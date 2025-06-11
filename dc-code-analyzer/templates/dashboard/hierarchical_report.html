@@ -1,0 +1,277 @@
+{% extends "dashboard/base.html" %}
+{% load static %}
+
+{% block title %}Hierarchical Analysis Report - Session {{ session.id }}{% endblock %}
+
+{% block extra_css %}
+<style>
+.drill-down-item {
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.drill-down-item:hover {
+    background-color: #f8f9fa;
+}
+
+.package-section {
+    border-left: 4px solid #007bff;
+    margin-bottom: 1.5rem;
+}
+
+.class-section {
+    border-left: 3px solid #28a745;
+    margin-left: 1rem;
+    margin-bottom: 1rem;
+}
+
+.method-section {
+    border-left: 2px solid #ffc107;
+    margin-left: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.complexity-badge {
+    font-size: 0.75rem;
+}
+
+.tree-toggle {
+    background: none;
+    border: none;
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin-right: 0.5rem;
+}
+
+.tree-content {
+    display: none;
+}
+
+.tree-content.show {
+    display: block;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Hierarchical Analysis Report</h1>
+        <div class="btn-group">
+            <a href="{% url 'dashboard:analysis_session_detail' session.id %}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Session
+            </a>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-sitemap"></i> Project Structure Overview
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Session:</strong> #{{ session.id }} | 
+                       <strong>Project:</strong> {{ session.flx_project.name }} | 
+                       <strong>Status:</strong> 
+                       <span class="badge badge-{% if session.status == 'completed' %}success{% elif session.status == 'failed' %}danger{% else %}warning{% endif %}">
+                           {{ session.status|capfirst }}
+                       </span>
+                    </p>
+                    <p><strong>Analysis Date:</strong> {{ session.created_at|date:"M d, Y H:i" }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">Code Hierarchy</h5>
+                    <div>
+                        <button class="btn btn-sm btn-outline-primary" onclick="expandAll()">Expand All</button>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="collapseAll()">Collapse All</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    {% for package_data in report_data.packages %}
+                    <div class="package-section card mb-3">
+                        <div class="card-header bg-light">
+                            <button class="tree-toggle" onclick="toggleSection('package-{{ forloop.counter }}')" type="button">
+                                <i class="fas fa-chevron-right" id="icon-package-{{ forloop.counter }}"></i>
+                            </button>
+                            <strong>
+                                <i class="fas fa-box"></i> 
+                                <a href="{% url 'dashboard:package_analysis' session.id package_data.package.id %}" class="text-decoration-none">
+                                    {{ package_data.package.name }}
+                                </a>
+                            </strong>
+                            <span class="float-end">
+                                <span class="badge bg-primary">{{ package_data.package.python_files_count }} files</span>
+                                <span class="badge bg-info">{{ package_data.package.total_functions }} functions</span>
+                                <span class="badge bg-success">{{ package_data.package.total_classes }} classes</span>
+                                {% if package_data.security_issues > 0 %}
+                                <span class="badge bg-danger">{{ package_data.security_issues }} security issues</span>
+                                {% endif %}
+                            </span>
+                        </div>
+                        
+                        <div class="tree-content" id="package-{{ forloop.counter }}">
+                            <div class="card-body">
+                                <!-- Package Metrics -->
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <small class="text-muted">Lines of Code:</small> {{ package_data.package.code_lines }}<br>
+                                        <small class="text-muted">Total Lines:</small> {{ package_data.package.total_lines }}
+                                    </div>
+                                    <div class="col-md-6">
+                                        <small class="text-muted">Avg Complexity:</small> {{ package_data.package.avg_complexity|floatformat:1 }}<br>
+                                        <small class="text-muted">Max Complexity:</small> {{ package_data.package.max_complexity|floatformat:1 }}
+                                    </div>
+                                </div>
+
+                                <!-- Classes in Package -->
+                                {% if package_data.classes %}
+                                <h6 class="text-muted">Classes</h6>
+                                {% for class_data in package_data.classes %}
+                                <div class="class-section card mb-2">
+                                    <div class="card-header bg-light">
+                                        <button class="tree-toggle" onclick="toggleSection('class-{{ forloop.parentloop.counter }}-{{ forloop.counter }}')" type="button">
+                                            <i class="fas fa-chevron-right" id="icon-class-{{ forloop.parentloop.counter }}-{{ forloop.counter }}"></i>
+                                        </button>
+                                        <strong>
+                                            <i class="fas fa-cube"></i>
+                                            <a href="{% url 'dashboard:class_analysis' session.id class_data.class.id %}" class="text-decoration-none">
+                                                {{ class_data.class.name }}
+                                            </a>
+                                        </strong>
+                                        <span class="float-end">
+                                            <span class="badge bg-secondary">{{ class_data.class.method_count }} methods</span>
+                                            <span class="badge complexity-badge bg-{% if class_data.class.complexity_level == 'low' %}success{% elif class_data.class.complexity_level == 'medium' %}warning{% else %}danger{% endif %}">
+                                                {{ class_data.class.complexity_level }}
+                                            </span>
+                                        </span>
+                                    </div>
+                                    
+                                    <div class="tree-content" id="class-{{ forloop.parentloop.counter }}-{{ forloop.counter }}">
+                                        <div class="card-body">
+                                            <div class="row mb-2">
+                                                <div class="col-md-12">
+                                                    <small class="text-muted">
+                                                        Lines: {{ class_data.class.lines_of_code }} | 
+                                                        Methods: {{ class_data.class.method_count }} |
+                                                        {% if class_data.class.base_classes %}
+                                                        Inherits: {{ class_data.class.base_classes|join:", " }}
+                                                        {% endif %}
+                                                    </small>
+                                                </div>
+                                            </div>
+
+                                            <!-- Methods in Class -->
+                                            {% if class_data.methods %}
+                                            <h6 class="text-muted">Methods</h6>
+                                            {% for method in class_data.methods %}
+                                            <div class="method-section p-2 mb-1 bg-light rounded">
+                                                <strong>
+                                                    <i class="fas fa-cog"></i>
+                                                    <a href="{% url 'dashboard:function_analysis' session.id method.id %}" class="text-decoration-none">
+                                                        {{ method.name }}
+                                                    </a>
+                                                </strong>
+                                                <span class="float-end">
+                                                    <span class="badge bg-info">{{ method.function_type }}</span>
+                                                    <span class="badge complexity-badge bg-{% if method.complexity_level == 'low' %}success{% elif method.complexity_level == 'medium' %}warning{% else %}danger{% endif %}">
+                                                        CC: {{ method.cyclomatic_complexity }}
+                                                    </span>
+                                                    {% if not method.has_docstring %}
+                                                    <span class="badge bg-warning">No docs</span>
+                                                    {% endif %}
+                                                </span>
+                                                <br>
+                                                <small class="text-muted">
+                                                    Lines: {{ method.lines_of_code }} | 
+                                                    Params: {{ method.parameter_count }} |
+                                                    Returns: {{ method.return_statement_count }}
+                                                </small>
+                                            </div>
+                                            {% endfor %}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                                {% endif %}
+
+                                <!-- Standalone Functions in Package -->
+                                {% if package_data.functions %}
+                                <h6 class="text-muted mt-3">Standalone Functions</h6>
+                                {% for function in package_data.functions %}
+                                <div class="method-section p-2 mb-1 bg-light rounded">
+                                    <strong>
+                                        <i class="fas fa-function"></i>
+                                        <a href="{% url 'dashboard:function_analysis' session.id function.id %}" class="text-decoration-none">
+                                            {{ function.name }}
+                                        </a>
+                                    </strong>
+                                    <span class="float-end">
+                                        <span class="badge bg-primary">{{ function.function_type }}</span>
+                                        <span class="badge complexity-badge bg-{% if function.complexity_level == 'low' %}success{% elif function.complexity_level == 'medium' %}warning{% else %}danger{% endif %}">
+                                            CC: {{ function.cyclomatic_complexity }}
+                                        </span>
+                                        {% if not function.has_docstring %}
+                                        <span class="badge bg-warning">No docs</span>
+                                        {% endif %}
+                                    </span>
+                                    <br>
+                                    <small class="text-muted">
+                                        Lines: {{ function.lines_of_code }} | 
+                                        Params: {{ function.parameter_count }} |
+                                        Returns: {{ function.return_statement_count }}
+                                    </small>
+                                </div>
+                                {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleSection(sectionId) {
+    const content = document.getElementById(sectionId);
+    const icon = document.getElementById('icon-' + sectionId);
+    
+    if (content.classList.contains('show')) {
+        content.classList.remove('show');
+        icon.className = 'fas fa-chevron-right';
+    } else {
+        content.classList.add('show');
+        icon.className = 'fas fa-chevron-down';
+    }
+}
+
+function expandAll() {
+    const contents = document.querySelectorAll('.tree-content');
+    const icons = document.querySelectorAll('.tree-toggle i');
+    
+    contents.forEach(content => content.classList.add('show'));
+    icons.forEach(icon => icon.className = 'fas fa-chevron-down');
+}
+
+function collapseAll() {
+    const contents = document.querySelectorAll('.tree-content');
+    const icons = document.querySelectorAll('.tree-toggle i');
+    
+    contents.forEach(content => content.classList.remove('show'));
+    icons.forEach(icon => icon.className = 'fas fa-chevron-right');
+}
+</script>
+{% endblock %} 

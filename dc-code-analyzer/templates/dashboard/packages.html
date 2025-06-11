@@ -1,0 +1,296 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Python Packages - Django Code Analyzer{% endblock %}
+
+{% block extra_head %}
+<style>
+.package-card {
+    border-left: 4px solid #007bff;
+    transition: all 0.3s ease;
+}
+.package-card:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.package-type-source {
+    border-left-color: #28a745;
+}
+.package-type-wheel {
+    border-left-color: #ffc107;
+}
+.package-type-system {
+    border-left-color: #6c757d;
+}
+.badge-source {
+    background-color: #28a745;
+}
+.badge-wheel {
+    background-color: #ffc107;
+    color: #000;
+}
+.badge-system {
+    background-color: #6c757d;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h3 mb-1">🐍 Python Packages</h1>
+                    <p class="text-muted">Discover and analyze installed Python packages</p>
+                </div>
+                <div>
+                    <button class="btn btn-outline-secondary" onclick="refreshPackages()">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="card mb-4">
+                <div class="card-body py-3">
+                    <form method="get" class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Package Type</label>
+                            <select name="type" class="form-select" onchange="this.form.submit()">
+                                <option value="all" {% if package_type == 'all' %}selected{% endif %}>All Packages</option>
+                                <option value="source" {% if package_type == 'source' %}selected{% endif %}>Source Installations</option>
+                                <option value="analyzable" {% if package_type == 'analyzable' %}selected{% endif %}>Analyzable Packages</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Search</label>
+                            <input type="text" name="search" class="form-control" 
+                                   value="{{ search_query }}" placeholder="Search packages...">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">&nbsp;</label>
+                            <button type="submit" class="btn btn-primary d-block w-100">
+                                <i class="fas fa-search"></i> Search
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Statistics -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h4 class="text-primary">{{ total_packages }}</h4>
+                            <small class="text-muted">Total Packages</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h4 class="text-success">{{ page_obj.paginator.count }}</h4>
+                            <small class="text-muted">Filtered Results</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Packages Grid -->
+            <div class="row">
+                {% for package in page_obj %}
+                <div class="col-lg-6 mb-4">
+                    <div class="card package-card package-type-{{ package.package_type }}">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-cube text-primary me-2"></i>
+                                    {{ package.name }}
+                                </h5>
+                                <span class="badge badge-{{ package.package_type }}">
+                                    {{ package.package_type|title }}
+                                </span>
+                            </div>
+                            
+                            <div class="mb-2">
+                                <small class="text-muted">Version:</small>
+                                <code class="ms-1">{{ package.version }}</code>
+                            </div>
+                            
+                            {% if package.description %}
+                            <p class="card-text text-muted small mb-2">
+                                {{ package.description|truncatechars:100 }}
+                            </p>
+                            {% endif %}
+                            
+                            <div class="row text-center mb-3">
+                                <div class="col-4">
+                                    <small class="text-muted d-block">Files</small>
+                                    <strong>{{ package.estimated_size }}</strong>
+                                </div>
+                                <div class="col-8">
+                                    <small class="text-muted d-block">Location</small>
+                                    <code class="small">{{ package.source_path|truncatechars:30 }}</code>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex gap-2">
+                                <form method="post" action="{% url 'dashboard:create_project_from_package' %}" class="flex-grow-1">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="package_name" value="{{ package.name }}">
+                                    <button type="submit" class="btn btn-primary btn-sm w-100">
+                                        <i class="fas fa-plus"></i> Create Project
+                                    </button>
+                                </form>
+                                <button class="btn btn-outline-info btn-sm" 
+                                        data-bs-toggle="collapse" 
+                                        data-bs-target="#details-{{ forloop.counter }}"
+                                        aria-expanded="false">
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                            </div>
+                            
+                            <!-- Collapse details -->
+                            <div class="collapse mt-3" id="details-{{ forloop.counter }}">
+                                <div class="border-top pt-3">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <small class="text-muted">Install Location:</small>
+                                            <p class="small"><code>{{ package.location|default:"N/A" }}</code></p>
+                                        </div>
+                                        <div class="col-6">
+                                            <small class="text-muted">Source Path:</small>
+                                            <p class="small"><code>{{ package.source_path }}</code></p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <small class="text-muted">Has Python Files:</small>
+                                            <p class="small">
+                                                {% if package.has_python_files %}
+                                                    <i class="fas fa-check text-success"></i> Yes
+                                                {% else %}
+                                                    <i class="fas fa-times text-danger"></i> No
+                                                {% endif %}
+                                            </p>
+                                        </div>
+                                        <div class="col-6">
+                                            <small class="text-muted">Estimated Size:</small>
+                                            <p class="small">{{ package.estimated_size }} files</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body text-center py-5">
+                            <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                            <h4>No packages found</h4>
+                            <p class="text-muted">
+                                {% if search_query %}
+                                    No packages found matching "{{ search_query }}".
+                                {% else %}
+                                    No packages found with the current filters.
+                                {% endif %}
+                            </p>
+                            {% if search_query %}
+                            <a href="{% url 'dashboard:packages_discovery' %}" class="btn btn-outline-primary">
+                                <i class="fas fa-times"></i> Clear Search
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination -->
+            {% if page_obj.has_other_pages %}
+            <nav aria-label="Package pagination">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if package_type != 'all' %}&type={{ package_type }}{% endif %}">
+                                <i class="fas fa-chevron-left"></i> Previous
+                            </a>
+                        </li>
+                    {% endif %}
+                    
+                    {% for i in page_obj.paginator.page_range %}
+                        {% if page_obj.number == i %}
+                            <li class="page-item active">
+                                <span class="page-link">{{ i }}</span>
+                            </li>
+                        {% else %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ i }}{% if search_query %}&search={{ search_query }}{% endif %}{% if package_type != 'all' %}&type={{ package_type }}{% endif %}">{{ i }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if package_type != 'all' %}&type={{ package_type }}{% endif %}">
+                                Next <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+function refreshPackages() {
+    const btn = event.target.closest('button');
+    const originalText = btn.innerHTML;
+    
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Refreshing...';
+    btn.disabled = true;
+    
+    fetch('{% url "dashboard:refresh_packages" %}')
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                // Show success message
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'alert alert-success alert-dismissible fade show';
+                alertDiv.innerHTML = `
+                    <i class="fas fa-check-circle"></i> ${data.message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                `;
+                document.querySelector('.container-fluid').insertBefore(alertDiv, document.querySelector('.row'));
+                
+                // Refresh page after 2 seconds
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000);
+            } else {
+                throw new Error(data.message);
+            }
+        })
+        .catch(error => {
+            // Show error message
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'alert alert-danger alert-dismissible fade show';
+            alertDiv.innerHTML = `
+                <i class="fas fa-exclamation-circle"></i> Error: ${error.message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            document.querySelector('.container-fluid').insertBefore(alertDiv, document.querySelector('.row'));
+        })
+        .finally(() => {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        });
+}
+</script>
+{% endblock %} 

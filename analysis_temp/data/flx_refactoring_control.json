@@ -1,0 +1,440 @@
+{
+    "projeto": "FLX Refatoração Completa - Padronização e Melhoria",
+    "data_inicio": "2024-06-06T00:13:38-03:00",
+    "objetivo": {
+        "docstrings": "Melhorar docstrings de todos os arquivos",
+        "classes": "Renomear classes flx para começar com Flx",
+        "funcoes": "Renomear funções fora de classes para começar com flx_",
+        "imports": "Mover todos os imports para o início dos arquivos"
+    },
+    "fases": {
+        "analise": "concluida",
+        "preparacao": "concluida",
+        "implementacao": "iniciada",
+        "validacao": "pendente",
+        "finalizacao": "pendente"
+    },
+    "estatisticas": {
+        "arquivos_python_total": 403,
+        "arquivos_processados": 25,
+        "arquivos_com_erro": 0,
+        "classes_renomeadas": 22,
+        "funcoes_renomeadas": 8,
+        "imports_organizados": 25,
+        "docstrings_melhorados": 23
+    },
+    "diretorios_alvo": [
+        "flx/",
+        "flx-database-oracle/",
+        "flx-http-oracle-oic/",
+        "flx-http-oracle-wms/",
+        "flx-ldap/",
+        "flx-oic-wms/",
+        "flx-oracle-wms/",
+        "src/flx_database_oracle/"
+    ],
+    "lista_arquivos_prioritarios": {
+        "fase_1_core_flx": [
+            "flx/src/flx/core/domain/entities/protocols.py",
+            "flx/src/flx/core/domain/entities/base.py",
+            "flx/src/flx/core/domain/entities/mixins.py",
+            "flx/src/flx/core/domain/entities/value_objects.py",
+            "flx/src/flx/core/domain/entities/entities.py",
+            "flx/src/flx/core/plugins/base.py",
+            "flx/src/flx/core/plugins/registry.py",
+            "flx/src/flx/core/application_layer/commands/entity_command_handlers.py",
+            "flx/src/flx/core/application_layer/queries/entity_query_handlers.py",
+            "flx/src/flx/core/application_layer/services/entity_application_service.py"
+        ],
+        "fase_2_infrastructure": [
+            "flx/src/flx/core/async_infrastructure/async_command_bus.py",
+            "flx/src/flx/core/async_infrastructure/broker_config.py",
+            "flx/src/flx/core/async_infrastructure/message_router.py",
+            "flx/src/flx/core/async_infrastructure/message_router_interface.py",
+            "flx/src/flx/core/async_infrastructure/queue_configuration.py",
+            "flx/src/flx/core/async_infrastructure/routing_strategies.py",
+            "flx/src/flx/core/async_infrastructure/message_classifier.py",
+            "flx/src/flx/core/async_infrastructure/domain_messages.py"
+        ],
+        "fase_3_database": [
+            "flx-database-oracle/src/flx_database_oracle/config.py",
+            "flx-database-oracle/src/flx_database_oracle/models.py",
+            "flx-database-oracle/src/flx_database_oracle/domain/entities.py",
+            "flx-database-oracle/src/flx_database_oracle/domain/events.py",
+            "flx-database-oracle/src/flx_database_oracle/domain/commands.py",
+            "flx-database-oracle/src/flx_database_oracle/ports.py",
+            "flx-database-oracle/src/flx_database_oracle/plugin.py"
+        ],
+        "fase_4_wms": [
+            "flx-oracle-wms/src/flx_oracle_wms/config.py",
+            "flx-oracle-wms/src/flx_oracle_wms/models.py",
+            "flx-oracle-wms/src/flx_oracle_wms/ports.py",
+            "flx-oracle-wms/src/flx_oracle_wms/plugin.py",
+            "flx-http-oracle-wms/src/flx_http_oracle_wms/models.py"
+        ],
+        "fase_5_ldap_oic": [
+            "flx-ldap/src/flx_ldap/entities/ldap_entities.py",
+            "flx-ldap/src/flx_ldap/services/ldap_service.py",
+            "flx-ldap/src/flx_ldap/services/oud_service.py",
+            "flx-ldap/src/flx_ldap/adapters/ldap_adapter.py",
+            "flx-oic-wms/src/flx_oic_wms/entities/oic_entities.py"
+        ]
+    },
+    "análise_detalhada": {
+        "classes_que_precisam_renomear": {
+            "flx_oracle_wms": [
+                "WMSConnectionType -> FlxWMSConnectionType",
+                "WMSAuthType -> FlxWMSAuthType",
+                "WMSConfig -> FlxWMSConfig",
+                "WMSPlugin -> FlxWMSPlugin",
+                "WMSPort -> FlxWMSPort",
+                "WMSOrderPort -> FlxWMSOrderPort",
+                "WMSInventoryPort -> FlxWMSInventoryPort",
+                "WMSLocationPort -> FlxWMSLocationPort",
+                "WMSItemPort -> FlxWMSItemPort",
+                "WMSOrderStatus -> FlxWMSOrderStatus",
+                "WMSItemStatus -> FlxWMSItemStatus",
+                "WMSBaseModel -> FlxWMSBaseModel",
+                "WMSLocation -> FlxWMSLocation",
+                "WMSItem -> FlxWMSItem",
+                "WMSOrder -> FlxWMSOrder",
+                "WMSInventory -> FlxWMSInventory",
+                "WMSMovement -> FlxWMSMovement"
+            ],
+            "flx_ldap": [
+                "LDAPConfig -> FlxLDAPConfig",
+                "LDAPEntry -> FlxLDAPEntry",
+                "LDAPSchema -> FlxLDAPSchema",
+                "LDAPFilter -> FlxLDAPFilter",
+                "LDAPAdapter -> FlxLDAPAdapter",
+                "LDAPService -> FlxLDAPService",
+                "OUDService -> FlxOUDService"
+            ],
+            "flx_oic_wms": [
+                "OICIntegrationType -> FlxOICIntegrationType",
+                "OICConfig -> FlxOICConfig",
+                "OICRequest -> FlxOICRequest",
+                "OICResponse -> FlxOICResponse",
+                "OICIntegration -> FlxOICIntegration"
+            ],
+            "flx_database_oracle": [
+                "OracleConnectionEvent -> FlxOracleConnectionEvent",
+                "OracleOperationEvent -> FlxOracleOperationEvent",
+                "OracleErrorEvent -> FlxOracleErrorEvent",
+                "OraclePerformanceEvent -> FlxOraclePerformanceEvent",
+                "OracleTransactionEvent -> FlxOracleTransactionEvent",
+                "OracleSchemaEvent -> FlxOracleSchemaEvent",
+                "OracleConnectionPoolEvent -> FlxOracleConnectionPoolEvent",
+                "OracleHealthCheckEvent -> FlxOracleHealthCheckEvent",
+                "AuthenticationType -> FlxAuthenticationType",
+                "PoolingMode -> FlxPoolingMode",
+                "DatabaseConfig -> FlxDatabaseConfig",
+                "OracleOperationType -> FlxOracleOperationType",
+                "OracleOperationStatus -> FlxOracleOperationStatus",
+                "OracleOperation -> FlxOracleOperation",
+                "OracleTransactionStatus -> FlxOracleTransactionStatus",
+                "OracleTransaction -> FlxOracleTransaction",
+                "OracleQuery -> FlxOracleQuery",
+                "ConnectionStatus -> FlxConnectionStatus",
+                "QueryType -> FlxQueryType",
+                "TransactionStatus -> FlxTransactionStatus",
+                "DataType -> FlxDataType",
+                "DatabaseBaseModel -> FlxDatabaseBaseModel",
+                "OracleSchemaAdapter -> FlxOracleSchemaAdapter",
+                "OracleConnectionAdapter -> FlxOracleConnectionAdapter",
+                "OracleQueryAdapter -> FlxOracleQueryAdapter",
+                "OracleDatabaseModule -> FlxOracleDatabaseModule",
+                "DatabasePlugin -> FlxDatabasePlugin",
+                "OracleTransactionAdapter -> FlxOracleTransactionAdapter",
+                "QueryPort -> FlxQueryPort",
+                "SchemaPort -> FlxSchemaPort",
+                "TransactionPort -> FlxTransactionPort"
+            ],
+            "flx_async_infrastructure": [
+                "FlxBrokerConfig -> FlxBrokerConfig",
+                "FlxMessageRouterInterface -> FlxMessageRouterInterface",
+                "FlxRoutingStrategyInterface -> FlxRoutingStrategyInterface",
+                "FlxQueuePriority -> FlxQueuePriority",
+                "FlxQueueType -> FlxQueueType",
+                "FlxQueueConfig -> FlxQueueConfig",
+                "FlxQueueConfigManager -> FlxQueueConfigManager",
+                "FlxRoutingStrategy -> FlxRoutingStrategy",
+                "FlxRegexBasedRouting -> FlxRegexBasedRouting",
+                "FlxDomainCommand -> FlxDomainCommand",
+                "FlxDomainEvent -> FlxDomainEvent",
+                "FlxDomainQuery -> FlxDomainQuery"
+            ]
+        },
+        "funcoes_que_precisam_renomear": [
+            "create_wms_adapter -> flx_create_wms_adapter",
+            "create_wms_plugin -> flx_create_wms_plugin",
+            "create_wms_config -> flx_create_wms_config",
+            "create_http_oracle_wms_project -> flx_create_http_oracle_wms_project",
+            "flx_create_database_plugin -> flx_create_database_plugin",
+            "flx_create_database_config -> flx_create_database_config",
+            "flx_create_oracle_database_project -> flx_create_oracle_database_project",
+            "create_cli_app -> flx_create_cli_app",
+            "create_command_context -> flx_create_command_context",
+            "create_oic_adapter -> flx_create_oic_adapter",
+            "create_client -> flx_create_client",
+            "flx_create_oic_factory -> flx_create_oic_factory",
+            "flx_create_oic_client -> flx_create_oic_client",
+            "flx_create_oic_context -> flx_create_oic_context",
+            "flx_create_project -> flx_create_project",
+            "flx_process_command_high -> flx_process_command_high",
+            "process_command_medium -> flx_flx_
+            "process_command_low -> flx_process_command_low",
+            "flx_process_command -> flx_process_command",
+            "flx_get_health_status -> flx_get_health_status",
+            "register_event_processors -> flx_register_event_processors"
+        ],
+        "arquivos_processados": {
+            "flx/src/flx/core/domain/entities/factory.py": {
+                "status": "concluido",
+                "mudancas": {
+                    "docstring_melhorado": true,
+                    "funcoes_renomeadas": [
+                        "flx_create_configurable -> flx_create_configurable",
+                        "flx_create_service -> flx_create_service"
+                    ],
+                    "imports_organizados": true
+                }
+            },
+            "flx-http-oracle-oic/src/flx_http_oracle_oic/service.py": {
+                "status": "concluido",
+                "mudancas": {
+                    "docstring_melhorado": false,
+                    "funcoes_renomeadas": [
+                        "flx_flx_
+                    ],
+                    "imports_organizados": false
+                }
+            },
+            "flx/src/flx/core/domain/entities/protocols.py": {
+                "status": "concluido",
+                "mudancas": {
+                    "docstring_melhorado": true,
+                    "funcoes_renomeadas": [],
+                    "imports_organizados": true
+                }
+            },
+            "flx/src/flx/core/domain/entities/mixins.py": {
+                "status": "concluido",
+                "mudancas": {
+                    "docstring_melhorado": true,
+                    "funcoes_renomeadas": [],
+                    "imports_organizados": true
+                }
+            },
+            "flx/src/flx/core/async_infrastructure/async_command_bus.py": {
+                "status": "concluido",
+                "mudancas": {
+                    "docstring_melhorado": false,
+                    "funcoes_renomeadas": [
+                        "process_command_medium -> flx_process_command_medium",
+                        "process_command_low -> flx_process_command_low",
+                        "process_command -> flx_process_command",
+                        "flx_get_health_status -> flx_get_health_status"
+                    ],
+                    "imports_organizados": true
+                }
+            },
+            "flx/src/flx/core/async_infrastructure/broker_config.py": {
+                "status": "concluido",
+                "mudancas": {
+                    "docstring_melhorado": true,
+                    "funcoes_renomeadas": [],
+                    "imports_organizados": true
+                }
+            },
+            "flx/src/flx/core/domain/entities/value_objects.py": {
+                "status": "concluido",
+                "mudancas": {
+                    "docstring_melhorado": true,
+                    "funcoes_renomeadas": [],
+                    "imports_organizados": true
+                }
+            },
+            "flx/src/flx/core/domain/entities/entities.py": {
+                "status": "concluido",
+                "mudancas": {
+                    "docstring_melhorado": true,
+                    "funcoes_renomeadas": [],
+                    "imports_organizados": true
+                }
+            },
+            "flx/src/flx/core/plugins/base.py": {
+                "status": "concluido",
+                "mudancas": {
+                    "docstring_melhorado": true,
+                    "funcoes_renomeadas": [],
+                    "imports_organizados": true
+                }
+            },
+            "flx/src/flx/core/plugins/registry.py": {
+                "status": "concluido",
+                "mudancas": {
+                    "docstring_melhorado": true,
+                    "funcoes_renomeadas": [],
+                    "imports_organizados": true
+                }
+            },
+            "flx/src/flx/core/application_layer/commands/entity_command_handlers.py": {
+                "status": "concluido",
+                "mudancas": {
+                    "docstring_melhorado": true,
+                    "funcoes_renomeadas": [
+                        "flx_create_service -> flx_create_service"
+                    ],
+                    "imports_organizados": true
+                }
+            },
+            "flx/src/flx/core/application_layer/queries/entity_query_handlers.py": {
+                "status": "concluido",
+                "mudancas": {
+                    "docstring_melhorado": true,
+                    "funcoes_renomeadas": [],
+                    "imports_organizados": true
+                }
+            },
+            "flx/src/flx/core/application_layer/services/entity_application_service.py": {
+                "status": "concluido",
+                "mudancas": {
+                    "docstring_melhorado": true,
+                    "funcoes_renomeadas": [],
+                    "imports_organizados": true
+                }
+            },
+            "flx/src/flx/core/async_infrastructure/message_router.py": {
+                "status": "concluido",
+                "mudancas": {
+                    "docstring_melhorado": true,
+                    "funcoes_renomeadas": [],
+                    "imports_organizados": true
+                }
+            },
+            "flx/src/flx/core/async_infrastructure/message_router_interface.py": {
+                "status": "concluido",
+                "mudancas": {
+                    "docstring_melhorado": true,
+                    "funcoes_renomeadas": [],
+                    "imports_organizados": true
+                }
+            },
+            "flx/src/flx/core/async_infrastructure/queue_configuration.py": {
+                "status": "concluido",
+                "mudancas": {
+                    "docstring_melhorado": true,
+                    "funcoes_renomeadas": [],
+                    "imports_organizados": true
+                }
+            },
+            "flx/src/flx/core/async_infrastructure/routing_strategies.py": {
+                "status": "concluido",
+                "mudancas": {
+                    "docstring_melhorado": true,
+                    "funcoes_renomeadas": [],
+                    "imports_organizados": true
+                }
+            },
+            "flx/src/flx/core/async_infrastructure/message_classifier.py": {
+                "status": "concluido",
+                "mudancas": {
+                    "docstring_melhorado": true,
+                    "funcoes_renomeadas": [],
+                    "imports_organizados": true
+                }
+            },
+            "flx/src/flx/core/async_infrastructure/domain_messages.py": {
+                "status": "concluido",
+                "mudancas": {
+                    "docstring_melhorado": true,
+                    "funcoes_renomeadas": [],
+                    "imports_organizados": true
+                }
+            },
+            "flx-database-oracle/src/flx_database_oracle/config.py": {
+                "status": "concluido",
+                "mudancas": {
+                    "docstring_melhorado": true,
+                    "classes_renomeadas": [
+                        "AuthenticationType -> FlxAuthenticationType",
+                        "PoolingMode -> FlxPoolingMode",
+                        "DatabaseConfig -> FlxDatabaseConfig"
+                    ],
+                    "funcoes_renomeadas": [],
+                    "imports_organizados": true
+                }
+            },
+            "flx-database-oracle/src/flx_database_oracle/models.py": {
+                "status": "concluido",
+                "mudancas": {
+                    "docstring_melhorado": true,
+                    "classes_renomeadas": [
+                        "ConnectionStatus -> FlxConnectionStatus",
+                        "QueryType -> FlxQueryType",
+                        "TransactionStatus -> FlxTransactionStatus",
+                        "DataType -> FlxDataType",
+                        "DatabaseBaseModel -> FlxDatabaseBaseModel"
+                    ],
+                    "funcoes_renomeadas": [],
+                    "imports_organizados": true
+                }
+            },
+            "flx-database-oracle/src/flx_database_oracle/domain/entities.py": {
+                "status": "concluido",
+                "mudancas": {
+                    "docstring_melhorado": true,
+                    "classes_renomeadas": [
+                        "OracleOperationType -> FlxOracleOperationType",
+                        "OracleOperationStatus -> FlxOracleOperationStatus",
+                        "OracleOperation -> FlxOracleOperation",
+                        "OracleTransactionStatus -> FlxOracleTransactionStatus",
+                        "OracleTransaction -> FlxOracleTransaction",
+                        "OracleQuery -> FlxOracleQuery"
+                    ],
+                    "funcoes_renomeadas": [],
+                    "imports_organizados": true
+                }
+            },
+            "flx-database-oracle/src/flx_database_oracle/domain/events.py": {
+                "status": "concluido",
+                "mudancas": {
+                    "docstring_melhorado": true,
+                    "classes_renomeadas": [
+                        "OracleConnectionEvent -> FlxOracleConnectionEvent",
+                        "OracleOperationEvent -> FlxOracleOperationEvent",
+                        "OracleErrorEvent -> FlxOracleErrorEvent",
+                        "OraclePerformanceEvent -> FlxOraclePerformanceEvent",
+                        "OracleTransactionEvent -> FlxOracleTransactionEvent",
+                        "OracleSchemaEvent -> FlxOracleSchemaEvent",
+                        "OracleConnectionPoolEvent -> FlxOracleConnectionPoolEvent",
+                        "OracleHealthCheckEvent -> FlxOracleHealthCheckEvent"
+                    ],
+                    "funcoes_renomeadas": [],
+                    "imports_organizados": true
+                }
+            }
+        }
+    },
+    "estrategia_processamento": {
+        "ordem": "modulo_por_modulo",
+        "prioritário": [
+            "flx/src/flx/core/",
+            "flx/src/flx/",
+            "flx-database-oracle/",
+            "flx-http-oracle-wms/",
+            "demais_modulos"
+        ],
+        "validacao_continua": true
+    },
+    "arquivos": {},
+    "problemas_encontrados": [],
+    "rollback_info": {
+        "backup_disponivel": true,
+        "backup_file": "flx_backup_20250606_001535.tar.gz",
+        "comandos_rollback": [
+            "tar -xzf flx_backup_20250606_001535.tar.gz"
+        ]
+    }
+}

@@ -1,0 +1,31 @@
+Directory,File,Classes,Methods,Lines,Purpose,Type,Complexity,Reexports
+adapters,__init__.py,_Entities;_Protocols;_Mixins;_ValueObjects;_Infrastructure;_Ports;_Adapters;_Services,N/A,27,Central de Adapters - Padrão Hexagonal,REEXPORT,LOW,FlxIngoingCliAdapter;SecondaryDatabaseAdapter
+adapters/ingoing,plugin_adapter.py,FlxPrimaryPluginAdapter,__init__;register_command;execute,151,Adapter Primário - Entrada de plugins,ADAPTER,MEDIUM,None
+adapters/ingoing/cli,cli_adapter.py,FlxIngoingCliAdapter,__init__;_register_commands;execute,358,Adapter CLI - Interface linha de comando,ADAPTER,HIGH,None
+adapters/ingoing/cli,context.py,FlxCliAdapterConfig;FlxCliAdapterContext,setup;teardown,456,Contexto CLI - Gerenciamento de execução,CONFIG,HIGH,None
+adapters/outgoing,database_adapter.py,SecondaryDatabaseAdapter,__init__;connect;execute_query,322,Adapter BD - Persistência de dados,ADAPTER,MEDIUM,None
+adapters/outgoing,http_adapter.py,SecondaryHttpAdapter,__init__;get;post;put;delete,267,Adapter HTTP - Comunicação externa,ADAPTER,MEDIUM,None
+core,application.py,FlxApplication;FlxMetricsCollector;FlxAuditLogger,__init__;register_plugin;start;stop,829,⭐ APLICAÇÃO PRINCIPAL - Core do framework,CORE,CRITICAL,None
+core,plugin_manager.py,FlxPluginManager,__init__;load_plugin;get_plugins,167,Gerenciador Plugins - Extensibilidade,MANAGER,MEDIUM,None
+core/domain/entities,base.py,FlxEntity;FlxTimestampedEntity;FlxVersionedEntity,__eq__;__hash__;mark_updated,98,🏗️ ENTIDADES BASE - Fundação DDD,ENTITY,LOW,FlxStrictModel;FlxImmutableModel
+core/domain/entities,entities.py,FlxAggregateRoot;FlxBusinessEntity;FlxServiceEntity,raise_domain_event;apply_business_rule,295,🏢 ENTIDADES NEGÓCIO - Agregados DDD,ENTITY,HIGH,None
+core/domain/entities,factory.py,FlxEntityFactory,create_base_entity;create_aggregate,319,🏭 FACTORY ENTIDADES - Criação padronizada,FACTORY,MEDIUM,None
+core/domain/entities,mixins.py,FlxStatusMixin;FlxMetadataMixin,activate;set_metadata,207,🔧 MIXINS - Capacidades reutilizáveis,MIXIN,MEDIUM,None
+core/async_infrastructure,message_router.py,FlxMessageRouter,__init__;route_message;publish,337,📡 ROTEADOR MENSAGENS - Async/Await,INFRASTRUCTURE,HIGH,None
+core/async_infrastructure,async_command_bus.py,FlxAsyncCommandBus,__init__;register_handler;dispatch,238,🚌 COMMAND BUS - CQRS Async,INFRASTRUCTURE,HIGH,None
+infrastructure/database,client.py,FlxDbClient,__init__;execute_query;transaction_manager,162,💾 CLIENTE BD - Abstração SQL,INFRASTRUCTURE,MEDIUM,None
+infrastructure/database,connection.py,FlxDbConnectionManager,__init__;get_connection;close,213,🔌 POOL CONEXÕES - Gerenciamento BD,INFRASTRUCTURE,MEDIUM,None
+infrastructure/http,client.py,FlxHttpClient,__init__;request;auth_manager;retry,516,🌐 CLIENTE HTTP - Requisições externas,INFRASTRUCTURE,HIGH,None
+infrastructure/ldap,client.py,FlxLdapClient,__init__;search;bind;modify,424,👥 CLIENTE LDAP - Diretório/Auth,INFRASTRUCTURE,HIGH,None
+infrastructure/logging,base.py,FlxLogger,__init__;info;debug;error;performance,577,📊 LOGGING AVANÇADO - Observabilidade,INFRASTRUCTURE,CRITICAL,None
+infrastructure/logging,performance.py,FlxPerformanceInstrumentation,measure;collect_metrics,822,⚡ PERFORMANCE - Métricas e profiling,INFRASTRUCTURE,CRITICAL,None
+ports/ingoing,operation.py,FlxOperationPort;FlxOperationParams,execute_operation,243,🚪 PORT OPERAÇÕES - Interface negócio,PORT,MEDIUM,None
+ports/ingoing,query.py,FlxQueryPort;FlxQueryFilter,execute_query;apply,302,🔍 PORT CONSULTAS - Interface queries,PORT,MEDIUM,None
+ports/outgoing,database.py,FlxDatabasePort;FlxDatabaseTransaction,is_connected,592,🗄️ PORT BD - Interface persistência,PORT,HIGH,None
+ports/outgoing,http_client.py,FlxHttpClientPort;FlxHttpResponse,request,272,🌍 PORT HTTP - Interface externa,PORT,MEDIUM,None
+plugins,manager.py,PluginManager,__init__;register;activate;deactivate,378,🔌 GESTOR PLUGINS - Lifecycle plugins,MANAGER,HIGH,None
+plugins/builtin,adapter_plugins.py,LoggingAdapterMiddleware,__init__,181,🛠️ PLUGINS BUILT-IN - Funcionalidades base,PLUGIN,MEDIUM,None
+cli,main.py,FlxEnhancedCliAdapter,__init__;register_commands,493,💻 CLI PRINCIPAL - Interface usuário,CLI,HIGH,None
+cli/commands,adapter.py,MockFlxDatabaseAdapter,N/A,498,⚙️ COMANDOS CLI - Operações framework,CLI,HIGH,None
+declarative,core.py,FlxProject,__init_subclass__;register_handlers,91,📝 DECLARATIVO - Configuração via código,DECLARATIVE,LOW,None
+services,pagination.py,FlxGenericPaginationService,__init__;paginate,134,📄 SERVIÇOS GENÉRICOS - Funcionalidades comuns,SERVICE,LOW,None 

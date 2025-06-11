@@ -1,0 +1,37 @@
+Django^4.2.0
+djangorestframework^3.14.0
+django-cors-headers^4.0.0
+bandit^1.8.0
+vulture^2.12
+radon^6.0.1
+pylint^2.17.0
+mypy^1.16.0
+psycopg2-binary^2.9.0
+celery^5.3.4
+redis^6.2.0
+python-dotenv^1.1.0
+Pillow^10.0.0
+whitenoise^6.5.0
+
+# Code Analysis Tools
+flake8^7.2.0
+safety^2.3.0
+
+# Report Generation
+reportlab^4.0.0
+markdown^3.4.0
+Pygments^2.15.0
+weasyprint^60.0
+jinja2^3.1.0
+
+# PDF Generation
+xhtml2pdf^0.2.11
+
+# Quality and Security
+coverage^7.8.2
+pytest^8.4.0
+pytest-django^4.5.0
+pytest-cov^6.1.1
+
+django-celery-beat^2.5.0
+django-celery-results^2.5.1

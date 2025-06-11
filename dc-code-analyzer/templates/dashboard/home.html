@@ -1,0 +1,331 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Code Analyzer{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2"><i class="fas fa-tachometer-alt"></i> Dashboard</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group me-2">
+            <a href="{% url 'dashboard:create_project' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> New Project
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card stat-card">
+            <div class="card-body text-center">
+                <i class="fas fa-folder-open fa-2x mb-2"></i>
+                <h4>{{ stats.total_projects }}</h4>
+                <p class="mb-0">Total Projects</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card success">
+            <div class="card-body text-center">
+                <i class="fas fa-check-circle fa-2x mb-2"></i>
+                <h4>{{ stats.completed_sessions }}</h4>
+                <p class="mb-0">Completed Analyses</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card warning">
+            <div class="card-body text-center">
+                <i class="fas fa-spinner fa-2x mb-2"></i>
+                <h4>{{ stats.running_sessions }}</h4>
+                <p class="mb-0">Running Analyses</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card {% if stats.avg_score >= 80 %}success{% elif stats.avg_score >= 60 %}warning{% else %}danger{% endif %}">
+            <div class="card-body text-center">
+                <i class="fas fa-star fa-2x mb-2"></i>
+                <h4>{{ stats.avg_score|floatformat:1 }}</h4>
+                <p class="mb-0">Average Score</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activity -->
+<div class="row">
+    <!-- Recent Projects -->
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5><i class="fas fa-folder"></i> Recent Projects</h5>
+                <a href="{% url 'dashboard:projects_list' %}" class="btn btn-sm btn-outline-primary">View All</a>
+            </div>
+            <div class="card-body">
+                {% if recent_projects %}
+                    <div class="list-group list-group-flush">
+                        {% for flx_project in recent_projects %}
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-1">
+                                        <a href="{% url 'dashboard:project_detail' flx_project.id %}" class="text-decoration-none">
+                                            {{ flx_project.name }}
+                                        </a>
+                                    </h6>
+                                    <small class="text-muted">{{ flx_project.description|default:"No description" }}</small>
+                                </div>
+                                <div class="text-end">
+                                    <small class="text-muted">{{ flx_project.updated_at|date:"M d, Y" }}</small>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-4 text-muted">
+                        <i class="fas fa-folder-open fa-3x mb-3"></i>
+                        <p>No projects yet. <a href="{% url 'dashboard:create_project' %}">Create your first flx_project!</a></p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Analyses -->
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-chart-line"></i> Recent Analyses</h5>
+            </div>
+            <div class="card-body">
+                {% if recent_sessions %}
+                    <div class="list-group list-group-flush">
+                        {% for session in recent_sessions %}
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-1">{{ session.flx_project.name }}</h6>
+                                    <small class="text-muted">{{ session.created_at|date:"M d, Y H:i" }}</small>
+                                </div>
+                                <div class="text-end">
+                                    {% if session.status == 'completed' %}
+                                        <span class="badge bg-success">
+                                            <i class="fas fa-check"></i> Completed
+                                        </span>
+                                        {% if session.overall_score %}
+                                            <div class="mt-1">
+                                                <span class="badge badge-score {% if session.overall_score >= 80 %}excellent{% elif session.overall_score >= 60 %}good{% elif session.overall_score >= 40 %}fair{% else %}poor{% endif %}">
+                                                    {{ session.overall_score|floatformat:0 }}%
+                                                </span>
+                                            </div>
+                                        {% endif %}
+                                    {% elif session.status == 'running' %}
+                                        <span class="badge bg-warning">
+                                            <i class="fas fa-spinner fa-spin"></i> Running
+                                        </span>
+                                    {% elif session.status == 'failed' %}
+                                        <span class="badge bg-danger">
+                                            <i class="fas fa-times"></i> Failed
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">
+                                            <i class="fas fa-clock"></i> Pending
+                                        </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-4 text-muted">
+                        <i class="fas fa-chart-bar fa-3x mb-3"></i>
+                        <p>No analyses yet. Start by creating a flx_project!</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-bolt"></i> Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 text-center mb-3">
+                        <a href="{% url 'dashboard:create_project' %}" class="btn btn-outline-primary btn-lg d-block">
+                            <i class="fas fa-plus fa-2x mb-2"></i>
+                            <div>Create Project</div>
+                        </a>
+                    </div>
+                    <div class="col-md-3 text-center mb-3">
+                        <a href="{% url 'dashboard:projects_list' %}" class="btn btn-outline-info btn-lg d-block">
+                            <i class="fas fa-list fa-2x mb-2"></i>
+                            <div>View Projects</div>
+                        </a>
+                    </div>
+                    <div class="col-md-3 text-center mb-3">
+                        <a href="/admin/" class="btn btn-outline-secondary btn-lg d-block">
+                            <i class="fas fa-cog fa-2x mb-2"></i>
+                            <div>Admin Panel</div>
+                        </a>
+                    </div>
+                    <div class="col-md-3 text-center mb-3">
+                        <a href="/api/v1/analyzer/" class="btn btn-outline-dark btn-lg d-block">
+                            <i class="fas fa-code fa-2x mb-2"></i>
+                            <div>API Docs</div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts Section -->
+<div class="row mb-4">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-chart-line"></i> Quality Trends (Last 30 Days)
+                </h5>
+            </div>
+            <div class="card-body">
+                <div style="height: 300px;">
+                    <canvas id="qualityTrendsChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-shield-alt"></i> Security Issues
+                </h5>
+            </div>
+            <div class="card-body">
+                <div style="height: 300px;">
+                    <canvas id="securityIssuesChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Initialize charts when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    loadQualityTrends();
+    loadSecurityIssues();
+});
+
+// Load quality trends chart
+function loadQualityTrends() {
+                    fetch('/charts/quality-trends/?days=30')
+        .then(response => response.json())
+        .then(data => {
+            const ctx = document.getElementById('qualityTrendsChart').getContext('2d');
+            
+            new Chart(ctx, {
+                type: 'line',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: false
+                        },
+                        legend: {
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: {
+                                display: true,
+                                text: 'Score'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Date'
+                            }
+                        }
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    }
+                }
+            });
+        })
+        .catch(error => {
+            console.error('Error loading quality trends:', error);
+            // Show placeholder message
+            const canvas = document.getElementById('qualityTrendsChart');
+            const ctx = canvas.getContext('2d');
+            ctx.font = '16px Arial';
+            ctx.fillStyle = '#6c757d';
+            ctx.textAlign = 'center';
+            ctx.fillText('No data available yet', canvas.width/2, canvas.height/2);
+        });
+}
+
+// Load security issues distribution
+function loadSecurityIssues() {
+                    fetch('/charts/security-issues-distribution/')
+        .then(response => response.json())
+        .then(data => {
+            const ctx = document.getElementById('securityIssuesChart').getContext('2d');
+            
+            if (data.labels.length === 0) {
+                // Show "no data" message
+                ctx.font = '16px Arial';
+                ctx.fillStyle = '#6c757d';
+                ctx.textAlign = 'center';
+                ctx.fillText('No security issues found', ctx.canvas.width/2, ctx.canvas.height/2);
+                return;
+            }
+            
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: false
+                        },
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        })
+        .catch(error => {
+            console.error('Error loading security issues:', error);
+            // Show placeholder message
+            const canvas = document.getElementById('securityIssuesChart');
+            const ctx = canvas.getContext('2d');
+            ctx.font = '16px Arial';
+            ctx.fillStyle = '#6c757d';
+            ctx.textAlign = 'center';
+            ctx.fillText('No data available yet', canvas.width/2, canvas.height/2);
+        });
+}
+</script>
+{% endblock %} 

@@ -1,0 +1,52 @@
+{
+  "name": "test_simple",
+  "version": "1.0",
+  "description": "Test schema for debugging",
+  "fields": [
+    {
+      "name": "ID",
+      "type": "INTEGER",
+      "nullable": false,
+      "description": "Primary key"
+    },
+    {
+      "name": "NAME",
+      "type": "STRING",
+      "length": 100,
+      "nullable": false,
+      "description": "Name field"
+    },
+    {
+      "name": "STATUS",
+      "type": "STRING",
+      "length": 20,
+      "nullable": false,
+      "default": "ACTIVE",
+      "description": "Status field"
+    },
+    {
+      "name": "CREATED_DATE",
+      "type": "DATE",
+      "nullable": false,
+      "default": "SYSDATE",
+      "description": "Creation date"
+    },
+    {
+      "name": "IS_ACTIVE",
+      "type": "BOOLEAN",
+      "nullable": false,
+      "default": 1,
+      "description": "Active flag"
+    }
+  ],
+  "indexes": [
+    {
+      "name": "PK_TEST_SIMPLE",
+      "columns": [
+        "ID"
+      ],
+      "unique": true
+    }
+  ],
+  "foreign_keys": []
+}

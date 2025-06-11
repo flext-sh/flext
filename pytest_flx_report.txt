@@ -1,0 +1,445 @@
+[1m===================================== test session starts =====================================[0m
+platform linux -- Python 3.13.3, pytest-8.3.5, pluggy-1.6.0
+Using --randomly-seed=2203356250
+benchmark: 5.1.0 (defaults: timer=time.perf_counter disable_gc=False min_rounds=5 min_time=0.000005 max_time=1.0 calibration_precision=10 warmup=False warmup_iterations=100000)
+rootdir: /home/marlonsc/pyauto/flx
+configfile: pytest.ini
+plugins: metadata-3.1.1, clarity-1.0.1, cov-6.1.1, mock-3.14.1, html-4.1.1, timeout-2.4.0, xdist-3.7.0, profiling-1.8.1, randomly-3.16.0, sugar-1.0.0, singer-sdk-0.46.4, benchmark-5.1.0, anyio-4.9.0, asyncio-0.23.8, logfire-3.18.0
+timeout: 60.0s
+timeout method: signal
+timeout func_only: False
+asyncio: mode=Mode.AUTO
+collected 19 items / 26 errors
+
+=========================================== ERRORS ============================================
+[31m[1m_______________ ERROR collecting tests/adapters/ingoing/cli/test_cli_adapter.py _______________[0m
+[31mImportError while importing test module '/home/marlonsc/pyauto/flx/tests/adapters/ingoing/cli/test_cli_adapter.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+flx/tests/adapters/ingoing/cli/test_cli_adapter.py:14: in <module>
+    from flx.adapters.ingoing.cli import (
+flx/src/flx/__init__.py:22: in <module>
+    from .adapters import (
+flx/src/flx/adapters/__init__.py:17: in <module>
+    from flx.core import (
+flx/src/flx/core/__init__.py:41: in <module>
+    from .async_events import (
+E   ImportError: cannot import name 'flx_create_async_event_handler' from 'flx.core.async_events' (/home/marlonsc/pyauto/flx/src/flx/core/async_events.py)[0m
+[31m[1m______________ ERROR collecting tests/adapters/ingoing/cli/test_cyclopts_cli.py _______________[0m
+[31mImportError while importing test module '/home/marlonsc/pyauto/flx/tests/adapters/ingoing/cli/test_cyclopts_cli.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+flx/tests/adapters/ingoing/cli/test_cyclopts_cli.py:14: in <module>
+    from flx.adapters.ingoing.cli import FlxEnhancedCliAdapter, FlxIngoingCliAdapter, flx_create_cli
+flx/src/flx/__init__.py:22: in <module>
+    from .adapters import (
+flx/src/flx/adapters/__init__.py:17: in <module>
+    from flx.core import (
+flx/src/flx/core/__init__.py:41: in <module>
+    from .async_events import (
+E   ImportError: cannot import name 'flx_create_async_event_handler' from 'flx.core.async_events' (/home/marlonsc/pyauto/flx/src/flx/core/async_events.py)[0m
+[31m[1m______________ ERROR collecting tests/cli/test_adapter_commands_comprehensive.py ______________[0m
+[31mImportError while importing test module '/home/marlonsc/pyauto/flx/tests/cli/test_adapter_commands_comprehensive.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+flx/tests/cli/test_adapter_commands_comprehensive.py:18: in <module>
+    from flx.adapters.ingoing.cli.adapter import FlxIngoingCliAdapter
+flx/src/flx/__init__.py:22: in <module>
+    from .adapters import (
+flx/src/flx/adapters/__init__.py:17: in <module>
+    from flx.core import (
+flx/src/flx/core/__init__.py:41: in <module>
+    from .async_events import (
+E   ImportError: cannot import name 'flx_create_async_event_handler' from 'flx.core.async_events' (/home/marlonsc/pyauto/flx/src/flx/core/async_events.py)[0m
+[31m[1m_________________________ ERROR collecting tests/cli/test_flx_cli.py __________________________[0m
+[31mImportError while importing test module '/home/marlonsc/pyauto/flx/tests/cli/test_flx_cli.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+flx/tests/cli/test_flx_cli.py:10: in <module>
+    from flx.adapters.ingoing.cli import flx_create_cli
+flx/src/flx/__init__.py:22: in <module>
+    from .adapters import (
+flx/src/flx/adapters/__init__.py:17: in <module>
+    from flx.core import (
+flx/src/flx/core/__init__.py:41: in <module>
+    from .async_events import (
+E   ImportError: cannot import name 'flx_create_async_event_handler' from 'flx.core.async_events' (/home/marlonsc/pyauto/flx/src/flx/core/async_events.py)[0m
+[31m[1m__________ ERROR collecting tests/infrastructure/logging/test_async_task_manager.py ___________[0m
+[31mImportError while importing test module '/home/marlonsc/pyauto/flx/tests/infrastructure/logging/test_async_task_manager.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+flx/tests/infrastructure/logging/test_async_task_manager.py:14: in <module>
+    from flx.infra.logging.async_task_manager import (
+flx/src/flx/__init__.py:22: in <module>
+    from .adapters import (
+flx/src/flx/adapters/__init__.py:17: in <module>
+    from flx.core import (
+flx/src/flx/core/__init__.py:41: in <module>
+    from .async_events import (
+E   ImportError: cannot import name 'flx_create_async_event_handler' from 'flx.core.async_events' (/home/marlonsc/pyauto/flx/src/flx/core/async_events.py)[0m
+[31m[1m___________ ERROR collecting tests/infrastructure/logging/test_shutdown_metrics.py ____________[0m
+[31mImportError while importing test module '/home/marlonsc/pyauto/flx/tests/infrastructure/logging/test_shutdown_metrics.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+flx/tests/infrastructure/logging/test_shutdown_metrics.py:13: in <module>
+    from flx.infra.logging.shutdown_metrics import (
+flx/src/flx/__init__.py:22: in <module>
+    from .adapters import (
+flx/src/flx/adapters/__init__.py:17: in <module>
+    from flx.core import (
+flx/src/flx/core/__init__.py:41: in <module>
+    from .async_events import (
+E   ImportError: cannot import name 'flx_create_async_event_handler' from 'flx.core.async_events' (/home/marlonsc/pyauto/flx/src/flx/core/async_events.py)[0m
+[31m[1m__________ ERROR collecting tests/integration/framework/test_public_api_interface.py __________[0m
+[31mImportError while importing test module '/home/marlonsc/pyauto/flx/tests/integration/framework/test_public_api_interface.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+flx/tests/integration/framework/test_public_api_interface.py:15: in <module>
+    from flx.core import (
+flx/src/flx/__init__.py:22: in <module>
+    from .adapters import (
+flx/src/flx/adapters/__init__.py:17: in <module>
+    from flx.core import (
+flx/src/flx/core/__init__.py:41: in <module>
+    from .async_events import (
+E   ImportError: cannot import name 'flx_create_async_event_handler' from 'flx.core.async_events' (/home/marlonsc/pyauto/flx/src/flx/core/async_events.py)[0m
+[31m[1m________________________ ERROR collecting tests/test_adaptive_cache.py ________________________[0m
+[31mImportError while importing test module '/home/marlonsc/pyauto/flx/tests/test_adaptive_cache.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+flx/tests/test_adaptive_cache.py:11: in <module>
+    from flx.infra.caching import (
+flx/src/flx/__init__.py:22: in <module>
+    from .adapters import (
+flx/src/flx/adapters/__init__.py:17: in <module>
+    from flx.core import (
+flx/src/flx/core/__init__.py:41: in <module>
+    from .async_events import (
+E   ImportError: cannot import name 'flx_create_async_event_handler' from 'flx.core.async_events' (/home/marlonsc/pyauto/flx/src/flx/core/async_events.py)[0m
+[31m[1m______________________ ERROR collecting tests/test_adaptive_ratelimit.py ______________________[0m
+[31mImportError while importing test module '/home/marlonsc/pyauto/flx/tests/test_adaptive_ratelimit.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+flx/tests/test_adaptive_ratelimit.py:10: in <module>
+    from flx.infra.logging.base import FlxLogger
+flx/src/flx/__init__.py:22: in <module>
+    from .adapters import (
+flx/src/flx/adapters/__init__.py:17: in <module>
+    from flx.core import (
+flx/src/flx/core/__init__.py:41: in <module>
+    from .async_events import (
+E   ImportError: cannot import name 'flx_create_async_event_handler' from 'flx.core.async_events' (/home/marlonsc/pyauto/flx/src/flx/core/async_events.py)[0m
+[31m[1m___________________ ERROR collecting tests/test_async_domain_integration.py ___________________[0m
+[31mImportError while importing test module '/home/marlonsc/pyauto/flx/tests/test_async_domain_integration.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+flx/tests/test_async_domain_integration.py:18: in <module>
+    from flx.core import FlxAggregateRoot, FlxEntityFactory
+flx/src/flx/__init__.py:22: in <module>
+    from .adapters import (
+flx/src/flx/adapters/__init__.py:17: in <module>
+    from flx.core import (
+flx/src/flx/core/__init__.py:41: in <module>
+    from .async_events import (
+E   ImportError: cannot import name 'flx_create_async_event_handler' from 'flx.core.async_events' (/home/marlonsc/pyauto/flx/src/flx/core/async_events.py)[0m
+[31m[1m_____________________________ ERROR collecting tests/test_cli.py ______________________________[0m
+[31mImportError while importing test module '/home/marlonsc/pyauto/flx/tests/test_cli.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+flx/tests/test_cli.py:13: in <module>
+    from flx.adapters.ingoing.cli.cyclopts import FlxCycloptsCli
+flx/src/flx/__init__.py:22: in <module>
+    from .adapters import (
+flx/src/flx/adapters/__init__.py:17: in <module>
+    from flx.core import (
+flx/src/flx/core/__init__.py:41: in <module>
+    from .async_events import (
+E   ImportError: cannot import name 'flx_create_async_event_handler' from 'flx.core.async_events' (/home/marlonsc/pyauto/flx/src/flx/core/async_events.py)[0m
+[31m[1m___________________ ERROR collecting tests/test_comprehensive_flx_suite.py ____________________[0m
+[31mImportError while importing test module '/home/marlonsc/pyauto/flx/tests/test_comprehensive_flx_suite.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+flx/tests/test_comprehensive_flx_suite.py:15: in <module>
+    from flx.core import FlxApplication, FlxApplicationBuilder
+flx/src/flx/__init__.py:22: in <module>
+    from .adapters import (
+flx/src/flx/adapters/__init__.py:17: in <module>
+    from flx.core import (
+flx/src/flx/core/__init__.py:41: in <module>
+    from .async_events import (
+E   ImportError: cannot import name 'flx_create_async_event_handler' from 'flx.core.async_events' (/home/marlonsc/pyauto/flx/src/flx/core/async_events.py)[0m
+[31m[1m__________________ ERROR collecting tests/test_core_logging_async_events.py ___________________[0m
+[31m.venv/lib/python3.13/site-packages/_pytest/python.py:493: in importtestmodule
+    mod = import_path(
+.venv/lib/python3.13/site-packages/_pytest/pathlib.py:587: in import_path
+    importlib.import_module(module_name)
+/usr/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1331: in _find_and_load_unlocked
+    ???
+<frozen importlib._bootstrap>:935: in _load_unlocked
+    ???
+.venv/lib/python3.13/site-packages/_pytest/assertion/rewrite.py:176: in exec_module
+    source_stat, co = _rewrite_test(fn, self.config)
+.venv/lib/python3.13/site-packages/_pytest/assertion/rewrite.py:356: in _rewrite_test
+    tree = ast.parse(source, filename=strfn)
+/usr/lib/python3.13/ast.py:54: in parse
+    return compile(source, filename, mode, flags,
+E     File "/home/marlonsc/pyauto/flx/tests/test_core_logging_async_events.py", line 29
+E       from flx.infra.utils.async_event_helpers import from flx.infra.utils.async_event_helpers import flx_create_async_event_handler
+E                                                       ^^^^
+E   SyntaxError: invalid syntax[0m
+[31m[1m___________________ ERROR collecting tests/test_core_logging_monitoring.py ____________________[0m
+[31mImportError while importing test module '/home/marlonsc/pyauto/flx/tests/test_core_logging_monitoring.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+flx/tests/test_core_logging_monitoring.py:23: in <module>
+    from flx.core import (
+flx/src/flx/__init__.py:22: in <module>
+    from .adapters import (
+flx/src/flx/adapters/__init__.py:17: in <module>
+    from flx.core import (
+flx/src/flx/core/__init__.py:41: in <module>
+    from .async_events import (
+E   ImportError: cannot import name 'flx_create_async_event_handler' from 'flx.core.async_events' (/home/marlonsc/pyauto/flx/src/flx/core/async_events.py)[0m
+[31m[1m___________________ ERROR collecting tests/test_core_logging_processors.py ____________________[0m
+[31mImportError while importing test module '/home/marlonsc/pyauto/flx/tests/test_core_logging_processors.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+flx/tests/test_core_logging_processors.py:24: in <module>
+    from flx.infra.logging import (
+flx/src/flx/__init__.py:22: in <module>
+    from .adapters import (
+flx/src/flx/adapters/__init__.py:17: in <module>
+    from flx.core import (
+flx/src/flx/core/__init__.py:41: in <module>
+    from .async_events import (
+E   ImportError: cannot import name 'flx_create_async_event_handler' from 'flx.core.async_events' (/home/marlonsc/pyauto/flx/src/flx/core/async_events.py)[0m
+[31m[1m_________________________ ERROR collecting tests/test_flx_modules.py __________________________[0m
+[31mImportError while importing test module '/home/marlonsc/pyauto/flx/tests/test_flx_modules.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+flx/tests/test_flx_modules.py:11: in <module>
+    from flx.infra.logging.formatters import FlxConsoleFormatter
+flx/src/flx/__init__.py:22: in <module>
+    from .adapters import (
+flx/src/flx/adapters/__init__.py:17: in <module>
+    from flx.core import (
+flx/src/flx/core/__init__.py:41: in <module>
+    from .async_events import (
+E   ImportError: cannot import name 'flx_create_async_event_handler' from 'flx.core.async_events' (/home/marlonsc/pyauto/flx/src/flx/core/async_events.py)[0m
+[31m[1m________________________ ERROR collecting tests/test_logging_system.py ________________________[0m
+[31mImportError while importing test module '/home/marlonsc/pyauto/flx/tests/test_logging_system.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+flx/tests/test_logging_system.py:22: in <module>
+    from flx.infra.logging import (
+flx/src/flx/__init__.py:22: in <module>
+    from .adapters import (
+flx/src/flx/adapters/__init__.py:17: in <module>
+    from flx.core import (
+flx/src/flx/core/__init__.py:41: in <module>
+    from .async_events import (
+E   ImportError: cannot import name 'flx_create_async_event_handler' from 'flx.core.async_events' (/home/marlonsc/pyauto/flx/src/flx/core/async_events.py)[0m
+[31m[1m__________________ ERROR collecting tests/test_logging_validation_system.py ___________________[0m
+[31mImportError while importing test module '/home/marlonsc/pyauto/flx/tests/test_logging_validation_system.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+flx/tests/test_logging_validation_system.py:21: in <module>
+    from flx.core import (
+flx/src/flx/__init__.py:22: in <module>
+    from .adapters import (
+flx/src/flx/adapters/__init__.py:17: in <module>
+    from flx.core import (
+flx/src/flx/core/__init__.py:41: in <module>
+    from .async_events import (
+E   ImportError: cannot import name 'flx_create_async_event_handler' from 'flx.core.async_events' (/home/marlonsc/pyauto/flx/src/flx/core/async_events.py)[0m
+[31m[1m__________________ ERROR collecting tests/unit/core/domain/test_entities.py ___________________[0m
+[31mImportError while importing test module '/home/marlonsc/pyauto/flx/tests/unit/core/domain/test_entities.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+flx/tests/unit/core/domain/test_entities.py:17: in <module>
+    from flx.core import (
+flx/src/flx/__init__.py:22: in <module>
+    from .adapters import (
+flx/src/flx/adapters/__init__.py:17: in <module>
+    from flx.core import (
+flx/src/flx/core/__init__.py:41: in <module>
+    from .async_events import (
+E   ImportError: cannot import name 'flx_create_async_event_handler' from 'flx.core.async_events' (/home/marlonsc/pyauto/flx/src/flx/core/async_events.py)[0m
+[31m[1m______ ERROR collecting tests/unit/core/entities/test_solid_principles_implementation.py ______[0m
+[31mImportError while importing test module '/home/marlonsc/pyauto/flx/tests/unit/core/entities/test_solid_principles_implementation.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+flx/tests/unit/core/entities/test_solid_principles_implementation.py:23: in <module>
+    from flx.core import (
+flx/src/flx/__init__.py:22: in <module>
+    from .adapters import (
+flx/src/flx/adapters/__init__.py:17: in <module>
+    from flx.core import (
+flx/src/flx/core/__init__.py:41: in <module>
+    from .async_events import (
+E   ImportError: cannot import name 'flx_create_async_event_handler' from 'flx.core.async_events' (/home/marlonsc/pyauto/flx/src/flx/core/async_events.py)[0m
+[31m[1m_______________ ERROR collecting tests/unit/infrastructure/ldap/test_client.py ________________[0m
+[31mImportError while importing test module '/home/marlonsc/pyauto/flx/tests/unit/infrastructure/ldap/test_client.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+flx/tests/unit/infrastructure/ldap/test_client.py:14: in <module>
+    from flx.infra.ldap.client import FlxLdapClient, flx_create_ldap_client, flx_create_ldap_client_from_env
+flx/src/flx/__init__.py:22: in <module>
+    from .adapters import (
+flx/src/flx/adapters/__init__.py:17: in <module>
+    from flx.core import (
+flx/src/flx/core/__init__.py:41: in <module>
+    from .async_events import (
+E   ImportError: cannot import name 'flx_create_async_event_handler' from 'flx.core.async_events' (/home/marlonsc/pyauto/flx/src/flx/core/async_events.py)[0m
+[31m[1m_______________ ERROR collecting tests/unit/infrastructure/ldap/test_config.py ________________[0m
+[31mImportError while importing test module '/home/marlonsc/pyauto/flx/tests/unit/infrastructure/ldap/test_config.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+flx/tests/unit/infrastructure/ldap/test_config.py:15: in <module>
+    from flx.infra.ldap.config import (
+flx/src/flx/__init__.py:22: in <module>
+    from .adapters import (
+flx/src/flx/adapters/__init__.py:17: in <module>
+    from flx.core import (
+flx/src/flx/core/__init__.py:41: in <module>
+    from .async_events import (
+E   ImportError: cannot import name 'flx_create_async_event_handler' from 'flx.core.async_events' (/home/marlonsc/pyauto/flx/src/flx/core/async_events.py)[0m
+[31m[1m_____________ ERROR collecting tests/unit/infrastructure/ldap/test_connection.py ______________[0m
+[31mImportError while importing test module '/home/marlonsc/pyauto/flx/tests/unit/infrastructure/ldap/test_connection.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+flx/tests/unit/infrastructure/ldap/test_connection.py:14: in <module>
+    from flx.infra.ldap.config import FlxLdapConfig
+flx/src/flx/__init__.py:22: in <module>
+    from .adapters import (
+flx/src/flx/adapters/__init__.py:17: in <module>
+    from flx.core import (
+flx/src/flx/core/__init__.py:41: in <module>
+    from .async_events import (
+E   ImportError: cannot import name 'flx_create_async_event_handler' from 'flx.core.async_events' (/home/marlonsc/pyauto/flx/src/flx/core/async_events.py)[0m
+[31m[1m_____________ ERROR collecting tests/unit/infrastructure/ldap/test_exceptions.py ______________[0m
+[31mImportError while importing test module '/home/marlonsc/pyauto/flx/tests/unit/infrastructure/ldap/test_exceptions.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+flx/tests/unit/infrastructure/ldap/test_exceptions.py:11: in <module>
+    from flx.infra.ldap.exceptions import (
+flx/src/flx/__init__.py:22: in <module>
+    from .adapters import (
+flx/src/flx/adapters/__init__.py:17: in <module>
+    from flx.core import (
+flx/src/flx/core/__init__.py:41: in <module>
+    from .async_events import (
+E   ImportError: cannot import name 'flx_create_async_event_handler' from 'flx.core.async_events' (/home/marlonsc/pyauto/flx/src/flx/core/async_events.py)[0m
+[31m[1m_______________ ERROR collecting tests/unit/infrastructure/ldap/test_schema.py ________________[0m
+[31mImportError while importing test module '/home/marlonsc/pyauto/flx/tests/unit/infrastructure/ldap/test_schema.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+flx/tests/unit/infrastructure/ldap/test_schema.py:13: in <module>
+    from flx.infra.ldap.config import FlxLdapConfig
+flx/src/flx/__init__.py:22: in <module>
+    from .adapters import (
+flx/src/flx/adapters/__init__.py:17: in <module>
+    from flx.core import (
+flx/src/flx/core/__init__.py:41: in <module>
+    from .async_events import (
+E   ImportError: cannot import name 'flx_create_async_event_handler' from 'flx.core.async_events' (/home/marlonsc/pyauto/flx/src/flx/core/async_events.py)[0m
+[31m[1m_______________ ERROR collecting tests/unit/infrastructure/test_http_client.py ________________[0m
+[31mImportError while importing test module '/home/marlonsc/pyauto/flx/tests/unit/infrastructure/test_http_client.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+flx/tests/unit/infrastructure/test_http_client.py:5: in <module>
+    from flx.infra.http import (
+flx/src/flx/__init__.py:22: in <module>
+    from .adapters import (
+flx/src/flx/adapters/__init__.py:17: in <module>
+    from flx.core import (
+flx/src/flx/core/__init__.py:41: in <module>
+    from .async_events import (
+E   ImportError: cannot import name 'flx_create_async_event_handler' from 'flx.core.async_events' (/home/marlonsc/pyauto/flx/src/flx/core/async_events.py)[0m
+-------------- generated xml file: /home/marlonsc/pyauto/junit/test-results.xml ---------------
+------- Generated html report: file:///home/marlonsc/pyauto/reports/pytest/report.html --------
+[36m[1m=================================== short test summary info ===================================[0m
+[31mERROR[0m flx/tests/adapters/ingoing/cli/test_cli_adapter.py
+[31mERROR[0m flx/tests/adapters/ingoing/cli/test_cyclopts_cli.py
+[31mERROR[0m flx/tests/cli/test_adapter_commands_comprehensive.py
+[31mERROR[0m flx/tests/cli/test_flx_cli.py
+[31mERROR[0m flx/tests/infrastructure/logging/test_async_task_manager.py
+[31mERROR[0m flx/tests/infrastructure/logging/test_shutdown_metrics.py
+[31mERROR[0m flx/tests/integration/framework/test_public_api_interface.py
+[31mERROR[0m flx/tests/test_adaptive_cache.py
+[31mERROR[0m flx/tests/test_adaptive_ratelimit.py
+[31mERROR[0m flx/tests/test_async_domain_integration.py
+[31mERROR[0m flx/tests/test_cli.py
+[31mERROR[0m flx/tests/test_comprehensive_flx_suite.py
+[31mERROR[0m flx/tests/test_core_logging_async_events.py
+[31mERROR[0m flx/tests/test_core_logging_monitoring.py
+[31mERROR[0m flx/tests/test_core_logging_processors.py
+[31mERROR[0m flx/tests/test_flx_modules.py
+[31mERROR[0m flx/tests/test_logging_system.py
+[31mERROR[0m flx/tests/test_logging_validation_system.py
+[31mERROR[0m flx/tests/unit/core/domain/test_entities.py
+[31mERROR[0m flx/tests/unit/core/entities/test_solid_principles_implementation.py
+[31mERROR[0m flx/tests/unit/infrastructure/ldap/test_client.py
+[31mERROR[0m flx/tests/unit/infrastructure/ldap/test_config.py
+[31mERROR[0m flx/tests/unit/infrastructure/ldap/test_connection.py
+[31mERROR[0m flx/tests/unit/infrastructure/ldap/test_exceptions.py
+[31mERROR[0m flx/tests/unit/infrastructure/ldap/test_schema.py
+[31mERROR[0m flx/tests/unit/infrastructure/test_http_client.py
+!!!!!!!!!!!!!!!!!!!!!!!!!! Interrupted: 26 errors during collection !!!!!!!!!!!!!!!!!!!!!!!!!!!
+[31m===================================== [31m[1m26 errors[0m[31m in 0.70s[0m[31m ======================================[0m
