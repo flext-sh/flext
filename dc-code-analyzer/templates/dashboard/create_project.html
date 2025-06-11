@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Project - Code Analyzer{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2"><i class="fas fa-plus"></i> Create New Project</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group me-2">
+            <a href="{% url 'dashboard:projects_list' %}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Projects
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-folder-plus"></i> Project Information</h5>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="name" class="form-label">
+                            <i class="fas fa-tag"></i> Project Name <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" class="form-control" id="name" name="name" 
+                               placeholder="Enter flx_project name" required>
+                        <div class="form-text">Choose a descriptive name for your flx_project.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="description" class="form-label">
+                            <i class="fas fa-align-left"></i> Description
+                        </label>
+                        <textarea class="form-control" id="description" name="description" 
+                                  rows="3" placeholder="Enter flx_project description (optional)"></textarea>
+                        <div class="form-text">Briefly describe what this flx_project is about.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="path" class="form-label">
+                            <i class="fas fa-folder"></i> Project Path <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" class="form-control" id="path" name="path" 
+                               placeholder="/path/to/your/flx_project" required>
+                        <div class="form-text">
+                            Full path to the directory containing your Python code.
+                            Example: <code>/home/user/my-python-flx_project</code>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i>
+                        <strong>Note:</strong> Make sure the path exists and contains Python files (.py) 
+                        that you want to analyze. The analyzer will recursively scan all subdirectories.
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'dashboard:projects_list' %}" class="btn btn-secondary me-md-2">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Create Project
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Help Section -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h6><i class="fas fa-question-circle"></i> Need Help?</h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6><i class="fas fa-lightbulb text-warning"></i> Tips</h6>
+                        <ul class="small">
+                            <li>Use absolute paths for better reliability</li>
+                            <li>Ensure the path is accessible by the application</li>
+                            <li>The directory should contain Python files (.py)</li>
+                            <li>Subdirectories will be scanned automatically</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6><i class="fas fa-examples text-info"></i> Examples</h6>
+                        <div class="small">
+                            <strong>Linux/Mac:</strong><br>
+                            <code>/home/user/my-flx_project</code><br>
+                            <code>/Users/user/projects/webapp</code><br><br>
+                            <strong>Windows:</strong><br>
+                            <code>C:\Users\User\Projects\MyApp</code><br>
+                            <code>D:\Development\python-flx_project</code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Auto-fill flx_project name based on path
+document.getElementById('path').addEventListener('blur', function() {
+    const path = this.value.trim();
+    const nameField = document.getElementById('name');
+    
+    if (path && !nameField.value) {
+        // Extract folder name from path
+        const folderName = path.split('/').pop() || path.split('\\').pop();
+        if (folderName) {
+            // Clean up folder name and capitalize
+            const cleanName = folderName
+                .replace(/[-_]/g, ' ')
+                .replace(/\b\w/g, l => l.toUpperCase());
+            nameField.value = cleanName;
+        }
+    }
+});
+</script>
+{% endblock %} 

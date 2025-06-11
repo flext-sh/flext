@@ -1,0 +1,197 @@
+name: Code Analysis
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    # Run weekly on Sundays at 2 AM UTC
+    - cron: '0 2 * * 0'
+
+env:
+  POETRY_VERSION: 2.1.3
+  PYTHON_VERSION: "3.11"
+
+jobs:
+  code-quality:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Needed for SonarCloud
+        
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        
+    - name: Install Poetry
+      uses: snok/install-poetry@v1
+      with:
+        version: ${{ env.POETRY_VERSION }}
+        virtualenvs-create: true
+        virtualenvs-in-project: true
+        
+    - name: Load cached venv
+      id: cached-poetry-dependencies
+      uses: actions/cache@v3
+      with:
+        path: .venv
+        key: venv-${{ runner.os }}-${{ env.PYTHON_VERSION }}-${{ hashFiles('**/poetry.lock') }}
+        
+    - name: Install dependencies
+      if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+      run: poetry install --no-interaction --no-root --with dev
+      
+    - name: Install project
+      run: poetry install --no-interaction
+      
+    - name: Run comprehensive code analysis
+      run: |
+        # Create reports directory
+        mkdir -p reports
+        
+        # Run ruff with JSON output
+        poetry run ruff check --output-format=json . > reports/ruff-report.json || true
+        
+        # Run bandit security analysis
+        poetry run bandit -r analyzer dashboard -f json -o reports/bandit-report.json || true
+        
+        # Run safety check
+        poetry run safety check --json --output reports/safety-report.json || true
+        
+        # Run mypy type checking
+        poetry run mypy analyzer dashboard --json-report reports/mypy || true
+        
+        # Run vulture dead code detection
+        poetry run vulture analyzer dashboard --json > reports/vulture-report.json || true
+        
+        # Run radon complexity analysis
+        poetry run radon cc analyzer dashboard -j > reports/radon-cc.json || true
+        poetry run radon mi analyzer dashboard -j > reports/radon-mi.json || true
+        poetry run radon hal analyzer dashboard -j > reports/radon-hal.json || true
+        
+    - name: Generate code metrics
+      run: |
+        # Count lines of code
+        find analyzer dashboard -name "*.py" -not -path "*/migrations/*" | xargs wc -l > reports/loc.txt
+        
+        # Generate test coverage report
+        poetry run pytest --cov=analyzer --cov=dashboard --cov-report=xml --cov-report=html --cov-report=json
+        
+    - name: SonarCloud Scan
+      if: github.actor != 'dependabot[bot]'
+      uses: SonarSource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        
+    - name: CodeQL Analysis
+      uses: github/codeql-action/init@v2
+      with:
+        languages: python
+        
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v2
+      
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
+      
+    - name: Upload analysis reports
+      uses: actions/upload-artifact@v3
+      with:
+        name: code-analysis-reports
+        path: |
+          reports/
+          htmlcov/
+          coverage.xml
+          coverage.json
+          
+    - name: Comment PR with analysis results
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+          
+          let comment = '## 📊 Code Analysis Results\n\n';
+          
+          // Add coverage info
+          try {
+            const coverage = JSON.parse(fs.readFileSync('coverage.json', 'utf8'));
+            const totalCoverage = coverage.totals.percent_covered.toFixed(1);
+            comment += `### Test Coverage: ${totalCoverage}%\n\n`;
+          } catch (e) {
+            comment += '### Test Coverage: N/A\n\n';
+          }
+          
+          // Add security issues count
+          try {
+            const bandit = JSON.parse(fs.readFileSync('reports/bandit-report.json', 'utf8'));
+            const issues = bandit.results.length;
+            comment += `### Security Issues: ${issues}\n\n`;
+          } catch (e) {
+            comment += '### Security Issues: N/A\n\n';
+          }
+          
+          // Add complexity info
+          try {
+            const radon = JSON.parse(fs.readFileSync('reports/radon-cc.json', 'utf8'));
+            let complexFunctions = 0;
+            Object.values(radon).forEach(file => {
+              file.forEach(func => {
+                if (func.complexity > 10) complexFunctions++;
+              });
+            });
+            comment += `### High Complexity Functions: ${complexFunctions}\n\n`;
+          } catch (e) {
+            comment += '### High Complexity Functions: N/A\n\n';
+          }
+          
+          comment += 'Full reports are available in the workflow artifacts.';
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: comment
+          });
+
+  dependency-review:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    steps:
+    - name: Dependency Review
+      uses: actions/dependency-review-action@v3
+      with:
+        fail-on-severity: moderate
+        
+  license-check:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        
+    - name: Install Poetry
+      uses: snok/install-poetry@v1
+      with:
+        version: ${{ env.POETRY_VERSION }}
+        
+    - name: Check licenses
+      run: |
+        poetry install --no-interaction
+        poetry run pip-licenses --format json --output-file licenses.json
+        
+    - name: Upload license report
+      uses: actions/upload-artifact@v3
+      with:
+        name: license-report
+        path: licenses.json

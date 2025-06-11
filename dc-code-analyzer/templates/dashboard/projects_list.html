@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% block title %}Projects - Code Analyzer{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2"><i class="fas fa-folder-open"></i> Projects</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group me-2">
+            <a href="{% url 'dashboard:create_project' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> New Project
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Search -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <form method="get" class="d-flex">
+            <input type="text" name="search" class="form-control me-2" 
+                   placeholder="Search projects..." value="{{ search_query }}">
+            <button class="btn btn-outline-secondary" type="submit">
+                <i class="fas fa-search"></i>
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- Projects List -->
+{% if page_obj %}
+    <div class="row">
+        {% for flx_project in page_obj %}
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a href="{% url 'dashboard:project_detail' flx_project.id %}" class="text-decoration-none">
+                                {{ flx_project.name }}
+                            </a>
+                        </h5>
+                        <p class="card-text text-muted">
+                            {{ flx_project.description|default:"No description provided"|truncatechars:100 }}
+                        </p>
+                        <div class="mb-3">
+                            <small class="text-muted">
+                                <i class="fas fa-folder"></i> {{ flx_project.path|truncatechars:50 }}
+                            </small>
+                        </div>
+                        <div class="row text-center">
+                            <div class="col-4">
+                                <div class="small text-muted">Files</div>
+                                <strong>{{ flx_project.total_files|default:0 }}</strong>
+                            </div>
+                            <div class="col-4">
+                                <div class="small text-muted">Lines</div>
+                                <strong>{{ flx_project.total_lines|default:0 }}</strong>
+                            </div>
+                            <div class="col-4">
+                                <div class="small text-muted">Python</div>
+                                <strong>{{ flx_project.python_files|default:0 }}</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">
+                                Updated {{ flx_project.updated_at|timesince }} ago
+                            </small>
+                            <a href="{% url 'dashboard:project_detail' flx_project.id %}" class="btn btn-sm btn-outline-primary">
+                                View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if page_obj.has_other_pages %}
+        <nav aria-label="Projects pagination">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?{% if search_query %}search={{ search_query }}&{% endif %}page={{ page_obj.previous_page_number }}">
+                            Previous
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ num }}</span>
+                        </li>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <li class="page-item">
+                            <a class="page-link" href="?{% if search_query %}search={{ search_query }}&{% endif %}page={{ num }}">{{ num }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?{% if search_query %}search={{ search_query }}&{% endif %}page={{ page_obj.next_page_number }}">
+                            Next
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+
+{% else %}
+    <div class="text-center py-5">
+        <i class="fas fa-folder-open fa-4x text-muted mb-4"></i>
+        <h4>No Projects Found</h4>
+        <p class="text-muted">
+            {% if search_query %}
+                No projects match your search "{{ search_query }}".
+                <a href="{% url 'dashboard:projects_list' %}">Clear search</a>
+            {% else %}
+                You haven't created any projects yet.
+            {% endif %}
+        </p>
+        <a href="{% url 'dashboard:create_project' %}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Create Your First Project
+        </a>
+    </div>
+{% endif %}
+{% endblock %} 

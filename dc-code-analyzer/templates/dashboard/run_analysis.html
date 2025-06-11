@@ -1,0 +1,87 @@
+{% extends "dashboard/base.html" %}
+{% load static %}
+
+{% block title %}Run Analysis - {{ flx_project.name }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Run Analysis for {{ flx_project.name }}</h1>
+        <a href="{% url 'dashboard:project_detail' flx_project.id %}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Project
+        </a>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Analysis Configuration</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="form-group mb-4">
+                            <label class="form-label">Select Analysis Backends:</label>
+                            <div class="row">
+                                {% for backend in available_backends %}
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" 
+                                               name="backends" value="{{ backend.name }}" 
+                                               id="{{ backend.name }}" checked>
+                                        <label class="form-check-label" for="{{ backend.name }}">
+                                            <strong>{{ backend.name|title }}</strong>
+                                            <br>
+                                            <small class="text-muted">{{ backend.description }}</small>
+                                        </label>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-play"></i> Start Analysis
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Analysis Information</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Project:</strong> {{ flx_project.name }}</p>
+                    <p><strong>Path:</strong> <code>{{ flx_project.path }}</code></p>
+                    
+                    <hr>
+                    
+                    <h6>What will be analyzed:</h6>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-check text-success"></i> Code structure (classes, functions)</li>
+                        <li><i class="fas fa-check text-success"></i> Complexity metrics</li>
+                        <li><i class="fas fa-check text-success"></i> Security vulnerabilities</li>
+                        <li><i class="fas fa-check text-success"></i> Code quality indicators</li>
+                        <li><i class="fas fa-check text-success"></i> Import analysis</li>
+                        <li><i class="fas fa-check text-success"></i> Dead code detection</li>
+                    </ul>
+                    
+                    <div class="alert alert-info">
+                        <small>
+                            <i class="fas fa-info-circle"></i>
+                            Analysis may take a few minutes depending on flx_project size.
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
