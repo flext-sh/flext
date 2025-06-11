@@ -1,0 +1,105 @@
+reports/
+.scaffold-tracking/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# Environment
+.env
+.venv
+env/
+venv/
+ENV/
+env*/
+
+# Poetry
+poetry.lock
+.poetry-cache/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# ruff
+.ruff_cache/
+
+# Jupyter
+.ipynb_checkpoints
+*.ipynb
+
+# IDE specific files
+.idea/
+.vscode/
+.cursor/
+*.swp
+*.swo
+.DS_Store
+
+# Project specific
+logs/
+*.log
+output/
+temp/
+tmp/
+
+# Security and credentials - NEVER COMMIT
+*.pem
+*.key
+*.crt
+secret*
+*.secret
+credentials.json
+.internal.invalid
+.env.*.local
+
+# Cache
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~
+*.bkp
+
+# Let's maintain locks only for root
+**/poetry.lock
+!/poetry.lock  # Only keep root poetry.lock 

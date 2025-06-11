@@ -1,0 +1,128 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+        - staging
+        - production
+
+env:
+  POETRY_VERSION: 2.1.3
+  PYTHON_VERSION: "3.11"
+
+jobs:
+  deploy-staging:
+    if: github.ref == 'refs/heads/develop' || (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'staging')
+    runs-on: ubuntu-latest
+    environment: staging
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        
+    - name: Install Poetry
+      uses: snok/install-poetry@v1
+      with:
+        version: ${{ env.POETRY_VERSION }}
+        
+    - name: Build Docker image
+      run: |
+        docker build -t dc-code-analyzer:staging .
+        
+    - name: Deploy to staging
+      run: |
+        echo "Deploying to staging environment..."
+        # Add your deployment commands here
+        # Examples:
+        # - Deploy to cloud provider
+        # - Update Kubernetes manifests
+        # - Run database migrations
+        # - Update configuration
+        
+    - name: Run health checks
+      run: |
+        echo "Running health checks..."
+        # Add health check commands here
+        
+    - name: Notify deployment status
+      if: always()
+      run: |
+        if [ "${{ job.status }}" = "success" ]; then
+          echo "✅ Staging deployment successful"
+        else
+          echo "❌ Staging deployment failed"
+        fi
+
+  deploy-production:
+    if: github.ref == 'refs/heads/main' || (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'production')
+    runs-on: ubuntu-latest
+    environment: production
+    needs: []  # Add dependencies if needed
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        
+    - name: Install Poetry
+      uses: snok/install-poetry@v1
+      with:
+        version: ${{ env.POETRY_VERSION }}
+        
+    - name: Build Docker image
+      run: |
+        docker build -t dc-code-analyzer:production .
+        
+    - name: Deploy to production
+      run: |
+        echo "Deploying to production environment..."
+        # Add your deployment commands here
+        # Examples:
+        # - Deploy to cloud provider
+        # - Update Kubernetes manifests
+        # - Run database migrations
+        # - Update configuration
+        # - Blue-green deployment
+        
+    - name: Run health checks
+      run: |
+        echo "Running production health checks..."
+        # Add comprehensive health check commands here
+        
+    - name: Notify deployment status
+      if: always()
+      run: |
+        if [ "${{ job.status }}" = "success" ]; then
+          echo "✅ Production deployment successful"
+        else
+          echo "❌ Production deployment failed"
+        fi
+
+  rollback:
+    if: failure() && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production
+    needs: [deploy-production]
+    
+    steps:
+    - name: Rollback production deployment
+      run: |
+        echo "Rolling back production deployment..."
+        # Add rollback commands here

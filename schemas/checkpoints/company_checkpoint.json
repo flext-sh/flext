@@ -1,0 +1,29 @@
+{
+  "entity_name": "company",
+  "checkpoint_version": "1.0",
+  "saved_at": "2025-06-02T20:11:43.525689+00:00",
+  "checkpoint_id": "7b168b3a-02bd-42b2-9983-1cf21dec9ad5",
+  "extraction_id": "eb70b3d6-6b61-42fb-8855-01cd9ff16639",
+  "status": "completed",
+  "started_at": "2025-06-02T20:11:43.041601+00:00",
+  "last_checkpoint_at": 1748895103.5253677,
+  "total_records_processed": 2,
+  "current_page": 1,
+  "last_processed_id": 198,
+  "page_size": 10000,
+  "sort_order": "-id",
+  "progress_percentage": 0.0,
+  "estimated_total_records": null,
+  "estimated_completion": null,
+  "error_count": 0,
+  "last_error": null,
+  "performance_metrics": {
+    "records_per_second": 0.0,
+    "pages_per_minute": 0.0,
+    "average_response_time": 0.0
+  },
+  "max_records_limit": 3,
+  "export_format": "json",
+  "output_file": null,
+  "completed_at": 1748895103.5256882
+}

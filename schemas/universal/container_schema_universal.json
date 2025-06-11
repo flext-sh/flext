@@ -1,0 +1,1920 @@
+{
+  "entity_name": "container",
+  "version": "1.0",
+  "source_system": "oracle_wms",
+  "extracted_at": "2025-06-03T12:54:53.761303+00:00",
+  "source_schema": {
+    "entity_name": "container",
+    "fields": {
+      "actual_weight_flg": {
+        "type": "boolean",
+        "required": true,
+        "nullable": false,
+        "sample_count": 5,
+        "value_count": 5,
+        "null_count": 0,
+        "field_name_hints": []
+      },
+      "ref_po_nbr": {
+        "type": "string",
+        "required": true,
+        "nullable": false,
+        "sample_count": 5,
+        "value_count": 5,
+        "null_count": 0,
+        "min_length": 6,
+        "max_length": 6,
+        "avg_length": 6.0,
+        "unique_values": 2,
+        "field_name_hints": []
+      },
+      "price_labels_printed": {
+        "type": "boolean",
+        "required": true,
+        "nullable": false,
+        "sample_count": 5,
+        "value_count": 5,
+        "null_count": 0,
+        "field_name_hints": [
+          "name"
+        ]
+      },
+      "asset_seal_nbr": {
+        "type": "string",
+        "required": true,
+        "nullable": false,
+        "sample_count": 5,
+        "value_count": 5,
+        "null_count": 0,
+        "min_length": 0,
+        "max_length": 0,
+        "avg_length": 0.0,
+        "unique_values": 1,
+        "field_name_hints": []
+      },
+      "inventory_lock_set": {
+        "type": "string",
+        "required": false,
+        "nullable": true,
+        "sample_count": 5,
+        "value_count": 0,
+        "null_count": 5,
+        "field_name_hints": []
+      },
+      "length": {
+        "type": "string",
+        "required": true,
+        "nullable": false,
+        "sample_count": 5,
+        "value_count": 5,
+        "null_count": 0,
+        "min_length": 1,
+        "max_length": 1,
+        "avg_length": 1.0,
+        "unique_values": 1,
+        "field_name_hints": []
+      },
+      "first_putaway_ts": {
+        "type": "datetime",
+        "required": true,
+        "nullable": false,
+        "sample_count": 5,
+        "value_count": 5,
+        "null_count": 0,
+        "field_name_hints": []
+      },
+      "facility_id": {
+        "type": "object",
+        "required": true,
+        "nullable": false,
+        "sample_count": 5,
+        "value_count": 5,
+        "null_count": 0,
+        "field_name_hints": [
+          "id"
+        ],
+        "possible_foreign_key": true
+      },
+      "mod_user": {
+        "type": "string",
+        "required": true,
+        "nullable": false,
+        "sample_count": 5,
+        "value_count": 5,
+        "null_count": 0,
+        "min_length": 5,
+        "max_length": 8,
+        "avg_length": 5.6,
+        "unique_values": 3,
+        "field_name_hints": []
+      },
+      "rcvd_shipment_id": {
+        "type": "object",
+        "required": true,
+        "nullable": false,
+        "sample_count": 5,
+        "value_count": 5,
+        "null_count": 0,
+        "field_name_hints": [
+          "id"
+        ],
+        "possible_foreign_key": true
+      },
+      "pick_user": {
+        "type": "string",
+        "required": true,
+        "nullable": false,
+        "sample_count": 5,
+        "value_count": 5,
+        "null_count": 0,
+        "min_length": 0,
+        "max_length": 0,
+        "avg_length": 0.0,
+        "unique_values": 1,
+        "field_name_hints": []
+      },
+      "vas_status_id": {
+        "type": "integer",
+        "required": true,
+        "nullable": false,
+        "sample_count": 5,
+        "value_count": 5,
+        "null_count": 0,
+        "min_value": 0,
+        "max_value": 0,
+        "avg_value": 0.0,
+        "field_name_hints": [
+          "id",
+          "status"
+        ],
+        "possible_foreign_key": true
+      },
+      "volume": {
+        "type": "string",
+        "required": true,
+        "nullable": false,
+        "sample_count": 5,
+        "value_count": 5,
+        "null_count": 0,
+        "min_length": 1,
+        "max_length": 8,
+        "avg_length": 2.4,
+        "unique_values": 2,
+        "field_name_hints": []
+      },
+      "orig_container_nbr": {
+        "type": "string",
+        "required": true,
+        "nullable": false,
+        "sample_count": 5,
+        "value_count": 5,
+        "null_count": 0,
+        "min_length": 25,
+        "max_length": 25,
+        "avg_length": 25.0,
+        "unique_values": 5,
+        "field_name_hints": []
+      },
+      "curr_location_id": {
+        "type": "string",
+        "required": false,
+        "nullable": true,
+        "sample_count": 5,
+        "value_count": 0,
+        "null_count": 5,
+        "field_name_hints": [
+          "id",
+          "address"
+        ],
+        "possible_foreign_key": true
+      },
+      "qc_status_id": {
+        "type": "integer",
+        "required": true,
+        "nullable": false,
+        "sample_count": 5,
+        "value_count": 5,
+        "null_count": 0,
+        "min_value": 0,
+        "max_value": 0,
+        "avg_value": 0.0,
+        "field_name_hints": [
+          "id",
+          "status"
+        ],
+        "possible_foreign_key": true
+      },
+      "status_id": {
+        "type": "integer",
+        "required": true,
+        "nullable": false,
+        "sample_count": 5,
+        "value_count": 5,
+        "null_count": 0,
+        "min_value": 90,
+        "max_value": 99,
+        "avg_value": 97.2,
+        "field_name_hints": [
+          "id",
+          "status"
+        ],
+        "possible_foreign_key": true
+      },
+      "ref_iblpn_nbr": {
+        "type": "string",
+        "required": true,
+        "nullable": false,
+        "sample_count": 5,
+        "value_count": 5,
+        "null_count": 0,
+        "min_length": 0,
+        "max_length": 0,
+        "avg_length": 0.0,
+        "unique_values": 1,
+        "field_name_hints": []
+      },
+      "rcvd_user": {
+        "type": "string",
+        "required": true,
+        "nullable": false,
+        "sample_count": 5,
+        "value_count": 5,
+        "null_count": 0,
+        "min_length": 5,
+        "max_length": 5,
+        "avg_length": 5.0,
+        "unique_values": 2,
+        "field_name_hints": []
+      },
+      "pack_user": {
+        "type": "string",
+        "required": true,
+        "nullable": false,
+        "sample_count": 5,
+        "value_count": 5,
+        "null_count": 0,
+        "min_length": 0,
+        "max_length": 0,
+        "avg_length": 0.0,
+        "unique_values": 1,
+        "field_name_hints": []
+      },
+      "ref_shipment_nbr": {
+        "type": "string",
+        "required": true,
+        "nullable": false,
+        "sample_count": 5,
+        "value_count": 5,
+        "null_count": 0,
+        "min_length": 0,
+        "max_length": 0,
+        "avg_length": 0.0,
+        "unique_values": 1,
+        "field_name_hints": []
+      },
+      "weight": {
+        "type": "string",
+        "required": true,
+        "nullable": false,
+        "sample_count": 5,
+        "value_count": 5,
+        "null_count": 0,
+        "min_length": 1,
+        "max_length": 3,
+        "avg_length": 1.4,
+        "unique_values": 2,
+        "field_name_hints": []
+      },
+      "mod_ts": {
+        "type": "datetime",
+        "required": true,
+        "nullable": false,
+        "sample_count": 5,
+        "value_count": 5,
+        "null_count": 0,
+        "field_name_hints": []
+      },
+      "container_nbr": {
+        "type": "string",
+        "required": true,
+        "nullable": false,
+        "sample_count": 5,
+        "value_count": 5,
+        "null_count": 0,
+        "min_length": 25,
+        "max_length": 25,
+        "avg_length": 25.0,
+        "unique_values": 5,
+        "field_name_hints": []
+      },
+      "url": {
+        "type": "url",
+        "required": true,
+        "nullable": false,
+        "sample_count": 5,
+        "value_count": 5,
+        "null_count": 0,
+        "field_name_hints": []
+      },
+      "putawaytype_id": {
+        "type": "object",
+        "required": true,
+        "nullable": false,
+        "sample_count": 5,
+        "value_count": 5,
+        "null_count": 0,
+        "field_name_hints": [
+          "id"
+        ],
+        "possible_foreign_key": true
+      },
+      "rcvd_trailer_nbr": {
+        "type": "string",
+        "required": true,
+        "nullable": false,
+        "sample_count": 5,
+        "value_count": 5,
+        "null_count": 0,
+        "min_length": 0,
+        "max_length": 0,
+        "avg_length": 0.0,
+        "unique_values": 1,
+        "field_name_hints": []
+      },
+      "priority_date": {
+        "type": "string",
+        "required": false,
+        "nullable": true,
+        "sample_count": 5,
+        "value_count": 0,
+        "null_count": 5,
+        "field_name_hints": [
+          "date"
+        ],
+        "possible_timestamp": true
+      },
+      "asset_id": {
+        "type": "string",
+        "required": false,
+        "nullable": true,
+        "sample_count": 5,
+        "value_count": 0,
+        "null_count": 5,
+        "field_name_hints": [
+          "id"
+        ],
+        "possible_foreign_key": true
+      },
+      "cust_field_4": {
+        "type": "string",
+        "required": true,
+        "nullable": false,
+        "sample_count": 5,
+        "value_count": 5,
+        "null_count": 0,
+        "min_length": 0,
+        "max_length": 0,
+        "avg_length": 0.0,
+        "unique_values": 1,
+        "field_name_hints": []
+      },
+      "lpn_type_id": {
+        "type": "string",
+        "required": false,
+        "nullable": true,
+        "sample_count": 5,
+        "value_count": 0,
+        "null_count": 5,
+        "field_name_hints": [
+          "id"
+        ],
+        "possible_foreign_key": true
+      },
+      "cust_field_5": {
+        "type": "string",
+        "required": true,
+        "nullable": false,
+        "sample_count": 5,
+        "value_count": 5,
+        "null_count": 0,
+        "min_length": 0,
+        "max_length": 0,
+        "avg_length": 0.0,
+        "unique_values": 1,
+        "field_name_hints": []
+      },
+      "create_ts": {
+        "type": "datetime",
+        "required": true,
+        "nullable": false,
+        "sample_count": 5,
+        "value_count": 5,
+        "null_count": 0,
+        "field_name_hints": []
+      },
+      "create_user": {
+        "type": "string",
+        "required": true,
+        "nullable": false,
+        "sample_count": 5,
+        "value_count": 5,
+        "null_count": 0,
+        "min_length": 5,
+        "max_length": 5,
+        "avg_length": 5.0,
+        "unique_values": 2,
+        "field_name_hints": []
+      },
+      "audit_status_id": {
+        "type": "integer",
+        "required": true,
+        "nullable": false,
+        "sample_count": 5,
+        "value_count": 5,
+        "null_count": 0,
+        "min_value": 10,
+        "max_value": 10,
+        "avg_value": 10.0,
+        "field_name_hints": [
+          "id",
+          "status"
+        ],
+        "possible_foreign_key": true
+      },
+      "pallet_position": {
+        "type": "string",
+        "required": true,
+        "nullable": false,
+        "sample_count": 5,
+        "value_count": 5,
+        "null_count": 0,
+        "min_length": 0,
+        "max_length": 0,
+        "avg_length": 0.0,
+        "unique_values": 1,
+        "field_name_hints": []
+      },
+      "cart_posn_nbr": {
+        "type": "integer",
+        "required": true,
+        "nullable": false,
+        "sample_count": 5,
+        "value_count": 5,
+        "null_count": 0,
+        "min_value": 0,
+        "max_value": 0,
+        "avg_value": 0.0,
+        "field_name_hints": []
+      },
+      "cust_field_1": {
+        "type": "string",
+        "required": true,
+        "nullable": false,
+        "sample_count": 5,
+        "value_count": 5,
+        "null_count": 0,
+        "min_length": 0,
+        "max_length": 0,
+        "avg_length": 0.0,
+        "unique_values": 1,
+        "field_name_hints": []
+      },
+      "rcvd_ts": {
+        "type": "datetime",
+        "required": true,
+        "nullable": false,
+        "sample_count": 5,
+        "value_count": 5,
+        "null_count": 0,
+        "field_name_hints": []
+      },
+      "cust_field_2": {
+        "type": "string",
+        "required": true,
+        "nullable": false,
+        "sample_count": 5,
+        "value_count": 5,
+        "null_count": 0,
+        "min_length": 0,
+        "max_length": 0,
+        "avg_length": 0.0,
+        "unique_values": 1,
+        "field_name_hints": []
+      },
+      "pallet_id": {
+        "type": "object",
+        "required": false,
+        "nullable": true,
+        "sample_count": 5,
+        "value_count": 3,
+        "null_count": 2,
+        "field_name_hints": [
+          "id"
+        ],
+        "possible_foreign_key": true
+      },
+      "ref_oblpn_nbr": {
+        "type": "string",
+        "required": true,
+        "nullable": false,
+        "sample_count": 5,
+        "value_count": 5,
+        "null_count": 0,
+        "min_length": 0,
+        "max_length": 0,
+        "avg_length": 0.0,
+        "unique_values": 1,
+        "field_name_hints": []
+      },
+      "width": {
+        "type": "string",
+        "required": true,
+        "nullable": false,
+        "sample_count": 5,
+        "value_count": 5,
+        "null_count": 0,
+        "min_length": 1,
+        "max_length": 1,
+        "avg_length": 1.0,
+        "unique_values": 1,
+        "field_name_hints": [
+          "id"
+        ]
+      },
+      "id": {
+        "type": "integer",
+        "required": true,
+        "nullable": false,
+        "sample_count": 5,
+        "value_count": 5,
+        "null_count": 0,
+        "min_value": 2,
+        "max_value": 6,
+        "avg_value": 4.0,
+        "field_name_hints": [
+          "id"
+        ],
+        "possible_foreign_key": true
+      },
+      "height": {
+        "type": "string",
+        "required": true,
+        "nullable": false,
+        "sample_count": 5,
+        "value_count": 5,
+        "null_count": 0,
+        "min_length": 1,
+        "max_length": 1,
+        "avg_length": 1.0,
+        "unique_values": 1,
+        "field_name_hints": []
+      },
+      "nbr_files": {
+        "type": "integer",
+        "required": true,
+        "nullable": false,
+        "sample_count": 5,
+        "value_count": 5,
+        "null_count": 0,
+        "min_value": 0,
+        "max_value": 0,
+        "avg_value": 0.0,
+        "field_name_hints": []
+      },
+      "company_id": {
+        "type": "object",
+        "required": true,
+        "nullable": false,
+        "sample_count": 5,
+        "value_count": 5,
+        "null_count": 0,
+        "field_name_hints": [
+          "id"
+        ],
+        "possible_foreign_key": true
+      },
+      "prev_location_id": {
+        "type": "object",
+        "required": true,
+        "nullable": false,
+        "sample_count": 5,
+        "value_count": 5,
+        "null_count": 0,
+        "field_name_hints": [
+          "id",
+          "address"
+        ],
+        "possible_foreign_key": true
+      },
+      "parcel_batch_flg": {
+        "type": "boolean",
+        "required": true,
+        "nullable": false,
+        "sample_count": 5,
+        "value_count": 5,
+        "null_count": 0,
+        "field_name_hints": []
+      },
+      "cust_field_3": {
+        "type": "string",
+        "required": true,
+        "nullable": false,
+        "sample_count": 5,
+        "value_count": 5,
+        "null_count": 0,
+        "min_length": 0,
+        "max_length": 0,
+        "avg_length": 0.0,
+        "unique_values": 1,
+        "field_name_hints": []
+      },
+      "comments": {
+        "type": "string",
+        "required": true,
+        "nullable": false,
+        "sample_count": 5,
+        "value_count": 5,
+        "null_count": 0,
+        "min_length": 0,
+        "max_length": 0,
+        "avg_length": 0.0,
+        "unique_values": 1,
+        "field_name_hints": [
+          "description"
+        ]
+      },
+      "type": {
+        "type": "string",
+        "required": true,
+        "nullable": false,
+        "sample_count": 5,
+        "value_count": 5,
+        "null_count": 0,
+        "min_length": 1,
+        "max_length": 1,
+        "avg_length": 1.0,
+        "unique_values": 1,
+        "field_name_hints": []
+      }
+    },
+    "metadata": {
+      "discovery_method": "data_inference",
+      "sample_size": 5,
+      "field_count": 52,
+      "confidence": "inferred",
+      "entity_name": "container",
+      "enhanced": true
+    }
+  },
+  "fields": {
+    "actual_weight_flg": {
+      "data_type": "boolean",
+      "required": true,
+      "nullable": false,
+      "description": "Field actual_weight_flg",
+      "source_mapping": {
+        "original_name": "actual_weight_flg",
+        "original_type": "boolean",
+        "original_definition": {
+          "type": "boolean",
+          "required": true,
+          "nullable": false,
+          "sample_count": 5,
+          "value_count": 5,
+          "null_count": 0,
+          "field_name_hints": []
+        }
+      }
+    },
+    "ref_po_nbr": {
+      "data_type": "string",
+      "required": true,
+      "nullable": false,
+      "description": "Field ref_po_nbr",
+      "source_mapping": {
+        "original_name": "ref_po_nbr",
+        "original_type": "string",
+        "original_definition": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "sample_count": 5,
+          "value_count": 5,
+          "null_count": 0,
+          "min_length": 6,
+          "max_length": 6,
+          "avg_length": 6.0,
+          "unique_values": 2,
+          "field_name_hints": []
+        }
+      },
+      "max_length": 6,
+      "min_length": 6
+    },
+    "price_labels_printed": {
+      "data_type": "boolean",
+      "required": true,
+      "nullable": false,
+      "description": "Field price_labels_printed",
+      "source_mapping": {
+        "original_name": "price_labels_printed",
+        "original_type": "boolean",
+        "original_definition": {
+          "type": "boolean",
+          "required": true,
+          "nullable": false,
+          "sample_count": 5,
+          "value_count": 5,
+          "null_count": 0,
+          "field_name_hints": [
+            "name"
+          ]
+        }
+      }
+    },
+    "asset_seal_nbr": {
+      "data_type": "string",
+      "required": true,
+      "nullable": false,
+      "description": "Field asset_seal_nbr",
+      "source_mapping": {
+        "original_name": "asset_seal_nbr",
+        "original_type": "string",
+        "original_definition": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "sample_count": 5,
+          "value_count": 5,
+          "null_count": 0,
+          "min_length": 0,
+          "max_length": 0,
+          "avg_length": 0.0,
+          "unique_values": 1,
+          "field_name_hints": []
+        }
+      },
+      "max_length": 0,
+      "min_length": 0
+    },
+    "inventory_lock_set": {
+      "data_type": "string",
+      "required": false,
+      "nullable": true,
+      "description": "Field inventory_lock_set",
+      "source_mapping": {
+        "original_name": "inventory_lock_set",
+        "original_type": "string",
+        "original_definition": {
+          "type": "string",
+          "required": false,
+          "nullable": true,
+          "sample_count": 5,
+          "value_count": 0,
+          "null_count": 5,
+          "field_name_hints": []
+        }
+      }
+    },
+    "length": {
+      "data_type": "string",
+      "required": true,
+      "nullable": false,
+      "description": "Field length",
+      "source_mapping": {
+        "original_name": "length",
+        "original_type": "string",
+        "original_definition": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "sample_count": 5,
+          "value_count": 5,
+          "null_count": 0,
+          "min_length": 1,
+          "max_length": 1,
+          "avg_length": 1.0,
+          "unique_values": 1,
+          "field_name_hints": []
+        }
+      },
+      "max_length": 1,
+      "min_length": 1
+    },
+    "first_putaway_ts": {
+      "data_type": "datetime",
+      "required": true,
+      "nullable": false,
+      "description": "Field first_putaway_ts",
+      "source_mapping": {
+        "original_name": "first_putaway_ts",
+        "original_type": "datetime",
+        "original_definition": {
+          "type": "datetime",
+          "required": true,
+          "nullable": false,
+          "sample_count": 5,
+          "value_count": 5,
+          "null_count": 0,
+          "field_name_hints": []
+        }
+      }
+    },
+    "facility_id": {
+      "data_type": "object",
+      "required": true,
+      "nullable": false,
+      "description": "Field facility_id",
+      "source_mapping": {
+        "original_name": "facility_id",
+        "original_type": "object",
+        "original_definition": {
+          "type": "object",
+          "required": true,
+          "nullable": false,
+          "sample_count": 5,
+          "value_count": 5,
+          "null_count": 0,
+          "field_name_hints": [
+            "id"
+          ],
+          "possible_foreign_key": true
+        }
+      }
+    },
+    "mod_user": {
+      "data_type": "string",
+      "required": true,
+      "nullable": false,
+      "description": "Field mod_user",
+      "source_mapping": {
+        "original_name": "mod_user",
+        "original_type": "string",
+        "original_definition": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "sample_count": 5,
+          "value_count": 5,
+          "null_count": 0,
+          "min_length": 5,
+          "max_length": 8,
+          "avg_length": 5.6,
+          "unique_values": 3,
+          "field_name_hints": []
+        }
+      },
+      "max_length": 8,
+      "min_length": 5
+    },
+    "rcvd_shipment_id": {
+      "data_type": "object",
+      "required": true,
+      "nullable": false,
+      "description": "Field rcvd_shipment_id",
+      "source_mapping": {
+        "original_name": "rcvd_shipment_id",
+        "original_type": "object",
+        "original_definition": {
+          "type": "object",
+          "required": true,
+          "nullable": false,
+          "sample_count": 5,
+          "value_count": 5,
+          "null_count": 0,
+          "field_name_hints": [
+            "id"
+          ],
+          "possible_foreign_key": true
+        }
+      }
+    },
+    "pick_user": {
+      "data_type": "string",
+      "required": true,
+      "nullable": false,
+      "description": "Field pick_user",
+      "source_mapping": {
+        "original_name": "pick_user",
+        "original_type": "string",
+        "original_definition": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "sample_count": 5,
+          "value_count": 5,
+          "null_count": 0,
+          "min_length": 0,
+          "max_length": 0,
+          "avg_length": 0.0,
+          "unique_values": 1,
+          "field_name_hints": []
+        }
+      },
+      "max_length": 0,
+      "min_length": 0
+    },
+    "vas_status_id": {
+      "data_type": "integer",
+      "required": true,
+      "nullable": false,
+      "description": "Field vas_status_id",
+      "source_mapping": {
+        "original_name": "vas_status_id",
+        "original_type": "integer",
+        "original_definition": {
+          "type": "integer",
+          "required": true,
+          "nullable": false,
+          "sample_count": 5,
+          "value_count": 5,
+          "null_count": 0,
+          "min_value": 0,
+          "max_value": 0,
+          "avg_value": 0.0,
+          "field_name_hints": [
+            "id",
+            "status"
+          ],
+          "possible_foreign_key": true
+        }
+      },
+      "min_value": 0,
+      "max_value": 0
+    },
+    "volume": {
+      "data_type": "string",
+      "required": true,
+      "nullable": false,
+      "description": "Field volume",
+      "source_mapping": {
+        "original_name": "volume",
+        "original_type": "string",
+        "original_definition": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "sample_count": 5,
+          "value_count": 5,
+          "null_count": 0,
+          "min_length": 1,
+          "max_length": 8,
+          "avg_length": 2.4,
+          "unique_values": 2,
+          "field_name_hints": []
+        }
+      },
+      "max_length": 8,
+      "min_length": 1
+    },
+    "orig_container_nbr": {
+      "data_type": "string",
+      "required": true,
+      "nullable": false,
+      "description": "Field orig_container_nbr",
+      "source_mapping": {
+        "original_name": "orig_container_nbr",
+        "original_type": "string",
+        "original_definition": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "sample_count": 5,
+          "value_count": 5,
+          "null_count": 0,
+          "min_length": 25,
+          "max_length": 25,
+          "avg_length": 25.0,
+          "unique_values": 5,
+          "field_name_hints": []
+        }
+      },
+      "max_length": 25,
+      "min_length": 25
+    },
+    "curr_location_id": {
+      "data_type": "string",
+      "required": false,
+      "nullable": true,
+      "description": "Field curr_location_id",
+      "source_mapping": {
+        "original_name": "curr_location_id",
+        "original_type": "string",
+        "original_definition": {
+          "type": "string",
+          "required": false,
+          "nullable": true,
+          "sample_count": 5,
+          "value_count": 0,
+          "null_count": 5,
+          "field_name_hints": [
+            "id",
+            "address"
+          ],
+          "possible_foreign_key": true
+        }
+      }
+    },
+    "qc_status_id": {
+      "data_type": "integer",
+      "required": true,
+      "nullable": false,
+      "description": "Field qc_status_id",
+      "source_mapping": {
+        "original_name": "qc_status_id",
+        "original_type": "integer",
+        "original_definition": {
+          "type": "integer",
+          "required": true,
+          "nullable": false,
+          "sample_count": 5,
+          "value_count": 5,
+          "null_count": 0,
+          "min_value": 0,
+          "max_value": 0,
+          "avg_value": 0.0,
+          "field_name_hints": [
+            "id",
+            "status"
+          ],
+          "possible_foreign_key": true
+        }
+      },
+      "min_value": 0,
+      "max_value": 0
+    },
+    "status_id": {
+      "data_type": "integer",
+      "required": true,
+      "nullable": false,
+      "description": "Field status_id",
+      "source_mapping": {
+        "original_name": "status_id",
+        "original_type": "integer",
+        "original_definition": {
+          "type": "integer",
+          "required": true,
+          "nullable": false,
+          "sample_count": 5,
+          "value_count": 5,
+          "null_count": 0,
+          "min_value": 90,
+          "max_value": 99,
+          "avg_value": 97.2,
+          "field_name_hints": [
+            "id",
+            "status"
+          ],
+          "possible_foreign_key": true
+        }
+      },
+      "min_value": 90,
+      "max_value": 99
+    },
+    "ref_iblpn_nbr": {
+      "data_type": "string",
+      "required": true,
+      "nullable": false,
+      "description": "Field ref_iblpn_nbr",
+      "source_mapping": {
+        "original_name": "ref_iblpn_nbr",
+        "original_type": "string",
+        "original_definition": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "sample_count": 5,
+          "value_count": 5,
+          "null_count": 0,
+          "min_length": 0,
+          "max_length": 0,
+          "avg_length": 0.0,
+          "unique_values": 1,
+          "field_name_hints": []
+        }
+      },
+      "max_length": 0,
+      "min_length": 0
+    },
+    "rcvd_user": {
+      "data_type": "string",
+      "required": true,
+      "nullable": false,
+      "description": "Field rcvd_user",
+      "source_mapping": {
+        "original_name": "rcvd_user",
+        "original_type": "string",
+        "original_definition": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "sample_count": 5,
+          "value_count": 5,
+          "null_count": 0,
+          "min_length": 5,
+          "max_length": 5,
+          "avg_length": 5.0,
+          "unique_values": 2,
+          "field_name_hints": []
+        }
+      },
+      "max_length": 5,
+      "min_length": 5
+    },
+    "pack_user": {
+      "data_type": "string",
+      "required": true,
+      "nullable": false,
+      "description": "Field pack_user",
+      "source_mapping": {
+        "original_name": "pack_user",
+        "original_type": "string",
+        "original_definition": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "sample_count": 5,
+          "value_count": 5,
+          "null_count": 0,
+          "min_length": 0,
+          "max_length": 0,
+          "avg_length": 0.0,
+          "unique_values": 1,
+          "field_name_hints": []
+        }
+      },
+      "max_length": 0,
+      "min_length": 0
+    },
+    "ref_shipment_nbr": {
+      "data_type": "string",
+      "required": true,
+      "nullable": false,
+      "description": "Field ref_shipment_nbr",
+      "source_mapping": {
+        "original_name": "ref_shipment_nbr",
+        "original_type": "string",
+        "original_definition": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "sample_count": 5,
+          "value_count": 5,
+          "null_count": 0,
+          "min_length": 0,
+          "max_length": 0,
+          "avg_length": 0.0,
+          "unique_values": 1,
+          "field_name_hints": []
+        }
+      },
+      "max_length": 0,
+      "min_length": 0
+    },
+    "weight": {
+      "data_type": "string",
+      "required": true,
+      "nullable": false,
+      "description": "Field weight",
+      "source_mapping": {
+        "original_name": "weight",
+        "original_type": "string",
+        "original_definition": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "sample_count": 5,
+          "value_count": 5,
+          "null_count": 0,
+          "min_length": 1,
+          "max_length": 3,
+          "avg_length": 1.4,
+          "unique_values": 2,
+          "field_name_hints": []
+        }
+      },
+      "max_length": 3,
+      "min_length": 1
+    },
+    "mod_ts": {
+      "data_type": "datetime",
+      "required": true,
+      "nullable": false,
+      "description": "Field mod_ts",
+      "source_mapping": {
+        "original_name": "mod_ts",
+        "original_type": "datetime",
+        "original_definition": {
+          "type": "datetime",
+          "required": true,
+          "nullable": false,
+          "sample_count": 5,
+          "value_count": 5,
+          "null_count": 0,
+          "field_name_hints": []
+        }
+      }
+    },
+    "container_nbr": {
+      "data_type": "string",
+      "required": true,
+      "nullable": false,
+      "description": "Field container_nbr",
+      "source_mapping": {
+        "original_name": "container_nbr",
+        "original_type": "string",
+        "original_definition": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "sample_count": 5,
+          "value_count": 5,
+          "null_count": 0,
+          "min_length": 25,
+          "max_length": 25,
+          "avg_length": 25.0,
+          "unique_values": 5,
+          "field_name_hints": []
+        }
+      },
+      "max_length": 25,
+      "min_length": 25
+    },
+    "url": {
+      "data_type": "string",
+      "required": true,
+      "nullable": false,
+      "description": "Field url",
+      "source_mapping": {
+        "original_name": "url",
+        "original_type": "url",
+        "original_definition": {
+          "type": "url",
+          "required": true,
+          "nullable": false,
+          "sample_count": 5,
+          "value_count": 5,
+          "null_count": 0,
+          "field_name_hints": []
+        }
+      }
+    },
+    "putawaytype_id": {
+      "data_type": "object",
+      "required": true,
+      "nullable": false,
+      "description": "Field putawaytype_id",
+      "source_mapping": {
+        "original_name": "putawaytype_id",
+        "original_type": "object",
+        "original_definition": {
+          "type": "object",
+          "required": true,
+          "nullable": false,
+          "sample_count": 5,
+          "value_count": 5,
+          "null_count": 0,
+          "field_name_hints": [
+            "id"
+          ],
+          "possible_foreign_key": true
+        }
+      }
+    },
+    "rcvd_trailer_nbr": {
+      "data_type": "string",
+      "required": true,
+      "nullable": false,
+      "description": "Field rcvd_trailer_nbr",
+      "source_mapping": {
+        "original_name": "rcvd_trailer_nbr",
+        "original_type": "string",
+        "original_definition": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "sample_count": 5,
+          "value_count": 5,
+          "null_count": 0,
+          "min_length": 0,
+          "max_length": 0,
+          "avg_length": 0.0,
+          "unique_values": 1,
+          "field_name_hints": []
+        }
+      },
+      "max_length": 0,
+      "min_length": 0
+    },
+    "priority_date": {
+      "data_type": "string",
+      "required": false,
+      "nullable": true,
+      "description": "Field priority_date",
+      "source_mapping": {
+        "original_name": "priority_date",
+        "original_type": "string",
+        "original_definition": {
+          "type": "string",
+          "required": false,
+          "nullable": true,
+          "sample_count": 5,
+          "value_count": 0,
+          "null_count": 5,
+          "field_name_hints": [
+            "date"
+          ],
+          "possible_timestamp": true
+        }
+      }
+    },
+    "asset_id": {
+      "data_type": "string",
+      "required": false,
+      "nullable": true,
+      "description": "Field asset_id",
+      "source_mapping": {
+        "original_name": "asset_id",
+        "original_type": "string",
+        "original_definition": {
+          "type": "string",
+          "required": false,
+          "nullable": true,
+          "sample_count": 5,
+          "value_count": 0,
+          "null_count": 5,
+          "field_name_hints": [
+            "id"
+          ],
+          "possible_foreign_key": true
+        }
+      }
+    },
+    "cust_field_4": {
+      "data_type": "string",
+      "required": true,
+      "nullable": false,
+      "description": "Field cust_field_4",
+      "source_mapping": {
+        "original_name": "cust_field_4",
+        "original_type": "string",
+        "original_definition": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "sample_count": 5,
+          "value_count": 5,
+          "null_count": 0,
+          "min_length": 0,
+          "max_length": 0,
+          "avg_length": 0.0,
+          "unique_values": 1,
+          "field_name_hints": []
+        }
+      },
+      "max_length": 0,
+      "min_length": 0
+    },
+    "lpn_type_id": {
+      "data_type": "string",
+      "required": false,
+      "nullable": true,
+      "description": "Field lpn_type_id",
+      "source_mapping": {
+        "original_name": "lpn_type_id",
+        "original_type": "string",
+        "original_definition": {
+          "type": "string",
+          "required": false,
+          "nullable": true,
+          "sample_count": 5,
+          "value_count": 0,
+          "null_count": 5,
+          "field_name_hints": [
+            "id"
+          ],
+          "possible_foreign_key": true
+        }
+      }
+    },
+    "cust_field_5": {
+      "data_type": "string",
+      "required": true,
+      "nullable": false,
+      "description": "Field cust_field_5",
+      "source_mapping": {
+        "original_name": "cust_field_5",
+        "original_type": "string",
+        "original_definition": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "sample_count": 5,
+          "value_count": 5,
+          "null_count": 0,
+          "min_length": 0,
+          "max_length": 0,
+          "avg_length": 0.0,
+          "unique_values": 1,
+          "field_name_hints": []
+        }
+      },
+      "max_length": 0,
+      "min_length": 0
+    },
+    "create_ts": {
+      "data_type": "datetime",
+      "required": true,
+      "nullable": false,
+      "description": "Field create_ts",
+      "source_mapping": {
+        "original_name": "create_ts",
+        "original_type": "datetime",
+        "original_definition": {
+          "type": "datetime",
+          "required": true,
+          "nullable": false,
+          "sample_count": 5,
+          "value_count": 5,
+          "null_count": 0,
+          "field_name_hints": []
+        }
+      }
+    },
+    "create_user": {
+      "data_type": "string",
+      "required": true,
+      "nullable": false,
+      "description": "Field create_user",
+      "source_mapping": {
+        "original_name": "create_user",
+        "original_type": "string",
+        "original_definition": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "sample_count": 5,
+          "value_count": 5,
+          "null_count": 0,
+          "min_length": 5,
+          "max_length": 5,
+          "avg_length": 5.0,
+          "unique_values": 2,
+          "field_name_hints": []
+        }
+      },
+      "max_length": 5,
+      "min_length": 5
+    },
+    "audit_status_id": {
+      "data_type": "integer",
+      "required": true,
+      "nullable": false,
+      "description": "Field audit_status_id",
+      "source_mapping": {
+        "original_name": "audit_status_id",
+        "original_type": "integer",
+        "original_definition": {
+          "type": "integer",
+          "required": true,
+          "nullable": false,
+          "sample_count": 5,
+          "value_count": 5,
+          "null_count": 0,
+          "min_value": 10,
+          "max_value": 10,
+          "avg_value": 10.0,
+          "field_name_hints": [
+            "id",
+            "status"
+          ],
+          "possible_foreign_key": true
+        }
+      },
+      "min_value": 10,
+      "max_value": 10
+    },
+    "pallet_position": {
+      "data_type": "string",
+      "required": true,
+      "nullable": false,
+      "description": "Field pallet_position",
+      "source_mapping": {
+        "original_name": "pallet_position",
+        "original_type": "string",
+        "original_definition": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "sample_count": 5,
+          "value_count": 5,
+          "null_count": 0,
+          "min_length": 0,
+          "max_length": 0,
+          "avg_length": 0.0,
+          "unique_values": 1,
+          "field_name_hints": []
+        }
+      },
+      "max_length": 0,
+      "min_length": 0
+    },
+    "cart_posn_nbr": {
+      "data_type": "integer",
+      "required": true,
+      "nullable": false,
+      "description": "Field cart_posn_nbr",
+      "source_mapping": {
+        "original_name": "cart_posn_nbr",
+        "original_type": "integer",
+        "original_definition": {
+          "type": "integer",
+          "required": true,
+          "nullable": false,
+          "sample_count": 5,
+          "value_count": 5,
+          "null_count": 0,
+          "min_value": 0,
+          "max_value": 0,
+          "avg_value": 0.0,
+          "field_name_hints": []
+        }
+      },
+      "min_value": 0,
+      "max_value": 0
+    },
+    "cust_field_1": {
+      "data_type": "string",
+      "required": true,
+      "nullable": false,
+      "description": "Field cust_field_1",
+      "source_mapping": {
+        "original_name": "cust_field_1",
+        "original_type": "string",
+        "original_definition": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "sample_count": 5,
+          "value_count": 5,
+          "null_count": 0,
+          "min_length": 0,
+          "max_length": 0,
+          "avg_length": 0.0,
+          "unique_values": 1,
+          "field_name_hints": []
+        }
+      },
+      "max_length": 0,
+      "min_length": 0
+    },
+    "rcvd_ts": {
+      "data_type": "datetime",
+      "required": true,
+      "nullable": false,
+      "description": "Field rcvd_ts",
+      "source_mapping": {
+        "original_name": "rcvd_ts",
+        "original_type": "datetime",
+        "original_definition": {
+          "type": "datetime",
+          "required": true,
+          "nullable": false,
+          "sample_count": 5,
+          "value_count": 5,
+          "null_count": 0,
+          "field_name_hints": []
+        }
+      }
+    },
+    "cust_field_2": {
+      "data_type": "string",
+      "required": true,
+      "nullable": false,
+      "description": "Field cust_field_2",
+      "source_mapping": {
+        "original_name": "cust_field_2",
+        "original_type": "string",
+        "original_definition": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "sample_count": 5,
+          "value_count": 5,
+          "null_count": 0,
+          "min_length": 0,
+          "max_length": 0,
+          "avg_length": 0.0,
+          "unique_values": 1,
+          "field_name_hints": []
+        }
+      },
+      "max_length": 0,
+      "min_length": 0
+    },
+    "pallet_id": {
+      "data_type": "object",
+      "required": false,
+      "nullable": true,
+      "description": "Field pallet_id",
+      "source_mapping": {
+        "original_name": "pallet_id",
+        "original_type": "object",
+        "original_definition": {
+          "type": "object",
+          "required": false,
+          "nullable": true,
+          "sample_count": 5,
+          "value_count": 3,
+          "null_count": 2,
+          "field_name_hints": [
+            "id"
+          ],
+          "possible_foreign_key": true
+        }
+      }
+    },
+    "ref_oblpn_nbr": {
+      "data_type": "string",
+      "required": true,
+      "nullable": false,
+      "description": "Field ref_oblpn_nbr",
+      "source_mapping": {
+        "original_name": "ref_oblpn_nbr",
+        "original_type": "string",
+        "original_definition": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "sample_count": 5,
+          "value_count": 5,
+          "null_count": 0,
+          "min_length": 0,
+          "max_length": 0,
+          "avg_length": 0.0,
+          "unique_values": 1,
+          "field_name_hints": []
+        }
+      },
+      "max_length": 0,
+      "min_length": 0
+    },
+    "width": {
+      "data_type": "string",
+      "required": true,
+      "nullable": false,
+      "description": "Field width",
+      "source_mapping": {
+        "original_name": "width",
+        "original_type": "string",
+        "original_definition": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "sample_count": 5,
+          "value_count": 5,
+          "null_count": 0,
+          "min_length": 1,
+          "max_length": 1,
+          "avg_length": 1.0,
+          "unique_values": 1,
+          "field_name_hints": [
+            "id"
+          ]
+        }
+      },
+      "max_length": 1,
+      "min_length": 1
+    },
+    "id": {
+      "data_type": "integer",
+      "required": true,
+      "nullable": false,
+      "description": "Field id",
+      "source_mapping": {
+        "original_name": "id",
+        "original_type": "integer",
+        "original_definition": {
+          "type": "integer",
+          "required": true,
+          "nullable": false,
+          "sample_count": 5,
+          "value_count": 5,
+          "null_count": 0,
+          "min_value": 2,
+          "max_value": 6,
+          "avg_value": 4.0,
+          "field_name_hints": [
+            "id"
+          ],
+          "possible_foreign_key": true
+        }
+      },
+      "min_value": 2,
+      "max_value": 6
+    },
+    "height": {
+      "data_type": "string",
+      "required": true,
+      "nullable": false,
+      "description": "Field height",
+      "source_mapping": {
+        "original_name": "height",
+        "original_type": "string",
+        "original_definition": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "sample_count": 5,
+          "value_count": 5,
+          "null_count": 0,
+          "min_length": 1,
+          "max_length": 1,
+          "avg_length": 1.0,
+          "unique_values": 1,
+          "field_name_hints": []
+        }
+      },
+      "max_length": 1,
+      "min_length": 1
+    },
+    "nbr_files": {
+      "data_type": "integer",
+      "required": true,
+      "nullable": false,
+      "description": "Field nbr_files",
+      "source_mapping": {
+        "original_name": "nbr_files",
+        "original_type": "integer",
+        "original_definition": {
+          "type": "integer",
+          "required": true,
+          "nullable": false,
+          "sample_count": 5,
+          "value_count": 5,
+          "null_count": 0,
+          "min_value": 0,
+          "max_value": 0,
+          "avg_value": 0.0,
+          "field_name_hints": []
+        }
+      },
+      "min_value": 0,
+      "max_value": 0
+    },
+    "company_id": {
+      "data_type": "object",
+      "required": true,
+      "nullable": false,
+      "description": "Field company_id",
+      "source_mapping": {
+        "original_name": "company_id",
+        "original_type": "object",
+        "original_definition": {
+          "type": "object",
+          "required": true,
+          "nullable": false,
+          "sample_count": 5,
+          "value_count": 5,
+          "null_count": 0,
+          "field_name_hints": [
+            "id"
+          ],
+          "possible_foreign_key": true
+        }
+      }
+    },
+    "prev_location_id": {
+      "data_type": "object",
+      "required": true,
+      "nullable": false,
+      "description": "Field prev_location_id",
+      "source_mapping": {
+        "original_name": "prev_location_id",
+        "original_type": "object",
+        "original_definition": {
+          "type": "object",
+          "required": true,
+          "nullable": false,
+          "sample_count": 5,
+          "value_count": 5,
+          "null_count": 0,
+          "field_name_hints": [
+            "id",
+            "address"
+          ],
+          "possible_foreign_key": true
+        }
+      }
+    },
+    "parcel_batch_flg": {
+      "data_type": "boolean",
+      "required": true,
+      "nullable": false,
+      "description": "Field parcel_batch_flg",
+      "source_mapping": {
+        "original_name": "parcel_batch_flg",
+        "original_type": "boolean",
+        "original_definition": {
+          "type": "boolean",
+          "required": true,
+          "nullable": false,
+          "sample_count": 5,
+          "value_count": 5,
+          "null_count": 0,
+          "field_name_hints": []
+        }
+      }
+    },
+    "cust_field_3": {
+      "data_type": "string",
+      "required": true,
+      "nullable": false,
+      "description": "Field cust_field_3",
+      "source_mapping": {
+        "original_name": "cust_field_3",
+        "original_type": "string",
+        "original_definition": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "sample_count": 5,
+          "value_count": 5,
+          "null_count": 0,
+          "min_length": 0,
+          "max_length": 0,
+          "avg_length": 0.0,
+          "unique_values": 1,
+          "field_name_hints": []
+        }
+      },
+      "max_length": 0,
+      "min_length": 0
+    },
+    "comments": {
+      "data_type": "string",
+      "required": true,
+      "nullable": false,
+      "description": "Field comments",
+      "source_mapping": {
+        "original_name": "comments",
+        "original_type": "string",
+        "original_definition": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "sample_count": 5,
+          "value_count": 5,
+          "null_count": 0,
+          "min_length": 0,
+          "max_length": 0,
+          "avg_length": 0.0,
+          "unique_values": 1,
+          "field_name_hints": [
+            "description"
+          ]
+        }
+      },
+      "max_length": 0,
+      "min_length": 0
+    },
+    "type": {
+      "data_type": "string",
+      "required": true,
+      "nullable": false,
+      "description": "Field type",
+      "source_mapping": {
+        "original_name": "type",
+        "original_type": "string",
+        "original_definition": {
+          "type": "string",
+          "required": true,
+          "nullable": false,
+          "sample_count": 5,
+          "value_count": 5,
+          "null_count": 0,
+          "min_length": 1,
+          "max_length": 1,
+          "avg_length": 1.0,
+          "unique_values": 1,
+          "field_name_hints": []
+        }
+      },
+      "max_length": 1,
+      "min_length": 1
+    }
+  },
+  "constraints": {},
+  "indexes": [],
+  "relationships": [],
+  "business_rules": [],
+  "migration_notes": [
+    "Schema extracted from Oracle WMS for entity: container",
+    "Extraction timestamp: 2025-06-03T12:54:53.761403+00:00",
+    "Universal format version: 1.0",
+    "Total fields: 52",
+    "Required fields: actual_weight_flg, ref_po_nbr, price_labels_printed, asset_seal_nbr, length, first_putaway_ts, facility_id, mod_user, rcvd_shipment_id, pick_user, vas_status_id, volume, orig_container_nbr, qc_status_id, status_id, ref_iblpn_nbr, rcvd_user, pack_user, ref_shipment_nbr, weight, mod_ts, container_nbr, url, putawaytype_id, rcvd_trailer_nbr, cust_field_4, cust_field_5, create_ts, create_user, audit_status_id, pallet_position, cart_posn_nbr, cust_field_1, rcvd_ts, cust_field_2, ref_oblpn_nbr, width, id, height, nbr_files, company_id, prev_location_id, parcel_batch_flg, cust_field_3, comments, type",
+    "PERFORMANCE: Large number of fields - consider selective extraction",
+    "COMPLEX TYPES: Fields requiring special handling: facility_id, rcvd_shipment_id, putawaytype_id, pallet_id, company_id, prev_location_id"
+  ]
+}

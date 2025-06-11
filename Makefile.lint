@@ -1,0 +1,260 @@
+###############################################################################
+#  Makefile.lint — Automação de correção de lints para o projeto pyauto
+#  Author : Marlon Costa <marlon.costa@datacosmos.com.br>
+#  License: MIT
+###############################################################################
+
+# ───────────────═[ Diretórios base ]═──────────────────────────────────────────
+WORKSPACE_ROOT ?= $(shell git -C "$(CURDIR)" rev-parse --show-toplevel 2>/dev/null || echo "$(CURDIR)")
+SCRIPTS_DIR    := $(WORKSPACE_ROOT)/scripts
+LOGS_DIR       := $(WORKSPACE_ROOT)/logs
+
+# ───────────────═[ Python & Paths ]═─────────────────────────────────────────
+PYTHON ?= python
+VENV_DIR ?= $(WORKSPACE_ROOT)/.venv
+VENV_PYTHON = $(VENV_DIR)/bin/python
+VENV_ACTIVATE = . $(VENV_DIR)/bin/activate
+
+# Definir projeto atual (pode ser sobrescrito por linha de comando: make lint-fix-all PROJECT=pyapix)
+PROJECT ?=
+
+# ───────────────═[ Ferramentas ]═───────────────────────────────────────────
+RUFF = $(VENV_DIR)/bin/ruff
+BLACK = $(VENV_DIR)/bin/black
+ISORT = $(VENV_DIR)/bin/isort
+MYPY = $(VENV_DIR)/bin/mypy
+PYLINT = $(VENV_DIR)/bin/pylint
+FLAKE8 = $(VENV_DIR)/bin/flake8
+BANDIT = $(VENV_DIR)/bin/bandit
+PYUPGRADE = $(VENV_DIR)/bin/pyupgrade
+AUTOFLAKE = $(VENV_DIR)/bin/autoflake
+REFURB = $(VENV_DIR)/bin/refurb
+
+# ───────────────═[ Opções padrão ]═─────────────────────────────────────────
+# Padrão de diretórios excluídos
+EXCLUDE_DIRS = ".venv/**,reference/**,*/examples/**,project-client-a-oud/typings/**,*/venv/**,*/env_test/**,*/env310/**,*/test_venv/**,*/.mypy_cache/**,*/.pytest_cache/**,*/.ruff_cache/**"
+# Versões para ferramentas específicas
+EXCLUDE_DIRS_FIND = -not -path "*/reference/*" -not -path "*/.venv/*" -not -path "*/venv/*" -not -path "*/env_test/*" -not -path "*/env310/*" -not -path "*/test_venv/*" -not -path "*/examples/*" -not -path "*/typings/*" -not -path "*/.mypy_cache/*" -not -path "*/.pytest_cache/*" -not -path "*/.ruff_cache/*"
+EXCLUDE_DIRS_BLACK = ".venv|reference|examples|venv|env_test|env310|test_venv|.mypy_cache|.pytest_cache|.ruff_cache"
+EXCLUDE_DIRS_BANDIT = ".venv,reference,examples,venv,env_test,env310,test_venv,.mypy_cache,.pytest_cache,.ruff_cache"
+
+E501_EXCLUDES_FILE = $(WORKSPACE_ROOT)/.e501_excludes.txt
+MAX_LINE_LENGTH = 88
+PYTHON_VERSION = 3.10
+
+# ───────────────═[ CORES ]═──────────────────────────────────────────────────
+ifeq ($(NO_COLOR),1)
+GREEN:=
+YELLOW:=
+RED:=
+CYAN:=
+BLUE:=
+NC:=
+else
+GREEN := \033[0;32m
+YELLOW:= \033[0;33m
+RED   := \033[0;31m
+CYAN  := \033[0;36m
+BLUE  := \033[0;34m
+NC    := \033[0m
+endif
+
+# ───────────────═[ Helpers ]═──────────────────────────────────────────────────
+define banner
+	@printf "$(GREEN)→ $1$(NC)\n"
+endef
+
+define section
+	@printf "\n$(BLUE)══════════════════[ $1 ]═══════════════════$(NC)\n"
+endef
+
+define subsection
+	@printf "$(CYAN)─── $1 ───$(NC)\n"
+endef
+
+define error
+	@printf "$(RED)ERROR: $1$(NC)\n"
+endef
+
+define warning
+	@printf "$(YELLOW)WARNING: $1$(NC)\n"
+endef
+
+# Run command in specific flx_project
+define in_project
+	@if [ -z "$(PROJECT)" ]; then \
+		$(call error,"Variável PROJECT não definida. Use make $@ PROJECT=nome_do_projeto"); \
+		exit 1; \
+	fi
+	@if [ ! -d "$(WORKSPACE_ROOT)/$(PROJECT)" ]; then \
+		$(call error,"Projeto '$(PROJECT)' não encontrado no workspace"); \
+		exit 1; \
+	fi
+	@$(call section,"Executando em $(PROJECT)")
+	@cd $(WORKSPACE_ROOT)/$(PROJECT) && $(1) || $(call error,"Falhou em $(PROJECT)")
+endef
+
+# ───────────────═[ Targets ]═─────────────────────────────────────────────────
+.DEFAULT_GOAL := lint-fix-all
+
+# Gera um arquivo de estatísticas e status dos lints
+lint-stats: venv-check
+	$(call section,Coletando estatísticas de lint)
+	@if [ -n "$(PROJECT)" ]; then \
+		$(call in_project,$(RUFF) check . --exclude=$(EXCLUDE_DIRS) --select="E,F,I,W,UP" --ignore="UP007" --statistics || true); \
+	else \
+		-@$(RUFF) check . --exclude=$(EXCLUDE_DIRS) --select="E,F,I,W,UP" --ignore="UP007" --statistics || true; \
+	fi
+
+# Verifica apenas erros críticos (sem E501 - linhas longas)
+lint-check: venv-check
+	$(call section,Verificando erros críticos de lint)
+	@if [ -n "$(PROJECT)" ]; then \
+		$(call in_project,$(RUFF) check . --exclude=$(EXCLUDE_DIRS) --select="E,F,I,W,UP" --ignore="E501,UP007" --statistics); \
+	else \
+		-@$(RUFF) check . --exclude=$(EXCLUDE_DIRS) --select="E,F,I,W,UP" --ignore="E501,UP007" --statistics; \
+	fi
+
+# Corrige automaticamente o que for possível usando o ruff
+lint-fix-ruff: venv-check
+	$(call section,Corrigindo erros com Ruff)
+	@if [ -n "$(PROJECT)" ]; then \
+		$(call in_project,$(RUFF) check . --exclude=$(EXCLUDE_DIRS) --select="E,F,I,W,UP,N,B,C4,DTZ,T10,ISC,G,PIE,PT,RET,SIM,ARG,ERA,PD,PGH,PL,TRY,BLE,COM" --ignore="E501,UP007" --fix --unsafe-fixes); \
+	else \
+		-@$(RUFF) check . --exclude=$(EXCLUDE_DIRS) --select="E,F,I,W,UP,N,B,C4,DTZ,T10,ISC,G,PIE,PT,RET,SIM,ARG,ERA,PD,PGH,PL,TRY,BLE,COM" --ignore="E501,UP007" --fix --unsafe-fixes; \
+	fi
+
+# Ordena imports com isort
+lint-fix-imports: venv-check
+	$(call section,Ordenando imports com isort)
+	@if [ -n "$(PROJECT)" ]; then \
+		$(call in_project,find . -name "*.py" $(EXCLUDE_DIRS_FIND) | xargs $(ISORT)); \
+	else \
+		-@find . -name "*.py" $(EXCLUDE_DIRS_FIND) | xargs $(ISORT); \
+	fi
+
+# Formata código com black
+lint-fix-black: venv-check
+	$(call section,Formatando código com Black)
+	@if [ -n "$(PROJECT)" ]; then \
+		$(call in_project,$(BLACK) . --exclude='$(EXCLUDE_DIRS_BLACK)'); \
+	else \
+		-@$(BLACK) . --exclude='$(EXCLUDE_DIRS_BLACK)'; \
+	fi
+
+# Gera lista de arquivos com problema de linha longa (E501)
+lint-gen-longlines: venv-check
+	$(call section,Gerando lista de arquivos com linhas longas)
+	@if [ -n "$(PROJECT)" ]; then \
+		$(call in_project,find . -name "*.py" $(EXCLUDE_DIRS_FIND) -exec sh -c "echo -n {} && $(RUFF) check {} --select=E501 | wc -l | sed 's/^/ '/" \; | sort -k2 -nr > $(E501_EXCLUDES_FILE)); \
+		@echo "Arquivos com mais linhas longas no projeto $(PROJECT):"; \
+	else \
+		@find . -name "*.py" $(EXCLUDE_DIRS_FIND) -exec sh -c "echo -n {} && $(RUFF) check {} --select=E501 | wc -l | sed 's/^/ '/" \; | sort -k2 -nr > $(E501_EXCLUDES_FILE); \
+		@echo "Arquivos com mais linhas longas:"; \
+	fi
+	@head -10 $(E501_EXCLUDES_FILE)
+	@echo "Total de arquivos com problemas: `wc -l < $(E501_EXCLUDES_FILE)`"
+
+# Atualiza o pyproject.toml para ignorar arquivos com muitas linhas longas
+lint-fix-config: lint-gen-longlines
+	$(call section,Atualizando pyproject.toml com exclusões)
+	@$(PYTHON) $(SCRIPTS_DIR)/update_lint_excludes.py --input=$(E501_EXCLUDES_FILE) --pyproject=$(WORKSPACE_ROOT)/pyproject.toml
+
+# Atualiza código para usar recursos modernos do Python com pyupgrade
+lint-pyupgrade: venv-check
+	$(call section,Atualizando para recursos modernos do Python com pyupgrade)
+	@if [ -n "$(PROJECT)" ]; then \
+		$(call in_project,find . -name "*.py" $(EXCLUDE_DIRS_FIND) -exec $(PYTHON) -m pyupgrade --py$(subst .,,$(PYTHON_VERSION))-plus {} \;); \
+	else \
+		@find . -name "*.py" $(EXCLUDE_DIRS_FIND) -exec $(PYTHON) -m pyupgrade --py$(subst .,,$(PYTHON_VERSION))-plus {} \;; \
+	fi
+
+# Remove imports não utilizados com autoflake
+lint-autoflake: venv-check
+	$(call section,Removendo imports não utilizados com autoflake)
+	@if [ -n "$(PROJECT)" ]; then \
+		$(call in_project,find . -name "*.py" $(EXCLUDE_DIRS_FIND) -exec $(PYTHON) -m autoflake --in-place --remove-unused-variables --remove-all-unused-imports {} \;); \
+	else \
+		@find . -name "*.py" $(EXCLUDE_DIRS_FIND) -exec $(PYTHON) -m autoflake --in-place --remove-unused-variables --remove-all-unused-imports {} \;; \
+	fi
+
+# Verifica possíveis problemas de segurança com bandit
+lint-security: venv-check
+	$(call section,Analisando segurança com bandit)
+	@if [ -n "$(PROJECT)" ]; then \
+		$(call in_project,$(BANDIT) -r . -x "$(EXCLUDE_DIRS_BANDIT)" -ll || true); \
+	else \
+		-@$(BANDIT) -r . -x "$(EXCLUDE_DIRS_BANDIT)" -ll || true; \
+	fi
+
+# Encontra possíveis oportunidades de refatoração
+lint-refurb: venv-check
+	$(call section,Buscando oportunidades de refatoração com refurb)
+	@if [ -n "$(PROJECT)" ]; then \
+		$(call in_project,find . -name "*.py" $(EXCLUDE_DIRS_FIND) -exec $(PYTHON) -m refurb {} \;); \
+	else \
+		@find . -name "*.py" $(EXCLUDE_DIRS_FIND) -exec $(PYTHON) -m refurb {} \;; \
+	fi
+
+# Corrige quebra de linhas longas (experimental)
+lint-fix-longlines: venv-check
+	$(call section,Tentando corrigir linhas longas (experimental))
+	@if [ -n "$(PROJECT)" ]; then \
+		$(call in_project,$(PYTHON) $(SCRIPTS_DIR)/fix_long_lines.py --exclude=$(EXCLUDE_DIRS) --max-length=$(MAX_LINE_LENGTH)); \
+	else \
+		@$(PYTHON) $(SCRIPTS_DIR)/fix_long_lines.py --exclude=$(EXCLUDE_DIRS) --max-length=$(MAX_LINE_LENGTH); \
+	fi
+
+# Combina todas as correções automáticas
+lint-fix-all: venv-check lint-fix-ruff lint-fix-imports lint-fix-black lint-pyupgrade lint-autoflake lint-stats
+
+# Verifica se o virtualenv está ativo ou tenta ativá-lo
+venv-check:
+	@bash $(WORKSPACE_ROOT)/scripts/setup_venv.sh verify || { \
+		echo ">>> Ambiente virtual precisa ser recriado."; \
+		echo ">>> Use 'make fix-venv' no Makefile principal para recriá-lo."; \
+		exit 1; \
+	}
+	@bash $(WORKSPACE_ROOT)/scripts/setup_venv.sh check-tools || { \
+		echo ">>> Instalando ferramentas faltantes..."; \
+		bash $(WORKSPACE_ROOT)/scripts/setup_venv.sh check-tools; \
+	}
+
+# Instala ferramentas de lint extras
+lint-install-tools: venv-check
+	$(call section,Instalando ferramentas de lint)
+	@$(VENV_DIR)/bin/pip install -U ruff black isort mypy pylint flake8 bandit pyupgrade autoflake refurb
+
+# Ajuda
+.PHONY: lint-help
+lint-help:
+	@echo "$(YELLOW)╔════════════════════════════════════════════════════════════════╗$(NC)"
+	@echo "$(YELLOW)║  Makefile para automação de correção de lints                  ║$(NC)"
+	@echo "$(YELLOW)╚════════════════════════════════════════════════════════════════╝$(NC)"
+	@echo ""
+	@echo "$(CYAN)Comandos disponíveis:$(NC)"
+	@echo "  $(GREEN)lint-stats$(NC)         Mostra estatísticas de lint do projeto"
+	@echo "  $(GREEN)lint-check$(NC)         Verifica erros de lint (exceto E501)"
+	@echo "  $(GREEN)lint-fix-ruff$(NC)      Corrige erros usando Ruff"
+	@echo "  $(GREEN)lint-fix-imports$(NC)   Ordena imports com isort"
+	@echo "  $(GREEN)lint-fix-black$(NC)     Formata código com Black"
+	@echo "  $(GREEN)lint-gen-longlines$(NC) Gera lista de arquivos com linhas longas"
+	@echo "  $(GREEN)lint-fix-config$(NC)    Atualiza pyproject.toml para ignorar arquivos problemáticos"
+	@echo "  $(GREEN)lint-pyupgrade$(NC)     Atualiza código para recursos modernos do Python"
+	@echo "  $(GREEN)lint-autoflake$(NC)     Remove imports não utilizados"
+	@echo "  $(GREEN)lint-security$(NC)      Verifica problemas de segurança com bandit"
+	@echo "  $(GREEN)lint-refurb$(NC)        Busca oportunidades de refatoração"
+	@echo "  $(GREEN)lint-fix-longlines$(NC) Tenta corrigir linhas longas (experimental)"
+	@echo "  $(GREEN)lint-fix-all$(NC)       Executa todas as correções automáticas"
+	@echo "  $(GREEN)lint-install-tools$(NC) Instala ferramentas de lint extras"
+	@echo ""
+	@echo "$(YELLOW)Exemplos:$(NC)"
+	@echo "  make -f Makefile.lint lint-fix-all"
+	@echo "  make -f Makefile.lint lint-security"
+	@echo "  make -f Makefile.lint lint-fix-all PROJECT=pyapix"
+	@echo ""
+	@echo "$(CYAN)Variáveis:$(NC)"
+	@echo "  EXCLUDE_DIRS     Diretórios a excluir (padrão: $(EXCLUDE_DIRS))"
+	@echo "  MAX_LINE_LENGTH  Comprimento máximo de linha (padrão: $(MAX_LINE_LENGTH))"
+	@echo "  PYTHON_VERSION   Versão do Python para pyupgrade (padrão: $(PYTHON_VERSION))" 
+	@echo "  PROJECT          Projeto específico para executar o comando (opcional)" 

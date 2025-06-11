@@ -1,0 +1,302 @@
+[tool.poetry]
+name = "dc-code-analyzer"
+version = "0.1.0"
+description = "Advanced Python code analysis tool for quality assessment, complexity analysis, and codebase insights"
+authors = ["Code Analysis Team <team@codeanalyzer.dev>"]
+maintainers = ["Code Analysis Team <team@codeanalyzer.dev>"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/codeanalyzer/dc-code-analyzer"
+repository = "https://github.com/codeanalyzer/dc-code-analyzer.git"
+documentation = "https://dc-code-analyzer.readthedocs.io"
+keywords = [
+    "code-analysis",
+    "python",
+    "static-analysis",
+    "code-quality",
+    "complexity",
+    "documentation",
+    "security",
+    "dead-code",
+    "duplicates",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Quality Assurance",
+    "Topic :: Software Development :: Testing",
+    "Topic :: Utilities",
+]
+packages = [
+    { include = "analyzer" },
+    { include = "code_analyzer_web" },
+    { include = "dashboard" },
+]
+
+[tool.poetry.dependencies]
+python = "^3.13"
+Django = "^4.2.0"
+djangorestframework = "^3.14.0"
+django-cors-headers = "^4.0.0"
+django-extensions = "^3.2.0"
+django-filter = "^23.0"
+psycopg2-binary = "^2.9.0"
+redis = "^6.2.0"
+celery = "^5.3.4"
+django-celery-beat = "^2.5.0"
+django-celery-results = "^2.5.1"
+bandit = "^1.8.0"
+vulture = "^2.12"
+radon = "^6.0.1"
+mypy = "^1.16.0"
+flake8 = "^7.2.0"
+safety = "^2.3.0"
+reportlab = "^4.0.0"
+markdown = "^3.4.0"
+Pygments = "^2.15.0"
+weasyprint = "^60.0"
+jinja2 = "^3.1.0"
+xhtml2pdf = "^0.2.11"
+python-dotenv = "^1.1.0"
+Pillow = "^10.0.0"
+whitenoise = "^6.5.0"
+pydantic = "^2.11.5"
+networkx = "^3.0"
+matplotlib = "^3.6.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.4.0"
+pytest-django = "^4.5.0"
+pytest-cov = "^6.1.1"
+pytest-mock = "^3.14.1"
+pytest-asyncio = "<0.24.0"
+pytest-xdist = "^3.7.0"
+coverage = "^7.8.2"
+black = "^25.1.0"
+isort = "<6"
+ruff = "^0.11.13"
+pre-commit = "^4.2.0"
+mypy = "^1.16.0"
+django-stubs = "^4.2.0"
+djangorestframework-stubs = "^3.14.0"
+types-redis = "^4.6.0.20240903"
+types-requests = "^2.32.0.20241016"
+mkdocs = "^1.6.0"
+mkdocs-material = "^9.5.0"
+ipython = "^8.0.0"
+django-debug-toolbar = "^4.0.0"
+
+[tool.poetry.group.ai]
+optional = true
+
+[tool.poetry.group.ai.dependencies]
+openai = "^1.0.0"
+tiktoken = "^0.5.0"
+numpy = "^1.24.0"
+scikit-learn = "^1.3.0"
+
+[tool.poetry.group.viz]
+optional = true
+
+[tool.poetry.group.viz.dependencies]
+pygraphviz = "^1.10"
+plotly = "^5.15.0"
+seaborn = "^0.12.0"
+bokeh = "^3.2.0"
+
+[tool.poetry.group.perf]
+optional = true
+
+[tool.poetry.group.perf.dependencies]
+psutil = "^5.9.0"
+memory-profiler = "^0.61.0"
+line-profiler = "^4.1.0"
+
+[tool.poetry.scripts]
+dc-analyzer = "analyzer.cli:main"
+manage = "manage:main"
+
+[tool.black]
+line-length = 88
+target-version = ["py312"]
+include = "\\.pyi?$"
+
+[tool.isort]
+profile = "black"
+line_length = 88
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+ensure_newline_before_comments = true
+
+[tool.ruff]
+target-version = "py312"
+line-length = 120
+src = ["src", "tests"]
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+show_error_codes = true
+pretty = true
+
+[tool.django-stubs]
+django_settings_module = "code_analyzer_web.settings"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "tests.test_settings"
+addopts = [
+    "--strict-markers",
+    "--strict-config",
+    "--ds=tests.test_settings",
+    "--reuse-db",
+    "--cov=analyzer",
+    "--cov=dashboard",
+    "--cov-report=term-missing",
+    "--cov-report=html:htmlcov",
+    "--cov-report=xml:coverage.xml",
+]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+    "unit: marks tests as unit tests",
+    "django_db: mark test to use database",
+]
+
+[tool.coverage.run]
+source = ["analyzer", "dashboard"]
+omit = [
+    "*/tests/*",
+    "*/test_*",
+    "*/conftest.py",
+    "*/__main__.py",
+    "*/migrations/*",
+    "*/venv/*",
+    "*/.venv/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]
+
+[tool.bandit]
+exclude_dirs = ["tests", "docs", "examples"]
+skips = ["B101", "B601"]
+
+[tool.vulture]
+exclude = ["tests/", "docs/", "examples/", "migrations/"]
+ignore_decorators = ["@app.route", "@require_*"]
+ignore_names = ["_*", "test_*"]
+make_whitelist = true
+min_confidence = 80
+paths = ["analyzer", "dashboard"]
+sort_by_size = true
+verbose = false
+
+[tool."ruff.lint"]
+select = [
+    "E",
+    "W",
+    "F",
+    "I",
+    "UP",
+    "N",
+    "B",
+    "C4",
+    "DTZ",
+    "T10",
+    "ISC",
+    "G",
+    "PIE",
+    "PT",
+    "RET",
+    "SIM",
+    "ARG",
+    "ERA",
+    "PGH",
+    "PL",
+    "TRY",
+    "BLE",
+    "COM",
+]
+ignore = [
+    "E501",
+    "UP007",
+    "BLE001",
+    "G004",
+    "DTZ007",
+    "TRY003",
+    "PLR2004",
+    "PLR0911",
+    "PLR0912",
+    "TRY401",
+]
+
+[tool."ruff.lint.per-file-ignores"]
+"__init__.py" = ["F401"]
+"tests/**/*.py" = ["S101", "PLR2004", "TID252", "ARG", "FBT"]
+"scripts/**/*.py" = ["T20", "S101", "PLR2004"]
+
+[tool."pytest.ini_options"]
+minversion = "8.0"
+addopts = [
+    "--strict-markers",
+    "--strict-config",
+    "--cov-report=term-missing",
+    "--cov-report=html:reports/coverage",
+    "--cov-report=xml",
+    "--junitxml=reports/junit.xml",
+]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_functions = ["test_*"]
+python_classes = ["Test*"]
+markers = [
+    "slow: marks tests as slow",
+    "integration: marks tests as integration tests",
+    "unit: marks tests as unit tests",
+]
+
+[tool."coverage.run"]
+source = ["src"]
+branch = true
+omit = ["*/tests/*", "*/test_*", "*/__main__.py", "*/conftest.py"]
+
+[tool."coverage.report"]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "@abstractmethod",
+]
+
+[build-system]
+requires = ["poetry-core>=2.1.3"]
+build-backend = "poetry.core.masonry.api"
