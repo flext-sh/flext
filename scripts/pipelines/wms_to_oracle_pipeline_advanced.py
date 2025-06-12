@@ -81,9 +81,9 @@ class MergeStatementGenerator:
         records: list[dict],
         table_name: str,
         key_properties: list[str],
-        schema_name: str = None,
+        schema_name: str | None = None,
         timestamp_field: str = "tk_insert_dt",
-        track_fields: list[str] = None,
+        track_fields: list[str] | None = None,
     ) -> tuple[str, list[dict]]:
         """Prepara comando MERGE para operação UPSERT.
 
@@ -661,7 +661,7 @@ class SQLAlchemySchemaMapper:
         self.logger.info("Usando MERGE tradicional")
         return self._generate_traditional_merge_statements(processed_data, resource, table_name, primary_keys, schema_name)
 
-    def _generate_simple_insert_statements(self, data: list[dict], table_name: str, valid_fields: list[str], schema_name: str = None) -> list[str]:
+    def _generate_simple_insert_statements(self, data: list[dict], table_name: str, valid_fields: list[str], schema_name: str | None = None) -> list[str]:
         """Gera comandos INSERT simples apenas com campos válidos.
 
         Args:
@@ -730,7 +730,7 @@ class SQLAlchemySchemaMapper:
         self.logger.info(f"Gerados {len(insert_statements)} comandos INSERT simples")
         return insert_statements
 
-    def _generate_traditional_merge_statements(self, data: list[dict], resource: str, table_name: str, primary_keys: list[str], schema_name: str = None) -> list[str]:
+    def _generate_traditional_merge_statements(self, data: list[dict], resource: str, table_name: str, primary_keys: list[str], schema_name: str | None = None) -> list[str]:
         """Gera comandos MERGE tradicionais usando MergeStatementGenerator.
 
         Args:
@@ -896,7 +896,7 @@ class SQLAlchemySchemaMapper:
             self.logger.info("=== Pipeline Incremental Concluído ===")
 
         except Exception as e:
-            self.logger.exception(f"Erro no pipeline incremental: {str(e)}")
+            self.logger.exception(f"Erro no pipeline incremental: {e!s}")
             raise
         finally:
             self.cleanup()
@@ -913,7 +913,7 @@ class SQLAlchemySchemaMapper:
                 self.logger.info("WmsClient finalizado")
 
         except Exception as e:
-            self.logger.warning(f"Erro durante cleanup: {str(e)}")
+            self.logger.warning(f"Erro durante cleanup: {e!s}")
 
     def _discover_additional_fields_from_data(
         self, records: list, resource: str,
@@ -1345,7 +1345,7 @@ class WmsToOracleAdvancedPipeline:
             return False
 
     def extract_from_wms(
-        self, resource: str, limit: int = None, **query_params,
+        self, resource: str, limit: int | None = None, **query_params,
     ) -> list[dict]:
         """Extrai dados do WMS usando a API nativa com mapeamento dinâmico.
 
@@ -1634,7 +1634,7 @@ class WmsToOracleAdvancedPipeline:
                                 fields[key] = int(value)
                         except ValueError:
                             # Remover aspas se existirem
-                            if value.startswith('"') and value.endswith('"') or value.startswith("'") and value.endswith("'"):
+                            if (value.startswith('"') and value.endswith('"')) or (value.startswith("'") and value.endswith("'")):
                                 value = value[1:-1]
                             fields[key] = value
 

@@ -18,14 +18,14 @@
 
 | **Topic** | **Function** | **Audience** | **Status** |
 |-----------|--------------|--------------|------------|
-| [Oracle Adapters](./flx-http-oracle-oic-adapter.md) | Oracle integration adapters | Oracle developers | ✅ Complete |
-| [Database Adapters](./flx-database-oracle-adapter.md) | Database connectivity patterns | Data engineers | ✅ Complete |
+| [Oracle Adapters](./flx_http_oracle_oic-adapter.md) | Oracle integration adapters | Oracle developers | ✅ Complete |
+| [Database Adapters](./flx_database_oracle-adapter.md) | Database connectivity patterns | Data engineers | ✅ Complete |
 | [HTTP Adapters](./http-client-adapters.md) | HTTP client implementations | API developers | 📋 Documented |
 
 ### **📋 Learning Path**
 
-1. **🎯 Start Here**: [Oracle HTTP Adapter](./flx-http-oracle-oic-adapter.md) - Oracle integration patterns
-2. **⚡ Quick Path**: [Database Adapter](./flx-database-oracle-adapter.md) - Database connectivity
+1. **🎯 Start Here**: [Oracle HTTP Adapter](./flx_http_oracle_oic-adapter.md) - Oracle integration patterns
+2. **⚡ Quick Path**: [Database Adapter](./flx_database_oracle-adapter.md) - Database connectivity
 3. **📚 Deep Dive**: [Custom Adapter Development](./custom-adapter-development.md) - Building custom adapters
 
 ---

@@ -93,15 +93,12 @@ async def main_async() -> None:
 
 def main() -> int:
     """Main entry point."""
-    print("WMS CLI Example with Direct API Integration")
     try:
         asyncio.run(main_async())
         return 0
     except KeyboardInterrupt:
-        print("\nOperation cancelled by user")
         return 1
-    except Exception as e:
-        print(f"Error: {e}")
+    except Exception:
         return 1
 
 

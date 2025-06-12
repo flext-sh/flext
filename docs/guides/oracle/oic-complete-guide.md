@@ -782,7 +782,7 @@ python -m flx_http_oracle_oic.cli jwt status --verbose
 
 ### **Related Topics**
 
-- [HTTP Adapter Patterns](../adapters/flx-http-oracle-oic-adapter.md) - FLX HTTP adapter implementation for OIC
+- [HTTP Adapter Patterns](../adapters/flx_http_oracle_oic-adapter.md) - FLX HTTP adapter implementation for OIC
 - [Security Framework](../../security/index.md) - Enterprise security patterns for Oracle integrations
 - [Infrastructure Services](../../infrastructure/index.md) - Infrastructure services supporting Oracle integrations
 

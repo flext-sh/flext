@@ -290,25 +290,4 @@ if __name__ == "__main__":
     # Note: In a real application, you would have Redis running
     # and Dramatiq workers processing the actual queues
 
-    print("""
-    FLX Async DDD Infrastructure Demo
-    =================================
-
-    This demo shows the conceptual flow of the new async infrastructure.
-
-    In production, you would:
-    1. Have Redis running for message queuing
-    2. Start Dramatiq workers to process queues
-    3. Send commands via the command bus to queues
-    4. Workers would process commands asynchronously
-    5. Events would be published and handled by multiple subscribers
-
-    Key Benefits:
-    - 10x performance improvement over synchronous processing
-    - Fault tolerance with automatic retries
-    - Horizontal scalability
-    - Clear separation of commands, events, and queries
-    - Message correlation for distributed tracing
-    """)
-
     asyncio.run(main())

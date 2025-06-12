@@ -92,7 +92,7 @@ flx/infra/
 
 **Three Production Oracle Adapters** (verified against actual source code):
 
-#### **Oracle Database Adapter** (`flx-database-oracle/`)
+#### **Oracle Database Adapter** (`flx_database_oracle/`)
 
 ```python
 # Actual implementation patterns from source analysis:
@@ -148,7 +148,7 @@ class OracleProductionAdapter(DatabaseAdapter):
         return results
 ```
 
-#### **Oracle Integration Cloud (OIC) Adapter** (`flx-http-oracle-oic/`)
+#### **Oracle Integration Cloud (OIC) Adapter** (`flx_http_oracle_oic/`)
 
 ```python
 # Real JWT authentication and REST integration verified in source:
@@ -159,7 +159,7 @@ from flx.infra.http import HttpClientAdapter
 class OracleOICAdapter(OracleOicHttpAdapterModern):
     """Production OIC adapter with JWT authentication.
     
-    Uses actual implementation from flx-http-oracle-oic source.
+    Uses actual implementation from flx_http_oracle_oic source.
     """
     
     def __init__(self, config: OracleOicConfigModern):
@@ -196,7 +196,7 @@ class OracleOICAdapter(OracleOicHttpAdapterModern):
             return await self._process_oic_response(response)
 ```
 
-#### **Oracle WMS Adapter** (`flx-http-oracle-wms/`)
+#### **Oracle WMS Adapter** (`flx_http_oracle_wms/`)
 
 ```python
 # Warehouse management operations:

@@ -58,6 +58,7 @@ define detect_projects
 endef
 
 PROJECTS := $(call detect_projects)
+ALL_PROJECT_NAMES := $(notdir $(PROJECTS))
 PROJECT_NAMES := $(if $(PROJECT),$(PROJECT),$(notdir $(PROJECTS)))
 PROJECT ?=
 
@@ -230,6 +231,72 @@ clean:
 	$(call section,Limpando artefatos)
 	$(call cleanup_artifacts)
 	$(call success,Limpeza de artefatos completada)
+
+# ───────────────────────────────────────────────────────────────────────────
+#  STANDARDIZED PROJECT COORDINATION
+# ───────────────────────────────────────────────────────────────────────────
+
+# Define PYAUTO_ROOT for coordinated mode
+export PYAUTO_ROOT := $(WORKSPACE_ROOT)
+
+## project-run: Executa qualquer target em um projeto específico
+project-run: venv-check
+	@if [ -z "$(PROJECT)" ]; then \
+		$(call error,"PROJECT não especificado. Use: make project-run PROJECT=nome TARGET=comando"); \
+		exit 1; \
+	elif [ -z "$(TARGET)" ]; then \
+		$(call error,"TARGET não especificado. Use: make project-run PROJECT=nome TARGET=comando"); \
+		exit 1; \
+	else \
+		$(call check_project_exists); \
+		$(call section,"Executando $(TARGET) em $(PROJECT)"); \
+		cd $(WORKSPACE_ROOT)/$(PROJECT) && \
+		$(MAKE) $(TARGET) PYAUTO_ROOT=$(WORKSPACE_ROOT); \
+	fi
+
+## project-status: Mostra status de um projeto específico
+project-status:
+	@if [ -z "$(PROJECT)" ]; then \
+		$(call section,"Status de todos os projetos"); \
+		for proj in $(ALL_PROJECT_NAMES); do \
+			echo ""; \
+			$(call subsection,"$$proj"); \
+			cd $(WORKSPACE_ROOT)/$$proj && $(MAKE) status --no-print-directory 2>/dev/null || echo "Status não disponível"; \
+		done; \
+	else \
+		$(call check_project_exists); \
+		cd $(WORKSPACE_ROOT)/$(PROJECT) && $(MAKE) status; \
+	fi
+
+## project-validate: Valida estrutura de um projeto
+project-validate:
+	@if [ -z "$(PROJECT)" ]; then \
+		$(call section,"Validando todos os projetos"); \
+		for proj in $(ALL_PROJECT_NAMES); do \
+			$(call subsection,"Validando $$proj"); \
+			cd $(WORKSPACE_ROOT)/$$proj && $(MAKE) validate --no-print-directory 2>/dev/null || echo "❌ Validação falhou"; \
+		done; \
+	else \
+		$(call check_project_exists); \
+		cd $(WORKSPACE_ROOT)/$(PROJECT) && $(MAKE) validate; \
+	fi
+
+## projects-report: Gera relatório consolidado de todos os projetos
+projects-report:
+	$(call section,"Gerando relatório consolidado")
+	@mkdir -p $(WORKSPACE_ROOT)/reports
+	@echo "# PyAuto Projects Report" > $(WORKSPACE_ROOT)/reports/consolidated_report.md
+	@echo "Generated: $$(date)" >> $(WORKSPACE_ROOT)/reports/consolidated_report.md
+	@echo "" >> $(WORKSPACE_ROOT)/reports/consolidated_report.md
+	@for proj in $(PROJECT_NAMES); do \
+		echo "## $$proj" >> $(WORKSPACE_ROOT)/reports/consolidated_report.md; \
+		cd $(WORKSPACE_ROOT)/$$proj && $(MAKE) report --no-print-directory 2>/dev/null || echo "Report não disponível"; \
+		if [ -f reports/report.md ]; then \
+			cat reports/report.md >> $(WORKSPACE_ROOT)/reports/consolidated_report.md; \
+		fi; \
+		echo "" >> $(WORKSPACE_ROOT)/reports/consolidated_report.md; \
+	done
+	$(call success,"Relatório consolidado gerado em reports/consolidated_report.md")
 
 # ───────────────────────────────────────────────────────────────────────────
 #  DEVELOPMENT
@@ -604,6 +671,12 @@ help:
 	@echo "  clean               Limpa artefatos de build e cache"
 	@echo ""
 	@echo "$(CYAN)Para comandos abaixo: todos os projetos ou específico PROJECT=nome$(NC)"
+	@echo ""
+	@echo "$(BOLD)$(GREEN)Standardized Project Coordination:$(NC)"
+	@echo "  project-run         Executa qualquer target em um projeto (PROJECT=nome TARGET=comando)"
+	@echo "  project-status      Mostra status de um projeto ou todos"
+	@echo "  project-validate    Valida estrutura de projetos"
+	@echo "  projects-report     Gera relatório consolidado de todos os projetos"
 	@echo ""
 	@echo "$(BOLD)$(GREEN)Dependency Management:$(NC)"
 	@echo "  install-all         Instala todas as dependências (todos os grupos)"

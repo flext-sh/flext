@@ -36,9 +36,9 @@ class QuickTestRunner:
         self.config = config
         self.available_projects = [
             "flx/tests",
-            "flx-database-oracle/tests",
-            "flx-http-oracle-wms/tests",
-            "flx-http-oracle-oic/tests",
+            "flx_database_oracle/tests",
+            "flx_http_oracle_wms/tests",
+            "flx_http_oracle_oic/tests",
             "dc-oracle-wms/tests",
             "dc-oracle-db/tests",
         ]

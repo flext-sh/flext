@@ -131,9 +131,9 @@ pyauto/
 │   ├── tests/                  # Comprehensive test suite
 │   ├── pyproject.toml          # Framework dependencies
 │   └── mypy.ini                # Type checking configuration
-├── flx-database-oracle/        # Oracle Database adapter
-├── flx-http-oracle-wms/        # Oracle WMS HTTP adapter
-├── flx-http-oracle-oic/        # Oracle OIC HTTP adapter
+├── flx_database_oracle/        # Oracle Database adapter
+├── flx_http_oracle_wms/        # Oracle WMS HTTP adapter
+├── flx_http_oracle_oic/        # Oracle OIC HTTP adapter
 ├── docs/                       # Documentation hub
 ├── examples/                   # Usage examples and patterns
 ├── scripts/                    # Shared utilities and tools
@@ -210,11 +210,11 @@ cd flx-database-oracle
 pip install -e .
 
 # WMS HTTP adapter  
-cd ../flx-http-oracle-wms
+cd ../flx_http_oracle_wms
 pip install -e .
 
 # OIC HTTP adapter
-cd ../flx-http-oracle-oic
+cd ../flx_http_oracle_oic
 pip install -e .
 ```
 

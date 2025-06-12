@@ -173,7 +173,7 @@ python -m bandit -r src
 ## Project Structure
 
 ```
-flx-http-oracle-wms/
+flx_http_oracle_wms/
 ├── src/
 │   └── flx_http_oracle_wms/
 │       ├── __init__.py

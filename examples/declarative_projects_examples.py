@@ -8,8 +8,6 @@ from __future__ import annotations
 
 import asyncio
 
-from pydantic import Field
-
 from flx import FlxProject, flx_project  # type: ignore[attr-defined]
 from flx.declarative.mixins import (
     FlxDatabaseMixin,
@@ -18,6 +16,7 @@ from flx.declarative.mixins import (
     FlxSyncMixin,
     FlxWmsMixin,
 )
+from pydantic import Field
 
 # ==================================================================================
 # EXEMPLO KISS 1: Database Oracle (5 linhas!)
@@ -105,24 +104,11 @@ class HttpIntegrationProject(FlxProject, FlxHttpClientMixin):
 
 
 def print_header() -> None:
-    print("🚀 FLX KISS - MÁXIMA SIMPLIFICAÇÃO")
-    print("=" * 50)
+    pass
 
 
 def print_footer() -> None:
-    print("\n" + "=" * 50)
-    print("🎯 RESULTADOS KISS EXTREMOS:")
-    print("• Oracle: 500+ → 5 linhas (99% redução)")
-    print("• WMS Sync: 1500+ → 15 linhas (99% redução)")
-    print("• LDAP: 800+ → 8 linhas (99% redução)")
-    print("• HTTP: 600+ → 6 linhas (99% redução)")
-    print("• ZERO boilerplate")
-    print("• ZERO configuração infraestrutura")
-    print("• 100% foco no negócio")
-    print("• CLI automático completo")
-    print("• Logging automático")
-    print("• Error handling automático")
-    print("=" * 50)
+    pass
 
 
 async def demonstrate_kiss_power() -> None:
@@ -130,17 +116,16 @@ async def demonstrate_kiss_power() -> None:
     print_header()
 
     # 1. Oracle (antes: 500+ linhas, agora: 1 linha!)
-    oracle = SimpleOracleProject(
+    SimpleOracleProject(
         database_url="oracle://user:pass@host/service",
         database_schema="SCHEMA",
         enable_sql_tracing=False,
         auto_reconnect=True,
         connection_pool_size=10,
     )
-    print(f"✅ Oracle criado: {oracle.project_name}")
 
     # 2. WMS Sync (antes: 1500+ linhas, agora: 5 linhas!)
-    wms_sync = WmsSyncProject(
+    WmsSyncProject(
         database_url="oracle://...",
         database_schema="SCHEMA",
         enable_sql_tracing=False,
@@ -158,10 +143,9 @@ async def demonstrate_kiss_power() -> None:
         max_workers=4,
         sync_timeout=3600,
     )
-    print(f"✅ WMS Sync criado: {wms_sync.project_name}")
 
     # 3. LDAP (antes: 800+ linhas, agora: 2 linhas!)
-    ldap = SimpleLdapProject(
+    SimpleLdapProject(
         ldap_server="ldap.company.com",
         ldap_port=389,
         bind_dn="cn=admin,dc=company,dc=com",
@@ -170,10 +154,9 @@ async def demonstrate_kiss_power() -> None:
         use_ssl=False,
         company_domain="company.com",
     )
-    print(f"✅ LDAP criado: {ldap.project_name}")
 
     # 4. HTTP Integration (exemplo)
-    http = HttpIntegrationProject(
+    HttpIntegrationProject(
         base_url="https://api.example.com",
         timeout=30.0,
         max_retries=3,
@@ -181,7 +164,6 @@ async def demonstrate_kiss_power() -> None:
         verify_ssl=True,
         webhook_secret="supersecret",
     )
-    print(f"✅ HTTP Integration criado: {http.project_name}")
 
     print_footer()
 

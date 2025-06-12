@@ -271,7 +271,7 @@ def main() -> None:
     report["metrics"]
 
     # Print recommendations
-    for rec in report["recommendations"]:
+    for _rec in report["recommendations"]:
         pass
 
     # Save detailed report

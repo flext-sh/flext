@@ -33,7 +33,7 @@ def find_workspace_root() -> Path:
         pass
 
     # Fallback: procura por marcadores do workspace
-    for parent in [current] + list(current.parents):
+    for parent in [current, *list(current.parents)]:
         markers = ["pyproject.toml", ".workspace", "Makefile", ".git"]
         if any((parent / marker).exists() for marker in markers):
             return parent

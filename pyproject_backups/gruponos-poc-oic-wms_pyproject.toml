@@ -1,0 +1,213 @@
+[build-system]
+requires = ["poetry-core>=2.1.3"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "gruponos_oic_wms"
+version = "0.4.0"
+description = "Integration between Oracle WMS, Oracle Integration Cloud, and Autonomous Database using FLX Framework"
+authors = ["datacosmos-br <dev@datacosmos.com.br>"]
+readme = "README.md"
+packages = [{ include = "gn_oic_wms_db", from = "src" }]
+
+[tool.poetry.scripts]
+# Main CLI command
+gn-wms = "gn_oic_wms_db.cli.main:main"
+
+[tool.poetry.dependencies]
+python = "^3.13,<3.15"
+rich = "^14.0.0"
+python-dotenv = "^1.0.0"
+cyclopts = "^3.1.0"
+flx-database-oracle = { path = "../flx-database-oracle", develop = true }
+flx-http-oracle-oic = { path = "../flx-http-oracle-oic", develop = true }
+flx-http-oracle-wms = { path = "../flx-http-oracle-wms", develop = true }
+flx = { path = "../flx", develop = true }
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.4.0"
+pytest-cov = "^6.1.1"
+black = "^25.1.0"
+isort = "^5.13.2"
+mypy = "^1.16.0"
+ruff = "^0.11.13"
+pytest-mock = "^3.14.1"
+pytest-asyncio = "^0.23.0"
+pre-commit = "^4.2.0"
+
+# Extras removed - dependencies now in dev group
+
+# Black - PEP8 compliant code formatter
+[tool.black]
+line-length = 79
+target-version = ["py313"]
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+# isort - Import sorting
+[tool.isort]
+profile = "black"
+line_length = 79
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+ensure_newline_before_comments = true
+skip_gitignore = true
+skip = ["__pycache__", ".venv", "build", "dist"]
+
+# Mypy - Type checking
+[tool.mypy]
+python_version = "3.13"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+show_error_codes = true
+pretty = true
+namespace_packages = true
+check_untyped_defs = true
+disallow_any_generics = true
+disallow_incomplete_defs = true
+disallow_untyped_defs = true
+no_implicit_optional = true
+warn_no_return = true
+warn_unreachable = true
+
+# Removed unused module overrides
+
+# Ruff - Fast Python linter
+[tool.ruff]
+target-version = "py313"
+line-length = 79
+src = ["src", "tests"]
+exclude = [
+    ".git",
+    "__pycache__",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".venv",
+    "build",
+    "dist",
+]
+
+[tool.ruff.lint]
+select = [
+    "E",     # pycodestyle errors
+    "W",     # pycodestyle warnings
+    "F",     # pyflakes
+    "I",     # isort
+    "N",     # pep8-naming
+    "D",     # pydocstyle
+    "UP",    # pyupgrade
+    "B",     # flake8-bugbear
+    "C4",    # flake8-comprehensions
+    "DTZ",   # flake8-datetimez
+    "T10",   # flake8-debugger
+    "ISC",   # flake8-implicit-str-concat
+    "G",     # flake8-logging-format
+    "PIE",   # flake8-pie
+    "PT",    # flake8-pytest-style
+    "RET",   # flake8-return
+    "SIM",   # flake8-simplify
+    "ARG",   # flake8-unused-arguments
+    "PGH",   # pygrep-hooks
+    "PL",    # pylint
+    "TRY",   # tryceratops
+    "RUF",   # ruff-specific rules
+]
+ignore = [
+    "D100",  # Missing docstring in public module
+    "D101",  # Missing docstring in public class
+    "D102",  # Missing docstring in public method
+    "D103",  # Missing docstring in public function
+    "D104",  # Missing docstring in public package
+    "D107",  # Missing docstring in __init__
+    "D203",  # 1 blank line required before class docstring
+    "D213",  # Multi-line docstring summary should start at the second line
+]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401", "D104"]
+"tests/**/*.py" = ["D", "S101", "PLR2004", "ARG"]
+"scripts/**/*.py" = ["T20", "S101"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+# Pylint configuration removed - using ruff instead
+
+# Pytest configuration
+[tool.pytest.ini_options]
+minversion = "8.0"
+addopts = [
+    "-ra",
+    "--strict-markers",
+    "--strict-config",
+    "--cov=gn_oic_wms_db",
+    "--cov-branch",
+    "--cov-report=term-missing",
+    "--cov-report=html:reports/coverage",
+    "--cov-report=xml",
+    "--junitxml=reports/junit.xml",
+]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_functions = ["test_*"]
+python_classes = ["Test*"]
+markers = [
+    "slow: marks tests as slow",
+    "integration: marks tests as integration tests",
+    "unit: marks tests as unit tests",
+    "asyncio: marks tests as async",
+]
+asyncio_mode = "auto"
+
+# Coverage configuration
+[tool.coverage.run]
+source = ["src/gn_oic_wms_db"]
+branch = true
+omit = [
+    "*/tests/*",
+    "*/test_*",
+    "*/__main__.py",
+    "*/conftest.py",
+    "*/__init__.py",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "def __str__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "@abstractmethod",
+    "@abc.abstractmethod",
+    "except ImportError:",
+    "except KeyError:",
+    "except FileNotFoundError:",
+    "logger.debug",
+    "logger.error",
+    "logger.warning",
+    "logger.info",
+]
+precision = 2
+show_missing = true
+
+# Flake8 configuration removed - using ruff instead

@@ -70,7 +70,7 @@ FLX Hexagonal Architecture - Actual Implementation
     └── HttpClientService (flx.infra.http.client_service)
 ```
 
-**⚠️ Implementation Note**: The actual implementation uses `WmsClient` class from `/flx-http-oracle-wms/src/flx_http_oracle_wms/wms_client.py`, not the previously documented adapter names.
+**⚠️ Implementation Note**: The actual implementation uses `WmsClient` class from `/flx_http_oracle_wms/src/flx_http_oracle_wms/wms_client.py`, not the previously documented adapter names.
 
 ### Communication Protocols
 

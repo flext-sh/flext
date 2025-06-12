@@ -86,7 +86,7 @@ This document serves as the central hub for all FLX architecture documentation, 
 ### Oracle Integration Architectures
 
 - **[Gruponos OIC-WMS Architecture](./gruponos-oic-wms-architecture.md)** - Enterprise Oracle WMS integration
-- Related projects: `flx-http-oracle-wms/`, `flx-http-oracle-oic/`, `flx-database-oracle/`
+- Related projects: `flx_http_oracle_wms/`, `flx_http_oracle_oic/`, `flx_database_oracle/`
 
 ### Meltano Integration Architecture
 

@@ -5,13 +5,13 @@ Resolve conflitos e isola projetos adequadamente
 """
 
 from pathlib import Path
-from typing import Dict, List
+
 import tomli
 import tomli_w
 from rich.console import Console
-from rich.table import Table
 from rich.panel import Panel
 from rich.progress import Progress, SpinnerColumn, TextColumn
+from rich.table import Table
 
 console = Console()
 
@@ -19,9 +19,9 @@ console = Console()
 class DependencyResolver:
     def __init__(self, workspace_path: Path):
         self.workspace_path = workspace_path
-        self.projects: List[Path] = []
+        self.projects: list[Path] = []
 
-    def find_projects(self) -> List[Path]:
+    def find_projects(self) -> list[Path]:
         """Encontra todos os projetos com pyproject.toml"""
         projects = []
         seen_projects = set()
@@ -72,7 +72,7 @@ class DependencyResolver:
 
         return conflicts
 
-    def resolve_version_conflicts(self, conflicts: Dict):
+    def resolve_version_conflicts(self, conflicts: dict):
         """Propõe resoluções para conflitos de versão"""
         console.print("\n📊 Análise de Conflitos:")
 
@@ -87,7 +87,7 @@ class DependencyResolver:
         # Identifica conflitos
         conflicted_deps = {}
         for dep, projects in common_deps.items():
-            versions = set(str(v) for v in projects.values())  # Converte para string
+            versions = {str(v) for v in projects.values()}  # Converte para string
             if len(versions) > 1:
                 conflicted_deps[dep] = projects
 
@@ -98,7 +98,7 @@ class DependencyResolver:
             table.add_column("Projetos Afetados", style="yellow")
 
             for dep, projects in conflicted_deps.items():
-                versions = ", ".join(set(str(v) for v in projects.values()))
+                versions = ", ".join({str(v) for v in projects.values()})
                 project_list = ", ".join(projects.keys())
                 table.add_row(dep, versions, project_list)
 
@@ -110,7 +110,7 @@ class DependencyResolver:
 
         return conflicted_deps
 
-    def propose_resolutions(self, conflicts: Dict) -> Dict:
+    def propose_resolutions(self, conflicts: dict) -> dict:
         """Propõe resoluções baseadas em compatibilidade"""
         resolutions = {}
 
@@ -123,13 +123,13 @@ class DependencyResolver:
             "pylint": "^2.17.0",  # Versão compatível
             "safety": "^2.3.0",  # Versão compatível
             "typer": "^0.15.0",  # Versão atual
-            "singer-sdk": "^0.46.3",
+            "singer_sdk": "^0.46.3",
             "meltano": "^3.7.0",
             "aiofiles": "^24.1.0",
             "xmltodict": "^0.14.0",
         }
 
-        for dep in conflicts.keys():
+        for dep in conflicts:
             if dep in compatible_versions:
                 resolutions[dep] = compatible_versions[dep]
             else:
@@ -139,7 +139,7 @@ class DependencyResolver:
 
         return resolutions
 
-    def display_resolutions(self, resolutions: Dict):
+    def display_resolutions(self, resolutions: dict):
         """Exibe as resoluções propostas"""
         console.print("\n💡 Resoluções Propostas:")
 
@@ -156,7 +156,7 @@ class DependencyResolver:
             "pylint": "Compatível com Python 3.13",
             "safety": "Versão estável",
             "typer": "Versão mais recente estável",
-            "singer-sdk": "Versão requerida pelos taps",
+            "singer_sdk": "Versão requerida pelos taps",
             "meltano": "Versão compatível",
             "aiofiles": "Versão async estável",
             "xmltodict": "Versão atualizada",
@@ -169,7 +169,7 @@ class DependencyResolver:
 
         console.print(table)
 
-    def apply_resolutions(self, resolutions: Dict):
+    def apply_resolutions(self, resolutions: dict):
         """Aplica as resoluções nos projetos"""
         console.print("\n🔧 Aplicando Resoluções...")
 
@@ -286,7 +286,7 @@ echo "💡 Para ativar: cd $PROJECT_PATH && source .venv/bin/activate"
 """
 
         script_path = self.workspace_path / "install_project.sh"
-        with open(script_path, "w") as f:
+        with open(script_path, "w", encoding="utf-8") as f:
             f.write(install_script)
         script_path.chmod(0o755)
 
@@ -308,11 +308,11 @@ failed_projects=()
 find "$WORKSPACE_ROOT" -name "pyproject.toml" -not -path "*/.venv/*" | while read -r pyproject; do
     project_dir=$(dirname "$pyproject")
     project_name=$(basename "$project_dir")
-    
+
     echo "🔍 Verificando: $project_name"
-    
+
     cd "$project_dir"
-    
+
     # Verifica se pyproject.toml é válido
     if poetry check --quiet 2>/dev/null; then
         echo "  ✅ Poetry config válida"
@@ -321,7 +321,7 @@ find "$WORKSPACE_ROOT" -name "pyproject.toml" -not -path "*/.venv/*" | while rea
         failed_projects+=("$project_name")
         continue
     fi
-    
+
     # Verifica se venv existe e está funcional
     if [ -d ".venv" ]; then
         if source .venv/bin/activate 2>/dev/null && python --version >/dev/null 2>&1; then
@@ -332,7 +332,7 @@ find "$WORKSPACE_ROOT" -name "pyproject.toml" -not -path "*/.venv/*" | while rea
     else
         echo "  ⚠️ Ambiente virtual não encontrado"
     fi
-    
+
     echo ""
 done
 
@@ -345,7 +345,7 @@ fi
 """
 
         health_script_path = self.workspace_path / "check_project_health.sh"
-        with open(health_script_path, "w") as f:
+        with open(health_script_path, "w", encoding="utf-8") as f:
             f.write(health_script)
         health_script_path.chmod(0o755)
 
@@ -402,7 +402,7 @@ def main():
 
     console.print(
         Panel.fit(
-            "Dependency Conflict Resolver\n" "Resolve conflitos e isola projetos",
+            "Dependency Conflict Resolver\nResolve conflitos e isola projetos",
             style="bold magenta",
         )
     )

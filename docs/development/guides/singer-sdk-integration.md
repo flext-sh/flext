@@ -126,7 +126,7 @@ pipx install cookiecutter
 cookiecutter https://github.com/meltano/sdk --directory="cookiecutter/tap-template"
 
 # From local SDK repo
-cookiecutter ./singer-sdk/cookiecutter/tap-template
+cookiecutter ./singer_sdk/cookiecutter/tap-template
 ```
 
 #### Create New Target
@@ -136,7 +136,7 @@ cookiecutter ./singer-sdk/cookiecutter/tap-template
 cookiecutter https://github.com/meltano/sdk --directory="cookiecutter/target-template"
 
 # From local SDK repo
-cookiecutter ./singer-sdk/cookiecutter/target-template
+cookiecutter ./singer_sdk/cookiecutter/target-template
 ```
 
 #### Create New Mapper
@@ -146,7 +146,7 @@ cookiecutter ./singer-sdk/cookiecutter/target-template
 cookiecutter https://github.com/meltano/sdk --directory="cookiecutter/mapper-template"
 
 # From local SDK repo
-cookiecutter ./singer-sdk/cookiecutter/mapper-template
+cookiecutter ./singer_sdk/cookiecutter/mapper-template
 ```
 
 ### 3. Integration with FLX Workspace

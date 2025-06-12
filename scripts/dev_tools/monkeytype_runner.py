@@ -33,13 +33,12 @@ import os
 import subprocess
 import sys
 from pathlib import Path
-from typing import Union
 
 
 class MonkeyTypeRunner:
     """Runner for MonkeyType type collection and application."""
 
-    def __init__(self, workspace_root: Union[str, Path] = None) -> None:
+    def __init__(self, workspace_root: str | Path | None = None) -> None:
         """Initialize the runner with workspace path."""
         if workspace_root is None:
             # Try to find the workspace root (git root or current directory)

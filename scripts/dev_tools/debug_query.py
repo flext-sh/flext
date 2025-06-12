@@ -59,7 +59,7 @@ def debug_query():
                 else:
                     print(f"Tipo desconhecido: {type(first_row)}")
                     print(f"Valor: {first_row}")
-                    print(f"String: {str(first_row)}")
+                    print(f"String: {first_row!s}")
 
         except Exception as e:
             print(f"❌ Erro na query: {e}")

@@ -4,7 +4,7 @@
 
 [![Transformers](https://img.shields.io/badge/transformers-1_plugin-purple.svg)](#transformer-categories)
 [![Oracle](https://img.shields.io/badge/oracle-OIC-red.svg)](./transform-oic.md)
-[![dbt](https://img.shields.io/badge/dbt-compatible-orange.svg)](../../development/guides/singer-sdk-integration.md)
+[![dbt](https://img.shields.io/badge/dbt-compatible-orange.svg)](../../development/guides/singer_sdk-integration.md)
 
 **Enterprise-grade Meltano transformer plugins for Oracle OIC data transformation with dbt integration**
 
@@ -50,7 +50,7 @@ Meltano transformer plugins provide enterprise-grade data transformation capabil
 
 ### **🆕 New to Data Transformation**
 
-1. **Foundation**: [dbt Integration Basics](../../development/guides/singer-sdk-integration.md)
+1. **Foundation**: [dbt Integration Basics](../../development/guides/singer_sdk-integration.md)
 2. **First Transform**: [OIC Transformer](./transform-oic.md)
 3. **Advanced Patterns**: [Complex Business Logic](../../guides/oracle/index.md)
 

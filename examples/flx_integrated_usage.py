@@ -12,13 +12,12 @@ import asyncio
 from typing import Any
 
 import structlog
+from flx.cli.declarative import FlxDeclarativeCli
+from flx.ports.ingoing.operation import FlxOperationRequest
 
 # Import FLX adapters from different projects
 from flx_database_oracle.adapters.flx_application import FlxOracleApplicationContext
 from flx_database_oracle.config.flx_oracle_config import FlxOracleConfig
-
-from flx.cli.declarative import FlxDeclarativeCli
-from flx.ports.ingoing.operation import FlxOperationRequest
 
 
 def setup_logging() -> None:

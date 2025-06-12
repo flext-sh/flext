@@ -1,0 +1,216 @@
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "flx_http_oracle_wms"
+version = "0.4.0"
+description = "FlxHttp integration with Oracle Retail WMS - Modern HTTP client for WMS operations"
+authors = ["Marlon Costa <marlon.costa@datacosmos.com.br>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "flx_http_oracle_wms", from = "src"}]
+repository = "https://github.com/datacosmos-br/flx_http_oracle_wms"
+documentation = "https://datacosmos-br.github.io/flx_http_oracle_wms/"
+keywords = ["oracle", "wms", "http", "flx", "integration", "retail"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Internet :: WWW/HTTP :: HTTP Servers",
+    "Topic :: Database :: Database Engines/Servers",
+]
+
+[tool.poetry.dependencies]
+python = "^3.13"
+# Core WMS dependencies
+pandas = "^2.2.0"
+tabulate = "^0.9.0"
+openpyxl = "^3.1.0"
+pyarrow = "^18.0.0"
+click = "^8.1.0"
+python-dotenv = "^1.0.0"
+# FLX Framework (provides: pydantic, httpx, pyyaml, structlog, rich, async support)
+flx = {path = "../flx", develop = true}
+
+[tool.poetry.group.dev.dependencies]
+# Testing
+pytest = "^8.3.0"
+pytest-asyncio = "<0.24.0"
+pytest-cov = "^6.0.0"
+pytest-xdist = "^3.6.0"
+pytest-mock = "^3.14.0"
+# Type checking
+mypy = "^1.13.0"
+types-requests = "^2.32.0"
+# Code quality
+ruff = "^0.8.0"
+bandit = "^1.8.0"
+vulture = "^2.12"
+# Pre-commit
+pre-commit = "^4.0.0"
+# Documentation
+mkdocs = "^1.6.0"
+mkdocs-material = "^9.5.0"
+# Benchmarking
+pytest-benchmark = "^4.0.0"
+
+[tool.poetry.scripts]
+flx-wms = "flx_http_oracle_wms.cli:main"
+
+[tool.poetry.urls]
+"Bug Tracker" = "https://github.com/datacosmos-br/flx_http_oracle_wms/issues"
+"Changelog" = "https://github.com/datacosmos-br/flx_http_oracle_wms/blob/main/CHANGELOG.md"
+
+# === CODE STYLE CONFIGURATION (PEP8) ===
+[tool.ruff]
+target-version = "py313"
+line-length = 88  # Black default
+src = ["src", "tests"]
+extend-exclude = [
+    ".git",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".ruff_cache",
+    ".venv",
+    "__pycache__",
+    "build",
+    "dist",
+    "*.egg-info",
+    ".coverage",
+    "htmlcov",
+]
+
+[tool.ruff.lint]
+select = [
+    "E",      # pycodestyle errors
+    "W",      # pycodestyle warnings
+    "F",      # pyflakes
+    "I",      # isort
+    "N",      # pep8-naming
+    "D",      # pydocstyle
+    "B",      # flake8-bugbear
+    "C4",     # flake8-comprehensions
+    "UP",     # pyupgrade
+    "ARG",    # flake8-unused-arguments
+    "SIM",    # flake8-simplify
+    "TID",    # flake8-tidy-imports
+    "Q",      # flake8-quotes
+    "FLY",    # flynt
+    "PERF",   # perflint
+    "RUF",    # ruff-specific rules
+]
+ignore = [
+    "D100",   # Missing docstring in public module
+    "D104",   # Missing docstring in public package
+    "D107",   # Missing docstring in __init__
+    "UP007",  # Use X | Y for type annotations (keep Optional for now)
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = [
+    "ARG",     # Unused function args -> fixtures nevertheless are functionally relevant
+    "S101",    # Use of assert detected
+    "T20",     # flake8-print
+]
+"scripts/**/*.py" = [
+    "T20",     # flake8-print
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["flx_http_oracle_wms"]
+force-single-line = false
+lines-after-imports = 2
+
+# === MYPY CONFIGURATION ===
+[tool.mypy]
+python_version = "3.13"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+show_error_codes = true
+show_column_numbers = true
+pretty = true
+ignore_missing_imports = false
+
+[[tool.mypy.overrides]]
+module = [
+    "tests.*",
+]
+disallow_untyped_defs = false
+
+[[tool.mypy.overrides]]
+module = [
+    "flx",
+    "flx.*",
+    "dotenv",
+]
+ignore_missing_imports = true
+
+# === PYTEST CONFIGURATION ===
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_functions = ["test_*"]
+python_classes = ["Test*"]
+addopts = [
+    "--strict-markers",
+    "--strict-config", 
+    "--cov=src/flx_http_oracle_wms",
+    "--cov-report=term-missing",
+    "--cov-report=html:reports/coverage",
+    "--cov-report=xml",
+    "--cov-fail-under=90",
+    "--junitxml=reports/pytest/junit.xml",
+]
+markers = [
+    "unit: Unit tests",
+    "integration: Integration tests", 
+    "e2e: End-to-end tests",
+    "slow: Slow tests",
+    "wms: WMS-specific tests",
+    "http: HTTP-related tests",
+]
+asyncio_mode = "auto"
+
+# === COVERAGE CONFIGURATION ===
+[tool.coverage.run]
+source = ["src"]
+branch = true
+omit = [
+    "*/tests/*",
+    "*/test_*",
+    "*/__main__.py",
+    "*/conftest.py",
+    "*/cli/*",  # Exclude CLI from coverage
+    "*/exceptions.py",  # Exclude unused exceptions module
+    "*/models.py",  # Exclude unused models module
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "@abstractmethod",
+]
+
+# === BANDIT CONFIGURATION ===
+[tool.bandit]
+exclude_dirs = ["tests", "scripts"]
+skips = ["B101", "B601"] 

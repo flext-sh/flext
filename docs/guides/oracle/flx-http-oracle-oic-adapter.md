@@ -8,7 +8,7 @@
 
 ## Navigation Context
 
-**Current Location**: `docs/guides/oracle/flx-http-oracle-oic-adapter.md`  
+**Current Location**: `docs/guides/oracle/flx_http_oracle_oic-adapter.md`  
 **Parent**: [Oracle Integration Hub](oracle-integration-hub.md) > Oracle OIC Integration  
 **Quick Links**: [Database Adapter](flx-database-oracle-adapter.md) | [WMS Adapter](flx-http-oracle-wms-adapter.md) | [OAuth2 Guide](oracle-oauth2-authentication-guide.md)
 

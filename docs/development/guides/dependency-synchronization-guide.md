@@ -167,9 +167,9 @@ This dependency synchronization is particularly important for the FLX framework 
 The FLX workspace contains multiple related projects:
 
 - `flx/` - Core FLX framework
-- `flx-http-oracle-oic/` - Oracle OIC integration
-- `flx-http-oracle-wms/` - Oracle WMS integration
-- `flx-database-oracle/` - Oracle database integration
+- `flx_http_oracle_oic/` - Oracle OIC integration
+- `flx_http_oracle_wms/` - Oracle WMS integration
+- `flx_database_oracle/` - Oracle database integration
 - And many more...
 
 ### **Hexagonal Architecture Dependencies**

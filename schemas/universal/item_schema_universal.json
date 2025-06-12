@@ -1,48 +1,384 @@
 {
-  "entity_name": "item",
-  "version": "1.0",
-  "source_system": "oracle_wms",
-  "extracted_at": "2025-06-03T12:42:11.779725+00:00",
-  "source_schema": {
-    "entity_name": "item",
-    "fields": {
-      "id": {
-        "type": "string",
-        "required": false,
-        "description": "Entity ID"
-      }
-    },
-    "metadata": {
-      "minimal_schema": true,
-      "discovery_method": "fallback",
-      "field_count": 1
-    }
-  },
+  "entity": "item",
+  "source": "Oracle WMS REST API",
+  "version": "25B",
+  "timestamp": "2025-06-11T15:47:59.014741",
   "fields": {
     "id": {
-      "data_type": "string",
-      "required": false,
+      "type": "integer",
+      "nullable": false,
+      "description": "",
+      "is_primary_key": true
+    },
+    "url": {
+      "type": "string",
+      "nullable": false,
+      "description": ""
+    },
+    "create_user": {
+      "type": "string",
+      "nullable": false,
+      "description": ""
+    },
+    "create_ts": {
+      "type": "string",
+      "nullable": false,
+      "description": ""
+    },
+    "mod_user": {
+      "type": "string",
+      "nullable": false,
+      "description": ""
+    },
+    "mod_ts": {
+      "type": "string",
+      "nullable": false,
+      "description": ""
+    },
+    "company_id": {
+      "type": "object",
+      "nullable": false,
+      "description": "",
+      "is_relationship": true,
+      "is_primary_key": true
+    },
+    "code": {
+      "type": "string",
+      "nullable": false,
+      "description": ""
+    },
+    "part_a": {
+      "type": "string",
+      "nullable": false,
+      "description": ""
+    },
+    "part_b": {
+      "type": "string",
+      "nullable": false,
+      "description": ""
+    },
+    "part_c": {
+      "type": "string",
+      "nullable": false,
+      "description": ""
+    },
+    "part_d": {
+      "type": "string",
+      "nullable": false,
+      "description": ""
+    },
+    "part_e": {
+      "type": "string",
+      "nullable": false,
+      "description": ""
+    },
+    "part_f": {
+      "type": "string",
+      "nullable": false,
+      "description": ""
+    },
+    "item_alternate_code": {
+      "type": "string",
+      "nullable": false,
+      "description": ""
+    },
+    "description": {
+      "type": "string",
+      "nullable": false,
+      "description": ""
+    },
+    "short_descr": {
+      "type": "string",
+      "nullable": false,
+      "description": ""
+    },
+    "putawaytype_id": {
+      "type": "object",
+      "nullable": false,
+      "description": "",
+      "is_relationship": true,
+      "is_primary_key": true
+    },
+    "barcode": {
+      "type": "string",
+      "nullable": false,
+      "description": ""
+    },
+    "unit_cost": {
+      "type": "string",
+      "nullable": false,
+      "description": ""
+    },
+    "unit_length": {
+      "type": "string",
+      "nullable": false,
+      "description": ""
+    },
+    "unit_width": {
+      "type": "string",
+      "nullable": false,
+      "description": ""
+    },
+    "unit_height": {
+      "type": "string",
+      "nullable": false,
+      "description": ""
+    },
+    "unit_weight": {
+      "type": "string",
+      "nullable": false,
+      "description": ""
+    },
+    "unit_volume": {
+      "type": "string",
+      "nullable": false,
+      "description": ""
+    },
+    "hazmat": {
+      "type": "boolean",
+      "nullable": false,
+      "description": ""
+    },
+    "sku_line_id": {
+      "type": "object",
+      "nullable": false,
+      "description": "",
+      "is_relationship": true,
+      "is_primary_key": true
+    },
+    "external_style": {
+      "type": "string",
+      "nullable": false,
+      "description": ""
+    },
+    "vas_group_code": {
+      "type": "string",
+      "nullable": false,
+      "description": ""
+    },
+    "pre_pack_code": {
+      "type": "string",
+      "nullable": false,
+      "description": ""
+    },
+    "host_aware_item_flg": {
+      "type": "boolean",
+      "nullable": false,
+      "description": ""
+    },
+    "is_parent_flg": {
+      "type": "boolean",
+      "nullable": false,
+      "description": ""
+    },
+    "mod_interface_flg": {
+      "type": "boolean",
+      "nullable": false,
+      "description": ""
+    },
+    "dummy_sku_flg": {
+      "type": "boolean",
+      "nullable": false,
+      "description": ""
+    },
+    "cubiscan_mod_ts": {
+      "type": "unknown",
       "nullable": true,
-      "description": "Entity ID",
-      "source_mapping": {
-        "original_name": "id",
-        "original_type": "string",
-        "original_definition": {
-          "type": "string",
-          "required": false,
-          "description": "Entity ID"
-        }
-      }
+      "description": ""
+    },
+    "description_2": {
+      "type": "string",
+      "nullable": false,
+      "description": ""
+    },
+    "description_3": {
+      "type": "string",
+      "nullable": false,
+      "description": ""
+    },
+    "invn_attr_a_tracking_id": {
+      "type": "object",
+      "nullable": false,
+      "description": "",
+      "is_relationship": true,
+      "is_primary_key": true
+    },
+    "invn_attr_a_dflt_value": {
+      "type": "string",
+      "nullable": false,
+      "description": ""
+    },
+    "invn_attr_b_tracking_id": {
+      "type": "object",
+      "nullable": false,
+      "description": "",
+      "is_relationship": true,
+      "is_primary_key": true
+    },
+    "invn_attr_b_dflt_value": {
+      "type": "string",
+      "nullable": false,
+      "description": ""
+    },
+    "invn_attr_c_tracking_id": {
+      "type": "object",
+      "nullable": false,
+      "description": "",
+      "is_relationship": true,
+      "is_primary_key": true
+    },
+    "invn_attr_c_dflt_value": {
+      "type": "string",
+      "nullable": false,
+      "description": ""
+    },
+    "nmfc_code": {
+      "type": "string",
+      "nullable": false,
+      "description": ""
+    },
+    "invn_attr_d_tracking_id": {
+      "type": "object",
+      "nullable": false,
+      "description": "",
+      "is_relationship": true,
+      "is_primary_key": true
+    },
+    "invn_attr_e_tracking_id": {
+      "type": "object",
+      "nullable": false,
+      "description": "",
+      "is_relationship": true,
+      "is_primary_key": true
+    },
+    "invn_attr_f_tracking_id": {
+      "type": "object",
+      "nullable": false,
+      "description": "",
+      "is_relationship": true,
+      "is_primary_key": true
+    },
+    "invn_attr_g_tracking_id": {
+      "type": "object",
+      "nullable": false,
+      "description": "",
+      "is_relationship": true,
+      "is_primary_key": true
+    },
+    "packing_tolerance_percent": {
+      "type": "string",
+      "nullable": false,
+      "description": ""
+    },
+    "handle_decimal_qty_flg": {
+      "type": "boolean",
+      "nullable": false,
+      "description": ""
+    },
+    "pack_with_wave_flg": {
+      "type": "boolean",
+      "nullable": false,
+      "description": ""
+    },
+    "primary_uom_id": {
+      "type": "object",
+      "nullable": false,
+      "description": "",
+      "is_relationship": true,
+      "is_primary_key": true
+    },
+    "pack_uom_id": {
+      "type": "object",
+      "nullable": true,
+      "description": "",
+      "is_relationship": true,
+      "is_primary_key": true
+    },
+    "case_uom_id": {
+      "type": "object",
+      "nullable": true,
+      "description": "",
+      "is_relationship": true,
+      "is_primary_key": true
+    },
+    "item_metrics_set": {
+      "type": "object",
+      "nullable": false,
+      "description": "",
+      "is_relationship": true
+    },
+    "item_characteristics_set": {
+      "type": "object",
+      "nullable": false,
+      "description": "",
+      "is_relationship": true
     }
   },
-  "constraints": {},
-  "indexes": [],
-  "relationships": [],
-  "business_rules": [],
-  "migration_notes": [
-    "Schema extracted from Oracle WMS for entity: item",
-    "Extraction timestamp: 2025-06-03T12:42:11.779742+00:00",
-    "Universal format version: 1.0",
-    "Total fields: 1"
-  ]
+  "relationships": {
+    "company_id": {
+      "type": "foreign_key",
+      "target": "company"
+    },
+    "putawaytype_id": {
+      "type": "foreign_key",
+      "target": "putawaytype"
+    },
+    "sku_line_id": {
+      "type": "foreign_key",
+      "target": "sku_line"
+    },
+    "invn_attr_a_tracking_id": {
+      "type": "foreign_key",
+      "target": "invn_attr_a_tracking"
+    },
+    "invn_attr_b_tracking_id": {
+      "type": "foreign_key",
+      "target": "invn_attr_b_tracking"
+    },
+    "invn_attr_c_tracking_id": {
+      "type": "foreign_key",
+      "target": "invn_attr_c_tracking"
+    },
+    "invn_attr_d_tracking_id": {
+      "type": "foreign_key",
+      "target": "invn_attr_d_tracking"
+    },
+    "invn_attr_e_tracking_id": {
+      "type": "foreign_key",
+      "target": "invn_attr_e_tracking"
+    },
+    "invn_attr_f_tracking_id": {
+      "type": "foreign_key",
+      "target": "invn_attr_f_tracking"
+    },
+    "invn_attr_g_tracking_id": {
+      "type": "foreign_key",
+      "target": "invn_attr_g_tracking"
+    },
+    "primary_uom_id": {
+      "type": "foreign_key",
+      "target": "primary_uom"
+    },
+    "pack_uom_id": {
+      "type": "foreign_key",
+      "target": "pack_uom"
+    },
+    "case_uom_id": {
+      "type": "foreign_key",
+      "target": "case_uom"
+    },
+    "item_metrics_set": {
+      "type": "foreign_key",
+      "target": "item_metrics_set"
+    },
+    "item_characteristics_set": {
+      "type": "foreign_key",
+      "target": "item_characteristics_set"
+    }
+  },
+  "metadata": {
+    "url": "https://ta29.wms.ocs.oraclecloud.com:443/raizen_test/wms/lgfapi/v10/entity/item",
+    "method": "sample_data",
+    "total_fields": 56
+  }
 }

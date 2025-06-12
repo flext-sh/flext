@@ -1,0 +1,292 @@
+###############################################################################
+#  PyAuto Standardized Project Makefile
+#  Version: 2.0.0
+#  
+#  This Makefile works both independently and with central coordination
+#  DO NOT EDIT the standard targets - add project-specific targets at the end
+###############################################################################
+
+# ─────────────────────────[ Configuration ]─────────────────────────────────
+SHELL := /bin/bash
+.ONESHELL:
+.SHELLFLAGS := -eu -o pipefail -c
+
+# ─────────────────────────[ Project Detection ]─────────────────────────────
+PROJECT_NAME := $(notdir $(CURDIR))
+PROJECT_ROOT := $(CURDIR)
+
+# Detect if we're being called from parent Makefile
+ifdef PYAUTO_ROOT
+    IS_COORDINATED := true
+    WORKSPACE_ROOT := $(PYAUTO_ROOT)
+else
+    IS_COORDINATED := false
+    WORKSPACE_ROOT := $(shell dirname $(CURDIR))
+endif
+
+# ─────────────────────────[ Project Structure ]─────────────────────────────
+SRC_DIR      := src
+TESTS_DIR    := tests
+DOCS_DIR     := docs
+REPORTS_DIR  := reports
+
+# ─────────────────────────[ Python Tools ]──────────────────────────────────
+# Check if Poetry is available
+ifeq ($(shell which poetry 2>/dev/null),)
+    PYTHON := python
+    PIP := pip
+    USE_POETRY := false
+else
+    POETRY := poetry
+    PYTHON := $(POETRY) run python
+    PIP := $(POETRY) run pip
+    USE_POETRY := true
+endif
+
+# Quality tools
+RUFF := $(PYTHON) -m ruff
+BLACK := $(PYTHON) -m black
+ISORT := $(PYTHON) -m isort
+MYPY := $(PYTHON) -m mypy
+PYTEST := $(PYTHON) -m pytest
+
+# ─────────────────────────[ Colors ]─────────────────────────────────────────
+ifneq ($(shell tput colors 2>/dev/null),)
+    C_RESET  := $(shell tput sgr0)
+    C_BLUE   := $(shell tput setaf 4)
+    C_GREEN  := $(shell tput setaf 2)
+    C_YELLOW := $(shell tput setaf 3)
+    C_RED    := $(shell tput setaf 1)
+    C_CYAN   := $(shell tput setaf 6)
+    C_MAGENTA:= $(shell tput setaf 5)
+else
+    C_RESET  :=
+    C_BLUE   :=
+    C_GREEN  :=
+    C_YELLOW :=
+    C_RED    :=
+    C_CYAN   :=
+    C_MAGENTA:=
+endif
+
+# ─────────────────────────[ Helpers ]────────────────────────────────────────
+define msg
+	@printf '$(C_BLUE)→ [$(PROJECT_NAME)] %s$(C_RESET)\n' "$(1)"
+endef
+
+define success
+	@printf '$(C_GREEN)✓ [$(PROJECT_NAME)] %s$(C_RESET)\n' "$(1)"
+endef
+
+define warn
+	@printf '$(C_YELLOW)⚠ [$(PROJECT_NAME)] %s$(C_RESET)\n' "$(1)"
+endef
+
+define error
+	@printf '$(C_RED)✗ [$(PROJECT_NAME)] %s$(C_RESET)\n' "$(1)"
+endef
+
+define important
+	@printf '$(C_MAGENTA)★ [$(PROJECT_NAME)] %s$(C_RESET)\n' "$(1)"
+endef
+
+# ─────────────────────────[ Default Target ]────────────────────────────────
+.DEFAULT_GOAL := help
+
+# ─────────────────────────[ Standard Phony Targets ]────────────────────────
+.PHONY: help install install-dev clean test lint lint-fix format type-check \
+        build check quality update status report \
+        test-unit test-integration test-e2e test-cov \
+        pre-commit ci validate
+
+# ═══════════════════════════[ HELP ]═══════════════════════════════════════
+help: ## Show this help message
+	@echo "$(C_CYAN)╔══════════════════════════════════════════════════════════════╗$(C_RESET)"
+	@echo "$(C_CYAN)║                  $(PROJECT_NAME) Makefile                      ║$(C_RESET)"
+	@echo "$(C_CYAN)╚══════════════════════════════════════════════════════════════╝$(C_RESET)"
+	@echo ""
+	@echo "$(C_YELLOW)Standard Targets:$(C_RESET)"
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  $(C_GREEN)%-20s$(C_RESET) %s\n", $$1, $$2}' | sort
+	@echo ""
+ifeq ($(IS_COORDINATED),true)
+	@echo "$(C_CYAN)Running in coordinated mode from $(WORKSPACE_ROOT)$(C_RESET)"
+else
+	@echo "$(C_CYAN)Running in standalone mode$(C_RESET)"
+endif
+
+# ═══════════════════════════[ SETUP ]═══════════════════════════════════════
+install: ## Install production dependencies
+	$(call msg,"Installing production dependencies")
+ifeq ($(USE_POETRY),true)
+	@$(POETRY) install --no-dev
+else
+	@$(PIP) install -e .
+endif
+	$(call success,"Production dependencies installed")
+
+install-dev: ## Install all dependencies including dev
+	$(call msg,"Installing all dependencies")
+ifeq ($(USE_POETRY),true)
+	@$(POETRY) install
+else
+	@$(PIP) install -e ".[dev]"
+endif
+	$(call success,"Development environment ready")
+
+clean: ## Clean all build artifacts and caches
+	$(call msg,"Cleaning build artifacts")
+	@find . \( \
+		-name "__pycache__" \
+		-o -name "*.py[cod]" \
+		-o -name ".pytest_cache" \
+		-o -name ".mypy_cache" \
+		-o -name ".ruff_cache" \
+		-o -name ".coverage*" \
+		-o -name "htmlcov" \
+		-o -name "dist" \
+		-o -name "build" \
+		-o -name "*.egg-info" \
+	\) -exec rm -rf {} + 2>/dev/null || true
+	@mkdir -p $(REPORTS_DIR)
+	$(call success,"Cleanup complete")
+
+# ═══════════════════════════[ TESTING ]═══════════════════════════════════
+test: test-unit ## Run unit tests (default)
+
+test-unit: ## Run unit tests only
+	$(call msg,"Running unit tests")
+	@if [ -d "$(TESTS_DIR)/unit" ]; then \
+		$(PYTEST) $(TESTS_DIR)/unit -v --tb=short; \
+	elif [ -d "$(TESTS_DIR)" ]; then \
+		$(PYTEST) $(TESTS_DIR) -v --tb=short -m "not integration and not e2e"; \
+	else \
+		echo "$(C_YELLOW)⚠ [$(PROJECT_NAME)] No tests directory found$(C_RESET)"; \
+	fi
+	$(call success,"Unit tests completed")
+
+test-integration: ## Run integration tests
+	$(call msg,"Running integration tests")
+	@if [ -d "$(TESTS_DIR)/integration" ]; then \
+		$(PYTEST) $(TESTS_DIR)/integration -v --tb=short; \
+	elif [ -d "$(TESTS_DIR)" ]; then \
+		$(PYTEST) $(TESTS_DIR) -v --tb=short -m "integration"; \
+	else \
+		echo "$(C_YELLOW)⚠ [$(PROJECT_NAME)]No integration tests found$(C_RESET)"; \
+	fi
+	$(call success,"Integration tests completed")
+
+test-e2e: ## Run end-to-end tests
+	$(call msg,"Running E2E tests")
+	@if [ -d "$(TESTS_DIR)/e2e" ]; then \
+		$(PYTEST) $(TESTS_DIR)/e2e -v --tb=short; \
+	elif [ -d "$(TESTS_DIR)" ]; then \
+		$(PYTEST) $(TESTS_DIR) -v --tb=short -m "e2e"; \
+	else \
+		echo "$(C_YELLOW)⚠ [$(PROJECT_NAME)]No E2E tests found$(C_RESET)"; \
+	fi
+	$(call success,"E2E tests completed")
+
+test-cov: ## Run tests with coverage report
+	$(call msg,"Running tests with coverage")
+	@$(PYTEST) $(TESTS_DIR) --cov=$(SRC_DIR) --cov-report=term-missing --cov-report=html:$(REPORTS_DIR)/coverage --cov-report=xml:$(REPORTS_DIR)/coverage.xml
+	$(call success,"Coverage report generated in $(REPORTS_DIR)/coverage")
+
+# ═══════════════════════════[ CODE QUALITY ]═══════════════════════════════
+lint: ## Run linting checks
+	$(call msg,"Running linting checks")
+	@$(RUFF) check $(SRC_DIR) $(TESTS_DIR)
+	$(call success,"Linting completed")
+
+lint-fix: ## Run linting with auto-fix
+	$(call msg,"Running linting with auto-fix")
+	@$(RUFF) check $(SRC_DIR) $(TESTS_DIR) --fix
+	$(call success,"Linting fixes applied")
+
+format: ## Format code with black and isort
+	$(call msg,"Formatting code")
+	@$(BLACK) $(SRC_DIR) $(TESTS_DIR)
+	@$(ISORT) $(SRC_DIR) $(TESTS_DIR)
+	$(call success,"Code formatted")
+
+type-check: ## Run type checking with mypy
+	$(call msg,"Running type checking")
+	@$(MYPY) $(SRC_DIR)
+	$(call success,"Type checking completed")
+
+# ═══════════════════════════[ BUILD & RELEASE ]═══════════════════════════════
+build: clean ## Build distribution packages
+	$(call msg,"Building distribution")
+ifeq ($(USE_POETRY),true)
+	@$(POETRY) build
+else
+	@$(PYTHON) -m build
+endif
+	$(call success,"Build completed - check dist/ directory")
+
+# ═══════════════════════════[ COMPOSITE TARGETS ]═══════════════════════════
+check: lint type-check test ## Run all checks (lint, type-check, test)
+	$(call success,"All checks passed")
+
+quality: format lint-fix type-check test-cov ## Run all quality improvements
+	$(call success,"Quality checks completed")
+
+pre-commit: format lint type-check test ## Pre-commit checks
+	$(call success,"Pre-commit checks passed")
+
+ci: clean lint type-check test-cov ## CI pipeline checks
+	$(call success,"CI checks completed")
+
+# ═══════════════════════════[ UTILITIES ]═══════════════════════════════════
+status: ## Show project status
+	$(call important,"Project Status")
+	@echo "Name: $(PROJECT_NAME)"
+	@echo "Path: $(PROJECT_ROOT)"
+	@echo "Poetry: $(USE_POETRY)"
+	@echo "Coordinated: $(IS_COORDINATED)"
+	@if [ -f "pyproject.toml" ]; then \
+		echo "Version: $$(grep '^version' pyproject.toml | cut -d'"' -f2)"; \
+	fi
+	@if [ -d ".git" ]; then \
+		echo "Git branch: $$(git branch --show-current 2>/dev/null || echo 'N/A')"; \
+		echo "Git status: $$(git status --porcelain | wc -l) uncommitted changes"; \
+	fi
+
+update: ## Update project dependencies
+	$(call msg,"Updating dependencies")
+ifeq ($(USE_POETRY),true)
+	@$(POETRY) update
+else
+	@$(PIP) install --upgrade -e ".[dev]"
+endif
+	$(call success,"Dependencies updated")
+
+validate: ## Validate project structure and configuration
+	$(call msg,"Validating project")
+	@[ -f "pyproject.toml" ] || (echo "$(C_RED)✗ [$(PROJECT_NAME)] Missing pyproject.toml$(C_RESET)"; exit 1)
+	@[ -d "$(SRC_DIR)" ] || (echo "$(C_RED)✗ [$(PROJECT_NAME)] Missing $(SRC_DIR) directory$(C_RESET)"; exit 1)
+	@[ -d "$(TESTS_DIR)" ] || echo "$(C_YELLOW)⚠ [$(PROJECT_NAME)] Missing $(TESTS_DIR) directory$(C_RESET)"
+	$(call success,"Project structure validated")
+
+report: ## Generate project report
+	$(call msg,"Generating project report")
+	@mkdir -p $(REPORTS_DIR)
+	@echo "# $(PROJECT_NAME) Report" > $(REPORTS_DIR)/report.md
+	@echo "Generated: $$(date)" >> $(REPORTS_DIR)/report.md
+	@echo "" >> $(REPORTS_DIR)/report.md
+	@echo "## Project Info" >> $(REPORTS_DIR)/report.md
+	@echo "- Name: $(PROJECT_NAME)" >> $(REPORTS_DIR)/report.md
+	@echo "- Path: $(PROJECT_ROOT)" >> $(REPORTS_DIR)/report.md
+	@if [ -f "pyproject.toml" ]; then \
+		echo "- Version: $$(grep '^version' pyproject.toml | cut -d'"' -f2)" >> $(REPORTS_DIR)/report.md; \
+	fi
+	@echo "" >> $(REPORTS_DIR)/report.md
+	@echo "## Quality Metrics" >> $(REPORTS_DIR)/report.md
+	@echo "Run 'make test-cov' for coverage report" >> $(REPORTS_DIR)/report.md
+	$(call success,"Report generated in $(REPORTS_DIR)/report.md")
+
+# ═══════════════════════════[ PROJECT SPECIFIC ]═══════════════════════════════
+# Add project-specific targets below this line
+# Example:
+# custom-target: ## Custom project target
+#     $(call msg,"Running custom target")
+#     @echo "Custom logic here"
