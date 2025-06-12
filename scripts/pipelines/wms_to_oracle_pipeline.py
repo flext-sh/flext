@@ -171,7 +171,7 @@ class WmsToOraclePipeline:
         except subprocess.CalledProcessError as e:
             raise PipelineError(f"Erro na extração WMS: {e.stderr}")
         except Exception as e:
-            raise PipelineError(f"Erro inesperado na extração WMS: {str(e)}")
+            raise PipelineError(f"Erro inesperado na extração WMS: {e!s}")
 
     def transform_data(self, data_file: Path, table_name: str) -> Path:
         """Transforma dados para formato compatível com Oracle DB.
@@ -263,7 +263,7 @@ class WmsToOraclePipeline:
         except subprocess.CalledProcessError as e:
             raise PipelineError(f"Erro no carregamento Oracle: {e.stderr}")
         except Exception as e:
-            raise PipelineError(f"Erro inesperado no carregamento Oracle: {str(e)}")
+            raise PipelineError(f"Erro inesperado no carregamento Oracle: {e!s}")
 
     def run_pipeline(self, resource: str, table_name: str, **query_params) -> None:
         """Executa o pipeline completo.
@@ -289,7 +289,7 @@ class WmsToOraclePipeline:
             self.logger.info("=== Pipeline concluído com sucesso ===")
 
         except Exception as e:
-            self.logger.exception(f"Erro no pipeline: {str(e)}")
+            self.logger.exception(f"Erro no pipeline: {e!s}")
             raise
         finally:
             if self.config["pipeline"]["cleanup_temp"]:
@@ -302,7 +302,7 @@ class WmsToOraclePipeline:
             shutil.rmtree(self.temp_dir)
             self.logger.info(f"Diretório temporário removido: {self.temp_dir}")
         except Exception as e:
-            self.logger.warning(f"Erro ao remover diretório temporário: {str(e)}")
+            self.logger.warning(f"Erro ao remover diretório temporário: {e!s}")
 
 
 def main():

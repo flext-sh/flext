@@ -1,6 +1,6 @@
 # Oracle Database Adapter - VALIDATED Implementation Guide
 
-> **Validation Status**: ✅ VERIFIED against actual codebase `/flx-database-oracle/src/`  
+> **Validation Status**: ✅ VERIFIED against actual codebase `/flx_database_oracle/src/`  
 > **Implementation**: REAL production-ready code  
 > **Content Source**: Direct codebase analysis, not file reorganization  
 > **Accuracy**: 100% validated against working implementation
@@ -13,7 +13,7 @@
 
 **This documentation represents CONTENT REORGANIZATION and validation, not file movement.** All information has been:
 
-- ✅ **Validated against actual implementation** in `/flx-database-oracle/`
+- ✅ **Validated against actual implementation** in `/flx_database_oracle/`
 - ✅ **Tested against working code** examples
 - ✅ **Cross-referenced with real configuration** options
 - ✅ **Verified against production dependencies**
@@ -25,7 +25,7 @@
 ### Actual Project Structure (VALIDATED)
 
 ```
-flx-database-oracle/
+flx_database_oracle/
 ├── src/flx_database_oracle/
 │   ├── __init__.py              # REAL exports verified
 │   ├── adapter.py               # FlxOracleDbAdapter implementation
@@ -60,7 +60,7 @@ from flx.core.exceptions import DatabaseError, FlxConnectionError
 ### Class Definition (VALIDATED)
 
 ```python
-# ACTUAL implementation from /flx-database-oracle/src/flx_database_oracle/adapter.py
+# ACTUAL implementation from /flx_database_oracle/src/flx_database_oracle/adapter.py
 from flx_database_oracle import FlxOracleDbAdapter, FlxDatabaseConfig
 
 class FlxOracleDbAdapter(BaseAdapter):
@@ -447,7 +447,7 @@ print(f"Database health: {health_status['status']}")
 ### Oracle Test Engine (VALIDATED)
 
 ```python
-# ACTUAL testing implementation from /flx-database-oracle/src/flx_database_oracle/testing.py
+# ACTUAL testing implementation from /flx_database_oracle/src/flx_database_oracle/testing.py
 from flx_database_oracle import OracleTestEngine, TestEngineFactory
 
 # REAL test engine usage
@@ -585,7 +585,7 @@ adapter = FlxOracleDbAdapter(
 
 ---
 
-**⚠️ Content Validation Notice**: This documentation represents **content analysis and reorganization** based on actual implementation code, not file movement. Every example has been validated against the working codebase in `/flx-database-oracle/`.
+**⚠️ Content Validation Notice**: This documentation represents **content analysis and reorganization** based on actual implementation code, not file movement. Every example has been validated against the working codebase in `/flx_database_oracle/`.
 
 **🔍 Accuracy Guarantee**: 100% validated against real implementation  
 **📅 Last Updated**: January 2025  

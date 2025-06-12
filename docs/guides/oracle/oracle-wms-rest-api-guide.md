@@ -24,7 +24,7 @@
 
 - **📂 Section Hub**: [Oracle Guides Hub](./index.md)
 - **🏠 Documentation Root**: [Root Index](../../index.md)
-- **🔗 Related**: [WMS Adapter](../../guides/adapters/flx-http-oracle-wms-adapter.md)
+- **🔗 Related**: [WMS Adapter](../../guides/adapters/flx_http_oracle_wms-adapter.md)
 
 ---
 

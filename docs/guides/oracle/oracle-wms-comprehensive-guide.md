@@ -749,7 +749,7 @@ sync_orders = WMSOperator(
 ## See Also
 
 - **Architecture Documentation:**
-  - [FLX HTTP Oracle WMS Adapter](./flx-http-oracle-wms-adapter.md) - Technical adapter implementation
+  - [FLX HTTP Oracle WMS Adapter](./flx_http_oracle_wms-adapter.md) - Technical adapter implementation
   - [Hexagonal Architecture Guide](../architecture/UNIFIED_ARCHITECTURE_GUIDE.md) - Architecture patterns
 
 - **Integration Guides:**

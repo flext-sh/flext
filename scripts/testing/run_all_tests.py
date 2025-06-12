@@ -25,9 +25,9 @@ class FlxTestConfig(BaseModel):
     test_directories: list[str] = Field(
         default=[
             "flx/tests",
-            "flx-database-oracle/tests",
-            "flx-http-oracle-wms/tests",
-            "flx-http-oracle-oic/tests",
+            "flx_database_oracle/tests",
+            "flx_http_oracle_wms/tests",
+            "flx_http_oracle_oic/tests",
             "dc-oracle-wms/tests",
             "dc-oracle-db/tests",
             "tests",

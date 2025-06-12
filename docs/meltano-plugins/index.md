@@ -3,7 +3,7 @@
 > **Function**: Complete Meltano plugin ecosystem for data integration and orchestration | **Audience**: Data engineers, plugin developers, DevOps teams | **Status**: ✅ Production Ready
 
 [![Meltano](https://img.shields.io/badge/meltano-3.7.8-blue.svg)](./extractors/index.md)
-[![Singer SDK](https://img.shields.io/badge/singer--sdk-0.46.4-green.svg)](../development/guides/singer-sdk-integration.md)
+[![Singer SDK](https://img.shields.io/badge/singer--sdk-0.46.4-green.svg)](../development/guides/singer_sdk-integration.md)
 [![Framework](https://img.shields.io/badge/framework-FLX%200.4.0-orange.svg)](../index.md)
 [![Plugins](https://img.shields.io/badge/plugins-13_available-purple.svg)](#section-metrics)
 
@@ -55,7 +55,7 @@ The Meltano Plugins Hub provides a comprehensive ecosystem of data integration p
 ### **🆕 New to Meltano**
 
 1. **Foundation**: [Meltano Contributing Guide](../development/guides/meltano-contributing-guide.md)
-2. **Basic Setup**: [Singer SDK Integration](../development/guides/singer-sdk-integration.md)
+2. **Basic Setup**: [Singer SDK Integration](../development/guides/singer_sdk-integration.md)
 3. **First Plugin**: [Oracle ADB Extractor](./extractors/tap-oracle-adb.md)
 
 ### **🏗️ Plugin Development**
@@ -75,7 +75,7 @@ The Meltano Plugins Hub provides a comprehensive ecosystem of data integration p
 ### **Prerequisites**
 
 - [Development Hub](../development/index.md) - Development environment and tooling setup
-- [Singer SDK Integration](../development/guides/singer-sdk-integration.md) - Singer SDK framework fundamentals
+- [Singer SDK Integration](../development/guides/singer_sdk-integration.md) - Singer SDK framework fundamentals
 - [Architecture Hub](../architecture/index.md) - Understanding hexagonal architecture patterns
 
 ### **Next Steps**

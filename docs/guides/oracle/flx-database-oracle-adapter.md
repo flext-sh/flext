@@ -8,7 +8,7 @@
 
 ## Navigation Context
 
-**Current Location**: `docs/guides/oracle/flx-database-oracle-adapter.md`  
+**Current Location**: `docs/guides/oracle/flx_database_oracle-adapter.md`  
 **Parent**: [Oracle Integration Hub](oracle-integration-hub.md) > Oracle Database Integration  
 **Quick Links**: [WMS Adapter](flx-http-oracle-wms-adapter.md) | [OIC Adapter](flx-http-oracle-oic-adapter.md) | [Architecture](../../architecture/index.md)
 

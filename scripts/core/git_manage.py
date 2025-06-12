@@ -62,7 +62,7 @@ def run_git_command(
     check: bool = True,
 ) -> subprocess.CompletedProcess:
     """Run a git command."""
-    git_cmd = ["git"] + cmd
+    git_cmd = ["git", *cmd]
     working_dir = cwd if cwd else WORKSPACE_ROOT
 
     # Check if directory is a git repository

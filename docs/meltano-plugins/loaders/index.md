@@ -4,7 +4,7 @@
 
 [![Loaders](https://img.shields.io/badge/loaders-3_plugins-green.svg)](#loader-categories)
 [![Oracle](https://img.shields.io/badge/oracle-ADB%20%7C%20OIC-red.svg)](./target-adb.md)
-[![Singer SDK](https://img.shields.io/badge/singer--sdk-0.46.4-green.svg)](../../development/guides/singer-sdk-integration.md)
+[![Singer SDK](https://img.shields.io/badge/singer--sdk-0.46.4-green.svg)](../../development/guides/singer_sdk-integration.md)
 
 **Enterprise-grade Meltano loader plugins for Oracle ADB and OIC data loading with Singer SDK compliance**
 
@@ -52,7 +52,7 @@ Meltano loader plugins (targets) provide enterprise-grade data loading capabilit
 
 ### **🆕 New to Data Loading**
 
-1. **Foundation**: [Singer SDK Integration](../../development/guides/singer-sdk-integration.md)
+1. **Foundation**: [Singer SDK Integration](../../development/guides/singer_sdk-integration.md)
 2. **First Loader**: [Oracle ADB Loader](./target-adb.md)
 3. **Advanced Patterns**: [Bulk Loading Optimization](../../optimization/performance/index.md)
 
@@ -74,7 +74,7 @@ Meltano loader plugins (targets) provide enterprise-grade data loading capabilit
 
 - [Meltano Plugins Hub](../index.md) - Understanding Meltano plugin ecosystem
 - [Extractors Hub](../extractors/index.md) - Data source plugins that feed loaders
-- [Singer SDK Integration](../../development/guides/singer-sdk-integration.md) - Singer SDK framework fundamentals
+- [Singer SDK Integration](../../development/guides/singer_sdk-integration.md) - Singer SDK framework fundamentals
 
 ### **Next Steps**
 

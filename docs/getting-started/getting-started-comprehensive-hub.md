@@ -81,9 +81,9 @@ make venv-install-dev                     # ✅ All dev dependencies
 # Project Structure (Real monorepo)
 PyAuto/                                   # ✅ Workspace root
 ├── flx/                                 # ✅ Core framework  
-├── flx-http-oracle-wms/                # ✅ WMS adapter
-├── flx-http-oracle-oic/                # ✅ OIC adapter
-├── flx-database-oracle/                # ✅ Database adapter
+├── flx_http_oracle_wms/                # ✅ WMS adapter
+├── flx_http_oracle_oic/                # ✅ OIC adapter
+├── flx_database_oracle/                # ✅ Database adapter
 └── CLAUDE.md                           # ✅ Development guide
 ```
 

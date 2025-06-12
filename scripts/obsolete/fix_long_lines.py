@@ -55,7 +55,7 @@ def parse_arguments():
 
 def get_python_files(
     exclude_patterns: list[str],
-    specific_files: list[str] = None,
+    specific_files: list[str] | None = None,
 ) -> list[Path]:
     """Encontra arquivos Python no diretório atual, excluindo padrões especificados."""
     if specific_files:
@@ -516,7 +516,7 @@ def main():
             )
             remaining_issues += remaining
         except Exception as e:
-            print(f"Erro ao processar {file_path}: {str(e)}")
+            print(f"Erro ao processar {file_path}: {e!s}")
 
     # Resumo
     if args.check:

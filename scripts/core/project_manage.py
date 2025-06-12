@@ -575,7 +575,7 @@ def apply_pep8_standards(projects: list[str]) -> None:
     project_paths = [str(WORKSPACE_ROOT / flx_project) for flx_project in projects]
 
     run_command(
-        [str(VENV_DIR / "bin" / "python"), str(pep8_script)] + project_paths,
+        [str(VENV_DIR / "bin" / "python"), str(pep8_script), *project_paths],
         check=False,
     )
 
@@ -605,7 +605,7 @@ def check_pep8_standards(projects: list[str]) -> None:
     project_paths = [str(WORKSPACE_ROOT / flx_project) for flx_project in projects]
 
     run_command(
-        [str(VENV_DIR / "bin" / "python"), str(pep8_check_script)] + project_paths,
+        [str(VENV_DIR / "bin" / "python"), str(pep8_check_script), *project_paths],
         check=False,
     )
 

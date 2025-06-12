@@ -35,10 +35,10 @@ This document contains real implementation examples extracted from production FL
 ### **Source Projects**
 
 - **FLX Core Framework**: `/flx/src/flx/` - Core framework implementation
-- **Oracle WMS Integration**: `/flx-http-oracle-wms/` - Production WMS system
-- **Oracle OIC Integration**: `/flx-http-oracle-oic/` - Integration Cloud platform
-- **Oracle Database**: `/flx-database-oracle/` - Database connectivity
-- **client-b POC**: `/client-b-poc-oic-wms/` - Multi-system orchestration
+- **Oracle WMS Integration**: `/flx_http_oracle_wms/` - Production WMS system
+- **Oracle OIC Integration**: `/flx_http_oracle_oic/` - Integration Cloud platform
+- **Oracle Database**: `/flx_database_oracle/` - Database connectivity
+- **client-b POC**: `/client-b_oic_wms/` - Multi-system orchestration
 
 ### **Prerequisites**
 
@@ -55,7 +55,7 @@ This document contains real implementation examples extracted from production FL
 Real implementation of a WMS inventory item entity:
 
 ```python
-# Real implementation from flx-http-oracle-wms/src/domain/
+# Real implementation from flx_http_oracle_wms/src/domain/
 from decimal import Decimal
 from datetime import datetime
 from typing import Optional, List
@@ -193,7 +193,7 @@ class InventoryReceivedEvent(DomainEvent):
 Real WMS application service with event handling:
 
 ```python
-# Real implementation from flx-http-oracle-wms/src/application/
+# Real implementation from flx_http_oracle_wms/src/application/
 class InventoryApplicationService:
     """Production inventory application service."""
     
@@ -302,7 +302,7 @@ class InventoryApplicationService:
 Real OAuth2-enabled HTTP adapter:
 
 ```python
-# Real implementation from flx-http-oracle-oic/src/adapters/
+# Real implementation from flx_http_oracle_oic/src/adapters/
 class OracleOicHttpAdapter(BaseAdapter, HttpClientPort):
     """Production Oracle Integration Cloud HTTP adapter."""
     
@@ -415,7 +415,7 @@ class OracleOicHttpAdapter(BaseAdapter, HttpClientPort):
 Real Oracle database adapter with connection pooling:
 
 ```python
-# Real implementation from flx-database-oracle/src/adapters/
+# Real implementation from flx_database_oracle/src/adapters/
 class FlxOracleDbAdapter(BaseAdapter, DatabasePort):
     """Production Oracle database adapter with advanced features."""
     
@@ -559,7 +559,7 @@ class FlxOracleDbAdapter(BaseAdapter, DatabasePort):
 Real implementation of WMS-OIC-Database integration:
 
 ```python
-# Real implementation from client-b-poc-oic-wms/src/services/
+# Real implementation from client-b_oic_wms/src/services/
 class IntegrationOrchestrator:
     """Production multi-system integration orchestrator."""
     

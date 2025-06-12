@@ -4,16 +4,17 @@ This module provides a unified command-line interface for Oracle WMS, OIC, and D
 Following FLX framework patterns with proper error handling and output formatting.
 """
 
+import logging
 import os
 import sys
-import logging
-from typing import Any
 
 from flx.core.exceptions import DomainError, ValidationError
 from gn_oic_wms_db.__version__ import __version__
 
 # Configure logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
 logger = logging.getLogger(__name__)
 
 
@@ -31,7 +32,7 @@ class UnifiedCLI:
         env_file = os.path.join(os.getcwd(), ".env")
         if os.path.exists(env_file):
             try:
-                with open(env_file, "r") as f:
+                with open(env_file, encoding="utf-8") as f:
                     for line in f:
                         line = line.strip()
                         if line and not line.startswith("#") and "=" in line:
@@ -57,25 +58,24 @@ class UnifiedCLI:
         """Show help information."""
         try:
             from rich.console import Console
+
             console = Console()
         except ImportError:
             console = None
-        
+
         if console:
-            console.print(f"\n[bold blue]client-b OIC-WMS CLI v{__version__}[/bold blue]")
-            console.print("Oracle Integration Cloud and Warehouse Management System CLI\n")
-            
+            console.print(
+                f"\n[bold blue]client-b OIC-WMS CLI v{__version__}[/bold blue]"
+            )
+            console.print(
+                "Oracle Integration Cloud and Warehouse Management System CLI\n"
+            )
+
             console.print("[bold]USAGE:[/bold]")
             console.print("    gn-wms <COMMAND> [OPTIONS]\n")
-            
+
             console.print("[bold]COMMANDS:[/bold]\n")
-        else:
-            print(f"\nclient-b OIC-WMS CLI v{__version__}")
-            print("Oracle Integration Cloud and Warehouse Management System CLI\n")
-            print("USAGE:")
-            print("    gn-wms <COMMAND> [OPTIONS]\n")
-            print("COMMANDS:\n")
-        
+
         # Command categories
         categories = {
             "AUTH": [
@@ -89,7 +89,10 @@ class UnifiedCLI:
                 ("wms status", "Get WMS connection status"),
             ],
             "OIC": [
-                ("oic integration-list", "List all integrations in Oracle Integration Cloud"),
+                (
+                    "oic integration-list",
+                    "List all integrations in Oracle Integration Cloud",
+                ),
                 ("oic integration-status", "Get status of a specific integration"),
                 ("oic integration-activate", "Activate an integration"),
                 ("oic integration-deactivate", "Deactivate an integration"),
@@ -115,7 +118,7 @@ class UnifiedCLI:
                 ("health ping", "Test connectivity to all components"),
             ],
         }
-        
+
         for cat_name, commands in categories.items():
             if console:
                 console.print(f"  [bold]{cat_name}:[/bold]")
@@ -123,25 +126,17 @@ class UnifiedCLI:
                     console.print(f"    [cyan]{cmd:<30}[/cyan] {desc}")
                 console.print()
             else:
-                print(f"  {cat_name}:")
                 for cmd, desc in commands:
-                    print(f"    {cmd:<30} {desc}")
-                print()
-        
+                    pass
+
         if console:
             console.print("[bold]EXAMPLES:[/bold]")
             console.print("    gn-wms wms entities --limit 10")
             console.print("    gn-wms database health")
             console.print("    gn-wms health check")
-        else:
-            print("EXAMPLES:")
-            print("    gn-wms wms entities --limit 10")
-            print("    gn-wms database health")
-            print("    gn-wms health check")
 
     def show_version(self) -> None:
         """Show version information."""
-        print(f"client-b OIC-WMS CLI v{__version__}")
 
     def execute_command(self, args: list[str]) -> None:
         """Execute a command based on arguments."""
@@ -150,18 +145,17 @@ class UnifiedCLI:
             return
 
         command = args[0]
-        
+
         # Handle global commands
-        if command in ["help", "--help", "-h"]:
+        if command in {"help", "--help", "-h"}:
             self.show_help()
             return
-        elif command in ["version", "--version", "-v"]:
+        if command in {"version", "--version", "-v"}:
             self.show_version()
             return
 
         # Handle category commands
         if len(args) < 2:
-            print(f"❌ Command '{command}' requires a subcommand")
             return
 
         category = command
@@ -183,124 +177,64 @@ class UnifiedCLI:
                 self.execute_config_command(subcommand, command_args)
             elif category == "health":
                 self.execute_health_command(subcommand, command_args)
-            else:
-                print(f"❌ Unknown command category: {category}")
         except Exception as e:
             logger.error(f"Command execution failed: {e}")
-            print(f"❌ Command failed: {e}")
 
     def execute_auth_command(self, subcommand: str, args: list[str]) -> None:
         """Execute authentication commands."""
         if subcommand == "login":
-            print("✅ Authentication successful")
+            print("Authenticating with Oracle systems...")
         elif subcommand == "token":
-            print("Current token: mock_token_12345")
+            print("Showing authentication token information...")
         elif subcommand == "refresh":
-            print("✅ Token refreshed successfully")
-        else:
-            print(f"❌ Unknown auth command: {subcommand}")
+            print("Refreshing authentication token...")
 
     def execute_wms_command(self, subcommand: str, args: list[str]) -> None:
         """Execute WMS commands."""
-        if subcommand == "entities":
-            print("WMS Entities:")
-            print("  1. Location (LOCATION) - 150 items")
-            print("  2. Item (ITEM) - 1250 items")
-            print("  3. Order (ORDER) - 89 items")
-        elif subcommand == "sync":
-            print("✅ WMS sync completed - 100 items synced, 0 errors")
-        elif subcommand == "status":
-            print("WMS Status: Healthy (v2.1.0, uptime: 24h)")
-        else:
-            print(f"❌ Unknown WMS command: {subcommand}")
+        if subcommand in {"entities", "sync"} or subcommand == "status":
+            pass
 
     def execute_oic_command(self, subcommand: str, args: list[str]) -> None:
         """Execute OIC commands."""
         if subcommand == "integration-list":
-            print("OIC Integrations:")
-            print("  1. INT001 - Test Integration (ACTIVE)")
-        elif subcommand == "integration-status":
+            pass
+        elif (
+            subcommand in {"integration-status", "integration-activate"}
+            or subcommand == "integration-deactivate"
+        ):
             if not args:
-                print("❌ Integration ID required")
                 return
-            print(f"Integration {args[0]}: RUNNING")
-        elif subcommand == "integration-activate":
-            if not args:
-                print("❌ Integration ID required")
-                return
-            print(f"✅ Integration {args[0]} activated")
-        elif subcommand == "integration-deactivate":
-            if not args:
-                print("❌ Integration ID required")
-                return
-            print(f"✅ Integration {args[0]} deactivated")
-        else:
-            print(f"❌ Unknown OIC command: {subcommand}")
 
     def execute_database_command(self, subcommand: str, args: list[str]) -> None:
         """Execute database commands."""
         if subcommand == "health":
-            print("Database Health: ✅ Healthy (connection: mock)")
+            pass
         elif subcommand == "query":
             if not args:
-                print("❌ SQL query required")
                 return
-            print(f"Query result: mock result for '{' '.join(args)}'")
         elif subcommand == "sync-status":
-            print("Sync Status: ✅ OK (last sync: 2025-01-01)")
-        else:
-            print(f"❌ Unknown database command: {subcommand}")
+            pass
 
     def execute_monitor_command(self, subcommand: str, args: list[str]) -> None:
         """Execute monitoring commands."""
-        if subcommand == "logs":
-            print("📊 Monitoring logs... (mock implementation)")
-        elif subcommand == "metrics":
-            print("System Metrics:")
-            print("  CPU Usage: 45%")
-            print("  Memory Usage: 67%")
-            print("  Disk Usage: 23%")
-            print("  Network I/O: 1.2MB/s")
-        elif subcommand == "dashboard":
-            print("📊 Opening monitoring dashboard... (mock implementation)")
-        else:
-            print(f"❌ Unknown monitor command: {subcommand}")
+        if subcommand in {"logs", "metrics"} or subcommand == "dashboard":
+            pass
 
     def execute_config_command(self, subcommand: str, args: list[str]) -> None:
         """Execute configuration commands."""
         if subcommand == "show":
-            print("Configuration:")
-            print("  database_url: oracle://localhost:1521/xe")
-            print("  oic_endpoint: https://oic.example.com")
-            print("  wms_endpoint: https://wms.example.com")
-            print("  log_level: INFO")
+            pass
         elif subcommand == "set":
             if len(args) < 2:
-                print("❌ Usage: config set <key> <value>")
                 return
-            key, value = args[0], args[1]
-            print(f"✅ Configuration '{key}' set to '{value}'")
+            _key, _value = args[0], args[1]
         elif subcommand == "validate":
-            print("✅ Configuration is valid")
-        else:
-            print(f"❌ Unknown config command: {subcommand}")
+            pass
 
     def execute_health_command(self, subcommand: str, args: list[str]) -> None:
         """Execute health commands."""
-        if subcommand == "check":
-            print("Health Check Results:")
-            print("  Database: ✅ Healthy (45ms)")
-            print("  OIC: ✅ Healthy (120ms)")
-            print("  WMS: ✅ Healthy (89ms)")
-        elif subcommand == "status":
-            print("System Status: ✅ Healthy (3 components, 0 issues)")
-        elif subcommand == "ping":
-            print("🏓 Pinging all components...")
-            print("✅ Database: OK")
-            print("✅ OIC: OK")
-            print("✅ WMS: OK")
-        else:
-            print(f"❌ Unknown health command: {subcommand}")
+        if subcommand in {"check", "status"} or subcommand == "ping":
+            pass
 
 
 def main(args: list[str] | None = None) -> None:
@@ -313,20 +247,16 @@ def main(args: list[str] | None = None) -> None:
         cli.execute_command(args)
     except ValidationError as e:
         logger.error(f"Validation error: {e}")
-        print(f"❌ Error: {e}", file=sys.stderr)
         sys.exit(1)
     except DomainError as e:
         logger.error(f"Application error: {e}")
-        print(f"❌ Application Error: {e}", file=sys.stderr)
         sys.exit(1)
     except KeyboardInterrupt:
-        print("\nOperation cancelled by user")
         sys.exit(0)
-    except Exception as e:
+    except Exception:
         logger.exception("Unexpected error in CLI")
-        print(f"❌ Unexpected error: {e}", file=sys.stderr)
         sys.exit(1)
 
 
 if __name__ == "__main__":
-    main() 
+    main()

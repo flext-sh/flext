@@ -277,7 +277,7 @@ class HttpClientService:
 #### **WMS Client - wms_client.py**
 
 ```python
-# Real implementation from /flx-http-oracle-wms/src/flx_http_oracle_wms/wms_client.py
+# Real implementation from /flx_http_oracle_wms/src/flx_http_oracle_wms/wms_client.py
 class WmsClient:
     """WMS client using FLX HttpClientService with full WMS operations."""
     
@@ -325,7 +325,7 @@ class WmsClient:
 #### **OIC Client - client.py**
 
 ```python
-# Real implementation from /flx-http-oracle-oic/src/flx_http_oracle_oic/client.py
+# Real implementation from /flx_http_oracle_oic/src/flx_http_oracle_oic/client.py
 class OracleOicClient:
     """Simple client facade for Oracle Integration Cloud operations."""
     

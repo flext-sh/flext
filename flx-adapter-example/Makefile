@@ -1,131 +1,62 @@
 ###############################################################################
-#  Scaffold Python Project Makefile
-#  Simple flx_project-specific targets that integrate with root workspace
+#  FLX Adapter Example - Project Makefile
+#  Includes standard targets and adds project-specific commands
 ###############################################################################
 
-# ───────────────═[ Basic Configuration ]═─────────────────────────────────────
-WORKSPACE_ROOT ?= $(shell git -C "$(CURDIR)" rev-parse --show-toplevel 2>/dev/null || echo "$(CURDIR)")
-PROJECT_ROOT   := $(CURDIR)
-PROJECT_NAME   := $(notdir $(PROJECT_ROOT))
-PACKAGE_NAME   := project_name
+# Include the standard Makefile
+include Makefile.standard
 
-# ───────────────═[ Commands ]═───────────────────────────────────────────────
-POETRY     := poetry
+# ═══════════════════════════[ PROJECT SPECIFIC ]═══════════════════════════════
+# Adapter Example specific targets
 
-# ───────────────═[ Targets ]═─────────────────────────────────────────────────
-.DEFAULT_GOAL := help
+.PHONY: example-basic example-advanced example-test adapter-scaffold
 
-## Project-specific commands
-## ------------------------
+example-basic: ## Run basic adapter example
+	$(call msg,"Running basic adapter example")
+	@$(PYTHON) examples/basic_usage.py
+	$(call success,"Basic example completed")
 
-## install: Instala dependências do projeto
-install:
-	@echo "→ Instalando dependências do projeto $(PROJECT_NAME)"
-	@$(POETRY) install
-
-## install-dev: Instala dependências de desenvolvimento
-install-dev:
-	@echo "→ Instalando dependências de desenvolvimento do projeto $(PROJECT_NAME)"
-	@$(POETRY) install --with dev
-
-## update: Atualiza dependências do projeto
-update:
-	@echo "→ Atualizando dependências do projeto $(PROJECT_NAME)"
-	@$(POETRY) update
-
-## build: Constrói o pacote do projeto
-build:
-	@echo "→ Construindo pacote do projeto $(PROJECT_NAME)"
-	@$(POETRY) build
-
-## clean: Limpa artefatos do projeto
-clean:
-	@echo "→ Limpando artefatos do projeto $(PROJECT_NAME)"
-	@find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
-	@find . -type f -name "*.pyc" -delete
-	@find . -type d -name ".pytest_cache" -exec rm -rf {} + 2>/dev/null || true
-	@find . -type d -name ".mypy_cache" -exec rm -rf {} + 2>/dev/null || true
-	@find . -type d -name ".ruff_cache" -exec rm -rf {} + 2>/dev/null || true
-	@find . -name ".coverage" -delete
-	@find . -type d -name "htmlcov" -exec rm -rf {} + 2>/dev/null || true
-	@find . -type d -name "dist" -exec rm -rf {} + 2>/dev/null || true
-	@find . -type d -name "build" -exec rm -rf {} + 2>/dev/null || true
-	@find . -name "*.egg-info" -exec rm -rf {} + 2>/dev/null || true
-
-## test: Executa testes do projeto
-test:
-	@echo "→ Executando testes do projeto $(PROJECT_NAME)"
-	@if [ -d "tests" ]; then \
-		$(POETRY) run pytest tests/; \
+example-advanced: ## Run advanced adapter example
+	$(call msg,"Running advanced adapter example")
+	@if [ -f "examples/advanced_usage.py" ]; then \
+		$(PYTHON) examples/advanced_usage.py; \
 	else \
-		echo "Nenhum diretório de testes encontrado."; \
+		$(warn,"Advanced example not yet implemented"); \
 	fi
+	$(call success,"Advanced example completed")
 
-## lint: Executa lint no projeto
-lint:
-	@echo "→ Executando lint no projeto $(PROJECT_NAME)"
-	@$(POETRY) run ruff check .
+example-test: ## Test adapter functionality
+	$(call msg,"Testing adapter functionality")
+	@$(PYTHON) -c "from flx_adapter_example import ExampleAdapter; adapter = ExampleAdapter(); print('✓ Adapter instantiated successfully')"
+	$(call success,"Adapter test completed")
 
-## format: Formata código do projeto
-format:
-	@echo "→ Formatando código do projeto $(PROJECT_NAME)"
-	@$(POETRY) run black . && $(POETRY) run isort .
+adapter-scaffold: ## Generate new adapter from template
+	$(call msg,"Generating adapter scaffold")
+	@echo "Enter adapter name (e.g., my-service):"
+	@read -r ADAPTER_NAME; \
+	if [ -n "$$ADAPTER_NAME" ]; then \
+		mkdir -p "../flx-adapter-$$ADAPTER_NAME"; \
+		cp -r . "../flx-adapter-$$ADAPTER_NAME/"; \
+		echo "✓ Created new adapter project: flx-adapter-$$ADAPTER_NAME"; \
+	else \
+		echo "❌ Adapter name required"; \
+	fi
+	$(call success,"Scaffold generation completed")
 
-## lint-fix: Corrige problemas de lint automaticamente
-lint-fix:
-	@echo "→ Corrigindo problemas de lint do projeto $(PROJECT_NAME)"
-	@$(POETRY) run ruff check --fix . && $(POETRY) run isort . && $(POETRY) run black .
-
-## Security check
-security:
-	@echo "→ Verificando segurança do projeto $(PROJECT_NAME)"
-	@$(POETRY) run bandit -r . -x test
-
-## standardize: Executa padrões no projeto (formatação + lint)
-standardize: format lint-fix
-
-## Integration with workspace
-## ------------------------
-## workspace: Executa comando no workspace (CMD=comando)
-workspace:
-	@echo "→ Executando comando no workspace: $(CMD)"
-	@cd $(WORKSPACE_ROOT) && make $(CMD) PROJECT=$(PROJECT_NAME)
-
-## root-lint: Utiliza as ferramentas de lint do workspace
-root-lint:
-	@cd $(WORKSPACE_ROOT) && make -f Makefile.lint lint-fix-all
-
-## root-format: Utiliza as ferramentas de formatação do workspace
-root-format:
-	@cd $(WORKSPACE_ROOT) && make format PROJECT=$(PROJECT_NAME)
-
-## root-test: Executa testes via workspace
-root-test:
-	@cd $(WORKSPACE_ROOT) && make test PROJECT=$(PROJECT_NAME)
-
-.PHONY: help
-help:
-	@echo "╔════════════════════════════════════════════════════════════════╗"
-	@echo "║  Projeto: $(PROJECT_NAME)"
-	@echo "╚════════════════════════════════════════════════════════════════╝"
+# Override the cli target
+cli: ## Show adapter example help
+	$(call msg,"FLX Adapter Example")
+	@echo "This is a template project for creating FLX adapters."
 	@echo ""
-	@echo "Comandos do projeto:"
-	@echo "  install         Instala dependências do projeto"
-	@echo "  install-dev     Instala dependências de desenvolvimento"
-	@echo "  update          Atualiza dependências do projeto"
-	@echo "  build           Constrói o pacote do projeto"
-	@echo "  clean           Limpa artefatos do projeto"
-	@echo "  test            Executa testes do projeto"
-	@echo "  lint            Executa lint no projeto"
-	@echo "  format          Formata código do projeto"
-	@echo "  lint-fix        Corrige problemas de lint automaticamente"
-	@echo "  security        Verifica segurança do código"
-	@echo "  standardize     Executa padrões no projeto (formatação + lint)"
+	@echo "Available examples:"
+	@echo "  make example-basic    - Run basic adapter example"
+	@echo "  make example-advanced - Run advanced adapter example"
 	@echo ""
-	@echo "Integração com workspace:"
-	@echo "  workspace       Executa comando no workspace (CMD=comando)"
-	@echo "  root-lint       Utiliza as ferramentas de lint do workspace"
-	@echo "  root-format     Utiliza as ferramentas de formatação do workspace"
-	@echo "  root-test       Executa testes via workspace"
+	@echo "To create a new adapter:"
+	@echo "  make adapter-scaffold - Generate new adapter from this template"
+
+# Add custom help section
+help-adapter: ## Show adapter-specific commands
 	@echo ""
-	@echo "Para executar comandos avançados e logs, use: make workspace CMD=comando" 
+	@echo "$(C_YELLOW)Adapter Example Targets:$(C_RESET)"
+	@grep -E '^(example|adapter)-[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  $(C_GREEN)%-20s$(C_RESET) %s\n", $$1, $$2}'

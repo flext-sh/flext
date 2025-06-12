@@ -4,44 +4,47 @@ Shows how to leverage FastAPI's features for automatic validation,
 documentation, and dependency injection.
 """
 
-from typing import Any, Dict, List, Optional
-from datetime import datetime
 from contextlib import asynccontextmanager
+from datetime import datetime
+from typing import Any
+
+import sentry_sdk
 import structlog
-from fastapi import FastAPI, Depends, HTTPException, Query, Path, Body
+from fastapi import Body, Depends, FastAPI, HTTPException, Path, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel, Field, EmailStr, ConfigDict
-from prometheus_client import make_asgi_app
-import sentry_sdk
-from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
-
-from flx.infra.services.optimized_base import (
-    OptimizedCacheService, OptimizedHttpClientService
-)
 from flx.infra.database.optimized_repository import (
-    DatabaseService, OptimizedDatabaseConfig
+    DatabaseService,
+    OptimizedDatabaseConfig,
 )
+from flx.infra.services.optimized_base import (
+    OptimizedCacheService,
+    OptimizedHttpClientService,
+)
+from prometheus_client import make_asgi_app
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
+from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
 
 # Configure logging
 logger = structlog.get_logger(__name__)
+
 
 # Pydantic models for validation
 class UserCreate(BaseModel):
     """User creation model."""
     email: EmailStr
     username: str = Field(..., min_length=3, max_length=50)
-    full_name: Optional[str] = None
-    
+    full_name: str | None = None
+
     model_config = ConfigDict(str_strip_whitespace=True)
 
 
 class UserUpdate(BaseModel):
     """User update model."""
-    email: Optional[EmailStr] = None
-    username: Optional[str] = Field(None, min_length=3, max_length=50)
-    full_name: Optional[str] = None
-    is_active: Optional[bool] = None
+    email: EmailStr | None = None
+    username: str | None = Field(None, min_length=3, max_length=50)
+    full_name: str | None = None
+    is_active: bool | None = None
 
 
 class UserResponse(BaseModel):
@@ -49,11 +52,11 @@ class UserResponse(BaseModel):
     id: str
     email: str
     username: str
-    full_name: Optional[str] = None
+    full_name: str | None = None
     is_active: bool
     created_at: datetime
     updated_at: datetime
-    
+
     model_config = ConfigDict(from_attributes=True)
 
 
@@ -67,18 +70,18 @@ class HealthResponse(BaseModel):
     """Health check response."""
     status: str
     timestamp: datetime
-    services: Dict[str, Dict[str, Any]]
+    services: dict[str, dict[str, Any]]
 
 
 # Dependency injection setup
 class Dependencies:
     """Application dependencies."""
-    
+
     def __init__(self):
-        self.db_service: Optional[DatabaseService] = None
-        self.cache_service: Optional[OptimizedCacheService] = None
-        self.http_service: Optional[OptimizedHttpClientService] = None
-    
+        self.db_service: DatabaseService | None = None
+        self.cache_service: OptimizedCacheService | None = None
+        self.http_service: OptimizedHttpClientService | None = None
+
     async def initialize(self):
         """Initialize all services."""
         # Database
@@ -87,15 +90,15 @@ class Dependencies:
         )
         self.db_service = DatabaseService(db_config)
         await self.db_service.initialize()
-        
+
         # Cache
         self.cache_service = OptimizedCacheService()
         await self.cache_service.connect()
-        
+
         # HTTP Client
         self.http_service = OptimizedHttpClientService()
         await self.http_service.connect()
-    
+
     async def cleanup(self):
         """Cleanup all services."""
         if self.db_service:
@@ -118,9 +121,9 @@ async def lifespan(app: FastAPI):
     logger.info("application_starting")
     await deps.initialize()
     logger.info("application_started")
-    
+
     yield
-    
+
     # Shutdown
     logger.info("application_stopping")
     await deps.cleanup()
@@ -179,9 +182,9 @@ async def get_pagination(
 
 
 # Cache decorator
-from functools import wraps
 import hashlib
 import json
+from functools import wraps
 
 
 def cached(ttl: int = 300):
@@ -191,7 +194,7 @@ def cached(ttl: int = 300):
         async def wrapper(*args, **kwargs):
             # Get cache service from dependencies
             cache = await get_cache_service()
-            
+
             # Generate cache key
             key_data = {
                 'func': func.__name__,
@@ -201,22 +204,22 @@ def cached(ttl: int = 300):
             cache_key = hashlib.md5(
                 json.dumps(key_data).encode()
             ).hexdigest()
-            
+
             # Try to get from cache
             cached_value = await cache.get(cache_key)
             if cached_value:
                 logger.debug("cache_hit", key=cache_key)
                 return cached_value
-            
+
             # Execute function
             result = await func(*args, **kwargs)
-            
+
             # Cache result
             await cache.set(cache_key, result, ttl=ttl)
             logger.debug("cache_set", key=cache_key, ttl=ttl)
-            
+
             return result
-        
+
         return wrapper
     return decorator
 
@@ -231,22 +234,22 @@ async def health_check(
 ):
     """Health check endpoint."""
     services = {}
-    
+
     # Check database
     services['database'] = await db.manager.health_check()
-    
+
     # Check cache
     services['cache'] = await cache.health_check()
-    
+
     # Check HTTP client
     services['http'] = await http.health_check()
-    
+
     # Overall status
     all_healthy = all(
-        s.get('status') == 'healthy' 
+        s.get('status') == 'healthy'
         for s in services.values()
     )
-    
+
     return HealthResponse(
         status='healthy' if all_healthy else 'degraded',
         timestamp=datetime.utcnow(),
@@ -268,25 +271,25 @@ async def create_user(
                 status_code=400,
                 detail="User with this email already exists"
             )
-        
+
         # Create user
         user = await db.users.create(**user_data.model_dump())
-        
+
         logger.info("user_created", user_id=user.id, email=user.email)
         return UserResponse.model_validate(user)
-        
+
     except Exception as e:
         logger.error("user_creation_failed", error=str(e))
         sentry_sdk.capture_exception(e)
         raise HTTPException(status_code=500, detail="Failed to create user")
 
 
-@app.get("/api/v1/users", response_model=List[UserResponse])
+@app.get("/api/v1/users", response_model=list[UserResponse])
 @cached(ttl=60)  # Cache for 1 minute
 async def list_users(
     pagination: PaginationParams = Depends(get_pagination),
     db: DatabaseService = Depends(get_db_service),
-    is_active: Optional[bool] = Query(None, description="Filter by active status")
+    is_active: bool | None = Query(None, description="Filter by active status")
 ):
     """List users with pagination."""
     if is_active is not None:
@@ -300,7 +303,7 @@ async def list_users(
             limit=pagination.limit,
             offset=pagination.offset
         )
-    
+
     return [UserResponse.model_validate(user) for user in users]
 
 
@@ -314,19 +317,19 @@ async def get_user(
     # Try cache first
     cache_key = f"user:{user_id}"
     cached_user = await cache.get(cache_key)
-    
+
     if cached_user:
         return UserResponse(**cached_user)
-    
+
     # Get from database
     user = await db.users.get_by_id(user_id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
-    
+
     # Cache for future requests
     user_dict = UserResponse.model_validate(user).model_dump()
     await cache.set(cache_key, user_dict, ttl=300)
-    
+
     return UserResponse.model_validate(user)
 
 
@@ -342,15 +345,15 @@ async def update_user(
     update_data = user_update.model_dump(exclude_unset=True)
     if not update_data:
         raise HTTPException(status_code=400, detail="No fields to update")
-    
+
     user = await db.users.update(user_id, **update_data)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
-    
+
     # Invalidate cache
     cache_key = f"user:{user_id}"
     await cache.delete(cache_key)
-    
+
     logger.info("user_updated", user_id=user_id, fields=list(update_data.keys()))
     return UserResponse.model_validate(user)
 
@@ -366,26 +369,25 @@ async def delete_user(
     deleted = await db.users.delete(user_id)
     if not deleted:
         raise HTTPException(status_code=404, detail="User not found")
-    
+
     # Invalidate cache
     cache_key = f"user:{user_id}"
     await cache.delete(cache_key)
-    
+
     logger.info("user_deleted", user_id=user_id)
-    return None
 
 
 # Batch operations endpoint
 class BatchUserCreate(BaseModel):
     """Batch user creation request."""
-    users: List[UserCreate] = Field(..., min_length=1, max_length=1000)
+    users: list[UserCreate] = Field(..., min_length=1, max_length=1000)
 
 
 class BatchUserResponse(BaseModel):
     """Batch operation response."""
     created: int
     failed: int
-    errors: List[Dict[str, str]]
+    errors: list[dict[str, str]]
 
 
 @app.post("/api/v1/users/batch", response_model=BatchUserResponse)
@@ -397,7 +399,7 @@ async def create_users_batch(
     created = 0
     failed = 0
     errors = []
-    
+
     # Process in transaction
     async with db.transaction():
         for user_data in batch.users:
@@ -411,25 +413,25 @@ async def create_users_batch(
                         "error": "Already exists"
                     })
                     continue
-                
+
                 # Create user
                 await db.users.create(**user_data.model_dump())
                 created += 1
-                
+
             except Exception as e:
                 failed += 1
                 errors.append({
                     "email": user_data.email,
                     "error": str(e)
                 })
-    
+
     logger.info(
         "batch_user_creation",
         total=len(batch.users),
         created=created,
         failed=failed
     )
-    
+
     return BatchUserResponse(
         created=created,
         failed=failed,
@@ -438,23 +440,23 @@ async def create_users_batch(
 
 
 # WebSocket example for real-time updates
+
 from fastapi import WebSocket, WebSocketDisconnect
-from typing import Set
 
 
 class ConnectionManager:
     """WebSocket connection manager."""
-    
+
     def __init__(self):
-        self.active_connections: Set[WebSocket] = set()
-    
+        self.active_connections: set[WebSocket] = set()
+
     async def connect(self, websocket: WebSocket):
         await websocket.accept()
         self.active_connections.add(websocket)
-    
+
     def disconnect(self, websocket: WebSocket):
         self.active_connections.discard(websocket)
-    
+
     async def broadcast(self, message: dict):
         """Broadcast message to all connections."""
         for connection in self.active_connections:
@@ -475,22 +477,22 @@ async def websocket_endpoint(
 ):
     """WebSocket endpoint for real-time user updates."""
     await manager.connect(websocket)
-    
+
     try:
         while True:
             # Wait for messages
             data = await websocket.receive_json()
-            
+
             # Handle different message types
             if data.get("type") == "subscribe":
                 await websocket.send_json({
                     "type": "subscribed",
                     "message": "Subscribed to user updates"
                 })
-            
+
             # In a real app, you'd have background tasks that broadcast updates
             # when users are created/updated/deleted
-            
+
     except WebSocketDisconnect:
         manager.disconnect(websocket)
 
@@ -513,7 +515,7 @@ async def general_exception_handler(request, exc):
     """Handle general exceptions."""
     logger.error("unhandled_exception", error=str(exc), path=request.url.path)
     sentry_sdk.capture_exception(exc)
-    
+
     return JSONResponse(
         status_code=500,
         content={
@@ -526,7 +528,7 @@ async def general_exception_handler(request, exc):
 # Run the application
 if __name__ == "__main__":
     import uvicorn
-    
+
     uvicorn.run(
         app,
         host="0.0.0.0",

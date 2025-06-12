@@ -68,7 +68,7 @@ def apply_black(files: list[Path]) -> bool:
         return True
 
     str_files = [str(f) for f in files]
-    return run_command(["black"] + str_files, "Black formatter")
+    return run_command(["black", *str_files], "Black formatter")
 
 
 def apply_isort(files: list[Path]) -> bool:
@@ -85,7 +85,7 @@ def apply_isort(files: list[Path]) -> bool:
         return True
 
     str_files = [str(f) for f in files]
-    return run_command(["isort"] + str_files, "isort import sorter")
+    return run_command(["isort", *str_files], "isort import sorter")
 
 
 def apply_ruff(files: list[Path]) -> bool:
@@ -102,7 +102,7 @@ def apply_ruff(files: list[Path]) -> bool:
         return True
 
     str_files = [str(f) for f in files]
-    return run_command(["ruff", "check", "--fix"] + str_files, "Ruff linter")
+    return run_command(["ruff", "check", "--fix", *str_files], "Ruff linter")
 
 
 def main(paths: list[str] | None = None) -> int:

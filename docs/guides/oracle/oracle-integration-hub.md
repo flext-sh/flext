@@ -28,7 +28,7 @@ Start here for understanding Oracle integrations within FLX framework:
 #### **WmsClient - REAL Implementation**
 
 ```python
-# VALIDATED: Actual working API from flx-http-oracle-wms v2.0.0
+# VALIDATED: Actual working API from flx_http_oracle_wms v2.0.0
 config = WmsConfig(
     base_url="https://wms.oracle.com",
     username="wms_user", 

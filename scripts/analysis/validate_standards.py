@@ -5,10 +5,11 @@ Validador de Padronização - Verifica se todos os projetos seguem os padrões
 
 import sys
 from pathlib import Path
+
 import tomli
 from rich.console import Console
-from rich.table import Table
 from rich.panel import Panel
+from rich.table import Table
 
 console = Console()
 

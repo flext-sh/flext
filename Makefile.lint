@@ -158,7 +158,7 @@ lint-gen-longlines: venv-check
 # Atualiza o pyproject.toml para ignorar arquivos com muitas linhas longas
 lint-fix-config: lint-gen-longlines
 	$(call section,Atualizando pyproject.toml com exclusões)
-	@$(PYTHON) $(SCRIPTS_DIR)/update_lint_excludes.py --input=$(E501_EXCLUDES_FILE) --pyproject=$(WORKSPACE_ROOT)/pyproject.toml
+	@$(PYTHON) $(SCRIPTS_DIR)/utilities/update_lint_excludes.py --input=$(E501_EXCLUDES_FILE) --pyproject=$(WORKSPACE_ROOT)/pyproject.toml
 
 # Atualiza código para usar recursos modernos do Python com pyupgrade
 lint-pyupgrade: venv-check
@@ -200,9 +200,9 @@ lint-refurb: venv-check
 lint-fix-longlines: venv-check
 	$(call section,Tentando corrigir linhas longas (experimental))
 	@if [ -n "$(PROJECT)" ]; then \
-		$(call in_project,$(PYTHON) $(SCRIPTS_DIR)/fix_long_lines.py --exclude=$(EXCLUDE_DIRS) --max-length=$(MAX_LINE_LENGTH)); \
+		$(call in_project,$(PYTHON) $(SCRIPTS_DIR)/obsolete/fix_long_lines.py --exclude=$(EXCLUDE_DIRS) --max-length=$(MAX_LINE_LENGTH)); \
 	else \
-		@$(PYTHON) $(SCRIPTS_DIR)/fix_long_lines.py --exclude=$(EXCLUDE_DIRS) --max-length=$(MAX_LINE_LENGTH); \
+		@$(PYTHON) $(SCRIPTS_DIR)/obsolete/fix_long_lines.py --exclude=$(EXCLUDE_DIRS) --max-length=$(MAX_LINE_LENGTH); \
 	fi
 
 # Combina todas as correções automáticas
