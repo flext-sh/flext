@@ -7,34 +7,26 @@ maintaining full type safety and hexagonal architecture principles.
 """
 
 import asyncio
-import sys
 import json
+import sys
 from pathlib import Path
-from typing import Any, Dict
 
 # Add FLX to path for isolated testing
 sys.path.insert(0, '/home/marlonsc/pyauto/flx/src')
 
 # Import meta-programming components
+from flx.core.capabilities import CapabilityType
+from flx.core.enhanced_factory import get_enhanced_factory
 from flx.core.meta_factory import (
-    MetaAdapterFactory,
     AdapterConfig,
     AdapterType,
     FieldDefinition,
     FieldType,
+    GenerationOptions,
     OperationDefinition,
     ServiceConfig,
-    GenerationOptions,
-    get_meta_factory
+    get_meta_factory,
 )
-
-from flx.core.enhanced_factory import (
-    EnhancedAdapterFactory,
-    get_enhanced_factory,
-    create_adapter
-)
-
-from flx.core.capabilities import CapabilityType
 
 
 async def demonstrate_meta_factory():
@@ -42,19 +34,19 @@ async def demonstrate_meta_factory():
     print("🚀 FLX Meta-programming Adapter Factory Demonstration")
     print("=" * 60)
     print()
-    
+
     # Get factories
     meta_factory = get_meta_factory()
     enhanced_factory = get_enhanced_factory()
-    
+
     print("📋 Phase 1: Built-in Schema Usage")
     print("-" * 40)
-    
+
     try:
         # Show available built-in schemas
         available_schemas = enhanced_factory.list_available_schemas()
         print(f"✅ Available built-in schemas: {available_schemas}")
-        
+
         # Create Oracle WMS adapter from built-in schema
         wms_config = {
             "connection_string": "oracle://wms_user:password@localhost:1521/WMSPROD",
@@ -64,14 +56,14 @@ async def demonstrate_meta_factory():
             "pool_max": 20,
             "pool_increment": 2
         }
-        
+
         print("\n🏗️  Creating Oracle WMS adapter from built-in schema...")
         wms_adapter = enhanced_factory.create_adapter("oracle_wms", **wms_config)
-        
+
         print(f"✅ Created adapter: {wms_adapter.__class__.__name__}")
         print(f"   Class module: {wms_adapter.__class__.__module__}")
         print(f"   Available methods: {[m for m in dir(wms_adapter) if not m.startswith('_') and callable(getattr(wms_adapter, m))][:5]}...")
-        
+
         # Show adapter capabilities
         if hasattr(wms_adapter, 'has_capability'):
             capabilities = []
@@ -79,13 +71,13 @@ async def demonstrate_meta_factory():
                 if wms_adapter.has_capability(cap):
                     capabilities.append(cap.value)
             print(f"   Capabilities: {capabilities}")
-        
+
     except Exception as e:
         print(f"❌ Built-in schema test failed: {e}")
-    
+
     print("\n📋 Phase 2: Custom Adapter Generation")
     print("-" * 40)
-    
+
     try:
         # Create a completely custom adapter configuration
         custom_config = AdapterConfig(
@@ -184,21 +176,21 @@ async def demonstrate_meta_factory():
                 use_connection_pooling=True
             )
         )
-        
+
         print("🏗️  Generating custom adapter class...")
         CustomAdapter = meta_factory.generate_adapter_class(custom_config)
-        
+
         print(f"✅ Generated adapter class: {CustomAdapter.__name__}")
         print(f"   Module: {CustomAdapter.__module__}")
-        
+
         # Show generated class details
         methods = [m for m in dir(CustomAdapter) if not m.startswith('_') and callable(getattr(CustomAdapter, m))]
         print(f"   Generated methods ({len(methods)}): {methods[:8]}...")
-        
+
         # Show docstring
         if CustomAdapter.__doc__:
             print(f"   Docstring preview: {CustomAdapter.__doc__[:100]}...")
-        
+
         # Create instance
         custom_adapter_config = {
             "api_base_url": "https://api.example.com/v2",
@@ -207,24 +199,24 @@ async def demonstrate_meta_factory():
             "max_retries": 5,
             "enable_caching": True
         }
-        
+
         print("\n🔧 Creating adapter instance...")
         custom_adapter = CustomAdapter(custom_adapter_config)
-        print(f"✅ Created custom adapter instance")
-        
+        print("✅ Created custom adapter instance")
+
         # Test configuration access
         if hasattr(custom_adapter, '_config'):
             print(f"   Configuration accessible: {bool(custom_adapter._config)}")
             print(f"   API Base URL: {custom_adapter_config.get('api_base_url')}")
-        
+
     except Exception as e:
         print(f"❌ Custom adapter generation failed: {e}")
         import traceback
         traceback.print_exc()
-    
+
     print("\n📋 Phase 3: Schema File Demonstration")
     print("-" * 40)
-    
+
     try:
         # Create a schema file
         schema_file_data = {
@@ -288,14 +280,14 @@ async def demonstrate_meta_factory():
                 "generate_metrics": True
             }
         }
-        
+
         # Write schema to temporary file
         schema_file = Path("/tmp/payment_gateway_schema.json")
-        with open(schema_file, 'w') as f:
+        with open(schema_file, 'w', encoding='utf-8') as f:
             json.dump(schema_file_data, f, indent=2)
-        
+
         print(f"📝 Created schema file: {schema_file}")
-        
+
         # Create adapter from file
         print("🏗️  Creating adapter from schema file...")
         payment_config = {
@@ -304,54 +296,54 @@ async def demonstrate_meta_factory():
             "webhook_url": "https://myapp.com/webhooks/payment",
             "currency": "USD"
         }
-        
+
         payment_adapter = enhanced_factory.create_adapter(schema_file, **payment_config)
         print(f"✅ Created payment adapter: {payment_adapter.__class__.__name__}")
-        
+
         # Register schema for reuse
         enhanced_factory.register_schema("payment_gateway", schema_file)
         print("✅ Registered schema for reuse")
-        
+
         # Validate schema
         validation_issues = enhanced_factory.validate_schema(schema_file)
         if validation_issues:
             print(f"⚠️  Schema validation issues: {validation_issues}")
         else:
             print("✅ Schema validation passed")
-        
+
     except Exception as e:
         print(f"❌ Schema file test failed: {e}")
-    
+
     print("\n📋 Phase 4: Template System Demonstration")
     print("-" * 40)
-    
+
     try:
         # Show template generation
         basic_template = enhanced_factory.generate_template_schema(
-            AdapterType.OUTBOUND, 
+            AdapterType.OUTBOUND,
             "basic"
         )
-        
+
         print("✅ Generated basic template schema")
         print(f"   Template name: {basic_template.adapter_name}")
         print(f"   Template type: {basic_template.adapter_type.value}")
         print(f"   Operations: {len(basic_template.operations)}")
-        
+
         # Create adapter from template
         print("\n🏗️  Creating adapter from template...")
         template_config = {
             "connection_url": "https://service.example.com/api/v1"
         }
-        
+
         template_adapter = enhanced_factory.create_adapter(basic_template, **template_config)
         print(f"✅ Created template-based adapter: {template_adapter.__class__.__name__}")
-        
+
     except Exception as e:
         print(f"❌ Template system test failed: {e}")
-    
+
     print("\n📋 Phase 5: Statistics and Performance")
     print("-" * 40)
-    
+
     try:
         # Show creation statistics
         stats = enhanced_factory.get_creation_statistics()
@@ -361,27 +353,27 @@ async def demonstrate_meta_factory():
         print(f"   Schema-based adapters: {stats['schema_based']}")
         print(f"   Total adapters created: {stats['total']}")
         print(f"   Meta-programming usage: {stats['meta_percentage']:.1f}%")
-        
+
         # Show generated classes
         generated_classes = meta_factory.get_generated_classes()
         print(f"\n🏭 Generated Classes ({len(generated_classes)}):")
         for name, cls in generated_classes.items():
             print(f"   {name[:50]}... -> {cls.__name__}")
-        
+
     except Exception as e:
         print(f"❌ Statistics test failed: {e}")
-    
+
     print("\n🎉 Meta-programming Adapter Factory Demonstration Complete!")
     print("\n💡 Key Benefits Achieved:")
     print("   ✅ 90%+ code reduction through meta-programming")
     print("   ✅ Type-safe generated adapters")
-    print("   ✅ Consistent hexagonal architecture patterns") 
+    print("   ✅ Consistent hexagonal architecture patterns")
     print("   ✅ Configuration-driven development")
     print("   ✅ Capability-based composition")
     print("   ✅ Schema validation and reuse")
     print("   ✅ Template system for rapid development")
     print("   ✅ Seamless integration with existing infrastructure")
-    
+
     print("\n🔮 Revolutionary Impact:")
     print("   • Adapter development time: Hours → Minutes")
     print("   • Code duplication: 80% → <5%")
@@ -395,77 +387,21 @@ async def demonstrate_traditional_vs_meta():
     """Compare traditional adapter development vs meta-programming approach."""
     print("\n🔄 Traditional vs Meta-programming Comparison")
     print("=" * 50)
-    
+
     print("📝 Traditional Approach (Manual Implementation):")
-    traditional_code = '''
-class OracleWMSAdapter(AdvancedAdapterMixin, BaseAdapter):
-    """Oracle WMS adapter implementation."""
-    
-    def __init__(self, config: Dict[str, Any]):
-        super().__init__(config)
-        self._connection_string = config.get("connection_string")
-        self._username = config.get("username")
-        self._password = config.get("password")
-        self._pool_min = config.get("pool_min", 2)
-        self._pool_max = config.get("pool_max", 20)
-        # ... 50+ lines of boilerplate code
-    
-    async def get_inventory_item(self, item_id: str) -> Optional[Dict[str, Any]]:
-        """Get inventory item by ID."""
-        if not item_id:
-            raise ValidationError("ID cannot be empty")
-        
-        try:
-            # ... 20+ lines of implementation
-            return await self._delegate_operation(...)
-        except Exception as e:
-            # ... error handling code
-    
-    async def update_inventory_quantity(self, item_id: str, quantity: int, reason: str) -> bool:
-        """Update inventory quantity."""
-        # ... 25+ lines of implementation
-    
-    # ... 200+ more lines for all operations
-    '''
-    
-    print(f"   Lines of code: ~350")
-    print(f"   Development time: 4-8 hours")
-    print(f"   Error-prone: High (manual type annotations, validation, etc.)")
-    print(f"   Maintainability: Medium (scattered patterns)")
-    
+
+    print("   Lines of code: ~350")
+    print("   Development time: 4-8 hours")
+    print("   Error-prone: High (manual type annotations, validation, etc.)")
+    print("   Maintainability: Medium (scattered patterns)")
+
     print("\n🚀 Meta-programming Approach (Schema-driven):")
-    meta_code = '''
-{
-  "adapter_name": "oracle_wms",
-  "adapter_type": "outbound",
-  "description": "Oracle WMS adapter",
-  "service_config": {
-    "service_class": "OracleWMSService",
-    "connection_fields": {
-      "connection_string": {"field_type": "url", "required": true},
-      "username": {"field_type": "str", "required": true},
-      "password": {"field_type": "secret", "required": true},
-      "pool_min": {"field_type": "int", "default": 2},
-      "pool_max": {"field_type": "int", "default": 20}
-    }
-  },
-  "operations": [
-    {
-      "name": "get_inventory_item",
-      "parameters": ["item_id"],
-      "return_type": "Optional[Dict[str, Any]]",
-      "template": "crud"
-    }
-  ],
-  "capabilities": ["logging", "health_check", "metrics"]
-}
-    '''
-    
-    print(f"   Lines of configuration: ~30")
-    print(f"   Development time: 10-15 minutes")
-    print(f"   Error-prone: Very Low (generated code, validation)")
-    print(f"   Maintainability: Very High (single source of truth)")
-    
+
+    print("   Lines of configuration: ~30")
+    print("   Development time: 10-15 minutes")
+    print("   Error-prone: Very Low (generated code, validation)")
+    print("   Maintainability: Very High (single source of truth)")
+
     print("\n📊 Comparison Results:")
     print("   Code Reduction: 350 lines → 30 lines (91.4% reduction)")
     print("   Time Reduction: 4-8 hours → 10-15 minutes (95%+ reduction)")
@@ -478,13 +414,13 @@ class OracleWMSAdapter(AdvancedAdapterMixin, BaseAdapter):
 if __name__ == "__main__":
     print("FLX Meta-programming Adapter Factory - Live Demonstration")
     print("=" * 60)
-    
+
     # Run the complete demonstration
     asyncio.run(demonstrate_meta_factory())
-    
+
     # Show comparison
     asyncio.run(demonstrate_traditional_vs_meta())
-    
+
     print("\n🎯 Next Steps:")
     print("   1. Integrate with existing FLX adapter infrastructure")
     print("   2. Create VS Code extension for schema editing")

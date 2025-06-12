@@ -4,16 +4,17 @@ Script de Padronização PYAUTO - PEP8 & Poetry
 Padroniza configurações de todos os projetos Python no workspace
 """
 
-import sys
 import shutil
+import sys
 from pathlib import Path
-from typing import Dict, List, Any
+from typing import Any
+
 import tomli
 import tomli_w
 from rich.console import Console
-from rich.table import Table
-from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.panel import Panel
+from rich.progress import Progress, SpinnerColumn, TextColumn
+from rich.table import Table
 
 console = Console()
 
@@ -163,10 +164,10 @@ STANDARD_DEV_DEPENDENCIES = {
 class ProjectStandardizer:
     def __init__(self, workspace_path: Path):
         self.workspace_path = workspace_path
-        self.projects: List[Path] = []
+        self.projects: list[Path] = []
         self.backup_dir = workspace_path / ".standardization_backup"
 
-    def find_projects(self) -> List[Path]:
+    def find_projects(self) -> list[Path]:
         """Encontra todos os projetos com pyproject.toml"""
         projects = []
         seen_projects = set()
@@ -197,15 +198,15 @@ class ProjectStandardizer:
         target = backup_path / "pyproject.toml"
         shutil.copy2(source, target)
 
-    def load_project_config(self, project_path: Path) -> Dict[str, Any]:
+    def load_project_config(self, project_path: Path) -> dict[str, Any]:
         """Carrega configuração atual do projeto"""
         config_path = project_path / "pyproject.toml"
         with open(config_path, "rb") as f:
             return tomli.load(f)
 
     def merge_configs(
-        self, current: Dict[str, Any], project_path: Path
-    ) -> Dict[str, Any]:
+        self, current: dict[str, Any], project_path: Path
+    ) -> dict[str, Any]:
         """Mescla configuração atual com padrões"""
         result = current.copy()
 
@@ -252,7 +253,7 @@ class ProjectStandardizer:
 
         return result
 
-    def save_project_config(self, project_path: Path, config: Dict[str, Any]):
+    def save_project_config(self, project_path: Path, config: dict[str, Any]):
         """Salva configuração padronizada"""
         config_path = project_path / "pyproject.toml"
         with open(config_path, "wb") as f:

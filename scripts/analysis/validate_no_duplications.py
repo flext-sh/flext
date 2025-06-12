@@ -56,7 +56,7 @@ def find_class_duplications() -> bool:
                 pass
             violations += 1
 
-    for name, files in sorted(adapter_classes.items()):
+    for _name, files in sorted(adapter_classes.items()):
         pass
 
     duplicate_bases = {
@@ -68,7 +68,7 @@ def find_class_duplications() -> bool:
                 pass
             violations += 1
 
-    for name, files in sorted(base_classes.items()):
+    for _name, files in sorted(base_classes.items()):
         if len(files) == 1:  # Only show non-duplicates
             pass
 
@@ -92,9 +92,7 @@ def find_class_duplications() -> bool:
             violations += 1
 
     # Final assessment
-    if violations == 0:
-        return True
-    return False
+    return violations == 0
 
 
 def check_standardization() -> bool:
@@ -130,7 +128,7 @@ def check_standardization() -> bool:
             ]
 
             if missing_patterns:
-                for pattern in missing_patterns:
+                for _pattern in missing_patterns:
                     pass
                 compliance_issues += 1
 

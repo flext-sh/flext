@@ -184,7 +184,7 @@ def scan_directory(directory: str) -> list[dict[str, Any]]:
     """Scan all Python files in a directory for docstring gaps."""
     all_gaps = []
 
-    for root, dirs, files in os.walk(directory):
+    for root, _dirs, files in os.walk(directory):
         # Skip test directories for now - focus on main code
         if "test" in root or "__pycache__" in root:
             continue
@@ -238,7 +238,7 @@ def main():
         gap_type = gap["type"]
         gap_types[gap_type] = gap_types.get(gap_type, 0) + 1
 
-    for gap_type, count in sorted(gap_types.items(), key=lambda x: x[1], reverse=True):
+    for gap_type, _count in sorted(gap_types.items(), key=lambda x: x[1], reverse=True):
         pass
 
     return gaps

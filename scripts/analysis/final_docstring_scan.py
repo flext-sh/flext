@@ -101,7 +101,7 @@ def scan_file(filepath: str) -> list[dict[str, Any]]:
 def scan_directory(directory: str) -> list[dict[str, Any]]:
     all_gaps = []
 
-    for root, dirs, files in os.walk(directory):
+    for root, _dirs, files in os.walk(directory):
         if "test" in root or "__pycache__" in root:
             continue
 

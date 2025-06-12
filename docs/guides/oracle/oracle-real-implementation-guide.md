@@ -44,12 +44,12 @@
 
 ### **Oracle WMS Implementation (Source Code Validated)**
 
-Based on actual implementation in `/flx-http-oracle-wms/src/`:
+Based on actual implementation in `/flx_http_oracle_wms/src/`:
 
 #### **WmsClient - Core Implementation**
 
 ```python
-# Real implementation from flx-http-oracle-wms/src/flx_http_oracle_wms/wms_client.py
+# Real implementation from flx_http_oracle_wms/src/flx_http_oracle_wms/wms_client.py
 class WmsClient:
     """WMS client using FLX HttpClientService with full WMS operations."""
 
@@ -139,7 +139,7 @@ class WmsClient:
 #### **WmsConfig - Configuration Management**
 
 ```python
-# Real implementation from flx-http-oracle-wms/src/flx_http_oracle_wms/config.py
+# Real implementation from flx_http_oracle_wms/src/flx_http_oracle_wms/config.py
 class WmsConfig(BaseModel):
     """Oracle WMS configuration with authentication."""
     
@@ -164,12 +164,12 @@ class WmsConfig(BaseModel):
 
 ### **Oracle OIC Implementation (Source Code Validated)**
 
-Based on actual implementation in `/flx-http-oracle-oic/src/`:
+Based on actual implementation in `/flx_http_oracle_oic/src/`:
 
 #### **OracleOicClient - Facade Pattern**
 
 ```python
-# Real implementation from flx-http-oracle-oic/src/flx_http_oracle_oic/client.py
+# Real implementation from flx_http_oracle_oic/src/flx_http_oracle_oic/client.py
 class OracleOicClient:
     """Simple client facade for Oracle Integration Cloud operations."""
 
@@ -224,7 +224,7 @@ class OracleOicClient:
 #### **OracleOicHttpAdapter - Core Adapter**
 
 ```python
-# Real implementation from flx-http-oracle-oic/src/flx_http_oracle_oic/adapter.py
+# Real implementation from flx_http_oracle_oic/src/flx_http_oracle_oic/adapter.py
 class OracleOicHttpAdapter(BaseAdapter):
     """Oracle OIC HTTP adapter with authentication and operations."""
 
@@ -348,7 +348,7 @@ async def main():
 Based on actual CLI implementation:
 
 ```python
-# Real CLI from flx-http-oracle-wms/src/flx_http_oracle_wms/cli/main.py
+# Real CLI from flx_http_oracle_wms/src/flx_http_oracle_wms/cli/main.py
 import asyncio
 import click
 from flx_http_oracle_wms import WmsClient, WmsConfig

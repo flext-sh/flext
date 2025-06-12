@@ -54,7 +54,7 @@ class FlxAdapterConfig(BaseSettings):
 
     # Basic adapter information
     name: str = Field(
-        default="flx-adapter-example",
+        default="flx_adapter_example",
         description="Adapter name identifier"
     )
     version: str = Field(

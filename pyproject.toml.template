@@ -1,0 +1,329 @@
+# PyAuto Enterprise pyproject.toml Template
+# Version: 2.0.0
+# Updated: 2025-06-11
+# Authority: Enterprise Architecture Team
+#
+# This template MUST be used for all PyAuto projects
+# Customize only the marked sections for each project
+
+[build-system]
+requires = ["poetry-core>=2.1.3"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+# PROJECT-SPECIFIC: Update these values for each project
+name = "project_name"  # Use underscores for Python package name
+version = "0.4.0"
+description = "Brief description of the project"
+authors = ["PyAuto Team <team@datacosmos.com.br>"]
+license = "MIT"
+readme = "README.md"
+packages = [{ include = "project_name", from = "src" }]
+
+# PROJECT-SPECIFIC: Update URLs
+repository = "https://github.com/datacosmos-br/project-name"
+documentation = "https://datacosmos-br.github.io/project-name/"
+homepage = "https://github.com/datacosmos-br/project-name"
+
+# PROJECT-SPECIFIC: Update keywords based on project purpose
+keywords = [
+    "enterprise",
+    "hexagonal",
+    "architecture",
+    "oracle",
+    "integration"
+]
+
+# STANDARD: Keep these classifiers for all projects
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
+]
+
+[tool.poetry.dependencies]
+# MANDATORY: All projects must use Python 3.13+
+python = "^3.13,<3.15"
+
+# CORE ENTERPRISE DEPENDENCIES: Include these in all projects
+pydantic = "^2.11.5"
+pydantic-settings = "^2.9.1"
+structlog = "^25.4.0"
+python-dotenv = "^1.1.0"
+rich = "^14.0.0"
+cyclopts = "^3.17.0"
+
+# PROJECT-SPECIFIC: Add project-specific dependencies here
+# Example for database projects:
+# sqlalchemy = "^2.0.0"
+# oracledb = "^2.5.0"
+
+# Example for HTTP projects:
+# httpx = "^0.28.1"
+# aiohttp = "^3.12.11"
+
+# FLX DEPENDENCY: Always include FLX framework
+[tool.poetry.dependencies.flx]
+path = "../flx"
+develop = true
+
+[tool.poetry.group.dev.dependencies]
+# MANDATORY: All projects must include these dev dependencies
+pytest = "^8.4.0"
+pytest-asyncio = ">=0.23.5.post1,<0.24.0"
+pytest-cov = "^6.1.1"
+pytest-xdist = "^3.7.0"
+pytest-mock = "^3.14.1"
+pytest-timeout = "^2.4.0"
+mypy = "^1.16.0"
+ruff = "^0.11.13"
+black = "^25.1.0"
+isort = "^6.0.1"
+pre-commit = "^4.2.0"
+coverage = { extras = ["toml"], version = "^7.8.2" }
+
+# OPTIONAL: Additional dev dependencies based on project needs
+# pytest-benchmark = "^4.0.0"  # For performance testing
+# bandit = "^1.8.0"             # For security scanning
+# vulture = "^2.12"             # For dead code detection
+
+# PROJECT-SPECIFIC: Add type stubs as needed
+# types-requests = "^2.32.0.20241016"
+# types-sqlalchemy = "^1.4.53.38"
+
+[tool.poetry.scripts]
+# PROJECT-SPECIFIC: Define CLI entry points
+# Format: "command-name" = "module.path:function"
+# project-cli = "project_name.cli.main:main"
+
+[tool.poetry.urls]
+# STANDARD: Keep these URLs for all projects
+"Bug Tracker" = "https://github.com/datacosmos-br/project-name/issues"
+"Changelog" = "https://github.com/datacosmos-br/project-name/blob/main/CHANGELOG.md"
+
+# MYPY CONFIGURATION - MANDATORY ENTERPRISE SETTINGS
+[tool.mypy]
+python_version = "3.13"
+# Strict settings for enterprise code quality
+strict = true
+strict_optional = true
+strict_equality = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_return_any = true
+warn_unreachable = true
+warn_unused_configs = true
+disallow_any_unimported = true
+disallow_any_decorated = true
+disallow_any_generics = true
+disallow_subclassing_any = true
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+no_implicit_reexport = true
+check_untyped_defs = true
+namespace_packages = true
+show_error_codes = true
+show_column_numbers = true
+show_error_context = true
+pretty = true
+plugins = ["pydantic.mypy"]
+
+# Standard overrides for common modules
+[[tool.mypy.overrides]]
+module = [
+    "cyclopts.*",
+    "rich.*",
+    "structlog.*",
+    "pydantic_settings.*",
+]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+disallow_untyped_decorators = false
+
+# RUFF CONFIGURATION - MANDATORY ENTERPRISE SETTINGS
+[tool.ruff]
+target-version = "py313"
+line-length = 120  # Enterprise standard for readability
+src = ["src", "tests"]
+extend-exclude = [
+    ".git",
+    ".mypy_cache",
+    ".pytest_cache", 
+    ".ruff_cache",
+    ".venv",
+    "__pycache__",
+    "build",
+    "dist",
+    "legacy",
+    "*/legacy/*",
+]
+
+[tool.ruff.lint]
+# Enterprise-grade linting rules
+select = [
+    "A",    # flake8-builtins
+    "ARG",  # flake8-unused-arguments
+    "B",    # flake8-bugbear
+    "BLE",  # flake8-blind-except
+    "C4",   # flake8-comprehensions
+    "C90",  # mccabe complexity
+    "D",    # pydocstyle
+    "DTZ",  # flake8-datetimez
+    "E",    # pycodestyle errors
+    "ERA",  # eradicate
+    "F",    # pyflakes
+    "FBT",  # flake8-boolean-trap
+    "G",    # flake8-logging-format
+    "I",    # isort
+    "LOG",  # flake8-logging
+    "N",    # pep8-naming
+    "PERF", # perflint
+    "PGH",  # pygrep-hooks
+    "PIE",  # flake8-pie
+    "PL",   # pylint
+    "PT",   # flake8-pytest-style
+    "PTH",  # flake8-use-pathlib
+    "Q",    # flake8-quotes
+    "RET",  # flake8-return
+    "RUF",  # ruff-specific rules
+    "S",    # flake8-bandit
+    "SIM",  # flake8-simplify
+    "TRY",  # tryceratops
+    "UP",   # pyupgrade
+    "W",    # pycodestyle warnings
+]
+
+# Acceptable violations for working enterprise code
+ignore = [
+    "D100",    # Missing docstring in public module
+    "D104",    # Missing docstring in public package
+    "D105",    # Missing docstring in magic method
+    "D107",    # Missing docstring in __init__
+    "D203",    # 1 blank line required before class docstring
+    "D213",    # Multi-line docstring summary should start at the second line
+    "FBT001",  # Boolean positional arg in function definition
+    "FBT002",  # Boolean default positional argument
+    "S101",    # Use of assert detected
+    "PLR0913", # Too many arguments in function definition
+    "PLR2004", # Magic value used in comparison
+    "TRY003",  # Avoid specifying long messages outside exception class
+    "BLE001",  # Blind except - acceptable in some contexts
+    "G004",    # Logging f-string - acceptable for readability
+    "ARG002",  # Unused method argument - interface compliance
+    "FBT003",  # Boolean positional value in function call
+    "SLF001",  # Private member access - internal framework use
+    "PLR0912", # Too many branches - complex business logic
+    "PTH123",  # Builtin open - acceptable for simple cases
+    "D401",    # First line should be in imperative mood
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = [
+    "S101",    # Assert usage in tests
+    "S105",    # Hardcoded password string
+    "S106",    # Hardcoded password function argument
+    "PLR2004", # Magic values
+    "D",       # Documentation not required in tests
+    "ARG",     # Unused arguments acceptable in test fixtures
+    "FBT",     # Boolean traps acceptable in tests
+    "PLR0913", # Too many arguments
+    "TRY003",  # Long exception messages
+    "SLF001",  # Private member access
+]
+"scripts/*" = ["T20", "S101", "PLR2004"]
+"__init__.py" = ["F401"]
+
+# BLACK CONFIGURATION - ENTERPRISE STANDARD
+[tool.black]
+line-length = 88
+target-version = ['py313']
+include = '\.pyi?$'
+
+# ISORT CONFIGURATION - ENTERPRISE STANDARD
+[tool.isort]
+profile = "black"
+line_length = 88
+known_first_party = ["project_name"]  # PROJECT-SPECIFIC: Update with your package name
+skip_gitignore = true
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+ensure_newline_before_comments = true
+
+# PYTEST CONFIGURATION - ENTERPRISE STANDARD
+[tool.pytest.ini_options]
+minversion = "8.0"
+addopts = [
+    "-ra",
+    "--strict-markers",
+    "--strict-config",
+    "--cov=src",
+    "--cov-branch",
+    "--cov-report=term-missing:skip-covered",
+    "--cov-report=html:reports/coverage",
+    "--cov-report=xml:reports/coverage.xml",
+    "--junitxml=reports/junit.xml",
+    "-n=auto",
+]
+testpaths = ["tests"]
+pythonpath = ["src"]
+asyncio_mode = "auto"
+
+# Standard markers for all projects
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+    "e2e: marks tests as end-to-end tests", 
+    "unit: marks tests as unit tests",
+    "hexarch: marks tests as hexagonal architecture tests",
+    "ports: marks tests for port interfaces",
+    "adapters: marks tests for adapter implementations",
+]
+
+# COVERAGE CONFIGURATION - ENTERPRISE STANDARD
+[tool.coverage.run]
+source = ["src"]
+branch = true
+omit = [
+    "*/tests/*",
+    "*/test_*",
+    "*/__main__.py",
+    "*/conftest.py",
+    "*/legacy/*",
+]
+
+[tool.coverage.report]
+precision = 2
+show_missing = true
+skip_covered = false
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if TYPE_CHECKING:",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "class .*Protocol:",
+    "@abstract",
+    "@overload",
+]
+
+# PYDANTIC MYPY PLUGIN CONFIGURATION
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true

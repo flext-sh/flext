@@ -84,7 +84,7 @@ async def main():
 
 ### **Configuration Management Pattern**
 
-Real configuration pattern from `/flx-database-oracle/src/flx_database_oracle/config.py`:
+Real configuration pattern from `/flx_database_oracle/src/flx_database_oracle/config.py`:
 
 ```python
 from pydantic import BaseModel, Field, SecretStr
@@ -140,7 +140,7 @@ class ProductionConfig(BaseModel):
 
 ### **Oracle WMS Integration (Real Implementation)**
 
-Based on `/flx-http-oracle-wms/src/flx_http_oracle_wms/wms_client.py`:
+Based on `/flx_http_oracle_wms/src/flx_http_oracle_wms/wms_client.py`:
 
 ```python
 from flx_http_oracle_wms import WmsClient, WmsConfig
@@ -231,7 +231,7 @@ async def wms_integration_example():
 
 ### **Oracle OIC Integration (Real Implementation)**
 
-Based on `/flx-http-oracle-oic/src/flx_http_oracle_oic/`:
+Based on `/flx_http_oracle_oic/src/flx_http_oracle_oic/`:
 
 ```python
 from flx_http_oracle_oic import OicClient, OracleOicConfig
@@ -354,7 +354,7 @@ async def oic_integration_example():
 
 ### **Oracle Database Integration (Real Implementation)**
 
-Based on `/flx-database-oracle/src/flx_database_oracle/adapter.py`:
+Based on `/flx_database_oracle/src/flx_database_oracle/adapter.py`:
 
 ```python
 from flx_database_oracle import FlxOracleDbAdapter, FlxDatabaseConfig
@@ -604,7 +604,7 @@ async def error_handling_example():
 
 ### **Real Test Patterns**
 
-Based on `/flx-http-oracle-wms/tests/test_client_comprehensive.py`:
+Based on `/flx_http_oracle_wms/tests/test_client_comprehensive.py`:
 
 ```python
 import pytest
@@ -754,7 +754,7 @@ async def test_wms_performance(wms_client: WmsClient, integration_config: dict):
 
 ### **Real CLI Pattern**
 
-Based on `/client-b-poc-oic-wms/src/gn_oic_wms_db/cli/main.py`:
+Based on `/client-b_oic_wms/src/gn_oic_wms_db/cli/main.py`:
 
 ```python
 import cyclopts

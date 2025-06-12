@@ -4,7 +4,7 @@
 
 [![Extractors](https://img.shields.io/badge/extractors-3_plugins-blue.svg)](#extractor-categories)
 [![Oracle](https://img.shields.io/badge/oracle-ADB%20%7C%20OIC%20%7C%20WMS-red.svg)](./tap-oracle-adb.md)
-[![Singer SDK](https://img.shields.io/badge/singer--sdk-0.46.4-green.svg)](../../development/guides/singer-sdk-integration.md)
+[![Singer SDK](https://img.shields.io/badge/singer--sdk-0.46.4-green.svg)](../../development/guides/singer_sdk-integration.md)
 
 **Enterprise-grade Meltano extractor plugins for Oracle ADB, OIC, and WMS data extraction with Singer SDK compliance**
 
@@ -52,7 +52,7 @@ Meltano extractor plugins (taps) provide enterprise-grade data extraction capabi
 
 ### **🆕 New to Data Extraction**
 
-1. **Foundation**: [Singer SDK Integration](../../development/guides/singer-sdk-integration.md)
+1. **Foundation**: [Singer SDK Integration](../../development/guides/singer_sdk-integration.md)
 2. **First Extractor**: [Oracle ADB Extractor](./tap-oracle-adb.md)
 3. **Advanced Features**: [Incremental Sync Patterns](../../guides/integration/index.md)
 
@@ -73,7 +73,7 @@ Meltano extractor plugins (taps) provide enterprise-grade data extraction capabi
 ### **Prerequisites**
 
 - [Meltano Plugins Hub](../index.md) - Understanding Meltano plugin ecosystem
-- [Singer SDK Integration](../../development/guides/singer-sdk-integration.md) - Singer SDK framework fundamentals
+- [Singer SDK Integration](../../development/guides/singer_sdk-integration.md) - Singer SDK framework fundamentals
 - [Development Hub](../../development/index.md) - Development environment setup
 
 ### **Next Steps**

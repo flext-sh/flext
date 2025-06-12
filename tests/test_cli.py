@@ -10,11 +10,10 @@ from typing import Any
 from unittest.mock import MagicMock, patch
 
 import pytest
-
 from flx.cli import fix_create_cli
 
 
-@pytest.fixture()
+@pytest.fixture
 def cli() -> Any:
     """Create FLX CLI instance for testing."""
     return fix_create_cli()
@@ -72,7 +71,7 @@ class TestFlxCli:
         assert hasattr(cli, "plugin_list")
         assert callable(cli.version)
 
-    @pytest.mark.asyncio()
+    @pytest.mark.asyncio
     async def test_version_command(self, cli: Any) -> None:
         """Test version command execution."""
         result = await cli.version()
@@ -81,7 +80,7 @@ class TestFlxCli:
         assert "flx_version" in result.data
         assert "cli_version" in result.data
 
-    @pytest.mark.asyncio()
+    @pytest.mark.asyncio
     async def test_status_command(self, cli: Any) -> None:
         """Test status command execution."""
         mock_response = MagicMock()
@@ -96,7 +95,7 @@ class TestFlxCli:
             assert result.status == "success"
             assert result.data == mock_response.data
 
-    @pytest.mark.asyncio()
+    @pytest.mark.asyncio
     async def test_config_show_command(self, cli: Any) -> None:
         """Test config show command."""
         result = await cli.config_show()
@@ -171,7 +170,7 @@ class TestFlxCliBackwardCompatibility:
 class TestFlxCliErrorHandling:
     """Test error handling scenarios."""
 
-    @pytest.mark.asyncio()
+    @pytest.mark.asyncio
     async def test_status_command_error(self, cli: Any) -> None:
         """Test status command with adapter error."""
         with patch.object(

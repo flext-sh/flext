@@ -22,9 +22,9 @@
 
 | **Integration** | **Use Case** | **Complexity** | **Source Code** |
 |----------------|--------------|----------------|-----------------|
-| **Oracle Database** | Data persistence and transactions | ⭐⭐ | `/flx-database-oracle/` |
-| **Oracle WMS** | Inventory and warehouse operations | ⭐⭐⭐ | `/flx-http-oracle-wms/` |
-| **Oracle OIC** | Integration orchestration | ⭐⭐⭐⭐ | `/flx-http-oracle-oic/` |
+| **Oracle Database** | Data persistence and transactions | ⭐⭐ | `/flx_database_oracle/` |
+| **Oracle WMS** | Inventory and warehouse operations | ⭐⭐⭐ | `/flx_http_oracle_wms/` |
+| **Oracle OIC** | Integration orchestration | ⭐⭐⭐⭐ | `/flx_http_oracle_oic/` |
 | **Multi-System** | End-to-end business process | ⭐⭐⭐⭐⭐ | Combined projects |
 
 ### **Architecture Patterns Demonstrated**
@@ -914,9 +914,9 @@ if __name__ == "__main__":
 
 ### **Source Code Validation**
 
-- **Database Examples**: Validated against `/flx-database-oracle/` implementation
-- **WMS Examples**: Validated against `/flx-http-oracle-wms/` implementation  
-- **OIC Examples**: Validated against `/flx-http-oracle-oic/` implementation
+- **Database Examples**: Validated against `/flx_database_oracle/` implementation
+- **WMS Examples**: Validated against `/flx_http_oracle_wms/` implementation  
+- **OIC Examples**: Validated against `/flx_http_oracle_oic/` implementation
 - **Architecture Patterns**: Validated against `/flx/src/flx/` core framework
 
 ### **Testing Coverage**

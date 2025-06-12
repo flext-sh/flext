@@ -66,7 +66,7 @@ def check_black(files: list[Path]) -> tuple[bool, str]:
 
     str_files = [str(f) for f in files]
     # Black returns 0 if files are formatted correctly
-    return run_command(["black", "--check"] + str_files, "Black check")
+    return run_command(["black", "--check", *str_files], "Black check")
 
 
 def check_isort(files: list[Path]) -> tuple[bool, str]:
@@ -84,7 +84,7 @@ def check_isort(files: list[Path]) -> tuple[bool, str]:
 
     str_files = [str(f) for f in files]
     # isort returns 0 if imports are sorted correctly
-    return run_command(["isort", "--check"] + str_files, "isort check")
+    return run_command(["isort", "--check", *str_files], "isort check")
 
 
 def check_ruff(files: list[Path]) -> tuple[bool, str]:
@@ -102,7 +102,7 @@ def check_ruff(files: list[Path]) -> tuple[bool, str]:
 
     str_files = [str(f) for f in files]
     # Ruff returns 0 if there are no issues
-    return run_command(["ruff", "check"] + str_files, "Ruff check")
+    return run_command(["ruff", "check", *str_files], "Ruff check")
 
 
 def main(paths: list[str] | None = None) -> int:

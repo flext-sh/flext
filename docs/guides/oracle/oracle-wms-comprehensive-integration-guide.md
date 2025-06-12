@@ -3,7 +3,7 @@
 > **Function**: Complete Oracle WMS integration guide with validated code examples | **Audience**: Integration developers, WMS implementers | **Status**: ✅ VALIDATED
 
 [![Oracle WMS](https://img.shields.io/badge/oracle-wms-red.svg)](./index.md)
-[![Validated](https://img.shields.io/badge/code-validated-green.svg)](../../../flx-http-oracle-wms/)
+[![Validated](https://img.shields.io/badge/code-validated-green.svg)](../../../flx_http_oracle_wms/)
 [![Framework](https://img.shields.io/badge/framework-FLX%200.4.0-orange.svg)](../../index.md)
 
 **Complete Oracle Warehouse Management System (WMS) integration guide validated against actual FLX implementation**
@@ -24,7 +24,7 @@
 
 - **📂 Section Hub**: [Oracle Integration Hub](./index.md)
 - **🏠 Documentation Root**: [Root Index](../../index.md)
-- **🔗 Source Code**: [FLX Oracle WMS](../../../flx-http-oracle-wms/)
+- **🔗 Source Code**: [FLX Oracle WMS](../../../flx_http_oracle_wms/)
 - **🔗 Related**: [Oracle Authentication](./oracle-authentication-unified-guide.md), [WMS CLI Guide](./oracle-wms-cli-guide.md)
 
 ---
@@ -53,7 +53,7 @@ This guide provides comprehensive Oracle WMS integration using the FLX framework
 
 ### **Real Implementation Overview**
 
-**Source**: `/flx-http-oracle-wms/src/flx_http_oracle_wms/wms_client.py` (validated)
+**Source**: `/flx_http_oracle_wms/src/flx_http_oracle_wms/wms_client.py` (validated)
 
 The Oracle WMS integration uses the `WmsClient` class, not "OracleWmsRestAdapter":
 
@@ -76,7 +76,7 @@ wms_client = WmsClient(config)
 
 ### **Configuration Management**
 
-**Source**: `/flx-http-oracle-wms/src/flx_http_oracle_wms/config.py` (validated)
+**Source**: `/flx_http_oracle_wms/src/flx_http_oracle_wms/config.py` (validated)
 
 ```python
 from flx_http_oracle_wms.config import WmsConfig

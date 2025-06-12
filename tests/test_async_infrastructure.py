@@ -200,7 +200,7 @@ def test_message_router() -> None:
         assert rules[0] == custom_rule  # Should be first (highest priority)
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_redis() -> Any:
     """Mock Redis client."""
     with patch("redis.from_url") as mock:
@@ -209,7 +209,7 @@ def mock_redis() -> Any:
         yield mock_client
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_dramatiq() -> Any:
     """Mock Dramatiq components."""
     with (
@@ -248,13 +248,13 @@ def test_event_handler_registration(_mock_redis: Any, _mock_dramatiq: Any) -> No
     bus = flx_async.FlxAsyncCommandBus()
 
     async def test_handler(event: Any) -> None:
-        print(f"Resource created: {event.resource_name}")
+        pass
     bus.register_event_handler(flx_async.FlxResourceCreatedEvent, test_handler)
     assert "FlxResourceCreatedEvent" in bus._event_handlers
     assert test_handler in bus._event_handlers["FlxResourceCreatedEvent"]
 
 
-@pytest.mark.asyncio()
+@pytest.mark.asyncio
 async def test_command_sending(_mock_redis: Any, _mock_dramatiq: Any) -> None:
     """Test sending commands to the bus."""
     bus = flx_async.FlxAsyncCommandBus()
@@ -274,7 +274,7 @@ async def test_command_sending(_mock_redis: Any, _mock_dramatiq: Any) -> None:
     mock_actor.send.assert_called_once()
 
 
-@pytest.mark.asyncio()
+@pytest.mark.asyncio
 async def test_event_publishing(_mock_redis: Any, _mock_dramatiq: Any) -> None:
     """Test publishing events."""
     bus = flx_async.FlxAsyncCommandBus()
@@ -305,7 +305,7 @@ async def test_event_publishing(_mock_redis: Any, _mock_dramatiq: Any) -> None:
 def test_integration() -> None:
     """Integration tests for the complete async infrastructure."""
 
-    @pytest.mark.asyncio()
+    @pytest.mark.asyncio
     async def test_end_to_end_command_flow() -> None:
         """Test complete command flow from creation to processing."""
         # This would be a full integration test with Redis running

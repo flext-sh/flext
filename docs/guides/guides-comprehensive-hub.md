@@ -19,14 +19,14 @@ Based on **actual code inspection** of FLX Oracle projects, the guides documenta
 # ✅ VALIDATED: Real Oracle implementations match guide documentation
 
 # FLX-HTTP-Oracle-WMS Project (KISS Implementation)
-flx-http-oracle-wms/src/__init__.py:
+flx_http_oracle_wms/src/__init__.py:
 class FlxHttpOracleWmsProject(ApplicationService):
     # ✅ GUIDES ACCURATE: 15 lines vs 1500+ = 99% code reduction
     # ✅ GUIDES ACCURATE: Uses FLX Declarative patterns
     # ✅ GUIDES ACCURATE: Focuses on business logic only
 
 # FLX-HTTP-Oracle-OIC Project (Enterprise Implementation)  
-flx-http-oracle-oic/src/flx_http_oracle_oic/__init__.py:
+flx_http_oracle_oic/src/flx_http_oracle_oic/__init__.py:
 class OracleOicHttpAdapter:
     # ✅ GUIDES ACCURATE: Modern FLX 0.4.0 patterns
     # ✅ GUIDES ACCURATE: OAuth2/JWT authentication
@@ -374,9 +374,9 @@ Guides ↔ Infrastructure:
 └── CLI Operations → CLI Infrastructure
 
 Guides ↔ Real Code:
-├── WMS Guide → /flx-http-oracle-wms/src/
-├── OIC Guide → /flx-http-oracle-oic/src/
-├── Database Guide → /flx-database-oracle/src/
+├── WMS Guide → /flx_http_oracle_wms/src/
+├── OIC Guide → /flx_http_oracle_oic/src/
+├── Database Guide → /flx_database_oracle/src/
 └── Authentication → Real OAuth2 implementations
 ```
 

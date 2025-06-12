@@ -87,7 +87,7 @@ cd dc-code-analyzer
 ## 📁 Project Structure
 
 ```
-dc-code-analyzer/
+dc_code_analyzer/
 ├── analyzer/                    # Core analysis engine
 │   ├── models.py               # Data models
 │   ├── package_discovery.py   # Package discovery system

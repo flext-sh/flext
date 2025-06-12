@@ -1,0 +1,1310 @@
+{
+  "summary": {
+    "total_projects": 8,
+    "projects_with_errors": 0,
+    "total_conflicts": 6,
+    "projects_with_local_deps": 6
+  },
+  "projects": {
+    "flx": {
+      "path": "flx/pyproject.toml",
+      "python_version": "^3.13,<3.15",
+      "total_dependencies": 31,
+      "total_dev_dependencies": 22,
+      "has_errors": false,
+      "error": null
+    },
+    "flx_database_oracle": {
+      "path": "flx-database-oracle/pyproject.toml",
+      "python_version": "^3.13,<3.15",
+      "total_dependencies": 6,
+      "total_dev_dependencies": 16,
+      "has_errors": false,
+      "error": null
+    },
+    "flx_http_oracle_oic": {
+      "path": "flx-http-oracle-oic/pyproject.toml",
+      "python_version": "^3.13,<3.15",
+      "total_dependencies": 11,
+      "total_dev_dependencies": 19,
+      "has_errors": false,
+      "error": null
+    },
+    "flx_http_oracle_wms": {
+      "path": "flx-http-oracle-wms/pyproject.toml",
+      "python_version": "^3.13,<3.15",
+      "total_dependencies": 7,
+      "total_dev_dependencies": 14,
+      "has_errors": false,
+      "error": null
+    },
+    "client-a_oud_migration": {
+      "path": "client-a-mig-oud/pyproject.toml",
+      "python_version": "^3.13,<3.15",
+      "total_dependencies": 9,
+      "total_dev_dependencies": 12,
+      "has_errors": false,
+      "error": null
+    },
+    "client-b_oic_wms": {
+      "path": "client-b-poc-oic-wms/pyproject.toml",
+      "python_version": "^3.13,<3.15",
+      "total_dependencies": 7,
+      "total_dev_dependencies": 9,
+      "has_errors": false,
+      "error": null
+    },
+    "flx_adapter_example": {
+      "path": "flx-adapter-example/pyproject.toml",
+      "python_version": "^3.13,<3.15",
+      "total_dependencies": 9,
+      "total_dev_dependencies": 14,
+      "has_errors": false,
+      "error": null
+    },
+    "pyauto-workspace": {
+      "path": "pyproject.toml",
+      "python_version": "^3.13,<3.15",
+      "total_dependencies": 12,
+      "total_dev_dependencies": 44,
+      "has_errors": false,
+      "error": null
+    }
+  },
+  "version_conflicts": [
+    {
+      "dependency": "pytest-asyncio",
+      "version1": "^0.23.5.post1,<0.24.0",
+      "projects1": [
+        "flx",
+        "flx_database_oracle",
+        "flx_http_oracle_oic",
+        "flx_http_oracle_wms",
+        "client-a_oud_migration",
+        "client-b_oic_wms",
+        "flx_adapter_example"
+      ],
+      "version2": "<0.24.0",
+      "projects2": [
+        "pyauto-workspace"
+      ]
+    },
+    {
+      "dependency": "isort",
+      "version1": "^6.0.1",
+      "projects1": [
+        "flx",
+        "flx_database_oracle",
+        "flx_http_oracle_oic",
+        "client-a_oud_migration",
+        "client-b_oic_wms",
+        "flx_adapter_example"
+      ],
+      "version2": "<6",
+      "projects2": [
+        "pyauto-workspace"
+      ]
+    },
+    {
+      "dependency": "flx",
+      "version1": "path:../flx",
+      "projects1": [
+        "flx_database_oracle",
+        "flx_http_oracle_oic",
+        "flx_http_oracle_wms",
+        "client-a_oud_migration",
+        "client-b_oic_wms"
+      ],
+      "version2": "path:./flx",
+      "projects2": [
+        "pyauto-workspace"
+      ]
+    },
+    {
+      "dependency": "flx-database-oracle",
+      "version1": "path:../flx-database-oracle",
+      "projects1": [
+        "client-b_oic_wms"
+      ],
+      "version2": "path:./flx_database_oracle",
+      "projects2": [
+        "pyauto-workspace"
+      ]
+    },
+    {
+      "dependency": "flx-http-oracle-oic",
+      "version1": "path:../flx-http-oracle-oic",
+      "projects1": [
+        "client-b_oic_wms"
+      ],
+      "version2": "path:./flx_http_oracle_oic",
+      "projects2": [
+        "pyauto-workspace"
+      ]
+    },
+    {
+      "dependency": "flx-http-oracle-wms",
+      "version1": "path:../flx-http-oracle-wms",
+      "projects1": [
+        "client-b_oic_wms"
+      ],
+      "version2": "path:./flx_http_oracle_wms",
+      "projects2": [
+        "pyauto-workspace"
+      ]
+    }
+  ],
+  "local_dependencies": {
+    "flx_database_oracle": [
+      "flx"
+    ],
+    "flx_http_oracle_oic": [
+      "flx"
+    ],
+    "flx_http_oracle_wms": [
+      "flx"
+    ],
+    "client-a_oud_migration": [
+      "flx"
+    ],
+    "client-b_oic_wms": [
+      "flx-database-oracle",
+      "flx-http-oracle-oic",
+      "flx-http-oracle-wms",
+      "flx"
+    ],
+    "pyauto-workspace": [
+      "dc-code-analyzer",
+      "dc-meltano-plugins",
+      "flx",
+      "flx-adapter-example",
+      "flx-database-oracle",
+      "flx-http-oracle-oic",
+      "flx-http-oracle-wms",
+      "client-b-poc-oic-wms",
+      "oud-automation"
+    ]
+  },
+  "dependency_matrix": {
+    "PyJWT": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": "^2.10.1",
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": null
+    },
+    "aiofiles": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": "^24.1.0",
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": null
+    },
+    "aiohttp": {
+      "flx": "^3.12.11",
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": null
+    },
+    "aiosqlite": {
+      "flx": "^0.21.0",
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": null
+    },
+    "alembic": {
+      "flx": "^1.14.0",
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": null
+    },
+    "anyio": {
+      "flx": "^4.9.0",
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": "^4.9.0",
+      "pyauto-workspace": null
+    },
+    "asyncio": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": "^3.4.3",
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": null
+    },
+    "attrs": {
+      "flx": "^25.3.0",
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": null
+    },
+    "autoflake": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": "^2.2.1"
+    },
+    "bandit": {
+      "flx": null,
+      "flx_database_oracle": "^1.8.0",
+      "flx_http_oracle_oic": "^1.8.0",
+      "flx_http_oracle_wms": "^1.8.0",
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": "^1.8.0",
+      "pyauto-workspace": "^1.8.0"
+    },
+    "black": {
+      "flx": "^25.1.0",
+      "flx_database_oracle": "^25.1.0",
+      "flx_http_oracle_oic": "^25.1.0",
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": "^25.1.0",
+      "client-b_oic_wms": "^25.1.0",
+      "flx_adapter_example": "^25.1.0",
+      "pyauto-workspace": "^25.1.0"
+    },
+    "click": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": "^8.2.1",
+      "flx_http_oracle_wms": "^8.2.1",
+      "client-a_oud_migration": "^8.2.1",
+      "client-b_oic_wms": null,
+      "flx_adapter_example": "^8.2.1",
+      "pyauto-workspace": null
+    },
+    "codebase-digest": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": "^0.1.43"
+    },
+    "coverage": {
+      "flx": "^7.8.2",
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": "^7.8.2"
+    },
+    "cryptography": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": "^43.0.0",
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": null
+    },
+    "cyclopts": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": "^3.1.0",
+      "flx_adapter_example": null,
+      "pyauto-workspace": null
+    },
+    "dc-code-analyzer": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": "path:./dc_code_analyzer"
+    },
+    "dc-meltano-plugins": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": "path:./dc-meltano-plugins"
+    },
+    "django-stubs": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": "^4.2.0"
+    },
+    "djangorestframework-stubs": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": "^3.14.0"
+    },
+    "dramatiq": {
+      "flx": "^1.18.0",
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": null
+    },
+    "fastapi": {
+      "flx": "^0.115.0",
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": null
+    },
+    "fire": {
+      "flx": "^0.7.0",
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": null
+    },
+    "flake8": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": "^7.2.0"
+    },
+    "flx": {
+      "flx": null,
+      "flx_database_oracle": "path:../flx",
+      "flx_http_oracle_oic": "path:../flx",
+      "flx_http_oracle_wms": "path:../flx",
+      "client-a_oud_migration": "path:../flx",
+      "client-b_oic_wms": "path:../flx",
+      "flx_adapter_example": null,
+      "pyauto-workspace": "path:./flx"
+    },
+    "flx-adapter-example": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": "path:./flx_adapter_example"
+    },
+    "flx-database-oracle": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": "path:../flx-database-oracle",
+      "flx_adapter_example": null,
+      "pyauto-workspace": "path:./flx_database_oracle"
+    },
+    "flx-http-oracle-oic": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": "path:../flx-http-oracle-oic",
+      "flx_adapter_example": null,
+      "pyauto-workspace": "path:./flx_http_oracle_oic"
+    },
+    "flx-http-oracle-wms": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": "path:../flx-http-oracle-wms",
+      "flx_adapter_example": null,
+      "pyauto-workspace": "path:./flx_http_oracle_wms"
+    },
+    "graphviz": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": "^0.20.3"
+    },
+    "client-b-poc-oic-wms": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": "path:./client-b_oic_wms"
+    },
+    "httpx": {
+      "flx": "^0.28.1",
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": "^0.28.1",
+      "pyauto-workspace": null
+    },
+    "interrogate": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": "^1.7.0"
+    },
+    "ipykernel": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": "^6.0.0",
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": "^6.0.0"
+    },
+    "ipython": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": "^8.0.0"
+    },
+    "isort": {
+      "flx": "^6.0.1",
+      "flx_database_oracle": "^6.0.1",
+      "flx_http_oracle_oic": "^6.0.1",
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": "^6.0.1",
+      "client-b_oic_wms": "^6.0.1",
+      "flx_adapter_example": "^6.0.1",
+      "pyauto-workspace": "<6"
+    },
+    "jinja2": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": "^3.1.0",
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": null
+    },
+    "jsonschema": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": "^4.24.0",
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": null
+    },
+    "lato": {
+      "flx": "^0.12.0",
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": null
+    },
+    "ldap3": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": "^2.9.1",
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": null
+    },
+    "line-profiler": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": "^4.1.0"
+    },
+    "loguru": {
+      "flx": "^0.7.3",
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": null
+    },
+    "lxml": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": "^5.3.0",
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": null
+    },
+    "meltano": {
+      "flx": "^3.7.6",
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": null
+    },
+    "memory-profiler": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": "^0.61.0"
+    },
+    "mkdocs": {
+      "flx": null,
+      "flx_database_oracle": "^1.6.0",
+      "flx_http_oracle_oic": "^1.6.0",
+      "flx_http_oracle_wms": "^1.6.0",
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": null
+    },
+    "mkdocs-material": {
+      "flx": null,
+      "flx_database_oracle": "^9.5.0",
+      "flx_http_oracle_oic": "^9.5.0",
+      "flx_http_oracle_wms": "^9.5.0",
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": null
+    },
+    "monkeytype": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": "^23.3.0"
+    },
+    "mypy": {
+      "flx": "^1.16.0",
+      "flx_database_oracle": "^1.16.0",
+      "flx_http_oracle_oic": "^1.16.0",
+      "flx_http_oracle_wms": "^1.16.0",
+      "client-a_oud_migration": "^1.16.0",
+      "client-b_oic_wms": "^1.16.0",
+      "flx_adapter_example": "^1.16.0",
+      "pyauto-workspace": "^1.16.0"
+    },
+    "nuitka": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": "^2.7.4"
+    },
+    "openai": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": "^1.0.0"
+    },
+    "openpyxl": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": "^3.1.0",
+      "flx_http_oracle_wms": "^3.1.0",
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": null
+    },
+    "opentelemetry-api": {
+      "flx": "^1.34.0",
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": null
+    },
+    "opentelemetry-instrumentation": {
+      "flx": "^0.55b0",
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": null
+    },
+    "opentelemetry-sdk": {
+      "flx": "^1.34.0",
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": null
+    },
+    "oracledb": {
+      "flx": "^2.5.0",
+      "flx_database_oracle": "^2.5.0",
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": null
+    },
+    "oud-automation": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": "path:./oud-automation"
+    },
+    "pandas": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": "^2.2.0",
+      "flx_http_oracle_wms": "^2.2.0",
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": null
+    },
+    "paramiko": {
+      "flx": "^3.3.1",
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": null
+    },
+    "pdoc3": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": "^0.11.6"
+    },
+    "pipenv": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": "^2025.0.2"
+    },
+    "pluggy": {
+      "flx": "^1.6.0",
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": null
+    },
+    "pre-commit": {
+      "flx": "^4.2.0",
+      "flx_database_oracle": "^4.2.0",
+      "flx_http_oracle_oic": "^4.2.0",
+      "flx_http_oracle_wms": "^4.2.0",
+      "client-a_oud_migration": "^4.2.0",
+      "client-b_oic_wms": "^4.2.0",
+      "flx_adapter_example": "^4.2.0",
+      "pyauto-workspace": "^4.2.0"
+    },
+    "pyarrow": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": "^18.0.0",
+      "flx_http_oracle_wms": "^18.0.0",
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": null
+    },
+    "pycodestyle": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": "^2.12.0",
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": null
+    },
+    "pydantic": {
+      "flx": "^2.11.5",
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": "^2.11.5",
+      "pyauto-workspace": null
+    },
+    "pydantic-core": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": "^2.27.0",
+      "pyauto-workspace": null
+    },
+    "pydantic-settings": {
+      "flx": "^2.9.1",
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": "^2.9.1",
+      "pyauto-workspace": null
+    },
+    "pydocstyle": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": "^6.3.0",
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": null
+    },
+    "pygraphviz": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": "^1.10"
+    },
+    "pyjwt": {
+      "flx": "^2.10.1",
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": null
+    },
+    "pylint": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": "^3.0.0",
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": null
+    },
+    "pytest": {
+      "flx": "^8.4.0",
+      "flx_database_oracle": "^8.4.0",
+      "flx_http_oracle_oic": "^8.4.0",
+      "flx_http_oracle_wms": "^8.4.0",
+      "client-a_oud_migration": "^8.4.0",
+      "client-b_oic_wms": "^8.4.0",
+      "flx_adapter_example": "^8.4.0",
+      "pyauto-workspace": "^8.4.0"
+    },
+    "pytest-asyncio": {
+      "flx": "^0.23.5.post1,<0.24.0",
+      "flx_database_oracle": "^0.23.5.post1,<0.24.0",
+      "flx_http_oracle_oic": "^0.23.5.post1,<0.24.0",
+      "flx_http_oracle_wms": "^0.23.5.post1,<0.24.0",
+      "client-a_oud_migration": "^0.23.5.post1,<0.24.0",
+      "client-b_oic_wms": "^0.23.5.post1,<0.24.0",
+      "flx_adapter_example": "^0.23.5.post1,<0.24.0",
+      "pyauto-workspace": "<0.24.0"
+    },
+    "pytest-benchmark": {
+      "flx": null,
+      "flx_database_oracle": "^4.0.0",
+      "flx_http_oracle_oic": "^4.0.0",
+      "flx_http_oracle_wms": "^4.0.0",
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": "^4.0.0"
+    },
+    "pytest-cov": {
+      "flx": "^6.1.1",
+      "flx_database_oracle": "^6.1.1",
+      "flx_http_oracle_oic": "^6.1.1",
+      "flx_http_oracle_wms": "^6.1.1",
+      "client-a_oud_migration": "^6.1.1",
+      "client-b_oic_wms": "^6.1.1",
+      "flx_adapter_example": "^6.1.1",
+      "pyauto-workspace": "^6.1.1"
+    },
+    "pytest-django": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": "^4.5.0"
+    },
+    "pytest-html": {
+      "flx": "^4.1.1",
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": "^4.1.1"
+    },
+    "pytest-mock": {
+      "flx": "^3.14.1",
+      "flx_database_oracle": "^3.14.1",
+      "flx_http_oracle_oic": "^3.14.1",
+      "flx_http_oracle_wms": "^3.14.1",
+      "client-a_oud_migration": "^3.14.1",
+      "client-b_oic_wms": "^3.14.1",
+      "flx_adapter_example": "^3.14.1",
+      "pyauto-workspace": "^3.14.1"
+    },
+    "pytest-timeout": {
+      "flx": "^2.4.0",
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": "^2.4.0"
+    },
+    "pytest-tornasync": {
+      "flx": "^0.6.0.post2",
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": "^0.6.0.post2"
+    },
+    "pytest-trio": {
+      "flx": "^0.8.0",
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": "^0.8.0"
+    },
+    "pytest-twisted": {
+      "flx": "^1.14.3",
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": "^1.14.3"
+    },
+    "pytest-xdist": {
+      "flx": "^3.7.0",
+      "flx_database_oracle": "^3.7.0",
+      "flx_http_oracle_oic": "^3.7.0",
+      "flx_http_oracle_wms": "^3.7.0",
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": "^3.7.0",
+      "pyauto-workspace": "^3.7.0"
+    },
+    "python-dotenv": {
+      "flx": "^1.1.0",
+      "flx_database_oracle": "^1.1.0",
+      "flx_http_oracle_oic": "^1.1.0",
+      "flx_http_oracle_wms": "^1.1.0",
+      "client-a_oud_migration": "^1.1.0",
+      "client-b_oic_wms": "^1.1.0",
+      "flx_adapter_example": "^1.1.0",
+      "pyauto-workspace": null
+    },
+    "python-json-logger": {
+      "flx": "^3.3.0",
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": null
+    },
+    "pyupgrade": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": "^3.1.0"
+    },
+    "pyyaml": {
+      "flx": "^6.0.2",
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": null
+    },
+    "radon": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": "^6.0.1"
+    },
+    "redis": {
+      "flx": "^6.2.0",
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": null
+    },
+    "refurb": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": "^2.1.0"
+    },
+    "rich": {
+      "flx": "^14.0.0",
+      "flx_database_oracle": "^14.0.0",
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": "^14.0.0",
+      "client-b_oic_wms": "^14.0.0",
+      "flx_adapter_example": "^14.0.0",
+      "pyauto-workspace": null
+    },
+    "ruff": {
+      "flx": "^0.11.13",
+      "flx_database_oracle": "^0.11.13",
+      "flx_http_oracle_oic": "^0.11.13",
+      "flx_http_oracle_wms": "^0.11.13",
+      "client-a_oud_migration": "^0.11.13",
+      "client-b_oic_wms": "^0.11.13",
+      "flx_adapter_example": "^0.11.13",
+      "pyauto-workspace": "^0.11.13"
+    },
+    "safety": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": "^2.3.0"
+    },
+    "setuptools": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": "^80.9.0",
+      "client-b_oic_wms": null,
+      "flx_adapter_example": "^80.9.0",
+      "pyauto-workspace": null
+    },
+    "singer-sdk": {
+      "flx": "^0.46.3",
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": null
+    },
+    "sqlalchemy": {
+      "flx": "^2.0.0",
+      "flx_database_oracle": "^2.0.0",
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": null
+    },
+    "structlog": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": "^25.4.0",
+      "pyauto-workspace": null
+    },
+    "tabulate": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": "^0.9.0",
+      "flx_http_oracle_wms": "^0.9.0",
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": null
+    },
+    "tenacity": {
+      "flx": "^9.1.2",
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": null
+    },
+    "twisted": {
+      "flx": "^25.5.0",
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": null
+    },
+    "typer": {
+      "flx": null,
+      "flx_database_oracle": "^0.9.0",
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": null
+    },
+    "types-python-dateutil": {
+      "flx": "^2.9.0.20241206",
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": "^2.9.0.20241206"
+    },
+    "types-pyyaml": {
+      "flx": "^6.0.12.20250516",
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": "^6.0.12.20250516"
+    },
+    "types-redis": {
+      "flx": "^4.6.0.20240903",
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": "^4.6.0.20240903"
+    },
+    "types-requests": {
+      "flx": "^2.32.0.20241016",
+      "flx_database_oracle": "^2.32.0.20241016",
+      "flx_http_oracle_oic": "^2.32.0.20241016",
+      "flx_http_oracle_wms": "^2.32.0.20241016",
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": "^2.32.0.20241016",
+      "pyauto-workspace": "^2.32.0.20241016"
+    },
+    "types-setuptools": {
+      "flx": "^75.7.0.20250106",
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": "^75.7.0.20250106"
+    },
+    "types-sqlalchemy": {
+      "flx": "^1.4.53.38",
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": "^1.4.53.38"
+    },
+    "uvicorn": {
+      "flx": "^0.30.0",
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": null
+    },
+    "vulture": {
+      "flx": null,
+      "flx_database_oracle": "^2.12",
+      "flx_http_oracle_oic": "^2.12",
+      "flx_http_oracle_wms": "^2.12",
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": "^2.12"
+    },
+    "wheel": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": null,
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": "^0.42.0",
+      "client-b_oic_wms": null,
+      "flx_adapter_example": "^0.42.0",
+      "pyauto-workspace": null
+    },
+    "xmltodict": {
+      "flx": null,
+      "flx_database_oracle": null,
+      "flx_http_oracle_oic": "^0.13.0",
+      "flx_http_oracle_wms": null,
+      "client-a_oud_migration": null,
+      "client-b_oic_wms": null,
+      "flx_adapter_example": null,
+      "pyauto-workspace": null
+    }
+  }
+}

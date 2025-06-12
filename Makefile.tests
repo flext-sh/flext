@@ -45,7 +45,7 @@ clean-coverage:
 # Generate full coverage report
 coverage-full: clean-coverage install-test-deps
 	@echo "📊 Gerando relatório completo de cobertura..."
-	python scripts/generate_full_coverage_report.py --workspace . --output reports/coverage
+	python scripts/analysis/generate_full_coverage_report.py --workspace . --output reports/coverage
 
 # Test all modules
 test-all: install-test-deps
@@ -58,12 +58,12 @@ test-all: install-test-deps
 	cd flx-http-oracle-oic && python -m pytest tests/ -v --tb=short || true
 	@echo "FLX HTTP Oracle WMS..."
 	cd flx-http-oracle-wms && python -m pytest tests/ -v --tb=short || true
-	@echo "FLX LDAP..."
-	cd flx-ldap && python -m pytest tests/ -v --tb=short || true
-	@echo "FLX OIC WMS..."
-	cd flx-oic-wms && python -m pytest tests/ -v --tb=short || true
-	@echo "FLX Oracle WMS..."
-	cd flx-oracle-wms && python -m pytest tests/ -v --tb=short || true
+	@echo "client-a OUD Migration..."
+	cd client-a-mig-oud && python -m pytest tests/ -v --tb=short || true
+	@echo "client-b POC OIC-WMS..."
+	cd client-b-poc-oic-wms && python -m pytest tests/ -v --tb=short || true
+	@echo "FLX Adapter Example..."
+	cd flx-adapter-example && python -m pytest tests/ -v --tb=short || true
 
 # Test unit tests only
 test-unit: install-test-deps

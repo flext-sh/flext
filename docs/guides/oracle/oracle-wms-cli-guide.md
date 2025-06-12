@@ -24,7 +24,7 @@
 
 - **📂 Section Hub**: [Oracle Integration Hub](./index.md)
 - **🏠 Documentation Root**: [Root Index](../../index.md)
-- **🔗 Source Code**: [FLX Oracle WMS CLI](../../../flx-http-oracle-wms/scripts/)
+- **🔗 Source Code**: [FLX Oracle WMS CLI](../../../flx_http_oracle_wms/scripts/)
 - **🔗 Related**: [WMS Integration Guide](./oracle-wms-comprehensive-integration-guide.md), [CLI Implementation](../../development/guides/cli-implementation.md)
 
 ---

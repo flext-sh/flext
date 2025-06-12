@@ -25,9 +25,9 @@
     },
     "diretorios_alvo": [
         "flx/",
-        "flx-database-oracle/",
-        "flx-http-oracle-oic/",
-        "flx-http-oracle-wms/",
+        "flx_database_oracle/",
+        "flx_http_oracle_oic/",
+        "flx_http_oracle_wms/",
         "flx-ldap/",
         "flx-oic-wms/",
         "flx-oracle-wms/",
@@ -57,20 +57,20 @@
             "flx/src/flx/core/async_infrastructure/domain_messages.py"
         ],
         "fase_3_database": [
-            "flx-database-oracle/src/flx_database_oracle/config.py",
-            "flx-database-oracle/src/flx_database_oracle/models.py",
-            "flx-database-oracle/src/flx_database_oracle/domain/entities.py",
-            "flx-database-oracle/src/flx_database_oracle/domain/events.py",
-            "flx-database-oracle/src/flx_database_oracle/domain/commands.py",
-            "flx-database-oracle/src/flx_database_oracle/ports.py",
-            "flx-database-oracle/src/flx_database_oracle/plugin.py"
+            "flx_database_oracle/src/flx_database_oracle/config.py",
+            "flx_database_oracle/src/flx_database_oracle/models.py",
+            "flx_database_oracle/src/flx_database_oracle/domain/entities.py",
+            "flx_database_oracle/src/flx_database_oracle/domain/events.py",
+            "flx_database_oracle/src/flx_database_oracle/domain/commands.py",
+            "flx_database_oracle/src/flx_database_oracle/ports.py",
+            "flx_database_oracle/src/flx_database_oracle/plugin.py"
         ],
         "fase_4_wms": [
             "flx-oracle-wms/src/flx_oracle_wms/config.py",
             "flx-oracle-wms/src/flx_oracle_wms/models.py",
             "flx-oracle-wms/src/flx_oracle_wms/ports.py",
             "flx-oracle-wms/src/flx_oracle_wms/plugin.py",
-            "flx-http-oracle-wms/src/flx_http_oracle_wms/models.py"
+            "flx_http_oracle_wms/src/flx_http_oracle_wms/models.py"
         ],
         "fase_5_ldap_oic": [
             "flx-ldap/src/flx_ldap/entities/ldap_entities.py",
@@ -200,7 +200,7 @@
                     "imports_organizados": true
                 }
             },
-            "flx-http-oracle-oic/src/flx_http_oracle_oic/service.py": {
+            "flx_http_oracle_oic/src/flx_http_oracle_oic/service.py": {
                 "status": "concluido",
                 "mudancas": {
                     "docstring_melhorado": false,
@@ -353,7 +353,7 @@
                     "imports_organizados": true
                 }
             },
-            "flx-database-oracle/src/flx_database_oracle/config.py": {
+            "flx_database_oracle/src/flx_database_oracle/config.py": {
                 "status": "concluido",
                 "mudancas": {
                     "docstring_melhorado": true,
@@ -366,7 +366,7 @@
                     "imports_organizados": true
                 }
             },
-            "flx-database-oracle/src/flx_database_oracle/models.py": {
+            "flx_database_oracle/src/flx_database_oracle/models.py": {
                 "status": "concluido",
                 "mudancas": {
                     "docstring_melhorado": true,
@@ -381,7 +381,7 @@
                     "imports_organizados": true
                 }
             },
-            "flx-database-oracle/src/flx_database_oracle/domain/entities.py": {
+            "flx_database_oracle/src/flx_database_oracle/domain/entities.py": {
                 "status": "concluido",
                 "mudancas": {
                     "docstring_melhorado": true,
@@ -397,7 +397,7 @@
                     "imports_organizados": true
                 }
             },
-            "flx-database-oracle/src/flx_database_oracle/domain/events.py": {
+            "flx_database_oracle/src/flx_database_oracle/domain/events.py": {
                 "status": "concluido",
                 "mudancas": {
                     "docstring_melhorado": true,
@@ -422,8 +422,8 @@
         "prioritário": [
             "flx/src/flx/core/",
             "flx/src/flx/",
-            "flx-database-oracle/",
-            "flx-http-oracle-wms/",
+            "flx_database_oracle/",
+            "flx_http_oracle_wms/",
             "demais_modulos"
         ],
         "validacao_continua": true
