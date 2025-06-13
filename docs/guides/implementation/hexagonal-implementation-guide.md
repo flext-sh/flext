@@ -58,7 +58,7 @@ Based on `flx/core/entities.py`, implement entities with proper identity managem
 
 ```python
 from flx.core.entities import Entity, AggregateRoot
-from flx.core.value_objects import ValueObject
+from flx.core.domain.value_objects import ValueObject
 from typing import List, Optional
 from datetime import datetime
 from enum import Enum

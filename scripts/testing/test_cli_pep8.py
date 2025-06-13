@@ -10,7 +10,7 @@ def run_command(cmd: str, env_file: str = ".env.test") -> None:
     """Run a CLI command with specific environment."""
     print(f"\n{'=' * 79}")
     print(f"Command: {cmd}")
-    print('=' * 79)
+    print("=" * 79)
 
     # Set up environment
     env = os.environ.copy()
@@ -27,7 +27,7 @@ def run_command(cmd: str, env_file: str = ".env.test") -> None:
             capture_output=True,
             text=True,
             cwd=project_dir,
-            env=env, check=False
+            env=env, check=False,
         )
 
         print("STDOUT:")

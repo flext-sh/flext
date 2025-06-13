@@ -10,7 +10,7 @@ from typing import Any
 class MethodCallFixer(ast.NodeTransformer):
     """AST transformer to fix method calls missing flx_ prefix."""
 
-    def __init__(self, inventory: dict[str, Any]):
+    def __init__(self, inventory: dict[str, Any]) -> None:
         self.inventory = inventory
         self.changes_made: list[dict[str, Any]] = []
         self.current_class: str | None = None
@@ -74,7 +74,7 @@ class MethodCallFixer(ast.NodeTransformer):
                     "old": old_name,
                     "new": flx_method_name,
                     "line": node.lineno if hasattr(node, "lineno") else 0,
-                    "context": context_info
+                    "context": context_info,
                 })
 
         return node
@@ -117,7 +117,7 @@ def fix_file(filepath: Path, inventory: dict[str, Any], dry_run: bool = False) -
         return []
 
 
-def main():
+def main() -> None:
     """Main function."""
     import argparse
 

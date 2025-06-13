@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Setup script for the project_name package.
+"""Setup script for the project_name package.
 
 This setup script is provided for backward compatibility with pip.
 For normal development and installation, use Poetry.
@@ -9,7 +8,6 @@ For normal development and installation, use Poetry.
 import os
 
 from setuptools import find_packages, setup
-
 
 # Read the contents of README.md
 with open("README.md", encoding="utf-8") as f:

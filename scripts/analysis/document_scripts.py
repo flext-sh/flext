@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Script Documentation Generator
+"""Script Documentation Generator.
 
 This script generates or improves documentation for Python scripts in the
 pyauto workspace. It scans Python files, analyzes their content, and adds
@@ -105,7 +104,7 @@ def get_python_files(scripts_dir: Path, exclude_patterns: list[str]) -> list[Pat
 class ScriptDocumenter:
     """Class to document Python scripts."""
 
-    def __init__(self, script_path: Path, verbose: bool = False):
+    def __init__(self, script_path: Path, verbose: bool = False) -> None:
         self.script_path = script_path
         self.verbose = verbose
         self.script_content = self._read_script()
@@ -410,7 +409,7 @@ def generate_scripts_summary(python_files: list[Path]) -> str:
     return summary
 
 
-def main():
+def main() -> int:
     """Main function."""
     args = parse_arguments()
 

@@ -1,95 +1,90 @@
-"""FLX Adapter Example - Template for creating FLX bidirectional plugins.
+"""A Python client library template with API client, configuration, and CLI tools.
 
-This module provides a complete example of how to create a bidirectional plugin
-for the FLX framework, demonstrating best practices and patterns.
-
-The adapter can operate in both inbound and outbound modes:
-- Inbound: Receives requests from external systems
-- Outbound: Makes calls to external APIs/services
-- Bidirectional: Supports both modes simultaneously
-
-Example:
-    Basic usage:
-
-    ```python
-    from flx_adapter_example import create_adapter, FlxAdapterConfig
-
-    # Create adapter with default configuration
-    adapter = create_adapter()
-
-    # Or with custom configuration
-    config = FlxAdapterConfig(
-        name="my-adapter",
-        api_url="https://api.example.com",
-        timeout_seconds=30.0
-    )
-    adapter = create_adapter(config)
-
-    # Initialize and start
-    await adapter.initialize()
-    await adapter.start()
-    ```
+This template provides a foundation for building API client libraries with
+features like dynamic configuration, robust error handling, and CLI tools.
 """
 
-from __future__ import annotations
+__version__ = "0.1.0"
 
-from .adapter import FlxAdapterExample
-from .client import FlxAdapterClient
-from .config import FlxAdapterConfig
+# Import core components
+from .client import ApiClient, FlxResponse
+from .config import Config, ConfigProfile, load_config_from_env
+from .entity import Entity, EntityManager
+from .exceptions import (
+    ApiError,
+    AuthenticationError,
+    ConfigurationError,
+    ConnectionError,
+    RequestError,
+    ResponseError,
+    ValidationError,
+)
+from .models import BaseModel
+from .pagination import PagedResponse, PageInfo, PaginatedIterator, paginate
+from .schema import SchemaDefinition, SchemaExtractor, SchemaManager
+from .utils.formatting import format_csv, format_json, format_table, format_text
 
+# Import utilities
+from .utils.logging import get_logger, setup_logger
+from .utils.validation import (
+    validate_date,
+    validate_email,
+    validate_enum_field,
+    validate_min_max,
+    validate_required_fields,
+    validate_url,
+    validate_uuid,
+)
 
-def create_adapter(config: FlxAdapterConfig | None = None) -> FlxAdapterExample:
-    """Create FLX adapter with configuration.
-
-    Args:
-        config: Adapter configuration. If None, loads from environment.
-
-    Returns:
-        Configured FLX adapter instance
-
-    Example:
-        ```python
-        # With default configuration
-        adapter = create_adapter()
-
-        # With custom configuration
-        config = FlxAdapterConfig(name="my-adapter")
-        adapter = create_adapter(config)
-        ```
-    """
-    if config is None:
-        config = FlxAdapterConfig.from_env()
-
-    return FlxAdapterExample(config)
-
-
-def create_client(config: FlxAdapterConfig | None = None) -> FlxAdapterClient:
-    """Create FLX adapter client with configuration.
-
-    Args:
-        config: Adapter configuration. If None, loads from environment.
-
-    Returns:
-        Configured FLX adapter client
-
-    Example:
-        ```python
-        client = create_client()
-        response = await client.get_resource("123")
-        ```
-    """
-    if config is None:
-        config = FlxAdapterConfig.from_env()
-
-    return FlxAdapterClient(config)
-
-
-__version__ = "1.0.0"
-
+# Public API
 __all__ = [
-    "FlxAdapterClient",
-    "FlxAdapterConfig",
-    "FlxAdapterExample",
-    "create_adapter",
-    "create_client",
+    # Core components
+    "ApiClient",
+    # Exceptions
+    "ApiError",
+    "AuthenticationError",
+    "BaseModel",
+    "Config",
+    "ConfigProfile",
+    "ConfigurationError",
+    "ConnectionError",
+    # Entity management
+    "Entity",
+    "EntityManager",
+    "FlxResponse",
+    # Pagination
+    "PageInfo",
+    "PagedResponse",
+    "PaginatedIterator",
+    "RequestError",
+    "ResponseError",
+    # Schema management
+    "SchemaDefinition",
+    "SchemaExtractor",
+    "SchemaManager",
+    "ValidationError",
+    "format_csv",
+    # Formatting utilities
+    "format_json",
+    "format_table",
+    "format_text",
+    "get_logger",
+    # Configuration
+    "load_config_from_env",
+    "paginate",
+    # Logging utilities
+    "setup_logger",
+    "validate_date",
+    "validate_email",
+    "validate_enum_field",
+    "validate_min_max",
+    "validate_required_fields",
+    # Validation utilities
+    "validate_url",
+    "validate_uuid",
 ]
+
+# Version info
+__author__ = "Your Name"
+__email__ = "your.email@example.com"
+__license__ = "MIT"

@@ -169,7 +169,7 @@ class MyModel:
 Convert to FLX Value Object:
 
 ```python
-from flx.core.value_objects import ValueObject
+from flx.core.domain.value_objects import ValueObject
 from pydantic import Field
 
 class MyModel(ValueObject):
@@ -213,7 +213,7 @@ class MyModel(ValueObject):
    make monkeytype-apply PROJECT=flx MODULE=flx.core.entities
    
    # Apply to value objects
-   make monkeytype-apply PROJECT=flx MODULE=flx.core.value_objects
+   make monkeytype-apply PROJECT=flx MODULE=flx.core.domain.value_objects
    ```
 
 2. **Application Layer Types**:

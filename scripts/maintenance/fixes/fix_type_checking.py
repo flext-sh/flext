@@ -33,7 +33,7 @@ def get_type_checking_errors():
         return []
 
 
-def fix_type_checking_import(file_path):
+def fix_type_checking_import(file_path) -> bool:
     """Fix TYPE_CHECKING import in a specific file."""
     path = Path(file_path)
     if not path.exists():
@@ -92,7 +92,7 @@ def fix_type_checking_import(file_path):
     return True
 
 
-def main():
+def main() -> None:
     """Main function to fix TYPE_CHECKING errors."""
     print("Finding files with TYPE_CHECKING errors...")
     files_with_errors = get_type_checking_errors()

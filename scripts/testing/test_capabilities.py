@@ -9,6 +9,7 @@ from typing import Any, Protocol, TypeVar, cast
 
 class CapabilityType(Enum):
     """Standard capability types for FLX framework components."""
+
     LOGGING = "logging"
     HEALTH_CHECK = "health_check"
     METRICS = "metrics"
@@ -17,6 +18,7 @@ class CapabilityType(Enum):
 @dataclass
 class CapabilityMetadata:
     """Metadata describing a capability's requirements and behavior."""
+
     capability_type: CapabilityType
     name: str
     description: str
@@ -51,7 +53,7 @@ class Capability(Protocol):
 class LoggingCapability:
     """Simple logging capability."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._logger_name = "test"
         self._messages = []
 
@@ -60,7 +62,7 @@ class LoggingCapability:
         return CapabilityMetadata(
             capability_type=CapabilityType.LOGGING,
             name="simple_logging",
-            description="Simple logging capability"
+            description="Simple logging capability",
         )
 
     async def initialize(self, config: dict[str, Any]) -> None:
@@ -83,7 +85,7 @@ class LoggingCapability:
 class HealthCheckCapability:
     """Simple health check capability."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._is_healthy = True
         self._checks = []
 
@@ -92,7 +94,7 @@ class HealthCheckCapability:
         return CapabilityMetadata(
             capability_type=CapabilityType.HEALTH_CHECK,
             name="simple_health",
-            description="Simple health check"
+            description="Simple health check",
         )
 
     async def initialize(self, config: dict[str, Any]) -> None:
@@ -111,7 +113,7 @@ class HealthCheckCapability:
 class MetricsCapability:
     """Simple metrics capability."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._counters = {}
 
     @property
@@ -119,7 +121,7 @@ class MetricsCapability:
         return CapabilityMetadata(
             capability_type=CapabilityType.METRICS,
             name="simple_metrics",
-            description="Simple metrics collection"
+            description="Simple metrics collection",
         )
 
     async def initialize(self, config: dict[str, Any]) -> None:
@@ -138,7 +140,7 @@ class MetricsCapability:
         return {"counters": self._counters.copy()}
 
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 class CapabilityComposer:
@@ -155,7 +157,7 @@ class CapabilityComposer:
         cls,
         base_class: type[T],
         capabilities: set[CapabilityType],
-        config: dict[str, Any] | None = None
+        config: dict[str, Any] | None = None,
     ) -> type[T]:
         """Compose a class with specified capabilities."""
         config = config or {}
@@ -163,7 +165,7 @@ class CapabilityComposer:
         class ComposedClass(base_class):
             """Dynamically composed class with capabilities."""
 
-            def __init__(self, *args, **kwargs):
+            def __init__(self, *args, **kwargs) -> None:
                 # Initialize base class
                 super().__init__(*args, **kwargs)
 
@@ -210,19 +212,19 @@ class CapabilityComposer:
         ComposedClass.__name__ = f"Composed{base_class.__name__}"
         ComposedClass.__qualname__ = f"Composed{base_class.__qualname__}"
 
-        return cast(type[T], ComposedClass)
+        return cast("type[T]", ComposedClass)
 
 
 # Test the system
 class SimpleAdapter:
-    def __init__(self, name):
+    def __init__(self, name) -> None:
         self.name = name
 
-    def process(self, data):
-        return f'Processing {data} with {self.name}'
+    def process(self, data) -> str:
+        return f"Processing {data} with {self.name}"
 
 
-async def test_capability_system():
+async def test_capability_system() -> None:
     print("🚀 Testing Capability-based Composition System")
     print("=" * 50)
 
@@ -232,45 +234,45 @@ async def test_capability_system():
         {CapabilityType.LOGGING, CapabilityType.HEALTH_CHECK, CapabilityType.METRICS},
         config={
             "logging": {"logger_name": "test_adapter"},
-        }
+        },
     )
 
-    adapter = EnhancedAdapter('TestAdapter')
+    adapter = EnhancedAdapter("TestAdapter")
     await adapter._initialize_capabilities()
 
-    print('✅ Adapter created with capabilities:')
-    print(f'   Has logging: {adapter.has_capability(CapabilityType.LOGGING)}')
-    print(f'   Has health check: {adapter.has_capability(CapabilityType.HEALTH_CHECK)}')
-    print(f'   Has metrics: {adapter.has_capability(CapabilityType.METRICS)}')
-    print(f'   Is healthy: {adapter.is_healthy()}')
+    print("✅ Adapter created with capabilities:")
+    print(f"   Has logging: {adapter.has_capability(CapabilityType.LOGGING)}")
+    print(f"   Has health check: {adapter.has_capability(CapabilityType.HEALTH_CHECK)}")
+    print(f"   Has metrics: {adapter.has_capability(CapabilityType.METRICS)}")
+    print(f"   Is healthy: {adapter.is_healthy()}")
     print()
 
     # Test logging capability
-    adapter.logging.info('Adapter initialized', component=adapter.name)
-    adapter.logging.info('Processing data', operation='test')
-    print('✅ Logging capability works')
+    adapter.logging.info("Adapter initialized", component=adapter.name)
+    adapter.logging.info("Processing data", operation="test")
+    print("✅ Logging capability works")
     print()
 
     # Test health check
     adapter.health_check.add_health_check(lambda: True)
-    adapter.health_check.add_health_check(lambda: adapter.name == 'TestAdapter')
-    print(f'✅ Health check result: {adapter.health_check.is_healthy()}')
+    adapter.health_check.add_health_check(lambda: adapter.name == "TestAdapter")
+    print(f"✅ Health check result: {adapter.health_check.is_healthy()}")
     print()
 
     # Test metrics
-    adapter.metrics.increment_counter('operations_count')
-    adapter.metrics.increment_counter('data_processed', 5)
+    adapter.metrics.increment_counter("operations_count")
+    adapter.metrics.increment_counter("data_processed", 5)
     metrics = adapter.metrics.get_metrics()
-    print(f'✅ Metrics collected: {metrics}')
+    print(f"✅ Metrics collected: {metrics}")
     print()
 
     # Test original functionality still works
     result = adapter.process("test_data")
-    print(f'✅ Original functionality: {result}')
+    print(f"✅ Original functionality: {result}")
     print()
 
     await adapter._cleanup_capabilities()
-    print('✅ Capabilities cleaned up')
+    print("✅ Capabilities cleaned up")
     print()
 
     print("🎉 All capability tests passed successfully!")

@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Git Management Script
+"""Git Management Script.
 
 Provides Git operations for the pyauto workspace.
 
@@ -73,7 +72,7 @@ def run_git_command(
 
         # Return a fake CompletedProcess with error information
         class FakeCompletedProcess:
-            def __init__(self):
+            def __init__(self) -> None:
                 self.returncode = 1
                 self.stdout = ""
                 self.stderr = f"Not a git repository: {working_dir}"
@@ -250,7 +249,7 @@ def git_stash(
 
 
 def git_branch_list() -> None:
-    """list branches."""
+    """List branches."""
     print(colorize("Local branches:", "YELLOW"))
     result = run_git_command(["branch"], capture_output=True)
     print(result.stdout)

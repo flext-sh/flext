@@ -14,17 +14,17 @@ from flx.infra.services.base import service_registry
 class Application:
     """Example application using standardized services."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.cache_service: StandardizedCacheService | None = None
         self.http_service: StandardizedHttpClientService | None = None
 
-    async def setup_services(self):
+    async def setup_services(self) -> None:
         """Set up infrastructure services."""
         # Configure cache service
         cache_config = {
             "backend": "memory",
             "ttl": 3600,  # 1 hour default TTL
-            "max_size": 1000
+            "max_size": 1000,
         }
         self.cache_service = StandardizedCacheService(cache_config)
         service_registry.register("cache", self.cache_service)
@@ -36,8 +36,8 @@ class Application:
             "max_retries": 3,
             "headers": {
                 "User-Agent": "FLX-Example/1.0",
-                "Accept": "application/json"
-            }
+                "Accept": "application/json",
+            },
         }
         self.http_service = StandardizedHttpClientService(http_config)
         service_registry.register("http", self.http_service)
@@ -84,19 +84,18 @@ class Application:
 
         return posts
 
-    async def cleanup(self):
+    async def cleanup(self) -> None:
         """Clean up services."""
         await service_registry.cleanup_all()
 
 
-async def example_basic_usage():
+async def example_basic_usage() -> None:
     """Basic usage example."""
-
     # Create and configure services
     cache = StandardizedCacheService({"backend": "memory"})
     http = StandardizedHttpClientService({
         "base_url": "https://api.github.com",
-        "headers": {"Accept": "application/vnd.github.v3+json"}
+        "headers": {"Accept": "application/vnd.github.v3+json"},
     })
 
     # Use services with context manager
@@ -114,9 +113,8 @@ async def example_basic_usage():
     # Services are automatically stopped
 
 
-async def example_with_registry():
+async def example_with_registry() -> None:
     """Example using service registry."""
-
     # Create services
     cache = StandardizedCacheService()
     http = StandardizedHttpClientService()
@@ -143,14 +141,13 @@ async def example_with_registry():
         await service_registry.cleanup_all()
 
 
-async def example_with_configuration():
+async def example_with_configuration() -> None:
     """Example with dynamic configuration."""
-
     # Create service with initial config
     cache = StandardizedCacheService({
         "backend": "memory",
         "ttl": 60,
-        "max_size": 100
+        "max_size": 100,
     })
 
     await cache.start()
@@ -169,18 +166,18 @@ async def example_with_configuration():
         await cache.cleanup()
 
 
-async def example_with_test_engine():
+async def example_with_test_engine() -> None:
     """Example using test engine for testing."""
 
     # Mock test engine
     class MockCacheEngine:
-        def __init__(self):
+        def __init__(self) -> None:
             self.data = {}
 
         def get(self, key):
             return self.data.get(key)
 
-        def set(self, key, value, ttl=None):
+        def set(self, key, value, ttl=None) -> None:
             self.data[key] = value
 
         def exists(self, key):
@@ -202,13 +199,12 @@ async def example_with_test_engine():
         await cache.cleanup()
 
 
-async def example_error_handling():
+async def example_error_handling() -> None:
     """Example with error handling."""
-
     # Create service with invalid config
     try:
         cache = StandardizedCacheService({
-            "backend": "unsupported_backend"
+            "backend": "unsupported_backend",
         })
         await cache.start()
     except ValueError:
@@ -227,13 +223,12 @@ async def example_error_handling():
     await cache.cleanup()
 
 
-async def example_metrics_and_monitoring():
+async def example_metrics_and_monitoring() -> None:
     """Example with metrics and monitoring."""
-
     # Create HTTP service
     http = StandardizedHttpClientService({
         "base_url": "https://httpbin.org",
-        "max_retries": 2
+        "max_retries": 2,
     })
 
     await http.start()
@@ -263,7 +258,7 @@ async def example_metrics_and_monitoring():
         await http.cleanup()
 
 
-async def main():
+async def main() -> None:
     """Run all examples."""
     # Basic examples
     await example_basic_usage()

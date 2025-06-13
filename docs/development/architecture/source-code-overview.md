@@ -213,7 +213,7 @@ flx/src/flx/
 ```python
 # Core imports (domain layer)
 from flx.core.entities import User, Order, Product
-from flx.core.value_objects import Email, Money, SKU
+from flx.core.domain.value_objects import Email, Money, SKU
 from flx.core.events import UserCreatedEvent, OrderProcessedEvent
 
 # Port imports (interface layer)

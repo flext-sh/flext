@@ -7,7 +7,6 @@ from pathlib import Path
 
 def fix_g004_logging_fstrings(content: str) -> str:
     """Fix G004 errors - f-strings in logging statements."""
-
     # Pattern to match logging statements with f-strings
     patterns = [
         # logger.info(f"message {var}")
@@ -25,12 +24,12 @@ def fix_g004_logging_fstrings(content: str) -> str:
 
             # Convert f-string variables to % formatting
             # Find {variable} patterns and convert them
-            variables = re.findall(r'{([^}]+)}', message)
+            variables = re.findall(r"{([^}]+)}", message)
             if variables:
                 # Replace {var} with %s
-                new_message = re.sub(r'{[^}]+}', '%s', message)
+                new_message = re.sub(r"{[^}]+}", "%s", message)
                 # Build the replacement with variables
-                var_list = ', '.join(variables)
+                var_list = ", ".join(variables)
                 replacement_text = f'{prefix}"{new_message}", {var_list}'
                 content = content[:start] + replacement_text + content[end:]
 
@@ -39,10 +38,9 @@ def fix_g004_logging_fstrings(content: str) -> str:
 
 def fix_b904_exception_chaining(content: str) -> str:
     """Fix B904 errors - missing exception chaining."""
-
     # Pattern to match raise statements without proper chaining
     # Look for raise statements within except blocks
-    lines = content.split('\n')
+    lines = content.split("\n")
     in_except_block = False
     except_variable = None
 
@@ -50,37 +48,37 @@ def fix_b904_exception_chaining(content: str) -> str:
         stripped = line.strip()
 
         # Check if we're entering an except block
-        if stripped.startswith('except ') and ' as ' in stripped:
+        if stripped.startswith("except ") and " as " in stripped:
             in_except_block = True
             # Extract the exception variable name
-            match = re.search(r'except .+ as (\w+):', stripped)
+            match = re.search(r"except .+ as (\w+):", stripped)
             if match:
                 except_variable = match.group(1)
-        elif stripped.startswith('except '):
+        elif stripped.startswith("except "):
             in_except_block = True
             except_variable = None
-        elif not stripped.startswith(' ') and stripped != '' and 'except' not in stripped:
+        elif not stripped.startswith(" ") and stripped != "" and "except" not in stripped:
             # We've left the except block
             in_except_block = False
             except_variable = None
 
         # If we're in an except block and find a raise statement
-        if in_except_block and stripped.startswith('raise ') and except_variable:
+        if in_except_block and stripped.startswith("raise ") and except_variable:
             # Check if it already has 'from'
-            if ' from ' not in stripped and not stripped.endswith(f' from {except_variable}'):
+            if " from " not in stripped and not stripped.endswith(f" from {except_variable}"):
                 # Add exception chaining
-                if stripped.endswith(')'):
-                    lines[i] = line.replace(stripped, f'{stripped} from {except_variable}')
+                if stripped.endswith(")"):
+                    lines[i] = line.replace(stripped, f"{stripped} from {except_variable}")
                 else:
-                    lines[i] = line.replace(stripped, f'{stripped} from {except_variable}')
+                    lines[i] = line.replace(stripped, f"{stripped} from {except_variable}")
 
-    return '\n'.join(lines)
+    return "\n".join(lines)
 
 
 def fix_lint_file(file_path: Path) -> bool:
     """Fix lint issues in a single file."""
     try:
-        with open(file_path, encoding='utf-8') as f:
+        with open(file_path, encoding="utf-8") as f:
             content = f.read()
 
         original_content = content
@@ -91,7 +89,7 @@ def fix_lint_file(file_path: Path) -> bool:
 
         # Write back only if changes were made
         if content != original_content:
-            with open(file_path, 'w', encoding='utf-8') as f:
+            with open(file_path, "w", encoding="utf-8") as f:
                 f.write(content)
             print(f"Fixed: {file_path}")
             return True
@@ -103,9 +101,8 @@ def fix_lint_file(file_path: Path) -> bool:
         return False
 
 
-def main():
+def main() -> None:
     """Main function to fix lint issues in project directories."""
-
     # Target directories
     target_dirs = [
         Path("project-client-a-oud/src"),

@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Script para atualizar o pyproject.toml com exclusões de arquivos problemáticos.
+"""Script para atualizar o pyproject.toml com exclusões de arquivos problemáticos.
 
 Este script lê uma lista de arquivos com problemas de linhas longas (E501) e
 atualiza a seção per-file-ignores no pyproject.toml para ignorar E501 em
@@ -76,8 +75,7 @@ def update_pyproject_toml(pyproject_file: str, problem_files: list[tuple[str, in
     exclusions = []
     for filepath, _count in problem_files:
         # Limpar o caminho (remover ./ no início)
-        if filepath.startswith("./"):
-            filepath = filepath[2:]
+        filepath = filepath.removeprefix("./")
         exclusions.append(f'"{filepath}" = ["E501"]')
 
     # Verificar se já temos seção per-file-ignores

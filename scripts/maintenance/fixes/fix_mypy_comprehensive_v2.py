@@ -23,19 +23,19 @@ def run_mypy() -> str:
 def parse_mypy_errors(output: str) -> list[dict[str, str]]:
     """Parse mypy output into structured errors."""
     errors = []
-    lines = output.split('\n')
+    lines = output.split("\n")
 
     for line in lines:
-        if ': error:' in line:
+        if ": error:" in line:
             # Parse the error line
-            match = re.match(r'^([^:]+):(\d+): error: (.+) \[([^\]]+)\]', line)
+            match = re.match(r"^([^:]+):(\d+): error: (.+) \[([^\]]+)\]", line)
             if match:
                 file_path, line_no, message, error_code = match.groups()
                 errors.append({
-                    'file': file_path,
-                    'line': int(line_no),
-                    'message': message,
-                    'code': error_code,
+                    "file": file_path,
+                    "line": int(line_no),
+                    "message": message,
+                    "code": error_code,
                 })
 
     return errors
@@ -48,22 +48,22 @@ def fix_logging_imports(file_path: str) -> bool:
             content = f.read()
 
         # If file uses logging but doesn't import it
-        if 'logging.' in content and 'import logging' not in content:
+        if "logging." in content and "import logging" not in content:
             # Add import at the top after existing imports
-            lines = content.split('\n')
+            lines = content.split("\n")
             import_index = 0
 
             # Find where to insert the import
             for i, line in enumerate(lines):
                 if line.startswith(("import ", "from ")):
                     import_index = i + 1
-                elif line.strip() == '' and import_index > 0:
+                elif line.strip() == "" and import_index > 0:
                     break
 
-            lines.insert(import_index, 'import logging')
+            lines.insert(import_index, "import logging")
 
-            with open(file_path, 'w', encoding="utf-8") as f:
-                f.write('\n'.join(lines))
+            with open(file_path, "w", encoding="utf-8") as f:
+                f.write("\n".join(lines))
             return True
 
     except Exception as e:
@@ -84,13 +84,13 @@ def fix_type_annotations(file_path: str, line_no: int, message: str) -> bool:
             # Fix missing return type annotations
             if "Function is missing a return type annotation" in message:
                 # Add -> None if function doesn't return value
-                if "Use \"-> None\" if function does not return a value" in message:
+                if 'Use "-> None" if function does not return a value' in message:
                     # Find the function definition
-                    if 'def ' in line and ')' in line and ':' in line:
-                        line = line.replace('):', ') -> None:')
+                    if "def " in line and ")" in line and ":" in line:
+                        line = line.replace("):", ") -> None:")
                         lines[line_no - 1] = line
 
-                        with open(file_path, 'w', encoding="utf-8") as f:
+                        with open(file_path, "w", encoding="utf-8") as f:
                             f.writelines(lines)
                         return True
 
@@ -100,17 +100,17 @@ def fix_type_annotations(file_path: str, line_no: int, message: str) -> bool:
                 if var_match:
                     var_name = var_match.group(1)
                     # Add type annotation based on context
-                    if f'{var_name} = []' in line:
-                        line = line.replace(f'{var_name} = []', f'{var_name}: list[Any] = []')
-                    elif f'{var_name} = {{}}' in line:
-                        line = line.replace(f'{var_name} = {{}}', f'{var_name}: dict[str, Any] = {{}}')
+                    if f"{var_name} = []" in line:
+                        line = line.replace(f"{var_name} = []", f"{var_name}: list[Any] = []")
+                    elif f"{var_name} = {{}}" in line:
+                        line = line.replace(f"{var_name} = {{}}", f"{var_name}: dict[str, Any] = {{}}")
                     else:
                         # Generic annotation
-                        line = line.replace(f'{var_name} = ', f'{var_name}: Any = ')
+                        line = line.replace(f"{var_name} = ", f"{var_name}: Any = ")
 
                     lines[line_no - 1] = line
 
-                    with open(file_path, 'w', encoding="utf-8") as f:
+                    with open(file_path, "w", encoding="utf-8") as f:
                         f.writelines(lines)
                     return True
 
@@ -132,20 +132,20 @@ def fix_attribute_errors(file_path: str, line_no: int, message: str) -> bool:
             # Fix logging attribute errors
             if 'Module has no attribute "getLogger"' in message:
                 # Ensure logging is imported
-                if 'import logging' not in '\n'.join(lines[:10]):
+                if "import logging" not in "\n".join(lines[:10]):
                     # Add import at the top
                     for i, line in enumerate(lines):
-                        if line.startswith('from __future__'):
+                        if line.startswith("from __future__"):
                             continue
                         if line.startswith(("import ", "from ")):
-                            if 'import logging' not in line:
-                                lines.insert(i, 'import logging\n')
+                            if "import logging" not in line:
+                                lines.insert(i, "import logging\n")
                                 break
-                        elif line.strip() == '':
-                            lines.insert(i, 'import logging\n')
+                        elif line.strip() == "":
+                            lines.insert(i, "import logging\n")
                             break
 
-                    with open(file_path, 'w', encoding="utf-8") as f:
+                    with open(file_path, "w", encoding="utf-8") as f:
                         f.writelines(lines)
                     return True
 
@@ -160,9 +160,9 @@ def fix_file_errors(file_path: str, errors: list[dict[str, str]]) -> int:
     fixed_count = 0
 
     # Group errors by type
-    logging_errors = [e for e in errors if 'logging' in e['message'].lower()]
-    type_errors = [e for e in errors if e['code'] in {'no-untyped-def', 'var-annotated'}]
-    attr_errors = [e for e in errors if e['code'] == 'attr-defined']
+    logging_errors = [e for e in errors if "logging" in e["message"].lower()]
+    type_errors = [e for e in errors if e["code"] in {"no-untyped-def", "var-annotated"}]
+    attr_errors = [e for e in errors if e["code"] == "attr-defined"]
 
     # Fix logging imports first
     if logging_errors and fix_logging_imports(file_path):
@@ -170,18 +170,18 @@ def fix_file_errors(file_path: str, errors: list[dict[str, str]]) -> int:
 
     # Fix type annotations
     for error in type_errors:
-        if fix_type_annotations(file_path, error['line'], error['message']):
+        if fix_type_annotations(file_path, error["line"], error["message"]):
             fixed_count += 1
 
     # Fix attribute errors
     for error in attr_errors:
-        if fix_attribute_errors(file_path, error['line'], error['message']):
+        if fix_attribute_errors(file_path, error["line"], error["message"]):
             fixed_count += 1
 
     return fixed_count
 
 
-def main():
+def main() -> None:
     """Main function to fix all mypy errors."""
     print("Running mypy to identify errors...")
     output = run_mypy()
@@ -196,7 +196,7 @@ def main():
     # Group errors by file
     errors_by_file: dict[str, list[dict[str, str]]] = {}
     for error in errors:
-        file_path = error['file']
+        file_path = error["file"]
         if file_path not in errors_by_file:
             errors_by_file[file_path] = []
         errors_by_file[file_path].append(error)

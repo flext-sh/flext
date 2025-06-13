@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Script to fix deprecated typing imports in Python files.
+"""Script to fix deprecated typing imports in Python files.
 Replaces typing.list, typing.dict, etc. with their modern equivalents.
 """
 
@@ -15,12 +14,11 @@ def find_python_files(directory: str) -> list[Path]:
 
 
 def flx_deprecated_typing(file_path: Path) -> dict[str, int]:
-    """
-    Fix deprecated typing imports in a Python file.
+    """Fix deprecated typing imports in a Python file.
 
     Returns a dictionary with counts of fixes by type.
     """
-    with open(file_path, encoding='utf-8') as f:
+    with open(file_path, encoding="utf-8") as f:
         content = f.read()
 
     # Check if file has any deprecated typing imports
@@ -28,7 +26,7 @@ def flx_deprecated_typing(file_path: Path) -> dict[str, int]:
         return {}
 
     # Get the original typing import line
-    typing_import_match = re.search(r'from typing import (.*?)(?:\n|$)', content, re.MULTILINE)
+    typing_import_match = re.search(r"from typing import (.*?)(?:\n|$)", content, re.MULTILINE)
     if not typing_import_match:
         return {}
 
@@ -37,15 +35,15 @@ def flx_deprecated_typing(file_path: Path) -> dict[str, int]:
 
     # Define the deprecated types to replace
     replacements = {
-        'list': 'list',
-        'dict': 'dict',
-        'Set': 'set',
-        'tuple': 'tuple',
-        'Optional': 'Optional',  # Keep this for now
-        'Union': 'Union',        # Keep this for now
-        'Any': 'Any',            # Keep this
-        'TypeVar': 'TypeVar',    # Keep this
-        'Callable': 'Callable',  # Keep this
+        "list": "list",
+        "dict": "dict",
+        "Set": "set",
+        "tuple": "tuple",
+        "Optional": "Optional",  # Keep this for now
+        "Union": "Union",        # Keep this for now
+        "Any": "Any",            # Keep this
+        "TypeVar": "TypeVar",    # Keep this
+        "Callable": "Callable",  # Keep this
     }
 
     # Track changes
@@ -53,11 +51,11 @@ def flx_deprecated_typing(file_path: Path) -> dict[str, int]:
     new_imports = []
 
     # Process each import
-    for imp in re.split(r',\s*', original_imports):
+    for imp in re.split(r",\s*", original_imports):
         imp = imp.strip()
         if imp in replacements:
             # If it's a deprecated type that needs replacement
-            if imp in {'list', 'dict', 'Set', 'tuple'}:
+            if imp in {"list", "dict", "Set", "tuple"}:
                 changes[imp] = changes.get(imp, 0) + 1
                 # Don't add to new imports as we'll use the builtin types
             else:
@@ -87,16 +85,16 @@ def flx_deprecated_typing(file_path: Path) -> dict[str, int]:
 
     # Replace the actual type uses in the code
     for old_type, new_type in replacements.items():
-        if old_type in {'list', 'dict', 'Set', 'tuple'} and old_type in changes:
+        if old_type in {"list", "dict", "Set", "tuple"} and old_type in changes:
             # Replace patterns like list[int] with list[int]
-            pattern = r'\b' + re.escape(old_type) + r'\['
-            replacement = new_type + '['
+            pattern = r"\b" + re.escape(old_type) + r"\["
+            replacement = new_type + "["
             modified_content, count = re.subn(pattern, replacement, modified_content)
             if count > 0:
                 changes[f"{old_type}_usage"] = count
 
     # Write the modified content back
-    with open(file_path, 'w', encoding='utf-8') as f:
+    with open(file_path, "w", encoding="utf-8") as f:
         f.write(modified_content)
 
     return changes
@@ -119,7 +117,7 @@ def process_files(files: list[Path]) -> dict[str, int]:
 
     return {
         "files_modified": files_modified,
-        "changes": total_changes
+        "changes": total_changes,
     }
 
 
@@ -134,7 +132,7 @@ def main() -> None:
     all_files = []
     for path_arg in sys.argv[1:]:
         path = Path(path_arg)
-        if path.is_file() and path.suffix == '.py':
+        if path.is_file() and path.suffix == ".py":
             all_files.append(path)
         elif path.is_dir():
             all_files.extend(find_python_files(str(path)))
@@ -153,9 +151,9 @@ def main() -> None:
     print(f"Files processed: {len(all_files)}")
     print(f"Files modified: {results['files_modified']}")
 
-    if results['changes']:
+    if results["changes"]:
         print("\nReplacements made:")
-        for change_type, count in results['changes'].items():
+        for change_type, count in results["changes"].items():
             print(f"  - {change_type}: {count}")
     else:
         print("\nNo deprecated typing imports found.")

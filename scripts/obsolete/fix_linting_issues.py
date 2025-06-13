@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Fix common linting issues in the dc-api-x flx_project.
+"""Fix common linting issues in the dc-api-x flx_project.
 
 This script automatically fixes:
 1. FBT001/FBT002 - Boolean-typed positional arguments in function definitions
@@ -21,12 +20,12 @@ from pathlib import Path
 class LintingFixer:
     """Class for fixing linting issues in Python files."""
 
-    def __init__(self, dry_run: bool = False):
-        """
-        Initialize the fixer.
+    def __init__(self, dry_run: bool = False) -> None:
+        """Initialize the fixer.
 
         Args:
             dry_run: If True, don't actually change files, just report what would change
+
         """
         self.dry_run = dry_run
         self.files_modified = 0
@@ -34,11 +33,11 @@ class LintingFixer:
         self.fixes_by_type: dict[str, int] = {}
 
     def process_directory(self, directory: Path) -> None:
-        """
-        Process all Python files in a directory (recursively).
+        """Process all Python files in a directory (recursively).
 
         Args:
             directory: Directory to process
+
         """
         for path in directory.glob("**/*.py"):
             if ".venv" in str(path) or "__pycache__" in str(path):
@@ -46,11 +45,11 @@ class LintingFixer:
             self.process_file(path)
 
     def process_file(self, file_path: Path) -> None:
-        """
-        Process a single Python file.
+        """Process a single Python file.
 
         Args:
             file_path: Path to the file to process
+
         """
         if not file_path.exists():
             print(f"File not found: {file_path}")
@@ -76,15 +75,14 @@ class LintingFixer:
                 file_path.write_text(content, encoding="utf-8")
 
     def _fix_path_issues(self, content: str) -> str:
-        """
-        Fix path-related issues.
+        """Fix path-related issues.
 
         This addresses PTH123, PTH119, etc. linting issues.
         """
         # Replace open() with Path.open()
         open_pattern = r"open\(([^,\)]+)(?:,\s*['\"]([^'\"]+)['\"])?\)"
 
-        def open_replacement(match):
+        def open_replacement(match) -> str:
             path, mode = match.groups()
             mode_str = f'"{mode}"' if mode else ""
             flx_key = "PTH123"
@@ -102,7 +100,7 @@ class LintingFixer:
         # Replace os.path.basename() with Path.name
         basename_pattern = r"os\.path\.basename\(([^)]+)\)"
 
-        def basename_replacement(match):
+        def basename_replacement(match) -> str:
             path = match.group(1)
             flx_key = "PTH119"
             self.fixes_by_type[flx_key] = self.fixes_by_type.get(fix_key, 0) + 1
@@ -117,7 +115,7 @@ class LintingFixer:
         # Replace os.path.exists() with Path.exists()
         exists_pattern = r"os\.path\.exists\(([^)]+)\)"
 
-        def exists_replacement(match):
+        def exists_replacement(match) -> str:
             path = match.group(1)
             flx_key = "PTH110"
             self.fixes_by_type[flx_key] = self.fixes_by_type.get(fix_key, 0) + 1
@@ -131,7 +129,7 @@ class LintingFixer:
         # Replace os.unlink() with Path.unlink()
         unlink_pattern = r"os\.unlink\(([^)]+)\)"
 
-        def unlink_replacement(match):
+        def unlink_replacement(match) -> str:
             path = match.group(1)
             flx_key = "PTH108"
             self.fixes_by_type[flx_key] = self.fixes_by_type.get(fix_key, 0) + 1
@@ -147,7 +145,7 @@ class LintingFixer:
         modified_content = content
         modified_content = re.sub(open_pattern, open_replacement, modified_content)
         modified_content = re.sub(
-            basename_pattern, basename_replacement, modified_content
+            basename_pattern, basename_replacement, modified_content,
         )
         modified_content = re.sub(exists_pattern, exists_replacement, modified_content)
         modified_content = re.sub(unlink_pattern, unlink_replacement, modified_content)
@@ -183,8 +181,7 @@ class LintingFixer:
         return modified_content
 
     def _fix_exception_handling(self, content: str) -> str:
-        """
-        Fix exception handling issues.
+        """Fix exception handling issues.
 
         This addresses B904 and TRY003 linting issues.
         """
@@ -212,19 +209,18 @@ class LintingFixer:
 
         # Apply the fixes for exception handling
         re.sub(
-            except_pattern, except_replacement, content, flags=re.DOTALL
+            except_pattern, except_replacement, content, flags=re.DOTALL,
         )
 
     def _fix_logging_issues(self, content: str) -> str:
-        """
-        Fix logging issues.
+        """Fix logging issues.
 
         This addresses G004 linting issues.
         """
         # Pattern to match logging statements with f-strings
         log_pattern = r"(logger\.[a-zA-Z]+\()f([\"\'](.*?)[\"\'])"
 
-        def log_replacement(match):
+        def log_replacement(match) -> str:
             log_func, full_string, _message = match.groups()
             flx_key = "G004"
             self.fixes_by_type[flx_key] = self.fixes_by_type.get(fix_key, 0) + 1
@@ -254,10 +250,10 @@ class LintingFixer:
 def main() -> None:
     """Main entry point for the script."""
     parser = argparse.ArgumentParser(
-        description="Fix common linting issues in the flx_project"
+        description="Fix common linting issues in the flx_project",
     )
     parser.add_argument(
-        "--dry-run", action="store_true", help="Don't actually modify files"
+        "--dry-run", action="store_true", help="Don't actually modify files",
     )
     args = parser.parse_args()
 

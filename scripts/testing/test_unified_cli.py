@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Test script for unified CLI implementations across Oracle projects.
+"""Test script for unified CLI implementations across Oracle projects.
 
 This script verifies that all Oracle projects now use a consistent CLI
 pattern with cyclopts and proper command structure.
@@ -78,7 +77,7 @@ def test_cli_version(project_path: Path, module_path: str) -> tuple[bool, str]:
         return False, f"❌ Version command error: {e}"
 
 
-def main():
+def main() -> None:
     """Main test function."""
     print("🧪 Testing unified CLI implementations across Oracle projects\n")
 

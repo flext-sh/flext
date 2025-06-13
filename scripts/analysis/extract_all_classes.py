@@ -209,7 +209,7 @@ def generate_markdown_table():
             continue
 
         rel_path = py_file.relative_to(flx_path)
-        directory = str(rel_path.parent) if rel_path.parent != Path(".") else "root"
+        directory = str(rel_path.parent) if rel_path.parent != Path() else "root"
         filename = py_file.name
 
         analysis = extract_all_classes_and_functions(py_file)

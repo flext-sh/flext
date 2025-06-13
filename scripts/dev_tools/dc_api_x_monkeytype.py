@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
-"""
-Utilitário para usar o MonkeyType com DCApiX
+"""MonkeyType utility for DCApiX.
 
-Este script fornece comandos simples para executar o MonkeyType
-para coletar e aplicar tipos no projeto DCApiX.
+This script provides simple commands to run MonkeyType
+for collecting and applying types in the DCApiX project.
 """
 
 import argparse
@@ -11,88 +10,88 @@ import subprocess
 import sys
 
 
-def run_monkeytype_tests(test_path=None):
-    """Executa testes com o MonkeyType para coletar tipos em tempo de execução."""
+def run_monkeytype_tests(test_path: str | None = None) -> int:
+    """Run tests with MonkeyType to collect runtime types."""
     cmd = ["monkeytype", "run", "-m", "pytest"]
 
     if test_path:
         cmd.append(test_path)
 
-    print(f"Executando testes com MonkeyType: {' '.join(cmd)}")
+    print(f"Running tests with MonkeyType: {' '.join(cmd)}")
     result = subprocess.run(cmd, check=False)
 
     if result.returncode == 0:
-        print("\nColeta de tipos concluída com sucesso.")
-        print("Para listar módulos com informações de tipo:")
+        print("\nType collection completed successfully.")
+        print("To list modules with type information:")
         print("  python dc_api_x_monkeytype.py list")
-        print("Para aplicar tipos a um módulo:")
+        print("To apply types to a module:")
         print("  python dc_api_x_monkeytype.py apply --module dc_api_x.some_module")
 
     return result.returncode
 
 
-def list_modules():
-    """Lista módulos com informações de tipo coletadas."""
+def list_modules() -> int:
+    """List modules with collected type information."""
     cmd = ["monkeytype", "list-modules"]
 
-    print("Listando módulos com informações de tipo:")
+    print("Listing modules with type information:")
     result = subprocess.run(cmd, check=False)
 
     if result.returncode == 0:
-        print("\nPara aplicar tipos a um módulo:")
+        print("\nTo apply types to a module:")
         print("  python dc_api_x_monkeytype.py apply --module dc_api_x.some_module")
 
     return result.returncode
 
 
-def apply_types(module):
-    """Aplica tipos coletados a um módulo específico."""
+def apply_types(module: str) -> int:
+    """Apply collected types to a specific module."""
     cmd = ["monkeytype", "apply", module]
 
-    print(f"Aplicando tipos ao módulo {module}:")
+    print(f"Applying types to module {module}:")
     result = subprocess.run(cmd, check=False)
 
     if result.returncode == 0:
-        print(f"\nTipos aplicados com sucesso ao módulo {module}")
-        print("Verifique as alterações e execute mypy para validar os tipos.")
+        print(f"\nTypes applied successfully to module {module}")
+        print("Check the changes and run mypy to validate the types.")
 
     return result.returncode
 
 
 def generate_stub(module):
-    """Gera um stub com os tipos coletados para um módulo."""
+    """Generate a stub with collected types for a module."""
     cmd = ["monkeytype", "stub", module]
 
-    print(f"Gerando stub para o módulo {module}:")
+    print(f"Generating stub for module {module}:")
     result = subprocess.run(cmd, check=False)
 
     if result.returncode == 0:
-        print(f"\nStub gerado com sucesso para o módulo {module}")
-        print("Revise o stub e aplique manualmente se necessário.")
+        print(f"\nStub generated successfully for module {module}")
+        print("Review the stub and apply manually if necessary.")
 
     return result.returncode
 
 
 def main():
-    """Ponto de entrada principal."""
-    parser = argparse.ArgumentParser(description="Utilitário MonkeyType para DCApiX")
-    subparsers = parser.add_subparsers(dest="command", help="Comando a executar")
+    """Main entry point."""
+    parser = argparse.ArgumentParser(description="MonkeyType utility for DCApiX")
+    subparsers = parser.add_subparsers(dest="command", help="Command to execute")
     subparsers.required = True
 
-    # Comando run
-    run_parser = subparsers.add_parser("run", help="Executar testes com MonkeyType")
-    run_parser.add_argument("--test-path", help="Caminho do teste específico")
+    # Run command
+    run_parser = subparsers.add_parser("run", help="Run tests with MonkeyType")
+    run_parser.add_argument("--test-path", help="Specific test path")
 
-    # Comando list
-    subparsers.add_parser("list", help="Listar módulos com informações de tipo")
+    # List command
+    subparsers.add_parser("list", help="List modules with type information")
 
-    # Comando apply
-    apply_parser = subparsers.add_parser("apply", help="Aplicar tipos a um módulo")
-    apply_parser.add_argument("--module", required=True, help="Caminho do módulo")
+    # Apply command
+    apply_parser = subparsers.add_parser("apply", help="Apply types to a module")
+    apply_parser.add_argument("--module", required=True, help="Module path")
 
-    # Comando stub
-    stub_parser = subparsers.add_parser("stub", help="Gerar stub para um módulo")
-    stub_parser.add_argument("--module", required=True, help="Caminho do módulo")
+    # Stub command
+    stub_parser = subparsers.add_parser("stub", help="Generate stub for a module")
+    stub_parser.add_argument("--module", required=True, help="Module path")
 
     args = parser.parse_args()
 
@@ -104,7 +103,7 @@ def main():
         return apply_types(args.module)
     if args.command == "stub":
         return generate_stub(args.module)
-    print(f"Comando desconhecido: {args.command}")
+    print(f"Unknown command: {args.command}")
     return 1
 
 

@@ -42,11 +42,12 @@ class WmsToOraclePipeline:
     tratamento de erros e logging detalhado.
     """
 
-    def __init__(self, config_file: str | None = None):
+    def __init__(self, config_file: str | None = None) -> None:
         """Inicializa o pipeline.
 
         Args:
             config_file: Caminho para arquivo de configuração (JSON/YAML)
+
         """
         self.setup_logging()
         self.config = self.load_config(config_file)
@@ -73,6 +74,7 @@ class WmsToOraclePipeline:
 
         Returns:
             Dicionário com configurações
+
         """
         default_config = {
             "wms": {
@@ -94,8 +96,8 @@ class WmsToOraclePipeline:
 
         if config_file and Path(config_file).exists():
             self.logger.info(f"Carregando configuração de: {config_file}")
-            with open(config_file, encoding='utf-8') as f:
-                if config_file.endswith(('.yaml', '.yml')):
+            with open(config_file, encoding="utf-8") as f:
+                if config_file.endswith((".yaml", ".yml")):
                     user_config = yaml.safe_load(f)
                 else:
                     user_config = json.load(f)
@@ -117,6 +119,7 @@ class WmsToOraclePipeline:
 
         Raises:
             PipelineError: Se extração falhar
+
         """
         self.logger.info(f"Iniciando extração do WMS - Recurso: {resource}")
 
@@ -157,21 +160,25 @@ class WmsToOraclePipeline:
             self.logger.info(f"Extração WMS concluída. Output: {result.stdout}")
 
             if not output_file.exists():
-                raise PipelineError(f"Arquivo de saída não foi criado: {output_file}")
+                msg = f"Arquivo de saída não foi criado: {output_file}"
+                raise PipelineError(msg)
 
             # Validar dados extraídos
-            with open(output_file, encoding='utf-8') as f:
+            with open(output_file, encoding="utf-8") as f:
                 data = json.load(f)
                 self.logger.info(f"Extraídos {len(data) if isinstance(data, list) else 1} registros")
 
             return output_file
 
         except subprocess.TimeoutExpired:
-            raise PipelineError(f"Timeout na extração WMS após {self.config['wms']['timeout']}s")
+            msg = f"Timeout na extração WMS após {self.config['wms']['timeout']}s"
+            raise PipelineError(msg)
         except subprocess.CalledProcessError as e:
-            raise PipelineError(f"Erro na extração WMS: {e.stderr}")
+            msg = f"Erro na extração WMS: {e.stderr}"
+            raise PipelineError(msg)
         except Exception as e:
-            raise PipelineError(f"Erro inesperado na extração WMS: {e!s}")
+            msg = f"Erro inesperado na extração WMS: {e!s}"
+            raise PipelineError(msg)
 
     def transform_data(self, data_file: Path, table_name: str) -> Path:
         """Transforma dados para formato compatível com Oracle DB.
@@ -182,10 +189,11 @@ class WmsToOraclePipeline:
 
         Returns:
             Caminho para arquivo SQL com comandos INSERT
+
         """
         self.logger.info(f"Iniciando transformação de dados para tabela: {table_name}")
 
-        with open(data_file, encoding='utf-8') as f:
+        with open(data_file, encoding="utf-8") as f:
             data = json.load(f)
 
         if not isinstance(data, list):
@@ -193,7 +201,7 @@ class WmsToOraclePipeline:
 
         sql_file = self.temp_dir / f"insert_{table_name}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.sql"
 
-        with open(sql_file, 'w', encoding='utf-8') as f:
+        with open(sql_file, "w", encoding="utf-8") as f:
             f.write(f"-- Inserção de dados WMS na tabela {table_name}\n")
             f.write(f"-- Gerado em: {datetime.now().isoformat()}\n")
             f.write(f"-- Total de registros: {len(data)}\n\n")
@@ -238,6 +246,7 @@ class WmsToOraclePipeline:
 
         Raises:
             PipelineError: Se inserção falhar
+
         """
         self.logger.info(f"Iniciando carregamento no Oracle DB: {sql_file}")
 
@@ -259,11 +268,14 @@ class WmsToOraclePipeline:
             self.logger.info(f"Carregamento Oracle concluído. Output: {result.stdout}")
 
         except subprocess.TimeoutExpired:
-            raise PipelineError(f"Timeout no carregamento Oracle após {self.config['oracle']['timeout']}s")
+            msg = f"Timeout no carregamento Oracle após {self.config['oracle']['timeout']}s"
+            raise PipelineError(msg)
         except subprocess.CalledProcessError as e:
-            raise PipelineError(f"Erro no carregamento Oracle: {e.stderr}")
+            msg = f"Erro no carregamento Oracle: {e.stderr}"
+            raise PipelineError(msg)
         except Exception as e:
-            raise PipelineError(f"Erro inesperado no carregamento Oracle: {e!s}")
+            msg = f"Erro inesperado no carregamento Oracle: {e!s}"
+            raise PipelineError(msg)
 
     def run_pipeline(self, resource: str, table_name: str, **query_params) -> None:
         """Executa o pipeline completo.
@@ -272,6 +284,7 @@ class WmsToOraclePipeline:
             resource: Recurso WMS para extrair
             table_name: Tabela Oracle de destino
             **query_params: Parâmetros de query WMS
+
         """
         try:
             self.logger.info("=== Iniciando Pipeline WMS -> Oracle ===")
@@ -305,7 +318,7 @@ class WmsToOraclePipeline:
             self.logger.warning(f"Erro ao remover diretório temporário: {e!s}")
 
 
-def main():
+def main() -> None:
     """Função principal do script."""
     parser = argparse.ArgumentParser(
         description="Pipeline WMS para Oracle Database",

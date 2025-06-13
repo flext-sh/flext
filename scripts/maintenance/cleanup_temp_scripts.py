@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
-"""
-Script de limpeza automática de scripts temporários.
+"""Automatic cleanup script for temporary scripts.
 
-Este script remove automaticamente scripts temporários antigos das pastas temp/
-em todo o workspace.
+This script automatically removes old temporary scripts from temp/ folders
+throughout the workspace.
 """
 
 import re
@@ -11,32 +10,32 @@ import sys
 from datetime import datetime, timedelta
 from pathlib import Path
 
-# Adiciona o path do utils para importar validação
+# Add utils path to import validation
 sys.path.append(str(Path(__file__).parent.parent / "utils"))
 import structlog
 from script_validation import find_workspace_root, validate_script_location
 
-# Validação obrigatória de localização
+# Mandatory location validation
 validate_script_location()
 
 logger = structlog.get_logger(__name__)
 
 
 def find_temp_scripts(workspace_root: Path, max_age_days: int = 30) -> list[Path]:
-    """
-    Encontra scripts temporários que excedem a idade máxima.
+    """Find temporary scripts that exceed the maximum age.
 
     Args:
-        workspace_root: Raiz do workspace
-        max_age_days: Idade máxima em dias
+        workspace_root: Workspace root directory
+        max_age_days: Maximum age in days
 
     Returns:
-        List[Path]: Lista de scripts para remoção
+        List[Path]: List of scripts for removal
+
     """
     cutoff_date = datetime.now() - timedelta(days=max_age_days)
     old_scripts = []
 
-    # Procura em todas as pastas temp
+    # Search in all temp folders
     temp_dirs = [
         workspace_root / "scripts" / "temp",
         *workspace_root.glob("*/scripts/temp"),
@@ -46,10 +45,10 @@ def find_temp_scripts(workspace_root: Path, max_age_days: int = 30) -> list[Path
         if not temp_dir.exists():
             continue
 
-        logger.info(f"Verificando pasta: {temp_dir}")
+        logger.info(f"Checking folder: {temp_dir}")
 
         for script_file in temp_dir.glob("*.py"):
-            # Verifica idade do arquivo
+            # Check file age
             file_age = datetime.fromtimestamp(script_file.stat().st_mtime)
 
             if file_age < cutoff_date:
@@ -59,48 +58,48 @@ def find_temp_scripts(workspace_root: Path, max_age_days: int = 30) -> list[Path
 
 
 def analyze_script_content(script_file: Path) -> dict:
-    """
-    Analisa o conteúdo do script para extrair metadados.
+    """Analyze script content to extract metadata.
 
     Args:
-        script_file: Caminho do script
+        script_file: Script file path
 
     Returns:
-        dict: Metadados extraídos
+        dict: Extracted metadata
+
     """
     try:
         content = script_file.read_text(encoding="utf-8")
 
-        # Procura por padrões de data de limpeza
-        cleanup_pattern = r"LIMPEZA AGENDADA:\s*(\d{4}-\d{2}-\d{2})"
+        # Search for cleanup date patterns
+        cleanup_pattern = r"CLEANUP SCHEDULED:\s*(\d{4}-\d{2}-\d{2})"
         cleanup_match = re.search(cleanup_pattern, content)
 
-        # Procura por objetivo/propósito
-        purpose_pattern = r"Objetivo:\s*(.+)"
+        # Search for objective/purpose
+        purpose_pattern = r"Purpose:\s*(.+)"
         purpose_match = re.search(purpose_pattern, content)
 
         return {
             "cleanup_date": cleanup_match.group(1) if cleanup_match else None,
             "purpose": purpose_match.group(1).strip() if purpose_match else None,
-            "is_temp_template": "SCRIPT TEMPORÁRIO" in content,
+            "is_temp_template": "TEMPORARY SCRIPT" in content,
         }
     except Exception as e:
-        logger.warning(f"Erro ao analisar script {script_file}: {e}")
+        logger.warning(f"Error analyzing script {script_file}: {e}")
         return {}
 
 
 def cleanup_temp_scripts(max_age_days: int = 30, dry_run: bool = False) -> None:
-    """
-    Remove scripts temporários antigos.
+    """Remove old temporary scripts.
 
     Args:
-        max_age_days: Idade máxima em dias para manter scripts
-        dry_run: Se True, apenas mostra o que seria removido
+        max_age_days: Maximum age in days to keep scripts
+        dry_run: If True, only shows what would be removed
+
     """
     workspace_root = find_workspace_root()
 
     logger.info(
-        "Iniciando limpeza de scripts temporários",
+        "Starting temporary scripts cleanup",
         max_age_days=max_age_days,
         dry_run=dry_run,
         workspace_root=str(workspace_root),
@@ -109,57 +108,57 @@ def cleanup_temp_scripts(max_age_days: int = 30, dry_run: bool = False) -> None:
     old_scripts = find_temp_scripts(workspace_root, max_age_days)
 
     if not old_scripts:
-        logger.info("Nenhum script temporário antigo encontrado")
+        logger.info("No old temporary scripts found")
         return
 
-    logger.info(f"Encontrados {len(old_scripts)} scripts para limpeza")
+    logger.info(f"Found {len(old_scripts)} scripts for cleanup")
 
     removed_count = 0
     for script_file in old_scripts:
         try:
-            # Analisa conteúdo para logs mais informativos
+            # Analyze content for more informative logs
             metadata = analyze_script_content(script_file)
 
             file_age = datetime.fromtimestamp(script_file.stat().st_mtime)
             age_days = (datetime.now() - file_age).days
 
             logger.info(
-                "Script encontrado para remoção",
+                "Script found for removal",
                 file=str(script_file),
                 age_days=age_days,
-                purpose=metadata.get("purpose", "Não especificado"),
+                purpose=metadata.get("purpose", "Not specified"),
             )
 
             if not dry_run:
                 script_file.unlink()
-                logger.info(f"Script removido: {script_file}")
+                logger.info(f"Script removed: {script_file}")
                 removed_count += 1
             else:
-                logger.info(f"[DRY RUN] Removeria: {script_file}")
+                logger.info(f"[DRY RUN] Would remove: {script_file}")
 
         except Exception as e:
-            logger.exception(f"Erro ao remover script {script_file}: {e}")
+            logger.exception(f"Error removing script {script_file}: {e}")
 
     if dry_run:
-        logger.info(f"[DRY RUN] {len(old_scripts)} scripts seriam removidos")
+        logger.info(f"[DRY RUN] {len(old_scripts)} scripts would be removed")
     else:
-        logger.info(f"Limpeza concluída: {removed_count} scripts removidos")
+        logger.info(f"Cleanup completed: {removed_count} scripts removed")
 
 
-def main():
-    """Função principal com interface CLI básica."""
+def main() -> None:
+    """Main function with basic CLI interface."""
     import argparse
 
     parser = argparse.ArgumentParser(
-        description="Limpa scripts temporários antigos do workspace"
+        description="Clean old temporary scripts from workspace",
     )
     parser.add_argument(
-        "--max-age", type=int, default=30, help="Idade máxima em dias (padrão: 30)"
+        "--max-age", type=int, default=30, help="Maximum age in days (default: 30)",
     )
     parser.add_argument(
         "--dry-run",
         action="store_true",
-        help="Apenas mostra o que seria removido, sem remover",
+        help="Only show what would be removed, without removing",
     )
 
     args = parser.parse_args()
@@ -167,7 +166,7 @@ def main():
     try:
         cleanup_temp_scripts(max_age_days=args.max_age, dry_run=args.dry_run)
     except Exception as e:
-        logger.exception("Erro durante limpeza", error=str(e))
+        logger.exception("Error during cleanup", error=str(e))
         sys.exit(1)
 
 

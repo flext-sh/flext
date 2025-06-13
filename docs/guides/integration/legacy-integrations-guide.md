@@ -257,7 +257,7 @@ class LegacyPatternExtractor:
 
 ```python
 # Modern FLX pattern
-from flx.core.value_objects import ASNNumber, SKU, Quantity
+from flx.core.domain.value_objects import ASNNumber, SKU, Quantity
 from flx.core.entities import ReceiptAdvice, ReceiptItem
 
 # Type-safe value objects

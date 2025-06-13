@@ -37,7 +37,7 @@ from flx.infra.services.resources import (
 class DatabaseConnection:
     """Mock database connection."""
 
-    def __init__(self, connection_id: str):
+    def __init__(self, connection_id: str) -> None:
         self.connection_id = connection_id
         self.is_alive = True
         self.query_count = 0
@@ -45,7 +45,8 @@ class DatabaseConnection:
     async def execute(self, query: str) -> dict[str, Any]:
         """Execute query."""
         if not self.is_alive:
-            raise ConnectionError("Connection is dead")
+            msg = "Connection is dead"
+            raise ConnectionError(msg)
 
         self.query_count += 1
 
@@ -54,7 +55,8 @@ class DatabaseConnection:
 
         # Simulate occasional failures
         if random.random() < 0.1:  # 10% failure rate
-            raise ConnectionError("Query execution failed")
+            msg = "Query execution failed"
+            raise ConnectionError(msg)
 
         return {"result": f"Result for: {query}", "rows": random.randint(0, 100)}
 
@@ -70,7 +72,7 @@ class DatabaseConnection:
 class DatabaseConnectionFactory(ResourceFactory[DatabaseConnection]):
     """Factory for database connections."""
 
-    def __init__(self, database_url: str):
+    def __init__(self, database_url: str) -> None:
         self.database_url = database_url
         self._created_count = 0
 
@@ -84,7 +86,8 @@ class DatabaseConnectionFactory(ResourceFactory[DatabaseConnection]):
 
         # Simulate occasional connection failures
         if random.random() < 0.05:  # 5% failure rate
-            raise ConnectionError("Failed to establish database connection")
+            msg = "Failed to establish database connection"
+            raise ConnectionError(msg)
 
         return DatabaseConnection(connection_id)
 
@@ -107,7 +110,7 @@ class DatabaseConnectionValidator(ResourceValidator[DatabaseConnection]):
 class AdvancedDatabaseService(BaseInfraService):
     """Advanced database service with all infrastructure features."""
 
-    def __init__(self, config: dict[str, Any] | None = None):
+    def __init__(self, config: dict[str, Any] | None = None) -> None:
         super().__init__("advanced_database", config)
 
         # Configuration
@@ -129,7 +132,7 @@ class AdvancedDatabaseService(BaseInfraService):
         # Add retry strategy for connection errors
         error_handler.register_strategy(
             ExponentialBackoffRetry(base_delay=0.5, max_delay=10.0),
-            [ErrorCategory.CONNECTION, ErrorCategory.NETWORK]
+            [ErrorCategory.CONNECTION, ErrorCategory.NETWORK],
         )
 
         # Add error listener for monitoring
@@ -143,8 +146,8 @@ class AdvancedDatabaseService(BaseInfraService):
             CircuitBreakerConfig(
                 failure_threshold=5,
                 timeout=30.0,
-                error_types={ConnectionError, TimeoutError}
-            )
+                error_types={ConnectionError, TimeoutError},
+            ),
         )
 
         # Bulkhead for connection isolation
@@ -152,8 +155,8 @@ class AdvancedDatabaseService(BaseInfraService):
             f"{self._service_name}_connections",
             BulkheadConfig(
                 max_concurrent=self._pool_size,
-                max_queue_size=20
-            )
+                max_queue_size=20,
+            ),
         )
 
         # Rate limiter for query operations
@@ -162,15 +165,15 @@ class AdvancedDatabaseService(BaseInfraService):
             RateLimiterConfig(
                 max_requests=1000,
                 time_window=60.0,
-                burst_size=1200
-            )
+                burst_size=1200,
+            ),
         )
 
     def _on_error(self, error: InfrastructureError) -> None:
         """Handle infrastructure errors."""
         self._logger.error(
             f"Infrastructure error in {error.context.service_name}: "
-            f"{error} (severity: {error.context.severity.value})"
+            f"{error} (severity: {error.context.severity.value})",
         )
 
     # Lifecycle Implementation
@@ -187,13 +190,13 @@ class AdvancedDatabaseService(BaseInfraService):
             max_size=self._pool_size,
             max_idle_time=300.0,  # 5 minutes
             max_lifetime=3600.0,  # 1 hour
-            validator=validator
+            validator=validator,
         )
 
         # Register with resource manager
         resource_manager.register_pool(
             f"{self._service_name}_pool",
-            self._connection_pool
+            self._connection_pool,
         )
 
     async def _do_start(self) -> None:
@@ -232,7 +235,8 @@ class AdvancedDatabaseService(BaseInfraService):
     async def execute_query(self, query: str) -> dict[str, Any]:
         """Execute database query with full resilience."""
         if not self._connected:
-            raise RuntimeError("Database service not connected")
+            msg = "Database service not connected"
+            raise RuntimeError(msg)
 
         # Create error context
         context = ErrorContext(
@@ -240,7 +244,7 @@ class AdvancedDatabaseService(BaseInfraService):
             operation="execute_query",
             severity=ErrorSeverity.MEDIUM,
             category=ErrorCategory.CONNECTION,
-            max_retries=self._max_retries
+            max_retries=self._max_retries,
         )
 
         # Define operation
@@ -249,7 +253,7 @@ class AdvancedDatabaseService(BaseInfraService):
             async with self._connection_pool.acquire_context(timeout=5.0) as conn:
                 # Use bulkhead for isolation
                 bulkhead = resilience_manager.get_bulkhead(
-                    f"{self._service_name}_connections"
+                    f"{self._service_name}_connections",
                 )
                 async with bulkhead.acquire():
                     # Record start time for adaptive timeout
@@ -260,7 +264,7 @@ class AdvancedDatabaseService(BaseInfraService):
 
                         # Record success for adaptive strategy
                         strategy = resilience_manager.get_adaptive_strategy(
-                            self._service_name
+                            self._service_name,
                         )
                         response_time = asyncio.get_event_loop().time() - start_time
                         await strategy.record_result(True, response_time)
@@ -270,7 +274,7 @@ class AdvancedDatabaseService(BaseInfraService):
                     except Exception:
                         # Record failure
                         strategy = resilience_manager.get_adaptive_strategy(
-                            self._service_name
+                            self._service_name,
                         )
                         response_time = asyncio.get_event_loop().time() - start_time
                         await strategy.record_result(False, response_time)
@@ -282,16 +286,17 @@ class AdvancedDatabaseService(BaseInfraService):
         except Exception as e:
             # Handle with error recovery
             return await error_handler.handle_error(
-                e, context, _execute
+                e, context, _execute,
             )
 
     async def execute_transaction(
         self,
-        queries: list[str]
+        queries: list[str],
     ) -> list[dict[str, Any]]:
         """Execute multiple queries in a transaction."""
         if not self._connected:
-            raise RuntimeError("Database service not connected")
+            msg = "Database service not connected"
+            raise RuntimeError(msg)
 
         results = []
 
@@ -309,15 +314,16 @@ class AdvancedDatabaseService(BaseInfraService):
             except Exception as e:
                 # Simulate rollback
                 await asyncio.sleep(0.05)
+                msg = "Transaction failed"
                 raise InfrastructureError(
-                    "Transaction failed",
+                    msg,
                     ErrorContext(
                         service_name=self._service_name,
                         operation="execute_transaction",
                         severity=ErrorSeverity.HIGH,
-                        category=ErrorCategory.CONNECTION
+                        category=ErrorCategory.CONNECTION,
                     ),
-                    cause=e
+                    cause=e,
                 )
 
     # Health Check Implementation
@@ -335,11 +341,11 @@ class AdvancedDatabaseService(BaseInfraService):
         resilience_stats = resilience_manager.get_all_stats()
         details["resilience"] = {
             "circuit_breaker": resilience_stats["circuit_breakers"].get(
-                "database_operations", {}
+                "database_operations", {},
             ),
             "rate_limiter": resilience_stats["rate_limiters"].get(
-                "database_queries", {}
-            )
+                "database_queries", {},
+            ),
         }
 
         # Test database connectivity
@@ -354,14 +360,13 @@ class AdvancedDatabaseService(BaseInfraService):
 
 # Example usage
 
-async def demonstrate_advanced_features():
+async def demonstrate_advanced_features() -> None:
     """Demonstrate advanced infrastructure features."""
-
     # Create service with configuration
     config = {
         "database_url": "postgresql://localhost/test",
         "pool_size": 5,
-        "max_retries": 3
+        "max_retries": 3,
     }
 
     db_service = AdvancedDatabaseService(config)
@@ -376,13 +381,13 @@ async def demonstrate_advanced_features():
         results = await db_service.execute_transaction([
             "INSERT INTO users (name) VALUES ('Alice')",
             "INSERT INTO users (name) VALUES ('Bob')",
-            "UPDATE users SET active = true"
+            "UPDATE users SET active = true",
         ])
 
         tasks = []
         for i in range(20):
             task = asyncio.create_task(
-                db_service.execute_query(f"SELECT * FROM table_{i}")
+                db_service.execute_query(f"SELECT * FROM table_{i}"),
             )
             tasks.append(task)
 
@@ -392,7 +397,7 @@ async def demonstrate_advanced_features():
         await db_service.health_check()
 
         stats = resilience_manager.get_all_stats()
-        for _component, data in stats.items():
+        for data in stats.values():
             if data:  # Only show components with data
                 for _name, _metrics in data.items():
                     pass
@@ -403,28 +408,29 @@ async def demonstrate_advanced_features():
         await resource_manager.cleanup()
 
 
-async def demonstrate_error_recovery():
+async def demonstrate_error_recovery() -> None:
     """Demonstrate error recovery features."""
 
     # Create a service that will experience failures
     class FlakeyService(BaseInfraService):
-        def __init__(self):
+        def __init__(self) -> None:
             super().__init__("flakey_service")
             self._failure_count = 0
 
-        async def _do_initialize(self): pass
-        async def _do_start(self): pass
-        async def _do_stop(self): pass
-        async def _do_cleanup(self): pass
-        async def _do_connect(self): pass
-        async def _do_disconnect(self): pass
+        async def _do_initialize(self) -> None: pass
+        async def _do_start(self) -> None: pass
+        async def _do_stop(self) -> None: pass
+        async def _do_cleanup(self) -> None: pass
+        async def _do_connect(self) -> None: pass
+        async def _do_disconnect(self) -> None: pass
 
         async def unreliable_operation(self) -> str:
             """Operation that fails initially then succeeds."""
             self._failure_count += 1
 
             if self._failure_count <= 2:
-                raise ConnectionError(f"Operation failed (attempt {self._failure_count})")
+                msg = f"Operation failed (attempt {self._failure_count})"
+                raise ConnectionError(msg)
 
             return "Success after retries!"
 
@@ -438,28 +444,28 @@ async def demonstrate_error_recovery():
             operation="unreliable_operation",
             severity=ErrorSeverity.MEDIUM,
             category=ErrorCategory.CONNECTION,
-            max_retries=3
+            max_retries=3,
         )
 
         # Execute with error recovery
         await error_handler.handle_error(
             ConnectionError("Initial failure"),
             context,
-            service.unreliable_operation
+            service.unreliable_operation,
         )
 
     finally:
         await service.cleanup()
 
 
-async def demonstrate_resource_pooling():
+async def demonstrate_resource_pooling() -> None:
     """Demonstrate resource pooling features."""
 
     # Create mock resource
     class ExpensiveResource:
         counter = 0
 
-        def __init__(self):
+        def __init__(self) -> None:
             ExpensiveResource.counter += 1
             self.id = ExpensiveResource.counter
 
@@ -483,7 +489,7 @@ async def demonstrate_resource_pooling():
         factory=ExpensiveResourceFactory(),
         min_size=2,
         max_size=5,
-        max_idle_time=10.0
+        max_idle_time=10.0,
     )
 
     await pool.initialize()
@@ -491,7 +497,7 @@ async def demonstrate_resource_pooling():
     try:
 
         # Use resources concurrently
-        async def use_resource(task_id: int):
+        async def use_resource(task_id: int) -> None:
             async with pool.acquire_context() as resource:
                 await resource.use()
                 await asyncio.sleep(0.2)  # Simulate work
@@ -504,7 +510,7 @@ async def demonstrate_resource_pooling():
         await pool.close()
 
 
-async def main():
+async def main() -> None:
     """Run all demonstrations."""
     await demonstrate_advanced_features()
     await demonstrate_error_recovery()

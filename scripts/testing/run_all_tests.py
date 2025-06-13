@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Comprehensive Test Runner for FLX Project.
+"""Comprehensive Test Runner for FLX Project.
 Executes all possible tests across all FLX modules with detailed reporting.
 """
 
@@ -32,7 +31,7 @@ class FlxTestConfig(BaseModel):
             "dc-oracle-db/tests",
             "tests",
         ],
-        description="Directories containing tests"
+        description="Directories containing tests",
     )
 
     # Test categories to run
@@ -43,9 +42,9 @@ class FlxTestConfig(BaseModel):
             "performance",
             "security",
             "smoke",
-            "e2e"
+            "e2e",
         ],
-        description="Test categories to execute"
+        description="Test categories to execute",
     )
 
     # Pytest options
@@ -56,9 +55,9 @@ class FlxTestConfig(BaseModel):
             "--color=yes",
             "--durations=10",
             "--maxfail=10",
-            "--disable-warnings"
+            "--disable-warnings",
         ],
-        description="Pytest command line options"
+        description="Pytest command line options",
     )
 
     # Coverage options
@@ -113,7 +112,7 @@ class FlxTestRunner:
             "reports/pytest",
             "reports/coverage",
             "junit",
-            "logs/testing"
+            "logs/testing",
         ]
 
         for directory in directories:
@@ -165,12 +164,12 @@ class FlxTestRunner:
                 *cmd,
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE,
-                cwd=Path.cwd()
+                cwd=Path.cwd(),
             )
 
             stdout, stderr = await asyncio.wait_for(
                 process.communicate(),
-                timeout=self.config.test_timeout
+                timeout=self.config.test_timeout,
             )
 
             execution_time = time.time() - start_time
@@ -178,7 +177,7 @@ class FlxTestRunner:
             # Parse test results
             result = self._parse_test_output(
                 project_name, category, stdout.decode(), stderr.decode(),
-                process.returncode, execution_time
+                process.returncode, execution_time,
             )
 
             status_emoji = "✅" if result.success else "❌"
@@ -199,7 +198,7 @@ class FlxTestRunner:
                 skipped_tests=0,
                 execution_time=execution_time,
                 success=False,
-                error_message=f"Test execution timed out after {self.config.test_timeout}s"
+                error_message=f"Test execution timed out after {self.config.test_timeout}s",
             )
 
         except Exception as e:
@@ -215,7 +214,7 @@ class FlxTestRunner:
                 skipped_tests=0,
                 execution_time=execution_time,
                 success=False,
-                error_message=str(e)
+                error_message=str(e),
             )
 
     def _build_pytest_command(self, project_dir: str, category: str) -> list[str]:
@@ -240,7 +239,7 @@ class FlxTestRunner:
                 "--cov=oic",
                 f"--cov-report=html:reports/coverage/{project_dir.replace('/', '_')}_{category}",
                 f"--cov-report=xml:reports/coverage/{project_dir.replace('/', '_')}_{category}.xml",
-                "--cov-report=term-missing"
+                "--cov-report=term-missing",
             ])
 
         # Add output files
@@ -259,7 +258,7 @@ class FlxTestRunner:
         stdout: str,
         stderr: str,
         return_code: int,
-        execution_time: float
+        execution_time: float,
     ) -> FlxTestResult:
         """Parse pytest output to extract test results."""
         # Initialize counters
@@ -270,7 +269,7 @@ class FlxTestRunner:
         coverage_percentage = None
 
         # Parse stdout for test results
-        lines = stdout.split('\n')
+        lines = stdout.split("\n")
         for line in lines:
             # Look for test summary line
             if "passed" in line or "failed" in line or "skipped" in line:
@@ -322,7 +321,7 @@ class FlxTestRunner:
             execution_time=execution_time,
             coverage_percentage=coverage_percentage,
             success=success,
-            error_message=error_message
+            error_message=error_message,
         )
 
     async def _generate_reports(self) -> None:
@@ -348,10 +347,10 @@ class FlxTestRunner:
                 "total_categories": len({r.test_category for r in self.results}),
                 "total_test_runs": len(self.results),
                 "successful_runs": len([r for r in self.results if r.success]),
-                "failed_runs": len([r for r in self.results if not r.success])
+                "failed_runs": len([r for r in self.results if not r.success]),
             },
             "test_results": [result.model_dump() for result in self.results],
-            "configuration": self.config.model_dump()
+            "configuration": self.config.model_dump(),
         }
 
         report_file = Path("reports/pytest/comprehensive_test_report.json")
@@ -387,7 +386,7 @@ class FlxTestRunner:
         for result in self.results:
             if result.project_name not in projects:
                 projects[result.project_name] = {
-                    "total": 0, "passed": 0, "failed": 0, "skipped": 0
+                    "total": 0, "passed": 0, "failed": 0, "skipped": 0,
                 }
             projects[result.project_name]["total"] += result.total_tests
             projects[result.project_name]["passed"] += result.passed_tests

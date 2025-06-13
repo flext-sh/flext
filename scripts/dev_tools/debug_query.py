@@ -9,7 +9,7 @@ sys.path.insert(0, str(Path(__file__).parent / "dc-oracle-wms"))
 sys.path.insert(0, str(Path(__file__).parent / "dc-oracle-db"))
 
 
-def debug_query():
+def debug_query() -> None:
     """Debug do acesso aos dados das queries."""
     print("=== DEBUG DE QUERY ===")
 
@@ -47,10 +47,10 @@ def debug_query():
                     print("É uma lista/tupla:")
                     for i, value in enumerate(first_row):
                         print(f"  [{i}]: {value}")
-                elif hasattr(first_row, '__dict__'):
+                elif hasattr(first_row, "__dict__"):
                     print("Tem atributos:")
                     for attr in dir(first_row):
-                        if not attr.startswith('_'):
+                        if not attr.startswith("_"):
                             try:
                                 value = getattr(first_row, attr)
                                 print(f"  {attr}: {value}")
@@ -80,7 +80,7 @@ def debug_query():
 
                 # Tentar acessar o valor
                 if isinstance(count_row, dict):
-                    count = count_row.get('TOTAL', count_row.get('total', 0))
+                    count = count_row.get("TOTAL", count_row.get("total", 0))
                 elif isinstance(count_row, list | tuple):
                     count = count_row[0] if len(count_row) > 0 else 0
                 else:

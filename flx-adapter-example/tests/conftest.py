@@ -1,13 +1,14 @@
-"""Test fixtures for the project_name API client."""
+"""Test fixtures for the flx_adapter_example API client."""
 
 import json
 from unittest.mock import MagicMock
 
 import pytest
 import responses
-from project_name.client import ApiClient
-from project_name.config import Config
 from requests import Response
+
+from flx_adapter_example.client import ApiClient
+from flx_adapter_example.config import Config
 
 
 @pytest.fixture

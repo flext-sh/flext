@@ -8,6 +8,8 @@ from __future__ import annotations
 
 import asyncio
 
+from pydantic import Field
+
 from flx import FlxProject, flx_project  # type: ignore[attr-defined]
 from flx.declarative.mixins import (
     FlxDatabaseMixin,
@@ -16,7 +18,6 @@ from flx.declarative.mixins import (
     FlxSyncMixin,
     FlxWmsMixin,
 )
-from pydantic import Field
 
 # ==================================================================================
 # EXEMPLO KISS 1: Database Oracle (5 linhas!)

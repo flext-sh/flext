@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
-"""
-Script de Resolução de Conflitos de Dependências
-Resolve conflitos e isola projetos adequadamente
+"""Script de Resolução de Conflitos de Dependências
+Resolve conflitos e isola projetos adequadamente.
 """
 
 from pathlib import Path
@@ -17,12 +16,12 @@ console = Console()
 
 
 class DependencyResolver:
-    def __init__(self, workspace_path: Path):
+    def __init__(self, workspace_path: Path) -> None:
         self.workspace_path = workspace_path
         self.projects: list[Path] = []
 
     def find_projects(self) -> list[Path]:
-        """Encontra todos os projetos com pyproject.toml"""
+        """Encontra todos os projetos com pyproject.toml."""
         projects = []
         seen_projects = set()
 
@@ -42,9 +41,9 @@ class DependencyResolver:
         return projects
 
     def analyze_conflicts(self):
-        """Analisa conflitos entre projetos"""
+        """Analisa conflitos entre projetos."""
         console.print(
-            Panel.fit("🔍 Analisando Conflitos de Dependências", style="bold blue")
+            Panel.fit("🔍 Analisando Conflitos de Dependências", style="bold blue"),
         )
 
         self.projects = self.find_projects()
@@ -73,7 +72,7 @@ class DependencyResolver:
         return conflicts
 
     def resolve_version_conflicts(self, conflicts: dict):
-        """Propõe resoluções para conflitos de versão"""
+        """Propõe resoluções para conflitos de versão."""
         console.print("\n📊 Análise de Conflitos:")
 
         # Agrupa dependências comuns
@@ -111,7 +110,7 @@ class DependencyResolver:
         return conflicted_deps
 
     def propose_resolutions(self, conflicts: dict) -> dict:
-        """Propõe resoluções baseadas em compatibilidade"""
+        """Propõe resoluções baseadas em compatibilidade."""
         resolutions = {}
 
         # Mapeamento de versões compatíveis conhecidas
@@ -139,8 +138,8 @@ class DependencyResolver:
 
         return resolutions
 
-    def display_resolutions(self, resolutions: dict):
-        """Exibe as resoluções propostas"""
+    def display_resolutions(self, resolutions: dict) -> None:
+        """Exibe as resoluções propostas."""
         console.print("\n💡 Resoluções Propostas:")
 
         table = Table(title="Versões Recomendadas")
@@ -169,8 +168,8 @@ class DependencyResolver:
 
         console.print(table)
 
-    def apply_resolutions(self, resolutions: dict):
-        """Aplica as resoluções nos projetos"""
+    def apply_resolutions(self, resolutions: dict) -> None:
+        """Aplica as resoluções nos projetos."""
         console.print("\n🔧 Aplicando Resoluções...")
 
         with Progress(
@@ -179,7 +178,7 @@ class DependencyResolver:
             console=console,
         ) as progress:
             task = progress.add_task(
-                "Atualizando projetos...", total=len(self.projects)
+                "Atualizando projetos...", total=len(self.projects),
             )
 
             for project_path in self.projects:
@@ -215,8 +214,8 @@ class DependencyResolver:
 
                 progress.advance(task)
 
-    def create_isolation_scripts(self):
-        """Cria scripts para isolamento de projetos"""
+    def create_isolation_scripts(self) -> None:
+        """Cria scripts para isolamento de projetos."""
         console.print("\n🏗️ Criando scripts de isolamento...")
 
         # Script para instalar projeto individual
@@ -351,14 +350,14 @@ fi
 
         console.print(f"✅ Script criado: {health_script_path}")
 
-    def run_resolution(self):
-        """Executa o processo completo de resolução"""
+    def run_resolution(self) -> None:
+        """Executa o processo completo de resolução."""
         conflicts = self.analyze_conflicts()
         conflicted_deps = self.resolve_version_conflicts(conflicts)
 
         if conflicted_deps:
             console.print(
-                f"\n[yellow]Encontrados {len(conflicted_deps)} dependências conflitantes[/yellow]"
+                f"\n[yellow]Encontrados {len(conflicted_deps)} dependências conflitantes[/yellow]",
             )
 
             # Propõe resoluções
@@ -366,18 +365,18 @@ fi
 
             # Pergunta se deseja aplicar
             apply = console.input(
-                "\n[yellow]Aplicar resoluções automaticamente? (y/N): [/yellow]"
+                "\n[yellow]Aplicar resoluções automaticamente? (y/N): [/yellow]",
             )
             if apply.lower() == "y":
                 self.apply_resolutions(resolutions)
                 console.print("\n[green]✅ Resoluções aplicadas![/green]")
             else:
                 console.print(
-                    "\n[blue]ℹ️ Resoluções não aplicadas. Execute novamente quando desejar aplicar.[/blue]"
+                    "\n[blue]ℹ️ Resoluções não aplicadas. Execute novamente quando desejar aplicar.[/blue]",
                 )
         else:
             console.print(
-                "\n[green]✅ Nenhum conflito de dependência encontrado![/green]"
+                "\n[green]✅ Nenhum conflito de dependência encontrado![/green]",
             )
 
         # Cria scripts de isolamento
@@ -392,19 +391,19 @@ fi
                 "4. Execute 'poetry install' em cada projeto conforme necessário",
                 title="Isolamento Configurado",
                 style="bold green",
-            )
+            ),
         )
 
 
-def main():
-    """Função principal"""
+def main() -> None:
+    """Main function."""
     workspace_path = Path.cwd()
 
     console.print(
         Panel.fit(
             "Dependency Conflict Resolver\nResolve conflitos e isola projetos",
             style="bold magenta",
-        )
+        ),
     )
 
     resolver = DependencyResolver(workspace_path)

@@ -86,7 +86,7 @@ def test_user_with_database():
 import pytest
 from datetime import UTC, datetime
 from flx.core.entities import User, AggregateRoot
-from flx.core.value_objects import Email, UserId
+from flx.core.domain.value_objects import Email, UserId
 
 class TestUserAggregate:
     """Test user aggregate root following DDD patterns."""

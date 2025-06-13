@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-Script to fix specific mypy errors in dc-api-x codebase.
-"""
+"""Script to fix specific mypy errors in dc-api-x codebase."""
 
 import os
 import subprocess
@@ -28,7 +26,7 @@ def flx_mypy_issues(file_path: str) -> None:
         # Fix 2: Fix dict[str, Any] default factory
         if "default_factory=dict[str, Any]" in line:
             line = line.replace(
-                "default_factory=dict[str, Any]", "default_factory=dict"
+                "default_factory=dict[str, Any]", "default_factory=dict",
             )
 
         # Fix 3: Fix the to_paginate_options method return
@@ -96,7 +94,7 @@ def flx_mypy_issues(file_path: str) -> None:
     needs_optional = False
     for line in new_lines:
         if "Optional[" in line and "from typing import Optional" not in "".join(
-            new_lines
+            new_lines,
         ):
             needs_optional = True
             break

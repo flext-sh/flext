@@ -411,6 +411,18 @@ build: venv-check
 	$(call success,Build concluído)
 
 # ───────────────────────────────────────────────────────────────────────────
+#  COMPLETE SETUP - PEP8 + INSTALLATION
+# ───────────────────────────────────────────────────────────────────────────
+
+## setup-complete: Aplica PEP8 e instala tudo via Poetry
+setup-complete: pep8-apply install-workspace
+	$(call success,Setup completo finalizado - PEP8 aplicado e dependências instaladas)
+
+## setup-complete-clean: Reinstala tudo do zero com PEP8
+setup-complete-clean: venv-clean venv-setup pep8-apply install-workspace
+	$(call success,Setup completo do zero finalizado - Ambiente limpo com PEP8)
+
+# ───────────────────────────────────────────────────────────────────────────
 #  DEPENDENCY MANAGEMENT
 # ───────────────────────────────────────────────────────────────────────────
 
@@ -423,6 +435,65 @@ install-all: venv-check
 		$(POETRY) install --all-groups || true \
 	)
 	$(call success,Todas as dependências instaladas)
+
+## install-workspace: Instala TODAS as dependências do workspace PyAuto de uma vez
+install-workspace: venv-check
+	$(call section,Instalação completa do workspace PyAuto via Poetry)
+	@echo "🚀 Instalando dependências do workspace principal..."
+	@. $(VENV_DIR)/bin/activate && cd $(WORKSPACE_ROOT) && \
+		if [ ! -f poetry.lock ] || [ pyproject.toml -nt poetry.lock ]; then \
+			$(VENV_BIN)/poetry lock --no-update || true; \
+		fi && \
+		$(VENV_BIN)/poetry install --all-extras --with dev || true
+	@echo ""
+	@echo "📦 Instalando projetos locais em modo desenvolvimento..."
+	@. $(VENV_DIR)/bin/activate && \
+	for proj in flx flx-database-oracle flx-http-oracle-oic flx-http-oracle-wms client-a-mig-oud client-b-poc-oic-wms flx-adapter-example; do \
+		if [ -d "$$proj" ]; then \
+			echo "  → Instalando $$proj..."; \
+			cd $(WORKSPACE_ROOT)/$$proj && \
+				if [ ! -f poetry.lock ] || [ pyproject.toml -nt poetry.lock ]; then \
+					$(VENV_BIN)/poetry lock --no-update || true; \
+				fi && \
+				$(VENV_BIN)/poetry install --all-extras || $(VENV_BIN)/poetry install || true; \
+		fi; \
+	done
+	@echo ""
+	@echo "🔗 Instalando projetos em modo editable para desenvolvimento..."
+	@. $(VENV_DIR)/bin/activate && cd $(WORKSPACE_ROOT) && \
+		$(VENV_BIN)/pip install -e flx/ && \
+		$(VENV_BIN)/pip install -e flx-database-oracle/ && \
+		$(VENV_BIN)/pip install -e flx-http-oracle-oic/ && \
+		$(VENV_BIN)/pip install -e flx-http-oracle-wms/ && \
+		$(VENV_BIN)/pip install -e client-a-mig-oud/ && \
+		$(VENV_BIN)/pip install -e client-b-poc-oic-wms/ && \
+		$(VENV_BIN)/pip install -e flx-adapter-example/
+	@echo ""
+	@echo "✅ Validando instalação..."
+	@. $(VENV_DIR)/bin/activate && cd $(WORKSPACE_ROOT) && \
+		$(VENV_BIN)/python -c "import flx, flx_database_oracle, flx_http_oracle_oic, flx_http_oracle_wms, client-a_oud_mig, gn_oic_wms_db; print('✅ Todos os imports funcionando!')" || \
+		echo "⚠️ Alguns imports falharam - verificar logs"
+	@echo ""
+	@echo "📊 Total de pacotes instalados:"
+	@$(VENV_BIN)/pip list | wc -l
+	$(call success,Instalação completa do workspace PyAuto finalizada!)
+
+## install-workspace-clean: Reinstala TUDO do zero (remove .venv e recria)
+install-workspace-clean: venv-clean venv-setup install-workspace
+	$(call success,Workspace PyAuto completamente reinstalado do zero!)
+
+## install-editable: Instala apenas os projetos locais em modo editable
+install-editable: venv-check
+	$(call section,Instalando projetos locais em modo editable)
+	@cd $(WORKSPACE_ROOT) && \
+		$(POETRY) run pip install -e flx/ && \
+		$(POETRY) run pip install -e flx-database-oracle/ && \
+		$(POETRY) run pip install -e flx-http-oracle-oic/ && \
+		$(POETRY) run pip install -e flx-http-oracle-wms/ && \
+		$(POETRY) run pip install -e client-a-mig-oud/ && \
+		$(POETRY) run pip install -e client-b-poc-oic-wms/ && \
+		$(POETRY) run pip install -e flx-adapter-example/
+	$(call success,Projetos instalados em modo editable)
 
 ## update: Atualiza dependências
 update: venv-check
@@ -554,6 +625,27 @@ pep8-check:
 		$(PYTHON) $(PROJECT_MANAGE) pep8-check \
 	)
 
+## pep8-apply: Aplica padrões PEP8 em todos os projetos
+pep8-apply: venv-check
+	$(call section,Aplicando padrões PEP8 em todos os projetos)
+	@. $(VENV_DIR)/bin/activate && \
+		$(PYTHON) $(SCRIPTS_DIR)/utilities/apply_pep8_standards.py
+	$(call success,Padrões PEP8 aplicados em todos os projetos)
+
+## pep8-apply-dry: Simula aplicação de padrões PEP8
+pep8-apply-dry: venv-check
+	$(call section,Simulando aplicação de padrões PEP8)
+	@. $(VENV_DIR)/bin/activate && \
+		$(PYTHON) $(SCRIPTS_DIR)/utilities/apply_pep8_standards.py --dry-run
+	$(call success,Simulação completada)
+
+## pep8-validate: Valida conformidade PEP8 de todos os projetos
+pep8-validate: venv-check
+	$(call section,Validando conformidade PEP8)
+	@. $(VENV_DIR)/bin/activate && \
+		$(PYTHON) $(SCRIPTS_DIR)/utilities/apply_pep8_standards.py --validate-only
+	$(call success,Validação PEP8 completada)
+
 ## setup-hooks: Instala pre-commit hooks
 setup-hooks:
 	$(call run_command,setup-hooks,\
@@ -679,6 +771,9 @@ help:
 	@echo "  projects-report     Gera relatório consolidado de todos os projetos"
 	@echo ""
 	@echo "$(BOLD)$(GREEN)Dependency Management:$(NC)"
+	@echo "  $(BOLD)install-workspace   🚀 Instala TODAS as dependências do PyAuto via Poetry$(NC)"
+	@echo "  $(BOLD)install-workspace-clean 🔄 Reinstala TUDO do zero (remove e recria .venv)$(NC)"
+	@echo "  install-editable    Instala projetos locais em modo editable"
 	@echo "  install-all         Instala todas as dependências (todos os grupos)"
 	@echo "  update              Atualiza dependências"
 	@echo "  update-dry-run      Simula atualização de dependências"

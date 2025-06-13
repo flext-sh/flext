@@ -1,0 +1,83 @@
+# Makefile específico para instalação completa via Poetry
+
+.PHONY: install-complete test-imports
+
+# Comando principal para instalar TUDO
+install-complete:
+	@echo "🚀 Instalação completa do PyAuto via Poetry"
+	@echo "==========================================="
+	
+	# 1. Garantir ambiente virtual ativo
+	@echo "→ Verificando ambiente virtual..."
+	@source .venv/bin/activate && which python
+	
+	# 2. Instalar workspace principal
+	@echo ""
+	@echo "📦 Instalando workspace principal..."
+	@source .venv/bin/activate && \
+		poetry install --all-extras --with dev --no-interaction
+	
+	# 3. Instalar cada projeto individualmente
+	@echo ""
+	@echo "📦 Instalando projetos individuais..."
+	@for proj in flx flx-database-oracle flx-http-oracle-oic flx-http-oracle-wms client-a-mig-oud client-b-poc-oic-wms; do \
+		echo ""; \
+		echo "→ Instalando $$proj..."; \
+		source .venv/bin/activate && cd $$proj && \
+			poetry install --no-interaction || true; \
+		cd ..; \
+	done
+	
+	# 4. Instalar em modo editable
+	@echo ""
+	@echo "🔗 Instalando em modo editable..."
+	@source .venv/bin/activate && \
+		pip install --force-reinstall -e flx/ && \
+		pip install --force-reinstall -e flx-database-oracle/ && \
+		pip install --force-reinstall -e flx-http-oracle-oic/ && \
+		pip install --force-reinstall -e flx-http-oracle-wms/ && \
+		pip install --force-reinstall -e client-a-mig-oud/ && \
+		pip install --force-reinstall -e client-b-poc-oic-wms/
+	
+	# 5. Resolver conflitos de versão
+	@echo ""
+	@echo "🔧 Resolvendo conflitos de versão..."
+	@source .venv/bin/activate && \
+		pip install "typer>=0.15.1,<0.16.0" --force-reinstall && \
+		pip install "cryptography>=43.0.0,<44.0.0" --force-reinstall
+	
+	# 6. Validar instalação
+	@echo ""
+	@echo "✅ Validando instalação..."
+	@make test-imports
+	
+	# 7. Estatísticas
+	@echo ""
+	@echo "📊 Instalação completa!"
+	@source .venv/bin/activate && pip list | wc -l
+
+test-imports:
+	@source .venv/bin/activate && python -c "\
+import sys; \
+print('Python:', sys.version); \
+print('Venv:', sys.prefix); \
+print(); \
+imports = [ \
+    ('flx', 'Core framework'), \
+    ('flx_database_oracle', 'Oracle DB adapter'), \
+    ('flx_http_oracle_oic', 'Oracle OIC adapter'), \
+    ('flx_http_oracle_wms', 'Oracle WMS adapter'), \
+    ('client-a_oud_mig', 'LDAP migration'), \
+    ('gn_oic_wms_db', 'client-b integration') \
+]; \
+success = 0; \
+for module, desc in imports: \
+    try: \
+        __import__(module); \
+        print(f'✅ {module} ({desc})'); \
+        success += 1; \
+    except Exception as e: \
+        print(f'❌ {module} ({desc}): {e}'); \
+print(); \
+print(f'Total: {success}/{len(imports)} imports funcionando'); \
+"

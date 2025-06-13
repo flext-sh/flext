@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Run all linting issue fixers in sequence.
+"""Run all linting issue fixers in sequence.
 
 This script runs all of the individual fixing scripts in the appropriate order
 to address various linting issues in the dc-api-x flx_project.
@@ -15,8 +14,7 @@ from pathlib import Path
 
 
 def run_fixer_script(script_name, dry_run=False):
-    """
-    Run a fixer script with the appropriate arguments.
+    """Run a fixer script with the appropriate arguments.
 
     Args:
         script_name: Name of the script to run
@@ -24,6 +22,7 @@ def run_fixer_script(script_name, dry_run=False):
 
     Returns:
         Process return code
+
     """
     script_path = Path(__file__).parent / script_name
 
@@ -49,11 +48,11 @@ def run_fixer_script(script_name, dry_run=False):
     return result.returncode
 
 
-def main():
+def main() -> None:
     """Run all fixer scripts in sequence."""
     parser = argparse.ArgumentParser(description="Run all linting issue fixers")
     parser.add_argument(
-        "--dry-run", action="store_true", help="Don't modify files, just report issues"
+        "--dry-run", action="store_true", help="Don't modify files, just report issues",
     )
     args = parser.parse_args()
 

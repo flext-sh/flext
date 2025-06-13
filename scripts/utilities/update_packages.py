@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
-"""
-Script para atualização de pacotes Python no workspace.
+"""Script para atualização de pacotes Python no workspace.
 Author: Marlon Costa <marlon.costa@datacosmos.com.br>
-License: MIT
+License: MIT.
 """
 import argparse
 import subprocess
@@ -63,10 +62,10 @@ def update_packages(force: bool = False) -> bool:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Gerenciador de atualização de pacotes"
+        description="Gerenciador de atualização de pacotes",
     )
     parser.add_argument(
-        "--force", action="store_true", help="Força atualização mesmo com conflitos"
+        "--force", action="store_true", help="Força atualização mesmo com conflitos",
     )
 
     args = parser.parse_args()

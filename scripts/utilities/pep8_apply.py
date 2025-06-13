@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-PEP 8 Compliance Script.
+"""PEP 8 Compliance Script.
 
 This script applies PEP 8 standards to Python code files by:
 1. Formatting with Black
@@ -20,21 +19,20 @@ from pathlib import Path
 
 
 def find_python_files(directory: Path) -> list[Path]:
-    """
-    Find all Python files in a directory recursively.
+    """Find all Python files in a directory recursively.
 
     Args:
         directory: The directory to search.
 
     Returns:
         A list of paths to Python files.
+
     """
     return list(directory.glob("**/*.py"))
 
 
 def run_command(command: list[str], description: str) -> bool:
-    """
-    Run a command with subprocess and handle errors.
+    """Run a command with subprocess and handle errors.
 
     Args:
         command: Command to run as a list of strings.
@@ -42,6 +40,7 @@ def run_command(command: list[str], description: str) -> bool:
 
     Returns:
         True if the command was successful, False otherwise.
+
     """
     print(f"Running {description}...")
     try:
@@ -55,14 +54,14 @@ def run_command(command: list[str], description: str) -> bool:
 
 
 def apply_black(files: list[Path]) -> bool:
-    """
-    Format files with Black.
+    """Format files with Black.
 
     Args:
         files: list of file paths to format.
 
     Returns:
         True if formatting was successful, False otherwise.
+
     """
     if not files:
         return True
@@ -72,14 +71,14 @@ def apply_black(files: list[Path]) -> bool:
 
 
 def apply_isort(files: list[Path]) -> bool:
-    """
-    Sort imports with isort.
+    """Sort imports with isort.
 
     Args:
         files: list of file paths to sort imports in.
 
     Returns:
         True if sorting was successful, False otherwise.
+
     """
     if not files:
         return True
@@ -89,14 +88,14 @@ def apply_isort(files: list[Path]) -> bool:
 
 
 def apply_ruff(files: list[Path]) -> bool:
-    """
-    Fix issues with Ruff.
+    """Fix issues with Ruff.
 
     Args:
         files: list of file paths to fix.
 
     Returns:
         True if fixing was successful, False otherwise.
+
     """
     if not files:
         return True
@@ -106,14 +105,14 @@ def apply_ruff(files: list[Path]) -> bool:
 
 
 def main(paths: list[str] | None = None) -> int:
-    """
-    Main function to apply PEP 8 standards.
+    """Main function to apply PEP 8 standards.
 
     Args:
         paths: list of paths to process. If None, uses current directory.
 
     Returns:
         Exit code (0 for success, 1 for errors).
+
     """
     if paths is None or not paths:
         paths = [os.getcwd()]

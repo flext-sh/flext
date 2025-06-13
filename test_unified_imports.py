@@ -21,7 +21,7 @@ projects = [
     "flx-http-oracle-wms/src",
     "client-a-mig-oud/src",
     "client-b-poc-oic-wms/src",
-    "flx-adapter-example/src"
+    "flx-adapter-example/src",
 ]
 
 for project in projects:
@@ -30,7 +30,7 @@ for project in projects:
         sys.path.insert(0, str(path))
 
 
-def test_core_framework_import():
+def test_core_framework_import() -> bool | None:
     """Test FLX core framework import."""
     try:
         import flx
@@ -87,7 +87,7 @@ def test_implementation_projects():
     return success
 
 
-def test_integration_pattern():
+def test_integration_pattern() -> bool | None:
     """Test that projects can work together."""
     try:
         # Import all main components
@@ -106,7 +106,7 @@ def test_integration_pattern():
             port=1521,
             service_name="ORCL",
             username="test",
-            password="test"
+            password="test",
         )
 
         OracleOicConfig(
@@ -118,13 +118,13 @@ def test_integration_pattern():
             client_id="test_client_id",
             client_secret="test_client_secret",
             client_aud="test_audience",
-            idcs_url="https://test-idcs.oracle.com"
+            idcs_url="https://test-idcs.oracle.com",
         )
 
         WmsConfig(
             base_url="https://test-wms.oracle.com",
             username="test_user",
-            password="test_password"
+            password="test_password",
         )
 
         return True
@@ -133,9 +133,8 @@ def test_integration_pattern():
         return False
 
 
-def main():
+def main() -> int:
     """Run all import tests."""
-
     results = []
 
     # Run all tests
