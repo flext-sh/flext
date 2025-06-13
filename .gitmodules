@@ -16,12 +16,12 @@
 [submodule "gruponos-poc-oic-wms"]
 	path = gruponos-poc-oic-wms
 	url = https://github.com/datacosmos-br/gruponos-poc-oic-wms.git
-[submodule "algar-mig-oud"]
-	path = algar-mig-oud
-	url = https://github.com/datacosmos-br/algar-mig-oud.git
 [submodule "meltano"]
 	path = meltano
 	url = https://github.com/meltanolabs/meltano.git
 [submodule "singer-sdk"]
 	path = singer-sdk
 	url = https://github.com/meltanolabs/singer-sdk.git
+[submodule "algar-oud-mig"]
+	path = algar-oud-mig
+	url = git@github.com:datacosmos-br/algar-oud-mig.git
