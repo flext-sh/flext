@@ -1,6 +1,19 @@
 schemas/
 reports/
 .scaffold-tracking/
+.env.*
+!.env.example
+CLAUDE.md
+.doc-reorg
+.token
+archive/
+pyproject_backups/
+meltano-plugins-extracted/
+docs-refactored/
+analysis_temp/
+.standardization_backup/
+.token
+.lock*
 
 # Python
 __pycache__/
@@ -103,4 +116,4 @@ __pycache__/
 
 # Let's maintain locks only for root
 **/poetry.lock
-!/poetry.lock  # Only keep root poetry.lock 
+!/poetry.lock # Only keep root poetry.lock
