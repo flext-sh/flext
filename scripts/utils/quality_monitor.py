@@ -46,7 +46,7 @@ class QualityMetrics:
 class ComplexityAnalyzer(ast.NodeVisitor):
     """AST visitor to analyze code complexity."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.complexity = 0
         self.function_complexities: list[int] = []
         self.function_parameters: list[int] = []
@@ -251,7 +251,7 @@ def save_baseline(metrics: list[QualityMetrics], baseline_file: Path) -> None:
 
 
 def compare_with_baseline(
-    current_metrics: list[QualityMetrics], baseline_file: Path
+    current_metrics: list[QualityMetrics], baseline_file: Path,
 ) -> tuple[bool, dict[str, Any]]:
     """Compare current metrics with baseline."""
     if not baseline_file.exists():
@@ -295,7 +295,7 @@ def compare_with_baseline(
     return not has_regression, comparison
 
 
-def main():
+def main() -> None:
     """Main function."""
     parser = argparse.ArgumentParser(description="Monitor code quality metrics")
     parser.add_argument("directory", type=Path, help="Directory to analyze")
@@ -306,7 +306,7 @@ def main():
         help="Baseline file path",
     )
     parser.add_argument(
-        "--save-baseline", action="store_true", help="Save current metrics as baseline"
+        "--save-baseline", action="store_true", help="Save current metrics as baseline",
     )
     parser.add_argument(
         "--check",
@@ -336,7 +336,7 @@ def main():
     print(f"Total lines of code: {report['summary']['total_lines_of_code']}")
     print(f"Total complexity: {report['summary']['total_complexity']}")
     print(
-        f"Average complexity per file: {report['summary']['average_complexity_per_file']:.2f}"
+        f"Average complexity per file: {report['summary']['average_complexity_per_file']:.2f}",
     )
 
     print("\n=== Issues ===")
@@ -361,10 +361,10 @@ def main():
             print("\n❌ Quality regression detected!")
             print(f"Complexity change: {comparison['complexity_change']}")
             print(
-                f"High complexity files change: {comparison['high_complexity_files_change']}"
+                f"High complexity files change: {comparison['high_complexity_files_change']}",
             )
             print(
-                f"High parameter files change: {comparison['high_parameter_files_change']}"
+                f"High parameter files change: {comparison['high_parameter_files_change']}",
             )
             print(f"High return files change: {comparison['high_return_files_change']}")
             sys.exit(1)

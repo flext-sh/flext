@@ -76,7 +76,7 @@ from flx.core.models import (
 )
 from flx.core.protocols import Adapter
 from flx.core.services import DomainService
-from flx.core.value_objects import ValueObject
+from flx.core.domain.value_objects import ValueObject
 ```
 
 ---
@@ -230,12 +230,12 @@ def uncommitted_events(self) -> list[DomainEvent]:
 
 ### ValueObject Base Class
 
-**Location**: `flx.core.value_objects.ValueObject`  
+**Location**: `flx.core.domain.value_objects.ValueObject`  
 **Validation**: ✅ VERIFIED
 
 ```python
 # REAL IMPLEMENTATION:
-from flx.core.value_objects import ValueObject
+from flx.core.domain.value_objects import ValueObject
 from dataclasses import dataclass
 
 @dataclass(frozen=True, slots=True)
@@ -382,7 +382,7 @@ class DatabaseAdapter(BaseAdapter, ConnectionMixin, ErrorHandlingMixin):
 # COMPLETE EXAMPLE - TESTED AGAINST REAL CODE:
 from flx.core.entities import AggregateRoot, Entity
 from flx.core.events import DomainEvent
-from flx.core.value_objects import ValueObject
+from flx.core.domain.value_objects import ValueObject
 from datetime import datetime, UTC
 from typing import Self
 

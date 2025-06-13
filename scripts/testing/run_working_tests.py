@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Run Working Tests for FLX Project.
+"""Run Working Tests for FLX Project.
 Executes only the tests that currently work with the available modules.
 """
 
@@ -65,20 +64,20 @@ class WorkingTestRunner:
             "flx/tests/test_simple_flx_suite.py",
             "-v",
             "--tb=short",
-            "--color=yes"
+            "--color=yes",
         ]
 
         if self.config.coverage:
             cmd.extend([
                 "--cov=flx",
                 "--cov-report=term-missing",
-                "--cov-report=html:reports/coverage/flx_basic"
+                "--cov-report=html:reports/coverage/flx_basic",
             ])
 
         if self.config.generate_reports:
             cmd.extend([
                 "--html=reports/pytest/flx_basic_tests.html",
-                "--self-contained-html"
+                "--self-contained-html",
             ])
 
         return self._execute_test(cmd, "FLX Basic Tests")
@@ -97,13 +96,13 @@ class WorkingTestRunner:
             "flx/tests/test_flx_modules.py",
             "-v",
             "--tb=short",
-            "--color=yes"
+            "--color=yes",
         ]
 
         if self.config.coverage:
             cmd.extend([
                 "--cov=flx",
-                "--cov-report=term-missing"
+                "--cov-report=term-missing",
             ])
 
         return self._execute_test(cmd, "FLX Module Tests")
@@ -125,7 +124,7 @@ class WorkingTestRunner:
             "duration": 0.1,
             "tests": 2,
             "passed": 2,
-            "failed": 0
+            "failed": 0,
         })
 
         return True
@@ -139,7 +138,7 @@ class WorkingTestRunner:
                 cmd,
                 capture_output=True,
                 text=True,
-                timeout=120, check=False
+                timeout=120, check=False,
             )
 
             duration = time.time() - start_time
@@ -156,7 +155,7 @@ class WorkingTestRunner:
                 "tests": passed + failed + skipped,
                 "passed": passed,
                 "failed": failed,
-                "skipped": skipped
+                "skipped": skipped,
             })
 
             # Display result
@@ -182,7 +181,7 @@ class WorkingTestRunner:
         skipped = output.count("SKIPPED") if "SKIPPED" in output else 0
 
         # Try to parse summary line
-        lines = output.split('\n')
+        lines = output.split("\n")
         for line in lines:
             if "passed" in line:
                 parts = line.split()
@@ -325,7 +324,7 @@ def main() -> None:
     config = WorkingTestConfig(
         verbose=True,
         coverage=True,
-        generate_reports=True
+        generate_reports=True,
     )
 
     # Create output directories

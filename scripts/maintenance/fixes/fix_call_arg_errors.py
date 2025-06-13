@@ -17,26 +17,26 @@ def get_call_arg_errors() -> dict[str, list[dict[str, Any]]]:
 
     for line in result.stdout.splitlines() + result.stderr.splitlines():
         if " error: " in line and "[call-arg]" in line:
-            match = re.match(r'(.+?):(\d+): error: (.+?) \[call-arg\]', line)
+            match = re.match(r"(.+?):(\d+): error: (.+?) \[call-arg\]", line)
             if match:
                 error_info = {
-                    'file': match.group(1),
-                    'line': int(match.group(2)),
-                    'message': match.group(3),
+                    "file": match.group(1),
+                    "line": int(match.group(2)),
+                    "message": match.group(3),
                 }
 
                 # Categorize by error pattern
-                msg = error_info['message']
+                msg = error_info["message"]
                 if "Missing named argument" in msg:
-                    errors_by_pattern['missing_named'].append(error_info)
+                    errors_by_pattern["missing_named"].append(error_info)
                 elif "Too many arguments" in msg:
-                    errors_by_pattern['too_many'].append(error_info)
+                    errors_by_pattern["too_many"].append(error_info)
                 elif "Unexpected keyword argument" in msg:
-                    errors_by_pattern['unexpected_kwarg'].append(error_info)
+                    errors_by_pattern["unexpected_kwarg"].append(error_info)
                 elif "takes no arguments" in msg:
-                    errors_by_pattern['takes_no_args'].append(error_info)
+                    errors_by_pattern["takes_no_args"].append(error_info)
                 else:
-                    errors_by_pattern['other'].append(error_info)
+                    errors_by_pattern["other"].append(error_info)
 
     return dict(errors_by_pattern)
 
@@ -46,9 +46,9 @@ def analyze_missing_arguments() -> dict[str, set[str]]:
     errors = get_call_arg_errors()
     missing_args_by_func = defaultdict(set)
 
-    for error in errors.get('missing_named', []):
+    for error in errors.get("missing_named", []):
         # Extract function/class name and missing argument
-        match = re.search(r'Missing named argument "(.+?)" for "(.+?)"', error['message'])
+        match = re.search(r'Missing named argument "(.+?)" for "(.+?)"', error["message"])
         if match:
             arg_name = match.group(1)
             func_name = match.group(2)
@@ -57,9 +57,8 @@ def analyze_missing_arguments() -> dict[str, set[str]]:
     return dict(missing_args_by_func)
 
 
-def fix_specific_call_patterns():
+def fix_specific_call_patterns() -> None:
     """Fix specific known call patterns."""
-
     # Fix FlxError calls with wrong arguments
     files_to_check = list(Path("flx/src").rglob("*.py"))
 
@@ -87,9 +86,9 @@ def fix_specific_call_patterns():
             # Fix Path().exists calls
             # Pattern: path.exists
             # Should be: path.exists()
-            pattern = r'(\w+)\.exists(?!\s*\()'
+            pattern = r"(\w+)\.exists(?!\s*\()"
             if re.search(pattern, content):
-                content = re.sub(pattern, r'\1.exists()', content)
+                content = re.sub(pattern, r"\1.exists()", content)
                 modified = True
 
             if modified:
@@ -100,24 +99,23 @@ def fix_specific_call_patterns():
             print(f"Error processing {filepath}: {e}")
 
 
-def fix_constructor_defaults():
+def fix_constructor_defaults() -> None:
     """Add default values to constructors that are missing arguments."""
-
     # Classes that commonly have missing arguments
     classes_to_fix = {
         "FlxAdapterMeta": {
             "file": "flx/src/flx/core/models.py",
             "defaults": {
                 "version": '"1.0.0"',
-                "dependencies": '[]',
+                "dependencies": "[]",
             },
         },
         "FlxAdapterResult": {
             "file": "flx/src/flx/core/models.py",
             "defaults": {
                 "message": '""',
-                "error": 'None',
-                "metadata": '{}',
+                "error": "None",
+                "metadata": "{}",
             },
         },
     }
@@ -140,7 +138,7 @@ def fix_constructor_defaults():
                 content = filepath.read_text()
 
                 # Find the class definition
-                class_pattern = rf'class {class_name}.*?:\n((?:    .*\n)*)'
+                class_pattern = rf"class {class_name}.*?:\n((?:    .*\n)*)"
                 match = re.search(class_pattern, content, re.MULTILINE)
 
                 if match:
@@ -151,11 +149,11 @@ def fix_constructor_defaults():
                         # Update __init__ to add defaults
                         for param, default in info["defaults"].items():
                             # Check if parameter exists without default
-                            param_pattern = rf'{param}:\s*[^,\)]+(?![\s=])'
+                            param_pattern = rf"{param}:\s*[^,\)]+(?![\s=])"
                             if re.search(param_pattern, class_body):
                                 # Add default value
-                                new_pattern = rf'({param}:\s*[^,\)]+)'
-                                replacement = rf'\1 = {default}'
+                                new_pattern = rf"({param}:\s*[^,\)]+)"
+                                replacement = rf"\1 = {default}"
                                 class_body = re.sub(new_pattern, replacement, class_body)
 
                     # Replace in content
@@ -167,19 +165,18 @@ def fix_constructor_defaults():
                 print(f"Error fixing {class_name}: {e}")
 
 
-def fix_method_signatures():
+def fix_method_signatures() -> None:
     """Fix method signatures that have changed."""
-
     # Common signature mismatches
     signature_fixes = [
         {
-            "pattern": r'\.flx_log\(([^,]+),\s*([^,]+),\s*([^)]+)\)',
-            "replacement": r'.flx_log(\1, level=\2, message=\3)',
+            "pattern": r"\.flx_log\(([^,]+),\s*([^,]+),\s*([^)]+)\)",
+            "replacement": r".flx_log(\1, level=\2, message=\3)",
             "description": "Fix flx_log calls",
         },
         {
-            "pattern": r'\.flx_create_logger\(([^)]+)\)',
-            "replacement": r'.flx_register_logger(\1)',
+            "pattern": r"\.flx_create_logger\(([^)]+)\)",
+            "replacement": r".flx_register_logger(\1)",
             "description": "Fix logger creation",
         },
     ]
@@ -204,9 +201,8 @@ def fix_method_signatures():
             print(f"Error processing {filepath}: {e}")
 
 
-def add_missing_type_imports():
+def add_missing_type_imports() -> None:
     """Add missing imports for types used in signatures."""
-
     files_to_check = list(Path("flx/src").rglob("*.py"))
 
     for filepath in files_to_check:
@@ -216,40 +212,40 @@ def add_missing_type_imports():
             imports_to_add = set()
 
             # Check for Dict usage without import
-            if re.search(r':\s*Dict\[', content) and 'from typing import' in content:
-                if 'Dict' not in content.split('from typing import')[1].split('\n')[0]:
-                    imports_to_add.add('Dict')
+            if re.search(r":\s*Dict\[", content) and "from typing import" in content:
+                if "Dict" not in content.split("from typing import")[1].split("\n")[0]:
+                    imports_to_add.add("Dict")
 
             # Check for Any usage without import
-            if re.search(r':\s*Any\b', content) and 'from typing import' in content:
-                if 'Any' not in content.split('from typing import')[1].split('\n')[0]:
-                    imports_to_add.add('Any')
+            if re.search(r":\s*Any\b", content) and "from typing import" in content:
+                if "Any" not in content.split("from typing import")[1].split("\n")[0]:
+                    imports_to_add.add("Any")
 
             # Check for field usage without import
-            if 'field(' in content and 'from dataclasses import' in content:
-                if 'field' not in content:
-                    imports_to_add.add('field')
+            if "field(" in content and "from dataclasses import" in content:
+                if "field" not in content:
+                    imports_to_add.add("field")
 
             if imports_to_add:
                 # Update typing imports
                 for i, line in enumerate(lines):
-                    if line.startswith('from typing import'):
-                        imports = line.split('import')[1].strip()
-                        current_imports = [imp.strip() for imp in imports.split(',')]
+                    if line.startswith("from typing import"):
+                        imports = line.split("import")[1].strip()
+                        current_imports = [imp.strip() for imp in imports.split(",")]
                         for imp in imports_to_add:
                             if imp not in current_imports:
                                 current_imports.append(imp)
                         lines[i] = f"from typing import {', '.join(sorted(current_imports))}"
                         break
 
-                filepath.write_text('\n'.join(lines))
+                filepath.write_text("\n".join(lines))
                 print(f"Updated imports in {filepath}")
 
         except Exception as e:
             print(f"Error processing {filepath}: {e}")
 
 
-def main():
+def main() -> None:
     """Main function to fix call-arg errors."""
     print("Analyzing call-arg errors...")
 

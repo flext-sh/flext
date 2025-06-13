@@ -4,22 +4,23 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 import responses
-from project_name.client import ApiClient
-from project_name.config import Config
-from project_name.exceptions import (
+
+from flx_adapter_example.client import ApiClient
+from flx_adapter_example.config import Config
+from flx_adapter_example.exceptions import (
     ApiError,
     AuthenticationError,
     ConfigurationError,
     ConnectionError,
     ResponseError,
 )
-from project_name.models import FlxResponse
+from flx_adapter_example.models import FlxResponse
 
 
 class TestApiClient:
     """Test cases for the ApiClient class."""
 
-    def test_initialization(self, mock_config: Config):
+    def test_initialization(self, mock_config: Config) -> None:
         """Test client initialization with configuration."""
         client = ApiClient(config=mock_config)
 
@@ -31,7 +32,7 @@ class TestApiClient:
         assert client.max_retries == 1
         assert client.debug is True
 
-    def test_initialization_with_parameters(self):
+    def test_initialization_with_parameters(self) -> None:
         """Test client initialization with direct parameters."""
         client = ApiClient(
             url="https://api.test.com",
@@ -47,12 +48,12 @@ class TestApiClient:
         assert client.timeout == 10
         assert client.verify_ssl is False
 
-    def test_initialization_missing_parameters(self):
+    def test_initialization_missing_parameters(self) -> None:
         """Test client initialization with missing required parameters."""
         with pytest.raises(ConfigurationError):
             ApiClient(url=None, username=None, password=None)
 
-    def test_build_url(self, api_client: ApiClient):
+    def test_build_url(self, api_client: ApiClient) -> None:
         """Test URL building with different endpoint formats."""
         # With leading slash
         assert api_client._build_url("/users") == "https://api.example.com/users"
@@ -64,7 +65,7 @@ class TestApiClient:
         assert api_client._build_url("users/123") == "https://api.example.com/users/123"
 
     @responses.activate
-    def test_get_request_success(self, api_client: ApiClient):
+    def test_get_request_success(self, api_client: ApiClient) -> None:
         """Test successful GET request."""
         # Mock response
         responses.add(
@@ -84,7 +85,7 @@ class TestApiClient:
         assert response.error is None
 
     @responses.activate
-    def test_post_request_success(self, api_client: ApiClient):
+    def test_post_request_success(self, api_client: ApiClient) -> None:
         """Test successful POST request."""
         # Mock response
         responses.add(
@@ -106,7 +107,7 @@ class TestApiClient:
         assert response.status_code == 201
 
     @responses.activate
-    def test_authentication_error(self, api_client: ApiClient):
+    def test_authentication_error(self, api_client: ApiClient) -> None:
         """Test authentication error handling."""
         # Mock response
         responses.add(
@@ -123,7 +124,7 @@ class TestApiClient:
         assert "Authentication failed" in str(exc.value)
 
     @responses.activate
-    def test_response_error(self, api_client: ApiClient):
+    def test_response_error(self, api_client: ApiClient) -> None:
         """Test response error handling."""
         # Mock response
         responses.add(
@@ -141,7 +142,7 @@ class TestApiClient:
         assert exc.value.status_code == 404
         assert exc.value.code == "NOT_FOUND"
 
-    def test_connection_error(self, api_client: ApiClient):
+    def test_connection_error(self, api_client: ApiClient) -> None:
         """Test connection error handling."""
         with patch("requests.Session.request") as mock_request:
             mock_request.side_effect = ConnectionError("Failed to connect")
@@ -150,7 +151,7 @@ class TestApiClient:
                 api_client.get("users")
 
     @responses.activate
-    def test_raw_response(self, api_client: ApiClient):
+    def test_raw_response(self, api_client: ApiClient) -> None:
         """Test raw response handling."""
         # Mock response
         responses.add(
@@ -168,9 +169,9 @@ class TestApiClient:
         assert isinstance(response.data, responses.Response)
         assert response.status_code == 200
 
-    def test_from_profile(self):
+    def test_from_profile(self) -> None:
         """Test client creation from profile."""
-        with patch("project_name.config.Config.from_profile") as mock_from_profile:
+        with patch("flx_adapter_example.config.Config.from_profile") as mock_from_profile:
             mock_config = MagicMock(spec=Config)
             mock_config.url = "https://api.profile.com"
             mock_config.username = "profile_user"
@@ -190,7 +191,7 @@ class TestApiClient:
 
             mock_from_profile.assert_called_once_with("test_profile")
 
-    def test_test_connection_success(self, api_client: ApiClient):
+    def test_test_connection_success(self, api_client: ApiClient) -> None:
         """Test successful connection test."""
         with patch.object(api_client, "get") as mock_get:
             mock_response = MagicMock(spec=FlxResponse)
@@ -203,7 +204,7 @@ class TestApiClient:
             assert "Connection successful" in message
             mock_get.assert_called_once_with("ping", raw_response=True)
 
-    def test_test_connection_failure(self, api_client: ApiClient):
+    def test_test_connection_failure(self, api_client: ApiClient) -> None:
         """Test failed connection test."""
         with patch.object(api_client, "get") as mock_get:
             mock_get.side_effect = ApiError("Connection failed")

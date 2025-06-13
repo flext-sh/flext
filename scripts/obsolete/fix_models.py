@@ -2,10 +2,10 @@ import os
 import re
 
 # Get the absolute path to the models.py file
-models_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'dc-api-x/src/dc_api_x/models.py')
+models_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "dc-api-x/src/dc_api_x/models.py")
 
 # Read the file content
-with open(models_path, encoding='utf-8') as f:
+with open(models_path, encoding="utf-8") as f:
     content = f.read()
 
 # Fix the is_valid method
@@ -21,19 +21,19 @@ replacement = '    def has_more(self) -> bool:\n        """Check if there are mo
 fixed_content = re.sub(pattern, replacement, fixed_content)
 
 # Fix the to_dict method
-pattern = r'        # Add data or error based on response type\s+ if self is not None:\s+     if self\.success and self\.data is not None:\s+ else:\s+     # Handle None case appropriately\s+     pass  # TODO: Implement proper None handling\s+            if isinstance\(self\.data, dict\[str, Any\]\):'
-replacement = '        # Add data or error based on response type\n        if self.success and self.data is not None:\n            if isinstance(self.data, dict[str, Any]):'
+pattern = r"        # Add data or error based on response type\s+ if self is not None:\s+     if self\.success and self\.data is not None:\s+ else:\s+     # Handle None case appropriately\s+     pass  # TODO: Implement proper None handling\s+            if isinstance\(self\.data, dict\[str, Any\]\):"
+replacement = "        # Add data or error based on response type\n        if self.success and self.data is not None:\n            if isinstance(self.data, dict[str, Any]):"
 
 fixed_content = re.sub(pattern, replacement, fixed_content)
 
 # Fix any assert/return statements at the end of the file
 pattern = r'assert isinstance\(result, None\), f"Expected None, got {type\(result\)}"\s+return result\s*$'
-replacement = ''
+replacement = ""
 
 fixed_content = re.sub(pattern, replacement, fixed_content)
 
 # Write the fixed content back to the file
-with open(models_path, 'w', encoding='utf-8') as f:
+with open(models_path, "w", encoding="utf-8") as f:
     f.write(fixed_content)
 
 print(f"Fixed {models_path}")

@@ -10,7 +10,7 @@ from pathlib import Path
 class FlxImportFixer(ast.NodeTransformer):
     """Fix import issues in FLX code."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.changes: list[dict[str, any]] = []
         self.imported_names: set[str] = set()
 
@@ -33,7 +33,7 @@ class FlxImportFixer(ast.NodeTransformer):
                         "type": "import_function",
                         "old": name,
                         "new": new_name,
-                        "line": node.lineno
+                        "line": node.lineno,
                     })
                 else:
                     new_names.append(alias)
@@ -47,7 +47,7 @@ class FlxImportFixer(ast.NodeTransformer):
 class FlxExceptionFixer(ast.NodeTransformer):
     """Fix exception attribute access patterns."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.changes: list[dict[str, any]] = []
 
     def visit_Attribute(self, node: ast.Attribute) -> ast.AST:
@@ -63,15 +63,15 @@ class FlxExceptionFixer(ast.NodeTransformer):
                     args=[
                         node.value,
                         ast.Constant(value=node.attr),
-                        ast.Constant(value=None)
+                        ast.Constant(value=None),
                     ],
-                    keywords=[]
+                    keywords=[],
                 )
                 self.changes.append({
                     "type": "exception_attr",
                     "old": f"{node.value.id}.{node.attr}",
                     "new": f"getattr({node.value.id}, '{node.attr}', None)",
-                    "line": node.lineno if hasattr(node, "lineno") else 0
+                    "line": node.lineno if hasattr(node, "lineno") else 0,
                 })
                 return new_node
 
@@ -110,7 +110,7 @@ def fix_missing_imports(filepath: Path) -> list[dict[str, any]]:
         # Check for undefined names and add imports
         added_imports = set()
         for name, import_stmt in import_map.items():
-            if re.search(rf'\b{name}\b', content) and import_stmt not in content:
+            if re.search(rf"\b{name}\b", content) and import_stmt not in content:
                 if import_stmt not in added_imports:
                     lines.insert(import_end_line, import_stmt)
                     added_imports.add(import_stmt)
@@ -118,7 +118,7 @@ def fix_missing_imports(filepath: Path) -> list[dict[str, any]]:
                     changes.append({
                         "type": "add_import",
                         "import": import_stmt,
-                        "for": name
+                        "for": name,
                     })
 
         if changes:
@@ -185,7 +185,7 @@ def fix_method_references(filepath: Path) -> list[dict[str, any]]:
                 changes.append({
                     "type": "method_reference",
                     "old": old,
-                    "new": new
+                    "new": new,
                 })
 
         if content != original:
@@ -205,16 +205,16 @@ def fix_constructor_calls(filepath: Path, inventory: dict[str, any]) -> list[dic
     constructor_defaults = {
         "FlxAdapterMeta": {
             "version": '"1.0.0"',
-            "dependencies": "[]"
+            "dependencies": "[]",
         },
         "FlxAdapterResult": {
             "message": '""',
             "error": "None",
-            "metadata": "{}"
+            "metadata": "{}",
         },
         "FlxLogEntry": {
-            "severity": "FlxLogSeverity.INFO"
-        }
+            "severity": "FlxLogSeverity.INFO",
+        },
     }
 
     try:
@@ -223,7 +223,7 @@ def fix_constructor_calls(filepath: Path, inventory: dict[str, any]) -> list[dic
 
         for class_name, defaults in constructor_defaults.items():
             # Find constructor calls missing arguments
-            pattern = rf'{class_name}\s*\([^)]*\)'
+            pattern = rf"{class_name}\s*\([^)]*\)"
             matches = list(re.finditer(pattern, content))
 
             for match in reversed(matches):  # Process in reverse to maintain positions
@@ -246,7 +246,7 @@ def fix_constructor_calls(filepath: Path, inventory: dict[str, any]) -> list[dic
 
                             # Calculate line and position
                             start_pos = match.start()
-                            line_num = content[:start_pos].count('\n')
+                            line_num = content[:start_pos].count("\n")
 
                             # Replace in content
                             content = content[:match.start()] + new_call + content[match.end():]
@@ -256,7 +256,7 @@ def fix_constructor_calls(filepath: Path, inventory: dict[str, any]) -> list[dic
                                 "class": class_name,
                                 "arg": arg_name,
                                 "value": default_value,
-                                "line": line_num + 1
+                                "line": line_num + 1,
                             })
 
         if changes:
@@ -268,7 +268,7 @@ def fix_constructor_calls(filepath: Path, inventory: dict[str, any]) -> list[dic
     return changes
 
 
-def main():
+def main() -> None:
     """Main function."""
     import argparse
 

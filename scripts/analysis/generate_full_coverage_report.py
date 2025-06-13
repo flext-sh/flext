@@ -35,6 +35,7 @@ def flx_run_coverage_analysis(module_path: Path) -> dict[str, Any]:
 
     Returns:
         Dicionário com métricas de cobertura
+
     """
     try:
         # Executar pytest com coverage
@@ -62,10 +63,10 @@ def flx_run_coverage_analysis(module_path: Path) -> dict[str, Any]:
             return {
                 "module": module_path.name,
                 "coverage_percent": coverage_data.get("totals", {}).get(
-                    "percent_covered", 0
+                    "percent_covered", 0,
                 ),
                 "lines_covered": coverage_data.get("totals", {}).get(
-                    "covered_lines", 0
+                    "covered_lines", 0,
                 ),
                 "lines_total": coverage_data.get("totals", {}).get("num_statements", 0),
                 "files_analyzed": len(coverage_data.get("files", {})),
@@ -104,6 +105,7 @@ def flx_count_source_lines(module_path: Path) -> int:
 
     Returns:
         Número total de linhas de código
+
     """
     total_lines = 0
     src_path = module_path / "src"
@@ -136,6 +138,7 @@ def flx_find_flx_modules(base_path: Path) -> list[Path]:
 
     Returns:
         Lista de caminhos para módulos FLX
+
     """
     flx_modules = []
 
@@ -165,6 +168,7 @@ def flx_generate_summary_report(results: list[dict[str, Any]]) -> str:
 
     Returns:
         Relatório em formato markdown
+
     """
     total_modules = len(results)
     modules_with_tests = sum(1 for r in results if r.get("has_tests", False))
@@ -268,6 +272,7 @@ def flx_generate_detailed_report(results: list[dict[str, Any]]) -> str:
 
     Returns:
         Relatório detalhado em formato markdown
+
     """
     report = f"""# 📋 RELATÓRIO DETALHADO DE COBERTURA FLX
 
@@ -278,7 +283,7 @@ Gerado em: {datetime.now().strftime("%d/%m/%Y às %H:%M:%S")}
 """
 
     for module_data in sorted(
-        results, key=lambda x: x.get("coverage_percent", 0), reverse=True
+        results, key=lambda x: x.get("coverage_percent", 0), reverse=True,
     ):
         coverage = module_data.get("coverage_percent", 0)
         has_tests = module_data.get("has_tests", False)
@@ -455,12 +460,12 @@ def main(workspace: Path, output: Path, output_format: str) -> None:
     print(f"   Cobertura Média: {avg_coverage:.2f}%")
     print(f"   Módulos Analisados: {len(results)}")
     print(
-        f"   Módulos com Testes: {sum(1 for r in results if r.get('has_tests', False))}"
+        f"   Módulos com Testes: {sum(1 for r in results if r.get('has_tests', False))}",
     )
 
     if avg_coverage < 50:
         print(
-            "⚠️  ATENÇÃO: Cobertura baixa! Recomenda-se implementação massiva de testes."
+            "⚠️  ATENÇÃO: Cobertura baixa! Recomenda-se implementação massiva de testes.",
         )
     elif avg_coverage < 80:
         print("🟡 Cobertura razoável. Foco em melhorar módulos críticos.")

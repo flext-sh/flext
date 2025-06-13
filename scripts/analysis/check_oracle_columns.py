@@ -9,7 +9,7 @@ sys.path.insert(0, str(Path(__file__).parent / "dc-oracle-wms"))
 sys.path.insert(0, str(Path(__file__).parent / "dc-oracle-db"))
 
 
-def check_oracle_columns():
+def check_oracle_columns() -> None:
     """Verifica quais colunas existem na tabela Oracle."""
     print("=== VERIFICAÇÃO DE COLUNAS ORACLE ===")
 

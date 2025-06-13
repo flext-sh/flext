@@ -9,7 +9,7 @@ sys.path.insert(0, str(Path(__file__).parent / "dc-oracle-wms"))
 sys.path.insert(0, str(Path(__file__).parent / "dc-oracle-db"))
 
 
-def debug_transaction():
+def debug_transaction() -> None:
     """Debug de problemas de transação."""
     print("=== DEBUG DE TRANSAÇÃO ===")
 

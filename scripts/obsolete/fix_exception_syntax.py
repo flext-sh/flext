@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Fix exception handling syntax errors in Python files.
+"""Fix exception handling syntax errors in Python files.
 
 This script specifically fixes issues with duplicate "from e" clauses in raise statements,
 which cause syntax errors.
@@ -18,35 +17,35 @@ from pathlib import Path
 class ExceptionSyntaxFixer:
     """Fix exception handling syntax issues in Python files."""
 
-    def __init__(self, dry_run=False):
-        """
-        Initialize the fixer.
+    def __init__(self, dry_run=False) -> None:
+        """Initialize the fixer.
 
         Args:
             dry_run: If True, don't actually modify files, just report issues
+
         """
         self.dry_run = dry_run
         self.files_modified = 0
         self.fixes_count = 0
 
-    def process_directory(self, directory):
-        """
-        Process all Python files in a directory recursively.
+    def process_directory(self, directory) -> None:
+        """Process all Python files in a directory recursively.
 
         Args:
             directory: Path to directory to process
+
         """
         for file_path in directory.glob("**/*.py"):
             if ".venv" in str(file_path) or "__pycache__" in str(file_path):
                 continue
             self.process_file(file_path)
 
-    def process_file(self, file_path):
-        """
-        Process a single Python file.
+    def process_file(self, file_path) -> None:
+        """Process a single Python file.
 
         Args:
             file_path: Path to file to process
+
         """
         try:
             content = file_path.read_text(encoding="utf-8")
@@ -63,15 +62,15 @@ class ExceptionSyntaxFixer:
         except Exception as e:
             print(f"Error processing {file_path}: {e}")
 
-    def _fix_multiple_from_clauses(self, content):
-        """
-        Fix multiple "from x" clauses in raise statements.
+    def _fix_multiple_from_clauses(self, content) -> None:
+        """Fix multiple "from x" clauses in raise statements.
 
         Args:
             content: File content to fix
 
         Returns:
             Fixed content
+
         """
         # Pattern to find raise statements with multiple "from e" clauses
         pattern = r"(raise\s+[a-zA-Z_][a-zA-Z0-9_.]*\(.*?\)\s+from\s+[a-zA-Z_][a-zA-Z0-9_]*)(\s+from\s+[a-zA-Z_][a-zA-Z0-9_]*)+\s*"
@@ -85,10 +84,10 @@ class ExceptionSyntaxFixer:
 
         # Apply the fix
         re.sub(
-            pattern, replace_multiple_from, content, flags=re.DOTALL
+            pattern, replace_multiple_from, content, flags=re.DOTALL,
         )
 
-    def print_summary(self):
+    def print_summary(self) -> None:
         """Print a summary of the fixes made."""
         print("\nSummary:")
         print(f"Files modified: {self.files_modified}")
@@ -98,11 +97,11 @@ class ExceptionSyntaxFixer:
             print("\nThis was a dry run. No files were actually modified.")
 
 
-def main():
+def main() -> None:
     """Run the script."""
     parser = argparse.ArgumentParser(description="Fix exception handling syntax issues")
     parser.add_argument(
-        "--dry-run", action="store_true", help="Don't modify files, just report issues"
+        "--dry-run", action="store_true", help="Don't modify files, just report issues",
     )
     args = parser.parse_args()
 

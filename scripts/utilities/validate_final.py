@@ -11,7 +11,7 @@ sys.path.insert(0, str(Path(__file__).parent / "dc-oracle-wms"))
 sys.path.insert(0, str(Path(__file__).parent / "dc-oracle-db"))
 
 
-def validate_final():
+def validate_final() -> bool | None:
     """Validação final do pipeline."""
     print("=== VALIDAÇÃO FINAL DO PIPELINE ===")
 

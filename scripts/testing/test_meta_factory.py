@@ -12,7 +12,7 @@ import sys
 from pathlib import Path
 
 # Add FLX to path for isolated testing
-sys.path.insert(0, '/home/marlonsc/pyauto/flx/src')
+sys.path.insert(0, "/home/marlonsc/pyauto/flx/src")
 
 # Import meta-programming components
 from flx.core.capabilities import CapabilityType
@@ -29,7 +29,7 @@ from flx.core.meta_factory import (
 )
 
 
-async def demonstrate_meta_factory():
+async def demonstrate_meta_factory() -> None:
     """Demonstrate the complete meta-programming adapter factory system."""
     print("🚀 FLX Meta-programming Adapter Factory Demonstration")
     print("=" * 60)
@@ -54,7 +54,7 @@ async def demonstrate_meta_factory():
             "password": "secure_password",
             "pool_min": 2,
             "pool_max": 20,
-            "pool_increment": 2
+            "pool_increment": 2,
         }
 
         print("\n🏗️  Creating Oracle WMS adapter from built-in schema...")
@@ -65,7 +65,7 @@ async def demonstrate_meta_factory():
         print(f"   Available methods: {[m for m in dir(wms_adapter) if not m.startswith('_') and callable(getattr(wms_adapter, m))][:5]}...")
 
         # Show adapter capabilities
-        if hasattr(wms_adapter, 'has_capability'):
+        if hasattr(wms_adapter, "has_capability"):
             capabilities = []
             for cap in CapabilityType:
                 if wms_adapter.has_capability(cap):
@@ -92,34 +92,34 @@ async def demonstrate_meta_factory():
                     "api_base_url": FieldDefinition(
                         FieldType.URL,
                         required=True,
-                        description="Base URL for the API service"
+                        description="Base URL for the API service",
                     ),
                     "api_key": FieldDefinition(
                         FieldType.SECRET,
                         required=True,
                         is_secret=True,
-                        description="API authentication key"
+                        description="API authentication key",
                     ),
                     "timeout_seconds": FieldDefinition(
                         FieldType.FLOAT,
                         default=30.0,
                         min_value=1.0,
                         max_value=300.0,
-                        description="Request timeout in seconds"
+                        description="Request timeout in seconds",
                     ),
                     "max_retries": FieldDefinition(
                         FieldType.INTEGER,
                         default=3,
                         min_value=0,
                         max_value=10,
-                        description="Maximum number of retry attempts"
+                        description="Maximum number of retry attempts",
                     ),
                     "enable_caching": FieldDefinition(
                         FieldType.BOOLEAN,
                         default=True,
-                        description="Enable response caching"
-                    )
-                }
+                        description="Enable response caching",
+                    ),
+                },
             ),
             operations=[
                 OperationDefinition(
@@ -128,7 +128,7 @@ async def demonstrate_meta_factory():
                     return_type="Dict[str, Any]",
                     template="crud",
                     template_params={"resource": "user_profile"},
-                    description="Get user profile by ID with caching"
+                    description="Get user profile by ID with caching",
                 ),
                 OperationDefinition(
                     name="create_user",
@@ -136,33 +136,33 @@ async def demonstrate_meta_factory():
                     return_type="Dict[str, Any]",
                     template="crud",
                     template_params={"resource": "user"},
-                    description="Create new user account"
+                    description="Create new user account",
                 ),
                 OperationDefinition(
                     name="send_notification",
                     parameters=["user_id", "message", "notification_type"],
                     return_type="bool",
-                    description="Send notification to user"
+                    description="Send notification to user",
                 ),
                 OperationDefinition(
                     name="bulk_update_users",
                     parameters=["user_updates"],
                     return_type="List[Dict[str, Any]]",
-                    description="Bulk update multiple users"
+                    description="Bulk update multiple users",
                 ),
                 OperationDefinition(
                     name="get_analytics_report",
                     parameters=["report_type", "date_range"],
                     return_type="Dict[str, Any]",
-                    description="Generate analytics report"
-                )
+                    description="Generate analytics report",
+                ),
             ],
             capabilities=[
                 CapabilityType.LOGGING,
                 CapabilityType.HEALTH_CHECK,
                 CapabilityType.METRICS,
                 CapabilityType.CIRCUIT_BREAKER,
-                CapabilityType.CACHING
+                CapabilityType.CACHING,
             ],
             generation_options=GenerationOptions(
                 add_docstrings=True,
@@ -173,8 +173,8 @@ async def demonstrate_meta_factory():
                 generate_metrics=True,
                 generate_error_handling=True,
                 use_caching=True,
-                use_connection_pooling=True
-            )
+                use_connection_pooling=True,
+            ),
         )
 
         print("🏗️  Generating custom adapter class...")
@@ -184,7 +184,7 @@ async def demonstrate_meta_factory():
         print(f"   Module: {CustomAdapter.__module__}")
 
         # Show generated class details
-        methods = [m for m in dir(CustomAdapter) if not m.startswith('_') and callable(getattr(CustomAdapter, m))]
+        methods = [m for m in dir(CustomAdapter) if not m.startswith("_") and callable(getattr(CustomAdapter, m))]
         print(f"   Generated methods ({len(methods)}): {methods[:8]}...")
 
         # Show docstring
@@ -197,7 +197,7 @@ async def demonstrate_meta_factory():
             "api_key": "secret_api_key_12345",
             "timeout_seconds": 45.0,
             "max_retries": 5,
-            "enable_caching": True
+            "enable_caching": True,
         }
 
         print("\n🔧 Creating adapter instance...")
@@ -205,7 +205,7 @@ async def demonstrate_meta_factory():
         print("✅ Created custom adapter instance")
 
         # Test configuration access
-        if hasattr(custom_adapter, '_config'):
+        if hasattr(custom_adapter, "_config"):
             print(f"   Configuration accessible: {bool(custom_adapter._config)}")
             print(f"   API Base URL: {custom_adapter_config.get('api_base_url')}")
 
@@ -231,45 +231,45 @@ async def demonstrate_meta_factory():
                         "field_type": "enum",
                         "required": True,
                         "choices": ["stripe", "paypal", "square"],
-                        "description": "Payment provider"
+                        "description": "Payment provider",
                     },
                     "api_key": {
                         "field_type": "secret",
                         "required": True,
                         "is_secret": True,
-                        "description": "Provider API key"
+                        "description": "Provider API key",
                     },
                     "webhook_url": {
                         "field_type": "url",
                         "required": False,
-                        "description": "Webhook callback URL"
+                        "description": "Webhook callback URL",
                     },
                     "currency": {
                         "field_type": "str",
                         "default": "USD",
-                        "description": "Default currency"
-                    }
-                }
+                        "description": "Default currency",
+                    },
+                },
             },
             "operations": [
                 {
                     "name": "process_payment",
                     "parameters": ["amount", "payment_method", "customer_id"],
                     "return_type": "Dict[str, Any]",
-                    "description": "Process payment transaction"
+                    "description": "Process payment transaction",
                 },
                 {
                     "name": "refund_payment",
                     "parameters": ["transaction_id", "amount"],
                     "return_type": "Dict[str, Any]",
-                    "description": "Process payment refund"
+                    "description": "Process payment refund",
                 },
                 {
                     "name": "get_transaction_status",
                     "parameters": ["transaction_id"],
                     "return_type": "Dict[str, Any]",
-                    "description": "Get transaction status"
-                }
+                    "description": "Get transaction status",
+                },
             ],
             "capabilities": ["logging", "health_check", "metrics", "circuit_breaker"],
             "generation_options": {
@@ -277,13 +277,13 @@ async def demonstrate_meta_factory():
                 "add_type_hints": True,
                 "add_validation": True,
                 "generate_health_checks": True,
-                "generate_metrics": True
-            }
+                "generate_metrics": True,
+            },
         }
 
         # Write schema to temporary file
         schema_file = Path("/tmp/payment_gateway_schema.json")
-        with open(schema_file, 'w', encoding='utf-8') as f:
+        with open(schema_file, "w", encoding="utf-8") as f:
             json.dump(schema_file_data, f, indent=2)
 
         print(f"📝 Created schema file: {schema_file}")
@@ -294,7 +294,7 @@ async def demonstrate_meta_factory():
             "provider": "stripe",
             "api_key": "sk_test_12345",
             "webhook_url": "https://myapp.com/webhooks/payment",
-            "currency": "USD"
+            "currency": "USD",
         }
 
         payment_adapter = enhanced_factory.create_adapter(schema_file, **payment_config)
@@ -321,7 +321,7 @@ async def demonstrate_meta_factory():
         # Show template generation
         basic_template = enhanced_factory.generate_template_schema(
             AdapterType.OUTBOUND,
-            "basic"
+            "basic",
         )
 
         print("✅ Generated basic template schema")
@@ -332,7 +332,7 @@ async def demonstrate_meta_factory():
         # Create adapter from template
         print("\n🏗️  Creating adapter from template...")
         template_config = {
-            "connection_url": "https://service.example.com/api/v1"
+            "connection_url": "https://service.example.com/api/v1",
         }
 
         template_adapter = enhanced_factory.create_adapter(basic_template, **template_config)
@@ -383,7 +383,7 @@ async def demonstrate_meta_factory():
     print("   • Maintenance burden: Heavy → Light")
 
 
-async def demonstrate_traditional_vs_meta():
+async def demonstrate_traditional_vs_meta() -> None:
     """Compare traditional adapter development vs meta-programming approach."""
     print("\n🔄 Traditional vs Meta-programming Comparison")
     print("=" * 50)

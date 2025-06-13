@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Fix undefined name 'e' in client.py.
+"""Fix undefined name 'e' in client.py.
 
 This script fixes two F821 Undefined name 'e' errors in client.py
 where 'from e' is used but 'e' is not defined.
@@ -13,7 +12,7 @@ import re
 from pathlib import Path
 
 
-def fix_client_file():
+def fix_client_file() -> bool:
     """Fix undefined name 'e' errors in client.py."""
     client_path = (
         Path(__file__).parent.parent / "dc-api-x" / "src" / "dc_api_x" / "client.py"
@@ -51,7 +50,7 @@ def fix_client_file():
     return False
 
 
-def main():
+def main() -> None:
     """Main entry point."""
     fix_client_file()
 

@@ -9,7 +9,7 @@ sys.path.insert(0, str(Path(__file__).parent / "dc-oracle-wms"))
 sys.path.insert(0, str(Path(__file__).parent / "dc-oracle-db"))
 
 
-def check_and_create_audit_columns():
+def check_and_create_audit_columns() -> None:
     """Verifica e cria colunas de auditoria nas tabelas WMS."""
     print("=== VERIFICAÇÃO E CRIAÇÃO DE COLUNAS DE AUDITORIA ===")
 
@@ -47,7 +47,7 @@ def check_and_create_audit_columns():
 
             try:
                 result = db_client.query(table_exists_sql, {"table_name": table_name})
-                table_count = result[0]['table_count'] if result else 0
+                table_count = result[0]["table_count"] if result else 0
 
                 if table_count == 0:
                     print(f"❌ Tabela {table_name} NÃO existe - pulando")
@@ -69,7 +69,7 @@ def check_and_create_audit_columns():
 
             try:
                 existing_columns = db_client.query(columns_sql, {"table_name": table_name})
-                existing_column_names = {row['COLUMN_NAME'] for row in existing_columns}
+                existing_column_names = {row["COLUMN_NAME"] for row in existing_columns}
 
                 print(f"Colunas existentes: {len(existing_column_names)}")
 
@@ -121,7 +121,7 @@ def check_and_create_audit_columns():
             try:
                 # Verificar se tabela existe
                 table_exists_result = db_client.query(table_exists_sql, {"table_name": table_name})
-                if table_exists_result[0]['table_count'] == 0:
+                if table_exists_result[0]["table_count"] == 0:
                     continue
 
                 # Contar colunas de auditoria
@@ -133,7 +133,7 @@ def check_and_create_audit_columns():
                 """
 
                 audit_result = db_client.query(audit_count_sql, {"table_name": table_name})
-                audit_count = audit_result[0]['audit_count'] if audit_result else 0
+                audit_count = audit_result[0]["audit_count"] if audit_result else 0
 
                 print(f"{table_name}: {audit_count}/4 colunas de auditoria")
 

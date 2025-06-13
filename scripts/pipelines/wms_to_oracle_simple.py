@@ -35,7 +35,7 @@ class SimplePipelineError(Exception):
 class SimpleWmsToOraclePipeline:
     """Pipeline simples para sincronização WMS-Oracle usando SQLAlchemy."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Inicializa o pipeline simples."""
         self.setup_logging()
 
@@ -74,7 +74,8 @@ class SimpleWmsToOraclePipeline:
             self.logger.info("Clientes inicializados com sucesso")
 
         except Exception as e:
-            raise SimplePipelineError(f"Erro ao inicializar clientes: {e}")
+            msg = f"Erro ao inicializar clientes: {e}"
+            raise SimplePipelineError(msg)
 
     def discover_oracle_schema(self, table_name: str) -> bool:
         """Descobre schema da tabela Oracle.
@@ -84,6 +85,7 @@ class SimpleWmsToOraclePipeline:
 
         Returns:
             True se schema foi descoberto com sucesso
+
         """
         try:
             self.logger.info(f"Descobrindo schema Oracle para tabela: {table_name}")
@@ -123,6 +125,7 @@ class SimpleWmsToOraclePipeline:
 
         Returns:
             Lista de registros processados
+
         """
         try:
             self.logger.info(f"Extraindo {limit} registros de {resource} do WMS")
@@ -188,7 +191,7 @@ class SimpleWmsToOraclePipeline:
                 self.logger.debug(f"Parsed string record: {fields}")
             else:
                 self.logger.warning(
-                    f"Record is not a Pydantic model or string: {type(record)}"
+                    f"Record is not a Pydantic model or string: {type(record)}",
                 )
                 return None
 
@@ -250,6 +253,7 @@ class SimpleWmsToOraclePipeline:
 
         Returns:
             Dicionário com campos extraídos
+
         """
         try:
             if "(" in wms_string and ")" in wms_string:
@@ -292,6 +296,7 @@ class SimpleWmsToOraclePipeline:
 
         Returns:
             Lista de registros mapeados para Oracle
+
         """
         if not wms_records:
             return []
@@ -363,6 +368,7 @@ class SimpleWmsToOraclePipeline:
 
         Returns:
             Nome do campo Oracle ou None se não encontrado
+
         """
         wms_field_lower = wms_field.lower()
 
@@ -417,6 +423,7 @@ class SimpleWmsToOraclePipeline:
 
         Returns:
             Valor convertido
+
         """
         if value is None:
             return None
@@ -464,6 +471,7 @@ class SimpleWmsToOraclePipeline:
 
         Returns:
             Lista de comandos INSERT SQL
+
         """
         if not mapped_records:
             return []
@@ -579,6 +587,7 @@ class SimpleWmsToOraclePipeline:
 
         Args:
             sql_statements: Lista de comandos SQL
+
         """
         if not sql_statements:
             self.logger.info("Nenhum comando SQL para executar")
@@ -614,6 +623,7 @@ class SimpleWmsToOraclePipeline:
         Args:
             resource: Recurso WMS para extrair
             limit: Limite de registros
+
         """
         try:
             self.logger.info("=== INICIANDO PIPELINE SIMPLES ===")
@@ -625,7 +635,8 @@ class SimpleWmsToOraclePipeline:
             # 2. Descobrir schema Oracle
             table_name = f"WMS_{resource.upper()}"
             if not self.discover_oracle_schema(table_name):
-                raise SimplePipelineError("Falha na descoberta do schema Oracle")
+                msg = "Falha na descoberta do schema Oracle"
+                raise SimplePipelineError(msg)
 
             # 3. Extrair dados WMS
             wms_records = self.extract_wms_data(resource, limit)
@@ -658,7 +669,7 @@ class SimpleWmsToOraclePipeline:
                 self.db_client.close()
 
 
-def main():
+def main() -> None:
     """Função principal."""
     parser = argparse.ArgumentParser(description="Pipeline Simples WMS para Oracle")
     parser.add_argument("--resource", required=True, help="Recurso WMS para extrair")

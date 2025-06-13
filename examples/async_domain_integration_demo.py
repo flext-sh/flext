@@ -30,7 +30,6 @@ from flx.core import (
 
 async def demo_aggregate_async_events() -> None:
     """Demo: Aggregate Root with Async Events."""
-
     # Create aggregate root with async events enabled
     order_aggregate = FlxEntityFactory.create_aggregate_root(
         name="CustomerOrder",
@@ -78,7 +77,6 @@ async def demo_aggregate_async_events() -> None:
 
 async def demo_mixed_events() -> None:
     """Demo: Mixing Regular and Async Events."""
-
     # Create aggregate that uses both types of events
     inventory_aggregate = FlxAggregateRoot(name="InventoryItem")
 
@@ -125,7 +123,6 @@ async def demo_mixed_events() -> None:
 
 async def demo_lato_integration() -> None:
     """Demo: Integration with Lato Application."""
-
     try:
         # Create FLX application with async infrastructure
         app = flx_create_application(
@@ -159,7 +156,6 @@ async def demo_lato_integration() -> None:
 
 async def demo_async_infrastructure_status() -> None:
     """Demo: Async Infrastructure Status."""
-
     # Show broker information
     broker_info = flx_get_broker_info()
     for key, value in broker_info.items():
@@ -169,7 +165,7 @@ async def demo_async_infrastructure_status() -> None:
     health = flx_get_health_status()
     for key, value in health.items():
         if key == "queues" and isinstance(value, dict):
-            for _queue_name, queue_stats in value.items():
+            for queue_stats in value.values():
                 (
                     "🟢 Empty"
                     if queue_stats.get("empty")
@@ -179,7 +175,6 @@ async def demo_async_infrastructure_status() -> None:
 
 async def demo_event_factory() -> None:
     """Demo: Async Event Factory."""
-
     from uuid import uuid4
 
     # Create async domain event using factory
@@ -200,7 +195,6 @@ async def demo_event_factory() -> None:
 
 async def main() -> None:
     """Run all demos."""
-
     try:
         await demo_aggregate_async_events()
         await demo_mixed_events()

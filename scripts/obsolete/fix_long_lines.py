@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Script para tentar corrigir linhas longas automaticamente.
+"""Script para tentar corrigir linhas longas automaticamente.
 
 Este script detecta linhas que excedem o comprimento máximo definido e tenta
 formatá-las melhor, dividindo-as em múltiplas linhas usando várias estratégias.
@@ -487,7 +486,7 @@ def process_file(
     return len(long_lines) - fixed_count
 
 
-def main():
+def main() -> int:
     """Função principal do script."""
     args = parse_arguments()
 

@@ -5,7 +5,7 @@ import re
 from pathlib import Path
 
 
-def fix_flx_strict_model_import():
+def fix_flx_strict_model_import() -> None:
     """Add FlxStrictModel import where needed."""
     files_needing_import = [
         "flx/src/flx/infra/mock_data/adapters.py",
@@ -48,9 +48,8 @@ def fix_flx_strict_model_import():
             print(f"Added FlxStrictModel import to {filepath}")
 
 
-def fix_mock_data_models():
+def fix_mock_data_models() -> None:
     """Fix missing model definitions in mock data."""
-
     # Fix MockDataModel in base.py
     base_file = Path("flx/src/flx/infra/mock_data/base.py")
     if base_file.exists():
@@ -77,9 +76,8 @@ class MockDataModel(BaseModel):
             print("Added MockDataModel to base.py")
 
 
-def fix_health_monitor_classes():
+def fix_health_monitor_classes() -> None:
     """Fix missing classes in health monitoring."""
-
     health_file = Path("flx/src/flx/infra/observability/health.py")
     if health_file.exists():
         content = health_file.read_text()
@@ -138,9 +136,8 @@ class HealthMonitor:
         print("Fixed health monitoring classes")
 
 
-def fix_universal_schema_classes():
+def fix_universal_schema_classes() -> None:
     """Fix missing classes in universal schema."""
-
     schema_file = Path("flx/src/flx/infra/schema/universal.py")
     if schema_file.exists():
         content = schema_file.read_text()
@@ -160,7 +157,7 @@ class UniversalField(FlxStrictModel):
             # Add after other class definitions or imports
             if "class " in content:
                 # Find last class definition
-                class_matches = list(re.finditer(r'^class\s+\w+', content, re.MULTILINE))
+                class_matches = list(re.finditer(r"^class\s+\w+", content, re.MULTILINE))
                 if class_matches:
                     last_class_end = content.find("\n\n", class_matches[-1].end())
                     if last_class_end > 0:
@@ -174,9 +171,8 @@ class UniversalField(FlxStrictModel):
             print("Added UniversalField to universal.py")
 
 
-def fix_decorator_imports():
+def fix_decorator_imports() -> None:
     """Fix missing decorator function imports."""
-
     files_with_decorator_issues = [
         "flx/src/flx/infra/logging/decorators.py",
     ]
@@ -219,9 +215,8 @@ def decorator(func):
                 print(f"Added decorator function to {filepath}")
 
 
-def fix_missing_attributes():
+def fix_missing_attributes() -> None:
     """Fix specific missing attributes."""
-
     # Fix logger attributes
     files_with_logger_issues = Path("flx/src").rglob("*.py")
 
@@ -247,7 +242,7 @@ def fix_missing_attributes():
             print(f"Fixed logger.debug in {path}")
 
 
-def main():
+def main() -> None:
     """Run all fixes."""
     print("Fixing remaining mypy issues...")
 

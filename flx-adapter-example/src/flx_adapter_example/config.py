@@ -1,208 +1,222 @@
-"""FLX Adapter Configuration - Pydantic-based configuration management.
+"""Configuration management for API client.
 
-This module provides configuration management for the FLX adapter example,
-using pydantic-settings for environment variable integration and validation.
+This module provides classes and functions for managing API client configuration
+through environment variables, configuration files, and configuration profiles.
 """
 
-from __future__ import annotations
-
+import json
+import os
+from pathlib import Path
 from typing import Any
 
-from pydantic import BaseModel, ConfigDict, Field, HttpUrl, field_validator
+from dotenv import load_dotenv
+from pydantic import Field, SecretStr, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-class FlxAdapterConfig(BaseSettings):
-    """Configuration for FLX Adapter Example.
+class ConfigProfile:
+    """Configuration profile for API client.
 
-    This configuration supports loading from environment variables with
-    the prefix 'FLX_ADAPTER_' and provides sensible defaults.
-
-    Environment Variables:
-        FLX_ADAPTER_NAME: Adapter name
-        FLX_ADAPTER_VERSION: Adapter version
-        FLX_ADAPTER_API_URL: Base URL for external API
-        FLX_ADAPTER_API_KEY: API key for authentication
-        FLX_ADAPTER_TIMEOUT_SECONDS: Request timeout in seconds
-        FLX_ADAPTER_RETRY_ATTEMPTS: Number of retry attempts
-        FLX_ADAPTER_RETRY_DELAY_SECONDS: Delay between retries
-        FLX_ADAPTER_ENABLED: Whether adapter is enabled
-        FLX_ADAPTER_DEBUG: Enable debug mode
-
-    Example:
-        ```python
-        # Load from environment
-        config = FlxAdapterConfig.from_env()
-
-        # Create with explicit values
-        config = FlxAdapterConfig(
-            name="my-adapter",
-            api_url="https://api.example.com",
-            api_key="secret-key"
-        )
-        ```
+    Profiles allow defining multiple configurations for different environments
+    (e.g., development, staging, production).
     """
 
-    model_config = SettingsConfigDict(
-        env_prefix="FLX_ADAPTER_",
-        env_file=".env",
-        env_file_encoding="utf-8",
-        case_sensitive=False,
-        extra="forbid",
-        str_strip_whitespace=True,
-    )
+    def __init__(self, name: str, config: dict[str, Any]) -> None:
+        """Initialize a configuration profile.
 
-    # Basic adapter information
-    name: str = Field(
-        default="flx_adapter_example",
-        description="Adapter name identifier"
-    )
-    version: str = Field(
-        default="1.0.0",
-        description="Adapter version"
-    )
+        Args:
+            name: Profile name
+            config: Configuration dictionary
+        """
+        self.name = name
+        self.config = config
 
-    # API configuration
-    api_url: HttpUrl = Field(
-        default="https://jsonplaceholder.typicode.com",
-        description="Base URL for external API"
-    )
-    api_key: str | None = Field(
-        default=None,
-        description="API key for authentication"
-    )
+    @property
+    def is_valid(self) -> bool:
+        """Check if the profile contains the minimum required configuration."""
+        return all(key in self.config for key in ["url", "username", "password"])
+
+    def __repr__(self) -> str:
+        """Return string representation of the profile."""
+        # Hide password in representation
+        config_repr = {
+            k: "****" if k == "password" else v for k, v in self.config.items()
+        }
+        return f"ConfigProfile({self.name}, {config_repr})"
+
+
+class Config(BaseSettings):
+    """API client configuration.
+
+    This class provides configuration management for the API client, including
+    connection settings, authentication, and client behavior.
+
+    Configuration can be loaded from environment variables, configuration files,
+    or provided directly.
+    """
 
     # Connection settings
-    timeout_seconds: float = Field(
-        default=30.0,
-        ge=1.0,
-        le=300.0,
-        description="Request timeout in seconds"
+    url: str = Field(..., description="API base URL")
+    timeout: int = Field(60, description="Request timeout in seconds")
+    verify_ssl: bool = Field(True, description="Verify SSL certificates")
+
+    # Authentication
+    username: str = Field(..., description="API username")
+    password: SecretStr = Field(..., description="API password")
+
+    # Client behavior
+    max_retries: int = Field(3, description="Maximum number of retry attempts")
+    retry_backoff: float = Field(
+        0.5,
+        description="Exponential backoff factor for retries",
     )
-    retry_attempts: int = Field(
-        default=3,
-        ge=0,
-        le=10,
-        description="Number of retry attempts"
-    )
-    retry_delay_seconds: float = Field(
-        default=1.0,
-        ge=0.1,
-        le=60.0,
-        description="Delay between retries in seconds"
+    debug: bool = Field(False, description="Enable debug mode")
+
+    # Optional settings
+    environment: str | None = Field(
+        None,
+        description="Environment name (e.g., development, production)",
     )
 
-    # Adapter behavior
-    enabled: bool = Field(
-        default=True,
-        description="Whether adapter is enabled"
-    )
-    debug: bool = Field(
-        default=False,
-        description="Enable debug mode"
+    model_config = SettingsConfigDict(
+        env_prefix="API_",
+        env_file=".env",
+        env_file_encoding="utf-8",
+        extra="ignore",
     )
 
-    # Additional configuration
-    extra_config: dict[str, Any] = Field(
-        default_factory=dict,
-        description="Additional adapter-specific configuration"
-    )
-
-    @field_validator("api_url")
+    @field_validator("url")
     @classmethod
-    def validate_api_url(cls, v: HttpUrl) -> HttpUrl:
-        """Validate API URL format."""
-        if not str(v).startswith(("http://", "https://")):
-            raise ValueError("API URL must start with http:// or https://")
+    def validate_url(cls, v: str) -> str:
+        """Validate and normalize URL."""
+        if not v:
+            msg = "URL cannot be empty"
+            raise ValueError(msg)
+
+        # Remove trailing slash
+        v = v.removesuffix("/")
+
+        # Ensure URL starts with http or https
+        if not (v.startswith(("http://", "https://"))):
+            msg = "URL must start with http:// or https://"
+            raise ValueError(msg)
+
         return v
 
-    @field_validator("name")
+    def to_dict(self) -> dict[str, Any]:
+        """Convert configuration to dictionary."""
+        result = self.model_dump()
+        # Convert SecretStr to plain string for easier serialization
+        if "password" in result and isinstance(result["password"], SecretStr):
+            result["password"] = result["password"].get_secret_value()
+        return result
+
+    def save(self, file_path: str | Path) -> None:
+        """Save configuration to a file.
+
+        Args:
+            file_path: Path to save the configuration file
+        """
+        file_path = Path(file_path)
+
+        # Create directory if it doesn't exist
+        file_path.parent.mkdir(parents=True, exist_ok=True)
+
+        # Determine file format based on extension
+        if file_path.suffix.lower() == ".json":
+            with open(file_path, "w", encoding="utf-8") as f:
+                json.dump(self.to_dict(), f, indent=2)
+        else:
+            msg = f"Unsupported file format: {file_path.suffix}"
+            raise ValueError(msg)
+
     @classmethod
-    def validate_name(cls, v: str) -> str:
-        """Validate adapter name format."""
-        if not v or len(v.strip()) == 0:
-            raise ValueError("Adapter name cannot be empty")
-        return v.strip()
+    def from_file(cls, file_path: str | Path) -> "Config":
+        """Load configuration from a file.
+
+        Args:
+            file_path: Path to the configuration file
+
+        Returns:
+            Config: Configuration object
+        """
+        file_path = Path(file_path)
+
+        if not file_path.exists():
+            msg = f"Configuration file not found: {file_path}"
+            raise FileNotFoundError(msg)
+
+        # Load based on file extension
+        if file_path.suffix.lower() == ".json":
+            with open(file_path, encoding="utf-8") as f:
+                config_data = json.load(f)
+        else:
+            msg = f"Unsupported file format: {file_path.suffix}"
+            raise ValueError(msg)
+
+        return cls(**config_data)
 
     @classmethod
-    def from_env(cls) -> FlxAdapterConfig:
-        """Create configuration from environment variables.
+    def from_profile(cls, profile_name: str) -> "Config":
+        """Load configuration from a profile.
+
+        Args:
+            profile_name: Name of the profile to load
 
         Returns:
-            Configuration instance loaded from environment
+            Config: Configuration object
 
-        Example:
-            ```python
-            config = FlxAdapterConfig.from_env()
-            ```
+        Raises:
+            ValueError: If the profile doesn't exist or is invalid
         """
-        return cls()
+        # Load environment variables from profile-specific .env file
+        env_file = f".env.{profile_name}"
+        if not os.path.exists(env_file):
+            msg = f"Profile environment file not found: {env_file}"
+            raise ValueError(msg)
 
-    def to_plugin_config(self) -> FlxPluginConfig:
-        """Convert to FLX FlxPluginConfig format.
+        load_dotenv(env_file)
 
-        Returns:
-            FlxPluginConfig instance for FLX framework
-        """
-        from flx.plugins.base import FlxPluginConfig, FlxPluginMode
+        # Construct environment variable prefix for this profile
+        env_prefix = f"API_{profile_name.upper()}_"
 
-        return FlxPluginConfig(
-            name=self.name,
-            version=self.version,
-            mode=FlxPluginMode.BIDIRECTIONAL,
-            enabled=self.enabled,
-            config={
-                "api_url": str(self.api_url),
-                "api_key": self.api_key,
-                "timeout_seconds": self.timeout_seconds,
-                "retry_attempts": self.retry_attempts,
-                "retry_delay_seconds": self.retry_delay_seconds,
-                "debug": self.debug,
-                **self.extra_config,
-            },
-            timeout_seconds=self.timeout_seconds,
-            retry_attempts=self.retry_attempts,
-            retry_delay_seconds=self.retry_delay_seconds,
-        )
+        # Extract configuration from environment variables
+        config_data = {}
+        for key in ["url", "username", "password", "timeout", "verify_ssl"]:
+            env_var = f"{env_prefix}{key.upper()}"
+            if env_var in os.environ:
+                config_data[key] = os.environ[env_var]
 
-    def get_headers(self) -> dict[str, str]:
-        """Get HTTP headers for API requests.
+        if not all(k in config_data for k in ["url", "username", "password"]):
+            msg = f"Invalid profile configuration: {profile_name}"
+            raise ValueError(msg)
 
-        Returns:
-            Dictionary of HTTP headers
-        """
-        headers = {
-            "Content-Type": "application/json",
-            "User-Agent": f"{self.name}/{self.version}",
-        }
-
-        if self.api_key:
-            headers["Authorization"] = f"Bearer {self.api_key}"
-
-        return headers
-
-    def model_dump_safe(self) -> dict[str, Any]:
-        """Dump model data with sensitive information masked.
-
-        Returns:
-            Dictionary with sensitive data masked
-        """
-        data = self.model_dump()
-        if data.get("api_key"):
-            data["api_key"] = "***masked***"
-        return data
+        return cls(**config_data)
 
 
-class FlxPluginConfig(BaseModel):
-    """Temporary FlxPluginConfig for standalone usage."""
+def load_config_from_env() -> Config:
+    """Load configuration from environment variables.
 
-    model_config = ConfigDict(strict=True, extra="forbid")
+    Returns:
+        Config: Configuration object
+    """
+    return Config()
 
-    name: str
-    version: str
-    mode: str
-    enabled: bool = True
-    config: dict[str, Any] = Field(default_factory=dict)
-    timeout_seconds: float = 30.0
-    retry_attempts: int = 3
-    retry_delay_seconds: float = 1.0
+
+def list_available_profiles() -> list[str]:
+    """List available configuration profiles.
+
+    Profiles are identified by .env.{profile_name} files in the current directory.
+
+    Returns:
+        list[str]: list of available profile names
+    """
+    profiles = []
+
+    # Search for .env.{profile} files
+    for file in Path().glob(".env.*"):
+        if file.name != ".env":
+            profile_name = file.name.replace(".env.", "")
+            profiles.append(profile_name)
+
+    return profiles

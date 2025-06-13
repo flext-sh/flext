@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Utilitário para validação de localização de scripts.
+"""Utilitário para validação de localização de scripts.
 
 Este módulo fornece funções para validar que scripts estão nas pastas corretas
 conforme as regras do workspace.
@@ -12,11 +11,11 @@ from pathlib import Path
 
 
 def find_workspace_root() -> Path:
-    """
-    Encontra a raiz do workspace usando git ou marcadores de projeto.
+    """Encontra a raiz do workspace usando git ou marcadores de projeto.
 
     Returns:
         Path: Caminho para a raiz do workspace
+
     """
     current = Path.cwd()
 
@@ -42,14 +41,14 @@ def find_workspace_root() -> Path:
 
 
 def validate_script_location(script_file: Path | None = None) -> None:
-    """
-    Valida se o script está na pasta correta.
+    """Valida se o script está na pasta correta.
 
     Args:
         script_file: Caminho do script. Se None, usa __file__ do caller
 
     Raises:
         RuntimeError: Se o script não estiver na pasta correta
+
     """
     if script_file is None:
         # Obtém o arquivo do script que chamou esta função
@@ -101,14 +100,14 @@ def validate_script_location(script_file: Path | None = None) -> None:
 
 
 def get_script_category(script_file: Path) -> str:
-    """
-    Determina a categoria do script baseada em sua localização.
+    """Determina a categoria do script baseada em sua localização.
 
     Args:
         script_file: Caminho do script
 
     Returns:
         str: Categoria do script (temp, automation, maintenance, etc.)
+
     """
     workspace_root = find_workspace_root()
     min_parts_for_category = 2  # Constante para evitar magic value
@@ -133,11 +132,11 @@ def get_script_category(script_file: Path) -> str:
 
 
 def check_all_scripts_location() -> list[Path]:
-    """
-    Verifica a localização de todos os scripts Python no workspace.
+    """Verifica a localização de todos os scripts Python no workspace.
 
     Returns:
         list[Path]: Lista de scripts em localização incorreta
+
     """
     workspace_root = find_workspace_root()
     invalid_scripts = []
@@ -187,7 +186,7 @@ if __name__ == "__main__":
 
     if invalid_scripts:
         logger.error(
-            "Scripts em localização incorreta encontrados", count=len(invalid_scripts)
+            "Scripts em localização incorreta encontrados", count=len(invalid_scripts),
         )
 
         for script in invalid_scripts:

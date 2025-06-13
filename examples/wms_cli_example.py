@@ -36,6 +36,7 @@ async def run_wms_command(cli: WmsCLI, command: str, args: dict) -> dict:
 
     Returns:
         Command result
+
     """
     logger.info(f"Executing WMS command: {command}")
     try:

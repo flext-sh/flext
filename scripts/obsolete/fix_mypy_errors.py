@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-Script to automatically fix common mypy errors in the codebase.
-"""
+"""Script to automatically fix common mypy errors in the codebase."""
 
 import re
 import sys
@@ -14,8 +12,7 @@ def find_python_files(directory: str) -> list[Path]:
 
 
 def add_return_type_annotations(file_path: Path) -> int:
-    """
-    Add return type annotations to functions missing them.
+    """Add return type annotations to functions missing them.
 
     Returns the number of fixes applied.
     """
@@ -51,8 +48,7 @@ def add_return_type_annotations(file_path: Path) -> int:
 
 
 def flx_missing_type_params(file_path: Path) -> int:
-    """
-    Add type parameters to generic types like list, dict, etc.
+    """Add type parameters to generic types like list, dict, etc.
 
     Returns the number of fixes applied.
     """
@@ -86,8 +82,7 @@ def flx_missing_type_params(file_path: Path) -> int:
 
 
 def remove_unused_type_ignores(file_path: Path) -> int:
-    """
-    Remove unused type: ignore comments.
+    """Remove unused type: ignore comments.
 
     Returns the number of fixes applied.
     """

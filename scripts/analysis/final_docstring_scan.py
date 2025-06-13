@@ -9,7 +9,7 @@ from typing import Any
 
 
 class DocstringGapFinder(ast.NodeVisitor):
-    def __init__(self, filepath: str):
+    def __init__(self, filepath: str) -> None:
         self.filepath = filepath
         self.gaps: list[dict[str, Any]] = []
         self.current_class = None
@@ -32,7 +32,7 @@ class DocstringGapFinder(ast.NodeVisitor):
                 "line": node.lineno,
                 "type": "class",
                 "name": node.name,
-                "description": f"Class {node.name}"
+                "description": f"Class {node.name}",
             })
 
         self.generic_visit(node)
@@ -54,7 +54,7 @@ class DocstringGapFinder(ast.NodeVisitor):
                 "line": node.lineno,
                 "type": func_type,
                 "name": name,
-                "description": f"{func_type} {name}"
+                "description": f"{func_type} {name}",
             })
 
         self.generic_visit(node)
@@ -75,7 +75,7 @@ class DocstringGapFinder(ast.NodeVisitor):
                 "line": node.lineno,
                 "type": func_type,
                 "name": name,
-                "description": f"{func_type} {name}"
+                "description": f"{func_type} {name}",
             })
 
         self.generic_visit(node)

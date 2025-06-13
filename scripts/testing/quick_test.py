@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Quick Test Runner for FLX Project Development.
+"""Quick Test Runner for FLX Project Development.
 Provides fast testing for development with simplified output.
 """
 
@@ -89,7 +88,7 @@ class QuickTestRunner:
                 capture_output=True,
                 text=True,
                 timeout=self.config.timeout,
-                check=False
+                check=False,
             )
 
             duration = time.time() - start_time
@@ -139,7 +138,7 @@ class QuickTestRunner:
         cmd.extend([
             "--tb=short",
             "--disable-warnings",
-            "--color=yes"
+            "--color=yes",
         ])
 
         return cmd
@@ -151,7 +150,7 @@ class QuickTestRunner:
         skipped = output.count(" SKIPPED") + output.count("⏭")
 
         # Try to parse summary line
-        lines = output.split('\n')
+        lines = output.split("\n")
         for line in lines:
             if "passed" in line and ("failed" in line or "skipped" in line):
                 parts = line.split()
@@ -174,34 +173,34 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Quick test runner for FLX development")
     parser.add_argument(
         "--flx_project", "-p",
-        help="Specific flx_project to test (flx, oracle, wms, oic, db)"
+        help="Specific flx_project to test (flx, oracle, wms, oic, db)",
     )
     parser.add_argument(
         "--category", "-c",
         default="unit",
         choices=["unit", "integration", "performance", "security", "smoke", "e2e"],
-        help="Test category to run"
+        help="Test category to run",
     )
     parser.add_argument(
         "--verbose", "-v",
         action="store_true",
-        help="Verbose output"
+        help="Verbose output",
     )
     parser.add_argument(
         "--no-fail-fast",
         action="store_true",
-        help="Don't stop on first failure"
+        help="Don't stop on first failure",
     )
     parser.add_argument(
         "--coverage",
         action="store_true",
-        help="Enable coverage reporting"
+        help="Enable coverage reporting",
     )
     parser.add_argument(
         "--timeout",
         type=int,
         default=60,
-        help="Test timeout in seconds"
+        help="Test timeout in seconds",
     )
 
     args = parser.parse_args()
@@ -212,7 +211,7 @@ def main() -> None:
         verbose=args.verbose,
         fail_fast=not args.no_fail_fast,
         coverage=args.coverage,
-        timeout=args.timeout
+        timeout=args.timeout,
     )
 
     runner = QuickTestRunner(config)

@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Test File Consolidation Analysis
+"""Test File Consolidation Analysis.
 
 Analyzes test file proliferation across PyAuto projects and suggests consolidation.
 Avoids critical documentation files as specified by user.
@@ -22,7 +21,7 @@ def analyze_test_files():
         "flx-http-oracle-wms",
         "flx-database-oracle",
         "client-b-oic-wms",
-        "client-a-mig-oud"
+        "client-a-mig-oud",
     ]
 
     analysis = {
@@ -30,7 +29,7 @@ def analyze_test_files():
         "projects_analyzed": [],
         "test_file_statistics": {},
         "redundancy_patterns": defaultdict(list),
-        "consolidation_opportunities": []
+        "consolidation_opportunities": [],
     }
 
     for project in projects:
@@ -49,7 +48,7 @@ def analyze_test_files():
         test_files = list(tests_dir.rglob("test_*.py"))
         analysis["test_file_statistics"][project] = {
             "total_test_files": len(test_files),
-            "test_files": [f.name for f in test_files[:10]]  # Sample
+            "test_files": [f.name for f in test_files[:10]],  # Sample
         }
 
         # Identify redundancy patterns
@@ -61,14 +60,14 @@ def analyze_test_files():
             analysis["redundancy_patterns"]["excessive_adapter_tests"].append({
                 "project": project,
                 "count": len(adapter_tests),
-                "files": [f.name for f in adapter_tests[:5]]
+                "files": [f.name for f in adapter_tests[:5]],
             })
 
         if len(client_tests) > 3:
             analysis["redundancy_patterns"]["excessive_client_tests"].append({
                 "project": project,
                 "count": len(client_tests),
-                "files": [f.name for f in client_tests[:5]]
+                "files": [f.name for f in client_tests[:5]],
             })
 
     # Generate consolidation opportunities
@@ -80,9 +79,9 @@ def analyze_test_files():
                 "recommended_structure": {
                     "unit": ["test_core.py", "test_adapters.py", "test_services.py"],
                     "integration": ["test_integration.py"],
-                    "e2e": ["test_e2e.py"]
+                    "e2e": ["test_e2e.py"],
                 },
-                "estimated_reduction": f"{stats['total_test_files']} → 5-8 files"
+                "estimated_reduction": f"{stats['total_test_files']} → 5-8 files",
             })
 
     return analysis

@@ -121,7 +121,7 @@ result = await service.execute_operation(
 
 ```python
 from flx.core.entities import AggregateRoot
-from flx.core.value_objects import ValueObject
+from flx.core.domain.value_objects import ValueObject
 
 # Domain entity for WMS items
 class WmsItem(AggregateRoot):

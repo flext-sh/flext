@@ -16,17 +16,17 @@ def get_mypy_errors_by_type(error_type: str) -> list[dict[str, Any]]:
     errors = []
     for line in result.stdout.splitlines() + result.stderr.splitlines():
         if f"[{error_type}]" in line:
-            match = re.match(r'(.+?):(\d+): error: (.+?) \[' + error_type + r'\]', line)
+            match = re.match(r"(.+?):(\d+): error: (.+?) \[" + error_type + r"\]", line)
             if match:
                 errors.append({
-                    'file': match.group(1),
-                    'line': int(match.group(2)),
-                    'message': match.group(3),
+                    "file": match.group(1),
+                    "line": int(match.group(2)),
+                    "message": match.group(3),
                 })
     return errors
 
 
-def fix_logger_attributes():
+def fix_logger_attributes() -> None:
     """Fix logger attribute errors."""
     files_to_fix = list(Path("flx/src").rglob("*.py"))
 
@@ -59,7 +59,7 @@ def fix_logger_attributes():
             print(f"Error processing {filepath}: {e}")
 
 
-def fix_path_methods():
+def fix_path_methods() -> None:
     """Fix Path method calls."""
     files_to_fix = list(Path("flx/src").rglob("*.py"))
 
@@ -69,21 +69,21 @@ def fix_path_methods():
             modified = False
 
             # Fix .parent.mkdir patterns
-            pattern = r'\.parent\.mkdir(?!\s*\()'
+            pattern = r"\.parent\.mkdir(?!\s*\()"
             if re.search(pattern, content):
-                content = re.sub(pattern, '.parent.mkdir()', content)
+                content = re.sub(pattern, ".parent.mkdir()", content)
                 modified = True
 
             # Fix .read_text patterns
-            pattern = r'\.read_text(?!\s*\()'
+            pattern = r"\.read_text(?!\s*\()"
             if re.search(pattern, content):
-                content = re.sub(pattern, '.read_text()', content)
+                content = re.sub(pattern, ".read_text()", content)
                 modified = True
 
             # Fix .write_text patterns without parentheses
-            pattern = r'\.write_text\s+([^(])'
+            pattern = r"\.write_text\s+([^(])"
             if re.search(pattern, content):
-                content = re.sub(pattern, r'.write_text(\1)', content)
+                content = re.sub(pattern, r".write_text(\1)", content)
                 modified = True
 
             if modified:
@@ -94,9 +94,8 @@ def fix_path_methods():
             print(f"Error processing {filepath}: {e}")
 
 
-def add_missing_imports():
+def add_missing_imports() -> None:
     """Add missing imports based on name-defined errors."""
-
     # Common missing imports
     missing_imports = {
         "Optional": "from typing import Optional",
@@ -126,11 +125,11 @@ def add_missing_imports():
     files_to_fix = defaultdict(set)
 
     for error in name_errors:
-        match = re.search(r'Name "(.+?)" is not defined', error['message'])
+        match = re.search(r'Name "(.+?)" is not defined', error["message"])
         if match:
             name = match.group(1)
             if name in missing_imports:
-                files_to_fix[error['file']].add(name)
+                files_to_fix[error["file"]].add(name)
 
     for filepath, names in files_to_fix.items():
         try:
@@ -143,8 +142,8 @@ def add_missing_imports():
             for i, line in enumerate(lines):
                 if line.startswith("from typing import"):
                     # Update existing typing import
-                    current_imports = re.findall(r'from typing import (.+)', line)[0]
-                    current_names = [n.strip() for n in current_imports.split(',')]
+                    current_imports = re.findall(r"from typing import (.+)", line)[0]
+                    current_names = [n.strip() for n in current_imports.split(",")]
 
                     for name in names:
                         if name not in current_names:
@@ -162,31 +161,30 @@ def add_missing_imports():
                     lines.insert(import_index, missing_imports[name])
                     import_index += 1
 
-            path.write_text('\n'.join(lines))
+            path.write_text("\n".join(lines))
             print(f"Added imports to {filepath}")
 
         except Exception as e:
             print(f"Error processing {filepath}: {e}")
 
 
-def fix_common_attribute_patterns():
+def fix_common_attribute_patterns() -> None:
     """Fix common attribute access patterns."""
-
     # Common patterns to fix
     patterns = [
         # Exception attributes
-        (r'except\s+(\w+)\s+as\s+e:\s*\n\s*if\s+e\.code',
+        (r"except\s+(\w+)\s+as\s+e:\s*\n\s*if\s+e\.code",
          r'except \1 as e:\n    if hasattr(e, "code") and e.code'),
 
         # Response attributes
-        (r'if\s+response\.ok(?:\s*:|\s+and)',
+        (r"if\s+response\.ok(?:\s*:|\s+and)",
          r'if hasattr(response, "ok") and response.ok'),
 
-        (r'response\.json\(\)',
+        (r"response\.json\(\)",
          r'response.json() if hasattr(response, "json") else {}'),
 
         # Config attributes
-        (r'if\s+self\.config\.(\w+)(?:\s*:|\s+and)',
+        (r"if\s+self\.config\.(\w+)(?:\s*:|\s+and)",
          r'if hasattr(self.config, "\1") and self.config.\1'),
     ]
 
@@ -210,9 +208,8 @@ def fix_common_attribute_patterns():
             print(f"Error processing {filepath}: {e}")
 
 
-def fix_model_attributes():
+def fix_model_attributes() -> None:
     """Fix pydantic model attribute access."""
-
     files_to_fix = list(Path("flx/src").rglob("*.py"))
 
     for filepath in files_to_fix:
@@ -227,7 +224,7 @@ def fix_model_attributes():
 
             # Fix json() calls
             if ".json()" in content and "response.json()" not in content:
-                content = re.sub(r'(\w+)\.json\(\)', r'\1.model_dump_json()', content)
+                content = re.sub(r"(\w+)\.json\(\)", r"\1.model_dump_json()", content)
                 modified = True
 
             # Fix validate() calls
@@ -251,9 +248,9 @@ def fix_model_attributes():
                 modified = True
 
             # Fix copy() calls with update
-            pattern = r'\.copy\(update='
+            pattern = r"\.copy\(update="
             if re.search(pattern, content):
-                content = re.sub(pattern, '.model_copy(update=', content)
+                content = re.sub(pattern, ".model_copy(update=", content)
                 modified = True
 
             if modified:
@@ -264,9 +261,8 @@ def fix_model_attributes():
             print(f"Error processing {filepath}: {e}")
 
 
-def fix_specific_undefined_names():
+def fix_specific_undefined_names() -> None:
     """Fix specific undefined names based on context."""
-
     specific_fixes = {
         "flx/src/flx/infra/logging/decorators.py": {
             "decorator": '''def decorator(func: Callable) -> Callable:
@@ -297,10 +293,10 @@ def fix_specific_undefined_names():
                             if line.startswith(("from", "import")):
                                 lines.insert(i + 1, fix)
                                 break
-                        content = '\n'.join(lines)
+                        content = "\n".join(lines)
                     else:
                         # Add definition
-                        content = fix + '\n\n' + content
+                        content = fix + "\n\n" + content
 
             path.write_text(content)
             print(f"Fixed undefined names in {filepath}")
@@ -309,7 +305,7 @@ def fix_specific_undefined_names():
             print(f"Error processing {filepath}: {e}")
 
 
-def main():
+def main() -> None:
     """Main function."""
     print("Fixing attribute and name errors...")
 

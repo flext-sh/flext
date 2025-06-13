@@ -10,7 +10,7 @@ from typing import Any
 class FlxInventoryBuilder(ast.NodeVisitor):
     """AST visitor to build inventory of Flx classes and functions."""
 
-    def __init__(self, filepath: str):
+    def __init__(self, filepath: str) -> None:
         self.filepath = filepath
         self.classes: dict[str, dict[str, Any]] = {}
         self.functions: dict[str, dict[str, Any]] = {}
@@ -43,7 +43,7 @@ class FlxInventoryBuilder(ast.NodeVisitor):
                 init_args.append({
                     "name": arg.arg,
                     "has_default": False,
-                    "annotation": ast.unparse(arg.annotation) if arg.annotation else None
+                    "annotation": ast.unparse(arg.annotation) if arg.annotation else None,
                 })
 
             # Check defaults
@@ -61,7 +61,7 @@ class FlxInventoryBuilder(ast.NodeVisitor):
             "init_args": init_args,
             "decorators": [ast.unparse(d) for d in node.decorator_list],
             "is_flx_prefixed": node.name.startswith("Flx"),
-            "methods": []
+            "methods": [],
         }
 
         # Visit methods
@@ -76,7 +76,7 @@ class FlxInventoryBuilder(ast.NodeVisitor):
             "line": node.lineno,
             "is_flx_prefixed": node.name.startswith("flx_"),
             "decorators": [ast.unparse(d) for d in node.decorator_list],
-            "args": []
+            "args": [],
         }
 
         # Get arguments
@@ -84,7 +84,7 @@ class FlxInventoryBuilder(ast.NodeVisitor):
             if arg.arg not in {"self", "cls"}:
                 func_info["args"].append({
                     "name": arg.arg,
-                    "annotation": ast.unparse(arg.annotation) if arg.annotation else None
+                    "annotation": ast.unparse(arg.annotation) if arg.annotation else None,
                 })
 
         if self.current_class:
@@ -102,7 +102,7 @@ class FlxInventoryBuilder(ast.NodeVisitor):
             self.imports.append({
                 "module": alias.name,
                 "name": alias.asname or alias.name,
-                "line": node.lineno
+                "line": node.lineno,
             })
         self.generic_visit(node)
 
@@ -114,7 +114,7 @@ class FlxInventoryBuilder(ast.NodeVisitor):
                 "module": module,
                 "name": alias.name,
                 "asname": alias.asname,
-                "line": node.lineno
+                "line": node.lineno,
             })
         self.generic_visit(node)
 
@@ -129,8 +129,8 @@ def build_inventory(src_dir: Path) -> dict[str, Any]:
         "function_name_mapping": {},  # Maps non-flx names to flx names
         "missing_flx_prefixes": {
             "classes": [],
-            "functions": []
-        }
+            "functions": [],
+        },
     }
 
     # Process all Python files
@@ -168,7 +168,7 @@ def build_inventory(src_dir: Path) -> dict[str, Any]:
                 inventory["missing_flx_prefixes"]["classes"].append({
                     "name": class_name,
                     "file": class_info["file"],
-                    "line": class_info["line"]
+                    "line": class_info["line"],
                 })
 
     for func_name, func_info in inventory["functions"].items():
@@ -185,7 +185,7 @@ def build_inventory(src_dir: Path) -> dict[str, Any]:
                 inventory["missing_flx_prefixes"]["functions"].append({
                     "name": func_name,
                     "file": func_info["file"],
-                    "line": func_info["line"]
+                    "line": func_info["line"],
                 })
 
     # Analyze method prefixes
@@ -199,7 +199,7 @@ def build_inventory(src_dir: Path) -> dict[str, Any]:
                             "file": method["file"],
                             "line": method["line"],
                             "is_method": True,
-                            "class": class_name
+                            "class": class_name,
                         })
 
     return inventory
@@ -211,7 +211,7 @@ def analyze_mypy_errors(inventory: dict[str, Any], mypy_output: str) -> dict[str
         "attr_defined_fixes": [],
         "name_defined_fixes": [],
         "call_arg_fixes": [],
-        "import_fixes": []
+        "import_fixes": [],
     }
 
     lines = mypy_output.strip().split("\n")
@@ -223,7 +223,7 @@ def analyze_mypy_errors(inventory: dict[str, Any], mypy_output: str) -> dict[str
                 suggestion = parts[1].split('"')[0]
                 analysis["attr_defined_fixes"].append({
                     "line": line,
-                    "suggestion": suggestion
+                    "suggestion": suggestion,
                 })
 
         elif "[name-defined]" in line:
@@ -237,13 +237,13 @@ def analyze_mypy_errors(inventory: dict[str, Any], mypy_output: str) -> dict[str
                         analysis["name_defined_fixes"].append({
                             "line": line,
                             "undefined": undefined_name,
-                            "fix": inventory["class_name_mapping"][undefined_name]
+                            "fix": inventory["class_name_mapping"][undefined_name],
                         })
 
     return analysis
 
 
-def main():
+def main() -> None:
     """Main function."""
     src_dir = Path("/home/marlonsc/pyauto/flx/src")
 

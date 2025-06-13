@@ -567,7 +567,7 @@ class CustomerActivatedEvent(DomainEvent):
 
 ```python
 from flx.core.entities import AggregateRoot, Entity
-from flx.core.value_objects import ValueObject
+from flx.core.domain.value_objects import ValueObject
 from flx.core.events import DomainEvent
 from pydantic import field_validator
 

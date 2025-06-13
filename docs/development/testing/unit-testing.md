@@ -20,7 +20,7 @@ Unit testing in the FLX framework focuses on testing individual components in is
 
 ```python
 from flx.core.entities import Customer
-from flx.core.value_objects import Email, Money
+from flx.core.domain.value_objects import Email, Money
 import pytest
 
 class TestCustomer:

@@ -9,7 +9,7 @@ sys.path.insert(0, str(Path(__file__).parent / "dc-oracle-wms"))
 sys.path.insert(0, str(Path(__file__).parent / "dc-oracle-db"))
 
 
-def list_tables():
+def list_tables() -> None:
     """Lista todas as tabelas disponíveis."""
     print("=== LISTAGEM DE TABELAS ===")
 

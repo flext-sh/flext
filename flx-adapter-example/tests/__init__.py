@@ -1,1 +1,1 @@
-"""Test package for the project_name API client."""
+"""Test package for the flx_adapter_example API client."""

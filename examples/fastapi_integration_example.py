@@ -6,13 +6,17 @@ documentation, and dependency injection.
 
 from contextlib import asynccontextmanager
 from datetime import datetime
-from typing import Any
+from typing import Annotated, Any
 
 import sentry_sdk
 import structlog
 from fastapi import Body, Depends, FastAPI, HTTPException, Path, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from prometheus_client import make_asgi_app
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
+from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
+
 from flx.infra.database.optimized_repository import (
     DatabaseService,
     OptimizedDatabaseConfig,
@@ -21,9 +25,6 @@ from flx.infra.services.optimized_base import (
     OptimizedCacheService,
     OptimizedHttpClientService,
 )
-from prometheus_client import make_asgi_app
-from pydantic import BaseModel, ConfigDict, EmailStr, Field
-from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
 
 # Configure logging
 logger = structlog.get_logger(__name__)
@@ -32,6 +33,7 @@ logger = structlog.get_logger(__name__)
 # Pydantic models for validation
 class UserCreate(BaseModel):
     """User creation model."""
+
     email: EmailStr
     username: str = Field(..., min_length=3, max_length=50)
     full_name: str | None = None
@@ -41,6 +43,7 @@ class UserCreate(BaseModel):
 
 class UserUpdate(BaseModel):
     """User update model."""
+
     email: EmailStr | None = None
     username: str | None = Field(None, min_length=3, max_length=50)
     full_name: str | None = None
@@ -49,6 +52,7 @@ class UserUpdate(BaseModel):
 
 class UserResponse(BaseModel):
     """User response model."""
+
     id: str
     email: str
     username: str
@@ -62,12 +66,14 @@ class UserResponse(BaseModel):
 
 class PaginationParams(BaseModel):
     """Pagination parameters."""
+
     limit: int = Field(100, ge=1, le=1000)
     offset: int = Field(0, ge=0)
 
 
 class HealthResponse(BaseModel):
     """Health check response."""
+
     status: str
     timestamp: datetime
     services: dict[str, dict[str, Any]]
@@ -77,16 +83,16 @@ class HealthResponse(BaseModel):
 class Dependencies:
     """Application dependencies."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.db_service: DatabaseService | None = None
         self.cache_service: OptimizedCacheService | None = None
         self.http_service: OptimizedHttpClientService | None = None
 
-    async def initialize(self):
+    async def initialize(self) -> None:
         """Initialize all services."""
         # Database
         db_config = OptimizedDatabaseConfig(
-            database_url="postgresql+asyncpg://localhost/flx_db"
+            database_url="postgresql+asyncpg://localhost/flx_db",
         )
         self.db_service = DatabaseService(db_config)
         await self.db_service.initialize()
@@ -99,7 +105,7 @@ class Dependencies:
         self.http_service = OptimizedHttpClientService()
         await self.http_service.connect()
 
-    async def cleanup(self):
+    async def cleanup(self) -> None:
         """Cleanup all services."""
         if self.db_service:
             await self.db_service.close()
@@ -138,7 +144,7 @@ app = FastAPI(
     lifespan=lifespan,
     docs_url="/api/docs",
     redoc_url="/api/redoc",
-    openapi_url="/api/openapi.json"
+    openapi_url="/api/openapi.json",
 )
 
 # Add middleware
@@ -175,7 +181,7 @@ async def get_cache_service() -> OptimizedCacheService:
 
 async def get_pagination(
     limit: int = Query(100, ge=1, le=1000, description="Items per page"),
-    offset: int = Query(0, ge=0, description="Items to skip")
+    offset: int = Query(0, ge=0, description="Items to skip"),
 ) -> PaginationParams:
     """Get pagination parameters."""
     return PaginationParams(limit=limit, offset=offset)
@@ -197,12 +203,12 @@ def cached(ttl: int = 300):
 
             # Generate cache key
             key_data = {
-                'func': func.__name__,
-                'args': str(args),
-                'kwargs': str(sorted(kwargs.items()))
+                "func": func.__name__,
+                "args": str(args),
+                "kwargs": str(sorted(kwargs.items())),
             }
             cache_key = hashlib.md5(
-                json.dumps(key_data).encode()
+                json.dumps(key_data).encode(),
             ).hexdigest()
 
             # Try to get from cache
@@ -228,39 +234,39 @@ def cached(ttl: int = 300):
 
 @app.get("/health", response_model=HealthResponse)
 async def health_check(
-    db: DatabaseService = Depends(get_db_service),
-    cache: OptimizedCacheService = Depends(get_cache_service),
-    http: OptimizedHttpClientService = Depends(get_http_service)
+    db: Annotated[DatabaseService, Depends(get_db_service)],
+    cache: Annotated[OptimizedCacheService, Depends(get_cache_service)],
+    http: Annotated[OptimizedHttpClientService, Depends(get_http_service)],
 ):
     """Health check endpoint."""
     services = {}
 
     # Check database
-    services['database'] = await db.manager.health_check()
+    services["database"] = await db.manager.health_check()
 
     # Check cache
-    services['cache'] = await cache.health_check()
+    services["cache"] = await cache.health_check()
 
     # Check HTTP client
-    services['http'] = await http.health_check()
+    services["http"] = await http.health_check()
 
     # Overall status
     all_healthy = all(
-        s.get('status') == 'healthy'
+        s.get("status") == "healthy"
         for s in services.values()
     )
 
     return HealthResponse(
-        status='healthy' if all_healthy else 'degraded',
+        status="healthy" if all_healthy else "degraded",
         timestamp=datetime.utcnow(),
-        services=services
+        services=services,
     )
 
 
 @app.post("/api/v1/users", response_model=UserResponse, status_code=201)
 async def create_user(
     user_data: UserCreate,
-    db: DatabaseService = Depends(get_db_service)
+    db: Annotated[DatabaseService, Depends(get_db_service)],
 ):
     """Create new user."""
     try:
@@ -269,7 +275,7 @@ async def create_user(
         if existing:
             raise HTTPException(
                 status_code=400,
-                detail="User with this email already exists"
+                detail="User with this email already exists",
             )
 
         # Create user
@@ -279,7 +285,7 @@ async def create_user(
         return UserResponse.model_validate(user)
 
     except Exception as e:
-        logger.error("user_creation_failed", error=str(e))
+        logger.exception("user_creation_failed", error=str(e))
         sentry_sdk.capture_exception(e)
         raise HTTPException(status_code=500, detail="Failed to create user")
 
@@ -287,21 +293,21 @@ async def create_user(
 @app.get("/api/v1/users", response_model=list[UserResponse])
 @cached(ttl=60)  # Cache for 1 minute
 async def list_users(
-    pagination: PaginationParams = Depends(get_pagination),
-    db: DatabaseService = Depends(get_db_service),
-    is_active: bool | None = Query(None, description="Filter by active status")
+    pagination: Annotated[PaginationParams, Depends(get_pagination)],
+    db: Annotated[DatabaseService, Depends(get_db_service)],
+    is_active: Annotated[bool | None, Query(description="Filter by active status")] = None,
 ):
     """List users with pagination."""
     if is_active is not None:
         users = await db.users.find_by(
             is_active=is_active,
             limit=pagination.limit,
-            offset=pagination.offset
+            offset=pagination.offset,
         )
     else:
         users = await db.users.get_all(
             limit=pagination.limit,
-            offset=pagination.offset
+            offset=pagination.offset,
         )
 
     return [UserResponse.model_validate(user) for user in users]
@@ -309,9 +315,9 @@ async def list_users(
 
 @app.get("/api/v1/users/{user_id}", response_model=UserResponse)
 async def get_user(
-    user_id: str = Path(..., description="User ID"),
+    user_id: Annotated[str, Path(description="User ID")] = ...,
     db: DatabaseService = Depends(get_db_service),
-    cache: OptimizedCacheService = Depends(get_cache_service)
+    cache: OptimizedCacheService = Depends(get_cache_service),
 ):
     """Get user by ID."""
     # Try cache first
@@ -335,10 +341,10 @@ async def get_user(
 
 @app.patch("/api/v1/users/{user_id}", response_model=UserResponse)
 async def update_user(
-    user_id: str = Path(..., description="User ID"),
-    user_update: UserUpdate = Body(...),
+    user_id: Annotated[str, Path(description="User ID")] = ...,
+    user_update: Annotated[UserUpdate, Body()] = ...,
     db: DatabaseService = Depends(get_db_service),
-    cache: OptimizedCacheService = Depends(get_cache_service)
+    cache: OptimizedCacheService = Depends(get_cache_service),
 ):
     """Update user."""
     # Update in database
@@ -360,10 +366,10 @@ async def update_user(
 
 @app.delete("/api/v1/users/{user_id}", status_code=204)
 async def delete_user(
-    user_id: str = Path(..., description="User ID"),
+    user_id: Annotated[str, Path(description="User ID")] = ...,
     db: DatabaseService = Depends(get_db_service),
-    cache: OptimizedCacheService = Depends(get_cache_service)
-):
+    cache: OptimizedCacheService = Depends(get_cache_service),
+) -> None:
     """Delete user."""
     # Delete from database
     deleted = await db.users.delete(user_id)
@@ -380,11 +386,13 @@ async def delete_user(
 # Batch operations endpoint
 class BatchUserCreate(BaseModel):
     """Batch user creation request."""
+
     users: list[UserCreate] = Field(..., min_length=1, max_length=1000)
 
 
 class BatchUserResponse(BaseModel):
     """Batch operation response."""
+
     created: int
     failed: int
     errors: list[dict[str, str]]
@@ -393,7 +401,7 @@ class BatchUserResponse(BaseModel):
 @app.post("/api/v1/users/batch", response_model=BatchUserResponse)
 async def create_users_batch(
     batch: BatchUserCreate,
-    db: DatabaseService = Depends(get_db_service)
+    db: Annotated[DatabaseService, Depends(get_db_service)],
 ):
     """Create multiple users in batch."""
     created = 0
@@ -410,7 +418,7 @@ async def create_users_batch(
                     failed += 1
                     errors.append({
                         "email": user_data.email,
-                        "error": "Already exists"
+                        "error": "Already exists",
                     })
                     continue
 
@@ -422,20 +430,20 @@ async def create_users_batch(
                 failed += 1
                 errors.append({
                     "email": user_data.email,
-                    "error": str(e)
+                    "error": str(e),
                 })
 
     logger.info(
         "batch_user_creation",
         total=len(batch.users),
         created=created,
-        failed=failed
+        failed=failed,
     )
 
     return BatchUserResponse(
         created=created,
         failed=failed,
-        errors=errors
+        errors=errors,
     )
 
 
@@ -447,17 +455,17 @@ from fastapi import WebSocket, WebSocketDisconnect
 class ConnectionManager:
     """WebSocket connection manager."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.active_connections: set[WebSocket] = set()
 
-    async def connect(self, websocket: WebSocket):
+    async def connect(self, websocket: WebSocket) -> None:
         await websocket.accept()
         self.active_connections.add(websocket)
 
-    def disconnect(self, websocket: WebSocket):
+    def disconnect(self, websocket: WebSocket) -> None:
         self.active_connections.discard(websocket)
 
-    async def broadcast(self, message: dict):
+    async def broadcast(self, message: dict) -> None:
         """Broadcast message to all connections."""
         for connection in self.active_connections:
             try:
@@ -473,8 +481,8 @@ manager = ConnectionManager()
 @app.websocket("/ws/users")
 async def websocket_endpoint(
     websocket: WebSocket,
-    db: DatabaseService = Depends(get_db_service)
-):
+    db: DatabaseService = Depends(get_db_service),
+) -> None:
     """WebSocket endpoint for real-time user updates."""
     await manager.connect(websocket)
 
@@ -487,7 +495,7 @@ async def websocket_endpoint(
             if data.get("type") == "subscribe":
                 await websocket.send_json({
                     "type": "subscribed",
-                    "message": "Subscribed to user updates"
+                    "message": "Subscribed to user updates",
                 })
 
             # In a real app, you'd have background tasks that broadcast updates
@@ -505,8 +513,8 @@ async def http_exception_handler(request, exc):
         status_code=exc.status_code,
         content={
             "error": exc.detail,
-            "status_code": exc.status_code
-        }
+            "status_code": exc.status_code,
+        },
     )
 
 
@@ -520,8 +528,8 @@ async def general_exception_handler(request, exc):
         status_code=500,
         content={
             "error": "Internal server error",
-            "status_code": 500
-        }
+            "status_code": 500,
+        },
     )
 
 
@@ -552,5 +560,5 @@ if __name__ == "__main__":
                 "level": "INFO",
                 "handlers": ["default"],
             },
-        }
+        },
     )

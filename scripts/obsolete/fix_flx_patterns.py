@@ -9,7 +9,7 @@ from pathlib import Path
 class FlxPatternFixer(ast.NodeTransformer):
     """Fix common FLX patterns using AST transformation."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.changes: list[dict[str, any]] = []
         self.current_class: str | None = None
         self.imported_classes: set[str] = set()
@@ -44,7 +44,7 @@ class FlxPatternFixer(ast.NodeTransformer):
                 name.endswith("Tracker") and not name.startswith("Flx"),
                 name in {"EndpointInfo", "ComponentType", "ShutdownPhase", "ShutdownMetrics",
                         "ComponentShutdownEvent", "ShutdownReport", "LogMessage", "TraceId",
-                        "LogSeverity", "BaseUrlBuilder"}
+                        "LogSeverity", "BaseUrlBuilder"},
             ])
 
             if needs_flx and not name.startswith("Flx"):
@@ -56,7 +56,7 @@ class FlxPatternFixer(ast.NodeTransformer):
                     "type": "import",
                     "old": name,
                     "new": new_name,
-                    "line": node.lineno
+                    "line": node.lineno,
                 })
                 if asname:
                     self.imported_classes.add(asname)
@@ -98,7 +98,7 @@ class FlxPatternFixer(ast.NodeTransformer):
                     "RetryBrokerMiddleware", "BasicAnalyticsHandler", "PerformanceTracker",
                     "LogAlertHandler", "ConsoleAlertHandler", "LoggingEventProcessor",
                     "DebugEventFilter", "NoOpEventTransformer", "ShutdownMetricsCollector",
-                    "ComponentShutdownTimer"}
+                    "ComponentShutdownTimer"},
         ])
 
         if needs_flx and not name.startswith("Flx"):
@@ -108,7 +108,7 @@ class FlxPatternFixer(ast.NodeTransformer):
                 "type": "name",
                 "old": name,
                 "new": new_name,
-                "line": node.lineno if hasattr(node, "lineno") else 0
+                "line": node.lineno if hasattr(node, "lineno") else 0,
             })
 
         return node
@@ -142,7 +142,7 @@ class FlxPatternFixer(ast.NodeTransformer):
                         "type": "method",
                         "old": attr,
                         "new": new_attr,
-                        "line": node.lineno if hasattr(node, "lineno") else 0
+                        "line": node.lineno if hasattr(node, "lineno") else 0,
                     })
 
         return node
@@ -157,20 +157,20 @@ def fix_specific_patterns(filepath: Path) -> list[dict[str, any]]:
 
         # Pattern 1: Fix function imports missing flx_ prefix
         patterns = [
-            (r'from (flx\.plugins\.hookspecs\.\w+) import (register_\w+)',
-             lambda m: f'from {m.group(1)} import flx_{m.group(2)}'),
+            (r"from (flx\.plugins\.hookspecs\.\w+) import (register_\w+)",
+             lambda m: f"from {m.group(1)} import flx_{m.group(2)}"),
 
             # Pattern 2: Fix method names in module attributes
             (r'has no attribute "(register_\w+)"; maybe "flx_\1"',
-             lambda m: f'flx_{m.group(1)}'),
+             lambda m: f"flx_{m.group(1)}"),
 
             # Pattern 3: Fix scan_object references
-            (r'\bscan_object\b', 'flx_scan_object'),
+            (r"\bscan_object\b", "flx_scan_object"),
 
             # Pattern 4: Fix Exception attributes
-            (r'exception\._context\b', 'getattr(exception, "_context", None)'),
-            (r'exception\._details\b', 'getattr(exception, "_details", None)'),
-            (r'exception\._error_chain\b', 'getattr(exception, "_error_chain", None)'),
+            (r"exception\._context\b", 'getattr(exception, "_context", None)'),
+            (r"exception\._details\b", 'getattr(exception, "_details", None)'),
+            (r"exception\._error_chain\b", 'getattr(exception, "_error_chain", None)'),
         ]
 
         for pattern, replacement in patterns:
@@ -179,7 +179,7 @@ def fix_specific_patterns(filepath: Path) -> list[dict[str, any]]:
                 changes.append({
                     "type": "regex",
                     "pattern": pattern,
-                    "file": str(filepath)
+                    "file": str(filepath),
                 })
                 content = new_content
 
@@ -212,7 +212,7 @@ def fix_file_ast(filepath: Path) -> list[dict[str, any]]:
         return []
 
 
-def main():
+def main() -> None:
     """Main function."""
     import argparse
 

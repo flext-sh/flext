@@ -46,7 +46,7 @@ Core domain testing ensures the correctness and integrity of business logic, dom
 ```python
 # Core domain components being tested
 from flx.core.entities import Entity, AggregateRoot
-from flx.core.value_objects import ValueObject
+from flx.core.domain.value_objects import ValueObject
 from flx.core.services import DomainService
 from flx.core.events import DomainEvent
 ```

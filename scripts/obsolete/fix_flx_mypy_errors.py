@@ -12,7 +12,7 @@ def get_mypy_errors() -> list[dict[str, any]]:
     result = subprocess.run(
         ["mypy", "flx/src/", "--show-error-codes", "--no-error-summary"],
         capture_output=True,
-        text=True, check=False
+        text=True, check=False,
     )
 
     errors = []
@@ -21,7 +21,7 @@ def get_mypy_errors() -> list[dict[str, any]]:
             continue
 
         # Parse error format: file:line: error: message [error-code]
-        match = re.match(r'^(.+?):(\d+): error: (.+?) \[(.+?)\]$', line)
+        match = re.match(r"^(.+?):(\d+): error: (.+?) \[(.+?)\]$", line)
         if match:
             filepath, line_num, message, error_code = match.groups()
 
@@ -37,7 +37,7 @@ def get_mypy_errors() -> list[dict[str, any]]:
                 "line": int(line_num),
                 "message": message,
                 "code": error_code,
-                "suggestion": suggestion
+                "suggestion": suggestion,
             })
 
     return errors
@@ -142,7 +142,7 @@ def fix_call_arg_errors(errors: list[dict], inventory: dict[str, any], dry_run: 
                                 "arg": arg_name,
                                 "has_default": arg.get("has_default", False),
                                 "default": arg.get("default", None),
-                                "type": arg.get("annotation", None)
+                                "type": arg.get("annotation", None),
                             })
                             break
 
@@ -178,7 +178,7 @@ def apply_fixes_to_file(filepath: str, fixes: list[tuple[int, str, str]]) -> int
             if 0 <= idx < len(lines):
                 line = lines[idx]
                 # Use word boundaries to avoid partial replacements
-                new_line = re.sub(r'\b' + re.escape(old_attr) + r'\b', new_attr, line)
+                new_line = re.sub(r"\b" + re.escape(old_attr) + r"\b", new_attr, line)
                 if new_line != line:
                     lines[idx] = new_line
                     applied += 1
@@ -202,7 +202,7 @@ def apply_name_fixes_to_file(filepath: str, fixes: list[tuple[str, str]]) -> int
         applied = 0
         for old_name, new_name in fixes:
             # Use word boundaries for accurate replacement
-            pattern = r'\b' + re.escape(old_name) + r'\b'
+            pattern = r"\b" + re.escape(old_name) + r"\b"
             new_content = re.sub(pattern, new_name, content)
             if new_content != content:
                 content = new_content
@@ -218,7 +218,7 @@ def apply_name_fixes_to_file(filepath: str, fixes: list[tuple[str, str]]) -> int
         return 0
 
 
-def main():
+def main() -> None:
     """Main function."""
     import argparse
 

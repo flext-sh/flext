@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Fix remaining syntax errors in client.py and adapters.py.
+"""Fix remaining syntax errors in client.py and adapters.py.
 
 This script fixes the remaining syntax errors that weren't caught by the previous scripts:
 1. Malformed code in client.py around the _process_response method
@@ -13,7 +12,7 @@ Usage:
 from pathlib import Path
 
 
-def fix_client_file():
+def fix_client_file() -> bool:
     """Fix syntax errors in client.py."""
     client_path = (
         Path(__file__).parent.parent / "dc-api-x" / "src" / "dc_api_x" / "client.py"
@@ -59,7 +58,7 @@ def fix_client_file():
     return False
 
 
-def fix_adapters_file():
+def fix_adapters_file() -> bool:
     """Fix syntax errors in adapters.py."""
     adapters_path = (
         Path(__file__).parent.parent
@@ -120,7 +119,7 @@ def fix_adapters_file():
     return False
 
 
-def main():
+def main() -> None:
     """Main entry point."""
     client_fixed = fix_client_file()
     adapters_fixed = fix_adapters_file()

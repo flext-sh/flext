@@ -68,11 +68,12 @@ class AdvancedPipelineError(Exception):
 class MergeStatementGenerator:
     """Gerador de comandos MERGE SQL reutilizando lógica dos loaders Meltano."""
 
-    def __init__(self, logger: logging.Logger):
+    def __init__(self, logger: logging.Logger) -> None:
         """Inicializa o gerador de MERGE.
 
         Args:
             logger: Logger para registrar operações
+
         """
         self.logger = logger
 
@@ -99,6 +100,7 @@ class MergeStatementGenerator:
 
         Returns:
             Tupla com (SQL MERGE, bind_data)
+
         """
         if not records:
             return None, None
@@ -109,7 +111,8 @@ class MergeStatementGenerator:
 
         # Verificar se temos chaves primárias
         if not key_properties:
-            raise ValueError("Cannot perform MERGE operation without primary key")
+            msg = "Cannot perform MERGE operation without primary key"
+            raise ValueError(msg)
 
         # Construir nome completo da tabela
         full_table_name = (
@@ -204,12 +207,13 @@ class MergeStatementGenerator:
 class SQLAlchemySchemaMapper:
     """Mapeador de schema usando SQLAlchemy para garantir compatibilidade Oracle."""
 
-    def __init__(self, oracle_schema: dict, logger: logging.Logger):
+    def __init__(self, oracle_schema: dict, logger: logging.Logger) -> None:
         """Inicializa o mapeador de schema.
 
         Args:
             oracle_schema: Schema Oracle descoberto
             logger: Logger para registrar operações
+
         """
         self.oracle_schema = oracle_schema
         self.logger = logger
@@ -220,21 +224,21 @@ class SQLAlchemySchemaMapper:
 
         self._build_oracle_table_definition()
 
-    def _build_oracle_table_definition(self):
+    def _build_oracle_table_definition(self) -> None:
         """Constrói definição da tabela Oracle usando SQLAlchemy."""
         table_name = self.oracle_schema.get("table_name", "WMS_ORDER_HDR")
         columns = []
 
         # Mapear tipos Oracle para SQLAlchemy
         type_mapping = {
-            'NUMBER': Integer,
-            'VARCHAR2': String,
-            'DATE': DateTime,
-            'TIMESTAMP': DateTime,
-            'FLOAT': Float,
-            'DECIMAL': Float,
-            'CHAR': String,
-            'CLOB': String,
+            "NUMBER": Integer,
+            "VARCHAR2": String,
+            "DATE": DateTime,
+            "TIMESTAMP": DateTime,
+            "FLOAT": Float,
+            "DECIMAL": Float,
+            "CHAR": String,
+            "CLOB": String,
         }
 
         for column_info in self.oracle_schema.get("columns", []):
@@ -244,8 +248,8 @@ class SQLAlchemySchemaMapper:
             # Mapear tipo Oracle para SQLAlchemy
             if oracle_type in type_mapping:
                 sqlalchemy_type = type_mapping[oracle_type]
-                if oracle_type in {'VARCHAR2', 'CHAR'} and 'length' in column_info:
-                    sqlalchemy_type = String(column_info['length'])
+                if oracle_type in {"VARCHAR2", "CHAR"} and "length" in column_info:
+                    sqlalchemy_type = String(column_info["length"])
             else:
                 sqlalchemy_type = String
 
@@ -255,13 +259,13 @@ class SQLAlchemySchemaMapper:
 
             # Armazenar informações da coluna
             self.oracle_columns[column_name.lower()] = {
-                'name': column_name,
-                'type': oracle_type,
-                'sqlalchemy_type': sqlalchemy_type,
-                'nullable': column_info.get('nullable', True),
-                'length': column_info.get('length'),
-                'precision': column_info.get('precision'),
-                'scale': column_info.get('scale'),
+                "name": column_name,
+                "type": oracle_type,
+                "sqlalchemy_type": sqlalchemy_type,
+                "nullable": column_info.get("nullable", True),
+                "length": column_info.get("length"),
+                "precision": column_info.get("precision"),
+                "scale": column_info.get("scale"),
             }
 
         # Criar tabela SQLAlchemy
@@ -277,6 +281,7 @@ class SQLAlchemySchemaMapper:
 
         Returns:
             Dicionário com campos mapeados para Oracle
+
         """
         mapped_fields = {}
         unmapped_fields = []
@@ -308,13 +313,14 @@ class SQLAlchemySchemaMapper:
 
         Returns:
             Nome do campo Oracle ou None se não encontrado
+
         """
         wms_field_lower = wms_field.lower()
 
         # 1. Busca direta (case-insensitive)
         for oracle_field in self.oracle_columns:
             if oracle_field == wms_field_lower:
-                return self.oracle_columns[oracle_field]['name']
+                return self.oracle_columns[oracle_field]["name"]
 
         # 2. Busca com variações comuns
         variations = [
@@ -328,12 +334,12 @@ class SQLAlchemySchemaMapper:
         for variation in variations:
             for oracle_field in self.oracle_columns:
                 if oracle_field == variation:
-                    return self.oracle_columns[oracle_field]['name']
+                    return self.oracle_columns[oracle_field]["name"]
 
         # 3. Busca por similaridade (contém)
         for oracle_field in self.oracle_columns:
             if wms_field_lower in oracle_field or oracle_field in wms_field_lower:
-                return self.oracle_columns[oracle_field]['name']
+                return self.oracle_columns[oracle_field]["name"]
 
         return None
 
@@ -347,62 +353,63 @@ class SQLAlchemySchemaMapper:
 
         Returns:
             Valor convertido
+
         """
         if value is None:
             return None
 
-        oracle_type = column_info['type']
+        oracle_type = column_info["type"]
 
         try:
             # Conversões por tipo Oracle
-            if oracle_type in {'NUMBER', 'INTEGER', 'DECIMAL', 'FLOAT'}:
+            if oracle_type in {"NUMBER", "INTEGER", "DECIMAL", "FLOAT"}:
                 if isinstance(value, str):
                     # CORREÇÃO: Verificar se campo ID contém texto (deve ser VARCHAR, não NUMBER)
-                    if ('_id' in oracle_field.lower() or oracle_field.lower().endswith('id')) and not value.isdigit():
+                    if ("_id" in oracle_field.lower() or oracle_field.lower().endswith("id")) and not value.isdigit():
                         # Campo ID com texto deve ser tratado como string, não número
                         self.logger.debug(f"Campo ID '{oracle_field}' contém texto '{value}', tratando como string")
                         return str(value)
 
                     # Mapeamentos específicos por nome de campo
-                    if 'status' in oracle_field.lower():
-                        status_map = {'PENDING': 10, 'ACTIVE': 40, 'PROCESSING': 30, 'COMPLETED': 99, 'CANCELLED': 0}
+                    if "status" in oracle_field.lower():
+                        status_map = {"PENDING": 10, "ACTIVE": 40, "PROCESSING": 30, "COMPLETED": 99, "CANCELLED": 0}
                         return status_map.get(value.upper(), 10)
-                    if 'priority' in oracle_field.lower():
-                        priority_map = {'LOW': 1, 'NORMAL': 2, 'HIGH': 3, 'URGENT': 4}
+                    if "priority" in oracle_field.lower():
+                        priority_map = {"LOW": 1, "NORMAL": 2, "HIGH": 3, "URGENT": 4}
                         return priority_map.get(value.upper(), 2)
-                    if 'type' in oracle_field.lower():
-                        type_map = {'STANDARD': 1, 'EXPRESS': 2, 'BULK': 3, 'SPECIAL': 4}
+                    if "type" in oracle_field.lower():
+                        type_map = {"STANDARD": 1, "EXPRESS": 2, "BULK": 3, "SPECIAL": 4}
                         return type_map.get(value.upper(), 1)
                     # Tentar converter para número
                     try:
-                        return float(value) if '.' in str(value) else int(value)
+                        return float(value) if "." in str(value) else int(value)
                     except ValueError:
                         # Se não conseguir converter para número, retornar como string
                         self.logger.debug(f"Não foi possível converter '{value}' para número, mantendo como string")
                         return str(value)
                 return value
 
-            if oracle_type in {'VARCHAR2', 'CHAR', 'CLOB'}:
+            if oracle_type in {"VARCHAR2", "CHAR", "CLOB"}:
                 str_value = str(value)
-                max_length = column_info.get('length')
+                max_length = column_info.get("length")
                 if max_length and len(str_value) > max_length:
                     str_value = str_value[:max_length]
                 return str_value
 
-            if oracle_type in {'DATE', 'TIMESTAMP'}:
+            if oracle_type in {"DATE", "TIMESTAMP"}:
                 # CORREÇÃO: Converter strings de data para datetime objects
                 if isinstance(value, str):
                     from datetime import datetime
                     try:
                         # Tentar diferentes formatos de data
-                        if len(value) == 10 and '-' in value:  # YYYY-MM-DD
-                            return datetime.strptime(value, '%Y-%m-%d')
-                        if len(value) == 19 and ' ' in value:  # YYYY-MM-DD HH:MM:SS
-                            return datetime.strptime(value, '%Y-%m-%d %H:%M:%S')
-                        if len(value) == 16 and ' ' in value:  # YYYY-MM-DD HH:MM
-                            return datetime.strptime(value, '%Y-%m-%d %H:%M')
+                        if len(value) == 10 and "-" in value:  # YYYY-MM-DD
+                            return datetime.strptime(value, "%Y-%m-%d")
+                        if len(value) == 19 and " " in value:  # YYYY-MM-DD HH:MM:SS
+                            return datetime.strptime(value, "%Y-%m-%d %H:%M:%S")
+                        if len(value) == 16 and " " in value:  # YYYY-MM-DD HH:MM
+                            return datetime.strptime(value, "%Y-%m-%d %H:%M")
                         # Tentar ISO format
-                        return datetime.fromisoformat(value.replace('T', ' '))
+                        return datetime.fromisoformat(value.replace("T", " "))
                     except ValueError:
                         # Se não conseguir converter, usar data atual
                         self.logger.warning(f"Não foi possível converter data '{value}', usando data atual")
@@ -420,9 +427,9 @@ class SQLAlchemySchemaMapper:
         except (ValueError, TypeError) as e:
             self.logger.warning(f"Erro ao converter {oracle_field}='{value}': {e}")
             # Valor padrão por tipo
-            if oracle_type in {'NUMBER', 'INTEGER', 'DECIMAL', 'FLOAT'}:
+            if oracle_type in {"NUMBER", "INTEGER", "DECIMAL", "FLOAT"}:
                 return 0
-            if oracle_type in {'DATE', 'TIMESTAMP'}:
+            if oracle_type in {"DATE", "TIMESTAMP"}:
                 from datetime import datetime
                 return datetime.now()
             return str(value)
@@ -435,6 +442,7 @@ class SQLAlchemySchemaMapper:
 
         Returns:
             Statement SQL INSERT
+
         """
         if not mapped_data:
             return None
@@ -455,6 +463,7 @@ class SQLAlchemySchemaMapper:
 
         Returns:
             Dicionário com informações dos campos
+
         """
         return self.oracle_columns.copy()
 
@@ -468,6 +477,7 @@ class SQLAlchemySchemaMapper:
 
         Returns:
             Statement SQL INSERT
+
         """
         if not mapped_data:
             return None
@@ -482,32 +492,32 @@ class SQLAlchemySchemaMapper:
             # Verificar se campo existe no Oracle
             if field_name.lower() in self.oracle_columns:
                 oracle_column = self.oracle_columns[field_name.lower()]
-                oracle_field_name = oracle_column['name']
-                oracle_type = oracle_column['type']
+                oracle_field_name = oracle_column["name"]
+                oracle_type = oracle_column["type"]
 
                 fields.append(f'"{oracle_field_name}"')
 
                 # Formatar valor baseado no tipo Oracle
                 if field_value is None:
                     values.append("NULL")
-                elif oracle_type in {'NUMBER', 'INTEGER', 'DECIMAL', 'FLOAT'}:
+                elif oracle_type in {"NUMBER", "INTEGER", "DECIMAL", "FLOAT"}:
                     if isinstance(field_value, int | float):
                         values.append(str(field_value))
                     else:
                         # Tentar converter para número
                         try:
-                            num_value = float(field_value) if '.' in str(field_value) else int(field_value)
+                            num_value = float(field_value) if "." in str(field_value) else int(field_value)
                             values.append(str(num_value))
                         except (ValueError, TypeError):
                             # Se não conseguir converter, usar NULL
                             values.append("NULL")
-                elif oracle_type in {'VARCHAR2', 'CHAR', 'CLOB'}:
+                elif oracle_type in {"VARCHAR2", "CHAR", "CLOB"}:
                     str_value = str(field_value).replace("'", "''")  # Escape aspas
                     values.append(f"'{str_value}'")
-                elif oracle_type in {'DATE', 'TIMESTAMP'}:
-                    if hasattr(field_value, 'strftime'):
+                elif oracle_type in {"DATE", "TIMESTAMP"}:
+                    if hasattr(field_value, "strftime"):
                         # É um datetime object
-                        date_str = field_value.strftime('%Y-%m-%d %H:%M:%S')
+                        date_str = field_value.strftime("%Y-%m-%d %H:%M:%S")
                         values.append(f"TO_DATE('{date_str}', 'YYYY-MM-DD HH24:MI:SS')")
                     else:
                         # Tentar como string
@@ -541,6 +551,7 @@ class SQLAlchemySchemaMapper:
 
         Returns:
             Lista de registros com TODOS os campos (sem filtrar)
+
         """
         if not data:
             return data
@@ -622,6 +633,7 @@ class SQLAlchemySchemaMapper:
 
         Returns:
             Lista de comandos SQL (INSERT ou MERGE)
+
         """
         if not data:
             return []
@@ -672,6 +684,7 @@ class SQLAlchemySchemaMapper:
 
         Returns:
             Lista de comandos INSERT
+
         """
         if not data or not valid_fields:
             return []
@@ -699,11 +712,11 @@ class SQLAlchemySchemaMapper:
                     values_list.append("NULL")
                 elif isinstance(value, str):
                     # CORREÇÃO: Verificar se é um campo de data para usar TO_DATE
-                    if any(date_keyword in field.lower() for date_keyword in ['date', '_dt', '_ts']):
+                    if any(date_keyword in field.lower() for date_keyword in ["date", "_dt", "_ts"]):
                         # Para campos de data, usar TO_DATE do Oracle
-                        if len(value) == 10 and '-' in value:  # Formato YYYY-MM-DD
+                        if len(value) == 10 and "-" in value:  # Formato YYYY-MM-DD
                             values_list.append(f"TO_DATE('{value}', 'YYYY-MM-DD')")
-                        elif len(value) == 19 and ' ' in value:  # Formato YYYY-MM-DD HH:MM:SS
+                        elif len(value) == 19 and " " in value:  # Formato YYYY-MM-DD HH:MM:SS
                             values_list.append(f"TO_DATE('{value}', 'YYYY-MM-DD HH24:MI:SS')")
                         else:
                             # Formato desconhecido, tentar como string
@@ -742,6 +755,7 @@ class SQLAlchemySchemaMapper:
 
         Returns:
             Lista de comandos MERGE
+
         """
         schema_config = self.config["schemas"].get(resource, {})
         track_fields = schema_config.get("track_fields", [])
@@ -809,6 +823,7 @@ class SQLAlchemySchemaMapper:
 
         Returns:
             Lista de comandos INSERT SQL
+
         """
         if not data:
             return []
@@ -850,6 +865,7 @@ class SQLAlchemySchemaMapper:
             resource: Recurso WMS para extrair
             days_back: Número de dias para buscar para trás (não usado atualmente)
             **query_params: Parâmetros adicionais de query
+
         """
         try:
             self.logger.info(
@@ -926,6 +942,7 @@ class SQLAlchemySchemaMapper:
         Args:
             records: Lista de registros do WMS
             resource: Nome do recurso
+
         """
         try:
             comprehensive_discovery = self.config["pipeline"]["comprehensive_field_discovery"]
@@ -1000,11 +1017,12 @@ class WmsToOracleAdvancedPipeline:
     - ModelRegistry para gerenciamento de modelos
     """
 
-    def __init__(self, config_file: str | None = None):
+    def __init__(self, config_file: str | None = None) -> None:
         """Inicializa o pipeline avançado.
 
         Args:
             config_file: Caminho para arquivo de configuração
+
         """
         self.setup_logging()
         self.config = self.load_config(config_file)
@@ -1141,11 +1159,14 @@ class WmsToOracleAdvancedPipeline:
             # pois precisam de uma conexão ativa
 
         except WmsConnectionError as e:
-            raise AdvancedPipelineError(f"Erro ao conectar no WMS: {e}")
+            msg = f"Erro ao conectar no WMS: {e}"
+            raise AdvancedPipelineError(msg)
         except DbConnectionError as e:
-            raise AdvancedPipelineError(f"Erro ao conectar no Oracle: {e}")
+            msg = f"Erro ao conectar no Oracle: {e}"
+            raise AdvancedPipelineError(msg)
         except Exception as e:
-            raise AdvancedPipelineError(f"Erro ao inicializar clientes: {e}")
+            msg = f"Erro ao inicializar clientes: {e}"
+            raise AdvancedPipelineError(msg)
 
     def discover_and_map_schemas(self, wms_entity: str, oracle_table: str) -> bool:
         """Descobre schemas e cria mapeamento usando bibliotecas existentes.
@@ -1158,6 +1179,7 @@ class WmsToOracleAdvancedPipeline:
 
         Returns:
             True se mapeamento foi criado com sucesso
+
         """
         self.logger.info("=== Descoberta e Mapeamento de Schemas (SchemaManager WMS) ===")
 
@@ -1181,8 +1203,8 @@ class WmsToOracleAdvancedPipeline:
                 self.wms_schema = complete_schema
 
                 # Extrair campos do schema completo
-                wms_fields_from_schema = complete_schema.get('fields', {})
-                wms_parameters = complete_schema.get('parameters', [])
+                wms_fields_from_schema = complete_schema.get("fields", {})
+                wms_parameters = complete_schema.get("parameters", [])
 
                 self.logger.info(f"Schema WMS completo carregado: {len(wms_fields_from_schema)} campos, {len(wms_parameters)} parâmetros")
 
@@ -1198,8 +1220,8 @@ class WmsToOracleAdvancedPipeline:
                 response = self.wms_client.describe(wms_entity)
                 if response.success:
                     self.wms_schema = response.data
-                    wms_fields_from_schema = self.wms_schema.get('fields', {})
-                    wms_parameters = self.wms_schema.get('parameters', [])
+                    wms_fields_from_schema = self.wms_schema.get("fields", {})
+                    wms_parameters = self.wms_schema.get("parameters", [])
                 else:
                     self.logger.exception(f"Fallback também falhou: {response.error}")
                     return False
@@ -1275,7 +1297,7 @@ class WmsToOracleAdvancedPipeline:
 
             # Log estatísticas dos campos
             required_fields = sum(1 for field_info in wms_fields.values()
-                                if isinstance(field_info, dict) and field_info.get('required', False))
+                                if isinstance(field_info, dict) and field_info.get("required", False))
             self.logger.info(f"Campos obrigatórios: {required_fields}")
             self.logger.info(f"Campos opcionais: {len(wms_fields) - required_fields}")
 
@@ -1358,9 +1380,11 @@ class WmsToOracleAdvancedPipeline:
 
         Returns:
             Lista de registros extraídos e mapeados do WMS
+
         """
         if not self.wms_client:
-            raise AdvancedPipelineError("WmsClient não inicializado")
+            msg = "WmsClient não inicializado"
+            raise AdvancedPipelineError(msg)
 
         # MELHORIA: Usar configuração para limite padrão se não especificado
         if limit is None:
@@ -1436,6 +1460,7 @@ class WmsToOracleAdvancedPipeline:
 
         Returns:
             Dicionário com campos mapeados para Oracle ou None se não conseguir processar
+
         """
         try:
             # Processar registro WMS para dict
@@ -1480,6 +1505,7 @@ class WmsToOracleAdvancedPipeline:
 
         Returns:
             Dicionário com campos processados ou None se não conseguir processar
+
         """
         try:
             # Se é string, tentar processar como "order_hdr(id=2, status_id=99)"
@@ -1501,12 +1527,12 @@ class WmsToOracleAdvancedPipeline:
 
             for field_name, field_value in fields.items():
                 # Verificar se é uma FK no formato {id: valor, key: valor, url: valor}
-                if isinstance(field_value, dict) and any(key in field_value for key in ['id', 'key', 'url']):
+                if isinstance(field_value, dict) and any(key in field_value for key in ["id", "key", "url"]):
                     self.logger.debug(f"Processando FK {field_name}: {field_value}")
 
                     # Extrair id e key da FK
-                    fk_id = field_value.get('id')
-                    fk_key = field_value.get('key')
+                    fk_id = field_value.get("id")
+                    fk_key = field_value.get("key")
 
                     # Adicionar campos separados para id e key
                     if fk_id is not None:
@@ -1655,6 +1681,7 @@ class WmsToOracleAdvancedPipeline:
 
         Returns:
             Dicionário com campos extraídos ou None se não conseguir processar
+
         """
         try:
             # Extrair conteúdo entre parênteses
@@ -1694,9 +1721,11 @@ class WmsToOracleAdvancedPipeline:
 
         Args:
             merge_statements: Lista de comandos MERGE SQL
+
         """
         if not self.db_client:
-            raise AdvancedPipelineError("DbClient não inicializado")
+            msg = "DbClient não inicializado"
+            raise AdvancedPipelineError(msg)
 
         if not merge_statements:
             self.logger.info("Nenhum comando MERGE para executar")
@@ -1722,9 +1751,11 @@ class WmsToOracleAdvancedPipeline:
                 )
 
         except DbError as e:
-            raise AdvancedPipelineError(f"Erro ao executar MERGE no Oracle: {e}")
+            msg = f"Erro ao executar MERGE no Oracle: {e}"
+            raise AdvancedPipelineError(msg)
         except Exception as e:
-            raise AdvancedPipelineError(f"Erro inesperado no MERGE: {e}")
+            msg = f"Erro inesperado no MERGE: {e}"
+            raise AdvancedPipelineError(msg)
 
     def _convert_value_to_oracle_type(self, value: Any, oracle_column: dict) -> Any:
         """Converte valor para o tipo esperado pelo Oracle.
@@ -1735,54 +1766,55 @@ class WmsToOracleAdvancedPipeline:
 
         Returns:
             Valor convertido para o tipo Oracle
+
         """
         if value is None:
             return None
 
-        oracle_type = oracle_column.get('data_type', '').upper()
-        column_name = oracle_column.get('name', '').upper()
+        oracle_type = oracle_column.get("data_type", "").upper()
+        column_name = oracle_column.get("name", "").upper()
 
         try:
             # Conversões numéricas
-            if oracle_type in {'NUMBER', 'INTEGER', 'DECIMAL', 'NUMERIC'}:
+            if oracle_type in {"NUMBER", "INTEGER", "DECIMAL", "NUMERIC"}:
                 if isinstance(value, str):
                     # Mapeamentos específicos por nome de coluna
-                    if 'PRIORITY' in column_name:
-                        priority_map = {'LOW': 1, 'NORMAL': 2, 'HIGH': 3, 'URGENT': 4}
+                    if "PRIORITY" in column_name:
+                        priority_map = {"LOW": 1, "NORMAL": 2, "HIGH": 3, "URGENT": 4}
                         return priority_map.get(value.upper(), 2)
-                    if 'STATUS' in column_name:
-                        status_map = {'PENDING': 10, 'ACTIVE': 40, 'PROCESSING': 30, 'COMPLETED': 99, 'CANCELLED': 0}
+                    if "STATUS" in column_name:
+                        status_map = {"PENDING": 10, "ACTIVE": 40, "PROCESSING": 30, "COMPLETED": 99, "CANCELLED": 0}
                         return status_map.get(value.upper(), 10)
-                    if 'ORDER_TYPE' in column_name or 'TYPE' in column_name:
+                    if "ORDER_TYPE" in column_name or "TYPE" in column_name:
                         # Mapeamento para ORDER_TYPE_ID
                         order_type_map = {
-                            'STANDARD': 1,
-                            'EXPRESS': 2,
-                            'BULK': 3,
-                            'SPECIAL': 4,
-                            'URGENT': 5,
-                            'NORMAL': 1,
+                            "STANDARD": 1,
+                            "EXPRESS": 2,
+                            "BULK": 3,
+                            "SPECIAL": 4,
+                            "URGENT": 5,
+                            "NORMAL": 1,
                         }
                         return order_type_map.get(value.upper(), 1)
-                    if 'COMPANY' in column_name:
+                    if "COMPANY" in column_name:
                         # Converter company_id string para número
                         if value.isdigit():
                             return int(value)
                         # Mapear códigos de empresa para números
-                        company_map = {'001': 1, 'MAIN': 1, 'DEFAULT': 1}
+                        company_map = {"001": 1, "MAIN": 1, "DEFAULT": 1}
                         return company_map.get(value.upper(), 1)
                     # Tentar converter string para número genérico
-                    if '.' in str(value):
+                    if "." in str(value):
                         return float(value)
                     return int(value)
                 return value
 
             # Conversões de string
-            if oracle_type in {'VARCHAR2', 'VARCHAR', 'CHAR', 'NVARCHAR2', 'NCHAR', 'CLOB'}:
+            if oracle_type in {"VARCHAR2", "VARCHAR", "CHAR", "NVARCHAR2", "NCHAR", "CLOB"}:
                 return str(value)
 
             # Conversões de data
-            if oracle_type in {'DATE', 'TIMESTAMP'}:
+            if oracle_type in {"DATE", "TIMESTAMP"}:
                 if isinstance(value, str):
                     return value  # Assumir que já está no formato correto
                 return str(value)
@@ -1793,14 +1825,14 @@ class WmsToOracleAdvancedPipeline:
         except (ValueError, TypeError) as e:
             self.logger.warning(f"Erro ao converter valor '{value}' para tipo Oracle '{oracle_type}' (coluna: {column_name}): {e}")
             # Retornar valor padrão baseado no tipo
-            if oracle_type in {'NUMBER', 'INTEGER', 'DECIMAL', 'NUMERIC'}:
+            if oracle_type in {"NUMBER", "INTEGER", "DECIMAL", "NUMERIC"}:
                 return 0
-            if oracle_type in {'VARCHAR2', 'VARCHAR', 'CHAR', 'NVARCHAR2', 'NCHAR', 'CLOB'}:
+            if oracle_type in {"VARCHAR2", "VARCHAR", "CHAR", "NVARCHAR2", "NCHAR", "CLOB"}:
                 return str(value)
             return value
 
 
-def main():
+def main() -> None:
     """Função principal do pipeline avançado."""
     parser = argparse.ArgumentParser(
         description="Pipeline Avançado WMS para Oracle reutilizando bibliotecas existentes",

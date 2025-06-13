@@ -12,6 +12,7 @@ import asyncio
 from typing import Any
 
 import structlog
+
 from flx.cli.declarative import FlxDeclarativeCli
 from flx.ports.ingoing.operation import FlxOperationRequest
 
@@ -388,7 +389,8 @@ async def demonstrate_error_handling_and_recovery() -> None:
                         ),
                     )
                     if not validation_result[0]:
-                        raise ValueError(f"Validation failed: {validation_result[1]}")
+                        msg = f"Validation failed: {validation_result[1]}"
+                        raise ValueError(msg)
 
                 logger.info(f"Scenario {scenario} handled successfully")
 

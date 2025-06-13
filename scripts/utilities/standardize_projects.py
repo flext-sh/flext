@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
-"""
-Script de Padronização PYAUTO - PEP8 & Poetry
-Padroniza configurações de todos os projetos Python no workspace
+"""Script de Padronização PYAUTO - PEP8 & Poetry
+Padroniza configurações de todos os projetos Python no workspace.
 """
 
 import shutil
@@ -162,13 +161,13 @@ STANDARD_DEV_DEPENDENCIES = {
 
 
 class ProjectStandardizer:
-    def __init__(self, workspace_path: Path):
+    def __init__(self, workspace_path: Path) -> None:
         self.workspace_path = workspace_path
         self.projects: list[Path] = []
         self.backup_dir = workspace_path / ".standardization_backup"
 
     def find_projects(self) -> list[Path]:
-        """Encontra todos os projetos com pyproject.toml"""
+        """Encontra todos os projetos com pyproject.toml."""
         projects = []
         seen_projects = set()
 
@@ -189,8 +188,8 @@ class ProjectStandardizer:
 
         return projects
 
-    def create_backup(self, project_path: Path):
-        """Cria backup do pyproject.toml original"""
+    def create_backup(self, project_path: Path) -> None:
+        """Create backup of original pyproject.toml."""
         backup_path = self.backup_dir / project_path.name
         backup_path.mkdir(parents=True, exist_ok=True)
 
@@ -199,15 +198,15 @@ class ProjectStandardizer:
         shutil.copy2(source, target)
 
     def load_project_config(self, project_path: Path) -> dict[str, Any]:
-        """Carrega configuração atual do projeto"""
+        """Load current project configuration."""
         config_path = project_path / "pyproject.toml"
         with open(config_path, "rb") as f:
             return tomli.load(f)
 
     def merge_configs(
-        self, current: dict[str, Any], project_path: Path
+        self, current: dict[str, Any], project_path: Path,
     ) -> dict[str, Any]:
-        """Mescla configuração atual com padrões"""
+        """Merge current configuration with standards."""
         result = current.copy()
 
         # Atualiza build-system
@@ -253,14 +252,14 @@ class ProjectStandardizer:
 
         return result
 
-    def save_project_config(self, project_path: Path, config: dict[str, Any]):
-        """Salva configuração padronizada"""
+    def save_project_config(self, project_path: Path, config: dict[str, Any]) -> None:
+        """Save standardized configuration."""
         config_path = project_path / "pyproject.toml"
         with open(config_path, "wb") as f:
             tomli_w.dump(config, f)
 
     def standardize_project(self, project_path: Path) -> bool:
-        """Padroniza um projeto específico"""
+        """Standardize a specific project."""
         try:
             # Cria backup
             self.create_backup(project_path)
@@ -277,8 +276,8 @@ class ProjectStandardizer:
             console.print(f"[red]Erro ao padronizar {project_path.name}: {e}[/red]")
             return False
 
-    def run_standardization(self):
-        """Executa padronização completa"""
+    def run_standardization(self) -> list[tuple[str, bool]]:
+        """Execute complete standardization."""
         console.print(Panel.fit("🔧 Iniciando Padronização PYAUTO", style="bold blue"))
 
         # Encontra projetos
@@ -302,7 +301,7 @@ class ProjectStandardizer:
             console=console,
         ) as progress:
             task = progress.add_task(
-                "Padronizando projetos...", total=len(self.projects)
+                "Padronizando projetos...", total=len(self.projects),
             )
 
             for project_path in self.projects:
@@ -325,15 +324,15 @@ class ProjectStandardizer:
         # Sumário final
         successful = sum(1 for _, success in results if success)
         console.print(
-            f"\n[green]✅ {successful}/{len(results)} projetos padronizados com sucesso[/green]"
+            f"\n[green]✅ {successful}/{len(results)} projetos padronizados com sucesso[/green]",
         )
         console.print(f"[yellow]📁 Backups salvos em: {self.backup_dir}[/yellow]")
 
         return results
 
 
-def main():
-    """Função principal"""
+def main() -> None:
+    """Main function."""
     workspace_path = Path.cwd()
 
     console.print(
@@ -342,13 +341,13 @@ def main():
             "Padroniza configurações PEP8 & Poetry\n"
             "em todos os projetos do workspace",
             style="bold magenta",
-        )
+        ),
     )
 
     # Confirma execução
     if "--force" not in sys.argv:
         confirm = console.input(
-            "\n[yellow]Deseja continuar com a padronização? (y/N): [/yellow]"
+            "\n[yellow]Deseja continuar com a padronização? (y/N): [/yellow]",
         )
         if confirm.lower() != "y":
             console.print("[red]Operação cancelada[/red]")
@@ -369,7 +368,7 @@ def main():
             "5. Execute testes para garantir funcionalidade",
             title="Pós-Padronização",
             style="bold green",
-        )
+        ),
     )
 
 

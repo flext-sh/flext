@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Fix the remaining star separator issue in client.py.
+"""Fix the remaining star separator issue in client.py.
 
 This script specifically targets line 179 in client.py which has a syntax error
 due to a star separator.
@@ -12,7 +11,7 @@ Usage:
 from pathlib import Path
 
 
-def fix_client_file():
+def fix_client_file() -> bool:
     """Fix the star separator issue in client.py."""
     client_path = (
         Path(__file__).parent.parent / "dc-api-x" / "src" / "dc_api_x" / "client.py"
@@ -66,7 +65,7 @@ def fix_client_file():
     return False
 
 
-def main():
+def main() -> None:
     """Main entry point."""
     fix_client_file()
 

@@ -13,7 +13,7 @@ from typing import Any
 from uuid import uuid4
 
 # Dynamic import for FLX async infrastructure
-flx_async = importlib.import_module('flx.infrastructure.async')  # type: ignore[attr-defined]
+flx_async = importlib.import_module("flx.infrastructure.async")  # type: ignore[attr-defined]
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -265,7 +265,8 @@ async def demonstrate_error_handling() -> None:
         logger.info("Simulating command that will fail...")
 
         # Simulate failure scenario
-        raise ValueError("Simulated processing error")
+        msg = "Simulated processing error"
+        raise ValueError(msg)
 
     except Exception as e:
         logger.exception(f"Command failed as expected: {e}")

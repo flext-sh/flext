@@ -5,7 +5,7 @@ import re
 from pathlib import Path
 
 
-def fix_adapter_meta_calls():
+def fix_adapter_meta_calls() -> None:
     """Fix FlxAdapterMeta constructor calls missing arguments."""
     files_to_fix = [
         "flx/src/flx/adapters/query.py",
@@ -36,7 +36,7 @@ def fix_adapter_meta_calls():
         print(f"Fixed FlxAdapterMeta calls in {filepath}")
 
 
-def fix_adapter_result_calls():
+def fix_adapter_result_calls() -> None:
     """Fix FlxAdapterResult constructor calls missing arguments."""
     files_to_fix = Path("flx/src").rglob("*.py")
 
@@ -44,7 +44,7 @@ def fix_adapter_result_calls():
         content = path.read_text()
 
         # Pattern 1: FlxAdapterResult(success=True, data={...})
-        pattern1 = r'FlxAdapterResult\(success=(True|False), data=({[^}]+}|\[[^\]]+\]|[^,)]+)\)'
+        pattern1 = r"FlxAdapterResult\(success=(True|False), data=({[^}]+}|\[[^\]]+\]|[^,)]+)\)"
         replacement1 = r'FlxAdapterResult(success=\1, data=\2, message="", error=None, metadata={})'
 
         if re.search(pattern1, content):
@@ -53,9 +53,8 @@ def fix_adapter_result_calls():
             print(f"Fixed FlxAdapterResult calls in {path}")
 
 
-def add_missing_classes():
+def add_missing_classes() -> None:
     """Add missing class definitions based on analysis."""
-
     missing_classes = {
         "flx/src/flx/infra/logging/resilience.py": [
             ("ResilienceState", """
@@ -237,9 +236,8 @@ class PluginState(StrEnum):
         path.write_text(content)
 
 
-def fix_missing_functions():
+def fix_missing_functions() -> None:
     """Add missing function definitions."""
-
     # Add async_wrapper and sync_wrapper to context.py
     context_file = Path("flx/src/flx/infra/logging/context.py")
     if context_file.exists():
@@ -275,9 +273,8 @@ def sync_wrapper(func):
                 print("Added wrapper functions to context.py")
 
 
-def fix_imports():
+def fix_imports() -> None:
     """Fix missing imports."""
-
     # Fix PluginFactory import
     factory_file = Path("flx/src/flx/plugins/factory.py")
     if factory_file.exists():
@@ -306,7 +303,7 @@ class PluginFactory:
             print("Added PluginFactory to factory.py")
 
 
-def main():
+def main() -> None:
     """Run all fixes."""
     print("Applying systematic fixes...")
 
