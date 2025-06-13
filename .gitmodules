@@ -16,12 +16,12 @@
 [submodule "client-b-poc-oic-wms"]
 	path = client-b-poc-oic-wms
 	url = https://github.com/datacosmos-br/client-b-poc-oic-wms.git
-[submodule "client-a-mig-oud"]
-	path = client-a-mig-oud
-	url = https://github.com/datacosmos-br/client-a-mig-oud.git
 [submodule "meltano"]
 	path = meltano
 	url = https://github.com/meltanolabs/meltano.git
 [submodule "singer-sdk"]
 	path = singer-sdk
 	url = https://github.com/meltanolabs/singer-sdk.git
+[submodule "client-a-oud-mig"]
+	path = client-a-oud-mig
+	url = git@github.com:datacosmos-br/client-a-oud-mig.git
