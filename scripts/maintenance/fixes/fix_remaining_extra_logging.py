@@ -1,13 +1,11 @@
 #!/usr/bin/env python3
-"""
-Script para corrigir todas as ocorrências restantes de extra= em logging do projeto FLX.
-"""
+"""Script para corrigir todas as ocorrências restantes de extra= em logging do projeto FLX."""
 
 import re
 from pathlib import Path
 
 
-def fix_logging_extra(file_path):
+def fix_logging_extra(file_path) -> bool:
     """Fix logging calls with extra= parameter in a file."""
     with open(file_path, encoding="utf-8") as f:
         content = f.read()
@@ -17,7 +15,7 @@ def fix_logging_extra(file_path):
     # Pattern 1: Simple extra= with single dict items
     pattern1 = r'logger\.(\w+)\(\s*"([^"]+)",\s*extra=\{([^}]+)\}\s*\)'
 
-    def replace_simple_extra(match):
+    def replace_simple_extra(match) -> str:
         method = match.group(1)
         message = match.group(2)
         extra_content = match.group(3)
@@ -44,7 +42,7 @@ def fix_logging_extra(file_path):
     # Pattern 2: Simple single line extra= without complex nesting
     pattern2 = r'logger\.(\w+)\(\s*"([^"]+)",\s*extra=([^)]+)\)'
 
-    def replace_simple_single_line(match):
+    def replace_simple_single_line(match) -> str:
         method = match.group(1)
         message = match.group(2)
         extra_param = match.group(3).strip()
@@ -98,7 +96,7 @@ def fix_logging_extra(file_path):
     return False
 
 
-def main():
+def main() -> None:
     """Main function to fix all files."""
     flx_dir = Path("/home/marlonsc/pyauto/flx")
 

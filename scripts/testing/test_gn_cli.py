@@ -4,11 +4,11 @@
 import subprocess
 
 
-def run_command(command):
+def run_command(command) -> None:
     """Run a CLI command and display output."""
     print(f"\n{'=' * 60}")
     print(f"Running: {command}")
-    print('=' * 60)
+    print("=" * 60)
 
     try:
         result = subprocess.run(command, shell=True, capture_output=True, text=True, check=False)
@@ -20,7 +20,7 @@ def run_command(command):
         print(f"Error running command: {e}")
 
 
-def main():
+def main() -> None:
     """Test various CLI commands."""
     base_cmd = "gn-wms"
 

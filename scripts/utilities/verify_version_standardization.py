@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Verification script for version standardization across Oracle projects.
+"""Verification script for version standardization across Oracle projects.
 
 This script verifies that all Oracle projects now use version 0.4.0
 from a centralized __version__.py file following the FLX pattern.
@@ -53,9 +52,9 @@ def check_pyproject_version(project_path: Path) -> tuple[bool, str]:
             content = f.read()
 
         # Look for version line
-        for line in content.split('\n'):
-            if line.strip().startswith('version = '):
-                if '0.4.0' in line:
+        for line in content.split("\n"):
+            if line.strip().startswith("version = "):
+                if "0.4.0" in line:
                     return True, "✓ Version 0.4.0 in pyproject.toml"
                 return False, f"Wrong version in pyproject.toml: {line.strip()}"
 
@@ -65,7 +64,7 @@ def check_pyproject_version(project_path: Path) -> tuple[bool, str]:
         return False, f"Error reading pyproject.toml: {e}"
 
 
-def main():
+def main() -> None:
     """Main verification function."""
     print("🔍 Verifying version standardization across Oracle projects\n")
 

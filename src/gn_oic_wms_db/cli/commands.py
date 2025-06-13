@@ -9,6 +9,7 @@ from collections.abc import Callable
 from typing import Annotated, Any
 
 import cyclopts
+
 from flx.core.exceptions import (  # type: ignore[import-untyped]
     DomainError,
 )
@@ -34,7 +35,7 @@ def _format_and_print_results(data: list[dict[str, Any]], format: str, columns: 
 class WmsCommands:
     """WMS management commands."""
 
-    def __init__(self, get_wms_client: Callable[[], Any], get_db_adapter: Callable[[], Any]):
+    def __init__(self, get_wms_client: Callable[[], Any], get_db_adapter: Callable[[], Any]) -> None:
         self.get_wms_client = get_wms_client
         self.get_db_adapter = get_db_adapter
 
@@ -50,6 +51,7 @@ class WmsCommands:
             limit: Maximum number of entities to return
             entity_type: Type of entity to filter (all, location, item, order)
             format: Output format (table, json, csv)
+
         """
         try:
             wms_client = self.get_wms_client()
@@ -58,8 +60,9 @@ class WmsCommands:
             _format_and_print_results(entities, format, ["id", "name", "type", "count"])
 
         except Exception as e:
-            logger.error(f"List WMS entities failed: {e}")
-            raise DomainError(f"List WMS entities failed: {e}") from e
+            logger.exception(f"List WMS entities failed: {e}")
+            msg = f"List WMS entities failed: {e}"
+            raise DomainError(msg) from e
 
     def sync_data(
         self,
@@ -71,6 +74,7 @@ class WmsCommands:
         Args:
             entity_type: Type of entity to sync (all, location, item, order)
             dry_run: Perform a dry run without making changes
+
         """
         try:
             wms_client = self.get_wms_client()
@@ -83,11 +87,13 @@ class WmsCommands:
             if result.get("status") == "success":
                 pass
             else:
-                raise DomainError(f"WMS sync failed: {result.get('error', 'Unknown error')}")
+                msg = f"WMS sync failed: {result.get('error', 'Unknown error')}"
+                raise DomainError(msg)
 
         except Exception as e:
-            logger.error(f"WMS sync failed: {e}")
-            raise DomainError(f"WMS sync failed: {e}") from e
+            logger.exception(f"WMS sync failed: {e}")
+            msg = f"WMS sync failed: {e}"
+            raise DomainError(msg) from e
 
     def status(self) -> None:
         """Get WMS connection status."""
@@ -96,14 +102,15 @@ class WmsCommands:
             wms_client.get_status()
 
         except Exception as e:
-            logger.error(f"Get WMS status failed: {e}")
-            raise DomainError(f"Get WMS status failed: {e}") from e
+            logger.exception(f"Get WMS status failed: {e}")
+            msg = f"Get WMS status failed: {e}"
+            raise DomainError(msg) from e
 
 
 class OicCommands:
     """Oracle Integration Cloud management commands."""
 
-    def __init__(self, get_oic_adapter: Callable[[], Any]):
+    def __init__(self, get_oic_adapter: Callable[[], Any]) -> None:
         self.get_oic_adapter = get_oic_adapter
 
     def integration_list(
@@ -116,6 +123,7 @@ class OicCommands:
         Args:
             status: Filter integrations by status (ACTIVE, INACTIVE, etc.)
             format: Output format (table, json, csv)
+
         """
         try:
             adapter = self.get_oic_adapter()
@@ -127,8 +135,9 @@ class OicCommands:
             _format_and_print_results(integrations, format, ["id", "name", "status"])
 
         except Exception as e:
-            logger.error(f"List integrations failed: {e}")
-            raise DomainError(f"List integrations failed: {e}") from e
+            logger.exception(f"List integrations failed: {e}")
+            msg = f"List integrations failed: {e}"
+            raise DomainError(msg) from e
 
     def integration_status(
         self,
@@ -138,14 +147,16 @@ class OicCommands:
 
         Args:
             integration_id: ID of the integration to check
+
         """
         try:
             adapter = self.get_oic_adapter()
             adapter.get_integration_status(integration_id)
 
         except Exception as e:
-            logger.error(f"Get integration status failed: {e}")
-            raise DomainError(f"Get integration status failed: {e}") from e
+            logger.exception(f"Get integration status failed: {e}")
+            msg = f"Get integration status failed: {e}"
+            raise DomainError(msg) from e
 
     def integration_activate(
         self,
@@ -155,6 +166,7 @@ class OicCommands:
 
         Args:
             integration_id: ID of the integration to activate
+
         """
         try:
             adapter = self.get_oic_adapter()
@@ -163,11 +175,13 @@ class OicCommands:
             if result.get("success"):
                 pass
             else:
-                raise DomainError(f"Activation failed: {result.get('error', 'Unknown error')}")
+                msg = f"Activation failed: {result.get('error', 'Unknown error')}"
+                raise DomainError(msg)
 
         except Exception as e:
-            logger.error(f"Activate integration failed: {e}")
-            raise DomainError(f"Activate integration failed: {e}") from e
+            logger.exception(f"Activate integration failed: {e}")
+            msg = f"Activate integration failed: {e}"
+            raise DomainError(msg) from e
 
     def integration_deactivate(
         self,
@@ -177,6 +191,7 @@ class OicCommands:
 
         Args:
             integration_id: ID of the integration to deactivate
+
         """
         try:
             adapter = self.get_oic_adapter()
@@ -185,17 +200,19 @@ class OicCommands:
             if result.get("success"):
                 pass
             else:
-                raise DomainError(f"Deactivation failed: {result.get('error', 'Unknown error')}")
+                msg = f"Deactivation failed: {result.get('error', 'Unknown error')}"
+                raise DomainError(msg)
 
         except Exception as e:
-            logger.error(f"Deactivate integration failed: {e}")
-            raise DomainError(f"Deactivate integration failed: {e}") from e
+            logger.exception(f"Deactivate integration failed: {e}")
+            msg = f"Deactivate integration failed: {e}"
+            raise DomainError(msg) from e
 
 
 class DatabaseCommands:
     """Database management commands."""
 
-    def __init__(self, get_db_adapter: Callable[[], Any]):
+    def __init__(self, get_db_adapter: Callable[[], Any]) -> None:
         self.get_db_adapter = get_db_adapter
 
     def health(self) -> None:
@@ -205,8 +222,9 @@ class DatabaseCommands:
             adapter.check_health()
 
         except Exception as e:
-            logger.error(f"Database health check failed: {e}")
-            raise DomainError(f"Database health check failed: {e}") from e
+            logger.exception(f"Database health check failed: {e}")
+            msg = f"Database health check failed: {e}"
+            raise DomainError(msg) from e
 
     def query(
         self,
@@ -218,6 +236,7 @@ class DatabaseCommands:
         Args:
             sql: SQL query to execute
             format: Output format (table, json, csv)
+
         """
         try:
             adapter = self.get_db_adapter()
@@ -227,8 +246,9 @@ class DatabaseCommands:
                 pass
 
         except Exception as e:
-            logger.error(f"Database query failed: {e}")
-            raise DomainError(f"Database query failed: {e}") from e
+            logger.exception(f"Database query failed: {e}")
+            msg = f"Database query failed: {e}"
+            raise DomainError(msg) from e
 
     def sync_status(self) -> None:
         """Get synchronization status."""
@@ -237,14 +257,15 @@ class DatabaseCommands:
             adapter.get_sync_status()
 
         except Exception as e:
-            logger.error(f"Get sync status failed: {e}")
-            raise DomainError(f"Get sync status failed: {e}") from e
+            logger.exception(f"Get sync status failed: {e}")
+            msg = f"Get sync status failed: {e}"
+            raise DomainError(msg) from e
 
 
 class AuthCommands:
     """Authentication and authorization commands."""
 
-    def __init__(self, get_oic_adapter: Callable[[], Any], get_wms_client: Callable[[], Any]):
+    def __init__(self, get_oic_adapter: Callable[[], Any], get_wms_client: Callable[[], Any]) -> None:
         self.get_oic_adapter = get_oic_adapter
         self.get_wms_client = get_wms_client
 
@@ -257,11 +278,13 @@ class AuthCommands:
             if token_info.get("access_token"):
                 pass
             else:
-                raise DomainError("Authentication failed")
+                msg = "Authentication failed"
+                raise DomainError(msg)
 
         except Exception as e:
-            logger.error(f"Authentication failed: {e}")
-            raise DomainError(f"Authentication failed: {e}") from e
+            logger.exception(f"Authentication failed: {e}")
+            msg = f"Authentication failed: {e}"
+            raise DomainError(msg) from e
 
     def token(
         self,
@@ -271,14 +294,16 @@ class AuthCommands:
 
         Args:
             show_token: Whether to show the actual token value
+
         """
         try:
             if show_token:
                 pass
 
         except Exception as e:
-            logger.error(f"Get token info failed: {e}")
-            raise DomainError(f"Get token info failed: {e}") from e
+            logger.exception(f"Get token info failed: {e}")
+            msg = f"Get token info failed: {e}"
+            raise DomainError(msg) from e
 
     def refresh(self) -> None:
         """Refresh authentication token."""
@@ -286,22 +311,23 @@ class AuthCommands:
             pass
 
         except Exception as e:
-            logger.error(f"Token refresh failed: {e}")
-            raise DomainError(f"Token refresh failed: {e}") from e
+            logger.exception(f"Token refresh failed: {e}")
+            msg = f"Token refresh failed: {e}"
+            raise DomainError(msg) from e
 
 
 class MonitorCommands:
     """Monitoring and observability commands."""
 
-    def __init__(self, get_oic_adapter: Callable[[], Any], get_wms_client: Callable[[], Any], get_db_adapter: Callable[[], Any]):
+    def __init__(self, get_oic_adapter: Callable[[], Any], get_wms_client: Callable[[], Any], get_db_adapter: Callable[[], Any]) -> None:
         self.get_oic_adapter = get_oic_adapter
         self.get_wms_client = get_wms_client
         self.get_db_adapter = get_db_adapter
 
     def logs(
         self,
-        component: Annotated[str, cyclopts.Parameter(help="Component to monitor")] = "all",
-        hours: Annotated[int, cyclopts.Parameter(help="Hours of logs to retrieve")] = 1,
+        _component: Annotated[str, cyclopts.Parameter(help="Component to monitor")] = "all",
+        _hours: Annotated[int, cyclopts.Parameter(help="Hours of logs to retrieve")] = 1,
         level: Annotated[str, cyclopts.Parameter(help="Log level filter")] = "",
     ) -> None:
         """Monitor system logs.
@@ -310,6 +336,7 @@ class MonitorCommands:
             component: Component to monitor (all, oic, wms, database)
             hours: Hours of logs to retrieve
             level: Log level filter (DEBUG, INFO, WARNING, ERROR)
+
         """
         try:
             if level:
@@ -318,27 +345,30 @@ class MonitorCommands:
             # Mock log output
 
         except Exception as e:
-            logger.error(f"Monitor logs failed: {e}")
-            raise DomainError(f"Monitor logs failed: {e}") from e
+            logger.exception(f"Monitor logs failed: {e}")
+            msg = f"Monitor logs failed: {e}"
+            raise DomainError(msg) from e
 
     def metrics(
         self,
-        component: Annotated[str, cyclopts.Parameter(help="Component to get metrics from")] = "all",
-        metric_type: Annotated[str, cyclopts.Parameter(help="Metric type")] = "performance",
+        _component: Annotated[str, cyclopts.Parameter(help="Component to get metrics from")] = "all",
+        _metric_type: Annotated[str, cyclopts.Parameter(help="Metric type")] = "performance",
     ) -> None:
         """Display system metrics.
 
         Args:
             component: Component to get metrics from (all, oic, wms, database)
             metric_type: Metric type (performance, usage, errors)
+
         """
         try:
 
             pass
 
         except Exception as e:
-            logger.error(f"Get metrics failed: {e}")
-            raise DomainError(f"Get metrics failed: {e}") from e
+            logger.exception(f"Get metrics failed: {e}")
+            msg = f"Get metrics failed: {e}"
+            raise DomainError(msg) from e
 
     def dashboard(self) -> None:
         """Show monitoring dashboard."""
@@ -346,14 +376,15 @@ class MonitorCommands:
             pass
 
         except Exception as e:
-            logger.error(f"Dashboard failed: {e}")
-            raise DomainError(f"Dashboard failed: {e}") from e
+            logger.exception(f"Dashboard failed: {e}")
+            msg = f"Dashboard failed: {e}"
+            raise DomainError(msg) from e
 
 
 class ConfigCommands:
     """Configuration management commands."""
 
-    def __init__(self, get_config: Callable[[], Any]):
+    def __init__(self, get_config: Callable[[], Any]) -> None:
         self.get_config = get_config
 
     def show(
@@ -364,25 +395,27 @@ class ConfigCommands:
 
         Args:
             sensitive: Whether to show sensitive configuration values
+
         """
         try:
             config = self.get_config()
-            config_data = config.show() if hasattr(config, 'show') else {
+            config_data = config.show() if hasattr(config, "show") else {
                 "database_url": "oracle://localhost:1521/xe",
                 "oic_endpoint": "https://oic.example.com",
                 "wms_endpoint": "https://wms.example.com",
-                "log_level": "INFO"
+                "log_level": "INFO",
             }
 
             if not sensitive:
                 # Mask sensitive values
                 for key in config_data:
-                    if any(sensitive_word in key.lower() for sensitive_word in ['password', 'token', 'key', 'secret']):
+                    if any(sensitive_word in key.lower() for sensitive_word in ["password", "token", "key", "secret"]):
                         config_data[key] = "***MASKED***"
 
         except Exception as e:
-            logger.error(f"Show config failed: {e}")
-            raise DomainError(f"Show config failed: {e}") from e
+            logger.exception(f"Show config failed: {e}")
+            msg = f"Show config failed: {e}"
+            raise DomainError(msg) from e
 
     def set(
         self,
@@ -394,38 +427,42 @@ class ConfigCommands:
         Args:
             key: Configuration key to set
             value: Configuration value to set
+
         """
         try:
             config = self.get_config()
 
-            if hasattr(config, 'set'):
+            if hasattr(config, "set"):
                 config.set(key, value)
 
         except Exception as e:
-            logger.error(f"Set config failed: {e}")
-            raise DomainError(f"Set config failed: {e}") from e
+            logger.exception(f"Set config failed: {e}")
+            msg = f"Set config failed: {e}"
+            raise DomainError(msg) from e
 
     def validate(self) -> None:
         """Validate configuration."""
         try:
             config = self.get_config()
 
-            is_valid = config.validate() if hasattr(config, 'validate') else True
+            is_valid = config.validate() if hasattr(config, "validate") else True
 
             if is_valid:
                 pass
             else:
-                raise DomainError("Configuration validation failed")
+                msg = "Configuration validation failed"
+                raise DomainError(msg)
 
         except Exception as e:
-            logger.error(f"Config validation failed: {e}")
-            raise DomainError(f"Config validation failed: {e}") from e
+            logger.exception(f"Config validation failed: {e}")
+            msg = f"Config validation failed: {e}"
+            raise DomainError(msg) from e
 
 
 class HealthCommands:
     """Health check and system status commands."""
 
-    def __init__(self, get_db_adapter: Callable[[], Any], get_oic_adapter: Callable[[], Any], get_wms_client: Callable[[], Any]):
+    def __init__(self, get_db_adapter: Callable[[], Any], get_oic_adapter: Callable[[], Any], get_wms_client: Callable[[], Any]) -> None:
         self.get_db_adapter = get_db_adapter
         self.get_oic_adapter = get_oic_adapter
         self.get_wms_client = get_wms_client
@@ -443,8 +480,9 @@ class HealthCommands:
             _format_and_print_results(health_data, "table", ["component", "status", "response_time"])
 
         except Exception as e:
-            logger.error(f"Health check failed: {e}")
-            raise DomainError(f"Health check failed: {e}") from e
+            logger.exception(f"Health check failed: {e}")
+            msg = f"Health check failed: {e}"
+            raise DomainError(msg) from e
 
     def status(self) -> None:
         """Get system status."""
@@ -452,8 +490,9 @@ class HealthCommands:
             pass
 
         except Exception as e:
-            logger.error(f"Get status failed: {e}")
-            raise DomainError(f"Get status failed: {e}") from e
+            logger.exception(f"Get status failed: {e}")
+            msg = f"Get status failed: {e}"
+            raise DomainError(msg) from e
 
     def ping(self) -> None:
         """Test connectivity to all components."""
@@ -465,5 +504,6 @@ class HealthCommands:
                 pass
 
         except Exception as e:
-            logger.error(f"Ping failed: {e}")
-            raise DomainError(f"Ping failed: {e}") from e
+            logger.exception(f"Ping failed: {e}")
+            msg = f"Ping failed: {e}"
+            raise DomainError(msg) from e

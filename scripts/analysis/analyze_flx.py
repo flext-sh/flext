@@ -265,7 +265,7 @@ def format_method_signature(method_info):
     return signature
 
 
-def main():
+def main() -> None:
     """Main analysis function with complete details."""
     try:
         print("🔍 Starting COMPLETE FLX analysis with ALL details...")
@@ -303,7 +303,7 @@ def main():
             print(f"🔍 Analyzing: {py_file.name}")
 
             rel_path = py_file.relative_to(flx_path)
-            directory = str(rel_path.parent) if rel_path.parent != Path(".") else "root"
+            directory = str(rel_path.parent) if rel_path.parent != Path() else "root"
             filename = py_file.name
 
             line_count = count_lines(py_file)

@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Fix star separator issues in the utils/logging.py file.
+"""Fix star separator issues in the utils/logging.py file.
 
 This script specifically fixes the issue with multiple keyword-only parameter markers
 in the setup_logger function of the utils/logging.py file.
@@ -12,7 +11,7 @@ Usage:
 from pathlib import Path
 
 
-def fix_logging_stars():
+def fix_logging_stars() -> None:
     """Fix the duplicate star separators in the logging.py file."""
     # Path to the logging.py file
     file_path = (

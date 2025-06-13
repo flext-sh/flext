@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Fix duplicate star (*) separators in function definitions.
+"""Fix duplicate star (*) separators in function definitions.
 
 This script identifies and fixes functions where we accidentally introduced
 multiple * separators in function parameter lists, which is a syntax error.
@@ -18,35 +17,35 @@ from pathlib import Path
 class StarSeparatorFixer:
     """Fix duplicate * separators in function parameter lists."""
 
-    def __init__(self, dry_run=False):
-        """
-        Initialize the fixer.
+    def __init__(self, dry_run=False) -> None:
+        """Initialize the fixer.
 
         Args:
             dry_run: If True, don't actually modify files, just report issues
+
         """
         self.dry_run = dry_run
         self.files_modified = 0
         self.fixes_count = 0
 
-    def process_directory(self, directory):
-        """
-        Process all Python files in a directory recursively.
+    def process_directory(self, directory) -> None:
+        """Process all Python files in a directory recursively.
 
         Args:
             directory: Path to directory to process
+
         """
         for file_path in directory.glob("**/*.py"):
             if ".venv" in str(file_path) or "__pycache__" in str(file_path):
                 continue
             self.process_file(file_path)
 
-    def process_file(self, file_path):
-        """
-        Process a single Python file.
+    def process_file(self, file_path) -> None:
+        """Process a single Python file.
 
         Args:
             file_path: Path to file to process
+
         """
         try:
             content = file_path.read_text(encoding="utf-8")
@@ -64,14 +63,14 @@ class StarSeparatorFixer:
             print(f"Error processing {file_path}: {e}")
 
     def _fix_duplicate_stars(self, content):
-        """
-        Fix function definitions with duplicate * separators.
+        """Fix function definitions with duplicate * separators.
 
         Args:
             content: File content to fix
 
         Returns:
             Fixed content
+
         """
         # Split content into lines for easier processing
         lines = content.split("\n")
@@ -101,27 +100,27 @@ class StarSeparatorFixer:
             # Fix any connection, *, * patterns
             if re.search(r"connection:\s*Any,\s*\*,\s*\*", lines[i]):
                 lines[i] = re.sub(
-                    r"connection:\s*Any,\s*\*,\s*\*", "connection: Any, *", lines[i]
+                    r"connection:\s*Any,\s*\*,\s*\*", "connection: Any, *", lines[i],
                 )
                 self.fixes_count += 1
 
             # Fix to_dict with duplicate stars
             if re.search(r"def\s+to_dict\(self,\s*\*,\s*\*", lines[i]):
                 lines[i] = re.sub(
-                    r"def\s+to_dict\(self,\s*\*,\s*\*", "def to_dict(self, *", lines[i]
+                    r"def\s+to_dict\(self,\s*\*,\s*\*", "def to_dict(self, *", lines[i],
                 )
                 self.fixes_count += 1
 
             # Fix def __init__ with duplicate stars
             if re.search(r"self,\s*\*,\s*\*\s+success", lines[i]):
                 lines[i] = re.sub(
-                    r"self,\s*\*,\s*\*\s+success", "self, * success", lines[i]
+                    r"self,\s*\*,\s*\*\s+success", "self, * success", lines[i],
                 )
                 self.fixes_count += 1
 
         return "\n".join(lines)
 
-    def print_summary(self):
+    def print_summary(self) -> None:
         """Print a summary of the fixes made."""
         print("\nSummary:")
         print(f"Files modified: {self.files_modified}")
@@ -131,13 +130,13 @@ class StarSeparatorFixer:
             print("\nThis was a dry run. No files were actually modified.")
 
 
-def main():
+def main() -> None:
     """Run the script."""
     parser = argparse.ArgumentParser(
-        description="Fix duplicate * separators in function definitions"
+        description="Fix duplicate * separators in function definitions",
     )
     parser.add_argument(
-        "--dry-run", action="store_true", help="Don't modify files, just report issues"
+        "--dry-run", action="store_true", help="Don't modify files, just report issues",
     )
     args = parser.parse_args()
 

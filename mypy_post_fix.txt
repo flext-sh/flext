@@ -1,0 +1,12 @@
+comprehensive_lint_fix.py:177: error: Unsupported operand types for in ("str | None" and "str")  [operator]
+comprehensive_lint_fix.py:326: error: Function is missing a return type annotation  [no-untyped-def]
+flx_shared_config.py:16: error: Variable "pydantic.BaseSettings" is not valid as a type  [valid-type]
+flx_shared_config.py:16: note: See https://mypy.readthedocs.io/en/stable/common_issues.html#variables-vs-type-aliases
+simple_rest_test.py:17: error: Module "flx.adapters.inbound.fire_cli" has no attribute "create_cli"  [attr-defined]
+simple_rest_test.py:18: error: Skipping analyzing "flx.adapters.inbound.rest_api": module is installed, but missing library stubs or py.typed marker  [import-untyped]
+simple_rest_test.py:18: note: See https://mypy.readthedocs.io/en/stable/running_mypy.html#missing-imports
+simple_rest_test.py:73: error: Argument 1 to "run" has incompatible type "bool"; expected "Coroutine[Any, Any, Never]"  [arg-type]
+standalone_rest_api.py:25: error: Module "flx.adapters.inbound.fire_cli" has no attribute "_command_groups"; maybe "_command_bus"?  [attr-defined]
+standalone_rest_api.py:25: error: Module "flx.adapters.inbound.fire_cli" has no attribute "_dynamic_commands"  [attr-defined]
+standalone_rest_api.py:63: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+Found 9 errors in 4 files (checked 9 source files)

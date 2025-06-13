@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-PyAuto Monorepo Dependency Standardization
+"""PyAuto Monorepo Dependency Standardization
 Standardizes dependencies across all projects to resolve conflicts.
 """
 
@@ -140,16 +139,17 @@ class DependencyStandardizer:
 
     # Dependencies that should be in dev group only
     DEV_ONLY_DEPS = {
-        "pytest", "pytest-asyncio", "pytest-cov", "pytest-mock", "pytest-xdist",
-        "pytest-benchmark", "pytest-html", "pytest-timeout", "coverage",
-        "mypy", "types-requests", "types-sqlalchemy", "types-pyyaml", "types-redis",
-        "types-setuptools", "types-python-dateutil",
-        "black", "isort", "ruff", "bandit", "vulture", "autoflake", "pyupgrade", "flake8",
-        "pycodestyle", "pydocstyle", "pylint", "pre-commit", "setuptools", "wheel",
+        "pytest", "pytest-asyncio", "pytest-cov", "pytest-mock",
+        "pytest-xdist", "pytest-benchmark", "pytest-html", "pytest-timeout",
+        "coverage", "mypy", "types-requests", "types-sqlalchemy",
+        "types-pyyaml", "types-redis", "types-setuptools",
+        "types-python-dateutil", "black", "isort", "ruff", "bandit",
+        "vulture", "autoflake", "pyupgrade", "flake8", "pycodestyle",
+        "pydocstyle", "pylint", "pre-commit", "setuptools", "wheel",
         "mkdocs", "mkdocs-material", "ipykernel", "ipython",
     }
 
-    def __init__(self, root_path: str = "."):
+    def __init__(self, root_path: str = ".") -> None:
         self.root_path = Path(root_path)
         self.backup_dir = self.root_path / "pyproject_backups"
 
@@ -192,7 +192,6 @@ class DependencyStandardizer:
 
     def standardize_project(self, pyproject_path: Path) -> dict[str, Any]:
         """Standardize dependencies for a single project."""
-
         # Create backup
         self.create_backup(pyproject_path)
 
@@ -209,13 +208,19 @@ class DependencyStandardizer:
         # Get current dependencies
         poetry_section = data.get("tool", {}).get("poetry", {})
         dependencies = poetry_section.get("dependencies", {})
-        dev_deps = poetry_section.setdefault("group", {}).setdefault("dev", {}).setdefault("dependencies", {})
+        dev_deps = (
+            poetry_section.setdefault("group", {})
+            .setdefault("dev", {})
+            .setdefault("dependencies", {})
+        )
         # Ensure Python version is standardized
         if "python" in dependencies:
             old_python = dependencies["python"]
             dependencies["python"] = self.STANDARD_VERSIONS["python"]
             if old_python != dependencies["python"]:
-                changes["standardized_versions"].append(f"python: {old_python} → {dependencies['python']}")
+                changes["standardized_versions"].append(
+                    f"python: {old_python} → {dependencies['python']}",
+                )
 
         # Process all dependencies
         deps_to_move = []
@@ -234,12 +239,17 @@ class DependencyStandardizer:
 
             # Standardize version if we have a standard for it
             if dep_name in self.STANDARD_VERSIONS:
-                old_version = str(dep_spec) if not isinstance(dep_spec, dict) else str(dep_spec.get("version", dep_spec))
+                old_version = (
+                    str(dep_spec) if not isinstance(dep_spec, dict)
+                    else str(dep_spec.get("version", dep_spec))
+                )
                 new_version = self.STANDARD_VERSIONS[dep_name]
 
                 if old_version != new_version:
                     dependencies[dep_name] = new_version
-                    changes["standardized_versions"].append(f"{dep_name}: {old_version} → {new_version}")
+                    changes["standardized_versions"].append(
+                        f"{dep_name}: {old_version} → {new_version}",
+                    )
 
         # Move dev-only dependencies to dev group
         for dep_name in deps_to_move:
@@ -253,12 +263,17 @@ class DependencyStandardizer:
         # Standardize dev dependencies
         for dep_name, dep_spec in list(dev_deps.items()):
             if dep_name in self.STANDARD_VERSIONS:
-                old_version = str(dep_spec) if not isinstance(dep_spec, dict) else str(dep_spec.get("version", dep_spec))
+                old_version = (
+                    str(dep_spec) if not isinstance(dep_spec, dict)
+                    else str(dep_spec.get("version", dep_spec))
+                )
                 new_version = self.STANDARD_VERSIONS[dep_name]
 
                 if old_version != new_version:
                     dev_deps[dep_name] = new_version
-                    changes["standardized_versions"].append(f"{dep_name} (dev): {old_version} → {new_version}")
+                    changes["standardized_versions"].append(
+                        f"{dep_name} (dev): {old_version} → {new_version}",
+                    )
 
         # Update build system to latest
         data.setdefault("build-system", {})["requires"] = ["poetry-core>=2.1.3"]
@@ -292,12 +307,16 @@ class DependencyStandardizer:
             black_config.update({
                 "line-length": 88,  # Black default
                 "target-version": ["py313"],
-                "include": '\\.pyi?$',
+                "include": "\\.pyi?$",
             })
 
         # Ensure pytest configuration is standardized
         if "pytest" in dev_deps:
-            pytest_config = data.setdefault("tool", {}).setdefault("pytest", {}).setdefault("ini_options", {})
+            pytest_config = (
+                data.setdefault("tool", {})
+                .setdefault("pytest", {})
+                .setdefault("ini_options", {})
+            )
             pytest_config.update({
                 "testpaths": ["tests"],
                 "python_files": ["test_*.py", "*_test.py"],
@@ -385,7 +404,6 @@ class DependencyStandardizer:
 
     def run_standardization(self) -> None:
         """Run complete dependency standardization."""
-
         pyproject_files = self.find_pyproject_files()
         for _file_path in pyproject_files:
             pass
@@ -400,7 +418,7 @@ class DependencyStandardizer:
         self.generate_dependency_report()
 
 
-def main():
+def main() -> None:
     """Main standardization function."""
     standardizer = DependencyStandardizer()
     standardizer.run_standardization()

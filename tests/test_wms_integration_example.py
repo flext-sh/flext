@@ -51,7 +51,8 @@ class ExampleOrder(FlxAggregateRoot):
     def validate_order(self) -> None:
         """Domain-specific business logic."""
         if self.status != ExampleOrderStatus.CREATED:
-            raise ValueError(f"Cannot validate order in status {self.status}")
+            msg = f"Cannot validate order in status {self.status}"
+            raise ValueError(msg)
 
         self.status = ExampleOrderStatus.VALIDATED
         self.mark_updated()

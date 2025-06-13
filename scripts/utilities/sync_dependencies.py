@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Sincroniza as versões de bibliotecas entre projetos no workspace.
+"""Sincroniza as versões de bibliotecas entre projetos no workspace.
 
 Este script pode funcionar em dois modos:
 1. Modo padrão: usa o projeto principal (dc-api-x) como fonte e atualiza os outros projetos
@@ -22,7 +21,7 @@ import tomli_w
 
 
 def load_toml(file_path: Path) -> dict:
-    """Carrega um arquivo TOML."""
+    """Load a TOML file."""
     try:
         with open(file_path, "rb") as f:
             return tomli.load(f)
@@ -32,7 +31,7 @@ def load_toml(file_path: Path) -> dict:
 
 
 def save_toml(file_path: Path, data: dict) -> None:
-    """Salva um dicionário como arquivo TOML."""
+    """Save a dictionary as a TOML file."""
     try:
         with open(file_path, "wb") as f:
             tomli_w.dump(data, f)
@@ -42,7 +41,7 @@ def save_toml(file_path: Path, data: dict) -> None:
 
 
 def extract_dependencies(toml_data: dict) -> dict[str, str]:
-    """Extrai as dependências de um arquivo pyproject.toml."""
+    """Extract dependencies from a pyproject.toml file."""
     dependencies = {}
 
     # Poetry format
@@ -57,7 +56,7 @@ def extract_dependencies(toml_data: dict) -> dict[str, str]:
 
         # Dev dependencies
         if "group" in toml_data["tool"]["poetry"]:
-            for _group_name, group_data in toml_data["tool"]["poetry"]["group"].items():
+            for group_data in toml_data["tool"]["poetry"]["group"].values():
                 if "dependencies" in group_data:
                     for dep, version in group_data["dependencies"].items():
                         if dep != "python" and dep not in dependencies:
@@ -236,8 +235,7 @@ def find_dependency_files(workspace_path: Path) -> list[tuple[Path, str]]:
 
 
 def detect_projects(workspace_path: Path) -> list[str]:
-    """
-    Detecta projetos no workspace usando a mesma lógica do Makefile.
+    """Detecta projetos no workspace usando a mesma lógica do Makefile.
     Exclui diretórios que começam com ".", "reference", "docs", "logs", "scripts".
     """
     exclude_patterns = {"reference", "docs", "logs", "scripts"}
@@ -261,7 +259,7 @@ def detect_projects(workspace_path: Path) -> list[str]:
 def filter_dependency_files_by_projects(
     dependency_files: list[tuple[Path, str]],
     projects: list[str],
-    workspace_path: Path
+    workspace_path: Path,
 ) -> list[tuple[Path, str]]:
     """Filtra arquivos de dependências para incluir apenas os projetos especificados."""
     if not projects:
@@ -284,14 +282,13 @@ def filter_dependency_files_by_projects(
 
 
 def is_version_newer(version1: str, version2: str) -> bool:
-    """
-    Compara duas strings de versão e retorna True se version1 for mais recente que version2.
+    """Compara duas strings de versão e retorna True se version1 for mais recente que version2.
     Lida com formatos comuns de versão como ^1.2.3, ~1.2.3, >=1.2.3, etc.
     """
     # Extrai o número da versão sem os prefixos
     def extract_version(version_str):
         # Remove prefixos comuns
-        match = re.search(r'[0-9]+(\.[0-9]+)*', version_str)
+        match = re.search(r"[0-9]+(\.[0-9]+)*", version_str)
         if match:
             return match.group(0)
         return "0.0.0"  # Versão padrão se não conseguir extrair
@@ -309,8 +306,7 @@ def is_version_newer(version1: str, version2: str) -> bool:
 
 
 def collect_latest_versions(dependency_files: list[tuple[Path, str]]) -> dict[str, tuple[str, str]]:
-    """
-    Coleta as versões mais recentes de todas as dependências em todos os projetos.
+    """Coleta as versões mais recentes de todas as dependências em todos os projetos.
     Retorna um dicionário com o nome da dependência e uma tupla (versão, origem).
     """
     all_dependencies = {}  # {nome: (versão, origem)}
@@ -351,7 +347,7 @@ Exemplos de uso:
   %(prog)s --source flx              # Usa 'flx' como projeto fonte
   %(prog)s --consolidate             # Força modo consolidação (versões mais recentes)
   %(prog)s --dry-run                 # Simula as mudanças sem aplicá-las
-        """
+        """,
     )
 
     parser.add_argument("--force", "-f", action="store_true",
@@ -378,7 +374,7 @@ Exemplos de uso:
     return parser.parse_args()
 
 
-def main():
+def main() -> None:
     args = parse_args()
     workspace_path = Path.cwd()
 
@@ -423,7 +419,7 @@ def main():
 
     # Filtra por projetos específicos
     dependency_files = filter_dependency_files_by_projects(
-        dependency_files, target_projects, workspace_path
+        dependency_files, target_projects, workspace_path,
     )
 
     print(f"Encontrados {len(dependency_files)} arquivos de dependências nos projetos selecionados.")

@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-Script to fix more complex mypy errors in the codebase.
-"""
+"""Script to fix more complex mypy errors in the codebase."""
 
 import re
 import sys
@@ -14,8 +12,7 @@ def find_python_files(directory: str) -> list[Path]:
 
 
 def flx_union_attribute_access(file_path: Path) -> int:
-    """
-    Fix 'Item "None" of "X | None" has no attribute Y' errors by adding None checks.
+    """Fix 'Item "None" of "X | None" has no attribute Y' errors by adding None checks.
 
     Returns the number of fixes applied.
     """
@@ -46,7 +43,7 @@ def flx_union_attribute_access(file_path: Path) -> int:
             modified_lines.append(f"{indent}else:")
             modified_lines.append(f"{indent}    # Handle None case appropriately")
             modified_lines.append(
-                f"{indent}    pass  # TODO: Implement proper None handling"
+                f"{indent}    pass  # TODO: Implement proper None handling",
             )
             fixes_count += 1
         else:
@@ -61,8 +58,7 @@ def flx_union_attribute_access(file_path: Path) -> int:
 
 
 def flx_return_value_type_issues(file_path: Path) -> int:
-    """
-    Fix 'Incompatible return value type' errors.
+    """Fix 'Incompatible return value type' errors.
 
     Returns the number of fixes applied.
     """
@@ -75,7 +71,7 @@ def flx_return_value_type_issues(file_path: Path) -> int:
 
     # Look for functions with explicit return types
     function_pattern = re.compile(
-        r"^(\s*)(def\s+\w+\s*\([^)]*\))\s*->\s*([^:]+)(\s*:)", re.MULTILINE
+        r"^(\s*)(def\s+\w+\s*\([^)]*\))\s*->\s*([^:]+)(\s*:)", re.MULTILINE,
     )
 
     # Find all function definitions with return types
@@ -114,8 +110,7 @@ def flx_return_value_type_issues(file_path: Path) -> int:
 
 
 def flx_abstract_class_issues(file_path: Path) -> int:
-    """
-    Fix 'Cannot instantiate abstract class' errors.
+    """Fix 'Cannot instantiate abstract class' errors.
 
     Returns the number of fixes applied.
     """
@@ -127,7 +122,7 @@ def flx_abstract_class_issues(file_path: Path) -> int:
 
     # Look for abstract classes and their methods
     abstract_class_pattern = re.compile(
-        r"class\s+(\w+)\(.*?(?:ABC|Protocol|abstract).*?\):", re.DOTALL | re.IGNORECASE
+        r"class\s+(\w+)\(.*?(?:ABC|Protocol|abstract).*?\):", re.DOTALL | re.IGNORECASE,
     )
     abstract_method_pattern = re.compile(
         r'^\s*def\s+(\w+)\s*\([^)]*\)\s*(?:->.*?)?\s*:\s*(?:pass|"""|\'\'\')?\s*$',
@@ -171,8 +166,7 @@ def flx_abstract_class_issues(file_path: Path) -> int:
 
 
 def flx_any_returns(file_path: Path) -> int:
-    """
-    Fix 'Returning Any from function declared to return X' errors.
+    """Fix 'Returning Any from function declared to return X' errors.
 
     Returns the number of fixes applied.
     """
@@ -181,7 +175,7 @@ def flx_any_returns(file_path: Path) -> int:
 
     # Look for functions that might return Any values
     any_return_pattern = re.compile(
-        r"(def\s+\w+\s*\([^)]*\)\s*->\s*(?!Any)[^:]+:.*?)(return\s+[^;]+)", re.DOTALL
+        r"(def\s+\w+\s*\([^)]*\)\s*->\s*(?!Any)[^:]+:.*?)(return\s+[^;]+)", re.DOTALL,
     )
 
     modified_content = content
@@ -204,7 +198,7 @@ def flx_any_returns(file_path: Path) -> int:
                 # Add a type assertion
                 return_var = return_stmt.split("return", 1)[1].strip()
                 new_return = f"{indent_str}result = {return_var}\n"
-                new_return += f"{indent_str}assert isinstance(result, {return_type.split('[')[0]}), f\"Expected {return_type}, got {{type(result)}}\"\n"
+                new_return += f'{indent_str}assert isinstance(result, {return_type.split('[')[0]}), f"Expected {return_type}, got {{type(result)}}"\n'
                 new_return += f"{indent_str}return result"
 
                 modified_content = modified_content.replace(return_stmt, new_return, 1)
@@ -251,7 +245,7 @@ def main() -> None:
         print("Usage: python flx_advanced_mypy_errors.py <directory> [fix_types]")
         print("Available fix types: union_attr, return_value, abstract, any_return")
         print(
-            "Example: python flx_advanced_mypy_errors.py ./src union_attr return_value"
+            "Example: python flx_advanced_mypy_errors.py ./src union_attr return_value",
         )
         sys.exit(1)
 

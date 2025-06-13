@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-Script to fix common errors in the DCApiX codebase.
-"""
+"""Script to fix common errors in the DCApiX codebase."""
 
 import os
 import re
@@ -16,8 +14,7 @@ def find_python_files(directory: str) -> list[Path]:
 
 
 def flx_client_config_dataclass(file_path: Path) -> int:
-    """
-    Fix indentation issues in the ClientConfig dataclass in client.py.
+    """Fix indentation issues in the ClientConfig dataclass in client.py.
 
     Returns the number of fixes applied.
     """
@@ -72,8 +69,7 @@ def flx_client_config_dataclass(file_path: Path) -> int:
 
 
 def flx_models_self_is_not_none(file_path: Path) -> int:
-    """
-    Fix the 'if self is not None' checks in models.py.
+    """Fix the 'if self is not None' checks in models.py.
 
     Returns the number of fixes applied.
     """
@@ -114,8 +110,7 @@ def flx_models_self_is_not_none(file_path: Path) -> int:
 
 
 def flx_auth_token_valid(file_path: Path) -> int:
-    """
-    Fix indentation in is_token_valid in auth files.
+    """Fix indentation in is_token_valid in auth files.
 
     Returns the number of fixes applied.
     """
@@ -140,8 +135,7 @@ def flx_auth_token_valid(file_path: Path) -> int:
 
 
 def flx_is_authenticated_method(file_path: Path) -> int:
-    """
-    Fix indentation in is_authenticated method in auth files.
+    """Fix indentation in is_authenticated method in auth files.
 
     Returns the number of fixes applied.
     """
@@ -166,8 +160,7 @@ def flx_is_authenticated_method(file_path: Path) -> int:
 
 
 def flx_validate_token_method(file_path: Path) -> int:
-    """
-    Fix indentation in validate_token method in auth files.
+    """Fix indentation in validate_token method in auth files.
 
     Returns the number of fixes applied.
     """
@@ -192,8 +185,7 @@ def flx_validate_token_method(file_path: Path) -> int:
 
 
 def flx_plugin_state_is_loaded(file_path: Path) -> int:
-    """
-    Fix the missing return in PluginState.is_loaded method.
+    """Fix the missing return in PluginState.is_loaded method.
 
     Returns the number of fixes applied.
     """
@@ -216,8 +208,7 @@ def flx_plugin_state_is_loaded(file_path: Path) -> int:
 
 
 def flx_has_key_method(file_path: Path) -> int:
-    """
-    Fix the indentation in has_key method in config provider.
+    """Fix the indentation in has_key method in config provider.
 
     Returns the number of fixes applied.
     """
@@ -242,8 +233,7 @@ def flx_has_key_method(file_path: Path) -> int:
 
 
 def flx_union_type_annotations(file_path: Path) -> int:
-    """
-    Fix incorrect Union type annotations.
+    """Fix incorrect Union type annotations.
 
     Returns the number of fixes applied.
     """
@@ -266,8 +256,7 @@ def flx_union_type_annotations(file_path: Path) -> int:
 
 
 def flx_read_file_write_file(file_path: Path) -> int:
-    """
-    Fix read_file and write_file method annotations in filesystem adapter.
+    """Fix read_file and write_file method annotations in filesystem adapter.
 
     Returns the number of fixes applied.
     """
@@ -298,8 +287,7 @@ def flx_read_file_write_file(file_path: Path) -> int:
 
 
 def flx_logfire_hook_return(file_path: Path) -> int:
-    """
-    Fix the return type and stray return statement in logfire_hook.py.
+    """Fix the return type and stray return statement in logfire_hook.py.
 
     Returns the number of fixes applied.
     """
@@ -328,8 +316,7 @@ def flx_logfire_hook_return(file_path: Path) -> int:
 
 
 def flx_error_hook_return(file_path: Path) -> int:
-    """
-    Fix the return type annotation in error_hook.py.
+    """Fix the return type annotation in error_hook.py.
 
     Returns the number of fixes applied.
     """
@@ -352,8 +339,7 @@ def flx_error_hook_return(file_path: Path) -> int:
 
 
 def flx_discover_plugins(file_path: Path) -> int:
-    """
-    Fix discover_plugins function in registry.py.
+    """Fix discover_plugins function in registry.py.
 
     Returns the number of fixes applied.
     """

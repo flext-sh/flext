@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-PEP 8 Compliance Checker.
+"""PEP 8 Compliance Checker.
 
 This script checks if Python code files follow PEP 8 standards by:
 1. Checking formatting with Black
@@ -20,21 +19,20 @@ from pathlib import Path
 
 
 def find_python_files(directory: Path) -> list[Path]:
-    """
-    Find all Python files in a directory recursively.
+    """Find all Python files in a directory recursively.
 
     Args:
         directory: The directory to search.
 
     Returns:
         A list of paths to Python files.
+
     """
     return list(directory.glob("**/*.py"))
 
 
 def run_command(command: list[str], description: str) -> tuple[bool, str]:
-    """
-    Run a command with subprocess and capture output.
+    """Run a command with subprocess and capture output.
 
     Args:
         command: Command to run as a list of strings.
@@ -42,6 +40,7 @@ def run_command(command: list[str], description: str) -> tuple[bool, str]:
 
     Returns:
         A tuple of (success_flag, output_string)
+
     """
     print(f"Running {description}...")
     try:
@@ -52,14 +51,14 @@ def run_command(command: list[str], description: str) -> tuple[bool, str]:
 
 
 def check_black(files: list[Path]) -> tuple[bool, str]:
-    """
-    Check if files are formatted correctly with Black.
+    """Check if files are formatted correctly with Black.
 
     Args:
         files: list of file paths to check.
 
     Returns:
         A tuple of (formatted_correctly, output_message)
+
     """
     if not files:
         return True, "No files to check"
@@ -70,14 +69,14 @@ def check_black(files: list[Path]) -> tuple[bool, str]:
 
 
 def check_isort(files: list[Path]) -> tuple[bool, str]:
-    """
-    Check if imports are sorted correctly with isort.
+    """Check if imports are sorted correctly with isort.
 
     Args:
         files: list of file paths to check.
 
     Returns:
         A tuple of (sorted_correctly, output_message)
+
     """
     if not files:
         return True, "No files to check"
@@ -88,14 +87,14 @@ def check_isort(files: list[Path]) -> tuple[bool, str]:
 
 
 def check_ruff(files: list[Path]) -> tuple[bool, str]:
-    """
-    Check for linting issues with Ruff.
+    """Check for linting issues with Ruff.
 
     Args:
         files: list of file paths to check.
 
     Returns:
         A tuple of (no_issues, output_message)
+
     """
     if not files:
         return True, "No files to check"
@@ -106,14 +105,14 @@ def check_ruff(files: list[Path]) -> tuple[bool, str]:
 
 
 def main(paths: list[str] | None = None) -> int:
-    """
-    Main function to check PEP 8 standards.
+    """Main function to check PEP 8 standards.
 
     Args:
         paths: list of paths to process. If None, uses current directory.
 
     Returns:
         Exit code (0 for success, 1 for errors).
+
     """
     if paths is None or not paths:
         paths = [os.getcwd()]

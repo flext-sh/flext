@@ -13,7 +13,7 @@ from typing import Any
 class DocstringGapFinder(ast.NodeVisitor):
     """AST visitor to find missing docstrings."""
 
-    def __init__(self, filepath: str):
+    def __init__(self, filepath: str) -> None:
         self.filepath = filepath
         self.gaps: list[dict[str, Any]] = []
         self.current_class = None
@@ -45,7 +45,7 @@ class DocstringGapFinder(ast.NodeVisitor):
                     "name": node.name,
                     "parent_class": old_class,
                     "description": f"Class {node.name}",
-                }
+                },
             )
 
         self.generic_visit(node)
@@ -78,7 +78,7 @@ class DocstringGapFinder(ast.NodeVisitor):
                     "name": name,
                     "parent_class": self.current_class,
                     "description": description,
-                }
+                },
             )
 
         self.generic_visit(node)
@@ -109,7 +109,7 @@ class DocstringGapFinder(ast.NodeVisitor):
                     "name": name,
                     "parent_class": self.current_class,
                     "description": description,
-                }
+                },
             )
 
         self.generic_visit(node)

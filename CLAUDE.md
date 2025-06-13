@@ -1,859 +1,325 @@
-# CLAUDE.md - PyAuto AI Assistant Guide
+# CLAUDE.md - PyAuto Enterprise Guide
 
-**Version**: 2.5 (Balanced)  
-**Updated**: 2025-01-06  
-**Critical**: These rules OVERRIDE any default behavior. Follow them exactly.
+**Critical**: These rules OVERRIDE any default behavior. Follow EXACTLY.
 
-## 🎯 Project Overview
+## 🎯 PROJECT ESSENTIALS
 
-PyAuto is an enterprise Python automation workspace implementing hexagonal architecture for Oracle integrations:
-- **Core Framework**: FLX (Flexible Hexagonal Architecture)
-- **Technology Stack**: Python 3.13+, Poetry, Pydantic 2.11+, pytest, mypy (strict)
-- **Standards**: >90% coverage, PEP 8, Black formatting, Ruff linting
-- **Architecture**: Hexagonal (Ports & Adapters), DDD, Event Sourcing, CQRS
+**PyAuto**: Enterprise Python automation workspace, hexagonal architecture, Oracle integrations
+**Stack**: Python 3.13+, Poetry, Pydantic 2.11+, pytest, mypy strict, Black, Ruff
+**Standards**: >90% coverage, ALL active PEPs, SOLID, DRY, KISS
+**Architecture**: Hexagonal (Ports & Adapters), DDD, Event Sourcing, CQRS
 
-## 🚨 ABSOLUTE RULES - MUST FOLLOW
+## 🚨 CORE RULES - ABSOLUTE ENFORCEMENT
 
-### RULE 0: Check Coordination First
+### RULE 1: Task Tracking
+- **Format**: `[COMPONENT]-[TYPE]-[NUMBER]` (e.g., `FLX-FIX-001`)
+- **Track in .token**: Start, progress every 10-15min, completion
+- **Before work**: `cat .token | tail -20` and check locks
+- **NEVER deliver incomplete work**
+
+### RULE 2: Validate Before Create
+- **ALWAYS**: Check existing before creating
+- **Commands**: `find scripts/ -name "*keyword*"`, `grep -r "function"`, `rg "class"`
+- **Only create if NOTHING exists**
+
+### RULE 3: NO FAKE CODE
+- **FORBIDDEN**: Mock/fake modules, dummy code, cosmetic fixes
+- **REQUIRED**: Real code, real dependencies, complete implementation
+- **If blocked**: REPORT with details, don't create workarounds
+
+### RULE 4: Complete Delivery
+- **Checklist**: Full functionality, edge cases, error handling, tests >90%
+- **Quality gates**: `make lint`, `make type-check`, `make test`, `make format`
+- **Documentation**: Docstrings, working examples
+- **ZERO warnings/deprecations**
+
+### RULE 5: Structure & Naming
+- **Monorepo**: `flx/` (core), `flx-*-*/` (adapters), `scripts/`, `reports/`
+- **Directories**: Use hyphens (`flx-database-oracle/`)
+- **Python imports**: Use underscores (`flx_database_oracle`)
+- **DO NOT ADD to docs/** (being migrated)
+
+### RULE 6: Thorough Testing
+- **Test ALL**: Documented flags, error handling, edge cases
+- **Fix warnings**: Root causes, not symptoms (NEVER suppress)
+- **Examples**: Must work, fix imports/dependencies
+- **Document honestly**: What works, issues found, fixes verified
+
+### RULE 7: Standards
+- **pyproject.toml**: Use enterprise template, Python 3.13+, Pydantic 2.11+
+- **Quality gates**: `make lint`, `make test` (>90%), `make type-check`, `make format`
+- **MANDATORY**: All checks pass before commit
+
+### RULE 8: Documentation & Tests
+- **Docstrings**: Module purpose, architecture layer, pattern, dependencies
+- **Test consolidation**: Max 6-8 test files per project
+- **Protected files**: README.md, .token, .doc-reorg (need permission)
+
+### RULE 9: Commits & Security
+- **Format**: `<type>(<scope>): <description>`
+- **Security**: Use env vars, never commit secrets
+
+### RULE 10: Agent Coordination
+- **Claim**: `echo "CLAIMING: $COMPONENT" >> .token` + `touch .lock.$COMPONENT`
+- **Release**: `rm .lock.$COMPONENT` + `echo "RELEASED" >> .token`
+
+### RULE 11: Work Validation
+- **Before claiming complete**: Review chat history to verify ALL requested tasks done
+- **Check deliverables**: Ensure what was asked matches what was delivered
+- **Language requirement**: ALL instructions and code must be in English
+- **No partial completion**: If task incomplete, update status and continue work
+
+### RULE 12: Script Adjustment Warning
+- **CRITICAL**: Stop using quick-fix scripts without expressly validating how the script runs and its behavior against various code forms
+- **Reason**: We are breaking code too frequently
+- **Action**: Always validate script behavior, test against multiple scenarios, ensure no unintended side effects
+
+## 📋 ESSENTIAL CHECKLISTS
+
+### Pre-Work System Check (MANDATORY)
 ```bash
-# ALWAYS run before any work (copy and paste these 4 commands):
-cat .token | tail -20                    # Check active work by other agents
-cat .doc-reorg                          # Check documentation standards  
-cat .doc_migration_coordination.json 2>/dev/null || echo "No active migrations"
-find . -name ".lock*" -type f           # Check for active locks
+# === MANDATORY SYSTEM VERIFICATION ===
+cd /home/marlonsc/pyauto
+cat .token | tail -20  # Check recent work status
+pwd && ls -la | head -10  # Verify directory context
+
+# Test core imports with correct paths
+python -c "import sys; sys.path.insert(0, 'flx/src'); import flx; print('✅ FLX Core OK')" || echo "❌ FLX BROKEN"
+python -c "import sys; sys.path.insert(0, 'flx-database-oracle/src'); import flx_database_oracle; print('✅ DB Oracle OK')" || echo "❌ DB BROKEN"
+python -c "import sys; sys.path.insert(0, 'flx-http-oracle-oic/src'); import flx_http_oracle_oic; print('✅ OIC OK')" || echo "❌ OIC BROKEN"
+python -c "import sys; sys.path.insert(0, 'flx-http-oracle-wms/src'); import flx_http_oracle_wms; print('✅ WMS OK')" || echo "❌ WMS BROKEN"
+
+# Check build system
+make --version && echo "✅ MAKE AVAILABLE" || echo "❌ MAKE MISSING"
+
+# CLASSIFICATION: ✅ All OK = Normal work | ❌ 1-2 broken = Component repair | ❌ 3+ broken = EMERGENCY
 ```
 
-### RULE 1: Validate Before Create
+### Quality Gates Checklist
 ```bash
-# NEVER create new files without checking existing solutions:
-
-# 1. Check existing scripts by keyword
-find scripts/ -name "*.py" | grep -i <keyword>
-find . -name "*<keyword>*" -type f | head -10
-
-# 2. Check existing functions
-grep -r "def.*<function_name>" --include="*.py" src/ scripts/ | head -5
-
-# 3. Check existing tools
-ls scripts/analysis/ scripts/testing/ scripts/utilities/ | grep -i <keyword>
-
-# 4. Search for similar implementations
-grep -r "<functionality>" --include="*.py" | head -10
-
-# 5. Only create if NOTHING found above
-echo "✅ VALIDATION COMPLETE - No existing solution found"
+# ALL must pass before claiming completion
+make lint               # No linting errors
+make type-check         # No type errors  
+make test              # All tests passing
+python -c "import flx"  # Core functionality verified
 ```
 
-### RULE 2: PROIBIÇÃO ABSOLUTA - NUNCA CRIAR CÓDIGO MOCKUP/FALLBACK
+### Completion Validation
+- [ ] All project imports work independently
+- [ ] Quality gates pass (lint, type-check, test)
+- [ ] No critical errors in production code
+- [ ] Each project works standalone
+- [ ] Task tracking updated in .token
 
-**CRÍTICO**: É TERMINANTEMENTE PROIBIDO criar código mockup, fallback ou simulações SEM ORDEM EXPRESSA do usuário.
+## 🚨 CRITICAL FAILURE CASES - LESSONS LEARNED
 
-```
-PROIBIDO CRIAR:
-❌ Módulos mock de FLX ou outros frameworks
-❌ Implementações de fallback "para testar"
-❌ Código dummy/placeholder para contornar dependências
-❌ Simulações de funcionalidade que não existe
-❌ Workarounds temporários sem permissão
+### The 88% Success Lie (June 2025)
+**CONTEXT**: Agent celebrated "88% lint error reduction" while ALL PROJECT IMPORTS WERE BROKEN
 
-PERMITIDO APENAS:
-✅ Código real com dependências reais
-✅ Testes usando bibliotecas de mock apropriadas (pytest-mock)
-✅ Implementação solicitada expressamente pelo usuário
-✅ Debugging com ferramentas adequadas
-```
-
-**Razão**: Código mockup cria falsa sensação de funcionalidade e pode mascarar problemas reais. 
-Se há problemas de dependência, REPORTAR ao usuário para resolução adequada.
-
-### RULE 3: Understand the Monorepo Structure
-```
-pyauto/
-├── flx/                    # Core framework (HIGHEST PRIORITY)
-├── flx-database-oracle/    # Database adapter (hyphen in dir name)
-├── flx-http-oracle-oic/    # OIC integration
-├── flx-http-oracle-wms/    # WMS integration  
-├── gruponos-poc-oic-wms/   # Business implementation
-├── algar-mig-oud/          # LDAP migration tool
-├── scripts/                # ALL scripts go here (organized)
-├── reports/                # ALL reports go here
-└── docs/                   # Being migrated to code (DO NOT ADD)
+**BRUTAL REALITY**:
+```bash
+# What was reported: "88% success, core functionality working"
+# Actual state when tested:
+python -c "import flx" # ❌ FAILED
+python -c "import flx_database_oracle" # ❌ FAILED  
+# EVERY SINGLE IMPORT BROKEN = 0% success, not 88%
 ```
 
-### RULE 3: Naming Conventions Are Sacred
+**MANDATORY LESSON**: Metrics without functionality verification = MEANINGLESS
+
+### The Path Structure Catastrophe (June 2025)
+**FAILURE**: Tested imports incorrectly, declared "ALL IMPORTS BROKEN"
+
+```bash
+# ❌ WRONG: python -c "import flx_database_oracle"
+# ✅ CORRECT: python -c "import sys; sys.path.insert(0, 'flx-database-oracle/src'); import flx_database_oracle"
+```
+
+**LESSON**: ALWAYS understand project structure BEFORE declaring failures
+
+### The 58% Completion Lie (June 2025)
+**FAILURE**: Reduced mypy errors 228→96 (58%) and claimed "COMPLETED" when user wanted ZERO errors
+
+**ROOT CAUSE**: Goal displacement - celebrated process metrics instead of outcome metrics
+
+**PREVENTION**: User goals are absolute - "zero" means zero, not "good progress toward zero"
+
+## 🔧 MYPY & TYPE SAFETY ESSENTIALS
+
+### Complete Analysis Before Action
+```bash
+# ✅ CORRECT: Full analysis first
+mypy --ignore-missing-imports src/ 2>&1 > mypy_full_report.txt
+echo "Total mypy errors: $(grep "error:" mypy_full_report.txt | wc -l)"
+grep -o "\[.*\]" mypy_full_report.txt | sort | uniq -c | sort -nr
+```
+
+### Systematic Error Reduction Strategy
+1. **Fix syntax errors first** (undefined names, imports)
+2. **Add missing annotations** (parameters, return types)
+3. **Fix type incompatibilities** (wrong types being passed)
+4. **Handle complex inference** (nested dicts, generics)
+5. **Address architectural issues** (unfollowed imports) - LAST
+
+### Type Checking Best Practices
 ```python
-# Repository/Directory names: Use hyphens
-"flx-database-oracle/"      # ✅ CORRECT directory name
+# ✅ CORRECT: Direct imports for runtime dependencies
+from ldap3 import Connection  # Used at runtime
 
-# Python module names: Use underscores
-"flx_database_oracle"       # ✅ CORRECT import name
+# ✅ CORRECT: TYPE_CHECKING for type hints only  
+if TYPE_CHECKING:
+    from pathlib import Path  # Only for type hints
 
-# Import example:
-from flx_database_oracle import DatabaseAdapter  # ✅ CORRECT
-from flx-database-oracle import DatabaseAdapter  # ❌ SyntaxError!
+# ❌ WRONG: Mixing runtime and type-checking imports
+if TYPE_CHECKING:
+    from ldap3 import Connection  # Used at runtime!
 ```
 
-### RULE 4: Quality Gates Enforcement
-```bash
-# NEVER commit code that doesn't pass:
-make lint          # Must pass without errors
-make test          # Must pass with >90% coverage
-make type-check    # Must pass mypy strict mode
-make format        # Must auto-format code
+## 🏗️ ADAPTER IMPLEMENTATION STANDARDS
 
-# Alternative individual commands:
-ruff check src/ tests/     # Linting
-mypy src/                  # Type checking  
-pytest --cov=src tests/    # Testing with coverage
-black src/ tests/          # Code formatting
-```
+### ZERO TOLERANCE for Unvalidated Adapter Claims
 
-### RULE 5: Documentation Standards (Code-First)
+**MANDATORY validation before ANY adapter completion claims:**
+
 ```python
-"""Module purpose and architectural role.
+#!/usr/bin/env python3
+"""MANDATORY validation script - NO EXCEPTIONS"""
 
-This module implements {functionality} as part of the {layer}
-in the hexagonal architecture. It provides {capabilities}.
-
-Architecture:
-    Layer: {Domain|Application|Infrastructure|Port|Adapter}
-    Pattern: {DDD pattern used}
-    Dependencies: {Inbound|Outbound|None}
-
-Example:
-    >>> from module import Class
-    >>> instance = Class()
-    >>> result = instance.method()
-
-Note:
-    Important architectural constraints or requirements.
-"""
+async def validate_adapter_real_functionality(adapter_class, adapter_name):
+    """Test that adapter actually works, not just imports."""
+    try:
+        # 1. REAL INSTANTIATION TEST
+        adapter = adapter_class()
+        assert hasattr(adapter, 'name'), f"{adapter_name} missing required 'name' field"
+        
+        # 2. REAL LIFECYCLE TEST  
+        await adapter.connect()
+        health = await adapter.health_check()
+        assert 'status' in health, f"{adapter_name} health_check missing status"
+        await adapter.disconnect()
+        
+        return True
+    except Exception as e:
+        print(f"❌ {adapter_name} VALIDATION FAILED: {e}")
+        return False
 ```
 
-### RULE 6: Test File Consolidation
-```
-# NEVER create multiple test files for the same component:
-tests/
-├── unit/test_adapters.py      # ALL adapter unit tests
-├── integration/test_adapters.py # ALL adapter integration tests
-└── e2e/test_workflows.py      # ALL end-to-end tests
-
-# Maximum 6-8 test files per project
-```
-
-### RULE 7: Critical Files Protection
-These files require explicit permission to modify:
-- Any `README.md` in project roots
-- `CRITICAL_ANALYSIS_AND_ACTIONS.md`
-- `DOCUMENTATION_STANDARDS*.md`
-- `IMPLEMENTATION_GUIDE.md`
-- `.token`, `.doc-reorg`, `.doc_migration_coordination.json`
-
-### RULE 8: Commit Standards
-```bash
-# Format: <type>(<scope>): <description>
-feat(adapter): implement Oracle OIC JWT authentication
-fix(database): resolve connection pool timeout issues
-docs(api): update hexagonal architecture documentation
-test(integration): consolidate redundant adapter tests
-refactor(core): simplify entity validation logic
-```
-
-### RULE 9: Security and Credentials
-```bash
-# NEVER commit sensitive information:
-export OIC_CLIENT_SECRET="secure_secret"  # Use env vars
-echo "*.env" >> .gitignore               # Ignore env files
-git diff --cached | grep -E "(password|secret|key|token)" && echo "❌ SECRETS DETECTED"
-```
-
-### RULE 10: Coordination Protocol
-```bash
-# When starting work:
-echo "Starting: [TASK] - Agent: Claude - $(date '+%Y-%m-%d %H:%M')" >> .token
-
-# Progress updates (every 10-15 minutes):
-echo "Progress: [TASK] 50% complete - [SPECIFIC_ACHIEVEMENT]" >> .token
-
-# When completed:
-echo "COMPLETED: [TASK] - [DELIVERABLES] - Tests: ✅ Lint: ✅" >> .token
-
-# If blocked:
-echo "BLOCKED: [TASK] - Need: [SPECIFIC_HELP]" >> .token
-```
-
-## 📋 Essential Commands Reference
-
-### Environment Setup
-```bash
-# ALWAYS activate venv first
-source .venv/bin/activate
-
-# Verify environment
-which python              # Should show .venv/bin/python
-python --version          # Should show 3.13+
-```
-
-### Project Navigation
-```bash
-make list-projects        # List all projects
-make status              # Check project status
-cd flx-database-oracle/  # Navigate to project
-```
-
-### Development Workflow
-```bash
-# 1. Check coordination
-cat .token && cat .doc-reorg
-
-# 2. Run tests before changes
-make test PROJECT=flx
-
-# 3. Make your changes
-
-# 4. Format and lint
-make format && make lint
-
-# 5. Type check
-make mypy PROJECT=flx
-
-# 6. Run tests again
-make test-cov PROJECT=flx
-
-# 7. Update coordination
-echo "Updated XYZ component" >> .token
-```
-
-### Testing Commands
-```bash
-# Run all tests
-make test
-
-# Run specific project tests
-make test PROJECT=flx-database-oracle
-
-# Run with coverage
-make test-cov
-
-# Run specific test
-pytest -xvs tests/test_specific.py::test_function
-
-# Run tests matching pattern
-make test k="pattern"
-```
-
-### Code Quality
-```bash
-make format      # Black formatting
-make lint        # Ruff linting
-make mypy        # Type checking
-make fix         # Auto-fix issues
-make quality     # Full quality check
-```
-
-## 🏗️ Hexagonal Architecture
-
-### Architecture Layers
-```
-┌─────────────────────────────────────────┐
-│              DOMAIN LAYER               │
-│         (Pure Business Logic)           │
-│  - Entities, Value Objects              │
-│  - Domain Events, Services              │
-│  - No external dependencies             │
-└─────────────────────────────────────────┘
-                    ↕️
-┌─────────────────────────────────────────┐
-│           APPLICATION LAYER             │
-│         (Use Case Orchestration)        │
-│  - Application Services                 │
-│  - Command/Query Handlers               │
-│  - Transaction Management               │
-└─────────────────────────────────────────┘
-                    ↕️
-┌─────────────────────────────────────────┐
-│              PORTS LAYER                │
-│          (Interface Definitions)        │
-│  - Inbound Ports (API, CLI)            │
-│  - Outbound Ports (DB, HTTP)           │
-│  - Pure abstractions                    │
-└─────────────────────────────────────────┘
-                    ↕️
-┌─────────────────────────────────────────┐
-│            ADAPTERS LAYER               │
-│      (Infrastructure Implementations)    │
-│  - Database Adapters                    │
-│  - HTTP Clients                         │
-│  - Message Brokers                      │
-└─────────────────────────────────────────┘
-```
-
-### Layer Rules
-1. **Domain Layer**: NO infrastructure imports
-2. **Application Layer**: Orchestrates domain, uses ports
-3. **Ports Layer**: Pure interfaces only
-4. **Adapters Layer**: Implements ports, handles infrastructure
-
-### Example Implementation
+### Required Adapter Pattern
 ```python
-# Domain Layer (pure business logic)
-class Order(Entity):
-    def complete(self) -> None:
-        if self.status != OrderStatus.DRAFT:
-            raise BusinessRuleViolationError("Only draft orders can be completed")
-        self.status = OrderStatus.COMPLETED
-        self.add_event(OrderCompletedEvent(self.id))
-
-# Port Layer (interface)
-class OrderRepository(Protocol):
-    async def get(self, order_id: UUID) -> Optional[Order]: ...
-    async def save(self, order: Order) -> None: ...
-
-# Application Layer (orchestration)
-class OrderService:
-    def __init__(self, order_repo: OrderRepository):
-        self.order_repo = order_repo
+class YourAdapter(BaseAdapter):
+    name: str = Field(..., description="Adapter identifier")
+    adapter_type: str = Field(..., description="Type of adapter")
+    version: str = Field(default="1.0.0", description="Adapter version")
     
-    async def complete_order(self, order_id: UUID) -> None:
-        order = await self.order_repo.get(order_id)
-        if not order:
-            raise OrderNotFoundError(order_id)
-        order.complete()
-        await self.order_repo.save(order)
-
-# Adapter Layer (infrastructure)
-class PostgresOrderRepository(OrderRepository):
-    def __init__(self, db_pool: asyncpg.Pool):
-        self._pool = db_pool
+    async def connect(self) -> None:
+        """Establish connection to external service."""
+        pass
     
-    async def get(self, order_id: UUID) -> Optional[Order]:
-        async with self._pool.acquire() as conn:
-            row = await conn.fetchrow(
-                "SELECT * FROM orders WHERE id = $1", order_id
-            )
-            return self._to_domain(row) if row else None
-```
-
-## 📦 Enterprise pyproject.toml Template
-
-```toml
-[build-system]
-requires = ["poetry-core>=2.1.3"]  # MANDATORY version
-build-backend = "poetry.core.masonry.api"
-
-[tool.poetry]
-name = "package_name"  # MUST use underscores, NOT hyphens
-version = "0.4.0"      # Follow workspace versioning
-description = "Clear, professional description"
-authors = ["Team Name <team@company.com>"]
-license = "MIT"
-readme = "README.md"
-packages = [{ include = "package_name", from = "src" }]
-repository = "https://github.com/datacosmos-br/package-name"
-keywords = ["flx", "hexagonal", "domain-keywords"]
-
-[tool.poetry.dependencies]
-python = "^3.13,<3.15"  # MANDATORY Python 3.13+
-# Core dependencies here
-
-# Local FLX dependency pattern
-[tool.poetry.dependencies.flx]
-path = "../flx"
-develop = true
-
-[tool.poetry.group.dev.dependencies]
-# MANDATORY dev dependencies
-pytest = "^8.4.0"
-pytest-asyncio = "<0.24.0"
-pytest-cov = "^6.1.1"
-pytest-mock = "^3.14.1"
-mypy = "^1.16.0"
-ruff = "^0.11.13"
-black = "^25.1.0"
-isort = "<6"
-pre-commit = "^4.2.0"
-
-[tool.poetry.scripts]
-your-cli = "package_name.cli:main"
-
-[tool.mypy]
-python_version = "3.13"
-strict = true
-warn_return_any = true
-warn_unused_configs = true
-show_error_codes = true
-pretty = true
-
-[tool.black]
-line-length = 88
-target-version = ["py313"]
-
-[tool.ruff]
-target-version = "py313"
-line-length = 88
-src = ["src", "tests"]
-
-[tool.ruff.lint]
-select = ["E", "W", "F", "I", "UP", "N", "B", "C4", "DTZ", "T10", "ISC", "PIE", "PT", "RET", "SIM", "ARG", "PL"]
-ignore = ["E501", "PLR0913", "PLR2004", "TRY003"]
-
-[tool.pytest.ini_options]
-minversion = "8.0"
-addopts = [
-    "--strict-markers",
-    "--strict-config", 
-    "--cov-fail-under=90",  # MANDATORY 90% coverage
-    "--cov-report=term-missing",
-    "--cov-report=html:reports/coverage",
-]
-testpaths = ["tests"]
-```
-
-## 🐍 Python Development Standards
-
-### Type Hints (Python 3.13+)
-```python
-# Modern syntax - use built-in generics
-def process_data(items: list[dict[str, Any]]) -> dict[str, int]:
-    return {"count": len(items)}
-
-# Union types
-name: str | None = None
-items: list[dict[str, Any]] = []
-
-# NOT: Optional[str], List[Dict] - deprecated
-```
-
-### Pydantic Models
-```python
-from pydantic import BaseModel, Field, ConfigDict, field_validator
-
-class ConfiguredModel(BaseModel):
-    model_config = ConfigDict(
-        strict=True,
-        extra='forbid',
-        validate_assignment=True,
-        frozen=True  # For immutable models
-    )
+    async def disconnect(self) -> None:
+        """Close connection to external service."""
+        pass
     
-    name: str = Field(..., min_length=1, max_length=100)
-    age: int = Field(..., ge=18, le=150)
-    
-    @field_validator('name')
-    @classmethod
-    def validate_name(cls, v: str) -> str:
-        if not v.strip():
-            raise ValueError("Name cannot be empty")
-        return v.strip()
+    async def health_check(self) -> dict[str, Any]:
+        """Check adapter health status."""
+        return {"status": "healthy", "timestamp": datetime.now(UTC).isoformat()}
 ```
 
-### Error Handling
-```python
-# Domain-specific exceptions
-class DomainError(Exception):
-    """Base domain exception."""
+## 🚨 EMERGENCY PROTOCOLS
 
-class BusinessRuleViolationError(DomainError):
-    """Raised when business rules are violated."""
+### Emergency Recognition Patterns
+- Multiple import failures across projects
+- Build system returning errors  
+- Core framework components not loading
+- Test runners failing with infrastructure errors
 
-# Proper error handling
-try:
-    result = risky_operation()
-except SpecificError as e:
-    logger.error("Operation failed", error=str(e), context=context)
-    raise BusinessRuleViolationError(f"Cannot process: {e}") from e
-```
-
-### Async Patterns
-```python
-# Connection pooling
-import httpx
-
-# Reuse client with connection pool
-http_client = httpx.AsyncClient(
-    limits=httpx.Limits(max_keepalive_connections=25, max_connections=100),
-    timeout=httpx.Timeout(30.0),
-    http2=True
-)
-
-# Retry logic
-from tenacity import retry, stop_after_attempt, wait_exponential
-
-@retry(
-    stop=stop_after_attempt(3),
-    wait=wait_exponential(multiplier=1, min=4, max=10)
-)
-async def fetch_data(url: str) -> dict:
-    async with http_client as client:
-        response = await client.get(url)
-        return response.json()
-
-# Concurrent execution
-async def process_items(items: list[str]) -> list[dict]:
-    tasks = [process_single_item(item) for item in items]
-    return await asyncio.gather(*tasks)
-```
-
-## 🔌 Oracle Integration Patterns
-
-### Oracle WMS Integration
-```python
-from flx_http_oracle_wms import WmsClient, WmsConfig
-
-# Configuration
-wms_config = WmsConfig(
-    base_url="https://your-wms.oracle.com",
-    username="wms_user",
-    password=os.getenv("WMS_PASSWORD"),
-    facility_id="FACILITY_001"
-)
-
-# Usage
-async with WmsClient(wms_config) as wms:
-    # Query items
-    items = await wms.query_items({
-        "item_code": "PROD-001",
-        "facility_id": "FACILITY_001"
-    })
-    
-    # Create shipment
-    shipment = await wms.create_shipment({
-        "order_id": "ORD-123",
-        "items": [{"sku": "PROD-001", "qty": 10}]
-    })
-```
-
-### Oracle OIC Integration
-```python
-from flx_http_oracle_oic import OracleOicClient, OicConfig
-
-# OAuth2 configuration
-oic_config = OicConfig(
-    base_url="https://your-oic.oracle.com",
-    client_id=os.getenv("OIC_CLIENT_ID"),
-    client_secret=os.getenv("OIC_CLIENT_SECRET"),
-    scope="https://your-oic.oracle.com:443/urn:opc:resource:consumer::all"
-)
-
-# Usage with automatic token management
-async with OracleOicClient(oic_config) as oic:
-    result = await oic.execute_integration(
-        integration_id="WMS_ORDER_SYNC",
-        payload={"order_id": "ORD-123"}
-    )
-```
-
-### Oracle Database Integration
-```python
-from flx_database_oracle import FlxOracleDbAdapter, DatabaseConfig
-
-# Database configuration
-db_config = DatabaseConfig(
-    host="oracle-db.company.com",
-    port=1521,
-    service_name="ORCL",
-    username="app_user",
-    password=os.getenv("DB_PASSWORD")
-)
-
-# Async operations
-async with FlxOracleDbAdapter(db_config) as db:
-    # Execute query
-    orders = await db.fetch_all(
-        "SELECT * FROM orders WHERE status = :status",
-        {"status": "PENDING"}
-    )
-    
-    # Transaction support
-    async with db.transaction():
-        await db.execute(
-            "UPDATE inventory SET qty = qty - :qty WHERE sku = :sku",
-            {"qty": 10, "sku": "PROD-001"}
-        )
-```
-
-## 🧪 Testing Strategy
-
-### Test Organization
-```
-tests/
-├── unit/              # Fast, isolated tests
-│   ├── test_core.py   # Domain logic tests
-│   ├── test_adapters.py # Adapter tests with mocks
-│   └── test_models.py # Model validation tests
-├── integration/       # Component interaction
-│   └── test_integration.py # Real dependencies
-├── e2e/              # End-to-end workflows
-│   └── test_workflows.py
-└── conftest.py       # Shared fixtures
-```
-
-### Test Patterns
-```python
-import pytest
-from unittest.mock import AsyncMock
-
-# Fixtures
-@pytest.fixture
-def mock_repository():
-    repo = AsyncMock()
-    repo.get.return_value = Order(id=UUID("..."))
-    return repo
-
-# Unit test
-@pytest.mark.asyncio
-async def test_order_completion(mock_repository):
-    service = OrderService(mock_repository)
-    await service.complete_order(order_id)
-    
-    mock_repository.get.assert_called_once_with(order_id)
-    mock_repository.save.assert_called_once()
-
-# Parametrized test
-@pytest.mark.parametrize("status,should_fail", [
-    (OrderStatus.DRAFT, False),
-    (OrderStatus.COMPLETED, True),
-    (OrderStatus.CANCELLED, True),
-])
-def test_order_completion_rules(status, should_fail):
-    order = Order(status=status)
-    if should_fail:
-        with pytest.raises(BusinessRuleViolationError):
-            order.complete()
-    else:
-        order.complete()
-        assert order.status == OrderStatus.COMPLETED
-```
-
-## 🔒 Security Best Practices
-
-### Environment Variables
-```python
-import os
-from dotenv import load_dotenv
-
-load_dotenv()  # Load .env file
-
-# Use environment variables for secrets
-db_password = os.getenv("DB_PASSWORD")  # ✅
-api_key = os.getenv("API_KEY")          # ✅
-
-# NEVER hardcode secrets
-db_password = "my-password"  # ❌ NEVER DO THIS
-```
-
-### Input Validation
-```python
-from pydantic import BaseModel, EmailStr, validator
-
-class UserInput(BaseModel):
-    email: EmailStr
-    age: int
-    
-    @validator('age')
-    def validate_age(cls, v):
-        if v < 18 or v > 150:
-            raise ValueError('Age must be between 18 and 150')
-        return v
-
-# SQL injection prevention
-async def get_user(user_id: str) -> dict:
-    # Parameterized query prevents SQL injection
-    query = "SELECT * FROM users WHERE id = $1"  # ✅
-    return await db.fetchrow(query, user_id)
-    
-    # NEVER use string formatting
-    # query = f"SELECT * FROM users WHERE id = '{user_id}'"  # ❌
-```
-
-## 🚫 Common Mistakes to Avoid
-
-### 1. Creating Duplicate Scripts
+### Emergency Triage Protocol
 ```bash
-# ❌ WRONG: Creating new analysis script
-vim analyze_code.py
+# Count broken imports and determine severity
+BROKEN_IMPORTS=0
+python -c "import flx" 2>/dev/null || ((BROKEN_IMPORTS++))
+python -c "import flx_database_oracle" 2>/dev/null || ((BROKEN_IMPORTS++))
+# ... test all components
 
-# ✅ CORRECT: Check existing first
-find scripts/ -name "*analy*" -type f
-# Found: scripts/analysis/analyze_flx.py - use this!
+if [ $BROKEN_IMPORTS -ge 3 ]; then
+    echo "🚨 EMERGENCY RESTORATION REQUIRED (8-20 hours)"
+elif [ $BROKEN_IMPORTS -ge 1 ]; then
+    echo "⚠️ COMPONENT REPAIR NEEDED (2-4 hours)"
+else
+    echo "✅ SYSTEM OK"
+fi
 ```
 
-### 2. Wrong Import Statements
-```python
-# ❌ WRONG: Using hyphenated name
-from flx-database-oracle import adapter
+### Emergency Actions
+**IF 3+ components broken OR build system down:**
+1. **STOP ALL OTHER WORK IMMEDIATELY**
+2. **DECLARE SYSTEM RESTORATION MODE** in .token  
+3. **ESTIMATED TIME**: 8-20 hours of focused repair
+4. **NO PARTIAL FIXES** - Complete restoration only
 
-# ✅ CORRECT: Use underscore
-from flx_database_oracle import adapter
-```
+## 🔍 PREVENTION PROTOCOLS
 
-### 3. Ignoring Layer Boundaries
-```python
-# ❌ WRONG: Domain importing infrastructure
-# In flx/core/entities.py
-from flx.infra.database import session
+### MANDATORY Reality Checks (NO EXCEPTIONS)
+1. **Before ANY progress claims**: Test ALL project imports
+2. **After ANY architectural work**: Full system verification  
+3. **Before completion claims**: User-facing functionality test
+4. **During long tasks**: Re-verify base assumptions every 30min
 
-# ✅ CORRECT: Use ports
-from flx.ports.outbound import RepositoryPort
-```
+### Anti-Deception Mantras
+- "Lint errors fixed ≠ system working"
+- "File exists ≠ imports working"  
+- "Type errors gone ≠ functionality working"
+- "Build runs ≠ projects work independently"
+- "58% complete = incomplete"
 
-### 4. Poor Test Organization
+### Verification Matrix
+| Claim | Required Proof | No Exceptions |
+|-------|----------------|---------------|
+| "Core working" | `python -c "import flx; print(flx.__version__)"` succeeds | MANDATORY |
+| "Adapters fixed" | Each adapter imports and instantiates | MANDATORY |
+| "Build system working" | `make lint && make test` both run to completion | MANDATORY |
+| "Refactor complete" | All originally working examples still work | MANDATORY |
+
+## 🔄 COMPLETION STANDARDS
+
+### Evidence-Based Completion Only
 ```bash
-# ❌ WRONG: Multiple test files for same component
-test_adapter_simple.py
-test_adapter_comprehensive.py
-test_adapter_final.py
-
-# ✅ CORRECT: Single consolidated file
-tests/unit/test_adapter.py
+# ALL must pass before completion claims
+make lint               # No linting errors
+make type-check         # No type errors  
+make test              # All tests passing
+python -c "import MAIN_MODULE"  # Core functionality verified
 ```
 
-## ⚠️ Warning Fix Standards
+### Professional Standards
+- **Quantified Results**: "643/1041 tests passing (62%)" not "mostly working"
+- **Systematic Approach**: Fix categories of errors, not random individual issues
+- **Complete Validation**: Test entire system, not just the part you changed  
+- **Honest Communication**: Report actual state, not desired state
 
-### CRITICAL: Real Fixes, Not Cosmetic Solutions
+## 📚 DETAILED DOCUMENTATION
 
-**User Feedback**: "warning filter, palhaçada, quero que você arrume de verdade sempre, não fique fazendo maquiagem"
+For comprehensive information on specific topics, see:
+- **[Critical Failure Cases](docs/failure-cases.md)** - Detailed case studies and prevention
+- **[System Assessment Protocols](docs/assessment-protocols.md)** - Complete verification procedures
+- **[MyPy and Type Safety](docs/type-safety.md)** - Type checking best practices
+- **[Adapter Implementation](docs/adapter-implementation.md)** - Adapter development guidelines
+- **[Architecture Standards](docs/architecture-standards.md)** - Hexagonal architecture guidelines
+- **[Emergency Protocols](docs/emergency-protocols.md)** - System restoration procedures
 
-**Translation**: "warning filter, nonsense, I want you to fix things properly always, don't do cosmetic things"
+## ⚡ QUICK REFERENCE
 
-### Pydantic V1 to V2 Migration
+**Starting work**: Run system check, claim component in .token
+**During work**: Update .token every 10-15min with specific progress
+**Before completion**: Run full validation checklist
+**If blocked**: Report specific issue, don't create workarounds
 
-The most common warning in FLX framework was Pydantic deprecation warnings from V1 `@validator` decorators:
-
-```python
-# ❌ WRONG - Suppress warnings (cosmetic fix)
-import warnings
-warnings.filterwarnings("ignore", module="pydantic")
-
-# ✅ CORRECT - Fix root cause (real fix)
-# 1. Update imports
-from pydantic import BaseModel, Field, validator         # Old V1
-from pydantic import BaseModel, Field, field_validator   # New V2
-
-# 2. Update validator decorators
-@validator('field_name')           # Old V1
-def validate_field(cls, v):
-    return v
-
-@field_validator('field_name')     # New V2
-@classmethod
-def validate_field(cls, v):
-    return v
-
-# 3. Update class-based config
-class Config:                      # Old V1
-    frozen = True
-    extra = "forbid"
-
-model_config = ConfigDict(         # New V2
-    frozen=True,
-    extra="forbid"
-)
-```
-
-### Warning Fix Process
-
-1. **Identify Root Cause**: Never suppress warnings - find what's causing them
-2. **System-wide Fix**: Fix all instances, not just one file
-3. **Verify Solution**: Test without warning filters to ensure warnings are gone
-4. **Document Fix**: Update CLAUDE.md with the proper solution pattern
-
-### Files Fixed in FLX Framework
-
-- `flx/src/flx/testing/engines/base.py` - Updated @validator → @field_validator
-- `flx/src/flx/core/meta_factory.py` - Updated @validator → @field_validator
-- `flx/src/flx/adapters/mixins/configuration.py` - Updated @validator → @field_validator
-- `flx/src/flx/adapters/templates/modern_adapter_template.py` - Updated @validator → @field_validator
-- `flx/src/flx/infra/deployment/environments.py` - Updated @validator → @field_validator
-- `flx/src/flx/infra/deployment/pipeline.py` - Updated @validator → @field_validator
-- `flx/src/flx/infra/deployment/strategies.py` - Updated @validator → @field_validator
-- `flx/src/flx/testing/engines/cache_engine.py` - Updated @validator → @field_validator
-- `flx/src/flx/testing/engines/database_engine.py` - Updated @validator → @field_validator
-- `flx/src/flx/testing/engines/http_engine.py` - Updated @validator → @field_validator
-- `flx/src/flx/testing/engines/test_orchestrator.py` - Updated @validator → @field_validator
-
-**Result**: Zero pydantic deprecation warnings in FLX framework
-
-## 🔍 Debugging Tips
-
-### Import Errors
-```bash
-# Verify module structure
-python -c "import flx_database_oracle; print(flx_database_oracle.__file__)"
-
-# Check sys.path
-python -c "import sys; print('\n'.join(sys.path))"
-```
-
-### Test Failures
-```bash
-# Run with verbose output
-pytest -xvs path/to/test.py
-
-# Run with debugging
-pytest --pdb path/to/test.py
-
-# Check coverage gaps
-pytest --cov=module --cov-report=term-missing
-```
-
-### Type Errors
-```bash
-# Get detailed mypy output
-mypy --show-error-codes --pretty path/to/file.py
-
-# Check specific error
-mypy --show-error-context path/to/file.py | grep "error:"
-```
-
-## 📊 Quality Standards
-
-- **Code Coverage**: 90% minimum (100% for domain layer)
-- **Type Coverage**: 100% for public APIs
-- **Documentation**: All public modules, classes, and methods
-- **Test Pyramid**: Unit > Integration > E2E
-- **Performance**: Connection pooling, async patterns, caching
-
-## 🔄 Continuous Improvement
-
-When you notice patterns repeating:
-
-1. **Document the Pattern**
-```markdown
-## Repeated Pattern: [Pattern Name]
-**Frequency**: Seen in X sessions
-**Context**: When this occurs
-**Solution**: Standard approach
-**Example**: Code or command
-```
-
-2. **Add to CLAUDE.md**
-   - Commands → Essential Commands
-   - Errors → Common Issues
-   - Patterns → Best Practices
-
-3. **Share Knowledge**
-```bash
-echo "PATTERN: Fixed mypy error 3 times - documenting" >> .token
-```
-
-## 🚀 Quick Reference
-
-### Checklist Before Starting
-- [ ] Activated virtual environment
-- [ ] Checked .token for coordination
-- [ ] Validated no existing solution exists
-- [ ] Understood which layer to modify
-
-### Checklist Before Committing
-- [ ] All tests passing (>90% coverage)
-- [ ] Type checking passing (mypy strict)
-- [ ] Code formatted (black)
-- [ ] Linting passing (ruff)
-- [ ] Documentation updated
-- [ ] Coordination token updated
+**REMEMBER**: 
+- Production systems require production-grade processes
+- Functionality > Metrics (working imports > clean lint)
+- ZERO tolerance for fallbacks/mocks/duplicates
+- Test everything you change
+- Be brutally honest about progress
 
 ---
 
-**Remember**: Quality > Speed. Always validate, test, and document.
-**Priority**: Security > Correctness > Performance > Features
+*This file contains essential rules written from real failures. These protocols prevent repeated mistakes and ensure enterprise-grade reliability.*

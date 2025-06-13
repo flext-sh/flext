@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-Main script to run all mypy error fixers in the right order.
-"""
+"""Main script to run all mypy error fixers in the right order."""
 
 import subprocess
 import sys
@@ -42,13 +40,13 @@ def flx_errors(directory: str) -> None:
     # Re-run mypy to see the progress
     current_errors = count_mypy_errors(directory)
     print(
-        f"Reduced errors from {initial_errors} to {current_errors} ({initial_errors - current_errors} fixed)"
+        f"Reduced errors from {initial_errors} to {current_errors} ({initial_errors - current_errors} fixed)",
     )
 
     # Step 2: Fix missing return type annotations for non-test functions
     print("\n=== Step 2: Fixing missing return type annotations ===")
     _returncode, output = run_command(
-        ["python", "flx_mypy_errors.py", directory, "return_type"]
+        ["python", "flx_mypy_errors.py", directory, "return_type"],
     )
     print(output)
 
@@ -56,13 +54,13 @@ def flx_errors(directory: str) -> None:
     previous_errors = current_errors
     current_errors = count_mypy_errors(directory)
     print(
-        f"Reduced errors from {previous_errors} to {current_errors} ({previous_errors - current_errors} fixed)"
+        f"Reduced errors from {previous_errors} to {current_errors} ({previous_errors - current_errors} fixed)",
     )
 
     # Step 3: Fix missing type parameters for generic types
     print("\n=== Step 3: Fixing missing type parameters for generic types ===")
     _returncode, output = run_command(
-        ["python", "flx_generic_type_params.py", directory]
+        ["python", "flx_generic_type_params.py", directory],
     )
     print(output)
 
@@ -70,13 +68,13 @@ def flx_errors(directory: str) -> None:
     previous_errors = current_errors
     current_errors = count_mypy_errors(directory)
     print(
-        f"Reduced errors from {previous_errors} to {current_errors} ({previous_errors - current_errors} fixed)"
+        f"Reduced errors from {previous_errors} to {current_errors} ({previous_errors - current_errors} fixed)",
     )
 
     # Step 4: Remove unused type ignore comments
     print("\n=== Step 4: Removing unused type ignore comments ===")
     _returncode, output = run_command(
-        ["python", "flx_mypy_errors.py", directory, "unused_ignores"]
+        ["python", "flx_mypy_errors.py", directory, "unused_ignores"],
     )
     print(output)
 
@@ -84,13 +82,13 @@ def flx_errors(directory: str) -> None:
     previous_errors = current_errors
     current_errors = count_mypy_errors(directory)
     print(
-        f"Reduced errors from {previous_errors} to {current_errors} ({previous_errors - current_errors} fixed)"
+        f"Reduced errors from {previous_errors} to {current_errors} ({previous_errors - current_errors} fixed)",
     )
 
     # Step 5: Apply advanced fixes (more complex issues)
     print("\n=== Step 5: Applying advanced fixes ===")
     _returncode, output = run_command(
-        ["python", "flx_advanced_mypy_errors.py", directory]
+        ["python", "flx_advanced_mypy_errors.py", directory],
     )
     print(output)
 
@@ -102,20 +100,20 @@ def flx_errors(directory: str) -> None:
     print(f"Initial mypy errors: {initial_errors}")
     print(f"Remaining mypy errors: {final_errors}")
     print(
-        f"Total fixed: {initial_errors - final_errors} ({(initial_errors - final_errors) / initial_errors * 100:.1f}%)"
+        f"Total fixed: {initial_errors - final_errors} ({(initial_errors - final_errors) / initial_errors * 100:.1f}%)",
     )
 
     if final_errors > 0:
         print("\nRemaining errors require manual intervention. Common patterns to fix:")
         print("1. Check functions that return values and add specific return types")
         print(
-            "2. Add proper None checks before accessing attributes of optional values"
+            "2. Add proper None checks before accessing attributes of optional values",
         )
         print(
-            "3. Fix incompatible return types by ensuring function returns match the declared type"
+            "3. Fix incompatible return types by ensuring function returns match the declared type",
         )
         print(
-            "4. Fix assignment issues by ensuring variable types are compatible with assigned values"
+            "4. Fix assignment issues by ensuring variable types are compatible with assigned values",
         )
         print("5. Address abstract class issues by implementing required methods")
         print("6. Fix call argument issues by matching function signatures")

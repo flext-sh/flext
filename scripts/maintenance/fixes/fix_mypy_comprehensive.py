@@ -111,7 +111,7 @@ __all__ = ["Flx{module_name.replace('_', '').title()}"]
             print(f"Created missing module: {module_path}")
 
 
-def main():
+def main() -> None:
     """Main function."""
     print("Analyzing mypy errors...")
     errors = get_mypy_errors()

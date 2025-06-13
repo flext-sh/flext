@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Scaffold Management Script
+"""Scaffold Management Script.
 
 Manages flx_project templates and scaffolds for the pyauto workspace.
 

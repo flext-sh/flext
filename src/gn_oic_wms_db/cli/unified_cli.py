@@ -8,12 +8,12 @@ import logging
 import os
 import sys
 
-from flx.core.exceptions import DomainError, ValidationError
+from flx.core.domain.exceptions import DomainError, ValidationError
 from gn_oic_wms_db.__version__ import __version__
 
 # Configure logging
 logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
 )
 logger = logging.getLogger(__name__)
 
@@ -33,8 +33,8 @@ class UnifiedCLI:
         if os.path.exists(env_file):
             try:
                 with open(env_file, encoding="utf-8") as f:
-                    for line in f:
-                        line = line.strip()
+                    for raw_line in f:
+                        line = raw_line.strip()
                         if line and not line.startswith("#") and "=" in line:
                             key, value = line.split("=", 1)
                             os.environ[key.strip()] = value.strip()
@@ -65,10 +65,10 @@ class UnifiedCLI:
 
         if console:
             console.print(
-                f"\n[bold blue]GrupoNos OIC-WMS CLI v{__version__}[/bold blue]"
+                f"\n[bold blue]GrupoNos OIC-WMS CLI v{__version__}[/bold blue]",
             )
             console.print(
-                "Oracle Integration Cloud and Warehouse Management System CLI\n"
+                "Oracle Integration Cloud and Warehouse Management System CLI\n",
             )
 
             console.print("[bold]USAGE:[/bold]")
@@ -126,7 +126,7 @@ class UnifiedCLI:
                     console.print(f"    [cyan]{cmd:<30}[/cyan] {desc}")
                 console.print()
             else:
-                for cmd, desc in commands:
+                for _cmd, _desc in commands:
                     pass
 
         if console:
@@ -178,18 +178,14 @@ class UnifiedCLI:
             elif category == "health":
                 self.execute_health_command(subcommand, command_args)
         except Exception as e:
-            logger.error(f"Command execution failed: {e}")
+            logger.exception(f"Command execution failed: {e}")
 
-    def execute_auth_command(self, subcommand: str, args: list[str]) -> None:
+    def execute_auth_command(self, subcommand: str, _args: list[str]) -> None:
         """Execute authentication commands."""
-        if subcommand == "login":
-            print("Authenticating with Oracle systems...")
-        elif subcommand == "token":
-            print("Showing authentication token information...")
-        elif subcommand == "refresh":
-            print("Refreshing authentication token...")
+        if subcommand in {"login", "token"} or subcommand == "refresh":
+            pass
 
-    def execute_wms_command(self, subcommand: str, args: list[str]) -> None:
+    def execute_wms_command(self, subcommand: str, _args: list[str]) -> None:
         """Execute WMS commands."""
         if subcommand in {"entities", "sync"} or subcommand == "status":
             pass
@@ -201,9 +197,8 @@ class UnifiedCLI:
         elif (
             subcommand in {"integration-status", "integration-activate"}
             or subcommand == "integration-deactivate"
-        ):
-            if not args:
-                return
+        ) and not args:
+            return
 
     def execute_database_command(self, subcommand: str, args: list[str]) -> None:
         """Execute database commands."""
@@ -215,7 +210,7 @@ class UnifiedCLI:
         elif subcommand == "sync-status":
             pass
 
-    def execute_monitor_command(self, subcommand: str, args: list[str]) -> None:
+    def execute_monitor_command(self, subcommand: str, _args: list[str]) -> None:
         """Execute monitoring commands."""
         if subcommand in {"logs", "metrics"} or subcommand == "dashboard":
             pass
@@ -231,7 +226,7 @@ class UnifiedCLI:
         elif subcommand == "validate":
             pass
 
-    def execute_health_command(self, subcommand: str, args: list[str]) -> None:
+    def execute_health_command(self, subcommand: str, _args: list[str]) -> None:
         """Execute health commands."""
         if subcommand in {"check", "status"} or subcommand == "ping":
             pass
@@ -246,10 +241,10 @@ def main(args: list[str] | None = None) -> None:
         cli = UnifiedCLI()
         cli.execute_command(args)
     except ValidationError as e:
-        logger.error(f"Validation error: {e}")
+        logger.exception(f"Validation error: {e}")
         sys.exit(1)
     except DomainError as e:
-        logger.error(f"Application error: {e}")
+        logger.exception(f"Application error: {e}")
         sys.exit(1)
     except KeyboardInterrupt:
         sys.exit(0)

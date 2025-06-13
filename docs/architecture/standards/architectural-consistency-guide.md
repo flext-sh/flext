@@ -379,7 +379,7 @@ class ExampleAdapter(BaseAdapter):
 ```python
 # ✅ CORRECT Layer-based Import Order
 from flx.core.entities import User, Order                    # Domain layer
-from flx.core.value_objects import Email, Money             # Domain layer
+from flx.core.domain.value_objects import Email, Money             # Domain layer
 from flx.ports.inbound.commands import CreateUserCommand    # Port layer
 from flx.ports.outbound.repository import UserRepository    # Port layer
 from flx.adapters.base import BaseAdapter                   # Adapter layer

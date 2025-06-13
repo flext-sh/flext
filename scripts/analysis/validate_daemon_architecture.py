@@ -20,7 +20,7 @@ from pathlib import Path
 class ArchitectureValidator:
     """Validates architecture compliance for FLX daemon."""
 
-    def __init__(self, project_root: Path):
+    def __init__(self, project_root: Path) -> None:
         self.project_root = project_root
         self.daemon_path = project_root / "flx" / "src" / "flx" / "daemon"
         self.violations: list[str] = []
@@ -57,13 +57,13 @@ class ArchitectureValidator:
                     for alias in node.names:
                         if self._is_infrastructure_import(alias.name):
                             self.violations.append(
-                                f"Core imports infrastructure: {alias.name}"
+                                f"Core imports infrastructure: {alias.name}",
                             )
 
                 elif isinstance(node, ast.ImportFrom):
                     if node.module and self._is_infrastructure_import(node.module):
                         self.violations.append(
-                            f"Core imports from infrastructure: {node.module}"
+                            f"Core imports from infrastructure: {node.module}",
                         )
 
         except SyntaxError as e:
@@ -76,7 +76,7 @@ class ArchitectureValidator:
             ("api.py", "adapter"),
             ("web.py", "adapter"),
             ("service.py", "infrastructure"),
-            ("infrastructure.py", "infrastructure")
+            ("infrastructure.py", "infrastructure"),
         ]
 
         for filename, layer in files_to_check:
@@ -113,12 +113,12 @@ class ArchitectureValidator:
 
             if "Mock" in content and "class Mock" in content:
                 self.violations.append(
-                    f"Mockup code found in {file_path.name}"
+                    f"Mockup code found in {file_path.name}",
                 )
 
             if "# TODO:" in content:
                 self.warnings.append(
-                    f"TODO found in {file_path.name} - may need implementation"
+                    f"TODO found in {file_path.name} - may need implementation",
                 )
 
     def validate_import_patterns(self) -> None:
@@ -135,7 +135,7 @@ class ArchitectureValidator:
             # Check for proper logging import
             if "import logging" in content:
                 self.warnings.append(
-                    f"{file_path.name} uses standard logging instead of flx.utils.logging"
+                    f"{file_path.name} uses standard logging instead of flx.utils.logging",
                 )
 
     def _is_infrastructure_import(self, module_name: str) -> bool:
@@ -146,7 +146,7 @@ class ArchitectureValidator:
             "flx.adapters",
             "flx.daemon.api",
             "flx.daemon.web",
-            "flx.daemon.infrastructure"
+            "flx.daemon.infrastructure",
         ]
 
         return any(pattern in module_name for pattern in infrastructure_patterns)
@@ -160,7 +160,7 @@ class ArchitectureValidator:
             tree = ast.parse(content)
 
             for node in ast.walk(tree):
-                if isinstance(node, (ast.Import, ast.ImportFrom)):
+                if isinstance(node, ast.Import | ast.ImportFrom):
                     self._check_layer_import(node, file_path.name, layer)
 
         except SyntaxError as e:
@@ -181,7 +181,7 @@ class ArchitectureValidator:
         if layer == "domain" and any(pattern in module for pattern in
                                    ["fastapi", "uvicorn", "flx.adapters"]):
             self.violations.append(
-                f"Domain layer ({filename}) imports adapter/infrastructure: {module}"
+                f"Domain layer ({filename}) imports adapter/infrastructure: {module}",
             )
 
     def report_results(self) -> bool:
@@ -222,7 +222,7 @@ class ArchitectureValidator:
         return success
 
 
-def main():
+def main() -> None:
     """Main validation function."""
     script_path = Path(__file__).parent
     project_root = script_path.parent.parent

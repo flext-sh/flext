@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-PyAuto Monorepo Dependency Analysis
+"""PyAuto Monorepo Dependency Analysis
 Analyzes all pyproject.toml files to identify version conflicts and compatibility issues.
 """
 
@@ -14,7 +13,7 @@ from typing import Any
 class DependencyAnalyzer:
     """Analyzes dependencies across PyAuto monorepo projects."""
 
-    def __init__(self, root_path: str = "."):
+    def __init__(self, root_path: str = ".") -> None:
         self.root_path = Path(root_path)
         self.projects: dict[str, dict[str, Any]] = {}
         self.all_dependencies: dict[str, dict[str, str]] = {}
@@ -55,14 +54,14 @@ class DependencyAnalyzer:
 
         # Extract version constraints
         patterns = [
-            (r'\^(\d+\.\d+(?:\.\d+)?)', 'caret'),
-            (r'~(\d+\.\d+(?:\.\d+)?)', 'tilde'),
-            (r'>=(\d+\.\d+(?:\.\d+)?)', 'gte'),
-            (r'<=(\d+\.\d+(?:\.\d+)?)', 'lte'),
-            (r'>(\d+\.\d+(?:\.\d+)?)', 'gt'),
-            (r'<(\d+\.\d+(?:\.\d+)?)', 'lt'),
-            (r'==(\d+\.\d+(?:\.\d+)?)', 'exact'),
-            (r'(\d+\.\d+(?:\.\d+)?)', 'simple'),
+            (r"\^(\d+\.\d+(?:\.\d+)?)", "caret"),
+            (r"~(\d+\.\d+(?:\.\d+)?)", "tilde"),
+            (r">=(\d+\.\d+(?:\.\d+)?)", "gte"),
+            (r"<=(\d+\.\d+(?:\.\d+)?)", "lte"),
+            (r">(\d+\.\d+(?:\.\d+)?)", "gt"),
+            (r"<(\d+\.\d+(?:\.\d+)?)", "lt"),
+            (r"==(\d+\.\d+(?:\.\d+)?)", "exact"),
+            (r"(\d+\.\d+(?:\.\d+)?)", "simple"),
         ]
 
         for pattern, op_type in patterns:
@@ -78,14 +77,22 @@ class DependencyAnalyzer:
             with open(pyproject_path, "rb") as f:
                 data = tomllib.load(f)
 
-            project_name = data.get("tool", {}).get("poetry", {}).get("name", pyproject_path.parent.name)
+            project_name = (
+                data.get("tool", {})
+                .get("poetry", {})
+                .get("name", pyproject_path.parent.name)
+            )
 
             dependencies = {}
             dev_dependencies = {}
             local_deps = []
 
             # Extract main dependencies
-            poetry_deps = data.get("tool", {}).get("poetry", {}).get("dependencies", {})
+            poetry_deps = (
+                data.get("tool", {})
+                .get("poetry", {})
+                .get("dependencies", {})
+            )
             for dep_name, dep_spec in poetry_deps.items():
                 if dep_name == "python":
                     continue
@@ -100,7 +107,13 @@ class DependencyAnalyzer:
                     dependencies[dep_name] = str(dep_spec)
 
             # Extract dev dependencies
-            dev_deps = data.get("tool", {}).get("poetry", {}).get("group", {}).get("dev", {}).get("dependencies", {})
+            dev_deps = (
+                data.get("tool", {})
+                .get("poetry", {})
+                .get("group", {})
+                .get("dev", {})
+                .get("dependencies", {})
+            )
             for dep_name, dep_spec in dev_deps.items():
                 if isinstance(dep_spec, dict):
                     dev_dependencies[dep_name] = str(dep_spec.get("version", "unknown"))
@@ -136,7 +149,10 @@ class DependencyAnalyzer:
             if "error" in project_data:
                 continue
 
-            all_deps = {**project_data["dependencies"], **project_data["dev_dependencies"]}
+            all_deps = {
+                **project_data["dependencies"],
+                **project_data["dev_dependencies"],
+            }
 
             for dep_name, version_spec in all_deps.items():
                 if dep_name.startswith("path:"):
@@ -187,7 +203,7 @@ class DependencyAnalyzer:
                 return False
 
             # Basic major version conflict detection
-            if v1.split('.')[0] != v2.split('.')[0]:
+            if v1.split(".")[0] != v2.split(".")[0]:
                 return True
 
         except Exception:
@@ -207,14 +223,17 @@ class DependencyAnalyzer:
             "rich": ["console", "print", "table"],
         }
 
-        for _project_name, project_data in self.projects.items():
+        for project_data in self.projects.values():
             if "error" in project_data:
                 continue
 
-            all_deps = {**project_data["dependencies"], **project_data["dev_dependencies"]}
+            all_deps = {
+                **project_data["dependencies"],
+                **project_data["dev_dependencies"],
+            }
 
             # Check if commonly imported packages are missing
-            for package, _imports in common_imports.items():
+            for package in common_imports:
                 if package not in all_deps:
                     # This is basic - in reality you'd scan source code for imports
                     continue
@@ -251,7 +270,9 @@ class DependencyAnalyzer:
         report = {
             "summary": {
                 "total_projects": len(self.projects),
-                "projects_with_errors": len([p for p in self.projects.values() if "error" in p]),
+                "projects_with_errors": len(
+                    [p for p in self.projects.values() if "error" in p],
+                ),
                 "total_conflicts": len(self.version_conflicts),
                 "projects_with_local_deps": len(self.local_dependencies),
             },
@@ -288,7 +309,10 @@ class DependencyAnalyzer:
                 if "error" in project_data:
                     continue
 
-                all_project_deps = {**project_data.get("dependencies", {}), **project_data.get("dev_dependencies", {})}
+                all_project_deps = {
+                    **project_data.get("dependencies", {}),
+                    **project_data.get("dev_dependencies", {}),
+                }
                 version = all_project_deps.get(dep)
                 report["dependency_matrix"][dep][project_name] = version
 
@@ -296,11 +320,10 @@ class DependencyAnalyzer:
 
     def print_report(self) -> None:
         """Print human-readable dependency analysis report."""
-
         # Summary
 
         # Projects overview
-        for _project_name, project_data in self.projects.items():
+        for project_data in self.projects.values():
             len(project_data.get("dependencies", {}))
             len(project_data.get("dev_dependencies", {}))
             project_data.get("python_version", "unknown")
@@ -317,17 +340,20 @@ class DependencyAnalyzer:
 
         # Local dependencies
         if self.local_dependencies:
-            for _project, deps in self.local_dependencies.items():
+            for deps in self.local_dependencies.values():
                 for dep in deps:
                     pass
 
         # Key dependencies matrix
-        key_deps = ["pydantic", "sqlalchemy", "fastapi", "pytest", "mypy", "ruff", "black"]
+        key_deps = [
+            "pydantic", "sqlalchemy", "fastapi", "pytest",
+            "mypy", "ruff", "black",
+        ]
 
         for dep in key_deps:
             pass
 
-        for _project_name, project_data in self.projects.items():
+        for project_data in self.projects.values():
             if "error" in project_data:
                 continue
 
@@ -344,7 +370,7 @@ class DependencyAnalyzer:
                     version = version.split(",")[0]  # Take first constraint
 
 
-def main():
+def main() -> None:
     """Main analysis function."""
     analyzer = DependencyAnalyzer()
     analyzer.run_analysis()

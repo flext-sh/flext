@@ -15,12 +15,11 @@ from flx.core import (
     flx_get_health_status,
 )
 
-flx_async = importlib.import_module('flx.infrastructure.async')
+flx_async = importlib.import_module("flx.infrastructure.async")
 
 
 async def main() -> None:
     """Demonstrate async infrastructure usage."""
-
     # Show current broker configuration
     broker_info = flx_get_broker_info()
 
@@ -60,7 +59,7 @@ async def main() -> None:
 
     # Example 3: Queue statistics
     stats = bus.get_queue_stats()
-    for _queue_name, queue_stats in stats.items():
+    for queue_stats in stats.values():
         "🟢 Empty" if queue_stats["empty"] else f"🔵 {queue_stats['length']} items"
 
     # Example 4: Event creation (for reference)
@@ -83,7 +82,7 @@ if __name__ == "__main__":
     configure_broker_examples()
 
     # Run demonstration
-    configured_type = os.getenv('FLX_BROKER_TYPE', 'auto (default)')
+    configured_type = os.getenv("FLX_BROKER_TYPE", "auto (default)")
 
     # Run async demo
     asyncio.run(main())

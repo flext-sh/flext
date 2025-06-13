@@ -17,43 +17,43 @@ def get_mypy_errors() -> dict[str, list[dict[str, Any]]]:
 
     for line in result.stdout.splitlines() + result.stderr.splitlines():
         if "error:" in line:
-            match = re.match(r'(.+?):(\d+): error: (.+?) \[(.+?)\]', line)
+            match = re.match(r"(.+?):(\d+): error: (.+?) \[(.+?)\]", line)
             if match:
                 error = {
-                    'file': match.group(1),
-                    'line': int(match.group(2)),
-                    'message': match.group(3),
-                    'type': match.group(4),
+                    "file": match.group(1),
+                    "line": int(match.group(2)),
+                    "message": match.group(3),
+                    "type": match.group(4),
                 }
-                errors_by_type[error['type']].append(error)
+                errors_by_type[error["type"]].append(error)
 
     return errors_by_type
 
 
-def fix_import_attr_errors():
+def fix_import_attr_errors() -> None:
     """Fix import attribute errors."""
     errors = get_mypy_errors()
-    attr_errors = errors.get('attr-defined', [])
+    attr_errors = errors.get("attr-defined", [])
 
     # Fix common patterns
     fixes = {
         # CLI command patterns
-        'fix_create_cli': 'flx_fix_create_cli',
-        'register_cli_command_provider': 'flx_register_cli_command_provider',
-        'get_adapter_registry': 'flx_get_adapter_registry',
+        "fix_create_cli": "flx_fix_create_cli",
+        "register_cli_command_provider": "flx_register_cli_command_provider",
+        "get_adapter_registry": "flx_get_adapter_registry",
 
         # Logger patterns
-        'logger.warning': 'logger.flx_warning',
-        'logger.critical': 'logger.flx_critical',
-        'logger.exception': 'logger.flx_exception',
+        "logger.warning": "logger.flx_warning",
+        "logger.critical": "logger.flx_critical",
+        "logger.exception": "logger.flx_exception",
 
         # Health check patterns
-        'health_check()': 'flx_health_check()',
+        "health_check()": "flx_health_check()",
     }
 
     files_to_fix = set()
     for error in attr_errors:
-        files_to_fix.add(error['file'])
+        files_to_fix.add(error["file"])
 
     for filepath in files_to_fix:
         try:
@@ -77,17 +77,17 @@ def fix_import_attr_errors():
             print(f"Error processing {filepath}: {e}")
 
 
-def fix_missing_flx_prefix():
+def fix_missing_flx_prefix() -> None:
     """Fix missing flx_ prefix on methods."""
     files_to_check = list(Path("flx/src").rglob("*.py"))
 
     # Common method names that need flx_ prefix
     methods_to_fix = [
-        'create_cli', 'register_command', 'get_adapter', 'health_check',
-        'execute_command', 'initialize', 'shutdown', 'validate',
-        'process', 'handle', 'dispatch', 'publish', 'subscribe',
-        'connect', 'disconnect', 'send', 'receive', 'transform',
-        'serialize', 'deserialize', 'encode', 'decode',
+        "create_cli", "register_command", "get_adapter", "health_check",
+        "execute_command", "initialize", "shutdown", "validate",
+        "process", "handle", "dispatch", "publish", "subscribe",
+        "connect", "disconnect", "send", "receive", "transform",
+        "serialize", "deserialize", "encode", "decode",
     ]
 
     for filepath in files_to_check:
@@ -97,22 +97,22 @@ def fix_missing_flx_prefix():
 
             for method in methods_to_fix:
                 # Fix method calls
-                pattern = rf'\.{method}\('
-                replacement = f'.flx_{method}('
+                pattern = rf"\.{method}\("
+                replacement = f".flx_{method}("
                 if re.search(pattern, content):
                     content = re.sub(pattern, replacement, content)
                     modified = True
 
                 # Fix method definitions
-                pattern = rf'def {method}\('
-                replacement = f'def flx_{method}('
+                pattern = rf"def {method}\("
+                replacement = f"def flx_{method}("
                 if re.search(pattern, content):
                     content = re.sub(pattern, replacement, content)
                     modified = True
 
                 # Fix async method definitions
-                pattern = rf'async def {method}\('
-                replacement = f'async def flx_{method}('
+                pattern = rf"async def {method}\("
+                replacement = f"async def flx_{method}("
                 if re.search(pattern, content):
                     content = re.sub(pattern, replacement, content)
                     modified = True
@@ -125,10 +125,10 @@ def fix_missing_flx_prefix():
             print(f"Error processing {filepath}: {e}")
 
 
-def fix_constructor_args():
+def fix_constructor_args() -> None:
     """Fix constructor argument errors."""
     errors = get_mypy_errors()
-    call_arg_errors = errors.get('call-arg', [])
+    call_arg_errors = errors.get("call-arg", [])
 
     # Group by common patterns
     adapter_meta_errors = []
@@ -136,16 +136,16 @@ def fix_constructor_args():
     other_errors = []
 
     for error in call_arg_errors:
-        if "FlxAdapterMeta" in error['message']:
+        if "FlxAdapterMeta" in error["message"]:
             adapter_meta_errors.append(error)
-        elif "FlxAdapterResult" in error['message']:
+        elif "FlxAdapterResult" in error["message"]:
             adapter_result_errors.append(error)
         else:
             other_errors.append(error)
 
     # Fix FlxAdapterMeta calls
     for error in adapter_meta_errors:
-        filepath = Path(error['file'])
+        filepath = Path(error["file"])
         if filepath.exists():
             try:
                 content = filepath.read_text()
@@ -166,13 +166,13 @@ def fix_constructor_args():
 
     # Fix FlxAdapterResult calls
     for error in adapter_result_errors:
-        filepath = Path(error['file'])
+        filepath = Path(error["file"])
         if filepath.exists():
             try:
                 content = filepath.read_text()
 
                 # Fix FlxAdapterResult calls missing required args
-                pattern = r'FlxAdapterResult\(success=(True|False)\)'
+                pattern = r"FlxAdapterResult\(success=(True|False)\)"
                 replacement = r'FlxAdapterResult(success=\1, data={}, message="", error=None, metadata={})'
 
                 new_content = re.sub(pattern, replacement, content)
@@ -191,44 +191,44 @@ def fix_constructor_args():
                 print(f"Error fixing {filepath}: {e}")
 
 
-def add_missing_type_imports():
+def add_missing_type_imports() -> None:
     """Add missing type imports."""
     errors = get_mypy_errors()
-    name_errors = errors.get('name-defined', [])
+    name_errors = errors.get("name-defined", [])
 
     # Group missing types by file
     missing_by_file = defaultdict(set)
 
     for error in name_errors:
-        match = re.search(r'Name "(.+?)" is not defined', error['message'])
+        match = re.search(r'Name "(.+?)" is not defined', error["message"])
         if match:
             name = match.group(1)
-            missing_by_file[error['file']].add(name)
+            missing_by_file[error["file"]].add(name)
 
     # Common type imports
     type_imports = {
-        'AsyncGenerator': 'from collections.abc import AsyncGenerator',
-        'AsyncIterator': 'from collections.abc import AsyncIterator',
-        'Awaitable': 'from collections.abc import Awaitable',
-        'Callable': 'from collections.abc import Callable',
-        'Iterator': 'from collections.abc import Iterator',
-        'Sequence': 'from collections.abc import Sequence',
-        'Mapping': 'from collections.abc import Mapping',
-        'MutableMapping': 'from collections.abc import MutableMapping',
-        'Generator': 'from collections.abc import Generator',
-        'Coroutine': 'from collections.abc import Coroutine',
-        'Hashable': 'from collections.abc import Hashable',
-        'Sized': 'from collections.abc import Sized',
-        'Container': 'from collections.abc import Container',
-        'Collection': 'from collections.abc import Collection',
-        'Set': 'from collections.abc import Set',
-        'MutableSet': 'from collections.abc import MutableSet',
-        'ByteString': 'from collections.abc import ByteString',
-        'MutableSequence': 'from collections.abc import MutableSequence',
-        'ItemsView': 'from collections.abc import ItemsView',
-        'KeysView': 'from collections.abc import KeysView',
-        'ValuesView': 'from collections.abc import ValuesView',
-        'AbstractSet': 'from collections.abc import AbstractSet',
+        "AsyncGenerator": "from collections.abc import AsyncGenerator",
+        "AsyncIterator": "from collections.abc import AsyncIterator",
+        "Awaitable": "from collections.abc import Awaitable",
+        "Callable": "from collections.abc import Callable",
+        "Iterator": "from collections.abc import Iterator",
+        "Sequence": "from collections.abc import Sequence",
+        "Mapping": "from collections.abc import Mapping",
+        "MutableMapping": "from collections.abc import MutableMapping",
+        "Generator": "from collections.abc import Generator",
+        "Coroutine": "from collections.abc import Coroutine",
+        "Hashable": "from collections.abc import Hashable",
+        "Sized": "from collections.abc import Sized",
+        "Container": "from collections.abc import Container",
+        "Collection": "from collections.abc import Collection",
+        "Set": "from collections.abc import Set",
+        "MutableSet": "from collections.abc import MutableSet",
+        "ByteString": "from collections.abc import ByteString",
+        "MutableSequence": "from collections.abc import MutableSequence",
+        "ItemsView": "from collections.abc import ItemsView",
+        "KeysView": "from collections.abc import KeysView",
+        "ValuesView": "from collections.abc import ValuesView",
+        "AbstractSet": "from collections.abc import AbstractSet",
     }
 
     for filepath, missing_names in missing_by_file.items():
@@ -243,7 +243,7 @@ def add_missing_type_imports():
             # Find where to insert imports
             import_index = 0
             for i, line in enumerate(lines):
-                if line.startswith(('import ', 'from ')):
+                if line.startswith(("import ", "from ")):
                     import_index = i + 1
 
             # Add missing imports
@@ -257,14 +257,14 @@ def add_missing_type_imports():
                     lines.insert(import_index, imp)
                     import_index += 1
 
-                path.write_text('\n'.join(lines))
+                path.write_text("\n".join(lines))
                 print(f"Added imports to {filepath}: {', '.join(name for name in missing_names if name in type_imports)}")
 
         except Exception as e:
             print(f"Error processing {filepath}: {e}")
 
 
-def main():
+def main() -> None:
     """Main function."""
     print("Fixing remaining mypy issues...")
 

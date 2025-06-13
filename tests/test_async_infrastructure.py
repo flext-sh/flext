@@ -14,7 +14,7 @@ from uuid import UUID, uuid4
 
 import pytest
 
-flx_async = importlib.import_module('flx.infrastructure.async')  # type: ignore[attr-defined]
+flx_async = importlib.import_module("flx.infrastructure.async")  # type: ignore[attr-defined]
 
 
 def test_domain_message_creation() -> None:

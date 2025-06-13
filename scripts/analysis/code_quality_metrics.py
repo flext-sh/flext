@@ -36,7 +36,7 @@ class CodeQualityMetrics:
                 ["ruff", "check", str(self.src_path)],
                 capture_output=True,
                 text=True,
-                cwd=self.project_root, check=False
+                cwd=self.project_root, check=False,
             )
 
             # Count errors by category
@@ -62,7 +62,7 @@ class CodeQualityMetrics:
                 "errors_by_type": errors_by_type,
                 "total_lines": total_lines,
                 "error_density": total_errors / total_lines if total_lines > 0 else 0,
-                "quality_score": max(0, 100 - (total_errors / total_lines * 1000)) if total_lines > 0 else 0
+                "quality_score": max(0, 100 - (total_errors / total_lines * 1000)) if total_lines > 0 else 0,
             }
         except Exception as e:
             return {"error": str(e)}
@@ -75,7 +75,7 @@ class CodeQualityMetrics:
                 ["python", "-m", "mypy", "--show-error-codes", str(self.src_path)],
                 capture_output=True,
                 text=True,
-                cwd=self.project_root, check=False
+                cwd=self.project_root, check=False,
             )
 
             type_errors = 0
@@ -94,7 +94,7 @@ class CodeQualityMetrics:
                 "missing_annotations": missing_annotations,
                 "total_functions": total_functions,
                 "annotation_coverage": ((total_functions - missing_annotations) / total_functions * 100) if total_functions > 0 else 0,
-                "type_safety_score": max(0, 100 - (type_errors / total_functions * 100)) if total_functions > 0 else 0
+                "type_safety_score": max(0, 100 - (type_errors / total_functions * 100)) if total_functions > 0 else 0,
             }
         except Exception as e:
             return {"error": str(e)}
@@ -121,7 +121,7 @@ class CodeQualityMetrics:
             "violations": architecture_violations,
             "compliance_score": max(0, compliance_score),
             "architecture_pattern": "Hexagonal",
-            "layers_identified": ["core", "application", "infrastructure", "adapters"]
+            "layers_identified": ["core", "application", "infrastructure", "adapters"],
         }
 
     def analyze_security_metrics(self) -> dict[str, Any]:
@@ -132,7 +132,7 @@ class CodeQualityMetrics:
                 ["python", "-m", "bandit", "-r", str(self.src_path), "-f", "json"],
                 capture_output=True,
                 text=True,
-                cwd=self.project_root, check=False
+                cwd=self.project_root, check=False,
             )
 
             if result.stdout:
@@ -147,7 +147,7 @@ class CodeQualityMetrics:
                 return {
                     "total_security_issues": security_issues,
                     "severity_breakdown": severity_counts,
-                    "security_score": max(0, 100 - security_issues * 5)
+                    "security_score": max(0, 100 - security_issues * 5),
                 }
             return {"total_security_issues": 0, "security_score": 100}
         except Exception as e:
@@ -197,11 +197,11 @@ class CodeQualityMetrics:
                 "lint": lint_metrics,
                 "types": type_metrics,
                 "architecture": architecture_metrics,
-                "security": security_metrics
+                "security": security_metrics,
             },
             "recommendations": self._generate_recommendations(
-                lint_metrics, type_metrics, architecture_metrics, security_metrics
-            )
+                lint_metrics, type_metrics, architecture_metrics, security_metrics,
+            ),
         }
 
     def _count_lines_of_code(self) -> int:

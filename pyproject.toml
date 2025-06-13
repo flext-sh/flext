@@ -2,17 +2,14 @@
 requires = ["poetry-core>=2.1.3"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.poetry]
+[project]
 name = "pyauto-workspace"
 version = "0.4.0"
 description = "PyAuto - Enterprise Python automation workspace with unified dependencies"
-authors = ["PyAuto Team <team@pyauto.dev>"]
+authors = [{name = "Marlon Costa", email = "marlon.costa@datacosmos.com.br"}]
 readme = "README.md"
-packages = []
-package-mode = false
-homepage = "https://github.com/datacosmos-br/pyauto"
-repository = "https://github.com/datacosmos-br/pyauto"
-documentation = "https://datacosmos-br.github.io/pyauto/"
+requires-python = ">=3.13,<3.15"
+license = {text = "MIT"}
 keywords = ["automation", "oracle", "hexagonal", "architecture", "framework"]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -24,73 +21,157 @@ classifiers = [
     "Typing :: Typed",
 ]
 
+# ═══════════════════════════════════════════════════════════════════════════════
+# UNIFIED DEPENDENCIES - Consolidating all subproject dependencies
+# ═══════════════════════════════════════════════════════════════════════════════
+dependencies = [
+    # ===== CORE FRAMEWORK DEPENDENCIES (from FLX) =====
+    "pydantic>=2.11.5",
+    "pydantic-settings>=2.9.1",
+    "pluggy>=1.6.0",
+    "fire>=0.7.0",
+    "fastapi>=0.115.0",
+    "uvicorn>=0.30.0",
+    "strawberry-graphql>=0.250.0",
+    "websockets>=14.1",
+    "itsdangerous>=2.2.0",
+    "pyyaml>=6.0.2",
+    "loguru>=0.7.3",
+    "python-dotenv>=1.1.0",
+    "anyio>=4.9.0",
+    "attrs>=25.3.0",
+    "httpx>=0.28.1",
+    "redis>=6.2.0",
+    "tenacity>=9.1.2",
+    "python-json-logger>=3.3.0",
+    "opentelemetry-api>=1.34.0",
+    "opentelemetry-sdk>=1.34.0",
+    "opentelemetry-instrumentation>=0.55b0",
+    "lato>=0.12.0",
+    "sqlalchemy>=2.0.0",
+    "alembic>=1.14.0",
+    "rich>=14.0.0",
+    "aiohttp>=3.12.11",
+    "aiosqlite>=0.21.0",
+    "pyjwt>=2.10.1",
+    "paramiko>=3.3.1",
+    "oracledb>=2.5.0",
+    "pybreaker>=1.3.0",
+    
+    # ===== DATABASE ADAPTER DEPENDENCIES =====
+    "typer>=0.9.0",
+    
+    # ===== HTTP/API DEPENDENCIES =====
+    "PyJWT>=2.10.1",
+    "cryptography>=43.0.0",
+    "pandas>=2.2.0",
+    "tabulate>=0.9.0",
+    "openpyxl>=3.1.0",
+    "pyarrow>=18.0.0",
+    "lxml>=5.3.0",
+    "xmltodict>=0.13.0",
+    "click>=8.2.1",
+    
+    # ===== ADAPTER EXAMPLE DEPENDENCIES =====
+    "structlog>=25.4.0",
+    "pydantic-core>=2.27.0",
+]
+
+[project.optional-dependencies]
+# ===== DEVELOPMENT DEPENDENCIES - UNIFIED STANDARDS =====
+dev = [
+    # Testing Framework
+    "pytest>=8.4.0",
+    "pytest-asyncio<0.24.0",
+    "pytest-cov>=6.1.1",
+    "pytest-mock>=3.14.1",
+    "pytest-xdist>=3.7.0",
+    "pytest-benchmark>=4.0.0",
+    "pytest-html>=4.1.1",
+    "pytest-timeout>=2.4.0",
+    "coverage[toml]>=7.8.2",
+    
+    # Code Quality & Formatting
+    "black>=25.1.0",
+    "isort>=5.13.2", 
+    "ruff>=0.11.13",
+    "autoflake>=2.2.1",
+    "pyupgrade>=3.19.0",
+    
+    # Type Checking
+    "mypy>=1.16.0",
+    "types-sqlalchemy>=1.4.53.38",
+    "types-python-dateutil>=2.9.0.20241206",
+    "types-pyyaml>=6.0.12.20250516",
+    "types-redis>=4.6.0.20240903",
+    "types-requests>=2.32.0.20241016",
+    "types-setuptools>=75.7.0.20250106",
+    
+    # Security & Quality Analysis
+    "bandit>=1.8.0",
+    "safety>=2.3.0",
+    "vulture>=2.12",
+    
+    # Development Tools
+    "pre-commit>=4.2.0",
+    "refurb>=2.1.0",
+    "monkeytype>=23.3.0",
+    "setuptools>=80.9.0",
+    "wheel>=0.42.0",
+    
+    # Documentation
+    "mkdocs>=1.6.1",
+    "mkdocs-material>=9.5.47",
+]
+
+# ===== OPTIONAL FEATURE DEPENDENCIES =====
+meltano = ["meltano>=3.7.6", "singer-sdk>=0.46.3"]
+advanced = ["dramatiq>=1.18.0", "twisted>=25.5.0"]
+
+[project.urls]
+Homepage = "https://github.com/datacosmos-br/pyauto"
+Repository = "https://github.com/datacosmos-br/pyauto"
+Documentation = "https://datacosmos-br.github.io/pyauto/"
+"Bug Tracker" = "https://github.com/datacosmos-br/pyauto/issues"
+
+[project.scripts]
+# Workspace-level commands
+pyauto = "scripts.main:main"
+
+# Subproject CLI tools (unified access)
+flx = "flx.cli.main:main"
+flx-oracle-db = "flx_database_oracle.cli:main"
+flx-ora = "flx_database_oracle.cli:main"
+oic = "flx_http_oracle_oic.cli:main"
+flx-oic = "flx_http_oracle_oic.cli:main"
+oracle-oic-cli = "flx_http_oracle_oic.cli:main"
+flx-wms = "flx_http_oracle_wms.cli:main"
+flx-adapter-example = "flx_adapter_example.cli:main"
+
+[tool.poetry]
+package-mode = false
+
 [tool.poetry.dependencies]
 python = "^3.13,<3.15"
 
-# ===== LOCAL PYAUTO PROJECTS =====
-# Core framework (required by all adapters)
+# ===== LOCAL PYAUTO PROJECTS - EDITABLE MODE =====
+# All subprojects installed in development mode
 flx = { path = "./flx", develop = true }
-
-# Oracle adapters
 flx-database-oracle = { path = "./flx-database-oracle", develop = true }
 flx-http-oracle-oic = { path = "./flx-http-oracle-oic", develop = true }
 flx-http-oracle-wms = { path = "./flx-http-oracle-wms", develop = true }
-
-# Implementation projects
 algar-oud-migration = { path = "./algar-mig-oud", develop = true }
 gruponos-oic-wms = { path = "./gruponos-poc-oic-wms", develop = true }
-
-# Example and templates
 flx-adapter-example = { path = "./flx-adapter-example", develop = true }
 
-[tool.poetry.group.dev.dependencies]
-# ===== TESTING FRAMEWORKS =====
-pytest = "^8.4.0"
-pytest-asyncio = "<0.24.0"
-pytest-cov = "^6.1.1"
-pytest-mock = "^3.14.1"
-pytest-xdist = "^3.7.0"
-pytest-benchmark = "^4.0.0"
-pytest-html = "^4.1.1"
-pytest-timeout = "^2.4.0"
-coverage = "^7.8.2"
-
-# ===== CODE FORMATTING & LINTING =====
-black = "^25.1.0"
-isort = "<6"
-ruff = "^0.11.13"
-autoflake = "^2.2.1"
-pyupgrade = "^3.19.0"
-
-# ===== TYPE CHECKING =====
-mypy = "^1.16.0"
-types-python-dateutil = "^2.9.0.20241206"
-types-pyyaml = "^6.0.12.20250516"
-types-redis = "^4.6.0.20240903"
-types-requests = "^2.32.0.20241016"
-types-setuptools = "^75.7.0.20250106"
-
-# ===== SECURITY & QUALITY ANALYSIS =====
-bandit = "^1.8.0"
-safety = "^2.3.0"
-vulture = "^2.12"
-
-# ===== DEVELOPMENT TOOLS =====
-pre-commit = "^4.2.0"
-refurb = "^2.1.0"
-monkeytype = "^23.3.0"
-
-# ===== DOCUMENTATION =====
-mkdocs = "^1.6.1"
-mkdocs-material = "^9.5.47"
-
-[tool.poetry.scripts]
-pyauto = "scripts.main:main"
+# ═══════════════════════════════════════════════════════════════════════════════
+# UNIFIED TOOL CONFIGURATIONS - ENTERPRISE STANDARDS
+# ═══════════════════════════════════════════════════════════════════════════════
 
 [tool.black]
 line-length = 88
 target-version = ["py313"]
-include = "\\.pyi?$"
+include = '\\.pyi?$'
 extend-exclude = '''
 /(
   # Directories to exclude
@@ -116,7 +197,15 @@ include_trailing_comma = true
 force_grid_wrap = 0
 use_parentheses = true
 ensure_newline_before_comments = true
-known_first_party = ["flx", "flx_database_oracle", "flx_http_oracle_oic", "flx_http_oracle_wms"]
+known_first_party = [
+    "flx", 
+    "flx_database_oracle", 
+    "flx_http_oracle_oic", 
+    "flx_http_oracle_wms",
+    "flx_adapter_example",
+    "algar_oud_mig", 
+    "gn_oic_wms_db"
+]
 known_local_folder = ["algar_oud_mig", "gn_oic_wms_db"]
 
 [tool.mypy]
@@ -133,8 +222,6 @@ check_untyped_defs = true
 show_error_codes = true
 show_error_context = true
 pretty = true
-
-# Ignore missing imports for external packages that don't have stubs
 ignore_missing_imports = false
 
 [[tool.mypy.overrides]]
@@ -142,13 +229,15 @@ module = [
     "oracledb.*",
     "ldap.*",
     "ldif.*",
+    "singer.*",
+    "meltano.*",
 ]
 ignore_missing_imports = true
 
 [tool.ruff]
 target-version = "py313"
 line-length = 88
-src = ["src", "tests", "scripts"]
+src = ["src", "tests", "scripts", "flx/src", "*/src"]
 extend-exclude = [
     "__pycache__",
     ".git",
@@ -194,6 +283,9 @@ ignore = [
 "tests/*" = ["S101", "PLR2004", "ARG001"]  # Allow assert, magic values, unused args in tests
 "scripts/*" = ["T201", "T203"]             # Allow print statements in scripts
 
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
 [tool.pytest.ini_options]
 minversion = "8.0"
 addopts = [
@@ -205,7 +297,7 @@ addopts = [
     "--cov-report=html:reports/coverage",
     "--cov-report=xml:reports/coverage.xml",
 ]
-testpaths = ["tests"]
+testpaths = ["tests", "*/tests"]
 markers = [
     "unit: Unit tests",
     "integration: Integration tests", 
@@ -239,3 +331,12 @@ exclude_lines = [
     "class .*\\bProtocol\\):",
     "@(abc\\.)?abstractmethod",
 ]
+
+[tool.bandit]
+exclude_dirs = ["tests", "scripts"]
+skips = ["B101", "B601"]
+
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true

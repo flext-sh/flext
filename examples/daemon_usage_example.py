@@ -24,6 +24,7 @@ Usage:
 import asyncio
 
 import requests
+
 from flx.daemon.core import DaemonConfig
 from flx.daemon.infrastructure import DaemonServiceFactory
 from flx.daemon.service import FlxDaemonService
@@ -32,9 +33,8 @@ from flx.utils.logging import get_logger
 logger = get_logger(__name__)
 
 
-async def example_programmatic_daemon():
+async def example_programmatic_daemon() -> None:
     """Example of using daemon programmatically."""
-
     # Create daemon configuration
     config = DaemonConfig(
         host="127.0.0.1",
@@ -43,7 +43,7 @@ async def example_programmatic_daemon():
         web_enabled=True,
         pid_file="/tmp/flx_example.pid",
         work_dir="/tmp/flx_example",
-        log_dir="/tmp/flx_example/logs"
+        log_dir="/tmp/flx_example/logs",
     )
 
     try:
@@ -71,9 +71,8 @@ async def example_programmatic_daemon():
         await daemon.stop()
 
 
-async def test_api_endpoints(host: str, port: int):
+async def test_api_endpoints(host: str, port: int) -> None:
     """Test daemon API endpoints."""
-
     base_url = f"http://{host}:{port}"
 
     # Test health endpoint
@@ -109,13 +108,12 @@ async def test_api_endpoints(host: str, port: int):
         pass
 
 
-def example_cli_usage():
+def example_cli_usage() -> None:
     """Example of using daemon via CLI commands."""
 
 
-def example_service_management():
+def example_service_management() -> None:
     """Example of systemd service management."""
-
     # Create service manager
     config = DaemonConfig()
     service = FlxDaemonService(config, user_service=True)
@@ -123,18 +121,17 @@ def example_service_management():
     # Check if service is installed
     status = service.get_service_status()
 
-    if not status.get('installed'):
+    if not status.get("installed"):
 
         pass
 
 
-def example_web_interface():
+def example_web_interface() -> None:
     """Example of accessing web interface."""
 
 
-def main():
+def main() -> None:
     """Main example runner."""
-
     # Show CLI usage examples
     example_cli_usage()
 
@@ -147,7 +144,7 @@ def main():
     # Ask user if they want to run the daemon
     response = input("Do you want to run the daemon example? (y/N): ").lower().strip()
 
-    if response in {'y', 'yes'}:
+    if response in {"y", "yes"}:
         asyncio.run(example_programmatic_daemon())
 
 

@@ -133,7 +133,7 @@ from flx.application import (
 ```python
 # Entities and value objects
 from flx.core.entities import Entity, AggregateRoot
-from flx.core.value_objects import ValueObject
+from flx.core.domain.value_objects import ValueObject
 
 # Events
 from flx.core.events import DomainEvent

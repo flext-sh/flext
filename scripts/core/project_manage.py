@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Project Management Script
+"""Project Management Script.
 
 Provides consolidated functionality for managing multiple Python projects
 in the pyauto workspace.
@@ -827,14 +826,14 @@ def show_project_status(projects: list[str]) -> None:
     print(colorize("        PROJECT STATUS OVERVIEW        ", "YELLOW"))
     print(colorize("======================================", "YELLOW"))
     print(f"Python version: {PYTHON_VERSION}")
-    print("")
+    print()
 
     for flx_project in projects:
         project_path = WORKSPACE_ROOT / flx_project
 
         if not project_path.exists():
             print(colorize(f"{flx_project}: Directory not found", "RED"))
-            print("")
+            print()
             continue
 
         print(colorize(f"{flx_project}:", "YELLOW"))
@@ -867,7 +866,7 @@ def show_project_status(projects: list[str]) -> None:
         else:
             print(colorize("  Lock file: Missing", "YELLOW"))
 
-        print("")
+        print()
 
     print(colorize("======================================", "YELLOW"))
 

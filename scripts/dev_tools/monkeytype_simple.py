@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-Script simplificado para usar o MonkeyType com DCApiX
-"""
+"""Script simplificado para usar o MonkeyType com DCApiX."""
 
 import argparse
 import subprocess

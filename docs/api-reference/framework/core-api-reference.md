@@ -99,16 +99,16 @@ class Order(AggregateRoot):
 - `collect_events()` → List[DomainEvent]: Collect and clear pending events for publishing
 - `events` → List[DomainEvent]: Property to get current pending events without clearing them
 
-### Value Objects (`flx.core.value_objects`)
+### Value Objects (`flx.core.domain.value_objects`)
 
 #### ValueObject
 
-**Location**: `flx.core.value_objects.ValueObject`
+**Location**: `flx.core.domain.value_objects.ValueObject`
 
 Base class for immutable value objects.
 
 ```python
-from flx.core.value_objects import ValueObject
+from flx.core.domain.value_objects import ValueObject
 
 class Money(ValueObject):
     amount: float
@@ -135,7 +135,7 @@ class Money(ValueObject):
 **Email**
 
 ```python
-from flx.core.value_objects import Email
+from flx.core.domain.value_objects import Email
 
 email = Email(value="user@example.com")
 print(email.domain)  # "example.com"
@@ -145,7 +145,7 @@ print(email.local_part)  # "user"
 **Address**
 
 ```python
-from flx.core.value_objects import Address
+from flx.core.domain.value_objects import Address
 
 address = Address(
     street="123 Main St",
@@ -159,7 +159,7 @@ print(address.formatted())  # "123 Main St, Springfield, 12345, USA"
 **DateRange**
 
 ```python
-from flx.core.value_objects import DateRange
+from flx.core.domain.value_objects import DateRange
 from datetime import date
 
 range1 = DateRange(start=date(2024, 1, 1), end=date(2024, 1, 31))
@@ -490,7 +490,7 @@ logger.info("Service started")
 The following APIs from old documentation are **obsolete** and should not be used:
 
 ❌ `flx.Entities.BaseEntity` - Use `flx.core.entities.Entity`  
-❌ `flx.ValueObjects.ContactInfo` - Use `flx.core.value_objects.Email` + custom value objects  
+❌ `flx.ValueObjects.ContactInfo` - Use `flx.core.domain.value_objects.Email` + custom value objects  
 ❌ `flx.Protocols.*` - Use proper Python protocols or interfaces  
 ❌ `flx.Mixins.*` - Use composition over inheritance  
 ❌ `UnifiedAdapterManager` - Use `flx.application.Bootstrap`  
@@ -498,7 +498,7 @@ The following APIs from old documentation are **obsolete** and should not be use
 ### Current Best Practices
 
 ✅ Use `flx.core.entities.Entity` and `AggregateRoot` for domain entities  
-✅ Use `flx.core.value_objects.ValueObject` for immutable domain concepts  
+✅ Use `flx.core.domain.value_objects.ValueObject` for immutable domain concepts  
 ✅ Use `flx.application.ApplicationService` for use cases  
 ✅ Use `flx.adapters.*` for infrastructure integration  
 ✅ Use `flx.testing.declarative.*` for testing  
@@ -536,7 +536,7 @@ The following APIs from old documentation are **obsolete** and should not be use
 ### **API Best Practices**
 
 - Use `flx.core.entities.Entity` and `AggregateRoot` for domain entities
-- Use `flx.core.value_objects.ValueObject` for immutable domain concepts
+- Use `flx.core.domain.value_objects.ValueObject` for immutable domain concepts
 - Use `flx.application.ApplicationService` for use cases
 - Use `flx.adapters.*` for infrastructure integration
 - Use `flx.testing.declarative.*` for comprehensive testing

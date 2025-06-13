@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Fix syntax errors in client.py and adapters.py.
+"""Fix syntax errors in client.py and adapters.py.
 
 This script specifically targets and fixes:
 1. Duplicated "from e" clauses
@@ -16,7 +15,7 @@ import re
 from pathlib import Path
 
 
-def fix_client_file():
+def fix_client_file() -> bool:
     """Fix syntax errors in client.py."""
     client_path = (
         Path(__file__).parent.parent / "dc-api-x" / "src" / "dc_api_x" / "client.py"
@@ -68,7 +67,7 @@ def fix_client_file():
     return False
 
 
-def fix_adapters_file():
+def fix_adapters_file() -> bool:
     """Fix syntax errors in adapters.py."""
     adapters_path = (
         Path(__file__).parent.parent
@@ -111,7 +110,7 @@ def fix_adapters_file():
     return False
 
 
-def main():
+def main() -> None:
     """Main entry point."""
     fixed_client = fix_client_file()
     fixed_adapters = fix_adapters_file()

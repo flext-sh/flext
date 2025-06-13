@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-SCRIPT TEMPORÁRIO - [SUBSTITUIR: PROPÓSITO ESPECÍFICO]
+"""SCRIPT TEMPORÁRIO - [SUBSTITUIR: PROPÓSITO ESPECÍFICO].
 
 Criado: [SUBSTITUIR: DATA ATUAL]
 Autor: [SUBSTITUIR: SEU NOME]
@@ -50,7 +49,7 @@ except RuntimeError as e:
 logger = structlog.get_logger(__name__)
 
 
-def setup_temp_script_environment():
+def setup_temp_script_environment() -> None:
     """Configura ambiente para execução de script temporário."""
     script_path = Path(__file__)
     category = get_script_category(script_path)
@@ -61,9 +60,8 @@ def setup_temp_script_environment():
                 timestamp=datetime.now().isoformat())
 
 
-def main():
-    """
-    Função principal do script temporário.
+def main() -> None:
+    """Função principal do script temporário.
 
     SUBSTITUA ESTA FUNÇÃO COM SUA LÓGICA ESPECÍFICA.
     """
@@ -107,9 +105,8 @@ def main():
     logger.info("Script temporário concluído com sucesso")
 
 
-def validate_template_usage():
-    """
-    Verifica se o template foi adequadamente personalizado.
+def validate_template_usage() -> None:
+    """Verifica se o template foi adequadamente personalizado.
     Remove esta função quando personalizar o script.
     """
     script_content = Path(__file__).read_text(encoding="utf-8")

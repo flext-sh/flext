@@ -17,7 +17,7 @@ from pathlib import Path
 # Enterprise standards from CLAUDE.md
 REQUIRED_BUILD_SYSTEM = {
     "requires": ["poetry-core>=2.1.3"],
-    "build-backend": "poetry.core.masonry.api"
+    "build-backend": "poetry.core.masonry.api",
 }
 
 REQUIRED_PYTHON = "^3.13"
@@ -27,20 +27,20 @@ REQUIRED_DEV_DEPS = {
     "mypy": "^1.16.0",
     "ruff": "^0.11.13",
     "black": "^25.1.0",
-    "pre-commit": "^4.2.0"
+    "pre-commit": "^4.2.0",
 }
 
 TOOL_VERSIONS = {
     "mypy": {"python_version": "3.13"},
     "black": {"target-version": ["py313"]},
-    "ruff": {"target-version": "py313"}
+    "ruff": {"target-version": "py313"},
 }
 
 
 class PyProjectValidator:
     """Validate pyproject.toml files against enterprise standards."""
 
-    def __init__(self, fix: bool = False):
+    def __init__(self, fix: bool = False) -> None:
         self.fix = fix
         self.errors: list[str] = []
         self.warnings: list[str] = []
@@ -87,12 +87,12 @@ class PyProjectValidator:
         requires = build_system.get("requires", [])
         if not any("poetry-core>=2.1.3" in req for req in requires):
             self.errors.append(
-                f"{file_path}: Build system must use poetry-core>=2.1.3"
+                f"{file_path}: Build system must use poetry-core>=2.1.3",
             )
 
         if build_system.get("build-backend") != "poetry.core.masonry.api":
             self.errors.append(
-                f"{file_path}: Build backend must be poetry.core.masonry.api"
+                f"{file_path}: Build backend must be poetry.core.masonry.api",
             )
 
     def _check_package_naming(self, file_path: Path, data: dict) -> None:
@@ -102,7 +102,7 @@ class PyProjectValidator:
 
         if "-" in name:
             self.errors.append(
-                f"{file_path}: Package name '{name}' must use underscores, not hyphens"
+                f"{file_path}: Package name '{name}' must use underscores, not hyphens",
             )
 
         # Check packages configuration
@@ -110,7 +110,7 @@ class PyProjectValidator:
         for pkg in packages:
             if isinstance(pkg, dict) and "-" in pkg.get("include", ""):
                 self.errors.append(
-                    f"{file_path}: Package include '{pkg['include']}' must use underscores"
+                    f"{file_path}: Package include '{pkg['include']}' must use underscores",
                 )
 
     def _check_python_version(self, file_path: Path, data: dict) -> None:
@@ -121,7 +121,7 @@ class PyProjectValidator:
 
         if not python_version.startswith("^3.13"):
             self.errors.append(
-                f"{file_path}: Python version must be ^3.13,<3.15 (found: {python_version})"
+                f"{file_path}: Python version must be ^3.13,<3.15 (found: {python_version})",
             )
 
     def _check_dev_dependencies(self, file_path: Path, data: dict) -> None:
@@ -143,13 +143,13 @@ class PyProjectValidator:
             )
             if dev_deps:
                 self.warnings.append(
-                    f"{file_path}: Using deprecated dev-dependencies format"
+                    f"{file_path}: Using deprecated dev-dependencies format",
                 )
 
-        for dep, _version in REQUIRED_DEV_DEPS.items():
+        for dep in REQUIRED_DEV_DEPS:
             if dep not in dev_deps:
                 self.errors.append(
-                    f"{file_path}: Missing required dev dependency: {dep}"
+                    f"{file_path}: Missing required dev dependency: {dep}",
                 )
 
     def _check_tool_configs(self, file_path: Path, data: dict) -> None:
@@ -160,7 +160,7 @@ class PyProjectValidator:
         mypy = tools.get("mypy", {})
         if mypy.get("python_version") != "3.13":
             self.errors.append(
-                f"{file_path}: mypy.python_version must be 3.13"
+                f"{file_path}: mypy.python_version must be 3.13",
             )
 
         # Check black
@@ -168,14 +168,14 @@ class PyProjectValidator:
         target_version = black.get("target-version", [])
         if "py313" not in target_version:
             self.errors.append(
-                f"{file_path}: black.target-version must include py313"
+                f"{file_path}: black.target-version must include py313",
             )
 
         # Check ruff
         ruff = tools.get("ruff", {})
         if ruff.get("target-version") not in {"py313", "py312"}:
             self.warnings.append(
-                f"{file_path}: ruff.target-version should be py313"
+                f"{file_path}: ruff.target-version should be py313",
             )
 
     def _check_coverage_requirements(self, file_path: Path, data: dict) -> None:
@@ -186,7 +186,7 @@ class PyProjectValidator:
         has_coverage = any("--cov-fail-under" in opt for opt in addopts)
         if not has_coverage:
             self.warnings.append(
-                f"{file_path}: Consider adding --cov-fail-under=90 for coverage requirement"
+                f"{file_path}: Consider adding --cov-fail-under=90 for coverage requirement",
             )
 
     def validate_all(self) -> bool:
@@ -232,15 +232,15 @@ class PyProjectValidator:
         print("\n" + "=" * 60)
 
 
-def main():
+def main() -> None:
     """Main entry point."""
     parser = argparse.ArgumentParser(
-        description="Validate pyproject.toml files against enterprise standards"
+        description="Validate pyproject.toml files against enterprise standards",
     )
     parser.add_argument(
         "--fix",
         action="store_true",
-        help="Automatically fix issues where possible"
+        help="Automatically fix issues where possible",
     )
     args = parser.parse_args()
 

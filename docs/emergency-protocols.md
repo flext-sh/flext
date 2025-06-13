@@ -1,0 +1,259 @@
+# Emergency Protocols - PyAuto
+
+System restoration procedures for critical failures and emergency situations.
+
+## 🚨 EMERGENCY PROTOCOLS FOR BROKEN SYSTEMS
+
+**IF SYSTEM IS SEVERELY DEGRADED** (3+ import failures, build broken):
+
+1. **STOP ALL OTHER WORK IMMEDIATELY**
+2. **DECLARE SYSTEM RESTORATION MODE** in .token  
+3. **ESTIMATED TIME**: 8-20 hours of focused repair
+4. **NO PARTIAL FIXES** - Complete restoration only
+5. **MANDATORY**: System integrity validation before ANY other work
+
+### RECOGNITION PATTERNS:
+
+- Multiple import failures across projects
+- Build system returning errors  
+- Core framework components not loading
+- Test runners failing with infrastructure errors
+
+## 🔥 EMERGENCY ASSESSMENT PROTOCOL
+
+**MANDATORY emergency triage procedure:**
+
+```bash
+# === EMERGENCY SYSTEM TRIAGE ===
+echo "=== EMERGENCY ASSESSMENT STARTING ==="
+cd /home/marlonsc/pyauto
+
+# Count broken imports
+BROKEN_IMPORTS=0
+python -c "import sys; sys.path.insert(0, 'flx/src'); import flx" 2>/dev/null || ((BROKEN_IMPORTS++))
+python -c "import sys; sys.path.insert(0, 'flx-database-oracle/src'); import flx_database_oracle" 2>/dev/null || ((BROKEN_IMPORTS++))
+python -c "import sys; sys.path.insert(0, 'flx-http-oracle-oic/src'); import flx_http_oracle_oic" 2>/dev/null || ((BROKEN_IMPORTS++))
+python -c "import sys; sys.path.insert(0, 'flx-http-oracle-wms/src'); import flx_http_oracle_wms" 2>/dev/null || ((BROKEN_IMPORTS++))
+
+echo "Broken imports: $BROKEN_IMPORTS"
+
+# Test build system
+BUILD_BROKEN=0
+make --version >/dev/null 2>&1 || ((BUILD_BROKEN++))
+[ -f "scripts/common.sh" ] || ((BUILD_BROKEN++))
+
+echo "Build system issues: $BUILD_BROKEN"
+
+# Determine severity
+TOTAL_ISSUES=$((BROKEN_IMPORTS + BUILD_BROKEN))
+echo "Total critical issues: $TOTAL_ISSUES"
+
+if [ $TOTAL_ISSUES -ge 3 ]; then
+    echo "🚨 EMERGENCY RESTORATION REQUIRED"
+    echo "ESTIMATED TIME: 8-20 hours"
+elif [ $TOTAL_ISSUES -ge 1 ]; then
+    echo "⚠️ COMPONENT REPAIR NEEDED"
+    echo "ESTIMATED TIME: 2-4 hours"
+else
+    echo "✅ SYSTEM OK"
+fi
+
+echo "=== EMERGENCY ASSESSMENT COMPLETE ==="
+```
+
+## 🔧 SYSTEM RESTORATION PHASES
+
+### Phase 1: Damage Assessment (30-60 minutes)
+
+```bash
+# Document EVERYTHING that's broken
+echo "EMERGENCY RESTORATION STARTED: $(date)" >> .token
+echo "BROKEN COMPONENTS:" >> .token
+
+# Test all major components
+python -c "import flx" 2>&1 || echo "- FLX Core BROKEN" >> .token
+python -c "import flx_database_oracle" 2>&1 || echo "- Database Oracle BROKEN" >> .token
+python -c "import flx_http_oracle_oic" 2>&1 || echo "- OIC BROKEN" >> .token
+python -c "import flx_http_oracle_wms" 2>&1 || echo "- WMS BROKEN" >> .token
+
+# Test build system
+make lint >/dev/null 2>&1 || echo "- Build system BROKEN" >> .token
+
+# Test core functionality
+python -m pytest tests/ --collect-only >/dev/null 2>&1 || echo "- Testing infrastructure BROKEN" >> .token
+
+echo "DAMAGE ASSESSMENT COMPLETE" >> .token
+```
+
+### Phase 2: Architecture Stabilization (2-4 hours)
+
+**Priority order:**
+
+1. **Fix FLX Core** - Everything depends on this
+2. **Restore build system** - Required for all validation
+3. **Fix imports** - Core dependency resolution
+4. **Restore testing** - Required for validation
+
+```bash
+# Start with core
+echo "PHASE 2: Core stabilization starting" >> .token
+
+# Fix core imports first
+cd flx/src
+python -c "import flx" && echo "✅ FLX Core restored" >> .token || echo "❌ FLX Core still broken" >> .token
+
+# Then build system
+cd /home/marlonsc/pyauto
+make lint && echo "✅ Build system restored" >> .token || echo "❌ Build system still broken" >> .token
+
+echo "PHASE 2: Core stabilization complete" >> .token
+```
+
+### Phase 3: Component Restoration (4-8 hours)
+
+**Systematic component fixes:**
+
+```bash
+echo "PHASE 3: Component restoration starting" >> .token
+
+# Fix each adapter individually
+for component in "flx-database-oracle" "flx-http-oracle-oic" "flx-http-oracle-wms"; do
+    echo "Fixing $component..." >> .token
+    cd "$component/src"
+    python -c "import ${component//-/_}" && echo "✅ $component restored" >> .token || echo "❌ $component still broken" >> .token
+    cd /home/marlonsc/pyauto
+done
+
+echo "PHASE 3: Component restoration complete" >> .token
+```
+
+### Phase 4: Integration Validation (2-4 hours)
+
+**End-to-end system validation:**
+
+```bash
+echo "PHASE 4: Integration validation starting" >> .token
+
+# Test all imports together
+python -c "
+import sys
+sys.path.insert(0, 'flx/src')
+sys.path.insert(0, 'flx-database-oracle/src')
+sys.path.insert(0, 'flx-http-oracle-oic/src')
+sys.path.insert(0, 'flx-http-oracle-wms/src')
+
+import flx
+import flx_database_oracle
+import flx_http_oracle_oic
+import flx_http_oracle_wms
+
+print('✅ ALL IMPORTS WORKING')
+" && echo "✅ Integration test passed" >> .token || echo "❌ Integration still broken" >> .token
+
+# Test build system end-to-end
+make lint && make test && echo "✅ Build system fully functional" >> .token || echo "❌ Build system needs more work" >> .token
+
+echo "PHASE 4: Integration validation complete" >> .token
+```
+
+## 🔍 EMERGENCY DECISION MATRIX
+
+### When to Enter Emergency Mode
+
+| Condition | Action | Timeline |
+|-----------|--------|----------|
+| FLX Core broken | **IMMEDIATE EMERGENCY** | 8-20 hours |
+| 3+ adapters broken | **EMERGENCY MODE** | 8-20 hours |
+| Build system broken | **EMERGENCY MODE** | 4-8 hours |
+| 1-2 adapters broken | Component repair | 2-4 hours |
+| Testing broken only | Component repair | 1-2 hours |
+
+### Escalation Triggers
+
+**IMMEDIATE escalation required if:**
+- Emergency restoration exceeds estimated timeline by 50%
+- New breakage discovered during restoration
+- Core architecture needs fundamental changes
+- Dependencies have incompatible changes
+
+## 📋 EMERGENCY COMMUNICATION PROTOCOL
+
+### Status Updates
+
+**MANDATORY updates every 2 hours during emergency:**
+
+```bash
+# Emergency status update format
+echo "EMERGENCY UPDATE $(date): Phase X of 4" >> .token
+echo "COMPLETED: [specific accomplishments]" >> .token
+echo "IN PROGRESS: [current work]" >> .token
+echo "BLOCKED: [any blockers]" >> .token
+echo "ETA: [realistic time estimate]" >> .token
+```
+
+### Completion Criteria
+
+**EMERGENCY RESOLVED only when ALL pass:**
+
+- [ ] All core imports work
+- [ ] Build system fully functional
+- [ ] All adapters import and instantiate
+- [ ] Testing infrastructure collects tests
+- [ ] No critical errors in core paths
+- [ ] Integration validation passes
+
+## 🚨 EMERGENCY FALLBACK PROCEDURES
+
+### If Standard Restoration Fails
+
+**Fallback options (in order):**
+
+1. **Revert to last known good state**
+   ```bash
+   git log --oneline | head -10  # Find last working commit
+   git checkout [HASH]  # Revert to working state
+   ```
+
+2. **Clean slate rebuild**
+   ```bash
+   # Nuclear option - rebuild from scratch
+   git stash  # Save current changes
+   git clean -fdx  # Remove all generated files
+   # Rebuild step by step
+   ```
+
+3. **Component isolation**
+   ```bash
+   # Work on one component at a time
+   cd flx
+   # Fix FLX first, then add adapters one by one
+   ```
+
+## ⚡ EMERGENCY PREVENTION
+
+### Pre-emptive Monitoring
+
+**MANDATORY before ANY major changes:**
+
+```bash
+# Create restoration point
+git add -A && git commit -m "Restoration point before [CHANGE]"
+
+# Document current state
+echo "PRE-CHANGE STATE: $(date)" >> .token
+echo "ALL IMPORTS: $(python -c 'import flx, flx_database_oracle, flx_http_oracle_oic, flx_http_oracle_wms; print("OK")' 2>/dev/null || echo 'BROKEN')" >> .token
+echo "BUILD: $(make lint >/dev/null 2>&1 && echo 'OK' || echo 'BROKEN')" >> .token
+```
+
+### Change Isolation
+
+**MANDATORY change protocol:**
+
+1. Make ONE change at a time
+2. Test immediately after each change
+3. Commit working state before next change
+4. If anything breaks, revert immediately
+
+---
+
+*Emergency protocols exist because complex systems can fail catastrophically. Use these procedures exactly when needed, but prefer prevention through careful change management.*

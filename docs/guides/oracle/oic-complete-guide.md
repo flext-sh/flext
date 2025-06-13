@@ -282,7 +282,7 @@ except Exception as e:
 
 ```python
 from flx.core.entities import AggregateRoot
-from flx.core.value_objects import ValueObject
+from flx.core.domain.value_objects import ValueObject
 
 # Domain entity for OIC integrations
 class OicIntegration(AggregateRoot):

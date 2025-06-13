@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-Complete fix for dc-api-x pydantic compatibility issues.
-"""
+"""Complete fix for dc-api-x pydantic compatibility issues."""
 import os
 import shutil
 import subprocess
@@ -9,7 +7,7 @@ import venv
 from pathlib import Path
 
 
-def run_command(cmd, cwd=None):
+def run_command(cmd, cwd=None) -> bool:
     """Run a command and return its output."""
     print(f"Running: {' '.join(cmd)}")
     result = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, check=False)
@@ -20,7 +18,7 @@ def run_command(cmd, cwd=None):
     return True
 
 
-def main():
+def main() -> None:
     """Set up an isolated environment for dc-api-x."""
     # Paths
     base_dir = Path("/home/marlonsc/pyauto")
@@ -58,7 +56,7 @@ def main():
         "pydantic-settings==2.0.3",
         "python-dotenv==0.1.0",
         "click==8.1.3",
-        "typer==0.9.0"
+        "typer==0.9.0",
     ]
 
     # Install packages

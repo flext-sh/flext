@@ -9,7 +9,7 @@ sys.path.insert(0, str(Path(__file__).parent / "dc-oracle-wms"))
 sys.path.insert(0, str(Path(__file__).parent / "dc-oracle-db"))
 
 
-def create_audit_columns():
+def create_audit_columns() -> None:
     """Cria colunas de auditoria nas tabelas WMS."""
     print("=== CRIAÇÃO DE COLUNAS DE AUDITORIA ===")
 
