@@ -1,0 +1,324 @@
+syntax = "proto3";
+
+package flx;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/struct.proto";
+
+// Main FLX service definition
+service FlxService {
+  // System operations
+  rpc GetSystemStats(google.protobuf.Empty) returns (SystemStats);
+  rpc HealthCheck(google.protobuf.Empty) returns (HealthStatus);
+  rpc GetSystemInfo(google.protobuf.Empty) returns (SystemInfo);
+
+  // Pipeline operations
+  rpc ListPipelines(ListPipelinesRequest) returns (ListPipelinesResponse);
+  rpc GetPipeline(GetPipelineRequest) returns (Pipeline);
+  rpc CreatePipeline(CreatePipelineRequest) returns (Pipeline);
+  rpc UpdatePipeline(UpdatePipelineRequest) returns (Pipeline);
+  rpc DeletePipeline(DeletePipelineRequest) returns (google.protobuf.Empty);
+  rpc RunPipeline(RunPipelineRequest) returns (Execution);
+
+  // Execution operations
+  rpc GetExecution(GetExecutionRequest) returns (Execution);
+  rpc ListExecutions(ListExecutionsRequest) returns (ListExecutionsResponse);
+  rpc CancelExecution(CancelExecutionRequest) returns (google.protobuf.Empty);
+  rpc StreamExecution(StreamExecutionRequest) returns (stream ExecutionUpdate);
+
+  // Plugin operations
+  rpc ListPlugins(ListPluginsRequest) returns (ListPluginsResponse);
+  rpc InstallPlugin(InstallPluginRequest) returns (Plugin);
+  rpc UninstallPlugin(UninstallPluginRequest) returns (google.protobuf.Empty);
+  rpc GetPluginConfig(GetPluginConfigRequest) returns (PluginConfig);
+  rpc UpdatePluginConfig(UpdatePluginConfigRequest) returns (PluginConfig);
+
+  // State operations
+  rpc GetState(GetStateRequest) returns (State);
+  rpc SetState(SetStateRequest) returns (google.protobuf.Empty);
+  rpc ClearState(ClearStateRequest) returns (google.protobuf.Empty);
+
+  // Schedule operations
+  rpc ListSchedules(ListSchedulesRequest) returns (ListSchedulesResponse);
+  rpc CreateSchedule(CreateScheduleRequest) returns (Schedule);
+  rpc UpdateSchedule(UpdateScheduleRequest) returns (Schedule);
+  rpc DeleteSchedule(DeleteScheduleRequest) returns (google.protobuf.Empty);
+}
+
+// Common enums
+enum Status {
+  STATUS_UNSPECIFIED = 0;
+  STATUS_PENDING = 1;
+  STATUS_RUNNING = 2;
+  STATUS_SUCCESS = 3;
+  STATUS_FAILED = 4;
+  STATUS_CANCELLED = 5;
+}
+
+enum PluginType {
+  PLUGIN_TYPE_UNSPECIFIED = 0;
+  PLUGIN_TYPE_EXTRACTOR = 1;
+  PLUGIN_TYPE_LOADER = 2;
+  PLUGIN_TYPE_TRANSFORMER = 3;
+  PLUGIN_TYPE_ORCHESTRATOR = 4;
+  PLUGIN_TYPE_UTILITY = 5;
+}
+
+// System messages
+message SystemStats {
+  int32 active_pipelines = 1;
+  int64 total_executions = 2;
+  double success_rate = 3;
+  int64 uptime_seconds = 4;
+  double cpu_usage = 5;
+  double memory_usage = 6;
+  int32 active_connections = 7;
+}
+
+message HealthStatus {
+  bool healthy = 1;
+  map<string, ComponentHealth> components = 2;
+  google.protobuf.Timestamp timestamp = 3;
+}
+
+message ComponentHealth {
+  string name = 1;
+  bool healthy = 2;
+  string message = 3;
+  map<string, string> metadata = 4;
+}
+
+message SystemInfo {
+  string version = 1;
+  string environment = 2;
+  string python_version = 3;
+  string meltano_version = 4;
+  map<string, string> features = 5;
+}
+
+// Pipeline messages
+message Pipeline {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  string extractor = 4;
+  string loader = 5;
+  string transform = 6;
+  google.protobuf.Struct config = 7;
+  string schedule = 8;
+  bool is_active = 9;
+  string created_by = 10;
+  google.protobuf.Timestamp created_at = 11;
+  google.protobuf.Timestamp updated_at = 12;
+  Status last_status = 13;
+  google.protobuf.Timestamp last_run = 14;
+}
+
+message ListPipelinesRequest {
+  int32 limit = 1;
+  int32 offset = 2;
+  string filter = 3;
+  string sort_by = 4;
+  bool descending = 5;
+}
+
+message ListPipelinesResponse {
+  repeated Pipeline pipelines = 1;
+  int32 total = 2;
+  int32 limit = 3;
+  int32 offset = 4;
+}
+
+message GetPipelineRequest {
+  string id = 1;
+}
+
+message CreatePipelineRequest {
+  string name = 1;
+  string description = 2;
+  string extractor = 3;
+  string loader = 4;
+  string transform = 5;
+  google.protobuf.Struct config = 6;
+  string schedule = 7;
+}
+
+message UpdatePipelineRequest {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  string extractor = 4;
+  string loader = 5;
+  string transform = 6;
+  google.protobuf.Struct config = 7;
+  string schedule = 8;
+  bool is_active = 9;
+}
+
+message DeletePipelineRequest {
+  string id = 1;
+}
+
+message RunPipelineRequest {
+  string pipeline_id = 1;
+  bool full_refresh = 2;
+  map<string, string> env_vars = 3;
+}
+
+// Execution messages
+message Execution {
+  string id = 1;
+  string pipeline_id = 2;
+  Status status = 3;
+  google.protobuf.Timestamp started_at = 4;
+  google.protobuf.Timestamp finished_at = 5;
+  int64 duration_seconds = 6;
+  string error_message = 7;
+  map<string, string> metadata = 8;
+  int64 records_processed = 9;
+  string triggered_by = 10;
+}
+
+message GetExecutionRequest {
+  string id = 1;
+}
+
+message ListExecutionsRequest {
+  string pipeline_id = 1;
+  int32 limit = 2;
+  int32 offset = 3;
+  Status status = 4;
+  google.protobuf.Timestamp start_date = 5;
+  google.protobuf.Timestamp end_date = 6;
+}
+
+message ListExecutionsResponse {
+  repeated Execution executions = 1;
+  int32 total = 2;
+  int32 limit = 3;
+  int32 offset = 4;
+}
+
+message CancelExecutionRequest {
+  string id = 1;
+}
+
+message StreamExecutionRequest {
+  string execution_id = 1;
+}
+
+message ExecutionUpdate {
+  string execution_id = 1;
+  string type = 2;  // log, progress, status, complete
+  string message = 3;
+  google.protobuf.Timestamp timestamp = 4;
+  double progress = 5;
+  Status status = 6;
+  map<string, string> metadata = 7;
+}
+
+// Plugin messages
+message Plugin {
+  string name = 1;
+  PluginType type = 2;
+  string variant = 3;
+  string version = 4;
+  string description = 5;
+  bool installed = 6;
+  google.protobuf.Struct settings = 7;
+  google.protobuf.Timestamp installed_at = 8;
+}
+
+message ListPluginsRequest {
+  PluginType type = 1;
+  bool installed_only = 2;
+}
+
+message ListPluginsResponse {
+  repeated Plugin plugins = 1;
+  int32 total = 2;
+}
+
+message InstallPluginRequest {
+  string name = 1;
+  PluginType type = 2;
+  string variant = 3;
+}
+
+message UninstallPluginRequest {
+  string name = 1;
+  PluginType type = 2;
+}
+
+message GetPluginConfigRequest {
+  string name = 1;
+  PluginType type = 2;
+}
+
+message UpdatePluginConfigRequest {
+  string name = 1;
+  PluginType type = 2;
+  google.protobuf.Struct config = 3;
+}
+
+message PluginConfig {
+  string name = 1;
+  PluginType type = 2;
+  google.protobuf.Struct config = 3;
+}
+
+// State messages
+message State {
+  string id = 1;
+  google.protobuf.Struct data = 2;
+  google.protobuf.Timestamp updated_at = 3;
+}
+
+message GetStateRequest {
+  string id = 1;
+}
+
+message SetStateRequest {
+  string id = 1;
+  google.protobuf.Struct data = 2;
+}
+
+message ClearStateRequest {
+  string id = 1;
+}
+
+// Schedule messages
+message Schedule {
+  string id = 1;
+  string pipeline_id = 2;
+  string cron = 3;
+  bool is_active = 4;
+  google.protobuf.Timestamp next_run = 5;
+  google.protobuf.Timestamp last_run = 6;
+}
+
+message ListSchedulesRequest {
+  string pipeline_id = 1;
+  bool active_only = 2;
+}
+
+message ListSchedulesResponse {
+  repeated Schedule schedules = 1;
+  int32 total = 2;
+}
+
+message CreateScheduleRequest {
+  string pipeline_id = 1;
+  string cron = 2;
+}
+
+message UpdateScheduleRequest {
+  string id = 1;
+  string cron = 2;
+  bool is_active = 3;
+}
+
+message DeleteScheduleRequest {
+  string id = 1;
+}

@@ -1,0 +1,69 @@
+# Pre-commit configuration for dbt-ldap
+# See https://pre-commit.com for more information
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-json
+      - id: check-added-large-files
+      - id: check-case-conflict
+      - id: check-merge-conflict
+      - id: check-toml
+      - id: mixed-line-ending
+
+  - repo: https://github.com/sqlfluff/sqlfluff
+    rev: 3.5.0
+    hooks:
+      - id: sqlfluff-lint
+        args: [--dialect=postgres]
+      - id: sqlfluff-fix
+        args: [--dialect=postgres]
+
+  - repo: https://github.com/dbt-labs/dbt-core
+    rev: v1.9.1
+    hooks:
+      - id: dbt-compile
+      - id: dbt-deps
+
+  - repo: https://github.com/psf/black
+    rev: 24.10.0
+    hooks:
+      - id: black
+        language_version: python3.9
+        files: ^(tests|macros)/.*\.py$
+
+  - repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: v0.8.6
+    hooks:
+      - id: ruff
+        args: [--fix, --exit-non-zero-on-fix]
+        files: ^(tests|macros)/.*\.py$
+      - id: ruff-format
+        files: ^(tests|macros)/.*\.py$
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.16.0
+    hooks:
+      - id: mypy
+        files: ^(tests|macros)/.*\.py$
+        args: [--strict, --ignore-missing-imports]
+
+  - repo: https://github.com/python-poetry/poetry
+    rev: 1.8.4
+    hooks:
+      - id: poetry-check
+      - id: poetry-lock
+        args: [--no-update]
+
+  - repo: local
+    hooks:
+      - id: dbt-test
+        name: dbt-test
+        entry: poetry run dbt test
+        language: system
+        pass_filenames: false
+        stages: [push]

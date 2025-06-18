@@ -24,11 +24,14 @@ class BaseModel(PydanticBaseModel):
         """Get field value with case-insensitive field name.
 
         Args:
+        ----
             field_name: Field name (case-insensitive)
             default: Default value to return if field is not found
 
         Returns:
+        -------
             Any: Field value or default
+
         """
         # Try exact match first
         if field_name in self.model_fields:
@@ -50,11 +53,14 @@ class BaseModel(PydanticBaseModel):
         """Convert model to dictionary with optional field filtering.
 
         Args:
+        ----
             include: Set of field names to include (optional)
             exclude: Set of field names to exclude (optional)
 
         Returns:
+        -------
             dict[str, Any]: Dictionary representation of the model
+
         """
         # Convert to dict using pydantic's model_dump
         return self.model_dump(
@@ -66,14 +72,18 @@ class BaseModel(PydanticBaseModel):
         """Format model data using a template string.
 
         Args:
+        ----
             template: Format template with field names in curly braces
 
         Returns:
+        -------
             str: Formatted string
 
         Example:
+        -------
             >>> model.format("Name: {name}, Age: {age}")
             "Name: John, Age: 30"
+
         """
         return template.format(**self.to_dict())
 
@@ -86,11 +96,14 @@ class BaseModel(PydanticBaseModel):
         """Create a dynamic model class with the given fields.
 
         Args:
+        ----
             model_name: Name for the dynamic model class
             fields: Dictionary mapping field names to types and validators
 
         Returns:
+        -------
             Type[BaseModel]: Dynamically created model class
+
         """
         return create_model(
             model_name,
@@ -140,11 +153,14 @@ class FlxResponse(BaseModel):
         """Create a successful API response.
 
         Args:
+        ----
             data: Response data
             status_code: HTTP status code (optional)
 
         Returns:
+        -------
             FlxResponse: Successful response object
+
         """
         return cls(success=True, data=data, status_code=status_code)
 
@@ -159,13 +175,16 @@ class FlxResponse(BaseModel):
         """Create an error API response.
 
         Args:
+        ----
             error: Error message
             error_code: Error code (optional)
             error_details: Additional error details (optional)
             status_code: HTTP status code (optional)
 
         Returns:
+        -------
             FlxResponse: Error response object
+
         """
         return cls(
             success=False,

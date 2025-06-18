@@ -25,8 +25,10 @@ class ConfigProfile:
         """Initialize a configuration profile.
 
         Args:
+        ----
             name: Profile name
             config: Configuration dictionary
+
         """
         self.name = name
         self.config = config
@@ -115,7 +117,9 @@ class Config(BaseSettings):
         """Save configuration to a file.
 
         Args:
+        ----
             file_path: Path to save the configuration file
+
         """
         file_path = Path(file_path)
 
@@ -135,10 +139,13 @@ class Config(BaseSettings):
         """Load configuration from a file.
 
         Args:
+        ----
             file_path: Path to the configuration file
 
         Returns:
+        -------
             Config: Configuration object
+
         """
         file_path = Path(file_path)
 
@@ -161,13 +168,17 @@ class Config(BaseSettings):
         """Load configuration from a profile.
 
         Args:
+        ----
             profile_name: Name of the profile to load
 
         Returns:
+        -------
             Config: Configuration object
 
         Raises:
+        ------
             ValueError: If the profile doesn't exist or is invalid
+
         """
         # Load environment variables from profile-specific .env file
         env_file = f".env.{profile_name}"
@@ -197,8 +208,10 @@ class Config(BaseSettings):
 def load_config_from_env() -> Config:
     """Load configuration from environment variables.
 
-    Returns:
+    Returns
+    -------
         Config: Configuration object
+
     """
     return Config()
 
@@ -208,8 +221,10 @@ def list_available_profiles() -> list[str]:
 
     Profiles are identified by .env.{profile_name} files in the current directory.
 
-    Returns:
+    Returns
+    -------
         list[str]: list of available profile names
+
     """
     profiles = []
 

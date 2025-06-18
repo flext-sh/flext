@@ -31,9 +31,11 @@ class Entity:
         """Initialize Entity instance.
 
         Args:
+        ----
             client: API client instance
             entity_name: Name of the entity in the API
             model_class: Optional model class for data validation and conversion
+
         """
         self.client = client
         self.entity_name = entity_name
@@ -52,6 +54,7 @@ class Entity:
         """List entity resources with optional filtering and pagination.
 
         Args:
+        ----
             filters: Optional dictionary of filter conditions
             sort_by: Optional field to sort by
             sort_order: Sort direction ('asc' or 'desc')
@@ -60,7 +63,9 @@ class Entity:
             fields: Specific fields to include in the response
 
         Returns:
+        -------
             FlxResponse: API response containing list of entities
+
         """
         params = {}
 
@@ -106,11 +111,14 @@ class Entity:
         """Get a single entity resource by ID.
 
         Args:
+        ----
             resource_id: ID of the resource to retrieve
             fields: Specific fields to include in the response
 
         Returns:
+        -------
             FlxResponse: API response containing the entity
+
         """
         params = {}
 
@@ -135,10 +143,13 @@ class Entity:
         """Create a new entity resource.
 
         Args:
+        ----
             data: Data for the new resource (dict or model instance)
 
         Returns:
+        -------
             FlxResponse: API response containing the created entity
+
         """
         # Convert model to dict if needed
         if isinstance(data, BaseModel):
@@ -174,11 +185,14 @@ class Entity:
         """Update an existing entity resource.
 
         Args:
+        ----
             resource_id: ID of the resource to update
             data: Updated data for the resource
 
         Returns:
+        -------
             FlxResponse: API response containing the updated entity
+
         """
         # Convert model to dict if needed
         if isinstance(data, BaseModel):
@@ -214,11 +228,14 @@ class Entity:
         """Partially update an existing entity resource.
 
         Args:
+        ----
             resource_id: ID of the resource to update
             data: Partial data for the resource
 
         Returns:
+        -------
             FlxResponse: API response containing the updated entity
+
         """
         # Convert model to dict if needed
         if isinstance(data, BaseModel):
@@ -241,10 +258,13 @@ class Entity:
         """Delete an entity resource.
 
         Args:
+        ----
             resource_id: ID of the resource to delete
 
         Returns:
+        -------
             FlxResponse: API response
+
         """
         return self.client.delete(f"{self.base_path}/{resource_id}")
 
@@ -255,10 +275,13 @@ class Entity:
         """Create multiple entity resources in a single request.
 
         Args:
+        ----
             items: list of data items for new resources
 
         Returns:
+        -------
             FlxResponse: API response
+
         """
         # Convert models to dicts if needed
         data = []
@@ -274,10 +297,13 @@ class Entity:
         """Update multiple entity resources in a single request.
 
         Args:
+        ----
             items: list of data items with IDs for existing resources
 
         Returns:
+        -------
             FlxResponse: API response
+
         """
         # Make request
         return self.client.put(f"{self.base_path}/bulk", json_data={"items": items})
@@ -286,10 +312,13 @@ class Entity:
         """Delete multiple entity resources in a single request.
 
         Args:
+        ----
             ids: list of resource IDs to delete
 
         Returns:
+        -------
             FlxResponse: API response
+
         """
         # Make request
         return self.client.delete(f"{self.base_path}/bulk", json_data={"ids": ids})
@@ -298,10 +327,13 @@ class Entity:
         """Count the number of entity resources matching the filters.
 
         Args:
+        ----
             filters: Optional dictionary of filter conditions
 
         Returns:
+        -------
             int: Number of matching resources
+
         """
         params = {"count": "true"}
 
@@ -328,6 +360,7 @@ class Entity:
         """Perform a custom action on an entity resource.
 
         Args:
+        ----
             action: Name of the custom action
             resource_id: Optional ID of the resource to act on
             method: HTTP method to use (default: POST)
@@ -335,7 +368,9 @@ class Entity:
             params: Optional query parameters
 
         Returns:
+        -------
             FlxResponse: API response
+
         """
         # Build URL
         if resource_id:
@@ -370,7 +405,9 @@ class EntityManager:
         """Initialize EntityManager.
 
         Args:
+        ----
             client: API client instance
+
         """
         self.client = client
         self.entities = {}  # Cache of entity instances
@@ -383,11 +420,14 @@ class EntityManager:
         """Get an Entity instance for the specified entity type.
 
         Args:
+        ----
             entity_name: Name of the entity in the API
             model_class: Optional model class for data validation and conversion
 
         Returns:
+        -------
             Entity: Entity instance
+
         """
         # Use cached instance if available (and model_class matches)
         if entity_name in self.entities:
@@ -403,8 +443,10 @@ class EntityManager:
     def discover_entities(self) -> list[str]:
         """Discover available entity types from the API.
 
-        Returns:
+        Returns
+        -------
             list[str]: list of entity names
+
         """
         response = self.client.get("api/entities")
         if response.success and isinstance(response.data, list):

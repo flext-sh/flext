@@ -1,0 +1,18 @@
+dbt_ldap:
+  outputs:
+    dev:
+      type: duckdb
+      path: ./target/ldap_transform.db
+      threads: 4
+
+    prod:
+      type: postgres
+      host: "{{ env_var('DBT_POSTGRES_HOST', 'localhost') }}"
+      port: "{{ env_var('DBT_POSTGRES_PORT', '5432') | int }}"
+      user: "{{ env_var('DBT_POSTGRES_USER', 'postgres') }}"
+      pass: "{{ env_var('DBT_POSTGRES_PASS', 'postgres') }}"
+      dbname: "{{ env_var('DBT_POSTGRES_DB', 'ldap_warehouse') }}"
+      schema: ldap
+      threads: 8
+
+  target: dev

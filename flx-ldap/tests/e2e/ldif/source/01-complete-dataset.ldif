@@ -1,0 +1,286 @@
+# Complete source LDAP dataset for E2E testing
+
+# Base organizational structure
+dn: ou=people,dc=source,dc=com
+objectClass: organizationalUnit
+ou: people
+description: All user accounts
+
+dn: ou=groups,dc=source,dc=com
+objectClass: organizationalUnit
+ou: groups
+description: All groups
+
+dn: ou=departments,dc=source,dc=com
+objectClass: organizationalUnit
+ou: departments
+description: Department structure
+
+# Departments
+dn: ou=engineering,ou=departments,dc=source,dc=com
+objectClass: organizationalUnit
+ou: engineering
+description: Engineering Department
+businessCategory: Technology
+
+dn: ou=sales,ou=departments,dc=source,dc=com
+objectClass: organizationalUnit
+ou: sales
+description: Sales Department
+businessCategory: Sales
+
+dn: ou=marketing,ou=departments,dc=source,dc=com
+objectClass: organizationalUnit
+ou: marketing
+description: Marketing Department
+businessCategory: Marketing
+
+dn: ou=hr,ou=departments,dc=source,dc=com
+objectClass: organizationalUnit
+ou: hr
+description: Human Resources
+businessCategory: Human Resources
+
+# Users - Engineering
+dn: uid=john.doe,ou=people,dc=source,dc=com
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+uid: john.doe
+cn: John Doe
+sn: Doe
+givenName: John
+mail: john.doe@source.com
+userPassword: {SSHA}x+wnyY9qS7TCSSdg1CtNyJr8FtNFh2RF
+employeeNumber: 1001
+employeeType: active
+departmentNumber: engineering
+telephoneNumber: +1-555-1001
+mobile: +1-555-2001
+title: Senior Software Engineer
+manager: uid=alice.johnson,ou=people,dc=source,dc=com
+
+dn: uid=bob.wilson,ou=people,dc=source,dc=com
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+uid: bob.wilson
+cn: Bob Wilson
+sn: Wilson
+givenName: Bob
+mail: bob.wilson@source.com
+userPassword: {SSHA}y+wnyY9qS7TCSSdg1CtNyJr8FtNFh2RF
+employeeNumber: 1002
+employeeType: active
+departmentNumber: engineering
+telephoneNumber: +1-555-1002
+mobile: +1-555-2002
+title: Software Developer
+manager: uid=john.doe,ou=people,dc=source,dc=com
+
+dn: uid=carol.smith,ou=people,dc=source,dc=com
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+uid: carol.smith
+cn: Carol Smith
+sn: Smith
+givenName: Carol
+mail: carol.smith@source.com
+userPassword: {SSHA}z+wnyY9qS7TCSSdg1CtNyJr8FtNFh2RF
+employeeNumber: 1003
+employeeType: active
+departmentNumber: engineering
+telephoneNumber: +1-555-1003
+mobile: +1-555-2003
+title: DevOps Engineer
+manager: uid=john.doe,ou=people,dc=source,dc=com
+
+# Users - Sales
+dn: uid=david.brown,ou=people,dc=source,dc=com
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+uid: david.brown
+cn: David Brown
+sn: Brown
+givenName: David
+mail: david.brown@source.com
+userPassword: {SSHA}a+wnyY9qS7TCSSdg1CtNyJr8FtNFh2RF
+employeeNumber: 2001
+employeeType: active
+departmentNumber: sales
+telephoneNumber: +1-555-2001
+mobile: +1-555-3001
+title: Sales Manager
+manager: uid=alice.johnson,ou=people,dc=source,dc=com
+
+dn: uid=emma.davis,ou=people,dc=source,dc=com
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+uid: emma.davis
+cn: Emma Davis
+sn: Davis
+givenName: Emma
+mail: emma.davis@source.com
+userPassword: {SSHA}b+wnyY9qS7TCSSdg1CtNyJr8FtNFh2RF
+employeeNumber: 2002
+employeeType: active
+departmentNumber: sales
+telephoneNumber: +1-555-2002
+mobile: +1-555-3002
+title: Sales Representative
+manager: uid=david.brown,ou=people,dc=source,dc=com
+
+dn: uid=frank.miller,ou=people,dc=source,dc=com
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+uid: frank.miller
+cn: Frank Miller
+sn: Miller
+givenName: Frank
+mail: frank.miller@source.com
+userPassword: {SSHA}c+wnyY9qS7TCSSdg1CtNyJr8FtNFh2RF
+employeeNumber: 2003
+employeeType: inactive
+departmentNumber: sales
+telephoneNumber: +1-555-2003
+mobile: +1-555-3003
+title: Former Sales Rep
+manager: uid=david.brown,ou=people,dc=source,dc=com
+
+# Users - Executive
+dn: uid=alice.johnson,ou=people,dc=source,dc=com
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+uid: alice.johnson
+cn: Alice Johnson
+sn: Johnson
+givenName: Alice
+mail: alice.johnson@source.com
+userPassword: {SSHA}d+wnyY9qS7TCSSdg1CtNyJr8FtNFh2RF
+employeeNumber: 9001
+employeeType: active
+departmentNumber: hr
+telephoneNumber: +1-555-9001
+mobile: +1-555-9002
+title: Chief Executive Officer
+
+# Service Accounts
+dn: uid=svc-backup,ou=people,dc=source,dc=com
+objectClass: account
+objectClass: simpleSecurityObject
+objectClass: top
+uid: svc-backup
+userPassword: {SSHA}e+wnyY9qS7TCSSdg1CtNyJr8FtNFh2RF
+description: Backup Service Account
+
+dn: uid=svc-monitoring,ou=people,dc=source,dc=com
+objectClass: account
+objectClass: simpleSecurityObject
+objectClass: top
+uid: svc-monitoring
+userPassword: {SSHA}f+wnyY9qS7TCSSdg1CtNyJr8FtNFh2RF
+description: Monitoring Service Account
+
+dn: uid=svc-ldap-sync,ou=people,dc=source,dc=com
+objectClass: account
+objectClass: simpleSecurityObject
+objectClass: top
+uid: svc-ldap-sync
+userPassword: {SSHA}g+wnyY9qS7TCSSdg1CtNyJr8FtNFh2RF
+description: LDAP Sync Service Account
+
+# Groups - Departmental
+dn: cn=dept-engineering,ou=groups,dc=source,dc=com
+objectClass: groupOfNames
+objectClass: top
+cn: dept-engineering
+description: Engineering Department
+member: uid=john.doe,ou=people,dc=source,dc=com
+member: uid=bob.wilson,ou=people,dc=source,dc=com
+member: uid=carol.smith,ou=people,dc=source,dc=com
+
+dn: cn=dept-sales,ou=groups,dc=source,dc=com
+objectClass: groupOfNames
+objectClass: top
+cn: dept-sales
+description: Sales Department
+member: uid=david.brown,ou=people,dc=source,dc=com
+member: uid=emma.davis,ou=people,dc=source,dc=com
+member: uid=frank.miller,ou=people,dc=source,dc=com
+
+# Groups - Functional
+dn: cn=managers,ou=groups,dc=source,dc=com
+objectClass: groupOfNames
+objectClass: top
+cn: managers
+description: All Managers
+member: uid=alice.johnson,ou=people,dc=source,dc=com
+member: uid=john.doe,ou=people,dc=source,dc=com
+member: uid=david.brown,ou=people,dc=source,dc=com
+
+dn: cn=developers,ou=groups,dc=source,dc=com
+objectClass: groupOfNames
+objectClass: top
+cn: developers
+description: Software Developers
+member: uid=john.doe,ou=people,dc=source,dc=com
+member: uid=bob.wilson,ou=people,dc=source,dc=com
+member: uid=carol.smith,ou=people,dc=source,dc=com
+
+dn: cn=executives,ou=groups,dc=source,dc=com
+objectClass: groupOfNames
+objectClass: top
+cn: executives
+description: Executive Team
+member: uid=alice.johnson,ou=people,dc=source,dc=com
+
+dn: cn=all-employees,ou=groups,dc=source,dc=com
+objectClass: groupOfNames
+objectClass: top
+cn: all-employees
+description: All Active Employees
+member: uid=alice.johnson,ou=people,dc=source,dc=com
+member: uid=john.doe,ou=people,dc=source,dc=com
+member: uid=bob.wilson,ou=people,dc=source,dc=com
+member: uid=carol.smith,ou=people,dc=source,dc=com
+member: uid=david.brown,ou=people,dc=source,dc=com
+member: uid=emma.davis,ou=people,dc=source,dc=com
+
+dn: cn=service-accounts,ou=groups,dc=source,dc=com
+objectClass: groupOfNames
+objectClass: top
+cn: service-accounts
+description: Service Accounts
+member: uid=svc-backup,ou=people,dc=source,dc=com
+member: uid=svc-monitoring,ou=people,dc=source,dc=com
+member: uid=svc-ldap-sync,ou=people,dc=source,dc=com
+
+# Access Control Groups
+dn: cn=ldap-admins,ou=groups,dc=source,dc=com
+objectClass: groupOfNames
+objectClass: top
+cn: ldap-admins
+description: LDAP Administrators
+member: uid=alice.johnson,ou=people,dc=source,dc=com
+member: uid=svc-ldap-sync,ou=people,dc=source,dc=com
+
+dn: cn=vpn-users,ou=groups,dc=source,dc=com
+objectClass: groupOfNames
+objectClass: top
+cn: vpn-users
+description: VPN Access Users
+member: uid=alice.johnson,ou=people,dc=source,dc=com
+member: uid=john.doe,ou=people,dc=source,dc=com
+member: uid=david.brown,ou=people,dc=source,dc=com

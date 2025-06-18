@@ -1,0 +1,156 @@
+[tool.poetry]
+name = "flx-ldap"
+version = "1.0.0"
+description = "Unified CLI for LDAP ETL operations with tap-ldap, target-ldap, and dbt-ldap"
+authors = ["PyAuto Team"]
+readme = "README.md"
+license = "Apache-2.0"
+packages = [{ include = "flx_ldap", from = "src" }]
+
+[tool.poetry.dependencies]
+python = "^3.13"
+click = "^8.1.0"
+pydantic = "^2.11.0"
+python-dotenv = "^1.0.0"
+rich = "^14.0.0"
+PyYAML = "^6.0"
+subprocess32 = { version = "^3.5.4", markers = "python_version < '3.2'" }
+
+# Optional dependencies for tap/target/dbt
+tap-ldap = { path = "../tap-ldap", develop = true, optional = true }
+target-ldap = { path = "../target-ldap", develop = true, optional = true }
+dbt-core = { version = "^1.9.0", optional = true }
+dbt-duckdb = { version = "^1.9.0", optional = true }
+
+[tool.poetry.extras]
+tap = ["tap-ldap"]
+target = ["target-ldap"]
+dbt = ["dbt-core", "dbt-duckdb"]
+all = ["tap-ldap", "target-ldap", "dbt-core", "dbt-duckdb"]
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0.0"
+pytest-asyncio = "^0.25.0"
+pytest-cov = "^6.0.0"
+black = "^24.0.0"
+ruff = "^0.8.0"
+mypy = "^1.14.0"
+ldap3 = "^2.9.1"
+bandit = "^1.7.9"
+safety = "^3.0.1"
+pre-commit = "^4.0.1"
+
+[tool.poetry.group.e2e.dependencies]
+docker = "^7.1.0"
+psycopg2-binary = "^2.9.9"
+
+[tool.poetry.scripts]
+flx-ldap = "flx_ldap.cli:cli"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 100
+target-version = ["py312"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+ignore = [
+    "N818",   # Allow Exceptions to have suffix 'Exception' rather than 'Error'
+    "S310",   # Allow `urllib.open`
+    "S603",   # Allow `subprocess.run(..., shell=False)`
+    "COM812", # Handled by the Ruff formatter
+    "ISC001", # Handled by the Ruff formatter
+]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "UP",  # pyupgrade
+    "N",   # pep8-naming
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "DTZ", # flake8-datetimez
+    "T20", # flake8-print
+    "ISC", # flake8-implicit-str-concat
+    "PIE", # flake8-pie
+    "PT",  # flake8-pytest-style
+    "RET", # flake8-return
+]
+unfixable = [
+    "ERA001", # Don't remove commented-out code
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*" = [
+    "S101",    # assert used in tests
+    "S105",    # hardcoded password in tests
+    "S106",    # hardcoded password in tests
+    "ARG",     # unused function args in fixtures
+    "PLR2004", # magic value used in comparison
+    "PTH123",  # Path.open vs open (can be fixed later)
+    "F841",    # unused variable (will fix individually)
+    "PGH003",  # type ignore specificity
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["flx_ldap"]
+force-sort-within-sections = true
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+follow_imports = "normal"
+ignore_missing_imports = false
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+addopts = [
+    "--cov=flx_ldap",
+    "--cov-report=term-missing",
+    "--cov-report=html",
+    "--cov-fail-under=90",
+    "-v",
+]
+
+[tool.coverage.run]
+source = ["src/flx_ldap"]
+omit = ["*/tests/*", "*/__init__.py"]
+
+[tool.coverage.report]
+precision = 2
+show_missing = true
+skip_covered = false
+
+[tool.bandit]
+exclude_dirs = ["tests"]
+skips = ["B101", "B601"]
+
+[tool.bandit.assert_used]
+skips = ["*/*test*.py", "*/test_*.py"]

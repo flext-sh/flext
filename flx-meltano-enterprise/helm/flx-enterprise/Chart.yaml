@@ -1,0 +1,35 @@
+apiVersion: v2
+name: flx-enterprise
+description: FLX Enterprise - Meltano-based Data Pipeline Platform
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+keywords:
+  - flx
+  - meltano
+  - data-pipeline
+  - etl
+  - orchestration
+home: https://github.com/gruponos/flx-meltano-enterprise
+sources:
+  - https://github.com/gruponos/flx-meltano-enterprise
+maintainers:
+  - name: FLX Team
+    email: flx@gruponos.com
+dependencies:
+  - name: postgresql
+    version: 13.2.x
+    repository: https://charts.bitnami.com/bitnami
+    condition: postgresql.enabled
+  - name: redis
+    version: 18.4.x
+    repository: https://charts.bitnami.com/bitnami
+    condition: redis.enabled
+  - name: prometheus
+    version: 19.x.x
+    repository: https://prometheus-community.github.io/helm-charts
+    condition: prometheus.enabled
+  - name: grafana
+    version: 6.x.x
+    repository: https://grafana.github.io/helm-charts
+    condition: grafana.enabled

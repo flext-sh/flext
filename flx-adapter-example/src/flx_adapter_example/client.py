@@ -53,6 +53,7 @@ class ApiClient:
         take precedence.
 
         Args:
+        ----
             url: API base URL (optional if config is provided)
             username: API username (optional if config is provided)
             password: API password (optional if config is provided)
@@ -62,6 +63,7 @@ class ApiClient:
             retry_backoff: Exponential backoff factor for retries (default: 0.5)
             debug: Enable debug mode (default: False)
             config: Configuration object (optional)
+
         """
         # Use config object if provided
         if config is None:
@@ -118,8 +120,10 @@ class ApiClient:
     def _create_session(self) -> requests.Session:
         """Create and configure a requests session.
 
-        Returns:
+        Returns
+        -------
             requests.Session: Configured session
+
         """
         session = requests.Session()
 
@@ -152,10 +156,13 @@ class ApiClient:
         """Build full URL for the given endpoint.
 
         Args:
+        ----
             endpoint: API endpoint path
 
         Returns:
+        -------
             str: Full URL
+
         """
         # Remove leading slash from endpoint if present
         endpoint = endpoint.removeprefix("/")
@@ -171,14 +178,18 @@ class ApiClient:
         """Handle API response.
 
         Args:
+        ----
             response: HTTP response
             raw_response: Whether to return raw response object (default: False)
 
         Returns:
+        -------
             FlxResponse: Processed API response
 
         Raises:
+        ------
             ResponseError: If response contains an error
+
         """
         status_code = response.status_code
 
@@ -247,6 +258,7 @@ class ApiClient:
         """Make HTTP request to API.
 
         Args:
+        ----
             method: HTTP method (GET, POST, PUT, DELETE, etc.)
             endpoint: API endpoint path
             params: Query parameters (optional)
@@ -257,12 +269,15 @@ class ApiClient:
             **kwargs: Additional arguments to pass to requests
 
         Returns:
+        -------
             FlxResponse: API response
 
         Raises:
+        ------
             ConnectionError: If there is an issue connecting to the API
             RequestError: If there is an issue with the request
             ResponseError: If the API returns an error response
+
         """
         url = self._build_url(endpoint)
 
@@ -314,6 +329,7 @@ class ApiClient:
         """Make GET request to API.
 
         Args:
+        ----
             endpoint: API endpoint path
             params: Query parameters (optional)
             headers: Additional headers (optional)
@@ -321,7 +337,9 @@ class ApiClient:
             **kwargs: Additional arguments to pass to requests
 
         Returns:
+        -------
             FlxResponse: API response
+
         """
         return self._make_request(
             "GET",
@@ -345,6 +363,7 @@ class ApiClient:
         """Make POST request to API.
 
         Args:
+        ----
             endpoint: API endpoint path
             data: Form data (optional)
             json_data: JSON data (optional)
@@ -354,7 +373,9 @@ class ApiClient:
             **kwargs: Additional arguments to pass to requests
 
         Returns:
+        -------
             FlxResponse: API response
+
         """
         return self._make_request(
             "POST",
@@ -380,6 +401,7 @@ class ApiClient:
         """Make PUT request to API.
 
         Args:
+        ----
             endpoint: API endpoint path
             data: Form data (optional)
             json_data: JSON data (optional)
@@ -389,7 +411,9 @@ class ApiClient:
             **kwargs: Additional arguments to pass to requests
 
         Returns:
+        -------
             FlxResponse: API response
+
         """
         return self._make_request(
             "PUT",
@@ -413,6 +437,7 @@ class ApiClient:
         """Make DELETE request to API.
 
         Args:
+        ----
             endpoint: API endpoint path
             params: Query parameters (optional)
             headers: Additional headers (optional)
@@ -420,7 +445,9 @@ class ApiClient:
             **kwargs: Additional arguments to pass to requests
 
         Returns:
+        -------
             FlxResponse: API response
+
         """
         return self._make_request(
             "DELETE",
@@ -444,6 +471,7 @@ class ApiClient:
         """Make PATCH request to API.
 
         Args:
+        ----
             endpoint: API endpoint path
             data: Form data (optional)
             json_data: JSON data (optional)
@@ -453,7 +481,9 @@ class ApiClient:
             **kwargs: Additional arguments to pass to requests
 
         Returns:
+        -------
             FlxResponse: API response
+
         """
         return self._make_request(
             "PATCH",
@@ -471,13 +501,17 @@ class ApiClient:
         """Create API client from configuration profile.
 
         Args:
+        ----
             profile_name: Name of the profile to load
 
         Returns:
+        -------
             ApiClient: API client instance
 
         Raises:
+        ------
             ValueError: If the profile doesn't exist or is invalid
+
         """
         from .config import Config
 
@@ -487,8 +521,10 @@ class ApiClient:
     def test_connection(self) -> tuple[bool, str]:
         """Test connection to API.
 
-        Returns:
+        Returns
+        -------
             tuple[bool, str]: (success, message)
+
         """
         try:
             # Try a simple request to test connection

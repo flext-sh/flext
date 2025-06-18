@@ -14,6 +14,10 @@ analysis_temp/
 .standardization_backup/
 .token
 .lock*
+reports/
+reference/
+outputs/
+ldif_output/
 
 # Python
 __pycache__/

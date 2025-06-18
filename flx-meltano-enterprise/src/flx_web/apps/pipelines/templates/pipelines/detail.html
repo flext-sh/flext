@@ -1,0 +1,413 @@
+{% extends "base.html" %}
+
+{% block title %}{{ pipeline.name }} - Pipelines - FLX Enterprise{% endblock %}
+
+{% block content %}
+<div class="py-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'pipelines:list' %}">Pipelines</a></li>
+            <li class="breadcrumb-item active">{{ pipeline.name }}</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h2 mb-1">
+                {{ pipeline.name }}
+                {% if pipeline.is_active %}
+                    <span class="badge bg-success ms-2">Active</span>
+                {% else %}
+                    <span class="badge bg-secondary ms-2">Inactive</span>
+                {% endif %}
+            </h1>
+            {% if pipeline.description %}
+                <p class="text-muted mb-0">{{ pipeline.description }}</p>
+            {% endif %}
+        </div>
+        <div>
+            <button class="btn btn-primary" onclick="runPipeline('{{ pipeline.id }}')">
+                <i class="fas fa-play me-2"></i>Run Now
+            </button>
+            <a href="{% url 'pipelines:edit' pipeline.id %}" class="btn btn-secondary">
+                <i class="fas fa-edit me-2"></i>Edit
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Pipeline Info -->
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Pipeline Configuration</h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-3">Type</dt>
+                        <dd class="col-sm-9">
+                            <span class="badge bg-secondary">{{ pipeline.get_type_display|default:pipeline.type }}</span>
+                        </dd>
+
+                        <dt class="col-sm-3">Schedule</dt>
+                        <dd class="col-sm-9">
+                            {% if pipeline.schedule %}
+                                <code>{{ pipeline.schedule }}</code>
+                                <small class="text-muted ms-2">{{ pipeline.schedule_description }}</small>
+                            {% else %}
+                                <span class="text-muted">Manual execution only</span>
+                            {% endif %}
+                        </dd>
+
+                        <dt class="col-sm-3">Created</dt>
+                        <dd class="col-sm-9">{{ pipeline.created_at|date:"Y-m-d H:i:s" }}</dd>
+
+                        <dt class="col-sm-3">Updated</dt>
+                        <dd class="col-sm-9">{{ pipeline.updated_at|date:"Y-m-d H:i:s" }}</dd>
+
+                        <dt class="col-sm-3">Next Run</dt>
+                        <dd class="col-sm-9">
+                            {% if pipeline.next_run %}
+                                {{ pipeline.next_run|date:"Y-m-d H:i:s" }}
+                                <small class="text-muted">(in {{ pipeline.next_run|timeuntil }})</small>
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </dd>
+                    </dl>
+
+                    <hr>
+
+                    <h6 class="mb-3">Configuration</h6>
+                    <pre class="bg-light p-3 rounded"><code>{{ pipeline.config_json|default:"{}" }}</code></pre>
+                </div>
+            </div>
+
+            <!-- Execution History -->
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">Execution History</h5>
+                    <button class="btn btn-sm btn-outline-secondary" onclick="refreshExecutions()">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="executionsTable">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Status</th>
+                                    <th>Started</th>
+                                    <th>Duration</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for execution in executions %}
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'pipelines:execution_detail' execution.id %}">
+                                            {{ execution.id|truncatechars:12 }}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        {% if execution.status == "completed" %}
+                                            <span class="badge bg-success">Completed</span>
+                                        {% elif execution.status == "running" %}
+                                            <span class="badge bg-primary">
+                                                <span class="spinner-border spinner-border-sm me-1"></span>
+                                                Running
+                                            </span>
+                                        {% elif execution.status == "failed" %}
+                                            <span class="badge bg-danger">Failed</span>
+                                        {% elif execution.status == "cancelled" %}
+                                            <span class="badge bg-warning">Cancelled</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">{{ execution.status }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ execution.started_at|date:"Y-m-d H:i:s" }}</td>
+                                    <td>{{ execution.duration|default:"-" }}</td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a href="{% url 'pipelines:execution_detail' execution.id %}"
+                                               class="btn btn-sm btn-outline-primary">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            {% if execution.status == "running" %}
+                                                <button class="btn btn-sm btn-outline-danger"
+                                                        onclick="cancelExecution('{{ execution.id }}')">
+                                                    <i class="fas fa-stop"></i>
+                                                </button>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted">No executions yet</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats & Actions -->
+        <div class="col-lg-4">
+            <!-- Stats -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Statistics</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <h6 class="text-muted mb-2">Total Executions</h6>
+                        <h3 class="mb-0">{{ stats.total_executions|default:"0" }}</h3>
+                    </div>
+                    <div class="mb-3">
+                        <h6 class="text-muted mb-2">Success Rate</h6>
+                        <h3 class="mb-0">{{ stats.success_rate|default:"0" }}%</h3>
+                        <div class="progress mt-2" style="height: 10px;">
+                            <div class="progress-bar bg-success" role="progressbar"
+                                 style="width: {{ stats.success_rate|default:0 }}%"></div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <h6 class="text-muted mb-2">Average Duration</h6>
+                        <h3 class="mb-0">{{ stats.avg_duration|default:"-" }}</h3>
+                    </div>
+                    <div>
+                        <h6 class="text-muted mb-2">Last Success</h6>
+                        <p class="mb-0">
+                            {% if stats.last_success %}
+                                {{ stats.last_success|timesince }} ago
+                            {% else %}
+                                <span class="text-muted">Never</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-primary" onclick="runPipeline('{{ pipeline.id }}')">
+                            <i class="fas fa-play me-2"></i>Run Pipeline
+                        </button>
+                        <button class="btn btn-outline-secondary" onclick="togglePipeline('{{ pipeline.id }}', {{ pipeline.is_active|lower }})">
+                            {% if pipeline.is_active %}
+                                <i class="fas fa-pause me-2"></i>Deactivate
+                            {% else %}
+                                <i class="fas fa-play me-2"></i>Activate
+                            {% endif %}
+                        </button>
+                        <a href="{% url 'pipelines:edit' pipeline.id %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-cog me-2"></i>Configure
+                        </a>
+                        <button class="btn btn-outline-secondary" onclick="exportPipeline('{{ pipeline.id }}')">
+                            <i class="fas fa-download me-2"></i>Export
+                        </button>
+                        <hr>
+                        <button class="btn btn-outline-danger" onclick="deletePipeline('{{ pipeline.id }}', '{{ pipeline.name }}')">
+                            <i class="fas fa-trash me-2"></i>Delete Pipeline
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dependencies -->
+            {% if pipeline.dependencies %}
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Dependencies</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        {% for dep in pipeline.dependencies %}
+                        <li class="mb-2">
+                            <i class="fas fa-link me-2 text-muted"></i>
+                            <a href="{% url 'pipelines:detail' dep.id %}">{{ dep.name }}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let ws = null;
+const WS_URL = `ws://localhost:8000/api/ws/pipeline-{{ pipeline.id }}-{{ user.id }}`;
+
+function connectWebSocket() {
+    ws = new WebSocket(WS_URL);
+
+    ws.onopen = function() {
+        // Subscribe to pipeline updates
+        ws.send(JSON.stringify({
+            type: 'subscribe',
+            event: `pipeline.{{ pipeline.id }}`
+        }));
+    };
+
+    ws.onmessage = function(event) {
+        const data = JSON.parse(event.data);
+
+        if (data.type === 'execution_update') {
+            updateExecutionRow(data.execution);
+        } else if (data.type === 'pipeline_update') {
+            location.reload();
+        }
+    };
+}
+
+function updateExecutionRow(execution) {
+    const row = $(`#executionsTable tr[data-execution-id="${execution.id}"]`);
+    if (row.length) {
+        // Update existing row
+        row.find('.status-badge').replaceWith(getStatusBadge(execution.status));
+        row.find('.duration').text(execution.duration || '-');
+    } else {
+        // Add new row at top
+        refreshExecutions();
+    }
+}
+
+function getStatusBadge(status) {
+    const badges = {
+        'completed': '<span class="badge bg-success">Completed</span>',
+        'running': '<span class="badge bg-primary"><span class="spinner-border spinner-border-sm me-1"></span>Running</span>',
+        'failed': '<span class="badge bg-danger">Failed</span>',
+        'cancelled': '<span class="badge bg-warning">Cancelled</span>'
+    };
+    return badges[status] || `<span class="badge bg-secondary">${status}</span>`;
+}
+
+function runPipeline(pipelineId) {
+    $.post(`/api/pipelines/${pipelineId}/run/`, {
+        csrfmiddlewaretoken: getCookie('csrftoken')
+    })
+    .done(function(data) {
+        window.location.href = `/pipelines/execution/${data.execution_id}/`;
+    })
+    .fail(function(xhr) {
+        alert('Error running pipeline: ' + xhr.responseJSON.error);
+    });
+}
+
+function togglePipeline(pipelineId, isActive) {
+    const action = isActive ? 'deactivate' : 'activate';
+
+    $.post(`/api/pipelines/${pipelineId}/${action}/`, {
+        csrfmiddlewaretoken: getCookie('csrftoken')
+    })
+    .done(function() {
+        location.reload();
+    })
+    .fail(function(xhr) {
+        alert(`Error ${action}ing pipeline: ` + xhr.responseJSON.error);
+    });
+}
+
+function cancelExecution(executionId) {
+    if (confirm('Are you sure you want to cancel this execution?')) {
+        $.post(`/api/executions/${executionId}/cancel/`, {
+            csrfmiddlewaretoken: getCookie('csrftoken')
+        })
+        .done(function() {
+            refreshExecutions();
+        })
+        .fail(function(xhr) {
+            alert('Error cancelling execution: ' + xhr.responseJSON.error);
+        });
+    }
+}
+
+function exportPipeline(pipelineId) {
+    window.location.href = `/api/pipelines/${pipelineId}/export/`;
+}
+
+function deletePipeline(pipelineId, pipelineName) {
+    if (confirm(`Are you sure you want to delete pipeline "${pipelineName}"? This action cannot be undone.`)) {
+        $.ajax({
+            url: `/api/pipelines/${pipelineId}/`,
+            type: 'DELETE',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken')
+            }
+        })
+        .done(function() {
+            window.location.href = '{% url "pipelines:list" %}';
+        })
+        .fail(function(xhr) {
+            alert('Error deleting pipeline: ' + xhr.responseJSON.error);
+        });
+    }
+}
+
+function refreshExecutions() {
+    $.get(`/api/pipelines/{{ pipeline.id }}/executions/`)
+    .done(function(data) {
+        // Update executions table
+        const tbody = $('#executionsTable tbody');
+        tbody.empty();
+
+        if (data.executions.length === 0) {
+            tbody.append('<tr><td colspan="5" class="text-center text-muted">No executions yet</td></tr>');
+            return;
+        }
+
+        data.executions.forEach(function(execution) {
+            const row = `
+                <tr data-execution-id="${execution.id}">
+                    <td><a href="/pipelines/execution/${execution.id}/">${execution.id.substring(0, 12)}</a></td>
+                    <td class="status-badge">${getStatusBadge(execution.status)}</td>
+                    <td>${new Date(execution.started_at).toLocaleString()}</td>
+                    <td class="duration">${execution.duration || '-'}</td>
+                    <td>
+                        <div class="btn-group" role="group">
+                            <a href="/pipelines/execution/${execution.id}/" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            ${execution.status === 'running' ?
+                                `<button class="btn btn-sm btn-outline-danger" onclick="cancelExecution('${execution.id}')">
+                                    <i class="fas fa-stop"></i>
+                                </button>` : ''}
+                        </div>
+                    </td>
+                </tr>
+            `;
+            tbody.append(row);
+        });
+    });
+}
+
+// Initialize
+$(document).ready(function() {
+    connectWebSocket();
+
+    // Auto-refresh executions every 30 seconds
+    setInterval(refreshExecutions, 30000);
+});
+
+// Cleanup
+window.addEventListener('beforeunload', function() {
+    if (ws) {
+        ws.close();
+    }
+});
+</script>
+{% endblock %}

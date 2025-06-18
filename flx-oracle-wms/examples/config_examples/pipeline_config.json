@@ -1,0 +1,78 @@
+{
+  "name": "Oracle WMS Enterprise Integration",
+  "tap_config_path": "./config/tap_config.json",
+  "target_config_path": "./config/target_config.json",
+  "state_path": "./state.json",
+  "catalog_path": "./catalog.json",
+  "max_parallel_pipelines": 3,
+  "retry_count": 3,
+  "retry_delay": 60,
+  "pipelines": [
+    {
+      "name": "inventory_sync",
+      "description": "Complete inventory synchronization with KPI calculation and alerts",
+      "streams": [
+        "inventory",
+        "lots",
+        "locations",
+        "cycle_counts"
+      ],
+      "schedule": "0 */6 * * *",
+      "enabled": true,
+      "target_config_override": {
+        "enable_kpi_calculation": true,
+        "enable_alerts": true,
+        "expiry_alert_days": 30,
+        "output_format": "parquet"
+      }
+    },
+    {
+      "name": "order_processing",
+      "description": "Real-time order processing and fulfillment tracking",
+      "streams": [
+        "orders",
+        "order_lines",
+        "shipments",
+        "allocations"
+      ],
+      "schedule": "0 * * * *",
+      "enabled": true,
+      "tap_config_override": {
+        "page_size": 500
+      }
+    },
+    {
+      "name": "warehouse_operations",
+      "description": "Monitor warehouse productivity and resource utilization",
+      "streams": [
+        "tasks",
+        "workers",
+        "equipment",
+        "zones"
+      ],
+      "schedule": "0 8,12,16,20 * * *",
+      "enabled": true,
+      "target_config_override": {
+        "enable_kpi_calculation": true,
+        "database_url": "postgresql://analytics:pass@localhost:5432/wms_operations"
+      }
+    },
+    {
+      "name": "full_sync",
+      "description": "Complete WMS data synchronization (runs weekly)",
+      "streams": [],
+      "schedule": "0 2 * * 0",
+      "enabled": false,
+      "tap_config_override": {
+        "start_date": null
+      }
+    }
+  ],
+  "monitoring": {
+    "enabled": true,
+    "metrics_port": 9090,
+    "health_check_interval": 60,
+    "alert_webhook_url": "https://your-monitoring.com/webhooks/wms",
+    "log_level": "INFO"
+  }
+}

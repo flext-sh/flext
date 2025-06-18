@@ -19,9 +19,11 @@ class ApiError(Exception):
         """Initialize API error.
 
         Args:
+        ----
             message: Error message
             code: Error code (optional)
             details: Additional error details (optional)
+
         """
         self.message = message
         self.code = code
@@ -65,11 +67,13 @@ class ResponseError(ApiError):
         """Initialize response error.
 
         Args:
+        ----
             message: Error message
             status_code: HTTP status code (optional)
             response_body: Response body (optional)
             code: Error code (optional)
             details: Additional error details (optional)
+
         """
         self.status_code = status_code
         self.response_body = response_body
@@ -96,10 +100,12 @@ class ValidationError(ApiError):
         """Initialize validation error.
 
         Args:
+        ----
             message: Error message
             field_errors: Mapping of field names to error messages (optional)
             code: Error code (optional)
             details: Additional error details (optional)
+
         """
         self.field_errors = field_errors or {}
         super().__init__(message, code, details)

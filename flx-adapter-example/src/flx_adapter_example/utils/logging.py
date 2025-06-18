@@ -24,6 +24,7 @@ def setup_logger(
     """Set up and configure a logger.
 
     Args:
+    ----
         name: Logger name
         level: Logging level (default: INFO)
         format_string: Format string for log messages (optional)
@@ -33,7 +34,9 @@ def setup_logger(
         processors: list of structlog processors (optional)
 
     Returns:
+    -------
         logging.Logger: Configured logger
+
     """
     # Convert level string to int if needed
     if isinstance(level, str):
@@ -100,10 +103,13 @@ def get_logger(name: str | None = None) -> logging.Logger:
     """Get a logger instance.
 
     Args:
+    ----
         name: Logger name (optional)
 
     Returns:
+    -------
         logging.Logger: Logger instance
+
     """
     if name is None:
         name = "flx_adapter_example"

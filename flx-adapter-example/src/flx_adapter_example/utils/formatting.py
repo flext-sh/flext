@@ -23,13 +23,16 @@ def format_json(
     """Format data as JSON.
 
     Args:
+    ----
         data: Data to format
         indent: Indentation level (default: 2)
         sort_keys: Whether to sort keys (default: False)
         output_file: Output file path or file object (optional)
 
     Returns:
+    -------
         str: Formatted JSON string
+
     """
     # Format as JSON
     json_str = json.dumps(data, indent=indent, sort_keys=sort_keys)
@@ -56,6 +59,7 @@ def format_table(
     """Format data as a table.
 
     Args:
+    ----
         data: Data to format
         fields: Fields to include (optional)
         headers: Field header mapping (optional)
@@ -64,7 +68,9 @@ def format_table(
         output_file: Output file path or file object (optional)
 
     Returns:
+    -------
         str: Formatted table string
+
     """
     # Create console if not provided
     if console is None:
@@ -118,6 +124,7 @@ def format_csv(
     """Format data as CSV.
 
     Args:
+    ----
         data: Data to format
         fields: Fields to include (optional)
         headers: Field header mapping (optional)
@@ -125,7 +132,9 @@ def format_csv(
         output_file: Output file path or file object (optional)
 
     Returns:
+    -------
         str: Formatted CSV string
+
     """
     # Determine fields if not provided
     if fields is None and data:
@@ -171,13 +180,16 @@ def format_text(
     """Format data using a text template.
 
     Args:
+    ----
         data: Data to format
         template: Format template with field placeholders
         field_func: Function to transform field values (optional)
         output_file: Output file path or file object (optional)
 
     Returns:
+    -------
         str: Formatted text string
+
     """
     # Default field transformation function
     if field_func is None:
