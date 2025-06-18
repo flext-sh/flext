@@ -48,7 +48,7 @@ classifiers = [
 
 [tool.poetry.dependencies]
 # MANDATORY: All projects must use Python 3.13+
-python = "^3.13,<3.15"
+python = "^3.9,<4.0"
 
 # CORE ENTERPRISE DEPENDENCIES: Include these in all projects
 pydantic = "^2.11.5"
@@ -160,7 +160,7 @@ src = ["src", "tests"]
 extend-exclude = [
     ".git",
     ".mypy_cache",
-    ".pytest_cache", 
+    ".pytest_cache",
     ".ruff_cache",
     ".venv",
     "__pycache__",
@@ -286,7 +286,7 @@ asyncio_mode = "auto"
 markers = [
     "slow: marks tests as slow (deselect with '-m \"not slow\"')",
     "integration: marks tests as integration tests",
-    "e2e: marks tests as end-to-end tests", 
+    "e2e: marks tests as end-to-end tests",
     "unit: marks tests as unit tests",
     "hexarch: marks tests as hexagonal architecture tests",
     "ports: marks tests for port interfaces",

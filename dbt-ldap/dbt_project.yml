@@ -1,0 +1,34 @@
+name: 'dbt_ldap'
+version: '1.0.0'
+config-version: 2
+
+profile: 'dbt_ldap'
+
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["data"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+models:
+  dbt_ldap:
+    staging:
+      +materialized: view
+      +schema: staging
+    intermediate:
+      +materialized: view
+      +schema: intermediate
+    marts:
+      +materialized: table
+      +schema: marts
+
+vars:
+  ldap_base_dn: 'dc=example,dc=com'
+  ldap_user_base: 'ou=users'
+  ldap_group_base: 'ou=groups'
+  ldap_ou_base: 'ou=departments'

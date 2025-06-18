@@ -114,7 +114,9 @@ class AdvancedDatabaseService(BaseInfraService):
         super().__init__("advanced_database", config)
 
         # Configuration
-        self._database_url = self._config.get("database_url", "postgresql://localhost/test")
+        self._database_url = self._config.get(
+            "database_url", "postgresql://localhost/test"
+        )
         self._pool_size = self._config.get("pool_size", 10)
         self._max_retries = self._config.get("max_retries", 3)
 
@@ -286,7 +288,9 @@ class AdvancedDatabaseService(BaseInfraService):
         except Exception as e:
             # Handle with error recovery
             return await error_handler.handle_error(
-                e, context, _execute,
+                e,
+                context,
+                _execute,
             )
 
     async def execute_transaction(
@@ -341,10 +345,12 @@ class AdvancedDatabaseService(BaseInfraService):
         resilience_stats = resilience_manager.get_all_stats()
         details["resilience"] = {
             "circuit_breaker": resilience_stats["circuit_breakers"].get(
-                "database_operations", {},
+                "database_operations",
+                {},
             ),
             "rate_limiter": resilience_stats["rate_limiters"].get(
-                "database_queries", {},
+                "database_queries",
+                {},
             ),
         }
 
@@ -359,6 +365,7 @@ class AdvancedDatabaseService(BaseInfraService):
 
 
 # Example usage
+
 
 async def demonstrate_advanced_features() -> None:
     """Demonstrate advanced infrastructure features."""
@@ -378,11 +385,13 @@ async def demonstrate_advanced_features() -> None:
         # Perform operations
         await db_service.execute_query("SELECT * FROM users")
 
-        results = await db_service.execute_transaction([
-            "INSERT INTO users (name) VALUES ('Alice')",
-            "INSERT INTO users (name) VALUES ('Bob')",
-            "UPDATE users SET active = true",
-        ])
+        results = await db_service.execute_transaction(
+            [
+                "INSERT INTO users (name) VALUES ('Alice')",
+                "INSERT INTO users (name) VALUES ('Bob')",
+                "UPDATE users SET active = true",
+            ]
+        )
 
         tasks = []
         for i in range(20):
@@ -417,12 +426,23 @@ async def demonstrate_error_recovery() -> None:
             super().__init__("flakey_service")
             self._failure_count = 0
 
-        async def _do_initialize(self) -> None: pass
-        async def _do_start(self) -> None: pass
-        async def _do_stop(self) -> None: pass
-        async def _do_cleanup(self) -> None: pass
-        async def _do_connect(self) -> None: pass
-        async def _do_disconnect(self) -> None: pass
+        async def _do_initialize(self) -> None:
+            pass
+
+        async def _do_start(self) -> None:
+            pass
+
+        async def _do_stop(self) -> None:
+            pass
+
+        async def _do_cleanup(self) -> None:
+            pass
+
+        async def _do_connect(self) -> None:
+            pass
+
+        async def _do_disconnect(self) -> None:
+            pass
 
         async def unreliable_operation(self) -> str:
             """Operation that fails initially then succeeds."""

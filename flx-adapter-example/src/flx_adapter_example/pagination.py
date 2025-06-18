@@ -32,12 +32,14 @@ class PageInfo:
         """Initialize PageInfo.
 
         Args:
+        ----
             page: Current page number (1-based)
             page_size: Number of items per page
             total_pages: Total number of pages
             total_items: Total number of items across all pages
             next_page: Next page number or None if there is no next page
             prev_page: Previous page number or None if there is no previous page
+
         """
         self.page = page
         self.page_size = page_size
@@ -66,10 +68,13 @@ class PageInfo:
         - Link-based pagination with metadata (pagination object)
 
         Args:
+        ----
             response: API response data
 
         Returns:
+        -------
             PageInfo: Pagination information
+
         """
         # Default values
         page = 1
@@ -81,7 +86,6 @@ class PageInfo:
 
         # Extract pagination info from response
         if "pagination" in response and isinstance(response["pagination"], dict):
-            # Format: {"pagination": {"page": 1, "page_size": 10, "total_pages": 5, "total": 45}}
             pagination = response["pagination"]
             page = pagination.get("page", pagination.get("current_page", 1))
             page_size = pagination.get("page_size", pagination.get("per_page", 0))
@@ -94,7 +98,6 @@ class PageInfo:
             if page > 1:
                 prev_page = page - 1
         elif "meta" in response and isinstance(response["meta"], dict):
-            # Format: {"meta": {"page": 1, "limit": 10, "total": 45}}
             meta = response["meta"]
             page = meta.get("page", meta.get("current_page", 1))
             page_size = meta.get("limit", meta.get("per_page", 0))
@@ -113,7 +116,6 @@ class PageInfo:
             # Try to extract pagination from query parameters in links
             links = response.get("links", {})
             if links and isinstance(links, dict):
-                # Format: {"links": {"next": "?page=2", "prev": null}}
                 next_link = links.get("next")
                 prev_link = links.get("prev")
 
@@ -160,9 +162,11 @@ class PagedResponse[T]:
         """Initialize PagedResponse.
 
         Args:
+        ----
             data: Current page of data
             page_info: Pagination information
             raw_response: Original API response
+
         """
         self.data = data
         self.page_info = page_info
@@ -203,6 +207,7 @@ class PaginatedIterator[T]:
         """Initialize PaginatedIterator.
 
         Args:
+        ----
             client: API client instance
             endpoint: API endpoint path
             params: Query parameters (optional)
@@ -212,6 +217,7 @@ class PaginatedIterator[T]:
             page_size: Number of items per page
             transform_func: Function to transform each data item (optional)
             model_class: Model class for data validation and conversion (optional)
+
         """
         self.client = client
         self.endpoint = endpoint
@@ -296,7 +302,9 @@ class PaginatedIterator[T]:
         self.current_page = PagedResponse(data, page_info, response)
 
 
-def paginate[T](
+def paginate[
+    T
+](
     client: ApiClient,
     endpoint: str,
     params: dict[str, Any] | None = None,
@@ -310,6 +318,7 @@ def paginate[T](
     """Create a paginated iterator for an API endpoint.
 
     Args:
+    ----
         client: API client instance
         endpoint: API endpoint path
         params: Query parameters (optional)
@@ -321,7 +330,9 @@ def paginate[T](
         model_class: Model class for data validation and conversion (optional)
 
     Returns:
+    -------
         PaginatedIterator: Iterator for paginated results
+
     """
     return PaginatedIterator(
         client=client,

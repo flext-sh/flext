@@ -14,10 +14,13 @@ def validate_url(url: str) -> tuple[bool, str | None]:
     """Validate a URL.
 
     Args:
+    ----
         url: URL to validate
 
     Returns:
+    -------
         tuple[bool, Optional[str]]: (is_valid, error_message)
+
     """
     # Check if URL is empty
     if not url:
@@ -37,10 +40,13 @@ def validate_email(email: str) -> tuple[bool, str | None]:
     """Validate an email address.
 
     Args:
+    ----
         email: Email address to validate
 
     Returns:
+    -------
         tuple[bool, Optional[str]]: (is_valid, error_message)
+
     """
     # Check if email is empty
     if not email:
@@ -60,10 +66,13 @@ def validate_uuid(uuid_str: str) -> tuple[bool, str | None]:
     """Validate a UUID string.
 
     Args:
+    ----
         uuid_str: UUID string to validate
 
     Returns:
+    -------
         tuple[bool, Optional[str]]: (is_valid, error_message)
+
     """
     # Check if UUID is empty
     if not uuid_str:
@@ -84,11 +93,14 @@ def validate_date(
     """Validate a date string.
 
     Args:
+    ----
         date_str: Date string to validate
         format_str: Date format string (default: "%Y-%m-%d")
 
     Returns:
+    -------
         tuple[bool, Optional[str]]: (is_valid, error_message)
+
     """
     # Check if date is empty
     if not date_str:
@@ -109,11 +121,14 @@ def validate_required_fields(
     """Validate that all required fields are present in data.
 
     Args:
+    ----
         data: Data to validate
         required_fields: list of required field names
 
     Returns:
+    -------
         tuple[bool, Optional[str]]: (is_valid, error_message)
+
     """
     # Check each required field
     missing_fields = [
@@ -131,11 +146,14 @@ def validate_enum_field(value: Any, valid_values: list) -> tuple[bool, str | Non
     """Validate that a value is in a list of valid values.
 
     Args:
+    ----
         value: Value to validate
         valid_values: list of valid values
 
     Returns:
+    -------
         tuple[bool, Optional[str]]: (is_valid, error_message)
+
     """
     # Check if value is in valid values
     if value not in valid_values:
@@ -155,12 +173,15 @@ def validate_min_max(
     """Validate that a numeric value is within a range.
 
     Args:
+    ----
         value: Value to validate
         min_value: Minimum allowed value (optional)
         max_value: Maximum allowed value (optional)
 
     Returns:
+    -------
         tuple[bool, Optional[str]]: (is_valid, error_message)
+
     """
     # Check minimum value
     if min_value is not None and value < min_value:

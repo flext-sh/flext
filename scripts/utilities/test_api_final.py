@@ -20,13 +20,13 @@ def test_api():
         # Count routes
         routes = []
         for route in app.routes:
-            if hasattr(route, 'path') and hasattr(route, 'methods'):
+            if hasattr(route, "path") and hasattr(route, "methods"):
                 for method in route.methods:
-                    if method != 'HEAD':
+                    if method != "HEAD":
                         routes.append(f"{method} {route.path}")
 
         # Show some example routes
-        plugin_routes = [r for r in routes if '/database/' in r or '/monitoring/' in r]
+        plugin_routes = [r for r in routes if "/database/" in r or "/monitoring/" in r]
 
         if plugin_routes:
             for route in plugin_routes[:5]:
@@ -36,6 +36,7 @@ def test_api():
 
     except Exception:
         import traceback
+
         traceback.print_exc()
         return False
 

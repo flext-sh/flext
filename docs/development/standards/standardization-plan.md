@@ -88,7 +88,7 @@ This document outlines the comprehensive enterprise standardization plan for ach
 ### 1. Python & Poetry
 
 ```toml
-python = "^3.13"
+python = "^3.9,<4.0"
 requires = ["poetry-core>=2.1.3"]
 ```
 

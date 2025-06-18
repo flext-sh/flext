@@ -1,0 +1,13 @@
+{
+  "base_url": "https://your-instance.integration.ocp.oraclecloud.com",
+  "oauth_client_id": "your_client_id",
+  "oauth_client_secret": "your_client_secret",
+  "oauth_token_url": "https://idcs-tenant.identity.oraclecloud.com/oauth2/v1/token",
+  "oauth_client_aud": "https://your-instance.integration.ocp.oraclecloud.com:443/urn:opc:resource:consumer::all",
+  "import_mode": "create_or_update",
+  "activate_integrations": false,
+  "validate_connections": true,
+  "archive_directory": "./archives",
+  "request_timeout": 60,
+  "max_retries": 5
+}

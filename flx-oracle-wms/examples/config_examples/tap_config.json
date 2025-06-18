@@ -1,0 +1,16 @@
+{
+  "base_url": "https://your-instance.oracle.com/fscmRestApi/resources/11.13.18.05",
+  "username": "wms_user",
+  "password": "${WMS_PASSWORD}",
+  "timeout": 300,
+  "page_size": 1000,
+  "start_date": "2024-01-01T00:00:00Z",
+  "api_version": "v2",
+  "request_timeout": 300,
+  "retry_count": 3,
+  "retry_delay": 5,
+  "user_agent": "tap-oracle-wms/1.0.0",
+  "stream_maps": {},
+  "stream_map_config": {},
+  "state_partitioning_keys": []
+}
