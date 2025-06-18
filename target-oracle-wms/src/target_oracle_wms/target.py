@@ -7,7 +7,9 @@ from typing import TYPE_CHECKING, Any
 
 from singer_sdk import Target
 from singer_sdk import typing as th
+
 from target_oracle_wms.sinks_advanced import DynamicWMSSink
+
 
 if TYPE_CHECKING:
     from singer_sdk.sinks import Sink

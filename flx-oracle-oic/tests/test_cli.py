@@ -4,8 +4,9 @@ import json
 import tempfile
 from pathlib import Path
 
-from flx_oracle_oic.cli import app
 from typer.testing import CliRunner
+
+from flx_oracle_oic.cli import app
 
 runner = CliRunner()
 

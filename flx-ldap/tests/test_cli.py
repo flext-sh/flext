@@ -5,8 +5,9 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 from unittest.mock import MagicMock, patch
 
-import pytest
 from click.testing import CliRunner
+import pytest
+
 from flx_ldap.cli import cli
 
 if TYPE_CHECKING:
@@ -16,12 +17,12 @@ if TYPE_CHECKING:
 class TestCLI:
     """Test CLI commands."""
 
-    @pytest.fixture()
+    @pytest.fixture
     def runner(self) -> CliRunner:
         """Get CLI runner."""
         return CliRunner()
 
-    @pytest.fixture()
+    @pytest.fixture
     def config_file(self, tmp_path: Path) -> Path:
         """Create test config file."""
         config_path = tmp_path / "config.yml"

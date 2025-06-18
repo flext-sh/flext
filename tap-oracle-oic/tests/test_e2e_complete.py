@@ -17,13 +17,14 @@ from unittest.mock import Mock, patch
 
 import pytest
 from singer_sdk.testing import get_tap_test_class
+
 from tap_oracle_oic.tap import TapOIC
 
 
 class TestTapOracleOICE2E:
     """End-to-end tests for tap-oracle-oic."""
 
-    @pytest.fixture()
+    @pytest.fixture
     def config_path(self):
         """Return path to config.json."""
         config_file = Path(__file__).parent.parent / "config.json"
@@ -32,13 +33,13 @@ class TestTapOracleOICE2E:
             os.system("cd .. && python generate_config.py")
         return str(config_file)
 
-    @pytest.fixture()
+    @pytest.fixture
     def config(self, config_path):
         """Load configuration from config.json."""
         with open(config_path, encoding="utf-8") as f:
             return json.load(f)
 
-    @pytest.fixture()
+    @pytest.fixture
     def tap(self, config):
         """Create tap instance."""
         return TapOIC(config=config)

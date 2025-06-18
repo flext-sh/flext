@@ -4,16 +4,16 @@ from __future__ import annotations
 
 import json
 import logging
+from pathlib import Path
 import subprocess
 import time
-from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 import docker
 import ldap3
+from ldap3 import ALL, Connection, Server
 import psycopg2
 import pytest
-from ldap3 import ALL, Connection, Server
 
 if TYPE_CHECKING:
     from collections.abc import Generator
@@ -114,7 +114,7 @@ def e2e_infrastructure(
     )
 
 
-@pytest.fixture()
+@pytest.fixture
 def source_ldap_connection(e2e_infrastructure: Any) -> Generator[Connection]:
     """Get source LDAP connection for testing."""
     server = Server("localhost", port=30389, get_info=ALL)
@@ -132,7 +132,7 @@ def source_ldap_connection(e2e_infrastructure: Any) -> Generator[Connection]:
         conn.unbind()
 
 
-@pytest.fixture()
+@pytest.fixture
 def target_ldap_connection(e2e_infrastructure: Any) -> Generator[Connection]:
     """Get target LDAP connection for testing."""
     server = Server("localhost", port=31389, get_info=ALL)
@@ -150,7 +150,7 @@ def target_ldap_connection(e2e_infrastructure: Any) -> Generator[Connection]:
         conn.unbind()
 
 
-@pytest.fixture()
+@pytest.fixture
 def postgres_connection(e2e_infrastructure: Any) -> Generator[Any]:
     """Get PostgreSQL connection for testing."""
     conn = psycopg2.connect(
@@ -167,7 +167,7 @@ def postgres_connection(e2e_infrastructure: Any) -> Generator[Any]:
     conn.close()
 
 
-@pytest.fixture()
+@pytest.fixture
 def migration_config(project_root: Path) -> dict[str, Any]:
     """Get migration configuration."""
     config_file = project_root / "tests" / "e2e" / "configs" / "migration-config.json"
@@ -175,7 +175,7 @@ def migration_config(project_root: Path) -> dict[str, Any]:
         return json.load(f)
 
 
-@pytest.fixture()
+@pytest.fixture
 def migration_config_file(migration_config: dict[str, Any], tmp_path: Path) -> Path:
     """Create migration configuration file."""
     config_file = tmp_path / "migration-config.json"
@@ -183,7 +183,7 @@ def migration_config_file(migration_config: dict[str, Any], tmp_path: Path) -> P
     return config_file
 
 
-@pytest.fixture()
+@pytest.fixture
 def data_dir(tmp_path: Path) -> Path:
     """Create data directory for E2E tests."""
     data_dir = tmp_path / "data"
@@ -191,7 +191,7 @@ def data_dir(tmp_path: Path) -> Path:
     return data_dir
 
 
-@pytest.fixture()
+@pytest.fixture
 def catalog_dir(tmp_path: Path) -> Path:
     """Create catalog directory for E2E tests."""
     catalog_dir = tmp_path / "catalogs"
@@ -199,7 +199,7 @@ def catalog_dir(tmp_path: Path) -> Path:
     return catalog_dir
 
 
-@pytest.fixture()
+@pytest.fixture
 def state_dir(tmp_path: Path) -> Path:
     """Create state directory for E2E tests."""
     state_dir = tmp_path / "state"

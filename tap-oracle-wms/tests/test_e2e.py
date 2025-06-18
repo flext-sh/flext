@@ -7,24 +7,25 @@ import tempfile
 from pathlib import Path
 
 import pytest
+
 from tap_oracle_wms.tap import TapOracleWMS
 
 
 class TestE2EWithOptionalConfig:
     """E2E tests with optional config.json validation."""
 
-    @pytest.fixture()
+    @pytest.fixture
     def project_root(self):
         """Get project root directory."""
         return Path(__file__).parent.parent
 
-    @pytest.fixture()
+    @pytest.fixture
     def config_file_path(self, project_root):
         """Check for config.json in project root."""
         config_path = project_root / "config.json"
         return config_path if config_path.exists() else None
 
-    @pytest.fixture()
+    @pytest.fixture
     def live_config_data(self, config_file_path):
         """Load live config if available."""
         if config_file_path:

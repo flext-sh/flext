@@ -7,6 +7,7 @@ from typing import Any
 from unittest.mock import MagicMock, patch
 
 import pytest
+
 from tap_ldap.streams import (
     CustomStream,
     GroupsStream,
@@ -21,7 +22,7 @@ from tap_ldap.tap import TapLDAP
 class TestLDAPStream:
     """Test base LDAP stream."""
 
-    @pytest.fixture()
+    @pytest.fixture
     def tap(self, mock_ldap_config: dict[str, Any]) -> TapLDAP:
         """Create test tap instance."""
         return TapLDAP(config=mock_ldap_config)
@@ -72,7 +73,7 @@ class TestLDAPStream:
 class TestUsersStream:
     """Test users stream."""
 
-    @pytest.fixture()
+    @pytest.fixture
     def users_stream(self, mock_ldap_config: dict[str, Any]) -> UsersStream:
         """Create users stream."""
         tap = TapLDAP(config=mock_ldap_config)
@@ -149,7 +150,7 @@ class TestUsersStream:
 class TestGroupsStream:
     """Test groups stream."""
 
-    @pytest.fixture()
+    @pytest.fixture
     def groups_stream(self, mock_ldap_config: dict[str, Any]) -> GroupsStream:
         """Create groups stream."""
         tap = TapLDAP(config=mock_ldap_config)
@@ -172,7 +173,7 @@ class TestGroupsStream:
 class TestOrganizationalUnitsStream:
     """Test organizational units stream."""
 
-    @pytest.fixture()
+    @pytest.fixture
     def ou_stream(self, mock_ldap_config: dict[str, Any]) -> OrganizationalUnitsStream:
         """Create OU stream."""
         tap = TapLDAP(config=mock_ldap_config)
@@ -189,7 +190,7 @@ class TestOrganizationalUnitsStream:
 class TestSchemaStream:
     """Test schema stream."""
 
-    @pytest.fixture()
+    @pytest.fixture
     def schema_stream(self, mock_ldap_config: dict[str, Any]) -> SchemaStream:
         """Create schema stream."""
         tap = TapLDAP(config=mock_ldap_config)
@@ -244,7 +245,7 @@ class TestSchemaStream:
 class TestCustomStream:
     """Test custom stream functionality."""
 
-    @pytest.fixture()
+    @pytest.fixture
     def tap(self, mock_ldap_config: dict[str, Any]) -> TapLDAP:
         """Create test tap instance."""
         return TapLDAP(config=mock_ldap_config)

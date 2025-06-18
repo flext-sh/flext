@@ -7,11 +7,11 @@ Includes Oracle OID/OUD support, SSH tunneling, SSL/TLS, and connection pooling.
 
 from __future__ import annotations
 
+from concurrent.futures import ThreadPoolExecutor
+from contextlib import contextmanager
 import logging
 import ssl
 import time
-from concurrent.futures import ThreadPoolExecutor
-from contextlib import contextmanager
 from typing import TYPE_CHECKING, Any
 
 import ldap3

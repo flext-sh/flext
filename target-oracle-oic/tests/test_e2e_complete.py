@@ -17,6 +17,7 @@ from unittest.mock import patch
 
 import pytest
 from singer_sdk.testing import get_target_test_class
+
 from target_oracle_oic.sinks import (
     ConnectionsSink,
     IntegrationsSink,
@@ -29,7 +30,7 @@ from target_oracle_oic.target import TargetOracleOIC
 class TestTargetOracleOICE2E:
     """End-to-end tests for target-oracle-oic."""
 
-    @pytest.fixture()
+    @pytest.fixture
     def config_path(self):
         """Return path to config.json."""
         config_file = Path(__file__).parent.parent / "config.json"
@@ -38,13 +39,13 @@ class TestTargetOracleOICE2E:
             os.system("cd .. && python generate_config.py")
         return str(config_file)
 
-    @pytest.fixture()
+    @pytest.fixture
     def config(self, config_path):
         """Load configuration from config.json."""
         with open(config_path) as f:
             return json.load(f)
 
-    @pytest.fixture()
+    @pytest.fixture
     def target(self, config):
         """Create target instance."""
         return TargetOracleOIC(config=config)

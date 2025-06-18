@@ -4,15 +4,16 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-import pytest
 from ldap3 import MOCK_SYNC, Connection, Server
+import pytest
+
 from tap_ldap.client import LDAPClient
 
 if TYPE_CHECKING:
     from collections.abc import Generator
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_ldap_config() -> dict[str, Any]:
     """Provide test LDAP configuration."""
     return {
@@ -29,7 +30,7 @@ def mock_ldap_config() -> dict[str, Any]:
     }
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_ldap_connection() -> Generator[Connection]:
     """Create mock LDAP connection with test data."""
     # Create mock server and connection
@@ -117,13 +118,13 @@ def mock_ldap_connection() -> Generator[Connection]:
     connection.unbind()
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_ldap_client(mock_ldap_config: dict[str, Any]) -> LDAPClient:
     """Create mock LDAP client."""
     return LDAPClient(**mock_ldap_config)
 
 
-@pytest.fixture()
+@pytest.fixture
 def sample_catalog() -> dict[str, Any]:
     """Provide sample Singer catalog."""
     return {
@@ -178,7 +179,7 @@ def sample_catalog() -> dict[str, Any]:
     }
 
 
-@pytest.fixture()
+@pytest.fixture
 def sample_state() -> dict[str, Any]:
     """Provide sample Singer state."""
     return {

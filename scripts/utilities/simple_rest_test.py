@@ -14,8 +14,9 @@ def test_rest_api() -> bool:
 
     try:
         # Import required modules
-        from flx.adapters.inbound.fire_cli import create_cli
         from flx.adapters.inbound.rest_api import create_rest_api
+
+        from flx.adapters.inbound.fire_cli import create_cli
 
         # Create CLI with plugins
         cli = create_cli()

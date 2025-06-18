@@ -12,6 +12,7 @@ import docker
 import psycopg2
 import pytest
 
+
 if TYPE_CHECKING:
     from collections.abc import Generator
 
@@ -76,7 +77,7 @@ def postgres_container(
     )
 
 
-@pytest.fixture()
+@pytest.fixture
 def db_connection(postgres_container: Any) -> Generator[Any]:
     """Get database connection for testing."""
     conn = psycopg2.connect(
@@ -93,13 +94,13 @@ def db_connection(postgres_container: Any) -> Generator[Any]:
     conn.close()
 
 
-@pytest.fixture()
+@pytest.fixture
 def dbt_project_dir(project_root: Path) -> Path:
     """Get dbt project directory."""
     return project_root
 
 
-@pytest.fixture()
+@pytest.fixture
 def dbt_profiles_dir(project_root: Path) -> Path:
     """Get dbt profiles directory."""
     return project_root / "tests" / "e2e" / "profiles"

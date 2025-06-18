@@ -6,8 +6,8 @@ which is critical for the brutal simplification migration project.
 
 from __future__ import annotations
 
-import logging
 from datetime import datetime, timezone
+import logging
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, ClassVar
 
@@ -15,6 +15,7 @@ if TYPE_CHECKING:
     from collections.abc import Iterable, Mapping
 
 from singer_sdk import typing as th
+
 from tap_ldap.ldif_processor import LDIFProcessor, LDIFTransformer, LDIFValidator
 from tap_ldap.streams import LDAPStream
 

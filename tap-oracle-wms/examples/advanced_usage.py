@@ -9,6 +9,7 @@ from typing import Any
 from tap_oracle_wms import TapOracleWMS
 from tap_oracle_wms.discovery import EntityDiscovery, SchemaGenerator
 
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 

@@ -7,9 +7,9 @@ and target-ldap components in the Singer/Meltano ecosystem.
 
 from __future__ import annotations
 
-import logging
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
+import logging
 from typing import Any, ClassVar
 
 # Import from ldap-core-shared if available

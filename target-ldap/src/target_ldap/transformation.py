@@ -7,10 +7,10 @@ for the brutal simplification project.
 
 from __future__ import annotations
 
-import logging
-import re
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
+import logging
+import re
 from typing import Any, ClassVar
 
 # Import from ldap-core-shared if available

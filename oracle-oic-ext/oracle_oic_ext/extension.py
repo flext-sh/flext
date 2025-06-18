@@ -8,6 +8,7 @@ import sys
 import structlog
 from meltano.edk import models
 from meltano.edk.extension import ExtensionBase
+
 from oracle_oic_ext.lifecycle import LifecycleManager
 from oracle_oic_ext.monitoring import MonitoringService
 

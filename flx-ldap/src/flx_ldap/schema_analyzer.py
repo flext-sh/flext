@@ -6,11 +6,11 @@ planning capabilities extracted and enhanced from algar-oud-mig.
 
 from __future__ import annotations
 
-import logging
-import re
 from collections import defaultdict
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
+import logging
+import re
 from typing import TYPE_CHECKING, Any, ClassVar
 
 if TYPE_CHECKING:

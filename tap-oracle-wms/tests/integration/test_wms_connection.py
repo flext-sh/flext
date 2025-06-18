@@ -2,13 +2,14 @@
 
 import httpx
 import pytest
+
 from tap_oracle_wms.tap import TapOracleWMS
 
 
 class TestWMSConnection:
     """Test WMS API connection and basic functionality."""
 
-    @pytest.mark.integration()
+    @pytest.mark.integration
     def test_api_connectivity(self, sample_config) -> None:
         """Test basic API connectivity to WMS."""
         # Create HTTP client with auth headers
@@ -38,7 +39,7 @@ class TestWMSConnection:
             except httpx.RequestError as e:
                 pytest.skip(f"Network connectivity issue: {e}")
 
-    @pytest.mark.integration()
+    @pytest.mark.integration
     def test_stream_initialization_with_real_config(self, sample_config) -> None:
         """Test that streams initialize properly with real configuration."""
         tap = TapOracleWMS(config=sample_config)
@@ -56,7 +57,7 @@ class TestWMSConnection:
             assert hasattr(stream, "url_base")
             assert stream.url_base.startswith("http")
 
-    @pytest.mark.integration()
+    @pytest.mark.integration
     def test_authentication_headers_generation(self, sample_config) -> None:
         """Test that authentication headers are generated correctly."""
         from tap_oracle_wms.auth import get_wms_headers
@@ -75,7 +76,7 @@ class TestWMSConnection:
         # Validate content type
         assert headers["Content-Type"] == "application/json"
 
-    @pytest.mark.integration()
+    @pytest.mark.integration
     def test_catalog_discovery_structure(self, sample_config) -> None:
         """Test that catalog discovery produces valid structure."""
         tap = TapOracleWMS(config=sample_config)
@@ -102,7 +103,7 @@ class TestWMSConnection:
             metadata = stream_def["metadata"]
             assert isinstance(metadata, list)
 
-    @pytest.mark.integration()
+    @pytest.mark.integration
     def test_stream_schema_consistency(self, sample_config) -> None:
         """Test that stream schemas are consistent and valid."""
         tap = TapOracleWMS(config=sample_config)
@@ -127,7 +128,7 @@ class TestWMSConnection:
                 assert isinstance(prop_def, dict)
                 assert "type" in prop_def or "anyOf" in prop_def
 
-    @pytest.mark.integration()
+    @pytest.mark.integration
     def test_error_handling_configuration(self, sample_config) -> None:
         """Test that streams handle configuration errors appropriately."""
         # Test with missing required fields

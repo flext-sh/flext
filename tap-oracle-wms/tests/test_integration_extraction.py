@@ -1,15 +1,16 @@
 """Integration tests for data extraction with live WMS API."""
 
 import pytest
+
 from tap_oracle_wms.tap import TapOracleWMS
 
 
-@pytest.mark.integration()
-@pytest.mark.extraction()
+@pytest.mark.integration
+@pytest.mark.extraction
 class TestLiveDataExtraction:
     """Integration tests using live WMS API for data extraction."""
 
-    @pytest.mark.live()
+    @pytest.mark.live
     def test_live_data_extraction_basic(self, live_config, captured_messages) -> None:
         """Test basic data extraction from live WMS API."""
         # Limit to single entity for focused testing
@@ -57,7 +58,7 @@ class TestLiveDataExtraction:
         # Should have state messages for tracking
         assert len(state_messages) > 0, "No STATE messages found"
 
-    @pytest.mark.live()
+    @pytest.mark.live
     def test_live_schema_generation(self, live_config) -> None:
         """Test schema generation from live WMS API."""
         limited_config = live_config.copy()
@@ -93,7 +94,7 @@ class TestLiveDataExtraction:
                 len(common_fields) > 0
             ), f"Expected {expected_fields}, found {list(found_fields)[:10]}"
 
-    @pytest.mark.live()
+    @pytest.mark.live
     def test_live_pagination_behavior(self, live_config, captured_messages) -> None:
         """Test pagination behavior with live WMS API."""
         # Configure for pagination testing
@@ -157,7 +158,7 @@ class TestLiveDataExtraction:
                     record_ids
                 ), "Duplicate records found - pagination issue"
 
-    @pytest.mark.live()
+    @pytest.mark.live
     def test_live_incremental_sync_setup(self, live_config, captured_messages) -> None:
         """Test incremental sync setup with live WMS API."""
         incremental_config = live_config.copy()
@@ -220,7 +221,7 @@ class TestLiveDataExtraction:
         # Should have state tracking
         assert len(state_messages) > 0, "No state messages found for incremental sync"
 
-    @pytest.mark.live()
+    @pytest.mark.live
     def test_live_error_handling(self, live_config) -> None:
         """Test error handling with live WMS API."""
         # Test with invalid entity
@@ -238,7 +239,7 @@ class TestLiveDataExtraction:
             # If it raises an exception, should be informative
             assert str(e)
 
-    @pytest.mark.live()
+    @pytest.mark.live
     def test_live_authentication_verification(self, live_config) -> None:
         """Test authentication verification with live WMS API."""
         tap = TapOracleWMS(config=live_config)
@@ -260,7 +261,7 @@ class TestLiveDataExtraction:
                 # Other error - re-raise
                 raise
 
-    @pytest.mark.live()
+    @pytest.mark.live
     def test_live_data_quality_validation(self, live_config, captured_messages) -> None:
         """Test data quality validation with live WMS API."""
         quality_config = live_config.copy()
@@ -323,12 +324,12 @@ class TestLiveDataExtraction:
                     assert not isinstance(value, (type, function, complex))
 
 
-@pytest.mark.integration()
-@pytest.mark.extraction()
+@pytest.mark.integration
+@pytest.mark.extraction
 class TestExtractionConfiguration:
     """Integration tests for extraction configuration options."""
 
-    @pytest.mark.live()
+    @pytest.mark.live
     def test_extraction_with_field_selection(
         self, live_config, captured_messages
     ) -> None:
@@ -377,7 +378,7 @@ class TestExtractionConfiguration:
             # This test verifies the configuration is accepted
             assert len(record_messages) > 0
 
-    @pytest.mark.live()
+    @pytest.mark.live
     def test_extraction_with_filtering(self, live_config, captured_messages) -> None:
         """Test extraction with filtering configuration."""
         filter_config = live_config.copy()
@@ -402,7 +403,7 @@ class TestExtractionConfiguration:
                 # Re-raise if not filter-related error
                 raise
 
-    @pytest.mark.live()
+    @pytest.mark.live
     def test_extraction_with_ordering(self, live_config, captured_messages) -> None:
         """Test extraction with ordering configuration."""
         order_config = live_config.copy()
@@ -421,7 +422,7 @@ class TestExtractionConfiguration:
             # Should handle gracefully if ordering not supported
             assert str(e)
 
-    @pytest.mark.live()
+    @pytest.mark.live
     def test_extraction_with_different_page_sizes(self, live_config) -> None:
         """Test extraction with different page sizes."""
         page_sizes = [1, 5, 10, 25]
@@ -447,7 +448,7 @@ class TestExtractionConfiguration:
             except Exception as e:
                 pytest.fail(f"Failed with page_size={page_size}: {e}")
 
-    @pytest.mark.live()
+    @pytest.mark.live
     def test_extraction_with_different_pagination_modes(self, live_config) -> None:
         """Test extraction with different pagination modes."""
         pagination_modes = ["offset", "cursor"]
@@ -475,13 +476,13 @@ class TestExtractionConfiguration:
                 pytest.fail(f"Failed with pagination_mode={mode}: {e}")
 
 
-@pytest.mark.integration()
-@pytest.mark.extraction()
+@pytest.mark.integration
+@pytest.mark.extraction
 class TestExtractionPerformance:
     """Integration tests for extraction performance."""
 
-    @pytest.mark.live()
-    @pytest.mark.slow()
+    @pytest.mark.live
+    @pytest.mark.slow
     def test_large_page_size_performance(self, live_config, captured_messages) -> None:
         """Test performance with large page sizes."""
         large_page_config = live_config.copy()
@@ -533,7 +534,7 @@ class TestExtractionPerformance:
                 records_per_second > 0.5
             ), f"Too slow: {records_per_second:.2f} records/second"
 
-    @pytest.mark.live()
+    @pytest.mark.live
     def test_connection_timeout_handling(self, live_config) -> None:
         """Test handling of connection timeouts."""
         timeout_config = live_config.copy()
@@ -556,7 +557,7 @@ class TestExtractionPerformance:
                 # Re-raise non-timeout errors
                 raise
 
-    @pytest.mark.live()
+    @pytest.mark.live
     def test_concurrent_stream_processing(self, live_config) -> None:
         """Test concurrent processing of multiple streams."""
         multi_entity_config = live_config.copy()
@@ -572,12 +573,12 @@ class TestExtractionPerformance:
         assert isinstance(streams, list)
 
 
-@pytest.mark.integration()
-@pytest.mark.extraction()
+@pytest.mark.integration
+@pytest.mark.extraction
 class TestExtractionEdgeCases:
     """Integration tests for extraction edge cases."""
 
-    @pytest.mark.live()
+    @pytest.mark.live
     def test_extraction_with_empty_results(self, live_config) -> None:
         """Test extraction when API returns empty results."""
         # Try with entity that might have no data
@@ -597,7 +598,7 @@ class TestExtractionEdgeCases:
             # Should not fail on empty results
             assert str(e)
 
-    @pytest.mark.live()
+    @pytest.mark.live
     def test_extraction_with_malformed_config(self, live_config) -> None:
         """Test extraction with various malformed configurations."""
         base_config = live_config.copy()
@@ -618,7 +619,7 @@ class TestExtractionEdgeCases:
                 # Should have informative error message
                 assert str(e)
 
-    @pytest.mark.live()
+    @pytest.mark.live
     def test_extraction_with_unicode_data(self, live_config, captured_messages) -> None:
         """Test extraction with unicode data."""
         unicode_config = live_config.copy()
@@ -671,7 +672,7 @@ class TestExtractionEdgeCases:
                         except UnicodeEncodeError:
                             pytest.fail(f"Invalid unicode in field {key}: {value}")
 
-    @pytest.mark.live()
+    @pytest.mark.live
     def test_extraction_with_large_field_values(
         self, live_config, captured_messages
     ) -> None:

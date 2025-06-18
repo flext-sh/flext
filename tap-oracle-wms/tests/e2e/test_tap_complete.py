@@ -3,13 +3,14 @@
 import json
 
 import pytest
+
 from tap_oracle_wms.tap import TapOracleWMS
 
 
 class TestTapComplete:
     """End-to-end tests for complete tap workflow."""
 
-    @pytest.mark.e2e()
+    @pytest.mark.e2e
     def test_complete_discovery_workflow(self, sample_config) -> None:
         """Test complete discovery workflow from config to catalog."""
         tap = TapOracleWMS(config=sample_config)
@@ -44,7 +45,7 @@ class TestTapComplete:
             table_metadata = [m for m in metadata if m.get("breadcrumb") == []]
             assert len(table_metadata) > 0
 
-    @pytest.mark.e2e()
+    @pytest.mark.e2e
     def test_catalog_json_serialization(self, sample_config) -> None:
         """Test that catalog can be properly serialized to JSON."""
         tap = TapOracleWMS(config=sample_config)
@@ -62,7 +63,7 @@ class TestTapComplete:
         except (TypeError, ValueError) as e:
             pytest.fail(f"Catalog is not JSON serializable: {e}")
 
-    @pytest.mark.e2e()
+    @pytest.mark.e2e
     def test_stream_instantiation_complete(self, sample_config) -> None:
         """Test complete stream instantiation and basic functionality."""
         tap = TapOracleWMS(config=sample_config)
@@ -91,7 +92,7 @@ class TestTapComplete:
             assert hasattr(stream, "authenticator")
             assert stream.authenticator is not None
 
-    @pytest.mark.e2e()
+    @pytest.mark.e2e
     def test_configuration_validation_complete(self, sample_config) -> None:
         """Test complete configuration validation."""
         # Test with valid config
@@ -107,7 +108,7 @@ class TestTapComplete:
             stream = stream_class(tap=tap)
             assert stream.config == sample_config
 
-    @pytest.mark.e2e()
+    @pytest.mark.e2e
     def test_tap_cli_compatibility(self, sample_config) -> None:
         """Test that tap is compatible with Singer CLI patterns."""
         tap = TapOracleWMS(config=sample_config)
@@ -128,7 +129,7 @@ class TestTapComplete:
             stream = stream_class(tap=tap)
             assert stream.name == stream_id
 
-    @pytest.mark.e2e()
+    @pytest.mark.e2e
     def test_error_handling_workflow(self, sample_config) -> None:
         """Test error handling throughout the workflow."""
         # Test tap initialization with various error conditions
@@ -155,7 +156,7 @@ class TestTapComplete:
                 # Expected for invalid configurations
                 assert len(str(e)) > 0
 
-    @pytest.mark.e2e()
+    @pytest.mark.e2e
     def test_memory_efficiency(self, sample_config) -> None:
         """Test that tap operations are memory efficient."""
         # Test that multiple tap instances don't accumulate memory

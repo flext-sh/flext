@@ -6,6 +6,7 @@ to ensure correctness across all LDAP operations.
 """
 
 import pytest
+
 from ldap_core_shared.utils.dn_utils import (
     build_dn,
     escape_dn_value,

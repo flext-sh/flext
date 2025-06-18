@@ -6,6 +6,7 @@ from typing import Any
 from unittest.mock import MagicMock, patch
 
 import pytest
+
 from target_ldap.sinks import (
     GenericSink,
     GroupsSink,
@@ -18,7 +19,7 @@ from target_ldap.sinks import (
 class TestLDAPSink:
     """Test base LDAP sink."""
 
-    @pytest.fixture()
+    @pytest.fixture
     def sink(
         self,
         mock_target: MagicMock,
@@ -166,7 +167,7 @@ class TestLDAPSink:
 class TestUsersSink:
     """Test users sink."""
 
-    @pytest.fixture()
+    @pytest.fixture
     def users_sink(
         self,
         mock_target: MagicMock,
@@ -199,7 +200,7 @@ class TestUsersSink:
 class TestGroupsSink:
     """Test groups sink."""
 
-    @pytest.fixture()
+    @pytest.fixture
     def groups_sink(
         self,
         mock_target: MagicMock,
@@ -244,7 +245,7 @@ class TestGroupsSink:
 class TestOrganizationalUnitsSink:
     """Test organizational units sink."""
 
-    @pytest.fixture()
+    @pytest.fixture
     def ou_sink(
         self,
         mock_target: MagicMock,
@@ -267,7 +268,7 @@ class TestOrganizationalUnitsSink:
 class TestGenericSink:
     """Test generic sink."""
 
-    @pytest.fixture()
+    @pytest.fixture
     def generic_sink(
         self,
         mock_target: MagicMock,

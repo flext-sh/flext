@@ -163,7 +163,7 @@ class TestTapOICIntegration:
             assert stream._tap is tap
 
 
-@pytest.fixture()
+@pytest.fixture
 def sample_config():
     """Sample configuration for testing."""
     return {
@@ -174,7 +174,7 @@ def sample_config():
     }
 
 
-@pytest.fixture()
+@pytest.fixture
 def sample_config_with_extended():
     """Sample configuration with extended features enabled."""
     return {

@@ -10,8 +10,8 @@ import os
 from pathlib import Path
 from typing import Any
 
-import yaml  # type: ignore[import-untyped]
 from pydantic import BaseModel, Field, field_validator
+import yaml  # type: ignore[import-untyped]
 
 
 class TapConfig(BaseModel):

@@ -7,10 +7,11 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+
 from flx_oracle_wms.config import PipelineConfig, PipelineDefinition
 
 
-@pytest.fixture()
+@pytest.fixture
 def tap_config() -> dict[str, Any]:
     """Return a test tap configuration."""
     return {
@@ -23,7 +24,7 @@ def tap_config() -> dict[str, Any]:
     }
 
 
-@pytest.fixture()
+@pytest.fixture
 def target_config() -> dict[str, Any]:
     """Return a test target configuration."""
     return {
@@ -37,14 +38,14 @@ def target_config() -> dict[str, Any]:
     }
 
 
-@pytest.fixture()
+@pytest.fixture
 def temp_config_dir() -> Generator[Path]:
     """Create a temporary configuration directory."""
     with tempfile.TemporaryDirectory() as tmpdir:
         yield Path(tmpdir)
 
 
-@pytest.fixture()
+@pytest.fixture
 def pipeline_config(
     temp_config_dir: Path, tap_config: dict, target_config: dict
 ) -> PipelineConfig:
@@ -83,7 +84,7 @@ def pipeline_config(
     )
 
 
-@pytest.fixture()
+@pytest.fixture
 def sample_catalog() -> dict[str, Any]:
     """Return a sample catalog."""
     return {
@@ -134,7 +135,7 @@ def sample_catalog() -> dict[str, Any]:
     }
 
 
-@pytest.fixture()
+@pytest.fixture
 def sample_state() -> dict[str, Any]:
     """Return a sample state."""
     return {
@@ -147,7 +148,7 @@ def sample_state() -> dict[str, Any]:
     }
 
 
-@pytest.fixture()
+@pytest.fixture
 def singer_messages() -> list[str]:
     """Return sample Singer messages."""
     return [

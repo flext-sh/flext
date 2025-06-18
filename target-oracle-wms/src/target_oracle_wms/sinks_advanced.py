@@ -29,6 +29,7 @@ from singer_sdk.sinks import BatchSink
 from .auth import WMSAuthenticator
 from .validation import WMSDataValidator
 
+
 if TYPE_CHECKING:
     from singer_sdk.plugin_base import PluginBase
 

@@ -1,6 +1,7 @@
 """Tests for TargetOracleWMS."""
 
 import pytest
+
 from target_oracle_wms.sinks import (
     GenericWMSSink,
     InventorySink,

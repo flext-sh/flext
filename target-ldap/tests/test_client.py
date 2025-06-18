@@ -5,15 +5,16 @@ from __future__ import annotations
 from typing import Any
 from unittest.mock import MagicMock, patch
 
-import pytest
 from ldap3.core.exceptions import LDAPException
+import pytest
+
 from target_ldap.client import LDAPClient
 
 
 class TestLDAPClient:
     """Test LDAP client functionality."""
 
-    @pytest.fixture()
+    @pytest.fixture
     def client(self, mock_ldap_config: dict[str, Any]) -> LDAPClient:
         """Create test client."""
         return LDAPClient(

@@ -6,6 +6,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 from singer_sdk.testing import get_target_test_class
+
 from target_ldap.target import TargetLDAP
 
 # Basic target tests
@@ -24,7 +25,7 @@ TestTargetLDAP = get_target_test_class(
 class TestTargetLDAPUnit:
     """Unit tests for TargetLDAP."""
 
-    @pytest.fixture()
+    @pytest.fixture
     def config(self) -> dict:
         """Get test configuration."""
         return {

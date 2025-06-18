@@ -6,8 +6,8 @@ data from LDAP directories.
 
 from __future__ import annotations
 
-import logging
 from datetime import datetime, timezone
+import logging
 from typing import TYPE_CHECKING, Any, ClassVar
 
 if TYPE_CHECKING:
@@ -15,6 +15,7 @@ if TYPE_CHECKING:
 
 from singer_sdk import typing as th
 from singer_sdk.streams import Stream
+
 from tap_ldap.client import LDAPClient
 
 if TYPE_CHECKING:
