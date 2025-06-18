@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING, Any
 from pydantic import BaseModel, Field
 from pydantic_settings import BaseSettings
 
+
 if TYPE_CHECKING:
     from pathlib import Path
 

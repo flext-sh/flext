@@ -10,12 +10,14 @@ import logging
 import os
 from datetime import UTC, datetime
 
+
 # Constants
 HTTP_OK = 200
 HTTP_NOT_FOUND = 404
 
 import httpx
 from dotenv import load_dotenv
+
 
 # Setup logging
 logging.basicConfig(

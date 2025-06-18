@@ -8,6 +8,7 @@ import httpx
 import pytest
 from dotenv import load_dotenv
 
+
 # Load environment variables for tests
 load_dotenv()
 
@@ -33,7 +34,7 @@ def add_src_to_path(src_root) -> None:
         sys.path.insert(0, str(src_root))
 
 
-@pytest.fixture()
+@pytest.fixture
 def sample_config():
     """Sample configuration for testing."""
     return {
@@ -50,7 +51,7 @@ def sample_config():
     }
 
 
-@pytest.fixture()
+@pytest.fixture
 def live_config():
     """Live configuration using environment variables."""
     username = os.getenv("WMS_USERNAME")
@@ -73,7 +74,7 @@ def live_config():
     }
 
 
-@pytest.fixture()
+@pytest.fixture
 def sample_wms_response():
     """Sample WMS API response data for testing validation."""
     return {
@@ -114,13 +115,13 @@ def sample_wms_response():
     }
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_entity_list():
     """Mock entity discovery response."""
     return ["facility", "item", "location", "inventory", "order_hdr", "allocation"]
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_schema():
     """Mock JSON schema for facility entity."""
     return {
@@ -147,7 +148,7 @@ def mock_schema():
     }
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_describe_response():
     """Mock describe endpoint response."""
     return {
@@ -164,7 +165,7 @@ def mock_describe_response():
     }
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_http_client():
     """Mock HTTP client with common responses."""
     client = Mock(spec=httpx.Client)
@@ -203,7 +204,7 @@ def mock_http_client():
     return client
 
 
-@pytest.fixture()
+@pytest.fixture
 def captured_messages():
     """Capture Singer messages during test execution."""
     messages = []
@@ -270,7 +271,7 @@ class WMSTestHelper:
         return False
 
 
-@pytest.fixture()
+@pytest.fixture
 def wms_test_helper():
     """WMS testing helper utilities."""
     return WMSTestHelper

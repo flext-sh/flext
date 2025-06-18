@@ -4,6 +4,7 @@ from typing import Optional
 
 from singer_sdk import typing as th
 
+
 # Constants
 WMS_MAX_PAGE_SIZE = 1250
 

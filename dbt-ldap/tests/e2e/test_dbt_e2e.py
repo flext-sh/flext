@@ -10,6 +10,7 @@ import pytest
 
 from .conftest import count_rows, query_database, run_dbt_command, table_exists
 
+
 if TYPE_CHECKING:
     pass
 

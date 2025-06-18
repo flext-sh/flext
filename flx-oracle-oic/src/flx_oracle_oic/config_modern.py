@@ -6,9 +6,8 @@ system with environment variable support, profile management, and enhanced valid
 
 from typing import Any, Self
 
-from pydantic import Field, SecretStr, field_validator, model_validator
-
 from flx.infra.config.hierarchical import ConfigManager
+from pydantic import Field, SecretStr, field_validator, model_validator
 
 from .constants import (
     DEFAULT_API_VERSION,

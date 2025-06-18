@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from singer_sdk import Target
+
 from target_oracle_oic.config import TargetOracleOICConfig
 from target_oracle_oic.sinks import (
     ConnectionsSink,

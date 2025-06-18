@@ -5,10 +5,13 @@ This module provides the CLI commands for orchestrating LDAP ETL operations.
 
 from __future__ import annotations
 
-import sys
 from pathlib import Path
+import sys
 
 import click
+from rich.console import Console
+from rich.table import Table
+
 from flx_ldap.config import FlxLDAPConfig
 from flx_ldap.migrator import GenericMigrationOrchestrator
 from flx_ldap.orchestrator import LDAPOrchestrator
@@ -17,8 +20,6 @@ from flx_ldap.utils import (
     extract_streams_from_jsonl,
     format_bytes,
 )
-from rich.console import Console
-from rich.table import Table
 
 console = Console()
 

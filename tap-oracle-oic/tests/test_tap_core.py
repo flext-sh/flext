@@ -4,6 +4,7 @@ Tests the main TapOIC class and core functionality without external dependencies
 """
 
 import pytest
+
 from tap_oracle_oic.tap import TapOIC
 
 
@@ -166,7 +167,7 @@ class TestTapOICIntegration:
             assert stream._tap is tap
 
 
-@pytest.fixture()
+@pytest.fixture
 def sample_config():
     """Sample configuration for testing."""
     return {
@@ -177,7 +178,7 @@ def sample_config():
     }
 
 
-@pytest.fixture()
+@pytest.fixture
 def sample_config_with_extended():
     """Sample configuration with extended features enabled."""
     return {

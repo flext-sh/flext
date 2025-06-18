@@ -8,7 +8,7 @@ from typing import Any
 import pytest
 
 
-@pytest.fixture()
+@pytest.fixture
 def config() -> dict[str, Any]:
     """Return a test configuration."""
     return {
@@ -24,14 +24,14 @@ def config() -> dict[str, Any]:
     }
 
 
-@pytest.fixture()
+@pytest.fixture
 def temp_output_dir() -> Generator[Path]:
     """Create a temporary output directory."""
     with tempfile.TemporaryDirectory() as tmpdir:
         yield Path(tmpdir)
 
 
-@pytest.fixture()
+@pytest.fixture
 def sample_inventory_records() -> list[dict]:
     """Return sample inventory records."""
     return [
@@ -56,7 +56,7 @@ def sample_inventory_records() -> list[dict]:
     ]
 
 
-@pytest.fixture()
+@pytest.fixture
 def sample_order_records() -> list[dict]:
     """Return sample order records."""
     return [
@@ -79,7 +79,7 @@ def sample_order_records() -> list[dict]:
     ]
 
 
-@pytest.fixture()
+@pytest.fixture
 def sample_task_records() -> list[dict]:
     """Return sample task records."""
     return [
@@ -104,7 +104,7 @@ def sample_task_records() -> list[dict]:
     ]
 
 
-@pytest.fixture()
+@pytest.fixture
 def singer_schema() -> dict:
     """Return a sample Singer schema."""
     return {

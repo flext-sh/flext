@@ -27,6 +27,7 @@ from pathlib import Path
 
 import click
 
+
 try:
     from rich.console import Console
     from rich.progress import Progress, SpinnerColumn, TextColumn
@@ -95,6 +96,7 @@ except ImportError:
 from .discovery import EntityDiscovery, SchemaGenerator
 from .monitoring import TAPMonitor
 from .tap import TapOracleWMS
+
 
 console = Console() if RICH_AVAILABLE else None
 

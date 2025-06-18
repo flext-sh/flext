@@ -5,6 +5,7 @@ from __future__ import annotations
 import structlog
 import typer
 from meltano.edk.logging import default_logging_config, parse_log_level
+
 from oracle_oic_ext.extension import OracleOICExtension
 
 APP_NAME = "oracle_oic_extension"

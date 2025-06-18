@@ -16,6 +16,7 @@ from pathlib import Path
 from unittest.mock import Mock, patch
 
 import pytest
+
 from oracle_oic_ext.extension import OracleOICExtension
 from oracle_oic_ext.lifecycle import LifecycleManager
 from oracle_oic_ext.monitoring import MonitoringService
@@ -24,7 +25,7 @@ from oracle_oic_ext.monitoring import MonitoringService
 class TestOracleOICExtE2E:
     """End-to-end tests for oracle-oic-ext."""
 
-    @pytest.fixture()
+    @pytest.fixture
     def config_path(self):
         """Return path to config.json."""
         config_file = Path(__file__).parent.parent / "config.json"
@@ -33,13 +34,13 @@ class TestOracleOICExtE2E:
             os.system("cd .. && python generate_config.py")
         return str(config_file)
 
-    @pytest.fixture()
+    @pytest.fixture
     def config(self, config_path):
         """Load configuration from config.json."""
         with open(config_path) as f:
             return json.load(f)
 
-    @pytest.fixture()
+    @pytest.fixture
     def extension(self):
         """Create extension instance."""
         return OracleOICExtension()

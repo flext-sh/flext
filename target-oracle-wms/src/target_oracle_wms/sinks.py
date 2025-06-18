@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING, Any
 
 from singer_sdk.sinks import BatchSink
 
+
 if TYPE_CHECKING:
     from singer_sdk.plugin_base import PluginBase
 

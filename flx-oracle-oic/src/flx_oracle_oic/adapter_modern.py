@@ -13,11 +13,10 @@ Key improvements:
 
 from typing import Any
 
-from pydantic import Field
-
 from flx.adapters.base import BaseAdapter
 from flx.adapters.mixins.behavioral import AdvancedAdapterMixin
 from flx.core.domain.exceptions import HttpError
+from pydantic import Field
 
 from .auth import AuthToken, OICAuthenticator
 from .config import OracleOicConfig

@@ -22,7 +22,7 @@ requires_config = pytest.mark.skipif(
 )
 
 
-@pytest.fixture()
+@pytest.fixture
 def real_config():
     """Load real configuration if available."""
     if not CONFIG_AVAILABLE:
@@ -200,7 +200,7 @@ class TestE2EExtractCommands:
     """Test extract commands with real configuration."""
 
     @requires_config
-    @pytest.mark.slow()
+    @pytest.mark.slow
     def test_extract_core_real(self, real_config) -> None:
         """Test core data extraction with real configuration."""
         with open("temp_config.json", "w") as f:
@@ -275,7 +275,7 @@ class TestE2EPerformance:
     """Performance tests with real configuration."""
 
     @requires_config
-    @pytest.mark.slow()
+    @pytest.mark.slow
     def test_discovery_performance(self, real_config) -> None:
         """Test that discovery completes in reasonable time."""
         import time

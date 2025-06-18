@@ -11,8 +11,10 @@ from pathlib import Path
 from typing import Any
 
 import structlog
+
 from flx_oracle_wms.config import PipelineConfig, PipelineDefinition, RuntimeConfig
 from flx_oracle_wms.monitoring import PipelineMonitor
+
 
 logger = structlog.get_logger()
 

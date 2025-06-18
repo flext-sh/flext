@@ -3,9 +3,8 @@
 import logging
 from typing import Any
 
-from pydantic import ConfigDict
-
 from flx.adapters.outbound.http import HttpClientAdapter  # type: ignore[import-untyped]
+from pydantic import ConfigDict
 
 from .auth import AuthenticationError, AuthToken, OICAuthenticator
 from .config import OracleOicConfig

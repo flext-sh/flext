@@ -4,15 +4,15 @@ from __future__ import annotations
 
 import json
 import logging
+from pathlib import Path
 import subprocess
 import time
-from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 import docker
 import ldap3
-import pytest
 from ldap3 import ALL, Connection, Server
+import pytest
 
 if TYPE_CHECKING:
     from collections.abc import Generator
@@ -88,7 +88,7 @@ def ldap_containers(
     )
 
 
-@pytest.fixture()
+@pytest.fixture
 def source_connection(ldap_containers: Any) -> Generator[Connection]:
     """Get source LDAP connection for testing."""
     server = Server("localhost", port=20389, get_info=ALL)
@@ -106,7 +106,7 @@ def source_connection(ldap_containers: Any) -> Generator[Connection]:
         conn.unbind()
 
 
-@pytest.fixture()
+@pytest.fixture
 def target_connection(ldap_containers: Any) -> Generator[Connection]:
     """Get target LDAP connection for testing."""
     server = Server("localhost", port=21389, get_info=ALL)
@@ -124,7 +124,7 @@ def target_connection(ldap_containers: Any) -> Generator[Connection]:
         conn.unbind()
 
 
-@pytest.fixture()
+@pytest.fixture
 def target_config(tmp_path: Path) -> dict[str, Any]:
     """Get target configuration for testing."""
     return {
@@ -146,7 +146,7 @@ def target_config(tmp_path: Path) -> dict[str, Any]:
     }
 
 
-@pytest.fixture()
+@pytest.fixture
 def target_config_file(target_config: dict[str, Any], tmp_path: Path) -> Path:
     """Create target configuration file."""
     config_file = tmp_path / "target-config.json"
@@ -154,7 +154,7 @@ def target_config_file(target_config: dict[str, Any], tmp_path: Path) -> Path:
     return config_file
 
 
-@pytest.fixture()
+@pytest.fixture
 def sample_user_records() -> list[dict[str, Any]]:
     """Generate sample user records for testing."""
     return [
@@ -195,7 +195,7 @@ def sample_user_records() -> list[dict[str, Any]]:
     ]
 
 
-@pytest.fixture()
+@pytest.fixture
 def sample_group_records() -> list[dict[str, Any]]:
     """Generate sample group records for testing."""
     return [

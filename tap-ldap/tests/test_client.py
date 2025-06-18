@@ -4,15 +4,16 @@ from __future__ import annotations
 
 from unittest.mock import MagicMock, patch
 
-import pytest
 from ldap3.core.exceptions import LDAPException
+import pytest
+
 from tap_ldap.client import LDAPClient
 
 
 class TestLDAPClient:
     """Unit tests for LDAPClient."""
 
-    @pytest.fixture()
+    @pytest.fixture
     def client(self) -> LDAPClient:
         """Get test client."""
         return LDAPClient(

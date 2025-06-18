@@ -4,15 +4,15 @@ from __future__ import annotations
 
 import json
 import logging
+from pathlib import Path
 import subprocess
 import time
-from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 import docker
 import ldap3
-import pytest
 from ldap3 import ALL, Connection, Server
+import pytest
 
 if TYPE_CHECKING:
     from collections.abc import Generator
@@ -84,7 +84,7 @@ def ldap_container(
     )
 
 
-@pytest.fixture()
+@pytest.fixture
 def ldap_connection(ldap_container: Any) -> Generator[Connection]:  # noqa: ANN401
     """Get LDAP connection for testing."""
     server = Server("localhost", port=10389, get_info=ALL)
@@ -102,7 +102,7 @@ def ldap_connection(ldap_container: Any) -> Generator[Connection]:  # noqa: ANN4
         conn.unbind()
 
 
-@pytest.fixture()
+@pytest.fixture
 def tap_config(tmp_path: Path) -> dict[str, Any]:
     """Get tap configuration for testing."""
     return {
@@ -116,7 +116,7 @@ def tap_config(tmp_path: Path) -> dict[str, Any]:
     }
 
 
-@pytest.fixture()
+@pytest.fixture
 def tap_config_file(tap_config: dict[str, Any], tmp_path: Path) -> Path:
     """Create tap configuration file."""
     config_file = tmp_path / "tap-config.json"
@@ -124,7 +124,7 @@ def tap_config_file(tap_config: dict[str, Any], tmp_path: Path) -> Path:
     return config_file
 
 
-@pytest.fixture()
+@pytest.fixture
 def catalog_file(tmp_path: Path) -> Path:
     """Create catalog file for testing."""
     catalog = {
@@ -210,7 +210,7 @@ def catalog_file(tmp_path: Path) -> Path:
     return catalog_file
 
 
-@pytest.fixture()
+@pytest.fixture
 def state_file(tmp_path: Path) -> Path:
     """Create empty state file."""
     state_file = tmp_path / "state.json"

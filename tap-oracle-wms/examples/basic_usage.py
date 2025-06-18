@@ -7,6 +7,7 @@ import os
 import sys
 from datetime import UTC, datetime
 
+
 # Set up logging
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"

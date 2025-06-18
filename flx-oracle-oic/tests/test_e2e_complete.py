@@ -17,16 +17,17 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
+from typer.testing import CliRunner
+
 from flx_oracle_oic.adapter import OracleOICAdapter
 from flx_oracle_oic.auth import OICAuth
 from flx_oracle_oic.cli import app
-from typer.testing import CliRunner
 
 
 class TestFLXOracleOICE2E:
     """End-to-end tests for flx-oracle-oic."""
 
-    @pytest.fixture()
+    @pytest.fixture
     def config_path(self):
         """Return path to config.json."""
         config_file = Path(__file__).parent.parent / "config.json"
@@ -35,18 +36,18 @@ class TestFLXOracleOICE2E:
             os.system("cd .. && python generate_config.py")
         return str(config_file)
 
-    @pytest.fixture()
+    @pytest.fixture
     def config(self, config_path):
         """Load configuration from config.json."""
         with open(config_path) as f:
             return json.load(f)
 
-    @pytest.fixture()
+    @pytest.fixture
     def runner(self):
         """Create CLI test runner."""
         return CliRunner()
 
-    @pytest.fixture()
+    @pytest.fixture
     def adapter(self, config):
         """Create adapter instance."""
         return OracleOICAdapter(**config)

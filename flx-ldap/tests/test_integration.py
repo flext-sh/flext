@@ -10,8 +10,9 @@ import json
 from typing import TYPE_CHECKING
 from unittest.mock import MagicMock, Mock, patch
 
-import pytest
 from click.testing import CliRunner
+import pytest
+
 from flx_ldap.cli import cli
 from flx_ldap.config import (
     DBTConfig,
@@ -31,7 +32,7 @@ if TYPE_CHECKING:
 class TestOrchestratorIntegration:
     """Integration tests for LDAPOrchestrator."""
 
-    @pytest.fixture()
+    @pytest.fixture
     def temp_dir(self, tmp_path: Path) -> Path:
         """Create temporary directory with required structure."""
         # Create output directory
@@ -78,7 +79,7 @@ class TestOrchestratorIntegration:
 
         return tmp_path
 
-    @pytest.fixture()
+    @pytest.fixture
     def config(self, temp_dir: Path) -> FlxLDAPConfig:
         """Create test configuration."""
         return FlxLDAPConfig(
@@ -424,12 +425,12 @@ class TestOrchestratorIntegration:
 class TestCLIIntegration:
     """Integration tests for CLI."""
 
-    @pytest.fixture()
+    @pytest.fixture
     def runner(self) -> CliRunner:
         """Create CLI test runner."""
         return CliRunner()
 
-    @pytest.fixture()
+    @pytest.fixture
     def config_file(self, tmp_path: Path) -> Path:
         """Create test configuration file."""
         config = {

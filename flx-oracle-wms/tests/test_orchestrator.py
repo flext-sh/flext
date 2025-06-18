@@ -3,6 +3,7 @@
 import json
 
 import pytest
+
 from flx_oracle_wms.config import PipelineConfig, RuntimeConfig
 from flx_oracle_wms.orchestrator import WMSOrchestrator
 

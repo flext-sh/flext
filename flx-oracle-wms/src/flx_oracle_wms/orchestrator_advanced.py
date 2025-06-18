@@ -26,9 +26,11 @@ from typing import Any
 
 import croniter
 import structlog
+from pydantic import BaseModel
+
 from flx_oracle_wms.config import PipelineConfig, PipelineDefinition, RuntimeConfig
 from flx_oracle_wms.monitoring import AlertManager, MetricsCollector, PipelineMonitor
-from pydantic import BaseModel
+
 
 logger = structlog.get_logger()
 

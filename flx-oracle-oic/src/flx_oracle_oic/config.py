@@ -2,9 +2,8 @@
 
 from typing import Any
 
-from pydantic import Field, SecretStr, field_validator
-
 from flx.infra.config.base import ConfigManager
+from pydantic import Field, SecretStr, field_validator
 
 from .constants import (
     DEFAULT_API_VERSION,
