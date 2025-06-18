@@ -6,8 +6,8 @@ for loading data into LDAP directories.
 
 from __future__ import annotations
 
-import logging
 from contextlib import contextmanager
+import logging
 from typing import TYPE_CHECKING, Any
 
 import ldap3

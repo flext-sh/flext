@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 import yaml
+
 from flx_ldap.config import (
     DBTConfig,
     FlxLDAPConfig,

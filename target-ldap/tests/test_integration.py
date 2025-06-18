@@ -6,8 +6,9 @@ import json
 from typing import TYPE_CHECKING, Any
 from unittest.mock import MagicMock, patch
 
-import pytest
 from click.testing import CliRunner
+import pytest
+
 from target_ldap.target import TargetLDAP
 
 if TYPE_CHECKING:
@@ -17,12 +18,12 @@ if TYPE_CHECKING:
 class TestTargetLDAPIntegration:
     """Integration tests for target-ldap."""
 
-    @pytest.fixture()
+    @pytest.fixture
     def runner(self) -> CliRunner:
         """Create CLI runner."""
         return CliRunner()
 
-    @pytest.fixture()
+    @pytest.fixture
     def config_file(self, tmp_path: Path, mock_ldap_config: dict[str, Any]) -> Path:
         """Create config file."""
         config_path = tmp_path / "config.json"
@@ -30,7 +31,7 @@ class TestTargetLDAPIntegration:
             json.dump(mock_ldap_config, f)
         return config_path
 
-    @pytest.fixture()
+    @pytest.fixture
     def input_file(
         self,
         tmp_path: Path,

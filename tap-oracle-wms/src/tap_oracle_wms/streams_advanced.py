@@ -22,10 +22,12 @@ from singer_sdk.exceptions import FatalAPIError, RetriableAPIError
 from singer_sdk.pagination import BaseOffsetPaginator
 from singer_sdk.streams import RESTStream
 
+
 # Context type alias for compatibility
 Context = dict[str, Any]
 
 from .auth import get_wms_authenticator, get_wms_headers
+
 
 if TYPE_CHECKING:
     from collections.abc import Iterable

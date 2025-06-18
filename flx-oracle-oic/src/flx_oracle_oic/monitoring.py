@@ -16,9 +16,8 @@ from datetime import UTC, datetime, timedelta
 from enum import StrEnum
 from typing import TYPE_CHECKING, Any, Optional
 
-from pydantic import BaseModel, Field
-
 from flx.core.logging import get_logger  # type: ignore[import-untyped]
+from pydantic import BaseModel, Field
 
 from .constants import STATUS_ACTIVE, STATUS_INACTIVE
 

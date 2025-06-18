@@ -2,13 +2,12 @@
 
 from typing import Any, ClassVar
 
-from pydantic import Field
-
 from flx.core.base import (  # type: ignore[import-untyped]
     DomainObject,
     Identifiable,
     Timestamped,
 )
+from pydantic import Field
 
 from .constants import (
     DEFAULT_PAGE_SIZE,

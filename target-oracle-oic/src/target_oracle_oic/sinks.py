@@ -6,6 +6,7 @@ from typing import Any
 
 import httpx
 from singer_sdk.sinks import Sink
+
 from target_oracle_oic.auth import OICOAuth2Authenticator
 
 

@@ -7,10 +7,11 @@ from typing import Any
 from unittest.mock import MagicMock
 
 import pytest
+
 from target_ldap.client import LDAPClient
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_ldap_config() -> dict[str, Any]:
     """Provide test LDAP configuration."""
     return {
@@ -35,7 +36,7 @@ def mock_ldap_config() -> dict[str, Any]:
     }
 
 
-@pytest.fixture()
+@pytest.fixture
 def sample_user_record() -> dict[str, Any]:
     """Provide sample user record."""
     return {
@@ -49,7 +50,7 @@ def sample_user_record() -> dict[str, Any]:
     }
 
 
-@pytest.fixture()
+@pytest.fixture
 def sample_group_record() -> dict[str, Any]:
     """Provide sample group record."""
     return {
@@ -64,7 +65,7 @@ def sample_group_record() -> dict[str, Any]:
     }
 
 
-@pytest.fixture()
+@pytest.fixture
 def sample_ou_record() -> dict[str, Any]:
     """Provide sample OU record."""
     return {
@@ -75,7 +76,7 @@ def sample_ou_record() -> dict[str, Any]:
     }
 
 
-@pytest.fixture()
+@pytest.fixture
 def singer_message_record(sample_user_record: dict[str, Any]) -> str:
     """Provide Singer RECORD message."""
     message = {
@@ -87,7 +88,7 @@ def singer_message_record(sample_user_record: dict[str, Any]) -> str:
     return json.dumps(message)
 
 
-@pytest.fixture()
+@pytest.fixture
 def singer_message_schema() -> str:
     """Provide Singer SCHEMA message."""
     message = {
@@ -108,7 +109,7 @@ def singer_message_schema() -> str:
     return json.dumps(message)
 
 
-@pytest.fixture()
+@pytest.fixture
 def singer_message_state() -> str:
     """Provide Singer STATE message."""
     message = {
@@ -125,7 +126,7 @@ def singer_message_state() -> str:
     return json.dumps(message)
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_ldap_client() -> MagicMock:
     """Create mock LDAP client."""
     client = MagicMock(spec=LDAPClient)
@@ -138,7 +139,7 @@ def mock_ldap_client() -> MagicMock:
     return client
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_target(mock_ldap_config: dict[str, Any]) -> MagicMock:
     """Create mock target."""
     target = MagicMock()

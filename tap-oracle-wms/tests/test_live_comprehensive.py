@@ -3,12 +3,13 @@
 import time
 
 import pytest
+
 from tap_oracle_wms.config import QUALITY_THRESHOLD, RATE_THRESHOLD
 from tap_oracle_wms.tap import TapOracleWMS
 
 
-@pytest.mark.live()
-@pytest.mark.slow()
+@pytest.mark.live
+@pytest.mark.slow
 class TestComprehensiveLiveFlow:
     """Comprehensive end-to-end tests with live WMS API."""
 
@@ -455,7 +456,7 @@ class TestComprehensiveLiveFlow:
             assert len(found_fields) > 0, "No expected fields found in records"
 
 
-@pytest.mark.live()
+@pytest.mark.live
 class TestLiveConfigurationMatrix:
     """Test various configuration combinations with live API."""
 
@@ -531,8 +532,8 @@ class TestLiveConfigurationMatrix:
             # But this depends on actual WMS configuration
 
 
-@pytest.mark.live()
-@pytest.mark.slow()
+@pytest.mark.live
+@pytest.mark.slow
 class TestLiveStressTests:
     """Stress tests with live WMS API."""
 

@@ -6,8 +6,9 @@ import json
 from typing import TYPE_CHECKING, Any
 from unittest.mock import patch
 
-import pytest
 from click.testing import CliRunner
+import pytest
+
 from tap_ldap.tap import TapLDAP
 
 if TYPE_CHECKING:
@@ -17,12 +18,12 @@ if TYPE_CHECKING:
 class TestTapLDAPIntegration:
     """Integration tests for tap-ldap."""
 
-    @pytest.fixture()
+    @pytest.fixture
     def runner(self) -> CliRunner:
         """Create CLI runner."""
         return CliRunner()
 
-    @pytest.fixture()
+    @pytest.fixture
     def config_file(self, tmp_path: Path, mock_ldap_config: dict[str, Any]) -> Path:
         """Create config file."""
         config_path = tmp_path / "config.json"
@@ -30,7 +31,7 @@ class TestTapLDAPIntegration:
             json.dump(mock_ldap_config, f)
         return config_path
 
-    @pytest.fixture()
+    @pytest.fixture
     def catalog_file(self, tmp_path: Path, sample_catalog: dict[str, Any]) -> Path:
         """Create catalog file."""
         catalog_path = tmp_path / "catalog.json"
@@ -38,7 +39,7 @@ class TestTapLDAPIntegration:
             json.dump(sample_catalog, f)
         return catalog_path
 
-    @pytest.fixture()
+    @pytest.fixture
     def state_file(self, tmp_path: Path, sample_state: dict[str, Any]) -> Path:
         """Create state file."""
         state_path = tmp_path / "state.json"

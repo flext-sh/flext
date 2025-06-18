@@ -10,6 +10,7 @@ import httpx
 from .auth import get_wms_authenticator, get_wms_headers
 from .config import HTTP_FORBIDDEN, HTTP_NOT_FOUND, HTTP_OK
 
+
 logger = logging.getLogger(__name__)
 
 

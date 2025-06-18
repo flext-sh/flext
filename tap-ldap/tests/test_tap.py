@@ -6,6 +6,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 from singer_sdk.testing import get_tap_test_class
+
 from tap_ldap.tap import TapLDAP
 
 # Basic tap tests
@@ -24,7 +25,7 @@ TestTapLDAP = get_tap_test_class(
 class TestTapLDAPUnit:
     """Unit tests for TapLDAP."""
 
-    @pytest.fixture()
+    @pytest.fixture
     def config(self) -> dict:
         """Get test configuration."""
         return {

@@ -108,7 +108,7 @@ def _wait_for_services(timeout: int = 60):
     raise TimeoutError("Services did not become ready in time")
 
 
-@pytest.fixture()
+@pytest.fixture
 def ldap_source_connection(docker_compose_up):
     """Create LDAP connection to source server."""
     server = Server("localhost", port=10389, get_info=ALL)
@@ -122,7 +122,7 @@ def ldap_source_connection(docker_compose_up):
     conn.unbind()
 
 
-@pytest.fixture()
+@pytest.fixture
 def ldap_target_connection(docker_compose_up):
     """Create LDAP connection to target server."""
     server = Server("localhost", port=11389, get_info=ALL)
@@ -136,7 +136,7 @@ def ldap_target_connection(docker_compose_up):
     conn.unbind()
 
 
-@pytest.fixture()
+@pytest.fixture
 def postgres_connection(docker_compose_up):
     """Create PostgreSQL connection."""
     conn = psycopg2.connect(
@@ -152,7 +152,7 @@ def postgres_connection(docker_compose_up):
     conn.close()
 
 
-@pytest.fixture()
+@pytest.fixture
 def clean_target_ldap(ldap_target_connection):
     """Clean target LDAP before test."""
     # Clean all entries except base structure
@@ -174,7 +174,7 @@ def clean_target_ldap(ldap_target_connection):
         ldap_target_connection.delete(dn)
 
 
-@pytest.fixture()
+@pytest.fixture
 def clean_postgres(postgres_connection):
     """Clean PostgreSQL tables before test."""
     with postgres_connection.cursor() as cursor:
@@ -184,13 +184,13 @@ def clean_postgres(postgres_connection):
         cursor.execute("TRUNCATE TABLE ldap_raw.sync_audit CASCADE")
 
 
-@pytest.fixture()
+@pytest.fixture
 def sync_id():
     """Generate a unique sync ID for the test run."""
     return str(uuid4())
 
 
-@pytest.fixture()
+@pytest.fixture
 def tap_ldap_config():
     """Create tap-ldap configuration."""
     return {
@@ -207,7 +207,7 @@ def tap_ldap_config():
     }
 
 
-@pytest.fixture()
+@pytest.fixture
 def target_ldap_config():
     """Create target-ldap configuration."""
     return {
@@ -221,7 +221,7 @@ def target_ldap_config():
     }
 
 
-@pytest.fixture()
+@pytest.fixture
 def dbt_ldap_config():
     """Create dbt-ldap configuration."""
     return {
@@ -233,7 +233,7 @@ def dbt_ldap_config():
     }
 
 
-@pytest.fixture()
+@pytest.fixture
 def flx_ldap_config(tap_ldap_config, target_ldap_config, dbt_ldap_config):
     """Create flx-ldap configuration."""
     return {

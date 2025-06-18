@@ -7,6 +7,7 @@ from typing import Any
 
 from jsonschema import Draft7Validator
 
+
 logger = logging.getLogger(__name__)
 
 
