@@ -1,0 +1,131 @@
+[tool.poetry]
+name = "oracle-oic-ext"
+version = "0.1.0"
+description = "Meltano extension for Oracle Integration Cloud operations"
+authors = ["PyAuto Team"]
+license = "Apache-2.0"
+readme = "README.md"
+repository = "https://github.com/pyauto/oracle-oic-ext"
+keywords = ["meltano", "extension", "oracle", "oic", "integration"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+
+[tool.poetry.dependencies]
+python = "^3.9,<4.0"
+meltano-edk = "^0.9.0"
+httpx = "^0.27.0"
+pydantic = "^2.11"
+backoff = "^2.2.1"
+click = "^8.1.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.0"
+pytest-asyncio = "^0.24.0"
+pytest-cov = "^6.0.0"
+mypy = "^1.13.0"
+ruff = "^0.8.6"
+black = "^24.10.0"
+isort = "^5.13.2"
+pre-commit = "^4.0.0"
+types-requests = "^2.32.0"
+bandit = "^1.7.0"
+safety = "^3.2.0"
+
+[tool.poetry.scripts]
+oracle-oic-ext = "oracle_oic_ext.main:main"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+# Strict PEP8 Configuration
+[tool.ruff]
+line-length = 88
+target-version = "py39"
+fix = true
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "N",   # pep8-naming
+    "UP",  # pyupgrade
+    "B",   # flake8-bugbear
+    "SIM", # flake8-simplify
+    "C4",  # flake8-comprehensions
+    "PIE", # flake8-pie
+    "T20", # flake8-print
+    "RET", # flake8-return
+    "TCH", # flake8-type-checking
+]
+ignore = [
+    "E501",   # Line too long (handled by formatter)
+    "B008",   # Do not perform function calls in argument defaults
+    "SIM105", # Use contextlib.suppress
+    "T201",   # Print found (allow for development)
+    "T203",   # pprint found (allow for development)
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+[tool.mypy]
+python_version = "3.9"
+ignore_missing_imports = true
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+no_implicit_reexport = true
+
+[tool.black]
+line-length = 88
+target-version = ["py39"]
+skip-string-normalization = false
+skip-magic-trailing-comma = false
+
+[tool.isort]
+profile = "black"
+line_length = 88
+force_sort_within_sections = true
+known_first_party = ["oracle_oic_ext"]
+known_third_party = ["meltano_edk", "httpx", "pydantic", "click"]
+sections = ["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+ensure_newline_before_comments = true
+
+[tool.bandit]
+exclude_dirs = ["tests"]
+skips = ["B101", "B601"]
+
+[tool.coverage.run]
+source = ["oracle_oic_ext"]
+omit = ["*/tests/*"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+]

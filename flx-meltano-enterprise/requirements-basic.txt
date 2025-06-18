@@ -1,0 +1,40 @@
+# Core dependencies
+pydantic>=2.11.0
+pydantic-settings>=2.3.0
+
+# Async
+uvloop>=0.21.0
+aiofiles>=24.1.0
+
+# gRPC
+grpcio>=1.68.0
+grpcio-tools>=1.68.0
+
+# Database
+asyncpg>=0.30.0
+sqlalchemy>=2.0.36
+alembic>=1.14.0
+
+# Redis
+redis>=5.2.0
+
+# Web
+django>=5.1.0
+djangorestframework>=3.15.0
+fastapi>=0.115.0
+uvicorn>=0.34.0
+click>=8.1.0
+rich>=13.9.0
+
+# Auth
+pyjwt>=2.10.0
+passlib>=1.7.4
+
+# Monitoring
+structlog>=25.1.0
+prometheus-client>=0.21.0
+
+# Utils
+python-dotenv>=1.0.0
+tenacity>=9.0.0
+pyyaml>=6.0.0

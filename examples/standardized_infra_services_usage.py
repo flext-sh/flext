@@ -63,7 +63,9 @@ class Application:
         user_data = await self.http_service.get(f"/users/{user_id}")
 
         # Cache the response
-        await self.cache_service.set(cache_key, user_data, ttl=300)  # Cache for 5 minutes
+        await self.cache_service.set(
+            cache_key, user_data, ttl=300
+        )  # Cache for 5 minutes
 
         return user_data
 
@@ -93,10 +95,12 @@ async def example_basic_usage() -> None:
     """Basic usage example."""
     # Create and configure services
     cache = StandardizedCacheService({"backend": "memory"})
-    http = StandardizedHttpClientService({
-        "base_url": "https://api.github.com",
-        "headers": {"Accept": "application/vnd.github.v3+json"},
-    })
+    http = StandardizedHttpClientService(
+        {
+            "base_url": "https://api.github.com",
+            "headers": {"Accept": "application/vnd.github.v3+json"},
+        }
+    )
 
     # Use services with context manager
     async with cache.context(), http.context():
@@ -144,11 +148,13 @@ async def example_with_registry() -> None:
 async def example_with_configuration() -> None:
     """Example with dynamic configuration."""
     # Create service with initial config
-    cache = StandardizedCacheService({
-        "backend": "memory",
-        "ttl": 60,
-        "max_size": 100,
-    })
+    cache = StandardizedCacheService(
+        {
+            "backend": "memory",
+            "ttl": 60,
+            "max_size": 100,
+        }
+    )
 
     await cache.start()
 
@@ -203,9 +209,11 @@ async def example_error_handling() -> None:
     """Example with error handling."""
     # Create service with invalid config
     try:
-        cache = StandardizedCacheService({
-            "backend": "unsupported_backend",
-        })
+        cache = StandardizedCacheService(
+            {
+                "backend": "unsupported_backend",
+            }
+        )
         await cache.start()
     except ValueError:
         pass
@@ -226,10 +234,12 @@ async def example_error_handling() -> None:
 async def example_metrics_and_monitoring() -> None:
     """Example with metrics and monitoring."""
     # Create HTTP service
-    http = StandardizedHttpClientService({
-        "base_url": "https://httpbin.org",
-        "max_retries": 2,
-    })
+    http = StandardizedHttpClientService(
+        {
+            "base_url": "https://httpbin.org",
+            "max_retries": 2,
+        }
+    )
 
     await http.start()
 

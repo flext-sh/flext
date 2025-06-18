@@ -18,7 +18,6 @@ class DependencyStandardizer:
     STANDARD_VERSIONS = {
         # Core Python
         "python": "^3.13,<3.15",
-
         # Core framework dependencies
         "pydantic": "^2.11.5",
         "pydantic-settings": "^2.9.1",
@@ -28,23 +27,19 @@ class DependencyStandardizer:
         "uvicorn": "^0.30.0",
         "httpx": "^0.28.1",
         "anyio": "^4.9.0",
-
         # Database
         "oracledb": "^2.5.0",
         "alembic": "^1.14.0",
         "aiosqlite": "^0.21.0",
-
         # Authentication & Security
         "PyJWT": "^2.10.1",
         "cryptography": "^43.0.0",
         "authlib": "^1.3.0",
-
         # CLI & UI
         "click": "^8.2.1",
         "typer": "^0.9.0",
         "rich": "^14.0.0",
         "cyclopts": "^3.1.0",
-
         # Data processing
         "pandas": "^2.2.0",
         "pyarrow": "^18.0.0",
@@ -52,13 +47,11 @@ class DependencyStandardizer:
         "tabulate": "^0.9.0",
         "lxml": "^5.3.0",
         "xmltodict": "^0.13.0",
-
         # Configuration & environment
         "python-dotenv": "^1.1.0",
         "pyyaml": "^6.0.2",
         "jinja2": "^3.1.0",
         "jsonschema": "^4.24.0",
-
         # Logging & monitoring
         "loguru": "^0.7.3",
         "structlog": "^25.4.0",
@@ -66,21 +59,17 @@ class DependencyStandardizer:
         "opentelemetry-api": "^1.34.0",
         "opentelemetry-sdk": "^1.34.0",
         "opentelemetry-instrumentation": "^0.55b0",
-
         # Async & concurrency
         "asyncio": "^3.4.3",
         "aiofiles": "^24.1.0",
         "aiohttp": "^3.12.11",
         "dramatiq": "^1.18.0",
         "tenacity": "^9.1.2",
-
         # Messaging & caching
         "redis": "^6.2.0",
         "paramiko": "^3.3.1",
-
         # LDAP
         "ldap3": "^2.9.1",
-
         # Development dependencies
         "pytest": "^8.4.0",
         "pytest-asyncio": "^0.23.5.post1,<0.24.0",
@@ -91,7 +80,6 @@ class DependencyStandardizer:
         "pytest-html": "^4.1.1",
         "pytest-timeout": "^2.4.0",
         "coverage": "^7.8.2",
-
         # Type checking
         "mypy": "^1.16.0",
         "types-requests": "^2.32.0.20241016",
@@ -100,7 +88,6 @@ class DependencyStandardizer:
         "types-redis": "^4.6.0.20240903",
         "types-setuptools": "^75.7.0.20250106",
         "types-python-dateutil": "^2.9.0.20241206",
-
         # Code formatting & linting
         "black": "^25.1.0",
         "isort": "^6.0.1",
@@ -110,25 +97,20 @@ class DependencyStandardizer:
         "autoflake": "^2.2.1",
         "pyupgrade": "^3.1.0",
         "flake8": "^7.2.0",
-
         # Additional linting tools
         "pycodestyle": "^2.12.0",
         "pydocstyle": "^6.3.0",
         "pylint": "^3.0.0",
-
         # Pre-commit and development tools
         "pre-commit": "^4.2.0",
         "setuptools": "^80.9.0",
         "wheel": "^0.42.0",
-
         # Documentation
         "mkdocs": "^1.6.0",
         "mkdocs-material": "^9.5.0",
-
         # Jupyter
         "ipykernel": "^6.0.0",
         "ipython": "^8.0.0",
-
         # Optional dependencies
         "attrs": "^25.3.0",
         "fire": "^0.7.0",
@@ -139,14 +121,40 @@ class DependencyStandardizer:
 
     # Dependencies that should be in dev group only
     DEV_ONLY_DEPS = {
-        "pytest", "pytest-asyncio", "pytest-cov", "pytest-mock",
-        "pytest-xdist", "pytest-benchmark", "pytest-html", "pytest-timeout",
-        "coverage", "mypy", "types-requests", "types-sqlalchemy",
-        "types-pyyaml", "types-redis", "types-setuptools",
-        "types-python-dateutil", "black", "isort", "ruff", "bandit",
-        "vulture", "autoflake", "pyupgrade", "flake8", "pycodestyle",
-        "pydocstyle", "pylint", "pre-commit", "setuptools", "wheel",
-        "mkdocs", "mkdocs-material", "ipykernel", "ipython",
+        "pytest",
+        "pytest-asyncio",
+        "pytest-cov",
+        "pytest-mock",
+        "pytest-xdist",
+        "pytest-benchmark",
+        "pytest-html",
+        "pytest-timeout",
+        "coverage",
+        "mypy",
+        "types-requests",
+        "types-sqlalchemy",
+        "types-pyyaml",
+        "types-redis",
+        "types-setuptools",
+        "types-python-dateutil",
+        "black",
+        "isort",
+        "ruff",
+        "bandit",
+        "vulture",
+        "autoflake",
+        "pyupgrade",
+        "flake8",
+        "pycodestyle",
+        "pydocstyle",
+        "pylint",
+        "pre-commit",
+        "setuptools",
+        "wheel",
+        "mkdocs",
+        "mkdocs-material",
+        "ipykernel",
+        "ipython",
     }
 
     def __init__(self, root_path: str = ".") -> None:
@@ -240,7 +248,8 @@ class DependencyStandardizer:
             # Standardize version if we have a standard for it
             if dep_name in self.STANDARD_VERSIONS:
                 old_version = (
-                    str(dep_spec) if not isinstance(dep_spec, dict)
+                    str(dep_spec)
+                    if not isinstance(dep_spec, dict)
                     else str(dep_spec.get("version", dep_spec))
                 )
                 new_version = self.STANDARD_VERSIONS[dep_name]
@@ -254,17 +263,15 @@ class DependencyStandardizer:
         # Move dev-only dependencies to dev group
         for dep_name in deps_to_move:
             dep_spec = dependencies.pop(dep_name)
-            if dep_name in self.STANDARD_VERSIONS:
-                dev_deps[dep_name] = self.STANDARD_VERSIONS[dep_name]
-            else:
-                dev_deps[dep_name] = dep_spec
+            dev_deps[dep_name] = self.STANDARD_VERSIONS.get(dep_name, dep_spec)
             changes["moved_to_dev"].append(dep_name)
 
         # Standardize dev dependencies
         for dep_name, dep_spec in list(dev_deps.items()):
             if dep_name in self.STANDARD_VERSIONS:
                 old_version = (
-                    str(dep_spec) if not isinstance(dep_spec, dict)
+                    str(dep_spec)
+                    if not isinstance(dep_spec, dict)
                     else str(dep_spec.get("version", dep_spec))
                 )
                 new_version = self.STANDARD_VERSIONS[dep_name]
@@ -281,34 +288,40 @@ class DependencyStandardizer:
         # Ensure mypy configuration is standardized
         if "mypy" in dev_deps:
             mypy_config = data.setdefault("tool", {}).setdefault("mypy", {})
-            mypy_config.update({
-                "python_version": "3.13",
-                "strict": True,
-                "warn_return_any": True,
-                "warn_unused_configs": True,
-                "warn_redundant_casts": True,
-                "warn_unused_ignores": True,
-                "show_error_codes": True,
-                "pretty": True,
-            })
+            mypy_config.update(
+                {
+                    "python_version": "3.13",
+                    "strict": True,
+                    "warn_return_any": True,
+                    "warn_unused_configs": True,
+                    "warn_redundant_casts": True,
+                    "warn_unused_ignores": True,
+                    "show_error_codes": True,
+                    "pretty": True,
+                }
+            )
 
         # Ensure ruff configuration is standardized
         if "ruff" in dev_deps:
             ruff_config = data.setdefault("tool", {}).setdefault("ruff", {})
-            ruff_config.update({
-                "target-version": "py313",
-                "line-length": 120,  # Standardize to FLX framework standard
-                "src": ["src", "tests"],
-            })
+            ruff_config.update(
+                {
+                    "target-version": "py313",
+                    "line-length": 120,  # Standardize to FLX framework standard
+                    "src": ["src", "tests"],
+                }
+            )
 
         # Ensure black configuration is standardized
         if "black" in dev_deps:
             black_config = data.setdefault("tool", {}).setdefault("black", {})
-            black_config.update({
-                "line-length": 88,  # Black default
-                "target-version": ["py313"],
-                "include": "\\.pyi?$",
-            })
+            black_config.update(
+                {
+                    "line-length": 88,  # Black default
+                    "target-version": ["py313"],
+                    "include": "\\.pyi?$",
+                }
+            )
 
         # Ensure pytest configuration is standardized
         if "pytest" in dev_deps:
@@ -317,27 +330,29 @@ class DependencyStandardizer:
                 .setdefault("pytest", {})
                 .setdefault("ini_options", {})
             )
-            pytest_config.update({
-                "testpaths": ["tests"],
-                "python_files": ["test_*.py", "*_test.py"],
-                "python_functions": ["test_*"],
-                "python_classes": ["Test*"],
-                "asyncio_mode": "auto",
-                "addopts": [
-                    "--strict-markers",
-                    "--strict-config",
-                    "--cov-report=term-missing",
-                    "--cov-report=html:reports/coverage",
-                    "--cov-report=xml",
-                    "--junitxml=reports/junit.xml",
-                ],
-                "markers": [
-                    "unit: Unit tests",
-                    "integration: Integration tests",
-                    "e2e: End-to-end tests",
-                    "slow: Slow tests",
-                ],
-            })
+            pytest_config.update(
+                {
+                    "testpaths": ["tests"],
+                    "python_files": ["test_*.py", "*_test.py"],
+                    "python_functions": ["test_*"],
+                    "python_classes": ["Test*"],
+                    "asyncio_mode": "auto",
+                    "addopts": [
+                        "--strict-markers",
+                        "--strict-config",
+                        "--cov-report=term-missing",
+                        "--cov-report=html:reports/coverage",
+                        "--cov-report=xml",
+                        "--junitxml=reports/junit.xml",
+                    ],
+                    "markers": [
+                        "unit: Unit tests",
+                        "integration: Integration tests",
+                        "e2e: End-to-end tests",
+                        "slow: Slow tests",
+                    ],
+                }
+            )
 
         # Save updated data
         self.save_pyproject(pyproject_path, data)
@@ -412,7 +427,9 @@ class DependencyStandardizer:
 
         for pyproject_path in pyproject_files:
             changes = self.standardize_project(pyproject_path)
-            total_changes["standardized_versions"] += len(changes["standardized_versions"])
+            total_changes["standardized_versions"] += len(
+                changes["standardized_versions"]
+            )
             total_changes["moved_to_dev"] += len(changes["moved_to_dev"])
 
         self.generate_dependency_report()

@@ -1,6 +1,6 @@
 # Plugin Development Guide
 
-> *"The power of a system lies in its extensibility."*  
+> *"The power of a system lies in its extensibility."*
 > This guide explains how FLX's plugin architecture enables seamless extension without modifying the core codebase.
 
 ## Overview
@@ -16,7 +16,7 @@ The core framework stays dependency-free while teams add features on their own c
 The plugin system consists of several key components working together:
 
 - **Hook Specifications**: Define extension points where plugins can integrate
-- **Hook Implementations**: Plugin implementations that connect to extension points  
+- **Hook Implementations**: Plugin implementations that connect to extension points
 - **Plugin Registry**: Central registry that manages plugin discovery and registration
 - **Plugin Manager**: Coordinates plugin loading, validation, and execution
 - **Bidirectional Support**: Plugins can act as both inbound and outbound adapters
@@ -30,18 +30,18 @@ graph TB
     REG --> DISC[Plugin Discovery]
     DISC --> EP[Entry Points]
     DISC --> DIR[Directory Scan]
-    
+
     PM --> HOOKS[Hook System]
     HOOKS --> INBOUND[Inbound Plugins]
     HOOKS --> OUTBOUND[Outbound Plugins]
-    
+
     INBOUND --> CLI[CLI Extensions]
     INBOUND --> API[API Extensions]
-    
+
     OUTBOUND --> DB[Database Adapters]
     OUTBOUND --> CACHE[Cache Adapters]
     OUTBOUND --> HTTP[HTTP Adapters]
-    
+
     style PM fill:#e1f5fe
     style HOOKS fill:#f3e5f5
     style INBOUND fill:#e8f5e8
@@ -63,7 +63,7 @@ hookspec = pluggy.HookspecMarker("flx")
 def register_adapters(registry: dict[str, Type["FlxAdapter"]]) -> None:
     """Add custom adapters keyed by a user-friendly name."""
 
-@hookspec  
+@hookspec
 def register_cache_providers(registry: dict[str, Type["CacheProvider"]]) -> None:
     """Expose new caching mechanisms (Redis, Memory, Distributed)."""
 
@@ -135,23 +135,23 @@ class RedisBackend(str, Enum):
 
 class RedisCacheConfig(BaseModel):
     """Redis cache configuration with validation."""
-    
+
     url: str = Field(..., description="Redis connection URL")
     backend: RedisBackend = RedisBackend.REDIS
-    
+
     # Connection settings
     max_connections: int = Field(20, ge=1, le=100)
     connection_timeout: float = Field(5.0, ge=0.1)
     socket_keepalive: bool = True
-    
+
     # Cache settings
     default_ttl: int = Field(3600, ge=1)  # 1 hour default
     key_prefix: str = Field("flx:", description="Key prefix for all cache keys")
-    
+
     # Performance settings
     enable_compression: bool = False
     compression_threshold: int = Field(1024, ge=1)  # Compress if larger than 1KB
-    
+
     @validator('url')
     def validate_redis_url(cls, v):
         if not v.startswith(('redis://', 'rediss://')):
@@ -173,13 +173,13 @@ from typing import Any, Optional
 
 class RedisCacheAdapter(BaseAdapter):
     """Redis cache adapter with advanced features."""
-    
+
     def __init__(self, config: RedisCacheConfig):
         super().__init__()
         self.config = config
         self._cache_service: Optional[CacheService] = None
         self._redis_pool: Optional[redis.ConnectionPool] = None
-    
+
     async def _connect(self) -> None:
         """Establish Redis connection with pooling."""
         try:
@@ -189,7 +189,7 @@ class RedisCacheAdapter(BaseAdapter):
                 socket_connect_timeout=self.config.connection_timeout,
                 socket_keepalive=self.config.socket_keepalive
             )
-            
+
             # Create cache service with Redis backend
             self._cache_service = CacheService(
                 backend="redis",
@@ -199,13 +199,13 @@ class RedisCacheAdapter(BaseAdapter):
                 enable_compression=self.config.enable_compression,
                 compression_threshold=self.config.compression_threshold
             )
-            
+
             await self._cache_service.connect()
             self.logger.info(f"Connected to Redis: {self.config.url}")
-            
+
         except Exception as e:
             raise FlxConnectionError(f"Failed to connect to Redis: {e}")
-    
+
     async def _disconnect(self) -> None:
         """Close Redis connections gracefully."""
         if self._cache_service:
@@ -213,57 +213,57 @@ class RedisCacheAdapter(BaseAdapter):
         if self._redis_pool:
             await self._redis_pool.disconnect()
         self.logger.info("Disconnected from Redis")
-    
+
     async def get(self, key: str) -> Optional[Any]:
         """Get value from cache with automatic decompression."""
         if not self._cache_service:
             raise FlxConnectionError("Not connected to Redis")
-        
+
         try:
             return await self._cache_service.get(key)
         except Exception as e:
             self.logger.error(f"Cache get failed for key {key}: {e}")
             raise FlxTimeoutError(f"Cache operation timeout: {e}")
-    
+
     async def set(self, key: str, value: Any, ttl: Optional[int] = None) -> bool:
         """Set value in cache with automatic compression."""
         if not self._cache_service:
             raise FlxConnectionError("Not connected to Redis")
-        
+
         try:
             await self._cache_service.set(key, value, ttl)
             return True
         except Exception as e:
             self.logger.error(f"Cache set failed for key {key}: {e}")
             return False
-    
+
     async def delete(self, key: str) -> bool:
         """Delete key from cache."""
         if not self._cache_service:
             raise FlxConnectionError("Not connected to Redis")
-        
+
         try:
             return await self._cache_service.delete(key)
         except Exception as e:
             self.logger.error(f"Cache delete failed for key {key}: {e}")
             return False
-    
+
     async def exists(self, key: str) -> bool:
         """Check if key exists in cache."""
         if not self._cache_service:
             raise FlxConnectionError("Not connected to Redis")
-        
+
         try:
             return await self._cache_service.exists(key)
         except Exception as e:
             self.logger.error(f"Cache exists check failed for key {key}: {e}")
             return False
-    
+
     async def health_check(self) -> dict[str, Any]:
         """Perform Redis health check."""
         if not self._cache_service:
             return {"status": "disconnected", "error": "Not connected"}
-        
+
         try:
             health = await self._cache_service.health_check()
             return {
@@ -326,7 +326,7 @@ repository = "https://github.com/yourorg/flx-redis-cache"
 keywords = ["flx", "redis", "cache", "plugin"]
 
 [tool.poetry.dependencies]
-python = "^3.13"
+python = "^3.9,<4.0"
 flx = "^0.4.0"
 redis = "^5.0.0"
 pydantic = "^2.0.0"
@@ -361,10 +361,10 @@ async def main():
     # Initialize FLX with plugin discovery
     flx = Flx()
     flx.discover_plugins()  # Auto-discovers all installed plugins
-    
+
     # Get Redis cache adapter from registry
     cache_adapter = flx.get_adapter("redis_cache")
-    
+
     # Configure with connection details
     from flx_redis_cache import RedisCacheConfig
     config = RedisCacheConfig(
@@ -372,26 +372,26 @@ async def main():
         max_connections=20,
         enable_compression=True
     )
-    
+
     # Initialize adapter
     cache = cache_adapter(config)
-    
+
     # Use with unified manager
     manager = UnifiedAdapterManager()
     manager.register("cache", cache)
-    
+
     await manager.initialize()
     await manager.start()
-    
+
     # Use the cache
     await cache.set("user:123", {"name": "John", "email": "john@example.com"})
     user = await cache.get("user:123")
     print(f"Retrieved user: {user}")
-    
+
     # Health check
     health = await cache.health_check()
     print(f"Cache health: {health}")
-    
+
     # Cleanup
     await manager.stop()
 
@@ -408,21 +408,21 @@ FLX plugins support bidirectional patterns - they can act as both inbound (drivi
 ```python
 class BidirectionalHttpPlugin(BaseAdapter):
     """HTTP plugin that can both receive and make requests."""
-    
+
     # Inbound capability - receive HTTP requests
     async def handle_request(self, request: HttpRequest) -> HttpResponse:
         """Handle incoming HTTP requests."""
         return await self._process_request(request)
-    
-    # Outbound capability - make HTTP requests  
+
+    # Outbound capability - make HTTP requests
     async def make_request(self, method: str, url: str, **kwargs) -> HttpResponse:
         """Make outbound HTTP requests."""
         return await self._http_client.request(method, url, **kwargs)
-    
+
     # Plugin registration for both directions
     def register_inbound_handlers(self, registry: dict) -> None:
         registry["http_server"] = self.handle_request
-    
+
     def register_outbound_adapters(self, registry: dict) -> None:
         registry["http_client"] = self.make_request
 ```
@@ -437,15 +437,15 @@ from flx.ports.inbound.cli import CLICommandGroup
 
 class RedisCLIExtension:
     """CLI commands for Redis cache management."""
-    
+
     def __init__(self, cache_adapter: RedisCacheAdapter):
         self.cache = cache_adapter
-    
+
     @cyclopts.App
     def redis_commands(self):
         """Redis cache management commands."""
         pass
-    
+
     @redis_commands.command
     async def get(self, key: str) -> None:
         """Get value from Redis cache."""
@@ -454,7 +454,7 @@ class RedisCLIExtension:
             print(f"Key '{key}' not found")
         else:
             print(f"{key}: {value}")
-    
+
     @redis_commands.command
     async def set(self, key: str, value: str, ttl: int = 3600) -> None:
         """Set value in Redis cache."""
@@ -463,7 +463,7 @@ class RedisCLIExtension:
             print(f"Set {key} = {value} (TTL: {ttl}s)")
         else:
             print(f"Failed to set {key}")
-    
+
     @redis_commands.command
     async def delete(self, key: str) -> None:
         """Delete key from Redis cache."""
@@ -472,7 +472,7 @@ class RedisCLIExtension:
             print(f"Deleted {key}")
         else:
             print(f"Key '{key}' not found")
-    
+
     @redis_commands.command
     async def health(self) -> None:
         """Check Redis health."""
@@ -494,20 +494,20 @@ from flx.ports.plugin.hooks import LifecycleHook
 
 class RedisCacheLifecycleHook(LifecycleHook):
     """Lifecycle management for Redis cache."""
-    
+
     def __init__(self, cache_adapter: RedisCacheAdapter):
         self.cache = cache_adapter
-    
+
     async def on_startup(self, app) -> None:
         """Execute when application starts."""
         await self.cache.connect()
         self.logger.info("Redis cache connected on startup")
-    
+
     async def on_shutdown(self, app) -> None:
         """Execute when application shuts down."""
         await self.cache.disconnect()
         self.logger.info("Redis cache disconnected on shutdown")
-    
+
     async def on_health_check(self, app) -> dict:
         """Return health information."""
         return await self.cache.health_check()
@@ -543,10 +543,10 @@ async def redis_config():
 async def mock_redis_adapter(redis_config):
     """Mock Redis adapter for testing."""
     adapter = RedisCacheAdapter(redis_config)
-    
+
     # Use fake Redis for testing
     adapter._redis_pool = aioredis.ConnectionPool()
-    
+
     await adapter.connect()
     yield adapter
     await adapter.disconnect()
@@ -570,57 +570,57 @@ from flx.core.exceptions import FlxConnectionError
 
 class TestRedisCacheAdapter:
     """Unit tests for Redis cache adapter."""
-    
+
     async def test_adapter_creation(self, redis_config):
         """Test adapter creation with valid config."""
         adapter = RedisCacheAdapter(redis_config)
         assert adapter.config == redis_config
         assert not adapter.is_connected()
-    
+
     async def test_connection_lifecycle(self, mock_redis_adapter):
         """Test connection and disconnection."""
         assert mock_redis_adapter.is_connected()
-        
+
         await mock_redis_adapter.disconnect()
         assert not mock_redis_adapter.is_connected()
-    
+
     async def test_cache_operations(self, mock_redis_adapter):
         """Test basic cache operations."""
         # Set value
         success = await mock_redis_adapter.set("test_key", "test_value")
         assert success
-        
+
         # Get value
         value = await mock_redis_adapter.get("test_key")
         assert value == "test_value"
-        
+
         # Check existence
         exists = await mock_redis_adapter.exists("test_key")
         assert exists
-        
+
         # Delete value
         deleted = await mock_redis_adapter.delete("test_key")
         assert deleted
-        
+
         # Verify deletion
         value = await mock_redis_adapter.get("test_key")
         assert value is None
-    
+
     async def test_health_check(self, mock_redis_adapter):
         """Test health check functionality."""
         health = await mock_redis_adapter.health_check()
         assert health["status"] == "healthy"
         assert "backend" in health
         assert "url" in health
-    
+
     async def test_error_handling(self, redis_config):
         """Test error handling for connection failures."""
         adapter = RedisCacheAdapter(redis_config)
-        
+
         # Test operations without connection
         with pytest.raises(FlxConnectionError):
             await adapter.get("test_key")
-        
+
         with pytest.raises(FlxConnectionError):
             await adapter.set("test_key", "value")
 ```
@@ -636,52 +636,52 @@ from flx.infra.adapters import UnifiedAdapterManager
 @pytest.mark.integration
 class TestRedisIntegration:
     """Integration tests with FLX framework."""
-    
+
     async def test_plugin_discovery(self):
         """Test automatic plugin discovery."""
         flx = Flx()
         flx.discover_plugins()
-        
+
         # Verify plugin is discovered
         adapters = flx.get_available_adapters()
         assert "redis_cache" in adapters
-    
+
     async def test_unified_manager_integration(self, integration_redis_adapter):
         """Test integration with unified adapter manager."""
         manager = UnifiedAdapterManager()
         manager.register("cache", integration_redis_adapter)
-        
+
         await manager.initialize()
         await manager.start()
-        
+
         # Test through manager
         health = await manager.health_check_all()
         assert "cache" in health
         assert health["cache"]["status"] == "healthy"
-        
+
         await manager.stop()
-    
+
     @pytest.mark.performance
     async def test_performance_benchmarks(self, integration_redis_adapter):
         """Test performance characteristics."""
         import time
-        
+
         # Benchmark set operations
         start_time = time.perf_counter()
         for i in range(1000):
             await integration_redis_adapter.set(f"perf_key_{i}", f"value_{i}")
         set_duration = time.perf_counter() - start_time
-        
+
         # Benchmark get operations
         start_time = time.perf_counter()
         for i in range(1000):
             await integration_redis_adapter.get(f"perf_key_{i}")
         get_duration = time.perf_counter() - start_time
-        
+
         # Performance assertions
         assert set_duration < 2.0  # Should complete in under 2 seconds
         assert get_duration < 1.0  # Should complete in under 1 second
-        
+
         print(f"Set 1000 keys in {set_duration:.3f}s")
         print(f"Get 1000 keys in {get_duration:.3f}s")
 ```
@@ -728,7 +728,7 @@ FLX is building an extensive plugin ecosystem with planned expansions:
 - **Oracle Database**: Enhanced Oracle integration with modern drivers
 - **Message Queues**: RabbitMQ, Apache Kafka, Apache Pulsar adapters
 
-### Cloud Platform Plugins  
+### Cloud Platform Plugins
 
 - **AWS Services**: S3, DynamoDB, SQS, Lambda integrations
 - **Azure Services**: Blob Storage, CosmosDB, Service Bus

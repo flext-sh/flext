@@ -33,10 +33,12 @@ class SchemaDefinition:
         """Initialize SchemaDefinition.
 
         Args:
+        ----
             name: Entity name
             fields: Field definitions
             description: Schema description (optional)
             required_fields: list of required field names (optional)
+
         """
         self.name = name
         self.fields = fields
@@ -48,11 +50,14 @@ class SchemaDefinition:
         """Create SchemaDefinition from dictionary.
 
         Args:
+        ----
             name: Entity name
             data: Schema definition data
 
         Returns:
+        -------
             SchemaDefinition: Schema definition
+
         """
         fields = {}
         required_fields = []
@@ -79,8 +84,10 @@ class SchemaDefinition:
     def to_dict(self) -> dict[str, Any]:
         """Convert SchemaDefinition to dictionary.
 
-        Returns:
+        Returns
+        -------
             dict[str, Any]: Schema definition as dictionary
+
         """
         return {
             "name": self.name,
@@ -92,8 +99,10 @@ class SchemaDefinition:
     def to_json_schema(self) -> dict[str, Any]:
         """Convert SchemaDefinition to JSON Schema format.
 
-        Returns:
+        Returns
+        -------
             dict[str, Any]: JSON Schema
+
         """
         return {
             "type": "object",
@@ -107,10 +116,13 @@ class SchemaDefinition:
         """Save SchemaDefinition to a file.
 
         Args:
+        ----
             directory: Directory to save the schema in
 
         Returns:
+        -------
             str: Path to the saved schema file
+
         """
         directory = Path(directory)
         os.makedirs(directory, exist_ok=True)
@@ -126,10 +138,13 @@ class SchemaDefinition:
         """Load SchemaDefinition from a file.
 
         Args:
+        ----
             file_path: Path to the schema file
 
         Returns:
+        -------
             SchemaDefinition: Schema definition
+
         """
         file_path = Path(file_path)
 
@@ -169,9 +184,11 @@ class SchemaExtractor:
         """Initialize SchemaExtractor.
 
         Args:
+        ----
             client: API client instance
             cache_dir: Directory for caching schemas (optional)
             schema_path: API endpoint path for schema extraction
+
         """
         self.client = client
         self.cache_dir = Path(cache_dir) if cache_dir else None
@@ -181,8 +198,10 @@ class SchemaExtractor:
     def discover_entities(self) -> list[str]:
         """Discover available entity types from the API.
 
-        Returns:
+        Returns
+        -------
             list[str]: list of entity names
+
         """
         response = self.client.get("api/entities")
         if response.success and isinstance(response.data, list):
@@ -193,10 +212,13 @@ class SchemaExtractor:
         """Extract schema for an entity from the API.
 
         Args:
+        ----
             entity_name: Name of the entity
 
         Returns:
+        -------
             Optional[SchemaDefinition]: Schema definition or None if not found
+
         """
         # Check cache first
         if entity_name in self.schemas:
@@ -239,10 +261,13 @@ class SchemaExtractor:
         """Extract schemas for multiple entities.
 
         Args:
+        ----
             entity_names: list of entity names
 
         Returns:
+        -------
             dict[str, Optional[SchemaDefinition]]: Mapping of entity names to schema definitions
+
         """
         result = {}
         for entity_name in entity_names:
@@ -252,8 +277,10 @@ class SchemaExtractor:
     def extract_all_schemas(self) -> dict[str, SchemaDefinition | None]:
         """Extract schemas for all available entities.
 
-        Returns:
+        Returns
+        -------
             dict[str, Optional[SchemaDefinition]]: Mapping of entity names to schema definitions
+
         """
         entity_names = self.discover_entities()
         return self.extract_schemas(entity_names)
@@ -275,9 +302,11 @@ class SchemaManager:
         """Initialize SchemaManager.
 
         Args:
+        ----
             client: API client instance (optional in offline mode)
             cache_dir: Directory for caching schemas (optional)
             offline_mode: Whether to operate in offline mode (using only cached schemas)
+
         """
         self.client = client
         self.cache_dir = Path(cache_dir) if cache_dir else None
@@ -311,10 +340,13 @@ class SchemaManager:
         """Get schema for an entity.
 
         Args:
+        ----
             entity_name: Name of the entity
 
         Returns:
+        -------
             Optional[SchemaDefinition]: Schema definition or None if not found
+
         """
         # Check if we already have the schema
         if entity_name in self.schemas:
@@ -345,10 +377,13 @@ class SchemaManager:
         """Get model class for an entity.
 
         Args:
+        ----
             entity_name: Name of the entity
 
         Returns:
+        -------
             Optional[Type[BaseModel]]: Model class or None if schema not found
+
         """
         # Check if we already have the model
         if entity_name in self.models:
@@ -367,10 +402,13 @@ class SchemaManager:
         """Create a model class from a schema definition.
 
         Args:
+        ----
             schema: Schema definition
 
         Returns:
+        -------
             Type[BaseModel]: Model class
+
         """
         # Define model fields
         fields = {}
@@ -406,10 +444,13 @@ class SchemaManager:
         """Get Python type for a field schema.
 
         Args:
+        ----
             field_schema: Field schema
 
         Returns:
+        -------
             Any: Python type
+
         """
         import typing
 

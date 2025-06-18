@@ -195,6 +195,7 @@ from functools import wraps
 
 def cached(ttl: int = 300):
     """Cache decorator for endpoints."""
+
     def decorator(func):
         @wraps(func)
         async def wrapper(*args, **kwargs):
@@ -227,10 +228,12 @@ def cached(ttl: int = 300):
             return result
 
         return wrapper
+
     return decorator
 
 
 # API Endpoints
+
 
 @app.get("/health", response_model=HealthResponse)
 async def health_check(
@@ -251,10 +254,7 @@ async def health_check(
     services["http"] = await http.health_check()
 
     # Overall status
-    all_healthy = all(
-        s.get("status") == "healthy"
-        for s in services.values()
-    )
+    all_healthy = all(s.get("status") == "healthy" for s in services.values())
 
     return HealthResponse(
         status="healthy" if all_healthy else "degraded",
@@ -295,7 +295,9 @@ async def create_user(
 async def list_users(
     pagination: Annotated[PaginationParams, Depends(get_pagination)],
     db: Annotated[DatabaseService, Depends(get_db_service)],
-    is_active: Annotated[bool | None, Query(description="Filter by active status")] = None,
+    is_active: Annotated[
+        bool | None, Query(description="Filter by active status")
+    ] = None,
 ):
     """List users with pagination."""
     if is_active is not None:
@@ -416,10 +418,12 @@ async def create_users_batch(
                 existing = await db.users.find_by_email(user_data.email)
                 if existing:
                     failed += 1
-                    errors.append({
-                        "email": user_data.email,
-                        "error": "Already exists",
-                    })
+                    errors.append(
+                        {
+                            "email": user_data.email,
+                            "error": "Already exists",
+                        }
+                    )
                     continue
 
                 # Create user
@@ -428,10 +432,12 @@ async def create_users_batch(
 
             except Exception as e:
                 failed += 1
-                errors.append({
-                    "email": user_data.email,
-                    "error": str(e),
-                })
+                errors.append(
+                    {
+                        "email": user_data.email,
+                        "error": str(e),
+                    }
+                )
 
     logger.info(
         "batch_user_creation",
@@ -493,10 +499,12 @@ async def websocket_endpoint(
 
             # Handle different message types
             if data.get("type") == "subscribe":
-                await websocket.send_json({
-                    "type": "subscribed",
-                    "message": "Subscribed to user updates",
-                })
+                await websocket.send_json(
+                    {
+                        "type": "subscribed",
+                        "message": "Subscribed to user updates",
+                    }
+                )
 
             # In a real app, you'd have background tasks that broadcast updates
             # when users are created/updated/deleted

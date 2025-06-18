@@ -48,7 +48,7 @@ class ResilientAdapter(BaseAdapter, CircuitBreakerHealthMixin):
 
     # Circuit breaker configuration
     circuit_breaker_failure_threshold: int = 3  # Open after 3 failures
-    circuit_breaker_recovery_timeout: int = 5   # Try recovery after 5 seconds
+    circuit_breaker_recovery_timeout: int = 5  # Try recovery after 5 seconds
 
     def __init__(self, service: UnreliableService, **kwargs) -> None:
         # Inject circuit breaker factory

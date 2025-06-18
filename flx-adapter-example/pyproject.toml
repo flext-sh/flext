@@ -6,10 +6,10 @@ build-backend = "poetry.core.masonry.api"
 name = "flx-adapter-example"
 description = "FLX Adapter Example - Template for creating FLX bidirectional plugins"
 dynamic = ["version"]
-authors = [{name = "Marlon Costa", email = "marlon.costa@datacosmos.com.br"}]
+authors = [{ name = "Marlon Costa", email = "marlon.costa@datacosmos.com.br" }]
 readme = "README.md"
-requires-python = ">=3.13,<3.15"
-license = {text = "MIT"}
+requires-python = ">=3.9,<4.0"
+license = { text = "MIT" }
 keywords = ["flx", "adapter", "plugin", "template", "example"]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -28,21 +28,21 @@ classifiers = [
 dependencies = [
     # Core FLX dependency (can be from PyPI or local development)
     "flx>=0.4.0",
-    
+
     # Configuration
     "pydantic>=2.11.5",
     "pydantic-settings>=2.9.1",
     "python-dotenv>=1.1.0",
-    
+
     # CLI utilities
     "typer>=0.9.0",
     "rich>=14.0.0",
     "click>=8.2.1",
-    
+
     # Basic utilities
     "loguru>=0.7.3",
     "structlog>=25.4.0",
-    
+
     # For example data processing
     "pyyaml>=6.0.2",
     "orjson>=3.10.13",
@@ -70,37 +70,37 @@ dev = [
     "pytest-html>=4.1.1",
     "pytest-timeout>=2.4.0",
     "coverage[toml]>=7.8.2",
-    
+
     # Code Quality
     "black>=25.1.0",
     "isort>=5.13.2",
     "ruff>=0.11.13",
     "autoflake>=2.2.1",
     "pyupgrade>=3.19.0",
-    
+
     # Type Checking
     "mypy>=1.16.0",
     "types-python-dateutil>=2.9.0.20241206",
     "types-pyyaml>=6.0.12.20250516",
     "types-setuptools>=75.7.0.20250106",
-    
+
     # Security & Quality
     "bandit>=1.8.0",
     "safety>=2.3.0",
     "vulture>=2.12",
     "pre-commit>=4.2.0",
-    
+
     # Documentation
     "mkdocs>=1.6.1",
     "mkdocs-material>=9.5.47",
 ]
 
 [tool.poetry]
-version = "0.1.0"  # Sync with src/flx_adapter_example/__version__.py
-packages = [{include = "flx_adapter_example", from = "src"}]
+version = "0.1.0"                                              # Sync with src/flx_adapter_example/__version__.py
+packages = [{ include = "flx_adapter_example", from = "src" }]
 
 [tool.poetry.dependencies]
-python = "^3.13,<3.15"
+python = "^3.9,<4.0"
 # IMPORTANT: Poetry dependencies left minimal for workspace compatibility
 # All real dependencies in [project.dependencies] section above
 
@@ -157,7 +157,7 @@ show_error_context = true
 pretty = true
 
 [tool.ruff]
-target-version = "py313"
+target-version = "py312"
 line-length = 88
 src = ["src", "tests"]
 extend-exclude = [
@@ -174,14 +174,54 @@ extend-exclude = [
 ]
 
 [tool.ruff.lint]
-select = [
-    "E", "W", "F", "I", "UP", "N", "B", "C4", "DTZ", "T20",
-    "ISC", "PIE", "PT", "RET", "SIM", "ARG", "PL", "RUF"
-]
 ignore = [
-    "E501",     # line too long (handled by formatter)
-    "PLR0913",  # too many arguments
-    "PLR2004",  # magic value comparison
+    "N818",   # Allow Exceptions to have suffix 'Exception' rather than 'Error'
+    "S310",   # Allow `urllib.open`
+    "S603",   # Allow `subprocess.run(..., shell=False)`
+    "COM812", # Handled by the Ruff formatter
+    "ISC001", # Handled by the Ruff formatter
+]
+select = [
+    "A",     # flake8-builtins
+    "ANN",   # flake8-annotations
+    "ARG",   # flake8-unused-arguments
+    "ASYNC", # flake8-async
+    "B",     # flake8-bugbear
+    "C4",    # flake8-comprehensions
+    "COM",   # flake8-commas
+    "D",     # pydocstyle/flake8-docstrings
+    "DTZ",   # flake8-datetimez
+    "E",     # pycodestyle (error)
+    "EM",    # flake8-errmsg
+    "ERA",   # flake8-eradicate
+    "F",     # pyflakes
+    "FBT",   # flake8-boolean-trap
+    "G",     # flake8-logging-format
+    "I",     # isort
+    "ICN",   # flake8-import-conventions
+    "INP",   # flake8-no-pep420
+    "ISC",   # flake8-implicit-str-concat
+    "N",     # pep8-naming
+    "PERF",  # Perflint
+    "PGH",   # pygrep-hooks
+    "PIE",   # flake8-pie
+    "PT",    # flake8-pytest-style
+    "PTH",   # flake8-use-pathlib
+    "Q",     # flake8-quotes
+    "RET",   # flake8-return
+    "RSE",   # flake8-raise
+    "RUF",   # Ruff specific rules
+    "S",     # flake8-bandit
+    "SIM",   # flake8-simplify
+    "T10",   # flake8-debugger
+    "T20",   # flake8-print
+    "TID",   # flake8-tidy-imports
+    "UP",    # pyupgrade
+    "W",     # pycodestyle (warning)
+    "YTT",   # flake8-2020
+]
+unfixable = [
+    "ERA001", # Don't remove commented-out code
 ]
 
 [tool.ruff.lint.per-file-ignores]
