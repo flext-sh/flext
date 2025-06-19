@@ -124,7 +124,8 @@ def validate_final() -> bool | None:
                 ],
                 capture_output=True,
                 text=True,
-                cwd=Path(__file__).parent, check=False,
+                cwd=Path(__file__).parent,
+                check=False,
             )
 
             if result.returncode == 0:

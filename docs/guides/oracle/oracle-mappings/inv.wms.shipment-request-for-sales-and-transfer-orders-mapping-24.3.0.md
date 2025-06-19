@@ -11,19 +11,19 @@
 Documento de mapeamento da interface WMS para chamadas REST da API de Inventory do Oracle Fusion (versão 24.4.0) destinado à criação de solicitações de expedição de pedidos de venda e transferência. Contém:
 
 • Cabeçalho de mensagem
- – Campos de controle: DocumentVersion, OriginSystem, ClientEnvCode, ParentCompanyCode, Entity, TimeStamp, MessageId
- – Dados do pedido: facility_code, company_code, order_nbr, order_type, ord_date, req_ship_date, exp_date, action_code
- – Informações de cliente e entrega: endereços de faturamento e de remessa (nome, rua, cidade, estado, CEP, país, telefone, e-mail, contato), route_nbr, priority, ship_via_code, carrier_account_nbr, payment_method, customer_po_nbr, sales_order_nbr, currency_code, instruções especiais, grupos de VAS e campos customizados (cust_field_1…cust_field_5, cust_number, cust_decimal, cust_short_text, cust_long_text, etc.)
- – Flags de processamento (async_flg, only_load_flg) e referências de integração (erp_source_hdr_ref, erp_source_system_ref, group_ref, externally_planned_load_flg)
+– Campos de controle: DocumentVersion, OriginSystem, ClientEnvCode, ParentCompanyCode, Entity, TimeStamp, MessageId
+– Dados do pedido: facility_code, company_code, order_nbr, order_type, ord_date, req_ship_date, exp_date, action_code
+– Informações de cliente e entrega: endereços de faturamento e de remessa (nome, rua, cidade, estado, CEP, país, telefone, e-mail, contato), route_nbr, priority, ship_via_code, carrier_account_nbr, payment_method, customer_po_nbr, sales_order_nbr, currency_code, instruções especiais, grupos de VAS e campos customizados (cust_field_1…cust_field_5, cust_number, cust_decimal, cust_short_text, cust_long_text, etc.)
+– Flags de processamento (async_flg, only_load_flg) e referências de integração (erp_source_hdr_ref, erp_source_system_ref, group_ref, externally_planned_load_flg)
 
 • Detalhe de itens
- – Sequência e ação (seq*nbr, action_code)
- – Identificação do item e lote (item_alternate_code, item_part**, batch*nbr, serial_nbr, item_barcode)
- – Quantidades e unidades (ord_qty, uom, pre_pack**, req_cntr_nbr, req_pallet_nbr)
- – Preço e custo (cost, sale_price)
- – Atributos de inventário customizados (invn_attr_a…invn_attr_o)
- – Instruções de linha (spl_instr), códigos de VAS (vas_activity_code), vouchers (voucher_nbr, voucher_amount, voucher_exp_date), e campos adicionais para data, número e texto livre
- – Referências ao ERP (erp_source_line_ref, erp_source_shipment_ref, erp_fulfillment_line_ref) e tolerâncias de expedição
+– Sequência e ação (seq*nbr, action_code)
+– Identificação do item e lote (item_alternate_code, item_part\*\*, batch*nbr, serial_nbr, item_barcode)
+– Quantidades e unidades (ord_qty, uom, pre_pack\*\*, req_cntr_nbr, req_pallet_nbr)
+– Preço e custo (cost, sale_price)
+– Atributos de inventário customizados (invn_attr_a…invn_attr_o)
+– Instruções de linha (spl_instr), códigos de VAS (vas_activity_code), vouchers (voucher_nbr, voucher_amount, voucher_exp_date), e campos adicionais para data, número e texto livre
+– Referências ao ERP (erp_source_line_ref, erp_source_shipment_ref, erp_fulfillment_line_ref) e tolerâncias de expedição
 
 Para cada campo são especificados: formato (string, date, number, boolean), tamanho máximo, obrigatoriedade, valores padrão ou hard-code, e regras de transformação (por ex. substring-before, concatenação, decodificação de Base64). O documento também lista links para a documentação oficial da API de Shipment Lines e de Shipment Line Change Requests.
 

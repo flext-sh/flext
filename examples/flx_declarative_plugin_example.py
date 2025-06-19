@@ -29,7 +29,7 @@ class DatabaseCommands:
     - flx database status
     """
 
-    def __init__(self, command_bus=None):
+    def __init__(self, command_bus=None) -> None:
         """Inicializa com command bus injetado automaticamente."""
         self.command_bus = command_bus
 
@@ -100,7 +100,7 @@ class MonitoringCommands:
     - flx monitoring health-check
     """
 
-    def __init__(self, command_bus=None):
+    def __init__(self, command_bus=None) -> None:
         self.command_bus = command_bus
 
     def alerts(self, severity: str = "all") -> dict[str, Any]:

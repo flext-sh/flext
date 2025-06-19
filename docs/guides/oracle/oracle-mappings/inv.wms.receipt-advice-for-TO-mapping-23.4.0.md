@@ -20,12 +20,12 @@ Este documento é a especificação de mapeamento entre o WMS e o Oracle Fusion 
 2. Cabeçalho do recebimento (shipment header)
 
    - Campos obrigatórios: shipment_nbr → RCV_SHIPMENT_HEADERS.SHIPMENT_NUM
-      facility_code → RCV_SHIPMENT_LINES.TO_ORGANIZATION_ID
-      company_code (hard-coded “PP”)
-      action_code (“CREATE”)
-      ref_nbr → RCV_SHIPMENT_HEADERS.SHIPMENT_HEADER_ID
-      shipment_type (“TRANSFER ORDER”)
-      shipped_date
+     facility_code → RCV_SHIPMENT_LINES.TO_ORGANIZATION_ID
+     company_code (hard-coded “PP”)
+     action_code (“CREATE”)
+     ref_nbr → RCV_SHIPMENT_HEADERS.SHIPMENT_HEADER_ID
+     shipment_type (“TRANSFER ORDER”)
+     shipped_date
    - Outros campos opcionais: trailer_nbr, load_nbr, manifest_nbr, orig_shipped_units, lock_code, campos customizados etc.
 
 3. Detalhes de linha e série

@@ -44,7 +44,7 @@ async def _get_user_properties(self, user_id: str) -> dict[str, Any]:
         try:
             return await self._analytics_client.get_user_properties(user_id)
         except Exception as e:
-            self._logger.warning(f"Failed to get user properties: {e}")
+            self._logger.warning("Failed to get user properties: %s", e")
     return {"source": "analytics_adapter", "created_by": "flx_framework"}
 
 
@@ -54,7 +54,7 @@ async def _get_group_member_count(self, group_id: str) -> int:
         try:
             return await self._analytics_client.get_group_member_count(group_id)
         except Exception as e:
-            self._logger.warning(f"Failed to get member count: {e}")
+            self._logger.warning("Failed to get member count: %s", e")
     return 1
 
 
@@ -240,7 +240,7 @@ from flx.ports.outbound.database import DatabasePort
 class DatabaseAdapter(DatabasePort):
     """Database adapter implementing the DatabasePort interface."""
 
-    def __init__(self, engine: DatabaseEngine):
+    def __init__(self, engine: DatabaseEngine) -> None:
         """Initialize the adapter with a DatabaseEngine instance."""
         if not isinstance(engine, DatabaseEngine):
             raise TypeError("engine must be an instance of DatabaseEngine.")

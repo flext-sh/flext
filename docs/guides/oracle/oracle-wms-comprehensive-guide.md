@@ -1,53 +1,37 @@
 # 🏢 Oracle WMS Comprehensive Guide
 
-> **Function**: Complete Oracle WMS operations, CLI, and integration patterns | **Audience**: WMS developers, integration engineers | **Status**: ✅ Production Ready
+> **Function**: Complete Oracle WMS operations, CLI, and integration patterns | **Audience**: WMS developers, integration engineers | **Status**: Production-ready
 
-[![Oracle WMS](https://img.shields.io/badge/Oracle-WMS-blue.svg)](./index.md)
+[![Oracle WMS](https://img.shields.io/badge/Oracle-WMS_25B-red.svg)](./index.md)
 [![CLI](https://img.shields.io/badge/CLI-validated-green.svg)](./oracle-wms-cli-guide.md)
 [![Integration](https://img.shields.io/badge/integration-patterns-orange.svg)](./oracle-wms-integration-validated.md)
+[![Framework](https://img.shields.io/badge/framework-FLX_0.4.0-orange.svg)](../../index.md)
 
-**Complete Oracle Warehouse Management System operations guide with FLX Framework - validated against production implementations**
+**Complete Oracle Warehouse Management System operations guide with FLX Framework - validated against production implementations and enterprise deployment patterns**
 
 ---
 
 ## 🧭 **Navigation Context**
 
-**🏠 Root**: [Documentation Home](../../index.md) → **📂 Hub**: [Guides](../index.md) → **📂 Section**: [Oracle](./index.md) → **📄 Current**: Oracle WMS Comprehensive Guide
+**🏠 Root**: [Documentation Home](../../index.md) → **📂 Hub**: [Guides Hub](../index.md) → **📂 Oracle**: [Oracle Hub](./index.md) → **📄 Current**: Oracle WMS Comprehensive Guide
+
+### **📍 Learning Path Position**
+
+```
+[Oracle Hub](./index.md) → **[Oracle WMS Comprehensive Guide]** → [WMS CLI Guide](./oracle-wms-cli-guide.md)
+```
+
+## 🎯 **Quick Navigation**
+
+- **📂 Section Hub**: [Oracle Hub](./index.md)
+- **🏠 Documentation Root**: [Root Index](../../index.md)
+- **🔗 Related**: [WMS CLI Guide](./oracle-wms-cli-guide.md) | [WMS API Reference](./oracle-wms-complete-api-reference.md)
 
 ---
 
-## 🔗 **Cross-Section Navigation**
+## 📋 **Overview**
 
-### **⬅️ Prerequisites**
-
-- [Getting Started Hub](../../getting-started/index.md) - Essential FLX Framework installation and setup before WMS integration
-- [Oracle Hub](./index.md) - Understanding Oracle integration patterns and authentication fundamentals
-- [Authentication Guide](../authentication/jwt-service-guide.md) - Required JWT and OAuth2 authentication setup for Oracle WMS access
-
-### **➡️ Next Steps**
-
-- [Oracle WMS CLI Guide](./oracle-wms-cli-guide.md) - Command-line interface operations and practical examples
-- [Oracle WMS Integration Validated](./oracle-wms-integration-validated.md) - Production integration patterns and troubleshooting
-- [Oracle WMS API Reference](./oracle-wms-complete-api-reference.md) - Complete API documentation for WMS operations
-
-### **🔗 Related Implementation Topics**
-
-- [**API Reference Documentation**](../../api-reference/core-api-reference.md) - Complete FLX Framework APIs and Oracle adapter class documentation for WMS integration
-- [**Real-World Examples**](../../examples/oracle-integration-real-examples.md) - Production-verified Oracle WMS implementation code examples and patterns
-- [**Testing WMS Integrations**](../../development/testing/hexagonal-testing-guide.md) - Comprehensive testing strategies for WMS operations within hexagonal architecture
-- [**Production Infrastructure**](../../infrastructure/service-patterns.md) - Infrastructure service patterns and deployment strategies for Oracle WMS in production
-- [**Security Implementation**](../../security/architecture/security-architecture.md) - Enterprise security patterns and authentication services for Oracle WMS access
-- [**Performance Optimization**](../../optimization/performance/optimization-guide.md) - WMS performance tuning, connection optimization, and batch processing strategies
-
-## Table of Contents
-
-1. [Overview and Architecture](#overview-and-architecture)
-2. [Installation and Configuration](#installation-and-configuration)
-3. [CLI Operations and Commands](#cli-operations-and-commands)
-4. [API Operations and Integration](#api-operations-and-integration)
-5. [Database Administration](#database-REDACTED_LDAP_BIND_PASSWORDistration)
-6. [Troubleshooting and Best Practices](#troubleshooting-and-best-practices)
-7. [Performance Optimization](#performance-optimization)
+Complete Oracle Warehouse Management System operations guide with FLX Framework, covering CLI operations, API integration, database REDACTED_LDAP_BIND_PASSWORDistration, and production deployment patterns validated against enterprise implementations.
 
 ## Overview and Architecture
 
@@ -746,32 +730,31 @@ sync_orders = WMSOperator(
 )
 ```
 
-## See Also
+---
 
-- **Architecture Documentation:**
+## 🔗 **Cross-References**
 
-  - [FLX HTTP Oracle WMS Adapter](./flx_http_oracle_wms-adapter.md) - Technical adapter implementation
-  - [Hexagonal Architecture Guide](../architecture/UNIFIED_ARCHITECTURE_GUIDE.md) - Architecture patterns
+### **Prerequisites**
 
-- **Integration Guides:**
+- [Oracle Hub](./index.md) - Understanding Oracle integration architecture before implementing WMS operations
+- [Getting Started Hub](../../getting-started/index.md) - FLX Framework installation and basic configuration setup
+- [OAuth2 Authentication Guide](./oracle-oauth2-authentication-guide.md) - Required authentication setup for Oracle WMS access
 
-  - [Meltano Plugins Integration](./meltano-plugins-integration.md) - Data pipeline integration
-  - [Oracle Integration API Guide](./oracle-integration-api-guide.md) - General Oracle API patterns
+### **Next Steps**
 
-- **Authentication and Security:**
+- [WMS CLI Guide](./oracle-wms-cli-guide.md) - Command-line interface operations and practical examples for WMS
+- [WMS Integration Validated](./oracle-wms-integration-validated.md) - Production integration patterns and troubleshooting guides
+- [WMS API Reference](./oracle-wms-complete-api-reference.md) - Complete API documentation for WMS operations
 
-  - [Oracle OAuth2 Authentication Guide](./oracle-oauth2-authentication-guide.md) - Authentication setup
-  - [Oracle Security Guide](./oracle-security-guide.md) - Security best practices
+### **Related Topics**
 
-- **Development and Testing:**
-
-  - [Testing Guide](./testing-guide.md) - Testing strategies and patterns
-  - [Development Tools](./development-tools.md) - Development environment setup
-
-- **Performance and Monitoring:**
-  - [Performance Optimization Guide](../optimization/performance-optimization.md) - Performance tuning
-  - [Monitoring and Observability](../monitoring/observability-guide.md) - Monitoring setup
+- [WMS Integration Project Plan](./oracle-wms-integration-project-plan.md) - Complete WMS integration project planning and implementation
+- [Oracle Security Guide](./oracle-security-guide.md) - Security best practices and authentication patterns for WMS
+- [Implementation Patterns](./oracle-implementation-patterns.md) - Enterprise integration patterns and architectural guidance
+- [Architecture Guide](../../architecture/index.md) - Hexagonal architecture patterns for WMS integration
+- [Infrastructure Services](../../infrastructure/index.md) - Infrastructure patterns for WMS deployment and scaling
+- [Performance Optimization](../../optimization/index.md) - WMS performance tuning and optimization strategies
 
 ---
 
-**📄 Content Document** | **🏠 Parent**: [Oracle Guides Hub](./index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Oracle Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11

@@ -128,7 +128,7 @@ def scan_directory(directory: str) -> list[dict[str, Any]]:
     return all_gaps
 
 
-def main():
+def main() -> None:
     flx_dir = "/home/marlonsc/pyauto/flx/src/flx"
 
     gaps = scan_directory(flx_dir)

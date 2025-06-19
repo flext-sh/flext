@@ -62,7 +62,7 @@ class StarSeparatorFixer:
         except Exception as e:
             print(f"Error processing {file_path}: {e}")
 
-    def _fix_duplicate_stars(self, content):
+    def _fix_duplicate_stars(self, content) -> Any:
         """Fix function definitions with duplicate * separators.
 
         Args:

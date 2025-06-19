@@ -7,6 +7,7 @@ import asyncio
 import random
 from typing import Any
 
+from flx.infra.services.base import BaseInfraService
 from flx.infra.services.errors import (
     ErrorCategory,
     ErrorContext,
@@ -23,8 +24,6 @@ from flx.infra.services.resilience import (
     rate_limited,
     resilience_manager,
 )
-
-from flx.infra.services.base import BaseInfraService
 from flx.infra.services.resources import (
     ResourceFactory,
     ResourcePool,
@@ -206,7 +205,7 @@ class AdvancedDatabaseService(BaseInfraService):
         """Start database service."""
         # Initialize connection pool
         await self._connection_pool.initialize()
-        self._logger.info(f"Database service started with pool size {self._pool_size}")
+        self._logger.info("Database service started with pool size %s", self._pool_size")
 
     async def _do_stop(self) -> None:
         """Stop database service."""

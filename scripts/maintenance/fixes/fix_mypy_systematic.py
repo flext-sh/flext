@@ -289,15 +289,15 @@ def fix_missing_functions() -> None:
 
         if "def async_wrapper" not in content:
             wrapper_code = '''
-def async_wrapper(func):
+def async_wrapper(func) -> Any:
     """Wrapper for async functions."""
     async def wrapper(*args, **kwargs):
         return await func(*args, **kwargs)
     return wrapper
 
-def sync_wrapper(func):
+def sync_wrapper(func) -> Any:
     """Wrapper for sync functions."""
-    def wrapper(*args, **kwargs):
+    def wrapper(*args, **kwargs) -> Any:
         return func(*args, **kwargs)
     return wrapper
 '''
@@ -329,7 +329,7 @@ def fix_imports() -> None:
 class PluginFactory:
     """Factory for creating plugin instances."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._registry = {}
 
     def register(self, name: str, plugin_class: type) -> None:

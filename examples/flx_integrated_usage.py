@@ -12,6 +12,7 @@ import asyncio
 from typing import Any
 
 import structlog
+
 from flx.cli.declarative import FlxDeclarativeCli
 from flx.ports.ingoing.operation import FlxOperationRequest
 
@@ -371,7 +372,7 @@ async def demonstrate_error_handling_and_recovery() -> None:
         }
 
         for scenario in error_scenarios:
-            logger.info(f"Testing error scenario: {scenario}")
+            logger.info("Testing error scenario: %s", scenario")
 
             try:
                 # Simulate error condition
@@ -391,7 +392,7 @@ async def demonstrate_error_handling_and_recovery() -> None:
                         msg = f"Validation failed: {validation_result[1]}"
                         raise ValueError(msg)
 
-                logger.info(f"Scenario {scenario} handled successfully")
+                logger.info("Scenario %s", scenario handled successfully")
 
             except Exception as e:
                 logger.warning(
@@ -426,9 +427,9 @@ async def main() -> None:
 
     for demo_name, demo_func in demos:
         try:
-            logger.info(f"Running {demo_name} demonstration")
+            logger.info("Running %s", demo_name demonstration")
             await demo_func()
-            logger.info(f"{demo_name} demonstration completed successfully")
+            logger.info("%s", demo_name demonstration completed successfully")
         except Exception as e:
             logger.exception(f"{demo_name} demonstration failed", error=str(e))
 

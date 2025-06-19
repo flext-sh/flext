@@ -42,7 +42,6 @@ async def example_modern_adapter_usage() -> None:
     try:
         # Modern adapter with automatic connection management
         async with adapter:
-
             # Get adapter info (shows modern features)
             await adapter.health_check()
 
@@ -69,7 +68,6 @@ async def example_modern_client_usage() -> None:
 
     try:
         async with client:
-
             # Show adapter information
             client.get_adapter_info()
 
@@ -97,12 +95,10 @@ async def example_adapter_comparison() -> None:
 
     # Test both adapters
     for use_modern in [False, True]:
-
         client = OracleOicClientModern(config=config, use_modern_adapter=use_modern)
 
         try:
             async with client:
-
                 # Show adapter capabilities
                 client.get_adapter_info()
 
@@ -172,7 +168,6 @@ async def example_modern_features() -> None:
 
     try:
         async with adapter:
-
             # Modern adapters provide enhanced health checking
             await adapter.health_check()
 

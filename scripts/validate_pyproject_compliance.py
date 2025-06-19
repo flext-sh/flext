@@ -80,7 +80,7 @@ def load_pyproject(project_path: Path) -> dict[str, Any]:
         with open(pyproject_file, "rb") as f:
             return tomllib.load(f)
     except Exception as e:
-        raise ComplianceError(f"Invalid pyproject.toml in {project_path}: {e}")
+        raise ComplianceError(f"Invalid pyproject.toml in {project_path}: {e}") from e
 
 
 def validate_build_system(config: dict[str, Any], project_name: str) -> list[str]:

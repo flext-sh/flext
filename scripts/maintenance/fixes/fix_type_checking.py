@@ -6,7 +6,7 @@ import subprocess
 from pathlib import Path
 
 
-def get_type_checking_errors():
+def get_type_checking_errors() -> Any:
     """Get list of files with TYPE_CHECKING undefined errors."""
     result = subprocess.run(
         ["ruff", "check", "flx/", "--select=F821", "--no-fix", "--format=json"],

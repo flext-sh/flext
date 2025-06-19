@@ -9,7 +9,7 @@ def fix_g004_logging_fstrings(content: str) -> str:
     """Fix G004 errors - f-strings in logging statements."""
     # Pattern to match logging statements with f-strings
     patterns = [
-        # logger.info(f"message {var}")
+        # logger.info("message %s", var")
         (
             r'(\s+(?:logger|self\.logger)\.(?:debug|info|warning|error|exception|critical)\s*\(\s*)f"([^"]*?{[^}]*}[^"]*?)"',
             r'\1"\2", ',

@@ -323,7 +323,7 @@ def fix_undefined_exports() -> int:
     return fixes_applied
 
 
-def fix_error_handling():
+def fix_error_handling() -> Any:
     """Fix B904 raise without from inside except."""
 
     flx_path = Path("/home/marlonsc/pyauto/flx/src/flx")

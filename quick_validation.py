@@ -6,7 +6,7 @@ import sys
 from pathlib import Path
 
 
-def test_project(name, path):
+def test_project(name, path) -> Any:
     """Quick test of a project."""
 
     # Check if project exists

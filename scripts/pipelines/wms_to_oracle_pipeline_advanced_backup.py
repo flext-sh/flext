@@ -447,7 +447,7 @@ class SQLAlchemySchemaMapper:
                 return str(value)
 
         except (ValueError, TypeError) as e:
-            self.logger.warning(f"Erro ao converter {oracle_field}='{value}': {e}")
+            self.logger.warning("Erro ao converter %s", oracle_field='%s", value': %s", e")
             # Valor padrão por tipo
             if oracle_type in {"NUMBER", "INTEGER", "DECIMAL", "FLOAT"}:
                 return 0
@@ -591,8 +591,8 @@ class SQLAlchemySchemaMapper:
         sample_record = data[0]
         total_fields = len(sample_record)
 
-        self.logger.info(f"Total de campos por registro: {total_fields}")
-        self.logger.info(f"Campos disponíveis: {sorted(sample_record.keys())}")
+        self.logger.info("Total de campos por registro: %s", total_fields")
+        self.logger.info("Campos disponíveis: %s", sorted(sample_record.keys())")
 
         # Coletar campos Oracle existentes para referência (mas não filtrar)
         oracle_columns = {}
@@ -655,7 +655,7 @@ class SQLAlchemySchemaMapper:
             processed_data.append(processed_record)
 
         self.logger.info("=== PROCESSAMENTO COMPLETO ===")
-        self.logger.info(f"Registros processados: {len(processed_data)}")
+        self.logger.info("Registros processados: %s", len(processed_data)")
         self.logger.info(
             f"Campos por registro: {len(processed_data[0]) if processed_data else 0}"
         )
@@ -708,8 +708,8 @@ class SQLAlchemySchemaMapper:
         existing_fields = [f for f in sample_record if f.lower() in oracle_columns]
         new_fields = [f for f in sample_record if f.lower() not in oracle_columns]
 
-        self.logger.info(f"Campos existentes no Oracle: {len(existing_fields)}")
-        self.logger.info(f"Campos novos: {len(new_fields)}")
+        self.logger.info("Campos existentes no Oracle: %s", len(existing_fields)")
+        self.logger.info("Campos novos: %s", len(new_fields)")
 
         # Se há muitos campos novos, usar INSERT simples apenas com campos existentes
         if len(new_fields) > len(existing_fields):
@@ -812,7 +812,7 @@ class SQLAlchemySchemaMapper:
             )
             insert_statements.append(insert_sql)
 
-        self.logger.info(f"Gerados {len(insert_statements)} comandos INSERT simples")
+        self.logger.info("Gerados %s", len(insert_statements) comandos INSERT simples")
         return insert_statements
 
     def _generate_traditional_merge_statements(
@@ -891,7 +891,7 @@ class SQLAlchemySchemaMapper:
                 )
                 continue
 
-        self.logger.info(f"Gerados {len(merge_statements)} comandos MERGE tradicionais")
+        self.logger.info("Gerados %s", len(merge_statements) comandos MERGE tradicionais")
         return merge_statements
 
     def generate_insert_statements_with_sqlalchemy(
@@ -943,7 +943,7 @@ class SQLAlchemySchemaMapper:
                 )
                 continue
 
-        self.logger.info(f"Gerados {len(insert_statements)} comandos INSERT SQLAlchemy")
+        self.logger.info("Gerados %s", len(insert_statements) comandos INSERT SQLAlchemy")
         return insert_statements
 
     def run_incremental_pipeline(
@@ -964,7 +964,7 @@ class SQLAlchemySchemaMapper:
             self.logger.info(
                 "=== Pipeline Incremental Avançado (Bibliotecas Reutilizadas) ===",
             )
-            self.logger.info(f"Recurso: {resource}")
+            self.logger.info("Recurso: %s", resource")
 
             # Inicializar clientes
             self.initialize_clients()
@@ -988,7 +988,7 @@ class SQLAlchemySchemaMapper:
                 self.logger.info("Usando extração padrão com limite")
                 data = self.extract_from_wms(resource, **query_params)
 
-            self.logger.info(f"Total de registros coletados e mapeados: {len(data)}")
+            self.logger.info("Total de registros coletados e mapeados: %s", len(data)")
 
             if data:
                 # CORREÇÃO: Gerar comandos INSERT usando SQLAlchemy
@@ -1024,7 +1024,7 @@ class SQLAlchemySchemaMapper:
                 self.logger.info("WmsClient finalizado")
 
         except Exception as e:
-            self.logger.warning(f"Erro durante cleanup: {e!s}")
+            self.logger.warning("Erro durante cleanup: %s", e!s")
 
     def _discover_additional_fields_from_data(
         self,
@@ -1109,7 +1109,7 @@ class SQLAlchemySchemaMapper:
             )
 
         except Exception as e:
-            self.logger.warning(f"Erro na descoberta complementar de campos: {e}")
+            self.logger.warning("Erro na descoberta complementar de campos: %s", e")
 
 
 class WmsToOracleAdvancedPipeline:
@@ -1235,13 +1235,13 @@ class WmsToOracleAdvancedPipeline:
             wms_env_path = Path(__file__).parent / "dc-oracle-wms" / ".env"
             if wms_env_path.exists():
                 load_dotenv(wms_env_path)
-                self.logger.info(f"Carregadas variáveis WMS de {wms_env_path}")
+                self.logger.info("Carregadas variáveis WMS de %s", wms_env_path")
 
             # Carregar .env do projeto Oracle DB
             db_env_path = Path(__file__).parent / "dc-oracle-db" / ".env"
             if db_env_path.exists():
                 load_dotenv(db_env_path)
-                self.logger.info(f"Carregadas variáveis DB de {db_env_path}")
+                self.logger.info("Carregadas variáveis DB de %s", db_env_path")
 
             # Inicializar WmsClient usando configuração do ambiente
             self.logger.info("Inicializando WmsClient...")
@@ -1323,11 +1323,11 @@ class WmsToOracleAdvancedPipeline:
 
                 # Log detalhado dos primeiros campos
                 field_names = list(wms_fields_from_schema.keys())
-                self.logger.info(f"Primeiros 10 campos: {field_names[:10]}")
-                self.logger.info(f"Últimos 10 campos: {field_names[-10:]}")
+                self.logger.info("Primeiros 10 campos: %s", field_names[:10]")
+                self.logger.info("Últimos 10 campos: %s", field_names[-10:]")
 
             except Exception as e:
-                self.logger.warning(f"Erro ao carregar schema via SchemaManager: {e}")
+                self.logger.warning("Erro ao carregar schema via SchemaManager: %s", e")
                 # Fallback para método anterior
                 self.logger.info("Usando fallback para método anterior...")
                 response = self.wms_client.describe(wms_entity)
@@ -1439,8 +1439,8 @@ class WmsToOracleAdvancedPipeline:
                 for field_info in wms_fields.values()
                 if isinstance(field_info, dict) and field_info.get("required", False)
             )
-            self.logger.info(f"Campos obrigatórios: {required_fields}")
-            self.logger.info(f"Campos opcionais: {len(wms_fields) - required_fields}")
+            self.logger.info("Campos obrigatórios: %s", required_fields")
+            self.logger.info("Campos opcionais: %s", len(wms_fields) - required_fields")
 
             # ETAPA 4: Descobrir schema Oracle usando SchemaExtractor
             self.logger.info(
@@ -1514,8 +1514,8 @@ class WmsToOracleAdvancedPipeline:
             self.logger.info(
                 f"Campos WMS (dados reais complementares): {len(wms_fields_from_data)}"
             )
-            self.logger.info(f"Total campos WMS: {len(wms_fields)}")
-            self.logger.info(f"Campos Oracle disponíveis: {len(oracle_field_info)}")
+            self.logger.info("Total campos WMS: %s", len(wms_fields)")
+            self.logger.info("Campos Oracle disponíveis: %s", len(oracle_field_info)")
             self.logger.info("SQLAlchemy mapper inicializado com sucesso")
 
             # CORREÇÃO: Não verificar field_mapping aqui, pois será criado dinamicamente
@@ -1553,7 +1553,7 @@ class WmsToOracleAdvancedPipeline:
         if limit is None:
             limit = self.config["wms"]["max_records_per_request"]
 
-        self.logger.info(f"Extraindo dados de {resource} do WMS (limite: {limit})")
+        self.logger.info("Extraindo dados de %s", resource do WMS (limite: %s", limit)")
 
         try:
             # CORREÇÃO: Usar apenas search simples sem filtros avançados
@@ -1571,7 +1571,7 @@ class WmsToOracleAdvancedPipeline:
             )
 
             if not response.success:
-                self.logger.warning(f"Erro na busca WMS: {response.error}")
+                self.logger.warning("Erro na busca WMS: %s", response.error")
                 return []
 
             # Extrair dados da resposta
@@ -1594,7 +1594,7 @@ class WmsToOracleAdvancedPipeline:
                 return []
 
             page_count = len(page_records)
-            self.logger.info(f"Página: {page_count} registros extraídos")
+            self.logger.info("Página: %s", page_count registros extraídos")
 
             # DESCOBERTA DINÂMICA: Descobrir campos adicionais dos dados reais (incluindo FKs)
             self._discover_additional_fields_from_data(page_records, resource)
@@ -1663,7 +1663,7 @@ class WmsToOracleAdvancedPipeline:
             return oracle_data
 
         except Exception as e:
-            self.logger.warning(f"Erro ao mapear registro WMS usando SQLAlchemy: {e}")
+            self.logger.warning("Erro ao mapear registro WMS usando SQLAlchemy: %s", e")
             return None
 
     def _process_wms_record(self, record: Any, resource: str) -> dict | None:
@@ -1689,7 +1689,7 @@ class WmsToOracleAdvancedPipeline:
             elif hasattr(record, "__dict__"):
                 fields = dict(record.__dict__)
             else:
-                self.logger.warning(f"Tipo de registro não suportado: {type(record)}")
+                self.logger.warning("Tipo de registro não suportado: %s", type(record)")
                 return None
 
             if not fields:
@@ -1843,7 +1843,7 @@ class WmsToOracleAdvancedPipeline:
             return fields
 
         except Exception as e:
-            self.logger.warning(f"Erro ao processar registro WMS: {e}")
+            self.logger.warning("Erro ao processar registro WMS: %s", e")
             return None
 
     def _parse_wms_result_string(
@@ -1892,7 +1892,7 @@ class WmsToOracleAdvancedPipeline:
                 return fields
 
         except Exception as e:
-            self.logger.warning(f"Erro ao processar string WMS '{result_string}': {e}")
+            self.logger.warning("Erro ao processar string WMS '%s", result_string': %s", e")
 
         return None
 
@@ -1911,7 +1911,7 @@ class WmsToOracleAdvancedPipeline:
             self.logger.info("Nenhum comando MERGE para executar")
             return
 
-        self.logger.info(f"Executando {len(merge_statements)} comandos MERGE no Oracle")
+        self.logger.info("Executando %s", len(merge_statements) comandos MERGE no Oracle")
 
         try:
             # Executar comandos em transação

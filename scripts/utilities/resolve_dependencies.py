@@ -40,7 +40,7 @@ class DependencyResolver:
 
         return projects
 
-    def analyze_conflicts(self):
+    def analyze_conflicts(self) -> Any:
         """Analisa conflitos entre projetos."""
         console.print(
             Panel.fit("🔍 Analisando Conflitos de Dependências", style="bold blue"),
@@ -71,7 +71,7 @@ class DependencyResolver:
 
         return conflicts
 
-    def resolve_version_conflicts(self, conflicts: dict):
+    def resolve_version_conflicts(self, conflicts: dict) -> Any:
         """Propõe resoluções para conflitos de versão."""
         console.print("\n📊 Análise de Conflitos:")
 
@@ -178,7 +178,8 @@ class DependencyResolver:
             console=console,
         ) as progress:
             task = progress.add_task(
-                "Atualizando projetos...", total=len(self.projects),
+                "Atualizando projetos...",
+                total=len(self.projects),
             )
 
             for project_path in self.projects:

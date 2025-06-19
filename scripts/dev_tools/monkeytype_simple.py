@@ -7,7 +7,7 @@ import sys
 from pathlib import Path
 
 
-def run_tests():
+def run_tests() -> Any:
     """Executa testes com MonkeyType."""
     cmd = ["monkeytype", "run", "-m", "pytest"]
     print(f"Executando: {' '.join(cmd)}")
@@ -15,7 +15,7 @@ def run_tests():
     return result.returncode
 
 
-def list_modules():
+def list_modules() -> Any:
     """Lista os módulos com informações de tipo coletadas."""
     cmd = ["monkeytype", "list-modules"]
     print(f"Executando: {' '.join(cmd)}")
@@ -23,7 +23,7 @@ def list_modules():
     return result.returncode
 
 
-def apply_types(module):
+def apply_types(module) -> Any:
     """Aplica tipos a um módulo."""
     # Verificar se o arquivo existe
     module_parts = module.split(".")
@@ -55,7 +55,7 @@ def apply_types(module):
     return result.returncode
 
 
-def main():
+def main() -> None:
     """Função principal."""
     parser = argparse.ArgumentParser(description="MonkeyType para DCApiX")
     subparsers = parser.add_subparsers(dest="command", help="Comando a executar")
