@@ -13,7 +13,7 @@ import subprocess
 from pathlib import Path
 
 
-def run_fixer_script(script_name, dry_run=False):
+def run_fixer_script(script_name, dry_run=False) -> Any:
     """Run a fixer script with the appropriate arguments.
 
     Args:

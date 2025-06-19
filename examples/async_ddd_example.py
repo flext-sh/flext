@@ -49,7 +49,7 @@ class ExampleResourceService:
 
     async def handle_create_resource(self, command: Any) -> dict[str, Any]:
         """Handle resource creation command."""
-        logger.info(f"Creating resource: {command.resource_name}")
+        logger.info("Creating resource: %s", command.resource_name")
 
         # Simulate resource creation logic
         resource_id = str(uuid4())
@@ -86,7 +86,7 @@ class ExampleResourceService:
 
     async def handle_process_data(self, command: Any) -> dict[str, Any]:
         """Handle data processing command."""
-        logger.info(f"Processing data from: {command.data_source}")
+        logger.info("Processing data from: %s", command.data_source")
 
         # Simulate data processing
         import random
@@ -149,7 +149,7 @@ class ExampleResourceService:
         )
 
         if event.errors:
-            logger.warning(f"Processing had {len(event.errors)} errors: {event.errors}")
+            logger.warning("Processing had %s", len(event.errors) errors: %s", event.errors")
 
         # Example side effects:
         # - Update dashboard metrics
@@ -198,7 +198,7 @@ async def demonstrate_async_ddd_workflow() -> None:
         # In a real scenario, this would be sent to the queue
         # For demo purposes, we'll call the handler directly
         result = await service.handle_create_resource(create_command_obj)
-        logger.info(f"Create resource result: {result}")
+        logger.info("Create resource result: %s", result")
     except Exception as e:
         logger.exception(f"Create resource failed: {e}")
 
@@ -217,7 +217,7 @@ async def demonstrate_async_ddd_workflow() -> None:
     try:
         # In a real scenario, this would be sent to the queue
         result = await service.handle_process_data(process_command_obj)
-        logger.info(f"Process data result: {result}")
+        logger.info("Process data result: %s", result")
     except Exception as e:
         logger.exception(f"Process data failed: {e}")
 

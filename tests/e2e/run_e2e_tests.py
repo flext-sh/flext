@@ -12,7 +12,7 @@ import sys
 from pathlib import Path
 
 
-def setup_environment():
+def setup_environment() -> Any:
     """Set up the test environment."""
     e2e_dir = Path(__file__).parent
 
@@ -39,17 +39,17 @@ def setup_environment():
     return not missing_packages
 
 
-def build_containers():
+def build_containers() -> Any:
     """Build Docker containers if needed."""
     subprocess.run(["docker-compose", "build"], check=True)
 
 
-def start_containers():
+def start_containers() -> Any:
     """Start Docker containers."""
     subprocess.run(["docker-compose", "up", "-d"], check=True)
 
 
-def stop_containers(keep=False):
+def stop_containers(keep=False) -> Any:
     """Stop Docker containers."""
     if not keep:
         subprocess.run(
@@ -57,7 +57,7 @@ def stop_containers(keep=False):
         )
 
 
-def run_tests(args):
+def run_tests(args) -> Any:
     """Run the test suite."""
     pytest_args = [
         "pytest",
@@ -103,7 +103,7 @@ def run_tests(args):
     return subprocess.run(pytest_args, check=False).returncode
 
 
-def show_logs(service=None):
+def show_logs(service=None) -> Any:
     """Show Docker container logs."""
     cmd = ["docker-compose", "logs", "--tail=100"]
     if service:
@@ -112,7 +112,7 @@ def show_logs(service=None):
     subprocess.run(cmd, check=False)
 
 
-def main():
+def main() -> None:
     """Main entry point."""
     parser = argparse.ArgumentParser(
         description="Run end-to-end tests for LDAP components"

@@ -124,7 +124,7 @@ class TestEdgeCases:
             if "García" in entry.get("sn", ""):
                 assert "í" in entry["sn"], "UTF-8 not preserved"
 
-    def test_large_attribute_values(self, ldap_source_connection, tap_ldap_config):
+    def test_large_attribute_values(self, ldap_source_connection, tap_ldap_config) -> Any:
         """Test handling of large attribute values."""
         source_helper = LDAPTestHelper(ldap_source_connection)
 
@@ -207,7 +207,7 @@ class TestEdgeCases:
         assert "group_b" in group_cns
         assert "group_c" in group_cns
 
-    def test_binary_attribute_handling(self, ldap_source_connection, tap_ldap_config):
+    def test_binary_attribute_handling(self, ldap_source_connection, tap_ldap_config) -> Any:
         """Test handling of binary attributes like photos."""
         source_helper = LDAPTestHelper(ldap_source_connection)
 
@@ -270,7 +270,7 @@ class TestEdgeCases:
 
             assert found_photo_user, "User with binary attribute not found"
 
-    def test_pagination_edge_cases(self, ldap_source_connection, tap_ldap_config):
+    def test_pagination_edge_cases(self, ldap_source_connection, tap_ldap_config) -> Any:
         """Test pagination with exact page boundaries."""
         source_helper = LDAPTestHelper(ldap_source_connection)
 
@@ -319,7 +319,7 @@ class TestEdgeCases:
             base_dn="dc=source,dc=example,dc=com", prefix="pagetest"
         )
 
-    def test_connection_failure_recovery(self, tap_ldap_config, docker_client):
+    def test_connection_failure_recovery(self, tap_ldap_config, docker_client) -> Any:
         """Test recovery from connection failures."""
         # Use invalid config to simulate connection failure
         bad_config = tap_ldap_config.copy()

@@ -11,27 +11,27 @@
 Este documento é um guia de mapeamento entre os dados do WMS e os campos esperados pela API de Inventory Staged Transactions da Oracle Cloud. Em linhas gerais ele:
 
 • Define quais colunas do WMS alimentam cada campo do payload INV, por exemplo
- – TransactionInterfaceId = concat(group_nbr, seq_nbr)
- – TransactionHeaderId = group_nbr
- – SourceCode, SourceLineId, SourceHeaderId são hard-coded (“Cloud WMS”, “0”, “0”)
- – TransactionMode = “1”
+– TransactionInterfaceId = concat(group_nbr, seq_nbr)
+– TransactionHeaderId = group_nbr
+– SourceCode, SourceLineId, SourceHeaderId são hard-coded (“Cloud WMS”, “0”, “0”)
+– TransactionMode = “1”
 
 • Especifica regras de escolha de valores
- – TransactionQuantity: usa adj_qty se existir, senão orig_qty
- – TransactionUnitOfMeasure/UOM: pode vir de propriedade de integração ou do campo qty_uom_code
- – SubinventoryCode e TransactionTypeName: determinadas pela presença ou ausência de bucket atual/ anterior
+– TransactionQuantity: usa adj_qty se existir, senão orig_qty
+– TransactionUnitOfMeasure/UOM: pode vir de propriedade de integração ou do campo qty_uom_code
+– SubinventoryCode e TransactionTypeName: determinadas pela presença ou ausência de bucket atual/ anterior
 
 • Mapeia demais campos básicos
- – TransactionDate ← create_ts
- – ItemNumber ← substring-before(item_alternate_code, ‘~^~’)
- – OrganizationName ← ref_value_3/4/6/10 quando marcados como “FCN”
- – ExternalSystemtransactionReference ← group_nbr + “-” + seq_nbr
- – UseCurrentCost = true
+– TransactionDate ← create_ts
+– ItemNumber ← substring-before(item_alternate_code, ‘~^~’)
+– OrganizationName ← ref_value_3/4/6/10 quando marcados como “FCN”
+– ExternalSystemtransactionReference ← group_nbr + “-” + seq_nbr
+– UseCurrentCost = true
 
 • Contém seções específicas para controle de lotes, séries e lotes com séries
- – Lotes: LotNbr e LotExpirationDate vindos de determinados ref_value_X (códigos “BAT”, “EXP”)
- – Séries: FmSerialNumber e ToSerialNumber = serial_nbr
- – Para itens com ambos controles detalha objetos JSON conforme a API (lots, serials, lots-lot-serials)
+– Lotes: LotNbr e LotExpirationDate vindos de determinados ref_value_X (códigos “BAT”, “EXP”)
+– Séries: FmSerialNumber e ToSerialNumber = serial_nbr
+– Para itens com ambos controles detalha objetos JSON conforme a API (lots, serials, lots-lot-serials)
 
 • Aponta as URLs das APIs REST relevantes (Inventory Staged Transactions) da documentação Oracle SaaS.
 

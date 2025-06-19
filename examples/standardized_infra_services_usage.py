@@ -181,13 +181,13 @@ async def example_with_test_engine() -> None:
         def __init__(self) -> None:
             self.data = {}
 
-        def get(self, key):
+        def get(self, key) -> Any:
             return self.data.get(key)
 
         def set(self, key, value, ttl=None) -> None:
             self.data[key] = value
 
-        def exists(self, key):
+        def exists(self, key) -> Any:
             return key in self.data
 
     # Create service and set test engine

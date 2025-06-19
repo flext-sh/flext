@@ -49,7 +49,7 @@ def colorize(text: str, color: str) -> str:
     return f"{COLORS.get(color, '')}{text}{COLORS['NC']}"
 
 
-def parse_arguments():
+def parse_arguments() -> Any:
     """Parse command line arguments."""
     parser = argparse.ArgumentParser(
         description="Document Python scripts in the workspace",

@@ -193,10 +193,10 @@ import json
 from functools import wraps
 
 
-def cached(ttl: int = 300):
+def cached(ttl: int = 300) -> Any:
     """Cache decorator for endpoints."""
 
-    def decorator(func):
+    def decorator(func) -> Any:
         @wraps(func)
         async def wrapper(*args, **kwargs):
             # Get cache service from dependencies

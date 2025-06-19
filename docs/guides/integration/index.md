@@ -22,6 +22,7 @@
 
 ## Quick Links
 
+- [🎼 Meltano Integration Guide](./meltano-integration.md) - Complete FLX-Meltano integration guide
 - [🎼 Meltano Plugins Integration](./meltano-plugins-integration.md) - Meltano plugin development and integration
 - [🔧 Meltano Framework Integration](./meltano-framework-integration.md) - Framework-level Meltano integration
 - [📋 Meltano FLX Integration Plan](./meltano-flx-integration-plan.md) - Comprehensive integration roadmap
@@ -35,9 +36,10 @@
 
 **Data Pipeline Integration:**
 
-1. [Meltano Plugins Integration](./meltano-plugins-integration.md)
-2. [Meltano Framework Integration](./meltano-framework-integration.md)
-3. [Meltano FLX Integration Plan](./meltano-flx-integration-plan.md)
+1. [Meltano Integration Guide](./meltano-integration.md) - Complete FLX-Meltano integration
+2. [Meltano Plugins Integration](./meltano-plugins-integration.md) - Plugin development and integration
+3. [Meltano Framework Integration](./meltano-framework-integration.md) - Framework-level integration
+4. [Meltano FLX Integration Plan](./meltano-flx-integration-plan.md) - Comprehensive roadmap
 
 ### Legacy System Integration
 
@@ -56,30 +58,30 @@
 
 ### Integration Engineers
 
-→ [Meltano Plugins Integration](./meltano-plugins-integration.md)  
-→ [Integration Examples & Patterns](./integration-examples-patterns.md)  
-→ [Meltano Framework Integration](./meltano-framework-integration.md)  
+→ [Meltano Plugins Integration](./meltano-plugins-integration.md)
+→ [Integration Examples & Patterns](./integration-examples-patterns.md)
+→ [Meltano Framework Integration](./meltano-framework-integration.md)
 → [Meltano FLX Integration Plan](./meltano-flx-integration-plan.md)
 
 ### Data Engineers
 
-→ [Meltano FLX Integration Plan](./meltano-flx-integration-plan.md)  
-→ [Meltano Plugins Integration](./meltano-plugins-integration.md)  
-→ [Integration Examples & Patterns](./integration-examples-patterns.md)  
+→ [Meltano FLX Integration Plan](./meltano-flx-integration-plan.md)
+→ [Meltano Plugins Integration](./meltano-plugins-integration.md)
+→ [Integration Examples & Patterns](./integration-examples-patterns.md)
 → [Meltano Framework Integration](./meltano-framework-integration.md)
 
 ### Legacy Migration Teams
 
-→ [Legacy Integrations Guide](./legacy-integrations-guide.md)  
-→ [Legacy Integrations Reference](./legacy-integrations-reference.md)  
-→ [Integration Examples & Patterns](./integration-examples-patterns.md)  
+→ [Legacy Integrations Guide](./legacy-integrations-guide.md)
+→ [Legacy Integrations Reference](./legacy-integrations-reference.md)
+→ [Integration Examples & Patterns](./integration-examples-patterns.md)
 → [Meltano Framework Integration](./meltano-framework-integration.md)
 
 ### Solution Architects
 
-→ [Meltano FLX Integration Plan](./meltano-flx-integration-plan.md)  
-→ [Integration Examples & Patterns](./integration-examples-patterns.md)  
-→ [Legacy Integrations Guide](./legacy-integrations-guide.md)  
+→ [Meltano FLX Integration Plan](./meltano-flx-integration-plan.md)
+→ [Integration Examples & Patterns](./integration-examples-patterns.md)
+→ [Legacy Integrations Guide](./legacy-integrations-guide.md)
 → [Meltano Framework Integration](./meltano-framework-integration.md)
 
 ## 🔗 **Cross-Section Navigation**

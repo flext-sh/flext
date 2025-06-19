@@ -198,7 +198,7 @@ def scan_directory(directory: str) -> list[dict[str, Any]]:
     return all_gaps
 
 
-def main():
+def main() -> None:
     """Main function to scan FLX project."""
     flx_dir = "/home/marlonsc/pyauto/flx/src/flx"
 

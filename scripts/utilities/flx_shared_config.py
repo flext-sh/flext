@@ -139,9 +139,9 @@ class FlxHttpConfig(FlxAdapterConfig):
     )
 
 
-def create_config_from_dict[
-    T: "BaseSettings"
-](config_class: type[T], config_dict: dict[str, Any]) -> T:
+def create_config_from_dict[T: "BaseSettings"](
+    config_class: type[T], config_dict: dict[str, Any]
+) -> T:
     """Create configuration instance from dictionary.
 
     Args:
@@ -157,9 +157,9 @@ def create_config_from_dict[
     return config_class(**config_dict)
 
 
-def load_config_from_file[
-    T: "BaseSettings"
-](config_class: type[T], file_path: str | Path) -> T:
+def load_config_from_file[T: "BaseSettings"](
+    config_class: type[T], file_path: str | Path
+) -> T:
     """Load configuration from file.
 
     Args:

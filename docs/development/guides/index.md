@@ -38,9 +38,10 @@ The Guides Hub provides comprehensive development tutorials and integration patt
 | **Category**                                              | **Focus Area**          | **Count** | **Status**    | **Key Features**                             |
 | --------------------------------------------------------- | ----------------------- | --------- | ------------- | -------------------------------------------- |
 | **[Environment Setup](./environment-configuration.md)**   | Development Environment | 3 guides  | ✅ Production | Automated setup, dependency management       |
-| **[Singer SDK Integration](./singer_sdk-integration.md)** | Data Integration        | 3 guides  | ✅ Production | Meltano plugins, data pipelines              |
+| **[Singer SDK Integration](./singer-sdk-integration.md)** | Data Integration        | 3 guides  | ✅ Production | Meltano plugins, data pipelines              |
 | **[Schema Management](./schema-management-guide.md)**     | Database Operations     | 2 guides  | ✅ Production | Schema versioning, migrations                |
 | **[Development Tools](./cli-implementation.md)**          | Automation & Quality    | 4 guides  | ✅ Production | CLI tools, type annotations, troubleshooting |
+| **[Adapter Implementation](./adapter-implementation.md)** | Framework Architecture  | 1 guide   | ✅ Production | Hexagonal architecture, adapter patterns     |
 
 ### **🚀 Enterprise Guide Features**
 
@@ -60,9 +61,10 @@ The Guides Hub provides comprehensive development tutorials and integration patt
 
 ### **🏗️ Integration Specialists**
 
-1. **Data Integration**: [Singer SDK Integration](./singer_sdk-integration.md)
+1. **Data Integration**: [Singer SDK Integration](./singer-sdk-integration.md)
 2. **Database Operations**: [Schema Management Guide](./schema-management-guide.md)
 3. **Plugin Development**: [Meltano Contributing Guide](./meltano-contributing-guide.md)
+4. **Adapter Development**: [Adapter Implementation](./adapter-implementation.md)
 
 ### **⚙️ Quality Engineers**
 

@@ -1,0 +1,76 @@
+# Emergency Maintenance Configuration
+# For rapid fixing of critical issues
+
+# Process all projects in emergency
+target_projects: []
+
+# Minimal exclusions for speed
+exclude_patterns:
+  - __pycache__
+  - .venv
+  - .git
+  - node_modules
+
+# Focus on critical fixes only
+fix_categories:
+  # Critical syntax fixes
+  type_annotations: true
+  logging_patterns: true
+  exception_handling: true
+  unused_variables: true
+  undefined_variables: true
+  type_checking_imports: true
+
+  # Disable non-critical
+  import_sorting: false
+  string_quotes: false
+  docstring_formatting: false
+  line_length: false
+  blank_lines: false
+  trailing_whitespace: false
+  indentation: false
+  f_string_conversion: false
+  comprehension_optimization: false
+  method_ordering: false
+  class_structure: false
+  sql_injection_prevention: false
+  hardcoded_secrets: false
+  assert_statements: false
+  eval_usage: false
+  loop_optimizations: false
+  dict_get_usage: false
+  set_operations: false
+  string_concatenation: false
+  asyncio_patterns: true  # Keep this - critical for performance
+  dependency_injection: false
+  hexagonal_architecture: false
+  ddd_patterns: false
+  cqrs_compliance: false
+  markdownlint_compliance: false
+  readme_coverage: false
+  api_documentation: false
+  code_examples: false
+
+# Maximum speed processing
+processing_mode: parallel
+
+# Aggressive settings for emergency
+safety:
+  validate_syntax: true      # Still validate to avoid breaking
+  max_changes_per_file: 100  # Allow more changes
+  create_backup: false       # Skip backups for speed
+  rollback_on_error: true    # Still rollback on errors
+  dry_run: false
+  parallel_workers: 16       # Maximum parallel processing
+
+# Minimal reporting for speed
+metrics:
+  detailed_report: false
+  json_output: false
+  html_report: false
+  metrics_file: null
+  include_timing: true
+
+# Minimal logging
+log_level: WARNING
+log_file: null

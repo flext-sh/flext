@@ -11,7 +11,7 @@ from .ldif_interface import ILdifProcessor
 class StandardLdifProcessor(BaseProcessor, ILdifProcessor):
     """Standard LDIF processor with essential functionality."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__("StandardLdifProcessor")
 
     def parse_file(self, filepath: Path) -> list[dict[str, Any]]:

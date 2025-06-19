@@ -204,7 +204,9 @@ class ProjectStandardizer:
             return tomli.load(f)
 
     def merge_configs(
-        self, current: dict[str, Any], project_path: Path,
+        self,
+        current: dict[str, Any],
+        project_path: Path,
     ) -> dict[str, Any]:
         """Merge current configuration with standards."""
         result = current.copy()
@@ -301,7 +303,8 @@ class ProjectStandardizer:
             console=console,
         ) as progress:
             task = progress.add_task(
-                "Padronizando projetos...", total=len(self.projects),
+                "Padronizando projetos...",
+                total=len(self.projects),
             )
 
             for project_path in self.projects:

@@ -63,7 +63,12 @@ def read_problem_files(input_file: str, min_errors: int) -> list[str]:
     return problem_files
 
 
-def update_pyproject_toml(pyproject_file: str, problem_files: list[tuple[str, int]], max_files: int, dry_run: bool) -> None:
+def update_pyproject_toml(
+    pyproject_file: str,
+    problem_files: list[tuple[str, int]],
+    max_files: int,
+    dry_run: bool,
+) -> None:
     """Atualiza o pyproject.toml com as exclusões."""
     with open(pyproject_file, encoding="utf-8") as f:
         content = f.read()

@@ -13,13 +13,13 @@ Este documento descreve o mapeamento entre campos do WMS e colunas da interface 
 • orderdtl**ship_request_line**in → ShipmentLine
 • lock_code → ExceptionCode
 • lock_description → ExceptionName
- – Valor padrão se vazio: “Shipment Line on Hold for Update”
+– Valor padrão se vazio: “Shipment Line on Hold for Update”
 • comments → ExceptionComments
- – Valor padrão se vazio: “The shipment line was placed on hold by a shipment request for update”
+– Valor padrão se vazio: “The shipment line was placed on hold by a shipment request for update”
 • autocreate_lock_flg → True
 • Chamadas de API:
- – bulk_lock → ActionType = “APPLY_HOLD” (LOCK)
- – bulk_Unlock → ActionType = “RELEASE_HOLD” (RELEASELOCK)
+– bulk_lock → ActionType = “APPLY_HOLD” (LOCK)
+– bulk_Unlock → ActionType = “RELEASE_HOLD” (RELEASELOCK)
 • Indica sucesso quando o elemento failure_count na resposta XML é igual a 0.
 
 ## Conteúdo extraído

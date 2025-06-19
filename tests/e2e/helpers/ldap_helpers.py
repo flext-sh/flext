@@ -11,7 +11,7 @@ from ldap3.core.exceptions import LDAPException
 class LDAPTestHelper:
     """Helper class for LDAP operations in tests."""
 
-    def __init__(self, connection: Connection):
+    def __init__(self, connection: Connection) -> None:
         self.connection = connection
 
     def create_test_user(self, uid: str, base_dn: str, **attributes) -> bool:
@@ -250,7 +250,7 @@ class LDAPTestHelper:
         sha.update(salt.encode())
         return "{SSHA}" + base64.b64encode(sha.digest() + salt.encode()).decode()
 
-    def cleanup_test_entries(self, base_dn: str, prefix: str = "test"):
+    def cleanup_test_entries(self, base_dn: str, prefix: str = "test") -> Any:
         """Clean up test entries created during tests."""
         # Find all test entries
         self.connection.search(

@@ -122,7 +122,7 @@ def flx_auth_token_valid(file_path: Path) -> int:
 
     if re.search(pattern, content, re.DOTALL):
 
-        def replacement(m):
+        def replacement(m) -> Any:
             return m.group(0).replace("return ", "        return ")
 
         modified_content = re.sub(pattern, replacement, content, flags=re.DOTALL)
@@ -149,7 +149,7 @@ def flx_is_authenticated_method(file_path: Path) -> int:
 
     if re.search(pattern, content, re.DOTALL):
 
-        def replacement(m):
+        def replacement(m) -> Any:
             return m.group(0).replace("return ", "        return ")
 
         modified_content = re.sub(pattern, replacement, content, flags=re.DOTALL)
@@ -176,7 +176,7 @@ def flx_validate_token_method(file_path: Path) -> int:
 
     if re.search(pattern, content, re.DOTALL):
 
-        def replacement(m):
+        def replacement(m) -> Any:
             return m.group(0).replace("return ", "        return ")
 
         modified_content = re.sub(pattern, replacement, content, flags=re.DOTALL)
@@ -224,7 +224,7 @@ def flx_has_key_method(file_path: Path) -> int:
     # Fix the indentation in has_key method
     pattern = r'def has_key\(self, key: str\) -> bool:\s+"""(?:.*?)"""\s+return self\.get\(key, None\) is not None'
 
-    def replacement(m):
+    def replacement(m) -> Any:
         return m.group(0).replace("return ", "        return ")
 
     modified_content = re.sub(pattern, replacement, content, flags=re.DOTALL)

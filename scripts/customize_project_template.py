@@ -81,7 +81,7 @@ def load_pyproject(file_path: Path) -> dict[str, Any]:
         with open(file_path, "rb") as f:
             return tomllib.load(f)
     except Exception as e:
-        raise ValueError(f"Failed to load {file_path}: {e}")
+        raise ValueError(f"Failed to load {file_path}: {e}") from e
 
 
 def detect_project_type(project_name: str, project_path: Path) -> str:

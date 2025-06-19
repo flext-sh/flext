@@ -12,7 +12,7 @@ fake = Faker()
 class LDAPDataGenerator:
     """Generate realistic LDAP test data."""
 
-    def __init__(self, seed: int | None = None):
+    def __init__(self, seed: int | None = None) -> None:
         if seed:
             Faker.seed(seed)
             random.seed(seed)

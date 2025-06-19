@@ -455,7 +455,7 @@ class WebSocketConnection:
 class WebSocketManager:
     """Manages WebSocket connections and broadcasting."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.active_connections: dict[str, WebSocketConnection] = {}
 
     async def connect(self, websocket: WebSocket, client_id: str) -> None:
@@ -463,13 +463,13 @@ class WebSocketManager:
         await websocket.accept()
         connection = WebSocketConnection(websocket, client_id)
         self.active_connections[client_id] = connection
-        logger.info(f"WebSocket client {client_id} connected")
+        logger.info("WebSocket client %s", client_id connected")
 
     def disconnect(self, client_id: str) -> None:
         """Remove WebSocket connection."""
         if client_id in self.active_connections:
             del self.active_connections[client_id]
-            logger.info(f"WebSocket client {client_id} disconnected")
+            logger.info("WebSocket client %s", client_id disconnected")
 
     async def broadcast(self, message: dict[str, Any]) -> None:
         """Broadcast message to all connected clients."""

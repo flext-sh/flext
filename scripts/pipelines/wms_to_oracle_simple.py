@@ -88,7 +88,7 @@ class SimpleWmsToOraclePipeline:
 
         """
         try:
-            self.logger.info(f"Descobrindo schema Oracle para tabela: {table_name}")
+            self.logger.info("Descobrindo schema Oracle para tabela: %s", table_name")
 
             with self.db_client.get_connection() as conn:
                 extractor = SchemaExtractor(conn)
@@ -128,7 +128,7 @@ class SimpleWmsToOraclePipeline:
 
         """
         try:
-            self.logger.info(f"Extraindo {limit} registros de {resource} do WMS")
+            self.logger.info("Extraindo %s", limit registros de %s", resource do WMS")
 
             response = self.wms_client.search(
                 entity_name=resource,
@@ -136,7 +136,7 @@ class SimpleWmsToOraclePipeline:
             )
 
             if not response.success:
-                self.logger.error(f"Erro na busca WMS: {response.error}")
+                self.logger.error("Erro na busca WMS: %s", response.error")
                 return []
 
             # Extrair registros
@@ -148,7 +148,7 @@ class SimpleWmsToOraclePipeline:
             else:
                 records = [data] if data else []
 
-            self.logger.info(f"Extraídos {len(records)} registros do WMS")
+            self.logger.info("Extraídos %s", len(records) registros do WMS")
 
             # Processar registros
             processed_records = []
@@ -157,7 +157,7 @@ class SimpleWmsToOraclePipeline:
                 if processed:
                     processed_records.append(processed)
 
-            self.logger.info(f"Processados {len(processed_records)} registros")
+            self.logger.info("Processados %s", len(processed_records) registros")
             return processed_records
 
         except Exception as e:
@@ -178,7 +178,7 @@ class SimpleWmsToOraclePipeline:
                 # Formato string: "order_hdr(id=2, status_id=99)"
                 # Extrair nome da entidade e campos
                 if not ("(" in record and ")" in record):
-                    self.logger.warning(f"Invalid string format for record: {record}")
+                    self.logger.warning("Invalid string format for record: %s", record")
                     return None
                 record.split("(")[0]
                 content = record.split("(")[1].split(")")[0]
@@ -198,7 +198,7 @@ class SimpleWmsToOraclePipeline:
             if not fields:
                 return None
 
-            self.logger.info(f"TOTAL de campos extraídos do WMS: {len(fields)} campos")
+            self.logger.info("TOTAL de campos extraídos do WMS: %s", len(fields) campos")
 
             # Processar FKs (foreign keys)
             processed_fields = {}
@@ -284,7 +284,7 @@ class SimpleWmsToOraclePipeline:
 
                 return fields
         except Exception as e:
-            self.logger.warning(f"Erro ao processar string WMS: {e}")
+            self.logger.warning("Erro ao processar string WMS: %s", e")
 
         return {}
 
@@ -303,7 +303,7 @@ class SimpleWmsToOraclePipeline:
         if not wms_records:
             return []
 
-        self.logger.info(f"Mapeando {len(wms_records)} registros WMS para Oracle")
+        self.logger.info("Mapeando %s", len(wms_records) registros WMS para Oracle")
 
         # Descobrir mapeamentos
         sample_record = wms_records[0]
@@ -328,7 +328,7 @@ class SimpleWmsToOraclePipeline:
                 # Usar mapeamento normal
                 self.field_mapping[wms_field] = oracle_field
 
-        self.logger.info(f"Mapeamentos criados: {len(self.field_mapping)}")
+        self.logger.info("Mapeamentos criados: %s", len(self.field_mapping)")
         for wms_field, oracle_field in self.field_mapping.items():
             self.logger.debug(f"  {wms_field} -> {oracle_field}")
 
@@ -349,7 +349,7 @@ class SimpleWmsToOraclePipeline:
             if mapped_record:
                 mapped_records.append(mapped_record)
 
-        self.logger.info(f"Registros mapeados: {len(mapped_records)}")
+        self.logger.info("Registros mapeados: %s", len(mapped_records)")
 
         # Log do primeiro registro mapeado para debug
         if mapped_records:
@@ -478,7 +478,7 @@ class SimpleWmsToOraclePipeline:
         if not mapped_records:
             return []
 
-        self.logger.info(f"Gerando INSERT SQL para {len(mapped_records)} registros")
+        self.logger.info("Gerando INSERT SQL para %s", len(mapped_records) registros")
 
         insert_statements = []
 
@@ -571,7 +571,7 @@ class SimpleWmsToOraclePipeline:
             )
             insert_statements.append(insert_sql)
 
-        self.logger.info(f"Gerados {len(insert_statements)} comandos INSERT")
+        self.logger.info("Gerados %s", len(insert_statements) comandos INSERT")
 
         # Log do primeiro SQL para debug
         if insert_statements:
@@ -595,7 +595,7 @@ class SimpleWmsToOraclePipeline:
             self.logger.info("Nenhum comando SQL para executar")
             return
 
-        self.logger.info(f"Executando {len(sql_statements)} comandos SQL no Oracle")
+        self.logger.info("Executando %s", len(sql_statements) comandos SQL no Oracle")
 
         try:
             # CORREÇÃO: Usar commit=True em vez de transaction() para garantir persistência
@@ -605,7 +605,7 @@ class SimpleWmsToOraclePipeline:
                     self.logger.debug(f"SQL {i + 1}: {affected_rows} linhas afetadas")
 
                     if i == 0:  # Log do primeiro SQL
-                        self.logger.info(f"Primeiro SQL executado: {sql[:100]}...")
+                        self.logger.info("Primeiro SQL executado: %s", sql[:100]...")
 
                 except DbError as e:
                     self.logger.exception(f"Erro no SQL {i + 1}: {e}")
@@ -629,7 +629,7 @@ class SimpleWmsToOraclePipeline:
         """
         try:
             self.logger.info("=== INICIANDO PIPELINE SIMPLES ===")
-            self.logger.info(f"Recurso: {resource}, Limite: {limit}")
+            self.logger.info("Recurso: %s", resource, Limite: %s", limit")
 
             # 1. Inicializar clientes
             self.initialize_clients()

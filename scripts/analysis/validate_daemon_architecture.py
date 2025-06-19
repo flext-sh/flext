@@ -175,11 +175,14 @@ class ArchitectureValidator:
         elif isinstance(node, ast.ImportFrom) and node.module:
             self._validate_import_for_layer(node.module, filename, layer)
 
-    def _validate_import_for_layer(self, module: str, filename: str, layer: str) -> None:
+    def _validate_import_for_layer(
+        self, module: str, filename: str, layer: str
+    ) -> None:
         """Validate specific module import for layer."""
         # Domain layer (core.py) should not import adapters
-        if layer == "domain" and any(pattern in module for pattern in
-                                   ["fastapi", "uvicorn", "flx.adapters"]):
+        if layer == "domain" and any(
+            pattern in module for pattern in ["fastapi", "uvicorn", "flx.adapters"]
+        ):
             self.violations.append(
                 f"Domain layer ({filename}) imports adapter/infrastructure: {module}",
             )
@@ -208,9 +211,13 @@ class ArchitectureValidator:
         success = len(self.violations) == 0
 
         if success:
-            print(f"\n✅ Architecture validation PASSED (with {len(self.warnings)} warnings)")
+            print(
+                f"\n✅ Architecture validation PASSED (with {len(self.warnings)} warnings)"
+            )
         else:
-            print(f"\n❌ Architecture validation FAILED ({len(self.violations)} violations)")
+            print(
+                f"\n❌ Architecture validation FAILED ({len(self.violations)} violations)"
+            )
 
         print("\n📋 ARCHITECTURE PRINCIPLES:")
         print("  ✓ Domain layer independent of infrastructure")

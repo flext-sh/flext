@@ -22,13 +22,13 @@ DOCKER_COMPOSE_FILE = E2E_DIR / "docker-compose.yml"
 
 
 @pytest.fixture(scope="session")
-def docker_client():
+def docker_client() -> Any:
     """Create Docker client."""
     return docker.from_env()
 
 
 @pytest.fixture(scope="session")
-def docker_compose_up(docker_client):
+def docker_compose_up(docker_client) -> Any:
     """Start docker-compose services."""
 
     # Change to e2e directory
@@ -66,7 +66,7 @@ def docker_compose_up(docker_client):
         os.chdir(original_dir)
 
 
-def _wait_for_services(timeout: int = 60):
+def _wait_for_services(timeout: int = 60) -> Any:
     """Wait for all services to be ready."""
     start_time = time.time()
 
@@ -109,7 +109,7 @@ def _wait_for_services(timeout: int = 60):
 
 
 @pytest.fixture
-def ldap_source_connection(docker_compose_up):
+def ldap_source_connection(docker_compose_up) -> Any:
     """Create LDAP connection to source server."""
     server = Server("localhost", port=10389, get_info=ALL)
     conn = Connection(
@@ -123,7 +123,7 @@ def ldap_source_connection(docker_compose_up):
 
 
 @pytest.fixture
-def ldap_target_connection(docker_compose_up):
+def ldap_target_connection(docker_compose_up) -> Any:
     """Create LDAP connection to target server."""
     server = Server("localhost", port=11389, get_info=ALL)
     conn = Connection(
@@ -137,7 +137,7 @@ def ldap_target_connection(docker_compose_up):
 
 
 @pytest.fixture
-def postgres_connection(docker_compose_up):
+def postgres_connection(docker_compose_up) -> Any:
     """Create PostgreSQL connection."""
     conn = psycopg2.connect(
         host="localhost",
@@ -153,7 +153,7 @@ def postgres_connection(docker_compose_up):
 
 
 @pytest.fixture
-def clean_target_ldap(ldap_target_connection):
+def clean_target_ldap(ldap_target_connection) -> Any:
     """Clean target LDAP before test."""
     # Clean all entries except base structure
     ldap_target_connection.search(
@@ -175,7 +175,7 @@ def clean_target_ldap(ldap_target_connection):
 
 
 @pytest.fixture
-def clean_postgres(postgres_connection):
+def clean_postgres(postgres_connection) -> Any:
     """Clean PostgreSQL tables before test."""
     with postgres_connection.cursor() as cursor:
         cursor.execute("TRUNCATE TABLE ldap_raw.users CASCADE")
@@ -185,13 +185,13 @@ def clean_postgres(postgres_connection):
 
 
 @pytest.fixture
-def sync_id():
+def sync_id() -> Any:
     """Generate a unique sync ID for the test run."""
     return str(uuid4())
 
 
 @pytest.fixture
-def tap_ldap_config():
+def tap_ldap_config() -> Any:
     """Create tap-ldap configuration."""
     return {
         "host": "localhost",
@@ -208,7 +208,7 @@ def tap_ldap_config():
 
 
 @pytest.fixture
-def target_ldap_config():
+def target_ldap_config() -> Any:
     """Create target-ldap configuration."""
     return {
         "host": "localhost",
@@ -222,7 +222,7 @@ def target_ldap_config():
 
 
 @pytest.fixture
-def dbt_ldap_config():
+def dbt_ldap_config() -> Any:
     """Create dbt-ldap configuration."""
     return {
         "profiles_dir": str(E2E_DIR / "configs"),
@@ -234,7 +234,7 @@ def dbt_ldap_config():
 
 
 @pytest.fixture
-def flx_ldap_config(tap_ldap_config, target_ldap_config, dbt_ldap_config):
+def flx_ldap_config(tap_ldap_config, target_ldap_config, dbt_ldap_config) -> Any:
     """Create flx-ldap configuration."""
     return {
         "tap": {"name": "tap-ldap", "config": tap_ldap_config},
@@ -246,7 +246,7 @@ def flx_ldap_config(tap_ldap_config, target_ldap_config, dbt_ldap_config):
 
 
 @contextmanager
-def temporary_config_file(config: dict[str, Any], prefix: str = "config"):
+def temporary_config_file(config: dict[str, Any], prefix: str = "config") -> Any:
     """Create a temporary configuration file."""
     import tempfile
 

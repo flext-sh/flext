@@ -26,8 +26,8 @@ Este material é a especificação de integração “Receipt Advice for ASN” 
    • Formatos, comprimentos máximos, tabelas de origem (ex.: RCV_SHIPMENT_HEADERS) e observações sobre cada coluna.
 
 3. Mapeamento das linhas de detalhe (ShipmentLines e Serial/Lot)
-   • Seq*nbr (ShipmentLineNumber), action_code (“CREATE”), lpn_nbr, item_alternate_code (ItemNumber + “~^~” + ItemRevision), shipped_qty (quantidade por lotes), po_nbr, pallet_nbr, expiry_date, batch_nbr (LotNumber), line_schedule_nbrs, uom, e dezenas de campos genéricos (cust_field**, cust*date**, cust*decimal**, invn*attr**).
-   • Para rastreamento por série (“ib*shipment_serial_nbr”), lista de colunas específicas: action_code, facility_code, shipment_nbr, item_alternate_code, serial_nbr, batch_nbr, expiry_date, invn_attr*\*.
+   • Seq*nbr (ShipmentLineNumber), action_code (“CREATE”), lpn_nbr, item_alternate_code (ItemNumber + “~^~” + ItemRevision), shipped_qty (quantidade por lotes), po_nbr, pallet_nbr, expiry_date, batch_nbr (LotNumber), line_schedule_nbrs, uom, e dezenas de campos genéricos (cust_field\*\*, cust*date**, cust\*decimal**, invn*attr\*\*).
+   • Para rastreamento por série (“ib*shipment_serial_nbr”), lista de colunas específicas: action_code, facility_code, shipment_nbr, item_alternate_code, serial_nbr, batch_nbr, expiry_date, invn_attr\*\*.
 
 Complementa o documento um trecho sobre uso de REST API (receiptAdviceLines) com URLs de consulta e descrição dos campos, além de links para casos de teste no Confluence.
 

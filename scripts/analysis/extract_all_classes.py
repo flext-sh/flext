@@ -200,7 +200,7 @@ def extract_all_classes_and_functions(file_path: Path) -> dict[str, Any]:
         return {"error": str(e)}
 
 
-def generate_markdown_table():
+def generate_markdown_table() -> Any:
     """Generate complete markdown table with all classes and functions."""
     flx_path = Path("flx/src/flx")
     all_items = []

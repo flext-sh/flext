@@ -45,7 +45,7 @@ def find_temp_scripts(workspace_root: Path, max_age_days: int = 30) -> list[Path
         if not temp_dir.exists():
             continue
 
-        logger.info(f"Checking folder: {temp_dir}")
+        logger.info("Checking folder: %s", temp_dir")
 
         for script_file in temp_dir.glob("*.py"):
             # Check file age
@@ -84,7 +84,7 @@ def analyze_script_content(script_file: Path) -> dict:
             "is_temp_template": "TEMPORARY SCRIPT" in content,
         }
     except Exception as e:
-        logger.warning(f"Error analyzing script {script_file}: {e}")
+        logger.warning("Error analyzing script %s", script_file: %s", e")
         return {}
 
 
@@ -111,7 +111,7 @@ def cleanup_temp_scripts(max_age_days: int = 30, dry_run: bool = False) -> None:
         logger.info("No old temporary scripts found")
         return
 
-    logger.info(f"Found {len(old_scripts)} scripts for cleanup")
+    logger.info("Found %s", len(old_scripts) scripts for cleanup")
 
     removed_count = 0
     for script_file in old_scripts:
@@ -131,18 +131,18 @@ def cleanup_temp_scripts(max_age_days: int = 30, dry_run: bool = False) -> None:
 
             if not dry_run:
                 script_file.unlink()
-                logger.info(f"Script removed: {script_file}")
+                logger.info("Script removed: %s", script_file")
                 removed_count += 1
             else:
-                logger.info(f"[DRY RUN] Would remove: {script_file}")
+                logger.info("[DRY RUN] Would remove: %s", script_file")
 
         except Exception as e:
             logger.exception(f"Error removing script {script_file}: {e}")
 
     if dry_run:
-        logger.info(f"[DRY RUN] {len(old_scripts)} scripts would be removed")
+        logger.info("[DRY RUN] %s", len(old_scripts) scripts would be removed")
     else:
-        logger.info(f"Cleanup completed: {removed_count} scripts removed")
+        logger.info("Cleanup completed: %s", removed_count scripts removed")
 
 
 def main() -> None:
