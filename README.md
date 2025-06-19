@@ -7,31 +7,36 @@
 [![Framework](https://img.shields.io/badge/framework-0.4.0-orange.svg)](./flx/README.md)
 [![Enterprise](https://img.shields.io/badge/grade-enterprise-red.svg)](./docs/deployment/production-checklist.md)
 
-**Monorepo workspace containing 21+ interconnected projects for enterprise Python automation, Oracle integration, data pipelines, and LDAP management**
+## 📋 **Overview**
+
+Monorepo workspace containing 21+ interconnected projects for enterprise Python automation, Oracle integration, data pipelines, and LDAP management
 
 ---
 
 ## 🧭 **Navigation Hub**
 
 ### **🎯 Quick Access**
+
 - **📖 [Complete Documentation](./docs/index.md)** - Comprehensive guides and references
 - **🏗️ [Architecture Overview](./docs/architecture/index.md)** - Hexagonal architecture patterns
 - **🚀 [Getting Started](./docs/getting-started/index.md)** - Setup and first steps
 - **🔧 [Development Guide](./docs/development/index.md)** - Development standards and tools
 
 ### **🏢 Enterprise Components**
-| Component | Purpose | Status | Documentation |
-|-----------|---------|--------|---------------|
-| **[FLX Core](./flx/)** | Hexagonal architecture framework | ✅ Stable | [FLX Docs](./flx/README.md) |
-| **[Meltano Enterprise](./flx-meltano-enterprise/)** | Enterprise data platform | ✅ Production | [Meltano Docs](./flx-meltano-enterprise/README.md) |
-| **[Oracle Database](./flx-database-oracle/)** | Oracle DB integration | ✅ Production | [Oracle Docs](./flx-database-oracle/README.md) |
-| **[Code Analyzer](./dc-code-analyzer/)** | Django-based code analysis | 🔶 Beta | [Analyzer Docs](./dc-code-analyzer/README.md) |
+
+| Component                                           | Purpose                          | Status        | Documentation                                      |
+| --------------------------------------------------- | -------------------------------- | ------------- | -------------------------------------------------- |
+| **[FLX Core](./flx/)**                              | Hexagonal architecture framework | ✅ Stable     | [FLX Docs](./flx/README.md)                        |
+| **[Meltano Enterprise](./flx-meltano-enterprise/)** | Enterprise data platform         | ✅ Production | [Meltano Docs](./flx-meltano-enterprise/README.md) |
+| **[Oracle Database](./flx-database-oracle/)**       | Oracle DB integration            | ✅ Production | [Oracle Docs](./flx-database-oracle/README.md)     |
+| **[Code Analyzer](./dc-code-analyzer/)**            | Django-based code analysis       | 🔶 Beta       | [Analyzer Docs](./dc-code-analyzer/README.md)      |
 
 ---
 
 ## 🎯 **Core Architecture**
 
 ### **🏗️ Hexagonal Architecture Implementation**
+
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                     PyAuto Enterprise                       │
@@ -65,6 +70,7 @@
 ```
 
 ### **📊 Project Statistics**
+
 - **Total Projects**: 21 independent packages
 - **Core Framework**: 1 (FLX)
 - **Database Adapters**: 1 (Oracle)
@@ -150,6 +156,7 @@ target = TargetOracleOIC(config="oic_config.json")
 ## 📁 **Workspace Structure**
 
 ### **🏗️ Core Framework**
+
 ```
 flx/                           # 🎯 Core hexagonal architecture framework
 ├── src/flx/
@@ -161,6 +168,7 @@ flx/                           # 🎯 Core hexagonal architecture framework
 ```
 
 ### **🔗 Database & HTTP Adapters**
+
 ```
 flx-database-oracle/           # 🗄️ Oracle database integration
 flx-http-oracle-oic/          # 🌐 Oracle Integration Cloud HTTP client
@@ -168,6 +176,7 @@ flx-http-oracle-wms/          # 📦 Oracle WMS HTTP client
 ```
 
 ### **📊 Singer SDK Data Pipeline Components**
+
 ```
 tap-oracle-oic/               # 📤 OIC data extractor
 tap-oracle-wms/               # 📤 WMS data extractor
@@ -178,6 +187,7 @@ target-ldap/                  # 📥 LDAP data loader
 ```
 
 ### **🏢 Enterprise Applications**
+
 ```
 flx-meltano-enterprise/       # 🎯 Enterprise data platform
 client-b-poc-oic-wms/         # 🔄 Business process orchestration
@@ -186,6 +196,7 @@ client-a-oud-mig/               # 🔄 LDAP migration utility
 ```
 
 ### **🛠️ Development & Utilities**
+
 ```
 examples/                     # 📚 Usage examples and tutorials
 docs/                        # 📖 Comprehensive documentation
@@ -198,6 +209,7 @@ reference/                   # 📋 Official Meltano reference implementations
 ## 🎯 **Key Features & Capabilities**
 
 ### **🏗️ Enterprise Architecture**
+
 - **Hexagonal Architecture**: Clean separation of domain, application, and infrastructure
 - **Domain-Driven Design**: Rich domain models with proper encapsulation
 - **CQRS & Event Sourcing**: Command/Query separation and event-driven architecture
@@ -205,6 +217,7 @@ reference/                   # 📋 Official Meltano reference implementations
 - **Type Safety**: Full Python 3.13+ type checking with mypy strict mode
 
 ### **🔗 Oracle Integration**
+
 - **Native Oracle Support**: Direct integration with Oracle Database 23c+
 - **Oracle Cloud Integration**: OIC (Oracle Integration Cloud) HTTP client
 - **WMS Integration**: Oracle Warehouse Management System integration
@@ -212,6 +225,7 @@ reference/                   # 📋 Official Meltano reference implementations
 - **Transaction Support**: ACID compliance with distributed transaction support
 
 ### **📊 Data Pipeline Capabilities**
+
 - **Singer SDK Compliance**: Full Singer specification implementation
 - **Stream Processing**: Real-time data processing with async support
 - **Schema Evolution**: Automatic schema detection and evolution
@@ -219,6 +233,7 @@ reference/                   # 📋 Official Meltano reference implementations
 - **Monitoring**: Comprehensive observability and metrics
 
 ### **🏢 Enterprise Features**
+
 - **Multi-tenancy**: Enterprise-grade multi-tenant architecture
 - **Security**: OAuth2, JWT, RBAC, and audit logging
 - **Scalability**: Horizontal scaling with load balancing
@@ -226,6 +241,7 @@ reference/                   # 📋 Official Meltano reference implementations
 - **Configuration**: Environment-based configuration management
 
 ### **🔧 Development Experience**
+
 - **Modern Python**: Python 3.13+ with latest language features
 - **Poetry Workspace**: Monorepo management with Poetry
 - **Quality Tools**: Black, Ruff, mypy, pytest with 90%+ coverage
@@ -237,6 +253,7 @@ reference/                   # 📋 Official Meltano reference implementations
 ## 🛠️ **Development Standards**
 
 ### **📋 Quality Requirements**
+
 - **Code Coverage**: Minimum 90% test coverage
 - **Type Safety**: 100% mypy strict compliance
 - **Code Style**: Black + Ruff formatting
@@ -244,6 +261,7 @@ reference/                   # 📋 Official Meltano reference implementations
 - **Testing**: Unit, integration, and E2E tests
 
 ### **🔧 Development Tools**
+
 ```bash
 # Quality checks
 make lint          # Code formatting and linting
@@ -258,6 +276,7 @@ make docs          # Documentation generation
 ```
 
 ### **📊 Supported Environments**
+
 - **Python**: 3.9, 3.10, 3.11, 3.12, 3.13
 - **Operating Systems**: Linux, macOS, Windows
 - **Databases**: Oracle 19c+, PostgreSQL 13+, SQLite 3.8+
@@ -268,19 +287,23 @@ make docs          # Documentation generation
 ## 📖 **Documentation Ecosystem**
 
 ### **📚 Core Documentation**
+
 - **[Architecture Guide](./docs/architecture/index.md)** - Hexagonal architecture implementation
 - **[Development Guide](./docs/development/index.md)** - Development standards and practices
 - **[Deployment Guide](./docs/deployment/index.md)** - Production deployment strategies
 - **[API Reference](./docs/api-reference/index.md)** - Complete API documentation
 
 ### **🎯 Quick Reference Guides**
+
 - **[Getting Started](./docs/getting-started/index.md)** - Setup and first steps
 - **[Oracle Integration](./docs/guides/oracle-integration.md)** - Oracle-specific implementations
 - **[Data Pipelines](./docs/guides/data-pipelines.md)** - Singer SDK pipeline development
 - **[Enterprise Features](./docs/guides/enterprise-features.md)** - Enterprise-grade capabilities
 
 ### **🔗 Component Documentation**
+
 Each project maintains its own comprehensive README.md with:
+
 - Purpose and scope
 - Installation instructions
 - Usage examples
@@ -293,6 +316,7 @@ Each project maintains its own comprehensive README.md with:
 ## 🤝 **Contributing & Support**
 
 ### **🔧 Development Setup**
+
 ```bash
 # Setup development environment
 git clone https://github.com/datacosmos-br/pyauto.git
@@ -305,6 +329,7 @@ make validate-all
 ```
 
 ### **📋 Contribution Guidelines**
+
 - Follow [development standards](./docs/development/index.md)
 - Maintain 90%+ test coverage
 - Update documentation for all changes
@@ -312,6 +337,7 @@ make validate-all
 - Submit detailed pull requests
 
 ### **🆘 Support Channels**
+
 - **Issues**: [GitHub Issues](https://github.com/datacosmos-br/pyauto/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/datacosmos-br/pyauto/discussions)
 - **Documentation**: [Official Docs](./docs/index.md)
@@ -322,9 +348,11 @@ make validate-all
 ## 📄 **License & Acknowledgments**
 
 ### **📋 License**
+
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ### **🙏 Acknowledgments**
+
 - **Meltano Labs**: Reference implementations and Singer SDK patterns
 - **Oracle**: Database and cloud integration technologies
 - **Python Community**: Modern Python tooling and best practices
@@ -335,16 +363,19 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🔗 **Cross-References**
 
 ### **🎯 Prerequisites**
+
 - Python 3.9+ with Poetry
 - Oracle Database or Oracle Cloud access (for Oracle components)
 - LDAP server access (for LDAP components)
 
 ### **➡️ Next Steps**
+
 - [Installation Guide](./docs/getting-started/installation.md) - Detailed setup instructions
 - [Architecture Deep Dive](./docs/architecture/hexagonal-architecture.md) - Understanding the framework
 - [First Project](./docs/getting-started/first-project.md) - Building your first PyAuto application
 
 ### **🔗 Related Projects**
+
 - [FLX Framework](./flx/README.md) - Core framework implementation
 - [Oracle Database Adapter](./flx-database-oracle/README.md) - Database integration
 - [Meltano Enterprise](./flx-meltano-enterprise/README.md) - Data platform implementation
