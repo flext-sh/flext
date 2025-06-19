@@ -1,51 +1,54 @@
 # sso-and-alternate-authentication-setup.pdf
 
-**Caminho:** `reference/sso-and-alternate-authentication-setup.pdf`  \n**Data de conversão:** 2025-05-15T14:33:08.273768  \n**Tipo:** .pdf  \n**[Download original](reference/sso-and-alternate-authentication-setup.pdf)**
+**Caminho:** `reference/sso-and-alternate-authentication-setup.pdf` \n**Data de conversão:** 2025-05-15T14:33:08.273768 \n**Tipo:** .pdf \n**[Download original](reference/sso-and-alternate-authentication-setup.pdf)**
 
 ---
 
 ## Sumário
 
-
-
 ## Resumo automático
 
 Este guia do Oracle Warehouse Management Cloud (Release 25B) apresenta os mecanismos de autenticação disponíveis e os passos necessários para configurá-los em seu ambiente:
 
-1. Visão geral dos métodos de autenticação  
-   - Autenticação nativa (usuário/senha) para acesso Web, App móvel e RF.  
-   - OAuth2 (fluxo ROPC) para Web, App móvel e RF, delegando a validação de credenciais a um Identity Provider (IDP).  
+1. Visão geral dos métodos de autenticação
+
+   - Autenticação nativa (usuário/senha) para acesso Web, App móvel e RF.
+   - OAuth2 (fluxo ROPC) para Web, App móvel e RF, delegando a validação de credenciais a um Identity Provider (IDP).
    - SAML2 Single Sign-On (SSO) para acesso Web, redirecionando ao IDP e retornando um token SAML.
 
-2. Identity Providers suportados  
-   - Oracle Identity Cloud Service (IDCS)  
-   - Azure Active Directory (Azure AD)  
-   (Outros provedores compatíveis com OAuth2 ou SAML2 podem funcionar.)
+2. Identity Providers suportados
 
-3. Configuração no WMS Cloud  
-   - Associar cada usuário local a um “alternate username” no formato <usuário>@<domínio>.  
+   - Oracle Identity Cloud Service (IDCS)
+   - Azure Active Directory (Azure AD)
+     (Outros provedores compatíveis com OAuth2 ou SAML2 podem funcionar.)
+
+3. Configuração no WMS Cloud
+
+   - Associar cada usuário local a um “alternate username” no formato <usuário>@<domínio>.
    - Possibilidade de manter usuários com autenticação local enquanto outros usam OAuth2 e/ou SSO.
 
-4. Detalhes técnicos para OAuth2  
-   - Fluxo suportado: Resource Owner Password Credentials (ROPC).  
-   - Parâmetros exigidos em um Service Request:  
-     • Nome do IDP, endpoint de token, client ID e client secret  
-     • Recurso/escopo  
+4. Detalhes técnicos para OAuth2
+
+   - Fluxo suportado: Resource Owner Password Credentials (ROPC).
+   - Parâmetros exigidos em um Service Request:
+     • Nome do IDP, endpoint de token, client ID e client secret
+     • Recurso/escopo
      • X-USER-IDENTITY-DOMAIN-NAME (domínio para mapear o alternate username)
 
-5. Detalhes técnicos para SAML2 SSO  
-   - Troca de metadados entre cliente e Oracle (arquivo XML ou URL).  
-   - Itens fornecidos pelo cliente:  
-     • Metadata SAML2.0 (incluindo certificado de assinatura em PEM)  
-     • Issuer ID, URLs de Single Sign-On e Assertion Consumer Service  
-     • Domínio para mapeamento do alternate username  
-   - Itens fornecidos pela Oracle:  
-     • Service Provider ID, resposta de binding, certificados públicos  
+5. Detalhes técnicos para SAML2 SSO
+
+   - Troca de metadados entre cliente e Oracle (arquivo XML ou URL).
+   - Itens fornecidos pelo cliente:
+     • Metadata SAML2.0 (incluindo certificado de assinatura em PEM)
+     • Issuer ID, URLs de Single Sign-On e Assertion Consumer Service
+     • Domínio para mapeamento do alternate username
+   - Itens fornecidos pela Oracle:
+     • Service Provider ID, resposta de binding, certificados públicos
    - Instruções específicas para IDCS e Azure AD (NameID na asserção, URLs, certificados X.509).
 
-6. Observações finais  
-   - Não suportam federations nem MFA no fluxo OAuth2.  
-   - O mesmo usuário pode usar SSO na interface Web e OAuth2 em App/RF, desde que o IDP seja o mesmo.  
+6. Observações finais
+   - Não suportam federations nem MFA no fluxo OAuth2.
+   - O mesmo usuário pode usar SSO na interface Web e OAuth2 em App/RF, desde que o IDP seja o mesmo.
    - Para ativar qualquer mecanismo, é preciso abrir um Service Request e preencher os dados técnicos solicitados.
 
 ## Conteúdo extraído
@@ -66,23 +69,21 @@ Author: Oracle WMS Cloud Product Team
 Oracle Warehouse Management Cloud
 SSO and Alternate Authentication Setup
 Contents
-Get Help  ................................................................................................................................  i
+Get Help ................................................................................................................................ i
 2 Oracle WMS Cloud Alternate Authentication Mechanisms 3
-Oracle WMS Cloud Alternate Authentication Mechanisms  ...................................................................................................  3
-Identity Providers ...........................................................................................................................................................................   3
-WMS Configuration for Alternate Authentication  ...................................................................................................................  3
-Built-in Authentication ..................................................................................................................................................................  4
-OAuth2 Authentication .................................................................................................................................................................   4
+Oracle WMS Cloud Alternate Authentication Mechanisms ................................................................................................... 3
+Identity Providers ........................................................................................................................................................................... 3
+WMS Configuration for Alternate Authentication ................................................................................................................... 3
+Built-in Authentication .................................................................................................................................................................. 4
+OAuth2 Authentication ................................................................................................................................................................. 4
 3 SSO Authentication 7
-SSO Authentication ........................................................................................................................................................................  7
-Technical Configuration for SSO .................................................................................................................................................  7
-IDCS SSO Information  ...................................................................................................................................................................  8
-Azure AD SSO Authentication  .....................................................................................................................................................  9
-
+SSO Authentication ........................................................................................................................................................................ 7
+Technical Configuration for SSO ................................................................................................................................................. 7
+IDCS SSO Information ................................................................................................................................................................... 8
+Azure AD SSO Authentication ..................................................................................................................................................... 9
 
 Oracle Warehouse Management Cloud
 SSO and Alternate Authentication Setup
-
 
 Oracle Warehouse Management Cloud
 SSO and Alternate Authentication Setup
@@ -115,7 +116,7 @@ Oracle Warehouse Management Cloud
 SSO and Alternate Authentication Setup
 Chapter 2
 Oracle WMS Cloud Alternate Authentication Mechanisms
-2  Oracle WMS Cloud Alternate Authentication
+2 Oracle WMS Cloud Alternate Authentication
 Mechanisms
 Oracle WMS Cloud Alternate Authentication Mechanisms
 
@@ -128,13 +129,13 @@ providers (IDP). It supports multiple authentication mechanisms:
 • OAuth2
 ◦ Another authentication standard that can be used for the WMS Web UI, the WMS Cloud Mobile App and
 Mobile RF.
-Identity Providers  
+Identity Providers
 Oracle Identity Cloud Service (IDCS) and Azure AD/ADFS are Identity Providers that have been tested with Oracle WMS
 Cloud. Other providers that support these standards may also work. Customers can request their environments to
 be configured to use SSO and/or Oauth2 by raising a Service Request (SR). Oracle will provide a template via the SR
 for customers to fill out certain technical pieces of information which will be used by our Cloud operations team to
 configure the customers environment.
-WMS Configuration for Alternate Authentication  
+WMS Configuration for Alternate Authentication
 Once the WMS Cloud environment has been setup for SSO or OAuth2 authentication, usernames in WMS Cloud have to
 be associated with a corresponding username in the external Identity Provider. This is the “Alternate username” field in
 WMS Cloud and must be of the format:
@@ -149,10 +150,10 @@ Oracle Warehouse Management Cloud
 SSO and Alternate Authentication Setup
 Chapter 2
 Oracle WMS Cloud Alternate Authentication Mechanisms
-Built-in Authentication  
+Built-in Authentication
 The user types in the username and password on the WMS Cloud login page, whether the Web, Mobile App, or Mobile
 RF device. The encrypted credentials are validated against the WMS Cloud Service.
-OAuth2 Authentication  
+OAuth2 Authentication
 The user types in the username and password on the WMS Cloud login page, whether the Web, Mobile App or Mobile
 RF device. The encrypted credentials are sent to the WMS Cloud Service. If the username has an associated “alternate
 username”, WMS Cloud will delegate the authentication to the external identity provider and validate against that
@@ -161,9 +162,9 @@ OAuth2 backends that have been validated with WMS Cloud are Oracle IDCS and Azur
 If users WMS instance was activated via My Services Portal for OCWMS after February 2021, as part of the activation,
 users are automatically provisioned with OAuth2 Authentication enabled. It is enabled with the domain of the WMS
 administrator who activated the account.
-Note:  You can include additional domains.
-Technical Configuration for OAuth2  
-Note:  Federation and MFA (Multi Factor Authentication) are not supported. The OAuth2 flow only supports the ROPC
+Note: You can include additional domains.
+Technical Configuration for OAuth2
+Note: Federation and MFA (Multi Factor Authentication) are not supported. The OAuth2 flow only supports the ROPC
 (Resource Owner Password Credentials) grant type, as defined here:
 4
 
@@ -190,7 +191,6 @@ Domain name Used to link WMS username with the OAuth2 username, using "Alternate
 
 For example if the username is "jdoe"@somedomain.com, then the domain name is somedomain.com.
 
-
 NOTE: Customers need to provide ALL domains that they need for WMS. We don’t support generic
 consumer domains (for example: @yahoo.com @gmail.com)
 
@@ -206,19 +206,19 @@ Oracle Warehouse Management Cloud
 SSO and Alternate Authentication Setup
 Chapter 3
 SSO Authentication
-3  SSO Authentication
-SSO Authentication  
+3 SSO Authentication
+SSO Authentication
 SAML2 SSO works a bit differently. The username and password are not entered in the WMS Cloud login page. The
 user instead clicks the “Login using SSO” button (which will be available after the SSO configuration has been setup by
 following SR process mentioned earlier). The page gets redirected to the Identity Provider’s login page where the user
 will login using their username linked to the IDP (this is stored in the “Alternate username” field in WMS Cloud). If the
 authentication succeeds, a token is returned back to the WMS Cloud and the user is logged in to the application.
-Note:  SAML2 being a web-based standard, this mechanism can be used only to login to the WMS Cloud web UI. RF
+Note: SAML2 being a web-based standard, this mechanism can be used only to login to the WMS Cloud web UI. RF
 or App login will have to use either local authentication or OAuth2 authentication. It is possible for the same user to be
 linked to both SAML2 SSO and OAuth2 backends (the IDP has to be the same in this case), so the same user can login
 via SSO to the Web UI and via OAuth2 on the RF.SAML2 SSO backends that have been validated against WMS Cloud
 are Oracle IDCS and Azure AD.
-Technical Configuration for SSO  
+Technical Configuration for SSO
 For SAML2 SSO setup, the customer and Oracle exchange certain technical information needed to configure both
 systems.
 Customer Provides Oracle provides
@@ -247,7 +247,7 @@ SAML2.0 MetaData - Customer must provide IDP metadata for SAML2.0, it can be pro
 URL allowing Oracle to download the IDP metadata from customer site.
 The specific fields that are used by Oracle are explained below. In addition, for IDCS, the MyApp URL is also needed
 (details below) and has to be sent separately as its not part of the metadata file.
-IDCS SSO Information  
+IDCS SSO Information
 Item Description
 Issuer ID Unique identifier of the IDP
 MyApp URL The binding that is used to send the response to the Identity provider.
@@ -266,7 +266,7 @@ For example if the username is "jdoe"@somedomain.com, then the domain name is so
 NOTE: Customers need to provide ALL domains that they need for WMS. We don’t support generic
 consumer domains (for example: @yahoo.com @gmail.com)
 
-Note:  An app has to be created in IDCS using the ROPC grant type. This is required for WMS to authenticate using
+Note: An app has to be created in IDCS using the ROPC grant type. This is required for WMS to authenticate using
 IDCS.If you have separate accounts for IDCS with Fusion, WMS and/or other, the backend IDCS setup for WMS will be
 used and if you want to use both, you can federate with assistance from the IDCS team.
 8
@@ -275,10 +275,9 @@ Oracle Warehouse Management Cloud
 SSO and Alternate Authentication Setup
 Chapter 3
 SSO Authentication
-Azure AD SSO Authentication  
+Azure AD SSO Authentication
 Item Description
 Issuer ID Unique identifier of the IDP
-
 
 Single Sign-On URL The binding that is used to send the response to the Identity provider.
 Response signature certificate
@@ -293,7 +292,7 @@ For example: if the username is jdoe @somedomain.com, then the domain name is so
 NOTE: Customers need to provide ALL domains that they need for WMS. We don’t support generic
 consumer domains (for example: @yahoo.com @gmail.com)
 
-Note:  The SSO assertion returned by the IDP must contain NameID tag with the alternate username configured in our
+Note: The SSO assertion returned by the IDP must contain NameID tag with the alternate username configured in our
 application as the value. We will use that to look up a user and create a session. Example assertion with NameID:
 <saml:Assertion xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" ...>
 ...

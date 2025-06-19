@@ -58,7 +58,7 @@ class TraditionalLdapAdapter:
         # Manual service delegation
         # etc...
 
-# After (FLX 0.4.0): ~20 lines for same functionality  
+# After (FLX 0.4.0): ~20 lines for same functionality
 class LdapAdapter(AdvancedAdapterMixin, BaseAdapter):
     async def _connect(self) -> None:
         self._ldap_service = await self._connect_service(
@@ -76,7 +76,7 @@ Operations are delegated to the underlying service with automatic error handling
 ```python
 async def search(self, base_dn: str, filter_str: str = "(objectClass=*)") -> list[dict]:
     return await self._delegate_operation(
-        "_ldap_service", "search", 
+        "_ldap_service", "search",
         (base_dn, filter_str),
         {"attributes": attributes or []},
         "ldap_search",
@@ -104,7 +104,7 @@ results = conn.search("dc=example,dc=com", "(objectClass=person)")
 - Configuration Manager: Enhanced config system operational
 - Backward Compatibility: Existing APIs maintained
 
-⚠️ **Minor Issues**: Non-Critical Implementation Details  
+⚠️ **Minor Issues**: Non-Critical Implementation Details
 
 - CLI command group import (implementation detail)
 - Lifecycle test validation edge case
@@ -112,7 +112,7 @@ results = conn.search("dc=example,dc=com", "(objectClass=person)")
 ## 🚀 Next Steps
 
 1. **Production Deployment**: The migrated code is ready for production use
-2. **Performance Testing**: Validate performance improvements with real LDAP servers  
+2. **Performance Testing**: Validate performance improvements with real LDAP servers
 3. **Documentation Updates**: Update user documentation to reflect new patterns
 4. **Legacy Code Migration**: Gradually migrate existing usage to new patterns
 

@@ -66,7 +66,7 @@ This document serves as the central hub for all FLX architecture documentation, 
 - **[Cache Infrastructure](./cache-infrastructure.md)** - Redis and memory caching patterns
 - Related code: `/flx/src/flx/infra/cache/`
 
-### Database Infrastructure  
+### Database Infrastructure
 
 - Related code: `/flx/src/flx/infra/database/`
 - Patterns: Connection pooling, repository patterns, transaction management
@@ -165,7 +165,7 @@ from flx.infra import (
 This hub preserves ALL valuable architectural content from the following consolidated sources:
 
 - `infrastructure-analysis.md` → Infrastructure patterns
-- `infrastructure-services.md` → Service implementations  
+- `infrastructure-services.md` → Service implementations
 - `infrastructure-services-guide.md` → Service patterns
 - Multiple `infrastructure-*.md` files → Comprehensive guide
 
@@ -240,7 +240,7 @@ class PostgresUserRepository(UserRepository):
 class AdapterConfig(BaseModel):
     timeout: int = Field(default=30, description="Connection timeout")
     retries: int = Field(default=3, description="Retry attempts")
-    
+
 class HttpAdapter(BaseAdapter):
     def __init__(self, config: AdapterConfig):
         super().__init__()
@@ -257,7 +257,7 @@ class HttpAdapter(BaseAdapter):
 class OrderService:
     def __init__(self, event_bus: EventBus):
         self.event_bus = event_bus
-    
+
     async def process_order(self, order: Order) -> None:
         # Process order
         await self.event_bus.publish(OrderProcessedEvent(order.id))
@@ -279,16 +279,16 @@ class TestOrderService:
         # Mock dependencies
         mock_repo = Mock(spec=OrderRepository)
         mock_event_bus = Mock(spec=EventBus)
-        
+
         service = OrderService(
             repository=mock_repo,
             event_bus=mock_event_bus
         )
-        
+
         # Test business logic in isolation
         order = Order(customer_id="123")
         await service.process_order(order)
-        
+
         mock_repo.save.assert_called_once_with(order)
         mock_event_bus.publish.assert_called_once()
 ```

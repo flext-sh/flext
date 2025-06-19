@@ -96,7 +96,7 @@ Edit `catalog.json` to enable desired streams:
         {
           "breadcrumb": [],
           "metadata": {
-            "selected": true,  // Enable this stream
+            "selected": true, // Enable this stream
             "replication-method": "INCREMENTAL",
             "replication-key": "update_ts"
           }
@@ -218,27 +218,27 @@ meltano add extractor tap-oracle-wms
 ```yaml
 project_id: your_project
 environments:
-- name: dev
-- name: prod
+  - name: dev
+  - name: prod
 
 plugins:
   extractors:
-  - name: tap-oracle-wms
-    pip_url: tap-oracle-wms
-    config:
-      base_url: ${TAP_ORACLE_WMS_BASE_URL}
-      auth_method: basic
-      username: ${TAP_ORACLE_WMS_USERNAME}
-      password: ${TAP_ORACLE_WMS_PASSWORD}
-      company_code: ${TAP_ORACLE_WMS_COMPANY}
-      facility_code: ${TAP_ORACLE_WMS_FACILITY}
-      start_date: '2024-01-01T00:00:00Z'
-    select:
-    - item.*
-    - inventory.*
-    - location.*
-    - order_hdr.*
-    - order_dtl.*
+    - name: tap-oracle-wms
+      pip_url: tap-oracle-wms
+      config:
+        base_url: ${TAP_ORACLE_WMS_BASE_URL}
+        auth_method: basic
+        username: ${TAP_ORACLE_WMS_USERNAME}
+        password: ${TAP_ORACLE_WMS_PASSWORD}
+        company_code: ${TAP_ORACLE_WMS_COMPANY}
+        facility_code: ${TAP_ORACLE_WMS_FACILITY}
+        start_date: "2024-01-01T00:00:00Z"
+      select:
+        - item.*
+        - inventory.*
+        - location.*
+        - order_hdr.*
+        - order_dtl.*
 ```
 
 ### 3. Run with Meltano

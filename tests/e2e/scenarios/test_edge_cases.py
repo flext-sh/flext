@@ -26,7 +26,8 @@ class TestEdgeCases:
 
         # Clean all entries from a specific OU
         source_helper.cleanup_test_entries(
-            base_dn="dc=source,dc=example,dc=com", prefix=""  # Clean everything
+            base_dn="dc=source,dc=example,dc=com",
+            prefix="",  # Clean everything
         )
 
         # Run tap with empty source
@@ -45,9 +46,9 @@ class TestEdgeCases:
                 )
 
                 # Should succeed even with no data
-                assert (
-                    result.returncode == 0
-                ), f"tap-ldap failed on empty source: {result.stderr}"
+                assert result.returncode == 0, (
+                    f"tap-ldap failed on empty source: {result.stderr}"
+                )
 
                 # Verify output contains schema but no records
                 has_schema = False
@@ -309,9 +310,9 @@ class TestEdgeCases:
                 except json.JSONDecodeError:
                     continue
 
-            assert pagetest_count == len(
-                created_users
-            ), f"Expected {len(created_users)} users, got {pagetest_count}"
+            assert pagetest_count == len(created_users), (
+                f"Expected {len(created_users)} users, got {pagetest_count}"
+            )
 
         # Clean up
         source_helper.cleanup_test_entries(
@@ -420,9 +421,9 @@ class TestEdgeCases:
         # Export and verify multi-valued attributes
         entry = source_helper.get_entry_as_dict(dn)
 
-        assert isinstance(
-            entry.get("cn"), list
-        ), "Multi-valued cn not preserved as list"
+        assert isinstance(entry.get("cn"), list), (
+            "Multi-valued cn not preserved as list"
+        )
         assert len(entry.get("cn", [])) == 3, "Not all cn values preserved"
         assert isinstance(entry.get("mail"), list), "Multi-valued mail not preserved"
         assert len(entry.get("mail", [])) == 3, "Not all mail values preserved"

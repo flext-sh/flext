@@ -134,6 +134,7 @@ Oracle WMS Cloud supports OAuth 2.0 for secure API access and integration with O
 #### Configuration Steps
 
 1. **Create OAuth Application**
+
    - Navigate to `api/oauth2/applications` screen
    - Register new application with required parameters
    - Generate Client ID and Client Secret
@@ -145,13 +146,13 @@ Oracle WMS Cloud supports OAuth 2.0 for secure API access and integration with O
 
 #### OAuth Configuration Fields
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| Client ID | String | Yes | Generated application identifier |
-| Client Secret | String | Yes | Secure application credential |
-| Access Token URI | URL | Yes | Token endpoint for authentication |
-| Authorization Code URI | URL | Conditional | Required for authorization code flow |
-| Scope | String | Yes | Access scope definition |
+| Field                  | Type   | Required    | Description                          |
+| ---------------------- | ------ | ----------- | ------------------------------------ |
+| Client ID              | String | Yes         | Generated application identifier     |
+| Client Secret          | String | Yes         | Secure application credential        |
+| Access Token URI       | URL    | Yes         | Token endpoint for authentication    |
+| Authorization Code URI | URL    | Conditional | Required for authorization code flow |
+| Scope                  | String | Yes         | Access scope definition              |
 
 ### Output Interface Authentication
 
@@ -289,17 +290,17 @@ Users must have eligibility to access facility/company combinations represented 
 
 ### HTTP Status Codes
 
-| Code | Status | Description |
-|------|--------|-------------|
-| 200 | OK | Successful operation |
-| 201 | Created | Resource successfully created |
-| 204 | No Content | Successful with no response body |
-| 400 | Bad Request | Invalid data or request structure |
-| 401 | Unauthorized | Invalid login credentials |
-| 403 | Forbidden | User lacks permission |
-| 404 | Not Found | Resource does not exist |
-| 409 | Conflict | Concurrent modification conflict |
-| 500 | Server Error | Unhandled error condition |
+| Code | Status       | Description                       |
+| ---- | ------------ | --------------------------------- |
+| 200  | OK           | Successful operation              |
+| 201  | Created      | Resource successfully created     |
+| 204  | No Content   | Successful with no response body  |
+| 400  | Bad Request  | Invalid data or request structure |
+| 401  | Unauthorized | Invalid login credentials         |
+| 403  | Forbidden    | User lacks permission             |
+| 404  | Not Found    | Resource does not exist           |
+| 409  | Conflict     | Concurrent modification conflict  |
+| 500  | Server Error | Unhandled error condition         |
 
 ---
 

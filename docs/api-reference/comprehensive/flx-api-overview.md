@@ -66,13 +66,13 @@ event = flx.ValueObjects.FlxDomainEvent(
 
 ### 2. **Component Organization**
 
-| Section             | Responsibility      | Main Components                                     |
-| ------------------- | ------------------- | --------------------------------------------------- |
-| `flx.Entities`      | Domain entities     | `BaseEntity`, `AggregateRoot`, `BusinessEntity`     |
+| Section             | Responsibility      | Main Components                                        |
+| ------------------- | ------------------- | ------------------------------------------------------ |
+| `flx.Entities`      | Domain entities     | `BaseEntity`, `AggregateRoot`, `BusinessEntity`        |
 | `flx.ValueObjects`  | Immutable data      | `FlxDomainEvent`, `EntityId`, `Address`, `ContactInfo` |
-| `flx.Protocols`     | Type interfaces     | `Configurable`, `Activatable`, `Timestamped`        |
-| `flx.Mixins`        | Composable behavior | `Status`, `Config`, `Metadata`, `Management`        |
-| `flx.EntityFactory` | Entity creation     | `flx_create_service()`, `flx_create_configurable()`         |
+| `flx.Protocols`     | Type interfaces     | `Configurable`, `Activatable`, `Timestamped`           |
+| `flx.Mixins`        | Composable behavior | `Status`, `Config`, `Metadata`, `Management`           |
+| `flx.EntityFactory` | Entity creation     | `flx_create_service()`, `flx_create_configurable()`    |
 
 ---
 
@@ -445,18 +445,18 @@ class OrderEntity(flx.Entities.BusinessEntity):
         super().__init__(name=name)
         self.items = []
         self.status = "draft"
-    
+
     def add_item(self, item: dict):
         self.items.append(item)
         self.raise_domain_event("ItemAdded", {
             "order_id": self.id,
             "item": item
         })
-    
+
     def confirm_order(self):
         if not self.items:
             raise ValueError("Cannot confirm empty order")
-        
+
         self.status = "confirmed"
         self.raise_domain_event("OrderConfirmed", {
             "order_id": self.id,
@@ -489,7 +489,7 @@ payment_service.configure_timeout(30)
 class PaymentProcessor:
     def __init__(self, payment_service):
         self.payment_service = payment_service
-    
+
     def process_payment(self, amount: float, order_id: str):
         # Business logic
         event = flx.ValueObjects.FlxDomainEvent(
@@ -746,7 +746,7 @@ events = user.get_domain_events()
 ### **Related Topics**
 
 - [Hexagonal Architecture Guide](../../architecture/design/unified-architecture-guide.md) - Architecture principles
-- [Infrastructure Services](../../infrastructure/index.md) - Infrastructure layer integration  
+- [Infrastructure Services](../../infrastructure/index.md) - Infrastructure layer integration
 - [Oracle Integration Examples](../../examples/oracle-integration-real-examples.md) - Real-world usage patterns
 
 ---

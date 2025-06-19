@@ -29,6 +29,7 @@ Oracle Integration Cloud Generation 3 capabilities are documented differently ac
 ### What OIC REST API CAN Do
 
 ✅ **Integration Creation and Management**
+
 - Create new integrations programmatically via REST API
 - Define integration flows, connections, and transformations
 - Import pre-built integration archives (.iar files)
@@ -40,18 +41,21 @@ Oracle Integration Cloud Generation 3 capabilities are documented differently ac
 - Manage integration versions
 
 ✅ **Connection Creation and Management**
+
 - Create new connections programmatically
 - Configure connection properties for all adapter types
 - Test connection configurations
 - Update existing connection properties
 
 ✅ **Monitoring and Analytics**
+
 - Monitor integration execution in real-time
 - Track performance metrics and statistics
 - Retrieve execution history and logs
 - Analyze error patterns and success rates
 
 ✅ **Configuration Management**
+
 - Update connection properties (for existing connections)
 - Test connection configurations
 - Manage lookup tables and libraries
@@ -60,12 +64,14 @@ Oracle Integration Cloud Generation 3 capabilities are documented differently ac
 ### What OIC REST API CANNOT Do
 
 ❌ **Advanced Design Operations**
+
 - Cannot create custom adapters (requires Oracle development)
 - Cannot modify OIC platform configuration
 - Cannot access internal system configurations
 - Cannot modify security policies beyond connection level
 
 ❌ **Visual Designer Features**
+
 - Cannot replicate the drag-and-drop visual interface via API
 - Cannot provide graphical design capabilities
 - Cannot replace the Visual Designer for complex mapping scenarios
@@ -75,12 +81,14 @@ Oracle Integration Cloud Generation 3 capabilities are documented differently ac
 The REST API and Visual Designer complement each other:
 
 **REST API Strengths:**
+
 - Programmatic integration creation with JSON/XML definitions
 - Automation and infrastructure-as-code workflows
 - Bulk operations and scripting
 - CI/CD pipeline integration
 
 **Visual Designer Strengths:**
+
 - Intuitive drag-and-drop interface
 - Complex transformation mapping tools
 - Visual flow design and debugging
@@ -93,6 +101,7 @@ The REST API and Visual Designer complement each other:
 Integration design can be accomplished through:
 
 **REST API Programmatic Creation:**
+
 - Creating new integrations via `POST /ic/api/integration/v1/integrations`
 - Defining integration flows with JSON/XML configurations
 - Creating connections programmatically
@@ -101,6 +110,7 @@ Integration design can be accomplished through:
 - Infrastructure-as-code workflows
 
 **Visual Designer Interface:**
+
 - Drag-and-drop visual development
 - Interactive mapping tools
 - Real-time testing and debugging
@@ -110,6 +120,7 @@ Integration design can be accomplished through:
 ### Runtime Management (REST API Available)
 
 The following can be managed via REST API:
+
 - Importing/exporting integration packages (.iar files)
 - Activating/deactivating integrations
 - Monitoring execution status and performance
@@ -137,6 +148,7 @@ Content-Type: application/octet-stream
 ```
 
 **Response (201 Created)**:
+
 ```json
 {
   "id": "CUSTOMER_DATA_SYNC|01.00.0000",
@@ -206,6 +218,7 @@ GET /ic/api/integration/v1/connections
 ```
 
 **Response**:
+
 ```json
 {
   "items": [
@@ -239,6 +252,7 @@ POST /ic/api/integration/v1/connections/{id}/test
 ```
 
 Response:
+
 ```json
 {
   "status": "SUCCESS",
@@ -289,6 +303,7 @@ GET /ic/api/monitoring/v1/integrations/{id}/metrics?period=24h
 ```
 
 Response:
+
 ```json
 {
   "integrationId": "CUSTOMER_DATA_SYNC",
@@ -323,12 +338,12 @@ GET /ic/api/monitoring/v1/executions/{executionId}/errors
 
 ### Rate Limits
 
-| Operation | Limit | Window |
-|-----------|-------|---------|
-| API Calls | 1000 | Per hour |
-| Concurrent Executions | 50 | Per integration |
-| Payload Size | 10MB | Per request |
-| Execution History | 90 days | Retention |
+| Operation             | Limit   | Window          |
+| --------------------- | ------- | --------------- |
+| API Calls             | 1000    | Per hour        |
+| Concurrent Executions | 50      | Per integration |
+| Payload Size          | 10MB    | Per request     |
+| Execution History     | 90 days | Retention       |
 
 ### Integration Patterns
 
@@ -354,6 +369,7 @@ Supported authentication methods:
 ## Supported Adapters
 
 ### Database Adapters
+
 - Oracle Database
 - MySQL
 - PostgreSQL
@@ -362,6 +378,7 @@ Supported authentication methods:
 - Cassandra
 
 ### Cloud Application Adapters
+
 - Salesforce
 - ServiceNow
 - Workday
@@ -370,6 +387,7 @@ Supported authentication methods:
 - NetSuite
 
 ### Messaging Adapters
+
 - Apache Kafka
 - JMS
 - RabbitMQ
@@ -377,6 +395,7 @@ Supported authentication methods:
 - Amazon SQS
 
 ### File/Storage Adapters
+
 - FTP/SFTP
 - File
 - Oracle Object Storage
@@ -384,6 +403,7 @@ Supported authentication methods:
 - Azure Blob Storage
 
 ### Technology Adapters
+
 - REST
 - SOAP
 - GraphQL
@@ -393,33 +413,35 @@ Supported authentication methods:
 ## API Summary
 
 ### Base URL
+
 ```
 https://{instance}.integration.ocp.oraclecloud.com
 ```
 
 ### Authentication
+
 ```
 Authorization: Basic {base64(username:password)}
 ```
 
 ### Key Endpoints
 
-| Operation | Method | Endpoint | Notes |
-|-----------|--------|----------|-------|
-| Import Integration | POST | `/ic/api/integration/v1/integrations/archive` | Import .iar file |
-| List Integrations | GET | `/ic/api/integration/v1/integrations` | |
-| Get Integration | GET | `/ic/api/integration/v1/integrations/{id}` | |
-| Update Integration | PUT | `/ic/api/integration/v1/integrations/{id}` | Properties only |
-| Export Integration | GET | `/ic/api/integration/v1/integrations/{id}/archive` | Export as .iar |
-| Clone Integration | POST | `/ic/api/integration/v1/integrations/{id}/clone` | |
-| Activate Integration | POST | `/ic/api/integration/v1/integrations/{id}/activate` | |
-| Deactivate Integration | POST | `/ic/api/integration/v1/integrations/{id}/deactivate` | |
-| List Connections | GET | `/ic/api/integration/v1/connections` | |
-| Update Connection | PUT | `/ic/api/integration/v1/connections/{id}` | Properties only |
-| Test Connection | POST | `/ic/api/integration/v1/connections/{id}/test` | |
-| List Projects | GET | `/ic/api/projects/v1/projects` | |
-| Get Metrics | GET | `/ic/api/monitoring/v1/integrations/{id}/metrics` | |
-| Get Executions | GET | `/ic/api/monitoring/v1/integrations/{id}/executions` | |
+| Operation              | Method | Endpoint                                              | Notes            |
+| ---------------------- | ------ | ----------------------------------------------------- | ---------------- |
+| Import Integration     | POST   | `/ic/api/integration/v1/integrations/archive`         | Import .iar file |
+| List Integrations      | GET    | `/ic/api/integration/v1/integrations`                 |                  |
+| Get Integration        | GET    | `/ic/api/integration/v1/integrations/{id}`            |                  |
+| Update Integration     | PUT    | `/ic/api/integration/v1/integrations/{id}`            | Properties only  |
+| Export Integration     | GET    | `/ic/api/integration/v1/integrations/{id}/archive`    | Export as .iar   |
+| Clone Integration      | POST   | `/ic/api/integration/v1/integrations/{id}/clone`      |                  |
+| Activate Integration   | POST   | `/ic/api/integration/v1/integrations/{id}/activate`   |                  |
+| Deactivate Integration | POST   | `/ic/api/integration/v1/integrations/{id}/deactivate` |                  |
+| List Connections       | GET    | `/ic/api/integration/v1/connections`                  |                  |
+| Update Connection      | PUT    | `/ic/api/integration/v1/connections/{id}`             | Properties only  |
+| Test Connection        | POST   | `/ic/api/integration/v1/connections/{id}/test`        |                  |
+| List Projects          | GET    | `/ic/api/projects/v1/projects`                        |                  |
+| Get Metrics            | GET    | `/ic/api/monitoring/v1/integrations/{id}/metrics`     |                  |
+| Get Executions         | GET    | `/ic/api/monitoring/v1/integrations/{id}/executions`  |                  |
 
 ## Future Capabilities (tap-oic v3.0)
 
@@ -428,16 +450,19 @@ Authorization: Basic {base64(username:password)}
 While OIC's REST API currently doesn't support programmatic integration creation, tap-oic v3.0 will provide:
 
 1. **Local Integration Builder**
+
    - Generate integration definitions from configuration
    - Support for all OIC adapter types
    - Validation against OIC constraints
 
 2. **IAR File Generator**
+
    - Create importable .iar files locally
    - Include all required metadata and mappings
    - Support versioning and rollback
 
 3. **Configuration as Code**
+
    ```yaml
    # Future capability
    apiVersion: oic/v1

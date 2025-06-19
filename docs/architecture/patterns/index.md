@@ -24,12 +24,12 @@ This hub provides comprehensive guidance for implementing domain-driven design, 
 
 ### **Core Pattern Topics**
 
-| **Topic** | **Function** | **Audience** | **Complexity** | **Status** |
-|-----------|--------------|--------------|----------------|------------|
-| [**Domain-Driven Design**](./domain-driven-design-patterns.md) | DDD patterns & practices | Domain experts, architects | ⭐⭐⭐ | ✅ Updated |
-| [**SOLID Principles**](./solid-principles-implementation.md) | SOLID implementation patterns | Senior developers | ⭐⭐ | ✅ Updated |
-| [**Event Sourcing**](./event-sourcing-implementation.md) | Event-driven architecture | Integration engineers | ⭐⭐⭐⭐ | ✅ Updated |
-| [**Advanced Patterns**](./advanced-patterns.md) | Enterprise architecture patterns | System architects | ⭐⭐⭐⭐⭐ | ✅ Updated |
+| **Topic**                                                      | **Function**                     | **Audience**               | **Complexity** | **Status** |
+| -------------------------------------------------------------- | -------------------------------- | -------------------------- | -------------- | ---------- |
+| [**Domain-Driven Design**](./domain-driven-design-patterns.md) | DDD patterns & practices         | Domain experts, architects | ⭐⭐⭐         | ✅ Updated |
+| [**SOLID Principles**](./solid-principles-implementation.md)   | SOLID implementation patterns    | Senior developers          | ⭐⭐           | ✅ Updated |
+| [**Event Sourcing**](./event-sourcing-implementation.md)       | Event-driven architecture        | Integration engineers      | ⭐⭐⭐⭐       | ✅ Updated |
+| [**Advanced Patterns**](./advanced-patterns.md)                | Enterprise architecture patterns | System architects          | ⭐⭐⭐⭐⭐     | ✅ Updated |
 
 ---
 
@@ -38,24 +38,24 @@ This hub provides comprehensive guidance for implementing domain-driven design, 
 ### **🎯 For Domain Experts**
 
 ```
-1. [Domain-Driven Design](./domain-driven-design-patterns.md) → 
-2. [SOLID Principles](./solid-principles-implementation.md) → 
+1. [Domain-Driven Design](./domain-driven-design-patterns.md) →
+2. [SOLID Principles](./solid-principles-implementation.md) →
 3. [Advanced Patterns](./advanced-patterns.md)
 ```
 
 ### **⚡ For Senior Developers**
 
 ```
-1. [SOLID Principles](./solid-principles-implementation.md) → 
-2. [Event Sourcing](./event-sourcing-implementation.md) → 
+1. [SOLID Principles](./solid-principles-implementation.md) →
+2. [Event Sourcing](./event-sourcing-implementation.md) →
 3. [Domain-Driven Design](./domain-driven-design-patterns.md)
 ```
 
 ### **🏢 For System Architects**
 
 ```
-1. [Advanced Patterns](./advanced-patterns.md) → 
-2. [Event Sourcing](./event-sourcing-implementation.md) → 
+1. [Advanced Patterns](./advanced-patterns.md) →
+2. [Event Sourcing](./event-sourcing-implementation.md) →
 3. [Design Standards](../standards/index.md)
 ```
 

@@ -36,33 +36,33 @@ This guide covers the Oracle Warehouse Management Cloud REST API (version 25B) i
 
 The Oracle WMS REST API is organized into six main chapters:
 
-1. Visão geral  
-   • Princípios REST e uso dos métodos HTTP (GET, POST, PATCH, DELETE, HEAD).  
-   • Formatos de entrada (JSON, XML), codificação de dados e tratamento de fusos horários.  
-   • Autenticação (BasicAuth, OAuth2) e controle de permissões (lgfapi_read/create/update/delete_access).  
-   • Versionamento da API, URLs, paginação, ordenação, seleção de campos e filtros avançados (operadores __gt,__lt, __in, etc.).
+1. Visão geral
+   • Princípios REST e uso dos métodos HTTP (GET, POST, PATCH, DELETE, HEAD).
+   • Formatos de entrada (JSON, XML), codificação de dados e tratamento de fusos horários.
+   • Autenticação (BasicAuth, OAuth2) e controle de permissões (lgfapi_read/create/update/delete_access).
+   • Versionamento da API, URLs, paginação, ordenação, seleção de campos e filtros avançados (operadores **gt,**lt, \_\_in, etc.).
 
-2. Tratamento de respostas HTTP  
-   • Códigos de status comuns (200, 201, 204, 400, 404, 409, 500).  
-   • Formatos de erro padronizados (reference, code, message, details).  
+2. Tratamento de respostas HTTP
+   • Códigos de status comuns (200, 201, 204, 400, 404, 409, 500).
+   • Formatos de erro padronizados (reference, code, message, details).
    • Esquemas de paginação (“paged” e “sequenced”) e uso dos cabeçalhos de paginação.
 
-3. Módulo Entity  
-   • Consulta (“list” e “retrieve”), criação (POST) e modificação (PATCH) de recursos de negócio (IBLPN, OBLPN, inventory, order, container, etc.).  
-   • Filtros por campos, relacionamentos (“__” para navegar por associações) e buscas por lote de valores.  
-   • Operações específicas de cada entidade (alocar, distribuir, paletizar, despachar, bloqueios em massa, QC, movimentação, etc.).  
+3. Módulo Entity
+   • Consulta (“list” e “retrieve”), criação (POST) e modificação (PATCH) de recursos de negócio (IBLPN, OBLPN, inventory, order, container, etc.).
+   • Filtros por campos, relacionamentos (“\_\_” para navegar por associações) e buscas por lote de valores.
+   • Operações específicas de cada entidade (alocar, distribuir, paletizar, despachar, bloqueios em massa, QC, movimentação, etc.).
    • APIs de ciclo de contagem, notificação de eventos (tasks), anexos, mudanças de contexto de usuário e auditoria.
 
-4. Módulos adicionais  
-   • Funções fora do core “entity”: data extract, pick-pack, printing, repack, replenishment, report, sort_receive, stage_track_record.  
+4. Módulos adicionais
+   • Funções fora do core “entity”: data extract, pick-pack, printing, repack, replenishment, report, sort_receive, stage_track_record.
    • Cada módulo tem suas operações dedicadas (por exemplo, repack de LPNs, geração de relatórios, extração assíncrona de dados, impressão de etiquetas).
 
-5. Operações disponíveis  
-   • Lista detalhada de endpoints para cada entidade e módulo: criação, atualização, operações em lote, consultas, geração de documentos e relatórios, métodos de tarefas, localização de trailers, execução de ondas de trabalho, etc.  
+5. Operações disponíveis
+   • Lista detalhada de endpoints para cada entidade e módulo: criação, atualização, operações em lote, consultas, geração de documentos e relatórios, métodos de tarefas, localização de trailers, execução de ondas de trabalho, etc.
    • Exemplos de payloads JSON/XML e descrições de parâmetros.
 
-6. Extração de dados (Data Extract)  
-   • API para empurrar dados paramétricos de entidades a um bucket em Object Store (OCI, AWS S3, GCS, Azure Blob).  
+6. Extração de dados (Data Extract)
+   • API para empurrar dados paramétricos de entidades a um bucket em Object Store (OCI, AWS S3, GCS, Azure Blob).
    • Configuração de endpoints, formatos de arquivo (CSV, JSON, Parquet), tamanho de partição, compressão e monitoramento de status assíncrono.
 
 Em suma, o guia descreve em profundidade como integrar sistemas externos à Oracle WMS Cloud via REST, incluindo padrões de design, formas de autenticação e autorização, métodos de consulta e modificação de dados de estoque, orders, LPNs, tarefas e geração de relatórios, além de mecanismos para extração automatizada de grandes volumes de dados.
@@ -84,66 +84,66 @@ Author: Oracle WMS Cloud Product Team
 Oracle Warehouse Management Cloud
 WMS REST API Guide
 Contents
-Get Help  ................................................................................................................................  i
+Get Help ................................................................................................................................ i
 1 Overview 1
-Change History ................................................................................................................................................................................   1
-End User License Agreement  ......................................................................................................................................................  4
-Restful Web Services  .....................................................................................................................................................................   4
-HTTP Requests  ...............................................................................................................................................................................   5
-Data Input Methodology  ...............................................................................................................................................................  7
+Change History ................................................................................................................................................................................ 1
+End User License Agreement ...................................................................................................................................................... 4
+Restful Web Services ..................................................................................................................................................................... 4
+HTTP Requests ............................................................................................................................................................................... 5
+Data Input Methodology ............................................................................................................................................................... 7
 2 HTTP Response 11
-Status Codes  ...................................................................................................................................................................................  11
-Response Formats ........................................................................................................................................................................   12
-Response Data Encoding  ............................................................................................................................................................   13
-Response Data Formats  ..............................................................................................................................................................   13
+Status Codes ................................................................................................................................................................................... 11
+Response Formats ........................................................................................................................................................................ 12
+Response Data Encoding ............................................................................................................................................................ 13
+Response Data Formats .............................................................................................................................................................. 13
 3 Entity Module 17
-Supported Entities  ........................................................................................................................................................................   17
-Entity Metadata  .............................................................................................................................................................................  17
-Input Data Types ...........................................................................................................................................................................  17
-Resource Result Set Filtering  ....................................................................................................................................................   20
-Resource Representations (GET) ..............................................................................................................................................   25
-Resource Existence and Modification (HEAD)  .......................................................................................................................  36
-Creating a Resource (POST)  ......................................................................................................................................................   38
-Updating a Resource (PATCH) ...................................................................................................................................................   41
-Entity Operations (GET /POST) ..................................................................................................................................................  59
+Supported Entities ........................................................................................................................................................................ 17
+Entity Metadata ............................................................................................................................................................................. 17
+Input Data Types ........................................................................................................................................................................... 17
+Resource Result Set Filtering .................................................................................................................................................... 20
+Resource Representations (GET) .............................................................................................................................................. 25
+Resource Existence and Modification (HEAD) ....................................................................................................................... 36
+Creating a Resource (POST) ...................................................................................................................................................... 38
+Updating a Resource (PATCH) ................................................................................................................................................... 41
+Entity Operations (GET /POST) .................................................................................................................................................. 59
 4 Other API Modules 63
-Additional API Modules  ..............................................................................................................................................................   63
+Additional API Modules .............................................................................................................................................................. 63
 5 Supported Operations 65
-Batch Number ...............................................................................................................................................................................  65
+Batch Number ............................................................................................................................................................................... 65
 
 Oracle Warehouse Management Cloud
 WMS REST API Guide
-Bulk Change Eligible Group  .......................................................................................................................................................  65
-Company ........................................................................................................................................................................................  66
-Container ........................................................................................................................................................................................  67
-Cycle Count ....................................................................................................................................................................................  75
-Describe Entity  .............................................................................................................................................................................   90
-Facility .............................................................................................................................................................................................  90
-IBLPN ...............................................................................................................................................................................................   91
-IB Shipment ..................................................................................................................................................................................   119
-Item ................................................................................................................................................................................................  120
-Inventory ........................................................................................................................................................................................  121
-Load ...............................................................................................................................................................................................   135
-Location ........................................................................................................................................................................................   138
-OBLPN ...........................................................................................................................................................................................  146
-Order Detail Serial Number  ......................................................................................................................................................  157
-Pallet ..............................................................................................................................................................................................   158
-Pick-Pack .......................................................................................................................................................................................   161
-Planned Parcel Shipment  ..........................................................................................................................................................  177
-Print ...............................................................................................................................................................................................   178
-Putaway .........................................................................................................................................................................................  185
-Repack ...........................................................................................................................................................................................  190
-Replenishment .............................................................................................................................................................................  197
-Report ...........................................................................................................................................................................................   202
-Sales Order Header  ...................................................................................................................................................................   203
-SQL Selection (Rule Tree)  ........................................................................................................................................................  208
-Sort and Receive  ........................................................................................................................................................................  209
-T ask ................................................................................................................................................................................................   213
-Trailer .............................................................................................................................................................................................   221
-Waves ............................................................................................................................................................................................  224
-Attachments ................................................................................................................................................................................   229
+Bulk Change Eligible Group ....................................................................................................................................................... 65
+Company ........................................................................................................................................................................................ 66
+Container ........................................................................................................................................................................................ 67
+Cycle Count .................................................................................................................................................................................... 75
+Describe Entity ............................................................................................................................................................................. 90
+Facility ............................................................................................................................................................................................. 90
+IBLPN ............................................................................................................................................................................................... 91
+IB Shipment .................................................................................................................................................................................. 119
+Item ................................................................................................................................................................................................ 120
+Inventory ........................................................................................................................................................................................ 121
+Load ............................................................................................................................................................................................... 135
+Location ........................................................................................................................................................................................ 138
+OBLPN ........................................................................................................................................................................................... 146
+Order Detail Serial Number ...................................................................................................................................................... 157
+Pallet .............................................................................................................................................................................................. 158
+Pick-Pack ....................................................................................................................................................................................... 161
+Planned Parcel Shipment .......................................................................................................................................................... 177
+Print ............................................................................................................................................................................................... 178
+Putaway ......................................................................................................................................................................................... 185
+Repack ........................................................................................................................................................................................... 190
+Replenishment ............................................................................................................................................................................. 197
+Report ........................................................................................................................................................................................... 202
+Sales Order Header ................................................................................................................................................................... 203
+SQL Selection (Rule Tree) ........................................................................................................................................................ 208
+Sort and Receive ........................................................................................................................................................................ 209
+T ask ................................................................................................................................................................................................ 213
+Trailer ............................................................................................................................................................................................. 221
+Waves ............................................................................................................................................................................................ 224
+Attachments ................................................................................................................................................................................ 229
 6 Data Extract 237
-Data Extract  .................................................................................................................................................................................   237
+Data Extract ................................................................................................................................................................................. 237
 
 Oracle Warehouse Management Cloud
 WMS REST API Guide
@@ -176,8 +176,8 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 1
 Overview
-1  Overview
-Change History  
+1 Overview
+Change History
 Review what's new in this document.
 Change Type Date Description
 25B revisions Edits 4/16/25 Added sample payload to:
@@ -197,9 +197,9 @@ Header:
 ◦ Required Ship Date
 ◦ Start Ship Date and Stop Ship Date
 • From Manufacturing Transaction
-◦ from_manufacturing_transaction_hdr
+◦ from*manufacturing_transaction_hdr
 ◦ from_manufacturing_transaction_dtl
-◦ from_manufacturing_transaction_dtl_
+◦ from_manufacturing_transaction_dtl*
 serial_nbr
 • IBLPN/Receive API - added:
 ◦ allow_inv_exp_override_flg parameter
@@ -280,7 +280,7 @@ Change Type Date Description
 Waves - Run Template.
 24B release edits Edits 4/9/24 Added the following API updates:
 • Movement Request API
-24A revisions Edits 3/11/24 Added note about T asks for pick_pack/pick_
+24A revisions Edits 3/11/24 Added note about T asks for pick*pack/pick*
 confirm API.
 Updated Print Shipping Labels, Print LPN Labels
 and Print Pallet Labels.
@@ -288,7 +288,7 @@ and Print Pallet Labels.
 24A revisions Edits 2/13/24 Updated parameter for IBLPN - Deallocate API.
 24A release edits Edits 1/9/24 Release T ask API - Print Labels
 23D revisions Edits 11/16/23 Updates to Move LPN API, Pick Confirm API,
- Repack Close LPN API.
+Repack Close LPN API.
 23D release edits Edits 10/13/23 Updates to Receive API
 23C revisions Edits 8/24/23 Locate LPN or Pallet
 23C release edits Edits 7 /14/23 Added the following API updates:
@@ -322,11 +322,11 @@ Representations
 23A release edits. Edits 1/13/23 Added the following API updates:
 Bulk Create, Batch Number
 
-End User License Agreement  
+End User License Agreement
 This guide is intended for REST API software developers with customers or system implementors. While the content
 includes a reasonable overview of REST concepts, the assumption is that the audience understands REST, HTTP
 communication, response codes, and related topics.
-Restful Web Services  
+Restful Web Services
 Representational State Transfer (REST) is a web standards-based architecture utilizing the HTTP protocol for data
 communication. RESTful web services are a light weight, scalable, and maintainable way to allow web-based system-to-
 system communication, irrespective of the respective application platforms (interoperability).
@@ -337,7 +337,7 @@ Oracle Fusion Cloud Warehouse Management has had REST API’s prior to update 18
 to provide fine grained access. These legacy API’s continue to be available. Once all the functionality provided by these
 API’s are incorporated into the newer APIs, the legacy ones will be retired with sufficient notice. The new APIs also
 adhere to RESTful practices better and simplify some of the data encoding requirements.
-Note:  Any APIs not documented in the “REST API Guide” or the “Integration API Guide” books are meant for internal
+Note: Any APIs not documented in the “REST API Guide” or the “Integration API Guide” books are meant for internal
 use by Oracle and subject to change without notice. We do not recommend you use them, but if you do, it is at your
 own risk. Such APIs may change or be dropped at any time, either mid-release or with the next release.
 4
@@ -346,14 +346,14 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 1
 Overview
-HTTP Requests  
+HTTP Requests
 RESTful web services are built on top of the HTTP protocol, which carries some important implications. First, each
 request is stateless. This means that each request is independent of any other requests and the request itself must
 contain all relevant data to fulfill the request. Second, certain types of requests should be idempotent; making identical
 requests should yield the same result on the server. This is a safety measure that also provides consistency. For
 example, when reading data the same request should always yield the same result assuming the resource’s state on the
 server has not changed between requests.
-HTTP Methods  
+HTTP Methods
 The APIs may utilize the following five HTTP methods in order to provide users with Create-Read-Update-Delete (CRUD)
 functionality. Note that not all APIs support all methods.
 GET
@@ -366,7 +366,7 @@ PATCH
 Modify existing resource(s).
 DELETE
 Remove/deactivate existing resource.
-URL Format  
+URL Format
 The lgfapi URL structure is broken down into several components.
 In general, lgfapi URLs following the following schema:
 The first portion of the URL (protocol, domain, environment, and app) is consistent with the URL of the environment’s
@@ -408,9 +408,9 @@ field ‘lgfapi Archive level’ for a user in the Users UI. The following are d
 • ALL - Archive all request/response
 • ERROR - Archive only on error
 • EDIT_AND_ERROR - Archive when the HTTP method is not HEAD or GET, or on error
-Note:  This feature is enabled for all Rest APIs included in this REST API Guide. However, it is not enabled for the
+Note: This feature is enabled for all Rest APIs included in this REST API Guide. However, it is not enabled for the
 legacy APIs.
-Login and Authentication  
+Login and Authentication
 Since each HTTP request is stateless, every request requires information to authenticate the user.
 6
 
@@ -421,12 +421,12 @@ Overview
 Lgfapi supports several types of user authentication:
 • BasicAuth – Classic username and password.
 • OAuth2 – A token based authorization framework.
-Application Permissions  
+Application Permissions
 Making a request to lgfapi not only requires user authorization, but also one or more of the CRUD application-level
 permission to access the supported HTTP methods. These are configurable in the user’s group-level permissions.
 • “lgfapi_read_access” – GET, HEAD
 • “lgfapi_create_access” – POST
-Note:  this access is also required in order to run resource operations.
+Note: this access is also required in order to run resource operations.
 • “lgfapi_update_access” – PATCH
 • “lgfapi_delete_access” – DELETE
 It’s recommended to create dedicated user(s) with appropriate lgfapi permissions and different facility/company
@@ -436,9 +436,9 @@ The legacy API permission, “can_run_ws_stage_interface”, has been replaced b
 “lgfapi_update_access”. This permission now applies to both lgfapi and the legacy APIs. For legacy API’s, this is the
 singular permission required to access all APIs. For lgfapi, this is one of several new permissions used to control user
 access.
-Data Input Methodology  
+Data Input Methodology
 Lgfapi allows for transmission of data in one of two ways, based on the HTTP method being used.
-GET /HEAD  
+GET /HEAD
 These read-only HTTP methods allow the user to pass additional information about the request in the URI. This data is
 sent as key-value pairs and starts with a question mark (“?”) at the end of the main URI. This section of the URI is known
 as the “query string”. Each key-value pair is known as a “parameter”. It is used to provide additional information to the
@@ -468,7 +468,7 @@ It is possible to repeat the same parameter within the query string. However, lg
 of the parameter in order to obtain a value. For example, given the query string “?code=A&code=B”, the interpreted
 value of the “code” parameter will be “B”. The “A” value is discarded. There is no use case for transmitting repeated
 parameters as the desired result is achieved through other module-specific query string mechanisms.
-POST  
+POST
 A POST request is used to pass data to the server similar to pressing a “Submit” button on a web page to submit form
 data to the server. In the context of lgfapi, when making a POST request, the user is passing data to either create a
 resource or invoke a resource operation, such as cancelling an order. Unlike GET and HEAD requests, POST allows for
@@ -526,7 +526,7 @@ allow for correct parsing.
 <list-item>SN1</list-item>
 <list-item>SN2</list-item>
 </serial_nbr_list>
-Note:  lgfapi is not intended to be directly called from a browser and users attempting it may run into CORS policy or
+Note: lgfapi is not intended to be directly called from a browser and users attempting it may run into CORS policy or
 other security errors. That is intended behavior. Use a non-browser application to make the API calls.
 9
 
@@ -540,8 +540,8 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 2
 HTTP Response
-2  HTTP Response
-Status Codes  
+2 HTTP Response
+Status Codes
 Every valid HTTP request receives a response that is comprised of three main components:
 • A 3-digit response status code that gives information about the success or failure of the request, the returned
 content, and other information specific to the request.
@@ -594,44 +594,44 @@ the application was unable to
 formulate a valid response. Please
 contact support and provide any
 returned error information.
-Response Formats  
+Response Formats
 Lgfapi supports JSON (default) and XML formats for data returned in the body of the response. This applies to all HTTP
 methods that return a response body.
 The requester is able to specify the response format in several ways:
 
 1. Making a request without specifying the response format will result in the default JSON format.
 2. Using the reserved “format” query string parameter in the URI when making a request.
-You can set the format to XML by adding “format=xml” to the query string portion of the request (the key-value pair
-data after the “?”). This is in addition to any other query string parameters also in the URI:
-… /resource/?format=json
-… /resource/?format=xml
-Note – “format” is one of the few query string parameters you can use with HTTP methods like POST, which typically
-require all data to be in the body of the request.
-• Using the file-extension dot-notation in the URI when making a request.
-Very similar to the example above, you can also request the format using dot notation like you would when giving a file
-the extension “.xml” or “.json”:
-… /resource/.json
-… /resource.xml (optional trailing slash)
-This can also be combined with a query string:
-… /resource/.xml?key1=value1&key2=value2
-12
+   You can set the format to XML by adding “format=xml” to the query string portion of the request (the key-value pair
+   data after the “?”). This is in addition to any other query string parameters also in the URI:
+   … /resource/?format=json
+   … /resource/?format=xml
+   Note – “format” is one of the few query string parameters you can use with HTTP methods like POST, which typically
+   require all data to be in the body of the request.
+   • Using the file-extension dot-notation in the URI when making a request.
+   Very similar to the example above, you can also request the format using dot notation like you would when giving a file
+   the extension “.xml” or “.json”:
+   … /resource/.json
+   … /resource.xml (optional trailing slash)
+   This can also be combined with a query string:
+   … /resource/.xml?key1=value1&key2=value2
+   12
 
 Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 2
 HTTP Response
-Response Data Encoding  
+Response Data Encoding
 When a response body is returned, the raw JSON or XML data will always be encoded using UTF-8. There is no way
 to configure or specify the response body’s encoding. This is done to ensure that the response content can always be
 correctly rendered. A request body using a different encoding is allowed because the requester is able to control the
 contents being sent to lgfapi. However, the output data may contain characters outside of the encoding used for the
 request, if for example a consistent character set has not been used throughout the application. UTF-8 covers the full
 change of characters supported by OCWMS and is therefore the default, and generally preferred, encoding.
-Response Data Formats  
+Response Data Formats
 In general, the HTTP response body can take on any number of different formats and styles. For lgfapi, several
 dedicated conventions have been adopted to give uniformity and consistency to the handling of both successful and
 erroneous requests.
-Error Response  
+Error Response
 A standardized error format is returned in the body of the response whenever there is an error while fulfilling the
 request. This is accompanied by the response status code, which provides additional insight.
 The standard error response is comprised of 4 components:
@@ -645,7 +645,7 @@ error(s).
 Example JSON Error Response Body:
 {
 "reference": "25b414f0-7a1d-4f35-ac3c-0ec9886cf37a", "code":
- "VALIDATION_ERROR",
+"VALIDATION_ERROR",
 "message": "Invalid input.", "details": {
 "reason_code": "Invalid Reason code"
 }
@@ -657,6 +657,7 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 2
 HTTP Response
+
 <?xml version="1.0" encoding="utf-8"?>
 <error>
 <reference>25b414f0-7a1d-4f35-ac3c-0ec9886cf37a</reference>
@@ -669,7 +670,7 @@ HTTP Response
 Unhandled Errors
 It is possible that the application is unable to convey the nature of the problem back to the requester. In these scenarios,
 the server will respond with a 500 (“Server Error”) status code and an accompanying message.
-Resource Representations  
+Resource Representations
 Representations are by default paginated unless a specific resource is being requested. Pagination allows the response
 data to be served in chunks (pages) to keep payload sizes manageable.
 Pagination
@@ -712,7 +713,7 @@ An example of a paginated JSON response:
 "result_count": 1,
 "page_count": 1,
 "page_nbr": 1, "next_page": null, "previous_page": null, "results":
- [
+[
 {
 "id": 0,
 …
@@ -720,7 +721,9 @@ An example of a paginated JSON response:
 ]
 }
 An example of a paginated XML response:
+
 <?xml version="1.0" encoding="utf-8"?>
+
 <entity_name>
 <result_count>1</result_count>
 <page_count>1</page_count>
@@ -772,8 +775,8 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 3
 Entity Module
-3  Entity Module
-Supported Entities  
+3 Entity Module
+Supported Entities
 The lgfapi entity module is used to access and modify OCWMS application data. It exposes specific methodologies for
 identifying subsets of data and obtaining their representations as well as allowing for the creation of certain resources.
 The entities supported and corresponding functionality will continue to be expanded through subsequent releases.
@@ -784,11 +787,11 @@ Each entity represents an object or combination of objects within OCWMS that is 
 all entities support all HTTP methods. Furthermore, these entities may share characteristics with their respective
 counterparts in other areas of the OCWMS application, but as a whole should be considered independent of other
 application functionality.
-Entity Metadata  
+Entity Metadata
 It is possible to obtain additional information for each entity by making a GET request to the “describe” entity
 operation (… /lgfapi/v10/entity/{entity_name}/describe/). This will return metadata that can be used to further your
 understanding of the entity. See “Entity Operations” section for more details.
-Input Data Types  
+Input Data Types
 Lgfapi supports user input depending on the HTTP method:
 • GET /HEAD
 ◦ Query string parameters
@@ -796,14 +799,14 @@ Lgfapi supports user input depending on the HTTP method:
 ◦ Request body data
 
 - The format must be JSON or XML
-◦ The “format” query sting parameter alone is supported to specify the desired format for the response.
-Although the input formats may be type ambiguous, the input value is cast to the appropriate type as defined in
-the entity’s field metadata. Some fields have naming conventions that are outlined below. The following types are
-supported for user input:
-String/Text
-Query String: …/?field=abc123
-JSON: {“field”: “abc123”}
-17
+  ◦ The “format” query sting parameter alone is supported to specify the desired format for the response.
+  Although the input formats may be type ambiguous, the input value is cast to the appropriate type as defined in
+  the entity’s field metadata. Some fields have naming conventions that are outlined below. The following types are
+  supported for user input:
+  String/Text
+  Query String: …/?field=abc123
+  JSON: {“field”: “abc123”}
+  17
 
 Oracle Warehouse Management Cloud
 WMS REST API Guide
@@ -818,11 +821,11 @@ Numeric/Decimal
 Query String: …/?field=1.234
 JSON: {“field”: "1.234"}
 XML: <field>1.234</field>
-Note:  Special Note about Numeric/Decimal Values: When sending decimal values in a JSON request, it is
+Note: Special Note about Numeric/Decimal Values: When sending decimal values in a JSON request, it is
 recommended to send them wrapped in double quotes like a string value, as seen in the example above. This will
 prevent against any loss of precision as part of the lgfapi request.
 Boolean
-Except for a few specific cases, all True/False Boolean field names end with “_flg”.
+Except for a few specific cases, all True/False Boolean field names end with “\_flg”.
 The input value for all formats should be either “true” or “false”.
 Query String: …/?field_flg=true
 JSON: {“field_flg”: true}
@@ -831,12 +834,12 @@ Temporal (Date/Time)
 All date, time, and date-time fields require the iso-8601 format: YYYY-mm-ddTHH:MM:SS.ffffff
 Note that the microsecond component “f” is optional. Using January 30th, 2018 at 6:30pm as an example:
 Date
-Field names for date-only fields typically end with “_date”.
+Field names for date-only fields typically end with “\_date”.
 Query String: …/?field_date=2018-01-30
 JSON: {“field_date”: “2018-01-30”}
 XML: <field_date>2018-01-30</field_date>
 Time
-Field names for time-only fields typically end with “_time”.
+Field names for time-only fields typically end with “\_time”.
 Query String: …/?field_time=18:30:00
 JSON: {“field_time”: “18:30:00”}
 XML: <field_time>18:30:00</field_time>
@@ -847,7 +850,7 @@ WMS REST API Guide
 Chapter 3
 Entity Module
 Date-time
-Field names for date-time fields typically end with “_ts”.
+Field names for date-time fields typically end with “\_ts”.
 All Date-time objects are assumed to be in the time zone of the user’s facility context. In other words, it should be the
 date/time you would expect to see if viewed by the user in the UI.
 Query String: …/?field_ts=2018-01-30T18:30:00
@@ -858,31 +861,31 @@ It is a recommended best practice to always pass time zone aware date-time value
 component so that there is no ambiguity. The following examples show the time zone specified as Indian Standard Time
 
 - IST (+05:30):
-• Query String: field_ts=2024-08-07T00:00:00+05:30
-• JSON:  {“field_ts”:“2024-08-07T00:00:00+05:30”}
-• XML: <field_ts>2024-08-07T00:00:00+05:30</field_ts>
-This data-time indicates 12:00 am on August 7th in India. The date is converted and stored in WMS appropriately using
-the offset provided on the field. When this date time is pulled up in a WMS UI screen, it would be displayed as per the
-time zone of the default facility of the user. For example, in an IST facility (Tz +05:30), the user would see this as 12:00
-am of August 7th. In a Singapore facility (Tz +08:00), the user would see this as 2:30 am on August 7th.
-• Query String: field_ts=2018-01-30T18:30:00
-• JSON: {“field_ts”: “2018-01-3030T18:30:00”}
-• XML: <field_ts>2018-01-3030T18:30:00</field_ts>
-Additional Note about Timezone
-If sending a time zone component, ensure that the API user's default facility time zone is same as the time zone of the
-facility in the payload, else the conversion may result in undesirable results
-Example 1:
-o API user's default facility time zone: +05:30
-o Time zone of the facility passed in the payload: +05:30
-o Timestamp sent with any time zone is converted appropriately.
-Example 2:
-o API user’s default facility time zone: +08:00
-o Time zone of the facility passed in the payload: +05:30
-o Timestamp sent with any time zone is NOT converted appropriately.
-If you are managing facilities in multiple time zones, ensure that you create as many API users as the number of time
-zones. Each user needs to have a default facility that represents a different time zone and used for posting API requests
-for the facilities in the respective time zones to avoid undesirable results as described in Example 2.
-19
+  • Query String: field_ts=2024-08-07T00:00:00+05:30
+  • JSON: {“field_ts”:“2024-08-07T00:00:00+05:30”}
+  • XML: <field_ts>2024-08-07T00:00:00+05:30</field_ts>
+  This data-time indicates 12:00 am on August 7th in India. The date is converted and stored in WMS appropriately using
+  the offset provided on the field. When this date time is pulled up in a WMS UI screen, it would be displayed as per the
+  time zone of the default facility of the user. For example, in an IST facility (Tz +05:30), the user would see this as 12:00
+  am of August 7th. In a Singapore facility (Tz +08:00), the user would see this as 2:30 am on August 7th.
+  • Query String: field_ts=2018-01-30T18:30:00
+  • JSON: {“field_ts”: “2018-01-3030T18:30:00”}
+  • XML: <field_ts>2018-01-3030T18:30:00</field_ts>
+  Additional Note about Timezone
+  If sending a time zone component, ensure that the API user's default facility time zone is same as the time zone of the
+  facility in the payload, else the conversion may result in undesirable results
+  Example 1:
+  o API user's default facility time zone: +05:30
+  o Time zone of the facility passed in the payload: +05:30
+  o Timestamp sent with any time zone is converted appropriately.
+  Example 2:
+  o API user’s default facility time zone: +08:00
+  o Time zone of the facility passed in the payload: +05:30
+  o Timestamp sent with any time zone is NOT converted appropriately.
+  If you are managing facilities in multiple time zones, ensure that you create as many API users as the number of time
+  zones. Each user needs to have a default facility that represents a different time zone and used for posting API requests
+  for the facilities in the respective time zones to avoid undesirable results as described in Example 2.
+  19
 
 Oracle Warehouse Management Cloud
 WMS REST API Guide
@@ -894,7 +897,7 @@ facility. In other words, it would be the date/time you expect to see if viewed 
 facility. These are date-time values that DO NOT include the time zone offset component as illustrated in the following
 example.
 • Query String: field_ts=2024-08-07T00:00:00
-• JSON:  {“field_ts”:“2024-08-07T00:00:00”}
+• JSON: {“field_ts”:“2024-08-07T00:00:00”}
 • XML: <field_ts>2024-08-07T00:00:00</field_ts>
 In this example, if the API user's default facility is Atlanta (Tz -04:00 EDT), the date-time value indicates 12:00 am on
 August 7th in Atlanta. The date is converted and stored in WMS appropriately using the time zone of the API user’s
@@ -902,14 +905,14 @@ default facility. When this date time is pulled up in a WMS UI screen, it would 
 default facility of the user. For example, in an ATL facility (Tz -04:00 EDT), the user would see this as 12:00 am of August
 7th. In a Singapore facility (Tz +08:00), the user would see this as 12:00 pm on August 7th.
 Relational
-Relational fields are when one resource has a link to another resource. These fields always end in “_id” and by default,
+Relational fields are when one resource has a link to another resource. These fields always end in “\_id” and by default,
 are integer values. They are unique when filtering, in that you can use the double-underscore (“**”) notation to
 reference a related resource’s fields, or even nested related resources. This is covered in more detail in the Resource
 Result Set Filtering section.
 Query String: …/?field_id=1
 JSON: {“field_id”: 1}
 XML: <field_id>1</field_id>
-Resource Result Set Filtering  
+Resource Result Set Filtering
 Lgfapi offers the ability to apply filters to GET and HEAD requests in order to narrow down the final result set. This is
 done by adding query string filter parameters to the URI. Furthermore, lgfapi supports several built-in lookup functions
 to assist in common filtering tasks.
@@ -922,42 +925,42 @@ This can be chained to apply multiple filters: …/?field1=value1&field2=value2
 Lgfapi uses double underscore (“**”) notation in order to join multiple fields or functions in the query string filters.
 The double underscore is used to distinguish the field names when filtering on a related resource’s attributes or when
 applying a lookup function.
-Applying a lookup function: …/?field__lookup=value
-Filtering on a related resource: …/?relation_id__related_field=value
+Applying a lookup function: …/?field**lookup=value
+Filtering on a related resource: …/?relation_id**related_field=value
 20
 
 Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 3
 Entity Module
-Applying a lookup function on a related resource: …/?relation_id__related_field__lookup=value
-Supported Lookup Functions  
+Applying a lookup function on a related resource: …/?relation_id**related_field**lookup=value
+Supported Lookup Functions
 The following lookup functions are provided by lgfapi. Note that any match function with a corresponding “i” function
 means that function is case-insensitive. For example, “exact” is used to match exactly on a value, as does “iexact”
 except that the latter ignores upper/lower case.
 Arithmetic Lookups
 gt – Greater than
 Example: Filtering sales order detail(s) for only those with an ordered quantity.
-…/order_dtl/?ord_qty__gt=0
+…/order_dtl/?ord_qty**gt=0
 • gte – Greater than or equal to
 Example: Filtering sales order detail(s) for only those with an ordered quantity.
-…/order_dtl/?ord_qty__gte=1
+…/order_dtl/?ord_qty**gte=1
 • lt – Less than
 Example: Filtering sales order detail(s) for only those with ordered quantity below 10.
-…/order_dtl/?ord_qty__lt=10
+…/order_dtl/?ord_qty**lt=10
 • lte – Less than or equal to
 Example: Filtering sales order detail(s) for those with ordered quantity at or below 10.
-…/order_dtl/?ord_qty__lte=10
+…/order_dtl/?ord_qty**lte=10
 Text Match Lookups
 • contains/icontains – Text contains substring
 Example: Filtering sales order(s) for orders with “FOO” in the order_nbr field.
-…/order_hdr/?order_nbr__contains=FOO
+…/order_hdr/?order_nbr**contains=FOO
 Example: Same as previous example, but ignore case.
-…/order_hdr/?order_nbr__icontains=FOO
+…/order_hdr/?order_nbr**icontains=FOO
 • exact/iexact – Text exactly matches
 Example: Match sales order(s) exactly on the order number.
-…/order_hdr/?order_nbr__exact=ORDER001
-Note:  “Exact” is not typically needed. The above filter condition does not require the exact lookup since this is
+…/order_hdr/?order_nbr\_\_exact=ORDER001
+Note: “Exact” is not typically needed. The above filter condition does not require the exact lookup since this is
 automatically implied by the exact operator (“=”).
 21
 
@@ -968,30 +971,30 @@ Entity Module
 The query string can be simplified to:
 …/order_hdr/?order_nbr=ORDER001
 “iexact”, on the other hand, is a useful tool when you need to do an exact match, but ignore letter casing:
-…/order_hdr/?order_nbr__iexact=OrDeR001
+…/order_hdr/?order_nbr**iexact=OrDeR001
 • startwith/istartswith – Text starts with
 Example: Filtering sales order(s) for only those whose order_nbr starts with “ORD”:
-…/order_hdr/?order_nbr__startswith=ORD
+…/order_hdr/?order_nbr**startswith=ORD
 • endswith/iendswith – Text ends with
 Example: Filtering sales order(s) for only those whose order_nbr ends with “001”:
-…/order_hdr/?order_nbr__endswith=001
+…/order_hdr/?order_nbr**endswith=001
 Temporal (Date/Time) Lookups
 The following temporal functions may only be used on date, time, and/or date-time data. Consider the “order_hdr”
 entity’s “order_shipped_ts” date-time field with a value “2018-09-17T20:30:59”:
 • year – Match on a date’s year (date or date-time).
-…/order_hdr/?order_shipped_ts__year=2018
+…/order_hdr/?order_shipped_ts**year=2018
 • month – Match on a date’s month (date or date-time).
-…/order_hdr/?order_shipped_ts__month=09
+…/order_hdr/?order_shipped_ts**month=09
 • week_day – Match on a date’s day of the week (date or date-time).
 T akes an integer value representing the day of week from 1 (Sunday) to 7 (Saturday).
-…/order_hdr/?order_shipped_ts__week_day=2
+…/order_hdr/?order_shipped_ts**week_day=2
 • day – Match on a date’s day (date or date-time).
-…/order_hdr/?order_shipped_ts__day=17
+…/order_hdr/?order_shipped_ts**day=17
 • hour – Match on a date’s hour (time or date-time).
 Assumes a 24-hour clock.
-…/order_hdr/?order_shipped_ts__hour=20
+…/order_hdr/?order_shipped_ts**hour=20
 • minute – Match on the time’s minutes (time or date-time).
-…/order_hdr/?order_shipped_ts__minute=30
+…/order_hdr/?order_shipped_ts\_\_minute=30
 You can also apply other lookup and arithmetic functions to temporal fields:
 • Date Range
 22
@@ -1002,19 +1005,19 @@ Chapter 3
 Entity Module
 For example, if we have a date-time field where we want to search for resources that have a value within a range, it is
 possible to chain two temporal filters together to search within a set date range:
-…/order_hdr/?order_shipped_ts__gte=2018-09-01T00:00:00&order_shipped_ts__lt=2018-10-01T00:00:00
+…/order_hdr/?order_shipped_ts**gte=2018-09-01T00:00:00&order_shipped_ts**lt=2018-10-01T00:00:00
 Or, it is possible to use the “range” lookup function:
-…/order_hdr/?order_shipped_ts__range=2018-09-01T00:00:00,2018-10-01T00:00:00
+…/order_hdr/?order_shipped_ts**range=2018-09-01T00:00:00,2018-10-01T00:00:00
 However, since in this example we don’t have any specific time data, this could have also been accomplished more
 easily using the “month” lookup:
-…/order_hdr/?order_shipped_ts__month=09
+…/order_hdr/?order_shipped_ts**month=09
 There may be multiple different ways to arrive at the same result when filtering. It is always desirable to be as specific as
 possible to minimize the result set and improve efficiency.
 Additional Lookups
 • isnull – Boolean; Is the field’s value null?
 This lookup is used to test if a field is null. This is a useful lookup as it can be used on any type of field to test for null.
 Example: Filtering sales order(s) for only those where the shipped timestamp is null:
-…/order_hdr/?order_shipped_ts__isnull=true
+…/order_hdr/?order_shipped_ts**isnull=true
 This is important because it allows you to make this test for any field type. If, for example, you tried to filter on the field’s
 value directly (…/order_hdr/?order_shipped_ts=null), you would receive an error that “null” is not a valid date. Since the
 field is of type date-time, it is expecting a temporal value and is interpreting “null” as the input.
@@ -1023,13 +1026,13 @@ This lookup function allows for filtering by a group of values. These values may
 type(s) should be consistent with the type of the field being filtered. The input is a comma-delimited list with no spaces
 between entries in the list.
 Example: Filter order_hdr by specific status id values:
-…/order_hdr/?status_id__in=10,30,90
+…/order_hdr/?status_id**in=10,30,90
 Or, it can be applied for filtering on a specific set of sales order numbers:
-…/order_hdr/?order_nbr__in=ORDER001,ORDER002,ORDER003
+…/order_hdr/?order_nbr**in=ORDER001,ORDER002,ORDER003
 It is also possible to use an “in” lookup with a single value to effectively function the same as an exact operator (“=”).
 The two following examples are equivalent in that they will return the same result set:
 …/order_hdr/?order_nbr=ORDER001
-…/order_hdr/?order_nbr__in=ORDER001
+…/order_hdr/?order_nbr**in=ORDER001
 The difference is that an “in” lookup in inherently slower because of the way the filter is built and applied when filtering
 the data. If you have a single value to match on, it is recommended to use “=” instead of “in”.
 • range – Filter for resources with value within an inclusive range.
@@ -1040,11 +1043,11 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 3
 Entity Module
-…/order_hdr/?status_id__range=10,90
+…/order_hdr/?status_id**range=10,90
 Date range
-…/order_hdr/?order_shipped_ts__range=2018-09-01T00:00:00,2018-10-01T00:00:00
+…/order_hdr/?order_shipped_ts**range=2018-09-01T00:00:00,2018-10-01T00:00:00
 Relational Resource Filtering
-It is possible to filter on any related field for the given entity. All related field names end with “_id” and are integers by
+It is possible to filter on any related field for the given entity. All related field names end with “\_id” and are integers by
 default.
 For example, the simplest and fastest performing related resource filter is to search directly on the resource’s id. An “id”
 is the unique value assigned to every resource. Using the “order_hdr” field, “facility_id”, we could filter specifically for
@@ -1055,18 +1058,18 @@ Adding the “company_id” field is a very common thing to do, in order to filt
 …/order_hdr/?facility_id=1&company_id=1
 But what if we wanted to filter by the value of a field belonging to the related resource. For example, what if we knew
 the facility and company codes, but didn’t yet know their respective “id” values. It is possible to filter on the related
-resource’s fields using double-underscore (“__”) notation.
+resource’s fields using double-underscore (“**”) notation.
 Assuming facility with id=1 has a code “FAC1” and company with id=1 has a code “COM1”:
-…/order_hdr/?facility_id__code=FAC1&company_id_code=COM1
+…/order_hdr/?facility_id**code=FAC1&company_id_code=COM1
 This is not as efficient as using just the “id” of the related resources since lgfapi will need to do an additional lookup for
 each related resource to filter on their respective “code” fields. It is recommended to cache client-side the “id” values of
 commonly used, static entities (like facility and company) in order to improve performance in high-throughput systems.
 It is also possible to filter multiple levels deep with related resources. For example, in order to filter on the order’s
 facility’s parent company, we could further chain the facility field, “parent_company_id”, as it is a related resource of
 “facility_id” and of entity type “company”:
-…/order_hdr/?facility_id__parent_company_id=1
+…/order_hdr/?facility_id**parent_company_id=1
 Again, you can also search on a related field:
-…/order_hdr/?facility_id__parent_company_id_code=COM1
+…/order_hdr/?facility_id**parent_company_id_code=COM1
 This is a handy and powerful tool for looking up resource sets based on related data. However, it is important to
 remember that as the relational filter depth increases, the performance may decrease as well since there is more work to
 be done to lookup related resource(s). Client-side caching and other performance methodologies are discussed in their
@@ -1075,7 +1078,7 @@ Chaining Multiple Filters
 It is possible to chain multiple filters on the same field. Each condition is just another key-value pair where the field is
 consistent. For example, if we wanted to filter the order_hdr entity to return those whose order_nbr starts with “ABC”
 and additionally contains the word “TEST”, we would write it as:
-…/order_hdr/?order_nbr__startswith=ABC&order_nbr__contains=TEST
+…/order_hdr/?order_nbr**startswith=ABC&order_nbr**contains=TEST
 24
 
 Oracle Warehouse Management Cloud
@@ -1085,7 +1088,7 @@ Entity Module
 It is possible to chain together any number of different field and lookup combinations to arrive at your desired result set.
 However, it is important to note that the more filters applied, the more the performance may degrade. Therefore, it is
 always preferred to be as specific as possible when using filtering.
-Resource Representations (GET)  
+Resource Representations (GET)
 Within the lgfapi entity module, JSON or XML resource representation(s) of entity(s) may be obtained through a GET
 request. A GET request is made for a specific entity in the format:
 …/lgfapi/v10/entity/{entity_name}/
@@ -1094,7 +1097,7 @@ additional filter conditions in the URI query string in order to arrive at the d
 found, a 404 – Not Found error will be returned in the standard lgfapi response.
 Furthermore, there are two conventions for how to request resource representation(s) – “list” and “retrieve”. For the
 following examples, the “company” entity will be used.
-List  
+List
 A list request is used to fetch one or more object representations of an entity. The result set is based on the default
 facility/company context filters and any optional filter parameters provided in the URI. The default results set is
 comprised of all resources for the given entity that are eligible to the requesting user. Since the result set may be of an
@@ -1104,7 +1107,7 @@ The representation for all eligible objects can be requested by not providing th
 Query string filter parameters may optionally be used to further narrow down the data set. For example, to filter
 additionally by company code “ABC”, we would add the following:
 …/lgfapi/v10/company/?code=ABC
-Retrieve  
+Retrieve
 A retrieve request is used to fetch a single resource by its integer “id” value. This is the most performant way to get a
 representation for a single resource where the “id” is known. The result set is not paginated. The “id” value is specified
 in the URI after the entity name:
@@ -1121,18 +1124,18 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 3
 Entity Module
-Note:  …/lgfapi/v10/company/?id=1 is still considered a “list” style request and is paginated.
+Note: …/lgfapi/v10/company/?id=1 is still considered a “list” style request and is paginated.
 Last-Modified HTTP Header
 If the requested resource exists and the data is temporally tracked, the Last-Modified HTTP header will be returned.
 This is the date-time that the resource was last updated. It is in iso-8601 format in the requesting user’s time zone.
 This can be cached client-side and used in conjunction with HEAD requests as an efficient way to check for resource
 modification.
-Resource Representation Data Conventions  
+Resource Representation Data Conventions
 For both list and retrieve GET requests, the “format” query string parameter can be passed in order to convey the
 desired response format as “json” (default) or “xml”.
-Hyperlink-Related Resource Representations  
+Hyperlink-Related Resource Representations
 All resources use hyperlinked representations for related resource fields. These are the fields whose name ends
-with “_id”. They represent another entity resource that can generate its own representation using the hyperlink
+with “\_id”. They represent another entity resource that can generate its own representation using the hyperlink
 provided. Lgfapi uses hyperlinked relationships to allow for users to crawl to the intended data sets. This allows for the
 preservation of RESTful principals as well as to keep the data interchange sizes manageable.
 All related field representations contain three pieces of information:
@@ -1140,21 +1143,21 @@ All related field representations contain three pieces of information:
 1. “id” – The integer id value of the related resource
 2. “key” – A string identifier for the related resource
 3. “url” – A crawl-able retrieve style hyperlink to the related resource
-◦ Both “id” and “key” are always provided. However, the value for “url” may be blank if the related resource
-it not one of the supported entities. In this case, it is not possible to build a hyperlink to the resource as it
-does not support generating its own representations.
-For example, when getting a representation for the “company” entity where the company is of type Regular, the related
-field “company_type_id” would be represented like the following JSON string:
-{
-…
-“company_type_id”: {
-“id”: 1,
-“key”: “R”,
-“url”: “https://…/wms/lgfapi/v10/entity/company_type/1”
-},
-…
-}
-26
+   ◦ Both “id” and “key” are always provided. However, the value for “url” may be blank if the related resource
+   it not one of the supported entities. In this case, it is not possible to build a hyperlink to the resource as it
+   does not support generating its own representations.
+   For example, when getting a representation for the “company” entity where the company is of type Regular, the related
+   field “company_type_id” would be represented like the following JSON string:
+   {
+   …
+   “company_type_id”: {
+   “id”: 1,
+   “key”: “R”,
+   “url”: “https://…/wms/lgfapi/v10/entity/company_type/1”
+   },
+   …
+   }
+   26
 
 Oracle Warehouse Management Cloud
 WMS REST API Guide
@@ -1187,11 +1190,11 @@ Important
 There are many related resource fields that are optional. If there is no linked resource, the field’s value will be “null” if
 using JSON or an empty tag if using XML. For more information, reference the entity’s field metadata for the “required”
 attribute.
-Related Data Sets  
+Related Data Sets
 The related resources previously discussed all link to a single resource. However, it is possible that the current resource
 has a list many other linked resources of the same type. A good example is a sales order header that has one or more
 child details. As a convenience and additionally for guidance/performance reasons, many entity representations have
-additional hyperlinked relations to these data sets. These field names always end in “_set”.
+additional hyperlinked relations to these data sets. These field names always end in “\_set”.
 27
 
 Oracle Warehouse Management Cloud
@@ -1210,86 +1213,86 @@ GET https://.../wms/lgfapi/v10/entity/order_hdr/123
 },
 …
 }
-It’s important to note that unlike the “_id” related resources which have a retrieve style hyperlink to the specific resource,
-“_set” related representations use list style with query string filters in order to return a paginated list of 1 to n resource
+It’s important to note that unlike the “\_id” related resources which have a retrieve style hyperlink to the specific resource,
+“\_set” related representations use list style with query string filters in order to return a paginated list of 1 to n resource
 representations. Also, instead of giving the “id” and “key”, the related count is returned.
 If no related resources are found for the set, the value will be “null” for JSON representations and an empty tag for XML.
-If you need to query an entity to return all entities with _set value being null, then you can query it as follows:
+If you need to query an entity to return all entities with \_set value being null, then you can query it as follows:
 Example: for purchase_order_hdr you can query as follows:
-https//…<cloud WMS instance path>/wms/lgfapi/v10/entity/purchase_order_hdr?purchaseorderdtl__isnull=true
+https//…<cloud WMS instance path>/wms/lgfapi/v10/entity/purchase_order_hdr?purchaseorderdtl**isnull=true
 Example Output
 The following is an example output that you will see for REST API GET operation for purchase order entity which have
 no details on them.
 {
- "result_count": 138,
- "page_count": 6,
- "page_nbr": 1,
- "next_page": “https//… intqa.wms.ocs.oraclecloud.com:443/lgf_22a_qa/wms/lgfapi/v10/entity/
-purchase_order_hdr?page=2&purchaseorderdtl__isnull=true",
- "previous_page": null,
- "results": [
- {
- "id": 1176,
- "url": "https//…intqa.wms.ocs.oraclecloud.com:443/lgf_22a_qa/wms/lgfapi/v10/entity/
+"result_count": 138,
+"page_count": 6,
+"page_nbr": 1,
+"next_page": “https//… intqa.wms.ocs.oraclecloud.com:443/lgf_22a_qa/wms/lgfapi/v10/entity/
+purchase_order_hdr?page=2&purchaseorderdtl**isnull=true",
+"previous_page": null,
+"results": [
+{
+"id": 1176,
+"url": "https//…intqa.wms.ocs.oraclecloud.com:443/lgf_22a_qa/wms/lgfapi/v10/entity/
 purchase_order_hdr/1176",
- "create_user": "",
- "create_ts": "2014-04-10T12:01:48.391494+05:30",
- "mod_user": "SMALL01",
- "mod_ts": "2014-04-10T12:01:48.391494+05:30",
- "facility_id": {
- "id": 647,
- "key": "QATRN01",
- "url": "https//…intqa.wms.ocs.oraclecloud.com:443/lgf_22a_qa/wms/lgfapi/v10/entity/facility/647"
- },
+"create_user": "",
+"create_ts": "2014-04-10T12:01:48.391494+05:30",
+"mod_user": "SMALL01",
+"mod_ts": "2014-04-10T12:01:48.391494+05:30",
+"facility_id": {
+"id": 647,
+"key": "QATRN01",
+"url": "https//…intqa.wms.ocs.oraclecloud.com:443/lgf_22a_qa/wms/lgfapi/v10/entity/facility/647"
+},
 28
 
 Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 3
 Entity Module
- "company_id": {
- "id": 369,
- "key": "QATSTPC",
- "url": "https://...intqa.wms.ocs.oraclecloud.com:443/lgf_22a_qa/wms/lgfapi/v10/entity/company/369"
- },
- "po_nbr": "POSMA001",
- "status_id": 0,
- "ord_date": "2014-04-10",
- "ref_nbr": "1STPO",
- "po_type_id": null,
- "delivery_date": "2014-04-14",
- "vendor_id": {
- "id": 390,
- "key": "VNDR048",
- "url": "https://...intqa.wms.ocs.oraclecloud.com:443/lgf_22a_qa/wms/lgfapi/v10/entity/vendor/390"
- },
- "dept_code": "",
- "ship_date": "2014-04-15",
- "cancel_date": "2014-04-15",
- "lock_id": null,
- "cust_nbr": "",
- "cust_name": "",
- "cust_addr": "",
- "cust_addr2": "",
- "cust_addr3": "",
- "rma_nbr": "",
- "sold_to_legal_name": "",
- "cust_field_1": "PO1",
- "cust_field_2": "",
- "cust_field_3": "",
- "cust_field_4": "",
- "cust_field_5": "",
- "purchase_order_dtl_set": null
- },
+"company_id": {
+"id": 369,
+"key": "QATSTPC",
+"url": "https://...intqa.wms.ocs.oraclecloud.com:443/lgf_22a_qa/wms/lgfapi/v10/entity/company/369"
+},
+"po_nbr": "POSMA001",
+"status_id": 0,
+"ord_date": "2014-04-10",
+"ref_nbr": "1STPO",
+"po_type_id": null,
+"delivery_date": "2014-04-14",
+"vendor_id": {
+"id": 390,
+"key": "VNDR048",
+"url": "https://...intqa.wms.ocs.oraclecloud.com:443/lgf_22a_qa/wms/lgfapi/v10/entity/vendor/390"
+},
+"dept_code": "",
+"ship_date": "2014-04-15",
+"cancel_date": "2014-04-15",
+"lock_id": null,
+"cust_nbr": "",
+"cust_name": "",
+"cust_addr": "",
+"cust_addr2": "",
+"cust_addr3": "",
+"rma_nbr": "",
+"sold_to_legal_name": "",
+"cust_field_1": "PO1",
+"cust_field_2": "",
+"cust_field_3": "",
+"cust_field_4": "",
+"cust_field_5": "",
+"purchase_order_dtl_set": null
+},
 Similarly, some of the other entities which contain sets and how they can be queried are as follows:
 IB_shipment (all inbound shipments which have no shipment details):
-https://...<cloud WMS instance path>/wms/lgfapi/v10/entity/ib_shipment?ibshipmentdtl__isnull=true
+https://...<cloud WMS instance path>/wms/lgfapi/v10/entity/ib_shipment?ibshipmentdtl**isnull=true
 Work_order_hdr (all work order headers which have not ktis on them):
-https://...<cloud WMS instance path>/wms/lgfapi/v10/entity/work_order_hdr?workorderkit__isnull=true
+https://...<cloud WMS instance path>/wms/lgfapi/v10/entity/work_order_hdr?workorderkit**isnull=true
 Work_order_kit (all kits that have no components):
-https://...<cloud wms instance path>/wms/lgfapi/v10/entity/work_order_kit?workordercomponent__isnull=true
+https://...<cloud wms instance path>/wms/lgfapi/v10/entity/work_order_kit?workordercomponent**isnull=true
 Container (for all containers that have no inventory locks on them):
-https://...<cloud wms instance path>/lgfapi/v10/entity/container?containerlockxref__isnull=true
+https://...<cloud wms instance path>/lgfapi/v10/entity/container?containerlockxref**isnull=true
 Inventory (for all inventory that have no serials associated):
 29
 
@@ -1297,12 +1300,12 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 3
 Entity Module
-https://...<cloud wms instance path>/wms/lgfapi/v10/entity/inventory?inv_serial_nbr_id__isnull=true
+https://...<cloud wms instance path>/wms/lgfapi/v10/entity/inventory?inv_serial_nbr_id**isnull=true
 Order_hdr (for all order hdrs what have no order details):
-https://...<cloud wms instance path>/wms/lgfapi/v10/entity/order_hdr?orderdtl__isnull=true
+https://...<cloud wms instance path>/wms/lgfapi/v10/entity/order_hdr?orderdtl**isnull=true
 Order_hdr (for all order hdrs that have no order locks):
-https://...<cloud wms instance path>/wms/lgfapi/v10/entity/order_hdr?orderlockxref__isnull=true
-Field Selection  
+https://...<cloud wms instance path>/wms/lgfapi/v10/entity/order_hdr?orderlockxref\_\_isnull=true
+Field Selection
 GET requests for the lgfapi entities support the “fields” query string parameters. It takes a comma-delimited list of field
 names for the entity and returns only those fields in the representation.
 For example, to return only the “id” and “code” for all eligible companies using a list style request with no filters:
@@ -1316,7 +1319,7 @@ GET https://.../wms/lgfapi/v10/entity/company/1?fields=id,code
 This is an important tool when performance is of concern. If it is known ahead of time that only specific field values are
 required, narrowing the returned data set using the “fields” parameter can greatly reduce the overall payload size and
 remove the need for unnecessary field and/or relation lookups.
-Ordering  
+Ordering
 By default, no ordering is applied to list style GET requests that can return 0 or more representations. This is done for
 performance considerations as applying ordering to any request may degrade performance, especially in the case of
 larger data sets.
@@ -1334,14 +1337,14 @@ WMS REST API Guide
 Chapter 3
 Entity Module
 Just like any other query string parameter, it may be chained with other parameters and filters.
-Querying Multiple Entities in one GET Request using “values_list”  
+Querying Multiple Entities in one GET Request using “values_list”
 Currently lgfapi GET queries can retrieve data related to one entity, whether it fetches objects (all the fields of the entity)
 or a specific list of fields (using the fields parameter). With this new experimental feature called “values_list”, you can
 now fetch data from other related entities also without the need to do multiple GET requests for each entity separately.
 The benefits that you will get from this feature is that you can very easily query related data across multiple entities
 which results in better performance as it fetches less data in the most efficient way possible. It is similar to running a
 database SQL query by joining multiple tables instead of executing multiple separate queries, one per table.
-Note:  You need to know the relationships between various entities to use this feature effectively. The entity
+Note: You need to know the relationships between various entities to use this feature effectively. The entity
 relationships are described via the self-documenting nature of lgfapi as documented elsewhere in this guide. Another
 resource is the list of entities (categories) that are listed in the web reports gen2 documentation, along with the
 relationships.
@@ -1351,36 +1354,36 @@ company type code you needed to make the following sequence of requests.
 Step 1: Fetch the order_hdr to get the associated Company’s id.
 GET .../entity/order_hdr/1
 {
- ...
- "company_id": {
- "id": 48,
- "key": "CM_COMP",
- "url": ".../wms/lgfapi/v10/entity/company/48"
- },
- ....
+...
+"company_id": {
+"id": 48,
+"key": "CM_COMP",
+"url": ".../wms/lgfapi/v10/entity/company/48"
+},
+....
 }
 Step 2: Now that you have the company id, you can fetch the company entity to get company type
 GET .../entity/company/48
 {
- ...
- "company_type_id": {
- "id": 1,
- "key": "R",
- "url": ".../entity/company_type/1"
- },
- ....
+...
+"company_type_id": {
+"id": 1,
+"key": "R",
+"url": ".../entity/company_type/1"
+},
+....
 }
 Now with value list feature, you only need one request.
-GET .../entity/order_hdr/1?values_list=company_id__company_type_id__code
+GET .../entity/order_hdr/1?values_list=company_id**company_type_id**code
 {
- "company_id__company_type_id__code": "R"
+"company_id**company_type_id**code": "R"
 31
 
 Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 3
 Entity Module
-Note:  The response field name will match the field names from the "values_list" parameter.
+Note: The response field name will match the field names from the "values_list" parameter.
 Let's break down the request:
 
 1. Making a GET Request to the order_hdr entity
@@ -1389,30 +1392,30 @@ Let's break down the request:
 4. Company_id is the foreign key between order hdr and company entities
 5. Company_type_id is the foreign key between company and company_type entities
 6. Code is what you are looking for ie. Order type code
-Example 2: Get the order number, ship via id and the ship via code for all orders of type ‘01’
-A query to lookup order hdr records with order type code of ‘01’ can already be represented in lgfapi as:
-GET .../lgfapi/v10/entity/order_hdr?type_id__code=01
-The ability to retrieve a values_list of field data for a filtered set of object and their related objects may now be used:
-GET .../lgfapi/v10/entity/order_hdr?
-type_id__code=01&values_list=order_nbr,ship_via_id,ship_via_id__code
-The ability to retrieve a values_list of field data for a filtered set of object(s) and their related objects may now be used:
-GET .../lgfapi/v10/entity/order_hdr?
-type_id__code__in=01,02,03&values_list=order_nbr,ship_via_id,ship_via_id__code
-Get All Information for a Load
-Example of a query to get all information for a load:
-<wms instance url>/wms/lgfapi/v10/entity/ob_stop_dtl?
-values_list=ob_stop_id__shipto_facility_id__code:facility,
-ob_stop_id__shipto_facility_id__name:Name,
-ob_stop_id__shipto_facility_id__address_1:Address,
-ob_stop_id__shipto_facility_id__zip:Zip,
-ob_stop_id__shipto_facility_id__state:State,
-ob_stop_id__load_id__load_nbr:load_nbr,
-container_id__container_nbr:container_nbr,
-container_id__cntr_inv__item_id__code:item_code,
-container_id__cntr_inv__to_from_inv__order_dtl_id__order_id__order_nbr:order_nbr,
-container_id__cntr_inv__to_from_inv__order_dtl_id__seq_nbr:order_seq_nbr,
-container_id__cntr_inv__batch_number_id:batch&ob_stop_id__load_id__load_nbr=OBL0000003712
-32
+   Example 2: Get the order number, ship via id and the ship via code for all orders of type ‘01’
+   A query to lookup order hdr records with order type code of ‘01’ can already be represented in lgfapi as:
+   GET .../lgfapi/v10/entity/order_hdr?type_id**code=01
+   The ability to retrieve a values_list of field data for a filtered set of object and their related objects may now be used:
+   GET .../lgfapi/v10/entity/order_hdr?
+   type_id**code=01&values_list=order_nbr,ship_via_id,ship_via_id**code
+   The ability to retrieve a values_list of field data for a filtered set of object(s) and their related objects may now be used:
+   GET .../lgfapi/v10/entity/order_hdr?
+   type_id**code**in=01,02,03&values_list=order_nbr,ship_via_id,ship_via_id**code
+   Get All Information for a Load
+   Example of a query to get all information for a load:
+   <wms instance url>/wms/lgfapi/v10/entity/ob_stop_dtl?
+   values_list=ob_stop_id**shipto_facility_id**code:facility,
+   ob_stop_id**shipto_facility_id**name:Name,
+   ob_stop_id**shipto_facility_id**address_1:Address,
+   ob_stop_id**shipto_facility_id**zip:Zip,
+   ob_stop_id**shipto_facility_id**state:State,
+   ob_stop_id**load_id**load_nbr:load_nbr,
+   container_id**container_nbr:container_nbr,
+   container_id**cntr_inv**item_id**code:item_code,
+   container_id**cntr_inv**to_from_inv**order_dtl_id**order_id**order_nbr:order_nbr,
+   container_id**cntr_inv**to_from_inv**order_dtl_id**seq_nbr:order_seq_nbr,
+   container_id**cntr_inv**batch_number_id:batch&ob_stop_id**load_id\_\_load_nbr=OBL0000003712
+   32
 
 Oracle Warehouse Management Cloud
 WMS REST API Guide
@@ -1422,36 +1425,36 @@ Paginated Response
 When doing a GET request using filters and values_list, the response structure will still be paginated - the same as a
 normal request of this type without "values_list":
 {
- "result_count": 20,
- "page_count": 1,
- "page_nbr": 1,
- "next_page": null,
- "previous_page": null,
- "results": [
- {
- "order_nbr": "ORDER001",
- "ship_via_id": 123,
- "ship_via_id__code": "UPS1D"
- },
- {
- "order_nbr": "ORDER002",
- "ship_via_id": 456,
- "ship_via_id__code": "FEDX2D"
- },
- ...
- ]
+"result_count": 20,
+"page_count": 1,
+"page_nbr": 1,
+"next_page": null,
+"previous_page": null,
+"results": [
+{
+"order_nbr": "ORDER001",
+"ship_via_id": 123,
+"ship_via_id__code": "UPS1D"
+},
+{
+"order_nbr": "ORDER002",
+"ship_via_id": 456,
+"ship_via_id__code": "FEDX2D"
+},
+...
+]
 }
 Example 3: Do the same query as the previous example, but for a specific order using its id.
 The same can also be done with the retrieve GET request using a specific object's ID in the URL:
 GET .../lgfapi/v10/entity/order_hdr/123?
-values_list=order_nbr,ship_via_id,ship_via_id__code
+values_list=order_nbr,ship_via_id,ship_via_id**code
 Non-Paginated Response
 When doing a GET request using the ID in the URL with values_list, the response will not be paginated - the same as a
 normal request of this type without "values_list".
 {
- "order_nbr": "ORDER001",
- "ship_via_id": 123,
- "ship_via_id__code": "UPS1D"
+"order_nbr": "ORDER001",
+"ship_via_id": 123,
+"ship_via_id**code": "UPS1D"
 }
 Differences in Response Structure
 There are several differences between the data returned by a standard GET query (ie. One retrieving objects or fields of
@@ -1459,13 +1462,13 @@ one entity) versus one using values_list:
 • Related objects (foreign keys) are represented in the normal flow as a nested object with the fields: id, url, key.
 When using values_list, the result will only be the integer "id" value for the related object.
 "company_id": {
- "id": 48,
- "key": "CM_COMP",
- "url": ".../wms/lgfapi/v10/entity/company/48"
+"id": 48,
+"key": "CM_COMP",
+"url": ".../wms/lgfapi/v10/entity/company/48"
 }
 vs
 {
- "company_id": 48
+"company_id": 48
 33
 
 Oracle Warehouse Management Cloud
@@ -1483,17 +1486,17 @@ Creating Aliases
 You also have the option to "rename" the fields in the output to reduce the field name complexity and the overall size
 of the response payload. It is important to have unique aliases. By default, fields names will match the value from the
 values_list:
-GET .../entity/allocation/1?values_list=id,order_dtl_id__order_id__order_nbr
+GET .../entity/allocation/1?values_list=id,order_dtl_id**order_id**order_nbr
 {
- "id": 1,
- "order_dtl_id__order_id__order_nbr": "ORDER123"
+"id": 1,
+"order_dtl_id**order_id**order_nbr": "ORDER123"
 }
 You may override the default names by giving an alias delimited by a colon character ":" for the given field in the request
 URL query string:
-GET .../entity/allocation/1?values_list=id:foo,order_dtl_id__order_id__order_nbr:order_nbr
+GET .../entity/allocation/1?values_list=id:foo,order_dtl_id**order_id**order_nbr:order_nbr
 {
- "foo": 1,
- "order_nbr": "ORDER123"
+"foo": 1,
+"order_nbr": "ORDER123"
 }
 Assumptions
 • The output fields name(s) must be unique:
@@ -1513,7 +1516,7 @@ Assumptions
 1. Only works for GET requests using the values_list query parameter
 2. Only works for list-style (paginated) requests. Will not work when querying by id.
 3. If used in unsupported situations, the parameter will be ignored (no error).
-34
+   34
 
 Oracle Warehouse Management Cloud
 WMS REST API Guide
@@ -1521,88 +1524,88 @@ Chapter 3
 Entity Module
 Example Usage - List (Paginated) Response
 Example 1 - Fetch order_nbr without using distinct
-GET .../entity/order_dtl/?order_id=123&values_list=order_id,order_id__order_nbr:order_nbr
+GET .../entity/order_dtl/?order_id=123&values_list=order_id,order_id**order_nbr:order_nbr
 {
- "result_count": 2,
- "page_count": 1,
- "page_nbr": 1,
- "next_page": null,
- "previous_page": null,
- "results": [
- {
- "order_id": 123,
- "order_nbr": "ORDER123"
- },
- {
- "order_id": 123,
- "order_nbr": "ORDER123"
- },
- ]
+"result_count": 2,
+"page_count": 1,
+"page_nbr": 1,
+"next_page": null,
+"previous_page": null,
+"results": [
+{
+"order_id": 123,
+"order_nbr": "ORDER123"
+},
+{
+"order_id": 123,
+"order_nbr": "ORDER123"
+},
+]
 }
 Example 1 - Fetch unique order_nbr using distinct
-GET .../entity/order_dtl/?order_id=123&values_list=order_id,order_id__order_nbr:order_nbr&distinct=1
+GET .../entity/order_dtl/?order_id=123&values_list=order_id,order_id**order_nbr:order_nbr&distinct=1
 {
- "result_count": 1,
- "page_count": 1,
- "page_nbr": 1,
- "next_page": null,
- "previous_page": null,
- "results": [
- {
- "order_id": 123,
- "order_nbr": "ORDER123"
- }
- ]
+"result_count": 1,
+"page_count": 1,
+"page_nbr": 1,
+"next_page": null,
+"previous_page": null,
+"results": [
+{
+"order_id": 123,
+"order_nbr": "ORDER123"
+}
+]
 }
 Example 2 - Get unique container status for each of the first 100 containers selected.
-GET .../entity/container/?limit=100&values_list=status_id__description:container_status&distinct=true
+GET .../entity/container/?limit=100&values_list=status_id\_\_description:container_status&distinct=true
 {
- "result_count": 4,
- "page_count": 1,
- "page_nbr": 1,
- "next_page": null,
- "previous_page": null,
- "results": [
- {
- "container_status": "Allocated"
- },
- {
- "container_status": "Cancelled"
- },
- {
- "container_status": "Consumed"
- },
- {
- "container_status": "Delivered"
- }
+"result_count": 4,
+"page_count": 1,
+"page_nbr": 1,
+"next_page": null,
+"previous_page": null,
+"results": [
+{
+"container_status": "Allocated"
+},
+{
+"container_status": "Cancelled"
+},
+{
+"container_status": "Consumed"
+},
+{
+"container_status": "Delivered"
+}
 35
 
 Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 3
 Entity Module
- ]
+]
 }
 Retrieve (Single-Object) Response
 Flow where entity "id" is included as part of the URL.
 This is not supported. Since this GET request style will always return a single object representation, there is no meaning
 to "distinct" as values cannot be repeated. If the query parameter is included in this flow, it will be ignored.
-Filter Entity Data using NOT Operator  
+Filter Entity Data using NOT Operator
 You have the option to filter for entity data using the NOT operator, "!", in their URL querystring. The NOT operator ("!")
 is added before the equals ("=") symbol in the key-value pair, and simply negates the statement to which it is added.
-Note:  This can be a useful tool for retrieving data, but be careful when using this functionality as this type of lookup
+Note: This can be a useful tool for retrieving data, but be careful when using this functionality as this type of lookup
 tends to be slower than an inclusive one.
 Example 1:
 Filter for a location barcode that contains the string "ABC":
-• .../wms/lgfapi/v10/entity/location?barcode__contains=ABC
+• .../wms/lgfapi/v10/entity/location?barcode**contains=ABC
 Filter for a location barcode that does NOT contain the string "ABC":
-• .../wms/lgfapi/v10/entity/location?barcode__contains!=ABC
+• .../wms/lgfapi/v10/entity/location?barcode**contains!=ABC
 Example 2:
 Filter for items where part A is in a list of explicit values:
-• .../wms/lgfapi/v10/entity/item?part_a__in=ABC,DEF
+• .../wms/lgfapi/v10/entity/item?part_a**in=ABC,DEF
 Filter for items where part A is NOT in a list of explicit values:
-• .../wms/lgfapi/v10/entity/item?part_a__in!=ABC,DEF
-Resource Existence and Modification (HEAD)  
+• .../wms/lgfapi/v10/entity/item?part_a**in!=ABC,DEF
+Resource Existence and Modification (HEAD)
 HTTP requests for lgfapi entities using the HEAD method are an efficient way to determine if a resource or list of
 resource(s) exists. Additionally, it is possible to determine if a specific resource has been modified since a target date-
 time. The HEAD method does not return any data in the body of the response. The only data returned is the response
@@ -1617,7 +1620,7 @@ build a representation (like in a GET request), minimum data is transmitted and 
 optimized.
 HEAD requests accept both retrieve and list style URI that same as a GET request. This can be used to check for the
 existence of a specific resource or filter for the existence of potentially many resources in a list.
-“If-Modified-Since” HTTP Request Header  
+“If-Modified-Since” HTTP Request Header
 Entity HEAD requests allow for the requester to optionally pass the “If-Modified-Since” HTTP header in the request.
 This is only permitted for retrieve style requests when querying for a specific resource by id in the URL. The header’s
 value is the target date-time in iso-8601 format in the appropriate time zone. When provided, the value will be
@@ -1636,7 +1639,7 @@ In scenarios where the updated resource representation is not needed, a HEAD req
 a GET request. Or, it may be used to determine if a more expensive GET request is subsequently called to fetch the
 updated resource representation. It is also common to use HEAD request modification checks as a trigger mechanism
 for down-steam operations.
-Response Statuses  
+Response Statuses
 The HTTP response status will be one of the following and vary depending on the outcome and if checking for existence
 or existence and modification of one or more resources. Note that this is not the full list of all possible response
 statuses. Rather, the following statuses are directly tied to this HTTP method’s functionality within lgfapi. For example,
@@ -1663,16 +1666,16 @@ For example, use a retrieve style request to check for the existence of a compan
 HEAD https://.../wms/lgfapi/v10/entity/company/1
 Or, it can be applied to a list style request with filters:
 HEAD https://.../wms/lgfapi/v10/entity/company?code=ABC
-Creating a Resource (POST)  
+Creating a Resource (POST)
 Lgfapi allows for the creating and linking of a limited number of entity resources using an HTTP POST request. The
 new resource’s initial data set is passed in the body of the request, in the structure and formats outlined below. The
 requesting user must have the “lgfapi_create_access” permission. Also, the requesting user must be eligible for the
 facility/company context of the data being created.
 Example request to create an IBLPN:
 POST …/wms/lgfapi/v10/entity/iblpn/
-Input Data  
+Input Data
 Data passed in the body of any POST request to the entity module requires the follow structure and data conventions.
-Data Structure  
+Data Structure
 Data is input in the request body in one of two sections:
 • Fields – Initial field data. The “fields” section is used to pass in the initial field data required by the entity.
 Optional fields have a default and should be omitted from the “fields” data if you with the default to be applied.
@@ -1708,8 +1711,8 @@ XML Example
 </request>
 Dates/Times
 Temporal data must be iso-8601 format.
-Related Resources  
-Relational fields (denoted by a field name ending in “_id”) require the integer “id” value of the target resource. This can
+Related Resources
+Relational fields (denoted by a field name ending in “\_id”) require the integer “id” value of the target resource. This can
 be obtained by making a GET request to the corresponding entity with appropriate filters.
 Assuming that you already know the corresponding fields each have an “id” value of 1; when creating a new resource
 with the required related fields “facility_id” and “company_id”, the JSON POST request body is modeled as:
@@ -1727,7 +1730,7 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 3
 Entity Module
-Response Statuses  
+Response Statuses
 A non-paginated representation of the new resource will be returned in the body of the HTTP response in the desired
 format.
 200 – Ok
@@ -1738,13 +1741,13 @@ The resource was successfully created.
 • 400 - Bad Request
 The request was invalid. This could be due to data validation failures, permission errors, or other missing requirements
 of the operation.
-Validations  
+Validations
 Field and object-level validations are applied before the new resource is created. Any errors will be returned the
 response body in the standard format. All related resources must be within the facility/company context of the resource
 being created. Meaning, users cannot link the new resource to any resources outside of its facility and/or company.
 For example, it is not possible to link an IBLPN to a pallet where the pallet is for a different facility or company than the
 IBLPN.
-Nested Related Objects  
+Nested Related Objects
 Some entities, such as “inventory”, allow for the creation and association of some related objects within the request
 to create the inventory object. This allows for the creation of multiple related objects using a single API call instead of
 multiple requests.
@@ -1775,7 +1778,7 @@ passed in:
 },
 …
 }
-Supported Entities  
+Supported Entities
 • inventory_attribute
 ◦ Functions as get-or-create based on the provided attributes for the given facility and company
 combination.
@@ -1790,7 +1793,7 @@ combination.
 ◦ Supports nested “batch_number” and “inventory_attribute” object creation.
 • inventory_lock
 Create an inventory lock that can applied to containers and locations.
-Updating a Resource (PATCH)  
+Updating a Resource (PATCH)
 Lgfapi allows you to update specific fields on a limited number of entity resources using an HTTP PATCH request.
 Only the desired changes are to be passed in the body of the request using the “fields” section (very similar to a create
 resource (POST) request). The requesting user must have the “lgfapi_update_access” permission and must be eligible
@@ -1808,7 +1811,7 @@ Updates are restricted to a single object per request and the “id” of the ta
 URL.
 The following is an example URL to update a sales order:
 PATCH …/wms/lgfapi/v10/entity/order_hdr/123/
-Input Data  
+Input Data
 Data passed in the body of any PATCH request to the entity module requires the following structure and data
 conventions.
 • Fields –Field data with target value for update.
@@ -1820,7 +1823,7 @@ JSON example of updating the values of multiple “cust” fields:
 “cust_decimal_2: 1.234
 }
 }
-Response Statuses  
+Response Statuses
 A non-paginated representation of the updated resource will be returned in the body of the HTTP response in the
 desired format.
 • 200 – Ok
@@ -1828,7 +1831,7 @@ The resource was successfully updated.
 • 400 - Bad Request
 The request was invalid. This could be due to data validation failures, permission errors, or other missing or incomplete
 requirements.
-Batch Number  
+Batch Number
 The Batch Number PATCH API allows you to update the lock code/expiry date for an existing lot.
 42
 
@@ -1850,7 +1853,7 @@ not be able to nullify the expiry date for a particular item that is expiry-trac
 Field Type
 lock_id Integer
 expiry_date Date
-IB Shipment  
+IB Shipment
 Field Type
 cust_date_1 Date
 cust_date_2 Date
@@ -1919,7 +1922,7 @@ Transit status)
 String
 shipment_type_id Integer
 load_id Integer
-IB Shipment Detail  
+IB Shipment Detail
 Field Type
 cust_date_1 Date
 cust_date_2 Date
@@ -1988,7 +1991,7 @@ inv_attr_o String
 Make Changes During Different Shipment Statuses
 You can also make changes to IB Shipment Detail fields through PATCH API when the Shipment status is in "Receiving
 Started" or "Receiving Complete" based on the status of the shipment.
-Note:  The Allow updating ASN after Receiving started flag needs to be enabled in the Shipment Type UI to allow
+Note: The Allow updating ASN after Receiving started flag needs to be enabled in the Shipment Type UI to allow
 you to make changes to IB Shipment Detail via API. From 22D onwards, the PATCH API for Inbound Shipments allows
 you to update relevant fields on the shipment header until the ASN status is in receiving complete.
 The following are the fields which are allowed to be updated in different statuses:
@@ -2039,7 +2042,7 @@ validation will fail.
 If these validations fail, the request should fail (so any other fields likecustom fields provided in this request will not
 be updated even though theymay have more lenient validations).Validate that the invn-attribute record matches the
 facility/company.If no invn_attr_id is provided then the current validations for custom fields should apply.
-Item Characteristics  
+Item Characteristics
 Field Type
 cust_attr_1 String
 cust_attr_2 String
@@ -2049,7 +2052,7 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 3
 Entity Module
-Load  
+Load
 Field Type
 cust_field_1 String
 cust_field_2 String
@@ -2061,7 +2064,7 @@ cust_field_7 String
 cust_field_8 String
 cust_field_9 String
 cust_field_10 String
-Location  
+Location
 Field Type Description
 cust_field_1 String
 cust_field_2 String
@@ -2085,7 +2088,7 @@ Field Type Description
 XML: <field_ts>2018-01-30T18:30:00</
 field_ts>
 
-Order Header  
+Order Header
 Field Type Description
 cust_date_1 Date
 cust_date_2 Date
@@ -2167,9 +2170,9 @@ Packing, Packed, Loaded. If order status is
 shipped or cancelled, then respond with
 error.
 • If order status is shipped or cancelled,
- then respond with error, other statuses
+then respond with error, other statuses
 should be ok.
-Order Detail  
+Order Detail
 Field Type
 cust_date_1 Date
 cust_date_2 Date
@@ -2220,14 +2223,14 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 3
 Entity Module
-Purchase Order Header  
+Purchase Order Header
 Field Type
 cust_field_1 String
 cust_field_2 String
 cust_field_3 String
 cust_field_4 String
 cust_field_5 String
-Purchase Order Detail  
+Purchase Order Detail
 Field Type
 cust_field_1 String
 cust_field_2 String
@@ -2235,7 +2238,7 @@ cust_field_3 String
 cust_field_4 String
 cust_field_5 String
 stop_recv_flg boolean
-Work Order Header  
+Work Order Header
 Field Type
 cust_field_1 String
 cust_field_2 String
@@ -2249,14 +2252,14 @@ Entity Module
 Field Type
 cust_field_4 String
 cust_field_5 String
-Work Order Kit  
+Work Order Kit
 Field Type
 cust_field_1 String
 cust_field_2 String
 cust_field_3 String
 cust_field_4 String
 cust_field_5 String
-Pallet  
+Pallet
 In order to provide the key to identify the Pallet and update the Weight and Volume fields. a PATCH verb for the Pallet
 entity is available.
 PATCH .../wms/lgfapi/entity/pallet/id/
@@ -2285,15 +2288,15 @@ length String
 width String
 height String
 actual_weight String
-Container, IBLPN, and OBLPN  
+Container, IBLPN, and OBLPN
 The legacy API, “update_oblpn_dims”, has been deprecated in place of PATCH requests on three lgfapi entities:
 container, iblpn, and oblpn. This functionality provides a mechanism to update the container’s dimensional and weight
 fields. The functionality is the same for each entity. The only difference being that the “container” entity may be used to
 update both IBLPN and OBLPN’s. The other two entities are restricted to acting on only their given container type.
 URL examples:
-                        PATCH .../entity/container/{id}
-                        PATCH .../entity/iblpn/{id}
-                        PATCH .../entity/oblpn/{id}
+PATCH .../entity/container/{id}
+PATCH .../entity/iblpn/{id}
+PATCH .../entity/oblpn/{id}
 
 Supported Fields
 • length
@@ -2349,7 +2352,7 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 3
 Entity Module
-Movement Request Header  
+Movement Request Header
 You can update movement requests after they are in a "Created" status, or update details in custom fields during the
 life-cycle of a movement request, using the new Movement Request PATCH API.
 Movement Request Header URL:
@@ -2393,38 +2396,38 @@ cust_short_text_10 String
 cust_short_text_11 String
 cust_short_text_12 String
 Sample Patch API Body
- "fields": {
- "cust_field_1": "Example",
- "cust_field_2": "Example",
- "cust_field_3": "Example",
- "cust_field_4": "Example",
- "cust_field_5": "Example",
- "cust_date_1": "Example",
- "cust_date_2": "Example",
- "cust_date_3": "Example",
- "cust_date_4": "Example",
- "cust_date_5": "Example",
- "cust_decimal_1": "Example",
- "cust_decimal_2": "Example",
- "cust_decimal_3": "Example",
- "cust_decimal_4": "Example",
- "cust_decimal_5": "Example",
- "cust_short_text_1": "Example",
- "cust_short_text_2": "Example",
- "cust_short_text_3": "Example",
- "cust_short_text_4": "Example",
- "cust_short_text_5": "Example",
- "cust_short_text_6": "Example",
- "cust_short_text_7": "Example",
- "cust_short_text_8": "Example",
- "cust_short_text_9": "Example",
- "cust_short_text_10": "Example",
- "cust_short_text_11": "Example",
- "cust_short_text_12": "Example",
- }
+"fields": {
+"cust_field_1": "Example",
+"cust_field_2": "Example",
+"cust_field_3": "Example",
+"cust_field_4": "Example",
+"cust_field_5": "Example",
+"cust_date_1": "Example",
+"cust_date_2": "Example",
+"cust_date_3": "Example",
+"cust_date_4": "Example",
+"cust_date_5": "Example",
+"cust_decimal_1": "Example",
+"cust_decimal_2": "Example",
+"cust_decimal_3": "Example",
+"cust_decimal_4": "Example",
+"cust_decimal_5": "Example",
+"cust_short_text_1": "Example",
+"cust_short_text_2": "Example",
+"cust_short_text_3": "Example",
+"cust_short_text_4": "Example",
+"cust_short_text_5": "Example",
+"cust_short_text_6": "Example",
+"cust_short_text_7": "Example",
+"cust_short_text_8": "Example",
+"cust_short_text_9": "Example",
+"cust_short_text_10": "Example",
+"cust_short_text_11": "Example",
+"cust_short_text_12": "Example",
+}
 }
 {
-Entity Operations (GET /POST)  
+Entity Operations (GET /POST)
 Many entities offer specialized operations in order to assist users in more complicated, or performance intensive
 operations. These operations can act on one or more resources and may affect entities beyond the one(s) targeted in
 the request. The URLs may follow a “list” or “retrieve” styles:
@@ -2442,27 +2445,27 @@ Entity operations are invoked in the same manner as previously discussed for GET
 has its own URL tied to the entity. Entity operations that use a GET request are still for obtaining a representation in the
 response body and do not modify data. Entity operations that use POST requests trigger an action or series of actions
 on the entity that can change resource state.
-Response Status  
+Response Status
 Entity operations follow the response statuses previously discussed for GET and POST request, with one addition:
 • 204 – No Content
 This HTTP response status is returned when the request was successfully fulfilled, but there is no additional content to
 return to the requester. Users should interpret this as success and expect the response body to be empty.
-Bulk Operations  
+Bulk Operations
 Entities may also support “bulk” operation that allow the same operation to be run on one or more resources within a
 single request. There are several key differences and additional options that apply to bulk operations.
 Parameter Data Filtering
 Since bulk operations are capable of acting on one or more objects in a single request, the request body’s “parameter”
 data is required. This data is a series of one or more filter conditions that will be applied to identify the target list of
 objects. Each operation may have its own allowed set of filter conditions that can be applied. This may include allowing
-users to filter on related objects and using complex lookups such as “in” by the same double underscore (“__”) notation
+users to filter on related objects and using complex lookups such as “in” by the same double underscore (“**”) notation
 as in a GET request’s filters.
-Note:  all data is still automatically filtered by the user’s eligible facilities and companies and that the user is not
+Note: all data is still automatically filtered by the user’s eligible facilities and companies and that the user is not
 permitted to run bulk operations on objects outside their allowed scope.
 In general, all bulk operations allow for the filtering of objects by “id”. For example, a JSON request body’s parameters
 section for filtering on multiple object id’s would be:
 {
 “paramters”: {
-“id__in”: [1, 2, 3]
+“id**in”: [1, 2, 3]
 }
 }
 Filtering on facility code and company code could be achieved by doing the following (assuming the entity and
@@ -2475,7 +2478,7 @@ WMS REST API Guide
 Chapter 3
 Entity Module
 “parameters”: {
-“facility_id__code”: “FAC1”,
+“facility_id\_\_code”: “FAC1”,
 “company_id_code”: “COM1”
 }
 }
@@ -2529,8 +2532,8 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 4
 Other API Modules
-4  Other API Modules
-Additional API Modules  
+4 Other API Modules
+Additional API Modules
 Besides entity, there are several other modules that support mostly POST operations (along with a few GETs).
 • cycle_count_info
 • data_extract
@@ -2558,8 +2561,8 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
-5  Supported Operations
-Batch Number  
+5 Supported Operations
+Batch Number
 The Batch Number API allows you to create a batch by making a POST HTTP request.
 URL
 .../wms/lgfapi/entity/batch_number/
@@ -2573,16 +2576,16 @@ not update the existing record.
 • The batch_nbr is validated against the barcode type configuration for "Batch Nbr".
 Request Body Example
 {
- "fields": {
- "facility_id": 269,
- "company_id": 48,
- "batch_nbr": "BATCH123",
- "item_id": 1,
- "lock_id": 123,
- "expiry_date": "2018-01-01"
- }
+"fields": {
+"facility_id": 269,
+"company_id": 48,
+"batch_nbr": "BATCH123",
+"item_id": 1,
+"lock_id": 123,
+"expiry_date": "2018-01-01"
 }
-Bulk Change Eligible Group  
+}
+Bulk Change Eligible Group
 The Bulk Change Eligible Group API allows you to add/remove the user eligible groups in bulk. You can update single or
 multiple user eligible facility all at once. Once updates are made, they will reflect in the User UI --> Eligible Groups.
 URL
@@ -2595,43 +2598,43 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
- "parameters": {
- "company_id": "222",
- "auth_user_id__username__in": [
- "user1",
- "user2",
- "user3"
- ]
- },
- "options": {
- "action": "ADD",
- "group_id_list": [10,20,21],
- "group_name_list": ["GRP1","GRP2","GRP3"],
- "commit_frequency": 1
+"parameters": {
+"company_id": "222",
+"auth_user_id**username**in": [
+"user1",
+"user2",
+"user3"
+]
+},
+"options": {
+"action": "ADD",
+"group_id_list": [10,20,21],
+"group_name_list": ["GRP1","GRP2","GRP3"],
+"commit_frequency": 1
 }
-Company  
+Company
 These topics give descriptions for APIs that complete actions related to companies for the Warehouse.
-Bulk Change Eligible Company  
+Bulk Change Eligible Company
 The Bulk Change Eligible Group API allows you to add/remove the user eligible groups in bulk. You can update single or
 multiple user eligible facility all at once. Once updates are made, they will reflect in the User UI --> Eligible Groups.
 URL
 POST ...../v10/entity/user/bulk_change_eligible_company
 Example Body Request
 {
- "parameters": {
- "company_id": "333",
- "auth_user_id__username__in": [
- "user1",
- "user2",
- "user3"
- ]
- },
- "options": {
- "action": "ADD",
- "company_id_list": [101,201,301],
- "company_code_list": ["COMP1","COMP2","COMP3"],
- "commit_frequency": 1
- }
+"parameters": {
+"company_id": "333",
+"auth_user_id**username**in": [
+"user1",
+"user2",
+"user3"
+]
+},
+"options": {
+"action": "ADD",
+"company_id_list": [101,201,301],
+"company_code_list": ["COMP1","COMP2","COMP3"],
+"commit_frequency": 1
+}
 }
 
 66
@@ -2640,7 +2643,7 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
-Company Parameter  
+Company Parameter
 POST .../entity/company_parm
 This operation is used to add single or multiple company parameters.
 If you have a new facility and you want to copy the same Company Parameters from your current facility, you can first
@@ -2653,15 +2656,15 @@ Example Body Request
 "parm_value": "test"
 }
 }
-Container  
+Container
 These topics give descriptions for APIs that complete actions related to containers in the Warehouse.
 The “iblpn” and “oblpn” entities are derived from the “container” entity and have access to all of the following entity
 operations, in addition to their own.
-Get Sales Orders  
+Get Sales Orders
 GET …/wms/lgfapi/v10/entity/container/{id}/orders/
 Returns a paginated representation of “order_hdr” entities for all sales order(s) allocated against the inbound or
 outbound container.
-Lock Container  
+Lock Container
 POST …/wms/lgfapi/v10/entity/container/{id}/lock/
 Apply one or more inventory locks to the target inbound or outbound container.
 Category Parameter Type Required Default Description
@@ -2673,11 +2676,11 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
-Bulk Lock Container  
+Bulk Lock Container
 POST …/wms/lgfapi/v10/entity/container/bulk_lock/
 Apply one or more inventory locks to one or more inbound or outbound container(s).
 The “parameters” section of the request body is required in addition to the “options” section outlined below. The “id”
-parameter filter (for a single value) or the “id__in” parameter (for an array of values) are valid and can be used.
+parameter filter (for a single value) or the “id\_\_in” parameter (for an array of values) are valid and can be used.
 Category Parameter Type Required Default Description
 options lock_code_list Array of Strings X Inventory lock(s) to be
 applied.
@@ -2686,18 +2689,18 @@ error.
 
 1 = Commit per object.
 
-Unlock Container  
+Unlock Container
 POST …/wms/lgfapi/v10/entity/container/{id}/unlock/
 Remove one or more inventory locks to the target inbound or outbound container.
 Category Parameter Type Required Description
 options lock_code_list Array of Strings X Inventory lock code(s) to be
 removed.
-Bulk Unlock Container  
+Bulk Unlock Container
  POST …/wms/lgfapi/v10/entity/container/bulk_unlock/
 
 Remove one or more inventory locks from one or more inbound or outbound container(s).
 The “parameters” section of the request body is required in addition to the “options” section outlined below. The “id”
-parameter filter (for a single value) or the “id__in” parameter (for an array of values) are valid and can be used.
+parameter filter (for a single value) or the “id\_\_in” parameter (for an array of values) are valid and can be used.
 68
 
 Oracle Warehouse Management Cloud
@@ -2712,14 +2715,14 @@ error.
 
 1 = Commit per object.
 
-Palletize Container  
+Palletize Container
 POST .../entity/container/{id}/palletize/
 Allows you to palletize an Inbound or Outbound LPN.
 The “parameters” section of the request body is required in addition to the “options” section outlined below.
 Category Name Required Type Description
 parameters container_nbr X String IB or OB LPN to be linked.
 
-“_in” lookup is not
+“\_in” lookup is not
 supported.
 
 parameters facility_id Integer Container’s facility
@@ -2739,7 +2742,7 @@ parameters facility_id string Container’s facility
 parameters company_id string Container’s company
 {
 "parameters": {
-"facility_id__code": "FAC-1",
+"facility_id\_\_code": "FAC-1",
 "company_id_code": "COM-1",
 69
 
@@ -2747,7 +2750,7 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
-"container_nbr": "OBLPN-1"
+"container*nbr": "OBLPN-1"
 }
 }
 Functional Request Data
@@ -2758,7 +2761,7 @@ or OBLPN's.
 options pallet_position string Position of Inbound
 or OBLPN during
 palletization.
-options allow_mix_pa_types_
+options allow_mix_pa_types*
 flg
 boolean False whether to allow
 mixing of LPN's with
@@ -2782,7 +2785,7 @@ and Destination
 "allow_mix_dest_shipto": Ignore Ship To and Destination
 }
 }
-Depalletize Inbound / Outbound LPN  
+Depalletize Inbound / Outbound LPN
 Allows you to depalletize an Inbound or Outbound LPN so you do not have to use RF guns for performing
 depalletization in automated guided facilities.
 Identify container by ID:
@@ -2802,7 +2805,7 @@ POST .../entity/container/depalletize/
 Category Name Required Type Description
 parameters container_nbr X String IB or OB LPN to be linked.
 
-“_in” lookup is not
+“\_in” lookup is not
 supported.
 
 parameters facility_id Integer Container’s facility
@@ -2812,8 +2815,8 @@ parameters type String Container’s type “I” or “O”.
 "parameters": {
 "facility_id": 1,
 "company_id": 1,
- "container_nbr":
- "LPN001",
+"container_nbr":
+"LPN001",
 "type": "O"
 }
 }
@@ -2823,34 +2826,34 @@ parameters facility_id_code string Container’s facility
 Parameters company_id_code string Container’s company
 {
 "parameters": {
- "facility_id__code":
- "FAC-1",
+"facility_id\_\_code":
+"FAC-1",
 71
 
 Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
- "company_id__code":
- "COM-1",
- "container_nbr":
- "LPN001",
+"company_id\_\_code":
+"COM-1",
+"container_nbr":
+"LPN001",
 "type": "O"
 }
 }
-Quality Check Approve  
+Quality Check Approve
 Quality Check Approv allows you to accept QC marked containers.
 API URL: Lookup by ID:
-                           POST.../entity/iblpn/{id}/qc_reject/
+POST.../entity/iblpn/{id}/qc_reject/
 
 No additional `parameters` data in the request body is required.
 API URL:Lookup by Filters:
 POST.../entity/iblpn/qc_reject/
 Category Name Required Type Description
 parameters facility_id Integer Facility context by id
-parameters facility_id__code string Facility context by code
+parameters facility_id**code string Facility context by code
 parameters company_id Integer Company context by id
-parameters company_id__code string Company context by code
+parameters company_id**code string Company context by code
 parameters container_nbr X string IBLPN subjected to QC
 Category Name Type Description
 Options vendor_perf_code String Vendor performance code, users
@@ -2875,14 +2878,14 @@ Request Body:
 The QC reject transaction is meant for the IBLPN entity. Hence, the users are required to send the following parameters
 in the body.
 {
- "parameters": {
- "id__in": [1, 2, 3]
- },
- "options": {
- "lock_code": "KHLOC01"
- "vendor_perf_code": "KHVND001",
- "commit_frequency": 1,
- }
+"parameters": {
+"id\_\_in": [1, 2, 3]
+},
+"options": {
+"lock_code": "KHLOC01"
+"vendor_perf_code": "KHVND001",
+"commit_frequency": 1,
+}
 }
 The commit frequency is by default set to 0. If it is set to 0, the system should roll back on first error/ If the commit
 frequency is set to 1, the system should commit per object.
@@ -2910,12 +2913,12 @@ Chapter 5
 Supported Operations
 No additional `parameters` data in the request body is required.
 API URL: Lookup by Filters
- POST.../entity/iblpn/qc_approve/
+POST.../entity/iblpn/qc_approve/
 Category Name Required Type Description
 parameters facility_id Integer Facility context by id
-parameters facility_id__code string Facility context by code
+parameters facility_id**code string Facility context by code
 parameters company_id Integer Company context by id
-parameters company_id__code string Company context by code
+parameters company_id**code string Company context by code
 parameters container_nbr X string IBLPN subjected to QC
 Category Name Type Description
 Options vendor_perf_code String Vendor performance code, users
@@ -2930,13 +2933,13 @@ Request Body:
 The QC accept transaction is meant for the IBLPN entity. Hence, the users are required to send the following parameters
 in the body.
 {
- "parameters": {
- "id__in": [1, 2, 3]
- },
- "options": {
- "vendor_perf_code": "KHVND001",
- "commit_frequency": 0
- }
+"parameters": {
+"id\_\_in": [1, 2, 3]
+},
+"options": {
+"vendor_perf_code": "KHVND001",
+"commit_frequency": 0
+}
 }
 The commit frequency is by default set to 0. If it is set to 0, the system should roll back on first error/ If the commit
 frequency is set to 1, the system should commit per object.
@@ -2954,24 +2957,24 @@ The system should proceed with the following updates after successful approval o
 • The LPN status should be received with QC status as QC approved
 • The system should capture the following inventory histories;
 ◦ IHT-73- QC approved
-◦ IHT- 48- Shipment status changed**
+◦ IHT- 48- Shipment status changed\*\*
 • If the inventory in the QC marked IBLPN is serial tracked the IHT 73 should be broken based on the serial
 number if the Enable split by serial nbr flag is turned on.
 • The Verification History view UI should create a record for the QC approval of the respective IBLPN-s.
-Quality Check Reject  
+Quality Check Reject
 The Quality Check Reject API allows you to reject QC marked containers, so you can perform the quality check from an
 external QC module without accessing the Oracle WMS Cloud platform.
-Cycle Count  
+Cycle Count
 Cycle count LPN allows you to count the inventory available in a location. The following options are available:
 • Confirm LPN Count
 • Confirm Count LPN Scan
 • Confirm Active Count
-Confirm LPN Count  
+Confirm LPN Count
 This API allows you to confirm the LPN count. This is if you need to confirm the number of LPNs available in a Reserve
 Location, so you just need to specify the number of LPNs you see in the location.
 URLs
 POST .../wms/lgfapi/v10/entity/location/{id}/cc_confirm_lpn_count
-Note:  that with ID in the URL, there are no request parameters, just options.
+Note: that with ID in the URL, there are no request parameters, just options.
 OR
 75
 
@@ -2990,7 +2993,7 @@ facility_id C Integer Facility context by id.
 one of id or code should be
 provided
 
-facility_id__code C String Facility context by code.
+facility_id\_\_code C String Facility context by code.
 
 one of id or code should be
 provided
@@ -3008,33 +3011,33 @@ validate_only_flg Y Boolean True or false
 Example:
 POST .../wms/lgfapi/v10/entity/location/cc_confirm_lpn_coun
 {
- "parameters": {
- "facility_id__code": "FAC",
- "barcode": "Location001"
- },
- "options": {
- "lpn_count": 5,
- "validate_only_flg": "Y",
+"parameters": {
+"facility_id\_\_code": "FAC",
+"barcode": "Location001"
+},
+"options": {
+"lpn_count": 5,
+"validate_only_flg": "Y",
 76
 
 Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
- }
+}
 }
 Request sent with an ID:
 POST .../wms/lgfapi/v10/entity/location/{id}/confirm_lpn_coun
 {
- "options": {
- "lpn_count": 5,
- "validate_only_flg": "N",
- }
+"options": {
+"lpn_count": 5,
+"validate_only_flg": "N",
+}
 }
 Response
 If validate only flag is set to true you will get a Response 200 - OK (No Pagination)
 {
-    "current_lpn_count": 3
+"current_lpn_count": 3
 }
 If validate only flag is True, you will get a Response 204 and a new record will be added to the module
 SummaryAuditView.
@@ -3042,11 +3045,11 @@ If Validate only flag is set to true and there is no variance, the system will a
 Count Complete.
 If validate only flag is set to False, a record is created - Response 204 and new record will be added to the module
 SummaryAuditViewGroup Number.
-Confirm Count LPN Scan  
+Confirm Count LPN Scan
 This API allows you to confirm the count of LPNs. This is if you to confirm the list of LPNs in the location.
 URLs
 POST .../wms/lgfapi/v10/entity/location/{id}/cc_confirm_count_lpn_scan
-Note:  With ID in the URL, there are no request parameters, just options.
+Note: With ID in the URL, there are no request parameters, just options.
 OR
 POST .../wms/lgfapi/v10/entity/location/cc_confirm_count_lpn_scan
 with request parameters and options
@@ -3065,7 +3068,7 @@ facility_id C Integer Facility context by id.
 one of id or code should be
 provided
 
-facility_id__code C String Facility context by code.
+facility_id\_\_code C String Facility context by code.
 
 one of id or code should be
 provided
@@ -3085,35 +3088,35 @@ expected to be scanned, but were not send in the request)
 expecting to be sent) then the system will take as those LPNs are not in the location.
 • If deferred_mode_flg is on. It would not matter the value in company parm INVN_ADJ_APPROVAL_REQUIRED.
 If this flag is set to YES. Approval is required if there is an Inventory adjustment in the location.
-Note:  deferred_mode_flg value will be irrelevant when validate_flg is true. In other words validation is the same
+Note: deferred_mode_flg value will be irrelevant when validate_flg is true. In other words validation is the same
 regardless of the deferred_mode_flg.
 Example:
 POST .../wms/lgfapi/v10/entity/location/cc_confirm_count_lpn_scan
 {
- "parameters": {
- "facility_id__code": "FAC",
- "barcode": "Location001"
- },
- "options": {
+"parameters": {
+"facility_id\_\_code": "FAC",
+"barcode": "Location001"
+},
+"options": {
 78
 
 Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
- "lpn_nbr_list": ["lpn1", "lpn2", "lpn3"],
- "validate_only_flg": "Y",
- "deferred_mode_flg": "Y"
- }
+"lpn_nbr_list": ["lpn1", "lpn2", "lpn3"],
+"validate_only_flg": "Y",
+"deferred_mode_flg": "Y"
+}
 }
 Request sent with an ID:
 POST .../wms/lgfapi/v10/entity/location/{id}/cc_confirm_count_lpn_scan
 {
- "options": {
- "lpn_nbr_list": ["lpn1", "lpn2", "lpn3"],
- "validate_only_flg": "Y",
- "deferred_mode_flg": "Y"
- }
+"options": {
+"lpn_nbr_list": ["lpn1", "lpn2", "lpn3"],
+"validate_only_flg": "Y",
+"deferred_mode_flg": "Y"
+}
 }
 Response
 Response is not paginated as its only for one location whether the request uses parameters or ID
@@ -3121,15 +3124,15 @@ if validate is True and successful it will be a 200 response with the response J
 if validate is False and successful, then response is 204, no payload
 With 200 - OK (No Pagination) for validate True
 {
- "new_lpn_nbr_list": ["lpn1"]
- "matching_lpn_nbr_list": ["lpn2", "lpn3"]
- "missing_lpn_nbr_list": ["lpn4", "lpn5"]
+"new_lpn_nbr_list": ["lpn1"]
+"matching_lpn_nbr_list": ["lpn2", "lpn3"]
+"missing_lpn_nbr_list": ["lpn4", "lpn5"]
 }
-Confirm Active Count  
+Confirm Active Count
 This API allows you to confirm the units available in an active location
 URLs
 POST .../wms/lgfapi/v10/entity/location/{id}/cc_confirm_active_count
-Note:  with ID in the URL, there are no request parameters, just options.
+Note: with ID in the URL, there are no request parameters, just options.
 OR
 POST .../wms/lgfapi/v10/entity/location/cc_confirm_active_count
 with parameters and options
@@ -3148,7 +3151,7 @@ facility_id C Integer Facility context by id.
 one of id or code should be
 provided
 
-facility_id__code C String Facility context by code.
+facility_id\_\_code C String Facility context by code.
 
 one of id or code should be
 provided
@@ -3171,7 +3174,7 @@ item_barcode C String Item identifier
 item_alternate_code C String Item identifier
 qty Y Integer Quantity of the item
 • If facility and/or company are provided, set login context accordingly.
-Note:  This API does not track batch, expiry, srl numbers or inventory attributes. As this API does NOT track
+Note: This API does not track batch, expiry, srl numbers or inventory attributes. As this API does NOT track
 those values, if you are trying to count a location with either batch, expiry, srl numbers or inventory attributes
 you will get an error.
 Example:
@@ -3183,40 +3186,40 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
- "parameters": {
- "facility_id__code": "FAC",
- "barcode": "Location001"
- },
- "options": {
- "count_all_items_flg": true,
- "item_quantity_list": [
- {
- "item_barcode": "Item001",
- "qty": 5
- },
- {
- "item_alternate_code": "itemx2",
- "qty": 3
- }
- ]
- }
+"parameters": {
+"facility_id\_\_code": "FAC",
+"barcode": "Location001"
+},
+"options": {
+"count_all_items_flg": true,
+"item_quantity_list": [
+{
+"item_barcode": "Item001",
+"qty": 5
+},
+{
+"item_alternate_code": "itemx2",
+"qty": 3
+}
+]
+}
 }
 Example request by location ID:
 POST .../wms/lgfapi/v10/entity/location/{id}/cc_confirm_active_count
 {
- "options": {
- "count_all_items_flg": true,
- "item_quantity_list": [
- {
- "item_barcode": "Item001",
- "qty": 5
- },
- {
- "item_alternate_code": "itemx2",
- "qty": 3
- }
- ]
- }
+"options": {
+"count_all_items_flg": true,
+"item_quantity_list": [
+{
+"item_barcode": "Item001",
+"qty": 5
+},
+{
+"item_alternate_code": "itemx2",
+"qty": 3
+}
+]
+}
 }
 Response
 Response is not paginated as its only for one location whether the request uses parameters or ID
@@ -3226,30 +3229,30 @@ When validate is False and the request is successful a status of 204 - No Conten
 When validate is True and the request is successful a status of 200 - OK is returned with a response payload:
 If there is no mismatch, then an empty list is returned:
 {
- "mismatched_item_quantity_list": []
+"mismatched_item_quantity_list": []
 }
 If there is a mismatch, the list of item(s) in error with the current quantity found is returned:
 {
- "mismatched_item_quantity_list": [
- {
- "item_barcode": "Item001",
- "item_alternate_code": "itemx1",
- "current_qty": 4
+"mismatched_item_quantity_list": [
+{
+"item_barcode": "Item001",
+"item_alternate_code": "itemx1",
+"current_qty": 4
 81
 
 Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
- },
- {
- "item_barcode": "Item002",
- "item_alternate_code": "itemx2",
- "current_qty": 6
- }
- ]
+},
+{
+"item_barcode": "Item002",
+"item_alternate_code": "itemx2",
+"current_qty": 6
 }
-Cycle Count List  
+]
+}
+Cycle Count List
 The Cycle Count List API allows you to input cycle count information from MHE to WMS.
 URL
 POST .../wms/lgfapi/v10/cycle_count_info/cycle_count_list/
@@ -3265,7 +3268,7 @@ in async mode. This API is designed for asynchronous calls
 only_load_flg Boolean (True/False) By default, the value will be considered as false. If the
 value is false, then API executes the interface (process
 corresponding records in stage tables). If the value is true,
- then only the API loads the API records to the From MHE
+then only the API loads the API records to the From MHE
 Cycle Count Info stage table.
 mhe_system String No MHE system used to perform the count.
 task_nbr String Conditional (only
@@ -3350,240 +3353,240 @@ You can send the serial numbers as comma separated
 values.
 Request Body - Active Location
 {
- "async_flg":true,
- "only_load_flg":true,
- "header": {
- "document_version": "25A",
- "origin_system": "ENV1",
- "client_env_code": "ENV1",
- "parent_company_code": "COMP01",
- "entity": "stage_cc_adjustment",
- "timestamp": "2024-06-04T12:12:12",
- "facility_code": "FAC01",
- "company_code": "COMP01",
- "messageid": "MSGID_0306202401002"
- },
- "stage_cycle_count_list":
- [
- {
- "mhe_system": "CONVEYOR-1",
- "task_nbr": "",
- "task_type": "",
- "location_barcode": "SS1202",
- "update_only_counted_inventory_flg": "FALSE",
- "stage_cycle_count_dtl_list":
- [
- {
- "stage_cycle_count_inventory_list":
- [
- {
- "item_alternate_code":"SSITEM01",
- "item_part_a": "",
- "item_part_b": "",
- "item_part_c": "",
- "item_part_d": "",
- "item_part_e": "",
- "item_part_f": "",
- "qty_counted": "5",
- "invn_attr_a": "",
+"async_flg":true,
+"only_load_flg":true,
+"header": {
+"document_version": "25A",
+"origin_system": "ENV1",
+"client_env_code": "ENV1",
+"parent_company_code": "COMP01",
+"entity": "stage_cc_adjustment",
+"timestamp": "2024-06-04T12:12:12",
+"facility_code": "FAC01",
+"company_code": "COMP01",
+"messageid": "MSGID_0306202401002"
+},
+"stage_cycle_count_list":
+[
+{
+"mhe_system": "CONVEYOR-1",
+"task_nbr": "",
+"task_type": "",
+"location_barcode": "SS1202",
+"update_only_counted_inventory_flg": "FALSE",
+"stage_cycle_count_dtl_list":
+[
+{
+"stage_cycle_count_inventory_list":
+[
+{
+"item_alternate_code":"SSITEM01",
+"item_part_a": "",
+"item_part_b": "",
+"item_part_c": "",
+"item_part_d": "",
+"item_part_e": "",
+"item_part_f": "",
+"qty_counted": "5",
+"invn_attr_a": "",
 84
 
 Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
- "invn_attr_b": "",
- "invn_attr_c": "",
- "invn_attr_d": "",
- "invn_attr_e": "",
- "invn_attr_f": "",
- "invn_attr_g": "",
- "invn_attr_h": "",
- "invn_attr_i": "",
- "invn_attr_j": "",
- "invn_attr_k": "",
- "invn_attr_l": "",
- "invn_attr_m": "",
- "invn_attr_n": "",
- "invn_attr_o": "",
- "cc_uom":"",
- "batch_nbr":"",
- "expiry_date":null,
- "pack_qty":"0",
- "case_qty":"0",
- "count_ts": "2025-01-21T12:05:45",
- "stage_cycle_count_serial_nbr":
- {
- "serial_nbr_list": ["S01","S02","S03","S04","S05"]
- }
- },
- {
- "item_alternate_code":"SSITEM02",
- "item_part_a": "",
- "item_part_b": "",
- "item_part_c": "",
- "item_part_d": "",
- "item_part_e": "",
- "item_part_f": "",
- "qty_counted": "3",
- "invn_attr_a": "",
- "invn_attr_b": "",
- "invn_attr_c": "",
- "invn_attr_d": "",
- "invn_attr_e": "",
- "invn_attr_f": "",
- "invn_attr_g": "",
- "invn_attr_h": "",
- "invn_attr_i": "",
- "invn_attr_j": "",
- "invn_attr_k": "",
- "invn_attr_l": "",
- "invn_attr_m": "",
- "invn_attr_n": "",
- "invn_attr_o": "",
- "cc_uom":"",
- "batch_nbr":"",
- "expiry_date":null,
- "pack_qty":"0",
- "case_qty":"0",
- "count_ts": "2025-01-21T12:05:45",
- "stage_cycle_count_serial_nbr":
- {
- "serial_nbr_list": ["S06","S07","S08"]
- }
- }
- ]
- }
+"invn_attr_b": "",
+"invn_attr_c": "",
+"invn_attr_d": "",
+"invn_attr_e": "",
+"invn_attr_f": "",
+"invn_attr_g": "",
+"invn_attr_h": "",
+"invn_attr_i": "",
+"invn_attr_j": "",
+"invn_attr_k": "",
+"invn_attr_l": "",
+"invn_attr_m": "",
+"invn_attr_n": "",
+"invn_attr_o": "",
+"cc_uom":"",
+"batch_nbr":"",
+"expiry_date":null,
+"pack_qty":"0",
+"case_qty":"0",
+"count_ts": "2025-01-21T12:05:45",
+"stage_cycle_count_serial_nbr":
+{
+"serial_nbr_list": ["S01","S02","S03","S04","S05"]
+}
+},
+{
+"item_alternate_code":"SSITEM02",
+"item_part_a": "",
+"item_part_b": "",
+"item_part_c": "",
+"item_part_d": "",
+"item_part_e": "",
+"item_part_f": "",
+"qty_counted": "3",
+"invn_attr_a": "",
+"invn_attr_b": "",
+"invn_attr_c": "",
+"invn_attr_d": "",
+"invn_attr_e": "",
+"invn_attr_f": "",
+"invn_attr_g": "",
+"invn_attr_h": "",
+"invn_attr_i": "",
+"invn_attr_j": "",
+"invn_attr_k": "",
+"invn_attr_l": "",
+"invn_attr_m": "",
+"invn_attr_n": "",
+"invn_attr_o": "",
+"cc_uom":"",
+"batch_nbr":"",
+"expiry_date":null,
+"pack_qty":"0",
+"case_qty":"0",
+"count_ts": "2025-01-21T12:05:45",
+"stage_cycle_count_serial_nbr":
+{
+"serial_nbr_list": ["S06","S07","S08"]
+}
+}
+]
+}
 85
 
 Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
- ]
- }
- ]
+]
+}
+]
 }
 Request Body - Reserve Location Detailed Count
 {
- "async_flg": true,
- "only_load_flg": false,
- "header": {
- "document_version": "25B",
- "origin_system": "ENV1",
- "client_env_code": "ENV1",
- "parent_company_code": "COMP01",
- "entity": "stage_cc_adjustment",
- "timestamp": "2024-06-04T12:12:12",
- "facility_code": "FAC01",
- "company_code": "COMP01",
- "messageid": "MSGID_0306202401002"
- },
- "stage_cycle_count_list": [
- {
- "mhe_system": "CONVEYOR-1",
- "task_nbr": "",
- "task_type": "",
- "location_barcode": "SSRSV1101",
- "lpn_scan_flg": "FALSE",
- "update_only_counted_inventory_flg": "FALSE",
- "allow_new_lpn_count_flg": "FALSE",
- "stage_cycle_count_dtl_list": [
- {
- "container_nbr": "LPN001",
- "stage_cycle_count_inventory_list": [
- {
- "item_alternate_code": "SSITEM01",
- "item_part_a": "",
- "item_part_b": "",
- "item_part_c": "",
- "item_part_d": "",
- "item_part_e": "",
- "item_part_f": "",
- "qty_counted": "5",
- "invn_attr_a": "",
- "invn_attr_b": "",
- "invn_attr_c": "",
- "invn_attr_d": "",
- "invn_attr_e": "",
- "invn_attr_f": "",
- "invn_attr_g": "",
- "invn_attr_h": "",
- "invn_attr_i": "",
- "invn_attr_j": "",
- "invn_attr_k": "",
- "invn_attr_l": "",
- "invn_attr_m": "",
- "invn_attr_n": "",
- "invn_attr_o": "",
- "batch_nbr": "",
- "expiry_date": "2025-11-01",
+"async_flg": true,
+"only_load_flg": false,
+"header": {
+"document_version": "25B",
+"origin_system": "ENV1",
+"client_env_code": "ENV1",
+"parent_company_code": "COMP01",
+"entity": "stage_cc_adjustment",
+"timestamp": "2024-06-04T12:12:12",
+"facility_code": "FAC01",
+"company_code": "COMP01",
+"messageid": "MSGID_0306202401002"
+},
+"stage_cycle_count_list": [
+{
+"mhe_system": "CONVEYOR-1",
+"task_nbr": "",
+"task_type": "",
+"location_barcode": "SSRSV1101",
+"lpn_scan_flg": "FALSE",
+"update_only_counted_inventory_flg": "FALSE",
+"allow_new_lpn_count_flg": "FALSE",
+"stage_cycle_count_dtl_list": [
+{
+"container_nbr": "LPN001",
+"stage_cycle_count_inventory_list": [
+{
+"item_alternate_code": "SSITEM01",
+"item_part_a": "",
+"item_part_b": "",
+"item_part_c": "",
+"item_part_d": "",
+"item_part_e": "",
+"item_part_f": "",
+"qty_counted": "5",
+"invn_attr_a": "",
+"invn_attr_b": "",
+"invn_attr_c": "",
+"invn_attr_d": "",
+"invn_attr_e": "",
+"invn_attr_f": "",
+"invn_attr_g": "",
+"invn_attr_h": "",
+"invn_attr_i": "",
+"invn_attr_j": "",
+"invn_attr_k": "",
+"invn_attr_l": "",
+"invn_attr_m": "",
+"invn_attr_n": "",
+"invn_attr_o": "",
+"batch_nbr": "",
+"expiry_date": "2025-11-01",
 86
 
 Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
- "cc_uom": "",
- "pack_qty": "0",
- "case_qty": "0",
- "count_ts": "2025-01-21T12:05:45",
- "stage_cycle_count_serial_nbr": {
- "serial_nbr_list": [
- "SER01",
- "SER02",
- "SER03",
- "SER04",
- "SER05"
- ]
- }
- },
- {
- "item_alternate_code": "SSITEM02",
- "item_part_a": "",
- "item_part_b": "",
- "item_part_c": "",
- "item_part_d": "",
- "item_part_e": "",
- "item_part_f": "",
- "qty_counted": "5",
- "invn_attr_a": "",
- "invn_attr_b": "",
- "invn_attr_c": "",
- "invn_attr_d": "",
- "invn_attr_e": "",
- "invn_attr_f": "",
- "invn_attr_g": "",
- "invn_attr_h": "",
- "invn_attr_i": "",
- "invn_attr_j": "",
- "invn_attr_k": "",
- "invn_attr_l": "",
- "invn_attr_m": "",
- "invn_attr_n": "",
- "invn_attr_o": "",
- "batch_nbr": "",
- "expiry_date": "2025-11-01",
- "cc_uom": "",
- "pack_qty": "0",
- "case_qty": "0",
- "count_ts": "2025-01-21T12:05:45",
- "stage_cycle_count_serial_nbr": {
- "serial_nbr_list": [
- "SER06",
- "SER07",
- "SER08",
- "SER09",
- "SER10"
- ]
- }
- }
+"cc_uom": "",
+"pack_qty": "0",
+"case_qty": "0",
+"count_ts": "2025-01-21T12:05:45",
+"stage_cycle_count_serial_nbr": {
+"serial_nbr_list": [
+"SER01",
+"SER02",
+"SER03",
+"SER04",
+"SER05"
+]
+}
+},
+{
+"item_alternate_code": "SSITEM02",
+"item_part_a": "",
+"item_part_b": "",
+"item_part_c": "",
+"item_part_d": "",
+"item_part_e": "",
+"item_part_f": "",
+"qty_counted": "5",
+"invn_attr_a": "",
+"invn_attr_b": "",
+"invn_attr_c": "",
+"invn_attr_d": "",
+"invn_attr_e": "",
+"invn_attr_f": "",
+"invn_attr_g": "",
+"invn_attr_h": "",
+"invn_attr_i": "",
+"invn_attr_j": "",
+"invn_attr_k": "",
+"invn_attr_l": "",
+"invn_attr_m": "",
+"invn_attr_n": "",
+"invn_attr_o": "",
+"batch_nbr": "",
+"expiry_date": "2025-11-01",
+"cc_uom": "",
+"pack_qty": "0",
+"case_qty": "0",
+"count_ts": "2025-01-21T12:05:45",
+"stage_cycle_count_serial_nbr": {
+"serial_nbr_list": [
+"SER06",
+"SER07",
+"SER08",
+"SER09",
+"SER10"
+]
+}
+}
 
- ]
- }
- ]
- }
- ]
+]
+}
+]
+}
+]
 }
 87
 
@@ -3593,47 +3596,47 @@ Chapter 5
 Supported Operations
 Request Body - Reserve Location LPN Scan Mode
 {
- "async_flg": true,
- "only_load_flg": false,
- "header": {
- "document_version": "25B",
- "origin_system": "ENV1",
- "client_env_code": "ENV1",
- "parent_company_code": "COMP01",
- "entity": "stage_cc_adjustment",
- "timestamp": "2024-06-04T12:12:12",
- "facility_code": "FAC01",
- "company_code": "COMP01",
- "messageid": "MSGID_0306202401002"
- },
- "stage_cycle_count_list": [
- {
- "mhe_system": "CONVEYOR-1",
- "task_nbr": "",
- "task_type": "",
- "location_barcode": "SSRSV1202",
- "lpn_scan_flg": "TRUE",
- "update_only_counted_inventory_flg": "FALSE",
- "allow_new_lpn_count_flg": "FALSE",
- "stage_cycle_count_dtl_list": [
- {
- "container_nbr": "LPN001"
- },
- {
- "container_nbr": "LPN002"
- }
- ]
- }
- ]
+"async_flg": true,
+"only_load_flg": false,
+"header": {
+"document_version": "25B",
+"origin_system": "ENV1",
+"client_env_code": "ENV1",
+"parent_company_code": "COMP01",
+"entity": "stage_cc_adjustment",
+"timestamp": "2024-06-04T12:12:12",
+"facility_code": "FAC01",
+"company_code": "COMP01",
+"messageid": "MSGID_0306202401002"
+},
+"stage_cycle_count_list": [
+{
+"mhe_system": "CONVEYOR-1",
+"task_nbr": "",
+"task_type": "",
+"location_barcode": "SSRSV1202",
+"lpn_scan_flg": "TRUE",
+"update_only_counted_inventory_flg": "FALSE",
+"allow_new_lpn_count_flg": "FALSE",
+"stage_cycle_count_dtl_list": [
+{
+"container_nbr": "LPN001"
+},
+{
+"container_nbr": "LPN002"
+}
+]
+}
+]
 }
 Sample Response
 {
- "success": true,
- "response": {
- "message": "Data successfully processed"
- }
+"success": true,
+"response": {
+"message": "Data successfully processed"
 }
-Cycle Count Adjustment  
+}
+Cycle Count Adjustment
 The following APIs allow you to fetch paginated results for Cycle Count Header entries and Cycle Count details.
 Cycle Count Adjustment Header URLs
 Fetch paginated results when users use the following URL:
@@ -3661,7 +3664,7 @@ To fetch only one result based on ‘ID’, search with a specific 'ID' in the f
 GET .../lgfapi/v10/entity/cc_adjustment_approval_rule/{id}
 In the same way, the support is extended for HEAD Request Method using the following URL:
 HEAD .../lgfapi/v10/entity/cc_adjustment_approval_rule/{id}
-Cycle Count Summary Adjustment  
+Cycle Count Summary Adjustment
 The following APIs allow you to fetch paginated results for Cycle Count Summary Adjustment Header entries and Cycle
 Count Summary Adjustment details.
 Cycle Count Summary Adjustment Header URLs
@@ -3680,7 +3683,7 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
-Describe Entity  
+Describe Entity
 GET …/wms/lgfapi/v10/entity/{entity_name}/describe/
 The describe operation is unique in that it is common and can be used on any entity. It returns a formatted
 representation of the entity’s metadata including any filterable “parameters” and all field definitions. This is the primary
@@ -3692,39 +3695,39 @@ Response Components
 ◦ allow_blank – String fields only. Is an empty string value permitted?
 ◦ max_length – String fields only. Max string length permitted.
 ◦ required – Does the field require data.
-Note:  Note about Required fields - X or Y indicates the field is required. N indicates the field is not
+Note: Note about Required fields - X or Y indicates the field is required. N indicates the field is not
 required. C indicates that the field is conditional.
 ◦ default – If the fields is not required, the default value when no value is provided.
-Facility  
+Facility
 These topics give descriptions for APIs that complete actions related to facilities for the Warehouse.
-Bulk Change Eligible Facility  
+Bulk Change Eligible Facility
 The Bulk Change Eligible Facility API allows you to add/remove the user eligible facility in bulk. You can update single or
 multiple user eligible facility all at once. Once updates are made, they will reflect in the User UI --> Eligible Facility.
 URL
 POST ...../v10/entity/user/bulk_change_eligible_facility
 Example Body Request
 {
- "parameters": {
- "company_id": "222",
- "auth_user_id__username__in": [
- "user1",
- "user2",
- "user3"
- ]
- },
- "options": {
+"parameters": {
+"company_id": "222",
+"auth_user_id**username**in": [
+"user1",
+"user2",
+"user3"
+]
+},
+"options": {
 90
 
 Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
- "action": "ADD",
- "facility_id_list": [10,20,21],
- "facility_code_list": ["FAC1","FAC2","FAC3"],
- "commit_frequency": 1
+"action": "ADD",
+"facility_id_list": [10,20,21],
+"facility_code_list": ["FAC1","FAC2","FAC3"],
+"commit_frequency": 1
 }
-Facility Parameter  
+Facility Parameter
 POST .../entity/facility_parm
 This operation is used to add single or multiple facility parameters.
 If you have a new facility and you want to copy the same facility parameters from your current facility, you can first GET
@@ -3738,15 +3741,15 @@ Example Body Request
 "parm_value": "test"
 }
 }
-IBLPN  
+IBLPN
 These topics give descriptions for APIs that complete actions related to IBLPNs in the Warehouse.
 The “iblpn” entity is derived from the “container” entity and therefore also has access to all of its entity operations, in
 addition to the following:
-Direct Consume  
+Direct Consume
 POST …/wms/lgfapi/v10/entity/iblpn/{id}/direct_consume/
 The direct consume API allows you to consume a Received or Located IBLPN and update its inventory to zero. This will
 write IBLPN consumed inventory history records.
-Note:  The `options` parameters, `transaction_ref_nbr`, may now be passed in the request body. This parameters will
+Note: The `options` parameters, `transaction_ref_nbr`, may now be passed in the request body. This parameters will
 be added to any CNTR_CONSUMED inventory history records created as part of the API’s execution. The inventory
 history field `ref_code_3` will now be set as “TRN”. The value of `ref_value_3` will be that of `transaction_ref_nbr` or an
 empty string.
@@ -3758,11 +3761,11 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
- "options": {
- "reason_code" : "DAM",
- "transaction_ref_nbr" : "TX12345",
- "num_days_iblpn_lost_for_consume": 1
- }
+"options": {
+"reason_code" : "DAM",
+"transaction_ref_nbr" : "TX12345",
+"num_days_iblpn_lost_for_consume": 1
+}
 }
 Category Name Type Required Description
 options reason_code String X Used for inventory
@@ -3777,7 +3780,7 @@ consumed according
 to the number of days
 that it has been lost.
 (Last mod date )
-Modify Item Quantity  
+Modify Item Quantity
 The IBLPN modify_item_qty API allows the caller to adjust item inventory in a “Received” or “Located” IBLPN. You can
 only update a single IBLPN and item per request.
 Regardless of the method used to identify the IBLPN, the following input is valid:
@@ -3809,7 +3812,7 @@ POST .../entity/iblpn/{id}/modify_item_qty/
 Caller knows the unique `id` value of the IBLPN, which is added to the request URL. No additional `parameters` data is
 required from the request body.
 IBLPN Lookup by Filters
-                              POST .../entity/iblpn/modify_item_qty/
+POST .../entity/iblpn/modify_item_qty/
 
 Category Name Type Required Description
 parameters container_nbr String Y IBLPN to be adjusted.
@@ -3819,20 +3822,20 @@ parameters company_id Integer N IBLPN’s company.
 ◦ The `__in` lookup is not supported for `container_nbr`.
 • `facility_id` and `company_id` both additionally support string lookup by `code` using the double-underscore
 notation:
-◦ facility_id__code
+◦ facility_id\_\_code
 ◦ company_id_code
 Example Request Body:
 {
- "options": {
- "item_barcode": "ITEM1234",
- "actual_qty": 13,
- "batch_nbr": "BATCH1234",
- "expiry_date": "2020-01-02",
- "invn_attr_a": "A",
- "reason_code": "C",
- "transaction_ref_nbr": "TX123457890",
- "serial_nbr_list": ["SN001", "SN002",...,"SN0013"]
- }
+"options": {
+"item_barcode": "ITEM1234",
+"actual_qty": 13,
+"batch_nbr": "BATCH1234",
+"expiry_date": "2020-01-02",
+"invn_attr_a": "A",
+"reason_code": "C",
+"transaction_ref_nbr": "TX123457890",
+"serial_nbr_list": ["SN001", "SN002",...,"SN0013"]
+}
 }
 93
 
@@ -3860,19 +3863,19 @@ not enabled.
 • Begin_ts and End_ts cannot be greater than the current timestamp of the facility in the API.
 Request Body with User Activity Data
 {
- "parameters": {
- "facility_id": 268,
- "company_id": 572,
- "container_nbr": "LPN123"
- },
- "options": {
- "item_barcode": "Item123",
- "adjustment_qty": 10,
- "reason_code": "DMG",
- "begin_ts": "2024-05-27T18:30:00",
- "end_ts": "2024-05-27T18:45:00",
- "screen_name": "Modify IBLN Qty"
- }
+"parameters": {
+"facility_id": 268,
+"company_id": 572,
+"container_nbr": "LPN123"
+},
+"options": {
+"item_barcode": "Item123",
+"adjustment_qty": 10,
+"reason_code": "DMG",
+"begin_ts": "2024-05-27T18:30:00",
+"end_ts": "2024-05-27T18:45:00",
+"screen_name": "Modify IBLN Qty"
+}
 }
 94
 
@@ -3880,7 +3883,7 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
-Composite Create  
+Composite Create
 POST …/wms/lgfapi/v10/entity/iblpn/composite_create/
 This operation allows for the creation of a Received or Located IBLPN along with one or more inventory records in a
 single request. Furthermore, it allows for the creating and/or association of the inventory’s corresponding batch and
@@ -3893,41 +3896,41 @@ must still pass all standard user eligibility validations.
 When the Composite Create API is called, an error will be returned if the appropriate serial number information is not
 provided for any serial number tracked items:
 This change avoids the requirement of making multiple API calls to complete the linking.
-Note:  Customers using composite_create for serial number tracked items should ensure that serial number
+Note: Customers using composite_create for serial number tracked items should ensure that serial number
 information is shared in the composite create itself.
 The following is an example body for composite create:
 {
- "fields": {
- "facility_id": 269, <== Will be inherited by objects
- "company_id": 48, <== Will be inherited by objects
- "iblpn": {
- "container_nbr": "IBLPN000001",
- "status_id": 30,
- "curr_location_id": 28536,
- "putawaytype_id":1020,
- "length": 1.1234567,
- "width": 2.34567890,
- "height": 3.123
- },
- "inventory": [ <== List of dictionaries, one per inventory record.
- {
- "item_id": 1,
- "expiry_date": "2019-01-01",
- "curr_qty": 1.2345,
- "batch_number_id": 1,
- "invn_attr_id": 2,
- "serial_nbr_list": [ <== Single Inventory can have multiple serial numbers.
- "SN1",
- "SN2",
- "SN3"
- ]
- }
- ]
- },
- "options": {
- "reason_code": "IT",
- "validate_serial_nbrs_flg": false
- }
+"fields": {
+"facility_id": 269, <== Will be inherited by objects
+"company_id": 48, <== Will be inherited by objects
+"iblpn": {
+"container_nbr": "IBLPN000001",
+"status_id": 30,
+"curr_location_id": 28536,
+"putawaytype_id":1020,
+"length": 1.1234567,
+"width": 2.34567890,
+"height": 3.123
+},
+"inventory": [ <== List of dictionaries, one per inventory record.
+{
+"item_id": 1,
+"expiry_date": "2019-01-01",
+"curr_qty": 1.2345,
+"batch_number_id": 1,
+"invn_attr_id": 2,
+"serial_nbr_list": [ <== Single Inventory can have multiple serial numbers.
+"SN1",
+"SN2",
+"SN3"
+]
+}
+]
+},
+"options": {
+"reason_code": "IT",
+"validate_serial_nbrs_flg": false
+}
 95
 
 Oracle Warehouse Management Cloud
@@ -3964,7 +3967,7 @@ The following is an example of JSON request data where the facility/company cont
 using the “id” values of “batch_number_id” and “invn_attr_id” to associate those objects that already exist. The defined
 top-level facility and company will be applied to the iblpn and inventory objects being created. The existing batch and
 inventory attribute objects being associated to the inventory must be of the same context.
-Note:  even though “inventory” does not have a “company_id” field, the company is determined from the associated
+Note: even though “inventory” does not have a “company_id” field, the company is determined from the associated
 item’s company and must also pass validations.
 {
 "fields": {
@@ -4093,68 +4096,68 @@ Supported Operations
 Request Body with User Activity Data
 {
 "fields": {
- "facility_id": 1,
- "company_id": 1,
- "iblpn": {
- "container_nbr": "IBLPN000003",
- "status_id": 10
- },
+"facility_id": 1,
+"company_id": 1,
+"iblpn": {
+"container_nbr": "IBLPN000003",
+"status_id": 10
+},
 "inventory": [{
- "item_id": 2,
- "curr_qty": 1,
- "begin_ts": "2024-05-27T18:30:00",
- "end_ts": "2024-05-27T18:45:00"
- },
- {
- "item_id": 4,
- "curr_qty": 2,
- "begin_ts": "2024-05-27T18:50:00",
- "end_ts": "2024-05-27T18:55:00"
- }]
+"item_id": 2,
+"curr_qty": 1,
+"begin_ts": "2024-05-27T18:30:00",
+"end_ts": "2024-05-27T18:45:00"
+},
+{
+"item_id": 4,
+"curr_qty": 2,
+"begin_ts": "2024-05-27T18:50:00",
+"end_ts": "2024-05-27T18:55:00"
+}]
 },
 "options": {
- "reason_code": "IT",
- "screen_name": "Create IBLPN Screen"
- }
+"reason_code": "IT",
+"screen_name": "Create IBLPN Screen"
 }
-Receive  
+}
+Receive
 The Receive API it allows you to receive LPNs. Currently, it supports attributes, batch, and expiry.
-Note:  Receipt can be done using the Purchase Order (PO) number or Inbound Shipment. If the PO number is
+Note: Receipt can be done using the Purchase Order (PO) number or Inbound Shipment. If the PO number is
 provided, then the Inbound Shipment is created automatically.
 API Signature
 POST .../entity/iblpn/receive
 The following is an example body for receive API.
 { "facility_id_code": "FAC",
- "company_id__code": "COMP",
- "shipment_nbr": "SHIPMTNBR",
- "container_nbr": "CNTRNBR",
- "recv_dock_nbr_or_location_barcode": "DOCK_NBR_OR_BARCODE",
- "trailer_nbr": "TRLRNBR",
- "lpn_type": "LPT",
- "pallet_nbr": "PLTNBR",
- "item_list": [{
- "item_barcode": "ITEM1234",
- "qty": 10,
- "case_qty": 5,
- "pack_qty": 5
- }]
+"company_id\_\_code": "COMP",
+"shipment_nbr": "SHIPMTNBR",
+"container_nbr": "CNTRNBR",
+"recv_dock_nbr_or_location_barcode": "DOCK_NBR_OR_BARCODE",
+"trailer_nbr": "TRLRNBR",
+"lpn_type": "LPT",
+"pallet_nbr": "PLTNBR",
+"item_list": [{
+"item_barcode": "ITEM1234",
+"qty": 10,
+"case_qty": 5,
+"pack_qty": 5
+}]
 99
 
 Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
- }
+}
 Request Parameters
 Name Required Type Default Description
-facility_id Integer Facility context by id.
-facility_id__code String Facility context by code.
+facility*id Integer Facility context by id.
+facility_id**code String Facility context by code.
 company_id Integer Company context by id.
-company_id__code String Company context by code.
+company_id**code String Company context by code.
 container_nbr X String IB container number
 shipment_nbr C String IB shipment number
 po_nbr C String Purchase order number
-recv_dock_nbr_or_location_
+recv_dock_nbr_or_location*
 barcode
 String The dock number or dock
 location barcode at which
@@ -4173,7 +4176,7 @@ error message.
 allow_rem_exp_override_flg Boolean False If the expiration date
 entered does not pass the
 “% acceptable” validation,
- the system does not allow
+the system does not allow
 you to receive the SKU and
 displays an error message
 “Rem prod life below accept
@@ -4196,11 +4199,11 @@ po_seq_nbr C Integer Purchase order sequence
 number
 batch_nbr C String Batch number
 batch_number C (If item is batch tracked,
- then batch number is
+then batch number is
 mandatory.)
 String Batch number
 expiry_date C (If item is expiry tracked,
- then expiry date is
+then expiry date is
 mandatory. However, if
 existing batch has expiry
 date, then expiry date is not
@@ -4224,7 +4227,7 @@ inventory attributes a-o
 qty C Number Value provided as a part of
 cartonized receipt
 manufacture_date C (If item is expiry tracked,
- then either expiry date
+then either expiry date
 or manufacture date is
 mandatory to pass.)
 Date Manufacture date
@@ -4255,16 +4258,16 @@ single sku. If it is a multi sku, it will try to xdock.
 Additional Notes
 As of now we support only receiving of normal items. Support for attribute, batch, expiry and serial tracking items will
 be added later.
-Note:  Receipt of cartonized LPNs is not supported for batch / expiry / inventory_attributes/ serial-tracking items,
+Note: Receipt of cartonized LPNs is not supported for batch / expiry / inventory_attributes/ serial-tracking items,
 even if underlining shipment details for the LPNs have batch / expiry / inventory_attributes/ serial information.
 • We do not support LPN as a Physical Pallet.
 • We do not support detail receiving for cartonized LPNs.
 • We do not support handling over-receipt warning message.
 • QC flow is not supported.
-Note:  If you are sending a case or pack quantity, it must be a multiple of standard case or standard pack quantity. For
+Note: If you are sending a case or pack quantity, it must be a multiple of standard case or standard pack quantity. For
 a cartonized shipment, the REST API will only pass the LPN information and ignore the item list information.
 If a PO number is passed in the API header, the PO is converted to a shipment for a PO based receiving.
-Note:  When the shipment is subjected for PO-based receiving, the PO sequence will not be considered.
+Note: When the shipment is subjected for PO-based receiving, the PO sequence will not be considered.
 Receive UOM
 With the receive API, you can also receive inbound shipments with receiving UOM.
 102
@@ -4275,19 +4278,19 @@ Chapter 5
 Supported Operations
 Receiving UOM Sample Body
 { "facility_id_code": "QATST01",
- "company_id_code": "QATSTPC",
- "shipment_nbr": "APIBS25012302",
- "container_nbr": "APCNTR27012301",
- "recv_dock_nbr_or_location_barcode": "BH-DK-01-01",
- "trailer_nbr": "APTRL2701",
- "lpn_type": "PEP-BEV",
- "pallet_nbr": "APPLT-27012301",
- "item_list": [{
- "item_barcode": "AP004",
- "qty": 10,
- "receiving_uom": "LB"
- }]
- }
+"company_id_code": "QATSTPC",
+"shipment_nbr": "APIBS25012302",
+"container_nbr": "APCNTR27012301",
+"recv_dock_nbr_or_location_barcode": "BH-DK-01-01",
+"trailer_nbr": "APTRL2701",
+"lpn_type": "PEP-BEV",
+"pallet_nbr": "APPLT-27012301",
+"item_list": [{
+"item_barcode": "AP004",
+"qty": 10,
+"receiving_uom": "LB"
+}]
+}
 Track User Activity
 If you have purchased WFM (Oracle Workforce Management), you can also send user activity data using the following
 parameters in the Receive API
@@ -4316,26 +4319,26 @@ not enabled.
 • Begin_ts and End_ts cannot be greater than the current timestamp of the facility in the API.
 Request Body with User Activity Data
 {
- "facility_id": "268",
- "company_id": "572",
- "container_nbr": "LPN123",
- "screen_name": "Dtl Recv Screen",
- "item_list": [
- {
- "item_barcode": "s1",
- "qty": 10,
- "begin_ts": "2024-05-21T18:30:00",
- "end_ts": "2024-05-21T18:45:00"
- },
- {
- "item_barcode": "s2",
- "qty": 10,
- "begin_ts": "2024-05-21T18:50:00",
- "end_ts": "2024-05-21T18:55:00"
- }
- ]
+"facility_id": "268",
+"company_id": "572",
+"container_nbr": "LPN123",
+"screen_name": "Dtl Recv Screen",
+"item_list": [
+{
+"item_barcode": "s1",
+"qty": 10,
+"begin_ts": "2024-05-21T18:30:00",
+"end_ts": "2024-05-21T18:45:00"
+},
+{
+"item_barcode": "s2",
+"qty": 10,
+"begin_ts": "2024-05-21T18:50:00",
+"end_ts": "2024-05-21T18:55:00"
 }
-Split LPN  
+]
+}
+Split LPN
 The Split LPN API allows you to split allocated Inbound LPNs into multiple LPNs. This will assist you in identifying
 allocations during packing, and increase efficiency.
 104
@@ -4345,7 +4348,7 @@ WMS REST API Guide
 Chapter 5
 Supported Operations
 URL
-POST /entity/iblpn/{id}/split_lpn/
+POST /entity/iblpn/{id}/split*lpn/
 Request Options
 Name Required Type Default Description
 company_id Y String Company ID
@@ -4353,66 +4356,66 @@ facility_id Y String
 auto_generate_lpn N Boolean N If set to yes then do not
 provide to_lpn
 to_lpn_list Y Array List of LPN the inventory is
-going to be split to. Refer to to_
+going to be split to. Refer to to*
 lpn_list section for details
 Sample Payload
 "parameters": {
- "iblpn_nbr": "LPN0"
- },
- "options": {
- "company_id": "units",
- "facility_id ": false,
- "mhe_system_code": "",
- "auto_generate_lpn": true,
- "to_lpn_list": [
- {
- "to_lpn_nbr": "LPN1",
- "inv_list": [
- {
- "item_code": "ABC",
- "batch_nbr": "BAT1",
- "expiry_date": "2024-12-31",
- "invn_attr_a": "A1",
- "invn_attr_b": "B1",
- "invn_attr_c": "C1",
- "qty": 10,
- "uom_code": "pack",
- "alloc_info": {
- "facility_code": "bar"
- }
- },
- {
- "item_code": "ABC",
- "batch_nbr": "BAT2",
- "expiry_date": "2025-01-01",
- "invn_attr_a": "A1",
- "invn_attr_b": "B1",
- "invn_attr_c": "C1",
- "qty": 15,
- "uom_code": "pack"
- }
- ]
- },
- {
- "to_lpn_nbr": "LPN2",
+"iblpn_nbr": "LPN0"
+},
+"options": {
+"company_id": "units",
+"facility_id ": false,
+"mhe_system_code": "",
+"auto_generate_lpn": true,
+"to_lpn_list": [
+{
+"to_lpn_nbr": "LPN1",
+"inv_list": [
+{
+"item_code": "ABC",
+"batch_nbr": "BAT1",
+"expiry_date": "2024-12-31",
+"invn_attr_a": "A1",
+"invn_attr_b": "B1",
+"invn_attr_c": "C1",
+"qty": 10,
+"uom_code": "pack",
+"alloc_info": {
+"facility_code": "bar"
+}
+},
+{
+"item_code": "ABC",
+"batch_nbr": "BAT2",
+"expiry_date": "2025-01-01",
+"invn_attr_a": "A1",
+"invn_attr_b": "B1",
+"invn_attr_c": "C1",
+"qty": 15,
+"uom_code": "pack"
+}
+]
+},
+{
+"to_lpn_nbr": "LPN2",
 105
 
 Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
- "inv_list": [
- {
- "item_code": "DEF",
- "invn_attr_a": "A1",
- "invn_attr_b": "B1",
- "invn_attr_c": "C1",
- "qty": 20
- }
- ]
- }
- ]
- }
+"inv_list": [
+{
+"item_code": "DEF",
+"invn_attr_a": "A1",
+"invn_attr_b": "B1",
+"invn_attr_c": "C1",
+"qty": 20
+}
+]
+}
+]
+}
 }
 to_lpn_list
 Name Required Type Default Description
@@ -4425,7 +4428,7 @@ batch_nbr C String
 qty Y number
 alloc_info_list Y Array List of fields for identifying
 allocation for the inventory
-Note:  if inventory has allocations, the alloc_info_list is required.
+Note: if inventory has allocations, the alloc_info_list is required.
 alloc_info_list
 Name Required Type Default Description
 facility_code C String Store number required for
@@ -4443,7 +4446,7 @@ WMS REST API Guide
 Chapter 5
 Supported Operations
 IBLPN Lookup by Filter
-POST /entity/iblpn/split_lpn/
+POST /entity/iblpn/split*lpn/
 Options
 Name Required Type Default Description
 company_id Y String Company ID
@@ -4453,9 +4456,9 @@ integration.
 auto_generate_lpn N Boolean N If set to yes then do not
 provide to_lpn
 to_lpn_list Y Array List of LPN the inventory is
-going to be split to. Refer to to_
+going to be split to. Refer to to*
 lpn_list section for details
-Split LPN for Replenishment  
+Split LPN for Replenishment
 The new split LPN for Replenishment API allows third party integration systems or Product as a service (PAAS) to do
 split an existing replenishment allocation of type “REPLEN_CS_PK_UNITS” into multiple smaller tasks as FULL LPN
 replenishments. This would be most conducive if you have an LPN that contains more than one unit of an UOM, and it
@@ -4474,7 +4477,7 @@ facility_id Integer C Facility context by id.
 one of id or code should be
 provided
 
-facility_id__code String C Facility context by code.
+facility_id\_\_code String C Facility context by code.
 107
 
 Oracle Warehouse Management Cloud
@@ -4491,7 +4494,7 @@ company_id String C Company context by id.
 one of id or code should be
 provided
 
-company_id__code String N Company context by code.
+company_id\_\_code String N Company context by code.
 
 one of id or code should be
 provided
@@ -4504,11 +4507,11 @@ split
 • Only one of `company_id` or `company_id__code` may be provided.
 Example:
 {
- "parameters": {
- "facility_id__code": "FAC",
- "company_id": 1,
- "container_nbr": "LPN123"
- }
+"parameters": {
+"facility_id\_\_code": "FAC",
+"company_id": 1,
+"container_nbr": "LPN123"
+}
 }
 Request Parameters - Options
 Name Required Type Default Description
@@ -4538,39 +4541,39 @@ invn_attr_o
 
 String inventory attributes A to O
 specified on the inventory
-qty_in_uom X integer new parameter. Total Qty in
+qty*in_uom X integer new parameter. Total Qty in
 UOM.(2 units/2 cs/2pks)
 new_container_nbr_list X list of Strings new parameter. List of new
 LPN numbers
 location_barcode Optional String must be of location type
 DROP
-task_type_description X String Description of REPLEN_
+task_type_description X String Description of REPLEN*
 LPN task type
 Example
 {
- "options": {
- "item_barcode": "ITEM123"
- "batch_nbr": "BTCH123"
- "invn_attr_a": "AA123"
- "qty_in_uom": 2
- "new_container_nbr_list": ["lpn1","lpn2"],
- "location_barcode": "LOC1",
- "task_type_description": "Full LPN Replenishment - PM"
- }
+"options": {
+"item_barcode": "ITEM123"
+"batch_nbr": "BTCH123"
+"invn_attr_a": "AA123"
+"qty_in_uom": 2
+"new_container_nbr_list": ["lpn1","lpn2"],
+"location_barcode": "LOC1",
+"task_type_description": "Full LPN Replenishment - PM"
+}
 }
 Full Request Body Examples
 Request with `id` in URL
 POST .../wms/lgfapi/v10/entity/iblpn/<id>/split_lpn_for_replen
 {
- "options": {
- "item_barcode": "LOAD123",
- "batch_nbr": "BTCH123",
- "invn_attr_a": "AA123",
- "qty_in_uom": 4,
- "new_container_nbr_list": ["lpn1","lpn2","lpn3","lpn4"],
- "location_barcode": "LOC1",
- "task_type_description": "Full LPN Replenishment - PM"
- }
+"options": {
+"item_barcode": "LOAD123",
+"batch_nbr": "BTCH123",
+"invn_attr_a": "AA123",
+"qty_in_uom": 4,
+"new_container_nbr_list": ["lpn1","lpn2","lpn3","lpn4"],
+"location_barcode": "LOC1",
+"task_type_description": "Full LPN Replenishment - PM"
+}
 }
 109
 
@@ -4581,18 +4584,18 @@ Supported Operations
 Request without ID in URL:
 POST .../wms/lgfapi/v10/entity/iblpn/split_lpn_for_replen
 {
- "parameters": {
- "facility_id__code": "FAC",
- "company_id": 1,
- "container_nbr": "LPN123"
- },
- "options": {
- "item_alternate_code": "ITEM123"
- "qty_in_uom": 4,
- "new_container_nbr_list": ["lpn1","lpn2","lpn3","lpn4"],
- "location_barcode": "LOC1",
- "task_type_description": "Full LPN Replenishment - PM"
- }
+"parameters": {
+"facility_id\_\_code": "FAC",
+"company_id": 1,
+"container_nbr": "LPN123"
+},
+"options": {
+"item_alternate_code": "ITEM123"
+"qty_in_uom": 4,
+"new_container_nbr_list": ["lpn1","lpn2","lpn3","lpn4"],
+"location_barcode": "LOC1",
+"task_type_description": "Full LPN Replenishment - PM"
+}
 }
 Track User Activity
 If you have purchased WFM (Oracle Workforce Management), you can also send user activity data using the following
@@ -4614,28 +4617,28 @@ not enabled.
 Request Body with User Activity Data
 {
 "parameters": {
- "facility_id": 101,
+"facility_id": 101,
 110
 
 Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
- "company_id": 102,
- "container_nbr": "LPN123"
+"company_id": 102,
+"container_nbr": "LPN123"
 },
 "options": {
- "item_alternate_code": "ITEM123"
- "qty_in_uom": 4,
- "new_container_nbr_list": ["lpn1","lpn2","lpn3","lpn4"],
- "location_barcode": "LOC1",
- "task_type_description": "Full LPN Replenishment - PM",
- "begin_ts": "2024-05-27T18:30:00",
- "end_ts": "2024-05-27T18:45:00",
- "screen_name": "Split LPN For Replen Screen"
+"item_alternate_code": "ITEM123"
+"qty_in_uom": 4,
+"new_container_nbr_list": ["lpn1","lpn2","lpn3","lpn4"],
+"location_barcode": "LOC1",
+"task_type_description": "Full LPN Replenishment - PM",
+"begin_ts": "2024-05-27T18:30:00",
+"end_ts": "2024-05-27T18:45:00",
+"screen_name": "Split LPN For Replen Screen"
 }
 }
-Deallocate  
+Deallocate
 The deallocate API allows you to de-allocate IBLPN which is in Partially Allocated/Allocated status through an API
 API URL: Lookup by ID
 POST.../entity/LPN/{id}/deallocate/
@@ -4644,9 +4647,9 @@ API URL: Lookup by Filters
 POST.../entity/iblpn/deallocate/
 Category Name Required Type Description
 parameters facility_id Integer Facility context by id
-parameters facility_id__code string Facility context by code
+parameters facility_id**code string Facility context by code
 parameters company_id Integer Company context by id
-parameters company_id__code string Company context by code
+parameters company_id**code string Company context by code
 parameters container_nbr X string IBLPN which needs to be
 De-allocated
 • If facility and/or company are provided, set login context accordingly.
@@ -4664,26 +4667,26 @@ Request Body:
 The transaction is meant for the task entity. The users are required to send the following parameters in the body.
 POST.../entity/iblpn/bulk_deallocate/
 {
- "parameters": {
- "id__in": [01, 02, 03]
- },
- "options": {
- "commit_frequency": "0",
- }
+"parameters": {
+"id\_\_in": [01, 02, 03]
+},
+"options": {
+"commit_frequency": "0",
+}
 }
 The commit frequency is by default set to 0. If it is set to 0, the system should roll back on first error/ If the commit
 frequency is set to 1, the system should commit per object. ID can be sent in bulk_deallocate or LPN numbers can also
 be shared.
-Vendor Performance Code  
+Vendor Performance Code
 The Vendor Performance Code API allows you to to fetch the vendor performance code as an entity. Only the GET and
 HEAD http methods are supported for this API.
 The following are some ways for calling the Vendor Performance Code API:
 • GET....../entity/vendor_perf_code/
-Note:  The system will display paginated results when users use the above URL.
+Note: The system will display paginated results when users use the above URL.
 Using the T ask ID
 • GET....../entity/vendor_perf_code/{id}/
-Note:  The system will display non paginated results when users use the above URL
-Quality Check Approve/Reject  
+Note: The system will display non paginated results when users use the above URL
+Quality Check Approve/Reject
 The QC Approve API allows you to approve QC marked IBLPNs. You can perform quality check by using external quality
 check modules with custom verification methods without accessing the UI or RF QC complete module in Oracle WMS
 Cloud.
@@ -4697,28 +4700,28 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
-Note:  No additional `parameters` data in the request body is required.
+Note: No additional `parameters` data in the request body is required.
 Using the Container Number:
 • POST.../entity/iblpn/qc_approve/
-Note:  The API body should include facility id/code, company id/code and container number. You can also send the
+Note: The API body should include facility id/code, company id/code and container number. You can also send the
 Vendor Performance code as an option in the API request body.
 Using the Bulk QC Approve:
 • POST.../entity/iblpn/bulk_qc_approve/
-Note:  The API body should have either the container IDs or container numbers in the. You can also send the Vendor
+Note: The API body should have either the container IDs or container numbers in the. You can also send the Vendor
 Performance code as an option in the API request body.
 Once quality check is approved, the container status becomes Received with QC status as QC approved.
 QC Reject
 The following are some ways for calling the QC Reject API:
 Using the Wave Template ID:
 • POST.../entity/iblpn/{id}/qc_reject/
-Note:  You can send the Vendor Performance code and Lock code as options in the API request body.
+Note: You can send the Vendor Performance code and Lock code as options in the API request body.
 Using the Container Number:
 • POST.../entity/iblpn/qc_reject/
-Note:  The API body should include facility id/code, company id/code and container number. You can also send the
+Note: The API body should include facility id/code, company id/code and container number. You can also send the
 Vendor Performance code and Lock code as options in the API request body.
 Using the Bulk QC Approve:
 • POST.../entity/iblpn/bulk_qc_reject/
-Note:  The API body should have either the container IDs or container numbers in the. You can also send the Vendor
+Note: The API body should have either the container IDs or container numbers in the. You can also send the Vendor
 Performance code Lock code as options in the API request body.
 113
 
@@ -4729,14 +4732,14 @@ Supported Operations
 If you do not send the unallocatable lock code, the rejected LPNs get cancelled. If the lock code parameter is populated
 with a unallocatable lock code, the system marks the QC rejected LPNs as received with QC status as QC Rejected. You
 cannot provide allocatable lock codes to reject an IBLPN.
-Distribute  
+Distribute
 The Distribute API allows you to perform distribution on the selected LPN.
 Request by ID
 POST /entity/iblpn/{id}/distribute/
 Parameters
 Name Required Type Description
 Alloc_uom N String Allocation UOM: Units, Packs,
- Cases, Cases then Packs.
+Cases, Cases then Packs.
 Req_host_oblpn_nbr N String When true, requires order details to
 have a host OBLPN number.
 allow_residuals N Boolean Option to allow distribution with
@@ -4744,12 +4747,12 @@ residuals.
 mhe_system_code N String Code for MHE system integration.
 Example Request Body
 {{{}}
- "options": {
- "alloc_uom": "units",
- "require_host_oblpn_nbr": false,
- "allow_residuals": true,
- "mhe_system_code": "system_code"
- }
+"options": {
+"alloc_uom": "units",
+"require_host_oblpn_nbr": false,
+"allow_residuals": true,
+"mhe_system_code": "system_code"
+}
 }
 Request by Filter
 POST /entity/iblpn/distribute/
@@ -4764,20 +4767,20 @@ Name Type Required Description
 container_nbr String Y IBLPN to distribute
 facility_id Integer N IBLPN's facility.
 company_id Integer N IBLPN's company
-Note:  Only a single IBLPN may be distributed per request. The __in lookup is not supported for container_nbr.
+Note: Only a single IBLPN may be distributed per request. The \_\_in lookup is not supported for container_nbr.
 Example Request Body
 {{{}}
 "parameters": {
- "container_nbr": "IBLPN00001",
- },
- "options": {
- "alloc_uom": "units",
- "require_host_oblpn_nbr": false,
- "allow_residuals": true,
- "mhe_system_code": "system_code"
- }
+"container_nbr": "IBLPN00001",
+},
+"options": {
+"alloc_uom": "units",
+"require_host_oblpn_nbr": false,
+"allow_residuals": true,
+"mhe_system_code": "system_code"
 }
-Get All Distributions  
+}
+Get All Distributions
 The Get All Distributions API allows you to fetch all the current distributions available for the LPN.
 Two options are available for you to filter the results. Item Barcode and Location Barcode. If you use the Item Barcode,
 the system will filter only the results for that Item. If you use location barcode, the system will sort the results with that
@@ -4792,10 +4795,10 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
- "options": {
- "item_barcode": "ITM0001",
- "location_barcode": "location0001"
- }
+"options": {
+"item_barcode": "ITM0001",
+"location_barcode": "location0001"
+}
 }
 IBLPN Lookup by Filter
 POST /entity/iblpn/get_all_distributions/
@@ -4806,13 +4809,13 @@ facility_id Integer N IBLPN's facility
 company_id Integer N IBLPN's company
 Example Request Body
 {{{}}
- "parameters": {
- "container_nbr": "IBLPN00001",
- },
- "options": {
- "item_barcode": "ITM0001",
- "location_barcode": "location0001"
- }
+"parameters": {
+"container_nbr": "IBLPN00001",
+},
+"options": {
+"item_barcode": "ITM0001",
+"location_barcode": "location0001"
+}
 }
 Distribution Response Structure
 Name Type Description
@@ -4850,7 +4853,7 @@ order_nbrs Array Order numbers
 picked_qty Integer Picked quantity
 skipped_alloc_id_list Array Array of skipped allocation IDs
 style String Item style
-Get Next Distribution  
+Get Next Distribution
 On performing distribution, you may want to anticipate the next pick information for the inventory. To get this
 information, you can use the Get Next Distribution API. Its input parameters are the same and the response has similar
 117
@@ -4870,13 +4873,13 @@ allocations for this item
 Location_barcode N String If populated, gets next allocation
 starting from this location. If no
 matching is found for this barcode,
- it will be ignored.
+it will be ignored.
 Example Request Body
 {{{}}
 "options": {
- "item_barcode": "ITM0001",
- "location_barcode": "location0001"
- }
+"item_barcode": "ITM0001",
+"location_barcode": "location0001"
+}
 }
 IBLPN Lookup by Filter
 POST /entity/iblpn/get_next_distribution/
@@ -4893,55 +4896,55 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
- "parameters": {
+"parameters": {
 "container_nbr": "IBLPN00001",
- },
- "options": {
+},
+"options": {
 "item_barcode": "ITM0001",
 "location_barcode": "location0001"
- }
 }
-IB Shipment  
+}
+IB Shipment
 These topics give descriptions for APIs that complete actions related to Inbound Shipments in the Warehouse.
-Receive Entire Shipment  
+Receive Entire Shipment
 The Receive Entire Shipment allows you to receive the entire shipment if it is in cartonized and in transit status..
 POST .../entity/ib_shipment/receive_entire_shipment
 Sample JSON Request
 {
- "parameters": {
- "facility_id__code": "FAC_CODE",
- "company_id__code": "COMP_CODE",
- "shipment_nbr": "SHIPMENT_NBR"
- }
+"parameters": {
+"facility_id**code": "FAC_CODE",
+"company_id**code": "COMP_CODE",
+"shipment_nbr": "SHIPMENT_NBR"
 }
-GET IB Shipment  
+}
+GET IB Shipment
 You can query the IB Shipment entity to find out the LPN Count and Shipped Quantity for a specific shipment. The
 LPN Count and Shipped Quantity fields are added in the response when you pass GET method (IB Shipment API) for
 Cartonized Shipments.
 GET … entity/ib_shipment?shipment_nbr=XXXXXXX&fields=lpn_count,shipped_qty
 Example Request
 {
- "result_count": 1,
- "page_count": 1,
- "page_nbr": 1,
- "next_page": null,
- "previous_page": null,
+"result_count": 1,
+"page_count": 1,
+"page_nbr": 1,
+"next_page": null,
+"previous_page": null,
 119
 
 Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
- "results": [
- {
- "lpn_count": 4,
- "shipped_qty": 40.0
- }
- ]
+"results": [
+{
+"lpn_count": 4,
+"shipped_qty": 40.0
 }
-Item  
+]
+}
+Item
 These topics give descriptions for APIs that complete actions related to items in the Warehouse.
-Image Upload  
+Image Upload
 The image_upload API allows you to update an image either by Item ID or Item by Filter.
 Assumptions
 • Only one item may be updated per request.
@@ -4985,7 +4988,7 @@ Example Request body options:
 "image_data": "ABC123"
 }
 }
-Item Image  
+Item Image
 Currently the full representation of item GET does not include the item image ('image_data') since that can be large.
 However if a request specifies the `fields` query string parameter and the 'image_data' field is specified, we will return
 the field and value.
@@ -4995,9 +4998,9 @@ This will return the id and image data for a specific item.
 GET .../entity/item/{id}/?fields=id,image_data
 The 'fields` parameter may still be combined with other filters per normal functionality:
 GET .../entity/item/?fields=id,image_data&barcode=ITEM123&...
-Inventory  
+Inventory
 These topics give descriptions for APIs that complete actions related to inventory in the Warehouse.
-Link Serial Numbers  
+Link Serial Numbers
 POST …/wms/lgfapi/v10/entity/inventory/{id}/link_serial_nbrs/
 This operation is used to link one or more serial numbers to a single inventory record. The “id” value of the target
 inventory record is required in the URI.
@@ -5012,7 +5015,7 @@ options serial_nbr_list Array of Strings X A list of serial number
 strings to be linked to
 the target inventory
 record.
-Bulk Update Inventory Attributes  
+Bulk Update Inventory Attributes
 POST …/wms/lgfapi/v10/entity/inventory/bulk_update_inventory_attributes/
 This operation is used to update the inventory attributes of one or more inventory objects. Inventory in a Received or
 Located IBLPN and inventory in an active location may be modified. Inventory history adjustment records will be written
@@ -5024,7 +5027,7 @@ cannot be or have been allocated.
 An empty string is a valid value to indicate removing the value from the corresponding attribute. Any attribute that is
 omitted from the request data will retain its current value.
 The “parameters” section of the request body is required in addition to the “options” section outlined below. The “id”
-parameter filter (for a single value) or the “id__in” parameter (for an array of values) are valid and can be used.
+parameter filter (for a single value) or the “id\_\_in” parameter (for an array of values) are valid and can be used.
 Category Parameter Type Required Default Description
 options invn_attr_a String C T arget attribute value.
 options invn_attr_b String C T arget attribute value.
@@ -5053,10 +5056,10 @@ error.
 
 1 = Commit per object.
 
-Delink Serial Numbers  
+Delink Serial Numbers
 The Delink Serial Numbers API allows users to delink a list of serial numbers from an existing inventory in order for the
 system to write appropriate serial number records.
-Note:  Every serial number that is delinked from the targeted inventory should have corresponding serial Number
+Note: Every serial number that is delinked from the targeted inventory should have corresponding serial Number
 History records. The Serial Number History UI should display the serial number with delinked action codes for IBLPN,
 OBLPN, and Active inventories.
 You can delink a serial number using the following POST request:
@@ -5098,7 +5101,7 @@ XML
 </serial_nbr_list>
 </options>
 </request>
-GET Inventory History  
+GET Inventory History
 The Inventory History API allows you to query inventory histories for default Companies and Facilities configured for
 the user. Previously, inventory history was not supported or exposed as an entity in lgfapi. Now, users can fetch the
 inventory history as an entity since it has been exposed to the lgfapi.
@@ -5115,11 +5118,11 @@ Query String Parameters
 Since inventory history is a large table, to avoid performance issues, certain combinations of query string fields are
 required when querying using query parameters. One of the following combinations must be used (in addition to any
 other field):
-• company_id__code, facility_id__code, group_nbr
-• company_id__code, facility_id__code, history_activity_id, status_id
-• company_id__code, facility_id__code, history_activity_id, item_code
-• company_id__code, facility_id__code, history_activity_id, item_alternate_code
-• company_id__code, facility_id__code, history_activity_id, container_nbr
+• company_id**code, facility_id**code, group_nbr
+• company_id**code, facility_id**code, history_activity_id, status_id
+• company_id**code, facility_id**code, history_activity_id, item_code
+• company_id**code, facility_id**code, history_activity_id, item_alternate_code
+• company_id**code, facility_id**code, history_activity_id, container_nbr
 124
 
 Oracle Warehouse Management Cloud
@@ -5127,7 +5130,7 @@ WMS REST API Guide
 Chapter 5
 Supported Operations
 Support for ISO-8601 Format Date/Time Values
-Note:  The company parameter ENABLE_ISO_8601_OUTPUT_DATE_TIME_FORMAT gives you the ability to control
+Note: The company parameter ENABLE_ISO_8601_OUTPUT_DATE_TIME_FORMAT gives you the ability to control
 the output format of date/time values in Inventory History and Shipped Load output. This will allow for all date/time
 output to be in the widely accepted and used ISO-8601 standard. This standard will not only give date, time, and date/
 time consistency across the output data, but it will provide the time zone offset from UTC as part of the date/time
@@ -5149,18 +5152,17 @@ HH 2 digit hour (24-hour clock)
 MM 2 digit minute
 SS 2 digit seconds
 z Time zone offset from UTC in the format (+/-)HH:MM
-GET Next Number  
+GET Next Number
 The GET Next Number API allows you to get a next up number from a given sequence counter.
 This API is broken down into two lgfapi operations:
 
 1. A detail operation where the sequence counter's id is already know and is provided in the URL.
-125
+   125
 
 Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
-Supported Operations
-2. A list operations where a series of filters are provided in the "parameters" section of the request body to find
+Supported Operations 2. A list operations where a series of filters are provided in the "parameters" section of the request body to find
 the sequence
 URL Signature
 Detail lookup when id is already known:
@@ -5172,12 +5174,11 @@ Request Body
 Section Name Required Type Default Comments
 options count integer 1 Count of next up
 numbers to be
-returned. Max value of
-1000.
+returned. Max value of 1000.
 {
- "options": {
- "count": 2
- }
+"options": {
+"count": 2
+}
 }
 Available Filters
 When filtering is required, a combination of the following may be used to determine the sequence counter.
@@ -5192,11 +5193,11 @@ When filtering is required, a combination of the following may be used to determ
 • destination_facility_id
 ◦ Allows for filtering on fields like "code"
 {
- "parameters": {
- "facility_id": 1,
- "company_id__code": "ABC",
- "counter_code": "OBLPN"
- }
+"parameters": {
+"facility_id": 1,
+"company_id\_\_code": "ABC",
+"counter_code": "OBLPN"
+}
 126
 
 Oracle Warehouse Management Cloud
@@ -5204,7 +5205,7 @@ WMS REST API Guide
 Chapter 5
 Supported Operations
 }
-Manufacturing Transaction  
+Manufacturing Transaction
 This API allows Manufacturing, Inventory Management or any other application to record Material Issues or Product
 Completions and transaction reversals. This provides a common API which supports both material issues and product
 completions.
@@ -5236,7 +5237,7 @@ transaction is recorded.
 external_transaction_date_time Holds the transaction date and time when it
 was performed at the source system.
 resend_flg By default the value will be No. If set to yes,
- Inventory Managaement has an ability to
+Inventory Managaement has an ability to
 resend the transaction in case of any failures.
 inventory_list
 127
@@ -5257,30 +5258,30 @@ item_part_f
 qty yes Corresponds to the quantity. Can be either + or
 
 - depending upon the transaction type.
-uom_code uom_code in which the transaction quantity is
-recorded in. For Prebuilt integration
-batch_nbr Lot number for lot tracking item.
-expiry date Expiry date in case sku is only expiry tracked.
-invn_attr_a
-invn_attr_b
-invn_attr_c
-invn_attr_d
-invn_attr_e
-invn_attr_f
-invn_attr_g
-invn_attr_h
-invn_attr_i
-invn_attr_j
-invn_attr_k
-invn_attr_l
-invn_attr_m
-invn_attr_n
-invn_attr_o
-serial_number_list Corresponding serial numbers associated with
-the transaction.
-API callers should take care of sending quantity values in the appropriate positive or negative connotation by
-transaction type:
-128
+  uom_code uom_code in which the transaction quantity is
+  recorded in. For Prebuilt integration
+  batch_nbr Lot number for lot tracking item.
+  expiry date Expiry date in case sku is only expiry tracked.
+  invn_attr_a
+  invn_attr_b
+  invn_attr_c
+  invn_attr_d
+  invn_attr_e
+  invn_attr_f
+  invn_attr_g
+  invn_attr_h
+  invn_attr_i
+  invn_attr_j
+  invn_attr_k
+  invn_attr_l
+  invn_attr_m
+  invn_attr_n
+  invn_attr_o
+  serial_number_list Corresponding serial numbers associated with
+  the transaction.
+  API callers should take care of sending quantity values in the appropriate positive or negative connotation by
+  transaction type:
+  128
 
 Oracle Warehouse Management Cloud
 WMS REST API Guide
@@ -5339,7 +5340,7 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
-"mfg_operation_seq_nbr": 1,
+"mfg*operation_seq_nbr": 1,
 "transaction_type": "Work in Process Material Issue",
 "create_hdr_flg":true,
 "resend_flg": false,
@@ -5355,18 +5356,18 @@ Supported Operations
 }
 ]
 }
-Note:  This API is designed for asynchronous calls (synchronous call is not supported) so the expected response on
+Note: This API is designed for asynchronous calls (synchronous call is not supported) so the expected response on
 success will be:
 {
- "success": true,
- "response": {
- "message": "Data successfully staged"
- }
+"success": true,
+"response": {
+"message": "Data successfully staged"
+}
 }
 You can find the details of data processed or errored from the From Manufacturing Transaction Header View UI.Validations
 The following table describes the validations at the header, detail, and serial number level:
 Validation Description
-Header Level Validations (mfg_work_
+Header Level Validations (mfg_work*
 order_transaction_list)
 
 • If there is a another instance of the transaction in "Not Ready", "Ready" or "In-Processing" or
@@ -5375,7 +5376,7 @@ exists, cannot process the transaction".
 • If the location passed is not valid for the passed in facility, the record is updated to Failed status
 with error string as "Transaction (%tran_id%) has invalid location for the facility".
 • If the location passed does not correspond to the location of type "Active"/"Reserve"/"Drop",
- the record is updated to Failed status with error string as "Invalid Location type recorded for the
+the record is updated to Failed status with error string as "Invalid Location type recorded for the
 Transaction (%tran_id%)".
 • If the LPN number passed is not in status "Allocated"/Partially Allocated/Reserved/"In-
 Receiving/Lost/Quality Check", the record is updated to Failed status with error string as
@@ -5411,7 +5412,7 @@ combination{_}".
 passed is a postive value where the item passed is not the same as the permanent dedicated
 item, the corresponding detail record is updated to Failed status with error string as "Item passed
 violates permanent sku assignment for the location".
-• If the active/reserve location passed has allow_multi_sku flag set to Yes and the qty passed is
+• If the active/reserve location passed has allow*multi_sku flag set to Yes and the qty passed is
 a positive value where the item/lot combination passed violates allow_multi_sku check, the
 corresponding detail record is updated to Failed status with error string as "Item passed violates
 allow multi sku check condition for the location".
@@ -5437,7 +5438,7 @@ returns an error "Serial Number not Supported for the company"
 "Item does not track serial, serial number records are passed".
 • If qty passed contains decimals and item is serial number tracked then the corresponding detail
 record is updated to Failed status with error "Decimal Qty not supported for serial tracked sku's".
-Serial Number Validations (serial_nbr_
+Serial Number Validations (serial_nbr*
 list)
 
 The following validations are applicable for the serial number passed pertaining to each inventory list:
@@ -5478,13 +5479,13 @@ status of the LPN is < Shipped then an error is returned. If the underlying LPN 
 different facility for the passed in serial number is in status Consumed/Cancelled/Shipped/
 Delivered then the system proceeds.
 ◦ If the serial number passed in is associated with an LPN in Lost Status for the current facility,
- system returns an error.
+system returns an error.
 • If the serial number passed is already present in the same active location passed, the system
 returns an error.
 • If the passed in serial number is already present in another LPN which is not in Consumed/
 Cancelled Status, then the corresponding serial number record and corresponding header and
 inventory record fails with error "Serial Number is present in another LPN(%target LPN%)".
-From Manufacturing Transaction  
+From Manufacturing Transaction
 The following APIs allow you to fetch paginated results for From Manufacturing Transaction Header, Detail, and Detail
 Serial Number.
 From Manufacturing Transaction Header URLs
@@ -5500,7 +5501,7 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
-GET.../lgfapi/v10/entity/from_manufacturing_transaction_dtl/
+GET.../lgfapi/v10/entity/from*manufacturing_transaction_dtl/
 Fetch non-paginated result by specific 'ID':
 GET.../lgfapi/v10/entity/from_manufacturing_transaction_dtl/{id}
 From Manufacturing Transaction Detail Serial Number URLs
@@ -5508,7 +5509,7 @@ Fetch paginated results when users use the following URL:
 GET.../lgfapi/v10/entity/from_manufacturing_transaction_dtl_serial_nbr/
 Fetch non-paginated result by specific 'ID':
 GET.../lgfapi/v10/entity/from_manufacturing_transaction_dtl_serial_nbr/{id}
-Movement Request  
+Movement Request
 The Movement Request API allows ERP and manufacturing applications the option to order specific serial numbers
 against a particular movement request line. This API allows you to load the stage tables for the movement request
 entity in JSON format with the required serial numbers.
@@ -5528,13 +5529,13 @@ no. If the value is passed as
 yes, then do not stop the
 movement request just on
 first error.
-parameters prevent_stage_hdr_record_
+parameters prevent_stage_hdr_record*
 creation_flg
 boolean (y/n) • Default value is "no"
 to retain backward
 compatibility.
 • When the value is no,
- WMS will create a
+WMS will create a
 new header record for
 133
 
@@ -5556,15 +5557,15 @@ appended to the stage
 header record with
 the same file group
 number.
-parameters file_group_num_without_
-timestamp_flg
+parameters file*group_num_without*
+timestamp*flg
 boolean (y/n) • Default value is "no"
 to retain backward
 compatibility.
 • If the value is set
 to "no", then the
 filegroup number is
-generated (message_
+generated (message*
 id appended
 with timestamp
 (YYYYMMDDHHMMSS
@@ -5596,15 +5597,15 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
-Load  
+Load
 These topics give descriptions for APIs that complete actions related to Loads in the Warehouse.
-Check_In  
+Check_In
 The check_in API allows the caller to check-in an inbound or outbound load to a dock door.
 Regardless of the method used to identify the load, the following input is valid:
 Category Name Type Required Description
 options dock_nbr String Y Dock door for check-in.
 Load Lookup by ID
-                              POST .../entity/load/{id}/check_in/
+POST .../entity/load/{id}/check_in/
 
 The caller knows the unique `id` value of the trailer, which is added to the request URL. No additional `parameters` data is
 required from the request body.
@@ -5615,7 +5616,7 @@ Example Request Body:
 }
 }
 Load Lookup by Filters
-                              POST .../entity/load/check_in/
+POST .../entity/load/check_in/
 
 Category Name Type Required Description
 parameters load_nbr String Y Load for check-in.
@@ -5631,12 +5632,12 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
-◦ facility_id__code
+◦ facility_id**code
 ◦ company_id_code
 Example Request Body:
 {
 "parameters": {
-"facility_id__code": "FAC-1",
+"facility_id**code": "FAC-1",
 "company_id_code": "COM-1",
 "load_nbr": "LOAD-1"
 },
@@ -5644,15 +5645,15 @@ Example Request Body:
 "dock_nbr": "DOCK-1"
 }
 }
-Check_Out  
+Check_Out
 The check_out API allows the caller to check-out an inbound or outbound load from a dock door.
 Load Lookup by ID
-                           POST .../entity/load/{id}/check_out/
+POST .../entity/load/{id}/check_out/
 
 The caller knows the unique `id` value of the trailer, which is added to the request URL. No additional `parameters` data is
 required from the request body.
 Load Lookup by Filters
-                           POST .../entity/load/check_out/
+POST .../entity/load/check_out/
 
 Category Name Type Required Description
 parameters load_nbr String Y Load for check-in.
@@ -5662,7 +5663,7 @@ parameters company_id Integer N Load’s company.
 ◦ The `__in` lookup is not supported for `load_nbr`.
 • `facility_id` and `company_id` both additionally support string lookup by `code` using the double-underscore
 notation:
-◦ facility_id__code
+◦ facility_id\_\_code
 ◦ company_id_code
 136
 
@@ -5673,17 +5674,17 @@ Supported Operations
 Example Request Body:
 {
 "parameters": {
-"facility_id__code": "FAC-1",
+"facility_id**code": "FAC-1",
 "company_id_code": "COM-1",
 "load_nbr": "LOAD-1"
 }
 }
-Ship Load  
+Ship Load
 The Ship Load API allows you to ship a load by uploading the load via ID or filter.
 Category Name Required Type Description
 parameters load_nbr X string Load for shipping
 parameters facility_id Integer Facility context by id
-parameters facility_id__code string Facility context by code
+parameters facility_id**code string Facility context by code
 parameters company_id Integer Company context by id
 parameters company_id_code string Company context by code
 Load Lookup by ID
@@ -5694,7 +5695,7 @@ POST .../entity/load/ship/
 Example Request Body:
 {
 "parameters": {
-"facility_id__code": "FAC-1",
+"facility_id\_\_code": "FAC-1",
 "company_id_code": "COM-1",
 "load_nbr": "LOAD-1"
 }
@@ -5738,9 +5739,9 @@ parameter ALLOW_LOAD_SHIP_WITH_AUDIT_PENDING = False
 • This API will not show you any warning message like the UI or RF, and it will proceed with the Ship Load
 transaction.
 • The Ship Load API does not generate multiple outbound files.
-Location  
+Location
 These topics give descriptions for APIs that complete actions related to location in the Warehouse.
-Update Active Inventory  
+Update Active Inventory
 The update_active_inventory API allows you to adjust the inventory quantity in an active location for a specific item.
 Only a single location and item may be updated per request.
 138
@@ -5749,7 +5750,7 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
-Note:  This is a new API meant to replace the existing legacy `update_active_inventory` API. The legacy API will
+Note: This is a new API meant to replace the existing legacy `update_active_inventory` API. The legacy API will
 eventually be retired so no further enhancements will be made to it. New functionality will instead be added to this
 API as part of the lgfapi suite.
 Regardless of the method used to identify the location, the following input is valid:
@@ -5793,7 +5794,7 @@ Supported Operations
 The caller knows the unique `id` value of the active location, which is added to the request URL. No additional
 `parameters` data is required from the request body.
 Location Lookup by Filters
-                           POST .../entity/location/update_active_inventory/
+POST .../entity/location/update_active_inventory/
 
 Category Name Type Required Description
 parameters barcode String Y Location’s barcode.
@@ -5801,11 +5802,11 @@ parameters facility_id Integer N Location’s facility.
 • Only a single location may be updated per request.
 ◦ The `__in` lookup is not supported for `barcode`.
 • `facility_id` supports string lookup by `code` using the double-underscore notation:
-◦ facility_id__code
+◦ facility_id**code
 Example Request Body:
 {
 "parameters": {
-"facility_id__code": "FAC-1",
+"facility_id**code": "FAC-1",
 "barcode": "LOCN1"
 },
 "options": {
@@ -5840,10 +5841,10 @@ Supported Operations
 },
 "options": {
 "item_barcode": "ITEM1234", "adjustment_qty": -3, "batch_nbr": "BATCH1234",
- "invn_attr_a": "A",
+"invn_attr_a": "A",
 "invn_attr_b": "B",
 "reason_code": "RC", "transaction_ref_nbr": "TX123457890", "serial_nbr_list":
- [
+[
 "SrlNbr1", "SrlNbr2", "SrlNbr3"
 ]
 }
@@ -5874,29 +5875,29 @@ not enabled.
 • Begin_ts and End_ts cannot be greater than the current timestamp of the facility in the API.
 Request Body with User Activity Data
 {
- "parameters": {
- "facility_id": 950,
- "barcode": "RNA070204"
- },
- "options”: {
- "adjustment_qty": 6,
- "reason_code": "DR",
- "item_barcode": "GDEAN13000003",
- "transaction_ref_nbr": "TX11384-Issue1",
- "company_code": "QATSTPC"
- "begin_ts": "2024-05-27T18:30:00",
- "end_ts": "2024-05-27T18:45:00",
- "screen_name": "Update Active Inventory Screen"
- }
+"parameters": {
+"facility_id": 950,
+"barcode": "RNA070204"
+},
+"options”: {
+"adjustment_qty": 6,
+"reason_code": "DR",
+"item_barcode": "GDEAN13000003",
+"transaction_ref_nbr": "TX11384-Issue1",
+"company_code": "QATSTPC"
+"begin_ts": "2024-05-27T18:30:00",
+"end_ts": "2024-05-27T18:45:00",
+"screen_name": "Update Active Inventory Screen"
 }
-Locate LPN or Pallet  
+}
+Locate LPN or Pallet
 The Locate LPN/Pallet API allows you to locate an LPN/ Pallet to its respective destination location.
 You can locate an Inbound or Outbound LPN to its respective destination using the following POST requests:
 Inbound LPN
-                           POST .../entity/iblpn/{id}/locate/
+POST .../entity/iblpn/{id}/locate/
 
                            POST .../entity/iblpn/bulk_locate/
-                        
+
 Outbound LPN
 142
 
@@ -5904,18 +5905,18 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
-                           POST .../entity/oblpn/{id}/locate/
+POST .../entity/oblpn/{id}/locate/
 
-                           POST .../entity/oblpn/bulk_locate/ 
-                        
-Note:  If you invoke the Locate LPN API by passing an LPN number that is part of the Pallet, the system locates the
+                           POST .../entity/oblpn/bulk_locate/
+
+Note: If you invoke the Locate LPN API by passing an LPN number that is part of the Pallet, the system locates the
 whole pallet and does not locate the individual LPN (i.e. the remaining LPN’s that are part of the Pallet will also get
 located.)
 Example requests for Locate IBLPN and OBLPN:
 POST .../entity/iblpn/bulk_locate/
 {
 "parameters": {
-"id__in": [1, 2, 3]
+"id**in": [1, 2, 3]
 },
 "options": {
 "location_barcode": "R1-R2-RB1-Rl1",
@@ -5925,7 +5926,7 @@ POST .../entity/iblpn/bulk_locate/
 POST .../entity/oblpn/bulk_locate/
 {
 "parameters": {
-"container_nbr__in": ["LPNPTW0102"]
+"container_nbr**in": ["LPNPTW0102"]
 },
 "options": {
 "location_barcode": "R1-R2-RB1-Rl1",
@@ -5934,15 +5935,15 @@ POST .../entity/oblpn/bulk_locate/
 }
 You can locate a Pallet to its respective destination using the following POST requests:
 Pallet
-                              POST .../entity/pallet/{id}/locate/
+POST .../entity/pallet/{id}/locate/
 
                               POST .../entity/pallet/bulk_locate/
-                           
+
 Example Request for Locate Pallet:
 POST .../entity/pallet/bulk_locate/
 {
 "parameters": {
-"id__in": [1, 2, 3]
+"id\_\_in": [1, 2, 3]
 },
 "options": {
 "location_barcode": "R1-R2-RB1-Rl1",
@@ -5962,10 +5963,10 @@ Inbound LPN is not present in the
 System
 Yes "LPN not found" .
 IBLPN in "In Receiving",
- "Consumed" & "Cancelled" Status
+"Consumed" & "Cancelled" Status
 Yes "LPN is not in valid status"
 IBLPN in Allocated Status &
-Company Parameter "ALLOW_
+Company Parameter "ALLOW\_
 MOVING_OF_ALLOCATED_LPNS"
 is set to No
 Yes "Locating Allocated LPN is
@@ -6033,27 +6034,27 @@ Outbound pallet
 "Cannot locate to %location type of given location%"
 When drop location passed is configured
 for IB sorting with criteria value defined,
- if the Incoming LPN/Pallet breaks the
+if the Incoming LPN/Pallet breaks the
 criteria value
 "Cannot locate, Drop location criteria value is not matching"
 When drop location passed is configured
 for OB sorting with criteria value defined,
- if the Incoming LPN/Pallet breaks the
+if the Incoming LPN/Pallet breaks the
 criteria value
 "Cannot locate, Drop location criteria value is not matching"
 Parameters
 Name Required Type Default Description
 facility_id Integer Facility context by id.
-facility_id__code String Facility context by code.
+facility_id**code String Facility context by code.
 company_id Integer Company context by id.
 company_id_code String Company context by code.
 container_nbr String The allowed parameter
 filter conditions are
 "container_nbr" and
-"container_nbr__in"
+"container_nbr**in"
 id Integer The allowed parameter
 filter conditions are "id" and
-"id__in":
+"id\_\_in":
 Request Options Parameters
 Name Required Type Default Description
 location_barcode X String
@@ -6064,7 +6065,7 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
-Location Size Type  
+Location Size Type
 POST .../entity/location_size_type
 This operation is used to add single or multiple location size types.
 If you have a new facility and you want to copy the same location size type from your current facility, you can first GET
@@ -6077,16 +6078,16 @@ Example body request
 "description": "Test Size 001"
 }
 }
-OBLPN  
+OBLPN
 The “oblpn” entity is derived from the “container” entity and therefore also has access to all of its entity operations, in
 addition to the following.
-Mark Delivered  
+Mark Delivered
 POST …/wms/lgfapi/v10/entity/oblpn/{id}/mark_delivered/
 Updates a Shipped OBLPN to Delivered status and writes container delivered inventory history.
-Create from IBLPN  
+Create from IBLPN
 The OBLPN create_from_iblpn API allows you to create an OBLPN in Outbound Ready status and allocate inventory
 from a designated IBLPN in a single request. Additionally allows the caller to trigger packing of the OBLPN.
-                        POST .../entity/oblpn/create_from_iblpn/
+POST .../entity/oblpn/create_from_iblpn/
 
 146
 
@@ -6097,40 +6098,40 @@ Supported Operations
 Assumptions
 
 1. All allocation data must have the same facility and company context as the OBLPN.
-◦ Allocations may be for multiple sales orders from multiple IBLPNs for different items as long as the
-facility/company context is consistent with the created OBLPN.
+   ◦ Allocations may be for multiple sales orders from multiple IBLPNs for different items as long as the
+   facility/company context is consistent with the created OBLPN.
 2. Sales order status will be recalculated on success.
 3. IBLPN status will be recalculated on success.
 4. Inventory history is only written if the OBLPN is packed.
-Request Body Data
-The request body data utilizes the 3 categories in the following ways:
-1. `fields` – The initial data required to create the OBLPN.
-2. `parameters` – List of data defining allocations.
-3. `options` – Additional functional data.
-OBLPN Fields Data
-The OBLPN’s initial data is defined in the `fields` section of the request under the `oblpn` key. This is similar to the
-request body data requirements when creating an LPN directly through the entity’s create mechanism.
-Supported fields:
-Name Type Required Description
-facility_id Integer Y OBLPN’s facility.
-company_id Integer Y OBLPN’s company.
-container_nbr String Y OBLPN’s container number.
-curr_location_id Integer N OBLPN’s location.
-lpn_type_id Integer N Associated LPN Type.
-length Numeric N OBLPN’s length dimension.
-width Numeric N OBLPN’s width dimension.
-height Numeric N OBLPN’s height dimension.
-• If providing `lpn_type_id` - `length`, `width`, and `height` are not valid.
-Example Request Body:
-"fields": {
-"oblpn": {
-"facility_id": 1,
-"company_id": 1,
-"container_nbr": "OBLPN-1",
-"lpn_type_id": 5
-}
-}
-147
+   Request Body Data
+   The request body data utilizes the 3 categories in the following ways:
+5. `fields` – The initial data required to create the OBLPN.
+6. `parameters` – List of data defining allocations.
+7. `options` – Additional functional data.
+   OBLPN Fields Data
+   The OBLPN’s initial data is defined in the `fields` section of the request under the `oblpn` key. This is similar to the
+   request body data requirements when creating an LPN directly through the entity’s create mechanism.
+   Supported fields:
+   Name Type Required Description
+   facility_id Integer Y OBLPN’s facility.
+   company_id Integer Y OBLPN’s company.
+   container_nbr String Y OBLPN’s container number.
+   curr_location_id Integer N OBLPN’s location.
+   lpn_type_id Integer N Associated LPN Type.
+   length Numeric N OBLPN’s length dimension.
+   width Numeric N OBLPN’s width dimension.
+   height Numeric N OBLPN’s height dimension.
+   • If providing `lpn_type_id` - `length`, `width`, and `height` are not valid.
+   Example Request Body:
+   "fields": {
+   "oblpn": {
+   "facility_id": 1,
+   "company_id": 1,
+   "container_nbr": "OBLPN-1",
+   "lpn_type_id": 5
+   }
+   }
+   147
 
 Oracle Warehouse Management Cloud
 WMS REST API Guide
@@ -6297,51 +6298,51 @@ not enabled.
 Request Body with User Activity Data
 {
 "fields": {
- "oblpn": {
- "facility_id": 1,
- "company_id": 1,
- "container_nbr": "OBLPN-1"
- }
+"oblpn": {
+"facility_id": 1,
+"company_id": 1,
+"container_nbr": "OBLPN-1"
+}
 },
 "parameters": {
- "allocations": [
- {
- "order_nbr": "ORDER-1",
- "order_dtl": {
- "seq_nbr": 1
+"allocations": [
+{
+"order_nbr": "ORDER-1",
+"order_dtl": {
+"seq_nbr": 1
 151
 
 Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
- },
- "iblpn_nbr": "IBLPN-1",
- "qty": 2,
- "begin_ts": "2024-05-21T18:30:00",
- "end_ts": "2024-05-21T18:45:00"
- },
- {
- "order_nbr": "ORDER-1",
- "order_dtl": {
- "item_barcode": "ITEM-1",
- "batch_nbr": "BATCH-1",
- "invn_attr_a": "A",
- "invn_attr_o": "O"
- },
- "iblpn_nbr": "IBLPN-2",
- "qty": 5.52,
- "begin_ts": "2024-05-21T18:50:00",
- "end_ts": "2024-05-21T18:55:00"
- }
- ]
+},
+"iblpn_nbr": "IBLPN-1",
+"qty": 2,
+"begin_ts": "2024-05-21T18:30:00",
+"end_ts": "2024-05-21T18:45:00"
+},
+{
+"order_nbr": "ORDER-1",
+"order_dtl": {
+"item_barcode": "ITEM-1",
+"batch_nbr": "BATCH-1",
+"invn_attr_a": "A",
+"invn_attr_o": "O"
+},
+"iblpn_nbr": "IBLPN-2",
+"qty": 5.52,
+"begin_ts": "2024-05-21T18:50:00",
+"end_ts": "2024-05-21T18:55:00"
+}
+]
 },
 "options": {
 "pack_flg": true,
 "screen_name": "Create OBLPN Screen"
 }
 }
-Link OBLPN with Asset  
+Link OBLPN with Asset
 POST …/wms/lgfapi/v10/entity/oblpn/{id}/link_asset
 links asset (reusable tote) to oblpn.
 Assumptions
@@ -6352,13 +6353,13 @@ The request body data utilizes the 3 categories in the following ways:
 
 1. `parameters` – allows user to identify the specific oblpn
 2. `options` – Additional functional data.
-Parameters
-Category Name Type Required Description
-Parameters container_nbr String Y OBLPN to be linked. "__in"
-lookup is not supported
-Parameters facility_id Integer Container's facility.
-Parameters company_id Integer Container's company.
-152
+   Parameters
+   Category Name Type Required Description
+   Parameters container_nbr String Y OBLPN to be linked. "\_\_in"
+   lookup is not supported
+   Parameters facility_id Integer Container's facility.
+   Parameters company_id Integer Container's company.
+   152
 
 Oracle Warehouse Management Cloud
 WMS REST API Guide
@@ -6367,7 +6368,7 @@ Supported Operations
 Example Request Body:
 {
 "parameters": {
-"facility_id": 1,
+"facility*id": 1,
 "company_id": 1,
 "container_nbr": "OBLPN-1"
 }
@@ -6380,7 +6381,7 @@ options asset_nbr String Y Asset to be linked. May be
 created as part of this API.
 options asset_seal_nbr String Optionally tracked seal
 number.
-Options replace_container_nbr_
+Options replace_container_nbr*
 with_asset_flg
 boolean Rename OBLPN to match
 asset upon linking?
@@ -6422,7 +6423,7 @@ number is updated back to status "In-use".
 • In case if the OBLPN is already linked to an asset/seal and another seal nbr is passed in the API, then update
 the seal nbr field with the corresponding seal.
 • If the Asset interfaced in the API is new to the system, then a new record is created in the Asset table
-• The fields "asset_nbr" and "asset_seal_nbr" is updated with corresponding data in the oblpn.
+• The fields "asset*nbr" and "asset_seal_nbr" is updated with corresponding data in the oblpn.
 • If Original OBLPN is replaced with Asset Nbr while interfacing (i.e. when "replace_container_nbr_with_asset"=
 true), system should update the Container table as mentioned below:
 ◦ LPN Nbr is updated with the Asset Nbr
@@ -6432,14 +6433,14 @@ true), system should update the Container table as mentioned below:
 • The following Inventory History records are created:
 ◦ IHT 57 - Asset Received – This record is not written if the Asset interfaced in the API is new to the system
 ◦ IHT 31- OB Container Modified is written if the OBLPN is renamed with Asset Nbr while linking.
-Ship OBLPN  
+Ship OBLPN
 This API allows you to Ship a packed or loaded Outbound LPN.
 POST entity/oblpn/{id}/ship/
 Request Body
 Section Name Required Type Default Comments
 options locn_barcode X string Final shipping location
 from the facility.
-options output_file_to_
+options output_file_to*
 generate
 string Output file to be
 generated upon
@@ -6447,7 +6448,7 @@ success per OBLPN.
 • "output_file_to_generate" supports:
 ◦ oblpn_shipping_info
 ◦ lpn_inventory
-Note:  The Ship OBLPN does not currently honor the Stop Ship flag.
+Note: The Ship OBLPN does not currently honor the Stop Ship flag.
 154
 
 Oracle Warehouse Management Cloud
@@ -6455,12 +6456,12 @@ WMS REST API Guide
 Chapter 5
 Supported Operations
 {
- "options": {
- "locn_barcode": "LOCN123",
- "output_file_to_generate": "oblpn_shipping_info"
- }
+"options": {
+"locn*barcode": "LOCN123",
+"output_file_to_generate": "oblpn_shipping_info"
 }
-Bulk Ship OBLPN  
+}
+Bulk Ship OBLPN
 This API allows you to ship one or more OBLPN(s) in a single request.
 Request Body
 POST entity/oblpn/bulk_ship/
@@ -6468,26 +6469,26 @@ Section Name Required Type Default Comments
 options commit_frequency integer 1 0=Roll back on first
 error. 1=Commit per
 OBLPN shipped.
-options require_facility_
+options require_facility*
 company_flg
 boolean True When filtering on
 fields other than `id`,
- is the facility and
+is the facility and
 company context
 required?
 {
- "parameters": {
- "facility_id": "111",
- "company_Id": "222",
- "container_nbr__in": ["OBLPN1", "OBLPN2", "OBLPN3"]
- },
- "options": {
- "locn_barcode": "LOCN123",
- "output_file_to_generate": "oblpn_shipping_info",
- "commit_frequency": 0
- }
+"parameters": {
+"facility_id": "111",
+"company_Id": "222",
+"container_nbr\_\_in": ["OBLPN1", "OBLPN2", "OBLPN3"]
+},
+"options": {
+"locn_barcode": "LOCN123",
+"output_file_to_generate": "oblpn_shipping_info",
+"commit_frequency": 0
 }
-Cancel OBLPN  
+}
+Cancel OBLPN
 The Cancel OBLPN REST API allows you to cancel an OBLPN. This enhancement work as a mirror to the functionality of
 RF Cancel OBLPN.
 API URL
@@ -6502,26 +6503,26 @@ Request Parameters
 Name Required Type Description
 facility_id Not mandatory String Facility context by id
 company_id Not mandatory String Company context by id
-facility_id__code Not mandatory String Facility context by code
-company_id__code Not mandatory String Company context by code
+facility_id**code Not mandatory String Facility context by code
+company_id**code Not mandatory String Company context by code
 oblpn_nbr Mandatory String can be same as IBLPNs
 iblpn_nbr Mandatory String can be same as OBLPNs
 reason_code Not mandatory String Used for inventory history tracking.
 Request Body Example
 {
- "parameters": {
- "facility_id__code": "123RF",
- "facility_id": "123",
- "company_id__code": "456AR",
- "company_id": "456",
- "oblpn_nbr": "OBLPN1"
- },
- "options": {
- "reason_code": "54",
- "iblpn_nbr": "IBLPN1"
- }
+"parameters": {
+"facility_id**code": "123RF",
+"facility_id": "123",
+"company_id**code": "456AR",
+"company_id": "456",
+"oblpn_nbr": "OBLPN1"
+},
+"options": {
+"reason_code": "54",
+"iblpn_nbr": "IBLPN1"
 }
-Bulk Cancel OBLPN  
+}
+Bulk Cancel OBLPN
 The Bulk Cancel OBLPN API allows you to bulk cancel OBLPNs. This enhancement work as a mirror to the functionality
 of RF Bulk Cancel OBLPN.
 API URL
@@ -6537,9 +6538,9 @@ Chapter 5
 Supported Operations
 Name Required Type Description
 company_id Not mandatory String Company context by id
-facility_id__code Not mandatory String Facility context by code
-company_id__code Not mandatory String Company context by code
-container_nbr__in Mandatory String List of container numbers
+facility_id**code Not mandatory String Facility context by code
+company_id**code Not mandatory String Company context by code
+container_nbr\_\_in Mandatory String List of container numbers
 reason_code Not mandatory String Used for inventory history tracking
 commit_frequency Not mandatory Integer 0=Roll back on first
 
@@ -6549,19 +6550,19 @@ OBLPN cancelled
 
 Request Body Example
 {
- "parameters": {
- "facility_id__code": "123RF",
- "facility_id" : "123",
- "company_id__code": "456AR",
- "company_id" : "456",
- "container_nbr__in": [“CNTR1”, “CNTR2”, “CNTR3”]
- },
- "options": {
- "reason_code": "54",
- "commit_frequency": "1"
- }
+"parameters": {
+"facility_id**code": "123RF",
+"facility_id" : "123",
+"company_id**code": "456AR",
+"company_id" : "456",
+"container_nbr\_\_in": [“CNTR1”, “CNTR2”, “CNTR3”]
+},
+"options": {
+"reason_code": "54",
+"commit_frequency": "1"
 }
-Order Detail Serial Number  
+}
+Order Detail Serial Number
 GET …/wms/lgfapi/v10/entity/order_dtl_serial_nbr/{id}
 On performing GET operation for "order_dtl_serial_nbr" with order detail, the API fetches the required serial numbers
 (required_serial_nbr) for that particular order detail.
@@ -6578,20 +6579,20 @@ WMS REST API Guide
 Chapter 5
 Supported Operations
 • required_serial_nbr
-Pallet  
+Pallet
 These topics give descriptions for APIs that complete actions related to Pallets in the Warehouse.
-Sort LPN  
+Sort LPN
 The Sort LPN API allows you to sort an LPN to a Pallet in a sort location mimicking what the RF Inbound Sorting process
 does. The RF modules include: RF Sort LPN, and RF Inbound Sort Location.
 You can sort an LPN to a pallet in a sort location with the following POST request:
-                        POST .../entity/pallet/sort_lpn/
+POST .../entity/pallet/sort_lpn/
 
 The following table provides details about the Input Parameters/Filters used to identify the target pallet:
 Name Required Type Default Description
 facility_id integer Facility context by id.
-facility_id__code string Facility context by code.
-company_id integer Company context by id.
-company_id___code string Company context by code.
+facility_id**code string Facility context by code.
+company*id integer Company context by id.
+company_id***code string Company context by code.
 pallet_nbr X string T arget sort pallet.
 • The pallet will be created if it doesn't exist.
 • The requesting user's default facility/company context will be assumed if overrides are not provided.
@@ -6636,19 +6637,19 @@ Response Status
 • Operation successfully completed.
 • 400 - Validation error
 • 500 - Internal server error
-Sort LPN Close Pallet  
+Sort LPN Close Pallet
 The Sort LPN/Close Pallet API is used as part of the inbound sorting process which groups LPNs to pallets in sort
 locations. This API mimics the RF IB Sort LPN module which calls the Sort LPN Close IB Pallet back end entry point with
 parameters.
 You can Sort LPNs and Close Pallet with the following POST requests:
-                        POST .../entity/pallet/close_inbound_sorting/
+POST .../entity/pallet/close_inbound_sorting/
 
                         POST .../entity/pallet/{id}/close_inbound_sorting/
-                     
+
 The following table provides details about the Input Parameters/Filters used to identify the target pallet:
 Name Required Type Default Description
 facility_id integer Facility context by id.
-facility_id__code string Facility context by code.
+facility_id\_\_code string Facility context by code.
 company_id integer Company context by id.
 159
 
@@ -6657,7 +6658,7 @@ WMS REST API Guide
 Chapter 5
 Supported Operations
 Name Required Type Default Description
-company_id___code string Company context by code.
+company_id*\_\_code string Company context by code.
 pallet_nbr X string T arget sort pallet.
 • The pallet will be created if it doesn't exist.
 • The requesting user's default facility/company context will be assumed if overrides are not provided.
@@ -6667,7 +6668,7 @@ create_replen_task_flg boolean True Generate a replenishment
 task on close?
 task_type_description string Required type description
 for generated replen task.
-Valid when create_replen_
+Valid when create_replen*
 task_flg = True.
 Default valid LPN statuses:
 • Located
@@ -6697,14 +6698,14 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
-Ship Pallet  
+Ship Pallet
 This API allows you to ship a pallet and all associated OBLPN(s.)
 entity/pallet/{id}/ship/
 Request Parameters
 Section Name Required Type Default Comments
-options locn_barcode X string Final shipping location
+options locn*barcode X string Final shipping location
 from the facility.
-options output_file_to_
+options output_file_to*
 generate
 string Output file to be
 generated upon
@@ -6713,14 +6714,14 @@ success per OBLPN.
 ◦ oblpn_shipping_info
 ◦ lpn_inventory
 {
- "options": {
- "locn_barcode": "LOCN123",
- "output_file_to_generate": "oblpn_shipping_info"
- }
+"options": {
+"locn_barcode": "LOCN123",
+"output_file_to_generate": "oblpn_shipping_info"
 }
-Pick-Pack  
+}
+Pick-Pack
 These topics give descriptions for APIs that complete actions related to picking and packing in the Warehouse.
-Pick Confirm  
+Pick Confirm
 The Pick Confirm API allows you to perform cubed or non-cubed picking. Also:
 • The Pick Confirm API supports picking of multiple allocations in a single payload.
 • If one or more Pick updates fail we report an error only for the first failed Pick.
@@ -6731,7 +6732,7 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
-Note:  This is a new API meant to replace the existing legacy `pick_confirm` API. The legacy API will eventually be
+Note: This is a new API meant to replace the existing legacy `pick_confirm` API. The legacy API will eventually be
 retired so no further enhancements will be made to it. New functionality will instead be added to this API as part of
 the lgfapi suite.
 This API supports features of the legacy API including the following new parameters:
@@ -6747,10 +6748,10 @@ Also note, for distribution, it is recommend that you use the Pack OBLPN Distrib
 Note About T asks
 If an allocation is completed using the pick_pack/pick_confirm API using one user, based on the modified user for the
 T ask, the application restricts additional users from completing Picks through an API call.
-Note:  If you are not using the RF to complete Picks, it is not necessary to generate T asks and Picks based on T asks.
+Note: If you are not using the RF to complete Picks, it is not necessary to generate T asks and Picks based on T asks.
 You can perform Pick Pack directly without generating the T asks using the Pick Pack API.
 Allocation Unit of Measure
-Note:  If pick confirmation is called with a source location from active, and the allocation Unit of Measure (UOM) is
+Note: If pick confirmation is called with a source location from active, and the allocation Unit of Measure (UOM) is
 “Cases” or “Packs”, the UOM_Qty considered will always be in terms of the item’s standard pack or case quantity. This
 is because allocation from active will always happen in terms of the underlying item’s standard pack or standard case
 quantity. If the allocation is from reserve, then the UOM_Qty will be relevant if the allocation UOM passed is “Cases” or
@@ -6771,10 +6772,10 @@ Chapter 5
 Supported Operations
 Name Required Type Default Description
 facility_id Integer Facility context by id.
-facility_id__code String Facility context by code.
-company_id Integer Company context by id.
-company_id___code String Company context by code.
-wave_nbr X String Associated wave.
+facility_id**code String Facility context by code.
+company*id Integer Company context by id.
+company_id***code String Company context by code.
+wave*nbr X String Associated wave.
 order_nbr X String Associated sales order.
 item_alternate_code C String Item identifier.
 item_barcode C String Item identifier.
@@ -6790,7 +6791,7 @@ pick_location C String From location.
 from_container_nbr C String From container.
 to_container_nbr C String LPN inventory is packed
 into. Not required for short.
-update_inventory_on_
+update_inventory_on*
 short_flg
 Boolean False Also short source inventory
 on pick short?
@@ -6842,7 +6843,7 @@ C String Inventory attribute M
 invn_attr_n
 
 C String Inventory attribute N
-invn_attr_o C String Inventory attribute O
+invn*attr_o C String Inventory attribute O
 Expiry_date C Date Format YYYY-MM-DD
 orig_iblpn_nbr C String If the original allocation
 is from the LPN and
@@ -6852,13 +6853,13 @@ orig_batch_nbr C String Batch Number associated
 with the original allocation.
 orig_expiry_date C String Expiry Date associated with
 the original allocation.
-orig_inventory_attribute_
-a to orig_inventory_
-attribute_o
+orig_inventory_attribute*
+a to orig*inventory*
+attribute*o
 C String Inventory attributes value
 associated with the original
 allocation.
-cubed_oblpn_exact_
+cubed_oblpn_exact*
 match_only_flg
 Boolean False When passed as true, in
 cubed scenarios (when the
@@ -6877,7 +6878,7 @@ WMS REST API Guide
 Chapter 5
 Supported Operations
 • If facility or company context is not included in the input parameters, user defaults are used.
-• User cannot pass both "facility_id" and "facility_id__code" in the same request.
+• User cannot pass both "facility_id" and "facility_id\_\_code" in the same request.
 • User cannot pass both "company_id" and "company_id_code" in the same request.
 • "mhe_system_code" is required if "mhe_mode_flg" is True.
 • Only one of "item_alternate_code" or "item_barcode" is allowed.
@@ -6902,19 +6903,19 @@ process the API without serial number (Existing
 behavior).
 The following is an example JSON request:
 {
- "mhe_mode_flg": true,
- "async_flg": true,
+"mhe_mode_flg": true,
+"async_flg": true,
 "suppress_serial_warning_flg":true,
- "pick_list": [{ "facility_id__code": "QATST01",
- "company_id__code": "QATSTPC",
- "wave_nbr": "WVQATSTPC072935",
- "order_nbr": "CPORD102720C1",
- "item_barcode": "RUG99",
- "qty":3,
- "serial_nbr_list": [
- "SLN1",
- "SLN2",
- "SLN3"],
+"pick_list": [{ "facility_id**code": "QATST01",
+"company_id**code": "QATSTPC",
+"wave_nbr": "WVQATSTPC072935",
+"order_nbr": "CPORD102720C1",
+"item_barcode": "RUG99",
+"qty":3,
+"serial_nbr_list": [
+"SLN1",
+"SLN2",
+"SLN3"],
 "invn_attr_a" : "TESTA",
 "invn_attr_b" : "TESTB",
 "invn_attr_c" : "TESTC",
@@ -6936,12 +6937,12 @@ Supported Operations
 "invn_attr_m" : "TESTM",
 "invn_attr_n" : "TESTN",
 "invn_attr_o" : "TESTO",
- "from_container_nbr": "CNTST0100031583",
- "to_container_nbr": "CPOBLPN0106,
- "update_inventory_on_short_flg": true,
- "close_container_status" : "packed",
- "mhe_system_code": "CONVCP1",
- "short_flg": false }]
+"from_container_nbr": "CNTST0100031583",
+"to_container_nbr": "CPOBLPN0106,
+"update_inventory_on_short_flg": true,
+"close_container_status" : "packed",
+"mhe_system_code": "CONVCP1",
+"short_flg": false }]
 }
 The following is an example XML request:
 <request>
@@ -6966,11 +6967,11 @@ If the batch number provided in the API is not the same as the original allocate
 the pick is happening contains inventory pointing to multiple batches for the same SKU, then substitution will happen
 against one of the allocated inventory. (For example: If Location has Batch1 and Batch2 allocated for Order1, during
 picking if the user sends Batch3 for Order1, the system will substitute against Batch1 or Batch2).
-Note:  To perform substitution by batch API, a new field called Original Batch Number for performing substitution will
+Note: To perform substitution by batch API, a new field called Original Batch Number for performing substitution will
 be required in upcoming releases after 21B. The behavior of the inbuilt substitution by only sending the batch number
 field will not be supported in the upcoming releases. Customers utilizing this API (pick_pack/pick_confirm/) please
 keep note of this new change in upcoming releases.
-Note:  If some of the inventory attribute values are not passed in the Pick request, then system will assume it to
+Note: If some of the inventory attribute values are not passed in the Pick request, then system will assume it to
 be wild card and matches with the allocated inventory. if the allocated inventory for the given order detail in the
 API request is not matching with the inventory attribute values passed in the API, then system should return error
 response "Inventory attribute combination is not allocated for order %order number%".
@@ -6986,7 +6987,7 @@ Pick Confirm API is enhanced to support substitutions where you can substitute o
 available inventory via Pick Confirm API. As shown below, the following fields were added to the Pick List:
 Parameters
 Name Required Type Default Description
-Orig_IBLPN_Nbr C String If original allocation is
+Orig*IBLPN_Nbr C String If original allocation is
 from LPN & substitution is
 happening from different
 LPN.
@@ -6994,8 +6995,8 @@ Orig_Batch_nbr C String Batch Number associated
 with the original allocation.
 Orig_expiry_date C String Expiry Date associated with
 the original allocation.
-Orig_Inventory_Attribute_
-A to Orig_Inventory_
+Orig_Inventory_Attribute*
+A to Orig*Inventory*
 Attribute_O
 C String Inventory attributes value
 associated with the original
@@ -7008,53 +7009,53 @@ which is an existing behavior.
 • If any of the Original values (Attribute/Expiry date/LPN) are sent in the pick confirm API, and the user wants a
 batch number to also be part of substitution, then the original batch number explicitly has to passed in the API.
 In this case, implicit substitution of the batch number will not happen.
- {
- "mhe_mode_flg": false,
- "async_flg": true,
+{
+"mhe_mode_flg": false,
+"async_flg": true,
 
- "pick_list": [{
- "facility_id__code": "QATST01",
- "company_id__code": "QATSTPC",
- "wave_nbr": "WVQATSTPC072935",
- "order_nbr": "CPORD102720C1",
- "item_barcode": "RUG99",
- "qty":2,
- "uom_qty":4,
- "orig_iblpn_nbr": "CNTST0100031599",
- "from_container_nbr": "CNTST0100031583",
- "to_container_nbr": "CPOBLPN010621C1",
- "orig_batch_nbr":"BAT2021",
- "batch_nbr":"CPBAT0708C12",
- "update_inventory_on_short_flg": true,
- "close_container_status" : "packed",
+"pick_list": [{
+"facility_id**code": "QATST01",
+"company_id**code": "QATSTPC",
+"wave_nbr": "WVQATSTPC072935",
+"order_nbr": "CPORD102720C1",
+"item_barcode": "RUG99",
+"qty":2,
+"uom_qty":4,
+"orig_iblpn_nbr": "CNTST0100031599",
+"from_container_nbr": "CNTST0100031583",
+"to_container_nbr": "CPOBLPN010621C1",
+"orig_batch_nbr":"BAT2021",
+"batch_nbr":"CPBAT0708C12",
+"update_inventory_on_short_flg": true,
+"close_container_status" : "packed",
 167
 
 Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
- "mhe_system_code": "CONVCP1",
- "short_flg": false
- },
- {
- "facility_id__code": "QATST01",
- "company_id__code": "QATSTPC",
- "wave_nbr": "WVQATSTPC072935",
- "order_nbr": "CPORD102720C1",
- "item_barcode": "RUG99",
- "qty":2,
- "pick_location": "CPLOC2021AA",
- "to_container_nbr": "CPOBLPN010621C1",
- "orig_batch_nbr":"BAT2021",
- "batch_nbr":"CPBAT0708C16",
- "update_inventory_on_short_flg": true,
- "close_container_status" : "packed",
- "mhe_system_code": "CONVCP1",
- "short_flg": false
+"mhe_system_code": "CONVCP1",
+"short_flg": false
+},
+{
+"facility_id**code": "QATST01",
+"company_id**code": "QATSTPC",
+"wave_nbr": "WVQATSTPC072935",
+"order_nbr": "CPORD102720C1",
+"item_barcode": "RUG99",
+"qty":2,
+"pick_location": "CPLOC2021AA",
+"to_container_nbr": "CPOBLPN010621C1",
+"orig_batch_nbr":"BAT2021",
+"batch_nbr":"CPBAT0708C16",
+"update_inventory_on_short_flg": true,
+"close_container_status" : "packed",
+"mhe_system_code": "CONVCP1",
+"short_flg": false
 
- }
+}
 
- ]}
+]}
 Track User Activity
 If you have purchased WFM (Oracle Workforce Management), you can also send user activity data using the following
 parameters in the Pick Confirm API
@@ -7087,28 +7088,28 @@ Request Body with User Activity Data
 "async_flg": true,
 "screen_name": "Pick Confirm Screen",
 "pick_list": [{
- "facility_idcode": "QATST01",
- "company_idcode": "QATSTPC",
- "wave_nbr": "WVQATSTPC072935",
- "order_nbr": "CPORD102720C1",
- "item_barcode": "RUG99",
- "qty":2,
- "from_container_nbr": "CNTST0100031583",
- "to_container_nbr": "CPOBLPN010621C1",
- "begin_ts": "2024-05-27T18:30:00",
- "end_ts": "2024-05-27T18:45:00"
+"facility_idcode": "QATST01",
+"company_idcode": "QATSTPC",
+"wave_nbr": "WVQATSTPC072935",
+"order_nbr": "CPORD102720C1",
+"item_barcode": "RUG99",
+"qty":2,
+"from_container_nbr": "CNTST0100031583",
+"to_container_nbr": "CPOBLPN010621C1",
+"begin_ts": "2024-05-27T18:30:00",
+"end_ts": "2024-05-27T18:45:00"
 },
 {
- "facility_idcode": "QATST01",
- "company_idcode": "QATSTPC",
- "wave_nbr": "WVQATSTPC072935",
- "order_nbr": "CPORD102720C1",
- "item_barcode": "RUG99",
- "qty":2,
- "pick_location": "CPLOC2021AA",
- "to_container_nbr": "CPOBLPN010621C1",
- "begin_ts": "2024-05-27T18:50:00",
- "end_ts": "2024-05-27T18:55:00"
+"facility_idcode": "QATST01",
+"company_idcode": "QATSTPC",
+"wave_nbr": "WVQATSTPC072935",
+"order_nbr": "CPORD102720C1",
+"item_barcode": "RUG99",
+"qty":2,
+"pick_location": "CPLOC2021AA",
+"to_container_nbr": "CPOBLPN010621C1",
+"begin_ts": "2024-05-27T18:50:00",
+"end_ts": "2024-05-27T18:55:00"
 }
 ]
 169
@@ -7118,23 +7119,23 @@ WMS REST API Guide
 Chapter 5
 Supported Operations
 }
-Close LPN  
+Close LPN
 The close_lpn API allows you to close an LPN during picking/packing. This API replaces the legacy pick confirm API
 when the action code is closed. While performing pick and pack operations (either non cubed active picking or cubed
 picking), the Close action code indicates to WMS that the Outbound LPN being picked needs to be closed.
-Note:  This is a new API meant to replace the existing legacy `close_lpn` API. The legacy API will eventually be retired
+Note: This is a new API meant to replace the existing legacy `close_lpn` API. The legacy API will eventually be retired
 so no further enhancements will be made to it. New functionality will instead be added to this API as part of the lgfapi
 suite.
 This API supports features of the legacy API including the following new parameter:
 • async_flg - true/false; default true
 Close LPN API can be called using the following POST request:
-                        POST ..lgfapi/v10/pick_pack/close_lpn/
+POST ..lgfapi/v10/pick_pack/close_lpn/
 
 Request Parameters
 The following table provides details about the query string parameters:
 Name Required Type Default Description
-facility_id Integer Facility context by id.
-facility_id__code String Facility context by code.
+facility*id Integer Facility context by id.
+facility_id\_\_code String Facility context by code.
 company_id Integer Company context by id.
 company_id_code String Company context by code.
 to_container_nbr X String To OBLPN.
@@ -7143,7 +7144,7 @@ close_container_status String "packed" Final OBLPN status:
 short_on_close_flg Boolean False Should any remaining
 unpacked quantity
 shorted?
-update_inventory_on_
+update_inventory_on*
 short_flg
 Boolean False Also short source inventory
 on pick short?
@@ -7158,13 +7159,13 @@ Supported Operations
 The following is an example JSON request:
 {
 "facility_idcode": "FAC",
- "company_id": 1, "to_container_nbr": "OBLPN001", "close_container_status":
- "picked", "short_on_close_flg": true, "async_flg": true
+"company_id": 1, "to_container_nbr": "OBLPN001", "close_container_status":
+"picked", "short_on_close_flg": true, "async_flg": true
 }
-Wave Complete  
+Wave Complete
 The Wave Complete API replaces the legacy API when the action code is Complete. This is an indicator to inform WMS
 that all picks are completed for that wave, and there are no more picks outstanding.
-Note:  This is a new API meant to replace the existing legacy `close_lpn` API. The legacy API will eventually be retired
+Note: This is a new API meant to replace the existing legacy `close_lpn` API. The legacy API will eventually be retired
 so no further enhancements will be made to it. New functionality will instead be added to this API as part of the lgfapi
 suite.
 This API supports features of the legacy API including the following new parameter:
@@ -7172,21 +7173,21 @@ This API supports features of the legacy API including the following new paramet
 ◦ When false:
 
 - Instead of submitting a celery task at the end for later processing, it should be immediately
-processed and a response returned.
+  processed and a response returned.
 - On success, return a 204 - "No Content" HTTP response status with no response body.
 - When true: Return HTTP response status 202 - "Accepted" with no response body.
-◦ Signals that we received the request and it was successfully submitted for processing.
-The Wave Complete API can be called using the following POST request:
-                        POST ..lgfapi/v10/pick_pack/wave_complete/
+  ◦ Signals that we received the request and it was successfully submitted for processing.
+  The Wave Complete API can be called using the following POST request:
+  POST ..lgfapi/v10/pick_pack/wave_complete/
 
 The following table provides details about the query string parameters:
 Name Required Type Default Description
 facility_id Integer Facility context by id.
-facility_id__code String Facility context by code.
-company_id Integer Company context by id.
-company_id___code String Company context by code.
-wave_nbr X String Associated wave.
-update_inventory_on_
+facility_id**code String Facility context by code.
+company*id Integer Company context by id.
+company_id***code String Company context by code.
+wave*nbr X String Associated wave.
+update_inventory_on*
 short_flg
 Boolean False Also short source inventory
 on pick short?
@@ -7204,17 +7205,17 @@ mhe_system_code String MHE system.
 async_flg Boolean True Run API asynchronously?
 The following is an example JSON request:
 {
- "facility_id__code": "FAC",
- "company_id": 1,
- "wave_nbr": "WAVE001",
- "update_inventory_on_short_flg": true,
- "async_flg" true
+"facility_id\_\_code": "FAC",
+"company_id": 1,
+"wave_nbr": "WAVE001",
+"update_inventory_on_short_flg": true,
+"async_flg" true
 }
-GET Next Pick  
+GET Next Pick
 The Get Next Pick REST API allows you to pick inventory based on the location pick sequence during picking from the
 Oracle WMS Cloud Mobile App or an external system using WMS APIs. This API follows the same underlying logic used
 in the text based Mobile RF picking transaction.
-Note:  The Oracle WMS Cloud Mobile App is one example of where this API will be leveraged. However, this API can be
+Note: The Oracle WMS Cloud Mobile App is one example of where this API will be leveraged. However, this API can be
 used in other scenarios.
 The Get Next Pick API should give one pick from allocation records based on the location pick sequence when there are
 multiple allocation records that exist for a given Order/OBLPN.
@@ -7245,16 +7246,16 @@ Get Reponse:
 ◦ Expiry Date: Expiry date associated with the inventory.
 ◦ Quantity : Pending quantity that needs to be picked for respective allocation record (Allocated Qty -
 Packed Qty)
-Pack Full LPN  
+Pack Full LPN
 The Full LPN Packing API allows you to pack a full LPN. This API can be used for voice based picking, or invoked from
 other systems likes MHE or AGV (Automated Guided Vehicle) to pack the full LPN's .
 API URL: Lookup by Filters
-                           POST.../lgfapi/v10/pick_pack/pack_full_lpn
+POST.../lgfapi/v10/pick_pack/pack_full_lpn
 
 Parameters for Full LPN API
 Name Required Type Default Value Description
 facility_id Integer Facility context by id
-facility_id__code string Facility context by code
+facility_id\_\_code string Facility context by code
 company_id Integer Company context by id.
 company_id_code string Company context by code.
 oblpn_number C string OBLPN which needs to be packed.
@@ -7342,14 +7343,14 @@ number.
 Sample Request JSON:
 {
 
- "async_flg": false,
- "pick_list": [{
- "facility_id__code": "FAC",
- "company_id": 1,
- "iblpn_number": "IBLPN0001",
- "oblpn_number": "OBLPN0001",
- "short_flg": false
- }]
+"async_flg": false,
+"pick_list": [{
+"facility_id__code": "FAC",
+"company_id": 1,
+"iblpn_number": "IBLPN0001",
+"oblpn_number": "OBLPN0001",
+"short_flg": false
+}]
 }
 Substitution
 Substitution Validation:
@@ -7372,22 +7373,22 @@ error message "Substitution fails".
 • If the substituting IBLPN is not present in the system for given facility, then API should return error message
 "No Such IBLPN %IBLPN Number%".
 Sample request JSON:
- {
+{
 
- "async_flg": false,
- "sub_validate_batch_number_flg": true,
- "sub_validate_expiry_date_flg": true,
- "sub_validate_po_number_flg": true,
- "sub_validate_shipment_number_flg": true,
+"async_flg": false,
+"sub_validate_batch_number_flg": true,
+"sub_validate_expiry_date_flg": true,
+"sub_validate_po_number_flg": true,
+"sub_validate_shipment_number_flg": true,
 
- "pick_list": [{
- "facility_id__code": "FAC",
- "company_id": 1,
- "iblpn_number": "IBLPN0001",
- "oblpn_number": "OBLPN0001",
- "short_flg": false
- }]
- }
+"pick_list": [{
+"facility_id__code": "FAC",
+"company_id": 1,
+"iblpn_number": "IBLPN0001",
+"oblpn_number": "OBLPN0001",
+"short_flg": false
+}]
+}
 
 Shorting
 If Short flag is set to True, then it should allow:
@@ -7403,7 +7404,7 @@ If the oblpn_status_post_picking parameter is set to:
 The following table lists the fields in the parameter:
 Name Description
 facility_id Facility context by id
-facility_id__code Facility context by code
+facility_id\_\_code Facility context by code
 176
 
 Oracle Warehouse Management Cloud
@@ -7422,7 +7423,7 @@ mhe_system_code MHE system. MHE System is not mandatory as this API can be calle
 externally developed packing screens or in future our VBCS option to perform full LPN picking.
 oblpn_status_post_picking Supported values "Picked" or "Packed". If the parameter is not sent or the value is left blank, then
 status "Packed" is displayed, as default.
-Planned Parcel Shipment  
+Planned Parcel Shipment
 The Planned Parcel Shipment API allows you to query data in the stage tables, status, and corresponding error
 messages without the need to go through the Input Interface UI.
 Stage Planned Parcel Shipment Header
@@ -7446,10 +7447,10 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
-HEAD .../lgfapi/v10/entity/stage_planned_parcel_shipment_dtl/{id}
-Print  
+HEAD .../lgfapi/v10/entity/stage*planned_parcel_shipment_dtl/{id}
+Print
 These topics give descriptions for APIs that complete actions related to Printing in the Warehouse.
-Print Shipping Label  
+Print Shipping Label
 GET.../wms/lgfapi/v10/print/label/shipping/?label_designer_code=foo
 Returns the ZPL representation of the label
 POST .../wms/lgfapi/v10/print/label/shipping
@@ -7458,13 +7459,13 @@ Parameters
 The “parameters” section of the request body is required in addition to the “options” section outlined below. One or
 more parameters are used to determine the order(s) for which the operation will be applied.
 Category Name Type Required GET Request POST Request Comments
-options label_designer_
+options label_designer*
 code
 string X X X Label designer
 template to be
 printed
-options printer_name string X Default's to
-cwuser.default_
+options printer*name string X Default's to
+cwuser.default*
 label_printer.
 options label_count integer X Number of labels
 to print. Must be
@@ -7484,12 +7485,12 @@ WMS REST API Guide
 Chapter 5
 Supported Operations
 GET.../wms/lgfapi/v10/print/label/shipping/?
-label_designer_code=foo&facility_id__code=FAC1&company_id_code=COM1&container_nbr=IBLPN1
+label_designer_code=foo&facility_id**code=FAC1&company_id_code=COM1&container_nbr=IBLPN1
 Example Request Body for POST
 {
 "parameters": {
-"facility_id__code": "FAC1",
-"company_id__code": "COM1",
+"facility_id**code": "FAC1",
+"company_id\_\_code": "COM1",
 "container_nbr": "IBLPN1"
 },
 "options": {
@@ -7525,17 +7526,17 @@ not found."
 To enable printing of carrier labels in the Print Shipping Label API:
 
 1. Either, you can directly pass the label designer code of the label type ‘wsaddon’ for the API parameter
-label_designer_code.
+   label_designer_code.
 2. Or, do not pass the label_designer_code in the request and set the configuration in the Label Rules Engine UI,
-set the Print Carrier Label Only flag to Yes, for the Shipping label type.
-179
+   set the Print Carrier Label Only flag to Yes, for the Shipping label type.
+   179
 
 Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
-Print LPN Label  
-GET.../wms/lgfapi/v10/print/label/ib_container/?label_designer_code=foo
+Print LPN Label
+GET.../wms/lgfapi/v10/print/label/ib*container/?label_designer_code=foo
 Returns the ZPL representation of the label.
 POST .../wms/lgfapi/v10/print/label/ib_container
 Submits the label for printing.The “parameters” section of the request body is required in addition to the “options”
@@ -7544,7 +7545,7 @@ applied.
 Category Name Type Required GET Request POST Request Comments
 options label_designer_code string X X X Label designer template to be
 printed
-options printer_name string X Default's to cwuser.default_
+options printer_name string X Default's to cwuser.default*
 label_printer.
 options label_count integer X Number of labels to print.
 Must be greater than 0.
@@ -7554,26 +7555,26 @@ API Filters
 ◦ id
 
 - Including "in" lookup
-◦ facility_id
-◦ company_id
-◦ container_nbr
+  ◦ facility_id
+  ◦ company_id
+  ◦ container_nbr
 - Including "in" lookup
-Example Query String for GET
-GET.../wms/lgfapi/v10/print/label/ib_container/?
-label_designer_code=foo&facility_id__code=FAC1&company_id_code=COM1&container_nbr=LPN1
-Example Request Body for POST
-{
-"parameters": {
-"facility_id__code": "FAC1",
-"company_id__code": "COM1",
-"container_nbr": "OBLPN1"
-},
-"options": {
-"label_designer_code": "label_1",
-"printer_name": "PRINTER1"
-}
-}
-180
+  Example Query String for GET
+  GET.../wms/lgfapi/v10/print/label/ib_container/?
+  label_designer_code=foo&facility_id**code=FAC1&company_id_code=COM1&container_nbr=LPN1
+  Example Request Body for POST
+  {
+  "parameters": {
+  "facility_id**code": "FAC1",
+  "company_id\_\_code": "COM1",
+  "container_nbr": "OBLPN1"
+  },
+  "options": {
+  "label_designer_code": "label_1",
+  "printer_name": "PRINTER1"
+  }
+  }
+  180
 
 Oracle Warehouse Management Cloud
 WMS REST API Guide
@@ -7583,7 +7584,7 @@ Response Body Data
 On success, a 200 - OK status is returned
 For a GET request, the ZPL data bill be base64 encoded in the "data" section.
 {
-"record_count": 2,
+"record*count": 2,
 "success_count": 1,
 "failure_count": 1,
 "data": {
@@ -7593,7 +7594,7 @@ For a GET request, the ZPL data bill be base64 encoded in the "data" section.
 "IBLPN_2": "Some error message."
 }
 }
-Print Pallet Label  
+Print Pallet Label
 GET.../wms/lgfapi/v10/print/label/pallet/?label_designer_code=foo
 Returns the ZPL representation of the label
 POST .../wms/lgfapi/v10/print/label/pallet
@@ -7601,13 +7602,13 @@ Submits the label for printing
 The “parameters” section of the request body is required in addition to the “options” section outlined below. One or
 more parameters are used to determine the order(s) for which the operation will be applied.
 Category Name Type Required GET Request POST Request Comments
-options label_designer_
+options label_designer*
 code
 string X X X Label designer
 template to be
 printed
-options printer_name string X Default's to
-cwuser.default_
+options printer*name string X Default's to
+cwuser.default*
 label_printer.
 options label_count integer X Number of labels
 to print. Must be
@@ -7624,42 +7625,42 @@ API Filters
 ◦ id
 
 - Including "in" lookup
-◦ facility_id
-◦ company_id
-◦ container_nbr
+  ◦ facility_id
+  ◦ company_id
+  ◦ container_nbr
 - Including "in" lookup
-Example Query String for GET
-GET.../wms/lgfapi/v10/print/label/pallet/?
-label_designer_code=foo&facility_id__code=FAC1&company_id_code=COM1&pallet_nbr=pallet1
-Example Request Body for POST
-{
-"parameters": {
-"facility_id__code": "FAC1",
-"company_id__code": "COM1",
-"pallet_nbr": "pallet1"
-},
-"options": {
-"label_designer_code": "label_1",
-"printer_name": "PRINTER1"
-}
-}
-Response Body Data
-On success, a 200 - OK status is returned
-For a GET request, the ZPL data bill be base64 encoded in the "data" section.
-{
-"success_count": 1,
-"failure_count":0,
-"data": {
-"OBLPN_1": "VGhpcyBpcyBaUEwgY29kZQ=="
-}
-}
-Print OBLPN Packing Slip  
-This API allows you to print packing slips for one or more OBLPNs to a specified printer from an external system (such
-as Material Handling Equipment (MHE.)
-URLs
-POST .../wms/lgfapi/v10/print/document/oblpn_packing_slip
-GET.../wms/lgfapi/v10/print/document/oblpn_packing_slip/doc_designer_code=foo
-182
+  Example Query String for GET
+  GET.../wms/lgfapi/v10/print/label/pallet/?
+  label_designer_code=foo&facility_id**code=FAC1&company_id_code=COM1&pallet_nbr=pallet1
+  Example Request Body for POST
+  {
+  "parameters": {
+  "facility_id**code": "FAC1",
+  "company_id\_\_code": "COM1",
+  "pallet_nbr": "pallet1"
+  },
+  "options": {
+  "label_designer_code": "label_1",
+  "printer_name": "PRINTER1"
+  }
+  }
+  Response Body Data
+  On success, a 200 - OK status is returned
+  For a GET request, the ZPL data bill be base64 encoded in the "data" section.
+  {
+  "success_count": 1,
+  "failure_count":0,
+  "data": {
+  "OBLPN_1": "VGhpcyBpcyBaUEwgY29kZQ=="
+  }
+  }
+  Print OBLPN Packing Slip
+  This API allows you to print packing slips for one or more OBLPNs to a specified printer from an external system (such
+  as Material Handling Equipment (MHE.)
+  URLs
+  POST .../wms/lgfapi/v10/print/document/oblpn_packing_slip
+  GET.../wms/lgfapi/v10/print/document/oblpn_packing_slip/doc_designer_code=foo
+  182
 
 Oracle Warehouse Management Cloud
 WMS REST API Guide
@@ -7667,7 +7668,7 @@ Chapter 5
 Supported Operations
 Parameters
 Category Name Type Required Comments
-options doc_designer_code string C Document template
+options doc*designer_code string C Document template
 to be printed.
 options web_report_path string C This field is
 mandatory. the path
@@ -7678,7 +7679,7 @@ mandatory. the file
 format of the report
 xls/csv/pdf
 options printer_name string Defaults to
-cwuser.default_
+cwuser.default*
 document_printer.
 options document_count integer Number of
 documents to print.
@@ -7686,39 +7687,39 @@ Must be greater
 than 0. Default = 1.
 Example Request Body - Web Reports
 {
- "parameters": {
- "facility_id__code": "LW_FAC",
- "company_id__code": "LW_COMP",
- "container_nbr__in" : "OBLW_LWCOMP123"
- },
- "options": {
- "web_report_path" : "ABC/OBLPNPackingList",
- "web_report_format" : "pdf",
- "printer_name": "ABCDOC",
- "document_count": 1
- }
+"parameters": {
+"facility_id**code": "LW_FAC",
+"company_id**code": "LW_COMP",
+"container_nbr**in" : "OBLW_LWCOMP123"
+},
+"options": {
+"web_report_path" : "ABC/OBLPNPackingList",
+"web_report_format" : "pdf",
+"printer_name": "ABCDOC",
+"document_count": 1
 }
-Note:  Web Reports will only work for PDF format.
+}
+Note: Web Reports will only work for PDF format.
 Example Request Body - Label Designer
 {
- "parameters": {
- "facility_id__code": "LW_FAC",
- "company_id__code": "LW_COMP",
- "container_nbr": "OBLPN11212402"
+"parameters": {
+"facility_id**code": "LW_FAC",
+"company_id\_\_code": "LW_COMP",
+"container_nbr": "OBLPN11212402"
 183
 
 Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
- },
- "options": {
- "doc_designer_code": "Packing_Slip_180_DPI_TOP_LW_COMP",
- "printer_name": "ABCDOC",
- "document_count": 1
- }
+},
+"options": {
+"doc*designer_code": "Packing_Slip_180_DPI_TOP_LW_COMP",
+"printer_name": "ABCDOC",
+"document_count": 1
 }
-Print Order Packing Slip  
+}
+Print Order Packing Slip
 The Order Packing Slip API allows you to print pallet packing slips. Note that this API will not do any template
 determination logic as seen in the UI. Doc designer code is required as part of the API parameters. Any determination
 would need to be done in the outside system.
@@ -7742,7 +7743,7 @@ mandatory. the file
 format of the report
 xls/csv/pdf.
 options printer_name string X Defaults to
-cwuser.default_
+cwuser.default*
 document_printer.
 options document_count integer X Number of
 documents to print.
@@ -7754,13 +7755,13 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
-Print Pallet Packing Slip  
+Print Pallet Packing Slip
 The Pallet Packing Slip API allows you to print pallet packing slips. Note that this API will not do any template
 determination logic as seen in the UI. Doc designer code is required as part of the API parameters. Any determination
 would need to be done in the outside system.
 This API supports the following HTTP methods:
 • GET - Returns the ZPL representation of the document.
-• HEAD - only supports checking if the object exists since lookup models don't have create_ts.
+• HEAD - only supports checking if the object exists since lookup models don't have create*ts.
 • POST - Submits the document for printing.
 URLs
 POST .../wms/lgfapi/v10/print/document/pallet_packing_slip
@@ -7776,13 +7777,13 @@ mandatory. the file
 format of the report
 xls/csv/pdf
 options printer_name string Defaults to
-cwuser.default_
+cwuser.default*
 document_printer.
 options document_count integer Number of
 documents to print.
 Must be greater
 than 0. Default = 1.
-Putaway  
+Putaway
 These topics give descriptions for APIs that complete actions related to putaway in the Warehouse.
 185
 
@@ -7790,7 +7791,7 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
-Putaway Priority  
+Putaway Priority
 This operation allows you to determine the order in which Putaway Types are triggered for putaway.
 POST .../entity/putaway_priority
 If you have a new facility and you want to copy the same Putaway Priority rules from your current facility, you can first
@@ -7841,21 +7842,21 @@ Supported Operations
 "radial_increment": 1
 }
 }
-Directed Putaway Location  
+Directed Putaway Location
 The Directed Putaway Location API now allows you to determine the putaway location for a given Inbound LPN or
 Pallet via a POST request, so that you can locate the LPN/Pallet to its respective destination.
 You can determine the putaway location for an IBLPN using the following POST request:
-                        POST .../entity/iblpn/directed_putaway_location/
+POST .../entity/iblpn/directed_putaway_location/
 
 Parameters
 Name Required Type Default Description
 facility_id Integer Facility context by id.
-facility_id__code String Facility context by code.
+facility_id\_\_code String Facility context by code.
 company_id Integer Company context by id.
 company_id_code String Company context by code.
 container_nbr X String
 You can determine the putaway location for a pallet using the following POST request:
-                        POST .../entity/pallet/directed_putaway_location/
+POST .../entity/pallet/directed_putaway_location/
 
 NOTE: Oracle WMS Cloud will check the putaway type associated with the IBLPN/ Pallet and check the respective
 putaway method priority configured for the putaway type. The system then determines the putaway location honoring
@@ -7868,17 +7869,17 @@ Chapter 5
 Supported Operations
 Parameters
 Name Required Type Default Description
-facility_id Integer Facility context by id.
-facility_id__code String Facility context by code.
+facility*id Integer Facility context by id.
+facility_id\_\_code String Facility context by code.
 company_id Integer Company context by id.
 company_id_code String Company context by code.
 pallet_nbr X String
 Request Options Parameters
 Name Required Type Default Description
-recalculate_putaway_type_
+recalculate_putaway_type*
 flg
 Boolean False
-validate_critical_
+validate*critical*
 dimensions_flg
 Boolean False
 Example Request
@@ -7901,7 +7902,7 @@ POST .../entity/pallet/directed_putaway_location/
 "recalculate_putaway_type_flg": false
 }
 }
-Putaway Type  
+Putaway Type
 POST .../entity/putaway_type
 This operation is used to add single or multiple putaway type.
 If you have a new facility and you want to copy the same putaway type from your current facility, you can first GET the
@@ -7922,7 +7923,7 @@ Example body request:
 "depalletize_on_putaway_flg": false
 }
 }
-Putaway Type Calculation Rule  
+Putaway Type Calculation Rule
 POST .../entity/putaway_type_calc_rule
 This operation is used to add single or multiple putaway type cal rules.
 If you have a new facility and you want to copy the same putaway type cal rule from your current facility, you can first
@@ -7946,10 +7947,10 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
-Repack  
+Repack
 The Repack APIs allow you to repack Outbound LPNs (or temporary totes) that are in Picked status to destination
 OBLPNs and move them into Packed status using the Pack Inventory API follow by the Close LPN API.
-Pack Inventory  
+Pack Inventory
 The Pack Inventory API allows you to pack inventory based on the source OBLPN (from OBLPN), item, quantity and the
 destination OBLPN (to OBLPN) information you send. In repack pack inventory, the system currently allows sending
 only one packing detail per request.
@@ -7958,9 +7959,9 @@ POST.../lgfapi/v10/repack/pack_inventory
 Request Level Parameters
 Name Required Type Default Description
 facility_id Integer Facility context by id
-facility_id__code String Facility context by code
+facility_id**code String Facility context by code
 company_id Integer Company context by id
-company_id__code String Company context by code
+company_id**code String Company context by code
 restrict_multiorder_combine_flg Boolean False When 'False', destination
 OBLPN can be repacked
 from source OBLPNs
@@ -7999,16 +8000,16 @@ repacked.
 item_alternate_code C string Item identifier
 item_barcode C string Item identifier
 qty X number 0 If short_flg is false,
- Quantity to be packed
+Quantity to be packed
 into destination OBLPN
 from source OBLPN
 
 If short_flg is true,
- Quantity to be shorted in
+Quantity to be shorted in
 source OBLPN
 
 allocation_uom string "UNITS", "PACKS",
- "CASES", LPNS"
+"CASES", LPNS"
 uom_qty number Provides the inventory/
 standard pack qty or case
 qty when allocation_uom
@@ -8048,22 +8049,22 @@ the inventory. Should
 be provided if the
 inventory to be packed
 has inventory attributes
-serial_nbr_list C list List of serial numbers
+serial*nbr_list C list List of serial numbers
 for the inventory packed
 (single SKU can have
 multiple serial numbers)
 to_oblpn_nbr X string Destination OBLPN where
 contents are going to
-be packed into. The "to_
-oblpn_nbr" will be the
+be packed into. The "to*
+oblpn*nbr" will be the
 new destination OBLPN
 that will be substituted
-in place of the "orig_to_
-oblpn_nbr"
+in place of the "orig_to*
+oblpn*nbr"
 orig_to_oblpn_nbr string This field will be used
 for substitution of
 destination OBLPN (to
-OBLPN.) The orig_to_
+OBLPN.) The orig_to*
 oblpn_nbr" will be the
 final OBLPN number that
 has been suggested by
@@ -8103,33 +8104,33 @@ calculated based on the LPN type dimensions and the existing dimensions for the 
 • WMS activity is written for the packing activity being done
 Sample JSON Request
 {
- "facility_id__code": "FAC",
- "company_id": 1,
- "restrict_multiorder_combine_flg": True,
- "from_oblpn_nbr": "TMPOBLPN0001",
- "item_alternate_code": "ITEM0001",
- "qty": 5,
- "batch_nbr":"B1",
- "expiry_date": "2024-02-24",
- "invn_attr_a" : "TESTA",
- "invn_attr_b" : "TESTB",
- "invn_attr_c" : "TESTC",
- "invn_attr_d" : "TESTD",
- "invn_attr_e" : "TESTE",
- "invn_attr_f" : "TESTF",
- "invn_attr_g" : "TESTG",
- "invn_attr_h" : "TESTH",
- "invn_attr_i" : "TESTI",
- "invn_attr_j" : "TESTJ",
- "invn_attr_k" : "TESTK",
- "invn_attr_l" : "TESTL",
- "invn_attr_m" : "TESTM",
- "invn_attr_n" : "TESTN",
- "invn_attr_o" : "TESTO",
- "to_oblpn_nbr": "OBLPN0001",
- "to_oblpn_type": "KNMEDBOX1",
- "packing_station_barcode": "KNP0101",
- "short_flg": false
+"facility_id\_\_code": "FAC",
+"company_id": 1,
+"restrict_multiorder_combine_flg": True,
+"from_oblpn_nbr": "TMPOBLPN0001",
+"item_alternate_code": "ITEM0001",
+"qty": 5,
+"batch_nbr":"B1",
+"expiry_date": "2024-02-24",
+"invn_attr_a" : "TESTA",
+"invn_attr_b" : "TESTB",
+"invn_attr_c" : "TESTC",
+"invn_attr_d" : "TESTD",
+"invn_attr_e" : "TESTE",
+"invn_attr_f" : "TESTF",
+"invn_attr_g" : "TESTG",
+"invn_attr_h" : "TESTH",
+"invn_attr_i" : "TESTI",
+"invn_attr_j" : "TESTJ",
+"invn_attr_k" : "TESTK",
+"invn_attr_l" : "TESTL",
+"invn_attr_m" : "TESTM",
+"invn_attr_n" : "TESTN",
+"invn_attr_o" : "TESTO",
+"to_oblpn_nbr": "OBLPN0001",
+"to_oblpn_type": "KNMEDBOX1",
+"packing_station_barcode": "KNP0101",
+"short_flg": false
 }
 Shorting
 If Short flag is set to True, then it should allow:
@@ -8147,13 +8148,13 @@ Chapter 5
 Supported Operations
 Sample JSON Request
 {
- "facility_id__code": "FAC",
- "company_id": 1,
- "from_oblpn_nbr": "TMPOBLPN0002",
- "item_alternate_code": "ITEM0001",
- "qty": 2,
- "to_oblpn_nbr": "OBLPN0002",
- "short_flg": true
+"facility_id**code": "FAC",
+"company_id": 1,
+"from_oblpn_nbr": "TMPOBLPN0002",
+"item_alternate_code": "ITEM0001",
+"qty": 2,
+"to_oblpn_nbr": "OBLPN0002",
+"short_flg": true
 }
 • In the sample request above, once the request is successfully processed, "TMPOBLPN0002" OBLPN will be
 shorted by 2 units for "ITEM0001."
@@ -8163,21 +8164,21 @@ in the respective request sent. In your request you can send a serial number lis
 API is not mandatory.
 "suppress_serial_warning_flg" - this flag helps users bypass warnings validations and improve speed of packing
 validations. The default of this flag is True, but if you want to be strict about these validations, you can set flag as 'False'.
-Note:  New serial numbers are allowed irrespective of whether company parameter
+Note: New serial numbers are allowed irrespective of whether company parameter
 SERIAL_NUMBER_TRACKING_LEVEL is set to '1' and '2'.
 Sample Request with Serial Number:
- {
- "facility_id__code": "FAC",
- "company_id": 1,
- "from_oblpn_nbr": "TMPOBLPN0001",
- "item_alternate_code": "ITEM0001S",
- "qty":3,
- "serial_nbr_list": [ <== Single Inventory can have multiple serial numbers.
- "SLN1",
- "SLN2",
- "SLN3" ],
- "to_oblpn_nbr": "OBLPN0001",
- "short_flg": false
+{
+"facility_id**code": "FAC",
+"company_id": 1,
+"from_oblpn_nbr": "TMPOBLPN0001",
+"item_alternate_code": "ITEM0001S",
+"qty":3,
+"serial_nbr_list": [ <== Single Inventory can have multiple serial numbers.
+"SLN1",
+"SLN2",
+"SLN3" ],
+"to_oblpn_nbr": "OBLPN0001",
+"short_flg": false
 }
 Track User Activity
 If you have purchased WFM (Oracle Workforce Management), you can also send user activity data using the following
@@ -8206,17 +8207,17 @@ not enabled.
 • WMS Activity is not written if short_flg is true.
 Request Body with User Activity Data
 {
- "facility_id": 101,
- "company_id": 102,
- "from_oblpn_nbr": "TMPOBLPN0001",
- "item_alternate_code": "ITEM0001",
- "qty": 5,
- "to_oblpn_nbr": "OBLPN0001",
- "begin_ts": "2024-05-27T18:30:00",
- "end_ts": "2024-05-27T18:45:00",
- "screen_name": "Repack OBLPN Screen"
+"facility_id": 101,
+"company_id": 102,
+"from_oblpn_nbr": "TMPOBLPN0001",
+"item_alternate_code": "ITEM0001",
+"qty": 5,
+"to_oblpn_nbr": "OBLPN0001",
+"begin_ts": "2024-05-27T18:30:00",
+"end_ts": "2024-05-27T18:45:00",
+"screen_name": "Repack OBLPN Screen"
 }
-Close LPN  
+Close LPN
 The Repack Close LPN API allows you to close the destination OBLPN (to OBLPN), based on the OBLPN information you
 send. This API is the second step to be done after you are done packing your inventory.
 URL
@@ -8234,13 +8235,13 @@ Supported Operations
 • When you do a repack for OBLPNs as a part of mode 3 cubing flow, the final OBLPN numbers are already
 decided by the system. But if you want to prematurely close the system suggested OBLPN, you can do so by
 closing the current OBLPN but mention the new OBLPN to be considered in place of the current OBLPN in the
-"new_to_oblpn_nbr" field.
+"new*to_oblpn_nbr" field.
 Parameters
 Name Required Type Default Value Description
 facility_id Integer Facility context by id
-facility_id__code string Facility context by code
+facility_id**code string Facility context by code
 company_id Integer Company context by id.
-company_id__code string Company context by code.
+company_id**code string Company context by code.
 to_oblpn_nbr X string Destination OBLPN where
 contents were packed and
 is about to be closed
@@ -8250,7 +8251,7 @@ OBLPN (to OBLPN),
 to_oblpn_lpn_type string LPN Type for the the
 destination OBLPN (to
 OBLPN)
-The field "to_oblpn_lpn_
+The field "to_oblpn_lpn*
 type" works together with
 "new_oblpn_nbr". and this
 oblpn_type is applicable
@@ -8260,7 +8261,7 @@ part of Repack Close LPN
 API. This is applicable only
 during substitution.
 
-Note:  when the user
+Note: when the user
 does a repack for
 OBLPNs as a part of a
 mode 3 cubing flow, the
@@ -8276,7 +8277,7 @@ close the current OBLPN
 and mention the new
 OBLPN to be considered
 in place of the current
-OBLPN in the "new_to_
+OBLPN in the "new*to*
 oblpn_nbr" field.
 
 • Destination OBLPN (to OBLPN) is updated to status “Packed.”
@@ -8295,27 +8296,27 @@ OBLPN should be calculated based on the LPN type dimesions, and the existing dim
 cleared.
 Example Request Body
 {
- "facility_id__code": "FAC",
- "company_id": 1,
- "to_oblpn_nbr": "OBLPN0001",
- "to_oblpn_lpn_type": "KNMEDBOX1"
+"facility_id\_\_code": "FAC",
+"company_id": 1,
+"to_oblpn_nbr": "OBLPN0001",
+"to_oblpn_lpn_type": "KNMEDBOX1"
 }
-Replenishment  
+Replenishment
 These topics give descriptions for APIs that complete actions related to Replenishment in the Warehouse.
-Replenish to Active  
+Replenish to Active
 The replenish_to_active API allows you to complete an open replenishment task for an active location.
 You can replenish to active with the following POST request:
-                        POST .../lgfapi/v10/replenishment/replenish_to_active/
+POST .../lgfapi/v10/replenishment/replenish_to_active/
 
-Note:  The Replenish to Active API is recommended only for  Full LPN Resplenishment Task Types. . This API has
+Note: The Replenish to Active API is recommended only for Full LPN Resplenishment Task Types. . This API has
 limited capabilities and may be deprecated in a future release. Consider using the Full LPN API.
 Parameters
 The following table provides details about the Input Parameters/Filters:
 Name Required Type Default Description
 facility_id integer Facility context by id.
-facility_id__code string Facility context by code.
-company_id integer Company context by id.
-company_id___code string Company context by code.
+facility_id**code string Facility context by code.
+company*id integer Company context by id.
+company_id***code string Company context by code.
 197
 
 Oracle Warehouse Management Cloud
@@ -8324,23 +8325,23 @@ Chapter 5
 Supported Operations
 • Used if the replenishment is in a context other than the requesting user's default.
 • The requesting user's default facility/company context will be assumed if values are not provided.
-• Either "facility_id" or "facility_id__code" may be used, but not both.
-• Either "company_id" or "company_id___code" may be used, but not both.
+• Either "facility_id" or "facility_id**code" may be used, but not both.
+• Either "company*id" or "company_id***code" may be used, but not both.
 The following table details the functional options:
 Name Required Type Default Description
 task_id C integer "id" of task to be
 completed.
-task_id__task_nbr C string Business key for task to be
+task_id**task_nbr C string Business key for task to be
 completed.
 replen_location_id C integer "id" of active location to be
 replenished.
-replen_location_id__
+replen_location_id**
 barcode
 C string Barcode of active location
 to be replenished
 qty decimal Allocation Qty Quantity to replenish.
-• Either "task_id" or "task_id__task_nbr" is required.
-• Either "replen_location_id" or "replen_location_id__barcode" is required.
+• Either "task_id" or "task_id**task_nbr" is required.
+• Either "replen_location_id" or "replen_location_id**barcode" is required.
 • If 'qty' is not provided, the full allocation quantity of the associated allocation will be used.
 ◦ If 'qty' is provided, it must be greater than 0.
 The following is an example body for Replenish Location ID Barcode:
@@ -8348,7 +8349,7 @@ The following is an example body for Replenish Location ID Barcode:
 "facility_id": 1,
 "company_id_code": "COMPANY",
 "task_id": 1,
-"replen_location_id__barcode": "LOCN1"
+"replen_location_id\_\_barcode": "LOCN1"
 }
 Track User Activity
 If you have purchased WFM (Oracle Workforce Management), you can also send user activity data using the following
@@ -8376,15 +8377,15 @@ not enabled.
 • Begin_ts and End_ts cannot be greater than the current timestamp of the facility in the API.
 Request Body with User Activity Data
 {
- "facility_id": 1,
- "company_id_code": "COMPANY",
- "task_id": 1,
- "replen_location_idbarcode": "LOCN1",
- "begin_ts": "2024-05-27T18:30:00",
- "end_ts": "2024-05-27T18:45:00",
- "screen_name": "Replen To Active Screen"
+"facility_id": 1,
+"company_id_code": "COMPANY",
+"task_id": 1,
+"replen_location_idbarcode": "LOCN1",
+"begin_ts": "2024-05-27T18:30:00",
+"end_ts": "2024-05-27T18:45:00",
+"screen_name": "Replen To Active Screen"
 }
-Replenishment Zone  
+Replenishment Zone
 POST .../entity/replenishment_zone
 This operation is used to add one or more replenishment zones.
 If you have a new facility and you want to copy the same replenishment zones from your current facility, you can first
@@ -8404,49 +8405,49 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
-Move LPN  
+Move LPN
 The Move LPN API allows you to facilitate the initial movement of the Replenishment process which will move the
 LPN(s) from a source location to a drop location.
-Note:  This REST API will only support Full LPN replenishment allocations.
+Note: This REST API will only support Full LPN replenishment allocations.
 You can perform Move LPN with the following POST request:
-                        Post Request : POST .../lgfapi/v10/replenishment/move_lpn
+Post Request : POST .../lgfapi/v10/replenishment/move_lpn
 
 Request Body
 {
- "location": "AAAAA",
- "move": [
- { --normal full LPN pick
- "facility_id__code": "CM101",
- "company_id__code": "CM_COMP",
- "from_container_nbr": "CNTST0100031583",
- "pallet_nbr": "IBLPN123",
- "mhe_system_code": "AGV",
- "short_flg": "False",
- "update_invn_onshort": "No"
- },
- {-- full LPN shorting pick
- "facility_id__code": "CM101",
- "company_id__code": "CM_COMP",
- "from_container_nbr": "CNTST0100031584",
- "pallet_nbr": "IBLPN123",
- "mhe_system_code": "AGV2",
- "short_flg": "True",
- "default_reason_code": "reason2",
- "update_invn_onshort": "yes"
- },
- { -- full LPN substitution
- "facility_id__code": "CM101",
- "company_id__code": "CM_COMP",
- "from_container_nbr": "CNTST0100031583",
- "sub_container_nbr": "CPOBLPN0106",
- "pallet_nbr": "IBLPN123",
- "mhe_system_code": "AGV",
- "short_flg": "False",
- "update_invn_onshort": "No"
- }
- ]
+"location": "AAAAA",
+"move": [
+{ --normal full LPN pick
+"facility_id__code": "CM101",
+"company_id__code": "CM_COMP",
+"from_container_nbr": "CNTST0100031583",
+"pallet_nbr": "IBLPN123",
+"mhe_system_code": "AGV",
+"short_flg": "False",
+"update_invn_onshort": "No"
+},
+{-- full LPN shorting pick
+"facility_id__code": "CM101",
+"company_id__code": "CM_COMP",
+"from_container_nbr": "CNTST0100031584",
+"pallet_nbr": "IBLPN123",
+"mhe_system_code": "AGV2",
+"short_flg": "True",
+"default_reason_code": "reason2",
+"update_invn_onshort": "yes"
+},
+{ -- full LPN substitution
+"facility_id__code": "CM101",
+"company_id__code": "CM_COMP",
+"from_container_nbr": "CNTST0100031583",
+"sub_container_nbr": "CPOBLPN0106",
+"pallet_nbr": "IBLPN123",
+"mhe_system_code": "AGV",
+"short_flg": "False",
+"update_invn_onshort": "No"
 }
-Note:  If shorting using the “short_flg” set to True, you have the option to provide a default reason code with a valid
+]
+}
+Note: If shorting using the “short_flg” set to True, you have the option to provide a default reason code with a valid
 reason code, and update_invn_on short to make sure the correct update happens to the inventory and the location in
 the parameter must be a drop location.
 200
@@ -8455,7 +8456,7 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
-Full LPN  
+Full LPN
 The Full LPN Replenishment API allows you to send Replenishment information for a Full LPN.
 POST .../lgfapi/v10/replenishment/full_lpn
 Request Parameters
@@ -8464,8 +8465,8 @@ mhe_mode_flg Boolean Facility context by id.
 async_flg Boolean Facility context by code.
 Replenishment List
 Name Required Type Default Description
-facility_id__code String Facility context by code.
-company_id___code String Company context by code.
+facility_id**code String Facility context by code.
+company*id***code String Company context by code.
 replen_wave_nbr x String Associated replenishment
 wave.
 from_container_nbr x String From container number
@@ -8475,22 +8476,22 @@ mhe_system_code Optional String MHE system.
 short_flg Boolean False is this a short?
 Request JSON Example
 "mhe_mode_flg": true,
- "async_flg": true,
- "replenishment_list": [{
- "facility_id__code": "QATST01",
- "company_id__code": "QATSTPC",
- "replen_wave_nbr": "WVQATSTPC072935",
- "from_container_nbr:"CNTST0100031583",
- "sub_container_nbr": "CPOBLPN0106",
- "mhe_system_code": "picktolight",
- "short_flg": false },
- { "facility_id__code": "QATST01",
- "company_id__code": "QATSTPC",
- "replen_wave_nbr": "WVQATSTPC072935",
- "from_container_nbr¿:"CNTST0100031584",
- "sub_container_nbr": "CPOBLPN0126",
- "mhe_system_code": "picktolight",
- "short_flg": false }]
+"async_flg": true,
+"replenishment_list": [{
+"facility_id__code": "QATST01",
+"company_id__code": "QATSTPC",
+"replen_wave_nbr": "WVQATSTPC072935",
+"from_container_nbr:"CNTST0100031583",
+"sub_container_nbr": "CPOBLPN0106",
+"mhe_system_code": "picktolight",
+"short_flg": false },
+{ "facility_id__code": "QATST01",
+"company_id__code": "QATSTPC",
+"replen_wave_nbr": "WVQATSTPC072935",
+"from_container_nbr¿:"CNTST0100031584",
+"sub_container_nbr": "CPOBLPN0126",
+"mhe_system_code": "picktolight",
+"short_flg": false }]
 201
 
 Oracle Warehouse Management Cloud
@@ -8498,20 +8499,20 @@ WMS REST API Guide
 Chapter 5
 Supported Operations
 }
-Report  
+Report
 These topics give descriptions for APIs that complete actions related to Reporting in the Warehouse.
-Customer Inventory Summary  
+Customer Inventory Summary
 Allows you to execute the customer inventory summary report for only a single item per request. This request returns
 the result set as a file attached to the response.
 If output format is pipe-delimited, use the following:
-GET.../report/custom_inventory_summary/?facility_id__code=FAC1&company_id_code=COM1&item_code=ITEM1
+GET.../report/custom_inventory_summary/?facility_id**code=FAC1&company_id_code=COM1&item_code=ITEM1
 If the output format is XML use the following:
 GET.../report/custom_inventory_summary.xml?
 item_code=<item_code>&company_id=<company_id>&facility_id=<facility_id>
 The following “parameters” are required:
 Parameter Type Required Default Description
 facility_id integer C Required facility context.
-facility_id__code string C Required facility context.
+facility_id**code string C Required facility context.
 company_id integer C Required company context.
 company_id_code string C Required company context.
 item_code string X Specific item for the report.
@@ -8519,7 +8520,7 @@ write_header_line_flg boolean False Include the header line with
 field names?
 • Either `facility_id` or `facility_id__code` is required
 • Either `company_id` or company_id_code` is required
-Dock to Stock Per Day  
+Dock to Stock Per Day
 The Dock to Stock Per Day API provides valuable insights into your shipment processes. With this API, you can now
 easily monitor and optimize the time it takes for your shipments to go from the receiving dock to the stock location.
 This API will generate a report on the dock-to-stock time for shipments received and put away in the past seven days.
@@ -8536,9 +8537,9 @@ Available Filters
 Name Required Type Description
 company_id C String Company ID
 facility_id C String Facility ID
-company_id__code C String Company Code
-facility_id__code C String Facility Code
-Dock to Stock Per Shipment  
+company_id**code C String Company Code
+facility_id**code C String Facility Code
+Dock to Stock Per Shipment
 The Dock to Stock per Shipment API offers you detailed insights into your shipment processes. This API provides a
 report with a view of the time taken for each shipment's journey from the receiving dock to the stock location.
 With this API, you can easily access and analyze data for shipments received and put away within the past seven days.
@@ -8550,9 +8551,9 @@ Available Filters
 Name Required Type Description
 company_id C String Company ID
 facility_id C String Facility ID
-company_id__code C String Company Code
-facility_id__code C String Facility Code
-Sales Order Header  
+company_id**code C String Company Code
+facility_id**code C String Facility Code
+Sales Order Header
 These topics give descriptions for APIs that complete actions related to Sales Orders in the Warehouse.
 203
 
@@ -8560,13 +8561,13 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
-GET IBLPN(s)  
+GET IBLPN(s)
 GET …/wms/lgfapi/v10/entity/order_hdr/{id}/iblpns/
 Returns a paginated representation of all IBLPN(s) allocated to the sales order.
-GET OBLPN(s)  
+GET OBLPN(s)
 GET …/wms/lgfapi/v10/entity/order_hdr/{id}/oblpns/
 Returns a paginated representation of all OBLPN(s) allocated to the sales order.
-Bulk Lock  
+Bulk Lock
 POST …/wms/lgfapi/v10/entity/order_hdr/bulk_lock/
 This operation is used to apply, and optionally create, an order lock to one or more orders.
 The number of orders that can be modified by this operation in a single requests is configured by the value of the
@@ -8580,9 +8581,9 @@ parameters are:
 • 'company_id'
 • 'erp_source_hdr_ref'
 • 'erp_source_system_ref'
-• 'orderdtl__erp_source_line_ref'
-• 'orderdtl__erp_source_shipment_ref'
-• 'orderdtl__ship_request_line'
+• 'orderdtl**erp_source_line_ref'
+• 'orderdtl**erp_source_shipment_ref'
+• 'orderdtl\_\_ship_request_line'
 Category Parameter Type Required Default Value Description
 options lock_code String X Order lock to be
 applied.
@@ -8606,14 +8607,14 @@ lock.
 options autocreate_lock_flg Boolean False When true, the order
 lock will be created in
 addition to be applied,
- if it does not already
+if it does not already
 exist.
 options commit_frequency Integer 0 0 = Roll back on first
 error.
 
 1 = Commit per object.
 
-Bulk Unlock  
+Bulk Unlock
 POST …/wms/lgfapi/v10/entity/order_hdr/bulk_unlock/
 This operation is used to remove an order lock from one or more orders.
 The “parameters” section of the request body is required in addition to the “options” section outlined below. One
@@ -8625,9 +8626,9 @@ parameters are:
 • 'company_id'
 • 'erp_source_hdr_ref'
 • 'erp_source_system_ref'
-• 'orderdtl__erp_source_line_ref'
-• 'orderdtl__erp_source_shipment_ref'
-• 'orderdtl__ship_request_line'
+• 'orderdtl**erp_source_line_ref'
+• 'orderdtl**erp_source_shipment_ref'
+• 'orderdtl\_\_ship_request_line'
 Category Parameter Type Required Default Value Description
 options lock_code String X Order lock to be
 removed.
@@ -8643,7 +8644,7 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
-Remove Personal Info  
+Remove Personal Info
 This operation is used to remove personal information on selected orders. This is the API form of the UI action button
 “Remove Personal Info”
 POST .../wms/lgfapi/v10/entity/order_hdr/remove_personal_info
@@ -8657,7 +8658,7 @@ facility_id C Integer Facility context by id.
 one of id or code should be
 provided
 
-facility_id__code C String Facility context by code.
+facility_id\_\_code C String Facility context by code.
 
 one of id or code should be
 provided
@@ -8667,7 +8668,7 @@ company_id C Integer Company context by id.
 one of id or code should be
 provided
 
-company_id__code C String Company context by code.
+company_id\_\_code C String Company context by code.
 
 one of id or code should be
 provided
@@ -8676,7 +8677,7 @@ order_nbr
 
 OR
 
-order_nbr__in
+order_nbr\_\_in
 
 C String Order/Orders for which PI
 needs to be removed.
@@ -8695,7 +8696,7 @@ id
 
 OR
 
-id__in
+id\_\_in
 
 C ID or IDs of Orders for
 which PI needs to be
@@ -8710,35 +8711,35 @@ should be provided.
 Example:
 URL: POST .../wms/lgfapi/v10/entity/order_hdr/remove_personal_info
 {
- "parameters": {
- "facility_id__code": "FAC",
- "company_id": 1,
- "order_nbr": "ORD1"
- }
+"parameters": {
+"facility_id**code": "FAC",
+"company_id": 1,
+"order_nbr": "ORD1"
+}
 }
 Request sent with an ID:
 {
- "parameters": {
- "facility_id__code": "FAC",
- "company_id": 1,
- "id": 123
- }
+"parameters": {
+"facility_id**code": "FAC",
+"company_id": 1,
+"id": 123
+}
 }
 Or for multiple orders:
 {
- "parameters": {
- "facility_id__code": "FAC",
- "company_id": 1,
- "order_nbr__in": ["ORD1","ORD2","ORD3"]
- }
+"parameters": {
+"facility_id**code": "FAC",
+"company_id": 1,
+"order_nbr**in": ["ORD1","ORD2","ORD3"]
+}
 }
 Request sent with IDs:
 {
- "parameters": {
- "facility_id__code": "FAC",
- "company_id": 1,
- "id__in": [123, 124, 126]
- }
+"parameters": {
+"facility_id**code": "FAC",
+"company_id": 1,
+"id**in": [123, 124, 126]
+}
 }
 207
 
@@ -8746,7 +8747,7 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
-Update Parcel Shipment Info  
+Update Parcel Shipment Info
 In order to support parcel shipments from Oracle Transportation Management (OTM) this API allows you to associate
 WMS orders with the appropriate ship-via and OTM's planned shipment number.
 POST ..lgfapi/v10/order_hdr/update_parcel_shipment_info/
@@ -8758,7 +8759,7 @@ These input field values may be updated by the user on the matching order_hdr.
 ◦ Lookup ship via using the ship_via_code.
 • tms_parcel_shipment_nbr
 • tms_order_hdr_ref
-SQL Selection (Rule Tree)  
+SQL Selection (Rule Tree)
 POST .../entity/sql_selection
 This entity is unique in that the API will allow the user to create the entire rule tree in a single request instead of needing
 the create and link each parent/child object individually (it can still be done this way if the user chooses to do so). This
@@ -8801,10 +8802,10 @@ Supported Operations
 ]
 }
 }
-Sort and Receive  
+Sort and Receive
 The topics in this section give descriptions for APIs that complete actions related to Sort and Receive transactions in the
 Warehouse.
-Validate Receiving Station  
+Validate Receiving Station
 The Validate Receiving Station API allows you to validate if the location type is a Receiving Station or not.
 URL
 POST ..lgfapi/v10/sort_receive/validate_receiving_station
@@ -8820,7 +8821,7 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
-Validate Shipment  
+Validate Shipment
 The Validate Shipment API allows you to validate the shipment number during the sort and receive transaction.
 URL
 POST ..lgfapi/v10/sort_receive/validate_shipment
@@ -8829,9 +8830,9 @@ POST ..lgfapi/v10/sort_receive/validate_shipment
 {
 "shipment number" : "12345"
 }
-Note:  On successfully response, the validate_shipment API returns Shipment Number, ASN type, Dock Number, and
+Note: On successfully response, the validate_shipment API returns Shipment Number, ASN type, Dock Number, and
 Trailer Number.
-Validate Load  
+Validate Load
 The Validate Load API allows users to validate a load as required for the Sort and Receive transaction.
 URL
 POST ..lgfapi/v10/sort_recieve/validate_load
@@ -8840,8 +8841,8 @@ POST ..lgfapi/v10/sort_recieve/validate_load
 {
 "load_nbr" : "12345"
 }
-Note:  On successfully response, the validate_load API returns Dock Number, Trailer Number, Load Number.
-Receive Sorted Item  
+Note: On successfully response, the validate_load API returns Dock Number, Trailer Number, Load Number.
+Receive Sorted Item
 The Receive Sorted Item API allows you to receive an item into a receiving station location during the Sort and Receive
 transaction.
 210
@@ -8855,11 +8856,11 @@ POST ..lgfapi/v10/sort_recieve/receive_sorted_item
 Example Payload
 {
 “location_barcode”:“LOC001”,
- “ib_shipment_dtl_id”:1234,
+“ib_shipment_dtl_id”:1234,
 “iblpn_nbr”:"LPN001”,
 “qty”:1
 }
-End LPN  
+End LPN
 The End LPN API allows users to end a tote during the Sort and Receive transaction.
 URL
 POST ..lgfapi/v10/sort_recieve/end_lpn
@@ -8875,7 +8876,7 @@ container_nbr String Y Container number
 location_barcode String Y Location barcode for receiving
 station
 lock_code_list Array N Array of lock codes
-Get Directed Tote  
+Get Directed Tote
 The Get Directed Tote API allows users to get directed tote for Sorting and Receiving.
 211
 
@@ -8899,16 +8900,16 @@ attributes_map Object N Attribute values (including
 batch & expiry)
 ib_shipment_dtl_id Integer Y IbShipment detail ID
 qty Integer or Number? N 1
-Validate Expiry Date  
+Validate Expiry Date
 The Validate Expiry Date API allows you to validate the expiry date during Sorting and Receiving.
 URL
 POST entity/ib_shipment_dtl/validate_expiry_date
 Example Request Body
 {
- "container_nbr": {}"LPN0001"
+"container_nbr": {}"LPN0001"
 } options:{
- "shipment_nbr": {}"ASN0001",
- "expiry_date": {}"2024-04-19"
+"shipment_nbr": {}"ASN0001",
+"expiry_date": {}"2024-04-19"
 }
 212
 
@@ -8924,17 +8925,17 @@ load_nbr String N Load number
 expiry_date Date C Expiry date
 manufacture_date Date C Manufacture date
 ib_shipment_dtl_id Integer N Inbound shipment detail ID
-T ask  
+T ask
 These topics give descriptions for APIs that complete actions related to tasks in the Warehouse.
-Next T ask  
+Next T ask
 The next_task API allows you to determine the next task via an API operation.
 You can search for the next task using the following GET request:
-                           GET .../entity/task/next_task
+GET .../entity/task/next_task
 
 The following table provides details about the query string parameters:
 Name Required Type Default Description
 facility_id Integer Facility context by id.
-facility_id__code String Facility context by code.
+facility_id\_\_code String Facility context by code.
 location_barcode String User's current location.
 task_type String Required task type.
 ordering_rule String Order tasks by rule name.
@@ -8956,7 +8957,7 @@ Ordering Rule
 • The value accepted by the API is that of the T ask Ordering Rule's description.
 The following is an example GET request using location barcode:
 GET .../entity/task/next_task?location_barcode=MY_LOCN_BRCD&task_type=MY_TASK_TYPE&ordering_rule=MY_RULE
-Hold T ask  
+Hold T ask
 The Hold T ask API allows you to hold a task which is in ready status. With this api, external systemd can change one
 or more task statuses to ‘Held’ from ‘Ready’. You can exclude tasks that are not currently required to be executed by
 the assigned user without accessing the web UI. Users who have the T ask/ Can hold/release task permission enabled
@@ -8964,13 +8965,13 @@ should be able to put a task on ‘Held’ status.
 The following are some ways for calling the Hold task API:
 Using the Task ID:
 • POST.../entity/task/{id}/hold/
-Note:  No additional parameters data in the request body is required.
+Note: No additional parameters data in the request body is required.
 Using the Task Number:
 • POST.../entity/task/hold/
-Note:  The API body should include facility id/code, company id/code and task number.
+Note: The API body should include facility id/code, company id/code and task number.
 Using the Bulk Task Hold:
 • POST.../entity/task/bulk_hold/
-Note:  The API body should task number list. Users can also provide the commit frequency as an option. The commit
+Note: The API body should task number list. Users can also provide the commit frequency as an option. The commit
 frequency is by default set to 0. If it is set to 0, the system should roll back on first error/ If the commit frequency is set
 to 1, the system will commit per object.
 Category Name Required Type Description
@@ -8982,24 +8983,24 @@ WMS REST API Guide
 Chapter 5
 Supported Operations
 Category Name Required Type Description
-parameters facility_id__code string Facility context by code
+parameters facility_id**code string Facility context by code
 parameters company_id Integer Company context by id
-parameters company_id__code string Company context by code
+parameters company_id**code string Company context by code
 parameters task_nbr X string T ask which needs to be on hold
 Using the Bulk Hold T ask
 POST.../entity/task/bulk_hold/
- {
- "parameters": {
- "id__in": [01, 02, 03]
- },
- "options": {
- "commit_frequency": "0",
- }
- }
-Note:  The API body should task number list. Users can also provide the commit frequency as an option. The commit
+{
+"parameters": {
+"id\_\_in": [01, 02, 03]
+},
+"options": {
+"commit_frequency": "0",
+}
+}
+Note: The API body should task number list. Users can also provide the commit frequency as an option. The commit
 frequency is by default set to 0. If it is set to 0, the system should roll back on first error/ If the commit frequency is set
 to 1, the system will commit per object.
-Release T ask  
+Release T ask
 The Release T ask API allowd you to release a task which is in 'Held’ status. With this API, external systems can change
 one or more task statuses to ‘Ready’ from ‘Held’. These tasks can be executed by the assigned user without accessing
 the web UI. Users who have the T ask/ Can hold/release task permission enabled should be able to put a task on ‘Held’
@@ -9007,7 +9008,7 @@ status.
 The following are some ways for calling the Release T ask API:
 Using the Task ID:
 POST.../entity/task/{id}/release/
-Note:  No additional parameters data in the request body is required.
+Note: No additional parameters data in the request body is required.
 Using the Task Number:
 POST.../entity/task/release/
 215
@@ -9018,15 +9019,15 @@ Chapter 5
 Supported Operations
 Category Name Required Type Description
 parameters facility_id Integer Facility context by id
-parameters facility_id__code string Facility context by code
+parameters facility_id**code string Facility context by code
 parameters company_id Integer Company context by id
-parameters company_id__code string Company context by code
+parameters company_id**code string Company context by code
 parameters task_nbr X string T ask which needs to be
 released
-Note:  The API body should include facility id/code, company id/code and task number.
+Note: The API body should include facility id/code, company id/code and task number.
 Using the Bulk Task Release:
 POST.../entity/task/bulk_release/
-Note:  The API body should have the task number list. Users can also provide the commit frequency as an option.
+Note: The API body should have the task number list. Users can also provide the commit frequency as an option.
 The commit frequency is by default set to 0. If it is set to 0, the system should roll back on first error/ If the commit
 frequency is set to 1, the system will commit per object.
 The bulk request API allows you to release task ids belonging to the same company in a given request. The API will not
@@ -9043,7 +9044,7 @@ parameter label_printer_name string printer context by name
 parameter document_printer_name string printer context by name
 parameter column_ordering string column ordering context by
 description
-Note:  The system should return a success message when labels/doc are printed after tasks are released.
+Note: The system should return a success message when labels/doc are printed after tasks are released.
 216
 
 Oracle Warehouse Management Cloud
@@ -9056,19 +9057,19 @@ Request Body:
 The transaction is meant for the task entity. Hence, the users are required to send the following parameters in the body.
 POST.../entity/task/bulk_release/
 {
- "parameters": {
- "id__in": [01, 02, 03]
- },
- "options": {
- "commit_frequency": "0",
- }
+"parameters": {
+"id\_\_in": [01, 02, 03]
+},
+"options": {
+"commit_frequency": "0",
 }
-Note:  The API body should have the task number list. Users can also provide the commit frequency as an option.
+}
+Note: The API body should have the task number list. Users can also provide the commit frequency as an option.
 The commit frequency is by default set to 0. If it is set to 0, the system should roll back on first error/ If the commit
 frequency is set to 1, the system will commit per object.
 The bulk request API allows you to release task ids belonging to the same company in a given request. The API will not
 support a request containing task ids belonging to multiple companies.
-Assign T ask  
+Assign T ask
 The new Assign T ask API allows you to assign a task to another user. For example, a task may require equipment
 handling like a forklift. The warehouse manager can assign the task to a specific user who can handle a forklift with this
 API without accessing the Web UI. However, you can assign a task with this API only if the T ask/ Assign User Permission
@@ -9079,7 +9080,7 @@ Using the Task ID:
 Options
 Category Name Type Required Description
 Options assigned_user string X user who is being assigned to the task
-Note:  You need to provide the ‘assigned_user’ in the request body as this is a post operation of tasks to assign users.
+Note: You need to provide the ‘assigned_user’ in the request body as this is a post operation of tasks to assign users.
 Using the Task Number:
 • POST .../entity/task/assign_user/
 217
@@ -9090,28 +9091,28 @@ Chapter 5
 Supported Operations
 Category Name Required Type Description
 parameters facility_id Integer Facility context by id
-parameters facility_id__code string Facility context by code
+parameters facility_id**code string Facility context by code
 parameters company_id Integer Company context by id
-parameters company_id__code string Company context by code
+parameters company_id**code string Company context by code
 parameters task_nbr X string T ask which needs to be updated
 Options
 Category Name Type Required Description
 Options assigned_user string X user who is being assigned to the task
-Note:  The API body should include facility id/code, company id/code and task number. You are also required to
+Note: The API body should include facility id/code, company id/code and task number. You are also required to
 provide the ‘assigned_user’ in the request body as this is a post operation of tasks to assign users.
 Using the Bulk Task Release:
 • POST.../entity/task/bulk_assign_user/
 POST.../entity/task/bulk_assign_user/
 {
- "parameters": {
- "id__in": [01, 02, 03]
- },
- "options": {
- "assigned_user": "KHALL01",
- "commit_frequency": "0",
- }
+"parameters": {
+"id\_\_in": [01, 02, 03]
+},
+"options": {
+"assigned_user": "KHALL01",
+"commit_frequency": "0",
 }
-Note:  The API body should have the task number list. You are also required to provide the ‘assigned_user’ in the
+}
+Note: The API body should have the task number list. You are also required to provide the ‘assigned_user’ in the
 request body. You can send the commit frequency as an option as well. The commit frequency is by default set to 0. If
 it is set to 0, the system should roll back on first error/ If the commit frequency is set to 1, the system will commit per
 object.
@@ -9124,7 +9125,7 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
-Change Priority  
+Change Priority
 The Change T ask Priority API allows you to change the priority of a task which is in Ready, Held or Created s status.
 External systems can also change the task priority of one or more tasks based on the urgency of other tasks which
 need to be executed on a priority. However, you can change the task priority with this API only if the T ask/ Change task
@@ -9135,15 +9136,15 @@ Using the Task ID:
 Options
 Category Name Type Required Description
 Options priority integer X Priority code of the task (3, 20 etc)
-Note:  You need to provide the task priority in the request body as this is a post operation of tasks to change the task
+Note: You need to provide the task priority in the request body as this is a post operation of tasks to change the task
 priority.
 Using the Task Number:
 • POST .../entity/task/change_priority/
 Category Name Required Type Description
 parameters facility_id Integer Facility context by id
-parameters facility_id__code string Facility context by code
+parameters facility_id**code string Facility context by code
 parameters company_id Integer Company context by id
-parameters company_id__code string Company context by code
+parameters company_id**code string Company context by code
 parameters task_nbr X string T ask which needs to be updated
 Options
 Category Name Type Required Description
@@ -9154,23 +9155,23 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
-Note:  The API body should include facility id/code, company id/code and task number. You are also required to
+Note: The API body should include facility id/code, company id/code and task number. You are also required to
 provide the task priority in the request body as this is a post operation of tasks to change the task priority.
 Using the Bulk Task Release:
 • POST.../entity/task/bulk_change_priority/
 {
- "parameters": {
- "id__in": [01, 02, 03]
- },
- "options": {
- "priority": "3",
- "commit_frequency": "0"
- }
+"parameters": {
+"id**in": [01, 02, 03]
+},
+"options": {
+"priority": "3",
+"commit_frequency": "0"
 }
-Note:  The API body should have the task number list. You are also required to provide the task priority in the request
+}
+Note: The API body should have the task number list. You are also required to provide the task priority in the request
 body. You can send the commit frequency as an option as well. The commit frequency is by default set to 0. If it is set
 to 0, the system should roll back on first error/ If the commit frequency is set to 1, the system will commit per object.
-Cancel T ask  
+Cancel T ask
 The Cancel T ask API allows you to cancel a task which is in ready/held status through an API so that the tasks not yet
 picked up can be cancelled/or supervisor would want to cancel a task part of the wave.
 API URL: Lookup by ID
@@ -9180,9 +9181,9 @@ API URL: Lookup by Filters
 POST.../entity/task/cancel/
 Category Name Required Type Description
 parameters facility_id Integer Facility context by id
-parameters facility_id__code string Facility context by code
+parameters facility_id**code string Facility context by code
 parameters company_id Integer Company context by id
-parameters company_id__code string Company context by code
+parameters company_id\_\_code string Company context by code
 parameters task_nbr X string T ask which needs to be on
 hold
 220
@@ -9200,25 +9201,25 @@ Request Body:
 The transaction is meant for the task entity. So, the users are required to send the following parameters in the body.
 POST.../entity/task/bulk_hold/
 {
- "parameters": {
- "id__in": [01, 02, 03]
- },
- "options": {
- "commit_frequency": "0",
- }
+"parameters": {
+"id\_\_in": [01, 02, 03]
+},
+"options": {
+"commit_frequency": "0",
+}
 }
 The commit frequency is by default set to 0. If it is set to 0, the system should roll back on first error/ If the commit
 frequency is set to 1, the system should commit per object.
-Trailer  
+Trailer
 These topics give descriptions for APIs that complete actions related to trailers and the Warehouse.
-First Available  
+First Available
 The first_available API allows you to identify yard locations with available capacity. After fetching this API, you will
 get the first yard location with capacity based on the yard location putaway sequence. If the putaway sequence is not
 configured, the fetch will display according to the yard location pick sequence. After you get the location, you can use
 the locate to yard API to update the trailer location to the yard.
 Identify yard location by capacity:
 GET
- .../entity/location/yard/first_available
+.../entity/location/yard/first_available
 Request
 The following are the Query String Filters for this API:
 Name Required Type Default Description
@@ -9230,8 +9231,8 @@ WMS REST API Guide
 Chapter 5
 Supported Operations
 Name Required Type Default Description
-facility_id__code String Facility context by code.
-• Only one of "facility_id" or "facility_id__code" is allowed per request.
+facility_id**code String Facility context by code.
+• Only one of "facility_id" or "facility_id**code" is allowed per request.
 • If no additional context is provided, the user's default facility/company will be used.
 Example Requests
 GET .../entity/location/yard/first_available?facility_id=1
@@ -9239,7 +9240,7 @@ The following is an example GET request for facility ID:
 GET .../entity/location/yard/first_available?facility_id=1
 The following is an example GET request for facility ID code:
 GET .../entity/location/yard/first_available?facility_id_code=STRAJB01
-Locate to Yard  
+Locate to Yard
 The locate_to_yard API allows the caller to update a trailer’s location within the yard.
 Input Parameters
 Common Parameter (Applicable to All Requests)
@@ -9253,10 +9254,10 @@ URL
 POST… /entity/trailer/{id}/locate_to_yard/
 Example Request Body
 {
- "options": {
- "location_barcode":
- "YARDAJ0101"
- }
+"options": {
+"location_barcode":
+"YARDAJ0101"
+}
 }
 222
 
@@ -9265,34 +9266,34 @@ WMS REST API Guide
 Chapter 5
 Supported Operations
 Trailer Lookup by Filters
-URL: POST…  /entity/trailer/locate_to_yard/ Input Parameters
+URL: POST… /entity/trailer/locate_to_yard/ Input Parameters
 Category Name Type Required Description
 parameters trailer_nbr String Yes Trailer number to be
 moved.
 parameters company_id Integer No Trailer’s company identifier.
 Additional Notes
 • Only a single trailer may be moved per request.
-• The __in lookup is not supported for trailer_nbr.
-• company_id also supports string lookup by   code  using double-underscore notation:
-• company_id__code
+• The **in lookup is not supported for trailer_nbr.
+• company_id also supports string lookup by code using double-underscore notation:
+• company_id**code
 Example Request Body
 {
- "options": {
- "location_barcode":
- "YARDAJ0101"
- },
- "parameters": {
- "company_id__code": "QATSTPC",
- "trailer_nbr": "JPTRL280225-1"
- }
+"options": {
+"location_barcode":
+"YARDAJ0101"
+},
+"parameters": {
+"company_id\_\_code": "QATSTPC",
+"trailer_nbr": "JPTRL280225-1"
+}
 }
 Response Codes
 Status Code Description
 200 OK Trailer location updated successfully.
-Remove from Yard  
+Remove from Yard
 The remove_from_yard API allows the caller to release a trailer from its current yard location.
 Trailer Lookup by ID
-                              POST .../entity/trailer/{id}/remove_from_yard/
+POST .../entity/trailer/{id}/remove_from_yard/
 
 The caller knows the unique `id` value of the trailer, which is added to the request URL. No additional `parameters` data is
 required from the request body.
@@ -9303,7 +9304,7 @@ WMS REST API Guide
 Chapter 5
 Supported Operations
 Trailer Lookup by Filters
-                              POST .../entity/trailer/remove_from_yard/
+POST .../entity/trailer/remove_from_yard/
 
 Category Name Type Required Description
 parameters trailer_nbr String Y Trailer number to be
@@ -9314,7 +9315,7 @@ parameters company_id Integer N Trailer’s company.
 ◦ The `__in` lookup is not supported for `trailer_nbr`.
 • `facility_id` and `company_id` both additionally support string lookup by `code` using the double-underscore
 notation:
-◦ facility_id__code
+◦ facility_id\_\_code
 ◦ company_id_code
 Example Request Body:
 {
@@ -9324,7 +9325,7 @@ Example Request Body:
 "trailer_nbr": "TRLR-1"
 }
 }
-Waves  
+Waves
 These topics give descriptions for APIs that complete actions related to waves in the Warehouse.
 224
 
@@ -9332,7 +9333,7 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
-Run Manual Wave  
+Run Manual Wave
 The Run Manual API allows you to invoke a manual wave. The following are some potential scenarios and reasons for
 running the wave using a Rest API:
 • External systems or PaaS Solutions can be built with the option to run a manual wave screen. These systems
@@ -9340,24 +9341,24 @@ may have their own order entry or display screen and running an API will allow t
 The following are some ways for calling the Manual Wave:
 Using the Wave Template ID:
 POST .../entity/wave_template/{id}/run_manual/
-Note:  ID corresponds to a valid Wave template ID. The API body should contain the list of corresponding
+Note: ID corresponds to a valid Wave template ID. The API body should contain the list of corresponding
 Order detail IDs for which the wave is run.
 Using the Wave Template Name:
 POST .../entity/wave_template/run_manual/
-Note:  The API body should include facility id/code, company id/code, wave template name, and corresponding Order
+Note: The API body should include facility id/code, company id/code, wave template name, and corresponding Order
 Detail ID's, or Order Number and Sequence number combination.
 Example Request Body Parameters to Identify Wave Template
 {
- "parameters": {
- "facility_id": 1,
- "template_name": "Wave Template"
- }
+"parameters": {
+"facility_id": 1,
+"template_name": "Wave Template"
+}
 }
 {
- "parameters": {
- "facility_id__code": "FAC1",
- "template_name": "Wave Template"
- }
+"parameters": {
+"facility_id\_\_code": "FAC1",
+"template_name": "Wave Template"
+}
 }
 Identifying the Order Details
 • User can provide either a list of specific order detail id(s), or a list of order number / sequence number pairs.
@@ -9365,10 +9366,10 @@ Identifying the Order Details
 • The data is provided in the "options" section of the request body.
 Identifying Order Details by ID
 {
- ...
- "options": {
- "order_dtl_id_list": [1, 2, 3, 4]
- }
+...
+"options": {
+"order_dtl_id_list": [1, 2, 3, 4]
+}
 225
 
 Oracle Warehouse Management Cloud
@@ -9380,46 +9381,46 @@ Supported Operations
 ◦ The list may not be empty.
 Identifying Order Details by Order Number - Sequence Number Pairs
 {
- ...
- "options": {
- "order_seq_nbr_list": [
- {
- "order_nbr": "ORD1",
- "seq_nbr_list": [1]
- },
- {
- "order_nbr": "ORD2",
- "seq_nbr_list": [3, 4, 5]
- }
- ]
- }
+...
+"options": {
+"order_seq_nbr_list": [
+{
+"order_nbr": "ORD1",
+"seq_nbr_list": [1]
+},
+{
+"order_nbr": "ORD2",
+"seq_nbr_list": [3, 4, 5]
+}
+]
+}
 }
 • order_seq_nbr_list is a list of objects grouping the different order number and sequence number combinations.
 ◦ "seq_nbr_list" is always a list, even if a single sequence number is provided.
 
 - The list may not be empty.
-Setting the Company Context
-• Users may optionally specify the company context by including either the "company_id" or "company_code" in
-the "options" section of the request required to:
-a. Specify a valid facility/company combination when changing the user's context from the default.
-b. Ensure any company parameters used in the functionality are of the correct company.
- {
- ...
- "options": {
- ...
- "company_id": 1
- }
- }
- {
- ...
- "options": {
- ...
- "company_code": "COM1"
- }
-}
-Run Template  
-The Run Template API allows you to invoke the wave template.
-226
+  Setting the Company Context
+  • Users may optionally specify the company context by including either the "company_id" or "company_code" in
+  the "options" section of the request required to:
+  a. Specify a valid facility/company combination when changing the user's context from the default.
+  b. Ensure any company parameters used in the functionality are of the correct company.
+  {
+  ...
+  "options": {
+  ...
+  "company_id": 1
+  }
+  }
+  {
+  ...
+  "options": {
+  ...
+  "company_code": "COM1"
+  }
+  }
+  Run Template
+  The Run Template API allows you to invoke the wave template.
+  226
 
 Oracle Warehouse Management Cloud
 WMS REST API Guide
@@ -9428,10 +9429,10 @@ Supported Operations
 The following are some ways for calling the Wave Template API:
 Using the Wave Template ID
 • POST .../entity/wave_template/{id}/run_template/
-Note:  No additional `parameters` data in the request body is required.
+Note: No additional `parameters` data in the request body is required.
 Using the Wave Template Name
 • POST .../entity/wave_template/run_template/
-Note:  The API body should include facility id/code and the wave template name.
+Note: The API body should include facility id/code and the wave template name.
 • The wave template name provided in the body should correspond to the default facility code or to your eligible
 facility.
 • If the company parameter "ONL Y_ONE_WAVE_PER_FACCO" is configured to ‘No’ and if there is already a wave
@@ -9439,10 +9440,10 @@ running for the same wave template, the system will not allow you to invoke the 
 request.
 Category Name Required Type Description
 parameters facility_id Integer Facility context by id
-parameters facility_id__code string Facility context by code
+parameters facility_id**code string Facility context by code
 parameters template_name X string Wave Template Name that
 users intend to run
-• Only one of `facility_id` or `facility_id__code` may be provided.
+• Only one of `facility_id` or `facility_id**code` may be provided.
 • If more than one object is found, an error should be returned.
 Options
 Category Name Type Description
@@ -9459,13 +9460,13 @@ Supported Operations
 ◦ If not provided, the user's default company is assumed.
 Sample Request Body Data Format JSON
 {
- "parameters": {
- "facility_id": "1",
- "template_name": "KHWAVE001"
- },
- "options": {
- "company_code": "CO1"
- }
+"parameters": {
+"facility_id": "1",
+"template_name": "KHWAVE001"
+},
+"options": {
+"company_code": "CO1"
+}
 }
 Response Body
 • Upon successful invocation of the wave return response code HTTP 202 - Accepted.
@@ -9474,15 +9475,15 @@ corresponding wave number generated will be shared in the response. Users will n
 entity using this information to know when the wave is complete.
 Sample Response Body Data Format JSON
 {
- "run_nbr": "WAVE001"
+"run_nbr": "WAVE001"
 }
-Undo Wave  
+Undo Wave
 The Undo Wave API allows you to invoke the wave template. With the introduction of this API, external systems or PaaS
 solutions can be integrated which will allow you to undo a wave without accessing the web UI screen.
 The following are some ways for calling the Undo Wave API:
 Using the Wave Template ID
 • POST .../entity/wave/{id}/undo
-Note:  No additional `parameters` data in the request body is required.
+Note: No additional `parameters` data in the request body is required.
 Using the Wave Run Number
 • POST .../entity/wave/undo/
 228
@@ -9491,26 +9492,26 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
-Note:  The API body should include facility id/code and the wave run number.
+Note: The API body should include facility id/code and the wave run number.
 When the parameter UNDO_WAVE_EVEN_AFTER_PICKING is set to 'No,' the system will not undo a Wave if picking is
 started. If the parameter is set to 'Yes,' the application allows undo wave even after picking has started.
 Category Name Required Type Description
 parameters run_nbr X string Wave Number
 parameters facility_id Integer Facility context by id
-parameters facility_id__code string Facility context by code
+parameters facility_id**code string Facility context by code
 • User should be able to provide either wave run_nbr or id.
-• Login context will be set up based on the facility id/facility_id__code provided.
+• Login context will be set up based on the facility id/facility_id**code provided.
 • Only one of `facility_id` or `facility_id__code` may be provided.
 • The above mentioned URL should undo the wave template ( Allocation should be cancelled for the order
 defined in the wave search set up in the wave template)
 Sample Data Format JSON
 {
- "parameters": {
- "facility_id__code": "FAC-1",
- "run_nbr": "128935"
- }
+"parameters": {
+"facility_id\_\_code": "FAC-1",
+"run_nbr": "128935"
 }
-Attachments  
+}
+Attachments
 The topics in this section describe the APIs that can be used to upload, get, and delete attachments from WMS.
 Attachments related to the following entities are supported through these APIs:
 • Inbound LPN
@@ -9525,7 +9526,7 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
-Attachment Upload  
+Attachment Upload
 The Attachment Upload API allows you to upload attachments to WMS. The attachment name along with the base 64
 encoded attachment data needs to be sent in the options section of the request body. The API supports both entity by
 ID and entity by filters.
@@ -9557,40 +9558,40 @@ Example Requests
 Entity by ID
 POST .../attachment/upload/
 {
- "parameters": {
- "company_id": "369",
- "facility_id": "648",
- "entity": "IBLPN",
- "entity_id": 12345 (container_id)
+"parameters": {
+"company_id": "369",
+"facility_id": "648",
+"entity": "IBLPN",
+"entity_id": 12345 (container_id)
 230
 
 Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
- },
- "options": {
- "attachment_name": "file123.png",
- "attachment_data": "data:@file/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/…" (base64 encoded)
- }
+},
+"options": {
+"attachment_name": "file123.png",
+"attachment_data": "data:@file/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/…" (base64 encoded)
+}
 }
 Entity by Filters
 POST .../attachment/upload/
 {
- "parameters": {
- "company_id": "369",
- "facility_id": "648",
- "entity": "IBLPN",
- "entity_key": "LPN123" (container_nbr)
- },
- "options": {
- "attachment_name": "file123.docx",
- "attachment_data": "data:@file/vnd.openxmlformats-
+"parameters": {
+"company_id": "369",
+"facility_id": "648",
+"entity": "IBLPN",
+"entity_key": "LPN123" (container_nbr)
+},
+"options": {
+"attachment_name": "file123.docx",
+"attachment_data": "data:@file/vnd.openxmlformats-
 officedocument.wordprocessingml.document;base64,UEsDBBQABgAIAGCnNFWaPJ7…" (base64 encoded)
- }
+}
 }
 Response
-If the attachment is uploaded successfully, a  200 OK  is returned with the following field in the response body.
+If the attachment is uploaded successfully, a 200 OK is returned with the following field in the response body.
 {
 "nbr_attachments": <Nbr of Attachments>
 }
@@ -9655,12 +9656,12 @@ Optional – Attachments will be tagged with these keys only if available at the
 of uploading
 IBSHIPMENT
 Inbound load number Optional – Although optional, attachments will always be tagged with this key,
- since this data is always available
+since this data is always available
 Outbound load number Mandatory – Every attachment will be tagged with this keyOBLOAD
 Trailer number Optional – Attachments will be tagged with this key only if available at the time of
 uploading
 PALLET Pallet number Mandatory – Every attachment will be tagged with this key
-Attachment GET  
+Attachment GET
 The Attachment Get API allows you to get the list of attachments for the requested entity from WMS. The API supports
 both entity by ID and entity by filters.
 API
@@ -9712,26 +9713,26 @@ GET.../attachment/get?company_id=354&facility_id=572&entity=IBLPN&entity_key=LPN
 (where entity key is the container nbr)
 Example Response
 {
- "result_count": 2,
- "page_count": 1,
- "page_nbr": 1,
- "next_page": null,
- "previous_page": null,
- "results": [
- {
- "attachment_id": "1234567890",
- "attachment_name": "IBLPN_LPN123_01242024090005.jpg",
- "attachment_data": "data:@file/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/…", (base64 encoded)
- "delete_permission": "true"
- },
- {
- "attachment_id": "5723497522",
- "attachment_name": " IBLPN_LPN123_01242024091017.docx",
- "attachment_data": "data:@file/vnd.openxmlformats-
+"result_count": 2,
+"page_count": 1,
+"page_nbr": 1,
+"next_page": null,
+"previous_page": null,
+"results": [
+{
+"attachment_id": "1234567890",
+"attachment_name": "IBLPN_LPN123_01242024090005.jpg",
+"attachment_data": "data:@file/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/…", (base64 encoded)
+"delete_permission": "true"
+},
+{
+"attachment_id": "5723497522",
+"attachment_name": " IBLPN_LPN123_01242024091017.docx",
+"attachment_data": "data:@file/vnd.openxmlformats-
 officedocument.wordprocessingml.document;base64,UEsDBBQABgAIAGCnNFWaPJ7…", (base64 encoded)
- "delete_permission": "true"
- }
- ]
+"delete_permission": "true"
+}
+]
 234
 
 Oracle Warehouse Management Cloud
@@ -9739,7 +9740,7 @@ WMS REST API Guide
 Chapter 5
 Supported Operations
 }
-Attachment Delete  
+Attachment Delete
 The Attachment Delete API allows you to delete attachments from WMS. The list of attachment IDs needs to be
 sent in the options section of the request body. The attachment ID is internal to WMS and can be retrieved using the
 “attachment/get” API described in the Attachment Get section. The API supports both entity by ID and entity by filters.
@@ -9769,45 +9770,45 @@ Example Requests
 Entity by ID
 POST .../attachment/delete/
 {
- "parameters": {
- "company_id": "369",
- "facility_id": "648",
- "entity": "IBLPN",
- "entity_id": 12345 (container_id)
- },
- "options": {
- "attachment_id_list": [
+"parameters": {
+"company_id": "369",
+"facility_id": "648",
+"entity": "IBLPN",
+"entity_id": 12345 (container_id)
+},
+"options": {
+"attachment_id_list": [
 235
 
 Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 5
 Supported Operations
- 1230,
- 2457,
- 7299
- ]
- }
+1230,
+2457,
+7299
+]
+}
 }
 Entity by Filters
 POST .../attachment/delete/
 {
- "parameters": {
- "company_id": "369",
- "facility_id": "648",
- "entity": "IBLPN",
- "entity_key": "LPN123" (container_nbr)
- },
- "options": {
- "attachment_id_list": [
- 1230,
- 2457,
- 7299
- ]
- }
+"parameters": {
+"company_id": "369",
+"facility_id": "648",
+"entity": "IBLPN",
+"entity_key": "LPN123" (container_nbr)
+},
+"options": {
+"attachment_id_list": [
+1230,
+2457,
+7299
+]
+}
 }
 Response
-Depending on how many attachments are deleted successfully, a  200 OK  is returned with the following field in the
+Depending on how many attachments are deleted successfully, a 200 OK is returned with the following field in the
 response body.
 {
 "nbr_deleted": <Nbr of attachments deleted successfully>,
@@ -9832,8 +9833,8 @@ Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 6
 Data Extract
-6  Data Extract
-Data Extract  
+6 Data Extract
+Data Extract
 Oracle WMS now supports the use of a REST API to extract data to your preferred object store by configuring the
 Endpoints UI.
 To use the REST API for Object Store, we’ve introduced a new Endpoints Interface Protocol called “Objectstore for Data
@@ -9853,7 +9854,7 @@ Binary Large Object Storage (Azure BLOB) • Tenant ID
 You can click the “Provider Configuration” button on the Endpoints UI and the system displays a set of service provider-
 specific information. This can be used by the cloud storage service provider to allow WMS target access for data
 extraction.
-Note:  Refer to this link for more information on configuration policies for your respective cloud object store service
+Note: Refer to this link for more information on configuration policies for your respective cloud object store service
 provider.
 After you click the Provider Configuration button, the system displays the relevant configuration info for the selected
 service provider as follows:
@@ -9888,63 +9889,63 @@ Push to Object Store API URL
 POST .../wms/lgfapi/v10/data_extract/push_to_object_store
 Example Body
 {
- "options": {
- "endpoint": {
- "name": "dummy_endpoint",
- "object_store_path": "Folder1/Folder2"
- },
- "file_format": "CSV",
- "file_size_in_mb": 10,
- "compressed": "true",
- "unique_identifier": "uniqueidentifier_01"
- },
- "parameters": {
- "entities": [
- {
- "entity": "inventory",
- "fields": "item_id",
- "filter": {
- "create_ts__gt": "2024-10-01T00:00:00.000",
- "status_id__lt": 90
- }
- },
- {
- "entity": "container",
- "fields": "container_nbr,rcvd_ts,curr_location_id",
- "filter": {
+"options": {
+"endpoint": {
+"name": "dummy_endpoint",
+"object_store_path": "Folder1/Folder2"
+},
+"file_format": "CSV",
+"file_size_in_mb": 10,
+"compressed": "true",
+"unique_identifier": "uniqueidentifier_01"
+},
+"parameters": {
+"entities": [
+{
+"entity": "inventory",
+"fields": "item_id",
+"filter": {
+"create_ts**gt": "2024-10-01T00:00:00.000",
+"status_id**lt": 90
+}
+},
+{
+"entity": "container",
+"fields": "container_nbr,rcvd_ts,curr_location_id",
+"filter": {
 238
 
 Oracle Warehouse Management Cloud
 WMS REST API Guide
 Chapter 6
 Data Extract
- "mod_ts__gt": "2024-10-01T00:00:00.000",
- "status_id__lt": 90
- }
- }
- ]
- }
+"mod_ts**gt": "2024-10-01T00:00:00.000",
+"status_id**lt": 90
+}
+}
+]
+}
 }
 Sample Response
 {
- "response_check_url": ".../wms/lgfapi/v10/data_extract/export_async_status?
+"response_check_url": ".../wms/lgfapi/v10/data_extract/export_async_status?
 unique_identifier=uniqueidentifier_01",
- "inventory": {
- "task_id": "b3cae633-b893-4e40-aefe-c037b79c2b81",
- "entity_status_url": ".../wms/lgfapi/v10/entity/lgf_async_task?backend_taskid__taskid=b3cae633-b893-4e40-
+"inventory": {
+"task_id": "b3cae633-b893-4e40-aefe-c037b79c2b81",
+"entity_status_url": ".../wms/lgfapi/v10/entity/lgf_async_task?backend_taskid**taskid=b3cae633-b893-4e40-
 aefe-c037b79c2b81"
- },
- "container": {
- "task_id": "b897ee89-2346-4d10-92a5-48572b0771c4",
- "entity_status_url": ".../wms/lgfapi/v10/entity/lgf_async_task?
-backend_taskid__taskid=b897ee89-2346-4d10-92a5-48572b0771c4"
- }
+},
+"container": {
+"task_id": "b897ee89-2346-4d10-92a5-48572b0771c4",
+"entity_status_url": ".../wms/lgfapi/v10/entity/lgf_async_task?
+backend_taskid**taskid=b897ee89-2346-4d10-92a5-48572b0771c4"
+}
 }
 Note:
 • The Unique Identifier is required to group the set of entities in the payload. So, it is mandatory to specify a
 unique identifier for each API call.
-• The REST API supports only three filters, namely "create_ts__gt", "mod_ts__gt" and "status_id__lt". Entries for
-"create_ts__gt" and "mod_ts__gt" filters cannot be given simultaneously per entity. However, specifying atleast
+• The REST API supports only three filters, namely "create_ts**gt", "mod_ts**gt" and "status_id**lt". Entries for
+"create_ts**gt" and "mod_ts\_\_gt" filters cannot be given simultaneously per entity. However, specifying atleast
 one of them is mandatory.
 • The timestamps in the API call should be specified only in UTC since the API is agnostic of the facility time
 zone.
@@ -9953,7 +9954,7 @@ The “async data extract” flag allows select users to perform data extract us
 (unchecked) in the Users UI. For data extraction, the checkbox for the async data extract flag needs to be enabled.
 You can apply facility/company filtering in the query (if required), since the API is targeted towards a table-level data
 extract.
-Note:  Only the original ADMIN role user(s) who are provisioned as a part of the WMS Cloud service activation (who
+Note: Only the original ADMIN role user(s) who are provisioned as a part of the WMS Cloud service activation (who
 also have access to the RF Device Connection details button on the Users page) will be able to set or unset the new
 “async data extract” flag. This can be set for any user, so that such users could be given the access to use this API,
 which will extract data, regardless of facility company restrictions.
@@ -9970,29 +9971,29 @@ URL
 GET .../wms/lgfapi/v10/data_extract/export_async_status?unique_identifier=uniqueidentifier_01
 Sample Response
 {
- "unique_identifier": "uniqueidentifier_01",
- "cummulative_status": "SUCCESS",
- "total_duration": 2.550852,
- "entities": [
- {
- "inventory": {
- "task_id": "b3cae633-b893-4e40-aefe-c037b79c2b81",
- "file_prefix": "data_ocwms_uniqueidentifier_01_inventory_b3cae633-b893-4e40-aefe-c037b79c2b81",
- "status": "SUCCESS",
- "message": null,
- "total_duration": 1.120942
- }
- },
- {
- "container": {
- "task_id": "b897ee89-2346-4d10-92a5-48572b0771c4",
- "file_prefix": "data_ocwms_uniqueidentifier_01_container_b897ee89-2346-4d10-92a5-48572b0771c4",
- "status": "SUCCESS",
- "message": null,
- "total_duration": 1.165918
- }
- }
- ]
+"unique_identifier": "uniqueidentifier_01",
+"cummulative_status": "SUCCESS",
+"total_duration": 2.550852,
+"entities": [
+{
+"inventory": {
+"task_id": "b3cae633-b893-4e40-aefe-c037b79c2b81",
+"file_prefix": "data_ocwms_uniqueidentifier_01_inventory_b3cae633-b893-4e40-aefe-c037b79c2b81",
+"status": "SUCCESS",
+"message": null,
+"total_duration": 1.120942
+}
+},
+{
+"container": {
+"task_id": "b897ee89-2346-4d10-92a5-48572b0771c4",
+"file_prefix": "data_ocwms_uniqueidentifier_01_container_b897ee89-2346-4d10-92a5-48572b0771c4",
+"status": "SUCCESS",
+"message": null,
+"total_duration": 1.165918
+}
+}
+]
 }
 Async T ask Status - Entity Level
 You can use this API call to check the async task status at the entity-level.

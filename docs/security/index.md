@@ -18,11 +18,11 @@
 
 ### **Core Topics**
 
-| **Topic** | **Function** | **Audience** | **Status** |
-|-----------|--------------|--------------|------------|
-| [Architecture](./architecture/index.md) | Security design patterns | Security architects | ✅ Complete |
-| [Policies](./policies/index.md) | Security policies & compliance | Compliance officers | ✅ Complete |
-| [Procedures](./procedures/index.md) | Security operations | Security engineers | ✅ Complete |
+| **Topic**                               | **Function**                   | **Audience**        | **Status**  |
+| --------------------------------------- | ------------------------------ | ------------------- | ----------- |
+| [Architecture](./architecture/index.md) | Security design patterns       | Security architects | ✅ Complete |
+| [Policies](./policies/index.md)         | Security policies & compliance | Compliance officers | ✅ Complete |
+| [Procedures](./procedures/index.md)     | Security operations            | Security engineers  | ✅ Complete |
 
 ### **📋 Learning Path**
 
@@ -56,7 +56,7 @@
 ## 📊 **Section Metrics**
 
 - **Documents**: 6 files
-- **Completeness**: 85%  
+- **Completeness**: 85%
 - **Last Updated**: June 11, 2025
 
 ---

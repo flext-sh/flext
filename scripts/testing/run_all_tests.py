@@ -62,15 +62,25 @@ class FlxTestConfig(BaseModel):
 
     # Coverage options
     enable_coverage: bool = Field(default=True, description="Enable coverage reporting")
-    coverage_threshold: float = Field(default=80.0, description="Minimum coverage threshold")
+    coverage_threshold: float = Field(
+        default=80.0, description="Minimum coverage threshold"
+    )
 
     # Parallel execution
-    parallel_workers: int = Field(default=4, description="Number of parallel test workers")
+    parallel_workers: int = Field(
+        default=4, description="Number of parallel test workers"
+    )
 
     # Output options
-    generate_html_report: bool = Field(default=True, description="Generate HTML test report")
-    generate_json_report: bool = Field(default=True, description="Generate JSON test report")
-    generate_junit_xml: bool = Field(default=True, description="Generate JUnit XML report")
+    generate_html_report: bool = Field(
+        default=True, description="Generate HTML test report"
+    )
+    generate_json_report: bool = Field(
+        default=True, description="Generate JSON test report"
+    )
+    generate_junit_xml: bool = Field(
+        default=True, description="Generate JUnit XML report"
+    )
 
     # Timeout settings
     test_timeout: int = Field(default=300, description="Test timeout in seconds")
@@ -88,10 +98,16 @@ class FlxTestResult(BaseModel):
     failed_tests: int = Field(description="Number of failed tests")
     skipped_tests: int = Field(description="Number of skipped tests")
     execution_time: float = Field(description="Execution time in seconds")
-    coverage_percentage: float | None = Field(default=None, description="Code coverage percentage")
+    coverage_percentage: float | None = Field(
+        default=None, description="Code coverage percentage"
+    )
     success: bool = Field(description="Whether all tests passed")
-    error_message: str | None = Field(default=None, description="Error message if failed")
-    output_files: list[str] = Field(default_factory=list, description="Generated output files")
+    error_message: str | None = Field(
+        default=None, description="Error message if failed"
+    )
+    output_files: list[str] = Field(
+        default_factory=list, description="Generated output files"
+    )
 
 
 class FlxTestRunner:
@@ -121,7 +137,9 @@ class FlxTestRunner:
     async def run_all_tests(self) -> list[FlxTestResult]:
         """Run all possible tests across all FLX projects."""
         print("🚀 Starting comprehensive FLX test execution...")
-        print(f"📊 Configuration: {len(self.config.test_directories)} projects, {len(self.config.test_categories)} categories")
+        print(
+            f"📊 Configuration: {len(self.config.test_directories)} projects, {len(self.config.test_categories)} categories"
+        )
 
         # Run tests for each flx_project and category combination
         tasks = []
@@ -134,7 +152,7 @@ class FlxTestRunner:
         # Execute tests in parallel batches
         batch_size = self.config.parallel_workers
         for i in range(0, len(tasks), batch_size):
-            batch = tasks[i:i + batch_size]
+            batch = tasks[i : i + batch_size]
             batch_results = await asyncio.gather(*batch, return_exceptions=True)
 
             for result in batch_results:
@@ -148,7 +166,9 @@ class FlxTestRunner:
 
         return self.results
 
-    async def _run_project_tests(self, project_dir: str, category: str) -> FlxTestResult:
+    async def _run_project_tests(
+        self, project_dir: str, category: str
+    ) -> FlxTestResult:
         """Run tests for a specific flx_project and category."""
         project_name = Path(project_dir).name
         print(f"🧪 Running {category} tests for {project_name}...")
@@ -176,18 +196,26 @@ class FlxTestRunner:
 
             # Parse test results
             result = self._parse_test_output(
-                project_name, category, stdout.decode(), stderr.decode(),
-                process.returncode, execution_time,
+                project_name,
+                category,
+                stdout.decode(),
+                stderr.decode(),
+                process.returncode,
+                execution_time,
             )
 
             status_emoji = "✅" if result.success else "❌"
-            print(f"{status_emoji} {project_name} {category}: {result.passed_tests}/{result.total_tests} passed ({execution_time:.2f}s)")
+            print(
+                f"{status_emoji} {project_name} {category}: {result.passed_tests}/{result.total_tests} passed ({execution_time:.2f}s)"
+            )
 
             return result
 
         except TimeoutError:
             execution_time = time.time() - start_time
-            print(f"⏰ Timeout: {project_name} {category} tests exceeded {self.config.test_timeout}s")
+            print(
+                f"⏰ Timeout: {project_name} {category} tests exceeded {self.config.test_timeout}s"
+            )
 
             return FlxTestResult(
                 project_name=project_name,
@@ -232,22 +260,31 @@ class FlxTestRunner:
 
         # Add coverage if enabled
         if self.config.enable_coverage:
-            cmd.extend([
-                "--cov=flx",
-                "--cov=wms",
-                "--cov=db",
-                "--cov=oic",
-                f"--cov-report=html:reports/coverage/{project_dir.replace('/', '_')}_{category}",
-                f"--cov-report=xml:reports/coverage/{project_dir.replace('/', '_')}_{category}.xml",
-                "--cov-report=term-missing",
-            ])
+            cmd.extend(
+                [
+                    "--cov=flx",
+                    "--cov=wms",
+                    "--cov=db",
+                    "--cov=oic",
+                    f"--cov-report=html:reports/coverage/{project_dir.replace('/', '_')}_{category}",
+                    f"--cov-report=xml:reports/coverage/{project_dir.replace('/', '_')}_{category}.xml",
+                    "--cov-report=term-missing",
+                ]
+            )
 
         # Add output files
         if self.config.generate_junit_xml:
-            cmd.extend([f"--junit-xml=junit/{project_dir.replace('/', '_')}_{category}.xml"])
+            cmd.extend(
+                [f"--junit-xml=junit/{project_dir.replace('/', '_')}_{category}.xml"]
+            )
 
         if self.config.generate_html_report:
-            cmd.extend([f"--html=reports/pytest/{project_dir.replace('/', '_')}_{category}.html", "--self-contained-html"])
+            cmd.extend(
+                [
+                    f"--html=reports/pytest/{project_dir.replace('/', '_')}_{category}.html",
+                    "--self-contained-html",
+                ]
+            )
 
         return cmd
 
@@ -386,7 +423,10 @@ class FlxTestRunner:
         for result in self.results:
             if result.project_name not in projects:
                 projects[result.project_name] = {
-                    "total": 0, "passed": 0, "failed": 0, "skipped": 0,
+                    "total": 0,
+                    "passed": 0,
+                    "failed": 0,
+                    "skipped": 0,
                 }
             projects[result.project_name]["total"] += result.total_tests
             projects[result.project_name]["passed"] += result.passed_tests
@@ -396,7 +436,9 @@ class FlxTestRunner:
         for flx_project, stats in projects.items():
             if stats["total"] > 0:
                 project_success = stats["passed"] / stats["total"] * 100
-                print(f"  {flx_project}: {stats['passed']}/{stats['total']} ({project_success:.1f}%)")
+                print(
+                    f"  {flx_project}: {stats['passed']}/{stats['total']} ({project_success:.1f}%)"
+                )
 
         print("\n" + "=" * 80)
 
@@ -420,7 +462,11 @@ class FlxTestRunner:
 
         for result in self.results:
             status_emoji = "✅" if result.success else "❌"
-            coverage_str = f"{result.coverage_percentage:.1f}%" if result.coverage_percentage else "N/A"
+            coverage_str = (
+                f"{result.coverage_percentage:.1f}%"
+                if result.coverage_percentage
+                else "N/A"
+            )
 
             markdown_content += f"| {result.project_name} | {result.test_category} | {result.total_tests} | {result.passed_tests} | {result.failed_tests} | {result.skipped_tests} | {coverage_str} | {status_emoji} |\n"
 
@@ -429,7 +475,9 @@ class FlxTestRunner:
         if failed_results:
             markdown_content += "\n## Failed Tests Details\n\n"
             for result in failed_results:
-                markdown_content += f"### {result.project_name} - {result.test_category}\n"
+                markdown_content += (
+                    f"### {result.project_name} - {result.test_category}\n"
+                )
                 if result.error_message:
                     markdown_content += f"```\n{result.error_message}\n```\n\n"
 

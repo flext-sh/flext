@@ -56,30 +56,30 @@ Security advisory templates and procedures for the FLX framework. Documentation 
 
 ### Security Officers
 
-→ [Advisory Templates](./advisory-templates.md)  
-→ [Reporting Procedures](./reporting-procedures.md)  
-→ [Incident Response](./incident-response.md)  
+→ [Advisory Templates](./advisory-templates.md)
+→ [Reporting Procedures](./reporting-procedures.md)
+→ [Incident Response](./incident-response.md)
 → [Publication Process](./publication-process.md)
 
 ### Development Teams
 
-→ [Security Review](./security-review.md)  
-→ [Patch Development Process](./patch-development.md)  
-→ [Testing & Validation](./testing-validation.md)  
+→ [Security Review](./security-review.md)
+→ [Patch Development Process](./patch-development.md)
+→ [Testing & Validation](./testing-validation.md)
 → [Security Best Practices](./security-best-practices.md)
 
 ### Operations Teams
 
-→ [Emergency Response Procedures](./emergency-response.md)  
-→ [Deployment Coordination](./deployment-coordination.md)  
-→ [Monitoring & Detection](./monitoring-detection.md)  
+→ [Emergency Response Procedures](./emergency-response.md)
+→ [Deployment Coordination](./deployment-coordination.md)
+→ [Monitoring & Detection](./monitoring-detection.md)
 → [Recovery Procedures](./recovery-procedures.md)
 
 ### Community Contributors
 
-→ [Vulnerability Intake Form](./vulnerability-intake.md)  
-→ [Confidential Reporting Process](./confidential-reporting.md)  
-→ [Responsible Disclosure](./responsible-disclosure.md)  
+→ [Vulnerability Intake Form](./vulnerability-intake.md)
+→ [Confidential Reporting Process](./confidential-reporting.md)
+→ [Responsible Disclosure](./responsible-disclosure.md)
 → [Bug Bounty Program](./bug-bounty.md)
 
 ## Template Categories
@@ -107,4 +107,4 @@ Security advisory templates and procedures for the FLX framework. Documentation 
 
 ---
 
-*Part of the [FLX Framework Documentation](../../../../index.md)*
+_Part of the [FLX Framework Documentation](../../../../index.md)_

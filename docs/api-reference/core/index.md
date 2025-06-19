@@ -35,11 +35,11 @@ The Core APIs Hub provides complete domain and business logic API documentation 
 
 ### **Core API Categories**
 
-| **API Documentation** | **Domain Area** | **Validation** | **Status** | **Key Features** |
-|-----------------------|------------------|----------------|------------|------------------|
-| **[Base Classes](./base-classes.md)** | Foundation | Source Validated | ✅ Production | DomainObject, Entity, AggregateRoot |
-| **[Entities](./entities.md)** | Domain Entities | Source Validated | ✅ Production | Business logic, identity, lifecycle |
-| **[Events](./events.md)** | Domain Events | Source Validated | ✅ Production | Event-driven architecture, state changes |
+| **API Documentation**                 | **Domain Area** | **Validation**   | **Status**    | **Key Features**                         |
+| ------------------------------------- | --------------- | ---------------- | ------------- | ---------------------------------------- |
+| **[Base Classes](./base-classes.md)** | Foundation      | Source Validated | ✅ Production | DomainObject, Entity, AggregateRoot      |
+| **[Entities](./entities.md)**         | Domain Entities | Source Validated | ✅ Production | Business logic, identity, lifecycle      |
+| **[Events](./events.md)**             | Domain Events   | Source Validated | ✅ Production | Event-driven architecture, state changes |
 
 ### **🚀 Core API Features**
 

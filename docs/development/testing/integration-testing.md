@@ -24,9 +24,9 @@ from flx.adapters.outbound import PostgreSQLUserRepository
 
 class TestUserRepositoryContract(PortContractTest):
     """Verify that PostgreSQL adapter conforms to UserRepository port contract."""
-    
+
     port_interface = UserRepositoryPort
-    
+
     @pytest.fixture
     async def adapter(self):
         # Setup test database
@@ -42,10 +42,10 @@ class TestUserRepositoryContract(PortContractTest):
             "email": "test@example.com",
             "status": "active"
         }
-        
+
         # Port contract: save should return user with generated ID
         saved_user = await adapter.save(user_data)
-        
+
         assert saved_user.id is not None
         assert saved_user.name == "Test User"
         assert saved_user.email == "test@example.com"
@@ -54,14 +54,14 @@ class TestUserRepositoryContract(PortContractTest):
         """Test find operation according to port contract."""
         # Setup: Save a user first
         user = await adapter.save({"name": "Find Me", "email": "findme@example.com"})
-        
+
         # Port contract: find should return exact same user
         found_user = await adapter.find_by_id(user.id)
-        
+
         assert found_user.id == user.id
         assert found_user.name == user.name
         assert found_user.email == user.email
-        
+
         # Port contract: find with invalid ID should return None
         not_found = await adapter.find_by_id("invalid-id")
         assert not_found is None
@@ -80,30 +80,30 @@ class TestOrderApplicationIntegration:
         # Real repositories with test database
         order_repo = OrderRepository(test_database)
         product_repo = ProductRepository(test_database)
-        
+
         # Real domain services
         pricing_service = PricingService()
-        
+
         # Application service with real dependencies
         app_service = OrderApplicationService(
             order_repo=order_repo,
             product_repo=product_repo,
             pricing_service=pricing_service
         )
-        
+
         return app_service, order_repo, product_repo
 
     async def test_create_order_with_pricing_calculation(self, service_setup):
         """Test complete order creation workflow with real pricing calculation."""
         app_service, order_repo, product_repo = service_setup
-        
+
         # Setup test data
         product = await product_repo.save({
             "name": "Test Product",
             "base_price": 100.00,
             "category": "electronics"
         })
-        
+
         # Execute order creation
         order_request = {
             "customer_id": "cust-123",
@@ -112,12 +112,12 @@ class TestOrderApplicationIntegration:
             ],
             "discount_code": "SAVE10"
         }
-        
+
         result = await app_service.create_order(order_request)
-        
+
         # Verify complete workflow
         assert result.success is True
-        
+
         saved_order = await order_repo.find_by_id(result.order_id)
         assert saved_order is not None
         assert saved_order.total_amount == 180.00  # 2 * 100 - 10% discount
@@ -133,7 +133,7 @@ from flx.testing.external import ExternalServiceTest
 
 class TestEmailServiceIntegration(ExternalServiceTest):
     """Integration tests with real email service (using test environment)."""
-    
+
     @pytest.fixture
     async def email_adapter(self):
         # Use test email service configuration
@@ -155,12 +155,12 @@ class TestEmailServiceIntegration(ExternalServiceTest):
             "body": "This is a test email from integration tests",
             "template": "test_template"
         }
-        
+
         result = await email_adapter.send_email(email_data)
-        
+
         assert result.success is True
         assert result.message_id is not None
-        
+
         # Verify with external service if possible
         status = await email_adapter.get_delivery_status(result.message_id)
         assert status in ["sent", "delivered", "queued"]
@@ -175,20 +175,20 @@ from flx.testing.database import DatabaseIntegrationTest
 
 class TestDatabaseIntegration(DatabaseIntegrationTest):
     """Test database operations with real database transactions."""
-    
+
     @pytest.fixture
     async def db_setup(self):
         # Setup test database with transaction isolation
         db_manager = DatabaseConnectionManager(test_config)
         await db_manager.connect()
-        
+
         # Start transaction for test isolation
         transaction = await db_manager.begin_transaction()
-        
+
         repository = OrderRepository(db_manager)
-        
+
         yield repository, db_manager
-        
+
         # Rollback transaction after test
         await transaction.rollback()
         await db_manager.disconnect()
@@ -196,7 +196,7 @@ class TestDatabaseIntegration(DatabaseIntegrationTest):
     async def test_repository_transaction_isolation(self, db_setup):
         """Test that repository operations work correctly within transactions."""
         repository, db_manager = db_setup
-        
+
         # Create order within transaction
         order_data = {
             "customer_id": "cust-123",
@@ -205,15 +205,15 @@ class TestDatabaseIntegration(DatabaseIntegrationTest):
                 {"product_id": "prod-456", "quantity": 1, "price": 50.00}
             ]
         }
-        
+
         order = await repository.save(order_data)
         assert order.id is not None
-        
+
         # Verify order exists within transaction
         found_order = await repository.find_by_id(order.id)
         assert found_order is not None
         assert found_order.customer_id == "cust-123"
-        
+
         # Test transaction rollback (handled by fixture)
         # Order should not exist after transaction rollback
 ```
@@ -245,21 +245,21 @@ class TestMessageBrokerIntegration(MessageBrokerTest):
             "order_id": "ord-123",
             "timestamp": "2024-01-01T10:00:00Z"
         }
-        
+
         # Publish message
         await message_broker.publish("order_events", message_data)
-        
+
         # Consume message
         received_messages = []
-        
+
         async def message_handler(message):
             received_messages.append(message)
-        
+
         await message_broker.subscribe("order_events", message_handler)
-        
+
         # Wait for message processing
         await asyncio.sleep(0.1)
-        
+
         assert len(received_messages) == 1
         assert received_messages[0]["order_id"] == "ord-123"
 ```
@@ -274,11 +274,11 @@ class TestMessageBrokerIntegration(MessageBrokerTest):
 async def test_database():
     """Setup isolated test database for integration tests."""
     test_db_name = f"test_flx_{uuid.uuid4().hex[:8]}"
-    
+
     # Create test database
     admin_conn = await create_admin_connection()
     await admin_conn.execute(f"CREATE DATABASE {test_db_name}")
-    
+
     # Configure test database connection
     test_config = DatabaseConfig(
         host=settings.DB_HOST,
@@ -287,12 +287,12 @@ async def test_database():
         username=settings.DB_USER,
         password=settings.DB_PASSWORD
     )
-    
+
     # Run migrations
     await run_migrations(test_config)
-    
+
     yield test_config
-    
+
     # Cleanup: Drop test database
     await admin_conn.execute(f"DROP DATABASE {test_db_name}")
     await admin_conn.close()
@@ -307,14 +307,14 @@ from flx.testing.external import ExternalServiceMockServer
 async def mock_payment_service():
     """Mock external payment service for integration tests."""
     mock_server = ExternalServiceMockServer(port=8888)
-    
+
     # Configure mock responses
     mock_server.add_endpoint(
         "POST", "/api/payments",
         response={"payment_id": "pay-123", "status": "approved"},
         status_code=200
     )
-    
+
     await mock_server.start()
     yield mock_server
     await mock_server.stop()
@@ -389,4 +389,4 @@ pytest --cov=src/flx --cov-report=html
 
 ---
 
-*This guide provides comprehensive patterns for integration testing in the FLX framework, ensuring robust component interactions while maintaining architectural boundaries.*
+_This guide provides comprehensive patterns for integration testing in the FLX framework, ensuring robust component interactions while maintaining architectural boundaries._

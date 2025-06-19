@@ -51,7 +51,7 @@ class DatabaseCommands:
             "backup_path": path,
             "compressed": compress,
             "size_mb": 150.5,
-            "timestamp": "2025-06-12T12:45:00Z"
+            "timestamp": "2025-06-12T12:45:00Z",
         }
 
     async def restore(self, backup_path: str, force: bool = False) -> dict[str, Any]:
@@ -71,7 +71,7 @@ class DatabaseCommands:
             "restored_from": backup_path,
             "forced": force,
             "records_restored": 10000,
-            "duration_seconds": 15.3
+            "duration_seconds": 15.3,
         }
 
     def status(self) -> dict[str, Any]:
@@ -86,7 +86,7 @@ class DatabaseCommands:
             "status": "running",
             "connections": 25,
             "size_gb": 2.4,
-            "uptime_hours": 168
+            "uptime_hours": 168,
         }
 
 
@@ -118,27 +118,25 @@ class MonitoringCommands:
                 "severity": "warning",
                 "component": "database",
                 "message": "High connection count",
-                "timestamp": "2025-06-12T12:40:00Z"
+                "timestamp": "2025-06-12T12:40:00Z",
             },
             {
                 "id": "ALT-002",
                 "severity": "critical",
                 "component": "api",
                 "message": "Response time above threshold",
-                "timestamp": "2025-06-12T12:42:00Z"
-            }
+                "timestamp": "2025-06-12T12:42:00Z",
+            },
         ]
 
         if severity != "all":
             alerts = [a for a in alerts if a["severity"] == severity]
 
-        return {
-            "alerts": alerts,
-            "total": len(alerts),
-            "filter": severity
-        }
+        return {"alerts": alerts, "total": len(alerts), "filter": severity}
 
-    async def metrics(self, component: str = "all", duration: str = "1h") -> dict[str, Any]:
+    async def metrics(
+        self, component: str = "all", duration: str = "1h"
+    ) -> dict[str, Any]:
         """Obter métricas do sistema.
 
         Args:
@@ -158,21 +156,21 @@ class MonitoringCommands:
             "memory_usage": 62.8,
             "disk_usage": 78.5,
             "network_in_mbps": 125.3,
-            "network_out_mbps": 89.7
+            "network_out_mbps": 89.7,
         }
 
         if component == "database":
-            metrics.update({
-                "connections": 25,
-                "queries_per_second": 150,
-                "cache_hit_ratio": 0.95
-            })
+            metrics.update(
+                {"connections": 25, "queries_per_second": 150, "cache_hit_ratio": 0.95}
+            )
         elif component == "api":
-            metrics.update({
-                "requests_per_second": 450,
-                "avg_response_time_ms": 85,
-                "error_rate": 0.02
-            })
+            metrics.update(
+                {
+                    "requests_per_second": 450,
+                    "avg_response_time_ms": 85,
+                    "error_rate": 0.02,
+                }
+            )
 
         return metrics
 
@@ -188,16 +186,18 @@ class MonitoringCommands:
                 "database": {"status": "healthy", "response_time_ms": 12},
                 "api": {"status": "healthy", "response_time_ms": 8},
                 "cache": {"status": "healthy", "response_time_ms": 2},
-                "queue": {"status": "healthy", "response_time_ms": 5}
+                "queue": {"status": "healthy", "response_time_ms": 5},
             },
             "checks_passed": 4,
             "checks_total": 4,
-            "timestamp": "2025-06-12T12:45:00Z"
+            "timestamp": "2025-06-12T12:45:00Z",
         }
 
 
 @register_command("system-report")
-async def generate_system_report(format: str = "json", output: str | None = None) -> dict[str, Any]:
+async def generate_system_report(
+    format: str = "json", output: str | None = None
+) -> dict[str, Any]:
     """Comando standalone para gerar relatório do sistema.
 
     Args:
@@ -218,26 +218,26 @@ async def generate_system_report(format: str = "json", output: str | None = None
                 "os": "Linux",
                 "version": "6.14.8-2-cachyos",
                 "architecture": "x86_64",
-                "uptime_hours": 72
+                "uptime_hours": 72,
             },
             "performance": {
                 "cpu_usage": 45.2,
                 "memory_usage": 62.8,
                 "disk_usage": 78.5,
-                "load_average": [1.2, 1.1, 0.9]
+                "load_average": [1.2, 1.1, 0.9],
             },
             "services": {
                 "flx_framework": "running",
                 "database": "running",
                 "api_server": "running",
-                "monitoring": "running"
-            }
+                "monitoring": "running",
+            },
         },
         "recommendations": [
             "Consider disk cleanup - usage above 75%",
             "Monitor CPU usage trends",
-            "All services operating normally"
-        ]
+            "All services operating normally",
+        ],
     }
 
     if output:

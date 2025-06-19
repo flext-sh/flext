@@ -7,13 +7,13 @@ Optimize tap-oracle-wms for maximum throughput and efficiency when extracting da
 ### Typical Performance Metrics
 
 | Dataset Size | Pagination Mode | Page Size | Throughput | Time |
-|-------------|-----------------|-----------|------------|------|
-| 10K records | Offset | 100 | 500 rec/s | 20s |
-| 10K records | Cursor | 1000 | 2000 rec/s | 5s |
-| 100K records | Offset | 100 | 300 rec/s | 5.5m |
-| 100K records | Cursor | 1000 | 1800 rec/s | 56s |
-| 1M records | Offset | 100 | 150 rec/s | 1.9h |
-| 1M records | Cursor | 1000 | 1500 rec/s | 11m |
+| ------------ | --------------- | --------- | ---------- | ---- |
+| 10K records  | Offset          | 100       | 500 rec/s  | 20s  |
+| 10K records  | Cursor          | 1000      | 2000 rec/s | 5s   |
+| 100K records | Offset          | 100       | 300 rec/s  | 5.5m |
+| 100K records | Cursor          | 1000      | 1800 rec/s | 56s  |
+| 1M records   | Offset          | 100       | 150 rec/s  | 1.9h |
+| 1M records   | Cursor          | 1000      | 1500 rec/s | 11m  |
 
 ## Key Performance Factors
 
@@ -48,12 +48,12 @@ Use offset pagination only when:
 
 #### Page Size Recommendations
 
-| Entity Type | Characteristics | Recommended Page Size |
-|------------|-----------------|----------------------|
-| Simple entities (item, location) | Few fields, small payload | 1000-1250 |
-| Medium entities (inventory) | Moderate fields | 500-1000 |
-| Complex entities (order_hdr) | Many fields, relationships | 200-500 |
-| Large entities (shipment) | Very large payload | 100-200 |
+| Entity Type                      | Characteristics            | Recommended Page Size |
+| -------------------------------- | -------------------------- | --------------------- |
+| Simple entities (item, location) | Few fields, small payload  | 1000-1250             |
+| Medium entities (inventory)      | Moderate fields            | 500-1000              |
+| Complex entities (order_hdr)     | Many fields, relationships | 200-500               |
+| Large entities (shipment)        | Very large payload         | 100-200               |
 
 #### Dynamic Page Size
 
@@ -148,9 +148,9 @@ Fields to avoid unless necessary:
   "replication_key_optimization": {
     "prefer_indexed_keys": true,
     "replication_key_preference": [
-      "update_ts",    // Usually indexed
-      "modify_ts",    // Alternative
-      "id"           // Fallback
+      "update_ts", // Usually indexed
+      "modify_ts", // Alternative
+      "id" // Fallback
     ]
   }
 }
@@ -193,9 +193,9 @@ def calculate_lookback(entity_name: str, last_sync: datetime) -> int:
 Always filter/sort on indexed fields:
 
 - Primary keys (id)
-- Foreign keys (*_id)
+- Foreign keys (\*\_id)
 - Status fields
-- Date fields (*_ts,*_date)
+- Date fields (_\_ts,_\_date)
 
 ### 3. Memory Management
 
@@ -499,7 +499,7 @@ class ReferenceDataCache:
 
 ### API Rate Limits
 
-1. **Check headers** - X-RateLimit-*
+1. **Check headers** - X-RateLimit-\*
 2. **Implement backoff** - Exponential retry
 3. **Reduce parallelism** - Fewer streams
 4. **Spread schedule** - Off-peak hours

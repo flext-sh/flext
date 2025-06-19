@@ -84,7 +84,7 @@ schedules:
   - name: wms_initial_load
     extractor: tap-wms
     loader: target-oracle
-    interval: "@hourly"  # Check every hour for new files on SFTP
+    interval: "@hourly" # Check every hour for new files on SFTP
     job_id: initial_load
     start_date: 2023-01-01
     config:

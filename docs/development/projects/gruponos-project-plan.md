@@ -47,24 +47,24 @@ Este projeto visa estabelecer uma integração completa entre o **Oracle WMS Clo
 **Oracle Autonomous Database** para os seguintes fluxos críticos:
 
 - **Sincronia de Pedidos:** Integrar pedidos de venda entre o WMS e o Autonomous DB,
-contemplando cabeçalhos e detalhes (tabelas `order_hdr` e `order_dtl`), desde cargas
-iniciais até processamento contínuo.
+  contemplando cabeçalhos e detalhes (tabelas `order_hdr` e `order_dtl`), desde cargas
+  iniciais até processamento contínuo.
 
 - **Rastreamento de Alocações:** Capturar e armazenar no Autonomous DB os eventos de
-alocação de estoque gerados no WMS (reservas de itens para pedidos), possibilitando
-visibilidade do atendimento de pedidos.
+  alocação de estoque gerados no WMS (reservas de itens para pedidos), possibilitando
+  visibilidade do atendimento de pedidos.
 
 - **Orquestração via OIC:** Utilizar o Oracle Integration Cloud para receber, transformar
-e transmitir os dados entre os sistemas, aplicando validações, tratamento de erros e
-garantindo segurança nas conexões.
+  e transmitir os dados entre os sistemas, aplicando validações, tratamento de erros e
+  garantindo segurança nas conexões.
 
 - **Atualização em Tempo Real:** Configurar Webhooks (interfaces de saída) no WMS Cloud
-para acionar fluxos do OIC em tempo real quando eventos-chave ocorrerem, reduzindo
-latência e evitando integrações puramente batch.
+  para acionar fluxos do OIC em tempo real quando eventos-chave ocorrerem, reduzindo
+  latência e evitando integrações puramente batch.
 
 - **Persistência e Auditoria:** Modelar tabelas de stage no Autonomous DB que armazenem
-os dados integrados com campos de auditoria, servindo como histórico e ponto de
-recuperação em caso de falhas.
+  os dados integrados com campos de auditoria, servindo como histórico e ponto de
+  recuperação em caso de falhas.
 
 ### 3.2 Escopo
 
@@ -86,12 +86,12 @@ recuperação em caso de falhas.
 
 ### 3.3 Stakeholders
 
-| Papel | Responsabilidade |
-|-------|------------------|
+| Papel                            | Responsabilidade                                          |
+| -------------------------------- | --------------------------------------------------------- |
 | Equipe de Operações de Warehouse | Validação funcional, testes de aceitação, operação diária |
-| Equipe de TI/Integração | Implementação, configuração, suporte técnico |
-| Gestores de Negócio | Definição de requisitos, aprovação, análise de impacto |
-| Oracle Support | Suporte à plataforma, resolução de problemas técnicos |
+| Equipe de TI/Integração          | Implementação, configuração, suporte técnico              |
+| Gestores de Negócio              | Definição de requisitos, aprovação, análise de impacto    |
+| Oracle Support                   | Suporte à plataforma, resolução de problemas técnicos     |
 
 ## 4. Arquitetura de Integração
 

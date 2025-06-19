@@ -15,11 +15,16 @@ def test_cli_import(project_path: Path, module_path: str) -> tuple[bool, str]:
     try:
         # Test import
         result = subprocess.run(
-            [sys.executable, "-c", f"from {module_path} import main; print('✅ Import successful')"],
+            [
+                sys.executable,
+                "-c",
+                f"from {module_path} import main; print('✅ Import successful')",
+            ],
             cwd=project_path,
             capture_output=True,
             text=True,
-            timeout=10, check=False,
+            timeout=10,
+            check=False,
         )
 
         if result.returncode == 0:
@@ -41,11 +46,14 @@ def test_cli_help(project_path: Path, module_path: str) -> tuple[bool, str]:
             cwd=project_path,
             capture_output=True,
             text=True,
-            timeout=10, check=False,
+            timeout=10,
+            check=False,
         )
 
         # Help should exit with code 0 and show help text
-        if result.returncode == 0 and ("help" in result.stdout.lower() or "usage" in result.stdout.lower()):
+        if result.returncode == 0 and (
+            "help" in result.stdout.lower() or "usage" in result.stdout.lower()
+        ):
             return True, "✅ Help command working"
         return False, "❌ Help command failed"
 
@@ -60,11 +68,16 @@ def test_cli_version(project_path: Path, module_path: str) -> tuple[bool, str]:
     try:
         # Test version command
         result = subprocess.run(
-            [sys.executable, "-c", f"from {module_path} import main; main(['version'])"],
+            [
+                sys.executable,
+                "-c",
+                f"from {module_path} import main; main(['version'])",
+            ],
             cwd=project_path,
             capture_output=True,
             text=True,
-            timeout=10, check=False,
+            timeout=10,
+            check=False,
         )
 
         if result.returncode == 0 and "0.4.0" in result.stdout:

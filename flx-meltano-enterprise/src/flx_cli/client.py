@@ -3,6 +3,10 @@ gRPC client for FLX CLI.
 """
 
 from typing import Any, AsyncIterator, Dict, List, Optional
+
+import grpc
+from google.protobuf import empty_pb2
+
 # Lazy import to avoid circular dependencies
 from flx.utils.lazy_import import lazy_import
 
@@ -10,12 +14,10 @@ from flx.utils.lazy_import import lazy_import
 # Lazy import to avoid circular dependencies
 
 
-import grpc
-from google.protobuf import empty_pb2
 
 # Lazy imports to avoid circular dependencies
-flx_pb2 = lazy_import('flx.grpc.proto', 'flx_pb2')
-flx_pb2_grpc = lazy_import('flx.grpc.proto', 'flx_pb2_grpc')
+flx_pb2 = lazy_import("flx.grpc.proto", "flx_pb2")
+flx_pb2_grpc = lazy_import("flx.grpc.proto", "flx_pb2_grpc")
 
 
 class AuthInterceptor(grpc.aio.UnaryUnaryClientInterceptor):

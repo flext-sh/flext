@@ -26,10 +26,10 @@ from typing import Dict, Any, List
 
 class MeltanoAdapter(BaseAdapter):
     """FLX adapter for Meltano integration."""
-    
+
     def __init__(self, project_dir: str):
         self.project = Project(project_dir)
-    
+
     async def run_extraction(self, tap: str, target: str) -> bool:
         """Run Meltano ELT pipeline through FLX adapter."""
         try:
@@ -38,11 +38,11 @@ class MeltanoAdapter(BaseAdapter):
         except Exception as e:
             await self.handle_error(e)
             return False
-    
+
     async def list_available_taps(self) -> List[str]:
         """List available extractors in Meltano project."""
         return [plugin.name for plugin in self.project.plugins.extractors()]
-    
+
     async def list_available_targets(self) -> List[str]:
         """List available loaders in Meltano project."""
         return [plugin.name for plugin in self.project.plugins.loaders()]
@@ -56,15 +56,15 @@ from meltano.core.project_add_service import ProjectAddService
 
 class FLXMeltanoConfig(Config):
     """FLX configuration for Meltano integration."""
-    
+
     meltano_project_dir: str = "./meltano"
     auto_discover_plugins: bool = True
     plugin_install_timeout: int = 300
-    
+
     async def setup_meltano_project(self):
         """Initialize Meltano project with FLX integration."""
         project = Project(self.meltano_project_dir)
-        
+
         # Add common extractors
         add_service = ProjectAddService(project)
         await add_service.add(plugin_type="extractors", plugin_name="tap-postgres")
@@ -94,37 +94,37 @@ default_environment: dev
 project_id: flx-meltano-integration
 
 environments:
-- name: dev
-- name: staging  
-- name: prod
+  - name: dev
+  - name: staging
+  - name: prod
 
 plugins:
   extractors:
-  - name: tap-postgres
-    variant: meltanolabs
-    pip_url: pipelinewise-tap-postgres
-    config:
-      host: localhost
-      port: 5432
-      user: postgres
-      password: ${POSTGRES_PASSWORD}
-      dbname: flx_data
-      
+    - name: tap-postgres
+      variant: meltanolabs
+      pip_url: pipelinewise-tap-postgres
+      config:
+        host: localhost
+        port: 5432
+        user: postgres
+        password: ${POSTGRES_PASSWORD}
+        dbname: flx_data
+
   loaders:
-  - name: target-postgres
-    variant: meltanolabs
-    pip_url: pipelinewise-target-postgres
-    config:
-      host: localhost
-      port: 5432
-      user: postgres
-      password: ${POSTGRES_PASSWORD}
-      dbname: flx_warehouse
-      
+    - name: target-postgres
+      variant: meltanolabs
+      pip_url: pipelinewise-target-postgres
+      config:
+        host: localhost
+        port: 5432
+        user: postgres
+        password: ${POSTGRES_PASSWORD}
+        dbname: flx_warehouse
+
   transforms:
-  - name: dbt-postgres
-    variant: dbt-labs
-    pip_url: dbt-core~=1.0.0 dbt-postgres~=1.0.0
+    - name: dbt-postgres
+      variant: dbt-labs
+      pip_url: dbt-core~=1.0.0 dbt-postgres~=1.0.0
 ```
 
 ## Integration Patterns
@@ -137,11 +137,11 @@ from flx.adapters.meltano import MeltanoAdapter
 
 class DataPipelineApplication(Application):
     """FLX application with Meltano integration."""
-    
+
     def __init__(self):
         super().__init__()
         self.meltano_adapter = MeltanoAdapter("./meltano")
-    
+
     async def run_data_pipeline(self, source: str, destination: str):
         """Execute data pipeline using Meltano."""
         # Extract and Load
@@ -149,11 +149,11 @@ class DataPipelineApplication(Application):
             tap=f"tap-{source}",
             target=f"target-{destination}"
         )
-        
+
         if success:
             # Transform using dbt
             await self.meltano_adapter.run_transform()
-            
+
         return success
 ```
 
@@ -165,13 +165,13 @@ from flx.adapters.base import BaseAdapter
 
 class FLXCustomTap(Tap):
     """Custom tap integrated with FLX framework."""
-    
+
     name = "tap-flx-custom"
-    
+
     def __init__(self, flx_adapter: BaseAdapter):
         super().__init__()
         self.flx_adapter = flx_adapter
-    
+
     def discover_streams(self):
         """Discover streams using FLX adapter."""
         return self.flx_adapter.discover_entities()
@@ -187,14 +187,14 @@ from flx.core.orchestration import TaskOrchestrator
 def run_flx_meltano_pipeline(**context):
     """Airflow task for FLX-Meltano pipeline."""
     orchestrator = TaskOrchestrator()
-    
+
     # Run Meltano pipeline through FLX
     result = await orchestrator.run_pipeline(
         pipeline_name="customer_data_sync",
         source="crm_api",
         destination="data_warehouse"
     )
-    
+
     return result.success
 
 dag = DAG(
@@ -231,7 +231,7 @@ meltano init meltano_project
 # Add extractor
 meltano add extractor tap-postgres
 
-# Add loader  
+# Add loader
 meltano add loader target-postgres
 
 # Add transformer

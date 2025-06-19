@@ -65,16 +65,16 @@ This guide provides comprehensive environment configuration management for FLX F
 # ✅ Secure configuration pattern
 class WmsConfig:
     """WMS configuration using environment variables only."""
-    
+
     def __init__(self):
         # No default values for sensitive configuration
         self.wms_url = os.getenv("WMS_URL")
-        self.wms_username = os.getenv("WMS_USERNAME") 
+        self.wms_username = os.getenv("WMS_USERNAME")
         self.wms_password = os.getenv("WMS_PASSWORD")
-        
+
         # Validate required configuration
         self._validate_required_config()
-    
+
     def _validate_required_config(self) -> None:
         """Validate that all required configuration is present."""
         required_vars = {
@@ -82,9 +82,9 @@ class WmsConfig:
             "WMS_USERNAME": self.wms_username,
             "WMS_PASSWORD": self.wms_password
         }
-        
+
         missing_vars = [var for var, value in required_vars.items() if not value]
-        
+
         if missing_vars:
             raise ConfigurationError(
                 f"Missing required environment variables: {', '.join(missing_vars)}"
@@ -108,12 +108,12 @@ from dotenv import load_dotenv
 
 class ConfigurationManager:
     """Manage environment configuration with security best practices."""
-    
+
     def __init__(self, config_dir: Optional[Path] = None):
         self.config_dir = config_dir or Path.cwd()
         self.loaded_files: list[str] = []
         self._load_environment_files()
-    
+
     def _load_environment_files(self) -> None:
         """Load environment files in priority order."""
         env_files = [
@@ -121,14 +121,14 @@ class ConfigurationManager:
             f".env.{os.getenv('ENVIRONMENT', 'development')}",
             ".env"
         ]
-        
+
         for env_file in env_files:
             env_path = self.config_dir / env_file
             if env_path.exists():
                 load_dotenv(env_path, override=True)
                 self.loaded_files.append(str(env_path))
                 break  # Load only the first found file
-    
+
     def get_config_summary(self) -> Dict[str, Any]:
         """Get configuration summary without exposing sensitive values."""
         return {
@@ -137,33 +137,33 @@ class ConfigurationManager:
             "config_sources": self._get_config_sources(),
             "validation_status": self._validate_all_configs()
         }
-    
+
     def _get_config_sources(self) -> Dict[str, str]:
         """Map configuration keys to their sources."""
         config_sources = {}
-        
+
         for key in os.environ:
             if any(prefix in key for prefix in ["WMS_", "DB_", "API_", "FLX_"]):
                 config_sources[key] = "environment"
-        
+
         return config_sources
-    
+
     def _validate_all_configs(self) -> Dict[str, bool]:
         """Validate all configuration without exposing values."""
         validations = {}
-        
+
         # WMS Configuration
         wms_required = ["WMS_URL", "WMS_USERNAME", "WMS_PASSWORD"]
         validations["wms"] = all(os.getenv(var) for var in wms_required)
-        
+
         # Database Configuration
         db_required = ["DB_HOST", "DB_PORT", "DB_NAME", "DB_USER", "DB_PASSWORD"]
         validations["database"] = all(os.getenv(var) for var in db_required)
-        
+
         # API Configuration
         api_required = ["API_KEY", "API_SECRET"]
         validations["api"] = all(os.getenv(var) for var in api_required)
-        
+
         return validations
 ```
 
@@ -256,35 +256,35 @@ from flx.core.logging import FlxLogger
 
 class FlxIntegrationConfig(FlxConfig):
     """FLX framework configuration for Oracle integration."""
-    
+
     def __init__(self):
         super().__init__()
-        
+
         # WMS Integration Settings
         self.wms_url = self.get_required("WMS_URL")
         self.wms_username = self.get_required("WMS_USERNAME")
         self.wms_password = self.get_required("WMS_PASSWORD")
         self.wms_timeout = self.get_int("WMS_TIMEOUT", 30)
-        
+
         # Database Settings
         self.db_host = self.get_required("DB_HOST")
         self.db_port = self.get_int("DB_PORT", 5432)
         self.db_name = self.get_required("DB_NAME")
         self.db_user = self.get_required("DB_USER")
         self.db_password = self.get_required("DB_PASSWORD")
-        
+
         # FLX Framework Settings
         self.log_level = self.get("FLX_LOG_LEVEL", "INFO")
         self.debug_mode = self.get_bool("FLX_DEBUG_MODE", False)
         self.metrics_enabled = self.get_bool("FLX_METRICS_ENABLED", True)
-    
+
     def get_database_url(self) -> str:
         """Build database URL from components."""
         return (
             f"postgresql://{self.db_user}:{self.db_password}"
             f"@{self.db_host}:{self.db_port}/{self.db_name}"
         )
-    
+
     def get_wms_config(self) -> dict[str, Any]:
         """Get WMS configuration dictionary."""
         return {
@@ -303,12 +303,12 @@ from flx.core.exceptions import ConfigurationError
 
 class WmsAdapterFactory:
     """Factory for creating configured WMS adapters."""
-    
+
     @staticmethod
     def create_wms_adapter() -> OracleWmsAdapter:
         """Create WMS adapter with environment configuration."""
         config = FlxIntegrationConfig()
-        
+
         try:
             adapter = OracleWmsAdapter(
                 base_url=config.wms_url,
@@ -326,9 +326,9 @@ class WmsAdapterFactory:
                     "expected_exception": Exception
                 }
             )
-            
+
             return adapter
-            
+
         except ConfigurationError as e:
             logger = FlxLogger("wms.adapter.factory")
             logger.error("Failed to create WMS adapter: %s", str(e))
@@ -369,54 +369,54 @@ def validate_environment() -> Dict[str, Any]:
         "warnings": [],
         "config_summary": {}
     }
-    
+
     # Required variables by category
     required_vars = {
         "wms": ["WMS_URL", "WMS_USERNAME", "WMS_PASSWORD"],
         "database": ["DB_HOST", "DB_PORT", "DB_NAME", "DB_USER", "DB_PASSWORD"],
         "api": ["API_KEY", "API_SECRET"]
     }
-    
+
     for category, vars in required_vars.items():
         missing_vars = [var for var in vars if not os.getenv(var)]
-        
+
         if missing_vars:
             results["errors"].append(f"Missing {category} variables: {', '.join(missing_vars)}")
             results["valid"] = False
         else:
             results["config_summary"][category] = "configured"
-    
+
     # Check for insecure default values
     insecure_patterns = ["default", "example", "changeme", "password"]
-    
+
     for var_name in os.environ:
         if any(prefix in var_name for prefix in ["WMS_", "DB_", "API_"]):
             value = os.getenv(var_name, "").lower()
             if any(pattern in value for pattern in insecure_patterns):
                 results["warnings"].append(f"{var_name} appears to use default/example value")
-    
+
     return results
 
 if __name__ == "__main__":
     validation = validate_environment()
-    
+
     print("Environment Configuration Validation")
     print("=" * 40)
-    
+
     if validation["valid"]:
         print("✅ Configuration is valid")
     else:
         print("❌ Configuration has errors")
         for error in validation["errors"]:
             print(f"  - {error}")
-    
+
     if validation["warnings"]:
         print("\n⚠️  Warnings:")
         for warning in validation["warnings"]:
             print(f"  - {warning}")
-    
+
     print(f"\nConfiguration Summary: {validation['config_summary']}")
-    
+
     sys.exit(0 if validation["valid"] else 1)
 ```
 
@@ -427,14 +427,14 @@ if __name__ == "__main__":
 ```json
 // .vscode/settings.json
 {
-    "python.defaultInterpreterPath": "./.venv/bin/python",
-    "python.envFile": "${workspaceFolder}/.env.local",
-    "python.terminal.activateEnvironment": true,
-    "files.exclude": {
-        ".env.local": false,
-        ".env.production": true,
-        ".env.staging": true
-    }
+  "python.defaultInterpreterPath": "./.venv/bin/python",
+  "python.envFile": "${workspaceFolder}/.env.local",
+  "python.terminal.activateEnvironment": true,
+  "files.exclude": {
+    ".env.local": false,
+    ".env.production": true,
+    ".env.staging": true
+  }
 }
 ```
 
@@ -449,10 +449,10 @@ from typing import Optional
 
 class SecretsManager:
     """Manage secrets from AWS Secrets Manager."""
-    
+
     def __init__(self, region_name: str = "us-east-1"):
         self.client = boto3.client("secretsmanager", region_name=region_name)
-    
+
     def get_secret(self, secret_name: str) -> Optional[str]:
         """Retrieve secret from AWS Secrets Manager."""
         try:
@@ -461,7 +461,7 @@ class SecretsManager:
         except Exception as e:
             logger.error("Failed to retrieve secret %s: %s", secret_name, str(e))
             return None
-    
+
     def get_database_config(self) -> Dict[str, str]:
         """Get database configuration from secrets."""
         db_secret = self.get_secret("wms-integration/database")
@@ -481,19 +481,19 @@ def audit_configuration() -> Dict[str, Any]:
         "issues": [],
         "recommendations": []
     }
-    
+
     # Check for insecure configurations
     if os.getenv("FLX_DEBUG_MODE", "").lower() == "true":
         if os.getenv("ENVIRONMENT") == "production":
             audit_results["issues"].append("Debug mode enabled in production")
-    
+
     # Check for weak passwords
     password_vars = [var for var in os.environ if "PASSWORD" in var]
     for var in password_vars:
         password = os.getenv(var, "")
         if len(password) < 12:
             audit_results["issues"].append(f"{var} appears to be weak (length < 12)")
-    
+
     # Check for HTTP URLs in production
     if os.getenv("ENVIRONMENT") == "production":
         url_vars = [var for var in os.environ if "URL" in var]
@@ -501,7 +501,7 @@ def audit_configuration() -> Dict[str, Any]:
             url = os.getenv(var, "")
             if url.startswith("http://"):
                 audit_results["issues"].append(f"{var} uses insecure HTTP in production")
-    
+
     return audit_results
 ```
 
@@ -517,7 +517,7 @@ from config import FlxIntegrationConfig, ConfigurationError
 
 class TestConfiguration:
     """Test configuration management."""
-    
+
     def test_valid_configuration(self):
         """Test configuration with all required variables."""
         env_vars = {
@@ -530,28 +530,28 @@ class TestConfiguration:
             "DB_USER": "test_user",
             "DB_PASSWORD": "test_password"
         }
-        
+
         with patch.dict(os.environ, env_vars):
             config = FlxIntegrationConfig()
             assert config.wms_url == "https://test.wms.oraclecloud.com"
             assert config.db_port == 5432
-    
+
     def test_missing_required_configuration(self):
         """Test configuration with missing required variables."""
         with patch.dict(os.environ, {}, clear=True):
             with pytest.raises(ConfigurationError):
                 FlxIntegrationConfig()
-    
+
     def test_database_url_generation(self):
         """Test database URL generation."""
         env_vars = {
             "DB_HOST": "localhost",
-            "DB_PORT": "5432", 
+            "DB_PORT": "5432",
             "DB_NAME": "test_db",
             "DB_USER": "test_user",
             "DB_PASSWORD": "test_password"
         }
-        
+
         with patch.dict(os.environ, env_vars):
             config = FlxIntegrationConfig()
             expected_url = "postgresql://test_user:test_password@localhost:5432/test_db"
@@ -643,7 +643,7 @@ config.add_backend("vault", {
 
 # AWS KMS backend (encrypted configuration)
 config.add_backend("kms", {
-    "region": "us-east-1", 
+    "region": "us-east-1",
     "key_id": "alias/app-config"
 })
 ```

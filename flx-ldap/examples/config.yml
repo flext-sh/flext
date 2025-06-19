@@ -21,10 +21,10 @@ tap:
       replication_key: "modifyTimestamp"
       schema:
         properties:
-          dn: {type: string}
-          uid: {type: string}
-          description: {type: string}
-          modifyTimestamp: {type: string, format: date-time}
+          dn: { type: string }
+          uid: { type: string }
+          description: { type: string }
+          modifyTimestamp: { type: string, format: date-time }
 
 # Target configuration for loading to destination LDAP
 target:

@@ -90,9 +90,9 @@ class TestLiveDataExtraction:
 
             # At least some expected fields should be present
             common_fields = found_fields.intersection(expected_fields)
-            assert (
-                len(common_fields) > 0
-            ), f"Expected {expected_fields}, found {list(found_fields)[:10]}"
+            assert len(common_fields) > 0, (
+                f"Expected {expected_fields}, found {list(found_fields)[:10]}"
+            )
 
     @pytest.mark.live
     def test_live_pagination_behavior(self, live_config, captured_messages) -> None:
@@ -154,9 +154,9 @@ class TestLiveDataExtraction:
 
             if len(record_ids) > 1:
                 unique_ids = set(record_ids)
-                assert len(unique_ids) == len(
-                    record_ids
-                ), "Duplicate records found - pagination issue"
+                assert len(unique_ids) == len(record_ids), (
+                    "Duplicate records found - pagination issue"
+                )
 
     @pytest.mark.live
     def test_live_incremental_sync_setup(self, live_config, captured_messages) -> None:
@@ -530,9 +530,9 @@ class TestExtractionPerformance:
         # Performance should be reasonable
         if record_count > 0:
             records_per_second = record_count / extraction_time
-            assert (
-                records_per_second > 0.5
-            ), f"Too slow: {records_per_second:.2f} records/second"
+            assert records_per_second > 0.5, (
+                f"Too slow: {records_per_second:.2f} records/second"
+            )
 
     @pytest.mark.live
     def test_connection_timeout_handling(self, live_config) -> None:

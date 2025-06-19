@@ -18,12 +18,12 @@
 
 ### **Core Topics**
 
-| **Topic** | **Function** | **Audience** | **Status** |
-|-----------|--------------|--------------|------------|
-| [WMS Lock/Unlock Mappings](./inv.wms.order-lock-unlock-mappings-23.1.0.md) | Order lock/unlock field mappings | WMS developers | ✅ Complete |
-| [Receipt Advice Mappings](./inv.wms.receipt-advice-for-purchase-orders-and-RMA-mapping-23.1.0.md) | Receipt processing mappings | Integration engineers | ✅ Complete |
-| [Shipment Confirmation Mappings](./wms.inv.shipment-confirmation-for-sales-orders-mapping-23.1.0.md) | Shipment workflow mappings | WMS specialists | ✅ Complete |
-| [Inventory Transaction Mappings](./wms.inv.inventory-transactions-mappings-23.1.0.md) | Inventory movement mappings | Data engineers | ✅ Complete |
+| **Topic**                                                                                            | **Function**                     | **Audience**          | **Status**  |
+| ---------------------------------------------------------------------------------------------------- | -------------------------------- | --------------------- | ----------- |
+| [WMS Lock/Unlock Mappings](./inv.wms.order-lock-unlock-mappings-23.1.0.md)                           | Order lock/unlock field mappings | WMS developers        | ✅ Complete |
+| [Receipt Advice Mappings](./inv.wms.receipt-advice-for-purchase-orders-and-RMA-mapping-23.1.0.md)    | Receipt processing mappings      | Integration engineers | ✅ Complete |
+| [Shipment Confirmation Mappings](./wms.inv.shipment-confirmation-for-sales-orders-mapping-23.1.0.md) | Shipment workflow mappings       | WMS specialists       | ✅ Complete |
+| [Inventory Transaction Mappings](./wms.inv.inventory-transactions-mappings-23.1.0.md)                | Inventory movement mappings      | Data engineers        | ✅ Complete |
 
 ### **📋 Learning Path**
 
@@ -101,30 +101,30 @@
 
 ### Data Engineers
 
-→ [Database Mappings](./database-mappings.md)  
-→ [ETL Mappings](./etl-mappings.md)  
-→ [Transformation Rules](./transformation-rules.md)  
+→ [Database Mappings](./database-mappings.md)
+→ [ETL Mappings](./etl-mappings.md)
+→ [Transformation Rules](./transformation-rules.md)
 → [Data Validation](./data-validation.md)
 
 ### Integration Developers
 
-→ [OIC Transformations](./oic-transformations.md)  
-→ [REST API Mappings](./rest-api-mappings.md)  
-→ [Message Queue Mappings](./message-queue-mappings.md)  
+→ [OIC Transformations](./oic-transformations.md)
+→ [REST API Mappings](./rest-api-mappings.md)
+→ [Message Queue Mappings](./message-queue-mappings.md)
 → [Integration Testing](./integration-testing.md)
 
 ### WMS Specialists
 
-→ [WMS Data Mappings](./wms-data-mappings.md)  
-→ [Inventory Mappings](./inventory-mappings.md)  
-→ [Order Processing Mappings](./order-processing-mappings.md)  
+→ [WMS Data Mappings](./wms-data-mappings.md)
+→ [Inventory Mappings](./inventory-mappings.md)
+→ [Order Processing Mappings](./order-processing-mappings.md)
 → [WMS API Integration](./wms-api-integration.md)
 
 ### Quality Engineers
 
-→ [Mapping Validation](./mapping-validation.md)  
-→ [Data Quality Rules](./data-quality-rules.md)  
-→ [Testing Strategies](./testing-strategies.md)  
+→ [Mapping Validation](./mapping-validation.md)
+→ [Data Quality Rules](./data-quality-rules.md)
+→ [Testing Strategies](./testing-strategies.md)
 → [Error Handling](./error-handling.md)
 
 ## Mapping Tools & Utilities
@@ -153,7 +153,7 @@
 ## 📊 **Section Metrics**
 
 - **Documents**: 23 mapping files
-- **Completeness**: 95%  
+- **Completeness**: 95%
 - **Last Updated**: 2025-06-11
 
 ---

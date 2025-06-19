@@ -6,8 +6,8 @@ echo "===================================="
 
 # Check if .env exists
 if [ ! -f .env ]; then
-    echo "❌ .env file not found. Please create it with WMS credentials."
-    exit 1
+	echo "❌ .env file not found. Please create it with WMS credentials."
+	exit 1
 fi
 
 # Load environment variables
@@ -19,7 +19,7 @@ echo "   - Username: $WMS_USERNAME"
 echo ""
 
 # Create a simple config for facility extraction
-cat > example_config.json << EOF
+cat >example_config.json <<EOF
 {
   "base_url": "https://ta29.wms.ocs.oraclecloud.com/raizen_test",
   "auth_method": "basic",
@@ -39,21 +39,21 @@ echo ""
 
 # Run discovery
 echo "🔍 Running discovery..."
-poetry run tap-oracle-wms --config example_config.json --discover > example_catalog.json
+poetry run tap-oracle-wms --config example_config.json --discover >example_catalog.json
 
 if [ $? -eq 0 ]; then
-    echo "✅ Discovery successful! Catalog saved to example_catalog.json"
-    echo ""
+	echo "✅ Discovery successful! Catalog saved to example_catalog.json"
+	echo ""
 
-    # Extract first 5 facilities
-    echo "📊 Extracting facility data (first 5 records)..."
-    poetry run tap-oracle-wms --config example_config.json --catalog example_catalog.json 2>/dev/null | head -20
+	# Extract first 5 facilities
+	echo "📊 Extracting facility data (first 5 records)..."
+	poetry run tap-oracle-wms --config example_config.json --catalog example_catalog.json 2>/dev/null | head -20
 
-    echo ""
-    echo "✅ Extraction complete!"
-    echo ""
-    echo "💡 To extract all data to a file:"
-    echo "   poetry run tap-oracle-wms --config example_config.json --catalog example_catalog.json > output.jsonl"
+	echo ""
+	echo "✅ Extraction complete!"
+	echo ""
+	echo "💡 To extract all data to a file:"
+	echo "   poetry run tap-oracle-wms --config example_config.json --catalog example_catalog.json > output.jsonl"
 else
-    echo "❌ Discovery failed. Check your credentials and connection."
+	echo "❌ Discovery failed. Check your credentials and connection."
 fi

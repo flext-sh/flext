@@ -24,11 +24,11 @@ This hub provides foundational design patterns and architectural principles for 
 
 ### **Core Design Topics**
 
-| **Topic** | **Function** | **Audience** | **Complexity** | **Status** |
-|-----------|--------------|--------------|----------------|------------|
-| [**Unified Architecture Guide**](./unified-architecture-guide.md) | Hexagonal architecture principles | System architects | ⭐⭐ | ✅ Updated |
-| [**FLX Framework Architecture**](./flx-framework-architecture-guide.md) | Complete framework design | Framework developers | ⭐⭐⭐ | ✅ Updated |
-| [**Comprehensive Hub**](./flx-architecture-comprehensive-hub.md) | All-in-one architecture reference | Technical leads | ⭐⭐⭐⭐ | ✅ Updated |
+| **Topic**                                                               | **Function**                      | **Audience**         | **Complexity** | **Status** |
+| ----------------------------------------------------------------------- | --------------------------------- | -------------------- | -------------- | ---------- |
+| [**Unified Architecture Guide**](./unified-architecture-guide.md)       | Hexagonal architecture principles | System architects    | ⭐⭐           | ✅ Updated |
+| [**FLX Framework Architecture**](./flx-framework-architecture-guide.md) | Complete framework design         | Framework developers | ⭐⭐⭐         | ✅ Updated |
+| [**Comprehensive Hub**](./flx-architecture-comprehensive-hub.md)        | All-in-one architecture reference | Technical leads      | ⭐⭐⭐⭐       | ✅ Updated |
 
 ---
 
@@ -37,22 +37,22 @@ This hub provides foundational design patterns and architectural principles for 
 ### **🎯 For New Architects**
 
 ```
-1. [Unified Architecture Guide](./unified-architecture-guide.md) → 
+1. [Unified Architecture Guide](./unified-architecture-guide.md) →
 2. [FLX Framework Architecture](./flx-framework-architecture-guide.md)
 ```
 
 ### **⚡ For Framework Developers**
 
 ```
-1. [FLX Framework Architecture](./flx-framework-architecture-guide.md) → 
+1. [FLX Framework Architecture](./flx-framework-architecture-guide.md) →
 2. [Comprehensive Hub](./flx-architecture-comprehensive-hub.md)
 ```
 
 ### **🏢 For Technical Leadership**
 
 ```
-1. [Comprehensive Hub](./flx-architecture-comprehensive-hub.md) → 
-2. [Standards](../standards/index.md) → 
+1. [Comprehensive Hub](./flx-architecture-comprehensive-hub.md) →
+2. [Standards](../standards/index.md) →
 3. [Implementation](../implementation/index.md)
 ```
 

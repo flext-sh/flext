@@ -85,20 +85,20 @@ from flx.testing.engines.database_engine import DatabaseTestEngine
 async def test_user_repository():
     # Actual API - no context manager support in current implementation
     engine = DatabaseTestEngine("test_database")
-    
+
     try:
         # Run comprehensive database tests
         metrics = await engine.run_all_tests()
-        
+
         # Access test results
         assert metrics.success_rate > 95.0  # High quality threshold
         assert metrics.failed_tests == 0     # Zero tolerance for failures
-        
+
         # Run specific CRUD tests
         crud_results = await engine.test_crud_operations()
         for result in crud_results:
             assert result.success, f"CRUD test failed: {result.message}"
-    
+
     finally:
         # Cleanup resources
         await engine.cleanup()
@@ -443,9 +443,9 @@ testing:
   performance:
     enabled: true
     thresholds:
-      response_time_p95: 100  # milliseconds
+      response_time_p95: 100 # milliseconds
       success_rate: 0.99
-      throughput: 500  # operations per second
+      throughput: 500 # operations per second
 ```
 
 ### Pytest Configuration
@@ -530,32 +530,32 @@ jobs:
           --health-retries 5
 
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
 
-    - name: Install dependencies
-      run: |
-        pip install -e .
-        pip install -r requirements-test.txt
+      - name: Install dependencies
+        run: |
+          pip install -e .
+          pip install -r requirements-test.txt
 
-    - name: Run unit tests
-      run: pytest tests/unit -m "not slow"
+      - name: Run unit tests
+        run: pytest tests/unit -m "not slow"
 
-    - name: Run integration tests
-      run: pytest tests/integration
-      env:
-        DATABASE_URL: postgresql://postgres:test@localhost/test_db
+      - name: Run integration tests
+        run: pytest tests/integration
+        env:
+          DATABASE_URL: postgresql://postgres:test@localhost/test_db
 
-    - name: Run performance tests
-      run: pytest tests/performance -m performance
-      if: github.ref == 'refs/heads/main'
+      - name: Run performance tests
+        run: pytest tests/performance -m performance
+        if: github.ref == 'refs/heads/main'
 
-    - name: Upload coverage
-      uses: codecov/codecov-action@v3
+      - name: Upload coverage
+        uses: codecov/codecov-action@v3
 ```
 
 ## Troubleshooting

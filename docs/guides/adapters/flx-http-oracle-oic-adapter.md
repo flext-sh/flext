@@ -53,19 +53,19 @@ from flx_http_oracle_oic import OicConfig, flx_create_oic_context
 async def main():
     # Load configuration
     config = OicConfig.from_env()
-    
+
     # Use factory pattern with context manager
     async with flx_create_oic_context(config) as factory:
         service = factory.create_oic_service()
-        
+
         # Health check
         is_healthy = await service.health_check()
-        
+
         # List integrations
         integrations = await service.list_integrations()
         for integration in integrations:
             print(f"{integration.name}: {integration.status}")
-        
+
         # List connections
         connections = await service.list_connections()
         for connection in connections:

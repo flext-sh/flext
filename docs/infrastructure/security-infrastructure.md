@@ -61,7 +61,7 @@ from flx.infra.services.base import BaseInfraService
 
 class AuthenticationService(BaseInfraService):
     """Multi-provider authentication with JWT support."""
-    
+
     def __init__(self, providers: List[AuthProvider]):
         super().__init__("authentication")
         self._providers = providers
@@ -181,7 +181,7 @@ class User:
     username: str
     email: str
     ssn: str  # Sensitive field
-    
+
     async def save(self):
         # Encrypt before saving
         encrypted_ssn = encryption_service.encrypt_field(
@@ -193,7 +193,7 @@ class User:
             "email": self.email,
             "ssn": encrypted_ssn
         })
-    
+
     async def load(self, user_id: str):
         data = await db.get(user_id)
         self.ssn = encryption_service.decrypt_field(
@@ -212,7 +212,7 @@ async def security_middleware(request, call_next):
     # Extract and verify token
     token = request.headers.get("Authorization", "").replace("Bearer ", "")
     claims = await auth_service.verify_token(token)
-    
+
     # Set security context
     with SecurityContext(
         user_id=claims["sub"],
@@ -220,7 +220,7 @@ async def security_middleware(request, call_next):
         permissions=claims.get("permissions", [])
     ):
         response = await call_next(request)
-    
+
     return response
 
 # Access security context anywhere
@@ -246,21 +246,21 @@ security:
       private_key_path: /secrets/jwt-private.pem
       access_token_expire_minutes: 15
       refresh_token_expire_days: 30
-    
+
     providers:
       ldap:
         enabled: true
         server: ldaps://ldap.company.com:636
         use_tls: true
         validate_cert: true
-      
+
       oauth2:
         enabled: true
         providers:
           - name: google
             client_id: ${GOOGLE_CLIENT_ID}
             client_secret: ${GOOGLE_CLIENT_SECRET}
-  
+
   encryption:
     master_key: ${MASTER_ENCRYPTION_KEY}
     key_derivation: PBKDF2
@@ -276,14 +276,14 @@ security:
 # Security headers middleware
 async def security_headers_middleware(request, call_next):
     response = await call_next(request)
-    
+
     # Security headers
     response.headers["X-Content-Type-Options"] = "nosniff"
     response.headers["X-Frame-Options"] = "DENY"
     response.headers["X-XSS-Protection"] = "1; mode=block"
     response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
     response.headers["Content-Security-Policy"] = "default-src 'self'"
-    
+
     return response
 ```
 
@@ -325,14 +325,14 @@ from flx.infra.security import AuthenticationService
 async def auth_service():
     service = AuthenticationService(use_test_engine=True)
     await service.connect()
-    
+
     # Add test user
     await service.add_test_user(
         username="test_user",
         password="test_pass",
         roles=["user", "admin"]
     )
-    
+
     yield service
     await service.disconnect()
 
@@ -342,9 +342,9 @@ async def test_authentication(auth_service):
         "username": "test_user",
         "password": "test_pass"
     })
-    
+
     assert token.access_token is not None
-    
+
     # Test token verification
     claims = await auth_service.verify_token(token.access_token)
     assert claims["sub"] == "test_user"
@@ -358,7 +358,7 @@ async def test_authentication(auth_service):
 async def test_sql_injection_protection():
     # Test SQL injection attempts
     malicious_input = "admin' OR '1'='1"
-    
+
     with pytest.raises(AuthenticationError):
         await auth_service.authenticate({
             "username": malicious_input,
@@ -372,7 +372,7 @@ async def test_token_expiration():
         subject="user",
         expires_delta=timedelta(seconds=-1)
     )
-    
+
     with pytest.raises(TokenExpiredError):
         await auth_service.verify_token(expired_token)
 ```
@@ -437,12 +437,12 @@ async def debug_authorization(user_id: str, resource: str, action: str):
     # Get user roles
     user_roles = await auth_service.get_user_roles(user_id)
     logger.info(f"User {user_id} has roles: {user_roles}")
-    
+
     # Check each role's permissions
     for role in user_roles:
         permissions = await auth_service.get_role_permissions(role)
         logger.info(f"Role {role} permissions: {permissions}")
-    
+
     # Evaluate final decision
     result = await auth_service.authorize(user_id, resource, action)
     logger.info(f"Authorization result: {result}")

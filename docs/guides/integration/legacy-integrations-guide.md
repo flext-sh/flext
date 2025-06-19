@@ -93,24 +93,24 @@ from flx.ports.inbound.receipt import ReceiptPort
 
 class ModernReceiptProcessor(ReceiptPort):
     """Modern implementation of legacy ASN receipt processing."""
-    
+
     def __init__(self, wms_adapter: OracleWmsAdapter):
         self.wms_adapter = wms_adapter
-    
+
     async def process_asn_receipt(self, asn_data: dict) -> ReceiptConfirmation:
         """Process ASN receipt with modern patterns."""
         try:
             # Validate using domain rules
             receipt = self._validate_receipt_data(asn_data)
-            
+
             # Process through adapter
             confirmation = await self.wms_adapter.confirm_receipt(receipt)
-            
+
             # Emit domain event
             await self._emit_receipt_event(receipt, confirmation)
-            
+
             return confirmation
-            
+
         except Exception as e:
             # Modern error handling
             await self._handle_receipt_error(asn_data, e)
@@ -191,18 +191,21 @@ Legacy patterns for inventory data synchronization:
 # Legacy Integration Analysis Template
 
 ## Integration Overview
+
 - **Legacy System**: Oracle WMS 23.4.0
 - **Integration Type**: Receipt Advice for ASN
 - **Business Purpose**: Process advanced shipping notices
 - **Data Volume**: ~1000 transactions/day
 
 ## Business Logic Analysis
+
 - **Core Rules**: [Document key business rules]
 - **Data Transformations**: [Map data conversions]
 - **Error Scenarios**: [Catalog error conditions]
 - **Performance Requirements**: [Note timing constraints]
 
 ## Modernization Plan
+
 - **Target Architecture**: FLX Hexagonal with Oracle adapters
 - **Implementation Approach**: Event-driven with async processing
 - **Migration Complexity**: Medium (requires data mapping updates)
@@ -215,7 +218,7 @@ Legacy patterns for inventory data synchronization:
 # Template for extracting patterns from legacy code
 class LegacyPatternExtractor:
     """Extract and document patterns from legacy integrations."""
-    
+
     def analyze_integration(self, legacy_file_path: str) -> IntegrationAnalysis:
         """Analyze legacy integration for modernization."""
         return IntegrationAnalysis(
@@ -224,7 +227,7 @@ class LegacyPatternExtractor:
             error_handling=self._analyze_error_patterns(legacy_file_path),
             performance_characteristics=self._assess_performance(legacy_file_path)
         )
-    
+
     def generate_modern_implementation(self, analysis: IntegrationAnalysis) -> str:
         """Generate modern FLX implementation based on analysis."""
         return self._template_generator.create_flx_adapter(
@@ -293,32 +296,32 @@ async def process_receipt(self, receipt_data: dict) -> ReceiptConfirmation:
     try:
         # Validate input
         receipt = self._validate_receipt(receipt_data)
-        
+
         # Process through adapter
         confirmation = await self.adapter.process_receipt(receipt)
-        
+
         # Record success metrics
         self.metrics.increment("receipts_processed_success")
-        
+
         return confirmation
-        
+
     except ValidationError as e:
         # Handle validation errors
         self.logger.warning("Receipt validation failed: %s", str(e))
         self.metrics.increment("receipts_validation_errors")
         raise ReceiptProcessingError(f"Invalid receipt data: {str(e)}") from e
-        
+
     except OracleApiError as e:
         # Handle Oracle API errors
         self.logger.error("Oracle API error: %s", str(e))
         self.metrics.increment("oracle_api_errors")
-        
+
         # Implement retry logic
         if e.is_retryable():
             await self._schedule_retry(receipt_data)
-        
+
         raise ReceiptProcessingError(f"Oracle API failure: {str(e)}") from e
-        
+
     except Exception as e:
         # Handle unexpected errors
         self.logger.exception("Unexpected error processing receipt")
@@ -351,7 +354,7 @@ async def process_receipt(self, receipt_data: dict) -> ReceiptConfirmation:
 
 ---
 
-**Last Updated**: January 2025  
-**Status**: Reference Material  
-**Purpose**: Legacy Analysis and Migration Planning  
+**Last Updated**: January 2025
+**Status**: Reference Material
+**Purpose**: Legacy Analysis and Migration Planning
 **Scope**: Oracle WMS Integration Patterns

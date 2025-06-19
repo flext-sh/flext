@@ -71,7 +71,8 @@ def flx_return_value_type_issues(file_path: Path) -> int:
 
     # Look for functions with explicit return types
     function_pattern = re.compile(
-        r"^(\s*)(def\s+\w+\s*\([^)]*\))\s*->\s*([^:]+)(\s*:)", re.MULTILINE,
+        r"^(\s*)(def\s+\w+\s*\([^)]*\))\s*->\s*([^:]+)(\s*:)",
+        re.MULTILINE,
     )
 
     # Find all function definitions with return types
@@ -122,7 +123,8 @@ def flx_abstract_class_issues(file_path: Path) -> int:
 
     # Look for abstract classes and their methods
     abstract_class_pattern = re.compile(
-        r"class\s+(\w+)\(.*?(?:ABC|Protocol|abstract).*?\):", re.DOTALL | re.IGNORECASE,
+        r"class\s+(\w+)\(.*?(?:ABC|Protocol|abstract).*?\):",
+        re.DOTALL | re.IGNORECASE,
     )
     abstract_method_pattern = re.compile(
         r'^\s*def\s+(\w+)\s*\([^)]*\)\s*(?:->.*?)?\s*:\s*(?:pass|"""|\'\'\')?\s*$',
@@ -175,7 +177,8 @@ def flx_any_returns(file_path: Path) -> int:
 
     # Look for functions that might return Any values
     any_return_pattern = re.compile(
-        r"(def\s+\w+\s*\([^)]*\)\s*->\s*(?!Any)[^:]+:.*?)(return\s+[^;]+)", re.DOTALL,
+        r"(def\s+\w+\s*\([^)]*\)\s*->\s*(?!Any)[^:]+:.*?)(return\s+[^;]+)",
+        re.DOTALL,
     )
 
     modified_content = content
@@ -198,7 +201,7 @@ def flx_any_returns(file_path: Path) -> int:
                 # Add a type assertion
                 return_var = return_stmt.split("return", 1)[1].strip()
                 new_return = f"{indent_str}result = {return_var}\n"
-                new_return += f'{indent_str}assert isinstance(result, {return_type.split('[')[0]}), f"Expected {return_type}, got {{type(result)}}"\n'
+                new_return += f'{indent_str}assert isinstance(result, {return_type.split("[")[0]}), f"Expected {return_type}, got {{type(result)}}"\n'
                 new_return += f"{indent_str}return result"
 
                 modified_content = modified_content.replace(return_stmt, new_return, 1)

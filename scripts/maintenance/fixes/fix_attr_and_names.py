@@ -10,7 +10,14 @@ from typing import Any
 
 def get_mypy_errors_by_type(error_type: str) -> list[dict[str, Any]]:
     """Get specific type of mypy errors."""
-    cmd = [".venv/bin/python", "-m", "mypy", "flx/src/", "--show-error-codes", "--no-error-summary"]
+    cmd = [
+        ".venv/bin/python",
+        "-m",
+        "mypy",
+        "flx/src/",
+        "--show-error-codes",
+        "--no-error-summary",
+    ]
     result = subprocess.run(cmd, capture_output=True, text=True, check=False)
 
     errors = []
@@ -18,11 +25,13 @@ def get_mypy_errors_by_type(error_type: str) -> list[dict[str, Any]]:
         if f"[{error_type}]" in line:
             match = re.match(r"(.+?):(\d+): error: (.+?) \[" + error_type + r"\]", line)
             if match:
-                errors.append({
-                    "file": match.group(1),
-                    "line": int(match.group(2)),
-                    "message": match.group(3),
-                })
+                errors.append(
+                    {
+                        "file": match.group(1),
+                        "line": int(match.group(2)),
+                        "message": match.group(3),
+                    }
+                )
     return errors
 
 
@@ -173,19 +182,24 @@ def fix_common_attribute_patterns() -> None:
     # Common patterns to fix
     patterns = [
         # Exception attributes
-        (r"except\s+(\w+)\s+as\s+e:\s*\n\s*if\s+e\.code",
-         r'except \1 as e:\n    if hasattr(e, "code") and e.code'),
-
+        (
+            r"except\s+(\w+)\s+as\s+e:\s*\n\s*if\s+e\.code",
+            r'except \1 as e:\n    if hasattr(e, "code") and e.code',
+        ),
         # Response attributes
-        (r"if\s+response\.ok(?:\s*:|\s+and)",
-         r'if hasattr(response, "ok") and response.ok'),
-
-        (r"response\.json\(\)",
-         r'response.json() if hasattr(response, "json") else {}'),
-
+        (
+            r"if\s+response\.ok(?:\s*:|\s+and)",
+            r'if hasattr(response, "ok") and response.ok',
+        ),
+        (
+            r"response\.json\(\)",
+            r'response.json() if hasattr(response, "json") else {}',
+        ),
         # Config attributes
-        (r"if\s+self\.config\.(\w+)(?:\s*:|\s+and)",
-         r'if hasattr(self.config, "\1") and self.config.\1'),
+        (
+            r"if\s+self\.config\.(\w+)(?:\s*:|\s+and)",
+            r'if hasattr(self.config, "\1") and self.config.\1',
+        ),
     ]
 
     files_to_fix = list(Path("flx/src").rglob("*.py"))

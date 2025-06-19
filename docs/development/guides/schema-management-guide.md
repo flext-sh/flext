@@ -81,13 +81,13 @@ from flx.core.config import Config
 async def extract_schemas():
     config = Config.from_env()
     schema_adapter = SchemaAdapter(config=config)
-    
+
     # Extract all entity schemas
     schemas = await schema_adapter.extract_all_schemas()
-    
+
     # Extract specific entity schema
     user_schema = await schema_adapter.extract_schema("users")
-    
+
     # Save to cache
     await schema_adapter.cache_schema("users", user_schema)
 ```
@@ -140,11 +140,11 @@ import jsonschema
 
 class SchemaValidationAdapter(BaseAdapter):
     """Adapter for schema validation within FLX framework."""
-    
+
     def __init__(self, schema_cache_dir: str = "./schemas"):
         self.schema_cache_dir = schema_cache_dir
         self.schemas = {}
-    
+
     async def load_schema(self, entity_name: str) -> dict:
         """Load schema from cache."""
         if entity_name not in self.schemas:
@@ -152,7 +152,7 @@ class SchemaValidationAdapter(BaseAdapter):
             with open(schema_path, 'r') as f:
                 self.schemas[entity_name] = json.load(f)
         return self.schemas[entity_name]
-    
+
     async def validate_data(self, entity_name: str, data: dict) -> bool:
         """Validate data against entity schema."""
         schema = await self.load_schema(entity_name)
@@ -172,22 +172,22 @@ import json
 
 class SchemaModelGenerator:
     """Generate Pydantic models from JSON schemas."""
-    
+
     @staticmethod
     def generate_model_from_schema(schema_path: str, model_name: str):
         """Generate Pydantic model from JSON schema."""
         with open(schema_path, 'r') as f:
             schema = json.load(f)
-        
+
         # Convert JSON schema to Pydantic field definitions
         fields = {}
         for prop_name, prop_def in schema.get('properties', {}).items():
             field_type = SchemaModelGenerator._get_python_type(prop_def)
             fields[prop_name] = (field_type, ...)
-        
+
         # Create dynamic Pydantic model
         return create_model(model_name, **fields, __base__=BaseEntity)
-    
+
     @staticmethod
     def _get_python_type(prop_def: dict):
         """Convert JSON schema type to Python type."""
@@ -224,7 +224,7 @@ from flx.core.config import Config
 
 class SchemaConfig(Config):
     """Configuration for schema management."""
-    
+
     schema_cache_dir: str = "./schemas"
     schema_validation_enabled: bool = True
     schema_auto_refresh: bool = False

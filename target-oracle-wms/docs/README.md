@@ -42,6 +42,7 @@ This comprehensive documentation covers all aspects of Oracle WMS Singer target 
 ## 📖 **Documentation Structure**
 
 ### **🏗️ 1. Architecture & Design**
+
 **📁 Location**: [`architecture/`](architecture/README.md)
 **📊 Content**: Technical architecture, Singer target implementation, business logic processing
 **👥 Audience**: Senior Engineers, Architects
@@ -53,6 +54,7 @@ This comprehensive documentation covers all aspects of Oracle WMS Singer target 
 - **Data Flow Patterns**: Stream routing and transformation pipelines
 
 ### **📚 2. API Reference**
+
 **📁 Location**: [`api/`](api/README.md)
 **📊 Content**: Complete API specification, sink definitions, business logic APIs
 **👥 Audience**: Developers, Integration Engineers
@@ -64,6 +66,7 @@ This comprehensive documentation covers all aspects of Oracle WMS Singer target 
 - **Authentication APIs**: WMS API authentication and security patterns
 
 ### **📘 3. Implementation Guides**
+
 **📁 Location**: [`guides/`](guides/README.md)
 **📊 Content**: Step-by-step implementation with real-world business scenarios
 **👥 Audience**: Developers, Business Analysts
@@ -75,6 +78,7 @@ This comprehensive documentation covers all aspects of Oracle WMS Singer target 
 - **Production Deployment**: Enterprise deployment patterns and monitoring
 
 ### **💡 4. Examples & Tutorials**
+
 **📁 Location**: [`examples/`](examples/README.md)
 **📊 Content**: Practical examples from basic to advanced business scenarios
 **👥 Audience**: All technical audiences
@@ -86,6 +90,7 @@ This comprehensive documentation covers all aspects of Oracle WMS Singer target 
 - **Multi-Pipeline Integration**: Complex ETL pipeline patterns
 
 ### **🔐 5. Security Implementation**
+
 **📁 Location**: [`security/`](security/README.md)
 **📊 Content**: Enterprise security practices and data compliance
 **👥 Audience**: Security Engineers, DevOps
@@ -97,6 +102,7 @@ This comprehensive documentation covers all aspects of Oracle WMS Singer target 
 - **Business Data Security**: KPI data protection and privacy controls
 
 ### **🎯 6. Performance & Patterns**
+
 **📁 Location**: [`patterns/`](patterns/README.md)
 **📊 Content**: Enterprise patterns and performance optimization
 **👥 Audience**: Senior Engineers, Performance Engineers
@@ -108,6 +114,7 @@ This comprehensive documentation covers all aspects of Oracle WMS Singer target 
 - **Parallel Processing**: Concurrent sink processing patterns
 
 ### **🚀 7. Deployment & Operations**
+
 **📁 Location**: [`deployment/`](deployment/README.md)
 **📊 Content**: Production deployment and operational procedures
 **👥 Audience**: DevOps Engineers, SRE Teams
@@ -124,31 +131,31 @@ This comprehensive documentation covers all aspects of Oracle WMS Singer target 
 
 ### **📖 Essential Reading**
 
-| Document | Purpose | Time Investment |
-|----------|---------|-----------------|
-| [Getting Started Guide](guides/README.md#getting-started) | First implementation | 30 minutes |
-| [Business Logic Setup](guides/README.md#business-logic) | KPI configuration | 45 minutes |
-| [Output Configuration](api/README.md#output-handlers) | Multi-destination setup | 20 minutes |
-| [Performance Tuning](patterns/README.md#performance-patterns) | Optimization strategies | 45 minutes |
+| Document                                                      | Purpose                 | Time Investment |
+| ------------------------------------------------------------- | ----------------------- | --------------- |
+| [Getting Started Guide](guides/README.md#getting-started)     | First implementation    | 30 minutes      |
+| [Business Logic Setup](guides/README.md#business-logic)       | KPI configuration       | 45 minutes      |
+| [Output Configuration](api/README.md#output-handlers)         | Multi-destination setup | 20 minutes      |
+| [Performance Tuning](patterns/README.md#performance-patterns) | Optimization strategies | 45 minutes      |
 
 ### **🎯 By Use Case**
 
-| Use Case | Primary Documentation | Supporting Resources |
-|----------|----------------------|---------------------|
-| **First Implementation** | [Implementation Guides](guides/README.md) | [Examples](examples/README.md), [API Reference](api/README.md) |
-| **Business Logic Setup** | [Implementation Guides](guides/README.md#business-logic) | [Examples](examples/README.md), [Patterns](patterns/README.md) |
-| **Production Deployment** | [Deployment Guide](deployment/README.md) | [Security](security/README.md), [Patterns](patterns/README.md) |
-| **Performance Issues** | [Performance Patterns](patterns/README.md) | [Architecture](architecture/README.md) |
-| **Custom KPI Development** | [API Reference](api/README.md#business-logic) | [Examples](examples/README.md) |
+| Use Case                   | Primary Documentation                                    | Supporting Resources                                           |
+| -------------------------- | -------------------------------------------------------- | -------------------------------------------------------------- |
+| **First Implementation**   | [Implementation Guides](guides/README.md)                | [Examples](examples/README.md), [API Reference](api/README.md) |
+| **Business Logic Setup**   | [Implementation Guides](guides/README.md#business-logic) | [Examples](examples/README.md), [Patterns](patterns/README.md) |
+| **Production Deployment**  | [Deployment Guide](deployment/README.md)                 | [Security](security/README.md), [Patterns](patterns/README.md) |
+| **Performance Issues**     | [Performance Patterns](patterns/README.md)               | [Architecture](architecture/README.md)                         |
+| **Custom KPI Development** | [API Reference](api/README.md#business-logic)            | [Examples](examples/README.md)                                 |
 
 ### **👥 By Role**
 
-| Role | Recommended Path | Key Documents |
-|------|------------------|---------------|
-| **Data Engineer** | Setup → Implementation → Optimization | [Guides](guides/README.md), [API](api/README.md), [Patterns](patterns/README.md) |
-| **Business Analyst** | Business Logic → KPIs → Examples | [Guides](guides/README.md#business-logic), [Examples](examples/README.md) |
-| **DevOps Engineer** | Security → Deployment → Monitoring | [Security](security/README.md), [Deployment](deployment/README.md) |
-| **System Architect** | Architecture → Patterns → Security | [Architecture](architecture/README.md), [Patterns](patterns/README.md) |
+| Role                 | Recommended Path                      | Key Documents                                                                    |
+| -------------------- | ------------------------------------- | -------------------------------------------------------------------------------- |
+| **Data Engineer**    | Setup → Implementation → Optimization | [Guides](guides/README.md), [API](api/README.md), [Patterns](patterns/README.md) |
+| **Business Analyst** | Business Logic → KPIs → Examples      | [Guides](guides/README.md#business-logic), [Examples](examples/README.md)        |
+| **DevOps Engineer**  | Security → Deployment → Monitoring    | [Security](security/README.md), [Deployment](deployment/README.md)               |
+| **System Architect** | Architecture → Patterns → Security    | [Architecture](architecture/README.md), [Patterns](patterns/README.md)           |
 
 ---
 
@@ -156,30 +163,30 @@ This comprehensive documentation covers all aspects of Oracle WMS Singer target 
 
 ### **Supported Oracle WMS Versions**
 
-| Version | API Support | Business Logic | Testing Status | Notes |
-|---------|-------------|---------------|----------------|-------|
-| **WMS 25B** | ✅ Full | ✅ Complete | ✅ Validated | Recommended version |
-| **WMS 24C** | ✅ Full | ✅ Complete | ✅ Tested | Production ready |
-| **WMS 23A** | ⚠️ Limited | ⚠️ Basic | ⚠️ Basic | Legacy support |
+| Version     | API Support | Business Logic | Testing Status | Notes               |
+| ----------- | ----------- | -------------- | -------------- | ------------------- |
+| **WMS 25B** | ✅ Full     | ✅ Complete    | ✅ Validated   | Recommended version |
+| **WMS 24C** | ✅ Full     | ✅ Complete    | ✅ Tested      | Production ready    |
+| **WMS 23A** | ⚠️ Limited  | ⚠️ Basic       | ⚠️ Basic       | Legacy support      |
 
 ### **Singer Specification Compliance**
 
-| Component | Specification | Implementation | Status |
-|-----------|---------------|----------------|---------|
-| **Target Protocol** | Singer v1.0 | Full compliance | ✅ Complete |
-| **Stream Processing** | Singer v1.0 | Full compliance | ✅ Complete |
-| **State Handling** | Singer v1.0 | Full compliance | ✅ Complete |
+| Component             | Specification  | Implementation  | Status      |
+| --------------------- | -------------- | --------------- | ----------- |
+| **Target Protocol**   | Singer v1.0    | Full compliance | ✅ Complete |
+| **Stream Processing** | Singer v1.0    | Full compliance | ✅ Complete |
+| **State Handling**    | Singer v1.0    | Full compliance | ✅ Complete |
 | **Schema Validation** | JSON Schema v7 | Full compliance | ✅ Complete |
-| **Record Formatting** | Singer v1.0 | Full compliance | ✅ Complete |
+| **Record Formatting** | Singer v1.0    | Full compliance | ✅ Complete |
 
 ### **Output Destination Support**
 
-| Destination | Format Support | Performance | Status |
-|-------------|---------------|-------------|---------|
-| **File Outputs** | JSON, CSV, Parquet, Excel | High throughput | ✅ Complete |
-| **Database Outputs** | PostgreSQL, Oracle, MySQL | Standard | ✅ Complete |
-| **Cloud Outputs** | S3, GCS, Azure Blob | High throughput | ✅ Complete |
-| **API Outputs** | Oracle WMS, REST APIs | Standard | ✅ Complete |
+| Destination          | Format Support            | Performance     | Status      |
+| -------------------- | ------------------------- | --------------- | ----------- |
+| **File Outputs**     | JSON, CSV, Parquet, Excel | High throughput | ✅ Complete |
+| **Database Outputs** | PostgreSQL, Oracle, MySQL | Standard        | ✅ Complete |
+| **Cloud Outputs**    | S3, GCS, Azure Blob       | High throughput | ✅ Complete |
+| **API Outputs**      | Oracle WMS, REST APIs     | Standard        | ✅ Complete |
 
 ---
 

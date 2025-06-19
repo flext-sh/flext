@@ -120,15 +120,18 @@ gn-wms-cli sync table company --mode full
 **All operations now use dc-oracle-wms exclusively:**
 
 1. **Connection Testing**:
+
    - `wms_client.test_connection()`
    - `wms_client.health_check()`
    - `extraction_suite.validate_connection()`
 
 2. **Entity Discovery**:
+
    - `wms_client.list_entities_sync(entity_name)`
    - `wms_client.get_entity(entity_name)`
 
 3. **Data Extraction**:
+
    - `wms_client.export_data(entity_name, filters, limit)`
    - `extraction_suite.extract_entity_data()`
 
@@ -153,13 +156,13 @@ def _execute_with_timeout(self, operation_func, timeout_seconds, operation):
 
 ## Performance Comparison
 
-| Scenario | Before (Mixed) | After (dc-oracle-wms exclusive) | Improvement |
-|----------|----------------|----------------------------------|-------------|
-| Single entity sync | 30-60s | 2-5s | **85-95% faster** |
-| Connection test | 30-45s | 1-10s | **70-95% faster** |
-| Discovery timeout | 30s per entity | 3-10s per entity | **60-90% faster** |
-| Full discovery | 150-300s | 15-50s | **75-90% faster** |
-| Method consistency | Inconsistent | 100% consistent | **Reliability improved** |
+| Scenario           | Before (Mixed) | After (dc-oracle-wms exclusive) | Improvement              |
+| ------------------ | -------------- | ------------------------------- | ------------------------ |
+| Single entity sync | 30-60s         | 2-5s                            | **85-95% faster**        |
+| Connection test    | 30-45s         | 1-10s                           | **70-95% faster**        |
+| Discovery timeout  | 30s per entity | 3-10s per entity                | **60-90% faster**        |
+| Full discovery     | 150-300s       | 15-50s                          | **75-90% faster**        |
+| Method consistency | Inconsistent   | 100% consistent                 | **Reliability improved** |
 
 ## Debug Information
 
@@ -240,7 +243,7 @@ from wms import (
 ## Future Enhancements
 
 - dc-oracle-wms version compatibility checks
-- Enhanced dc-oracle-wms configuration validation  
+- Enhanced dc-oracle-wms configuration validation
 - Advanced dc-oracle-wms method selection based on entity type
 - dc-oracle-wms connection pooling optimization
 - Parallel operations using dc-oracle-wms async capabilities

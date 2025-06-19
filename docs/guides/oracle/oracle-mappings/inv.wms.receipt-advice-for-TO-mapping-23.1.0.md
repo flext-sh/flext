@@ -1,25 +1,23 @@
 # inv.wms.receipt-advice-for-TO-mapping-23.1.0.xlsx
 
-**Caminho:** `reference/wms_solutions/mappings/inv.wms.receipt-advice-for-TO-mapping-23.1.0.xlsx`  \n**Data de conversão:** 2025-05-15T14:39:48.641667  \n**Tipo:** .xlsx  \n**[Download original](reference/wms_solutions/mappings/inv.wms.receipt-advice-for-TO-mapping-23.1.0.xlsx)**
+**Caminho:** `reference/wms_solutions/mappings/inv.wms.receipt-advice-for-TO-mapping-23.1.0.xlsx` \n**Data de conversão:** 2025-05-15T14:39:48.641667 \n**Tipo:** .xlsx \n**[Download original](reference/wms_solutions/mappings/inv.wms.receipt-advice-for-TO-mapping-23.1.0.xlsx)**
 
 ---
 
 ## Sumário
 
-
-
 ## Resumo automático
 
 Este arquivo define o mapeamento da mensagem de “receipt advice” de Transfer Order (TO) gerada pelo WMS para as tabelas do Oracle Fusion Inventory Management Cloud.
 
-Principais pontos:  
-• Campos informativos de cabeçalho (fixos): versão do documento, sistema de origem, ambiente cliente, código da empresa.  
-• Campos obrigatórios de cabeçalho: entidade (“ib_shipment”), identificador da mensagem, número do envio (shipment_nbr → RCV_SHIPMENT_HEADERS.SHIPMENT_NUM), código da unidade receptora (facility_code → RCV_SHIPMENT_LINES.TO_ORGANIZATION_ID), código da empresa (“PP”), ação (“CREATE”), referência interna (ref_nbr → SHIPMENT_HEADER_ID), tipo de recebimento (“TRANSFER ORDER”) e data de envio.  
-• Campos obrigatórios de linha: sequência da linha (seq_nbr → SHIPMENT_LINE_ID), ação (“CREATE”), código do item (item_alternate_code → RCV_SHIPMENT_LINES.ITEM_ID) e quantidade recebida (shipped_qty → quantity_shipped).  
-• Diversos campos opcionais para unidades logísticas (LPN, pallet), lote, validade, UOM e atributos de inventário (invn_attr_a…invn_attr_o).  
-• Estrutura para customizações (cust_field_1–5, cust_date_1–5, cust_decimal_1–5, cust_number_1–5, cust_short_text_1–12, cust_long_text_1–3).  
-• Geração de identificador de linha de recebimento (receipt_advice_line = HEADER_ID + “~^~” + LINE_ID) para distinguir linhas idênticas.  
-• Em outra entidade (“ib_shipment_serial_nbr”), mapeia também números de série (serial_nbr → RCV_SERIALS_SUPPLY.SERIAL_NUM) e seus atributos.  
+Principais pontos:
+• Campos informativos de cabeçalho (fixos): versão do documento, sistema de origem, ambiente cliente, código da empresa.
+• Campos obrigatórios de cabeçalho: entidade (“ib_shipment”), identificador da mensagem, número do envio (shipment_nbr → RCV_SHIPMENT_HEADERS.SHIPMENT_NUM), código da unidade receptora (facility_code → RCV_SHIPMENT_LINES.TO_ORGANIZATION_ID), código da empresa (“PP”), ação (“CREATE”), referência interna (ref_nbr → SHIPMENT_HEADER_ID), tipo de recebimento (“TRANSFER ORDER”) e data de envio.
+• Campos obrigatórios de linha: sequência da linha (seq_nbr → SHIPMENT_LINE_ID), ação (“CREATE”), código do item (item_alternate_code → RCV_SHIPMENT_LINES.ITEM_ID) e quantidade recebida (shipped_qty → quantity_shipped).
+• Diversos campos opcionais para unidades logísticas (LPN, pallet), lote, validade, UOM e atributos de inventário (invn_attr_a…invn_attr_o).
+• Estrutura para customizações (cust_field_1–5, cust_date_1–5, cust_decimal_1–5, cust_number_1–5, cust_short_text_1–12, cust_long_text_1–3).
+• Geração de identificador de linha de recebimento (receipt_advice_line = HEADER_ID + “~^~” + LINE_ID) para distinguir linhas idênticas.
+• Em outra entidade (“ib_shipment_serial_nbr”), mapeia também números de série (serial_nbr → RCV_SERIALS_SUPPLY.SERIAL_NUM) e seus atributos.
 
 Esse layout garante que o WMS entregue ao Oracle Fusion todos os dados necessários para processar o recebimento de TO de forma consistente nas tabelas RCV_SHIPMENT_HEADERS, RCV_SHIPMENT_LINES, RCV_LOTS_SUPPLY e RCV_SERIALS_SUPPLY.
 
@@ -38,8 +36,8 @@ WMS Column: facility_code, Format: string, Max: 20.0, REQD?: X, INV Column: Orga
 WMS Column: company_code, Format: string, Max: 20.0, REQD?: X, INV Column: "PP", Table Column: , Format.1: , Max.1: , Notes: Hard-coded. Updated by customer.
 WMS Column: trailer_nbr, Format: string, Max: 30.0, REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Notes:
 WMS Column: action_code, Format: string, Max: 10.0, REQD?: X, INV Column: CREATE, Table Column: , Format.1: , Max.1: , Notes:
-WMS Column: ref_nbr, Format: string, Max: 50.0, REQD?: X, INV Column: IntransitShipmentHeaderId, Table Column:  RCV_SHIPMENT_HEADERS.SHIPMENT_HEADER_ID, Format.1: number, Max.1: 18.0, Notes:
-WMS Column: shipment_type, Format: string, Max: 20.0, REQD?: X, INV Column: ReceiptSourceCode, Table Column:  RCV_SHIPMENT_LINES.SOURCE_DOCUMENT_CODE, Format.1: string, Max.1: 25.0, Notes: TRANSFER ORDER
+WMS Column: ref_nbr, Format: string, Max: 50.0, REQD?: X, INV Column: IntransitShipmentHeaderId, Table Column: RCV_SHIPMENT_HEADERS.SHIPMENT_HEADER_ID, Format.1: number, Max.1: 18.0, Notes:
+WMS Column: shipment_type, Format: string, Max: 20.0, REQD?: X, INV Column: ReceiptSourceCode, Table Column: RCV_SHIPMENT_LINES.SOURCE_DOCUMENT_CODE, Format.1: string, Max.1: 25.0, Notes: TRANSFER ORDER
 WMS Column: load_nbr, Format: string, Max: 30.0, REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Notes:
 WMS Column: manifest_nbr, Format: string, Max: 30.0, REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Notes:
 WMS Column: trailer_type, Format: string, Max: 10.0, REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Notes:
@@ -88,12 +86,12 @@ WMS Column: cust_short_text_10, Format: string, Max: , REQD?: , INV Column: , Ta
 WMS Column: cust_short_text_11, Format: string, Max: , REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Notes:
 WMS Column: cust_short_text_12, Format: string, Max: , REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Notes:
 
-WMS Column: seq_nbr, Format: number, Max: 9.0, REQD?: X, INV Column: IntransitShipmentLineId, Table Column:  RCV_SHIPMENT_LINES.SHIPMENT_LINE_ID, Format.1: number, Max.1: 18, Notes: Unique Number
+WMS Column: seq_nbr, Format: number, Max: 9.0, REQD?: X, INV Column: IntransitShipmentLineId, Table Column: RCV_SHIPMENT_LINES.SHIPMENT_LINE_ID, Format.1: number, Max.1: 18, Notes: Unique Number
 WMS Column: action_code, Format: string, Max: 10.0, REQD?: X, INV Column: CREATE, Table Column: , Format.1: , Max.1: , Notes:
 WMS Column: lpn_nbr, Format: string, Max: 30.0, REQD?: , INV Column: ShippingPackingUnit, Table Column: Retrieved from Package, Format.1: string, Max.1: 30, Notes:
 WMS Column: lpn_weight, Format: decimal, Max: , REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Notes:
 WMS Column: lpn_volume, Format: decimal, Max: , REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Notes:
-WMS Column: item_alternate_code, Format: string, Max: 130.0, REQD?: , INV Column: ItemNumber , Table Column:  RCV_SHIPMENT_LINES.ITEM_ID, Format.1: string, Max.1: 300, Notes:
+WMS Column: item_alternate_code, Format: string, Max: 130.0, REQD?: , INV Column: ItemNumber , Table Column: RCV_SHIPMENT_LINES.ITEM_ID, Format.1: string, Max.1: 300, Notes:
 WMS Column: item_part_a, Format: string, Max: 30.0, REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Notes:
 WMS Column: item_part_b, Format: string, Max: 30.0, REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Notes:
 WMS Column: item_part_c, Format: string, Max: 20.0, REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Notes:
@@ -192,7 +190,7 @@ WMS Column: item_part_c, Format: String, Max: , REQD?: , INV Column: , Table Col
 WMS Column: item_part_d, Format: String, Max: , REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Comments: , Unnamed: 9:
 WMS Column: item_part_e, Format: String, Max: , REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Comments: , Unnamed: 9:
 WMS Column: item_part_f, Format: String, Max: , REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Comments: , Unnamed: 9:
-WMS Column: item_alternate_code, Format: String, Max: , REQD?: X, INV Column: ItemNumber , Table Column:  RCV_SHIPMENT_LINES.ITEM_ID, Format.1: string, Max.1: 300, Comments: , Unnamed: 9:
+WMS Column: item_alternate_code, Format: String, Max: , REQD?: X, INV Column: ItemNumber , Table Column: RCV_SHIPMENT_LINES.ITEM_ID, Format.1: string, Max.1: 300, Comments: , Unnamed: 9:
 WMS Column: serial_nbr, Format: String, Max: , REQD?: X, INV Column: SerialNumber, Table Column: RCV_SERIALS_SUPPLY.SERIAL_NUM, Format.1: string, Max.1: 80, Comments: , Unnamed: 9:
 WMS Column: batch_nbr, Format: String, Max: , REQD?: , INV Column: LotNumber, Table Column: RCV_LOTS_SUPPLY.LOT_NUM, Format.1: string, Max.1: 80, Comments: , Unnamed: 9:
 WMS Column: expiry_date, Format: Date, Max: , REQD?: , INV Column: ExpirationDate, Table Column: , Format.1: date, Max.1: , Comments: , Unnamed: 9:

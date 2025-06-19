@@ -62,7 +62,7 @@ import dramatiq
 
 class AsyncMessageBus:
     """Integrates Lato DDD patterns with Dramatiq background processing."""
-    
+
     def __init__(self, broker_type: str = "redis"):
         self._broker = self._create_broker(broker_type)
         self._container = ApplicationContainer()
@@ -110,20 +110,20 @@ from flx.infra.messaging.handlers import CommandHandler
 
 class CreateUserHandler(CommandHandler[CreateUserCommand, str]):
     """Handle user creation commands."""
-    
+
     async def handle(self, command: CreateUserCommand) -> str:
         # Create user in database
         user = await self.repository.create_user(
             username=command.username,
             email=command.email
         )
-        
+
         # Publish domain event
         await self.bus.publish(UserCreatedEvent(
             user_id=user.id,
             username=user.username
         ))
-        
+
         return user.id
 
 # Register handler
@@ -143,14 +143,14 @@ from flx.infra.messaging.handlers import EventHandler
 
 class UserCreatedHandler(EventHandler[UserCreatedEvent]):
     """React to user creation events."""
-    
+
     async def handle(self, event: UserCreatedEvent) -> None:
         # Send welcome email
         await self.email_service.send_welcome(event.user_id)
-        
+
         # Update analytics
         await self.analytics.track_user_signup(event.user_id)
-        
+
         # Initialize user preferences
         await self.preferences.create_defaults(event.user_id)
 
@@ -195,30 +195,30 @@ send_email.send_with_options(
 ```python
 class OrderSaga:
     """Multi-step business process orchestration."""
-    
+
     def __init__(self, bus: AsyncMessageBus):
         self.bus = bus
         self.steps = []
-    
+
     async def process_order(self, order_id: str):
         try:
             # Step 1: Reserve inventory
             await self.bus.send_command(ReserveInventoryCommand(order_id))
             self.steps.append("inventory_reserved")
-            
+
             # Step 2: Process payment
             await self.bus.send_command(ProcessPaymentCommand(order_id))
             self.steps.append("payment_processed")
-            
+
             # Step 3: Ship order
             await self.bus.send_command(ShipOrderCommand(order_id))
             self.steps.append("order_shipped")
-            
+
         except Exception as e:
             # Compensate in reverse order
             await self.compensate()
             raise
-    
+
     async def compensate(self):
         if "order_shipped" in self.steps:
             await self.bus.send_command(CancelShipmentCommand())
@@ -261,19 +261,19 @@ messaging:
   redis:
     url: redis://redis-cluster:6379/0
     namespace: flx
-    queue_ttl: 86400  # 24 hours
-    result_ttl: 3600  # 1 hour
-  
+    queue_ttl: 86400 # 24 hours
+    result_ttl: 3600 # 1 hour
+
   queues:
     default:
       concurrency: 4
       max_retries: 3
-    
+
     emails:
       concurrency: 2
       max_retries: 5
       min_backoff: 60
-    
+
     analytics:
       concurrency: 8
       max_retries: 1
@@ -330,13 +330,13 @@ async def test_command_handling(bus):
     # Register test handler
     handler = Mock(return_value="user-123")
     bus.register_handler(CreateUserCommand, handler)
-    
+
     # Send command
     result = await bus.send_command(CreateUserCommand(
         username="test",
         email="test@example.com"
     ))
-    
+
     assert result == "user-123"
     handler.assert_called_once()
 ```
@@ -348,22 +348,22 @@ async def test_command_handling(bus):
 async def test_event_propagation():
     bus = AsyncMessageBus(broker_type="redis")
     events_received = []
-    
+
     # Register event handler
     async def handler(event):
         events_received.append(event)
-    
+
     bus.subscribe(UserCreatedEvent, handler)
-    
+
     # Publish event
     await bus.publish(UserCreatedEvent(
         user_id="123",
         username="test_user"
     ))
-    
+
     # Wait for processing
     await asyncio.sleep(0.1)
-    
+
     assert len(events_received) == 1
     assert events_received[0].user_id == "123"
 ```
@@ -417,7 +417,7 @@ async def process_with_retry(data):
 # Solution: Use message references
 class LargeDataCommand(Command):
     data_reference: str  # S3 key or database ID
-    
+
     async def get_data(self):
         return await storage.get(self.data_reference)
 ```

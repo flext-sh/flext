@@ -1,7 +1,7 @@
 # FLX Core API Reference
 
-**Status**: 🚧 CRITICAL DOCUMENTATION GAP - Implementation Complete, Documentation Needed  
-**Implementation**: `/flx/src/flx/core/`  
+**Status**: 🚧 CRITICAL DOCUMENTATION GAP - Implementation Complete, Documentation Needed
+**Implementation**: `/flx/src/flx/core/`
 **Last Updated**: 2025-01-06
 
 ## Overview
@@ -9,6 +9,7 @@
 The FLX Core module implements the domain layer of the hexagonal architecture, containing pure business logic with no external dependencies. This is the heart of the FLX framework, providing domain-driven design (DDD) patterns and clean architecture compliance.
 
 ## TODO IMPLEMENTATION ALIGNMENT
+
 - [ ] Document all 40+ exported components from `/flx/src/flx/core/__init__.py`
 - [ ] Add code examples for each domain component
 - [ ] Cross-reference with actual implementation patterns
@@ -17,16 +18,17 @@ The FLX Core module implements the domain layer of the hexagonal architecture, c
 
 ## Architecture Compliance
 
-✅ **Pure Domain Layer**: No infrastructure dependencies  
-✅ **DDD Patterns**: Entities, Value Objects, Aggregates, Domain Events  
-✅ **Clean Interfaces**: Protocol-based abstractions  
-✅ **Event-Driven**: Domain events for business logic  
+✅ **Pure Domain Layer**: No infrastructure dependencies
+✅ **DDD Patterns**: Entities, Value Objects, Aggregates, Domain Events
+✅ **Clean Interfaces**: Protocol-based abstractions
+✅ **Event-Driven**: Domain events for business logic
 
 ## Core Components
 
 ### Domain Objects
 
 #### AggregateRoot
+
 ```python
 from flx.core import AggregateRoot
 
@@ -36,12 +38,14 @@ class OrderAggregate(AggregateRoot):
 ```
 
 **TODO DOCUMENTATION GAPS:**
+
 - [ ] Document AggregateRoot usage patterns
 - [ ] Add business logic examples
 - [ ] Link to DDD patterns guide
 - [ ] Show event publication patterns
 
 #### Entity
+
 ```python
 from flx.core import Entity
 
@@ -51,11 +55,13 @@ class OrderItem(Entity):
 ```
 
 **TODO DOCUMENTATION GAPS:**
+
 - [ ] Document Entity patterns
 - [ ] Show identity management
 - [ ] Add validation examples
 
 #### ValueObject
+
 ```python
 from flx.core import ValueObject
 
@@ -65,6 +71,7 @@ class Money(ValueObject):
 ```
 
 **TODO DOCUMENTATION GAPS:**
+
 - [ ] Document ValueObject immutability
 - [ ] Show comparison patterns
 - [ ] Add validation examples
@@ -72,6 +79,7 @@ class Money(ValueObject):
 ### Domain Events
 
 #### DomainEvent
+
 ```python
 from flx.core import DomainEvent
 
@@ -81,6 +89,7 @@ class OrderCreated(DomainEvent):
 ```
 
 **TODO DOCUMENTATION GAPS:**
+
 - [ ] Document event patterns
 - [ ] Show event publishing
 - [ ] Link to event sourcing guide
@@ -88,6 +97,7 @@ class OrderCreated(DomainEvent):
 ### Domain Services
 
 #### DomainService
+
 ```python
 from flx.core import DomainService
 
@@ -97,6 +107,7 @@ class OrderPricingService(DomainService):
 ```
 
 **TODO DOCUMENTATION GAPS:**
+
 - [ ] Document service patterns
 - [ ] Show business logic orchestration
 - [ ] Add service composition examples
@@ -104,6 +115,7 @@ class OrderPricingService(DomainService):
 ### Protocols and Interfaces
 
 #### Adapter Protocol
+
 ```python
 from flx.core import Adapter
 
@@ -113,11 +125,13 @@ class DatabaseAdapter(Adapter):
 ```
 
 **TODO DOCUMENTATION GAPS:**
+
 - [ ] Document adapter contracts
 - [ ] Show port-adapter binding
 - [ ] Link to ports documentation
 
 #### LoggerInterface
+
 ```python
 from flx.core import LoggerInterface, DomainLogger
 
@@ -127,6 +141,7 @@ def create_domain_logger() -> DomainLogger:
 ```
 
 **TODO DOCUMENTATION GAPS:**
+
 - [ ] Document logging patterns
 - [ ] Show structured logging
 - [ ] Link to infrastructure logging
@@ -134,6 +149,7 @@ def create_domain_logger() -> DomainLogger:
 ### Models and Enums
 
 #### FlxAdapterModel
+
 ```python
 from flx.core import FlxAdapterModel
 
@@ -142,11 +158,13 @@ model = FlxAdapterModel(...)
 ```
 
 **TODO DOCUMENTATION GAPS:**
+
 - [ ] Document all model classes
 - [ ] Show model validation
 - [ ] Add configuration examples
 
 #### Status Enums
+
 ```python
 from flx.core import (
     FlxAdapterStatus,
@@ -159,6 +177,7 @@ from flx.core import (
 ```
 
 **TODO DOCUMENTATION GAPS:**
+
 - [ ] Document all enum types
 - [ ] Show status transitions
 - [ ] Add state management patterns
@@ -166,6 +185,7 @@ from flx.core import (
 ### Mixins System
 
 #### ConfigurationMixin
+
 ```python
 from flx.core import ConfigurationMixin
 
@@ -175,6 +195,7 @@ class ConfigurableService(ConfigurationMixin):
 ```
 
 #### ErrorHandlingMixin
+
 ```python
 from flx.core import ErrorHandlingMixin
 
@@ -184,6 +205,7 @@ class RobustService(ErrorHandlingMixin):
 ```
 
 #### HealthCheckMixin
+
 ```python
 from flx.core import HealthCheckMixin
 
@@ -193,6 +215,7 @@ class MonitorableService(HealthCheckMixin):
 ```
 
 **TODO DOCUMENTATION GAPS:**
+
 - [ ] Document all 8+ mixin classes
 - [ ] Show mixin composition patterns
 - [ ] Add cross-cutting concerns examples
@@ -201,6 +224,7 @@ class MonitorableService(HealthCheckMixin):
 ### Exceptions
 
 #### DomainError
+
 ```python
 from flx.core import DomainError
 
@@ -209,6 +233,7 @@ raise DomainError("Business rule violation")
 ```
 
 #### ValidationError
+
 ```python
 from flx.core import ValidationError
 
@@ -217,6 +242,7 @@ raise ValidationError("Invalid entity state")
 ```
 
 #### BusinessRuleViolationError
+
 ```python
 from flx.core import BusinessRuleViolationError
 
@@ -225,6 +251,7 @@ raise BusinessRuleViolationError("Order cannot be modified after shipping")
 ```
 
 **TODO DOCUMENTATION GAPS:**
+
 - [ ] Document exception hierarchy
 - [ ] Show error handling patterns
 - [ ] Add validation examples
@@ -232,6 +259,7 @@ raise BusinessRuleViolationError("Order cannot be modified after shipping")
 ## Usage Patterns
 
 ### TODO: Complete Usage Documentation
+
 - [ ] **Domain Modeling**: How to model business domains using FLX core
 - [ ] **Event Sourcing**: Implementing event-driven business logic
 - [ ] **Aggregate Design**: Designing aggregates for complex business logic
@@ -242,6 +270,7 @@ raise BusinessRuleViolationError("Order cannot be modified after shipping")
 ## Cross-References
 
 ### TODO: Add Cross-Reference Links
+
 - [ ] **Architecture Guide**: `/docs/architecture/core-domain-layer.md`
 - [ ] **DDD Patterns**: `/docs/architecture/patterns/domain-driven-design-patterns.md`
 - [ ] **Event Sourcing**: `/docs/architecture/patterns/event-sourcing-implementation.md`
@@ -259,5 +288,5 @@ raise BusinessRuleViolationError("Order cannot be modified after shipping")
 
 ---
 
-**Implementation Reference**: `/flx/src/flx/core/__init__.py`  
+**Implementation Reference**: `/flx/src/flx/core/__init__.py`
 **Related Documentation**: [Architecture Guide](../architecture/core-domain-layer.md) | [DDD Patterns](../architecture/patterns/domain-driven-design-patterns.md)

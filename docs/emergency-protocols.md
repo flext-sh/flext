@@ -7,15 +7,15 @@ System restoration procedures for critical failures and emergency situations.
 **IF SYSTEM IS SEVERELY DEGRADED** (3+ import failures, build broken):
 
 1. **STOP ALL OTHER WORK IMMEDIATELY**
-2. **DECLARE SYSTEM RESTORATION MODE** in .token  
+2. **DECLARE SYSTEM RESTORATION MODE** in .token
 3. **ESTIMATED TIME**: 8-20 hours of focused repair
 4. **NO PARTIAL FIXES** - Complete restoration only
 5. **MANDATORY**: System integrity validation before ANY other work
 
-### RECOGNITION PATTERNS:
+### RECOGNITION PATTERNS
 
 - Multiple import failures across projects
-- Build system returning errors  
+- Build system returning errors
 - Core framework components not loading
 - Test runners failing with infrastructure errors
 
@@ -160,17 +160,18 @@ echo "PHASE 4: Integration validation complete" >> .token
 
 ### When to Enter Emergency Mode
 
-| Condition | Action | Timeline |
-|-----------|--------|----------|
-| FLX Core broken | **IMMEDIATE EMERGENCY** | 8-20 hours |
-| 3+ adapters broken | **EMERGENCY MODE** | 8-20 hours |
-| Build system broken | **EMERGENCY MODE** | 4-8 hours |
-| 1-2 adapters broken | Component repair | 2-4 hours |
-| Testing broken only | Component repair | 1-2 hours |
+| Condition           | Action                  | Timeline   |
+| ------------------- | ----------------------- | ---------- |
+| FLX Core broken     | **IMMEDIATE EMERGENCY** | 8-20 hours |
+| 3+ adapters broken  | **EMERGENCY MODE**      | 8-20 hours |
+| Build system broken | **EMERGENCY MODE**      | 4-8 hours  |
+| 1-2 adapters broken | Component repair        | 2-4 hours  |
+| Testing broken only | Component repair        | 1-2 hours  |
 
 ### Escalation Triggers
 
 **IMMEDIATE escalation required if:**
+
 - Emergency restoration exceeds estimated timeline by 50%
 - New breakage discovered during restoration
 - Core architecture needs fundamental changes
@@ -209,12 +210,14 @@ echo "ETA: [realistic time estimate]" >> .token
 **Fallback options (in order):**
 
 1. **Revert to last known good state**
+
    ```bash
    git log --oneline | head -10  # Find last working commit
    git checkout [HASH]  # Revert to working state
    ```
 
 2. **Clean slate rebuild**
+
    ```bash
    # Nuclear option - rebuild from scratch
    git stash  # Save current changes
@@ -223,6 +226,7 @@ echo "ETA: [realistic time estimate]" >> .token
    ```
 
 3. **Component isolation**
+
    ```bash
    # Work on one component at a time
    cd flx
@@ -256,4 +260,4 @@ echo "BUILD: $(make lint >/dev/null 2>&1 && echo 'OK' || echo 'BROKEN')" >> .tok
 
 ---
 
-*Emergency protocols exist because complex systems can fail catastrophically. Use these procedures exactly when needed, but prefer prevention through careful change management.*
+_Emergency protocols exist because complex systems can fail catastrophically. Use these procedures exactly when needed, but prefer prevention through careful change management._

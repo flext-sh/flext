@@ -55,9 +55,9 @@ class TestMigrationScenarios:
             if target_helper.connection.add(target_dn, attributes=user_attrs):
                 migrated_count += 1
 
-        assert migrated_count == len(
-            source_users
-        ), f"Only {migrated_count}/{len(source_users)} users migrated"
+        assert migrated_count == len(source_users), (
+            f"Only {migrated_count}/{len(source_users)} users migrated"
+        )
 
         # Verify key attributes preserved
         for source_user in source_users[:3]:  # Check first 3 users
@@ -68,9 +68,9 @@ class TestMigrationScenarios:
                     f"uid={uid},ou=People,dc=target,dc=example,dc=com",
                     attributes_to_compare=["cn", "sn", "mail", "employeeNumber"],
                 )
-                assert comparison[
-                    "equal"
-                ], f"User {uid} attributes differ: {comparison['differences']}"
+                assert comparison["equal"], (
+                    f"User {uid} attributes differ: {comparison['differences']}"
+                )
 
     def test_group_migration_with_members(
         self, ldap_source_connection, ldap_target_connection, clean_target_ldap
@@ -138,9 +138,9 @@ class TestMigrationScenarios:
             if target_helper.connection.add(target_dn, attributes=group_attrs):
                 migrated_groups += 1
 
-        assert migrated_groups == len(
-            source_groups
-        ), f"Only {migrated_groups}/{len(source_groups)} groups migrated"
+        assert migrated_groups == len(source_groups), (
+            f"Only {migrated_groups}/{len(source_groups)} groups migrated"
+        )
 
         # Verify group memberships
         for group in ["engineering", "sales", "managers"]:
@@ -161,9 +161,9 @@ class TestMigrationScenarios:
                 for m in source_members
             }
 
-            assert (
-                adjusted_source == target_members
-            ), f"Group {group} members don't match"
+            assert adjusted_source == target_members, (
+                f"Group {group} members don't match"
+            )
 
     def test_organizational_structure_migration(
         self, ldap_source_connection, ldap_target_connection, clean_target_ldap
@@ -206,9 +206,9 @@ class TestMigrationScenarios:
             "dc=target,dc=example,dc=com", "(objectClass=organizationalUnit)"
         )
 
-        assert target_ou_count >= len(
-            source_ous
-        ), "Not all organizational units were migrated"
+        assert target_ou_count >= len(source_ous), (
+            "Not all organizational units were migrated"
+        )
 
     def test_filtered_migration(
         self, ldap_source_connection, ldap_target_connection, clean_target_ldap
@@ -243,9 +243,9 @@ class TestMigrationScenarios:
                 migrated_count += 1
 
         # Verify only active users migrated
-        assert migrated_count == len(
-            active_users
-        ), f"Expected {len(active_users)} active users, migrated {migrated_count}"
+        assert migrated_count == len(active_users), (
+            f"Expected {len(active_users)} active users, migrated {migrated_count}"
+        )
 
         assert len(active_users) < len(all_users), "Filter didn't exclude any users"
 
@@ -255,9 +255,9 @@ class TestMigrationScenarios:
             "(&(objectClass=inetOrgPerson)(employeeType=terminated))",
         )
 
-        assert (
-            terminated_in_target == 0
-        ), f"Found {terminated_in_target} terminated users in target"
+        assert terminated_in_target == 0, (
+            f"Found {terminated_in_target} terminated users in target"
+        )
 
     def test_attribute_transformation_migration(
         self, ldap_source_connection, ldap_target_connection, clean_target_ldap
@@ -341,14 +341,14 @@ class TestMigrationScenarios:
 
             # Check email transformation
             if "mail" in target_user:
-                assert (
-                    "@target.example.com" in target_user["mail"]
-                ), f"Email not transformed: {target_user['mail']}"
+                assert "@target.example.com" in target_user["mail"], (
+                    f"Email not transformed: {target_user['mail']}"
+                )
 
             # Check description added
-            assert "Migrated from source" in target_user.get(
-                "description", ""
-            ), "Migration metadata not added"
+            assert "Migrated from source" in target_user.get("description", ""), (
+                "Migration metadata not added"
+            )
 
     def test_conflict_resolution_migration(
         self, ldap_source_connection, ldap_target_connection, clean_target_ldap
@@ -432,10 +432,10 @@ class TestMigrationScenarios:
             "uid=conflict_user,ou=People,dc=target,dc=example,dc=com"
         )
 
-        assert "CONFLICT RESOLVED" in resolved_user.get(
-            "description", ""
-        ), "Conflict resolution not recorded"
+        assert "CONFLICT RESOLVED" in resolved_user.get("description", ""), (
+            "Conflict resolution not recorded"
+        )
 
-        assert (
-            resolved_user.get("employeeID") == "SOURCE001"
-        ), "Source employee number not preserved"
+        assert resolved_user.get("employeeID") == "SOURCE001", (
+            "Source employee number not preserved"
+        )

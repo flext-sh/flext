@@ -167,18 +167,18 @@ sudo systemctl status gruponos-oic-wms
 
 Key configuration variables (see `.env.example` for complete list):
 
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `DB_HOST` | Oracle ADB hostname | Yes |
-| `DB_USERNAME` | Database username | Yes |
-| `DB_PASSWORD` | Database password | Yes |
-| `DB_WALLET_PATH` | Oracle wallet directory | Yes |
-| `WMS_URL` | WMS Cloud instance URL | Yes |
-| `WMS_USERNAME` | WMS username | Yes |
-| `WMS_PASSWORD` | WMS password | Yes |
-| `OIC_BASE_URL` | OIC instance URL | Yes |
-| `OIC_USERNAME` | OIC username | Yes |
-| `OIC_PASSWORD` | OIC password | Yes |
+| Variable         | Description             | Required |
+| ---------------- | ----------------------- | -------- |
+| `DB_HOST`        | Oracle ADB hostname     | Yes      |
+| `DB_USERNAME`    | Database username       | Yes      |
+| `DB_PASSWORD`    | Database password       | Yes      |
+| `DB_WALLET_PATH` | Oracle wallet directory | Yes      |
+| `WMS_URL`        | WMS Cloud instance URL  | Yes      |
+| `WMS_USERNAME`   | WMS username            | Yes      |
+| `WMS_PASSWORD`   | WMS password            | Yes      |
+| `OIC_BASE_URL`   | OIC instance URL        | Yes      |
+| `OIC_USERNAME`   | OIC username            | Yes      |
+| `OIC_PASSWORD`   | OIC password            | Yes      |
 
 ### Oracle Wallet Setup
 
@@ -486,9 +486,9 @@ kubectl scale deployment gruponos-oic-wms --replicas=3
 ```yaml
 # nginx.conf
 upstream gruponos_backend {
-    server gruponos-oic-wms-1:8000;
-    server gruponos-oic-wms-2:8000;
-    server gruponos-oic-wms-3:8000;
+server gruponos-oic-wms-1:8000;
+server gruponos-oic-wms-2:8000;
+server gruponos-oic-wms-3:8000;
 }
 ```
 
@@ -502,7 +502,7 @@ deploy:
   resources:
     limits:
       memory: 2GB
-      cpus: '2.0'
+      cpus: "2.0"
 ```
 
 **Performance Tuning:**
@@ -541,7 +541,6 @@ tail -f logs/gruponos-oic-wms.log | jq 'select(.component=="wms")'
 - **Technical Issues:** [technical-support@gruponos.com]
 - **Integration Issues:** [integration-team@gruponos.com]
 - **Emergency:** [on-call@gruponos.com]
-
 
 ---
 

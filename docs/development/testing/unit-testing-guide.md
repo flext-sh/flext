@@ -76,10 +76,10 @@ class TestUserEntity:
         # Arrange
         username = "john_doe"
         email = Email("john@example.com")
-        
+
         # Act
         user = User(username=username, email=email)
-        
+
         # Assert
         assert user.username == username
         assert user.email == email
@@ -92,10 +92,10 @@ class TestUserEntity:
         # Arrange
         user = User(username="john", email=Email("john@old.com"))
         original_version = user.version
-        
+
         # Act
         user.change_email(Email("john@new.com"))
-        
+
         # Assert
         assert user.email.value == "john@new.com"
         assert user.version == original_version + 1  # Version increment
@@ -107,15 +107,15 @@ class TestUserEntity:
         # Arrange
         user = User(username="john", email=Email("john@example.com"))
         deactivation_reason = "Account suspended for policy violation"
-        
+
         # Act
         user.deactivate(reason=deactivation_reason)
-        
+
         # Assert
         assert user.is_active is False
         assert user.deactivation_reason == deactivation_reason
         assert user.deactivated_at is not None
-        
+
         # Verify business rule: cannot deactivate already inactive user
         with pytest.raises(BusinessRuleViolationError):
             user.deactivate("Already inactive")
@@ -125,11 +125,11 @@ class TestUserEntity:
         # Arrange
         user = User(username="john", email=Email("john@example.com"))
         original_events = user.domain_events.copy()
-        
+
         # Act - External modification attempt
         external_events = user.domain_events
         external_events.append("malicious_event")
-        
+
         # Assert - Internal state unchanged
         assert user.domain_events == original_events
         assert "malicious_event" not in user.domain_events
@@ -148,7 +148,7 @@ class TestEmailValueObject:
             "user.name+tag@domain.co.uk",
             "x@y.co"
         ]
-        
+
         for email_str in valid_emails:
             email = Email(email_str)
             assert email.value == email_str
@@ -163,7 +163,7 @@ class TestEmailValueObject:
             "",
             "user space@domain.com"
         ]
-        
+
         for invalid_email in invalid_emails:
             with pytest.raises(ValidationError, match="Invalid email format"):
                 Email(invalid_email)
@@ -173,11 +173,11 @@ class TestEmailValueObject:
         email1 = Email("test@example.com")
         email2 = Email("test@example.com")
         email3 = Email("different@example.com")
-        
+
         # Equality
         assert email1 == email2
         assert email1 != email3
-        
+
         # Hashing (for use in sets/dicts)
         email_set = {email1, email2, email3}
         assert len(email_set) == 2  # email1 and email2 are same
@@ -185,7 +185,7 @@ class TestEmailValueObject:
     def test_email_immutability(self):
         """Test email value objects are immutable."""
         email = Email("test@example.com")
-        
+
         # Should not have settable attributes
         with pytest.raises(AttributeError):
             email.value = "changed@example.com"
@@ -203,14 +203,14 @@ class TestDomainEvents:
         aggregate_id = uuid4()
         username = "john_doe"
         email = "john@example.com"
-        
+
         # Act
         event = UserCreatedEvent(
             aggregate_id=aggregate_id,
             username=username,
             email=email
         )
-        
+
         # Assert
         assert event.aggregate_id == aggregate_id
         assert event.username == username
@@ -227,11 +227,11 @@ class TestDomainEvents:
             username="john_doe",
             email="john@example.com"
         )
-        
+
         # Act
         serialized = event.to_dict()
         deserialized = UserCreatedEvent.from_dict(serialized)
-        
+
         # Assert
         assert deserialized.aggregate_id == event.aggregate_id
         assert deserialized.username == event.username
@@ -245,11 +245,11 @@ class TestDomainEvents:
             username="john_doe",
             email="john@example.com"
         )
-        
+
         # Should not be able to modify event data
         with pytest.raises(AttributeError):
             event.username = "changed_username"
-        
+
         with pytest.raises(AttributeError):
             event.occurred_at = datetime.now()
 ```
@@ -288,25 +288,25 @@ class TestCreateUserCommandHandler:
             username="john_doe",
             email="john@example.com"
         )
-        
+
         # Configure mocks
         mock_dependencies['user_repository'].exists_by_username.return_value = False
         mock_dependencies['user_repository'].save.return_value = None
         mock_dependencies['event_bus'].publish.return_value = None
-        
+
         # Act
         result = await command_handler.handle(command)
-        
+
         # Assert
         assert result.success is True
         assert result.user_id is not None
         assert result.errors == []
-        
+
         # Verify interactions
         mock_dependencies['user_repository'].exists_by_username.assert_called_once_with("john_doe")
         mock_dependencies['user_repository'].save.assert_called_once()
         mock_dependencies['event_bus'].publish.assert_called_once()
-        
+
         # Verify event type
         published_event = mock_dependencies['event_bus'].publish.call_args[0][0]
         assert isinstance(published_event, UserCreatedEvent)
@@ -320,18 +320,18 @@ class TestCreateUserCommandHandler:
             username="existing_user",
             email="john@example.com"
         )
-        
+
         # Configure mocks - user already exists
         mock_dependencies['user_repository'].exists_by_username.return_value = True
-        
+
         # Act
         result = await command_handler.handle(command)
-        
+
         # Assert
         assert result.success is False
         assert result.user_id is None
         assert "Username already exists" in result.errors[0]
-        
+
         # Verify no save or event publishing occurred
         mock_dependencies['user_repository'].save.assert_not_called()
         mock_dependencies['event_bus'].publish.assert_not_called()
@@ -344,15 +344,15 @@ class TestCreateUserCommandHandler:
             username="john_doe",
             email="john@example.com"
         )
-        
+
         # Configure mocks - repository raises exception
         mock_dependencies['user_repository'].exists_by_username.return_value = False
         mock_dependencies['user_repository'].save.side_effect = DatabaseError("Connection failed")
-        
+
         # Act & Assert
         with pytest.raises(DatabaseError):
             await command_handler.handle(command)
-        
+
         # Verify logging occurred
         mock_dependencies['logger'].error.assert_called()
 ```
@@ -380,14 +380,14 @@ class TestSqlUserRepository:
         """Test save user generates correct SQL operations."""
         # Arrange
         user = User(username="john_doe", email=Email("john@example.com"))
-        
+
         # Act
         await repository.save(user)
-        
+
         # Assert
         mock_session.add.assert_called_once()
         mock_session.commit.assert_called_once()
-        
+
         # Verify correct user data was added
         added_user = mock_session.add.call_args[0][0]
         assert added_user.username == "john_doe"
@@ -405,18 +405,18 @@ class TestSqlUserRepository:
             email="john@example.com"
         )
         mock_session.execute.return_value = mock_result
-        
+
         # Act
         user = await repository.find_by_username(username)
-        
+
         # Assert
         assert user is not None
         assert user.username == username
-        
+
         # Verify query was executed
         mock_session.execute.assert_called_once()
         executed_query = mock_session.execute.call_args[0][0]
-        
+
         # Verify query contains username filter
         query_str = str(executed_query)
         assert "WHERE" in query_str
@@ -428,13 +428,13 @@ class TestSqlUserRepository:
         # Arrange
         user = User(username="john_doe", email=Email("john@example.com"))
         mock_session.commit.side_effect = SQLAlchemyError("Database connection lost")
-        
+
         # Act & Assert
         with pytest.raises(RepositoryError) as exc_info:
             await repository.save(user)
-        
+
         assert "Database connection lost" in str(exc_info.value)
-        
+
         # Verify rollback was called
         mock_session.rollback.assert_called_once()
 ```
@@ -474,7 +474,7 @@ class TestConfigAdapter:
         db_url = config_adapter.get('database.url')
         pool_size = config_adapter.get('database.pool_size')
         log_level = config_adapter.get('logging.level')
-        
+
         # Assert
         assert db_url == 'postgresql://localhost/test'
         assert pool_size == 10
@@ -484,7 +484,7 @@ class TestConfigAdapter:
         """Test default values for missing configuration."""
         # Act
         missing_value = config_adapter.get('missing.key', default='default_value')
-        
+
         # Assert
         assert missing_value == 'default_value'
 
@@ -498,10 +498,10 @@ class TestConfigAdapter:
         """Test environment variables override configuration files."""
         # Arrange
         monkeypatch.setenv('FLX_DATABASE__URL', 'postgresql://override/db')
-        
+
         # Act
         db_url = config_adapter.get('database.url')
-        
+
         # Assert
         assert db_url == 'postgresql://override/db'
 ```
@@ -521,11 +521,11 @@ class TestUserRepositoryPort:
             'save', 'find_by_id', 'find_by_username',
             'exists_by_username', 'delete', 'list_all'
         ]
-        
+
         # Act
-        port_methods = [method for method in dir(UserRepository) 
+        port_methods = [method for method in dir(UserRepository)
                        if not method.startswith('_')]
-        
+
         # Assert
         for required_method in required_methods:
             assert required_method in port_methods, f"Missing required method: {required_method}"
@@ -533,12 +533,12 @@ class TestUserRepositoryPort:
     def test_port_method_signatures(self):
         """Test port methods have correct signatures."""
         import inspect
-        
+
         # Test save method signature
         save_sig = inspect.signature(UserRepository.save)
         assert 'user' in save_sig.parameters
         assert save_sig.return_annotation == None
-        
+
         # Test find_by_id method signature
         find_sig = inspect.signature(UserRepository.find_by_id)
         assert 'user_id' in find_sig.parameters
@@ -549,7 +549,7 @@ class TestUserRepositoryPort:
         # Assert
         assert issubclass(UserRepository, Repository)
         assert hasattr(UserRepository, '__abstractmethods__')
-        
+
         # Verify abstract methods are defined
         abstract_methods = UserRepository.__abstractmethods__
         assert 'save' in abstract_methods
@@ -663,14 +663,14 @@ class UserTestBuilder:
             username=self._username,
             email=Email(self._email)
         )
-        
+
         # Apply configuration
         if not self._active:
             user.deactivate("Test deactivation")
-            
+
         # Set creation time (using private access for testing)
         user._created_at = self._created_at
-        
+
         return user
 
 # Usage example
@@ -682,7 +682,7 @@ def test_user_builder_example():
            .created_days_ago(30)
            .inactive()
            .build())
-    
+
     assert user.username == "john_doe"
     assert not user.is_active
     assert user.created_at < datetime.now() - timedelta(days=29)
@@ -692,7 +692,7 @@ def test_user_builder_example():
 
 ### Execution Time Monitoring
 
-```python
+````python
 import pytest
 import time
 from functools import wraps
@@ -705,11 +705,11 @@ def time_limit(seconds):
             start_time = time.time()
             result = func(*args, **kwargs)
             execution_time = time.time() - start_time
-            
+
             if execution_time > seconds:
                 pytest.fail(f"Test {func.__name__} took {execution_time:.3f}s, "
                           f"exceeded limit of {seconds}s")
-            
+
             return result
         return wrapper
     return decorator
@@ -733,7 +733,7 @@ class TestPerformanceRequirements:
         """Test value object validation is fast enough."""
         # This test must complete in <50ms
         valid_emails = [f"user{i}@example.com" for i in range(50)]
-        
+
         for email_str in valid_emails:
             email = Email(email_str)
             assert email.value == email_str
@@ -748,11 +748,11 @@ class TestPerformanceRequirements:
 # Problem: Tests affecting each other
 class ProblematicTestClass:
     shared_data = []  # ❌ Shared state between tests
-    
+
     def test_first(self):
         self.shared_data.append("data")
         assert len(self.shared_data) == 1
-    
+
     def test_second(self):
         # This may fail depending on test execution order
         assert len(self.shared_data) == 0
@@ -761,14 +761,14 @@ class ProblematicTestClass:
 class IsolatedTestClass:
     def setup_method(self):
         self.data = []  # ✅ Fresh data for each test
-    
+
     def test_first(self):
         self.data.append("data")
         assert len(self.data) == 1
-    
+
     def test_second(self):
         assert len(self.data) == 0  # ✅ Always passes
-```
+````
 
 #### Mock Configuration Issues
 
@@ -785,7 +785,7 @@ def test_with_configured_mock(mocker):
     mock_repo = mocker.Mock(spec=UserRepository)
     test_user = User(username="test", email=Email("test@example.com"))
     mock_repo.find_by_id.return_value = test_user
-    
+
     user = mock_repo.find_by_id("123")
     assert user.username == "test"  # ✅ Will pass
 ```
@@ -823,7 +823,7 @@ def test_fast_operation(mocker):
     # Mock database connection ✅
     mock_db = mocker.Mock()
     mock_db.query.return_value = [{"id": 1, "name": "test"}]
-    
+
     result = mock_db.query("SELECT * FROM large_table")
     assert len(result) > 0
 ```
@@ -835,7 +835,7 @@ def test_fast_operation(mocker):
 class TestMemoryLeak:
     def setup_method(self):
         self.large_data = [i for i in range(1000000)]  # ❌ Large data kept in memory
-    
+
     def test_operation(self):
         # Test uses large_data but doesn't clean up
         pass
@@ -946,4 +946,7 @@ def test_user_creation(user_fixture):
 ---
 
 **📂 Content Document** | **🏠 Parent**: [Testing Hub](./index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+
+```
+
 ```

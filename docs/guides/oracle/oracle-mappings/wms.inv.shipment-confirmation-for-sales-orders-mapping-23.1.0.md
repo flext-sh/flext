@@ -1,39 +1,37 @@
 # wms.inv.shipment-confirmation-for-sales-orders-mapping-23.1.0.xlsx
 
-**Caminho:** `reference/wms_solutions/mappings/wms.inv.shipment-confirmation-for-sales-orders-mapping-23.1.0.xlsx`  \n**Data de conversão:** 2025-05-15T14:42:55.183355  \n**Tipo:** .xlsx  \n**[Download original](reference/wms_solutions/mappings/wms.inv.shipment-confirmation-for-sales-orders-mapping-23.1.0.xlsx)**
+**Caminho:** `reference/wms_solutions/mappings/wms.inv.shipment-confirmation-for-sales-orders-mapping-23.1.0.xlsx` \n**Data de conversão:** 2025-05-15T14:42:55.183355 \n**Tipo:** .xlsx \n**[Download original](reference/wms_solutions/mappings/wms.inv.shipment-confirmation-for-sales-orders-mapping-23.1.0.xlsx)**
 
 ---
 
 ## Sumário
 
-
-
 ## Resumo automático
 
 Este documento é uma especificação de mapeamento (versão 23.1.0) para a integração entre um WMS e o serviço REST “Shipment Transaction Requests” da Oracle Cloud SCM, usado na confirmação de remessas de pedidos de venda em lote. Nele são definidos:
 
-• Estrutura geral do payload  
-  – Campos de cabeçalho: id, path (“/shipmentTransactionRequests”), operation (“create”), ActionCode (“CreateAndConfirmShipment”).  
-  – Array shipments contendo, para cada parada ou carga:  
-    • Shipment (identificador de remessa)  
-    • ShipFromOrganizationCode (filial), BillOfLading, Waybill  
-    • GrossWeight/WeightUOMCode e Volume/VolumeUOMCode (com possibilidade de usar unidades definidas em propriedade de integração)  
-    • ActualShipDate, ExternalSystemTransactionReference, CarrierNumber, ModeOfTransportCode, ServiceLevelCode  
+• Estrutura geral do payload
+ – Campos de cabeçalho: id, path (“/shipmentTransactionRequests”), operation (“create”), ActionCode (“CreateAndConfirmShipment”).
+ – Array shipments contendo, para cada parada ou carga:
+ • Shipment (identificador de remessa)
+ • ShipFromOrganizationCode (filial), BillOfLading, Waybill
+ • GrossWeight/WeightUOMCode e Volume/VolumeUOMCode (com possibilidade de usar unidades definidas em propriedade de integração)
+ • ActualShipDate, ExternalSystemTransactionReference, CarrierNumber, ModeOfTransportCode, ServiceLevelCode
 
-• Unidades de embalagem  
-  – outerPackingUnits e innerPackingUnits, cada um com PackingUnit (número de pallet ou LPN), PackingUnitType (definido por propriedade), GrossWeight, Volume e suas UOMs  
+• Unidades de embalagem
+ – outerPackingUnits e innerPackingUnits, cada um com PackingUnit (número de pallet ou LPN), PackingUnitType (definido por propriedade), GrossWeight, Volume e suas UOMs
 
-• Linhas embarcadas (packedLines)  
-  – ShipmentLine (nº da linha), Item (código alternativo), ShippedQuantity/ShippedQuantityUOMCode (considerando propriedade de UOM), RequestedQuantityToConsume, LoadingSequence, TrackingNumber, Subinventory  
+• Linhas embarcadas (packedLines)
+ – ShipmentLine (nº da linha), Item (código alternativo), ShippedQuantity/ShippedQuantityUOMCode (considerando propriedade de UOM), RequestedQuantityToConsume, LoadingSequence, TrackingNumber, Subinventory
 
-• Rastreamento de lote e série  
-  – Se o SKU for controlado por lote: array lots com Lot, Subinventory, Quantity  
-  – Se for controlado por série: array serials com FromSerialNumber, ToSerialNumber, Subinventory  
+• Rastreamento de lote e série
+ – Se o SKU for controlado por lote: array lots com Lot, Subinventory, Quantity
+ – Se for controlado por série: array serials com FromSerialNumber, ToSerialNumber, Subinventory
 
-• Regras e observações de formatação  
-  – Tamanhos máximos de campos, obrigatoriedade, concatenações (por exemplo load_manifest_nbr+“-”+seq_nbr ou shipto_zip)  
-  – Uso de propriedades de integração para definições padrão de UOM e tipos de embalagem  
-  – Suporte a cenários de múltiplos pontos de entrega no fluxo Parcel  
+• Regras e observações de formatação
+ – Tamanhos máximos de campos, obrigatoriedade, concatenações (por exemplo load_manifest_nbr+“-”+seq_nbr ou shipto_zip)
+ – Uso de propriedades de integração para definições padrão de UOM e tipos de embalagem
+ – Suporte a cenários de múltiplos pontos de entrega no fluxo Parcel
 
 Finalmente, o documento cita links para a documentação oficial do serviço REST e para casos de teste de batch processing, servindo de guia para desenvolvimento ou configuração do conector entre o WMS e o Oracle SCM.
 
@@ -46,7 +44,7 @@ INV -REST: operation, Format: , Max: , WMS Column: "create", Format.1: , Max.1: 
 INV -REST: payload, Format: , Max: , WMS Column: , Format.1: , Max.1: , REQD?: , Notes:
 INV -REST: ActionCode, Format: string, Max: , WMS Column: CreateAndConfirmShipment, Format.1: , Max.1: , REQD?: , Notes:
 INV -REST: shipments, Format: , Max: , WMS Column: , Format.1: , Max.1: , REQD?: , Notes:
-INV -REST: Shipment, Format: String, Max: 30.0, WMS Column: load_manifest_nbr+"-"+seq_nbr  (for Load flow)
+INV -REST: Shipment, Format: String, Max: 30.0, WMS Column: load_manifest_nbr+"-"+seq_nbr (for Load flow)
 load_manifest_nbr+"-"+shipto_zip (for Parcel flow), Format.1: String, Max.1: , REQD?: , Notes: In Parcel flow, to support multi stop scenario, Shipment mapping uses shipto_zip
 INV -REST: ShipFromOrganizationCode, Format: String, Max: 240.0, WMS Column: facility_code, Format.1: String, Max.1: 20.0, REQD?: , Notes:
 INV -REST: BillOfLading, Format: String, Max: 50.0, WMS Column: stop_bol_nbr, Format.1: String, Max.1: 30.0, REQD?: , Notes:

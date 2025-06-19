@@ -108,13 +108,7 @@ Environment variables:
 
 ```json
 {
-  "entities": [
-    "item",
-    "inventory",
-    "location",
-    "order_hdr",
-    "order_dtl"
-  ]
+  "entities": ["item", "inventory", "location", "order_hdr", "order_dtl"]
 }
 ```
 
@@ -146,7 +140,13 @@ Environment variables:
 {
   "field_selection": {
     "item": ["id", "code", "description", "status", "item_type"],
-    "inventory": ["id", "item_id", "location_id", "on_hand_qty", "allocated_qty"],
+    "inventory": [
+      "id",
+      "item_id",
+      "location_id",
+      "on_hand_qty",
+      "allocated_qty"
+    ],
     "order_hdr": ["id", "order_nbr", "status", "customer_id", "order_date"]
   }
 }
@@ -504,61 +504,61 @@ export TAP_ORACLE_WMS_LOG_LEVEL="DEBUG"
 ```yaml
 plugins:
   extractors:
-  - name: tap-oracle-wms
-    namespace: tap_oracle_wms
-    pip_url: tap-oracle-wms
-    executable: tap-oracle-wms
-    capabilities:
-    - catalog
-    - discover
-    - properties
-    - state
-    settings:
-    - name: base_url
-      kind: string
-      description: Oracle WMS instance URL
-      sensitive: false
-    - name: auth_method
-      kind: options
-      options:
-      - label: Basic
-        value: basic
-      - label: OAuth2
-        value: oauth2
-    - name: username
-      kind: string
-      sensitive: true
-    - name: password
-      kind: password
-      sensitive: true
-    config:
-      base_url: ${TAP_ORACLE_WMS_BASE_URL}
-      auth_method: ${TAP_ORACLE_WMS_AUTH_METHOD}
-      start_date: '2024-01-01T00:00:00Z'
+    - name: tap-oracle-wms
+      namespace: tap_oracle_wms
+      pip_url: tap-oracle-wms
+      executable: tap-oracle-wms
+      capabilities:
+        - catalog
+        - discover
+        - properties
+        - state
+      settings:
+        - name: base_url
+          kind: string
+          description: Oracle WMS instance URL
+          sensitive: false
+        - name: auth_method
+          kind: options
+          options:
+            - label: Basic
+              value: basic
+            - label: OAuth2
+              value: oauth2
+        - name: username
+          kind: string
+          sensitive: true
+        - name: password
+          kind: password
+          sensitive: true
+      config:
+        base_url: ${TAP_ORACLE_WMS_BASE_URL}
+        auth_method: ${TAP_ORACLE_WMS_AUTH_METHOD}
+        start_date: "2024-01-01T00:00:00Z"
 ```
 
 ### Environment-Specific Configuration
 
 ```yaml
 environments:
-- name: dev
-  config:
-    plugins:
-      extractors:
-      - name: tap-oracle-wms
-        config:
-          base_url: https://dev.wms.example.com/dev
-          pagination_mode: offset
-          page_size: 100
-- name: prod
-  config:
-    plugins:
-      extractors:
-      - name: tap-oracle-wms
-        config:
-          base_url: https://prod.wms.example.com/prod
-          pagination_mode: cursor
-          page_size: 1000
+  - name: dev
+    config:
+      plugins:
+        extractors:
+          - name: tap-oracle-wms
+            config:
+              base_url: https://dev.wms.example.com/dev
+              pagination_mode: offset
+              page_size: 100
+  - name: prod
+    config:
+      plugins:
+        extractors:
+          - name: tap-oracle-wms
+            config:
+              base_url: https://prod.wms.example.com/prod
+              pagination_mode: cursor
+              page_size: 1000
 ```
 
 ## Configuration Validation

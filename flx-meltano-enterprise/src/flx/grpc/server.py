@@ -34,7 +34,8 @@ except ImportError:
     flx_pb2_grpc = None
 
 try:
-    from flx.monitoring.health import HealthChecker, HealthStatus as HealthStatusEnum
+    from flx.monitoring.health import HealthChecker
+    from flx.monitoring.health import HealthStatus as HealthStatusEnum
 except ImportError:
     HealthChecker = None
     HealthStatusEnum = None

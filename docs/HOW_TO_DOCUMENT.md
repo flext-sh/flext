@@ -52,7 +52,7 @@ Essential guide for contributors, maintainers, and agents working on FLX Framewo
 /docs/index.md (ROOT - ABSOLUTE NAVIGATION CENTER)
     ↓
 [CATEGORY]/index.md (FUNCTIONAL HUBS)
-    ↓  
+    ↓
 [CATEGORY]/document.md (SPECIALIZED CONTENT)
     ↓
 Cross-references & Navigation
@@ -60,16 +60,16 @@ Cross-references & Navigation
 
 ### **Functional Categories**
 
-| **Category** | **Function** | **Audience** | **Pattern** |
-|--------------|--------------|--------------|-------------|
-| **getting-started/** | Onboarding & first steps | New developers | Tutorial → Config → Project |
-| **architecture/** | Design & patterns | Architects, senior devs | Overview → Components → Implementation |
-| **development/** | Tools & dev standards | Developers, teams | Standards → Tools → Process |
-| **guides/** | Practical tutorials | Implementation devs | Problem → Solution → Example |
-| **api-reference/** | Complete API docs | Implementation devs | Overview → Modules → Classes → Functions |
-| **integrations/** | External integrations | Integration engineers | Overview → System → Configuration |
-| **optimization/** | Performance tuning | Performance engineers | Analysis → Strategy → Implementation |
-| **ports/** | Hexagonal architecture | Framework developers | Concepts → Implementation → Examples |
+| **Category**         | **Function**             | **Audience**            | **Pattern**                              |
+| -------------------- | ------------------------ | ----------------------- | ---------------------------------------- |
+| **getting-started/** | Onboarding & first steps | New developers          | Tutorial → Config → Project              |
+| **architecture/**    | Design & patterns        | Architects, senior devs | Overview → Components → Implementation   |
+| **development/**     | Tools & dev standards    | Developers, teams       | Standards → Tools → Process              |
+| **guides/**          | Practical tutorials      | Implementation devs     | Problem → Solution → Example             |
+| **api-reference/**   | Complete API docs        | Implementation devs     | Overview → Modules → Classes → Functions |
+| **integrations/**    | External integrations    | Integration engineers   | Overview → System → Configuration        |
+| **optimization/**    | Performance tuning       | Performance engineers   | Analysis → Strategy → Implementation     |
+| **ports/**           | Hexagonal architecture   | Framework developers    | Concepts → Implementation → Examples     |
 
 ---
 
@@ -91,17 +91,20 @@ Cross-references & Navigation
 ---
 
 ## 🧭 **Navigation Context**
+
 **🏠 Root**: [Documentation Home](../index.md) → **📂 Current Hub**: [Section Name]
 
 ## 🎯 **Quick Navigation**
 
 ### **Core Topics**
-| **Topic** | **Function** | **Audience** | **Status** |
-|-----------|--------------|--------------|------------|
-| [Topic 1](./topic1.md) | Function description | Target audience | ✅ Status |
-| [Topic 2](./topic2.md) | Function description | Target audience | 🔶 Status |
+
+| **Topic**              | **Function**         | **Audience**    | **Status** |
+| ---------------------- | -------------------- | --------------- | ---------- |
+| [Topic 1](./topic1.md) | Function description | Target audience | ✅ Status  |
+| [Topic 2](./topic2.md) | Function description | Target audience | 🔶 Status  |
 
 ### **📋 Learning Path**
+
 1. **🎯 Start Here**: [First Document](./start.md) - What to read first
 2. **⚡ Quick Path**: [Quick Guide](./quick.md) - Fast implementation
 3. **📚 Deep Dive**: [Complete Guide](./complete.md) - Comprehensive coverage
@@ -111,20 +114,24 @@ Cross-references & Navigation
 ## 🔗 **Cross-Section Navigation**
 
 ### **⬅️ Prerequisites**
+
 - [Required Hub](../required/index.md) - Why needed before this section
 
 ### **➡️ Next Steps**
+
 - [Next Hub](../next/index.md) - What comes after this section
 
 ### **🔗 Related Sections**
+
 - [Related Hub 1](../related1/index.md) - Connection explanation
 - [Related Hub 2](../related2/index.md) - Connection explanation
 
 ---
 
 ## 📊 **Section Metrics**
+
 - **Documents**: X files
-- **Completeness**: Y%  
+- **Completeness**: Y%
 - **Last Updated**: Date
 
 ---
@@ -148,6 +155,7 @@ Cross-references & Navigation
 ---
 
 ## 🧭 **Navigation Context**
+
 **🏠 Root**: [Home](../index.md) → **📂 Hub**: [Section Hub](./index.md) → **📄 Current**: [Document Name]
 
 ### **📍 Learning Path Position**
@@ -243,7 +251,7 @@ Cross-references & Navigation
 Every document MUST include:
 
 1. **Prerequisites**: What's needed before this document
-2. **Next Steps**: What to do after this document  
+2. **Next Steps**: What to do after this document
 3. **Related Topics**: Connected concepts or procedures
 
 ### **Cross-Reference Principles**
@@ -258,12 +266,15 @@ Every document MUST include:
 
 ```markdown
 ### **Prerequisites**
+
 - [Required Topic](./path/to/topic.md) - Brief explanation of why it's required
 
 ### **Next Steps**
+
 - [Follow-up Topic](./path/to/next.md) - What this enables you to do
 
 ### **Related Topics**
+
 - [Related Concept](./path/to/related.md) - How it connects to current topic
 ```
 
@@ -273,6 +284,7 @@ Every document MUST include navigation context:
 
 ```markdown
 ## 🧭 **Navigation Context**
+
 **🏠 Root**: [Home](../index.md) → **📂 Hub**: [Section](./index.md) → **📄 Current**: Document Name
 ```
 
@@ -306,7 +318,7 @@ from datetime import datetime, UTC
 
 class Customer(Entity):
     """Customer entity with proper domain logic.
-    
+
     Example:
         >>> customer = Customer(
         ...     name="John Doe",

@@ -18,9 +18,9 @@
 
 ### **Core Topics**
 
-| **Topic** | **Function** | **Audience** | **Status** |
-|-----------|--------------|--------------|------------|
-| [Quickstart](./quickstart.md) | Rapid framework introduction | New developers | ✅ Complete |
+| **Topic**                             | **Function**                   | **Audience**   | **Status**  |
+| ------------------------------------- | ------------------------------ | -------------- | ----------- |
+| [Quickstart](./quickstart.md)         | Rapid framework introduction   | New developers | ✅ Complete |
 | [First Pipeline](./first-pipeline.md) | Build your first data pipeline | Data engineers | ✅ Complete |
 
 ### **📋 Learning Path**
@@ -57,7 +57,7 @@
 ## 📊 **Section Metrics**
 
 - **Documents**: 2 files
-- **Completeness**: 100%  
+- **Completeness**: 100%
 - **Last Updated**: June 11, 2025
 
 ---

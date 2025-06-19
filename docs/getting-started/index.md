@@ -18,12 +18,12 @@
 
 ### **Core Topics**
 
-| **Topic** | **Function** | **Audience** | **Status** |
-|-----------|--------------|--------------|------------|
-| [Setup](./setup/index.md) | Installation & environment | All new users | ✅ Complete |
-| [Basics](./basics/index.md) | First projects & quickstart | New developers | ✅ Complete |
-| [Concepts](./concepts/index.md) | Framework fundamentals | All users | ✅ Complete |
-| [Advanced](./advanced/index.md) | Advanced configurations | Experienced devs | ✅ Complete |
+| **Topic**                       | **Function**                | **Audience**     | **Status**  |
+| ------------------------------- | --------------------------- | ---------------- | ----------- |
+| [Setup](./setup/index.md)       | Installation & environment  | All new users    | ✅ Complete |
+| [Basics](./basics/index.md)     | First projects & quickstart | New developers   | ✅ Complete |
+| [Concepts](./concepts/index.md) | Framework fundamentals      | All users        | ✅ Complete |
+| [Advanced](./advanced/index.md) | Advanced configurations     | Experienced devs | ✅ Complete |
 
 ### **📋 Learning Path**
 
@@ -58,7 +58,7 @@
 ## 📊 **Section Metrics**
 
 - **Documents**: 13 files
-- **Completeness**: 95%  
+- **Completeness**: 95%
 - **Last Updated**: June 11, 2025
 
 ---

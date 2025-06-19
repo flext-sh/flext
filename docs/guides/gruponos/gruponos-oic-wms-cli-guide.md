@@ -57,7 +57,7 @@ poetry run gn-wms-cli check --format=json
 
 **Options:**
 
-- `--pattern TEXT`: Table name pattern (default: WMS_%)
+- `--pattern TEXT`: Table name pattern (default: WMS\_%)
 - `--columns`: Show column structure and data types
 - `--audit`: Show audit field status
 - `--format [table|json]`: Output format
@@ -156,7 +156,7 @@ poetry run gn-wms-cli analyze --force
 
 **Options:**
 
-- `--pattern TEXT`: Table name pattern (default: WMS_%)
+- `--pattern TEXT`: Table name pattern (default: WMS\_%)
 - `--compute TEXT`: Type of analysis (default: STATISTICS)
 - `--dry-run`: Show what would be analyzed without executing
 - `--force`: Skip confirmation prompt
@@ -220,7 +220,7 @@ poetry run gn-wms-cli backup --pattern="WMS_ORDER%"
 
 **Options:**
 
-- `--pattern TEXT`: Table name pattern to backup (default: WMS_%)
+- `--pattern TEXT`: Table name pattern to backup (default: WMS\_%)
 - `--output-dir PATH`: Output directory (default: ./backup)
 - `--format [sql|csv|json]`: Backup format (default: sql)
 - `--compress`: Compress backup files (future feature)

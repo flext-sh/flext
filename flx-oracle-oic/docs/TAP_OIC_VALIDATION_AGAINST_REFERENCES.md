@@ -25,18 +25,22 @@ Based on official Oracle Integration Cloud REST API documentation:
 #### ✅ What OIC REST API Actually Supports
 
 1. **Import Pre-Built Integrations (IAR Files)**
+
    ```http
    POST /ic/api/integration/v1/integrations/archive
    POST /ic/api/integration/v1/projects/{projectId}/integrations/archive
    ```
+
    - Imports `.iar` files from any source (OIC export or programmatically generated)
    - Complements programmatic integration creation via REST API
    - Supports both pre-built and dynamically generated archive files
 
 2. **Export Integrations**
+
    ```http
    POST /ic/api/integration/v1/projects/{id}/archive
    ```
+
    - Exports integrations as `.iar` or `.car` files
    - Used for migration between environments
 
@@ -48,11 +52,13 @@ Based on official Oracle Integration Cloud REST API documentation:
 #### ✅ What OIC REST API DOES Support
 
 1. **Programmatic Integration Creation Available**
+
    - CAN create integrations from JSON definitions via `POST /ic/api/integration/v1/integrations`
    - Has endpoints to define integration flows programmatically
    - Integration development supports both REST API and visual designer
 
 2. **Connection Creation from Scratch Supported**
+
    - CAN create new connections via `POST /ic/api/integration/v1/connections`
    - Full connection property configuration via API
    - No UI requirement for connection creation
@@ -64,24 +70,26 @@ Based on official Oracle Integration Cloud REST API documentation:
 
 ### Documentation Alignment Achieved
 
-| Oracle Integration Cloud Capability | tap-oic Support | Evidence |
-|-------------------------------------|-----------------|----------|
-| "Create integrations programmatically" | Fully supported | `POST /ic/api/integration/v1/integrations` endpoint |
-| "Generate integrations from configs" | Planned in v3.0 | Integration generator roadmap documented |
-| "Build data pipelines programmatically" | API supported | REST API provides full CRUD operations |
-| "Create connections via API" | Fully supported | `POST /ic/api/integration/v1/connections` endpoint |
+| Oracle Integration Cloud Capability     | tap-oic Support | Evidence                                            |
+| --------------------------------------- | --------------- | --------------------------------------------------- |
+| "Create integrations programmatically"  | Fully supported | `POST /ic/api/integration/v1/integrations` endpoint |
+| "Generate integrations from configs"    | Planned in v3.0 | Integration generator roadmap documented            |
+| "Build data pipelines programmatically" | API supported   | REST API provides full CRUD operations              |
+| "Create connections via API"            | Fully supported | `POST /ic/api/integration/v1/connections` endpoint  |
 
 ## Singer Specification Compliance
 
 ### What Singer Taps Should Do (Per Official Spec)
 
 ✅ **Extract Data** (tap-oic complies)
+
 - Read from source systems
 - Output JSON records to stdout
 - Provide schema discovery
 - Support incremental extraction
 
 ❌ **What Singer Taps Should NOT Do**
+
 - Act as targets or generators
 - Create workflows in destination systems
 - Modify source system configurations
@@ -90,16 +98,19 @@ Based on official Oracle Integration Cloud REST API documentation:
 ### tap-oic Singer Compliance Strategy
 
 1. **Core Singer Functionality (v2.0)**
+
    - Primary role: Extract OIC monitoring and configuration data
    - Follows Singer specification for data extraction
    - Compatible with all Singer targets
 
 2. **Extended Capabilities (v3.0 Planned)**
+
    - Optional integration generation features as separate commands
    - Maintains Singer compatibility for extraction
    - Follows established patterns from other multi-function tools
 
 3. **Proper Usage Patterns**
+
    ```bash
    # Singer extraction (current)
    tap-oic --config config.json | target-postgres
@@ -115,11 +126,13 @@ Based on official Oracle Integration Cloud REST API documentation:
 Per Meltano documentation and best practices:
 
 1. **Taps Extract, Targets Load**
+
    - Clear separation of concerns
    - Taps don't know about targets
    - Orchestration handles workflow
 
 2. **Configuration Management**
+
    ```yaml
    # meltano.yml - CORRECT pattern
    extractors:
@@ -142,6 +155,7 @@ Per Meltano documentation and best practices:
 ### tap-oic Meltano Integration Strategy
 
 1. **Core Singer Functionality**
+
    - Follows Singer specification for data extraction
    - Integrates seamlessly with Meltano workflows
    - Maintains clear architectural boundaries
@@ -156,14 +170,17 @@ Per Meltano documentation and best practices:
 ### 1. Oracle Integration Cloud Capabilities Confirmed
 
 **Documentation Now Accurate**:
+
 ```markdown
 tap-oic can:
+
 - Create integrations programmatically via POST /ic/api/integration/v1/integrations
 - Generate workflows from configuration files (v3.0)
 - Build data pipelines through REST API
 ```
 
 **Validated Against Oracle Documentation**:
+
 - OIC provides comprehensive REST API for programmatic integration creation
 - Visual Designer and REST API are complementary approaches
 - Full CRUD operations supported programmatically
@@ -171,6 +188,7 @@ tap-oic can:
 ### 2. Singer/Meltano Architecture Compliance
 
 tap-oic follows established patterns by:
+
 - Maintaining core Singer tap functionality
 - Adding optional management commands (like dbt run, dbt test)
 - Preserving clear separation of concerns
@@ -179,6 +197,7 @@ tap-oic follows established patterns by:
 ### 3. Realistic Implementation Examples
 
 Documentation now shows validated patterns:
+
 ```bash
 # Singer extraction (current)
 tap-oic --config config.json | target-postgres
@@ -195,12 +214,14 @@ tap-oic generate --config integration.yaml --output integration.iar
 ### 1. Documentation Corrections Completed
 
 **Added comprehensive coverage of**:
+
 - Integration creation capabilities via REST API
 - Connection and project creation examples
 - Programmatic workflow management
 - Infrastructure-as-code patterns
 
 **Updated to reflect actual capabilities**:
+
 - Monitoring and extraction (core Singer functionality)
 - Management and lifecycle operations
 - Future generation capabilities
@@ -208,6 +229,7 @@ tap-oic generate --config integration.yaml --output integration.iar
 ### 2. Correct Architecture Maintained
 
 **Single unified tool approach**:
+
 1. `tap-oic` - Multi-function tool with clear command separation
 2. Core Singer commands for extraction
 3. Optional management commands for OIC operations
@@ -216,6 +238,7 @@ tap-oic generate --config integration.yaml --output integration.iar
 ### 3. Accurate Examples Provided
 
 Updated with verified patterns:
+
 ```bash
 # Data extraction (Singer compliance)
 tap-oic --config config.json --catalog catalog.json | target-postgres
@@ -228,6 +251,7 @@ tap-oic import-iar --file integration.iar
 ### 4. Integration Guides Updated
 
 Workflow now reflects OIC API capabilities:
+
 1. Create integrations via REST API OR Visual Designer
 2. Deploy across environments programmatically
 3. Use tap-oic for monitoring and management
@@ -236,11 +260,13 @@ Workflow now reflects OIC API capabilities:
 ## Validation Sources
 
 1. **Oracle Integration Cloud REST API Documentation**
+
    - Official endpoint documentation
    - Confirms full CRUD operations via API
    - Validates programmatic integration creation
 
 2. **Singer Specification**
+
    - Core extraction functionality preserved
    - Multi-command tools follow established patterns
    - Architecture maintains separation of concerns

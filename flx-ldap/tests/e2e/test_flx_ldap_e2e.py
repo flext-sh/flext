@@ -565,14 +565,14 @@ class TestFlxLDAPCompleteE2E:
         )
 
         # 2. Hierarchical DN transformation
-        config["target"]["dn_templates"][
-            "sudoers"
-        ] = "cn={cn},ou=sudo,ou=access,{base_dn}"
+        config["target"]["dn_templates"]["sudoers"] = (
+            "cn={cn},ou=sudo,ou=access,{base_dn}"
+        )
 
         # 3. Complex filtering for active employees only
-        config["tap"][
-            "user_filter"
-        ] = "(&(objectClass=inetOrgPerson)(employeeType=active)(!(uid=svc-*)))"
+        config["tap"]["user_filter"] = (
+            "(&(objectClass=inetOrgPerson)(employeeType=active)(!(uid=svc-*)))"
+        )
 
         algar_config_file = data_dir / "algar-config.json"
         with open(algar_config_file, "w") as f:

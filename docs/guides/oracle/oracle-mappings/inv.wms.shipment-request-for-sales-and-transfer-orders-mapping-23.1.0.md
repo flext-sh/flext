@@ -1,30 +1,28 @@
 # inv.wms.shipment-request-for-sales-and-transfer-orders-mapping-23.1.0.xlsx
 
-**Caminho:** `reference/wms_solutions/mappings/inv.wms.shipment-request-for-sales-and-transfer-orders-mapping-23.1.0.xlsx`  \n**Data de conversão:** 2025-05-15T14:40:17.620447  \n**Tipo:** .xlsx  \n**[Download original](reference/wms_solutions/mappings/inv.wms.shipment-request-for-sales-and-transfer-orders-mapping-23.1.0.xlsx)**
+**Caminho:** `reference/wms_solutions/mappings/inv.wms.shipment-request-for-sales-and-transfer-orders-mapping-23.1.0.xlsx` \n**Data de conversão:** 2025-05-15T14:40:17.620447 \n**Tipo:** .xlsx \n**[Download original](reference/wms_solutions/mappings/inv.wms.shipment-request-for-sales-and-transfer-orders-mapping-23.1.0.xlsx)**
 
 ---
 
 ## Sumário
 
-
-
 ## Resumo automático
 
 O documento é a especificação de mapeamento da interface WMS (versão 23.1.0) para requisição de expedição de pedidos de venda e de transferência. Ele está dividido em duas partes principais:
 
-1. Cabeçalho (Header):  
-   • Campos informacionais (DocumentVersion, OriginSystem, ClientEnvCode, ParentCompanyCode)  
-   • Controle da mensagem (Entity, TimeStamp, MessageId)  
-   • Valores fixos ou vindos de propriedades de integração  
+1. Cabeçalho (Header):
+   • Campos informacionais (DocumentVersion, OriginSystem, ClientEnvCode, ParentCompanyCode)
+   • Controle da mensagem (Entity, TimeStamp, MessageId)
+   • Valores fixos ou vindos de propriedades de integração
 
-2. Linhas de detalhe (Detail Lines):  
-   • Identificação de instalação e empresa (facility_code, company_code)  
-   • Dados do pedido (order_nbr, order_type, ord_date, req_ship_date, sales_order_nbr, customer_po_nbr etc.)  
-   • Informações de cliente e destinatário (nome, endereço, contato, canal de venda)  
-   • Transporte e roteirização (action_code, ship_via_code, carrier_account_nbr, group_ref, externally_planned_load_flg etc.)  
-   • Itens e quantidades (item_alternate_code, ord_qty, uom, cost, sale_price, batch_nbr, serial_nbr)  
-   • Instruções, campos customizados e atributos adicionais (spl_instr, vas_group_code, cust_field_1…cust_field_5, invn_attr_a…invn_attr_o, vouchers, tolerâncias de embarque etc.)  
-   • Definições de formato, tamanho máximo e obrigatoriedade para cada coluna  
+2. Linhas de detalhe (Detail Lines):
+   • Identificação de instalação e empresa (facility_code, company_code)
+   • Dados do pedido (order_nbr, order_type, ord_date, req_ship_date, sales_order_nbr, customer_po_nbr etc.)
+   • Informações de cliente e destinatário (nome, endereço, contato, canal de venda)
+   • Transporte e roteirização (action_code, ship_via_code, carrier_account_nbr, group_ref, externally_planned_load_flg etc.)
+   • Itens e quantidades (item_alternate_code, ord_qty, uom, cost, sale_price, batch_nbr, serial_nbr)
+   • Instruções, campos customizados e atributos adicionais (spl_instr, vas_group_code, cust_field_1…cust_field_5, invn_attr_a…invn_attr_o, vouchers, tolerâncias de embarque etc.)
+   • Definições de formato, tamanho máximo e obrigatoriedade para cada coluna
    • Regras de transformação (extração de data antes do “T”, concatenação de campos, flags booleanas)
 
 Além disso, o documento faz referência aos recursos REST API de Inventário da Oracle para consulta ou alteração de linhas de expedição, incluindo links para a documentação oficial.
@@ -45,7 +43,7 @@ WMS Column: order_nbr, Format: string, Max: 30.0, Required?: X, INV Column (REST
 WMS Column: order_type, Format: string, Max: 25.0, Required?: X, INV Column (REST API - SO): OrderTypeCode, INV Column (REST API - TO): OrderTypeCode, Format.1: string , Max.1: 30.0, Notes:
 WMS Column: ord_date, Format: date, Max: 14.0, Required?: X, INV Column (REST API - SO): RequestedDate, INV Column (REST API - TO): RequestedDate, Format.1: datetime, Max.1: , Notes: substring-before (ns27:RequestedDate, &quot;T&quot; ) - We extract date part from FA field as WMS ord_date is date type
 WMS Column: exp_date, Format: date, Max: 14.0, Required?: , INV Column (REST API - SO): , INV Column (REST API - TO): , Format.1: , Max.1: , Notes:
-WMS Column: req_ship_date, Format: date, Max: 14.0, Required?: , INV Column (REST API - SO): ScheduledShipDate, INV Column (REST API - TO): ScheduledShipDate, Format.1: datetime, Max.1: , Notes: substring-before (ns27:ScheduledShipDate, &quot;T&quot; ) -  We extract date part from FA field as WMS req_ship_date is date type
+WMS Column: req_ship_date, Format: date, Max: 14.0, Required?: , INV Column (REST API - SO): ScheduledShipDate, INV Column (REST API - TO): ScheduledShipDate, Format.1: datetime, Max.1: , Notes: substring-before (ns27:ScheduledShipDate, &quot;T&quot; ) - We extract date part from FA field as WMS req_ship_date is date type
 WMS Column: dest_facility_code, Format: string, Max: 20.0, Required?: , INV Column (REST API - SO): , INV Column (REST API - TO): destinationorganizationcode, Format.1: , Max.1: , Notes:
 WMS Column: cust_name, Format: string, Max: 50.0, Required?: , INV Column (REST API - SO): SoldToCustomer, INV Column (REST API - TO): , Format.1: string, Max.1: 360.0, Notes:
 WMS Column: cust_addr, Format: string, Max: 70.0, Required?: , INV Column (REST API - SO): , INV Column (REST API - TO): , Format.1: , Max.1: , Notes:
@@ -174,10 +172,10 @@ WMS Column: dest_facility_attr_c, Format: string, Max: 20.0, Required?: , INV Co
 WMS Column: ref_nbr_1, Format: string, Max: 30.0, Required?: , INV Column - SO & TO: , Format.1: , Max.1: , Notes:
 WMS Column: host_ob_lpn_nbr, Format: string, Max: 30.0, Required?: , INV Column - SO & TO: , Format.1: , Max.1: , Notes:
 WMS Column: spl_instr, Format: string, Max: 255.0, Required?: , INV Column - SO & TO: NoteTxt, Format.1: attachment?, Max.1: , Notes: <xsl:for-each xml:id="id_267" select="ns27:notes">
- <xsl:if xml:id="id_268" test="ns27:NoteTypeCode =  &quot;LINE_SHIPPING_INSTRUCTIONS&quot;">
-        <xsl:value-of xml:id="id_269" select="oraext:decodeBase64 (ns27:NoteTxt )"/>
- </xsl:if>
- </xsl:for-each>
+<xsl:if xml:id="id_268" test="ns27:NoteTypeCode = &quot;LINE_SHIPPING_INSTRUCTIONS&quot;">
+<xsl:value-of xml:id="id_269" select="oraext:decodeBase64 (ns27:NoteTxt )"/>
+</xsl:if>
+</xsl:for-each>
 
 WMS Column: vas_activity_code, Format: string, Max: 30.0, Required?: , INV Column - SO & TO: , Format.1: , Max.1: , Notes:
 WMS Column: cust_field_1, Format: string, Max: 30.0, Required?: , INV Column - SO & TO: , Format.1: , Max.1: , Notes:

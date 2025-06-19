@@ -64,7 +64,8 @@ def extract_complete_analysis(file_path):
                                 if isinstance(item, ast.Str):
                                     analysis["exports"].append(item.s)
                                 elif isinstance(item, ast.Constant) and isinstance(
-                                    item.value, str,
+                                    item.value,
+                                    str,
                                 ):
                                     analysis["exports"].append(item.value)
 
@@ -464,7 +465,8 @@ def main() -> None:
             # Show standalone functions
             if analysis.get("functions") or analysis.get("async_functions"):
                 all_functions = analysis.get("functions", []) + analysis.get(
-                    "async_functions", [],
+                    "async_functions",
+                    [],
                 )
                 print(f"⚙️  FUNCTIONS ({len(all_functions)}):")
                 for func in all_functions:
@@ -487,7 +489,13 @@ def main() -> None:
 
         # Directory summary
         dir_summary = defaultdict(
-            lambda: {"files": 0, "lines": 0, "classes": 0, "methods": 0, "functions": 0},
+            lambda: {
+                "files": 0,
+                "lines": 0,
+                "classes": 0,
+                "methods": 0,
+                "functions": 0,
+            },
         )
         for result in results:
             analysis = result["analysis"]

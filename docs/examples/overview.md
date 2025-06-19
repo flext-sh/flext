@@ -124,7 +124,7 @@ async def main() -> None:
 
             # Show adapter metrics
             metrics = await http_adapter.get_metrics()
-            logger.info("Adapter metrics - Requests: %s, Errors: %s", 
+            logger.info("Adapter metrics - Requests: %s, Errors: %s",
                        metrics.get("requests_total"), metrics.get("errors_total"))
 
     except Exception as e:
@@ -351,15 +351,15 @@ async def test_warehouse_inventory_addition(warehouse):
     """Test adding inventory to warehouse."""
     # Arrange
     sku = SKU(value="PROD-001")
-    
+
     # Act
     warehouse.add_inventory(sku, 100, "A1-01")
-    
+
     # Assert
     assert sku.value in warehouse.items
     assert warehouse.items[sku.value].quantity == 100
     assert len(warehouse.events) == 1
-    
+
     # Verify event
     event = warehouse.events[0]
     assert event.sku == "PROD-001"
@@ -563,5 +563,5 @@ The examples demonstrate both the foundational patterns and the latest framework
 
 **📂 Content Document** | **🏠 Parent**: [Examples Hub](./index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
 
-**Status**: Production Ready  
+**Status**: Production Ready
 **Python Support**: 3.13+

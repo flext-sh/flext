@@ -48,30 +48,30 @@ from flx import ApplicationService
 
 class FlxHttpOracleWmsProject(ApplicationService):
     """Projeto HTTP Oracle WMS - VERSÃO KISS.
-    
+
     15 linhas vs 1500+ anteriores = 99% redução!
     FLX automaticamente: HTTP client, database, WMS adapters, CLI, logging, etc.
     """
-    
+
     def __init__(self, **kwargs) -> None:
         """Initialize the HTTP Oracle WMS project."""
         super().__init__(service_name="FlxHttpOracleWms", **kwargs)
-        
+
         # Only business-specific configuration needed
         self.enable_webhook_mode = False
         self.webhook_secret = None
         self.entity_mappings = {
             "orders": "WMS_ORDERS",
-            "shipments": "WMS_SHIPMENTS", 
+            "shipments": "WMS_SHIPMENTS",
             "inventory": "WMS_INVENTORY",
             "items": "WMS_ITEMS",
         }
         self.warehouse_code = "DEFAULT_WH"
-    
+
     async def start(self) -> None:
         """Start the application service."""
         pass  # FLX handles all infrastructure startup
-    
+
     # Only WMS-specific business logic required
     async def handle_wms_webhook(
         self, webhook_data: dict[str, str]
@@ -79,12 +79,12 @@ class FlxHttpOracleWmsProject(ApplicationService):
         """Handler específico para webhooks WMS."""
         entity_type = webhook_data.get("entity_type")
         action = webhook_data.get("action")
-        
+
         if entity_type == "order" and action == "create":
             return await self._process_new_order(webhook_data["data"])
         elif entity_type == "shipment" and action == "update":
             return await self._process_shipment_update(webhook_data["data"])
-            
+
         return {"status": "processed", "entity": entity_type, "action": action}
 ```
 
@@ -203,13 +203,13 @@ async def process_wms_webhook(webhook_data: dict[str, str]) -> dict[str, str]:
     """Real webhook processing logic."""
     entity_type = webhook_data.get("entity_type")
     action = webhook_data.get("action")
-    
+
     # Business logic routing
     if entity_type == "order" and action == "create":
         return await wms._process_new_order(webhook_data["data"])
     elif entity_type == "shipment" and action == "update":
         return await wms._process_shipment_update(webhook_data["data"])
-    
+
     return {"status": "processed", "entity": entity_type, "action": action}
 ```
 
@@ -244,7 +244,7 @@ python -m flx_http_oracle_wms --warehouse-code MAIN_WH --enable-webhooks
 # Run examples (validated paths)
 cd examples/
 python cli_usage.py                    # Basic CLI usage
-python adapter_demo.py                 # Adapter demonstration  
+python adapter_demo.py                 # Adapter demonstration
 python declarative_cli_usage.py        # Declarative patterns
 python discovery_example.py            # Entity discovery
 ```
@@ -267,12 +267,12 @@ $ python examples/cli_usage.py
 
 ### **Code Reduction (Measured)**
 
-| **Metric** | **Previous Version** | **KISS Version** | **Improvement** |
-|------------|---------------------|------------------|-----------------|
-| **Total Lines** | 1500+ | 86 | 94% reduction |
-| **Configuration** | 200+ lines | 15 lines | 92% reduction |
-| **Dependencies** | 25+ manual | 1 (FLX) | 96% reduction |
-| **Setup Time** | 2+ hours | 5 minutes | 95% reduction |
+| **Metric**        | **Previous Version** | **KISS Version** | **Improvement** |
+| ----------------- | -------------------- | ---------------- | --------------- |
+| **Total Lines**   | 1500+                | 86               | 94% reduction   |
+| **Configuration** | 200+ lines           | 15 lines         | 92% reduction   |
+| **Dependencies**  | 25+ manual           | 1 (FLX)          | 96% reduction   |
+| **Setup Time**    | 2+ hours             | 5 minutes        | 95% reduction   |
 
 ### **FLX Automation Benefits**
 
@@ -310,15 +310,15 @@ class ComplexWMSAdapter:
         self.parse_cli_args()          # Manual
         self.validate_config()         # Manual
         # ... 1400+ more lines of boilerplate
-    
+
     def setup_logging(self):
         # 50+ lines of logging configuration
         pass
-    
+
     def configure_http_client(self):
         # 100+ lines of HTTP setup
         pass
-    
+
     # ... massive amount of infrastructure code
 ```
 
@@ -331,7 +331,7 @@ class FlxHttpOracleWmsProject(ApplicationService):
         super().__init__(service_name="FlxHttpOracleWms", **kwargs)
         # Only business configuration
         self.entity_mappings = {"orders": "WMS_ORDERS"}
-    
+
     async def handle_wms_webhook(self, webhook_data: dict) -> dict:
         # Only business logic needed
         return await self._process_business_logic(webhook_data)

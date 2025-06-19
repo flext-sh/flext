@@ -55,7 +55,7 @@ extraction_suite = create_extraction_suite()
 # Preference order for connection tests:
 1. wms_client.test_connection()           # Preferred method
 2. wms_client.health_check()              # Fallback 1
-3. extraction_suite.validate_connection() # Fallback 2  
+3. extraction_suite.validate_connection() # Fallback 2
 4. wms_client.list_entities() (minimal)   # Fallback 3
 ```
 
@@ -96,7 +96,7 @@ extraction_suite = create_extraction_suite()
 ```python
 # ✅ Benefits of exclusive usage:
 - 100% operations via dc-oracle-wms
-- Uniform and configurable timeouts  
+- Uniform and configurable timeouts
 - Consistent error handling via library exceptions
 - Standardized response formats
 - Optimized and predictable performance
@@ -110,13 +110,13 @@ extraction_suite = create_extraction_suite()
 def _execute_with_timeout(self, operation_func, timeout_seconds: int, operation: str):
     """Execute dc-oracle-wms operation with custom timeout."""
     import signal
-    
+
     def timeout_handler(signum, frame):
         raise TimeoutError(f"dc-oracle-wms {operation} timeout after {timeout_seconds}s")
-    
+
     signal.signal(signal.SIGALRM, timeout_handler)
     signal.alarm(timeout_seconds)
-    
+
     try:
         result = operation_func()  # dc-oracle-wms method
         signal.alarm(0)
@@ -148,13 +148,13 @@ response = self._execute_with_timeout(
 
 ### **Time Comparison**
 
-| Operation | Before (Mixed) | After (dc-oracle-wms) | Improvement |
-|-----------|----------------|----------------------|-------------|
-| Connection test | 30-45s | 1-10s | **70-95% faster** |
-| Entity discovery | 150-300s | 15-50s | **75-90% faster** |
-| Single entity extraction | 30-60s | 2-5s | **85-95% faster** |
-| Timeout per entity | 30s fixed | 3-10s configurable | **60-90% faster** |
-| Method consistency | Variable | 100% consistent | **Total reliability** |
+| Operation                | Before (Mixed) | After (dc-oracle-wms) | Improvement           |
+| ------------------------ | -------------- | --------------------- | --------------------- |
+| Connection test          | 30-45s         | 1-10s                 | **70-95% faster**     |
+| Entity discovery         | 150-300s       | 15-50s                | **75-90% faster**     |
+| Single entity extraction | 30-60s         | 2-5s                  | **85-95% faster**     |
+| Timeout per entity       | 30s fixed      | 3-10s configurable    | **60-90% faster**     |
+| Method consistency       | Variable       | 100% consistent       | **Total reliability** |
 
 ### **Improvement Evidence**
 
@@ -300,4 +300,4 @@ logger.info(f"Starting {operation} via dc-oracle-wms")
 
 ---
 
-*This guide ensures consistent, high-performance WMS operations through exclusive use of the dc-oracle-wms library.*
+_This guide ensures consistent, high-performance WMS operations through exclusive use of the dc-oracle-wms library._

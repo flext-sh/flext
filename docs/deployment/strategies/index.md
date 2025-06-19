@@ -18,10 +18,10 @@
 
 ### **Core Topics**
 
-| **Topic** | **Function** | **Audience** | **Status** |
-|-----------|--------------|--------------|------------|
-| [Production Checklist](./production-checklist.md) | Complete production readiness validation | DevOps teams | ✅ Complete |
-| [Kubernetes Deployment](./kubernetes-deployment.md) | Container orchestration strategies | Platform engineers | ✅ Complete |
+| **Topic**                                           | **Function**                             | **Audience**       | **Status**  |
+| --------------------------------------------------- | ---------------------------------------- | ------------------ | ----------- |
+| [Production Checklist](./production-checklist.md)   | Complete production readiness validation | DevOps teams       | ✅ Complete |
+| [Kubernetes Deployment](./kubernetes-deployment.md) | Container orchestration strategies       | Platform engineers | ✅ Complete |
 
 ### **📋 Learning Path**
 
@@ -57,7 +57,7 @@
 ## 📊 **Section Metrics**
 
 - **Documents**: 2 files
-- **Completeness**: 100%  
+- **Completeness**: 100%
 - **Last Updated**: June 11, 2025
 
 ---

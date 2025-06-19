@@ -47,18 +47,21 @@ The integration follows a hybrid architecture pattern with three key components:
 ### Key Components
 
 1. **Oracle WMS Cloud (v25A/25B)** - Source and destination for warehouse operational data
+
    - Provides events (allocations, order status changes) via webhooks
    - Receives data via REST APIs
    - Supports XML and CSV data formats
    - Configured with Output Interfaces for real-time event propagation
 
 2. **Oracle Integration Cloud (OIC)** - Central integration platform
+
    - Hosts integration flows for data orchestration
    - Connects via REST, FTP, and DB adapters
    - Handles data transformation and error management
    - Provides monitoring and reprocessing capabilities
 
 3. **Oracle Autonomous Database** - Centralized data repository
+
    - Stores staging tables with audit capabilities
    - Provides views and procedures for data transformation
    - Serves as historical record and reporting source
@@ -75,12 +78,14 @@ The integration follows a hybrid architecture pattern with three key components:
 The integration implements three primary data flows:
 
 1. **Carga Inicial (Initial Load)**
+
    - WMS Cloud exports data to CSV files via SFTP
    - Files are processed and loaded to staging tables
    - Provides baseline data for incremental processing
    - Implemented as a scheduled batch process
 
 2. **Pedidos (Orders)**
+
    - Bidirectional flow supporting both inbound and outbound scenarios:
      - **Inbound**: Orders from external systems loaded to WMS via OIC
      - **Outbound**: Real-time webhook triggers when orders are created/modified in WMS

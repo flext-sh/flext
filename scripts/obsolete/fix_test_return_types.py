@@ -30,7 +30,8 @@ def flx_test_return_types(file_path: Path) -> int:
 
     # Pattern to match test functions without return type annotations
     test_func_pattern = re.compile(
-        r"^(\s*)(def\s+(test_\w+)\s*\([^)]*\))(\s*:)", re.MULTILINE,
+        r"^(\s*)(def\s+(test_\w+)\s*\([^)]*\))(\s*:)",
+        re.MULTILINE,
     )
 
     # Find all test functions and add return type annotations

@@ -112,10 +112,8 @@ async def demonstrate_circuit_breaker() -> None:
     adapter = ResilientAdapter(service)
 
     async with adapter:
-
         # Make multiple calls to trigger circuit breaker
         for i in range(10):
-
             # Check circuit state
 
             # Try to fetch data
@@ -141,7 +139,6 @@ async def demonstrate_manual_control() -> None:
     adapter = ResilientAdapter(service)
 
     async with adapter:
-
         # Force some failures
         for i in range(5):
             await adapter.fetch_data(f"test_{i}")
@@ -154,7 +151,6 @@ async def demonstrate_manual_control() -> None:
 
 
 if __name__ == "__main__":
-
     # Run demonstrations
     asyncio.run(demonstrate_circuit_breaker())
     asyncio.run(demonstrate_manual_control())

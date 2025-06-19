@@ -52,7 +52,7 @@ The FLX Testing Framework provides a comprehensive testing infrastructure specif
 #### Testing Hexagonal Architecture
 
 - **Port Testing**: Test inbound and outbound port contracts independently
-- **Adapter Testing**: Test adapter implementations against port interfaces  
+- **Adapter Testing**: Test adapter implementations against port interfaces
 - **Domain Isolation**: Test domain logic without external dependencies
 - **Integration Testing**: Test complete workflows through the hexagon
 - **Contract Testing**: Ensure adapters conform to port specifications
@@ -149,7 +149,7 @@ Focused on testing individual framework components:
 - **HttpClientEngine**: Tests HTTP communication patterns
 - **LoggerEngine**: Tests logging functionality and formats
 
-### Infrastructure Engines  
+### Infrastructure Engines
 
 Focused on testing infrastructure layer components:
 
@@ -175,15 +175,15 @@ Implement the same port contracts as production adapters while providing control
 # Example mock adapter implementation
 class MockHttpAdapter(HttpPort):
     """Mock HTTP adapter for testing"""
-    
+
     def __init__(self):
         self.responses = {}
         self.requests = []
-    
+
     async def get(self, url: str) -> HttpResponse:
         self.requests.append(('GET', url))
         return self.responses.get(url, HttpResponse(status=200, data={}))
-    
+
     def setup_response(self, url: str, response: HttpResponse):
         """Configure mock response for testing"""
         self.responses[url] = response
@@ -230,7 +230,7 @@ test_pipeline:
   unit_tests:
     - pytest tests/unit/ -v
   integration_tests:
-    - pytest tests/integration/ -v  
+    - pytest tests/integration/ -v
   e2e_tests:
     - pytest tests/e2e/ -v
   coverage:
@@ -243,7 +243,7 @@ test_pipeline:
 # Run all tests
 make test
 
-# Run specific test categories  
+# Run specific test categories
 make test-unit
 make test-integration
 make test-e2e

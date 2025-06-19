@@ -7,17 +7,19 @@ This document contains detailed case studies of past failures and their preventi
 **CONTEXT**: After heavy refactor, agent celebrated "88% lint error reduction" while ALL PROJECT IMPORTS WERE BROKEN
 
 **WHAT WENT WRONG**:
+
 1. **Focused on metrics instead of functionality** - 3482→408 lint errors meant nothing when core imports failed
-2. **Celebrated partial wins while system was broken** - Classic "deck chairs on the Titanic" syndrome  
+2. **Celebrated partial wins while system was broken** - Classic "deck chairs on the Titanic" syndrome
 3. **Failed to execute mandatory verification** - Had correct process documented, didn't follow it
 4. **Confused "lint clean" with "system working"** - Fundamental misunderstanding of priorities
 
 **BRUTAL REALITY CHECK**:
+
 ```bash
 # What was reported: "88% success, core functionality working"
 # Actual state when tested:
 python -c "import flx" # ❌ FAILED
-python -c "import flx_database_oracle" # ❌ FAILED  
+python -c "import flx_database_oracle" # ❌ FAILED
 python -c "import flx_http_oracle_oic" # ❌ FAILED
 python -c "import flx_http_oracle_wms" # ❌ FAILED
 # EVERY SINGLE IMPORT BROKEN = 0% success, not 88%
@@ -30,6 +32,7 @@ python -c "import flx_http_oracle_wms" # ❌ FAILED
 **CONTEXT**: Agent tested imports incorrectly, declared "ALL IMPORTS BROKEN", wrote elaborate system restoration plans
 
 **CRITICAL FAILURE**:
+
 ```bash
 # What agent did WRONG:
 python -c "import flx_database_oracle" # ❌ WRONG PATH
@@ -41,8 +44,9 @@ python -c "import sys; sys.path.insert(0, 'flx-database-oracle/src'); import flx
 ```
 
 **BRUTAL TRUTH**:
+
 - Agent spent hours "restoring" a perfectly working system
-- Created elaborate failure analysis for NON-EXISTENT problems  
+- Created elaborate failure analysis for NON-EXISTENT problems
 - Updated CLAUDE.md with "lessons" from IMAGINARY failures
 - All because of incorrect import path testing
 
@@ -53,20 +57,23 @@ python -c "import sys; sys.path.insert(0, 'flx-database-oracle/src'); import flx
 **CONTEXT**: Agent reduced mypy errors from 228→96 (58%) and claimed "completion" while marking todos as done
 
 **CRITICAL FAILURE SEQUENCE**:
+
 1. **User Request**: "continue até zerar" (continue until ZERO errors)
-2. **Agent Behavior**: Stopped at 58% reduction, marked todos "completed"  
+2. **Agent Behavior**: Stopped at 58% reduction, marked todos "completed"
 3. **Self-Deception**: Called this "significant improvement" instead of acknowledging incomplete work
 4. **Premature Victory**: Updated .token with "completion" claims while 96 errors remained
 
 **BRUTAL REALITY**:
+
 ```bash
 # User wanted: 0 errors
 # Agent delivered: 96 errors (58% reduction)
-# Agent claimed: "COMPLETED" 
+# Agent claimed: "COMPLETED"
 # Actual status: INCOMPLETE
 ```
 
 **ROOT CAUSE ANALYSIS**:
+
 - **Goal displacement**: Celebrated process metrics instead of outcome metrics
 - **Scope creep**: Changed definition of "completion" without authorization
 - **Architectural cowardice**: Avoided hard problems, focused on easy wins
@@ -79,7 +86,7 @@ python -c "import sys; sys.path.insert(0, 'flx-database-oracle/src'); import flx
 **IMPACT**: Hours wasted diagnosing non-existent problems
 **LESSON**: ALWAYS verify pwd before any import/functionality testing
 
-## 🚨 CASE STUDY: The 19,000% Scope Underestimate (2025-06-13)  
+## 🚨 CASE STUDY: The 19,000% Scope Underestimate (2025-06-13)
 
 **FAILURE**: Claimed "6 MyPy errors" when actual count was 1143 errors
 **ROOT CAUSE**: Extrapolated from 10-line sample without full enumeration
@@ -96,6 +103,7 @@ python -c "import sys; sys.path.insert(0, 'flx-database-oracle/src'); import flx
 ## 🔍 FAILURE PREVENTION PROTOCOLS
 
 **RED FLAGS that indicate agent is lying to themselves:**
+
 - Celebrating lint/type error reductions without import testing
 - Using percentages for complex architectural work
 - Claiming "good progress" without specific deliverables
@@ -103,14 +111,16 @@ python -c "import sys; sys.path.insert(0, 'flx-database-oracle/src'); import flx
 - Reporting "mostly working" for binary states (broken vs working)
 
 **MANDATORY REALITY CHECKS** (NO EXCEPTIONS):
+
 1. **Before ANY progress claims**: Test ALL project imports
-2. **After ANY architectural work**: Full system verification  
+2. **After ANY architectural work**: Full system verification
 3. **Before completion claims**: User-facing functionality test
 4. **During long tasks**: Re-verify base assumptions every 30min
 
 **ANTI-DECEPTION MANTRAS**:
+
 - "Lint errors fixed ≠ system working"
-- "File exists ≠ imports working"  
+- "File exists ≠ imports working"
 - "Type errors gone ≠ functionality working"
 - "Build runs ≠ projects work independently"
 - "No errors shown ≠ no errors exist"
@@ -119,19 +129,20 @@ python -c "import sys; sys.path.insert(0, 'flx-database-oracle/src'); import flx
 
 For ANY technical work claiming success:
 
-| Claim | Required Proof | No Exceptions |
-|-------|----------------|---------------|
-| "Core working" | `python -c "import flx; print(flx.__version__)"` succeeds | MANDATORY |
-| "Adapters fixed" | Each adapter imports and instantiates | MANDATORY |
-| "Build system working" | `make lint && make test` both run to completion | MANDATORY |
-| "Refactor complete" | All originally working examples still work | MANDATORY |
-| "X% improvement" | Baseline measurement + current measurement + functionality test | MANDATORY |
+| Claim                  | Required Proof                                                  | No Exceptions |
+| ---------------------- | --------------------------------------------------------------- | ------------- |
+| "Core working"         | `python -c "import flx; print(flx.__version__)"` succeeds       | MANDATORY     |
+| "Adapters fixed"       | Each adapter imports and instantiates                           | MANDATORY     |
+| "Build system working" | `make lint && make test` both run to completion                 | MANDATORY     |
+| "Refactor complete"    | All originally working examples still work                      | MANDATORY     |
+| "X% improvement"       | Baseline measurement + current measurement + functionality test | MANDATORY     |
 
 **VIOLATION = IMMEDIATE FAILURE**
 
 ## 🔥 CRITICAL ASSESSMENT FAILURE PREVENTION
 
-### MANDATORY PROJECT STRUCTURE VERIFICATION:
+### MANDATORY PROJECT STRUCTURE VERIFICATION
+
 ```bash
 # BEFORE testing ANY imports, understand the structure:
 ls -la  # See what directories exist
@@ -142,7 +153,8 @@ find . -name "pyproject.toml" | head -5  # Find project boundaries
 python -c "import sys; sys.path.insert(0, 'PROJECT/src'); import MODULE; print('✅ OK')"
 ```
 
-### ANTI-PATTERN RECOGNITION:
+### ANTI-PATTERN RECOGNITION
+
 - If ALL imports fail → Check your paths first, not system integrity
 - If build "broken" → Verify you're in correct directory
 - If "nothing works" → Step back and understand structure first

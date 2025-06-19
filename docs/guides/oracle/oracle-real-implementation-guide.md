@@ -81,7 +81,7 @@ class WmsClient:
         for endpoint in endpoints_to_try:
             try:
                 http_response = await self._http_client.get(endpoint)
-                
+
                 # Handle httpx.Response object properly
                 if hasattr(http_response, "status_code"):
                     if http_response.status_code == 200:
@@ -112,13 +112,13 @@ class WmsClient:
             raise ValueError(f"Entity {entity_name} not discovered")
 
         entity_url = self._discovered_endpoints[entity_name]
-        
+
         # Build query parameters for Oracle WMS
         params = {
             "limit": limit,
             "offset": offset
         }
-        
+
         if filters:
             # Oracle WMS filter format
             for key, value in filters.items():
@@ -142,12 +142,12 @@ class WmsClient:
 # Real implementation from flx_http_oracle_wms/src/flx_http_oracle_wms/config.py
 class WmsConfig(BaseModel):
     """Oracle WMS configuration with authentication."""
-    
+
     base_url: str = Field(..., description="Oracle WMS base URL")
     username: str = Field(..., description="WMS username")
     password: str = Field(..., description="WMS password")
     tenant: str = Field(default="", description="Oracle tenant ID")
-    
+
     def get_wms_headers(self) -> dict[str, str]:
         """Get Oracle WMS specific headers."""
         headers = {
@@ -155,10 +155,10 @@ class WmsConfig(BaseModel):
             "Accept": "application/json",
             "User-Agent": "FLX-Oracle-WMS-Client/1.0"
         }
-        
+
         if self.tenant:
             headers["X-Oracle-Tenant"] = self.tenant
-            
+
         return headers
 ```
 
@@ -244,7 +244,7 @@ class OracleOicHttpAdapter(BaseAdapter):
             verify_ssl=True,
             default_headers=self._get_base_headers()
         )
-        
+
         await self._http_client.connect()
         await self._authenticate()
 
@@ -268,10 +268,10 @@ class OracleOicHttpAdapter(BaseAdapter):
             "Accept": "application/json",
             "X-Oracle-Cloud-Service": "OIC"
         }
-        
+
         if self._auth_token:
             headers["Authorization"] = f"Bearer {self._auth_token}"
-            
+
         return headers
 ```
 
@@ -294,14 +294,14 @@ wms_config = WmsConfig(
 # Initialize client with production settings
 async def main():
     client = WmsClient(wms_config)
-    
+
     try:
         await client.start()
-        
+
         # Discover available entities
         entities = await client.get_entities()
         print(f"Available entities: {entities}")
-        
+
         # Extract data with pagination
         for entity in entities[:5]:  # Process first 5 entities
             data = await client.extract_entity(
@@ -310,7 +310,7 @@ async def main():
                 offset=0
             )
             print(f"Entity {entity}: {len(data.get('items', []))} records")
-            
+
     finally:
         await client.stop()
 ```
@@ -334,10 +334,10 @@ async def main():
     async with OracleOicClient(oic_config) as client:
         # Get all integrations
         integrations = await client.get_integrations(limit=100)
-        
+
         for integration in integrations:
             integration_id = integration["identifier"]
-            
+
             # Monitor integration status
             status = await client.monitor_integration(integration_id)
             print(f"Integration {integration_id}: {status['state']}")
@@ -372,19 +372,19 @@ def discover(base_url: str, username: str, password: str, tenant: str):
             password=password,
             tenant=tenant
         )
-        
+
         client = WmsClient(config)
         try:
             await client.start()
             entities = await client.get_entities()
-            
+
             click.echo("Discovered Oracle WMS entities:")
             for entity in sorted(entities):
                 click.echo(f"  - {entity}")
-                
+
         finally:
             await client.stop()
-    
+
     asyncio.run(_discover())
 
 @cli.command()

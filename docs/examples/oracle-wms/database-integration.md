@@ -105,7 +105,7 @@ results = pipeline.run_full_sync(
 
 # Incremental synchronization
 results = pipeline.run_incremental_sync(
-    table_name="WMS_ORDER_HDR", 
+    table_name="WMS_ORDER_HDR",
     wms_resource="order_hdr",
     batch_size=500
 )
@@ -328,7 +328,7 @@ try:
     # Setup tables
     setup_result = db_manager.create_wms_tables(force=False)
     print(f"Created {len(setup_result['created'])} tables")
-    
+
     # Inspect tables
     inspection_result = db_manager.inspect_wms_tables(
         table_pattern="WMS_%", show_columns=True, show_data=True
@@ -362,7 +362,7 @@ print(f"Sync successful: {success}")
 
 # Control and management operations
 from gn_oic_wms_db.control_management import (
-    show_tables_status, 
+    show_tables_status,
     show_load_history,
     refresh_table_counts,
     get_table_statistics
@@ -406,16 +406,16 @@ try:
         table_type="WMS"
     )
     print(f"Table registered: {success}")
-    
+
     # Start load tracking
     load_id = db_manager.start_load_tracking(
         table_name="WMS_ORDER_HDR",
-        wms_resource="order_hdr", 
+        wms_resource="order_hdr",
         load_type="INCREMENTAL",
         batch_size=1000
     )
     print(f"Load tracking started: {load_id}")
-    
+
     # Complete load tracking
     success = db_manager.complete_load_tracking(
         load_id=load_id,
@@ -424,15 +424,15 @@ try:
         records_failed=50
     )
     print(f"Load tracking completed: {success}")
-    
+
     # Get comprehensive status
     status = db_manager.get_tables_status()
     print(f"Found {len(status['tables'])} registered tables")
-    
+
     # Get load history
     history = db_manager.get_load_history(days=30)
     print(f"Found {len(history)} load operations in last 30 days")
-    
+
 finally:
     db_manager.close()
 ```
@@ -448,7 +448,7 @@ finally:
 ### Control Tables
 
 - **WMS_TABLE_REGISTRY**: Central registry of all WMS tables with metadata
-- **WMS_TABLE_STATUS**: Current status and metrics for each table  
+- **WMS_TABLE_STATUS**: Current status and metrics for each table
 - **WMS_LOAD_HISTORY**: Complete history of all load operations
 - **WMS_LOAD_WATERMARK**: Watermarks for incremental loading
 - **WMS_LOAD_ERRORS**: Error tracking and debugging information
@@ -485,7 +485,7 @@ DB_SERVICE_NAME=ORCL
 DB_USERNAME=wms_user
 DB_PASSWORD=secure_password
 
-# WMS Configuration  
+# WMS Configuration
 WMS_URL=https://wms.example.com/api
 WMS_USERNAME=api_user
 WMS_PASSWORD=api_password
@@ -508,8 +508,8 @@ All operations use structured logging:
 from .core.logging_setup import get_logger
 
 logger = get_logger(__name__)
-logger.info("Operation completed successfully", 
-           table="WMS_ORDER_HDR", 
+logger.info("Operation completed successfully",
+           table="WMS_ORDER_HDR",
            records_processed=1500)
 ```
 
@@ -593,7 +593,7 @@ The system now uses comprehensive control tables for complete governance and tra
 ### Control Tables
 
 1. **WMS_TABLE_REGISTRY**: Central registry of all WMS tables with metadata
-2. **WMS_TABLE_STATUS**: Current status and metrics for each table  
+2. **WMS_TABLE_STATUS**: Current status and metrics for each table
 3. **WMS_LOAD_HISTORY**: Complete history of all load operations
 4. **WMS_LOAD_WATERMARK**: Watermarks for incremental loading
 5. **WMS_LOAD_ERRORS**: Error tracking and debugging information
@@ -622,7 +622,7 @@ Every sync operation is automatically tracked with:
 Tables maintain real-time status information:
 
 - Current record counts
-- Last sync and check timestamps  
+- Last sync and check timestamps
 - Data quality scores
 - Error counts and schema validation
 - Load success/failure tracking

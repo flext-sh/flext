@@ -5,6 +5,7 @@ Unified Oracle WMS integration that orchestrates `tap-oracle-wms` and `target-or
 ## Overview
 
 `flx-oracle-wms` provides a complete ETL solution for Oracle Warehouse Management System by:
+
 - Orchestrating data extraction (tap) and loading (target)
 - Managing complex pipelines with scheduling
 - Monitoring pipeline health and performance
@@ -37,24 +38,28 @@ Unified Oracle WMS integration that orchestrates `tap-oracle-wms` and `target-or
 ## Features
 
 ### Pipeline Management
+
 - **Pre-configured Pipelines**: Inventory sync, order processing, warehouse analytics
 - **Custom Pipelines**: Define your own extraction and transformation workflows
 - **Scheduling**: Cron-based scheduling for automated execution
 - **Parallel Execution**: Run multiple pipelines concurrently with resource control
 
 ### Monitoring & Observability
+
 - **Real-time Metrics**: Track pipeline performance, record counts, errors
 - **Prometheus Integration**: Export metrics for external monitoring
 - **Health Checks**: Automatic health monitoring of pipelines
 - **Event Logging**: Detailed event tracking for debugging
 
 ### Business Intelligence
+
 - **KPI Calculation**: Automatic calculation of key performance indicators
 - **Alert Generation**: Multi-level alerts for inventory, orders, operations
 - **Report Generation**: Automated reports with insights and recommendations
 - **Trend Analysis**: Historical data analysis for pattern detection
 
 ### Advanced Features
+
 - **State Management**: Incremental replication with automatic state tracking
 - **Error Recovery**: Automatic retry with exponential backoff
 - **Data Validation**: Schema validation and data quality checks
@@ -89,6 +94,7 @@ flx-oracle-wms init \
 Edit the generated configuration files:
 
 **tap_config.json** (extraction settings):
+
 ```json
 {
   "base_url": "https://your-instance.oracle.com/wms/api/v1",
@@ -99,6 +105,7 @@ Edit the generated configuration files:
 ```
 
 **target_config.json** (loading and business logic):
+
 ```json
 {
   "output_path": "./output",
@@ -205,6 +212,7 @@ flx-oracle-wms monitor metrics --format prometheus
 ### Pre-configured Pipelines
 
 #### 1. Inventory Sync Pipeline
+
 - **Purpose**: Synchronize inventory data with business intelligence
 - **Streams**: inventory, lots, locations, cycle_counts
 - **Features**:
@@ -214,6 +222,7 @@ flx-oracle-wms monitor metrics --format prometheus
   - Location utilization reports
 
 #### 2. Order Processing Pipeline
+
 - **Purpose**: Process orders and track fulfillment
 - **Streams**: orders, order_lines, shipments, allocations
 - **Features**:
@@ -223,6 +232,7 @@ flx-oracle-wms monitor metrics --format prometheus
   - On-time delivery tracking
 
 #### 3. Warehouse Analytics Pipeline
+
 - **Purpose**: Analyze warehouse operations
 - **Streams**: tasks, workers, equipment, zones
 - **Features**:
@@ -331,18 +341,18 @@ make quality
 
 ### Pipeline Configuration Options
 
-| Option | Type | Description | Default |
-|--------|------|-------------|---------|
-| name | string | Integration name | Required |
-| tap_config_path | string | Path to tap config | Required |
-| target_config_path | string | Path to target config | Required |
-| state_path | string | Path to state file | Optional |
-| catalog_path | string | Path to catalog | Optional |
-| pipelines | array | Pipeline definitions | [] |
-| monitoring | object | Monitoring config | {} |
-| max_parallel_pipelines | int | Max concurrent pipelines | 2 |
-| retry_count | int | Retry attempts | 3 |
-| retry_delay | int | Retry delay (seconds) | 60 |
+| Option                 | Type   | Description              | Default  |
+| ---------------------- | ------ | ------------------------ | -------- |
+| name                   | string | Integration name         | Required |
+| tap_config_path        | string | Path to tap config       | Required |
+| target_config_path     | string | Path to target config    | Required |
+| state_path             | string | Path to state file       | Optional |
+| catalog_path           | string | Path to catalog          | Optional |
+| pipelines              | array  | Pipeline definitions     | []       |
+| monitoring             | object | Monitoring config        | {}       |
+| max_parallel_pipelines | int    | Max concurrent pipelines | 2        |
+| retry_count            | int    | Retry attempts           | 3        |
+| retry_delay            | int    | Retry delay (seconds)    | 60       |
 
 ## Best Practices
 
@@ -357,11 +367,13 @@ make quality
 ### Common Issues
 
 1. **Pipeline Fails to Start**
+
    - Check tap and target are installed
    - Verify configuration file paths
    - Check Oracle WMS connectivity
 
 2. **No Data Extracted**
+
    - Verify credentials and permissions
    - Check start_date in tap config
    - Review catalog stream selection

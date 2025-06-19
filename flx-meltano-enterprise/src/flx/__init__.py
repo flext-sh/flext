@@ -1,4 +1,3 @@
-
 # Lazy imports to avoid circular dependencies
 # Lazy import to avoid circular dependencies
 # Lazy import to avoid circular dependencies
@@ -16,7 +15,7 @@ __email__ = "team@flx.io"
 
 # Export main classes
 # Lazy imports to avoid circular dependencies
-Settings = lazy_import('flx.config', 'Settings')
-settings = lazy_import('flx.config', 'settings')
+Settings = lazy_import("flx.config", "Settings")
+settings = lazy_import("flx.config", "settings")
 
 __all__ = ["Settings", "settings", "__version__"]

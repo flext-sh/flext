@@ -23,7 +23,7 @@
 ## 🎯 **Quick Links**
 
 - **📂 Section Hub**: [Basics Hub](./index.md)
-- **🏠 Documentation Root**: [Root Index](../../index.md)  
+- **🏠 Documentation Root**: [Root Index](../../index.md)
 - **🔗 Next Step**: [Framework Overview](../concepts/flx-framework-overview.md)
 
 ## 🎯 Prerequisites

@@ -192,19 +192,19 @@ from flx_http_oracle_oic import OicConfig, flx_create_oic_context
 async def main():
     # Load configuration
     config = OicConfig.from_env()
-    
+
     # Use factory pattern with context manager
     async with flx_create_oic_context(config) as factory:
         service = factory.create_oic_service()
-        
+
         # Health check
         is_healthy = await service.health_check()
-        
+
         # List integrations
         integrations = await service.list_integrations()
         for integration in integrations:
             print(f"{integration.name}: {integration.status}")
-        
+
         # List connections
         connections = await service.list_connections()
         for connection in connections:
@@ -246,16 +246,16 @@ from flx.adapters.oracle.oic import OICClient, OICAuthError
 
 async def robust_oic_call(endpoint, max_retries=3):
     """Make OIC API call with robust error handling."""
-    
+
     for attempt in range(max_retries):
         try:
             # Initialize OIC client
             client = OICClient()
-            
+
             # Authenticate and make call
             response = await client.authenticated_request('GET', endpoint)
             return response
-            
+
         except OICAuthError as e:
             if attempt < max_retries - 1:
                 # Wait before retry (exponential backoff)
@@ -291,12 +291,12 @@ class OicIntegration(AggregateRoot):
     status: str
     version: str
     created_by: str
-    
+
     def activate(self) -> None:
         if self.status == "CONFIGURED":
             self.status = "ACTIVATED"
             self.increment_version()
-            
+
             # Add domain event
             self.add_event(DomainEvent(
                 event_type="IntegrationActivated",
@@ -307,12 +307,12 @@ class OicIntegration(AggregateRoot):
                     "activated_at": datetime.now()
                 }
             ))
-    
+
     def deactivate(self) -> None:
         if self.status == "ACTIVATED":
             self.status = "CONFIGURED"
             self.increment_version()
-            
+
             # Add domain event
             self.add_event(DomainEvent(
                 event_type="IntegrationDeactivated",
@@ -330,11 +330,11 @@ class OicConnection(ValueObject):
     name: str
     connection_type: str
     adapter_type: str
-    
+
     @property
     def is_database_connection(self) -> bool:
         return self.adapter_type.lower() in ["oracle", "mysql", "postgresql"]
-    
+
     @property
     def is_rest_connection(self) -> bool:
         return self.adapter_type.lower() == "rest"
@@ -485,17 +485,17 @@ class OicIntegrationService(ApplicationService):
     def __init__(self, oic_client, event_publisher):
         self.oic = oic_client
         self.event_publisher = event_publisher
-    
+
     async def handle_integration_flow_trigger(self, event: DomainEvent):
         """Handle domain events by triggering OIC flows."""
-        
+
         if event.event_type == "OrderCreated":
             # Trigger order processing integration
             result = await self.oic.trigger_integration(
                 "ORDER_PROCESSING_FLOW",
                 payload=event.data
             )
-            
+
             # Publish integration result event
             await self.event_publisher.publish(DomainEvent(
                 event_type="OrderProcessingTriggered",
@@ -513,24 +513,24 @@ class OicIntegrationService(ApplicationService):
 class BatchOicProcessor:
     async def process_daily_integration_sync(self):
         """Daily batch processing for OIC integrations."""
-        
+
         # 1. Get failed integrations
         failed_flows = await self.oic.get_failed_flows(
             since=datetime.now() - timedelta(days=1)
         )
-        
+
         # 2. Retry failed flows
         for flow in failed_flows:
             try:
                 await self.oic.retry_flow(flow.flow_id)
             except Exception as e:
                 logger.error(f"Failed to retry flow {flow.flow_id}: {e}")
-        
+
         # 3. Generate daily report
         report = await self.oic.generate_integration_report(
             date=datetime.now().date()
         )
-        
+
         return report
 ```
 
@@ -544,22 +544,22 @@ Oracle provides pre-built integration recipes for common scenarios:
 class ReceiptAdviceIntegration:
     def __init__(self, oic_service: OracleOicService):
         self.oic = oic_service
-    
+
     async def process_receipt_advice(self, purchase_order_id: str):
         """Process receipt advice from IM to WMS."""
-        
+
         # 1. Generate receipt advice in IM
         receipt_advice = await self.oic.trigger_integration(
             "GENERATE_RECEIPT_ADVICE",
             payload={"po_id": purchase_order_id}
         )
-        
+
         # 2. Send to WMS for processing
         wms_receipt = await self.oic.trigger_integration(
-            "WMS_RECEIPT_PROCESSING", 
+            "WMS_RECEIPT_PROCESSING",
             payload=receipt_advice
         )
-        
+
         # 3. Confirm receipt back to IM
         confirmation = await self.oic.trigger_integration(
             "RECEIPT_CONFIRMATION",
@@ -568,7 +568,7 @@ class ReceiptAdviceIntegration:
                 "status": "COMPLETED"
             }
         )
-        
+
         return confirmation
 ```
 
@@ -585,14 +585,14 @@ class ResilientOicClient:
             timeout=60,
             expected_exception=OICConnectionError
         )
-    
+
     async def call_integration_with_breaker(self, integration_id, payload):
         """Call integration with circuit breaker protection."""
-        
+
         @self.circuit_breaker
         async def protected_call():
             return await self.oic.trigger_integration(integration_id, payload)
-        
+
         try:
             return await protected_call()
         except CircuitBreakerOpenError:
@@ -668,18 +668,18 @@ oracle_oic:
     scopes:
       - "urn:opc:resource:consumer::all"
       - "/ic/api/"
-  
+
   instance:
     url: ${OIC_URL}
     region: ${OIC_REGION}
     environment: ${OIC_ENVIRONMENT}
-  
+
   security:
     token_cache_enabled: true
-    token_refresh_threshold: 300  # seconds
+    token_refresh_threshold: 300 # seconds
     max_retry_attempts: 3
     ssl_verify: true
-    
+
   monitoring:
     health_check_interval: 300
     failed_flow_retry_enabled: true
@@ -745,15 +745,15 @@ python -m flx_http_oracle_oic.cli jwt status --verbose
 
 ### Error Resolution Matrix
 
-| Error | Cause | Solution |
-|-------|-------|----------|
-| `invalid_redirect_uri` | REDIRECT_URI not configured in IDCS | Add URI to IDCS application or use Client Credentials |
-| `invalid_client` | Wrong client credentials | Verify CLIENT_ID and CLIENT_SECRET |
-| `insufficient_scope` | Missing scopes in IDCS | Add required scopes to IDCS application |
-| `token_expired` | Access token expired | Implement automatic token refresh |
-| `connection_timeout` | Network connectivity issue | Check firewall rules and DNS resolution |
-| `integration_not_found` | Invalid integration ID | Verify integration exists and is accessible |
-| `connection_test_failed` | Connection configuration issue | Check connection parameters and credentials |
+| Error                    | Cause                               | Solution                                              |
+| ------------------------ | ----------------------------------- | ----------------------------------------------------- |
+| `invalid_redirect_uri`   | REDIRECT_URI not configured in IDCS | Add URI to IDCS application or use Client Credentials |
+| `invalid_client`         | Wrong client credentials            | Verify CLIENT_ID and CLIENT_SECRET                    |
+| `insufficient_scope`     | Missing scopes in IDCS              | Add required scopes to IDCS application               |
+| `token_expired`          | Access token expired                | Implement automatic token refresh                     |
+| `connection_timeout`     | Network connectivity issue          | Check firewall rules and DNS resolution               |
+| `integration_not_found`  | Invalid integration ID              | Verify integration exists and is accessible           |
+| `connection_test_failed` | Connection configuration issue      | Check connection parameters and credentials           |
 
 ## 📖 Related Documentation
 

@@ -25,11 +25,11 @@
 - **🏠 Documentation Root**: [Root Index](../../index.md)
 - **🔗 Related**: [Development Standards](../../development/index.md)
 
-**Date**: January 2025  
-**Objective**: Replace custom code with mature libraries  
+**Date**: January 2025
+**Objective**: Replace custom code with mature libraries
 **Expected Impact**: -40% code, +60% productivity
 
----  
+---
 
 ## 📋 Integration Overview
 
@@ -55,7 +55,7 @@ uvicorn = {extras = ["standard"], version = "^0.30.0"}
 # Before: Custom HTTP server
 class CustomHTTPServer:
     def __init__(self, config): # 50+ lines
-    async def start_server(self): # 40+ lines  
+    async def start_server(self): # 40+ lines
     async def handle_request(self): # 60+ lines
     # ... 450+ total lines
 
@@ -74,7 +74,7 @@ async def health_check():
     return {"status": "healthy"}
 
 # Auto-documentation included
-# OpenAPI schema automatic  
+# OpenAPI schema automatic
 # Type safety enforced
 ```
 
@@ -113,18 +113,18 @@ from dependency_injector.wiring import Provide, inject
 class ApplicationContainer(containers.DeclarativeContainer):
     # Configuration
     config = providers.Configuration()
-    
+
     # Database
     database = providers.Singleton(
         DatabaseEngine,
         connection_string=config.database.url
     )
-    
+
     # Adapters (with meta-factory integration)
     adapter_factory = providers.Singleton(
         get_enhanced_factory
     )
-    
+
     # Services
     user_service = providers.Factory(
         UserService,
@@ -248,7 +248,7 @@ def create_adapter(schema_name: str):
         f"[bold blue]Creating Adapter: {schema_name}[/bold blue]",
         border_style="blue"
     ))
-    
+
     # Progress bars
     with Progress(
         SpinnerColumn(),
@@ -261,7 +261,7 @@ def create_adapter(schema_name: str):
         # ... validation ...
         progress.update(task, description="Creating class...")
         # ... creation ...
-    
+
     # Success table
     table = Table(title="Adapter Created Successfully")
     table.add_column("Property", style="cyan")
@@ -270,14 +270,14 @@ def create_adapter(schema_name: str):
     table.add_row("Type", "Generated")
     table.add_row("Methods", "5")
     console.print(table)
-    
+
     console.print("[bold green]✅ Adapter ready for use![/bold green]")
 ```
 
 **Benefits**:
 
 - **UX dramaticamente melhorada** (60%+)
-- **Progress bars** para operações longas  
+- **Progress bars** para operações longas
 - **Tables & panels** para dados estruturados
 - **Syntax highlighting** automático
 - **Error formatting** mais claro
@@ -309,7 +309,7 @@ import orjson
 
 def serialize_adapter_config(config):
     return orjson.dumps(
-        config, 
+        config,
         option=orjson.OPT_INDENT_2 | orjson.OPT_SORT_KEYS
     ).decode()
 
@@ -360,29 +360,29 @@ from typing import Optional, Any
 class AdapterCache:
     def __init__(self, redis_url: str):
         self.redis = redis.from_url(redis_url)
-    
+
     async def get_adapter_response(
-        self, 
-        adapter_name: str, 
-        operation: str, 
+        self,
+        adapter_name: str,
+        operation: str,
         params_hash: str
     ) -> Optional[dict]:
         key = f"adapter:{adapter_name}:{operation}:{params_hash}"
         cached = await self.redis.get(key)
         return orjson.loads(cached) if cached else None
-    
+
     async def cache_adapter_response(
         self,
         adapter_name: str,
-        operation: str, 
+        operation: str,
         params_hash: str,
         response: dict,
         ttl: int = 300
     ):
         key = f"adapter:{adapter_name}:{operation}:{params_hash}"
         await self.redis.setex(
-            key, 
-            ttl, 
+            key,
+            ttl,
             orjson.dumps(response)
         )
 
@@ -392,28 +392,28 @@ from flx.core.enhanced_factory import create_adapter
 async def cached_adapter_operation(schema_name: str, operation: str, **kwargs):
     # Create adapter with caching
     adapter = create_adapter(schema_name, enable_caching=True)
-    
+
     # Cache key from parameters
     cache_key = hash(str(kwargs))
-    
+
     # Try cache first
     cache = AdapterCache("redis://localhost:6379")
     cached_result = await cache.get_adapter_response(
         schema_name, operation, cache_key
     )
-    
+
     if cached_result:
         logger.info("Cache hit", adapter=schema_name, operation=operation)
         return cached_result
-    
+
     # Execute operation
     result = await getattr(adapter, operation)(**kwargs)
-    
+
     # Cache result
     await cache.cache_adapter_response(
         schema_name, operation, cache_key, result
     )
-    
+
     return result
 ```
 
@@ -468,22 +468,22 @@ def process_oracle_data_sync(self, schema_name: str, operation: str, **kwargs):
     try:
         # Create adapter using meta-factory
         adapter = create_adapter(schema_name, **kwargs)
-        
+
         # Execute operation
         result = adapter.__getattribute__(operation)(**kwargs)
-        
+
         logger.info(
             "Background task completed",
             task_id=self.request.id,
             schema=schema_name,
             operation=operation
         )
-        
+
         return result
-        
+
     except Exception as exc:
         logger.error(
-            "Background task failed", 
+            "Background task failed",
             task_id=self.request.id,
             error=str(exc)
         )
@@ -553,20 +553,20 @@ adapter_config_strategy = st.builds(
 @given(adapter_config_strategy)
 def test_meta_factory_generates_valid_adapters(config):
     """Property: Meta-factory should generate valid adapters for any valid config."""
-    
+
     # Generate adapter class
     adapter_class = generate_adapter(config)
-    
+
     # Properties that should always hold
     assert adapter_class.__name__.endswith("Adapter")
     assert hasattr(adapter_class, '__init__')
-    
+
     # All operations should be methods
     for operation in config.operations:
         assert hasattr(adapter_class, operation.name)
         method = getattr(adapter_class, operation.name)
         assert callable(method)
-    
+
     # Should be instantiable
     instance = adapter_class({})
     assert instance is not None
@@ -574,7 +574,7 @@ def test_meta_factory_generates_valid_adapters(config):
 @given(st.text(), st.dictionaries(st.text(), st.text()))
 def test_adapter_error_handling(invalid_schema, invalid_config):
     """Property: Invalid inputs should not crash the system."""
-    
+
     try:
         # Should either work or raise specific exceptions
         adapter = create_adapter(invalid_schema, **invalid_config)
@@ -608,13 +608,13 @@ code_reduction = {
     },
     "dependency_injector": {
         "files_simplified": ["/flx/src/flx/core/services.py"],
-        "lines_reduced": 300,  
+        "lines_reduced": 300,
         "percentage": 2.0
     },
     "loguru": {
         "files_eliminated": ["/flx/src/flx/infra/logging/"],
         "lines_reduced": 200,
-        "percentage": 1.3  
+        "percentage": 1.3
     },
     "celery": {
         "files_eliminated": ["background_tasks/*"],
@@ -658,8 +658,8 @@ performance_gains = {
 
 #### **Phase 1: Foundation (Sprint 6)**
 
-**Risk**: Low  
-**Impact**: High  
+**Risk**: Low
+**Impact**: High
 **Dependencies**: None
 
 ```bash
@@ -667,12 +667,12 @@ performance_gains = {
 fastapi_migration = {
     "day_1": "Install FastAPI, create basic app",
     "day_2": "Migrate health endpoints",
-    "day_3": "Migrate adapter endpoints", 
+    "day_3": "Migrate adapter endpoints",
     "day_4": "Integration testing",
     "day_5": "Performance validation"
 }
 
-# Week 2  
+# Week 2
 infrastructure_migration = {
     "day_6": "Install dependency-injector",
     "day_7": "Create container configuration",
@@ -684,8 +684,8 @@ infrastructure_migration = {
 
 #### **Phase 2: Performance (Sprint 7)**
 
-**Risk**: Low-Medium  
-**Impact**: Medium-High  
+**Risk**: Low-Medium
+**Impact**: Medium-High
 **Dependencies**: Phase 1 complete
 
 ```bash
@@ -697,8 +697,8 @@ performance_migration = {
 
 #### **Phase 3: Advanced (Sprint 8)**
 
-**Risk**: Medium  
-**Impact**: Medium  
+**Risk**: Medium
+**Impact**: Medium
 **Dependencies**: Phase 1 & 2 complete
 
 ```bash
@@ -730,7 +730,7 @@ rollback_fastapi = {
 rollback_di = {
     "trigger": "service_resolution_failures > 5%",
     "action": "revert_to_custom_di",
-    "time": "< 15 minutes", 
+    "time": "< 15 minutes",
     "validation": "all_services_resolvable"
 }
 ```
@@ -754,35 +754,35 @@ rollback_logging = {
 # API contract testing
 async def test_fastapi_oracle_adapter_compatibility():
     """Ensure FastAPI doesn't break Oracle adapter APIs."""
-    
+
     client = TestClient(app)
-    
+
     # Test adapter creation endpoint
     response = client.post("/adapters/create", json={
         "schema_name": "oracle_wms",
         "config": {"connection_string": "test://"}
     })
-    
+
     assert response.status_code == 200
     assert "adapter_id" in response.json()
-    
+
     # Test adapter operation endpoint
     adapter_id = response.json()["adapter_id"]
-    response = client.post(f"/adapters/{adapter_id}/operations/get_inventory_item", 
+    response = client.post(f"/adapters/{adapter_id}/operations/get_inventory_item",
                           json={"item_id": "TEST001"})
-    
+
     assert response.status_code == 200
 
 # Performance testing
 def test_fastapi_performance_baseline():
     """Ensure FastAPI performs at least as well as custom HTTP server."""
-    
+
     # Baseline from custom server
     baseline_rps = get_baseline_requests_per_second()
-    
+
     # Test FastAPI
     fastapi_rps = benchmark_fastapi_requests_per_second()
-    
+
     assert fastapi_rps >= baseline_rps * 0.95  # Allow 5% margin
 ```
 
@@ -791,21 +791,21 @@ def test_fastapi_performance_baseline():
 ```python
 def test_di_container_meta_factory_integration():
     """Test DI container works with meta-factory."""
-    
+
     container = ApplicationContainer()
     container.config.from_dict({
         "database": {"url": "test://"},
         "adapters": {"cache_enabled": True}
     })
-    
+
     # Resolve adapter factory
     factory = container.adapter_factory()
     assert factory is not None
-    
+
     # Create adapter via DI
     adapter = factory.create_adapter("oracle_wms")
     assert adapter is not None
-    
+
     # Services should be injected
     assert hasattr(adapter, '_database')
     assert hasattr(adapter, '_cache')
@@ -816,7 +816,7 @@ def test_di_container_meta_factory_integration():
 ```python
 async def test_end_to_end_oracle_integration():
     """Complete end-to-end test with all new libraries."""
-    
+
     # FastAPI + DI + Loguru + Meta-factory
     async with TestClient(app) as client:
         # Create adapter
@@ -824,27 +824,27 @@ async def test_end_to_end_oracle_integration():
             "connection_string": os.getenv("TEST_ORACLE_URL"),
             "pool_size": 5
         })
-        
+
         adapter_id = response.json()["adapter_id"]
-        
+
         # Execute operation (should use Redis cache)
         response = await client.post(
             f"/adapters/{adapter_id}/get_inventory_item",
             json={"item_id": "TEST001"}
         )
-        
+
         assert response.status_code == 200
         result = response.json()
-        
+
         # Verify logging (Loguru)
         assert "correlation_id" in result
-        
-        # Verify caching (Redis) 
+
+        # Verify caching (Redis)
         response2 = await client.post(
-            f"/adapters/{adapter_id}/get_inventory_item", 
+            f"/adapters/{adapter_id}/get_inventory_item",
             json={"item_id": "TEST001"}
         )
-        
+
         # Should be faster (cached)
         assert response2.elapsed < response.elapsed
 ```
@@ -856,12 +856,12 @@ async def test_end_to_end_oracle_integration():
 ```
 Week 1: HTTP & FastAPI
 ├── Mon: FastAPI installation & basic setup
-├── Tue: Health & admin endpoints migration  
+├── Tue: Health & admin endpoints migration
 ├── Wed: Adapter API endpoints migration
 ├── Thu: Oracle system integration testing
 └── Fri: Performance benchmarking
 
-Week 2: DI & Logging  
+Week 2: DI & Logging
 ├── Mon: Dependency Injector installation
 ├── Tue: Container configuration & service migration
 ├── Wed: Meta-factory DI integration
@@ -881,7 +881,7 @@ Week 3: Rich & orjson
 
 Week 4: Redis & Caching
 ├── Mon: Redis installation & configuration
-├── Tue: Cache layer implementation  
+├── Tue: Cache layer implementation
 ├── Wed: Adapter caching integration
 ├── Thu: Cache performance testing
 └── Fri: Sprint review & validation
@@ -959,7 +959,7 @@ Week 6: Advanced Testing
 **Mitigation**:
 
 - Comprehensive Oracle integration test suite
-- Dedicated Oracle test environment  
+- Dedicated Oracle test environment
 - Compatibility matrix testing
 - Rollback procedures within 30 minutes
 
@@ -1041,7 +1041,7 @@ rollback_triggers = {
 1. Check adapter serialization compatibility with FastAPI's JSON handling
 2. Verify async/await patterns are properly implemented
 3. Ensure dependency injection works with FastAPI's DI system
-**Solution**: Update adapter interfaces to be FastAPI-compatible and test endpoint integration
+   **Solution**: Update adapter interfaces to be FastAPI-compatible and test endpoint integration
 
 #### **Dependency Injector Container Failures**
 
@@ -1061,7 +1061,7 @@ rollback_triggers = {
 1. Verify Redis server is running and accessible
 2. Check connection string format and credentials
 3. Test network connectivity to Redis instance
-**Solution**: Update Redis configuration and validate connection parameters
+   **Solution**: Update Redis configuration and validate connection parameters
 
 #### **Celery Task Execution Failures**
 
@@ -1081,7 +1081,7 @@ rollback_triggers = {
 1. Profile specific operations to identify bottlenecks
 2. Check if library default configurations are optimal
 3. Verify proper connection pooling and resource management
-**Solution**: Tune library configurations and implement caching where appropriate
+   **Solution**: Tune library configurations and implement caching where appropriate
 
 #### **Type Safety Issues with Library Integration**
 
@@ -1095,9 +1095,9 @@ rollback_triggers = {
 
 ---
 
-**Document Owner**: Architecture Team  
-**Implementation Lead**: Senior Developer  
-**Review Schedule**: End of each sprint  
+**Document Owner**: Architecture Team
+**Implementation Lead**: Senior Developer
+**Review Schedule**: End of each sprint
 **Success Tracking**: Automated metrics + manual validation
 
 ---

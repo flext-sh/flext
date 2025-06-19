@@ -10,14 +10,22 @@ def fix_g004_logging_fstrings(content: str) -> str:
     # Pattern to match logging statements with f-strings
     patterns = [
         # logger.info(f"message {var}")
-        (r'(\s+(?:logger|self\.logger)\.(?:debug|info|warning|error|exception|critical)\s*\(\s*)f"([^"]*?{[^}]*}[^"]*?)"', r'\1"\2", '),
-        (r"(\s+(?:logger|self\.logger)\.(?:debug|info|warning|error|exception|critical)\s*\(\s*)f'([^']*?{[^}]*}[^']*?)'", r"\1'\2', "),
+        (
+            r'(\s+(?:logger|self\.logger)\.(?:debug|info|warning|error|exception|critical)\s*\(\s*)f"([^"]*?{[^}]*}[^"]*?)"',
+            r'\1"\2", ',
+        ),
+        (
+            r"(\s+(?:logger|self\.logger)\.(?:debug|info|warning|error|exception|critical)\s*\(\s*)f'([^']*?{[^}]*}[^']*?)'",
+            r"\1'\2', ",
+        ),
     ]
 
     for pattern, _replacement in patterns:
         # Find all matches
         matches = re.finditer(pattern, content)
-        for match in reversed(list(matches)):  # Process in reverse to maintain positions
+        for match in reversed(
+            list(matches)
+        ):  # Process in reverse to maintain positions
             start, end = match.span()
             prefix = match.group(1)
             message = match.group(2)
@@ -57,7 +65,9 @@ def fix_b904_exception_chaining(content: str) -> str:
         elif stripped.startswith("except "):
             in_except_block = True
             except_variable = None
-        elif not stripped.startswith(" ") and stripped != "" and "except" not in stripped:
+        elif (
+            not stripped.startswith(" ") and stripped != "" and "except" not in stripped
+        ):
             # We've left the except block
             in_except_block = False
             except_variable = None
@@ -65,12 +75,18 @@ def fix_b904_exception_chaining(content: str) -> str:
         # If we're in an except block and find a raise statement
         if in_except_block and stripped.startswith("raise ") and except_variable:
             # Check if it already has 'from'
-            if " from " not in stripped and not stripped.endswith(f" from {except_variable}"):
+            if " from " not in stripped and not stripped.endswith(
+                f" from {except_variable}"
+            ):
                 # Add exception chaining
                 if stripped.endswith(")"):
-                    lines[i] = line.replace(stripped, f"{stripped} from {except_variable}")
+                    lines[i] = line.replace(
+                        stripped, f"{stripped} from {except_variable}"
+                    )
                 else:
-                    lines[i] = line.replace(stripped, f"{stripped} from {except_variable}")
+                    lines[i] = line.replace(
+                        stripped, f"{stripped} from {except_variable}"
+                    )
 
     return "\n".join(lines)
 

@@ -41,12 +41,12 @@ graph TD
     C --> D[Business Logic Layer]
     D --> E[FLX Application Services]
     E --> F[Domain Layer]
-    
+
     G[Configuration Manager] --> C
     H[Output Formatters] --> C
     I[Error Handlers] --> C
     J[Plugin Manager] --> B
-    
+
     K[Validation Layer] --> C
     L[Authentication Layer] --> C
 ```
@@ -184,7 +184,7 @@ def main(
 ):
     """
     FLX Framework Development CLI
-    
+
     A comprehensive command-line interface for FLX hexagonal architecture
     framework development, testing, and deployment operations.
     """
@@ -197,7 +197,7 @@ def main(
         output_format=output_format,
         console=console
     )
-    
+
     # Store context for commands
     ctx.obj = cli_context
 
@@ -213,17 +213,17 @@ def version(
 ):
     """Show FLX CLI version information."""
     cli_context: CLIContext = ctx.obj
-    
+
     if detailed:
         version_info = cli_context.get_detailed_version_info()
         table = Table(title="FLX CLI Version Information")
         table.add_column("Component", style="cyan")
         table.add_column("Version", style="green")
         table.add_column("Build", style="yellow")
-        
+
         for component, info in version_info.items():
             table.add_row(component, info['version'], info.get('build', 'N/A'))
-        
+
         console.print(table)
     else:
         rprint(f"[green]FLX CLI[/green] version [cyan]{cli_context.version}[/cyan]")
@@ -232,19 +232,19 @@ def version(
 def info(ctx: typer.Context):
     """Show system and environment information."""
     cli_context: CLIContext = ctx.obj
-    
+
     info_data = cli_context.get_system_info()
-    
+
     if cli_context.output_format == "json":
         console.print_json(data=info_data)
     else:
         table = Table(title="System Information")
         table.add_column("Property", style="cyan")
         table.add_column("Value", style="green")
-        
+
         for key, value in info_data.items():
             table.add_row(key.replace('_', ' ').title(), str(value))
-        
+
         console.print(table)
 
 if __name__ == "__main__":
@@ -269,22 +269,22 @@ from flx.core.version import __version__
 @dataclass
 class CLIContext:
     """CLI execution context with configuration and state."""
-    
+
     config: CLIConfig
     verbose: bool = False
     quiet: bool = False
     output_format: str = "text"
     console: Optional[Console] = None
-    
+
     def __post_init__(self):
         if self.console is None:
             self.console = Console()
-    
+
     @property
     def version(self) -> str:
         """Get FLX CLI version."""
         return __version__
-    
+
     def get_detailed_version_info(self) -> Dict[str, Dict[str, str]]:
         """Get detailed version information."""
         return {
@@ -301,7 +301,7 @@ class CLIContext:
                 "build": platform.machine()
             }
         }
-    
+
     def get_system_info(self) -> Dict[str, Any]:
         """Get comprehensive system information."""
         return {
@@ -314,26 +314,26 @@ class CLIContext:
             "output_format": self.output_format,
             "verbose": self.verbose
         }
-    
+
     def print_success(self, message: str, **kwargs):
         """Print success message with consistent formatting."""
         if not self.quiet:
             self.console.print(f"[green]✓[/green] {message}", **kwargs)
-    
+
     def print_error(self, message: str, **kwargs):
         """Print error message with consistent formatting."""
         self.console.print(f"[red]✗[/red] {message}", **kwargs)
-    
+
     def print_warning(self, message: str, **kwargs):
         """Print warning message with consistent formatting."""
         if not self.quiet:
             self.console.print(f"[yellow]⚠[/yellow] {message}", **kwargs)
-    
+
     def print_info(self, message: str, **kwargs):
         """Print info message with consistent formatting."""
         if self.verbose and not self.quiet:
             self.console.print(f"[blue]ℹ[/blue] {message}", **kwargs)
-    
+
     def output_data(self, data: Any, title: Optional[str] = None):
         """Output data in the requested format."""
         if self.output_format == "json":
@@ -346,49 +346,49 @@ class CLIContext:
             # Text format - use rich formatting
             if title:
                 self.console.print(f"[bold]{title}[/bold]")
-            
+
             if isinstance(data, dict):
                 self._print_dict_as_table(data, title)
             elif isinstance(data, list):
                 self._print_list_as_table(data, title)
             else:
                 self.console.print(str(data))
-    
+
     def _print_dict_as_table(self, data: Dict[str, Any], title: Optional[str] = None):
         """Print dictionary as a formatted table."""
         from rich.table import Table
-        
+
         table = Table(title=title)
         table.add_column("Key", style="cyan")
         table.add_column("Value", style="green")
-        
+
         for key, value in data.items():
             table.add_row(str(key), str(value))
-        
+
         self.console.print(table)
-    
+
     def _print_list_as_table(self, data: list, title: Optional[str] = None):
         """Print list as a formatted table."""
         from rich.table import Table
-        
+
         if not data:
             self.console.print("No data available")
             return
-        
+
         table = Table(title=title)
-        
+
         # If list contains dictionaries, use keys as columns
         if isinstance(data[0], dict):
             for key in data[0].keys():
                 table.add_column(str(key).title(), style="cyan")
-            
+
             for item in data:
                 table.add_row(*[str(v) for v in item.values()])
         else:
             table.add_column("Item", style="cyan")
             for item in data:
                 table.add_row(str(item))
-        
+
         self.console.print(table)
 
 # src/flx/cli/core/config.py
@@ -400,50 +400,50 @@ import os
 
 class CLIConfig(BaseModel):
     """CLI configuration model."""
-    
+
     # Project settings
     project_root: Path = Field(default_factory=Path.cwd)
     default_profile: str = "development"
-    
+
     # Output settings
     default_format: str = "text"
     color_output: bool = True
     verbose_by_default: bool = False
-    
+
     # Tool integrations
     editor: str = "code"  # Default editor for opening files
     browser: str = "default"  # Default browser for opening URLs
-    
+
     # Database settings
     default_database_url: Optional[str] = None
-    
+
     # Testing settings
     test_command: str = "pytest"
     coverage_threshold: float = 90.0
-    
+
     # Quality settings
     lint_command: str = "ruff check"
     format_command: str = "black"
     type_check_command: str = "mypy"
-    
+
     # Custom settings
     custom: Dict[str, Any] = Field(default_factory=dict)
-    
+
     # Internal
     config_file: Optional[Path] = None
-    
+
     @classmethod
     def load(cls, config_file: Optional[str] = None) -> "CLIConfig":
         """Load configuration from file or environment."""
         config_data = {}
-        
+
         # Try to find config file
         if config_file:
             config_path = Path(config_file)
         else:
             # Look for config in standard locations
             config_path = cls._find_config_file()
-        
+
         # Load config file if found
         if config_path and config_path.exists():
             with open(config_path) as f:
@@ -452,16 +452,16 @@ class CLIConfig(BaseModel):
                 else:
                     import json
                     config_data = json.load(f)
-        
+
         # Override with environment variables
         config_data.update(cls._load_from_environment())
-        
+
         # Create config instance
         config = cls(**config_data)
         config.config_file = config_path
-        
+
         return config
-    
+
     @staticmethod
     def _find_config_file() -> Optional[Path]:
         """Find configuration file in standard locations."""
@@ -472,18 +472,18 @@ class CLIConfig(BaseModel):
             Path.home() / ".config" / "flx" / "config.yaml",
             Path.home() / ".flx.yaml"
         ]
-        
+
         for location in possible_locations:
             if location.exists():
                 return location
-        
+
         return None
-    
+
     @staticmethod
     def _load_from_environment() -> Dict[str, Any]:
         """Load configuration from environment variables."""
         config = {}
-        
+
         # Map environment variables to config keys
         env_mapping = {
             'FLX_CLI_PROFILE': 'default_profile',
@@ -494,7 +494,7 @@ class CLIConfig(BaseModel):
             'FLX_CLI_TEST_COMMAND': 'test_command',
             'FLX_CLI_COVERAGE_THRESHOLD': 'coverage_threshold'
         }
-        
+
         for env_var, config_key in env_mapping.items():
             value = os.getenv(env_var)
             if value is not None:
@@ -504,9 +504,9 @@ class CLIConfig(BaseModel):
                 # Convert numeric strings
                 elif value.replace('.', '').isdigit():
                     value = float(value) if '.' in value else int(value)
-                
+
                 config[config_key] = value
-        
+
         return config
 ```
 
@@ -524,31 +524,31 @@ from flx.cli.core.exceptions import CLIError
 
 class BaseCommand(ABC):
     """Base class for CLI commands with common functionality."""
-    
+
     def __init__(self, context: CLIContext):
         self.context = context
         self.console = context.console
-    
+
     @abstractmethod
     async def execute(self, **kwargs) -> Dict[str, Any]:
         """Execute the command and return results."""
         pass
-    
+
     def validate_inputs(self, **kwargs) -> None:
         """Validate command inputs."""
         pass
-    
+
     def pre_execute(self, **kwargs) -> None:
         """Pre-execution setup."""
         self.validate_inputs(**kwargs)
-    
+
     def post_execute(self, result: Dict[str, Any]) -> None:
         """Post-execution cleanup and reporting."""
         if result.get('success', False):
             self.context.print_success("Command completed successfully")
         else:
             self.context.print_error(f"Command failed: {result.get('error', 'Unknown error')}")
-    
+
     async def run(self, **kwargs) -> Dict[str, Any]:
         """Run the complete command lifecycle."""
         try:
@@ -564,7 +564,7 @@ class BaseCommand(ABC):
             }
             self.post_execute(error_result)
             raise CLIError(f"Command execution failed: {e}") from e
-    
+
     def progress_context(self, description: str = "Processing"):
         """Create a progress context for long-running operations."""
         return Progress(console=self.console)
@@ -586,7 +586,7 @@ app = typer.Typer(name="project", help="Project management commands")
 
 class CreateProjectCommand(BaseCommand):
     """Command to create new FLX projects."""
-    
+
     async def execute(
         self,
         name: str,
@@ -595,17 +595,17 @@ class CreateProjectCommand(BaseCommand):
         **kwargs
     ) -> Dict[str, Any]:
         """Create a new FLX project."""
-        
+
         project_dir = directory or Path.cwd() / name
-        
+
         self.context.print_info(f"Creating project '{name}' using template '{template}'")
-        
+
         with self.progress_context("Creating project") as progress:
             task = progress.add_task("Setting up project structure", total=100)
-            
+
             # Initialize project manager
             project_manager = ProjectManager(self.context.config)
-            
+
             # Create project
             progress.update(task, advance=20, description="Creating directory structure")
             project_config = await project_manager.create_project(
@@ -613,20 +613,20 @@ class CreateProjectCommand(BaseCommand):
                 template=template,
                 directory=project_dir
             )
-            
+
             progress.update(task, advance=30, description="Installing dependencies")
             await project_manager.install_dependencies(project_dir)
-            
+
             progress.update(task, advance=25, description="Setting up development tools")
             await project_manager.setup_dev_tools(project_dir)
-            
+
             progress.update(task, advance=15, description="Initializing git repository")
             await project_manager.init_git_repo(project_dir)
-            
+
             progress.update(task, advance=10, description="Finalizing setup")
-            
+
         self.context.print_success(f"Project '{name}' created successfully at {project_dir}")
-        
+
         return {
             'success': True,
             'project_name': name,
@@ -645,26 +645,26 @@ def create(
 ):
     """Create a new FLX project."""
     cli_context: CLIContext = ctx.obj
-    
+
     # Interactive mode
     if interactive:
         import questionary
-        
+
         name = questionary.text("Project name:", default=name).ask()
         template = questionary.select(
             "Select project template:",
             choices=["basic", "web-api", "cli-tool", "data-pipeline", "microservice"]
         ).ask()
-        
+
         if questionary.confirm("Create project?").ask():
             pass
         else:
             cli_context.print_info("Project creation cancelled")
             raise typer.Exit()
-    
+
     # Convert directory string to Path
     target_dir = Path(directory) if directory else None
-    
+
     # Create and run command
     command = CreateProjectCommand(cli_context)
     result = asyncio.run(command.run(
@@ -672,7 +672,7 @@ def create(
         template=template,
         directory=target_dir
     ))
-    
+
     # Output result
     cli_context.output_data(result, title="Project Creation Result")
 
@@ -680,7 +680,7 @@ def create(
 def list_templates(ctx: typer.Context):
     """List available project templates."""
     cli_context: CLIContext = ctx.obj
-    
+
     templates = [
         {
             "name": "basic",
@@ -708,7 +708,7 @@ def list_templates(ctx: typer.Context):
             "features": "Docker, Kubernetes, monitoring, health checks"
         }
     ]
-    
+
     if cli_context.output_format == "json":
         cli_context.output_data(templates)
     else:
@@ -716,14 +716,14 @@ def list_templates(ctx: typer.Context):
         table.add_column("Template", style="cyan")
         table.add_column("Description", style="green")
         table.add_column("Features", style="yellow")
-        
+
         for template in templates:
             table.add_row(
                 template["name"],
                 template["description"],
                 template["features"]
             )
-        
+
         cli_context.console.print(table)
 
 @app.command()
@@ -733,15 +733,15 @@ def status(
 ):
     """Show project status and health information."""
     cli_context: CLIContext = ctx.obj
-    
+
     project_dir = Path(project_path) if project_path else Path.cwd()
-    
+
     # Check if this is an FLX project
     config_file = project_dir / "pyproject.toml"
     if not config_file.exists():
         cli_context.print_error("Not an FLX project (no pyproject.toml found)")
         raise typer.Exit(1)
-    
+
     # Gather project information
     project_info = {
         "project_path": str(project_dir),
@@ -754,7 +754,7 @@ def status(
         "tests_passing": None,  # Could run quick test check
         "coverage": None  # Could check last coverage report
     }
-    
+
     cli_context.output_data(project_info, title="Project Status")
 
 # Additional commands for project management
@@ -766,16 +766,16 @@ def validate(
 ):
     """Validate project structure and configuration."""
     cli_context: CLIContext = ctx.obj
-    
+
     project_dir = Path(project_path) if project_path else Path.cwd()
-    
+
     validation_results = {
         "valid": True,
         "issues": [],
         "warnings": [],
         "suggestions": []
     }
-    
+
     # Validate project structure
     required_files = [
         "pyproject.toml",
@@ -783,12 +783,12 @@ def validate(
         "src",
         "tests"
     ]
-    
+
     for required_file in required_files:
         if not (project_dir / required_file).exists():
             validation_results["issues"].append(f"Missing required file/directory: {required_file}")
             validation_results["valid"] = False
-    
+
     # Output results
     if validation_results["valid"]:
         cli_context.print_success("Project validation passed")
@@ -796,7 +796,7 @@ def validate(
         cli_context.print_error("Project validation failed")
         for issue in validation_results["issues"]:
             cli_context.print_error(f"  - {issue}")
-    
+
     cli_context.output_data(validation_results, title="Validation Results")
 ```
 
@@ -820,7 +820,7 @@ app = typer.Typer(name="test", help="Testing utilities and commands")
 
 class TestRunnerCommand(BaseCommand):
     """Command to run tests with various options."""
-    
+
     async def execute(
         self,
         test_type: str = "all",
@@ -831,10 +831,10 @@ class TestRunnerCommand(BaseCommand):
         **kwargs
     ) -> Dict[str, Any]:
         """Execute test suite with specified options."""
-        
+
         # Build pytest command
         cmd_parts = ["pytest"]
-        
+
         # Add test paths based on type
         if test_type == "unit":
             cmd_parts.append("tests/unit/")
@@ -846,11 +846,11 @@ class TestRunnerCommand(BaseCommand):
             cmd_parts.append("tests/")
         else:
             cmd_parts.append(f"tests/{test_type}/")
-        
+
         # Add options
         if pattern:
             cmd_parts.extend(["-k", pattern])
-        
+
         if coverage:
             cmd_parts.extend([
                 "--cov=flx",
@@ -858,37 +858,37 @@ class TestRunnerCommand(BaseCommand):
                 "--cov-report=html:reports/coverage",
                 "--cov-fail-under=90"
             ])
-        
+
         if parallel:
             cmd_parts.extend(["-n", "auto"])
-        
+
         if verbose:
             cmd_parts.append("-v")
-        
+
         cmd_parts.extend(["--tb=short"])
-        
+
         self.context.print_info(f"Running command: {' '.join(cmd_parts)}")
-        
+
         # Execute tests
         with self.progress_context("Running tests") as progress:
             task = progress.add_task("Executing test suite", total=100)
-            
+
             process = await asyncio.create_subprocess_exec(
                 *cmd_parts,
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE,
                 cwd=Path.cwd()
             )
-            
+
             stdout, stderr = await process.communicate()
-            
+
             progress.update(task, completed=100)
-        
+
         # Parse results
         success = process.returncode == 0
         output = stdout.decode('utf-8')
         error_output = stderr.decode('utf-8')
-        
+
         return {
             'success': success,
             'exit_code': process.returncode,
@@ -910,13 +910,13 @@ def run(
 ):
     """Run the test suite with various options."""
     cli_context: CLIContext = ctx.obj
-    
+
     if watch:
         cli_context.print_info("Starting test watch mode (Ctrl+C to stop)")
         # Implementation would use file watching library
         cli_context.print_warning("Watch mode not yet implemented")
         return
-    
+
     # Create and run command
     command = TestRunnerCommand(cli_context)
     result = asyncio.run(command.run(
@@ -926,7 +926,7 @@ def run(
         parallel=parallel,
         verbose=verbose or cli_context.verbose
     ))
-    
+
     # Display results
     if result['success']:
         cli_context.print_success("All tests passed!")
@@ -935,7 +935,7 @@ def run(
         if result['error_output']:
             cli_context.console.print("[red]Error Output:[/red]")
             cli_context.console.print(result['error_output'])
-    
+
     # Show output if verbose
     if cli_context.verbose and result['output']:
         cli_context.console.print("[blue]Test Output:[/blue]")
@@ -950,7 +950,7 @@ def coverage(
 ):
     """Generate and display coverage reports."""
     cli_context: CLIContext = ctx.obj
-    
+
     # Run tests with coverage
     cmd_parts = [
         "pytest",
@@ -958,24 +958,24 @@ def coverage(
         f"--cov=flx",
         f"--cov-fail-under={threshold}"
     ]
-    
+
     if format == "html":
         cmd_parts.append("--cov-report=html:reports/coverage")
     elif format == "xml":
         cmd_parts.append("--cov-report=xml:reports/coverage.xml")
     elif format == "json":
         cmd_parts.append("--cov-report=json:reports/coverage.json")
-    
+
     cmd_parts.append("--cov-report=term-missing")
-    
+
     cli_context.print_info(f"Generating {format} coverage report")
-    
+
     try:
         result = subprocess.run(cmd_parts, capture_output=True, text=True)
-        
+
         if result.returncode == 0:
             cli_context.print_success(f"Coverage report generated successfully")
-            
+
             if format == "html" and open_report:
                 import webbrowser
                 report_path = Path("reports/coverage/index.html")
@@ -984,7 +984,7 @@ def coverage(
         else:
             cli_context.print_error("Coverage generation failed")
             cli_context.console.print(result.stderr)
-            
+
     except Exception as e:
         cli_context.print_error(f"Failed to generate coverage report: {e}")
 
@@ -996,27 +996,27 @@ def benchmark(
 ):
     """Run performance benchmarks."""
     cli_context: CLIContext = ctx.obj
-    
+
     cmd_parts = ["pytest", "tests/", "-m", "benchmark", "--benchmark-only"]
-    
+
     if pattern:
         cmd_parts.extend(["-k", pattern])
-    
+
     if compare:
         cmd_parts.extend(["--benchmark-compare", compare])
-    
+
     cli_context.print_info("Running performance benchmarks")
-    
+
     try:
         result = subprocess.run(cmd_parts, capture_output=True, text=True)
-        
+
         if result.returncode == 0:
             cli_context.print_success("Benchmarks completed")
             cli_context.console.print(result.stdout)
         else:
             cli_context.print_error("Benchmark execution failed")
             cli_context.console.print(result.stderr)
-            
+
     except Exception as e:
         cli_context.print_error(f"Failed to run benchmarks: {e}")
 ```
@@ -1035,41 +1035,41 @@ from flx.cli.core.context import CLIContext
 
 class CLIPlugin(ABC):
     """Base class for CLI plugins."""
-    
+
     def __init__(self, context: CLIContext):
         self.context = context
-    
+
     @property
     @abstractmethod
     def name(self) -> str:
         """Plugin name."""
         pass
-    
+
     @property
     @abstractmethod
     def description(self) -> str:
         """Plugin description."""
         pass
-    
+
     @property
     @abstractmethod
     def version(self) -> str:
         """Plugin version."""
         pass
-    
+
     @abstractmethod
     def register_commands(self) -> typer.Typer:
         """Register plugin commands."""
         pass
-    
+
     def initialize(self) -> None:
         """Initialize plugin."""
         pass
-    
+
     def cleanup(self) -> None:
         """Cleanup plugin resources."""
         pass
-    
+
     def get_status(self) -> Dict[str, Any]:
         """Get plugin status information."""
         return {
@@ -1082,32 +1082,32 @@ class CLIPlugin(ABC):
 # Plugin manager
 class PluginManager:
     """Manage CLI plugins."""
-    
+
     def __init__(self, context: CLIContext):
         self.context = context
         self.plugins: Dict[str, CLIPlugin] = {}
-    
+
     def register_plugin(self, plugin: CLIPlugin) -> None:
         """Register a plugin."""
         plugin.initialize()
         self.plugins[plugin.name] = plugin
         self.context.print_info(f"Registered plugin: {plugin.name}")
-    
+
     def unregister_plugin(self, plugin_name: str) -> None:
         """Unregister a plugin."""
         if plugin_name in self.plugins:
             self.plugins[plugin_name].cleanup()
             del self.plugins[plugin_name]
             self.context.print_info(f"Unregistered plugin: {plugin_name}")
-    
+
     def get_plugin(self, plugin_name: str) -> CLIPlugin:
         """Get a plugin by name."""
         return self.plugins.get(plugin_name)
-    
+
     def list_plugins(self) -> List[Dict[str, Any]]:
         """List all registered plugins."""
         return [plugin.get_status() for plugin in self.plugins.values()]
-    
+
     def load_plugins_from_config(self) -> None:
         """Load plugins from configuration."""
         # Implementation would load plugins based on config
@@ -1129,18 +1129,18 @@ from typing import Optional, List
 
 class CreateProjectArgs(BaseModel):
     """Validated arguments for project creation."""
-    
+
     name: str
     template: str = "basic"
     directory: Optional[str] = None
     features: List[str] = []
-    
+
     @validator('name')
     def validate_name(cls, v):
         if not v.isidentifier():
             raise ValueError("Project name must be a valid Python identifier")
         return v
-    
+
     @validator('template')
     def validate_template(cls, v):
         valid_templates = ['basic', 'web-api', 'cli-tool', 'data-pipeline']
@@ -1176,39 +1176,39 @@ def create_validated(
 
 class OutputFormatter:
     """Centralized output formatting for CLI."""
-    
+
     def __init__(self, context: CLIContext):
         self.context = context
-    
+
     def format_table(self, data: List[Dict], title: str = None) -> None:
         """Format data as table."""
         if not data:
             self.context.console.print("No data to display")
             return
-        
+
         table = Table(title=title)
-        
+
         # Add columns from first row
         for key in data[0].keys():
             table.add_column(key.replace('_', ' ').title(), style="cyan")
-        
+
         # Add rows
         for row in data:
             table.add_row(*[str(v) for v in row.values()])
-        
+
         self.context.console.print(table)
-    
+
     def format_success(self, message: str, details: Dict = None) -> None:
         """Format success message with optional details."""
         self.context.print_success(message)
-        
+
         if details and self.context.verbose:
             self.context.output_data(details, title="Details")
-    
+
     def format_error(self, message: str, error: Exception = None) -> None:
         """Format error message with optional exception."""
         self.context.print_error(message)
-        
+
         if error and self.context.verbose:
             self.context.console.print_exception()
 ```
@@ -1237,7 +1237,7 @@ async def async_operation(
 ):
     """Perform async operation."""
     cli_context: CLIContext = ctx.obj
-    
+
     try:
         # Async operation here
         result = await perform_async_operation(operation)

@@ -27,10 +27,10 @@ class TestCustomer:
     def test_create_customer_with_valid_data(self):
         # Arrange
         email = Email("customer@example.com")
-        
+
         # Act
         customer = Customer(name="Test Customer", email=email)
-        
+
         # Assert
         assert customer.name == "Test Customer"
         assert customer.email.value == "customer@example.com"
@@ -39,10 +39,10 @@ class TestCustomer:
     def test_customer_deactivation_raises_domain_event(self):
         # Arrange
         customer = Customer(name="Test Customer", email=Email("test@example.com"))
-        
+
         # Act
         customer.deactivate("Business closure")
-        
+
         # Assert
         assert customer.is_active is False
         events = customer.get_domain_events()
@@ -65,14 +65,14 @@ class TestPricingService:
         # Arrange
         product = product_factory(base_price=Money(100, "USD"))
         discount = discount_factory(type="volume", threshold=10, rate=0.15)
-        
+
         # Act
         final_price = pricing_service.calculate_price(
-            product=product, 
-            quantity=15, 
+            product=product,
+            quantity=15,
             applicable_discounts=[discount]
         )
-        
+
         # Assert
         assert final_price.amount == 85.00  # 15% discount applied
         assert final_price.currency == "USD"
@@ -102,15 +102,15 @@ class TestCreateOrderHandler:
             customer_id="cust-123",
             items=[{"product_id": "prod-456", "quantity": 2}]
         )
-        
+
         # Act
         result = await handler.handle(command)
-        
+
         # Assert
         assert result.success is True
         assert order_repo.was_called("save")
         assert event_publisher.was_called("publish")
-        
+
         published_events = event_publisher.get_published_events()
         assert len(published_events) == 1
         assert published_events[0].event_type == "OrderCreated"
@@ -140,14 +140,14 @@ class TestEmailAdapter:
             "template": "order_confirmation",
             "data": {"order_id": "ord-123"}
         }
-        
+
         # Act
         result = await adapter.send_notification(notification)
-        
+
         # Assert
         assert result.success is True
         assert email_service.was_called("send")
-        
+
         sent_email = email_service.get_last_sent_email()
         assert sent_email["to"] == "customer@example.com"
         assert "ord-123" in sent_email["body"]
@@ -175,14 +175,14 @@ class TestOrderWebhookAdapter:
             "payment_id": "pay-456",
             "amount": 150.00
         }
-        
+
         # Act
         result = await adapter.process_webhook(webhook_payload)
-        
+
         # Assert
         assert result.status == "processed"
         assert order_service.was_called("update_payment_status")
-        
+
         service_call = order_service.get_last_call("update_payment_status")
         assert service_call["order_id"] == "ord-123"
         assert service_call["status"] == "paid"
@@ -222,9 +222,9 @@ def assert_domain_event_raised(entity, event_type, **expected_data):
     """Assert that a specific domain event was raised by an entity."""
     events = entity.get_domain_events()
     matching_events = [e for e in events if e.event_type == event_type]
-    
+
     assert len(matching_events) > 0, f"No {event_type} event found"
-    
+
     if expected_data:
         event = matching_events[0]
         for key, value in expected_data.items():
@@ -233,7 +233,7 @@ def assert_domain_event_raised(entity, event_type, **expected_data):
 def assert_repository_interaction(mock_repo, method, times=1, **expected_args):
     """Assert that repository was called with expected parameters."""
     assert mock_repo.call_count(method) == times
-    
+
     if expected_args:
         last_call = mock_repo.get_last_call(method)
         for key, value in expected_args.items():
@@ -271,4 +271,4 @@ def assert_repository_interaction(mock_repo, method, times=1, **expected_args):
 
 ---
 
-*This guide provides comprehensive patterns for unit testing in the FLX framework following hexagonal architecture principles.*
+_This guide provides comprehensive patterns for unit testing in the FLX framework following hexagonal architecture principles._

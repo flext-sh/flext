@@ -54,7 +54,11 @@ class MethodCallFixer(ast.NodeTransformer):
             # Check if calling on self or instance of Flx class
             if isinstance(node.func.value, ast.Name):
                 var_name = node.func.value.id
-                if var_name == "self" and self.current_class and self.current_class.startswith("Flx"):
+                if (
+                    var_name == "self"
+                    and self.current_class
+                    and self.current_class.startswith("Flx")
+                ):
                     should_fix = True
                     context_info = f"self in {self.current_class}"
                 elif var_name in self.imported_names:
@@ -69,21 +73,33 @@ class MethodCallFixer(ast.NodeTransformer):
                 old_name = node.func.attr
                 node.func.attr = flx_method_name
 
-                self.changes_made.append({
-                    "type": "method_call",
-                    "old": old_name,
-                    "new": flx_method_name,
-                    "line": node.lineno if hasattr(node, "lineno") else 0,
-                    "context": context_info,
-                })
+                self.changes_made.append(
+                    {
+                        "type": "method_call",
+                        "old": old_name,
+                        "new": flx_method_name,
+                        "line": node.lineno if hasattr(node, "lineno") else 0,
+                        "context": context_info,
+                    }
+                )
 
         return node
 
     def _is_flx_instance_var(self, var_name: str) -> bool:
         """Check if variable is likely an instance of Flx class."""
         # Simple heuristic - can be improved with type inference
-        flx_indicators = ["client", "service", "manager", "handler", "builder",
-                         "formatter", "adapter", "factory", "registry", "publisher"]
+        flx_indicators = [
+            "client",
+            "service",
+            "manager",
+            "handler",
+            "builder",
+            "formatter",
+            "adapter",
+            "factory",
+            "registry",
+            "publisher",
+        ]
         return any(ind in var_name.lower() for ind in flx_indicators)
 
     def _method_exists_in_inventory(self, method_name: str) -> bool:
@@ -96,7 +112,9 @@ class MethodCallFixer(ast.NodeTransformer):
         return False
 
 
-def fix_file(filepath: Path, inventory: dict[str, Any], dry_run: bool = False) -> list[dict[str, Any]]:
+def fix_file(
+    filepath: Path, inventory: dict[str, Any], dry_run: bool = False
+) -> list[dict[str, Any]]:
     """Fix method calls in a single file."""
     try:
         content = filepath.read_text()
@@ -122,7 +140,11 @@ def main() -> None:
     import argparse
 
     parser = argparse.ArgumentParser(description="Fix method calls missing flx_ prefix")
-    parser.add_argument("--dry-run", action="store_true", help="Show what would be changed without modifying files")
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Show what would be changed without modifying files",
+    )
     parser.add_argument("--file", help="Fix specific file only")
     args = parser.parse_args()
 
@@ -154,7 +176,9 @@ def main() -> None:
 
             print(f"\n{filepath.relative_to(src_dir.parent)}:")
             for change in changes:
-                print(f"  Line {change['line']}: {change['old']} -> {change['new']} ({change['context']})")
+                print(
+                    f"  Line {change['line']}: {change['old']} -> {change['new']} ({change['context']})"
+                )
 
     print("\nSummary:")
     print(f"- Files processed: {len(files)}")

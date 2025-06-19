@@ -173,7 +173,7 @@ While maintaining type safety, the system supports structured information:
 
 ```python
 # Type-safe approach
-logger.info("User login - ID: %s, IP: %s, Status: %s", 
+logger.info("User login - ID: %s, IP: %s, Status: %s",
            user_id, ip_address, "success")
 
 # Rather than problematic extra= usage
@@ -197,7 +197,7 @@ import flx
 class UserService(BaseService):
     def __init__(self):
         self.logger = flx.get_logger(__name__, flx.LogLevel.INFO)
-    
+
     async def create_user(self, user_data):
         self.logger.info("Creating user: %s", user_data.email)
         # Service logic here
@@ -214,7 +214,7 @@ class ApiClientAdapter(HttpAdapter):
     def __init__(self):
         super().__init__()
         self.logger = flx.get_logger(__name__, flx.LogLevel.DEBUG)
-    
+
     async def make_request(self, endpoint):
         self.logger.trace("Making request to: %s", endpoint)
         response = await self.http_client.get(endpoint)
@@ -232,7 +232,7 @@ class UserRepositoryAdapter(DatabaseAdapter):
     def __init__(self):
         super().__init__()
         self.logger = flx.get_logger(__name__, flx.LogLevel.INFO)
-    
+
     async def save_user(self, user):
         self.logger.debug("Saving user to database: %s", user.id)
         result = await self.db.save(user)
@@ -261,14 +261,14 @@ logger = flx.get_logger(__name__, log_level)
 # Application initialization
 def configure_logging():
     base_level = flx.LogLevel.INFO
-    
+
     # Different levels for different modules
     loggers = {
         "app.services": flx.get_logger("app.services", base_level),
         "app.adapters": flx.get_logger("app.adapters", flx.LogLevel.DEBUG),
         "app.domain": flx.get_logger("app.domain", flx.LogLevel.TRACE),
     }
-    
+
     return loggers
 ```
 
@@ -287,9 +287,9 @@ def mock_logger():
 def test_service_with_logging(mock_logger):
     service = UserService()
     service.logger = mock_logger
-    
+
     service.create_user(user_data)
-    
+
     mock_logger.info.assert_called_with("Creating user: %s", user_data.email)
 ```
 
@@ -302,7 +302,7 @@ import flx
 @pytest.mark.asyncio
 async def test_async_logging():
     logger = flx.get_async_logger("test", flx.LogLevel.DEBUG)
-    
+
     # Test that async logging works
     await logger.info("Test message")
     await logger.debug("Debug message")

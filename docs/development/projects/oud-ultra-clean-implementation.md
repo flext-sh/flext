@@ -16,7 +16,7 @@ Implementação ultra-clean que usa **maximamente** a infraestrutura FLX, elimin
 ### Componentes Mínimos
 
 1. **OudConfig** - Properties diretas do env (51 linhas)
-2. **OudLdapService** - LDAP real com ldap3 (74 linhas)  
+2. **OudLdapService** - LDAP real com ldap3 (74 linhas)
 3. **OudLdifService** - Processamento LDIF real (61 linhas)
 4. **OudCliApplication** - Herda de UnifiedCliApplication (157 linhas)
 
@@ -48,7 +48,7 @@ Implementação ultra-clean que usa **maximamente** a infraestrutura FLX, elimin
 python -m oud_automation test-connection
 # Conecta no Oracle Unified Directory real
 # Status: connected
-# Vendor: Oracle Corporation  
+# Vendor: Oracle Corporation
 # Version: Oracle Unified Directory 14.1.2.1.250218
 ```
 
@@ -80,22 +80,22 @@ python -m oud_automation ldif-process test.ldif
 
 ```bash
 python -m oud_automation --json env-info      # JSON
-python -m oud_automation --csv ldap-servers   # CSV  
+python -m oud_automation --csv ldap-servers   # CSV
 python -m oud_automation --yaml health        # YAML
 python -m oud_automation env-info             # TABLE (padrão)
 ```
 
 ## 🎯 Comandos Funcionais
 
-| Comando | Status | Descrição |
-|---------|--------|-----------|
-| `env-info` | ✅ | Lista variáveis de ambiente |
-| `health` | ✅ | Health check completo |
-| `ldap-servers` | ✅ | Info dos servidores LDAP |
-| `test-connection` | ✅ | Testa conexão LDAP real |
-| `ldap-search` | ✅ | Busca LDAP real |
-| `ldif-process` | ✅ | Processa arquivos LDIF |
-| `schema-migrate` | ✅ | Simulação de migração |
+| Comando           | Status | Descrição                   |
+| ----------------- | ------ | --------------------------- |
+| `env-info`        | ✅     | Lista variáveis de ambiente |
+| `health`          | ✅     | Health check completo       |
+| `ldap-servers`    | ✅     | Info dos servidores LDAP    |
+| `test-connection` | ✅     | Testa conexão LDAP real     |
+| `ldap-search`     | ✅     | Busca LDAP real             |
+| `ldif-process`    | ✅     | Processa arquivos LDIF      |
+| `schema-migrate`  | ✅     | Simulação de migração       |
 
 ## 📊 Métricas de Sucesso
 
@@ -105,7 +105,7 @@ python -m oud_automation env-info             # TABLE (padrão)
 - **Depois**: 1 arquivo, 359 linhas
 - **Redução**: ~88% menos código
 
-### Funcionalidades Mantidas  
+### Funcionalidades Mantidas
 
 - ✅ **100%** das funcionalidades principais
 - ✅ **100%** dos formatos de output
@@ -165,11 +165,11 @@ $ python -m oud_automation test-connection
 
 ## 🎉 Resultado Final
 
-✅ **Ultra-Clean**: 88% menos código  
-✅ **Zero Duplicação**: Máximo reuso FLX  
-✅ **Funcionalidade Completa**: Todos os comandos funcionais  
-✅ **Conexões Reais**: LDAP e LDIF reais  
-✅ **KISS/SOLID/DRY**: Tolerância zero para complexidade  
-✅ **Pronto para Produção**: Totalmente funcional  
+✅ **Ultra-Clean**: 88% menos código
+✅ **Zero Duplicação**: Máximo reuso FLX
+✅ **Funcionalidade Completa**: Todos os comandos funcionais
+✅ **Conexões Reais**: LDAP e LDIF reais
+✅ **KISS/SOLID/DRY**: Tolerância zero para complexidade
+✅ **Pronto para Produção**: Totalmente funcional
 
 **A CLI está implementada com tolerância zero para duplicação e máximo aproveitamento da infraestrutura FLX!**

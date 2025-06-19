@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Final validation script to ensure zero tolerance for duplications."""
+
 from __future__ import annotations
 
 import ast

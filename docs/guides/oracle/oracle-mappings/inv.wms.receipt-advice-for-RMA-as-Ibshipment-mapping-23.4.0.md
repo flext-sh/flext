@@ -1,55 +1,59 @@
 # inv.wms.receipt-advice-for-RMA-as-Ibshipment-mapping-23.4.0.xlsx
 
-**Caminho:** `reference/wms_solutions/mappings/inv.wms.receipt-advice-for-RMA-as-Ibshipment-mapping-23.4.0.xlsx`  \n**Data de conversão:** 2025-05-15T14:39:37.820117  \n**Tipo:** .xlsx  \n**[Download original](reference/wms_solutions/mappings/inv.wms.receipt-advice-for-RMA-as-Ibshipment-mapping-23.4.0.xlsx)**
+**Caminho:** `reference/wms_solutions/mappings/inv.wms.receipt-advice-for-RMA-as-Ibshipment-mapping-23.4.0.xlsx` \n**Data de conversão:** 2025-05-15T14:39:37.820117 \n**Tipo:** .xlsx \n**[Download original](reference/wms_solutions/mappings/inv.wms.receipt-advice-for-RMA-as-Ibshipment-mapping-23.4.0.xlsx)**
 
 ---
 
 ## Sumário
 
-
-
 ## Resumo automático
 
 Este documento é um guia de mapeamento entre o WMS (Sistema de Gestão de Armazém) e o Oracle Fusion Inventory para o processamento de Recebimento de RMA como Inbound Shipment. Os principais pontos são:
 
-1. Cabeçalho do Mensagem (Header)  
-   - Campos informacionais: DocumentVersion (24.4.0), OriginSystem, ClientEnvCode, ParentCompanyCode, TimeStamp e MessageId (identificador único).  
-   - Entity identifica o tipo de interface: “ib_shipment” ou “ib_shipment_serial_nbr”.  
+1. Cabeçalho do Mensagem (Header)
+
+   - Campos informacionais: DocumentVersion (24.4.0), OriginSystem, ClientEnvCode, ParentCompanyCode, TimeStamp e MessageId (identificador único).
+   - Entity identifica o tipo de interface: “ib_shipment” ou “ib_shipment_serial_nbr”.
    - Ação (action_code) define CREATE, UPDATE ou DELETE.
 
-2. Mapeamento de Campos de Cabeçalho de Envio (Shipment Headers)  
-   - shipment_nbr → RCV_SHIPMENT_HEADERS.RA_DOCUMENT_NUMBER (RMA Number).  
-   - facility_code → RCV_SHIPMENT_LINES.TO_ORGANIZATION_ID.  
-   - company_code fixo (“PP”).  
-   - ref_nbr → SOURCE_DOCUMENT_NUMBER (ordem de venda original).  
-   - shipment_type sempre “RMA”.  
-   - shipped_date → RA_DOC_CREATION_DATE.  
+2. Mapeamento de Campos de Cabeçalho de Envio (Shipment Headers)
+
+   - shipment_nbr → RCV_SHIPMENT_HEADERS.RA_DOCUMENT_NUMBER (RMA Number).
+   - facility_code → RCV_SHIPMENT_LINES.TO_ORGANIZATION_ID.
+   - company_code fixo (“PP”).
+   - ref_nbr → SOURCE_DOCUMENT_NUMBER (ordem de venda original).
+   - shipment_type sempre “RMA”.
+   - shipped_date → RA_DOC_CREATION_DATE.
    - Vários campos livres (cust_field_x, cust_date_x etc.) para customizações.
 
-3. Mapeamento de Linhas de Envio (Shipment Lines)  
-   - seq_nbr → LINE_NUMBER.  
-   - item_alternate_code concatena ItemNumber e ItemRevision.  
-   - shipped_qty → RA_QUANTITY_EXPECTED.  
-   - batch_nbr (lot number) e expiry_date mapeados para supply de lotes.  
-   - receipt_advice_line reúne RMAHeaderId e RMALineId para unicidade por lote.  
+3. Mapeamento de Linhas de Envio (Shipment Lines)
+
+   - seq_nbr → LINE_NUMBER.
+   - item_alternate_code concatena ItemNumber e ItemRevision.
+   - shipped_qty → RA_QUANTITY_EXPECTED.
+   - batch_nbr (lot number) e expiry_date mapeados para supply de lotes.
+   - receipt_advice_line reúne RMAHeaderId e RMALineId para unicidade por lote.
    - Vários atributos de inventário e campos customizáveis.
 
-4. Mapeamento de Números de Série  
-   - Uma entidade separada (“ib_shipment_serial_nbr”).  
+4. Mapeamento de Números de Série
+
+   - Uma entidade separada (“ib_shipment_serial_nbr”).
    - Campos obrigatórios: facility_code, shipment_nbr, item_alternate_code, serial_nbr.
 
-5. Tamanhos de Campo e Ajustes  
-   - Identificação de discrepâncias de comprimento entre WMS e Fusion (marcadas em vermelho).  
+5. Tamanhos de Campo e Ajustes
+
+   - Identificação de discrepâncias de comprimento entre WMS e Fusion (marcadas em vermelho).
    - Decisões de manter tamanhos maiores no Fusion e documentar limitações em dispositivos móveis.
 
-6. Discussões, Decisões e Premissas de RMA  
-   - Novo RMA deve ser criado para cada adição de linha; não se adicionam linhas a um RMA existente.  
-   - Diminuir quantidade via cancelamento não atualiza WMS automaticamente; documenta-se que seria preciso “auto-verify” no WMS.  
-   - Reenvio (resend) da mensagem sobrescreve o inbound shipment completo; recomenda-se documentar uso cuidadoso dessa opção.  
+6. Discussões, Decisões e Premissas de RMA
+
+   - Novo RMA deve ser criado para cada adição de linha; não se adicionam linhas a um RMA existente.
+   - Diminuir quantidade via cancelamento não atualiza WMS automaticamente; documenta-se que seria preciso “auto-verify” no WMS.
+   - Reenvio (resend) da mensagem sobrescreve o inbound shipment completo; recomenda-se documentar uso cuidadoso dessa opção.
    - Não há suporte a SKU não antecipado em RMA.
 
-7. Integração REST API  
-   - Exemplo de URL para consulta de receiptAdviceLines filtrando por ExternalSystemGroupId.  
+7. Integração REST API
+   - Exemplo de URL para consulta de receiptAdviceLines filtrando por ExternalSystemGroupId.
    - Endpoints de descrição de metadados (“describe”) para obter detalhes de tipos, comprimentos e obrigatoriedade de campos.
 
 Em suma, o documento padroniza todos os campos necessários, suas regras de validação e tratamentos especiais para intercâmbio de informações de RMA entre o WMS e o Oracle Fusion Inventory Cloud.
@@ -70,7 +74,7 @@ WMS Column: company_code, Format: string, Max: 20.0, REQD?: X, INV Column: "PP",
 WMS Column: trailer_nbr, Format: string, Max: 30.0, REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Notes:
 WMS Column: action_code, Format: string, Max: 10.0, REQD?: X, INV Column: "UPDATE", Table Column: RCV_SHIPMENT_HEADERS.RA_LAST_ACTION_CODE, Format.1: string, Max.1: 7.0, Notes: CREATE/UPDATE/DELETE
 WMS Column: ref_nbr, Format: string, Max: 50.0, REQD?: X, INV Column: OriginalSourceOrderNumber, Table Column: RCV_SHIPMENT_HEADERS.SOURCE_DOCUMENT_NUMBER, Format.1: number, Max.1: 18.0, Notes: Still to be anlayzed if its possible to do that. The idea is to send the Sales Order Number information for the RMA document where we have the reference rma lines.
-WMS Column: shipment_type, Format: string, Max: 20.0, REQD?: X, INV Column: SourceDocumentTypeCode, Table Column: Value = "RMA", Format.1: string, Max.1: 25.0, Notes:  Over Receipt should not be allowed
+WMS Column: shipment_type, Format: string, Max: 20.0, REQD?: X, INV Column: SourceDocumentTypeCode, Table Column: Value = "RMA", Format.1: string, Max.1: 25.0, Notes: Over Receipt should not be allowed
 WMS Column: load_nbr, Format: string, Max: 30.0, REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Notes:
 WMS Column: manifest_nbr, Format: string, Max: 30.0, REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Notes:
 WMS Column: trailer_type, Format: string, Max: 10.0, REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Notes:
@@ -124,7 +128,7 @@ WMS Column: action_code, Format: string, Max: 10.0, REQD?: X, INV Column: Action
 WMS Column: lpn_nbr, Format: string, Max: 30.0, REQD?: , INV Column: , Table Column: , Format.1: string, Max.1: 30, Notes: No LPN information for RMA, Unnamed: 9:
 WMS Column: lpn_weight, Format: decimal, Max: , REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Notes: , Unnamed: 9:
 WMS Column: lpn_volume, Format: decimal, Max: , REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Notes: , Unnamed: 9:
-WMS Column: item_alternate_code, Format: string, Max: 130.0, REQD?: , INV Column: ItemNumber + "~^~" + ItemRevision, Table Column:  RCV_SHIPMENT_LINES.ITEM_ID (corrosponding Item Number) + RCV_SHIPMENT_LINES.ITEM_REVISION, Format.1: string, Max.1: 300, Notes: Discussed with Mike and he is fine with the size mismatch and we can revisit once the customer has a use case for such a big length for Item Number., Unnamed: 9:
+WMS Column: item_alternate_code, Format: string, Max: 130.0, REQD?: , INV Column: ItemNumber + "~^~" + ItemRevision, Table Column: RCV_SHIPMENT_LINES.ITEM_ID (corrosponding Item Number) + RCV_SHIPMENT_LINES.ITEM_REVISION, Format.1: string, Max.1: 300, Notes: Discussed with Mike and he is fine with the size mismatch and we can revisit once the customer has a use case for such a big length for Item Number., Unnamed: 9:
 WMS Column: item_part_a, Format: string, Max: 30.0, REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Notes: , Unnamed: 9:
 WMS Column: item_part_b, Format: string, Max: 30.0, REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Notes: , Unnamed: 9:
 WMS Column: item_part_c, Format: string, Max: 20.0, REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Notes: , Unnamed: 9:
@@ -144,7 +148,7 @@ WMS Column: pallet_nbr, Format: string, Max: 30.0, REQD?: , INV Column: , Table 
 WMS Column: putaway_type, Format: string, Max: 15.0, REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Notes: , Unnamed: 9:
 WMS Column: expiry_date, Format: date, Max: 14.0, REQD?: , INV Column: ExpirationDate, Table Column: INV_LOT_NUMBERS.LOT_EXPIRATION_DATE, Format.1: date, Max.1: , Notes: , Unnamed: 9:
 WMS Column: batch_nbr, Format: string, Max: 25.0, REQD?: , INV Column: LotNumber, Table Column: RCV_LOTS_SUPPLY.LOT_NUM, Format.1: string, Max.1: 80, Notes: One lot per shipment line.
-Discussed with Mike and he is fine with the size mismatch and we can revisit once the customer has a use case for such a big length for Lot  Number. The issue is w.r.t the space available on the hand held and whether the 80 char lotr number will fit on to the screen of the hand held.
+Discussed with Mike and he is fine with the size mismatch and we can revisit once the customer has a use case for such a big length for Lot Number. The issue is w.r.t the space available on the hand held and whether the 80 char lotr number will fit on to the screen of the hand held.
 
 , Unnamed: 9:
 WMS Column: recv_xdock_facility_code, Format: string, Max: 20.0, REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Notes: , Unnamed: 9:
@@ -227,10 +231,10 @@ WMS Column: item_part_c, Format: String, Max: 20.0, REQD?: , INV Column: , Table
 WMS Column: item_part_d, Format: String, Max: 20.0, REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Comments: , Unnamed: 9:
 WMS Column: item_part_e, Format: String, Max: 10.0, REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Comments: , Unnamed: 9:
 WMS Column: item_part_f, Format: String, Max: 10.0, REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Comments: , Unnamed: 9:
-WMS Column: item_alternate_code, Format: String, Max: 130.0, REQD?: X, INV Column: ItemNumber + "~^~" + ItemRevision, Table Column:  RCV_SHIPMENT_LINES.ITEM_ID (corrosponding Item Number) + RCV_SHIPMENT_LINES.ITEM_REVISION, Format.1: string, Max.1: 300, Comments: Discussed with Mike and he is fine with the size mismatch and we can revisit once the customer has a use case for such a big length for Item Number., Unnamed: 9:
-WMS Column: serial_nbr, Format: String, Max: 40.0, REQD?: X, INV Column: SerialNumber, Table Column: RCV_SERIALS_SUPPLY.SERIAL_NUM, Format.1: string, Max.1: 80, Comments: Discussed with Mike and he is fine with the size mismatch and we can revisit once the customer has a use case for such a big length for Serial  Number. The issue is w.r.t the space available on the hand held and whether the 80 char lotr number will fit on to the screen of the hand held., Unnamed: 9:
+WMS Column: item_alternate_code, Format: String, Max: 130.0, REQD?: X, INV Column: ItemNumber + "~^~" + ItemRevision, Table Column: RCV_SHIPMENT_LINES.ITEM_ID (corrosponding Item Number) + RCV_SHIPMENT_LINES.ITEM_REVISION, Format.1: string, Max.1: 300, Comments: Discussed with Mike and he is fine with the size mismatch and we can revisit once the customer has a use case for such a big length for Item Number., Unnamed: 9:
+WMS Column: serial_nbr, Format: String, Max: 40.0, REQD?: X, INV Column: SerialNumber, Table Column: RCV_SERIALS_SUPPLY.SERIAL_NUM, Format.1: string, Max.1: 80, Comments: Discussed with Mike and he is fine with the size mismatch and we can revisit once the customer has a use case for such a big length for Serial Number. The issue is w.r.t the space available on the hand held and whether the 80 char lotr number will fit on to the screen of the hand held., Unnamed: 9:
 WMS Column: batch_nbr, Format: String, Max: 25.0, REQD?: , INV Column: LotNumber, Table Column: RCV_LOTS_SUPPLY.LOT_NUM, Format.1: string, Max.1: 80, Comments:
-Discussed with Mike and he is fine with the size mismatch and we can revisit once the customer has a use case for such a big length for Lot  Number. The issue is w.r.t the space available on the hand held and whether the 80 char lotr number will fit on to the screen of the hand held.
+Discussed with Mike and he is fine with the size mismatch and we can revisit once the customer has a use case for such a big length for Lot Number. The issue is w.r.t the space available on the hand held and whether the 80 char lotr number will fit on to the screen of the hand held.
 
 , Unnamed: 9:
 WMS Column: expiry_date, Format: Date, Max: 14.0, REQD?: , INV Column: ExpirationDate, Table Column: , Format.1: date, Max.1: , Comments: , Unnamed: 9:
@@ -266,18 +270,19 @@ Unnamed: 0: , Unnamed: 1: , Unnamed: 2: , Unnamed: 3: , Unnamed: 4:
 Unnamed: 0: , Unnamed: 1: RMA Discussions/Assumptions, Unnamed: 2: , Unnamed: 3: , Unnamed: 4:
 Unnamed: 0: , Unnamed: 1: , Unnamed: 2: , Unnamed: 3: , Unnamed: 4:
 Unnamed: 0: , Unnamed: 1: Need to have Fusion RMA and line number and Original SO and Line number reference in WMS Inbound Shipment/Line level.
-    Per Mike: Original SO and Line number: Should/Nice to have... doesn't need to be part of this flx_project
-    Decision:
-        Short term: Use RMA+datetimestamp as the document reference for each payload coming from INV; Document that customers can additionally add the RMA and/or SO reference into the custom fields.
-        Longer Term: GAP: WMS to add document number and line number columns to the inbound shipment
+Per Mike: Original SO and Line number: Should/Nice to have... doesn't need to be part of this flx_project
+Decision:
+Short term: Use RMA+datetimestamp as the document reference for each payload coming from INV; Document that customers can additionally add the RMA and/or SO reference into the custom fields.
+Longer Term: GAP: WMS to add document number and line number columns to the inbound shipment
 
 , Unnamed: 2: , Unnamed: 3: , Unnamed: 4:
 Unnamed: 0: , Unnamed: 1: , Unnamed: 2: , Unnamed: 3: , Unnamed: 4:
-Unnamed: 0: , Unnamed: 1: Fusion RMA allows updating(Only decreasing the quantity)  the Returned quantity, whereas WMS wont allow any changes to IB Shipment once the receiving is started.  For example: when the RMA got created for 10units and initially customer has returned 3units and later he can request for remaining quantity cancellation. This will lead to a mismatch between Fusion and WMS and this is the same behavior for PO integration.  
+Unnamed: 0: , Unnamed: 1: Fusion RMA allows updating(Only decreasing the quantity) the Returned quantity, whereas WMS wont allow any changes to IB Shipment once the receiving is started. For example: when the RMA got created for 10units and initially customer has returned 3units and later he can request for remaining quantity cancellation. This will lead to a mismatch between Fusion and WMS and this is the same behavior for PO integration.
 
     Option: If there is a quantity decrease / cancellation, could call the auto-verify the inbound order in WMS which blocks additional receipts
         This would block all of the receipts (i.e. other lines)
-        Decision: the shorted quantity would be remain open in WMS even though it's closed in INV. We can document that if they don't want to see the open quantity in WMS, they would need to verify it. , Unnamed: 2: , Unnamed: 3: , Unnamed: 4: 
+        Decision: the shorted quantity would be remain open in WMS even though it's closed in INV. We can document that if they don't want to see the open quantity in WMS, they would need to verify it. , Unnamed: 2: , Unnamed: 3: , Unnamed: 4:
+
 Unnamed: 0: , Unnamed: 1: , Unnamed: 2: , Unnamed: 3: , Unnamed: 4:
 Unnamed: 0: , Unnamed: 1: For RMA in Fusion we cannot add a new line (Unreferenced Return) to an existing RMA. The user will need to create a new RMA to add any line. It should not be added to an existing RMA Document. This needs to be documented., Unnamed: 2: , Unnamed: 3: , Unnamed: 4:
 Unnamed: 0: , Unnamed: 1: , Unnamed: 2: , Unnamed: 3: , Unnamed: 4:

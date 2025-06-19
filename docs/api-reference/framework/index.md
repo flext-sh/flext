@@ -34,10 +34,10 @@ The Framework APIs Hub provides core framework API documentation for FLX Framewo
 
 ### **Framework API Categories**
 
-| **API Documentation** | **Coverage** | **Validation** | **Status** | **Key Features** |
-|-----------------------|--------------|----------------|------------|------------------|
+| **API Documentation**                                       | **Coverage**   | **Validation**   | **Status**    | **Key Features**                     |
+| ----------------------------------------------------------- | -------------- | ---------------- | ------------- | ------------------------------------ |
 | **[Core API Reference](./core-api-reference-validated.md)** | Framework Core | Source Validated | ✅ Production | Application, infrastructure, plugins |
-| **[API Reference Hub](./api-reference-hub.md)** | Central Guide | Source Validated | ✅ Production | Navigation, organization, patterns |
+| **[API Reference Hub](./api-reference-hub.md)**             | Central Guide  | Source Validated | ✅ Production | Navigation, organization, patterns   |
 
 ### **🚀 Framework API Features**
 

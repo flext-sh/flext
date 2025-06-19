@@ -18,8 +18,8 @@
 
 ### **Core Topics**
 
-| **Topic** | **Function** | **Audience** | **Status** |
-|-----------|--------------|--------------|------------|
+| **Topic**                                                   | **Function**                             | **Audience**         | **Status**  |
+| ----------------------------------------------------------- | ---------------------------------------- | -------------------- | ----------- |
 | [Infrastructure Deployment](./infrastructure-deployment.md) | Complete infrastructure automation guide | Infrastructure teams | ✅ Complete |
 
 ### **📋 Learning Path**
@@ -56,7 +56,7 @@
 ## 📊 **Section Metrics**
 
 - **Documents**: 1 file
-- **Completeness**: 100%  
+- **Completeness**: 100%
 - **Last Updated**: June 11, 2025
 
 ---

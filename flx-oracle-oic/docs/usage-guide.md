@@ -17,6 +17,7 @@ poetry install
 ### Quick Start
 
 1. Create configuration file:
+
 ```bash
 cat > config.json << EOF
 {
@@ -29,11 +30,13 @@ EOF
 ```
 
 2. Discover available streams:
+
 ```bash
 flx-oracle-oic tap discover --config config.json --output catalog.json
 ```
 
 3. Extract data:
+
 ```bash
 flx-oracle-oic tap extract --config config.json --catalog catalog.json --output data.jsonl
 ```

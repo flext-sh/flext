@@ -10,10 +10,7 @@ import importlib
 import os
 from uuid import uuid4
 
-from flx.core import (
-    flx_get_broker_info,
-    flx_get_health_status,
-)
+from flx.core import flx_get_broker_info, flx_get_health_status
 
 flx_async = importlib.import_module("flx.infrastructure.async")
 

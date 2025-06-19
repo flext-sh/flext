@@ -1,45 +1,46 @@
 # wms.inv.inventory-transactions-mappings-24.4.0.xlsx
 
-**Caminho:** `reference/wms_solutions/mappings/wms.inv.inventory-transactions-mappings-24.4.0.xlsx`  \n**Data de conversão:** 2025-05-15T14:42:18.562634  \n**Tipo:** .xlsx  \n**[Download original](reference/wms_solutions/mappings/wms.inv.inventory-transactions-mappings-24.4.0.xlsx)**
+**Caminho:** `reference/wms_solutions/mappings/wms.inv.inventory-transactions-mappings-24.4.0.xlsx` \n**Data de conversão:** 2025-05-15T14:42:18.562634 \n**Tipo:** .xlsx \n**[Download original](reference/wms_solutions/mappings/wms.inv.inventory-transactions-mappings-24.4.0.xlsx)**
 
 ---
 
 ## Sumário
 
-
-
 ## Resumo automático
 
 Este documento é a especificação de mapeamento entre os dados do WMS e a interface de “Inventory Staged Transactions” do Oracle Cloud SCM (versão 24.4.0). Ele detalha:
 
-1. Campos de cabeçalho e linha  
-   - TransactionInterfaceId: concatena group_nbr + seq_nbr  
-   - TransactionHeaderId: group_nbr  
-   - SourceCode/SourceLineId/SourceHeaderId: valores fixos (‘Cloud WMS’, ‘0’, ‘0’)  
-   - TransactionMode: ‘1’ (executa o job após sucesso)  
-   - TransactionDate: create_ts  
-   - TransferSubinventory, SubinventoryCode, TransactionTypeName: baseados em buckets atuais e anteriores, com regras para issue, receipt ou transfer  
-   - TransactionQuantity: usa adj_qty se disponível, senão orig_qty  
-   - ItemNumber: substring-before de item_alternate_code até ‘~^~’  
-   - OrganizationName: proveniente de campos ref_value_X com código “FCN”  
-   - TransactionUOM: ou qty_uom_code ou valor de propriedade de integração (‘Ea’)  
-   - ExternalSystemtransactionReference: “group_nbr-seq_nbr”  
+1. Campos de cabeçalho e linha
+
+   - TransactionInterfaceId: concatena group_nbr + seq_nbr
+   - TransactionHeaderId: group_nbr
+   - SourceCode/SourceLineId/SourceHeaderId: valores fixos (‘Cloud WMS’, ‘0’, ‘0’)
+   - TransactionMode: ‘1’ (executa o job após sucesso)
+   - TransactionDate: create_ts
+   - TransferSubinventory, SubinventoryCode, TransactionTypeName: baseados em buckets atuais e anteriores, com regras para issue, receipt ou transfer
+   - TransactionQuantity: usa adj_qty se disponível, senão orig_qty
+   - ItemNumber: substring-before de item_alternate_code até ‘~^~’
+   - OrganizationName: proveniente de campos ref_value_X com código “FCN”
+   - TransactionUOM: ou qty_uom_code ou valor de propriedade de integração (‘Ea’)
+   - ExternalSystemtransactionReference: “group_nbr-seq_nbr”
    - UseCurrentCost: ‘true’
 
-2. Objeto de lotes (inventoryStagedTransactions-lots)  
-   - Não usado se o item não for controlado por lote  
-   - LotNbr e LotExpirationDate: extraídos de ref_value_1/2/4/5 conforme ref_code (BAT, EXP)  
-   - TransactionQuantity: mesma lógica de adj_qty/orig_qty  
+2. Objeto de lotes (inventoryStagedTransactions-lots)
+
+   - Não usado se o item não for controlado por lote
+   - LotNbr e LotExpirationDate: extraídos de ref_value_1/2/4/5 conforme ref_code (BAT, EXP)
+   - TransactionQuantity: mesma lógica de adj_qty/orig_qty
    - Referência à API REST para lotes
 
-3. Objeto de séries (inventoryStagedTransactions-serials)  
-   - Para itens controlados por série (serial_nbr presente)  
-   - FmSerialNumber e ToSerialNumber: valores de serial_nbr  
-   - SerialTransactionTempId: concatena group_nbr + seq_nbr  
+3. Objeto de séries (inventoryStagedTransactions-serials)
+
+   - Para itens controlados por série (serial_nbr presente)
+   - FmSerialNumber e ToSerialNumber: valores de serial_nbr
+   - SerialTransactionTempId: concatena group_nbr + seq_nbr
    - Referência à API REST para séries
 
-4. Objeto combinado lote-série (inventoryStagedTransactions-lots-lotSerials)  
-   - Para itens que são controlados por lote e série simultaneamente  
+4. Objeto combinado lote-série (inventoryStagedTransactions-lots-lotSerials)
+   - Para itens que são controlados por lote e série simultaneamente
    - Também referenciado por API REST própria
 
 Além disso, o documento inclui links para a documentação das APIs REST de Inventory Staged Transactions (versões 20a e 22d) e reforça os nomes de campos, defaults e regras condicionais para cada cenário de transação.
@@ -61,7 +62,7 @@ INV Column: ItemNumber, WMS Column: item_alternate_code + '~^~', Notes: substrin
 INV Column: OrganizationName, WMS Column: ref_value_3/ref_value_4/ref_value_6/ref_value_10, Notes: Ref Code 3 = "FCN"/Ref Code 4 = "FCN"/Ref Code 6 = "FCN"/Ref Code 10 = "FCN"
 INV Column: TransactionUnitOfMeasure, WMS Column: , Notes:
 INV Column: TransactionUOM, WMS Column: qty_uom_code, Notes: If integration property "consider_qty_uom_from_property = yes and qty_uom_code='UNITS'" use transaction_unit_of_measure from integration properties(default is 'Ea'), else use qty_uom_code.
-INV Column: ExternalSystemtransactionReference, WMS Column:  Group Nbr, "-", Seq Nbr, Notes:
+INV Column: ExternalSystemtransactionReference, WMS Column: Group Nbr, "-", Seq Nbr, Notes:
 INV Column: UseCurrentCost, WMS Column: , Notes: Hard coded to 'true'
 INV Column: inventoryStagedTransactions-lots, WMS Column: [Lot Block], Notes: An object representing the lot details for the staged inventory transaction.
 

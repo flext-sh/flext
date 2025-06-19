@@ -238,18 +238,21 @@ The CLI provides comprehensive error handling:
 ### Common Issues
 
 1. **Component not found**
+
    ```bash
    # Install missing component
    poetry install --extras tap
    ```
 
 2. **Configuration errors**
+
    ```bash
    # Validate configuration
    flx-ldap validate
    ```
 
 3. **Connection failures**
+
    ```bash
    # Test with minimal config
    flx-ldap extract --catalog catalog.json

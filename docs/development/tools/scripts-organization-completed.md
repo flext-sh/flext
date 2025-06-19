@@ -26,15 +26,18 @@ All original functionality has been preserved, while adding new features for scr
 ## Improvements Made
 
 1. **Executed Setup Scripts**:
+
    - `setup_scripts.sh` has been executed to create symlinks for the main management scripts
    - Added to PATH through .bashrc for easy access
 
 2. **Added Documentation Tools**:
+
    - Created `document_scripts.py` - A new tool to automatically document Python scripts
    - Generated `SCRIPTS_SUMMARY.md` - A comprehensive summary of all scripts in the workspace
    - Added docstrings to scripts that were missing them
 
 3. **Created Utility Wrappers**:
+
    - Added `create_utility_wrappers.sh` - Creates bin wrappers for utility scripts
    - Created bin wrappers for all utility scripts (flx_long_lines.py, update_packages.py, etc.)
    - All scripts accessible through simple commands (fix-longlines, update-packages, etc.)
@@ -79,10 +82,10 @@ After sourcing `~/.bashrc`, you can use the following commands from anywhere in 
    ```bash
    # Show flx_project status
    status
-   
+
    # Document Python scripts
    document-scripts --check
-   
+
    # Show git status
    git-op status
    ```

@@ -90,14 +90,14 @@ def fix_import_errors() -> None:
             module_name = path.stem
 
             # Create basic module content
-            content = f'''"""FLX {module_name.replace('_', ' ').title()} module."""
+            content = f'''"""FLX {module_name.replace("_", " ").title()} module."""
 
 from __future__ import annotations
 
 from typing import Any
 
 
-class Flx{module_name.replace('_', '').title()}:
+class Flx{module_name.replace("_", "").title()}:
     """Placeholder class for {module_name}."""
 
     def __init__(self) -> None:
@@ -105,7 +105,7 @@ class Flx{module_name.replace('_', '').title()}:
         pass
 
 
-__all__ = ["Flx{module_name.replace('_', '').title()}"]
+__all__ = ["Flx{module_name.replace("_", "").title()}"]
 '''
             path.write_text(content)
             print(f"Created missing module: {module_path}")
@@ -128,7 +128,9 @@ def main() -> None:
 
     print("\nError distribution:")
     for code, errs in sorted(
-        error_types.items(), key=lambda x: len(x[1]), reverse=True,
+        error_types.items(),
+        key=lambda x: len(x[1]),
+        reverse=True,
     ):
         print(f"  {code}: {len(errs)}")
 

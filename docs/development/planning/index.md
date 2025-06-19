@@ -41,4 +41,4 @@ Strategic planning documentation for FLX framework development, covering roadmap
 
 ---
 
-*Part of the [FLX Framework Documentation](../../../index.md)*
+_Part of the [FLX Framework Documentation](../../../index.md)_

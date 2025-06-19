@@ -61,7 +61,7 @@ from flx.infra.services.base import BaseInfraService
 
 class CacheService(BaseInfraService):
     """Unified cache service with multiple backend support."""
-    
+
     def __init__(self, backend: str = "memory", redis_url: str = None):
         super().__init__("cache")
         self._backend = backend
@@ -111,10 +111,10 @@ async def get_user(user_id: str) -> User:
     cached = await cache.get(f"user:{user_id}")
     if cached:
         return User.model_validate(cached)
-    
+
     # Load from database
     user = await db.get_user(user_id)
-    
+
     # Cache for next time
     await cache.set(f"user:{user_id}", user.model_dump(), ttl=3600)
     return user
@@ -126,11 +126,11 @@ async def get_user(user_id: str) -> User:
 async def update_user(user_id: str, data: dict) -> User:
     # Update cache and database atomically
     user = User.model_validate(data)
-    
+
     async with db.transaction():
         await db.update_user(user_id, user)
         await cache.set(f"user:{user_id}", user.model_dump(), ttl=3600)
-    
+
     return user
 ```
 
@@ -140,7 +140,7 @@ async def update_user(user_id: str, data: dict) -> User:
 async def record_event(event: Event) -> None:
     # Write to cache immediately
     await cache.set(f"event:{event.id}", event.model_dump(), ttl=300)
-    
+
     # Queue for eventual database write
     await queue.publish("process_events", event.id)
 ```
@@ -152,19 +152,19 @@ async def record_event(event: Event) -> None:
 ```python
 class MultiTierCache(CacheService):
     """L1 (memory) + L2 (Redis) cache implementation."""
-    
+
     async def get(self, key: str) -> Any:
         # Check L1 (memory)
         if key in self._memory_cache:
             return self._memory_cache[key]
-        
+
         # Check L2 (Redis)
         value = await self._redis_client.get(key)
         if value:
             # Promote to L1
             self._memory_cache[key] = value
             return value
-        
+
         return None
 ```
 
@@ -245,7 +245,7 @@ async def cache():
 async def test_cache_operations(cache):
     await cache.set("key", "value")
     assert await cache.get("key") == "value"
-    
+
     await cache.delete("key")
     assert await cache.get("key") is None
 ```
@@ -256,13 +256,13 @@ async def test_cache_operations(cache):
 @pytest.mark.integration
 async def test_redis_failover():
     cache = CacheService(backend="redis", redis_url="redis://localhost:6379")
-    
+
     # Test normal operation
     await cache.set("test", "value")
-    
+
     # Simulate Redis failure
     await cache._redis_client.close()
-    
+
     # Should fallback gracefully
     result = await cache.get("test")  # Returns None, doesn't crash
 ```

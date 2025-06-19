@@ -18,8 +18,8 @@
 
 ### **Core Topics**
 
-| **Topic** | **Function** | **Audience** | **Status** |
-|-----------|--------------|--------------|------------|
+| **Topic**                                                                              | **Function**          | **Audience**         | **Status**  |
+| -------------------------------------------------------------------------------------- | --------------------- | -------------------- | ----------- |
 | [Hexagonal Architecture Modernization](./0001-hexagonal-architecture-modernization.md) | Architecture proposal | Technical architects | 📋 Proposal |
 
 ### **📋 Learning Path**
@@ -66,20 +66,20 @@
 
 ### Contributors
 
-→ [RFC Template](./template.md)  
-→ [Proposal Guidelines](./guidelines.md)  
+→ [RFC Template](./template.md)
+→ [Proposal Guidelines](./guidelines.md)
 → [Community Process](./process.md)
 
 ### Reviewers
 
-→ [Active RFCs](./active.md)  
-→ [Review Guidelines](./review-process.md)  
+→ [Active RFCs](./active.md)
+→ [Review Guidelines](./review-process.md)
 → [Technical Standards](../../development/index.md)
 
 ### Implementers
 
-→ [Accepted RFCs](./accepted.md)  
-→ [Implementation Guidelines](../../development/index.md)  
+→ [Accepted RFCs](./accepted.md)
+→ [Implementation Guidelines](../../development/index.md)
 → [ADR Creation](../adrs/index.md)
 
 ---
@@ -115,8 +115,8 @@
 **Proposing technical improvements and architectural changes**
 
 ```
-[RFC Template](./template.md) → 
-[Architecture Proposal](./0001-hexagonal-architecture-modernization.md) → 
+[RFC Template](./template.md) →
+[Architecture Proposal](./0001-hexagonal-architecture-modernization.md) →
 [Community Process](../index.md)
 ```
 
@@ -125,8 +125,8 @@
 **Evaluating and providing feedback on technical proposals**
 
 ```
-[Architecture Modernization](./0001-hexagonal-architecture-modernization.md) → 
-[Technical Standards](../../development/index.md) → 
+[Architecture Modernization](./0001-hexagonal-architecture-modernization.md) →
+[Technical Standards](../../development/index.md) →
 [Review Process](../index.md)
 ```
 
@@ -135,8 +135,8 @@
 **Implementing accepted RFC proposals**
 
 ```
-[Accepted Proposals](./0001-hexagonal-architecture-modernization.md) → 
-[Implementation Guidelines](../../development/index.md) → 
+[Accepted Proposals](./0001-hexagonal-architecture-modernization.md) →
+[Implementation Guidelines](../../development/index.md) →
 [ADR Creation](../adrs/index.md)
 ```
 

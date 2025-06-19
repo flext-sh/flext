@@ -26,7 +26,7 @@ PROJECT_CONFIGURATIONS = {
             "requests": "^2.32.3",
             "backoff": "^2.2.1",
         },
-        "scripts_pattern": "tap-{project_name} = \"{module_name}.cli:main\"",
+        "scripts_pattern": 'tap-{project_name} = "{module_name}.cli:main"',
         "description_template": "Singer tap for extracting data from {service_name}",
     },
     "api_integration": {
@@ -35,7 +35,7 @@ PROJECT_CONFIGURATIONS = {
             "fastapi": "^0.115.6",
             "uvicorn": "^0.32.1",
         },
-        "scripts_pattern": "{project_name}-api = \"{module_name}.main:app\"",
+        "scripts_pattern": '{project_name}-api = "{module_name}.main:app"',
         "description_template": "API integration service for {service_name}",
     },
     "database": {
@@ -44,7 +44,7 @@ PROJECT_CONFIGURATIONS = {
             "alembic": "^1.14.0",
             "cx-oracle": "^8.3.0",
         },
-        "scripts_pattern": "{project_name}-cli = \"{module_name}.cli:main\"",
+        "scripts_pattern": '{project_name}-cli = "{module_name}.cli:main"',
         "description_template": "Database integration for {service_name}",
     },
     "ldap": {
@@ -52,7 +52,7 @@ PROJECT_CONFIGURATIONS = {
             "python-ldap": "^3.4.4",
             "ldap3": "^2.9.1",
         },
-        "scripts_pattern": "{project_name}-ldap = \"{module_name}.cli:main\"",
+        "scripts_pattern": '{project_name}-ldap = "{module_name}.cli:main"',
         "description_template": "LDAP integration and migration tools",
     },
     "meltano": {
@@ -61,7 +61,7 @@ PROJECT_CONFIGURATIONS = {
             "grpcio": "^1.68.1",
             "grpcio-tools": "^1.68.1",
         },
-        "scripts_pattern": "{project_name} = \"{module_name}.__main__:main\"",
+        "scripts_pattern": '{project_name} = "{module_name}.__main__:main"',
         "description_template": "Meltano enterprise data integration platform",
     },
 }
@@ -112,10 +112,14 @@ def detect_project_type(project_name: str, project_path: Path) -> str:
     return "api_integration"
 
 
-def generate_project_scripts(project_name: str, module_name: str, project_type: str) -> dict[str, str]:
+def generate_project_scripts(
+    project_name: str, module_name: str, project_type: str
+) -> dict[str, str]:
     """Generate CLI scripts configuration for the project."""
     config = PROJECT_CONFIGURATIONS.get(project_type, {})
-    pattern = config.get("scripts_pattern", "{project_name}-cli = \"{module_name}.cli:main\"")
+    pattern = config.get(
+        "scripts_pattern", '{project_name}-cli = "{module_name}.cli:main"'
+    )
 
     script_name = pattern.format(project_name=project_name, module_name=module_name)
     script_parts = script_name.split(" = ")
@@ -129,7 +133,9 @@ def generate_project_scripts(project_name: str, module_name: str, project_type: 
 def generate_project_description(project_name: str, project_type: str) -> str:
     """Generate appropriate description for the project."""
     config = PROJECT_CONFIGURATIONS.get(project_type, {})
-    template = config.get("description_template", "Enterprise Python automation component")
+    template = config.get(
+        "description_template", "Enterprise Python automation component"
+    )
 
     # Extract service name from project name
     service_name = "Unknown Service"
@@ -158,7 +164,7 @@ def customize_pyproject_for_project(
         project=project_name,
         type=project_type,
         module=module_name,
-        dry_run=dry_run
+        dry_run=dry_run,
     )
 
     pyproject_file = project_path / "pyproject.toml"
@@ -176,7 +182,11 @@ def customize_pyproject_for_project(
     project_config = PROJECT_CONFIGURATIONS.get(project_type, {})
 
     # Update dependencies
-    dependencies = config.setdefault("tool", {}).setdefault("poetry", {}).setdefault("dependencies", {})
+    dependencies = (
+        config.setdefault("tool", {})
+        .setdefault("poetry", {})
+        .setdefault("dependencies", {})
+    )
     project_deps = project_config.get("dependencies", {})
 
     for dep_name, dep_version in project_deps.items():
@@ -194,13 +204,18 @@ def customize_pyproject_for_project(
 
     # Update description
     poetry_config = config["tool"]["poetry"]
-    if poetry_config.get("description") == "Enterprise-grade Python automation component":
+    if (
+        poetry_config.get("description")
+        == "Enterprise-grade Python automation component"
+    ):
         new_description = generate_project_description(project_name, project_type)
         poetry_config["description"] = new_description
         logger.info("Updated description", description=new_description)
 
     # Update keywords based on project type
-    keywords = poetry_config.setdefault("keywords", ["automation", "enterprise", "oracle", "integration"])
+    keywords = poetry_config.setdefault(
+        "keywords", ["automation", "enterprise", "oracle", "integration"]
+    )
     type_keywords = {
         "singer_tap": ["singer", "tap", "etl", "data-extraction"],
         "api_integration": ["api", "rest", "http", "integration"],
@@ -224,12 +239,12 @@ def customize_pyproject_for_project(
         toml_content = generate_toml_content(config)
 
         # Backup original file
-        backup_file = pyproject_file.with_suffix('.toml.backup')
+        backup_file = pyproject_file.with_suffix(".toml.backup")
         pyproject_file.rename(backup_file)
         logger.info("Created backup", backup=backup_file)
 
         # Write updated file
-        with open(pyproject_file, 'w', encoding='utf-8') as f:
+        with open(pyproject_file, "w", encoding="utf-8") as f:
             f.write(toml_content)
 
         logger.info("Successfully customized project", project=project_name)
@@ -252,8 +267,8 @@ def generate_toml_content(config: dict[str, Any]) -> str:
         lines.append("[build-system]")
         build_system = config["build-system"]
         if "requires" in build_system:
-            requires = ', '.join(f'"{req}"' for req in build_system["requires"])
-            lines.append(f'requires = [{requires}]')
+            requires = ", ".join(f'"{req}"' for req in build_system["requires"])
+            lines.append(f"requires = [{requires}]")
         if "build-backend" in build_system:
             lines.append(f'build-backend = "{build_system["build-backend"]}"')
         lines.append("")
@@ -270,8 +285,8 @@ def generate_toml_content(config: dict[str, Any]) -> str:
 
         # Authors
         if "authors" in poetry:
-            authors = ', '.join(f'"{author}"' for author in poetry["authors"])
-            lines.append(f'authors = [{authors}]')
+            authors = ", ".join(f'"{author}"' for author in poetry["authors"])
+            lines.append(f"authors = [{authors}]")
 
         # Other metadata
         for key in ["license", "readme", "homepage", "repository", "documentation"]:
@@ -280,8 +295,8 @@ def generate_toml_content(config: dict[str, Any]) -> str:
 
         # Keywords
         if "keywords" in poetry:
-            keywords = ', '.join(f'"{kw}"' for kw in poetry["keywords"])
-            lines.append(f'keywords = [{keywords}]')
+            keywords = ", ".join(f'"{kw}"' for kw in poetry["keywords"])
+            lines.append(f"keywords = [{keywords}]")
 
         # Classifiers
         if "classifiers" in poetry:
@@ -297,7 +312,9 @@ def generate_toml_content(config: dict[str, Any]) -> str:
                 if isinstance(package, dict):
                     include = package.get("include", "")
                     from_dir = package.get("from", "")
-                    lines.append(f'    {{ include = "{include}", from = "{from_dir}" }},')
+                    lines.append(
+                        f'    {{ include = "{include}", from = "{from_dir}" }},'
+                    )
             lines.append("]")
 
         lines.append("")
@@ -324,34 +341,25 @@ def main() -> int:
     parser = argparse.ArgumentParser(
         description="Customize pyproject.toml template for specific project requirements"
     )
+    parser.add_argument("project_path", type=Path, help="Path to the project directory")
     parser.add_argument(
-        "project_path",
-        type=Path,
-        help="Path to the project directory"
-    )
-    parser.add_argument(
-        "--project-name",
-        help="Project name (defaults to directory name)"
+        "--project-name", help="Project name (defaults to directory name)"
     )
     parser.add_argument(
         "--module-name",
-        help="Python module name (defaults to project name with hyphens replaced by underscores)"
+        help="Python module name (defaults to project name with hyphens replaced by underscores)",
     )
     parser.add_argument(
         "--project-type",
         choices=list(PROJECT_CONFIGURATIONS.keys()),
-        help="Project type for specific configurations"
+        help="Project type for specific configurations",
     )
     parser.add_argument(
         "--dry-run",
         action="store_true",
-        help="Show what would be done without making changes"
+        help="Show what would be done without making changes",
     )
-    parser.add_argument(
-        "--verbose",
-        action="store_true",
-        help="Enable verbose logging"
-    )
+    parser.add_argument("--verbose", action="store_true", help="Enable verbose logging")
 
     args = parser.parse_args()
 
@@ -360,7 +368,7 @@ def main() -> int:
     structlog.configure(
         processors=[
             structlog.processors.TimeStamper(fmt="ISO"),
-            structlog.dev.ConsoleRenderer()
+            structlog.dev.ConsoleRenderer(),
         ],
         wrapper_class=structlog.stdlib.BoundLogger,
         logger_factory=structlog.stdlib.LoggerFactory(),
@@ -387,16 +395,12 @@ def main() -> int:
         project_name=project_name,
         module_name=module_name,
         project_type=args.project_type,
-        dry_run=args.dry_run
+        dry_run=args.dry_run,
     )
 
     # Customize the project
     success = customize_pyproject_for_project(
-        args.project_path,
-        project_name,
-        module_name,
-        args.project_type,
-        args.dry_run
+        args.project_path, project_name, module_name, args.project_type, args.dry_run
     )
 
     if success:

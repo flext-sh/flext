@@ -166,7 +166,7 @@ def test_oracle_adapter_with_mock_data():
 ```python
 def test_oracle_integration_with_postman():
     # Run Postman collection tests via Newman
-    result = newman.run(collection="oracle-wms-tests.json", 
+    result = newman.run(collection="oracle-wms-tests.json",
                        environment="test-env.json")
     assert result.success
 ```
@@ -212,11 +212,11 @@ pip install cx_Oracle oracledb
 postman:
   collections_dir: "./postman/collections"
   environments_dir: "./postman/environments"
-  
+
 schemas:
   source_dir: "./schemas"
   generated_dir: "./generated"
-  
+
 oracle:
   test_instance: "https://test-oracle.company.com"
   prod_instance: "https://prod-oracle.company.com"

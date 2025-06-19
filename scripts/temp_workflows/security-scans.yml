@@ -84,7 +84,7 @@ jobs:
         run: |
           mkdir -p reports
           bandit -r src/ -f sarif -o reports/bandit-results.sarif || echo "::warning::Bandit found security issues"
-          
+
       - name: Upload Bandit scan results
         uses: github/codeql-action/upload-sarif@v3
         if: always() && steps.bandit.outcome != 'cancelled'
@@ -124,7 +124,7 @@ jobs:
             --json=reports/osv-results.json
             --skip-git
             ./
-          
+
       - name: Process OSV results
         if: always() && steps.osv.outcome != 'cancelled'
         run: |
@@ -132,7 +132,7 @@ jobs:
             echo "::group::OSV Scanner Results"
             cat reports/osv-results.json
             echo "::endgroup::"
-            
+
             VULNS=$(jq '.results | map(.vulns) | flatten | length' reports/osv-results.json)
             if [ "$VULNS" -gt 0 ]; then
               echo "::warning::Found $VULNS vulnerabilities in dependencies"

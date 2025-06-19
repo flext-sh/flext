@@ -108,9 +108,7 @@ def generate_lazy_import_replacement(
     for item in import_items:
         lazy_imports.append(f"{item} = lazy_import('flx.{module}', '{item}')")
 
-    return "# Lazy imports to avoid circular dependencies\n" + "\n".join(
-        lazy_imports
-    )
+    return "# Lazy imports to avoid circular dependencies\n" + "\n".join(lazy_imports)
 
 
 def fix_file_imports(file_path: Path) -> bool:
@@ -239,13 +237,10 @@ def fix_lazy_import_function(file_path: Path) -> bool:
                 # Adiciona após o último import ou comentário de lazy import
                 if (
                     not import_added
-                    and (
-                        line.startswith(("# Lazy import", "import ", "from "))
-                    )
+                    and (line.startswith(("# Lazy import", "import ", "from ")))
                     and i + 1 < len(lines)
                     and not lines[i + 1].startswith(("import ", "from ", "#"))
                 ):
-
                     new_lines.append("from flx.utils.lazy_import import lazy_import")
                     import_added = True
 

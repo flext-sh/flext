@@ -33,31 +33,45 @@ class FlxPatternFixer(ast.NodeTransformer):
             asname = alias.asname
 
             # Check common patterns that need Flx prefix
-            needs_flx = any([
-                name in {"AsyncPluginManager", "PluggableAsyncEventPublisher"},
-                name.endswith("EventProcessor") and not name.startswith("Flx"),
-                name.endswith("EventFilter") and not name.startswith("Flx"),
-                name.endswith("EventTransformer") and not name.startswith("Flx"),
-                name.endswith("Broker") and not name.startswith("Flx"),
-                name.endswith("Middleware") and not name.startswith("Flx"),
-                name.endswith("Handler") and not name.startswith("Flx"),
-                name.endswith("Tracker") and not name.startswith("Flx"),
-                name in {"EndpointInfo", "ComponentType", "ShutdownPhase", "ShutdownMetrics",
-                        "ComponentShutdownEvent", "ShutdownReport", "LogMessage", "TraceId",
-                        "LogSeverity", "BaseUrlBuilder"},
-            ])
+            needs_flx = any(
+                [
+                    name in {"AsyncPluginManager", "PluggableAsyncEventPublisher"},
+                    name.endswith("EventProcessor") and not name.startswith("Flx"),
+                    name.endswith("EventFilter") and not name.startswith("Flx"),
+                    name.endswith("EventTransformer") and not name.startswith("Flx"),
+                    name.endswith("Broker") and not name.startswith("Flx"),
+                    name.endswith("Middleware") and not name.startswith("Flx"),
+                    name.endswith("Handler") and not name.startswith("Flx"),
+                    name.endswith("Tracker") and not name.startswith("Flx"),
+                    name
+                    in {
+                        "EndpointInfo",
+                        "ComponentType",
+                        "ShutdownPhase",
+                        "ShutdownMetrics",
+                        "ComponentShutdownEvent",
+                        "ShutdownReport",
+                        "LogMessage",
+                        "TraceId",
+                        "LogSeverity",
+                        "BaseUrlBuilder",
+                    },
+                ]
+            )
 
             if needs_flx and not name.startswith("Flx"):
                 new_name = f"Flx{name}"
                 new_alias = ast.alias(name=new_name, asname=asname or name)
                 new_names.append(new_alias)
                 changed = True
-                self.changes.append({
-                    "type": "import",
-                    "old": name,
-                    "new": new_name,
-                    "line": node.lineno,
-                })
+                self.changes.append(
+                    {
+                        "type": "import",
+                        "old": name,
+                        "new": new_name,
+                        "line": node.lineno,
+                    }
+                )
                 if asname:
                     self.imported_classes.add(asname)
                 else:
@@ -83,33 +97,55 @@ class FlxPatternFixer(ast.NodeTransformer):
             return node
 
         # Check if this name needs Flx prefix
-        needs_flx = any([
-            name in {"AsyncPluginManager", "PluggableAsyncEventPublisher"},
-            name.endswith("EventProcessor") and not name.startswith("Flx"),
-            name.endswith("EventFilter") and not name.startswith("Flx"),
-            name.endswith("EventTransformer") and not name.startswith("Flx"),
-            name.endswith("Broker") and not name.startswith("Flx"),
-            name.endswith("Middleware") and not name.startswith("Flx"),
-            name.endswith("Handler") and not name.startswith("Flx"),
-            name.endswith("Tracker") and not name.startswith("Flx"),
-            name in {"EndpointInfo", "ComponentType", "ShutdownPhase", "ShutdownMetrics",
-                    "ComponentShutdownEvent", "ShutdownReport", "LogMessage", "TraceId",
-                    "LogSeverity", "BaseUrlBuilder", "InMemoryBroker", "LoggingBrokerMiddleware",
-                    "RetryBrokerMiddleware", "BasicAnalyticsHandler", "PerformanceTracker",
-                    "LogAlertHandler", "ConsoleAlertHandler", "LoggingEventProcessor",
-                    "DebugEventFilter", "NoOpEventTransformer", "ShutdownMetricsCollector",
-                    "ComponentShutdownTimer"},
-        ])
+        needs_flx = any(
+            [
+                name in {"AsyncPluginManager", "PluggableAsyncEventPublisher"},
+                name.endswith("EventProcessor") and not name.startswith("Flx"),
+                name.endswith("EventFilter") and not name.startswith("Flx"),
+                name.endswith("EventTransformer") and not name.startswith("Flx"),
+                name.endswith("Broker") and not name.startswith("Flx"),
+                name.endswith("Middleware") and not name.startswith("Flx"),
+                name.endswith("Handler") and not name.startswith("Flx"),
+                name.endswith("Tracker") and not name.startswith("Flx"),
+                name
+                in {
+                    "EndpointInfo",
+                    "ComponentType",
+                    "ShutdownPhase",
+                    "ShutdownMetrics",
+                    "ComponentShutdownEvent",
+                    "ShutdownReport",
+                    "LogMessage",
+                    "TraceId",
+                    "LogSeverity",
+                    "BaseUrlBuilder",
+                    "InMemoryBroker",
+                    "LoggingBrokerMiddleware",
+                    "RetryBrokerMiddleware",
+                    "BasicAnalyticsHandler",
+                    "PerformanceTracker",
+                    "LogAlertHandler",
+                    "ConsoleAlertHandler",
+                    "LoggingEventProcessor",
+                    "DebugEventFilter",
+                    "NoOpEventTransformer",
+                    "ShutdownMetricsCollector",
+                    "ComponentShutdownTimer",
+                },
+            ]
+        )
 
         if needs_flx and not name.startswith("Flx"):
             new_name = f"Flx{name}"
             node.id = new_name
-            self.changes.append({
-                "type": "name",
-                "old": name,
-                "new": new_name,
-                "line": node.lineno if hasattr(node, "lineno") else 0,
-            })
+            self.changes.append(
+                {
+                    "type": "name",
+                    "old": name,
+                    "new": new_name,
+                    "line": node.lineno if hasattr(node, "lineno") else 0,
+                }
+            )
 
         return node
 
@@ -121,29 +157,45 @@ class FlxPatternFixer(ast.NodeTransformer):
             attr = node.func.attr
 
             # Fix method calls that should have flx_ prefix
-            if (not attr.startswith("flx_") and not attr.startswith("_") and
-                attr not in {"__init__", "__str__", "__repr__", "__eq__", "__hash__"}):
-
+            if (
+                not attr.startswith("flx_")
+                and not attr.startswith("_")
+                and attr
+                not in {"__init__", "__str__", "__repr__", "__eq__", "__hash__"}
+            ):
                 # Check if it's a method that needs flx_ prefix
                 needs_flx = False
 
-                if isinstance(node.func.value, ast.Name) and node.func.value.id == "self":
+                if (
+                    isinstance(node.func.value, ast.Name)
+                    and node.func.value.id == "self"
+                ):
                     if self.current_class and self.current_class.startswith("Flx"):
                         # Common methods that need flx_ prefix
-                        if attr in {"validate_url", "discover_api_structure", "publish_event",
-                                   "publish_events", "format_and_display", "record_event",
-                                   "get_metrics", "numeric_value", "full_path"}:
+                        if attr in {
+                            "validate_url",
+                            "discover_api_structure",
+                            "publish_event",
+                            "publish_events",
+                            "format_and_display",
+                            "record_event",
+                            "get_metrics",
+                            "numeric_value",
+                            "full_path",
+                        }:
                             needs_flx = True
 
                 if needs_flx:
                     new_attr = f"flx_{attr}"
                     node.func.attr = new_attr
-                    self.changes.append({
-                        "type": "method",
-                        "old": attr,
-                        "new": new_attr,
-                        "line": node.lineno if hasattr(node, "lineno") else 0,
-                    })
+                    self.changes.append(
+                        {
+                            "type": "method",
+                            "old": attr,
+                            "new": new_attr,
+                            "line": node.lineno if hasattr(node, "lineno") else 0,
+                        }
+                    )
 
         return node
 
@@ -157,16 +209,17 @@ def fix_specific_patterns(filepath: Path) -> list[dict[str, any]]:
 
         # Pattern 1: Fix function imports missing flx_ prefix
         patterns = [
-            (r"from (flx\.plugins\.hookspecs\.\w+) import (register_\w+)",
-             lambda m: f"from {m.group(1)} import flx_{m.group(2)}"),
-
+            (
+                r"from (flx\.plugins\.hookspecs\.\w+) import (register_\w+)",
+                lambda m: f"from {m.group(1)} import flx_{m.group(2)}",
+            ),
             # Pattern 2: Fix method names in module attributes
-            (r'has no attribute "(register_\w+)"; maybe "flx_\1"',
-             lambda m: f"flx_{m.group(1)}"),
-
+            (
+                r'has no attribute "(register_\w+)"; maybe "flx_\1"',
+                lambda m: f"flx_{m.group(1)}",
+            ),
             # Pattern 3: Fix scan_object references
             (r"\bscan_object\b", "flx_scan_object"),
-
             # Pattern 4: Fix Exception attributes
             (r"exception\._context\b", 'getattr(exception, "_context", None)'),
             (r"exception\._details\b", 'getattr(exception, "_details", None)'),
@@ -176,11 +229,13 @@ def fix_specific_patterns(filepath: Path) -> list[dict[str, any]]:
         for pattern, replacement in patterns:
             new_content = re.sub(pattern, replacement, content)
             if new_content != content:
-                changes.append({
-                    "type": "regex",
-                    "pattern": pattern,
-                    "file": str(filepath),
-                })
+                changes.append(
+                    {
+                        "type": "regex",
+                        "pattern": pattern,
+                        "file": str(filepath),
+                    }
+                )
                 content = new_content
 
         if content != original_content:
@@ -217,7 +272,9 @@ def main() -> None:
     import argparse
 
     parser = argparse.ArgumentParser(description="Fix FLX patterns")
-    parser.add_argument("--dry-run", action="store_true", help="Show what would be changed")
+    parser.add_argument(
+        "--dry-run", action="store_true", help="Show what would be changed"
+    )
     parser.add_argument("--file", help="Fix specific file only")
     args = parser.parse_args()
 
@@ -273,11 +330,17 @@ def main() -> None:
             total_changes += len(changes)
             for change in changes:
                 if change["type"] == "import":
-                    print(f"  Line {change['line']}: Import {change['old']} -> {change['new']}")
+                    print(
+                        f"  Line {change['line']}: Import {change['old']} -> {change['new']}"
+                    )
                 elif change["type"] == "name":
-                    print(f"  Line {change['line']}: Name {change['old']} -> {change['new']}")
+                    print(
+                        f"  Line {change['line']}: Name {change['old']} -> {change['new']}"
+                    )
                 elif change["type"] == "method":
-                    print(f"  Line {change['line']}: Method {change['old']} -> {change['new']}")
+                    print(
+                        f"  Line {change['line']}: Method {change['old']} -> {change['new']}"
+                    )
                 elif change["type"] == "regex":
                     print(f"  Regex pattern: {change['pattern']}")
         else:

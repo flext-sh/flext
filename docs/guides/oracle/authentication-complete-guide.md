@@ -19,23 +19,23 @@ Complete Oracle authentication guide for the FLX framework, covering OAuth2, JWT
 
 ### Overview of Oracle Authentication Options
 
-| Method | Use Case | Oracle System | Automation | MFA Support |
-|--------|----------|---------------|------------|-------------|
-| **OAuth2 Client Credentials** | Server-to-server | OIC, WMS API | ✅ Excellent | ✅ Yes |
-| **OAuth2 Authorization Code** | Interactive apps | OIC, WMS API | ❌ No | ✅ Yes |
-| **Basic Authentication** | Legacy systems | WMS API, Database | ⚠️ Limited | ❌ No |
-| **Database Authentication** | Direct DB access | Oracle Database | ✅ Yes | ⚠️ Limited |
-| **JWT Assertion** | Enterprise SSO | OIC, Custom | ✅ Yes | ✅ Yes |
+| Method                        | Use Case         | Oracle System     | Automation   | MFA Support |
+| ----------------------------- | ---------------- | ----------------- | ------------ | ----------- |
+| **OAuth2 Client Credentials** | Server-to-server | OIC, WMS API      | ✅ Excellent | ✅ Yes      |
+| **OAuth2 Authorization Code** | Interactive apps | OIC, WMS API      | ❌ No        | ✅ Yes      |
+| **Basic Authentication**      | Legacy systems   | WMS API, Database | ⚠️ Limited   | ❌ No       |
+| **Database Authentication**   | Direct DB access | Oracle Database   | ✅ Yes       | ⚠️ Limited  |
+| **JWT Assertion**             | Enterprise SSO   | OIC, Custom       | ✅ Yes       | ✅ Yes      |
 
 ### Recommended Authentication Matrix
 
-| Scenario | Recommended Method | Alternative |
-|----------|-------------------|-------------|
-| **Production Automation** | OAuth2 Client Credentials | JWT Assertion |
-| **Development/Testing** | OAuth2 Client Credentials | Basic Auth |
-| **Web Applications** | OAuth2 Authorization Code | OAuth2 Client Credentials |
-| **Database Operations** | Database Authentication | Connection pooling |
-| **Enterprise Integration** | OAuth2 Client Credentials + SSO | JWT Assertion |
+| Scenario                   | Recommended Method              | Alternative               |
+| -------------------------- | ------------------------------- | ------------------------- |
+| **Production Automation**  | OAuth2 Client Credentials       | JWT Assertion             |
+| **Development/Testing**    | OAuth2 Client Credentials       | Basic Auth                |
+| **Web Applications**       | OAuth2 Authorization Code       | OAuth2 Client Credentials |
+| **Database Operations**    | Database Authentication         | Connection pooling        |
+| **Enterprise Integration** | OAuth2 Client Credentials + SSO | JWT Assertion             |
 
 ## 🤖 OAuth2 Client Credentials
 
@@ -89,7 +89,7 @@ OAuth2 Client Credentials is the **gold standard** for machine-to-machine integr
    ```
    Resources → Primary Audience:
    https://instance-name.integration.ocp.oraclecloud.com:443
-   
+
    Resources → Scope:
    urn:opc:resource:consumer::all     # For calling integrations
    /ic/api/                           # For calling administrative APIs
@@ -205,21 +205,21 @@ from tenacity import retry, stop_after_attempt, wait_exponential
 )
 async def robust_oauth_call(endpoint, max_retries=3):
     """Make OAuth-authenticated API call with robust error handling."""
-    
+
     try:
         # Initialize OIC client with OAuth2
         client = OICClient()
-        
+
         # Authenticate and make call
         response = await client.authenticated_request('GET', endpoint)
         return response
-        
+
     except OICAuthError as e:
         logger.error(f"OAuth authentication failed: {e}")
         # Token might be expired, force refresh
         await client.refresh_token()
         raise
-        
+
     except Exception as e:
         logger.error(f"API call failed: {e}")
         raise
@@ -248,7 +248,7 @@ get_oauth_token() {
         -H "Content-Type: application/x-www-form-urlencoded" \
         -u "${CLIENT_ID}:${CLIENT_SECRET}" \
         -d "grant_type=client_credentials&scope=${RESOURCE_AUD}%20${API_AUD}")
-    
+
     echo "$token_response" | jq -r '.access_token'
 }
 
@@ -257,12 +257,12 @@ oic_api_call() {
     local endpoint="$1"
     local token
     token=$(get_oauth_token)
-    
+
     if [[ "$token" == "null" || -z "$token" ]]; then
         echo "❌ Failed to get OAuth token"
         return 1
     fi
-    
+
     curl -s -H "Authorization: Bearer $token" \
          -H "Content-Type: application/json" \
          "${OIC_URL}${endpoint}"
@@ -274,7 +274,7 @@ TOKEN=$(get_oauth_token)
 
 if [[ "$TOKEN" != "null" && -n "$TOKEN" ]]; then
     echo "✅ OAuth2 authentication successful"
-    
+
     # List integrations
     echo "📋 Listing integrations..."
     INTEGRATIONS=$(oic_api_call "/ic/api/integration/v1/integrations")
@@ -621,27 +621,27 @@ oracle_security:
       token_cache_enabled: true
       token_refresh_threshold: 300
       max_retry_attempts: 3
-      
+
     # Database settings
     database:
       ssl_required: true
       ssl_verify_certificates: true
       connection_timeout: 30
-      
+
   network:
     # SSL/TLS settings
     ssl:
       enforce_tls: true
       min_tls_version: "1.2"
       certificate_pinning: true
-      
+
     # Access control
     access_control:
       ip_whitelist_enabled: true
       allowed_ips:
         - "192.168.1.0/24"
         - "10.0.0.0/8"
-        
+
   monitoring:
     # Audit settings
     audit:
@@ -649,7 +649,7 @@ oracle_security:
       log_api_calls: true
       alert_on_failures: true
       retention_days: 90
-      
+
     # Security alerts
     alerts:
       failed_auth_threshold: 5
@@ -845,7 +845,7 @@ echo "=== Network Diagnostics ==="
 echo "Testing IDCS connectivity..."
 nc -zv $(echo $IDCS_URL | cut -d'/' -f3) 443
 
-# Test OIC connectivity  
+# Test OIC connectivity
 echo "Testing OIC connectivity..."
 nc -zv $(echo $OIC_URL | cut -d'/' -f3) 443
 
@@ -862,15 +862,15 @@ nslookup $ORACLE_HOST
 
 ### Error Resolution Matrix
 
-| Error Code | System | Cause | Solution |
-|------------|--------|-------|----------|
-| `invalid_client` | OAuth2 | Wrong credentials | Verify CLIENT_ID/SECRET |
-| `insufficient_scope` | OAuth2 | Missing permissions | Add scopes to IDCS app |
-| `token_expired` | OAuth2 | Token expired | Implement auto-refresh |
-| `ORA-01017` | Database | Auth failed | Check credentials |
-| `ORA-12541` | Database | Connection refused | Check network/firewall |
-| `403 Forbidden` | API | Insufficient privileges | Check role assignment |
-| `Connection timeout` | Network | Network issue | Check connectivity/DNS |
+| Error Code           | System   | Cause                   | Solution                |
+| -------------------- | -------- | ----------------------- | ----------------------- |
+| `invalid_client`     | OAuth2   | Wrong credentials       | Verify CLIENT_ID/SECRET |
+| `insufficient_scope` | OAuth2   | Missing permissions     | Add scopes to IDCS app  |
+| `token_expired`      | OAuth2   | Token expired           | Implement auto-refresh  |
+| `ORA-01017`          | Database | Auth failed             | Check credentials       |
+| `ORA-12541`          | Database | Connection refused      | Check network/firewall  |
+| `403 Forbidden`      | API      | Insufficient privileges | Check role assignment   |
+| `Connection timeout` | Network  | Network issue           | Check connectivity/DNS  |
 
 ## 📖 Related Documentation
 
@@ -893,10 +893,10 @@ For authentication support:
 
 ---
 
-**Security Level**: 🔒 **Enterprise Grade**  
-**Compliance**: OAuth2 RFC 6749, Oracle Cloud Security Standards  
+**Security Level**: 🔒 **Enterprise Grade**
+**Compliance**: OAuth2 RFC 6749, Oracle Cloud Security Standards
 **Last Updated**: January 2025
 
 ---
 
-*This comprehensive authentication guide provides complete security implementation for all Oracle integrations within the FLX framework, ensuring enterprise-grade security and compliance.*
+_This comprehensive authentication guide provides complete security implementation for all Oracle integrations within the FLX framework, ensuring enterprise-grade security and compliance._

@@ -8,8 +8,8 @@
 
 ## Navigation Context
 
-**Current Location**: `docs/guides/oracle/oracle-oud-automation-guide.md`  
-**Parent**: [Oracle Integration Hub](oracle-integration-hub.md) > Oracle Directory Services  
+**Current Location**: `docs/guides/oracle/oracle-oud-automation-guide.md`
+**Parent**: [Oracle Integration Hub](oracle-integration-hub.md) > Oracle Directory Services
 **Quick Links**: [OID Migration Workflow](oracle-oid-to-oud-migration-workflow.md) | [Schema Migration](oracle-oud-schema-migration-guide.md) | [LDAP Operations](ldap-complete-guide.md)
 
 ---
@@ -20,60 +20,60 @@ This comprehensive guide provides automation tools for Oracle Unified Directory 
 
 ## Features
 
-* Schema migration from OID to OUD
-* LDIF export, validation, and transformation
-* Complete migration workflow for OID to OUD transitions
-* LDAP operations for data management and verification
-* Support for both file-based and direct server-to-server migration
-* Gerenciamento de esquema e migração de OID para OUD
-* Processamento centralizado de arquivos LDIF com a classe `LDIFProcessor`
+- Schema migration from OID to OUD
+- LDIF export, validation, and transformation
+- Complete migration workflow for OID to OUD transitions
+- LDAP operations for data management and verification
+- Support for both file-based and direct server-to-server migration
+- Gerenciamento de esquema e migração de OID para OUD
+- Processamento centralizado de arquivos LDIF com a classe `LDIFProcessor`
 
 ## Changelog
 
 ### 2023-12-06: Integração de Configurações Padrão no Pacote
 
-* **Configurações Embutidas**: Migração de todos os arquivos de configuração padrão para dentro do pacote via módulo `config_defaults`.
-* **Redução de Duplicação**: Eliminação de configurações hardcoded no código-fonte, melhorando a manutenção do código.
-* **Acesso Centralizado**: Implementação de interface unificada para carregar configurações padrão através de funções dedicadas.
-* **Distribuição Simplificada**: Configurações incluídas com o pacote, permitindo inicialização mesmo sem arquivos externos.
+- **Configurações Embutidas**: Migração de todos os arquivos de configuração padrão para dentro do pacote via módulo `config_defaults`.
+- **Redução de Duplicação**: Eliminação de configurações hardcoded no código-fonte, melhorando a manutenção do código.
+- **Acesso Centralizado**: Implementação de interface unificada para carregar configurações padrão através de funções dedicadas.
+- **Distribuição Simplificada**: Configurações incluídas com o pacote, permitindo inicialização mesmo sem arquivos externos.
 
 ### 2023-12-05: Aprimoramento do Sistema de Configuração
 
-* **Unificação de Configurações**: Migração de constantes hardcoded para arquivos de configuração JSON externos, incluindo metadados de configuração.
-* **Gerenciamento Centralizado**: Ampliação da classe `ConfigManager` com métodos para validação de dependências entre configurações.
-* **Maior Flexibilidade**: Introdução do arquivo `app_config.json` para armazenar metadados de configuração e `config_metadata.json` para definir relações entre arquivos de configuração.
+- **Unificação de Configurações**: Migração de constantes hardcoded para arquivos de configuração JSON externos, incluindo metadados de configuração.
+- **Gerenciamento Centralizado**: Ampliação da classe `ConfigManager` com métodos para validação de dependências entre configurações.
+- **Maior Flexibilidade**: Introdução do arquivo `app_config.json` para armazenar metadados de configuração e `config_metadata.json` para definir relações entre arquivos de configuração.
 
 ### 2023-12-01: Correção da Estrutura do Módulo LDAP
 
-* **Restauração da Compatibilidade**: Correção do módulo `ldap/` para fornecer retrocompatibilidade com código existente, garantindo que os imports continuem funcionando após a consolidação do módulo.
-* **Documentação Atualizada**: Atualização da documentação para refletir a nova estrutura de importação.
+- **Restauração da Compatibilidade**: Correção do módulo `ldap/` para fornecer retrocompatibilidade com código existente, garantindo que os imports continuem funcionando após a consolidação do módulo.
+- **Documentação Atualizada**: Atualização da documentação para refletir a nova estrutura de importação.
 
 ### 2023-11-30: Consolidação do Módulo de Schema
 
-* **Unificação da Lógica de Schema**: Integração do módulo `ldap/schema.py` com o módulo principal `schema.py`, consolidando todas as funcionalidades de manipulação de schema LDAP em um único local.
-* **Melhor Encapsulamento**: Ampliação da classe `SchemaManager` para integrar todas as operações de schema, facilitando a reutilização de código e manutenção.
-* **Remoção de Código Duplicado**: Eliminação de redundâncias entre os módulos de schema, tornando a codebase mais enxuta e coesa.
+- **Unificação da Lógica de Schema**: Integração do módulo `ldap/schema.py` com o módulo principal `schema.py`, consolidando todas as funcionalidades de manipulação de schema LDAP em um único local.
+- **Melhor Encapsulamento**: Ampliação da classe `SchemaManager` para integrar todas as operações de schema, facilitando a reutilização de código e manutenção.
+- **Remoção de Código Duplicado**: Eliminação de redundâncias entre os módulos de schema, tornando a codebase mais enxuta e coesa.
 
 ### 2023-11-25: Consolidação de Funcionalidades LDIF
 
-* **Unificação de Código LDIF**: Migração das funcionalidades do módulo `differ.py` para o módulo central `ldif_processor.py`, consolidando todas as operações LDIF em um único lugar.
-* **Redução de Acoplamento**: Simplificação das dependências entre pacotes, reduzindo a complexidade do código e melhorando a manutenibilidade.
-* **Eliminação de Código Duplicado**: Reuso das estruturas e funções existentes para análise e manipulação de LDIF.
+- **Unificação de Código LDIF**: Migração das funcionalidades do módulo `differ.py` para o módulo central `ldif_processor.py`, consolidando todas as operações LDIF em um único lugar.
+- **Redução de Acoplamento**: Simplificação das dependências entre pacotes, reduzindo a complexidade do código e melhorando a manutenibilidade.
+- **Eliminação de Código Duplicado**: Reuso das estruturas e funções existentes para análise e manipulação de LDIF.
 
 ### 2023-11-20: Consolidação de Módulos LDAP
 
-* **Melhoria da Estrutura LDAP**: Unificação dos módulos `detect.py` e `connection.py` para simplificar a arquitetura e reduzir dependências circulares.
-* **Atualização de Importações**: Simplificação das importações no pacote LDAP através de referências diretas.
+- **Melhoria da Estrutura LDAP**: Unificação dos módulos `detect.py` e `connection.py` para simplificar a arquitetura e reduzir dependências circulares.
+- **Atualização de Importações**: Simplificação das importações no pacote LDAP através de referências diretas.
 
 ### 2023-11-15: Reorganização do Módulo LDAP
 
-* **Refatoração da Arquitetura LDAP**: Migração do módulo `ldap_utils.py` para uma nova estrutura de pacote `ldap/` com organização modular. Esta mudança melhora a manutenibilidade, aumenta a coesão do código e facilita futuras extensões.
-* **Classes Renomeadas**: `LDAPClient` foi substituída por `LDAPConnection` com API aprimorada.
-* **Compatibilidade**: A migração mantém compatibilidade para código existente através de importações no módulo `__init__.py`.
+- **Refatoração da Arquitetura LDAP**: Migração do módulo `ldap_utils.py` para uma nova estrutura de pacote `ldap/` com organização modular. Esta mudança melhora a manutenibilidade, aumenta a coesão do código e facilita futuras extensões.
+- **Classes Renomeadas**: `LDAPClient` foi substituída por `LDAPConnection` com API aprimorada.
+- **Compatibilidade**: A migração mantém compatibilidade para código existente através de importações no módulo `__init__.py`.
 
 ### 2023-10-30: Melhorias na Arquitetura
 
-* **Refatoração do Processamento LDIF**: Implementação da classe centralizada `LDIFProcessor` para unificar operações LDIF e reduzir duplicação de código. Esta classe substitui os módulos antigos (ldif_analyzer, ldif_fixer, ldif_validator, ldif_merger, ldif_splitter).
+- **Refatoração do Processamento LDIF**: Implementação da classe centralizada `LDIFProcessor` para unificar operações LDIF e reduzir duplicação de código. Esta classe substitui os módulos antigos (ldif_analyzer, ldif_fixer, ldif_validator, ldif_merger, ldif_splitter).
 
 ## Installation
 
@@ -128,9 +128,9 @@ The package uses the following configuration files:
 
 You can set configuration through environment variables with the following prefixes:
 
-* `LDAP_*`: For default LDAP connection  
-* `SOURCE_*`: For source (typically OID) connection
-* `TARGET_*`: For target (typically OUD) connection
+- `LDAP_*`: For default LDAP connection
+- `SOURCE_*`: For source (typically OID) connection
+- `TARGET_*`: For target (typically OUD) connection
 
 ### Viewing Configuration
 
@@ -196,23 +196,23 @@ For detailed workflow steps, see [Migration Workflow Guide](README_MIGRATION_WOR
 
 ## Documentation
 
-* [Module Documentation](src/oud_automation/README.md)
-* [Migration Workflow Guide](README_MIGRATION_WORKFLOW.md)
+- [Module Documentation](src/oud_automation/README.md)
+- [Migration Workflow Guide](README_MIGRATION_WORKFLOW.md)
 
 ## Requirements
 
-* Python 3.6+
-* python-ldap
-* Click
-* python-dotenv
-* Required LDAP client libraries for your platform
+- Python 3.6+
+- python-ldap
+- Click
+- python-dotenv
+- Required LDAP client libraries for your platform
 
 ## License
 
-**Documentation Framework**: FLX Enterprise Documentation Standard  
-**Implementation Status**: Production Ready - Validated Migration Tools  
-**Last Updated**: 2025-06-11  
-**Maintained by**: FLX Framework Directory Services Team  
+**Documentation Framework**: FLX Enterprise Documentation Standard
+**Implementation Status**: Production Ready - Validated Migration Tools
+**Last Updated**: 2025-06-11
+**Maintained by**: FLX Framework Directory Services Team
 
 ## License
 
@@ -225,21 +225,24 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ### Prerequisites
 
 Before starting OUD automation, ensure you have:
-* [LDAP Operations Guide](ldap-complete-guide.md) - Understanding LDAP fundamentals and operations
-* [Oracle Directory Migration Guide](oracle-directory-migration-complete-guide.md) - Overall migration strategy and planning
-* [FLX Core Framework Setup](../../getting-started/index.md) - Framework installation for automation tools
+
+- [LDAP Operations Guide](ldap-complete-guide.md) - Understanding LDAP fundamentals and operations
+- [Oracle Directory Migration Guide](oracle-directory-migration-complete-guide.md) - Overall migration strategy and planning
+- [FLX Core Framework Setup](../../getting-started/index.md) - Framework installation for automation tools
 
 ### Next Steps
 
 After setting up OUD automation:
-* **For Migration Projects**: [OID to OUD Migration Workflow](oracle-oid-to-oud-migration-workflow.md) for detailed migration procedures
-* **For Schema Operations**: [OUD Schema Migration Guide](oracle-oud-schema-migration-guide.md) for schema transformation
-* **For Operations**: [OUD Simple CLI Guide](oud-simple-cli-guide.md) for daily management tasks
+
+- **For Migration Projects**: [OID to OUD Migration Workflow](oracle-oid-to-oud-migration-workflow.md) for detailed migration procedures
+- **For Schema Operations**: [OUD Schema Migration Guide](oracle-oud-schema-migration-guide.md) for schema transformation
+- **For Operations**: [OUD Simple CLI Guide](oud-simple-cli-guide.md) for daily management tasks
 
 ### Related Topics
-* [Authentication Systems](oracle-authentication-comprehensive-guide.md) - Directory authentication integration
-* [Security Framework](../../security/index.md) - Directory security best practices
-* [Infrastructure Services](../../infrastructure/index.md) - Supporting infrastructure for directory services
+
+- [Authentication Systems](oracle-authentication-comprehensive-guide.md) - Directory authentication integration
+- [Security Framework](../../security/index.md) - Directory security best practices
+- [Infrastructure Services](../../infrastructure/index.md) - Supporting infrastructure for directory services
 
 ---
 
@@ -298,16 +301,18 @@ dsconfig get-connection-handler-prop --hostname oud-host --port 4444 --bindDN "c
 ```
 
 #### Migration Validation Failures
-* Check source OID connectivity and permissions
-* Verify target OUD instance is accessible and has sufficient space
-* Review LDIF file format and encoding issues
-* Validate schema compatibility between OID and OUD
+
+- Check source OID connectivity and permissions
+- Verify target OUD instance is accessible and has sufficient space
+- Review LDIF file format and encoding issues
+- Validate schema compatibility between OID and OUD
 
 #### Schema Migration Issues
-* Compare schema differences using built-in detection tools
-* Review object class definitions and attribute mappings
-* Check for custom schema extensions in source OID
-* Validate schema import results in target OUD
+
+- Compare schema differences using built-in detection tools
+- Review object class definitions and attribute mappings
+- Check for custom schema extensions in source OID
+- Validate schema import results in target OUD
 
 ### Performance Optimization
 
@@ -341,7 +346,8 @@ oud_automation --version --check-dependencies
 ```
 
 #### Log Analysis
-* Review automation logs in `logs/` directory
-* Check OUD server logs for detailed error information
-* Use correlation IDs to trace operations across systems
-* Monitor system resources during migration operations
+
+- Review automation logs in `logs/` directory
+- Check OUD server logs for detailed error information
+- Use correlation IDs to trace operations across systems
+- Monitor system resources during migration operations

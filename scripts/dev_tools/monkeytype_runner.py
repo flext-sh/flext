@@ -68,7 +68,9 @@ class MonkeyTypeRunner:
         self.db_dir.mkdir(exist_ok=True)
 
     def run_tests_with_monkeytype(
-        self, project_dir: str, test_path: str | None = None,
+        self,
+        project_dir: str,
+        test_path: str | None = None,
     ) -> int:
         """Run pytest with MonkeyType instrumentation."""
         project_path = self.workspace_root / project_dir
@@ -245,31 +247,42 @@ def parse_args() -> argparse.Namespace:
 
     # Run command
     run_parser = subparsers.add_parser("run", help="Run tests with MonkeyType tracing")
-    run_parser.add_argument("--flx_project", required=True, help="Target flx_project directory")
+    run_parser.add_argument(
+        "--flx_project", required=True, help="Target flx_project directory"
+    )
     run_parser.add_argument("--tests", help="Specific test path within the flx_project")
 
     # list command
     list_parser = subparsers.add_parser(
-        "list", help="list modules with collected types",
+        "list",
+        help="list modules with collected types",
     )
     list_parser.add_argument(
-        "--flx_project", required=True, help="Target flx_project directory",
+        "--flx_project",
+        required=True,
+        help="Target flx_project directory",
     )
 
     # Apply command
     apply_parser = subparsers.add_parser(
-        "apply", help="Apply collected types to a module",
+        "apply",
+        help="Apply collected types to a module",
     )
     apply_parser.add_argument(
-        "--module", required=True, help="Module path to apply types to",
+        "--module",
+        required=True,
+        help="Module path to apply types to",
     )
 
     # Stub command
     stub_parser = subparsers.add_parser(
-        "stub", help="Generate stub file with collected types",
+        "stub",
+        help="Generate stub file with collected types",
     )
     stub_parser.add_argument(
-        "--module", required=True, help="Module path to generate stub for",
+        "--module",
+        required=True,
+        help="Module path to generate stub for",
     )
 
     return parser.parse_args()

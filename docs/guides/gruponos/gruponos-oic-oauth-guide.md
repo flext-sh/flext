@@ -149,7 +149,7 @@ response=$(oic_api_get '/ic/api/integration/v1/integrations')
 If you receive the error:
 
 ```
-"error": "invalid_redirect_uri", 
+"error": "invalid_redirect_uri",
 "error_description": "Client xxxx requested an invalid redirect URL..."
 ```
 

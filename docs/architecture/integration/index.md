@@ -24,10 +24,10 @@ This hub provides comprehensive patterns for integrating FLX Framework with exte
 
 ### **Core Integration Topics**
 
-| **Topic** | **Function** | **Audience** | **Complexity** | **Status** |
-|-----------|--------------|--------------|----------------|------------|
-| [**Meltano Integration**](./meltano-integration-hub.md) | Data integration patterns | Data engineers, architects | ⭐⭐⭐ | ✅ Updated |
-| [**Enterprise Architecture**](./gruponos-oic-wms-architecture.md) | Enterprise integration patterns | System architects, integrators | ⭐⭐⭐⭐ | ✅ Updated |
+| **Topic**                                                         | **Function**                    | **Audience**                   | **Complexity** | **Status** |
+| ----------------------------------------------------------------- | ------------------------------- | ------------------------------ | -------------- | ---------- |
+| [**Meltano Integration**](./meltano-integration-hub.md)           | Data integration patterns       | Data engineers, architects     | ⭐⭐⭐         | ✅ Updated |
+| [**Enterprise Architecture**](./gruponos-oic-wms-architecture.md) | Enterprise integration patterns | System architects, integrators | ⭐⭐⭐⭐       | ✅ Updated |
 
 ---
 
@@ -36,24 +36,24 @@ This hub provides comprehensive patterns for integrating FLX Framework with exte
 ### **🎯 For Data Engineers**
 
 ```
-1. [Meltano Integration](./meltano-integration-hub.md) → 
-2. [Data Patterns](../../guides/integration/index.md) → 
+1. [Meltano Integration](./meltano-integration-hub.md) →
+2. [Data Patterns](../../guides/integration/index.md) →
 3. [Oracle Integration](../../guides/oracle/index.md)
 ```
 
 ### **⚡ For System Architects**
 
 ```
-1. [Enterprise Architecture](./gruponos-oic-wms-architecture.md) → 
-2. [Integration Patterns](../../guides/integration/index.md) → 
+1. [Enterprise Architecture](./gruponos-oic-wms-architecture.md) →
+2. [Integration Patterns](../../guides/integration/index.md) →
 3. [Infrastructure](../../infrastructure/index.md)
 ```
 
 ### **🏢 For Integration Engineers**
 
 ```
-1. [Enterprise Architecture](./gruponos-oic-wms-architecture.md) → 
-2. [Meltano Integration](./meltano-integration-hub.md) → 
+1. [Enterprise Architecture](./gruponos-oic-wms-architecture.md) →
+2. [Meltano Integration](./meltano-integration-hub.md) →
 3. [Oracle Examples](../../examples/oracle-wms/index.md)
 ```
 

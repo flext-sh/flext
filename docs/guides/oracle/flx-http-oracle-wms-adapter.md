@@ -8,8 +8,8 @@
 
 ## Navigation Context
 
-**Current Location**: `docs/guides/oracle/flx_http_oracle_wms-adapter.md`  
-**Parent**: [Oracle Integration Hub](oracle-integration-hub.md) > Oracle WMS Integration  
+**Current Location**: `docs/guides/oracle/flx_http_oracle_wms-adapter.md`
+**Parent**: [Oracle Integration Hub](oracle-integration-hub.md) > Oracle WMS Integration
 **Quick Links**: [Database Adapter](flx-database-oracle-adapter.md) | [OIC Adapter](flx-http-oracle-oic-adapter.md) | [WMS Commands Reference](oracle-wms-commands-reference.md)
 
 ---
@@ -65,36 +65,36 @@ class WmsAuthType(str, Enum):
 
 class WmsConfig(BaseModel):
     """Oracle WMS configuration."""
-    
+
     # WMS Instance Settings
     base_url: HttpUrl = Field(..., description="WMS instance base URL")
     api_version: str = Field(default="v10", description="WMS API version")
     tenant_id: Optional[str] = Field(None, description="Multi-tenant WMS identifier")
-    
+
     # Authentication
     auth_type: WmsAuthType = Field(default=WmsAuthType.OAUTH2)
     username: str = Field(..., description="WMS username")
     password: SecretStr = Field(..., description="WMS password")
     client_id: Optional[str] = Field(None, description="OAuth2 client ID")
     client_secret: Optional[SecretStr] = Field(None, description="OAuth2 client secret")
-    
+
     # API Configuration
     timeout: int = Field(default=30, ge=1, le=300, description="Request timeout in seconds")
     max_retries: int = Field(default=3, ge=0, le=10, description="Maximum retry attempts")
     retry_backoff: float = Field(default=1.5, ge=1.0, le=5.0, description="Retry backoff multiplier")
-    
+
     # Rate Limiting
     requests_per_minute: int = Field(default=120, ge=1, le=1000)
     burst_requests: int = Field(default=20, ge=1, le=100)
-    
+
     # Entity Configuration
     default_warehouse: Optional[str] = Field(None, description="Default warehouse code")
     default_company: Optional[str] = Field(None, description="Default company code")
-    
+
     # Performance Settings
     batch_size: int = Field(default=100, ge=1, le=1000, description="Default batch operation size")
     page_size: int = Field(default=50, ge=1, le=500, description="Default pagination size")
-    
+
     class Config:
         env_prefix = "WMS_"
         validate_assignment = True
@@ -140,7 +140,7 @@ class FlxOracleWmsAdapter(
     BaseAdapter
 ):
     """FLX Oracle WMS HTTP Adapter with comprehensive entity management."""
-    
+
     def __init__(self, config: WmsConfig):
         super().__init__()
         self.config = config
@@ -152,14 +152,14 @@ class FlxOracleWmsAdapter(
             burst_requests=config.burst_requests
         )
         self._entity_schemas: Dict[str, Dict[str, Any]] = {}
-    
+
     async def connect(self) -> None:
         """Initialize HTTP session and authenticate."""
         async with self.observe_operation("wms_adapter_connect"):
             try:
                 # Create HTTP session
                 timeout = aiohttp.ClientTimeout(total=self.config.timeout)
-                
+
                 self._session = aiohttp.ClientSession(
                     timeout=timeout,
                     headers={
@@ -168,13 +168,13 @@ class FlxOracleWmsAdapter(
                         "Content-Type": "application/json"
                     }
                 )
-                
+
                 # Authenticate
                 await self._authenticate()
-                
+
                 # Discover available entities
                 await self._discover_entities()
-                
+
                 self.logger.info(
                     "WMS adapter connected successfully",
                     extra={
@@ -183,26 +183,26 @@ class FlxOracleWmsAdapter(
                         "entities_discovered": len(self._entity_schemas)
                     }
                 )
-                
+
             except Exception as e:
                 raise WmsAuthenticationError(
                     f"Failed to connect to WMS: {str(e)}",
                     context={"base_url": str(self.config.base_url)}
                 ) from e
-    
+
     async def disconnect(self) -> None:
         """Close HTTP session and cleanup resources."""
         async with self.observe_operation("wms_adapter_disconnect"):
             if self._session:
                 await self._session.close()
                 self._session = None
-            
+
             self._auth_token = None
             self._token_expires_at = None
             self._entity_schemas.clear()
-            
+
             self.logger.info("WMS adapter disconnected")
-    
+
     async def _authenticate(self) -> None:
         """Authenticate with WMS and obtain access token."""
         async with self.observe_operation("wms_authenticate"):
@@ -212,23 +212,23 @@ class FlxOracleWmsAdapter(
                 await self._basic_authenticate()
             else:
                 raise WmsAuthenticationError(f"Unsupported auth type: {self.config.auth_type}")
-    
+
     async def _oauth2_authenticate(self) -> None:
         """Perform OAuth2 authentication."""
         auth_url = urljoin(str(self.config.base_url), "wms/lgfapi/oauth/token")
-        
+
         auth_data = {
             "grant_type": "password",
             "username": self.config.username,
             "password": self.config.password.get_secret_value()
         }
-        
+
         if self.config.client_id:
             auth_data.update({
                 "client_id": self.config.client_id,
                 "client_secret": self.config.client_secret.get_secret_value()
             })
-        
+
         async with self._session.post(
             auth_url,
             data=auth_data,
@@ -240,12 +240,12 @@ class FlxOracleWmsAdapter(
                     f"OAuth2 authentication failed: {error_text}",
                     context={"status_code": response.status}
                 )
-            
+
             token_data = await response.json()
             self._auth_token = token_data["access_token"]
             expires_in = token_data.get("expires_in", 3600)
             self._token_expires_at = datetime.now() + timedelta(seconds=expires_in - 300)  # 5 min buffer
-    
+
     async def _basic_authenticate(self) -> None:
         """Perform basic authentication."""
         # For basic auth, we'll store credentials and use them in headers
@@ -254,12 +254,12 @@ class FlxOracleWmsAdapter(
         encoded_credentials = base64.b64encode(credentials.encode()).decode()
         self._auth_token = f"Basic {encoded_credentials}"
         self._token_expires_at = datetime.now() + timedelta(hours=24)  # Basic auth doesn't expire
-    
+
     async def _ensure_authenticated(self) -> None:
         """Ensure we have a valid authentication token."""
         if not self._auth_token or datetime.now() >= self._token_expires_at:
             await self._authenticate()
-    
+
     async def _make_request(
         self,
         method: str,
@@ -272,20 +272,20 @@ class FlxOracleWmsAdapter(
         async with self.observe_operation("wms_api_request", method=method, endpoint=endpoint):
             # Rate limiting
             await self._rate_limiter.acquire()
-            
+
             # Ensure authentication
             await self._ensure_authenticated()
-            
+
             # Build URL
             url = urljoin(str(self.config.base_url), f"wms/lgfapi/{self.config.api_version}/{endpoint}")
-            
+
             # Prepare headers
             request_headers = {"Authorization": f"Bearer {self._auth_token}"}
             if self.config.tenant_id:
                 request_headers["X-Tenant-ID"] = self.config.tenant_id
             if headers:
                 request_headers.update(headers)
-            
+
             try:
                 async with self._session.request(
                     method=method,
@@ -294,17 +294,17 @@ class FlxOracleWmsAdapter(
                     params=params,
                     headers=request_headers
                 ) as response:
-                    
+
                     # Handle rate limiting
                     if response.status == 429:
                         retry_after = int(response.headers.get("Retry-After", 60))
                         raise WmsRateLimitError(f"Rate limit exceeded, retry after {retry_after} seconds")
-                    
+
                     # Handle errors
                     if response.status >= 400:
                         error_data = await response.json() if response.content_type == "application/json" else {}
                         error_message = error_data.get("message", await response.text())
-                        
+
                         raise WmsApiError(
                             f"WMS API error {response.status}: {error_message}",
                             context={
@@ -314,19 +314,19 @@ class FlxOracleWmsAdapter(
                                 "error_data": error_data
                             }
                         )
-                    
+
                     # Parse response
                     if response.content_type == "application/json":
                         return await response.json()
                     else:
                         return {"content": await response.text()}
-                        
+
             except aiohttp.ClientError as e:
                 raise WmsApiError(
                     f"HTTP client error: {str(e)}",
                     context={"method": method, "endpoint": endpoint}
                 ) from e
-    
+
     async def _discover_entities(self) -> None:
         """Discover available entities and their schemas."""
         async with self.observe_operation("wms_discover_entities"):
@@ -334,44 +334,44 @@ class FlxOracleWmsAdapter(
                 # Get list of available entities
                 response = await self._make_request("GET", "entity")
                 entities = response.get("entities", [])
-                
+
                 # Get schema for each entity
                 for entity_name in entities:
                     try:
                         schema_response = await self._make_request("GET", f"entity/{entity_name}/schema")
                         self._entity_schemas[entity_name] = schema_response
-                        
+
                     except Exception as e:
                         self.logger.warning(
                             f"Failed to get schema for entity {entity_name}: {str(e)}",
                             extra={"entity": entity_name}
                         )
-                
+
                 self.logger.info(
                     f"Discovered {len(self._entity_schemas)} entity schemas",
                     extra={"entities": list(self._entity_schemas.keys())}
                 )
-                
+
             except Exception as e:
                 self.logger.warning(f"Entity discovery failed: {str(e)}")
                 # Continue without entity schemas - they can be retrieved on demand
-    
+
     async def get_entities(self) -> List[str]:
         """Get list of available WMS entities."""
         async with self.observe_operation("wms_get_entities"):
             response = await self._make_request("GET", "entity")
             return response.get("entities", [])
-    
+
     async def get_entity_schema(self, entity_name: str) -> Dict[str, Any]:
         """Get schema definition for a specific entity."""
         async with self.observe_operation("wms_get_entity_schema", entity=entity_name):
             if entity_name in self._entity_schemas:
                 return self._entity_schemas[entity_name]
-            
+
             response = await self._make_request("GET", f"entity/{entity_name}/schema")
             self._entity_schemas[entity_name] = response
             return response
-    
+
     async def query_entity(
         self,
         entity_name: str,
@@ -383,24 +383,24 @@ class FlxOracleWmsAdapter(
         """Query entity with filters and pagination."""
         async with self.observe_operation("wms_query_entity", entity=entity_name):
             endpoint = f"entity/{entity_name}"
-            
+
             # Build query parameters
             params = {"page": str(page)}
             if page_size:
                 params["pageSize"] = str(page_size)
             elif self.config.page_size:
                 params["pageSize"] = str(self.config.page_size)
-            
+
             if order_by:
                 params["orderBy"] = order_by
-            
+
             if filters:
                 # Convert filters to WMS query format
                 for key, value in filters.items():
                     params[f"filter.{key}"] = str(value)
-            
+
             response = await self._make_request("GET", endpoint, params=params)
-            
+
             self.logger.debug(
                 f"Queried entity {entity_name}",
                 extra={
@@ -410,30 +410,30 @@ class FlxOracleWmsAdapter(
                     "filters": filters
                 }
             )
-            
+
             return response
-    
+
     async def get_entity_by_id(self, entity_name: str, entity_id: str) -> Dict[str, Any]:
         """Get specific entity record by ID."""
         async with self.observe_operation("wms_get_entity_by_id", entity=entity_name, id=entity_id):
             endpoint = f"entity/{entity_name}/{entity_id}"
             response = await self._make_request("GET", endpoint)
-            
+
             return response.get("record", response)
-    
+
     async def create_entity(self, entity_name: str, data: Dict[str, Any]) -> Dict[str, Any]:
         """Create new entity record."""
         async with self.observe_operation("wms_create_entity", entity=entity_name):
             endpoint = f"entity/{entity_name}"
-            
+
             # Add default warehouse/company if configured
             if self.config.default_warehouse and "warehouse" not in data:
                 data["warehouse"] = self.config.default_warehouse
             if self.config.default_company and "company" not in data:
                 data["company"] = self.config.default_company
-            
+
             response = await self._make_request("POST", endpoint, data=data)
-            
+
             self.logger.info(
                 f"Created entity {entity_name}",
                 extra={
@@ -441,52 +441,52 @@ class FlxOracleWmsAdapter(
                     "record_id": response.get("id")
                 }
             )
-            
+
             return response
-    
+
     async def update_entity(self, entity_name: str, entity_id: str, data: Dict[str, Any]) -> Dict[str, Any]:
         """Update existing entity record."""
         async with self.observe_operation("wms_update_entity", entity=entity_name, id=entity_id):
             endpoint = f"entity/{entity_name}/{entity_id}"
             response = await self._make_request("PUT", endpoint, data=data)
-            
+
             self.logger.info(
                 f"Updated entity {entity_name}/{entity_id}",
                 extra={"entity": entity_name, "id": entity_id}
             )
-            
+
             return response
-    
+
     async def delete_entity(self, entity_name: str, entity_id: str) -> bool:
         """Delete entity record."""
         async with self.observe_operation("wms_delete_entity", entity=entity_name, id=entity_id):
             endpoint = f"entity/{entity_name}/{entity_id}"
             await self._make_request("DELETE", endpoint)
-            
+
             self.logger.info(
                 f"Deleted entity {entity_name}/{entity_id}",
                 extra={"entity": entity_name, "id": entity_id}
             )
-            
+
             return True
-    
+
     async def bulk_create(self, entity_name: str, records: List[Dict[str, Any]]) -> Dict[str, Any]:
         """Create multiple entity records in batch."""
         async with self.observe_operation("wms_bulk_create", entity=entity_name):
             endpoint = f"entity/{entity_name}/bulk"
-            
+
             # Process in batches
             batch_size = self.config.batch_size
             results = {"created": [], "errors": []}
-            
+
             for i in range(0, len(records), batch_size):
                 batch = records[i:i + batch_size]
-                
+
                 try:
                     response = await self._make_request("POST", endpoint, data={"records": batch})
                     results["created"].extend(response.get("created", []))
                     results["errors"].extend(response.get("errors", []))
-                    
+
                 except Exception as e:
                     # Record batch error
                     results["errors"].append({
@@ -494,7 +494,7 @@ class FlxOracleWmsAdapter(
                         "batch_size": len(batch),
                         "error": str(e)
                     })
-            
+
             self.logger.info(
                 f"Bulk create completed for {entity_name}",
                 extra={
@@ -504,24 +504,24 @@ class FlxOracleWmsAdapter(
                     "errors": len(results["errors"])
                 }
             )
-            
+
             return results
-    
+
     async def execute_workflow(self, workflow_name: str, parameters: Dict[str, Any]) -> Dict[str, Any]:
         """Execute WMS workflow/business process."""
         async with self.observe_operation("wms_execute_workflow", workflow=workflow_name):
             endpoint = f"workflow/{workflow_name}/execute"
-            
+
             request_data = {
                 "parameters": parameters,
                 "correlationId": self.correlation_id,
                 "timestamp": datetime.now().isoformat()
             }
-            
+
             response = await self._make_request("POST", endpoint, data=request_data)
-            
+
             execution_id = response.get("executionId")
-            
+
             self.logger.info(
                 f"Workflow {workflow_name} executed",
                 extra={
@@ -530,9 +530,9 @@ class FlxOracleWmsAdapter(
                     "correlation_id": self.correlation_id
                 }
             )
-            
+
             return response
-    
+
     async def health_check(self) -> Dict[str, Any]:
         """Perform comprehensive health check."""
         async with self.observe_operation("wms_health_check"):
@@ -544,60 +544,60 @@ class FlxOracleWmsAdapter(
                 "entities_available": 0,
                 "error": None
             }
-            
+
             try:
                 start_time = asyncio.get_event_loop().time()
-                
+
                 # Test authentication
                 await self._ensure_authenticated()
                 health_status["authenticated"] = True
-                
+
                 # Test API accessibility
                 entities = await self.get_entities()
                 health_status["api_accessible"] = True
                 health_status["entities_available"] = len(entities)
-                
+
                 end_time = asyncio.get_event_loop().time()
                 response_time = (end_time - start_time) * 1000
-                
+
                 health_status.update({
                     "healthy": True,
                     "response_time_ms": round(response_time, 2)
                 })
-                
+
             except Exception as e:
                 health_status["error"] = str(e)
                 self.logger.warning(f"Health check failed: {str(e)}")
-            
+
             return health_status
 
 class WmsRateLimiter:
     """Rate limiter for WMS API requests."""
-    
+
     def __init__(self, requests_per_minute: int, burst_requests: int):
         self.requests_per_minute = requests_per_minute
         self.burst_requests = burst_requests
         self.tokens = burst_requests
         self.last_refill = asyncio.get_event_loop().time()
         self._lock = asyncio.Lock()
-    
+
     async def acquire(self) -> None:
         """Acquire a token for making a request."""
         async with self._lock:
             now = asyncio.get_event_loop().time()
-            
+
             # Refill tokens based on time elapsed
             time_passed = now - self.last_refill
             tokens_to_add = time_passed * (self.requests_per_minute / 60.0)
             self.tokens = min(self.burst_requests, self.tokens + tokens_to_add)
             self.last_refill = now
-            
+
             # Wait if no tokens available
             if self.tokens < 1:
                 wait_time = (1 - self.tokens) / (self.requests_per_minute / 60.0)
                 await asyncio.sleep(wait_time)
                 self.tokens = 1
-            
+
             self.tokens -= 1
 ```
 
@@ -624,23 +624,23 @@ async def basic_wms_example():
         default_warehouse="MAIN_WH",
         default_company="COMPANY01"
     )
-    
+
     # Initialize adapter
     wms_adapter = FlxOracleWmsAdapter(config)
-    
+
     try:
         # Connect to WMS
         await wms_adapter.connect()
-        
+
         # Discover available entities
         entities = await wms_adapter.get_entities()
         print(f"Available entities: {entities}")
-        
+
         # Get entity schema
         if "SHIPMENT" in entities:
             schema = await wms_adapter.get_entity_schema("SHIPMENT")
             print(f"SHIPMENT schema: {schema}")
-        
+
         # Query shipments
         shipments = await wms_adapter.query_entity(
             "SHIPMENT",
@@ -649,9 +649,9 @@ async def basic_wms_example():
             page_size=10,
             order_by="shipment_date DESC"
         )
-        
+
         print(f"Found {shipments.get('totalRecords', 0)} pending shipments")
-        
+
         # Create new shipment
         new_shipment = {
             "shipment_id": "SHIP-12345",
@@ -665,17 +665,17 @@ async def basic_wms_example():
                 {"item_id": "ITEM002", "quantity": 5}
             ]
         }
-        
+
         created_shipment = await wms_adapter.create_entity("SHIPMENT", new_shipment)
         print(f"Created shipment: {created_shipment.get('id')}")
-        
+
         # Update shipment status
         await wms_adapter.update_entity(
             "SHIPMENT",
             created_shipment["id"],
             {"status": "READY_TO_SHIP"}
         )
-        
+
     finally:
         await wms_adapter.disconnect()
 
@@ -689,7 +689,7 @@ asyncio.run(basic_wms_example())
 async def inventory_management_example():
     wms_adapter = FlxOracleWmsAdapter(config)
     await wms_adapter.connect()
-    
+
     try:
         # Query current inventory levels
         inventory = await wms_adapter.query_entity(
@@ -700,9 +700,9 @@ async def inventory_management_example():
             },
             order_by="item_id"
         )
-        
+
         print(f"Current inventory items: {inventory.get('totalRecords', 0)}")
-        
+
         # Check specific item availability
         item_inventory = await wms_adapter.query_entity(
             "INVENTORY",
@@ -711,12 +711,12 @@ async def inventory_management_example():
                 "warehouse": "MAIN_WH"
             }
         )
-        
+
         if item_inventory.get("records"):
             item_data = item_inventory["records"][0]
             available_qty = item_data.get("available_quantity", 0)
             print(f"ITEM001 available quantity: {available_qty}")
-            
+
             # Reserve inventory for shipment
             if available_qty >= 10:
                 reservation_data = {
@@ -727,10 +727,10 @@ async def inventory_management_example():
                     "reference_id": "SHIP-12345",
                     "reservation_date": datetime.now().isoformat()
                 }
-                
+
                 reservation = await wms_adapter.create_entity("RESERVATION", reservation_data)
                 print(f"Created inventory reservation: {reservation.get('id')}")
-        
+
         # Execute inventory adjustment workflow
         adjustment_result = await wms_adapter.execute_workflow(
             "INVENTORY_ADJUSTMENT",
@@ -742,9 +742,9 @@ async def inventory_management_example():
                 "notes": "Cycle count adjustment"
             }
         )
-        
+
         print(f"Inventory adjustment executed: {adjustment_result.get('executionId')}")
-        
+
     finally:
         await wms_adapter.disconnect()
 ```
@@ -755,7 +755,7 @@ async def inventory_management_example():
 async def bulk_operations_example():
     wms_adapter = FlxOracleWmsAdapter(config)
     await wms_adapter.connect()
-    
+
     try:
         # Bulk create pick tasks
         pick_tasks = []
@@ -770,22 +770,22 @@ async def bulk_operations_example():
                 "assigned_user": None,
                 "status": "PENDING"
             })
-        
+
         result = await wms_adapter.bulk_create("PICK_TASK", pick_tasks)
-        
+
         print(f"Bulk create results:")
         print(f"  Created: {len(result['created'])}")
         print(f"  Errors: {len(result['errors'])}")
-        
+
         # Query created tasks
         created_tasks = await wms_adapter.query_entity(
             "PICK_TASK",
             filters={"shipment_id": "SHIP-12345"},
             page_size=50
         )
-        
+
         print(f"Total pick tasks for shipment: {created_tasks.get('totalRecords', 0)}")
-        
+
     finally:
         await wms_adapter.disconnect()
 ```
@@ -859,13 +859,13 @@ class WmsService:
     def __init__(self, config: WmsConfig):
         self.adapter = FlxOracleWmsAdapter(config)
         self._connected = False
-    
+
     async def __aenter__(self):
         if not self._connected:
             await self.adapter.connect()
             self._connected = True
         return self.adapter
-    
+
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         await self.adapter.disconnect()
         self._connected = False
@@ -884,19 +884,19 @@ async with WmsService(config) as wms:
 
 ### Error Codes Reference
 
-| HTTP Code | WMS Error | Description | Resolution |
-|-----------|-----------|-------------|------------|
-| 400 | Bad Request | Invalid request format or data | Validate request data against entity schema |
-| 401 | Unauthorized | Invalid or expired token | Refresh authentication token |
-| 403 | Forbidden | Insufficient permissions | Check user roles and entity permissions |
-| 404 | Not Found | Entity or record not found | Verify entity names and record IDs |
-| 422 | Unprocessable Entity | Business rule validation failed | Review WMS business rules and data constraints |
-| 429 | Too Many Requests | Rate limit exceeded | Implement exponential backoff |
-| 500 | Internal Error | WMS internal error | Check WMS system status, retry operation |
+| HTTP Code | WMS Error            | Description                     | Resolution                                     |
+| --------- | -------------------- | ------------------------------- | ---------------------------------------------- |
+| 400       | Bad Request          | Invalid request format or data  | Validate request data against entity schema    |
+| 401       | Unauthorized         | Invalid or expired token        | Refresh authentication token                   |
+| 403       | Forbidden            | Insufficient permissions        | Check user roles and entity permissions        |
+| 404       | Not Found            | Entity or record not found      | Verify entity names and record IDs             |
+| 422       | Unprocessable Entity | Business rule validation failed | Review WMS business rules and data constraints |
+| 429       | Too Many Requests    | Rate limit exceeded             | Implement exponential backoff                  |
+| 500       | Internal Error       | WMS internal error              | Check WMS system status, retry operation       |
 
 ---
 
-**Documentation Framework**: FLX Enterprise Documentation Standard  
-**Implementation Status**: Production Ready - Validated with Oracle WMS Cloud  
-**Last Updated**: 2025-06-11  
+**Documentation Framework**: FLX Enterprise Documentation Standard
+**Implementation Status**: Production Ready - Validated with Oracle WMS Cloud
+**Last Updated**: 2025-06-11
 **Maintained by**: FLX Framework WMS Integration Team

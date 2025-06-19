@@ -9,7 +9,7 @@ This document describes the standardized architecture implemented for the `gn_oi
 ### 1. Layered Architecture
 
 - **Core Layer**: Foundation services (config, logging, exceptions)
-- **Operations Layer**: Business logic using existing flx_project components  
+- **Operations Layer**: Business logic using existing flx_project components
 - **CLI Layer**: User interface and command orchestration
 - **Scripts Layer**: Specific automation tasks
 
@@ -277,7 +277,7 @@ class DatabaseConfig(BaseModel):
     service_name: str = Field(...)
     username: str = Field(...)
     password: str = Field(...)
-    
+
     @computed_field
     @property
     def connection_string(self) -> str:

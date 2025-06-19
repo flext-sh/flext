@@ -18,15 +18,15 @@
 
 ### **Core Topics**
 
-| **Topic** | **Function** | **Audience** | **Status** |
-|-----------|--------------|--------------|------------|
-| [🌐 Oracle](./oracle/index.md) | Oracle system integrations | Oracle developers | ✅ Complete |
-| [🔐 Authentication](./authentication/index.md) | JWT & OAuth2 implementation | Security engineers | ✅ Complete |
-| [🔄 Integration](./integration/index.md) | System integration patterns | Integration engineers | ✅ Complete |
-| [🛠️ Development](./development/index.md) | Development tools & practices | Development teams | ✅ Complete |
-| [🧪 Testing](./testing/index.md) | Testing strategies | QA engineers | ✅ Complete |
-| [🏗️ Implementation](./implementation/index.md) | Hexagonal architecture patterns | Framework developers | ✅ Complete |
-| [🏢 GrupoNOS](./gruponos/index.md) | GrupoNOS-specific integrations | GrupoNOS teams | ✅ Complete |
+| **Topic**                                      | **Function**                    | **Audience**          | **Status**  |
+| ---------------------------------------------- | ------------------------------- | --------------------- | ----------- |
+| [🌐 Oracle](./oracle/index.md)                 | Oracle system integrations      | Oracle developers     | ✅ Complete |
+| [🔐 Authentication](./authentication/index.md) | JWT & OAuth2 implementation     | Security engineers    | ✅ Complete |
+| [🔄 Integration](./integration/index.md)       | System integration patterns     | Integration engineers | ✅ Complete |
+| [🛠️ Development](./development/index.md)       | Development tools & practices   | Development teams     | ✅ Complete |
+| [🧪 Testing](./testing/index.md)               | Testing strategies              | QA engineers          | ✅ Complete |
+| [🏗️ Implementation](./implementation/index.md) | Hexagonal architecture patterns | Framework developers  | ✅ Complete |
+| [🏢 GrupoNOS](./gruponos/index.md)             | GrupoNOS-specific integrations  | GrupoNOS teams        | ✅ Complete |
 
 ### **📋 Learning Path**
 

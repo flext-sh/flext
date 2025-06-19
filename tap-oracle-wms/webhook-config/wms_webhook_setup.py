@@ -221,7 +221,7 @@ Configure webhooks in Oracle WMS to send real-time notifications when data chang
 
 ### 3. Configure Each Entity
 
-For each entity ({', '.join(entities)}):
+For each entity ({", ".join(entities)}):
 
 ```json
 {{

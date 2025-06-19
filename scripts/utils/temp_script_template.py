@@ -54,10 +54,12 @@ def setup_temp_script_environment() -> None:
     script_path = Path(__file__)
     category = get_script_category(script_path)
 
-    logger.info("Configurando ambiente de script temporário",
-                script=script_path.name,
-                category=category,
-                timestamp=datetime.now().isoformat())
+    logger.info(
+        "Configurando ambiente de script temporário",
+        script=script_path.name,
+        category=category,
+        timestamp=datetime.now().isoformat(),
+    )
 
 
 def main() -> None:
@@ -67,9 +69,11 @@ def main() -> None:
     """
     setup_temp_script_environment()
 
-    logger.info("Iniciando script temporário",
-                script=__file__,
-                purpose="[SUBSTITUIR: PROPÓSITO ESPECÍFICO]")
+    logger.info(
+        "Iniciando script temporário",
+        script=__file__,
+        purpose="[SUBSTITUIR: PROPÓSITO ESPECÍFICO]",
+    )
 
     try:
         # ============================================================
@@ -97,9 +101,9 @@ def main() -> None:
         sys.exit(130)
 
     except Exception as e:
-        logger.exception("Erro no script temporário",
-                    error=str(e),
-                    error_type=type(e).__name__)
+        logger.exception(
+            "Erro no script temporário", error=str(e), error_type=type(e).__name__
+        )
         sys.exit(1)
 
     logger.info("Script temporário concluído com sucesso")

@@ -49,7 +49,7 @@ from flx.adapters.base import BaseAdapter
 
 class OptimizedDatabaseAdapter(BaseAdapter, AdvancedAdapterMixin):
     """90% code reduction through mixin consolidation."""
-    
+
     # Connection pooling optimizations
     async def connect(self) -> None:
         await self._establish_pooled_connection(
@@ -57,7 +57,7 @@ class OptimizedDatabaseAdapter(BaseAdapter, AdvancedAdapterMixin):
             max_overflow=10,
             pool_timeout=30
         )
-    
+
     # Batch operation optimizations
     async def batch_insert(self, records: list) -> None:
         async with self._get_batch_context(size=1000) as batch:
@@ -164,7 +164,7 @@ class OptimizedHttpAdapter(BaseAdapter):
             limits=httpx.Limits(max_connections=100),
             timeout=httpx.Timeout(30.0)
         )
-    
+
     async def request(self, url: str, data: dict) -> dict:
         # 3x faster JSON with orjson
         json_data = orjson.dumps(data)
@@ -197,7 +197,7 @@ class OptimizedOracleWMSAdapter(BaseAdapter):
             min=10, max=50, increment=5,
             dsn="oracle://wms-cluster/XE"
         )
-    
+
     async def process_shipment_batch(self, shipments: list) -> list:
         # Batch processing: 10x faster than individual operations
         async with self.pool.acquire() as connection:
@@ -244,7 +244,7 @@ class OptimizedLogger(StructuredLogger):
         self.async_handler = AsyncHandler()
         # JSON serialization optimization
         self.json_encoder = orjson.dumps
-    
+
     async def log_with_context(self, level: str, message: str, **context):
         # Non-blocking logging with context preservation
         log_entry = {

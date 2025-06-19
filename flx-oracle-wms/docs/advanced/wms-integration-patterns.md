@@ -552,4 +552,4 @@ This integration patterns guide is based on Oracle's official documentation:
 
 ---
 
-*Last updated: Based on Oracle WMS Cloud 25B Integration Guide (June 2025)*
+_Last updated: Based on Oracle WMS Cloud 25B Integration Guide (June 2025)_

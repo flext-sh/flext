@@ -281,7 +281,7 @@ except Exception as e:
 def test_logging_levels():
     """Test all logging levels work correctly."""
     logger = flx.get_logger("test")
-    
+
     # Test all levels
     logger.trace("trace message")
     logger.debug("debug message")
@@ -297,7 +297,7 @@ def test_logging_levels():
 async def test_async_logging():
     """Test async logging functionality."""
     logger = flx.get_async_logger("test_async")
-    
+
     await logger.info("async message")
     # Verify non-blocking behavior
 ```
@@ -431,7 +431,7 @@ The new logging system successfully implements hexagonal architecture with KISS 
 
 ---
 
-**Last Updated**: January 2025  
-**Status**: Production Ready  
-**Architecture**: Hexagonal (Ports & Adapters)  
+**Last Updated**: January 2025
+**Status**: Production Ready
+**Architecture**: Hexagonal (Ports & Adapters)
 **Principles**: KISS, SOLID, DRY

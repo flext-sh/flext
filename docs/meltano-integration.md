@@ -2,35 +2,40 @@
 
 ## Overview
 
-The FLX framework now includes complete integration with Meltano, allowing you to use all Meltano plugins (tap-*, target-*, etc.) as native FLX adapters with full workflow orchestration, state management, and Airflow integration.
+The FLX framework now includes complete integration with Meltano, allowing you to use all Meltano plugins (tap-_, target-_, etc.) as native FLX adapters with full workflow orchestration, state management, and Airflow integration.
 
 ## Key Features
 
 ### 🔌 **Native Plugin Integration**
+
 - Use any Meltano plugin as a native FLX adapter
-- Full support for extractors (tap-*), loaders (target-*), transformers (dbt), and utilities
+- Full support for extractors (tap-_), loaders (target-_), transformers (dbt), and utilities
 - Automatic plugin discovery from Meltano Hub
 - Plugin configuration management through FLX interfaces
 
 ### 🔄 **Workflow Orchestration**
+
 - Create and manage ELT/ETL workflows
 - Schedule workflows with cron expressions
 - Environment-specific configurations (dev, staging, prod)
 - Dry-run capabilities for testing
 
 ### 💾 **State Management**
+
 - Persistent state across pipeline runs
 - Multiple state backends (systemdb, S3, Redis, etc.)
 - State merging and copying operations
 - Singer state format support
 
 ### ✈️ **Airflow Integration**
+
 - Automatic DAG generation from workflows
 - Deploy workflows to Airflow
 - Schedule management through Airflow
 - Monitor workflow execution
 
 ### 🏗️ **Hexagonal Architecture**
+
 - Clean separation between domain and infrastructure
 - Port/Adapter pattern implementation
 - SOLID principles compliance
@@ -180,13 +185,15 @@ for name, config in templates["plugin_templates"].items():
     print(f"  - {name}: {config['description']}")
 ```
 
-### Configuration Templates:
+### Configuration Templates
+
 - **development**: Local development with systemdb backend
 - **production**: Production-ready with S3 backend and extended timeouts
 - **data_lake**: Optimized for large data transfers with extended timeouts
 - **real_time**: Optimized for streaming with Redis backend
 
-### Plugin Templates:
+### Plugin Templates
+
 - **postgres_to_snowflake**: PostgreSQL → Snowflake pipeline
 - **mysql_to_bigquery**: MySQL → BigQuery pipeline
 - **salesforce_to_warehouse**: Salesforce → Data warehouse
@@ -319,6 +326,7 @@ print(f"Execution time: {result['execution_time']}s")
 ## Best Practices
 
 ### 1. **Project Organization**
+
 ```
 meltano_projects/
 ├── dev/
@@ -333,21 +341,25 @@ meltano_projects/
 ```
 
 ### 2. **Configuration Management**
+
 - Use environment variables for sensitive data
 - Separate configurations per environment
 - Version control your workflows and configurations
 
 ### 3. **State Management**
+
 - Use consistent state IDs across environments
 - Regular state backups for production
 - Monitor state growth and cleanup old states
 
 ### 4. **Error Recovery**
+
 - Implement retry logic for transient failures
 - Use circuit breaker patterns for external services
 - Monitor pipeline health and set up alerts
 
 ### 5. **Performance Optimization**
+
 - Use appropriate batch sizes for data transfers
 - Configure timeouts based on data volume
 - Monitor resource usage and scale accordingly
@@ -355,6 +367,7 @@ meltano_projects/
 ## Integration with Existing FLX Components
 
 ### With Database Adapters
+
 ```python
 from flx.adapters.outbound.database import DatabaseAdapter
 
@@ -366,6 +379,7 @@ meltano_adapter = MeltanoAdapterFactory.create_adapter(project_root)
 ```
 
 ### With CLI Interface
+
 ```python
 from flx.adapters.inbound.cli import CliAdapter
 
@@ -375,6 +389,7 @@ cli_adapter = CliAdapter()
 ```
 
 ### With Application Services
+
 ```python
 from flx.application import ApplicationService
 
@@ -396,6 +411,7 @@ class DataPipelineService(ApplicationService):
 ### Common Issues
 
 1. **Meltano not found**
+
    ```bash
    # Install Meltano
    pip install meltano
@@ -405,6 +421,7 @@ class DataPipelineService(ApplicationService):
    ```
 
 2. **Plugin installation fails**
+
    ```python
    # Check plugin availability
    plugins = await adapter.discover_plugins(search_term="postgres")
@@ -418,6 +435,7 @@ class DataPipelineService(ApplicationService):
    ```
 
 3. **State backend issues**
+
    ```python
    # Verify state backend configuration
    health = await adapter.health_check()
@@ -428,6 +446,7 @@ class DataPipelineService(ApplicationService):
    ```
 
 4. **Airflow deployment issues**
+
    ```python
    # Verify Airflow configuration
    airflow_config = {
@@ -440,12 +459,14 @@ class DataPipelineService(ApplicationService):
 ## Examples Repository
 
 Complete examples are available in:
+
 - `examples/flx_meltano_integration_example.py` - Comprehensive usage examples
 - `flx/tests/test_meltano_integration.py` - Test cases and patterns
 
 ## API Reference
 
 ### Ports
+
 - `MeltanoUnifiedPort` - Complete Meltano functionality
 - `MeltanoPluginManagerPort` - Plugin management
 - `MeltanoPluginExecutorPort` - Plugin execution
@@ -454,10 +475,12 @@ Complete examples are available in:
 - `MeltanoAirflowIntegrationPort` - Airflow integration
 
 ### Adapters
+
 - `MeltanoAdapter` - Main adapter implementation
 - `MeltanoAdapterFactory` - Factory for creating adapters
 
 ### Models
+
 - `MeltanoPluginConfig` - Plugin configuration
 - `MeltanoPluginState` - Plugin state
 - `MeltanoWorkflowConfig` - Workflow configuration

@@ -439,9 +439,9 @@ class TestTargetLDAPE2E:
     ) -> None:
         """Test custom object classes configuration."""
         # Add custom object classes for service accounts
-        target_config["dn_templates"][
-            "service_accounts"
-        ] = "uid={uid},ou=services,{base_dn}"
+        target_config["dn_templates"]["service_accounts"] = (
+            "uid={uid},ou=services,{base_dn}"
+        )
         target_config["default_object_classes"]["service_accounts"] = [
             "account",
             "simpleSecurityObject",

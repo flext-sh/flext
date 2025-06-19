@@ -1,39 +1,37 @@
 # wms.inv.shipment-confirmation-for-sales-orders-mapping-23.4.0.xlsx
 
-**Caminho:** `reference/wms_solutions/mappings/wms.inv.shipment-confirmation-for-sales-orders-mapping-23.4.0.xlsx`  \n**Data de conversão:** 2025-05-15T14:43:02.079678  \n**Tipo:** .xlsx  \n**[Download original](reference/wms_solutions/mappings/wms.inv.shipment-confirmation-for-sales-orders-mapping-23.4.0.xlsx)**
+**Caminho:** `reference/wms_solutions/mappings/wms.inv.shipment-confirmation-for-sales-orders-mapping-23.4.0.xlsx` \n**Data de conversão:** 2025-05-15T14:43:02.079678 \n**Tipo:** .xlsx \n**[Download original](reference/wms_solutions/mappings/wms.inv.shipment-confirmation-for-sales-orders-mapping-23.4.0.xlsx)**
 
 ---
 
 ## Sumário
 
-
-
 ## Resumo automático
 
 Este documento é um guia de mapeamento para a integração entre o WMS e a API REST de “Shipment Transaction Requests” do Oracle Inventory Management, versão 23.4.0. Nele são especificados:
 
-1. Estrutura geral do payload  
-   • Campos de controle do lote (id, path, operation, ActionCode).  
+1. Estrutura geral do payload
+   • Campos de controle do lote (id, path, operation, ActionCode).
    • Envelope “shipments” com instruções para criação e confirmação de expedição.
 
-2. Mapeamento dos campos do cabeçalho de cada remessa  
-   • Shipment (identificador único), ShipFromOrganizationCode (filial), BillOfLading, Waybill, ExternalSystemTransactionReference.  
-   • Dados de peso e volume: GrossWeight, Volume e suas respectivas UOM (unidades), com opção de usar valores vindos de propriedades de integração.  
+2. Mapeamento dos campos do cabeçalho de cada remessa
+   • Shipment (identificador único), ShipFromOrganizationCode (filial), BillOfLading, Waybill, ExternalSystemTransactionReference.
+   • Dados de peso e volume: GrossWeight, Volume e suas respectivas UOM (unidades), com opção de usar valores vindos de propriedades de integração.
    • Datas e códigos de transportadora: ActualShipDate, CarrierNumber, ModeOfTransportCode, ServiceLevelCode.
 
-3. Unidades de embalagem  
-   • outerPackingUnits: número e tipo de pallet.  
+3. Unidades de embalagem
+   • outerPackingUnits: número e tipo de pallet.
    • innerPackingUnits: número e tipo de LPN, peso e volume por LPN, com UOM controladas por propriedades.
 
-4. Linhas de expedição (“packedLines”)  
-   • ShipmentLine (número da linha), Item (código do produto), ShippedQuantity e UOM, RequestedQuantityToConsume, LoadingSequence e TrackingNumber.  
+4. Linhas de expedição (“packedLines”)
+   • ShipmentLine (número da linha), Item (código do produto), ShippedQuantity e UOM, RequestedQuantityToConsume, LoadingSequence e TrackingNumber.
    • Subinventory de origem.
 
-5. Rastreamento de lote e série  
-   • Para itens controlados por lote: lista de lotes com número, subinventory e quantidade.  
+5. Rastreamento de lote e série
+   • Para itens controlados por lote: lista de lotes com número, subinventory e quantidade.
    • Para itens controlados por série: faixas de números de série e subinventory.
 
-6. Referências externas  
+6. Referências externas
    • Links para documentação de testes e API oficial no Oracle Confluence e no site de ajuda.
 
 ## Conteúdo extraído
@@ -45,7 +43,7 @@ INV -REST: operation, Format: , Max: , WMS Column: "create", Format.1: , Max.1: 
 INV -REST: payload, Format: , Max: , WMS Column: , Format.1: , Max.1: , REQD?: , Notes:
 INV -REST: ActionCode, Format: string, Max: , WMS Column: CreateAndConfirmShipment, Format.1: , Max.1: , REQD?: , Notes:
 INV -REST: shipments, Format: , Max: , WMS Column: , Format.1: , Max.1: , REQD?: , Notes:
-INV -REST: Shipment, Format: String, Max: 30.0, WMS Column: load_manifest_nbr+"-"+seq_nbr  (for Load flow)
+INV -REST: Shipment, Format: String, Max: 30.0, WMS Column: load_manifest_nbr+"-"+seq_nbr (for Load flow)
 load_manifest_nbr+"-"+shipto_zip (for Parcel flow), Format.1: String, Max.1: , REQD?: , Notes: In Parcel flow, to support multi stop scenario, Shipment mapping uses shipto_zip
 INV -REST: ShipFromOrganizationCode, Format: String, Max: 240.0, WMS Column: facility_code, Format.1: String, Max.1: 20.0, REQD?: , Notes:
 INV -REST: BillOfLading, Format: String, Max: 50.0, WMS Column: stop_bol_nbr, Format.1: String, Max.1: 30.0, REQD?: , Notes:

@@ -34,11 +34,11 @@ Meltano extractor plugins (taps) provide enterprise-grade data extraction capabi
 
 ### **Extractor Categories**
 
-| **Plugin** | **Data Source** | **Type** | **Status** | **Key Features** |
-|------------|-----------------|----------|------------|------------------|
-| **[Oracle ADB](./tap-oracle-adb.md)** | Oracle Autonomous Database | Database | ✅ Production | SQL extraction, table discovery, incremental sync |
-| **[Oracle OIC](./tap-oic.md)** | Oracle Integration Cloud | API/REST | ✅ Production | Integration flow extraction, metadata capture |
-| **[OIC WMS](./tap-oic-wms.md)** | Oracle WMS via OIC | Warehouse | ✅ Production | WMS data extraction via OIC integration |
+| **Plugin**                            | **Data Source**            | **Type**  | **Status**    | **Key Features**                                  |
+| ------------------------------------- | -------------------------- | --------- | ------------- | ------------------------------------------------- |
+| **[Oracle ADB](./tap-oracle-adb.md)** | Oracle Autonomous Database | Database  | ✅ Production | SQL extraction, table discovery, incremental sync |
+| **[Oracle OIC](./tap-oic.md)**        | Oracle Integration Cloud   | API/REST  | ✅ Production | Integration flow extraction, metadata capture     |
+| **[OIC WMS](./tap-oic-wms.md)**       | Oracle WMS via OIC         | Warehouse | ✅ Production | WMS data extraction via OIC integration           |
 
 ### **🚀 Key Capabilities**
 

@@ -1,11 +1,11 @@
 # Plugin Development Guide
 
-> *"The power of a system lies in its extensibility."*
+> _"The power of a system lies in its extensibility."_
 > This guide explains how FLX's plugin architecture enables seamless extension without modifying the core codebase.
 
 ## Overview
 
-FLX implements a sophisticated plugin system where **every external connector**—Oracle DB, Cache, HTTP, Message Queues—is treated as a *plugin* discovered at runtime via Python entry-points. This design enables developers to add new functionality, support additional protocols, or integrate with different systems while maintaining compatibility with the existing ecosystem.
+FLX implements a sophisticated plugin system where **every external connector**—Oracle DB, Cache, HTTP, Message Queues—is treated as a _plugin_ discovered at runtime via Python entry-points. This design enables developers to add new functionality, support additional protocols, or integrate with different systems while maintaining compatibility with the existing ecosystem.
 
 The core framework stays dependency-free while teams add features on their own cadence.
 

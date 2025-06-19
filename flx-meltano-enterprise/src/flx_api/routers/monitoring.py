@@ -7,6 +7,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from flx_api.dependencies import get_grpc_stub
 from flx_api.models.monitoring import HealthResponse, SystemStatsResponse
 from google.protobuf import empty_pb2
+
 # Lazy import to avoid circular dependencies
 from flx.utils.lazy_import import lazy_import
 
@@ -15,7 +16,7 @@ from flx.utils.lazy_import import lazy_import
 
 
 # Lazy import to avoid circular dependencies
-flx_pb2_grpc = lazy_import('flx.grpc.proto', 'flx_pb2_grpc')
+flx_pb2_grpc = lazy_import("flx.grpc.proto", "flx_pb2_grpc")
 
 router = APIRouter()
 

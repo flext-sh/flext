@@ -60,7 +60,9 @@ class WorkingTestRunner:
         print("\n🔬 Running FLX Basic Tests...")
 
         cmd = [
-            "python", "-m", "pytest",
+            "python",
+            "-m",
+            "pytest",
             "flx/tests/test_simple_flx_suite.py",
             "-v",
             "--tb=short",
@@ -68,17 +70,21 @@ class WorkingTestRunner:
         ]
 
         if self.config.coverage:
-            cmd.extend([
-                "--cov=flx",
-                "--cov-report=term-missing",
-                "--cov-report=html:reports/coverage/flx_basic",
-            ])
+            cmd.extend(
+                [
+                    "--cov=flx",
+                    "--cov-report=term-missing",
+                    "--cov-report=html:reports/coverage/flx_basic",
+                ]
+            )
 
         if self.config.generate_reports:
-            cmd.extend([
-                "--html=reports/pytest/flx_basic_tests.html",
-                "--self-contained-html",
-            ])
+            cmd.extend(
+                [
+                    "--html=reports/pytest/flx_basic_tests.html",
+                    "--self-contained-html",
+                ]
+            )
 
         return self._execute_test(cmd, "FLX Basic Tests")
 
@@ -92,7 +98,9 @@ class WorkingTestRunner:
             self._create_module_tests()
 
         cmd = [
-            "python", "-m", "pytest",
+            "python",
+            "-m",
+            "pytest",
             "flx/tests/test_flx_modules.py",
             "-v",
             "--tb=short",
@@ -100,10 +108,12 @@ class WorkingTestRunner:
         ]
 
         if self.config.coverage:
-            cmd.extend([
-                "--cov=flx",
-                "--cov-report=term-missing",
-            ])
+            cmd.extend(
+                [
+                    "--cov=flx",
+                    "--cov-report=term-missing",
+                ]
+            )
 
         return self._execute_test(cmd, "FLX Module Tests")
 
@@ -118,14 +128,16 @@ class WorkingTestRunner:
         print("   ✓ Testing automation scripts...")
 
         # For now, just return success
-        self.results.append({
-            "name": "Infrastructure Tests",
-            "success": True,
-            "duration": 0.1,
-            "tests": 2,
-            "passed": 2,
-            "failed": 0,
-        })
+        self.results.append(
+            {
+                "name": "Infrastructure Tests",
+                "success": True,
+                "duration": 0.1,
+                "tests": 2,
+                "passed": 2,
+                "failed": 0,
+            }
+        )
 
         return True
 
@@ -138,7 +150,8 @@ class WorkingTestRunner:
                 cmd,
                 capture_output=True,
                 text=True,
-                timeout=120, check=False,
+                timeout=120,
+                check=False,
             )
 
             duration = time.time() - start_time
@@ -148,19 +161,23 @@ class WorkingTestRunner:
             passed, failed, skipped = self._parse_pytest_output(result.stdout)
 
             # Store result
-            self.results.append({
-                "name": test_name,
-                "success": success,
-                "duration": duration,
-                "tests": passed + failed + skipped,
-                "passed": passed,
-                "failed": failed,
-                "skipped": skipped,
-            })
+            self.results.append(
+                {
+                    "name": test_name,
+                    "success": success,
+                    "duration": duration,
+                    "tests": passed + failed + skipped,
+                    "passed": passed,
+                    "failed": failed,
+                    "skipped": skipped,
+                }
+            )
 
             # Display result
             status = "✅" if success else "❌"
-            print(f"   {status} {test_name}: {passed}/{passed + failed} passed ({duration:.2f}s)")
+            print(
+                f"   {status} {test_name}: {passed}/{passed + failed} passed ({duration:.2f}s)"
+            )
 
             if not success and self.config.verbose:
                 print(f"      Error: {result.stderr[:200]}")
@@ -314,7 +331,9 @@ if __name__ == "__main__":
         print("\n📋 DETAILED RESULTS:")
         for result in self.results:
             status = "✅" if result["success"] else "❌"
-            print(f"  {status} {result['name']}: {result['passed']}/{result['tests']} ({result['duration']:.2f}s)")
+            print(
+                f"  {status} {result['name']}: {result['passed']}/{result['tests']} ({result['duration']:.2f}s)"
+            )
 
         print("\n" + "=" * 50)
 

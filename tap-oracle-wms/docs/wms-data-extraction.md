@@ -106,20 +106,20 @@ GET /entity/item?status=ACTIVE&facility_id=1
 
 ### Advanced Filtering Operators
 
-| Operator | Description | Example |
-|----------|-------------|---------|
-| `__contains` | Contains substring (case-sensitive) | `?description__contains=widget` |
-| `__icontains` | Contains substring (case-insensitive) | `?description__icontains=WIDGET` |
-| `__startswith` | Starts with string | `?code__startswith=PROD` |
-| `__endswith` | Ends with string | `?code__endswith=001` |
-| `__gte` | Greater than or equal | `?create_ts__gte=2024-01-01` |
-| `__gt` | Greater than | `?qty__gt=100` |
-| `__lte` | Less than or equal | `?update_ts__lte=2024-12-31` |
-| `__lt` | Less than | `?qty__lt=10` |
-| `__in` | Value in list | `?status__in=ACTIVE,PENDING,HOLD` |
-| `__range` | Between two values | `?qty__range=10,100` |
-| `__isnull` | Is null or not null | `?deleted_ts__isnull=true` |
-| `__regex` | Regular expression match | `?code__regex=^PROD[0-9]+$` |
+| Operator       | Description                           | Example                           |
+| -------------- | ------------------------------------- | --------------------------------- |
+| `__contains`   | Contains substring (case-sensitive)   | `?description__contains=widget`   |
+| `__icontains`  | Contains substring (case-insensitive) | `?description__icontains=WIDGET`  |
+| `__startswith` | Starts with string                    | `?code__startswith=PROD`          |
+| `__endswith`   | Ends with string                      | `?code__endswith=001`             |
+| `__gte`        | Greater than or equal                 | `?create_ts__gte=2024-01-01`      |
+| `__gt`         | Greater than                          | `?qty__gt=100`                    |
+| `__lte`        | Less than or equal                    | `?update_ts__lte=2024-12-31`      |
+| `__lt`         | Less than                             | `?qty__lt=10`                     |
+| `__in`         | Value in list                         | `?status__in=ACTIVE,PENDING,HOLD` |
+| `__range`      | Between two values                    | `?qty__range=10,100`              |
+| `__isnull`     | Is null or not null                   | `?deleted_ts__isnull=true`        |
+| `__regex`      | Regular expression match              | `?code__regex=^PROD[0-9]+$`       |
 
 ### Negation
 
@@ -200,8 +200,8 @@ GET /entity/order_dtl?values_list=id:order_line_id,item_id__code:sku,ordered_qty
 ```json
 {
   "results": [
-    {"order_line_id": 1, "sku": "ITEM001", "quantity": 10},
-    {"order_line_id": 2, "sku": "ITEM002", "quantity": 5}
+    { "order_line_id": 1, "sku": "ITEM001", "quantity": 10 },
+    { "order_line_id": 2, "sku": "ITEM002", "quantity": 5 }
   ]
 }
 ```
@@ -505,12 +505,12 @@ Oracle WMS 25B introduces a new REST API for extracting data directly to cloud o
 
 ### Supported Cloud Storage Providers
 
-| Provider | Required Parameters |
-|----------|-------------------|
+| Provider                          | Required Parameters            |
+| --------------------------------- | ------------------------------ |
 | Oracle Cloud Infrastructure (OCI) | Namespace, Bucket Name, Region |
-| Google Cloud Storage (GCS) | Bucket URL |
-| Amazon S3 | User Role ARN, Bucket URL |
-| Azure Blob Storage | Tenant ID, Bucket URL |
+| Google Cloud Storage (GCS)        | Bucket URL                     |
+| Amazon S3                         | User Role ARN, Bucket URL      |
+| Azure Blob Storage                | Tenant ID, Bucket URL          |
 
 ### Configuration Requirements
 
@@ -633,10 +633,10 @@ task_status = get_entity_task_status("b3cae633-b893-4e40-aefe-c037b79c2b81")
 
 The Data Extract API supports three specific filters:
 
-| Filter | Description | Usage |
-|--------|-------------|-------|
-| `create_ts__gt` | Records created after timestamp | Cannot be used with `mod_ts__gt` |
-| `mod_ts__gt` | Records modified after timestamp | Cannot be used with `create_ts__gt` |
+| Filter          | Description                         | Usage                                  |
+| --------------- | ----------------------------------- | -------------------------------------- |
+| `create_ts__gt` | Records created after timestamp     | Cannot be used with `mod_ts__gt`       |
+| `mod_ts__gt`    | Records modified after timestamp    | Cannot be used with `create_ts__gt`    |
 | `status_id__lt` | Records with status less than value | Can be combined with timestamp filters |
 
 **Important Notes:**

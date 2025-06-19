@@ -35,12 +35,12 @@ The Guides Hub provides comprehensive development tutorials and integration patt
 
 ### **Guide Categories**
 
-| **Category** | **Focus Area** | **Count** | **Status** | **Key Features** |
-|--------------|----------------|-----------|------------|------------------|
-| **[Environment Setup](./environment-configuration.md)** | Development Environment | 3 guides | ✅ Production | Automated setup, dependency management |
-| **[Singer SDK Integration](./singer_sdk-integration.md)** | Data Integration | 3 guides | ✅ Production | Meltano plugins, data pipelines |
-| **[Schema Management](./schema-management-guide.md)** | Database Operations | 2 guides | ✅ Production | Schema versioning, migrations |
-| **[Development Tools](./cli-implementation.md)** | Automation & Quality | 4 guides | ✅ Production | CLI tools, type annotations, troubleshooting |
+| **Category**                                              | **Focus Area**          | **Count** | **Status**    | **Key Features**                             |
+| --------------------------------------------------------- | ----------------------- | --------- | ------------- | -------------------------------------------- |
+| **[Environment Setup](./environment-configuration.md)**   | Development Environment | 3 guides  | ✅ Production | Automated setup, dependency management       |
+| **[Singer SDK Integration](./singer_sdk-integration.md)** | Data Integration        | 3 guides  | ✅ Production | Meltano plugins, data pipelines              |
+| **[Schema Management](./schema-management-guide.md)**     | Database Operations     | 2 guides  | ✅ Production | Schema versioning, migrations                |
+| **[Development Tools](./cli-implementation.md)**          | Automation & Quality    | 4 guides  | ✅ Production | CLI tools, type annotations, troubleshooting |
 
 ### **🚀 Enterprise Guide Features**
 

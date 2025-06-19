@@ -71,10 +71,10 @@ entries = [
         }
     },
     {
-        "dn": "uid=user2,ou=people,dc=example,dc=com", 
+        "dn": "uid=user2,ou=people,dc=example,dc=com",
         "attributes": {
             "objectClass": ["inetOrgPerson"],
-            "cn": "User Two", 
+            "cn": "User Two",
             "sn": "Two",
             "uid": "user2"
         }
@@ -224,6 +224,6 @@ poetry run pytest --cov=oud_automation tests/
 ## Security Notes
 
 - Store credentials in environment variables
-- Use SSL/TLS for production connections  
+- Use SSL/TLS for production connections
 - Validate LDIF files before import
 - Implement proper error handling and logging

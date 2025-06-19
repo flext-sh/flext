@@ -71,7 +71,7 @@ plugins:
         user: username
         password: password
         service_name: ORCLPDB1
-        driver_type: thin  # Options: thin, thick
+        driver_type: thin # Options: thin, thick
 ```
 
 ### Configuration for Oracle Autonomous Database
@@ -99,16 +99,16 @@ plugins:
 ```yaml
 # Complete config.json
 {
-  "connection_type": "normal",  # normal, autonomous
+  "connection_type": "normal", # normal, autonomous
   "host": "localhost",
   "port": 1521,
   "user": "username",
   "password": "password",
   "service_name": "ORCLPDB1",
-  "sid": null,  # Alternative to service_name if needed
-  "driver_type": "thin",  # thin, thick
-  "wallet_location": null,  # For Autonomous DB
-  "wallet_password": null,  # For Autonomous DB
+  "sid": null, # Alternative to service_name if needed
+  "driver_type": "thin", # thin, thick
+  "wallet_location": null, # For Autonomous DB
+  "wallet_password": null, # For Autonomous DB
   "include_schemas": ["WMSSTAGE"],
   "exclude_schemas": ["SYS", "SYSTEM"],
   "default_replication_method": "INCREMENTAL",
@@ -116,40 +116,37 @@ plugins:
   "fetch_size": 10000,
   "connect_timeout": 60,
   "query_timeout": 3600,
-  "use_logminer": false,  # For CDC (experimental)
-  "tables": [
-    {
-      "table_name": "ORDER_HDR_STAGE",
-      "schema": "WMSSTAGE",
-      "replication_method": "INCREMENTAL",
-      "replication_key": "CREATED_AT"
-    },
-    {
-      "table_name": "ORDER_DTL_STAGE",
-      "schema": "WMSSTAGE",
-      "replication_method": "INCREMENTAL",
-      "replication_key": "CREATED_AT"
-    },
-    {
-      "table_name": "ALLOC_STAGE",
-      "schema": "WMSSTAGE",
-      "replication_method": "INCREMENTAL",
-      "replication_key": "ALLOC_TS"
-    }
-  ],
-  "views": [
-    {
-      "view_name": "VW_ORDER_COMPLETE",
-      "schema": "WMSSTAGE"
-    }
-  ],
-  "select_queries": [
-    {
-      "name": "allocation_summary",
-      "query": "SELECT order_nbr, SUM(alloc_qty) as total_allocated FROM WMSSTAGE.ALLOC_STAGE GROUP BY order_nbr",
-      "replication_method": "FULL_TABLE"
-    }
-  ]
+  "use_logminer": false, # For CDC (experimental)
+  "tables":
+    [
+      {
+        "table_name": "ORDER_HDR_STAGE",
+        "schema": "WMSSTAGE",
+        "replication_method": "INCREMENTAL",
+        "replication_key": "CREATED_AT",
+      },
+      {
+        "table_name": "ORDER_DTL_STAGE",
+        "schema": "WMSSTAGE",
+        "replication_method": "INCREMENTAL",
+        "replication_key": "CREATED_AT",
+      },
+      {
+        "table_name": "ALLOC_STAGE",
+        "schema": "WMSSTAGE",
+        "replication_method": "INCREMENTAL",
+        "replication_key": "ALLOC_TS",
+      },
+    ],
+  "views": [{ "view_name": "VW_ORDER_COMPLETE", "schema": "WMSSTAGE" }],
+  "select_queries":
+    [
+      {
+        "name": "allocation_summary",
+        "query": "SELECT order_nbr, SUM(alloc_qty) as total_allocated FROM WMSSTAGE.ALLOC_STAGE GROUP BY order_nbr",
+        "replication_method": "FULL_TABLE",
+      },
+    ],
 }
 ```
 
@@ -215,7 +212,7 @@ schedules:
   - name: oracle_daily_sync
     extractor: tap-oracle-db
     loader: target-postgres
-    interval: '@daily'
+    interval: "@daily"
     start_date: 2023-01-01
 ```
 
@@ -248,7 +245,7 @@ If encountering issues with the wallet:
 ```yaml
 config:
   connection_type: autonomous
-  service_name: dbname_low  # Use _low for integration workloads
+  service_name: dbname_low # Use _low for integration workloads
 ```
 
 ### Performance Issues
@@ -262,7 +259,7 @@ For very large tables:
 ```yaml
 config:
   batch_size: 100000
-  fetch_size: 20000  # Controls data blocks in memory
+  fetch_size: 20000 # Controls data blocks in memory
 ```
 
 ### Issues with Special Characters

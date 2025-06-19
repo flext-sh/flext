@@ -59,35 +59,35 @@ The heart of the FLX Framework implementing pure domain logic:
 # Real implementation from /flx/src/flx/core/entities.py
 class Entity(DomainObject):
     """Base entity with identity-based equality and lifecycle management."""
-    
+
     id: UUID = Field(default_factory=uuid4, frozen=True)
     created_at: datetime = Field(default_factory=lambda: datetime.now(UTC), frozen=True)
     updated_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
     version: int = Field(default=1, description="Optimistic locking version")
-    
+
     def __eq__(self, other: object) -> bool:
         """Identity-based equality for entities."""
         if not isinstance(other, Entity):
             return False
         return self.id == other.id
-    
+
     def __hash__(self) -> int:
         """Hash based on identity."""
         return hash(self.id)
-    
+
     def touch(self) -> "Entity":
         """Update timestamp for entity modification."""
         return self.model_copy(update={"updated_at": datetime.now(UTC)})
 
 class AggregateRoot(Entity):
     """Aggregate root with domain event collection."""
-    
+
     _events: List[DomainEvent] = Field(default_factory=list, exclude=True)
-    
+
     def add_event(self, event: DomainEvent) -> None:
         """Add domain event to collection."""
         self._events.append(event)
-    
+
     def get_events(self) -> List[DomainEvent]:
         """Get and clear domain events."""
         events = self._events.copy()
@@ -101,7 +101,7 @@ class AggregateRoot(Entity):
 # Real implementation from /flx/src/flx/core/value_objects.py
 class ValueObject(DomainObject):
     """Base value object with value-based equality."""
-    
+
     def __eq__(self, other: object) -> bool:
         """Value-based equality for value objects."""
         if not isinstance(other, ValueObject):
@@ -110,10 +110,10 @@ class ValueObject(DomainObject):
 
 class Money(ValueObject):
     """Production-ready money value object."""
-    
+
     amount: Decimal = Field(..., decimal_places=2)
     currency: str = Field(..., pattern=r"^[A-Z]{3}$")
-    
+
     @field_validator("amount")
     @classmethod
     def validate_amount(cls, v: Decimal) -> Decimal:
@@ -121,7 +121,7 @@ class Money(ValueObject):
         if v < 0:
             raise ValueError("Amount cannot be negative")
         return v.quantize(Decimal("0.01"))
-    
+
     def add(self, other: "Money") -> "Money":
         """Add money values with currency validation."""
         if self.currency != other.currency:
@@ -135,22 +135,22 @@ class Money(ValueObject):
 # Real implementation from /flx/src/flx/core/events.py
 class DomainEvent(DomainObject):
     """Base domain event with correlation tracking."""
-    
+
     event_id: UUID = Field(default_factory=uuid4, frozen=True)
     event_type: str = Field(..., frozen=True)
     aggregate_id: UUID = Field(..., frozen=True)
     occurred_at: datetime = Field(default_factory=lambda: datetime.now(UTC), frozen=True)
     correlation_id: Optional[UUID] = Field(default=None, frozen=True)
     causation_id: Optional[UUID] = Field(default=None, frozen=True)
-    
+
 class FlxDomainEvent(DomainEvent):
     """Enhanced domain event with multi-tenancy and routing."""
-    
+
     tenant_id: Optional[str] = Field(default=None, frozen=True)
     source_system: str = Field(..., frozen=True)
     event_version: int = Field(default=1, frozen=True)
     metadata: Dict[str, Any] = Field(default_factory=dict, frozen=True)
-    
+
     def with_correlation(self, correlation_id: UUID) -> "FlxDomainEvent":
         """Create event with correlation ID."""
         return self.model_copy(update={"correlation_id": correlation_id})
@@ -166,39 +166,39 @@ Orchestrates domain objects and implements use cases:
 # Real implementation from /flx/src/flx/application/
 class ApplicationService:
     """Base application service with domain integration."""
-    
+
     def __init__(self, logger: Optional[logging.Logger] = None):
         self._logger = logger or logging.getLogger(self.__class__.__name__)
-    
+
     async def execute_with_events(
         self,
         operation: Callable[[], Awaitable[T]],
         event_publisher: Optional[EventPublisher] = None
     ) -> T:
         """Execute operation and publish collected events."""
-        
+
         result = await operation()
-        
+
         # Collect and publish domain events
         if event_publisher and hasattr(result, 'get_events'):
             events = result.get_events()
             for event in events:
                 await event_publisher.publish(event)
-                
+
         return result
 
 class CommandService(ApplicationService):
     """Service for handling write operations."""
-    
+
     async def handle_command(self, command: Command) -> CommandResult:
         """Handle domain command with validation and events."""
-        
+
         # Validate command
         self._validate_command(command)
-        
+
         # Execute command
         result = await self._execute_command(command)
-        
+
         # Log and return
         self._logger.info(f"Command executed: {command.__class__.__name__}")
         return result
@@ -210,28 +210,28 @@ class CommandService(ApplicationService):
 # Real implementation pattern from /flx/src/flx/application/
 class QueryService(ApplicationService):
     """Service for handling read operations with caching."""
-    
+
     def __init__(self, cache: Optional[CachePort] = None):
         super().__init__()
         self._cache = cache
-    
+
     async def execute_query(self, query: Query) -> QueryResult:
         """Execute query with optional caching."""
-        
+
         # Check cache first
         if self._cache:
             cache_key = self._generate_cache_key(query)
             cached_result = await self._cache.get(cache_key)
             if cached_result:
                 return cached_result
-        
+
         # Execute query
         result = await self._execute_query(query)
-        
+
         # Cache result
         if self._cache and result.cacheable:
             await self._cache.set(cache_key, result, ttl=result.cache_ttl)
-            
+
         return result
 ```
 
@@ -248,11 +248,11 @@ from typing import Protocol, runtime_checkable
 @runtime_checkable
 class CommandPort(Protocol):
     """Port for executing domain commands."""
-    
+
     async def execute(self, command: Command) -> CommandResult:
         """Execute a domain command."""
         ...
-    
+
     async def execute_batch(self, commands: list[Command]) -> list[CommandResult]:
         """Execute multiple commands in batch."""
         ...
@@ -260,7 +260,7 @@ class CommandPort(Protocol):
 @runtime_checkable
 class ApiPort(Protocol):
     """Port for HTTP API operations."""
-    
+
     async def handle_request(
         self,
         method: str,
@@ -280,15 +280,15 @@ class ApiPort(Protocol):
 @runtime_checkable
 class RepositoryPort(Protocol, Generic[T]):
     """Generic repository port for entity persistence."""
-    
+
     async def save(self, entity: T) -> None:
         """Persist an entity."""
         ...
-    
+
     async def find_by_id(self, entity_id: UUID) -> Optional[T]:
         """Find entity by ID."""
         ...
-    
+
     async def find_all(self) -> list[T]:
         """Retrieve all entities."""
         ...
@@ -296,11 +296,11 @@ class RepositoryPort(Protocol, Generic[T]):
 @runtime_checkable
 class EventPublisherPort(Protocol):
     """Port for publishing domain events."""
-    
+
     async def publish(self, event: DomainEvent) -> None:
         """Publish a single event."""
         ...
-    
+
     async def publish_batch(self, events: list[DomainEvent]) -> None:
         """Publish multiple events atomically."""
         ...
@@ -323,37 +323,37 @@ class BaseAdapter(
     AsyncContextMixin
 ):
     """Base adapter with comprehensive functionality."""
-    
+
     def __init__(self):
         super().__init__()
         self._connected = False
         self._metrics = AdapterMetrics()
         self._circuit_breaker = None
-        
+
     async def connect(self) -> None:
         """Public connect method with error handling."""
         if self._connected:
             return
-            
+
         try:
             await self._connect()
             self._connected = True
             self._metrics.record_connection()
-            
+
         except Exception as e:
             self._metrics.record_error(e)
             raise AdapterConnectionError(f"Failed to connect: {e}")
-    
+
     @abstractmethod
     async def _connect(self) -> None:
         """Subclass implements actual connection logic."""
         pass
-    
+
     async def __aenter__(self):
         """Async context manager entry."""
         await self.connect()
         return self
-        
+
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         """Async context manager exit with cleanup."""
         await self.disconnect()
@@ -365,12 +365,12 @@ class BaseAdapter(
 # Real implementation patterns from /flx/src/flx/adapters/
 class DatabaseAdapter(BaseAdapter, RepositoryPort[T]):
     """Database adapter implementing repository port."""
-    
+
     def __init__(self, config: DatabaseConfig):
         super().__init__()
         self._config = config
         self._connection_pool = None
-        
+
     async def _connect(self) -> None:
         """Initialize database connection pool."""
         self._connection_pool = create_pool(
@@ -378,11 +378,11 @@ class DatabaseAdapter(BaseAdapter, RepositoryPort[T]):
             min_size=self._config.min_connections,
             max_size=self._config.max_connections
         )
-        
+
         # Verify connection
         async with self._connection_pool.acquire() as conn:
             await conn.execute("SELECT 1")
-    
+
     async def save(self, entity: T) -> None:
         """Save entity with optimistic locking."""
         async with self._connection_pool.acquire() as conn:
@@ -390,7 +390,7 @@ class DatabaseAdapter(BaseAdapter, RepositoryPort[T]):
             current_version = await self._get_current_version(conn, entity.id)
             if current_version != entity.version:
                 raise OptimisticLockingError(f"Entity version mismatch")
-            
+
             # Update with incremented version
             await self._update_entity(conn, entity.increment_version())
 ```
@@ -405,7 +405,7 @@ Comprehensive infrastructure services:
 # Real implementation from /flx/src/flx/infra/config/
 class HierarchicalConfig(BaseModel):
     """Hierarchical configuration with multiple sources."""
-    
+
     @classmethod
     def load(
         cls,
@@ -414,23 +414,23 @@ class HierarchicalConfig(BaseModel):
         environment: str = "development"
     ) -> "HierarchicalConfig":
         """Load configuration from multiple sources."""
-        
+
         config_data = {}
-        
+
         # 1. Load default configuration
         config_data.update(cls._load_defaults())
-        
+
         # 2. Load environment-specific configuration
         config_data.update(cls._load_environment_config(environment))
-        
+
         # 3. Load configuration files
         if config_files:
             for config_file in config_files:
                 config_data.update(cls._load_config_file(config_file))
-        
+
         # 4. Load environment variables
         config_data.update(cls._load_env_vars(env_prefix))
-        
+
         return cls(**config_data)
 ```
 
@@ -440,29 +440,29 @@ class HierarchicalConfig(BaseModel):
 # Real implementation from /flx/src/flx/infra/services/
 class ServiceRegistry:
     """Dependency injection and service discovery."""
-    
+
     def __init__(self):
         self._services: dict[type, Any] = {}
         self._factories: dict[type, Callable] = {}
-        
+
     def register_singleton(self, service_type: type[T], instance: T) -> None:
         """Register singleton service instance."""
         self._services[service_type] = instance
-        
+
     def register_factory(self, service_type: type[T], factory: Callable[[], T]) -> None:
         """Register service factory for lazy instantiation."""
         self._factories[service_type] = factory
-        
+
     def resolve(self, service_type: type[T]) -> T:
         """Resolve service with dependencies."""
         if service_type in self._services:
             return self._services[service_type]
-            
+
         if service_type in self._factories:
             instance = self._factories[service_type]()
             self._services[service_type] = instance
             return instance
-            
+
         raise ServiceNotFoundError(f"Service {service_type} not registered")
 ```
 
@@ -476,7 +476,7 @@ class ServiceRegistry:
 # Real implementation from /flx/src/flx/core/
 class FlxException(Exception):
     """Base exception with structured error information."""
-    
+
     def __init__(
         self,
         message: str,
@@ -490,11 +490,11 @@ class FlxException(Exception):
         self.details = details or {}
         self.cause = cause
         self.occurred_at = datetime.now(UTC)
-        
+
 class DomainError(FlxException):
     """Domain layer exceptions."""
     pass
-    
+
 class InfrastructureError(FlxException):
     """Infrastructure layer exceptions."""
     pass
@@ -506,32 +506,32 @@ class InfrastructureError(FlxException):
 # Real implementation from /flx/src/flx/infra/observability/
 class ObservabilityMixin:
     """Mixin for comprehensive observability."""
-    
+
     def __init__(self):
         self._metrics = MetricsCollector()
         self._tracer = TracingService()
         self._health_checker = HealthChecker()
-        
+
     async def execute_with_observability(
         self,
         operation_name: str,
         operation: Callable[[], Awaitable[T]]
     ) -> T:
         """Execute operation with full observability."""
-        
+
         with self._tracer.start_span(operation_name) as span:
             start_time = time.time()
-            
+
             try:
                 result = await operation()
-                
+
                 # Record success metrics
                 duration = time.time() - start_time
                 self._metrics.record_operation_success(operation_name, duration)
                 span.set_tag("success", True)
-                
+
                 return result
-                
+
             except Exception as e:
                 # Record error metrics
                 self._metrics.record_operation_error(operation_name, str(e))
@@ -546,27 +546,27 @@ class ObservabilityMixin:
 # Real implementation from /flx/src/flx/testing/
 class DeclarativeTestEngine:
     """Production-grade test framework."""
-    
+
     async def run_test_suite(self, test_definitions: list[TestDefinition]) -> TestResults:
         """Run comprehensive test suite."""
-        
+
         results = TestResults()
-        
+
         for test_def in test_definitions:
             try:
                 # Setup test environment
                 await self._setup_test_environment(test_def)
-                
+
                 # Execute test
                 test_result = await self._execute_test(test_def)
                 results.add_result(test_result)
-                
+
                 # Cleanup
                 await self._cleanup_test_environment(test_def)
-                
+
             except Exception as e:
                 results.add_error(test_def.name, str(e))
-                
+
         return results
 ```
 

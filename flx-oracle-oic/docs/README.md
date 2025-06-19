@@ -1,7 +1,6 @@
 # tap-oic Documentation
 
-> **Oracle Integration Cloud (OIC) Singer Tap**
-> **Version**: 2.0
+> **Oracle Integration Cloud (OIC) Singer Tap** > **Version**: 2.0
 > **Last Updated**: June 15, 2025
 
 ## Overview
@@ -15,23 +14,24 @@ tap-oic is a Singer tap for Oracle Integration Cloud Generation 3 that provides 
 
 ## Quick Links
 
-| Document | Description |
-|----------|-------------|
-| [OIC Capabilities](OIC_CAPABILITIES.md) | Complete guide to OIC Gen3 capabilities and limitations |
-| [API Reference](API_REFERENCE.md) | Full REST API documentation with examples |
-| [Installation & Setup](INSTALLATION_AND_SETUP.md) | Getting started guide |
-| [Implementation Guide](IMPLEMENTATION_GUIDE.md) | Architecture and best practices |
-| [Integration Management](INTEGRATION_GENERATION.md) | Managing existing integrations and artifacts |
-| [Meltano Integration](MELTANO_INTEGRATION.md) | Using tap-oic with Meltano |
-| [Monitoring & Operations](MONITORING_AND_OPERATIONS.md) | Performance and troubleshooting |
-| [Development Guide](DEVELOPMENT_GUIDE.md) | Contributing to tap-oic |
-| [Examples](EXAMPLES.md) | Code examples and use cases |
-| [FAQ](FAQ.md) | Frequently asked questions |
-| [Changelog](CHANGELOG.md) | Version history and updates |
+| Document                                                | Description                                             |
+| ------------------------------------------------------- | ------------------------------------------------------- |
+| [OIC Capabilities](OIC_CAPABILITIES.md)                 | Complete guide to OIC Gen3 capabilities and limitations |
+| [API Reference](API_REFERENCE.md)                       | Full REST API documentation with examples               |
+| [Installation & Setup](INSTALLATION_AND_SETUP.md)       | Getting started guide                                   |
+| [Implementation Guide](IMPLEMENTATION_GUIDE.md)         | Architecture and best practices                         |
+| [Integration Management](INTEGRATION_GENERATION.md)     | Managing existing integrations and artifacts            |
+| [Meltano Integration](MELTANO_INTEGRATION.md)           | Using tap-oic with Meltano                              |
+| [Monitoring & Operations](MONITORING_AND_OPERATIONS.md) | Performance and troubleshooting                         |
+| [Development Guide](DEVELOPMENT_GUIDE.md)               | Contributing to tap-oic                                 |
+| [Examples](EXAMPLES.md)                                 | Code examples and use cases                             |
+| [FAQ](FAQ.md)                                           | Frequently asked questions                              |
+| [Changelog](CHANGELOG.md)                               | Version history and updates                             |
 
 ## Key Features
 
 ### 1. Data Extraction (Singer Tap Capabilities)
+
 - Extract integration metadata and configurations
 - Monitor integration execution status
 - Retrieve performance metrics and statistics
@@ -40,6 +40,7 @@ tap-oic is a Singer tap for Oracle Integration Cloud Generation 3 that provides 
 - Download integration artifacts (.iar files)
 
 ### 2. Monitoring and Analytics
+
 - Real-time integration status monitoring
 - Historical execution data analysis
 - Performance metrics collection
@@ -47,6 +48,7 @@ tap-oic is a Singer tap for Oracle Integration Cloud Generation 3 that provides 
 - Success rate calculations
 
 ### 3. Configuration Management
+
 - Export integration configurations
 - Retrieve connection properties
 - Access lookup tables and libraries

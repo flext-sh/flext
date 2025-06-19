@@ -29,18 +29,22 @@ class ExampleResourceService:
 
         # Register command handlers
         self.command_bus.register_command_handler(
-            flx_async.FlxCreateResourceCommand, self.handle_create_resource,  # type: ignore[attr-defined]
+            flx_async.FlxCreateResourceCommand,
+            self.handle_create_resource,  # type: ignore[attr-defined]
         )
         self.command_bus.register_command_handler(
-            flx_async.FlxProcessDataCommand, self.handle_process_data,  # type: ignore[attr-defined]
+            flx_async.FlxProcessDataCommand,
+            self.handle_process_data,  # type: ignore[attr-defined]
         )
 
         # Register event handlers
         self.command_bus.register_event_handler(
-            flx_async.FlxResourceCreatedEvent, self.handle_resource_created_event,  # type: ignore[attr-defined]
+            flx_async.FlxResourceCreatedEvent,
+            self.handle_resource_created_event,  # type: ignore[attr-defined]
         )
         self.command_bus.register_event_handler(
-            flx_async.FlxDataProcessedEvent, self.handle_data_processed_event,  # type: ignore[attr-defined]
+            flx_async.FlxDataProcessedEvent,
+            self.handle_data_processed_event,  # type: ignore[attr-defined]
         )
 
     async def handle_create_resource(self, command: Any) -> dict[str, Any]:

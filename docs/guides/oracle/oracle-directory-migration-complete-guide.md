@@ -29,7 +29,7 @@ This document consolidates all Oracle Internet Directory (OID) to Oracle Unified
 Oracle OID to OUD migration is a critical infrastructure transformation that requires:
 
 - **Zero downtime** migration strategy
-- **Complete data integrity** preservation  
+- **Complete data integrity** preservation
 - **Enterprise-grade security** throughout the process
 - **Comprehensive validation** at every step
 - **Automated rollback capabilities**

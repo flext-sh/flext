@@ -51,7 +51,9 @@ def flx_run_coverage_analysis(module_path: Path) -> dict[str, Any]:
             "-q",
         ]
 
-        result = subprocess.run(cmd, capture_output=True, text=True, cwd=module_path, check=False)
+        result = subprocess.run(
+            cmd, capture_output=True, text=True, cwd=module_path, check=False
+        )
 
         # Ler relatório JSON se existir
         coverage_file = module_path / "coverage.json"
@@ -63,10 +65,12 @@ def flx_run_coverage_analysis(module_path: Path) -> dict[str, Any]:
             return {
                 "module": module_path.name,
                 "coverage_percent": coverage_data.get("totals", {}).get(
-                    "percent_covered", 0,
+                    "percent_covered",
+                    0,
                 ),
                 "lines_covered": coverage_data.get("totals", {}).get(
-                    "covered_lines", 0,
+                    "covered_lines",
+                    0,
                 ),
                 "lines_total": coverage_data.get("totals", {}).get("num_statements", 0),
                 "files_analyzed": len(coverage_data.get("files", {})),
@@ -283,7 +287,9 @@ Gerado em: {datetime.now().strftime("%d/%m/%Y às %H:%M:%S")}
 """
 
     for module_data in sorted(
-        results, key=lambda x: x.get("coverage_percent", 0), reverse=True,
+        results,
+        key=lambda x: x.get("coverage_percent", 0),
+        reverse=True,
     ):
         coverage = module_data.get("coverage_percent", 0)
         has_tests = module_data.get("has_tests", False)
@@ -302,12 +308,12 @@ Gerado em: {datetime.now().strftime("%d/%m/%Y às %H:%M:%S")}
             status_icon = "🔴"
             status_text = "CRÍTICO"
 
-        report += f"""### {status_icon} {module_data['module']} - {status_text}
+        report += f"""### {status_icon} {module_data["module"]} - {status_text}
 
 - **Cobertura:** {coverage:.2f}%
-- **Linhas Cobertas:** {module_data.get('lines_covered', 0):,} / {module_data.get('lines_total', 0):,}
-- **Arquivos Analisados:** {module_data.get('files_analyzed', 0)}
-- **Possui Testes:** {'✅ Sim' if has_tests else '❌ Não'}
+- **Linhas Cobertas:** {module_data.get("lines_covered", 0):,} / {module_data.get("lines_total", 0):,}
+- **Arquivos Analisados:** {module_data.get("files_analyzed", 0)}
+- **Possui Testes:** {"✅ Sim" if has_tests else "❌ Não"}
 """
 
         if module_data.get("error"):
@@ -412,7 +418,11 @@ def main(workspace: Path, output: Path, output_format: str) -> None:
         status = (
             "✅"
             if coverage >= 80
-            else "🟡" if coverage >= 60 else "⚠️" if coverage >= 30 else "🔴"
+            else "🟡"
+            if coverage >= 60
+            else "⚠️"
+            if coverage >= 30
+            else "🔴"
         )
         print(f"   {status} {coverage:.1f}% cobertura")
 

@@ -35,12 +35,12 @@ The Meltano Plugins Hub provides a comprehensive ecosystem of data integration p
 
 ### **Plugin Categories**
 
-| **Category** | **Function** | **Count** | **Status** | **Key Features** |
-|--------------|--------------|-----------|------------|------------------|
-| **[Extractors](./extractors/index.md)** | Data source extraction | 3 plugins | ✅ Production | Oracle ADB, OIC, WMS extraction |
-| **[Loaders](./loaders/index.md)** | Data destination loading | 3 plugins | ✅ Production | Oracle ADB, OIC targets |
-| **[Transformers](./transformers/index.md)** | Data transformation | 1 plugin | ✅ Production | OIC data transformation |
-| **[Utilities](./utilities/index.md)** | Orchestration & automation | 1 plugin | ✅ Production | OIC workflow orchestration |
+| **Category**                                | **Function**               | **Count** | **Status**    | **Key Features**                |
+| ------------------------------------------- | -------------------------- | --------- | ------------- | ------------------------------- |
+| **[Extractors](./extractors/index.md)**     | Data source extraction     | 3 plugins | ✅ Production | Oracle ADB, OIC, WMS extraction |
+| **[Loaders](./loaders/index.md)**           | Data destination loading   | 3 plugins | ✅ Production | Oracle ADB, OIC targets         |
+| **[Transformers](./transformers/index.md)** | Data transformation        | 1 plugin  | ✅ Production | OIC data transformation         |
+| **[Utilities](./utilities/index.md)**       | Orchestration & automation | 1 plugin  | ✅ Production | OIC workflow orchestration      |
 
 ### **🚀 Enterprise Features**
 

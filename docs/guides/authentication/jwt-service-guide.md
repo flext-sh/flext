@@ -239,16 +239,16 @@ The JWT service automatically:
 
 ### FlxJwtServiceConfig
 
-| Field | Type | Description | Required |
-|-------|------|-------------|----------|
-| `client_id` | str | OAuth2 client ID | Yes |
-| `client_secret` | SecretStr | OAuth2 client secret | Yes |
-| `token_url` | str | OAuth2 token endpoint URL | Yes |
-| `scope` | str \| None | OAuth2 scope | No |
-| `audience` | str \| None | OAuth2 audience | No |
-| `grant_type` | str | OAuth2 grant type (default: "client_credentials") | No |
-| `token_expiry_buffer` | int | Buffer in seconds before token expiry to refresh (default: 300) | No |
-| `service_name` | str | Service name for identification | No |
+| Field                 | Type        | Description                                                     | Required |
+| --------------------- | ----------- | --------------------------------------------------------------- | -------- |
+| `client_id`           | str         | OAuth2 client ID                                                | Yes      |
+| `client_secret`       | SecretStr   | OAuth2 client secret                                            | Yes      |
+| `token_url`           | str         | OAuth2 token endpoint URL                                       | Yes      |
+| `scope`               | str \| None | OAuth2 scope                                                    | No       |
+| `audience`            | str \| None | OAuth2 audience                                                 | No       |
+| `grant_type`          | str         | OAuth2 grant type (default: "client_credentials")               | No       |
+| `token_expiry_buffer` | int         | Buffer in seconds before token expiry to refresh (default: 300) | No       |
+| `service_name`        | str         | Service name for identification                                 | No       |
 
 ### Environment Variables for Oracle OIC
 
@@ -305,7 +305,7 @@ async def monitor_jwt_service():
         if not is_healthy:
             logger.warning("JWT service unhealthy")
             # Alert or take corrective action
-        
+
         await asyncio.sleep(60)  # Check every minute
 ```
 
@@ -356,7 +356,7 @@ async def test_jwt_service_creation():
         client_secret="test-secret",
         token_url="https://test.auth.com/token"
     )
-    
+
     service_info = jwt_service.get_service_info()
     assert service_info["client_id"] == "test-client"
     assert service_info["service_name"] == "generic-jwt"
@@ -368,11 +368,11 @@ async def test_jwt_service_creation():
 @pytest.mark.asyncio
 async def test_oic_integration(oic_test_config):
     jwt_service = FlxJwtService.create_for_oracle_oic(**oic_test_config)
-    
+
     # Test health check
     is_healthy = await jwt_service.health_check()
     assert is_healthy
-    
+
     # Test token acquisition
     token = await jwt_service.get_valid_token()
     assert token
@@ -448,11 +448,13 @@ token = await jwt_service.get_valid_token()
 ### Common Issues
 
 1. **Authentication Failed**
+
    - Check client credentials
    - Verify token URL is accessible
    - Confirm OAuth2 scope is correct
 
 2. **Token Refresh Errors**
+
    - Check network connectivity
    - Verify client credentials haven't expired
    - Review OAuth2 scope permissions

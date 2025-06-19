@@ -18,11 +18,11 @@
 
 ### **Core Topics**
 
-| **Topic** | **Function** | **Audience** | **Status** |
-|-----------|--------------|--------------|------------|
-| [Strategies](./strategies/index.md) | Deployment methodologies | DevOps engineers | ✅ Complete |
+| **Topic**                                   | **Function**                | **Audience**       | **Status**  |
+| ------------------------------------------- | --------------------------- | ------------------ | ----------- |
+| [Strategies](./strategies/index.md)         | Deployment methodologies    | DevOps engineers   | ✅ Complete |
 | [Infrastructure](./infrastructure/index.md) | Infrastructure provisioning | Platform engineers | ✅ Complete |
-| [Projects](./projects/index.md) | Project-specific deployment | Project teams | ✅ Complete |
+| [Projects](./projects/index.md)             | Project-specific deployment | Project teams      | ✅ Complete |
 
 ### **📋 Learning Path**
 
@@ -58,7 +58,7 @@
 ## 📊 **Section Metrics**
 
 - **Documents**: 8 files
-- **Completeness**: 90%  
+- **Completeness**: 90%
 - **Last Updated**: June 11, 2025
 
 ---

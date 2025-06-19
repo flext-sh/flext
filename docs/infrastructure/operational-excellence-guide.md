@@ -55,28 +55,28 @@ Operational excellence in FLX infrastructure focuses on **reliability**, **obser
 # Production metrics collection
 class InfrastructureMetrics:
     """Golden signals for infrastructure services"""
-    
+
     # Latency metrics
     request_duration = Histogram(
         "flx_request_duration_seconds",
         "Request processing time",
         ["service", "method", "endpoint"]
     )
-    
+
     # Traffic metrics
     request_rate = Counter(
         "flx_requests_total",
         "Total requests processed",
         ["service", "method", "status_code"]
     )
-    
+
     # Error metrics
     error_rate = Counter(
         "flx_errors_total",
         "Total errors encountered",
         ["service", "error_type", "severity"]
     )
-    
+
     # Saturation metrics
     resource_utilization = Gauge(
         "flx_resource_utilization_percent",
@@ -95,13 +95,13 @@ class DatabaseMetrics:
         "Active database connections",
         ["database", "pool"]
     )
-    
+
     query_execution_time = Histogram(
         "flx_db_query_duration_seconds",
         "Database query execution time",
         ["database", "operation"]
     )
-    
+
     transaction_duration = Histogram(
         "flx_db_transaction_duration_seconds",
         "Database transaction duration",
@@ -115,7 +115,7 @@ class CacheMetrics:
         "Cache operations",
         ["cache", "operation", "result"]  # result: hit, miss
     )
-    
+
     cache_memory_usage = Gauge(
         "flx_cache_memory_bytes",
         "Cache memory usage in bytes",
@@ -131,10 +131,10 @@ class CacheMetrics:
 # Structured logging with correlation
 class OperationalLogger:
     """Production logging with operational context"""
-    
+
     def __init__(self):
         self.logger = structlog.get_logger()
-    
+
     def log_request(self, correlation_id: str, operation: str, **context):
         """Log request with full operational context"""
         self.logger.info(
@@ -144,7 +144,7 @@ class OperationalLogger:
             timestamp=datetime.utcnow().isoformat(),
             **context
         )
-    
+
     def log_performance(self, correlation_id: str, duration: float, **metrics):
         """Log performance metrics with context"""
         self.logger.info(
@@ -154,7 +154,7 @@ class OperationalLogger:
             performance_tier=self._classify_performance(duration),
             **metrics
         )
-    
+
     def log_error(self, correlation_id: str, error: Exception, **context):
         """Log errors with full context for troubleshooting"""
         self.logger.error(
@@ -175,7 +175,7 @@ class OperationalLogger:
 # Comprehensive health check system
 class HealthMonitor:
     """Production health monitoring with multiple levels"""
-    
+
     async def check_system_health(self) -> SystemHealth:
         """Aggregate health across all components"""
         checks = {
@@ -184,29 +184,29 @@ class HealthMonitor:
             "external_apis": await self._check_external_apis(),
             "message_bus": await self._check_message_bus_health()
         }
-        
+
         overall_status = self._determine_overall_health(checks)
-        
+
         return SystemHealth(
             status=overall_status,
             components=checks,
             timestamp=datetime.utcnow(),
             version="1.0.0"
         )
-    
+
     async def _check_database_health(self) -> ComponentHealth:
         """Check database connectivity and performance"""
         try:
             start_time = time.time()
-            
+
             # Test basic connectivity
             await self.db_adapter.execute_query("SELECT 1 FROM dual")
-            
+
             # Test connection pool health
             pool_stats = await self.db_adapter.get_pool_stats()
-            
+
             duration = time.time() - start_time
-            
+
             return ComponentHealth(
                 status="healthy" if duration < 0.1 else "degraded",
                 response_time_ms=duration * 1000,
@@ -235,7 +235,7 @@ class HealthMonitor:
 # Circuit breaker for external service calls
 class CircuitBreaker:
     """Production circuit breaker with configurable thresholds"""
-    
+
     def __init__(
         self,
         failure_threshold: int = 5,
@@ -245,11 +245,11 @@ class CircuitBreaker:
         self.failure_threshold = failure_threshold
         self.recovery_timeout = recovery_timeout
         self.expected_exception = expected_exception
-        
+
         self._failure_count = 0
         self._last_failure_time = None
         self._state = "closed"  # closed, open, half_open
-    
+
     async def call(self, func: Callable, *args, **kwargs):
         """Execute function with circuit breaker protection"""
         match self._state:
@@ -258,7 +258,7 @@ class CircuitBreaker:
                     self._state = "half_open"
                 else:
                     raise CircuitBreakerOpenError("Circuit breaker is open")
-            
+
             case "half_open":
                 try:
                     result = await func(*args, **kwargs)
@@ -267,7 +267,7 @@ class CircuitBreaker:
                 except self.expected_exception as e:
                     self._on_failure()
                     raise
-            
+
             case "closed":
                 try:
                     result = await func(*args, **kwargs)
@@ -276,24 +276,24 @@ class CircuitBreaker:
                 except self.expected_exception as e:
                     self._on_failure()
                     raise
-    
+
     def _should_attempt_reset(self) -> bool:
         """Check if enough time has passed to attempt reset"""
         return (
             self._last_failure_time and
             time.time() - self._last_failure_time >= self.recovery_timeout
         )
-    
+
     def _on_success(self):
         """Handle successful execution"""
         self._failure_count = 0
         self._state = "closed"
-    
+
     def _on_failure(self):
         """Handle failed execution"""
         self._failure_count += 1
         self._last_failure_time = time.time()
-        
+
         if self._failure_count >= self.failure_threshold:
             self._state = "open"
 ```
@@ -306,7 +306,7 @@ class CircuitBreaker:
 # Production retry strategy
 class RetryStrategy:
     """Configurable retry strategy with backoff"""
-    
+
     def __init__(
         self,
         max_attempts: int = 3,
@@ -320,20 +320,20 @@ class RetryStrategy:
         self.max_delay = max_delay
         self.backoff_factor = backoff_factor
         self.jitter = jitter
-    
+
     async def execute(self, func: Callable, *args, **kwargs):
         """Execute function with retry logic"""
         last_exception = None
-        
+
         for attempt in range(self.max_attempts):
             try:
                 return await func(*args, **kwargs)
             except Exception as e:
                 last_exception = e
-                
+
                 if attempt == self.max_attempts - 1:
                     break
-                
+
                 delay = self._calculate_delay(attempt)
                 logger.warning(
                     "retry_attempt",
@@ -342,24 +342,24 @@ class RetryStrategy:
                     delay_seconds=delay,
                     error=str(e)
                 )
-                
+
                 await asyncio.sleep(delay)
-        
+
         raise RetryExhaustedError(
             f"Failed after {self.max_attempts} attempts"
         ) from last_exception
-    
+
     def _calculate_delay(self, attempt: int) -> float:
         """Calculate delay with exponential backoff and jitter"""
         delay = min(
             self.base_delay * (self.backoff_factor ** attempt),
             self.max_delay
         )
-        
+
         if self.jitter:
             # Add random jitter to prevent thundering herd
             delay *= (0.5 + random.random() * 0.5)
-        
+
         return delay
 ```
 
@@ -371,11 +371,11 @@ class RetryStrategy:
 # Graceful degradation implementation
 class GracefulDegradation:
     """Service degradation for partial failures"""
-    
+
     def __init__(self, service_registry: ServiceRegistry):
         self.service_registry = service_registry
         self.degradation_rules = self._load_degradation_rules()
-    
+
     async def execute_with_degradation(
         self,
         primary_service: str,
@@ -384,7 +384,7 @@ class GracefulDegradation:
         **kwargs
     ):
         """Execute operation with fallback services"""
-        
+
         # Try primary service first
         try:
             service = await self.service_registry.get_service(primary_service)
@@ -395,31 +395,31 @@ class GracefulDegradation:
                 service=primary_service,
                 operation=operation
             )
-        
+
         # Try fallback services
         for fallback_service in fallback_services:
             try:
                 service = await self.service_registry.get_service(fallback_service)
                 result = await self._execute_operation(service, operation, **kwargs)
-                
+
                 logger.info(
                     "fallback_service_success",
                     primary_service=primary_service,
                     fallback_service=fallback_service,
                     operation=operation
                 )
-                
+
                 return result
             except ServiceUnavailableError:
                 continue
-        
+
         # All services failed - return degraded response
         return self._get_degraded_response(operation, **kwargs)
-    
+
     def _get_degraded_response(self, operation: str, **kwargs):
         """Return degraded response when all services fail"""
         degradation_rule = self.degradation_rules.get(operation)
-        
+
         if degradation_rule:
             return degradation_rule.get_fallback_response(**kwargs)
         else:
@@ -438,7 +438,7 @@ class GracefulDegradation:
 # Production connection pool optimization
 class OptimizedConnectionPool:
     """High-performance connection pool with monitoring"""
-    
+
     def __init__(
         self,
         min_connections: int = 2,
@@ -452,11 +452,11 @@ class OptimizedConnectionPool:
         self.connection_timeout = connection_timeout
         self.idle_timeout = idle_timeout
         self.health_check_interval = health_check_interval
-        
+
         self._pool = asyncio.Queue(maxsize=max_connections)
         self._active_connections = 0
         self._total_connections = 0
-        
+
     async def acquire(self) -> Connection:
         """Acquire connection with timeout"""
         try:
@@ -469,27 +469,27 @@ class OptimizedConnectionPool:
                 await self._close_connection(connection)
         except asyncio.QueueEmpty:
             pass
-        
+
         # Create new connection if under limit
         if self._total_connections < self.max_connections:
             connection = await self._create_connection()
             self._total_connections += 1
             self._active_connections += 1
             return connection
-        
+
         # Wait for available connection
         connection = await asyncio.wait_for(
             self._pool.get(),
             timeout=self.connection_timeout
         )
-        
+
         self._active_connections += 1
         return connection
-    
+
     async def release(self, connection: Connection):
         """Release connection back to pool"""
         self._active_connections -= 1
-        
+
         if await self._validate_connection(connection):
             await self._pool.put(connection)
         else:
@@ -505,17 +505,17 @@ class OptimizedConnectionPool:
 # High-performance caching implementation
 class MultiTierCache:
     """Production multi-tier caching with performance optimization"""
-    
+
     def __init__(self):
         # L1 Cache: In-memory (fastest)
         self.l1_cache = {}
         self.l1_max_size = 1000
         self.l1_ttl = 300  # 5 minutes
-        
+
         # L2 Cache: Redis (network cache)
         self.l2_cache = redis.Redis(decode_responses=True)
         self.l2_ttl = 3600  # 1 hour
-        
+
     async def get(self, key: str) -> Any:
         """Get value with multi-tier lookup"""
         # Check L1 cache first
@@ -523,7 +523,7 @@ class MultiTierCache:
         if l1_result is not None:
             self._record_cache_hit("l1", key)
             return l1_result
-        
+
         # Check L2 cache
         l2_result = await self._get_l2(key)
         if l2_result is not None:
@@ -531,19 +531,19 @@ class MultiTierCache:
             self._set_l1(key, l2_result)
             self._record_cache_hit("l2", key)
             return l2_result
-        
+
         # Cache miss
         self._record_cache_miss(key)
         return None
-    
+
     async def set(self, key: str, value: Any, ttl: int = None) -> None:
         """Set value in both cache tiers"""
         # Set in L1 cache
         self._set_l1(key, value)
-        
+
         # Set in L2 cache
         await self._set_l2(key, value, ttl or self.l2_ttl)
-    
+
     def _get_l1(self, key: str) -> Any:
         """Get from L1 cache with TTL check"""
         if key in self.l1_cache:
@@ -553,7 +553,7 @@ class MultiTierCache:
             else:
                 del self.l1_cache[key]
         return None
-    
+
     def _set_l1(self, key: str, value: Any) -> None:
         """Set in L1 cache with LRU eviction"""
         if len(self.l1_cache) >= self.l1_max_size:
@@ -563,7 +563,7 @@ class MultiTierCache:
                 key=lambda k: self.l1_cache[k]["accessed_at"]
             )
             del self.l1_cache[oldest_key]
-        
+
         self.l1_cache[key] = {
             "value": value,
             "expires_at": time.time() + self.l1_ttl,
@@ -646,14 +646,14 @@ from flx.infra.observability import ObservabilityStack
 
 observability = ObservabilityStack(
     metrics_backend="prometheus",
-    tracing_backend="jaeger", 
+    tracing_backend="jaeger",
     health_check_interval=30,
     analytics_enabled=True
 )
 
 # Automatic adapter instrumentation
 await observability.instrument_adapter("oracle_db", db_adapter)
-await observability.instrument_adapter("wms_client", wms_adapter) 
+await observability.instrument_adapter("wms_client", wms_adapter)
 await observability.instrument_adapter("cache", cache_adapter)
 
 # Start comprehensive monitoring
@@ -696,7 +696,7 @@ tracer = Tracer("flx-application")
 with tracer.start_span("order-processing") as span:
     span.set_attribute("order.id", order_id)
     span.set_attribute("customer.id", customer_id)
-    
+
     # Automatic trace propagation across services
     result = await process_order(order_data)
     span.set_attribute("order.result", result.status)

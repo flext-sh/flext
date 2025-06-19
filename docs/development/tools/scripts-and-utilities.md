@@ -1060,7 +1060,7 @@ repos:
 
 ### GitHub Actions - Zero Tolerance Workflow
 
-```yaml
+````yaml
 # .github/workflows/zero-tolerance-compliance.yml
 name: Zero Tolerance Compliance
 
@@ -1070,10 +1070,10 @@ on:
   pull_request:
     branches: [main]
   schedule:
-    - cron: '0 2 * * 1'  # Weekly validation on Monday 2 AM
+    - cron: "0 2 * * 1" # Weekly validation on Monday 2 AM
 
 env:
-  PYTHON_VERSION: '3.13'
+  PYTHON_VERSION: "3.13"
 
 jobs:
   zero-tolerance-validation:
@@ -1091,7 +1091,7 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ env.PYTHON_VERSION }}
-          cache: 'pip'
+          cache: "pip"
 
       - name: Install Dependencies
         run: |
@@ -1200,7 +1200,7 @@ jobs:
           path: |
             safety_report.json
             bandit_report.json
-```
+````
 
 ### Makefile Integration
 
@@ -1418,7 +1418,8 @@ cleanup:
 
   execution_phases:
     phase_1_ruff_autofix:
-      command: ["python", "-m", "ruff", "check", "src/flx/", "--fix", "--unsafe-fixes"]
+      command:
+        ["python", "-m", "ruff", "check", "src/flx/", "--fix", "--unsafe-fixes"]
       description: "Applying all Ruff auto-fixes with unsafe fixes enabled"
       continue_on_error: false
 
@@ -1428,7 +1429,17 @@ cleanup:
       continue_on_error: false
 
     phase_3_import_sorting:
-      command: ["python", "-m", "isort", "src/flx/", "--profile", "black", "--line-length", "120"]
+      command:
+        [
+          "python",
+          "-m",
+          "isort",
+          "src/flx/",
+          "--profile",
+          "black",
+          "--line-length",
+          "120",
+        ]
       description: "Sorting imports with isort"
       continue_on_error: false
 
@@ -2004,6 +2015,7 @@ class RecoveryStrategies:
 ### High Priority (Immediate Implementation Needed)
 
 - [ ] **Test Coverage Analysis Script** (`analyze_test_coverage.py`)
+
   - Implement comprehensive coverage analysis across all test categories
   - Gap identification in test coverage with actionable recommendations
   - Coverage trend analysis over time with historical data
@@ -2018,12 +2030,14 @@ class RecoveryStrategies:
 ### Medium Priority (Enhanced Functionality)
 
 - [ ] **Dependency Analysis and Update Script**
+
   - Automated dependency vulnerability scanning
   - Update recommendation system with compatibility checks
   - License compliance validation
   - Dependency tree analysis and optimization
 
 - [ ] **Code Complexity Analysis Script**
+
   - Cyclomatic complexity measurement and reporting
   - Cognitive complexity analysis for maintainability
   - Technical debt assessment with prioritized recommendations
@@ -2038,12 +2052,14 @@ class RecoveryStrategies:
 ### Low Priority (Nice-to-Have Features)
 
 - [ ] **Documentation Generation Script**
+
   - Automated API documentation generation from docstrings
   - Architectural documentation extraction from code structure
   - Example code generation from test cases
   - Documentation consistency validation
 
 - [ ] **License Header Management Script**
+
   - Automated license header insertion and updates
   - Copyright year maintenance across files
   - License compliance verification
@@ -2058,6 +2074,7 @@ class RecoveryStrategies:
 ### Research & Investigation
 
 - [ ] **AI-Powered Code Analysis**
+
   - Integration with AI models for advanced code review
   - Automated refactoring suggestions using ML
   - Pattern recognition for architectural improvements

@@ -87,7 +87,7 @@
 #### **Packages Discovered** 📦
 
 - ✅ flx (main framework)
-- ✅ flx-database-oracle  
+- ✅ flx-database-oracle
 - ✅ flx-http-oracle-oic
 - ✅ flx-http-oracle-wms
 - ✅ gruponos-poc-oic-wms

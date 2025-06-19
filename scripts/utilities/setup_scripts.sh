@@ -21,12 +21,12 @@ WORKSPACE_ROOT="$(dirname "$script_dir")"
 
 # Fallback: uso dentro de submódulo Git ou layout diferente
 if [ -z "$(test -f "${WORKSPACE_ROOT}/Makefile" && echo exists)" ]; then
-    WORKSPACE_ROOT="$(git -C "$script_dir" rev-parse --show-toplevel 2>/dev/null || true)"
+	WORKSPACE_ROOT="$(git -C "$script_dir" rev-parse --show-toplevel 2>/dev/null || true)"
 fi
 
-[[ -d "$WORKSPACE_ROOT" ]] || {
-    echo "Error: Could not determine WORKSPACE_ROOT." >&2
-    exit 1
+[[ -d $WORKSPACE_ROOT ]] || {
+	echo "Error: Could not determine WORKSPACE_ROOT." >&2
+	exit 1
 }
 
 SCRIPTS_DIR="${WORKSPACE_ROOT}/scripts"
@@ -41,8 +41,8 @@ cd "${WORKSPACE_ROOT}"
 mkdir -p "${BIN_DIR}"
 
 chmod +x "${SCRIPTS_DIR}/project_manage.py" \
-    "${SCRIPTS_DIR}/scaffold_manage.py" \
-    "${SCRIPTS_DIR}/git_manage.py"
+	"${SCRIPTS_DIR}/scaffold_manage.py" \
+	"${SCRIPTS_DIR}/git_manage.py"
 
 ln -sf "${SCRIPTS_DIR}/project_manage.py" "${BIN_DIR}/flx_project-manage"
 ln -sf "${SCRIPTS_DIR}/scaffold_manage.py" "${BIN_DIR}/scaffold-manage"
@@ -84,10 +84,10 @@ BASHRC="${HOME}/.bashrc"
 BIN_PATH_EXPORT="export PATH=\"${BIN_DIR}:\$PATH\""
 
 if [ -z "$(grep -F "${BIN_DIR}" "${BASHRC}")" ]; then
-    printf '\n# pyauto workspace scripts\n%s\n' "${BIN_PATH_EXPORT}" >>"${BASHRC}"
-    echo "Added ${BIN_DIR} to PATH in ${BASHRC}.  Run 'source ${BASHRC}' to apply."
+	printf '\n# pyauto workspace scripts\n%s\n' "${BIN_PATH_EXPORT}" >>"${BASHRC}"
+	echo "Added ${BIN_DIR} to PATH in ${BASHRC}.  Run 'source ${BASHRC}' to apply."
 else
-    echo "${BIN_DIR} is already in PATH."
+	echo "${BIN_DIR} is already in PATH."
 fi
 
 ## ─── RESUMO ──────────────────────────────────────────────────────────────────

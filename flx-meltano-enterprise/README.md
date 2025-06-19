@@ -54,10 +54,10 @@ make api     # FastAPI REST API
 
 ### 4. Access Services
 
-- Web UI: http://localhost:8080
-- REST API: http://localhost:8081/api/docs
+- Web UI: <http://localhost:8080>
+- REST API: <http://localhost:8081/api/docs>
 - gRPC: localhost:50051
-- Metrics: http://localhost:8000/metrics
+- Metrics: <http://localhost:8000/metrics>
 
 ## 🏗️ Architecture
 

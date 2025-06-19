@@ -33,8 +33,8 @@ Successfully completed a comprehensive refactoring of the FLX codebase to elimin
 
 ### Target Files Processed
 
-- `flx/src/flx/utils/`: cli.py, constants.py, __init__.py, definitions.py, exceptions.py, formatting.py, logging.py, validation_models.py, validation.py
-- `flx/src/flx/models/`: __init__.py, base_unified.py, base.py, core.py, validators.py
+- `flx/src/flx/utils/`: cli.py, constants.py, **init**.py, definitions.py, exceptions.py, formatting.py, logging.py, validation_models.py, validation.py
+- `flx/src/flx/models/`: **init**.py, base_unified.py, base.py, core.py, validators.py
 
 ## Key Accomplishments
 

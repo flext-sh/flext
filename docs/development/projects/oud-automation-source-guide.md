@@ -9,31 +9,37 @@ This library has been optimized for maximum performance when working with large 
 ### Key Performance Features
 
 1. **Direct python-ldap Usage**
+
    - Uses python-ldap API directly for all operations instead of subprocess calls
    - Eliminates overhead of spawning external processes for ldapsearch/ldapmodify
    - Provides better error handling and type safety
 
 2. **Connection Pooling**
+
    - Maintains a pool of LDAP connections for parallel operations
    - Reuses existing connections to reduce connection setup/teardown overhead
    - Configurable pool size to match system capabilities
 
 3. **Atomic Operations**
+
    - Groups operations by type (add, modify, delete) for bulk processing
    - Minimizes network round-trips for better throughput
    - Provides atomic transaction-like behavior when possible
 
 4. **Batched Processing**
+
    - Processes entries in configurable batch sizes
    - Optimizes memory usage for large datasets
    - Provides progress tracking and statistics
 
 5. **Memory Efficiency**
+
    - Uses iterators for large LDIF files to reduce memory footprint
    - Streams entries rather than loading everything into memory
    - Efficiently handles files of any size
 
 6. **Parallel Processing**
+
    - Uses ThreadPoolExecutor for concurrent operations
    - Optimizes thread usage based on operation type and complexity
    - Intelligently distributes workload across workers
@@ -69,7 +75,7 @@ with LDAPConnection.from_env() as ldap_conn:
         ignore_errors=True,
         invalid_suffix_file="invalid_suffixes.ldif"  # Save entries with invalid suffixes
     )
-    
+
     print(f"Import completed: {success} entries successfully processed, {errors} errors")
 ```
 

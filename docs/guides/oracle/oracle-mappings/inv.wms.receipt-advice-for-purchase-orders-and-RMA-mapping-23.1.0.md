@@ -1,32 +1,32 @@
 # inv.wms.receipt-advice-for-purchase-orders-and-RMA-mapping-23.1.0.xlsx
 
-**Caminho:** `reference/wms_solutions/mappings/inv.wms.receipt-advice-for-purchase-orders-and-RMA-mapping-23.1.0.xlsx`  \n**Data de conversão:** 2025-05-15T14:38:40.579352  \n**Tipo:** .xlsx  \n**[Download original](reference/wms_solutions/mappings/inv.wms.receipt-advice-for-purchase-orders-and-RMA-mapping-23.1.0.xlsx)**
+**Caminho:** `reference/wms_solutions/mappings/inv.wms.receipt-advice-for-purchase-orders-and-RMA-mapping-23.1.0.xlsx` \n**Data de conversão:** 2025-05-15T14:38:40.579352 \n**Tipo:** .xlsx \n**[Download original](reference/wms_solutions/mappings/inv.wms.receipt-advice-for-purchase-orders-and-RMA-mapping-23.1.0.xlsx)**
 
 ---
 
 ## Sumário
 
-
-
 ## Resumo automático
 
 Este documento descreve o mapeamento dos dados de aviso de recebimento (receipt advice) entre o sistema WMS e o Oracle Fusion Inventory Management Cloud (versão 23.1.0) para pedidos de compra e devoluções (RMA).
 
-Resumo dos principais pontos:  
+Resumo dos principais pontos:
 
-1) Cabeçalho da mensagem  
-   - Campos informacionais (ex.: versão do documento, sistema de origem, ambiente do cliente).  
-   - Identificação obrigatória da entidade (“purchase_order”), timestamp ISO e MessageId.  
-   - Dados do pedido: número do PO, filial, código da empresa, fornecedor, ação (CREATE/UPDATE/CANCEL), datas (criação, entrega, cancelamento), tipo de documento, além de até cinco campos personalizados e informações de cliente/vendedor.  
+1. Cabeçalho da mensagem
 
-2) Linhas de detalhe  
-   - Cada linha recebe um número de sequência gerado automaticamente.  
-   - Campos obrigatórios: código de ação, código alternativo do item (concatenação de número e revisão), quantidade ordenada, código do item pelo fornecedor e programação de linha (linha~agenda).  
-   - Vários campos opcionais para custos, códigos de embalagem, atributos internos, atributos de inventário e campos customizados.  
-   - Informações de unidade de medida, código de barras, razão de pré-embalagem e demais extensões de atributos.  
+   - Campos informacionais (ex.: versão do documento, sistema de origem, ambiente do cliente).
+   - Identificação obrigatória da entidade (“purchase_order”), timestamp ISO e MessageId.
+   - Dados do pedido: número do PO, filial, código da empresa, fornecedor, ação (CREATE/UPDATE/CANCEL), datas (criação, entrega, cancelamento), tipo de documento, além de até cinco campos personalizados e informações de cliente/vendedor.
 
-3) Para cada campo, o documento especifica:  
-   - Nome no WMS e no Fusion, formato (string, data, número), tamanho máximo, se é obrigatório e regras de transformação (concatenações, extração de parte da data, uso de propriedades de integração).  
+2. Linhas de detalhe
+
+   - Cada linha recebe um número de sequência gerado automaticamente.
+   - Campos obrigatórios: código de ação, código alternativo do item (concatenação de número e revisão), quantidade ordenada, código do item pelo fornecedor e programação de linha (linha~agenda).
+   - Vários campos opcionais para custos, códigos de embalagem, atributos internos, atributos de inventário e campos customizados.
+   - Informações de unidade de medida, código de barras, razão de pré-embalagem e demais extensões de atributos.
+
+3. Para cada campo, o documento especifica:
+   - Nome no WMS e no Fusion, formato (string, data, número), tamanho máximo, se é obrigatório e regras de transformação (concatenações, extração de parte da data, uso de propriedades de integração).
 
 Esse mapeamento garante que todos os dados necessários do WMS sejam corretamente traduzidos para os campos do Oracle Fusion durante o processamento de avisos de recebimento de pedidos e RMA.
 
@@ -35,14 +35,14 @@ Esse mapeamento garante que todos os dados necessários do WMS sejam corretament
 WMS Column: DocumentVersion, WMS Format: string, Fusion Format: , Fusion MaxLength: , Required?: , Value: "23.1.0", Notes: Informational only.
 WMS Column: OriginSystem, WMS Format: string, Fusion Format: , Fusion MaxLength: , Required?: , Value: "Oracle Fusion Inventory Management Cloud", Notes: Informational only.
 WMS Column: ClientEnvCode, WMS Format: string, Fusion Format: , Fusion MaxLength: , Required?: , Value: 23A, Notes: Informational only.
-WMS Column: ParentCompanyCode, WMS Format: string, Fusion Format: , Fusion MaxLength: , Required?: , Value: Set using IntegrationProperties. By default 'PP'  , Notes: Informational only.
+WMS Column: ParentCompanyCode, WMS Format: string, Fusion Format: , Fusion MaxLength: , Required?: , Value: Set using IntegrationProperties. By default 'PP' , Notes: Informational only.
 WMS Column: Entity, WMS Format: string, Fusion Format: , Fusion MaxLength: , Required?: X, Value: "purchase_order", Notes: WMS interface entity code.
 WMS Column: TimeStamp, WMS Format: string, Fusion Format: , Fusion MaxLength: , Required?: , Value: current-dateTime(), Notes: iso format: yyyy-mm-ddTHH:MM:SS
 WMS Column: MessageId, WMS Format: string, Fusion Format: , Fusion MaxLength: , Required?: X, Value: current-dateTime(), Notes: Unique WMS interface message identifier.
 
 WMS Column: po_nbr, Format: string, Max: 30, REQD?: X, INV Column for PO: DocumentNumber, INV Column for RMA as PO: DocumentNumber, Format.1: string, Max.1: 150.0, Notes:
 WMS Column: facility_code, Format: string, Max: 20, REQD?: X, INV Column for PO: OrganizationCode, INV Column for RMA as PO: OrganizationCode, Format.1: string, Max.1: 18.0, Notes:
-WMS Column: company_code, Format: string, Max: 20, REQD?: X, INV Column for PO: Set using IntegrationProperties. By default 'PP'  , INV Column for RMA as PO: Set using IntegrationProperties. By default 'PP'  , Format.1: , Max.1: , Notes: ($selfProperties/nsmpr14:properties/nsmpr14:company_code)
+WMS Column: company_code, Format: string, Max: 20, REQD?: X, INV Column for PO: Set using IntegrationProperties. By default 'PP' , INV Column for RMA as PO: Set using IntegrationProperties. By default 'PP' , Format.1: , Max.1: , Notes: ($selfProperties/nsmpr14:properties/nsmpr14:company_code)
 WMS Column: vendor_code, Format: string, Max: 20, REQD?: X, INV Column for PO: SupplierId, INV Column for RMA as PO: CustomerId, Format.1: integer, Max.1: 18.0, Notes:
 WMS Column: action_code, Format: string, Max: 10, REQD?: X, INV Column for PO: ActionCode, INV Column for RMA as PO: ActionCode, Format.1: string, Max.1: 25.0, Notes: For Fusion CREATE or CANCEL action we use UPDATE action in WMS
 WMS Column: ord_date, Format: date, Max: 14, REQD?: X, INV Column for PO: DocumentCreationDate, INV Column for RMA as PO: DocumentCreationDate, Format.1: datetime, Max.1: , Notes: substring-before (DocumentCreationDate, "." )

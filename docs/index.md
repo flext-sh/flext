@@ -18,14 +18,14 @@ Complete documentation hub for FLX Framework - Python 3.13+ hexagonal architectu
 
 ### **Core Topics**
 
-| **Topic** | **Function** | **Audience** | **Status** |
-|-----------|--------------|--------------|------------|
-| [Getting Started](./getting-started/index.md) | Installation & first steps | New developers | ✅ Complete |
-| [Architecture](./architecture/index.md) | Hexagonal architecture patterns | Architects, senior devs | ✅ Complete |
-| [Development](./development/index.md) | Dev tools & testing | Development teams | ✅ Complete |
-| [Guides](./guides/index.md) | Practical tutorials | Implementation teams | ✅ Complete |
-| [API Reference](./api-reference/index.md) | Complete API docs | Integration developers | ✅ Complete |
-| [Examples](./examples/index.md) | Code examples & templates | All developers | ✅ Complete |
+| **Topic**                                     | **Function**                    | **Audience**            | **Status**  |
+| --------------------------------------------- | ------------------------------- | ----------------------- | ----------- |
+| [Getting Started](./getting-started/index.md) | Installation & first steps      | New developers          | ✅ Complete |
+| [Architecture](./architecture/index.md)       | Hexagonal architecture patterns | Architects, senior devs | ✅ Complete |
+| [Development](./development/index.md)         | Dev tools & testing             | Development teams       | ✅ Complete |
+| [Guides](./guides/index.md)                   | Practical tutorials             | Implementation teams    | ✅ Complete |
+| [API Reference](./api-reference/index.md)     | Complete API docs               | Integration developers  | ✅ Complete |
+| [Examples](./examples/index.md)               | Code examples & templates       | All developers          | ✅ Complete |
 
 ### **📋 Learning Path**
 
@@ -39,21 +39,21 @@ Complete documentation hub for FLX Framework - Python 3.13+ hexagonal architectu
 
 ### **Infrastructure & Deployment**
 
-| **Topic** | **Function** | **Audience** | **Status** |
-|-----------|--------------|--------------|------------|
-| [Infrastructure](./infrastructure/index.md) | Infrastructure services | Platform engineers | ✅ Complete |
-| [Deployment](./deployment/index.md) | Production deployment | DevOps teams | ✅ Complete |
-| [Security](./security/index.md) | Security implementation | Security engineers | ✅ Complete |
-| [Optimization](./optimization/index.md) | Performance tuning | Performance engineers | ✅ Complete |
+| **Topic**                                   | **Function**            | **Audience**          | **Status**  |
+| ------------------------------------------- | ----------------------- | --------------------- | ----------- |
+| [Infrastructure](./infrastructure/index.md) | Infrastructure services | Platform engineers    | ✅ Complete |
+| [Deployment](./deployment/index.md)         | Production deployment   | DevOps teams          | ✅ Complete |
+| [Security](./security/index.md)             | Security implementation | Security engineers    | ✅ Complete |
+| [Optimization](./optimization/index.md)     | Performance tuning      | Performance engineers | ✅ Complete |
 
 ### **Data & Integration**
 
-| **Topic** | **Function** | **Audience** | **Status** |
-|-----------|--------------|--------------|------------|
-| [Meltano Plugins](./meltano-plugins/index.md) | Data pipeline plugins | Data engineers | ✅ Complete |
-| [Migration](./migration/index.md) | System migration guides | Migration teams | ✅ Complete |
-| [Reference](./reference/index.md) | Technical references | All developers | ✅ Complete |
-| [Engineering](./engineering/index.md) | ADRs & RFCs | Technical architects | ✅ Complete |
+| **Topic**                                     | **Function**            | **Audience**         | **Status**  |
+| --------------------------------------------- | ----------------------- | -------------------- | ----------- |
+| [Meltano Plugins](./meltano-plugins/index.md) | Data pipeline plugins   | Data engineers       | ✅ Complete |
+| [Migration](./migration/index.md)             | System migration guides | Migration teams      | ✅ Complete |
+| [Reference](./reference/index.md)             | Technical references    | All developers       | ✅ Complete |
+| [Engineering](./engineering/index.md)         | ADRs & RFCs             | Technical architects | ✅ Complete |
 
 ---
 
@@ -64,18 +64,18 @@ Complete documentation hub for FLX Framework - Python 3.13+ hexagonal architectu
 Getting started with FLX Framework
 
 ```
-[Installation](./getting-started/setup/installation-guide.md) → 
-[First Project](./getting-started/basics/quickstart.md) → 
+[Installation](./getting-started/setup/installation-guide.md) →
+[First Project](./getting-started/basics/quickstart.md) →
 [Examples](./examples/basic/index.md)
 ```
 
-### **👨‍💻 Application Developers**  
+### **👨‍💻 Application Developers**
 
 Building applications with FLX
 
 ```
-[Architecture](./architecture/index.md) → 
-[API Reference](./api-reference/index.md) → 
+[Architecture](./architecture/index.md) →
+[API Reference](./api-reference/index.md) →
 [Development Tools](./development/index.md)
 ```
 
@@ -84,8 +84,8 @@ Building applications with FLX
 Oracle system integrations
 
 ```
-[Oracle Guides](./guides/oracle/index.md) → 
-[Oracle Examples](./examples/oracle-wms/index.md) → 
+[Oracle Guides](./guides/oracle/index.md) →
+[Oracle Examples](./examples/oracle-wms/index.md) →
 [Authentication](./guides/authentication/index.md)
 ```
 
@@ -94,8 +94,8 @@ Oracle system integrations
 System design and architecture
 
 ```
-[Architecture Hub](./architecture/index.md) → 
-[Engineering Decisions](./engineering/index.md) → 
+[Architecture Hub](./architecture/index.md) →
+[Engineering Decisions](./engineering/index.md) →
 [Security Architecture](./security/architecture/index.md)
 ```
 
@@ -104,8 +104,8 @@ System design and architecture
 Data pipeline development
 
 ```
-[Meltano Plugins](./meltano-plugins/index.md) → 
-[Integration Guides](./guides/integration/index.md) → 
+[Meltano Plugins](./meltano-plugins/index.md) →
+[Integration Guides](./guides/integration/index.md) →
 [Examples](./examples/automation/index.md)
 ```
 
@@ -114,8 +114,8 @@ Data pipeline development
 Deployment and operations
 
 ```
-[Deployment](./deployment/index.md) → 
-[Infrastructure](./infrastructure/index.md) → 
+[Deployment](./deployment/index.md) →
+[Infrastructure](./infrastructure/index.md) →
 [Security](./security/index.md)
 ```
 

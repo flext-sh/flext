@@ -230,21 +230,21 @@ from dotenv import load_dotenv
 
 class ExampleClass:
     """Classe exemplo com docstring."""
-    
+
     def __init__(self, name: str) -> None:
         """Inicializa a classe.
-        
+
         Args:
             name: Nome do exemplo
         """
         self.name = name
-    
+
     def process(self, data: str) -> str:
         """Processa dados.
-        
+
         Args:
             data: Dados para processar
-            
+
         Returns:
             Dados processados
         """

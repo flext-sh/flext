@@ -34,8 +34,8 @@ Meltano utility plugins provide enterprise-grade orchestration and automation ca
 
 ### **Utility Categories**
 
-| **Plugin** | **Function** | **Platform** | **Status** | **Key Features** |
-|------------|-------------|--------------|------------|------------------|
+| **Plugin**                                    | **Function**           | **Platform**             | **Status**    | **Key Features**                                |
+| --------------------------------------------- | ---------------------- | ------------------------ | ------------- | ----------------------------------------------- |
 | **[OIC Orchestrator](./orchestrator-oic.md)** | Workflow orchestration | Oracle Integration Cloud | ✅ Production | Pipeline scheduling, monitoring, error handling |
 
 ### **🚀 Key Capabilities**

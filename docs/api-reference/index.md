@@ -35,12 +35,12 @@ The API Reference Hub provides complete, source-validated API documentation for 
 
 ### **API Categories**
 
-| **Category** | **Coverage** | **Validation** | **Status** | **Key Features** |
-|--------------|--------------|----------------|------------|------------------|
-| **[Framework](./framework/index.md)** | Core Framework APIs | Source Validated | ✅ Production | Application, infrastructure, plugins |
-| **[Core](./core/index.md)** | Domain & Business Logic | Source Validated | ✅ Production | Entities, services, protocols, events |
-| **[Adapters](./adapters/index.md)** | Integration APIs | Source Validated | ✅ Production | Inbound/outbound ports, Oracle adapters |
-| **[Comprehensive](./comprehensive/index.md)** | Complete Reference | Source Validated | ✅ Production | Full API coverage, examples |
+| **Category**                                  | **Coverage**            | **Validation**   | **Status**    | **Key Features**                        |
+| --------------------------------------------- | ----------------------- | ---------------- | ------------- | --------------------------------------- |
+| **[Framework](./framework/index.md)**         | Core Framework APIs     | Source Validated | ✅ Production | Application, infrastructure, plugins    |
+| **[Core](./core/index.md)**                   | Domain & Business Logic | Source Validated | ✅ Production | Entities, services, protocols, events   |
+| **[Adapters](./adapters/index.md)**           | Integration APIs        | Source Validated | ✅ Production | Inbound/outbound ports, Oracle adapters |
+| **[Comprehensive](./comprehensive/index.md)** | Complete Reference      | Source Validated | ✅ Production | Full API coverage, examples             |
 
 ### **🚀 Enterprise API Features**
 

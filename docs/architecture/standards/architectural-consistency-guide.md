@@ -521,6 +521,7 @@ By following these standards, the FLX framework maintains architectural consiste
 **Prevention**: Use terminology checklist in documentation review process
 
 **Example Fix**:
+
 ```python
 # Wrong: Mixed terminology
 class InboundAdapter:  # Should be consistent
@@ -538,18 +539,19 @@ class OrderInboundAdapter: # Port implementation
 **Prevention**: Establish coding standards checklist and automated validation
 
 **Example Fix**:
+
 ```python
 # Wrong: Inconsistent adapter patterns
 class DatabaseAdapter:
     def connect(self): pass  # Sync method
-    
+
 class CacheAdapter:
     async def start(self): pass  # Different method name
 
 # Correct: Consistent adapter pattern
 class DatabaseAdapter(BaseAdapter):
     async def connect(self) -> None: pass
-    
+
 class CacheAdapter(BaseAdapter):
     async def connect(self) -> None: pass
 ```
@@ -561,18 +563,19 @@ class CacheAdapter(BaseAdapter):
 **Prevention**: Include documentation updates in definition of done for all features
 
 **Example Fix**:
+
 ```python
 # Sync documentation with code changes
 class UserService:
     async def create_user(self, user_data: UserCreateData) -> User:
         """Create new user with validation.
-        
+
         Args:
             user_data: User creation data including email and profile
-            
+
         Returns:
             User: Created user entity with generated ID
-            
+
         Raises:
             ValidationError: When user data validation fails
             DuplicateEmailError: When email already exists
@@ -586,6 +589,7 @@ class UserService:
 **Prevention**: Use import linting and layer dependency validation
 
 **Example Fix**:
+
 ```python
 # Wrong: Domain importing infrastructure
 from flx.infra.database import PostgresConnection
@@ -611,6 +615,7 @@ class User(Entity):
 **Prevention**: Code review checklist including error handling validation
 
 **Example Fix**:
+
 ```python
 # Wrong: Inconsistent error handling
 class DatabaseAdapter:

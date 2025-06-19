@@ -130,15 +130,15 @@ class WmsItem(AggregateRoot):
     quantity: int
     location: str
     status: str = "AVAILABLE"
-    
+
     def allocate(self, quantity: int) -> None:
         if self.quantity < quantity:
             raise ValueError("Insufficient quantity")
-        
+
         self.quantity -= quantity
         self.status = "ALLOCATED" if self.quantity == 0 else "PARTIAL"
         self.increment_version()
-        
+
         # Add domain event
         self.add_event(DomainEvent(
             event_type="WmsItemAllocated",
@@ -156,7 +156,7 @@ class WmsLocation(ValueObject):
     zone: str
     aisle: str
     shelf: str
-    
+
     @property
     def full_location(self) -> str:
         return f"{self.facility_id}-{self.zone}-{self.aisle}-{self.shelf}"
@@ -482,17 +482,17 @@ class OracleWmsIntegrationService(ApplicationService):
     def __init__(self, wms_client, db_repository):
         self.wms = wms_client
         self.db = db_repository
-    
+
     async def handle_inventory_update(self, event: DomainEvent):
         """Handle inventory update across Oracle systems."""
-        
+
         if event.event_type == "InventoryAdjusted":
             # 1. Update WMS
             await self.wms.update_inventory(
                 item_id=event.data["item_id"],
                 adjustment=event.data["adjustment"]
             )
-            
+
             # 2. Record in database
             await self.db.save_inventory_transaction(
                 event.data
@@ -508,20 +508,20 @@ from flx.adapters.outbound.database import OracleAdapter
 class OracleWmsRepository:
     def __init__(self, db_adapter: DatabaseAdapter):
         self.db = db_adapter
-    
+
     async def save_wms_transaction(self, transaction: WmsTransaction) -> None:
         """Save WMS transaction to Oracle database."""
-        
+
         query = """
         INSERT INTO wms_transactions (
-            transaction_id, item_id, quantity, 
+            transaction_id, item_id, quantity,
             transaction_type, created_at
         ) VALUES (
             :transaction_id, :item_id, :quantity,
             :transaction_type, :created_at
         )
         """
-        
+
         await self.db.execute(query, {
             "transaction_id": transaction.transaction_id,
             "item_id": transaction.item_id,
@@ -668,13 +668,13 @@ app.register_adapter("wms", wms_adapter)
 # Use in domain services
 async def process_inventory_adjustment(item_id: str, adjustment: int):
     wms = app.get_adapter("wms")
-    
+
     # Update WMS inventory
     result = await wms.update_inventory(
         item_id=item_id,
         adjustment=adjustment
     )
-    
+
     return result
 ```
 
@@ -725,7 +725,7 @@ For additional support:
 
 **📂 Content Document** | **🏠 Parent**: [Oracle Guides Hub](./index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
 
-**Implementation Status**: ✅ **Production Ready**  
+**Implementation Status**: ✅ **Production Ready**
 **Documentation**: Complete WMS integration guide
 
-*This comprehensive guide consolidates all Oracle WMS integration documentation for the FLX framework, providing complete implementation instructions, examples, and best practices.*
+_This comprehensive guide consolidates all Oracle WMS integration documentation for the FLX framework, providing complete implementation instructions, examples, and best practices._

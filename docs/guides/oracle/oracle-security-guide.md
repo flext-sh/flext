@@ -1,6 +1,6 @@
 # Oracle Warehouse Management Cloud - Security Guide
 
-*Release 25B*
+_Release 25B_
 
 This comprehensive security guide covers shared responsibility models, authentication mechanisms, authorization controls, and secure configuration practices for Oracle Warehouse Management Cloud implementations within PyAuto's hexagonal architecture.
 

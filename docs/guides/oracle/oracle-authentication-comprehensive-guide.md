@@ -45,14 +45,14 @@ Oracle Cloud services support multiple authentication methods to accommodate dif
 
 ### Method Selection Criteria
 
-| Use Case | Recommended Method | Alternative |
-|----------|-------------------|-------------|
-| **Automation/CI/CD** | OAuth2 Client Credentials | JWT Service (FLX) |
-| **Server-to-Server** | OAuth2 Client Credentials | Basic Auth (legacy) |
-| **MFA Environments** | OAuth2 Client Credentials | JWT Service (FLX) |
-| **Web Applications** | SAML2 SSO | OAuth2 ROPC |
-| **Mobile/RF Devices** | OAuth2 ROPC | Native Authentication |
-| **FLX Framework** | JWT Service | OAuth2 Client Credentials |
+| Use Case              | Recommended Method        | Alternative               |
+| --------------------- | ------------------------- | ------------------------- |
+| **Automation/CI/CD**  | OAuth2 Client Credentials | JWT Service (FLX)         |
+| **Server-to-Server**  | OAuth2 Client Credentials | Basic Auth (legacy)       |
+| **MFA Environments**  | OAuth2 Client Credentials | JWT Service (FLX)         |
+| **Web Applications**  | SAML2 SSO                 | OAuth2 ROPC               |
+| **Mobile/RF Devices** | OAuth2 ROPC               | Native Authentication     |
+| **FLX Framework**     | JWT Service               | OAuth2 Client Credentials |
 
 ## OAuth2 Configuration and Patterns
 
@@ -78,6 +78,7 @@ Choose this flow when:
 **Step-by-Step IDCS Setup:**
 
 1. **Access IDCS Console**
+
    - Navigate to the IDCS console associated with your Oracle Cloud environment
    - URL format: `https://idcs-[hash].identity.oraclecloud.com`
 
@@ -88,6 +89,7 @@ Choose this flow when:
    ```
 
 3. **Basic Configuration**
+
    - Set descriptive name for the application
    - Description should include purpose and owner information
 
@@ -163,45 +165,45 @@ class OracleOAuth2Client:
         self.client_secret = client_secret
         self.access_token: Optional[str] = None
         self.token_type: str = "Bearer"
-    
+
     def get_access_token(self, resource_aud: str) -> Dict:
         """Get OAuth2 access token using client credentials flow."""
-        
+
         # Prepare token request
         token_url = f"https://{self.idcs_url}/oauth2/v1/token"
-        
+
         # Basic authentication header
         credentials = f"{self.client_id}:{self.client_secret}"
         encoded_credentials = base64.b64encode(credentials.encode()).decode()
-        
+
         headers = {
             "Authorization": f"Basic {encoded_credentials}",
             "Content-Type": "application/x-www-form-urlencoded"
         }
-        
+
         data = {
             "grant_type": "client_credentials",
             "scope": resource_aud
         }
-        
+
         response = requests.post(token_url, headers=headers, data=data)
         response.raise_for_status()
-        
+
         token_data = response.json()
         self.access_token = token_data["access_token"]
-        
+
         return token_data
-    
+
     def make_authenticated_request(self, url: str, method: str = "GET", **kwargs) -> requests.Response:
         """Make authenticated request to Oracle services."""
-        
+
         if not self.access_token:
             raise ValueError("No access token available. Call get_access_token() first.")
-        
+
         headers = kwargs.get("headers", {})
         headers["Authorization"] = f"{self.token_type} {self.access_token}"
         kwargs["headers"] = headers
-        
+
         return requests.request(method, url, **kwargs)
 ```
 
@@ -221,27 +223,27 @@ export X_USER_IDENTITY_DOMAIN_NAME="domain_name"
 ```python
 def get_access_token_ropc(self, username: str, password: str, resource_aud: str) -> Dict:
     """Get OAuth2 access token using Resource Owner Password Credentials flow."""
-    
+
     token_url = f"https://{self.idcs_url}/oauth2/v1/token"
-    
+
     credentials = f"{self.client_id}:{self.client_secret}"
     encoded_credentials = base64.b64encode(credentials.encode()).decode()
-    
+
     headers = {
         "Authorization": f"Basic {encoded_credentials}",
         "Content-Type": "application/x-www-form-urlencoded"
     }
-    
+
     data = {
         "grant_type": "password",
         "username": username,
         "password": password,
         "scope": resource_aud
     }
-    
+
     response = requests.post(token_url, headers=headers, data=data)
     response.raise_for_status()
-    
+
     return response.json()
 ```
 
@@ -337,13 +339,13 @@ async def main():
         client_secret="your_client_secret",
         oic_base_url="https://instance-name.integration.ocp.oraclecloud.com"
     )
-    
+
     # Create HTTP adapter with JWT authentication
     http_adapter = HTTPAdapter(auth_manager=jwt_service)
-    
+
     # Make authenticated requests
     response = await http_adapter.get("https://instance-name.integration.ocp.oraclecloud.com/ic/api/integrations")
-    
+
     # JWT service handles token refresh automatically
     data = response.json()
     print(f"Found {len(data.get('items', []))} integrations")
@@ -436,7 +438,7 @@ When requesting SAML2 SSO setup, provide:
         </ds:X509Data>
       </ds:KeyInfo>
     </md:KeyDescriptor>
-    <md:SingleSignOnService 
+    <md:SingleSignOnService
       Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
       Location="https://your-idp.com/sso"/>
   </md:IDPSSODescriptor>
@@ -503,10 +505,10 @@ class WMSAuthenticator:
     def __init__(self, config: Dict):
         self.config = config
         self.session = requests.Session()
-    
+
     def authenticate_oauth2(self, username: str, password: str) -> Dict:
         """Authenticate using OAuth2 ROPC flow for WMS."""
-        
+
         token_data = {
             "grant_type": "password",
             "client_id": self.config["client_id"],
@@ -515,31 +517,31 @@ class WMSAuthenticator:
             "password": password,
             "scope": self.config["resource"]
         }
-        
+
         response = self.session.post(
             self.config["token_endpoint"],
             data=token_data,
             headers={"Content-Type": "application/x-www-form-urlencoded"}
         )
-        
+
         response.raise_for_status()
         return response.json()
-    
+
     def authenticate_native(self, username: str, password: str) -> Dict:
         """Authenticate using native WMS authentication."""
-        
+
         auth_data = {
             "username": username,
             "password": password,
             "company_code": self.config.get("company_code"),
             "facility_code": self.config.get("facility_code")
         }
-        
+
         response = self.session.post(
             f"{self.config['wms_url']}/authenticate",
             json=auth_data
         )
-        
+
         response.raise_for_status()
         return response.json()
 ```
@@ -582,7 +584,7 @@ oic_auth_oauth2() {
         -H "Authorization: Basic $(echo -n "${CLIENT_ID}:${CLIENT_SECRET}" | base64)" \
         -H "Content-Type: application/x-www-form-urlencoded" \
         -d "grant_type=client_credentials&scope=${RESOURCE_AUD}")
-    
+
     ACCESS_TOKEN=$(echo "$token_response" | jq -r '.access_token')
     export ACCESS_TOKEN
 }
@@ -591,7 +593,7 @@ oic_auth_oauth2() {
 oic_api_call() {
     local endpoint="$1"
     local method="${2:-GET}"
-    
+
     curl -s -X "$method" \
         "https://${OIC_HOST}${endpoint}" \
         -H "Authorization: Bearer ${ACCESS_TOKEN}" \
@@ -611,24 +613,24 @@ echo "Integrations: $integrations"
 ```python
 async def monitor_oic_integrations(jwt_service: FlxJwtService):
     """Monitor OIC integrations using JWT authentication."""
-    
+
     http_adapter = HTTPAdapter(auth_manager=jwt_service)
-    
+
     # Get all integrations
     integrations_response = await http_adapter.get(
         "https://instance-name.integration.ocp.oraclecloud.com/ic/api/integrations/v1/integrations"
     )
-    
+
     integrations = integrations_response.json()
-    
+
     for integration in integrations.get("items", []):
         integration_id = integration["id"]
-        
+
         # Get integration status
         status_response = await http_adapter.get(
             f"https://instance-name.integration.ocp.oraclecloud.com/ic/api/integrations/v1/integrations/{integration_id}/status"
         )
-        
+
         status = status_response.json()
         print(f"Integration {integration['name']}: {status['state']}")
 ```
@@ -646,17 +648,17 @@ async def handle_oic_authentication_errors():
             client_secret="invalid_secret",
             oic_base_url="https://instance-name.integration.ocp.oraclecloud.com"
         )
-        
+
         await jwt_service.get_access_token()
-        
+
     except AuthenticationError as e:
         print(f"Authentication failed: {e}")
         # Handle invalid credentials
-        
+
     except ConnectionError as e:
         print(f"Connection failed: {e}")
         # Handle network issues
-        
+
     except Exception as e:
         print(f"Unexpected error: {e}")
         # Handle other errors
@@ -788,7 +790,7 @@ export READ_TIMEOUT="60"
 ```python
 def secure_error_handling(func):
     """Decorator to handle authentication errors securely."""
-    
+
     def wrapper(*args, **kwargs):
         try:
             return func(*args, **kwargs)
@@ -800,7 +802,7 @@ def secure_error_handling(func):
             # Generic error without implementation details
             logger.error(f"Service error: {type(e).__name__}")
             raise ServiceError("Service temporarily unavailable")
-    
+
     return wrapper
 ```
 
@@ -816,14 +818,14 @@ class TokenCache:
     def __init__(self):
         self._token: Optional[str] = None
         self._expires_at: Optional[float] = None
-    
+
     def get_token(self) -> Optional[str]:
         if self._token and self._expires_at:
             # Return token if still valid (with 5-minute buffer)
             if time.time() < (self._expires_at - 300):
                 return self._token
         return None
-    
+
     def set_token(self, token: str, expires_in: int):
         self._token = token
         self._expires_at = time.time() + expires_in
@@ -838,26 +840,26 @@ from requests.packages.urllib3.util.retry import Retry
 
 def create_http_session() -> requests.Session:
     """Create optimized HTTP session for authentication."""
-    
+
     session = requests.Session()
-    
+
     # Configure retries
     retry_strategy = Retry(
         total=3,
         backoff_factor=1,
         status_forcelist=[429, 500, 502, 503, 504]
     )
-    
+
     # Configure adapter with connection pooling
     adapter = HTTPAdapter(
         max_retries=retry_strategy,
         pool_connections=10,
         pool_maxsize=20
     )
-    
+
     session.mount("http://", adapter)
     session.mount("https://", adapter)
-    
+
     return session
 ```
 
@@ -882,25 +884,25 @@ class AuthMonitor:
     def __init__(self):
         self.metrics = AuthMetrics()
         self.response_times: List[float] = []
-    
+
     def record_success(self, response_time: float):
         self.metrics.success_count += 1
         self.metrics.last_success = time.time()
         self.response_times.append(response_time)
         self._update_avg_response_time()
-    
+
     def record_failure(self):
         self.metrics.failure_count += 1
         self.metrics.last_failure = time.time()
-    
+
     def _update_avg_response_time(self):
         if self.response_times:
             self.metrics.avg_response_time = sum(self.response_times) / len(self.response_times)
-    
+
     def get_health_status(self) -> Dict:
         total_requests = self.metrics.success_count + self.metrics.failure_count
         success_rate = self.metrics.success_count / total_requests if total_requests > 0 else 0
-        
+
         return {
             "success_rate": success_rate,
             "avg_response_time": self.metrics.avg_response_time,
@@ -996,10 +998,10 @@ import asyncio
 
 async def setup_flx_authentication():
     """Complete FLX authentication setup example."""
-    
+
     # Load configuration
     config = Config.from_env()
-    
+
     # Setup JWT service for OIC
     oic_jwt_service = FlxJwtService.for_oracle_oic(
         idcs_url=config.get("IDCS_URL"),
@@ -1007,7 +1009,7 @@ async def setup_flx_authentication():
         client_secret=config.get("CLIENT_SECRET"),
         oic_base_url=f"https://{config.get('OIC_HOST')}"
     )
-    
+
     # Setup HTTP adapter with authentication
     oic_adapter = HTTPAdapter(
         base_url=f"https://{config.get('OIC_HOST')}",
@@ -1015,14 +1017,14 @@ async def setup_flx_authentication():
         timeout=config.get("CONNECTION_TIMEOUT", 30),
         max_retries=config.get("MAX_RETRIES", 3)
     )
-    
+
     # Setup WMS authentication (basic auth for legacy)
     wms_adapter = HTTPAdapter(
         base_url=f"https://{config.get('WMS_HOST')}",
         auth=(config.get("WMS_USERNAME"), config.get("WMS_PASSWORD")),
         timeout=config.get("CONNECTION_TIMEOUT", 30)
     )
-    
+
     return {
         "oic_adapter": oic_adapter,
         "wms_adapter": wms_adapter,

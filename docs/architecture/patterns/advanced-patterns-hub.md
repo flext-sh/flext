@@ -34,111 +34,118 @@
 
 ### 🎯 **Domain-Driven Design (DDD)**
 
-*Rich domain models with clear business boundaries*
+_Rich domain models with clear business boundaries_
 
 - **[Domain-Driven Design Patterns](domain-driven-design-patterns.md)** ⭐ **Core DDD Implementation**
   - Bounded contexts and aggregate design
   - Value objects and domain events
   - Domain services and repositories
-  - *Complexity: Advanced | Time: 2 hours*
+  - _Complexity: Advanced | Time: 2 hours_
 
 ### 📝 **Event-Driven Architecture**
 
-*Event sourcing and event-driven patterns*
+_Event sourcing and event-driven patterns_
 
 - **[Event Sourcing Implementation](event-sourcing-implementation.md)** ⭐ **Event Store & Audit Trails**
+
   - Complete event store implementation
   - Temporal queries and projections
   - Snapshot optimization strategies
-  - *Complexity: Advanced | Time: 2-3 hours*
+  - _Complexity: Advanced | Time: 2-3 hours_
 
 - **[CQRS Architecture Guide](cqrs-architecture-guide.md)** ⭐ **Command-Query Separation**
   - Command and query separation
   - Read/write model optimization
   - Event-driven projections
-  - *Complexity: Advanced | Time: 1.5 hours*
+  - _Complexity: Advanced | Time: 1.5 hours_
 
 ### 🏗️ **Microservices & Distributed Systems**
 
-*Scalable distributed architecture patterns*
+_Scalable distributed architecture patterns_
 
 - **[Microservices Patterns](microservices-patterns.md)** ⭐ **Distributed Service Architecture**
   - Service boundaries and communication
   - Saga orchestration patterns
   - Inter-service resilience
-  - *Complexity: Expert | Time: 3-4 hours*
+  - _Complexity: Expert | Time: 3-4 hours_
 
 ### ⚡ **Reactive & Async Patterns**
 
-*High-performance async and reactive programming*
+_High-performance async and reactive programming_
 
 - **[Reactive Programming Guide](reactive-programming-guide.md)** ⭐ **Async Streams & Backpressure**
   - Reactive streams implementation
   - Backpressure handling
   - Async pipeline optimization
-  - *Complexity: Advanced | Time: 2 hours*
+  - _Complexity: Advanced | Time: 2 hours_
 
 ### 🔌 **Plugin & Extension Patterns**
 
-*Extensible architecture and plugin systems*
+_Extensible architecture and plugin systems_
 
 - **[Plugin Architecture Patterns](../guides/plugin-development-guide.md)** ⭐ **Extensible Systems**
   - Bidirectional plugin design
   - Runtime discovery patterns
   - Hook and extension systems
-  - *Complexity: Intermediate | Time: 1.5 hours*
+  - _Complexity: Intermediate | Time: 1.5 hours_
 
 ---
 
 ## 🎓 **Learning Paths**
 
-### 🌱 **Foundation Path** *(3-4 hours)*
+### 🌱 **Foundation Path** _(3-4 hours)_
 
-*Essential patterns for enterprise development*
+_Essential patterns for enterprise development_
 
-1. **[Domain-Driven Design Patterns](domain-driven-design-patterns.md)** *(2 hours)*
+1. **[Domain-Driven Design Patterns](domain-driven-design-patterns.md)** _(2 hours)_
+
    - Master bounded contexts and aggregates
    - Understand value objects and domain events
 
-2. **[Hexagonal Architecture Foundation](unified-architecture-guide.md)** *(1.5 hours)*
+2. **[Hexagonal Architecture Foundation](unified-architecture-guide.md)** _(1.5 hours)_
+
    - Ports and adapters implementation
    - Dependency inversion principles
 
-3. **[Testing Hexagonal Architecture](../development/testing-hexagonal-architecture.md)** *(30 minutes)*
+3. **[Testing Hexagonal Architecture](../development/testing-hexagonal-architecture.md)** _(30 minutes)_
    - Layer-specific testing strategies
 
-### 🚀 **Advanced Path** *(6-8 hours)*
+### 🚀 **Advanced Path** _(6-8 hours)_
 
-*Sophisticated patterns for complex systems*
+_Sophisticated patterns for complex systems_
 
-1. **Complete Foundation Path** *(Prerequisites)*
+1. **Complete Foundation Path** _(Prerequisites)_
 
-2. **[Event Sourcing Implementation](event-sourcing-implementation.md)** *(2-3 hours)*
+2. **[Event Sourcing Implementation](event-sourcing-implementation.md)** _(2-3 hours)_
+
    - Event store and temporal queries
    - Projection and snapshot strategies
 
-3. **[CQRS Architecture Guide](cqrs-architecture-guide.md)** *(1.5 hours)*
+3. **[CQRS Architecture Guide](cqrs-architecture-guide.md)** _(1.5 hours)_
+
    - Command-query separation
    - Read/write model optimization
 
-4. **[Performance Optimization](../optimization/comprehensive-optimization-guide.md)** *(2 hours)*
+4. **[Performance Optimization](../optimization/comprehensive-optimization-guide.md)** _(2 hours)_
    - Advanced caching and async patterns
 
-### 🏆 **Expert Path** *(10-12 hours)*
+### 🏆 **Expert Path** _(10-12 hours)_
 
-*Master-level distributed systems patterns*
+_Master-level distributed systems patterns_
 
-1. **Complete Advanced Path** *(Prerequisites)*
+1. **Complete Advanced Path** _(Prerequisites)_
 
-2. **[Microservices Patterns](microservices-patterns.md)** *(3-4 hours)*
+2. **[Microservices Patterns](microservices-patterns.md)** _(3-4 hours)_
+
    - Service decomposition strategies
    - Saga orchestration and compensation
 
-3. **[Reactive Programming Guide](reactive-programming-guide.md)** *(2 hours)*
+3. **[Reactive Programming Guide](reactive-programming-guide.md)** _(2 hours)_
+
    - Reactive streams and backpressure
    - High-throughput async patterns
 
-4. **[Infrastructure Architecture](infrastructure-architecture.md)** *(2-3 hours)*
+4. **[Infrastructure Architecture](infrastructure-architecture.md)** _(2-3 hours)_
    - Production deployment patterns
    - Monitoring and observability
 
@@ -148,13 +155,15 @@
 
 ### 🏢 **Enterprise Applications**
 
-*Patterns for large-scale business systems*
+_Patterns for large-scale business systems_
 
 - **Customer Management System**
+
   - Apply: DDD + Event Sourcing + CQRS
   - See: [Domain-Driven Design Patterns](domain-driven-design-patterns.md)
 
 - **Order Processing System**
+
   - Apply: Microservices + Saga Patterns
   - See: [Microservices Patterns](microservices-patterns.md)
 
@@ -164,9 +173,10 @@
 
 ### 🔌 **Integration Platforms**
 
-*Patterns for system integration and data flow*
+_Patterns for system integration and data flow_
 
 - **Oracle WMS Integration**
+
   - Apply: Hexagonal Architecture + Plugin Patterns
   - See: [Oracle Integration Hub](../guides/oracle-integration-hub.md)
 
@@ -176,9 +186,10 @@
 
 ### ⚡ **High-Performance Systems**
 
-*Patterns for scalability and performance*
+_Patterns for scalability and performance_
 
 - **Event Streaming Platform**
+
   - Apply: Reactive Patterns + Event Sourcing
   - See: [Event Sourcing Implementation](event-sourcing-implementation.md)
 
@@ -322,7 +333,7 @@ class OptimizedAggregateRoot(AggregateRoot):
             version=version,
             data=self.model_dump()
         )
-    
+
     async def load_from_snapshot(self, snapshot: Snapshot) -> None:
         self.__dict__.update(snapshot.data)
         self.version = snapshot.version
@@ -355,7 +366,7 @@ class ResilientServiceClient:
             failure_threshold=5,
             recovery_timeout=60
         )
-    
+
     async def call_service(self, request: ServiceRequest) -> ServiceResponse:
         return await self.circuit_breaker.call(self._make_request, request)
 ```
@@ -369,7 +380,7 @@ class OrderAggregate(AggregateRoot):
     # Keep related entities that must be consistent together
     order_items: List[OrderItem]
     shipping_address: Address
-    
+
     # Reference other aggregates by ID only
     customer_id: str  # Not Customer object
     product_ids: List[str]  # Not Product objects

@@ -1,7 +1,7 @@
 #!/bin/bash
 # Script para instalar TODAS as dependências do PyAuto via Poetry
 
-set -e  # Exit on error
+set -e # Exit on error
 
 echo "🚀 Instalação completa do PyAuto via Poetry"
 echo "==========================================="
@@ -27,20 +27,20 @@ PROJECTS="flx flx-database-oracle flx-http-oracle-oic flx-http-oracle-wms algar-
 echo ""
 echo "📦 Instalando projetos individuais..."
 for proj in $PROJECTS; do
-    if [ -d "$proj" ]; then
-        echo ""
-        echo "→ Instalando $proj..."
-        cd "$proj"
-        if [ -f "pyproject.toml" ]; then
-            # Criar poetry.lock se não existir
-            if [ ! -f "poetry.lock" ] || [ "pyproject.toml" -nt "poetry.lock" ]; then
-                poetry lock --no-update || true
-            fi
-            # Instalar dependências
-            poetry install --all-extras || poetry install || true
-        fi
-        cd ..
-    fi
+	if [ -d "$proj" ]; then
+		echo ""
+		echo "→ Instalando $proj..."
+		cd "$proj"
+		if [ -f "pyproject.toml" ]; then
+			# Criar poetry.lock se não existir
+			if [ ! -f "poetry.lock" ] || [ "pyproject.toml" -nt "poetry.lock" ]; then
+				poetry lock --no-update || true
+			fi
+			# Instalar dependências
+			poetry install --all-extras || poetry install || true
+		fi
+		cd ..
+	fi
 done
 
 # Instalar projetos em modo editable

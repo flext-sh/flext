@@ -102,7 +102,9 @@ def flx_generic_type_params(file_path: Path) -> dict[str, int]:
     # Add the necessary import if it's not already there
     if "from typing import Any" not in content and "from typing import " in content:
         # Find any typing import
-        typing_import_match = re.search(r"from typing import (.*?)$", content, re.MULTILINE)
+        typing_import_match = re.search(
+            r"from typing import (.*?)$", content, re.MULTILINE
+        )
         if typing_import_match:
             imports = typing_import_match.group(1)
             if "Any" not in imports:
@@ -137,13 +139,19 @@ def flx_generic_type_params(file_path: Path) -> dict[str, int]:
                 type_var_def = f"\n{match.group(1)}# Define TypeVar with proper bound\n{match.group(1)}{type_var} = TypeVar('{type_var}', bound=BaseModel)\n"
                 # Add this before the class definition
                 class_start = match.start()
-                modified_content = modified_content[:class_start] + type_var_def + modified_content[class_start:]
+                modified_content = (
+                    modified_content[:class_start]
+                    + type_var_def
+                    + modified_content[class_start:]
+                )
                 fixes["type_var_bounds"] = fixes.get("type_var_bounds", 0) + 1
                 # Make sure TypeVar is imported
                 if "TypeVar" not in content:
                     if "from typing import " in modified_content:
                         # Add to existing import
-                        typing_import_match = re.search(r"from typing import (.*?)$", modified_content, re.MULTILINE)
+                        typing_import_match = re.search(
+                            r"from typing import (.*?)$", modified_content, re.MULTILINE
+                        )
                         if typing_import_match:
                             imports = typing_import_match.group(1)
                             new_imports = imports.strip()
@@ -151,11 +159,15 @@ def flx_generic_type_params(file_path: Path) -> dict[str, int]:
                                 new_imports += " TypeVar"
                             else:
                                 new_imports += ", TypeVar"
-                            modified_content = modified_content.replace(imports, new_imports)
+                            modified_content = modified_content.replace(
+                                imports, new_imports
+                            )
                             fixes["typing_import"] = fixes.get("typing_import", 0) + 1
                     else:
                         # Add new import at the top of the file
-                        modified_content = "from typing import TypeVar\n" + modified_content
+                        modified_content = (
+                            "from typing import TypeVar\n" + modified_content
+                        )
                         fixes["typing_import"] = fixes.get("typing_import", 0) + 1
 
     # Write the modified content back if changes were made

@@ -287,9 +287,7 @@ class LDIFProcessor:
 
             # Ensure we have an entry to work with
             if not current_entry:
-                error_msg = (
-                    f"Line {line_number}: Attribute line without DN in {source_name}: {line}"
-                )
+                error_msg = f"Line {line_number}: Attribute line without DN in {source_name}: {line}"
                 self._handle_error(error_msg)
                 return None
 
@@ -316,9 +314,7 @@ class LDIFProcessor:
 
                     attr_value = base64.b64decode(attr_value_b64).decode("utf-8")
                 except Exception as e:
-                    error_msg = (
-                        f"Line {line_number}: Failed to decode base64 value in {source_name}: {e}"
-                    )
+                    error_msg = f"Line {line_number}: Failed to decode base64 value in {source_name}: {e}"
                     self._handle_error(error_msg)
                     return current_entry
 

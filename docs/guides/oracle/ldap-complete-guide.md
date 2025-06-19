@@ -470,12 +470,12 @@ deployment:
       port: 1389
       ssl_port: 1636
       role: replica
-  
+
   replication:
     mode: multi-master
     encryption: true
     conflict_resolution: timestamp
-    
+
   load_balancer:
     type: f5
     virtual_ip: 10.1.1.100
@@ -578,17 +578,17 @@ monitoring:
       - ldap_operations
       - connection_pool
       - cache_statistics
-  
+
   alerts:
     - name: high_cpu_usage
       condition: cpu_usage > 80
       action: email
       recipients: ["ops-team@company.com"]
-    
+
     - name: connection_pool_exhausted
       condition: available_connections < 5
       action: scale_up
-      
+
   dashboards:
     grafana:
       enabled: true
