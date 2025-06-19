@@ -1,6 +1,7 @@
 """Tests for WMS orchestrator."""
 
 import json
+from typing import Any
 
 import pytest
 
@@ -11,7 +12,7 @@ from flx_oracle_wms.orchestrator import WMSOrchestrator
 class TestWMSOrchestrator:
     """Test the WMS orchestrator."""
 
-    def test_orchestrator_initialization(self, sample_config) -> None:
+    def test_orchestrator_initialization(self, sample_config: dict[str, Any]) -> None:
         """Test that orchestrator initializes properly."""
         pipeline_config = PipelineConfig(
             source_name="tap-oracle-wms",
@@ -26,7 +27,7 @@ class TestWMSOrchestrator:
         assert orchestrator.source_name == "tap-oracle-wms"
         assert orchestrator.target_name == "target-oracle-wms"
 
-    def test_orchestrator_configuration_validation(self, sample_config) -> None:
+    def test_orchestrator_configuration_validation(self, sample_config: dict[str, Any]) -> None:
         """Test that orchestrator validates configuration properly."""
         # Test valid configuration
         valid_config = PipelineConfig(
@@ -42,7 +43,7 @@ class TestWMSOrchestrator:
         assert orchestrator.config.source_name == "tap-oracle-wms"
         assert orchestrator.config.target_name == "target-oracle-wms"
 
-    def test_orchestrator_pipeline_setup(self, sample_config) -> None:
+    def test_orchestrator_pipeline_setup(self, sample_config: dict[str, Any]) -> None:
         """Test that orchestrator sets up pipelines correctly."""
         pipeline_config = PipelineConfig(
             source_name="tap-oracle-wms",
@@ -65,7 +66,7 @@ class TestWMSOrchestrator:
             # Should not raise unexpected errors
             pytest.fail(f"Unexpected error during pipeline setup: {e}")
 
-    def test_orchestrator_runtime_configuration(self, sample_config) -> None:
+    def test_orchestrator_runtime_configuration(self, sample_config: dict[str, Any]) -> None:
         """Test runtime configuration handling."""
         pipeline_config = PipelineConfig(
             source_name="tap-oracle-wms",
@@ -83,7 +84,7 @@ class TestWMSOrchestrator:
         orchestrator.set_runtime_config(runtime_config)
         assert orchestrator.runtime_config == runtime_config
 
-    def test_orchestrator_stream_processing(self, sample_config) -> None:
+    def test_orchestrator_stream_processing(self, sample_config: dict[str, Any]) -> None:
         """Test stream processing capabilities."""
         pipeline_config = PipelineConfig(
             source_name="tap-oracle-wms",
@@ -112,7 +113,7 @@ class TestWMSOrchestrator:
             # Should not raise unexpected errors
             pytest.fail(f"Unexpected error during stream processing: {e}")
 
-    def test_orchestrator_monitoring_capabilities(self, sample_config) -> None:
+    def test_orchestrator_monitoring_capabilities(self, sample_config: dict[str, Any]) -> None:
         """Test monitoring and metrics capabilities."""
         pipeline_config = PipelineConfig(
             source_name="tap-oracle-wms",
@@ -137,7 +138,7 @@ class TestWMSOrchestrator:
             # Should not raise unexpected errors
             pytest.fail(f"Unexpected error getting metrics: {e}")
 
-    def test_orchestrator_error_handling(self, sample_config) -> None:
+    def test_orchestrator_error_handling(self, sample_config: dict[str, Any]) -> None:
         """Test error handling capabilities."""
         pipeline_config = PipelineConfig(
             source_name="tap-oracle-wms",
@@ -164,7 +165,7 @@ class TestWMSOrchestrator:
             # Should not raise unexpected errors
             pytest.fail(f"Unexpected error handling invalid config: {e}")
 
-    def test_orchestrator_lifecycle_management(self, sample_config) -> None:
+    def test_orchestrator_lifecycle_management(self, sample_config: dict[str, Any]) -> None:
         """Test orchestrator lifecycle management."""
         pipeline_config = PipelineConfig(
             source_name="tap-oracle-wms",
@@ -187,7 +188,7 @@ class TestWMSOrchestrator:
                     # Should not raise unexpected errors
                     pytest.fail(f"Unexpected error in {method}: {e}")
 
-    def test_orchestrator_configuration_serialization(self, sample_config) -> None:
+    def test_orchestrator_configuration_serialization(self, sample_config: dict[str, Any]) -> None:
         """Test configuration serialization and deserialization."""
         pipeline_config = PipelineConfig(
             source_name="tap-oracle-wms",

@@ -64,6 +64,8 @@ class TapOIC(Tap):
         setup_mapper: bool = True,
     ) -> None:
         """Initialize TAP with clean configuration validation."""
+        # CRITICAL: Singer SDK requires tap_name BEFORE super().__init__
+        self.tap_name = "tap-oracle-oic"  # Required by Singer SDK
         super().__init__(
             config=config,
             catalog=catalog,

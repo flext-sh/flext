@@ -86,20 +86,22 @@ config_schema = th.PropertiesList(
     th.Property(
         "company_code",
         th.StringType,
-        required=True,
-        description="WMS company code for context headers",
+        required=False,
+        default="*",
+        description="WMS company code for context headers (default: * for all companies)",
     ),
     th.Property(
         "facility_code",
         th.StringType,
-        required=True,
-        description="WMS facility code for context headers",
+        required=False,
+        default="*",
+        description="WMS facility code for context headers (default: * for all facilities)",
     ),
     # Data selection configuration
     th.Property(
         "start_date",
         th.DateTimeType,
-        required=True,
+        required=False,
         description="Initial data extraction date (ISO 8601 format)",
     ),
     th.Property(

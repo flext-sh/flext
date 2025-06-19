@@ -2,11 +2,12 @@
 
 from typing import Any, ClassVar
 
-from flx.core.base import (  # type: ignore[import-untyped]
-    DomainObject,
-    Identifiable,
-    Timestamped,
-)
+# Lazy import to avoid circular dependencies
+from flx.utils.lazy_import import lazy_import
+
+DomainObject = lazy_import("flx.core.base", "DomainObject")
+Identifiable = lazy_import("flx.core.base", "Identifiable")
+Timestamped = lazy_import("flx.core.base", "Timestamped")
 from pydantic import Field
 
 from .constants import (

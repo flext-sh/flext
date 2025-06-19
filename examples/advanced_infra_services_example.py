@@ -7,6 +7,7 @@ import asyncio
 import random
 from typing import Any
 
+from flx.infra.services.base import BaseInfraService
 from flx.infra.services.errors import (
     ErrorCategory,
     ErrorContext,
@@ -23,8 +24,6 @@ from flx.infra.services.resilience import (
     rate_limited,
     resilience_manager,
 )
-
-from flx.infra.services.base import BaseInfraService
 from flx.infra.services.resources import (
     ResourceFactory,
     ResourcePool,

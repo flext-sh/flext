@@ -11,12 +11,24 @@ Key improvements:
     - Enhanced observability
 """
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-from flx.adapters.base import BaseAdapter
-from flx.adapters.mixins.behavioral import AdvancedAdapterMixin
-from flx.core.domain.exceptions import HttpError
 from pydantic import Field
+
+if TYPE_CHECKING:
+    from flx.adapters.base import BaseAdapter
+    from flx.adapters.mixins.behavioral import AdvancedAdapterMixin
+else:
+    # Runtime: Use dummy base classes to avoid lazy_import as base class
+    class BaseAdapter:
+        """Dummy base class for runtime."""
+
+        def __init__(self, **kwargs: Any) -> None:
+            pass
+
+    class AdvancedAdapterMixin:
+        """Dummy mixin class for runtime."""
+
 
 from .auth import AuthToken, OICAuthenticator
 from .config import OracleOicConfig
@@ -126,8 +138,6 @@ class OracleOicHttpAdapterModern(AdvancedAdapterMixin, BaseAdapter):
         )
 
         # Initialize HTTP service using parent class HTTP adapter
-        from flx.adapters.outbound.http import HttpClientAdapter
-
         self._http_service = await self._connect_service(
             lambda: HttpClientAdapter(
                 base_url=config.base_url,

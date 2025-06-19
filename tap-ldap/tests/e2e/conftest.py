@@ -1,35 +1,22 @@
-"""E2E test configuration and fixtures for tap-ldap."""
+"""Pytest fixtures for E2E tests."""
 
 from __future__ import annotations
 
+from collections.abc import Generator
 import json
-import logging
 from pathlib import Path
 import subprocess
 import time
 from typing import TYPE_CHECKING, Any
 
-import docker
-import ldap3
 from ldap3 import ALL, Connection, Server
 import pytest
+import structlog
 
 if TYPE_CHECKING:
-    from collections.abc import Generator
+    from collections.abc import Iterator
 
-logger = logging.getLogger(__name__)
-
-
-@pytest.fixture(scope="session")
-def docker_client() -> docker.DockerClient:
-    """Get Docker client."""
-    return docker.from_env()
-
-
-@pytest.fixture(scope="session")
-def e2e_dir() -> Path:
-    """Get E2E test directory."""
-    return Path(__file__).parent
+logger = structlog.get_logger()
 
 
 @pytest.fixture(scope="session")
@@ -39,9 +26,28 @@ def project_root() -> Path:
 
 
 @pytest.fixture(scope="session")
-def ldap_container(
-    docker_client: docker.DockerClient, project_root: Path
-) -> Generator[Any]:
+def sample_catalog() -> dict[str, Any]:
+    """Sample catalog for testing."""
+    return {
+        "streams": [
+            {
+                "tap_stream_id": "users",
+                "schema": {
+                    "type": "object",
+                    "properties": {
+                        "dn": {"type": "string"},
+                        "uid": {"type": "string"},
+                        "cn": {"type": "string"},
+                    },
+                },
+                "metadata": [],
+            }
+        ]
+    }
+
+
+@pytest.fixture(scope="session")
+def ldap_container(project_root: Path) -> Iterator[None]:
     """Start OpenLDAP container for testing."""
     compose_file = project_root / "docker-compose.yml"
 
@@ -65,17 +71,18 @@ def ldap_container(
                 auto_bind=True,
             )
             conn.unbind()
-            logger.info("OpenLDAP is ready")
+            logger.info("LDAP container is ready")
             break
         except Exception:
             if i == max_retries - 1:
+                logger.error("LDAP container failed to start")
                 raise
-            logger.info("Waiting for OpenLDAP... (%s/%s)", i + 1, max_retries)
+            logger.info("Waiting for LDAP container to be ready...")
             time.sleep(2)
 
     yield
 
-    # Stop containers
+    # Cleanup
     logger.info("Stopping OpenLDAP container...")
     subprocess.run(
         ["docker-compose", "-f", str(compose_file), "down", "-v"],
@@ -85,7 +92,7 @@ def ldap_container(
 
 
 @pytest.fixture
-def ldap_connection(ldap_container: Any) -> Generator[Connection]:  # noqa: ANN401
+def ldap_connection(ldap_container: Any) -> Generator[Connection, None, None]:  # noqa: ANN401
     """Get LDAP connection for testing."""
     server = Server("localhost", port=10389, get_info=ALL)
     conn = Connection(
@@ -93,159 +100,32 @@ def ldap_connection(ldap_container: Any) -> Generator[Connection]:  # noqa: ANN4
         user="cn=admin,dc=test,dc=com",
         password="admin_password",
         auto_bind=True,
-        raise_exceptions=True,
     )
-
     yield conn
-
-    if conn.bound:
-        conn.unbind()
+    conn.unbind()
 
 
 @pytest.fixture
-def tap_config(tmp_path: Path) -> dict[str, Any]:
-    """Get tap configuration for testing."""
-    return {
+def tap_config_file(tmp_path: Path, ldap_container: Any) -> Path:  # noqa: ANN401
+    """Create tap config file for testing."""
+    config = {
         "host": "localhost",
         "port": 10389,
         "bind_dn": "cn=admin,dc=test,dc=com",
         "password": "admin_password",
         "base_dn": "dc=test,dc=com",
-        "use_ssl": False,
-        "page_size": 500,
+        "timeout": 30,
+        "page_size": 1000,
     }
 
-
-@pytest.fixture
-def tap_config_file(tap_config: dict[str, Any], tmp_path: Path) -> Path:
-    """Create tap configuration file."""
-    config_file = tmp_path / "tap-config.json"
-    config_file.write_text(json.dumps(tap_config))
+    config_file = tmp_path / "tap_config.json"
+    config_file.write_text(json.dumps(config, indent=2))
     return config_file
 
 
 @pytest.fixture
-def catalog_file(tmp_path: Path) -> Path:
+def catalog_file(tmp_path: Path, sample_catalog: dict[str, Any]) -> Path:
     """Create catalog file for testing."""
-    catalog = {
-        "streams": [
-            {
-                "tap_stream_id": "users",
-                "replication_method": "FULL_TABLE",
-                "metadata": [
-                    {
-                        "breadcrumb": [],
-                        "metadata": {
-                            "inclusion": "available",
-                            "selected": True,
-                            "forced-replication-method": "FULL_TABLE",
-                        },
-                    }
-                ],
-                "schema": {
-                    "type": "object",
-                    "properties": {
-                        "dn": {"type": "string"},
-                        "uid": {"type": "string"},
-                        "cn": {"type": "string"},
-                        "sn": {"type": "string"},
-                        "givenName": {"type": "string"},
-                        "mail": {"type": "string"},
-                        "employeeNumber": {"type": "string"},
-                        "employeeType": {"type": "string"},
-                        "departmentNumber": {"type": "string"},
-                    },
-                },
-            },
-            {
-                "tap_stream_id": "groups",
-                "replication_method": "FULL_TABLE",
-                "metadata": [
-                    {
-                        "breadcrumb": [],
-                        "metadata": {
-                            "inclusion": "available",
-                            "selected": True,
-                            "forced-replication-method": "FULL_TABLE",
-                        },
-                    }
-                ],
-                "schema": {
-                    "type": "object",
-                    "properties": {
-                        "dn": {"type": "string"},
-                        "cn": {"type": "string"},
-                        "description": {"type": "string"},
-                        "member": {"type": "array", "items": {"type": "string"}},
-                    },
-                },
-            },
-            {
-                "tap_stream_id": "organizational_units",
-                "replication_method": "FULL_TABLE",
-                "metadata": [
-                    {
-                        "breadcrumb": [],
-                        "metadata": {
-                            "inclusion": "available",
-                            "selected": True,
-                            "forced-replication-method": "FULL_TABLE",
-                        },
-                    }
-                ],
-                "schema": {
-                    "type": "object",
-                    "properties": {
-                        "dn": {"type": "string"},
-                        "ou": {"type": "string"},
-                        "description": {"type": "string"},
-                    },
-                },
-            },
-        ]
-    }
-
     catalog_file = tmp_path / "catalog.json"
-    catalog_file.write_text(json.dumps(catalog))
+    catalog_file.write_text(json.dumps(sample_catalog, indent=2))
     return catalog_file
-
-
-@pytest.fixture
-def state_file(tmp_path: Path) -> Path:
-    """Create empty state file."""
-    state_file = tmp_path / "state.json"
-    state_file.write_text("{}")
-    return state_file
-
-
-def count_ldap_entries(conn: Connection, base_dn: str, search_filter: str) -> int:
-    """Count LDAP entries matching filter."""
-    conn.search(
-        search_base=base_dn,
-        search_filter=search_filter,
-        search_scope=ldap3.SUBTREE,
-        attributes=["dn"],
-    )
-    return len(conn.entries)
-
-
-def verify_user_exists(conn: Connection, uid: str) -> bool:
-    """Verify a user exists in LDAP."""
-    conn.search(
-        search_base="dc=test,dc=com",
-        search_filter=f"(uid={uid})",
-        search_scope=ldap3.SUBTREE,
-        attributes=["*"],
-    )
-    return len(conn.entries) > 0
-
-
-def verify_group_exists(conn: Connection, cn: str) -> bool:
-    """Verify a group exists in LDAP."""
-    conn.search(
-        search_base="dc=test,dc=com",
-        search_filter=f"(cn={cn})",
-        search_scope=ldap3.SUBTREE,
-        attributes=["*"],
-    )
-    return len(conn.entries) > 0

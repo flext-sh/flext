@@ -9,10 +9,9 @@ import asyncio
 import random
 from typing import Any
 
+from flx.adapters.base import BaseAdapter
 from flx.adapters.mixins.circuit_breaker_simple import CircuitBreakerHealthMixin
 from flx.infra.adapters.circuit_breaker_adapter import create_circuit_breaker_factory
-
-from flx.adapters.base import BaseAdapter
 from flx.utils.logging import get_logger
 
 logger = get_logger(__name__)

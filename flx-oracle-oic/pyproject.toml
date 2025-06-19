@@ -17,14 +17,14 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.9,<4.0"
-# FLX core
-flx = { path = "../flx", develop = true }
-# Singer components
-tap-oracle-oic = { path = "../tap-oracle-oic", develop = true }
-target-oracle-oic = { path = "../target-oracle-oic", develop = true }
-oracle-oic-ext = { path = "../oracle-oic-ext", develop = true }
+# FLX core - made optional to avoid circular dependencies
+flx = { path = "../flx", develop = true, optional = true }
+# Singer components - made optional to avoid circular dependencies
+tap-oracle-oic = { path = "../tap-oracle-oic", develop = true, optional = true }
+target-oracle-oic = { path = "../target-oracle-oic", develop = true, optional = true }
+oracle-oic-ext = { path = "../oracle-oic-ext", develop = true, optional = true }
 # HTTP client
-httpx = "^0.27.0"
+httpx = "^0.28.1"
 # CLI
 click = "^8.1.0"
 typer = "^0.12.0"
@@ -36,6 +36,12 @@ python-dotenv = "^1.0.0"
 # Utilities
 tenacity = "^9.0.0"
 structlog = "^24.4.0"
+
+[tool.poetry.extras]
+# Optional dependency groups to avoid circular dependencies
+flx = ["flx"]
+singer = ["tap-oracle-oic", "target-oracle-oic", "oracle-oic-ext"]
+all = ["flx", "tap-oracle-oic", "target-oracle-oic", "oracle-oic-ext"]
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.0"

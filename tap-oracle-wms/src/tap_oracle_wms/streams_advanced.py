@@ -69,7 +69,7 @@ class CircuitBreaker:
         if self.failure_count >= self.failure_threshold:
             self.state = "open"
             logger.warning(
-                f"Circuit breaker opened after {self.failure_count} failures"
+                "Circuit breaker opened after %d failures", self.failure_count
             )
 
     def can_attempt_call(self) -> bool:
@@ -238,24 +238,18 @@ class WMSAdvancedStream(RESTStream):
         """Build URL parameters with all advanced features."""
         params = {}
 
-        # Pagination
-        pagination_mode = self.config.get("pagination_mode", "offset")
+        # Always use sequenced pagination for sync efficiency
+        params["page_mode"] = "sequenced"
         page_size = min(
             self.config.get("page_size", self.DEFAULT_PAGE_SIZE),
             self.MAX_PAGE_SIZE,
         )
+        params["page_size"] = page_size
 
-        if pagination_mode == "sequenced":
-            params["page_mode"] = "sequenced"
-            params["page_size"] = page_size
-
-            paginator = self.get_new_paginator()
-            if next_page_token and hasattr(paginator, "_cursor") and paginator._cursor:
-                params["cursor"] = paginator._cursor
-        else:
-            params["page_size"] = page_size
-            if next_page_token:
-                params["page"] = next_page_token
+        # Handle cursor for sequenced mode
+        paginator = self.get_new_paginator()
+        if next_page_token and hasattr(paginator, "_cursor") and paginator._cursor:
+            params["cursor"] = paginator._cursor
 
         # Date filtering
         if self.config.get("start_date"):
@@ -307,10 +301,9 @@ class WMSAdvancedStream(RESTStream):
             self.config.get("page_size", self.DEFAULT_PAGE_SIZE),
             self.MAX_PAGE_SIZE,
         )
-        pagination_mode = self.config.get("pagination_mode", "offset")
-
+        # Always use sequenced mode for sync efficiency
         return WMSAdvancedPaginator(
-            start_value=1, page_size=page_size, mode=pagination_mode
+            start_value=1, page_size=page_size, mode="sequenced"
         )
 
     @property
@@ -405,30 +398,30 @@ class WMSAdvancedStream(RESTStream):
                     yield record
             else:
                 # Unknown format
-                logger.warning(f"Unexpected response format for {self.entity_name}")
+                logger.warning("Unexpected response format for %s", self.entity_name)
                 yield data
 
         except json.JSONDecodeError as e:
             self._errors["json_decode"] = self._errors.get("json_decode", 0) + 1
-            logger.error(f"JSON decode error for {self.entity_name}: {e}")
+            logger.error("JSON decode error for {self.entity_name}: %s", e)
             msg = f"Invalid JSON response from {self.entity_name}"
-            raise FatalAPIError(msg)
+            raise FatalAPIError(msg) from e
         except Exception as e:
             self._errors["parse_error"] = self._errors.get("parse_error", 0) + 1
-            logger.error(f"Parse error for {self.entity_name}: {e}")
+            logger.error("Parse error for {self.entity_name}: %s", e)
             raise
 
     def post_process(self, row: dict, context: dict | None = None) -> dict | None:
         """Post-process records with validation."""
         # Skip invalid records
         if not isinstance(row, dict):
-            logger.warning(f"Invalid record type in {self.entity_name}: {type(row)}")
+            logger.warning("Invalid record type in {self.entity_name}: %s", type(row))
             return None
 
         # Ensure ID exists (most entities have it)
         if not row.get("id") and "id" not in row:
             # Some entities might not have ID field
-            logger.debug(f"Record without ID in {self.entity_name}")
+            logger.debug("Record without ID in %s", self.entity_name)
 
         # Add metadata
         row["_entity_name"] = self.entity_name
@@ -476,12 +469,15 @@ class WMSAdvancedStream(RESTStream):
             if duration > 0:
                 rate = self._records_extracted / duration
                 logger.info(
-                    f"Extracted {self._records_extracted} records from {self.entity_name} "
-                    f"in {duration:.2f}s ({rate:.2f} records/sec)"
+                    "Extracted %d records from %s in %.2fs (%.2f records/sec)",
+                    self._records_extracted,
+                    self.entity_name,
+                    duration,
+                    rate,
                 )
 
             if self._errors:
-                logger.warning(f"Errors during extraction: {self._errors}")
+                logger.warning("Errors during extraction: %s", self._errors)
 
     def request_decorator(self, func):
         """Decorator for retry logic with exponential backoff."""
@@ -497,11 +493,15 @@ class WMSAdvancedStream(RESTStream):
                     if attempt < self.MAX_RETRIES - 1:
                         delay = self.RETRY_DELAY * (self.BACKOFF_FACTOR**attempt)
                         logger.warning(
-                            f"Retrying after {delay}s (attempt {attempt + 1}/{self.MAX_RETRIES}): {e}"
+                            "Retrying after %.1fs (attempt %d/%d): %s",
+                            delay,
+                            attempt + 1,
+                            self.MAX_RETRIES,
+                            e,
                         )
                         time.sleep(delay)
                     else:
-                        logger.error(f"Max retries reached for {self.entity_name}")
+                        logger.error("Max retries reached for %s", self.entity_name)
                         raise
                 except Exception:
                     # Don't retry on non-retriable errors

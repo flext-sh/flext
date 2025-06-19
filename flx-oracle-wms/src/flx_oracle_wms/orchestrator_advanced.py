@@ -164,7 +164,7 @@ class StateManager:
         try:
             return json.loads(state_file.read_text())
         except Exception as e:
-            logger.error(f"Failed to load state for {pipeline_name}: {e}")
+            logger.error("Failed to load state for %s: %s", pipeline_name, e)
             return None
 
     def save_checkpoint(
@@ -191,7 +191,7 @@ class StateManager:
             return json.loads(checkpoint_file.read_text())
         except Exception as e:
             logger.error(
-                f"Failed to load checkpoint {checkpoint_name} for {pipeline_name}: {e}"
+                "Failed to load checkpoint %s for %s: %s", checkpoint_name, pipeline_name, e
             )
             return None
 
@@ -346,6 +346,7 @@ class WMSAdvancedOrchestrator:
         self._active_executions: dict[str, ExecutionContext] = {}
         self._execution_history: list[ExecutionContext] = []
         self._scheduler_task: asyncio.Task | None = None
+        self._background_tasks: set = set()
 
     def _setup_logging(self) -> None:
         """Setup structured logging."""
@@ -395,7 +396,7 @@ class WMSAdvancedOrchestrator:
 
         # Wait for active executions
         if self._active_executions:
-            logger.info(f"Waiting for {len(self._active_executions)} active pipelines")
+            logger.info("Waiting for %d active pipelines", len(self._active_executions))
             await asyncio.gather(
                 *[ctx.state for ctx in self._active_executions.values()],
                 return_exceptions=True,
@@ -408,7 +409,7 @@ class WMSAdvancedOrchestrator:
         logger.info("Orchestrator stopped")
 
     async def run_pipeline(
-        self, pipeline_name: str, force: bool = False, checkpoint: str | None = None
+        self, pipeline_name: str, *, force: bool = False, checkpoint: str | None = None
     ) -> dict[str, Any]:
         """Run a pipeline with advanced features.
 
@@ -577,7 +578,7 @@ class WMSAdvancedOrchestrator:
 
                     if attempt < max_retries:
                         logger.warning(
-                            f"Pipeline failed, retrying in {retry_delay}s",
+                            "Pipeline failed, retrying in %ss", retry_delay,
                             pipeline=context.pipeline_name,
                             attempt=attempt + 1,
                             error=str(e),
@@ -781,12 +782,15 @@ class WMSAdvancedOrchestrator:
 
                     if last_run is None or next_run <= now:
                         logger.info(
-                            f"Scheduled pipeline {pipeline.name} triggered",
+                            "Scheduled pipeline %s triggered", pipeline.name,
                             schedule=pipeline.schedule,
                         )
 
                         # Run pipeline
-                        asyncio.create_task(self.run_pipeline(pipeline.name))
+                        task = asyncio.create_task(self.run_pipeline(pipeline.name))
+                        # Store reference to avoid garbage collection
+                        self._background_tasks.add(task)
+                        task.add_done_callback(self._background_tasks.discard)
 
                 # Sleep until next minute
                 await asyncio.sleep(60)
@@ -794,7 +798,7 @@ class WMSAdvancedOrchestrator:
             except asyncio.CancelledError:
                 break
             except Exception as e:
-                logger.error(f"Scheduler error: {e}")
+                logger.error("Scheduler error: %s", e)
                 await asyncio.sleep(60)
 
     def _get_last_run_time(self, pipeline_name: str) -> datetime | None:

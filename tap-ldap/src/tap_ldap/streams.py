@@ -56,7 +56,7 @@ class LDAPStream(Stream):
         return self._client
 
     def get_records(
-        self, context: Mapping[str, Any] | None = None
+        self, context: Mapping[str, Any] | None = None  # noqa: ARG002
     ) -> Iterable[dict[str, Any]]:
         """Get records from LDAP.
 
@@ -286,7 +286,7 @@ class SchemaStream(LDAPStream):
     primary_keys: ClassVar[list[str]] = ["type", "name"]
 
     def get_records(
-        self, context: Mapping[str, Any] | None = None
+        self, context: Mapping[str, Any] | None = None  # noqa: ARG002
     ) -> Iterable[dict[str, Any]]:
         """Get schema records from LDAP.
 

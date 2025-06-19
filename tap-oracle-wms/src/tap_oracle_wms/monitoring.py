@@ -95,7 +95,7 @@ class MetricsCollector:
         self._collection_task: asyncio.Task[None] | None = None
         self._running = False
 
-        logger.info(f"Metrics collector initialized (enabled: {self.enabled})")
+        logger.info("Metrics collector initialized (enabled: %s)", self.enabled)
 
     def start_collection(self) -> None:
         """Start background metrics collection."""
@@ -132,7 +132,7 @@ class MetricsCollector:
         except asyncio.CancelledError:
             logger.debug("Metrics collection loop cancelled")
         except Exception as e:
-            logger.exception(f"Error in metrics collection loop: {e}")
+            logger.exception("Error in metrics collection loop: %s", e)
 
     async def _collect_system_metrics(self) -> None:
         """Collect system-level metrics."""
@@ -156,7 +156,7 @@ class MetricsCollector:
             # psutil not available, skip system metrics
             pass
         except Exception as e:
-            logger.warning(f"Error collecting system metrics: {e}")
+            logger.warning("Error collecting system metrics: %s", e)
 
     def record_counter(
         self, name: str, value: int = 1, tags: Optional[dict[str, str]] = None
@@ -421,7 +421,7 @@ class HealthMonitor:
         self._health_checks[name] = HealthCheck(
             name=name, description=description, check_function=check_function
         )
-        logger.debug(f"Registered health check: {name}")
+        logger.debug("Registered health check: %s", name)
 
     def start_monitoring(self) -> None:
         """Start background health monitoring."""
@@ -454,7 +454,7 @@ class HealthMonitor:
         except asyncio.CancelledError:
             logger.debug("Health monitoring loop cancelled")
         except Exception as e:
-            logger.exception(f"Error in health monitoring loop: {e}")
+            logger.exception("Error in health monitoring loop: %s", e)
 
     async def run_health_checks(self) -> dict[str, bool]:
         """Run all health checks.
@@ -493,7 +493,7 @@ class HealthMonitor:
                 )
 
             except Exception as e:
-                logger.exception(f"Error running health check {name}: {e}")
+                logger.exception("Error running health check %s: %s", name, e)
                 check.consecutive_failures += 1
                 results[name] = False
                 overall_healthy = False
@@ -656,7 +656,7 @@ class AlertManager:
             threshold=threshold,
             metric_name=metric_name,
         )
-        logger.debug(f"Registered alert: {name}")
+        logger.debug("Registered alert: %s", name)
 
     def start_monitoring(self) -> None:
         """Start background alert monitoring."""
@@ -689,7 +689,7 @@ class AlertManager:
         except asyncio.CancelledError:
             logger.debug("Alert monitoring loop cancelled")
         except Exception as e:
-            logger.exception(f"Error in alert monitoring loop: {e}")
+            logger.exception("Error in alert monitoring loop: %s", e)
 
     async def check_alerts(self) -> list[str]:
         """Check all alerts and trigger as needed.
@@ -719,8 +719,11 @@ class AlertManager:
                     triggered.append(name)
 
                     logger.warning(
-                        f"ALERT TRIGGERED: {alert.name} - {alert.description} "
-                        f"(value: {current_value}, threshold: {alert.threshold})"
+                        "ALERT TRIGGERED: %s - %s (value: %s, threshold: %s)",
+                        alert.name,
+                        alert.description,
+                        current_value,
+                        alert.threshold,
                     )
 
                     # Record alert metric
@@ -732,7 +735,7 @@ class AlertManager:
                 elif not should_trigger and alert.active:
                     # Clear alert
                     alert.active = False
-                    logger.info(f"ALERT CLEARED: {alert.name} (value: {current_value})")
+                    logger.info("ALERT CLEARED: {alert.name} (value: %s)", current_value)
 
                     # Record alert cleared metric
                     self.metrics.record_counter(
@@ -741,7 +744,7 @@ class AlertManager:
                     )
 
             except Exception as e:
-                logger.exception(f"Error checking alert {name}: {e}")
+                logger.exception("Error checking alert %s: %s", name, e)
 
         return triggered
 
@@ -819,7 +822,7 @@ class PerformanceProfiler:
 
         """
         if profile_id not in self._active_profiles:
-            logger.warning(f"Profile ID not found: {profile_id}")
+            logger.warning("Profile ID not found: %s", profile_id)
             return 0.0
 
         start_time = self._active_profiles.pop(profile_id)

@@ -469,7 +469,9 @@ class TestTargetLDAPE2E:
             f.write(json.dumps(record) + "\n")
 
         # Ensure target OU exists
-        try:
+        import contextlib
+
+        with contextlib.suppress(Exception):
             target_connection.add(
                 "ou=services,dc=target,dc=com",
                 attributes={
@@ -478,8 +480,6 @@ class TestTargetLDAPE2E:
                     "description": "Service Accounts",
                 },
             )
-        except Exception:
-            pass  # OU might already exist
 
         with open(input_file) as f:
             subprocess.run(

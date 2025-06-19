@@ -9,14 +9,23 @@ import asyncio
 import json
 from pathlib import Path
 from typing import Any, Optional
+# Lazy import to avoid circular dependencies
+from flx.utils.lazy_import import lazy_import
+
+# Lazy imports to avoid circular dependencies
+# Lazy import to avoid circular dependencies
+
 
 import structlog
 from meltano.core.plugin import PluginRef, PluginType
 from meltano.core.project import Project
 from meltano.core.project_add_service import ProjectAddService
 
-from flx.config import settings
-from flx.events.event_bus import Event, EventBus
+# Lazy import to avoid circular dependencies
+settings = lazy_import('flx.config', 'settings')
+# Lazy imports to avoid circular dependencies
+Event = lazy_import('flx.events.event_bus', 'Event')
+EventBus = lazy_import('flx.events.event_bus', 'EventBus')
 
 logger = structlog.get_logger()
 

@@ -275,11 +275,12 @@ def get_wms_headers(config: dict[str, Any]) -> dict[str, str]:
         "User-Agent": "tap-oracle-wms/0.1.0",
     }
 
-    # Add required WMS context headers
-    if "company_code" in config:
-        headers["X-WMS-Company"] = config["company_code"]
+    # Add WMS context headers with defaults
+    # Use "*" as default if not provided (tested and confirmed to work)
+    company_code = config.get("company_code", "*")
+    facility_code = config.get("facility_code", "*")
 
-    if "facility_code" in config:
-        headers["X-WMS-Facility"] = config["facility_code"]
+    headers["X-WMS-Company"] = company_code
+    headers["X-WMS-Facility"] = facility_code
 
     return headers

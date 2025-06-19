@@ -1,7 +1,7 @@
 """Version information for FLX Adapter Example."""
 
 __version__ = "0.1.0"
-__version_info__ = tuple(map(int, __version__.split(".")))
+__version_info__ = tuple(int(x) for x in __version__.split(".") if x.isdigit())
 
 # Build information
 __build__ = "template"

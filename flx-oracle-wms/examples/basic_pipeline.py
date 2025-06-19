@@ -48,7 +48,7 @@ def create_basic_pipeline() -> None:
         pass
 
 
-def create_multi_pipeline():
+def create_multi_pipeline() -> "PipelineConfig":
     """Create multiple pipelines for different business areas."""
     return PipelineConfig(
         name="Multi-Pipeline WMS Integration",

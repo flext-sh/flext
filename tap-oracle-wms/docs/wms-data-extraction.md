@@ -332,6 +332,7 @@ Response:
 ```
 
 **Use Cases:**
+
 - Building lookup dictionaries
 - Extracting specific fields for reporting
 - Getting unique values for filters

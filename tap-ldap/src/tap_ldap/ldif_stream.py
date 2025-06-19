@@ -21,11 +21,7 @@ from tap_ldap.streams import LDAPStream
 
 # Import from ldap-core-shared
 try:
-    from ldap_core_shared.domain.models import LDAPEntry, MigrationStats
-    from ldap_core_shared.utils.simple_dn_utils import (
-        simple_normalize_dn,
-        simple_parse_dn,
-    )
+    from ldap_core_shared.utils.simple_dn_utils import simple_parse_dn
 
     LDAP_CORE_AVAILABLE = True
 except ImportError as e:
@@ -113,7 +109,7 @@ class LDIFStream(LDAPStream):
         }
 
     def get_records(
-        self, context: Mapping[str, Any] | None = None
+        self, context: Mapping[str, Any] | None = None  # noqa: ARG002
     ) -> Iterable[dict[str, Any]]:
         """Get records from LDIF files.
 
@@ -256,7 +252,7 @@ class LDIFStream(LDAPStream):
                 yield record
                 self.stats["entries_processed"] += 1
 
-            except Exception as e:
+            except Exception as e:  # noqa: PERF203
                 error_msg = f"Error processing entry {ldif_entry.dn}: {e}"
                 logger.error(error_msg)
                 self.stats["errors"].append(error_msg)
@@ -264,7 +260,7 @@ class LDIFStream(LDAPStream):
                 if not self.config.get("ldif_ignore_entry_errors", True):
                     raise
 
-    def _extract_entry_metadata(self, ldif_entry) -> dict[str, Any]:
+    def _extract_entry_metadata(self, ldif_entry: Any) -> dict[str, Any]:  # noqa: ANN401
         """Extract metadata from LDIF entry.
 
         Args:
@@ -405,7 +401,7 @@ class LDIFAnalysisStream(LDAPStream):
     primary_keys: ClassVar[list[str]] = ["source_file"]
 
     def get_records(
-        self, context: Mapping[str, Any] | None = None
+        self, context: Mapping[str, Any] | None = None  # noqa: ARG002
     ) -> Iterable[dict[str, Any]]:
         """Get LDIF analysis records.
 
@@ -425,7 +421,7 @@ class LDIFAnalysisStream(LDAPStream):
             try:
                 analysis = self._analyze_ldif_file(file_path, analysis_timestamp)
                 yield analysis
-            except Exception as e:
+            except Exception as e:  # noqa: PERF203
                 logger.error("Failed to analyze LDIF file %s: %s", file_path, e)
 
     def _get_ldif_files(self) -> list[Path]:
@@ -484,8 +480,9 @@ class LDIFAnalysisStream(LDAPStream):
                     hierarchy_levels[str(level)] = (
                         hierarchy_levels.get(str(level), 0) + 1
                     )
-                except Exception:
-                    pass
+                except Exception:  # noqa: S112
+                    # Skip entries with invalid DN hierarchy
+                    continue
 
             # Count attribute usage
             for attr_name in ldif_entry.attributes:

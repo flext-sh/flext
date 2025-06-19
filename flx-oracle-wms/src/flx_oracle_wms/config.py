@@ -19,7 +19,7 @@ class PipelineDefinition(BaseModel):
     description: str = Field(..., description="Pipeline description")
     streams: list[str] = Field(..., description="Streams to include in pipeline")
     schedule: str | None = Field(None, description="Cron schedule expression")
-    enabled: bool = Field(True, description="Whether pipeline is enabled")
+    enabled: bool = Field(default=True, description="Whether pipeline is enabled")
     tap_config_override: dict[str, Any] | None = Field(
         None, description="Override tap configuration for this pipeline"
     )
@@ -31,7 +31,7 @@ class PipelineDefinition(BaseModel):
 class MonitoringConfig(BaseModel):
     """Monitoring configuration."""
 
-    enabled: bool = Field(True, description="Enable monitoring")
+    enabled: bool = Field(default=True, description="Enable monitoring")
     metrics_port: int = Field(9090, description="Port for metrics endpoint")
     health_check_interval: int = Field(
         60, description="Health check interval in seconds"

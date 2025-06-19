@@ -90,6 +90,7 @@ X-WMS-User-Context: integration_user
 ### Date/Time Format
 
 All timestamps must be in ISO 8601 format with timezone:
+
 - Full format: `2025-06-15T14:30:00.000Z`
 - Date only: `2025-06-15`
 - With timezone: `2025-06-15T14:30:00-07:00`
@@ -445,6 +446,7 @@ DELETE /entity/{entity_name}/{id}
 ```
 
 **Error Response Components:**
+
 - `reference`: Unique error reference ID for support
 - `code`: Generic error classification
 - `message`: Human-readable error message
@@ -881,6 +883,7 @@ Content-Type: application/json
 ```
 
 **Commit Frequency Options:**
+
 - `0`: All or nothing (default) - entire batch succeeds or fails
 - `1`: Commit per resource - each record processed independently
 - `>1`: Advanced scenarios - commit after N successful records
@@ -933,6 +936,7 @@ GET /entity/order_hdr/12345/order_dtl
 Entity operations are business-specific actions that can be performed on entities.
 
 **Operation URL Format:**
+
 - Single entity: `/entity/{entity_name}/{id}/{operation_name}/`
 - Bulk operation: `/entity/{entity_name}/{operation_name}/`
 
@@ -1033,6 +1037,7 @@ If rate limiting is enforced, the API will return HTTP status code 429 (Too Many
 ### Default Page Size
 
 The default page size is determined by the requesting user's configuration of the "Rows per Page" field in the WMS UI. This setting:
+
 - Has an allowed range of 10 to 125 results per page
 - Applies to both UI and API requests
 - Also determines the maximum object count for bulk operations
@@ -1040,6 +1045,7 @@ The default page size is determined by the requesting user's configuration of th
 ### Page Size Override
 
 You can override the default with the `page_size` query parameter:
+
 - Maximum value: 1250 records
 - Recommended range: 100-1000 records
 - Example: `?page_size=500`

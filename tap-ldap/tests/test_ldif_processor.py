@@ -214,7 +214,7 @@ class TestLDIFProcessor:
 
     def test_parse_with_base64_values(self) -> None:
         """Test parsing LDIF with base64 encoded values."""
-        # "test value" in base64 is "dGVzdCB2YWx1ZQ=="
+        # Base64 encoded test value
         ldif_content = dedent(
             """
             dn: cn=john,ou=users,dc=example,dc=com
@@ -256,7 +256,7 @@ class TestLDIFProcessor:
         """Test parsing nonexistent file raises error."""
         processor = LDIFProcessor()
 
-        with pytest.raises(Exception):  # Should raise LDIFParseError
+        with pytest.raises(FileNotFoundError):
             list(processor.parse_file(Path("/nonexistent/file.ldif")))
 
     def test_error_handling_ignore_errors(self) -> None:

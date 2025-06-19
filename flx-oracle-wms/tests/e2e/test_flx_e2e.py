@@ -106,12 +106,10 @@ class TestFLXOracleWMSE2E:
         )
 
         # Discovery might fail in test mode, but command should run
-        if result.returncode == 0:
-            # Check if catalog was created
-            if Path("catalog.json").exists():
-                with open("catalog.json") as f:
-                    catalog = json.load(f)
-                assert "streams" in catalog
+        if result.returncode == 0 and Path("catalog.json").exists():
+            with Path("catalog.json").open() as f:
+                catalog = json.load(f)
+            assert "streams" in catalog
 
     def test_pipeline_list(self) -> None:
         """Test listing available pipelines."""
@@ -151,7 +149,7 @@ class TestFLXOracleWMSE2E:
             ]
         }
 
-        with open("test_catalog.json", "w") as f:
+        with Path("test_catalog.json").open("w") as f:
             json.dump(test_catalog, f)
 
         try:
@@ -194,20 +192,21 @@ class TestFLXOracleWMSE2E:
             input_file = f.name
 
         try:
-            result = subprocess.run(
-                [
-                    sys.executable,
-                    "-m",
-                    "flx_oracle_wms",
-                    "load",
-                    "--config",
-                    "config/target_config.json",
-                ],
-                stdin=open(input_file),
-                capture_output=True,
-                text=True,
-                cwd=self.project_root,
-            )
+            with Path(input_file).open() as input_stream:
+                result = subprocess.run(
+                    [
+                        sys.executable,
+                        "-m",
+                        "flx_oracle_wms",
+                        "load",
+                        "--config",
+                        "config/target_config.json",
+                    ],
+                    stdin=input_stream,
+                    capture_output=True,
+                    text=True,
+                    cwd=self.project_root,
+                )
 
             # Load should process without crashing
             assert result.returncode in [0, 1]
@@ -344,7 +343,7 @@ print("✅ Monitoring test successful")
         assert "✅ Monitoring test successful" in result.stdout
 
 
-def main():
+def main() -> None:
     """Run E2E tests."""
     # Change to project directory
     project_dir = Path(__file__).parent.parent.parent

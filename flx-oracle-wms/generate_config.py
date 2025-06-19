@@ -4,6 +4,7 @@
 import json
 import os
 from pathlib import Path
+from typing import Any
 
 from dotenv import load_dotenv
 
@@ -12,7 +13,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-def generate_tap_config():
+def generate_tap_config() -> dict[str, Any]:
     """Generate tap configuration."""
     return {
         "base_url": os.getenv("WMS_BASE_URL", "https://test.oracle.com/wms/api/v1"),
@@ -24,7 +25,7 @@ def generate_tap_config():
     }
 
 
-def generate_target_config():
+def generate_target_config() -> dict[str, Any]:
     """Generate target configuration."""
     return {
         "base_url": os.getenv("WMS_BASE_URL", "https://test.oracle.com/wms/api/v1"),
@@ -38,7 +39,7 @@ def generate_target_config():
     }
 
 
-def generate_pipeline_config():
+def generate_pipeline_config() -> dict[str, Any]:
     """Generate pipeline configuration."""
     return {
         "name": "Oracle WMS Integration",
@@ -70,17 +71,17 @@ def main() -> None:
 
     # Generate tap config
     tap_config = generate_tap_config()
-    with open(config_dir / "tap_config.json", "w") as f:
+    with (config_dir / "tap_config.json").open("w") as f:
         json.dump(tap_config, f, indent=2)
 
     # Generate target config
     target_config = generate_target_config()
-    with open(config_dir / "target_config.json", "w") as f:
+    with (config_dir / "target_config.json").open("w") as f:
         json.dump(target_config, f, indent=2)
 
     # Generate pipeline config
     pipeline_config = generate_pipeline_config()
-    with open(config_dir / "pipeline_config.json", "w") as f:
+    with (config_dir / "pipeline_config.json").open("w") as f:
         json.dump(pipeline_config, f, indent=2)
 
 

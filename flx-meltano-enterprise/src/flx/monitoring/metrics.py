@@ -8,12 +8,19 @@ resource usage, and business metrics.
 import time
 from functools import wraps
 from typing import Any, Callable
+# Lazy import to avoid circular dependencies
+from flx.utils.lazy_import import lazy_import
+
+# Lazy imports to avoid circular dependencies
+# Lazy import to avoid circular dependencies
+
 
 import psutil
 import structlog
 from prometheus_client import Counter, Gauge, Histogram, Info
 
-from flx.config import settings
+# Lazy import to avoid circular dependencies
+settings = lazy_import('flx.config', 'settings')
 
 logger = structlog.get_logger()
 

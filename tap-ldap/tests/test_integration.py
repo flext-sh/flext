@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 from typing import TYPE_CHECKING, Any
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 from click.testing import CliRunner
 import pytest
@@ -51,8 +51,8 @@ class TestTapLDAPIntegration:
     @patch("tap_ldap.client.Server")
     def test_discovery_mode(
         self,
-        mock_server: Any,
-        mock_connection: Any,
+        mock_server: Mock,
+        mock_connection: Mock,
         runner: CliRunner,
         config_file: Path,
     ) -> None:
@@ -86,8 +86,8 @@ class TestTapLDAPIntegration:
     @patch("tap_ldap.client.Server")
     def test_sync_mode(
         self,
-        mock_server: Any,
-        mock_connection: Any,
+        mock_server: Mock,
+        mock_connection: Mock,
         runner: CliRunner,
         config_file: Path,
         catalog_file: Path,
@@ -131,8 +131,8 @@ class TestTapLDAPIntegration:
     @patch("tap_ldap.client.Server")
     def test_incremental_sync(
         self,
-        mock_server: Any,
-        mock_connection: Any,
+        mock_server: Mock,
+        mock_connection: Mock,
         runner: CliRunner,
         config_file: Path,
         catalog_file: Path,
@@ -227,8 +227,8 @@ class TestTapLDAPIntegration:
     @patch("tap_ldap.client.Server")
     def test_pagination_handling(
         self,
-        mock_server: Any,
-        mock_connection: Any,
+        mock_server: Mock,
+        mock_connection: Mock,
         runner: CliRunner,
         config_file: Path,
         catalog_file: Path,
@@ -265,7 +265,7 @@ class TestTapLDAPIntegration:
         # Set up pagination responses
         call_count = 0
 
-        def side_effect(*args, **kwargs) -> bool:
+        def side_effect(*args: object, **kwargs: object) -> bool:
             nonlocal call_count
             call_count += 1
             if call_count == 1:

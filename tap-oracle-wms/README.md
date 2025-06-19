@@ -43,19 +43,18 @@ poetry install
 |---------|------|-------------|
 | `base_url` | string | Oracle WMS instance URL (e.g., `https://instance.wms.ocs.oraclecloud.com/tenant`) |
 | `auth_method` | string | Authentication method: `basic` or `oauth2` |
-| `company_code` | string | WMS company code |
-| `facility_code` | string | WMS facility code |
-| `start_date` | string | Start date for data extraction (ISO 8601 format) |
 
 ### Authentication Settings
 
 #### Basic Authentication
+
 | Setting | Type | Description |
 |---------|------|-------------|
 | `username` | string | WMS username |
 | `password` | string | WMS password |
 
 #### OAuth2 Authentication
+
 | Setting | Type | Description |
 |---------|------|-------------|
 | `oauth_client_id` | string | OAuth2 client ID |
@@ -67,6 +66,9 @@ poetry install
 
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
+| `company_code` | string | `*` | WMS company code for context headers (`*` = all companies) |
+| `facility_code` | string | `*` | WMS facility code for context headers (`*` = all facilities) |
+| `start_date` | string | null | Start date for data extraction (ISO 8601 format) |
 | `entities` | array | [] | Specific entities to extract (empty = all entities) |
 | `excluded_entities` | array | [] | Entities to exclude from extraction |
 | `page_size` | integer | 100 | Number of records per page |

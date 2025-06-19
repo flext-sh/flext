@@ -76,10 +76,8 @@ class TestLDAPSink:
         """Test DN extraction error."""
         record = {"uid": "test"}  # No DN, no matching RDN
 
-        with pytest.raises(ValueError) as exc_info:
+        with pytest.raises(ValueError, match="Cannot determine DN"):
             sink.get_dn_from_record(record)
-
-        assert "Cannot determine DN" in str(exc_info.value)
 
     def test_get_object_classes(self, sink: LDAPSink) -> None:
         """Test object class extraction."""
