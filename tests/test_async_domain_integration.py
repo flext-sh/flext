@@ -15,11 +15,12 @@ import pytest
 # Force stub broker for tests to avoid Redis dependency
 os.environ["FLX_BROKER_TYPE"] = "stub"
 
-from flx.core import FlxAggregateRoot, FlxEntityFactory
 from flx.infrastructure.di.container import (
     AsyncEventPublisher,
     create_default_container,
 )
+
+from flx.core import FlxAggregateRoot, FlxEntityFactory
 
 
 def test_aggregate_root_async_events() -> None:

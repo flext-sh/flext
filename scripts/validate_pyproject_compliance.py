@@ -341,9 +341,9 @@ def main() -> int:
             "COMPLIANCE FAILURE - Projects require template application",
             failed_projects=failed_projects
         )
-        print("\n" + "="*80)
+        print("\n" + "=" * 80)
         print("ENTERPRISE COMPLIANCE FAILURE")
-        print("="*80)
+        print("=" * 80)
         print(f"Failed Projects: {len(failed_projects)}/{len(projects)}")
         print(f"Total Violations: {total_violations}")
         print("\nFailed Projects:")
@@ -353,7 +353,7 @@ def main() -> int:
         print("1. Apply pyproject-template.toml to all failed projects")
         print("2. Update project-specific dependencies")
         print("3. Re-run validation until ZERO violations")
-        print("="*80)
+        print("=" * 80)
         return 1
 
     logger.info("ALL PROJECTS COMPLIANT - Enterprise standards maintained")
