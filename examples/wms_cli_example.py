@@ -38,10 +38,10 @@ async def run_wms_command(cli: WmsCLI, command: str, args: dict) -> dict:
         Command result
 
     """
-    logger.info(f"Executing WMS command: {command}")
+    logger.info("Executing WMS command: %s", command")
     try:
         result = await cli.run_command(command, args)
-        logger.info(f"Command result: {result.get('success', False)}")
+        logger.info("Command result: %s", result.get('success', False)")
         return result
     except Exception as e:
         logger.exception(f"Error executing command: {e}")
@@ -54,7 +54,7 @@ async def main_async() -> None:
 
     # Create WMS CLI with configuration from environment variables
     cli = WmsCLI()
-    logger.info(f"WMS CLI initialized with URL: {cli.config.url}")
+    logger.info("WMS CLI initialized with URL: %s", cli.config.url")
 
     # Run test-connection command
     await run_wms_command(cli, "test-connection", {})

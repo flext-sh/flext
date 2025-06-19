@@ -13,7 +13,7 @@ import sys
 from pathlib import Path
 
 
-def parse_arguments():
+def parse_arguments() -> Any:
     """Parse command line arguments."""
     parser = argparse.ArgumentParser(
         description="Corrige linhas longas em arquivos Python",

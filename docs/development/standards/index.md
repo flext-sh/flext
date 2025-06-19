@@ -41,6 +41,7 @@ The Standards Hub establishes enterprise-grade code quality standards and develo
 | **[Python Modernization](./python-modernization-guide.md)** | Language Standards | Python 3.13+      | ✅ Production | Modern syntax, type hints, performance patterns     |
 | **[Documentation Standards](./documentation-standards.md)** | Documentation      | Technical Writing | ✅ Production | Structure, formatting, quality requirements         |
 | **[Documentation Guide](./documentation-guide.md)**         | Writing Practices  | Content Creation  | ✅ Production | Writing guidelines, templates, workflows            |
+| **[Type Safety](./type-safety.md)**                         | Type Checking      | MyPy Compliance   | ✅ Production | Type annotations, error resolution, validation      |
 
 ### **🚀 Enterprise Standards Features**
 

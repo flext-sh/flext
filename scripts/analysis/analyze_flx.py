@@ -9,7 +9,7 @@ from pathlib import Path
 import grimp
 
 
-def count_lines(file_path):
+def count_lines(file_path) -> Any:
     """Count lines in a file."""
     try:
         with open(file_path, encoding="utf-8") as f:
@@ -18,7 +18,7 @@ def count_lines(file_path):
         return 0
 
 
-def extract_complete_analysis(file_path):
+def extract_complete_analysis(file_path) -> Any:
     """Extract ALL classes, methods, functions, imports, exports from a Python file."""
     try:
         with open(file_path, encoding="utf-8") as f:
@@ -191,7 +191,7 @@ def extract_complete_analysis(file_path):
         return {"error": str(e)}
 
 
-def get_detailed_file_purpose(file_path, analysis):
+def get_detailed_file_purpose(file_path, analysis) -> Any:
     """Get detailed purpose of a file based on content analysis."""
     try:
         with open(file_path, encoding="utf-8") as f:
@@ -245,7 +245,7 @@ def get_detailed_file_purpose(file_path, analysis):
         return "Error analyzing purpose"
 
 
-def format_method_signature(method_info):
+def format_method_signature(method_info) -> Any:
     """Format method signature with args and decorators."""
     signature = method_info["name"]
     if method_info.get("args"):

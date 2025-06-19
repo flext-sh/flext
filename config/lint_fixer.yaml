@@ -1,0 +1,46 @@
+# Official PyAuto Lint Fixer Configuration
+# Enterprise-grade configuration for systematic lint/mypy fixes
+
+# Target projects (empty list = all projects)
+target_projects: []
+
+# Exclusion patterns for directories and files
+exclude_patterns:
+  - __pycache__
+  - .venv
+  - .git
+  - dist
+  - build
+  - .pytest_cache
+  - .mypy_cache
+  - .ruff_cache
+  - node_modules
+  - archive
+  - backup
+  - logs
+  - reports
+  - htmlcov
+  - junit
+
+# Fix categories to apply
+fix_categories:
+  type_annotations: true # Add missing return type annotations
+  logging_patterns: true # Convert f-strings in logging to % format
+  exception_handling: true # Add 'from e' to exception handling
+  unused_variables: true # Prefix unused variables with _
+  path_operations: false # Convert open() to Path.open() (disabled)
+  datetime_timezone: false # Add timezone info to datetime (disabled)
+  test_patterns: false # Fix test assertion patterns (disabled)
+
+# Safety controls
+safety:
+  validate_syntax: true # Validate Python syntax after fixes
+  max_changes_per_file: 20 # Maximum changes per file (safety limit)
+  create_backup: false # Create backup before processing (disabled)
+  batch_size: 10 # Process files in batches
+
+# Output controls
+output:
+  verbose: true # Enable verbose logging
+  report_format: json # Report format: json or yaml
+  report_path: reports/lint_fixer_report.json # Report output path

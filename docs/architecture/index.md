@@ -24,14 +24,15 @@ This hub provides comprehensive architectural guidance for implementing FLX Fram
 
 ### **Core Architecture Topics**
 
-| **Topic**                                          | **Function**                       | **Audience**           | **Complexity** | **Status** |
-| -------------------------------------------------- | ---------------------------------- | ---------------------- | -------------- | ---------- |
-| [**Design Patterns**](./design/index.md)           | Hexagonal architecture foundations | Architects, tech leads | ⭐⭐           | ✅ Updated |
-| [**Ports & Interfaces**](./ports/index.md)         | Port definitions and contracts     | Framework developers   | ⭐⭐⭐         | ✅ Updated |
-| [**Adapters**](./adapters/index.md)                | Adapter implementations            | Integration engineers  | ⭐⭐⭐         | ✅ Updated |
-| [**Domain Patterns**](./patterns/index.md)         | DDD, CQRS, Event Sourcing          | Senior developers      | ⭐⭐⭐⭐       | ✅ Updated |
-| [**Layer Organization**](./layers/index.md)        | Application layer structure        | All developers         | ⭐⭐           | ✅ Updated |
-| [**Architecture Standards**](./standards/index.md) | Consistency guidelines             | All teams              | ⭐⭐           | ✅ Updated |
+| **Topic**                                                 | **Function**                       | **Audience**           | **Complexity** | **Status** |
+| --------------------------------------------------------- | ---------------------------------- | ---------------------- | -------------- | ---------- |
+| [**Design Patterns**](./design/index.md)                  | Hexagonal architecture foundations | Architects, tech leads | ⭐⭐           | ✅ Updated |
+| [**Ports & Interfaces**](./ports/index.md)                | Port definitions and contracts     | Framework developers   | ⭐⭐⭐         | ✅ Updated |
+| [**Adapters**](./adapters/index.md)                       | Adapter implementations            | Integration engineers  | ⭐⭐⭐         | ✅ Updated |
+| [**Domain Patterns**](./patterns/index.md)                | DDD, CQRS, Event Sourcing          | Senior developers      | ⭐⭐⭐⭐       | ✅ Updated |
+| [**Layer Organization**](./layers/index.md)               | Application layer structure        | All developers         | ⭐⭐           | ✅ Updated |
+| [**Architecture Standards**](./architecture-standards.md) | Enterprise architecture guidelines | Architects, developers | ⭐⭐⭐         | ✅ Updated |
+| [**FLX 2.0 Architecture**](./flx-2.0-architecture.md)     | Meltano-powered evolution          | Technical leads        | ⭐⭐⭐⭐       | ✅ Updated |
 
 ### **Integration & Implementation**
 

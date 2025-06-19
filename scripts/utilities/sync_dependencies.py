@@ -102,7 +102,9 @@ def parse_requirements_txt(file_path: Path) -> dict[str, str]:
     return dependencies
 
 
-def update_toml_dependencies(file_path: Path, main_dependencies: dict[str, str], force: bool = False) -> None:
+def update_toml_dependencies(
+    file_path: Path, main_dependencies: dict[str, str], force: bool = False
+) -> None:
     """Atualiza as dependências em um arquivo pyproject.toml."""
     toml_data = load_toml(file_path)
     if not toml_data:
@@ -113,17 +115,27 @@ def update_toml_dependencies(file_path: Path, main_dependencies: dict[str, str],
     # Poetry format
     if "tool" in toml_data and "poetry" in toml_data["tool"]:
         if "dependencies" in toml_data["tool"]["poetry"]:
-            for dep, version in list(toml_data["tool"]["poetry"]["dependencies"].items()):
+            for dep, version in list(
+                toml_data["tool"]["poetry"]["dependencies"].items()
+            ):
                 if dep in main_dependencies and dep != "python":
                     if isinstance(version, str):
                         if force or version != main_dependencies[dep]:
-                            toml_data["tool"]["poetry"]["dependencies"][dep] = main_dependencies[dep]
-                            print(f"  Atualizando {dep}: {version} -> {main_dependencies[dep]}")
+                            toml_data["tool"]["poetry"]["dependencies"][dep] = (
+                                main_dependencies[dep]
+                            )
+                            print(
+                                f"  Atualizando {dep}: {version} -> {main_dependencies[dep]}"
+                            )
                             updated = True
                     elif isinstance(version, dict) and "version" in version:
                         if force or version["version"] != main_dependencies[dep]:
-                            toml_data["tool"]["poetry"]["dependencies"][dep]["version"] = main_dependencies[dep]
-                            print(f"  Atualizando {dep}: {version['version']} -> {main_dependencies[dep]}")
+                            toml_data["tool"]["poetry"]["dependencies"][dep][
+                                "version"
+                            ] = main_dependencies[dep]
+                            print(
+                                f"  Atualizando {dep}: {version['version']} -> {main_dependencies[dep]}"
+                            )
                             updated = True
 
         # Dev dependencies
@@ -134,13 +146,24 @@ def update_toml_dependencies(file_path: Path, main_dependencies: dict[str, str],
                         if dep in main_dependencies and dep != "python":
                             if isinstance(version, str):
                                 if force or version != main_dependencies[dep]:
-                                    toml_data["tool"]["poetry"]["group"][group_name]["dependencies"][dep] = main_dependencies[dep]
-                                    print(f"  Atualizando {dep} (grupo {group_name}): {version} -> {main_dependencies[dep]}")
+                                    toml_data["tool"]["poetry"]["group"][group_name][
+                                        "dependencies"
+                                    ][dep] = main_dependencies[dep]
+                                    print(
+                                        f"  Atualizando {dep} (grupo {group_name}): {version} -> {main_dependencies[dep]}"
+                                    )
                                     updated = True
                             elif isinstance(version, dict) and "version" in version:
-                                if force or version["version"] != main_dependencies[dep]:
-                                    toml_data["tool"]["poetry"]["group"][group_name]["dependencies"][dep]["version"] = main_dependencies[dep]
-                                    print(f"  Atualizando {dep} (grupo {group_name}): {version['version']} -> {main_dependencies[dep]}")
+                                if (
+                                    force
+                                    or version["version"] != main_dependencies[dep]
+                                ):
+                                    toml_data["tool"]["poetry"]["group"][group_name][
+                                        "dependencies"
+                                    ][dep]["version"] = main_dependencies[dep]
+                                    print(
+                                        f"  Atualizando {dep} (grupo {group_name}): {version['version']} -> {main_dependencies[dep]}"
+                                    )
                                     updated = True
 
     # PEP 621 format
@@ -150,8 +173,12 @@ def update_toml_dependencies(file_path: Path, main_dependencies: dict[str, str],
             match = re.match(r"([a-zA-Z0-9_-]+)([><=~!].+)", dep_spec)
             if match and match.group(1) in main_dependencies:
                 if force or match.group(2) != main_dependencies[match.group(1)]:
-                    new_deps.append(f"{match.group(1)}{main_dependencies[match.group(1)]}")
-                    print(f"  Atualizando {match.group(1)}: {match.group(2)} -> {main_dependencies[match.group(1)]}")
+                    new_deps.append(
+                        f"{match.group(1)}{main_dependencies[match.group(1)]}"
+                    )
+                    print(
+                        f"  Atualizando {match.group(1)}: {match.group(2)} -> {main_dependencies[match.group(1)]}"
+                    )
                     updated = True
                 else:
                     new_deps.append(dep_spec)
@@ -166,7 +193,9 @@ def update_toml_dependencies(file_path: Path, main_dependencies: dict[str, str],
         print(f"Nenhuma dependência atualizada em {file_path}")
 
 
-def update_requirements_txt(file_path: Path, main_dependencies: dict[str, str], force: bool = False) -> None:
+def update_requirements_txt(
+    file_path: Path, main_dependencies: dict[str, str], force: bool = False
+) -> None:
     """Atualiza as versões das dependências em um arquivo requirements.txt."""
     try:
         with open(file_path, encoding="utf-8") as f:
@@ -185,7 +214,7 @@ def update_requirements_txt(file_path: Path, main_dependencies: dict[str, str], 
 
             # Remove comentários inline
             code_part = line.split("#")[0].strip()
-            comment_part = line[len(code_part):] if len(line) > len(code_part) else ""
+            comment_part = line[len(code_part) :] if len(line) > len(code_part) else ""
 
             # Extrai nome e versão
             match = re.match(r"([a-zA-Z0-9_.-]+)([><=~!].+)?", code_part)
@@ -198,7 +227,9 @@ def update_requirements_txt(file_path: Path, main_dependencies: dict[str, str], 
                         new_line = f"{name}{main_dependencies[name]}{comment_part}\n"
                         new_lines.append(new_line)
                         updated = True
-                        print(f"  Atualizando {name}: {current_version} -> {main_dependencies[name]}")
+                        print(
+                            f"  Atualizando {name}: {current_version} -> {main_dependencies[name]}"
+                        )
                     else:
                         new_lines.append(original_line)
                 else:
@@ -223,7 +254,11 @@ def find_dependency_files(workspace_path: Path) -> list[tuple[Path, str]]:
 
     for root, dirs, files in os.walk(workspace_path):
         # Ignora diretórios ocultos e ambientes virtuais
-        dirs[:] = [d for d in dirs if not d.startswith(".") and d not in {"__pycache__", "venv", ".venv"}]
+        dirs[:] = [
+            d
+            for d in dirs
+            if not d.startswith(".") and d not in {"__pycache__", "venv", ".venv"}
+        ]
 
         for file in files:
             if file == "pyproject.toml":
@@ -285,8 +320,9 @@ def is_version_newer(version1: str, version2: str) -> bool:
     """Compara duas strings de versão e retorna True se version1 for mais recente que version2.
     Lida com formatos comuns de versão como ^1.2.3, ~1.2.3, >=1.2.3, etc.
     """
+
     # Extrai o número da versão sem os prefixos
-    def extract_version(version_str):
+    def extract_version(version_str) -> Any:
         # Remove prefixos comuns
         match = re.search(r"[0-9]+(\.[0-9]+)*", version_str)
         if match:
@@ -305,7 +341,9 @@ def is_version_newer(version1: str, version2: str) -> bool:
         return False
 
 
-def collect_latest_versions(dependency_files: list[tuple[Path, str]]) -> dict[str, tuple[str, str]]:
+def collect_latest_versions(
+    dependency_files: list[tuple[Path, str]],
+) -> dict[str, tuple[str, str]]:
     """Coleta as versões mais recentes de todas as dependências em todos os projetos.
     Retorna um dicionário com o nome da dependência e uma tupla (versão, origem).
     """
@@ -335,7 +373,7 @@ def collect_latest_versions(dependency_files: list[tuple[Path, str]]) -> dict[st
     return all_dependencies
 
 
-def parse_args():
+def parse_args() -> Any:
     """Analisa os argumentos de linha de comando."""
     parser = argparse.ArgumentParser(
         description="Sincroniza versões de dependências entre projetos",
@@ -350,26 +388,51 @@ Exemplos de uso:
         """,
     )
 
-    parser.add_argument("--force", "-f", action="store_true",
-                        help="Força a atualização mesmo quando as versões são iguais")
+    parser.add_argument(
+        "--force",
+        "-f",
+        action="store_true",
+        help="Força a atualização mesmo quando as versões são iguais",
+    )
 
-    parser.add_argument("--flx_project", "-p",
-                        help="Especifica um projeto específico para atualizar (nome do diretório)")
+    parser.add_argument(
+        "--flx_project",
+        "-p",
+        help="Especifica um projeto específico para atualizar (nome do diretório)",
+    )
 
-    parser.add_argument("--projects", nargs="+", metavar="PROJECT",
-                        help="Lista de projetos específicos para sincronizar")
+    parser.add_argument(
+        "--projects",
+        nargs="+",
+        metavar="PROJECT",
+        help="Lista de projetos específicos para sincronizar",
+    )
 
-    parser.add_argument("--dry-run", "-d", action="store_true",
-                        help="Executa em modo de simulação, sem fazer alterações")
+    parser.add_argument(
+        "--dry-run",
+        "-d",
+        action="store_true",
+        help="Executa em modo de simulação, sem fazer alterações",
+    )
 
-    parser.add_argument("--consolidate", "-c", action="store_true",
-                        help="Modo de consolidação: coleta as versões mais recentes de todos os projetos")
+    parser.add_argument(
+        "--consolidate",
+        "-c",
+        action="store_true",
+        help="Modo de consolidação: coleta as versões mais recentes de todos os projetos",
+    )
 
-    parser.add_argument("--source", "-s",
-                        help="Projeto fonte para as versões (detectado automaticamente se não especificado)")
+    parser.add_argument(
+        "--source",
+        "-s",
+        help="Projeto fonte para as versões (detectado automaticamente se não especificado)",
+    )
 
-    parser.add_argument("--list-projects", action="store_true",
-                        help="Lista os projetos detectados e sai")
+    parser.add_argument(
+        "--list-projects",
+        action="store_true",
+        help="Lista os projetos detectados e sai",
+    )
 
     return parser.parse_args()
 
@@ -419,10 +482,14 @@ def main() -> None:
 
     # Filtra por projetos específicos
     dependency_files = filter_dependency_files_by_projects(
-        dependency_files, target_projects, workspace_path,
+        dependency_files,
+        target_projects,
+        workspace_path,
     )
 
-    print(f"Encontrados {len(dependency_files)} arquivos de dependências nos projetos selecionados.")
+    print(
+        f"Encontrados {len(dependency_files)} arquivos de dependências nos projetos selecionados."
+    )
 
     if not dependency_files:
         print("Nenhum arquivo de dependências encontrado nos projetos especificados.")
@@ -436,11 +503,15 @@ def main() -> None:
     if not use_consolidation and not source_project:
         if len(target_projects) == 1:
             source_project = target_projects[0]
-            print(f"Usando '{source_project}' como projeto fonte (único projeto especificado).")
+            print(
+                f"Usando '{source_project}' como projeto fonte (único projeto especificado)."
+            )
         else:
             # Se há múltiplos projetos, usa modo consolidação por padrão
             use_consolidation = True
-            print("Múltiplos projetos detectados. Usando modo consolidação automaticamente.")
+            print(
+                "Múltiplos projetos detectados. Usando modo consolidação automaticamente."
+            )
 
     # Verifica se o projeto fonte existe
     if source_project and source_project not in detected_projects:
@@ -451,7 +522,9 @@ def main() -> None:
 
     # Modo de consolidação: coleta as versões mais recentes de todos os projetos
     if use_consolidation:
-        print("\nModo de consolidação: coletando versões mais recentes de todos os projetos...")
+        print(
+            "\nModo de consolidação: coletando versões mais recentes de todos os projetos..."
+        )
         latest_versions = collect_latest_versions(dependency_files)
 
         print(f"\nEncontradas {len(latest_versions)} dependências únicas:")
@@ -460,7 +533,9 @@ def main() -> None:
             print(f"  {dep_name}: {dep_version} (de {origin_name})")
 
         # Converte para o formato esperado pelas funções de atualização
-        main_dependencies = {name: version for name, (version, _) in latest_versions.items()}
+        main_dependencies = {
+            name: version for name, (version, _) in latest_versions.items()
+        }
 
     # Modo padrão: usa o projeto fonte como referência
     else:
@@ -514,7 +589,9 @@ def main() -> None:
     if not args.dry_run:
         print(f"\nProcessamento concluído. {updated_count} arquivos processados.")
     else:
-        print(f"\nSimulação concluída. {len(dependency_files)} arquivos seriam processados.")
+        print(
+            f"\nSimulação concluída. {len(dependency_files)} arquivos seriam processados."
+        )
 
 
 if __name__ == "__main__":

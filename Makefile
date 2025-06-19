@@ -730,6 +730,22 @@ setup-hooks:
 	)
 
 # ───────────────────────────────────────────────────────────────────────────
+#  OFFICIAL LINT FIXER
+# ───────────────────────────────────────────────────────────────────────────
+
+## lint-fix: Fix lint issues automatically (Official PyAuto Lint Fixer)
+lint-fix: venv-check
+	$(call section,🚀 Running Official PyAuto Lint Fixer)
+	@$(PYTHON) scripts/maintenance/official_pyauto_lint_fixer.py --config config/lint_fixer.yaml
+	$(call success,Lint fixing completed)
+
+## lint-fix-dry: Analyze lint issues without applying fixes
+lint-fix-dry: venv-check
+	$(call section,🔍 Running Official PyAuto Lint Fixer (Dry Run))
+	@$(PYTHON) scripts/maintenance/official_pyauto_lint_fixer.py --config config/lint_fixer.yaml --dry-run
+	$(call success,Lint analysis completed)
+
+# ───────────────────────────────────────────────────────────────────────────
 #  VERSION CONTROL
 # ───────────────────────────────────────────────────────────────────────────
 

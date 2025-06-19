@@ -35,12 +35,13 @@ def test_core_framework_import() -> bool | None:
     try:
         import flx
         from flx import Bootstrap, Entity, get_logger
+
         return True
     except ImportError:
         return False
 
 
-def test_oracle_adapters_import():
+def test_oracle_adapters_import() -> Any:
     """Test Oracle adapter imports."""
     success = True
 
@@ -68,7 +69,7 @@ def test_oracle_adapters_import():
     return success
 
 
-def test_implementation_projects():
+def test_implementation_projects() -> Any:
     """Test implementation project imports."""
     success = True
 

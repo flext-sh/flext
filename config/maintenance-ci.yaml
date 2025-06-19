@@ -1,0 +1,84 @@
+# CI/CD Maintenance Configuration
+# For continuous integration checks
+
+# Check all projects
+target_projects: []
+
+# CI-appropriate exclusions
+exclude_patterns:
+  - __pycache__
+  - .venv
+  - .git
+  - dist
+  - build
+  - .pytest_cache
+  - .mypy_cache
+  - .ruff_cache
+  - node_modules
+  - htmlcov
+  - junit
+  - "*.egg-info"
+
+# Focus on automated fixable issues
+fix_categories:
+  # Automated fixes safe for CI
+  type_annotations: true
+  logging_patterns: true
+  exception_handling: true
+  unused_variables: true
+  import_sorting: true
+  string_quotes: true
+  undefined_variables: true
+  trailing_whitespace: true
+  type_checking_imports: true
+  asyncio_patterns: true
+
+  # Skip manual review items
+  docstring_formatting: false
+  line_length: false
+  blank_lines: false
+  indentation: false
+  f_string_conversion: false
+  comprehension_optimization: false
+  method_ordering: false
+  class_structure: false
+  sql_injection_prevention: false
+  hardcoded_secrets: true      # Important for CI
+  assert_statements: false
+  eval_usage: true             # Security concern
+  loop_optimizations: false
+  dict_get_usage: false
+  set_operations: false
+  string_concatenation: false
+  dependency_injection: false
+  hexagonal_architecture: false
+  ddd_patterns: false
+  cqrs_compliance: false
+  markdownlint_compliance: false
+  readme_coverage: false
+  api_documentation: false
+  code_examples: false
+
+# Sequential for predictability
+processing_mode: sequential
+
+# CI-safe settings
+safety:
+  validate_syntax: true
+  max_changes_per_file: 30
+  create_backup: false       # No backups in CI
+  rollback_on_error: true
+  dry_run: true             # Always dry-run in CI
+  parallel_workers: 1        # Sequential in CI
+
+# CI reporting
+metrics:
+  detailed_report: true
+  json_output: true          # For CI parsing
+  html_report: false
+  metrics_file: maintenance_report.json
+  include_timing: true
+
+# CI logging
+log_level: INFO
+log_file: maintenance_ci.log

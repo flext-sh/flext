@@ -13,7 +13,7 @@ from threading import Thread
 import requests
 
 
-def start_api_server():
+def start_api_server() -> Any:
     """Start the REST API server in background."""
     import uvicorn
     from flx.adapters.inbound.rest_api import create_rest_api
@@ -27,7 +27,7 @@ def start_api_server():
     uvicorn.run(app, host="127.0.0.1", port=8000, log_level="warning")
 
 
-def test_api_endpoints():
+def test_api_endpoints() -> Any:
     """Test various API endpoints."""
     base_url = "http://127.0.0.1:8000"
 

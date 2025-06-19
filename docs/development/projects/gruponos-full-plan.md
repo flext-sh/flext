@@ -147,19 +147,19 @@ Os passos incluem:
   \-- tabela de cabeçalho de pedidos (stage)
 
   CREATE TABLE WMSSTAGE.ORDER_HDR_STAGE (
-   BATCH_ID VARCHAR2(50),
-   ORDER_NBR VARCHAR2(50),
-   ORDER_TYPE VARCHAR2(30),
-   COMPANY_CODE VARCHAR2(20),
-   FACILITY_CODE VARCHAR2(20),
-   ORDER_DATE DATE,
-   DESTINATION VARCHAR2(100),
-   \-- ... outros campos relevantes do pedido ...
-   STATUS VARCHAR2(20),
-   CREATED_BY VARCHAR2(30),
-   CREATED_AT TIMESTAMP DEFAULT SYSTIMESTAMP,
-   PROCESSED_FLAG CHAR(1) DEFAULT 'N',
-   PROCESSED_AT TIMESTAMP
+  BATCH_ID VARCHAR2(50),
+  ORDER_NBR VARCHAR2(50),
+  ORDER_TYPE VARCHAR2(30),
+  COMPANY_CODE VARCHAR2(20),
+  FACILITY_CODE VARCHAR2(20),
+  ORDER_DATE DATE,
+  DESTINATION VARCHAR2(100),
+  \-- ... outros campos relevantes do pedido ...
+  STATUS VARCHAR2(20),
+  CREATED_BY VARCHAR2(30),
+  CREATED_AT TIMESTAMP DEFAULT SYSTIMESTAMP,
+  PROCESSED_FLAG CHAR(1) DEFAULT 'N',
+  PROCESSED_AT TIMESTAMP
   );
 
   ALTER TABLE WMSSTAGE.ORDER_HDR_STAGE ADD CONSTRAINT PK_ORDER_HDR_STAGE PRIMARY KEY (ORDER_NBR);
@@ -223,11 +223,11 @@ Para que o WMS Cloud participe da integração, precisamos garantir dois pontos:
     `{`
 
     `"company_code": "YOURCO",`
-     `"facility_code": "WH1",`
-     `"order_nbr": "ORD12345",`
-     `"item_alternate_code": "PROD001",`
-     `"allocated_qty": 100,`
-     `"allocation_ts": "2025-05-08T15:30:00Z"`
+    `"facility_code": "WH1",`
+    `"order_nbr": "ORD12345",`
+    `"item_alternate_code": "PROD001",`
+    `"allocated_qty": 100,`
+    `"allocation_ts": "2025-05-08T15:30:00Z"`
     `}`
 
     (Exemplo ilustrativo de um payload JSON de alocação.)
@@ -441,31 +441,31 @@ _(Nota: Parte desse tópico já foi endereçada na seção 3.3, mas aqui recapit
     - Um exemplo de payload (XML) de pedido que poderíamos receber:
 
       \<Order\>
-       \<order_hdr\>
-       \<company_code\>YOURCO\</company_code\>
-       \<facility_code\>WH1\</facility_code\>
-       \<order_nbr\>ORD0001\</order_nbr\>
-       \<order_type\>SO\</order_type\>
-       \<order_date\>2025-05-08T12:00:00Z\</order_date\>
-       \<destination\>DROGARIA A\</destination\>
-       \<status\>Created\</status\>
-       ... outros campos ...
-       \</order_hdr\>
-       \<order_dtl\>
-       \<order_nbr\>ORD0001\</order_nbr\>
-       \<seq_nbr\>1\</seq_nbr\>
-       \<item_alternate_code\>ITEM123\</item_alternate_code\>
-       \<orig_qty\>5\</orig_qty\>
-       \<uom\>EA\</uom\>
-       ...
+      \<order_hdr\>
+      \<company_code\>YOURCO\</company_code\>
+      \<facility_code\>WH1\</facility_code\>
+      \<order_nbr\>ORD0001\</order_nbr\>
+      \<order_type\>SO\</order_type\>
+      \<order_date\>2025-05-08T12:00:00Z\</order_date\>
+      \<destination\>DROGARIA A\</destination\>
+      \<status\>Created\</status\>
+      ... outros campos ...
+      \</order_hdr\>
+      \<order_dtl\>
+      \<order_nbr\>ORD0001\</order_nbr\>
+      \<seq_nbr\>1\</seq_nbr\>
+      \<item_alternate_code\>ITEM123\</item_alternate_code\>
+      \<orig_qty\>5\</orig_qty\>
+      \<uom\>EA\</uom\>
+      ...
       \</order_dtl\>
-       \<order_dtl\>
-       \<order_nbr\>ORD0001\</order_nbr\>
-       \<seq_nbr\>2\</seq_nbr\>
-       \<item_alternate_code\>ITEM124\</item_alternate_code\>
-       \<orig_qty\>2\</orig_qty\>
-       \<uom\>EA\</uom\>
-       \</order_dtl\>
+      \<order_dtl\>
+      \<order_nbr\>ORD0001\</order_nbr\>
+      \<seq_nbr\>2\</seq_nbr\>
+      \<item_alternate_code\>ITEM124\</item_alternate_code\>
+      \<orig_qty\>2\</orig_qty\>
+      \<uom\>EA\</uom\>
+      \</order_dtl\>
       \</Order\>
 
       Este XML hierárquico traz um `<order_hdr>` seguido de um ou mais `<order_dtl>`. No caso JSON, seria análogo com um objeto contendo um array de linhas. O OIC integrará esse payload (ver 7.1).

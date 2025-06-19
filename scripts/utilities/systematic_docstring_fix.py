@@ -14,7 +14,7 @@ from pathlib import Path
 class DocstringTranslator:
     """Professional docstring translation system."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the translator with Portuguese-to-English mappings."""
         self.translations = {
             # Common Portuguese docstring patterns
@@ -313,7 +313,7 @@ class DocstringTranslator:
         print("🔄 Use 'git diff' to review all changes")
 
 
-def main():
+def main() -> None:
     """Main execution function."""
     parser = argparse.ArgumentParser(description='Systematic docstring translation tool')
     parser.add_argument('--dry-run', action='store_true', help='Show what would be changed without making changes')

@@ -58,7 +58,7 @@ def apply_types(module: str) -> int:
     return result.returncode
 
 
-def generate_stub(module):
+def generate_stub(module) -> Any:
     """Generate a stub with collected types for a module."""
     cmd = ["monkeytype", "stub", module]
 
@@ -72,7 +72,7 @@ def generate_stub(module):
     return result.returncode
 
 
-def main():
+def main() -> None:
     """Main entry point."""
     parser = argparse.ArgumentParser(description="MonkeyType utility for DCApiX")
     subparsers = parser.add_subparsers(dest="command", help="Command to execute")

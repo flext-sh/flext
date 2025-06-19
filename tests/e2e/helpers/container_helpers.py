@@ -11,7 +11,7 @@ import docker
 class ContainerManager:
     """Manage Docker containers for E2E tests."""
 
-    def __init__(self, compose_file: Path):
+    def __init__(self, compose_file: Path) -> None:
         self.compose_file = compose_file
         self.compose_dir = compose_file.parent
         self.client = docker.from_env()

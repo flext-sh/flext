@@ -8,7 +8,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent / "flx" / "src"))
 
 
-def test_api():
+def test_api() -> Any:
     """Test REST API creation."""
     try:
         from flx.adapters.inbound.rest_api import create_rest_api

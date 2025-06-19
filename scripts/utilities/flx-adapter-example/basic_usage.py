@@ -284,7 +284,7 @@ def schema_example() -> int:
     return 0
 
 
-def main():
+def main() -> None:
     """Run the API client examples."""
     # Run basic client example
     result = basic_client_example()

@@ -3,6 +3,7 @@
 Author: Marlon Costa <marlon.costa@datacosmos.com.br>
 License: MIT.
 """
+
 import argparse
 import subprocess
 import sys
@@ -11,7 +12,9 @@ from pathlib import Path
 WORKSPACE_ROOT = Path(__file__).parent.parent.absolute()
 
 
-def run_command(cmd: list[str], cwd: Path | None = None, check: bool = True) -> subprocess.CompletedProcess[str]:
+def run_command(
+    cmd: list[str], cwd: Path | None = None, check: bool = True
+) -> subprocess.CompletedProcess[str]:
     """Executa um comando e retorna a saída."""
     print(f"Executando: {' '.join(cmd)}")
     return subprocess.run(
@@ -65,7 +68,9 @@ def main() -> None:
         description="Gerenciador de atualização de pacotes",
     )
     parser.add_argument(
-        "--force", action="store_true", help="Força atualização mesmo com conflitos",
+        "--force",
+        action="store_true",
+        help="Força atualização mesmo com conflitos",
     )
 
     args = parser.parse_args()

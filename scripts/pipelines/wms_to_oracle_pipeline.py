@@ -52,7 +52,7 @@ class WmsToOraclePipeline:
         self.setup_logging()
         self.config = self.load_config(config_file)
         self.temp_dir = Path(tempfile.mkdtemp(prefix="wms_oracle_pipeline_"))
-        self.logger.info(f"Pipeline iniciado. Diretório temporário: {self.temp_dir}")
+        self.logger.info("Pipeline iniciado. Diretório temporário: %s", self.temp_dir")
 
     def setup_logging(self) -> None:
         """Configura o sistema de logging."""
@@ -97,7 +97,7 @@ class WmsToOraclePipeline:
         }
 
         if config_file and Path(config_file).exists():
-            self.logger.info(f"Carregando configuração de: {config_file}")
+            self.logger.info("Carregando configuração de: %s", config_file")
             with open(config_file, encoding="utf-8") as f:
                 if config_file.endswith((".yaml", ".yml")):
                     user_config = yaml.safe_load(f)
@@ -123,7 +123,7 @@ class WmsToOraclePipeline:
             PipelineError: Se extração falhar
 
         """
-        self.logger.info(f"Iniciando extração do WMS - Recurso: {resource}")
+        self.logger.info("Iniciando extração do WMS - Recurso: %s", resource")
 
         output_file = (
             self.temp_dir
@@ -158,7 +158,7 @@ class WmsToOraclePipeline:
             cmd.extend(["--fields", query_params["fields"]])
 
         try:
-            self.logger.info(f"Executando comando WMS: {' '.join(cmd)}")
+            self.logger.info("Executando comando WMS: %s", ' '.join(cmd)")
             result = subprocess.run(
                 cmd,
                 cwd=self.config["wms"]["base_path"],
@@ -168,7 +168,7 @@ class WmsToOraclePipeline:
                 check=True,
             )
 
-            self.logger.info(f"Extração WMS concluída. Output: {result.stdout}")
+            self.logger.info("Extração WMS concluída. Output: %s", result.stdout")
 
             if not output_file.exists():
                 msg = f"Arquivo de saída não foi criado: {output_file}"
@@ -204,7 +204,7 @@ class WmsToOraclePipeline:
             Caminho para arquivo SQL com comandos INSERT
 
         """
-        self.logger.info(f"Iniciando transformação de dados para tabela: {table_name}")
+        self.logger.info("Iniciando transformação de dados para tabela: %s", table_name")
 
         with open(data_file, encoding="utf-8") as f:
             data = json.load(f)
@@ -251,7 +251,7 @@ class WmsToOraclePipeline:
 
             f.write("\nCOMMIT;\n")
 
-        self.logger.info(f"Transformação concluída. Arquivo SQL: {sql_file}")
+        self.logger.info("Transformação concluída. Arquivo SQL: %s", sql_file")
         return sql_file
 
     def load_to_oracle(self, sql_file: Path) -> None:
@@ -264,7 +264,7 @@ class WmsToOraclePipeline:
             PipelineError: Se inserção falhar
 
         """
-        self.logger.info(f"Iniciando carregamento no Oracle DB: {sql_file}")
+        self.logger.info("Iniciando carregamento no Oracle DB: %s", sql_file")
 
         cmd = [
             "python",
@@ -275,7 +275,7 @@ class WmsToOraclePipeline:
         ]
 
         try:
-            self.logger.info(f"Executando comando Oracle: {' '.join(cmd)}")
+            self.logger.info("Executando comando Oracle: %s", ' '.join(cmd)")
             result = subprocess.run(
                 cmd,
                 cwd=self.config["oracle"]["base_path"],
@@ -285,7 +285,7 @@ class WmsToOraclePipeline:
                 check=True,
             )
 
-            self.logger.info(f"Carregamento Oracle concluído. Output: {result.stdout}")
+            self.logger.info("Carregamento Oracle concluído. Output: %s", result.stdout")
 
         except subprocess.TimeoutExpired:
             msg = f"Timeout no carregamento Oracle após {self.config['oracle']['timeout']}s"
@@ -308,7 +308,7 @@ class WmsToOraclePipeline:
         """
         try:
             self.logger.info("=== Iniciando Pipeline WMS -> Oracle ===")
-            self.logger.info(f"Recurso: {resource} -> Tabela: {table_name}")
+            self.logger.info("Recurso: %s", resource -> Tabela: %s", table_name")
 
             # 1. Extrair dados do WMS
             data_file = self.extract_from_wms(resource, **query_params)
@@ -334,9 +334,9 @@ class WmsToOraclePipeline:
             import shutil
 
             shutil.rmtree(self.temp_dir)
-            self.logger.info(f"Diretório temporário removido: {self.temp_dir}")
+            self.logger.info("Diretório temporário removido: %s", self.temp_dir")
         except Exception as e:
-            self.logger.warning(f"Erro ao remover diretório temporário: {e!s}")
+            self.logger.warning("Erro ao remover diretório temporário: %s", e!s")
 
 
 def main() -> None:

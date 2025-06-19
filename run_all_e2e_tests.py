@@ -56,7 +56,7 @@ def run_project_tests(project_name: str, test_file: str) -> tuple[bool, str]:
     return success, status
 
 
-def check_environment():
+def check_environment() -> Any:
     """Check that .env file exists with required variables."""
     env_file = Path(".env")
     if not env_file.exists():
@@ -79,7 +79,7 @@ def check_environment():
     return True
 
 
-def main():
+def main() -> None:
     """Run all E2E tests."""
 
     # Check environment

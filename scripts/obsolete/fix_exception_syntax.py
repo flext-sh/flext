@@ -76,7 +76,7 @@ class ExceptionSyntaxFixer:
         pattern = r"(raise\s+[a-zA-Z_][a-zA-Z0-9_.]*\(.*?\)\s+from\s+[a-zA-Z_][a-zA-Z0-9_]*)(\s+from\s+[a-zA-Z_][a-zA-Z0-9_]*)+\s*"
 
         # Function to replace multiple "from e" with just one
-        def replace_multiple_from(match):
+        def replace_multiple_from(match) -> Any:
             # Keep only the first "from e" clause
             first_part = match.group(1)
             self.fixes_count += 1

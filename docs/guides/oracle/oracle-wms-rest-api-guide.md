@@ -1,30 +1,30 @@
-# Oracle WMS REST API Guide
+# 🏭 Oracle WMS REST API Complete Guide
 
-> **Function**: Oracle Warehouse Management Cloud REST API reference | **Audience**: Integration developers, API consumers | **Status**: Stable
+> **Function**: Complete Oracle Warehouse Management Cloud REST API reference and integration patterns | **Audience**: Integration developers, API consumers, WMS specialists | **Status**: Production-ready
 
 [![Oracle WMS](https://img.shields.io/badge/oracle-WMS_25B-red.svg)](./index.md)
 [![REST API](https://img.shields.io/badge/api-REST-blue.svg)](../../api-reference/index.md)
 [![Framework](https://img.shields.io/badge/framework-FLX_0.4.0-orange.svg)](../../index.md)
 
-**Comprehensive guide for integrating with Oracle Warehouse Management Cloud via REST API using FLX Framework**
+**Comprehensive Oracle Warehouse Management Cloud REST API guide (Release 25B) covering all entities, operations, authentication patterns, and integration best practices using FLX Framework**
 
 ---
 
 ## 🧭 **Navigation Context**
 
-**🏠 Root**: [Documentation Home](../../index.md) → **📂 Hub**: [Oracle Guides](./index.md) → **📄 Current**: WMS REST API Guide
+**🏠 Root**: [Documentation Home](../../index.md) → **📂 Hub**: [Guides Hub](../index.md) → **📂 Oracle**: [Oracle Hub](./index.md) → **📄 Current**: WMS REST API Complete Guide
 
 ### **📍 Learning Path Position**
 
 ```
-[Oracle Integration Hub](./index.md) → **[WMS REST API]** → [WMS Comprehensive Guide](./oracle-wms-comprehensive-guide.md)
+[Oracle Hub](./index.md) → **[WMS REST API Complete Guide]** → [WMS Comprehensive Guide](./oracle-wms-comprehensive-guide.md)
 ```
 
-## 🎯 **Quick Links**
+## 🎯 **Quick Navigation**
 
-- **📂 Section Hub**: [Oracle Guides Hub](./index.md)
+- **📂 Section Hub**: [Oracle Hub](./index.md)
 - **🏠 Documentation Root**: [Root Index](../../index.md)
-- **🔗 Related**: [WMS Adapter](../../guides/adapters/flx_http_oracle_wms-adapter.md)
+- **🔗 Related**: [WMS Adapter](./flx-http-oracle-wms-adapter.md) | [WMS Commands](./oracle-wms-commands-reference.md)
 
 ---
 
@@ -2696,7 +2696,7 @@ Category Parameter Type Required Description
 options lock_code_list Array of Strings X Inventory lock code(s) to be
 removed.
 Bulk Unlock Container
- POST …/wms/lgfapi/v10/entity/container/bulk_unlock/
+POST …/wms/lgfapi/v10/entity/container/bulk_unlock/
 
 Remove one or more inventory locks from one or more inbound or outbound container(s).
 The “parameters” section of the request body is required in addition to the “options” section outlined below. The “id”
@@ -10004,27 +10004,28 @@ GET .../lgfapi/v10/entity/lgf_async_task/
 For non-paginated results, filtered by specific 'ID':
 GET .../lgfapi/v10/entity/lgf_async_task/{id}
 
----
-
 ## 🔗 **Cross-References**
 
 ### **Prerequisites**
 
-- [Oracle Integration Hub](./index.md) - Understanding Oracle integration patterns
-- [HTTP Client Adapter](../../api-reference/adapters/flx-adapters-comprehensive-reference.md) - FLX HTTP adapter for Oracle WMS calls
+- [Oracle Hub](./index.md) - Understanding Oracle integration architecture before WMS API implementation
+- [Authentication Complete Guide](./authentication-complete-guide.md) - OAuth2 and authentication setup for Oracle WMS
+- [Getting Started Hub](../../getting-started/index.md) - FLX Framework installation and basic configuration
 
 ### **Next Steps**
 
-- [WMS Comprehensive Guide](./oracle-wms-comprehensive-guide.md) - Complete WMS integration guide
-- [Oracle Authentication](./oracle-sso-authentication-setup.md) - Setting up Oracle authentication
-- [WMS CLI Guide](./oracle-wms-cli-guide.md) - Command-line tools for WMS
+- [WMS Complete Guide](./wms-complete-guide.md) - Complete WMS integration implementation with FLX Framework
+- [WMS Adapter](./flx-http-oracle-wms-adapter.md) - FLX HTTP adapter implementation for Oracle WMS
+- [WMS Commands Reference](./oracle-wms-commands-reference.md) - Command-line tools and operations
 
 ### **Related Topics**
 
-- [HTTP Integration Patterns](../../architecture/patterns/advanced-patterns-hub.md) - Advanced HTTP integration patterns
-- [Testing Oracle Integrations](../../development/testing/integration-testing.md) - Testing Oracle WMS integrations
-- [Performance Optimization](../../optimization/performance/index.md) - Optimizing Oracle API calls
+- [Oracle OIC Integration](./oic-complete-guide.md) - Oracle Integration Cloud patterns for WMS orchestration
+- [Database Integration](./database-complete-guide.md) - Oracle Database patterns for WMS data persistence
+- [Security Architecture](../../security/index.md) - Enterprise security patterns for Oracle WMS integrations
+- [Performance Optimization](../../optimization/index.md) - Optimizing Oracle WMS API performance and throughput
+- [Testing Strategies](../../development/testing/index.md) - Testing Oracle WMS integrations and API patterns
 
 ---
 
-**📂 Hub**: [Oracle Guides](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Oracle Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11

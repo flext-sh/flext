@@ -25,3 +25,45 @@
 [submodule "algar-oud-mig"]
 	path = algar-oud-mig
 	url = git@github.com:datacosmos-br/algar-oud-mig.git
+[submodule "dbt-ldap"]
+	path = dbt-ldap
+	url = git@github.com:datacosmos-br/dbt-ldap.git
+[submodule "flx-adapter-example"]
+	path = flx-adapter-example
+	url = git@github.com:datacosmos-br/flx-adapter-example.git
+[submodule "flx-ldap"]
+	path = flx-ldap
+	url = git@github.com:datacosmos-br/flx-ldap.git
+[submodule "flx-meltano-enterprise"]
+	path = flx-meltano-enterprise
+	url = git@github.com:datacosmos-br/flx-meltano-enterprise.git
+[submodule "flx-oracle-oic"]
+	path = flx-oracle-oic
+	url = git@github.com:datacosmos-br/flx-oracle-oic.git
+[submodule "flx-oracle-wms"]
+	path = flx-oracle-wms
+	url = git@github.com:datacosmos-br/flx-oracle-wms.git
+[submodule "ldap-core-shared"]
+	path = ldap-core-shared
+	url = git@github.com:datacosmos-br/ldap-core-shared.git
+[submodule "oracle-oic-ext"]
+	path = oracle-oic-ext
+	url = git@github.com:datacosmos-br/oracle-oic-ext.git
+[submodule "tap-ldap"]
+	path = tap-ldap
+	url = git@github.com:datacosmos-br/tap-ldap.git
+[submodule "tap-oracle-oic"]
+	path = tap-oracle-oic
+	url = git@github.com:datacosmos-br/tap-oracle-oic.git
+[submodule "tap-oracle-wms"]
+	path = tap-oracle-wms
+	url = git@github.com:datacosmos-br/tap-oracle-wms.git
+[submodule "target-ldap"]
+	path = target-ldap
+	url = git@github.com:datacosmos-br/target-ldap.git
+[submodule "target-oracle-oic"]
+	path = target-oracle-oic
+	url = git@github.com:datacosmos-br/target-oracle-oic.git
+[submodule "target-oracle-wms"]
+	path = target-oracle-wms
+	url = git@github.com:datacosmos-br/target-oracle-wms.git

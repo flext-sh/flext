@@ -11,27 +11,27 @@
 Este documento é uma especificação de mapeamento (versão 23.1.0) para a integração entre um WMS e o serviço REST “Shipment Transaction Requests” da Oracle Cloud SCM, usado na confirmação de remessas de pedidos de venda em lote. Nele são definidos:
 
 • Estrutura geral do payload
- – Campos de cabeçalho: id, path (“/shipmentTransactionRequests”), operation (“create”), ActionCode (“CreateAndConfirmShipment”).
- – Array shipments contendo, para cada parada ou carga:
- • Shipment (identificador de remessa)
- • ShipFromOrganizationCode (filial), BillOfLading, Waybill
- • GrossWeight/WeightUOMCode e Volume/VolumeUOMCode (com possibilidade de usar unidades definidas em propriedade de integração)
- • ActualShipDate, ExternalSystemTransactionReference, CarrierNumber, ModeOfTransportCode, ServiceLevelCode
+– Campos de cabeçalho: id, path (“/shipmentTransactionRequests”), operation (“create”), ActionCode (“CreateAndConfirmShipment”).
+– Array shipments contendo, para cada parada ou carga:
+• Shipment (identificador de remessa)
+• ShipFromOrganizationCode (filial), BillOfLading, Waybill
+• GrossWeight/WeightUOMCode e Volume/VolumeUOMCode (com possibilidade de usar unidades definidas em propriedade de integração)
+• ActualShipDate, ExternalSystemTransactionReference, CarrierNumber, ModeOfTransportCode, ServiceLevelCode
 
 • Unidades de embalagem
- – outerPackingUnits e innerPackingUnits, cada um com PackingUnit (número de pallet ou LPN), PackingUnitType (definido por propriedade), GrossWeight, Volume e suas UOMs
+– outerPackingUnits e innerPackingUnits, cada um com PackingUnit (número de pallet ou LPN), PackingUnitType (definido por propriedade), GrossWeight, Volume e suas UOMs
 
 • Linhas embarcadas (packedLines)
- – ShipmentLine (nº da linha), Item (código alternativo), ShippedQuantity/ShippedQuantityUOMCode (considerando propriedade de UOM), RequestedQuantityToConsume, LoadingSequence, TrackingNumber, Subinventory
+– ShipmentLine (nº da linha), Item (código alternativo), ShippedQuantity/ShippedQuantityUOMCode (considerando propriedade de UOM), RequestedQuantityToConsume, LoadingSequence, TrackingNumber, Subinventory
 
 • Rastreamento de lote e série
- – Se o SKU for controlado por lote: array lots com Lot, Subinventory, Quantity
- – Se for controlado por série: array serials com FromSerialNumber, ToSerialNumber, Subinventory
+– Se o SKU for controlado por lote: array lots com Lot, Subinventory, Quantity
+– Se for controlado por série: array serials com FromSerialNumber, ToSerialNumber, Subinventory
 
 • Regras e observações de formatação
- – Tamanhos máximos de campos, obrigatoriedade, concatenações (por exemplo load_manifest_nbr+“-”+seq_nbr ou shipto_zip)
- – Uso de propriedades de integração para definições padrão de UOM e tipos de embalagem
- – Suporte a cenários de múltiplos pontos de entrega no fluxo Parcel
+– Tamanhos máximos de campos, obrigatoriedade, concatenações (por exemplo load_manifest_nbr+“-”+seq_nbr ou shipto_zip)
+– Uso de propriedades de integração para definições padrão de UOM e tipos de embalagem
+– Suporte a cenários de múltiplos pontos de entrega no fluxo Parcel
 
 Finalmente, o documento cita links para a documentação oficial do serviço REST e para casos de teste de batch processing, servindo de guia para desenvolvimento ou configuração do conector entre o WMS e o Oracle SCM.
 

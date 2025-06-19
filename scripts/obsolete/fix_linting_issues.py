@@ -189,7 +189,7 @@ class LintingFixer:
         # This is a simplified approach - a full AST parser would be more accurate
         except_pattern = r"(except\s+([a-zA-Z_][a-zA-Z0-9_.]*)(?:\s+as\s+([a-zA-Z_][a-zA-Z0-9_]*))?\s*:.*?\n\s*raise\s+)([a-zA-Z_][a-zA-Z0-9_.]*)(.*?)(\n)"
 
-        def except_replacement(match):
+        def except_replacement(match) -> Any:
             (
                 except_clause,
                 exception_type,

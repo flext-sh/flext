@@ -119,7 +119,7 @@ class HealthMonitorConfig(FlxStrictModel):
 class HealthMonitor:
     """Monitor for system health."""
 
-    def __init__(self, config: HealthMonitorConfig):
+    def __init__(self, config: HealthMonitorConfig) -> None:
         self.config = config
         self._checks: Dict[str, Callable] = {}
         self._status: Dict[str, bool] = {}
@@ -210,10 +210,10 @@ def fix_decorator_imports() -> None:
                 continue
             # Add a simple decorator function
             decorator_def = '''
-def decorator(func):
+def decorator(func) -> Any:
     """Simple decorator wrapper."""
     @functools.wraps(func)
-    def wrapper(*args, **kwargs):
+    def wrapper(*args, **kwargs) -> Any:
         return func(*args, **kwargs)
     return wrapper
 '''

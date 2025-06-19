@@ -88,11 +88,7 @@ class DependencyAnalyzer:
             local_deps = []
 
             # Extract main dependencies
-            poetry_deps = (
-                data.get("tool", {})
-                .get("poetry", {})
-                .get("dependencies", {})
-            )
+            poetry_deps = data.get("tool", {}).get("poetry", {}).get("dependencies", {})
             for dep_name, dep_spec in poetry_deps.items():
                 if dep_name == "python":
                     continue
@@ -174,15 +170,17 @@ class DependencyAnalyzer:
                 conflicts = []
 
                 for i, ver1 in enumerate(version_list):
-                    for ver2 in version_list[i + 1:]:
+                    for ver2 in version_list[i + 1 :]:
                         if self.is_version_conflict(ver1, ver2):
-                            conflicts.append({
-                                "dependency": dep_name,
-                                "version1": ver1,
-                                "projects1": versions[ver1],
-                                "version2": ver2,
-                                "projects2": versions[ver2],
-                            })
+                            conflicts.append(
+                                {
+                                    "dependency": dep_name,
+                                    "version1": ver1,
+                                    "projects1": versions[ver1],
+                                    "version2": ver2,
+                                    "projects2": versions[ver2],
+                                }
+                            )
 
                 if conflicts:
                     self.version_conflicts.extend(conflicts)
@@ -346,8 +344,13 @@ class DependencyAnalyzer:
 
         # Key dependencies matrix
         key_deps = [
-            "pydantic", "sqlalchemy", "fastapi", "pytest",
-            "mypy", "ruff", "black",
+            "pydantic",
+            "sqlalchemy",
+            "fastapi",
+            "pytest",
+            "mypy",
+            "ruff",
+            "black",
         ]
 
         for dep in key_deps:
@@ -357,7 +360,10 @@ class DependencyAnalyzer:
             if "error" in project_data:
                 continue
 
-            all_deps = {**project_data.get("dependencies", {}), **project_data.get("dev_dependencies", {})}
+            all_deps = {
+                **project_data.get("dependencies", {}),
+                **project_data.get("dev_dependencies", {}),
+            }
 
             for dep in key_deps:
                 version = all_deps.get(dep, "❌")

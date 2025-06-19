@@ -18,14 +18,14 @@ Este documento é um guia de mapeamento para o processo de “confirmação de r
 
 2. Estrutura de payload e query parameters
    • Campos comuns de header:
-    – id (GUID), path, operation (“create”), InsertAndProcessFlag (“true”)
-    – ReceiptSourceCode (VENDOR/CUSTOMER/TRANSFER ORDER), SourceDocumentCode (PO/RMA), TransactionType/AutoTransactCode (“RECEIVE”)
-    – OrganizationCode (facility_code), ExternalSystemTransactionReference (MessageId ou group_nbr+seq_nbr)
+   – id (GUID), path, operation (“create”), InsertAndProcessFlag (“true”)
+   – ReceiptSourceCode (VENDOR/CUSTOMER/TRANSFER ORDER), SourceDocumentCode (PO/RMA), TransactionType/AutoTransactCode (“RECEIVE”)
+   – OrganizationCode (facility_code), ExternalSystemTransactionReference (MessageId ou group_nbr+seq_nbr)
    • Campos de linha:
-    – DocumentNumber (po_nbr ou shipment_nbr), DocumentLineNumber, DocumentShipmentLineNumber
-    – Quantity (orig_qty/adj_qty), UOMCode (com lógica para “UNITS” vs. unit_of_measure), SubInventory (prev_erp_bucket/current_erp_bucket/ref_value_16)
-    – ItemNumber e ItemRevision (extraídos de item_alternate_code), ShipmentHeaderId/LineId (substring de ref_value_9), SoldToLegalEntity (ref_value_7)
-    – ExternalSystemPackingUnit (lpn_nbr ou to_container_nbr), ShipToLocationId (LocationId), DestinationTypeCode
+   – DocumentNumber (po_nbr ou shipment_nbr), DocumentLineNumber, DocumentShipmentLineNumber
+   – Quantity (orig_qty/adj_qty), UOMCode (com lógica para “UNITS” vs. unit_of_measure), SubInventory (prev_erp_bucket/current_erp_bucket/ref_value_16)
+   – ItemNumber e ItemRevision (extraídos de item_alternate_code), ShipmentHeaderId/LineId (substring de ref_value_9), SoldToLegalEntity (ref_value_7)
+   – ExternalSystemPackingUnit (lpn_nbr ou to_container_nbr), ShipToLocationId (LocationId), DestinationTypeCode
    • Blocos condicionais para lotes e números de série, quando o SKU for lot-tracked, serial-tracked ou ambos
 
 3. Transformações e regras de extração

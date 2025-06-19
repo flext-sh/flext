@@ -29,7 +29,12 @@ def check_version_file(project_path: Path, package_name: str) -> tuple[bool, str
             return False, f"Version is {version}, expected 0.4.0"
 
         # Check for required metadata
-        required_vars = ["__version_info__", "__title__", "__description__", "__author__"]
+        required_vars = [
+            "__version_info__",
+            "__title__",
+            "__description__",
+            "__author__",
+        ]
         missing = [var for var in required_vars if var not in local_vars]
         if missing:
             return False, f"Missing metadata: {missing}"
@@ -99,10 +104,14 @@ def main() -> None:
         if pyproject_file.exists():
             with open(pyproject_file, encoding="utf-8") as f:
                 content = f.read()
-                has_flx = ('flx = { path = "../flx"' in content or
-                          'flx = {path = "../flx"' in content)
+                has_flx = (
+                    'flx = { path = "../flx"' in content
+                    or 'flx = {path = "../flx"' in content
+                )
 
-        flx_status = "✓ FLX dependency present" if has_flx else "✗ FLX dependency missing"
+        flx_status = (
+            "✓ FLX dependency present" if has_flx else "✗ FLX dependency missing"
+        )
         print(f"  FLX dependency: {flx_status}")
 
         project_passed = version_ok and pyproject_ok and has_flx
