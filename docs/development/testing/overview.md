@@ -116,10 +116,10 @@ class TestUserService(TestCase):
         repo = MockRepository()
         service = UserService(repo)
         user_data = {"email": "test@example.com", "name": "Test User"}
-        
+
         # Act
         user = await service.create_user(user_data)
-        
+
         # Assert
         assert user.email == "test@example.com"
         assert repo.was_called("save")

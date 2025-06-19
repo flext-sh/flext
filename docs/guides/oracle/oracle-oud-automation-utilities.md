@@ -1,7 +1,7 @@
 # Oracle OUD Automation Simplified Utilities
 
-**Date**: January 2025  
-**Status**: Production Ready Tools  
+**Date**: January 2025
+**Status**: Production Ready Tools
 **Version**: Complete Utility Suite
 
 ## Overview
@@ -121,25 +121,25 @@ The tools use the following environment variables from the `.env` file:
 
 ### Source LDAP
 
-| Variable | Description |
-|----------|-------------|
-| SOURCE_LDAP_HOST | LDAP server hostname or IP |
-| SOURCE_LDAP_PORT | LDAP server port |
-| SOURCE_LDAP_BIND_DN | Authentication DN |
-| SOURCE_LDAP_PASSWORD | Authentication password |
-| SOURCE_LDAP_BASE_DN | Base DN for searches |
-| SOURCE_LDAP_USE_SSL | Use SSL (true/false) |
+| Variable             | Description                |
+| -------------------- | -------------------------- |
+| SOURCE_LDAP_HOST     | LDAP server hostname or IP |
+| SOURCE_LDAP_PORT     | LDAP server port           |
+| SOURCE_LDAP_BIND_DN  | Authentication DN          |
+| SOURCE_LDAP_PASSWORD | Authentication password    |
+| SOURCE_LDAP_BASE_DN  | Base DN for searches       |
+| SOURCE_LDAP_USE_SSL  | Use SSL (true/false)       |
 
 ### Target LDAP
 
-| Variable | Description |
-|----------|-------------|
-| TARGET_LDAP_HOST | LDAP server hostname or IP |
-| TARGET_LDAP_PORT | LDAP server port |
-| TARGET_LDAP_BIND_DN | Authentication DN |
-| TARGET_LDAP_PASSWORD | Authentication password |
-| TARGET_LDAP_BASE_DN | Base DN for searches |
-| TARGET_LDAP_USE_SSL | Use SSL (true/false) |
+| Variable             | Description                |
+| -------------------- | -------------------------- |
+| TARGET_LDAP_HOST     | LDAP server hostname or IP |
+| TARGET_LDAP_PORT     | LDAP server port           |
+| TARGET_LDAP_BIND_DN  | Authentication DN          |
+| TARGET_LDAP_PASSWORD | Authentication password    |
+| TARGET_LDAP_BASE_DN  | Base DN for searches       |
+| TARGET_LDAP_USE_SSL  | Use SSL (true/false)       |
 
 ## LDAP Mock Mode
 
@@ -180,7 +180,7 @@ Create configuration templates for different environments:
 # Development environment
 oud-simple-env edit -e source --template dev
 
-# Production environment  
+# Production environment
 oud-simple-env edit -e source --template prod
 ```
 

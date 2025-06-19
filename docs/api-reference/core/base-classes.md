@@ -46,13 +46,13 @@ class Product(DomainObject):
 
 #### Configuration
 
-| Property | Value | Description |
-|----------|-------|-------------|
-| `validate_assignment` | `True` | All field assignments trigger validation |
-| `arbitrary_types_allowed` | `True` | Supports complex domain types |
-| `frozen` | `True` | Enforces immutability for data integrity |
-| `str_strip_whitespace` | `True` | Automatic string normalization |
-| `use_enum_values` | `True` | Consistent enum serialization |
+| Property                  | Value  | Description                              |
+| ------------------------- | ------ | ---------------------------------------- |
+| `validate_assignment`     | `True` | All field assignments trigger validation |
+| `arbitrary_types_allowed` | `True` | Supports complex domain types            |
+| `frozen`                  | `True` | Enforces immutability for data integrity |
+| `str_strip_whitespace`    | `True` | Automatic string normalization           |
+| `use_enum_values`         | `True` | Consistent enum serialization            |
 
 #### Key Features
 
@@ -86,9 +86,9 @@ class Customer(DomainObject, Identifiable, Timestamped):
 
 #### Attributes
 
-| Attribute | Type | Description |
-|-----------|------|-------------|
-| `id` | `UUID` | Unique entity identifier, automatically generated |
+| Attribute | Type   | Description                                       |
+| --------- | ------ | ------------------------------------------------- |
+| `id`      | `UUID` | Unique entity identifier, automatically generated |
 
 #### Methods
 
@@ -157,10 +157,10 @@ class Order(DomainObject, Identifiable, Timestamped):
 
 #### Attributes
 
-| Attribute | Type | Description |
-|-----------|------|-------------|
-| `created_at` | `datetime` | Automatically set to current UTC time when object is created |
-| `updated_at` | `datetime \| None` | Set to None initially, updated via domain operations |
+| Attribute    | Type               | Description                                                  |
+| ------------ | ------------------ | ------------------------------------------------------------ |
+| `created_at` | `datetime`         | Automatically set to current UTC time when object is created |
+| `updated_at` | `datetime \| None` | Set to None initially, updated via domain operations         |
 
 #### Methods
 
@@ -217,8 +217,8 @@ class BankAccount(DomainObject, Identifiable, Timestamped, Versionable):
 
 #### Attributes
 
-| Attribute | Type | Description |
-|-----------|------|-------------|
+| Attribute | Type  | Description                                                    |
+| --------- | ----- | -------------------------------------------------------------- |
 | `version` | `int` | Positive integer version starting at 1, incremented on updates |
 
 #### Methods
@@ -599,5 +599,7 @@ async def test_optimistic_locking():
 ---
 
 **📂 API Reference** | **🏠 Parent**: [Core APIs Hub](./index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+
+```
 
 ```

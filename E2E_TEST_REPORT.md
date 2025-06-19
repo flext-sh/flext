@@ -5,12 +5,15 @@
 ### 📋 O QUE FOI IMPLEMENTADO
 
 #### 1. **Scripts de Geração de Configuração**
+
 - ✅ `tap-oracle-wms/generate_config.py` - Gera config.json do .env
 - ✅ `target-oracle-wms/generate_config.py` - Gera config.json do .env
 - ✅ `flx-oracle-wms/generate_config.py` - Gera todas as configs necessárias
 
 #### 2. **Testes E2E Abrangentes**
+
 - ✅ `tap-oracle-wms/tests/e2e/test_tap_e2e.py`
+
   - Teste de help/version
   - Geração de configuração
   - Discovery de streams
@@ -21,6 +24,7 @@
   - Importação de módulos
 
 - ✅ `target-oracle-wms/tests/e2e/test_target_e2e.py`
+
   - Teste de help/version
   - Geração de configuração
   - Processamento de mensagens Singer
@@ -44,11 +48,13 @@
   - Sistema de monitoramento
 
 #### 3. **Arquivos .env Configurados**
+
 - ✅ Todos os projetos têm .env com credenciais reais
-- ✅ Variáveis seguem padrão WMS_*
+- ✅ Variáveis seguem padrão WMS\_\*
 - ✅ Configuração completa para ambiente de teste
 
 #### 4. **Script Master de Testes**
+
 - ✅ `run_all_e2e_tests.py` - Executa todos os testes E2E
 - ✅ Validação de ambiente
 - ✅ Instalação automática de dependências
@@ -57,6 +63,7 @@
 ## 🔧 CONFIGURAÇÃO DO AMBIENTE
 
 ### Variáveis de Ambiente (.env)
+
 ```env
 WMS_BASE_URL=https://ta29.wms.ocs.oraclecloud.com/raizen_test
 WMS_USERNAME=USER_WMS_INTEGRA
@@ -71,6 +78,7 @@ WMS_TEST_MODE=false
 ### Cobertura de Testes E2E
 
 #### tap-oracle-wms
+
 - [x] Comandos CLI (help, version)
 - [x] Geração de config.json
 - [x] Discovery de entidades
@@ -81,6 +89,7 @@ WMS_TEST_MODE=false
 - [x] Importação de módulos
 
 #### target-oracle-wms
+
 - [x] Comandos CLI (help, version)
 - [x] Processamento Singer
 - [x] Business logic (KPIs, alertas)
@@ -90,6 +99,7 @@ WMS_TEST_MODE=false
 - [x] Importação de módulos
 
 #### flx-oracle-wms
+
 - [x] CLI unificada
 - [x] Orquestração de pipeline
 - [x] Sistema de monitoramento
@@ -128,21 +138,25 @@ python run_all_e2e_tests.py
 ## ✅ VALIDAÇÕES IMPLEMENTADAS
 
 ### 1. **Geração Condicional de config.json**
+
 - Se não existe, gera do .env
 - Se existe, faz backup antes de sobrescrever
 - Usa variáveis de ambiente com valores padrão
 
 ### 2. **Testes Resilientes**
+
 - Tratam erros de conexão graciosamente
 - Verificam se é modo de teste
 - Validam estrutura mesmo sem API real
 
 ### 3. **Importação de Módulos**
+
 - Todos os módulos principais testados
 - Business logic verificada
 - Dependências validadas
 
 ### 4. **Integração Completa**
+
 - Tap → Target via pipe
 - Orquestração via FLX
 - Monitoramento funcionando
@@ -150,6 +164,7 @@ python run_all_e2e_tests.py
 ## 🎯 PRÓXIMOS PASSOS
 
 1. **Instalar Dependências** (se ainda não instaladas):
+
 ```bash
 cd tap-oracle-wms && poetry install
 cd ../target-oracle-wms && poetry install
@@ -157,12 +172,14 @@ cd ../flx-oracle-wms && poetry install
 ```
 
 2. **Executar Testes Completos**:
+
 ```bash
 cd /home/marlonsc/pyauto
 python run_all_e2e_tests.py
 ```
 
 3. **Verificar Resultados**:
+
 - Logs detalhados de cada teste
 - Arquivos gerados em output/
 - Métricas em metrics/
@@ -177,6 +194,7 @@ python run_all_e2e_tests.py
 ## ✅ CONCLUSÃO
 
 Todos os componentes estão:
+
 - ✅ Com testes E2E implementados
 - ✅ Com geração automática de config
 - ✅ Com .env configurado

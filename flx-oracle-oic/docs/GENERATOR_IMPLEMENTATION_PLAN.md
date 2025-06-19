@@ -902,7 +902,7 @@ spec:
     error_endpoint: https://api.example.com/v1/errors
 
   schedule:
-    frequency: "*/15 * * * *"  # Every 15 minutes
+    frequency: "*/15 * * * *" # Every 15 minutes
     timezone: "UTC"
 ```
 

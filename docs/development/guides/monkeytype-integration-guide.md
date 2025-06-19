@@ -112,7 +112,7 @@ class User(Entity):
     name: str
     email: str
     age: Optional[int] = None
-    
+
     def change_email(self, new_email: str) -> None:
         self.email = new_email
         self.touch()
@@ -188,6 +188,7 @@ class MyModel(ValueObject):
    ```
 
 3. **Review Applied Types**: Always review the types applied by MonkeyType and refine them for FLX patterns:
+
    - Convert to proper Entity/ValueObject/AggregateRoot
    - Use proper port interfaces
    - Follow hexagonal architecture patterns
@@ -208,10 +209,10 @@ class MyModel(ValueObject):
    ```bash
    # Collect types from domain tests
    make monkeytype-test PROJECT=flx TEST_PATH=tests/unit/core/
-   
+
    # Apply to core entities
    make monkeytype-apply PROJECT=flx MODULE=flx.core.entities
-   
+
    # Apply to value objects
    make monkeytype-apply PROJECT=flx MODULE=flx.core.domain.value_objects
    ```
@@ -221,7 +222,7 @@ class MyModel(ValueObject):
    ```bash
    # Collect from application service tests
    make monkeytype-test PROJECT=flx TEST_PATH=tests/unit/application/
-   
+
    # Apply to services
    make monkeytype-apply PROJECT=flx MODULE=flx.application.services
    ```
@@ -231,7 +232,7 @@ class MyModel(ValueObject):
    ```bash
    # Collect from adapter tests
    make monkeytype-test PROJECT=flx-http-oracle-wms TEST_PATH=tests/
-   
+
    # Apply to adapters
    make monkeytype-apply PROJECT=flx-http-oracle-wms MODULE=flx_http_oracle_wms.adapters
    ```
@@ -275,11 +276,11 @@ The underlying implementation is in `scripts/monkeytype_runner.py`, which you ca
    # Before
    def list_items(self, facility_id):
        # ...
-   
+
    # After MonkeyType
    def list_items(self, facility_id: str) -> List[Dict[str, Any]]:
        # ...
-   
+
    # After FLX conversion
    async def list_items(self, facility_id: str) -> List[WmsItem]:
        # ...
@@ -328,9 +329,9 @@ make test
 
 ---
 
-**Implementation Status**: ✅ Current and Active  
-**Script Location**: `/scripts/monkeytype_runner.py`  
-**Last Updated**: January 2025  
+**Implementation Status**: ✅ Current and Active
+**Script Location**: `/scripts/monkeytype_runner.py`
+**Last Updated**: January 2025
 **Maintained By**: FLX Development Team
 
 ---

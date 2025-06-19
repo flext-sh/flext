@@ -164,10 +164,7 @@ class TestExternalProjectUsage:
         """Test integration with FLX async infrastructure."""
         # Import only when needed to test availability
         try:
-            from flx.core import (
-                flx_get_broker_info,
-                flx_get_health_status,
-            )
+            from flx.core import flx_get_broker_info, flx_get_health_status
 
             # Test FLX async infrastructure status
             broker_info = flx_get_broker_info()

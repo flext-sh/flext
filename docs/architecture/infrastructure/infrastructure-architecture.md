@@ -62,15 +62,15 @@ spec:
         app: flx-application
     spec:
       containers:
-      - name: flx-app
-        image: flx-framework:latest
-        resources:
-          requests:
-            memory: "256Mi"
-            cpu: "250m"
-          limits:
-            memory: "512Mi"
-            cpu: "500m"
+        - name: flx-app
+          image: flx-framework:latest
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
 ```
 
 ### **Storage Layer**
@@ -81,7 +81,7 @@ from flx.infra.database import DatabaseEngine
 
 class ProductionDatabaseEngine(DatabaseEngine):
     """Production-grade database engine with advanced features."""
-    
+
     def __init__(self):
         super().__init__(
             pool_size=20,
@@ -90,7 +90,7 @@ class ProductionDatabaseEngine(DatabaseEngine):
             pool_recycle=3600,
             echo=False  # Production: disable SQL logging
         )
-    
+
     async def configure_production_settings(self):
         """Apply production-specific database optimizations."""
         await self.execute("""
@@ -107,7 +107,7 @@ from flx.infra.networking import LoadBalancer, ServiceMesh
 
 class InfrastructureNetworking:
     """Network infrastructure management."""
-    
+
     def __init__(self):
         self.load_balancer = LoadBalancer(
             algorithm="round_robin",
@@ -131,7 +131,7 @@ from flx.infra.discovery import ServiceRegistry
 
 class ServiceDiscovery:
     """Manages service registration and discovery."""
-    
+
     async def register_service(self, service_name: str, endpoint: str):
         """Register service in discovery registry."""
         await self.registry.register(
@@ -140,7 +140,7 @@ class ServiceDiscovery:
             health_check="/health",
             tags=["flx", "production"]
         )
-    
+
     async def discover_service(self, service_name: str) -> ServiceEndpoint:
         """Discover available service instances."""
         instances = await self.registry.discover(service_name)
@@ -155,11 +155,11 @@ from flx.infra.config import ConfigurationManager
 
 class InfrastructureConfig:
     """Infrastructure configuration management."""
-    
+
     def __init__(self, environment: str):
         self.config = ConfigurationManager()
         self.environment = environment
-    
+
     def get_database_config(self) -> DatabaseConfig:
         """Get environment-specific database configuration."""
         return self.config.get_section(
@@ -178,11 +178,11 @@ from flx.infra.monitoring import MetricsCollector, PrometheusExporter
 
 class InfrastructureMetrics:
     """Infrastructure metrics collection and export."""
-    
+
     def __init__(self):
         self.collector = MetricsCollector()
         self.exporter = PrometheusExporter()
-    
+
     async def collect_system_metrics(self):
         """Collect infrastructure-level metrics."""
         metrics = {
@@ -202,7 +202,7 @@ from flx.infra.health import HealthMonitor
 
 class InfrastructureHealth:
     """Monitor infrastructure component health."""
-    
+
     async def check_infrastructure_health(self) -> HealthStatus:
         """Comprehensive infrastructure health check."""
         checks = {
@@ -211,7 +211,7 @@ class InfrastructureHealth:
             "message_queue": await self.check_queue_health(),
             "external_services": await self.check_external_services()
         }
-        
+
         return HealthStatus(
             overall=all(check.healthy for check in checks.values()),
             components=checks,
@@ -229,11 +229,11 @@ from flx.infra.security import NetworkSecurity, Firewall
 
 class SecurityInfrastructure:
     """Infrastructure security management."""
-    
+
     def __init__(self):
         self.firewall = Firewall()
         self.network_security = NetworkSecurity()
-    
+
     async def configure_security_policies(self):
         """Apply infrastructure security policies."""
         # Network segmentation
@@ -243,7 +243,7 @@ class SecurityInfrastructure:
             ports=[5432, 3306],
             protocol="tcp"
         )
-        
+
         # TLS encryption for all traffic
         await self.network_security.enable_tls_everywhere()
 ```
@@ -256,11 +256,11 @@ from flx.infra.secrets import SecretManager, VaultIntegration
 
 class InfrastructureSecrets:
     """Manage infrastructure secrets securely."""
-    
+
     def __init__(self):
         self.vault = VaultIntegration()
         self.secret_manager = SecretManager(backend=self.vault)
-    
+
     async def rotate_database_credentials(self):
         """Automatic credential rotation."""
         new_password = self.generate_secure_password()
@@ -281,10 +281,10 @@ from flx.infra.scaling import AutoScaler, MetricsTrigger
 
 class InfrastructureScaling:
     """Manage infrastructure scaling policies."""
-    
+
     def __init__(self):
         self.autoscaler = AutoScaler()
-    
+
     async def configure_scaling_policies(self):
         """Configure automatic scaling triggers."""
         # Scale up on high CPU
@@ -296,7 +296,7 @@ class InfrastructureScaling:
                 cooldown=300
             )
         )
-        
+
         # Scale down on low CPU
         await self.autoscaler.add_trigger(
             MetricsTrigger(
@@ -316,16 +316,16 @@ from flx.infra.resources import ResourceManager
 
 class ResourceOptimization:
     """Optimize infrastructure resource utilization."""
-    
+
     async def optimize_resource_allocation(self):
         """Dynamically adjust resource allocation."""
         current_load = await self.get_current_load()
-        
+
         if current_load.cpu > 80:
             await self.allocate_additional_cpu()
         if current_load.memory > 85:
             await self.allocate_additional_memory()
-        
+
         # Optimize database connection pools
         await self.optimize_connection_pools(current_load)
 ```

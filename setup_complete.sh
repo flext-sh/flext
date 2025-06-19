@@ -22,30 +22,30 @@ echo "⚫ Aplicando Black (formatação de código)..."
 PROJECTS="flx flx-database-oracle flx-http-oracle-oic flx-http-oracle-wms client-a-mig-oud client-b-poc-oic-wms flx-adapter-example dc-code-analyzer"
 
 for proj in $PROJECTS; do
-    if [ -d "$proj" ]; then
-        echo "  → Formatando $proj..."
-        black "$proj" --quiet || true
-    fi
+	if [ -d "$proj" ]; then
+		echo "  → Formatando $proj..."
+		black "$proj" --quiet || true
+	fi
 done
 
 # 4. Aplicar isort
 echo ""
 echo "🔤 Aplicando isort (organização de imports)..."
 for proj in $PROJECTS; do
-    if [ -d "$proj" ]; then
-        echo "  → Organizando imports em $proj..."
-        isort "$proj" --quiet || true
-    fi
+	if [ -d "$proj" ]; then
+		echo "  → Organizando imports em $proj..."
+		isort "$proj" --quiet || true
+	fi
 done
 
 # 5. Aplicar Ruff com correções automáticas
 echo ""
 echo "🦀 Aplicando Ruff (linting com correções)..."
 for proj in $PROJECTS; do
-    if [ -d "$proj" ]; then
-        echo "  → Linting $proj..."
-        ruff check "$proj" --fix --quiet || true
-    fi
+	if [ -d "$proj" ]; then
+		echo "  → Linting $proj..."
+		ruff check "$proj" --fix --quiet || true
+	fi
 done
 
 # 6. Instalar todas as dependências via Poetry
@@ -59,13 +59,13 @@ poetry install --all-extras --with dev --no-interaction
 
 # Projetos individuais
 for proj in $PROJECTS; do
-    if [ -d "$proj" ] && [ -f "$proj/pyproject.toml" ]; then
-        echo ""
-        echo "→ Instalando $proj..."
-        cd "$proj"
-        poetry install --no-interaction || true
-        cd ..
-    fi
+	if [ -d "$proj" ] && [ -f "$proj/pyproject.toml" ]; then
+		echo ""
+		echo "→ Instalando $proj..."
+		cd "$proj"
+		poetry install --no-interaction || true
+		cd ..
+	fi
 done
 
 # 7. Instalar em modo editable

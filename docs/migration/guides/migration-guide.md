@@ -29,7 +29,7 @@ This guide helps developers migrate from legacy FLX implementations to the new u
 ### **Related Guides**
 
 - [Infrastructure Architecture](../../infrastructure/README.md) - Infrastructure implementation details
-- [API Reference](../../api-reference/index.md) - Complete API documentation  
+- [API Reference](../../api-reference/index.md) - Complete API documentation
 - [Examples](../../examples/index.md) - Code examples for new patterns
 
 ## Table of Contents

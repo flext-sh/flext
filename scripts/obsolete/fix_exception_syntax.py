@@ -84,7 +84,10 @@ class ExceptionSyntaxFixer:
 
         # Apply the fix
         re.sub(
-            pattern, replace_multiple_from, content, flags=re.DOTALL,
+            pattern,
+            replace_multiple_from,
+            content,
+            flags=re.DOTALL,
         )
 
     def print_summary(self) -> None:
@@ -101,7 +104,9 @@ def main() -> None:
     """Run the script."""
     parser = argparse.ArgumentParser(description="Fix exception handling syntax issues")
     parser.add_argument(
-        "--dry-run", action="store_true", help="Don't modify files, just report issues",
+        "--dry-run",
+        action="store_true",
+        help="Don't modify files, just report issues",
     )
     args = parser.parse_args()
 

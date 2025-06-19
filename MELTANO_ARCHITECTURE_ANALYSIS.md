@@ -24,6 +24,7 @@ class PluginType(YAMLEnum):
 ```
 
 Each plugin type has a dedicated base class:
+
 - `SingerTap` for extractors
 - `SingerTarget` for loaders
 - `DbtPlugin` for transformers
@@ -76,6 +77,7 @@ class StateStoreManager(ABC):
 ```
 
 State is managed through:
+
 - `MeltanoState` objects containing partial and completed states
 - State merging capabilities for incremental updates
 - Lock management for concurrent access
@@ -141,6 +143,7 @@ def cli():
 ```
 
 Key features:
+
 - Environment-aware execution
 - Dry-run capabilities
 - State management integration
@@ -178,6 +181,7 @@ class Schedule:
 ### Recommended Integration Strategy
 
 1. **Create FLX Extensions using EDK**
+
    ```python
    class FlxOracleOICExtension(ExtensionBase):
        """FLX Oracle OIC Extension for Meltano."""
@@ -188,6 +192,7 @@ class Schedule:
    ```
 
 2. **Leverage Existing Infrastructure**
+
    - Use Meltano's state management instead of custom implementation
    - Integrate with Meltano's configuration system
    - Utilize built-in scheduling capabilities
@@ -213,6 +218,7 @@ class HubClient:
 ```
 
 FLX plugins can be:
+
 - Published to Meltano Hub for discovery
 - Distributed via pip packages
 - Configured with variants for different use cases
@@ -241,6 +247,7 @@ class Job:
 ## 9. UI Components (Deprecated)
 
 While Meltano UI is deprecated, the architecture shows:
+
 - REST API server capabilities
 - Plugin configuration interfaces
 - Pipeline monitoring
@@ -251,18 +258,21 @@ This could be replaced with FLX's own UI components if needed.
 ## 10. Implementation Recommendations
 
 ### Phase 1: Core FLX Extensions
+
 1. Create `flx-oracle-oic-ext` using EDK
 2. Create `flx-oracle-wms-ext` using EDK
 3. Implement state management adapters
 4. Configure plugin definitions
 
 ### Phase 2: Advanced Integration
+
 1. Hub integration for FLX plugins
 2. Custom orchestration patterns
 3. Advanced state merging strategies
 4. Performance optimizations
 
 ### Phase 3: Ecosystem Enhancement
+
 1. FLX-specific utilities
 2. Monitoring dashboards
 3. Custom transformers

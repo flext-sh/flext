@@ -23,7 +23,9 @@ class StandaloneOracleOicHttpAdapter(BaseModel):
         extra = "allow"  # Allow dynamic method injection
 
     def __init__(
-        self, config: StandaloneOracleOicConfig | None = None, **kwargs: Any  # type: ignore[misc],
+        self,
+        config: StandaloneOracleOicConfig | None = None,
+        **kwargs: Any,  # type: ignore[misc],
     ) -> None:
         """Initialize adapter with configuration."""
         if config is None:

@@ -29,6 +29,7 @@ python demo.py
 ### 3. Test Individual Components
 
 #### CLI Test
+
 ```bash
 # Test CLI functionality
 python test_cli_simple.py --help
@@ -37,6 +38,7 @@ python test_cli_simple.py list
 ```
 
 #### API Test
+
 ```bash
 # Start test API server
 python test_api_simple.py
@@ -114,6 +116,7 @@ poetry run python test_basic.py
 ## 📊 Current Status
 
 ✅ **Working:**
+
 - Basic project structure
 - Core module imports
 - Configuration system
@@ -123,6 +126,7 @@ poetry run python test_basic.py
 - Kubernetes Helm charts
 
 ⚠️ **Requires Setup:**
+
 - PostgreSQL database
 - Redis cache
 - Django migrations
@@ -139,13 +143,17 @@ poetry run python test_basic.py
 ## 🐛 Troubleshooting
 
 ### Import Errors
+
 Make sure you're in the virtual environment:
+
 ```bash
 source .venv/bin/activate
 ```
 
 ### Database Connection
+
 Start PostgreSQL with Docker:
+
 ```bash
 docker run -d --name flx-postgres \
   -e POSTGRES_USER=flx \
@@ -156,7 +164,9 @@ docker run -d --name flx-postgres \
 ```
 
 ### Port Conflicts
+
 Default ports:
+
 - gRPC: 50051
 - Django: 8000
 - FastAPI: 8001

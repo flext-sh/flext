@@ -18,11 +18,11 @@
 
 ### **Core Topics**
 
-| **Topic** | **Function** | **Audience** | **Status** |
-|-----------|--------------|--------------|------------|
-| [Guides](./guides/index.md) | Step-by-step migration procedures | Migration teams | ✅ Complete |
-| [Strategies](./strategies/index.md) | Migration planning strategies | Technical architects | ✅ Complete |
-| [Tools](./tools/index.md) | Migration automation tools | DevOps engineers | ✅ Complete |
+| **Topic**                           | **Function**                      | **Audience**         | **Status**  |
+| ----------------------------------- | --------------------------------- | -------------------- | ----------- |
+| [Guides](./guides/index.md)         | Step-by-step migration procedures | Migration teams      | ✅ Complete |
+| [Strategies](./strategies/index.md) | Migration planning strategies     | Technical architects | ✅ Complete |
+| [Tools](./tools/index.md)           | Migration automation tools        | DevOps engineers     | ✅ Complete |
 
 ### **📋 Learning Path**
 
@@ -58,7 +58,7 @@
 ## 📊 **Section Metrics**
 
 - **Documents**: 5 files
-- **Completeness**: 90%  
+- **Completeness**: 90%
 - **Last Updated**: June 11, 2025
 
 ---

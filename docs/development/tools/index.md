@@ -18,14 +18,14 @@
 
 ### **Core Topics**
 
-| **Topic** | **Function** | **Audience** | **Status** |
-|-----------|--------------|--------------|------------|
-| [Scripts Automation](./scripts-automation-guide.md) | Complete automation strategies | Developers | ✅ Complete |
-| [Scripts Organization](./scripts-organization-guide.md) | Script organization patterns | Development Teams | ✅ Complete |
-| [GitHub Workflows](./github-workflow-setup.md) | CI/CD workflow configuration | DevOps Engineers | ✅ Complete |
-| [Scripts & Utilities](./scripts-and-utilities.md) | Development utilities documentation | All Developers | ✅ Complete |
-| [Code Analysis](./django-code-analyzer.md) | Code analysis and metrics tools | Quality Engineers | ✅ Complete |
-| [GitHub Templates](./github-templates/index.md) | Template resources and patterns | Teams | ✅ Complete |
+| **Topic**                                               | **Function**                        | **Audience**      | **Status**  |
+| ------------------------------------------------------- | ----------------------------------- | ----------------- | ----------- |
+| [Scripts Automation](./scripts-automation-guide.md)     | Complete automation strategies      | Developers        | ✅ Complete |
+| [Scripts Organization](./scripts-organization-guide.md) | Script organization patterns        | Development Teams | ✅ Complete |
+| [GitHub Workflows](./github-workflow-setup.md)          | CI/CD workflow configuration        | DevOps Engineers  | ✅ Complete |
+| [Scripts & Utilities](./scripts-and-utilities.md)       | Development utilities documentation | All Developers    | ✅ Complete |
+| [Code Analysis](./django-code-analyzer.md)              | Code analysis and metrics tools     | Quality Engineers | ✅ Complete |
+| [GitHub Templates](./github-templates/index.md)         | Template resources and patterns     | Teams             | ✅ Complete |
 
 ### **📋 Learning Path**
 

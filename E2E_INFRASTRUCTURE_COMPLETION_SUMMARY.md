@@ -7,6 +7,7 @@ I have successfully completed the comprehensive E2E test infrastructure for all 
 ## ✅ Completed Projects
 
 ### 1. tap-ldap E2E Tests
+
 - **Location**: `/home/marlonsc/pyauto/tap-ldap/tests/e2e/`
 - **Infrastructure**: OpenLDAP container with comprehensive test data
 - **Test Coverage**: Discovery, extraction, incremental sync, custom streams, error handling
@@ -17,6 +18,7 @@ I have successfully completed the comprehensive E2E test infrastructure for all 
   - `conftest.py` - Pytest fixtures and utilities
 
 ### 2. target-ldap E2E Tests
+
 - **Location**: `/home/marlonsc/pyauto/target-ldap/tests/e2e/`
 - **Infrastructure**: Source and target LDAP containers
 - **Test Coverage**: Loading, upsert operations, DN transformation, batch processing
@@ -26,6 +28,7 @@ I have successfully completed the comprehensive E2E test infrastructure for all 
   - `ldif/` - Source and target test data
 
 ### 3. dbt-ldap E2E Tests
+
 - **Location**: `/home/marlonsc/pyauto/dbt-ldap/tests/e2e/`
 - **Infrastructure**: PostgreSQL container for dbt transformations
 - **Test Coverage**: Staging models, dimensional models, data quality tests
@@ -35,6 +38,7 @@ I have successfully completed the comprehensive E2E test infrastructure for all 
   - `dbt-profiles/` - dbt configuration files
 
 ### 4. flx-ldap E2E Tests
+
 - **Location**: `/home/marlonsc/pyauto/flx-ldap/tests/e2e/`
 - **Infrastructure**: Complete pipeline with LDAP containers + PostgreSQL
 - **Test Coverage**: Full orchestration, migration workflows, incremental sync, client-a-oud-mig compatibility
@@ -46,13 +50,16 @@ I have successfully completed the comprehensive E2E test infrastructure for all 
 ## 🔧 Technical Implementation Details
 
 ### Docker Infrastructure
+
 Each project includes a `docker-compose.yml` file that:
+
 - Sets up required services (OpenLDAP, PostgreSQL)
 - Configures appropriate ports and networking
 - Initializes test data using LDIF files
 - Provides realistic testing environments
 
 ### Test Architecture
+
 - **Comprehensive Coverage**: Tests cover normal operations, edge cases, and error conditions
 - **Real Data**: Uses realistic LDAP organizational structures
 - **Incremental Testing**: Supports state management and incremental sync testing
@@ -60,7 +67,9 @@ Each project includes a `docker-compose.yml` file that:
 - **Compatibility Testing**: Validates client-a-oud-mig migration patterns
 
 ### Validation Infrastructure
+
 Created comprehensive validation script at `/home/marlonsc/pyauto/scripts/validate_e2e_infrastructure.py`:
+
 - Validates project structure completeness
 - Checks Docker Compose configuration validity
 - Tests actual container startup and service connectivity
@@ -78,6 +87,7 @@ Created comprehensive validation script at `/home/marlonsc/pyauto/scripts/valida
 ## 🚀 Usage Instructions
 
 ### Running Individual Project Tests
+
 ```bash
 # For tap-ldap
 cd tap-ldap
@@ -105,6 +115,7 @@ docker-compose down -v
 ```
 
 ### Running Validation
+
 ```bash
 # Validate all projects structure
 python scripts/validate_e2e_infrastructure.py
@@ -119,6 +130,7 @@ python scripts/validate_e2e_infrastructure.py --run-docker-tests
 ## 🧪 Test Scenarios Covered
 
 ### tap-ldap E2E Tests
+
 - **Discovery Testing**: Catalog generation with all streams
 - **Extraction Testing**: Full data extraction with filtering
 - **Incremental Sync**: State-based incremental extraction
@@ -127,6 +139,7 @@ python scripts/validate_e2e_infrastructure.py --run-docker-tests
 - **Performance**: Large dataset extraction testing
 
 ### target-ldap E2E Tests
+
 - **Loading Operations**: Insert new records
 - **Upsert Functionality**: Update existing records
 - **Deletion Markers**: Handle deletion scenarios
@@ -135,6 +148,7 @@ python scripts/validate_e2e_infrastructure.py --run-docker-tests
 - **Validation Mode**: Data validation without loading
 
 ### dbt-ldap E2E Tests
+
 - **Staging Models**: Raw data staging transformations
 - **Dimensional Models**: Business logic transformations
 - **Data Quality Tests**: Automated data validation
@@ -143,6 +157,7 @@ python scripts/validate_e2e_infrastructure.py --run-docker-tests
 - **Performance**: Large dataset transformation testing
 
 ### flx-ldap E2E Tests
+
 - **Pipeline Orchestration**: Complete extract-transform-load workflow
 - **Migration Workflows**: Full LDAP migration with comparison
 - **Incremental Sync**: State management across pipeline
@@ -154,6 +169,7 @@ python scripts/validate_e2e_infrastructure.py --run-docker-tests
 ## 🔗 Integration with Existing Codebase
 
 The E2E tests are designed to:
+
 - ✅ **Validate client-a-oud-mig compatibility patterns**
 - ✅ **Test real LDAP organizational structures**
 - ✅ **Support complex filtering and transformation requirements**
@@ -163,6 +179,7 @@ The E2E tests are designed to:
 ## 📝 Dependencies Added
 
 Updated `pyproject.toml` files for E2E testing dependencies:
+
 - `docker` for container management
 - `psycopg2-binary` for PostgreSQL connectivity
 - Existing `ldap3`, `pytest`, and other test dependencies

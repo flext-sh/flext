@@ -32,14 +32,14 @@ class InfrastructureEvolutionQuestions:
 Infrastructure optimization is about **evolution, not revolution**:
 
 ```
-Current State → Measure → Identify Real Problems → 
+Current State → Measure → Identify Real Problems →
 Small Changes → Measure Impact → Iterate
 ```
 
 **Not:**
 
 ```
-Current State → Assume Everything is Wrong → 
+Current State → Assume Everything is Wrong →
 Rewrite Everything → Hope for the Best
 ```
 
@@ -59,7 +59,7 @@ class ClaimedVsActual:
     - 5,000 lines of actual custom code
     - 10,000 lines of generated/boilerplate
     - Mix of custom and library usage
-    
+
     Claimed: "50% code reduction possible"
     Reality: Depends on:
     - What's actually custom vs using libraries
@@ -74,16 +74,16 @@ class ClaimedVsActual:
 class ValidationRequirements:
     """
     Before claiming we can optimize, we must know:
-    
+
     1. Current Performance Baseline
        - Response times, throughput, error rates
        - Resource usage, costs
-       
+
     2. Actual Code Metrics
        - Real line counts (excluding tests, docs)
        - Complexity scores
        - Duplication analysis
-       
+
     3. Architectural Constraints
        - What can actually be changed?
        - What must remain for compatibility?
@@ -108,7 +108,7 @@ class LibraryAdoptionCriteria:
     3. Significant complexity reduction
     4. Team can understand and debug it
     5. Fits within architectural boundaries
-    
+
     BUILD when:
     1. Core business differentiator
     2. Unique requirements not met by libraries
@@ -125,7 +125,7 @@ class TotalCostOfOwnership:
     """
     Library Cost = Learning + Integration + Upgrades + Lock-in
     Custom Cost = Development + Maintenance + Bugs + Documentation
-    
+
     Decision = min(Library Cost, Custom Cost) + Risk Assessment
     """
 ```
@@ -148,7 +148,7 @@ class IncrementalReplacement:
     5. Gradually increase percentage if better
     6. Remove old implementation only when proven
     """
-    
+
     async def hybrid_implementation(self, feature_flag_percentage: float):
         """Run both implementations, compare results"""
         if random.random() < feature_flag_percentage:
@@ -173,7 +173,7 @@ class ComplexityReduction:
     3. Long methods (> 50 lines)
     4. High coupling (> 5 dependencies)
     5. Duplicate code (> 3 instances)
-    
+
     Simple code > Clever code > Less code
     """
 ```
@@ -190,7 +190,7 @@ class PerformanceOptimization:
     3. Cache computations before scaling
     4. Batch operations before parallelizing
     5. Measure impact of each change
-    
+
     Premature optimization is still the root of all evil
     """
 ```
@@ -210,12 +210,12 @@ class TechnicalDebtVsInvestment:
     - Quick fixes that complicate future changes
     - Ignoring known better solutions for speed
     - Accumulates interest (harder to fix later)
-    
+
     Technical Investment:
     - Strategic complexity for future flexibility
     - Learning and skill building
     - Enables future capabilities
-    
+
     Not all custom code is debt!
     """
 ```
@@ -230,7 +230,7 @@ class MigrationRisks:
     - All-at-once migrations
     - Unproven technology choices
     - No rollback plan
-    
+
     Low Risk:
     - New features use new approach
     - Gradual migration with feature flags
@@ -254,17 +254,17 @@ class ActualQuickWins:
        - Not replacing logging system
        - Just consistent format/fields
        - Enables better debugging
-       
+
     2. Add Basic Metrics
        - Not complex observability
        - Just key counters/timers
        - Use existing Prometheus if available
-       
+
     3. Implement Retry on Critical Paths
        - Not everywhere
        - Just proven failure points
        - Simple exponential backoff
-       
+
     4. Connection Pool Tuning
        - Not new pooling system
        - Just optimize existing settings
@@ -283,17 +283,17 @@ class MediumTermImprovements:
        - Prevent cascade failures
        - Start with most unreliable dependency
        - Measure impact before expanding
-       
+
     2. Cache Frequently Accessed Data
        - Not complex caching system
        - Just cache obvious hot paths
        - Simple TTL-based invalidation
-       
+
     3. Async Where It Matters
        - Not rewrite everything async
        - Just I/O bound operations
        - Measure concurrency gains
-       
+
     4. Structured Error Handling
        - Consistent error types
        - Proper error context
@@ -312,17 +312,17 @@ class LongTermEvolution:
        - Gradual implementation
        - Start with critical paths
        - Build dashboards iteratively
-       
+
     2. Service Mesh Patterns
        - Only if actually needed
        - Start with service discovery
        - Add features as required
-       
+
     3. Advanced Caching Strategies
        - Multi-tier caching
        - Intelligent invalidation
        - Cache warming
-       
+
     4. Performance Optimization
        - Based on real bottlenecks
        - Algorithm improvements first
@@ -344,12 +344,12 @@ class BusinessMetrics:
        - Page load time < 2s
        - API response time < 200ms
        - Error rate < 0.1%
-       
+
     2. Operational Costs
        - Infrastructure spend
        - Developer hours for maintenance
        - Incident response time
-       
+
     3. Business Capability
        - Feature delivery speed
        - System reliability (uptime)
@@ -367,12 +367,12 @@ class TechnicalMetrics:
        - Test coverage > 80%
        - Cyclomatic complexity < 10
        - Duplicate code < 5%
-       
+
     2. System Performance
        - P50/P95/P99 latencies
        - Throughput (requests/second)
        - Resource utilization
-       
+
     3. Operational Health
        - Deploy frequency
        - Mean time to recovery

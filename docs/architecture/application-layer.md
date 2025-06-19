@@ -75,38 +75,38 @@ from flx.domain.repositories import Repository
 
 class OrderApplicationService(ApplicationService):
     """Orchestrates order-related use cases."""
-    
-    def __init__(self, 
+
+    def __init__(self,
                  order_repo: Repository[Order],
                  customer_repo: Repository[Customer],
                  pricing_service: PricingService):
         self.order_repo = order_repo
         self.customer_repo = customer_repo
         self.pricing_service = pricing_service
-    
+
     async def create_order(self, customer_id: str, items: List[OrderItem]) -> str:
         """Use case: Create new order with pricing calculation."""
         # 1. Load customer
         customer = await self.customer_repo.get(customer_id)
         if not customer:
             raise CustomerNotFoundError(customer_id)
-        
+
         # 2. Calculate pricing
         total_price = await self.pricing_service.calculate_total(
             customer.tier,
             items
         )
-        
+
         # 3. Create order
         order = Order.create(
             customer_id=customer_id,
             items=items,
             total_price=total_price
         )
-        
+
         # 4. Save order
         await self.order_repo.save(order)
-        
+
         return order.id
 ```
 
@@ -117,15 +117,15 @@ from flx.application.container import ApplicationContainer
 
 class ApplicationContainer:
     """Manages application service dependencies."""
-    
+
     def __init__(self):
         self._services = {}
         self._factories = {}
-    
+
     def register_factory(self, service_type: Type[T], factory: Callable[[], T]):
         """Register service factory for lazy instantiation."""
         self._factories[service_type] = factory
-    
+
     def resolve(self, service_type: Type[T]) -> T:
         """Resolve service with dependencies."""
         if service_type not in self._services:
@@ -143,16 +143,16 @@ from flx.application.bootstrap import ApplicationBootstrap
 
 class ApplicationBootstrap:
     """Initializes application with all dependencies."""
-    
+
     async def bootstrap(self, config: ApplicationConfig) -> ApplicationContainer:
         container = ApplicationContainer()
-        
+
         # Register repositories (interfaces only)
         container.register_factory(
             CustomerRepository,
             lambda: self._create_customer_repository(config)
         )
-        
+
         # Register domain services
         container.register_factory(
             PricingService,
@@ -160,7 +160,7 @@ class ApplicationBootstrap:
                 pricing_rules=config.pricing_rules
             )
         )
-        
+
         # Register application services
         container.register_factory(
             OrderApplicationService,
@@ -170,7 +170,7 @@ class ApplicationBootstrap:
                 pricing_service=container.resolve(PricingService)
             )
         )
-        
+
         return container
 ```
 
@@ -190,10 +190,10 @@ class CreateOrderCommand(Command):
 
 class CreateOrderHandler(CommandHandler[CreateOrderCommand, str]):
     """Handles order creation commands."""
-    
+
     def __init__(self, order_service: OrderApplicationService):
         self.order_service = order_service
-    
+
     async def handle(self, command: CreateOrderCommand) -> str:
         return await self.order_service.create_order(
             command.customer_id,
@@ -208,10 +208,10 @@ from flx.application.transactions import TransactionManager
 
 class TransactionalApplicationService:
     """Base class for transactional services."""
-    
+
     def __init__(self, transaction_manager: TransactionManager):
         self._tx_manager = transaction_manager
-    
+
     async def execute_in_transaction(self, operation: Callable):
         """Execute operation within transaction boundaries."""
         async with self._tx_manager.begin() as transaction:
@@ -231,10 +231,10 @@ from flx.application.queries import QueryService
 
 class OrderQueryService(QueryService):
     """Read-only queries for orders."""
-    
+
     def __init__(self, query_executor: QueryExecutor):
         self.query_executor = query_executor
-    
+
     async def get_customer_orders(self, customer_id: str) -> List[OrderDTO]:
         """Get all orders for a customer."""
         query = """
@@ -243,12 +243,12 @@ class OrderQueryService(QueryService):
             WHERE o.customer_id = :customer_id
             ORDER BY o.created_at DESC
         """
-        
+
         results = await self.query_executor.fetch_all(
             query,
             {"customer_id": customer_id}
         )
-        
+
         return [OrderDTO.from_row(row) for row in results]
 ```
 
@@ -272,19 +272,19 @@ async def test_create_order_success(mock_repositories):
     customer = Customer(id="123", tier="gold")
     mock_repositories["customer_repo"].get = AsyncMock(return_value=customer)
     mock_repositories["order_repo"].save = AsyncMock()
-    
+
     pricing_service = Mock(spec=PricingService)
     pricing_service.calculate_total = AsyncMock(return_value=99.99)
-    
+
     service = OrderApplicationService(
         order_repo=mock_repositories["order_repo"],
         customer_repo=mock_repositories["customer_repo"],
         pricing_service=pricing_service
     )
-    
+
     # Act
     order_id = await service.create_order("123", [OrderItem(...)])
-    
+
     # Assert
     assert order_id is not None
     mock_repositories["order_repo"].save.assert_called_once()

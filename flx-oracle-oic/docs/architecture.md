@@ -29,24 +29,28 @@ The flx-oracle-oic package follows a modular architecture with clear separation 
 ## Design Principles
 
 ### 1. Singer Protocol Compliance
+
 - Standard TAP for data extraction
 - Standard Target for data loading
 - Full catalog and state management
 - Stream discovery and selection
 
 ### 2. Meltano Extension Architecture
+
 - EDK-based extension for advanced features
 - Lifecycle management capabilities
 - Monitoring and analytics
 - Artifact extraction
 
 ### 3. FLX Adapter Pattern
+
 - Hexagonal architecture compliance
 - Async operations support
 - Dependency injection ready
 - Circuit breaker pattern
 
 ### 4. Unified CLI
+
 - Single entry point for all operations
 - Consistent command structure
 - Rich terminal output
@@ -55,16 +59,19 @@ The flx-oracle-oic package follows a modular architecture with clear separation 
 ## Data Flow
 
 ### Extraction Flow
+
 ```
 OIC API → OAuth2 Auth → TAP Streams → Singer Messages → Output
 ```
 
 ### Loading Flow
+
 ```
 Singer Messages → Target Sinks → OAuth2 Auth → OIC API
 ```
 
 ### Lifecycle Flow
+
 ```
 CLI Command → Extension → Lifecycle Manager → OIC API
 ```
@@ -81,6 +88,7 @@ All components share a common OAuth2 authentication pattern:
 ## Stream Architecture
 
 ### Core Streams
+
 - Integrations
 - Connections
 - Packages
@@ -89,10 +97,12 @@ All components share a common OAuth2 authentication pattern:
 - Certificates
 
 ### Infrastructure Streams
+
 - Adapters
 - Agent Groups
 
 ### Monitoring Streams (via Extension)
+
 - Execution Instances
 - Error Logs
 - Performance Metrics
@@ -122,6 +132,7 @@ All components share a common OAuth2 authentication pattern:
 ## Extensibility
 
 The architecture supports:
+
 - Custom stream implementations
 - Additional sink types
 - New lifecycle operations

@@ -56,17 +56,17 @@ from flx.core import (
     # Base domain objects
     DomainObject, Identifiable, Timestamped,
     Entity, AggregateRoot, ValueObject,
-    
+
     # Domain events and services
     DomainEvent, DomainService, DomainLogger,
-    
+
     # Business exceptions
     DomainError, BusinessRuleViolationError, ValidationError,
-    
+
     # Cross-cutting mixins
     ConfigurationMixin, ConnectionMixin, ErrorHandlingMixin,
     HealthCheckMixin, LoggingMixin, MetricsMixin,
-    
+
     # Core models and enums
     FlxAdapterStatus, FlxConnectionStatus, FlxOperationStatus
 )
@@ -80,16 +80,16 @@ from flx.ports import (
     # Modern base ports
     PortConfig, ModernBasePort, ModernInboundPort, ModernOutboundPort,
     ConnectionPort, HealthCheckPort, MetricsPort, AsyncContextPort,
-    
+
     # Inbound ports (External → Domain)
     ApiPort, CliPort, CommandPort, EventListenerPort,
     PluginPort, QueryPort, WebhookPort,
-    
+
     # Outbound ports (Domain → External)
     AnalyticsPort, CachePort, ConfigPort, DatabasePort,
     EventPublisherPort, FileSystemPort, HttpClientPort,
     LoggingPort, MessageQueuePort, OutputPort, RepositoryPort,
-    
+
     # Advanced patterns
     CircuitBreakerMixin, RetryMixin, ObservabilityMixin
 )
@@ -102,10 +102,10 @@ from flx.ports import (
 from flx.adapters import (
     # Core adapter infrastructure
     BaseAdapter, AdapterFactory, ApiClient,
-    
+
     # Inbound adapters
     ApiAdapter, CliAdapter,
-    
+
     # Outbound adapters
     AnalyticsAdapter, CacheAdapter, DatabaseAdapter,
     EventPublisherAdapter, HttpClientAdapter, MemoryCacheAdapter,
@@ -148,7 +148,7 @@ cache_engine = CacheProductionEngine(
 await cache_engine.connect()
 ```
 
-#### Database Production Engine  
+#### Database Production Engine
 
 ```python
 from flx.infra.database.production_engine import DatabaseProductionEngine

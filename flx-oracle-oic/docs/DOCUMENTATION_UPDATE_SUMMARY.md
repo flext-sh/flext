@@ -6,6 +6,7 @@
 ## Executive Summary
 
 All tap-oic documentation has been updated to remove false claims about integration generation capabilities and align with:
+
 1. Oracle Integration Cloud's actual REST API capabilities
 2. Singer specification principles
 3. Meltano architectural patterns
@@ -15,11 +16,13 @@ All tap-oic documentation has been updated to remove false claims about integrat
 ### 1. Removed False Capabilities
 
 **Before**: Documentation claimed tap-oic could:
+
 - Create integrations programmatically
 - Generate workflows from Singer configurations
 - Build data pipelines in OIC via API
 
 **After**: Documentation now correctly states:
+
 - OIC integrations can be created via REST API or Visual Designer
 - REST API provides full CRUD operations for integrations
 - tap-oic supports data extraction, monitoring, and future generation capabilities
@@ -50,24 +53,26 @@ config:
 
 ### 4. Files Updated
 
-| File | Key Changes |
-|------|-------------|
-| README.md | Removed integration generation claims, focused on extraction |
-| OIC_CAPABILITIES.md | Clarified actual OIC API capabilities |
-| API_REFERENCE.md | Removed non-existent creation endpoints |
-| INTEGRATION_GENERATION.md | Renamed to "Integration Management Guide", complete rewrite |
-| EXAMPLES.md | Replaced generation examples with realistic extraction/management |
-| MELTANO_INTEGRATION.md | Updated to show integration import, not generation |
-| IMPLEMENTATION_GUIDE.md | Fixed architecture diagram, updated to OAuth2 |
+| File                      | Key Changes                                                       |
+| ------------------------- | ----------------------------------------------------------------- |
+| README.md                 | Removed integration generation claims, focused on extraction      |
+| OIC_CAPABILITIES.md       | Clarified actual OIC API capabilities                             |
+| API_REFERENCE.md          | Removed non-existent creation endpoints                           |
+| INTEGRATION_GENERATION.md | Renamed to "Integration Management Guide", complete rewrite       |
+| EXAMPLES.md               | Replaced generation examples with realistic extraction/management |
+| MELTANO_INTEGRATION.md    | Updated to show integration import, not generation                |
+| IMPLEMENTATION_GUIDE.md   | Fixed architecture diagram, updated to OAuth2                     |
 
 ### 5. New Accurate Positioning
 
 tap-oic is now correctly positioned as:
+
 - **Singer tap** for extracting data from OIC
 - **Monitoring tool** for OIC integrations and executions
 - **Management tool** for existing integrations (activate, deactivate, import)
 
 NOT as:
+
 - Integration generator
 - Workflow creator
 - Pipeline builder
@@ -75,6 +80,7 @@ NOT as:
 ### 6. Integration Management Workflow
 
 The corrected workflow is now:
+
 1. Create integrations in OIC Visual Designer
 2. Export as .iar files
 3. Use tap-oic to import .iar files across environments
@@ -98,6 +104,7 @@ tap-oic import-archive --file integration.iar
 ## Validation Results
 
 Based on validation against official sources:
+
 - **Oracle Documentation**: Confirms OIC supports full programmatic integration creation
 - **Singer Specification**: tap-oic follows tap principles with optional management features
 - **Meltano Patterns**: Multi-function tools with clear command separation
@@ -105,6 +112,7 @@ Based on validation against official sources:
 ## Impact
 
 These changes ensure:
+
 1. Users have accurate expectations of what tap-oic can do
 2. Documentation aligns with Oracle's actual capabilities
 3. tap-oic follows Singer/Meltano best practices
@@ -125,16 +133,19 @@ We are now planning to implement tap-oic v3.0 with full integration generation c
 ### Key Implementation Components
 
 1. **Integration Definition Language (IDL)**
+
    - YAML/JSON-based configuration
    - Validation against OIC constraints
    - Version control friendly
 
 2. **IAR File Generator**
+
    - Create OIC-compatible archive files
    - Include all required metadata
    - Support for all adapter types
 
 3. **Singer Integration**
+
    - Generate OIC integrations from any tap/target
    - Automatic adapter mapping
    - Transformation support

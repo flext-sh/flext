@@ -18,7 +18,7 @@ All FLX infrastructure follows a unified service pattern that provides consisten
 
 ```python
 # The semantic concept: Every infrastructure service is a managed, configurable, testable unit
-class BaseInfraService(BaseServiceImplementation, ManagedService, 
+class BaseInfraService(BaseServiceImplementation, ManagedService,
                       ConfigurableService, TestableService, ABC):
     """
     Semantic purpose: Standardize how ANY external system is integrated
@@ -39,28 +39,32 @@ class BaseInfraService(BaseServiceImplementation, ManagedService,
 The infrastructure layer's primary semantic purpose is integrating with external systems:
 
 ```
-Domain needs something → Port defines contract → Adapter implements port → 
+Domain needs something → Port defines contract → Adapter implements port →
 Infrastructure Service handles external system → External System
 ```
 
 **Key semantic categories of external systems:**
 
 1. **State Persistence** (Database, Cache)
+
    - Storing and retrieving domain state
    - Managing data lifecycle
    - Ensuring consistency
 
 2. **Communication** (HTTP, Messaging)
+
    - Synchronous request/response (HTTP)
    - Asynchronous events (Message Bus)
    - External API integration
 
 3. **Observability** (Logging, Metrics, Tracing)
+
    - System behavior visibility
    - Performance monitoring
    - Distributed tracing
 
 4. **Security** (Auth, Encryption)
+
    - Identity verification
    - Data protection
    - Access control
@@ -100,10 +104,10 @@ class ResilientService:
 # Not about a specific file, but about the concept of service management
 class ServiceRegistry:
     """Central management of all infrastructure services"""
-    
+
     async def start_all(self) -> None:
         """Start services in dependency order"""
-        
+
     async def health_check_all(self) -> Dict[str, HealthStatus]:
         """Aggregate health across all services"""
 ```
@@ -327,7 +331,7 @@ Infrastructure health is more than individual service health:
 # Semantic health check pattern
 class HealthAggregation:
     """
-    Overall health = ALL(critical services healthy) AND 
+    Overall health = ALL(critical services healthy) AND
                      MOST(non-critical services healthy)
     """
 ```

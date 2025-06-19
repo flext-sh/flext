@@ -27,7 +27,7 @@
 ## 🎯 Quick Navigation
 
 - [**Getting Started**](#-getting-started) - Setup and basic configuration
-- [**FLX Database Plugin**](#-flx-database-plugin) - Modern simplified architecture  
+- [**FLX Database Plugin**](#-flx-database-plugin) - Modern simplified architecture
 - [**Database Operations**](#-database-operations) - Queries, transactions, and schema
 - [**CLI Interface**](#-cli-interface) - Command-line database operations
 - [**Advanced Features**](#-advanced-features) - Monitoring, pooling, and performance
@@ -140,21 +140,21 @@ async def main():
     # Create plugin
     plugin = flx_create_database_plugin(
         host="localhost",
-        username="hr", 
+        username="hr",
         password="oracle",
         service_name="XEPDB1",
         mode=FlxPluginMode.BIDIRECTIONAL
     )
-    
+
     # Initialize and start
     await plugin.initialize()
     await plugin.start()
-    
+
     # Execute query
     query_port = plugin.get_query_port()
     result = await query_port.execute_query("SELECT SYSDATE FROM DUAL")
     print(f"Current date: {result.data}")
-    
+
     # Clean shutdown
     await plugin.stop()
 
@@ -170,7 +170,7 @@ from flx_database_oracle import DatabaseConfig, DatabasePlugin
 config = DatabaseConfig(
     host="localhost",
     username="hr",
-    password="oracle", 
+    password="oracle",
     service_name="XEPDB1",
     port=1521,
     # Connection pooling
@@ -334,17 +334,17 @@ try:
         "UPDATE hr.employees SET salary = salary * 1.1 WHERE department_id = :dept_id",
         {"dept_id": 10}
     )
-    
+
     await transaction_port.execute_in_transaction(
         transaction_id,
         "INSERT INTO hr.salary_history (employee_id, old_salary, new_salary, change_date) SELECT employee_id, salary/1.1, salary, SYSDATE FROM hr.employees WHERE department_id = :dept_id",
         {"dept_id": 10}
     )
-    
+
     # Commit
     await transaction_port.commit_transaction(transaction_id)
     print("Transaction committed successfully")
-    
+
 except Exception as e:
     # Rollback on error
     await transaction_port.rollback_transaction(transaction_id)
@@ -361,30 +361,30 @@ transaction_id = str(transaction.transaction_id)
 try:
     # Create savepoint
     await transaction_port.create_savepoint(transaction_id, "sp1")
-    
+
     # Execute some operations
     await transaction_port.execute_in_transaction(
         transaction_id,
         "UPDATE hr.employees SET salary = salary * 1.05 WHERE department_id = :dept_id",
         {"dept_id": 20}
     )
-    
+
     # Create another savepoint
     await transaction_port.create_savepoint(transaction_id, "sp2")
-    
+
     # Execute more operations
     await transaction_port.execute_in_transaction(
         transaction_id,
         "UPDATE hr.employees SET commission_pct = 0.1 WHERE job_id LIKE 'SA_%'",
         {}
     )
-    
+
     # Rollback to savepoint if needed
     # await transaction_port.rollback_to_savepoint(transaction_id, "sp1")
-    
+
     # Commit entire transaction
     await transaction_port.commit_transaction(transaction_id)
-    
+
 except Exception as e:
     await transaction_port.rollback_transaction(transaction_id)
     raise e
@@ -562,16 +562,16 @@ class DatabaseRecord(AggregateRoot):
     data: Dict[str, Any]
     created_at: datetime
     updated_at: Optional[datetime] = None
-    
+
     def update_field(self, field_name: str, new_value: Any) -> None:
         if field_name not in self.data:
             raise ValueError(f"Field {field_name} does not exist")
-        
+
         old_value = self.data[field_name]
         self.data[field_name] = new_value
         self.updated_at = datetime.now()
         self.increment_version()
-        
+
         # Add domain event
         self.add_event(DomainEvent(
             event_type="RecordFieldUpdated",
@@ -592,11 +592,11 @@ class DatabaseConnection(ValueObject):
     port: int
     service_name: str
     username: str
-    
+
     @property
     def dsn(self) -> str:
         return f"{self.host}:{self.port}/{self.service_name}"
-    
+
     @property
     def connection_string(self) -> str:
         return f"oracle://{self.username}@{self.dsn}"
@@ -612,39 +612,39 @@ class OracleEmployeeRepository(DatabaseRepository):
         self.db = database_plugin
         self.query_port = database_plugin.get_query_port()
         self.transaction_port = database_plugin.get_transaction_port()
-    
+
     async def find_by_id(self, employee_id: int) -> Optional[Employee]:
         """Find employee by ID."""
         result = await self.query_port.execute_query(
             "SELECT * FROM hr.employees WHERE employee_id = :emp_id",
             {"emp_id": employee_id}
         )
-        
+
         if result.data:
             return Employee.from_dict(result.data[0])
         return None
-    
+
     async def find_by_department(self, department_id: int) -> List[Employee]:
         """Find employees by department."""
         result = await self.query_port.execute_query(
             "SELECT * FROM hr.employees WHERE department_id = :dept_id ORDER BY last_name, first_name",
             {"dept_id": department_id}
         )
-        
+
         return [Employee.from_dict(row) for row in result.data]
-    
+
     async def save(self, employee: Employee) -> None:
         """Save employee (insert or update)."""
         if employee.employee_id:
             await self._update_employee(employee)
         else:
             await self._insert_employee(employee)
-    
+
     async def _update_employee(self, employee: Employee) -> None:
         """Update existing employee."""
         await self.query_port.execute_query(
             """
-            UPDATE hr.employees 
+            UPDATE hr.employees
             SET first_name = :first_name,
                 last_name = :last_name,
                 email = :email,
@@ -654,7 +654,7 @@ class OracleEmployeeRepository(DatabaseRepository):
             """,
             employee.to_dict()
         )
-    
+
     async def _insert_employee(self, employee: Employee) -> None:
         """Insert new employee."""
         result = await self.query_port.execute_query(
@@ -665,7 +665,7 @@ class OracleEmployeeRepository(DatabaseRepository):
             """,
             employee.to_dict()
         )
-        
+
         employee.employee_id = result.data[0]['employee_id']
 ```
 
@@ -677,25 +677,25 @@ from flx.application.services import ApplicationService
 class EmployeeService(ApplicationService):
     def __init__(self, employee_repository: OracleEmployeeRepository):
         self.employee_repo = employee_repository
-    
+
     async def promote_employee(self, employee_id: int, new_salary: float, new_title: str) -> Employee:
         """Promote employee with salary increase and title change."""
-        
+
         # Find employee
         employee = await self.employee_repo.find_by_id(employee_id)
         if not employee:
             raise EmployeeNotFoundError(f"Employee {employee_id} not found")
-        
+
         # Business rule: salary can only increase
         if new_salary <= employee.salary:
             raise BusinessRuleViolationError("Salary can only increase during promotion")
-        
+
         # Update employee
         employee.promote(new_salary, new_title)
-        
+
         # Save changes
         await self.employee_repo.save(employee)
-        
+
         # Emit promotion event
         await self.event_publisher.publish(DomainEvent(
             event_type="EmployeePromoted",
@@ -707,7 +707,7 @@ class EmployeeService(ApplicationService):
                 "promoted_at": datetime.now()
             }
         ))
-        
+
         return employee
 ```
 
@@ -715,24 +715,24 @@ class EmployeeService(ApplicationService):
 
 ### Database Configuration Options
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `host` | str | - | Database host |
-| `port` | int | 1521 | Database port |
-| `username` | str | - | Database username |
-| `password` | str | None | Database password |
-| `service_name` | str | None | Oracle service name |
-| `sid` | str | None | Oracle SID |
-| `pool_min` | int | 1 | Minimum pool connections |
-| `pool_max` | int | 10 | Maximum pool connections |
-| `pool_increment` | int | 1 | Pool increment size |
-| `connect_timeout` | int | 30 | Connection timeout (seconds) |
-| `query_timeout` | int | 300 | Query timeout (seconds) |
-| `ssl_mode` | bool | False | Enable SSL/TLS |
-| `ssl_verify` | bool | True | Verify SSL certificates |
-| `enable_monitoring` | bool | True | Enable monitoring |
-| `log_queries` | bool | False | Log executed queries |
-| `log_performance` | bool | False | Log performance metrics |
+| Parameter           | Type | Default | Description                  |
+| ------------------- | ---- | ------- | ---------------------------- |
+| `host`              | str  | -       | Database host                |
+| `port`              | int  | 1521    | Database port                |
+| `username`          | str  | -       | Database username            |
+| `password`          | str  | None    | Database password            |
+| `service_name`      | str  | None    | Oracle service name          |
+| `sid`               | str  | None    | Oracle SID                   |
+| `pool_min`          | int  | 1       | Minimum pool connections     |
+| `pool_max`          | int  | 10      | Maximum pool connections     |
+| `pool_increment`    | int  | 1       | Pool increment size          |
+| `connect_timeout`   | int  | 30      | Connection timeout (seconds) |
+| `query_timeout`     | int  | 300     | Query timeout (seconds)      |
+| `ssl_mode`          | bool | False   | Enable SSL/TLS               |
+| `ssl_verify`        | bool | True    | Verify SSL certificates      |
+| `enable_monitoring` | bool | True    | Enable monitoring            |
+| `log_queries`       | bool | False   | Log executed queries         |
+| `log_performance`   | bool | False   | Log performance metrics      |
 
 ### Environment Configuration
 
@@ -745,19 +745,19 @@ oracle_database:
     service_name: ${ORACLE_SERVICE_NAME}
     username: ${ORACLE_USERNAME}
     password: ${ORACLE_PASSWORD}
-  
+
   pool:
     min_connections: 5
     max_connections: 20
     increment: 2
     timeout: 30
-  
+
   security:
     ssl_enabled: true
     ssl_verify: true
     connection_timeout: 60
     query_timeout: 300
-  
+
   monitoring:
     enabled: true
     log_queries: false

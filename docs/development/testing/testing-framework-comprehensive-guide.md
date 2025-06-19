@@ -603,17 +603,17 @@ from flx.testing import TestEnvironment
 async def test_environment():
     """Setup comprehensive test environment."""
     env = TestEnvironment()
-    
+
     # Configure adapters
     env.configure_adapter("database", MockDatabaseAdapter())
     env.configure_adapter("cache", MockCacheAdapter())
     env.configure_adapter("http", MockHttpAdapter())
-    
+
     # Setup engines
     env.register_engine("auth", AuthenticationEngine())
     env.register_engine("db", DatabaseEngine())
     env.register_engine("http", HttpEngine())
-    
+
     await env.initialize()
     yield env
     await env.cleanup()
@@ -776,17 +776,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.13'
-      
+          python-version: "3.13"
+
       - name: Run Comprehensive Tests
         run: |
           python -m pytest tests/ --cov=src/ --cov-report=xml
           python -m flx.testing.orchestrator --config=test_config.yaml
-      
+
       - name: Generate Test Report
         run: |
           python -m flx.testing.reporting --output=test_report.html
@@ -832,7 +832,7 @@ await report.export_junit("junit.xml")
 
 ---
 
-**Testing Framework Status**: ✅ **Production Ready**  
-**Coverage**: **Comprehensive** - All framework components  
-**Performance**: **Optimized** - Parallel execution and caching  
+**Testing Framework Status**: ✅ **Production Ready**
+**Coverage**: **Comprehensive** - All framework components
+**Performance**: **Optimized** - Parallel execution and caching
 **Integration**: **Complete** - CI/CD and reporting integration

@@ -153,7 +153,10 @@ def main() -> None:
         description="Clean old temporary scripts from workspace",
     )
     parser.add_argument(
-        "--max-age", type=int, default=30, help="Maximum age in days (default: 30)",
+        "--max-age",
+        type=int,
+        default=30,
+        help="Maximum age in days (default: 30)",
     )
     parser.add_argument(
         "--dry-run",

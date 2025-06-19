@@ -35,14 +35,14 @@ The Testing Hub provides enterprise-grade testing strategies specifically design
 
 ### **Testing Categories**
 
-| **Strategy** | **Architecture Focus** | **Coverage** | **Status** | **Key Features** |
-|--------------|----------------------|--------------|------------|------------------|
-| **[Hexagonal Testing](./hexagonal-testing-guide.md)** | Ports & Adapters | Core Architecture | ✅ Production | Isolation testing, port/adapter validation |
-| **[Unit Testing](./unit-testing-guide.md)** | Domain Layer | Business Logic | ✅ Production | Pure domain testing, value object validation |
-| **[Integration Testing](./integration-testing-guide.md)** | Infrastructure Layer | System Integration | ✅ Production | Database, HTTP, message queue testing |
-| **[E2E Testing](./e2e-testing-guide.md)** | Full System | End-to-End Flows | ✅ Production | Complete workflow validation |
-| **[Testing Framework](./testing-framework.md)** | Test Infrastructure | Foundation | ✅ Production | Declarative engines, test automation |
-| **[Comprehensive Guide](./testing-comprehensive-guide.md)** | All Layers | Complete Strategy | ✅ Production | Enterprise testing methodology |
+| **Strategy**                                                | **Architecture Focus** | **Coverage**       | **Status**    | **Key Features**                             |
+| ----------------------------------------------------------- | ---------------------- | ------------------ | ------------- | -------------------------------------------- |
+| **[Hexagonal Testing](./hexagonal-testing-guide.md)**       | Ports & Adapters       | Core Architecture  | ✅ Production | Isolation testing, port/adapter validation   |
+| **[Unit Testing](./unit-testing-guide.md)**                 | Domain Layer           | Business Logic     | ✅ Production | Pure domain testing, value object validation |
+| **[Integration Testing](./integration-testing-guide.md)**   | Infrastructure Layer   | System Integration | ✅ Production | Database, HTTP, message queue testing        |
+| **[E2E Testing](./e2e-testing-guide.md)**                   | Full System            | End-to-End Flows   | ✅ Production | Complete workflow validation                 |
+| **[Testing Framework](./testing-framework.md)**             | Test Infrastructure    | Foundation         | ✅ Production | Declarative engines, test automation         |
+| **[Comprehensive Guide](./testing-comprehensive-guide.md)** | All Layers             | Complete Strategy  | ✅ Production | Enterprise testing methodology               |
 
 ### **🚀 Enterprise Testing Features**
 

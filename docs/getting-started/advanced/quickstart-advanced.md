@@ -174,7 +174,7 @@ from flx.ports.secondary.external import FlxHttpService
 # Adapters Layer - Implement contracts
 # (Covered in advanced tutorials)
 
-# Infrastructure Layer - External system integration  
+# Infrastructure Layer - External system integration
 # (Covered in infrastructure guides)
 ```
 
@@ -214,7 +214,7 @@ try:
         active=True  # Boolean validation
     )
     print("✅ Valid entity created")
-    
+
 except ValueError as e:
     print(f"❌ Validation error: {e}")
 
@@ -308,7 +308,7 @@ total_amount = 0
 for item in items:
     item_total = item["quantity"] * item["unit_price"]
     total_amount += item_total
-    
+
     order.raise_domain_event("OrderItemAdded", {
         "sku": item["sku"],
         "quantity": item["quantity"],
@@ -359,19 +359,19 @@ Active: True
 1. OrderStarted
    ID: evt_abc123def456
    Time: 2024-01-15T10:30:00Z
-   
+
 2. OrderItemAdded
    ID: evt_def456ghi789
    Time: 2024-01-15T10:30:01Z
-   
+
 3. OrderItemAdded
    ID: evt_ghi789jkl012
    Time: 2024-01-15T10:30:02Z
-   
+
 4. OrderItemAdded
    ID: evt_jkl012mno345
    Time: 2024-01-15T10:30:03Z
-   
+
 5. OrderCompleted
    ID: evt_mno345pqr678
    Time: 2024-01-15T10:30:04Z

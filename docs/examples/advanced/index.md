@@ -41,4 +41,4 @@ Advanced code examples for the FLX framework, showcasing complex integration pat
 
 ---
 
-*Part of the [FLX Framework Documentation](../../index.md)*
+_Part of the [FLX Framework Documentation](../../index.md)_

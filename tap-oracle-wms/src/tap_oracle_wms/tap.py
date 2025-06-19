@@ -223,12 +223,16 @@ class TapOracleWMS(Tap):
                     return entity_name, schema
                 except (ValueError, TypeError, AttributeError) as e:
                     logger.warning(
-                        "Configuration error generating schema for entity %s: %s", entity_name, e
+                        "Configuration error generating schema for entity %s: %s",
+                        entity_name,
+                        e,
                     )
                     return entity_name, None
                 except Exception as e:
                     logger.warning(
-                        "Unexpected error generating schema for entity %s: %s", entity_name, e
+                        "Unexpected error generating schema for entity %s: %s",
+                        entity_name,
+                        e,
                     )
                     return entity_name, None
 
@@ -254,12 +258,16 @@ class TapOracleWMS(Tap):
                     results.append((entity_name, schema))
                 except (ValueError, TypeError, AttributeError) as e:
                     logger.warning(
-                        "Configuration error generating schema for entity %s: %s", entity_name, e
+                        "Configuration error generating schema for entity %s: %s",
+                        entity_name,
+                        e,
                     )
                     results.append((entity_name, None))
                 except Exception as e:
                     logger.warning(
-                        "Unexpected error generating schema for entity %s: %s", entity_name, e
+                        "Unexpected error generating schema for entity %s: %s",
+                        entity_name,
+                        e,
                     )
                     results.append((entity_name, None))
 
@@ -272,7 +280,9 @@ class TapOracleWMS(Tap):
                 logger.warning("Skipping entity %s: No schema generated", entity_name)
 
         logger.info(
-            "Generated schemas for %d/%d entities", len(successful_schemas), len(entities)
+            "Generated schemas for %d/%d entities",
+            len(successful_schemas),
+            len(entities),
         )
         return successful_schemas
 
@@ -372,7 +382,9 @@ class TapOracleWMS(Tap):
 
             except (ValueError, TypeError, AttributeError) as e:
                 logger.exception(
-                    "Configuration error creating stream for entity %s: %s", entity_name, e
+                    "Configuration error creating stream for entity %s: %s",
+                    entity_name,
+                    e,
                 )
                 if self._monitor:
                     self._monitor.metrics.record_counter(

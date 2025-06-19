@@ -85,11 +85,11 @@ from flx_http_oracle_wms.config import WmsConfig
 config = WmsConfig(
     base_url="https://your-wms.oraclecloud.com",
     username="api_user",
-    password="secure_password", 
+    password="secure_password",
     facility="DC01",
     company="YOUR_COMPANY",
     user_language="en",
-    
+
     # Optional configuration
     session_timeout=3600,
     max_retries=3,
@@ -119,23 +119,23 @@ headers = config.get_wms_headers()
 ```python
 async def wms_integration_example():
     """Complete WMS integration example."""
-    
+
     # Initialize client
     config = WmsConfig.from_env()
     wms_client = WmsClient(config)
-    
+
     try:
         # Start client and discover endpoints
         await wms_client.start()
-        
+
         # Perform WMS operations
         entities = await wms_client.get_entities()
         print(f"Available entities: {entities}")
-        
+
         # Get specific entity data
         orders = await wms_client.get_entity_data("order_hdr", limit=10)
         print(f"Found {len(orders)} orders")
-        
+
     finally:
         # Always clean up
         await wms_client.stop()
@@ -144,7 +144,7 @@ async def wms_integration_example():
 async def context_manager_example():
     """WMS client with context manager."""
     config = WmsConfig.from_env()
-    
+
     async with WmsClient(config) as wms:
         entities = await wms.get_entities()
         orders = await wms.get_entity_data("order_hdr")
@@ -158,18 +158,18 @@ async def context_manager_example():
 ```python
 async def discover_wms_structure():
     """Discover WMS entities and schemas."""
-    
+
     async with WmsClient(config) as wms:
         # Discover available entities (validated method)
         entities = await wms.get_entities()
         print("Available entities:")
         for entity in entities:
             print(f"  - {entity}")
-        
+
         # Get entity schema (validated method)
         order_schema = await wms.get_entity_schema("order_hdr")
         print(f"Order header fields: {order_schema.keys()}")
-        
+
         # Get entity metadata
         inventory_schema = await wms.get_entity_schema("inventory")
         print(f"Inventory fields: {list(inventory_schema.keys())[:10]}...")
@@ -180,7 +180,7 @@ async def discover_wms_structure():
 ```python
 async def retrieve_wms_data():
     """Retrieve data from WMS entities."""
-    
+
     async with WmsClient(config) as wms:
         # Get entity data with pagination (validated method)
         orders = await wms.get_entity_data(
@@ -188,7 +188,7 @@ async def retrieve_wms_data():
             limit=100,
             offset=0
         )
-        
+
         # Get specific record by ID
         order_id = orders[0].get("order_id") if orders else None
         if order_id:
@@ -197,7 +197,7 @@ async def retrieve_wms_data():
                 record_id=order_id
             )
             print(f"Order detail: {order_detail}")
-        
+
         # Get inventory data
         inventory = await wms.get_entity_data(
             entity_name="inventory",
@@ -215,7 +215,7 @@ async def retrieve_wms_data():
 ```python
 async def create_wms_records():
     """Create new records in WMS."""
-    
+
     async with WmsClient(config) as wms:
         # Create new order header
         new_order = {
@@ -225,13 +225,13 @@ async def create_wms_records():
             "priority": "HIGH",
             "expected_ship_date": "2025-01-15T10:00:00Z"
         }
-        
+
         created_order = await wms.create_record(
             entity_name="order_hdr",
             data=new_order
         )
         print(f"Created order: {created_order}")
-        
+
         # Create order line
         order_line = {
             "order_id": created_order["order_id"],
@@ -239,7 +239,7 @@ async def create_wms_records():
             "quantity": 10,
             "unit_of_measure": "EA"
         }
-        
+
         created_line = await wms.create_record(
             entity_name="order_line",
             data=order_line
@@ -252,7 +252,7 @@ async def create_wms_records():
 ```python
 async def update_wms_records():
     """Update existing WMS records."""
-    
+
     async with WmsClient(config) as wms:
         # Update order status
         order_id = "12345"
@@ -261,7 +261,7 @@ async def update_wms_records():
             "priority": "URGENT",
             "notes": "Rush order - expedite processing"
         }
-        
+
         updated_order = await wms.update_record(
             entity_name="order_hdr",
             record_id=order_id,
@@ -275,7 +275,7 @@ async def update_wms_records():
 ```python
 async def delete_wms_records():
     """Delete WMS records."""
-    
+
     async with WmsClient(config) as wms:
         # Delete order line
         order_line_id = "67890"
@@ -283,7 +283,7 @@ async def delete_wms_records():
             entity_name="order_line",
             record_id=order_line_id
         )
-        
+
         if success:
             print(f"Successfully deleted order line {order_line_id}")
         else:
@@ -299,7 +299,7 @@ async def delete_wms_records():
 ```python
 async def advanced_queries():
     """Advanced WMS query operations."""
-    
+
     async with WmsClient(config) as wms:
         # Filter by date range
         recent_orders = await wms.get_entity_data(
@@ -311,7 +311,7 @@ async def advanced_queries():
             },
             limit=100
         )
-        
+
         # Filter by multiple values
         priority_orders = await wms.get_entity_data(
             entity_name="order_hdr",
@@ -320,7 +320,7 @@ async def advanced_queries():
                 "facility": config.facility
             }
         )
-        
+
         # Search with sorting
         sorted_inventory = await wms.get_entity_data(
             entity_name="inventory",
@@ -336,7 +336,7 @@ async def advanced_queries():
 ```python
 async def batch_operations():
     """Efficient batch operations."""
-    
+
     async with WmsClient(config) as wms:
         # Batch create multiple orders
         orders_data = [
@@ -347,17 +347,17 @@ async def batch_operations():
             }
             for i in range(1, 11)
         ]
-        
+
         created_orders = await wms.batch_create(
             entity_name="order_hdr",
             data_list=orders_data
         )
         print(f"Created {len(created_orders)} orders in batch")
-        
+
         # Batch update
         update_data = {"status": "READY"}
         order_ids = [order["order_id"] for order in created_orders]
-        
+
         updated_count = await wms.batch_update(
             entity_name="order_hdr",
             record_ids=order_ids,
@@ -375,17 +375,17 @@ async def batch_operations():
 ```python
 async def monitor_wms_health():
     """Monitor WMS client health."""
-    
+
     async with WmsClient(config) as wms:
         # Check WMS health
         health = await wms.health_check()
         print(f"WMS Health: {health}")
-        
+
         # Get API information
         api_info = await wms.get_api_info()
         print(f"API Version: {api_info.get('version')}")
         print(f"Available endpoints: {api_info.get('endpoints', [])}")
-        
+
         # Connection diagnostics
         diagnostics = await wms.get_diagnostics()
         print(f"Connection status: {diagnostics}")
@@ -409,16 +409,16 @@ async def timed_operation(operation_name: str):
 
 async def performance_monitoring():
     """Monitor WMS operation performance."""
-    
+
     async with WmsClient(config) as wms:
         # Time entity discovery
         async with timed_operation("Entity discovery"):
             entities = await wms.get_entities()
-        
+
         # Time data retrieval
         async with timed_operation("Order data retrieval"):
             orders = await wms.get_entity_data("order_hdr", limit=100)
-        
+
         # Time schema retrieval
         async with timed_operation("Schema retrieval"):
             schema = await wms.get_entity_schema("inventory")
@@ -440,34 +440,34 @@ from flx_http_oracle_wms.exceptions import (
 
 async def robust_wms_operations():
     """WMS operations with comprehensive error handling."""
-    
+
     config = WmsConfig.from_env()
     wms_client = WmsClient(config)
-    
+
     try:
         await wms_client.start()
-        
+
         # Attempt operations with error handling
         try:
             orders = await wms_client.get_entity_data("order_hdr")
             print(f"Retrieved {len(orders)} orders")
-            
+
         except WmsAuthenticationError as e:
             print(f"Authentication failed: {e}")
             # Handle re-authentication
-            
+
         except WmsApiError as e:
             print(f"API error: {e.message} (Code: {e.code})")
             # Handle API-specific errors
-            
+
         except WmsTimeoutError as e:
             print(f"Operation timed out: {e}")
             # Handle timeout scenarios
-            
+
     except WmsConnectionError as e:
         print(f"Connection failed: {e}")
         # Handle connection issues
-        
+
     finally:
         await wms_client.stop()
 ```
@@ -484,14 +484,14 @@ async def retry_operation(
     delay: float = 1.0
 ) -> Any:
     """Retry WMS operations with exponential backoff."""
-    
+
     for attempt in range(max_retries + 1):
         try:
             return await operation()
         except (WmsTimeoutError, WmsConnectionError) as e:
             if attempt == max_retries:
                 raise e
-            
+
             wait_time = delay * (2 ** attempt)
             print(f"Attempt {attempt + 1} failed, retrying in {wait_time}s...")
             await asyncio.sleep(wait_time)
@@ -499,7 +499,7 @@ async def retry_operation(
 # Usage example
 async def reliable_data_fetch():
     """Fetch data with retry logic."""
-    
+
     async with WmsClient(config) as wms:
         orders = await retry_operation(
             lambda: wms.get_entity_data("order_hdr"),
@@ -518,41 +518,41 @@ async def reliable_data_fetch():
 ```python
 class WmsIntegrationService:
     """Service class for WMS integration."""
-    
+
     def __init__(self, config: WmsConfig):
         self.config = config
         self._wms_client: WmsClient | None = None
-    
+
     async def start(self) -> None:
         """Start the integration service."""
         self._wms_client = WmsClient(self.config)
         await self._wms_client.start()
-    
+
     async def stop(self) -> None:
         """Stop the integration service."""
         if self._wms_client:
             await self._wms_client.stop()
             self._wms_client = None
-    
+
     async def sync_orders(self) -> list[dict]:
         """Sync orders from WMS."""
         if not self._wms_client:
             raise RuntimeError("Service not started")
-        
+
         return await self._wms_client.get_entity_data("order_hdr")
-    
+
     async def create_order(self, order_data: dict) -> dict:
         """Create order in WMS."""
         if not self._wms_client:
             raise RuntimeError("Service not started")
-        
+
         return await self._wms_client.create_record("order_hdr", order_data)
 
 # Usage
 async def main():
     config = WmsConfig.from_env()
     service = WmsIntegrationService(config)
-    
+
     try:
         await service.start()
         orders = await service.sync_orders()
@@ -569,25 +569,25 @@ from datetime import datetime, timedelta
 
 class WmsDataSynchronizer:
     """Synchronize data between systems using WMS client."""
-    
+
     def __init__(self, config: WmsConfig):
         self.config = config
         self.last_sync: datetime | None = None
-    
+
     async def incremental_sync(self) -> dict:
         """Perform incremental data synchronization."""
-        
+
         async with WmsClient(self.config) as wms:
             # Calculate sync window
             if self.last_sync:
                 since_date = self.last_sync.isoformat()
             else:
                 since_date = (datetime.utcnow() - timedelta(days=1)).isoformat()
-            
+
             # Sync multiple entities
             sync_results = {}
             entities = ["order_hdr", "order_line", "inventory"]
-            
+
             for entity in entities:
                 try:
                     data = await wms.get_entity_data(
@@ -597,11 +597,11 @@ class WmsDataSynchronizer:
                     )
                     sync_results[entity] = len(data)
                     print(f"Synced {len(data)} {entity} records")
-                    
+
                 except Exception as e:
                     print(f"Error syncing {entity}: {e}")
                     sync_results[entity] = 0
-            
+
             self.last_sync = datetime.utcnow()
             return sync_results
 
@@ -610,14 +610,14 @@ async def scheduled_sync():
     """Run synchronization on schedule."""
     config = WmsConfig.from_env()
     synchronizer = WmsDataSynchronizer(config)
-    
+
     while True:
         try:
             results = await synchronizer.incremental_sync()
             print(f"Sync completed: {results}")
         except Exception as e:
             print(f"Sync failed: {e}")
-        
+
         # Wait 5 minutes before next sync
         await asyncio.sleep(300)
 ```
@@ -657,7 +657,7 @@ async def scheduled_sync():
 config = WmsConfig(
     base_url="https://your-wms.oraclecloud.com",
     username="correct_username",
-    password="correct_password", 
+    password="correct_password",
     facility="CORRECT_FACILITY",  # Case sensitive
     company="CORRECT_COMPANY"     # Case sensitive
 )
@@ -688,7 +688,7 @@ async with WmsClient(config) as wms:
     all_orders = []
     offset = 0
     limit = 100
-    
+
     while True:
         batch = await wms.get_entity_data(
             "order_hdr",
@@ -697,7 +697,7 @@ async with WmsClient(config) as wms:
         )
         if not batch:
             break
-        
+
         all_orders.extend(batch)
         offset += limit
 ```

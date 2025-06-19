@@ -91,11 +91,11 @@ from pydantic import BaseModel, Field
 
 class Entity(DomainObject, Identifiable, Timestamped):
     """Base entity with identity and lifecycle management."""
-    
+
     def touch(self) -> Self:
         """Create updated entity with current timestamp (immutable pattern)."""
         return self.model_copy(update={"updated_at": datetime.now(UTC)})
-    
+
     def __eq__(self, other: object) -> bool:
         """Entity equality based on ID, not attributes."""
         if not isinstance(other, Entity):
@@ -104,15 +104,15 @@ class Entity(DomainObject, Identifiable, Timestamped):
 
 class AggregateRoot(Entity):
     """Aggregate root with domain event management."""
-    
+
     def __init__(self, **data):
         super().__init__(**data)
         self._domain_events: list[DomainEvent] = []
-    
+
     def add_event(self, event: DomainEvent) -> None:
         """Add domain event to aggregate."""
         self._domain_events.append(event)
-    
+
     def collect_events(self) -> list[DomainEvent]:
         """Collect and clear domain events."""
         events = self._domain_events.copy()
@@ -134,37 +134,37 @@ class AggregateRoot(Entity):
 # Real implementation from /flx/src/flx/adapters/base.py
 class BaseAdapter(BaseModel):
     """Base adapter for hexagonal architecture with lifecycle management."""
-    
+
     adapter_id: str = Field(default_factory=lambda: str(uuid4()))
     name: str = ""
     is_connected: bool = False
-    
+
     async def connect(self) -> None:
         """Connect adapter with lifecycle management."""
         if self.is_connected:
             return
-            
+
         await self._connect()
         self.is_connected = True
         self.logger.info(f"Adapter {self.name} connected")
-    
+
     async def disconnect(self) -> None:
         """Disconnect adapter with proper cleanup."""
         if not self.is_connected:
             return
-            
+
         await self._disconnect()
         self.is_connected = False
         self.logger.info(f"Adapter {self.name} disconnected")
-    
+
     async def _connect(self) -> None:
         """Override in subclass for specific connection logic."""
         pass
-    
+
     async def _disconnect(self) -> None:
         """Override in subclass for specific disconnection logic."""
         pass
-    
+
     async def health_check(self) -> dict[str, Any]:
         """Perform health check and return status."""
         return await self._health_check()
@@ -186,7 +186,7 @@ class BaseAdapter(BaseModel):
 # Real implementation from /flx/src/flx/infra/adapters/unified_manager.py
 class UnifiedAdapterManager(BaseLifecycleManager):
     """Unified adapter manager consolidating lifecycle and messaging."""
-    
+
     def __init__(
         self,
         registry: FlxAdapterRegistry | None = None,
@@ -198,24 +198,24 @@ class UnifiedAdapterManager(BaseLifecycleManager):
         self._registry = registry or flx_get_adapter_registry()
         self._instance_cache: dict[str, FlxBaseAdapter] = {}
         self._messaging_enabled = enable_messaging_features
-    
+
     async def initialize_adapter(
-        self, 
-        adapter_type: str, 
+        self,
+        adapter_type: str,
         config: dict[str, Any]
     ) -> FlxBaseAdapter:
         """Initialize adapter with caching and lifecycle management."""
         cache_key = f"{adapter_type}:{hash(str(config))}"
-        
+
         if cache_key in self._instance_cache:
             return self._instance_cache[cache_key]
-        
+
         adapter_class = self._registry.get_adapter(adapter_type)
         adapter = adapter_class(**config)
-        
+
         await adapter.connect()
         self._instance_cache[cache_key] = adapter
-        
+
         return adapter
 ```
 
@@ -233,7 +233,7 @@ class UnifiedAdapterManager(BaseLifecycleManager):
 # Real implementation from /flx/src/flx/infra/http/client_service.py
 class HttpClientService:
     """HTTP client service with authentication and error handling."""
-    
+
     def __init__(
         self,
         base_url: str = "",
@@ -249,7 +249,7 @@ class HttpClientService:
         self.timeout = timeout
         self.max_retries = max_retries
         self._client: httpx.AsyncClient | None = None
-    
+
     async def connect(self) -> None:
         """Initialize HTTP client connection."""
         self._client = httpx.AsyncClient(
@@ -258,7 +258,7 @@ class HttpClientService:
             verify=self.verify_ssl,
             headers=self.default_headers,
         )
-    
+
     async def get(self, url: str, **kwargs: Any) -> httpx.Response:
         """Perform GET request with retry logic."""
         return await self._request("GET", url, **kwargs)
@@ -280,7 +280,7 @@ class HttpClientService:
 # Real implementation from /flx_http_oracle_wms/src/flx_http_oracle_wms/wms_client.py
 class WmsClient:
     """WMS client using FLX HttpClientService with full WMS operations."""
-    
+
     def __init__(self, config: WmsConfig) -> None:
         """Initialize WMS client."""
         self._config = config
@@ -292,14 +292,14 @@ class WmsClient:
             default_headers=config.get_wms_headers(),
         )
         self._discovered_endpoints: dict[str, str] = {}
-    
+
     async def _discover_endpoints(self) -> None:
         """Discover WMS endpoints."""
         endpoints_to_try = [
             "/wms/lgfapi/v10/entity",
             "/wms/lgfapi/v10/entity/"
         ]
-        
+
         for endpoint in endpoints_to_try:
             try:
                 http_response = await self._http_client.get(endpoint)
@@ -328,20 +328,20 @@ class WmsClient:
 # Real implementation from /flx_http_oracle_oic/src/flx_http_oracle_oic/client.py
 class OracleOicClient:
     """Simple client facade for Oracle Integration Cloud operations."""
-    
+
     def __init__(self, config: OracleOicConfig | None = None, **kwargs: Any) -> None:
         """Initialize client with configuration."""
         if config is None:
             config = OracleOicConfig()
-        
+
         self._adapter = OracleOicHttpAdapter(config=config, **kwargs)
         self.config = config
-    
+
     async def __aenter__(self) -> "OracleOicClient":
         """Async context manager entry."""
         await self._adapter.connect()
         return self
-    
+
     async def __aexit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
         """Async context manager exit."""
         await self._adapter.disconnect()
@@ -362,7 +362,7 @@ The framework includes production-ready engines in multiple infrastructure compo
 ```
 infra/
 ├── api/production_engine.py           # API production engine
-├── cache/production_engine.py         # Cache production engine  
+├── cache/production_engine.py         # Cache production engine
 ├── database/production_engine.py      # Database production engine
 ├── events/production_engine.py        # Events production engine
 ├── http/production_engine.py          # HTTP production engine
@@ -389,13 +389,13 @@ Real testing engine implementation:
 # From /flx/src/flx/testing/engines/
 class HexagonalTestEngine:
     """Test engine for hexagonal architecture testing."""
-    
+
     async def test_adapter_lifecycle(self, adapter: BaseAdapter) -> TestResult:
         """Test adapter connect/disconnect lifecycle."""
-        
+
     async def test_port_compliance(self, adapter: BaseAdapter, port: Protocol) -> TestResult:
         """Test adapter compliance with port interface."""
-        
+
     async def test_domain_isolation(self, use_case: Any) -> TestResult:
         """Test domain logic isolation from infrastructure."""
 ```

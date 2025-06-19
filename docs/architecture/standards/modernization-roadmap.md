@@ -1,8 +1,8 @@
 # FLX Framework - Architectural Modernization Roadmap
 
-**Date**: January 2025  
-**Status**: Core Implementation Completed  
-**Version**: 2.0.0  
+**Date**: January 2025
+**Status**: Core Implementation Completed
+**Version**: 2.0.0
 
 ## 📋 Executive Summary
 
@@ -120,7 +120,7 @@ assert adapter.health_check.is_healthy()
 ```python
 # Antes: Engines espalhados, lifecycle manual
 database_engine = DatabaseEngine()
-cache_engine = CacheEngine() 
+cache_engine = CacheEngine()
 # Manual initialization, no monitoring
 
 # Depois: Centralizado e automático
@@ -300,7 +300,7 @@ sqlmodel = "^0.0.22"              # +ORM type-safe
 
 - [x] Exception hierarchy unification
 - [x] Capability-based composition
-- [x] Production engine registry  
+- [x] Production engine registry
 - [x] Meta-programming adapter factory
 - [x] Enhanced integration system
 - [x] Comprehensive testing and validation
@@ -317,8 +317,8 @@ sqlmodel = "^0.0.22"              # +ORM type-safe
   - Migrar HTTP server customizado para FastAPI
   - Eliminar `/home/marlonsc/pyauto/flx/src/flx/infra/http/` (~600 linhas)
   - Auto-documentation APIs
-  
 - [ ] **Dependency Injector Implementation**
+
   - Substituir sistema DI customizado
   - Simplificar `/home/marlonsc/pyauto/flx/src/flx/core/services.py`
   - Integration com meta-factory
@@ -331,11 +331,13 @@ sqlmodel = "^0.0.22"              # +ORM type-safe
 **Sprint 7: Performance & UX**
 
 - [ ] **Rich CLI Enhancement**
+
   - Upgrade todos os CLIs para Rich
   - Progress bars, tabelas, syntax highlighting
   - Better error formatting
 
 - [ ] **orjson Integration**
+
   - Substituir JSON stdlib por orjson
   - 2-3x performance improvement
   - Seamless Pydantic integration
@@ -348,6 +350,7 @@ sqlmodel = "^0.0.22"              # +ORM type-safe
 **Sprint 8: Advanced Features**
 
 - [ ] **Celery Background Tasks**
+
   - Migrar sistema custom para Celery
   - Flower monitoring dashboard
   - Retry policies e error handling
@@ -362,6 +365,7 @@ sqlmodel = "^0.0.22"              # +ORM type-safe
 **Sprint 9: Monitoring & Observability**
 
 - [ ] **Sentry Enhanced Integration**
+
   - Performance monitoring
   - Release tracking
   - Error grouping optimization
@@ -374,6 +378,7 @@ sqlmodel = "^0.0.22"              # +ORM type-safe
 **Sprint 10: Security & Auth**
 
 - [ ] **Authlib Integration**
+
   - OAuth 2.0 / JWT padronizado
   - SSO integration
   - Permission management
@@ -386,6 +391,7 @@ sqlmodel = "^0.0.22"              # +ORM type-safe
 **Sprint 11: Developer Experience**
 
 - [ ] **VS Code Extension**
+
   - Schema editing com IntelliSense
   - Adapter generation commands
   - Debugging integration
@@ -398,6 +404,7 @@ sqlmodel = "^0.0.22"              # +ORM type-safe
 **Sprint 12: Documentation & Migration**
 
 - [ ] **Migration Tooling**
+
   - Legacy adapter converter
   - Schema migration scripts
   - Automated refactoring
@@ -446,6 +453,7 @@ sqlmodel = "^0.0.22"              # +ORM type-safe
 #### **Alto Risco**
 
 1. **Breaking Changes em Dependencies**
+
    - **Mitigação**: Version pinning + gradual migration
    - **Contingência**: Rollback plans documentados
 
@@ -456,6 +464,7 @@ sqlmodel = "^0.0.22"              # +ORM type-safe
 #### **Médio Risco**
 
 1. **Learning Curve para Equipe**
+
    - **Mitigação**: Training sessions + documentation
    - **Contingência**: Phased rollout
 
@@ -535,7 +544,7 @@ Developer Experience:  ██░░░░░░░░░░░░░░░░░
 
 ### **Next Milestone**: Sprint 6 - Foundation Libraries
 
-**Target Date**: Fevereiro 2025  
+**Target Date**: Fevereiro 2025
 **Key Deliverables**:
 
 - FastAPI integration complete
@@ -576,6 +585,6 @@ O sistema de meta-programação estabelece uma **base sólida** para:
 
 ---
 
-**Próxima Revisão**: 15 de Fevereiro, 2025  
-**Responsável**: Equipe de Arquitetura  
+**Próxima Revisão**: 15 de Fevereiro, 2025
+**Responsável**: Equipe de Arquitetura
 **Aprovação**: Pending Sprint 6 Planning

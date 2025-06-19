@@ -7,12 +7,6 @@ across the platform components.
 
 from functools import wraps
 from typing import Any, Callable, Optional
-# Lazy import to avoid circular dependencies
-from flx.utils.lazy_import import lazy_import
-
-# Lazy imports to avoid circular dependencies
-# Lazy import to avoid circular dependencies
-
 
 import structlog
 from opentelemetry import trace
@@ -26,7 +20,15 @@ from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 
 # Lazy import to avoid circular dependencies
-Settings = lazy_import('flx.config', 'Settings')
+from flx.utils.lazy_import import lazy_import
+
+# Lazy imports to avoid circular dependencies
+# Lazy import to avoid circular dependencies
+
+
+
+# Lazy import to avoid circular dependencies
+Settings = lazy_import("flx.config", "Settings")
 
 logger = structlog.get_logger()
 

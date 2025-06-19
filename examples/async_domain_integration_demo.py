@@ -147,7 +147,8 @@ async def demo_lato_integration() -> None:
             # Access injected dependencies
             logger = ctx.dependency_provider.get("logger")
             logger.info(
-                "Command executed successfully", command_type=type(command).__name__,
+                "Command executed successfully",
+                command_type=type(command).__name__,
             )
 
     except Exception:

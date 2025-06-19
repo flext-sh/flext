@@ -264,7 +264,11 @@ def propagate_scaffold(projects: list[str], confirm: bool = False) -> None:
         project_path = WORKSPACE_ROOT / flx_project
 
         if not project_path.exists():
-            print(colorize(f"⚠ Directory {flx_project} does not exist, skipping", "YELLOW"))
+            print(
+                colorize(
+                    f"⚠ Directory {flx_project} does not exist, skipping", "YELLOW"
+                )
+            )
             continue
 
         if not (project_path / "pyproject.toml").exists():

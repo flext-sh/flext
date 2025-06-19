@@ -65,7 +65,7 @@ plugins:
   "include_payload": true,
   "include_logs": true,
   "payload_format": "json",
-  "request_timeout": 300
+  "request_timeout": 300,
 }
 ```
 
@@ -155,7 +155,7 @@ Increase `request_timeout` to handle long API calls:
 
 ```yaml
 config:
-  request_timeout: 600  # 10 minutes
+  request_timeout: 600 # 10 minutes
 ```
 
 ### Rate Limiting

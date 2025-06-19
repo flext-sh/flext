@@ -10,7 +10,14 @@ from typing import Any
 
 def get_detailed_mypy_errors() -> list[dict[str, Any]]:
     """Run mypy and parse errors with full details."""
-    cmd = [".venv/bin/python", "-m", "mypy", "flx/src/", "--show-error-codes", "--no-error-summary"]
+    cmd = [
+        ".venv/bin/python",
+        "-m",
+        "mypy",
+        "flx/src/",
+        "--show-error-codes",
+        "--no-error-summary",
+    ]
     result = subprocess.run(cmd, capture_output=True, text=True, check=False)
 
     errors = []
@@ -18,12 +25,14 @@ def get_detailed_mypy_errors() -> list[dict[str, Any]]:
         if " error: " in line and "[" in line:
             match = re.match(r"(.+?):(\d+): error: (.+?) \[(.+?)\]", line)
             if match:
-                errors.append({
-                    "file": match.group(1),
-                    "line": int(match.group(2)),
-                    "message": match.group(3),
-                    "code": match.group(4),
-                })
+                errors.append(
+                    {
+                        "file": match.group(1),
+                        "line": int(match.group(2)),
+                        "message": match.group(3),
+                        "code": match.group(4),
+                    }
+                )
     return errors
 
 
@@ -139,12 +148,16 @@ def generate_fix_suggestions(errors: list[dict[str, Any]]) -> None:
 
     print("\n=== ATTR-DEFINED ERROR ANALYSIS ===")
     print("\nMost common missing attributes:")
-    for attr, count in sorted(attr_patterns.items(), key=lambda x: x[1], reverse=True)[:20]:
+    for attr, count in sorted(attr_patterns.items(), key=lambda x: x[1], reverse=True)[
+        :20
+    ]:
         print(f"  {attr}: {count} occurrences")
 
     print("\n=== NAME-DEFINED ERROR ANALYSIS ===")
     print("\nMost common undefined names:")
-    for name, locations in sorted(name_patterns.items(), key=lambda x: len(x[1]), reverse=True)[:20]:
+    for name, locations in sorted(
+        name_patterns.items(), key=lambda x: len(x[1]), reverse=True
+    )[:20]:
         print(f"\n  {name}: {len(locations)} occurrences")
         if name in class_locations:
             print(f"    Available in: {class_locations[name]}")

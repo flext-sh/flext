@@ -254,7 +254,7 @@ integrations = response.json()
 - name: Start Mockup Service
   run: |
     python tests/fixtures/recorded_responses/latest_mockup_service.py &
-    
+
 - name: Run Development Tests
   run: |
     export OIC_BASE_URL=http://localhost:8000
@@ -318,7 +318,7 @@ async def test_new_feature(
 ) -> None:
     """Test new OIC feature."""
     result = await e2e_client.new_feature()
-    
+
     response_recorder.record_response(
         operation="new_feature",
         method="GET",
@@ -326,7 +326,7 @@ async def test_new_feature(
         status_code=200,
         response_data=result,
     )
-    
+
     assert result is not None
 ```
 

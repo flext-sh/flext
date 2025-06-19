@@ -66,43 +66,36 @@ plugins:
   "batch_size": 100,
   "batch_wait_limit_seconds": 60,
   "request_timeout": 300,
-  "username": null,  # For Basic Auth
-  "password": null,  # For Basic Auth
-  "additional_headers": {
-    "Content-Type": "application/json",
-    "X-Custom-Header": "value"
-  },
-  "stream_maps": {
-    "order_hdr": {
-      "endpoint_path": "/ic/api/integration/v1/flows/rest/WMS_ORDER_INBOUND/1.0/orders",
-      "method": "POST",
-      "template": {
-        "order_hdr": "{{ record }}"
-      }
+  "username": null, # For Basic Auth
+  "password": null, # For Basic Auth
+  "additional_headers":
+    { "Content-Type": "application/json", "X-Custom-Header": "value" },
+  "stream_maps":
+    {
+      "order_hdr":
+        {
+          "endpoint_path": "/ic/api/integration/v1/flows/rest/WMS_ORDER_INBOUND/1.0/orders",
+          "method": "POST",
+          "template": { "order_hdr": "{{ record }}" },
+        },
+      "order_dtl":
+        {
+          "endpoint_path": "/ic/api/integration/v1/flows/rest/WMS_ORDER_DETAIL_INBOUND/1.0/orderDetails",
+          "method": "POST",
+          "template": { "order_dtl": "{{ record }}" },
+        },
+      "allocations":
+        {
+          "endpoint_path": "/ic/api/integration/v1/flows/rest/WMS_ALLOC_INBOUND/1.0/allocations",
+          "method": "POST",
+          "template": { "allocation": "{{ record }}" },
+        },
     },
-    "order_dtl": {
-      "endpoint_path": "/ic/api/integration/v1/flows/rest/WMS_ORDER_DETAIL_INBOUND/1.0/orderDetails",
-      "method": "POST",
-      "template": {
-        "order_dtl": "{{ record }}"
-      }
-    },
-    "allocations": {
-      "endpoint_path": "/ic/api/integration/v1/flows/rest/WMS_ALLOC_INBOUND/1.0/allocations",
-      "method": "POST",
-      "template": {
-        "allocation": "{{ record }}"
-      }
-    }
-  },
-  "default_stream_map": {
-    "method": "POST",
-    "template": "{{ record }}"
-  },
+  "default_stream_map": { "method": "POST", "template": "{{ record }}" },
   "retry_count": 3,
   "retry_backoff_seconds": 10,
   "emit_state_on_batch": true,
-  "validate_records": true
+  "validate_records": true,
 }
 ```
 
@@ -130,10 +123,10 @@ The loader allows configuring different endpoints for each stream:
 ```yaml
 config:
   stream_maps:
-    "order_hdr":  # Source stream name
+    "order_hdr": # Source stream name
       endpoint_path: "/ic/api/integration/v1/flows/rest/WMS_ORDER_INBOUND/1.0/orders"
       method: "POST"
-      template:  # Template to transform data before sending
+      template: # Template to transform data before sending
         order_hdr: "{{ record }}"
 ```
 
@@ -148,7 +141,7 @@ config:
   stream_maps:
     "order_hdr":
       template:
-        order: 
+        order:
           header: "{{ record }}"
           meta:
             source: "meltano"
@@ -168,8 +161,8 @@ To improve performance, target-oic groups records into batches:
 
 ```yaml
 config:
-  batch_size: 100  # Number of records per batch
-  batch_wait_limit_seconds: 60  # Maximum wait time to complete a batch
+  batch_size: 100 # Number of records per batch
+  batch_wait_limit_seconds: 60 # Maximum wait time to complete a batch
 ```
 
 ## Example with Meltano
@@ -196,7 +189,7 @@ schedules:
   - name: db_to_oic_daily
     extractor: tap-oracle-db
     loader: target-oic
-    interval: '@daily'
+    interval: "@daily"
     start_date: 2023-01-01
 ```
 

@@ -41,4 +41,4 @@ Basic code examples for the FLX framework, covering fundamental concepts, simple
 
 ---
 
-*Part of the [FLX Framework Documentation](../../index.md)*
+_Part of the [FLX Framework Documentation](../../index.md)_

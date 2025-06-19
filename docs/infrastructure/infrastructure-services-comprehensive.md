@@ -26,12 +26,12 @@ All FLX infrastructure services follow a unified architecture pattern that ensur
 # Base infrastructure service pattern
 class BaseAdapter(ABC):
     """Foundation for all infrastructure services"""
-    
+
     # Core lifecycle methods
     async def initialize(self) -> None: ...
     async def shutdown(self) -> None: ...
     async def _health_check(self) -> HealthStatus: ...
-    
+
     # Configuration and metrics
     def get_metrics(self) -> AdapterMetrics: ...
     def get_config(self) -> dict: ...
@@ -39,13 +39,13 @@ class BaseAdapter(ABC):
 
 ### **Infrastructure Service Categories**
 
-| **Category** | **Purpose** | **Key Services** | **External Systems** |
-|--------------|-------------|------------------|---------------------|
-| **Data Persistence** | State management | Database, Cache | Oracle DB, Redis, Files |
-| **Communication** | System integration | HTTP, Message Bus | REST APIs, Event Streams |
-| **Observability** | System monitoring | Logging, Metrics, Tracing | ELK, Prometheus, Jaeger |
-| **Security** | System protection | Auth, Encryption | LDAP, HSM, OAuth |
-| **Configuration** | System behavior | Config, Feature Flags | Consul, Environment |
+| **Category**         | **Purpose**        | **Key Services**          | **External Systems**     |
+| -------------------- | ------------------ | ------------------------- | ------------------------ |
+| **Data Persistence** | State management   | Database, Cache           | Oracle DB, Redis, Files  |
+| **Communication**    | System integration | HTTP, Message Bus         | REST APIs, Event Streams |
+| **Observability**    | System monitoring  | Logging, Metrics, Tracing | ELK, Prometheus, Jaeger  |
+| **Security**         | System protection  | Auth, Encryption          | LDAP, HSM, OAuth         |
+| **Configuration**    | System behavior    | Config, Feature Flags     | Consul, Environment      |
 
 ---
 
@@ -58,7 +58,7 @@ class BaseAdapter(ABC):
 ```python
 class FlxOracleDbAdapter(BaseAdapter):
     """Production Oracle Database service with enterprise features"""
-    
+
     # Configuration
     host: str
     port: int = 1522
@@ -66,12 +66,12 @@ class FlxOracleDbAdapter(BaseAdapter):
     username: str
     password: str
     wallet_location: str | None = None  # Autonomous Database
-    
+
     # Connection pool settings
     pool_min: int = 1
     pool_max: int = 10
     pool_increment: int = 1
-    
+
     async def _connect(self) -> None:
         """Establish Oracle connection with production features"""
         if self.wallet_location:
@@ -80,7 +80,7 @@ class FlxOracleDbAdapter(BaseAdapter):
         else:
             # Standard Oracle connection
             dsn = f"{self.host}:{self.port}/{self.service_name}"
-        
+
         self._connection_pool = oracledb.create_pool(
             user=self.username,
             password=self.password,
@@ -89,7 +89,7 @@ class FlxOracleDbAdapter(BaseAdapter):
             max=self.pool_max,
             increment=self.pool_increment
         )
-    
+
     async def execute_query(self, sql: str, params: dict = None) -> list[dict]:
         """Execute SQL query with parameter binding"""
         async with self._connection_pool.acquire() as conn:
@@ -98,7 +98,7 @@ class FlxOracleDbAdapter(BaseAdapter):
             columns = [desc[0] for desc in cursor.description]
             rows = cursor.fetchall()
             return [dict(zip(columns, row)) for row in rows]
-    
+
     async def upsert(self, table: str, data: dict, key_columns: list[str]) -> None:
         """UPSERT using Oracle MERGE statement"""
         merge_sql = f"""
@@ -127,19 +127,19 @@ class FlxOracleDbAdapter(BaseAdapter):
 ```python
 class CacheService(BaseAdapter):
     """Production Redis cache service with clustering support"""
-    
+
     # Configuration
     backend: str = "redis"  # redis, memory, hybrid
     host: str = "localhost"
     port: int = 6379
     password: str | None = None
     cluster_enabled: bool = False
-    
+
     # Cache behavior
     default_ttl: int = 3600
     max_memory_policy: str = "allkeys-lru"
     compression_enabled: bool = True
-    
+
     async def _connect(self) -> None:
         """Initialize Redis connection with clustering support"""
         if self.cluster_enabled:
@@ -151,37 +151,37 @@ class CacheService(BaseAdapter):
                 host=self.host, port=self.port, password=self.password,
                 decode_responses=True
             )
-    
+
     async def get(self, key: str) -> Any:
         """Get cached value with automatic deserialization"""
         try:
             value = await self._redis.get(key)
             if value is None:
                 return None
-            
+
             if self.compression_enabled:
                 value = self._decompress(value)
-            
+
             return self._deserialize(value)
         except redis.RedisError as e:
             # Graceful degradation - return None for cache misses
             logger.warning(f"Cache get failed for key {key}: {e}")
             return None
-    
+
     async def set(self, key: str, value: Any, ttl: int = None) -> bool:
         """Set cached value with compression and TTL"""
         try:
             serialized = self._serialize(value)
-            
+
             if self.compression_enabled:
                 serialized = self._compress(serialized)
-            
+
             await self._redis.set(key, serialized, ex=ttl or self.default_ttl)
             return True
         except redis.RedisError as e:
             logger.error(f"Cache set failed for key {key}: {e}")
             return False
-    
+
     async def invalidate_pattern(self, pattern: str) -> int:
         """Invalidate keys matching pattern"""
         keys = await self._redis.keys(pattern)
@@ -208,19 +208,19 @@ class CacheService(BaseAdapter):
 ```python
 class HttpClientService(BaseAdapter):
     """Production HTTP client with resilience patterns"""
-    
+
     # Configuration
     base_url: str
     timeout: int = 30
     max_retries: int = 3
     retry_delay: float = 1.0
     circuit_breaker_enabled: bool = True
-    
+
     # Authentication
     auth_type: str = "none"  # none, basic, oauth2, jwt
     client_id: str | None = None
     client_secret: str | None = None
-    
+
     async def _connect(self) -> None:
         """Initialize HTTP client with session management"""
         self._session = aiohttp.ClientSession(
@@ -231,17 +231,17 @@ class HttpClientService(BaseAdapter):
                 keepalive_timeout=60
             )
         )
-        
+
         if self.circuit_breaker_enabled:
             self._circuit_breaker = CircuitBreaker(
                 failure_threshold=5,
                 recovery_timeout=60
             )
-    
+
     async def request(self, method: str, endpoint: str, **kwargs) -> dict:
         """Make HTTP request with resilience patterns"""
         url = f"{self.base_url.rstrip('/')}/{endpoint.lstrip('/')}"
-        
+
         # Apply circuit breaker if enabled
         if self.circuit_breaker_enabled:
             return await self._circuit_breaker.call(
@@ -249,22 +249,22 @@ class HttpClientService(BaseAdapter):
             )
         else:
             return await self._make_request(method, url, **kwargs)
-    
+
     async def _make_request(self, method: str, url: str, **kwargs) -> dict:
         """Internal request method with retry logic"""
         last_exception = None
-        
+
         for attempt in range(self.max_retries + 1):
             try:
                 # Add authentication headers
                 headers = kwargs.get('headers', {})
                 headers.update(await self._get_auth_headers())
                 kwargs['headers'] = headers
-                
+
                 async with self._session.request(method, url, **kwargs) as response:
                     response.raise_for_status()
                     return await response.json()
-                    
+
             except (aiohttp.ClientError, asyncio.TimeoutError) as e:
                 last_exception = e
                 if attempt < self.max_retries:
@@ -272,9 +272,9 @@ class HttpClientService(BaseAdapter):
                     await asyncio.sleep(delay)
                     continue
                 break
-        
+
         raise HttpServiceError(f"Request failed after {self.max_retries} retries") from last_exception
-    
+
     async def _get_auth_headers(self) -> dict:
         """Get authentication headers based on auth type"""
         if self.auth_type == "oauth2":
@@ -300,33 +300,33 @@ class HttpClientService(BaseAdapter):
 ```python
 class AsyncMessageBus(BaseAdapter):
     """Production message bus with event routing"""
-    
+
     # Configuration
     backend: str = "dramatiq"  # dramatiq, celery, sqs
     broker_url: str = "redis://localhost:6379"
     exchange_name: str = "flx.events"
-    
+
     # Routing configuration
     routing_strategies: list[str] = ["topic", "fanout"]
     dead_letter_enabled: bool = True
     message_persistence: bool = True
-    
+
     async def _connect(self) -> None:
         """Initialize message bus with routing"""
         if self.backend == "dramatiq":
             import dramatiq
             from dramatiq.brokers.redis import RedisBroker
-            
+
             self._broker = RedisBroker(url=self.broker_url)
             dramatiq.set_broker(self._broker)
-            
+
             # Configure middleware
             self._broker.add_middleware(
                 dramatiq.middleware.Prometheus(),
                 dramatiq.middleware.AgeLimit(max_age=3600000),  # 1 hour
                 dramatiq.middleware.TimeLimit(time_limit=300000)  # 5 minutes
             )
-    
+
     async def publish(self, event: DomainEvent, routing_key: str = None) -> None:
         """Publish domain event with routing"""
         message = {
@@ -337,7 +337,7 @@ class AsyncMessageBus(BaseAdapter):
             "timestamp": event.timestamp.isoformat(),
             "version": event.version
         }
-        
+
         # Determine routing strategy
         if routing_key:
             # Topic-based routing
@@ -345,24 +345,24 @@ class AsyncMessageBus(BaseAdapter):
         else:
             # Fanout to all subscribers
             await self._publish_fanout(message)
-    
+
     async def subscribe(self, event_type: str, handler: Callable) -> None:
         """Subscribe to events with automatic handler registration"""
         @dramatiq.actor(queue_name=f"events.{event_type}")
         async def event_handler(message_data: dict):
             event = self._deserialize_event(message_data)
             await handler(event)
-        
+
         # Register handler
         self._handlers[event_type] = event_handler
-    
+
     async def _publish_topic(self, message: dict, routing_key: str) -> None:
         """Publish with topic-based routing"""
         # Topic routing allows selective subscription
         queue_name = f"events.{routing_key}"
         actor = self._get_or_create_actor(queue_name)
         actor.send(message)
-    
+
     async def _publish_fanout(self, message: dict) -> None:
         """Publish to all subscribers (fanout)"""
         # Fanout ensures all subscribers receive the event
@@ -389,21 +389,21 @@ class AsyncMessageBus(BaseAdapter):
 ```python
 class StructuredLoggingService(BaseAdapter):
     """Production logging with structured output and correlation"""
-    
+
     # Configuration
     log_level: str = "INFO"
     output_format: str = "json"  # json, text, elk
     correlation_enabled: bool = True
-    
+
     # Output destinations
     file_output: bool = True
     console_output: bool = True
     remote_output: str | None = None  # ELK, Splunk endpoint
-    
+
     async def _connect(self) -> None:
         """Initialize structured logging"""
         self._logger = structlog.get_logger()
-        
+
         # Configure processors
         processors = [
             structlog.stdlib.filter_by_level,
@@ -414,34 +414,34 @@ class StructuredLoggingService(BaseAdapter):
             structlog.processors.StackInfoRenderer(),
             structlog.processors.format_exc_info,
         ]
-        
+
         if self.correlation_enabled:
             processors.append(self._add_correlation_id)
-        
+
         if self.output_format == "json":
             processors.append(structlog.processors.JSONRenderer())
         else:
             processors.append(structlog.dev.ConsoleRenderer())
-        
+
         structlog.configure(
             processors=processors,
             wrapper_class=structlog.stdlib.BoundLogger,
             logger_factory=structlog.stdlib.LoggerFactory(),
             cache_logger_on_first_use=True,
         )
-    
+
     def log(self, level: str, message: str, **context) -> None:
         """Log structured message with context"""
         logger_method = getattr(self._logger, level.lower())
         logger_method(message, **context)
-    
+
     def _add_correlation_id(self, logger, method_name, event_dict):
         """Add correlation ID to log entries"""
         correlation_id = self._get_correlation_id()
         if correlation_id:
             event_dict["correlation_id"] = correlation_id
         return event_dict
-    
+
     def _get_correlation_id(self) -> str | None:
         """Get correlation ID from context (request, task, etc.)"""
         # Implementation depends on context (web request, async task, etc.)
@@ -455,43 +455,43 @@ class StructuredLoggingService(BaseAdapter):
 ```python
 class MetricsCollectionService(BaseAdapter):
     """Production metrics with Prometheus integration"""
-    
+
     # Configuration
     metrics_backend: str = "prometheus"
     export_port: int = 8000
     export_path: str = "/metrics"
-    
+
     # Metric collection
     collection_interval: int = 15  # seconds
     custom_metrics_enabled: bool = True
-    
+
     async def _connect(self) -> None:
         """Initialize metrics collection"""
         if self.metrics_backend == "prometheus":
             from prometheus_client import start_http_server, Counter, Histogram, Gauge
-            
+
             # Standard metrics
             self._request_counter = Counter(
                 "flx_requests_total",
                 "Total requests",
                 ["method", "endpoint", "status"]
             )
-            
+
             self._request_duration = Histogram(
                 "flx_request_duration_seconds",
                 "Request duration",
                 ["method", "endpoint"]
             )
-            
+
             self._active_connections = Gauge(
                 "flx_active_connections",
                 "Active connections",
                 ["service_type"]
             )
-            
+
             # Start metrics server
             start_http_server(self.export_port)
-    
+
     def increment_counter(self, name: str, labels: dict = None) -> None:
         """Increment a counter metric"""
         counter = self._get_or_create_counter(name)
@@ -499,7 +499,7 @@ class MetricsCollectionService(BaseAdapter):
             counter.labels(**labels).inc()
         else:
             counter.inc()
-    
+
     def record_histogram(self, name: str, value: float, labels: dict = None) -> None:
         """Record histogram value"""
         histogram = self._get_or_create_histogram(name)
@@ -507,7 +507,7 @@ class MetricsCollectionService(BaseAdapter):
             histogram.labels(**labels).observe(value)
         else:
             histogram.observe(value)
-    
+
     def set_gauge(self, name: str, value: float, labels: dict = None) -> None:
         """Set gauge value"""
         gauge = self._get_or_create_gauge(name)
@@ -528,17 +528,17 @@ class MetricsCollectionService(BaseAdapter):
 ```python
 class AuthenticationService(BaseAdapter):
     """Production authentication with multiple providers"""
-    
+
     # Configuration
     auth_providers: list[str] = ["jwt", "oauth2", "ldap"]
     token_expiry: int = 3600
     refresh_enabled: bool = True
-    
+
     # JWT Configuration
     jwt_secret: str
     jwt_algorithm: str = "HS256"
     jwt_issuer: str = "flx-framework"
-    
+
     async def authenticate(self, credentials: dict) -> AuthResult:
         """Authenticate user with multiple provider support"""
         for provider in self.auth_providers:
@@ -548,9 +548,9 @@ class AuthenticationService(BaseAdapter):
                     return result
             except AuthenticationError:
                 continue
-        
+
         raise AuthenticationError("Authentication failed with all providers")
-    
+
     async def _authenticate_with_provider(self, provider: str, credentials: dict) -> AuthResult:
         """Authenticate with specific provider"""
         if provider == "jwt":
@@ -561,7 +561,7 @@ class AuthenticationService(BaseAdapter):
             return await self._authenticate_ldap(credentials)
         else:
             raise ValueError(f"Unknown auth provider: {provider}")
-    
+
     async def generate_token(self, user_id: str, permissions: list[str]) -> str:
         """Generate JWT token with permissions"""
         payload = {
@@ -571,18 +571,18 @@ class AuthenticationService(BaseAdapter):
             "exp": datetime.utcnow() + timedelta(seconds=self.token_expiry),
             "iat": datetime.utcnow()
         }
-        
+
         return jwt.encode(payload, self.jwt_secret, algorithm=self.jwt_algorithm)
-    
+
     async def validate_token(self, token: str) -> TokenValidation:
         """Validate JWT token"""
         try:
             payload = jwt.decode(
-                token, self.jwt_secret, 
+                token, self.jwt_secret,
                 algorithms=[self.jwt_algorithm],
                 issuer=self.jwt_issuer
             )
-            
+
             return TokenValidation(
                 valid=True,
                 user_id=payload["user_id"],
@@ -624,16 +624,16 @@ class AuthenticationService(BaseAdapter):
 
 **Validation Status**: ✅ Comprehensive validation against `/flx/src/flx/infra/` implementation completed
 
-| Component | Documentation | Implementation | Validation Status |
-|-----------|--------------|----------------|------------------|
-| BaseInfraService | ✅ Complete | ✅ Verified | ✅ **VALIDATED** |
-| Service Lifecycle | ✅ Complete | ✅ Verified | ⚠️ **Enhanced implementation** |
-| Health Checks | ✅ Complete | ✅ Verified | ✅ **VALIDATED** |
-| Test Engine Support | ✅ Complete | ✅ Verified | ✅ **VALIDATED** |
-| Service Registry | ✅ Complete | ✅ Verified | ✅ **VALIDATED** |
-| Configuration Management | ✅ Complete | ✅ Verified | ✅ **VALIDATED** |
-| Connection Management | ✅ Complete | ✅ Verified | ✅ **VALIDATED** |
-| Resilience Patterns | ✅ Complete | ✅ Verified | ✅ **VALIDATED** |
+| Component                | Documentation | Implementation | Validation Status              |
+| ------------------------ | ------------- | -------------- | ------------------------------ |
+| BaseInfraService         | ✅ Complete   | ✅ Verified    | ✅ **VALIDATED**               |
+| Service Lifecycle        | ✅ Complete   | ✅ Verified    | ⚠️ **Enhanced implementation** |
+| Health Checks            | ✅ Complete   | ✅ Verified    | ✅ **VALIDATED**               |
+| Test Engine Support      | ✅ Complete   | ✅ Verified    | ✅ **VALIDATED**               |
+| Service Registry         | ✅ Complete   | ✅ Verified    | ✅ **VALIDATED**               |
+| Configuration Management | ✅ Complete   | ✅ Verified    | ✅ **VALIDATED**               |
+| Connection Management    | ✅ Complete   | ✅ Verified    | ✅ **VALIDATED**               |
+| Resilience Patterns      | ✅ Complete   | ✅ Verified    | ✅ **VALIDATED**               |
 
 ### **Validated Implementation Features**
 
@@ -653,15 +653,15 @@ class AuthenticationService(BaseAdapter):
 
 ### **Service Categories Implementation Status**
 
-| Service Category | Implementation Path | Validation | Production Ready |
-|-----------------|---------------------|------------|-----------------|
-| **Data Persistence** | `/flx/src/flx/infra/database/` | ✅ Verified | ✅ Production |
-| **Cache Services** | `/flx/src/flx/infra/cache/` | ✅ Verified | ✅ Production |
-| **HTTP Communication** | `/flx/src/flx/infra/http/` | ✅ Verified | ✅ Production |
-| **Message Bus** | `/flx/src/flx/infra/messaging/` | ✅ Verified | ✅ Production |
-| **Observability** | `/flx/src/flx/infra/observability/` | ✅ Verified | ✅ Production |
-| **Authentication** | `/flx/src/flx/infra/auth/` | ✅ Verified | ✅ Production |
-| **Configuration** | `/flx/src/flx/infra/config/` | ✅ Verified | ✅ Production |
+| Service Category       | Implementation Path                 | Validation  | Production Ready |
+| ---------------------- | ----------------------------------- | ----------- | ---------------- |
+| **Data Persistence**   | `/flx/src/flx/infra/database/`      | ✅ Verified | ✅ Production    |
+| **Cache Services**     | `/flx/src/flx/infra/cache/`         | ✅ Verified | ✅ Production    |
+| **HTTP Communication** | `/flx/src/flx/infra/http/`          | ✅ Verified | ✅ Production    |
+| **Message Bus**        | `/flx/src/flx/infra/messaging/`     | ✅ Verified | ✅ Production    |
+| **Observability**      | `/flx/src/flx/infra/observability/` | ✅ Verified | ✅ Production    |
+| **Authentication**     | `/flx/src/flx/infra/auth/`          | ✅ Verified | ✅ Production    |
+| **Configuration**      | `/flx/src/flx/infra/config/`        | ✅ Verified | ✅ Production    |
 
 ### **Resilience Implementation Validation**
 

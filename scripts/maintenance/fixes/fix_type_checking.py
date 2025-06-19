@@ -12,7 +12,8 @@ def get_type_checking_errors():
         ["ruff", "check", "flx/", "--select=F821", "--no-fix", "--format=json"],
         capture_output=True,
         text=True,
-        cwd="/home/marlonsc/pyauto", check=False,
+        cwd="/home/marlonsc/pyauto",
+        check=False,
     )
 
     if result.returncode != 0:
@@ -119,7 +120,8 @@ def main() -> None:
         ["ruff", "check", "flx/", "--select=F821", "--no-fix"],
         capture_output=True,
         text=True,
-        cwd="/home/marlonsc/pyauto", check=False,
+        cwd="/home/marlonsc/pyauto",
+        check=False,
     )
 
     type_checking_errors = [

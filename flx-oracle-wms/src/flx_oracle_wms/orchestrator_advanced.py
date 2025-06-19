@@ -191,7 +191,10 @@ class StateManager:
             return json.loads(checkpoint_file.read_text())
         except Exception as e:
             logger.error(
-                "Failed to load checkpoint %s for %s: %s", checkpoint_name, pipeline_name, e
+                "Failed to load checkpoint %s for %s: %s",
+                checkpoint_name,
+                pipeline_name,
+                e,
             )
             return None
 
@@ -578,7 +581,8 @@ class WMSAdvancedOrchestrator:
 
                     if attempt < max_retries:
                         logger.warning(
-                            "Pipeline failed, retrying in %ss", retry_delay,
+                            "Pipeline failed, retrying in %ss",
+                            retry_delay,
                             pipeline=context.pipeline_name,
                             attempt=attempt + 1,
                             error=str(e),
@@ -782,7 +786,8 @@ class WMSAdvancedOrchestrator:
 
                     if last_run is None or next_run <= now:
                         logger.info(
-                            "Scheduled pipeline %s triggered", pipeline.name,
+                            "Scheduled pipeline %s triggered",
+                            pipeline.name,
                             schedule=pipeline.schedule,
                         )
 

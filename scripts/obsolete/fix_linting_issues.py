@@ -93,9 +93,7 @@ class LintingFixer:
             if "Path" in path:
                 return f"{path}.open({mode_str})" if mode else f"{path}.open()"
 
-            return (
-                f"Path({path}).open({mode_str})" if mode else f"Path({path}).open()"
-            )
+            return f"Path({path}).open({mode_str})" if mode else f"Path({path}).open()"
 
         # Replace os.path.basename() with Path.name
         basename_pattern = r"os\.path\.basename\(([^)]+)\)"
@@ -145,7 +143,9 @@ class LintingFixer:
         modified_content = content
         modified_content = re.sub(open_pattern, open_replacement, modified_content)
         modified_content = re.sub(
-            basename_pattern, basename_replacement, modified_content,
+            basename_pattern,
+            basename_replacement,
+            modified_content,
         )
         modified_content = re.sub(exists_pattern, exists_replacement, modified_content)
         modified_content = re.sub(unlink_pattern, unlink_replacement, modified_content)
@@ -209,7 +209,10 @@ class LintingFixer:
 
         # Apply the fixes for exception handling
         re.sub(
-            except_pattern, except_replacement, content, flags=re.DOTALL,
+            except_pattern,
+            except_replacement,
+            content,
+            flags=re.DOTALL,
         )
 
     def _fix_logging_issues(self, content: str) -> str:
@@ -253,7 +256,9 @@ def main() -> None:
         description="Fix common linting issues in the flx_project",
     )
     parser.add_argument(
-        "--dry-run", action="store_true", help="Don't actually modify files",
+        "--dry-run",
+        action="store_true",
+        help="Don't actually modify files",
     )
     args = parser.parse_args()
 

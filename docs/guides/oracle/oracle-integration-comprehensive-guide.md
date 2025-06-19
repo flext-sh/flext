@@ -43,12 +43,12 @@ This comprehensive guide covers Oracle system integration patterns within the FL
 
 ### **Supported Oracle Systems**
 
-| Oracle System | Integration Type | FLX Component | Status |
-|---------------|------------------|---------------|--------|
-| **Oracle Fusion Cloud WMS** | REST/HTTP | `flx-http-oracle-wms` | ✅ Production |
-| **Oracle Integration Cloud (OIC)** | REST/OAuth2 | `flx-http-oracle-oic` | ✅ Production |
-| **Oracle Database** | SQL/Async | `flx-database-oracle` | ✅ Production |
-| **Oracle Inventory Management** | Pre-built OIC | Integration recipes | 📋 Documented |
+| Oracle System                      | Integration Type | FLX Component         | Status        |
+| ---------------------------------- | ---------------- | --------------------- | ------------- |
+| **Oracle Fusion Cloud WMS**        | REST/HTTP        | `flx-http-oracle-wms` | ✅ Production |
+| **Oracle Integration Cloud (OIC)** | REST/OAuth2      | `flx-http-oracle-oic` | ✅ Production |
+| **Oracle Database**                | SQL/Async        | `flx-database-oracle` | ✅ Production |
+| **Oracle Inventory Management**    | Pre-built OIC    | Integration recipes   | 📋 Documented |
 
 ### **Architecture Pattern**
 
@@ -78,7 +78,7 @@ FLX Hexagonal Architecture
 Oracle Warehouse Management System (WMS) integration provides:
 
 - **Inventory Management**: Real-time stock tracking
-- **Order Processing**: Pick, pack, ship workflows  
+- **Order Processing**: Pick, pack, ship workflows
 - **Receipt Processing**: Inbound goods handling
 - **Allocation Management**: Stock allocation and reservation
 
@@ -99,13 +99,13 @@ wms_config = WmsConfig(
 async with WmsClient(wms_config) as wms:
     # Get facility information
     facility = await wms.get_facility_info()
-    
+
     # List inventory items
     items = await wms.list_items(
         facility_id="FACILITY_001",
         status="AVAILABLE"
     )
-    
+
     # Create shipment
     shipment = await wms.create_shipment({
         "order_id": "ORD-123",
@@ -138,7 +138,7 @@ jwt_service = FlxJwtService.create_for_oracle_oic(
 async with OracleOicService(oic_config) as oic:
     # List integrations
     integrations = await oic.list_integrations()
-    
+
     # Trigger integration
     result = await oic.trigger_integration(
         "INVENTORY_SYNC",
@@ -170,18 +170,18 @@ db_adapter = OracleAdapter(oracle_config)
 class OracleWmsRepository:
     def __init__(self, db_adapter: DatabaseAdapter):
         self.db = db_adapter
-    
+
     async def save_wms_transaction(self, transaction: WmsTransaction) -> None:
         query = """
         INSERT INTO wms_transactions (
-            transaction_id, item_id, quantity, 
+            transaction_id, item_id, quantity,
             transaction_type, created_at
         ) VALUES (
             :transaction_id, :item_id, :quantity,
             :transaction_type, :created_at
         )
         """
-        
+
         await self.db.execute(query, {
             "transaction_id": transaction.transaction_id,
             "item_id": transaction.item_id,
@@ -196,7 +196,7 @@ class OracleWmsRepository:
 For complete implementation details, see:
 
 1. **WMS Implementation**: [Oracle WMS Integration Guide](./oracle-wms-integration-validated.md)
-2. **OIC Implementation**: [Oracle OIC Complete Guide](./oic-complete-guide.md)  
+2. **OIC Implementation**: [Oracle OIC Complete Guide](./oic-complete-guide.md)
 3. **Database Implementation**: [Oracle Database Guide](./database-complete-guide.md)
 4. **Authentication Setup**: [Oracle Authentication Guide](./oracle-authentication-comprehensive-guide.md)
 
@@ -237,7 +237,7 @@ For complete implementation details, see:
 - **Authentication errors**: Verify credentials and facility permissions
 - **Invalid facility**: Ensure facility_id exists in Oracle WMS
 
-### **Common OIC Issues**  
+### **Common OIC Issues**
 
 - **OAuth2 failures**: Verify IDCS configuration and client credentials
 - **Integration not found**: Check integration name and deployment status

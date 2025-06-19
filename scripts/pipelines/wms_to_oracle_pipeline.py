@@ -61,7 +61,9 @@ class WmsToOraclePipeline:
             format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
             handlers=[
                 logging.StreamHandler(sys.stdout),
-                logging.FileHandler(f"pipeline_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"),
+                logging.FileHandler(
+                    f"pipeline_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
+                ),
             ],
         )
         self.logger = logging.getLogger("WmsToOraclePipeline")
@@ -123,13 +125,22 @@ class WmsToOraclePipeline:
         """
         self.logger.info(f"Iniciando extração do WMS - Recurso: {resource}")
 
-        output_file = self.temp_dir / f"wms_data_{resource}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+        output_file = (
+            self.temp_dir
+            / f"wms_data_{resource}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+        )
 
         # Construir comando CLI do WMS
         cmd = [
-            "python", "-m", "wms.cli", "query", resource,
-            "--format", "json",
-            "--output-file", str(output_file),
+            "python",
+            "-m",
+            "wms.cli",
+            "query",
+            resource,
+            "--format",
+            "json",
+            "--output-file",
+            str(output_file),
         ]
 
         # Adicionar parâmetros de query
@@ -166,7 +177,9 @@ class WmsToOraclePipeline:
             # Validar dados extraídos
             with open(output_file, encoding="utf-8") as f:
                 data = json.load(f)
-                self.logger.info(f"Extraídos {len(data) if isinstance(data, list) else 1} registros")
+                self.logger.info(
+                    f"Extraídos {len(data) if isinstance(data, list) else 1} registros"
+                )
 
             return output_file
 
@@ -199,7 +212,10 @@ class WmsToOraclePipeline:
         if not isinstance(data, list):
             data = [data]
 
-        sql_file = self.temp_dir / f"insert_{table_name}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.sql"
+        sql_file = (
+            self.temp_dir
+            / f"insert_{table_name}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.sql"
+        )
 
         with open(sql_file, "w", encoding="utf-8") as f:
             f.write(f"-- Inserção de dados WMS na tabela {table_name}\n")
@@ -251,7 +267,11 @@ class WmsToOraclePipeline:
         self.logger.info(f"Iniciando carregamento no Oracle DB: {sql_file}")
 
         cmd = [
-            "python", "-m", "db.cli", "run", str(sql_file),
+            "python",
+            "-m",
+            "db.cli",
+            "run",
+            str(sql_file),
         ]
 
         try:
@@ -312,6 +332,7 @@ class WmsToOraclePipeline:
         """Remove arquivos temporários."""
         try:
             import shutil
+
             shutil.rmtree(self.temp_dir)
             self.logger.info(f"Diretório temporário removido: {self.temp_dir}")
         except Exception as e:
@@ -345,9 +366,17 @@ Exemplos de uso:
     parser.add_argument("--table", required=True, help="Tabela Oracle de destino")
     parser.add_argument("--limit", type=int, help="Limite de registros")
     parser.add_argument("--query", help="Query string para filtrar dados")
-    parser.add_argument("--filter", action="append", help="Filtros avançados (pode ser usado múltiplas vezes)")
-    parser.add_argument("--fields", help="Campos específicos para extrair (separados por vírgula)")
-    parser.add_argument("--verbose", "-v", action="store_true", help="Logging detalhado")
+    parser.add_argument(
+        "--filter",
+        action="append",
+        help="Filtros avançados (pode ser usado múltiplas vezes)",
+    )
+    parser.add_argument(
+        "--fields", help="Campos específicos para extrair (separados por vírgula)"
+    )
+    parser.add_argument(
+        "--verbose", "-v", action="store_true", help="Logging detalhado"
+    )
 
     args = parser.parse_args()
 

@@ -24,13 +24,13 @@ This hub provides comprehensive guidance for implementing adapters in hexagonal 
 
 ### **Core Adapter Topics**
 
-| **Topic** | **Function** | **Audience** | **Complexity** | **Status** |
-|-----------|--------------|--------------|----------------|------------|
-| [**Implementation Guide**](./implementation-guide.md) | Adapter creation patterns | Framework developers | ⭐⭐⭐ | ✅ Updated |
-| [**Inbound Adapters**](./inbound-adapters.md) | External interface handling | API developers | ⭐⭐⭐ | ✅ Updated |
-| [**Outbound Adapters**](./outbound-adapters.md) | External service integration | Integration engineers | ⭐⭐⭐⭐ | ✅ Updated |
-| [**Adapter Patterns**](./adapter-patterns.md) | Design patterns & best practices | All developers | ⭐⭐ | ✅ Updated |
-| [**Testing Strategies**](./adapter-testing.md) | Adapter testing approaches | QA engineers, developers | ⭐⭐⭐ | ✅ Updated |
+| **Topic**                                             | **Function**                     | **Audience**             | **Complexity** | **Status** |
+| ----------------------------------------------------- | -------------------------------- | ------------------------ | -------------- | ---------- |
+| [**Implementation Guide**](./implementation-guide.md) | Adapter creation patterns        | Framework developers     | ⭐⭐⭐         | ✅ Updated |
+| [**Inbound Adapters**](./inbound-adapters.md)         | External interface handling      | API developers           | ⭐⭐⭐         | ✅ Updated |
+| [**Outbound Adapters**](./outbound-adapters.md)       | External service integration     | Integration engineers    | ⭐⭐⭐⭐       | ✅ Updated |
+| [**Adapter Patterns**](./adapter-patterns.md)         | Design patterns & best practices | All developers           | ⭐⭐           | ✅ Updated |
+| [**Testing Strategies**](./adapter-testing.md)        | Adapter testing approaches       | QA engineers, developers | ⭐⭐⭐         | ✅ Updated |
 
 ---
 
@@ -39,24 +39,24 @@ This hub provides comprehensive guidance for implementing adapters in hexagonal 
 ### **🎯 For New Developers**
 
 ```
-1. [Adapter Patterns](./adapter-patterns.md) → 
-2. [Implementation Guide](./implementation-guide.md) → 
+1. [Adapter Patterns](./adapter-patterns.md) →
+2. [Implementation Guide](./implementation-guide.md) →
 3. [Inbound Adapters](./inbound-adapters.md)
 ```
 
 ### **⚡ For Integration Engineers**
 
 ```
-1. [Outbound Adapters](./outbound-adapters.md) → 
-2. [Implementation Guide](./implementation-guide.md) → 
+1. [Outbound Adapters](./outbound-adapters.md) →
+2. [Implementation Guide](./implementation-guide.md) →
 3. [Oracle Integration](../../guides/oracle/index.md)
 ```
 
 ### **🏢 For Quality Engineers**
 
 ```
-1. [Testing Strategies](./adapter-testing.md) → 
-2. [Adapter Patterns](./adapter-patterns.md) → 
+1. [Testing Strategies](./adapter-testing.md) →
+2. [Adapter Patterns](./adapter-patterns.md) →
 3. [Testing Framework](../../development/testing/index.md)
 ```
 

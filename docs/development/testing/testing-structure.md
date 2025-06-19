@@ -618,6 +618,7 @@ def assert_event_published(event_bus_mock, event_type: Type[DomainEvent]):
 ### Code Quality Standards
 
 1. **Test Naming**: Use descriptive names that explain the scenario
+
    - ✅ `test_user_registration_with_duplicate_username_raises_error`
    - ❌ `test_user_error`
 

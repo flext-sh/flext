@@ -23,7 +23,7 @@
 ## 🎯 **Quick Links**
 
 - **🎯 Main Hub**: [Getting Started](./index.md)
-- **📚 Documentation Root**: [Root Index](../index.md)  
+- **📚 Documentation Root**: [Root Index](../index.md)
 - **🔗 Architecture Deep**: [Architecture Hub](../architecture/index.md)
 
 ---
@@ -74,11 +74,11 @@ from typing import Protocol
 
 class OrderUseCasePort(Protocol):
     """Inbound port for order management operations."""
-    
+
     def create_order(self, order_data: OrderCreateData) -> OrderResult:
         """Create a new order in the system."""
         ...
-    
+
     def get_order(self, order_id: str) -> OrderResult:
         """Retrieve order by ID."""
         ...
@@ -93,18 +93,18 @@ Outbound ports define how your application interacts with external systems:
 ```python
 class OrderRepositoryPort(Protocol):
     """Outbound port for order persistence."""
-    
+
     def save(self, order: Order) -> None:
         """Save order to storage."""
         ...
-    
+
     def find_by_id(self, order_id: str) -> Optional[Order]:
         """Find order by ID."""
         ...
 
 class NotificationPort(Protocol):
     """Outbound port for notifications."""
-    
+
     def send_order_confirmation(self, order: Order) -> None:
         """Send order confirmation notification."""
         ...
@@ -129,22 +129,22 @@ from uuid import UUID, uuid4
 @dataclass
 class Order:
     """Order domain entity with business logic."""
-    
+
     id: UUID
     customer_id: UUID
     items: list[OrderItem]
     status: OrderStatus
     created_at: datetime
     total_amount: Decimal
-    
+
     @classmethod
     def create_new(cls, customer_id: UUID, items: list[OrderItem]) -> 'Order':
         """Factory method to create new order with validation."""
         if not items:
             raise ValueError("Order must have at least one item")
-        
+
         total = sum(item.total_price for item in items)
-        
+
         return cls(
             id=uuid4(),
             customer_id=customer_id,
@@ -153,12 +153,12 @@ class Order:
             created_at=datetime.utcnow(),
             total_amount=total
         )
-    
+
     def mark_as_confirmed(self) -> None:
         """Business logic for order confirmation."""
         if self.status != OrderStatus.PENDING:
             raise OrderError(f"Cannot confirm order in {self.status} status")
-        
+
         self.status = OrderStatus.CONFIRMED
 ```
 
@@ -170,21 +170,21 @@ Value objects represent concepts without identity:
 @dataclass(frozen=True)
 class Money:
     """Value object for monetary amounts."""
-    
+
     amount: Decimal
     currency: str
-    
+
     def __post_init__(self):
         if self.amount < 0:
             raise ValueError("Amount cannot be negative")
         if len(self.currency) != 3:
             raise ValueError("Currency must be 3-letter code")
-    
+
     def add(self, other: 'Money') -> 'Money':
         """Add two monetary amounts."""
         if self.currency != other.currency:
             raise ValueError("Cannot add different currencies")
-        
+
         return Money(self.amount + other.amount, self.currency)
 ```
 
@@ -196,12 +196,12 @@ Events represent important business occurrences:
 @dataclass(frozen=True)
 class OrderConfirmedEvent:
     """Domain event fired when order is confirmed."""
-    
+
     order_id: UUID
     customer_id: UUID
     total_amount: Decimal
     confirmed_at: datetime
-    
+
     @classmethod
     def from_order(cls, order: Order) -> 'OrderConfirmedEvent':
         """Create event from order entity."""
@@ -224,7 +224,7 @@ Application services orchestrate domain logic and coordinate with infrastructure
 ```python
 class OrderApplicationService:
     """Application service for order operations."""
-    
+
     def __init__(
         self,
         order_repo: OrderRepositoryPort,
@@ -234,27 +234,27 @@ class OrderApplicationService:
         self._order_repo = order_repo
         self._notification_service = notification_service
         self._event_publisher = event_publisher
-    
+
     def confirm_order(self, order_id: UUID) -> OrderResult:
         """Confirm order use case implementation."""
         # Load domain entity
         order = self._order_repo.find_by_id(str(order_id))
         if not order:
             raise OrderNotFoundError(order_id)
-        
+
         # Execute business logic
         order.mark_as_confirmed()
-        
+
         # Persist changes
         self._order_repo.save(order)
-        
+
         # Publish domain event
         event = OrderConfirmedEvent.from_order(order)
         self._event_publisher.publish(event)
-        
+
         # Send notification
         self._notification_service.send_order_confirmation(order)
-        
+
         return OrderResult.from_entity(order)
 ```
 
@@ -265,16 +265,16 @@ Adapters implement ports to connect with external systems:
 ```python
 class SqlAlchemyOrderRepository:
     """SQL database adapter for order repository."""
-    
+
     def __init__(self, session: Session):
         self._session = session
-    
+
     def save(self, order: Order) -> None:
         """Save order to SQL database."""
         db_order = OrderModel.from_entity(order)
         self._session.merge(db_order)
         self._session.commit()
-    
+
     def find_by_id(self, order_id: str) -> Optional[Order]:
         """Find order by ID from SQL database."""
         db_order = self._session.query(OrderModel).filter_by(id=order_id).first()
@@ -282,10 +282,10 @@ class SqlAlchemyOrderRepository:
 
 class EmailNotificationAdapter:
     """Email adapter for notification service."""
-    
+
     def __init__(self, email_client: EmailClient):
         self._email_client = email_client
-    
+
     def send_order_confirmation(self, order: Order) -> None:
         """Send order confirmation via email."""
         message = self._build_confirmation_message(order)
@@ -304,18 +304,18 @@ from flx.core.container import Container
 def configure_container() -> Container:
     """Configure dependency injection container."""
     container = Container()
-    
+
     # Infrastructure
     container.register(Session, SQLAlchemySession)
     container.register(EmailClient, SMTPEmailClient)
-    
+
     # Repositories (Outbound adapters)
     container.register(OrderRepositoryPort, SqlAlchemyOrderRepository)
     container.register(NotificationPort, EmailNotificationAdapter)
-    
+
     # Application services
     container.register(OrderApplicationService, OrderApplicationService)
-    
+
     return container
 ```
 

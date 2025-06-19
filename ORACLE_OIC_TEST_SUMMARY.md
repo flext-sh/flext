@@ -3,6 +3,7 @@
 ## Overview
 
 All 4 Oracle OIC projects have been set up with:
+
 - ✅ .env files for configuration (using real Oracle OIC credentials)
 - ✅ Config generation scripts that create config.json from .env
 - ✅ Comprehensive E2E test suites
@@ -11,6 +12,7 @@ All 4 Oracle OIC projects have been set up with:
 ## Test Results
 
 ### 1. tap-oracle-oic (Singer TAP) - ✅ FULLY WORKING
+
 - Successfully initializes with OAuth2 configuration
 - Discovers 6 streams: integrations, connections, packages, lookups, libraries, certificates
 - Each stream has proper schema with 15-42 properties
@@ -18,6 +20,7 @@ All 4 Oracle OIC projects have been set up with:
 - Base URL correctly configured to real OIC instance
 
 ### 2. target-oracle-oic (Singer Target) - ✅ CORE FUNCTIONALITY WORKING
+
 - Successfully initializes with configuration
 - All sink mappings work correctly:
   - ConnectionsSink for connections stream
@@ -28,6 +31,7 @@ All 4 Oracle OIC projects have been set up with:
 - Note: Minor auth parameter issue in tests but core functionality intact
 
 ### 3. oracle-oic-ext (Meltano Extension) - ✅ COMPONENTS WORKING
+
 - LifecycleManager successfully initializes
 - MonitoringService successfully initializes
 - Configuration properly loaded from config.json
@@ -35,6 +39,7 @@ All 4 Oracle OIC projects have been set up with:
 - Note: Full extension requires meltano.edk dependency
 
 ### 4. flx-oracle-oic (Unified CLI & FLX Adapter) - ✅ CONFIGURATION WORKING
+
 - FLX configuration validates successfully with all required fields
 - CLI app imports correctly
 - Adapter configuration matches OIC instance settings
@@ -55,6 +60,7 @@ cd flx-oracle-oic && python generate_config.py
 ## Environment Variables Used
 
 The following environment variables from .env are used:
+
 - `OIC_IDCS_URL`: Identity service URL for OAuth2
 - `OIC_IDCS_CLIENT_ID`: OAuth2 client ID
 - `OIC_IDCS_CLIENT_SECRET`: OAuth2 client secret
@@ -66,6 +72,7 @@ The following environment variables from .env are used:
 ## Test Files Created
 
 1. **Comprehensive E2E Tests**:
+
    - `/tap-oracle-oic/tests/test_e2e_complete.py`
    - `/target-oracle-oic/tests/test_e2e_complete.py`
    - `/oracle-oic-ext/tests/test_e2e_complete.py`

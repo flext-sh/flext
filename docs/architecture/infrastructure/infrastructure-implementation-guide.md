@@ -107,11 +107,11 @@ class InfrastructureService(BaseInfraService):
     async def _do_initialize(self) -> None:
         """Service-specific initialization."""
         pass
-    
+
     async def _do_connect(self) -> None:
         """Establish connections."""
         pass
-    
+
     async def _do_start(self) -> None:
         """Start service operations."""
         pass
@@ -359,20 +359,20 @@ system_health = CompositeHealthCheck("flx_system", [
 # REAL Production-Grade Health Check Aggregation
 class CompositeHealthCheck(HealthCheck):
     """Composite health check that aggregates multiple individual checks."""
-    
+
     async def check(self) -> HealthCheckResult:
         """Execute all child health checks concurrently and aggregate results."""
         results = await asyncio.gather(
             *[check.check() for check in self.checks],
             return_exceptions=True,
         )
-        
+
         # Sophisticated status aggregation using Python 3.13 match
         match (all_healthy, degraded):
             case (True, False): status = HealthStatus.HEALTHY
             case (False, _): status = HealthStatus.UNHEALTHY
             case _: status = HealthStatus.DEGRADED
-        
+
         return HealthCheckResult(name=self.name, status=status, details=details)
 
 # REAL Distributed Tracing with Context Propagation
@@ -528,7 +528,7 @@ await service_registry.stop_all()
 ```python
 class CacheProductionEngine:
     """Production-grade cache with clustering and HA."""
-    
+
     def __init__(self, cluster_nodes: list[str], enable_tls: bool = True):
         self.cluster_nodes = cluster_nodes
         self.enable_tls = enable_tls
@@ -569,11 +569,11 @@ result = await cache_service.get("key")
 
 ### **Test Engine Features**
 
-✅ **In-Memory Implementations**: Fast test engines without external dependencies  
-✅ **Interface Compatibility**: Exact same API as production services  
-✅ **Failure Simulation**: Test engines can simulate various failure scenarios  
-✅ **Performance Testing**: Load testing capabilities with timing  
-✅ **Isolation**: Each test gets clean test engine instance  
+✅ **In-Memory Implementations**: Fast test engines without external dependencies
+✅ **Interface Compatibility**: Exact same API as production services
+✅ **Failure Simulation**: Test engines can simulate various failure scenarios
+✅ **Performance Testing**: Load testing capabilities with timing
+✅ **Isolation**: Each test gets clean test engine instance
 
 ---
 

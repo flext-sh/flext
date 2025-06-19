@@ -19,7 +19,9 @@ class QuickTestConfig(BaseModel):
 
     model_config = ConfigDict(strict=True, extra="forbid")
 
-    flx_project: str | None = Field(default=None, description="Specific flx_project to test")
+    flx_project: str | None = Field(
+        default=None, description="Specific flx_project to test"
+    )
     category: str = Field(default="unit", description="Test category to run")
     verbose: bool = Field(default=False, description="Verbose output")
     fail_fast: bool = Field(default=True, description="Stop on first failure")
@@ -101,7 +103,9 @@ class QuickTestRunner:
             if success:
                 print(f"✅ {project_name}: {passed} passed ({duration:.1f}s)")
             else:
-                print(f"❌ {project_name}: {failed} failed, {passed} passed ({duration:.1f}s)")
+                print(
+                    f"❌ {project_name}: {failed} failed, {passed} passed ({duration:.1f}s)"
+                )
                 if self.config.verbose and result.stderr:
                     print(f"   Error: {result.stderr[:200]}...")
 
@@ -135,11 +139,13 @@ class QuickTestRunner:
             cmd.extend(["--cov", "--cov-report=term-missing"])
 
         # Additional options
-        cmd.extend([
-            "--tb=short",
-            "--disable-warnings",
-            "--color=yes",
-        ])
+        cmd.extend(
+            [
+                "--tb=short",
+                "--disable-warnings",
+                "--color=yes",
+            ]
+        )
 
         return cmd
 
@@ -170,19 +176,24 @@ class QuickTestRunner:
 
 def main() -> None:
     """Main entry point."""
-    parser = argparse.ArgumentParser(description="Quick test runner for FLX development")
+    parser = argparse.ArgumentParser(
+        description="Quick test runner for FLX development"
+    )
     parser.add_argument(
-        "--flx_project", "-p",
+        "--flx_project",
+        "-p",
         help="Specific flx_project to test (flx, oracle, wms, oic, db)",
     )
     parser.add_argument(
-        "--category", "-c",
+        "--category",
+        "-c",
         default="unit",
         choices=["unit", "integration", "performance", "security", "smoke", "e2e"],
         help="Test category to run",
     )
     parser.add_argument(
-        "--verbose", "-v",
+        "--verbose",
+        "-v",
         action="store_true",
         help="Verbose output",
     )

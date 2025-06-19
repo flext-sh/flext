@@ -82,7 +82,7 @@ docs/
 
 ### **Hexagonal Architecture Guide (architecture/hexagonal-architecture.md)**
 
-```markdown
+````markdown
 # Hexagonal Architecture Implementation
 
 ## Overview
@@ -92,6 +92,7 @@ The FLX Adapter Example implements hexagonal architecture (Ports and Adapters pa
 ## Architecture Layers
 
 ### Domain Layer (Core)
+
 - **Purpose**: Business logic and domain rules
 - **Dependencies**: None (dependency-free)
 - **Components**:
@@ -101,6 +102,7 @@ The FLX Adapter Example implements hexagonal architecture (Ports and Adapters pa
   - Business rules
 
 ### Application Layer
+
 - **Purpose**: Application services and use cases
 - **Dependencies**: Domain layer only
 - **Components**:
@@ -110,6 +112,7 @@ The FLX Adapter Example implements hexagonal architecture (Ports and Adapters pa
   - DTOs
 
 ### Infrastructure Layer
+
 - **Purpose**: Technical implementation details
 - **Dependencies**: Application and domain layers
 - **Components**:
@@ -121,6 +124,7 @@ The FLX Adapter Example implements hexagonal architecture (Ports and Adapters pa
 ## Port Definitions
 
 ### Primary Ports (Inbound)
+
 ```python
 class CustomerManagementPort(ABC):
     """Primary port for customer management operations."""
@@ -135,8 +139,10 @@ class CustomerManagementPort(ABC):
         """Get customer by ID."""
         pass
 ```
+````
 
 ### Secondary Ports (Outbound)
+
 ```python
 class CustomerRepositoryPort(ABC):
     """Secondary port for customer persistence."""
@@ -158,7 +164,8 @@ class CustomerRepositoryPort(ABC):
 2. **Flexibility**: Easy to swap implementations
 3. **Maintainability**: Clear separation of concerns
 4. **Independence**: Domain logic independent of infrastructure
-```
+
+````
 
 ### **Domain-Driven Design Guide (architecture/domain-driven-design.md)**
 
@@ -173,10 +180,12 @@ class CustomerRepositoryPort(ABC):
 - **Inventory Management**: Stock and product management
 
 ### Context Mapping
-```
+````
+
 Customer Management ---> Order Processing (Customer-Supplier)
-Order Processing    ---> Inventory Management (Customer-Supplier)
-```
+Order Processing ---> Inventory Management (Customer-Supplier)
+
+````
 
 ## Tactical Design
 
@@ -201,9 +210,10 @@ class Customer(Entity):
             old_email=old_email.value,
             new_email=new_email.value
         ))
-```
+````
 
 ### Value Objects
+
 ```python
 @dataclass(frozen=True)
 class Email(ValueObject):
@@ -220,6 +230,7 @@ class Email(ValueObject):
 ```
 
 ### Domain Events
+
 ```python
 @dataclass
 class CustomerEmailChangedEvent(DomainEvent):
@@ -230,7 +241,8 @@ class CustomerEmailChangedEvent(DomainEvent):
     new_email: str
     event_type: str = "customer_email_changed"
 ```
-```
+
+````
 
 ---
 
@@ -429,11 +441,11 @@ components:
 
 security:
   - BearerAuth: []
-```
+````
 
 ### **Authentication Guide (api/authentication.md)**
 
-```markdown
+````markdown
 # Authentication and Authorization
 
 ## Overview
@@ -458,15 +470,18 @@ The FLX Adapter Example API uses JWT (JSON Web Tokens) for authentication and ro
   "iat": 1640908800
 }
 ```
+````
 
 ## Authorization Levels
 
 ### Roles
+
 - **REDACTED_LDAP_BIND_PASSWORD**: Full system access
 - **user**: Standard user operations
 - **readonly**: Read-only access
 
 ### Permissions
+
 - **customers:read**: View customer information
 - **customers:write**: Create and modify customers
 - **orders:read**: View order information
@@ -504,7 +519,8 @@ def require_permission(permission: str):
 async def list_customers(user = Depends(require_permission("customers:read"))):
     return await customer_service.list_customers()
 ```
-```
+
+````
 
 ---
 
@@ -529,30 +545,35 @@ async def list_customers(user = Depends(require_permission("customers:read"))):
 ```bash
 git clone <repository-url>
 cd flx-adapter-example
-```
+````
 
 2. **Install Dependencies**
+
 ```bash
 poetry install
 poetry shell
 ```
 
 3. **Start Services**
+
 ```bash
 docker-compose up -d postgres redis
 ```
 
 4. **Setup Database**
+
 ```bash
 poetry run alembic upgrade head
 ```
 
 5. **Run Application**
+
 ```bash
 poetry run uvicorn flx_adapter_example.main:app --reload
 ```
 
 6. **Verify Setup**
+
 ```bash
 curl http://localhost:8000/health
 ```
@@ -560,22 +581,26 @@ curl http://localhost:8000/health
 ## Development Workflow
 
 1. **Create Feature Branch**
+
 ```bash
 git checkout -b feature/customer-management
 ```
 
 2. **Implement Changes**
+
 - Follow hexagonal architecture patterns
 - Write tests first (TDD)
 - Update documentation
 
 3. **Run Tests**
+
 ```bash
 poetry run pytest
 poetry run pytest --cov=flx_adapter_example
 ```
 
 4. **Quality Checks**
+
 ```bash
 poetry run black .
 poetry run ruff check .
@@ -583,6 +608,7 @@ poetry run mypy flx_adapter_example
 ```
 
 5. **Commit and Push**
+
 ```bash
 git add .
 git commit -m "feat: add customer management endpoint"
@@ -603,7 +629,8 @@ flx-adapter-example/
 ├── scripts/                # Development scripts
 └── docker/                 # Docker configurations
 ```
-```
+
+````
 
 ---
 
@@ -655,12 +682,12 @@ HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
 EXPOSE 8000
 
 CMD ["uvicorn", "flx_adapter_example.main:app", "--host", "0.0.0.0", "--port", "8000"]
-```
+````
 
 ## Docker Compose
 
 ```yaml
-version: '3.8'
+version: "3.8"
 
 services:
   app:
@@ -734,7 +761,8 @@ EXPOSE 8000
 
 CMD ["uvicorn", "flx_adapter_example.main:app", "--host", "0.0.0.0", "--port", "8000"]
 ```
-```
+
+````
 
 ---
 
@@ -760,9 +788,10 @@ curl -X POST http://localhost:8000/auth/login \
     "email": "user@example.com",
     "password": "password"
   }'
-```
+````
 
 Response:
+
 ```json
 {
   "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
@@ -784,6 +813,7 @@ curl -X POST http://localhost:8000/v1/customers \
 ```
 
 Response:
+
 ```json
 {
   "id": "123e4567-e89b-12d3-a456-426614174000",
@@ -830,6 +860,7 @@ The API returns structured error responses:
 - Explore [Advanced Usage](advanced-usage.md)
 - Check [API Reference](../api/endpoints-reference.md)
 - Review [Integration Guides](../integration/README.md)
+
 ```
 
 ---
@@ -858,3 +889,4 @@ The API returns structured error responses:
 ---
 
 **📂 Module**: Documentation | **🏠 Component**: [FLX Adapter Example](../README.md) | **Framework**: Markdown/OpenAPI | **Updated**: 2025-06-19
+```

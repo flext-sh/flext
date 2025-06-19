@@ -64,8 +64,8 @@ tests/
 
 ### Unit Tests (`unit/`) - Foundation Layer
 
-**Purpose**: Test individual components in complete isolation  
-**Coverage Target**: >95% code coverage  
+**Purpose**: Test individual components in complete isolation
+**Coverage Target**: >95% code coverage
 **Execution Time**: <2 seconds total
 
 #### Core Domain Tests (`unit/core/`)
@@ -110,8 +110,8 @@ tests/
 
 ### Integration Tests (`integration/`) - Interaction Layer
 
-**Purpose**: Test component interactions and boundary compliance  
-**Coverage Target**: >85% integration scenario coverage  
+**Purpose**: Test component interactions and boundary compliance
+**Coverage Target**: >85% integration scenario coverage
 **Execution Time**: <30 seconds total
 
 #### Key Integration Scenarios
@@ -123,8 +123,8 @@ tests/
 
 ### End-to-End Tests (`e2e/`) - System Layer
 
-**Purpose**: Test complete user workflows and system behavior  
-**Coverage Target**: >90% critical user journey coverage  
+**Purpose**: Test complete user workflows and system behavior
+**Coverage Target**: >90% critical user journey coverage
 **Execution Time**: <2 minutes total
 
 #### User Workflow Validation
@@ -135,7 +135,7 @@ tests/
 
 ### Hexagonal Architecture Tests (`hexagonal/`) - Architectural Compliance
 
-**Purpose**: Enforce hexagonal architecture principles and boundaries  
+**Purpose**: Enforce hexagonal architecture principles and boundaries
 **Coverage Target**: 100% architectural rule compliance
 
 #### Architectural Validation
@@ -636,6 +636,7 @@ def assert_event_published(event_bus_mock, event_type: Type[DomainEvent]):
 ### Code Quality Standards
 
 1. **Test Naming**: Use descriptive names that explain the scenario
+
    - ✅ `test_user_registration_with_duplicate_username_raises_error`
    - ❌ `test_user_error`
 
@@ -682,23 +683,23 @@ def assert_event_published(event_bus_mock, event_type: Type[DomainEvent]):
 async def test_repository_crud_operations():
     """Test complete CRUD operations."""
     repo = UserRepository()
-    
+
     # Create
     user = User(username="test", email=Email("test@example.com"))
     await repo.save(user)
-    
+
     # Read
     found_user = await repo.get_by_id(user.id)
     assert found_user.username == "test"
-    
+
     # Update
     found_user.update_email(Email("new@example.com"))
     await repo.save(found_user)
-    
+
     # Verify update
     updated_user = await repo.get_by_id(user.id)
     assert updated_user.email.value == "new@example.com"
-    
+
     # Delete
     await repo.delete(user.id)
     deleted_user = await repo.get_by_id(user.id)
@@ -712,18 +713,18 @@ async def test_repository_crud_operations():
 async def test_domain_event_publishing():
     """Test domain event publishing flow."""
     event_store = []
-    
+
     def capture_event(event):
         event_store.append(event)
-    
+
     # Setup event handler
     event_bus = EventBus()
     await event_bus.subscribe(UserCreatedEvent, capture_event)
-    
+
     # Create user (should publish event)
     user_service = UserService(event_bus)
     await user_service.create_user("test", "test@example.com")
-    
+
     # Verify event was published
     assert len(event_store) == 1
     assert isinstance(event_store[0], UserCreatedEvent)
@@ -735,7 +736,7 @@ async def test_domain_event_publishing():
 ```python
 class TestUserCommandsAndQueries:
     """Test CQRS pattern implementation."""
-    
+
     @pytest.mark.asyncio
     async def test_command_query_separation(self):
         """Test that commands and queries are properly separated."""
@@ -743,14 +744,14 @@ class TestUserCommandsAndQueries:
         command_handler = CreateUserCommandHandler()
         command = CreateUserCommand(username="test", email="test@example.com")
         result = await command_handler.handle(command)
-        
+
         assert result.success
-        
+
         # Queries should only read state
         query_handler = GetUserQueryHandler()
         query = GetUserQuery(user_id=result.user_id)
         user = await query_handler.handle(query)
-        
+
         assert user.username == "test"
         assert user.email.value == "test@example.com"
 ```
@@ -765,7 +766,7 @@ class TestUserCommandsAndQueries:
 async def test_problematic_async():
     # Missing await - will cause issues
     result = some_async_function()  # ❌ Missing await
-    
+
 # Solution: Proper async/await usage
 @pytest.mark.asyncio
 async def test_proper_async():
@@ -797,11 +798,11 @@ def test_with_proper_mock(mocker):
 # Problem: Shared mutable state between tests
 class TestWithSharedState:
     shared_data = []  # ❌ Shared between test instances
-    
+
     def test_first(self):
         self.shared_data.append("item1")
         assert len(self.shared_data) == 1
-    
+
     def test_second(self):
         # This test might fail depending on execution order
         assert len(self.shared_data) == 0
@@ -810,11 +811,11 @@ class TestWithSharedState:
 class TestWithIsolatedState:
     def setup_method(self):
         self.data = []  # ✅ Fresh data for each test
-    
+
     def test_first(self):
         self.data.append("item1")
         assert len(self.data) == 1
-    
+
     def test_second(self):
         assert len(self.data) == 0  # ✅ Always passes
 ```
@@ -860,6 +861,6 @@ class TestWithIsolatedState:
 ## See Also
 
 - [Testing Hexagonal Architecture](./TESTING_HEXAGONAL_ARCHITECTURE.md) - Architecture testing patterns
-- [Development Standards](./standardization-plan.md) - Code quality standards  
+- [Development Standards](./standardization-plan.md) - Code quality standards
 - [Port Implementation Guide](../ports/implementation-guide.md) - Port contract testing
 - [Architecture Documentation](../architecture/) - FLX framework architecture

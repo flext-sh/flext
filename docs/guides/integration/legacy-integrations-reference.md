@@ -16,7 +16,7 @@ This guide contains reference material from previous integration implementations
 Historical Oracle Integration Cloud packages:
 
 - **`CRIARORDERRTV_01.00.0000.iar.zip`** - Order creation integration flow
-- **`INTEGRACAOEXPEDI_*.iar`** - Expedition and shipping integration flows  
+- **`INTEGRACAOEXPEDI_*.iar`** - Expedition and shipping integration flows
 - **`OCWMS_OTM_Integration.par`** - WMS to Oracle Transportation Management integration
 
 ### Extracted Integration Projects
@@ -78,7 +78,7 @@ class OrderProcessingService:  # Domain Service
     def __init__(self, order_repo: OrderRepositoryPort, wms_client: WmsClientPort):
         self._order_repo = order_repo
         self._wms_client = wms_client
-    
+
     async def process_order(self, order: Order) -> OrderResult:
         # Pure business logic
         validated_order = order.validate_business_rules()
@@ -100,7 +100,7 @@ def legacy_inventory_sync():
 class InventorySyncService:  # Domain Service
     def __init__(self, inventory_port: InventoryPort):
         self._inventory_port = inventory_port  # Depends on abstraction
-    
+
     async def sync_inventory(self) -> SyncResult:
         # Pure business logic
         current_inventory = await self._inventory_port.get_current_inventory()
@@ -117,14 +117,14 @@ class OracleInventoryAdapter:  # Infrastructure Adapter
 
 #### Legacy to Hexagonal Architecture Translation
 
-| Legacy Pattern | Hexagonal Architecture Component | Implementation |
-|---|---|---|
-| **Integration Flows** | Domain Services + Outbound Adapters | Extract business logic to services, Oracle calls to adapters |
-| **Connection Configs** | Outbound Port Implementations | Configuration becomes adapter initialization |
-| **Data Mappings** | Domain Value Objects + Adapters | Business models in domain, technical mapping in adapters |
-| **Error Handling** | Adapter Resilience + Domain Exceptions | Technical errors in adapters, business errors in domain |
-| **Validation Logic** | Domain Entities + Value Objects | Business validation in domain objects |
-| **Workflow Steps** | Domain Services + Events | Business workflows as services, coordination via events |
+| Legacy Pattern         | Hexagonal Architecture Component       | Implementation                                               |
+| ---------------------- | -------------------------------------- | ------------------------------------------------------------ |
+| **Integration Flows**  | Domain Services + Outbound Adapters    | Extract business logic to services, Oracle calls to adapters |
+| **Connection Configs** | Outbound Port Implementations          | Configuration becomes adapter initialization                 |
+| **Data Mappings**      | Domain Value Objects + Adapters        | Business models in domain, technical mapping in adapters     |
+| **Error Handling**     | Adapter Resilience + Domain Exceptions | Technical errors in adapters, business errors in domain      |
+| **Validation Logic**   | Domain Entities + Value Objects        | Business validation in domain objects                        |
+| **Workflow Steps**     | Domain Services + Events               | Business workflows as services, coordination via events      |
 
 ### 3. Practical Migration Examples
 
@@ -192,13 +192,13 @@ class InventorySynchronizationService:
     async def synchronize_active_inventory(self) -> SyncResult:
         active_items = await self._inventory_repo.find_active_items()
         sync_results = []
-        
+
         for item in active_items:
             # Business rule: only sync items with sufficient quantity
             if item.quantity >= self._minimum_sync_quantity:
                 result = await self._wms_client.update_inventory(item)
                 sync_results.append(result)
-        
+
         return SyncResult(items_synced=len(sync_results), results=sync_results)
 
 # Repository Adapter (Data Access)
@@ -248,7 +248,7 @@ class InventoryItemMapper:
             location=LocationCode(value=oracle_data['LOCATION_ID']),
             status=InventoryStatus.from_oracle_code(oracle_data['STATUS'])
         )
-    
+
     @staticmethod
     def to_wms_format(item: InventoryItem) -> dict:
         return {
@@ -270,17 +270,17 @@ def process_order_legacy(order_data):
         # Validation mixed with processing
         if not order_data.get('customer_id'):
             raise ValueError("Customer ID required")
-        
+
         # Database operation
         save_order(order_data)
-        
+
         # External API call
         wms_response = call_wms_api(order_data)
         if wms_response.status != 'SUCCESS':
             # Technical error handling mixed with business logic
             rollback_order(order_data)
             raise Exception("WMS processing failed")
-            
+
     except Exception as e:
         # Generic error handling
         log_error(f"Order processing failed: {e}")
@@ -306,7 +306,7 @@ class OracleWmsAdapter:
             wms_request = self._map_to_wms_format(order)
             response = await self._wms_service.submit_order(wms_request)
             return self._map_fulfillment_result(response)
-            
+
         except ConnectionError as e:
             # Infrastructure error -> Adapter exception
             raise WmsConnectionError("WMS service unavailable") from e
@@ -323,14 +323,14 @@ class OrderProcessingService:
         try:
             # Business validation
             order.validate_business_rules()  # May raise OrderValidationError
-            
+
             # Delegate to infrastructure
             fulfillment = await self._wms_adapter.submit_order(order)
-            
+
             # Record success
             await self._order_repo.mark_as_processing(order.order_id, fulfillment.id)
             return ProcessingResult.success(fulfillment)
-            
+
         except OrderValidationError:
             # Business error - re-raise as-is
             raise
@@ -369,7 +369,7 @@ class OracleWmsConfig(BaseConfig):
     timeout_seconds: int = Field(default=30, ge=1, le=300)
     retry_attempts: int = Field(default=3, ge=1, le=10)
     enable_ssl_verification: bool = True
-    
+
     class Config:
         env_prefix = "ORACLE_WMS_"
 
@@ -378,7 +378,7 @@ class OracleWmsAdapter:
     def __init__(self, config: OracleWmsConfig):
         self._config = config
         self._client = None
-    
+
     async def _connect(self):
         self._client = OracleWmsClient(
             url=str(self._config.url),
@@ -407,7 +407,7 @@ def test_order_validation():
         customer_id="CUST001",
         items=[OrderItem(sku="ITEM001", quantity=5)]
     )
-    
+
     # Test business rules without external dependencies
     assert order.is_valid()
     assert order.total_items == 5
@@ -418,14 +418,14 @@ async def test_order_processing_service():
     # Mock adapters
     mock_wms = AsyncMock(spec=WmsClientPort)
     mock_repo = AsyncMock(spec=OrderRepositoryPort)
-    
+
     # Configure mock behavior
     mock_wms.submit_order.return_value = FulfillmentResult.success("WMS123")
-    
+
     # Test service logic
     service = OrderProcessingService(mock_wms, mock_repo)
     result = await service.process_order(valid_order)
-    
+
     # Verify behavior
     assert result.success
     mock_wms.submit_order.assert_called_once()
@@ -440,14 +440,14 @@ async def test_oracle_wms_adapter_integration():
         username="test_user",
         password="test_password"
     )
-    
+
     adapter = OracleWmsAdapter(config)
     await adapter.connect()
-    
+
     # Test real Oracle WMS interaction
     test_order = create_test_order()
     result = await adapter.submit_order(test_order)
-    
+
     assert result.confirmation_id is not None
     await adapter.disconnect()
 ```
@@ -470,11 +470,11 @@ class InventoryBatchProcessor:
         # Process updates concurrently
         tasks = [self._process_single_update(update) for update in updates]
         results = await asyncio.gather(*tasks, return_exceptions=True)
-        
+
         # Aggregate results
         successful = [r for r in results if not isinstance(r, Exception)]
         failed = [r for r in results if isinstance(r, Exception)]
-        
+
         return BatchResult(successful=len(successful), failed=len(failed))
 
 # Connection pooling in infrastructure
@@ -513,7 +513,7 @@ class SecureOracleWmsAdapter:
     def __init__(self, config: OracleWmsConfig, credential_manager: CredentialManager):
         self._config = config
         self._credentials = credential_manager
-    
+
     async def _authenticate(self) -> str:
         # OAuth2 or JWT authentication
         token = await self._credentials.get_access_token(
@@ -531,7 +531,7 @@ class AuditableWmsAdapter:
             resource_id=order.order_id,
             timestamp=datetime.utcnow()
         )
-        
+
         try:
             result = await self._perform_wms_submission(order)
             await self._audit_logger.log_success(audit_context, result)

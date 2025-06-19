@@ -12,18 +12,18 @@ echo "Checking Python version..."
 python_version=$(python3 --version 2>&1 | awk '{print $2}')
 required_version="3.13"
 
-if [[ ! "$python_version" == "$required_version"* ]]; then
-    echo "❌ Error: Python $required_version or higher is required. Found: $python_version"
-    exit 1
+if [[ $python_version != "$required_version"* ]]; then
+	echo "❌ Error: Python $required_version or higher is required. Found: $python_version"
+	exit 1
 fi
 echo "✅ Python $python_version"
 
 # Check if Poetry is installed
 echo "Checking Poetry installation..."
-if ! command -v poetry &> /dev/null; then
-    echo "❌ Poetry is not installed. Installing..."
-    curl -sSL https://install.python-poetry.org | python3 -
-    export PATH="$HOME/.local/bin:$PATH"
+if ! command -v poetry &>/dev/null; then
+	echo "❌ Poetry is not installed. Installing..."
+	curl -sSL https://install.python-poetry.org | python3 -
+	export PATH="$HOME/.local/bin:$PATH"
 fi
 echo "✅ Poetry is installed"
 
@@ -37,9 +37,9 @@ poetry install --no-interaction --verbose
 
 # Copy environment file
 if [ ! -f .env ]; then
-    echo "Creating .env file..."
-    cp .env.example .env
-    echo "⚠️  Please update .env with your configuration"
+	echo "Creating .env file..."
+	cp .env.example .env
+	echo "⚠️  Please update .env with your configuration"
 fi
 
 # Create necessary directories
@@ -51,28 +51,28 @@ mkdir -p meltano_projects
 # Generate protobuf files
 echo "Generating protobuf files..."
 poetry run python -m grpc_tools.protoc \
-    -I./src/flx/grpc/proto \
-    --python_out=./src/flx/grpc/proto \
-    --grpc_python_out=./src/flx/grpc/proto \
-    ./src/flx/grpc/proto/flx.proto || echo "⚠️  Protobuf generation skipped (proto file may be missing)"
+	-I./src/flx/grpc/proto \
+	--python_out=./src/flx/grpc/proto \
+	--grpc_python_out=./src/flx/grpc/proto \
+	./src/flx/grpc/proto/flx.proto || echo "⚠️  Protobuf generation skipped (proto file may be missing)"
 
 # Setup database
 echo "Setting up database..."
-if command -v docker &> /dev/null; then
-    echo "Starting PostgreSQL and Redis with Docker..."
-    docker run -d --name flx-postgres \
-        -e POSTGRES_USER=flx \
-        -e POSTGRES_PASSWORD=flx_secret \
-        -e POSTGRES_DB=flx \
-        -p 5432:5432 \
-        postgres:16-alpine || echo "⚠️  PostgreSQL container may already exist"
+if command -v docker &>/dev/null; then
+	echo "Starting PostgreSQL and Redis with Docker..."
+	docker run -d --name flx-postgres \
+		-e POSTGRES_USER=flx \
+		-e POSTGRES_PASSWORD=flx_secret \
+		-e POSTGRES_DB=flx \
+		-p 5432:5432 \
+		postgres:16-alpine || echo "⚠️  PostgreSQL container may already exist"
 
-    docker run -d --name flx-redis \
-        -p 6379:6379 \
-        redis:7-alpine || echo "⚠️  Redis container may already exist"
+	docker run -d --name flx-redis \
+		-p 6379:6379 \
+		redis:7-alpine || echo "⚠️  Redis container may already exist"
 
-    echo "Waiting for database to be ready..."
-    sleep 5
+	echo "Waiting for database to be ready..."
+	sleep 5
 fi
 
 # Run Django migrations

@@ -464,7 +464,6 @@ class TestExtractionOrchestrator:
                 patch.object(orchestrator, "_generate_comprehensive_report"),
                 patch.object(orchestrator, "_calculate_summary_metrics"),
             ):
-
                 result = orchestrator.execute_extraction_plan(plan)
 
                 assert result.core_data_results is not None
@@ -545,7 +544,6 @@ class TestIntegrationScenarios:
                     "tap_oic.extractors.extraction_orchestrator.AdvancedArtifactsExtractor"
                 ) as mock_artifacts,
             ):
-
                 # Setup mocks
                 mock_core.return_value.extract_all_core_data.return_value = {
                     "extraction_metrics": {"total_records": 50}

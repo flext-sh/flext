@@ -37,7 +37,7 @@ models:
         description: Size classification of the group
         tests:
           - accepted_values:
-              values: ['Large', 'Medium', 'Small', 'Empty']
+              values: ["Large", "Medium", "Small", "Empty"]
       - name: is_orphaned
         description: Empty groups older than 90 days
       - name: organizational_unit_id

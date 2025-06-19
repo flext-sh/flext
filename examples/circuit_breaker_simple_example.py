@@ -50,15 +50,22 @@ class ResilientService:
 
         # Configure circuit breaker with listeners
         self.breaker = pybreaker.CircuitBreaker(
-            fail_max=3,          # Open after 3 failures
-            reset_timeout=5,     # Try recovery after 5 seconds
+            fail_max=3,  # Open after 3 failures
+            reset_timeout=5,  # Try recovery after 5 seconds
             name="api_breaker",
             listeners=[self._on_state_change],
         )
 
     def _on_state_change(self, cb, old_state, new_state) -> None:
         """Called when circuit state changes."""
-        if new_state == pybreaker.STATE_OPEN or (new_state == pybreaker.STATE_CLOSED and old_state != pybreaker.STATE_CLOSED) or new_state == pybreaker.STATE_HALF_OPEN:
+        if (
+            new_state == pybreaker.STATE_OPEN
+            or (
+                new_state == pybreaker.STATE_CLOSED
+                and old_state != pybreaker.STATE_CLOSED
+            )
+            or new_state == pybreaker.STATE_HALF_OPEN
+        ):
             pass
 
     async def get_user(self, user_id: int) -> dict[str, Any]:
@@ -95,7 +102,6 @@ async def main() -> None:
 
     # Make multiple calls to trigger circuit breaker
     for i in range(15):
-
         await service.get_user(i)
 
         # Show stats

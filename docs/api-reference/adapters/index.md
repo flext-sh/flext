@@ -34,9 +34,9 @@ The Adapters APIs Hub provides complete API documentation for hexagonal architec
 
 ### **Adapter API Categories**
 
-| **API Documentation** | **Architecture** | **Validation** | **Status** | **Key Features** |
-|-----------------------|------------------|----------------|------------|------------------|
-| **[FLX Adapters Reference](./flx-adapters-comprehensive-reference.md)** | Hexagonal | Source Validated | ✅ Production | Inbound/outbound ports, Oracle adapters |
+| **API Documentation**                                                   | **Architecture** | **Validation**   | **Status**    | **Key Features**                        |
+| ----------------------------------------------------------------------- | ---------------- | ---------------- | ------------- | --------------------------------------- |
+| **[FLX Adapters Reference](./flx-adapters-comprehensive-reference.md)** | Hexagonal        | Source Validated | ✅ Production | Inbound/outbound ports, Oracle adapters |
 
 ### **🚀 Adapter API Features**
 

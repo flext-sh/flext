@@ -11,7 +11,9 @@ def run_command(command) -> None:
     print("=" * 60)
 
     try:
-        result = subprocess.run(command, shell=True, capture_output=True, text=True, check=False)
+        result = subprocess.run(
+            command, shell=True, capture_output=True, text=True, check=False
+        )
         print(result.stdout)
         if result.stderr:
             print("STDERR:", result.stderr)
@@ -28,31 +30,22 @@ def main() -> None:
     commands = [
         # Help
         f"{base_cmd} --help",
-
         # Version (table format - default)
         f"{base_cmd} version",
-
         # Version (JSON format)
         f"{base_cmd} version --format json",
-
         # Config show (table format)
         f"{base_cmd} config show",
-
         # Config show (JSON format)
         f"{base_cmd} config show --format json",
-
         # List entities (table format)
         f"{base_cmd} list-entities --entity-type=all --limit=5",
-
         # List entities (CSV format)
         f"{base_cmd} list-entities --entity-type=orders --format csv",
-
         # Health check (table format)
         f"{base_cmd} health",
-
         # Show logs (table format)
         f"{base_cmd} show-logs --hours=1 --level=INFO",
-
         # Show logs (JSON format)
         f"{base_cmd} show-logs --hours=1 --format json",
     ]

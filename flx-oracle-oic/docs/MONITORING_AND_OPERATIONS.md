@@ -19,12 +19,14 @@
 ### Key Monitoring Areas
 
 1. **Integration Performance**
+
    - Execution times
    - Success/failure rates
    - Throughput metrics
    - Resource utilization
 
 2. **Data Quality**
+
    - Record counts
    - Validation errors
    - Transformation failures

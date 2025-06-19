@@ -33,7 +33,7 @@ Commands:
 
 ```bash
 $ python -m oud_automation env-info
-             Environment Variables             
+             Environment Variables
 ┏━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━┓
 ┃ Variable             ┃ Value                ┃
 ┡━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━┩
@@ -51,7 +51,7 @@ $ python -m oud_automation env-info
 
 ```bash
 $ python -m oud_automation health
-       System Health       
+       System Health
 ┏━━━━━━━━━━━━━━━━━┳━━━━━━━┓
 ┃ Key             ┃ Value ┃
 ┡━━━━━━━━━━━━━━━━━╇━━━━━━━┩
@@ -65,7 +65,7 @@ $ python -m oud_automation health
 
 ```bash
 $ python -m oud_automation test-connection
-                                Connection Test                                 
+                                Connection Test
 ┏━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 ┃ Key             ┃ Value                                                      ┃
 ┡━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
@@ -84,7 +84,7 @@ $ python -m oud_automation test-connection
 
 ```bash
 $ python -m oud_automation ldif-process test.ldif
-                            LDIF Analysis: test.ldif                            
+                            LDIF Analysis: test.ldif
 ┏━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 ┃ Key            ┃ Value                                                       ┃
 ┡━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
@@ -100,7 +100,7 @@ $ python -m oud_automation ldif-process test.ldif
 
 ```bash
 $ python -m oud_automation ldap-search "dc=network,dc=ctbc" "(objectClass=*)" 3
-   LDAP Search: dc=network,dc=ctbc   
+   LDAP Search: dc=network,dc=ctbc
 ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 ┃ dn                                ┃
 ┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
@@ -120,7 +120,7 @@ $ python -m oud_automation --json env-info
     "Value": "localhost"
   },
   {
-    "Variable": "TARGET_LDAP_PORT", 
+    "Variable": "TARGET_LDAP_PORT",
     "Value": "3389"
   },
   // ... resto em JSON
@@ -155,7 +155,7 @@ $ python -m oud_automation --json env-info
 - Mostra vendor, version, naming contexts
 - Testa conectividade real
 
-### ✅ Processamento LDIF Real  
+### ✅ Processamento LDIF Real
 
 - Lê arquivos LDIF reais
 - Analisa objectClasses e atributos
@@ -181,36 +181,36 @@ $ python -m oud_automation --json env-info
 
 ## 📊 Métricas Finais
 
-| Métrica | Antes | Depois | Melhoria |
-|---------|-------|--------|----------|
-| **Arquivos** | ~15 | 1 | -93% |
-| **Linhas** | ~3000+ | 432 | -86% |
-| **Classes** | ~20+ | 4 | -80% |
-| **Funcionalidades** | 100% | 100% | Mantido |
-| **Conexões Reais** | ❌ Mock | ✅ Real | +100% |
+| Métrica             | Antes   | Depois  | Melhoria |
+| ------------------- | ------- | ------- | -------- |
+| **Arquivos**        | ~15     | 1       | -93%     |
+| **Linhas**          | ~3000+  | 432     | -86%     |
+| **Classes**         | ~20+    | 4       | -80%     |
+| **Funcionalidades** | 100%    | 100%    | Mantido  |
+| **Conexões Reais**  | ❌ Mock | ✅ Real | +100%    |
 
 ## ✅ Comandos Testados
 
-| Comando | Status | Descrição |
-|---------|--------|-----------|
-| `--help` | ✅ | Help system funcional |
-| `env-info` | ✅ | Lista env vars com tabela |
-| `health` | ✅ | Health check real |
-| `test-connection` | ✅ | Conexão LDAP real |
-| `ldap-search` | ✅ | Busca LDAP real |
-| `ldif-process` | ✅ | Processa LDIF real |
-| `schema-migrate` | ✅ | Simulação migração |
-| `--json` | ✅ | Output JSON |
-| `--csv` | ✅ | Output CSV |
+| Comando           | Status | Descrição                 |
+| ----------------- | ------ | ------------------------- |
+| `--help`          | ✅     | Help system funcional     |
+| `env-info`        | ✅     | Lista env vars com tabela |
+| `health`          | ✅     | Health check real         |
+| `test-connection` | ✅     | Conexão LDAP real         |
+| `ldap-search`     | ✅     | Busca LDAP real           |
+| `ldif-process`    | ✅     | Processa LDIF real        |
+| `schema-migrate`  | ✅     | Simulação migração        |
+| `--json`          | ✅     | Output JSON               |
+| `--csv`           | ✅     | Output CSV                |
 
 ## 🎉 Resultado Final
 
-✅ **KISS**: Single file, 432 linhas, zero complexidade  
-✅ **SOLID**: Cada classe uma responsabilidade  
-✅ **DRY**: Zero duplicação de código  
-✅ **Funcional**: Todas as funcionalidades testadas  
-✅ **Real**: Conexões LDAP e LDIF reais  
-✅ **Clean**: Código limpo e legível  
+✅ **KISS**: Single file, 432 linhas, zero complexidade
+✅ **SOLID**: Cada classe uma responsabilidade
+✅ **DRY**: Zero duplicação de código
+✅ **Funcional**: Todas as funcionalidades testadas
+✅ **Real**: Conexões LDAP e LDIF reais
+✅ **Clean**: Código limpo e legível
 
 **A CLI está 100% funcional, testada e pronta para produção!**
 

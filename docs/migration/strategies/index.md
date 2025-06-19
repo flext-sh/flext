@@ -18,8 +18,8 @@
 
 ### **Core Topics**
 
-| **Topic** | **Function** | **Audience** | **Status** |
-|-----------|--------------|--------------|------------|
+| **Topic**                                         | **Function**                     | **Audience**         | **Status**        |
+| ------------------------------------------------- | -------------------------------- | -------------------- | ----------------- |
 | [Migration Strategies](./migration-strategies.md) | Strategic planning methodologies | Technical architects | 🚧 In Development |
 
 ### **📋 Learning Path**
@@ -55,7 +55,7 @@
 ## 📊 **Section Metrics**
 
 - **Documents**: 1 file (placeholder)
-- **Completeness**: 25%  
+- **Completeness**: 25%
 - **Last Updated**: June 11, 2025
 
 ---

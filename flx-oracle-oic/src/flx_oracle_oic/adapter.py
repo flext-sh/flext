@@ -15,6 +15,7 @@ else:
         def __init__(self, **kwargs: Any) -> None:
             pass
 
+
 from .auth import AuthenticationError, AuthToken, OICAuthenticator
 from .config import OracleOicConfig
 from .constants import (
@@ -57,7 +58,9 @@ class OracleOicHttpAdapter(HttpClientAdapter):
         if "labels" not in kwargs:
             try:
                 # Lazy import to avoid circular dependencies
-                MetricLabels = lazy_import("flx.infra.observability.metrics_system", "MetricLabels")
+                MetricLabels = lazy_import(
+                    "flx.infra.observability.metrics_system", "MetricLabels"
+                )
 
                 kwargs["labels"] = MetricLabels(
                     {"service": "oic-cli", "adapter": "oic-http"}

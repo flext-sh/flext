@@ -2,7 +2,9 @@ import os
 import re
 
 # Get the absolute path to the models.py file
-models_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "dc-api-x/src/dc_api_x/models.py")
+models_path = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), "dc-api-x/src/dc_api_x/models.py"
+)
 
 # Read the file content
 with open(models_path, encoding="utf-8") as f:

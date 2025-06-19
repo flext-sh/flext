@@ -62,7 +62,9 @@ async def demonstrate_meta_factory() -> None:
 
         print(f"✅ Created adapter: {wms_adapter.__class__.__name__}")
         print(f"   Class module: {wms_adapter.__class__.__module__}")
-        print(f"   Available methods: {[m for m in dir(wms_adapter) if not m.startswith('_') and callable(getattr(wms_adapter, m))][:5]}...")
+        print(
+            f"   Available methods: {[m for m in dir(wms_adapter) if not m.startswith('_') and callable(getattr(wms_adapter, m))][:5]}..."
+        )
 
         # Show adapter capabilities
         if hasattr(wms_adapter, "has_capability"):
@@ -184,7 +186,11 @@ async def demonstrate_meta_factory() -> None:
         print(f"   Module: {CustomAdapter.__module__}")
 
         # Show generated class details
-        methods = [m for m in dir(CustomAdapter) if not m.startswith("_") and callable(getattr(CustomAdapter, m))]
+        methods = [
+            m
+            for m in dir(CustomAdapter)
+            if not m.startswith("_") and callable(getattr(CustomAdapter, m))
+        ]
         print(f"   Generated methods ({len(methods)}): {methods[:8]}...")
 
         # Show docstring
@@ -212,6 +218,7 @@ async def demonstrate_meta_factory() -> None:
     except Exception as e:
         print(f"❌ Custom adapter generation failed: {e}")
         import traceback
+
         traceback.print_exc()
 
     print("\n📋 Phase 3: Schema File Demonstration")
@@ -335,8 +342,12 @@ async def demonstrate_meta_factory() -> None:
             "connection_url": "https://service.example.com/api/v1",
         }
 
-        template_adapter = enhanced_factory.create_adapter(basic_template, **template_config)
-        print(f"✅ Created template-based adapter: {template_adapter.__class__.__name__}")
+        template_adapter = enhanced_factory.create_adapter(
+            basic_template, **template_config
+        )
+        print(
+            f"✅ Created template-based adapter: {template_adapter.__class__.__name__}"
+        )
 
     except Exception as e:
         print(f"❌ Template system test failed: {e}")

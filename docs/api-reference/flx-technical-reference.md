@@ -49,12 +49,14 @@ FLX implements clean hexagonal architecture with strict layer separation:
 ### **Layer Responsibilities**
 
 1. **Domain Layer** (`flx.core.*`)
+
    - Pure business logic and rules
    - Entities with identity and lifecycle
    - Domain events for communication
    - Value objects for immutable data
 
 2. **Application Layer** (`flx.application.*`)
+
    - Use case orchestration
    - Application services coordination
    - Bootstrap and dependency injection
@@ -81,16 +83,16 @@ from datetime import datetime
 
 class User(Entity):
     """User entity with identity and lifecycle management."""
-    
+
     username: str
     email: str
     created_at: Optional[datetime] = None
-    
+
     def change_email(self, new_email: str) -> None:
         """Change user email with audit trail."""
         self.email = new_email
         self.touch()  # Updates timestamp automatically
-    
+
     def model_post_init(self, __context):
         """Initialize entity after creation."""
         super().model_post_init(__context)
@@ -99,19 +101,19 @@ class User(Entity):
 
 class Order(AggregateRoot):
     """Order aggregate root with event emission."""
-    
+
     customer_id: str
     status: str = "pending"
     total: float = 0.0
-    
+
     def confirm(self) -> None:
         """Confirm order and emit domain event."""
         if self.status != "pending":
             raise ValueError("Order already confirmed")
-        
+
         self.status = "confirmed"
         self.increment_version()  # Optimistic locking
-        
+
         # Emit domain event
         self.add_event({
             "event_type": "order_confirmed",
@@ -146,12 +148,12 @@ from typing import Any, Dict
 
 class ApiPort(ABC):
     """Port for HTTP API operations."""
-    
+
     @abstractmethod
     async def handle_request(self, request: Dict[str, Any]) -> Dict[str, Any]:
         """Handle incoming HTTP request."""
         ...
-    
+
     @abstractmethod
     async def authenticate_request(self, headers: Dict[str, str]) -> bool:
         """Authenticate incoming request."""
@@ -160,7 +162,7 @@ class ApiPort(ABC):
 # flx/ports/inbound/cli.py
 class CliPort(ABC):
     """Port for CLI operations."""
-    
+
     @abstractmethod
     async def execute_command(self, command: str, args: Dict[str, Any]) -> Any:
         """Execute CLI command with arguments."""
@@ -175,22 +177,22 @@ from typing import Any, Dict, List, Optional
 
 class DatabasePort(ABC):
     """Port for database operations."""
-    
+
     @abstractmethod
     async def create(self, entity: Dict[str, Any]) -> str:
         """Create new entity and return ID."""
         ...
-    
+
     @abstractmethod
     async def find_by_id(self, entity_id: str) -> Optional[Dict[str, Any]]:
         """Find entity by ID."""
         ...
-    
+
     @abstractmethod
     async def update(self, entity_id: str, data: Dict[str, Any]) -> bool:
         """Update entity data."""
         ...
-    
+
     @abstractmethod
     async def delete(self, entity_id: str) -> bool:
         """Delete entity by ID."""
@@ -199,17 +201,17 @@ class DatabasePort(ABC):
 # flx/ports/outbound/cache.py
 class CachePort(ABC):
     """Port for cache operations."""
-    
+
     @abstractmethod
     async def get(self, key: str) -> Optional[Any]:
         """Get value from cache."""
         ...
-    
+
     @abstractmethod
     async def set(self, key: str, value: Any, ttl: Optional[int] = None) -> bool:
         """Set value in cache with optional TTL."""
         ...
-    
+
     @abstractmethod
     async def delete(self, key: str) -> bool:
         """Delete key from cache."""
@@ -229,17 +231,17 @@ import redis.asyncio as redis
 
 class RedisAdapter(BaseAdapter, CachePort):
     """Redis cache adapter implementation."""
-    
+
     # Configuration schema
     host: str = Field(default="localhost", description="Redis host")
     port: int = Field(default=6379, description="Redis port")
     db: int = Field(default=0, description="Redis database number")
     password: Optional[str] = Field(default=None, description="Redis password")
-    
+
     def __init__(self, **data):
         super().__init__(**data)
         self._redis_client: Optional[redis.Redis] = None
-    
+
     async def _connect(self) -> None:
         """Initialize Redis connection."""
         self._redis_client = redis.Redis(
@@ -249,60 +251,60 @@ class RedisAdapter(BaseAdapter, CachePort):
             password=self.password,
             decode_responses=True
         )
-        
+
         # Test connection
         await self._redis_client.ping()
         self.logger.info(f"Connected to Redis at {self.host}:{self.port}")
-    
+
     async def _disconnect(self) -> None:
         """Close Redis connection."""
         if self._redis_client:
             await self._redis_client.close()
             self._redis_client = None
             self.logger.info("Disconnected from Redis")
-    
+
     async def _health_check(self) -> bool:
         """Check Redis connection health."""
         if not self._redis_client:
             return False
-        
+
         try:
             await self._redis_client.ping()
             return True
         except Exception as e:
             self.logger.error(f"Redis health check failed: {e}")
             return False
-    
+
     # Port interface implementation
     async def get(self, key: str) -> Optional[Any]:
         """Get value from Redis cache."""
         if not self._redis_client:
             raise RuntimeError("Redis client not connected")
-        
+
         try:
             value = await self._redis_client.get(key)
             return value
         except Exception as e:
             self.logger.error(f"Failed to get key {key}: {e}")
             return None
-    
+
     async def set(self, key: str, value: Any, ttl: Optional[int] = None) -> bool:
         """Set value in Redis cache."""
         if not self._redis_client:
             raise RuntimeError("Redis client not connected")
-        
+
         try:
             result = await self._redis_client.set(key, value, ex=ttl)
             return bool(result)
         except Exception as e:
             self.logger.error(f"Failed to set key {key}: {e}")
             return False
-    
+
     async def delete(self, key: str) -> bool:
         """Delete key from Redis cache."""
         if not self._redis_client:
             raise RuntimeError("Redis client not connected")
-        
+
         try:
             result = await self._redis_client.delete(key)
             return result > 0
@@ -325,16 +327,16 @@ from typing import Any, Dict, Optional
 
 class CacheService(BaseInfraService):
     """Cache infrastructure service with Redis and memory fallback."""
-    
+
     def __init__(self, config: Optional[Dict[str, Any]] = None):
         super().__init__("cache", config)
         self._redis_client = None
         self._memory_cache: Dict[str, Any] = {}
-    
+
     async def start(self) -> None:
         """Start cache service."""
         await super().start()
-        
+
         # Try to connect to Redis
         try:
             redis_config = self._config.get("redis", {})
@@ -342,14 +344,14 @@ class CacheService(BaseInfraService):
             self._logger.info("Cache service started with Redis backend")
         except Exception as e:
             self._logger.warning(f"Redis unavailable, using memory cache: {e}")
-    
+
     async def stop(self) -> None:
         """Stop cache service."""
         if self._redis_client:
             await self._redis_client.close()
         self._memory_cache.clear()
         await super().stop()
-    
+
     async def health_check(self) -> ServiceHealthStatus:
         """Check cache service health."""
         if self._redis_client:
@@ -358,9 +360,9 @@ class CacheService(BaseInfraService):
                 return ServiceHealthStatus.HEALTHY
             except Exception:
                 return ServiceHealthStatus.DEGRADED
-        
+
         return ServiceHealthStatus.HEALTHY  # Memory cache always works
-    
+
     async def get(self, key: str) -> Optional[Any]:
         """Get value from cache."""
         if self._redis_client:
@@ -368,20 +370,20 @@ class CacheService(BaseInfraService):
                 return await self._redis_client.get(key)
             except Exception as e:
                 self._logger.error(f"Redis get failed: {e}")
-        
+
         return self._memory_cache.get(key)
-    
+
     async def set(self, key: str, value: Any, ttl: Optional[int] = None) -> bool:
         """Set value in cache."""
         success = False
-        
+
         if self._redis_client:
             try:
                 await self._redis_client.set(key, value, ex=ttl)
                 success = True
             except Exception as e:
                 self._logger.error(f"Redis set failed: {e}")
-        
+
         # Always store in memory as fallback
         self._memory_cache[key] = value
         return success or True  # Memory cache always succeeds
@@ -392,21 +394,25 @@ class CacheService(BaseInfraService):
 Based on the source code structure in `flx/infra/`:
 
 1. **Cache Service** (`cache/cache_service.py`)
+
    - Redis with memory fallback
    - TTL support and eviction policies
    - Health monitoring and failover
 
 2. **Database Service** (`database/engine.py`)
+
    - SQLAlchemy async engine
    - Connection pooling
    - Transaction management
 
 3. **HTTP Client Service** (`http/client_service.py`)
+
    - HTTP/HTTPS client with retries
    - Authentication integration
    - Request/response logging
 
 4. **Security Service** (`security/services.py`)
+
    - Authentication providers
    - JWT token management
    - Role-based authorization
@@ -444,7 +450,7 @@ async def test_cache_operations():
         await adapter.set("test_key", "test_value")
         value = await adapter.get("test_key")
         assert value == "test_value"
-        
+
         # Test TTL
         await adapter.set("ttl_key", "ttl_value", ttl=1)
         await asyncio.sleep(2)
@@ -478,19 +484,19 @@ from typing import Optional
 
 class ApplicationConfig(HierarchicalConfig):
     """Application configuration with hierarchy."""
-    
+
     # Database configuration
     database_url: str = Field(..., description="Database connection URL")
     database_pool_size: int = Field(default=10, description="Connection pool size")
-    
+
     # Cache configuration
     cache_backend: str = Field(default="redis", description="Cache backend type")
     cache_ttl: int = Field(default=3600, description="Default TTL in seconds")
-    
+
     # Security configuration
     jwt_secret: str = Field(..., description="JWT signing secret")
     jwt_expiry: int = Field(default=3600, description="JWT expiry in seconds")
-    
+
     # Observability configuration
     metrics_enabled: bool = Field(default=True, description="Enable metrics collection")
     log_level: str = Field(default="INFO", description="Logging level")
@@ -524,12 +530,12 @@ from flx.infra.observability.health import HealthService
 
 class ObservabilityService(BaseInfraService):
     """Comprehensive observability service."""
-    
+
     def __init__(self, config: Optional[Dict[str, Any]] = None):
         super().__init__("observability", config)
         self.metrics = MetricsService()
         self.health = HealthService()
-    
+
     async def record_operation(self, operation: str, duration: float, success: bool):
         """Record operation metrics."""
         await self.metrics.record_histogram(
@@ -537,12 +543,12 @@ class ObservabilityService(BaseInfraService):
             duration,
             tags={"operation": operation, "success": str(success)}
         )
-        
+
         await self.metrics.increment_counter(
             "operation_count",
             tags={"operation": operation, "result": "success" if success else "error"}
         )
-    
+
     async def get_system_health(self) -> Dict[str, Any]:
         """Get comprehensive system health."""
         return {
@@ -560,10 +566,10 @@ from flx.infra.observability.health import HealthCheck, HealthStatus
 
 class DatabaseHealthCheck(HealthCheck):
     """Database health check implementation."""
-    
+
     def __init__(self, database_service):
         self.database_service = database_service
-    
+
     async def check(self) -> HealthStatus:
         """Check database connectivity."""
         try:

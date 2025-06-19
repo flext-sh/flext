@@ -6,6 +6,7 @@
 ## Quick Summary
 
 I have validated the tap-oic documentation against:
+
 1. ✅ Official Oracle Integration Cloud REST API documentation
 2. ✅ Singer specification and best practices
 3. ✅ Meltano patterns and architecture guidelines
@@ -15,6 +16,7 @@ I have validated the tap-oic documentation against:
 ### 1. Oracle Integration Cloud Capabilities
 
 **What OIC Actually Does** (per official Oracle docs):
+
 - ✅ Import pre-built integration archives (.iar files)
 - ✅ Export integrations for migration
 - ✅ Activate/deactivate existing integrations
@@ -22,6 +24,7 @@ I have validated the tap-oic documentation against:
 - ✅ Update connection properties
 
 **What OIC CANNOT Do** (despite tap-oic claims):
+
 - ❌ Create integrations programmatically from scratch
 - ❌ Generate workflows from Singer configurations
 - ❌ Build integration logic via REST API
@@ -30,11 +33,13 @@ I have validated the tap-oic documentation against:
 ### 2. Singer/Meltano Compliance Issues
 
 **Singer Specification Violations**:
+
 - tap-oic claims to act as both a tap (extractor) AND a generator
 - Violates single-responsibility principle
 - Mixes extraction with target-like behavior
 
 **Correct Singer Pattern**:
+
 ```bash
 # ✅ CORRECT: Taps extract data
 tap-oic --config config.json | target-postgres
@@ -45,22 +50,24 @@ tap-oic generate --source tap-mysql --target target-postgres
 
 ### 3. Documentation Accuracy Issues
 
-| Document | Issue | Severity |
-|----------|-------|----------|
-| README.md | Claims integration generation capability | CRITICAL |
-| API_REFERENCE.md | Shows non-existent creation endpoints | CRITICAL |
-| INTEGRATION_GENERATION.md | Entire premise is false | CRITICAL |
-| OIC_CAPABILITIES.md | Contains contradictory information | HIGH |
-| EXAMPLES.md | Shows impossible operations | HIGH |
+| Document                  | Issue                                    | Severity |
+| ------------------------- | ---------------------------------------- | -------- |
+| README.md                 | Claims integration generation capability | CRITICAL |
+| API_REFERENCE.md          | Shows non-existent creation endpoints    | CRITICAL |
+| INTEGRATION_GENERATION.md | Entire premise is false                  | CRITICAL |
+| OIC_CAPABILITIES.md       | Contains contradictory information       | HIGH     |
+| EXAMPLES.md               | Shows impossible operations              | HIGH     |
 
 ## Validation Sources Used
 
 1. **Oracle Official Documentation**
+
    - REST API for Oracle Integration 3
    - Integration management endpoints
    - Confirmed: Only archive import, no programmatic creation
 
 2. **Singer.io Specification**
+
    - Official Singer protocol documentation
    - Best practices for tap development
    - Clear tap vs target separation
@@ -75,11 +82,13 @@ tap-oic generate --source tap-mysql --target target-postgres
 ### Immediate Actions Required
 
 1. **Remove False Claims**
+
    - Delete all references to integration generation
    - Remove workflow creation capabilities
    - Correct API endpoint documentation
 
 2. **Restructure Documentation**
+
    - Focus on monitoring and extraction (true tap behavior)
    - Separate management operations into different tool
    - Align with Singer/Meltano patterns
@@ -113,6 +122,7 @@ oic-cli (Separate Management Tool)
 ## Conclusion
 
 The tap-oic documentation contains fundamental inaccuracies about Oracle Integration Cloud's capabilities. Major revisions are required to align with:
+
 - Oracle's actual REST API capabilities
 - Singer tap specifications
 - Meltano architectural patterns

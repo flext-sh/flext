@@ -45,7 +45,9 @@ class AdvancedWMSOrchestration:
         # Decide which pipeline to run
         if inventory_status.get("last_run"):
             last_run = datetime.fromisoformat(inventory_status["last_run"])
-            hours_since_last_run = (datetime.now(tz=datetime.timezone.utc) - last_run).total_seconds() / 3600
+            hours_since_last_run = (
+                datetime.now(tz=datetime.timezone.utc) - last_run
+            ).total_seconds() / 3600
 
             if hours_since_last_run > 6:
                 self.orchestrator.run_pipeline("inventory_sync")
@@ -77,7 +79,6 @@ class AdvancedWMSOrchestration:
         backoff_seconds = 60
 
         while retry_count < max_retries:
-
             result = self.orchestrator.run_pipeline(pipeline_name)
 
             if result["status"] == "success":
@@ -90,7 +91,9 @@ class AdvancedWMSOrchestration:
 
         return result
 
-    def create_dynamic_pipeline(self, stream_criteria: dict[str, Any]) -> dict[str, Any]:  # noqa: ARG002
+    def create_dynamic_pipeline(
+        self, stream_criteria: dict[str, Any]
+    ) -> dict[str, Any]:
         """Create pipeline dynamically based on criteria."""
         # Discover available streams
         import subprocess
@@ -147,7 +150,6 @@ class AdvancedWMSOrchestration:
                 last_run = last_execution.get(pipeline_name)
 
                 if last_run is None or (current_time - last_run) >= interval:
-
                     # Run asynchronously
                     await self.orchestrator.run_pipeline_async(pipeline_name)
 

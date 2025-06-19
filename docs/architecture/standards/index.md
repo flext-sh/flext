@@ -24,11 +24,11 @@ This hub provides comprehensive architecture standards and consistency guideline
 
 ### **Core Standards Topics**
 
-| **Topic** | **Function** | **Audience** | **Complexity** | **Status** |
-|-----------|--------------|--------------|----------------|------------|
-| [**Architectural Consistency**](./architectural-consistency-guide.md) | Consistency guidelines & standards | Technical leads, teams | ⭐⭐ | ✅ Updated |
-| [**FLX Architecture Standards**](./flx-architecture-standards.md) | Core architecture design standards | Architects, senior developers | ⭐⭐⭐ | ✅ Updated |
-| [**Modernization Roadmap**](./modernization-roadmap.md) | Framework evolution strategy | Framework developers | ⭐⭐⭐⭐ | ✅ Updated |
+| **Topic**                                                             | **Function**                       | **Audience**                  | **Complexity** | **Status** |
+| --------------------------------------------------------------------- | ---------------------------------- | ----------------------------- | -------------- | ---------- |
+| [**Architectural Consistency**](./architectural-consistency-guide.md) | Consistency guidelines & standards | Technical leads, teams        | ⭐⭐           | ✅ Updated |
+| [**FLX Architecture Standards**](./flx-architecture-standards.md)     | Core architecture design standards | Architects, senior developers | ⭐⭐⭐         | ✅ Updated |
+| [**Modernization Roadmap**](./modernization-roadmap.md)               | Framework evolution strategy       | Framework developers          | ⭐⭐⭐⭐       | ✅ Updated |
 
 ---
 
@@ -37,24 +37,24 @@ This hub provides comprehensive architecture standards and consistency guideline
 ### **🎯 For Technical Leads**
 
 ```
-1. [Architectural Consistency](./architectural-consistency-guide.md) → 
-2. [FLX Architecture Standards](./flx-architecture-standards.md) → 
+1. [Architectural Consistency](./architectural-consistency-guide.md) →
+2. [FLX Architecture Standards](./flx-architecture-standards.md) →
 3. [Team Implementation](../../development/index.md)
 ```
 
 ### **⚡ For Architects**
 
 ```
-1. [FLX Architecture Standards](./flx-architecture-standards.md) → 
-2. [Modernization Roadmap](./modernization-roadmap.md) → 
+1. [FLX Architecture Standards](./flx-architecture-standards.md) →
+2. [Modernization Roadmap](./modernization-roadmap.md) →
 3. [Design Patterns](../design/index.md)
 ```
 
 ### **🏢 For Development Teams**
 
 ```
-1. [Architectural Consistency](./architectural-consistency-guide.md) → 
-2. [Development Standards](../../development/index.md) → 
+1. [Architectural Consistency](./architectural-consistency-guide.md) →
+2. [Development Standards](../../development/index.md) →
 3. [Testing Standards](../../development/testing/index.md)
 ```
 

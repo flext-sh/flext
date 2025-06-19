@@ -23,7 +23,7 @@ This document describes field mappings between Oracle WMS and the Inventory (INV
 ### **Core Field Mappings**
 
 - **ShipmentLine** ← `orderdtl__ship_request_line__in`
-- **ExceptionCode** ← `lock_code`  
+- **ExceptionCode** ← `lock_code`
 - **ExceptionName** ← `lock_description` (defaults to "Shipment Line on Hold for Update" if empty)
 - **ExceptionComments** ← `comments` (defaults to "The shipment line was placed on hold by a shipment request for update" if empty)
 - **autocreate_lock_flg** → always "True"
@@ -38,27 +38,27 @@ This document describes field mappings between Oracle WMS and the Inventory (INV
 
 ## 📊 **Field Mapping Table**
 
-| WMS Column | Required | INV Column | Format | Notes |
-|------------|----------|------------|---------|-------|
-| `orderdtl__ship_request_line__in` | Yes | ShipmentLine | String | Primary shipment line identifier |
-| `lock_code` | Yes | ExceptionCode | String | Lock/exception code |
-| `lock_description` | No | ExceptionName | String | Default: "Shipment Line on Hold for Update" |
-| `comments` | No | ExceptionComments | String | Default: "The shipment line was placed on hold by a shipment request for update" |
-| N/A | N/A | autocreate_lock_flg | Boolean | Always set to "True" |
+| WMS Column                        | Required | INV Column          | Format  | Notes                                                                            |
+| --------------------------------- | -------- | ------------------- | ------- | -------------------------------------------------------------------------------- |
+| `orderdtl__ship_request_line__in` | Yes      | ShipmentLine        | String  | Primary shipment line identifier                                                 |
+| `lock_code`                       | Yes      | ExceptionCode       | String  | Lock/exception code                                                              |
+| `lock_description`                | No       | ExceptionName       | String  | Default: "Shipment Line on Hold for Update"                                      |
+| `comments`                        | No       | ExceptionComments   | String  | Default: "The shipment line was placed on hold by a shipment request for update" |
+| N/A                               | N/A      | autocreate_lock_flg | Boolean | Always set to "True"                                                             |
 
 ### **API Operation Mappings**
 
-| WMS API Operation | INV ActionType | Description |
-|-------------------|----------------|-------------|
-| `bulk_lock` | "LOCK" or "APPLY_HOLD" | Lock shipment line operations |
-| `bulk_Unlock` | "RELEASELOCK" or "RELEASE_HOLD" | Unlock shipment line operations |
+| WMS API Operation | INV ActionType                  | Description                     |
+| ----------------- | ------------------------------- | ------------------------------- |
+| `bulk_lock`       | "LOCK" or "APPLY_HOLD"          | Lock shipment line operations   |
+| `bulk_Unlock`     | "RELEASELOCK" or "RELEASE_HOLD" | Unlock shipment line operations |
 
 ### **Response Mappings**
 
-| WMS Response | INV Field | Condition |
-|--------------|-----------|-----------|
-| `Status` | `Success` | True when `failure_count = 0` |
-| API Response | Response Back To Fusion | Complete operation status |
+| WMS Response | INV Field               | Condition                     |
+| ------------ | ----------------------- | ----------------------------- |
+| `Status`     | `Success`               | True when `failure_count = 0` |
+| API Response | Response Back To Fusion | Complete operation status     |
 
 ---
 

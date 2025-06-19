@@ -266,9 +266,9 @@ class TestE2EConfigValidation:
 
         for field in url_fields:
             if field in real_config:
-                assert real_config[field].startswith(
-                    "https://"
-                ), f"{field} should use HTTPS: {real_config[field]}"
+                assert real_config[field].startswith("https://"), (
+                    f"{field} should use HTTPS: {real_config[field]}"
+                )
 
 
 class TestE2EPerformance:

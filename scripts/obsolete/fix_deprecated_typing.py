@@ -26,7 +26,9 @@ def flx_deprecated_typing(file_path: Path) -> dict[str, int]:
         return {}
 
     # Get the original typing import line
-    typing_import_match = re.search(r"from typing import (.*?)(?:\n|$)", content, re.MULTILINE)
+    typing_import_match = re.search(
+        r"from typing import (.*?)(?:\n|$)", content, re.MULTILINE
+    )
     if not typing_import_match:
         return {}
 
@@ -40,9 +42,9 @@ def flx_deprecated_typing(file_path: Path) -> dict[str, int]:
         "Set": "set",
         "tuple": "tuple",
         "Optional": "Optional",  # Keep this for now
-        "Union": "Union",        # Keep this for now
-        "Any": "Any",            # Keep this
-        "TypeVar": "TypeVar",    # Keep this
+        "Union": "Union",  # Keep this for now
+        "Any": "Any",  # Keep this
+        "TypeVar": "TypeVar",  # Keep this
         "Callable": "Callable",  # Keep this
     }
 
@@ -124,7 +126,9 @@ def process_files(files: list[Path]) -> dict[str, int]:
 def main() -> None:
     """Main function to fix deprecated typing imports in all Python files."""
     if len(sys.argv) < 2:
-        print("Usage: python flx_deprecated_typing.py <directory_or_file> [directory_or_file2 ...]")
+        print(
+            "Usage: python flx_deprecated_typing.py <directory_or_file> [directory_or_file2 ...]"
+        )
         print("Example: python flx_deprecated_typing.py ./src ./tests")
         sys.exit(1)
 

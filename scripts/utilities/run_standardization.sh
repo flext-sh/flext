@@ -10,8 +10,8 @@ echo "=================================="
 # Verifica se as dependências estão instaladas
 echo "📦 Verificando dependências..."
 python3 -c "import tomli, tomli_w, rich" 2>/dev/null || {
-    echo "❌ Dependências não encontradas. Instalando..."
-    pip install tomli tomli-w rich
+	echo "❌ Dependências não encontradas. Instalando..."
+	pip install tomli tomli-w rich
 }
 
 # Executa validação inicial
@@ -25,13 +25,13 @@ python3 standardize_projects.py --force
 # Atualiza locks do Poetry
 echo "🔄 Atualizando Poetry locks..."
 find . -name "pyproject.toml" -not -path "./.venv/*" -not -path "./.mypy_cache/*" | while read -r project; do
-    project_dir=$(dirname "$project")
-    echo "  Processando: $project_dir"
-    cd "$project_dir"
-    if command -v poetry &>/dev/null; then
-        poetry lock --no-update 2>/dev/null || echo "    ⚠️  Erro no poetry lock"
-    fi
-    cd - >/dev/null
+	project_dir=$(dirname "$project")
+	echo "  Processando: $project_dir"
+	cd "$project_dir"
+	if command -v poetry &>/dev/null; then
+		poetry lock --no-update 2>/dev/null || echo "    ⚠️  Erro no poetry lock"
+	fi
+	cd - >/dev/null
 done
 
 # Validação final

@@ -42,6 +42,7 @@ This comprehensive documentation covers all aspects of Oracle WMS Singer tap imp
 ## 📖 **Documentation Structure**
 
 ### **🏗️ 1. Architecture & Design**
+
 **📁 Location**: [`architecture/`](architecture/README.md)
 **📊 Content**: Technical architecture, Singer specification implementation, data flow patterns
 **👥 Audience**: Senior Engineers, Architects
@@ -53,6 +54,7 @@ This comprehensive documentation covers all aspects of Oracle WMS Singer tap imp
 - **State Management**: Incremental sync and bookmark handling
 
 ### **📚 2. API Reference**
+
 **📁 Location**: [`api/`](api/README.md)
 **📊 Content**: Complete API specification, stream definitions, configuration options
 **👥 Audience**: Developers, Integration Engineers
@@ -64,6 +66,7 @@ This comprehensive documentation covers all aspects of Oracle WMS Singer tap imp
 - **Authentication APIs**: OAuth2, Basic, and API key authentication
 
 ### **📘 3. Implementation Guides**
+
 **📁 Location**: [`guides/`](guides/README.md)
 **📊 Content**: Step-by-step implementation with real-world scenarios
 **👥 Audience**: Developers, System Integrators
@@ -75,6 +78,7 @@ This comprehensive documentation covers all aspects of Oracle WMS Singer tap imp
 - **Production Deployment**: Enterprise deployment patterns and monitoring
 
 ### **💡 4. Examples & Tutorials**
+
 **📁 Location**: [`examples/`](examples/README.md)
 **📊 Content**: Practical examples from basic to advanced scenarios
 **👥 Audience**: All technical audiences
@@ -86,6 +90,7 @@ This comprehensive documentation covers all aspects of Oracle WMS Singer tap imp
 - **Performance Examples**: High-throughput extraction patterns
 
 ### **🔐 5. Security Implementation**
+
 **📁 Location**: [`security/`](security/README.md)
 **📊 Content**: Enterprise security practices and compliance
 **👥 Audience**: Security Engineers, DevOps
@@ -97,6 +102,7 @@ This comprehensive documentation covers all aspects of Oracle WMS Singer tap imp
 - **Network Security**: VPN, firewall, and secure connectivity
 
 ### **🎯 6. Performance & Patterns**
+
 **📁 Location**: [`patterns/`](patterns/README.md)
 **📊 Content**: Enterprise patterns and performance optimization
 **👥 Audience**: Senior Engineers, Performance Engineers
@@ -108,6 +114,7 @@ This comprehensive documentation covers all aspects of Oracle WMS Singer tap imp
 - **Parallel Processing**: Concurrent stream processing patterns
 
 ### **🚀 7. Deployment & Operations**
+
 **📁 Location**: [`deployment/`](deployment/README.md)
 **📊 Content**: Production deployment and operational procedures
 **👥 Audience**: DevOps Engineers, SRE Teams
@@ -124,31 +131,31 @@ This comprehensive documentation covers all aspects of Oracle WMS Singer tap imp
 
 ### **📖 Essential Reading**
 
-| Document | Purpose | Time Investment |
-|----------|---------|-----------------|
-| [Getting Started Guide](guides/README.md#getting-started) | First implementation | 30 minutes |
-| [Stream Configuration](api/README.md#stream-specifications) | Understanding data structures | 20 minutes |
-| [Authentication Setup](security/README.md#authentication) | Secure connectivity | 15 minutes |
-| [Performance Tuning](patterns/README.md#extraction-patterns) | Optimization strategies | 45 minutes |
+| Document                                                     | Purpose                       | Time Investment |
+| ------------------------------------------------------------ | ----------------------------- | --------------- |
+| [Getting Started Guide](guides/README.md#getting-started)    | First implementation          | 30 minutes      |
+| [Stream Configuration](api/README.md#stream-specifications)  | Understanding data structures | 20 minutes      |
+| [Authentication Setup](security/README.md#authentication)    | Secure connectivity           | 15 minutes      |
+| [Performance Tuning](patterns/README.md#extraction-patterns) | Optimization strategies       | 45 minutes      |
 
 ### **🎯 By Use Case**
 
-| Use Case | Primary Documentation | Supporting Resources |
-|----------|----------------------|---------------------|
-| **First Implementation** | [Implementation Guides](guides/README.md) | [Examples](examples/README.md), [API Reference](api/README.md) |
-| **Production Deployment** | [Deployment Guide](deployment/README.md) | [Security](security/README.md), [Patterns](patterns/README.md) |
-| **Performance Issues** | [Performance Patterns](patterns/README.md) | [Architecture](architecture/README.md) |
-| **Integration Development** | [API Reference](api/README.md) | [Examples](examples/README.md) |
-| **Troubleshooting** | [Implementation Guides](guides/README.md#troubleshooting) | [Deployment](deployment/README.md) |
+| Use Case                    | Primary Documentation                                     | Supporting Resources                                           |
+| --------------------------- | --------------------------------------------------------- | -------------------------------------------------------------- |
+| **First Implementation**    | [Implementation Guides](guides/README.md)                 | [Examples](examples/README.md), [API Reference](api/README.md) |
+| **Production Deployment**   | [Deployment Guide](deployment/README.md)                  | [Security](security/README.md), [Patterns](patterns/README.md) |
+| **Performance Issues**      | [Performance Patterns](patterns/README.md)                | [Architecture](architecture/README.md)                         |
+| **Integration Development** | [API Reference](api/README.md)                            | [Examples](examples/README.md)                                 |
+| **Troubleshooting**         | [Implementation Guides](guides/README.md#troubleshooting) | [Deployment](deployment/README.md)                             |
 
 ### **👥 By Role**
 
-| Role | Recommended Path | Key Documents |
-|------|------------------|---------------|
-| **Data Engineer** | Setup → Implementation → Optimization | [Guides](guides/README.md), [API](api/README.md), [Patterns](patterns/README.md) |
-| **DevOps Engineer** | Security → Deployment → Monitoring | [Security](security/README.md), [Deployment](deployment/README.md) |
-| **System Architect** | Architecture → Patterns → Security | [Architecture](architecture/README.md), [Patterns](patterns/README.md) |
-| **Developer** | Examples → API → Implementation | [Examples](examples/README.md), [API](api/README.md), [Guides](guides/README.md) |
+| Role                 | Recommended Path                      | Key Documents                                                                    |
+| -------------------- | ------------------------------------- | -------------------------------------------------------------------------------- |
+| **Data Engineer**    | Setup → Implementation → Optimization | [Guides](guides/README.md), [API](api/README.md), [Patterns](patterns/README.md) |
+| **DevOps Engineer**  | Security → Deployment → Monitoring    | [Security](security/README.md), [Deployment](deployment/README.md)               |
+| **System Architect** | Architecture → Patterns → Security    | [Architecture](architecture/README.md), [Patterns](patterns/README.md)           |
+| **Developer**        | Examples → API → Implementation       | [Examples](examples/README.md), [API](api/README.md), [Guides](guides/README.md) |
 
 ---
 
@@ -156,30 +163,30 @@ This comprehensive documentation covers all aspects of Oracle WMS Singer tap imp
 
 ### **Supported Oracle WMS Versions**
 
-| Version | API Support | Testing Status | Notes |
-|---------|-------------|----------------|-------|
-| **WMS 25B** | ✅ Full | ✅ Validated | Recommended version |
-| **WMS 24C** | ✅ Full | ✅ Tested | Production ready |
-| **WMS 23A** | ⚠️ Limited | ⚠️ Basic | Legacy support |
+| Version     | API Support | Testing Status | Notes               |
+| ----------- | ----------- | -------------- | ------------------- |
+| **WMS 25B** | ✅ Full     | ✅ Validated   | Recommended version |
+| **WMS 24C** | ✅ Full     | ✅ Tested      | Production ready    |
+| **WMS 23A** | ⚠️ Limited  | ⚠️ Basic       | Legacy support      |
 
 ### **Singer Specification Compliance**
 
-| Component | Specification | Implementation | Status |
-|-----------|---------------|----------------|---------|
-| **Discovery** | Singer v1.0 | Full compliance | ✅ Complete |
-| **Sync** | Singer v1.0 | Full compliance | ✅ Complete |
-| **State** | Singer v1.0 | Full compliance | ✅ Complete |
-| **Schema** | JSON Schema v7 | Full compliance | ✅ Complete |
-| **Catalog** | Singer v1.0 | Full compliance | ✅ Complete |
+| Component     | Specification  | Implementation  | Status      |
+| ------------- | -------------- | --------------- | ----------- |
+| **Discovery** | Singer v1.0    | Full compliance | ✅ Complete |
+| **Sync**      | Singer v1.0    | Full compliance | ✅ Complete |
+| **State**     | Singer v1.0    | Full compliance | ✅ Complete |
+| **Schema**    | JSON Schema v7 | Full compliance | ✅ Complete |
+| **Catalog**   | Singer v1.0    | Full compliance | ✅ Complete |
 
 ### **Data Stream Categories**
 
-| Category | Streams | Replication | Performance |
-|----------|---------|-------------|-------------|
-| **Core Warehouse** | 8 streams | Incremental/Full | High throughput |
-| **Operational** | 12 streams | Incremental | Standard |
-| **Master Data** | 6 streams | Full table | Low frequency |
-| **Transactional** | 15 streams | Incremental | Real-time |
+| Category           | Streams    | Replication      | Performance     |
+| ------------------ | ---------- | ---------------- | --------------- |
+| **Core Warehouse** | 8 streams  | Incremental/Full | High throughput |
+| **Operational**    | 12 streams | Incremental      | Standard        |
+| **Master Data**    | 6 streams  | Full table       | Low frequency   |
+| **Transactional**  | 15 streams | Incremental      | Real-time       |
 
 ---
 

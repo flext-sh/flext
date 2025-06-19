@@ -24,16 +24,16 @@ from typing import Dict, Any
 
 class FLXSingerAdapter(BaseAdapter):
     """Adapter for Singer SDK integration with FLX framework."""
-    
+
     def __init__(self, tap_class: type[Tap], target_class: type[Target]):
         self.tap_class = tap_class
         self.target_class = target_class
-    
+
     async def extract_data(self, config: Dict[str, Any]) -> Any:
         """Extract data using Singer tap."""
         tap = self.tap_class(config=config)
         return await tap.sync_all()
-    
+
     async def load_data(self, data: Any, config: Dict[str, Any]) -> bool:
         """Load data using Singer target."""
         target = self.target_class(config=config)
@@ -50,7 +50,7 @@ from singer_sdk.streams import RESTStream
 
 class CustomTap(Tap):
     """Custom tap for extracting data from your API."""
-    
+
     name = "tap-custom-api"
     config_jsonschema = {
         "type": "object",
@@ -59,13 +59,13 @@ class CustomTap(Tap):
             "api_key": {"type": "string"}
         }
     }
-    
+
     def discover_streams(self):
         return [CustomStream(tap=self)]
 
 class CustomStream(RESTStream):
     """Custom stream for your data source."""
-    
+
     name = "your_stream"
     path = "/api/data"
     primary_keys = ["id"]
@@ -86,7 +86,7 @@ from singer_sdk.sinks import SQLSink
 
 class CustomTarget(Target):
     """Custom target for loading data."""
-    
+
     name = "target-custom-db"
     config_jsonschema = {
         "type": "object",
@@ -94,12 +94,12 @@ class CustomTarget(Target):
             "connection_string": {"type": "string"}
         }
     }
-    
+
     default_sink_class = CustomSink
 
 class CustomSink(SQLSink):
     """Custom sink for your target database."""
-    
+
     def process_record(self, record: dict, context: dict) -> None:
         # Custom record processing logic
         super().process_record(record, context)
@@ -132,7 +132,7 @@ cookiecutter ./singer_sdk/cookiecutter/tap-template
 #### Create New Target
 
 ```bash
-# From Git repository  
+# From Git repository
 cookiecutter https://github.com/meltano/sdk --directory="cookiecutter/target-template"
 
 # From local SDK repo
@@ -168,14 +168,14 @@ from your_tap import CustomTap
 
 class TestSingerIntegration(BaseTestEngine):
     """Test Singer SDK integration with FLX."""
-    
+
     async def test_tap_extraction(self):
         tap = CustomTap(config=self.test_config)
         records = []
-        
+
         for record in tap.sync_all():
             records.append(record)
-        
+
         assert len(records) > 0
         assert all("id" in record for record in records)
 ```
@@ -210,7 +210,7 @@ plugins:
   extractors:
     - name: tap-custom-api
       pip_url: -e .
-      
+
   loaders:
     - name: target-custom-db
       pip_url: -e .

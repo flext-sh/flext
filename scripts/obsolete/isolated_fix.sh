@@ -33,7 +33,7 @@ pip install -e "$REPO_PATH"
 
 # Create a wrapper script to use the isolated environment
 WRAPPER_PATH="/home/marlonsc/pyauto/run_dcapix.sh"
-cat > "$WRAPPER_PATH" << 'EOF'
+cat >"$WRAPPER_PATH" <<'EOF'
 #!/bin/bash
 source "$HOME/pyauto/.venv_isolated/bin/activate"
 dcapix "$@"
@@ -43,4 +43,4 @@ chmod +x "$WRAPPER_PATH"
 
 echo ""
 echo "Setup complete. To use dcapix, run:"
-echo "/home/marlonsc/pyauto/run_dcapix.sh" 
+echo "/home/marlonsc/pyauto/run_dcapix.sh"

@@ -186,7 +186,8 @@ if __name__ == "__main__":
 
     if invalid_scripts:
         logger.error(
-            "Scripts em localização incorreta encontrados", count=len(invalid_scripts),
+            "Scripts em localização incorreta encontrados",
+            count=len(invalid_scripts),
         )
 
         for script in invalid_scripts:

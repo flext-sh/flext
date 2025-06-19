@@ -1,8 +1,8 @@
-name: 'dbt_ldap'
-version: '1.0.0'
+name: "dbt_ldap"
+version: "1.0.0"
 config-version: 2
 
-profile: 'dbt_ldap'
+profile: "dbt_ldap"
 
 model-paths: ["models"]
 analysis-paths: ["analyses"]
@@ -28,7 +28,7 @@ models:
       +schema: marts
 
 vars:
-  ldap_base_dn: 'dc=example,dc=com'
-  ldap_user_base: 'ou=users'
-  ldap_group_base: 'ou=groups'
-  ldap_ou_base: 'ou=departments'
+  ldap_base_dn: "dc=example,dc=com"
+  ldap_user_base: "ou=users"
+  ldap_group_base: "ou=groups"
+  ldap_ou_base: "ou=departments"

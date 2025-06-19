@@ -462,9 +462,9 @@ class WarehouseManager:
                                 end_time.replace("Z", "+00:00")
                             )
                             downtime_hours = (end_dt - start_dt).total_seconds() / 3600
-                            equipment_downtime[eq_id][
-                                "total_downtime_hours"
-                            ] += downtime_hours
+                            equipment_downtime[eq_id]["total_downtime_hours"] += (
+                                downtime_hours
+                            )
                         except (ValueError, TypeError):
                             pass
 

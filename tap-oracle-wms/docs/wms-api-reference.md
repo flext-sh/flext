@@ -82,8 +82,8 @@ X-WMS-User-Context: integration_user
 
 ```json
 {
-  "weight": "123.456789",     // ✓ Correct - preserves precision
-  "height": 123.456789        // ✗ May lose precision
+  "weight": "123.456789", // ✓ Correct - preserves precision
+  "height": 123.456789 // ✗ May lose precision
 }
 ```
 
@@ -258,17 +258,17 @@ GET /entity/{entity_name}
 
 **Query Parameters:**
 
-| Parameter | Type | Description | Default | Max |
-|-----------|------|-------------|---------|-----|
-| `page` | integer | Page number | 1 | - |
-| `page_size` | integer | Records per page | 20 | 1250 |
-| `page_mode` | string | `standard` or `sequenced` | standard | - |
-| `ordering` | string | Sort fields (comma-separated) | - | - |
-| `fields` | string | Fields to return (comma-separated) | all | - |
-| `values_list` | string | Return as array with specified fields | - | - |
-| `distinct` | boolean | Return distinct values only | false | - |
-| `{field}` | various | Filter by field value | - | - |
-| `{field}__{operator}` | various | Advanced filtering | - | - |
+| Parameter             | Type    | Description                           | Default  | Max  |
+| --------------------- | ------- | ------------------------------------- | -------- | ---- |
+| `page`                | integer | Page number                           | 1        | -    |
+| `page_size`           | integer | Records per page                      | 20       | 1250 |
+| `page_mode`           | string  | `standard` or `sequenced`             | standard | -    |
+| `ordering`            | string  | Sort fields (comma-separated)         | -        | -    |
+| `fields`              | string  | Fields to return (comma-separated)    | all      | -    |
+| `values_list`         | string  | Return as array with specified fields | -        | -    |
+| `distinct`            | boolean | Return distinct values only           | false    | -    |
+| `{field}`             | various | Filter by field value                 | -        | -    |
+| `{field}__{operator}` | various | Advanced filtering                    | -        | -    |
 
 **Examples:**
 
@@ -456,32 +456,32 @@ DELETE /entity/{entity_name}/{id}
 
 ### Filtering Operators
 
-| Operator | Description | Example | Data Types |
-|----------|-------------|---------|------------|
-| (none) | Exact match | `?status=ACTIVE` | All |
-| `__contains` | Contains substring | `?description__contains=widget` | String |
-| `__icontains` | Case-insensitive contains | `?description__icontains=Widget` | String |
-| `__startswith` | Starts with | `?code__startswith=PROD` | String |
-| `__istartswith` | Case-insensitive starts with | `?code__istartswith=prod` | String |
-| `__endswith` | Ends with | `?code__endswith=001` | String |
-| `__iendswith` | Case-insensitive ends with | `?code__iendswith=001` | String |
-| `__exact` | Exact match (explicit) | `?code__exact=ITEM001` | All |
-| `__iexact` | Case-insensitive exact | `?code__iexact=item001` | String |
-| `__gte` | Greater than or equal | `?qty__gte=100` | Numeric, Date |
-| `__gt` | Greater than | `?qty__gt=100` | Numeric, Date |
-| `__lte` | Less than or equal | `?qty__lte=100` | Numeric, Date |
-| `__lt` | Less than | `?qty__lt=100` | Numeric, Date |
-| `__in` | In list | `?status__in=ACTIVE,PENDING` | All |
-| `__range` | Between values | `?qty__range=10,100` | Numeric, Date |
-| `__isnull` | Is null/not null | `?deleted_ts__isnull=true` | All |
-| `__regex` | Regular expression | `?code__regex=^PROD.*001$` | String |
-| `__iregex` | Case-insensitive regex | `?code__iregex=^prod.*001$` | String |
-| `__year` | Extract year | `?create_ts__year=2025` | Date/DateTime |
-| `__month` | Extract month | `?create_ts__month=6` | Date/DateTime |
-| `__day` | Extract day | `?create_ts__day=15` | Date/DateTime |
-| `__week_day` | Day of week (1=Sunday) | `?create_ts__week_day=1` | Date/DateTime |
-| `__hour` | Extract hour | `?create_ts__hour=14` | DateTime |
-| `__minute` | Extract minute | `?create_ts__minute=30` | DateTime |
+| Operator        | Description                  | Example                          | Data Types    |
+| --------------- | ---------------------------- | -------------------------------- | ------------- |
+| (none)          | Exact match                  | `?status=ACTIVE`                 | All           |
+| `__contains`    | Contains substring           | `?description__contains=widget`  | String        |
+| `__icontains`   | Case-insensitive contains    | `?description__icontains=Widget` | String        |
+| `__startswith`  | Starts with                  | `?code__startswith=PROD`         | String        |
+| `__istartswith` | Case-insensitive starts with | `?code__istartswith=prod`        | String        |
+| `__endswith`    | Ends with                    | `?code__endswith=001`            | String        |
+| `__iendswith`   | Case-insensitive ends with   | `?code__iendswith=001`           | String        |
+| `__exact`       | Exact match (explicit)       | `?code__exact=ITEM001`           | All           |
+| `__iexact`      | Case-insensitive exact       | `?code__iexact=item001`          | String        |
+| `__gte`         | Greater than or equal        | `?qty__gte=100`                  | Numeric, Date |
+| `__gt`          | Greater than                 | `?qty__gt=100`                   | Numeric, Date |
+| `__lte`         | Less than or equal           | `?qty__lte=100`                  | Numeric, Date |
+| `__lt`          | Less than                    | `?qty__lt=100`                   | Numeric, Date |
+| `__in`          | In list                      | `?status__in=ACTIVE,PENDING`     | All           |
+| `__range`       | Between values               | `?qty__range=10,100`             | Numeric, Date |
+| `__isnull`      | Is null/not null             | `?deleted_ts__isnull=true`       | All           |
+| `__regex`       | Regular expression           | `?code__regex=^PROD.*001$`       | String        |
+| `__iregex`      | Case-insensitive regex       | `?code__iregex=^prod.*001$`      | String        |
+| `__year`        | Extract year                 | `?create_ts__year=2025`          | Date/DateTime |
+| `__month`       | Extract month                | `?create_ts__month=6`            | Date/DateTime |
+| `__day`         | Extract day                  | `?create_ts__day=15`             | Date/DateTime |
+| `__week_day`    | Day of week (1=Sunday)       | `?create_ts__week_day=1`         | Date/DateTime |
+| `__hour`        | Extract hour                 | `?create_ts__hour=14`            | DateTime      |
+| `__minute`      | Extract minute               | `?create_ts__minute=30`          | DateTime      |
 
 ### Date/Time Filtering
 
@@ -588,8 +588,8 @@ GET /entity/item?values_list=id:item_id,code:item_code
 
 ```json
 [
-  {"item_id": 1, "item_code": "ITEM001"},
-  {"item_id": 2, "item_code": "ITEM002"}
+  { "item_id": 1, "item_code": "ITEM001" },
+  { "item_id": 2, "item_code": "ITEM002" }
 ]
 ```
 
@@ -896,8 +896,8 @@ Content-Type: application/json
   "success_count": 2,
   "failure_count": 0,
   "results": [
-    {"id": 12345, "code": "ITEM001", "status": "success"},
-    {"id": 12346, "code": "ITEM002", "status": "success"}
+    { "id": 12345, "code": "ITEM001", "status": "success" },
+    { "id": 12346, "code": "ITEM002", "status": "success" }
   ],
   "errors": []
 }
@@ -990,21 +990,21 @@ Content-Type: application/json
 
 ## HTTP Status Codes
 
-| Code | Description | When Used |
-|------|-------------|-----------|
-| 200 | OK | Successful GET, PUT, PATCH |
-| 201 | Created | Successful POST (creation) |
-| 204 | No Content | Successful DELETE |
-| 400 | Bad Request | Invalid request format, missing required fields |
-| 401 | Unauthorized | Authentication failed or missing |
-| 403 | Forbidden | Insufficient permissions for operation |
-| 404 | Not Found | Entity, record, or endpoint not found |
-| 409 | Conflict | Duplicate key, constraint violation |
-| 422 | Unprocessable Entity | Validation error, business rule violation |
-| 429 | Too Many Requests | Rate limit exceeded |
-| 500 | Internal Server Error | System error |
-| 502 | Bad Gateway | Upstream service error |
-| 503 | Service Unavailable | System maintenance or overload |
+| Code | Description           | When Used                                       |
+| ---- | --------------------- | ----------------------------------------------- |
+| 200  | OK                    | Successful GET, PUT, PATCH                      |
+| 201  | Created               | Successful POST (creation)                      |
+| 204  | No Content            | Successful DELETE                               |
+| 400  | Bad Request           | Invalid request format, missing required fields |
+| 401  | Unauthorized          | Authentication failed or missing                |
+| 403  | Forbidden             | Insufficient permissions for operation          |
+| 404  | Not Found             | Entity, record, or endpoint not found           |
+| 409  | Conflict              | Duplicate key, constraint violation             |
+| 422  | Unprocessable Entity  | Validation error, business rule violation       |
+| 429  | Too Many Requests     | Rate limit exceeded                             |
+| 500  | Internal Server Error | System error                                    |
+| 502  | Bad Gateway           | Upstream service error                          |
+| 503  | Service Unavailable   | System maintenance or overload                  |
 
 ## Rate Limiting
 
@@ -1054,13 +1054,13 @@ You can override the default with the `page_size` query parameter:
 
 ### Pagination Modes Comparison
 
-| Feature | Standard (Paged) | Cursor (Sequenced) |
-|---------|------------------|-------------------|
-| Total count available | Yes | No |
-| Jump to specific page | Yes | No |
-| Performance on large datasets | Degrades with offset | Consistent |
-| Stability during data changes | May miss/duplicate | Stable |
-| Use case | Interactive UIs | Data exports |
+| Feature                       | Standard (Paged)     | Cursor (Sequenced) |
+| ----------------------------- | -------------------- | ------------------ |
+| Total count available         | Yes                  | No                 |
+| Jump to specific page         | Yes                  | No                 |
+| Performance on large datasets | Degrades with offset | Consistent         |
+| Stability during data changes | May miss/duplicate   | Stable             |
+| Use case                      | Interactive UIs      | Data exports       |
 
 ## Performance Optimization
 
@@ -1086,6 +1086,7 @@ You can override the default with the `page_size` query parameter:
 ### Filtering Best Practices
 
 1. **Use indexed fields for filtering:**
+
    - Primary keys (`id`)
    - Unique fields (`code`, `order_nbr`)
    - Status fields
@@ -1196,4 +1197,4 @@ This API reference is based on Oracle's official documentation:
 
 ---
 
-*Last updated: Based on Oracle WMS Cloud 25B REST API Guide (June 2025)*
+_Last updated: Based on Oracle WMS Cloud 25B REST API Guide (June 2025)_

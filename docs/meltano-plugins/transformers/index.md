@@ -34,9 +34,9 @@ Meltano transformer plugins provide enterprise-grade data transformation capabil
 
 ### **Transformer Categories**
 
-| **Plugin** | **Processing Type** | **Framework** | **Status** | **Key Features** |
-|------------|-------------------|---------------|------------|------------------|
-| **[OIC Transformer](./transform-oic.md)** | Oracle Integration Cloud | dbt + SQL | ✅ Production | OIC data mapping, business logic, schema evolution |
+| **Plugin**                                | **Processing Type**      | **Framework** | **Status**    | **Key Features**                                   |
+| ----------------------------------------- | ------------------------ | ------------- | ------------- | -------------------------------------------------- |
+| **[OIC Transformer](./transform-oic.md)** | Oracle Integration Cloud | dbt + SQL     | ✅ Production | OIC data mapping, business logic, schema evolution |
 
 ### **🚀 Key Capabilities**
 

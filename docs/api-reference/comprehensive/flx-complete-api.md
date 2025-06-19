@@ -30,17 +30,17 @@ from flx import (
     # Core Domain Layer
     AggregateRoot, Entity, ValueObject,
     DomainEvent, DomainLogger, LogLevel,
-    
+
     # Application Services
     ApplicationService, Bootstrap,
     CommandService, QueryService,
     create_bootstrap, run_bootstrap,
-    
+
     # Testing Framework
     DeclarativeTestEngine, TestableAdapter,
     TestMetrics, TestResult,
     create_test_engine, run_full_test_suite,
-    
+
     # Logging
     StandardLoggingAdapter, get_logger
 )
@@ -94,12 +94,12 @@ class Order(AggregateRoot):
         # Business validation
         if self.status != "pending":
             raise ValueError("Cannot modify confirmed order")
-            
+
         # Add item and emit event
         item = OrderItem(product_id=product_id, quantity=quantity, unit_price=price)
         self.items.append(item)
         self.increment_version()
-        
+
         self.add_event(ItemAddedToOrderEvent(
             order_id=self.id,
             product_id=product_id,
@@ -225,7 +225,7 @@ await run_bootstrap(bootstrap)
 
 CQRS command handling service.
 
-#### `QueryService`  
+#### `QueryService`
 
 **Location**: `/flx/src/flx/application/services.py`
 
@@ -247,10 +247,10 @@ Protocol for ports requiring connection management.
 class MyPort(BaseConnectionPort):
     async def connect(self) -> None:
         """Establish connection."""
-    
+
     async def disconnect(self) -> None:
         """Close connection."""
-        
+
     async def health_check(self) -> dict[str, Any]:
         """Health check."""
 ```
@@ -306,7 +306,7 @@ await cache_service.set("key", "value", ttl=3600)
 await cache_service.disconnect()
 ```
 
-#### Database Service  
+#### Database Service
 
 **Location**: `/flx/src/flx/infra/database/`
 
@@ -429,7 +429,7 @@ coverage_ok = validate_test_coverage(results)
 #### Test Adapters
 
 **`TestableAdapter`**: Base for testable adapters
-**`TestMetrics`**: Test performance metrics  
+**`TestMetrics`**: Test performance metrics
 **`TestResult`**: Test execution results
 
 ### Test Engines by Domain
@@ -437,7 +437,7 @@ coverage_ok = validate_test_coverage(results)
 **Location**: `/flx/src/flx/testing/engines/`
 
 - `DatabaseTestEngine`: In-memory database testing
-- `CacheTestEngine`: In-memory cache testing  
+- `CacheTestEngine`: In-memory cache testing
 - `HttpTestEngine`: Mock HTTP responses
 - `CliTestEngine`: Command-line interface testing
 - `MetricsTestEngine`: Metrics collection testing
@@ -477,7 +477,7 @@ from flx import DomainLogger, LogLevel
 class OrderService:
     def __init__(self, logger: DomainLogger):
         self.logger = logger
-    
+
     def process_order(self, order_id: str):
         self.logger.log(LogLevel.INFO, "Processing order", {"order_id": order_id})
 ```
@@ -532,19 +532,19 @@ class Order(AggregateRoot):
     def confirm(self) -> Self:
         if self.status != "pending":
             raise ValueError("Order already confirmed")
-        
+
         confirmed = self.model_copy(update={
             "status": "confirmed",
             "updated_at": datetime.now(UTC),
             "version": self.version + 1
         })
-        
+
         confirmed.add_event(OrderConfirmedEvent(
             order_id=self.id,
             customer_id=self.customer_id,
             total=self.total
         ))
-        
+
         return confirmed
 
 # 2. Application Service
@@ -572,19 +572,19 @@ class OrderApplicationService(ApplicationService):
 # 3. Testing
 async def test_order_confirmation():
     engine = create_test_engine()
-    
+
     # Use test engines for all infrastructure
     order_repo = OrderRepository(use_test_engine=True)
     event_bus = EventBus(use_test_engine=True)
-    
+
     service = OrderApplicationService(order_repo, event_bus)
-    
+
     # Test business logic
     order = Order(customer_id="123", total=Money(amount=99.99, currency="USD"))
     await order_repo.save(order)
-    
+
     await service.confirm_order(order.id)
-    
+
     # Verify results
     saved_order = await order_repo.find_by_id(order.id)
     assert saved_order.status == "confirmed"
@@ -599,7 +599,7 @@ async def test_order_confirmation():
 All domain operations raise clear business exceptions:
 
 - `ValidationError`: Data validation failures
-- `ValueError`: Business rule violations  
+- `ValueError`: Business rule violations
 - `ConcurrencyError`: Optimistic locking conflicts
 
 ### Infrastructure Exceptions
@@ -639,6 +639,6 @@ Infrastructure services provide specific error types:
 
 **📂 API Reference** | **🏠 Parent**: [Comprehensive API Hub](./index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
 
-**API Reference Version**: 1.0.0  
-**Generated From**: `/flx/src/flx/` codebase  
+**API Reference Version**: 1.0.0
+**Generated From**: `/flx/src/flx/` codebase
 **Python Version**: 3.13+

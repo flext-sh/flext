@@ -223,13 +223,13 @@ async def main():
         enable_wal_mode=True,
         use_test_engine=True  # For testing
     )
-    
+
     # Auto-connect and disconnect with context manager
     async with db:
         # Save aggregate
         user = UserEntity(username="john", email="john@example.com")
         await db.save(user)
-        
+
         # Query with criteria
         users = await db.query(
             criteria=QueryCriteria(filters={"active": True})
@@ -249,14 +249,14 @@ async def main():
         connection_timeout=30,
         use_test_engine=False
     )
-    
+
     async with http:
         # GET request with automatic observability
         response = await http.get("/users/123")
-        
+
         # POST with data
         result = await http.post("/users", data={"name": "John"})
-        
+
         # File operations
         await http.download("/files/report.pdf", Path("./report.pdf"))
 ```
@@ -275,7 +275,7 @@ class MyCliAdapter(CliAdapter):
             colors_enabled=True
         )
         self.command_service = command_service
-    
+
     async def setup_commands(self):
         @self.register_command("create-user")
         async def create_user(username: str, email: str):
@@ -305,32 +305,32 @@ class UserService(ApplicationService):
         self.cache = CacheAdapter(
             redis_url="redis://localhost:6379/0"
         )
-    
+
     async def create_user(self, username: str, email: str) -> UserEntity:
         """Create user with caching."""
         user = UserEntity(username=username, email=email)
-        
+
         # Save to database
         await self.db.save(user)
-        
+
         # Cache user data
         await self.cache.set(f"user:{user.id}", user.to_dict(), ttl=3600)
-        
+
         return user
-    
+
     async def get_user(self, user_id: str) -> Optional[UserEntity]:
         """Get user with cache-first strategy."""
         # Try cache first
         cached_data = await self.cache.get(f"user:{user_id}")
         if cached_data:
             return UserEntity.from_dict(cached_data)
-        
+
         # Fallback to database
         user = await self.db.get(user_id)
         if user:
             # Cache for future requests
             await self.cache.set(f"user:{user_id}", user.to_dict(), ttl=3600)
-        
+
         return user
 ```
 
@@ -346,12 +346,12 @@ async def test_user_service():
         connection_url="postgresql://test_db",
         use_test_engine=True  # No actual database needed
     )
-    
+
     http = HttpClientAdapter(
         base_url="https://api.example.com",
         use_test_engine=True  # Mock HTTP responses
     )
-    
+
     async with db, http:
         # Test with mocked dependencies
         service = UserService(db=db, http=http)

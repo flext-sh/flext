@@ -18,8 +18,8 @@
 
 ### **Core Topics**
 
-| **Topic** | **Function** | **Audience** | **Status** |
-|-----------|--------------|--------------|------------|
+| **Topic**                                                       | **Function**                          | **Audience**         | **Status**  |
+| --------------------------------------------------------------- | ------------------------------------- | -------------------- | ----------- |
 | [Hexagonal Implementation](./hexagonal-implementation-guide.md) | Complete hexagonal architecture guide | Framework developers | ✅ Complete |
 
 ### **📋 Learning Path**
@@ -55,7 +55,7 @@
 ## 📊 **Section Metrics**
 
 - **Documents**: 1 file
-- **Completeness**: 100%  
+- **Completeness**: 100%
 - **Last Updated**: June 11, 2025
 
 ---

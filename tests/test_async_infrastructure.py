@@ -238,6 +238,7 @@ def test_command_handler_registration(_mock_redis: Any, _mock_dramatiq: Any) -> 
 
     async def test_handler(command: Any) -> dict[str, Any]:
         return {"status": "created", "resource_id": str(command.message_id)}
+
     bus.register_command_handler(flx_async.FlxCreateResourceCommand, test_handler)
     assert "FlxCreateResourceCommand" in bus._handlers
     assert bus._handlers["FlxCreateResourceCommand"] == test_handler
@@ -249,6 +250,7 @@ def test_event_handler_registration(_mock_redis: Any, _mock_dramatiq: Any) -> No
 
     async def test_handler(event: Any) -> None:
         pass
+
     bus.register_event_handler(flx_async.FlxResourceCreatedEvent, test_handler)
     assert "FlxResourceCreatedEvent" in bus._event_handlers
     assert test_handler in bus._event_handlers["FlxResourceCreatedEvent"]
@@ -282,6 +284,7 @@ async def test_event_publishing(_mock_redis: Any, _mock_dramatiq: Any) -> None:
 
     async def test_handler(event: Any) -> None:
         pass
+
     bus.register_event_handler(flx_async.FlxResourceCreatedEvent, test_handler)
     # Mock the actor
     mock_actor = Mock()
@@ -316,7 +319,6 @@ def test_integration() -> None:
             patch("dramatiq.set_broker"),
             patch.object(flx_async.FlxAsyncCommandBus, "_setup_broker"),
         ):
-
             bus = flx_async.FlxAsyncCommandBus()
 
             # Register handler
@@ -331,7 +333,8 @@ def test_integration() -> None:
                 }
 
             bus.register_command_handler(
-                flx_async.FlxCreateResourceCommand, create_resource_handler,
+                flx_async.FlxCreateResourceCommand,
+                create_resource_handler,
             )
 
             # Create and process command
@@ -395,7 +398,6 @@ def test_global_instances() -> None:
             patch("dramatiq.set_broker"),
             patch.object(flx_async.FlxAsyncCommandBus, "_setup_broker"),
         ):
-
             bus1 = flx_async.get_command_bus()
             bus2 = flx_async.get_command_bus()
 
@@ -408,7 +410,6 @@ def test_global_instances() -> None:
             patch("dramatiq.set_broker"),
             patch.object(flx_async.FlxAsyncCommandBus, "_setup_broker"),
         ):
-
             config = flx_async.FlxAsyncCommandBusConfig(redis_url="redis://test:6379/1")
             bus = flx_async.initialize_command_bus(config)
 

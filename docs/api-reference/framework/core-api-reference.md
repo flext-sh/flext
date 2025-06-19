@@ -40,7 +40,7 @@ from flx.core.entities import Entity
 class User(Entity):
     username: str
     email: str
-    
+
     def change_email(self, new_email: str) -> None:
         self.email = new_email
         self.touch()  # Update timestamp
@@ -72,11 +72,11 @@ class Order(AggregateRoot):
     customer_id: str
     status: str = "pending"
     total: float = 0.0
-    
+
     def confirm(self) -> None:
         if self.status != "pending":
             raise ValueError("Order already confirmed")
-        
+
         self.status = "confirmed"
         self.increment_version()
         self.add_event(DomainEvent(
@@ -113,10 +113,10 @@ from flx.core.domain.value_objects import ValueObject
 class Money(ValueObject):
     amount: float
     currency: str = "USD"
-    
+
     def multiply(self, factor: float) -> "Money":
         return Money(amount=self.amount * factor, currency=self.currency)
-    
+
     def add(self, other: "Money") -> "Money":
         if self.currency != other.currency:
             raise ValueError("Cannot add different currencies")
@@ -249,24 +249,24 @@ class CreateUserService(ApplicationService):
     def __init__(self, user_repo: UserRepository, email_service: EmailService):
         self.user_repo = user_repo
         self.email_service = email_service
-    
+
     async def execute(self, command: CreateUserCommand) -> UserCreated:
         # Validate business rules
         if await self.user_repo.exists_by_email(command.email):
             raise UserAlreadyExistsError(command.email)
-        
+
         # Create domain entity
         user = User(
             username=command.username,
             email=command.email
         )
-        
+
         # Persist
         await self.user_repo.save(user)
-        
+
         # Send welcome email
         await self.email_service.send_welcome(user.email)
-        
+
         # Return result
         return UserCreated(user_id=user.id, username=user.username)
 ```
@@ -393,7 +393,7 @@ class MockEmailAdapter(TestableAdapter):
     def __init__(self):
         super().__init__()
         self.sent_emails = []
-    
+
     async def send_email(self, to: str, subject: str, body: str) -> None:
         self.sent_emails.append({
             "to": to,
@@ -421,7 +421,7 @@ from flx.core.logging_interface import LoggerInterface, LogLevel
 class MyDomainService:
     def __init__(self, logger: LoggerInterface):
         self.logger = logger
-    
+
     def process_order(self, order_id: str) -> None:
         self.logger.log(LogLevel.INFO, "Processing order", {
             "order_id": order_id,
@@ -489,19 +489,19 @@ logger.info("Service started")
 
 The following APIs from old documentation are **obsolete** and should not be used:
 
-❌ `flx.Entities.BaseEntity` - Use `flx.core.entities.Entity`  
-❌ `flx.ValueObjects.ContactInfo` - Use `flx.core.domain.value_objects.Email` + custom value objects  
-❌ `flx.Protocols.*` - Use proper Python protocols or interfaces  
-❌ `flx.Mixins.*` - Use composition over inheritance  
-❌ `UnifiedAdapterManager` - Use `flx.application.Bootstrap`  
+❌ `flx.Entities.BaseEntity` - Use `flx.core.entities.Entity`
+❌ `flx.ValueObjects.ContactInfo` - Use `flx.core.domain.value_objects.Email` + custom value objects
+❌ `flx.Protocols.*` - Use proper Python protocols or interfaces
+❌ `flx.Mixins.*` - Use composition over inheritance
+❌ `UnifiedAdapterManager` - Use `flx.application.Bootstrap`
 
 ### Current Best Practices
 
-✅ Use `flx.core.entities.Entity` and `AggregateRoot` for domain entities  
-✅ Use `flx.core.domain.value_objects.ValueObject` for immutable domain concepts  
-✅ Use `flx.application.ApplicationService` for use cases  
-✅ Use `flx.adapters.*` for infrastructure integration  
-✅ Use `flx.testing.declarative.*` for testing  
+✅ Use `flx.core.entities.Entity` and `AggregateRoot` for domain entities
+✅ Use `flx.core.domain.value_objects.ValueObject` for immutable domain concepts
+✅ Use `flx.application.ApplicationService` for use cases
+✅ Use `flx.adapters.*` for infrastructure integration
+✅ Use `flx.testing.declarative.*` for testing
 
 ---
 

@@ -20,4 +20,4 @@ echo "4. Testando comando sem cores:"
 NO_COLOR=1 make list-projects | head -5
 echo ""
 
-echo "=== Teste concluído ===" 
+echo "=== Teste concluído ==="

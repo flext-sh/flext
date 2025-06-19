@@ -100,21 +100,27 @@ class StarSeparatorFixer:
             # Fix any connection, *, * patterns
             if re.search(r"connection:\s*Any,\s*\*,\s*\*", lines[i]):
                 lines[i] = re.sub(
-                    r"connection:\s*Any,\s*\*,\s*\*", "connection: Any, *", lines[i],
+                    r"connection:\s*Any,\s*\*,\s*\*",
+                    "connection: Any, *",
+                    lines[i],
                 )
                 self.fixes_count += 1
 
             # Fix to_dict with duplicate stars
             if re.search(r"def\s+to_dict\(self,\s*\*,\s*\*", lines[i]):
                 lines[i] = re.sub(
-                    r"def\s+to_dict\(self,\s*\*,\s*\*", "def to_dict(self, *", lines[i],
+                    r"def\s+to_dict\(self,\s*\*,\s*\*",
+                    "def to_dict(self, *",
+                    lines[i],
                 )
                 self.fixes_count += 1
 
             # Fix def __init__ with duplicate stars
             if re.search(r"self,\s*\*,\s*\*\s+success", lines[i]):
                 lines[i] = re.sub(
-                    r"self,\s*\*,\s*\*\s+success", "self, * success", lines[i],
+                    r"self,\s*\*,\s*\*\s+success",
+                    "self, * success",
+                    lines[i],
                 )
                 self.fixes_count += 1
 
@@ -136,7 +142,9 @@ def main() -> None:
         description="Fix duplicate * separators in function definitions",
     )
     parser.add_argument(
-        "--dry-run", action="store_true", help="Don't modify files, just report issues",
+        "--dry-run",
+        action="store_true",
+        help="Don't modify files, just report issues",
     )
     args = parser.parse_args()
 

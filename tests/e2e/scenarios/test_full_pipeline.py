@@ -111,12 +111,12 @@ class TestFullPipeline:
                         continue
 
                 # Verify extraction counts
-                assert (
-                    extracted_users >= user_count - 1
-                ), f"Expected at least {user_count - 1} users, got {extracted_users}"
-                assert (
-                    extracted_groups >= group_count - 1
-                ), f"Expected at least {group_count - 1} groups, got {extracted_groups}"
+                assert extracted_users >= user_count - 1, (
+                    f"Expected at least {user_count - 1} users, got {extracted_users}"
+                )
+                assert extracted_groups >= group_count - 1, (
+                    f"Expected at least {group_count - 1} groups, got {extracted_groups}"
+                )
 
     def test_target_ldap_loading(
         self,
@@ -213,18 +213,18 @@ class TestFullPipeline:
                     _target_stdout, target_stderr = target_proc.communicate()
                     tap_proc.wait()
 
-                    assert (
-                        target_proc.returncode == 0
-                    ), f"target-ldap failed: {target_stderr}"
+                    assert target_proc.returncode == 0, (
+                        f"target-ldap failed: {target_stderr}"
+                    )
 
         # Verify user was loaded
         final_target_users = target_helper.count_entries(
             "dc=target,dc=example,dc=com", "(objectClass=inetOrgPerson)"
         )
 
-        assert (
-            final_target_users > initial_target_users
-        ), "No users were loaded to target LDAP"
+        assert final_target_users > initial_target_users, (
+            "No users were loaded to target LDAP"
+        )
 
         # Verify specific user
         loaded_user = target_helper.get_entry_as_dict(
@@ -382,9 +382,9 @@ e2e_test:
             ):
                 migrated_count += 1
 
-        assert (
-            migrated_count >= len(created_uids) * 0.8
-        ), f"Only {migrated_count}/{len(created_uids)} users migrated"
+        assert migrated_count >= len(created_uids) * 0.8, (
+            f"Only {migrated_count}/{len(created_uids)} users migrated"
+        )
 
         # Check PostgreSQL has records
         pg_users = get_postgres_record_count(postgres_connection, "ldap_raw.users")
@@ -443,9 +443,9 @@ e2e_test:
                     "dc=target,dc=example,dc=com", "(objectClass=inetOrgPerson)"
                 )
 
-                assert (
-                    final_count > initial_count
-                ), "Incremental sync did not add new user"
+                assert final_count > initial_count, (
+                    "Incremental sync did not add new user"
+                )
 
                 # Clean up
                 if state_file.exists():
@@ -514,9 +514,9 @@ e2e_test:
         sync_duration = end_time - start_time
 
         # Verify performance is acceptable
-        assert (
-            sync_duration < 60
-        ), f"Sync of 100 users took {sync_duration}s, expected < 60s"
+        assert sync_duration < 60, (
+            f"Sync of 100 users took {sync_duration}s, expected < 60s"
+        )
 
         # Clean up
         source_helper.cleanup_test_entries(

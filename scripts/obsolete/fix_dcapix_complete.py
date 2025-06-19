@@ -26,7 +26,8 @@ def flx_mypy_issues(file_path: str) -> None:
         # Fix 2: Fix dict[str, Any] default factory
         if "default_factory=dict[str, Any]" in line:
             line = line.replace(
-                "default_factory=dict[str, Any]", "default_factory=dict",
+                "default_factory=dict[str, Any]",
+                "default_factory=dict",
             )
 
         # Fix 3: Fix the to_paginate_options method return

@@ -12,7 +12,7 @@
 
 ## 🧭 **Navigation Context**
 
-**🏠 Root**: [Documentation Home](../../index.md) → **📂 Hub**: [Architecture](../index.md) → **📂 Patterns**: [Index](./index.md) → **📂 Current**: Domain-Driven Design Patterns  
+**🏠 Root**: [Documentation Home](../../index.md) → **📂 Hub**: [Architecture](../index.md) → **📂 Patterns**: [Index](./index.md) → **📂 Current**: Domain-Driven Design Patterns
 
 ---
 
@@ -41,7 +41,7 @@ from flx.core.domain import AggregateRoot, ValueObject, DomainEvent
 
 class CustomerContext(DomainContext):
     """Customer management bounded context."""
-    
+
     def __init__(self):
         super().__init__(name="customers")
         self.register_aggregates([Customer, CustomerAccount])
@@ -56,7 +56,7 @@ class CustomerContext(DomainContext):
 ```python
 class Customer(AggregateRoot):
     """Customer aggregate with rich domain behavior."""
-    
+
     def __init__(self, customer_id: CustomerId, personal_info: PersonalInfo):
         super().__init__(entity_id=customer_id)
         self.personal_info = personal_info
@@ -64,43 +64,43 @@ class Customer(AggregateRoot):
         self.contact_info: ContactInfo | None = None
         self.status = CustomerStatus.PENDING
         self.registration_date = datetime.utcnow()
-    
+
     def register(self, contact_info: ContactInfo) -> None:
         """Register customer with contact information."""
         if self.status != CustomerStatus.PENDING:
             raise DomainError("Customer already registered")
-        
+
         self.contact_info = contact_info
         self.status = CustomerStatus.ACTIVE
-        
+
         # Raise domain event
         self.raise_event(CustomerRegistered(
             customer_id=self.id,
             email=contact_info.email,
             registration_date=self.registration_date
         ))
-    
+
     def add_address(self, address: CustomerAddress) -> None:
         """Add address with business rules."""
         if len(self.addresses) >= 5:
             raise DomainError("Customer cannot have more than 5 addresses")
-        
+
         # Ensure only one primary address
         if address.is_primary:
             for addr in self.addresses:
                 addr.is_primary = False
-        
+
         self.addresses.append(address)
         self.mark_modified()
-    
+
     def change_email(self, new_email: str) -> None:
         """Change email with validation."""
         if not self.contact_info:
             raise DomainError("Customer must have contact info to change email")
-        
+
         old_email = self.contact_info.email
         self.contact_info = self.contact_info.with_email(new_email)
-        
+
         self.raise_event(CustomerEmailChanged(
             customer_id=self.id,
             old_email=old_email,
@@ -118,7 +118,7 @@ class Customer(AggregateRoot):
 ```python
 class CustomerAddress(ValueObject):
     """Customer address value object."""
-    
+
     street: str
     city: str
     state: str
@@ -126,16 +126,16 @@ class CustomerAddress(ValueObject):
     country: str
     is_primary: bool = False
     address_type: AddressType = AddressType.SHIPPING
-    
+
     def __post_init__(self):
         self.validate_postal_code()
-    
+
     def validate_postal_code(self) -> None:
         """Validate postal code format."""
         if self.country == "US":
             if not re.match(r'^\d{5}(-\d{4})?$', self.postal_code):
                 raise ValueError("Invalid US postal code format")
-    
+
     def with_primary(self, is_primary: bool) -> 'CustomerAddress':
         """Return new address with updated primary status."""
         return CustomerAddress(
@@ -150,21 +150,21 @@ class CustomerAddress(ValueObject):
 
 class ContactInfo(ValueObject):
     """Contact information value object."""
-    
+
     email: str
     phone: str | None = None
     preferred_contact: ContactMethod = ContactMethod.EMAIL
-    
+
     def __post_init__(self):
         self.validate_email()
-    
+
     def validate_email(self) -> None:
         """Validate email format."""
         import re
         pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
         if not re.match(pattern, self.email):
             raise ValueError("Invalid email format")
-    
+
     def with_email(self, email: str) -> 'ContactInfo':
         """Return new contact info with updated email."""
         return ContactInfo(
@@ -183,21 +183,21 @@ class ContactInfo(ValueObject):
 ```python
 class CustomerRegistered(DomainEvent):
     """Customer registration domain event."""
-    
+
     customer_id: CustomerId
     email: str
     registration_date: datetime
 
 class CustomerEmailChanged(DomainEvent):
     """Customer email change domain event."""
-    
+
     customer_id: CustomerId
     old_email: str
     new_email: str
 
 class CustomerDeactivated(DomainEvent):
     """Customer deactivation domain event."""
-    
+
     customer_id: CustomerId
     reason: str
     deactivation_date: datetime
@@ -212,43 +212,43 @@ class CustomerDeactivated(DomainEvent):
 ```python
 class CustomerDuplicationService(DomainService):
     """Service to check for customer duplication."""
-    
+
     def __init__(self, customer_repository: CustomerRepository):
         self.customer_repository = customer_repository
-    
+
     async def is_duplicate(self, email: str, phone: str = None) -> bool:
         """Check if customer with same contact info exists."""
         # Check email duplication
         existing_by_email = await self.customer_repository.find_by_email(email)
         if existing_by_email:
             return True
-        
+
         # Check phone duplication if provided
         if phone:
             existing_by_phone = await self.customer_repository.find_by_phone(phone)
             if existing_by_phone:
                 return True
-        
+
         return False
-    
+
     async def find_similar_customers(self, customer: Customer) -> list[Customer]:
         """Find customers with similar information."""
         similar = []
-        
+
         # Find by partial name match
         if customer.personal_info.last_name:
             name_matches = await self.customer_repository.find_by_last_name(
                 customer.personal_info.last_name
             )
             similar.extend(name_matches)
-        
+
         # Find by address similarity
         for address in customer.addresses:
             address_matches = await self.customer_repository.find_by_address_similarity(
                 address.postal_code, address.street
             )
             similar.extend(address_matches)
-        
+
         # Remove duplicates and self
         unique_similar = []
         seen_ids = {customer.id}
@@ -256,36 +256,36 @@ class CustomerDuplicationService(DomainService):
             if similar_customer.id not in seen_ids:
                 unique_similar.append(similar_customer)
                 seen_ids.add(similar_customer.id)
-        
+
         return unique_similar
 
 class CustomerLifecycleService(DomainService):
     """Service managing customer lifecycle."""
-    
+
     def __init__(self, customer_repository: CustomerRepository,
                  account_repository: CustomerAccountRepository):
         self.customer_repository = customer_repository
         self.account_repository = account_repository
-    
+
     async def complete_registration(self, customer: Customer,
                                   initial_account_settings: dict) -> None:
         """Complete customer registration process."""
         if customer.status != CustomerStatus.ACTIVE:
             raise DomainError("Customer must be active to complete registration")
-        
+
         # Create customer account
         account = CustomerAccount(
             customer_id=customer.id,
             settings=AccountSettings(**initial_account_settings)
         )
-        
+
         # Set up welcome workflow
         await self._setup_welcome_workflow(customer, account)
-        
+
         # Save entities
         await self.customer_repository.save(customer)
         await self.account_repository.save(account)
-    
+
     async def _setup_welcome_workflow(self, customer: Customer,
                                     account: CustomerAccount) -> None:
         """Setup welcome workflow for new customer."""
@@ -295,7 +295,7 @@ class CustomerLifecycleService(DomainService):
             WelcomeTask.COMPLETE_PROFILE,
             WelcomeTask.SETUP_PREFERENCES
         ]
-        
+
         for task in welcome_tasks:
             account.add_onboarding_task(task)
 ```
@@ -310,17 +310,17 @@ class CustomerLifecycleService(DomainService):
 # Domain layer repository interface
 class CustomerRepository(ABC):
     """Repository interface for customer aggregate."""
-    
+
     @abstractmethod
     async def get(self, customer_id: CustomerId) -> Customer | None:
         """Get customer by ID."""
         pass
-    
+
     @abstractmethod
     async def save(self, customer: Customer) -> None:
         """Save customer aggregate."""
         pass
-    
+
     @abstractmethod
     async def find_by_email(self, email: str) -> Customer | None:
         """Find customer by email."""
@@ -329,33 +329,33 @@ class CustomerRepository(ABC):
 # Infrastructure layer implementation
 class DatabaseCustomerRepository(CustomerRepository):
     """Database implementation of customer repository."""
-    
+
     def __init__(self, database: DatabaseAdapter):
         self.database = database
-    
+
     async def get(self, customer_id: CustomerId) -> Customer | None:
         """Get customer by ID from database."""
         query = "SELECT * FROM customers WHERE customer_id = ?"
         row = await self.database.fetch_one(query, [str(customer_id)])
-        
+
         if not row:
             return None
-        
+
         return Customer.from_dict(row)
-    
+
     async def save(self, customer: Customer) -> None:
         """Save customer to database."""
         data = customer.to_dict()
-        
+
         if customer.is_new():
             await self._insert_customer(data)
         else:
             await self._update_customer(data)
-        
+
         # Publish domain events
         for event in customer.get_uncommitted_events():
             await self.event_bus.publish(event)
-        
+
         customer.mark_events_as_committed()
 ```
 
@@ -376,37 +376,37 @@ class DatabaseCustomerRepository(CustomerRepository):
 ```python
 class TestCustomerAggregate:
     """Test customer aggregate behavior."""
-    
+
     def test_customer_registration(self):
         """Test customer registration process."""
         # Arrange
         customer_id = CustomerId.generate()
         personal_info = PersonalInfo(first_name="John", last_name="Doe")
         contact_info = ContactInfo(email="john@example.com")
-        
+
         # Act
         customer = Customer(customer_id, personal_info)
         customer.register(contact_info)
-        
+
         # Assert
         assert customer.status == CustomerStatus.ACTIVE
         assert customer.contact_info.email == "john@example.com"
-        
+
         # Check domain event
         events = customer.get_uncommitted_events()
         assert len(events) == 1
         assert isinstance(events[0], CustomerRegistered)
-    
+
     def test_address_business_rules(self):
         """Test address business rules."""
         # Arrange
         customer = self._create_active_customer()
         addresses = [self._create_address() for _ in range(5)]
-        
+
         # Act - add 5 addresses (maximum)
         for address in addresses:
             customer.add_address(address)
-        
+
         # Assert - adding 6th address should fail
         with pytest.raises(DomainError, match="cannot have more than 5 addresses"):
             customer.add_address(self._create_address())

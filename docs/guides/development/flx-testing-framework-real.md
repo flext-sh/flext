@@ -84,7 +84,7 @@ flx/testing/
 # Real implementation from /flx/src/flx/testing/engines/hexagonal_test_engine.py
 class HexagonalTestEngine:
     """Test engine specifically designed for hexagonal architecture testing.
-    
+
     This engine validates the proper implementation of hexagonal architecture
     patterns including port/adapter isolation, domain logic separation,
     and dependency inversion compliance.
@@ -102,34 +102,34 @@ class HexagonalTestEngine:
             adapter_id=adapter.adapter_id,
             start_time=datetime.now(UTC)
         )
-        
+
         try:
             # Test initial state
             assert not adapter.is_connected, "Adapter should start disconnected"
-            
+
             # Test connection
             await adapter.connect()
             assert adapter.is_connected, "Adapter should be connected after connect()"
-            
+
             # Test health check
             health = await adapter.health_check()
             assert isinstance(health, dict), "Health check should return dict"
-            
+
             # Test disconnection
             await adapter.disconnect()
             assert not adapter.is_connected, "Adapter should be disconnected after disconnect()"
-            
+
             result.status = "PASSED"
             result.message = "Adapter lifecycle test passed"
-            
+
         except Exception as e:
             result.status = "FAILED"
             result.message = f"Adapter lifecycle test failed: {str(e)}"
             result.error = e
-            
+
         finally:
             result.end_time = datetime.now(UTC)
-            
+
         return result
 
     async def test_port_compliance(self, adapter: BaseAdapter, port: Protocol) -> TestResult:
@@ -139,28 +139,28 @@ class HexagonalTestEngine:
             adapter_id=adapter.adapter_id,
             start_time=datetime.now(UTC)
         )
-        
+
         try:
             # Check if adapter implements required port methods
             port_methods = [method for method in dir(port) if not method.startswith('_')]
-            
+
             for method_name in port_methods:
                 assert hasattr(adapter, method_name), f"Adapter missing required method: {method_name}"
-                
+
                 method = getattr(adapter, method_name)
                 assert callable(method), f"Adapter method {method_name} is not callable"
-            
+
             result.status = "PASSED"
             result.message = f"Adapter implements all required port methods: {port_methods}"
-            
+
         except Exception as e:
             result.status = "FAILED"
             result.message = f"Port compliance test failed: {str(e)}"
             result.error = e
-            
+
         finally:
             result.end_time = datetime.now(UTC)
-            
+
         return result
 
     async def test_domain_isolation(self, use_case: Any) -> TestResult:
@@ -169,51 +169,51 @@ class HexagonalTestEngine:
             test_name="domain_isolation",
             start_time=datetime.now(UTC)
         )
-        
+
         try:
             # Analyze use case dependencies
             dependencies = self._analyze_dependencies(use_case)
-            
+
             # Check for infrastructure leakage
             infrastructure_imports = [
                 "httpx", "requests", "sqlalchemy", "redis", "psycopg2",
                 "pymongo", "boto3", "azure", "google.cloud"
             ]
-            
+
             leaked_dependencies = [
                 dep for dep in dependencies
                 if any(infra in dep.lower() for infra in infrastructure_imports)
             ]
-            
+
             assert not leaked_dependencies, f"Domain logic has infrastructure dependencies: {leaked_dependencies}"
-            
+
             result.status = "PASSED"
             result.message = "Domain logic is properly isolated from infrastructure"
-            
+
         except Exception as e:
             result.status = "FAILED"
             result.message = f"Domain isolation test failed: {str(e)}"
             result.error = e
-            
+
         finally:
             result.end_time = datetime.now(UTC)
-            
+
         return result
 
     def _analyze_dependencies(self, use_case: Any) -> list[str]:
         """Analyze dependencies of a use case class."""
         import inspect
-        
+
         dependencies = []
-        
+
         # Get source code
         try:
             source = inspect.getsource(use_case)
-            
+
             # Extract import statements
             import ast
             tree = ast.parse(source)
-            
+
             for node in ast.walk(tree):
                 if isinstance(node, ast.Import):
                     for alias in node.names:
@@ -221,10 +221,10 @@ class HexagonalTestEngine:
                 elif isinstance(node, ast.ImportFrom):
                     if node.module:
                         dependencies.append(node.module)
-                        
+
         except Exception:
             pass  # Could not analyze source
-            
+
         return dependencies
 ```
 
@@ -240,47 +240,47 @@ class HttpTestEngine:
     async def test_http_client_lifecycle(self, client: HttpClientService) -> TestResult:
         """Test HTTP client connection lifecycle."""
         result = TestResult(test_name="http_client_lifecycle")
-        
+
         try:
             # Test connection
             await client.connect()
             assert client._client is not None, "HTTP client should be initialized"
-            
+
             # Test basic request
             if client.base_url:
                 response = await client.get("/health")
                 assert response.status_code in [200, 404], "Should get valid HTTP response"
-            
+
             # Test disconnection
             await client.disconnect()
             assert client._client is None, "HTTP client should be cleaned up"
-            
+
             result.status = "PASSED"
-            
+
         except Exception as e:
             result.status = "FAILED"
             result.error = e
-            
+
         return result
 
     async def test_http_authentication(self, client: HttpClientService, auth_token: str) -> TestResult:
         """Test HTTP authentication mechanisms."""
         result = TestResult(test_name="http_authentication")
-        
+
         try:
             # Test with authentication
             client.auth_token = auth_token
             headers = client._get_auth_headers()
-            
+
             assert "Authorization" in headers, "Should include Authorization header"
             assert headers["Authorization"].startswith("Bearer "), "Should use Bearer token format"
-            
+
             result.status = "PASSED"
-            
+
         except Exception as e:
             result.status = "FAILED"
             result.error = e
-            
+
         return result
 ```
 
@@ -294,49 +294,49 @@ class DatabaseTestEngine:
     async def test_database_connection(self, engine: DatabaseEngine) -> TestResult:
         """Test database connection and basic operations."""
         result = TestResult(test_name="database_connection")
-        
+
         try:
             # Test connection
             await engine.connect()
             assert engine.is_connected, "Database should be connected"
-            
+
             # Test basic query
             async with engine.get_session() as session:
                 result_set = await session.execute("SELECT 1")
                 rows = result_set.fetchall()
                 assert len(rows) == 1, "Should return one row"
                 assert rows[0][0] == 1, "Should return value 1"
-            
+
             # Test disconnection
             await engine.disconnect()
             assert not engine.is_connected, "Database should be disconnected"
-            
+
             result.status = "PASSED"
-            
+
         except Exception as e:
             result.status = "FAILED"
             result.error = e
-            
+
         return result
 
     async def test_transaction_handling(self, engine: DatabaseEngine) -> TestResult:
         """Test database transaction management."""
         result = TestResult(test_name="transaction_handling")
-        
+
         try:
             await engine.connect()
-            
+
             # Test transaction rollback
             async with engine.get_session() as session:
                 async with session.begin():
                     # Perform operations that should be rolled back
                     await session.execute("CREATE TEMPORARY TABLE test_rollback (id INT)")
                     raise Exception("Intentional rollback")
-                    
+
         except Exception:
             # Exception is expected for rollback test
             pass
-            
+
         try:
             # Verify rollback occurred
             async with engine.get_session() as session:
@@ -345,15 +345,15 @@ class DatabaseTestEngine:
                     assert False, "Table should not exist after rollback"
                 except Exception:
                     pass  # Expected - table doesn't exist
-            
+
             result.status = "PASSED"
-            
+
         except Exception as e:
             result.status = "FAILED"
             result.error = e
         finally:
             await engine.disconnect()
-            
+
         return result
 ```
 
@@ -373,53 +373,53 @@ class CacheTestAdapter:
     async def test_cache_operations(self) -> TestResult:
         """Test basic cache operations."""
         result = TestResult(test_name="cache_operations")
-        
+
         try:
             # Test set operation
             await self.cache_service.set("test_key", "test_value", ttl=60)
-            
+
             # Test get operation
             value = await self.cache_service.get("test_key")
             assert value == "test_value", "Retrieved value should match stored value"
-            
+
             # Test delete operation
             await self.cache_service.delete("test_key")
             value = await self.cache_service.get("test_key")
             assert value is None, "Value should be None after deletion"
-            
+
             result.status = "PASSED"
-            
+
         except Exception as e:
             result.status = "FAILED"
             result.error = e
-            
+
         return result
 
     async def test_cache_expiration(self) -> TestResult:
         """Test cache TTL and expiration."""
         result = TestResult(test_name="cache_expiration")
-        
+
         try:
             # Set with short TTL
             await self.cache_service.set("expire_test", "value", ttl=1)
-            
+
             # Verify immediate retrieval
             value = await self.cache_service.get("expire_test")
             assert value == "value", "Value should be available immediately"
-            
+
             # Wait for expiration
             await asyncio.sleep(2)
-            
+
             # Verify expiration
             value = await self.cache_service.get("expire_test")
             assert value is None, "Value should be None after expiration"
-            
+
             result.status = "PASSED"
-            
+
         except Exception as e:
             result.status = "FAILED"
             result.error = e
-            
+
         return result
 ```
 
@@ -453,7 +453,7 @@ class TestOrchestrator:
             passed_tests=0,
             failed_tests=0
         )
-        
+
         try:
             # Test hexagonal architecture compliance
             if "adapters" in components:
@@ -490,11 +490,11 @@ class TestOrchestrator:
 
             report.end_time = datetime.now(UTC)
             report.results = self.results.copy()
-            
+
         except Exception as e:
             report.error = str(e)
             report.end_time = datetime.now(UTC)
-            
+
         return report
 ```
 
@@ -511,7 +511,7 @@ from flx.testing.engines import HexagonalTestEngine
 @pytest.mark.asyncio
 async def test_oracle_wms_integration():
     """Test Oracle WMS integration with FLX testing framework."""
-    
+
     # Configure test environment
     config = WmsConfig(
         base_url="https://test-wms.oraclecloud.com",
@@ -519,18 +519,18 @@ async def test_oracle_wms_integration():
         password="test_password",
         tenant="test_tenant"
     )
-    
+
     client = WmsClient(config)
     test_engine = HexagonalTestEngine()
-    
+
     try:
         # Test client lifecycle
         await client.start()
-        
+
         # Test entity discovery
         entities = await client.get_entities()
         assert isinstance(entities, list), "Should return list of entities"
-        
+
         # Test data extraction
         if entities:
             data = await client.extract_entity(
@@ -538,21 +538,21 @@ async def test_oracle_wms_integration():
                 limit=10
             )
             assert "items" in data, "Should return data with items"
-            
+
     finally:
         await client.stop()
 
 @pytest.mark.asyncio
 async def test_hexagonal_architecture_compliance():
     """Test that Oracle adapters comply with hexagonal architecture."""
-    
+
     from flx_http_oracle_wms.wms_client import WmsClient
     from flx.testing.engines import HexagonalTestEngine
-    
+
     config = WmsConfig(base_url="https://test.example.com")
     client = WmsClient(config)
     test_engine = HexagonalTestEngine()
-    
+
     # Test adapter lifecycle compliance
     result = await test_engine.test_adapter_lifecycle(client._http_client)
     assert result.status == "PASSED", f"Adapter lifecycle test failed: {result.message}"
@@ -563,7 +563,7 @@ async def test_hexagonal_architecture_compliance():
 #### **Hexagonal Architecture Testing**
 
 - ✅ **Architecture Validation**: Tests enforce hexagonal architecture patterns
-- ✅ **Port Compliance**: Validates adapter implementation against port interfaces  
+- ✅ **Port Compliance**: Validates adapter implementation against port interfaces
 - ✅ **Domain Isolation**: Ensures domain logic is free from infrastructure dependencies
 - ✅ **Dependency Inversion**: Tests validate proper dependency direction
 

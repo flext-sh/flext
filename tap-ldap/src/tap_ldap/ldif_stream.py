@@ -109,7 +109,8 @@ class LDIFStream(LDAPStream):
         }
 
     def get_records(
-        self, context: Mapping[str, Any] | None = None  # noqa: ARG002
+        self,
+        context: Mapping[str, Any] | None = None,  # noqa: ARG002
     ) -> Iterable[dict[str, Any]]:
         """Get records from LDIF files.
 
@@ -401,7 +402,8 @@ class LDIFAnalysisStream(LDAPStream):
     primary_keys: ClassVar[list[str]] = ["source_file"]
 
     def get_records(
-        self, context: Mapping[str, Any] | None = None  # noqa: ARG002
+        self,
+        context: Mapping[str, Any] | None = None,  # noqa: ARG002
     ) -> Iterable[dict[str, Any]]:
         """Get LDIF analysis records.
 

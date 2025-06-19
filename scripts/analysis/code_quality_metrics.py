@@ -36,7 +36,8 @@ class CodeQualityMetrics:
                 ["ruff", "check", str(self.src_path)],
                 capture_output=True,
                 text=True,
-                cwd=self.project_root, check=False,
+                cwd=self.project_root,
+                check=False,
             )
 
             # Count errors by category
@@ -51,7 +52,9 @@ class CodeQualityMetrics:
                         error_part = parts[3].strip()
                         if error_part:
                             error_code = error_part.split()[0]
-                            errors_by_type[error_code] = errors_by_type.get(error_code, 0) + 1
+                            errors_by_type[error_code] = (
+                                errors_by_type.get(error_code, 0) + 1
+                            )
                             total_errors += 1
 
             # Calculate total lines of code
@@ -62,7 +65,9 @@ class CodeQualityMetrics:
                 "errors_by_type": errors_by_type,
                 "total_lines": total_lines,
                 "error_density": total_errors / total_lines if total_lines > 0 else 0,
-                "quality_score": max(0, 100 - (total_errors / total_lines * 1000)) if total_lines > 0 else 0,
+                "quality_score": max(0, 100 - (total_errors / total_lines * 1000))
+                if total_lines > 0
+                else 0,
             }
         except Exception as e:
             return {"error": str(e)}
@@ -75,7 +80,8 @@ class CodeQualityMetrics:
                 ["python", "-m", "mypy", "--show-error-codes", str(self.src_path)],
                 capture_output=True,
                 text=True,
-                cwd=self.project_root, check=False,
+                cwd=self.project_root,
+                check=False,
             )
 
             type_errors = 0
@@ -93,8 +99,14 @@ class CodeQualityMetrics:
                 "type_errors": type_errors,
                 "missing_annotations": missing_annotations,
                 "total_functions": total_functions,
-                "annotation_coverage": ((total_functions - missing_annotations) / total_functions * 100) if total_functions > 0 else 0,
-                "type_safety_score": max(0, 100 - (type_errors / total_functions * 100)) if total_functions > 0 else 0,
+                "annotation_coverage": (
+                    (total_functions - missing_annotations) / total_functions * 100
+                )
+                if total_functions > 0
+                else 0,
+                "type_safety_score": max(0, 100 - (type_errors / total_functions * 100))
+                if total_functions > 0
+                else 0,
             }
         except Exception as e:
             return {"error": str(e)}
@@ -113,8 +125,17 @@ class CodeQualityMetrics:
             for py_file in core_path.rglob("*.py"):
                 content = py_file.read_text()
                 # Check for infrastructure imports in core
-                if any(forbidden in content for forbidden in ["import requests", "import sqlalchemy", "import redis"]):
-                    architecture_violations.append(f"Infrastructure import in core: {py_file}")
+                if any(
+                    forbidden in content
+                    for forbidden in [
+                        "import requests",
+                        "import sqlalchemy",
+                        "import redis",
+                    ]
+                ):
+                    architecture_violations.append(
+                        f"Infrastructure import in core: {py_file}"
+                    )
                     compliance_score -= 5
 
         return {
@@ -132,7 +153,8 @@ class CodeQualityMetrics:
                 ["python", "-m", "bandit", "-r", str(self.src_path), "-f", "json"],
                 capture_output=True,
                 text=True,
-                cwd=self.project_root, check=False,
+                cwd=self.project_root,
+                check=False,
             )
 
             if result.stdout:
@@ -200,7 +222,10 @@ class CodeQualityMetrics:
                 "security": security_metrics,
             },
             "recommendations": self._generate_recommendations(
-                lint_metrics, type_metrics, architecture_metrics, security_metrics,
+                lint_metrics,
+                type_metrics,
+                architecture_metrics,
+                security_metrics,
             ),
         }
 
@@ -211,7 +236,11 @@ class CodeQualityMetrics:
             try:
                 lines = py_file.read_text().split("\n")
                 # Count non-empty, non-comment lines
-                code_lines = [line for line in lines if line.strip() and not line.strip().startswith("#")]
+                code_lines = [
+                    line
+                    for line in lines
+                    if line.strip() and not line.strip().startswith("#")
+                ]
                 total_lines += len(code_lines)
             except Exception:
                 continue
@@ -225,22 +254,28 @@ class CodeQualityMetrics:
                 content = py_file.read_text()
                 # Simple regex to count function definitions
                 import re
+
                 functions = re.findall(r"^\s*def\s+\w+", content, re.MULTILINE)
                 total_functions += len(functions)
             except Exception:
                 continue
         return total_functions
 
-    def _generate_recommendations(self, lint_metrics: dict[str, Any],
-                                 type_metrics: dict[str, Any],
-                                 architecture_metrics: dict[str, Any],
-                                 security_metrics: dict[str, Any]) -> list[str]:
+    def _generate_recommendations(
+        self,
+        lint_metrics: dict[str, Any],
+        type_metrics: dict[str, Any],
+        architecture_metrics: dict[str, Any],
+        security_metrics: dict[str, Any],
+    ) -> list[str]:
         """Generate improvement recommendations."""
         recommendations = []
 
         # Lint recommendations
         if lint_metrics.get("total_errors", 0) > 50:
-            recommendations.append("🔧 High lint error count - run aggressive auto-fixing")
+            recommendations.append(
+                "🔧 High lint error count - run aggressive auto-fixing"
+            )
 
         # Type recommendations
         if type_metrics.get("annotation_coverage", 100) < 80:
@@ -255,7 +290,9 @@ class CodeQualityMetrics:
             recommendations.append("🛡️ Address security vulnerabilities")
 
         if not recommendations:
-            recommendations.append("✨ Excellent code quality - maintain current standards!")
+            recommendations.append(
+                "✨ Excellent code quality - maintain current standards!"
+            )
 
         return recommendations
 

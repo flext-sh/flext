@@ -2,12 +2,12 @@ name: CI/CD Pipeline - Target Oracle OIC
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
   pull_request:
-    branches: [ main, develop ]
+    branches: [main, develop]
   schedule:
     # Run daily at 2 AM UTC
-    - cron: '0 2 * * *'
+    - cron: "0 2 * * *"
 
 jobs:
   lint-and-format:
@@ -18,45 +18,45 @@ jobs:
         python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ matrix.python-version }}
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
 
-    - name: Install Poetry
-      uses: snok/install-poetry@v1
-      with:
-        version: latest
-        virtualenvs-create: true
-        virtualenvs-in-project: true
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: latest
+          virtualenvs-create: true
+          virtualenvs-in-project: true
 
-    - name: Load cached venv
-      id: cached-poetry-dependencies
-      uses: actions/cache@v3
-      with:
-        path: .venv
-        key: venv-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
+      - name: Load cached venv
+        id: cached-poetry-dependencies
+        uses: actions/cache@v3
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
 
-    - name: Install dependencies
-      if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-      run: poetry install --no-interaction --no-root
+      - name: Install dependencies
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        run: poetry install --no-interaction --no-root
 
-    - name: Install project
-      run: poetry install --no-interaction
+      - name: Install project
+        run: poetry install --no-interaction
 
-    - name: Run Black (formatting check)
-      run: poetry run black --check --diff src/ tests/
+      - name: Run Black (formatting check)
+        run: poetry run black --check --diff src/ tests/
 
-    - name: Run isort (import sorting check)
-      run: poetry run isort --check-only --diff src/ tests/
+      - name: Run isort (import sorting check)
+        run: poetry run isort --check-only --diff src/ tests/
 
-    - name: Run Ruff (linting)
-      run: poetry run ruff check src/ tests/
+      - name: Run Ruff (linting)
+        run: poetry run ruff check src/ tests/
 
-    - name: Run Ruff (formatting check)
-      run: poetry run ruff format --check src/ tests/
+      - name: Run Ruff (formatting check)
+        run: poetry run ruff format --check src/ tests/
 
   type-checking:
     name: Type Checking
@@ -66,67 +66,67 @@ jobs:
         python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ matrix.python-version }}
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
 
-    - name: Install Poetry
-      uses: snok/install-poetry@v1
-      with:
-        version: latest
-        virtualenvs-create: true
-        virtualenvs-in-project: true
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: latest
+          virtualenvs-create: true
+          virtualenvs-in-project: true
 
-    - name: Load cached venv
-      id: cached-poetry-dependencies
-      uses: actions/cache@v3
-      with:
-        path: .venv
-        key: venv-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
+      - name: Load cached venv
+        id: cached-poetry-dependencies
+        uses: actions/cache@v3
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
 
-    - name: Install dependencies
-      if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-      run: poetry install --no-interaction --no-root
+      - name: Install dependencies
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        run: poetry install --no-interaction --no-root
 
-    - name: Install project
-      run: poetry install --no-interaction
+      - name: Install project
+        run: poetry install --no-interaction
 
-    - name: Run MyPy
-      run: poetry run mypy src/ --strict
+      - name: Run MyPy
+        run: poetry run mypy src/ --strict
 
   security:
     name: Security Checks
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: "3.11"
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
 
-    - name: Install Poetry
-      uses: snok/install-poetry@v1
-      with:
-        version: latest
-        virtualenvs-create: true
-        virtualenvs-in-project: true
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: latest
+          virtualenvs-create: true
+          virtualenvs-in-project: true
 
-    - name: Install dependencies
-      run: poetry install --no-interaction
+      - name: Install dependencies
+        run: poetry install --no-interaction
 
-    - name: Run Bandit (security linting)
-      run: poetry run bandit -r src/ -f json || true
+      - name: Run Bandit (security linting)
+        run: poetry run bandit -r src/ -f json || true
 
-    - name: Run Safety (dependency vulnerability check)
-      run: poetry run safety check
+      - name: Run Safety (dependency vulnerability check)
+        run: poetry run safety check
 
-    - name: Run Poetry Audit
-      run: poetry audit
+      - name: Run Poetry Audit
+        run: poetry audit
 
   test:
     name: Tests
@@ -136,46 +136,46 @@ jobs:
         python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ matrix.python-version }}
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
 
-    - name: Install Poetry
-      uses: snok/install-poetry@v1
-      with:
-        version: latest
-        virtualenvs-create: true
-        virtualenvs-in-project: true
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: latest
+          virtualenvs-create: true
+          virtualenvs-in-project: true
 
-    - name: Load cached venv
-      id: cached-poetry-dependencies
-      uses: actions/cache@v3
-      with:
-        path: .venv
-        key: venv-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
+      - name: Load cached venv
+        id: cached-poetry-dependencies
+        uses: actions/cache@v3
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
 
-    - name: Install dependencies
-      if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-      run: poetry install --no-interaction --no-root
+      - name: Install dependencies
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        run: poetry install --no-interaction --no-root
 
-    - name: Install project
-      run: poetry install --no-interaction
+      - name: Install project
+        run: poetry install --no-interaction
 
-    - name: Run unit tests
-      run: poetry run pytest tests/ -v --tb=short --cov=src --cov-report=xml --cov-fail-under=80
-      env:
-        SKIP_LIVE_TESTS: true
+      - name: Run unit tests
+        run: poetry run pytest tests/ -v --tb=short --cov=src --cov-report=xml --cov-fail-under=80
+        env:
+          SKIP_LIVE_TESTS: true
 
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v3
-      with:
-        file: ./coverage.xml
-        flags: unittests
-        name: codecov-umbrella
-        fail_ci_if_error: false
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage.xml
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: false
 
   build:
     name: Build Package
@@ -183,31 +183,31 @@ jobs:
     needs: [lint-and-format, type-checking, test]
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: "3.11"
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
 
-    - name: Install Poetry
-      uses: snok/install-poetry@v1
-      with:
-        version: latest
-        virtualenvs-create: true
-        virtualenvs-in-project: true
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: latest
+          virtualenvs-create: true
+          virtualenvs-in-project: true
 
-    - name: Install dependencies
-      run: poetry install --no-interaction
+      - name: Install dependencies
+        run: poetry install --no-interaction
 
-    - name: Build package
-      run: poetry build
+      - name: Build package
+        run: poetry build
 
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: dist
-        path: dist/
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist
+          path: dist/
 
   singer-sdk-test:
     name: Singer SDK Compliance
@@ -215,36 +215,36 @@ jobs:
     needs: [build]
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: "3.11"
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
 
-    - name: Install Poetry
-      uses: snok/install-poetry@v1
-      with:
-        version: latest
-        virtualenvs-create: true
-        virtualenvs-in-project: true
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: latest
+          virtualenvs-create: true
+          virtualenvs-in-project: true
 
-    - name: Install dependencies
-      run: poetry install --no-interaction
+      - name: Install dependencies
+        run: poetry install --no-interaction
 
-    - name: Test Singer SDK compliance
-      run: |
-        poetry run python -c "
-        from target_oracle_oic import TargetOracleOIC
-        config = {
-          'base_url': 'https://test.integration.ocp.oraclecloud.com',
-          'oauth_client_id': 'test_client',
-          'oauth_client_secret': 'test_secret',
-          'oauth_token_url': 'https://test.identity.oraclecloud.com/oauth2/v1/token'
-        }
-        target = TargetOracleOIC(config=config)
-        print(f'✅ Target initialized: {target.name}')
-        "
+      - name: Test Singer SDK compliance
+        run: |
+          poetry run python -c "
+          from target_oracle_oic import TargetOracleOIC
+          config = {
+            'base_url': 'https://test.integration.ocp.oraclecloud.com',
+            'oauth_client_id': 'test_client',
+            'oauth_client_secret': 'test_secret',
+            'oauth_token_url': 'https://test.identity.oraclecloud.com/oauth2/v1/token'
+          }
+          target = TargetOracleOIC(config=config)
+          print(f'✅ Target initialized: {target.name}')
+          "
 
   release:
     name: Release
@@ -253,33 +253,33 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: "3.11"
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
 
-    - name: Install Poetry
-      uses: snok/install-poetry@v1
-      with:
-        version: latest
-        virtualenvs-create: true
-        virtualenvs-in-project: true
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: latest
+          virtualenvs-create: true
+          virtualenvs-in-project: true
 
-    - name: Install dependencies
-      run: poetry install --no-interaction
+      - name: Install dependencies
+        run: poetry install --no-interaction
 
-    - name: Download build artifacts
-      uses: actions/download-artifact@v3
-      with:
-        name: dist
-        path: dist/
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: dist
+          path: dist/
 
-    - name: Publish to PyPI
-      env:
-        POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_TOKEN }}
-      run: poetry publish
-      if: env.POETRY_PYPI_TOKEN_PYPI != ''
+      - name: Publish to PyPI
+        env:
+          POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_TOKEN }}
+        run: poetry publish
+        if: env.POETRY_PYPI_TOKEN_PYPI != ''

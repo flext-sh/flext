@@ -16,7 +16,7 @@ This directory contains Oracle-specific documentation, API specifications, and i
 Official Oracle documentation in PDF and Markdown formats:
 
 - **REST API Guides**: WMS and OIC service specifications
-- **Implementation Guides**: Configuration and deployment documentation  
+- **Implementation Guides**: Configuration and deployment documentation
 - **Security Documentation**: Authentication and authorization patterns
 - **SSO Setup Guides**: Single sign-on integration procedures
 

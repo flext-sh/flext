@@ -28,7 +28,7 @@
 
 ```
 Observability → Know what's happening
-Resilience → Handle what goes wrong  
+Resilience → Handle what goes wrong
 Security → Protect what matters
 ```
 
@@ -69,7 +69,7 @@ class HealthSpectrum:
     DEGRADED: Partial functionality, but operational
     UNHEALTHY: Critical failures, needs intervention
     """
-    
+
     def aggregate_health(self, components: List[Health]) -> OverallHealth:
         """
         Health aggregation logic:
@@ -98,12 +98,12 @@ class SystemBehaviorMetrics:
        - Traffic: How much is happening
        - Errors: What's failing
        - Saturation: How full we are
-       
+
     2. Business Metrics:
        - User actions completed
        - Revenue processed
        - SLA compliance
-       
+
     3. Infrastructure Metrics:
        - Resource utilization
        - Connection pool status
@@ -119,9 +119,9 @@ Distributed tracing shows **causality chains** across services:
 # The semantic concept of tracing
 class CausalityChain:
     """
-    User Request → API Gateway → Auth Service → 
+    User Request → API Gateway → Auth Service →
     Business Logic → Database → Cache → Response
-    
+
     Each step has:
     - Duration (performance)
     - Status (success/failure)
@@ -166,7 +166,7 @@ class RelationshipStates:
     OPEN: "You've failed me too much, I'll stop asking"
     HALF_OPEN: "Let me check if you're better now"
     """
-    
+
     def semantic_transition(self, current_state, event):
         """
         Trust is lost quickly (few failures → OPEN)
@@ -188,13 +188,13 @@ Retries embody **bounded optimism** about transient failures:
 class RetrySemantics:
     """
     Retry patterns encode assumptions:
-    
+
     1. Immediate retry: "Maybe it was a hiccup"
     2. Exponential backoff: "Give them time to recover"
     3. Jitter: "Don't thundering herd"
     4. Max attempts: "Know when to give up"
     """
-    
+
     def should_retry(self, error: Exception) -> bool:
         """
         Semantic retry decisions:
@@ -213,7 +213,7 @@ Bulkheads prevent **failure contamination** across system boundaries:
 class FailureIsolation:
     """
     Like ship compartments, system resources are isolated:
-    
+
     1. Thread pools per external service
     2. Connection pools per database
     3. Separate queues per priority
@@ -258,7 +258,7 @@ class IdentitySemantics:
     - Something you have (token, device)
     - Something you are (biometric)
     - Somewhere you are (network, location)
-    
+
     Confidence increases with more facets
     """
 ```
@@ -277,7 +277,7 @@ Authorization is about **what actions are allowed**:
 class CapabilityModel:
     """
     Not "what role do you have" but "what can you do":
-    
+
     1. Resource-based: Can access specific items
     2. Action-based: Can perform specific operations
     3. Attribute-based: Dynamic based on context
@@ -315,10 +315,10 @@ class ObservabilityDrivenResilience:
     - Latency > SLA → Reduce load
     - Queue depth > limit → Back pressure
     """
-    
+
     async def adaptive_behavior(self):
         metrics = await self.collect_metrics()
-        
+
         if metrics.error_rate > 0.5:
             self.circuit_breaker.open()
         elif metrics.latency_p99 > self.sla:
@@ -340,7 +340,7 @@ class SecurityObservability:
     - Encryption operations (performance impact)
     - Audit trail (compliance)
     """
-    
+
     def security_metrics(self):
         return {
             "auth_failures": self.count_auth_failures(),
@@ -379,7 +379,7 @@ class GraduatedRollout:
     2. Pilot: 10% traffic, watch metrics
     3. Rollout: 50% traffic, confirm stability
     4. Full: 100% traffic, keep monitoring
-    
+
     Rollback at any sign of issues
     """
 ```
@@ -396,7 +396,7 @@ class ChaosExperiments:
     - Inject latency (test timeouts)
     - Corrupt data (test validation)
     - Fill disk (test resource limits)
-    
+
     Always in controlled environments first
     """
 ```

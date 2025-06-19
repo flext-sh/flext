@@ -34,16 +34,16 @@ Meltano loader plugins (targets) provide enterprise-grade data loading capabilit
 
 ### **Loader Categories**
 
-| **Plugin** | **Destination** | **Type** | **Status** | **Key Features** |
-|------------|----------------|----------|------------|------------------|
-| **[Oracle ADB](./target-adb.md)** | Oracle Autonomous Database | Database | ✅ Production | Direct ADB loading, bulk insert, schema management |
-| **[Oracle OIC](./target-oic.md)** | Oracle Integration Cloud | API/REST | ✅ Production | OIC API loading, integration flow triggers |
-| **[OIC ADB](./target-oic-adb.md)** | Oracle ADB via OIC | Hybrid | ✅ Production | ADB loading through OIC integration layer |
+| **Plugin**                         | **Destination**            | **Type** | **Status**    | **Key Features**                                   |
+| ---------------------------------- | -------------------------- | -------- | ------------- | -------------------------------------------------- |
+| **[Oracle ADB](./target-adb.md)**  | Oracle Autonomous Database | Database | ✅ Production | Direct ADB loading, bulk insert, schema management |
+| **[Oracle OIC](./target-oic.md)**  | Oracle Integration Cloud   | API/REST | ✅ Production | OIC API loading, integration flow triggers         |
+| **[OIC ADB](./target-oic-adb.md)** | Oracle ADB via OIC         | Hybrid   | ✅ Production | ADB loading through OIC integration layer          |
 
 ### **🚀 Key Capabilities**
 
 - **Oracle Native**: Full Oracle ecosystem destination support
-- **Singer Compliance**: Full Singer SDK specification compliance  
+- **Singer Compliance**: Full Singer SDK specification compliance
 - **Bulk Loading**: Optimized batch loading for large datasets
 - **Schema Management**: Automatic table creation and evolution
 - **Enterprise Features**: Transaction support, error handling, monitoring

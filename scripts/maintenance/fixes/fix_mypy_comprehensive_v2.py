@@ -12,7 +12,8 @@ def run_mypy() -> str:
             ["mypy", "flx/", "--config-file", "mypy.ini"],
             capture_output=True,
             text=True,
-            cwd="/home/marlonsc/pyauto", check=False,
+            cwd="/home/marlonsc/pyauto",
+            check=False,
         )
         return result.stdout
     except Exception as e:
@@ -31,12 +32,14 @@ def parse_mypy_errors(output: str) -> list[dict[str, str]]:
             match = re.match(r"^([^:]+):(\d+): error: (.+) \[([^\]]+)\]", line)
             if match:
                 file_path, line_no, message, error_code = match.groups()
-                errors.append({
-                    "file": file_path,
-                    "line": int(line_no),
-                    "message": message,
-                    "code": error_code,
-                })
+                errors.append(
+                    {
+                        "file": file_path,
+                        "line": int(line_no),
+                        "message": message,
+                        "code": error_code,
+                    }
+                )
 
     return errors
 
@@ -101,9 +104,13 @@ def fix_type_annotations(file_path: str, line_no: int, message: str) -> bool:
                     var_name = var_match.group(1)
                     # Add type annotation based on context
                     if f"{var_name} = []" in line:
-                        line = line.replace(f"{var_name} = []", f"{var_name}: list[Any] = []")
+                        line = line.replace(
+                            f"{var_name} = []", f"{var_name}: list[Any] = []"
+                        )
                     elif f"{var_name} = {{}}" in line:
-                        line = line.replace(f"{var_name} = {{}}", f"{var_name}: dict[str, Any] = {{}}")
+                        line = line.replace(
+                            f"{var_name} = {{}}", f"{var_name}: dict[str, Any] = {{}}"
+                        )
                     else:
                         # Generic annotation
                         line = line.replace(f"{var_name} = ", f"{var_name}: Any = ")
@@ -161,7 +168,9 @@ def fix_file_errors(file_path: str, errors: list[dict[str, str]]) -> int:
 
     # Group errors by type
     logging_errors = [e for e in errors if "logging" in e["message"].lower()]
-    type_errors = [e for e in errors if e["code"] in {"no-untyped-def", "var-annotated"}]
+    type_errors = [
+        e for e in errors if e["code"] in {"no-untyped-def", "var-annotated"}
+    ]
     attr_errors = [e for e in errors if e["code"] == "attr-defined"]
 
     # Fix logging imports first

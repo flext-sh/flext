@@ -69,7 +69,7 @@ ORACLE_DB_SERVICE_NAME="ORCL"
 ORACLE_DB_USERNAME="your_db_user"
 ORACLE_DB_PASSWORD="your_db_password"
 
-# Oracle WMS Configuration  
+# Oracle WMS Configuration
 WMS_URL="https://your-wms.oracle.com"
 WMS_USERNAME="wms_user"
 WMS_PASSWORD="wms_password"
@@ -94,33 +94,33 @@ from flx_database_oracle import FlxOracleDbAdapter, FlxDatabaseConfig
 
 async def test_oracle_database():
     """Test Oracle database connection."""
-    
+
     # Load configuration from environment
     config = FlxDatabaseConfig.from_env()
     adapter = FlxOracleDbAdapter(config)
-    
+
     try:
         # Connect to database
         await adapter.connect()
         print("✅ Oracle Database connected successfully")
-        
+
         # Test query - real Oracle system tables
         tables = await adapter.execute_query("""
-            SELECT table_name, owner 
-            FROM all_tables 
+            SELECT table_name, owner
+            FROM all_tables
             WHERE owner NOT IN ('SYS', 'SYSTEM', 'CTXSYS', 'MDSYS', 'OLAPSYS')
             AND rownum <= 10
             ORDER BY table_name
         """)
-        
+
         print(f"📊 Found {len(tables)} tables:")
         for table in tables:
             print(f"  - {table['OWNER']}.{table['TABLE_NAME']}")
-        
+
         # Test connection info
         info = await adapter.get_connection_info()
         print(f"🔗 Connected to: {info['database_name']} (Version: {info['version']})")
-        
+
     except Exception as e:
         print(f"❌ Database connection failed: {e}")
     finally:
@@ -139,33 +139,33 @@ from flx_http_oracle_wms import WmsClient, WmsConfig
 
 async def test_oracle_wms():
     """Test Oracle WMS integration."""
-    
+
     # Load WMS configuration
     config = WmsConfig.from_env()
     client = WmsClient(config)
-    
+
     try:
         # Start WMS client (includes authentication)
         await client.start()
         print("✅ Oracle WMS authenticated successfully")
-        
+
         # Test WMS operations - real endpoints
         print("🔍 Discovering WMS entities...")
         entities = await client.get_entities()
         print(f"📋 Available entities: {', '.join(entities[:5])}...")
-        
+
         # Test specific WMS query
         if "orders" in entities:
             orders = await client.get_orders(limit=5)
             print(f"📦 Found {len(orders)} recent orders")
-            
+
             for order in orders[:3]:
                 print(f"  - Order {order.get('order_id', 'N/A')}: {order.get('status', 'N/A')}")
-        
+
         # Test WMS facility info
         facility_info = await client.get_facility_info()
         print(f"🏭 Facility: {facility_info.get('facility_code', 'N/A')} - {facility_info.get('name', 'N/A')}")
-        
+
     except Exception as e:
         print(f"❌ WMS connection failed: {e}")
     finally:
@@ -184,35 +184,35 @@ from flx_http_oracle_oic import OicClient, OracleOicConfig
 
 async def test_oracle_oic():
     """Test Oracle OIC integration."""
-    
+
     # Load OIC configuration
     config = OracleOicConfig.from_env()
     client = OicClient(config)
-    
+
     try:
         # Authenticate with OIC (OAuth2)
         token = await client.authenticate()
         print("✅ Oracle OIC authenticated successfully")
         print(f"🎫 Token: {token[:20]}...")
-        
+
         # List integrations
         print("🔍 Listing OIC integrations...")
         integrations = await client.list_integrations()
         print(f"⚙️  Found {len(integrations)} integrations")
-        
+
         for integration in integrations[:3]:
             print(f"  - {integration.get('name', 'N/A')}: {integration.get('status', 'N/A')}")
-        
+
         # Test integration details
         if integrations:
             first_integration = integrations[0]
             integration_id = first_integration.get('id')
-            
+
             details = await client.get_integration_details(integration_id)
             print(f"📄 Integration '{details.get('name')}' has {len(details.get('connections', []))} connections")
-        
+
         print("✨ OIC integration test completed successfully")
-        
+
     except Exception as e:
         print(f"❌ OIC connection failed: {e}")
 
@@ -234,45 +234,45 @@ from flx_http_oracle_oic import OicClient, OracleOicConfig
 
 class OracleIntegrationApp:
     """Complete Oracle integration application."""
-    
+
     def __init__(self):
         # Initialize configurations
         self.db_config = FlxDatabaseConfig.from_env()
         self.wms_config = WmsConfig.from_env()
         self.oic_config = OracleOicConfig.from_env()
-        
+
         # Initialize clients
         self.db_adapter = FlxOracleDbAdapter(self.db_config)
         self.wms_client = WmsClient(self.wms_config)
         self.oic_client = OicClient(self.oic_config)
-    
+
     async def start(self):
         """Start all Oracle connections."""
         print("🚀 Starting Oracle integration...")
-        
+
         # Connect to Oracle Database
         await self.db_adapter.connect()
         print("✅ Oracle Database connected")
-        
+
         # Connect to Oracle WMS
         await self.wms_client.start()
         print("✅ Oracle WMS connected")
-        
+
         # Authenticate with Oracle OIC
         await self.oic_client.authenticate()
         print("✅ Oracle OIC authenticated")
-        
+
         print("🎉 All Oracle systems connected successfully!")
-    
+
     async def sync_wms_to_database(self):
         """Sync WMS data to Oracle Database."""
         print("🔄 Syncing WMS data to database...")
-        
+
         try:
             # Get orders from WMS
             orders = await self.wms_client.get_orders(status="PENDING")
             print(f"📦 Retrieved {len(orders)} pending orders from WMS")
-            
+
             # Insert into database
             for order in orders:
                 await self.db_adapter.execute_query("""
@@ -287,25 +287,25 @@ class OracleIntegrationApp:
                     "facility_code": order.get("facility_code"),
                     "item_count": len(order.get("items", []))
                 })
-            
+
             print(f"✅ Synced {len(orders)} orders to database")
-            
+
         except Exception as e:
             print(f"❌ Sync failed: {e}")
-    
+
     async def trigger_oic_integration(self, integration_name: str, data: dict):
         """Trigger OIC integration with data."""
         print(f"⚡ Triggering OIC integration: {integration_name}")
-        
+
         try:
             result = await self.oic_client.trigger_integration(integration_name, data)
             print(f"✅ Integration triggered successfully: {result.get('status')}")
             return result
-            
+
         except Exception as e:
             print(f"❌ Integration trigger failed: {e}")
             return None
-    
+
     async def health_check(self):
         """Check health of all Oracle connections."""
         health = {
@@ -313,30 +313,30 @@ class OracleIntegrationApp:
             "wms": False,
             "oic": False
         }
-        
+
         try:
             # Test database
             await self.db_adapter.execute_query("SELECT 1 FROM DUAL")
             health["database"] = True
         except:
             pass
-        
+
         try:
             # Test WMS
             await self.wms_client.get_entities()
             health["wms"] = True
         except:
             pass
-        
+
         try:
             # Test OIC
             await self.oic_client.list_integrations()
             health["oic"] = True
         except:
             pass
-        
+
         return health
-    
+
     async def close(self):
         """Close all connections."""
         await self.db_adapter.close()
@@ -347,25 +347,25 @@ class OracleIntegrationApp:
 async def main():
     """Main application example."""
     app = OracleIntegrationApp()
-    
+
     try:
         # Start all Oracle connections
         await app.start()
-        
+
         # Perform operations
         await app.sync_wms_to_database()
-        
+
         # Trigger OIC integration
         await app.trigger_oic_integration("INVENTORY_SYNC", {
             "source": "WMS",
             "timestamp": "2025-06-11T10:00:00Z",
             "data": {"sync_type": "incremental"}
         })
-        
+
         # Health check
         health = await app.health_check()
         print(f"🏥 Health status: {health}")
-        
+
     finally:
         await app.close()
 
@@ -402,18 +402,18 @@ async def db_tables(
     limit: int = 10
 ) -> None:
     """List Oracle database tables.
-    
+
     Args:
         schema: Schema name to filter tables
         limit: Maximum number of tables to show
     """
     try:
         await oracle_app.db_adapter.connect()
-        
+
         if schema:
             sql = """
             SELECT table_name, owner, num_rows
-            FROM all_tables 
+            FROM all_tables
             WHERE owner = UPPER(:schema)
             AND rownum <= :limit
             ORDER BY table_name
@@ -422,21 +422,21 @@ async def db_tables(
         else:
             sql = """
             SELECT table_name, num_rows
-            FROM user_tables 
+            FROM user_tables
             WHERE rownum <= :limit
             ORDER BY table_name
             """
             params = {"limit": limit}
-        
+
         tables = await oracle_app.db_adapter.execute_query(sql, params)
-        
+
         print(f"📊 Database Tables ({len(tables)} found):")
         for table in tables:
             owner = table.get('OWNER', 'USER')
             name = table['TABLE_NAME']
             rows = table.get('NUM_ROWS', 'N/A')
             print(f"  {owner}.{name} ({rows} rows)")
-    
+
     except Exception as e:
         print(f"❌ Error: {e}")
     finally:
@@ -449,7 +449,7 @@ async def wms_orders(
     limit: int = 10
 ) -> None:
     """List Oracle WMS orders.
-    
+
     Args:
         status: Order status filter
         facility: Facility code filter
@@ -457,20 +457,20 @@ async def wms_orders(
     """
     try:
         await oracle_app.wms_client.start()
-        
+
         orders = await oracle_app.wms_client.get_orders(
             status=status,
             facility=facility,
             limit=limit
         )
-        
+
         print(f"📦 WMS Orders ({len(orders)} found, status={status}):")
         for order in orders:
             order_id = order.get('order_id', 'N/A')
             order_status = order.get('status', 'N/A')
             items = len(order.get('items', []))
             print(f"  {order_id}: {order_status} ({items} items)")
-    
+
     except Exception as e:
         print(f"❌ Error: {e}")
     finally:
@@ -481,16 +481,16 @@ async def oic_integrations() -> None:
     """List Oracle OIC integrations."""
     try:
         await oracle_app.oic_client.authenticate()
-        
+
         integrations = await oracle_app.oic_client.list_integrations()
-        
+
         print(f"⚙️  OIC Integrations ({len(integrations)} found):")
         for integration in integrations:
             name = integration.get('name', 'N/A')
             status = integration.get('status', 'N/A')
             version = integration.get('version', 'N/A')
             print(f"  {name} (v{version}): {status}")
-    
+
     except Exception as e:
         print(f"❌ Error: {e}")
 
@@ -501,7 +501,7 @@ async def sync_data(
     dry_run: bool = False
 ) -> None:
     """Sync data between Oracle systems.
-    
+
     Args:
         source: Source system (wms|database|oic)
         target: Target system (wms|database|oic)
@@ -509,14 +509,14 @@ async def sync_data(
     """
     try:
         await oracle_app.start()
-        
+
         if source == "wms" and target == "database":
             if dry_run:
                 orders = await oracle_app.wms_client.get_orders(status="PENDING")
                 print(f"🔍 Would sync {len(orders)} orders from WMS to Database")
             else:
                 await oracle_app.sync_wms_to_database()
-        
+
         elif source == "database" and target == "oic":
             # Trigger OIC integration with database data
             result = await oracle_app.trigger_oic_integration("DATA_EXPORT", {
@@ -524,10 +524,10 @@ async def sync_data(
                 "export_type": "incremental"
             })
             print(f"✅ OIC integration triggered: {result}")
-        
+
         else:
             print(f"❌ Unsupported sync: {source} -> {target}")
-    
+
     except Exception as e:
         print(f"❌ Error: {e}")
     finally:
@@ -538,17 +538,17 @@ async def health() -> None:
     """Check health of all Oracle systems."""
     try:
         await oracle_app.start()
-        
+
         health = await oracle_app.health_check()
-        
+
         print("🏥 Oracle Systems Health:")
         for system, status in health.items():
             icon = "✅" if status else "❌"
             print(f"  {icon} {system.upper()}: {'healthy' if status else 'unhealthy'}")
-        
+
         overall = "✅ All systems healthy" if all(health.values()) else "⚠️  Some systems unhealthy"
         print(f"\n{overall}")
-    
+
     except Exception as e:
         print(f"❌ Error: {e}")
     finally:
@@ -604,7 +604,7 @@ oracle:
     pool_size: ${DB_POOL_SIZE:20}
     use_ssl: ${DB_USE_SSL:true}
     connection_timeout: 30
-    
+
   wms:
     base_url: "${WMS_URL}"
     username: "${WMS_USERNAME}"
@@ -613,7 +613,7 @@ oracle:
     facility_code: "${WMS_FACILITY:01}"
     timeout: 30.0
     max_retries: 3
-    
+
   oic:
     instance_id: "${OIC_INSTANCE_ID}"
     region: "${OIC_REGION}"
@@ -621,7 +621,7 @@ oracle:
     client_secret: "${OIC_CLIENT_SECRET}"
     client_aud: "${OIC_CLIENT_AUD}"
     idcs_url: "${OIC_IDCS_URL}"
-    
+
   monitoring:
     health_check_interval: 60
     metrics_enabled: true
@@ -641,7 +641,7 @@ oracle:
     password: "hr"
     pool_size: 5
     use_ssl: false
-    
+
   wms:
     base_url: "https://test-wms.oracle.com"
     username: "test_user"
@@ -649,12 +649,12 @@ oracle:
     company_code: "TEST"
     facility_code: "TEST01"
     timeout: 10.0
-    
+
   oic:
     instance_id: "test-instance"
     region: "us-ashburn-1"
     # Use test credentials
-    
+
   monitoring:
     health_check_interval: 30
     metrics_enabled: false

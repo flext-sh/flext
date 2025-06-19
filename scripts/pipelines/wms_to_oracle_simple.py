@@ -238,7 +238,9 @@ class SimpleWmsToOraclePipeline:
             if "updated_by" not in processed_fields:
                 processed_fields["updated_by"] = "WMS_INTEGRATION"
 
-            self.logger.debug(f"Registro WMS processado: {len(processed_fields)} campos")
+            self.logger.debug(
+                f"Registro WMS processado: {len(processed_fields)} campos"
+            )
             return processed_fields
 
         except Exception as e:

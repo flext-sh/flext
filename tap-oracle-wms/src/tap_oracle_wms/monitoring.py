@@ -735,7 +735,9 @@ class AlertManager:
                 elif not should_trigger and alert.active:
                     # Clear alert
                     alert.active = False
-                    logger.info("ALERT CLEARED: {alert.name} (value: %s)", current_value)
+                    logger.info(
+                        "ALERT CLEARED: {alert.name} (value: %s)", current_value
+                    )
 
                     # Record alert cleared metric
                     self.metrics.record_counter(

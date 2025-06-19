@@ -5,16 +5,19 @@
 ### 📊 Resultados dos Testes Reais
 
 1. **Conectividade WMS**: ✅ SUCESSO
+
    - URL: `https://ta29.wms.ocs.oraclecloud.com/raizen_test`
    - Autenticação: Basic Auth funcionando
    - Credenciais: Validadas com sucesso
 
 2. **Descoberta de Entidades**: ✅ SUCESSO
+
    - Total descoberto: **311 entidades**
    - Método: Discovery dinâmico via API `/entity`
    - Schema: Geração automática via `/describe`
 
 3. **Extração de Dados**: ✅ SUCESSO
+
    ```json
    {
      "id": 3,
@@ -44,11 +47,13 @@
 ### 📝 Exemplos de Uso Validados
 
 1. **Discovery**:
+
    ```bash
    tap-oracle-wms --config config.json --discover > catalog.json
    ```
 
 2. **Extração**:
+
    ```bash
    tap-oracle-wms --config config.json --catalog catalog.json | target-jsonl
    ```
@@ -71,6 +76,7 @@ O **TAP está 100% funcional**. Para completar a solução:
 ### 📊 Dados Reais Extraídos
 
 Facilidades OXXO extraídas com sucesso:
+
 - OXXO OROZIMBO MAIA (Campinas/SP)
 - OXXO MALL VIEIRA (Campinas/SP)
 - OXXO BARAO DE JAGUARA (Campinas/SP)

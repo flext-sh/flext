@@ -47,7 +47,7 @@ graph TD
     I --> J[Deployment]
     J --> K[Monitoring & Feedback]
     K --> A
-    
+
     D --> C
     E --> C
     G --> C
@@ -62,31 +62,31 @@ graph TD
 feature:
   name: "User Registration Enhancement"
   description: "Add social media authentication to user registration"
-  
+
   requirements:
     functional:
       - Support OAuth2 authentication with Google/GitHub
       - Maintain existing email/password registration
       - Validate social media profile data
-    
+
     non_functional:
       - Response time < 2 seconds
       - Support 1000 concurrent registrations
       - 99.9% availability
-  
+
   acceptance_criteria:
     - User can register using Google OAuth
     - User can register using GitHub OAuth
     - Social profile data is validated and stored
     - Email verification is sent for social registrations
     - Error handling for failed OAuth flows
-  
+
   architecture_impact:
     - New OAuth adapter in infrastructure layer
     - Extended User entity with social profile
     - New authentication service in application layer
     - Updated registration command handlers
-  
+
   testing_strategy:
     - Unit tests for new OAuth adapter
     - Integration tests for authentication flow
@@ -183,22 +183,22 @@ make lint      # Code quality checks
 # 3. Development cycle
 while developing; do
     # Make changes
-    
+
     # Run relevant tests frequently
     pytest tests/unit/test_oauth_adapter.py -v
-    
+
     # Check quality continuously
     make format  # Auto-format code
     make lint    # Check for issues
-    
+
     # Commit frequently with meaningful messages
     git add .
     git commit -m "feat: implement Google OAuth adapter
-    
+
     - Add GoogleOAuthAdapter implementing AuthProvider interface
     - Include profile data validation and mapping
     - Add comprehensive unit tests with 95% coverage
-    
+
     Closes #123"
 done
 
@@ -216,7 +216,7 @@ git push origin feature/user-registration-oauth
 # 1. Write failing test first
 class TestGoogleOAuthAdapter:
     """Test Google OAuth adapter implementation."""
-    
+
     def test_authenticate_user_with_valid_token(self):
         """Test successful authentication with valid Google token."""
         # Arrange
@@ -224,17 +224,17 @@ class TestGoogleOAuthAdapter:
             client_id="test_client_id",
             client_secret="test_secret"
         )
-        
+
         valid_token = "valid_google_token"
         expected_profile = UserProfile(
             email="user@example.com",
             name="Test User",
             provider="google"
         )
-        
+
         # Act
         result = adapter.authenticate(valid_token)
-        
+
         # Assert
         assert result.success is True
         assert result.profile.email == expected_profile.email
@@ -246,11 +246,11 @@ class TestGoogleOAuthAdapter:
 # 3. Implement minimal code to pass test
 class GoogleOAuthAdapter:
     """Google OAuth authentication adapter."""
-    
+
     def __init__(self, client_id: str, client_secret: str) -> None:
         self._client_id = client_id
         self._client_secret = client_secret
-    
+
     def authenticate(self, token: str) -> AuthenticationResult:
         """Authenticate user with Google OAuth token."""
         # Minimal implementation to pass test
@@ -261,7 +261,7 @@ class GoogleOAuthAdapter:
                 provider="google"
             )
             return AuthenticationResult.success(profile)
-        
+
         return AuthenticationResult.failure("Invalid token")
 
 # 4. Run test (should pass)
@@ -283,12 +283,12 @@ logger = logging.getLogger(__name__)
 
 class AuthProvider(ABC):
     """Abstract base class for authentication providers."""
-    
+
     @abstractmethod
     async def authenticate(self, token: str) -> AuthenticationResult:
         """Authenticate user with provider token."""
         pass
-    
+
     @abstractmethod
     async def get_user_profile(self, token: str) -> Optional[UserProfile]:
         """Get user profile from provider."""
@@ -296,7 +296,7 @@ class AuthProvider(ABC):
 
 class GoogleOAuthAdapter(AuthProvider):
     """Google OAuth2 authentication adapter."""
-    
+
     def __init__(
         self,
         *,
@@ -306,7 +306,7 @@ class GoogleOAuthAdapter(AuthProvider):
         logger: logging.Logger
     ) -> None:
         """Initialize Google OAuth adapter.
-        
+
         Args:
             client_id: Google OAuth client ID
             client_secret: Google OAuth client secret
@@ -317,36 +317,36 @@ class GoogleOAuthAdapter(AuthProvider):
         self._client_secret = client_secret
         self._http_client = http_client
         self._logger = logger
-    
+
     async def authenticate(self, token: str) -> AuthenticationResult:
         """Authenticate user with Google OAuth token.
-        
+
         Args:
             token: Google OAuth access token
-            
+
         Returns:
             Authentication result with user profile
-            
+
         Raises:
             AuthenticationError: If authentication fails
         """
         try:
             # Validate token with Google
             profile_data = await self._get_google_profile(token)
-            
+
             if not profile_data:
                 return AuthenticationResult.failure("Invalid token")
-            
+
             # Map Google profile to our domain model
             profile = self._map_google_profile(profile_data)
-            
+
             self._logger.info("Google authentication successful", extra={
                 "user_email": profile.email,
                 "provider": "google"
             })
-            
+
             return AuthenticationResult.success(profile)
-            
+
         except Exception as e:
             self._logger.error("Google authentication failed", exc_info=e, extra={
                 "provider": "google"
@@ -367,9 +367,11 @@ class GoogleOAuthAdapter(AuthProvider):
 ## Pull Request Description
 
 ### Summary
+
 Brief description of changes and motivation.
 
 ### Type of Change
+
 - [ ] 🐛 Bug fix (non-breaking change which fixes an issue)
 - [ ] ✨ New feature (non-breaking change which adds functionality)
 - [ ] 💥 Breaking change (fix or feature that would cause existing functionality to not work as expected)
@@ -379,6 +381,7 @@ Brief description of changes and motivation.
 - [ ] 🧪 Tests (adding missing tests or correcting existing tests)
 
 ### Architecture Impact
+
 - [ ] No architectural changes
 - [ ] New ports/adapters added
 - [ ] Domain model changes
@@ -386,6 +389,7 @@ Brief description of changes and motivation.
 - [ ] Breaking API changes
 
 ### Testing
+
 - [ ] Unit tests added/updated
 - [ ] Integration tests added/updated
 - [ ] E2E tests added/updated
@@ -393,6 +397,7 @@ Brief description of changes and motivation.
 - [ ] Performance testing completed
 
 ### Quality Checklist
+
 - [ ] Code follows style guidelines
 - [ ] Self-review of code completed
 - [ ] Code is commented and self-documenting
@@ -401,18 +406,20 @@ Brief description of changes and motivation.
 - [ ] Documentation updated
 
 ### Security Considerations
+
 - [ ] No sensitive data exposed
 - [ ] Input validation implemented
 - [ ] Authentication/authorization considered
 - [ ] Dependencies security checked
 
 ### Related Issues
+
 Closes #(issue_number)
 ```
 
 ### Review Guidelines
 
-```python
+````python
 # Code review checklist and examples
 
 # ✅ Architecture Review Points
@@ -443,7 +450,7 @@ def review_code_quality(code_change):
 
 # 🔍 Architecture Feedback
 """
-This adapter is directly importing domain entities, which violates our 
+This adapter is directly importing domain entities, which violates our
 hexagonal architecture principles. Consider:
 
 1. Creating a port interface in the domain layer
@@ -463,12 +470,14 @@ class DatabaseUserRegistrationAdapter(UserRegistrationPort):
     async def register_user(self, registration_data: UserRegistrationData) -> User:
         # Implementation here
         pass
-```
+````
+
 """
 
 # 💡 Code Quality Feedback
+
 """
-Consider extracting this complex validation logic into separate methods 
+Consider extracting this complex validation logic into separate methods
 for better readability and testability:
 
 ```python
@@ -490,9 +499,11 @@ def _validate_email(self, email: str) -> None:
     if not email or '@' not in email:
         raise ValidationError("Invalid email format")
 ```
+
 """
 
 # ✅ Testing Feedback
+
 """
 Great test coverage! Consider adding these edge cases:
 
@@ -513,8 +524,10 @@ def test_oauth_authentication(provider, token, expected):
     # Test implementation
     pass
 ```
+
 """
-```
+
+````
 
 ## Phase 4: CI/CD Integration
 
@@ -540,40 +553,40 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: ${{ env.PYTHON_VERSION }}
-          
+
       - name: Cache dependencies
         uses: actions/cache@v3
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/pyproject.toml') }}
-          
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
-          
+
       - name: Code formatting
         run: black --check --diff .
-        
+
       - name: Import sorting
         run: ruff check --select I .
-        
+
       - name: Linting
         run: ruff check .
-        
+
       - name: Type checking
         run: mypy src/
-        
+
       - name: Security scanning
         run: |
           bandit -r src/ -f json -o reports/bandit.json
           safety check --json --output reports/safety.json
-          
+
       - name: Upload quality reports
         uses: actions/upload-artifact@v3
         with:
@@ -584,7 +597,7 @@ jobs:
     name: Test Suite
     runs-on: ubuntu-latest
     needs: quality
-    
+
     services:
       postgres:
         image: postgres:15
@@ -598,7 +611,7 @@ jobs:
           --health-retries 5
         ports:
           - 5432:5432
-          
+
       redis:
         image: redis:7
         options: >-
@@ -612,32 +625,32 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: ${{ env.PYTHON_VERSION }}
-          
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
-          
+
       - name: Run unit tests
         run: pytest tests/unit/ -v --cov=flx --cov-report=xml:reports/coverage-unit.xml
-        
+
       - name: Run integration tests
         run: pytest tests/integration/ -v --cov=flx --cov-append --cov-report=xml:reports/coverage-integration.xml
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_flx
           REDIS_URL: redis://localhost:6379/0
-          
+
       - name: Run E2E tests
         run: pytest tests/e2e/ -v --cov=flx --cov-append --cov-report=xml:reports/coverage-e2e.xml
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_flx
           REDIS_URL: redis://localhost:6379/0
-          
+
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
@@ -650,27 +663,27 @@ jobs:
     runs-on: ubuntu-latest
     needs: [quality, test]
     if: github.event_name == 'push'
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: ${{ env.PYTHON_VERSION }}
-          
+
       - name: Install build dependencies
         run: |
           python -m pip install --upgrade pip
           pip install build twine
-          
+
       - name: Build package
         run: python -m build
-        
+
       - name: Check package
         run: twine check dist/*
-        
+
       - name: Upload build artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -683,13 +696,13 @@ jobs:
     needs: build
     if: github.ref == 'refs/heads/develop'
     environment: staging
-    
+
     steps:
       - name: Deploy to staging environment
         run: |
           echo "Deploying to staging..."
           # Deployment commands here
-```
+````
 
 ### Quality Gates Configuration
 
@@ -718,17 +731,17 @@ QUALITY_GATES = {
 def evaluate_quality_gates(metrics: QualityMetrics) -> GateResult:
     """Evaluate quality gates against metrics."""
     result = GateResult()
-    
+
     # Check blocking gates
     for gate, threshold in QUALITY_GATES['blocking'].items():
         if not meets_threshold(metrics, gate, threshold):
             result.add_blocker(gate, metrics.get(gate), threshold)
-    
+
     # Check warning gates
     for gate, threshold in QUALITY_GATES['warning'].items():
         if not meets_threshold(metrics, gate, threshold):
             result.add_warning(gate, metrics.get(gate), threshold)
-    
+
     return result
 ```
 
@@ -740,7 +753,7 @@ def evaluate_quality_gates(metrics: QualityMetrics) -> GateResult:
 # Development metrics collection
 class DevelopmentMetrics:
     """Collect and analyze development workflow metrics."""
-    
+
     def collect_cycle_time_metrics(self) -> CycleTimeMetrics:
         """Collect development cycle time metrics."""
         return CycleTimeMetrics(
@@ -750,7 +763,7 @@ class DevelopmentMetrics:
             test_execution_time=self._calculate_test_time(), # Test suite duration
             deployment_time=self._calculate_deploy_time()    # Deployment duration
         )
-    
+
     def collect_quality_metrics(self) -> QualityMetrics:
         """Collect code quality metrics over time."""
         return QualityMetrics(
@@ -760,7 +773,7 @@ class DevelopmentMetrics:
             technical_debt_ratio=self._calculate_debt_ratio(),
             review_thoroughness=self._calculate_review_score()
         )
-    
+
     def generate_team_report(self) -> TeamReport:
         """Generate team performance report."""
         return TeamReport(
@@ -778,7 +791,7 @@ class DevelopmentMetrics:
 # Retrospective and improvement tracking
 class DevelopmentRetrospective:
     """Track and improve development workflow."""
-    
+
     def conduct_retrospective(self, sprint_data: SprintData) -> RetrospectiveReport:
         """Conduct development retrospective analysis."""
         return RetrospectiveReport(
@@ -788,7 +801,7 @@ class DevelopmentRetrospective:
             metrics_trends=self._analyze_metric_trends(sprint_data),
             process_recommendations=self._recommend_process_changes(sprint_data)
         )
-    
+
     def track_improvement_actions(self) -> ImprovementTracker:
         """Track implementation of improvement actions."""
         return ImprovementTracker(
@@ -886,7 +899,7 @@ def pre_commit_quality_check():
         ('security', run_security_scan),
         ('tests', run_unit_tests)
     ]
-    
+
     for check_name, check_func in checks:
         try:
             result = check_func()
@@ -897,21 +910,21 @@ def pre_commit_quality_check():
         except Exception as e:
             print(f"❌ {check_name} error: {e}")
             return False
-    
+
     return True
 
 # 2. Incremental quality improvement
 def fix_quality_issues_incrementally():
     """Fix quality issues one category at a time."""
-    
+
     # Start with formatting (easiest)
     run_command("black .")
     run_command("ruff --fix .")
-    
+
     # Then type issues
     run_command("mypy src/ --show-error-codes")
     # Fix issues one by one
-    
+
     # Finally security issues
     run_command("bandit -r src/")
     # Address security concerns

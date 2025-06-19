@@ -17,7 +17,7 @@ This document provides reference information for Oracle Cloud WMS and Inventory 
 ### Supported Oracle Versions
 
 - **Oracle Cloud WMS 23.1.x** - Legacy version mappings
-- **Oracle Cloud WMS 23.4.x** - Stable release mappings  
+- **Oracle Cloud WMS 23.4.x** - Stable release mappings
 - **Oracle Cloud WMS 24.3.x** - Current release mappings
 - **Oracle Cloud WMS 24.4.x** - Latest release mappings
 
@@ -26,11 +26,13 @@ This document provides reference information for Oracle Cloud WMS and Inventory 
 #### Inbound Integrations (Inventory → WMS)
 
 1. **Order Lock/Unlock Mappings**
+
    - Purpose: Control order processing state in WMS
    - Versions: 23.1.0, 24.3.0
    - Format: REST API calls with JSON payload
 
 2. **Receipt Advice Mappings**
+
    - **ASN (Advanced Shipping Notice)**: 23.1.0, 23.4.0
    - **Purchase Orders**: 23.1.0, 23.4.0
    - **RMA (Return Merchandise Authorization)**: 23.1.0, 23.4.0
@@ -44,16 +46,19 @@ This document provides reference information for Oracle Cloud WMS and Inventory 
 #### Outbound Integrations (WMS → Inventory)
 
 1. **Backorder Mappings**
+
    - Purpose: Report unavailable items to Inventory Management
    - Versions: 23.1.0, 23.4.0
    - Target: Shipment line allocation
 
 2. **Inventory Transaction Mappings**
+
    - Purpose: Real-time inventory updates
    - Versions: 23.1.0, 24.4.0
    - Frequency: Real-time or batch
 
 3. **Receipt Confirmation Mappings**
+
    - **Purchase Orders**: 23.1.0, 24.4.0
    - **RMA Processing**: 23.1.0, 24.4.0
    - **Transfer Orders**: 23.1.0, 24.4.0
@@ -78,7 +83,7 @@ class OrderLockIntegration:
     def __init__(self):
         self.wms_adapter = WMSIntegrationAdapter()
         self.inventory_adapter = InventoryAdapter()
-    
+
     async def lock_order(self, order_id: str) -> bool:
         """Lock order in WMS system."""
         lock_request = {
@@ -86,7 +91,7 @@ class OrderLockIntegration:
             "lock_action": "LOCK",
             "timestamp": datetime.utcnow().isoformat()
         }
-        
+
         response = await self.wms_adapter.post("/orders/lock", data=lock_request)
         return response.status_code == 200
 ```
@@ -112,16 +117,19 @@ Where:
 Each mapping document contains:
 
 1. **Integration Overview**
+
    - Business purpose and scope
    - Data flow direction
    - Frequency and timing
 
 2. **Field Mappings**
+
    - Source field to target field mappings
    - Data transformations required
    - Validation rules
 
 3. **API Specifications**
+
    - Endpoint URLs and methods
    - Request/response formats
    - Error handling patterns
@@ -138,11 +146,13 @@ Each mapping document contains:
 Key changes in Oracle Cloud WMS 24.x series:
 
 1. **Enhanced Field Validation**
+
    - Stricter data type validation
    - Additional required fields
    - Updated field length limits
 
 2. **API Endpoint Changes**
+
    - New REST endpoints for some operations
    - Deprecated SOAP endpoints
    - Enhanced authentication requirements
@@ -159,7 +169,7 @@ Key changes in Oracle Cloud WMS 24.x series:
    ```python
    # Check current mappings
    from flx.adapters.oracle.migration import MappingAnalyzer
-   
+
    analyzer = MappingAnalyzer()
    compatibility = analyzer.check_version_compatibility(
        source_version="23.4.0",
@@ -172,7 +182,7 @@ Key changes in Oracle Cloud WMS 24.x series:
    ```python
    # Test mapping compatibility
    from flx.testing.oracle import OracleIntegrationTester
-   
+
    tester = OracleIntegrationTester()
    results = await tester.test_mapping_compatibility(
        mapping_file="inv.wms.receipt-advice-24.4.0.json"
@@ -184,7 +194,7 @@ Key changes in Oracle Cloud WMS 24.x series:
    ```python
    # Execute migration
    from flx.adapters.oracle.migration import MappingMigrator
-   
+
    migrator = MappingMigrator()
    await migrator.migrate_mappings(
        from_version="23.4.0",
@@ -207,11 +217,11 @@ class OrderAggregate(AggregateRoot):
     order_id: str
     status: str
     items: List[OrderItem]
-    
+
     def lock_for_processing(self) -> None:
         if self.status == "LOCKED":
             raise ValueError("Order already locked")
-        
+
         self.status = "LOCKED"
         self.add_event(DomainEvent(
             event_type="OrderLocked",
@@ -236,7 +246,7 @@ class InventoryUpdatedHandler(OracleEventHandler):
     async def handle(self, event: DomainEvent) -> None:
         """Update WMS when inventory changes."""
         inventory_data = event.data
-        
+
         await self.wms_adapter.update_inventory(
             item_id=inventory_data["item_id"],
             quantity=inventory_data["new_quantity"],
@@ -274,7 +284,7 @@ oracle:
       type: "oauth2"
       client_id: "${WMS_CLIENT_ID}"
       client_secret: "${WMS_CLIENT_SECRET}"
-    
+
   inventory:
     base_url: "https://inventory.oracle.cloud"
     version: "24.4.0"
@@ -301,7 +311,7 @@ config = OracleMappingConfig.load_from_file("mappings/24.4.0/config.yaml")
 # Access mapping rules
 receipt_advice_mapping = config.get_mapping(
     source="inventory",
-    target="wms", 
+    target="wms",
     operation="receipt_advice"
 )
 ```
@@ -369,7 +379,7 @@ async def send_receipt_advice(data: dict) -> bool:
    ```python
    # Verify mapping compatibility
    from flx.adapters.oracle.diagnostics import MappingDiagnostics
-   
+
    diagnostics = MappingDiagnostics()
    issues = diagnostics.check_mapping_conflicts()
    ```
@@ -429,6 +439,6 @@ To migrate from legacy mappings to FLX framework:
 
 ---
 
-**Mapping Status**: Reference and Historical  
-**Recommended Approach**: Use FLX framework for new integrations  
+**Mapping Status**: Reference and Historical
+**Recommended Approach**: Use FLX framework for new integrations
 **Legacy Support**: Available for migration and reference

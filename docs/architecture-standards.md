@@ -22,6 +22,7 @@ Hexagonal architecture guidelines and standards for PyAuto enterprise developmen
 ### Dependency Direction
 
 **MANDATORY**: Dependencies ALWAYS point inward
+
 - Infrastructure → Application → Domain
 - **NEVER**: Domain → Infrastructure
 - **NEVER**: Application → Infrastructure (use ports)
@@ -31,6 +32,7 @@ Hexagonal architecture guidelines and standards for PyAuto enterprise developmen
 ### Domain Layer (`flx/core/domain/`)
 
 **CONTAINS**:
+
 - Entities (business objects with identity)
 - Value Objects (immutable data structures)
 - Domain Services (business logic)
@@ -38,6 +40,7 @@ Hexagonal architecture guidelines and standards for PyAuto enterprise developmen
 - Domain Exceptions
 
 **FORBIDDEN**:
+
 - External dependencies (databases, HTTP, etc.)
 - Infrastructure imports
 - Framework-specific code
@@ -48,7 +51,7 @@ class User(Entity):
     def __init__(self, user_id: UserId, email: Email):
         self.id = user_id
         self.email = email
-    
+
     def change_email(self, new_email: Email) -> None:
         # Business logic here
         self.email = new_email
@@ -60,6 +63,7 @@ from requests import get  # FORBIDDEN in domain
 ### Application Layer (`flx/application/`)
 
 **CONTAINS**:
+
 - Commands and Command Handlers
 - Queries and Query Handlers
 - Application Services
@@ -67,6 +71,7 @@ from requests import get  # FORBIDDEN in domain
 - Use Cases
 
 **FORBIDDEN**:
+
 - Direct infrastructure dependencies
 - Framework-specific implementations
 
@@ -75,7 +80,7 @@ from requests import get  # FORBIDDEN in domain
 class UserService:
     def __init__(self, user_repo: UserRepositoryPort):
         self.user_repo = user_repo  # Port, not implementation
-    
+
     async def get_user(self, user_id: str) -> User:
         return await self.user_repo.get_by_id(user_id)
 
@@ -86,6 +91,7 @@ from sqlalchemy import create_engine  # FORBIDDEN in application
 ### Infrastructure Layer (`flx/infra/`)
 
 **CONTAINS**:
+
 - Database implementations
 - HTTP clients
 - Cache implementations
@@ -93,6 +99,7 @@ from sqlalchemy import create_engine  # FORBIDDEN in application
 - Framework integrations
 
 **ALLOWED**:
+
 - External dependencies
 - Framework-specific code
 - Implementation details
@@ -102,7 +109,7 @@ from sqlalchemy import create_engine  # FORBIDDEN in application
 class SqlUserRepository(UserRepositoryPort):
     def __init__(self, db_engine: DatabaseEngine):
         self.db = db_engine
-    
+
     async def get_by_id(self, user_id: str) -> User:
         # Database-specific implementation
         pass
@@ -124,7 +131,7 @@ class UserManagementPort(Protocol):
 class RestApiAdapter:
     def __init__(self, user_service: UserManagementPort):
         self.user_service = user_service
-    
+
     @app.post("/users")
     async def create_user_endpoint(self, request: CreateUserRequest):
         command = CreateUserCommand(...)
@@ -140,7 +147,7 @@ class RestApiAdapter:
 class UserRepositoryPort(Protocol):
     async def save(self, user: User) -> None:
         ...
-    
+
     async def get_by_id(self, user_id: str) -> User:
         ...
 
@@ -203,15 +210,15 @@ from flx.adapters.outbound.database import DatabaseAdapter
 
 def create_infrastructure_adapters(config: Config) -> dict[str, Any]:
     """Create infrastructure adapters with proper dependency injection."""
-    
+
     # Create infrastructure components
     db_engine = DatabaseEngine(url=config.database_url)
     cache = RedisCache(url=config.redis_url)
-    
+
     # Create adapters
     db_adapter = DatabaseAdapter(engine=db_engine)
     cache_adapter = CacheAdapter(cache=cache)
-    
+
     return {
         "database": db_adapter,
         "cache": cache_adapter,
@@ -224,11 +231,11 @@ def create_infrastructure_adapters(config: Config) -> dict[str, Any]:
 class Bootstrap:
     def __init__(self):
         self.adapters: dict[str, BaseAdapter] = {}
-    
+
     def register_adapter(self, name: str, adapter: BaseAdapter) -> None:
         """Register adapter with bootstrap."""
         self.adapters[name] = adapter
-    
+
     def get_adapter(self, name: str) -> BaseAdapter:
         """Get registered adapter."""
         if name not in self.adapters:
@@ -250,21 +257,21 @@ from pathlib import Path
 
 def check_layer_dependencies():
     """Verify no architectural boundary violations."""
-    
+
     violations = []
-    
+
     # Check domain layer doesn't import infrastructure
     domain_files = Path("flx/core/domain").rglob("*.py")
     for file_path in domain_files:
         with open(file_path) as f:
             content = f.read()
-            
+
         tree = ast.parse(content)
         for node in ast.walk(tree):
             if isinstance(node, ast.ImportFrom):
                 if node.module and "infra" in node.module:
                     violations.append(f"{file_path}: Domain importing infrastructure: {node.module}")
-    
+
     return violations
 
 # Run validation
@@ -284,24 +291,24 @@ else:
 @pytest.mark.architecture
 def test_domain_layer_independence():
     """Test that domain layer has no external dependencies."""
-    
+
     # Domain should import only:
     # - Standard library
     # - Other domain modules
     # - typing modules
-    
+
     allowed_imports = {
-        "typing", "datetime", "uuid", "enum", "abc", 
+        "typing", "datetime", "uuid", "enum", "abc",
         "dataclasses", "functools", "collections"
     }
-    
+
     violations = check_domain_imports()
     assert not violations, f"Domain layer violations: {violations}"
 
-@pytest.mark.architecture  
+@pytest.mark.architecture
 def test_application_uses_ports_only():
     """Test that application layer only uses port interfaces."""
-    
+
     # Application should not import from infrastructure
     violations = check_application_imports()
     assert not violations, f"Application layer violations: {violations}"
@@ -332,7 +339,7 @@ class UserService:
     def __init__(self, user_repo: UserRepositoryPort, event_bus: EventBusPort):
         self.user_repo = user_repo
         self.event_bus = event_bus
-    
+
     def create_user(self, command: CreateUserCommand) -> User:
         # Single responsibility: user creation
         pass
@@ -343,6 +350,7 @@ class UserService:
 ### Quality Indicators
 
 **Good Architecture Metrics:**
+
 - Domain layer: 0 external dependencies
 - Application layer: Only port dependencies
 - Infrastructure layer: Can depend on anything
@@ -350,6 +358,7 @@ class UserService:
 - Clear interface definitions
 
 **Bad Architecture Metrics:**
+
 - Circular dependencies between layers
 - Domain importing infrastructure
 - Application directly using databases/HTTP
@@ -392,4 +401,4 @@ jobs:
 
 ---
 
-*Hexagonal architecture is fundamental to PyAuto's maintainability and testability. Follow these standards exactly to ensure clean, scalable code.*
+_Hexagonal architecture is fundamental to PyAuto's maintainability and testability. Follow these standards exactly to ensure clean, scalable code._

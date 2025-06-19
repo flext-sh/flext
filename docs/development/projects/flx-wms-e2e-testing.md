@@ -75,7 +75,7 @@ python run_e2e_tests.py
 #### Ciclo de Vida LPN
 
 - ✅ Criação de LPN
-- ✅ Recebimento de LPN  
+- ✅ Recebimento de LPN
 - ✅ Indução de LPN
 - ✅ Fluxo completo: criar → receber → induzir
 
@@ -380,4 +380,4 @@ curl http://localhost:8888/recordings
 
 ---
 
-*Esta documentação é atualizada automaticamente durante a execução dos testes E2E.*
+_Esta documentação é atualizada automaticamente durante a execução dos testes E2E._

@@ -66,12 +66,12 @@ from flx.core.entities import Entity
 class TestDomainEntity:
     def setup_method(self):
         self.test_engine = ComprehensiveTestEngine()
-    
+
     def test_entity_immutability(self):
         """Test entity follows immutable patterns."""
         customer = CustomerEntity(name="John", email="john@example.com")
         updated_customer = customer.change_email("new@example.com")
-        
+
         # Original remains unchanged
         assert customer.email == "john@example.com"
         # New instance has updated data

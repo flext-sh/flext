@@ -10,7 +10,14 @@ from typing import Any
 
 def get_mypy_errors() -> dict[str, list[dict[str, Any]]]:
     """Get all mypy errors grouped by type."""
-    cmd = [".venv/bin/python", "-m", "mypy", "flx/src/", "--show-error-codes", "--no-error-summary"]
+    cmd = [
+        ".venv/bin/python",
+        "-m",
+        "mypy",
+        "flx/src/",
+        "--show-error-codes",
+        "--no-error-summary",
+    ]
     result = subprocess.run(cmd, capture_output=True, text=True, check=False)
 
     errors_by_type = defaultdict(list)
@@ -41,12 +48,10 @@ def fix_import_attr_errors() -> None:
         "fix_create_cli": "flx_fix_create_cli",
         "register_cli_command_provider": "flx_register_cli_command_provider",
         "get_adapter_registry": "flx_get_adapter_registry",
-
         # Logger patterns
         "logger.warning": "logger.flx_warning",
         "logger.critical": "logger.flx_critical",
         "logger.exception": "logger.flx_exception",
-
         # Health check patterns
         "health_check()": "flx_health_check()",
     }
@@ -83,11 +88,28 @@ def fix_missing_flx_prefix() -> None:
 
     # Common method names that need flx_ prefix
     methods_to_fix = [
-        "create_cli", "register_command", "get_adapter", "health_check",
-        "execute_command", "initialize", "shutdown", "validate",
-        "process", "handle", "dispatch", "publish", "subscribe",
-        "connect", "disconnect", "send", "receive", "transform",
-        "serialize", "deserialize", "encode", "decode",
+        "create_cli",
+        "register_command",
+        "get_adapter",
+        "health_check",
+        "execute_command",
+        "initialize",
+        "shutdown",
+        "validate",
+        "process",
+        "handle",
+        "dispatch",
+        "publish",
+        "subscribe",
+        "connect",
+        "disconnect",
+        "send",
+        "receive",
+        "transform",
+        "serialize",
+        "deserialize",
+        "encode",
+        "decode",
     ]
 
     for filepath in files_to_check:
@@ -152,7 +174,9 @@ def fix_constructor_args() -> None:
                 content.splitlines()
 
                 # Find FlxAdapterMeta calls missing version/dependencies
-                pattern = r'FlxAdapterMeta\(\s*name="([^"]+)",\s*adapter_type=([^,\)]+)\s*\)'
+                pattern = (
+                    r'FlxAdapterMeta\(\s*name="([^"]+)",\s*adapter_type=([^,\)]+)\s*\)'
+                )
                 replacement = r'FlxAdapterMeta(name="\1", adapter_type=\2, version="1.0.0", dependencies=[])'
 
                 new_content = re.sub(pattern, replacement, content)
@@ -258,7 +282,9 @@ def add_missing_type_imports() -> None:
                     import_index += 1
 
                 path.write_text("\n".join(lines))
-                print(f"Added imports to {filepath}: {', '.join(name for name in missing_names if name in type_imports)}")
+                print(
+                    f"Added imports to {filepath}: {', '.join(name for name in missing_names if name in type_imports)}"
+                )
 
         except Exception as e:
             print(f"Error processing {filepath}: {e}")

@@ -41,23 +41,23 @@ GitHub repository templates, issue templates, pull request templates, and workfl
 
 ### Repository Maintainers
 
-→ [Repository Templates](./repo-templates/)  
-→ [Issue Templates](./issue-templates/)  
-→ [PR Templates](./pr-templates/)  
+→ [Repository Templates](./repo-templates/)
+→ [Issue Templates](./issue-templates/)
+→ [PR Templates](./pr-templates/)
 → [Workflow Templates](./workflow-templates/)
 
 ### Development Teams
 
-→ [Issue Templates](./issue-templates/)  
-→ [PR Templates](./pr-templates/)  
-→ [Development Workflows](./workflow-templates/)  
+→ [Issue Templates](./issue-templates/)
+→ [PR Templates](./pr-templates/)
+→ [Development Workflows](./workflow-templates/)
 → [Contributing Guidelines](./contributing-templates/)
 
 ### Security Teams
 
-→ [Security Templates](./SECURITY_ADVISORIES/)  
-→ [Security Workflows](./workflow-templates/)  
-→ [Security Guidelines](./security-templates/)  
+→ [Security Templates](./SECURITY_ADVISORIES/)
+→ [Security Workflows](./workflow-templates/)
+→ [Security Guidelines](./security-templates/)
 → [Incident Response](./security-templates/)
 
 ## Related Sections
@@ -69,4 +69,4 @@ GitHub repository templates, issue templates, pull request templates, and workfl
 
 ---
 
-*Part of the [FLX Framework Documentation](../../../index.md)*
+_Part of the [FLX Framework Documentation](../../../index.md)_

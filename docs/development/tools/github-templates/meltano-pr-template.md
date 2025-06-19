@@ -24,4 +24,4 @@ Please, go through these steps when you submit a PR.
 
 ## Related Issues
 
-* Closes #XXXX
+- Closes #XXXX

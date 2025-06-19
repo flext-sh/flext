@@ -38,7 +38,6 @@ class TestE2EWithOptionalConfig:
         config_path = project_root / "config.json"
 
         if config_path.exists():
-
             # Validate config structure
             with open(config_path) as f:
                 config = json.load(f)
@@ -86,7 +85,6 @@ class TestE2EWithOptionalConfig:
             )
 
             if result.returncode == 0:
-
                 # Parse output
                 try:
                     output_data = json.loads(result.stdout)
@@ -168,7 +166,6 @@ class TestE2EWithOptionalConfig:
             )
 
             if result.returncode == 0:
-
                 # Parse catalog output
                 try:
                     catalog = json.loads(result.stdout)
@@ -253,7 +250,6 @@ class TestE2EWithOptionalConfig:
             )
 
             if result.returncode == 0:
-
                 # Check for Singer messages in output
                 lines = result.stdout.strip().split("\n")
                 message_types = set()
@@ -525,9 +521,9 @@ class TestE2EPerformance:
             discovery_time = time.time() - start_time
 
             # Discovery should complete in reasonable time
-            assert (
-                discovery_time < 60
-            ), f"Discovery took too long: {discovery_time:.2f}s"
+            assert discovery_time < 60, (
+                f"Discovery took too long: {discovery_time:.2f}s"
+            )
 
         except Exception as e:
             pytest.skip(f"Discovery performance test failed: {e}")

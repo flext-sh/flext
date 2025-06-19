@@ -146,7 +146,10 @@ class LDAPClient:
         )
 
     def _execute_with_retry(
-        self, operation: callable, *args: Any, **kwargs: Any  # noqa: ANN401
+        self,
+        operation: callable,
+        *args: Any,
+        **kwargs: Any,  # noqa: ANN401
     ) -> Any:  # noqa: ANN401
         """Execute LDAP operation with automatic retry."""
         last_exception = None
@@ -158,7 +161,9 @@ class LDAPClient:
                 last_exception = e
                 if attempt < self.max_retries:
                     logger.warning(
-                        "LDAP operation failed, retrying in %ds: %s", self.retry_delay, e
+                        "LDAP operation failed, retrying in %ds: %s",
+                        self.retry_delay,
+                        e,
                     )
                     time.sleep(self.retry_delay)
                     continue

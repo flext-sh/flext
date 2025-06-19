@@ -191,25 +191,25 @@ from flx import Flx
 
 async def smoke_test():
     """Basic smoke test for production deployment."""
-    
+
     # Test application creation
     flx = Flx()
     customer = flx.Entities.BusinessEntity(
         name="Smoke Test Customer",
         business_type="Test"
     )
-    
+
     # Test API endpoints
     async with aiohttp.ClientSession() as session:
         # Health check
         async with session.get('https://api.company.com/health') as resp:
             assert resp.status == 200
-            
+
         # Authentication test
-        async with session.post('https://api.company.com/auth/login', 
+        async with session.post('https://api.company.com/auth/login',
                                json={'username': 'test', 'password': 'test'}) as resp:
             assert resp.status in [200, 201]
-    
+
     print("✅ Smoke tests passed")
 
 asyncio.run(smoke_test())
@@ -329,7 +329,7 @@ CRITICAL_METRICS = {
     ],
     "infrastructure": [
         "cpu_usage_percent",
-        "memory_usage_percent", 
+        "memory_usage_percent",
         "disk_usage_percent",
         "network_io_bytes",
         "database_connections",
@@ -358,7 +358,7 @@ groups:
           severity: critical
         annotations:
           summary: "High error rate detected"
-          
+
       - alert: SlowResponseTime
         expr: flx_request_duration_95th > 0.5
         for: 5m
@@ -366,7 +366,7 @@ groups:
           severity: warning
         annotations:
           summary: "Slow response times detected"
-          
+
       - alert: DatabaseConnectionPool
         expr: flx_database_connections / flx_database_pool_size > 0.8
         for: 5m
