@@ -1,9 +1,20 @@
 """Configuration for Oracle Integration Cloud client with zero redundancy."""
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-from flx.infra.config.base import ConfigManager
 from pydantic import Field, SecretStr, field_validator
+
+if TYPE_CHECKING:
+    from flx.infra.config.base import ConfigManager
+else:
+    # Runtime: Use dummy base class to avoid lazy_import as base class
+    class ConfigManager:
+        """Dummy base class for runtime."""
+
+        def __init__(self, **kwargs: Any) -> None:
+            for key, value in kwargs.items():
+                setattr(self, key, value)
+
 
 from .constants import (
     DEFAULT_API_VERSION,

@@ -18,16 +18,9 @@ if TYPE_CHECKING:
 
 # Import from ldap-core-shared if available
 try:
-    from ldap_core_shared.domain.events import (
-        SchemaDiscoveryEvent,
-        SchemaValidationEvent,
-    )
-    from ldap_core_shared.domain.models import LDAPEntry, SchemaElement
-    from ldap_core_shared.domain.value_objects import AttributeMap, LdapDn
-    from ldap_core_shared.utils.simple_dn_utils import (
-        simple_normalize_dn,
-        simple_parse_dn,
-    )
+    # Import only what we actually use
+    # Currently no imports are used, so we just check availability
+    import ldap_core_shared  # noqa: F401
 
     LDAP_CORE_AVAILABLE = True
 except ImportError:
@@ -597,7 +590,8 @@ class SchemaAnalyzer:
         if compatibility.custom_object_classes:
             steps.extend(
                 [
-                    f"Export {len(compatibility.custom_object_classes)} custom object class definitions",
+                    f"Export {len(compatibility.custom_object_classes)} "
+                    "custom object class definitions",
                     "Resolve object class dependencies",
                     "Import custom object classes in dependency order",
                 ]
@@ -644,7 +638,8 @@ class SchemaAnalyzer:
 
         if oracle_elements:
             recommendations.append(
-                f"Oracle-specific elements detected: {oracle_elements[:3]}... - consider transformation rules"
+                f"Oracle-specific elements detected: {oracle_elements[:3]}... "
+                "- consider transformation rules"
             )
 
         # Performance recommendations

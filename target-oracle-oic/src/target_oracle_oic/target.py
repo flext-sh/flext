@@ -40,6 +40,8 @@ class TargetOracleOIC(Target):
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         """Initialize the target."""
+        # CRITICAL: Initialize required Singer SDK attributes FIRST
+        # Note: logger is a property in Singer SDK, don't override
         super().__init__(*args, **kwargs)
         # Initialize any target-specific attributes here
 

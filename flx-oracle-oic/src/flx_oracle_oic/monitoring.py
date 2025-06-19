@@ -16,7 +16,10 @@ from datetime import UTC, datetime, timedelta
 from enum import StrEnum
 from typing import TYPE_CHECKING, Any, Optional
 
-from flx.core.logging import get_logger  # type: ignore[import-untyped]
+# Lazy import to avoid circular dependencies
+from flx.utils.lazy_import import lazy_import
+
+get_logger = lazy_import("flx.core.logging", "get_logger")
 from pydantic import BaseModel, Field
 
 from .constants import STATUS_ACTIVE, STATUS_INACTIVE

@@ -3,6 +3,7 @@
 Unified FLX adapter and CLI for Oracle Integration Cloud operations.
 
 This package combines:
+
 - **tap-oracle-oic**: Singer tap for data extraction
 - **target-oracle-oic**: Singer target for data loading
 - **oracle-oic-ext**: Meltano extension for lifecycle and monitoring
@@ -11,22 +12,26 @@ This package combines:
 ## Features
 
 ### Data Operations
+
 - Extract data from Oracle OIC (integrations, connections, packages, etc.)
 - Load data into Oracle OIC (create/update integrations, connections, etc.)
 - Full Singer protocol support with catalog and state management
 
 ### Lifecycle Management
+
 - Activate/deactivate integrations
 - Bulk operations support
 - Integration status monitoring
 
 ### Monitoring & Analytics
+
 - Health checks
 - Performance metrics
 - Error analysis
 - Usage analytics
 
 ### FLX Integration
+
 - Native FLX adapter for hexagonal architecture
 - Async operations support
 - Built-in retry and error handling
@@ -262,6 +267,7 @@ poetry run mypy src/
 ## Documentation
 
 For detailed documentation on each component:
+
 - [TAP Documentation](../tap-oracle-oic/README.md)
 - [Target Documentation](../target-oracle-oic/README.md)
 - [Extension Documentation](../oracle-oic-ext/README.md)

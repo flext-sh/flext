@@ -23,6 +23,8 @@ class TapOracleWMS(Tap):
 
     def __init__(self, *args, **kwargs) -> None:
         """Initialize tap."""
+        # CRITICAL: Singer SDK requires tap_name BEFORE super().__init__
+        self.tap_name = "tap-oracle-wms"  # Required by Singer SDK
         self._entity_discovery = None
         self._schema_generator = None
         self._discovered_entities = None
@@ -74,7 +76,7 @@ class TapOracleWMS(Tap):
                 self._monitor.metrics.record_counter("connection.test.attempts")
 
             if entities:
-                logger.info(f"Connection successful. Found {len(entities)} entities.")
+                logger.info("Connection successful. Found %s entities.", len(entities))
                 if self._monitor:
                     self._monitor.metrics.record_counter("connection.test.success")
                     self._monitor.metrics.record_gauge(
@@ -89,12 +91,12 @@ class TapOracleWMS(Tap):
             if self._monitor:
                 self._monitor.metrics.record_counter("connection.test.failure")
             msg = f"Connection test failed: {e}"
-            raise ValueError(msg)
+            raise ValueError(msg) from e
         except Exception as e:
             if self._monitor:
                 self._monitor.metrics.record_counter("connection.test.error")
             msg = f"Unexpected error during connection test: {e}"
-            raise ValueError(msg)
+            raise ValueError(msg) from e
 
     @property
     def entity_discovery(self) -> EntityDiscovery:
@@ -129,8 +131,8 @@ class TapOracleWMS(Tap):
 
         if not verify_access:
             logger.info(
-                f"Skipping access verification for {len(filtered_entities)} entities "
-                f"(set verify_entity_access=true to enable)"
+                "Skipping access verification for %d entities (set verify_entity_access=true to enable)",
+                len(filtered_entities),
             )
             return filtered_entities
 
@@ -161,12 +163,12 @@ class TapOracleWMS(Tap):
                     return name, url, accessible
                 except (ValueError, TypeError, AttributeError) as e:
                     logger.warning(
-                        f"Configuration error checking access to entity {name}: {e}"
+                        "Configuration error checking access to entity %s: %s", name, e
                     )
                     return name, url, False
                 except Exception as e:
                     logger.warning(
-                        f"Unexpected error checking access to entity {name}: {e}"
+                        "Unexpected error checking access to entity %s: %s", name, e
                     )
                     return name, url, False
 
@@ -178,7 +180,7 @@ class TapOracleWMS(Tap):
         try:
             results = await asyncio.wait_for(asyncio.gather(*tasks), timeout=timeout)
         except asyncio.TimeoutError:
-            logger.warning(f"Entity access check timed out after {timeout} seconds")
+            logger.warning("Entity access check timed out after %s seconds", timeout)
             # Return all entities if timeout
             return entities
 
@@ -188,10 +190,10 @@ class TapOracleWMS(Tap):
             if accessible:
                 accessible_entities[name] = url
             else:
-                logger.warning(f"No access to entity: {name}")
+                logger.warning("No access to entity: %s", name)
 
         logger.info(
-            f"Verified access to {len(accessible_entities)}/{len(entities)} entities"
+            "Verified access to %d/%d entities", len(accessible_entities), len(entities)
         )
         return accessible_entities
 
@@ -221,12 +223,12 @@ class TapOracleWMS(Tap):
                     return entity_name, schema
                 except (ValueError, TypeError, AttributeError) as e:
                     logger.warning(
-                        f"Configuration error generating schema for entity {entity_name}: {e}"
+                        "Configuration error generating schema for entity %s: %s", entity_name, e
                     )
                     return entity_name, None
                 except Exception as e:
                     logger.warning(
-                        f"Unexpected error generating schema for entity {entity_name}: {e}"
+                        "Unexpected error generating schema for entity %s: %s", entity_name, e
                     )
                     return entity_name, None
 
@@ -243,7 +245,7 @@ class TapOracleWMS(Tap):
         try:
             results = await asyncio.wait_for(asyncio.gather(*tasks), timeout=timeout)
         except asyncio.TimeoutError:
-            logger.warning(f"Schema generation timed out after {timeout} seconds")
+            logger.warning("Schema generation timed out after %s seconds", timeout)
             # Try to generate schemas sequentially for remaining entities
             results = []
             for entity_name in sorted(entities.keys()):
@@ -252,12 +254,12 @@ class TapOracleWMS(Tap):
                     results.append((entity_name, schema))
                 except (ValueError, TypeError, AttributeError) as e:
                     logger.warning(
-                        f"Configuration error generating schema for entity {entity_name}: {e}"
+                        "Configuration error generating schema for entity %s: %s", entity_name, e
                     )
                     results.append((entity_name, None))
                 except Exception as e:
                     logger.warning(
-                        f"Unexpected error generating schema for entity {entity_name}: {e}"
+                        "Unexpected error generating schema for entity %s: %s", entity_name, e
                     )
                     results.append((entity_name, None))
 
@@ -267,10 +269,10 @@ class TapOracleWMS(Tap):
             if schema:
                 successful_schemas[entity_name] = schema
             else:
-                logger.warning(f"Skipping entity {entity_name}: No schema generated")
+                logger.warning("Skipping entity %s: No schema generated", entity_name)
 
         logger.info(
-            f"Generated schemas for {len(successful_schemas)}/{len(entities)} entities"
+            "Generated schemas for %d/%d entities", len(successful_schemas), len(entities)
         )
         return successful_schemas
 
@@ -305,7 +307,7 @@ class TapOracleWMS(Tap):
                 return self.schema_generator.generate_from_sample(samples)
 
         # Default minimal schema
-        logger.warning(f"Could not generate schema for entity: {entity_name}")
+        logger.warning("Could not generate schema for entity: %s", entity_name)
         return {
             "type": "object",
             "properties": {
@@ -330,7 +332,7 @@ class TapOracleWMS(Tap):
 
         # Run async discovery
         entities = asyncio.run(self._discover_and_filter_entities())
-        logger.info(f"Discovered {len(entities)} accessible entities")
+        logger.info("Discovered %s accessible entities", len(entities))
 
         # Record discovery metrics
         if self._monitor:
@@ -360,7 +362,7 @@ class TapOracleWMS(Tap):
                 )
                 streams.append(stream)
 
-                logger.debug(f"Created stream for entity: {entity_name}")
+                logger.debug("Created stream for entity: %s", entity_name)
 
                 # Record stream creation metric
                 if self._monitor:
@@ -370,7 +372,7 @@ class TapOracleWMS(Tap):
 
             except (ValueError, TypeError, AttributeError) as e:
                 logger.exception(
-                    f"Configuration error creating stream for entity {entity_name}: {e}"
+                    "Configuration error creating stream for entity %s: %s", entity_name, e
                 )
                 if self._monitor:
                     self._monitor.metrics.record_counter(
@@ -380,7 +382,7 @@ class TapOracleWMS(Tap):
                 continue
             except Exception as e:
                 logger.exception(
-                    f"Unexpected error creating stream for entity {entity_name}: {e}"
+                    "Unexpected error creating stream for entity %s: %s", entity_name, e
                 )
                 if self._monitor:
                     self._monitor.metrics.record_counter(
@@ -394,9 +396,9 @@ class TapOracleWMS(Tap):
             duration_ms = self._monitor.profiler.end_profile(
                 profile_id, record_count=len(streams)
             )
-            logger.info(f"Stream discovery completed in {duration_ms:.2f}ms")
+            logger.info("Stream discovery completed in %.2fms", duration_ms)
 
-        logger.info(f"Created {len(streams)} streams")
+        logger.info("Created %s streams", len(streams))
 
         # Record final metrics
         if self._monitor:

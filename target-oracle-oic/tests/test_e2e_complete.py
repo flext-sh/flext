@@ -31,22 +31,28 @@ class TestTargetOracleOICE2E:
     """End-to-end tests for target-oracle-oic."""
 
     @pytest.fixture
-    def config_path(self):
+    def config_path(self) -> str:
         """Return path to config.json."""
         config_file = Path(__file__).parent.parent / "config.json"
         if not config_file.exists():
             # Generate config if it doesn't exist
-            os.system("cd .. && python generate_config.py")
+            import subprocess
+
+            subprocess.run(
+                ["python", "generate_config.py"],
+                cwd=Path(__file__).parent.parent,
+                check=True,
+            )
         return str(config_file)
 
     @pytest.fixture
-    def config(self, config_path):
+    def config(self, config_path: str) -> dict[str, object]:
         """Load configuration from config.json."""
         with open(config_path) as f:
             return json.load(f)
 
     @pytest.fixture
-    def target(self, config):
+    def target(self, config: dict[str, object]) -> object:
         """Create target instance."""
         return TargetOracleOIC(config=config)
 

@@ -106,7 +106,7 @@ class LDIFProcessor:
         r"^changetype:\s*(.+)$", re.IGNORECASE
     )
 
-    def __init__(self, ignore_errors: bool = False, max_errors: int = 100) -> None:
+    def __init__(self, *, ignore_errors: bool = False, max_errors: int = 100) -> None:
         """Initialize LDIF processor.
 
         Args:
@@ -144,13 +144,13 @@ class LDIFProcessor:
         logger.info("Starting LDIF parsing: %s", file_path)
 
         try:
-            with open(file_path, encoding="utf-8") as f:
+            with Path(file_path).open(encoding="utf-8") as f:
                 yield from self._parse_lines(f.readlines(), str(file_path))
         except UnicodeDecodeError:
             # Try with latin-1 encoding if UTF-8 fails
             logger.warning("UTF-8 decoding failed, trying latin-1 for: %s", file_path)
             try:
-                with open(file_path, encoding="latin-1") as f:
+                with Path(file_path).open(encoding="latin-1") as f:
                     yield from self._parse_lines(f.readlines(), str(file_path))
             except Exception as e:
                 error_msg = f"Failed to parse LDIF file {file_path}: {e}"
@@ -287,7 +287,9 @@ class LDIFProcessor:
 
             # Ensure we have an entry to work with
             if not current_entry:
-                error_msg = f"Line {line_number}: Attribute line without DN in {source_name}: {line}"
+                error_msg = (
+                    f"Line {line_number}: Attribute line without DN in {source_name}: {line}"
+                )
                 self._handle_error(error_msg)
                 return None
 
@@ -314,7 +316,9 @@ class LDIFProcessor:
 
                     attr_value = base64.b64decode(attr_value_b64).decode("utf-8")
                 except Exception as e:
-                    error_msg = f"Line {line_number}: Failed to decode base64 value in {source_name}: {e}"
+                    error_msg = (
+                        f"Line {line_number}: Failed to decode base64 value in {source_name}: {e}"
+                    )
                     self._handle_error(error_msg)
                     return current_entry
 

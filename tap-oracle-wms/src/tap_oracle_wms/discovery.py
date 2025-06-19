@@ -81,7 +81,7 @@ class EntityDiscovery:
             else:
                 logger.debug("No authenticator configured")
         except (ImportError, AttributeError, ValueError, TypeError) as e:
-            logger.warning(f"Failed to setup authentication: {e}")
+            logger.warning("Failed to setup authentication: %s", e)
             # Continue without auth - basic auth will be used via headers
 
     @property
@@ -156,12 +156,12 @@ class EntityDiscovery:
                 self._entity_cache = entities
                 self._last_entity_cache_time = datetime.now(UTC)
 
-                logger.info(f"Discovered {len(entities)} entities")
+                logger.info("Discovered %s entities", len(entities))
                 return entities
 
             except httpx.HTTPStatusError as e:
                 logger.exception("Failed to discover entities")
-                logger.error(f"Response: {e.response.text}")
+                logger.error("Response: %s", e.response.text)
                 raise
             except (
                 httpx.ConnectError,
@@ -192,7 +192,7 @@ class EntityDiscovery:
             if cache_time and datetime.now(UTC) - cache_time < timedelta(
                 seconds=self._cache_ttl
             ):
-                logger.debug(f"Using cached metadata for entity: {entity_name}")
+                logger.debug("Using cached metadata for entity: %s", entity_name)
                 return self._metadata_cache[entity_name]
 
         url = f"{self.entity_endpoint}/{entity_name}/describe/"
@@ -211,7 +211,7 @@ class EntityDiscovery:
                 return metadata
 
             except httpx.HTTPStatusError as e:
-                logger.warning(f"Failed to describe entity {entity_name}: {e}")
+                logger.warning("Failed to describe entity %s: %s", entity_name, e)
                 return None
             except (
                 httpx.ConnectError,
@@ -246,7 +246,7 @@ class EntityDiscovery:
             if cache_time and datetime.now(UTC) - cache_time < timedelta(
                 seconds=self._cache_ttl
             ):
-                logger.debug(f"Using cached sample data for entity: {entity_name}")
+                logger.debug("Using cached sample data for entity: %s", entity_name)
                 return self._sample_cache[cache_key]
         url = f"{self.entity_endpoint}/{entity_name}"
         params = {"page_size": limit, "page": 1}
@@ -278,9 +278,9 @@ class EntityDiscovery:
 
             except httpx.HTTPStatusError as e:
                 if e.response.status_code == HTTP_NOT_FOUND:
-                    logger.debug(f"Entity {entity_name} not found for sampling")
+                    logger.debug("Entity %s not found for sampling", entity_name)
                 else:
-                    logger.warning(f"HTTP error getting sample for {entity_name}: {e}")
+                    logger.warning("HTTP error getting sample for %s: %s", entity_name, e)
                 return []
             except (
                 httpx.ConnectError,
@@ -288,12 +288,12 @@ class EntityDiscovery:
                 httpx.RequestError,
             ) as e:
                 logger.warning(
-                    f"Network error getting sample for entity {entity_name}: {e}"
+                    "Network error getting sample for entity %s: %s", entity_name, e
                 )
                 return []
             except (ValueError, KeyError, TypeError) as e:
                 logger.warning(
-                    f"Data parsing error getting sample for entity {entity_name}: {e}"
+                    "Data parsing error getting sample for entity %s: %s", entity_name, e
                 )
                 return []
 
@@ -369,7 +369,7 @@ class EntityDiscovery:
             if cache_time and datetime.now(UTC) - cache_time < timedelta(
                 seconds=self._access_cache_ttl
             ):
-                logger.debug(f"Using cached access result for entity: {entity_name}")
+                logger.debug("Using cached access result for entity: %s", entity_name)
                 return self._access_cache[entity_name]
         url = f"{self.entity_endpoint}/{entity_name}"
         params = {"page_size": 1, "page": 1}
@@ -391,7 +391,7 @@ class EntityDiscovery:
 
             except httpx.HTTPStatusError as e:
                 if e.response.status_code == HTTP_FORBIDDEN:
-                    logger.warning(f"No access to entity {entity_name}")
+                    logger.warning("No access to entity %s", entity_name)
                     access_result = False
                 else:
                     access_result = False
@@ -443,10 +443,10 @@ class EntityDiscovery:
 
             except httpx.HTTPStatusError as e:
                 if e.response.status_code == HTTP_NOT_FOUND:
-                    logger.debug(f"Entity {entity_name} size estimation not supported")
+                    logger.debug("Entity %s size estimation not supported", entity_name)
                 else:
                     logger.warning(
-                        f"HTTP error estimating size for entity {entity_name}: {e}"
+                        "HTTP error estimating size for entity %s: %s", entity_name, e
                     )
                 return None
             except (
@@ -455,12 +455,12 @@ class EntityDiscovery:
                 httpx.RequestError,
             ) as e:
                 logger.warning(
-                    f"Network error estimating size for entity {entity_name}: {e}"
+                    "Network error estimating size for entity %s: %s", entity_name, e
                 )
                 return None
             except (ValueError, KeyError, TypeError) as e:
                 logger.warning(
-                    f"Data parsing error estimating size for entity {entity_name}: {e}"
+                    "Data parsing error estimating size for entity %s: %s", entity_name, e
                 )
                 return None
 
@@ -585,8 +585,10 @@ class EntityDiscovery:
 
         if expired_metadata or expired_samples or expired_access:
             logger.debug(
-                f"Cleaned up {len(expired_metadata)} metadata, "
-                f"{len(expired_samples)} sample, {len(expired_access)} access entries"
+                "Cleaned up %d metadata, %d sample, %d access entries",
+                len(expired_metadata),
+                len(expired_samples),
+                len(expired_access),
             )
 
 

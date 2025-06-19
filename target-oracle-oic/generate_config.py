@@ -4,6 +4,7 @@
 import json
 import os
 from pathlib import Path
+from typing import Any
 
 from dotenv import load_dotenv
 
@@ -11,7 +12,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-def generate_config():
+def generate_config() -> dict[str, Any]:
     """Generate config.json from environment variables."""
     # OAuth2 configuration
     oauth_config = {
@@ -61,7 +62,7 @@ def generate_config():
 
 
 def main() -> None:
-    """Main function."""
+    """Execute the config generation process."""
     config = generate_config()
 
     # Check if config.json already exists
@@ -72,7 +73,8 @@ def main() -> None:
             return
 
     # Write config.json
-    with open(config_path, "w") as f:
+    config_file = Path(config_path)
+    with config_file.open("w") as f:
         json.dump(config, f, indent=2)
 
 

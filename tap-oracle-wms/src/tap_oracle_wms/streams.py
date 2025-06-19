@@ -180,7 +180,7 @@ class WMSDynamicStream(RESTStream):
         # Debug logging
         if hasattr(self, "logger"):
             self.logger.info(
-                f"Initialized {entity_name} with replication_key: {self._replication_key}"
+                "Initialized %s with replication_key: %s", entity_name, self._replication_key
             )
 
         # Call parent constructor
@@ -531,13 +531,15 @@ class WMSDynamicStream(RESTStream):
         )
 
         if bookmark_value:
-            self.logger.info(f"Using bookmark value for {self.name}: {bookmark_value}")
+            self.logger.info(
+                "Using bookmark value for %s: %s", self.name, bookmark_value
+            )
             return bookmark_value
 
         # Check for start_date in config
         start_date = self.config.get("start_date")
         if start_date:
-            self.logger.info(f"Using start_date for {self.name}: {start_date}")
+            self.logger.info("Using start_date for %s: %s", self.name, start_date)
             return start_date
 
         return None
@@ -650,7 +652,7 @@ class WMSDynamicStream(RESTStream):
 
             # Log progress
             self.logger.info(
-                f"Updated bookmark for {self.name}: {self.replication_key}={replication_value}"
+                "Updated bookmark for %s: %s=%s", self.name, self.replication_key, replication_value
             )
 
     def post_process(

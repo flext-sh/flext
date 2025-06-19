@@ -5,6 +5,12 @@ FastAPI-based REST API providing modern async interface to FLX platform.
 """
 
 from contextlib import asynccontextmanager
+# Lazy import to avoid circular dependencies
+from flx.utils.lazy_import import lazy_import
+
+# Lazy imports to avoid circular dependencies
+# Lazy import to avoid circular dependencies
+
 
 import uvicorn
 from fastapi import FastAPI
@@ -16,7 +22,8 @@ from flx_api.config import api_settings
 from flx_api.routers import monitoring, pipelines, plugins, websocket
 from flx_api.websocket.connection_manager import ConnectionManager
 
-from flx.config import settings
+# Lazy import to avoid circular dependencies
+settings = lazy_import('flx.config', 'settings')
 
 # Global connection manager
 manager = ConnectionManager()

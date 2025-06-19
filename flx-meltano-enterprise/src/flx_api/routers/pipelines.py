@@ -3,6 +3,12 @@ Pipeline management endpoints.
 """
 
 from typing import List, Optional
+# Lazy import to avoid circular dependencies
+from flx.utils.lazy_import import lazy_import
+
+# Lazy imports to avoid circular dependencies
+# Lazy import to avoid circular dependencies
+
 
 import grpc
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query, status
@@ -16,7 +22,9 @@ from flx_api.models.pipeline import (
 )
 from google.protobuf import struct_pb2
 
-from flx.grpc.proto import flx_pb2, flx_pb2_grpc
+# Lazy imports to avoid circular dependencies
+flx_pb2 = lazy_import('flx.grpc.proto', 'flx_pb2')
+flx_pb2_grpc = lazy_import('flx.grpc.proto', 'flx_pb2_grpc')
 
 router = APIRouter()
 

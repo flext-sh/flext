@@ -55,7 +55,7 @@ def cli() -> None:
 )
 def extract(
     tap_config: str,
-    target_config: str,
+    target_config: str,  # noqa: ARG001
     state: str | None,
     catalog: str | None,
 ) -> None:
@@ -102,7 +102,7 @@ def extract(
     help="Path to target configuration file",
 )
 @click.argument("input_file", type=click.File("r"), default=sys.stdin)
-def load(config: str, input_file: Any) -> None:
+def load(config: str, input_file: Any) -> None:  # noqa: ANN401
     """Load data to Oracle WMS (target only)."""
     with Progress(
         SpinnerColumn(),
@@ -115,7 +115,7 @@ def load(config: str, input_file: Any) -> None:
             import subprocess
 
             result = subprocess.run(
-                ["target-oracle-wms", "--config", config],
+                ["target-oracle-wms", "--config", config],  # noqa: S607
                 input=input_file.read(),
                 capture_output=True,
                 text=True,
@@ -155,7 +155,7 @@ def pipeline() -> None:
     is_flag=True,
     help="Run pipeline asynchronously",
 )
-def run_pipeline(config: str, pipeline_name: str | None, run_async: bool) -> None:
+def run_pipeline(config: str, pipeline_name: str | None, *, run_async: bool) -> None:
     """Run a complete ETL pipeline."""
     try:
         # Load pipeline configuration
@@ -235,7 +235,7 @@ def discover(tap_config: str) -> None:
             import subprocess
 
             result = subprocess.run(
-                ["tap-oracle-wms", "--config", tap_config, "--discover"],
+                ["tap-oracle-wms", "--config", tap_config, "--discover"],  # noqa: S607
                 capture_output=True,
                 text=True,
                 check=True,
@@ -305,14 +305,14 @@ def monitor_status(pipeline_name: str | None) -> None:
     default="table",
     help="Output format for metrics",
 )
-def monitor_metrics(format: str) -> None:
+def monitor_metrics(output_format: str) -> None:
     """Show pipeline metrics."""
     monitor = PipelineMonitor()
     metrics = monitor.get_metrics()
 
-    if format == "table":
+    if output_format == "table":
         _display_metrics_table(metrics)
-    elif format == "json" or format == "prometheus":
+    elif output_format == "json" or output_format == "prometheus":
         pass
 
 

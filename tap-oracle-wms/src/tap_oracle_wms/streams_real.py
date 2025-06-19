@@ -281,15 +281,15 @@ class WMSEntityStream(RESTStream):
                 yield data
 
         except (ValueError, TypeError) as e:
-            self.logger.error(f"Failed to parse response for {self.entity_name}: {e}")
+            self.logger.error("Failed to parse response for {self.entity_name}: %s", e)
             msg = f"Invalid JSON response from {self.entity_name}"
-            raise FatalAPIError(msg)
+            raise FatalAPIError(msg) from e
 
     def post_process(self, row: dict, context: dict | None = None) -> dict | None:
         """Post-process real WMS record."""
         # Ensure required fields exist
         if not row.get("id"):
-            self.logger.warning(f"Record missing ID in {self.entity_name}: {row}")
+            self.logger.warning("Record missing ID in {self.entity_name}: %s", row)
             return None
 
         # Convert timestamps to ISO format if needed

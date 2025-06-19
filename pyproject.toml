@@ -28,25 +28,68 @@ classifiers = [
 # Dependências unificadas removidas para evitar conflito com subprojetos
 
 [tool.poetry.extras]
-subprojects = [
-    # "flx-meltano-enterprise",
-    "flx-ldap",
+# Database adapters
+database = [
+    "flx-database-oracle",
+]
+
+# HTTP adapters
+http = [
+    "flx-http-oracle-oic",
+    "flx-http-oracle-wms",
+]
+
+# Integration adapters
+integration = [
+    "flx-oracle-oic",
     "flx-oracle-wms",
-    # "meltano-edk",
+]
+
+# LDAP ecosystem
+ldap = [
+    "flx-ldap",
     "tap-ldap",
+    "target-ldap",
+    "dbt-ldap",
+]
+
+# Oracle ecosystem
+oracle = [
+    "target-oracle-wms",
+    "target-oracle-oic",
+    "tap-oracle-oic",
+    "tap-oracle-wms",
+    "oracle-oic-ext",
+]
+
+# Enterprise features
+enterprise = [
+    "flx-meltano-enterprise",
+]
+
+# Singer SDK
+singer = [
+    "singer-sdk",
+]
+
+# All subprojects (comprehensive installation)
+all = [
+    "flx-database-oracle",
+    "flx-http-oracle-oic",
+    "flx-http-oracle-wms",
+    "flx-oracle-oic",
+    "flx-oracle-wms",
+    "flx-ldap",
+    "tap-ldap",
+    "target-ldap",
     "dbt-ldap",
     "target-oracle-wms",
-    "target-ldap",
-    "oracle-oic-ext",
-    # "map-gpt-embeddings",
-    # "superset-ext",
-    # "meltano-map-transform",
-    # "meltano-hub",
     "target-oracle-oic",
-    # "hub-utils",
-    # "airflow-ext",
+    "tap-oracle-oic",
+    "tap-oracle-wms",
+    "oracle-oic-ext",
+    "flx-meltano-enterprise",
     "singer-sdk",
-    # "gpt-ext",
 ]
 
 [project.urls]
@@ -60,31 +103,44 @@ package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.9,<4.0"
-# Instala todos os subprojetos em modo develop
-# flx-meltano-enterprise = { path = "./flx-meltano-enterprise", develop = true, optional = true }
-flx-ldap = { path = "./flx-ldap", develop = true, optional = true }
-flx-oracle-wms = { path = "./flx-oracle-wms", develop = true, optional = true }
-# meltano-edk = { path = "./meltano-edk", develop = true, optional = true }
-tap-ldap = { path = "./tap-ldap", develop = true, optional = true }
-dbt-ldap = { path = "./dbt-ldap", develop = true, optional = true }
-target-oracle-wms = { path = "./target-oracle-wms", develop = true, optional = true }
-target-ldap = { path = "./target-ldap", develop = true, optional = true }
-oracle-oic-ext = { path = "./oracle-oic-ext", develop = true, optional = true }
-# map-gpt-embeddings = { path = "./meltano-map-gpt-embeddings", develop = true, optional = true }
-# superset-ext = { path = "./meltano-superset-ext", develop = true, optional = true }
-# meltano-map-transform = { path = "./meltano-map-transform", develop = true, optional = true }
-# meltano-hub = { path = "./meltano-hub", develop = true, optional = true }
-target-oracle-oic = { path = "./target-oracle-oic", develop = true, optional = true }
-# hub-utils = { path = "./meltano-hub-utils", develop = true, optional = true }
-# airflow-ext = { path = "./meltano-airflow-ext", develop = true, optional = true }
-singer-sdk = { version = "^0.45.0", optional = true }
-# gpt-ext = { path = "./meltano-gpt-ext", develop = true, optional = true }
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# UNIFIED TOOL CONFIGURATIONS - ENTERPRISE STANDARDS
+# CORE FRAMEWORK - Always available (no circular dependencies)
 # ═══════════════════════════════════════════════════════════════════════════════
 flx = { path = "flx", develop = true }
-flx-database-oracle = { path = "flx-database-oracle", develop = true }
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# OPTIONAL SUBPROJECTS - Installed as extras to avoid circular dependencies
+# ═══════════════════════════════════════════════════════════════════════════════
+# Database adapters
+flx-database-oracle = { path = "flx-database-oracle", develop = true, optional = true }
+
+# HTTP adapters
+flx-http-oracle-oic = { path = "flx-http-oracle-oic", develop = true, optional = true }
+flx-http-oracle-wms = { path = "flx-http-oracle-wms", develop = true, optional = true }
+
+# Integration adapters
+flx-oracle-oic = { path = "flx-oracle-oic", develop = true, optional = true }
+flx-oracle-wms = { path = "flx-oracle-wms", develop = true, optional = true }
+
+# LDAP ecosystem
+flx-ldap = { path = "./flx-ldap", develop = true, optional = true }
+tap-ldap = { path = "./tap-ldap", develop = true, optional = true }
+target-ldap = { path = "./target-ldap", develop = true, optional = true }
+dbt-ldap = { path = "./dbt-ldap", develop = true, optional = true }
+
+# Oracle ecosystem
+target-oracle-wms = { path = "./target-oracle-wms", develop = true, optional = true }
+target-oracle-oic = { path = "./target-oracle-oic", develop = true, optional = true }
+tap-oracle-oic = { path = "./tap-oracle-oic", develop = true, optional = true }
+tap-oracle-wms = { path = "./tap-oracle-wms", develop = true, optional = true }
+oracle-oic-ext = { path = "./oracle-oic-ext", develop = true, optional = true }
+
+# Enterprise features
+flx-meltano-enterprise = { path = "./flx-meltano-enterprise", develop = true, optional = true }
+
+# External dependencies
+singer-sdk = { version = "^0.45.0", optional = true }
 
 [tool.black]
 line-length = 88

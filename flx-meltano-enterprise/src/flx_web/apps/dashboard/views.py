@@ -2,6 +2,12 @@
 
 from datetime import datetime, timezone
 from typing import Any, Dict
+# Lazy import to avoid circular dependencies
+from flx.utils.lazy_import import lazy_import
+
+# Lazy imports to avoid circular dependencies
+# Lazy import to avoid circular dependencies
+
 
 import grpc
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -11,7 +17,9 @@ from django.views.generic import TemplateView
 from flx_web.settings import base as settings
 from google.protobuf import empty_pb2
 
-from flx.grpc.proto import flx_pb2, flx_pb2_grpc
+# Lazy imports to avoid circular dependencies
+flx_pb2 = lazy_import('flx.grpc.proto', 'flx_pb2')
+flx_pb2_grpc = lazy_import('flx.grpc.proto', 'flx_pb2_grpc')
 
 
 class DashboardView(LoginRequiredMixin, TemplateView):

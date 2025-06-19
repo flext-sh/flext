@@ -230,7 +230,8 @@ def migrate_analyze(
     feasibility = analysis["feasibility"]
     feasibility_color = "green" if feasibility["overall"] == "feasible" else "red"
     console.print(
-        f"\n[bold]Feasibility:[/bold] [{feasibility_color}]{feasibility['overall']}[/{feasibility_color}]"
+        f"\n[bold]Feasibility:[/bold] "
+        f"[{feasibility_color}]{feasibility['overall']}[/{feasibility_color}]"
     )
     console.print(f"  Confidence: {feasibility['confidence']}")
 

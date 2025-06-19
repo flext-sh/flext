@@ -23,13 +23,13 @@ class AdvancedWMSOrchestration:
     async def run_parallel_pipelines(self) -> None:
         """Run multiple pipelines in parallel with monitoring."""
         # Start monitoring
-        start_time = datetime.now()
+        start_time = datetime.now(tz=datetime.timezone.utc)
 
         # Run pipelines asynchronously
         results = await self.orchestrator.run_all_pipelines_async()
 
         # Calculate execution time
-        (datetime.now() - start_time).total_seconds()
+        (datetime.now(tz=datetime.timezone.utc) - start_time).total_seconds()
 
         # Display results
 
@@ -45,7 +45,7 @@ class AdvancedWMSOrchestration:
         # Decide which pipeline to run
         if inventory_status.get("last_run"):
             last_run = datetime.fromisoformat(inventory_status["last_run"])
-            hours_since_last_run = (datetime.now() - last_run).total_seconds() / 3600
+            hours_since_last_run = (datetime.now(tz=datetime.timezone.utc) - last_run).total_seconds() / 3600
 
             if hours_since_last_run > 6:
                 self.orchestrator.run_pipeline("inventory_sync")
@@ -71,7 +71,7 @@ class AdvancedWMSOrchestration:
 
         self.orchestrator._execute_pipeline(runtime_config)
 
-    def pipeline_with_retry(self, pipeline_name: str, max_retries: int = 3):
+    def pipeline_with_retry(self, pipeline_name: str, max_retries: int = 3) -> bool:
         """Run pipeline with automatic retry on failure."""
         retry_count = 0
         backoff_seconds = 60
@@ -90,7 +90,7 @@ class AdvancedWMSOrchestration:
 
         return result
 
-    def create_dynamic_pipeline(self, stream_criteria: dict[str, Any]):
+    def create_dynamic_pipeline(self, stream_criteria: dict[str, Any]) -> dict[str, Any]:  # noqa: ARG002
         """Create pipeline dynamically based on criteria."""
         # Discover available streams
         import subprocess
@@ -141,7 +141,7 @@ class AdvancedWMSOrchestration:
 
         # Run for demonstration (normally would be infinite loop)
         for _ in range(3):
-            current_time = datetime.now()
+            current_time = datetime.now(tz=datetime.timezone.utc)
 
             for pipeline_name, interval in schedule.items():
                 last_run = last_execution.get(pipeline_name)
@@ -180,15 +180,7 @@ async def main() -> None:
     # Note: These examples assume configuration files exist
     # In practice, you would create these first
 
-    # Example 1: Parallel execution
-    # orchestrator = AdvancedWMSOrchestration("./config/pipeline_config.json")
-    # await orchestrator.run_parallel_pipelines()
-
-    # Example 2: Conditional execution
-    # orchestrator.conditional_pipeline_execution()
-
-    # Example 3: Retry logic
-    # orchestrator.pipeline_with_retry("inventory_sync", max_retries=3)
+    # Example usage would initialize and run different orchestration methods
 
     # Example 4: Monitoring dashboard
     monitoring_dashboard_example()

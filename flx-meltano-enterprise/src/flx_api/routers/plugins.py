@@ -3,13 +3,21 @@ Plugin management endpoints.
 """
 
 from typing import List, Optional
+# Lazy import to avoid circular dependencies
+from flx.utils.lazy_import import lazy_import
+
+# Lazy imports to avoid circular dependencies
+# Lazy import to avoid circular dependencies
+
 
 import grpc
 from fastapi import APIRouter, Depends, HTTPException, status
 from flx_api.dependencies import check_rate_limit, get_current_user, get_grpc_stub
 from flx_api.models.plugin import PluginInstallRequest, PluginResponse
 
-from flx.grpc.proto import flx_pb2, flx_pb2_grpc
+# Lazy imports to avoid circular dependencies
+flx_pb2 = lazy_import('flx.grpc.proto', 'flx_pb2')
+flx_pb2_grpc = lazy_import('flx.grpc.proto', 'flx_pb2_grpc')
 
 router = APIRouter()
 

@@ -322,7 +322,7 @@ class WMSOrchestrator:
         # Check tap and target are installed
         try:
             subprocess.run(
-                ["tap-oracle-wms", "--version"],
+                ["tap-oracle-wms", "--version"],  # noqa: S607
                 capture_output=True,
                 check=True,
             )
@@ -331,7 +331,7 @@ class WMSOrchestrator:
 
         try:
             subprocess.run(
-                ["target-oracle-wms", "--version"],
+                ["target-oracle-wms", "--version"],  # noqa: S607
                 capture_output=True,
                 check=True,
             )

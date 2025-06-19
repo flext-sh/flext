@@ -8,6 +8,7 @@ from pathlib import Path
 import subprocess
 import time
 from typing import TYPE_CHECKING, Any
+from unittest.mock import Mock
 
 import docker
 import ldap3
@@ -69,12 +70,12 @@ def ldap_containers(
                     auto_bind=True,
                 )
                 conn.unbind()
-                logger.info(f"OpenLDAP {name} is ready")
+                logger.info("OpenLDAP %s is ready", name)
                 break
             except Exception:
                 if i == max_retries - 1:
                     raise
-                logger.info(f"Waiting for OpenLDAP {name}... ({i + 1}/{max_retries})")
+                logger.info("Waiting for OpenLDAP %s... (%d/%d)", name, i + 1, max_retries)
                 time.sleep(2)
 
     yield
@@ -89,7 +90,7 @@ def ldap_containers(
 
 
 @pytest.fixture
-def source_connection(ldap_containers: Any) -> Generator[Connection]:
+def source_connection(ldap_containers: Mock) -> Generator[Connection]:
     """Get source LDAP connection for testing."""
     server = Server("localhost", port=20389, get_info=ALL)
     conn = Connection(
@@ -107,7 +108,7 @@ def source_connection(ldap_containers: Any) -> Generator[Connection]:
 
 
 @pytest.fixture
-def target_connection(ldap_containers: Any) -> Generator[Connection]:
+def target_connection(ldap_containers: Mock) -> Generator[Connection]:
     """Get target LDAP connection for testing."""
     server = Server("localhost", port=21389, get_info=ALL)
     conn = Connection(

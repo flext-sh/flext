@@ -20,7 +20,7 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.9,<4.0"
-singer-sdk = { path = "../meltano-sdk", develop = true }
+singer-sdk = "^0.39.0"
 httpx = ">=0.28.1"
 pydantic = "^2.11"
 backoff = "^2.2.1"
@@ -97,6 +97,30 @@ select = [
 ]
 unfixable = [
     "ERA001", # Don't remove commented-out code
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*" = [
+    "S101",    # assert used in tests
+    "S607",    # subprocess calls in tests
+    "PTH123",  # Path.open vs open in tests
+    "ANN001",  # type annotations in tests
+    "ARG",     # unused function args in fixtures
+    "PLR2004", # magic value used in comparison
+]
+"src/target_oracle_oic/auth.py" = [
+    "ANN401",  # Any type needed for Singer SDK compatibility
+]
+"src/target_oracle_oic/sinks.py" = [
+    "ANN401",  # Any type needed for Singer SDK compatibility
+    "ARG002",  # Context parameters required by Singer SDK interface
+]
+"src/target_oracle_oic/target.py" = [
+    "ANN401",  # Any type needed for Singer SDK compatibility
+    "ARG002",  # Record parameter required by Singer SDK interface
+]
+"src/target_oracle_oic/sinks_extended.py" = [
+    "ARG002",  # Context parameters required by Singer SDK interface
 ]
 
 [tool.ruff.format]
