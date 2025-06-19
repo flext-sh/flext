@@ -13,14 +13,14 @@ import structlog
 from fastapi import Body, Depends, FastAPI, HTTPException, Path, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from prometheus_client import make_asgi_app
-from pydantic import BaseModel, ConfigDict, EmailStr, Field
-from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
-
 from flx.infra.database.optimized_repository import (
     DatabaseService,
     OptimizedDatabaseConfig,
 )
+from prometheus_client import make_asgi_app
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
+from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
+
 from flx.infra.services.optimized_base import (
     OptimizedCacheService,
     OptimizedHttpClientService,
