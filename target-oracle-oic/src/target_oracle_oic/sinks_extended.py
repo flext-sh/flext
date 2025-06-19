@@ -16,7 +16,7 @@ class LibrariesSink(OICBaseSink):
 
     name = "libraries"
 
-    def process_record(self, record: dict[str, Any], context: dict[str, Any]) -> None:
+    def process_record(self, record: dict[str, Any], _context: dict[str, Any]) -> None:
         """Process a single library record."""
         library_id = record.get("id") or ""
 
@@ -86,7 +86,7 @@ class CertificatesSink(OICBaseSink):
 
     name = "certificates"
 
-    def process_record(self, record: dict[str, Any], context: dict[str, Any]) -> None:
+    def process_record(self, record: dict[str, Any], _context: dict[str, Any]) -> None:
         """Process a single certificate record."""
         cert_alias = record.get("alias") or ""
 
@@ -106,7 +106,7 @@ class CertificatesSink(OICBaseSink):
         cert_content = record.get("certificate_content")
         if not cert_content:
             self.logger.warning(
-                f"No certificate content provided for {record.get('alias')}"
+                "No certificate content provided for %s", record.get("alias")
             )
             return
 
@@ -130,7 +130,7 @@ class CertificatesSink(OICBaseSink):
         response = self.client.post(
             "/ic/api/integration/v1/certificates",
             data=data,
-            files=files,  # type: ignore[arg-type]
+            files=files,
         )
         response.raise_for_status()
 
@@ -154,7 +154,7 @@ class ProjectsSink(OICBaseSink):
 
     name = "projects"
 
-    def process_record(self, record: dict[str, Any], context: dict[str, Any]) -> None:
+    def process_record(self, record: dict[str, Any], _context: dict[str, Any]) -> None:
         """Process a single project record."""
         project_id = record.get("id") or ""
 
@@ -187,8 +187,9 @@ class ProjectsSink(OICBaseSink):
 
         # Create folders if provided
         if "folders" in record:
+            project_id_var = record["id"]
             for folder in record["folders"]:
-                self._create_folder(project_id, folder)
+                self._create_folder(project_id_var, folder)
 
     def _create_folder(self, project_id: str, folder: dict[str, Any]) -> None:
         """Create a folder within a project."""
@@ -224,14 +225,14 @@ class SchedulesSink(OICBaseSink):
 
     name = "schedules"
 
-    def process_record(self, record: dict[str, Any], context: dict[str, Any]) -> None:
+    def process_record(self, record: dict[str, Any], _context: dict[str, Any]) -> None:
         """Process a single schedule record."""
         schedule_id = record.get("id") or ""
         integration_id = record.get("integrationId") or ""
 
         if not integration_id:
             self.logger.warning(
-                f"No integration ID provided for schedule {schedule_id}"
+                "No integration ID provided for schedule %s", schedule_id
             )
             return
 
@@ -323,7 +324,7 @@ class BusinessEventsSink(OICBaseSink):
 
     name = "business_events"
 
-    def process_record(self, record: dict[str, Any], context: dict[str, Any]) -> None:
+    def process_record(self, record: dict[str, Any], _context: dict[str, Any]) -> None:
         """Process a single business event record."""
         # Business events are typically published, not created
         self._publish_event(record)
@@ -358,7 +359,7 @@ class MonitoringConfigSink(OICBaseSink):
 
     name = "monitoring_config"
 
-    def process_record(self, record: dict[str, Any], context: dict[str, Any]) -> None:
+    def process_record(self, record: dict[str, Any], _context: dict[str, Any]) -> None:
         """Process monitoring configuration record."""
         config_type = record.get("configType", "alerts")
 
@@ -420,7 +421,7 @@ class IntegrationActionsSink(OICBaseSink):
 
     name = "integration_actions"
 
-    def process_record(self, record: dict[str, Any], context: dict[str, Any]) -> None:
+    def process_record(self, record: dict[str, Any], _context: dict[str, Any]) -> None:
         """Process integration action record."""
         action = record.get("action", "")
         integration_id = record.get("integrationId", "")
@@ -496,7 +497,7 @@ class ConnectionActionsSink(OICBaseSink):
 
     name = "connection_actions"
 
-    def process_record(self, record: dict[str, Any], context: dict[str, Any]) -> None:
+    def process_record(self, record: dict[str, Any], _context: dict[str, Any]) -> None:
         """Process connection action record."""
         action = record.get("action", "")
         connection_id = record.get("connectionId", "")
@@ -521,7 +522,9 @@ class ConnectionActionsSink(OICBaseSink):
         result = response.json()
         if result.get("status") != "SUCCESS":
             self.logger.warning(
-                f"Connection test failed for {connection_id}: {result.get('message')}"
+                "Connection test failed for %s: %s",
+                connection_id,
+                result.get("message"),
             )
 
     def _refresh_metadata(self, connection_id: str) -> None:

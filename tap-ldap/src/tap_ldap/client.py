@@ -96,7 +96,7 @@ class LDAPClient:
         self._setup_server()
 
     def _setup_tls_context(self) -> None:
-        """Setup TLS context for secure connections."""
+        """Set up TLS context for secure connections."""
         if not self.use_ssl:
             return
 
@@ -117,7 +117,7 @@ class LDAPClient:
         self._tls_context = Tls(**tls_config)
 
     def _setup_server(self) -> None:
-        """Setup LDAP server with proper configuration."""
+        """Set up LDAP server with proper configuration."""
         self._server = Server(
             host=self.host,
             port=self.port,
@@ -145,23 +145,25 @@ class LDAPClient:
             receive_timeout=self.timeout,
         )
 
-    def _execute_with_retry(self, operation, *args, **kwargs) -> Any:
+    def _execute_with_retry(
+        self, operation: callable, *args: Any, **kwargs: Any  # noqa: ANN401
+    ) -> Any:  # noqa: ANN401
         """Execute LDAP operation with automatic retry."""
         last_exception = None
 
         for attempt in range(self.max_retries + 1):
             try:
                 return operation(*args, **kwargs)
-            except LDAPException as e:
+            except LDAPException as e:  # noqa: PERF203
                 last_exception = e
                 if attempt < self.max_retries:
                     logger.warning(
-                        f"LDAP operation failed, retrying in {self.retry_delay}s: {e}"
+                        "LDAP operation failed, retrying in %ds: %s", self.retry_delay, e
                     )
                     time.sleep(self.retry_delay)
                     continue
                 logger.error(
-                    f"LDAP operation failed after {self.max_retries} retries: {e}"
+                    "LDAP operation failed after %d retries: %s", self.max_retries, e
                 )
                 break
 
@@ -189,7 +191,7 @@ class LDAPClient:
 
         """
 
-        def _create_and_bind():
+        def _create_and_bind() -> ldap3.Connection:
             connection = self._create_connection()
             logger.info("Connected to LDAP server: %s", self.server_uri)
             return connection
@@ -364,6 +366,7 @@ class LDAPClient:
         base_dn: str,
         search_filter: str = "(objectClass=*)",
         attributes: list[str] | None = None,
+        *,
         oracle_oid_mode: bool = False,
     ) -> Iterator[dict[str, Any]]:
         """Search with Oracle Internet Directory compatibility.

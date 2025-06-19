@@ -51,7 +51,9 @@ class TargetOracleOICConfig:
                 "import_mode",
                 th.StringType,
                 default="create_or_update",
-                description="Import mode: 'create_only', 'update_only', or 'create_or_update'",
+                description=(
+                    "Import mode: 'create_only', 'update_only', or 'create_or_update'"
+                ),
             ),
             th.Property(
                 "activate_integrations",

@@ -26,7 +26,7 @@ from flx_ldap.orchestrator import LDAPOrchestrator
 if TYPE_CHECKING:
     from pathlib import Path
 
-    from pytest import MonkeyPatch
+    import pytest
 
 
 class TestOrchestratorIntegration:
@@ -375,11 +375,14 @@ class TestOrchestratorIntegration:
 
         # Create mock data files for comparison
         source_output.write_text(
-            '{"type": "RECORD", "stream": "users", "record": {"dn": "uid=user1,dc=source,dc=com"}}\n'
-            '{"type": "RECORD", "stream": "users", "record": {"dn": "uid=user2,dc=source,dc=com"}}\n'
+            '{"type": "RECORD", "stream": "users", "record": '
+            '{"dn": "uid=user1,dc=source,dc=com"}}\n'
+            '{"type": "RECORD", "stream": "users", "record": '
+            '{"dn": "uid=user2,dc=source,dc=com"}}\n'
         )
         target_output.write_text(
-            '{"type": "RECORD", "stream": "users", "record": {"dn": "uid=user1,dc=target,dc=com"}}\n'
+            '{"type": "RECORD", "stream": "users", '
+            '"record": {"dn": "uid=user1,dc=target,dc=com"}}\n'
         )
 
         orchestrator = LDAPOrchestrator(config)
@@ -459,7 +462,7 @@ class TestCLIIntegration:
         self,
         runner: CliRunner,
         config_file: Path,
-        monkeypatch: MonkeyPatch,
+        monkeypatch: pytest.MonkeyPatch,
     ) -> None:
         """Test CLI validate command."""
         # Mock validate_config to return True
@@ -603,7 +606,7 @@ class TestCLIIntegration:
         self,
         runner: CliRunner,
         config_file: Path,
-        monkeypatch: MonkeyPatch,
+        monkeypatch: pytest.MonkeyPatch,
     ) -> None:
         """Test CLI with environment variable configuration."""
         # Set environment variable

@@ -1,10 +1,19 @@
 """Oracle Integration Cloud HTTP adapter using FLX architecture with zero redundancy."""
 
 import logging
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-from flx.adapters.outbound.http import HttpClientAdapter  # type: ignore[import-untyped]
 from pydantic import ConfigDict
+
+if TYPE_CHECKING:
+    from flx.adapters.outbound.http import HttpClientAdapter
+else:
+    # Runtime: Use dummy base class to avoid lazy_import as base class
+    class HttpClientAdapter:
+        """Dummy base class for runtime."""
+
+        def __init__(self, **kwargs: Any) -> None:
+            pass
 
 from .auth import AuthenticationError, AuthToken, OICAuthenticator
 from .config import OracleOicConfig
@@ -26,7 +35,7 @@ from .constants import (
 logger = logging.getLogger(__name__)
 
 
-class OracleOicHttpAdapter(HttpClientAdapter):  # type: ignore[misc]
+class OracleOicHttpAdapter(HttpClientAdapter):
     """Oracle Integration Cloud HTTP adapter using FLX HTTP base with zero code duplication."""
 
     model_config = ConfigDict(
@@ -47,7 +56,8 @@ class OracleOicHttpAdapter(HttpClientAdapter):  # type: ignore[misc]
 
         if "labels" not in kwargs:
             try:
-                from flx.infra.observability.metrics_system import MetricLabels
+                # Lazy import to avoid circular dependencies
+                MetricLabels = lazy_import("flx.infra.observability.metrics_system", "MetricLabels")
 
                 kwargs["labels"] = MetricLabels(
                     {"service": "oic-cli", "adapter": "oic-http"}

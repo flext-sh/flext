@@ -10,13 +10,20 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from enum import Enum
 from typing import Any, Optional
+# Lazy import to avoid circular dependencies
+from flx.utils.lazy_import import lazy_import
+
+# Lazy imports to avoid circular dependencies
+# Lazy import to avoid circular dependencies
+
 
 import asyncpg
 import redis.asyncio as redis
 import structlog
 from aio_pika import connect_robust
 
-from flx.config import settings
+# Lazy import to avoid circular dependencies
+settings = lazy_import('flx.config', 'settings')
 
 logger = structlog.get_logger()
 

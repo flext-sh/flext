@@ -14,16 +14,9 @@ from typing import Any, ClassVar
 
 # Import from ldap-core-shared if available
 try:
-    from ldap_core_shared.domain.events import (
-        MigrationPhaseCompletedEvent,
-        MigrationPlanCreatedEvent,
-    )
-    from ldap_core_shared.domain.models import LDAPEntry, MigrationStats
-    from ldap_core_shared.domain.value_objects import LdapDn
-    from ldap_core_shared.utils.simple_dn_utils import (
-        simple_normalize_dn,
-        simple_parse_dn,
-    )
+    # Import only what we actually use
+    # Currently no imports are used, so we just check availability
+    import ldap_core_shared  # noqa: F401
 
     LDAP_CORE_AVAILABLE = True
 except ImportError:
@@ -390,7 +383,10 @@ class MigrationPlanner:
         plan = MigrationPlan(
             plan_id=plan_id,
             name=f"LDAP Migration - {pattern_config['description']}",
-            description=f"Migration from {source_config.get('host', 'source')} to {target_config.get('host', 'target')}",
+            description=(
+                f"Migration from {source_config.get('host', 'source')} "
+                f"to {target_config.get('host', 'target')}"
+            ),
             source_config=source_config,
             target_config=target_config,
             estimated_total_duration=self._estimate_duration(

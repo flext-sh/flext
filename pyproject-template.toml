@@ -1,0 +1,414 @@
+[build-system]
+requires = ["poetry-core>=1.9.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "PROJECT_NAME"  # Replace with actual project name
+version = "0.1.0"
+description = "Enterprise-grade Python automation component"
+authors = ["PyAuto Team <pyauto@enterprise.com>"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/enterprise/pyauto"
+repository = "https://github.com/enterprise/pyauto"
+documentation = "https://pyauto.enterprise.com/docs"
+keywords = ["automation", "enterprise", "oracle", "integration"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
+]
+packages = [
+    { include = "PROJECT_MODULE", from = "src" }  # Replace PROJECT_MODULE
+]
+
+[tool.poetry.dependencies]
+python = ">=3.9,<4.0"
+pydantic = "^2.11.0"
+structlog = "^24.4.0"
+python-dotenv = "^1.0.1"
+typing-extensions = "^4.12.2"
+# Add project-specific dependencies here
+
+[tool.poetry.group.dev.dependencies]
+# Testing
+pytest = "^8.3.4"
+pytest-cov = "^6.0.0"
+pytest-asyncio = "^0.25.0"
+pytest-mock = "^3.14.0"
+pytest-timeout = "^2.3.1"
+pytest-xdist = "^3.6.1"
+hypothesis = "^6.122.0"
+
+# Code Quality
+black = "^24.10.0"
+ruff = "^0.8.3"
+mypy = "^1.13.0"
+bandit = {extras = ["toml"], version = "^1.8.0"}
+safety = "^3.2.11"
+vulture = "^2.14"
+
+# Documentation
+mkdocs = "^1.6.1"
+mkdocs-material = "^9.5.48"
+mkdocstrings = {extras = ["python"], version = "^0.27.0"}
+
+# Development Tools
+ipython = "^8.31.0"
+ipdb = "^0.13.13"
+pre-commit = "^4.0.1"
+commitizen = "^4.1.1"
+
+# Type Stubs
+types-requests = "^2.32.0.20241229"
+types-python-dateutil = "^2.9.0.20241206"
+types-pyyaml = "^6.0.12.20240917"
+types-jsonschema = "^4.23.0.20241206"
+
+[tool.poetry.scripts]
+# Define CLI entry points here
+# example = "project_module.cli:main"
+
+[tool.black]
+line-length = 88
+target-version = ['py39', 'py310', 'py311', 'py312', 'py313']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # Standard exclusions
+  \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+  | migrations
+  | __pycache__
+  | node_modules
+  | .coverage
+  | .pytest_cache
+  | .ruff_cache
+)/
+'''
+
+[tool.ruff]
+line-length = 88
+target-version = "py39"
+fix = true
+unsafe-fixes = false
+
+[tool.ruff.lint]
+select = [
+    # Pyflakes
+    "F",
+    # Pycodestyle
+    "E",
+    "W",
+    # isort
+    "I",
+    # pep8-naming
+    "N",
+    # pydocstyle
+    "D",
+    # pyupgrade
+    "UP",
+    # flake8-annotations
+    "ANN",
+    # flake8-bandit
+    "S",
+    # flake8-blind-except
+    "BLE",
+    # flake8-boolean-trap
+    "FBT",
+    # flake8-bugbear
+    "B",
+    # flake8-builtins
+    "A",
+    # flake8-commas
+    "COM",
+    # flake8-comprehensions
+    "C4",
+    # flake8-datetimez
+    "DTZ",
+    # flake8-errmsg
+    "EM",
+    # flake8-executable
+    "EXE",
+    # flake8-implicit-str-concat
+    "ISC",
+    # flake8-import-conventions
+    "ICN",
+    # flake8-logging-format
+    "G",
+    # flake8-no-pep420
+    "INP",
+    # flake8-pie
+    "PIE",
+    # flake8-print
+    "T20",
+    # flake8-pyi
+    "PYI",
+    # flake8-pytest-style
+    "PT",
+    # flake8-quotes
+    "Q",
+    # flake8-raise
+    "RSE",
+    # flake8-return
+    "RET",
+    # flake8-simplify
+    "SIM",
+    # flake8-tidy-imports
+    "TID",
+    # flake8-type-checking
+    "TCH",
+    # flake8-unused-arguments
+    "ARG",
+    # flake8-use-pathlib
+    "PTH",
+    # eradicate
+    "ERA",
+    # pandas-vet
+    "PD",
+    # pygrep-hooks
+    "PGH",
+    # Pylint
+    "PL",
+    # flake8-airflow
+    "AIR",
+    # flake8-django
+    "DJ",
+    # flake8-numpy
+    "NPY",
+    # flake8-async
+    "ASYNC",
+    # flake8-trio
+    "TRIO",
+    # flake8-slots
+    "SLOT",
+    # flake8-future-annotations
+    "FA",
+    # flynt
+    "FLY",
+    # perflint
+    "PERF",
+    # refurb
+    "FURB",
+    # flake8-logging
+    "LOG",
+    # Ruff-specific rules
+    "RUF",
+]
+ignore = [
+    "D100",  # Missing docstring in public module
+    "D104",  # Missing docstring in public package
+    "D107",  # Missing docstring in __init__
+    "ANN101",  # Missing type annotation for self in method
+    "ANN102",  # Missing type annotation for cls in classmethod
+    "COM812",  # Missing trailing comma (conflicts with black)
+    "ISC001",  # Single line implicit string concatenation (conflicts with black)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = [
+    "S101",  # Use of assert detected
+    "ARG",  # Unused function args -> fixtures nevertheless are functionally relevant
+    "FBT",  # Don't care about booleans in tests
+    "PLR2004",  # Magic value used in comparison
+    "D",  # No docstrings in tests
+    "ANN",  # No type annotations in tests
+]
+"**/{tests,docs,tools,scripts}/*" = ["E402", "INP001"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.isort]
+known-first-party = ["flx", "flx_*", "tap_*", "target_*"]
+required-imports = ["from __future__ import annotations"]
+
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+[tool.ruff.lint.flake8-annotations]
+allow-star-arg-any = false
+suppress-dummy-args = true
+
+[tool.ruff.lint.pylint]
+max-args = 5
+max-branches = 12
+max-returns = 6
+max-statements = 50
+
+[tool.mypy]
+python_version = "3.9"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_any_unimported = true
+disallow_any_expr = false  # Too restrictive for practical use
+disallow_any_decorated = true
+disallow_any_explicit = true
+disallow_any_generics = true
+disallow_subclassing_any = true
+check_untyped_defs = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+strict_equality = true
+strict_concatenate = true
+namespace_packages = true
+show_error_codes = true
+show_error_context = true
+pretty = true
+show_column_numbers = true
+show_absolute_path = true
+
+[[tool.mypy.overrides]]
+module = [
+    "tests.*",
+    "docs.*",
+]
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+module = [
+    # Add third-party modules without type stubs here
+]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+addopts = [
+    "-ra",
+    "--strict-markers",
+    "--strict-config",
+    "--cov=src",
+    "--cov-branch",
+    "--cov-report=term-missing:skip-covered",
+    "--cov-report=html",
+    "--cov-report=xml",
+    "--cov-fail-under=90",
+    "--no-cov-on-fail",
+    "--maxfail=1",
+    "--tb=short",
+    "-n=auto",
+]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+    "unit: marks tests as unit tests",
+    "e2e: marks tests as end-to-end tests",
+]
+filterwarnings = [
+    "error",
+    "ignore::UserWarning",
+    "ignore::DeprecationWarning",
+]
+xfail_strict = true
+required_plugins = [
+    "pytest-cov>=6.0.0",
+    "pytest-asyncio>=0.25.0",
+    "pytest-timeout>=2.3.1",
+]
+
+[tool.coverage.run]
+source = ["src"]
+branch = true
+parallel = true
+omit = [
+    "*/tests/*",
+    "*/test_*",
+    "*/__main__.py",
+]
+
+[tool.coverage.report]
+precision = 2
+show_missing = true
+skip_covered = false
+fail_under = 90
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "def __str__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "if typing.TYPE_CHECKING:",
+    "@abstractmethod",
+    "@abc.abstractmethod",
+    "except ImportError:",
+    "except KeyboardInterrupt:",
+    "except Exception as e:",
+    "logger.debug",
+    "logger.warning",
+    "logger.error",
+    "logger.critical",
+]
+
+[tool.coverage.html]
+directory = "htmlcov"
+
+[tool.coverage.xml]
+output = "coverage.xml"
+
+[tool.bandit]
+targets = ["src"]
+recursive = true
+skips = ["B101", "B601"]  # Assert and shell usage (controlled environments)
+exclude_dirs = ["/tests/", "/test/", "/.tox/", "/.venv/", "/venv/"]
+
+[tool.bandit.assert_used]
+skips = ["*/test_*.py", "*_test.py"]
+
+[tool.vulture]
+min_confidence = 80
+paths = ["src"]
+exclude = ["tests/", "docs/"]
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+version = "0.1.0"
+tag_format = "v$version"
+version_files = [
+    "pyproject.toml:version",
+    "src/PROJECT_MODULE/__init__.py:__version__",  # Replace PROJECT_MODULE
+]
+style = [
+    ["qmark", "fg:#ff9d00 bold"],
+    ["question", "bold"],
+    ["answer", "fg:#ff9d00 bold"],
+    ["pointer", "fg:#ff9d00 bold"],
+    ["highlighted", "fg:#ff9d00 bold"],
+    ["selected", "fg:#cc5454"],
+    ["separator", "fg:#cc5454"],
+    ["instruction", ""],
+    ["text", ""],
+    ["disabled", "fg:#858585 italic"]
+]
+
+[tool.isort]
+profile = "black"
+line_length = 88
+known_first_party = ["flx", "flx_*", "tap_*", "target_*"]
+add_imports = ["from __future__ import annotations"]

@@ -12,12 +12,24 @@ import grpc
 import structlog
 from grpc.aio import ServerInterceptor
 
-from flx.monitoring.metrics import (
-    grpc_active_requests,
-    grpc_request_duration_seconds,
-    grpc_requests_total,
-)
-from flx.monitoring.tracing import get_current_span
+# Lazy imports to avoid circular dependencies
+try:
+    from flx.monitoring.metrics import (
+        grpc_active_requests,
+        grpc_request_duration_seconds,
+        grpc_requests_total,
+    )
+except ImportError:
+    # Fallback if metrics module not available
+    grpc_active_requests = None
+    grpc_request_duration_seconds = None
+    grpc_requests_total = None
+
+try:
+    from flx.monitoring.tracing import get_current_span
+except ImportError:
+    # Fallback if tracing module not available
+    get_current_span = lambda: None
 
 logger = structlog.get_logger()
 

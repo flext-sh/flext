@@ -366,6 +366,17 @@ lint-security: venv-check
 	)
 	$(call success,Verificação de segurança completada)
 
+## mypy: Executa verificação de tipos com mypy
+mypy: venv-check
+	$(call run_for_projects,mypy,Executando verificação de tipos,\
+		$(VENV_BIN)/mypy . \
+			--config-file=$(WORKSPACE_ROOT)/mypy.ini \
+			--ignore-missing-imports \
+			--no-error-summary \
+			--pretty \
+	)
+	$(call success,Verificação de tipos completada)
+
 ## fix-ruff: Executa correções automáticas com Ruff
 fix-ruff: venv-check
 	$(call run_for_projects,fix-ruff,Executando correções Ruff,\
@@ -388,8 +399,18 @@ fix-black: venv-check
 	$(call success,Formatação Black executada)
 
 ## fix: Executa todas as correções automáticas
-fix: fix-ruff fix-isort fix-black
+fix: fix-ruff fix-isort fix-black fix-lint-issues
 	$(call success,Todas as correções automáticas executadas)
+
+## fix-lint-issues: Corrige problemas específicos de lint
+fix-lint-issues: venv-check
+	$(call run_for_projects,fix-lint-issues,Corrigindo problemas de lint,\
+		$(VENV_BIN)/ruff check --fix . \
+			--select=DTZ,TRY,ANN,D,INP,PLW \
+			--extend-ignore=D100,D101,D102,D103,D104,D105,D106,D107 \
+		|| true \
+	)
+	$(call success,Problemas de lint corrigidos)
 
 ## upgrade-syntax: Atualiza sintaxe Python para versão mais recente
 upgrade-syntax: venv-check
@@ -568,6 +589,61 @@ force-poetry-lock: venv-check
 
 ## fix-poetry-deps: Corrige problemas de dependências do Poetry
 fix-poetry-deps: force-poetry-lock install-dev
+
+# ───────────────────────────────────────────────────────────────────────────
+#  PYPROJECT TEMPLATE COMPLIANCE
+# ───────────────────────────────────────────────────────────────────────────
+
+## pyproject-template-validate: Validates all projects against enterprise template
+pyproject-template-validate: venv-check
+	$(call section,Validating PyProject Template Compliance)
+	@. $(VENV_DIR)/bin/activate && \
+		$(PYTHON) $(SCRIPTS_DIR)/validate_pyproject_compliance.py
+	$(call success,PyProject template validation completed)
+
+## pyproject-template-apply: Applies enterprise template to all projects
+pyproject-template-apply: venv-check
+	$(call section,Applying PyProject Template to All Projects)
+	@if [ -z "$(FORCE)" ]; then \
+		$(call warning,This will overwrite all pyproject.toml files); \
+		$(call warning,Use FORCE=1 to confirm: make pyproject-template-apply FORCE=1); \
+		exit 1; \
+	fi
+	@echo "Applying enterprise template to all projects..."
+	@for proj in $(ALL_PROJECT_NAMES); do \
+		if [ -f "$$proj/pyproject.toml" ]; then \
+			echo "  → Backing up $$proj/pyproject.toml..."; \
+			cp "$$proj/pyproject.toml" "$$proj/pyproject.toml.backup"; \
+		fi; \
+		echo "  → Applying template to $$proj..."; \
+		cp pyproject-template.toml "$$proj/pyproject.toml"; \
+		if [ -f "$$proj/src" ]; then \
+			PROJECT_MODULE=$$(echo "$$proj" | sed 's/-/_/g'); \
+			sed -i "s/PROJECT_NAME/$$proj/g" "$$proj/pyproject.toml"; \
+			sed -i "s/PROJECT_MODULE/$$PROJECT_MODULE/g" "$$proj/pyproject.toml"; \
+		fi; \
+	done
+	$(call success,Enterprise template applied to all projects)
+
+## pyproject-template-customize: Customizes template for specific project
+pyproject-template-customize:
+	$(call require_project,pyproject-template-customize)
+	$(call section,Customizing PyProject Template for $(PROJECT))
+	@if [ ! -f "$(PROJECT)/pyproject.toml" ]; then \
+		$(call error,Project $(PROJECT) does not have pyproject.toml file); \
+		exit 1; \
+	fi
+	@PROJECT_MODULE=$$(echo "$(PROJECT)" | sed 's/-/_/g'); \
+		sed -i "s/PROJECT_NAME/$(PROJECT)/g" "$(PROJECT)/pyproject.toml"; \
+		sed -i "s/PROJECT_MODULE/$$PROJECT_MODULE/g" "$(PROJECT)/pyproject.toml"
+	$(call success,Template customized for $(PROJECT))
+
+## pyproject-template-status: Shows compliance status for all projects
+pyproject-template-status: venv-check
+	$(call section,PyProject Template Compliance Status)
+	@. $(VENV_DIR)/bin/activate && \
+		$(PYTHON) $(SCRIPTS_DIR)/validate_pyproject_compliance.py --status-only || true
+	$(call success,Compliance status report completed)
 
 # ───────────────────────────────────────────────────────────────────────────
 #  QUALITY ASSURANCE
@@ -800,6 +876,12 @@ help:
 	@echo "  upgrade-syntax      Atualiza sintaxe Python para versão mais recente"
 	@echo "  format              Formata código (alias para fix-black)"
 	@echo "  build               Constrói pacotes"
+	@echo ""
+	@echo "$(BOLD)$(GREEN)PyProject Template Compliance:$(NC)"
+	@echo "  $(BOLD)pyproject-template-validate   🔍 Validates all projects against enterprise template$(NC)"
+	@echo "  $(BOLD)pyproject-template-apply      ⚠️  Applies template to ALL projects (FORCE=1 required)$(NC)"
+	@echo "  pyproject-template-customize  Customizes template for specific project (PROJECT=name)"
+	@echo "  pyproject-template-status     Shows compliance status for all projects"
 	@echo ""
 	@echo "$(BOLD)$(GREEN)Quality Assurance:$(NC)"
 	@echo "  standardize         Executa todas as padronizações"

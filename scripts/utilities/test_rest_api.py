@@ -16,9 +16,9 @@ import requests
 def start_api_server():
     """Start the REST API server in background."""
     import uvicorn
-    from flx.adapters.inbound.rest_api import create_rest_api
 
     from flx.adapters.inbound.fire_cli import create_cli
+    from flx.adapters.inbound.rest_api import create_rest_api
 
     cli = create_cli()
     app = create_rest_api(cli=cli)

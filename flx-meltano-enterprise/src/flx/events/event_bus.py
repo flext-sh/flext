@@ -11,12 +11,19 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Any, Callable, Optional
 from uuid import UUID, uuid4
+# Lazy import to avoid circular dependencies
+from flx.utils.lazy_import import lazy_import
+
+# Lazy imports to avoid circular dependencies
+# Lazy import to avoid circular dependencies
+
 
 import structlog
 from aio_pika import ExchangeType, connect_robust
 from aio_pika.abc import AbstractChannel, AbstractExchange, AbstractQueue
 
-from flx.config import settings
+# Lazy import to avoid circular dependencies
+settings = lazy_import('flx.config', 'settings')
 
 logger = structlog.get_logger()
 

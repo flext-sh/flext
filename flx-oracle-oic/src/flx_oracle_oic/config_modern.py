@@ -4,10 +4,21 @@ This configuration implementation uses the modern FLX hierarchical configuration
 system with environment variable support, profile management, and enhanced validation.
 """
 
-from typing import Any, Self
+from typing import TYPE_CHECKING, Any, Self
 
-from flx.infra.config.hierarchical import ConfigManager
 from pydantic import Field, SecretStr, field_validator, model_validator
+
+if TYPE_CHECKING:
+    from flx.infra.config.hierarchical import ConfigManager
+else:
+    # Runtime: Use dummy base class to avoid lazy_import as base class
+    class ConfigManager:
+        """Dummy base class for runtime."""
+
+        def __init__(self, **kwargs: Any) -> None:
+            for key, value in kwargs.items():
+                setattr(self, key, value)
+
 
 from .constants import (
     DEFAULT_API_VERSION,

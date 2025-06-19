@@ -26,24 +26,28 @@ tests/
 ## 🏷️ Test Categories
 
 ### Unit Tests (`@pytest.mark.unit`)
+
 - **Fast execution** (< 1 second per test)
 - **No external dependencies** (mocked WMS API)
 - **High coverage** of individual components
 - **Run by default** in CI/CD pipelines
 
 ### Integration Tests (`@pytest.mark.integration`)
+
 - **Medium execution time** (1-30 seconds per test)
 - **May use external services** (but typically mocked)
 - **Test component interactions**
 - **Run in staging environments**
 
 ### Live Tests (`@pytest.mark.live`)
+
 - **Require live WMS API connection**
 - **Longest execution time** (30+ seconds per test)
 - **Test real API behavior**
 - **Run manually or in production-like environments**
 
 ### Slow Tests (`@pytest.mark.slow`)
+
 - **Extended execution time**
 - **Stress testing and performance validation**
 - **Run periodically or before releases**
@@ -51,6 +55,7 @@ tests/
 ## 🚀 Running Tests
 
 ### Quick Start - Unit Tests Only
+
 ```bash
 # Run all unit tests (default)
 pytest
@@ -63,6 +68,7 @@ pytest tests/test_unit_auth.py::TestWMSAuthentication::test_get_wms_headers_basi
 ```
 
 ### Integration Tests
+
 ```bash
 # Run all integration tests
 pytest -m integration
@@ -72,6 +78,7 @@ pytest tests/test_integration_discovery.py
 ```
 
 ### Live Tests (Requires WMS Credentials)
+
 ```bash
 # Set up environment
 export WMS_USERNAME="your_username"
@@ -85,6 +92,7 @@ pytest tests/test_live_comprehensive.py::TestComprehensiveLiveFlow::test_complet
 ```
 
 ### Custom Test Selection
+
 ```bash
 # Run only authentication tests
 pytest -m auth
@@ -111,6 +119,7 @@ pytest --cov=tap_oracle_wms --cov-report=html
 ## 📊 Test Coverage
 
 ### Component Coverage
+
 - ✅ **Authentication**: Basic Auth, OAuth2, headers, error handling
 - ✅ **Discovery**: Entity discovery, access checking, schema generation
 - ✅ **Pagination**: Offset/cursor modes, loop detection, performance
@@ -120,6 +129,7 @@ pytest --cov=tap_oracle_wms --cov-report=html
 - ✅ **Live API**: Real WMS connectivity, data quality, performance
 
 ### Test Types Coverage
+
 - **Happy Path**: Normal operation scenarios
 - **Edge Cases**: Boundary conditions, empty data, large datasets
 - **Error Handling**: Network failures, invalid data, authentication errors
@@ -129,6 +139,7 @@ pytest --cov=tap_oracle_wms --cov-report=html
 ## ⚙️ Configuration
 
 ### Environment Variables
+
 ```bash
 # Required for live tests
 WMS_USERNAME=your_wms_username
@@ -141,6 +152,7 @@ WMS_FACILITY_CODE=CUSTOM_FACILITY
 ```
 
 ### Test Configuration Files
+
 ```bash
 # Create test-specific config
 cp config.json tests/test_config.json
@@ -157,12 +169,14 @@ cp config.json tests/test_config.json
    - Live: Requires real WMS API
 
 2. **Use existing fixtures**:
+
    ```python
    def test_my_feature(sample_config, mock_wms_response, captured_messages):
        # Test implementation
    ```
 
 3. **Add appropriate markers**:
+
    ```python
    @pytest.mark.unit
    @pytest.mark.auth
@@ -206,6 +220,7 @@ mock_http_client      # Mock HTTP client
 ## 📈 Continuous Integration
 
 ### GitHub Actions / CI Pipeline
+
 ```yaml
 # Example CI configuration
 - name: Run Unit Tests
@@ -222,6 +237,7 @@ mock_http_client      # Mock HTTP client
 ```
 
 ### Test Reports
+
 ```bash
 # Generate HTML coverage report
 pytest --cov=tap_oracle_wms --cov-report=html
@@ -238,6 +254,7 @@ pytest --cov=tap_oracle_wms --cov-report=html --junitxml=test-results.xml
 ### Common Issues
 
 1. **Live tests failing with auth errors**:
+
    ```bash
    # Check environment variables
    echo $WMS_USERNAME
@@ -248,6 +265,7 @@ pytest --cov=tap_oracle_wms --cov-report=html --junitxml=test-results.xml
    ```
 
 2. **Tests timing out**:
+
    ```bash
    # Increase timeout for slow tests
    pytest --timeout=600  # 10 minutes
@@ -257,6 +275,7 @@ pytest --cov=tap_oracle_wms --cov-report=html --junitxml=test-results.xml
    ```
 
 3. **Import errors**:
+
    ```bash
    # Ensure tap is installed in development mode
    poetry install
@@ -266,6 +285,7 @@ pytest --cov=tap_oracle_wms --cov-report=html --junitxml=test-results.xml
    ```
 
 4. **Fixture not found**:
+
    ```bash
    # Check conftest.py is in the right location
    ls tests/conftest.py
@@ -275,6 +295,7 @@ pytest --cov=tap_oracle_wms --cov-report=html --junitxml=test-results.xml
    ```
 
 ### Debug Mode
+
 ```bash
 # Run with debug output
 pytest -s -vv --tb=long
@@ -302,17 +323,20 @@ Before submitting code:
 ## 🎯 Quality Metrics
 
 ### Current Test Coverage
+
 - **Lines**: >95%
 - **Branches**: >90%
 - **Functions**: >95%
 - **Classes**: >95%
 
 ### Performance Benchmarks
+
 - **Unit Tests**: <100ms per test
 - **Integration Tests**: <30s per test
 - **Live Tests**: <60s per test (excluding slow tests)
 
 ### Test Reliability
+
 - **Flaky Test Rate**: <2%
 - **False Positive Rate**: <1%
 - **Test Isolation**: 100% (no inter-test dependencies)

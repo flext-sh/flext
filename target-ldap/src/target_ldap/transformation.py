@@ -15,16 +15,8 @@ from typing import Any, ClassVar
 
 # Import from ldap-core-shared if available
 try:
-    from ldap_core_shared.domain.events import (
-        DataClassificationEvent,
-        TransformationAppliedEvent,
-    )
-    from ldap_core_shared.domain.models import LDAPEntry, MigrationStats
-    from ldap_core_shared.domain.value_objects import AttributeMap, LdapDn
-    from ldap_core_shared.utils.simple_dn_utils import (
-        simple_normalize_dn,
-        simple_parse_dn,
-    )
+    from ldap_core_shared.domain.events import TransformationAppliedEvent
+    from ldap_core_shared.utils.simple_dn_utils import simple_parse_dn
 
     LDAP_CORE_AVAILABLE = True
 except ImportError:
@@ -235,7 +227,10 @@ class DataTransformationEngine:
     DEFAULT_RULES: ClassVar[list[dict[str, Any]]] = [
         {
             "name": "oracle_dn_structure_transform",
-            "condition": "classification.entry_type in ['oracle_user', 'oracle_data'] and 'dc=ctbc' in entry['dn']",
+            "condition": (
+                "classification.entry_type in ['oracle_user', 'oracle_data'] "
+                "and 'dc=ctbc' in entry['dn']"
+            ),
             "action": "transform_dn_structure",
             "parameters": {
                 "source_pattern": r"(.*),dc=ctbc",
@@ -433,7 +428,7 @@ class DataTransformationEngine:
                 "list": list,
                 "dict": dict,
             }
-            return bool(eval(condition, {"__builtins__": safe_builtins}, context))
+            return bool(eval(condition, {"__builtins__": safe_builtins}, context))  # noqa: S307
 
         except Exception as e:
             logger.warning("Failed to evaluate condition '%s': %s", condition, e)
@@ -443,7 +438,7 @@ class DataTransformationEngine:
         self,
         rule: TransformationRule,
         result: TransformationResult,
-        classification: ClassificationResult,
+        classification: ClassificationResult,  # noqa: ARG002
     ) -> None:
         """Apply a specific transformation rule."""
         action = rule.action

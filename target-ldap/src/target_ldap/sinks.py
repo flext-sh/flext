@@ -218,7 +218,7 @@ class LDAPSink(Sink):
         """
         return {"member", "memberOf", "memberUid", "mail", "telephoneNumber"}
 
-    def process_record(self, record: dict[str, Any], context: dict[str, Any]) -> None:
+    def process_record(self, record: dict[str, Any], context: dict[str, Any]) -> None:  # noqa: ARG002
         """Process a single record with transformation and validation.
 
         Args:
@@ -267,7 +267,10 @@ class LDAPSink(Sink):
                 self._processing_stats["validated"] += 1
 
                 if not validation_result["valid"]:
-                    error_msg = f"Validation failed for {working_record.get('dn', 'unknown')}: {validation_result['errors']}"
+                    error_msg = (
+                        f"Validation failed for {working_record.get('dn', 'unknown')}: "
+                        f"{validation_result['errors']}"
+                    )
                     if self.config.get("validation_strict_mode", False):
                         logger.error(error_msg)
                         raise ValueError(error_msg)
@@ -329,7 +332,7 @@ class LDAPSink(Sink):
     def _process_dry_run(
         self,
         record: dict[str, Any],
-        transformation_result: Any = None,
+        transformation_result: dict[str, Any] | None = None,
         validation_result: dict[str, Any] | None = None,
     ) -> None:
         """Process entry in dry run mode (simulation only).
@@ -487,7 +490,7 @@ class LDAPSink(Sink):
 
                 self.process_record(record, context)
 
-            except Exception as e:
+            except Exception as e:  # noqa: PERF203
                 self._error_count += 1
                 self._failed_entries.append({"record": record, "error": str(e)})
 
@@ -520,7 +523,7 @@ class LDAPSink(Sink):
             try:
                 dn = self.get_dn_from_record(record)
                 dn_to_record[dn] = record
-            except ValueError:
+            except ValueError:  # noqa: PERF203
                 # If DN cannot be determined, process at the end
                 sorted_records.append(record)
                 if record in remaining_records:
@@ -572,10 +575,10 @@ class LDAPSink(Sink):
             logger.debug("Converted orclPassword to userPassword")
 
         # Handle Oracle privilege groups
-        if "orclPrivilegeGroup" in processed_record.get("objectClass", []):
+        if ("orclPrivilegeGroup" in processed_record.get("objectClass", []) and
+            "groupOfNames" not in processed_record.get("objectClass", [])):
             # Special handling for Oracle privilege groups
-            if "groupOfNames" not in processed_record.get("objectClass", []):
-                processed_record["objectClass"].append("groupOfNames")
+            processed_record["objectClass"].append("groupOfNames")
 
         return processed_record
 
@@ -614,7 +617,7 @@ class LDAPSink(Sink):
                 retry_success_count += 1
                 logger.info("Successfully retried failed entry")
 
-            except Exception as e:
+            except Exception as e:  # noqa: PERF203
                 # Still failing, keep in failed list
                 remaining_failures.append(
                     {

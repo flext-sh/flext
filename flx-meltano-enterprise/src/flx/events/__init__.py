@@ -1,5 +1,14 @@
+
+# Lazy imports to avoid circular dependencies
+# Lazy import to avoid circular dependencies
+# Lazy import to avoid circular dependencies
+from flx.utils.lazy_import import lazy_import
+
 """Event system for FLX platform."""
 
-from flx.events.event_bus import Event, EventBus, EventHandler
+# Lazy imports to avoid circular dependencies
+Event = lazy_import('flx.events.event_bus', 'Event')
+EventBus = lazy_import('flx.events.event_bus', 'EventBus')
+EventHandler = lazy_import('flx.events.event_bus', 'EventHandler')
 
 __all__ = ["Event", "EventBus", "EventHandler"]

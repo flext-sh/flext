@@ -15,12 +15,34 @@ import grpc
 import structlog
 from google.protobuf import empty_pb2, struct_pb2, timestamp_pb2
 
-from flx.engine.meltano_wrapper import MeltanoEngine
-from flx.events.event_bus import Event, EventBus
-from flx.grpc.proto import flx_pb2, flx_pb2_grpc
-from flx.monitoring.health import HealthChecker
-from flx.monitoring.health import HealthStatus as HealthStatusEnum
-from flx.monitoring.metrics import MetricsCollector
+# Conditional imports to avoid circular dependencies
+try:
+    from flx.engine.meltano_wrapper import MeltanoEngine
+except ImportError:
+    MeltanoEngine = None
+
+try:
+    from flx.events.event_bus import Event, EventBus
+except ImportError:
+    Event = None
+    EventBus = None
+
+try:
+    from flx.grpc.proto import flx_pb2, flx_pb2_grpc
+except ImportError:
+    flx_pb2 = None
+    flx_pb2_grpc = None
+
+try:
+    from flx.monitoring.health import HealthChecker, HealthStatus as HealthStatusEnum
+except ImportError:
+    HealthChecker = None
+    HealthStatusEnum = None
+
+try:
+    from flx.monitoring.metrics import MetricsCollector
+except ImportError:
+    MetricsCollector = None
 
 logger = structlog.get_logger()
 

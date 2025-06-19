@@ -27,7 +27,7 @@ logger = setup_logger("flx_adapter_example.cli")
 @click.group()
 @click.version_option()
 def main() -> None:
-    """API Client command-line tools.
+    """Provide API Client command-line tools.
 
     This CLI provides tools for interacting with the API, managing configuration,
     and performing common operations.
@@ -244,7 +244,7 @@ def request(
             if data.startswith("@"):
                 # Load from file
                 file_path = data[1:]
-                with open(file_path, encoding="utf-8") as f:
+                with Path(file_path).open(encoding="utf-8") as f:
                     json_data = json.load(f)
             else:
                 # Parse as JSON string
@@ -285,7 +285,7 @@ def request(
                 result = str(response.data)
 
             if output:
-                with open(output, "w", encoding="utf-8") as f:
+                with Path(output).open("w", encoding="utf-8") as f:
                     f.write(result)
                 console.print(f"[green]Response saved to {output}[/green]")
             else:
@@ -544,7 +544,7 @@ def query_entity(
                 console.print(result)
         elif output_format == "text":
             if not format:
-                format = " ".join(f"{{{field}}}" for field in fields)
+                format = " ".join(f"{{{field}}}" for field in fields)  # noqa: A001
             result = format_text(data, format, output_file=output)
             if not output:
                 console.print(result)
@@ -630,7 +630,7 @@ def get_entity(
             result = "\n".join(lines)
 
             if output:
-                with open(output, "w", encoding="utf-8") as f:
+                with Path(output).open("w", encoding="utf-8") as f:
                     f.write(result)
             else:
                 console.print(result)

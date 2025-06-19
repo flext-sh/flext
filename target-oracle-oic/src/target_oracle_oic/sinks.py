@@ -16,6 +16,8 @@ class OICBaseSink(Sink):
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         """Initialize the sink."""
         super().__init__(*args, **kwargs)
+        # CRITICAL: Set tap_name for Singer SDK auth compatibility
+        self.tap_name = "target-oracle-oic"  # Required by Singer SDK authenticators
         self._authenticator: OICOAuth2Authenticator | None = None
         self._client: httpx.Client | None = None
 
@@ -38,13 +40,13 @@ class OICBaseSink(Sink):
         return self._client
 
     def preprocess_record(
-        self, record: dict[str, Any], context: dict[str, Any] | None
+        self, record: dict[str, Any], _context: dict[str, Any] | None
     ) -> dict[str, Any]:
         """Process the record before sending it to Oracle Integration Cloud."""
         return record
 
     def process_batch(self, context: dict[str, Any]) -> None:
-        """Process a batch of records efficiently using Oracle OIC batch API endpoints."""
+        """Process batch efficiently using Oracle OIC batch API endpoints."""
         if not context.get("records"):
             return
 
@@ -73,7 +75,7 @@ class OICBaseSink(Sink):
                 batch = update_records[i : i + batch_size]
                 self._process_update_batch(batch, context)
 
-    def _record_exists(self, record: dict[str, Any]) -> bool:
+    def _record_exists(self, _record: dict[str, Any]) -> bool:
         """Check if a record already exists in OIC."""
         # Default implementation - subclasses should override
         return False
@@ -102,7 +104,7 @@ class ConnectionsSink(OICBaseSink):
 
     name = "connections"
 
-    def process_record(self, record: dict[str, Any], context: dict[str, Any]) -> None:
+    def process_record(self, record: dict[str, Any], _context: dict[str, Any]) -> None:
         """Process a single connection record."""
         connection_id = record.get("id") or ""
 
@@ -157,7 +159,7 @@ class IntegrationsSink(OICBaseSink):
 
     name = "integrations"
 
-    def process_record(self, record: dict[str, Any], context: dict[str, Any]) -> None:
+    def process_record(self, record: dict[str, Any], _context: dict[str, Any]) -> None:
         """Process a single integration record."""
         integration_id = record.get("id") or ""
         version = record.get("version", "01.00.0000")
@@ -228,7 +230,7 @@ class PackagesSink(OICBaseSink):
 
     name = "packages"
 
-    def process_record(self, record: dict[str, Any], context: dict[str, Any]) -> None:
+    def process_record(self, record: dict[str, Any], _context: dict[str, Any]) -> None:
         """Process a single package record."""
         record.get("id") or ""
 
@@ -258,7 +260,7 @@ class LookupsSink(OICBaseSink):
 
     name = "lookups"
 
-    def process_record(self, record: dict[str, Any], context: dict[str, Any]) -> None:
+    def process_record(self, record: dict[str, Any], _context: dict[str, Any]) -> None:
         """Process a single lookup record."""
         lookup_name = record.get("name") or ""
 

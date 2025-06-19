@@ -17,14 +17,47 @@ import uvloop
 from grpc_reflection.v1alpha import reflection
 from prometheus_client import start_http_server
 
-from flx.config import settings
-from flx.engine.meltano_wrapper import MeltanoEngine
-from flx.events.event_bus import EventBus
-from flx.grpc.proto import flx_pb2, flx_pb2_grpc
-from flx.grpc.server import FlxGrpcServer
-from flx.monitoring.health import HealthChecker
-from flx.monitoring.metrics import MetricsCollector
-from flx.monitoring.tracing import setup_tracing
+# Conditional imports to avoid circular dependencies
+try:
+    from flx.config import settings
+except ImportError:
+    settings = None
+
+try:
+    from flx.engine.meltano_wrapper import MeltanoEngine
+except ImportError:
+    MeltanoEngine = None
+
+try:
+    from flx.events.event_bus import EventBus
+except ImportError:
+    EventBus = None
+
+try:
+    from flx.grpc.proto import flx_pb2, flx_pb2_grpc
+except ImportError:
+    flx_pb2 = None
+    flx_pb2_grpc = None
+
+try:
+    from flx.grpc.server import FlxGrpcServer
+except ImportError:
+    FlxGrpcServer = None
+
+try:
+    from flx.monitoring.health import HealthChecker
+except ImportError:
+    HealthChecker = None
+
+try:
+    from flx.monitoring.metrics import MetricsCollector
+except ImportError:
+    MetricsCollector = None
+
+try:
+    from flx.monitoring.tracing import setup_tracing
+except ImportError:
+    setup_tracing = None
 
 # Configure structured logging
 structlog.configure(
@@ -196,13 +229,19 @@ class FlxDaemon:
         """Get gRPC server interceptors."""
         interceptors = []
 
-        # Add monitoring interceptor
-        from flx.grpc.interceptors import MetricsInterceptor, TracingInterceptor
+        # Add monitoring interceptor if available
+        try:
+            from flx.grpc.interceptors import MetricsInterceptor, TracingInterceptor
+            interceptors.append(MetricsInterceptor())
+        except ImportError:
+            pass
 
-        interceptors.append(MetricsInterceptor())
-
-        if settings.tracing_enabled:
-            interceptors.append(TracingInterceptor())
+        if settings and settings.tracing_enabled:
+            try:
+                from flx.grpc.interceptors import TracingInterceptor
+                interceptors.append(TracingInterceptor())
+            except ImportError:
+                pass
 
         return interceptors
 

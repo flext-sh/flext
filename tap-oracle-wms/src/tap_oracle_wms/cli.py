@@ -127,7 +127,14 @@ def safe_print(message: str, style: str | None = None) -> None:
 @click.option("--config", type=click.File("r"), help="Singer config file")
 @click.option("--state", type=click.File("r"), help="Singer state file")
 @click.pass_context
-def cli(ctx, version, discover, catalog, config, state) -> None:
+def cli(
+    ctx: click.Context,
+    version: bool,
+    discover: bool,
+    catalog: click.File | None,
+    config: click.File | None,
+    state: click.File | None,
+) -> None:
     r"""Oracle WMS Singer Tap with Extended Business Functionality.
 
     Default behavior follows Singer SDK protocol. Extended business
@@ -157,7 +164,13 @@ def cli(ctx, version, discover, catalog, config, state) -> None:
         click.echo(ctx.get_help())
 
 
-def _handle_singer_mode(version, discover, catalog, config, state) -> None:
+def _handle_singer_mode(
+    version: bool,
+    discover: bool,
+    catalog: click.File | None,
+    config: click.File | None,
+    state: click.File | None,
+) -> None:
     """Handle standard Singer SDK protocol commands."""
     # Build Singer CLI arguments
     singer_args = ["tap-oracle-wms"]  # Program name
@@ -225,12 +238,12 @@ def discover() -> None:
     help="Exclude entities matching these glob patterns",
 )
 def discover_entities(
-    config,
-    output,
-    output_format,
-    verify_access,
-    include_patterns,
-    exclude_patterns,
+    config: click.File,
+    output: click.File | None,
+    output_format: str,
+    verify_access: bool,
+    include_patterns: tuple[str, ...],
+    exclude_patterns: tuple[str, ...],
 ) -> None:
     """Discover available WMS entities with business categorization."""
     config_data = _prepare_discovery_config(
@@ -270,7 +283,13 @@ def discover_entities(
     default=5,
     help="Number of sample records for schema inference",
 )
-def discover_schemas(config, entities, method, output_dir, sample_size) -> None:
+def discover_schemas(
+    config: click.File,
+    entities: str,
+    method: str,
+    output_dir: click.Path,
+    sample_size: int,
+) -> None:
     """Generate schemas for WMS entities."""
     config_data = json.load(config)
     config_data["schema_discovery_method"] = method
@@ -380,13 +399,13 @@ def inventory() -> None:
     help="Show items below this quantity threshold",
 )
 def inventory_status(
-    config,
-    facility,
-    item_code,
-    location,
-    include_lots,
-    include_serials,
-    low_stock_threshold,
+    config: click.File,
+    facility: str,
+    item_code: str,
+    location: str,
+    include_lots: bool,
+    include_serials: bool,
+    low_stock_threshold: int,
 ) -> None:
     """Get current inventory status with business intelligence."""
     config_data = json.load(config)
@@ -584,7 +603,7 @@ def analyze_allocation(
     help="Reporting period",
 )
 @click.option("--include-kpis", is_flag=True, help="Include key performance indicators")
-def fulfillment_metrics(config, period, include_kpis) -> None:
+def fulfillment_metrics(config: click.File, period: str, include_kpis: bool) -> None:
     """Generate order fulfillment performance metrics."""
     safe_print(f"Generating {period} fulfillment metrics...", "blue")
 
@@ -622,7 +641,9 @@ def warehouse() -> None:
     is_flag=True,
     help="Calculate productivity metrics",
 )
-def task_performance(config, task_type, worker_id, productivity_metrics) -> None:
+def task_performance(
+    config: click.File, task_type: str, worker_id: str, productivity_metrics: bool
+) -> None:
     """Analyze warehouse task performance and productivity."""
     safe_print(f"Analyzing {task_type} task performance...", "blue")
 
@@ -655,7 +676,9 @@ def task_performance(config, task_type, worker_id, productivity_metrics) -> None
 )
 @click.option("--equipment-type", help="Filter by equipment type")
 @click.option("--downtime-analysis", is_flag=True, help="Include downtime analysis")
-def equipment_utilization(config, equipment_type, downtime_analysis) -> None:
+def equipment_utilization(
+    config: click.File, equipment_type: str, downtime_analysis: bool
+) -> None:
     """Analyze warehouse equipment utilization and performance."""
     safe_print("Analyzing equipment utilization...", "blue")
 
@@ -702,7 +725,13 @@ def sync() -> None:
     type=click.File("w"),
     help="Output file for updated state",
 )
-def sync_incremental(config, state, entities, since, output_state) -> None:
+def sync_incremental(
+    config: click.File,
+    state: click.File,
+    entities: str,
+    since: str,
+    output_state: click.File,
+) -> None:
     """Run incremental sync for specified entities."""
     config_data = json.load(config)
 
@@ -754,7 +783,9 @@ def sync_incremental(config, state, entities, since, output_state) -> None:
     default=1000,
     help="Batch size for data extraction",
 )
-def sync_full(config, business_area, parallel_streams, batch_size) -> None:
+def sync_full(
+    config: click.File, business_area: str, parallel_streams: int, batch_size: int
+) -> None:
     """Run full sync for business area or all entities."""
     config_data = json.load(config)
 
@@ -794,7 +825,9 @@ def analyze() -> None:
     is_flag=True,
     help="Include demand forecasting analysis",
 )
-def analyze_supply_chain(config, time_window, include_forecasting) -> None:
+def analyze_supply_chain(
+    config: click.File, time_window: str, include_forecasting: bool
+) -> None:
     """Analyze supply chain performance and visibility."""
     safe_print("Analyzing supply chain performance...", "blue")
 
@@ -828,7 +861,7 @@ def analyze_supply_chain(config, time_window, include_forecasting) -> None:
     help="Type of compliance audit",
 )
 @click.option("--date-range", help="Date range for audit (YYYY-MM-DD,YYYY-MM-DD)")
-def analyze_compliance(config, audit_type, date_range) -> None:
+def analyze_compliance(config: click.File, audit_type: str, date_range: str) -> None:
     """Run compliance and audit analysis."""
     safe_print(f"Running {audit_type} compliance analysis...", "blue")
 
@@ -1146,7 +1179,7 @@ def monitor() -> None:
     default="table",
     help="Output format",
 )
-def monitor_status(config, output_format) -> None:
+def monitor_status(config: click.File, output_format: str) -> None:
     """Get current monitoring status and metrics."""
     config_data = json.load(config)
     config_data.setdefault("metrics", {})["enabled"] = True

@@ -9,7 +9,7 @@ packages = [{ include = "target_ldap", from = "src" }]
 
 [tool.poetry.dependencies]
 python = "^3.9,<4.0"
-singer-sdk = { path = "../meltano-sdk", develop = true }
+singer-sdk = "^0.39.0"
 ldap3 = "^2.9.1"
 pydantic = "^2.11.0"
 python-dotenv = "^1.0.0"
@@ -101,6 +101,7 @@ unfixable = [
     "S101",    # assert used in tests
     "S105",    # hardcoded password in tests
     "S106",    # hardcoded password in tests
+    "S607",    # Starting a process with a partial executable path (test calls)
     "ARG",     # unused function args in fixtures
     "PLR2004", # magic value used in comparison
     "PTH123",  # Path.open vs open (can be fixed later)
