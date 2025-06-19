@@ -265,10 +265,10 @@ def generate_report(results: list[dict]) -> None:
     print(f"   Projects with CLIs: {projects_with_clis}")
     print(f"   Working CLI commands: {working_clis}/{total_clis}")
     print(
-        f"   Installation success rate: {(successful_installs/total_projects)*100:.1f}%"
+        f"   Installation success rate: {(successful_installs / total_projects) * 100:.1f}%"
     )
     if total_clis > 0:
-        print(f"   CLI success rate: {(working_clis/total_clis)*100:.1f}%")
+        print(f"   CLI success rate: {(working_clis / total_clis) * 100:.1f}%")
 
     # Detailed results
     print("\n📋 DETAILED RESULTS:")

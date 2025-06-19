@@ -29,7 +29,8 @@ try:
     from flx.monitoring.tracing import get_current_span
 except ImportError:
     # Fallback if tracing module not available
-    get_current_span = lambda: None
+    def get_current_span():
+        return None
 
 logger = structlog.get_logger()
 
