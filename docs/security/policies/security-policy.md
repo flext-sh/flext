@@ -22,10 +22,10 @@ This document outlines the security policy for the FLX framework, including vuln
 
 The following FLX versions are currently supported with security updates:
 
-| Version | Supported          | Status |
-| ------- | ------------------ | ------ |
+| Version | Supported          | Status                                   |
+| ------- | ------------------ | ---------------------------------------- |
 | 0.2.x   | :white_check_mark: | Active development with security patches |
-| 0.1.x   | :x:                | End of life - no security updates |
+| 0.1.x   | :x:                | End of life - no security updates        |
 
 ## Reporting Security Vulnerabilities
 
@@ -167,7 +167,7 @@ class UserInput(BaseModel):
     username: Annotated[str, field(min_length=3, max_length=50)]
     email: EmailStr
     password: SecureString
-    
+
     @field_validator('username')
     @classmethod
     def validate_username(cls, v: str) -> str:
@@ -192,7 +192,7 @@ class DatabaseConfig(BaseConfig):
     database: str
     ssl_require: bool = True
     ssl_verify: bool = True
-    
+
     class Config:
         env_prefix = "DB_"
         # Secrets are automatically masked in logs and repr
@@ -217,11 +217,11 @@ async def secure_operation(user_id: str, data: dict) -> dict:
                 extra={"user_id": user_id, "operation": "secure_operation"}
             )
             raise SecurityError("Access denied")
-        
+
         # Perform operation
         result = await process_data(data)
         return result
-        
+
     except ValidationError as e:
         # Log validation errors safely
         logger.info(f"Validation failed for user {user_id}")
@@ -352,4 +352,4 @@ async def secure_operation(user_id: str, data: dict) -> dict:
 
 **Thank you for helping keep FLX and its community secure!**
 
-*This security policy is reviewed and updated quarterly to ensure continued effectiveness and alignment with current security best practices.*
+_This security policy is reviewed and updated quarterly to ensure continued effectiveness and alignment with current security best practices._

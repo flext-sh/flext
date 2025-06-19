@@ -30,10 +30,10 @@
 
 ## 🎯 **Core Engineering Topics**
 
-| **Topic** | **Function** | **Audience** | **Status** |
-|-----------|--------------|--------------|------------|
+| **Topic**                      | **Function**                   | **Audience**         | **Status**  |
+| ------------------------------ | ------------------------------ | -------------------- | ----------- |
 | [📋 ADRs Hub](./adrs/index.md) | Architectural Decision Records | Technical Architects | ✅ Complete |
-| [📝 RFCs Hub](./rfc/index.md) | Request for Comments | Engineering Teams | ✅ Complete |
+| [📝 RFCs Hub](./rfc/index.md)  | Request for Comments           | Engineering Teams    | ✅ Complete |
 
 ### **📋 Learning Path**
 

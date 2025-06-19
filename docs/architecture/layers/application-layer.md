@@ -61,7 +61,7 @@ from flx.core.domain import Entity, AggregateRoot
 
 class OrderApplicationService(ApplicationService):
     """Application service orchestrating order use cases."""
-    
+
     def __init__(
         self,
         order_repository: OrderRepository,
@@ -71,24 +71,24 @@ class OrderApplicationService(ApplicationService):
         self.order_repository = order_repository
         self.customer_repository = customer_repository
         self.event_publisher = event_publisher
-    
+
     async def create_order(self, command: CreateOrderCommand) -> OrderResult:
         """Use case: Create new order with business validation."""
         # Coordinate domain objects
         customer = await self.customer_repository.find_by_id(command.customer_id)
         if not customer.can_place_order():
             raise DomainException("Customer cannot place orders")
-        
+
         # Create domain aggregate
         order = Order.create(
             customer_id=command.customer_id,
             items=command.items
         )
-        
+
         # Persist and publish events
         await self.order_repository.save(order)
         await self.event_publisher.publish_domain_events(order.events)
-        
+
         return OrderResult(order_id=order.id, status="created")
 ```
 
@@ -105,11 +105,11 @@ class OrderApplicationService(ApplicationService):
             order = await self.order_repository.find_by_id(command.order_id)
             inventory = await self.inventory_repository.reserve_items(order.items)
             payment = await self.payment_service.charge(order.total)
-            
+
             # All succeed or all fail
             order.mark_as_processed()
             await self.order_repository.save(order)
-            
+
             # Events published after successful transaction
             await self.event_publisher.publish(order.events)
 ```
@@ -179,13 +179,13 @@ class OrderApplicationService:
                 # All operations within transaction scope
                 customer = await self.customer_repo.find_by_id(command.customer_id)
                 order = Order.create(customer_id=customer.id, items=command.items)
-                
+
                 await self.order_repo.save(order)
                 await tx.commit()
-                
+
                 # Events published after successful transaction
                 await self.event_bus.publish_batch(order.collect_events())
-                
+
                 return OrderResult(order_id=order.id)
             except Exception:
                 await tx.rollback()
@@ -230,13 +230,13 @@ class OrderFulfillmentProcessManager:
 class ReliableEventPublisher:
     async def publish_events(self, aggregate: AggregateRoot) -> None:
         events = aggregate.collect_events()
-        
+
         # Store events in outbox table within same transaction
         async with self.transaction_manager.begin() as tx:
             await self.aggregate_repo.save(aggregate)
             await self.outbox_repo.store_events(events)
             await tx.commit()
-        
+
         # Publish events asynchronously
         await self.event_publisher.publish_batch(events)
 ```

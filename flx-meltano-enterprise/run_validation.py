@@ -10,9 +10,9 @@ from pathlib import Path
 
 def run_command(cmd: str, description: str) -> bool:
     """Run a command and report results."""
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"🔍 {description}")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
 
     try:
         result = subprocess.run(cmd, shell=True, capture_output=True, text=True)

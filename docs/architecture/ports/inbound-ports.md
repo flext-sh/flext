@@ -64,11 +64,11 @@ TResult = TypeVar('TResult')
 
 class CommandPort(Protocol):
     """Port for executing domain commands."""
-    
+
     async def execute(self, command: TCommand) -> TResult:
         """Execute a single domain command."""
         ...
-    
+
     async def execute_batch(self, commands: List[TCommand]) -> List[TResult]:
         """Execute multiple commands in a transaction."""
         ...
@@ -81,11 +81,11 @@ from flx.application.commands import CreateOrderCommand
 
 class OrderCommandPort(Protocol):
     """Port for order-related commands."""
-    
+
     async def create_order(self, command: CreateOrderCommand) -> str:
         """Create new order, return order ID."""
         ...
-    
+
     async def cancel_order(self, order_id: str, reason: str) -> None:
         """Cancel existing order."""
         ...
@@ -104,11 +104,11 @@ TResult = TypeVar('TResult')
 
 class QueryPort(Protocol):
     """Port for executing domain queries."""
-    
+
     async def execute(self, query: TQuery) -> TResult:
         """Execute a domain query."""
         ...
-    
+
     async def execute_batch(self, queries: List[TQuery]) -> List[TResult]:
         """Execute multiple queries."""
         ...
@@ -121,11 +121,11 @@ from flx.application.queries import GetOrderQuery, OrderDTO
 
 class OrderQueryPort(Protocol):
     """Port for order-related queries."""
-    
+
     async def get_order(self, order_id: str) -> OrderDTO:
         """Get order by ID."""
         ...
-    
+
     async def list_customer_orders(self, customer_id: str) -> List[OrderDTO]:
         """List all orders for customer."""
         ...
@@ -141,9 +141,9 @@ from flx.core.types import RequestContext, ResponseContext
 
 class ApiPort(Protocol):
     """Port for HTTP API operations."""
-    
+
     async def handle_request(
-        self, 
+        self,
         method: str,
         path: str,
         headers: Dict[str, str],
@@ -152,7 +152,7 @@ class ApiPort(Protocol):
     ) -> ResponseContext:
         """Handle incoming HTTP request."""
         ...
-    
+
     def get_openapi_spec(self) -> Dict[str, Any]:
         """Get OpenAPI specification."""
         ...
@@ -163,16 +163,16 @@ class ApiPort(Protocol):
 ```python
 class OrderApiPort(Protocol):
     """Port for order API endpoints."""
-    
+
     async def create_order_endpoint(
-        self, 
+        self,
         customer_id: str,
         items: List[Dict],
         context: RequestContext
     ) -> ResponseContext:
         """Create order API endpoint."""
         ...
-    
+
     async def get_order_endpoint(
         self,
         order_id: str,
@@ -191,7 +191,7 @@ from typing import Protocol, List, Dict, Any
 
 class CliPort(Protocol):
     """Port for command-line interface operations."""
-    
+
     async def execute_command(
         self,
         command: str,
@@ -200,11 +200,11 @@ class CliPort(Protocol):
     ) -> int:
         """Execute CLI command and return exit code."""
         ...
-    
+
     def get_help(self, command: str) -> str:
         """Get help text for command."""
         ...
-    
+
     def list_commands(self) -> List[str]:
         """List available commands."""
         ...
@@ -215,7 +215,7 @@ class CliPort(Protocol):
 ```python
 class OrderCliPort(Protocol):
     """Port for order CLI commands."""
-    
+
     async def create_order_cli(
         self,
         customer_email: str,
@@ -224,7 +224,7 @@ class OrderCliPort(Protocol):
     ) -> int:
         """CLI command to create order."""
         ...
-    
+
     async def list_orders_cli(
         self,
         customer_email: str,
@@ -244,14 +244,14 @@ from flx.domain.events import ExternalEvent
 
 class EventHandlerPort(Protocol):
     """Port for handling external events."""
-    
+
     async def handle_event(self, event: ExternalEvent) -> None:
         """Handle incoming external event."""
         ...
-    
+
     async def register_handler(
-        self, 
-        event_type: str, 
+        self,
+        event_type: str,
         handler: Callable[[ExternalEvent], None]
     ) -> None:
         """Register event handler."""
@@ -269,18 +269,18 @@ Separating commands and queries:
 ```python
 class OrderServicePort(Protocol):
     """Combined port following CQRS pattern."""
-    
+
     # Commands (writes)
     async def create_order(self, command: CreateOrderCommand) -> str:
         ...
-    
+
     async def update_order(self, command: UpdateOrderCommand) -> None:
         ...
-    
+
     # Queries (reads)
     async def get_order(self, query: GetOrderQuery) -> OrderDTO:
         ...
-    
+
     async def list_orders(self, query: ListOrdersQuery) -> List[OrderDTO]:
         ...
 ```
@@ -292,15 +292,15 @@ Organizing by business use cases:
 ```python
 class CustomerManagementPort(Protocol):
     """Port for customer management use cases."""
-    
+
     async def register_customer(self, data: CustomerRegistrationData) -> str:
         """Use case: Register new customer."""
         ...
-    
+
     async def update_customer_profile(self, customer_id: str, data: ProfileData) -> None:
         """Use case: Update customer profile."""
         ...
-    
+
     async def deactivate_customer(self, customer_id: str, reason: str) -> None:
         """Use case: Deactivate customer account."""
         ...
@@ -315,15 +315,15 @@ from flx.core.context import ExecutionContext
 
 class SecureOrderPort(Protocol):
     """Security-aware order port."""
-    
+
     async def create_order(
-        self, 
+        self,
         command: CreateOrderCommand,
         context: ExecutionContext
     ) -> str:
         """Create order with security context."""
         ...
-    
+
     async def get_order(
         self,
         order_id: str,
@@ -342,16 +342,16 @@ class SecureOrderPort(Protocol):
 ```python
 class MockOrderPort(OrderServicePort):
     """Mock implementation for testing."""
-    
+
     def __init__(self):
         self.orders: Dict[str, Order] = {}
-    
+
     async def create_order(self, command: CreateOrderCommand) -> str:
         order_id = str(uuid.uuid4())
         order = Order.from_command(command, order_id)
         self.orders[order_id] = order
         return order_id
-    
+
     async def get_order(self, query: GetOrderQuery) -> OrderDTO:
         order = self.orders.get(query.order_id)
         if not order:
@@ -369,16 +369,16 @@ from fastapi.testclient import TestClient
 async def test_order_api_integration():
     """Test real API integration."""
     client = TestClient(app)
-    
+
     # Create order via API
     response = client.post("/orders", json={
         "customer_id": "123",
         "items": [{"product_id": "456", "quantity": 2}]
     })
-    
+
     assert response.status_code == 201
     order_id = response.json()["order_id"]
-    
+
     # Get order via API
     response = client.get(f"/orders/{order_id}")
     assert response.status_code == 200

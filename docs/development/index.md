@@ -35,17 +35,17 @@ The Development Hub provides a comprehensive ecosystem for FLX Framework develop
 
 ### **Development Categories**
 
-| **Category** | **Function** | **Count** | **Status** | **Key Features** |
-|--------------|--------------|-----------|------------|------------------|
-| **[Testing](./testing/index.md)** | Testing strategies & frameworks | 15 guides | ✅ Production | Hexagonal architecture testing, declarative engines |
-| **[Standards](./standards/index.md)** | Code quality & development standards | 4 guides | ✅ Production | Python 3.13+, PEP8, documentation standards |
-| **[Guides](./guides/index.md)** | Development guides & tutorials | 12 guides | ✅ Production | Environment setup, troubleshooting, dependencies |
-| **[Tools](./tools/index.md)** | Development tools & automation | 8 tools | ✅ Production | GitHub workflows, Django analyzer, scripts |
-| **[Reports](./reports/index.md)** | Quality metrics & analysis | 15 reports | ✅ Production | Coverage, MyPy fixes, optimization reports |
-| **[Projects](./projects/index.md)** | Project-specific guides | 8 projects | ✅ Production | Oracle integrations, automation projects |
-| **[Architecture](./architecture/index.md)** | System design & patterns | 5 guides | ✅ Production | Error handling, logging, refactoring |
-| **[Planning](./planning/index.md)** | Strategic planning & roadmaps | 2 guides | ✅ Production | Framework planning, next steps |
-| **[Internal](./internal/index.md)** | Internal documentation | 4 docs | ✅ Production | Reference materials, internal processes |
+| **Category**                                | **Function**                         | **Count**  | **Status**    | **Key Features**                                    |
+| ------------------------------------------- | ------------------------------------ | ---------- | ------------- | --------------------------------------------------- |
+| **[Testing](./testing/index.md)**           | Testing strategies & frameworks      | 15 guides  | ✅ Production | Hexagonal architecture testing, declarative engines |
+| **[Standards](./standards/index.md)**       | Code quality & development standards | 4 guides   | ✅ Production | Python 3.13+, PEP8, documentation standards         |
+| **[Guides](./guides/index.md)**             | Development guides & tutorials       | 12 guides  | ✅ Production | Environment setup, troubleshooting, dependencies    |
+| **[Tools](./tools/index.md)**               | Development tools & automation       | 8 tools    | ✅ Production | GitHub workflows, Django analyzer, scripts          |
+| **[Reports](./reports/index.md)**           | Quality metrics & analysis           | 15 reports | ✅ Production | Coverage, MyPy fixes, optimization reports          |
+| **[Projects](./projects/index.md)**         | Project-specific guides              | 8 projects | ✅ Production | Oracle integrations, automation projects            |
+| **[Architecture](./architecture/index.md)** | System design & patterns             | 5 guides   | ✅ Production | Error handling, logging, refactoring                |
+| **[Planning](./planning/index.md)**         | Strategic planning & roadmaps        | 2 guides   | ✅ Production | Framework planning, next steps                      |
+| **[Internal](./internal/index.md)**         | Internal documentation               | 4 docs     | ✅ Production | Reference materials, internal processes             |
 
 ### **🚀 Enterprise Features**
 

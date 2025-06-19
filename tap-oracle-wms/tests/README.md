@@ -164,6 +164,7 @@ cp config.json tests/test_config.json
 ### Adding New Tests
 
 1. **Choose appropriate test category**:
+
    - Unit: Pure logic, no external dependencies
    - Integration: Component interactions
    - Live: Requires real WMS API

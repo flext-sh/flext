@@ -85,7 +85,7 @@ plugins:
   "include_payload": true,
   "include_logs": true,
   "payload_format": "json",
-  "request_timeout": 300
+  "request_timeout": 300,
 }
 ```
 
@@ -165,9 +165,9 @@ plugins:
       pip_url: tap-wms
       config:
         wms_url: https://tenantname.wms.ocs.oraclecloud.com/env/wms/api
-        username: INT_OIC  # Integration user created in WMS
+        username: INT_OIC # Integration user created in WMS
         password: YOUR_PASSWORD
-        start_date: '2023-01-01T00:00:00Z'
+        start_date: "2023-01-01T00:00:00Z"
 ```
 
 #### Advanced Configuration
@@ -183,24 +183,26 @@ plugins:
   "facility_code": "WH1",
   "batch_size": 100,
   "request_timeout": 300,
-  "extraction_mode": "api",  # Options: "api", "csv", "webhook"
-  "sftp_config": {
-    "host": "sftp.example.com",
-    "port": 22,
-    "username": "sftp_user",
-    "password": "sftp_password",
-    "directory": "/WMSInitialLoad"
-  },
-  "webhook_config": {
-    "listen_port": 5000,
-    "endpoint_path": "/wms-events",
-    "auth_required": true,
-    "webhook_username": "webhook_user",
-    "webhook_password": "webhook_password"
-  },
+  "extraction_mode": "api", # Options: "api", "csv", "webhook"
+  "sftp_config":
+    {
+      "host": "sftp.example.com",
+      "port": 22,
+      "username": "sftp_user",
+      "password": "sftp_password",
+      "directory": "/WMSInitialLoad",
+    },
+  "webhook_config":
+    {
+      "listen_port": 5000,
+      "endpoint_path": "/wms-events",
+      "auth_required": true,
+      "webhook_username": "webhook_user",
+      "webhook_password": "webhook_password",
+    },
   "enable_metadata_columns": true,
   "retry_count": 3,
-  "connection_timeout": 60
+  "connection_timeout": 60,
 }
 ```
 
@@ -392,7 +394,7 @@ schedules:
   - name: oic_monitoring_daily
     extractor: tap-oic
     loader: target-oracle
-    interval: '@daily'
+    interval: "@daily"
     start_date: 2023-01-01
     config:
       integration_filter: "*"
@@ -401,7 +403,7 @@ schedules:
   - name: wms_continuous_sync
     extractor: tap-wms
     loader: target-oracle
-    interval: '@hourly'
+    interval: "@hourly"
     start_date: 2023-01-01
     config:
       extraction_mode: "api"
@@ -410,7 +412,7 @@ schedules:
   - name: wms_initial_load
     extractor: tap-wms
     loader: target-oracle
-    interval: '@once'
+    interval: "@once"
     config:
       extraction_mode: "csv"
 ```
@@ -423,7 +425,7 @@ schedules:
   - name: wms_realtime_events
     extractor: tap-wms
     loader: target-oracle
-    interval: '@continuous'
+    interval: "@continuous"
     config:
       extraction_mode: "webhook"
       webhook_config:
@@ -476,7 +478,7 @@ Increase `request_timeout` to handle long API calls:
 
 ```yaml
 config:
-  request_timeout: 600  # 10 minutes
+  request_timeout: 600 # 10 minutes
 ```
 
 For WMS large volume extractions:
@@ -570,7 +572,7 @@ Extractors maintain state to enable incremental extractions:
 
 ```yaml
 config:
-  batch_size: 1000          # Optimize for your data volume
+  batch_size: 1000 # Optimize for your data volume
   max_requests_per_minute: 100
   connection_timeout: 60
   request_timeout: 300

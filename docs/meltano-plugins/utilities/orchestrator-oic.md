@@ -22,7 +22,7 @@ This plugin is responsible for configuration, management and monitoring of flows
 - schedule
 - pydantic
 
-# Development dependencies  
+# Development dependencies
 - pytest
 - pytest-mock
 - pytest-cov
@@ -88,7 +88,7 @@ utilities:
         required: true
         description: Oracle Integration Cloud instance URL
       - name: oic_username
-        label: OIC Username  
+        label: OIC Username
         kind: string
         required: true
         description: Username for OIC authentication
@@ -97,7 +97,7 @@ utilities:
         kind: password
         required: true
         description: Password for OIC authentication
-        
+
       # WMS Configuration
       - name: wms_url
         label: WMS Cloud URL
@@ -114,7 +114,7 @@ utilities:
         kind: password
         required: true
         description: Password for WMS authentication
-        
+
       # Autonomous Database Configuration
       - name: adb_wallet_path
         label: ADB Wallet Path
@@ -136,7 +136,7 @@ utilities:
         kind: password
         required: true
         description: Password for Autonomous Database
-        
+
       # Scheduling Configuration
       - name: schedule_interval
         label: Schedule Interval
@@ -148,7 +148,7 @@ utilities:
         kind: integer
         default: 3
         description: Number of retry attempts for failed jobs
-        
+
       # Monitoring Configuration
       - name: log_level
         label: Log Level
@@ -160,7 +160,6 @@ utilities:
           - ERROR
         default: INFO
         description: Application log level
-
 # This configuration makes the job periodically check the SFTP directory
 # and process new files when they are available
 ```
@@ -276,7 +275,7 @@ environments:
         utilities:
           - name: orchestrator-oic
             config:
-              schedule_interval: 1800  # 30 minutes
+              schedule_interval: 1800 # 30 minutes
               retry_attempts: 5
               log_level: INFO
 ```

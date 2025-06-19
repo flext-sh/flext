@@ -109,69 +109,69 @@ default_environment: dev
 project_id: oic-integration
 
 environments:
-- name: dev
-  config:
-    extractors:
-      tap-oracle-oic:
-        base_url: ${OIC_DEV_BASE_URL}
-        oauth_client_id: ${OIC_DEV_CLIENT_ID}
-        oauth_client_secret: ${OIC_DEV_CLIENT_SECRET}
-        oauth_token_url: ${OIC_DEV_TOKEN_URL}
+  - name: dev
+    config:
+      extractors:
+        tap-oracle-oic:
+          base_url: ${OIC_DEV_BASE_URL}
+          oauth_client_id: ${OIC_DEV_CLIENT_ID}
+          oauth_client_secret: ${OIC_DEV_CLIENT_SECRET}
+          oauth_token_url: ${OIC_DEV_TOKEN_URL}
 
-- name: prod
-  config:
-    extractors:
-      tap-oracle-oic:
-        base_url: ${OIC_PROD_BASE_URL}
-        oauth_client_id: ${OIC_PROD_CLIENT_ID}
-        oauth_client_secret: ${OIC_PROD_CLIENT_SECRET}
-        oauth_token_url: ${OIC_PROD_TOKEN_URL}
+  - name: prod
+    config:
+      extractors:
+        tap-oracle-oic:
+          base_url: ${OIC_PROD_BASE_URL}
+          oauth_client_id: ${OIC_PROD_CLIENT_ID}
+          oauth_client_secret: ${OIC_PROD_CLIENT_SECRET}
+          oauth_token_url: ${OIC_PROD_TOKEN_URL}
 
 extractors:
-- name: tap-oracle-oic
-  pip_url: flx-oracle-oic
-  executable: flx-oracle-oic
-  capabilities:
-  - catalog
-  - discover
-  - state
-  settings:
-  - name: base_url
-    kind: string
-    env: OIC_BASE_URL
-  - name: oauth_client_id
-    kind: string
-    env: OIC_CLIENT_ID
-  - name: oauth_client_secret
-    kind: password
-    env: OIC_CLIENT_SECRET
-  - name: oauth_token_url
-    kind: string
-    env: OIC_TOKEN_URL
-  select:
-  - integrations.*
-  - connections.*
-  - packages.*
+  - name: tap-oracle-oic
+    pip_url: flx-oracle-oic
+    executable: flx-oracle-oic
+    capabilities:
+      - catalog
+      - discover
+      - state
+    settings:
+      - name: base_url
+        kind: string
+        env: OIC_BASE_URL
+      - name: oauth_client_id
+        kind: string
+        env: OIC_CLIENT_ID
+      - name: oauth_client_secret
+        kind: password
+        env: OIC_CLIENT_SECRET
+      - name: oauth_token_url
+        kind: string
+        env: OIC_TOKEN_URL
+    select:
+      - integrations.*
+      - connections.*
+      - packages.*
 
 loaders:
-- name: target-oracle-oic
-  pip_url: flx-oracle-oic
-  executable: flx-oracle-oic
-  settings:
-  - name: base_url
-    kind: string
-  - name: oauth_client_id
-    kind: string
-  - name: oauth_client_secret
-    kind: password
-  - name: oauth_token_url
-    kind: string
-  - name: import_mode
-    kind: options
-    options:
-    - create_only
-    - update_only
-    - create_or_update
+  - name: target-oracle-oic
+    pip_url: flx-oracle-oic
+    executable: flx-oracle-oic
+    settings:
+      - name: base_url
+        kind: string
+      - name: oauth_client_id
+        kind: string
+      - name: oauth_client_secret
+        kind: password
+      - name: oauth_token_url
+        kind: string
+      - name: import_mode
+        kind: options
+        options:
+          - create_only
+          - update_only
+          - create_or_update
 ```
 
 ## Pipeline Configuration
@@ -228,6 +228,7 @@ flx-oracle-oic validate-config --config config.json
 ```
 
 This will verify:
+
 - Required fields are present
 - URLs use HTTPS protocol
 - JSON is valid

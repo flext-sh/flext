@@ -21,13 +21,16 @@ This document outlines the roadmap for extending tap-oic beyond its current data
 ## Vision and Goals
 
 ### Vision
+
 Transform tap-oic from a data extraction tool into a comprehensive integration platform that can:
+
 - Generate OIC integrations programmatically
 - Create workflows from configuration
 - Provide infrastructure-as-code for OIC
 - Enable GitOps workflows for integration management
 
 ### Goals
+
 1. **Programmatic Integration Creation**: Generate OIC integrations without Visual Designer
 2. **Configuration-Driven Workflows**: Define integrations in YAML/JSON
 3. **Singer Ecosystem Integration**: Leverage existing taps and targets
@@ -78,24 +81,28 @@ Transform tap-oic from a data extraction tool into a comprehensive integration p
 ### Component Details
 
 #### 1. Generator Engine
+
 - Converts configurations to OIC integration definitions
 - Supports multiple input formats (YAML, JSON, Python)
 - Validates configurations against OIC constraints
 - Generates optimized integration flows
 
 #### 2. Workflow Creator
+
 - Orchestrates complex multi-step integrations
 - Manages dependencies between integrations
 - Handles conditional logic and branching
 - Supports parallel and sequential execution
 
 #### 3. Integration Definition Language (IDL)
+
 - Domain-specific language for OIC integrations
 - Abstracts OIC complexity
 - Provides reusable components
 - Enables version control
 
 #### 4. Template Engine
+
 - Pre-built templates for common patterns
 - Customizable for specific use cases
 - Supports all OIC adapter types
@@ -104,24 +111,28 @@ Transform tap-oic from a data extraction tool into a comprehensive integration p
 ## Implementation Phases
 
 ### Phase 1: Foundation (Q3 2025)
+
 - [ ] Design Integration Definition Language
 - [ ] Implement basic template engine
 - [ ] Create IAR file builder
 - [ ] Develop configuration validator
 
 ### Phase 2: Core Generation (Q4 2025)
+
 - [ ] Implement REST integration generator
 - [ ] Add database integration support
 - [ ] Create transformation mapping engine
 - [ ] Build deployment manager
 
 ### Phase 3: Advanced Features (Q1 2026)
+
 - [ ] Add SOAP/XML support
 - [ ] Implement custom adapter framework
 - [ ] Create visual workflow designer
 - [ ] Add GitOps integration
 
 ### Phase 4: Enterprise Features (Q2 2026)
+
 - [ ] Multi-tenant support
 - [ ] Advanced security features
 - [ ] Performance optimization
@@ -265,6 +276,7 @@ tap-oic generate-from-singer \
 To fully implement the generator, these API capabilities are needed:
 
 1. **Integration Creation API**
+
    ```http
    POST /ic/api/integration/v1/integrations/create
    Content-Type: application/json
@@ -280,6 +292,7 @@ To fully implement the generator, these API capabilities are needed:
    ```
 
 2. **Connection Creation API**
+
    ```http
    POST /ic/api/integration/v1/connections/create
    Content-Type: application/json
@@ -292,6 +305,7 @@ To fully implement the generator, these API capabilities are needed:
    ```
 
 3. **Transformation Builder API**
+
    ```http
    POST /ic/api/integration/v1/transformations/build
    Content-Type: application/json
@@ -306,6 +320,7 @@ To fully implement the generator, these API capabilities are needed:
 ### Workaround Strategy
 
 Until these APIs are available, we'll:
+
 1. Generate IAR files locally
 2. Use existing import API
 3. Provide templates for common patterns
@@ -393,6 +408,7 @@ iar_file = template.generate()
 ## Success Criteria
 
 ### Technical Success Metrics
+
 1. Generate 90% of common integration patterns
 2. Reduce integration development time by 70%
 3. Enable version control for all integrations
@@ -400,6 +416,7 @@ iar_file = template.generate()
 5. Achieve 99% deployment success rate
 
 ### Business Success Metrics
+
 1. Increase integration delivery speed 5x
 2. Reduce integration maintenance cost by 60%
 3. Enable self-service integration creation

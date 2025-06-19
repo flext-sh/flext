@@ -5,8 +5,8 @@ echo "Starting Celery Worker for Code Analyzer..."
 
 # Activate virtual environment if it exists
 if [ -d "venv" ]; then
-    source venv/bin/activate
-    echo "Virtual environment activated"
+	source venv/bin/activate
+	echo "Virtual environment activated"
 fi
 
 # Set Django settings

@@ -302,9 +302,7 @@ class PaginatedIterator[T]:
         self.current_page = PagedResponse(data, page_info, response)
 
 
-def paginate[
-    T
-](
+def paginate[T](
     client: ApiClient,
     endpoint: str,
     params: dict[str, Any] | None = None,

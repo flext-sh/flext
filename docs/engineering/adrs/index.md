@@ -18,10 +18,10 @@
 
 ### **Core Topics**
 
-| **Topic** | **Function** | **Audience** | **Status** |
-|-----------|--------------|--------------|------------|
-| [Documentation Architecture Strategy](./0001-documentation-architecture-strategy.md) | Documentation decisions | Technical architects | ✅ Complete |
-| [Quality Gates Framework](./0002-quality-gates-framework.md) | Quality assurance decisions | Engineering teams | ✅ Complete |
+| **Topic**                                                                            | **Function**                | **Audience**         | **Status**  |
+| ------------------------------------------------------------------------------------ | --------------------------- | -------------------- | ----------- |
+| [Documentation Architecture Strategy](./0001-documentation-architecture-strategy.md) | Documentation decisions     | Technical architects | ✅ Complete |
+| [Quality Gates Framework](./0002-quality-gates-framework.md)                         | Quality assurance decisions | Engineering teams    | ✅ Complete |
 
 ### **📋 Learning Path**
 
@@ -59,14 +59,14 @@
 
 ### Technical Architects
 
-→ [ADR Template](./template.md)  
-→ [Decision Process](../engineering-process.md)  
+→ [ADR Template](./template.md)
+→ [Decision Process](../engineering-process.md)
 → [Architecture Patterns](../../architecture/index.md)
 
 ### Engineering Teams
 
-→ [Active Decisions](./active.md)  
-→ [Decision Log](./log.md)  
+→ [Active Decisions](./active.md)
+→ [Decision Log](./log.md)
 → [Implementation Guidelines](../../development/index.md)
 
 ---
@@ -102,8 +102,8 @@
 **Creating and reviewing architectural decisions**
 
 ```
-[ADR Process](../index.md) → 
-[Documentation Strategy](./0001-documentation-architecture-strategy.md) → 
+[ADR Process](../index.md) →
+[Documentation Strategy](./0001-documentation-architecture-strategy.md) →
 [Quality Gates](./0002-quality-gates-framework.md)
 ```
 
@@ -112,8 +112,8 @@
 **Understanding and implementing architectural decisions**
 
 ```
-[Quality Gates Framework](./0002-quality-gates-framework.md) → 
-[Documentation Strategy](./0001-documentation-architecture-strategy.md) → 
+[Quality Gates Framework](./0002-quality-gates-framework.md) →
+[Documentation Strategy](./0001-documentation-architecture-strategy.md) →
 [Implementation Guidelines](../../development/index.md)
 ```
 
@@ -122,8 +122,8 @@
 **Managing decision process and team alignment**
 
 ```
-[ADR Overview](../index.md) → 
-[Decision Framework](./0002-quality-gates-framework.md) → 
+[ADR Overview](../index.md) →
+[Decision Framework](./0002-quality-gates-framework.md) →
 [Technical Proposals](../rfc/index.md)
 ```
 

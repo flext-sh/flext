@@ -63,7 +63,7 @@ Oracle WMS Cloud provides comprehensive warehouse management capabilities throug
 ### Key Features
 
 - **Dynamic Discovery**: Automatically discover available entities and endpoints
-- **Type-Safe Operations**: Runtime validation using Pydantic models  
+- **Type-Safe Operations**: Runtime validation using Pydantic models
 - **High-Speed Extraction**: Paged extraction for large datasets
 - **Multiple Formats**: Support for JSON, CSV, Excel, Parquet, YAML
 - **Bulk Operations**: Process multiple operations in batches
@@ -346,7 +346,7 @@ client = WMSClient(
 # With advanced configuration
 client = WMSClient(
     host="your-wms-host.com",
-    username="your-username", 
+    username="your-username",
     password="your-password",
     company_code="YOURCO",
     facility_code="WH1",
@@ -388,7 +388,7 @@ from flx.core.entities import Order
 class OrderService:
     def __init__(self, wms_adapter: WMSAdapter):
         self._wms_adapter = wms_adapter
-    
+
     async def process_order(self, order_id: str) -> Order:
         # Domain logic with adapter
         wms_data = await self._wms_adapter.get_order(order_id)
@@ -613,7 +613,7 @@ poetry run gn-wms-cli schema-compatibility
 # Small datasets (< 1000 records)
 --batch-size=50
 
-# Medium datasets (1000-10000 records)  
+# Medium datasets (1000-10000 records)
 --batch-size=100
 
 # Large datasets (> 10000 records)
@@ -716,7 +716,7 @@ async def handle_order_created(event_data):
 async def process_wms_stream():
     async for batch in client.stream_entities("orders"):
         await process_order_batch(batch)
-        
+
 # Background task processing
 from flx.infrastructure.tasks import BackgroundTaskManager
 
@@ -749,18 +749,22 @@ sync_orders = WMSOperator(
 ## See Also
 
 - **Architecture Documentation:**
+
   - [FLX HTTP Oracle WMS Adapter](./flx_http_oracle_wms-adapter.md) - Technical adapter implementation
   - [Hexagonal Architecture Guide](../architecture/UNIFIED_ARCHITECTURE_GUIDE.md) - Architecture patterns
 
 - **Integration Guides:**
+
   - [Meltano Plugins Integration](./meltano-plugins-integration.md) - Data pipeline integration
   - [Oracle Integration API Guide](./oracle-integration-api-guide.md) - General Oracle API patterns
 
 - **Authentication and Security:**
+
   - [Oracle OAuth2 Authentication Guide](./oracle-oauth2-authentication-guide.md) - Authentication setup
   - [Oracle Security Guide](./oracle-security-guide.md) - Security best practices
 
 - **Development and Testing:**
+
   - [Testing Guide](./testing-guide.md) - Testing strategies and patterns
   - [Development Tools](./development-tools.md) - Development environment setup
 

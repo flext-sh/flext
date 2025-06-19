@@ -16,10 +16,10 @@ class DocstringGapFinder(ast.NodeVisitor):
 
     def has_docstring(self, node: ast.AST) -> bool:
         return (
-            node.body and
-            isinstance(node.body[0], ast.Expr) and
-            isinstance(node.body[0].value, ast.Constant) and
-            isinstance(node.body[0].value.value, str)
+            node.body
+            and isinstance(node.body[0], ast.Expr)
+            and isinstance(node.body[0].value, ast.Constant)
+            and isinstance(node.body[0].value.value, str)
         )
 
     def visit_ClassDef(self, node: ast.ClassDef) -> None:
@@ -27,13 +27,15 @@ class DocstringGapFinder(ast.NodeVisitor):
         self.current_class = node.name
 
         if not self.has_docstring(node):
-            self.gaps.append({
-                "file": self.filepath,
-                "line": node.lineno,
-                "type": "class",
-                "name": node.name,
-                "description": f"Class {node.name}",
-            })
+            self.gaps.append(
+                {
+                    "file": self.filepath,
+                    "line": node.lineno,
+                    "type": "class",
+                    "name": node.name,
+                    "description": f"Class {node.name}",
+                }
+            )
 
         self.generic_visit(node)
         self.current_class = old_class
@@ -45,17 +47,23 @@ class DocstringGapFinder(ast.NodeVisitor):
 
             # Skip private methods except __init__
             if name.startswith("_") and name != "__init__":
-                if not name.startswith("__") or name in {"__enter__", "__exit__", "__call__"}:
+                if not name.startswith("__") or name in {
+                    "__enter__",
+                    "__exit__",
+                    "__call__",
+                }:
                     self.generic_visit(node)
                     return
 
-            self.gaps.append({
-                "file": self.filepath,
-                "line": node.lineno,
-                "type": func_type,
-                "name": name,
-                "description": f"{func_type} {name}",
-            })
+            self.gaps.append(
+                {
+                    "file": self.filepath,
+                    "line": node.lineno,
+                    "type": func_type,
+                    "name": name,
+                    "description": f"{func_type} {name}",
+                }
+            )
 
         self.generic_visit(node)
 
@@ -66,17 +74,23 @@ class DocstringGapFinder(ast.NodeVisitor):
 
             # Skip private methods except __init__
             if name.startswith("_") and name != "__init__":
-                if not name.startswith("__") or name in {"__aenter__", "__aexit__", "__call__"}:
+                if not name.startswith("__") or name in {
+                    "__aenter__",
+                    "__aexit__",
+                    "__call__",
+                }:
                     self.generic_visit(node)
                     return
 
-            self.gaps.append({
-                "file": self.filepath,
-                "line": node.lineno,
-                "type": func_type,
-                "name": name,
-                "description": f"{func_type} {name}",
-            })
+            self.gaps.append(
+                {
+                    "file": self.filepath,
+                    "line": node.lineno,
+                    "type": func_type,
+                    "name": name,
+                    "description": f"{func_type} {name}",
+                }
+            )
 
         self.generic_visit(node)
 
@@ -127,7 +141,9 @@ def main():
                 gaps_by_file[file_path] = []
             gaps_by_file[file_path].append(gap)
 
-        for file_path, file_gaps in sorted(gaps_by_file.items(), key=lambda x: len(x[1]), reverse=True):
+        for file_path, file_gaps in sorted(
+            gaps_by_file.items(), key=lambda x: len(x[1]), reverse=True
+        ):
             file_path.replace("/home/marlonsc/pyauto/flx/", "")
 
             for gap in sorted(file_gaps, key=lambda x: x["line"]):

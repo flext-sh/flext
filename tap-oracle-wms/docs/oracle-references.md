@@ -63,46 +63,46 @@ Core business entities include:
 
 ### Architecture Alignment
 
-| tap-oracle-wms Document | Oracle Official Reference | Key Alignment Points |
-|------------------------|---------------------------|---------------------|
-| [wms-architecture.md](wms-architecture.md) | [Oracle WMS REST API Guide](https://docs.oracle.com/en/cloud/saas/warehouse-management/25a/owmre/) | API layering, authentication, entity model |
-| [wms-api-reference.md](wms-api-reference.md) | [WMS Web Service APIs](https://docs.oracle.com/en/cloud/saas/warehouse-management/24a/owmap/) | Endpoint structure, HTTP methods, response formats |
-| [wms-authentication.md](wms-authentication.md) | Chapter 2: Authentication (REST API Guide) | Basic Auth, OAuth 2.0, required headers |
-| [wms-entity-discovery.md](wms-entity-discovery.md) | Chapter 4: Entity Module | Entity metadata, schema discovery, field types |
-| [wms-data-extraction.md](wms-data-extraction.md) | Chapter 3: HTTP Response & Pagination | Pagination modes, filtering, field selection |
+| tap-oracle-wms Document                            | Oracle Official Reference                                                                          | Key Alignment Points                               |
+| -------------------------------------------------- | -------------------------------------------------------------------------------------------------- | -------------------------------------------------- |
+| [wms-architecture.md](wms-architecture.md)         | [Oracle WMS REST API Guide](https://docs.oracle.com/en/cloud/saas/warehouse-management/25a/owmre/) | API layering, authentication, entity model         |
+| [wms-api-reference.md](wms-api-reference.md)       | [WMS Web Service APIs](https://docs.oracle.com/en/cloud/saas/warehouse-management/24a/owmap/)      | Endpoint structure, HTTP methods, response formats |
+| [wms-authentication.md](wms-authentication.md)     | Chapter 2: Authentication (REST API Guide)                                                         | Basic Auth, OAuth 2.0, required headers            |
+| [wms-entity-discovery.md](wms-entity-discovery.md) | Chapter 4: Entity Module                                                                           | Entity metadata, schema discovery, field types     |
+| [wms-data-extraction.md](wms-data-extraction.md)   | Chapter 3: HTTP Response & Pagination                                                              | Pagination modes, filtering, field selection       |
 
 ### Configuration Mapping
 
-| tap-oracle-wms Config | Oracle WMS Requirement | Official Reference |
-|----------------------|------------------------|--------------------|
-| `base_url` | WMS Instance URL | REST API Guide: URL Format |
-| `username`/`password` | Basic Authentication | Chapter 2: Login and Authentication |
-| `oauth_token` | OAuth 2.0 Token | Chapter 2: OAuth2 Authentication |
-| `company_code` | X-WMS-Company Header | Required for multi-tenant access |
-| `facility_code` | X-WMS-Facility Header | Required for facility context |
+| tap-oracle-wms Config | Oracle WMS Requirement | Official Reference                  |
+| --------------------- | ---------------------- | ----------------------------------- |
+| `base_url`            | WMS Instance URL       | REST API Guide: URL Format          |
+| `username`/`password` | Basic Authentication   | Chapter 2: Login and Authentication |
+| `oauth_token`         | OAuth 2.0 Token        | Chapter 2: OAuth2 Authentication    |
+| `company_code`        | X-WMS-Company Header   | Required for multi-tenant access    |
+| `facility_code`       | X-WMS-Facility Header  | Required for facility context       |
 
 ### Entity Stream Mapping
 
-| Singer Stream | Oracle WMS Entity | API Endpoint | Official Documentation |
-|---------------|-------------------|--------------|----------------------|
-| `items` | `item` | `/entity/item/` | Chapter 5: Supported Entity Operations |
-| `locations` | `location` | `/entity/location/` | Chapter 5: Location |
-| `inventory` | `inventory` | `/entity/inventory/` | Chapter 5: Inventory |
-| `orders` | `order_hdr` | `/entity/order_hdr/` | Chapter 5: Sales Order Header |
-| `order_details` | `order_dtl` | `/entity/order_dtl/` | Chapter 5: Order Detail |
-| `receipts` | `receipt` | `/entity/receipt/` | Chapter 5: Receipt |
-| `shipments` | `shipment` | `/entity/shipment/` | Chapter 5: Shipment |
+| Singer Stream   | Oracle WMS Entity | API Endpoint         | Official Documentation                 |
+| --------------- | ----------------- | -------------------- | -------------------------------------- |
+| `items`         | `item`            | `/entity/item/`      | Chapter 5: Supported Entity Operations |
+| `locations`     | `location`        | `/entity/location/`  | Chapter 5: Location                    |
+| `inventory`     | `inventory`       | `/entity/inventory/` | Chapter 5: Inventory                   |
+| `orders`        | `order_hdr`       | `/entity/order_hdr/` | Chapter 5: Sales Order Header          |
+| `order_details` | `order_dtl`       | `/entity/order_dtl/` | Chapter 5: Order Detail                |
+| `receipts`      | `receipt`         | `/entity/receipt/`   | Chapter 5: Receipt                     |
+| `shipments`     | `shipment`        | `/entity/shipment/`  | Chapter 5: Shipment                    |
 
 ## Oracle WMS Version Compatibility
 
 ### API Version Support Matrix
 
-| WMS Version | API Version | Support Status | Documentation Link |
-|-------------|-------------|----------------|-------------------|
-| 25B | v10 | Current | [25B Documentation](https://docs.oracle.com/en/cloud/saas/warehouse-management/25b/) |
-| 24C | v10 | Supported | [24C Documentation](https://support.oracle.com/knowledge/Oracle%20Cloud/3033874_1.html) |
-| 24B | v10 | Supported | [24B Documentation](https://docs.oracle.com/en/cloud/saas/supply-chain-and-manufacturing/24b/) |
-| 24A | v10 | Supported | [24A Documentation](https://docs.oracle.com/en/cloud/saas/warehouse-management/24a/) |
+| WMS Version | API Version | Support Status | Documentation Link                                                                             |
+| ----------- | ----------- | -------------- | ---------------------------------------------------------------------------------------------- |
+| 25B         | v10         | Current        | [25B Documentation](https://docs.oracle.com/en/cloud/saas/warehouse-management/25b/)           |
+| 24C         | v10         | Supported      | [24C Documentation](https://support.oracle.com/knowledge/Oracle%20Cloud/3033874_1.html)        |
+| 24B         | v10         | Supported      | [24B Documentation](https://docs.oracle.com/en/cloud/saas/supply-chain-and-manufacturing/24b/) |
+| 24A         | v10         | Supported      | [24A Documentation](https://docs.oracle.com/en/cloud/saas/warehouse-management/24a/)           |
 
 ### Version Compatibility Notes
 
@@ -179,16 +179,16 @@ GET /entity/item?fields=id,code,description&page_size=1000
 
 ### Standard HTTP Status Codes
 
-| Status Code | Description | Oracle Documentation Reference |
-|-------------|-------------|-------------------------------|
-| 200 | Success | Chapter 3: Status Codes |
-| 201 | Created | Chapter 3: Status Codes |
-| 400 | Bad Request | Chapter 3: Status Codes |
-| 401 | Unauthorized | Chapter 3: Status Codes |
-| 403 | Forbidden | Chapter 3: Status Codes |
-| 404 | Not Found | Chapter 3: Status Codes |
-| 409 | Conflict | Chapter 3: Status Codes |
-| 500 | Server Error | Chapter 3: Status Codes |
+| Status Code | Description  | Oracle Documentation Reference |
+| ----------- | ------------ | ------------------------------ |
+| 200         | Success      | Chapter 3: Status Codes        |
+| 201         | Created      | Chapter 3: Status Codes        |
+| 400         | Bad Request  | Chapter 3: Status Codes        |
+| 401         | Unauthorized | Chapter 3: Status Codes        |
+| 403         | Forbidden    | Chapter 3: Status Codes        |
+| 404         | Not Found    | Chapter 3: Status Codes        |
+| 409         | Conflict     | Chapter 3: Status Codes        |
+| 500         | Server Error | Chapter 3: Status Codes        |
 
 ### Error Response Format
 

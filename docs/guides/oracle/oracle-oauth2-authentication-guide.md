@@ -131,7 +131,7 @@ source "scripts/lib/oic.sh"
 # Main execution
 main() {
     echo "🔐 Authenticating with OIC..."
-    
+
     # Get OAuth2 token
     if oic_get_token; then
         echo "✅ Authentication successful"
@@ -139,22 +139,22 @@ main() {
         echo "❌ Authentication failed"
         exit 1
     fi
-    
+
     # Test API connectivity
     echo "🔍 Testing API connectivity..."
-    
+
     # Check OIC health
     if health=$(oic_check_health); then
         echo "✅ OIC Health Check: $health"
     else
         echo "❌ Health check failed"
     fi
-    
+
     # List available integrations
     echo "📋 Listing integrations..."
     integrations=$(oic_api_get '/ic/api/integration/v1/integrations')
     echo "✅ Found integrations: $integrations"
-    
+
     # List connections
     echo "🔗 Listing connections..."
     connections=$(oic_list_connections)
@@ -198,16 +198,16 @@ from flx.adapters.oracle.oic import OICClient, OICAuthError
 
 async def robust_oic_call(endpoint, max_retries=3):
     """Make OIC API call with robust error handling."""
-    
+
     for attempt in range(max_retries):
         try:
             # Initialize OIC client
             client = OICClient()
-            
+
             # Authenticate and make call
             response = await client.authenticated_request('GET', endpoint)
             return response
-            
+
         except OICAuthError as e:
             if attempt < max_retries - 1:
                 # Wait before retry (exponential backoff)
@@ -497,16 +497,16 @@ oracle_authentication:
     scopes:
       - "urn:opc:resource:consumer::all"
       - "/ic/api/"
-  
+
   wms:
     method: basic_auth
     base_url: ${WMS_URL}
     username: ${WMS_USER}
     password: ${WMS_PASS}
-  
+
   security:
     token_cache_enabled: true
-    token_refresh_threshold: 300  # seconds
+    token_refresh_threshold: 300 # seconds
     max_retry_attempts: 3
     ssl_verify: true
 ```
@@ -515,13 +515,13 @@ oracle_authentication:
 
 ### 6.1 Error Resolution Matrix
 
-| Error | Cause | Solution |
-|-------|-------|----------|
+| Error                  | Cause                               | Solution                                              |
+| ---------------------- | ----------------------------------- | ----------------------------------------------------- |
 | `invalid_redirect_uri` | REDIRECT_URI not configured in IDCS | Add URI to IDCS application or use Client Credentials |
-| `invalid_client` | Wrong client credentials | Verify CLIENT_ID and CLIENT_SECRET |
-| `insufficient_scope` | Missing scopes in IDCS | Add required scopes to IDCS application |
-| `token_expired` | Access token expired | Implement automatic token refresh |
-| `connection_timeout` | Network connectivity issue | Check firewall rules and DNS resolution |
+| `invalid_client`       | Wrong client credentials            | Verify CLIENT_ID and CLIENT_SECRET                    |
+| `insufficient_scope`   | Missing scopes in IDCS              | Add required scopes to IDCS application               |
+| `token_expired`        | Access token expired                | Implement automatic token refresh                     |
+| `connection_timeout`   | Network connectivity issue          | Check firewall rules and DNS resolution               |
 
 ### 6.2 Debug Procedures
 

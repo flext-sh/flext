@@ -28,4 +28,4 @@ echo "Running the verification script..."
 cd ..
 python -c "from dc_api_x.ext.auth.ldap import LdapAuthProvider; print('LDAP module loaded successfully')"
 
-echo "Installation complete. Use 'source .venv_fixed/bin/activate' to activate this environment." 
+echo "Installation complete. Use 'source .venv_fixed/bin/activate' to activate this environment."

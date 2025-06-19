@@ -8,7 +8,7 @@ This Meltano loader for Oracle Database (including Oracle Autonomous Database) a
 - Complete Oracle Autonomous Database support
 - Automatic table creation when they don't exist
 - Insert, update, merge (upsert) and complete replacement operations
-- Bulk loading optimization using SQL*Loader or Direct Path Insert
+- Bulk loading optimization using SQL\*Loader or Direct Path Insert
 - Support for data type transformations and column mapping
 
 ## Requirements
@@ -93,41 +93,36 @@ plugins:
 ```yaml
 # Complete config.json
 {
-  "connection_type": "normal",  # normal, autonomous
+  "connection_type": "normal", # normal, autonomous
   "host": "localhost",
   "port": 1521,
   "user": "username",
   "password": "password",
   "service_name": "ORCLPDB1",
-  "sid": null,  # Alternative to service_name if needed
-  "wallet_location": null,  # For Autonomous DB
-  "wallet_password": null,  # For Autonomous DB
+  "sid": null, # Alternative to service_name if needed
+  "wallet_location": null, # For Autonomous DB
+  "wallet_password": null, # For Autonomous DB
   "default_target_schema": "WMSSTAGE",
-  "table_prefix": "",  # Optional: prefix for all tables
-  "table_suffix": "_STAGE",  # Optional: suffix for all tables
-  "schema_mapping": {
-    "tap_schema": "target_schema"
-  },
+  "table_prefix": "", # Optional: prefix for all tables
+  "table_suffix": "_STAGE", # Optional: suffix for all tables
+  "schema_mapping": { "tap_schema": "target_schema" },
   "add_metadata_columns": true,
-  "metadata_columns": {
-    "LOADED_AT": "TIMESTAMP",
-    "BATCH_ID": "VARCHAR2(50)"
-  },
+  "metadata_columns": { "LOADED_AT": "TIMESTAMP", "BATCH_ID": "VARCHAR2(50)" },
   "batch_size_rows": 100000,
   "flush_all_streams": false,
   "parallelism": 4,
   "data_flattening_max_level": 0,
   "primary_key_required": false,
   "validate_records": true,
-  "compression": "NONE",  # NONE, BASIC, LOW, MEDIUM, HIGH
+  "compression": "NONE", # NONE, BASIC, LOW, MEDIUM, HIGH
   "hard_delete": false,
-  "load_method": "append",  # append, upsert, insert, overwrite
+  "load_method": "append", # append, upsert, insert, overwrite
   "table_cache_size": 20,
-  "driver_type": "thin",  # thin, thick
-  "use_direct_path": false,  # Use Direct Path for fast loading
-  "use_sqlldr": false,  # Use SQL*Loader for very large loads
+  "driver_type": "thin", # thin, thick
+  "use_direct_path": false, # Use Direct Path for fast loading
+  "use_sqlldr": false, # Use SQL*Loader for very large loads
   "sqlldr_path": "sqlldr",
-  "commit_every": 1000
+  "commit_every": 1000,
 }
 ```
 
@@ -186,14 +181,14 @@ config:
   use_direct_path: true
 ```
 
-#### SQL*Loader
+#### SQL\*Loader
 
-Uses SQL*Loader tool for extremely large loads:
+Uses SQL\*Loader tool for extremely large loads:
 
 ```yaml
 config:
   use_sqlldr: true
-  sqlldr_path: "/path/to/sqlldr"  # Path to sqlldr
+  sqlldr_path: "/path/to/sqlldr" # Path to sqlldr
 ```
 
 ## Mapping and Transformation
@@ -237,7 +232,7 @@ schedules:
   - name: wms_daily_sync
     extractor: tap-wms
     loader: target-oracle
-    interval: '@daily'
+    interval: "@daily"
     start_date: 2023-01-01
 ```
 

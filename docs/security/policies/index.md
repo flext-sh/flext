@@ -18,8 +18,8 @@
 
 ### **Core Topics**
 
-| **Topic** | **Function** | **Audience** | **Status** |
-|-----------|--------------|--------------|------------|
+| **Topic**                               | **Function**                    | **Audience**        | **Status**  |
+| --------------------------------------- | ------------------------------- | ------------------- | ----------- |
 | [Security Policy](./security-policy.md) | Comprehensive security policies | Compliance officers | ✅ Complete |
 
 ### **📋 Learning Path**
@@ -55,7 +55,7 @@
 ## 📊 **Section Metrics**
 
 - **Documents**: 1 file
-- **Completeness**: 90%  
+- **Completeness**: 90%
 - **Last Updated**: June 11, 2025
 
 ---

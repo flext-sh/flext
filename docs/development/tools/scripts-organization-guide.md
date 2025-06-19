@@ -19,7 +19,7 @@ The scripts management system provides a centralized, consistent approach to man
 **ALL scripts must be in appropriate `scripts/` folders** - this rule applies to:
 
 - ✅ Production scripts
-- ✅ Temporary scripts  
+- ✅ Temporary scripts
 - ✅ Testing scripts
 - ✅ Support scripts
 - ✅ Debugging scripts
@@ -263,10 +263,10 @@ logger = structlog.get_logger(__name__)
 def main():
     """Main script logic following architectural patterns."""
     logger.info("Starting debug of problem X")
-    
+
     # Your logic here
     pass
-    
+
     logger.info("Debug completed")
 
 if __name__ == "__main__":
@@ -553,4 +553,4 @@ For more information, consult:
 - **[Documentation Standards](../architecture/ARCHITECTURAL_CONSISTENCY_GUIDE.md)** - Framework conventions
 - **[Testing Strategies](TESTING_HEXAGONAL_ARCHITECTURE.md)** - Testing methodologies
 
-*This guide provides comprehensive coverage of script organization and management within the FLX framework workspace, ensuring consistency and maintainability across all development activities.*
+_This guide provides comprehensive coverage of script organization and management within the FLX framework workspace, ensuring consistency and maintainability across all development activities._

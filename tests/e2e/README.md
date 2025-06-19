@@ -1,6 +1,7 @@
 # End-to-End Testing Infrastructure for LDAP Components
 
 This directory contains comprehensive end-to-end tests for the LDAP ecosystem components:
+
 - `tap-ldap`: Singer tap for extracting data from LDAP
 - `target-ldap`: Singer target for loading data to LDAP
 - `dbt-ldap`: DBT package for transforming LDAP data
@@ -9,6 +10,7 @@ This directory contains comprehensive end-to-end tests for the LDAP ecosystem co
 ## Architecture
 
 The E2E test infrastructure uses Docker containers to provide:
+
 - **Source LDAP**: OpenLDAP server with test data (port 10389)
 - **Target LDAP**: Clean OpenLDAP server for migration testing (port 11389)
 - **PostgreSQL**: Database for dbt transformations (port 15432)
@@ -18,6 +20,7 @@ The E2E test infrastructure uses Docker containers to provide:
 
 1. Docker and docker-compose installed
 2. Python 3.11+ with required packages:
+
    ```bash
    pip install pytest docker psycopg2-binary ldap3 faker
    ```
@@ -25,16 +28,19 @@ The E2E test infrastructure uses Docker containers to provide:
 ## Quick Start
 
 Run all E2E tests:
+
 ```bash
 ./run_e2e_tests.py
 ```
 
 Run specific test scenarios:
+
 ```bash
 ./run_e2e_tests.py scenarios/test_full_pipeline.py
 ```
 
 Keep containers running after tests (for debugging):
+
 ```bash
 ./run_e2e_tests.py --keep-containers
 ```
@@ -42,6 +48,7 @@ Keep containers running after tests (for debugging):
 ## Test Scenarios
 
 ### Full Pipeline Tests (`test_full_pipeline.py`)
+
 - **tap_ldap_extraction**: Validates complete data extraction from source LDAP
 - **target_ldap_loading**: Tests loading data to target LDAP server
 - **dbt_ldap_transformations**: Verifies dbt transformations with PostgreSQL
@@ -51,6 +58,7 @@ Keep containers running after tests (for debugging):
 - **performance_with_large_dataset**: Performance testing with 100+ entries
 
 ### Migration Scenarios (`test_migration_scenarios.py`)
+
 - **basic_user_migration**: Simple user migration from source to target
 - **group_migration_with_members**: Group migration with member reference updates
 - **organizational_structure_migration**: Complete OU structure migration
@@ -59,6 +67,7 @@ Keep containers running after tests (for debugging):
 - **conflict_resolution_migration**: Handling conflicts during migration
 
 ### Edge Cases (`test_edge_cases.py`)
+
 - **empty_ldap_source**: Handling empty LDAP directories
 - **special_characters_in_dn**: Special characters (UTF-8, quotes, commas)
 - **large_attribute_values**: Large text attributes (10KB+)
@@ -96,17 +105,20 @@ tests/e2e/
 ## Test Data
 
 ### Source LDAP Structure
+
 - Base DN: `dc=source,dc=example,dc=com`
 - Admin DN: `cn=REDACTED_LDAP_BIND_PASSWORD,dc=source,dc=example,dc=com`
 - Password: `REDACTED_LDAP_BIND_PASSWORD_source_password`
 
 Pre-populated with:
+
 - Organizational Units: People, Groups, Applications, Departments
 - Users: Engineering and Sales employees with full attributes
 - Groups: Department groups, role-based groups
 - Special test entries for edge case testing
 
 ### Target LDAP Structure
+
 - Base DN: `dc=target,dc=example,dc=com`
 - Admin DN: `cn=REDACTED_LDAP_BIND_PASSWORD,dc=target,dc=example,dc=com`
 - Password: `REDACTED_LDAP_BIND_PASSWORD_target_password`
@@ -114,6 +126,7 @@ Pre-populated with:
 Initially empty except for base OUs.
 
 ### PostgreSQL Database
+
 - Database: `dbt_ldap_test`
 - User: `dbt_user`
 - Password: `dbt_password`
@@ -145,20 +158,23 @@ Initially empty except for base OUs.
 
 ### Debugging
 
-Access phpLDAPREDACTED_LDAP_BIND_PASSWORD: http://localhost:18080
+Access phpLDAPREDACTED_LDAP_BIND_PASSWORD: <http://localhost:18080>
 
 View container logs:
+
 ```bash
 ./run_e2e_tests.py --logs              # All logs
 ./run_e2e_tests.py --logs ldap-source  # Specific service
 ```
 
 Keep containers running:
+
 ```bash
 ./run_e2e_tests.py --keep-containers
 ```
 
 Manual container management:
+
 ```bash
 cd tests/e2e
 docker-compose up -d     # Start containers
@@ -169,16 +185,19 @@ docker-compose down -v   # Stop and clean up
 ### Advanced Options
 
 Skip setup checks:
+
 ```bash
 ./run_e2e_tests.py --skip-setup
 ```
 
 Skip container rebuild:
+
 ```bash
 ./run_e2e_tests.py --skip-build
 ```
 
 Run tests with markers:
+
 ```bash
 # Add @pytest.mark.slow to slow tests
 ./run_e2e_tests.py -m "not slow"
@@ -251,6 +270,7 @@ def test_container_operations(docker_compose_up):
 ### Container Issues
 
 If containers fail to start:
+
 ```bash
 # Check for port conflicts
 lsof -i :10389 -i :11389 -i :15432 -i :18080
@@ -263,11 +283,13 @@ docker system prune -f
 ### Test Failures
 
 Enable detailed output:
+
 ```bash
 ./run_e2e_tests.py --pytest-args="-vv -s"
 ```
 
 Debug with pdb:
+
 ```bash
 ./run_e2e_tests.py --pytest-args="--pdb"
 ```
@@ -275,6 +297,7 @@ Debug with pdb:
 ### Performance
 
 For faster test runs:
+
 ```bash
 # Skip slow tests
 ./run_e2e_tests.py -m "not slow"
@@ -300,7 +323,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
+          python-version: "3.11"
 
       - name: Install dependencies
         run: |

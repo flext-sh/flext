@@ -6,7 +6,7 @@ Este extrator Meltano para Oracle WMS Cloud (Warehouse Management System) permit
 
 - Extração de pedidos (orders) e detalhes
 - Extração de alocações de estoque (allocations)
-- Suporte a cargas incrementais e captura de alterações  
+- Suporte a cargas incrementais e captura de alterações
 - Suporte para webhooks via servidor auxiliar
 - Exportação de dados via CSV para cargas iniciais de alto volume
 
@@ -40,9 +40,9 @@ plugins:
       pip_url: tap-wms
       config:
         wms_url: https://tenantname.wms.ocs.oraclecloud.com/env/wms/api
-        username: INT_OIC  # Usuário de integração criado no WMS
+        username: INT_OIC # Usuário de integração criado no WMS
         password: YOUR_PASSWORD
-        start_date: '2023-01-01T00:00:00Z'
+        start_date: "2023-01-01T00:00:00Z"
 ```
 
 ### Configuração Avançada
@@ -58,24 +58,26 @@ plugins:
   "facility_code": "WH1",
   "batch_size": 100,
   "request_timeout": 300,
-  "extraction_mode": "api",  # Opções: "api", "csv", "webhook"
-  "sftp_config": {
-    "host": "sftp.example.com",
-    "port": 22,
-    "username": "sftp_user",
-    "password": "sftp_password",
-    "directory": "/WMSInitialLoad"
-  },
-  "webhook_config": {
-    "listen_port": 5000,
-    "endpoint_path": "/wms-events",
-    "auth_required": true,
-    "webhook_username": "webhook_user",
-    "webhook_password": "webhook_password"
-  },
+  "extraction_mode": "api", # Opções: "api", "csv", "webhook"
+  "sftp_config":
+    {
+      "host": "sftp.example.com",
+      "port": 22,
+      "username": "sftp_user",
+      "password": "sftp_password",
+      "directory": "/WMSInitialLoad",
+    },
+  "webhook_config":
+    {
+      "listen_port": 5000,
+      "endpoint_path": "/wms-events",
+      "auth_required": true,
+      "webhook_username": "webhook_user",
+      "webhook_password": "webhook_password",
+    },
   "enable_metadata_columns": true,
   "retry_count": 3,
-  "connection_timeout": 60
+  "connection_timeout": 60,
 }
 ```
 
@@ -175,7 +177,7 @@ schedules:
   - name: wms_daily_sync
     extractor: tap-wms
     loader: target-oracle
-    interval: '@daily'
+    interval: "@daily"
     start_date: 2023-01-01
     config:
       extraction_mode: "api"

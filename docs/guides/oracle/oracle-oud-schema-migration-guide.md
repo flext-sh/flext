@@ -1,7 +1,7 @@
 # Oracle OUD Schema Migration Guide
 
-**Date**: January 2025  
-**Status**: Production Ready  
+**Date**: January 2025
+**Status**: Production Ready
 **Version**: Complete Migration Guide
 
 ## Overview
@@ -206,7 +206,7 @@ python -m oud_automation init --environment prod --strict-validation
    ```bash
    # Create workspace
    mkdir -p migration_workspace/{config,ldifs,reports,backups}
-   
+
    # Initialize configuration
    python -m oud_automation init --output-dir ./migration_workspace/config
    ```
@@ -218,7 +218,7 @@ python -m oud_automation init --environment prod --strict-validation
    python -m oud_automation schema analyze \
        --host oid.example.com \
        --output ./reports/oid_schema_analysis.json
-   
+
    # Analyze target schema
    python -m oud_automation schema analyze \
        --host oud.example.com \

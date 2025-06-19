@@ -26,7 +26,13 @@
       "table": "ORDER_HDR",
       "primary_keys": ["order_id"],
       "date_field": "order_date",
-      "track_fields": ["status", "customer_id", "total_amount", "order_type", "priority"],
+      "track_fields": [
+        "status",
+        "customer_id",
+        "total_amount",
+        "order_type",
+        "priority"
+      ],
       "timestamp_field": "tk_insert_dt",
       "default_fields": "order_id,order_date,status,customer_id,total_amount,order_type,priority,created_date,modified_date"
     },
@@ -52,4 +58,4 @@
       "description": "Teste completo ORDER_HDR última semana"
     }
   }
-} 
+}

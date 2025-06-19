@@ -72,7 +72,13 @@ models:
         description: Type of user account
         tests:
           - accepted_values:
-              values: ['Employee', 'Service Account', 'Application Account', 'Standard User']
+              values:
+                [
+                  "Employee",
+                  "Service Account",
+                  "Application Account",
+                  "Standard User",
+                ]
       - name: is_disabled
         description: Whether the account is disabled
         tests:
@@ -95,7 +101,7 @@ models:
         description: Security or Distribution group
         tests:
           - accepted_values:
-              values: ['Security', 'Distribution']
+              values: ["Security", "Distribution"]
       - name: member_count
         description: Number of members in the group
         tests:
@@ -121,4 +127,12 @@ models:
         description: Type of organizational unit
         tests:
           - accepted_values:
-              values: ['User Container', 'Group Container', 'Computer Container', 'Service Container', 'Business Unit', 'General Container']
+              values:
+                [
+                  "User Container",
+                  "Group Container",
+                  "Computer Container",
+                  "Service Container",
+                  "Business Unit",
+                  "General Container",
+                ]

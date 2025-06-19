@@ -57,21 +57,21 @@ async def main() -> None:
     """Enhanced FLX usage example showcasing modern patterns."""
     # Setup structured logging with enterprise features
     logger = FlxLogger("flx.examples.modern_quickstart")
-    
+
     # Create client with advanced configuration
     client = ApiClient()
-    
+
     # Modern adapter with advanced mixins (70% code reduction)
     class ModernHttpAdapter(AdvancedAdapterMixin, HttpClientAdapter):
         """HTTP adapter with advanced mixins eliminating boilerplate."""
-        
+
         async def get_with_metrics(self, url: str) -> dict[str, Any]:
             """GET request with automatic operation tracking and error handling."""
             return await self._delegate_operation(
                 "_http_client", "get", (url,), {}, "get",
                 {"error": "HTTP GET failed", "status_code": 500}, RuntimeError
             )
-    
+
     # Register adapter with enterprise configuration
     http_adapter = ModernHttpAdapter(
         name="github_api",
@@ -82,13 +82,13 @@ async def main() -> None:
         enable_health_checks=True
     )
     client.register_adapter("http", http_adapter)
-    
+
     try:
         async with client:
             # Comprehensive health monitoring
             health = await http_adapter.health_check()
             logger.info("Adapter health check", extra=health)
-            
+
             # Modern HTTP request with advanced error handling
             response = await http_adapter.get_with_metrics(
                 "https://api.github.com/users/github"
@@ -98,11 +98,11 @@ async def main() -> None:
                 "public_repos": response.get("public_repos"),
                 "followers": response.get("followers")
             })
-            
+
             # Advanced metrics collection
             metrics = await http_adapter.get_metrics()
             logger.info("Enterprise metrics", extra=metrics)
-            
+
     except Exception as e:
         logger.exception("Operation failed", extra={
             "error_type": type(e).__name__,
@@ -127,7 +127,7 @@ from flx.core.advanced_mixins import AdvancedAdapterMixin
 
 class EnterpriseAdapter(AdvancedAdapterMixin):
     """Unified adapter pattern eliminating protocol-specific boilerplate."""
-    
+
     async def execute_operation(self, operation: str, *args, **kwargs) -> Any:
         """Universal operation execution with automatic error handling."""
         return await self._delegate_operation(
@@ -139,10 +139,10 @@ class EnterpriseAdapter(AdvancedAdapterMixin):
 @flx_project
 class MultiProtocolProject(FlxProject):
     """Modern multi-protocol project with declarative configuration."""
-    
+
     project_name = "multi-protocol-demo"
     version = "2.0.0"
-    
+
     # Declarative adapter configuration
     adapters = {
         "database": {
@@ -178,12 +178,12 @@ async def demonstrate_multi_protocol():
     """Demonstrate unified multi-protocol operations."""
     project = MultiProtocolProject()
     await project.setup()
-    
+
     # All adapters use same operation pattern (code unification)
     db_result = await project.database.execute_operation("query", "SELECT 1")
     http_result = await project.http.execute_operation("get", "https://api.example.com/health")
     msg_result = await project.messaging.execute_operation("publish", "topic", {"event": "demo"})
-    
+
     print(f"Database: {db_result}")
     print(f"HTTP: {http_result}")
     print(f"Messaging: {msg_result}")
@@ -200,7 +200,7 @@ from dataclasses import dataclass
 
 from flx import AggregateRoot, DomainEvent
 from flx.infrastructure import (
-    ServiceRegistry, MessageBus, CircuitBreaker, 
+    ServiceRegistry, MessageBus, CircuitBreaker,
     ServiceDiscovery, APIGateway, DistributedTracing
 )
 from flx.core.advanced_mixins import (
@@ -219,18 +219,18 @@ class ServiceEndpoint:
 
 class MicroserviceOrchestrator(
     ServiceConnectionMixin,
-    OperationTrackingMixin, 
+    OperationTrackingMixin,
     ServiceDelegationMixin
 ):
     """Enterprise microservices orchestrator with advanced patterns."""
-    
+
     def __init__(self):
         self.service_registry = ServiceRegistry()
         self.message_bus = MessageBus()
         self.api_gateway = APIGateway()
         self.tracer = DistributedTracing()
         self.services: Dict[str, ServiceEndpoint] = {}
-    
+
     async def register_service(self, service: ServiceEndpoint) -> None:
         """Register service with automatic discovery and health monitoring."""
         await self._delegate_operation(
@@ -241,19 +241,19 @@ class MicroserviceOrchestrator(
             RuntimeError
         )
         self.services[service.name] = service
-    
+
     async def orchestrate_workflow(self, workflow_id: str, steps: List[Dict[str, Any]]) -> Any:
         """Orchestrate complex workflow across multiple services."""
         with self.tracer.start_span("workflow_orchestration") as span:
             span.set_attribute("workflow_id", workflow_id)
             span.set_attribute("steps_count", len(steps))
-            
+
             results = []
             for step in steps:
                 service_name = step["service"]
                 operation = step["operation"]
                 params = step.get("params", {})
-                
+
                 # Use circuit breaker for resilience
                 circuit_breaker = self.services[service_name].circuit_breaker
                 result = await circuit_breaker.call(
@@ -261,9 +261,9 @@ class MicroserviceOrchestrator(
                     service_name, operation, params
                 )
                 results.append(result)
-            
+
             return results
-    
+
     async def _execute_service_operation(
         self, service_name: str, operation: str, params: Dict[str, Any]
     ) -> Any:
@@ -279,12 +279,12 @@ class MicroserviceOrchestrator(
 # Example usage with Saga pattern
 class OrderProcessingSaga(AggregateRoot):
     """Order processing saga with event sourcing."""
-    
+
     def __init__(self, orchestrator: MicroserviceOrchestrator):
         super().__init__()
         self.orchestrator = orchestrator
         self.compensation_actions: List[Dict[str, Any]] = []
-    
+
     async def process_order(self, order_data: Dict[str, Any]) -> None:
         """Process order with automatic compensation on failure."""
         workflow_steps = [
@@ -293,23 +293,23 @@ class OrderProcessingSaga(AggregateRoot):
             {"service": "shipping", "operation": "schedule_delivery", "params": order_data},
             {"service": "notification", "operation": "send_confirmation", "params": order_data}
         ]
-        
+
         try:
             results = await self.orchestrator.orchestrate_workflow(
                 f"order_{order_data['order_id']}", workflow_steps
             )
-            
+
             # Emit success event
             self.add_event(OrderProcessedEvent(
                 aggregate_id=self.id,
                 order_id=order_data["order_id"],
                 results=results
             ))
-            
+
         except Exception as e:
             # Execute compensation
             await self._execute_compensation()
-            
+
             # Emit failure event
             self.add_event(OrderProcessingFailedEvent(
                 aggregate_id=self.id,
@@ -345,18 +345,18 @@ from flx.core.advanced_mixins import HierarchicalConfigMixin
 class SKU(ValueObject):
     """Product SKU with advanced validation and business logic."""
     value: str
-    
+
     def __post_init__(self):
         if not self.value or len(self.value) < 5:
             raise ValueError("SKU must be at least 5 characters")
         if not self.value.replace("-", "").replace("_", "").isalnum():
             raise ValueError("SKU must contain only alphanumeric characters, hyphens, and underscores")
-    
+
     @property
     def category(self) -> str:
         """Extract category from SKU format: CATEGORY-PRODUCT-VARIANT."""
         return self.value.split("-")[0] if "-" in self.value else "GENERAL"
-    
+
     @property
     def is_premium(self) -> bool:
         """Check if this is a premium product SKU."""
@@ -366,23 +366,23 @@ class SKU(ValueObject):
 # Enhanced Entity with business rules
 class InventoryItem(Entity, HierarchicalConfigMixin):
     """Inventory item with advanced business logic and configuration."""
-    
+
     sku: SKU
     quantity: int
     location: str
     reserved_quantity: int = 0
     minimum_stock: int = 10
     maximum_stock: int = 1000
-    
+
     def __post_init__(self):
         super().__post_init__()
         self.logger = FlxLogger(f"inventory.item.{self.sku.value}")
-    
+
     @property
     def available_quantity(self) -> int:
         """Calculate available quantity considering reservations."""
         return max(0, self.quantity - self.reserved_quantity)
-    
+
     @property
     def stock_status(self) -> str:
         """Determine stock status based on business rules."""
@@ -393,7 +393,7 @@ class InventoryItem(Entity, HierarchicalConfigMixin):
         elif self.quantity >= self.maximum_stock:
             return "OVERSTOCK"
         return "IN_STOCK"
-    
+
     def reserve(self, quantity: int, reason: str = "SALE") -> None:
         """Reserve inventory with business rule validation."""
         if quantity <= 0:
@@ -401,7 +401,7 @@ class InventoryItem(Entity, HierarchicalConfigMixin):
                 "Reservation quantity must be positive",
                 rule="inventory.reservation.positive_quantity"
             )
-        
+
         if quantity > self.available_quantity:
             self.logger.warning("Insufficient inventory for reservation", extra={
                 "requested": quantity,
@@ -417,7 +417,7 @@ class InventoryItem(Entity, HierarchicalConfigMixin):
                     "available": self.available_quantity
                 }
             )
-        
+
         self.reserved_quantity += quantity
         self.logger.info("Inventory reserved", extra={
             "quantity": quantity,
@@ -425,21 +425,21 @@ class InventoryItem(Entity, HierarchicalConfigMixin):
             "new_reserved": self.reserved_quantity,
             "available_after": self.available_quantity
         })
-    
+
     def adjust_quantity(self, adjustment: int, reason: str) -> 'InventoryAdjustedEvent':
         """Adjust inventory quantity with event generation."""
         old_quantity = self.quantity
         new_quantity = max(0, old_quantity + adjustment)
-        
+
         self.quantity = new_quantity
-        
+
         self.logger.info("Inventory adjusted", extra={
             "old_quantity": old_quantity,
             "adjustment": adjustment,
             "new_quantity": new_quantity,
             "reason": reason
         })
-        
+
         return InventoryAdjustedEvent(
             aggregate_id=str(self.id),
             sku=self.sku.value,
@@ -454,31 +454,31 @@ class InventoryItem(Entity, HierarchicalConfigMixin):
 # Enhanced Aggregate Root with event sourcing
 class Warehouse(AggregateRoot, HierarchicalConfigMixin):
     """Warehouse aggregate with comprehensive business logic."""
-    
+
     name: str
     code: str
     location: str
     max_capacity: int = 10000
-    
+
     def __post_init__(self):
         super().__post_init__()
         self.items: Dict[str, InventoryItem] = {}
         self.logger = FlxLogger(f"warehouse.{self.code}")
-    
+
     @property
     def total_items(self) -> int:
         """Calculate total items in warehouse."""
         return sum(item.quantity for item in self.items.values())
-    
+
     @property
     def capacity_utilization(self) -> float:
         """Calculate capacity utilization percentage."""
         return (self.total_items / self.max_capacity) * 100 if self.max_capacity > 0 else 0
-    
+
     def add_inventory(
-        self, 
-        sku: SKU, 
-        quantity: int, 
+        self,
+        sku: SKU,
+        quantity: int,
         location: str,
         reason: str = "RECEIPT"
     ) -> None:
@@ -494,7 +494,7 @@ class Warehouse(AggregateRoot, HierarchicalConfigMixin):
                     "capacity": self.max_capacity
                 }
             )
-        
+
         if sku.value in self.items:
             # Adjust existing item
             event = self.items[sku.value].adjust_quantity(quantity, reason)
@@ -508,7 +508,7 @@ class Warehouse(AggregateRoot, HierarchicalConfigMixin):
                 maximum_stock=500 if sku.is_premium else 1000
             )
             self.items[sku.value] = item
-            
+
             event = InventoryAdjustedEvent(
                 aggregate_id=str(self.id),
                 sku=sku.value,
@@ -518,9 +518,9 @@ class Warehouse(AggregateRoot, HierarchicalConfigMixin):
                 reason=reason,
                 stock_status=item.stock_status
             )
-        
+
         self.add_event(event)
-        
+
         self.logger.info("Inventory added to warehouse", extra={
             "sku": sku.value,
             "quantity": quantity,
@@ -529,11 +529,11 @@ class Warehouse(AggregateRoot, HierarchicalConfigMixin):
             "total_items": self.total_items,
             "capacity_utilization": f"{self.capacity_utilization:.1f}%"
         })
-    
+
     def transfer_inventory(
-        self, 
-        sku: SKU, 
-        quantity: int, 
+        self,
+        sku: SKU,
+        quantity: int,
         destination_warehouse: 'Warehouse'
     ) -> None:
         """Transfer inventory between warehouses with validation."""
@@ -542,7 +542,7 @@ class Warehouse(AggregateRoot, HierarchicalConfigMixin):
                 f"SKU {sku.value} not found in warehouse {self.code}",
                 rule="warehouse.transfer.sku_not_found"
             )
-        
+
         source_item = self.items[sku.value]
         if quantity > source_item.available_quantity:
             raise BusinessRuleViolationError(
@@ -554,16 +554,16 @@ class Warehouse(AggregateRoot, HierarchicalConfigMixin):
                     "available": source_item.available_quantity
                 }
             )
-        
+
         # Remove from source
         source_event = source_item.adjust_quantity(-quantity, "TRANSFER_OUT")
         self.add_event(source_event)
-        
+
         # Add to destination
         destination_warehouse.add_inventory(
             sku, quantity, "TRANSFER_IN", "TRANSFER_IN"
         )
-        
+
         # Emit transfer event
         self.add_event(InventoryTransferredEvent(
             aggregate_id=str(self.id),
@@ -603,24 +603,24 @@ async def demonstrate_enhanced_domain():
         location="New York",
         max_capacity=5000
     )
-    
+
     # Create premium and regular SKUs
     premium_sku = SKU("PREMIUM-LAPTOP-X1")
     regular_sku = SKU("STANDARD-MOUSE-M1")
-    
+
     # Add inventory with business rule validation
     warehouse.add_inventory(premium_sku, 50, "A1-01", "INITIAL_STOCK")
     warehouse.add_inventory(regular_sku, 200, "B2-05", "INITIAL_STOCK")
-    
+
     # Reserve inventory (demonstrates business rules)
     warehouse.items[premium_sku.value].reserve(5, "CUSTOMER_ORDER")
-    
+
     # Check stock status
     premium_item = warehouse.items[premium_sku.value]
     print(f"Premium laptop stock status: {premium_item.stock_status}")
     print(f"Available quantity: {premium_item.available_quantity}")
     print(f"Warehouse capacity utilization: {warehouse.capacity_utilization:.1f}%")
-    
+
     # Process domain events
     events = warehouse.get_uncommitted_events()
     print(f"Generated {len(events)} domain events")
@@ -636,7 +636,7 @@ async def demonstrate_enhanced_domain():
 # examples/advanced/declarative_example_enhanced.py
 from flx import FlxProject, flx_project
 from flx.declarative.mixins import (
-    FlxApiMixin, FlxDatabaseMixin, FlxHttpClientMixin, 
+    FlxApiMixin, FlxDatabaseMixin, FlxHttpClientMixin,
     FlxIntegrationMixin, FlxSecurityMixin, FlxMonitoringMixin
 )
 from flx.declarative.testing import run_full_test_suite, validate_test_coverage
@@ -653,42 +653,42 @@ class EnterpriseECommerceProject(
     FlxMonitoringMixin
 ):
     """Enterprise e-commerce project with comprehensive configuration."""
-    
+
     # Project metadata
     project_name = "enterprise-ecommerce"
     version = "2.0.0"
     description = "Enterprise e-commerce platform with FLX framework"
-    
+
     # Database configuration (auto-configured through FlxDatabaseMixin)
     database_url = "postgresql://user:pass@localhost/ecommerce"
     database_pool_size = 20
     database_enable_ssl = True
-    
+
     # API configuration (auto-configured through FlxApiMixin)
     api_host = "0.0.0.0"
     api_port = 8000
     api_enable_cors = True
     api_enable_rate_limiting = True
-    
+
     # HTTP client configuration (auto-configured through FlxHttpClientMixin)
     http_timeout = 30.0
     http_max_connections = 100
     http_enable_circuit_breaker = True
-    
+
     # Security configuration (auto-configured through FlxSecurityMixin)
     security_jwt_secret = "your-secret-key"
     security_enable_oauth2 = True
     security_enable_rbac = True
-    
+
     # Monitoring configuration (auto-configured through FlxMonitoringMixin)
     monitoring_enable_metrics = True
     monitoring_enable_tracing = True
     monitoring_enable_health_checks = True
-    
+
     # Integration configuration (auto-configured through FlxIntegrationMixin)
     integration_message_broker = "redis://localhost:6379"
     integration_enable_event_sourcing = True
-    
+
     # Custom configuration
     enable_product_recommendations = True
     enable_inventory_tracking = True
@@ -700,7 +700,7 @@ async def demonstrate_declarative_enterprise():
     # Project automatically configures all services through mixins
     project = EnterpriseECommerceProject()
     await project.setup()
-    
+
     # All services are automatically available
     assert project.database is not None
     assert project.api_server is not None
@@ -708,54 +708,54 @@ async def demonstrate_declarative_enterprise():
     assert project.message_bus is not None
     assert project.security_service is not None
     assert project.monitoring_service is not None
-    
+
     # Run comprehensive testing with automatic coverage validation
     test_results = await run_full_test_suite(project)
     coverage_valid = validate_test_coverage(test_results, minimum_coverage=0.90)
-    
+
     print(f"Project: {project.project_name} v{project.version}")
     print(f"Services configured: {len(project.get_services())}")
     print(f"Test coverage valid: {coverage_valid}")
     print(f"All integrations healthy: {await project.health_check()}")
-    
+
     # Demonstrate automatic service integration
     await demonstrate_service_integration(project)
 
 
 async def demonstrate_service_integration(project: EnterpriseECommerceProject):
     """Demonstrate automatic service integration in declarative projects."""
-    
+
     # Database operations (automatically configured)
     async with project.database.transaction():
         await project.database.execute(
             "INSERT INTO products (sku, name, price) VALUES ($1, $2, $3)",
             "LAPTOP-001", "Enterprise Laptop", 1299.99
         )
-    
+
     # HTTP client operations (automatically configured with circuit breaker)
     payment_response = await project.http_client.post(
         "https://payment-api.example.com/charge",
         json={"amount": 1299.99, "currency": "USD"}
     )
-    
+
     # Message bus operations (automatically configured)
     await project.message_bus.publish("order.created", {
         "order_id": "ORD-123",
         "product_sku": "LAPTOP-001",
         "payment_id": payment_response["id"]
     })
-    
+
     # Security operations (automatically configured)
     token = await project.security_service.create_jwt_token({
         "user_id": "user-123",
         "roles": ["customer"]
     })
-    
+
     # Monitoring operations (automatically configured)
     await project.monitoring_service.record_metric(
         "orders.created", 1, {"product_category": "electronics"}
     )
-    
+
     print("All service integrations completed successfully")
 ```
 
@@ -775,7 +775,7 @@ class OldHttpAdapter:
         self._error_count = 0
         self._total_time = 0.0
         self.logger = logging.getLogger(f"adapter.{name}")
-    
+
     async def connect(self):
         if self._connected:
             return
@@ -786,34 +786,34 @@ class OldHttpAdapter:
         except Exception as e:
             self.logger.error(f"Connection failed: {e}")
             raise
-    
+
     async def get(self, url: str) -> dict:
         if not self._connected:
             raise RuntimeError("Not connected")
-        
+
         start_time = time.time()
         try:
             response = await self._client.get(url)
             response.raise_for_status()
             result = response.json()
-            
+
             self._operation_count += 1
             self._total_time += time.time() - start_time
-            
+
             self.logger.info(f"GET {url} successful")
             return result
-            
+
         except Exception as e:
             self._error_count += 1
             self.logger.error(f"GET {url} failed: {e}")
             raise RuntimeError(f"HTTP GET failed: {e}")
-    
+
     async def disconnect(self):
         if self._client:
             await self._client.aclose()
             self._connected = False
             self.logger.info(f"Disconnected from {self.name}")
-    
+
     def get_metrics(self) -> dict:
         return {
             "operation_count": self._operation_count,
@@ -826,14 +826,14 @@ class OldHttpAdapter:
 # After: Modern approach with advanced mixins (70% less code)
 class ModernHttpAdapter(AdvancedAdapterMixin, BaseAdapter):
     """HTTP adapter with advanced mixins - 70% code reduction."""
-    
+
     async def get(self, url: str) -> dict:
         """GET request with automatic error handling, metrics, and logging."""
         return await self._delegate_operation(
             "_client", "get", (url,), {}, "get",
             {"error": "HTTP GET failed", "url": url}, RuntimeError
         )
-    
+
     # All other functionality (connection, metrics, logging, error handling)
     # is automatically provided by AdvancedAdapterMixin
 
@@ -854,7 +854,7 @@ from flx.core.advanced_mixins import AdvancedAdapterMixin
 
 class EnterprisePlatform(AdvancedAdapterMixin):
     """Complete enterprise platform showcasing all 7 production engines."""
-    
+
     def __init__(self):
         super().__init__()
         self.engines = {
@@ -894,30 +894,30 @@ class EnterprisePlatform(AdvancedAdapterMixin):
                 enable_human_tasks=True
             )
         }
-    
+
     async def setup(self) -> None:
         """Initialize all enterprise engines."""
         for name, engine in self.engines.items():
             await self._delegate_operation(
-                "engines", "start", (name,), {"engine": engine}, 
+                "engines", "start", (name,), {"engine": engine},
                 f"start_{name}_engine",
                 {"error": f"Failed to start {name} engine"}, RuntimeError
             )
-        
+
         self.logger.info("Enterprise platform initialized", extra={
             "engines": list(self.engines.keys()),
             "status": "ready"
         })
-    
+
     async def process_enterprise_workflow(self, workflow_data: dict) -> dict:
         """Process complex enterprise workflow using all engines."""
         workflow_id = workflow_data["workflow_id"]
-        
+
         # Use workflow engine for orchestration
         workflow = await self.engines["workflow"].create_workflow(
             workflow_id, workflow_data
         )
-        
+
         # Database operations with caching
         async with self.engines["database"].transaction():
             # Cache frequently accessed data
@@ -926,12 +926,12 @@ class EnterprisePlatform(AdvancedAdapterMixin):
                 lambda: self._fetch_workflow_data(workflow_id),
                 ttl=3600
             )
-            
+
             # Security validation
             await self.engines["security"].validate_permissions(
                 workflow_data["user_id"], "workflow:execute"
             )
-            
+
             # Execute workflow steps
             for step in workflow.steps:
                 # HTTP calls to external services
@@ -939,19 +939,19 @@ class EnterprisePlatform(AdvancedAdapterMixin):
                     result = await self.engines["http"].call(
                         step.url, step.method, step.data
                     )
-                
+
                 # Messaging for event notifications
                 elif step.type == "notification":
                     await self.engines["messaging"].publish(
                         step.topic, step.message
                     )
-                
+
                 # Record metrics for monitoring
                 await self.engines["monitoring"].record_metric(
                     f"workflow.step.{step.name}", 1,
                     {"workflow_id": workflow_id, "step": step.name}
                 )
-        
+
         return {"workflow_id": workflow_id, "status": "completed"}
 ```
 

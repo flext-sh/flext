@@ -125,7 +125,7 @@ async def main():
         enable_messaging_features=True,
         instance_cache_size=1000
     )
-    
+
     # Configure adapters
     cache_adapter = CacheAdapter()
     cache_adapter.configure({
@@ -133,20 +133,20 @@ async def main():
         "redis_url": "redis://localhost:6379",
         "enable_compression": True
     })
-    
+
     # Register and start services
     manager.register("cache", cache_adapter)
     await manager.initialize()
     await manager.start()
-    
+
     # Use in your application
     await cache_adapter.set("customer:123", customer.get_summary())
     cached_customer = await cache_adapter.get("customer:123")
-    
+
     # Health monitoring
     health = await manager.health_check_all()
     print(f"System health: {health}")
-    
+
     # Cleanup
     await manager.stop()
 
@@ -169,7 +169,7 @@ async def create_customer(name: str, email: str) -> None:
         name=name,
         business_type="Standard"
     )
-    
+
     print(f"✅ Customer created: {customer.name}")
     print(f"   ID: {customer.id}")
     print(f"   Email: {email}")
@@ -192,32 +192,32 @@ graph TB
     CLI[CLI Interface] --> APP[Application Layer]
     WEB[Web API] --> APP
     PLUGIN[Plugin System] --> APP
-    
+
     APP --> DOM[Domain Layer]
     APP --> PORTS[Ports Layer]
-    
+
     PORTS --> ADAPTERS[Adapters Layer]
     ADAPTERS --> INFRA[Infrastructure Layer]
-    
+
     INFRA --> REDIS[(Redis)]
     INFRA --> POSTGRES[(PostgreSQL)]
     INFRA --> HTTP[External APIs]
     INFRA --> FILES[File System]
-    
+
     subgraph "Core Domain"
         DOM
         ENT[Entities]
         VO[Value Objects]
         EVT[Domain Events]
     end
-    
+
     subgraph "Infrastructure"
         REDIS
         POSTGRES
         HTTP
         FILES
     end
-    
+
     style DOM fill:#e1f5fe
     style APP fill:#f3e5f5
     style PORTS fill:#fff3e0
@@ -287,15 +287,15 @@ def test_business_logic():
 @pytest.mark.integration
 async def test_cache_integration():
     from flx.adapters.outbound.cache import CacheAdapter
-    
+
     adapter = CacheAdapter()
     adapter.configure({"backend": "memory"})
     await adapter.connect()
-    
+
     await adapter.set("test", "value")
     result = await adapter.get("test")
     assert result == "value"
-    
+
     await adapter.disconnect()
 
 # E2E tests - Complete workflows
@@ -407,7 +407,7 @@ my_plugin = "my_plugin_package"
 We welcome contributions! Please see our [Contributing Guide](../development/documentation-guide.md) for:
 
 - **Development Setup**: Local environment configuration
-- **Code Standards**: Quality guidelines and best practices  
+- **Code Standards**: Quality guidelines and best practices
 - **Testing Requirements**: Comprehensive testing approach
 - **Documentation Guidelines**: Writing and maintaining docs
 

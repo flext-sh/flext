@@ -8,9 +8,9 @@
 
 ## Navigation Context
 
-**Current Location**: `docs/guides/integration/meltano-flx-integration-plan.md`  
-**Parent**: [Integration Hub](index.md) > Meltano Integration  
-**Quick Links**: [Framework Integration](meltano-framework-integration.md) | [Plugins Integration](meltano-plugins-integration.md) | [Architecture](../../architecture/index.md)  
+**Current Location**: `docs/guides/integration/meltano-flx-integration-plan.md`
+**Parent**: [Integration Hub](index.md) > Meltano Integration
+**Quick Links**: [Framework Integration](meltano-framework-integration.md) | [Plugins Integration](meltano-plugins-integration.md) | [Architecture](../../architecture/index.md)
 
 ---
 
@@ -101,7 +101,7 @@ singer-sdk = "^0.46.4"
 # New FLX Domain Service
 class MeltanoOrchestrationService:
     """Domain service for Meltano pipeline orchestration."""
-    
+
     async def create_project(self, config: MeltanoProjectConfig) -> MeltanoProject
     async def run_pipeline(self, pipeline_id: str, params: dict) -> PipelineRun
     async def schedule_pipeline(self, pipeline_id: str, schedule: Schedule) -> ScheduledPipeline
@@ -114,13 +114,13 @@ class MeltanoOrchestrationService:
 # Meltano CLI Adapter (Outbound)
 class MeltanoCLIAdapter(
     UnifiedObservabilityMixin,
-    AdapterErrorHandlingMixin, 
+    AdapterErrorHandlingMixin,
     UnifiedAdapterConfigurationMixin,
     AdvancedAdapterMixin,
     BaseAdapter
 ):
     """Adapter for Meltano CLI operations."""
-    
+
     async def execute_meltano_command(self, command: str, **kwargs) -> CommandResult
     async def get_project_state(self, project_path: str) -> ProjectState
 ```
@@ -153,7 +153,7 @@ from enum import Enum
 
 class PipelineStatus(str, Enum):
     PENDING = "pending"
-    RUNNING = "running" 
+    RUNNING = "running"
     SUCCESS = "success"
     FAILED = "failed"
     CANCELLED = "cancelled"
@@ -166,8 +166,8 @@ class MeltanoProject:
     extractors: List[str]
     loaders: List[str]
     created_at: datetime
-    
-@dataclass 
+
+@dataclass
 class PipelineRun:
     id: str
     project: MeltanoProject
@@ -189,22 +189,22 @@ from flx.ports.outbound.meltano import MeltanoPort
 
 class MeltanoOrchestrationService(ApplicationService):
     """Application service for Meltano pipeline orchestration."""
-    
+
     def __init__(self, meltano_adapter: MeltanoPort):
         self.meltano_adapter = meltano_adapter
-    
+
     async def create_project(self, config: MeltanoProjectConfig) -> MeltanoProject:
         """Create new Meltano project with validation."""
         async with self.observe_operation("create_meltano_project", project_name=config.name):
             # Validate configuration
             await self._validate_project_config(config)
-            
+
             # Create project via adapter
             project = await self.meltano_adapter.create_project(config)
-            
+
             # Initialize default settings
             await self._initialize_project_defaults(project)
-            
+
             return project
 ```
 
@@ -222,47 +222,47 @@ from typing import Dict, List, Optional
 class MeltanoCLIAdapter(
     UnifiedObservabilityMixin,
     AdapterErrorHandlingMixin,
-    UnifiedAdapterConfigurationMixin, 
+    UnifiedAdapterConfigurationMixin,
     AdvancedAdapterMixin,
     BaseAdapter
 ):
     """Adapter for Meltano CLI operations."""
-    
+
     async def create_project(self, config: MeltanoProjectConfig) -> MeltanoProject:
         """Create new Meltano project."""
         async with self.observe_operation("meltano_create_project"):
             command = [
-                "meltano", "init", 
+                "meltano", "init",
                 "--project_directory", str(config.path),
                 config.name
             ]
-            
+
             result = await self._execute_command(command)
-            
+
             if result.returncode != 0:
                 raise MeltanoOperationError(
                     f"Failed to create project {config.name}",
                     context={"command": command, "stderr": result.stderr}
                 )
-            
+
             return await self._load_project(config.path)
-    
+
     async def run_pipeline(self, project_path: Path, pipeline: str, **kwargs) -> PipelineRun:
         """Execute Meltano pipeline."""
         async with self.observe_operation("meltano_run_pipeline", pipeline=pipeline):
             command = ["meltano", "--project_directory", str(project_path), "run", pipeline]
-            
+
             # Add additional parameters
             for key, value in kwargs.items():
                 command.extend([f"--{key}", str(value)])
-            
+
             process = await asyncio.create_subprocess_exec(
                 *command,
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE,
                 cwd=project_path
             )
-            
+
             # Stream output for real-time monitoring
             run = PipelineRun(
                 id=self._generate_run_id(),
@@ -270,10 +270,10 @@ class MeltanoCLIAdapter(
                 status=PipelineStatus.RUNNING,
                 started_at=datetime.now()
             )
-            
+
             # Monitor process
             await self._monitor_pipeline_execution(process, run)
-            
+
             return run
 ```
 
@@ -288,30 +288,30 @@ class SingerSDKAdapter(
     UnifiedObservabilityMixin,
     AdapterErrorHandlingMixin,
     UnifiedAdapterConfigurationMixin,
-    AdvancedAdapterMixin, 
+    AdvancedAdapterMixin,
     BaseAdapter
 ):
     """Adapter for Singer SDK operations."""
-    
+
     async def discover_streams(self, tap_config: Dict[str, Any]) -> List[Stream]:
         """Discover available streams from tap."""
         async with self.observe_operation("singer_discover_streams"):
             # Initialize tap with configuration
             tap = self._create_tap_instance(tap_config)
-            
+
             # Run discovery
             catalog = await self._run_discovery(tap)
-            
+
             return catalog.streams
-    
+
     async def extract_data(self, tap_config: Dict[str, Any], selected_streams: List[str]) -> AsyncIterator[Dict[str, Any]]:
         """Extract data from source using Singer tap."""
         async with self.observe_operation("singer_extract_data", streams=selected_streams):
             tap = self._create_tap_instance(tap_config)
-            
+
             # Configure selected streams
             catalog = await self._build_catalog(tap, selected_streams)
-            
+
             # Stream data
             async for record in tap.sync_all(catalog):
                 yield record
@@ -329,29 +329,29 @@ from typing import Dict, List, Optional
 
 class MeltanoConfigurationMixin(BaseModel):
     """Meltano-specific configuration mixin."""
-    
+
     # Project Configuration
     project_directory: Path = Field(
         default=Path("./meltano_projects"),
         description="Base directory for Meltano projects"
     )
-    
+
     default_project_name: str = Field(
         default="flx_data_platform",
         description="Default project name for new installations"
     )
-    
+
     # Pipeline Configuration
     default_extractors: List[str] = Field(
         default_factory=lambda: ["tap-csv", "tap-postgres"],
         description="Default extractors to install"
     )
-    
+
     default_loaders: List[str] = Field(
         default_factory=lambda: ["target-postgres", "target-csv"],
         description="Default loaders to install"
     )
-    
+
     # Execution Configuration
     max_concurrent_runs: int = Field(
         default=3,
@@ -359,33 +359,33 @@ class MeltanoConfigurationMixin(BaseModel):
         le=10,
         description="Maximum concurrent pipeline runs"
     )
-    
+
     pipeline_timeout_minutes: int = Field(
         default=60,
         ge=1,
         le=1440,
         description="Default pipeline timeout in minutes"
     )
-    
+
     # State Storage Configuration
     state_backend: str = Field(
         default="systemdb",
         pattern=r"^(systemdb|s3|gcs|azure)$",
         description="State storage backend"
     )
-    
+
     @validator('project_directory')
     def validate_project_directory(cls, v):
         """Ensure project directory exists and is writable."""
         v = Path(v)
         v.mkdir(parents=True, exist_ok=True)
-        
+
         if not v.is_dir():
             raise ValueError(f"Project directory {v} is not a directory")
-        
+
         if not os.access(v, os.W_OK):
             raise ValueError(f"Project directory {v} is not writable")
-        
+
         return v
 ```
 
@@ -400,17 +400,17 @@ from pathlib import Path
 
 class StateStore(ABC):
     """Abstract state store for pipeline state management."""
-    
+
     @abstractmethod
     async def get_state(self, pipeline_id: str) -> Optional[Dict[str, Any]]:
         """Get pipeline state."""
         pass
-    
+
     @abstractmethod
     async def set_state(self, pipeline_id: str, state: Dict[str, Any]) -> None:
         """Set pipeline state."""
         pass
-    
+
     @abstractmethod
     async def delete_state(self, pipeline_id: str) -> None:
         """Delete pipeline state."""
@@ -418,18 +418,18 @@ class StateStore(ABC):
 
 class FileStateStore(StateStore):
     """File-based state store implementation."""
-    
+
     def __init__(self, state_directory: Path):
         self.state_directory = Path(state_directory)
         self.state_directory.mkdir(parents=True, exist_ok=True)
-    
+
     async def get_state(self, pipeline_id: str) -> Optional[Dict[str, Any]]:
         """Get pipeline state from file."""
         state_file = self.state_directory / f"{pipeline_id}.json"
-        
+
         if not state_file.exists():
             return None
-        
+
         try:
             with open(state_file, 'r') as f:
                 return json.load(f)
@@ -463,16 +463,16 @@ async def init(
     """Initialize new Meltano project."""
     container = get_container()
     meltano_service = await container.meltano_service()
-    
+
     config = MeltanoProjectConfig(
         name=name,
         path=project_directory or Path.cwd() / name,
         extractors=extractors or [],
         loaders=loaders or []
     )
-    
+
     project = await meltano_service.create_project(config)
-    
+
     console.print(f"✅ Meltano project '{name}' created at {project.path}")
 
 @meltano_app.command
@@ -485,7 +485,7 @@ async def run(
     """Run Meltano pipeline."""
     container = get_container()
     meltano_service = await container.meltano_service()
-    
+
     # Show progress with Rich
     with console.status(f"Running pipeline '{pipeline}'..."):
         run = await meltano_service.run_pipeline(
@@ -494,7 +494,7 @@ async def run(
             full_refresh=full_refresh,
             dry_run=dry_run
         )
-    
+
     # Display results
     if run.status == PipelineStatus.SUCCESS:
         console.print(f"✅ Pipeline '{pipeline}' completed successfully")
@@ -513,9 +513,9 @@ async def status(
     """Show pipeline status and monitoring information."""
     container = get_container()
     meltano_service = await container.meltano_service()
-    
+
     project_path = project_directory or Path.cwd()
-    
+
     if watch:
         # Live monitoring mode
         with Live(auto_refresh=True, refresh_per_second=2) as live:
@@ -536,17 +536,17 @@ async def _create_status_table(service: MeltanoOrchestrationService, project_pat
     table.add_column("Last Run", style="dim")
     table.add_column("Duration", justify="right")
     table.add_column("Records", justify="right", style="green")
-    
+
     runs = await service.get_recent_runs(project_path, limit=10)
-    
+
     for run in runs:
         status_emoji = {
             PipelineStatus.SUCCESS: "✅",
-            PipelineStatus.FAILED: "❌", 
+            PipelineStatus.FAILED: "❌",
             PipelineStatus.RUNNING: "🔄",
             PipelineStatus.PENDING: "⏳"
         }.get(run.status, "❓")
-        
+
         table.add_row(
             run.pipeline_name,
             f"{status_emoji} {run.status.value.upper()}",
@@ -554,7 +554,7 @@ async def _create_status_table(service: MeltanoOrchestrationService, project_pat
             _format_duration(run.duration),
             str(run.metrics.get('records_processed', 0))
         )
-    
+
     return table
 ```
 
@@ -584,13 +584,13 @@ async def lifespan(app: FastAPI):
     container = ApplicationContainer()
     await container.init_resources()
     app.state.container = container
-    
+
     # Initialize Meltano if needed
     meltano_service = await container.meltano_service()
     await meltano_service.initialize_default_project()
-    
+
     yield
-    
+
     # Shutdown
     await container.shutdown_resources()
 
@@ -598,23 +598,23 @@ def create_app() -> FastAPI:
     """Create FastAPI application."""
     app = FastAPI(
         title="FLX Data Platform",
-        version="0.4.0", 
+        version="0.4.0",
         description="Enterprise data platform with Meltano integration",
         lifespan=lifespan,
         docs_url="/api/docs",
         redoc_url="/api/redoc"
     )
-    
+
     # Add middleware
     add_middleware(app)
-    
+
     # Mount static files
     app.mount("/static", StaticFiles(directory="static"), name="static")
-    
+
     # Include routers
     app.include_router(health_router, prefix="/api/health", tags=["health"])
     app.include_router(meltano_router, prefix="/api/meltano", tags=["meltano"])
-    
+
     return app
 
 app = create_app()
@@ -668,13 +668,13 @@ async def run_pipeline(
         pipeline_name=run_request.pipeline_name,
         parameters=run_request.parameters
     )
-    
+
     # Execute in background
     background_tasks.add_task(
         service.execute_pipeline_run,
         run.id
     )
-    
+
     return PipelineRunResponse.from_entity(run)
 
 @router.get("/projects/{project_name}/runs", response_model=List[PipelineRunResponse])
@@ -692,7 +692,7 @@ async def get_pipeline_runs(
         offset=offset,
         status_filter=status
     )
-    
+
     return [PipelineRunResponse.from_entity(run) for run in runs]
 
 @router.get("/projects/{project_name}/runs/{run_id}/logs")
@@ -714,7 +714,7 @@ async def stream_run_logs(
 ):
     """Stream real-time logs via WebSocket."""
     await websocket.accept()
-    
+
     try:
         async for log_line in service.stream_run_logs(run_id):
             await websocket.send_text(log_line)
@@ -732,76 +732,100 @@ async def stream_run_logs(
 <!-- flx/src/flx/infra/web/templates/dashboard.html -->
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FLX Data Platform</title>
     <script src="https://unpkg.com/htmx.org@1.9.9"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/chart.js"></script>
-</head>
-<body class="bg-gray-100">
+  </head>
+  <body class="bg-gray-100">
     <!-- Navigation -->
     <nav class="bg-blue-600 text-white p-4">
-        <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-xl font-bold">🔄 FLX Data Platform</h1>
-            <div class="space-x-4">
-                <a href="/dashboard" class="hover:text-blue-200">Dashboard</a>
-                <a href="/projects" class="hover:text-blue-200">Projects</a>
-                <a href="/monitoring" class="hover:text-blue-200">Monitoring</a>
-                <a href="/api/docs" class="hover:text-blue-200">API Docs</a>
-            </div>
+      <div class="container mx-auto flex justify-between items-center">
+        <h1 class="text-xl font-bold">🔄 FLX Data Platform</h1>
+        <div class="space-x-4">
+          <a href="/dashboard" class="hover:text-blue-200">Dashboard</a>
+          <a href="/projects" class="hover:text-blue-200">Projects</a>
+          <a href="/monitoring" class="hover:text-blue-200">Monitoring</a>
+          <a href="/api/docs" class="hover:text-blue-200">API Docs</a>
         </div>
+      </div>
     </nav>
 
     <!-- Dashboard Content -->
     <div class="container mx-auto p-6">
-        <!-- Status Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <div class="bg-white p-6 rounded-lg shadow">
-                <h3 class="text-sm font-medium text-gray-500">Active Projects</h3>
-                <p class="text-2xl font-bold text-blue-600" hx-get="/api/meltano/stats/projects" hx-trigger="load, every 30s">{{ stats.active_projects }}</p>
-            </div>
-            <div class="bg-white p-6 rounded-lg shadow">
-                <h3 class="text-sm font-medium text-gray-500">Running Pipelines</h3>
-                <p class="text-2xl font-bold text-green-600" hx-get="/api/meltano/stats/running" hx-trigger="load, every 5s">{{ stats.running_pipelines }}</p>
-            </div>
-            <div class="bg-white p-6 rounded-lg shadow">
-                <h3 class="text-sm font-medium text-gray-500">Today's Runs</h3>
-                <p class="text-2xl font-bold text-indigo-600" hx-get="/api/meltano/stats/daily" hx-trigger="load, every 30s">{{ stats.daily_runs }}</p>
-            </div>
-            <div class="bg-white p-6 rounded-lg shadow">
-                <h3 class="text-sm font-medium text-gray-500">Success Rate</h3>
-                <p class="text-2xl font-bold text-emerald-600" hx-get="/api/meltano/stats/success-rate" hx-trigger="load, every 30s">{{ stats.success_rate }}%</p>
-            </div>
+      <!-- Status Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white p-6 rounded-lg shadow">
+          <h3 class="text-sm font-medium text-gray-500">Active Projects</h3>
+          <p
+            class="text-2xl font-bold text-blue-600"
+            hx-get="/api/meltano/stats/projects"
+            hx-trigger="load, every 30s"
+          >
+            {{ stats.active_projects }}
+          </p>
         </div>
+        <div class="bg-white p-6 rounded-lg shadow">
+          <h3 class="text-sm font-medium text-gray-500">Running Pipelines</h3>
+          <p
+            class="text-2xl font-bold text-green-600"
+            hx-get="/api/meltano/stats/running"
+            hx-trigger="load, every 5s"
+          >
+            {{ stats.running_pipelines }}
+          </p>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow">
+          <h3 class="text-sm font-medium text-gray-500">Today's Runs</h3>
+          <p
+            class="text-2xl font-bold text-indigo-600"
+            hx-get="/api/meltano/stats/daily"
+            hx-trigger="load, every 30s"
+          >
+            {{ stats.daily_runs }}
+          </p>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow">
+          <h3 class="text-sm font-medium text-gray-500">Success Rate</h3>
+          <p
+            class="text-2xl font-bold text-emerald-600"
+            hx-get="/api/meltano/stats/success-rate"
+            hx-trigger="load, every 30s"
+          >
+            {{ stats.success_rate }}%
+          </p>
+        </div>
+      </div>
 
-        <!-- Recent Pipeline Runs -->
-        <div class="bg-white rounded-lg shadow">
-            <div class="p-6 border-b border-gray-200">
-                <h2 class="text-lg font-semibold">Recent Pipeline Runs</h2>
-            </div>
-            <div hx-get="/api/meltano/runs/recent" hx-trigger="load, every 10s">
-                <!-- Pipeline runs table will be loaded here -->
-                <div class="p-6">
-                    <div class="animate-pulse">Loading recent runs...</div>
-                </div>
-            </div>
+      <!-- Recent Pipeline Runs -->
+      <div class="bg-white rounded-lg shadow">
+        <div class="p-6 border-b border-gray-200">
+          <h2 class="text-lg font-semibold">Recent Pipeline Runs</h2>
         </div>
+        <div hx-get="/api/meltano/runs/recent" hx-trigger="load, every 10s">
+          <!-- Pipeline runs table will be loaded here -->
+          <div class="p-6">
+            <div class="animate-pulse">Loading recent runs...</div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Real-time Updates -->
     <script>
-        // WebSocket for real-time updates
-        const ws = new WebSocket('ws://localhost:8000/ws/updates');
-        ws.onmessage = function(event) {
-            const data = JSON.parse(event.data);
-            if (data.type === 'run_status_update') {
-                htmx.trigger('#runs-table', 'refresh');
-            }
-        };
+      // WebSocket for real-time updates
+      const ws = new WebSocket("ws://localhost:8000/ws/updates");
+      ws.onmessage = function (event) {
+        const data = JSON.parse(event.data);
+        if (data.type === "run_status_update") {
+          htmx.trigger("#runs-table", "refresh");
+        }
+      };
     </script>
-</body>
+  </body>
 </html>
 ```
 
@@ -810,60 +834,98 @@ async def stream_run_logs(
 ```html
 <!-- flx/src/flx/infra/web/templates/components/pipeline_runs_table.html -->
 <div class="overflow-x-auto">
-    <table class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-50">
-            <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pipeline</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Started</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Duration</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Records</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-            </tr>
-        </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
-            {% for run in runs %}
-            <tr>
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    {{ run.pipeline_name }}
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                    {% if run.status == 'SUCCESS' %}
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                            ✅ Success
-                        </span>
-                    {% elif run.status == 'FAILED' %}
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                            ❌ Failed
-                        </span>
-                    {% elif run.status == 'RUNNING' %}
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                            🔄 Running
-                        </span>
-                    {% endif %}
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {{ run.started_at.strftime('%Y-%m-%d %H:%M') }}
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {{ run.duration_formatted }}
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {{ run.metrics.records_processed | default(0) }}
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <a href="/runs/{{ run.id }}/logs" class="text-indigo-600 hover:text-indigo-900 mr-3">View Logs</a>
-                    {% if run.status == 'FAILED' %}
-                        <button hx-post="/api/meltano/runs/{{ run.id }}/retry" 
-                                class="text-green-600 hover:text-green-900">
-                            Retry
-                        </button>
-                    {% endif %}
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+  <table class="min-w-full divide-y divide-gray-200">
+    <thead class="bg-gray-50">
+      <tr>
+        <th
+          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+        >
+          Pipeline
+        </th>
+        <th
+          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+        >
+          Status
+        </th>
+        <th
+          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+        >
+          Started
+        </th>
+        <th
+          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+        >
+          Duration
+        </th>
+        <th
+          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+        >
+          Records
+        </th>
+        <th
+          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+        >
+          Actions
+        </th>
+      </tr>
+    </thead>
+    <tbody class="bg-white divide-y divide-gray-200">
+      {% for run in runs %}
+      <tr>
+        <td
+          class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"
+        >
+          {{ run.pipeline_name }}
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap">
+          {% if run.status == 'SUCCESS' %}
+          <span
+            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
+          >
+            ✅ Success
+          </span>
+          {% elif run.status == 'FAILED' %}
+          <span
+            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800"
+          >
+            ❌ Failed
+          </span>
+          {% elif run.status == 'RUNNING' %}
+          <span
+            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
+          >
+            🔄 Running
+          </span>
+          {% endif %}
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+          {{ run.started_at.strftime('%Y-%m-%d %H:%M') }}
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+          {{ run.duration_formatted }}
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+          {{ run.metrics.records_processed | default(0) }}
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+          <a
+            href="/runs/{{ run.id }}/logs"
+            class="text-indigo-600 hover:text-indigo-900 mr-3"
+            >View Logs</a
+          >
+          {% if run.status == 'FAILED' %}
+          <button
+            hx-post="/api/meltano/runs/{{ run.id }}/retry"
+            class="text-green-600 hover:text-green-900"
+          >
+            Retry
+          </button>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
 ```
 
@@ -880,16 +942,16 @@ import asyncio
 
 class ConnectionManager:
     """Manage WebSocket connections for real-time updates."""
-    
+
     def __init__(self):
         self.active_connections: List[WebSocket] = []
         self.subscriptions: Dict[str, List[WebSocket]] = {}
-    
+
     async def connect(self, websocket: WebSocket):
         """Accept new WebSocket connection."""
         await websocket.accept()
         self.active_connections.append(websocket)
-    
+
     def disconnect(self, websocket: WebSocket):
         """Remove WebSocket connection."""
         self.active_connections.remove(websocket)
@@ -897,13 +959,13 @@ class ConnectionManager:
         for topic, connections in self.subscriptions.items():
             if websocket in connections:
                 connections.remove(websocket)
-    
+
     async def subscribe(self, websocket: WebSocket, topic: str):
         """Subscribe to specific topic updates."""
         if topic not in self.subscriptions:
             self.subscriptions[topic] = []
         self.subscriptions[topic].append(websocket)
-    
+
     async def broadcast_to_topic(self, topic: str, message: dict):
         """Broadcast message to all subscribers of a topic."""
         if topic in self.subscriptions:
@@ -913,7 +975,7 @@ class ConnectionManager:
                     await connection.send_text(json.dumps(message))
                 except:
                     disconnected.append(connection)
-            
+
             # Clean up disconnected connections
             for conn in disconnected:
                 self.subscriptions[topic].remove(conn)
@@ -924,13 +986,13 @@ manager = ConnectionManager()
 async def websocket_endpoint(websocket: WebSocket):
     """WebSocket endpoint for real-time updates."""
     await manager.connect(websocket)
-    
+
     try:
         while True:
             # Listen for subscription requests
             data = await websocket.receive_text()
             message = json.loads(data)
-            
+
             if message.get('type') == 'subscribe':
                 topic = message.get('topic')
                 await manager.subscribe(websocket, topic)
@@ -938,7 +1000,7 @@ async def websocket_endpoint(websocket: WebSocket):
                     'type': 'subscription_confirmed',
                     'topic': topic
                 }))
-    
+
     except WebSocketDisconnect:
         manager.disconnect(websocket)
 ```
@@ -965,7 +1027,7 @@ async def get_monitoring_metrics(
 ):
     """Get current system metrics."""
     metrics = await service.get_system_metrics()
-    
+
     return {
         "timestamp": datetime.now().isoformat(),
         "metrics": {
@@ -989,15 +1051,15 @@ async def broadcast_metrics_updates():
             container = get_container()
             service = await container.meltano_service()
             metrics = await service.get_system_metrics()
-            
+
             # Broadcast to monitoring subscribers
             await manager.broadcast_to_topic('monitoring', {
                 'type': 'metrics_update',
                 'data': metrics.to_dict()
             })
-            
+
             await asyncio.sleep(5)  # Update every 5 seconds
-            
+
         except Exception as e:
             logger.error(f"Error broadcasting metrics: {e}")
             await asyncio.sleep(30)  # Wait longer on error
@@ -1017,16 +1079,16 @@ import json
 
 class CacheMiddleware(BaseHTTPMiddleware):
     """Cache middleware for API responses."""
-    
+
     def __init__(self, app, redis_url: str = "redis://localhost:6379"):
         super().__init__(app)
         self.redis = redis.from_url(redis_url)
-    
+
     async def dispatch(self, request: Request, call_next):
         # Only cache GET requests to API endpoints
         if request.method == "GET" and request.url.path.startswith("/api/"):
             cache_key = f"api_cache:{request.url.path}:{str(request.query_params)}"
-            
+
             # Try to get from cache
             cached = await self.redis.get(cache_key)
             if cached:
@@ -1036,47 +1098,47 @@ class CacheMiddleware(BaseHTTPMiddleware):
                     media_type=cached_data["media_type"],
                     headers={"X-Cache": "HIT"}
                 )
-        
+
         # Execute request
         start_time = time.time()
         response = await call_next(request)
         process_time = time.time() - start_time
-        
+
         # Add performance headers
         response.headers["X-Process-Time"] = str(process_time)
-        
+
         # Cache successful API responses
-        if (request.method == "GET" and 
-            request.url.path.startswith("/api/") and 
+        if (request.method == "GET" and
+            request.url.path.startswith("/api/") and
             response.status_code == 200):
-            
+
             cache_key = f"api_cache:{request.url.path}:{str(request.query_params)}"
             cache_data = {
                 "content": response.body.decode(),
                 "media_type": response.media_type
             }
-            
+
             # Cache for 60 seconds
             await self.redis.setex(cache_key, 60, json.dumps(cache_data))
             response.headers["X-Cache"] = "MISS"
-        
+
         return response
 
 def add_middleware(app: FastAPI):
     """Add all middleware to the application."""
-    
+
     # CORS middleware
     app.add_middleware(
         CORSMiddleware,
         allow_origins=["*"],
-        allow_credentials=True, 
+        allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
     )
-    
+
     # Cache middleware
     app.add_middleware(CacheMiddleware)
-    
+
     # Compression middleware
     app.add_middleware(GZipMiddleware, minimum_size=1000)
 ```
@@ -1103,7 +1165,7 @@ async def http_exception_handler(request: Request, exc: HTTPException):
             "detail": exc.detail
         }
     )
-    
+
     return JSONResponse(
         status_code=exc.status_code,
         content={
@@ -1125,7 +1187,7 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
             "errors": exc.errors()
         }
     )
-    
+
     return JSONResponse(
         status_code=422,
         content={
@@ -1149,7 +1211,7 @@ async def general_exception_handler(request: Request, exc: Exception):
             "exception_type": type(exc).__name__
         }
     )
-    
+
     return JSONResponse(
         status_code=500,
         content={
@@ -1262,7 +1324,7 @@ CMD ["web"]
 
 ```yaml
 # docker-compose.yml
-version: '3.8'
+version: "3.8"
 
 services:
   flx-web:
@@ -1391,69 +1453,69 @@ import uvicorn
 
 class FlxDaemonService:
     """Main daemon service for FLX platform."""
-    
+
     def __init__(self, config_path: Optional[Path] = None):
         self.config_path = config_path
         self.container: Optional[ApplicationContainer] = None
         self.web_server: Optional[uvicorn.Server] = None
         self.background_tasks: List[asyncio.Task] = []
         self.shutdown_event = asyncio.Event()
-    
+
     async def start(self):
         """Start the daemon service."""
         logger.info("Starting FLX daemon service...")
-        
+
         # Initialize container
         self.container = ApplicationContainer()
         if self.config_path:
             await self.container.load_config(self.config_path)
         await self.container.init_resources()
-        
+
         # Initialize Meltano
         meltano_service = await self.container.meltano_service()
         await meltano_service.initialize_default_project()
-        
+
         # Start background tasks
         await self._start_background_tasks()
-        
+
         # Start web server
         await self._start_web_server()
-        
+
         # Setup signal handlers
         self._setup_signal_handlers()
-        
+
         logger.info("FLX daemon service started successfully")
-    
+
     async def stop(self):
         """Stop the daemon service."""
         logger.info("Stopping FLX daemon service...")
-        
+
         # Set shutdown event
         self.shutdown_event.set()
-        
+
         # Stop web server
         if self.web_server:
             self.web_server.should_exit = True
             await self.web_server.shutdown()
-        
+
         # Cancel background tasks
         for task in self.background_tasks:
             task.cancel()
-        
+
         if self.background_tasks:
             await asyncio.gather(*self.background_tasks, return_exceptions=True)
-        
+
         # Shutdown container
         if self.container:
             await self.container.shutdown_resources()
-        
+
         logger.info("FLX daemon service stopped")
-    
+
     async def _start_web_server(self):
         """Start the web server."""
         app = create_app()
         app.state.container = self.container
-        
+
         config = uvicorn.Config(
             app=app,
             host="0.0.0.0",
@@ -1461,85 +1523,85 @@ class FlxDaemonService:
             log_config=None,  # Use our logging config
             access_log=False  # Disable uvicorn access logs
         )
-        
+
         self.web_server = uvicorn.Server(config)
-        
+
         # Start server in background
         self.background_tasks.append(
             asyncio.create_task(self.web_server.serve())
         )
-    
+
     async def _start_background_tasks(self):
         """Start background tasks."""
-        
+
         # Pipeline scheduler task
         self.background_tasks.append(
             asyncio.create_task(self._pipeline_scheduler())
         )
-        
+
         # Health monitoring task
         self.background_tasks.append(
             asyncio.create_task(self._health_monitor())
         )
-        
+
         # Metrics collection task
         self.background_tasks.append(
             asyncio.create_task(self._metrics_collector())
         )
-        
+
         # Log cleanup task
         self.background_tasks.append(
             asyncio.create_task(self._log_cleanup())
         )
-    
+
     async def _pipeline_scheduler(self):
         """Background task for pipeline scheduling."""
         meltano_service = await self.container.meltano_service()
-        
+
         while not self.shutdown_event.is_set():
             try:
                 # Check for scheduled pipelines
                 await meltano_service.process_scheduled_pipelines()
                 await asyncio.sleep(60)  # Check every minute
-                
+
             except asyncio.CancelledError:
                 break
             except Exception as e:
                 logger.error(f"Error in pipeline scheduler: {e}")
                 await asyncio.sleep(300)  # Wait 5 minutes on error
-    
+
     async def _health_monitor(self):
         """Background task for health monitoring."""
         health_service = await self.container.health_service()
-        
+
         while not self.shutdown_event.is_set():
             try:
                 # Perform health checks
                 health_status = await health_service.comprehensive_check()
-                
+
                 # Log unhealthy components
                 for component, status in health_status.items():
                     if not status.get('healthy', True):
                         logger.warning(f"Component {component} is unhealthy: {status}")
-                
+
                 await asyncio.sleep(30)  # Check every 30 seconds
-                
+
             except asyncio.CancelledError:
                 break
             except Exception as e:
                 logger.error(f"Error in health monitor: {e}")
                 await asyncio.sleep(60)  # Wait 1 minute on error
-    
+
     def _setup_signal_handlers(self):
         """Setup signal handlers for graceful shutdown."""
-        
+
         def signal_handler(signum, frame):
             logger.info(f"Received signal {signum}, initiating shutdown...")
             asyncio.create_task(self.stop())
-        
+
         signal.signal(signal.SIGTERM, signal_handler)
         signal.signal(signal.SIGINT, signal_handler)
-        
+
         if hasattr(signal, 'SIGHUP'):
             signal.signal(signal.SIGHUP, signal_handler)
 
@@ -1547,13 +1609,13 @@ class FlxDaemonService:
 async def main():
     """Main entry point for daemon mode."""
     daemon = FlxDaemonService()
-    
+
     try:
         await daemon.start()
-        
+
         # Wait for shutdown
         await daemon.shutdown_event.wait()
-        
+
     except KeyboardInterrupt:
         logger.info("Received keyboard interrupt")
     except Exception as e:
@@ -1579,7 +1641,7 @@ wait_for_service() {
     local host=$1
     local port=$2
     local service_name=$3
-    
+
     echo "Waiting for $service_name..."
     while ! nc -z $host $port; do
         sleep 1
@@ -1641,14 +1703,14 @@ from flx.application.container import ApplicationContainer
 async def shell():
     container = ApplicationContainer()
     await container.init_resources()
-    
+
     # Make services available
     globals().update({
         'container': container,
         'meltano': await container.meltano_service(),
         'health': await container.health_service()
     })
-    
+
     import IPython
     IPython.embed()
 
@@ -1709,40 +1771,40 @@ spec:
         app: flx-web
     spec:
       containers:
-      - name: flx-web
-        image: flx-platform:latest
-        ports:
-        - containerPort: 8000
-        env:
-        - name: FLX_ENVIRONMENT
-          valueFrom:
-            configMapKeyRef:
-              name: flx-config
-              key: FLX_ENVIRONMENT
-        - name: FLX_DATABASE_URL
-          valueFrom:
-            secretKeyRef:
-              name: flx-secrets
-              key: database-url
-        resources:
-          requests:
-            memory: "512Mi"
-            cpu: "250m"
-          limits:
-            memory: "1Gi"
-            cpu: "500m"
-        livenessProbe:
-          httpGet:
-            path: /api/health
-            port: 8000
-          initialDelaySeconds: 30
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /api/health
-            port: 8000
-          initialDelaySeconds: 5
-          periodSeconds: 5
+        - name: flx-web
+          image: flx-platform:latest
+          ports:
+            - containerPort: 8000
+          env:
+            - name: FLX_ENVIRONMENT
+              valueFrom:
+                configMapKeyRef:
+                  name: flx-config
+                  key: FLX_ENVIRONMENT
+            - name: FLX_DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: flx-secrets
+                  key: database-url
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 5
 
 ---
 # k8s/service.yaml
@@ -1755,9 +1817,9 @@ spec:
   selector:
     app: flx-web
   ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 8000
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
   type: ClusterIP
 
 ---
@@ -1772,20 +1834,20 @@ metadata:
     cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
   tls:
-  - hosts:
-    - flx.yourdomain.com
-    secretName: flx-tls
+    - hosts:
+        - flx.yourdomain.com
+      secretName: flx-tls
   rules:
-  - host: flx.yourdomain.com
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: flx-web-service
-            port:
-              number: 80
+    - host: flx.yourdomain.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: flx-web-service
+                port:
+                  number: 80
 ```
 
 #### **Day 74-77: Monitoring & Observability**
@@ -1802,9 +1864,9 @@ spec:
     matchLabels:
       app: flx-web
   endpoints:
-  - port: metrics
-    interval: 30s
-    path: /metrics
+    - port: metrics
+      interval: 30s
+      path: /metrics
 
 ---
 apiVersion: monitoring.coreos.com/v1
@@ -1814,25 +1876,25 @@ metadata:
   namespace: flx-platform
 spec:
   groups:
-  - name: flx.rules
-    rules:
-    - alert: FlxPipelineFailure
-      expr: increase(flx_pipeline_failures_total[5m]) > 0
-      for: 0m
-      labels:
-        severity: warning
-      annotations:
-        summary: "FLX pipeline failure detected"
-        description: "Pipeline {{ $labels.pipeline }} has failed"
-    
-    - alert: FlxHighMemoryUsage
-      expr: flx_memory_usage_percent > 90
-      for: 5m
-      labels:
-        severity: critical
-      annotations:
-        summary: "FLX high memory usage"
-        description: "Memory usage is {{ $value }}%"
+    - name: flx.rules
+      rules:
+        - alert: FlxPipelineFailure
+          expr: increase(flx_pipeline_failures_total[5m]) > 0
+          for: 0m
+          labels:
+            severity: warning
+          annotations:
+            summary: "FLX pipeline failure detected"
+            description: "Pipeline {{ $labels.pipeline }} has failed"
+
+        - alert: FlxHighMemoryUsage
+          expr: flx_memory_usage_percent > 90
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "FLX high memory usage"
+            description: "Memory usage is {{ $value }}%"
 ```
 
 ### **Week 12: Performance Optimization & Documentation**
@@ -1848,22 +1910,22 @@ import aioredis
 
 class PerformanceOptimizer:
     """Performance optimization utilities."""
-    
+
     def __init__(self, redis_url: str):
         self.redis = aioredis.from_url(redis_url)
         self._cache = {}
-    
+
     @lru_cache(maxsize=1000)
     def get_cached_config(self, config_key: str) -> Dict[str, Any]:
         """Cache configuration lookups."""
         # Implementation for config caching
         pass
-    
+
     async def batch_database_operations(self, operations: List[callable]) -> List[Any]:
         """Batch database operations for better performance."""
         tasks = [asyncio.create_task(op()) for op in operations]
         return await asyncio.gather(*tasks, return_exceptions=True)
-    
+
     async def warm_up_caches(self):
         """Warm up commonly used caches."""
         # Pre-load frequently accessed data
@@ -1872,11 +1934,11 @@ class PerformanceOptimizer:
 # Connection pooling optimization
 class OptimizedConnectionPool:
     """Optimized connection pool management."""
-    
+
     def __init__(self):
         self.database_pool = None
         self.redis_pool = None
-    
+
     async def initialize_pools(self, db_url: str, redis_url: str):
         """Initialize connection pools with optimal settings."""
         # Database pool with optimized settings
@@ -1888,7 +1950,7 @@ class OptimizedConnectionPool:
             max_inactive_connection_lifetime=300,
             command_timeout=60
         )
-        
+
         # Redis pool
         self.redis_pool = aioredis.ConnectionPool.from_url(
             redis_url,
@@ -1899,7 +1961,7 @@ class OptimizedConnectionPool:
 
 #### **Day 81-84: Complete Documentation**
 
-```markdown
+````markdown
 # FLX Platform - Deployment Guide
 
 ## Prerequisites
@@ -1931,6 +1993,7 @@ make migrate
 # Start development server
 make dev
 ```
+````
 
 ### 2. Production Deployment
 
@@ -1949,12 +2012,12 @@ kubectl apply -f k8s/
 
 ### Environment Variables
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `FLX_ENVIRONMENT` | Environment (dev/staging/prod) | `development` |
-| `FLX_DATABASE_URL` | PostgreSQL connection URL | Required |
-| `FLX_REDIS_URL` | Redis connection URL | Required |
-| `FLX_LOG_LEVEL` | Logging level | `INFO` |
+| Variable           | Description                    | Default       |
+| ------------------ | ------------------------------ | ------------- |
+| `FLX_ENVIRONMENT`  | Environment (dev/staging/prod) | `development` |
+| `FLX_DATABASE_URL` | PostgreSQL connection URL      | Required      |
+| `FLX_REDIS_URL`    | Redis connection URL           | Required      |
+| `FLX_LOG_LEVEL`    | Logging level                  | `INFO`        |
 
 ### Meltano Configuration
 
@@ -2021,7 +2084,7 @@ For support and documentation, see:
 - [Architecture Guide](./ARCHITECTURE.md)
 - [Troubleshooting](./TROUBLESHOOTING.md)
 
-```
+````
 
 ---
 
@@ -2104,8 +2167,8 @@ For support and documentation, see:
 | **Phase 3** | 2 weeks | Docker containerization, daemon mode |
 | **Phase 4** | 2 weeks | Production deployment, documentation |
 
-**Total Duration**: 12 weeks  
-**Team Size**: 3-4 developers  
+**Total Duration**: 12 weeks
+**Team Size**: 3-4 developers
 **Risk Level**: Medium (mitigated through phased approach)
 
 ---
@@ -2150,7 +2213,7 @@ python -c "from singer_sdk import Tap, Target; print('Singer SDK available')"
 
 # Check FLX adapter integration
 flx meltano --help
-```
+````
 
 #### Container Build Issues
 
@@ -2271,7 +2334,7 @@ flx config export --include-secrets=false > config-review.yaml
 
 **This comprehensive plan provides a clear roadmap for integrating Meltano functionality into the FLX framework while maintaining architectural integrity and adding enterprise-grade capabilities for container deployment and web-based management.**
 
-**Documentation Framework**: FLX Enterprise Documentation Standard  
-**Implementation Status**: Strategic Roadmap - Production Planning Phase  
-**Last Updated**: 2025-06-11  
+**Documentation Framework**: FLX Enterprise Documentation Standard
+**Implementation Status**: Strategic Roadmap - Production Planning Phase
+**Last Updated**: 2025-06-11
 **Maintained by**: FLX Framework Data Platform Team

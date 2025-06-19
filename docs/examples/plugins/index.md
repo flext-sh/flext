@@ -31,20 +31,20 @@ Plugin development examples for the FLX framework, covering adapter implementati
 
 ### Plugin Developers
 
-→ [Plugin Examples](./plugin-examples.md)  
-→ [FLX Adapter Logs Example](./flx-adapter-logs-example.md)  
+→ [Plugin Examples](./plugin-examples.md)
+→ [FLX Adapter Logs Example](./flx-adapter-logs-example.md)
 → [FLX Adapter Schemas Example](./flx-adapter-schemas-example.md)
 
 ### Adapter Developers
 
-→ [FLX Adapter Schemas Example](./flx-adapter-schemas-example.md)  
-→ [FLX Adapter Logs Example](./flx-adapter-logs-example.md)  
+→ [FLX Adapter Schemas Example](./flx-adapter-schemas-example.md)
+→ [FLX Adapter Logs Example](./flx-adapter-logs-example.md)
 → [Plugin Examples](./plugin-examples.md)
 
 ### Integration Engineers
 
-→ [Plugin Examples](./plugin-examples.md)  
-→ [FLX Adapter Schemas Example](./flx-adapter-schemas-example.md)  
+→ [Plugin Examples](./plugin-examples.md)
+→ [FLX Adapter Schemas Example](./flx-adapter-schemas-example.md)
 → [FLX Adapter Logs Example](./flx-adapter-logs-example.md)
 
 ## Related Sections
@@ -56,4 +56,4 @@ Plugin development examples for the FLX framework, covering adapter implementati
 
 ---
 
-*Part of the [FLX Framework Documentation](../../index.md)*
+_Part of the [FLX Framework Documentation](../../index.md)_

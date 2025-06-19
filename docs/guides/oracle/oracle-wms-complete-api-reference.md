@@ -95,7 +95,7 @@ Base URL: https://a29.wms.ocs.oraclecloud.com:443/raizen/wms/lgfapi/v10/
 Entity API: https://a29.wms.ocs.oraclecloud.com:443/raizen/wms/lgfapi/v10/entity/
 ```
 
-#### Test Environment  
+#### Test Environment
 
 ```
 Base URL: https://ta29.wms.ocs.oraclecloud.com:443/raizen_test/wms/lgfapi/v10/
@@ -195,14 +195,14 @@ class WMSAuthenticator:
         self.client_id = client_id
         self.client_secret = client_secret
         self.access_token = None
-    
+
     def get_access_token(self) -> str:
         \"\"\"Obtain OAuth2 access token using client credentials.\"\"\"
-        
+
         # Prepare credentials
         credentials = f\"{self.client_id}:{self.client_secret}\"
         encoded_credentials = b64encode(credentials.encode()).decode()
-        
+
         # Token request
         token_url = f\"https://{self.idcs_url}/oauth2/v1/token\"
         headers = {
@@ -213,19 +213,19 @@ class WMSAuthenticator:
             \"grant_type\": \"client_credentials\",
             \"scope\": \"urn:opc:resource:consumer::all\"
         }
-        
+
         response = requests.post(token_url, headers=headers, data=data)
         response.raise_for_status()
-        
+
         token_data = response.json()
         self.access_token = token_data[\"access_token\"]
         return self.access_token
-    
+
     def get_auth_headers(self) -> dict:
         \"\"\"Get authorization headers for API requests.\"\"\"
         if not self.access_token:
             self.get_access_token()
-        
+
         return {
             \"Authorization\": f\"Bearer {self.access_token}\",
             \"Content-Type\": \"application/json\"
@@ -305,15 +305,15 @@ GET /entity/inventory?item_id__in=ABC123,DEF456&facility_id=WH01
 
 #### Available Filter Operators
 
-- **__gt**: Greater than
-- **__gte**: Greater than or equal
-- **__lt**: Less than
-- **__lte**: Less than or equal
-- **__in**: In list of values
-- **__contains**: String contains
-- **__icontains**: Case-insensitive contains
-- **__startswith**: String starts with
-- **__endswith**: String ends with
+- **\_\_gt**: Greater than
+- **\_\_gte**: Greater than or equal
+- **\_\_lt**: Less than
+- **\_\_lte**: Less than or equal
+- **\_\_in**: In list of values
+- **\_\_contains**: String contains
+- **\_\_icontains**: Case-insensitive contains
+- **\_\_startswith**: String starts with
+- **\_\_endswith**: String ends with
 
 ### Field Selection and Sorting
 
@@ -633,7 +633,7 @@ response = requests.patch(update_url, headers=auth_headers, json=update_data)
 
 ### Advanced Filtering Examples
 
-```python
+````python
 # Complex filtering
 complex_filter_url = f\"{base_url}/entity/inventory\" + \\\n    \"?item_id__in=ITEM001,ITEM002,ITEM003\" + \\\n    \"&quantity__gt=100\" + \\\n    \"&last_updated__gte=2025-01-01\" + \\\n    \"&facility_id=WH01\" + \\\n    \"&ordering=-last_updated\" + \\\n    \"&limit=50\"\n\nresponse = requests.get(complex_filter_url, headers=auth_headers)\ninventory_items = response.json()\n\n# Pagination example\ndef get_all_orders(base_url, headers):\n    all_orders = []\n    offset = 0\n    limit = 100\n    \n    while True:\n        url = f\"{base_url}/entity/order_hdr?limit={limit}&offset={offset}\"\n        response = requests.get(url, headers=headers)\n        data = response.json()\n        \n        orders = data.get('results', [])\n        if not orders:\n            break\n            \n        all_orders.extend(orders)\n        offset += limit\n        \n        # Check if we have more data\n        if len(orders) < limit:\n            break\n    \n    return all_orders\n```
 
@@ -681,3 +681,4 @@ The Data Extract module provides capabilities to export large datasets to Object
 ---
 
 **📂 Hub**: [Oracle Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+````

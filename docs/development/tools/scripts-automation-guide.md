@@ -142,7 +142,7 @@ All scripts include comprehensive docstrings and help systems:
 def main():
     """
     Main script function with detailed documentation.
-    
+
     Features:
     - Automatic help generation
     - Command validation
@@ -398,17 +398,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.13'
-      
+          python-version: "3.13"
+
       - name: Run PEP8 check
         run: |
           source scripts/bin/pep8-check
           pep8-check src/ --report pep8_report.json
-      
+
       - name: Fix long lines
         run: |
           source scripts/bin/fix-longlines
@@ -432,7 +432,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Generate script documentation
         run: |
           source scripts/bin/document-scripts
@@ -464,14 +464,14 @@ def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--verbose', '-v', action='store_true')
-    
+
     args = parser.parse_args()
-    
+
     if args.verbose:
         logging.basicConfig(level=logging.DEBUG)
-    
+
     # Script logic here
-    
+
 if __name__ == '__main__':
     main()
 ```
@@ -495,14 +495,14 @@ exec python "$SCRIPT_DIR/../script_name.py" "$@"
 def process_files(directory: Path, pattern: str = "*.py") -> List[Path]:
     """
     Process files in directory matching pattern.
-    
+
     Args:
         directory: Target directory to process
         pattern: File pattern to match (default: "*.py")
-    
+
     Returns:
         List of processed file paths
-    
+
     Raises:
         FileNotFoundError: If directory doesn't exist
         PermissionError: If directory isn't accessible
@@ -632,7 +632,7 @@ To migrate from legacy scripts:
 
 ---
 
-**Organization Status**: ✅ Complete and Automated  
-**Command Availability**: All commands accessible via PATH  
-**Documentation**: Comprehensive and auto-generated  
+**Organization Status**: ✅ Complete and Automated
+**Command Availability**: All commands accessible via PATH
+**Documentation**: Comprehensive and auto-generated
 **Integration**: Full CI/CD workflow integration

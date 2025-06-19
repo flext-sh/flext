@@ -72,7 +72,7 @@ result = cast(str, some_function())  # Hiding the problem
 # ✅ CORRECT: Direct imports for runtime dependencies
 from ldap3 import Connection  # Used at runtime
 
-# ✅ CORRECT: TYPE_CHECKING for type hints only  
+# ✅ CORRECT: TYPE_CHECKING for type hints only
 if TYPE_CHECKING:
     from pathlib import Path  # Only for type hints
 
@@ -107,6 +107,7 @@ echo "ESTIMATE: 2-4 hours per function to properly refactor" >> .token
 ## 🔍 COMMON PITFALLS TO AVOID
 
 ### 1. Creating "helper" files without checking patterns
+
 - Check if similar solutions exist first
 - Follow project conventions
 
@@ -121,6 +122,7 @@ def process(data: dict[str, Any]) -> str:
 ```
 
 ### 3. Ignoring root causes
+
 - Unfollowed imports = architectural issue
 - Multiple similar errors = pattern to fix systematically
 - Complexity warnings = technical debt, not quick fixes
@@ -132,7 +134,7 @@ def process(data: dict[str, Any]) -> str:
 # 1. Check reduction in errors
 mypy --ignore-missing-imports src/ 2>&1 | grep "error:" | wc -l
 
-# 2. Verify no new issues introduced  
+# 2. Verify no new issues introduced
 ruff check src/ --select=F,E9  # Critical errors only
 
 # 3. Document exactly what was fixed
@@ -190,7 +192,7 @@ Handle unfollowed imports and complex inference last, as these often require lar
 
 ```python
 # FORBIDDEN:
-@dataclass  
+@dataclass
 class SampleCommand(Command):
     name: str
     value: int
@@ -211,6 +213,7 @@ class SampleCommand(Command):
 - **Total**: 490 errors fixed (13.2% reduction)
 
 **Key Success Factors:**
+
 1. Complete enumeration before starting
 2. Category-based systematic approach
 3. Fix highest-impact categories first
@@ -227,4 +230,4 @@ class SampleCommand(Command):
 
 ---
 
-*Type safety is fundamental to PyAuto's enterprise-grade reliability. Follow these protocols systematically for consistent results.*
+_Type safety is fundamental to PyAuto's enterprise-grade reliability. Follow these protocols systematically for consistent results._

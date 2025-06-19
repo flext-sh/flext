@@ -75,7 +75,9 @@ def ldap_containers(
             except Exception:
                 if i == max_retries - 1:
                     raise
-                logger.info("Waiting for OpenLDAP %s... (%d/%d)", name, i + 1, max_retries)
+                logger.info(
+                    "Waiting for OpenLDAP %s... (%d/%d)", name, i + 1, max_retries
+                )
                 time.sleep(2)
 
     yield

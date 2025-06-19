@@ -23,7 +23,7 @@ pip install -e dc-api-x
 
 # Create a wrapper script that unsets PYTHONPATH
 echo "Creating wrapper script..."
-cat > run_dcapix_fixed.sh << 'EOF'
+cat >run_dcapix_fixed.sh <<'EOF'
 #!/bin/bash
 # Unset PYTHONPATH to avoid conflicts with system packages
 unset PYTHONPATH
@@ -37,4 +37,4 @@ EOF
 chmod +x run_dcapix_fixed.sh
 
 echo "Installation complete."
-echo "Use './run_dcapix_fixed.sh' to run dcapix without PYTHONPATH conflicts." 
+echo "Use './run_dcapix_fixed.sh' to run dcapix without PYTHONPATH conflicts."

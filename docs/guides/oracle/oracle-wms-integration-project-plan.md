@@ -1,8 +1,8 @@
 # Oracle WMS Cloud Integration Project Plan
 
-**Date**: January 2025  
-**Status**: CRITICAL PROJECT IMPLEMENTATION  
-**Priority**: HIGHEST - BUSINESS CRITICAL  
+**Date**: January 2025
+**Status**: CRITICAL PROJECT IMPLEMENTATION
+**Priority**: HIGHEST - BUSINESS CRITICAL
 **Version**: Complete Technical Implementation Plan
 
 ## 🚨 CRITICAL PROJECT NOTICE
@@ -288,7 +288,7 @@ CREATE TABLE WMS_ORDER_DTL_STG (
     integration_id VARCHAR2(100),
     processing_status VARCHAR2(20) DEFAULT 'NEW',
     -- Foreign key
-    CONSTRAINT fk_order_dtl_hdr FOREIGN KEY (order_id) 
+    CONSTRAINT fk_order_dtl_hdr FOREIGN KEY (order_id)
         REFERENCES WMS_ORDER_HDR_STG(order_id)
 );
 
@@ -339,7 +339,7 @@ CREATE TABLE WMS_INTEGRATION_ERRORS (
     created_date DATE DEFAULT SYSDATE,
     retry_count NUMBER(3) DEFAULT 0,
     retry_status VARCHAR2(20) DEFAULT 'PENDING',
-    CONSTRAINT fk_error_control FOREIGN KEY (control_id) 
+    CONSTRAINT fk_error_control FOREIGN KEY (control_id)
         REFERENCES WMS_INTEGRATION_CONTROL(control_id)
 );
 ```

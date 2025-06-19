@@ -39,7 +39,8 @@ def apply_types(module):
             # src/dc_api_x/utils/logging.py
             workspace_root / "src" / "dc_api_x" / "/".join(module_parts[1:]) + ".py",
             # src/dc_api_x/utils/logging.py (construído de outro modo)
-            workspace_root / "src" / module_parts[0] / "/".join(module_parts[1:]) + ".py",
+            workspace_root / "src" / module_parts[0] / "/".join(module_parts[1:])
+            + ".py",
             # src/utils/logging.py
             workspace_root / "src" / "/".join(module_parts[1:]) + ".py",
         ]

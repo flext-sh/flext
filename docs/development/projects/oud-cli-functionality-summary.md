@@ -57,7 +57,7 @@ python src/oud_automation/cli/cli_full.py ldap-servers
 ```
 
 - Lista servidores LDAP configurados
-- Mostra configurações TARGET_LDAP_*
+- Mostra configurações TARGET*LDAP*\*
 - Formato tabela estruturado
 
 #### `ldif-process` - ✅ FUNCIONANDO
@@ -92,7 +92,7 @@ python src/oud_automation/cli/cli_full.py env-info
 Saída:
 
 ```
-Environment Variables      
+Environment Variables
 ┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━┓
 ┃ Variable           ┃ Value   ┃
 ┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━┩
@@ -116,7 +116,7 @@ Saída:
     "Value": "DEBUG"
   },
   {
-    "Variable": "OUTPUT", 
+    "Variable": "OUTPUT",
     "Value": "TABLE"
   }
 ]
@@ -217,7 +217,7 @@ python src/oud_automation/cli/cli_full.py --csv ldap-servers
 ✅ **CLI TOTALMENTE FUNCIONAL** com:
 
 - Carregamento automático de .env ✅
-- Output padrão TABLE ✅  
+- Output padrão TABLE ✅
 - Trace/Debug completo ✅
 - Todos os comandos funcionando ✅
 - Múltiplos formatos de saída ✅

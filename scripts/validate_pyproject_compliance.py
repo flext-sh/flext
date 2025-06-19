@@ -322,7 +322,7 @@ def main() -> int:
                 "Project compliance violations",
                 project=project_name,
                 violations=violations,
-                count=len(violations)
+                count=len(violations),
             )
         else:
             logger.info("Project compliant", project=project_name)
@@ -333,13 +333,13 @@ def main() -> int:
         total_projects=len(projects),
         compliant_projects=len(projects) - len(failed_projects),
         failed_projects=len(failed_projects),
-        total_violations=total_violations
+        total_violations=total_violations,
     )
 
     if failed_projects:
         logger.error(
             "COMPLIANCE FAILURE - Projects require template application",
-            failed_projects=failed_projects
+            failed_projects=failed_projects,
         )
         print("\n" + "=" * 80)
         print("ENTERPRISE COMPLIANCE FAILURE")
@@ -364,7 +364,7 @@ if __name__ == "__main__":
     structlog.configure(
         processors=[
             structlog.processors.TimeStamper(fmt="ISO"),
-            structlog.dev.ConsoleRenderer()
+            structlog.dev.ConsoleRenderer(),
         ],
         wrapper_class=structlog.stdlib.BoundLogger,
         logger_factory=structlog.stdlib.LoggerFactory(),

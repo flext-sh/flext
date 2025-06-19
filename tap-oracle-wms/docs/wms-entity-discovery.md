@@ -22,7 +22,7 @@ This endpoint returns a complete dictionary of all available entities in the WMS
   "appointment": "https://{instance}.wms.ocs.oraclecloud.com/{tenant}/wms/lgfapi/v10/entity/appointment",
   "barcode_type": "https://{instance}.wms.ocs.oraclecloud.com/{tenant}/wms/lgfapi/v10/entity/barcode_type",
   "batch_nbr": "https://{instance}.wms.ocs.oraclecloud.com/{tenant}/wms/lgfapi/v10/entity/batch_nbr",
-  "break_type": "https://{instance}.wms.ocs.oraclecloud.com/{tenant}/wms/lgfapi/v10/entity/break_type",
+  "break_type": "https://{instance}.wms.ocs.oraclecloud.com/{tenant}/wms/lgfapi/v10/entity/break_type"
   // ... 300+ more entities
 }
 ```
@@ -85,27 +85,27 @@ Returns detailed metadata about a specific entity including field definitions, t
 
 The `type` field indicates the data type:
 
-| Type | Description | JSON Schema Type |
-|------|-------------|------------------|
-| `integer` | Whole numbers | `integer` |
-| `string` | Text values | `string` |
-| `number` | Decimal numbers | `number` |
-| `boolean` | True/false values | `boolean` |
+| Type       | Description         | JSON Schema Type     |
+| ---------- | ------------------- | -------------------- |
+| `integer`  | Whole numbers       | `integer`            |
+| `string`   | Text values         | `string`             |
+| `number`   | Decimal numbers     | `number`             |
+| `boolean`  | True/false values   | `boolean`            |
 | `datetime` | ISO 8601 timestamps | `string` with format |
-| `date` | ISO 8601 dates | `string` with format |
-| `array` | List of values | `array` |
-| `object` | Nested object | `object` |
+| `date`     | ISO 8601 dates      | `string` with format |
+| `array`    | List of values      | `array`              |
+| `object`   | Nested object       | `object`             |
 
 ### Required Field Indicators
 
 The `required` field uses these codes:
 
-| Code | Meaning | JSON Schema Required |
-|------|---------|---------------------|
-| `X` | Always required (primary key) | Yes |
-| `Y` | Required for create/update | Yes |
-| `N` | Optional | No |
-| `C` | Conditionally required | No (with description) |
+| Code | Meaning                       | JSON Schema Required  |
+| ---- | ----------------------------- | --------------------- |
+| `X`  | Always required (primary key) | Yes                   |
+| `Y`  | Required for create/update    | Yes                   |
+| `N`  | Optional                      | No                    |
+| `C`  | Conditionally required        | No (with description) |
 
 ### Field Constraints
 
@@ -383,11 +383,13 @@ async def estimate_entity_size(entity_name: str) -> int:
 ### Common Issues
 
 1. **Entity Not Found**
+
    - Check entity name spelling
    - Verify permissions
    - Confirm WMS version compatibility
 
 2. **Schema Missing Fields**
+
    - Some fields only appear with data
    - Use sample data inference
    - Check field-level permissions

@@ -9,7 +9,7 @@ rm -rf .venv_fix
 # Activate virtual environment and install packages
 echo "Activating and configuring environment..."
 source .venv_fix/bin/activate
-export PYTHONNOUSERSITE=1  # Don't use user site packages
+export PYTHONNOUSERSITE=1 # Don't use user site packages
 
 # Install the required packages
 echo "Installing packages..."
@@ -26,4 +26,4 @@ echo "Testing module import..."
 cd dc-api-x
 python -c "from dc_api_x.ext.auth.ldap import LdapAuthProvider; print('LDAP module loaded successfully')"
 
-echo "Fix complete. Use 'source .venv_fix/bin/activate && export PYTHONNOUSERSITE=1' to use this environment." 
+echo "Fix complete. Use 'source .venv_fix/bin/activate && export PYTHONNOUSERSITE=1' to use this environment."

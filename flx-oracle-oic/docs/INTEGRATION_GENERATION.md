@@ -43,13 +43,13 @@ Integrations can be created using either the OIC Visual Designer or REST API:
 
 ### Integration Patterns in Visual Designer
 
-| Pattern | Use Case | Created Via |
-|---------|----------|-------------|
-| App Driven Orchestration | REST/SOAP triggered flows | Visual Designer |
-| Scheduled Orchestration | Time-based batch processing | Visual Designer |
-| Basic Routing | Simple message routing | Visual Designer |
-| Publish to OIC | Event publishing | Visual Designer |
-| Subscribe to OIC | Event consumption | Visual Designer |
+| Pattern                  | Use Case                    | Created Via     |
+| ------------------------ | --------------------------- | --------------- |
+| App Driven Orchestration | REST/SOAP triggered flows   | Visual Designer |
+| Scheduled Orchestration  | Time-based batch processing | Visual Designer |
+| Basic Routing            | Simple message routing      | Visual Designer |
+| Publish to OIC           | Event publishing            | Visual Designer |
+| Subscribe to OIC         | Event consumption           | Visual Designer |
 
 ## Managing Existing Integrations
 
@@ -569,12 +569,14 @@ class IntegrationHealthChecker:
 ### Integration Lifecycle Management
 
 1. **Version Control**
+
    - Export all integrations as .iar files
    - Store in version control system
    - Use semantic versioning
    - Tag releases appropriately
 
 2. **Testing Strategy**
+
    - Test integrations in Visual Designer first
    - Use non-production environments
    - Validate connections before activation

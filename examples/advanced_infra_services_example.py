@@ -516,7 +516,6 @@ async def demonstrate_resource_pooling() -> None:
     await pool.initialize()
 
     try:
-
         # Use resources concurrently
         async def use_resource(task_id: int) -> None:
             async with pool.acquire_context() as resource:

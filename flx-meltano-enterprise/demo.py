@@ -47,7 +47,6 @@ def check_environment():
         TextColumn("[progress.description]{task.description}"),
         console=console,
     ) as progress:
-
         # Check Python
         task = progress.add_task("Checking Python version...", total=1)
         time.sleep(0.5)

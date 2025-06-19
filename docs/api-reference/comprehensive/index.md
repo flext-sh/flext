@@ -43,9 +43,9 @@ The Comprehensive APIs Hub provides complete, enterprise-grade API documentation
 
 ### **Comprehensive API Categories**
 
-| **API Documentation** | **Coverage** | **Validation** | **Status** | **Key Features** |
-|-----------------------|--------------|----------------|------------|------------------|
-| **[FLX Complete API](./flx-complete-api.md)** | Complete Framework | Source Validated | ✅ Production | All APIs, patterns, examples |
+| **API Documentation**                         | **Coverage**       | **Validation**   | **Status**    | **Key Features**                 |
+| --------------------------------------------- | ------------------ | ---------------- | ------------- | -------------------------------- |
+| **[FLX Complete API](./flx-complete-api.md)** | Complete Framework | Source Validated | ✅ Production | All APIs, patterns, examples     |
 | **[FLX API Overview](./flx-api-overview.md)** | Architecture Guide | Source Validated | ✅ Production | High-level patterns, integration |
 
 ### **🚀 Enterprise API Features**

@@ -46,23 +46,23 @@ Oracle Warehouse Management System (WMS) integration examples using FLX framewor
 
 ### WMS Beginners
 
-→ [WMS API Examples](./api-examples.md)  
-→ [Authentication Examples](./authentication.md)  
-→ [Basic Transformations](./transformations.md)  
+→ [WMS API Examples](./api-examples.md)
+→ [Authentication Examples](./authentication.md)
+→ [Basic Transformations](./transformations.md)
 → [WMS Integration Guide](../../guides/oracle/wms-integration.md)
 
 ### WMS Developers
 
-→ [Data Transformation Examples](./transformations.md)  
-→ [Error Handling Examples](./error-handling.md)  
-→ [Performance Patterns](./performance.md)  
+→ [Data Transformation Examples](./transformations.md)
+→ [Error Handling Examples](./error-handling.md)
+→ [Performance Patterns](./performance.md)
 → [Advanced Integration](../../guides/oracle/advanced-wms.md)
 
 ### Enterprise WMS
 
-→ [Enterprise Patterns](./enterprise-patterns.md)  
-→ [Security Patterns](./security.md)  
-→ [Monitoring Examples](./monitoring.md)  
+→ [Enterprise Patterns](./enterprise-patterns.md)
+→ [Security Patterns](./security.md)
+→ [Monitoring Examples](./monitoring.md)
 → [Architecture Guide](../../architecture/index.md)
 
 ## Related Sections
@@ -74,4 +74,4 @@ Oracle Warehouse Management System (WMS) integration examples using FLX framewor
 
 ---
 
-*Part of the [FLX Framework Documentation](../../index.md)*
+_Part of the [FLX Framework Documentation](../../index.md)_

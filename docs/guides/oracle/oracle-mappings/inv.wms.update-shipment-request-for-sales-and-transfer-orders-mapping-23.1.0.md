@@ -1,24 +1,22 @@
 # inv.wms.update-shipment-request-for-sales-and-transfer-orders-mapping-23.1.0.xlsx
 
-**Caminho:** `reference/wms_solutions/mappings/inv.wms.update-shipment-request-for-sales-and-transfer-orders-mapping-23.1.0.xlsx`  \n**Data de conversão:** 2025-05-15T14:41:13.084886  \n**Tipo:** .xlsx  \n**[Download original](reference/wms_solutions/mappings/inv.wms.update-shipment-request-for-sales-and-transfer-orders-mapping-23.1.0.xlsx)**
+**Caminho:** `reference/wms_solutions/mappings/inv.wms.update-shipment-request-for-sales-and-transfer-orders-mapping-23.1.0.xlsx` \n**Data de conversão:** 2025-05-15T14:41:13.084886 \n**Tipo:** .xlsx \n**[Download original](reference/wms_solutions/mappings/inv.wms.update-shipment-request-for-sales-and-transfer-orders-mapping-23.1.0.xlsx)**
 
 ---
 
 ## Sumário
 
-
-
 ## Resumo automático
 
 Este documento é a especificação de mapeamento da interface “inv.wms.update‐shipment‐request‐for‐sales‐and‐transfer‐orders” versão 23.1.0, que define como os campos recebidos do WMS devem ser traduzidos para as APIs REST de Inventário do Oracle Fusion (tanto para pedidos de venda quanto de transferência).
 
-Principais pontos:  
-• Header da mensagem – campos informacionais (DocumentVersion, OriginSystem, ClientEnvCode, ParentCompanyCode) e identificadores obrigatórios (Entity, TimeStamp, MessageId).  
-• Dados da expedição – informações da organização (facility_code, company_code), do pedido (order_nbr, order_type, datas de solicitação e agendamento), do cliente e do destinatário (nomes, endereços, contatos), e parâmetros de roteirização e frete (route_nbr, ship_via_code, carrier_code, etc.).  
-• Bloco de totais e valores – moedas, preços unitários, quantidades solicitadas e valores declarados.  
-• Linhas de item – “seq_nbr” fixo em 1, “item_alternate_code” (código interno), quantidade, ação (ex.: CANCEL), custo, preço de venda e demais atributos de lote, embalagem, unidades de medida e campos customizáveis (cust_field_1…cust_field_5, cust_date_1…cust_date_5 etc.).  
-• Controles de bloqueio e comentários – lock_code (por exemplo “WSH_SR_LOCK_FOR_UPDATE”), texto de comentário padrão e flag de criação automática de bloqueio.  
-• Notas de implementação – indicações quando certos campos são obrigatórios ou quando o fluxo deve tratar o pedido como atualização ou exclusão (ActionType).  
+Principais pontos:
+• Header da mensagem – campos informacionais (DocumentVersion, OriginSystem, ClientEnvCode, ParentCompanyCode) e identificadores obrigatórios (Entity, TimeStamp, MessageId).
+• Dados da expedição – informações da organização (facility_code, company_code), do pedido (order_nbr, order_type, datas de solicitação e agendamento), do cliente e do destinatário (nomes, endereços, contatos), e parâmetros de roteirização e frete (route_nbr, ship_via_code, carrier_code, etc.).
+• Bloco de totais e valores – moedas, preços unitários, quantidades solicitadas e valores declarados.
+• Linhas de item – “seq_nbr” fixo em 1, “item_alternate_code” (código interno), quantidade, ação (ex.: CANCEL), custo, preço de venda e demais atributos de lote, embalagem, unidades de medida e campos customizáveis (cust_field_1…cust_field_5, cust_date_1…cust_date_5 etc.).
+• Controles de bloqueio e comentários – lock_code (por exemplo “WSH_SR_LOCK_FOR_UPDATE”), texto de comentário padrão e flag de criação automática de bloqueio.
+• Notas de implementação – indicações quando certos campos são obrigatórios ou quando o fluxo deve tratar o pedido como atualização ou exclusão (ActionType).
 
 Em suma, é um guia detalhado de cada coluna que o WMS envia, seu formato e obrigatoriedade, e a qual atributo da API REST do Oracle Fusion Inventory cada uma deve ser mapeada.
 
@@ -33,7 +31,7 @@ WMS Column: TimeStamp, Format: string, Required?: , Value: fn:current-dateTime()
 WMS Column: MessageId, Format: string, Required?: X, Value: fn:current-dateTime(), Notes: Unique interface messgae identifier.
 
 WMS Column: facility_code, Format: string, Max: 20.0, Required?: X, INV Column (REST API - SO): OrganizationCode/key, INV Column (REST API - TO): OrganizationCode/key, Format.1: string, Max.1: 18.0, Notes:
-WMS Column: company_code, Format: string, Max: 20.0, Required?: X, INV Column (REST API - SO): compnay_code, INV Column (REST API - TO): compnay_code, Format.1: , Max.1: , Notes: Self Properties  - Default value is set as "PP"
+WMS Column: company_code, Format: string, Max: 20.0, Required?: X, INV Column (REST API - SO): compnay_code, INV Column (REST API - TO): compnay_code, Format.1: , Max.1: , Notes: Self Properties - Default value is set as "PP"
 WMS Column: order_nbr, Format: string, Max: 30.0, Required?: X, INV Column (REST API - SO): ShipmentLine, INV Column (REST API - TO): ShipmentLine, Format.1: integer, Max.1: 18.0, Notes:
 WMS Column: order_type, Format: string, Max: 25.0, Required?: X, INV Column (REST API - SO): OrderTypeCode, INV Column (REST API - TO): OrderTypeCode, Format.1: string , Max.1: 30.0, Notes:
 WMS Column: ord_date, Format: date, Max: 14.0, Required?: X, INV Column (REST API - SO): RequestedDate, INV Column (REST API - TO): RequestedDate, Format.1: datetime, Max.1: , Notes:
@@ -232,7 +230,7 @@ WMS Column: erp_source_shipment_ref, Format: string, Max: 150.0, Required?: , IN
 WMS Column: erp_fulfillment_line_ref, Format: number, Max: 18.0, Required?: , INV Column: , Format.1: , Max.1: , Notes:
 WMS Column: sales_order_line_ref, Format: string, Max: 150.0, Required?: , INV Column: , Format.1: , Max.1: , Notes:
 WMS Column: sales_order_schedule_ref, Format: string, Max: 150.0, Required?: , INV Column: , Format.1: , Max.1: , Notes:
-WMS Column: min_shipping_tolerance_percentage, Format: , Max: , Required?: , INV Column: UnderShipTolerancePercentage, Format.1: , Max.1: , Notes:  '0' if ShippingToleranceBehavior = "REQUESTEDQUANTITY" else UnderShipTolerancePercentage
+WMS Column: min_shipping_tolerance_percentage, Format: , Max: , Required?: , INV Column: UnderShipTolerancePercentage, Format.1: , Max.1: , Notes: '0' if ShippingToleranceBehavior = "REQUESTEDQUANTITY" else UnderShipTolerancePercentage
 WMS Column: max_shipping_tolerance_percentage, Format: , Max: , Required?: , INV Column: OverShipTolerancePercentage, Format.1: , Max.1: , Notes:
 
 WMS Column: lock_code, Format: string, Required?: , Value: "WSH_SR_LOCK_FOR_UPDATE", Notes:

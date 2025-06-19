@@ -83,7 +83,7 @@ class BasicAdapter:
     def __init__(self, config):
         self.config = config  # Direct configuration dependency
         self.connection = create_connection(config)  # Hard-coded creation
-    
+
     def process(self, data):
         # No type safety, limited error handling
         return self.connection.execute(data)
@@ -113,17 +113,17 @@ R = TypeVar('R')
 
 class Port(Protocol, Generic[T, R]):
     """Type-safe port definition with generic input/output types."""
-    
+
     @abstractmethod
     async def execute(self, input_data: T) -> R:
         """Execute operation with type-safe input and output."""
         ...
-    
+
     @abstractmethod
     async def health_check(self) -> HealthStatus:
         """Perform health check with standardized status."""
         ...
-    
+
     @abstractmethod
     def get_metrics(self) -> PortMetrics:
         """Retrieve operational metrics."""
@@ -140,14 +140,14 @@ class AdapterConfiguration:
     timeout_seconds: int = 30
     retry_attempts: int = 3
     circuit_breaker_threshold: float = 0.5
-    
+
     def __post_init__(self):
         if self.timeout_seconds <= 0:
             raise ValueError("Timeout must be positive")
 
 class PostgreSQLAdapter(Port[DatabaseQuery, DatabaseResult]):
     """Enterprise-grade database adapter with full observability."""
-    
+
     def __init__(
         self,
         config: AdapterConfiguration,
@@ -160,7 +160,7 @@ class PostgreSQLAdapter(Port[DatabaseQuery, DatabaseResult]):
         self._tracer = tracer
         self._circuit_breaker = circuit_breaker
         self._connection_pool = None
-    
+
     @with_tracing(operation="database.execute")
     @with_circuit_breaker
     @with_metrics(metric_name="database.query.duration")
@@ -172,7 +172,7 @@ class PostgreSQLAdapter(Port[DatabaseQuery, DatabaseResult]):
                 "db.table": query.table,
                 "query.complexity": query.estimated_complexity
             })
-            
+
             try:
                 result = await self._execute_with_retry(query)
                 self._metrics.increment("database.query.success")
@@ -181,19 +181,19 @@ class PostgreSQLAdapter(Port[DatabaseQuery, DatabaseResult]):
                 self._metrics.increment("database.query.error")
                 span.record_exception(e)
                 raise
-    
+
     async def health_check(self) -> HealthStatus:
         """Comprehensive health check with detailed diagnostics."""
         try:
             # Check connection pool health
             pool_health = await self._check_connection_pool()
-            
+
             # Check database responsiveness
             response_time = await self._measure_response_time()
-            
+
             # Check circuit breaker status
             circuit_status = self._circuit_breaker.current_state
-            
+
             return HealthStatus(
                 is_healthy=pool_health.is_healthy and response_time < 1000,
                 status_details={
@@ -220,15 +220,15 @@ class PostgreSQLAdapter(Port[DatabaseQuery, DatabaseResult]):
 ```python
 class ServiceContainer:
     """Enterprise dependency injection container."""
-    
+
     def __init__(self):
         self._services: Dict[Type, ServiceRegistration] = {}
         self._instances: Dict[Type, Any] = {}
         self._factories: Dict[Type, ServiceFactory] = {}
-    
+
     def register_singleton(
-        self, 
-        interface: Type[T], 
+        self,
+        interface: Type[T],
         implementation: Type[T],
         factory: Optional[ServiceFactory[T]] = None
     ) -> None:
@@ -238,10 +238,10 @@ class ServiceContainer:
             lifecycle=ServiceLifecycle.SINGLETON,
             factory=factory or DefaultServiceFactory(implementation)
         )
-    
+
     def register_transient(
-        self, 
-        interface: Type[T], 
+        self,
+        interface: Type[T],
         implementation: Type[T]
     ) -> None:
         """Register transient service."""
@@ -250,21 +250,21 @@ class ServiceContainer:
             lifecycle=ServiceLifecycle.TRANSIENT,
             factory=DefaultServiceFactory(implementation)
         )
-    
+
     async def resolve(self, interface: Type[T]) -> T:
         """Resolve service with dependency injection."""
         if interface not in self._services:
             raise ServiceNotRegisteredException(interface)
-        
+
         registration = self._services[interface]
-        
+
         if registration.lifecycle == ServiceLifecycle.SINGLETON:
             if interface not in self._instances:
                 self._instances[interface] = await self._create_instance(registration)
             return self._instances[interface]
-        
+
         return await self._create_instance(registration)
-    
+
     async def _create_instance(self, registration: ServiceRegistration) -> Any:
         """Create service instance with dependency resolution."""
         factory = registration.factory
@@ -294,13 +294,13 @@ class UserCreatedEvent(DomainEvent):
     username: str
     email: str
     created_by: str
-    
+
     def __post_init__(self):
         object.__setattr__(self, 'aggregate_id', self.user_id)
 
 class EventBus:
     """Enterprise event bus with reliable delivery."""
-    
+
     def __init__(
         self,
         message_broker: MessageBroker,
@@ -311,36 +311,36 @@ class EventBus:
         self._event_store = event_store
         self._metrics = metrics_collector
         self._handlers: Dict[Type[DomainEvent], List[EventHandler]] = {}
-    
+
     async def publish(self, event: DomainEvent) -> None:
         """Publish domain event with guaranteed delivery."""
         # Store event for audit and replay
         await self._event_store.append(event)
-        
+
         # Publish to message broker
         await self._broker.publish(
             topic=f"domain.events.{event.__class__.__name__}",
             message=event,
             partition_key=event.aggregate_id
         )
-        
+
         # Update metrics
         self._metrics.increment(
             "domain.events.published",
             tags={"event_type": event.__class__.__name__}
         )
-    
+
     async def subscribe(
-        self, 
-        event_type: Type[DomainEvent], 
+        self,
+        event_type: Type[DomainEvent],
         handler: EventHandler[DomainEvent]
     ) -> None:
         """Subscribe to domain events with error handling."""
         if event_type not in self._handlers:
             self._handlers[event_type] = []
-        
+
         self._handlers[event_type].append(handler)
-        
+
         # Configure message broker subscription
         await self._broker.subscribe(
             topic=f"domain.events.{event_type.__name__}",
@@ -356,52 +356,52 @@ class EventBus:
 ```python
 class PluginManager:
     """Enterprise plugin management system."""
-    
+
     def __init__(self, container: ServiceContainer):
         self._container = container
         self._plugins: Dict[str, Plugin] = {}
         self._plugin_configs: Dict[str, PluginConfiguration] = {}
-    
+
     async def discover_plugins(self) -> List[PluginMetadata]:
         """Discover plugins from multiple sources."""
         discovered = []
-        
+
         # Discover from entry points
         entry_point_plugins = self._discover_from_entry_points()
         discovered.extend(entry_point_plugins)
-        
+
         # Discover from plugin directories
         directory_plugins = await self._discover_from_directories()
         discovered.extend(directory_plugins)
-        
+
         # Discover from remote repositories
         remote_plugins = await self._discover_from_remote()
         discovered.extend(remote_plugins)
-        
+
         return discovered
-    
+
     async def load_plugin(self, plugin_id: str) -> Plugin:
         """Load and configure plugin with dependency injection."""
         metadata = await self._get_plugin_metadata(plugin_id)
-        
+
         # Validate plugin compatibility
         self._validate_plugin_compatibility(metadata)
-        
+
         # Load plugin class
         plugin_class = self._load_plugin_class(metadata)
-        
+
         # Resolve plugin dependencies
         dependencies = await self._resolve_plugin_dependencies(metadata)
-        
+
         # Create plugin instance
         plugin = plugin_class(dependencies)
-        
+
         # Initialize plugin
         await plugin.initialize()
-        
+
         # Register plugin services
         await self._register_plugin_services(plugin)
-        
+
         self._plugins[plugin_id] = plugin
         return plugin
 
@@ -416,7 +416,7 @@ class PluginMetadata:
     dependencies: List[PluginDependency]
     permissions: List[PluginPermission]
     compatibility: PluginCompatibility
-    
+
     def is_compatible_with(self, framework_version: str) -> bool:
         """Check compatibility with framework version."""
         return self.compatibility.is_compatible(framework_version)
@@ -429,12 +429,12 @@ class PluginMetadata:
 ```python
 class ObservabilityFramework:
     """Comprehensive observability for hexagonal architecture."""
-    
+
     def __init__(self):
         self._tracer = DistributedTracer()
         self._metrics = MetricsCollector()
         self._logger = StructuredLogger()
-    
+
     def trace_port_execution(self, port_name: str):
         """Decorator for tracing port executions."""
         def decorator(func):
@@ -446,24 +446,24 @@ class ObservabilityFramework:
                         "port.input_type": type(args[1]).__name__ if len(args) > 1 else "unknown",
                         "execution.start_time": time.time()
                     })
-                    
+
                     start_time = time.time()
                     try:
                         result = await func(*args, **kwargs)
-                        
+
                         execution_time = time.time() - start_time
                         self._metrics.histogram(
                             "port.execution.duration",
                             execution_time,
                             tags={"port": port_name, "status": "success"}
                         )
-                        
+
                         span.set_attributes({
                             "execution.duration_ms": execution_time * 1000,
                             "execution.status": "success",
                             "port.output_type": type(result).__name__
                         })
-                        
+
                         return result
                     except Exception as e:
                         execution_time = time.time() - start_time
@@ -472,14 +472,14 @@ class ObservabilityFramework:
                             execution_time,
                             tags={"port": port_name, "status": "error"}
                         )
-                        
+
                         span.record_exception(e)
                         span.set_attributes({
                             "execution.duration_ms": execution_time * 1000,
                             "execution.status": "error",
                             "error.type": type(e).__name__
                         })
-                        
+
                         self._logger.error(
                             "Port execution failed",
                             extra={
@@ -488,7 +488,7 @@ class ObservabilityFramework:
                                 "execution_time_ms": execution_time * 1000
                             }
                         )
-                        
+
                         raise
             return wrapper
         return decorator
@@ -528,18 +528,18 @@ class ObservabilityFramework:
 
 ### Benefits
 
-✅ **Enhanced Type Safety**: Generic types reduce runtime errors by 60%  
-✅ **Improved Testability**: Dependency injection enables better unit testing  
-✅ **Better Observability**: Full tracing reduces debugging time by 40%  
-✅ **Increased Extensibility**: Plugin system enables rapid feature development  
-✅ **Enterprise Readiness**: Production-grade patterns and practices  
+✅ **Enhanced Type Safety**: Generic types reduce runtime errors by 60%
+✅ **Improved Testability**: Dependency injection enables better unit testing
+✅ **Better Observability**: Full tracing reduces debugging time by 40%
+✅ **Increased Extensibility**: Plugin system enables rapid feature development
+✅ **Enterprise Readiness**: Production-grade patterns and practices
 
 ### Risks
 
-⚠️ **Complexity Increase**: Higher learning curve for developers  
-⚠️ **Migration Effort**: Significant refactoring required  
-⚠️ **Performance Overhead**: Additional abstraction layers  
-⚠️ **Tool Dependency**: Reliance on external observability tools  
+⚠️ **Complexity Increase**: Higher learning curve for developers
+⚠️ **Migration Effort**: Significant refactoring required
+⚠️ **Performance Overhead**: Additional abstraction layers
+⚠️ **Tool Dependency**: Reliance on external observability tools
 
 ### Mitigation Strategies
 
@@ -573,10 +573,10 @@ class ObservabilityFramework:
 
 ---
 
-**Author**: agent_005_claude_code  
-**Reviewers**: AGENT_ZERO, Architecture Council, Senior Engineers  
-**Status**: PROPOSAL  
-**Implementation Start**: January 2025  
+**Author**: agent_005_claude_code
+**Reviewers**: AGENT_ZERO, Architecture Council, Senior Engineers
+**Status**: PROPOSAL
+**Implementation Start**: January 2025
 **Target Completion**: March 2025
 
 ---

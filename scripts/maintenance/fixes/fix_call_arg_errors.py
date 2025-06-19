@@ -10,7 +10,14 @@ from typing import Any
 
 def get_call_arg_errors() -> dict[str, list[dict[str, Any]]]:
     """Get all call-arg errors grouped by pattern."""
-    cmd = [".venv/bin/python", "-m", "mypy", "flx/src/", "--show-error-codes", "--no-error-summary"]
+    cmd = [
+        ".venv/bin/python",
+        "-m",
+        "mypy",
+        "flx/src/",
+        "--show-error-codes",
+        "--no-error-summary",
+    ]
     result = subprocess.run(cmd, capture_output=True, text=True, check=False)
 
     errors_by_pattern = defaultdict(list)
@@ -48,7 +55,9 @@ def analyze_missing_arguments() -> dict[str, set[str]]:
 
     for error in errors.get("missing_named", []):
         # Extract function/class name and missing argument
-        match = re.search(r'Missing named argument "(.+?)" for "(.+?)"', error["message"])
+        match = re.search(
+            r'Missing named argument "(.+?)" for "(.+?)"', error["message"]
+        )
         if match:
             arg_name = match.group(1)
             func_name = match.group(2)
@@ -154,7 +163,9 @@ def fix_constructor_defaults() -> None:
                                 # Add default value
                                 new_pattern = rf"({param}:\s*[^,\)]+)"
                                 replacement = rf"\1 = {default}"
-                                class_body = re.sub(new_pattern, replacement, class_body)
+                                class_body = re.sub(
+                                    new_pattern, replacement, class_body
+                                )
 
                     # Replace in content
                     content = content.replace(match.group(0), class_body)
@@ -235,7 +246,9 @@ def add_missing_type_imports() -> None:
                         for imp in imports_to_add:
                             if imp not in current_imports:
                                 current_imports.append(imp)
-                        lines[i] = f"from typing import {', '.join(sorted(current_imports))}"
+                        lines[i] = (
+                            f"from typing import {', '.join(sorted(current_imports))}"
+                        )
                         break
 
                 filepath.write_text("\n".join(lines))
@@ -258,7 +271,9 @@ def main() -> None:
     # Analyze missing arguments
     missing_args = analyze_missing_arguments()
     print("\nFunctions/classes with missing arguments:")
-    for func, args in sorted(missing_args.items(), key=lambda x: len(x[1]), reverse=True)[:10]:
+    for func, args in sorted(
+        missing_args.items(), key=lambda x: len(x[1]), reverse=True
+    )[:10]:
         print(f"  {func}: {', '.join(sorted(args))}")
 
     print("\n1. Fixing specific call patterns...")

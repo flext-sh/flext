@@ -3,12 +3,6 @@ FastAPI dependencies for dependency injection.
 """
 
 from typing import Optional
-# Lazy import to avoid circular dependencies
-from flx.utils.lazy_import import lazy_import
-
-# Lazy imports to avoid circular dependencies
-# Lazy import to avoid circular dependencies
-
 
 import grpc
 from fastapi import Depends, HTTPException, status
@@ -17,9 +11,17 @@ from flx_api.config import api_settings
 from jose import JWTError, jwt
 
 # Lazy import to avoid circular dependencies
-settings = lazy_import('flx.config', 'settings')
+from flx.utils.lazy_import import lazy_import
+
+# Lazy imports to avoid circular dependencies
 # Lazy import to avoid circular dependencies
-flx_pb2_grpc = lazy_import('flx.grpc.proto', 'flx_pb2_grpc')
+
+
+
+# Lazy import to avoid circular dependencies
+settings = lazy_import("flx.config", "settings")
+# Lazy import to avoid circular dependencies
+flx_pb2_grpc = lazy_import("flx.grpc.proto", "flx_pb2_grpc")
 
 # Security scheme
 security = HTTPBearer()

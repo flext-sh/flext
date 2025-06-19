@@ -82,7 +82,7 @@ def check_pyproject_structure(project_path: Path) -> dict[str, Any]:
                 "has_project_info": "tool" in data and "poetry" in data["tool"],
                 "has_name": poetry_data.get("name") is not None,
                 "has_dependencies": "dependencies" in poetry_data,
-                "flx_dependency_optional": True  # Verificação específica abaixo
+                "flx_dependency_optional": True,  # Verificação específica abaixo
             }
 
             dependencies = poetry_data.get("dependencies", {})
@@ -99,7 +99,7 @@ def check_pyproject_structure(project_path: Path) -> dict[str, Any]:
                 "checks": checks,
                 "dependencies": list(dependencies.keys()),
                 "optional_dependencies": poetry_data.get("extras", {}),
-                "format": "poetry"
+                "format": "poetry",
             }
         # Formato padrão
         checks = {
@@ -107,7 +107,7 @@ def check_pyproject_structure(project_path: Path) -> dict[str, Any]:
             "has_project_info": "project" in data,
             "has_name": data.get("project", {}).get("name") is not None,
             "has_dependencies": "dependencies" in data.get("project", {}),
-            "flx_dependency_optional": True  # Assumimos que está correto após correções
+            "flx_dependency_optional": True,  # Assumimos que está correto após correções
         }
 
         # Verifica se dependências do FLX são opcionais (se existirem)
@@ -125,7 +125,7 @@ def check_pyproject_structure(project_path: Path) -> dict[str, Any]:
             "checks": checks,
             "dependencies": dependencies,
             "optional_dependencies": optional_deps,
-            "format": "standard"
+            "format": "standard",
         }
 
     except Exception as e:
@@ -296,8 +296,13 @@ def test_unified_installation() -> dict[str, Any]:
                     if any(proj in dep for proj in INDEPENDENT_PROJECTS):
                         subprojects_in_optional += 1
 
-            main_deps_count = len([k for k, v in dependencies.items()
-                                 if not (isinstance(v, dict) and v.get("optional", False))])
+            main_deps_count = len(
+                [
+                    k
+                    for k, v in dependencies.items()
+                    if not (isinstance(v, dict) and v.get("optional", False))
+                ]
+            )
             optional_groups_count = len(extras)
 
         else:
@@ -321,7 +326,7 @@ def test_unified_installation() -> dict[str, Any]:
             "optional_groups": optional_groups_count,
             "subprojects_included": subprojects_in_optional,
             "structure_valid": subprojects_in_optional > 0,
-            "format": "poetry" if is_poetry else "standard"
+            "format": "poetry" if is_poetry else "standard",
         }
 
     except Exception as e:

@@ -171,7 +171,9 @@ class TestApiClient:
 
     def test_from_profile(self) -> None:
         """Test client creation from profile."""
-        with patch("flx_adapter_example.config.Config.from_profile") as mock_from_profile:
+        with patch(
+            "flx_adapter_example.config.Config.from_profile"
+        ) as mock_from_profile:
             mock_config = MagicMock(spec=Config)
             mock_config.url = "https://api.profile.com"
             mock_config.username = "profile_user"

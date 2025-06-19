@@ -29,12 +29,14 @@ class FlxImportFixer(ast.NodeTransformer):
                     new_alias = ast.alias(name=new_name, asname=alias.asname or name)
                     new_names.append(new_alias)
                     changed = True
-                    self.changes.append({
-                        "type": "import_function",
-                        "old": name,
-                        "new": new_name,
-                        "line": node.lineno,
-                    })
+                    self.changes.append(
+                        {
+                            "type": "import_function",
+                            "old": name,
+                            "new": new_name,
+                            "line": node.lineno,
+                        }
+                    )
                 else:
                     new_names.append(alias)
 
@@ -67,12 +69,14 @@ class FlxExceptionFixer(ast.NodeTransformer):
                     ],
                     keywords=[],
                 )
-                self.changes.append({
-                    "type": "exception_attr",
-                    "old": f"{node.value.id}.{node.attr}",
-                    "new": f"getattr({node.value.id}, '{node.attr}', None)",
-                    "line": node.lineno if hasattr(node, "lineno") else 0,
-                })
+                self.changes.append(
+                    {
+                        "type": "exception_attr",
+                        "old": f"{node.value.id}.{node.attr}",
+                        "new": f"getattr({node.value.id}, '{node.attr}', None)",
+                        "line": node.lineno if hasattr(node, "lineno") else 0,
+                    }
+                )
                 return new_node
 
         return node
@@ -115,11 +119,13 @@ def fix_missing_imports(filepath: Path) -> list[dict[str, any]]:
                     lines.insert(import_end_line, import_stmt)
                     added_imports.add(import_stmt)
                     import_end_line += 1
-                    changes.append({
-                        "type": "add_import",
-                        "import": import_stmt,
-                        "for": name,
-                    })
+                    changes.append(
+                        {
+                            "type": "add_import",
+                            "import": import_stmt,
+                            "for": name,
+                        }
+                    )
 
         if changes:
             filepath.write_text("\n".join(lines) + "\n")
@@ -182,11 +188,13 @@ def fix_method_references(filepath: Path) -> list[dict[str, any]]:
         for old, new in method_map.items():
             if old in content:
                 content = content.replace(old, new)
-                changes.append({
-                    "type": "method_reference",
-                    "old": old,
-                    "new": new,
-                })
+                changes.append(
+                    {
+                        "type": "method_reference",
+                        "old": old,
+                        "new": new,
+                    }
+                )
 
         if content != original:
             filepath.write_text(content)
@@ -197,7 +205,9 @@ def fix_method_references(filepath: Path) -> list[dict[str, any]]:
     return changes
 
 
-def fix_constructor_calls(filepath: Path, inventory: dict[str, any]) -> list[dict[str, any]]:
+def fix_constructor_calls(
+    filepath: Path, inventory: dict[str, any]
+) -> list[dict[str, any]]:
     """Fix constructor calls with missing arguments."""
     changes = []
 
@@ -231,7 +241,10 @@ def fix_constructor_calls(filepath: Path, inventory: dict[str, any]) -> list[dic
 
                 # Check if it's missing required args
                 for arg_name, default_value in defaults.items():
-                    if f"{arg_name}=" not in call_text and f'"{arg_name}"' not in call_text:
+                    if (
+                        f"{arg_name}=" not in call_text
+                        and f'"{arg_name}"' not in call_text
+                    ):
                         # Add the missing argument
                         if ")" in call_text:
                             # Find the closing parenthesis
@@ -242,22 +255,30 @@ def fix_constructor_calls(filepath: Path, inventory: dict[str, any]) -> list[dic
                             if "(" in args_part and args_part.split("(")[1].strip():
                                 new_call = f"{args_part}, {arg_name}={default_value})"
                             else:
-                                new_call = f"{args_part.rstrip()}{arg_name}={default_value})"
+                                new_call = (
+                                    f"{args_part.rstrip()}{arg_name}={default_value})"
+                                )
 
                             # Calculate line and position
                             start_pos = match.start()
                             line_num = content[:start_pos].count("\n")
 
                             # Replace in content
-                            content = content[:match.start()] + new_call + content[match.end():]
+                            content = (
+                                content[: match.start()]
+                                + new_call
+                                + content[match.end() :]
+                            )
 
-                            changes.append({
-                                "type": "constructor_arg",
-                                "class": class_name,
-                                "arg": arg_name,
-                                "value": default_value,
-                                "line": line_num + 1,
-                            })
+                            changes.append(
+                                {
+                                    "type": "constructor_arg",
+                                    "class": class_name,
+                                    "arg": arg_name,
+                                    "value": default_value,
+                                    "line": line_num + 1,
+                                }
+                            )
 
         if changes:
             filepath.write_text(content)
@@ -273,9 +294,15 @@ def main() -> None:
     import argparse
 
     parser = argparse.ArgumentParser(description="Fix remaining FLX issues")
-    parser.add_argument("--dry-run", action="store_true", help="Show what would be changed")
-    parser.add_argument("--type", choices=["imports", "exceptions", "methods", "constructors", "all"],
-                       default="all", help="Type of fixes to apply")
+    parser.add_argument(
+        "--dry-run", action="store_true", help="Show what would be changed"
+    )
+    parser.add_argument(
+        "--type",
+        choices=["imports", "exceptions", "methods", "constructors", "all"],
+        default="all",
+        help="Type of fixes to apply",
+    )
     args = parser.parse_args()
 
     # Load inventory
@@ -357,7 +384,9 @@ def main() -> None:
                 elif change["type"] == "method_reference":
                     print(f"  Method: {change['old']} -> {change['new']}")
                 elif change["type"] == "constructor_arg":
-                    print(f"  Constructor: {change['class']} added {change['arg']}={change['value']}")
+                    print(
+                        f"  Constructor: {change['class']} added {change['arg']}={change['value']}"
+                    )
         else:
             print("  No changes needed")
 

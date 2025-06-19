@@ -212,14 +212,14 @@ class TestValidator:
     ) -> None:
         """Validate performance metrics are within acceptable bounds."""
         if "duration" in metrics:
-            assert (
-                metrics["duration"] < max_duration
-            ), f"Duration {metrics['duration']} exceeds {max_duration}s"
+            assert metrics["duration"] < max_duration, (
+                f"Duration {metrics['duration']} exceeds {max_duration}s"
+            )
 
         if "memory_growth" in metrics:
-            assert (
-                metrics["memory_growth"] < max_memory_growth
-            ), f"Memory growth {metrics['memory_growth']} exceeds {max_memory_growth} bytes"
+            assert metrics["memory_growth"] < max_memory_growth, (
+                f"Memory growth {metrics['memory_growth']} exceeds {max_memory_growth} bytes"
+            )
 
 
 class MockAPIServer:

@@ -209,7 +209,7 @@ source .venv/bin/activate
 cd flx-database-oracle
 pip install -e .
 
-# WMS HTTP adapter  
+# WMS HTTP adapter
 cd ../flx_http_oracle_wms
 pip install -e .
 
@@ -293,38 +293,38 @@ def verify_installation():
         from flx.core import Entity, AggregateRoot, DomainEvent
         from flx.ports import ModernBasePort, CliPort
         from flx.adapters.inbound.cli import CliAdapter
-        
+
         print(f"✅ FLX {flx.__version__} - Core framework installed")
-        
+
         # Test entity system
         class TestEntity(Entity):
             name: str = "test"
-        
+
         entity = TestEntity()
         print(f"✅ Entity system functional - ID: {entity.id}")
-        
+
         # Test Oracle adapters (if available)
         try:
             import flx_database_oracle
             print("✅ Oracle Database adapter available")
         except ImportError:
             print("ℹ️  Oracle Database adapter not installed")
-        
+
         try:
             import flx_http_oracle_wms
             print("✅ Oracle WMS adapter available")
         except ImportError:
             print("ℹ️  Oracle WMS adapter not installed")
-        
+
         try:
             import flx_http_oracle_oic
             print("✅ Oracle OIC adapter available")
         except ImportError:
             print("ℹ️  Oracle OIC adapter not installed")
-        
+
         print("\n🎉 FLX Framework successfully installed and verified!")
         return True
-        
+
     except ImportError as e:
         print(f"❌ Import error: {e}")
         return False

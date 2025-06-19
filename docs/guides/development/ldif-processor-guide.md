@@ -46,7 +46,7 @@ Configurações para transformação de arquivos LDIF:
   "transform": {
     "remove_attributes": ["createtimestamp", "creatorsname"],
     "remove_objectclasses": ["orclreferral"],
-    "attribute_mappings": {"orclguid": "entryuuid"},
+    "attribute_mappings": { "orclguid": "entryuuid" },
     "create_missing_parents": true,
     "skip_entries_patterns": ["^cn=OracleContext"]
   }

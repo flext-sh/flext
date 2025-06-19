@@ -353,4 +353,4 @@ engine = create_async_engine(
 
 ---
 
-*This troubleshooting guide provides comprehensive coverage of common issues and debugging strategies for the FLX hexagonal architecture framework. Use it as a reference when encountering problems during development, testing, or production deployment.*
+_This troubleshooting guide provides comprehensive coverage of common issues and debugging strategies for the FLX hexagonal architecture framework. Use it as a reference when encountering problems during development, testing, or production deployment._

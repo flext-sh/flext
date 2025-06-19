@@ -24,11 +24,11 @@ This hub provides comprehensive guidance for defining and implementing port inte
 
 ### **Core Port Topics**
 
-| **Topic** | **Function** | **Audience** | **Complexity** | **Status** |
-|-----------|--------------|--------------|----------------|------------|
-| [**Interface Definitions**](./ports-interface-definitions.md) | Complete port contracts catalog | All developers | ⭐⭐ | ✅ Updated |
-| [**Inbound Ports**](./inbound-ports.md) | External request handling ports | API developers, CLI builders | ⭐⭐⭐ | ✅ Updated |
-| [**Implementation Guide**](./port-implementation-guide.md) | Step-by-step port creation | Framework developers | ⭐⭐⭐ | ✅ Updated |
+| **Topic**                                                     | **Function**                    | **Audience**                 | **Complexity** | **Status** |
+| ------------------------------------------------------------- | ------------------------------- | ---------------------------- | -------------- | ---------- |
+| [**Interface Definitions**](./ports-interface-definitions.md) | Complete port contracts catalog | All developers               | ⭐⭐           | ✅ Updated |
+| [**Inbound Ports**](./inbound-ports.md)                       | External request handling ports | API developers, CLI builders | ⭐⭐⭐         | ✅ Updated |
+| [**Implementation Guide**](./port-implementation-guide.md)    | Step-by-step port creation      | Framework developers         | ⭐⭐⭐         | ✅ Updated |
 
 ---
 
@@ -37,24 +37,24 @@ This hub provides comprehensive guidance for defining and implementing port inte
 ### **🎯 For New Framework Developers**
 
 ```
-1. [Interface Definitions](./ports-interface-definitions.md) → 
-2. [Inbound Ports](./inbound-ports.md) → 
+1. [Interface Definitions](./ports-interface-definitions.md) →
+2. [Inbound Ports](./inbound-ports.md) →
 3. [Implementation Guide](./port-implementation-guide.md)
 ```
 
 ### **⚡ For Integration Engineers**
 
 ```
-1. [Implementation Guide](./port-implementation-guide.md) → 
-2. [Adapters](../adapters/index.md) → 
+1. [Implementation Guide](./port-implementation-guide.md) →
+2. [Adapters](../adapters/index.md) →
 3. [Integration Patterns](../integration/index.md)
 ```
 
 ### **🏢 For Architects**
 
 ```
-1. [Interface Definitions](./ports-interface-definitions.md) → 
-2. [Design Patterns](../design/index.md) → 
+1. [Interface Definitions](./ports-interface-definitions.md) →
+2. [Design Patterns](../design/index.md) →
 3. [Standards](../standards/index.md)
 ```
 

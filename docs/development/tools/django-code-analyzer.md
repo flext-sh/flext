@@ -57,32 +57,32 @@ cd dc-code-analyzer
 
 1. **Clone and Setup**
 
-    ```bash
-    git clone <repository>
-    cd dc-code-analyzer
-    pip install -r requirements.txt
-    pip install sarif-om jschema-to-python  # Additional dependencies
-    ```
+   ```bash
+   git clone <repository>
+   cd dc-code-analyzer
+   pip install -r requirements.txt
+   pip install sarif-om jschema-to-python  # Additional dependencies
+   ```
 
 2. **Database Setup**
 
-    ```bash
-    python manage.py migrate
-    ```
+   ```bash
+   python manage.py migrate
+   ```
 
 3. **Start Server with Auto-reload**
 
-    ```bash
-    python manage.py runserver 0.0.0.0:8000
-    ```
+   ```bash
+   python manage.py runserver 0.0.0.0:8000
+   ```
 
 4. **Access Application**
 
-    ```
-    🌐 Main Dashboard: http://localhost:8000/
-    📦 Package Discovery: http://localhost:8000/packages/
-    📊 Admin Interface: http://localhost:8000/REDACTED_LDAP_BIND_PASSWORD/
-    ```
+   ```
+   🌐 Main Dashboard: http://localhost:8000/
+   📦 Package Discovery: http://localhost:8000/packages/
+   📊 Admin Interface: http://localhost:8000/REDACTED_LDAP_BIND_PASSWORD/
+   ```
 
 ## 📁 Project Structure
 
@@ -272,11 +272,13 @@ The package discovery system can be customized:
 ### **Common Issues**
 
 1. **Package Discovery Not Working**
+
    - Check Python environment
    - Verify package installations
    - Try manual refresh
 
 2. **Analysis Fails**
+
    - Verify source code accessibility
    - Check file permissions
    - Review error logs

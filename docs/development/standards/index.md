@@ -35,12 +35,12 @@ The Standards Hub establishes enterprise-grade code quality standards and develo
 
 ### **Standards Categories**
 
-| **Standard** | **Scope** | **Compliance** | **Status** | **Key Features** |
-|--------------|-----------|----------------|------------|------------------|
-| **[Standardization Plan](./standardization-plan.md)** | Core Development | Enterprise | ✅ Production | Code quality, architecture patterns, best practices |
-| **[Python Modernization](./python-modernization-guide.md)** | Language Standards | Python 3.13+ | ✅ Production | Modern syntax, type hints, performance patterns |
-| **[Documentation Standards](./documentation-standards.md)** | Documentation | Technical Writing | ✅ Production | Structure, formatting, quality requirements |
-| **[Documentation Guide](./documentation-guide.md)** | Writing Practices | Content Creation | ✅ Production | Writing guidelines, templates, workflows |
+| **Standard**                                                | **Scope**          | **Compliance**    | **Status**    | **Key Features**                                    |
+| ----------------------------------------------------------- | ------------------ | ----------------- | ------------- | --------------------------------------------------- |
+| **[Standardization Plan](./standardization-plan.md)**       | Core Development   | Enterprise        | ✅ Production | Code quality, architecture patterns, best practices |
+| **[Python Modernization](./python-modernization-guide.md)** | Language Standards | Python 3.13+      | ✅ Production | Modern syntax, type hints, performance patterns     |
+| **[Documentation Standards](./documentation-standards.md)** | Documentation      | Technical Writing | ✅ Production | Structure, formatting, quality requirements         |
+| **[Documentation Guide](./documentation-guide.md)**         | Writing Practices  | Content Creation  | ✅ Production | Writing guidelines, templates, workflows            |
 
 ### **🚀 Enterprise Standards Features**
 

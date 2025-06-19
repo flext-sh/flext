@@ -6,14 +6,14 @@ Oracle WMS Cloud follows a quarterly release cycle with continuous API improveme
 
 ### Release Timeline
 
-| Version | Release Date | API Version | Major Changes |
-|---------|--------------|-------------|---------------|
-| 25B | April 2025 | v10 | Data Extract API, Enhanced IBLPN APIs, Async Processing |
-| 25A | January 2025 | v10 | Performance improvements, Cursor pagination |
-| 24C | October 2024 | v10 | OAuth 2.0 support, Bulk operations |
-| 24B | July 2024 | v10 | Enhanced filtering, Field selection |
-| 24A | April 2024 | v10 | API v10 release, Standardized responses |
-| 23D | January 2024 | v9 | Legacy version (deprecated) |
+| Version | Release Date | API Version | Major Changes                                           |
+| ------- | ------------ | ----------- | ------------------------------------------------------- |
+| 25B     | April 2025   | v10         | Data Extract API, Enhanced IBLPN APIs, Async Processing |
+| 25A     | January 2025 | v10         | Performance improvements, Cursor pagination             |
+| 24C     | October 2024 | v10         | OAuth 2.0 support, Bulk operations                      |
+| 24B     | July 2024    | v10         | Enhanced filtering, Field selection                     |
+| 24A     | April 2024   | v10         | API v10 release, Standardized responses                 |
+| 23D     | January 2024 | v9          | Legacy version (deprecated)                             |
 
 ## API Versioning Strategy
 

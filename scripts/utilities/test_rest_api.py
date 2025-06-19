@@ -91,7 +91,6 @@ def test_api_endpoints():
 
     for test in test_cases:
         try:
-
             if test["method"] == "GET":
                 response = requests.get(test["url"], timeout=10)
             elif test["method"] == "POST":

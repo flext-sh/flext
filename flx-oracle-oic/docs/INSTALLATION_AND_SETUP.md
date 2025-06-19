@@ -128,20 +128,20 @@ Create a `config.json` file:
 
 ### Configuration Parameters
 
-| Parameter | Required | Description | Default |
-|-----------|----------|-------------|---------|
-| `instance_url` | Yes | OIC instance URL | - |
-| `username` | Yes | OIC username | - |
-| `password` | Yes | OIC password | - |
-| `start_date` | No | Start date for data extraction | 30 days ago |
-| `api_version` | No | API version to use | "v1" |
-| `page_size` | No | Records per page | 100 |
-| `request_timeout` | No | Request timeout in seconds | 300 |
-| `max_retries` | No | Maximum retry attempts | 3 |
-| `retry_delay` | No | Delay between retries | 60 |
-| `selected_streams` | No | Streams to extract | All available |
-| `state_backend` | No | State storage configuration | File-based |
-| `verify_ssl` | No | Verify SSL certificates | true |
+| Parameter          | Required | Description                    | Default       |
+| ------------------ | -------- | ------------------------------ | ------------- |
+| `instance_url`     | Yes      | OIC instance URL               | -             |
+| `username`         | Yes      | OIC username                   | -             |
+| `password`         | Yes      | OIC password                   | -             |
+| `start_date`       | No       | Start date for data extraction | 30 days ago   |
+| `api_version`      | No       | API version to use             | "v1"          |
+| `page_size`        | No       | Records per page               | 100           |
+| `request_timeout`  | No       | Request timeout in seconds     | 300           |
+| `max_retries`      | No       | Maximum retry attempts         | 3             |
+| `retry_delay`      | No       | Delay between retries          | 60            |
+| `selected_streams` | No       | Streams to extract             | All available |
+| `state_backend`    | No       | State storage configuration    | File-based    |
+| `verify_ssl`       | No       | Verify SSL certificates        | true          |
 
 ### Environment Variables
 
@@ -344,6 +344,7 @@ Error: 401 Unauthorized
 ```
 
 **Solution**:
+
 - Verify username and password
 - Check if account is locked
 - Ensure user has API access permissions
@@ -356,6 +357,7 @@ Error: SSL: CERTIFICATE_VERIFY_FAILED
 ```
 
 **Solution**:
+
 ```json
 {
   "advanced": {
@@ -365,6 +367,7 @@ Error: SSL: CERTIFICATE_VERIFY_FAILED
 ```
 
 Or install certificates:
+
 ```bash
 pip install certifi
 export SSL_CERT_FILE=$(python -m certifi)
@@ -377,6 +380,7 @@ Error: Connection timeout after 300s
 ```
 
 **Solution**:
+
 ```json
 {
   "request_timeout": 600,
@@ -393,6 +397,7 @@ Error: 429 Too Many Requests
 ```
 
 **Solution**:
+
 ```json
 {
   "page_size": 50,
@@ -408,6 +413,7 @@ Error: MemoryError
 ```
 
 **Solution**:
+
 - Reduce page_size
 - Enable streaming mode
 - Use state management for incremental sync
@@ -594,28 +600,28 @@ spec:
     spec:
       serviceAccountName: tap-oic-sa
       containers:
-      - name: tap-oic
-        image: <region>.ocir.io/<tenancy>/tap-oic:latest
-        env:
-        - name: OCI_RESOURCE_PRINCIPAL_VERSION
-          value: "2.2"
-        - name: OCI_RESOURCE_PRINCIPAL_REGION
-          value: "us-ashburn-1"
-        volumeMounts:
-        - name: config
-          mountPath: /config
-          readOnly: true
-        resources:
-          requests:
-            memory: "512Mi"
-            cpu: "500m"
-          limits:
-            memory: "2Gi"
-            cpu: "2000m"
+        - name: tap-oic
+          image: <region>.ocir.io/<tenancy>/tap-oic:latest
+          env:
+            - name: OCI_RESOURCE_PRINCIPAL_VERSION
+              value: "2.2"
+            - name: OCI_RESOURCE_PRINCIPAL_REGION
+              value: "us-ashburn-1"
+          volumeMounts:
+            - name: config
+              mountPath: /config
+              readOnly: true
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "500m"
+            limits:
+              memory: "2Gi"
+              cpu: "2000m"
       volumes:
-      - name: config
-        secret:
-          secretName: tap-oic-config
+        - name: config
+          secret:
+            secretName: tap-oic-config
 ```
 
 #### Schedule Extraction with CronJob
@@ -628,7 +634,7 @@ metadata:
   name: tap-oic-hourly
   namespace: data-pipeline
 spec:
-  schedule: "0 * * * *"  # Every hour
+  schedule: "0 * * * *" # Every hour
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 3
@@ -638,16 +644,16 @@ spec:
         spec:
           serviceAccountName: tap-oic-sa
           containers:
-          - name: tap-oic
-            image: <region>.ocir.io/<tenancy>/tap-oic:latest
-            command:
-            - /bin/bash
-            - -c
-            - |
-              tap-oic --config /config/config.json \
-                      --catalog /catalog/catalog.json \
-                      --state /state/state.json | \
-              target-oracle --config /config/target-config.json
+            - name: tap-oic
+              image: <region>.ocir.io/<tenancy>/tap-oic:latest
+              command:
+                - /bin/bash
+                - -c
+                - |
+                  tap-oic --config /config/config.json \
+                          --catalog /catalog/catalog.json \
+                          --state /state/state.json | \
+                  target-oracle --config /config/target-config.json
           restartPolicy: OnFailure
 ```
 
@@ -769,12 +775,12 @@ spec:
   minReplicas: 1
   maxReplicas: 5
   metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 70
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
 ```
 
 ## Next Steps

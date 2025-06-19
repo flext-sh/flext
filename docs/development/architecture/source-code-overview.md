@@ -113,7 +113,7 @@ class PostgreSQLAdapter(DatabasePort):
     async def save(self, entity: Entity) -> None:
         # PostgreSQL-specific implementation
         pass
-    
+
     async def find_by_id(self, entity_id: str) -> Entity | None:
         # PostgreSQL-specific implementation
         pass
@@ -139,7 +139,7 @@ service = container.get(UserService)  # Auto-wired dependencies
 class UserManagementPlugin(Plugin):
     async def initialize(self, container: ServiceContainer) -> None:
         container.bind(UserService, EnhancedUserService)
-    
+
     async def get_commands(self) -> List[Command]:
         return [CreateUserCommand, UpdateUserCommand]
 ```
@@ -244,7 +244,7 @@ from typing import List, Optional, Dict, Any
 class UserService:
     def __init__(self, repository: UserRepository) -> None:
         self.repository = repository
-    
+
     async def create_user(self, username: str, email: str) -> User:
         # Implementation with proper typing
         pass
@@ -260,13 +260,13 @@ class UserService:
             # Validate input
             if not username or not email:
                 raise ValidationError("Username and email are required")
-            
+
             # Business logic
             user = User(username=username, email=Email(email))
             await self.repository.save(user)
-            
+
             return user
-            
+
         except ValidationError:
             # Re-raise validation errors
             raise
@@ -290,17 +290,17 @@ class UserService:
     def __init__(self, repository: UserRepository) -> None:
         self.repository = repository
         self.logger = FlxLogger("user.service")
-    
+
     async def create_user(self, username: str, email: str) -> User:
         self.logger.info("Creating user - Username: %s", username)
-        
+
         try:
             user = User(username=username, email=Email(email))
             await self.repository.save(user)
-            
+
             self.logger.info("User created successfully - ID: %s", user.id)
             return user
-            
+
         except Exception as e:
             self.logger.error("User creation failed - Error: %s", str(e))
             raise
@@ -316,7 +316,7 @@ from flx.testing.fixtures import user_repository_mock, event_publisher_mock
 class TestUserService:
     @pytest.mark.asyncio
     async def test_create_user_success(
-        self, 
+        self,
         user_repository_mock: UserRepository,
         event_publisher_mock: EventPublisher
     ):
@@ -325,10 +325,10 @@ class TestUserService:
             repository=user_repository_mock,
             event_publisher=event_publisher_mock
         )
-        
+
         # Act
         user = await service.create_user("john", "john@example.com")
-        
+
         # Assert
         assert user.username == "john"
         assert user.email.value == "john@example.com"
@@ -398,7 +398,7 @@ debug_mode = config.get_bool("DEBUG_MODE", False)
 
 ---
 
-**Last Updated**: January 2025  
-**Status**: Production Ready  
-**Architecture**: Hexagonal Architecture  
+**Last Updated**: January 2025
+**Status**: Production Ready
+**Architecture**: Hexagonal Architecture
 **Language**: Python 3.13+

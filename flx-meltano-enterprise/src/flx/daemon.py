@@ -232,6 +232,7 @@ class FlxDaemon:
         # Add monitoring interceptor if available
         try:
             from flx.grpc.interceptors import MetricsInterceptor, TracingInterceptor
+
             interceptors.append(MetricsInterceptor())
         except ImportError:
             pass
@@ -239,6 +240,7 @@ class FlxDaemon:
         if settings and settings.tracing_enabled:
             try:
                 from flx.grpc.interceptors import TracingInterceptor
+
                 interceptors.append(TracingInterceptor())
             except ImportError:
                 pass

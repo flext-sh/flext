@@ -32,6 +32,7 @@ except ImportError:
     def get_current_span():
         return None
 
+
 logger = structlog.get_logger()
 
 

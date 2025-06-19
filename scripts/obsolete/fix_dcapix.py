@@ -121,8 +121,10 @@ def flx_auth_token_valid(file_path: Path) -> int:
     pattern = r'def is_token_valid\(self\) -> bool:(?:\s+""".*?""")?\s+(?:return [\w\.\s_!=]+|return\s+self\._token\s+is\s+not\s+None\s+and\s+self\._authenticated)'
 
     if re.search(pattern, content, re.DOTALL):
+
         def replacement(m):
             return m.group(0).replace("return ", "        return ")
+
         modified_content = re.sub(pattern, replacement, content, flags=re.DOTALL)
 
         # Write the modified content back if changes were made
@@ -146,8 +148,10 @@ def flx_is_authenticated_method(file_path: Path) -> int:
     pattern = r'def is_authenticated\(self\) -> bool:(?:\s+""".*?""")?\s+(?:return [\w\.\s_!=]+|return\s+self\._authenticated)'
 
     if re.search(pattern, content, re.DOTALL):
+
         def replacement(m):
             return m.group(0).replace("return ", "        return ")
+
         modified_content = re.sub(pattern, replacement, content, flags=re.DOTALL)
 
         # Write the modified content back if changes were made
@@ -171,8 +175,10 @@ def flx_validate_token_method(file_path: Path) -> int:
     pattern = r'def validate_token\(self, token: str\) -> bool:(?:\s+""".*?""")?\s+(?:return [\w\.\s_!=]+|return\s+token\s+==\s+self\._token\s+and\s+self\._authenticated)'
 
     if re.search(pattern, content, re.DOTALL):
+
         def replacement(m):
             return m.group(0).replace("return ", "        return ")
+
         modified_content = re.sub(pattern, replacement, content, flags=re.DOTALL)
 
         # Write the modified content back if changes were made

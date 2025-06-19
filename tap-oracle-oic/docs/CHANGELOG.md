@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.0.0] - 2025-06-15
 
 ### Added
+
 - **Integration Generation**: Create integrations programmatically via OIC REST API
 - **Connection Management**: Create and manage connections via API
 - **Project Management**: Create and organize projects programmatically
@@ -18,18 +19,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Self-Healing Integrations**: Automatic error recovery patterns
 
 ### Changed
+
 - **Major Documentation Overhaul**: Reorganized from 36+ files to 11 essential documents
 - **Corrected Capabilities**: Updated all documentation to reflect OIC Gen3's true ability to create integrations via API
 - **Improved API Client**: Enhanced with connection pooling and better error handling
 - **Performance Optimizations**: Batch processing and caching improvements
 
 ### Fixed
+
 - Removed all false claims about OIC being "read-only"
 - Corrected API endpoint documentation
 - Fixed authentication issues with OAuth2
 - Improved state management reliability
 
 ### Migration Notes
+
 - This is a major version upgrade with new capabilities
 - Review the new INTEGRATION_GENERATION.md for programmatic integration creation
 - Update configuration to leverage new features
@@ -38,6 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.0] - 2025-01-15
 
 ### Added
+
 - Initial release of tap-oic
 - Full support for Oracle Integration Cloud Generation 3
 - OAuth2 authentication (mandatory for Gen3)
@@ -64,11 +69,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Docker container support
 
 ### Security
+
 - OAuth2 authentication support
 - Secure credential management
 - TLS 1.2+ enforcement
 
 ### Performance
+
 - Connection pooling
 - Pagination support
 - Streaming mode for large datasets

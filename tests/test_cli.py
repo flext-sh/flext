@@ -175,7 +175,9 @@ class TestFlxCliErrorHandling:
     async def test_status_command_error(self, cli: Any) -> None:
         """Test status command with adapter error."""
         with patch.object(
-            cli.adapter, "execute_command", side_effect=RuntimeError("Test error"),
+            cli.adapter,
+            "execute_command",
+            side_effect=RuntimeError("Test error"),
         ):
             result = await cli.status()
             assert result.status == "error"

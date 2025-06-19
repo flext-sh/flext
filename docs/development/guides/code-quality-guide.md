@@ -208,38 +208,38 @@ async def create_user(
     logger: FlxLogger
 ) -> CreateUserResult:
     """Create a new user with validation and event publishing.
-    
+
     Args:
         username: Unique username for the user
         email: Validated email address
         user_repo: Repository for user persistence
         event_bus: Event bus for publishing domain events
         logger: Logger for operation tracking
-        
+
     Returns:
         Result containing user ID and success status
-        
+
     Raises:
         ValidationError: If username or email is invalid
         DuplicateUserError: If username already exists
     """
     if await user_repo.exists_by_username(username):
         raise DuplicateUserError(f"Username '{username}' already exists")
-    
+
     user = User(username=username, email=email)
     await user_repo.save(user)
-    
+
     await event_bus.publish(UserCreatedEvent(
         user_id=user.id,
         username=username,
         email=email.value
     ))
-    
+
     logger.info("User created", extra={
         "user_id": str(user.id),
         "username": username
     })
-    
+
     return CreateUserResult(success=True, user_id=user.id)
 
 # ❌ Bad: Too many responsibilities, unclear parameters
@@ -256,7 +256,7 @@ def process_user_data(data, db, events, log):
 # ✅ Good: Single responsibility, clear interfaces
 class UserService:
     """Application service for user management operations."""
-    
+
     def __init__(
         self,
         *,
@@ -267,7 +267,7 @@ class UserService:
         self._user_repo = user_repo
         self._event_bus = event_bus
         self._logger = logger
-    
+
     async def register_user(
         self,
         registration_data: UserRegistrationData
@@ -276,18 +276,18 @@ class UserService:
         try:
             # Validation
             await self._validate_registration_data(registration_data)
-            
+
             # Business logic
             user = await self._create_user_entity(registration_data)
-            
+
             # Persistence
             await self._user_repo.save(user)
-            
+
             # Events
             await self._publish_user_created_event(user)
-            
+
             return UserRegistrationResult.success(user.id)
-            
+
         except Exception as e:
             self._logger.error("User registration failed", exc_info=e, extra={
                 "username": registration_data.username
@@ -300,7 +300,7 @@ class UserManager:
         # Direct dependencies instead of abstractions
         # No type hints
         pass
-    
+
     def do_user_stuff(self, user_data):
         # Unclear method name and purpose
         # No error handling
@@ -328,15 +328,15 @@ EntityId = TypeVar('EntityId', bound=UUID)
 @runtime_checkable
 class Repository(Protocol[T]):
     """Repository protocol with generic type support."""
-    
+
     async def save(self, entity: T) -> None:
         """Save entity to storage."""
         ...
-    
+
     async def find_by_id(self, entity_id: EntityId) -> Optional[T]:
         """Find entity by ID."""
         ...
-    
+
     async def find_all(
         self,
         *,
@@ -348,11 +348,11 @@ class Repository(Protocol[T]):
 
 class UserRepository(Repository[User]):
     """User-specific repository with additional methods."""
-    
+
     async def find_by_username(self, username: str) -> Optional[User]:
         """Find user by unique username."""
         ...
-    
+
     async def find_by_email(self, email: Email) -> Optional[User]:
         """Find user by email address."""
         ...
@@ -364,10 +364,10 @@ ConfigValue = Union[str, int, bool, float, List[Any], Dict[str, Any]]
 
 class EventBus:
     """Type-safe event bus implementation."""
-    
+
     def __init__(self) -> None:
         self._handlers: Dict[type[DomainEvent], List[EventHandler]] = {}
-    
+
     async def subscribe(
         self,
         event_type: type[DomainEvent],
@@ -377,7 +377,7 @@ class EventBus:
         if event_type not in self._handlers:
             self._handlers[event_type] = []
         self._handlers[event_type].append(handler)
-    
+
     async def publish(self, event: DomainEvent) -> None:
         """Publish event to all registered handlers."""
         event_type = type(event)
@@ -389,11 +389,11 @@ class EventBus:
 class BadEventBus:
     def __init__(self):  # No return type annotation
         self.handlers = {}  # No type hints
-    
+
     def subscribe(self, event_type, handler):  # No parameter types
         # Implementation without types
         pass
-    
+
     def publish(self, event):  # No return type
         # Implementation without types
         pass
@@ -429,14 +429,14 @@ class UserService:
             if user is None:
                 raise UserNotFoundError(f"User with ID {user_id} not found")
             return user
-            
+
         except RepositoryError as e:
             # Log infrastructure error but don't expose details
             self._logger.error("Repository error retrieving user", exc_info=e, extra={
                 "user_id": str(user_id)
             })
             raise UserServiceError("Failed to retrieve user") from e
-        
+
         except Exception as e:
             # Catch unexpected errors
             self._logger.error("Unexpected error retrieving user", exc_info=e, extra={
@@ -517,34 +517,34 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.13'
-          
+          python-version: "3.13"
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
-          
+
       - name: Code formatting check
         run: black --check .
-        
+
       - name: Linting
         run: ruff check .
-        
+
       - name: Type checking
         run: mypy src/
-        
+
       - name: Security check
         run: |
           bandit -r . -f json -o reports/bandit.json
           safety check
-          
+
       - name: Run tests with coverage
         run: pytest --cov-fail-under=90
-        
+
       - name: Upload coverage reports
         uses: codecov/codecov-action@v3
         with:
@@ -593,11 +593,11 @@ jobs:
 # ✅ Good: Code ready for review
 class UserRegistrationService:
     """Service for handling user registration workflows.
-    
+
     This service orchestrates the complete user registration process,
     including validation, persistence, and event publishing.
     """
-    
+
     def __init__(
         self,
         *,
@@ -607,7 +607,7 @@ class UserRegistrationService:
         logger: FlxLogger
     ) -> None:
         """Initialize the registration service.
-        
+
         Args:
             user_repo: Repository for user persistence
             email_service: Service for sending emails
@@ -618,19 +618,19 @@ class UserRegistrationService:
         self._email_service = email_service
         self._event_bus = event_bus
         self._logger = logger
-    
+
     async def register_user(
         self,
         registration_data: UserRegistrationData
     ) -> UserRegistrationResult:
         """Register a new user with complete validation and notification.
-        
+
         Args:
             registration_data: Validated registration data
-            
+
         Returns:
             Registration result with success status and user ID
-            
+
         Raises:
             DuplicateUserError: If username or email already exists
             ValidationError: If registration data is invalid
@@ -639,44 +639,44 @@ class UserRegistrationService:
         try:
             # Validate uniqueness
             await self._validate_user_uniqueness(registration_data)
-            
+
             # Create user entity
             user = User(
                 username=registration_data.username,
                 email=registration_data.email,
                 profile=registration_data.profile
             )
-            
+
             # Persist user
             await self._user_repo.save(user)
-            
+
             # Send welcome email
             await self._email_service.send_welcome_email(user)
-            
+
             # Publish event
             await self._event_bus.publish(UserRegisteredEvent(
                 user_id=user.id,
                 username=user.username,
                 email=user.email.value
             ))
-            
+
             self._logger.info("User registered successfully", extra={
                 "user_id": str(user.id),
                 "username": user.username
             })
-            
+
             return UserRegistrationResult.success(user.id)
-            
+
         except (DuplicateUserError, ValidationError):
             # Re-raise domain errors
             raise
-            
+
         except Exception as e:
             self._logger.error("User registration failed", exc_info=e, extra={
                 "username": registration_data.username
             })
             raise RegistrationError("Registration process failed") from e
-    
+
     async def _validate_user_uniqueness(
         self,
         registration_data: UserRegistrationData
@@ -684,7 +684,7 @@ class UserRegistrationService:
         """Validate that username and email are unique."""
         if await self._user_repo.exists_by_username(registration_data.username):
             raise DuplicateUserError(f"Username '{registration_data.username}' already exists")
-        
+
         if await self._user_repo.exists_by_email(registration_data.email):
             raise DuplicateUserError(f"Email '{registration_data.email}' already exists")
 
@@ -694,7 +694,7 @@ class UserStuff:
         self.repo = repo
         self.email = email
         self.events = events
-    
+
     def register(self, data):  # No documentation, unclear parameters
         # No error handling
         user = self.repo.create(data)
@@ -739,7 +739,7 @@ def measure_code_quality(project_path: Path) -> QualityReport:
 # Quality reporting for dashboards
 class QualityReporter:
     """Generate quality reports for monitoring dashboards."""
-    
+
     def generate_quality_report(self) -> Dict[str, Any]:
         """Generate comprehensive quality report."""
         return {
@@ -776,7 +776,7 @@ class QualityReporter:
 class BadRepository:
     def save(self, entity):  # ❌ Missing type annotations
         pass
-    
+
     def find_all(self):  # ❌ Missing return type
         return []
 
@@ -789,11 +789,11 @@ class Repository(Generic[T]):
     async def save(self, entity: T) -> None:
         """Save entity to storage."""
         pass
-    
+
     async def find_all(self) -> List[T]:
         """Find all entities."""
         return []
-    
+
     async def find_by_id(self, entity_id: str) -> Optional[T]:
         """Find entity by ID."""
         return None
@@ -842,17 +842,17 @@ def process_user_data(user_data: UserData) -> ProcessingResult:
     """Process user data with decomposed logic."""
     if not user_data.is_active:
         return ProcessingResult.inactive_user()
-    
+
     if not user_data.is_verified:
         return ProcessingResult.unverified_user()
-    
+
     return _process_verified_user(user_data)
 
 def _process_verified_user(user_data: UserData) -> ProcessingResult:
     """Process verified user based on subscription and region."""
     if user_data.is_premium:
         return _process_premium_user(user_data)
-    
+
     return _process_standard_user(user_data)
 
 def _process_premium_user(user_data: UserData) -> ProcessingResult:

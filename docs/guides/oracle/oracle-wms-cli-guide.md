@@ -385,7 +385,7 @@ The CLI is built on the FLX framework extension architecture, providing:
    ```bash
    # Check if variables are set
    echo $WMS_HOST $WMS_USERNAME
-   
+
    # Set missing variables
    export WMS_HOST="your-host.com"
    ```

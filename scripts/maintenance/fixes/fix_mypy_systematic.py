@@ -57,15 +57,20 @@ def add_missing_classes() -> None:
     """Add missing class definitions based on analysis."""
     missing_classes = {
         "flx/src/flx/infra/logging/resilience.py": [
-            ("ResilienceState", """
+            (
+                "ResilienceState",
+                """
 class ResilienceState(StrEnum):
     \"\"\"States for resilience tracking.\"\"\"
     HEALTHY = "healthy"
     DEGRADED = "degraded"
     CIRCUIT_OPEN = "circuit_open"
     RECOVERING = "recovering"
-"""),
-            ("ResilienceMetrics", """
+""",
+            ),
+            (
+                "ResilienceMetrics",
+                """
 @dataclass
 class ResilienceMetrics:
     \"\"\"Metrics for resilience tracking.\"\"\"
@@ -74,8 +79,11 @@ class ResilienceMetrics:
     success_rate: float = 1.0
     avg_response_time: float = 0.0
     circuit_state: str = "closed"
-"""),
-            ("FailureEvent", """
+""",
+            ),
+            (
+                "FailureEvent",
+                """
 @dataclass
 class FailureEvent:
     \"\"\"Event representing a failure.\"\"\"
@@ -83,10 +91,13 @@ class FailureEvent:
     error_type: str
     error_message: str
     component: str = ""
-"""),
+""",
+            ),
         ],
         "flx/src/flx/infra/ratelimit/adaptive.py": [
-            ("RateLimitDecision", """
+            (
+                "RateLimitDecision",
+                """
 @dataclass
 class RateLimitDecision:
     \"\"\"Decision from rate limiter.\"\"\"
@@ -94,16 +105,22 @@ class RateLimitDecision:
     wait_time: float = 0.0
     reason: str = ""
     remaining_quota: int = 0
-"""),
-            ("UserProfile", """
+""",
+            ),
+            (
+                "UserProfile",
+                """
 @dataclass
 class UserProfile:
     \"\"\"User profile for rate limiting.\"\"\"
     user_id: str
     tier: str = "standard"
     quota_multiplier: float = 1.0
-"""),
-            ("EndpointStats", """
+""",
+            ),
+            (
+                "EndpointStats",
+                """
 @dataclass
 class EndpointStats:
     \"\"\"Statistics for an endpoint.\"\"\"
@@ -111,45 +128,60 @@ class EndpointStats:
     request_count: int = 0
     avg_response_time: float = 0.0
     error_rate: float = 0.0
-"""),
+""",
+            ),
         ],
         "flx/src/flx/infra/mock_data/adapters.py": [
-            ("AdapterModel", """
+            (
+                "AdapterModel",
+                """
 class AdapterModel(FlxStrictModel):
     \"\"\"Model for adapter data.\"\"\"
     name: str
     adapter_type: str
     config: Dict[str, Any] = {}
-"""),
-            ("AdapterCatalogEntry", """
+""",
+            ),
+            (
+                "AdapterCatalogEntry",
+                """
 @dataclass
 class AdapterCatalogEntry:
     \"\"\"Entry in adapter catalog.\"\"\"
     adapter_id: str
     adapter_class: type
     metadata: Dict[str, Any] = field(default_factory=dict)
-"""),
+""",
+            ),
         ],
         "flx/src/flx/infra/caching/adaptive.py": [
-            ("CachePattern", """
+            (
+                "CachePattern",
+                """
 class CachePattern(StrEnum):
     \"\"\"Cache access patterns.\"\"\"
     READ_HEAVY = "read_heavy"
     WRITE_HEAVY = "write_heavy"
     BALANCED = "balanced"
     TEMPORAL = "temporal"
-"""),
+""",
+            ),
         ],
         "flx/src/flx/infra/observability/metrics.py": [
-            ("MetricType", """
+            (
+                "MetricType",
+                """
 class MetricType(StrEnum):
     \"\"\"Types of metrics.\"\"\"
     COUNTER = "counter"
     GAUGE = "gauge"
     HISTOGRAM = "histogram"
     SUMMARY = "summary"
-"""),
-            ("SystemMetric", """
+""",
+            ),
+            (
+                "SystemMetric",
+                """
 @dataclass
 class SystemMetric:
     \"\"\"System metric data.\"\"\"
@@ -158,10 +190,13 @@ class SystemMetric:
     metric_type: str
     timestamp: float
     labels: Dict[str, str] = field(default_factory=dict)
-"""),
+""",
+            ),
         ],
         "flx/src/flx/plugins/base.py": [
-            ("PluginState", """
+            (
+                "PluginState",
+                """
 class PluginState(StrEnum):
     \"\"\"Plugin states.\"\"\"
     UNINITIALIZED = "uninitialized"
@@ -171,7 +206,8 @@ class PluginState(StrEnum):
     STOPPING = "stopping"
     STOPPED = "stopped"
     ERROR = "error"
-"""),
+""",
+            ),
         ],
     }
 
@@ -192,19 +228,25 @@ class PluginState(StrEnum):
         import_lines = []
         if needs_dataclass and "from dataclasses import dataclass" not in content:
             if "from dataclasses import" in content:
-                content = content.replace("from dataclasses import", "from dataclasses import dataclass,")
+                content = content.replace(
+                    "from dataclasses import", "from dataclasses import dataclass,"
+                )
             else:
                 import_lines.append("from dataclasses import dataclass")
 
         if needs_field and "field" not in content:
             if "from dataclasses import" in content:
-                content = content.replace("from dataclasses import", "from dataclasses import field,")
+                content = content.replace(
+                    "from dataclasses import", "from dataclasses import field,"
+                )
             else:
                 import_lines.append("from dataclasses import field")
 
         if needs_strenum and "from enum import StrEnum" not in content:
             if "from enum import" in content:
-                content = content.replace("from enum import", "from enum import StrEnum,")
+                content = content.replace(
+                    "from enum import", "from enum import StrEnum,"
+                )
             else:
                 import_lines.append("from enum import StrEnum")
 
@@ -228,7 +270,9 @@ class PluginState(StrEnum):
             if f"class {class_name}" not in content:
                 # Add before the first function or at the end
                 if "\ndef " in content:
-                    content = content.replace("\ndef ", f"\n{class_def.strip()}\n\n\ndef ", 1)
+                    content = content.replace(
+                        "\ndef ", f"\n{class_def.strip()}\n\n\ndef ", 1
+                    )
                 else:
                     content += f"\n\n{class_def.strip()}\n"
                 print(f"Added {class_name} to {filepath}")

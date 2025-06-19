@@ -63,7 +63,7 @@ class TestDatabaseAdapter:
     def setup_method(self):
         self.test_engine = HexagonalTestEngine()
         self.adapter = DatabaseAdapter(use_test_engine=True)
-    
+
     async def test_adapter_port_compliance(self):
         """Test adapter implements port interface correctly."""
         assert hasattr(self.adapter, 'connect')

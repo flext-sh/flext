@@ -166,14 +166,14 @@ class ProtocolPlugin(Protocol):
 
 ### 10. Default Infrastructure Stack
 
-| Component | Implementation | Location |
-|-----------|----------------|----------|
-| Logging | Structured logging with Logfire | `flx.infra.logging.structured` |
-| Config | YAML + Environment variables | `flx.infra.config.hierarchical` |
-| CLI | Cyclopts with auto-discovery | `flx.infra.cli.cyclopts` |
-| Output | Rich console output | `flx.infra.output.rich` |
-| Auth | Multi-provider authentication | `flx.infra.security.auth` |
-| Cache | Redis with local fallback | `flx.infra.cache.hybrid` |
+| Component | Implementation                  | Location                        |
+| --------- | ------------------------------- | ------------------------------- |
+| Logging   | Structured logging with Logfire | `flx.infra.logging.structured`  |
+| Config    | YAML + Environment variables    | `flx.infra.config.hierarchical` |
+| CLI       | Cyclopts with auto-discovery    | `flx.infra.cli.cyclopts`        |
+| Output    | Rich console output             | `flx.infra.output.rich`         |
+| Auth      | Multi-provider authentication   | `flx.infra.security.auth`       |
+| Cache     | Redis with local fallback       | `flx.infra.cache.hybrid`        |
 
 ### 11. Configuration Hierarchy
 

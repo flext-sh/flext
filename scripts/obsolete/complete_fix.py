@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Complete fix for dc-api-x pydantic compatibility issues."""
+
 import os
 import shutil
 import subprocess

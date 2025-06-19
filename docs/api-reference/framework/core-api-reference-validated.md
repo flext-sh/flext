@@ -45,7 +45,7 @@ from flx.core.base import DomainObject, Identifiable, Timestamped
 from flx.core.entities import AggregateRoot, Entity
 from flx.core.enums import (
     FlxAdapterStatus,
-    FlxConnectionStatus, 
+    FlxConnectionStatus,
     FlxDataType,
     FlxOperationStatus,
     FlxQueryType,
@@ -85,7 +85,7 @@ from flx.core.domain.value_objects import ValueObject
 
 ### Entity Class - IMMUTABLE PATTERN
 
-**Location**: `flx.core.entities.Entity`  
+**Location**: `flx.core.entities.Entity`
 **Validation**: ✅ VERIFIED
 
 ```python
@@ -98,25 +98,25 @@ class Customer(Entity):
     username: str
     email: str
     status: str = "active"
-    
+
     def change_email(self, new_email: str) -> Self:
         """Update email using IMMUTABLE pattern (ACTUAL implementation)."""
         if not self._is_valid_email(new_email):
             raise ValueError("Invalid email format")
-        
+
         # REAL PATTERN: Returns new instance, doesn't mutate existing
         return self.model_copy(update={
             "email": new_email,
             "updated_at": datetime.now(UTC)
         })
-    
+
     def deactivate(self) -> Self:
         """Deactivate customer using IMMUTABLE pattern."""
         return self.model_copy(update={
             "status": "inactive",
             "updated_at": datetime.now(UTC)
         })
-    
+
     def _is_valid_email(self, email: str) -> bool:
         return "@" in email and "." in email.split("@")[1]
 ```
@@ -147,7 +147,7 @@ def __hash__(self) -> int:
 
 ### AggregateRoot Class - ACTUAL Implementation
 
-**Location**: `flx.core.entities.AggregateRoot`  
+**Location**: `flx.core.entities.AggregateRoot`
 **Validation**: ✅ VERIFIED
 
 ```python
@@ -161,17 +161,17 @@ class Order(AggregateRoot):
     status: str = "pending"
     total: float = 0.0
     items: list = []
-    
+
     def confirm(self) -> Self:
         """Confirm order with domain event (ACTUAL pattern)."""
         if self.status != "pending":
             raise ValueError("Order already confirmed")
-        
+
         # Update state immutably
         updated_order = self.model_copy(update={
             "status": "confirmed"
         })
-        
+
         # Add domain event (REAL method name)
         updated_order.add_event(OrderConfirmedEvent(
             order_id=self.entity_id,
@@ -179,7 +179,7 @@ class Order(AggregateRoot):
             total=self.total,
             occurred_at=datetime.now(UTC)
         ))
-        
+
         # Increment version for optimistic locking
         return updated_order.increment_version()
 ```
@@ -189,14 +189,14 @@ class Order(AggregateRoot):
 ```python
 def add_event(self, event: DomainEvent) -> None:
     """Add a domain event to be dispatched after persistence.
-    
+
     VALIDATED: This is the actual method name in the codebase.
     """
     self._events.append(event)
 
 def collect_events(self) -> list[DomainEvent]:
     """Collect and clear pending events for publishing.
-    
+
     VALIDATED: This clears events after collection.
     """
     events = self._events.copy()
@@ -230,7 +230,7 @@ def uncommitted_events(self) -> list[DomainEvent]:
 
 ### ValueObject Base Class
 
-**Location**: `flx.core.domain.value_objects.ValueObject`  
+**Location**: `flx.core.domain.value_objects.ValueObject`
 **Validation**: ✅ VERIFIED
 
 ```python
@@ -243,18 +243,18 @@ class Money(ValueObject):
     """ACTUAL value object pattern with validation."""
     amount: float
     currency: str = "USD"
-    
+
     def __post_init__(self) -> None:
         """Business rule validation (REAL pattern)."""
         if self.amount < 0:
             raise ValueError("Amount cannot be negative")
         if not self.currency or len(self.currency) != 3:
             raise ValueError("Currency must be 3-letter code")
-    
+
     def multiply(self, factor: float) -> "Money":
         """IMMUTABLE operations return new instances."""
         return Money(amount=self.amount * factor, currency=self.currency)
-    
+
     def add(self, other: "Money") -> "Money":
         """Business rule enforcement in operations."""
         if self.currency != other.currency:
@@ -268,7 +268,7 @@ class Money(ValueObject):
 
 ### DomainEvent Class
 
-**Location**: `flx.core.events.DomainEvent`  
+**Location**: `flx.core.events.DomainEvent`
 **Validation**: ✅ VERIFIED
 
 ```python
@@ -285,7 +285,7 @@ class OrderConfirmedEvent(DomainEvent):
     customer_id: str
     total: float
     occurred_at: datetime
-    
+
     @classmethod
     def create(cls, order_id: str, customer_id: str, total: float) -> "OrderConfirmedEvent":
         """Factory method following framework patterns."""
@@ -306,7 +306,7 @@ class OrderConfirmedEvent(DomainEvent):
 ```python
 from flx.core.enums import (
     FlxAdapterStatus,      # Adapter operational status
-    FlxConnectionStatus,   # Connection state management  
+    FlxConnectionStatus,   # Connection state management
     FlxDataType,          # Data type definitions
     FlxOperationStatus,   # Operation execution status
     FlxQueryType,         # Query operation types
@@ -389,7 +389,7 @@ from typing import Self
 @dataclass(frozen=True)
 class CustomerId(ValueObject):
     value: str
-    
+
     def __post_init__(self) -> None:
         if not self.value or not self.value.strip():
             raise ValueError("Customer ID cannot be empty")
@@ -398,7 +398,7 @@ class Customer(Entity):
     name: str
     email: str
     status: str = "active"
-    
+
     def change_email(self, new_email: str) -> Self:
         """REAL immutable update pattern."""
         return self.model_copy(update={
@@ -408,14 +408,14 @@ class Customer(Entity):
 
 class Order(AggregateRoot):
     customer_id: str
-    status: str = "pending" 
+    status: str = "pending"
     total: float = 0.0
-    
+
     def confirm(self) -> Self:
         """REAL business operation with events."""
         if self.status != "pending":
             raise ValueError("Order already confirmed")
-        
+
         updated = self.model_copy(update={"status": "confirmed"})
         updated.add_event(OrderConfirmedEvent.create(
             order_id=self.entity_id,
@@ -430,13 +430,13 @@ async def confirm_order_use_case(order_id: str, order_repo: OrderRepository) -> 
     order = await order_repo.find_by_id(order_id)
     if not order:
         raise OrderNotFoundError(order_id)
-    
+
     # Business operation (returns new instance)
     confirmed_order = order.confirm()
-    
-    # Persistence 
+
+    # Persistence
     await order_repo.save(confirmed_order)
-    
+
     # Event publishing
     events = confirmed_order.collect_events()
     await event_bus.publish_batch(events)
@@ -469,17 +469,17 @@ events = aggregate.collect_events()  # Real method for event retrieval
 
 ## 📊 **Validation Summary**
 
-| Component | Status | Coverage | Test Status |
-|-----------|--------|----------|-------------|
-| Entity API | ✅ VALIDATED | 100% | ✅ TESTED |
-| AggregateRoot API | ✅ VALIDATED | 100% | ✅ TESTED |
-| Value Objects | ✅ VALIDATED | 100% | ✅ TESTED |
-| Domain Events | ✅ VALIDATED | 100% | ✅ TESTED |
-| Core Enums | ✅ VALIDATED | 100% | ✅ TESTED |
-| Core Models | ✅ VALIDATED | 100% | ✅ TESTED |
-| Core Mixins | ✅ VALIDATED | 100% | ✅ TESTED |
+| Component         | Status       | Coverage | Test Status |
+| ----------------- | ------------ | -------- | ----------- |
+| Entity API        | ✅ VALIDATED | 100%     | ✅ TESTED   |
+| AggregateRoot API | ✅ VALIDATED | 100%     | ✅ TESTED   |
+| Value Objects     | ✅ VALIDATED | 100%     | ✅ TESTED   |
+| Domain Events     | ✅ VALIDATED | 100%     | ✅ TESTED   |
+| Core Enums        | ✅ VALIDATED | 100%     | ✅ TESTED   |
+| Core Models       | ✅ VALIDATED | 100%     | ✅ TESTED   |
+| Core Mixins       | ✅ VALIDATED | 100%     | ✅ TESTED   |
 
-**Validation Method**: Direct code inspection and import testing  
+**Validation Method**: Direct code inspection and import testing
 **Accuracy Confidence**: 100% (based on actual codebase)
 
 ---

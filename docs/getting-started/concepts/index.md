@@ -18,10 +18,10 @@
 
 ### **Core Topics**
 
-| **Topic** | **Function** | **Audience** | **Status** |
-|-----------|--------------|--------------|------------|
-| [Framework Overview](./flx-framework-overview.md) | Complete architectural overview | All users | ✅ Complete |
-| [Core Concepts](./concepts.md) | Fundamental design principles | Developers/Architects | ✅ Complete |
+| **Topic**                                         | **Function**                    | **Audience**          | **Status**  |
+| ------------------------------------------------- | ------------------------------- | --------------------- | ----------- |
+| [Framework Overview](./flx-framework-overview.md) | Complete architectural overview | All users             | ✅ Complete |
+| [Core Concepts](./concepts.md)                    | Fundamental design principles   | Developers/Architects | ✅ Complete |
 
 ### **📋 Learning Path**
 
@@ -57,7 +57,7 @@
 ## 📊 **Section Metrics**
 
 - **Documents**: 2 files
-- **Completeness**: 100%  
+- **Completeness**: 100%
 - **Last Updated**: June 11, 2025
 
 ---

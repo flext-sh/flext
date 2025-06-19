@@ -18,10 +18,10 @@
 
 ### **Core Topics**
 
-| **Topic** | **Function** | **Audience** | **Status** |
-|-----------|--------------|--------------|------------|
-| [Installation Guide](./installation-guide.md) | Complete framework installation | All users | ✅ Complete |
-| [Import Guide](./import-guide.md) | Module import and configuration | Developers | ✅ Complete |
+| **Topic**                                     | **Function**                    | **Audience** | **Status**  |
+| --------------------------------------------- | ------------------------------- | ------------ | ----------- |
+| [Installation Guide](./installation-guide.md) | Complete framework installation | All users    | ✅ Complete |
+| [Import Guide](./import-guide.md)             | Module import and configuration | Developers   | ✅ Complete |
 
 ### **📋 Learning Path**
 
@@ -57,7 +57,7 @@
 ## 📊 **Section Metrics**
 
 - **Documents**: 2 files
-- **Completeness**: 100%  
+- **Completeness**: 100%
 - **Last Updated**: June 11, 2025
 
 ---

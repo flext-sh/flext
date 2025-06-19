@@ -16,11 +16,11 @@
 
 ### **Core Topics**
 
-| **Topic** | **Function** | **Audience** | **Status** |
-|-----------|--------------|--------------|------------|
-| [Oracle Adapters](./flx_http_oracle_oic-adapter.md) | Oracle integration adapters | Oracle developers | ✅ Complete |
-| [Database Adapters](./flx_database_oracle-adapter.md) | Database connectivity patterns | Data engineers | ✅ Complete |
-| [HTTP Adapters](./http-client-adapters.md) | HTTP client implementations | API developers | 📋 Documented |
+| **Topic**                                             | **Function**                   | **Audience**      | **Status**    |
+| ----------------------------------------------------- | ------------------------------ | ----------------- | ------------- |
+| [Oracle Adapters](./flx_http_oracle_oic-adapter.md)   | Oracle integration adapters    | Oracle developers | ✅ Complete   |
+| [Database Adapters](./flx_database_oracle-adapter.md) | Database connectivity patterns | Data engineers    | ✅ Complete   |
+| [HTTP Adapters](./http-client-adapters.md)            | HTTP client implementations    | API developers    | 📋 Documented |
 
 ### **📋 Learning Path**
 
@@ -86,23 +86,23 @@
 
 ### New Developers
 
-→ [Getting Started with Adapters](./getting-started-adapters.md)  
-→ [Simple Inbound Adapter](./simple-inbound-adapter.md)  
-→ [Basic Testing](./adapter-testing-guide.md)  
+→ [Getting Started with Adapters](./getting-started-adapters.md)
+→ [Simple Inbound Adapter](./simple-inbound-adapter.md)
+→ [Basic Testing](./adapter-testing-guide.md)
 → [Real Examples](./adapter-examples.md)
 
 ### Integration Engineers
 
-→ [Outbound Adapter Guide](./outbound-adapter-guide.md)  
-→ [Oracle Integration Adapters](./oracle-integration-adapters.md)  
-→ [Advanced Patterns](./advanced-adapter-patterns.md)  
+→ [Outbound Adapter Guide](./outbound-adapter-guide.md)
+→ [Oracle Integration Adapters](./oracle-integration-adapters.md)
+→ [Advanced Patterns](./advanced-adapter-patterns.md)
 → [Production Deployment](./adapter-deployment.md)
 
 ### Senior Developers
 
-→ [Advanced Adapter Patterns](./advanced-adapter-patterns.md)  
-→ [Performance Optimization](./adapter-performance.md)  
-→ [Error Handling Strategies](./adapter-error-handling.md)  
+→ [Advanced Adapter Patterns](./advanced-adapter-patterns.md)
+→ [Performance Optimization](./adapter-performance.md)
+→ [Error Handling Strategies](./adapter-error-handling.md)
 → [Architecture Design](./adapter-architecture-design.md)
 
 ## Integration Examples

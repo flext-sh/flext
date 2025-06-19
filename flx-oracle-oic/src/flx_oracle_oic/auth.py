@@ -481,9 +481,7 @@ class OAuth2AuthStrategy(AuthStrategy):
                 "exp": now + 300,  # Expires in 5 minutes
                 "jti": hashlib.sha256(
                     f"{self.config.client_id}{now}".encode(),
-                ).hexdigest()[
-                    :16
-                ],  # Unique ID
+                ).hexdigest()[:16],  # Unique ID
             }
 
             # Sign with client secret

@@ -84,10 +84,12 @@ python scripts/flx_ldif_for_oud.py --input input.ldif --output output.ldif \
 ### Common Issues
 
 1. **Object class violations**:
+
    - Symptom: Error messages like "unknown objectclass orclcontainerOC"
    - Solution: Ensure schema extensions are applied first using `ldif-apply-schema-extensions`
 
 2. **Missing parent entries**:
+
    - Symptom: Error messages like "parent entry does not exist"
    - Solution: The script now automatically creates parent entries during LDIF processing
 

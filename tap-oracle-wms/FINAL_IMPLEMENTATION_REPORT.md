@@ -18,6 +18,7 @@
 ### 1. TAP-ORACLE-WMS ✅ FUNCIONAL
 
 **Funcionalidades validadas:**
+
 - Conecta ao WMS Oracle Cloud real
 - Descobre 311 entidades dinamicamente via `/entity` endpoint
 - Gera schemas automaticamente via `/describe` endpoint
@@ -28,11 +29,13 @@
 - Autenticação Basic Auth funcional
 
 **Teste real executado:**
+
 ```bash
 poetry run tap-oracle-wms --config config.json --catalog catalog.json
 ```
 
 **Dados extraídos (exemplo):**
+
 ```json
 {
   "id": 3,
@@ -46,12 +49,14 @@ poetry run tap-oracle-wms --config config.json --catalog catalog.json
 ### 2. TARGET-ORACLE-WMS ✅ IMPLEMENTADO
 
 **Tipos de target suportados:**
+
 - **Database**: PostgreSQL, MySQL, SQLite com criação automática de tabelas
 - **File**: JSONL, CSV, Parquet com metadados
 - **Webhook**: HTTP POST para APIs externas
 - **API Gateway**: REST API integration
 
 **Pipeline testado:**
+
 ```bash
 tap-oracle-wms | target-oracle-wms  # ✅ FUNCIONANDO
 ```
@@ -59,11 +64,13 @@ tap-oracle-wms | target-oracle-wms  # ✅ FUNCIONANDO
 ### 3. WEBHOOK CONFIGURATION ✅ ANALISADO
 
 **Descoberta:**
+
 - WMS não suporta webhooks via API REST
 - Configuração deve ser feita manualmente no console Oracle
 - Instruções detalhadas geradas automaticamente
 
 **Alternativas implementadas:**
+
 - Sync incremental baseado em `mod_ts` (modification timestamp)
 - Polling agendado para mudanças
 - Change Data Capture via comparação de estados
@@ -75,11 +82,13 @@ tap-oracle-wms | target-oracle-wms  # ✅ FUNCIONANDO
 ### Entidades Descobertas e Testadas
 
 **Master Data (3 entidades testadas):**
+
 - ✅ `facility` - 10 records extraídos (lojas OXXO)
 - ✅ `item` - Schema gerado (56 campos)
 - ✅ `location` - Schema gerado (62 campos)
 
 **Inventory (1 entidade testada):**
+
 - ✅ `inventory` - Schema gerado (21 campos)
 
 **Total disponível:** 311 entidades descobertas dinamicamente
@@ -106,6 +115,7 @@ Oracle WMS Cloud
 ```
 
 **Componentes técnicos:**
+
 - **Authentication**: Basic Auth + Bearer Token support
 - **Pagination**: Cursor-based + offset-based
 - **Error handling**: Exponential backoff + retries
@@ -119,6 +129,7 @@ Oracle WMS Cloud
 ### 1. Configuração Básica
 
 **config.json:**
+
 ```json
 {
   "base_url": "https://ta29.wms.ocs.oraclecloud.com/raizen_test",
@@ -147,6 +158,7 @@ tap-oracle-wms --config config.json --catalog catalog.json | target-oracle-wms -
 ### 3. Target Configuration
 
 **Database target:**
+
 ```json
 {
   "target_type": "database",
@@ -156,6 +168,7 @@ tap-oracle-wms --config config.json --catalog catalog.json | target-oracle-wms -
 ```
 
 **File target:**
+
 ```json
 {
   "target_type": "file",
@@ -173,17 +186,18 @@ tap-oracle-wms --config config.json --catalog catalog.json | target-oracle-wms -
 ```yaml
 # meltano.yml
 extractors:
-- name: tap-oracle-wms
-  pip_url: ./tap-oracle-wms
+  - name: tap-oracle-wms
+    pip_url: ./tap-oracle-wms
 
 loaders:
-- name: target-oracle-wms
-  pip_url: ./target-oracle-wms
+  - name: target-oracle-wms
+    pip_url: ./target-oracle-wms
 ```
 
 ### 2. Configuração de Webhooks Manual
 
 **No Oracle WMS Console:**
+
 1. Setup > Integration > Event Management
 2. Configure Business Events para entidades chave
 3. Setup HTTP notifications para endpoint externo
@@ -261,4 +275,4 @@ loaders:
 
 **Status: PRONTO PARA PRODUÇÃO** 🚀
 
-*Implementação realizada e validada em 15/06/2025*
+_Implementação realizada e validada em 15/06/2025_

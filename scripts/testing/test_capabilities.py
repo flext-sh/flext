@@ -104,7 +104,9 @@ class HealthCheckCapability:
         self._checks.clear()
 
     def is_healthy(self) -> bool:
-        return all(check() for check in self._checks) if self._checks else self._is_healthy
+        return (
+            all(check() for check in self._checks) if self._checks else self._is_healthy
+        )
 
     def add_health_check(self, check_func) -> None:
         self._checks.append(check_func)

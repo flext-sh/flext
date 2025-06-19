@@ -130,20 +130,20 @@ class DocstringGapFinder(ast.NodeVisitor):
             return f"Magic method {name}"
 
         if name.startswith("test_"):
-            return f'Test {name.replace("test_", "").replace("_", " ")}'
+            return f"Test {name.replace('test_', '').replace('_', ' ')}"
 
         if name.startswith("_"):
             return f"Private {func_type} {name}"
 
         # Check for common patterns
         if name.startswith("get_"):
-            return f'Get {name[4:].replace("_", " ")}'
+            return f"Get {name[4:].replace('_', ' ')}"
 
         if name.startswith("set_"):
-            return f'Set {name[4:].replace("_", " ")}'
+            return f"Set {name[4:].replace('_', ' ')}"
 
         if name.startswith(("is_", "has_")):
-            return f'Check if {name[3:].replace("_", " ") if name.startswith("is_") else name[4:].replace("_", " ")}'
+            return f"Check if {name[3:].replace('_', ' ') if name.startswith('is_') else name[4:].replace('_', ' ')}"
 
         if name in {"connect", "disconnect", "close", "open"}:
             return f"{name.capitalize()} connection"
@@ -152,13 +152,13 @@ class DocstringGapFinder(ast.NodeVisitor):
             return f"{name.capitalize()} operation"
 
         if name.endswith("_handler"):
-            return f'Handle {name[:-8].replace("_", " ")}'
+            return f"Handle {name[:-8].replace('_', ' ')}"
 
         if name.endswith("_callback"):
-            return f'Callback for {name[:-9].replace("_", " ")}'
+            return f"Callback for {name[:-9].replace('_', ' ')}"
 
         # Default description
-        return f'{func_type.capitalize()} {name.replace("_", " ")}'
+        return f"{func_type.capitalize()} {name.replace('_', ' ')}"
 
 
 def scan_file(filepath: str) -> list[dict[str, Any]]:

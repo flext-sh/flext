@@ -24,11 +24,11 @@ This hub provides comprehensive guidance for organizing application layers in he
 
 ### **Core Layer Topics**
 
-| **Topic** | **Function** | **Audience** | **Complexity** | **Status** |
-|-----------|--------------|--------------|----------------|------------|
-| [**Core Domain Layer**](./core-domain-layer.md) | Domain layer design patterns | Domain experts, architects | ⭐⭐⭐ | ✅ Updated |
-| [**Application Layer**](./application-layer.md) | Application coordination patterns | Backend developers | ⭐⭐ | ✅ Updated |
-| [**FLX Source Structure**](./flx-source-structure.md) | Framework organization patterns | Framework developers | ⭐⭐ | ✅ Updated |
+| **Topic**                                             | **Function**                      | **Audience**               | **Complexity** | **Status** |
+| ----------------------------------------------------- | --------------------------------- | -------------------------- | -------------- | ---------- |
+| [**Core Domain Layer**](./core-domain-layer.md)       | Domain layer design patterns      | Domain experts, architects | ⭐⭐⭐         | ✅ Updated |
+| [**Application Layer**](./application-layer.md)       | Application coordination patterns | Backend developers         | ⭐⭐           | ✅ Updated |
+| [**FLX Source Structure**](./flx-source-structure.md) | Framework organization patterns   | Framework developers       | ⭐⭐           | ✅ Updated |
 
 ---
 
@@ -37,24 +37,24 @@ This hub provides comprehensive guidance for organizing application layers in he
 ### **🎯 For Domain Experts**
 
 ```
-1. [Core Domain Layer](./core-domain-layer.md) → 
-2. [Application Layer](./application-layer.md) → 
+1. [Core Domain Layer](./core-domain-layer.md) →
+2. [Application Layer](./application-layer.md) →
 3. [Domain Patterns](../patterns/index.md)
 ```
 
 ### **⚡ For Backend Developers**
 
 ```
-1. [Application Layer](./application-layer.md) → 
-2. [Core Domain Layer](./core-domain-layer.md) → 
+1. [Application Layer](./application-layer.md) →
+2. [Core Domain Layer](./core-domain-layer.md) →
 3. [Ports & Interfaces](../ports/index.md)
 ```
 
 ### **🏢 For Framework Developers**
 
 ```
-1. [FLX Source Structure](./flx-source-structure.md) → 
-2. [Core Domain Layer](./core-domain-layer.md) → 
+1. [FLX Source Structure](./flx-source-structure.md) →
+2. [Core Domain Layer](./core-domain-layer.md) →
 3. [Standards](../standards/index.md)
 ```
 

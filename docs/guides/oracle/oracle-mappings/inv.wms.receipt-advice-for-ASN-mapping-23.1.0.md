@@ -1,63 +1,61 @@
 # inv.wms.receipt-advice-for-ASN-mapping-23.1.0.xlsx
 
-**Caminho:** `reference/wms_solutions/mappings/inv.wms.receipt-advice-for-ASN-mapping-23.1.0.xlsx`  \n**Data de conversão:** 2025-05-15T14:38:07.798572  \n**Tipo:** .xlsx  \n**[Download original](reference/wms_solutions/mappings/inv.wms.receipt-advice-for-ASN-mapping-23.1.0.xlsx)**
+**Caminho:** `reference/wms_solutions/mappings/inv.wms.receipt-advice-for-ASN-mapping-23.1.0.xlsx` \n**Data de conversão:** 2025-05-15T14:38:07.798572 \n**Tipo:** .xlsx \n**[Download original](reference/wms_solutions/mappings/inv.wms.receipt-advice-for-ASN-mapping-23.1.0.xlsx)**
 
 ---
 
 ## Sumário
 
-
-
 ## Resumo automático
 
 Este documento é o guia de integração para envio de “Receipt Advice” (avisos de recebimento) de ASNs (Advance Shipment Notices) da Oracle Fusion Inventory para um WMS Cloud, versão 23.1.0.
 
-1. Objetivo e Fluxo  
-   • Garantir que o WMS receba os cabeçalhos e linhas de ASN da Fusion de forma consistente.  
+1. Objetivo e Fluxo
+   • Garantir que o WMS receba os cabeçalhos e linhas de ASN da Fusion de forma consistente.
    • As ASNs são criadas na Fusion e encaminhadas ao WMS via REST API.
 
-2. Questões em Aberto e Decisões Principais  
-   – Ajuste de tamanhos de campo: coluna maxSize marcada em vermelho indica divergência entre Fusion e WMS.  
-   – Chave única de mensagem: usar ShipmentHeaderId + timestamp para MessageId.  
-   – Evitar duplicação de número de ASN por fornecedores diferentes: adotar combinação única de DocumentNumber + SupplierName + ShippedDate.  
-   – Cancelamento de linha ASN: seguir “Option 2” (reduzir a quantidade esperada na Fusion; WMS trata manualmente).  
-   – Packing Slip e Waybill: mapeados em campos customizados no WMS.  
-   – Expected Receipt Date: Fusion passa DateTime, WMS armazena só Date (trunca).  
-   – Proibir usuários WMS de criar ASNs manualmente — apenas Fusion deve gerar/asn.  
-   – Garantir que o PO seja integrado antes da ASN ou, em falha, que a Fusion possa reenviar o aviso.  
+2. Questões em Aberto e Decisões Principais
+   – Ajuste de tamanhos de campo: coluna maxSize marcada em vermelho indica divergência entre Fusion e WMS.
+   – Chave única de mensagem: usar ShipmentHeaderId + timestamp para MessageId.
+   – Evitar duplicação de número de ASN por fornecedores diferentes: adotar combinação única de DocumentNumber + SupplierName + ShippedDate.
+   – Cancelamento de linha ASN: seguir “Option 2” (reduzir a quantidade esperada na Fusion; WMS trata manualmente).
+   – Packing Slip e Waybill: mapeados em campos customizados no WMS.
+   – Expected Receipt Date: Fusion passa DateTime, WMS armazena só Date (trunca).
+   – Proibir usuários WMS de criar ASNs manualmente — apenas Fusion deve gerar/asn.
+   – Garantir que o PO seja integrado antes da ASN ou, em falha, que a Fusion possa reenviar o aviso.
    – Envio de atributos de Projeto/Tarefa/COO: chamar serviço de PO para buscá-los e incluí-los no callback.
 
-3. Mapeamento de Cabeçalho (Header)  
-   • DocumentVersion, OriginSystem, ClientEnvCode, ParentCompanyCode: valores fixos (“23.1.0”, “Oracle Fusion…”, “23A”, “PP”).  
-   • Entity: “ib_shipment”.  
-   • TimeStamp: data-hora atual em ISO.  
-   • MessageId: ShipmentHeaderId.  
-   • shipment_nbr ← ShipmentHeaderId  
-   • facility_code ← ShipToOrganizationCode  
-   • company_code ← “PP” (hard-coded)  
-   • action_code ← “UPDATE”  
-   • ref_nbr ← ShipmentNumber  
-   • shipment_type ← constante “ASN” ou “ASBN”  
-   • shipped_date ← ShippedDate (truncado para data)  
-   • vendor_info ← SupplierId  
+3. Mapeamento de Cabeçalho (Header)
+   • DocumentVersion, OriginSystem, ClientEnvCode, ParentCompanyCode: valores fixos (“23.1.0”, “Oracle Fusion…”, “23A”, “PP”).
+   • Entity: “ib_shipment”.
+   • TimeStamp: data-hora atual em ISO.
+   • MessageId: ShipmentHeaderId.
+   • shipment_nbr ← ShipmentHeaderId
+   • facility_code ← ShipToOrganizationCode
+   • company_code ← “PP” (hard-coded)
+   • action_code ← “UPDATE”
+   • ref_nbr ← ShipmentNumber
+   • shipment_type ← constante “ASN” ou “ASBN”
+   • shipped_date ← ShippedDate (truncado para data)
+   • vendor_info ← SupplierId
    • cust_field_1..5, cust_date_1..5, cust_decimal_1..5, cust_number_1..5, cust_long_text_1..3, cust_short_text_1..12: campos livres para uso do cliente
 
-4. Mapeamento de Detalhes (Lines)  
-   • seq_nbr ← ShipmentLineNumber  
-   • action_code ← “CREATE”  
-   • lpn_nbr ← SourcePackingUnit (LPN mais interno)  
-   • item_alternate_code ← ItemNumber + “~^~” + ItemRevision  
-   • shipped_qty ← QuantityShipped (ou soma de lotes)  
-   • lot e lote por linha: batch_nbr ← LotNumber; expiry_date ← LotExpirationDate  
-   • serial_nbr ← SerialNumber (se aplicável)  
-   • po_nbr ← PONumber (opcional)  
-   • pallet_nbr ← PackingUnit (LPN pai nulo)  
-   • putaway_type, recv_xdock_facility_code, priority_date, invn_attr_a..o, lpn atributos e campos customizados: opcionais conforme necessidade  
+4. Mapeamento de Detalhes (Lines)
+   • seq_nbr ← ShipmentLineNumber
+   • action_code ← “CREATE”
+   • lpn_nbr ← SourcePackingUnit (LPN mais interno)
+   • item_alternate_code ← ItemNumber + “~^~” + ItemRevision
+   • shipped_qty ← QuantityShipped (ou soma de lotes)
+   • lot e lote por linha: batch_nbr ← LotNumber; expiry_date ← LotExpirationDate
+   • serial_nbr ← SerialNumber (se aplicável)
+   • po_nbr ← PONumber (opcional)
+   • pallet_nbr ← PackingUnit (LPN pai nulo)
+   • putaway_type, recv_xdock_facility_code, priority_date, invn_attr_a..o, lpn atributos e campos customizados: opcionais conforme necessidade
    • receipt_advice_line ← combinação ShipmentHeaderId + ShipmentLineId (e lote) — chave única
 
-5. APIs REST  
-   • GET receiptAdviceLines?q=ExternalSystemGroupId=…  
-   • describe em /receiptAdviceLines/describe para metadados (tipos, tamanhos, descrições).  
+5. APIs REST
+   • GET receiptAdviceLines?q=ExternalSystemGroupId=…
+   • describe em /receiptAdviceLines/describe para metadados (tipos, tamanhos, descrições).
 
 ## Conteúdo extraído
 
@@ -67,10 +65,10 @@ Unnamed: 0: , Unnamed: 1: WMS team needs to check on all columns where max size 
 Unnamed: 0: , Unnamed: 1: Same shipment number by two different suppliers
 
     In WMS when two supplier's send the same ASN number then second ASN will fail and this needs to be corrected manually
-    There is a possibility that when ASN1 is not received in WMS and ASN2 gets interfaced by another supplier(with same shipment number as AS1N), then WMS will override ASN1 as Shipment number is unique key in WMS.  
+    There is a possibility that when ASN1 is not received in WMS and ASN2 gets interfaced by another supplier(with same shipment number as AS1N), then WMS will override ASN1 as Shipment number is unique key in WMS.
 
-It is proposed to use the Document Number + Supplier Name +  Shipped date from fusion to WMS. This will be unique.
-WMS Team needs to confirm if they are ok and the partical sceanrios like scanning the Shipment Number will work out if INV passes ShipmentNumber +  SupplierName +  ShippedDate, Unnamed: 2: WMS, Unnamed: 3: Closed, Unnamed: 4: Decision is to use ShipmentHeaderId + DateTime (12)
+It is proposed to use the Document Number + Supplier Name + Shipped date from fusion to WMS. This will be unique.
+WMS Team needs to confirm if they are ok and the partical sceanrios like scanning the Shipment Number will work out if INV passes ShipmentNumber + SupplierName + ShippedDate, Unnamed: 2: WMS, Unnamed: 3: Closed, Unnamed: 4: Decision is to use ShipmentHeaderId + DateTime (12)
 Unnamed: 0: , Unnamed: 1: Is carrier information available in WMS. This information is available in Fusion. - WMS team (Ram) to check and confirm. We would also need the carrier setup in WMS to handle this., Unnamed: 2: WMS, Unnamed: 3: , Unnamed: 4:
 Unnamed: 0: , Unnamed: 1: Single ASN line can be canceled or the entire ASN can be canceled. For each line, we send one CancelAsnNotification event containing the ASN line Id. In Fusion, we allow ASN line to be canceled even if it has been received (partially of course). If ASN is created for 10 each, user receives 6 each and uses the cancel line action, then the remaining 4 each is canceled and will not be received. But WMS does not allow cancelation after receiving.
 
@@ -87,23 +85,23 @@ Unnamed: 0: , Unnamed: 1: WMS user should not be given the privilege's to create
 Unnamed: 0: , Unnamed: 1: , Unnamed: 2: , Unnamed: 3: , Unnamed: 4:
 Unnamed: 0: , Unnamed: 1: PO gets interfaced to WMS by the virtue of Receipt Advice. ASN gets interfaced to WMS by a different integrations. PO should get created/Interfaced in/to WMS before ASN gets interfaced/created. This should be true most of the times as the PO gets created first in fusion and then only ASN can be created. But in a corner case the the ASN information reaches WMS first then
 
-    WMS fails the ASN creation 
-    Reprocess the ASN with in WMS, so that the ASN gets created in WMS. 
-    FA will not be able to reprocess the ASN with the current architecture. 
+    WMS fails the ASN creation
+    Reprocess the ASN with in WMS, so that the ASN gets created in WMS.
+    FA will not be able to reprocess the ASN with the current architecture.
     In case some one clears the failed records, ASN can be created manually in WMS.
 
-    The abilty of the Fusion to re-raise the ASN notification has to be listed in Backlog. , Unnamed: 2: , Unnamed: 3: , Unnamed: 4: 
+    The abilty of the Fusion to re-raise the ASN notification has to be listed in Backlog. , Unnamed: 2: , Unnamed: 3: , Unnamed: 4:
+
 Unnamed: 0: , Unnamed: 1: , Unnamed: 2: , Unnamed: 3: , Unnamed: 4:
 Unnamed: 0: , Unnamed: 1: We cannot add new lines to the ASN document once created and the ASN lines cannot be modified too. Only few attributes on the header like waybill, packing slip, weights can be modified after creating ASN. And these attributes are of no interest to a WMS. So, on updating "select" attributes in the ASN header, no event is sent., Unnamed: 2: , Unnamed: 3: , Unnamed: 4:
 Unnamed: 0: , Unnamed: 1: , Unnamed: 2: , Unnamed: 3: , Unnamed: 4:
 Unnamed: 0: , Unnamed: 1: We donot have the Inventory Tracking Attributes in ASN REST. We need to pass the Project/Task/COO to WMS for them to be able to Receive against the Project/Task against the shipment.
-1.Project and task should not be able to change at the time of Receipt. WMS might need to introduce some feature to lock it down. For now its is dealt with a SOP documentation.
-2. Few  option evaluated.
+1.Project and task should not be able to change at the time of Receipt. WMS might need to introduce some feature to lock it down. For now its is dealt with a SOP documentation. 2. Few option evaluated.
 a) Project and Task information needed by WMS on ASN Line so the ASN callback service needs to send this.
 b) WMS team needs to derive this information from the PO reference passed. - Ram says technically not possible as they will never know which attributes are configured for the Project/Task out of the WMS INV tracking attributes.
 c)WMS calls another API call to retrive the Project and Task from RA/PO level - INV uses this oprion on INV UI - Ram mentions this needs to be evaluated for bulk data scenarios as this might be expensive.
 
-Decision:  The proposal is to customize the out of box integration to call the PO Service to retrieve the Project/Task information.
+Decision: The proposal is to customize the out of box integration to call the PO Service to retrieve the Project/Task information.
 
 Please note that COO information is on the ASN service already.
 , Unnamed: 2: <https://confluence.oraclecorp.com/confluence/pages/viewpage.action?pageId=1657906878>
@@ -128,12 +126,12 @@ WMS Column: facility_code, Format: string, Max: 20.0, REQD?: X, INV Column: Ship
 WMS Column: company_code, Format: string, Max: 20.0, REQD?: X, INV Column: "PP", Table Column: , Format.1: , Max.1: , Notes: Hard-coded. Updated by customer., Unnamed: 9:
 WMS Column: trailer_nbr, Format: string, Max: 30.0, REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Notes: , Unnamed: 9:
 WMS Column: action_code, Format: string, Max: 10.0, REQD?: X, INV Column: UPDATE, Table Column: , Format.1: string, Max.1: 7.0, Notes: , Unnamed: 9:
-WMS Column: ref_nbr, Format: string, Max: 50.0, REQD?: X, INV Column: ShipmentNumber, Table Column:  RCV_SHIPMENT_HEADERS.SHIPMENT_NUM, Format.1: string, Max.1: 30.0, Notes: , Unnamed: 9:
+WMS Column: ref_nbr, Format: string, Max: 50.0, REQD?: X, INV Column: ShipmentNumber, Table Column: RCV_SHIPMENT_HEADERS.SHIPMENT_NUM, Format.1: string, Max.1: 30.0, Notes: , Unnamed: 9:
 WMS Column: shipment_type, Format: string, Max: 20.0, REQD?: X, INV Column: ASNType, Table Column: Value = "ASN" or "ASBN", Format.1: string, Max.1: 25.0, Notes: , Unnamed: 9:
 WMS Column: load_nbr, Format: string, Max: 30.0, REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Notes: , Unnamed: 9:
 WMS Column: manifest_nbr, Format: string, Max: 30.0, REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Notes: , Unnamed: 9:
 WMS Column: trailer_type, Format: string, Max: 10.0, REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Notes: , Unnamed: 9:
-WMS Column: vendor_info, Format: string, Max: 30.0, REQD?: , INV Column: SupplierId, Table Column: RCV_SHIPMENT_HEADERS. VENDOR_ID  (the (corrosponding code coulmns), Format.1: String, Max.1: 15.0, Notes: In the later releases we will change this to Supplier Number to be inline with the change to the PO mapping, Unnamed: 9:
+WMS Column: vendor_info, Format: string, Max: 30.0, REQD?: , INV Column: SupplierId, Table Column: RCV_SHIPMENT_HEADERS. VENDOR_ID (the (corrosponding code coulmns), Format.1: String, Max.1: 15.0, Notes: In the later releases we will change this to Supplier Number to be inline with the change to the PO mapping, Unnamed: 9:
 WMS Column: origin_info, Format: string, Max: 30.0, REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Notes: , Unnamed: 9:
 WMS Column: origin_code, Format: string, Max: 10.0, REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Notes: , Unnamed: 9:
 WMS Column: orig_shipped_units, Format: decimal, Max: , REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Notes: , Unnamed: 9:
@@ -181,12 +179,12 @@ WMS Column: cust_short_text_12, Format: string, Max: , REQD?: , INV Column: , Ta
 WMS Column: seq_nbr, Format: number, Max: 9.0, REQD?: X, INV Column:
 
 ShipmentLineNumber
-, Table Column:  RCV_SHIPMENT_LINES.SHIPMENT_LINE_NUM , Format.1: number, Max.1: 18, Notes: Will this need to be unique? As for same line number we can have multiple lots and in that case we will have the same line number repeated for each lot., Unnamed: 9:
+, Table Column: RCV_SHIPMENT_LINES.SHIPMENT_LINE_NUM , Format.1: number, Max.1: 18, Notes: Will this need to be unique? As for same line number we can have multiple lots and in that case we will have the same line number repeated for each lot., Unnamed: 9:
 WMS Column: action_code, Format: string, Max: 10.0, REQD?: X, INV Column: CREATE, Table Column: , Format.1: , Max.1: , Notes: HARD CODED TO CREATE as we donot raise events at time of update/cancel of ASN. Also new line cannot be added to ASN. Update is not done on Quantity etc., Unnamed: 9:
 WMS Column: lpn_nbr, Format: string, Max: 30.0, REQD?: , INV Column: SourcePackingUnit, Table Column: INV_LICENSE_PLATE_NUMBERS.LICENSE_PLATE_NUMBER(corrosponding to RCV_SHIPMENT_LINES.ASN_LPN_ID), Format.1: string, Max.1: 30, Notes: This is the innermost packing unit, Unnamed: 9:
 WMS Column: lpn_weight, Format: decimal, Max: , REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Notes: , Unnamed: 9:
 WMS Column: lpn_volume, Format: decimal, Max: , REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Notes: , Unnamed: 9:
-WMS Column: item_alternate_code, Format: string, Max: 130.0, REQD?: , INV Column: ItemNumber + "~^~" + ItemRevision, Table Column:  RCV_SHIPMENT_LINES.ITEM_ID (corrosponding Item Number) + RCV_SHIPMENT_LINES.ITEM_REVISION, Format.1: string, Max.1: 300, Notes: Discussed with Mike and he is fine with the size mismatch and we can revisit once the customer has a use case for such a big length for Item Number., Unnamed: 9:
+WMS Column: item_alternate_code, Format: string, Max: 130.0, REQD?: , INV Column: ItemNumber + "~^~" + ItemRevision, Table Column: RCV_SHIPMENT_LINES.ITEM_ID (corrosponding Item Number) + RCV_SHIPMENT_LINES.ITEM_REVISION, Format.1: string, Max.1: 300, Notes: Discussed with Mike and he is fine with the size mismatch and we can revisit once the customer has a use case for such a big length for Item Number., Unnamed: 9:
 WMS Column: item_part_a, Format: string, Max: 30.0, REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Notes: , Unnamed: 9:
 WMS Column: item_part_b, Format: string, Max: 30.0, REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Notes: , Unnamed: 9:
 WMS Column: item_part_c, Format: string, Max: 20.0, REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Notes: , Unnamed: 9:
@@ -206,7 +204,7 @@ WMS Column: pallet_nbr, Format: string, Max: 30.0, REQD?: , INV Column: PackingU
 WMS Column: putaway_type, Format: string, Max: 15.0, REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Notes: , Unnamed: 9:
 WMS Column: expiry_date, Format: date, Max: 14.0, REQD?: , INV Column: LotExpirationDate, Table Column: INV_LOT_NUMBER.LOT_EXPIRATION_DATE, Format.1: date, Max.1: , Notes: , Unnamed: 9:
 WMS Column: batch_nbr, Format: string, Max: 25.0, REQD?: , INV Column: LotNumber, Table Column: RCV_LOTS_SUPPLY.LOT_NUM, Format.1: string, Max.1: 80, Notes: One lot per shipment line.
-Discussed with Mike and he is fine with the size mismatch and we can revisit once the customer has a use case for such a big length for Lot  Number. The issue is w.r.t the space available on the hand held and whether the 80 char lotr number will fit on to the screen of the hand held.
+Discussed with Mike and he is fine with the size mismatch and we can revisit once the customer has a use case for such a big length for Lot Number. The issue is w.r.t the space available on the hand held and whether the 80 char lotr number will fit on to the screen of the hand held.
 
 , Unnamed: 9:
 WMS Column: recv_xdock_facility_code, Format: string, Max: 20.0, REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Notes: , Unnamed: 9:
@@ -291,11 +289,10 @@ WMS Column: item_part_c, Format: String, Max: 20.0, REQD?: , INV Column: , Table
 WMS Column: item_part_d, Format: String, Max: 20.0, REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Comments:
 WMS Column: item_part_e, Format: String, Max: 10.0, REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Comments:
 WMS Column: item_part_f, Format: String, Max: 10.0, REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Comments:
-WMS Column: item_alternate_code, Format: String, Max: 130.0, REQD?: X, INV Column: ItemNumber + "~^~" + ItemRevision, Table Column:  RCV_SHIPMENT_LINES.ITEM_ID (corrosponding Item Number) + RCV_SHIPMENT_LINES.ITEM_REVISION, Format.1: string, Max.1: 300, Comments: Discussed with Mike and he is fine with the size mismatch and we can revisit once the customer has a use case for such a big length for Item Number.
-WMS Column: serial_nbr, Format: String, Max: 40.0, REQD?: X, INV Column: SerialNumber, Table Column: RCV_SERIALS_SUPPLY.SERIAL_NUM, Format.1: string, Max.1: 80, Comments: Discussed with Mike and he is fine with the size mismatch and we can revisit once the customer has a use case for such a big length for Serial  Number. The issue is w.r.t the space available on the hand held and whether the 80 char lotr number will fit on to the screen of the hand held.
+WMS Column: item_alternate_code, Format: String, Max: 130.0, REQD?: X, INV Column: ItemNumber + "~^~" + ItemRevision, Table Column: RCV_SHIPMENT_LINES.ITEM_ID (corrosponding Item Number) + RCV_SHIPMENT_LINES.ITEM_REVISION, Format.1: string, Max.1: 300, Comments: Discussed with Mike and he is fine with the size mismatch and we can revisit once the customer has a use case for such a big length for Item Number.
+WMS Column: serial_nbr, Format: String, Max: 40.0, REQD?: X, INV Column: SerialNumber, Table Column: RCV_SERIALS_SUPPLY.SERIAL_NUM, Format.1: string, Max.1: 80, Comments: Discussed with Mike and he is fine with the size mismatch and we can revisit once the customer has a use case for such a big length for Serial Number. The issue is w.r.t the space available on the hand held and whether the 80 char lotr number will fit on to the screen of the hand held.
 WMS Column: batch_nbr, Format: String, Max: 25.0, REQD?: , INV Column: LotNumber, Table Column: RCV_LOTS_SUPPLY.LOT_NUM, Format.1: string, Max.1: 80, Comments:
-Discussed with Mike and he is fine with the size mismatch and we can revisit once the customer has a use case for such a big length for Lot  Number. The issue is w.r.t the space available on the hand held and whether the 80 char lotr number will fit on to the screen of the hand held.
-
+Discussed with Mike and he is fine with the size mismatch and we can revisit once the customer has a use case for such a big length for Lot Number. The issue is w.r.t the space available on the hand held and whether the 80 char lotr number will fit on to the screen of the hand held.
 
 WMS Column: expiry_date, Format: Date, Max: 14.0, REQD?: , INV Column: ExpirationDate, Table Column: , Format.1: date, Max.1: , Comments:
 WMS Column: invn_attr_a, Format: String, Max: 75.0, REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Comments:
@@ -314,7 +311,7 @@ WMS Column: invn_attr_m, Format: String, Max: 75.0, REQD?: , INV Column: , Table
 WMS Column: invn_attr_n, Format: String, Max: 75.0, REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Comments:
 WMS Column: invn_attr_o, Format: String, Max: 75.0, REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Comments:
 WMS Column: po_nbr, Format: String, Max: 30.0, REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Comments: Its already at the ib shipment dtl level- Not Needed confirmed by Ram
-WMS Column: po_seq_nbr, Format: Integer, Max: , REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Comments:  Its already at the ib shipment dtl level- Not Needed confirmed by Ram
+WMS Column: po_seq_nbr, Format: Integer, Max: , REQD?: , INV Column: , Table Column: , Format.1: , Max.1: , Comments: Its already at the ib shipment dtl level- Not Needed confirmed by Ram
 WMS Column: receipt_advice_line, Format: String, Max: 36.0, REQD?: , INV Column: ShipmentHeaderId+ "~^~" + ShipmentlineId , Table Column: RCV SHIPMENTLINES.SHIPMENTHEADERID +
 RCV SHIPMENTLINES.SHIPMENTLINEID, Format.1: string, Max.1: 18-18, Comments: ShipmentHeaderId+ "~^~" + ShipmentlineId +Lot will be unique
 

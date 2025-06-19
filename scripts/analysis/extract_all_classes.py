@@ -175,7 +175,8 @@ def extract_all_classes_and_functions(file_path: Path) -> dict[str, Any]:
                         if isinstance(node.value, ast.List):
                             for item in node.value.elts:
                                 if isinstance(
-                                    item, ast.Str | ast.Constant,
+                                    item,
+                                    ast.Str | ast.Constant,
                                 ) and isinstance(
                                     getattr(
                                         item,

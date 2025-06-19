@@ -59,10 +59,12 @@ class DatabaseCommands:
             "compressed": compress,
             "size_mb": 150.5,
             "tables_backed_up": 25,
-            "timestamp": "2025-06-12T15:30:00Z"
+            "timestamp": "2025-06-12T15:30:00Z",
         }
 
-    async def restore(self, backup_path: str, target_db: str = "main") -> dict[str, Any]:
+    async def restore(
+        self, backup_path: str, target_db: str = "main"
+    ) -> dict[str, Any]:
         """Restore database from backup.
 
         Args:
@@ -79,7 +81,7 @@ class DatabaseCommands:
             "restored_from": backup_path,
             "target_database": target_db,
             "tables_restored": 25,
-            "records_restored": 10450
+            "records_restored": 10450,
         }
 
     def list_tables(self) -> dict[str, Any]:
@@ -88,10 +90,10 @@ class DatabaseCommands:
             "tables": [
                 {"name": "users", "rows": 1250, "size_mb": 5.2},
                 {"name": "orders", "rows": 3400, "size_mb": 12.8},
-                {"name": "products", "rows": 850, "size_mb": 3.1}
+                {"name": "products", "rows": 850, "size_mb": 3.1},
             ],
             "total_tables": 3,
-            "total_size_mb": 21.1
+            "total_size_mb": 21.1,
         }
 
     async def maintenance(self, operation: str = "analyze") -> dict[str, Any]:
@@ -103,7 +105,7 @@ class DatabaseCommands:
         operations = {
             "analyze": "Analyzing table statistics",
             "vacuum": "Reclaiming disk space",
-            "reindex": "Rebuilding indexes"
+            "reindex": "Rebuilding indexes",
         }
 
         if operation not in operations:
@@ -116,7 +118,7 @@ class DatabaseCommands:
             "operation": operation,
             "description": operations[operation],
             "duration_seconds": 0.3,
-            "space_reclaimed_mb": 5.7 if operation == "vacuum" else 0
+            "space_reclaimed_mb": 5.7 if operation == "vacuum" else 0,
         }
 
 
@@ -136,7 +138,7 @@ class MonitoringCommands:
             "cpu_usage": 25.5,
             "memory_usage": 512.0,
             "disk_usage": 85.2,
-            "network_io": 1024.0
+            "network_io": 1024.0,
         }
 
     def list_metrics(self) -> dict[str, Any]:
@@ -144,7 +146,7 @@ class MonitoringCommands:
         return {
             "metrics": list(self.metrics_store.keys()),
             "total_metrics": len(self.metrics_store),
-            "collection_interval": "30s"
+            "collection_interval": "30s",
         }
 
     def get_metric(self, metric_name: str) -> dict[str, Any]:
@@ -160,7 +162,7 @@ class MonitoringCommands:
             "metric": metric_name,
             "value": self.metrics_store[metric_name],
             "timestamp": "2025-06-12T15:30:00Z",
-            "unit": "percent" if "usage" in metric_name else "bytes"
+            "unit": "percent" if "usage" in metric_name else "bytes",
         }
 
     async def collect_all(self) -> dict[str, Any]:
@@ -172,7 +174,7 @@ class MonitoringCommands:
             "status": "success",
             "metrics": self.metrics_store,
             "collection_time": "2025-06-12T15:30:00Z",
-            "collection_duration_ms": 100
+            "collection_duration_ms": 100,
         }
 
 
@@ -191,10 +193,12 @@ async def health_check() -> dict[str, Any]:
         {"name": "database", "status": "healthy", "latency_ms": 5},
         {"name": "cache", "status": "healthy", "latency_ms": 2},
         {"name": "api", "status": "healthy", "latency_ms": 15},
-        {"name": "disk_space", "status": "warning", "usage_percent": 85}
+        {"name": "disk_space", "status": "warning", "usage_percent": 85},
     ]
 
-    overall_status = "warning" if any(c["status"] == "warning" for c in checks) else "healthy"
+    overall_status = (
+        "warning" if any(c["status"] == "warning" for c in checks) else "healthy"
+    )
 
     return {
         "overall_status": overall_status,
@@ -202,7 +206,7 @@ async def health_check() -> dict[str, Any]:
         "total_checks": len(checks),
         "healthy_checks": len([c for c in checks if c["status"] == "healthy"]),
         "warning_checks": len([c for c in checks if c["status"] == "warning"]),
-        "failed_checks": len([c for c in checks if c["status"] == "failed"])
+        "failed_checks": len([c for c in checks if c["status"] == "failed"]),
     }
 
 
@@ -221,11 +225,7 @@ class UtilityCommands:
 
         uuids = [str(uuid.uuid4()) for _ in range(count)]
 
-        return {
-            "uuids": uuids,
-            "count": count,
-            "format": "uuid4"
-        }
+        return {"uuids": uuids, "count": count, "format": "uuid4"}
 
     async def hash_password(self, password: str) -> dict[str, Any]:
         """Hash a password securely.
@@ -240,13 +240,13 @@ class UtilityCommands:
         await asyncio.sleep(0.1)
 
         salt = secrets.token_hex(16)
-        hashed = hashlib.pbkdf2_hmac('sha256', password.encode(), salt.encode(), 100000)
+        hashed = hashlib.pbkdf2_hmac("sha256", password.encode(), salt.encode(), 100000)
 
         return {
             "hashed_password": hashed.hex(),
             "salt": salt,
             "algorithm": "pbkdf2_hmac_sha256",
-            "iterations": 100000
+            "iterations": 100000,
         }
 
     def timestamp(self, format_type: str = "iso") -> dict[str, Any]:
@@ -263,13 +263,13 @@ class UtilityCommands:
         formats = {
             "iso": now.isoformat(),
             "unix": int(time.time()),
-            "readable": now.strftime("%Y-%m-%d %H:%M:%S")
+            "readable": now.strftime("%Y-%m-%d %H:%M:%S"),
         }
 
         return {
             "timestamp": formats.get(format_type, formats["iso"]),
             "format": format_type,
-            "timezone": "UTC"
+            "timezone": "UTC",
         }
 
 

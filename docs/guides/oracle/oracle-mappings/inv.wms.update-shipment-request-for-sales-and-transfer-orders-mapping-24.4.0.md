@@ -1,37 +1,39 @@
 # inv.wms.update-shipment-request-for-sales-and-transfer-orders-mapping-24.4.0.xlsx
 
-**Caminho:** `reference/wms_solutions/mappings/inv.wms.update-shipment-request-for-sales-and-transfer-orders-mapping-24.4.0.xlsx`  \n**Data de conversão:** 2025-05-15T14:41:38.107944  \n**Tipo:** .xlsx  \n**[Download original](reference/wms_solutions/mappings/inv.wms.update-shipment-request-for-sales-and-transfer-orders-mapping-24.4.0.xlsx)**
+**Caminho:** `reference/wms_solutions/mappings/inv.wms.update-shipment-request-for-sales-and-transfer-orders-mapping-24.4.0.xlsx` \n**Data de conversão:** 2025-05-15T14:41:38.107944 \n**Tipo:** .xlsx \n**[Download original](reference/wms_solutions/mappings/inv.wms.update-shipment-request-for-sales-and-transfer-orders-mapping-24.4.0.xlsx)**
 
 ---
 
 ## Sumário
 
-
-
 ## Resumo automático
 
 Este é um guia de mapeamento para a integração “Update Shipment Request” (versão 24.4.0) entre um WMS e a API REST do Oracle Fusion Inventory Management Cloud. Nele são especificados:
 
-1. Cabeçalho da mensagem  
-   - Versão do documento, sistema de origem, código de ambiente e empresa, identificador único e carimbo de data‐hora.  
+1. Cabeçalho da mensagem
+
+   - Versão do documento, sistema de origem, código de ambiente e empresa, identificador único e carimbo de data‐hora.
    - Tipo de entidade (“order” ou “stage_order”) e sinalizador assíncrono.
 
-2. Campos de nível de pedido  
-   - Códigos de instalação (facility_code), empresa, número e tipo de pedido.  
-   - Datas (solicitação, agendamento, expiração), cliente (nome, endereço, contato) e referências (ref_nbr, customer_po_nbr, sales_order_nbr).  
+2. Campos de nível de pedido
+
+   - Códigos de instalação (facility_code), empresa, número e tipo de pedido.
+   - Datas (solicitação, agendamento, expiração), cliente (nome, endereço, contato) e referências (ref_nbr, customer_po_nbr, sales_order_nbr).
    - Códigos de rota, transportadora, serviço, método de pagamento, canal de venda, prioridades, instruções especiais e diversos campos personalizados (cust_field_1…5, cust_date_1…5, cust_number_1…5, cust_decimal_1…5, cust_short_text_1…12, cust_long_text_1…3).
 
-3. Estrutura de lista de linhas de envio  
-   - Cada pedido é tratado como um único detalhe (seq_nbr=1).  
-   - Para cada item: código alternativo (união de item e sufixo), quantidade requisitada (ord_qty), unidade de medida (uom), preço unitário e preço de venda.  
+3. Estrutura de lista de linhas de envio
+
+   - Cada pedido é tratado como um único detalhe (seq_nbr=1).
+   - Para cada item: código alternativo (união de item e sufixo), quantidade requisitada (ord_qty), unidade de medida (uom), preço unitário e preço de venda.
    - Dados adicionais: lote, número de contêiner, atributos de inventário (invn_attr_a…o), instruções de linha codificadas, campos de voucher, palete, bloqueio, números seriais, código de barras, declarações de valor aduaneiro, referências de origem (erp_source_line_ref, erp_source_shipment_ref) e tolerâncias de envio.
 
-4. Lógica de transformação e validações  
-   - Campos obrigatórios versus opcionais, formatos (string, número, data, decimal, booleano), tamanhos máximos e regras de concatenação (por exemplo, “Order‐OrderLine” ou “Item~^~”).  
-   - Extração de datas e tempos, decodificação de notas em Base64, seleção de UOM a partir do nome (“Ea” → “UNITS”, “Cases” → “CASES”, “Packs” → “PACKS”).  
+4. Lógica de transformação e validações
+
+   - Campos obrigatórios versus opcionais, formatos (string, número, data, decimal, booleano), tamanhos máximos e regras de concatenação (por exemplo, “Order‐OrderLine” ou “Item~^~”).
+   - Extração de datas e tempos, decodificação de notas em Base64, seleção de UOM a partir do nome (“Ea” → “UNITS”, “Cases” → “CASES”, “Packs” → “PACKS”).
    - Ações suportadas (CANCEL, CHANGEORG), fluxos de criação, atualização e exclusão de solicitações de envio.
 
-5. Controle de bloqueio para atualização de status  
+5. Controle de bloqueio para atualização de status
    - Em caso de “shipment request for update”, são incluídos lock_code fixo (“WSH_SR_LOCK_FOR_UPDATE”), comentário padrão e flag de autocriação de bloqueio.
 
 Em suma, o documento detalha todos os campos, regras de preenchimento e mapeamentos necessários para atualizar solicitações de embarque de pedidos de venda e transferência via WMS para o Oracle Inventory.
@@ -47,7 +49,7 @@ WMS Column: TimeStamp, Format: string, Required?: , Value: fn:current-dateTime()
 WMS Column: MessageId, Format: string, Required?: X, Value: fn:current-dateTime(), Notes: Unique interface messgae identifier.
 
 WMS Column: facility_code, Format: string, Max: 20.0, Required?: X, INV Column (REST API - SO): OrganizationCode/key, INV Column (REST API - TO): OrganizationCode/key, Format.1: string, Max.1: 18.0, Notes:
-WMS Column: company_code, Format: string, Max: 20.0, Required?: X, INV Column (REST API - SO): company_code, INV Column (REST API - TO): company_code, Format.1: , Max.1: , Notes: Self Properties  - Default value is set as "PP"
+WMS Column: company_code, Format: string, Max: 20.0, Required?: X, INV Column (REST API - SO): company_code, INV Column (REST API - TO): company_code, Format.1: , Max.1: , Notes: Self Properties - Default value is set as "PP"
 WMS Column: order_nbr, Format: string, Max: 30.0, Required?: X, INV Column (REST API - SO): ShipmentLine, INV Column (REST API - TO): ShipmentLine, Format.1: integer, Max.1: 18.0, Notes:
 WMS Column: order_type, Format: string, Max: 25.0, Required?: X, INV Column (REST API - SO): OrderTypeCode, INV Column (REST API - TO): OrderTypeCode, Format.1: string , Max.1: 30.0, Notes:
 WMS Column: ord_date, Format: date, Max: 14.0, Required?: X, INV Column (REST API - SO): RequestedDate, INV Column (REST API - TO): RequestedDate, Format.1: datetime, Max.1: , Notes:
@@ -246,7 +248,7 @@ WMS Column: erp_source_shipment_ref, Format: string, Max: 150.0, Required?: , IN
 WMS Column: erp_fulfillment_line_ref, Format: number, Max: 18.0, Required?: , INV Column: , Format.1: , Max.1: , Notes:
 WMS Column: sales_order_line_ref, Format: string, Max: 150.0, Required?: , INV Column: , Format.1: , Max.1: , Notes:
 WMS Column: sales_order_schedule_ref, Format: string, Max: 150.0, Required?: , INV Column: , Format.1: , Max.1: , Notes:
-WMS Column: min_shipping_tolerance_percentage, Format: , Max: , Required?: , INV Column: UnderShipTolerancePercentage, Format.1: , Max.1: , Notes:  '0' if ShippingToleranceBehavior = "REQUESTEDQUANTITY" else UnderShipTolerancePercentage
+WMS Column: min_shipping_tolerance_percentage, Format: , Max: , Required?: , INV Column: UnderShipTolerancePercentage, Format.1: , Max.1: , Notes: '0' if ShippingToleranceBehavior = "REQUESTEDQUANTITY" else UnderShipTolerancePercentage
 WMS Column: max_shipping_tolerance_percentage, Format: , Max: , Required?: , INV Column: OverShipTolerancePercentage, Format.1: , Max.1: , Notes:
 
 WMS Column: async_flg, Format: , Max: , Required?: , INV Column (REST API - SO): false , INV Column (REST API - TO): false , Format.1: , Max.1: , Notes:
@@ -263,7 +265,7 @@ WMS Column: order_nbr, Format: string, Max: 30.0, Required?: X, INV Column (REST
 WMS Column: order_type, Format: string, Max: 25.0, Required?: X, INV Column (REST API - SO): OrderTypeCode, INV Column (REST API - TO): OrderTypeCode, Format.1: string , Max.1: 30.0, Notes:
 WMS Column: ord_date, Format: date, Max: 14.0, Required?: X, INV Column (REST API - SO): RequestedDate, INV Column (REST API - TO): RequestedDate, Format.1: datetime, Max.1: , Notes: substring-before (ns27:RequestedDate, &quot;T&quot; ) - We extract date part from FA field as WMS ord_date is date type
 WMS Column: exp_date, Format: date, Max: 14.0, Required?: , INV Column (REST API - SO): , INV Column (REST API - TO): , Format.1: , Max.1: , Notes:
-WMS Column: req_ship_date, Format: date, Max: 14.0, Required?: , INV Column (REST API - SO): ScheduledShipDate /RequestedDate, INV Column (REST API - TO): ScheduledShipDate /RequestedDate, Format.1: datetime, Max.1: , Notes: substring-before (ns27:ScheduledShipDate, &quot;T&quot; ) -  We extract date part from FA field as WMS req_ship_date is date type
+WMS Column: req_ship_date, Format: date, Max: 14.0, Required?: , INV Column (REST API - SO): ScheduledShipDate /RequestedDate, INV Column (REST API - TO): ScheduledShipDate /RequestedDate, Format.1: datetime, Max.1: , Notes: substring-before (ns27:ScheduledShipDate, &quot;T&quot; ) - We extract date part from FA field as WMS req_ship_date is date type
 WMS Column: dest_facility_code, Format: string, Max: 20.0, Required?: , INV Column (REST API - SO): , INV Column (REST API - TO): destinationorganizationcode, Format.1: , Max.1: , Notes:
 WMS Column: cust_name, Format: string, Max: 50.0, Required?: , INV Column (REST API - SO): SoldToCustomer, INV Column (REST API - TO): SoldToCustomer, Format.1: string, Max.1: 360.0, Notes:
 WMS Column: cust_addr, Format: string, Max: 70.0, Required?: , INV Column (REST API - SO): , INV Column (REST API - TO): , Format.1: , Max.1: , Notes:
@@ -406,10 +408,10 @@ WMS Column: dest_facility_attr_c, Format: string, Max: 20.0, Required?: , INV Co
 WMS Column: ref_nbr_1, Format: string, Max: 30.0, Required?: , INV Column (REST API - SO): , INV Column (REST API - TO): , Format.1: , Max.1: , Notes:
 WMS Column: host_ob_lpn_nbr, Format: string, Max: 30.0, Required?: , INV Column (REST API - SO): , INV Column (REST API - TO): , Format.1: , Max.1: , Notes:
 WMS Column: spl_instr, Format: string, Max: 255.0, Required?: , INV Column (REST API - SO): NoteTxt, INV Column (REST API - TO): NoteTxt, Format.1: attachment?, Max.1: , Notes: <xsl:for-each xml:id="id_267" select="ns27:notes">
- <xsl:if xml:id="id_268" test="ns27:NoteTypeCode =  &quot;LINE_SHIPPING_INSTRUCTIONS&quot;">
-        <xsl:value-of xml:id="id_269" select="oraext:decodeBase64 (ns27:NoteTxt )"/>
- </xsl:if>
- </xsl:for-each>
+<xsl:if xml:id="id_268" test="ns27:NoteTypeCode = &quot;LINE_SHIPPING_INSTRUCTIONS&quot;">
+<xsl:value-of xml:id="id_269" select="oraext:decodeBase64 (ns27:NoteTxt )"/>
+</xsl:if>
+</xsl:for-each>
 
 WMS Column: vas_activity_code, Format: string, Max: 30.0, Required?: , INV Column (REST API - SO): , INV Column (REST API - TO): , Format.1: , Max.1: , Notes:
 WMS Column: cust_field_1, Format: string, Max: 30.0, Required?: , INV Column (REST API - SO): , INV Column (REST API - TO): , Format.1: , Max.1: , Notes:

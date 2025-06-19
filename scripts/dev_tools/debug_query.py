@@ -64,6 +64,7 @@ def debug_query() -> None:
         except Exception as e:
             print(f"❌ Erro na query: {e}")
             import traceback
+
             traceback.print_exc()
 
         # Teste específico para WMS_ORDER_HDR
@@ -97,6 +98,7 @@ def debug_query() -> None:
     except Exception as e:
         print(f"❌ Erro geral: {e}")
         import traceback
+
         traceback.print_exc()
 
 

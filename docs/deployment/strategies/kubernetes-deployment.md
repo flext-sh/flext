@@ -48,45 +48,45 @@ graph TB
         LB[Load Balancer]
         DNS[DNS]
     end
-    
+
     subgraph "Kubernetes Cluster"
         subgraph "Istio Service Mesh"
             IG[Istio Gateway]
             VS[Virtual Service]
         end
-        
+
         subgraph "FLX Application"
             FLX1[FLX Pod 1]
             FLX2[FLX Pod 2]
             FLX3[FLX Pod 3]
         end
-        
+
         subgraph "Data Layer"
             REDIS[Redis Cluster]
             POSTGRES[PostgreSQL]
         end
-        
+
         subgraph "Monitoring"
             PROM[Prometheus]
             GRAF[Grafana]
             JAEGER[Jaeger]
         end
     end
-    
+
     DNS --> LB
     LB --> IG
     IG --> VS
     VS --> FLX1
     VS --> FLX2
     VS --> FLX3
-    
+
     FLX1 --> REDIS
     FLX1 --> POSTGRES
     FLX2 --> REDIS
     FLX2 --> POSTGRES
     FLX3 --> REDIS
     FLX3 --> POSTGRES
-    
+
     PROM --> FLX1
     PROM --> FLX2
     PROM --> FLX3
@@ -269,155 +269,155 @@ spec:
         prometheus.io/path: "/metrics"
     spec:
       serviceAccountName: flx-service-account
-      
+
       # Security context
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
         runAsGroup: 1000
         fsGroup: 1000
-      
+
       # Init containers
       initContainers:
-      - name: wait-for-db
-        image: postgres:15-alpine
-        command: ['sh', '-c']
-        args:
-        - |
-          until pg_isready -h postgres -p 5432 -U flx-user; do
-            echo "Waiting for database..."
-            sleep 2
-          done
-          echo "Database is ready!"
-        env:
-        - name: PGPASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: flx-secrets
-              key: DATABASE_PASSWORD
-      
-      - name: wait-for-redis
-        image: redis:7-alpine
-        command: ['sh', '-c']
-        args:
-        - |
-          until redis-cli -h redis-cluster -p 6379 ping; do
-            echo "Waiting for Redis..."
-            sleep 2
-          done
-          echo "Redis is ready!"
-      
+        - name: wait-for-db
+          image: postgres:15-alpine
+          command: ["sh", "-c"]
+          args:
+            - |
+              until pg_isready -h postgres -p 5432 -U flx-user; do
+                echo "Waiting for database..."
+                sleep 2
+              done
+              echo "Database is ready!"
+          env:
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: flx-secrets
+                  key: DATABASE_PASSWORD
+
+        - name: wait-for-redis
+          image: redis:7-alpine
+          command: ["sh", "-c"]
+          args:
+            - |
+              until redis-cli -h redis-cluster -p 6379 ping; do
+                echo "Waiting for Redis..."
+                sleep 2
+              done
+              echo "Redis is ready!"
+
       containers:
-      - name: flx-app
-        image: flx:v0.4.0
-        ports:
-        - name: http
-          containerPort: 8000
-          protocol: TCP
-        - name: metrics
-          containerPort: 9090
-          protocol: TCP
-        
-        # Environment configuration
-        envFrom:
-        - configMapRef:
-            name: flx-config
-        env:
-        - name: DATABASE_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: flx-secrets
-              key: DATABASE_PASSWORD
-        - name: REDIS_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: flx-secrets
-              key: REDIS_PASSWORD
-        - name: JWT_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: flx-secrets
-              key: JWT_SECRET
-        
-        # Resource limits
-        resources:
-          requests:
-            memory: "256Mi"
-            cpu: "100m"
-          limits:
-            memory: "512Mi"
-            cpu: "500m"
-        
-        # Health checks
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: http
-          initialDelaySeconds: 60
-          periodSeconds: 30
-          timeoutSeconds: 10
-          failureThreshold: 3
-        
-        readinessProbe:
-          httpGet:
-            path: /ready
-            port: http
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 5
-          failureThreshold: 3
-        
-        # Startup probe for slow-starting applications
-        startupProbe:
-          httpGet:
-            path: /health
-            port: http
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 5
-          failureThreshold: 10
-        
-        # Security context
-        securityContext:
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: true
-          capabilities:
-            drop:
-            - ALL
-        
-        # Volume mounts
-        volumeMounts:
-        - name: tmp
-          mountPath: /tmp
-        - name: cache
-          mountPath: /app/cache
-      
+        - name: flx-app
+          image: flx:v0.4.0
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+            - name: metrics
+              containerPort: 9090
+              protocol: TCP
+
+          # Environment configuration
+          envFrom:
+            - configMapRef:
+                name: flx-config
+          env:
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: flx-secrets
+                  key: DATABASE_PASSWORD
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: flx-secrets
+                  key: REDIS_PASSWORD
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: flx-secrets
+                  key: JWT_SECRET
+
+          # Resource limits
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+
+          # Health checks
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            timeoutSeconds: 10
+            failureThreshold: 3
+
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+
+          # Startup probe for slow-starting applications
+          startupProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 10
+
+          # Security context
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+
+          # Volume mounts
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            - name: cache
+              mountPath: /app/cache
+
       volumes:
-      - name: tmp
-        emptyDir: {}
-      - name: cache
-        emptyDir: {}
-      
+        - name: tmp
+          emptyDir: {}
+        - name: cache
+          emptyDir: {}
+
       # Pod scheduling
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 100
-            podAffinityTerm:
-              labelSelector:
-                matchExpressions:
-                - key: app
-                  operator: In
-                  values:
-                  - flx
-              topologyKey: kubernetes.io/hostname
-      
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - flx
+                topologyKey: kubernetes.io/hostname
+
       # Tolerations for node taints
       tolerations:
-      - key: "node-role.kubernetes.io/spot"
-        operator: "Equal"
-        value: "true"
-        effect: "NoSchedule"
+        - key: "node-role.kubernetes.io/spot"
+          operator: "Equal"
+          value: "true"
+          effect: "NoSchedule"
 ```
 
 ### **Service Configuration**
@@ -438,14 +438,14 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-  - name: http
-    port: 80
-    targetPort: http
-    protocol: TCP
-  - name: https
-    port: 443
-    targetPort: http
-    protocol: TCP
+    - name: http
+      port: 80
+      targetPort: http
+      protocol: TCP
+    - name: https
+      port: 443
+      targetPort: http
+      protocol: TCP
   selector:
     app: flx
 ---
@@ -461,14 +461,14 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-  - name: http
-    port: 8000
-    targetPort: http
-    protocol: TCP
-  - name: metrics
-    port: 9090
-    targetPort: metrics
-    protocol: TCP
+    - name: http
+      port: 8000
+      targetPort: http
+      protocol: TCP
+    - name: metrics
+      port: 9090
+      targetPort: metrics
+      protocol: TCP
   selector:
     app: flx
 ```
@@ -490,38 +490,38 @@ spec:
   minReplicas: 3
   maxReplicas: 20
   metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 70
-  - type: Resource
-    resource:
-      name: memory
-      target:
-        type: Utilization
-        averageUtilization: 80
-  - type: Pods
-    pods:
-      metric:
-        name: flx_requests_per_second
-      target:
-        type: AverageValue
-        averageValue: "100"
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80
+    - type: Pods
+      pods:
+        metric:
+          name: flx_requests_per_second
+        target:
+          type: AverageValue
+          averageValue: "100"
   behavior:
     scaleUp:
       stabilizationWindowSeconds: 60
       policies:
-      - type: Percent
-        value: 50
-        periodSeconds: 60
+        - type: Percent
+          value: 50
+          periodSeconds: 60
     scaleDown:
       stabilizationWindowSeconds: 300
       policies:
-      - type: Percent
-        value: 10
-        periodSeconds: 60
+        - type: Percent
+          value: 10
+          periodSeconds: 60
 ```
 
 ### **Vertical Pod Autoscaler**
@@ -542,14 +542,14 @@ spec:
     updateMode: "Auto"
   resourcePolicy:
     containerPolicies:
-    - containerName: flx-app
-      minAllowed:
-        cpu: 100m
-        memory: 128Mi
-      maxAllowed:
-        cpu: 2
-        memory: 1Gi
-      controlledResources: ["cpu", "memory"]
+      - containerName: flx-app
+        minAllowed:
+          cpu: 100m
+          memory: 128Mi
+        maxAllowed:
+          cpu: 2
+          memory: 1Gi
+        controlledResources: ["cpu", "memory"]
 ```
 
 ## 🔒 Security Configuration
@@ -572,12 +572,12 @@ metadata:
   namespace: flx-production
   name: flx-role
 rules:
-- apiGroups: [""]
-  resources: ["configmaps", "secrets"]
-  verbs: ["get", "list", "watch"]
-- apiGroups: [""]
-  resources: ["pods"]
-  verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["configmaps", "secrets"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list", "watch"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -585,9 +585,9 @@ metadata:
   name: flx-role-binding
   namespace: flx-production
 subjects:
-- kind: ServiceAccount
-  name: flx-service-account
-  namespace: flx-production
+  - kind: ServiceAccount
+    name: flx-service-account
+    namespace: flx-production
 roleRef:
   kind: Role
   name: flx-role
@@ -608,39 +608,39 @@ spec:
     matchLabels:
       app: flx
   policyTypes:
-  - Ingress
-  - Egress
+    - Ingress
+    - Egress
   ingress:
-  - from:
-    - namespaceSelector:
-        matchLabels:
-          name: istio-system
-    - namespaceSelector:
-        matchLabels:
-          name: flx-production
-    ports:
-    - protocol: TCP
-      port: 8000
-    - protocol: TCP
-      port: 9090
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: istio-system
+        - namespaceSelector:
+            matchLabels:
+              name: flx-production
+      ports:
+        - protocol: TCP
+          port: 8000
+        - protocol: TCP
+          port: 9090
   egress:
-  - to:
-    - namespaceSelector:
-        matchLabels:
-          name: flx-production
-    ports:
-    - protocol: TCP
-      port: 5432  # PostgreSQL
-    - protocol: TCP
-      port: 6379  # Redis
-  - to: []  # Allow DNS
-    ports:
-    - protocol: UDP
-      port: 53
-  - to: []  # Allow HTTPS for external APIs
-    ports:
-    - protocol: TCP
-      port: 443
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              name: flx-production
+      ports:
+        - protocol: TCP
+          port: 5432 # PostgreSQL
+        - protocol: TCP
+          port: 6379 # Redis
+    - to: [] # Allow DNS
+      ports:
+        - protocol: UDP
+          port: 53
+    - to: [] # Allow HTTPS for external APIs
+      ports:
+        - protocol: TCP
+          port: 443
 ```
 
 ### **Pod Security Standards**
@@ -657,18 +657,18 @@ spec:
   requiredDropCapabilities:
     - ALL
   volumes:
-    - 'configMap'
-    - 'emptyDir'
-    - 'projected'
-    - 'secret'
-    - 'downwardAPI'
-    - 'persistentVolumeClaim'
+    - "configMap"
+    - "emptyDir"
+    - "projected"
+    - "secret"
+    - "downwardAPI"
+    - "persistentVolumeClaim"
   runAsUser:
-    rule: 'MustRunAsNonRoot'
+    rule: "MustRunAsNonRoot"
   seLinux:
-    rule: 'RunAsAny'
+    rule: "RunAsAny"
   fsGroup:
-    rule: 'RunAsAny'
+    rule: "RunAsAny"
 ```
 
 ## 📊 Monitoring Integration
@@ -689,13 +689,13 @@ spec:
     matchLabels:
       app: flx
   endpoints:
-  - port: metrics
-    interval: 30s
-    path: /metrics
-    honorLabels: true
+    - port: metrics
+      interval: 30s
+      path: /metrics
+      honorLabels: true
   namespaceSelector:
     matchNames:
-    - flx-production
+      - flx-production
 ```
 
 ### **PrometheusRule for Alerting**
@@ -711,48 +711,48 @@ metadata:
     app: flx
 spec:
   groups:
-  - name: flx.rules
-    rules:
-    - alert: FlxHighErrorRate
-      expr: |
-        (
-          rate(flx_requests_total{status=~"5.."}[5m]) / 
-          rate(flx_requests_total[5m])
-        ) > 0.05
-      for: 5m
-      labels:
-        severity: critical
-        component: flx
-      annotations:
-        summary: "FLX application has high error rate"
-        description: "Error rate is {{ $value | humanizePercentage }}"
-    
-    - alert: FlxHighLatency
-      expr: |
-        histogram_quantile(0.95, 
-          rate(flx_request_duration_seconds_bucket[5m])
-        ) > 0.5
-      for: 5m
-      labels:
-        severity: warning
-        component: flx
-      annotations:
-        summary: "FLX application has high latency"
-        description: "95th percentile latency is {{ $value }}s"
-    
-    - alert: FlxPodCrashLooping
-      expr: |
-        rate(kube_pod_container_status_restarts_total{
-          namespace="flx-production",
-          pod=~"flx-.*"
-        }[5m]) > 0
-      for: 5m
-      labels:
-        severity: critical
-        component: flx
-      annotations:
-        summary: "FLX pod is crash looping"
-        description: "Pod {{ $labels.pod }} is restarting frequently"
+    - name: flx.rules
+      rules:
+        - alert: FlxHighErrorRate
+          expr: |
+            (
+              rate(flx_requests_total{status=~"5.."}[5m]) /
+              rate(flx_requests_total[5m])
+            ) > 0.05
+          for: 5m
+          labels:
+            severity: critical
+            component: flx
+          annotations:
+            summary: "FLX application has high error rate"
+            description: "Error rate is {{ $value | humanizePercentage }}"
+
+        - alert: FlxHighLatency
+          expr: |
+            histogram_quantile(0.95,
+              rate(flx_request_duration_seconds_bucket[5m])
+            ) > 0.5
+          for: 5m
+          labels:
+            severity: warning
+            component: flx
+          annotations:
+            summary: "FLX application has high latency"
+            description: "95th percentile latency is {{ $value }}s"
+
+        - alert: FlxPodCrashLooping
+          expr: |
+            rate(kube_pod_container_status_restarts_total{
+              namespace="flx-production",
+              pod=~"flx-.*"
+            }[5m]) > 0
+          for: 5m
+          labels:
+            severity: critical
+            component: flx
+          annotations:
+            summary: "FLX pod is crash looping"
+            description: "Pod {{ $labels.pod }} is restarting frequently"
 ```
 
 ## 🌐 Istio Service Mesh
@@ -770,23 +770,23 @@ spec:
   selector:
     istio: ingressgateway
   servers:
-  - port:
-      number: 80
-      name: http
-      protocol: HTTP
-    hosts:
-    - flx-api.company.com
-    tls:
-      httpsRedirect: true
-  - port:
-      number: 443
-      name: https
-      protocol: HTTPS
-    tls:
-      mode: SIMPLE
-      credentialName: flx-tls-cert
-    hosts:
-    - flx-api.company.com
+    - port:
+        number: 80
+        name: http
+        protocol: HTTP
+      hosts:
+        - flx-api.company.com
+      tls:
+        httpsRedirect: true
+    - port:
+        number: 443
+        name: https
+        protocol: HTTPS
+      tls:
+        mode: SIMPLE
+        credentialName: flx-tls-cert
+      hosts:
+        - flx-api.company.com
 ```
 
 ### **VirtualService Configuration**
@@ -800,44 +800,44 @@ metadata:
   namespace: flx-production
 spec:
   hosts:
-  - flx-api.company.com
+    - flx-api.company.com
   gateways:
-  - flx-gateway
+    - flx-gateway
   http:
-  - match:
-    - uri:
-        prefix: /health
-    route:
-    - destination:
-        host: flx-internal
-        port:
-          number: 8000
-    timeout: 5s
-  - match:
-    - uri:
-        prefix: /api/v1
-    route:
-    - destination:
-        host: flx-internal
-        port:
-          number: 8000
-    timeout: 30s
-    retries:
-      attempts: 3
-      perTryTimeout: 10s
-    fault:
-      delay:
-        percentage:
-          value: 0.1
-        fixedDelay: 100ms
-  - match:
-    - uri:
-        prefix: /
-    route:
-    - destination:
-        host: flx-internal
-        port:
-          number: 8000
+    - match:
+        - uri:
+            prefix: /health
+      route:
+        - destination:
+            host: flx-internal
+            port:
+              number: 8000
+      timeout: 5s
+    - match:
+        - uri:
+            prefix: /api/v1
+      route:
+        - destination:
+            host: flx-internal
+            port:
+              number: 8000
+      timeout: 30s
+      retries:
+        attempts: 3
+        perTryTimeout: 10s
+      fault:
+        delay:
+          percentage:
+            value: 0.1
+          fixedDelay: 100ms
+    - match:
+        - uri:
+            prefix: /
+      route:
+        - destination:
+            host: flx-internal
+            port:
+              number: 8000
 ```
 
 ### **DestinationRule Configuration**
@@ -866,9 +866,9 @@ spec:
       baseEjectionTime: 30s
       maxEjectionPercent: 50
   subsets:
-  - name: v0-4-0
-    labels:
-      version: v0.4.0
+    - name: v0-4-0
+      labels:
+        version: v0.4.0
 ```
 
 ## 🚀 Deployment Strategies
@@ -926,25 +926,25 @@ metadata:
   namespace: flx-production
 spec:
   hosts:
-  - flx-internal
+    - flx-internal
   http:
-  - match:
-    - headers:
-        canary:
-          exact: "true"
-    route:
-    - destination:
-        host: flx-internal
-        subset: v0-4-0
-  - route:
-    - destination:
-        host: flx-internal
-        subset: v0-3-9
-      weight: 90
-    - destination:
-        host: flx-internal
-        subset: v0-4-0
-      weight: 10
+    - match:
+        - headers:
+            canary:
+              exact: "true"
+      route:
+        - destination:
+            host: flx-internal
+            subset: v0-4-0
+    - route:
+        - destination:
+            host: flx-internal
+            subset: v0-3-9
+          weight: 90
+        - destination:
+            host: flx-internal
+            subset: v0-4-0
+          weight: 10
 ```
 
 ### **Automated Deployment Pipeline**
@@ -956,48 +956,48 @@ name: Deploy to Kubernetes
 on:
   push:
     tags:
-      - 'v*'
+      - "v*"
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v2
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: us-west-2
-    
-    - name: Login to Amazon ECR
-      run: |
-        aws ecr get-login-password --region us-west-2 | \
-        docker login --username AWS --password-stdin $ECR_REGISTRY
-    
-    - name: Build and push Docker image
-      run: |
-        docker build -t $ECR_REGISTRY/flx:$GITHUB_REF_NAME .
-        docker push $ECR_REGISTRY/flx:$GITHUB_REF_NAME
-    
-    - name: Update kubeconfig
-      run: |
-        aws eks update-kubeconfig --region us-west-2 --name production-cluster
-    
-    - name: Deploy to Kubernetes
-      run: |
-        sed -i 's|flx:latest|'$ECR_REGISTRY'/flx:'$GITHUB_REF_NAME'|g' k8s/production/*.yaml
-        kubectl apply -f k8s/production/ -n flx-production
-    
-    - name: Wait for deployment
-      run: |
-        kubectl rollout status deployment/flx-app -n flx-production --timeout=600s
-    
-    - name: Run smoke tests
-      run: |
-        kubectl run smoke-test --rm -i --image=$ECR_REGISTRY/flx:$GITHUB_REF_NAME \
-          --restart=Never -n flx-production -- python -m pytest tests/smoke/
+      - uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+
+      - name: Login to Amazon ECR
+        run: |
+          aws ecr get-login-password --region us-west-2 | \
+          docker login --username AWS --password-stdin $ECR_REGISTRY
+
+      - name: Build and push Docker image
+        run: |
+          docker build -t $ECR_REGISTRY/flx:$GITHUB_REF_NAME .
+          docker push $ECR_REGISTRY/flx:$GITHUB_REF_NAME
+
+      - name: Update kubeconfig
+        run: |
+          aws eks update-kubeconfig --region us-west-2 --name production-cluster
+
+      - name: Deploy to Kubernetes
+        run: |
+          sed -i 's|flx:latest|'$ECR_REGISTRY'/flx:'$GITHUB_REF_NAME'|g' k8s/production/*.yaml
+          kubectl apply -f k8s/production/ -n flx-production
+
+      - name: Wait for deployment
+        run: |
+          kubectl rollout status deployment/flx-app -n flx-production --timeout=600s
+
+      - name: Run smoke tests
+        run: |
+          kubectl run smoke-test --rm -i --image=$ECR_REGISTRY/flx:$GITHUB_REF_NAME \
+            --restart=Never -n flx-production -- python -m pytest tests/smoke/
 ```
 
 ## 🔍 Troubleshooting
@@ -1045,8 +1045,8 @@ kubectl describe resourcequota -n flx-production
 
 ```yaml
 env:
-- name: JAVA_OPTS
-  value: "-Xms512m -Xmx1g -XX:+UseG1GC -XX:MaxGCPauseMillis=200"
+  - name: JAVA_OPTS
+    value: "-Xms512m -Xmx1g -XX:+UseG1GC -XX:MaxGCPauseMillis=200"
 ```
 
 #### Resource Optimization

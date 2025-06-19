@@ -280,7 +280,9 @@ class EntityDiscovery:
                 if e.response.status_code == HTTP_NOT_FOUND:
                     logger.debug("Entity %s not found for sampling", entity_name)
                 else:
-                    logger.warning("HTTP error getting sample for %s: %s", entity_name, e)
+                    logger.warning(
+                        "HTTP error getting sample for %s: %s", entity_name, e
+                    )
                 return []
             except (
                 httpx.ConnectError,
@@ -293,7 +295,9 @@ class EntityDiscovery:
                 return []
             except (ValueError, KeyError, TypeError) as e:
                 logger.warning(
-                    "Data parsing error getting sample for entity %s: %s", entity_name, e
+                    "Data parsing error getting sample for entity %s: %s",
+                    entity_name,
+                    e,
                 )
                 return []
 
@@ -460,7 +464,9 @@ class EntityDiscovery:
                 return None
             except (ValueError, KeyError, TypeError) as e:
                 logger.warning(
-                    "Data parsing error estimating size for entity %s: %s", entity_name, e
+                    "Data parsing error estimating size for entity %s: %s",
+                    entity_name,
+                    e,
                 )
                 return None
 

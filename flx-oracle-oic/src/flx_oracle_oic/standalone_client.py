@@ -22,7 +22,9 @@ class StandaloneOracleOicClient(BaseModel):
         arbitrary_types_allowed = True
 
     def __init__(
-        self, config: StandaloneOracleOicConfig | None = None, **kwargs: Any  # type: ignore[misc],
+        self,
+        config: StandaloneOracleOicConfig | None = None,
+        **kwargs: Any,  # type: ignore[misc],
     ) -> None:
         """Initialize client with configuration."""
         if config is None:

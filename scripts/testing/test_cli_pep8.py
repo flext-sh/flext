@@ -27,7 +27,8 @@ def run_command(cmd: str, env_file: str = ".env.test") -> None:
             capture_output=True,
             text=True,
             cwd=project_dir,
-            env=env, check=False,
+            env=env,
+            check=False,
         )
 
         print("STDOUT:")
@@ -55,6 +56,7 @@ def main() -> None:
 
     if env_test.exists() and not env_file.exists():
         import shutil
+
         shutil.copy(env_test, env_file)
         print("Created .env from .env.test")
 
@@ -62,22 +64,16 @@ def main() -> None:
     commands = [
         # Help command
         "poetry run gn-wms --help",
-
         # Version with default format (TABLE from .env)
         "poetry run gn-wms version",
-
         # Config show with default format
         "poetry run gn-wms config show",
-
         # Override format to JSON
         "poetry run gn-wms version --format json",
-
         # List entities
         "poetry run gn-wms list-entities --limit 5",
-
         # Health check
         "poetry run gn-wms health",
-
         # Show logs with TRACE level
         "poetry run gn-wms show-logs --hours 1 --level TRACE",
     ]

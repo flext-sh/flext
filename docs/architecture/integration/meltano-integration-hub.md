@@ -1,8 +1,8 @@
 # Meltano Integration Hub
 
-**Navigation Center**: Complete Meltano & Singer SDK integration within FLX Framework  
-**Purpose**: Unified data pipeline functionality via hexagonal architecture  
-**Audience**: Data Engineers, Integration Architects, Platform Teams  
+**Navigation Center**: Complete Meltano & Singer SDK integration within FLX Framework
+**Purpose**: Unified data pipeline functionality via hexagonal architecture
+**Audience**: Data Engineers, Integration Architects, Platform Teams
 
 > **Central navigation hub for all Meltano integration patterns and implementations. This hub provides structured pathways to master data pipeline orchestration within the FLX hexagonal architecture.**
 
@@ -47,133 +47,146 @@ FLX Hexagonal Architecture + Meltano Integration
 
 ### 🏗️ **Architecture & Design**
 
-*Fundamental patterns and architectural decisions*
+_Fundamental patterns and architectural decisions_
 
 - **[Meltano Ports Reorganization Plan](meltano-ports-reorganization-plan.md)** ⭐ **Complete Integration Architecture**
+
   - Bidirectional port patterns
   - Singer protocol implementation
   - Plugin management system
-  - *Complexity: Expert | Time: 3-4 hours*
+  - _Complexity: Expert | Time: 3-4 hours_
 
 - **[Data Pipeline Architecture](data-pipeline-architecture.md)** ⭐ **Pipeline Design Patterns**
   - Block-based execution patterns
   - State management strategies
   - Error handling and recovery
-  - *Complexity: Advanced | Time: 2 hours*
+  - _Complexity: Advanced | Time: 2 hours_
 
 ### 🔌 **Plugin System**
 
-*Plugin discovery, lifecycle, and management*
+_Plugin discovery, lifecycle, and management_
 
 - **[Plugin Management Guide](plugin-management-guide.md)** ⭐ **Plugin Lifecycle**
+
   - MeltanoHub integration
   - Plugin discovery and installation
   - Configuration management
-  - *Complexity: Intermediate | Time: 1.5 hours*
+  - _Complexity: Intermediate | Time: 1.5 hours_
 
 - **[Singer Protocol Implementation](singer-protocol-implementation.md)** ⭐ **TAP/TARGET Patterns**
   - Singer specification compliance
   - Stream processing optimization
   - Schema discovery and validation
-  - *Complexity: Advanced | Time: 2 hours*
+  - _Complexity: Advanced | Time: 2 hours_
 
 ### 🔄 **Pipeline Orchestration**
 
-*Execution, scheduling, and monitoring*
+_Execution, scheduling, and monitoring_
 
 - **[Pipeline Orchestration Guide](pipeline-orchestration-guide.md)** ⭐ **Execution Engine**
+
   - Block composition patterns
   - Parallel execution strategies
   - Real-time monitoring
-  - *Complexity: Advanced | Time: 2-3 hours*
+  - _Complexity: Advanced | Time: 2-3 hours_
 
 - **[State Management Implementation](state-management-implementation.md)** ⭐ **State Persistence**
   - Multi-backend state storage
   - Concurrency control
   - Incremental processing
-  - *Complexity: Intermediate | Time: 1.5 hours*
+  - _Complexity: Intermediate | Time: 1.5 hours_
 
 ### 🛠️ **Implementation Examples**
 
-*Practical implementations and integrations*
+_Practical implementations and integrations_
 
 - **[Oracle Integration with Meltano](oracle-meltano-integration.md)** ⭐ **Enterprise Integration**
+
   - Oracle WMS data extraction
   - Real-time data synchronization
   - Error handling strategies
-  - *Complexity: Advanced | Time: 2-3 hours*
+  - _Complexity: Advanced | Time: 2-3 hours_
 
 - **[CLI Integration Examples](meltano-cli-integration.md)** ⭐ **Command-Line Interface**
   - FLX CLI extensions
   - Pipeline execution commands
   - Development workflows
-  - *Complexity: Intermediate | Time: 1 hour*
+  - _Complexity: Intermediate | Time: 1 hour_
 
 ---
 
 ## 🎓 **Learning Paths**
 
-### 🌱 **Foundation Path** *(4-5 hours)*
+### 🌱 **Foundation Path** _(4-5 hours)_
 
-*Essential knowledge for Meltano integration*
+_Essential knowledge for Meltano integration_
 
-1. **[Hexagonal Architecture Basics](../architecture/unified-architecture-guide.md)** *(1 hour)*
+1. **[Hexagonal Architecture Basics](../architecture/unified-architecture-guide.md)** _(1 hour)_
+
    - Understand ports and adapters
    - Dependency inversion principles
 
-2. **[Singer Protocol Fundamentals](singer-protocol-implementation.md)** *(1.5 hours)*
+2. **[Singer Protocol Fundamentals](singer-protocol-implementation.md)** _(1.5 hours)_
+
    - TAP/TARGET concepts
    - Stream processing basics
 
-3. **[Plugin Management Guide](plugin-management-guide.md)** *(1.5 hours)*
+3. **[Plugin Management Guide](plugin-management-guide.md)** _(1.5 hours)_
+
    - Plugin discovery and installation
    - Configuration management
 
-4. **[Basic Pipeline Implementation](pipeline-orchestration-guide.md)** *(1 hour)*
+4. **[Basic Pipeline Implementation](pipeline-orchestration-guide.md)** _(1 hour)_
    - Simple pipeline creation
    - Basic execution patterns
 
-### 🚀 **Integration Path** *(8-10 hours)*
+### 🚀 **Integration Path** _(8-10 hours)_
 
-*Complete Meltano integration mastery*
+_Complete Meltano integration mastery_
 
-1. **Complete Foundation Path** *(Prerequisites)*
+1. **Complete Foundation Path** _(Prerequisites)_
 
-2. **[Meltano Ports Reorganization Plan](meltano-ports-reorganization-plan.md)** *(3-4 hours)*
+2. **[Meltano Ports Reorganization Plan](meltano-ports-reorganization-plan.md)** _(3-4 hours)_
+
    - Complete architectural understanding
    - Bidirectional port implementation
 
-3. **[Data Pipeline Architecture](data-pipeline-architecture.md)** *(2 hours)*
+3. **[Data Pipeline Architecture](data-pipeline-architecture.md)** _(2 hours)_
+
    - Advanced orchestration patterns
    - Performance optimization
 
-4. **[State Management Implementation](state-management-implementation.md)** *(1.5 hours)*
+4. **[State Management Implementation](state-management-implementation.md)** _(1.5 hours)_
+
    - Production state strategies
    - Concurrency handling
 
-5. **[Oracle Integration Example](oracle-meltano-integration.md)** *(2-3 hours)*
+5. **[Oracle Integration Example](oracle-meltano-integration.md)** _(2-3 hours)_
    - Real-world implementation
    - Enterprise patterns
 
-### 🏆 **Expert Path** *(12-15 hours)*
+### 🏆 **Expert Path** _(12-15 hours)_
 
-*Advanced patterns and custom implementations*
+_Advanced patterns and custom implementations_
 
-1. **Complete Integration Path** *(Prerequisites)*
+1. **Complete Integration Path** _(Prerequisites)_
 
-2. **[Custom Plugin Development](custom-plugin-development.md)** *(3-4 hours)*
+2. **[Custom Plugin Development](custom-plugin-development.md)** _(3-4 hours)_
+
    - Building custom extractors/loaders
    - Advanced plugin patterns
 
-3. **[Advanced Orchestration Patterns](advanced-orchestration-patterns.md)** *(2-3 hours)*
+3. **[Advanced Orchestration Patterns](advanced-orchestration-patterns.md)** _(2-3 hours)_
+
    - Complex pipeline compositions
    - Error recovery strategies
 
-4. **[Performance Optimization](meltano-performance-optimization.md)** *(2-3 hours)*
+4. **[Performance Optimization](meltano-performance-optimization.md)** _(2-3 hours)_
+
    - High-throughput pipelines
    - Resource optimization
 
-5. **[Production Deployment](meltano-production-deployment.md)** *(2-3 hours)*
+5. **[Production Deployment](meltano-production-deployment.md)** _(2-3 hours)_
    - Containerization strategies
    - Monitoring and alerting
 
@@ -183,9 +196,10 @@ FLX Hexagonal Architecture + Meltano Integration
 
 ### 📊 **Data Warehouse Integration**
 
-*Enterprise data warehouse patterns*
+_Enterprise data warehouse patterns_
 
 - **ELT Pipelines**: `Oracle → Snowflake → dbt transformations`
+
   - Apply: Singer TAP/TARGET + State Management
   - See: [Oracle Integration with Meltano](oracle-meltano-integration.md)
 
@@ -195,9 +209,10 @@ FLX Hexagonal Architecture + Meltano Integration
 
 ### 🔄 **System Integration**
 
-*Application-to-application data flow*
+_Application-to-application data flow_
 
 - **CRM Integration**: `HubSpot → Oracle WMS → Reporting`
+
   - Apply: Bidirectional ports + Error handling
   - See: [Bidirectional Port Patterns](meltano-ports-reorganization-plan.md)
 
@@ -207,9 +222,10 @@ FLX Hexagonal Architecture + Meltano Integration
 
 ### ⚡ **High-Volume Processing**
 
-*Performance-critical data pipelines*
+_Performance-critical data pipelines_
 
 - **Batch Processing**: `Large file imports with parallel processing`
+
   - Apply: Parallel execution + Resource optimization
   - See: [Performance Optimization](meltano-performance-optimization.md)
 
@@ -230,36 +246,36 @@ default_environment: dev
 project_id: flx-pipeline
 
 environments:
-- name: dev
-- name: prod
+  - name: dev
+  - name: prod
 
 plugins:
   extractors:
-  - name: tap-postgres
-    variant: meltanolabs
-    pip_url: pipelinewise-tap-postgres
-    settings:
-    - name: host
-    - name: port
-    - name: dbname
-    - name: user
-    - name: password
-  
+    - name: tap-postgres
+      variant: meltanolabs
+      pip_url: pipelinewise-tap-postgres
+      settings:
+        - name: host
+        - name: port
+        - name: dbname
+        - name: user
+        - name: password
+
   loaders:
-  - name: target-snowflake
-    variant: transferwise
-    pip_url: pipelinewise-target-snowflake
-    settings:
-    - name: account
-    - name: dbname
-    - name: user
-    - name: password
-    - name: warehouse
+    - name: target-snowflake
+      variant: transferwise
+      pip_url: pipelinewise-target-snowflake
+      settings:
+        - name: account
+        - name: dbname
+        - name: user
+        - name: password
+        - name: warehouse
 
 jobs:
-- name: postgres-to-snowflake
-  tasks:
-  - tap-postgres target-snowflake
+  - name: postgres-to-snowflake
+    tasks:
+      - tap-postgres target-snowflake
 ```
 
 ### 🐍 **Python Integration Template**
@@ -273,19 +289,19 @@ from flx.domain.data_pipeline.entities import PipelineExecutionContext
 async def run_meltano_pipeline():
     """Example Meltano pipeline execution."""
     container = get_container()
-    
+
     # Create pipeline orchestration port
     pipeline_port = await container.pipeline_orchestration_port()
-    
+
     # Execute pipeline
     context = PipelineExecutionContext(
         pipeline_id="postgres-to-snowflake",
         environment="production",
         parameters={"full_refresh": False}
     )
-    
+
     run = await pipeline_port.execute_pipeline("postgres-to-snowflake", context)
-    
+
     # Monitor execution
     async for log in pipeline_port.stream_execution_logs(run.id):
         print(log)
@@ -373,7 +389,7 @@ Ready to integrate Meltano with FLX? Choose your starting point:
 
 ---
 
-**Integration Hub**: Meltano within FLX Framework  
-**Maintained By**: FLX Data Engineering Team  
-**Last Updated**: January 2025  
+**Integration Hub**: Meltano within FLX Framework
+**Maintained By**: FLX Data Engineering Team
+**Last Updated**: January 2025
 **Feedback**: [Integration Issues](https://github.com/flx/flx/issues)

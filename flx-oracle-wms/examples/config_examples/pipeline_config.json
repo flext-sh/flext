@@ -11,12 +11,7 @@
     {
       "name": "inventory_sync",
       "description": "Complete inventory synchronization with KPI calculation and alerts",
-      "streams": [
-        "inventory",
-        "lots",
-        "locations",
-        "cycle_counts"
-      ],
+      "streams": ["inventory", "lots", "locations", "cycle_counts"],
       "schedule": "0 */6 * * *",
       "enabled": true,
       "target_config_override": {
@@ -29,12 +24,7 @@
     {
       "name": "order_processing",
       "description": "Real-time order processing and fulfillment tracking",
-      "streams": [
-        "orders",
-        "order_lines",
-        "shipments",
-        "allocations"
-      ],
+      "streams": ["orders", "order_lines", "shipments", "allocations"],
       "schedule": "0 * * * *",
       "enabled": true,
       "tap_config_override": {
@@ -44,12 +34,7 @@
     {
       "name": "warehouse_operations",
       "description": "Monitor warehouse productivity and resource utilization",
-      "streams": [
-        "tasks",
-        "workers",
-        "equipment",
-        "zones"
-      ],
+      "streams": ["tasks", "workers", "equipment", "zones"],
       "schedule": "0 8,12,16,20 * * *",
       "enabled": true,
       "target_config_override": {

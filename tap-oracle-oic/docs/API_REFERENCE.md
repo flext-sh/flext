@@ -38,6 +38,7 @@ scope=https://{instance}.integration.ocp.oraclecloud.com:443
 ```
 
 **Response**:
+
 ```json
 {
   "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9...",
@@ -132,6 +133,7 @@ Authorization: Bearer {access_token}
 ```
 
 **Response (201 Created)**:
+
 ```json
 {
   "id": "CUSTOMER_DATA_SYNC|01.00.0000",
@@ -179,6 +181,7 @@ Content-Type: application/octet-stream
 ```
 
 **Response (201 Created)**:
+
 ```json
 {
   "id": "CUSTOMER_ORDER_INT|01.00.0000",
@@ -210,6 +213,7 @@ GET /ic/api/integration/v1/integrations?limit=20&offset=0
 ```
 
 **Query Parameters**:
+
 - `limit` (optional): Number of results per page (default: 100, max: 500)
 - `offset` (optional): Starting position (default: 0)
 - `q` (optional): Search query
@@ -217,6 +221,7 @@ GET /ic/api/integration/v1/integrations?limit=20&offset=0
 - `projectId` (optional): Filter by project
 
 **Response**:
+
 ```json
 {
   "items": [
@@ -375,6 +380,7 @@ Authorization: Bearer {access_token}
 ```
 
 **Response (201 Created)**:
+
 ```json
 {
   "id": "PROD_DB_CONN_01",
@@ -448,6 +454,7 @@ POST /ic/api/integration/v1/connections/{id}/test
 ```
 
 **Response**:
+
 ```json
 {
   "status": "SUCCESS",
@@ -501,6 +508,7 @@ Authorization: Bearer {access_token}
 ```
 
 **Response (201 Created)**:
+
 ```json
 {
   "id": "CUSTOMER_PROJECT",
@@ -557,12 +565,14 @@ GET /ic/api/monitoring/v1/integrations/{id}/metrics?period=24h&interval=1h
 ```
 
 **Query Parameters**:
+
 - `period`: Time period (1h, 6h, 24h, 7d, 30d)
 - `interval`: Data point interval
 - `startTime`: ISO 8601 timestamp
 - `endTime`: ISO 8601 timestamp
 
 **Response**:
+
 ```json
 {
   "integrationId": "CUSTOMER_ORDER_INT|01.00.0000",
@@ -595,6 +605,7 @@ GET /ic/api/monitoring/v1/integrations/{id}/executions?limit=50&status=FAILED
 ```
 
 **Query Parameters**:
+
 - `status`: Filter by status (SUCCESS, FAILED, IN_PROGRESS)
 - `startTime`: Start of time range
 - `endTime`: End of time range
@@ -619,6 +630,7 @@ GET /ic/api/monitoring/v1/executions/{executionId}/errors
 ```
 
 **Response**:
+
 ```json
 {
   "errors": [
@@ -710,6 +722,7 @@ Authorization: Bearer {access_token}
 ```
 
 **Response (201 Created)**:
+
 ```json
 {
   "id": "SCHEDULE_001",
@@ -767,27 +780,27 @@ DELETE /ic/api/integration/v1/schedules/{id}
 
 ### Common Error Codes
 
-| Code | Status | Description |
-|------|--------|-------------|
-| OIC-400001 | 400 | Invalid request format |
-| OIC-401001 | 401 | Authentication failed |
-| OIC-403001 | 403 | Insufficient permissions |
-| OIC-404001 | 404 | Resource not found |
-| OIC-409001 | 409 | Resource already exists |
-| OIC-429001 | 429 | Rate limit exceeded |
-| OIC-500001 | 500 | Internal server error |
-| OIC-503001 | 503 | Service temporarily unavailable |
+| Code       | Status | Description                     |
+| ---------- | ------ | ------------------------------- |
+| OIC-400001 | 400    | Invalid request format          |
+| OIC-401001 | 401    | Authentication failed           |
+| OIC-403001 | 403    | Insufficient permissions        |
+| OIC-404001 | 404    | Resource not found              |
+| OIC-409001 | 409    | Resource already exists         |
+| OIC-429001 | 429    | Rate limit exceeded             |
+| OIC-500001 | 500    | Internal server error           |
+| OIC-503001 | 503    | Service temporarily unavailable |
 
 ## Rate Limits
 
 ### Default Limits
 
-| Resource | Limit | Window | Scope |
-|----------|-------|---------|--------|
-| API Requests | 1000 | 1 hour | Per user |
-| Concurrent Integrations | 50 | - | Per tenant |
-| Payload Size | 10 MB | - | Per request |
-| Bulk Operations | 100 | - | Per request |
+| Resource                | Limit | Window | Scope       |
+| ----------------------- | ----- | ------ | ----------- |
+| API Requests            | 1000  | 1 hour | Per user    |
+| Concurrent Integrations | 50    | -      | Per tenant  |
+| Payload Size            | 10 MB | -      | Per request |
+| Bulk Operations         | 100   | -      | Per request |
 
 ### Rate Limit Headers
 

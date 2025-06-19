@@ -307,7 +307,7 @@ plugins:
       retry_attempts: 3
 
   message_queue:
-    enabled: false  # Can be disabled
+    enabled: false # Can be disabled
     config:
       provider: "redis"
       connection_string: "redis://localhost:6379"
@@ -484,21 +484,25 @@ class CachingPlugin(BasePlugin):
 ### Plugin Development Guidelines
 
 1. **Follow Hexagonal Architecture**
+
    - Implement clear port interfaces
    - Separate business logic from infrastructure concerns
    - Use dependency injection for external dependencies
 
 2. **Error Handling**
+
    - Implement comprehensive error handling
    - Provide meaningful error messages
    - Support graceful degradation
 
 3. **Configuration Management**
+
    - Use type-safe configuration classes
    - Support environment variable overrides
    - Validate configuration on startup
 
 4. **Monitoring and Observability**
+
    - Implement health checks
    - Provide metrics and telemetry
    - Support distributed tracing

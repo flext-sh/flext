@@ -41,15 +41,15 @@ class UserRegistered(DomainEvent):
 
 #### Attributes
 
-| Attribute | Type | Description |
-|-----------|------|-------------|
-| `event_id` | `UUID` | Unique identifier for the event, automatically generated |
-| `event_type` | `str` | Event type name, derived from class name if not specified |
-| `occurred_at` | `datetime` | Timestamp when the event occurred (UTC) |
-| `aggregate_id` | `UUID \| None` | ID of the aggregate that generated this event |
-| `correlation_id` | `UUID \| None` | ID for tracing related events across requests |
-| `causation_id` | `UUID \| None` | ID of the event that caused this event |
-| `metadata` | `dict[str, object]` | Additional contextual information |
+| Attribute        | Type                | Description                                               |
+| ---------------- | ------------------- | --------------------------------------------------------- |
+| `event_id`       | `UUID`              | Unique identifier for the event, automatically generated  |
+| `event_type`     | `str`               | Event type name, derived from class name if not specified |
+| `occurred_at`    | `datetime`          | Timestamp when the event occurred (UTC)                   |
+| `aggregate_id`   | `UUID \| None`      | ID of the aggregate that generated this event             |
+| `correlation_id` | `UUID \| None`      | ID for tracing related events across requests             |
+| `causation_id`   | `UUID \| None`      | ID of the event that caused this event                    |
+| `metadata`       | `dict[str, object]` | Additional contextual information                         |
 
 #### Methods
 
@@ -123,12 +123,12 @@ class TenantUserRegistered(FlxDomainEvent):
 
 #### Additional Attributes
 
-| Attribute | Type | Description |
-|-----------|------|-------------|
-| `tenant_id` | `str \| None` | Tenant identifier for multi-tenant isolation |
-| `user_id` | `str \| None` | User who initiated the action that caused this event |
-| `source` | `str` | Source system identifier (default: "flx") |
-| `version` | `str` | Event schema version (default: "1.0") |
+| Attribute   | Type          | Description                                          |
+| ----------- | ------------- | ---------------------------------------------------- |
+| `tenant_id` | `str \| None` | Tenant identifier for multi-tenant isolation         |
+| `user_id`   | `str \| None` | User who initiated the action that caused this event |
+| `source`    | `str`         | Source system identifier (default: "flx")            |
+| `version`   | `str`         | Event schema version (default: "1.0")                |
 
 #### Properties
 

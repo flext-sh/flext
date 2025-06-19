@@ -41,13 +41,13 @@ This guide provides a **complete refactoring methodology** for the entire FLX he
 
 ### **Code Quality Improvements**
 
-| Metric | Before | After | Improvement |
-|--------|--------|-------|-------------|
-| **Total Lines** | ~25,000 | 12,500-15,000 | 40-50% reduction |
-| **Code Duplication** | 60-70% | <5% | 95%+ elimination |
-| **Type Coverage** | ~60% | 98%+ | 38%+ increase |
-| **Test Coverage** | Variable | 95%+ | Comprehensive |
-| **Documentation** | Incomplete | 100% | Complete coverage |
+| Metric               | Before     | After         | Improvement       |
+| -------------------- | ---------- | ------------- | ----------------- |
+| **Total Lines**      | ~25,000    | 12,500-15,000 | 40-50% reduction  |
+| **Code Duplication** | 60-70%     | <5%           | 95%+ elimination  |
+| **Type Coverage**    | ~60%       | 98%+          | 38%+ increase     |
+| **Test Coverage**    | Variable   | 95%+          | Comprehensive     |
+| **Documentation**    | Incomplete | 100%          | Complete coverage |
 
 ### **Performance Improvements**
 
@@ -135,17 +135,17 @@ python scripts/refactoring_master.py --analyze-only
 
 ### **Phase Overview**
 
-| Phase | Focus | Duration | Deliverables |
-|-------|-------|----------|--------------|
-| **Phase 0** | Planning & Validation | 1-2 days | Analysis framework, metrics baseline |
-| **Phase 1** | Core Layer Refactoring | 3-5 days | Advanced mixins, factory patterns |
-| **Phase 2** | Ports Standardization | 2-3 days | Unified protocols, clear interfaces |
-| **Phase 3** | Adapters Modernization | 4-6 days | Zero duplication, consistent patterns |
-| **Phase 4** | Infrastructure Enhancement | 2-4 days | Production-ready engines |
-| **Phase 5** | Examples Rewrite | 1-2 days | Modern pattern showcase |
-| **Phase 6** | Testing Modernization | 3-4 days | Hexagonal testing suite |
-| **Phase 7** | Documentation Standardization | 2-3 days | Complete documentation coverage |
-| **Phase 8** | Final Validation | 1-2 days | Quality assurance, metrics validation |
+| Phase       | Focus                         | Duration | Deliverables                          |
+| ----------- | ----------------------------- | -------- | ------------------------------------- |
+| **Phase 0** | Planning & Validation         | 1-2 days | Analysis framework, metrics baseline  |
+| **Phase 1** | Core Layer Refactoring        | 3-5 days | Advanced mixins, factory patterns     |
+| **Phase 2** | Ports Standardization         | 2-3 days | Unified protocols, clear interfaces   |
+| **Phase 3** | Adapters Modernization        | 4-6 days | Zero duplication, consistent patterns |
+| **Phase 4** | Infrastructure Enhancement    | 2-4 days | Production-ready engines              |
+| **Phase 5** | Examples Rewrite              | 1-2 days | Modern pattern showcase               |
+| **Phase 6** | Testing Modernization         | 3-4 days | Hexagonal testing suite               |
+| **Phase 7** | Documentation Standardization | 2-3 days | Complete documentation coverage       |
+| **Phase 8** | Final Validation              | 1-2 days | Quality assurance, metrics validation |
 
 ### **Phase 1: Core Layer Complete Refactoring**
 
@@ -326,12 +326,12 @@ Revolutionary mixin architecture eliminating 60-70% of duplicate code:
 
 ### **Common Issues**
 
-| Issue | Symptoms | Solution |
-|-------|----------|----------|
-| **Import Errors** | Module not found exceptions | Check `__init__.py` files and import paths |
-| **Type Errors** | MyPy validation failures | Add missing type annotations |
-| **Test Failures** | Tests failing after refactoring | Update tests for new interfaces |
-| **Performance Issues** | Slower execution times | Profile code, check for circular imports |
+| Issue                  | Symptoms                        | Solution                                   |
+| ---------------------- | ------------------------------- | ------------------------------------------ |
+| **Import Errors**      | Module not found exceptions     | Check `__init__.py` files and import paths |
+| **Type Errors**        | MyPy validation failures        | Add missing type annotations               |
+| **Test Failures**      | Tests failing after refactoring | Update tests for new interfaces            |
+| **Performance Issues** | Slower execution times          | Profile code, check for circular imports   |
 
 ### **Getting Help**
 

@@ -74,7 +74,14 @@ def main() -> None:
 
         def state_change(self, cb, old_state, new_state) -> None:
             self.states.append((old_state, new_state))
-            if new_state == pybreaker.STATE_OPEN or (new_state == pybreaker.STATE_CLOSED and old_state != pybreaker.STATE_CLOSED) or new_state == pybreaker.STATE_HALF_OPEN:
+            if (
+                new_state == pybreaker.STATE_OPEN
+                or (
+                    new_state == pybreaker.STATE_CLOSED
+                    and old_state != pybreaker.STATE_CLOSED
+                )
+                or new_state == pybreaker.STATE_HALF_OPEN
+            ):
                 pass
 
     listener = StateListener(states)
@@ -83,7 +90,6 @@ def main() -> None:
     # Make multiple calls
 
     for i in range(12):
-
         try:
             protected_fetch(i)
         except pybreaker.CircuitBreakerError:

@@ -137,6 +137,7 @@ dbt snapshot
 ## Integration with tap-ldap
 
 1. Extract data using tap-ldap:
+
 ```bash
 tap-ldap --config tap-config.json | target-jsonl > ldap_data.jsonl
 ```
@@ -144,6 +145,7 @@ tap-ldap --config tap-config.json | target-jsonl > ldap_data.jsonl
 2. Load data into your warehouse
 
 3. Run dbt transformations:
+
 ```bash
 dbt run
 ```
@@ -154,10 +156,10 @@ Configure project variables in `dbt_project.yml`:
 
 ```yaml
 vars:
-  ldap_base_dn: 'dc=example,dc=com'
-  ldap_user_base: 'ou=users'
-  ldap_group_base: 'ou=groups'
-  ldap_ou_base: 'ou=departments'
+  ldap_base_dn: "dc=example,dc=com"
+  ldap_user_base: "ou=users"
+  ldap_group_base: "ou=groups"
+  ldap_ou_base: "ou=departments"
 ```
 
 ## Performance Optimization

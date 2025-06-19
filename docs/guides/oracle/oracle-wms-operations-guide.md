@@ -7,7 +7,7 @@ A comprehensive guide to Oracle WMS operations available through the FLX HTTP Or
 This CLI provides full access to Oracle WMS Cloud Integration API operations with enhanced features:
 
 - **Dynamic Discovery**: Automatically discover available entities and endpoints
-- **Type-Safe Operations**: Runtime validation using Pydantic models  
+- **Type-Safe Operations**: Runtime validation using Pydantic models
 - **High-Speed Extraction**: Paged extraction for large datasets
 - **Multiple Formats**: Support for JSON, CSV, Excel, Parquet, YAML
 - **Bulk Operations**: Process multiple operations in batches

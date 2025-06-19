@@ -27,7 +27,7 @@
       "filters": ["status:ne:CANCELLED"]
     },
     "items": {
-      "table": "WMS_ITEMS", 
+      "table": "WMS_ITEMS",
       "fields": "item_id,item_name,category,price,quantity",
       "filters": ["status:eq:ACTIVE"]
     },
@@ -50,10 +50,10 @@
       "filters": ["order_date:gte:today-1"]
     },
     "hourly_inventory": {
-      "resource": "inventory", 
+      "resource": "inventory",
       "cron": "0 * * * *",
       "enabled": false,
       "filters": []
     }
   }
-} 
+}

@@ -47,7 +47,6 @@ async def example_programmatic_daemon() -> None:
     )
 
     try:
-
         # Create daemon and server manager using factory
         daemon, server_manager = DaemonServiceFactory.create_daemon_service(config)
 
@@ -122,7 +121,6 @@ def example_service_management() -> None:
     status = service.get_service_status()
 
     if not status.get("installed"):
-
         pass
 
 

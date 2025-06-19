@@ -40,15 +40,7 @@ from pathlib import Path
 from typing import Any
 
 import yaml
-from sqlalchemy import (
-    Column,
-    DateTime,
-    Float,
-    Integer,
-    MetaData,
-    String,
-    Table,
-)
+from sqlalchemy import Column, DateTime, Float, Integer, MetaData, String, Table
 from sqlalchemy.dialects import oracle
 
 # Importar APIs nativas dos projetos
@@ -271,7 +263,9 @@ class SQLAlchemySchemaMapper:
         # Criar tabela SQLAlchemy
         self.oracle_table = Table(table_name, self.metadata, *columns)
 
-        self.logger.info(f"Tabela Oracle mapeada: {table_name} com {len(columns)} colunas")
+        self.logger.info(
+            f"Tabela Oracle mapeada: {table_name} com {len(columns)} colunas"
+        )
 
     def map_wms_fields_to_oracle(self, wms_fields: dict) -> dict:
         """Mapeia campos WMS para campos Oracle existentes.
@@ -292,7 +286,9 @@ class SQLAlchemySchemaMapper:
             if oracle_field:
                 # Converter valor para tipo Oracle
                 converted_value = self._convert_value_for_oracle(
-                    wms_value, oracle_field, self.oracle_columns[oracle_field.lower()],
+                    wms_value,
+                    oracle_field,
+                    self.oracle_columns[oracle_field.lower()],
                 )
                 mapped_fields[oracle_field] = converted_value
                 self.field_mapping[wms_field] = oracle_field
@@ -328,7 +324,9 @@ class SQLAlchemySchemaMapper:
             wms_field_lower.replace("_", ""),
             wms_field_lower.replace("-", "_"),
             f"wms_{wms_field_lower}",
-            f"{wms_field_lower}_id" if not wms_field_lower.endswith("_id") else wms_field_lower[:-3],
+            f"{wms_field_lower}_id"
+            if not wms_field_lower.endswith("_id")
+            else wms_field_lower[:-3],
         ]
 
         for variation in variations:
@@ -343,7 +341,9 @@ class SQLAlchemySchemaMapper:
 
         return None
 
-    def _convert_value_for_oracle(self, value: Any, oracle_field: str, column_info: dict) -> Any:
+    def _convert_value_for_oracle(
+        self, value: Any, oracle_field: str, column_info: dict
+    ) -> Any:
         """Converte valor para tipo Oracle usando informações da coluna.
 
         Args:
@@ -365,27 +365,45 @@ class SQLAlchemySchemaMapper:
             if oracle_type in {"NUMBER", "INTEGER", "DECIMAL", "FLOAT"}:
                 if isinstance(value, str):
                     # CORREÇÃO: Verificar se campo ID contém texto (deve ser VARCHAR, não NUMBER)
-                    if ("_id" in oracle_field.lower() or oracle_field.lower().endswith("id")) and not value.isdigit():
+                    if (
+                        "_id" in oracle_field.lower()
+                        or oracle_field.lower().endswith("id")
+                    ) and not value.isdigit():
                         # Campo ID com texto deve ser tratado como string, não número
-                        self.logger.debug(f"Campo ID '{oracle_field}' contém texto '{value}', tratando como string")
+                        self.logger.debug(
+                            f"Campo ID '{oracle_field}' contém texto '{value}', tratando como string"
+                        )
                         return str(value)
 
                     # Mapeamentos específicos por nome de campo
                     if "status" in oracle_field.lower():
-                        status_map = {"PENDING": 10, "ACTIVE": 40, "PROCESSING": 30, "COMPLETED": 99, "CANCELLED": 0}
+                        status_map = {
+                            "PENDING": 10,
+                            "ACTIVE": 40,
+                            "PROCESSING": 30,
+                            "COMPLETED": 99,
+                            "CANCELLED": 0,
+                        }
                         return status_map.get(value.upper(), 10)
                     if "priority" in oracle_field.lower():
                         priority_map = {"LOW": 1, "NORMAL": 2, "HIGH": 3, "URGENT": 4}
                         return priority_map.get(value.upper(), 2)
                     if "type" in oracle_field.lower():
-                        type_map = {"STANDARD": 1, "EXPRESS": 2, "BULK": 3, "SPECIAL": 4}
+                        type_map = {
+                            "STANDARD": 1,
+                            "EXPRESS": 2,
+                            "BULK": 3,
+                            "SPECIAL": 4,
+                        }
                         return type_map.get(value.upper(), 1)
                     # Tentar converter para número
                     try:
                         return float(value) if "." in str(value) else int(value)
                     except ValueError:
                         # Se não conseguir converter para número, retornar como string
-                        self.logger.debug(f"Não foi possível converter '{value}' para número, mantendo como string")
+                        self.logger.debug(
+                            f"Não foi possível converter '{value}' para número, mantendo como string"
+                        )
                         return str(value)
                 return value
 
@@ -400,6 +418,7 @@ class SQLAlchemySchemaMapper:
                 # CORREÇÃO: Converter strings de data para datetime objects
                 if isinstance(value, str):
                     from datetime import datetime
+
                     try:
                         # Tentar diferentes formatos de data
                         if len(value) == 10 and "-" in value:  # YYYY-MM-DD
@@ -412,13 +431,16 @@ class SQLAlchemySchemaMapper:
                         return datetime.fromisoformat(value.replace("T", " "))
                     except ValueError:
                         # Se não conseguir converter, usar data atual
-                        self.logger.warning(f"Não foi possível converter data '{value}', usando data atual")
+                        self.logger.warning(
+                            f"Não foi possível converter data '{value}', usando data atual"
+                        )
                         return datetime.now()
                 elif isinstance(value, datetime):
                     return value
                 else:
                     # Para outros tipos, usar data atual
                     from datetime import datetime
+
                     return datetime.now()
 
             else:
@@ -431,6 +453,7 @@ class SQLAlchemySchemaMapper:
                 return 0
             if oracle_type in {"DATE", "TIMESTAMP"}:
                 from datetime import datetime
+
                 return datetime.now()
             return str(value)
 
@@ -506,7 +529,11 @@ class SQLAlchemySchemaMapper:
                     else:
                         # Tentar converter para número
                         try:
-                            num_value = float(field_value) if "." in str(field_value) else int(field_value)
+                            num_value = (
+                                float(field_value)
+                                if "." in str(field_value)
+                                else int(field_value)
+                            )
                             values.append(str(num_value))
                         except (ValueError, TypeError):
                             # Se não conseguir converter, usar NULL
@@ -525,7 +552,9 @@ class SQLAlchemySchemaMapper:
                         if len(date_str) == 10:  # YYYY-MM-DD
                             values.append(f"TO_DATE('{date_str}', 'YYYY-MM-DD')")
                         else:
-                            values.append(f"TO_DATE('{date_str}', 'YYYY-MM-DD HH24:MI:SS')")
+                            values.append(
+                                f"TO_DATE('{date_str}', 'YYYY-MM-DD HH24:MI:SS')"
+                            )
                 else:
                     # Outros tipos como string
                     str_value = str(field_value).replace("'", "''")
@@ -580,8 +609,12 @@ class SQLAlchemySchemaMapper:
             else:
                 new_fields.append(field)
 
-        self.logger.info(f"Campos que existem no Oracle: {len(existing_fields)} - {sorted(existing_fields)}")
-        self.logger.info(f"Campos novos (serão criados dinamicamente): {len(new_fields)} - {sorted(new_fields)}")
+        self.logger.info(
+            f"Campos que existem no Oracle: {len(existing_fields)} - {sorted(existing_fields)}"
+        )
+        self.logger.info(
+            f"Campos novos (serão criados dinamicamente): {len(new_fields)} - {sorted(new_fields)}"
+        )
 
         # Processar e converter TODOS os registros (sem filtrar)
         processed_data = []
@@ -592,21 +625,27 @@ class SQLAlchemySchemaMapper:
                 # Converter valor se temos informação da coluna Oracle
                 if field.lower() in oracle_columns:
                     oracle_column = oracle_columns[field.lower()]
-                    converted_value = self._convert_value_to_oracle_type(value, oracle_column)
+                    converted_value = self._convert_value_to_oracle_type(
+                        value, oracle_column
+                    )
                     processed_record[field] = converted_value
 
                     # Log conversão se houve mudança
                     if str(converted_value) != str(value):
-                        self.logger.debug(f"Convertido {field}: '{value}' -> '{converted_value}' (tipo: {oracle_column.get('data_type')})")
+                        self.logger.debug(
+                            f"Convertido {field}: '{value}' -> '{converted_value}' (tipo: {oracle_column.get('data_type')})"
+                        )
                 # Campo novo, manter valor original mas fazer conversões básicas
                 elif isinstance(value, dict):
                     # Para FKs e objetos complexos, converter para JSON string
                     import json
+
                     processed_record[field] = json.dumps(value)
                     self.logger.debug(f"Campo novo {field}: convertido dict para JSON")
                 elif isinstance(value, list):
                     # Para arrays, converter para JSON string
                     import json
+
                     processed_record[field] = json.dumps(value)
                     self.logger.debug(f"Campo novo {field}: convertido list para JSON")
                 else:
@@ -617,7 +656,9 @@ class SQLAlchemySchemaMapper:
 
         self.logger.info("=== PROCESSAMENTO COMPLETO ===")
         self.logger.info(f"Registros processados: {len(processed_data)}")
-        self.logger.info(f"Campos por registro: {len(processed_data[0]) if processed_data else 0}")
+        self.logger.info(
+            f"Campos por registro: {len(processed_data[0]) if processed_data else 0}"
+        )
         self.logger.info("TODOS os campos serão inseridos no Oracle (sem filtrar)")
 
         return processed_data
@@ -650,8 +691,12 @@ class SQLAlchemySchemaMapper:
         primary_keys = schema_config.get("primary_keys", ["id"])
         schema_name = self.config["oracle"].get("schema_name")
 
-        self.logger.info(f"Gerando SQL para {len(processed_data)} registros em {table_name}")
-        self.logger.info(f"Campos por registro: {len(processed_data[0]) if processed_data else 0}")
+        self.logger.info(
+            f"Gerando SQL para {len(processed_data)} registros em {table_name}"
+        )
+        self.logger.info(
+            f"Campos por registro: {len(processed_data[0]) if processed_data else 0}"
+        )
 
         # Coletar campos Oracle existentes
         oracle_columns = set()
@@ -668,12 +713,24 @@ class SQLAlchemySchemaMapper:
 
         # Se há muitos campos novos, usar INSERT simples apenas com campos existentes
         if len(new_fields) > len(existing_fields):
-            self.logger.info("Muitos campos novos detectados, usando INSERT simples com campos existentes")
-            return self._generate_simple_insert_statements(processed_data, table_name, existing_fields, schema_name)
+            self.logger.info(
+                "Muitos campos novos detectados, usando INSERT simples com campos existentes"
+            )
+            return self._generate_simple_insert_statements(
+                processed_data, table_name, existing_fields, schema_name
+            )
         self.logger.info("Usando MERGE tradicional")
-        return self._generate_traditional_merge_statements(processed_data, resource, table_name, primary_keys, schema_name)
+        return self._generate_traditional_merge_statements(
+            processed_data, resource, table_name, primary_keys, schema_name
+        )
 
-    def _generate_simple_insert_statements(self, data: list[dict], table_name: str, valid_fields: list[str], schema_name: str | None = None) -> list[str]:
+    def _generate_simple_insert_statements(
+        self,
+        data: list[dict],
+        table_name: str,
+        valid_fields: list[str],
+        schema_name: str | None = None,
+    ) -> list[str]:
         """Gera comandos INSERT simples apenas com campos válidos.
 
         Args:
@@ -690,13 +747,19 @@ class SQLAlchemySchemaMapper:
             return []
 
         # Construir nome completo da tabela
-        full_table_name = f'"{schema_name}"."{table_name.upper()}"' if schema_name else f'"{table_name.upper()}"'
+        full_table_name = (
+            f'"{schema_name}"."{table_name.upper()}"'
+            if schema_name
+            else f'"{table_name.upper()}"'
+        )
 
         insert_statements = []
 
         for record in data:
             # Filtrar apenas campos válidos
-            valid_record = {field: record.get(field) for field in valid_fields if field in record}
+            valid_record = {
+                field: record.get(field) for field in valid_fields if field in record
+            }
 
             if not valid_record:
                 continue
@@ -712,12 +775,19 @@ class SQLAlchemySchemaMapper:
                     values_list.append("NULL")
                 elif isinstance(value, str):
                     # CORREÇÃO: Verificar se é um campo de data para usar TO_DATE
-                    if any(date_keyword in field.lower() for date_keyword in ["date", "_dt", "_ts"]):
+                    if any(
+                        date_keyword in field.lower()
+                        for date_keyword in ["date", "_dt", "_ts"]
+                    ):
                         # Para campos de data, usar TO_DATE do Oracle
                         if len(value) == 10 and "-" in value:  # Formato YYYY-MM-DD
                             values_list.append(f"TO_DATE('{value}', 'YYYY-MM-DD')")
-                        elif len(value) == 19 and " " in value:  # Formato YYYY-MM-DD HH:MM:SS
-                            values_list.append(f"TO_DATE('{value}', 'YYYY-MM-DD HH24:MI:SS')")
+                        elif (
+                            len(value) == 19 and " " in value
+                        ):  # Formato YYYY-MM-DD HH:MM:SS
+                            values_list.append(
+                                f"TO_DATE('{value}', 'YYYY-MM-DD HH24:MI:SS')"
+                            )
                         else:
                             # Formato desconhecido, tentar como string
                             escaped_value = value.replace("'", "''")
@@ -737,13 +807,22 @@ class SQLAlchemySchemaMapper:
 
             values_str = ", ".join(values_list)
 
-            insert_sql = f"INSERT INTO {full_table_name} ({fields_str}) VALUES ({values_str})"
+            insert_sql = (
+                f"INSERT INTO {full_table_name} ({fields_str}) VALUES ({values_str})"
+            )
             insert_statements.append(insert_sql)
 
         self.logger.info(f"Gerados {len(insert_statements)} comandos INSERT simples")
         return insert_statements
 
-    def _generate_traditional_merge_statements(self, data: list[dict], resource: str, table_name: str, primary_keys: list[str], schema_name: str | None = None) -> list[str]:
+    def _generate_traditional_merge_statements(
+        self,
+        data: list[dict],
+        resource: str,
+        table_name: str,
+        primary_keys: list[str],
+        schema_name: str | None = None,
+    ) -> list[str]:
         """Gera comandos MERGE tradicionais usando MergeStatementGenerator.
 
         Args:
@@ -800,19 +879,24 @@ class SQLAlchemySchemaMapper:
                                 formatted_value = f"'{json_value}'"
 
                             individual_sql = individual_sql.replace(
-                                placeholder, formatted_value,
+                                placeholder,
+                                formatted_value,
                             )
 
                         merge_statements.append(individual_sql)
 
             except Exception as e:
-                self.logger.exception(f"Erro ao gerar MERGE para batch {i // batch_size + 1}: {e}")
+                self.logger.exception(
+                    f"Erro ao gerar MERGE para batch {i // batch_size + 1}: {e}"
+                )
                 continue
 
         self.logger.info(f"Gerados {len(merge_statements)} comandos MERGE tradicionais")
         return merge_statements
 
-    def generate_insert_statements_with_sqlalchemy(self, data: list[dict], resource: str) -> list[str]:
+    def generate_insert_statements_with_sqlalchemy(
+        self, data: list[dict], resource: str
+    ) -> list[str]:
         """Gera comandos INSERT usando SQLAlchemy para garantir compatibilidade Oracle.
 
         CORREÇÃO: Usa SQLAlchemy para gerar SQL correto e compatível.
@@ -832,7 +916,9 @@ class SQLAlchemySchemaMapper:
             self.logger.error("SQLAlchemySchemaMapper não inicializado")
             return []
 
-        self.logger.info(f"Gerando INSERT statements SQLAlchemy para {len(data)} registros")
+        self.logger.info(
+            f"Gerando INSERT statements SQLAlchemy para {len(data)} registros"
+        )
 
         insert_statements = []
 
@@ -847,17 +933,24 @@ class SQLAlchemySchemaMapper:
                     if i == 0:  # Log do primeiro statement para debug
                         self.logger.debug(f"Primeiro INSERT SQL: {insert_sql}")
                 else:
-                    self.logger.warning(f"Não foi possível gerar INSERT para registro {i + 1}")
+                    self.logger.warning(
+                        f"Não foi possível gerar INSERT para registro {i + 1}"
+                    )
 
             except Exception as e:
-                self.logger.exception(f"Erro ao gerar INSERT para registro {i + 1}: {e}")
+                self.logger.exception(
+                    f"Erro ao gerar INSERT para registro {i + 1}: {e}"
+                )
                 continue
 
         self.logger.info(f"Gerados {len(insert_statements)} comandos INSERT SQLAlchemy")
         return insert_statements
 
     def run_incremental_pipeline(
-        self, resource: str, days_back: int = 7, **query_params,
+        self,
+        resource: str,
+        days_back: int = 7,
+        **query_params,
     ) -> None:
         """Executa pipeline incremental reutilizando bibliotecas existentes.
 
@@ -899,7 +992,9 @@ class SQLAlchemySchemaMapper:
 
             if data:
                 # CORREÇÃO: Gerar comandos INSERT usando SQLAlchemy
-                insert_statements = self.generate_insert_statements_with_sqlalchemy(data, resource)
+                insert_statements = self.generate_insert_statements_with_sqlalchemy(
+                    data, resource
+                )
 
                 # Executar INSERT no Oracle usando API nativa
                 if insert_statements:
@@ -932,7 +1027,9 @@ class SQLAlchemySchemaMapper:
             self.logger.warning(f"Erro durante cleanup: {e!s}")
 
     def _discover_additional_fields_from_data(
-        self, records: list, resource: str,
+        self,
+        records: list,
+        resource: str,
     ) -> None:
         """Descobre campos adicionais analisando os dados reais.
 
@@ -945,7 +1042,9 @@ class SQLAlchemySchemaMapper:
 
         """
         try:
-            comprehensive_discovery = self.config["pipeline"]["comprehensive_field_discovery"]
+            comprehensive_discovery = self.config["pipeline"][
+                "comprehensive_field_discovery"
+            ]
 
             if comprehensive_discovery:
                 self.logger.info(
@@ -966,14 +1065,18 @@ class SQLAlchemySchemaMapper:
 
                 # Log de progresso para descoberta abrangente
                 if comprehensive_discovery and i > 0 and i % 100 == 0:
-                    self.logger.debug(f"Descoberta: processados {i} registros, {len(all_fields)} campos únicos encontrados")
+                    self.logger.debug(
+                        f"Descoberta: processados {i} registros, {len(all_fields)} campos únicos encontrados"
+                    )
 
             # Comparar com campos já conhecidos
             known_fields = set(self.field_mapping.keys())
             new_fields = all_fields - known_fields
 
             if new_fields:
-                discovery_type = "abrangente" if comprehensive_discovery else "complementar"
+                discovery_type = (
+                    "abrangente" if comprehensive_discovery else "complementar"
+                )
                 self.logger.info(
                     f"Descobertos {len(new_fields)} campos adicionais ({discovery_type}): {sorted(new_fields)}",
                 )
@@ -996,7 +1099,9 @@ class SQLAlchemySchemaMapper:
                         "source": f"real_data_{discovery_type}",
                     }
             else:
-                discovery_type = "abrangente" if comprehensive_discovery else "complementar"
+                discovery_type = (
+                    "abrangente" if comprehensive_discovery else "complementar"
+                )
                 self.logger.debug(f"Nenhum campo adicional {discovery_type} descoberto")
 
             self.logger.info(
@@ -1181,11 +1286,15 @@ class WmsToOracleAdvancedPipeline:
             True se mapeamento foi criado com sucesso
 
         """
-        self.logger.info("=== Descoberta e Mapeamento de Schemas (SchemaManager WMS) ===")
+        self.logger.info(
+            "=== Descoberta e Mapeamento de Schemas (SchemaManager WMS) ==="
+        )
 
         try:
             # ETAPA 1: Usar SchemaManager das bibliotecas WMS para carregar schema completo
-            self.logger.info(f"ETAPA 1: Carregando schema completo WMS para entidade: {wms_entity}")
+            self.logger.info(
+                f"ETAPA 1: Carregando schema completo WMS para entidade: {wms_entity}"
+            )
 
             # Importar SchemaManager das bibliotecas WMS
             from wms.schema import SchemaManager
@@ -1199,14 +1308,18 @@ class WmsToOracleAdvancedPipeline:
 
             # Carregar schema completo usando SchemaManager
             try:
-                complete_schema = wms_schema_manager.get_schema(wms_entity, refresh=False, ignore_errors=False)
+                complete_schema = wms_schema_manager.get_schema(
+                    wms_entity, refresh=False, ignore_errors=False
+                )
                 self.wms_schema = complete_schema
 
                 # Extrair campos do schema completo
                 wms_fields_from_schema = complete_schema.get("fields", {})
                 wms_parameters = complete_schema.get("parameters", [])
 
-                self.logger.info(f"Schema WMS completo carregado: {len(wms_fields_from_schema)} campos, {len(wms_parameters)} parâmetros")
+                self.logger.info(
+                    f"Schema WMS completo carregado: {len(wms_fields_from_schema)} campos, {len(wms_parameters)} parâmetros"
+                )
 
                 # Log detalhado dos primeiros campos
                 field_names = list(wms_fields_from_schema.keys())
@@ -1227,18 +1340,24 @@ class WmsToOracleAdvancedPipeline:
                     return False
 
             # ETAPA 2: Descobrir campos adicionais através de dados reais (complementar)
-            self.logger.info("ETAPA 2: Descobrindo campos adicionais via dados reais (complementar)")
+            self.logger.info(
+                "ETAPA 2: Descobrindo campos adicionais via dados reais (complementar)"
+            )
             wms_fields_from_data = {}
 
             try:
                 # MELHORIA: Usar configuração para tamanho da amostra de descoberta
                 discovery_sample_size = self.config["wms"]["discovery_sample_size"]
-                self.logger.info(f"Usando {discovery_sample_size} registros para descoberta abrangente de campos")
+                self.logger.info(
+                    f"Usando {discovery_sample_size} registros para descoberta abrangente de campos"
+                )
 
                 # Buscar mais registros para descobrir campos que possam não estar no schema
                 sample_response = self.wms_client.search(
                     entity_name=wms_entity,
-                    params={"limit": discovery_sample_size},  # Usar configuração em vez de valor fixo
+                    params={
+                        "limit": discovery_sample_size
+                    },  # Usar configuração em vez de valor fixo
                 )
 
                 if sample_response.success:
@@ -1255,7 +1374,9 @@ class WmsToOracleAdvancedPipeline:
                     else:
                         sample_records = []
 
-                    self.logger.info(f"Obtidos {len(sample_records)} registros para descoberta complementar")
+                    self.logger.info(
+                        f"Obtidos {len(sample_records)} registros para descoberta complementar"
+                    )
 
                     # Analisar registros para descobrir campos adicionais
                     all_discovered_fields = set()
@@ -1269,40 +1390,62 @@ class WmsToOracleAdvancedPipeline:
                     new_fields_from_data = all_discovered_fields - schema_fields
 
                     for field in new_fields_from_data:
-                        wms_fields_from_data[field] = {"type": "discovered_from_data", "source": "real_data"}
+                        wms_fields_from_data[field] = {
+                            "type": "discovered_from_data",
+                            "source": "real_data",
+                        }
 
-                    self.logger.info(f"Campos adicionais descobertos dos dados: {len(wms_fields_from_data)}")
+                    self.logger.info(
+                        f"Campos adicionais descobertos dos dados: {len(wms_fields_from_data)}"
+                    )
                     if wms_fields_from_data:
-                        self.logger.info(f"Novos campos: {sorted(wms_fields_from_data.keys())}")
+                        self.logger.info(
+                            f"Novos campos: {sorted(wms_fields_from_data.keys())}"
+                        )
 
                 else:
-                    self.logger.warning(f"Erro ao buscar dados para descoberta complementar: {sample_response.error}")
+                    self.logger.warning(
+                        f"Erro ao buscar dados para descoberta complementar: {sample_response.error}"
+                    )
 
             except Exception as e:
-                self.logger.warning(f"Erro na descoberta complementar via dados reais: {e}")
+                self.logger.warning(
+                    f"Erro na descoberta complementar via dados reais: {e}"
+                )
 
             # ETAPA 3: Combinar campos do schema completo + dados reais
-            self.logger.info(f"ETAPA 3: Combinando campos do schema ({len(wms_fields_from_schema)}) + dados reais ({len(wms_fields_from_data)})")
+            self.logger.info(
+                f"ETAPA 3: Combinando campos do schema ({len(wms_fields_from_schema)}) + dados reais ({len(wms_fields_from_data)})"
+            )
 
             # Combinar campos, priorizando schema quando disponível
             combined_wms_fields = {}
             combined_wms_fields.update(wms_fields_from_data)  # Primeiro os dados reais
-            combined_wms_fields.update(wms_fields_from_schema)  # Depois schema (sobrescreve)
+            combined_wms_fields.update(
+                wms_fields_from_schema
+            )  # Depois schema (sobrescreve)
 
             # Atualizar schema WMS com campos combinados
             self.wms_schema["fields"] = combined_wms_fields
             wms_fields = combined_wms_fields
 
-            self.logger.info(f"TOTAL de campos WMS descobertos: {len(wms_fields)} campos")
+            self.logger.info(
+                f"TOTAL de campos WMS descobertos: {len(wms_fields)} campos"
+            )
 
             # Log estatísticas dos campos
-            required_fields = sum(1 for field_info in wms_fields.values()
-                                if isinstance(field_info, dict) and field_info.get("required", False))
+            required_fields = sum(
+                1
+                for field_info in wms_fields.values()
+                if isinstance(field_info, dict) and field_info.get("required", False)
+            )
             self.logger.info(f"Campos obrigatórios: {required_fields}")
             self.logger.info(f"Campos opcionais: {len(wms_fields) - required_fields}")
 
             # ETAPA 4: Descobrir schema Oracle usando SchemaExtractor
-            self.logger.info(f"ETAPA 4: Descobrindo schema Oracle para tabela: {oracle_table}")
+            self.logger.info(
+                f"ETAPA 4: Descobrindo schema Oracle para tabela: {oracle_table}"
+            )
 
             with self.db_client.get_connection() as conn:
                 # Inicializar SchemaExtractor com conexão
@@ -1311,13 +1454,19 @@ class WmsToOracleAdvancedPipeline:
 
                 try:
                     # Extrair schema da tabela Oracle
-                    table_schema = self.schema_extractor.extract_table_schema(oracle_table)
+                    table_schema = self.schema_extractor.extract_table_schema(
+                        oracle_table
+                    )
                     self.oracle_schema = table_schema.to_dict()
 
-                    self.logger.info(f"Schema Oracle descoberto: {len(self.oracle_schema.get('columns', []))} colunas")
+                    self.logger.info(
+                        f"Schema Oracle descoberto: {len(self.oracle_schema.get('columns', []))} colunas"
+                    )
 
                 except Exception as e:
-                    self.logger.warning(f"Tabela {oracle_table} não existe ou erro ao extrair schema: {e}")
+                    self.logger.warning(
+                        f"Tabela {oracle_table} não existe ou erro ao extrair schema: {e}"
+                    )
                     # Criar schema básico para tabela inexistente
                     self.oracle_schema = {
                         "table_name": oracle_table,
@@ -1328,10 +1477,14 @@ class WmsToOracleAdvancedPipeline:
                     }
 
             # ETAPA 5: Criar mapeamento usando SQLAlchemySchemaMapper
-            self.logger.info("ETAPA 5: Criando mapeamento usando SQLAlchemySchemaMapper")
+            self.logger.info(
+                "ETAPA 5: Criando mapeamento usando SQLAlchemySchemaMapper"
+            )
 
             # CORREÇÃO: Usar SQLAlchemySchemaMapper para mapeamento correto
-            self.sqlalchemy_mapper = SQLAlchemySchemaMapper(self.oracle_schema, self.logger)
+            self.sqlalchemy_mapper = SQLAlchemySchemaMapper(
+                self.oracle_schema, self.logger
+            )
 
             # Criar metadata para conversão (manter compatibilidade)
             metadata = SchemaMetadata(
@@ -1343,17 +1496,24 @@ class WmsToOracleAdvancedPipeline:
 
             # Converter schema WMS para formato universal (manter compatibilidade)
             self.schema_converter.convert_oracle_wms_schema(
-                self.wms_schema, metadata,
+                self.wms_schema,
+                metadata,
             )
 
             # MAPEAMENTO: Usar SQLAlchemy para mapeamento correto
             oracle_field_info = self.sqlalchemy_mapper.get_oracle_field_info()
 
-            self.logger.info(f"Criando mapeamento SQLAlchemy para {len(oracle_field_info)} campos Oracle")
+            self.logger.info(
+                f"Criando mapeamento SQLAlchemy para {len(oracle_field_info)} campos Oracle"
+            )
 
             self.logger.info("=== RESUMO DA DESCOBERTA COMPLETA ===")
-            self.logger.info(f"Campos WMS (schema completo): {len(wms_fields_from_schema)}")
-            self.logger.info(f"Campos WMS (dados reais complementares): {len(wms_fields_from_data)}")
+            self.logger.info(
+                f"Campos WMS (schema completo): {len(wms_fields_from_schema)}"
+            )
+            self.logger.info(
+                f"Campos WMS (dados reais complementares): {len(wms_fields_from_data)}"
+            )
             self.logger.info(f"Total campos WMS: {len(wms_fields)}")
             self.logger.info(f"Campos Oracle disponíveis: {len(oracle_field_info)}")
             self.logger.info("SQLAlchemy mapper inicializado com sucesso")
@@ -1367,7 +1527,10 @@ class WmsToOracleAdvancedPipeline:
             return False
 
     def extract_from_wms(
-        self, resource: str, limit: int | None = None, **query_params,
+        self,
+        resource: str,
+        limit: int | None = None,
+        **query_params,
     ) -> list[dict]:
         """Extrai dados do WMS usando a API nativa com mapeamento dinâmico.
 
@@ -1395,7 +1558,9 @@ class WmsToOracleAdvancedPipeline:
         try:
             # CORREÇÃO: Usar apenas search simples sem filtros avançados
             # Os filtros avançados estão causando "Entrada invalida"
-            self.logger.info("Usando search simples sem filtros avançados (evitando 'Entrada invalida')")
+            self.logger.info(
+                "Usando search simples sem filtros avançados (evitando 'Entrada invalida')"
+            )
 
             simple_params = {"limit": limit}
             simple_params.update(query_params)
@@ -1441,12 +1606,16 @@ class WmsToOracleAdvancedPipeline:
                 if mapped_record:
                     processed_page_records.append(mapped_record)
 
-            self.logger.info(f"Página processada: {len(processed_page_records)} registros mapeados")
+            self.logger.info(
+                f"Página processada: {len(processed_page_records)} registros mapeados"
+            )
 
             return processed_page_records
 
         except Exception as e:
-            self.logger.exception(f"Erro inesperado durante extração de {resource}: {e}")
+            self.logger.exception(
+                f"Erro inesperado durante extração de {resource}: {e}"
+            )
             return []
 
     def _map_wms_record_to_oracle(self, record: Any, resource: str) -> dict | None:
@@ -1480,12 +1649,16 @@ class WmsToOracleAdvancedPipeline:
                 self.logger.warning("Nenhum campo WMS foi mapeado para Oracle")
                 return None
 
-            self.logger.debug(f"Registro mapeado: {len(wms_data)} campos WMS -> {len(oracle_data)} campos Oracle")
+            self.logger.debug(
+                f"Registro mapeado: {len(wms_data)} campos WMS -> {len(oracle_data)} campos Oracle"
+            )
 
             # Log dos campos mapeados
             for wms_field, oracle_field in self.sqlalchemy_mapper.field_mapping.items():
                 if oracle_field in oracle_data:
-                    self.logger.debug(f"  {wms_field} -> {oracle_field} = {oracle_data[oracle_field]}")
+                    self.logger.debug(
+                        f"  {wms_field} -> {oracle_field} = {oracle_data[oracle_field]}"
+                    )
 
             return oracle_data
 
@@ -1527,7 +1700,9 @@ class WmsToOracleAdvancedPipeline:
 
             for field_name, field_value in fields.items():
                 # Verificar se é uma FK no formato {id: valor, key: valor, url: valor}
-                if isinstance(field_value, dict) and any(key in field_value for key in ["id", "key", "url"]):
+                if isinstance(field_value, dict) and any(
+                    key in field_value for key in ["id", "key", "url"]
+                ):
                     self.logger.debug(f"Processando FK {field_name}: {field_value}")
 
                     # Extrair id e key da FK
@@ -1619,7 +1794,8 @@ class WmsToOracleAdvancedPipeline:
                     fields["discount_amount"] = round(fields["total_amount"] * 0.05, 2)
                 if "net_amount" not in fields:
                     fields["net_amount"] = round(
-                        fields["total_amount"] - fields["discount_amount"], 2,
+                        fields["total_amount"] - fields["discount_amount"],
+                        2,
                     )
 
                 # Campos de tipo e prioridade
@@ -1671,7 +1847,9 @@ class WmsToOracleAdvancedPipeline:
             return None
 
     def _parse_wms_result_string(
-        self, result_string: str, resource: str,
+        self,
+        result_string: str,
+        resource: str,
     ) -> dict | None:
         """Processa string de resultado do WMS para extrair campos.
 
@@ -1704,7 +1882,9 @@ class WmsToOracleAdvancedPipeline:
                                 fields[key] = int(value)
                         except ValueError:
                             # Remover aspas se existirem
-                            if (value.startswith('"') and value.endswith('"')) or (value.startswith("'") and value.endswith("'")):
+                            if (value.startswith('"') and value.endswith('"')) or (
+                                value.startswith("'") and value.endswith("'")
+                            ):
                                 value = value[1:-1]
                             fields[key] = value
 
@@ -1783,7 +1963,13 @@ class WmsToOracleAdvancedPipeline:
                         priority_map = {"LOW": 1, "NORMAL": 2, "HIGH": 3, "URGENT": 4}
                         return priority_map.get(value.upper(), 2)
                     if "STATUS" in column_name:
-                        status_map = {"PENDING": 10, "ACTIVE": 40, "PROCESSING": 30, "COMPLETED": 99, "CANCELLED": 0}
+                        status_map = {
+                            "PENDING": 10,
+                            "ACTIVE": 40,
+                            "PROCESSING": 30,
+                            "COMPLETED": 99,
+                            "CANCELLED": 0,
+                        }
                         return status_map.get(value.upper(), 10)
                     if "ORDER_TYPE" in column_name or "TYPE" in column_name:
                         # Mapeamento para ORDER_TYPE_ID
@@ -1810,7 +1996,14 @@ class WmsToOracleAdvancedPipeline:
                 return value
 
             # Conversões de string
-            if oracle_type in {"VARCHAR2", "VARCHAR", "CHAR", "NVARCHAR2", "NCHAR", "CLOB"}:
+            if oracle_type in {
+                "VARCHAR2",
+                "VARCHAR",
+                "CHAR",
+                "NVARCHAR2",
+                "NCHAR",
+                "CLOB",
+            }:
                 return str(value)
 
             # Conversões de data
@@ -1823,11 +2016,20 @@ class WmsToOracleAdvancedPipeline:
             return value
 
         except (ValueError, TypeError) as e:
-            self.logger.warning(f"Erro ao converter valor '{value}' para tipo Oracle '{oracle_type}' (coluna: {column_name}): {e}")
+            self.logger.warning(
+                f"Erro ao converter valor '{value}' para tipo Oracle '{oracle_type}' (coluna: {column_name}): {e}"
+            )
             # Retornar valor padrão baseado no tipo
             if oracle_type in {"NUMBER", "INTEGER", "DECIMAL", "NUMERIC"}:
                 return 0
-            if oracle_type in {"VARCHAR2", "VARCHAR", "CHAR", "NVARCHAR2", "NCHAR", "CLOB"}:
+            if oracle_type in {
+                "VARCHAR2",
+                "VARCHAR",
+                "CHAR",
+                "NVARCHAR2",
+                "NCHAR",
+                "CLOB",
+            }:
                 return str(value)
             return value
 
@@ -1877,7 +2079,10 @@ Exemplos de uso:
     parser.add_argument("--limit", type=int, help="Limite de registros")
     parser.add_argument("--fields", help="Campos específicos para extrair")
     parser.add_argument(
-        "--verbose", "-v", action="store_true", help="Logging detalhado",
+        "--verbose",
+        "-v",
+        action="store_true",
+        help="Logging detalhado",
     )
     parser.add_argument(
         "--extract-all",
@@ -1914,7 +2119,9 @@ Exemplos de uso:
             pipeline.config["wms"]["extract_all_data"] = True
             pipeline.config["pipeline"]["extract_complete_dataset"] = True
             pipeline.config["pipeline"]["comprehensive_field_discovery"] = True
-            print("🚀 Modo de extração completa ativado - extraindo TODOS os dados disponíveis")
+            print(
+                "🚀 Modo de extração completa ativado - extraindo TODOS os dados disponíveis"
+            )
 
         if args.no_pagination:
             pipeline.config["wms"]["enable_pagination"] = False
@@ -1945,8 +2152,12 @@ Exemplos de uso:
         print(f"   - Extração completa: {pipeline.config['wms']['extract_all_data']}")
         print(f"   - Paginação: {pipeline.config['wms']['enable_pagination']}")
         print(f"   - Tamanho da página: {pipeline.config['wms']['pagination_size']}")
-        print(f"   - Máximo por requisição: {pipeline.config['wms']['max_records_per_request']}")
-        print(f"   - Descoberta abrangente: {pipeline.config['pipeline']['comprehensive_field_discovery']}")
+        print(
+            f"   - Máximo por requisição: {pipeline.config['wms']['max_records_per_request']}"
+        )
+        print(
+            f"   - Descoberta abrangente: {pipeline.config['pipeline']['comprehensive_field_discovery']}"
+        )
 
         # Executar pipeline incremental
         pipeline.run_incremental_pipeline(args.resource, args.days_back, **query_params)

@@ -7,7 +7,9 @@ import sys
 from pathlib import Path
 from typing import TypeVar
 
-test_file_path = Path(__file__).parent.parent.parent / "scripts" / "temp" / "utils_analysis"
+test_file_path = (
+    Path(__file__).parent.parent.parent / "scripts" / "temp" / "utils_analysis"
+)
 sys.path.insert(0, str(test_file_path))
 
 

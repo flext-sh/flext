@@ -12,7 +12,8 @@ def get_mypy_errors() -> list[dict[str, any]]:
     result = subprocess.run(
         ["mypy", "flx/src/", "--show-error-codes", "--no-error-summary"],
         capture_output=True,
-        text=True, check=False,
+        text=True,
+        check=False,
     )
 
     errors = []
@@ -32,13 +33,15 @@ def get_mypy_errors() -> list[dict[str, any]]:
                 if suggestion_match:
                     suggestion = suggestion_match.group(1)
 
-            errors.append({
-                "file": filepath,
-                "line": int(line_num),
-                "message": message,
-                "code": error_code,
-                "suggestion": suggestion,
-            })
+            errors.append(
+                {
+                    "file": filepath,
+                    "line": int(line_num),
+                    "message": message,
+                    "code": error_code,
+                    "suggestion": suggestion,
+                }
+            )
 
     return errors
 
@@ -57,14 +60,18 @@ def fix_attr_defined_errors(errors: list[dict], dry_run: bool = False) -> int:
             message = error["message"]
 
             # Pattern 1: "ClassName" has no attribute "method"; maybe "flx_method"?
-            match1 = re.search(r'"([^"]+)" has no attribute "([^"]+)"; maybe "([^"]+)"', message)
+            match1 = re.search(
+                r'"([^"]+)" has no attribute "([^"]+)"; maybe "([^"]+)"', message
+            )
             if match1:
                 _class_name, old_attr, new_attr = match1.groups()
                 fixes_by_file[filepath].append((error["line"], old_attr, new_attr))
                 continue
 
             # Pattern 2: Module "x" has no attribute "y"; maybe "z"?
-            match2 = re.search(r'Module "[^"]+" has no attribute "([^"]+)"; maybe "([^"]+)"', message)
+            match2 = re.search(
+                r'Module "[^"]+" has no attribute "([^"]+)"; maybe "([^"]+)"', message
+            )
             if match2:
                 old_attr, new_attr = match2.groups()
                 fixes_by_file[filepath].append((error["line"], old_attr, new_attr))
@@ -82,7 +89,9 @@ def fix_attr_defined_errors(errors: list[dict], dry_run: bool = False) -> int:
     return total_fixes
 
 
-def fix_name_defined_errors(errors: list[dict], inventory: dict[str, any], dry_run: bool = False) -> int:
+def fix_name_defined_errors(
+    errors: list[dict], inventory: dict[str, any], dry_run: bool = False
+) -> int:
     """Fix name-defined errors using inventory mappings."""
     fixes_by_file: dict[str, set[tuple[str, str]]] = {}
 
@@ -115,7 +124,9 @@ def fix_name_defined_errors(errors: list[dict], inventory: dict[str, any], dry_r
     return total_fixes
 
 
-def fix_call_arg_errors(errors: list[dict], inventory: dict[str, any], dry_run: bool = False) -> int:
+def fix_call_arg_errors(
+    errors: list[dict], inventory: dict[str, any], dry_run: bool = False
+) -> int:
     """Fix call-arg errors by adding missing arguments."""
     fixes_by_file: dict[str, list[dict]] = {}
 
@@ -126,7 +137,9 @@ def fix_call_arg_errors(errors: list[dict], inventory: dict[str, any], dry_run: 
                 fixes_by_file[filepath] = []
 
             # Extract missing argument and class
-            match = re.search(r'Missing named argument "([^"]+)" for "([^"]+)"', error["message"])
+            match = re.search(
+                r'Missing named argument "([^"]+)" for "([^"]+)"', error["message"]
+            )
             if match:
                 arg_name, class_name = match.groups()
 
@@ -136,14 +149,16 @@ def fix_call_arg_errors(errors: list[dict], inventory: dict[str, any], dry_run: 
                     # Find the argument info
                     for arg in class_info["init_args"]:
                         if arg["name"] == arg_name:
-                            fixes_by_file[filepath].append({
-                                "line": error["line"],
-                                "class": class_name,
-                                "arg": arg_name,
-                                "has_default": arg.get("has_default", False),
-                                "default": arg.get("default", None),
-                                "type": arg.get("annotation", None),
-                            })
+                            fixes_by_file[filepath].append(
+                                {
+                                    "line": error["line"],
+                                    "class": class_name,
+                                    "arg": arg_name,
+                                    "has_default": arg.get("has_default", False),
+                                    "default": arg.get("default", None),
+                                    "type": arg.get("annotation", None),
+                                }
+                            )
                             break
 
     total_fixes = 0
@@ -223,9 +238,15 @@ def main() -> None:
     import argparse
 
     parser = argparse.ArgumentParser(description="Fix mypy errors in FLX codebase")
-    parser.add_argument("--dry-run", action="store_true", help="Show what would be changed")
-    parser.add_argument("--type", choices=["attr", "name", "call", "all"], default="all",
-                       help="Type of errors to fix")
+    parser.add_argument(
+        "--dry-run", action="store_true", help="Show what would be changed"
+    )
+    parser.add_argument(
+        "--type",
+        choices=["attr", "name", "call", "all"],
+        default="all",
+        help="Type of errors to fix",
+    )
     args = parser.parse_args()
 
     # Load inventory

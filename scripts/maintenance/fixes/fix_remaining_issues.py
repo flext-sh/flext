@@ -22,10 +22,16 @@ def fix_flx_strict_model_import() -> None:
         content = path.read_text()
 
         # Check if FlxStrictModel is used but not imported
-        if "FlxStrictModel" in content and "from flx.core.base import FlxStrictModel" not in content:
+        if (
+            "FlxStrictModel" in content
+            and "from flx.core.base import FlxStrictModel" not in content
+        ):
             # Add import after other imports
             if "from flx.core" in content:
-                content = content.replace("from flx.core", "from flx.core.base import FlxStrictModel\nfrom flx.core")
+                content = content.replace(
+                    "from flx.core",
+                    "from flx.core.base import FlxStrictModel\nfrom flx.core",
+                )
             elif "from typing import" in content:
                 lines = content.splitlines()
                 for i, line in enumerate(lines):
@@ -33,14 +39,18 @@ def fix_flx_strict_model_import() -> None:
                         # Find next empty line
                         for j in range(i + 1, len(lines)):
                             if not lines[j].strip():
-                                lines.insert(j + 1, "from flx.core.base import FlxStrictModel")
+                                lines.insert(
+                                    j + 1, "from flx.core.base import FlxStrictModel"
+                                )
                                 break
                         break
                 content = "\n".join(lines)
             # Add at the beginning after __future__
             elif "from __future__ import" in content:
-                content = content.replace("from __future__ import annotations\n",
-                                        "from __future__ import annotations\n\nfrom flx.core.base import FlxStrictModel\n")
+                content = content.replace(
+                    "from __future__ import annotations\n",
+                    "from __future__ import annotations\n\nfrom flx.core.base import FlxStrictModel\n",
+                )
             else:
                 content = "from flx.core.base import FlxStrictModel\n\n" + content
 
@@ -68,7 +78,9 @@ class MockDataModel(BaseModel):
 '''
             # Add before BaseMockProvider
             if "class BaseMockProvider" in content:
-                content = content.replace("class BaseMockProvider", f"{model_def}\n\nclass BaseMockProvider")
+                content = content.replace(
+                    "class BaseMockProvider", f"{model_def}\n\nclass BaseMockProvider"
+                )
             else:
                 content += f"\n\n{model_def}"
 
@@ -157,11 +169,17 @@ class UniversalField(FlxStrictModel):
             # Add after other class definitions or imports
             if "class " in content:
                 # Find last class definition
-                class_matches = list(re.finditer(r"^class\s+\w+", content, re.MULTILINE))
+                class_matches = list(
+                    re.finditer(r"^class\s+\w+", content, re.MULTILINE)
+                )
                 if class_matches:
                     last_class_end = content.find("\n\n", class_matches[-1].end())
                     if last_class_end > 0:
-                        content = content[:last_class_end] + f"\n\n{field_def}" + content[last_class_end:]
+                        content = (
+                            content[:last_class_end]
+                            + f"\n\n{field_def}"
+                            + content[last_class_end:]
+                        )
                     else:
                         content += f"\n\n{field_def}"
             else:

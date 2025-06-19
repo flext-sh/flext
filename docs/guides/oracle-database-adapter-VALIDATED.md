@@ -1,8 +1,8 @@
 # Oracle Database Adapter - VALIDATED Implementation Guide
 
-> **Validation Status**: ✅ VERIFIED against actual codebase `/flx_database_oracle/src/`  
-> **Implementation**: REAL production-ready code  
-> **Content Source**: Direct codebase analysis, not file reorganization  
+> **Validation Status**: ✅ VERIFIED against actual codebase `/flx_database_oracle/src/`
+> **Implementation**: REAL production-ready code
+> **Content Source**: Direct codebase analysis, not file reorganization
 > **Accuracy**: 100% validated against working implementation
 
 **This guide is based on ACTUAL implementation content, validated against real working code.**
@@ -29,7 +29,7 @@ flx_database_oracle/
 ├── src/flx_database_oracle/
 │   ├── __init__.py              # REAL exports verified
 │   ├── adapter.py               # FlxOracleDbAdapter implementation
-│   ├── client.py                # FlxOracleDbClient 
+│   ├── client.py                # FlxOracleDbClient
 │   ├── config.py               # Configuration classes
 │   ├── operations.py           # Schema and SQL operations
 │   └── testing.py              # OracleTestEngine
@@ -65,10 +65,10 @@ from flx_database_oracle import FlxOracleDbAdapter, FlxDatabaseConfig
 
 class FlxOracleDbAdapter(BaseAdapter):
     """Oracle Database adapter extending FLX DatabaseAdapter.
-    
+
     VALIDATED: This is the actual class definition from the codebase.
     """
-    
+
     # REAL Configuration Fields (VERIFIED):
     host: str = Field(..., description="Oracle database host")
     port: int = Field(default=1522, description="Oracle database port")
@@ -194,7 +194,7 @@ adapter = FlxOracleDbAdapter.from_config(config)
 # ACTUAL methods from implementation
 async def execute_query(self, sql: str, params: dict[str, Any] | None = None) -> list[dict[str, Any]]:
     """Execute SELECT query returning list of dictionaries.
-    
+
     VALIDATED: This is the actual method signature and implementation.
     """
     if not self._oracle_connection:
@@ -240,7 +240,7 @@ results = await adapter.execute_query(
 # ACTUAL method from implementation
 async def execute_command(self, sql: str, params: dict[str, Any] | None = None) -> int:
     """Execute INSERT/UPDATE/DELETE command returning affected rows.
-    
+
     VALIDATED: Real implementation with transaction handling.
     """
     if not self._oracle_connection:
@@ -294,7 +294,7 @@ def upsert_data(
     update_columns: list[str] | None = None
 ) -> dict[str, Any] | None:
     """Perform upsert operation on table using Oracle MERGE statement.
-    
+
     VALIDATED: This is sophisticated real implementation using Oracle MERGE.
     """
     if not self._sqlalchemy_ops:
@@ -342,7 +342,7 @@ result = adapter.upsert_data(
     table_name="CUSTOMER_ORDERS",
     data={
         "order_id": 12345,
-        "customer_id": "CUST001", 
+        "customer_id": "CUST001",
         "status": "SHIPPED",
         "ship_date": "2025-01-10",
         "total_amount": 599.99
@@ -365,7 +365,7 @@ def bulk_upsert_data(
     batch_size: int = 1000
 ) -> list[dict[str, Any]] | None:
     """Perform bulk upsert operations using Oracle MERGE statements.
-    
+
     VALIDATED: Real implementation with batching and error handling.
     """
     # REAL implementation processes in batches for performance
@@ -377,7 +377,7 @@ def bulk_upsert_data(
         for i in range(0, len(data_list), batch_size):
             batch = data_list[i:i + batch_size]
             # ... actual batching logic from implementation
-            
+
     except Exception as e:
         self.error(f"Bulk upsert operation failed for table {table_name}: {e}")
         # REAL error handling with detailed status
@@ -408,7 +408,7 @@ results = adapter.bulk_upsert_data(
 # ACTUAL health check implementation
 async def _perform_health_check_operation(self) -> dict[str, Any]:
     """Perform Oracle health check with proper error handling.
-    
+
     VALIDATED: Real implementation with comprehensive status reporting.
     """
     if not self._oracle_connection:
@@ -487,25 +487,25 @@ async def main():
         password="SecurePassword123!",
         max_pool_size=5
     )
-    
+
     # VERIFIED: Create adapter
     adapter = FlxOracleDbAdapter.from_config(config)
-    
+
     try:
         # REAL: Connect to Oracle Autonomous Database
         await adapter.connect()
-        
+
         # VERIFIED: Test connection
         health = await adapter._perform_health_check_operation()
         print(f"Connection status: {health['status']}")
-        
+
         # REAL: Query operation
         orders = await adapter.execute_query(
             "SELECT * FROM orders WHERE status = :status",
             {"status": "PENDING"}
         )
         print(f"Found {len(orders)} pending orders")
-        
+
         # VERIFIED: Upsert operation
         upsert_result = adapter.upsert_data(
             table_name="ORDERS",
@@ -519,7 +519,7 @@ async def main():
             update_columns=["status", "total_amount"]
         )
         print(f"Upsert result: {upsert_result}")
-        
+
     finally:
         # REAL: Cleanup
         await adapter.close()
@@ -587,7 +587,7 @@ adapter = FlxOracleDbAdapter(
 
 **⚠️ Content Validation Notice**: This documentation represents **content analysis and reorganization** based on actual implementation code, not file movement. Every example has been validated against the working codebase in `/flx_database_oracle/`.
 
-**🔍 Accuracy Guarantee**: 100% validated against real implementation  
-**📅 Last Updated**: January 2025  
-**🎯 Content Source**: Direct codebase analysis  
+**🔍 Accuracy Guarantee**: 100% validated against real implementation
+**📅 Last Updated**: January 2025
+**🎯 Content Source**: Direct codebase analysis
 **📊 Implementation Status**: Production-ready

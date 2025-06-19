@@ -32,7 +32,7 @@ The FLX core domain layer (`/flx/src/flx/core/`) implements **production-grade D
 /flx/src/flx/core/
 ├── __init__.py           # ✅ Clean public API exports
 ├── base.py              # ✅ Foundation classes (DomainObject, Identifiable)
-├── entities.py          # ✅ Entity and AggregateRoot implementations  
+├── entities.py          # ✅ Entity and AggregateRoot implementations
 ├── value_objects.py     # ✅ Money, Email, Address, DateRange values
 ├── events.py            # ✅ Domain event infrastructure
 ├── services.py          # ✅ Domain service patterns
@@ -62,20 +62,20 @@ Based on actual `/flx/src/flx/core/entities.py`:
 ```python
 class Entity(DomainObject, Identifiable, Timestamped):
     """Base class for domain entities with identity and lifecycle management.
-    
+
     Entities represent business objects that have a distinct identity and can
     change over time while maintaining their identity. Unlike value objects,
     entities are compared by their ID rather than their attribute values.
     """
-    
+
     def __eq__(self, other: object) -> bool:
         """Entities are equal if they have the same ID."""
         return Identifiable.__eq__(self, other)
-    
+
     def __hash__(self) -> int:
-        """Hash based on ID.""" 
+        """Hash based on ID."""
         return Identifiable.__hash__(self)
-    
+
     def touch(self) -> Self:
         """Create updated entity with current timestamp (immutable pattern)."""
         from datetime import UTC, datetime
@@ -96,27 +96,27 @@ class Entity(DomainObject, Identifiable, Timestamped):
 ```python
 class AggregateRoot(Entity, Versionable):
     """Base class for aggregate roots implementing DDD consistency boundaries.
-    
+
     Aggregate roots are special entities that serve as the entry point to
     aggregates - clusters of related entities and value objects that form
     a consistency boundary.
     """
-    
+
     def __init__(self, **data: object) -> None:
         """Initialize aggregate root."""
         super().__init__(**data)
         self._events: list[DomainEvent] = []
-    
+
     def add_event(self, event: DomainEvent) -> None:
         """Add a domain event to be dispatched after persistence."""
         self._events.append(event)
-    
+
     def collect_events(self) -> list[DomainEvent]:
         """Collect and clear pending events for publishing."""
         events = self._events.copy()
         self._events.clear()
         return events
-    
+
     def increment_version(self) -> Self:
         """Increment version for optimistic locking."""
         self.version += 1
@@ -139,17 +139,17 @@ class Customer(Entity):
     name: str
     email: str
     status: str = "active"
-    
+
     def deactivate(self) -> Self:
         """Deactivate customer using immutable pattern."""
         if self.status == "inactive":
             raise ValueError("Customer already inactive")
-        
+
         return self.model_copy(update={
             "status": "inactive",
             "updated_at": datetime.now(UTC)
         })
-    
+
     def change_email(self, new_email: str) -> Self:
         """Change email with validation."""
         Email(value=new_email)  # Validate using value object
@@ -163,19 +163,19 @@ class Order(AggregateRoot):
     customer_id: str
     status: str = "pending"
     items: list[OrderItem] = []
-    
+
     def add_item(self, product_id: str, quantity: int, price: float) -> None:
         """Add item with business rule validation."""
         if self.status != "pending":
             raise ValueError("Cannot modify confirmed order")
-        
+
         if quantity <= 0:
             raise ValueError("Quantity must be positive")
-        
+
         item = OrderItem(product_id=product_id, quantity=quantity, price=price)
         self.items.append(item)
         self.increment_version()
-        
+
         # Emit domain event for external systems
         self.add_event(ItemAddedToOrderEvent(
             order_id=self.entity_id,
@@ -197,17 +197,17 @@ Based on actual `/flx/src/flx/core/value_objects.py`:
 ```python
 class ValueObject(DomainObject):
     """Abstract base class for all value objects in the domain model.
-    
+
     Value objects represent immutable concepts that are defined by their
     attributes rather than their identity.
     """
-    
+
     def __eq__(self, other: object) -> bool:
         """Compare value objects by their attribute values."""
         if not isinstance(other, self.__class__):
             return False
         return self.model_dump() == other.model_dump()
-    
+
     def __hash__(self) -> int:
         """Generate hash based on all attribute values."""
         return hash(tuple(self.model_dump().items()))
@@ -220,28 +220,28 @@ class ValueObject(DomainObject):
 ```python
 class Money(ValueObject):
     """Money value object with currency support."""
-    
+
     amount: float = Field(..., description="Monetary amount")
     currency: str = Field(..., min_length=3, max_length=3, description="ISO 4217")
-    
+
     @field_validator("amount")
     @classmethod
     def validate_amount(cls, v: float) -> float:
         """Ensure amount has at most 2 decimal places."""
         return round(v, 2)
-    
+
     @field_validator("currency")
     @classmethod
     def validate_currency(cls, v: str) -> str:
         """Ensure currency is uppercase."""
         return v.upper()
-    
+
     def add(self, other: Money) -> Money:
         """Add two money values with currency validation."""
         if self.currency != other.currency:
             raise ValueError(f"Cannot add {self.currency} and {other.currency}")
         return Money(amount=self.amount + other.amount, currency=self.currency)
-    
+
     def multiply(self, factor: float) -> Money:
         """Multiply money by a factor."""
         return Money(amount=self.amount * factor, currency=self.currency)
@@ -252,20 +252,20 @@ class Money(ValueObject):
 ```python
 class Email(ValueObject):
     """Email address value object with validation."""
-    
+
     value: str = Field(..., pattern=r"^[\w\.-]+@[\w\.-]+\.\w+$")
-    
+
     @field_validator("value")
     @classmethod
     def validate_email(cls, v: str) -> str:
         """Normalize email to lowercase."""
         return v.lower()
-    
+
     @property
     def domain(self) -> str:
         """Extract domain from email."""
         return self.value.split("@")[1]
-    
+
     @property
     def username(self) -> str:
         """Extract username from email."""
@@ -282,12 +282,12 @@ class Email(ValueObject):
 # Based on /flx/src/flx/core/events.py
 class DomainEvent(ValueObject):
     """Base class for domain events."""
-    
+
     event_id: str = Field(default_factory=lambda: str(uuid4()))
     occurred_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
     aggregate_id: str
     event_version: int = 1
-    
+
     class Config:
         frozen = True  # Events are immutable
 
@@ -295,7 +295,7 @@ class CustomerActivatedEvent(DomainEvent):
     """Customer activation event."""
     customer_id: str
     activated_by: str
-    
+
 class OrderConfirmedEvent(DomainEvent):
     """Order confirmation event."""
     order_id: str
@@ -310,18 +310,18 @@ class OrderConfirmedEvent(DomainEvent):
 # Real usage in application services
 async def confirm_order_use_case(order_id: str) -> None:
     """Confirm order with event publishing."""
-    
+
     # Load aggregate
     order = await order_repository.find_by_id(order_id)
     if not order:
         raise OrderNotFoundError(order_id)
-    
+
     # Execute business operation
     order.confirm()  # This adds OrderConfirmedEvent
-    
+
     # Save aggregate (optimistic locking)
     await order_repository.save(order)
-    
+
     # Publish domain events
     events = order.collect_events()
     await event_bus.publish_batch(events)
@@ -385,7 +385,7 @@ def test_entity_identity_equality():
     """Test entity equality based on ID."""
     customer1 = Customer(entity_id="123", name="John", email="john@example.com")
     customer2 = Customer(entity_id="123", name="Jane", email="jane@example.com")
-    
+
     # Same ID = equal entities despite different attributes
     assert customer1 == customer2
     assert hash(customer1) == hash(customer2)
@@ -394,7 +394,7 @@ def test_entity_immutable_updates():
     """Test entity immutable update patterns."""
     customer = Customer(name="John", email="john@example.com")
     updated = customer.change_email("john.doe@example.com")
-    
+
     # Original unchanged, new instance created
     assert customer.email == "john@example.com"
     assert updated.email == "john.doe@example.com"
@@ -409,13 +409,13 @@ def test_aggregate_event_collection():
     order = Order(customer_id="123")
     order.add_item("product-1", 2, 29.99)
     order.confirm()
-    
+
     events = order.collect_events()
-    
+
     assert len(events) == 2
     assert isinstance(events[0], ItemAddedToOrderEvent)
     assert isinstance(events[1], OrderConfirmedEvent)
-    
+
     # Events cleared after collection
     assert len(order.collect_events()) == 0
 ```
@@ -447,20 +447,20 @@ Based on actual implementation:
 ```python
 # Real application service pattern
 class CustomerApplicationService:
-    def __init__(self, 
+    def __init__(self,
                  customer_repo: CustomerRepository,
                  event_bus: EventBus):
         self.customer_repo = customer_repo
         self.event_bus = event_bus
-    
+
     async def activate_customer(self, customer_id: str) -> None:
         customer = await self.customer_repo.find_by_id(customer_id)
         if not customer:
             raise CustomerNotFoundError(customer_id)
-        
+
         activated_customer = customer.activate()  # Domain operation
         await self.customer_repo.save(activated_customer)
-        
+
         events = activated_customer.collect_events()
         await self.event_bus.publish_batch(events)
 ```
@@ -482,10 +482,10 @@ class PostgresCustomerRepository:
                 ))
                 .values(**customer.model_dump())
             )
-            
+
             if result.rowcount == 0:
                 raise OptimisticLockingError(customer.entity_id)
-                
+
         except IntegrityError as e:
             raise RepositoryError(f"Failed to save customer: {e}")
 ```
@@ -504,11 +504,11 @@ class Customer(Entity):
     name: str
     email: str
     status: str = "active"
-    
+
     # New fields with defaults for backward compatibility
     preferred_language: str = "en"
     marketing_consent: bool = False
-    
+
     # Version handling for migrations
     schema_version: int = 2
 ```
@@ -520,7 +520,7 @@ class Customer(Entity):
 class CustomerActivatedEvent(DomainEvent):
     customer_id: str
     activated_by: str
-    
+
     # V2 adds activation reason
     activation_reason: str = "manual"
     event_version: int = 2
@@ -553,15 +553,14 @@ class CustomerActivatedEvent(DomainEvent):
 
 ---
 
-**Implementation Status**: ✅ **Validated and Production-Ready**  
-**Source Validation**: `/flx/src/flx/core/`  
-**Quality Score**: **95% Test Coverage**  
+**Implementation Status**: ✅ **Validated and Production-Ready**
+**Source Validation**: `/flx/src/flx/core/`
+**Quality Score**: **95% Test Coverage**
 **Last Updated**: January 2025
 
 ---
 
-*This guide is validated against actual FLX framework implementation and provides production-ready patterns for domain-driven design.*
-5. **Event-Driven**: Domain events for decoupling
+_This guide is validated against actual FLX framework implementation and provides production-ready patterns for domain-driven design._ 5. **Event-Driven**: Domain events for decoupling
 
 ## Usage
 
@@ -686,7 +685,7 @@ class Customer(Entity):
         if not isinstance(other, Customer):
             return False
         return self.entity_id == other.entity_id
-    
+
     def __hash__(self) -> int:
         # Consistent hash based on ID
         return hash(self.entity_id)
@@ -702,10 +701,10 @@ class Order(AggregateRoot):
         # Correct: Access only entities within this aggregate
         item = OrderItem(product_id=product_id, quantity=quantity)
         self.items.append(item)
-        
+
         # Wrong: Don't access Product entity directly
         # product = await product_repository.find_by_id(product_id)
-        
+
         # Correct: Reference by ID and validate in domain service
         self.add_event(ItemAddedEvent(
             order_id=self.entity_id,
@@ -721,10 +720,10 @@ class Order(AggregateRoot):
 # Solution: Ensure value objects are truly immutable
 class Money(ValueObject):
     model_config = ConfigDict(frozen=True)  # Pydantic v2 immutability
-    
+
     amount: Decimal
     currency: str
-    
+
     def add(self, other: 'Money') -> 'Money':
         # Correct: Return new instance, don't modify existing
         if self.currency != other.currency:
@@ -741,13 +740,13 @@ class OrderAggregate(AggregateRoot):
     def __init__(self, **data: Any) -> None:
         super().__init__(**data)
         self._events: List[DomainEvent] = []
-    
+
     def collect_events(self) -> List[DomainEvent]:
         # Correct: Copy events and clear internal list
         events = self._events.copy()
         self._events.clear()
         return events
-    
+
     def add_event(self, event: DomainEvent) -> None:
         """Add domain event for later publishing."""
         self._events.append(event)
@@ -763,10 +762,10 @@ class PricingDomainService:
         # Correct: Pure domain logic only
         if customer.is_premium() and order.total() > Money(1000, "USD"):
             return Discount(percentage=0.1, reason="Premium customer bulk discount")
-        
+
         # Wrong: Don't access external systems directly
         # discount_rate = await external_pricing_api.get_rate(customer.id)
-        
+
         return Discount(percentage=0.0, reason="No discount applicable")
 ```
 
@@ -779,15 +778,15 @@ from abc import ABC, abstractmethod
 
 class CustomerRepository(ABC):
     """Domain repository interface - no infrastructure details."""
-    
+
     @abstractmethod
     async def find_by_id(self, customer_id: str) -> Optional[Customer]:
         """Find customer by ID."""
-    
+
     @abstractmethod
     async def save(self, customer: Customer) -> None:
         """Save customer with optimistic locking."""
-    
+
     @abstractmethod
     async def find_by_email(self, email: str) -> Optional[Customer]:
         """Find customer by email address."""

@@ -15,7 +15,7 @@ def fix_b904_exceptions(content: str) -> str:
 
     for i, line in enumerate(lines):
         stripped = line.strip()
-        indentation = line[:len(line) - len(line.lstrip())]
+        indentation = line[: len(line) - len(line.lstrip())]
 
         # Check if we're entering an except block
         if stripped.startswith("except ") and " as " in stripped:
@@ -30,7 +30,12 @@ def fix_b904_exceptions(content: str) -> str:
         elif stripped.startswith("except "):
             in_except_block = True
             except_variable = None
-        elif stripped and not stripped.startswith(" ") and not stripped.startswith("\t") and "except" not in stripped:
+        elif (
+            stripped
+            and not stripped.startswith(" ")
+            and not stripped.startswith("\t")
+            and "except" not in stripped
+        ):
             # We've left the except block
             in_except_block = False
             except_variable = None
@@ -41,10 +46,14 @@ def fix_b904_exceptions(content: str) -> str:
             if " from " not in stripped:
                 # Add exception chaining
                 if stripped.endswith(")"):
-                    lines[i] = f"{indentation}raise {stripped[6:]} from {except_variable}"
+                    lines[i] = (
+                        f"{indentation}raise {stripped[6:]} from {except_variable}"
+                    )
                 else:
                     # For cases like: raise Exception("message")
-                    lines[i] = f"{indentation}raise {stripped[6:]} from {except_variable}"
+                    lines[i] = (
+                        f"{indentation}raise {stripped[6:]} from {except_variable}"
+                    )
 
     return "\n".join(lines)
 
@@ -52,12 +61,18 @@ def fix_b904_exceptions(content: str) -> str:
 def fix_remaining_syntax_errors(content: str) -> str:
     """Fix remaining syntax errors from incomplete f-string conversions."""
     # Fix cases where f-strings weren't properly converted
-    content = re.sub(r'(\s+logger\.\w+\s*\(\s*)"([^"]*?)", ([^,]+)\s+f"([^"]*?)"',
-                     r'\1"\2 \4", \3', content)
+    content = re.sub(
+        r'(\s+logger\.\w+\s*\(\s*)"([^"]*?)", ([^,]+)\s+f"([^"]*?)"',
+        r'\1"\2 \4", \3',
+        content,
+    )
 
     # Fix cases with multiple f-string fragments
-    return re.sub(r'(\s+logger\.\w+\s*\(\s*)"([^"]*?)", ([^,]+)\s*\n\s*f"([^"]*?)"',
-                     r'\1"\2 \4", \3', content)
+    return re.sub(
+        r'(\s+logger\.\w+\s*\(\s*)"([^"]*?)", ([^,]+)\s*\n\s*f"([^"]*?)"',
+        r'\1"\2 \4", \3',
+        content,
+    )
 
 
 def fix_lint_file(file_path: Path) -> bool:

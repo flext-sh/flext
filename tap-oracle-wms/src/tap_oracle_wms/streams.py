@@ -180,7 +180,9 @@ class WMSDynamicStream(RESTStream):
         # Debug logging
         if hasattr(self, "logger"):
             self.logger.info(
-                "Initialized %s with replication_key: %s", entity_name, self._replication_key
+                "Initialized %s with replication_key: %s",
+                entity_name,
+                self._replication_key,
             )
 
         # Call parent constructor
@@ -252,19 +254,19 @@ class WMSDynamicStream(RESTStream):
         if self.replication_key:
             # Configure for incremental replication
             metadata.get_property_metadata(".", "replication-method").selected = False
-            metadata.get_property_metadata(".", "replication-method").value = (
-                "INCREMENTAL"
-            )
+            metadata.get_property_metadata(
+                ".", "replication-method"
+            ).value = "INCREMENTAL"
             metadata.get_property_metadata(".", "replication-key").selected = False
-            metadata.get_property_metadata(".", "replication-key").value = (
-                self.replication_key
-            )
+            metadata.get_property_metadata(
+                ".", "replication-key"
+            ).value = self.replication_key
         else:
             # Configure for full table replication
             metadata.get_property_metadata(".", "replication-method").selected = False
-            metadata.get_property_metadata(".", "replication-method").value = (
-                "FULL_TABLE"
-            )
+            metadata.get_property_metadata(
+                ".", "replication-method"
+            ).value = "FULL_TABLE"
 
         return metadata
 
@@ -652,7 +654,10 @@ class WMSDynamicStream(RESTStream):
 
             # Log progress
             self.logger.info(
-                "Updated bookmark for %s: %s=%s", self.name, self.replication_key, replication_value
+                "Updated bookmark for %s: %s=%s",
+                self.name,
+                self.replication_key,
+                replication_value,
             )
 
     def post_process(

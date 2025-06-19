@@ -60,24 +60,24 @@ from flx.core.config import ConfigValidator, RequiredConfig
 
 class WMSConfig(RequiredConfig):
     """WMS configuration with validation."""
-    
+
     wms_url: str
     wms_username: str
     wms_password: str
     wms_timeout: int = 30
-    
+
     @classmethod
     def validate_required(cls) -> bool:
         """Validate all required configuration is present."""
         missing = []
-        
+
         if not cls.wms_url:
             missing.append("WMS_URL")
         if not cls.wms_username:
             missing.append("WMS_USERNAME")
         if not cls.wms_password:
             missing.append("WMS_PASSWORD")
-            
+
         if missing:
             raise ConfigurationError(
                 f"Missing required configuration: {', '.join(missing)}"
@@ -204,63 +204,63 @@ from pathlib import Path
 @dataclass
 class EnvironmentConfig:
     """Environment configuration management."""
-    
+
     # WMS Configuration
     wms_url: str
     wms_username: str
     wms_password: str
     wms_timeout: int = 30
-    
-    # Database Configuration  
+
+    # Database Configuration
     db_host: str = "localhost"
     db_port: int = 5432
     db_name: str = "pyauto"
     db_user: str = ""
     db_password: str = ""
-    
+
     # Security Configuration
     secret_key: str = ""
     jwt_algorithm: str = "HS256"
-    
+
     @classmethod
     def from_environment(cls, env_file: Optional[str] = None) -> "EnvironmentConfig":
         """Load configuration from environment variables."""
         if env_file:
             cls._load_env_file(env_file)
-        
+
         return cls(
             # WMS
             wms_url=os.getenv("WMS_URL", ""),
             wms_username=os.getenv("WMS_USERNAME", ""),
             wms_password=os.getenv("WMS_PASSWORD", ""),
             wms_timeout=int(os.getenv("WMS_TIMEOUT", "30")),
-            
+
             # Database
             db_host=os.getenv("DB_HOST", "localhost"),
             db_port=int(os.getenv("DB_PORT", "5432")),
             db_name=os.getenv("DB_NAME", "pyauto"),
             db_user=os.getenv("DB_USER", ""),
             db_password=os.getenv("DB_PASSWORD", ""),
-            
+
             # Security
             secret_key=os.getenv("SECRET_KEY", ""),
             jwt_algorithm=os.getenv("JWT_ALGORITHM", "HS256"),
         )
-    
+
     @staticmethod
     def _load_env_file(env_file: str) -> None:
         """Load environment variables from file."""
         env_path = Path(env_file)
         if not env_path.exists():
             raise FileNotFoundError(f"Environment file not found: {env_file}")
-        
+
         with open(env_path) as f:
             for line in f:
                 line = line.strip()
                 if line and not line.startswith("#"):
                     key, value = line.split("=", 1)
                     os.environ[key] = value
-    
+
     def validate(self) -> None:
         """Validate required configuration."""
         required_fields = [
@@ -269,9 +269,9 @@ class EnvironmentConfig:
             ("WMS_PASSWORD", self.wms_password),
             ("SECRET_KEY", self.secret_key),
         ]
-        
+
         missing = [field for field, value in required_fields if not value]
-        
+
         if missing:
             raise ValueError(f"Missing required configuration: {', '.join(missing)}")
 ```
@@ -284,7 +284,7 @@ from pathlib import Path
 
 class ConfigurationFactory:
     """Factory for creating environment-specific configurations."""
-    
+
     @staticmethod
     def create_config(environment: str = "development") -> EnvironmentConfig:
         """Create configuration for specific environment."""
@@ -294,16 +294,16 @@ class ConfigurationFactory:
             "staging": [".env.staging", ".env"],
             "production": [".env.production", ".env"],
         }
-        
+
         config = None
         for env_file in env_files.get(environment, [".env"]):
             if Path(env_file).exists():
                 config = EnvironmentConfig.from_environment(env_file)
                 break
-        
+
         if config is None:
             config = EnvironmentConfig.from_environment()
-        
+
         config.validate()
         return config
 ```
@@ -317,22 +317,22 @@ import base64
 
 class SecureConfigLoader:
     """Secure configuration loading with encryption support."""
-    
+
     def __init__(self, encryption_key: Optional[str] = None):
         self.encryption_key = encryption_key
         if encryption_key:
             self.cipher = Fernet(encryption_key.encode())
-    
+
     def load_encrypted_config(self, config_file: str) -> dict[str, str]:
         """Load encrypted configuration file."""
         config = {}
-        
+
         with open(config_file, 'r') as f:
             for line in f:
                 line = line.strip()
                 if line and not line.startswith("#"):
                     key, encrypted_value = line.split("=", 1)
-                    
+
                     # Decrypt value if cipher is available
                     if self.cipher and encrypted_value.startswith("encrypted:"):
                         encrypted_data = encrypted_value[10:]  # Remove "encrypted:" prefix
@@ -342,13 +342,13 @@ class SecureConfigLoader:
                         config[key] = decrypted_value
                     else:
                         config[key] = encrypted_value
-        
+
         return config
-    
+
     def store_in_keyring(self, service: str, username: str, password: str) -> None:
         """Store credentials in system keyring."""
         keyring.set_password(service, username, password)
-    
+
     def get_from_keyring(self, service: str, username: str) -> Optional[str]:
         """Retrieve credentials from system keyring."""
         return keyring.get_password(service, username)
@@ -388,22 +388,22 @@ def test_environment_config():
         config = EnvironmentConfig.from_environment(".internal.invalid")
         config.validate()
         print("✅ Configuration validation passed")
-        
+
         # Test connections
         print("🔍 Testing connections...")
         test_wms_connection(config)
         test_database_connection(config)
-        
+
     except Exception as e:
         print(f"❌ Configuration error: {e}")
         return False
-    
+
     return True
 
 def test_wms_connection(config: EnvironmentConfig) -> bool:
     """Test WMS connection with configuration."""
     from src.adapters.wms import WMSAdapter
-    
+
     try:
         wms = WMSAdapter(
             url=config.wms_url,
@@ -411,7 +411,7 @@ def test_wms_connection(config: EnvironmentConfig) -> bool:
             password=config.wms_password,
             timeout=config.wms_timeout
         )
-        
+
         if wms.test_connection():
             print("✅ WMS connection successful")
             return True
@@ -432,14 +432,14 @@ if __name__ == "__main__":
 
 ```json
 {
-    "python.defaultInterpreterPath": ".venv/bin/python",
-    "python.envFile": "${workspaceFolder}/.internal.invalid",
-    "python.terminal.activateEnvironment": true,
-    "files.exclude": {
-        ".internal.invalid": true,
-        ".env.production": true,
-        ".env.staging": true
-    }
+  "python.defaultInterpreterPath": ".venv/bin/python",
+  "python.envFile": "${workspaceFolder}/.internal.invalid",
+  "python.terminal.activateEnvironment": true,
+  "files.exclude": {
+    ".internal.invalid": true,
+    ".env.production": true,
+    ".env.staging": true
+  }
 }
 ```
 
@@ -499,18 +499,18 @@ def get_secure_password(service: str, username: str) -> str:
 # Different configs for different environments
 class ConfigFactory:
     """Configuration factory with environment isolation."""
-    
+
     @staticmethod
     def get_config() -> EnvironmentConfig:
         environment = os.getenv("ENVIRONMENT", "development")
-        
+
         config_files = {
             "development": ".internal.invalid",
-            "testing": ".env.test", 
+            "testing": ".env.test",
             "staging": ".env.staging",
             "production": ".env.production"
         }
-        
+
         config_file = config_files.get(environment, ".internal.invalid")
         return EnvironmentConfig.from_environment(config_file)
 ```
@@ -543,22 +543,22 @@ from flx.adapters.health import HealthCheck
 
 class ConfigurationHealthCheck(HealthCheck):
     """Health check for configuration validation."""
-    
+
     def check_health(self) -> HealthStatus:
         """Check configuration health."""
         try:
             config = ConfigurationFactory.create_config()
             config.validate()
-            
+
             # Test critical connections
             wms_healthy = self._test_wms_connection(config)
             db_healthy = self._test_database_connection(config)
-            
+
             if wms_healthy and db_healthy:
                 return HealthStatus.HEALTHY
             else:
                 return HealthStatus.DEGRADED
-                
+
         except Exception as e:
             return HealthStatus.UNHEALTHY
 ```
@@ -571,10 +571,10 @@ from datetime import datetime
 
 class ConfigurationAuditor:
     """Audit configuration access and changes."""
-    
+
     def __init__(self):
         self.logger = logging.getLogger("config.audit")
-    
+
     def log_config_access(self, config_key: str, source: str) -> None:
         """Log configuration value access."""
         self.logger.info(
@@ -586,11 +586,11 @@ class ConfigurationAuditor:
                 "masked_value": self._mask_sensitive(config_key)
             }
         )
-    
+
     def _mask_sensitive(self, key: str) -> str:
         """Mask sensitive configuration keys."""
         sensitive_keys = ["password", "secret", "key", "token"]
-        
+
         if any(sensitive in key.lower() for sensitive in sensitive_keys):
             return "***MASKED***"
         return "logged"
@@ -615,7 +615,7 @@ class ConfigurationAuditor:
 
 ---
 
-**Configuration Status**: ✅ Secure and Standardized  
-**Security Level**: Production-Ready  
-**Validation**: Automated health checks  
+**Configuration Status**: ✅ Secure and Standardized
+**Security Level**: Production-Ready
+**Validation**: Automated health checks
 **Best Practices**: Fully implemented

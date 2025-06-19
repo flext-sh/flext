@@ -48,21 +48,21 @@ async def main():
     # Create plugin
     plugin = flx_create_database_plugin(
         host="localhost",
-        username="hr", 
+        username="hr",
         password="oracle",
         service_name="XEPDB1",
         mode=FlxPluginMode.BIDIRECTIONAL
     )
-    
+
     # Initialize and start
     await plugin.initialize()
     await plugin.start()
-    
+
     # Execute query
     query_port = plugin.get_query_port()
     result = await query_port.execute_query("SELECT SYSDATE FROM DUAL")
     print(f"Current date: {result.data}")
-    
+
     # Clean shutdown
     await plugin.stop()
 
@@ -78,7 +78,7 @@ from flx_database_oracle import DatabaseConfig, DatabasePlugin
 config = DatabaseConfig(
     host="localhost",
     username="hr",
-    password="oracle", 
+    password="oracle",
     service_name="XEPDB1",
     port=1521,
     # Connection pooling
@@ -138,7 +138,7 @@ Strong typing with Pydantic 2.0:
 - `FlxDatabaseConnection` - Connection information
 - `FlxQueryResult` - Query execution results
 - `FlxTableInfo` - Table metadata
-- `FlxColumnInfo` - Column information  
+- `FlxColumnInfo` - Column information
 - `FlxIndexInfo` - Index metadata
 - `FlxTransactionInfo` - Transaction status
 
@@ -230,17 +230,17 @@ transaction_id = str(transaction.transaction_id)
 try:
     # Create savepoint
     await transaction_port.create_savepoint(transaction_id, "sp1")
-    
+
     # Execute operations within transaction
     await transaction_port.execute_in_transaction(
         transaction_id,
         "UPDATE hr.employees SET salary = salary * 1.1 WHERE department_id = :dept_id",
         {"dept_id": 10}
     )
-    
+
     # Commit
     await transaction_port.commit_transaction(transaction_id)
-    
+
 except Exception:
     # Rollback on error
     await transaction_port.rollback_transaction(transaction_id)
@@ -443,7 +443,7 @@ cli.run(["query", "SELECT 1 FROM dual"])
 
 - **Type Safety**: SQLAlchemy ORM integration with Pydantic validation
 - **Connection Pooling**: Automatic connection pool management
-- **Async Support**: Full async/sync operation support  
+- **Async Support**: Full async/sync operation support
 - **Rich Output**: Enhanced table formatting with colors
 - **Error Handling**: Comprehensive error messages and logging
 - **Configuration**: Environment variables and config file support
@@ -469,24 +469,24 @@ flx-oracle-db query "SELECT * FROM employees"
 
 ### DatabaseConfig Parameters
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `host` | str | - | Database host |
-| `port` | int | 1521 | Database port |
-| `username` | str | - | Database username |
-| `password` | str | None | Database password |
-| `service_name` | str | None | Oracle service name |
-| `sid` | str | None | Oracle SID |
-| `pool_min` | int | 1 | Minimum pool connections |
-| `pool_max` | int | 10 | Maximum pool connections |
-| `pool_increment` | int | 1 | Pool increment size |
-| `connect_timeout` | int | 30 | Connection timeout (seconds) |
-| `query_timeout` | int | 300 | Query timeout (seconds) |
-| `ssl_mode` | bool | False | Enable SSL/TLS |
-| `ssl_verify` | bool | True | Verify SSL certificates |
-| `enable_monitoring` | bool | True | Enable monitoring |
-| `log_queries` | bool | False | Log executed queries |
-| `log_performance` | bool | False | Log performance metrics |
+| Parameter           | Type | Default | Description                  |
+| ------------------- | ---- | ------- | ---------------------------- |
+| `host`              | str  | -       | Database host                |
+| `port`              | int  | 1521    | Database port                |
+| `username`          | str  | -       | Database username            |
+| `password`          | str  | None    | Database password            |
+| `service_name`      | str  | None    | Oracle service name          |
+| `sid`               | str  | None    | Oracle SID                   |
+| `pool_min`          | int  | 1       | Minimum pool connections     |
+| `pool_max`          | int  | 10      | Maximum pool connections     |
+| `pool_increment`    | int  | 1       | Pool increment size          |
+| `connect_timeout`   | int  | 30      | Connection timeout (seconds) |
+| `query_timeout`     | int  | 300     | Query timeout (seconds)      |
+| `ssl_mode`          | bool | False   | Enable SSL/TLS               |
+| `ssl_verify`        | bool | True    | Verify SSL certificates      |
+| `enable_monitoring` | bool | True    | Enable monitoring            |
+| `log_queries`       | bool | False   | Log executed queries         |
+| `log_performance`   | bool | False   | Log performance metrics      |
 
 ## 📝 Examples
 
@@ -494,7 +494,7 @@ See the `examples/` directory for:
 
 - `basic_usage.py` - Complete basic and advanced usage examples
 - Database connection examples
-- Schema introspection examples  
+- Schema introspection examples
 - Transaction management examples
 - Performance monitoring examples
 

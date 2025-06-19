@@ -123,33 +123,28 @@ plugins:
   "wallet_location": "/path/to/wallet.zip",
   "wallet_password": "wallet_password",
   "default_target_schema": "WMSSTAGE",
-  "table_prefix": "",  # Optional: prefix for all tables
-  "table_suffix": "_STAGE",  # Optional: suffix for all tables
-  "schema_mapping": {
-    "tap_schema": "target_schema"
-  },
+  "table_prefix": "", # Optional: prefix for all tables
+  "table_suffix": "_STAGE", # Optional: suffix for all tables
+  "schema_mapping": { "tap_schema": "target_schema" },
   "add_metadata_columns": true,
-  "metadata_columns": {
-    "LOADED_AT": "TIMESTAMP",
-    "BATCH_ID": "VARCHAR2(50)"
-  },
+  "metadata_columns": { "LOADED_AT": "TIMESTAMP", "BATCH_ID": "VARCHAR2(50)" },
   "batch_size_rows": 100000,
   "flush_all_streams": false,
   "parallelism": 4,
   "data_flattening_max_level": 0,
   "primary_key_required": false,
   "validate_records": true,
-  "load_method": "append",  # append, upsert, insert, overwrite
-  "bulk_load": false,  # Use Direct Path for fast loading
-  "oic_integration": "WMS_PROCESS_DATA",  # OIC integration name for additional processing
+  "load_method": "append", # append, upsert, insert, overwrite
+  "bulk_load": false, # Use Direct Path for fast loading
+  "oic_integration": "WMS_PROCESS_DATA", # OIC integration name for additional processing
   "oic_config": {
-    "url": "https://your-instance.integration.ocp.oraclecloud.com",
-    "auth_method": "basic",  # basic or oauth2
-    "username": "oic_username",
-    "password": "oic_password",
-    "client_id": "your_oauth_client_id",
-    "client_secret": "your_oauth_client_secret"
-  }
+      "url": "https://your-instance.integration.ocp.oraclecloud.com",
+      "auth_method": "basic", # basic or oauth2
+      "username": "oic_username",
+      "password": "oic_password",
+      "client_id": "your_oauth_client_id",
+      "client_secret": "your_oauth_client_secret",
+    },
 }
 ```
 
@@ -192,7 +187,7 @@ For high-volume loads:
 
 ```yaml
 config:
-  bulk_load: true  # Enable Direct Path Insert for fast loading
+  bulk_load: true # Enable Direct Path Insert for fast loading
 ```
 
 ## OIC Integration
@@ -203,7 +198,7 @@ The advantage of this loader is the ability to integrate with Oracle Integration
 
 ```yaml
 config:
-  oic_integration: "WMS_DATA_PROCESSOR"  # Nome da integração a ser chamada após carga no DB
+  oic_integration: "WMS_DATA_PROCESSOR" # Nome da integração a ser chamada após carga no DB
 ```
 
 Quando configurado, o loader notificará o OIC após a carga bem-sucedida, permitindo processamentos adicionais como:
@@ -255,7 +250,7 @@ schedules:
   - name: wms_daily_sync
     extractor: tap-wms
     loader: target-oic-adb
-    interval: '@daily'
+    interval: "@daily"
     start_date: 2023-01-01
 ```
 

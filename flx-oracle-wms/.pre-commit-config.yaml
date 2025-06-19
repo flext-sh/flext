@@ -37,11 +37,8 @@ repos:
     rev: v1.16.0
     hooks:
       - id: mypy
-        additional_dependencies: [
-          types-python-dateutil,
-          types-requests,
-          types-PyYAML,
-        ]
+        additional_dependencies:
+          [types-python-dateutil, types-requests, types-PyYAML]
         args: [--strict, --ignore-missing-imports]
 
   - repo: https://github.com/PyCQA/bandit
@@ -94,8 +91,8 @@ ci:
 
     for more information, see https://pre-commit.ci
   autofix_prs: true
-  autoupdate_branch: ''
-  autoupdate_commit_msg: '[pre-commit.ci] pre-commit autoupdate'
+  autoupdate_branch: ""
+  autoupdate_commit_msg: "[pre-commit.ci] pre-commit autoupdate"
   autoupdate_schedule: weekly
   skip: []
   submodules: false

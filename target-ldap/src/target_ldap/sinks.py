@@ -575,8 +575,9 @@ class LDAPSink(Sink):
             logger.debug("Converted orclPassword to userPassword")
 
         # Handle Oracle privilege groups
-        if ("orclPrivilegeGroup" in processed_record.get("objectClass", []) and
-            "groupOfNames" not in processed_record.get("objectClass", [])):
+        if "orclPrivilegeGroup" in processed_record.get(
+            "objectClass", []
+        ) and "groupOfNames" not in processed_record.get("objectClass", []):
             # Special handling for Oracle privilege groups
             processed_record["objectClass"].append("groupOfNames")
 

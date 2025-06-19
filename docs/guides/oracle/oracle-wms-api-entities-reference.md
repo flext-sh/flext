@@ -1,7 +1,7 @@
 # Oracle WMS API Entities Reference
 
-**Date**: January 2025  
-**Status**: Complete Entity Reference  
+**Date**: January 2025
+**Status**: Complete Entity Reference
 **Version**: v10
 
 ## Overview
@@ -79,19 +79,19 @@ Below is the complete list of all available entities:
 
 ```json
 {
-    "action_code": "https://a29.wms.ocs.oraclecloud.com:443/raizen/wms/lgfapi/v10/entity/action_code",
-    "active_location": "https://a29.wms.ocs.oraclecloud.com:443/raizen/wms/lgfapi/v10/entity/active_location",
-    "aiml_model_training_hdr": "https://a29.wms.ocs.oraclecloud.com:443/raizen/wms/lgfapi/v10/entity/aiml_model_training_hdr",
-    "aiml_order_cycle_time": "https://a29.wms.ocs.oraclecloud.com:443/raizen/wms/lgfapi/v10/entity/aiml_order_cycle_time",
-    "aiml_prediction_order_cycle_time": "https://a29.wms.ocs.oraclecloud.com:443/raizen/wms/lgfapi/v10/entity/aiml_prediction_order_cycle_time",
-    "aiml_prediction_run": "https://a29.wms.ocs.oraclecloud.com:443/raizen/wms/lgfapi/v10/entity/aiml_prediction_run",
-    "allocation": "https://a29.wms.ocs.oraclecloud.com:443/raizen/wms/lgfapi/v10/entity/allocation",
-    "allocation_distribution_mode": "https://a29.wms.ocs.oraclecloud.com:443/raizen/wms/lgfapi/v10/entity/allocation_distribution_mode",
-    "allocation_status": "https://a29.wms.ocs.oraclecloud.com:443/raizen/wms/lgfapi/v10/entity/allocation_status"
+  "action_code": "https://a29.wms.ocs.oraclecloud.com:443/raizen/wms/lgfapi/v10/entity/action_code",
+  "active_location": "https://a29.wms.ocs.oraclecloud.com:443/raizen/wms/lgfapi/v10/entity/active_location",
+  "aiml_model_training_hdr": "https://a29.wms.ocs.oraclecloud.com:443/raizen/wms/lgfapi/v10/entity/aiml_model_training_hdr",
+  "aiml_order_cycle_time": "https://a29.wms.ocs.oraclecloud.com:443/raizen/wms/lgfapi/v10/entity/aiml_order_cycle_time",
+  "aiml_prediction_order_cycle_time": "https://a29.wms.ocs.oraclecloud.com:443/raizen/wms/lgfapi/v10/entity/aiml_prediction_order_cycle_time",
+  "aiml_prediction_run": "https://a29.wms.ocs.oraclecloud.com:443/raizen/wms/lgfapi/v10/entity/aiml_prediction_run",
+  "allocation": "https://a29.wms.ocs.oraclecloud.com:443/raizen/wms/lgfapi/v10/entity/allocation",
+  "allocation_distribution_mode": "https://a29.wms.ocs.oraclecloud.com:443/raizen/wms/lgfapi/v10/entity/allocation_distribution_mode",
+  "allocation_status": "https://a29.wms.ocs.oraclecloud.com:443/raizen/wms/lgfapi/v10/entity/allocation_status"
 }
 ```
 
-*Note: The complete entity list contains over 200 entities. For the full list, please refer to the production API discovery endpoint.*
+_Note: The complete entity list contains over 200 entities. For the full list, please refer to the production API discovery endpoint._
 
 ## Usage Examples
 

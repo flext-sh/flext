@@ -251,7 +251,8 @@ def save_baseline(metrics: list[QualityMetrics], baseline_file: Path) -> None:
 
 
 def compare_with_baseline(
-    current_metrics: list[QualityMetrics], baseline_file: Path,
+    current_metrics: list[QualityMetrics],
+    baseline_file: Path,
 ) -> tuple[bool, dict[str, Any]]:
     """Compare current metrics with baseline."""
     if not baseline_file.exists():
@@ -306,7 +307,9 @@ def main() -> None:
         help="Baseline file path",
     )
     parser.add_argument(
-        "--save-baseline", action="store_true", help="Save current metrics as baseline",
+        "--save-baseline",
+        action="store_true",
+        help="Save current metrics as baseline",
     )
     parser.add_argument(
         "--check",

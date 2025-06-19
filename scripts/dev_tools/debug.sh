@@ -25,42 +25,42 @@ echo "3. Testando verificações funcionais..."
 # Verifica se o Python do ambiente virtual está funcionando
 echo "3.1 Verificando Python do ambiente virtual..."
 if [ -f "${VENV_BIN}/python" ]; then
-    echo "Python existe no path."
+	echo "Python existe no path."
 else
-    echo "Python não existe no path."
+	echo "Python não existe no path."
 fi
 
 echo "3.2 Testando comando Python..."
 if [ -f "${VENV_BIN}/python" ] && "${VENV_BIN}/python" --version >/dev/null 2>&1; then
-    echo "Python funciona."
+	echo "Python funciona."
 else
-    echo "Python não funciona."
+	echo "Python não funciona."
 fi
 
 echo "3.3 Testando comando Poetry..."
 if [ -f "${VENV_BIN}/poetry" ] && "${VENV_BIN}/poetry" --version >/dev/null 2>&1; then
-    echo "Poetry funciona."
+	echo "Poetry funciona."
 else
-    echo "Poetry não funciona."
+	echo "Poetry não funciona."
 fi
 
 echo "3.4 Testando verificação de pip..."
 if [ -f "${VENV_BIN}/pip" ] && "${VENV_BIN}/pip" --version >/dev/null 2>&1; then
-    echo "Pip funciona."
+	echo "Pip funciona."
 else
-    echo "Pip não funciona."
+	echo "Pip não funciona."
 fi
 
 echo "3.5 Testando importação de módulos..."
 if [ -f "${VENV_BIN}/python" ]; then
-    echo "Tentando importar setuptools e wheel..."
-    if "${VENV_BIN}/python" -c 'import setuptools, wheel' >/dev/null 2>&1; then
-        echo "Importação bem-sucedida."
-    else
-        echo "Importação falhou."
-    fi
+	echo "Tentando importar setuptools e wheel..."
+	if "${VENV_BIN}/python" -c 'import setuptools, wheel' >/dev/null 2>&1; then
+		echo "Importação bem-sucedida."
+	else
+		echo "Importação falhou."
+	fi
 fi
 
 echo "4. Verificações concluídas."
 
-echo "=== Fim da depuração ===" 
+echo "=== Fim da depuração ==="
