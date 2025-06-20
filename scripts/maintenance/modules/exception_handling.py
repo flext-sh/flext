@@ -272,7 +272,7 @@ class ExceptionVisitor(ast.NodeVisitor):
         self.in_except = False
         self.except_var = None
 
-    def visit_ExceptHandler(self, node) -> None:
+    def visit_except_handler(self, node) -> None:
         """Visit except handlers."""
         old_in_except = self.in_except
         old_except_var = self.except_var
@@ -306,7 +306,7 @@ class ExceptionVisitor(ast.NodeVisitor):
         self.in_except = old_in_except
         self.except_var = old_except_var
 
-    def visit_Raise(self, node) -> None:
+    def visit_raise(self, node) -> None:
         """Visit raise statements."""
         if self.in_except and node.exc and not node.cause:
             # Raising new exception in except without 'from'
