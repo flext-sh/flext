@@ -114,7 +114,7 @@ class ComplexityAnalyzer(ast.NodeVisitor):
         self.current_function_complexity += 1
         self.generic_visit(node)
 
-    def visit_ExceptHandler(self, node: ast.ExceptHandler) -> None:
+    def visit_except_handler(self, node: ast.ExceptHandler) -> None:
         """Visit except handler."""
         self.current_function_complexity += 1
         self.generic_visit(node)

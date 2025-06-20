@@ -148,7 +148,6 @@ ignore = [
     # Relaxed rules for practical development
     "E501",    # line-too-long (handled by formatter)
     "E203",    # whitespace-before-colon (conflicts with black)
-    "W503",    # line-break-before-binary-operator (conflicts with black)
     "D100",    # missing-docstring-in-public-module (too verbose)
     "D101",    # missing-docstring-in-public-class (too verbose)
     "D102",    # missing-docstring-in-public-method (too verbose)
