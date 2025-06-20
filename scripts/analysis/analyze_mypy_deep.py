@@ -20,7 +20,7 @@ def get_detailed_mypy_errors() -> list[dict[str, Any]]:
     ]
     result = subprocess.run(cmd, capture_output=True, text=True, check=False)
 
-    errors = []
+    errors: list = []
     for line in result.stdout.splitlines() + result.stderr.splitlines():
         if " error: " in line and "[" in line:
             match = re.match(r"(.+?):(\d+): error: (.+?) \[(.+?)\]", line)
@@ -36,7 +36,8 @@ def get_detailed_mypy_errors() -> list[dict[str, Any]]:
     return errors
 
 
-def analyze_call_arg_errors(errors: list[dict[str, Any]]) -> dict[str, list[str]]:
+def analyze_call_arg_errors(
+        errors: list[dict[str, Any]]) -> dict[str, list[str]]:
     """Analyze call-arg errors to find patterns."""
     patterns = defaultdict(list)
 
@@ -48,7 +49,8 @@ def analyze_call_arg_errors(errors: list[dict[str, Any]]) -> dict[str, list[str]
 
         # Missing named argument
         if "Missing named argument" in msg:
-            match = re.search(r'Missing named argument "(.+?)" for "(.+?)"', msg)
+            match = re.search(
+                r'Missing named argument "(.+?)" for "(.+?)"', msg)
             if match:
                 arg_name = match.group(1)
                 class_name = match.group(2)
@@ -56,7 +58,8 @@ def analyze_call_arg_errors(errors: list[dict[str, Any]]) -> dict[str, list[str]
 
         # Too many arguments
         elif "Too many arguments" in msg:
-            patterns["too_many_args"].append(f"{error['file']}:{error['line']}")
+            patterns["too_many_args"].append(
+                f"{error['file']}:{error['line']}")
 
         # Unexpected keyword argument
         elif "Unexpected keyword argument" in msg:
@@ -67,7 +70,8 @@ def analyze_call_arg_errors(errors: list[dict[str, Any]]) -> dict[str, list[str]
     return dict(patterns)
 
 
-def analyze_attr_defined_errors(errors: list[dict[str, Any]]) -> dict[str, int]:
+def analyze_attr_defined_errors(
+        errors: list[dict[str, Any]]) -> dict[str, int]:
     """Analyze remaining attr-defined errors."""
     attr_patterns = defaultdict(int)
 
@@ -86,7 +90,8 @@ def analyze_attr_defined_errors(errors: list[dict[str, Any]]) -> dict[str, int]:
     return dict(attr_patterns)
 
 
-def analyze_name_defined_errors(errors: list[dict[str, Any]]) -> dict[str, list[str]]:
+def analyze_name_defined_errors(
+        errors: list[dict[str, Any]]) -> dict[str, list[str]]:
     """Analyze name-defined errors to find missing imports/definitions."""
     missing_names = defaultdict(list)
 
@@ -105,7 +110,7 @@ def analyze_name_defined_errors(errors: list[dict[str, Any]]) -> dict[str, list[
 
 def find_class_definitions() -> dict[str, str]:
     """Find where classes are defined in the codebase."""
-    class_locations = {}
+    class_locations: dict = {}
 
     for py_file in Path("flx/src").rglob("*.py"):
         try:
@@ -148,9 +153,9 @@ def generate_fix_suggestions(errors: list[dict[str, Any]]) -> None:
 
     print("\n=== ATTR-DEFINED ERROR ANALYSIS ===")
     print("\nMost common missing attributes:")
-    for attr, count in sorted(attr_patterns.items(), key=lambda x: x[1], reverse=True)[
-        :20
-    ]:
+    for attr, count in sorted(
+            attr_patterns.items(), key=lambda x: x[1], reverse=True)[
+            :20]:
         print(f"  {attr}: {count} occurrences")
 
     print("\n=== NAME-DEFINED ERROR ANALYSIS ===")
@@ -179,7 +184,9 @@ def main() -> None:
         by_type[error["code"]].append(error)
 
     print("\nError distribution:")
-    for code, errs in sorted(by_type.items(), key=lambda x: len(x[1]), reverse=True):
+    for code, errs in sorted(
+            by_type.items(), key=lambda x: len(
+            x[1]), reverse=True):
         print(f"  {code}: {len(errs)}")
 
     # Generate detailed analysis and suggestions

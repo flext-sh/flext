@@ -104,9 +104,8 @@ class HealthCheckCapability:
         self._checks.clear()
 
     def is_healthy(self) -> bool:
-        return (
-            all(check() for check in self._checks) if self._checks else self._is_healthy
-        )
+        return (all(check() for check in self._checks)
+                if self._checks else self._is_healthy)
 
     def add_health_check(self, check_func) -> None:
         self._checks.append(check_func)
@@ -188,7 +187,8 @@ class CapabilityComposer:
             async def _initialize_capabilities(self) -> None:
                 """Initialize all capabilities with configuration."""
                 for cap_type, capability in self._capabilities.items():
-                    cap_config = self._capability_config.get(cap_type.value, {})
+                    cap_config = self._capability_config.get(
+                        cap_type.value, {})
                     await capability.initialize(cap_config)
 
             async def _cleanup_capabilities(self) -> None:
@@ -244,7 +244,10 @@ async def test_capability_system() -> None:
 
     print("✅ Adapter created with capabilities:")
     print(f"   Has logging: {adapter.has_capability(CapabilityType.LOGGING)}")
-    print(f"   Has health check: {adapter.has_capability(CapabilityType.HEALTH_CHECK)}")
+    print(
+        f"   Has health check: {
+            adapter.has_capability(
+                CapabilityType.HEALTH_CHECK)}")
     print(f"   Has metrics: {adapter.has_capability(CapabilityType.METRICS)}")
     print(f"   Is healthy: {adapter.is_healthy()}")
     print()
@@ -257,7 +260,8 @@ async def test_capability_system() -> None:
 
     # Test health check
     adapter.health_check.add_health_check(lambda: True)
-    adapter.health_check.add_health_check(lambda: adapter.name == "TestAdapter")
+    adapter.health_check.add_health_check(
+        lambda: adapter.name == "TestAdapter")
     print(f"✅ Health check result: {adapter.health_check.is_healthy()}")
     print()
 

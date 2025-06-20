@@ -33,7 +33,7 @@ class ExceptionHandlingFixModule(CustomFixModule):
 
     def analyze(self, file_path: Path, content: str) -> list[Issue]:
         """Analyze file for exception handling issues."""
-        issues = []
+        issues: list = []
 
         try:
             tree = ast.parse(content)
@@ -57,7 +57,10 @@ class ExceptionHandlingFixModule(CustomFixModule):
 
         return issues
 
-    def _create_issue_from_finding(self, finding: dict, lines: list[str]) -> Issue | None:
+    def _create_issue_from_finding(
+            self,
+            finding: dict,
+            lines: list[str]) -> Issue | None:
         """Create an Issue from an AST finding."""
         line_num = finding['line']
         issue_type = finding['type']
@@ -74,8 +77,9 @@ class ExceptionHandlingFixModule(CustomFixModule):
                 severity="error",
                 fix_description="Replace with 'except Exception:'",
                 original_line=original_line,
-                fixed_line=original_line.replace('except:', 'except Exception:')
-            )
+                fixed_line=original_line.replace(
+                    'except:',
+                    'except Exception:'))
 
         if issue_type == 'broad_except':
             return Issue(
@@ -110,10 +114,11 @@ class ExceptionHandlingFixModule(CustomFixModule):
 
     def _check_regex_patterns(self, lines: list[str]) -> list[Issue]:
         """Check for patterns using regex."""
-        issues = []
+        issues: list = []
 
         # Pattern 1: assert used for validation (should be proper exception)
-        assert_pattern = re.compile(r'^\s*assert\s+([^,]+),\s*["\']([^"\']+)["\']')
+        assert_pattern = re.compile(
+            r'^\s*assert\s+([^,]+),\s*["\']([^"\']+)["\']')
 
         # Pattern 2: raise without message
         bare_raise_pattern = re.compile(r'^\s*raise\s+(\w+)\s*\(\s*\)')
@@ -142,7 +147,10 @@ class ExceptionHandlingFixModule(CustomFixModule):
             if match:
                 condition, message = match.groups()
                 indent = len(line) - len(line.lstrip())
-                fixed_line = f"{' ' * indent}if not {condition}:\n{' ' * (indent + 4)}raise ValueError('{message}')"
+                fixed_line = f"{' ' *
+                                indent}if not {condition}:\n{' ' *
+                                                             (indent +
+                                                              4)}raise ValueError('{message}')"
 
                 issues.append(Issue(
                     line=i,
@@ -150,7 +158,8 @@ class ExceptionHandlingFixModule(CustomFixModule):
                     severity="warning",
                     fix_description="Replace with if/raise pattern",
                     original_line=line,
-                    fixed_line=fixed_line.split('\n')[0]  # Just show first line
+                    fixed_line=fixed_line.split(
+                        '\n')[0]  # Just show first line
                 ))
 
             # Check bare raise
@@ -169,7 +178,8 @@ class ExceptionHandlingFixModule(CustomFixModule):
             match = multi_except_pattern.match(line)
             if match:
                 exc1, exc2 = match.groups()
-                fixed_line = line.replace(f'{exc1}, {exc2}', f'({exc1}, {exc2})')
+                fixed_line = line.replace(
+                    f'{exc1}, {exc2}', f'({exc1}, {exc2})')
 
                 issues.append(Issue(
                     line=i,
@@ -181,11 +191,11 @@ class ExceptionHandlingFixModule(CustomFixModule):
                 ))
 
             # Check for raise in except without from
-            if in_except_block and re.match(r'^\s*raise\s+\w+\(', line) and ' from ' not in line:
+            if in_except_block and re.match(
+                    r'^\s*raise\s+\w+\(', line) and ' from ' not in line:
                 fixed_line = line.rstrip()
                 if except_var:
                     fixed_line += f' from {except_var}'
-                else:
                     fixed_line += ' from e'
 
                 issues.append(Issue(
@@ -217,14 +227,13 @@ class ExceptionHandlingFixModule(CustomFixModule):
         sorted_issues = sorted(issues, key=lambda x: x.line, reverse=True)
 
         # Track multi-line fixes
-        multi_line_fixes = []
+        multi_line_fixes: list = []
 
         for issue in sorted_issues:
             if issue.fixed_line and 0 < issue.line <= len(lines):
                 # Handle multi-line fixes (like assert replacement)
                 if '\n' in issue.fixed_line:
                     multi_line_fixes.append((issue.line, issue.fixed_line))
-                else:
                     lines[issue.line - 1] = issue.fixed_line
 
         # Apply multi-line fixes
@@ -263,7 +272,7 @@ class ExceptionVisitor(ast.NodeVisitor):
         self.in_except = False
         self.except_var = None
 
-    def visit_ExceptHandler(self, node):
+    def visit_ExceptHandler(self, node) -> None:
         """Visit except handlers."""
         old_in_except = self.in_except
         old_except_var = self.except_var
@@ -297,7 +306,7 @@ class ExceptionVisitor(ast.NodeVisitor):
         self.in_except = old_in_except
         self.except_var = old_except_var
 
-    def visit_Raise(self, node):
+    def visit_Raise(self, node) -> None:
         """Visit raise statements."""
         if self.in_except and node.exc and not node.cause:
             # Raising new exception in except without 'from'
@@ -348,6 +357,7 @@ def risky_operation(data):
     fixer = ExceptionHandlingFixModule(dry_run=True, verbose=True)
 
     from tempfile import NamedTemporaryFile
+
     with NamedTemporaryFile(mode='w', suffix='.py', delete=False) as f:
         f.write(test_content)
         temp_path = Path(f.name)

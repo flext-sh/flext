@@ -20,6 +20,11 @@ Usage:
 from __future__ import annotations
 
 import asyncio
+import datetime
+import hashlib
+import secrets
+import time
+import uuid
 from typing import Any
 
 # Import the plugin registration decorators
@@ -197,8 +202,8 @@ async def health_check() -> dict[str, Any]:
     ]
 
     overall_status = (
-        "warning" if any(c["status"] == "warning" for c in checks) else "healthy"
-    )
+        "warning" if any(
+            c["status"] == "warning" for c in checks) else "healthy")
 
     return {
         "overall_status": overall_status,
@@ -221,8 +226,6 @@ class UtilityCommands:
         Args:
             count: Number of UUIDs to generate (default: 1)
         """
-        import uuid
-
         uuids = [str(uuid.uuid4()) for _ in range(count)]
 
         return {"uuids": uuids, "count": count, "format": "uuid4"}
@@ -233,14 +236,12 @@ class UtilityCommands:
         Args:
             password: Password to hash
         """
-        import hashlib
-        import secrets
-
         # Simulate async hashing operation
         await asyncio.sleep(0.1)
 
         salt = secrets.token_hex(16)
-        hashed = hashlib.pbkdf2_hmac("sha256", password.encode(), salt.encode(), 100000)
+        hashed = hashlib.pbkdf2_hmac(
+            "sha256", password.encode(), salt.encode(), 100000)
 
         return {
             "hashed_password": hashed.hex(),
@@ -255,9 +256,6 @@ class UtilityCommands:
         Args:
             format_type: Format type (iso, unix, readable)
         """
-        import datetime
-        import time
-
         now = datetime.datetime.now()
 
         formats = {

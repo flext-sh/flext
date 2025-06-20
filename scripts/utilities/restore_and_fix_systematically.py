@@ -155,7 +155,6 @@ class AnalyticsAdapter(BaseAdapter):
             )
             self._background_tasks.add(task)
             task.add_done_callback(self._background_tasks.discard)
-        else:
             loop.run_until_complete(
                 self.track_event_async(event_name, properties or {}, user_id)
             )

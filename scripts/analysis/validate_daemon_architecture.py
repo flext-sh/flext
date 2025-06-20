@@ -28,7 +28,7 @@ class ArchitectureValidator:
 
     def validate_all(self) -> bool:
         """Run all architecture validations."""
-        print("🔍 Validating FLX Daemon Architecture...")
+        logger.info("🔍 Validating FLX Daemon Architecture...")
 
         self.validate_core_dependencies()
         self.validate_layer_separation()
@@ -61,7 +61,8 @@ class ArchitectureValidator:
                             )
 
                 elif isinstance(node, ast.ImportFrom):
-                    if node.module and self._is_infrastructure_import(node.module):
+                    if node.module and self._is_infrastructure_import(
+                            node.module):
                         self.violations.append(
                             f"Core imports from infrastructure: {node.module}",
                         )
@@ -118,8 +119,8 @@ class ArchitectureValidator:
 
             if "# TODO:" in content:
                 self.warnings.append(
-                    f"TODO found in {file_path.name} - may need implementation",
-                )
+                    f"TODO found in {
+                        file_path.name} - may need implementation", )
 
     def validate_import_patterns(self) -> None:
         """Validate import patterns follow conventions."""
@@ -149,7 +150,8 @@ class ArchitectureValidator:
             "flx.daemon.infrastructure",
         ]
 
-        return any(pattern in module_name for pattern in infrastructure_patterns)
+        return any(
+            pattern in module_name for pattern in infrastructure_patterns)
 
     def _validate_layer_imports(self, file_path: Path, layer: str) -> None:
         """Validate imports for specific layer."""
@@ -166,7 +168,11 @@ class ArchitectureValidator:
         except SyntaxError as e:
             self.violations.append(f"Syntax error in {file_path.name}: {e}")
 
-    def _check_layer_import(self, node: ast.AST, filename: str, layer: str) -> None:
+    def _check_layer_import(
+            self,
+            node: ast.AST,
+            filename: str,
+            layer: str) -> None:
         """Check specific import for layer violations."""
         if isinstance(node, ast.Import):
             for alias in node.names:
@@ -181,32 +187,33 @@ class ArchitectureValidator:
         """Validate specific module import for layer."""
         # Domain layer (core.py) should not import adapters
         if layer == "domain" and any(
-            pattern in module for pattern in ["fastapi", "uvicorn", "flx.adapters"]
-        ):
+            pattern in module for pattern in [
+                "fastapi",
+                "uvicorn",
+                "flx.adapters"]):
             self.violations.append(
-                f"Domain layer ({filename}) imports adapter/infrastructure: {module}",
-            )
+                f"Domain layer ({filename}) imports adapter/infrastructure: {module}", )
 
     def report_results(self) -> bool:
         """Report validation results."""
-        print("\n" + "=" * 60)
-        print("📊 ARCHITECTURE VALIDATION RESULTS")
-        print("=" * 60)
+        logger.info("\n" + "=" * 60)
+        logger.info("📊 ARCHITECTURE VALIDATION RESULTS")
+        logger.info("=" * 60)
 
         if not self.violations and not self.warnings:
-            print("✅ All architecture validations passed!")
-            print("🏗️  Daemon follows hexagonal architecture correctly")
+            logger.info("✅ All architecture validations passed!")
+            logger.info("🏗️  Daemon follows hexagonal architecture correctly")
             return True
 
         if self.violations:
-            print(f"❌ {len(self.violations)} VIOLATIONS found:")
+            logger.info(f"❌ {len(self.violations)} VIOLATIONS found:")
             for i, violation in enumerate(self.violations, 1):
-                print(f"   {i}. {violation}")
+                logger.info(f"   {i}. {violation}")
 
         if self.warnings:
-            print(f"\n⚠️  {len(self.warnings)} WARNINGS:")
+            logger.warning(f"\n⚠️  {len(self.warnings)} WARNINGS:")
             for i, warning in enumerate(self.warnings, 1):
-                print(f"   {i}. {warning}")
+                logger.warning(f"   {i}. {warning}")
 
         success = len(self.violations) == 0
 
@@ -214,17 +221,16 @@ class ArchitectureValidator:
             print(
                 f"\n✅ Architecture validation PASSED (with {len(self.warnings)} warnings)"
             )
-        else:
             print(
                 f"\n❌ Architecture validation FAILED ({len(self.violations)} violations)"
             )
 
-        print("\n📋 ARCHITECTURE PRINCIPLES:")
-        print("  ✓ Domain layer independent of infrastructure")
-        print("  ✓ Dependency injection used for infrastructure")
-        print("  ✓ No circular dependencies")
-        print("  ✓ Proper separation of concerns")
-        print("  ✓ No mockup code in production")
+        logger.info("\n📋 ARCHITECTURE PRINCIPLES:")
+        logger.info("  ✓ Domain layer independent of infrastructure")
+        logger.info("  ✓ Dependency injection used for infrastructure")
+        logger.info("  ✓ No circular dependencies")
+        logger.info("  ✓ Proper separation of concerns")
+        logger.info("  ✓ No mockup code in production")
 
         return success
 

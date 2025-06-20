@@ -7,6 +7,8 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from flx.adapters.inbound.fire_cli import _command_groups, _dynamic_commands
+
 # Add paths
 sys.path.insert(0, str(Path(__file__).parent / "flx" / "src"))
 sys.path.insert(0, str(Path(__file__).parent / "examples"))
@@ -22,7 +24,6 @@ except ImportError:
     sys.exit(1)
 
 # Import only what we need from FLX
-from flx.adapters.inbound.fire_cli import _command_groups, _dynamic_commands
 
 
 class CommandRequest(BaseModel):
@@ -60,7 +61,9 @@ def create_standalone_api() -> FastAPI:
         allow_headers=["*"],
     )
 
-    async def execute_plugin_command(command_func: Any, **kwargs) -> CommandResponse:
+    async def execute_plugin_command(
+            command_func: Any,
+            **kwargs) -> CommandResponse:
         """Execute a plugin command and return structured response."""
         import time
 
@@ -69,7 +72,6 @@ def create_standalone_api() -> FastAPI:
         try:
             if inspect.iscoroutinefunction(command_func):
                 result = await command_func(**kwargs)
-            else:
                 loop = asyncio.get_event_loop()
                 result = await loop.run_in_executor(
                     None, lambda: command_func(**kwargs)
@@ -84,8 +86,10 @@ def create_standalone_api() -> FastAPI:
         except Exception as e:
             execution_time = (time.time() - start_time) * 1000
             return CommandResponse(
-                success=False, data=None, error=str(e), execution_time_ms=execution_time
-            )
+                success=False,
+                data=None,
+                error=str(e),
+                execution_time_ms=execution_time)
 
     @app.get("/")
     async def root() -> dict[str, Any]:
@@ -110,7 +114,9 @@ def create_standalone_api() -> FastAPI:
             db_class = _command_groups["database"]
             db_instance = db_class()
             return await execute_plugin_command(db_instance.status)
-        raise HTTPException(status_code=404, detail="Database plugin not found")
+        raise HTTPException(
+            status_code=404,
+            detail="Database plugin not found")
 
     @app.post("/api/v1/database/backup")
     async def database_backup(request: CommandRequest) -> Any:
@@ -123,12 +129,16 @@ def create_standalone_api() -> FastAPI:
             compress = request.parameters.get("compress", True)
 
             if not path:
-                raise HTTPException(status_code=400, detail="path parameter required")
+                raise HTTPException(
+                    status_code=400,
+                    detail="path parameter required")
 
             return await execute_plugin_command(
                 db_instance.backup, path=path, compress=compress
             )
-        raise HTTPException(status_code=404, detail="Database plugin not found")
+        raise HTTPException(
+            status_code=404,
+            detail="Database plugin not found")
 
     @app.post("/api/v1/database/restore")
     async def database_restore(request: CommandRequest) -> Any:
@@ -148,7 +158,9 @@ def create_standalone_api() -> FastAPI:
             return await execute_plugin_command(
                 db_instance.restore, backup_path=backup_path, force=force
             )
-        raise HTTPException(status_code=404, detail="Database plugin not found")
+        raise HTTPException(
+            status_code=404,
+            detail="Database plugin not found")
 
     @app.get("/api/v1/monitoring/alerts")
     async def monitoring_alerts(severity: str = Query("all")) -> Any:
@@ -157,7 +169,9 @@ def create_standalone_api() -> FastAPI:
             mon_class = _command_groups["monitoring"]
             mon_instance = mon_class()
             return await execute_plugin_command(mon_instance.alerts, severity=severity)
-        raise HTTPException(status_code=404, detail="Monitoring plugin not found")
+        raise HTTPException(
+            status_code=404,
+            detail="Monitoring plugin not found")
 
     @app.get("/api/v1/monitoring/metrics")
     async def monitoring_metrics(
@@ -170,7 +184,9 @@ def create_standalone_api() -> FastAPI:
             return await execute_plugin_command(
                 mon_instance.metrics, component=component, duration=duration
             )
-        raise HTTPException(status_code=404, detail="Monitoring plugin not found")
+        raise HTTPException(
+            status_code=404,
+            detail="Monitoring plugin not found")
 
     @app.get("/api/v1/monitoring/health-check")
     async def monitoring_health_check() -> Any:
@@ -179,7 +195,9 @@ def create_standalone_api() -> FastAPI:
             mon_class = _command_groups["monitoring"]
             mon_instance = mon_class()
             return await execute_plugin_command(mon_instance.health_check)
-        raise HTTPException(status_code=404, detail="Monitoring plugin not found")
+        raise HTTPException(
+            status_code=404,
+            detail="Monitoring plugin not found")
 
     @app.post("/api/v1/system-report")
     async def system_report(request: CommandRequest) -> Any:
@@ -189,7 +207,8 @@ def create_standalone_api() -> FastAPI:
             format_type = request.parameters.get("format", "json")
             output = request.parameters.get("output")
             return await execute_plugin_command(func, format=format_type, output=output)
-        raise HTTPException(status_code=404, detail="System report command not found")
+        raise HTTPException(status_code=404,
+                            detail="System report command not found")
 
     @app.get("/api/v1/info")
     async def api_info() -> dict[str, Any]:
@@ -210,8 +229,10 @@ def create_standalone_api() -> FastAPI:
                 "GET /api/v1/monitoring/health-check",
                 "POST /api/v1/system-report",
             ],
-            "plugin_commands": list(_command_groups.keys()),
-            "dynamic_commands": list(_dynamic_commands.keys()),
+            "plugin_commands": list(
+                _command_groups.keys()),
+            "dynamic_commands": list(
+                _dynamic_commands.keys()),
         }
 
     return app

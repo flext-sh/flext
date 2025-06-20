@@ -12,6 +12,7 @@ import argparse
 import re
 import sys
 from pathlib import Path
+from typing import Any
 
 
 class ExceptionSyntaxFixer:
@@ -102,7 +103,8 @@ class ExceptionSyntaxFixer:
 
 def main() -> None:
     """Run the script."""
-    parser = argparse.ArgumentParser(description="Fix exception handling syntax issues")
+    parser = argparse.ArgumentParser(
+        description="Fix exception handling syntax issues")
     parser.add_argument(
         "--dry-run",
         action="store_true",

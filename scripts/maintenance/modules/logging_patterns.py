@@ -32,7 +32,7 @@ class LoggingPatternFixModule(CustomFixModule):
 
     def analyze(self, file_path: Path, content: str) -> list[Issue]:
         """Analyze file for logging issues."""
-        issues = []
+        issues: list = []
         lines = content.split('\n')
 
         # Check for logger presence
@@ -66,7 +66,7 @@ class LoggingPatternFixModule(CustomFixModule):
 
     def _check_fstring_logging(self, lines: list[str]) -> list[Issue]:
         """Check for f-strings in logging calls."""
-        issues = []
+        issues: list = []
 
         # Pattern: logger.method(f"...") or logger.method(f'...')
         fstring_pattern = re.compile(
@@ -86,10 +86,7 @@ class LoggingPatternFixModule(CustomFixModule):
                 if variables:
                     var_args = ', '.join(variables)
                     fixed_line = line.replace(
-                        match.group(0),
-                        f'{logger_obj}.{level}("{fixed_message}", {var_args}{rest})'
-                    )
-                else:
+                        match.group(0), f'{logger_obj}.{level}("{fixed_message}", {var_args}{rest})')
                     fixed_line = line.replace('f"', '"').replace("f'", "'")
 
                 issues.append(Issue(
@@ -103,9 +100,12 @@ class LoggingPatternFixModule(CustomFixModule):
 
         return issues
 
-    def _check_print_statements(self, lines: list[str], has_logger: bool) -> list[Issue]:
+    def _check_print_statements(
+            self,
+            lines: list[str],
+            has_logger: bool) -> list[Issue]:
         """Check for print statements that should be logger calls."""
-        issues = []
+        issues: list = []
 
         print_pattern = re.compile(r'^\s*print\s*\((.+)\)\s*$')
 
@@ -121,7 +121,6 @@ class LoggingPatternFixModule(CustomFixModule):
                 if has_logger:
                     indent = len(line) - len(line.lstrip())
                     fixed_line = f"{' ' * indent}logger.{log_level}({content})"
-                else:
                     # Skip if no logger available
                     continue
 
@@ -138,13 +137,12 @@ class LoggingPatternFixModule(CustomFixModule):
 
     def _check_percent_formatting(self, lines: list[str]) -> list[Issue]:
         """Check for % formatting in logging (should be lazy)."""
-        issues = []
+        issues: list = []
 
         # Pattern: logger.method("... %s ..." % variable)
         percent_pattern = re.compile(
             r'(logger|logging)\.(debug|info|warning|error|critical)\s*\(\s*["\']([^"\']*%[sdfr][^"\']*)["\']'
-            r'\s*%\s*([^)]+)\)'
-        )
+            r'\s*%\s*([^)]+)\)')
 
         for i, line in enumerate(lines, 1):
             match = percent_pattern.search(line)
@@ -170,13 +168,12 @@ class LoggingPatternFixModule(CustomFixModule):
 
     def _check_format_logging(self, lines: list[str]) -> list[Issue]:
         """Check for .format() in logging calls."""
-        issues = []
+        issues: list = []
 
         # Pattern: logger.method("...{}...".format(...))
         format_pattern = re.compile(
             r'(logger|logging)\.(debug|info|warning|error|critical)\s*\(\s*["\']([^"\']*\{[^"\']*\}[^"\']*)["\']'
-            r'\.format\s*\(([^)]+)\)\s*\)'
-        )
+            r'\.format\s*\(([^)]+)\)\s*\)')
 
         for i, line in enumerate(lines, 1):
             match = format_pattern.search(line)
@@ -205,7 +202,7 @@ class LoggingPatternFixModule(CustomFixModule):
 
     def _check_log_levels(self, lines: list[str]) -> list[Issue]:
         """Check for incorrect log level usage."""
-        issues = []
+        issues: list = []
 
         # Common patterns that indicate wrong log level
         error_keywords = ['error', 'exception', 'fail', 'critical']
@@ -229,11 +226,23 @@ class LoggingPatternFixModule(CustomFixModule):
         """Determine appropriate log level based on content."""
         content_lower = content.lower()
 
-        if any(word in content_lower for word in ['error', 'exception', 'fail']):
+        if any(
+            word in content_lower for word in [
+                'error',
+                'exception',
+                'fail']):
             return 'error'
-        if any(word in content_lower for word in ['warning', 'warn', 'deprecated']):
+        if any(
+            word in content_lower for word in [
+                'warning',
+                'warn',
+                'deprecated']):
             return 'warning'
-        if any(word in content_lower for word in ['debug', 'trace', 'verbose']):
+        if any(
+            word in content_lower for word in [
+                'debug',
+                'trace',
+                'verbose']):
             return 'debug'
         return 'info'
 
@@ -253,17 +262,21 @@ class LoggingPatternFixModule(CustomFixModule):
         if 'logger.' in fixed_content and 'import logging' not in fixed_content:
             # Add import at the top after other imports
             import_added = False
-            new_lines = []
+            new_lines: list = []
             for line in lines:
                 new_lines.append(line)
-                if line.startswith('import ') or line.startswith('from ') and not import_added:
+                if line.startswith('import ') or line.startswith(
+                        'from ') and not import_added:
                     new_lines.append('import logging')
                     new_lines.append('logger = logging.getLogger(__name__)')
                     import_added = True
 
             if not import_added:
                 # No imports found, add at the beginning
-                new_lines = ['import logging', 'logger = logging.getLogger(__name__)', ''] + new_lines
+                new_lines = [
+                    'import logging',
+                    'logger = logging.getLogger(__name__)',
+                    ''] + new_lines
 
             fixed_content = '\n'.join(new_lines)
 
@@ -320,6 +333,7 @@ def process_data(data):
     fixer = LoggingPatternFixModule(dry_run=True, verbose=True)
 
     from tempfile import NamedTemporaryFile
+
     with NamedTemporaryFile(mode='w', suffix='.py', delete=False) as f:
         f.write(test_content)
         temp_path = Path(f.name)

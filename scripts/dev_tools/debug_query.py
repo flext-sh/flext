@@ -54,9 +54,8 @@ def debug_query() -> None:
                             try:
                                 value = getattr(first_row, attr)
                                 print(f"  {attr}: {value}")
-                            except:
+                            except Exception:
                                 pass
-                else:
                     print(f"Tipo desconhecido: {type(first_row)}")
                     print(f"Valor: {first_row}")
                     print(f"String: {first_row!s}")
@@ -84,7 +83,6 @@ def debug_query() -> None:
                     count = count_row.get("TOTAL", count_row.get("total", 0))
                 elif isinstance(count_row, list | tuple):
                     count = count_row[0] if len(count_row) > 0 else 0
-                else:
                     count = count_row
 
                 print(f"Count: {count}")

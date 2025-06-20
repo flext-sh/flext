@@ -1,23 +1,62 @@
-"""Example: FLX Async DDD Infrastructure Usage.
+"""
+FLX Async Domain-Driven Design Infrastructure Demo
 
-This example demonstrates how to use the new asynchronous Domain-Driven Design
-infrastructure with Dramatiq for high-performance message processing.
+This example demonstrates the async infrastructure components with enterprise patterns.
 """
 
-from __future__ import annotations
-
 import asyncio
-import importlib
 import logging
+import random
+import time
 from typing import Any
 from uuid import uuid4
-
-# Dynamic import for FLX async infrastructure
-flx_async = importlib.import_module("flx.infrastructure.async")  # type: ignore[attr-defined]
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+
+class MockFlxAsync:
+    """Mock implementation for demonstration purposes."""
+
+    class FlxCreateResourceCommand:
+        def __init__(self, **kwargs):
+            self.resource_name = kwargs.get("resource_name")
+            self.resource_type = kwargs.get("resource_type")
+            self.configuration = kwargs.get("configuration")
+            self.correlation_id = kwargs.get("correlation_id")
+            self.message_id = str(uuid4())
+            self.timestamp = kwargs.get("timestamp")
+
+    class FlxProcessDataCommand:
+        def __init__(self, **kwargs):
+            self.data_source = kwargs.get("data_source")
+            self.correlation_id = kwargs.get("correlation_id")
+            self.message_id = str(uuid4())
+
+    class FlxResourceCreatedEvent:
+        def __init__(self, **kwargs):
+            self.resource_id = kwargs.get("resource_id")
+            self.resource_name = kwargs.get("resource_name")
+            self.resource_type = kwargs.get("resource_type")
+
+    class FlxDataProcessedEvent:
+        def __init__(self, **kwargs):
+            self.records_processed = kwargs.get("records_processed")
+            self.processing_time = kwargs.get("processing_time")
+            self.errors = kwargs.get("errors", [])
+
+    @staticmethod
+    def create_command(command_class, **kwargs):
+        return command_class(**kwargs)
+
+    @staticmethod
+    def create_event(event_class, **kwargs):
+        return event_class(**kwargs)
+
+
+# Use mock implementation
+flx_async = MockFlxAsync()
 
 
 class ExampleResourceService:
@@ -49,7 +88,7 @@ class ExampleResourceService:
 
     async def handle_create_resource(self, command: Any) -> dict[str, Any]:
         """Handle resource creation command."""
-        logger.info("Creating resource: %s", command.resource_name")
+        logger.info("Creating resource: %s", command.resource_name)
 
         # Simulate resource creation logic
         resource_id = str(uuid4())
@@ -86,12 +125,9 @@ class ExampleResourceService:
 
     async def handle_process_data(self, command: Any) -> dict[str, Any]:
         """Handle data processing command."""
-        logger.info("Processing data from: %s", command.data_source")
+        logger.info("Processing data from: %s", command.data_source)
 
         # Simulate data processing
-        import random
-        import time
-
         processing_start = time.time()
 
         # Simulate some processing time
@@ -149,7 +185,9 @@ class ExampleResourceService:
         )
 
         if event.errors:
-            logger.warning("Processing had %s", len(event.errors) errors: %s", event.errors")
+            logger.warning(
+                "Processing had %s", len(event.errors), "errors:", event.errors
+            )
 
         # Example side effects:
         # - Update dashboard metrics
@@ -198,7 +236,7 @@ async def demonstrate_async_ddd_workflow() -> None:
         # In a real scenario, this would be sent to the queue
         # For demo purposes, we'll call the handler directly
         result = await service.handle_create_resource(create_command_obj)
-        logger.info("Create resource result: %s", result")
+        logger.info("Create resource result: %s", result)
     except Exception as e:
         logger.exception(f"Create resource failed: {e}")
 
@@ -217,7 +255,7 @@ async def demonstrate_async_ddd_workflow() -> None:
     try:
         # In a real scenario, this would be sent to the queue
         result = await service.handle_process_data(process_command_obj)
-        logger.info("Process data result: %s", result")
+        logger.info("Process data result: %s", result)
     except Exception as e:
         logger.exception(f"Process data failed: {e}")
 

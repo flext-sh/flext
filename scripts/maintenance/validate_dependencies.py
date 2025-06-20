@@ -16,7 +16,7 @@ from pathlib import Path
 
 def check_direct_flx_imports() -> list[str]:
     """Verifica se ainda existem imports diretos do FLX fora do projeto FLX."""
-    issues = []
+    issues: list = []
 
     # Projetos que não devem ter imports diretos do FLX
     projects_to_check = [
@@ -57,8 +57,7 @@ def check_direct_flx_imports() -> list[str]:
                         line.startswith(("from flx.", "import flx."))
                     ) and "lazy_import" not in line:
                         issues.append(
-                            f"{py_file}:{line_num} - Import direto do FLX: {line}"
-                        )
+                            f"{py_file}:{line_num} - Import direto do FLX: {line}")
 
             except Exception as e:
                 issues.append(f"Erro ao analisar {py_file}: {e}")
@@ -68,7 +67,7 @@ def check_direct_flx_imports() -> list[str]:
 
 def check_lazy_import_usage() -> list[str]:
     """Verifica se os lazy imports estão sendo usados corretamente."""
-    issues = []
+    issues: list = []
 
     projects_to_check = [
         "flx-http-oracle-oic",
@@ -87,7 +86,7 @@ def check_lazy_import_usage() -> list[str]:
         if not src_path.exists():
             continue
 
-        lazy_import_files = []
+        lazy_import_files: list = []
         for py_file in src_path.rglob("*.py"):
             if "test" in str(py_file) or "example" in str(py_file):
                 continue
@@ -102,17 +101,15 @@ def check_lazy_import_usage() -> list[str]:
                     # Verifica se o import do lazy_import está presente
                     if "from flx.utils.lazy_import import lazy_import" not in content:
                         issues.append(
-                            f"{py_file} - Usa lazy_import mas não importa a função"
-                        )
+                            f"{py_file} - Usa lazy_import mas não importa a função")
 
             except Exception as e:
                 issues.append(f"Erro ao analisar {py_file}: {e}")
 
         if lazy_import_files:
             print(
-                f"✅ {project}: {len(lazy_import_files)} arquivos usando lazy imports"
-            )
-        else:
+                f"✅ {project}: {
+                    len(lazy_import_files)} arquivos usando lazy imports")
             print(f"⚠️  {project}: Nenhum arquivo usando lazy imports")
 
     return issues
@@ -120,7 +117,7 @@ def check_lazy_import_usage() -> list[str]:
 
 def check_pyproject_dependencies() -> list[str]:
     """Verifica se os pyproject.toml estão bem configurados."""
-    issues = []
+    issues: list = []
 
     # Verifica o pyproject.toml principal
     main_pyproject = Path("pyproject.toml")
@@ -131,7 +128,8 @@ def check_pyproject_dependencies() -> list[str]:
 
             # Verifica se FLX não é opcional no principal
             if 'flx = { path = "flx", develop = true, optional = true }' in content:
-                issues.append("pyproject.toml principal - FLX não deve ser opcional")
+                issues.append(
+                    "pyproject.toml principal - FLX não deve ser opcional")
 
             # Verifica se subprojetos são opcionais
             required_optional = [
@@ -145,8 +143,7 @@ def check_pyproject_dependencies() -> list[str]:
             for project in required_optional:
                 if f'{project} = {{ path = "./{project}", develop = true }}' in content:
                     issues.append(
-                        f"pyproject.toml principal - {project} deve ser opcional"
-                    )
+                        f"pyproject.toml principal - {project} deve ser opcional")
 
         except Exception as e:
             issues.append(f"Erro ao analisar pyproject.toml principal: {e}")
@@ -168,18 +165,18 @@ def check_pyproject_dependencies() -> list[str]:
                 # Verifica se dependências do FLX são opcionais
                 if 'flx = { path = "../flx", develop = true }' in content:
                     issues.append(
-                        f"{project}/pyproject.toml - Dependência do FLX deve ser opcional"
-                    )
+                        f"{project}/pyproject.toml - Dependência do FLX deve ser opcional")
 
             except Exception as e:
-                issues.append(f"Erro ao analisar {project}/pyproject.toml: {e}")
+                issues.append(
+                    f"Erro ao analisar {project}/pyproject.toml: {e}")
 
     return issues
 
 
 def test_import_flx_utils() -> list[str]:
     """Testa se o módulo lazy_import pode ser importado."""
-    issues = []
+    issues: list = []
 
     try:
         # Adiciona o caminho do FLX ao sys.path temporariamente
@@ -213,7 +210,7 @@ def main() -> None:
     """Função principal."""
     print("🔍 Validando correção de dependências circulares...")
 
-    all_issues = []
+    all_issues: list = []
 
     print("\n1. Verificando imports diretos do FLX...")
     direct_import_issues = check_direct_flx_imports()
@@ -225,7 +222,6 @@ def main() -> None:
             print(f"  - {issue}")
         if len(direct_import_issues) > 5:
             print(f"  ... e mais {len(direct_import_issues) - 5} problemas")
-    else:
         print("✅ Nenhum import direto do FLX encontrado")
 
     print("\n2. Verificando uso de lazy imports...")
@@ -236,7 +232,6 @@ def main() -> None:
         print(f"❌ {len(lazy_import_issues)} problemas com lazy imports")
         for issue in lazy_import_issues:
             print(f"  - {issue}")
-    else:
         print("✅ Lazy imports configurados corretamente")
 
     print("\n3. Verificando configuração dos pyproject.toml...")
@@ -247,7 +242,6 @@ def main() -> None:
         print(f"❌ {len(pyproject_issues)} problemas nos pyproject.toml")
         for issue in pyproject_issues:
             print(f"  - {issue}")
-    else:
         print("✅ pyproject.toml configurados corretamente")
 
     print("\n4. Testando funcionalidade do lazy_import...")
@@ -267,7 +261,6 @@ def main() -> None:
         for issue in all_issues:
             print(f"  - {issue}")
         sys.exit(1)
-    else:
         print("✅ VALIDAÇÃO PASSOU: Dependências circulares corrigidas com sucesso!")
         print("\n🎉 Benefícios alcançados:")
         print("  - Imports diretos do FLX eliminados")

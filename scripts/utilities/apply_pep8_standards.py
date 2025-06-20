@@ -26,7 +26,7 @@ def get_project_dirs() -> list[Path]:
         "src", "tests", "data", "meltano", "singer-sdk",
     }
 
-    projects = []
+    projects: list = []
     for item in root.iterdir():
         if item.is_dir() and item.name not in exclude_dirs:
             if (item / "pyproject.toml").exists():
@@ -94,7 +94,13 @@ def update_pyproject_toml(project_path: Path, dry_run: bool = False) -> None:
         if "tool" not in doc:
             doc["tool"] = {}
 
-        for section in ["black", "isort", "ruff", "mypy", "pytest", "coverage"]:
+        for section in [
+            "black",
+            "isort",
+            "ruff",
+            "mypy",
+            "pytest",
+                "coverage"]:
             if section in standard_config.get("tool", {}):
                 doc["tool"][section] = standard_config["tool"][section]
 
@@ -119,7 +125,11 @@ def run_black(project_path: Path, dry_run: bool = False) -> bool:
         cmd.append("--diff")
 
     try:
-        result = subprocess.run(cmd, capture_output=True, text=True, check=False)
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            check=False)
         if result.returncode == 0:
             print("  ✅ Black formatting complete")
             return True
@@ -140,7 +150,11 @@ def run_isort(project_path: Path, dry_run: bool = False) -> bool:
         cmd.append("--diff")
 
     try:
-        result = subprocess.run(cmd, capture_output=True, text=True, check=False)
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            check=False)
         if result.returncode == 0:
             print("  ✅ Import sorting complete")
             return True
@@ -151,7 +165,10 @@ def run_isort(project_path: Path, dry_run: bool = False) -> bool:
         return False
 
 
-def run_ruff(project_path: Path, dry_run: bool = False, fix: bool = True) -> bool:
+def run_ruff(
+        project_path: Path,
+        dry_run: bool = False,
+        fix: bool = True) -> bool:
     """Run Ruff linter on project."""
     print(f"\n🦀 Running Ruff on {project_path.name}...")
 
@@ -160,7 +177,11 @@ def run_ruff(project_path: Path, dry_run: bool = False, fix: bool = True) -> boo
         cmd.append("--fix")
 
     try:
-        result = subprocess.run(cmd, capture_output=True, text=True, check=False)
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            check=False)
         if result.returncode == 0:
             print("  ✅ Ruff linting complete")
             return True
@@ -206,16 +227,27 @@ def validate_project(project_path: Path) -> dict:
     results["ruff"] = result.returncode == 0
     print(f"  {'✅' if results['ruff'] else '❌'} Ruff check")
 
-    results["overall"] = all([results["black"], results["isort"], results["ruff"]])
+    results["overall"] = all(
+        [results["black"], results["isort"], results["ruff"]])
     return results
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Apply PEP8 standards to PyAuto projects")
-    parser.add_argument("--dry-run", action="store_true", help="Show what would be done")
+    parser = argparse.ArgumentParser(
+        description="Apply PEP8 standards to PyAuto projects")
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Show what would be done")
     parser.add_argument("--project", help="Apply to specific project only")
-    parser.add_argument("--no-fix", action="store_true", help="Don't auto-fix issues")
-    parser.add_argument("--validate-only", action="store_true", help="Only validate, don't modify")
+    parser.add_argument(
+        "--no-fix",
+        action="store_true",
+        help="Don't auto-fix issues")
+    parser.add_argument(
+        "--validate-only",
+        action="store_true",
+        help="Only validate, don't modify")
 
     args = parser.parse_args()
 
@@ -229,7 +261,6 @@ def main() -> int:
             print(f"❌ Project {args.project} not found")
             return 1
         projects = [project_path]
-    else:
         projects = get_project_dirs()
 
     print(f"\n📦 Found {len(projects)} projects to process:")
@@ -237,7 +268,7 @@ def main() -> int:
         print(f"  - {project.name}")
 
     # Process each project
-    all_results = {}
+    all_results: dict = {}
 
     for project in projects:
         print(f"\n{'=' * 60}")
@@ -268,7 +299,9 @@ def main() -> int:
     print("=" * 60)
 
     if all_results:
-        total_pass = sum(1 for r in all_results.values() if r.get("overall", False))
+        total_pass = sum(
+            1 for r in all_results.values() if r.get(
+                "overall", False))
         print(f"\n✅ Passed: {total_pass}/{len(all_results)}")
 
         for project, results in all_results.items():
@@ -283,7 +316,8 @@ def main() -> int:
             json.dump(all_results, f, indent=2)
         print(f"\n📄 Results saved to {results_file}")
 
-    return 0 if all(r.get("overall", False) for r in all_results.values()) else 1
+    return 0 if all(r.get("overall", False)
+                    for r in all_results.values()) else 1
 
 
 if __name__ == "__main__":

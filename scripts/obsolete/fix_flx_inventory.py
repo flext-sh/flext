@@ -23,7 +23,7 @@ class FlxInventoryBuilder(ast.NodeVisitor):
         self.current_class = node.name
 
         # Get base classes
-        bases = []
+        bases: list = []
         for base in node.bases:
             if isinstance(base, ast.Name):
                 bases.append(base.id)
@@ -35,7 +35,7 @@ class FlxInventoryBuilder(ast.NodeVisitor):
                 )
 
         # Get required init args
-        init_args = []
+        init_args: list = []
         init_method = None
         for item in node.body:
             if isinstance(item, ast.FunctionDef) and item.name == "__init__":
@@ -55,7 +55,8 @@ class FlxInventoryBuilder(ast.NodeVisitor):
                 )
 
             # Check defaults
-            defaults_start = len(init_method.args.args) - len(init_method.args.defaults)
+            defaults_start = len(init_method.args.args) - \
+                len(init_method.args.defaults)
             for i, default in enumerate(init_method.args.defaults):
                 arg_idx = defaults_start + i - 1  # -1 for self
                 if arg_idx >= 0 and arg_idx < len(init_args):
@@ -102,7 +103,6 @@ class FlxInventoryBuilder(ast.NodeVisitor):
         if self.current_class:
             # It's a method
             self.classes[self.current_class]["methods"].append(func_info)
-        else:
             # It's a module-level function
             self.functions[node.name] = func_info
 
@@ -158,7 +158,8 @@ def build_inventory(src_dir: Path) -> dict[str, Any]:
             content = py_file.read_text()
             tree = ast.parse(content)
 
-            visitor = FlxInventoryBuilder(str(py_file.relative_to(src_dir.parent)))
+            visitor = FlxInventoryBuilder(
+                str(py_file.relative_to(src_dir.parent)))
             visitor.visit(tree)
 
             # Merge results
@@ -175,12 +176,10 @@ def build_inventory(src_dir: Path) -> dict[str, Any]:
             # Map non-Flx version to Flx version
             non_flx_name = class_name[3:]  # Remove Flx prefix
             inventory["class_name_mapping"][non_flx_name] = class_name
-        else:
             # Check if Flx version exists
             flx_name = f"Flx{class_name}"
             if flx_name in inventory["classes"]:
                 inventory["class_name_mapping"][class_name] = flx_name
-            else:
                 inventory["missing_flx_prefixes"]["classes"].append(
                     {
                         "name": class_name,
@@ -194,12 +193,10 @@ def build_inventory(src_dir: Path) -> dict[str, Any]:
             # Map non-flx version to flx version
             non_flx_name = func_name[4:]  # Remove flx_ prefix
             inventory["function_name_mapping"][non_flx_name] = func_name
-        else:
             # Check if flx version exists
             flx_name = f"flx_{func_name}"
             if flx_name in inventory["functions"]:
                 inventory["function_name_mapping"][func_name] = flx_name
-            else:
                 inventory["missing_flx_prefixes"]["functions"].append(
                     {
                         "name": func_name,
@@ -212,9 +209,8 @@ def build_inventory(src_dir: Path) -> dict[str, Any]:
     for class_name, class_info in inventory["classes"].items():
         if class_name.startswith("Flx"):
             for method in class_info["methods"]:
-                if not method["name"].startswith("_") and not method["name"].startswith(
-                    "flx_"
-                ):
+                if not method["name"].startswith(
+                        "_") and not method["name"].startswith("flx_"):
                     if method["name"] not in {
                         "__init__",
                         "__str__",
@@ -235,7 +231,8 @@ def build_inventory(src_dir: Path) -> dict[str, Any]:
     return inventory
 
 
-def analyze_mypy_errors(inventory: dict[str, Any], mypy_output: str) -> dict[str, Any]:
+def analyze_mypy_errors(
+        inventory: dict[str, Any], mypy_output: str) -> dict[str, Any]:
     """Analyze mypy errors against inventory."""
     analysis = {
         "attr_defined_fixes": [],
@@ -300,7 +297,8 @@ def main() -> None:
         f"- flx-prefixed functions: {sum(1 for f in inventory['functions'].values() if f['is_flx_prefixed'])}"
     )
     print(f"- Class name mappings: {len(inventory['class_name_mapping'])}")
-    print(f"- Function name mappings: {len(inventory['function_name_mapping'])}")
+    print(
+        f"- Function name mappings: {len(inventory['function_name_mapping'])}")
     print("\nMissing prefixes:")
     print(
         f"- Classes without Flx prefix: {len(inventory['missing_flx_prefixes']['classes'])}"

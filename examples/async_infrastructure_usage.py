@@ -46,7 +46,6 @@ async def main() -> None:
 
         with contextlib.suppress(TimeoutError):
             await bus.send_command(sync_command)
-    else:
         async_command = flx_async.FlxCreateResourceCommand(
             resource_name="another-resource",
             resource_type="cache",
@@ -57,7 +56,8 @@ async def main() -> None:
     # Example 3: Queue statistics
     stats = bus.get_queue_stats()
     for queue_stats in stats.values():
-        "🟢 Empty" if queue_stats["empty"] else f"🔵 {queue_stats['length']} items"
+        "🟢 Empty" if queue_stats["empty"] else f"🔵 {
+            queue_stats['length']} items"
 
     # Example 4: Event creation (for reference)
     flx_async.FlxResourceCreatedEvent(

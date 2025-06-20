@@ -20,7 +20,9 @@ def add_return_type_annotations(file_path: Path) -> int:
         content = f.read()
 
     # Regular expressions to identify function definitions without return types
-    function_pattern = re.compile(r"^(\s*)(def\s+\w+\s*\([^)]*\))(\s*:)", re.MULTILINE)
+    function_pattern = re.compile(
+        r"^(\s*)(def\s+\w+\s*\([^)]*\))(\s*:)",
+        re.MULTILINE)
 
     # Find all function definitions without return types
     fixes_count = 0
@@ -96,7 +98,8 @@ def remove_unused_type_ignores(file_path: Path) -> int:
     fixes_count = 0
 
     # Simple approach: just remove all type: ignore comments
-    # In a real scenario, we'd want to be more careful about which ones to remove
+    # In a real scenario, we'd want to be more careful about which ones to
+    # remove
     new_content, count = re.subn(type_ignore_pattern, "", modified_content)
     if count > 0:
         modified_content = new_content
@@ -112,7 +115,7 @@ def remove_unused_type_ignores(file_path: Path) -> int:
 
 def process_file(file_path: Path, flx_types: list[str]) -> dict[str, int]:
     """Process a single file, applying the requested fixes."""
-    fixes_applied = {}
+    fixes_applied: dict = {}
 
     if "return_type" in fix_types:
         count = add_return_type_annotations(file_path)

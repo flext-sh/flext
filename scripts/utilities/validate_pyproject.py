@@ -102,16 +102,15 @@ class PyProjectValidator:
 
         if "-" in name:
             self.errors.append(
-                f"{file_path}: Package name '{name}' must use underscores, not hyphens",
-            )
+                f"{file_path}: Package name '{name}' must use underscores, not hyphens", )
 
         # Check packages configuration
         packages = poetry.get("packages", [])
         for pkg in packages:
             if isinstance(pkg, dict) and "-" in pkg.get("include", ""):
                 self.errors.append(
-                    f"{file_path}: Package include '{pkg['include']}' must use underscores",
-                )
+                    f"{file_path}: Package include '{
+                        pkg['include']}' must use underscores", )
 
     def _check_python_version(self, file_path: Path, data: dict) -> None:
         """Check Python version requirement."""
@@ -121,8 +120,7 @@ class PyProjectValidator:
 
         if not python_version.startswith("^3.13"):
             self.errors.append(
-                f"{file_path}: Python version must be ^3.13,<3.15 (found: {python_version})",
-            )
+                f"{file_path}: Python version must be ^3.13,<3.15 (found: {python_version})", )
 
     def _check_dev_dependencies(self, file_path: Path, data: dict) -> None:
         """Check required dev dependencies."""
@@ -178,7 +176,8 @@ class PyProjectValidator:
                 f"{file_path}: ruff.target-version should be py313",
             )
 
-    def _check_coverage_requirements(self, file_path: Path, data: dict) -> None:
+    def _check_coverage_requirements(
+            self, file_path: Path, data: dict) -> None:
         """Check coverage requirements."""
         pytest_config = data.get("tool", {}).get("pytest.ini_options", {})
         addopts = pytest_config.get("addopts", [])
@@ -186,8 +185,7 @@ class PyProjectValidator:
         has_coverage = any("--cov-fail-under" in opt for opt in addopts)
         if not has_coverage:
             self.warnings.append(
-                f"{file_path}: Consider adding --cov-fail-under=90 for coverage requirement",
-            )
+                f"{file_path}: Consider adding --cov-fail-under=90 for coverage requirement", )
 
     def validate_all(self) -> bool:
         """Validate all pyproject.toml files in workspace."""
@@ -235,8 +233,7 @@ class PyProjectValidator:
 def main() -> None:
     """Main entry point."""
     parser = argparse.ArgumentParser(
-        description="Validate pyproject.toml files against enterprise standards",
-    )
+        description="Validate pyproject.toml files against enterprise standards", )
     parser.add_argument(
         "--fix",
         action="store_true",
@@ -249,7 +246,6 @@ def main() -> None:
     if validator.validate_all():
         print("\n✅ All validation checks passed!")
         sys.exit(0)
-    else:
         validator.print_summary()
         sys.exit(1)
 

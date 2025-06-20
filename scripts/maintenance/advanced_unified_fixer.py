@@ -57,7 +57,11 @@ class FixStats:
 class AdvancedUnifiedFixer:
     """Advanced unified lint fixer with precision context awareness."""
 
-    def __init__(self, project_path: str, dry_run: bool = False, verbose: bool = False):
+    def __init__(
+            self,
+            project_path: str,
+            dry_run: bool = False,
+            verbose: bool = False):
         self.project_path = Path(project_path)
         self.dry_run = dry_run
         self.verbose = verbose
@@ -85,8 +89,8 @@ class AdvancedUnifiedFixer:
             handlers=[
                 logging.StreamHandler(),
                 logging.FileHandler(
-                    f'lint_fixer_{datetime.now().strftime("%Y%m%d_%H%M%S")}.log'
-                ),
+                    f'lint_fixer_{
+                        datetime.now().strftime("%Y%m%d_%H%M%S")}.log'),
             ],
         )
         self.logger = logging.getLogger(__name__)
@@ -109,7 +113,7 @@ class AdvancedUnifiedFixer:
             return None
 
         # Common parameter type mappings
-        param_fixes = []
+        param_fixes: list = []
         for param in params.split(","):
             param = param.strip()
             if not param or param == "self" or param == "cls":
@@ -121,7 +125,8 @@ class AdvancedUnifiedFixer:
                 continue
 
             # Apply common type hints based on parameter names
-            if any(name in param.lower() for name in ["data", "records", "items"]):
+            if any(name in param.lower()
+                   for name in ["data", "records", "items"]):
                 param_fixes.append(f"{param}: list[dict[str, Any]]")
             elif "config" in param.lower():
                 param_fixes.append(f"{param}: dict[str, Any]")
@@ -135,7 +140,6 @@ class AdvancedUnifiedFixer:
                 param.endswith("_flag") or param.startswith(("is_", "has_"))
             ):
                 param_fixes.append(f"{param}: bool")
-            else:
                 param_fixes.append(f"{param}: Any")
 
         new_params = ", ".join(param_fixes)
@@ -152,7 +156,7 @@ class AdvancedUnifiedFixer:
         context = lines[context_start:context_end]
 
         # Look for variable definitions in the surrounding context
-        variable_definitions = {}
+        variable_definitions: dict = {}
         for _i, ctx_line in enumerate(context):
             # Look for assignments
             assign_matches = re.findall(r"(\w+)\s*=", ctx_line)
@@ -174,7 +178,8 @@ class AdvancedUnifiedFixer:
         for pattern, replacement in fixes:
             if re.search(pattern, line):
                 # Only apply if replacement variable exists in context
-                if replacement in variable_definitions or replacement.startswith("_"):
+                if replacement in variable_definitions or replacement.startswith(
+                        "_"):
                     return re.sub(pattern, replacement, line)
 
         return None
@@ -230,8 +235,10 @@ class AdvancedUnifiedFixer:
                 break
 
         if in_except_block and "from" not in raise_stmt:
-            # Prefer 'from None' for re-raised exceptions, 'from e' for new ones
-            if "raise " == raise_stmt.strip()[:6]:  # Re-raising original exception
+            # Prefer 'from None' for re-raised exceptions, 'from e' for new
+            # ones
+            if "raise " == raise_stmt.strip()[
+                    :6]:  # Re-raising original exception
                 return f"{indent}{raise_stmt} from None{trailing}"
             # Raising new exception
             return f"{indent}{raise_stmt} from e{trailing}"
@@ -252,11 +259,15 @@ class AdvancedUnifiedFixer:
         indent, params, closing = match.groups()
 
         # Skip if it's a known override method or interface
-        if any(keyword in line for keyword in ["__init__", "__str__", "__repr__"]):
+        if any(
+            keyword in line for keyword in [
+                "__init__",
+                "__str__",
+                "__repr__"]):
             return None
 
         # Parse parameters and add underscore prefix to unused ones
-        param_list = []
+        param_list: list = []
         for param in params.split(","):
             param = param.strip()
             if param and param != "self" and param != "cls":
@@ -275,7 +286,8 @@ class AdvancedUnifiedFixer:
         """Check if a parameter is used in the function body."""
         lines = content.split("\n")
 
-        # Find the end of the function by looking for the next function or class
+        # Find the end of the function by looking for the next function or
+        # class
         func_end = len(lines)
         for i in range(func_line_num + 1, len(lines)):
             if re.match(r"^\s*(def|class)\s+", lines[i]):
@@ -353,12 +365,12 @@ class AdvancedUnifiedFixer:
 
             # Get current lint errors for this file
             current_content = original_content
-            results = []
+            results: list = []
 
             # Apply fixes iteratively
             for fix_type, fix_func in self.fix_patterns.items():
                 lines = current_content.split("\n")
-                new_lines = []
+                new_lines: list = []
 
                 for i, line in enumerate(lines):
                     try:
@@ -380,7 +392,6 @@ class AdvancedUnifiedFixer:
                                 self.stats.fixes_by_type.get(fix_type, 0) + 1
                             )
                             self.stats.total_fixes_applied += 1
-                        else:
                             new_lines.append(line)
                     except Exception as e:
                         self.logger.error(
@@ -412,7 +423,7 @@ class AdvancedUnifiedFixer:
         )
         self.logger.info(f"Mode: {'DRY RUN' if self.dry_run else 'LIVE'}")
 
-        all_results = []
+        all_results: list = []
 
         # Find all Python files
         python_files = list(self.project_path.rglob("*.py"))
@@ -459,8 +470,7 @@ class AdvancedUnifiedFixer:
                     "fixed": result.fixed_line.strip() if result.success else None,
                     "success": result.success,
                     "error": result.error_message,
-                }
-            )
+                })
 
         return report
 
@@ -489,8 +499,9 @@ def main() -> int:
     args = parser.parse_args()
 
     fixer = AdvancedUnifiedFixer(
-        project_path=args.project_path, dry_run=args.dry_run, verbose=args.verbose
-    )
+        project_path=args.project_path,
+        dry_run=args.dry_run,
+        verbose=args.verbose)
 
     try:
         report = fixer.run()
@@ -501,11 +512,18 @@ def main() -> int:
             f"Advanced Unified Lint Fixer v3.0.0 - {'DRY RUN' if args.dry_run else 'LIVE'} Results"
         )
         print(f"{'=' * 60}")
-        print(f"Files processed: {report['statistics']['total_files_processed']}")
-        print(f"Total fixes applied: {report['statistics']['total_fixes_applied']}")
-        print(f"Errors encountered: {report['statistics']['errors_encountered']}")
+        print(
+            f"Files processed: {
+                report['statistics']['total_files_processed']}")
+        print(
+            f"Total fixes applied: {
+                report['statistics']['total_fixes_applied']}")
+        print(
+            f"Errors encountered: {
+                report['statistics']['errors_encountered']}")
         print("\nFixes by type:")
-        for fix_type, count in sorted(report["statistics"]["fixes_by_type"].items()):
+        for fix_type, count in sorted(
+                report["statistics"]["fixes_by_type"].items()):
             print(f"  {fix_type}: {count}")
 
         # Save report if requested

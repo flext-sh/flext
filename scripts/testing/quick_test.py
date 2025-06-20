@@ -102,10 +102,9 @@ class QuickTestRunner:
             # Display results
             if success:
                 print(f"✅ {project_name}: {passed} passed ({duration:.1f}s)")
-            else:
                 print(
-                    f"❌ {project_name}: {failed} failed, {passed} passed ({duration:.1f}s)"
-                )
+                    f"❌ {project_name}: {failed} failed, {passed} passed ({
+                        duration:.1f}s)")
                 if self.config.verbose and result.stderr:
                     print(f"   Error: {result.stderr[:200]}...")
 
@@ -128,7 +127,6 @@ class QuickTestRunner:
         # Basic options
         if self.config.verbose:
             cmd.append("-v")
-        else:
             cmd.append("-q")
 
         if self.config.fail_fast:
@@ -188,7 +186,13 @@ def main() -> None:
         "--category",
         "-c",
         default="unit",
-        choices=["unit", "integration", "performance", "security", "smoke", "e2e"],
+        choices=[
+            "unit",
+            "integration",
+            "performance",
+            "security",
+            "smoke",
+            "e2e"],
         help="Test category to run",
     )
     parser.add_argument(
@@ -231,7 +235,6 @@ def main() -> None:
     if success:
         print("\n✅ All tests passed!")
         sys.exit(0)
-    else:
         print("\n❌ Some tests failed!")
         sys.exit(1)
 

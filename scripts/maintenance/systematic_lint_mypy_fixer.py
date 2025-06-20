@@ -54,7 +54,7 @@ class SystematicFixer:
 
     def _find_python_projects(self) -> list[Path]:
         """Find all Python projects in workspace."""
-        projects = []
+        projects: list = []
         for item in self.workspace_root.iterdir():
             if item.is_dir() and not item.name.startswith("."):
                 # Check for Python project indicators
@@ -158,7 +158,7 @@ class SystematicFixer:
     def _fix_type_annotations(self, content: str, file_path: Path) -> str:
         """Fix missing type annotations (ANN201, ANN401)."""
         lines = content.split("\n")
-        fixed_lines = []
+        fixed_lines: list = []
 
         for line in lines:
             # Fix missing return type annotations
@@ -277,7 +277,12 @@ class SystematicFixer:
 
     def _count_changes(self, original: str, fixed: str) -> int:
         """Count number of changes made."""
-        return sum(1 for a, b in zip(original.split("\n"), fixed.split("\n"), strict=False) if a != b)
+        return sum(
+            1 for a,
+            b in zip(
+                original.split("\n"),
+                fixed.split("\n"),
+                strict=False) if a != b)
 
     def _validate_zero_tolerance(self) -> None:
         """Validate CLAUDE.md ZERO TOLERANCE compliance."""
@@ -307,8 +312,9 @@ class SystematicFixer:
                 total_lint_errors += lint_errors
 
                 if lint_errors > 0:
-                    print(f"  ❌ {project.name}: {lint_errors} lint errors remaining")
-                else:
+                    print(
+                        f"  ❌ {
+                            project.name}: {lint_errors} lint errors remaining")
                     print(f"  ✅ {project.name}: ZERO lint errors")
 
             except subprocess.SubprocessError:
@@ -321,7 +327,6 @@ class SystematicFixer:
 
         if total_lint_errors == 0 and total_mypy_errors == 0:
             print("✅ CLAUDE.md ZERO TOLERANCE: ACHIEVED")
-        else:
             print("❌ CLAUDE.md ZERO TOLERANCE: VIOLATIONS DETECTED")
             print("   Emergency action required per CLAUDE.md Rule 4")
 

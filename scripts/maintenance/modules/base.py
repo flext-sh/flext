@@ -8,6 +8,7 @@ and confirmation capabilities.
 import difflib
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
+from enum import Enum
 from pathlib import Path
 from typing import Any
 
@@ -15,6 +16,14 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.prompt import Confirm
 from rich.syntax import Syntax
+
+
+class Severity(Enum):
+    """Issue severity levels."""
+    HIGH = "high"
+    MEDIUM = "medium"
+    LOW = "low"
+    INFO = "info"
 
 
 @dataclass
@@ -33,10 +42,11 @@ class FixResult:
 class Issue:
     """Represents an issue found in code."""
 
-    line: int
+    line: int | None
+    message: str
+    severity: Severity
+    file_path: Path | None = None
     column: int = 0
-    message: str = ""
-    severity: str = "warning"  # error, warning, info
     fix_description: str = ""
     original_line: str = ""
     fixed_line: str = ""
@@ -45,7 +55,11 @@ class Issue:
 class CustomFixModule(ABC):
     """Base class for all custom fix modules."""
 
-    def __init__(self, dry_run: bool = True, interactive: bool = False, verbose: bool = False):
+    def __init__(
+            self,
+            dry_run: bool = True,
+            interactive: bool = False,
+            verbose: bool = False):
         """
         Initialize the fix module.
 
@@ -107,7 +121,8 @@ class CustomFixModule(ABC):
             if self.dry_run:
                 # Generate diff without applying
                 fixed_content = self.apply_fixes(original_content, issues)
-                diff = self._generate_diff(original_content, fixed_content, file_path)
+                diff = self._generate_diff(
+                    original_content, fixed_content, file_path)
 
                 return FixResult(
                     success=True,
@@ -119,7 +134,8 @@ class CustomFixModule(ABC):
             # Check for confirmation if in interactive mode
             if self.interactive:
                 fixed_content = self.apply_fixes(original_content, issues)
-                diff = self._generate_diff(original_content, fixed_content, file_path)
+                diff = self._generate_diff(
+                    original_content, fixed_content, file_path)
 
                 self.console.print(Panel(
                     Syntax(diff, "diff", theme="monokai"),
@@ -167,7 +183,10 @@ class CustomFixModule(ABC):
                 error=str(e)
             )
 
-    def process_directory(self, directory: Path, pattern: str = "*.py") -> list[FixResult]:
+    def process_directory(
+            self,
+            directory: Path,
+            pattern: str = "*.py") -> list[FixResult]:
         """
         Process all matching files in a directory.
 
@@ -178,13 +197,15 @@ class CustomFixModule(ABC):
         Returns:
             List of FixResult for each file
         """
-        results = []
+        results: list = []
 
         # Find all matching files
         files = list(directory.rglob(pattern))
 
         if not files:
-            self.console.print(f"No {pattern} files found in {directory}", style="yellow")
+            self.console.print(
+                f"No {pattern} files found in {directory}",
+                style="yellow")
             return results
 
         # Process each file
@@ -194,7 +215,8 @@ class CustomFixModule(ABC):
                 if self._should_skip(file_path):
                     continue
 
-                status.update(f"Processing [{i}/{len(files)}]: {file_path.name}")
+                status.update(
+                    f"Processing [{i}/{len(files)}]: {file_path.name}")
                 result = self.process_file(file_path)
                 results.append(result)
 
@@ -205,11 +227,11 @@ class CustomFixModule(ABC):
                             f"✅ Fixed {result.issues_fixed}/{result.issues_found} issues in {file_path.name}",
                             style="green"
                         )
-                    else:
                         self.console.print(
-                            f"🔍 Found {result.issues_found} issues in {file_path.name}",
-                            style="yellow"
-                        )
+                            f"🔍 Found {
+                                result.issues_found} issues in {
+                                file_path.name}",
+                            style="yellow")
 
         return results
 
@@ -265,17 +287,28 @@ class CustomFixModule(ABC):
             }.get(issue.severity, "white")
 
             self.console.print(
-                f"  Line {issue.line}: [{severity_color}]{issue.message}[/{severity_color}]"
-            )
+                f"  Line {
+                    issue.line}: [{severity_color}]{
+                    issue.message}[/{severity_color}]")
             if issue.original_line:
-                self.console.print(f"    - {issue.original_line.strip()}", style="dim")
+                self.console.print(
+                    f"    - {issue.original_line.strip()}", style="dim")
             if issue.fixed_line:
-                self.console.print(f"    + {issue.fixed_line.strip()}", style="green")
+                self.console.print(
+                    f"    + {issue.fixed_line.strip()}", style="green")
 
         if len(issues) > 10:
-            self.console.print(f"  ... and {len(issues) - 10} more issues", style="dim")
+            self.console.print(
+                f"  ... and {
+                    len(issues) -
+                    10} more issues",
+                style="dim")
 
-    def _generate_diff(self, original: str, fixed: str, file_path: Path) -> str:
+    def _generate_diff(
+            self,
+            original: str,
+            fixed: str,
+            file_path: Path) -> str:
         """Generate a unified diff."""
         original_lines = original.splitlines(keepends=True)
         fixed_lines = fixed.splitlines(keepends=True)

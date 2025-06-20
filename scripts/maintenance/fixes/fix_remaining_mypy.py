@@ -19,7 +19,7 @@ def get_mypy_errors() -> list[dict[str, Any]]:
     ]
     result = subprocess.run(cmd, capture_output=True, text=True, check=False)
 
-    errors = []
+    errors: list = []
     for line in result.stdout.splitlines() + result.stderr.splitlines():
         if " error: " in line and "[" in line:
             match = re.match(r"(.+?):(\d+): error: (.+?) \[(.+?)\]", line)
@@ -74,9 +74,8 @@ def fix_specific_files() -> None:
                 # Insert after __init__ method
                 init_end = class_def.rfind("\n\n")
                 if init_end > 0:
-                    new_class = (
-                        class_def[:init_end] + new_methods + class_def[init_end:]
-                    )
+                    new_class = (class_def[:init_end] +
+                                 new_methods + class_def[init_end:])
                     content = content.replace(class_def, new_class)
 
                     # Also add time import if not present
@@ -91,7 +90,7 @@ def fix_specific_files() -> None:
         content = shutdown_metrics.read_text()
 
         # Check if these classes are missing
-        missing_classes = []
+        missing_classes: list = []
         for class_name in [
             "FlxCorrelationId",
             "FlxComponentPath",
@@ -128,7 +127,6 @@ class {class_name}(str, Enum):
     ERROR = "ERROR"
     CRITICAL = "CRITICAL"
 '''
-                else:
                     new_classes += f'''
 class {class_name}(FlxStrictModel):
     """{class_name.replace("Flx", "")} event."""
@@ -139,14 +137,14 @@ class {class_name}(FlxStrictModel):
             # Add enum import if needed
             if "from enum import" not in content:
                 content = content.replace(
-                    "from typing import", "from enum import Enum\nfrom typing import"
-                )
+                    "from typing import",
+                    "from enum import Enum\nfrom typing import")
 
             content += new_classes
             shutdown_metrics.write_text(content)
             print(
-                f"Added {len(missing_classes)} missing classes to shutdown_metrics.py"
-            )
+                f"Added {
+                    len(missing_classes)} missing classes to shutdown_metrics.py")
 
 
 def main() -> None:
@@ -160,7 +158,7 @@ def main() -> None:
     print(f"Found {len(errors)} errors")
 
     # Group errors by type
-    error_types = {}
+    error_types: dict = {}
     for error in errors:
         code = error["code"]
         if code not in error_types:

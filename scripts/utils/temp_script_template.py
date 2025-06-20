@@ -33,10 +33,10 @@ from datetime import datetime
 from pathlib import Path
 
 import structlog
+from script_validation import get_script_category, validate_script_location
 
 # Adiciona o path do utils para importar validação
 sys.path.append(str(Path(__file__).parent))
-from script_validation import get_script_category, validate_script_location
 
 # Validação obrigatória de localização
 try:
@@ -102,8 +102,9 @@ def main() -> None:
 
     except Exception as e:
         logger.exception(
-            "Erro no script temporário", error=str(e), error_type=type(e).__name__
-        )
+            "Erro no script temporário",
+            error=str(e),
+            error_type=type(e).__name__)
         sys.exit(1)
 
     logger.info("Script temporário concluído com sucesso")

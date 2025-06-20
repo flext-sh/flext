@@ -8,9 +8,6 @@ configuration, authentication, and making requests.
 import sys
 from pathlib import Path
 
-# Add flx_project root to path for imports
-sys.path.insert(0, str(Path(__file__).parent.parent))
-
 from flx_adapter_example import (
     ApiClient,
     ApiError,
@@ -21,6 +18,10 @@ from flx_adapter_example import (
     paginate,
     setup_logger,
 )
+
+# Add flx_project root to path for imports
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
 
 # Set up logging
 logger = setup_logger("example", level="INFO")
@@ -51,8 +52,6 @@ def basic_client_example() -> int:
     try:
         success, _message = client.test_connection()
         if success:
-            pass
-        else:
             return 1
     except ApiError:
         return 1
@@ -70,7 +69,6 @@ def basic_client_example() -> int:
 
             if len(users) > 3:
                 pass
-        else:
             return 1
     except ConnectionError:
         return 1
@@ -79,13 +77,15 @@ def basic_client_example() -> int:
 
     # Make a POST request to create a resource
     try:
-        new_user = {"name": "John Doe", "email": "john.doe@example.com", "role": "user"}
+        new_user = {
+            "name": "John Doe",
+            "email": "john.doe@example.com",
+            "role": "user"}
 
         response = client.post("users", json_data=new_user)
 
         if response.success:
             created_user = response.data
-        else:
             return 1
     except ApiError:
         return 1
@@ -100,8 +100,6 @@ def basic_client_example() -> int:
             response = client.put(f"users/{user_id}", json_data=update_data)
 
             if response.success:
-                pass
-            else:
                 return 1
         except ApiError:
             return 1
@@ -112,8 +110,6 @@ def basic_client_example() -> int:
             response = client.delete(f"users/{user_id}")
 
             if response.success:
-                pass
-            else:
                 return 1
         except ApiError:
             return 1
@@ -251,7 +247,7 @@ def schema_example() -> int:
         try:
             # Create a minimal valid instance with required fields
             required_fields = schema.required_fields
-            sample_data = {}
+            sample_data: dict = {}
 
             for field in required_fields:
                 field_schema = schema.fields.get(field, {})

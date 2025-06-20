@@ -15,8 +15,7 @@ from pathlib import Path
 def parse_arguments() -> argparse.Namespace:
     """Parse command line arguments."""
     parser = argparse.ArgumentParser(
-        description="Atualiza pyproject.toml com exclusões para arquivos com problemas E501",
-    )
+        description="Atualiza pyproject.toml com exclusões para arquivos com problemas E501", )
     parser.add_argument(
         "--input",
         required=True,
@@ -49,7 +48,7 @@ def parse_arguments() -> argparse.Namespace:
 
 def read_problem_files(input_file: str, min_errors: int) -> list[str]:
     """Lê a lista de arquivos problemáticos do arquivo de entrada."""
-    problem_files = []
+    problem_files: list = []
 
     with open(input_file, encoding="utf-8") as f:
         for line in f:
@@ -77,7 +76,7 @@ def update_pyproject_toml(
     problem_files = problem_files[:max_files]
 
     # Construir novas exclusões
-    exclusions = []
+    exclusions: list = []
     for filepath, _count in problem_files:
         # Limpar o caminho (remover ./ no início)
         filepath = filepath.removeprefix("./")
@@ -94,9 +93,10 @@ def update_pyproject_toml(
         section_content = per_file_section.group(1)
 
         # Remover exclusões existentes de E501
-        existing_lines = []
+        existing_lines: list = []
         for line in section_content.splitlines():
-            # Se não for uma linha de exclusão para E501 ou um comentário, mantemos
+            # Se não for uma linha de exclusão para E501 ou um comentário,
+            # mantemos
             if '["E501"]' not in line or line.strip().startswith("#"):
                 if line.strip():  # Se não for linha vazia
                     existing_lines.append(line)
@@ -105,8 +105,7 @@ def update_pyproject_toml(
         if existing_lines and not existing_lines[-1].strip().startswith("#"):
             existing_lines.append("")
         existing_lines.append(
-            "# Arquivos com problemas severos de linhas longas (a serem tratados gradualmente)",
-        )
+            "# Arquivos com problemas severos de linhas longas (a serem tratados gradualmente)", )
 
         # Adicionar novas exclusões
         existing_lines.extend(exclusions)
@@ -119,7 +118,6 @@ def update_pyproject_toml(
             per_file_section.group(0),
             f"[tool.ruff.lint.per-file-ignores]\n{new_section_content}\n",
         )
-    else:
         # A seção não existe, adicionar nova seção
         new_section = "\n[tool.ruff.lint.per-file-ignores]\n"
         new_section += '"__init__.py" = ["F401"]  # Imported but unused\n'
@@ -136,7 +134,9 @@ def update_pyproject_toml(
         )
 
     # Mostrar mudanças
-    print(f"Serão atualizados {len(problem_files)} arquivos com exclusões para E501")
+    print(
+        f"Serão atualizados {
+            len(problem_files)} arquivos com exclusões para E501")
 
     if dry_run:
         print("Modo dry-run ativado. Nenhuma alteração será realizada.")
@@ -165,18 +165,26 @@ def main() -> None:
         return 1
 
     if not pyproject_file.exists():
-        print(f"Erro: Arquivo {pyproject_file} não encontrado", file=sys.stderr)
+        print(
+            f"Erro: Arquivo {pyproject_file} não encontrado",
+            file=sys.stderr)
         return 1
 
     # Ler arquivos problemáticos
     problem_files = read_problem_files(input_file, args.min_errors)
 
     if not problem_files:
-        print(f"Nenhum arquivo com pelo menos {args.min_errors} erros E501 encontrado.")
+        print(
+            f"Nenhum arquivo com pelo menos {
+                args.min_errors} erros E501 encontrado.")
         return 0
 
     # Atualizar pyproject.toml
-    update_pyproject_toml(pyproject_file, problem_files, args.max_files, args.dry_run)
+    update_pyproject_toml(
+        pyproject_file,
+        problem_files,
+        args.max_files,
+        args.dry_run)
 
     return 0
 

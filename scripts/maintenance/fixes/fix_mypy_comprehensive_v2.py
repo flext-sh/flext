@@ -17,13 +17,13 @@ def run_mypy() -> str:
         )
         return result.stdout
     except Exception as e:
-        print(f"Error running mypy: {e}")
+        logger.error(f"Error running mypy: {e}")
         return ""
 
 
 def parse_mypy_errors(output: str) -> list[dict[str, str]]:
     """Parse mypy output into structured errors."""
-    errors = []
+    errors: list = []
     lines = output.split("\n")
 
     for line in lines:
@@ -70,7 +70,7 @@ def fix_logging_imports(file_path: str) -> bool:
             return True
 
     except Exception as e:
-        print(f"Error fixing logging imports in {file_path}: {e}")
+        logger.error(f"Error fixing logging imports in {file_path}: {e}")
 
     return False
 
@@ -99,7 +99,8 @@ def fix_type_annotations(file_path: str, line_no: int, message: str) -> bool:
 
             # Fix variable annotations
             elif "Need type annotation for" in message:
-                var_match = re.search(r'Need type annotation for "([^"]+)"', message)
+                var_match = re.search(
+                    r'Need type annotation for "([^"]+)"', message)
                 if var_match:
                     var_name = var_match.group(1)
                     # Add type annotation based on context
@@ -111,9 +112,9 @@ def fix_type_annotations(file_path: str, line_no: int, message: str) -> bool:
                         line = line.replace(
                             f"{var_name} = {{}}", f"{var_name}: dict[str, Any] = {{}}"
                         )
-                    else:
                         # Generic annotation
-                        line = line.replace(f"{var_name} = ", f"{var_name}: Any = ")
+                        line = line.replace(
+                            f"{var_name} = ", f"{var_name}: Any = ")
 
                     lines[line_no - 1] = line
 
@@ -122,7 +123,7 @@ def fix_type_annotations(file_path: str, line_no: int, message: str) -> bool:
                     return True
 
     except Exception as e:
-        print(f"Error fixing type annotations in {file_path}:{line_no}: {e}")
+        logger.error(f"Error fixing type annotations in {file_path}:{line_no}: {e}")
 
     return False
 
@@ -157,7 +158,7 @@ def fix_attribute_errors(file_path: str, line_no: int, message: str) -> bool:
                     return True
 
     except Exception as e:
-        print(f"Error fixing attribute errors in {file_path}:{line_no}: {e}")
+        logger.error(f"Error fixing attribute errors in {file_path}:{line_no}: {e}")
 
     return False
 
@@ -192,15 +193,15 @@ def fix_file_errors(file_path: str, errors: list[dict[str, str]]) -> int:
 
 def main() -> None:
     """Main function to fix all mypy errors."""
-    print("Running mypy to identify errors...")
+    logger.error("Running mypy to identify errors...")
     output = run_mypy()
 
     if not output:
-        print("No mypy output received")
+        logger.info("No mypy output received")
         return
 
     errors = parse_mypy_errors(output)
-    print(f"Found {len(errors)} mypy errors")
+    logger.error(f"Found {len(errors)} mypy errors")
 
     # Group errors by file
     errors_by_file: dict[str, list[dict[str, str]]] = {}
@@ -214,18 +215,18 @@ def main() -> None:
 
     # Fix errors file by file
     for file_path, file_errors in errors_by_file.items():
-        print(f"\nProcessing {file_path} ({len(file_errors)} errors)...")
+        logger.error(f"\nProcessing {file_path} ({len(file_errors)} errors)...")
         fixed = fix_file_errors(file_path, file_errors)
         total_fixed += fixed
-        print(f"Fixed {fixed}/{len(file_errors)} errors in {file_path}")
+        logger.error(f"Fixed {fixed}/{len(file_errors)} errors in {file_path}")
 
-    print(f"\nTotal errors fixed: {total_fixed}/{len(errors)}")
+    logger.error(f"\nTotal errors fixed: {total_fixed}/{len(errors)}")
 
     # Run mypy again to check progress
-    print("\nRunning mypy again to check progress...")
+    logger.info("\nRunning mypy again to check progress...")
     new_output = run_mypy()
     new_errors = parse_mypy_errors(new_output)
-    print(f"Remaining errors: {len(new_errors)}")
+    logger.error(f"Remaining errors: {len(new_errors)}")
 
 
 if __name__ == "__main__":

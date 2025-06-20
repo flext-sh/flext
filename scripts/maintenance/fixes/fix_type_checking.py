@@ -4,6 +4,7 @@
 import re
 import subprocess
 from pathlib import Path
+from typing import Any
 
 
 def get_type_checking_errors() -> Any:
@@ -24,7 +25,7 @@ def get_type_checking_errors() -> Any:
 
     try:
         errors = json.loads(result.stdout)
-        type_checking_files = set()
+        type_checking_files: set = set()
         for error in errors:
             if "TYPE_CHECKING" in error.get("message", ""):
                 type_checking_files.add(error["filename"])
@@ -60,8 +61,8 @@ def fix_type_checking_import(file_path) -> bool:
                 new_imports = imports.strip() + ", TYPE_CHECKING"
                 new_line = f"from typing import {new_imports}"
                 content = re.sub(typing_import_pattern, new_line, content)
-                print(f"+ Added TYPE_CHECKING to existing import in {file_path}")
-        else:
+                print(
+                    f"+ Added TYPE_CHECKING to existing import in {file_path}")
             # Add TYPE_CHECKING import after other typing imports
             # Look for the first import line
             lines = content.split("\n")
@@ -80,7 +81,9 @@ def fix_type_checking_import(file_path) -> bool:
             if insert_index > 0:
                 lines.insert(insert_index, "")
                 lines.insert(insert_index + 1, "try:")
-                lines.insert(insert_index + 2, "    from typing import TYPE_CHECKING")
+                lines.insert(
+                    insert_index + 2,
+                    "    from typing import TYPE_CHECKING")
                 lines.insert(insert_index + 3, "except ImportError:")
                 lines.insert(insert_index + 4, "    TYPE_CHECKING = False")
                 content = "\n".join(lines)
@@ -128,10 +131,11 @@ def main() -> None:
         line for line in result.stdout.split("\n") if "TYPE_CHECKING" in line
     ]
     if type_checking_errors:
-        print(f"Still {len(type_checking_errors)} TYPE_CHECKING errors remaining:")
+        print(
+            f"Still {
+                len(type_checking_errors)} TYPE_CHECKING errors remaining:")
         for error in type_checking_errors[:5]:  # Show first 5
             print(f"  {error}")
-    else:
         print("✓ All TYPE_CHECKING errors fixed!")
 
 

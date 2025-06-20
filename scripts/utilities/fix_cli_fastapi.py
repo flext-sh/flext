@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 """Fix CLI and FastAPI adapters - TASK: FLX-CLI-FASTAPI-002."""
 
+import logging
 import subprocess
+
+logger = logging.getLogger(__name__)
 from pathlib import Path
 
 
@@ -42,13 +45,21 @@ Note:
 from __future__ import annotations
 
 import asyncio
+import logging
+logger = logging.getLogger(__name__)
 import inspect
+import logging
+logger = logging.getLogger(__name__)
 import json
+import logging
+logger = logging.getLogger(__name__)
 from collections.abc import Callable
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, TypeVar
+from typing import List, TYPE_CHECKING, Any, TypeVar
 
 import fire
+import logging
+logger = logging.getLogger(__name__)
 
 from flx.application.commands.app_commands import (
     GetAdapterInfoQuery,
@@ -299,7 +310,6 @@ class DaemonCommands:
         if no_fork:
             # Run in foreground
             daemon_service.run_foreground()
-        else:
             # Run as daemon
             daemon_service.start_daemon()
 
@@ -312,14 +322,14 @@ class DaemonCommands:
         if force:
             success = asyncio.run(FlxDaemon.force_stop(config))
             if success:
-                print("Daemon force stopped")
+                logger.info("Daemon force stopped")
         elif FlxDaemon.is_running(config):
             pid = FlxDaemon.get_running_pid(config)
             if pid:
                 import os
                 import signal
                 os.kill(pid, signal.SIGTERM)
-                print("Daemon stop signal sent")
+                logger.info("Daemon stop signal sent")
 
     def status(self) -> dict[str, Any]:
         """Get daemon status."""
@@ -395,11 +405,17 @@ Note:
 from __future__ import annotations
 
 import asyncio
+import logging
+logger = logging.getLogger(__name__)
 import json
+import logging
+logger = logging.getLogger(__name__)
 import time
+import logging
+logger = logging.getLogger(__name__)
 from contextlib import asynccontextmanager
 from datetime import UTC, datetime
-from typing import TYPE_CHECKING, Annotated, Any
+from typing import List, TYPE_CHECKING, Annotated, Any
 from uuid import uuid4
 
 from fastapi import (

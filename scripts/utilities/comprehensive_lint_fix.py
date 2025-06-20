@@ -5,6 +5,7 @@ import ast
 import re
 import subprocess
 from pathlib import Path
+from typing import Any
 
 
 def apply_ruff_autofixes() -> bool:
@@ -56,13 +57,13 @@ def fix_unused_arguments() -> int:
                             message = error.get("message", "")
                             if "Unused method argument:" in message:
                                 arg_match = re.search(
-                                    r"Unused method argument: `([^`]+)`", message
-                                )
+                                    r"Unused method argument: `([^`]+)`", message)
                                 if arg_match:
                                     arg_name = arg_match.group(1)
                                     if not arg_name.startswith("_"):
                                         # Replace the argument name with underscore prefix
-                                        # Be careful to only replace in function signatures
+                                        # Be careful to only replace in
+                                        # function signatures
                                         patterns = [
                                             f"def ([^(]+)\\(([^)]*\\b){arg_name}(\\b[^)]*\\))",
                                             f"async def ([^(]+)\\(([^)]*\\b){arg_name}(\\b[^)]*\\))",
@@ -99,13 +100,15 @@ def fix_syntax_errors() -> int:
 
             # Check for common syntax issues
             lines = content.splitlines()
-            fixed_lines = []
+            fixed_lines: list = []
 
             for i, line in enumerate(lines):
                 fixed_line = line
 
                 # Fix missing colons in class/function definitions
-                if re.match(r"^\s*(class|def|async def)\s+[^:]+$", line.strip()):
+                if re.match(
+                    r"^\s*(class|def|async def)\s+[^:]+$",
+                        line.strip()):
                     if not line.rstrip().endswith(":"):
                         fixed_line = line.rstrip() + ":"
 
@@ -116,7 +119,6 @@ def fix_syntax_errors() -> int:
                         next_line = lines[i + 1]
                         if next_line.strip().startswith(")"):
                             fixed_line = line  # Leave as is, next line will close
-                        else:
                             # Add closing paren if needed
                             open_parens = line.count("(") - line.count(")")
                             fixed_line = line + ")" * open_parens
@@ -156,7 +158,7 @@ def fix_import_order() -> int:
             lines = content.splitlines()
 
             # Find all imports and their positions
-            imports = []
+            imports: list = []
             non_import_start = 0
 
             # Skip initial comments and docstrings
@@ -187,31 +189,30 @@ def fix_import_order() -> int:
                 # Check for imports
                 if stripped.startswith(("import ", "from ")):
                     imports.append((i, line))
-                else:
                     non_import_start = i
                     break
 
             # Check if imports are after non-import code
             has_issue = False
-            for _i, line in enumerate(lines[non_import_start:], non_import_start):
+            for _i, line in enumerate(
+                    lines[non_import_start:], non_import_start):
                 if line.strip().startswith(("import ", "from ")):
                     has_issue = True
                     break
 
             if has_issue:
                 # Move all imports to top (after initial comments/docstrings)
-                import_lines = []
-                other_lines = []
+                import_lines: list = []
+                other_lines: list = []
 
                 # Separate imports from other lines
                 for _i, line in enumerate(lines):
                     if line.strip().startswith(("import ", "from ")):
                         import_lines.append(line)
-                    else:
                         other_lines.append((i, line))
 
                 # Reconstruct file with imports at top
-                new_lines = []
+                new_lines: list = []
 
                 # Add initial comments/docstrings
                 for i, line in other_lines:
@@ -222,7 +223,6 @@ def fix_import_order() -> int:
                         or "'''" in line
                     ):
                         new_lines.append(line)
-                    else:
                         break
 
                 # Add imports
@@ -265,7 +265,8 @@ def fix_undefined_exports() -> int:
             content = py_file.read_text()
 
             # Find __all__ definition
-            all_match = re.search(r"__all__\s*=\s*\[(.*?)\]", content, re.DOTALL)
+            all_match = re.search(
+                r"__all__\s*=\s*\[(.*?)\]", content, re.DOTALL)
             if not all_match:
                 continue
 
@@ -274,10 +275,11 @@ def fix_undefined_exports() -> int:
             exported_names = re.findall(r'["\']([^"\']+)["\']', exports_str)
 
             # Find defined names in the file
-            defined_names = set()
+            defined_names: set = set()
 
             # Find class definitions
-            class_matches = re.findall(r"^class\s+(\w+)", content, re.MULTILINE)
+            class_matches = re.findall(
+                r"^class\s+(\w+)", content, re.MULTILINE)
             defined_names.update(class_matches)
 
             # Find function definitions
@@ -291,14 +293,17 @@ def fix_undefined_exports() -> int:
             defined_names.update(var_matches)
 
             # Find imports that are re-exported
-            import_matches = re.findall(r"from\s+[^\s]+\s+import\s+([^\n]+)", content)
+            import_matches = re.findall(
+                r"from\s+[^\s]+\s+import\s+([^\n]+)", content)
             for imports in import_matches:
                 for name in imports.split(","):
-                    name = name.strip().split(" as ")[-1]  # Handle 'as' aliases
+                    name = name.strip().split(
+                        " as ")[-1]  # Handle 'as' aliases
                     defined_names.add(name)
 
             # Filter out undefined exports
-            valid_exports = [name for name in exported_names if name in defined_names]
+            valid_exports = [
+                name for name in exported_names if name in defined_names]
 
             if len(valid_exports) != len(exported_names):
                 # Update __all__ with only valid exports
@@ -308,12 +313,13 @@ def fix_undefined_exports() -> int:
                         + "\n".join(f'    "{name}",' for name in valid_exports)
                         + "\n]"
                     )
-                else:
                     new_all = "__all__ = []"
 
                 new_content = re.sub(
-                    r"__all__\s*=\s*\[[^\]]*\]", new_all, content, flags=re.DOTALL
-                )
+                    r"__all__\s*=\s*\[[^\]]*\]",
+                    new_all,
+                    content,
+                    flags=re.DOTALL)
                 py_file.write_text(new_content)
                 fixes_applied += 1
 
@@ -359,7 +365,6 @@ def fix_error_handling() -> Any:
                             lines[i] = line.replace(
                                 stripped, stripped[:-1] + ") from e"
                             )
-                        else:
                             lines[i] = line + " from e"
 
             fixed_content = "\n".join(lines)
@@ -396,7 +401,8 @@ def remove_remaining_stubs() -> int:
             for pattern in stub_patterns:
                 if re.search(pattern, content, re.IGNORECASE):
                     # For now, just mark these for manual review
-                    # Don't automatically remove as it might break functionality
+                    # Don't automatically remove as it might break
+                    # functionality
                     pass
 
         except Exception:

@@ -4,6 +4,9 @@ UNIFIED ENTERPRISE MAINTENANCE SYSTEM - PyAuto Standard v3.0.0
 
 Complete enterprise-grade maintenance system combining all proven patterns
 from the PyAuto workspace evolution. Follows CLAUDE.md rules with ABSOLUTE
+from typing import List, Dict, Optional, Any
+from typing import List, Dict, Optional, Dict
+from typing import List, Dict, Optional, List
 ZERO TOLERANCE for errors, warnings, or partial implementations.
 
 This system unifies:
@@ -145,7 +148,8 @@ class SafetyConfig:
     create_backup: bool = False
     rollback_on_error: bool = True
     dry_run: bool = False
-    parallel_workers: int = field(default_factory=lambda: multiprocessing.cpu_count())
+    parallel_workers: int = field(
+        default_factory=lambda: multiprocessing.cpu_count())
 
 
 @dataclass
@@ -163,7 +167,9 @@ class MaintenanceConfig(BaseModel):
     """Main configuration model for the maintenance system."""
 
     # Target configuration
-    target_projects: list[str] = Field(default_factory=list, description="Specific projects to target")
+    target_projects: list[str] = Field(
+        default_factory=list,
+        description="Specific projects to target")
     exclude_patterns: list[str] = Field(
         default_factory=lambda: [
             "__pycache__", ".venv", ".git", "dist", "build",
@@ -200,7 +206,8 @@ class MaintenanceConfig(BaseModel):
         """Validate target projects exist."""
         for project in v:
             if not Path(project).exists():
-                raise ValueError(f"Project directory does not exist: {project}")
+                raise ValueError(
+                    f"Project directory does not exist: {project}")
         return v
 
 
@@ -333,14 +340,16 @@ class TypeAnnotationFixer(MaintenancePlugin):
 
     def fix(self, file_path: Path, content: str) -> tuple[str, list[str]]:
         """Fix type annotations."""
-        changes = []
+        changes: list = []
         fixed = content
 
         # Fix function return types
-        def add_return_type(match):
+        def add_return_type(match) -> None:
             func_line = match.group(0)
             if " -> " not in func_line and not func_line.strip().startswith("def __init__"):
-                changes.append(f"Added return type to function: {func_line.strip()}")
+                changes.append(
+                    f"Added return type to function: {
+                        func_line.strip()}")
                 return func_line.rstrip(":") + " -> None:"
             return func_line
 
@@ -389,11 +398,11 @@ class LoggingPatternFixer(MaintenancePlugin):
 
     def fix(self, file_path: Path, content: str) -> tuple[str, list[str]]:
         """Fix logging patterns."""
-        changes = []
+        changes: list = []
         fixed = content
 
         # Fix f-strings in logging
-        def fix_f_string_logging(match):
+        def fix_f_string_logging(match) -> None:
             full_match = match.group(0)
             changes.append(f"Fixed f-string in logging: {full_match[:50]}...")
 
@@ -409,7 +418,8 @@ class LoggingPatternFixer(MaintenancePlugin):
             if variables:
                 closing_paren = new_string.rfind(')')
                 var_args = ', '.join(variables)
-                new_string = new_string[:closing_paren] + f", {var_args}" + new_string[closing_paren:]
+                new_string = new_string[:closing_paren] + \
+                    f", {var_args}" + new_string[closing_paren:]
 
             return new_string
 
@@ -453,7 +463,7 @@ class ExceptionHandlingFixer(MaintenancePlugin):
 
     def fix(self, file_path: Path, content: str) -> tuple[str, list[str]]:
         """Fix exception handling."""
-        changes = []
+        changes: list = []
         fixed = content
 
         # Fix bare except
@@ -462,9 +472,10 @@ class ExceptionHandlingFixer(MaintenancePlugin):
             changes.append("Fixed bare except clause")
 
         # Fix raise without from
-        def fix_raise_from(match):
+        def fix_raise_from(match) -> None:
             line = match.group(0)
-            if " from " not in line and "except" in content[:match.start()].split('\n')[-3:]:
+            if " from " not in line and "except" in content[:match.start()].split(
+                    '\n')[-3:]:
                 changes.append(f"Added 'from e' to raise: {line}")
                 return line.rstrip() + " from e"
             return line
@@ -496,11 +507,11 @@ class UnusedVariableFixer(MaintenancePlugin):
 
     def fix(self, file_path: Path, content: str) -> tuple[str, list[str]]:
         """Fix unused variables."""
-        changes = []
+        changes: list = []
         fixed = content
 
         # Fix unused arguments in methods (ARG002)
-        def fix_unused_arg(match):
+        def fix_unused_arg(match) -> None:
             func_def = match.group(0)
             args = match.group(1)
 
@@ -511,10 +522,10 @@ class UnusedVariableFixer(MaintenancePlugin):
             # Add *_ to catch unused positional args
             if ", " in args:
                 new_args = args.rstrip() + ", *_"
-            else:
                 new_args = args + ", *_"
 
-            changes.append(f"Added *_ to function arguments: {func_def.split('(')[0]}")
+            changes.append(
+                f"Added *_ to function arguments: {func_def.split('(')[0]}")
             return func_def.replace(args, new_args)
 
         fixed = re.sub(
@@ -547,12 +558,12 @@ class FStringConversionFixer(MaintenancePlugin):
 
     def fix(self, file_path: Path, content: str) -> tuple[str, list[str]]:
         """Convert to f-strings where appropriate."""
-        changes = []
+        changes: list = []
         fixed = content
 
         # Skip if in logging statement
         lines = fixed.split('\n')
-        new_lines = []
+        new_lines: list = []
 
         for line in lines:
             if 'logger.' in line or 'logging.' in line:
@@ -562,16 +573,17 @@ class FStringConversionFixer(MaintenancePlugin):
             # Convert .format() to f-string
             if '.format(' in line and '{' in line:
                 # Simple conversion for basic cases
-                match = re.search(r'(["\'])([^"\']*)\1\.format\(([^)]+)\)', line)
+                match = re.search(
+                    r'(["\'])([^"\']*)\1\.format\(([^)]+)\)', line)
                 if match:
-                    quote, template, args = match.groups()
-                    # This is simplified - real implementation would parse properly
-                    new_line = line.replace(match.group(0), f'f{quote}{template}{quote}')
+                    quote, template, _args = match.groups()
+                    # This is simplified - real implementation would parse
+                    # properly
+                    new_line = line.replace(
+                        match.group(0), f'f{quote}{template}{quote}')
                     new_lines.append(new_line)
                     changes.append("Converted .format() to f-string")
-                else:
                     new_lines.append(line)
-            else:
                 new_lines.append(line)
 
         fixed = '\n'.join(new_lines)
@@ -596,17 +608,18 @@ class AsyncioPatternFixer(MaintenancePlugin):
             r'async\s+def.*\n.*time\.sleep\(',  # time.sleep in async
             r'\.result\(\).*async',  # Blocking on async
         ]
-        return any(re.search(pattern, content, re.MULTILINE) for pattern in patterns)
+        return any(re.search(pattern, content, re.MULTILINE)
+                   for pattern in patterns)
 
     def fix(self, file_path: Path, content: str) -> tuple[str, list[str]]:
         """Fix asyncio patterns."""
-        changes = []
+        changes: list = []
         fixed = content
 
         # Replace time.sleep with asyncio.sleep in async functions
         lines = fixed.split('\n')
         in_async_func = False
-        new_lines = []
+        new_lines: list = []
 
         for line in lines:
             if re.match(r'async\s+def', line):
@@ -618,7 +631,6 @@ class AsyncioPatternFixer(MaintenancePlugin):
                 new_line = line.replace('time.sleep(', 'await asyncio.sleep(')
                 new_lines.append(new_line)
                 changes.append("Replaced time.sleep with await asyncio.sleep")
-            else:
                 new_lines.append(line)
 
         fixed = '\n'.join(new_lines)
@@ -642,7 +654,7 @@ class TypeCheckingImportFixer(MaintenancePlugin):
 
     def fix(self, file_path: Path, content: str) -> tuple[str, list[str]]:
         """Fix TYPE_CHECKING imports."""
-        changes = []
+        changes: list = []
         fixed = content
 
         # Ensure proper import order
@@ -676,15 +688,16 @@ class DocstringFormattingFixer(MaintenancePlugin):
             r'def\s+\w+\([^)]*\).*:\s*\n\s*[^"\s#]',  # Missing docstring
             r'class\s+\w+.*:\s*\n\s*[^"\s#]',  # Missing class docstring
         ]
-        return any(re.search(pattern, content, re.MULTILINE) for pattern in patterns)
+        return any(re.search(pattern, content, re.MULTILINE)
+                   for pattern in patterns)
 
     def fix(self, file_path: Path, content: str) -> tuple[str, list[str]]:
         """Fix docstring formatting."""
-        changes = []
+        changes: list = []
         fixed = content
 
         # Add minimal docstrings to public methods
-        def add_docstring(match):
+        def add_docstring(match) -> None:
             indent = len(match.group(0)) - len(match.group(0).lstrip())
             func_name = re.search(r'def\s+(\w+)', match.group(0)).group(1)
 
@@ -740,9 +753,12 @@ class PluginRegistry:
                 self._plugins[plugin.category] = plugin
                 self.logger.debug(f"Loaded plugin: {plugin.name}")
 
-    def get_applicable_plugins(self, file_path: Path, content: str) -> list[MaintenancePlugin]:
+    def get_applicable_plugins(
+            self,
+            file_path: Path,
+            content: str) -> list[MaintenancePlugin]:
         """Get all plugins that can fix this file."""
-        applicable = []
+        applicable: list = []
         for plugin in self._plugins.values():
             try:
                 if plugin.can_fix(file_path, content):
@@ -760,7 +776,11 @@ class PluginRegistry:
 class FileProcessor:
     """Process individual files with plugins."""
 
-    def __init__(self, config: MaintenanceConfig, logger: logging.Logger, registry: PluginRegistry):
+    def __init__(
+            self,
+            config: MaintenanceConfig,
+            logger: logging.Logger,
+            registry: PluginRegistry):
         """Initialize processor."""
         self.config = config
         self.logger = logger
@@ -789,7 +809,7 @@ class FileProcessor:
                 return result
 
             # Apply fixes
-            total_changes = []
+            total_changes: list = []
             for plugin in plugins:
                 try:
                     fixed_content, changes = plugin.fix(file_path, content)
@@ -799,8 +819,9 @@ class FileProcessor:
                         content = fixed_content
                         total_changes.extend(changes)
                         self.metrics[plugin.category.value] += len(changes)
-                    else:
-                        self.logger.warning(f"Fix validation failed for {plugin.name}")
+                        self.logger.warning(
+                            f"Fix validation failed for {
+                                plugin.name}")
 
                 except Exception as e:
                     self.logger.error(f"Plugin {plugin.name} failed: {e}")
@@ -811,7 +832,8 @@ class FileProcessor:
                 if not self.config.safety.dry_run:
                     # Create backup if configured
                     if self.config.safety.create_backup:
-                        backup_path = file_path.with_suffix(file_path.suffix + '.bak')
+                        backup_path = file_path.with_suffix(
+                            file_path.suffix + '.bak')
                         shutil.copy2(file_path, backup_path)
 
                     # Write fixed content
@@ -820,7 +842,6 @@ class FileProcessor:
                 result["success"] = True
                 result["changes"] = total_changes
                 result["metrics"] = {"changes": len(total_changes)}
-            else:
                 result["success"] = True
 
         except Exception as e:
@@ -845,12 +866,11 @@ class WorkspaceScanner:
 
     def scan(self) -> list[Path]:
         """Scan for Python files to process."""
-        files = []
+        files: list = []
 
         # Determine target directories
         if self.config.target_projects:
             targets = [Path(p) for p in self.config.target_projects]
-        else:
             targets = [Path.cwd()]
 
         # Scan each target
@@ -862,7 +882,8 @@ class WorkspaceScanner:
             # Find Python files
             for py_file in target.rglob("*.py"):
                 # Skip excluded patterns
-                if any(pattern in str(py_file) for pattern in self.config.exclude_patterns):
+                if any(pattern in str(py_file)
+                       for pattern in self.config.exclude_patterns):
                     continue
 
                 files.append(py_file)
@@ -884,7 +905,8 @@ class MetricsReporter:
         self.config = config
         self.logger = logger
 
-    def generate_report(self, results: list[dict[str, Any]], duration: float) -> None:
+    def generate_report(
+            self, results: list[dict[str, Any]], duration: float) -> None:
         """Generate and display metrics report."""
         # Aggregate metrics
         total_files = len(results)
@@ -922,7 +944,12 @@ class MetricsReporter:
             self.logger.warning("\nFailed files:")
             for result in results:
                 if not result["success"]:
-                    self.logger.warning(f"  {result['file']}: {result.get('error', 'Unknown error')}")
+                    self.logger.warning(
+                        f"  {
+                            result['file']}: {
+                            result.get(
+                                'error',
+                                'Unknown error')}")
 
         # Save detailed report if configured
         if self.config.metrics.metrics_file:
@@ -942,7 +969,9 @@ class MetricsReporter:
             with open(self.config.metrics.metrics_file, 'w') as f:
                 json.dump(report_data, f, indent=2)
 
-            self.logger.info(f"\nDetailed report saved to: {self.config.metrics.metrics_file}")
+            self.logger.info(
+                f"\nDetailed report saved to: {
+                    self.config.metrics.metrics_file}")
 
 
 # ============================================================================
@@ -978,10 +1007,9 @@ class MaintenanceOrchestrator:
                 return 0
 
             # Process files
-            results = []
+            results: list = []
             if self.config.processing_mode == ProcessingMode.PARALLEL:
                 results = self._process_parallel(files)
-            else:
                 results = self._process_sequential(files)
 
             # Generate report
@@ -1001,7 +1029,7 @@ class MaintenanceOrchestrator:
 
     def _process_sequential(self, files: list[Path]) -> list[dict[str, Any]]:
         """Process files sequentially."""
-        results = []
+        results: list = []
         for i, file_path in enumerate(files, 1):
             self.logger.debug(f"Processing [{i}/{len(files)}]: {file_path}")
             result = self.processor.process_file(file_path)
@@ -1015,7 +1043,7 @@ class MaintenanceOrchestrator:
 
     def _process_parallel(self, files: list[Path]) -> list[dict[str, Any]]:
         """Process files in parallel."""
-        results = []
+        results: list = []
 
         with concurrent.futures.ProcessPoolExecutor(
             max_workers=self.config.safety.parallel_workers
@@ -1061,13 +1089,12 @@ def load_config(config_path: Path | None) -> MaintenanceConfig:
         with open(config_path) as f:
             if config_path.suffix == '.yaml':
                 config_data = yaml.safe_load(f)
-            else:
                 config_data = json.load(f)
         return MaintenanceConfig(**config_data)
     return MaintenanceConfig()
 
 
-def main():
+def main() -> None:
     """Main CLI entry point."""
     parser = argparse.ArgumentParser(
         description=f"Unified Enterprise Maintenance System v{__version__}",

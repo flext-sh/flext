@@ -8,7 +8,6 @@ from typing import Any
 
 from flx.infra.cache.standardized_cache_service import StandardizedCacheService
 from flx.infra.http.standardized_client_service import StandardizedHttpClientService
-
 from flx.infra.services.base import service_registry
 
 
@@ -83,7 +82,8 @@ class Application:
         posts = await self.http_service.get("/posts", params={"userId": user_id})
 
         # Cache the response
-        await self.cache_service.set(cache_key, posts, ttl=600)  # Cache for 10 minutes
+        # Cache for 10 minutes
+        await self.cache_service.set(cache_key, posts, ttl=600)
 
         return posts
 

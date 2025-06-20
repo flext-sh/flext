@@ -56,7 +56,6 @@ class MonkeyTypeRunner:
                 )
             except (FileNotFoundError, subprocess.SubprocessError):
                 self.workspace_root = Path.cwd()
-        else:
             self.workspace_root = Path(workspace_root)
 
         self.venv_dir = self.workspace_root / ".venv"
@@ -113,10 +112,13 @@ class MonkeyTypeRunner:
             print("\nMonkeyType successfully collected types during test execution.")
             print("\nTo apply collected types:")
             print(
-                f"  python {Path(__file__).name} apply --flx_project {project_dir} --module <module_path>",
+                f"  python {
+                    Path(__file__).name} apply --flx_project {project_dir} --module <module_path>",
             )
             print("\nTo list modules with type information:")
-            print(f"  python {Path(__file__).name} list --flx_project {project_dir}")
+            print(
+                f"  python {
+                    Path(__file__).name} list --flx_project {project_dir}")
 
         return result.returncode
 
@@ -126,10 +128,11 @@ class MonkeyTypeRunner:
         db_file_absolute = str(db_file.absolute())
 
         if not db_file.exists():
-            print(f"Error: No type information database found for {project_dir}")
             print(
-                f"Run tests first: python {Path(__file__).name} run --flx_project {project_dir}",
-            )
+                f"Error: No type information database found for {project_dir}")
+            print(
+                f"Run tests first: python {
+                    Path(__file__).name} run --flx_project {project_dir}", )
             return 1
 
         os.environ["MONKEYTYPE_DB"] = f"sqlite:///{db_file_absolute}"
@@ -152,7 +155,8 @@ class MonkeyTypeRunner:
 
         """
         # Aplica os tipos usando o comando monkeytype apply diretamente
-        # O MonkeyType encontrará o módulo por si só, sem necessidade de verificarmos o caminho
+        # O MonkeyType encontrará o módulo por si só, sem necessidade de
+        # verificarmos o caminho
         cmd = [
             "monkeytype",
             "apply",
@@ -169,7 +173,11 @@ class MonkeyTypeRunner:
             )
             print("\nPara verificar a conformidade dos tipos:")
             print(
-                f"  cd {self.workspace_root} && python -m mypy src/{module_path.replace('.', '/')}.py",
+                f"  cd {
+                    self.workspace_root} && python -m mypy src/{
+                    module_path.replace(
+                        '.',
+                        '/')}.py",
             )
 
             # Guia para modelos Pydantic
@@ -179,7 +187,8 @@ class MonkeyTypeRunner:
                     "  Para classes de modelo, você pode converter anotações de tipo para campos Pydantic:",
                 )
                 print("  Em vez de:")
-                print("    def __init__(self, name: str, age: Optional[int] = None):")
+                print(
+                    "    def __init__(self, name: str, age: Optional[int] = None):")
                 print("  Use:")
                 print("    class User(BaseModel):")
                 print("        name: str")
@@ -198,7 +207,8 @@ class MonkeyTypeRunner:
 
         """
         # Gera o stub usando o comando monkeytype stub diretamente
-        # O MonkeyType encontrará o módulo por si só, sem necessidade de verificarmos o caminho
+        # O MonkeyType encontrará o módulo por si só, sem necessidade de
+        # verificarmos o caminho
         cmd = [
             "monkeytype",
             "stub",
@@ -211,8 +221,7 @@ class MonkeyTypeRunner:
         if result.returncode == 0:
             print(f"\nStub de tipos gerado com sucesso para {module_path}")
             print(
-                "Revise o stub gerado e aplique-o manualmente ao seu código, se necessário.",
-            )
+                "Revise o stub gerado e aplique-o manualmente ao seu código, se necessário.", )
 
             # Dicas para integração com Pydantic
             if "models" in module_path or "schema" in module_path:
@@ -239,18 +248,20 @@ class MonkeyTypeRunner:
 def parse_args() -> argparse.Namespace:
     """Parse command line arguments."""
     parser = argparse.ArgumentParser(
-        description="Run tests with MonkeyType for type collection and application.",
-    )
+        description="Run tests with MonkeyType for type collection and application.", )
 
     subparsers = parser.add_subparsers(dest="command", help="Command to run")
     subparsers.required = True
 
     # Run command
-    run_parser = subparsers.add_parser("run", help="Run tests with MonkeyType tracing")
+    run_parser = subparsers.add_parser(
+        "run", help="Run tests with MonkeyType tracing")
     run_parser.add_argument(
         "--flx_project", required=True, help="Target flx_project directory"
     )
-    run_parser.add_argument("--tests", help="Specific test path within the flx_project")
+    run_parser.add_argument(
+        "--tests",
+        help="Specific test path within the flx_project")
 
     # list command
     list_parser = subparsers.add_parser(

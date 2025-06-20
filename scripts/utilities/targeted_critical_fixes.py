@@ -33,7 +33,7 @@ def fix_broken_files() -> None:
 
             # Fix docstring and import order issues
             lines = content.splitlines()
-            fixed_lines = []
+            fixed_lines: list = []
 
             for line in lines:
                 # Skip completely broken lines
@@ -71,10 +71,8 @@ def fix_broken_files() -> None:
                         or line.strip().startswith("#")
                     ):
                         fixed_lines.append(line)
-                    else:
                         # This might be orphaned content, skip it for now
                         continue
-                else:
                     fixed_lines.append(line)
 
             # Write back the fixed content
@@ -202,7 +200,8 @@ class Customer(Entity, Identifiable, Timestamped, Versionable):
         return customer
 '''
 
-    customer_file = Path("/home/marlonsc/pyauto/flx/src/flx/core/domain/customer.py")
+    customer_file = Path(
+        "/home/marlonsc/pyauto/flx/src/flx/core/domain/customer.py")
     customer_file.write_text(customer_content)
 
 
