@@ -15,9 +15,6 @@ import os
 
 import structlog
 
-# Set up environment for demo
-os.environ["FLX_BROKER_TYPE"] = "auto"  # Auto-detect Redis or fall back to in-memory
-
 from flx.core import (
     FlxAggregateRoot,
     FlxEntityFactory,
@@ -26,6 +23,10 @@ from flx.core import (
     flx_get_broker_info,
     flx_get_health_status,
 )
+
+# Set up environment for demo
+# Auto-detect Redis or fall back to in-memory
+os.environ["FLX_BROKER_TYPE"] = "auto"
 
 
 async def demo_aggregate_async_events() -> None:

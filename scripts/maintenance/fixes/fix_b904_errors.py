@@ -24,7 +24,6 @@ def fix_b904_exceptions(content: str) -> str:
             if match:
                 except_variable = match.group(1)
                 in_except_block = True
-            else:
                 in_except_block = False
                 except_variable = None
         elif stripped.startswith("except "):
@@ -41,7 +40,8 @@ def fix_b904_exceptions(content: str) -> str:
             except_variable = None
 
         # If we're in an except block and find a raise statement
-        if in_except_block and stripped.startswith("raise ") and except_variable:
+        if in_except_block and stripped.startswith(
+                "raise ") and except_variable:
             # Check if it already has 'from'
             if " from " not in stripped:
                 # Add exception chaining
@@ -49,7 +49,6 @@ def fix_b904_exceptions(content: str) -> str:
                     lines[i] = (
                         f"{indentation}raise {stripped[6:]} from {except_variable}"
                     )
-                else:
                     # For cases like: raise Exception("message")
                     lines[i] = (
                         f"{indentation}raise {stripped[6:]} from {except_variable}"
@@ -122,7 +121,6 @@ def main() -> None:
                 total_files += 1
                 if fix_lint_file(py_file):
                     files_fixed += 1
-        else:
             print(f"Skipping non-existent path: {target_dir}")
 
     print(f"\nSummary: Fixed {files_fixed} out of {total_files} files")

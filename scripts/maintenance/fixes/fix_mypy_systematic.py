@@ -219,19 +219,22 @@ class PluginState(StrEnum):
         content = path.read_text()
 
         # Check which imports are needed
-        needs_dataclass = any("@dataclass" in class_def for _, class_def in classes)
+        needs_dataclass = any(
+            "@dataclass" in class_def for _,
+            class_def in classes)
         needs_strenum = any("StrEnum" in class_def for _, class_def in classes)
-        needs_dict_any = any("Dict[str, Any]" in class_def for _, class_def in classes)
+        needs_dict_any = any(
+            "Dict[str, Any]" in class_def for _,
+            class_def in classes)
         needs_field = any("field(" in class_def for _, class_def in classes)
 
         # Add imports if needed
-        import_lines = []
+        import_lines: list = []
         if needs_dataclass and "from dataclasses import dataclass" not in content:
             if "from dataclasses import" in content:
                 content = content.replace(
-                    "from dataclasses import", "from dataclasses import dataclass,"
-                )
-            else:
+                    "from dataclasses import",
+                    "from dataclasses import dataclass,")
                 import_lines.append("from dataclasses import dataclass")
 
         if needs_field and "field" not in content:
@@ -239,7 +242,6 @@ class PluginState(StrEnum):
                 content = content.replace(
                     "from dataclasses import", "from dataclasses import field,"
                 )
-            else:
                 import_lines.append("from dataclasses import field")
 
         if needs_strenum and "from enum import StrEnum" not in content:
@@ -247,11 +249,12 @@ class PluginState(StrEnum):
                 content = content.replace(
                     "from enum import", "from enum import StrEnum,"
                 )
-            else:
                 import_lines.append("from enum import StrEnum")
 
-        if needs_dict_any and "from typing import" in content and "Dict" not in content:
-            content = content.replace("from typing import", "from typing import Dict,")
+        if needs_dict_any and "from typing import Dict," in content and "Dict" not in content:
+            content = content.replace(
+                "from typing import Dict,",
+                "from typing import Dict, Dict,")
 
         # Add imports after __future__ or at the beginning
         if import_lines:
@@ -262,7 +265,6 @@ class PluginState(StrEnum):
                         lines.insert(i + 1, "\n".join(import_lines))
                         break
                 content = "\n".join(lines)
-            else:
                 content = "\n".join(import_lines) + "\n\n" + content
 
         # Add missing classes
@@ -273,7 +275,6 @@ class PluginState(StrEnum):
                     content = content.replace(
                         "\ndef ", f"\n{class_def.strip()}\n\n\ndef ", 1
                     )
-                else:
                     content += f"\n\n{class_def.strip()}\n"
                 print(f"Added {class_name} to {filepath}")
 
@@ -302,10 +303,10 @@ def sync_wrapper(func) -> Any:
     return wrapper
 '''
             # Add after imports
-            if "from typing import" in content:
+            if "from typing import Dict," in content:
                 lines = content.splitlines()
                 for i, line in enumerate(lines):
-                    if line.startswith("from typing import"):
+                    if line.startswith("from typing import Dict,"):
                         # Find the next empty line
                         for j in range(i + 1, len(lines)):
                             if not lines[j].strip():

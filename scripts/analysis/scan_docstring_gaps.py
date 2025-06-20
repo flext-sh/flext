@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+from typing import Any
+
 """Comprehensive docstring gap scanner for FLX project.
 Finds all classes, functions, and methods missing docstrings.
 """
 
 import ast
 import os
-from typing import Any
 
 
 class DocstringGapFinder(ast.NodeVisitor):
@@ -20,7 +21,8 @@ class DocstringGapFinder(ast.NodeVisitor):
 
     def has_docstring(self, node: ast.AST) -> bool:
         """Check if a node has a docstring."""
-        # Check if node has body attribute (ClassDef, FunctionDef, AsyncFunctionDef, Module)
+        # Check if node has body attribute (ClassDef, FunctionDef,
+        # AsyncFunctionDef, Module)
         if not hasattr(node, "body") or not node.body:  # type: ignore
             return False
 
@@ -114,7 +116,10 @@ class DocstringGapFinder(ast.NodeVisitor):
 
         self.generic_visit(node)
 
-    def _get_function_description(self, node: ast.FunctionDef, func_type: str) -> str:
+    def _get_function_description(
+            self,
+            node: ast.FunctionDef,
+            func_type: str) -> str:
         """Generate description based on function characteristics."""
         name = node.name
 
@@ -143,7 +148,9 @@ class DocstringGapFinder(ast.NodeVisitor):
             return f"Set {name[4:].replace('_', ' ')}"
 
         if name.startswith(("is_", "has_")):
-            return f"Check if {name[3:].replace('_', ' ') if name.startswith('is_') else name[4:].replace('_', ' ')}"
+            return f"Check if {name[3:].replace('_',
+                                                ' ') if name.startswith('is_') else name[4:].replace('_',
+                                                                                                     ' ')}"
 
         if name in {"connect", "disconnect", "close", "open"}:
             return f"{name.capitalize()} connection"
@@ -182,7 +189,7 @@ def scan_file(filepath: str) -> list[dict[str, Any]]:
 
 def scan_directory(directory: str) -> list[dict[str, Any]]:
     """Scan all Python files in a directory for docstring gaps."""
-    all_gaps = []
+    all_gaps: list = []
 
     for root, _dirs, files in os.walk(directory):
         # Skip test directories for now - focus on main code
@@ -205,7 +212,7 @@ def main() -> None:
     gaps = scan_directory(flx_dir)
 
     # Group by file
-    gaps_by_file = {}
+    gaps_by_file: dict = {}
     for gap in gaps:
         file_path = gap["file"]
         if file_path not in gaps_by_file:
@@ -213,7 +220,11 @@ def main() -> None:
         gaps_by_file[file_path].append(gap)
 
     # Sort files by number of gaps (descending)
-    sorted_files = sorted(gaps_by_file.items(), key=lambda x: len(x[1]), reverse=True)
+    sorted_files = sorted(
+        gaps_by_file.items(),
+        key=lambda x: len(
+            x[1]),
+        reverse=True)
 
     for file_path, file_gaps in sorted_files[:10]:
         file_path.replace("/home/marlonsc/pyauto/flx/", "")
@@ -233,12 +244,13 @@ def main() -> None:
             f" (in {gap['parent_class']})" if gap["parent_class"] else ""
 
     # Summary by type
-    gap_types = {}
+    gap_types: dict = {}
     for gap in gaps:
         gap_type = gap["type"]
         gap_types[gap_type] = gap_types.get(gap_type, 0) + 1
 
-    for gap_type, _count in sorted(gap_types.items(), key=lambda x: x[1], reverse=True):
+    for gap_type, _count in sorted(
+            gap_types.items(), key=lambda x: x[1], reverse=True):
         pass
 
     return gaps

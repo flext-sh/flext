@@ -78,7 +78,6 @@ def validate_script_location(script_file: Path | None = None) -> None:
                     break
                 except ValueError:
                     continue
-        else:
             # Para pastas específicas
             try:
                 script_file.relative_to(pattern)
@@ -127,7 +126,6 @@ def get_script_category(script_file: Path) -> str:
             return parts[-2]
     except ValueError:
         return "unknown"
-    else:
         return "general"
 
 
@@ -139,7 +137,7 @@ def check_all_scripts_location() -> list[Path]:
 
     """
     workspace_root = find_workspace_root()
-    invalid_scripts = []
+    invalid_scripts: list = []
 
     # Encontra todos os arquivos Python
     for python_file in workspace_root.rglob("*.py"):
@@ -198,6 +196,5 @@ if __name__ == "__main__":
         print("  - <projeto>/scripts/ (flx_project-level)")
 
         sys.exit(1)
-    else:
         logger.info("Todos os scripts estão nas pastas corretas! ✅")
         sys.exit(0)

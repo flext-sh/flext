@@ -57,7 +57,7 @@ def main() -> None:
     protected_fetch = breaker(api.fetch_user_sync)
 
     # Track state changes
-    states = []
+    states: list = []
 
     class StateListener:
         def __init__(self, states_list) -> None:

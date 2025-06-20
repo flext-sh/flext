@@ -123,15 +123,14 @@ def main() -> None:
         if import_ok:
             help_ok, help_msg = test_cli_help(project_path, module_path)
             print(f"  Help: {help_msg}")
-        else:
             help_ok = False
             print("  Help: ⏭️ Skipped (import failed)")
 
         # Test version (only if import works)
         if import_ok:
-            version_ok, version_msg = test_cli_version(project_path, module_path)
+            version_ok, version_msg = test_cli_version(
+                project_path, module_path)
             print(f"  Version: {version_msg}")
-        else:
             version_ok = False
             print("  Version: ⏭️ Skipped (import failed)")
 
@@ -149,7 +148,6 @@ def main() -> None:
         print("   - Consistent command structure")
         print("   - Proper version management (0.4.0)")
         print("   - Standard help functionality")
-    else:
         print("❌ Some CLI implementations have issues")
         print("   Check the output above for specific problems")
         sys.exit(1)

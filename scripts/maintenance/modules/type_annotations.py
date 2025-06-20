@@ -28,7 +28,7 @@ class TypeAnnotationFixModule(CustomFixModule):
 
     def analyze(self, file_path: Path, content: str) -> list[Issue]:
         """Analyze file for missing type annotations."""
-        issues = []
+        issues: list = []
 
         try:
             tree = ast.parse(content)
@@ -50,9 +50,12 @@ class TypeAnnotationFixModule(CustomFixModule):
 
         return issues
 
-    def _check_function(self, node: ast.FunctionDef, content: str) -> list[Issue]:
+    def _check_function(
+            self,
+            node: ast.FunctionDef,
+            content: str) -> list[Issue]:
         """Check function for missing annotations."""
-        issues = []
+        issues: list = []
         lines = content.split('\n')
 
         # Check return annotation
@@ -81,7 +84,10 @@ class TypeAnnotationFixModule(CustomFixModule):
 
         return issues
 
-    def _check_variable(self, node: ast.AnnAssign, content: str) -> list[Issue]:
+    def _check_variable(
+            self,
+            node: ast.AnnAssign,
+            content: str) -> list[Issue]:
         """Check variable assignments."""
         return []
 
@@ -90,7 +96,7 @@ class TypeAnnotationFixModule(CustomFixModule):
 
     def _check_patterns(self, content: str) -> list[Issue]:
         """Check for patterns that need type annotations."""
-        issues = []
+        issues: list = []
         lines = content.split('\n')
 
         # Pattern: variable = []  (should be: variable: list = [])
@@ -107,14 +113,14 @@ class TypeAnnotationFixModule(CustomFixModule):
             match = list_pattern.match(line)
             if match:
                 indent, var_name = match.groups()
-                issues.append(Issue(
-                    line=i,
-                    message=f"Variable '{var_name}' should have type annotation",
-                    severity="warning",
-                    fix_description="Add list type annotation",
-                    original_line=line,
-                    fixed_line=f"{indent}{var_name}: list = []"
-                ))
+                issues.append(
+                    Issue(
+                        line=i,
+                        message=f"Variable '{var_name}' should have type annotation",
+                        severity="warning",
+                        fix_description="Add list type annotation",
+                        original_line=line,
+                        fixed_line=f"{indent}{var_name}: list = []"))
 
             # Check dict pattern
             match = dict_pattern.match(line)
@@ -133,14 +139,14 @@ class TypeAnnotationFixModule(CustomFixModule):
             match = set_pattern.match(line)
             if match:
                 indent, var_name = match.groups()
-                issues.append(Issue(
-                    line=i,
-                    message=f"Variable '{var_name}' should have type annotation",
-                    severity="warning",
-                    fix_description="Add set type annotation",
-                    original_line=line,
-                    fixed_line=f"{indent}{var_name}: set = set()"
-                ))
+                issues.append(
+                    Issue(
+                        line=i,
+                        message=f"Variable '{var_name}' should have type annotation",
+                        severity="warning",
+                        fix_description="Add set type annotation",
+                        original_line=line,
+                        fixed_line=f"{indent}{var_name}: set = set()"))
 
         return issues
 
@@ -201,9 +207,9 @@ class ShoppingCart:
     def get_total(self):
         return sum(item.price for item in self.items)
 
-empty_list = []
-empty_dict = {}
-empty_set = set()
+empty_list: list = []
+empty_dict: dict = {}
+empty_set: set = set()
 '''
 
     # Run fixer in dry-run mode
@@ -211,6 +217,7 @@ empty_set = set()
 
     # Create temporary file
     from tempfile import NamedTemporaryFile
+
     with NamedTemporaryFile(mode='w', suffix='.py', delete=False) as f:
         f.write(test_content)
         temp_path = Path(f.name)

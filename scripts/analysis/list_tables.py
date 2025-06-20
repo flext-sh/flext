@@ -31,8 +31,8 @@ def list_tables() -> None:
             result = db_client.query(tables_sql)
             print(f"Tabelas encontradas: {len(result)}")
 
-            wms_tables = []
-            other_tables = []
+            wms_tables: list = []
+            other_tables: list = []
 
             for row in result:
                 # Acessar dados da linha corretamente
@@ -40,12 +40,10 @@ def list_tables() -> None:
                     table_name = row.get("TABLE_NAME", "")
                 elif isinstance(row, list | tuple):
                     table_name = row[0] if len(row) > 0 else ""
-                else:
                     table_name = str(row)
 
                 if "WMS" in table_name:
                     wms_tables.append(table_name)
-                else:
                     other_tables.append(table_name)
 
             print(f"\n--- TABELAS WMS ({len(wms_tables)}) ---")
@@ -57,13 +55,15 @@ def list_tables() -> None:
                 print(f"  {i:2d}. {table}")
 
             # Verificar especificamente as tabelas que queremos
-            target_tables = ["WMS_ALLOCATION", "WMS_ORDER_DTL", "WMS_ORDER_HDR"]
+            target_tables = [
+                "WMS_ALLOCATION",
+                "WMS_ORDER_DTL",
+                "WMS_ORDER_HDR"]
 
             print("\n--- VERIFICAÇÃO DAS TABELAS ALVO ---")
             for table in target_tables:
                 if table in wms_tables:
                     print(f"  ✅ {table} - EXISTE")
-                else:
                     print(f"  ❌ {table} - NÃO EXISTE")
 
         except Exception as e:

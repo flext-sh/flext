@@ -48,21 +48,6 @@ def fix_common_imports(file_path: Path, undefined_names: list[str]) -> bool:
         "ConfigDict": "from pydantic import ConfigDict",
         "field_validator": "from pydantic import field_validator",
         "computed_field": "from pydantic import computed_field",
-        "Dict": "from typing import Dict",
-        "List": "from typing import List",
-        "Optional": "from typing import Optional",
-        "Union": "from typing import Union",
-        "Any": "from typing import Any",
-        "ClassVar": "from typing import ClassVar",
-        "Protocol": "from typing import Protocol",
-        "TypeVar": "from typing import TypeVar",
-        "Generic": "from typing import Generic",
-        "Callable": "from typing import Callable",
-        "Iterable": "from typing import Iterable",
-        "Iterator": "from typing import Iterator",
-        "Mapping": "from typing import Mapping",
-        "Sequence": "from typing import Sequence",
-        "Type": "from typing import Type",
         "dataclass": "from dataclasses import dataclass",
         "field": "from dataclasses import field",
         "datetime": "from datetime import datetime",
@@ -96,7 +81,7 @@ def fix_common_imports(file_path: Path, undefined_names: list[str]) -> bool:
     }
 
     # Check which imports we need
-    needed_imports = []
+    needed_imports: list = []
     for name in undefined_names:
         if name in import_fixes:
             import_statement = import_fixes[name]
@@ -126,7 +111,9 @@ def fix_common_imports(file_path: Path, undefined_names: list[str]) -> bool:
     return modified
 
 
-def fix_flx_module_imports(file_path: Path, undefined_names: list[str]) -> bool:
+def fix_flx_module_imports(
+        file_path: Path,
+        undefined_names: list[str]) -> bool:
     """Fix imports for FLX framework modules."""
     content = file_path.read_text()
     modified = False
@@ -159,7 +146,7 @@ def fix_flx_module_imports(file_path: Path, undefined_names: list[str]) -> bool:
     }
 
     # Check which FLX imports we need
-    needed_imports = []
+    needed_imports: list = []
     for name in undefined_names:
         if name in flx_imports:
             import_statement = flx_imports[name]
@@ -197,7 +184,9 @@ def fix_flx_module_imports(file_path: Path, undefined_names: list[str]) -> bool:
     return modified
 
 
-def fix_forward_references(file_path: Path, undefined_names: list[str]) -> bool:
+def fix_forward_references(
+        file_path: Path,
+        undefined_names: list[str]) -> bool:
     """Fix forward reference issues in type annotations."""
     content = file_path.read_text()
     modified = False
@@ -234,7 +223,9 @@ def fix_forward_references(file_path: Path, undefined_names: list[str]) -> bool:
     return modified
 
 
-def fix_variable_definitions(file_path: Path, undefined_names: list[str]) -> bool:
+def fix_variable_definitions(
+        file_path: Path,
+        undefined_names: list[str]) -> bool:
     """Fix undefined variables by adding proper definitions."""
     content = file_path.read_text()
     modified = False

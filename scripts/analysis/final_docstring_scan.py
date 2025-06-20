@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+from typing import Any
+
 """Final comprehensive docstring gap scanner for FLX project."""
 
 import ast
 import os
-from typing import Any
 
 
 class DocstringGapFinder(ast.NodeVisitor):
@@ -113,7 +114,7 @@ def scan_file(filepath: str) -> list[dict[str, Any]]:
 
 
 def scan_directory(directory: str) -> list[dict[str, Any]]:
-    all_gaps = []
+    all_gaps: list = []
 
     for root, _dirs, files in os.walk(directory):
         if "test" in root or "__pycache__" in root:
@@ -134,7 +135,7 @@ def main() -> None:
     gaps = scan_directory(flx_dir)
 
     if gaps:
-        gaps_by_file = {}
+        gaps_by_file: dict = {}
         for gap in gaps:
             file_path = gap["file"]
             if file_path not in gaps_by_file:

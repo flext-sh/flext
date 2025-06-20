@@ -26,8 +26,8 @@ def fix_logging_extra(file_path) -> bool:
             return f'logger.{method}("{message}")'
 
         # Create formatted message with placeholders
-        placeholders = []
-        values = []
+        placeholders: list = []
+        values: list = []
         for key, value in pairs:
             placeholders.append(f"{key}: %s")
             values.append(value.strip())
@@ -54,8 +54,8 @@ def fix_logging_extra(file_path) -> bool:
                 # Extract simple key-value pairs
                 pairs = re.findall(r'"([^"]+)":\s*([^,}]+)', inner)
                 if pairs:
-                    placeholders = []
-                    values = []
+                    placeholders: list = []
+                    values: list = []
                     for key, value in pairs:
                         placeholders.append(f"{key}: %s")
                         values.append(value.strip())
@@ -105,7 +105,7 @@ def main() -> None:
         "examples/advanced/declarative_example.py",
     ]
 
-    fixed_files = []
+    fixed_files: list = []
 
     for file_path in files_to_fix:
         full_path = flx_dir / file_path

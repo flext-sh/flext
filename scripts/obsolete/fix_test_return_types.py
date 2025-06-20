@@ -8,7 +8,7 @@ from pathlib import Path
 
 def find_test_files(directory: str) -> list[Path]:
     """Find all Python test files in the given directory and its subdirectories."""
-    test_files = []
+    test_files: list = []
     for path in Path(directory).glob("**/*.py"):
         # Match common test file patterns
         if (

@@ -8,6 +8,7 @@ Avoids critical documentation files as specified by user.
 import json
 from collections import defaultdict
 from pathlib import Path
+from typing import Any
 
 
 def analyze_test_files() -> Any:
@@ -90,9 +91,9 @@ def analyze_test_files() -> Any:
                         "integration": ["test_integration.py"],
                         "e2e": ["test_e2e.py"],
                     },
-                    "estimated_reduction": f"{stats['total_test_files']} → 5-8 files",
-                }
-            )
+                    "estimated_reduction": f"{
+                        stats['total_test_files']} → 5-8 files",
+                })
 
     return analysis
 

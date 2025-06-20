@@ -9,6 +9,7 @@ via REST API endpoints, including plugin commands.
 import json
 import time
 from threading import Thread
+from typing import Any
 
 import requests
 
@@ -16,9 +17,9 @@ import requests
 def start_api_server() -> Any:
     """Start the REST API server in background."""
     import uvicorn
-    from flx.adapters.inbound.rest_api import create_rest_api
 
     from flx.adapters.inbound.fire_cli import create_cli
+    from flx.adapters.inbound.rest_api import create_rest_api
 
     cli = create_cli()
     app = create_rest_api(cli=cli)
@@ -34,60 +35,52 @@ def test_api_endpoints() -> Any:
     time.sleep(3)
 
     # Test cases
-    test_cases = [
-        {
-            "name": "Health Check",
-            "method": "GET",
-            "url": f"{base_url}/health",
-            "expected_status": 200,
-        },
-        {
-            "name": "API Info",
-            "method": "GET",
-            "url": f"{base_url}/api/v1/info",
-            "expected_status": 200,
-        },
-        {
-            "name": "App Status",
-            "method": "GET",
-            "url": f"{base_url}/api/v1/app/status",
-            "expected_status": 200,
-        },
-        {
-            "name": "System Health",
-            "method": "GET",
-            "url": f"{base_url}/api/v1/system/health",
-            "expected_status": 200,
-        },
-        {
-            "name": "Database Status (Plugin)",
-            "method": "GET",
-            "url": f"{base_url}/api/v1/database/status",
-            "expected_status": 200,
-        },
-        {
-            "name": "Database Backup (Plugin)",
-            "method": "POST",
-            "url": f"{base_url}/api/v1/database/backup",
-            "data": {"parameters": {"path": "/tmp/test-backup.sql", "compress": True}},
-            "expected_status": 200,
-        },
-        {
-            "name": "Monitoring Alerts (Plugin)",
-            "method": "GET",
-            "url": f"{base_url}/api/v1/monitoring/alerts?severity=critical",
-            "expected_status": 200,
-        },
-        {
-            "name": "System Report (Dynamic Command)",
-            "method": "POST",
-            "url": f"{base_url}/api/v1/system-report",
-            "data": {"parameters": {"format": "json"}},
-            "expected_status": 200,
-        },
-    ]
+    test_cases = [{"name": "Health Check",
+                   "method": "GET",
+                   "url": f"{base_url}/health",
+                   "expected_status": 200,
+                   },
+                  {"name": "API Info",
+                   "method": "GET",
+                   "url": f"{base_url}/api/v1/info",
+                   "expected_status": 200,
+                   },
+                  {"name": "App Status",
+                   "method": "GET",
+                   "url": f"{base_url}/api/v1/app/status",
+                   "expected_status": 200,
+                   },
+                  {"name": "System Health",
+                   "method": "GET",
+                   "url": f"{base_url}/api/v1/system/health",
+                   "expected_status": 200,
+                   },
+                  {"name": "Database Status (Plugin)",
+                   "method": "GET",
+                   "url": f"{base_url}/api/v1/database/status",
+                   "expected_status": 200,
+                   },
+                  {"name": "Database Backup (Plugin)",
+                   "method": "POST",
+                   "url": f"{base_url}/api/v1/database/backup",
+                   "data": {"parameters": {"path": "/tmp/test-backup.sql",
+                                           "compress": True}},
+                   "expected_status": 200,
+                   },
+                  {"name": "Monitoring Alerts (Plugin)",
+                   "method": "GET",
+                   "url": f"{base_url}/api/v1/monitoring/alerts?severity=critical",
+                   "expected_status": 200,
+                   },
+                  {"name": "System Report (Dynamic Command)",
+                   "method": "POST",
+                   "url": f"{base_url}/api/v1/system-report",
+                   "data": {"parameters": {"format": "json"}},
+                   "expected_status": 200,
+                   },
+                  ]
 
-    results = []
+    results: list = []
 
     for test in test_cases:
         try:
@@ -112,10 +105,8 @@ def test_api_endpoints() -> Any:
                         json_data.get("execution_time_ms", 0)
                         if json_data["success"]:
                             pass
-                    else:
                         # Direct response
-                        pass
-                except:
+                except Exception:
                     pass
 
             results.append(

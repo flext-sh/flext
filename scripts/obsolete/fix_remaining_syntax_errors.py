@@ -15,8 +15,11 @@ from pathlib import Path
 def fix_client_file() -> bool:
     """Fix syntax errors in client.py."""
     client_path = (
-        Path(__file__).parent.parent / "dc-api-x" / "src" / "dc_api_x" / "client.py"
-    )
+        Path(__file__).parent.parent /
+        "dc-api-x" /
+        "src" /
+        "dc_api_x" /
+        "client.py")
 
     if not client_path.exists():
         print(f"File not found: {client_path}")
@@ -94,7 +97,8 @@ def fix_adapters_file() -> bool:
                     lines[i] = parts[0] + "from e\n"
 
                     # Add method definition as a new line
-                    lines.insert(i + 1, "\n    def disconnect(self) -> None:\n")
+                    lines.insert(
+                        i + 1, "\n    def disconnect(self) -> None:\n")
                     fixed_content = True
 
             # LDAP connection
@@ -106,7 +110,8 @@ def fix_adapters_file() -> bool:
                     lines[i] = parts[0] + "from e\n"
 
                     # Add method definition as a new line
-                    lines.insert(i + 1, "\n    def disconnect(self) -> None:\n")
+                    lines.insert(
+                        i + 1, "\n    def disconnect(self) -> None:\n")
                     fixed_content = True
 
     # Only write the file if changes were made
@@ -126,7 +131,6 @@ def main() -> None:
 
     if client_fixed or adapters_fixed:
         print("\nFixed remaining syntax errors.")
-    else:
         print("\nNo remaining syntax errors found or fixed.")
 
 

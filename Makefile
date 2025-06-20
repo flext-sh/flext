@@ -28,6 +28,7 @@ PROJECT_RUNNER := $(SCRIPTS_DIR)/project_runner.sh
 PROJECT_MANAGE := $(SCRIPTS_DIR)/core/project_manage.py
 SCAFFOLD_MANAGE:= $(SCRIPTS_DIR)/core/scaffold_manage.py
 GIT_MANAGE     := $(SCRIPTS_DIR)/core/git_manage.py
+VERSION_MANAGER:= $(SCRIPTS_DIR)/utilities/version_manager.py
 
 # Logging
 TIMESTAMP      := $(shell date +"%Y%m%d_%H%M%S")
@@ -40,11 +41,17 @@ CACHE_DIRS     := __pycache__ .pytest_cache .mypy_cache .ruff_cache htmlcov dist
 CACHE_FILES    := *.pyc .coverage
 CACHE_PATTERNS := *.egg-info
 
-# Project Detection - Melhorada para consistência com sync_dependencies.py
-EXCLUDE_DIRS := reference docs logs scripts reports schemas temp_workflows junit src tests
+# Submodule Detection - Enhanced for Git submodules integration
+EXCLUDE_DIRS := reference docs logs scripts reports schemas temp_workflows junit src tests config .github
 EXCLUDE_DIRS_PATTERN := $(shell echo "$(EXCLUDE_DIRS)" | sed 's/ /|/g')
 PROJECTS_DIR := $(WORKSPACE_ROOT)
 
+# Get all Git submodules
+define detect_submodules
+  $(shell git submodule status 2>/dev/null | awk '{print $$2}' | sort)
+endef
+
+# Get all directories with pyproject.toml (for backward compatibility)
 define detect_projects
   $(shell find $(PROJECTS_DIR) \
     -mindepth 1 \
@@ -57,9 +64,12 @@ define detect_projects
     sort)
 endef
 
-PROJECTS := $(call detect_projects)
-ALL_PROJECT_NAMES := $(notdir $(PROJECTS))
-PROJECT_NAMES := $(if $(PROJECT),$(PROJECT),$(notdir $(PROJECTS)))
+# Combine submodules and regular projects, prioritizing submodules
+SUBMODULES := $(call detect_submodules)
+REGULAR_PROJECTS := $(call detect_projects)
+ALL_PROJECTS := $(sort $(SUBMODULES) $(notdir $(REGULAR_PROJECTS)))
+ALL_PROJECT_NAMES := $(ALL_PROJECTS)
+PROJECT_NAMES := $(if $(PROJECT),$(PROJECT),$(ALL_PROJECT_NAMES))
 PROJECT ?=
 
 # Colors - Compatível com bash simples
@@ -113,17 +123,52 @@ define info
 	@/bin/echo -e "$(CYAN)ℹ $1$(NC)"
 endef
 
-# Execute command for all projects
+# Execute command for all projects (enhanced for submodules)
 define run_for_projects
 	@mkdir -p $(LOGFILE_DIR)/$(1)
 	@/bin/echo -e "\n$(BLUE)══════════════════[ $(2) em $(if $(PROJECT),$(PROJECT),todos os projetos) ]═══════════════════$(NC)"
 	@for proj in $(PROJECT_NAMES); do \
 		/bin/echo -e "\n$(BLUE)══════════════════[ $(2) em $$proj ]═══════════════════$(NC)"; \
-		$(PROJECT_RUNNER) \
-			--flx_project $$proj \
-			--log-dir $(LOGFILE_DIR)/$(1) \
-			"$(3)"; \
+		if [ -d "$$proj" ] && [ -f "$$proj/pyproject.toml" ]; then \
+			cd "$$proj" && \
+			$(3) 2>&1 | tee -a "$(LOGFILE_DIR)/$(1)/$$proj.log" || \
+			{ $(call error,"Falha em $$proj"); exit 1; }; \
+			cd "$(WORKSPACE_ROOT)"; \
+		else \
+			$(call warning,"Projeto $$proj não encontrado ou sem pyproject.toml"); \
+		fi; \
 	done
+endef
+
+# Execute command for submodules specifically
+define run_for_submodules
+	@mkdir -p $(LOGFILE_DIR)/$(1)
+	@/bin/echo -e "\n$(BLUE)══════════════════[ $(2) em submódulos ]═══════════════════$(NC)"
+	@for submodule in $(SUBMODULES); do \
+		if [ -d "$$submodule" ] && [ -f "$$submodule/pyproject.toml" ]; then \
+			/bin/echo -e "\n$(CYAN)──────────────────[ $(2) em $$submodule ]──────────────────$(NC)"; \
+			cd "$$submodule" && \
+			$(3) 2>&1 | tee -a "$(LOGFILE_DIR)/$(1)/$$submodule.log" || \
+			{ $(call error,"Falha em $$submodule"); exit 1; }; \
+			cd "$(WORKSPACE_ROOT)"; \
+		else \
+			$(call warning,"Submódulo $$submodule não encontrado ou sem pyproject.toml"); \
+		fi; \
+	done
+endef
+
+# Check if project exists and has pyproject.toml
+define check_project_exists
+	@if [ -z "$(PROJECT)" ]; then \
+		$(call error,"PROJECT não especificado"); \
+		exit 1; \
+	elif [ ! -d "$(PROJECT)" ]; then \
+		$(call error,"Projeto $(PROJECT) não encontrado"); \
+		exit 1; \
+	elif [ ! -f "$(PROJECT)/pyproject.toml" ]; then \
+		$(call error,"Projeto $(PROJECT) não possui pyproject.toml"); \
+		exit 1; \
+	fi
 endef
 
 # Execute single command with logging
@@ -337,7 +382,7 @@ test-verbose: test
 ## lint: Executa verificação de código (CHECK=1 SECURITY=1)
 lint: venv-check
 	$(call run_for_projects,lint,Executando lint,\
-		$(VENV_BIN)/ruff check . \
+		poetry run ruff check . \
 	)
 	$(call success,Lint executado)
 	@if [ "$(CHECK)" = "1" ]; then \
@@ -369,11 +414,9 @@ lint-security: venv-check
 ## mypy: Executa verificação de tipos com mypy
 mypy: venv-check
 	$(call run_for_projects,mypy,Executando verificação de tipos,\
-		$(VENV_BIN)/mypy . \
-			--config-file=$(WORKSPACE_ROOT)/mypy.ini \
-			--ignore-missing-imports \
-			--no-error-summary \
+		poetry run mypy . \
 			--pretty \
+			--show-error-codes \
 	)
 	$(call success,Verificação de tipos completada)
 
@@ -427,9 +470,145 @@ format: fix-black
 ## build: Constrói pacotes
 build: venv-check
 	$(call run_for_projects,build,Construindo,\
-		python -m build \
+		poetry build \
 	)
 	$(call success,Build concluído)
+
+# ───────────────────────────────────────────────────────────────────────────
+#  SUBMODULE MANAGEMENT
+# ───────────────────────────────────────────────────────────────────────────
+
+## submodules-init: Inicializa todos os submódulos
+submodules-init:
+	$(call section,Inicializando submódulos)
+	@git submodule update --init --recursive
+	$(call success,Submódulos inicializados)
+
+## submodules-update: Atualiza todos os submódulos
+submodules-update:
+	$(call section,Atualizando submódulos)
+	@git submodule update --remote --recursive
+	$(call success,Submódulos atualizados)
+
+## submodules-sync: Sincroniza URLs dos submódulos
+submodules-sync:
+	$(call section,Sincronizando URLs dos submódulos)
+	@git submodule sync --recursive
+	$(call success,URLs dos submódulos sincronizadas)
+
+## submodules-status: Mostra status de todos os submódulos
+submodules-status:
+	$(call section,Status dos submódulos)
+	@git submodule status --recursive
+	@echo ""
+	@echo "$(BOLD)Submódulos detectados:$(NC)"
+	@for submodule in $(SUBMODULES); do \
+		if [ -f "$$submodule/pyproject.toml" ]; then \
+			echo "  ✅ $$submodule (com pyproject.toml)"; \
+		else \
+			echo "  ❌ $$submodule (sem pyproject.toml)"; \
+		fi; \
+	done
+
+## submodules-lint: Executa lint apenas em submódulos
+submodules-lint: venv-check
+	$(call run_for_submodules,submodules-lint,Executando lint,\
+		poetry run ruff check . \
+	)
+	$(call success,Lint dos submódulos executado)
+
+## submodules-mypy: Executa mypy apenas em submódulos
+submodules-mypy: venv-check
+	$(call run_for_submodules,submodules-mypy,Executando verificação de tipos,\
+		poetry run mypy . --pretty --show-error-codes \
+	)
+	$(call success,Verificação de tipos dos submódulos completada)
+
+## submodules-test: Executa testes apenas em submódulos
+submodules-test: venv-check
+	$(call run_for_submodules,submodules-test,Executando testes,\
+		poetry run pytest -xvs \
+	)
+	$(call success,Testes dos submódulos executados)
+
+## submodules-quality: Executa todas as verificações de qualidade em submódulos
+submodules-quality: submodules-lint submodules-mypy submodules-test
+	$(call success,Verificações de qualidade dos submódulos completadas)
+
+# ───────────────────────────────────────────────────────────────────────────
+#  ZERO TOLERANCE QUALITY GATES
+# ───────────────────────────────────────────────────────────────────────────
+
+## quality-gate-zero: ZERO TOLERANCE - Falha se qualquer warning/erro
+quality-gate-zero: venv-check
+	$(call section,🚨 ZERO TOLERANCE QUALITY GATE 🚨)
+	@failed_projects=""; \
+	for proj in $(PROJECT_NAMES); do \
+		if [ -d "$$proj" ] && [ -f "$$proj/pyproject.toml" ]; then \
+			$(call info,"Validando $$proj com tolerância ZERO..."); \
+			cd "$$proj"; \
+			echo "🔍 Ruff check (ZERO errors/warnings)..."; \
+			if ! poetry run ruff check . --quiet; then \
+				failed_projects="$$failed_projects $$proj"; \
+				$(call error,"RUFF FAILED em $$proj"); \
+			fi; \
+			echo "🔍 MyPy check (ZERO errors)..."; \
+			if ! poetry run mypy . --no-error-summary 2>/dev/null; then \
+				failed_projects="$$failed_projects $$proj"; \
+				$(call error,"MYPY FAILED em $$proj"); \
+			fi; \
+			echo "🔍 pytest (100% pass)..."; \
+			if ! poetry run pytest --tb=no -q 2>/dev/null; then \
+				failed_projects="$$failed_projects $$proj"; \
+				$(call error,"PYTEST FAILED em $$proj"); \
+			fi; \
+			echo "🔍 bandit security check..."; \
+			if ! poetry run bandit -r . -q 2>/dev/null; then \
+				failed_projects="$$failed_projects $$proj"; \
+				$(call error,"BANDIT FAILED em $$proj"); \
+			fi; \
+			cd "$(WORKSPACE_ROOT)"; \
+		fi; \
+	done; \
+	if [ -n "$$failed_projects" ]; then \
+		$(call error,"❌ QUALITY GATE FAILED em:$$failed_projects"); \
+		exit 1; \
+	else \
+		$(call success,"✅ ZERO TOLERANCE QUALITY GATE PASSED - TODOS OS PROJETOS APROVADOS"); \
+	fi
+
+## quality-gate-strict: Modo strict (falha com warnings)
+quality-gate-strict: venv-check
+	$(call section,📊 STRICT QUALITY GATE 📊)
+	$(call run_for_projects,quality-strict,Executando validação strict,\
+		set -e; \
+		poetry run ruff check . --statistics; \
+		poetry run mypy . --strict --show-error-codes; \
+		poetry run pytest --cov=src --cov-fail-under=85 --tb=short; \
+		poetry run bandit -r . -ll \
+	)
+	$(call success,Strict quality gate passou)
+
+## quality-summary: Relatório resumido de qualidade
+quality-summary: venv-check
+	$(call section,📈 RELATÓRIO DE QUALIDADE)
+	@mkdir -p reports
+	@echo "# PyAuto Quality Summary" > reports/quality_summary.md
+	@echo "Generated: $$(date)" >> reports/quality_summary.md
+	@echo "" >> reports/quality_summary.md
+	@for proj in $(PROJECT_NAMES); do \
+		if [ -d "$$proj" ] && [ -f "$$proj/pyproject.toml" ]; then \
+			echo "## $$proj" >> reports/quality_summary.md; \
+			cd "$$proj"; \
+			echo "### Ruff" >> ../reports/quality_summary.md; \
+			poetry run ruff check . --statistics 2>&1 | tail -5 >> ../reports/quality_summary.md || echo "Ruff failed" >> ../reports/quality_summary.md; \
+			echo "### MyPy" >> ../reports/quality_summary.md; \
+			poetry run mypy . --no-error-summary 2>&1 | grep -E "(error|warning)" | wc -l | xargs -I {} echo "Errors/Warnings: {}" >> ../reports/quality_summary.md; \
+			echo "" >> ../reports/quality_summary.md; \
+			cd "$(WORKSPACE_ROOT)"; \
+		fi; \
+	done
+	$(call success,Relatório de qualidade gerado em reports/quality_summary.md)
 
 # ───────────────────────────────────────────────────────────────────────────
 #  COMPLETE SETUP - PEP8 + INSTALLATION
@@ -885,6 +1064,7 @@ help:
 	@echo "  lint                Executa verificação de código (CHECK=1 SECURITY=1)"
 	@echo "  lint-check          Verifica erros de lint sem correção"
 	@echo "  lint-security       Verifica problemas de segurança"
+	@echo "  mypy                Executa verificação de tipos com mypy"
 	@echo "  fix                 Executa todas as correções automáticas"
 	@echo "  fix-ruff            Executa correções automáticas com Ruff"
 	@echo "  fix-isort           Organiza imports com isort"
@@ -892,6 +1072,21 @@ help:
 	@echo "  upgrade-syntax      Atualiza sintaxe Python para versão mais recente"
 	@echo "  format              Formata código (alias para fix-black)"
 	@echo "  build               Constrói pacotes"
+	@echo ""
+	@echo "$(BOLD)$(GREEN)Submodule Management:$(NC)"
+	@echo "  submodules-init     Inicializa todos os submódulos"
+	@echo "  submodules-update   Atualiza todos os submódulos"
+	@echo "  submodules-sync     Sincroniza URLs dos submódulos"
+	@echo "  submodules-status   Mostra status de todos os submódulos"
+	@echo "  submodules-lint     Executa lint apenas em submódulos"
+	@echo "  submodules-mypy     Executa mypy apenas em submódulos"
+	@echo "  submodules-test     Executa testes apenas em submódulos"
+	@echo "  submodules-quality  Executa todas as verificações de qualidade em submódulos"
+	@echo ""
+	@echo "$(BOLD)$(GREEN)Zero Tolerance Quality Gates:$(NC)"
+	@echo "  $(BOLD)quality-gate-zero   🚨 ZERO TOLERANCE - Falha se qualquer warning/erro$(NC)"
+	@echo "  quality-gate-strict 📊 Modo strict (falha com warnings)"
+	@echo "  quality-summary     📈 Relatório resumido de qualidade"
 	@echo ""
 	@echo "$(BOLD)$(GREEN)PyProject Template Compliance:$(NC)"
 	@echo "  $(BOLD)pyproject-template-validate   🔍 Validates all projects against enterprise template$(NC)"
@@ -924,10 +1119,58 @@ help:
 	@echo "  scaffold-status     Mostra status do scaffold"
 	@echo "  sync-scaffold       Sincroniza scaffold com projeto"
 	@echo ""
+	@echo "$(BOLD)$(GREEN)Version Management:$(NC)"
+	@echo "  version-set         Define versão em todos submódulos (VERSION=x.y.z)"
+	@echo "  version-get         Obtém versões atuais de todos submódulos"
+	@echo "  version-check       Verifica consistência de versões"
+	@echo "  version-audit       Auditoria de versões hardcoded"
+	@echo ""
 	@echo "$(BOLD)$(YELLOW)Controle de Cores:$(NC)"
 	@echo "  NO_COLOR=1          Desabilita todas as cores"
 	@echo "  make help NO_COLOR=1    Exemplo sem cores"
 	@echo ""
 	@echo "$(YELLOW)Projetos detectados:$(NC) $(notdir $(PROJECTS))"
 	@echo "$(CYAN)Para executar em projeto específico: make <comando> PROJECT=nome$(NC)"
+
+# ═══════════════════════════════════════════════════════════════════════════
+#  VERSION MANAGEMENT COMMANDS
+# ═══════════════════════════════════════════════════════════════════════════
+
+## version-set: Define versão unificada em todos submódulos (VERSION=x.y.z)
+version-set: venv-check
+	$(call section,Setting Unified Version $(if $(VERSION),$(VERSION),0.5.0))
+	@if [ -z "$(VERSION)" ]; then \
+		$(call info,Using default version 0.5.0); \
+		VERSION="0.5.0"; \
+	else \
+		VERSION="$(VERSION)"; \
+	fi; \
+	. $(VENV_DIR)/bin/activate && \
+	$(PYTHON) $(VERSION_MANAGER) --workspace "$(WORKSPACE_ROOT)" set $$VERSION
+	$(call success,Version $$VERSION set across all submodules)
+
+## version-get: Obtém versões atuais de todos submódulos
+version-get: venv-check
+	$(call section,Getting Current Versions)
+	@. $(VENV_DIR)/bin/activate && \
+	$(PYTHON) $(VERSION_MANAGER) --workspace "$(WORKSPACE_ROOT)" get
+
+## version-check: Verifica consistência de versões entre pyproject.toml e __version__.py
+version-check: venv-check
+	$(call section,Checking Version Consistency)
+	@. $(VENV_DIR)/bin/activate && \
+	$(PYTHON) $(VERSION_MANAGER) --workspace "$(WORKSPACE_ROOT)" check
+
+## version-audit: Auditoria de versões hardcoded no código
+version-audit: venv-check
+	$(call section,Auditing Hardcoded Versions)
+	@. $(VENV_DIR)/bin/activate && \
+	$(PYTHON) $(VERSION_MANAGER) --workspace "$(WORKSPACE_ROOT)" audit
+
+## version-update-to-0-5-0: Atualiza todos os submódulos para versão 0.5.0 (comando específico)
+version-update-to-0-5-0: venv-check
+	$(call section,Updating All Submodules to Version 0.5.0)
+	@. $(VENV_DIR)/bin/activate && \
+	$(PYTHON) $(VERSION_MANAGER) --workspace "$(WORKSPACE_ROOT)" set 0.5.0
+	$(call success,All submodules updated to version 0.5.0)
 	@echo "$(CYAN)Logs salvos em: $(LOGFILE_DIR)$(NC)"

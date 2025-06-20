@@ -159,43 +159,44 @@ class DocstringTranslator:
             r'\bcom relacao a\b': 'regarding',
         }
 
-                 # Files to process (from our analysis)
-         self.target_files = [
-             'scripts/utilities/sync_dependencies.py',
-             'scripts/analysis/generate_full_coverage_report.py',
-             'scripts/utilities/standardize_projects.py',
-             'scripts/utilities/resolve_dependencies.py',
-             'scripts/analysis/validate_standards.py',
-             'scripts/dev_tools/dc_api_x_monkeytype.py',
-             'scripts/maintenance/cleanup_temp_scripts.py',
-             'gruponos-poc-oic-wms/test_real_cli.py',
-             'gruponos-poc-oic-wms/test_all_commands.py',
-             'gruponos-poc-oic-wms/show_all_commands.py',
-             'gruponos-poc-oic-wms/test_commands_mock.py',
-             'algar-mig-oud/comparison_demo.py',
-             'algar-mig-oud/create_links.py',
-             'flx/src/flx/core/commands/base.py',
-             'flx/src/flx/core/commands/bus.py',
-             'flx/src/flx/core/commands/registry.py',
-             'flx/src/flx/core/commands/__init__.py',
-             'flx/src/flx/core/commands/exceptions.py',
-             'flx/src/flx/core/domain/services/ldap.py',
-             'flx/src/flx/core/domain/services/__init__.py',
-             'flx/src/flx/core/domain/value_object_types/ldap.py',
-             'flx/src/flx/core/domain/value_object_types/__init__.py',
-             'flx/src/flx/core/domain/entities.py',
-             'flx/src/flx/core/domain/exceptions.py',
-             'flx/src/flx/core/domain/base_service.py',
-             'flx/src/flx/core/domain/__init__.py',
-             'flx/src/flx/core/domain/value_objects.py',
-             'flx/src/flx/core/domain/customer.py',
-             'flx/src/flx/core/contracts/adapters.py',
-             'flx/src/flx/core/contracts/logging.py'
-         ]
+        # Files to process (from our analysis)
+        self.target_files = [
+            'scripts/utilities/sync_dependencies.py',
+            'scripts/analysis/generate_full_coverage_report.py',
+            'scripts/utilities/standardize_projects.py',
+            'scripts/utilities/resolve_dependencies.py',
+            'scripts/analysis/validate_standards.py',
+            'scripts/dev_tools/dc_api_x_monkeytype.py',
+            'scripts/maintenance/cleanup_temp_scripts.py',
+            'gruponos-poc-oic-wms/test_real_cli.py',
+            'gruponos-poc-oic-wms/test_all_commands.py',
+            'gruponos-poc-oic-wms/show_all_commands.py',
+            'gruponos-poc-oic-wms/test_commands_mock.py',
+            'algar-mig-oud/comparison_demo.py',
+            'algar-mig-oud/create_links.py',
+            'flx/src/flx/core/commands/base.py',
+            'flx/src/flx/core/commands/bus.py',
+            'flx/src/flx/core/commands/registry.py',
+            'flx/src/flx/core/commands/__init__.py',
+            'flx/src/flx/core/commands/exceptions.py',
+            'flx/src/flx/core/domain/services/ldap.py',
+            'flx/src/flx/core/domain/services/__init__.py',
+            'flx/src/flx/core/domain/value_object_types/ldap.py',
+            'flx/src/flx/core/domain/value_object_types/__init__.py',
+            'flx/src/flx/core/domain/entities.py',
+            'flx/src/flx/core/domain/exceptions.py',
+            'flx/src/flx/core/domain/base_service.py',
+            'flx/src/flx/core/domain/__init__.py',
+            'flx/src/flx/core/domain/value_objects.py',
+            'flx/src/flx/core/domain/customer.py',
+            'flx/src/flx/core/contracts/adapters.py',
+            'flx/src/flx/core/contracts/logging.py'
+        ]
 
-    def find_portuguese_content(self, file_path: Path) -> list[tuple[int, str]]:
+    def find_portuguese_content(
+            self, file_path: Path) -> list[tuple[int, str]]:
         """Find Portuguese content in a file."""
-        portuguese_lines = []
+        portuguese_lines: list = []
 
         try:
             with open(file_path, encoding='utf-8') as f:
@@ -218,7 +219,11 @@ class DocstringTranslator:
         translated = content
 
         for portuguese_pattern, english_replacement in self.translations.items():
-            translated = re.sub(portuguese_pattern, english_replacement, translated, flags=re.IGNORECASE)
+            translated = re.sub(
+                portuguese_pattern,
+                english_replacement,
+                translated,
+                flags=re.IGNORECASE)
 
         return translated
 
@@ -258,7 +263,7 @@ class DocstringTranslator:
 
     def process_all_files(self) -> dict[str, bool]:
         """Process all target files."""
-        results = {}
+        results: dict = {}
 
         print("🚀 Starting systematic docstring translation...")
         print(f"📋 Processing {len(self.target_files)} files...")
@@ -315,8 +320,12 @@ class DocstringTranslator:
 
 def main() -> None:
     """Main execution function."""
-    parser = argparse.ArgumentParser(description='Systematic docstring translation tool')
-    parser.add_argument('--dry-run', action='store_true', help='Show what would be changed without making changes')
+    parser = argparse.ArgumentParser(
+        description='Systematic docstring translation tool')
+    parser.add_argument(
+        '--dry-run',
+        action='store_true',
+        help='Show what would be changed without making changes')
     parser.add_argument('--file', type=str, help='Process specific file only')
 
     args = parser.parse_args()
@@ -329,12 +338,12 @@ def main() -> None:
         if args.dry_run:
             portuguese_lines = translator.find_portuguese_content(file_path)
             if portuguese_lines:
-                print(f"Would translate {len(portuguese_lines)} items in {file_path}")
+                print(
+                    f"Would translate {
+                        len(portuguese_lines)} items in {file_path}")
                 for line_num, line in portuguese_lines:
                     print(f"  Line {line_num}: {line}")
-            else:
                 print(f"No Portuguese content found in {file_path}")
-        else:
             translator.process_file(file_path)
     # Process all files
     elif args.dry_run:
@@ -344,7 +353,6 @@ def main() -> None:
             portuguese_lines = translator.find_portuguese_content(file_path)
             if portuguese_lines:
                 print(f"{file_path}: {len(portuguese_lines)} Portuguese items")
-    else:
         results = translator.process_all_files()
         translator.generate_report(results)
 

@@ -48,20 +48,18 @@ def debug_transaction() -> None:
         fields = list(test_data.keys())
         fields_str = ", ".join([f'"{field}"' for field in fields])
 
-        values = []
+        values: list = []
         for field in fields:
             value = test_data[field]
             if isinstance(value, str):
-                if any(
-                    date_keyword in field.lower() for date_keyword in ["date", "_dt"]
-                ):
+                if any(date_keyword in field.lower()
+                        for date_keyword in ["date", "_dt"]):
                     if len(value) == 10:  # YYYY-MM-DD
                         values.append(f"TO_DATE('{value}', 'YYYY-MM-DD')")
                     else:  # YYYY-MM-DD HH:MM:SS
-                        values.append(f"TO_DATE('{value}', 'YYYY-MM-DD HH24:MI:SS')")
-                else:
+                        values.append(
+                            f"TO_DATE('{value}', 'YYYY-MM-DD HH24:MI:SS')")
                     values.append(f"'{value}'")
-            else:
                 values.append(str(value))
 
         values_str = ", ".join(values)
@@ -86,8 +84,7 @@ def debug_transaction() -> None:
                 # Verificar dentro da transação
                 count_in_transaction = db_client.query(count_before_sql)
                 count_in_tx = (
-                    count_in_transaction[0]["total"] if count_in_transaction else 0
-                )
+                    count_in_transaction[0]["total"] if count_in_transaction else 0)
                 print(f"Registros dentro da transação: {count_in_tx}")
 
                 print("Saindo do bloco with (commit automático)...")
@@ -122,7 +119,6 @@ def debug_transaction() -> None:
                 db_client.execute(delete_sql, commit=True)
                 print("🧹 Dados de teste removidos")
 
-        else:
             print("❌ Dados NÃO foram inseridos")
 
         # TESTE 4: Verificar se há problemas com autocommit

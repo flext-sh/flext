@@ -13,7 +13,7 @@ def flx_mypy_issues(file_path: str) -> None:
         lines = f.readlines()
 
     # Process the file line by line
-    new_lines = []
+    new_lines: list = []
     i = 0
 
     while i < len(lines):
@@ -34,7 +34,8 @@ def flx_mypy_issues(file_path: str) -> None:
         if "result = PaginateOptions(" in line:
             line = line.replace("result = ", "return ")
 
-        # Fix 4: Remove blocks with "if self is not None:" or "if doctyper is not None:"
+        # Fix 4: Remove blocks with "if self is not None:" or "if doctyper is
+        # not None:"
         if (
             "if self is not None:" in line.strip()
             or "if doctyper is not None:" in line.strip()
@@ -67,7 +68,8 @@ def flx_mypy_issues(file_path: str) -> None:
             i += 2
             continue
 
-        # Fix 7: Fix lines with multi-line parameters that have wrong indentation
+        # Fix 7: Fix lines with multi-line parameters that have wrong
+        # indentation
         if ": Annotated[" in line:
             # This might be part of a parameter definition
             next_line_idx = i + 1
@@ -77,12 +79,13 @@ def flx_mypy_issues(file_path: str) -> None:
                 and lines[next_line_idx].lstrip().startswith("doctyper")
             ):
                 # Fix indentation if needed
-                if (
-                    len(lines[next_line_idx]) - len(lines[next_line_idx].lstrip())
-                    < len(line) - len(line.lstrip()) + 4
-                ):
+                if (len(lines[next_line_idx]) -
+                    len(lines[next_line_idx].lstrip()) < len(line) -
+                    len(line.lstrip()) +
+                        4):
                     # Indentation is incorrect, fix it
-                    expected_indent = " " * (len(line) - len(line.lstrip()) + 4)
+                    expected_indent = " " * \
+                        (len(line) - len(line.lstrip()) + 4)
                     lines[next_line_idx] = (
                         expected_indent + lines[next_line_idx].lstrip()
                     )
@@ -94,7 +97,7 @@ def flx_mypy_issues(file_path: str) -> None:
     # Look for missing Optional import
     needs_optional = False
     for line in new_lines:
-        if "Optional[" in line and "from typing import Optional" not in "".join(
+        if "Optional[" in line and "from typing import Optional, Optional" not in "".join(
             new_lines,
         ):
             needs_optional = True
@@ -102,10 +105,9 @@ def flx_mypy_issues(file_path: str) -> None:
 
     if needs_optional:
         for i, line in enumerate(new_lines):
-            if "from typing import " in line and "Optional" not in line:
+            if "from typing import Optional, " in line and "Optional" not in line:
                 if "Union" in line:
                     new_lines[i] = line.replace("Union", "Optional, Union")
-                else:
                     new_lines[i] = line.rstrip() + ", Optional\n"
                 break
 
@@ -140,8 +142,11 @@ if __name__ == "__main__":
 
     # Find files with the specific issues
     print("Finding files with mypy issues...")
-    files_with_offset_issue = find_files_with_pattern(base_dir, r"offset\[Any\]")
-    print(f"Found {len(files_with_offset_issue)} files with offset[Any] issues")
+    files_with_offset_issue = find_files_with_pattern(
+        base_dir, r"offset\[Any\]")
+    print(
+        f"Found {
+            len(files_with_offset_issue)} files with offset[Any] issues")
 
     # Process each file
     for file_path in files_with_offset_issue:
@@ -149,8 +154,14 @@ if __name__ == "__main__":
         fix_mypy_issues(file_path)
 
     # Also fix base.py directly since it's known to have issues
-    base_py_path = os.path.join(base_dir, "src", "dc_api_x", "entity", "base.py")
-    if os.path.exists(base_py_path) and base_py_path not in files_with_offset_issue:
+    base_py_path = os.path.join(
+        base_dir,
+        "src",
+        "dc_api_x",
+        "entity",
+        "base.py")
+    if os.path.exists(
+            base_py_path) and base_py_path not in files_with_offset_issue:
         print(f"Fixing issues in {base_py_path}...")
         fix_mypy_issues(base_py_path)
 

@@ -18,8 +18,11 @@ from pathlib import Path
 def fix_client_file() -> bool:
     """Fix syntax errors in client.py."""
     client_path = (
-        Path(__file__).parent.parent / "dc-api-x" / "src" / "dc_api_x" / "client.py"
-    )
+        Path(__file__).parent.parent /
+        "dc-api-x" /
+        "src" /
+        "dc_api_x" /
+        "client.py")
 
     if not client_path.exists():
         print(f"File not found: {client_path}")
@@ -117,7 +120,6 @@ def main() -> None:
 
     if fixed_client or fixed_adapters:
         print("\nFixed syntax errors in files.")
-    else:
         print("\nNo syntax errors fixed.")
 
 

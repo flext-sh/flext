@@ -20,7 +20,8 @@ class WorkingTestConfig(BaseModel):
 
     verbose: bool = Field(default=True, description="Verbose output")
     coverage: bool = Field(default=True, description="Enable coverage")
-    generate_reports: bool = Field(default=True, description="Generate HTML reports")
+    generate_reports: bool = Field(
+        default=True, description="Generate HTML reports")
 
 
 class WorkingTestRunner:
@@ -235,7 +236,7 @@ class TestFlxModules:
         """Test that FLX modules can be imported."""
         try:
             import flx
-            assert hasattr(flx, "__version__") or True  # Module exists
+            if not hasattr(flx:
         except ImportError as e:
             pytest.skip(f"FLX not available: {e}")
 
@@ -247,7 +248,6 @@ class TestFlxModules:
             assert (flx_path / "ingoing").exists()
             assert (flx_path / "outgoing").exists()
             assert (flx_path / "__init__.py").exists()
-        else:
             pytest.skip("FLX ports not found")
 
     @pytest.mark.unit
@@ -266,7 +266,6 @@ class TestFlxModules:
                 file_path = outgoing_path / file
                 if file_path.exists():
                     assert file_path.stat().st_size > 0  # File has content
-        else:
             pytest.skip("Outgoing ports not found")
 
     @pytest.mark.unit
@@ -275,8 +274,8 @@ class TestFlxModules:
         try:
             from flx.cli.formatters import FlxCliOutputFormatter
             formatter = FlxCliOutputFormatter()
-            assert hasattr(formatter, "format_table")
-            assert hasattr(formatter, "format_json")
+            if not hasattr(formatter:
+            if not hasattr(formatter:
         except ImportError:
             pytest.skip("CLI formatters not available")
 
@@ -325,15 +324,21 @@ if __name__ == "__main__":
         print(f"❌ Failed: {total_failed}")
         print(f"⏱️ Total Time: {total_duration:.2f}s")
 
-        success_rate = (total_passed / total_tests * 100) if total_tests > 0 else 0
+        success_rate = (
+            total_passed /
+            total_tests *
+            100) if total_tests > 0 else 0
         print(f"📊 Success Rate: {success_rate:.1f}%")
 
         print("\n📋 DETAILED RESULTS:")
         for result in self.results:
             status = "✅" if result["success"] else "❌"
             print(
-                f"  {status} {result['name']}: {result['passed']}/{result['tests']} ({result['duration']:.2f}s)"
-            )
+                f"  {status} {
+                    result['name']}: {
+                    result['passed']}/{
+                    result['tests']} ({
+                    result['duration']:.2f}s)")
 
         print("\n" + "=" * 50)
 
@@ -356,7 +361,6 @@ def main() -> None:
     if success:
         print("\n🎉 All working tests completed successfully!")
         sys.exit(0)
-    else:
         print("\n⚠️ Some tests failed, but working tests identified!")
         sys.exit(0)  # Don't fail completely for working tests
 

@@ -11,10 +11,6 @@ import json
 import sys
 from pathlib import Path
 
-# Add FLX to path for isolated testing
-sys.path.insert(0, "/home/marlonsc/pyauto/flx/src")
-
-# Import meta-programming components
 from flx.core.capabilities import CapabilityType
 from flx.core.enhanced_factory import get_enhanced_factory
 from flx.core.meta_factory import (
@@ -27,6 +23,11 @@ from flx.core.meta_factory import (
     ServiceConfig,
     get_meta_factory,
 )
+
+# Add FLX to path for isolated testing
+sys.path.insert(0, "/home/marlonsc/pyauto/flx/src")
+
+# Import meta-programming components
 
 
 async def demonstrate_meta_factory() -> None:
@@ -58,7 +59,8 @@ async def demonstrate_meta_factory() -> None:
         }
 
         print("\n🏗️  Creating Oracle WMS adapter from built-in schema...")
-        wms_adapter = enhanced_factory.create_adapter("oracle_wms", **wms_config)
+        wms_adapter = enhanced_factory.create_adapter(
+            "oracle_wms", **wms_config)
 
         print(f"✅ Created adapter: {wms_adapter.__class__.__name__}")
         print(f"   Class module: {wms_adapter.__class__.__module__}")
@@ -68,7 +70,7 @@ async def demonstrate_meta_factory() -> None:
 
         # Show adapter capabilities
         if hasattr(wms_adapter, "has_capability"):
-            capabilities = []
+            capabilities: list = []
             for cap in CapabilityType:
                 if wms_adapter.has_capability(cap):
                     capabilities.append(cap.value)
@@ -212,8 +214,13 @@ async def demonstrate_meta_factory() -> None:
 
         # Test configuration access
         if hasattr(custom_adapter, "_config"):
-            print(f"   Configuration accessible: {bool(custom_adapter._config)}")
-            print(f"   API Base URL: {custom_adapter_config.get('api_base_url')}")
+            print(
+                f"   Configuration accessible: {
+                    bool(
+                        custom_adapter._config)}")
+            print(
+                f"   API Base URL: {
+                    custom_adapter_config.get('api_base_url')}")
 
     except Exception as e:
         print(f"❌ Custom adapter generation failed: {e}")
@@ -304,8 +311,11 @@ async def demonstrate_meta_factory() -> None:
             "currency": "USD",
         }
 
-        payment_adapter = enhanced_factory.create_adapter(schema_file, **payment_config)
-        print(f"✅ Created payment adapter: {payment_adapter.__class__.__name__}")
+        payment_adapter = enhanced_factory.create_adapter(
+            schema_file, **payment_config)
+        print(
+            f"✅ Created payment adapter: {
+                payment_adapter.__class__.__name__}")
 
         # Register schema for reuse
         enhanced_factory.register_schema("payment_gateway", schema_file)
@@ -315,7 +325,6 @@ async def demonstrate_meta_factory() -> None:
         validation_issues = enhanced_factory.validate_schema(schema_file)
         if validation_issues:
             print(f"⚠️  Schema validation issues: {validation_issues}")
-        else:
             print("✅ Schema validation passed")
 
     except Exception as e:

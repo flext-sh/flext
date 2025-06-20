@@ -33,7 +33,7 @@ class AsyncioPatternFixModule(CustomFixModule):
 
     def analyze(self, file_path: Path, content: str) -> list[Issue]:
         """Analyze file for asyncio issues."""
-        issues = []
+        issues: list = []
 
         try:
             tree = ast.parse(content)
@@ -57,7 +57,10 @@ class AsyncioPatternFixModule(CustomFixModule):
 
         return issues
 
-    def _create_issue_from_finding(self, finding: dict, lines: list[str]) -> Issue | None:
+    def _create_issue_from_finding(
+            self,
+            finding: dict,
+            lines: list[str]) -> Issue | None:
         """Create Issue from AST finding."""
         line_num = finding['line']
         issue_type = finding['type']
@@ -73,11 +76,11 @@ class AsyncioPatternFixModule(CustomFixModule):
                 message="asyncio.run() called inside loop - creates new event loop each time",
                 severity="error",
                 fix_description="Move asyncio.run() outside loop or use await",
-                original_line=original_line
-            )
+                original_line=original_line)
 
         if issue_type == 'time_sleep_in_async':
-            fixed_line = original_line.replace('time.sleep(', 'await asyncio.sleep(')
+            fixed_line = original_line.replace(
+                'time.sleep(', 'await asyncio.sleep(')
             return Issue(
                 line=line_num,
                 message="time.sleep() blocks the event loop in async function",
@@ -108,12 +111,14 @@ class AsyncioPatternFixModule(CustomFixModule):
             )
             return Issue(
                 line=line_num,
-                message=f"Coroutine '{finding.get('name', 'unknown')}' called without await",
+                message=f"Coroutine '{
+                    finding.get(
+                        'name',
+                        'unknown')}' called without await",
                 severity="error",
                 fix_description="Add await keyword",
                 original_line=original_line,
-                fixed_line=fixed_line
-            )
+                fixed_line=fixed_line)
 
         elif issue_type == 'blocking_io':
             return Issue(
@@ -128,7 +133,7 @@ class AsyncioPatternFixModule(CustomFixModule):
 
     def _check_regex_patterns(self, lines: list[str]) -> list[Issue]:
         """Check patterns with regex."""
-        issues = []
+        issues: list = []
 
         # Track if we're in an async function
         in_async_func = False
@@ -154,43 +159,43 @@ class AsyncioPatternFixModule(CustomFixModule):
 
             # Check for create_task without assignment
             if task_pattern.match(line) and '=' not in line:
-                issues.append(Issue(
-                    line=i,
-                    message="asyncio.create_task() result not stored - task may be garbage collected",
-                    severity="warning",
-                    fix_description="Store task reference: task = asyncio.create_task(...)",
-                    original_line=line
-                ))
+                issues.append(
+                    Issue(
+                        line=i,
+                        message="asyncio.create_task() result not stored - task may be garbage collected",
+                        severity="warning",
+                        fix_description="Store task reference: task = asyncio.create_task(...)",
+                        original_line=line))
 
             # Check for synchronous requests in async
             if in_async_func and requests_pattern.search(line):
-                issues.append(Issue(
-                    line=i,
-                    message="Synchronous requests library used in async function",
-                    severity="error",
-                    fix_description="Use aiohttp or httpx for async HTTP requests",
-                    original_line=line
-                ))
+                issues.append(
+                    Issue(
+                        line=i,
+                        message="Synchronous requests library used in async function",
+                        severity="error",
+                        fix_description="Use aiohttp or httpx for async HTTP requests",
+                        original_line=line))
 
             # Check for threading in async
             if in_async_func and threading_pattern.search(line):
-                issues.append(Issue(
-                    line=i,
-                    message="Threading used in async function - use asyncio primitives",
-                    severity="warning",
-                    fix_description="Use asyncio.Lock, asyncio.Event, etc.",
-                    original_line=line
-                ))
+                issues.append(
+                    Issue(
+                        line=i,
+                        message="Threading used in async function - use asyncio primitives",
+                        severity="warning",
+                        fix_description="Use asyncio.Lock, asyncio.Event, etc.",
+                        original_line=line))
 
             # Check for loop.run_until_complete in async
             if in_async_func and 'run_until_complete' in line:
-                issues.append(Issue(
-                    line=i,
-                    message="run_until_complete() in async function - use await instead",
-                    severity="error",
-                    fix_description="Replace with await",
-                    original_line=line
-                ))
+                issues.append(
+                    Issue(
+                        line=i,
+                        message="run_until_complete() in async function - use await instead",
+                        severity="error",
+                        fix_description="Replace with await",
+                        original_line=line))
 
         return issues
 
@@ -200,7 +205,7 @@ class AsyncioPatternFixModule(CustomFixModule):
 
         # Check if we need asyncio import
         needs_asyncio = any('asyncio.sleep' in issue.fixed_line
-                          for issue in issues if issue.fixed_line)
+                            for issue in issues if issue.fixed_line)
 
         # Sort issues by line number in reverse
         sorted_issues = sorted(issues, key=lambda x: x.line, reverse=True)
@@ -261,7 +266,7 @@ class AsyncVisitor(ast.NodeVisitor):
         self.in_loop = False
         self.async_funcs = set()
 
-    def visit_AsyncFunctionDef(self, node):
+    def visit_AsyncFunctionDef(self, node) -> None:
         """Visit async function definitions."""
         old_in_async = self.in_async_func
         self.in_async_func = True
@@ -271,7 +276,7 @@ class AsyncVisitor(ast.NodeVisitor):
 
         self.in_async_func = old_in_async
 
-    def visit_For(self, node):
+    def visit_For(self, node) -> None:
         """Visit for loops."""
         old_in_loop = self.in_loop
         self.in_loop = True
@@ -280,7 +285,7 @@ class AsyncVisitor(ast.NodeVisitor):
 
         self.in_loop = old_in_loop
 
-    def visit_While(self, node):
+    def visit_While(self, node) -> None:
         """Visit while loops."""
         old_in_loop = self.in_loop
         self.in_loop = True
@@ -289,14 +294,14 @@ class AsyncVisitor(ast.NodeVisitor):
 
         self.in_loop = old_in_loop
 
-    def visit_Call(self, node):
+    def visit_Call(self, node) -> None:
         """Visit function calls."""
         # Check for asyncio.run in loops
         if (isinstance(node.func, ast.Attribute) and
             isinstance(node.func.value, ast.Name) and
             node.func.value.id == 'asyncio' and
             node.func.attr == 'run' and
-            self.in_loop):
+                self.in_loop):
 
             self.findings.append({
                 'type': 'asyncio_run_in_loop',
@@ -308,7 +313,7 @@ class AsyncVisitor(ast.NodeVisitor):
             isinstance(node.func, ast.Attribute) and
             isinstance(node.func.value, ast.Name) and
             node.func.value.id == 'time' and
-            node.func.attr == 'sleep'):
+                node.func.attr == 'sleep'):
 
             self.findings.append({
                 'type': 'time_sleep_in_async',
@@ -318,7 +323,7 @@ class AsyncVisitor(ast.NodeVisitor):
         # Check for sync open() in async
         if (self.in_async_func and
             isinstance(node.func, ast.Name) and
-            node.func.id == 'open'):
+                node.func.id == 'open'):
 
             self.findings.append({
                 'type': 'sync_open_in_async',
@@ -328,7 +333,7 @@ class AsyncVisitor(ast.NodeVisitor):
         # Check for missing await on coroutines
         if (self.in_async_func and
             isinstance(node.func, ast.Name) and
-            node.func.id in self.async_funcs):
+                node.func.id in self.async_funcs):
 
             # Check if this call is already awaited
             # This is simplified - real implementation would check parent
@@ -342,7 +347,7 @@ class AsyncVisitor(ast.NodeVisitor):
         blocking_funcs = {'input', 'sleep', 'subprocess.run', 'os.system'}
         if (self.in_async_func and
             isinstance(node.func, ast.Name) and
-            node.func.id in blocking_funcs):
+                node.func.id in blocking_funcs):
 
             self.findings.append({
                 'type': 'blocking_io',
@@ -397,6 +402,7 @@ async def background_job():
     fixer = AsyncioPatternFixModule(dry_run=True, verbose=True)
 
     from tempfile import NamedTemporaryFile
+
     with NamedTemporaryFile(mode='w', suffix='.py', delete=False) as f:
         f.write(test_content)
         temp_path = Path(f.name)

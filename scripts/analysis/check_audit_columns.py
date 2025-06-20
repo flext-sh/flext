@@ -46,7 +46,9 @@ def check_and_create_audit_columns() -> None:
             """
 
             try:
-                result = db_client.query(table_exists_sql, {"table_name": table_name})
+                result = db_client.query(
+                    table_exists_sql, {
+                        "table_name": table_name})
                 table_count = result[0]["table_count"] if result else 0
 
                 if table_count == 0:
@@ -71,22 +73,23 @@ def check_and_create_audit_columns() -> None:
                 existing_columns = db_client.query(
                     columns_sql, {"table_name": table_name}
                 )
-                existing_column_names = {row["COLUMN_NAME"] for row in existing_columns}
+                existing_column_names = {
+                    row["COLUMN_NAME"] for row in existing_columns}
 
                 print(f"Colunas existentes: {len(existing_column_names)}")
 
                 # Verificar quais colunas de auditoria existem
-                existing_audit = []
-                missing_audit = []
+                existing_audit: list = []
+                missing_audit: list = []
 
                 for audit_col in audit_columns:
                     if audit_col in existing_column_names:
                         existing_audit.append(audit_col)
-                    else:
                         missing_audit.append(audit_col)
 
                 if existing_audit:
-                    print(f"✅ Colunas de auditoria existentes: {existing_audit}")
+                    print(
+                        f"✅ Colunas de auditoria existentes: {existing_audit}")
 
                 if missing_audit:
                     print(f"❌ Colunas de auditoria faltando: {missing_audit}")
@@ -111,10 +114,9 @@ def check_and_create_audit_columns() -> None:
                                 "ORA-01430" in str(e)
                                 or "already exists" in str(e).lower()
                             ):
-                                print(f"⚠️ Coluna {col_name} já existe - ignorando erro")
-                            else:
+                                print(
+                                    f"⚠️ Coluna {col_name} já existe - ignorando erro")
                                 print(f"❌ Erro real ao criar {col_name}: {e}")
-                else:
                     print("✅ Todas as colunas de auditoria já existem")
 
             except Exception as e:
@@ -148,7 +150,6 @@ def check_and_create_audit_columns() -> None:
 
                 if audit_count == 4:
                     print("  ✅ Todas as colunas de auditoria presentes")
-                else:
                     print(f"  ❌ Faltam {4 - audit_count} colunas de auditoria")
 
             except Exception as e:

@@ -58,7 +58,11 @@ class DatabaseConnection:
             msg = "Query execution failed"
             raise ConnectionError(msg)
 
-        return {"result": f"Result for: {query}", "rows": random.randint(0, 100)}
+        return {
+    "result": f"Result for: {query}",
+    "rows": random.randint(
+        0,
+         100)}
 
     async def ping(self) -> bool:
         """Check if connection is alive."""
@@ -205,7 +209,7 @@ class AdvancedDatabaseService(BaseInfraService):
         """Start database service."""
         # Initialize connection pool
         await self._connection_pool.initialize()
-        self._logger.info("Database service started with pool size %s", self._pool_size")
+        self._logger.info("Database service started with pool size %s", self._pool_size)
 
     async def _do_stop(self) -> None:
         """Stop database service."""

@@ -54,7 +54,8 @@ class DatabaseCommands:
             "timestamp": "2025-06-12T12:45:00Z",
         }
 
-    async def restore(self, backup_path: str, force: bool = False) -> dict[str, Any]:
+    async def restore(self, backup_path: str,
+                      force: bool = False) -> dict[str, Any]:
         """Restaurar banco de dados do backup.
 
         Args:
@@ -160,9 +161,9 @@ class MonitoringCommands:
         }
 
         if component == "database":
-            metrics.update(
-                {"connections": 25, "queries_per_second": 150, "cache_hit_ratio": 0.95}
-            )
+            metrics.update({"connections": 25,
+                            "queries_per_second": 150,
+                            "cache_hit_ratio": 0.95})
         elif component == "api":
             metrics.update(
                 {

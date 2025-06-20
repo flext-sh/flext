@@ -105,10 +105,10 @@ class OfficialLintMyPyFixer:
         self.config = config or FixerConfig()
         self.workspace_root = Path.cwd()
         self.backup_dir = (
-            self.workspace_root
-            / "archive"
-            / f'lint_fixes_backup_{datetime.now(UTC).strftime("%Y%m%d_%H%M%S")}'
-        )
+            self.workspace_root /
+            "archive" /
+            f'lint_fixes_backup_{
+                datetime.now(UTC).strftime("%Y%m%d_%H%M%S")}')
 
         # Statistics tracking
         self.stats = {
@@ -171,12 +171,13 @@ class OfficialLintMyPyFixer:
         required_tools = ["ruff", "mypy"]
         for tool in required_tools:
             try:
-                subprocess.run([tool, "--version"], capture_output=True, check=True)
+                subprocess.run([tool, "--version"],
+                               capture_output=True, check=True)
                 logger.info("✅ %s is available", tool)
             except (subprocess.SubprocessError, FileNotFoundError):
                 msg = f"❌ Required tool {tool} not found"
                 logger.error(msg)
-                raise RuntimeError(msg)
+                raise RuntimeError(msg) from e
 
         # Check disk space (at least 1GB)
         disk_usage = shutil.disk_usage(self.workspace_root)
@@ -214,9 +215,8 @@ class OfficialLintMyPyFixer:
                 for proj in self.config.target_projects
                 if (self.workspace_root / proj).exists()
             ]
-        else:
             # Auto-discover Python projects
-            projects = []
+            projects: list = []
             for item in self.workspace_root.iterdir():
                 if item.is_dir() and not item.name.startswith("."):
                     # Check for Python project indicators
@@ -228,7 +228,8 @@ class OfficialLintMyPyFixer:
 
         return projects
 
-    def _process_projects_incrementally(self, projects: list[Path]) -> dict[str, Any]:
+    def _process_projects_incrementally(
+            self, projects: list[Path]) -> dict[str, Any]:
         """Process projects incrementally with rollback capability."""
         results = {
             "projects_processed": 0,
@@ -248,7 +249,6 @@ class OfficialLintMyPyFixer:
                 if project_result["success"]:
                     results["projects_successful"] += 1
                     results["total_fixes"] += project_result["fixes_applied"]
-                else:
                     results["projects_failed"] += 1
                     logger.warning("⚠️ Project %s had issues", project.name)
 
@@ -263,7 +263,10 @@ class OfficialLintMyPyFixer:
                 )
 
             except Exception as e:
-                logger.error("💥 Failed to process project %s: %s", project.name, e)
+                logger.error(
+                    "💥 Failed to process project %s: %s",
+                    project.name,
+                    e)
                 results["projects_failed"] += 1
                 results["project_results"][project.name] = {
                     "success": False,
@@ -286,7 +289,8 @@ class OfficialLintMyPyFixer:
 
         try:
             # Get initial error count
-            result["error_count_before"] = self._count_lint_errors(project_path)
+            result["error_count_before"] = self._count_lint_errors(
+                project_path)
             logger.info(
                 "📊 Initial errors in %s: %d",
                 project_path.name,
@@ -295,13 +299,14 @@ class OfficialLintMyPyFixer:
 
             # Find Python files
             python_files = list(project_path.rglob("*.py"))
-            python_files = [f for f in python_files if not self._should_skip_file(f)]
+            python_files = [
+                f for f in python_files if not self._should_skip_file(f)]
 
             result["files_processed"] = len(python_files)
 
             # Process files in batches
             for i in range(0, len(python_files), self.config.batch_size):
-                batch = python_files[i : i + self.config.batch_size]
+                batch = python_files[i: i + self.config.batch_size]
                 batch_fixes = self._process_file_batch(batch)
                 result["fixes_applied"] += batch_fixes
 
@@ -319,10 +324,10 @@ class OfficialLintMyPyFixer:
             )
 
             # Success if we reduced errors and didn't introduce syntax errors
-            improvement = result["error_count_before"] - result["error_count_after"]
+            improvement = result["error_count_before"] - \
+                result["error_count_after"]
             result["success"] = improvement >= 0 and not self._has_syntax_errors(
-                project_path
-            )
+                project_path)
 
             if result["success"]:
                 logger.info(
@@ -331,12 +336,16 @@ class OfficialLintMyPyFixer:
                     result["fixes_applied"],
                     improvement,
                 )
-            else:
-                logger.warning("⚠️ Project %s may have issues", project_path.name)
+                logger.warning(
+                    "⚠️ Project %s may have issues",
+                    project_path.name)
 
         except Exception as e:
             result["errors"].append(str(e))
-            logger.error("Error processing project %s: %s", project_path.name, e)
+            logger.error(
+                "Error processing project %s: %s",
+                project_path.name,
+                e)
 
         return result
 
@@ -350,7 +359,8 @@ class OfficialLintMyPyFixer:
                 total_fixes += fixes
 
                 if fixes > 0:
-                    logger.debug("✅ %s: %d fixes applied", file_path.name, fixes)
+                    logger.debug(
+                        "✅ %s: %d fixes applied", file_path.name, fixes)
 
             except Exception as e:
                 logger.error("Error processing file %s: %s", file_path, e)
@@ -401,11 +411,10 @@ class OfficialLintMyPyFixer:
 
                 # Syntax validation
                 if self.config.validate_syntax and not self._validate_python_syntax(
-                    content
-                ):
+                        content):
                     logger.warning(
-                        "⚠️ Syntax validation failed for %s, skipping", file_path.name
-                    )
+                        "⚠️ Syntax validation failed for %s, skipping",
+                        file_path.name)
                     return 0
 
                 # Write changes
@@ -421,7 +430,7 @@ class OfficialLintMyPyFixer:
     def _fix_type_annotations(self, content: str) -> str:
         """Fix missing type annotations with intelligent detection."""
         lines = content.split("\n")
-        fixed_lines = []
+        fixed_lines: list = []
 
         for line in lines:
 
@@ -526,7 +535,7 @@ class OfficialLintMyPyFixer:
     def _fix_exception_handling(self, content: str) -> str:
         """Fix exception handling patterns safely."""
         lines = content.split("\n")
-        fixed_lines = []
+        fixed_lines: list = []
 
         i = 0
         while i < len(lines):
@@ -597,7 +606,8 @@ class OfficialLintMyPyFixer:
 
         for pattern, replacement in patterns:
             try:
-                # Only apply if the variable appears unused in the following lines
+                # Only apply if the variable appears unused in the following
+                # lines
                 content = re.sub(pattern, replacement, content)
             except re.error:
                 continue
@@ -645,9 +655,8 @@ class OfficialLintMyPyFixer:
                 text=True,
                 cwd=self.workspace_root,
             )
-            return (
-                len(result.stdout.strip().split("\n")) if result.stdout.strip() else 0
-            )
+            return (len(result.stdout.strip().split("\n"))
+                    if result.stdout.strip() else 0)
         except subprocess.SubprocessError:
             return 0
 
@@ -670,9 +679,8 @@ class OfficialLintMyPyFixer:
 
     def _should_skip_file(self, file_path: Path) -> bool:
         """Check if file should be skipped."""
-        return any(
-            pattern in str(file_path) for pattern in self.config.exclude_patterns
-        )
+        return any(pattern in str(file_path)
+                   for pattern in self.config.exclude_patterns)
 
     def _validate_zero_tolerance(self) -> dict[str, Any]:
         """Validate CLAUDE.md ZERO TOLERANCE compliance."""
@@ -698,7 +706,6 @@ class OfficialLintMyPyFixer:
                 logger.warning(
                     "❌ %s: %d lint errors remaining", project.name, lint_errors
                 )
-            else:
                 logger.info("✅ %s: ZERO lint errors", project.name)
 
         # CLAUDE.md ZERO TOLERANCE assessment
@@ -708,7 +715,6 @@ class OfficialLintMyPyFixer:
 
         if validation_result["zero_tolerance_achieved"]:
             logger.info("✅ CLAUDE.md ZERO TOLERANCE: ACHIEVED")
-        else:
             logger.error(
                 "❌ CLAUDE.md ZERO TOLERANCE: %d VIOLATIONS DETECTED",
                 validation_result["total_lint_errors"],
@@ -718,9 +724,8 @@ class OfficialLintMyPyFixer:
 
     def _generate_final_report(self, results: dict[str, Any]) -> None:
         """Generate comprehensive final report."""
-        report_path = (
-            self.workspace_root / f"reports/lint_fixer_report_{self.session_id}.json"
-        )
+        report_path = (self.workspace_root /
+                       f"reports/lint_fixer_report_{self.session_id}.json")
         report_path.parent.mkdir(exist_ok=True)
 
         final_report = {
@@ -797,10 +802,9 @@ def main() -> None:
             print(f"   Total fixes applied: {results['total_fixes']}")
             print(f"   Projects processed: {results['projects_processed']}")
             sys.exit(0)
-        else:
             print(
-                f"\n⚠️ PARTIAL SUCCESS: {results['final_validation']['total_lint_errors']} violations remain"
-            )
+                f"\n⚠️ PARTIAL SUCCESS: {
+                    results['final_validation']['total_lint_errors']} violations remain")
             print("   Additional fixes may be required")
             sys.exit(1)
 

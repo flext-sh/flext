@@ -11,6 +11,7 @@ Usage:
 import argparse
 import subprocess
 from pathlib import Path
+from typing import Any
 
 
 def run_fixer_script(script_name, dry_run=False) -> Any:
@@ -50,7 +51,8 @@ def run_fixer_script(script_name, dry_run=False) -> Any:
 
 def main() -> None:
     """Run all fixer scripts in sequence."""
-    parser = argparse.ArgumentParser(description="Run all linting issue fixers")
+    parser = argparse.ArgumentParser(
+        description="Run all linting issue fixers")
     parser.add_argument(
         "--dry-run",
         action="store_true",
@@ -67,7 +69,8 @@ def main() -> None:
         "flx_syntax_errors.py",  # Fix malformed raise statements and function definitions
         "flx_client_star_separator.py",  # Fix the star separator in client.py
         "flx_undefined_names.py",  # Fix undefined name 'e' errors in client.py
-        "flx_remaining_syntax_errors.py",  # Fix remaining syntax errors in client.py and adapters.py
+        "flx_remaining_syntax_errors.py",
+        # Fix remaining syntax errors in client.py and adapters.py
     ]
 
     # Run each fixer script

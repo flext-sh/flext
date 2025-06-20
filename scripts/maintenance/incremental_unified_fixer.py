@@ -35,10 +35,20 @@ class UnifiedFixerConfig:
     """Configuration for the unified fixer."""
 
     target_projects: list[str] = field(default_factory=list)
-    exclude_patterns: list[str] = field(default_factory=lambda: [
-        "__pycache__", ".venv", ".git", "dist", "build", ".pytest_cache",
-        ".mypy_cache", ".ruff_cache", "node_modules", "archive", "backup", "logs"
-    ])
+    exclude_patterns: list[str] = field(
+        default_factory=lambda: [
+            "__pycache__",
+            ".venv",
+            ".git",
+            "dist",
+            "build",
+            ".pytest_cache",
+            ".mypy_cache",
+            ".ruff_cache",
+            "node_modules",
+            "archive",
+            "backup",
+            "logs"])
 
     # All available fixes
     enabled_fixes: dict[str, bool] = field(default_factory=lambda: {
@@ -98,17 +108,21 @@ class IncrementalUnifiedFixer:
             logger.info("⚡ Processing project: %s", project.name)
 
             try:
-                project_result = self._process_project_incrementally(project, dry_run)
+                project_result = self._process_project_incrementally(
+                    project, dry_run)
                 results["projects"][project.name] = project_result
 
                 logger.info("✅ Project %s: %d→%d errors (%+d improvement)",
-                           project.name,
-                           project_result["initial_errors"],
-                           project_result["final_errors"],
-                           project_result["improvement"])
+                            project.name,
+                            project_result["initial_errors"],
+                            project_result["final_errors"],
+                            project_result["improvement"])
 
             except Exception as e:
-                logger.error("❌ Failed to process project %s: %s", project.name, e)
+                logger.error(
+                    "❌ Failed to process project %s: %s",
+                    project.name,
+                    e)
                 results["projects"][project.name] = {"error": str(e)}
 
         # Generate summary
@@ -123,7 +137,7 @@ class IncrementalUnifiedFixer:
     def _discover_projects(self) -> list[Path]:
         """Discover Python projects in workspace."""
         if self.config.target_projects:
-            projects = []
+            projects: list = []
             for proj_name in self.config.target_projects:
                 proj_path = self.workspace_root / proj_name
                 if proj_path.exists() and proj_path.is_dir():
@@ -131,12 +145,12 @@ class IncrementalUnifiedFixer:
             return projects
 
         # Auto-discover
-        projects = []
+        projects: list = []
         for item in self.workspace_root.iterdir():
             if (item.is_dir() and
                 not item.name.startswith(".") and
                 not self._should_skip_directory(item) and
-                self._is_python_project(item)):
+                    self._is_python_project(item)):
                 projects.append(item)
 
         return sorted(projects)
@@ -149,9 +163,11 @@ class IncrementalUnifiedFixer:
 
     def _should_skip_directory(self, path: Path) -> bool:
         """Check if directory should be skipped."""
-        return any(pattern in path.name for pattern in self.config.exclude_patterns)
+        return any(
+            pattern in path.name for pattern in self.config.exclude_patterns)
 
-    def _process_project_incrementally(self, project_path: Path, dry_run: bool) -> dict[str, Any]:
+    def _process_project_incrementally(
+            self, project_path: Path, dry_run: bool) -> dict[str, Any]:
         """Process a single project with incremental fixes."""
         # Get initial error count
         initial_errors = self._count_lint_errors(project_path)
@@ -160,12 +176,12 @@ class IncrementalUnifiedFixer:
         python_files = self._get_python_files(project_path)
 
         logger.info("📂 Project %s: %d files, %d initial errors",
-                   project_path.name, len(python_files), initial_errors)
+                    project_path.name, len(python_files), initial_errors)
 
         # Process files
         files_modified = 0
         total_fixes = 0
-        fixes_by_category = {}
+        fixes_by_category: dict = {}
 
         for py_file in python_files:
             try:
@@ -174,8 +190,8 @@ class IncrementalUnifiedFixer:
                     if potential_fixes > 0:
                         files_modified += 1
                         total_fixes += potential_fixes
-                else:
-                    file_fixes, file_category_fixes = self._fix_file_comprehensively(py_file)
+                    file_fixes, file_category_fixes = self._fix_file_comprehensively(
+                        py_file)
                     if file_fixes > 0:
                         files_modified += 1
                         total_fixes += file_fixes
@@ -191,7 +207,8 @@ class IncrementalUnifiedFixer:
                 self.stats["errors_prevented"] += 1
 
         # Get final error count
-        final_errors = initial_errors if dry_run else self._count_lint_errors(project_path)
+        final_errors = initial_errors if dry_run else self._count_lint_errors(
+            project_path)
 
         # Update global stats
         self.stats["files_processed"] += len(python_files)
@@ -210,7 +227,7 @@ class IncrementalUnifiedFixer:
 
     def _get_python_files(self, project_path: Path) -> list[Path]:
         """Get all Python files in project."""
-        python_files = []
+        python_files: list = []
         for py_file in project_path.rglob("*.py"):
             if not self._should_skip_file(py_file):
                 python_files.append(py_file)
@@ -218,7 +235,8 @@ class IncrementalUnifiedFixer:
 
     def _should_skip_file(self, file_path: Path) -> bool:
         """Check if file should be skipped."""
-        return any(pattern in str(file_path) for pattern in self.config.exclude_patterns)
+        return any(pattern in str(file_path)
+                   for pattern in self.config.exclude_patterns)
 
     def _analyze_file_potential(self, file_path: Path) -> int:
         """Analyze potential fixes for a file."""
@@ -231,13 +249,20 @@ class IncrementalUnifiedFixer:
                 potential_fixes += content.count('config_key')
 
             if self.config.enabled_fixes['type_annotations']:
-                potential_fixes += len(re.findall(r'def \w+\([^)]*\):\s*(?:#.*)?$', content, re.MULTILINE))
+                potential_fixes += len(
+                    re.findall(
+                        r'def \w+\([^)]*\):\s*(?:#.*)?$',
+                        content,
+                        re.MULTILINE))
 
             if self.config.enabled_fixes['logging_patterns']:
-                potential_fixes += len(re.findall(r'logger\.\w+\(f"[^"]*\{[^}]+\}', content))
+                potential_fixes += len(
+                    re.findall(
+                        r'logger\.\w+\(f"[^"]*\{[^}]+\}', content))
 
             if self.config.enabled_fixes['whitespace_cleanup']:
-                potential_fixes += len([line for line in content.split('\n') if line.rstrip() != line])
+                potential_fixes += len([line for line in content.split('\n')
+                                       if line.rstrip() != line])
 
             if self.config.enabled_fixes['string_standardization']:
                 potential_fixes += content.count("'") // 4  # Rough estimate
@@ -247,12 +272,13 @@ class IncrementalUnifiedFixer:
         except Exception:
             return 0
 
-    def _fix_file_comprehensively(self, file_path: Path) -> tuple[int, dict[str, int]]:
+    def _fix_file_comprehensively(
+            self, file_path: Path) -> tuple[int, dict[str, int]]:
         """Apply comprehensive fixes to a single file."""
         try:
             content = file_path.read_text(encoding="utf-8")
             original_content = content
-            category_fixes = {}
+            category_fixes: dict = {}
 
             # Apply fixes in order of importance and safety
 
@@ -323,7 +349,7 @@ class IncrementalUnifiedFixer:
                 # Safety check
                 if total_changes > self.config.max_changes_per_file:
                     logger.warning("⚠️ Too many changes (%d) in %s, skipping",
-                                 total_changes, file_path.name)
+                                   total_changes, file_path.name)
                     return 0, {}
 
                 # Syntax validation
@@ -332,14 +358,17 @@ class IncrementalUnifiedFixer:
                         compile(content, str(file_path), 'exec')
                     except SyntaxError as e:
                         logger.warning("⚠️ Syntax error in %s after fixes: %s",
-                                     file_path.name, e)
+                                       file_path.name, e)
                         return 0, {}
 
                 # Apply changes
                 file_path.write_text(content, encoding="utf-8")
                 total_fixes = sum(category_fixes.values())
 
-                logger.debug("✅ Fixed %s: %d fixes applied", file_path.name, total_fixes)
+                logger.debug(
+                    "✅ Fixed %s: %d fixes applied",
+                    file_path.name,
+                    total_fixes)
                 return total_fixes, category_fixes
 
             return 0, {}
@@ -366,7 +395,6 @@ class IncrementalUnifiedFixer:
                                 lines[i] = line.replace('config_key', key_var)
                                 fixes += 1
                                 break
-                    else:
                         # Fallback: use a sensible default
                         lines[i] = line.replace('config_key', 'key')
                         fixes += 1
@@ -384,10 +412,14 @@ class IncrementalUnifiedFixer:
             if (stripped.startswith('def ') and
                 stripped.endswith(':') and
                 '-> ' not in stripped and
-                not any(x in stripped for x in ['__init__', '__str__', '__repr__'])):
+                    not any(x in stripped for x in ['__init__', '__str__', '__repr__'])):
 
                 # Add appropriate return type
-                if any(name in stripped for name in ['test_', 'setUp', 'tearDown']):
+                if any(
+                    name in stripped for name in [
+                        'test_',
+                        'setUp',
+                        'tearDown']):
                     lines[i] = line.replace('):', ') -> None:')
                     fixes += 1
                 elif 'main(' in stripped:
@@ -450,11 +482,10 @@ class IncrementalUnifiedFixer:
                     next_line = lines[j].strip()
                     if (next_line.startswith('raise ') and
                         ' from e' not in next_line and
-                        'raise e' not in next_line):
+                            'raise e' not in next_line):
 
                         if next_line.endswith(')'):
                             lines[j] = lines[j].replace(')', ' from e)')
-                        else:
                             lines[j] = lines[j] + ' from e'
                         fixes += 1
                         break
@@ -489,7 +520,8 @@ class IncrementalUnifiedFixer:
         lines = content.split('\n')
 
         for i, line in enumerate(lines):
-            # Only fix lines that have single quotes but no double quotes (simple case)
+            # Only fix lines that have single quotes but no double quotes
+            # (simple case)
             if "'" in line and '"' not in line and not line.strip().startswith('#'):
                 # Simple single quote to double quote conversion
                 new_line = re.sub(r"'([^'\\]*(?:\\.[^'\\]*)*)'", r'"\1"', line)
@@ -512,7 +544,7 @@ class IncrementalUnifiedFixer:
                 fixes += 1
 
         # Remove excessive blank lines (more than 2)
-        new_lines = []
+        new_lines: list = []
         blank_count = 0
 
         for line in lines:
@@ -520,9 +552,7 @@ class IncrementalUnifiedFixer:
                 blank_count += 1
                 if blank_count <= 2:
                     new_lines.append(line)
-                else:
                     fixes += 1  # Count removed lines
-            else:
                 blank_count = 0
                 new_lines.append(line)
 
@@ -570,13 +600,19 @@ class IncrementalUnifiedFixer:
 
         # Remove hardcoded passwords/secrets (basic patterns)
         patterns = [
-            (r'password\s*=\s*["\'][^"\']{8,}["\']', 'password = os.getenv("PASSWORD")'),
-            (r'secret\s*=\s*["\'][^"\']{16,}["\']', 'secret = os.getenv("SECRET")'),
+            (r'password\s*=\s*["\'][^"\']{8,}["\']',
+             'password = os.getenv("PASSWORD")'),
+            (r'secret\s*=\s*["\'][^"\']{16,}["\']',
+             'secret = os.getenv("SECRET")'),
         ]
 
         for pattern, replacement in patterns:
             before = content
-            content = re.sub(pattern, replacement, content, flags=re.IGNORECASE)
+            content = re.sub(
+                pattern,
+                replacement,
+                content,
+                flags=re.IGNORECASE)
             if content != before:
                 fixes += 1
                 # Ensure os import
@@ -613,15 +649,21 @@ class IncrementalUnifiedFixer:
                 timeout=60,
             )
             # Count actual error lines (not empty lines)
-            errors = [line for line in result.stdout.split('\n') if line.strip()]
+            errors = [
+                line for line in result.stdout.split('\n') if line.strip()]
             return len(errors)
         except Exception as e:
-            logger.warning("Could not count lint errors for %s: %s", project_path, e)
+            logger.warning(
+                "Could not count lint errors for %s: %s",
+                project_path,
+                e)
             return 0
 
     def _generate_summary(self, project_results: dict) -> dict[str, Any]:
         """Generate processing summary."""
-        successful_projects = {k: v for k, v in project_results.items() if "error" not in v}
+        successful_projects = {
+            k: v for k,
+            v in project_results.items() if "error" not in v}
 
         if not successful_projects:
             return {
@@ -636,12 +678,18 @@ class IncrementalUnifiedFixer:
                 "projects_failed": len(project_results),
             }
 
-        total_initial = sum(r["initial_errors"] for r in successful_projects.values())
-        total_final = sum(r["final_errors"] for r in successful_projects.values())
-        total_fixes = sum(r["total_fixes"] for r in successful_projects.values())
+        total_initial = sum(r["initial_errors"]
+                            for r in successful_projects.values())
+        total_final = sum(r["final_errors"]
+                          for r in successful_projects.values())
+        total_fixes = sum(r["total_fixes"]
+                          for r in successful_projects.values())
 
         improvement = total_initial - total_final
-        improvement_pct = (improvement / total_initial * 100) if total_initial > 0 else 0
+        improvement_pct = (
+            improvement /
+            total_initial *
+            100) if total_initial > 0 else 0
 
         return {
             "total_initial_errors": total_initial,
@@ -659,7 +707,8 @@ class IncrementalUnifiedFixer:
     def _save_report(self, results: dict) -> None:
         """Save comprehensive report."""
         Path("reports").mkdir(exist_ok=True)
-        report_path = Path(f"reports/incremental_unified_fixer_{self.session_id}.json")
+        report_path = Path(
+            f"reports/incremental_unified_fixer_{self.session_id}.json")
 
         report_data = {
             "metadata": {
@@ -694,10 +743,23 @@ def main() -> None:
         description=f"Incremental Unified Lint Fixer v{__version__}",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    parser.add_argument("--projects", nargs="+", help="Specific projects to process")
-    parser.add_argument("--dry-run", action="store_true", help="Analyze without applying fixes")
-    parser.add_argument("--aggressive", action="store_true", help="Enable aggressive mode with security fixes")
-    parser.add_argument("--max-changes", type=int, default=150, help="Maximum changes per file")
+    parser.add_argument(
+        "--projects",
+        nargs="+",
+        help="Specific projects to process")
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Analyze without applying fixes")
+    parser.add_argument(
+        "--aggressive",
+        action="store_true",
+        help="Enable aggressive mode with security fixes")
+    parser.add_argument(
+        "--max-changes",
+        type=int,
+        default=150,
+        help="Maximum changes per file")
 
     args = parser.parse_args()
 
@@ -718,7 +780,10 @@ def main() -> None:
     summary = results["summary"]
     print(f"\n🚀 INCREMENTAL UNIFIED FIXER v{__version__} - COMPLETE")
     print("=" * 70)
-    print(f"📊 Projects: {summary['projects_successful']}/{summary['projects_processed']} successful")
+    print(
+        f"📊 Projects: {
+            summary['projects_successful']}/{
+            summary['projects_processed']} successful")
     print(f"🔢 Lint Errors: {summary['total_initial_errors']} → {summary['total_final_errors']} "
           f"({summary['total_improvement']:+d})")
     print(f"🔧 Total Fixes: {summary['total_fixes_applied']} applied")
@@ -729,11 +794,13 @@ def main() -> None:
         print("🎉 CLAUDE.md ZERO TOLERANCE: ✅ ACHIEVED")
         print("   All lint violations have been resolved!")
         sys.exit(0)
-    else:
-        print(f"⚠️ CLAUDE.md ZERO TOLERANCE: ❌ {summary['total_final_errors']} violations remain")
+        print(
+            f"⚠️ CLAUDE.md ZERO TOLERANCE: ❌ {
+                summary['total_final_errors']} violations remain")
         print("   Additional manual fixes may be required.")
         if not args.dry_run:
-            print(f"📋 Detailed report: reports/incremental_unified_fixer_{fixer.session_id}.json")
+            print(
+                f"📋 Detailed report: reports/incremental_unified_fixer_{fixer.session_id}.json")
         sys.exit(1 if not args.dry_run else 0)
 
 

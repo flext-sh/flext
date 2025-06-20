@@ -14,9 +14,8 @@ def test_rest_api() -> bool:
 
     try:
         # Import required modules
-        from flx.adapters.inbound.rest_api import create_rest_api
-
         from flx.adapters.inbound.fire_cli import create_cli
+        from flx.adapters.inbound.rest_api import create_rest_api
 
         # Create CLI with plugins
         cli = create_cli()
@@ -27,7 +26,7 @@ def test_rest_api() -> bool:
         # Check app configuration
 
         # Get routes information
-        routes = []
+        routes: list = []
         for route in app.routes:
             if hasattr(route, "path") and hasattr(route, "methods"):
                 for method in route.methods:
@@ -35,9 +34,9 @@ def test_rest_api() -> bool:
                         routes.append(f"{method} {route.path}")
 
         # Group routes by category
-        core_routes = []
-        plugin_routes = []
-        other_routes = []
+        core_routes: list = []
+        plugin_routes: list = []
+        other_routes: list = []
 
         for route in sorted(routes):
             if (
@@ -48,7 +47,6 @@ def test_rest_api() -> bool:
                 plugin_routes.append(route)
             elif "/api/v1/" in route:
                 core_routes.append(route)
-            else:
                 other_routes.append(route)
 
         for _route in core_routes:

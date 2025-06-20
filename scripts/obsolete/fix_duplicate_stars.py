@@ -12,6 +12,7 @@ import argparse
 import re
 import sys
 from pathlib import Path
+from typing import Any
 
 
 class StarSeparatorFixer:
@@ -83,7 +84,8 @@ class StarSeparatorFixer:
                 lines[i] = re.sub(r"\*,\s*\*,", "*, ", lines[i])
                 self.fixes_count += 1
 
-            # Also check for leading * with space followed by * at the beginning of parameters
+            # Also check for leading * with space followed by * at the
+            # beginning of parameters
             if re.search(r"^\s+\*,\s*\*\s+", lines[i]):
                 lines[i] = re.sub(
                     r"^\s+\*,\s*\*\s+",

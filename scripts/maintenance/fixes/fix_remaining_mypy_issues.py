@@ -56,7 +56,7 @@ def fix_import_attr_errors() -> None:
         "health_check()": "flx_health_check()",
     }
 
-    files_to_fix = set()
+    files_to_fix: set = set()
     for error in attr_errors:
         files_to_fix.add(error["file"])
 
@@ -153,16 +153,15 @@ def fix_constructor_args() -> None:
     call_arg_errors = errors.get("call-arg", [])
 
     # Group by common patterns
-    adapter_meta_errors = []
-    adapter_result_errors = []
-    other_errors = []
+    adapter_meta_errors: list = []
+    adapter_result_errors: list = []
+    other_errors: list = []
 
     for error in call_arg_errors:
         if "FlxAdapterMeta" in error["message"]:
             adapter_meta_errors.append(error)
         elif "FlxAdapterResult" in error["message"]:
             adapter_result_errors.append(error)
-        else:
             other_errors.append(error)
 
     # Fix FlxAdapterMeta calls
@@ -271,7 +270,7 @@ def add_missing_type_imports() -> None:
                     import_index = i + 1
 
             # Add missing imports
-            added_imports = []
+            added_imports: list = []
             for name in missing_names:
                 if name in type_imports and type_imports[name] not in content:
                     added_imports.append(type_imports[name])
@@ -283,8 +282,9 @@ def add_missing_type_imports() -> None:
 
                 path.write_text("\n".join(lines))
                 print(
-                    f"Added imports to {filepath}: {', '.join(name for name in missing_names if name in type_imports)}"
-                )
+                    f"Added imports to {filepath}: {
+                        ', '.join(
+                            name for name in missing_names if name in type_imports)}")
 
         except Exception as e:
             print(f"Error processing {filepath}: {e}")

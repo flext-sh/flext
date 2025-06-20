@@ -63,9 +63,9 @@ oracle = [
 ]
 
 # Enterprise features
-enterprise = [
-    "flx-meltano-enterprise",
-]
+# enterprise = [
+#     "flx-meltano-enterprise",
+# ]
 
 # Singer SDK
 singer = [
@@ -88,7 +88,7 @@ all = [
     "tap-oracle-oic",
     "tap-oracle-wms",
     "oracle-oic-ext",
-    "flx-meltano-enterprise",
+    # "flx-meltano-enterprise",
     "singer-sdk",
 ]
 
@@ -137,7 +137,7 @@ tap-oracle-wms = { path = "./tap-oracle-wms", develop = true, optional = true }
 oracle-oic-ext = { path = "./oracle-oic-ext", develop = true, optional = true }
 
 # Enterprise features
-flx-meltano-enterprise = { path = "./flx-meltano-enterprise", develop = true, optional = true }
+# flx-meltano-enterprise = { path = "./flx-meltano-enterprise", develop = true, optional = true }
 
 # External dependencies
 singer-sdk = { version = "^0.45.0", optional = true }

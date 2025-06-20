@@ -14,7 +14,7 @@ console = Console()
 
 def check_project_standards(project_path: Path) -> dict:
     """Check if a project follows the defined standards."""
-    issues = []
+    issues: list = []
     config_path = project_path / "pyproject.toml"
 
     if not config_path.exists():
@@ -56,8 +56,8 @@ def check_project_standards(project_path: Path) -> dict:
     mypy_config = tool_config.get("mypy", {})
     if mypy_config.get("python_version") != "3.13":
         issues.append(
-            f"Incorrect MyPy python_version: {mypy_config.get('python_version')}",
-        )
+            f"Incorrect MyPy python_version: {
+                mypy_config.get('python_version')}", )
 
     return {"issues": issues}
 
@@ -75,8 +75,8 @@ def main() -> None:
     )
 
     # Find projects
-    projects = []
-    seen_projects = set()
+    projects: list = []
+    seen_projects: set = set()
     for path in workspace_path.rglob("pyproject.toml"):
         if any(
             part.startswith(".")
@@ -110,7 +110,6 @@ def main() -> None:
             if len(issues) > 3:
                 issues_text += f"\n... and {len(issues) - 3} more"
             total_issues += len(issues)
-        else:
             status = "✅ Compliant"
             issues_text = "-"
 
@@ -124,7 +123,6 @@ def main() -> None:
             "[yellow]Run 'python standardize_projects.py' to fix[/yellow]",
         )
         sys.exit(1)
-    else:
         console.print("\n[green]✅ All projects are compliant![/green]")
 
 
