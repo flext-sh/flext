@@ -16,7 +16,7 @@ class MethodCallFixer(ast.NodeTransformer):
         self.current_class: str | None = None
         self.imported_names: set[str] = set()
 
-    def visit_ClassDef(self, node: ast.ClassDef) -> Any:
+    def visit_class_def(self, node: ast.ClassDef) -> Any:
         """Track current class context."""
         old_class = self.current_class
         self.current_class = node.name
@@ -24,13 +24,13 @@ class MethodCallFixer(ast.NodeTransformer):
         self.current_class = old_class
         return result
 
-    def visit_Import(self, node: ast.Import) -> Any:
+    def visit_import(self, node: ast.Import) -> Any:
         """Track imported names."""
         for alias in node.names:
             self.imported_names.add(alias.asname or alias.name)
         return node
 
-    def visit_ImportFrom(self, node: ast.ImportFrom) -> Any:
+    def visit_import_from(self, node: ast.ImportFrom) -> Any:
         """Track imported names."""
         for alias in node.names:
             self.imported_names.add(alias.asname or alias.name)

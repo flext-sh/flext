@@ -17,7 +17,7 @@ class FlxInventoryBuilder(ast.NodeVisitor):
         self.imports: list[dict[str, Any]] = []
         self.current_class: str | None = None
 
-    def visit_ClassDef(self, node: ast.ClassDef) -> None:
+    def visit_class_def(self, node: ast.ClassDef) -> None:
         """Visit class definitions."""
         old_class = self.current_class
         self.current_class = node.name
@@ -77,7 +77,7 @@ class FlxInventoryBuilder(ast.NodeVisitor):
         self.generic_visit(node)
         self.current_class = old_class
 
-    def visit_FunctionDef(self, node: ast.FunctionDef) -> None:
+    def visit_function_def(self, node: ast.FunctionDef) -> None:
         """Visit function definitions."""
         func_info = {
             "name": node.name,
@@ -108,7 +108,7 @@ class FlxInventoryBuilder(ast.NodeVisitor):
 
         self.generic_visit(node)
 
-    def visit_Import(self, node: ast.Import) -> None:
+    def visit_import(self, node: ast.Import) -> None:
         """Visit import statements."""
         for alias in node.names:
             self.imports.append(
@@ -120,7 +120,7 @@ class FlxInventoryBuilder(ast.NodeVisitor):
             )
         self.generic_visit(node)
 
-    def visit_ImportFrom(self, node: ast.ImportFrom) -> None:
+    def visit_import_from(self, node: ast.ImportFrom) -> None:
         """Visit from...import statements."""
         module = node.module or ""
         for alias in node.names:

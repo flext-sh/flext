@@ -14,7 +14,7 @@ class FlxImportFixer(ast.NodeTransformer):
         self.changes: list[dict[str, any]] = []
         self.imported_names: set[str] = set()
 
-    def visit_ImportFrom(self, node: ast.ImportFrom) -> ast.ImportFrom:
+    def visit_import_from(self, node: ast.ImportFrom) -> ast.ImportFrom:
         """Fix from...import statements."""
         # Fix hookspecs imports
         if node.module and "hookspecs" in node.module:
