@@ -76,6 +76,60 @@ fix_categories:
   api_documentation: true
   code_examples: true
 
+  # Workspace organization (NEW)
+  project_standardization: true   # Standardize pyproject.toml across projects
+  temp_file_cleanup: true         # Remove old temporary files
+  project_customization: true     # Customize project templates by type
+  redundant_file_cleanup: true    # Remove redundant/duplicate files
+
+  # Critical automation modules (NEW from zero-tolerance analysis)
+  universal_quality_loop: true    # Zero-tolerance quality assurance automation
+  config_generation: true         # Unified configuration generation across projects
+  oracle_integration: true        # Oracle WMS/OIC integration automation
+  ldif_processing: true           # LDAP migration and LDIF processing automation
+
+  # Final automation gaps (NEW - completing zero-tolerance requirements)
+  deployment_automation: true     # Automated deployment, health checks, rollback
+  monitoring_automation: true     # Automated monitoring, alerting, performance tracking
+  cli_validation_automation: true # Automated CLI testing and validation
+
+# Custom fix modules to run (in order)
+custom_fixes:
+  # Code quality and fixes
+  - type_annotations
+  - logging_patterns
+  - exception_handling
+  - asyncio_patterns
+  - imports
+  - docstrings
+  - performance
+  - security
+
+  # Critical automation modules (NEW from zero-tolerance analysis)
+  - universal_quality_loop    # Zero-tolerance quality assurance automation
+  - config_generation         # Unified configuration generation across projects
+  - oracle_integration        # Oracle WMS/OIC integration automation
+  - ldif_processing           # LDAP migration and LDIF processing automation
+
+  # Final automation gaps (NEW - completing zero-tolerance requirements)
+  - deployment_automation     # Automated deployment, health checks, rollback
+  - monitoring_automation     # Automated monitoring, alerting, performance tracking
+  - cli_validation_automation # Automated CLI testing and validation
+
+  # Workspace organization and validation
+  - dependency_management
+  - project_validation
+  - project_standardization
+  - project_customization
+
+  # Testing and quality metrics
+  - testing_orchestration
+  - quality_metrics
+
+  # Cleanup operations (run last)
+  - temp_file_cleanup
+  - redundant_file_cleanup
+
 # Processing mode
 processing_mode: incremental  # sequential, parallel, incremental
 

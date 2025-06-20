@@ -14,8 +14,11 @@ from pathlib import Path
 def fix_client_file() -> bool:
     """Fix the star separator issue in client.py."""
     client_path = (
-        Path(__file__).parent.parent / "dc-api-x" / "src" / "dc_api_x" / "client.py"
-    )
+        Path(__file__).parent.parent /
+        "dc-api-x" /
+        "src" /
+        "dc_api_x" /
+        "client.py")
 
     if not client_path.exists():
         print(f"File not found: {client_path}")
@@ -32,7 +35,7 @@ def fix_client_file() -> bool:
 
     # Find the problematic line with the star separator
     lines = content.split("\n")
-    fixed_lines = []
+    fixed_lines: list = []
 
     found_issue = False
     in_init = False
@@ -48,7 +51,6 @@ def fix_client_file() -> bool:
             fixed_lines.append(fixed_line)
             found_issue = True
             star_found = True
-        else:
             fixed_lines.append(line)
 
         if in_init and line.strip() == ")":

@@ -113,7 +113,6 @@ def main() -> None:
             print(f"Found {len(long_lines)} lines exceeding 79 characters:")
             for line_no, length in long_lines[:10]:  # Show first 10
                 print(f"  Line {line_no}: {length} chars")
-        else:
             print("✓ All lines are within 79 characters (PEP8 compliant)")
 
 

@@ -11,9 +11,7 @@ import sys
 from pathlib import Path
 
 # Import all custom modules
-from modules import (
-    MODULE_REGISTRY,
-)
+from modules import MODULE_REGISTRY
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
@@ -21,7 +19,7 @@ from rich.table import Table
 console = Console()
 
 
-def list_modules():
+def list_modules() -> None:
     """List all available custom fix modules."""
     table = Table(title="Available Custom Fix Modules")
     table.add_column("Module", style="cyan")
@@ -73,7 +71,7 @@ def run_module(
     ))
 
     # Process all targets
-    all_results = []
+    all_results: list = []
 
     for target in targets:
         if target.is_file():
@@ -86,7 +84,6 @@ def run_module(
                 console.print("\n[yellow]Changes:[/yellow]")
                 console.print(result.diff)
 
-        else:
             # Directory
             console.print(f"\n📁 Processing directory: {target}")
             results = module.process_directory(target)
@@ -112,7 +109,7 @@ def run_module(
     return 0 if summary['failed_files'] == 0 else 1
 
 
-def main():
+def main() -> None:
     """Main entry point."""
     parser = argparse.ArgumentParser(
         description="Run custom fix modules for Python code maintenance",
@@ -186,7 +183,7 @@ Examples:
         args.targets = ["."]
 
     # Convert targets to Path objects
-    targets = []
+    targets: list = []
     for target in args.targets:
         path = Path(target)
         if not path.exists():

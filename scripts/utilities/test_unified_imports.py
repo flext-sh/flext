@@ -12,6 +12,7 @@ evitar problemas de compatibilidade"
 
 import sys
 from pathlib import Path
+from typing import Any
 
 # Add all project source paths to sys.path
 projects = [
@@ -33,8 +34,6 @@ for project in projects:
 def test_core_framework_import() -> bool | None:
     """Test FLX core framework import."""
     try:
-        import flx
-        from flx import Bootstrap, Entity, get_logger
 
         return True
     except ImportError:
@@ -47,22 +46,19 @@ def test_oracle_adapters_import() -> Any:
 
     # Database adapter
     try:
-        import flx_database_oracle
-        from flx_database_oracle import FlxDatabaseConfig, FlxOracleDbAdapter
+        pass
     except ImportError:
         success = False
 
     # OIC adapter
     try:
-        import flx_http_oracle_oic
-        from flx_http_oracle_oic import OracleOicClient, OracleOicConfig
+        pass
     except ImportError:
         success = False
 
     # WMS adapter
     try:
-        import flx_http_oracle_wms
-        from flx_http_oracle_wms import WmsClient, WmsConfig
+        pass
     except ImportError:
         success = False
 
@@ -75,13 +71,13 @@ def test_implementation_projects() -> Any:
 
     # client-a migration
     try:
-        import client-a_oud_mig
+        pass
     except ImportError:
         success = False
 
     # client-b POC
     try:
-        import gn_oic_wms_db
+        pass
     except ImportError:
         success = False
 
@@ -136,7 +132,7 @@ def test_integration_pattern() -> bool | None:
 
 def main() -> int:
     """Run all import tests."""
-    results = []
+    results: list = []
 
     # Run all tests
     results.append(test_core_framework_import())

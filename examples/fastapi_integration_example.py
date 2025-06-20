@@ -4,23 +4,35 @@ Shows how to leverage FastAPI's features for automatic validation,
 documentation, and dependency injection.
 """
 
+import hashlib
+import json
 from contextlib import asynccontextmanager
 from datetime import datetime
+from functools import wraps
 from typing import Annotated, Any
 
 import sentry_sdk
 import structlog
-from fastapi import Body, Depends, FastAPI, HTTPException, Path, Query
+from fastapi import (
+    Body,
+    Depends,
+    FastAPI,
+    HTTPException,
+    Path,
+    Query,
+    WebSocket,
+    WebSocketDisconnect,
+)
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from flx.infra.database.optimized_repository import (
-    DatabaseService,
-    OptimizedDatabaseConfig,
-)
 from prometheus_client import make_asgi_app
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
 
+from flx.infra.database.optimized_repository import (
+    DatabaseService,
+    OptimizedDatabaseConfig,
+)
 from flx.infra.services.optimized_base import (
     OptimizedCacheService,
     OptimizedHttpClientService,
@@ -168,14 +180,18 @@ app.mount("/metrics", metrics_app)
 async def get_db_service() -> DatabaseService:
     """Get database service dependency."""
     if not deps.db_service:
-        raise HTTPException(status_code=503, detail="Database service unavailable")
+        raise HTTPException(
+            status_code=503,
+            detail="Database service unavailable")
     return deps.db_service
 
 
 async def get_cache_service() -> OptimizedCacheService:
     """Get cache service dependency."""
     if not deps.cache_service:
-        raise HTTPException(status_code=503, detail="Cache service unavailable")
+        raise HTTPException(
+            status_code=503,
+            detail="Cache service unavailable")
     return deps.cache_service
 
 
@@ -188,9 +204,6 @@ async def get_pagination(
 
 
 # Cache decorator
-import hashlib
-import json
-from functools import wraps
 
 
 def cached(ttl: int = 300) -> Any:
@@ -242,7 +255,7 @@ async def health_check(
     http: Annotated[OptimizedHttpClientService, Depends(get_http_service)],
 ):
     """Health check endpoint."""
-    services = {}
+    services: dict = {}
 
     # Check database
     services["database"] = await db.manager.health_check()
@@ -287,7 +300,9 @@ async def create_user(
     except Exception as e:
         logger.exception("user_creation_failed", error=str(e))
         sentry_sdk.capture_exception(e)
-        raise HTTPException(status_code=500, detail="Failed to create user")
+        raise HTTPException(
+            status_code=500,
+            detail="Failed to create user") from e
 
 
 @app.get("/api/v1/users", response_model=list[UserResponse])
@@ -306,7 +321,6 @@ async def list_users(
             limit=pagination.limit,
             offset=pagination.offset,
         )
-    else:
         users = await db.users.get_all(
             limit=pagination.limit,
             offset=pagination.offset,
@@ -362,7 +376,11 @@ async def update_user(
     cache_key = f"user:{user_id}"
     await cache.delete(cache_key)
 
-    logger.info("user_updated", user_id=user_id, fields=list(update_data.keys()))
+    logger.info(
+        "user_updated",
+        user_id=user_id,
+        fields=list(
+            update_data.keys()))
     return UserResponse.model_validate(user)
 
 
@@ -408,7 +426,7 @@ async def create_users_batch(
     """Create multiple users in batch."""
     created = 0
     failed = 0
-    errors = []
+    errors: list = []
 
     # Process in transaction
     async with db.transaction():
@@ -454,8 +472,6 @@ async def create_users_batch(
 
 
 # WebSocket example for real-time updates
-
-from fastapi import WebSocket, WebSocketDisconnect
 
 
 class ConnectionManager:

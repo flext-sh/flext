@@ -11,6 +11,7 @@ import os
 import re
 import sys
 from pathlib import Path
+from typing import Any
 
 
 def parse_arguments() -> Any:
@@ -60,7 +61,7 @@ def get_python_files(
     if specific_files:
         return [Path(file) for file in specific_files if file.endswith(".py")]
 
-    python_files = []
+    python_files: list = []
     for root, _, files in os.walk(".", topdown=True):
         # Verifica se o diretório atual deve ser excluído
         skip_dir = False
@@ -86,9 +87,10 @@ def get_python_files(
     return python_files
 
 
-def detect_long_lines(file_path: Path, max_length: int) -> list[tuple[int, str]]:
+def detect_long_lines(
+        file_path: Path, max_length: int) -> list[tuple[int, str]]:
     """Detecta linhas que excedem o comprimento máximo."""
-    long_lines = []
+    long_lines: list = []
 
     with open(file_path, encoding="utf-8") as f:
         for i, line in enumerate(f, 1):
@@ -117,18 +119,17 @@ def flx_string_concatenation(line: str, max_length: int) -> str:
         prefix = line[: longest_match.start()]
         string_content = longest_match.group(2)
         quote = longest_match.group(1)
-        suffix = line[longest_match.end() :]
+        suffix = line[longest_match.end():]
 
         # Divide a string em partes menores
-        parts = []
+        parts: list = []
         part = ""
         for word in string_content.split():
-            if len(part + " " + word) <= max_length - 10:  # Margem de segurança
+            if len(part + " " + word) <= max_length - \
+                    10:  # Margem de segurança
                 if part:
                     part += " " + word
-                else:
                     part = word
-            else:
                 parts.append(part)
                 part = word
 
@@ -161,11 +162,12 @@ def flx_function_args(line: str, max_length: int) -> str:
 
         # Se chegou aqui, podemos fazer parse da expressão
         prefix = line[: open_paren + 1]
-        suffix = line[line.rfind(")") :]
-        args_str = line[open_paren + 1 : line.rfind(")")]
+        suffix = line[line.rfind(")"):]
+        args_str = line[open_paren + 1: line.rfind(")")]
 
-        # Divide os argumentos (isso é uma simplificação e não lida com todos os casos)
-        args = []
+        # Divide os argumentos (isso é uma simplificação e não lida com todos
+        # os casos)
+        args: list = []
         current_arg = ""
         paren_level = 0
         bracket_level = 0
@@ -206,7 +208,6 @@ def flx_function_args(line: str, max_length: int) -> str:
             elif char == "}":
                 brace_level -= 1
                 current_arg += char
-            else:
                 current_arg += char
 
         if current_arg.strip():
@@ -216,7 +217,8 @@ def flx_function_args(line: str, max_length: int) -> str:
         if args:
             # Calcula indentação
             indent = len(line) - len(line.lstrip())
-            extra_indent = " " * (indent + 4)  # 4 espaços extras para argumentos
+            # 4 espaços extras para argumentos
+            extra_indent = " " * (indent + 4)
 
             new_line = prefix.rstrip() + "\n"
             for i, arg in enumerate(args):
@@ -237,7 +239,8 @@ def flx_function_args(line: str, max_length: int) -> str:
 def flx_long_list_dict(line: str, max_length: int) -> str:
     """Corrige linhas longas com listas ou dicionários."""
     # Verifica se a linha contém uma definição de lista ou dicionário
-    if ("[" not in line and "{" not in line) or ("]" not in line and "}" not in line):
+    if ("[" not in line and "{" not in line) or (
+            "]" not in line and "}" not in line):
         return line
 
     # Tenta identificar a estrutura
@@ -248,7 +251,7 @@ def flx_long_list_dict(line: str, max_length: int) -> str:
         close_char = match.group(3)
 
         prefix = line[: match.start()]
-        suffix = line[match.end() :]
+        suffix = line[match.end():]
 
         # Se o conteúdo for longo, quebra em múltiplas linhas
         if len(content) > max_length // 2:
@@ -257,7 +260,7 @@ def flx_long_list_dict(line: str, max_length: int) -> str:
             extra_indent = " " * (indent + 4)  # 4 espaços extras para itens
 
             # Divide os itens
-            items = []
+            items: list = []
             current_item = ""
             paren_level = 0
             bracket_level = 0
@@ -298,7 +301,6 @@ def flx_long_list_dict(line: str, max_length: int) -> str:
                 elif char == "}":
                     brace_level -= 1
                     current_item += char
-                else:
                     current_item += char
 
             if current_item.strip():
@@ -450,7 +452,7 @@ def process_file(
 
     # Corrige cada linha longa
     fixed_count = 0
-    fixed_lines = []
+    fixed_lines: list = []
     for i, line in enumerate(lines):
         line_num = i + 1
         is_long_line = any(num == line_num for num, _ in long_lines)
@@ -462,13 +464,10 @@ def process_file(
                 fixed_lines.append(fixed_line)
                 if verbose:
                     print(f"{file_path}: Linha {line_num} corrigida")
-            else:
                 fixed_lines.append(line)
                 if verbose:
                     print(
-                        f"{file_path}: Linha {line_num} não pôde ser corrigida automaticamente",
-                    )
-        else:
+                        f"{file_path}: Linha {line_num} não pôde ser corrigida automaticamente", )
             fixed_lines.append(line)
 
     # Escreve as alterações se alguma linha foi corrigida
@@ -478,10 +477,9 @@ def process_file(
                 f.write(line if line.endswith("\n") else line + "\n")
 
         print(f"{file_path}: {fixed_count}/{len(long_lines)} linhas corrigidas")
-    else:
         print(
-            f"{file_path}: Nenhuma linha pôde ser corrigida automaticamente ({len(long_lines)} linhas longas)",
-        )
+            f"{file_path}: Nenhuma linha pôde ser corrigida automaticamente ({
+                len(long_lines)} linhas longas)", )
 
     return len(long_lines) - fixed_count
 
@@ -520,9 +518,8 @@ def main() -> int:
     # Resumo
     if args.check:
         print(
-            f"\nVerificação concluída: {remaining_issues} linhas longas encontradas em {len(python_files)} arquivos.",
-        )
-    else:
+            f"\nVerificação concluída: {remaining_issues} linhas longas encontradas em {
+                len(python_files)} arquivos.", )
         print(
             f"\nProcessamento concluído: {remaining_issues} linhas longas ainda precisam ser corrigidas manualmente.",
         )

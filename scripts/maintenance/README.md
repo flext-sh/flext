@@ -13,6 +13,7 @@ This directory contains production-ready maintenance scripts for code quality, d
 The primary enterprise maintenance system (v4.0.0) that prioritizes project tools:
 
 **Features:**
+
 - Runs project tools first (ruff, mypy, black, isort, etc.)
 - Beautiful Rich console interface with progress tracking
 - Dry-run, interactive, and auto modes
@@ -20,6 +21,7 @@ The primary enterprise maintenance system (v4.0.0) that prioritizes project tool
 - Custom fix modules for remaining issues
 
 **Usage:**
+
 ```bash
 # Dry run on entire workspace
 python scripts/maintenance/unified_maintenance_system_v2.py
@@ -38,7 +40,8 @@ python scripts/maintenance/unified_maintenance_system_v2.py --skip-tools mypy ba
 
 Modular fix modules for issues that tools can't handle:
 
-#### Available Modules:
+#### Available Modules
+
 - **type_annotations** - Add missing type hints to functions and variables
 - **logging_patterns** - Fix f-strings in logging, replace print() statements
 - **exception_handling** - Fix bare except, add exception chaining
@@ -49,6 +52,7 @@ Modular fix modules for issues that tools can't handle:
 - **performance** - Optimize loops and data structures (stub)
 
 **Run Custom Fixes:**
+
 ```bash
 # List available modules
 python scripts/maintenance/run_custom_fixes.py --list
@@ -68,6 +72,7 @@ python scripts/maintenance/run_custom_fixes.py type_annotations logging_patterns
 The primary enterprise maintenance system (v3.0.0) that combines all proven patterns:
 
 **Features:**
+
 - Modular plugin architecture
 - Configuration-driven operations
 - Parallel processing support
@@ -76,6 +81,7 @@ The primary enterprise maintenance system (v3.0.0) that combines all proven patt
 - Multi-project targeting
 
 **Usage:**
+
 ```bash
 # Basic usage - process entire workspace
 python scripts/maintenance/unified_maintenance_system.py
@@ -132,6 +138,7 @@ metrics:
 ## Fix Categories
 
 ### Syntax and Style
+
 - **type_annotations**: Add missing type hints
 - **logging_patterns**: Fix f-strings in logging, replace print()
 - **exception_handling**: Fix bare except, add "from e"
@@ -140,6 +147,7 @@ metrics:
 - **string_quotes**: Standardize quote usage
 
 ### Code Quality
+
 - **undefined_variables**: Fix undefined name errors
 - **docstring_formatting**: Add missing docstrings
 - **line_length**: Fix long lines
@@ -148,6 +156,7 @@ metrics:
 - **indentation**: Fix indentation errors
 
 ### Modern Python
+
 - **f_string_conversion**: Convert .format() to f-strings
 - **comprehension_optimization**: Optimize list/dict comprehensions
 - **method_ordering**: Fix method order in classes
@@ -155,12 +164,14 @@ metrics:
 - **type_checking_imports**: Fix TYPE_CHECKING patterns
 
 ### Security
+
 - **sql_injection_prevention**: Fix SQL injection risks
 - **hardcoded_secrets**: Remove hardcoded passwords
 - **assert_statements**: Fix assert usage
 - **eval_usage**: Remove eval() calls
 
 ### Performance
+
 - **loop_optimizations**: Optimize loops
 - **dict_get_usage**: Use dict.get() properly
 - **set_operations**: Optimize set operations
@@ -168,12 +179,14 @@ metrics:
 - **asyncio_patterns**: Fix asyncio anti-patterns
 
 ### Enterprise Patterns
+
 - **dependency_injection**: Implement DI patterns
 - **hexagonal_architecture**: Ensure hexagonal compliance
 - **ddd_patterns**: Apply DDD patterns
 - **cqrs_compliance**: Ensure CQRS compliance
 
 ### Documentation
+
 - **markdownlint_compliance**: Fix markdown issues
 - **readme_coverage**: Ensure README.md in all folders
 - **api_documentation**: Add API docs
@@ -268,21 +281,25 @@ python scripts/maintenance/unified_maintenance_system.py \
 ## Best Practices
 
 1. **Always run dry-run first**
+
    ```bash
    python scripts/maintenance/unified_maintenance_system.py --dry-run
    ```
 
 2. **Target specific projects when possible**
+
    ```bash
    python scripts/maintenance/unified_maintenance_system.py --projects flx
    ```
 
 3. **Use configuration files for repeatability**
+
    ```bash
    python scripts/maintenance/unified_maintenance_system.py --config config/myproject.yaml
    ```
 
 4. **Monitor metrics for trends**
+
    ```bash
    # Generate detailed metrics
    python scripts/maintenance/unified_maintenance_system.py --metrics-file reports/metrics.json
@@ -292,6 +309,7 @@ python scripts/maintenance/unified_maintenance_system.py \
    ```
 
 5. **Incremental fixes for large codebases**
+
    ```bash
    # Fix one category at a time
    python scripts/maintenance/unified_maintenance_system.py --categories logging_patterns
@@ -385,6 +403,7 @@ python scripts/maintenance/unified_maintenance_system.py --log-level DEBUG
 The recommended workflow is:
 
 1. **Run tools first** - Let professional tools handle what they can:
+
    ```bash
    python scripts/maintenance/unified_maintenance_system_v2.py --mode dry-run
    ```
@@ -392,6 +411,7 @@ The recommended workflow is:
 2. **Review tool results** - See what needs manual intervention
 
 3. **Run custom fixes** - For issues tools can't handle:
+
    ```bash
    python scripts/maintenance/run_custom_fixes.py type_annotations logging_patterns --target . --apply
    ```

@@ -42,12 +42,16 @@ def check_oracle_columns() -> None:
                 for i, column in enumerate(columns, 1):
                     name = column["name"]
                     data_type = column.get("data_type", "UNKNOWN")
-                    nullable = "NULL" if column.get("nullable", True) else "NOT NULL"
+                    nullable = "NULL" if column.get(
+                        "nullable", True) else "NOT NULL"
                     length = column.get("length", "")
                     length_str = f"({length})" if length else ""
 
                     print(
-                        f"  {i:2d}. {name:<25} {data_type}{length_str:<15} {nullable}",
+                        f"  {
+                            i:2d}. {
+                            name:<25} {data_type}{
+                            length_str:<15} {nullable}",
                     )
 
         except Exception as e:
@@ -87,17 +91,18 @@ def check_oracle_columns() -> None:
                     if data_type == "NUMBER" and precision:
                         if scale and scale > 0:
                             type_str = f"NUMBER({precision},{scale})"
-                        else:
                             type_str = f"NUMBER({precision})"
                     elif data_type in {"VARCHAR2", "CHAR"} and length:
                         type_str = f"{data_type}({length})"
-                    else:
                         type_str = data_type
 
                     nullable_str = "NULL" if nullable == "Y" else "NOT NULL"
 
-                    print(f"  {i:2d}. {name:<25} {type_str:<20} {nullable_str}")
-            else:
+                    print(
+                        f"  {
+                            i:2d}. {
+                            name:<25} {
+                            type_str:<20} {nullable_str}")
                 print(f"❌ Nenhuma coluna encontrada para tabela {table_name}")
 
         except Exception as e:
@@ -112,12 +117,13 @@ def check_oracle_columns() -> None:
             WHERE TABLE_NAME = :table_name
             """
 
-            result = db_client.query(table_exists_sql, {"table_name": table_name})
+            result = db_client.query(
+                table_exists_sql, {
+                    "table_name": table_name})
             table_count = result[0]["table_count"] if result else 0
 
             if table_count > 0:
                 print(f"✅ Tabela {table_name} existe")
-            else:
                 print(f"❌ Tabela {table_name} NÃO existe")
 
                 # Listar tabelas disponíveis

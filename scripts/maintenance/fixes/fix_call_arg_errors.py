@@ -42,7 +42,6 @@ def get_call_arg_errors() -> dict[str, list[dict[str, Any]]]:
                     errors_by_pattern["unexpected_kwarg"].append(error_info)
                 elif "takes no arguments" in msg:
                     errors_by_pattern["takes_no_args"].append(error_info)
-                else:
                     errors_by_pattern["other"].append(error_info)
 
     return dict(errors_by_pattern)
@@ -201,7 +200,8 @@ def fix_method_signatures() -> None:
 
             for fix in signature_fixes:
                 if re.search(fix["pattern"], content):
-                    content = re.sub(fix["pattern"], fix["replacement"], content)
+                    content = re.sub(
+                        fix["pattern"], fix["replacement"], content)
                     modified = True
                     print(f"{fix['description']} in {filepath}")
 
@@ -220,16 +220,22 @@ def add_missing_type_imports() -> None:
         try:
             content = filepath.read_text()
             lines = content.splitlines()
-            imports_to_add = set()
+            imports_to_add: set = set()
 
             # Check for Dict usage without import
-            if re.search(r":\s*Dict\[", content) and "from typing import" in content:
-                if "Dict" not in content.split("from typing import")[1].split("\n")[0]:
+            if re.search(
+                r":\s*Dict\[",
+                    content) and "from typing import Dict," in content:
+                if "Dict" not in content.split("from typing import Dict,")[
+                        1].split("\n")[0]:
                     imports_to_add.add("Dict")
 
             # Check for Any usage without import
-            if re.search(r":\s*Any\b", content) and "from typing import" in content:
-                if "Any" not in content.split("from typing import")[1].split("\n")[0]:
+            if re.search(
+                r":\s*Any\b",
+                    content) and "from typing import Dict," in content:
+                if "Any" not in content.split("from typing import Dict,")[
+                        1].split("\n")[0]:
                     imports_to_add.add("Any")
 
             # Check for field usage without import
@@ -240,15 +246,17 @@ def add_missing_type_imports() -> None:
             if imports_to_add:
                 # Update typing imports
                 for i, line in enumerate(lines):
-                    if line.startswith("from typing import"):
+                    if line.startswith("from typing import Dict,"):
                         imports = line.split("import")[1].strip()
-                        current_imports = [imp.strip() for imp in imports.split(",")]
+                        current_imports = [imp.strip()
+                                           for imp in imports.split(",")]
                         for imp in imports_to_add:
                             if imp not in current_imports:
                                 current_imports.append(imp)
                         lines[i] = (
-                            f"from typing import {', '.join(sorted(current_imports))}"
-                        )
+                            f"from typing import Dict, {
+                                ', '.join(
+                                    sorted(current_imports))}")
                         break
 
                 filepath.write_text("\n".join(lines))

@@ -44,7 +44,8 @@ def create_audit_columns_fixed() -> None:
             try:
                 result = db_client.query(table_exists_sql)
                 # CORREÇÃO: Acessar dados como dicionário
-                table_count = result[0]["count"] if result and len(result) > 0 else 0
+                table_count = result[0]["count"] if result and len(
+                    result) > 0 else 0
 
                 if table_count == 0:
                     print(f"❌ Tabela {table_name} NÃO existe - pulando")
@@ -69,7 +70,6 @@ def create_audit_columns_fixed() -> None:
                     col_name = "CREATED_BY"
                 elif 'ADD "UPDATED_BY"' in alter_sql:
                     col_name = "UPDATED_BY"
-                else:
                     col_name = "UNKNOWN"
 
                 try:
@@ -88,7 +88,6 @@ def create_audit_columns_fixed() -> None:
                         or "already exists" in error_msg.lower()
                     ):
                         print(f"  ⚠️ Coluna {col_name} já existe - OK")
-                    else:
                         print(f"  ❌ Erro ao criar coluna {col_name}: {e}")
 
         # Verificação final (formato corrigido)
@@ -97,8 +96,7 @@ def create_audit_columns_fixed() -> None:
             try:
                 # Verificar se tabela existe
                 table_exists_result = db_client.query(
-                    f"SELECT COUNT(*) as count FROM USER_TABLES WHERE TABLE_NAME = '{table_name}'",
-                )
+                    f"SELECT COUNT(*) as count FROM USER_TABLES WHERE TABLE_NAME = '{table_name}'", )
                 if not table_exists_result or table_exists_result[0]["count"] == 0:
                     continue
 
@@ -122,7 +120,6 @@ def create_audit_columns_fixed() -> None:
 
                 if audit_count == 4:
                     print("  ✅ Todas as colunas de auditoria presentes")
-                else:
                     print(f"  ❌ Faltam {4 - audit_count} colunas de auditoria")
 
                 # Listar colunas existentes
@@ -137,7 +134,8 @@ def create_audit_columns_fixed() -> None:
                 existing_audit = db_client.query(columns_list_sql)
                 if existing_audit:
                     # CORREÇÃO: Acessar dados como dicionário
-                    existing_names = [row["column_name"] for row in existing_audit]
+                    existing_names = [row["column_name"]
+                                      for row in existing_audit]
                     print(f"  Colunas existentes: {existing_names}")
 
             except Exception as e:

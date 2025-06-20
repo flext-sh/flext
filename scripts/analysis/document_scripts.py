@@ -20,6 +20,7 @@ import ast
 import re
 import sys
 from pathlib import Path
+from typing import Any
 
 # Absolute paths
 WORKSPACE_ROOT = Path("/home/marlonsc/pyauto")
@@ -77,9 +78,11 @@ def parse_arguments() -> Any:
     return parser.parse_args()
 
 
-def get_python_files(scripts_dir: Path, exclude_patterns: list[str]) -> list[Path]:
+def get_python_files(
+        scripts_dir: Path,
+        exclude_patterns: list[str]) -> list[Path]:
     """Get all Python files in the scripts directory."""
-    python_files = []
+    python_files: list = []
 
     # Check if the path exists
     if not scripts_dir.exists():
@@ -168,8 +171,8 @@ class ScriptDocumenter:
         )
 
         # Try to infer purpose from function names and content
-        purpose = []
-        keywords = set()
+        purpose: list = []
+        keywords: set = set()
 
         for func in self.functions:
             func_name = func.name.lower()
@@ -230,7 +233,7 @@ class ScriptDocumenter:
         )
 
         # Get parameters
-        params = []
+        params: list = []
         for arg in func.args.args:
             if arg.arg != "self":
                 params.append(arg.arg)
@@ -351,7 +354,7 @@ def generate_scripts_summary(python_files: list[Path]) -> str:
     )
 
     # Group scripts by directory
-    scripts_by_dir = {}
+    scripts_by_dir: dict = {}
     for file_path in sorted(python_files):
         dir_name = file_path.parent.name
         if dir_name not in scripts_by_dir:
@@ -362,7 +365,6 @@ def generate_scripts_summary(python_files: list[Path]) -> str:
     for dir_name, scripts in scripts_by_dir.items():
         if dir_name == "scripts":
             summary += "## Main Scripts\n\n"
-        else:
             summary += f"## Scripts in {dir_name}\n\n"
 
         for script_path in sorted(scripts):
@@ -396,7 +398,6 @@ def generate_scripts_summary(python_files: list[Path]) -> str:
 
                     # Add a separator
                     summary += "---\n\n"
-                else:
                     summary += f"### {script_name}\n\n"
                     summary += "*No documentation available*\n\n"
                     summary += "---\n\n"
@@ -438,7 +439,10 @@ def main() -> int:
 
             if issues["module"] or issues["functions"]:
                 issues_found = True
-                print(colorize(documenter.generate_documentation_report(), "YELLOW"))
+                print(
+                    colorize(
+                        documenter.generate_documentation_report(),
+                        "YELLOW"))
             elif args.verbose:
                 print(
                     colorize(
@@ -468,12 +472,22 @@ def main() -> int:
                             "GREEN",
                         ),
                     )
-                else:
-                    print(colorize(f"Failed to update {script_path.name}", "RED"))
+                    print(
+                        colorize(
+                            f"Failed to update {
+                                script_path.name}",
+                            "RED"))
             elif args.verbose:
-                print(colorize(f"No updates needed for {script_path.name}", "YELLOW"))
+                print(
+                    colorize(
+                        f"No updates needed for {
+                            script_path.name}",
+                        "YELLOW"))
 
-        print(colorize(f"Updated documentation for {updated_count} scripts", "GREEN"))
+        print(
+            colorize(
+                f"Updated documentation for {updated_count} scripts",
+                "GREEN"))
 
     # Generate summary
     print(colorize("Generating scripts summary...", "CYAN"))

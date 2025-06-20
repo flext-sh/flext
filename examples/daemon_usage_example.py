@@ -48,7 +48,8 @@ async def example_programmatic_daemon() -> None:
 
     try:
         # Create daemon and server manager using factory
-        daemon, server_manager = DaemonServiceFactory.create_daemon_service(config)
+        daemon, server_manager = DaemonServiceFactory.create_daemon_service(
+            config)
 
         # Start servers in background
         asyncio.create_task(server_manager.start_all_servers())
@@ -140,7 +141,8 @@ def main() -> None:
     example_web_interface()
 
     # Ask user if they want to run the daemon
-    response = input("Do you want to run the daemon example? (y/N): ").lower().strip()
+    response = input(
+        "Do you want to run the daemon example? (y/N): ").lower().strip()
 
     if response in {"y", "yes"}:
         asyncio.run(example_programmatic_daemon())

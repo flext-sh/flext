@@ -117,14 +117,13 @@ def main(paths: list[str] | None = None) -> int:
     if paths is None or not paths:
         paths = [os.getcwd()]
 
-    all_files = []
+    all_files: list = []
     for path_str in paths:
         path = Path(path_str)
         if path.is_dir():
             all_files.extend(find_python_files(path))
         elif path.is_file() and path.suffix == ".py":
             all_files.append(path)
-        else:
             print(f"Skipping {path} (not a Python file or directory)")
 
     print(f"Found {len(all_files)} Python files to process")

@@ -4,6 +4,7 @@ Essential migration functionality without over-engineering
 """
 
 # Core components
+
 from .async_ldap import AsyncLDAPPool
 from .base import BaseConnectionManager, BaseProcessor
 

@@ -61,7 +61,8 @@ class FlxTestConfig(BaseModel):
     )
 
     # Coverage options
-    enable_coverage: bool = Field(default=True, description="Enable coverage reporting")
+    enable_coverage: bool = Field(default=True,
+                                  description="Enable coverage reporting")
     coverage_threshold: float = Field(
         default=80.0, description="Minimum coverage threshold"
     )
@@ -83,7 +84,8 @@ class FlxTestConfig(BaseModel):
     )
 
     # Timeout settings
-    test_timeout: int = Field(default=300, description="Test timeout in seconds")
+    test_timeout: int = Field(default=300,
+                              description="Test timeout in seconds")
 
 
 class FlxTestResult(BaseModel):
@@ -138,11 +140,14 @@ class FlxTestRunner:
         """Run all possible tests across all FLX projects."""
         print("🚀 Starting comprehensive FLX test execution...")
         print(
-            f"📊 Configuration: {len(self.config.test_directories)} projects, {len(self.config.test_categories)} categories"
-        )
+            f"📊 Configuration: {
+                len(
+                    self.config.test_directories)} projects, {
+                len(
+                    self.config.test_categories)} categories")
 
         # Run tests for each flx_project and category combination
-        tasks = []
+        tasks: list = []
         for project_dir in self.config.test_directories:
             if Path(project_dir).exists():
                 for category in self.config.test_categories:
@@ -152,7 +157,7 @@ class FlxTestRunner:
         # Execute tests in parallel batches
         batch_size = self.config.parallel_workers
         for i in range(0, len(tasks), batch_size):
-            batch = tasks[i : i + batch_size]
+            batch = tasks[i: i + batch_size]
             batch_results = await asyncio.gather(*batch, return_exceptions=True)
 
             for result in batch_results:
@@ -206,16 +211,18 @@ class FlxTestRunner:
 
             status_emoji = "✅" if result.success else "❌"
             print(
-                f"{status_emoji} {project_name} {category}: {result.passed_tests}/{result.total_tests} passed ({execution_time:.2f}s)"
-            )
+                f"{status_emoji} {project_name} {category}: {
+                    result.passed_tests}/{
+                    result.total_tests} passed ({
+                    execution_time:.2f}s)")
 
             return result
 
         except TimeoutError:
             execution_time = time.time() - start_time
             print(
-                f"⏰ Timeout: {project_name} {category} tests exceeded {self.config.test_timeout}s"
-            )
+                f"⏰ Timeout: {project_name} {category} tests exceeded {
+                    self.config.test_timeout}s")
 
             return FlxTestResult(
                 project_name=project_name,
@@ -226,7 +233,8 @@ class FlxTestRunner:
                 skipped_tests=0,
                 execution_time=execution_time,
                 success=False,
-                error_message=f"Test execution timed out after {self.config.test_timeout}s",
+                error_message=f"Test execution timed out after {
+                    self.config.test_timeout}s",
             )
 
         except Exception as e:
@@ -245,7 +253,10 @@ class FlxTestRunner:
                 error_message=str(e),
             )
 
-    def _build_pytest_command(self, project_dir: str, category: str) -> list[str]:
+    def _build_pytest_command(
+            self,
+            project_dir: str,
+            category: str) -> list[str]:
         """Build pytest command for specific flx_project and category."""
         cmd = ["python", "-m", "pytest"]
 
@@ -310,7 +321,8 @@ class FlxTestRunner:
         for line in lines:
             # Look for test summary line
             if "passed" in line or "failed" in line or "skipped" in line:
-                # Extract numbers from lines like "5 passed, 2 failed, 1 skipped"
+                # Extract numbers from lines like "5 passed, 2 failed, 1
+                # skipped"
                 parts = line.split()
                 for i, part in enumerate(parts):
                     if part.isdigit():
@@ -404,7 +416,10 @@ class FlxTestRunner:
         total_skipped = sum(r.skipped_tests for r in self.results)
         total_time = time.time() - self.start_time
 
-        success_rate = (total_passed / total_tests * 100) if total_tests > 0 else 0
+        success_rate = (
+            total_passed /
+            total_tests *
+            100) if total_tests > 0 else 0
 
         print("\n" + "=" * 80)
         print("🎯 COMPREHENSIVE FLX TEST EXECUTION SUMMARY")
@@ -419,7 +434,7 @@ class FlxTestRunner:
 
         # Project breakdown
         print("📋 PROJECT BREAKDOWN:")
-        projects = {}
+        projects: dict = {}
         for result in self.results:
             if result.project_name not in projects:
                 projects[result.project_name] = {
@@ -468,7 +483,13 @@ class FlxTestRunner:
                 else "N/A"
             )
 
-            markdown_content += f"| {result.project_name} | {result.test_category} | {result.total_tests} | {result.passed_tests} | {result.failed_tests} | {result.skipped_tests} | {coverage_str} | {status_emoji} |\n"
+            markdown_content += f"| {
+                result.project_name} | {
+                result.test_category} | {
+                result.total_tests} | {
+                result.passed_tests} | {
+                    result.failed_tests} | {
+                        result.skipped_tests} | {coverage_str} | {status_emoji} |\n"
 
         # Add failure details
         failed_results = [r for r in self.results if not r.success]
@@ -505,7 +526,6 @@ async def main() -> None:
     if failed_runs:
         print(f"\n❌ {len(failed_runs)} test runs failed")
         sys.exit(1)
-    else:
         print("\n✅ All test runs completed successfully!")
         sys.exit(0)
 

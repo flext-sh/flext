@@ -5,7 +5,7 @@ import os
 import re
 import sys
 from pathlib import Path
-from typing import dict, list
+from typing import Any, dict, list
 
 
 def find_python_files(directory: str) -> list[Path]:
@@ -125,7 +125,8 @@ def flx_auth_token_valid(file_path: Path) -> int:
         def replacement(m) -> Any:
             return m.group(0).replace("return ", "        return ")
 
-        modified_content = re.sub(pattern, replacement, content, flags=re.DOTALL)
+        modified_content = re.sub(
+            pattern, replacement, content, flags=re.DOTALL)
 
         # Write the modified content back if changes were made
         if modified_content != content:
@@ -152,7 +153,8 @@ def flx_is_authenticated_method(file_path: Path) -> int:
         def replacement(m) -> Any:
             return m.group(0).replace("return ", "        return ")
 
-        modified_content = re.sub(pattern, replacement, content, flags=re.DOTALL)
+        modified_content = re.sub(
+            pattern, replacement, content, flags=re.DOTALL)
 
         # Write the modified content back if changes were made
         if modified_content != content:
@@ -179,7 +181,8 @@ def flx_validate_token_method(file_path: Path) -> int:
         def replacement(m) -> Any:
             return m.group(0).replace("return ", "        return ")
 
-        modified_content = re.sub(pattern, replacement, content, flags=re.DOTALL)
+        modified_content = re.sub(
+            pattern, replacement, content, flags=re.DOTALL)
 
         # Write the modified content back if changes were made
         if modified_content != content:
@@ -369,7 +372,7 @@ def flx_discover_plugins(file_path: Path) -> int:
 
 def process_file(file_path: Path) -> dict[str, int]:
     """Process a single file, applying all fixes."""
-    fixes_applied = {}
+    fixes_applied: dict = {}
     filename = file_path.name
 
     if filename == "client.py":

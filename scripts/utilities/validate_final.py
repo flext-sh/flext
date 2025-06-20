@@ -68,8 +68,16 @@ def validate_final() -> bool | None:
                 print(f"    ORDER_NBR: {record.get('ORDER_NBR', 'N/A')}")
                 print(f"    COMPANY_ID: {record.get('COMPANY_ID', 'N/A')}")
                 print(f"    FACILITY_ID: {record.get('FACILITY_ID', 'N/A')}")
-                print(f"    ORDER_TYPE_ID: {record.get('ORDER_TYPE_ID', 'N/A')}")
-                print(f"    ORIG_SALE_PRICE: {record.get('ORIG_SALE_PRICE', 'N/A')}")
+                print(
+                    f"    ORDER_TYPE_ID: {
+                        record.get(
+                            'ORDER_TYPE_ID',
+                            'N/A')}")
+                print(
+                    f"    ORIG_SALE_PRICE: {
+                        record.get(
+                            'ORIG_SALE_PRICE',
+                            'N/A')}")
                 print(f"    CREATED_BY: {record.get('CREATED_BY', 'N/A')}")
                 print(f"    UPDATED_BY: {record.get('UPDATED_BY', 'N/A')}")
 
@@ -104,7 +112,6 @@ def validate_final() -> bool | None:
 
             if audit_ok:
                 print("✅ Campos de auditoria: OK")
-            else:
                 print("⚠️ Campos de auditoria: Alguns campos podem estar NULL")
 
         # 4. Testar inserção de mais um registro
@@ -141,10 +148,8 @@ def validate_final() -> bool | None:
                     print("✅ Novo registro inserido com sucesso!")
                 elif new_total == total_count:
                     print("⚠️ Mesmo número de registros (pode ser duplicata evitada)")
-                else:
                     print("❌ Número de registros diminuiu (problema)")
 
-            else:
                 print(f"❌ Erro na segunda execução: {result.stderr}")
 
         except Exception as e:

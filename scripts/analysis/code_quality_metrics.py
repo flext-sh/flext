@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+from typing import Any
+
 """Advanced Code Quality Metrics Dashboard for FLX Project.
 
 This script provides comprehensive analysis of code quality metrics including:
@@ -16,13 +18,14 @@ import json
 import subprocess
 from datetime import datetime
 from pathlib import Path
-from typing import Any
 
 
 class CodeQualityMetrics:
     """Advanced code quality metrics analyzer."""
 
-    def __init__(self, project_root: str = "/home/marlonsc/pyauto/flx") -> None:
+    def __init__(
+            self,
+            project_root: str = "/home/marlonsc/pyauto/flx") -> None:
         """Initialize metrics analyzer."""
         self.project_root = Path(project_root)
         self.src_path = self.project_root / "src" / "flx"
@@ -41,7 +44,7 @@ class CodeQualityMetrics:
             )
 
             # Count errors by category
-            errors_by_type = {}
+            errors_by_type: dict = {}
             total_errors = 0
 
             for line in result.stdout.split("\n"):
@@ -113,7 +116,7 @@ class CodeQualityMetrics:
 
     def analyze_architecture_compliance(self) -> dict[str, Any]:
         """Analyze hexagonal architecture compliance."""
-        architecture_violations = []
+        architecture_violations: list = []
         compliance_score = 100
 
         # Check for proper layer separation
@@ -140,9 +143,15 @@ class CodeQualityMetrics:
 
         return {
             "violations": architecture_violations,
-            "compliance_score": max(0, compliance_score),
+            "compliance_score": max(
+                0,
+                compliance_score),
             "architecture_pattern": "Hexagonal",
-            "layers_identified": ["core", "application", "infrastructure", "adapters"],
+            "layers_identified": [
+                "core",
+                "application",
+                "infrastructure",
+                "adapters"],
         }
 
     def analyze_security_metrics(self) -> dict[str, Any]:
@@ -160,11 +169,12 @@ class CodeQualityMetrics:
             if result.stdout:
                 bandit_data = json.loads(result.stdout)
                 security_issues = len(bandit_data.get("results", []))
-                severity_counts = {}
+                severity_counts: dict = {}
 
                 for issue in bandit_data.get("results", []):
                     severity = issue.get("issue_severity", "UNKNOWN")
-                    severity_counts[severity] = severity_counts.get(severity, 0) + 1
+                    severity_counts[severity] = severity_counts.get(
+                        severity, 0) + 1
 
                 return {
                     "total_security_issues": security_issues,
@@ -186,7 +196,7 @@ class CodeQualityMetrics:
         security_metrics = self.analyze_security_metrics()
 
         # Calculate overall quality score
-        scores = []
+        scores: list = []
         if "quality_score" in lint_metrics:
             scores.append(lint_metrics["quality_score"])
         if "type_safety_score" in type_metrics:
@@ -207,7 +217,6 @@ class CodeQualityMetrics:
             grade = "B"
         elif overall_score >= 60:
             grade = "C"
-        else:
             grade = "D"
 
         return {
@@ -269,7 +278,7 @@ class CodeQualityMetrics:
         security_metrics: dict[str, Any],
     ) -> list[str]:
         """Generate improvement recommendations."""
-        recommendations = []
+        recommendations: list = []
 
         # Lint recommendations
         if lint_metrics.get("total_errors", 0) > 50:
@@ -283,7 +292,8 @@ class CodeQualityMetrics:
 
         # Architecture recommendations
         if architecture_metrics.get("compliance_score", 100) < 90:
-            recommendations.append("🏗️ Address hexagonal architecture violations")
+            recommendations.append(
+                "🏗️ Address hexagonal architecture violations")
 
         # Security recommendations
         if security_metrics.get("total_security_issues", 0) > 0:

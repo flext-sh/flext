@@ -22,12 +22,12 @@ def flx_deprecated_typing(file_path: Path) -> dict[str, int]:
         content = f.read()
 
     # Check if file has any deprecated typing imports
-    if "from typing import " not in content:
+    if "from typing import Optional, " not in content:
         return {}
 
     # Get the original typing import line
     typing_import_match = re.search(
-        r"from typing import (.*?)(?:\n|$)", content, re.MULTILINE
+        r"from typing import Optional, (.*?)(?:\n|$)", content, re.MULTILINE
     )
     if not typing_import_match:
         return {}
@@ -49,8 +49,8 @@ def flx_deprecated_typing(file_path: Path) -> dict[str, int]:
     }
 
     # Track changes
-    changes = {}
-    new_imports = []
+    changes: dict = {}
+    new_imports: list = []
 
     # Process each import
     for imp in re.split(r",\s*", original_imports):
@@ -60,10 +60,8 @@ def flx_deprecated_typing(file_path: Path) -> dict[str, int]:
             if imp in {"list", "dict", "Set", "tuple"}:
                 changes[imp] = changes.get(imp, 0) + 1
                 # Don't add to new imports as we'll use the builtin types
-            else:
                 # Keep other imports from typing that aren't deprecated
                 new_imports.append(imp)
-        else:
             # Keep any other imports we don't recognize
             new_imports.append(imp)
 
@@ -72,14 +70,12 @@ def flx_deprecated_typing(file_path: Path) -> dict[str, int]:
 
     # Create new import line if there are still typing imports needed
     if new_imports:
-        new_import_line = f"from typing import {', '.join(new_imports)}"
-    else:
+        new_import_line = f"from typing import Optional, {', '.join(new_imports)}"
         new_import_line = ""  # No more typing imports needed
 
     # Replace the import line
     if new_import_line:
         modified_content = content.replace(import_line, new_import_line)
-    else:
         # Remove the entire line if no imports remain
         modified_content = content.replace(import_line + "\n", "")
         if modified_content == content:  # If there was no newline
@@ -87,11 +83,13 @@ def flx_deprecated_typing(file_path: Path) -> dict[str, int]:
 
     # Replace the actual type uses in the code
     for old_type, new_type in replacements.items():
-        if old_type in {"list", "dict", "Set", "tuple"} and old_type in changes:
+        if old_type in {"list", "dict", "Set",
+                        "tuple"} and old_type in changes:
             # Replace patterns like list[int] with list[int]
             pattern = r"\b" + re.escape(old_type) + r"\["
             replacement = new_type + "["
-            modified_content, count = re.subn(pattern, replacement, modified_content)
+            modified_content, count = re.subn(
+                pattern, replacement, modified_content)
             if count > 0:
                 changes[f"{old_type}_usage"] = count
 
@@ -104,7 +102,7 @@ def flx_deprecated_typing(file_path: Path) -> dict[str, int]:
 
 def process_files(files: list[Path]) -> dict[str, int]:
     """Process multiple files and collect statistics."""
-    total_changes = {}
+    total_changes: dict = {}
     files_modified = 0
 
     for file_path in files:
@@ -115,7 +113,8 @@ def process_files(files: list[Path]) -> dict[str, int]:
             print(f"Fixed {file_path}:")
             for change_type, count in changes.items():
                 print(f"  - {change_type}: {count} replacements")
-                total_changes[change_type] = total_changes.get(change_type, 0) + count
+                total_changes[change_type] = total_changes.get(
+                    change_type, 0) + count
 
     return {
         "files_modified": files_modified,
@@ -133,7 +132,7 @@ def main() -> None:
         sys.exit(1)
 
     # Get all files to process
-    all_files = []
+    all_files: list = []
     for path_arg in sys.argv[1:]:
         path = Path(path_arg)
         if path.is_file() and path.suffix == ".py":
@@ -159,7 +158,6 @@ def main() -> None:
         print("\nReplacements made:")
         for change_type, count in results["changes"].items():
             print(f"  - {change_type}: {count}")
-    else:
         print("\nNo deprecated typing imports found.")
 
 

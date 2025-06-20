@@ -24,8 +24,9 @@ class FlxPatternFixer(ast.NodeTransformer):
 
     def visit_ImportFrom(self, node: ast.ImportFrom) -> ast.ImportFrom:
         """Fix import statements."""
-        # Fix imports like: from module import ClassName -> from module import FlxClassName
-        new_names = []
+        # Fix imports like: from module import ClassName -> from module import
+        # FlxClassName
+        new_names: list = []
         changed = False
 
         for alias in node.names:
@@ -35,7 +36,9 @@ class FlxPatternFixer(ast.NodeTransformer):
             # Check common patterns that need Flx prefix
             needs_flx = any(
                 [
-                    name in {"AsyncPluginManager", "PluggableAsyncEventPublisher"},
+                    name in {
+                        "AsyncPluginManager",
+                        "PluggableAsyncEventPublisher"},
                     name.endswith("EventProcessor") and not name.startswith("Flx"),
                     name.endswith("EventFilter") and not name.startswith("Flx"),
                     name.endswith("EventTransformer") and not name.startswith("Flx"),
@@ -43,8 +46,7 @@ class FlxPatternFixer(ast.NodeTransformer):
                     name.endswith("Middleware") and not name.startswith("Flx"),
                     name.endswith("Handler") and not name.startswith("Flx"),
                     name.endswith("Tracker") and not name.startswith("Flx"),
-                    name
-                    in {
+                    name in {
                         "EndpointInfo",
                         "ComponentType",
                         "ShutdownPhase",
@@ -56,8 +58,7 @@ class FlxPatternFixer(ast.NodeTransformer):
                         "LogSeverity",
                         "BaseUrlBuilder",
                     },
-                ]
-            )
+                ])
 
             if needs_flx and not name.startswith("Flx"):
                 new_name = f"Flx{name}"
@@ -74,13 +75,10 @@ class FlxPatternFixer(ast.NodeTransformer):
                 )
                 if asname:
                     self.imported_classes.add(asname)
-                else:
                     self.imported_classes.add(name)
-            else:
                 new_names.append(alias)
                 if asname:
                     self.imported_classes.add(asname)
-                else:
                     self.imported_classes.add(name)
 
         if changed:
@@ -99,7 +97,9 @@ class FlxPatternFixer(ast.NodeTransformer):
         # Check if this name needs Flx prefix
         needs_flx = any(
             [
-                name in {"AsyncPluginManager", "PluggableAsyncEventPublisher"},
+                name in {
+                    "AsyncPluginManager",
+                    "PluggableAsyncEventPublisher"},
                 name.endswith("EventProcessor") and not name.startswith("Flx"),
                 name.endswith("EventFilter") and not name.startswith("Flx"),
                 name.endswith("EventTransformer") and not name.startswith("Flx"),
@@ -107,8 +107,7 @@ class FlxPatternFixer(ast.NodeTransformer):
                 name.endswith("Middleware") and not name.startswith("Flx"),
                 name.endswith("Handler") and not name.startswith("Flx"),
                 name.endswith("Tracker") and not name.startswith("Flx"),
-                name
-                in {
+                name in {
                     "EndpointInfo",
                     "ComponentType",
                     "ShutdownPhase",
@@ -132,8 +131,7 @@ class FlxPatternFixer(ast.NodeTransformer):
                     "ShutdownMetricsCollector",
                     "ComponentShutdownTimer",
                 },
-            ]
-        )
+            ])
 
         if needs_flx and not name.startswith("Flx"):
             new_name = f"Flx{name}"
@@ -170,7 +168,8 @@ class FlxPatternFixer(ast.NodeTransformer):
                     isinstance(node.func.value, ast.Name)
                     and node.func.value.id == "self"
                 ):
-                    if self.current_class and self.current_class.startswith("Flx"):
+                    if self.current_class and self.current_class.startswith(
+                            "Flx"):
                         # Common methods that need flx_ prefix
                         if attr in {
                             "validate_url",
@@ -188,21 +187,19 @@ class FlxPatternFixer(ast.NodeTransformer):
                 if needs_flx:
                     new_attr = f"flx_{attr}"
                     node.func.attr = new_attr
-                    self.changes.append(
-                        {
-                            "type": "method",
-                            "old": attr,
-                            "new": new_attr,
-                            "line": node.lineno if hasattr(node, "lineno") else 0,
-                        }
-                    )
+                    self.changes.append({"type": "method",
+                                         "old": attr,
+                                         "new": new_attr,
+                                         "line": node.lineno if hasattr(node,
+                                                                        "lineno") else 0,
+                                         })
 
         return node
 
 
 def fix_specific_patterns(filepath: Path) -> list[dict[str, any]]:
     """Fix specific patterns in a file."""
-    changes = []
+    changes: list = []
     try:
         content = filepath.read_text()
         original_content = content
@@ -223,7 +220,8 @@ def fix_specific_patterns(filepath: Path) -> list[dict[str, any]]:
             # Pattern 4: Fix Exception attributes
             (r"exception\._context\b", 'getattr(exception, "_context", None)'),
             (r"exception\._details\b", 'getattr(exception, "_details", None)'),
-            (r"exception\._error_chain\b", 'getattr(exception, "_error_chain", None)'),
+            (r"exception\._error_chain\b",
+             'getattr(exception, "_error_chain", None)'),
         ]
 
         for pattern, replacement in patterns:
@@ -299,7 +297,6 @@ def main() -> None:
 
     if args.file:
         files = [Path(args.file)]
-    else:
         files = [src_dir / f for f in problem_files if (src_dir / f).exists()]
 
     print(f"Processing {len(files)} files...")
@@ -317,9 +314,8 @@ def main() -> None:
                 fixer = FlxPatternFixer()
                 fixer.visit(tree)
                 changes = fixer.changes
-            except:
-                changes = []
-        else:
+            except Exception:
+                changes: list = []
             # Apply AST fixes
             changes = fix_file_ast(filepath)
             # Apply regex fixes
@@ -343,7 +339,6 @@ def main() -> None:
                     )
                 elif change["type"] == "regex":
                     print(f"  Regex pattern: {change['pattern']}")
-        else:
             print("  No changes needed")
 
     print(f"\nTotal changes: {total_changes}")

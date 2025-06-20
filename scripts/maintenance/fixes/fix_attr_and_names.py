@@ -20,10 +20,11 @@ def get_mypy_errors_by_type(error_type: str) -> list[dict[str, Any]]:
     ]
     result = subprocess.run(cmd, capture_output=True, text=True, check=False)
 
-    errors = []
+    errors: list = []
     for line in result.stdout.splitlines() + result.stderr.splitlines():
         if f"[{error_type}]" in line:
-            match = re.match(r"(.+?):(\d+): error: (.+?) \[" + error_type + r"\]", line)
+            match = re.match(
+                r"(.+?):(\d+): error: (.+?) \[" + error_type + r"\]", line)
             if match:
                 errors.append(
                     {
@@ -107,27 +108,27 @@ def add_missing_imports() -> None:
     """Add missing imports based on name-defined errors."""
     # Common missing imports
     missing_imports = {
-        "Optional": "from typing import Optional",
-        "Union": "from typing import Union",
-        "Callable": "from typing import Callable",
-        "Iterator": "from typing import Iterator",
-        "Sequence": "from typing import Sequence",
-        "Mapping": "from typing import Mapping",
-        "MutableMapping": "from typing import MutableMapping",
-        "Awaitable": "from typing import Awaitable",
-        "Final": "from typing import Final",
-        "Literal": "from typing import Literal",
-        "TypedDict": "from typing import TypedDict",
-        "Protocol": "from typing import Protocol",
-        "runtime_checkable": "from typing import runtime_checkable",
-        "overload": "from typing import overload",
-        "NoReturn": "from typing import NoReturn",
-        "ClassVar": "from typing import ClassVar",
-        "Type": "from typing import Type",
-        "cast": "from typing import cast",
-        "get_args": "from typing import get_args",
-        "get_origin": "from typing import get_origin",
-        "get_type_hints": "from typing import get_type_hints",
+        "Optional": "from typing import Dict, Optional, Optional",
+        "Union": "from typing import Dict, Optional, Union",
+        "Callable": "from typing import Dict, Optional, Callable",
+        "Iterator": "from typing import Dict, Optional, Iterator",
+        "Sequence": "from typing import Dict, Optional, Sequence",
+        "Mapping": "from typing import Dict, Optional, Mapping",
+        "MutableMapping": "from typing import Dict, Optional, MutableMapping",
+        "Awaitable": "from typing import Dict, Optional, Awaitable",
+        "Final": "from typing import Dict, Optional, Final",
+        "Literal": "from typing import Dict, Optional, Literal",
+        "TypedDict": "from typing import Dict, Optional, TypedDict",
+        "Protocol": "from typing import Dict, Optional, Protocol",
+        "runtime_checkable": "from typing import Dict, Optional, runtime_checkable",
+        "overload": "from typing import Dict, Optional, overload",
+        "NoReturn": "from typing import Dict, Optional, NoReturn",
+        "ClassVar": "from typing import Dict, Optional, ClassVar",
+        "Type": "from typing import Dict, Optional, Type",
+        "cast": "from typing import Dict, Optional, cast",
+        "get_args": "from typing import Dict, Optional, get_args",
+        "get_origin": "from typing import Dict, Optional, get_origin",
+        "get_type_hints": "from typing import Dict, Optional, get_type_hints",
     }
 
     name_errors = get_mypy_errors_by_type("name-defined")
@@ -149,17 +150,21 @@ def add_missing_imports() -> None:
             # Find where to insert imports
             import_index = 0
             for i, line in enumerate(lines):
-                if line.startswith("from typing import"):
+                if line.startswith("from typing import Dict, Optional,"):
                     # Update existing typing import
-                    current_imports = re.findall(r"from typing import (.+)", line)[0]
-                    current_names = [n.strip() for n in current_imports.split(",")]
+                    current_imports = re.findall(
+                        r"from typing import Dict, Optional, (.+)", line)[0]
+                    current_names = [n.strip()
+                                     for n in current_imports.split(",")]
 
                     for name in names:
                         if name not in current_names:
                             current_names.append(name)
 
-                    lines[i] = f"from typing import {', '.join(sorted(current_names))}"
-                    names = set()  # Clear names since we updated
+                    lines[i] = f"from typing import Dict, Optional, {
+                        ', '.join(
+                            sorted(current_names))}"
+                    names: set = set()
                     break
                 if line.startswith(("import", "from")):
                     import_index = i + 1
@@ -238,7 +243,10 @@ def fix_model_attributes() -> None:
 
             # Fix json() calls
             if ".json()" in content and "response.json()" not in content:
-                content = re.sub(r"(\w+)\.json\(\)", r"\1.model_dump_json()", content)
+                content = re.sub(
+                    r"(\w+)\.json\(\)",
+                    r"\1.model_dump_json()",
+                    content)
                 modified = True
 
             # Fix validate() calls
@@ -253,7 +261,8 @@ def fix_model_attributes() -> None:
 
             # Fix parse_raw() calls
             if ".parse_raw(" in content:
-                content = content.replace(".parse_raw(", ".model_validate_json(")
+                content = content.replace(
+                    ".parse_raw(", ".model_validate_json(")
                 modified = True
 
             # Fix schema() calls
@@ -286,7 +295,7 @@ def fix_specific_undefined_names() -> None:
         },
         "flx/src/flx/infra/observability/health.py": {
             "asyncio": "import asyncio",
-            "Callable": "from typing import Callable",
+            "Callable": "from typing import Dict, Optional, Callable",
         },
     }
 
@@ -308,7 +317,6 @@ def fix_specific_undefined_names() -> None:
                                 lines.insert(i + 1, fix)
                                 break
                         content = "\n".join(lines)
-                    else:
                         # Add definition
                         content = fix + "\n\n" + content
 

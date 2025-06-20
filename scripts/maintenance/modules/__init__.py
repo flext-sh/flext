@@ -4,6 +4,7 @@ Custom fix modules for the Unified Maintenance System.
 Each module provides specialized fixes that can't be handled by standard tools.
 """
 
+
 from .asyncio_patterns import AsyncioPatternFixModule
 from .base import CustomFixModule, FixResult
 from .docstrings import DocstringFixModule

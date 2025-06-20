@@ -47,7 +47,6 @@ def fix_logging_stars() -> None:
     if fixed_content != content:
         file_path.write_text(fixed_content, encoding="utf-8")
         print(f"Fixed star separator issues in {file_path}")
-    else:
         print("No changes needed")
 
 
