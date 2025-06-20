@@ -1,0 +1,47 @@
+[tool.poetry]
+name = "flx-meltano-enterprise"
+version = "0.5.0"
+description = "Enterprise Python component"
+authors = ["DataCosmos Team <team@datacosmos.com>"]
+readme = "README.md"
+packages = [{include = "flx_meltano_enterprise", from = "src"}, {include = "flx_core", from = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.9,<4.0"
+singer-python = ">=6.0.0"
+pyarrow = ">=14.0.0"
+sqlalchemy = ">=2.0.0"
+alembic = ">=1.12.0"
+celery = ">=5.3.0"
+redis = ">=5.0.0"
+kombu = ">=5.3.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0.0"
+ruff = "^0.8.0"
+black = "^24.0.0"
+isort = "^5.13.0"
+mypy = "^1.13.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 88
+target-version = "py39"
+
+
+[tool.ruff.lint]
+ignore = ["E402", "F405", "F821"]
+[tool.black]
+line-length = 88
+target-version = ["py39"]
+
+[tool.isort]
+profile = "black"
+line_length = 88
+
+[tool.mypy]
+python_version = "3.9"
+strict = true

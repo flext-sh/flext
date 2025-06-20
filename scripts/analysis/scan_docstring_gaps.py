@@ -33,7 +33,7 @@ class DocstringGapFinder(ast.NodeVisitor):
             and isinstance(node.body[0].value.value, str)
         )
 
-    def visit_ClassDef(self, node: ast.ClassDef) -> None:
+    def visit_class_def(self, node: ast.ClassDef) -> None:
         """Visit class definitions."""
         old_class = self.current_class
         self.current_class = node.name
@@ -53,7 +53,7 @@ class DocstringGapFinder(ast.NodeVisitor):
         self.generic_visit(node)
         self.current_class = old_class
 
-    def visit_FunctionDef(self, node: ast.FunctionDef) -> None:
+    def visit_function_def(self, node: ast.FunctionDef) -> None:
         """Visit function definitions."""
         if not self.has_docstring(node):
             func_type = "method" if self.current_class else "function"

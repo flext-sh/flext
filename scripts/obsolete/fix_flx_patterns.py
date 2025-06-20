@@ -14,7 +14,7 @@ class FlxPatternFixer(ast.NodeTransformer):
         self.current_class: str | None = None
         self.imported_classes: set[str] = set()
 
-    def visit_ClassDef(self, node: ast.ClassDef) -> ast.ClassDef:
+    def visit_class_def(self, node: ast.ClassDef) -> ast.ClassDef:
         """Track current class."""
         old_class = self.current_class
         self.current_class = node.name
@@ -22,7 +22,7 @@ class FlxPatternFixer(ast.NodeTransformer):
         self.current_class = old_class
         return result
 
-    def visit_ImportFrom(self, node: ast.ImportFrom) -> ast.ImportFrom:
+    def visit_import_from(self, node: ast.ImportFrom) -> ast.ImportFrom:
         """Fix import statements."""
         # Fix imports like: from module import ClassName -> from module import
         # FlxClassName
@@ -86,7 +86,7 @@ class FlxPatternFixer(ast.NodeTransformer):
 
         return node
 
-    def visit_Name(self, node: ast.Name) -> ast.Name:
+    def visit_name(self, node: ast.Name) -> ast.Name:
         """Fix class name references."""
         name = node.id
 
