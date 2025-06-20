@@ -56,7 +56,7 @@ class ComplexityAnalyzer(ast.NodeVisitor):
         self.current_function_complexity = 0
         self.current_function_returns = 0
 
-    def visit_FunctionDef(self, node: ast.FunctionDef) -> None:
+    def visit_function_def(self, node: ast.FunctionDef) -> None:
         """Visit function definition."""
         self.function_count += 1
 
@@ -87,9 +87,9 @@ class ComplexityAnalyzer(ast.NodeVisitor):
 
     def visit_AsyncFunctionDef(self, node: ast.AsyncFunctionDef) -> None:
         """Visit async function definition."""
-        self.visit_FunctionDef(node)
+        self.visit_function_def(node)
 
-    def visit_ClassDef(self, node: ast.ClassDef) -> None:
+    def visit_class_def(self, node: ast.ClassDef) -> None:
         """Visit class definition."""
         self.class_count += 1
         self.generic_visit(node)

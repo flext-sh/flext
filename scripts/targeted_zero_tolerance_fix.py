@@ -19,13 +19,13 @@ class TargetedFixer:
     """Targeted fixer for critical violations."""
 
     def __init__(self, base_path: str = "/home/marlonsc/pyauto"):
-        self.base_path = Path(base_path)
-        self.fixes_applied = 0
-        self.files_modified = set()
+        self.base_path: Path = Path(base_path)
+        self.fixes_applied: int = 0
+        self.files_modified: set = set()
 
     def find_all_python_files(self) -> list[Path]:
         """Find all Python files in the workspace."""
-        python_files: list = []
+        python_files: list[Path] = []
         for pattern in ["*.py", "**/*.py"]:
             python_files.extend(self.base_path.glob(pattern))
         return python_files
@@ -46,8 +46,8 @@ class TargetedFixer:
             # Check if logging is already imported
             has_logging = 'import logging' in content or 'from loguru import logger' in content
 
-            new_lines: list = []
-            added_imports = False
+            new_lines: list[str] = []
+            added_imports: bool = False
 
             for i, line in enumerate(lines):
                 # Skip if it's already a logger call
@@ -143,31 +143,31 @@ class TargetedFixer:
 
             # Find all names used
             class NameCollector(ast.NodeVisitor):
-                def __init__(self):
-                    self.names = set()
-                    self.defined = set()
+                def __init__(self) -> None:
+                    self.names: set[str] = set()
+                    self.defined: set[str] = set()
 
-                def visit_Name(self, node) -> None:
+                def visit_name(self, node: ast.Name) -> None:
                     if isinstance(node.ctx, ast.Load):
                         self.names.add(node.id)
                     elif isinstance(node.ctx, ast.Store):
                         self.defined.add(node.id)
                     self.generic_visit(node)
 
-                def visit_FunctionDef(self, node) -> None:
+                def visit_function_def(self, node: ast.FunctionDef) -> None:
                     self.defined.add(node.name)
                     self.generic_visit(node)
 
-                def visit_ClassDef(self, node) -> None:
+                def visit_class_def(self, node: ast.ClassDef) -> None:
                     self.defined.add(node.name)
                     self.generic_visit(node)
 
-                def visit_Import(self, node) -> None:
+                def visit_import(self, node: ast.Import) -> None:
                     for alias in node.names:
                         self.defined.add(alias.asname or alias.name)
                     self.generic_visit(node)
 
-                def visit_ImportFrom(self, node) -> None:
+                def visit_import_from(self, node: ast.ImportFrom) -> None:
                     for alias in node.names:
                         self.defined.add(alias.asname or alias.name)
                     self.generic_visit(node)
