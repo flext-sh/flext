@@ -7,13 +7,13 @@ Based on scripts/utilities/standardize_projects.py functionality.
 
 import shutil
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 import tomli
 import tomli_w
 from rich.console import Console
 
-from .base import CustomFixModule, Issue
+from .base import CustomFixModule, Issue, Severity
 
 
 class ProjectStandardizationModule(CustomFixModule):
@@ -135,15 +135,15 @@ class ProjectStandardizationModule(CustomFixModule):
         "pre-commit": "^4.2.0",
     }
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
         self.console = Console()
         self.backup_dir = Path.cwd() / ".standardization_backup"
 
     def find_projects(self, workspace_path: Path) -> list[Path]:
         """Find all projects with pyproject.toml."""
-        projects: list = []
-        seen_projects: set = set()
+        projects: list[Path] = []
+        seen_projects: set[str] = set()
 
         for path in workspace_path.rglob("pyproject.toml"):
             # Ignore venv and cache directories
@@ -164,7 +164,7 @@ class ProjectStandardizationModule(CustomFixModule):
 
     def analyze(self, file_path: Path, content: str) -> list[Issue]:
         """Analyze workspace for standardization opportunities."""
-        issues: list = []
+        issues: list[Issue] = []
 
         if file_path.name == "pyproject.toml":
             try:
@@ -181,14 +181,16 @@ class ProjectStandardizationModule(CustomFixModule):
 
                 # Check tool configurations
                 tool_config = config.get("tool", {})
-                for tool, standard_config in self.STANDARD_CONFIG["tool"].items(
-                ):
-                    if tool == "poetry":
-                        continue  # Handle poetry separately
+                if isinstance(tool_config, dict):
+                    standard_tool_configs = self.STANDARD_CONFIG.get("tool", {})
+                    if isinstance(standard_tool_configs, dict):
+                        for tool, standard_config in standard_tool_configs.items():
+                            if tool == "poetry":
+                                continue  # Handle poetry separately
 
-                    if tool_config.get(tool) != standard_config:
-                        needs_update = True
-                        break
+                            if tool_config.get(tool) != standard_config:
+                                needs_update = True
+                                break
 
                 # Check development dependencies
                 poetry_config = tool_config.get("poetry", {})
@@ -205,18 +207,18 @@ class ProjectStandardizationModule(CustomFixModule):
                     issues.append(
                         Issue(
                             line=1,
-                            column=1,
-                            code="PROJ001",
                             message="Project configuration needs standardization",
-                            suggestion="Apply standard PyAuto configuration template"))
+                            severity=Severity.MEDIUM,
+                            column=1,
+                            fix_description="Apply standard PyAuto configuration template"))
 
             except Exception as e:
                 issues.append(Issue(
                     line=1,
-                    column=1,
-                    code="PROJ002",
                     message=f"Failed to analyze pyproject.toml: {e}",
-                    suggestion="Check file format and syntax"
+                    severity=Severity.HIGH,
+                    column=1,
+                    fix_description="Check file format and syntax"
                 ))
 
         return issues
@@ -267,9 +269,11 @@ class ProjectStandardizationModule(CustomFixModule):
                 dev_deps[dep] = version
 
         # Apply standard tool configurations
-        for tool, config in self.STANDARD_CONFIG["tool"].items():
-            if tool != "poetry":  # Poetry handled above
-                result["tool"][tool] = config
+        if isinstance(self.STANDARD_CONFIG["tool"], dict):
+            tool_configs = self.STANDARD_CONFIG["tool"]
+            for tool, config in tool_configs.items():
+                if tool != "poetry":  # Poetry handled above
+                    result["tool"][tool] = config
 
         # Project-specific adjustments
         if "flx" in str(project_path):
@@ -325,6 +329,7 @@ class ProjectStandardizationModule(CustomFixModule):
                         self.console.print(
                             f"[cyan][DRY RUN] Would standardize {
                                 project_path.name}[/cyan]")
+                else:
                     # Save standardized configuration
                     with open(config_path, "wb") as f:
                         tomli_w.dump(standardized_config, f)
@@ -350,7 +355,7 @@ class ProjectStandardizationModule(CustomFixModule):
         return success_count == len(projects)
 
     def run_workspace_standardization(
-            self, workspace_path: Path = None) -> bool:
+            self, workspace_path: Optional[Path] = None) -> bool:
         """Run standardization across the entire workspace."""
         if workspace_path is None:
             workspace_path = Path.cwd()

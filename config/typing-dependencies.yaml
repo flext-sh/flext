@@ -1,0 +1,117 @@
+# Configuração centralizada de dependências de tipagem para PyAuto
+# Versões compatíveis e equilibradas para evitar conflitos entre projetos
+
+# Python version target
+python_version: "3.13"
+python_minimum: "3.9"
+
+# Core typing dependencies - SEMPRE incluir
+core_typing:
+  typing-extensions: "^4.12.0"
+  mypy: "^1.16.0"
+
+# Standard library types - incluir quando necessário
+stdlib_types:
+  types-python-dateutil: "^2.9.0.20241206"
+  types-pyyaml: "^6.0.12.20250516"
+  types-setuptools: "^75.7.0.20250106"
+  types-requests: "^2.32.0.20241016"
+  types-redis: "^4.6.0.20240903"
+
+# Web framework types
+web_types:
+  types-fastapi: "^0.115.0"
+  types-django: "^5.1.0"
+  types-flask: "^1.1.6"
+  types-starlette: "^0.41.0"
+
+# Database types
+database_types:
+  types-sqlalchemy: "^1.4.53.38"
+  types-psycopg2: "^2.9.21.20241231"
+  types-pymongo: "^4.10.0"
+
+# Development types
+dev_types:
+  types-pytest: "^7.4.4"
+  types-mock: "^5.1.0.20241217"
+
+# Async/concurrency types
+async_types:
+  types-asyncio: "^3.4.8.20241217"
+  types-aiofiles: "^24.1.0.20241114"
+
+# Project-specific mapping - quais types incluir em cada projeto
+project_mappings:
+  all_projects:
+    - typing-extensions
+    - mypy
+    - types-python-dateutil
+    - types-pyyaml
+    - types-setuptools
+    - types-requests
+
+  web_projects:
+    - types-fastapi
+    - types-starlette
+
+  database_projects:
+    - types-sqlalchemy
+
+  async_projects:
+    - types-asyncio
+    - types-aiofiles
+
+  test_projects:
+    - types-pytest
+    - types-mock
+
+# MyPy configuration standards
+mypy_config:
+  python_version: "3.13"
+  strict: true
+  warn_return_any: true
+  warn_unused_configs: true
+  warn_redundant_casts: true
+  warn_unused_ignores: true
+  disallow_untyped_defs: true
+  disallow_any_unimported: true
+  no_implicit_optional: true
+  check_untyped_defs: true
+  show_error_codes: true
+  show_error_context: true
+  pretty: true
+  ignore_missing_imports: false
+
+# Projects and their type requirements
+projects:
+  pyauto-root:
+    types: ["all_projects"]
+
+  flx:
+    types: ["all_projects", "web_projects", "async_projects"]
+
+  flx-database-oracle:
+    types: ["all_projects", "database_projects", "async_projects"]
+
+  flx-http-oracle-oic:
+    types: ["all_projects", "web_projects", "async_projects"]
+
+  flx-http-oracle-wms:
+    types: ["all_projects", "web_projects", "async_projects"]
+
+  flx-meltano-enterprise:
+    types:
+      ["all_projects", "web_projects", "database_projects", "async_projects"]
+
+  algar-oud-mig:
+    types: ["all_projects", "database_projects"]
+
+  ldap-projects:
+    types: ["all_projects", "async_projects"]
+
+  oracle-projects:
+    types: ["all_projects", "database_projects", "async_projects"]
+
+  tap-target-projects:
+    types: ["all_projects", "database_projects", "async_projects"]
