@@ -10,7 +10,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 from rich.console import Console
 from rich.panel import Panel
@@ -34,18 +34,18 @@ class FixResult:
     file_path: Path
     issues_found: int
     issues_fixed: int
-    error: str | None = None
-    diff: str | None = None
+    error: Optional[str] = None
+    diff: Optional[str] = None
 
 
 @dataclass
 class Issue:
     """Represents an issue found in code."""
 
-    line: int | None
+    line: Optional[int]
     message: str
     severity: Severity
-    file_path: Path | None = None
+    file_path: Optional[Path] = None
     column: int = 0
     fix_description: str = ""
     original_line: str = ""
@@ -197,7 +197,7 @@ class CustomFixModule(ABC):
         Returns:
             List of FixResult for each file
         """
-        results: list = []
+        results: list[FixResult] = []
 
         # Find all matching files
         files = list(directory.rglob(pattern))
@@ -281,9 +281,10 @@ class CustomFixModule(ABC):
 
         for issue in issues[:10]:  # Show first 10 issues
             severity_color = {
-                "error": "red",
-                "warning": "yellow",
-                "info": "blue"
+                Severity.HIGH: "red",
+                Severity.MEDIUM: "yellow",
+                Severity.LOW: "blue",
+                Severity.INFO: "blue"
             }.get(issue.severity, "white")
 
             self.console.print(

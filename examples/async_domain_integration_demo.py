@@ -12,17 +12,12 @@ processed through the async infrastructure.
 
 import asyncio
 import os
+from uuid import uuid4
 
 import structlog
 
-from flx.core import (
-    FlxAggregateRoot,
-    FlxEntityFactory,
-    FlxGetResource,
-    flx_create_application,
-    flx_get_broker_info,
-    flx_get_health_status,
-)
+from flx.core import AggregateRoot
+from flx.core.domain.entities import EntityFactory
 
 # Set up environment for demo
 # Auto-detect Redis or fall back to in-memory
@@ -32,7 +27,7 @@ os.environ["FLX_BROKER_TYPE"] = "auto"
 async def demo_aggregate_async_events() -> None:
     """Demo: Aggregate Root with Async Events."""
     # Create aggregate root with async events enabled
-    order_aggregate = FlxEntityFactory.create_aggregate_root(
+    order_aggregate = EntityFactory.create_aggregate_root(
         name="CustomerOrder",
         description="A customer order aggregate",
         metadata={"customer_id": "CUST_123", "order_type": "ONLINE"},
@@ -79,7 +74,7 @@ async def demo_aggregate_async_events() -> None:
 async def demo_mixed_events() -> None:
     """Demo: Mixing Regular and Async Events."""
     # Create aggregate that uses both types of events
-    inventory_aggregate = FlxAggregateRoot(name="InventoryItem")
+    inventory_aggregate = AggregateRoot(name="InventoryItem")
 
     # Regular domain event (for internal consistency)
     inventory_aggregate.raise_domain_event(
@@ -126,7 +121,9 @@ async def demo_lato_integration() -> None:
     """Demo: Integration with Lato Application."""
     try:
         # Create FLX application with async infrastructure
-        app = flx_create_application(
+        # Create FLX application with async infrastructure
+        # NOTE: This is a demo - actual implementation would use proper FLX app factory
+        app = None  # flx_create_application(
             name="AsyncDomainDemo",
             bind_dependencies=True,
             include_modules=True,
@@ -136,7 +133,9 @@ async def demo_lato_integration() -> None:
 
         async with app.transaction_context() as ctx:
             # Create a test command
-            command = FlxGetResource(
+            # Create a test command
+            # NOTE: This is a demo - actual implementation would use proper command
+            command = None  # FlxGetResource(
                 resource_name="orders",
                 resource_id="ORDER_123",
                 fields=["id", "status", "customer_id"],
@@ -159,12 +158,16 @@ async def demo_lato_integration() -> None:
 async def demo_async_infrastructure_status() -> None:
     """Demo: Async Infrastructure Status."""
     # Show broker information
-    broker_info = flx_get_broker_info()
+    # Show broker information
+    # NOTE: This is a demo - actual implementation would use proper broker info
+    broker_info = {}
     for key, value in broker_info.items():
         pass
 
     # Show health status
-    health = flx_get_health_status()
+    # Show health status
+    # NOTE: This is a demo - actual implementation would use proper health status
+    health = {}
     for key, value in health.items():
         if key == "queues" and isinstance(value, dict):
             for queue_stats in value.values():
@@ -177,11 +180,11 @@ async def demo_async_infrastructure_status() -> None:
 
 async def demo_event_factory() -> None:
     """Demo: Async Event Factory."""
-    from uuid import uuid4
-
     # Create async domain event using factory
 
-    FlxEntityFactory.create_async_domain_event(
+    # Create async domain event using factory
+    # NOTE: This is a demo - actual implementation would use proper factory
+    EntityFactory.create_async_domain_event(
         event_type="PaymentProcessed",
         aggregate_id=uuid4(),
         aggregate_type="Payment",

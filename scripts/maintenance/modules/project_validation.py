@@ -5,10 +5,10 @@ Validates project compliance with enterprise standards.
 Based on scripts/validate_pyproject_compliance.py functionality.
 """
 
-import tomllib
 from pathlib import Path
 from typing import Any
 
+import tomllib
 from rich.console import Console
 from rich.table import Table
 
