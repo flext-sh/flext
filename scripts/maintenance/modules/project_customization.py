@@ -5,9 +5,9 @@ Customizes pyproject.toml templates for specific project types.
 Based on scripts/customize_project_template.py functionality.
 """
 
-import tomllib
 from pathlib import Path
 
+import tomllib
 from rich.console import Console
 
 from .base import CustomFixModule, Issue

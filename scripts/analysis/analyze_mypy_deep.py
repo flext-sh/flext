@@ -20,7 +20,7 @@ def get_detailed_mypy_errors() -> list[dict[str, Any]]:
     ]
     result = subprocess.run(cmd, capture_output=True, text=True, check=False)
 
-    errors: list = []
+    errors: list[dict[str, Any]] = []
     for line in result.stdout.splitlines() + result.stderr.splitlines():
         if " error: " in line and "[" in line:
             match = re.match(r"(.+?):(\d+): error: (.+?) \[(.+?)\]", line)
@@ -73,7 +73,7 @@ def analyze_call_arg_errors(
 def analyze_attr_defined_errors(
         errors: list[dict[str, Any]]) -> dict[str, int]:
     """Analyze remaining attr-defined errors."""
-    attr_patterns = defaultdict(int)
+    attr_patterns: dict[str, int] = defaultdict(int)
 
     for error in errors:
         if error["code"] != "attr-defined":
@@ -110,7 +110,7 @@ def analyze_name_defined_errors(
 
 def find_class_definitions() -> dict[str, str]:
     """Find where classes are defined in the codebase."""
-    class_locations: dict = {}
+    class_locations: dict[str, str] = {}
 
     for py_file in Path("flx/src").rglob("*.py"):
         try:

@@ -11,8 +11,9 @@ Usage:
 
 import argparse
 import sys
-import tomllib
 from pathlib import Path
+
+import tomllib
 
 # Enterprise standards from CLAUDE.md
 REQUIRED_BUILD_SYSTEM = {

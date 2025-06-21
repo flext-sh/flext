@@ -40,7 +40,7 @@ class DatabaseCommands:
     All commands in this group are available as: flx database <command>
     """
 
-    def __init__(self, command_bus=None) -> None:
+    def __init__(self, command_bus: Any = None) -> None:
         """Initialize with optional command bus injection."""
         self.command_bus = command_bus
         self.connection_pool = "mock_connection_pool"
@@ -136,7 +136,7 @@ class MonitoringCommands:
     Commands are available as: flx monitoring <command>
     """
 
-    def __init__(self, command_bus) -> None:
+    def __init__(self, command_bus: Any) -> None:
         """Initialize with command bus for integration."""
         self.command_bus = command_bus
         self.metrics_store = {
@@ -256,7 +256,7 @@ class UtilityCommands:
         Args:
             format_type: Format type (iso, unix, readable)
         """
-        now = datetime.datetime.now()
+        now = datetime.datetime.now(datetime.UTC)
 
         formats = {
             "iso": now.isoformat(),

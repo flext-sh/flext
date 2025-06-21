@@ -184,8 +184,9 @@ def load_config_from_file[T: "BaseSettings"](
         ValidationError: If configuration is invalid
     """
     import json
-    import tomllib
     from pathlib import Path
+
+    import tomllib
 
     path = Path(file_path)
 
