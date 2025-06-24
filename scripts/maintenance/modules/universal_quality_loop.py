@@ -24,18 +24,20 @@ class UniversalQualityLoopModule(CustomFixModule):
     """Module for universal zero-tolerance quality assurance automation."""
 
     name = "universal_quality_loop"
-    description = "Zero-tolerance quality assurance automation for enterprise Python projects"
+    description = (
+        "Zero-tolerance quality assurance automation for enterprise Python projects"
+    )
 
     # Quality tools in execution order
     QUALITY_TOOLS = [
-        "autoflake",    # Remove unused imports/variables
-        "pyupgrade",    # Upgrade syntax patterns
-        "isort",        # Sort imports
-        "black",        # Format code
-        "ruff",         # Lint and fix
-        "mypy",         # Type checking
-        "bandit",       # Security analysis
-        "safety",       # Dependency vulnerability check
+        "autoflake",  # Remove unused imports/variables
+        "pyupgrade",  # Upgrade syntax patterns
+        "isort",  # Sort imports
+        "black",  # Format code
+        "ruff",  # Lint and fix
+        "mypy",  # Type checking
+        "bandit",  # Security analysis
+        "safety",  # Dependency vulnerability check
     ]
 
     # Zero tolerance thresholds
@@ -64,11 +66,14 @@ class UniversalQualityLoopModule(CustomFixModule):
         "pyupgrade": ["--keep-percent-format"],  # More aggressive
     }
 
-    def __init__(self,
-                 zero_tolerance: bool = True,
-                 max_iterations: int = 10,
-                 enable_unsafe_fixes: bool = False,
-                 *args, **kwargs):
+    def __init__(
+        self,
+        zero_tolerance: bool = True,
+        max_iterations: int = 10,
+        enable_unsafe_fixes: bool = False,
+        *args,
+        **kwargs,
+    ):
         super().__init__(*args, **kwargs)
         self.console = Console()
         self.zero_tolerance = zero_tolerance
@@ -129,46 +134,63 @@ class UniversalQualityLoopModule(CustomFixModule):
 
         return test_paths
 
-    def run_tool(self, tool: str, project_path: Path,
-                 fix_mode: bool = False) -> tuple[bool, str, str]:
+    def run_tool(
+        self, tool: str, project_path: Path, fix_mode: bool = False
+    ) -> tuple[bool, str, str]:
         """Run a quality tool on the project."""
         tool_configs = {
             "autoflake": {
                 "check": ["autoflake", "--check", "--recursive"],
-                "fix": ["autoflake", "--in-place", "--recursive"] +
-                (self.UNSAFE_FIXES["autoflake"]
-                 if self.enable_unsafe_fixes else self.SAFE_FIXES["autoflake"])
+                "fix": ["autoflake", "--in-place", "--recursive"]
+                + (
+                    self.UNSAFE_FIXES["autoflake"]
+                    if self.enable_unsafe_fixes
+                    else self.SAFE_FIXES["autoflake"]
+                ),
             },
             "pyupgrade": {
-                "check": ["find", ".", "-name", "*.py", "-exec", "pyupgrade", "--py313-plus", "--check", "{}", "+"],
-                "fix": ["find", ".", "-name", "*.py", "-exec", "pyupgrade"] + self.SAFE_FIXES["pyupgrade"] + ["{}", "+"]
+                "check": [
+                    "find",
+                    ".",
+                    "-name",
+                    "*.py",
+                    "-exec",
+                    "pyupgrade",
+                    "--py313-plus",
+                    "--check",
+                    "{}",
+                    "+",
+                ],
+                "fix": ["find", ".", "-name", "*.py", "-exec", "pyupgrade"]
+                + self.SAFE_FIXES["pyupgrade"]
+                + ["{}", "+"],
             },
             "isort": {
                 "check": ["isort", "--check-only", "--diff"],
-                "fix": ["isort"] + self.SAFE_FIXES["isort"]
+                "fix": ["isort"] + self.SAFE_FIXES["isort"],
             },
-            "black": {
-                "check": ["black", "--check", "--diff"],
-                "fix": ["black"]
-            },
+            "black": {"check": ["black", "--check", "--diff"], "fix": ["black"]},
             "ruff": {
                 "check": ["ruff", "check", "--format=json"],
-                "fix": ["ruff", "check"] +
-                (self.UNSAFE_FIXES["ruff"]
-                 if self.enable_unsafe_fixes else self.SAFE_FIXES["ruff"])
+                "fix": ["ruff", "check"]
+                + (
+                    self.UNSAFE_FIXES["ruff"]
+                    if self.enable_unsafe_fixes
+                    else self.SAFE_FIXES["ruff"]
+                ),
             },
             "mypy": {
                 "check": ["mypy", "--no-error-summary"],
-                "fix": []  # MyPy doesn't auto-fix
+                "fix": [],  # MyPy doesn't auto-fix
             },
             "bandit": {
                 "check": ["bandit", "-r", "-f", "json"],
-                "fix": []  # Bandit doesn't auto-fix
+                "fix": [],  # Bandit doesn't auto-fix
             },
             "safety": {
                 "check": ["safety", "check", "--json"],
-                "fix": []  # Safety doesn't auto-fix
-            }
+                "fix": [],  # Safety doesn't auto-fix
+            },
         }
 
         if tool not in tool_configs:
@@ -189,7 +211,7 @@ class UniversalQualityLoopModule(CustomFixModule):
                 cwd=project_path,
                 capture_output=True,
                 text=True,
-                timeout=300  # 5 minute timeout
+                timeout=300,  # 5 minute timeout
             )
 
             return result.returncode == 0, result.stdout, result.stderr
@@ -201,8 +223,9 @@ class UniversalQualityLoopModule(CustomFixModule):
         except Exception as e:
             return False, "", f"Error running {tool}: {e}"
 
-    def analyze_results(self, tool: str, success: bool,
-                        stdout: str, stderr: str) -> dict[str, Any]:
+    def analyze_results(
+        self, tool: str, success: bool, stdout: str, stderr: str
+    ) -> dict[str, Any]:
         """Analyze tool results and extract metrics."""
         analysis = {
             "tool": tool,
@@ -222,37 +245,49 @@ class UniversalQualityLoopModule(CustomFixModule):
                 for issue in ruff_results:
                     analysis["details"].append(
                         {
-                            "file": issue.get(
-                                "filename", ""), "line": issue.get(
-                                "location", {}).get(
-                                "row", 0), "code": issue.get(
-                                "code", ""), "message": issue.get(
-                                "message", ""), "severity": "error" if issue.get(
-                                "code", "").startswith("E") else "warning"})
+                            "file": issue.get("filename", ""),
+                            "line": issue.get("location", {}).get("row", 0),
+                            "code": issue.get("code", ""),
+                            "message": issue.get("message", ""),
+                            "severity": "error"
+                            if issue.get("code", "").startswith("E")
+                            else "warning",
+                        }
+                    )
             except json.JSONDecodeError:
                 # Fallback to text parsing
                 lines = stdout.split("\n")
                 analysis["issues_found"] = len(
-                    [line for line in lines if line.strip() and not line.startswith("Found")])
+                    [
+                        line
+                        for line in lines
+                        if line.strip() and not line.startswith("Found")
+                    ]
+                )
 
         elif tool == "mypy":
             # Parse MyPy output
             lines = stdout.split("\n") + stderr.split("\n")
             error_lines = [
-                line for line in lines if ": error:" in line or ": warning:" in line]
+                line for line in lines if ": error:" in line or ": warning:" in line
+            ]
             analysis["issues_found"] = len(error_lines)
 
             for line in error_lines:
                 if ": error:" in line or ": warning:" in line:
                     parts = line.split(":", 3)
                     if len(parts) >= 4:
-                        analysis["details"].append({
-                            "file": parts[0],
-                            "line": parts[1] if parts[1].isdigit() else 0,
-                            "type": parts[2].strip(),
-                            "message": parts[3].strip() if len(parts) > 3 else "",
-                            "severity": "error" if ": error:" in line else "warning"
-                        })
+                        analysis["details"].append(
+                            {
+                                "file": parts[0],
+                                "line": parts[1] if parts[1].isdigit() else 0,
+                                "type": parts[2].strip(),
+                                "message": parts[3].strip() if len(parts) > 3 else "",
+                                "severity": "error"
+                                if ": error:" in line
+                                else "warning",
+                            }
+                        )
 
         elif tool == "bandit" and stdout:
             try:
@@ -261,14 +296,16 @@ class UniversalQualityLoopModule(CustomFixModule):
                 analysis["issues_found"] = len(issues)
 
                 for issue in issues:
-                    analysis["details"].append({
-                        "file": issue.get("filename", ""),
-                        "line": issue.get("line_number", 0),
-                        "severity": issue.get("issue_severity", "unknown"),
-                        "confidence": issue.get("issue_confidence", "unknown"),
-                        "test_id": issue.get("test_id", ""),
-                        "message": issue.get("issue_text", "")
-                    })
+                    analysis["details"].append(
+                        {
+                            "file": issue.get("filename", ""),
+                            "line": issue.get("line_number", 0),
+                            "severity": issue.get("issue_severity", "unknown"),
+                            "confidence": issue.get("issue_confidence", "unknown"),
+                            "test_id": issue.get("test_id", ""),
+                            "message": issue.get("issue_text", ""),
+                        }
+                    )
             except json.JSONDecodeError:
                 pass
 
@@ -278,12 +315,14 @@ class UniversalQualityLoopModule(CustomFixModule):
                 analysis["issues_found"] = len(safety_results)
 
                 for issue in safety_results:
-                    analysis["details"].append({
-                        "package": issue.get("package", ""),
-                        "vulnerability": issue.get("vulnerability", ""),
-                        "severity": issue.get("severity", "unknown"),
-                        "advisory": issue.get("advisory", "")
-                    })
+                    analysis["details"].append(
+                        {
+                            "package": issue.get("package", ""),
+                            "vulnerability": issue.get("vulnerability", ""),
+                            "severity": issue.get("severity", "unknown"),
+                            "advisory": issue.get("advisory", ""),
+                        }
+                    )
             except json.JSONDecodeError:
                 pass
 
@@ -303,38 +342,42 @@ class UniversalQualityLoopModule(CustomFixModule):
             "tools": {},
             "total_issues": 0,
             "total_fixes": 0,
-            "success": True
+            "success": True,
         }
 
         if self.verbose:
-            self.console.print(
-                f"[blue]Quality Loop Iteration {
-                    self.iteration}[/blue]")
+            self.console.print(f"[blue]Quality Loop Iteration {self.iteration}[/blue]")
 
         with Progress(
             SpinnerColumn(),
             TextColumn("[progress.description]{task.description}"),
-            console=self.console
+            console=self.console,
         ) as progress:
-
             for tool in self.QUALITY_TOOLS:
                 task = progress.add_task(f"Running {tool}...", total=None)
 
                 # Check first
                 success, stdout, stderr = self.run_tool(
-                    tool, project_path, fix_mode=False)
-                check_analysis = self.analyze_results(
-                    tool, success, stdout, stderr)
+                    tool, project_path, fix_mode=False
+                )
+                check_analysis = self.analyze_results(tool, success, stdout, stderr)
 
                 # Apply fixes if issues found and tool supports fixing
                 fix_analysis = None
                 if check_analysis["issues_found"] > 0 and tool in [
-                        "autoflake", "pyupgrade", "isort", "black", "ruff"]:
+                    "autoflake",
+                    "pyupgrade",
+                    "isort",
+                    "black",
+                    "ruff",
+                ]:
                     if not self.dry_run:
                         fix_success, fix_stdout, fix_stderr = self.run_tool(
-                            tool, project_path, fix_mode=True)
+                            tool, project_path, fix_mode=True
+                        )
                         fix_analysis = self.analyze_results(
-                            tool, fix_success, fix_stdout, fix_stderr)
+                            tool, fix_success, fix_stdout, fix_stderr
+                        )
 
                         if fix_analysis["issues_fixed"] > 0:
                             self.total_fixes_applied += fix_analysis["issues_fixed"]
@@ -344,33 +387,45 @@ class UniversalQualityLoopModule(CustomFixModule):
                     progress.update(task, description=f"✅ {tool} - No issues")
                 elif fix_analysis and fix_analysis["issues_fixed"] > 0:
                     progress.update(
-                        task, description=f"🔧 {tool} - Fixed {fix_analysis['issues_fixed']} issues")
+                        task,
+                        description=f"🔧 {tool} - Fixed {fix_analysis['issues_fixed']} issues",
+                    )
                     progress.update(
-                        task, description=f"⚠️ {tool} - {check_analysis['issues_found']} issues found")
+                        task,
+                        description=f"⚠️ {tool} - {check_analysis['issues_found']} issues found",
+                    )
 
                 # Store results
                 tool_result = {
                     "check": check_analysis,
                     "fix": fix_analysis,
-                    "final_issues": check_analysis["issues_found"] - (
-                        fix_analysis["issues_fixed"] if fix_analysis else 0)}
+                    "final_issues": check_analysis["issues_found"]
+                    - (fix_analysis["issues_fixed"] if fix_analysis else 0),
+                }
 
                 iteration_results["tools"][tool] = tool_result
                 iteration_results["total_issues"] += tool_result["final_issues"]
                 iteration_results["total_fixes"] += (
-                    fix_analysis["issues_fixed"] if fix_analysis else 0)
+                    fix_analysis["issues_fixed"] if fix_analysis else 0
+                )
 
                 # Zero tolerance check
                 if self.zero_tolerance and tool in self.ZERO_TOLERANCE_LIMITS:
                     limit_key = f"max_{tool}_errors"
                     if limit_key in self.ZERO_TOLERANCE_LIMITS:
-                        if tool_result["final_issues"] > self.ZERO_TOLERANCE_LIMITS[limit_key]:
+                        if (
+                            tool_result["final_issues"]
+                            > self.ZERO_TOLERANCE_LIMITS[limit_key]
+                        ):
                             iteration_results["success"] = False
                             if self.verbose:
                                 self.console.print(
                                     f"[red]ZERO TOLERANCE VIOLATION: {tool} has {
-                                        tool_result['final_issues']} issues (limit: {
-                                        self.ZERO_TOLERANCE_LIMITS[limit_key]})[/red]")
+                                        tool_result['final_issues']
+                                    } issues (limit: {
+                                        self.ZERO_TOLERANCE_LIMITS[limit_key]
+                                    })[/red]"
+                                )
 
         return iteration_results
 
@@ -382,7 +437,7 @@ class UniversalQualityLoopModule(CustomFixModule):
             "tests_passed": 0,
             "tests_failed": 0,
             "coverage": 0.0,
-            "errors": []
+            "errors": [],
         }
 
         try:
@@ -394,7 +449,8 @@ class UniversalQualityLoopModule(CustomFixModule):
                     "pytest",
                     "--tb=short",
                     "--cov=src",
-                    "--cov-report=term-missing"]
+                    "--cov-report=term-missing",
+                ]
                 cmd = ["pytest", "--tb=short"]
 
             result = subprocess.run(
@@ -402,7 +458,7 @@ class UniversalQualityLoopModule(CustomFixModule):
                 cwd=project_path,
                 capture_output=True,
                 text=True,
-                timeout=600  # 10 minute timeout for tests
+                timeout=600,  # 10 minute timeout for tests
             )
 
             test_results["success"] = result.returncode == 0
@@ -412,6 +468,7 @@ class UniversalQualityLoopModule(CustomFixModule):
 
             # Extract test counts
             import re
+
             test_summary = re.search(r"(\d+) passed", output)
             if test_summary:
                 test_results["tests_passed"] = int(test_summary.group(1))
@@ -420,8 +477,9 @@ class UniversalQualityLoopModule(CustomFixModule):
             if failed_summary:
                 test_results["tests_failed"] = int(failed_summary.group(1))
 
-            test_results["tests_run"] = test_results["tests_passed"] + \
-                test_results["tests_failed"]
+            test_results["tests_run"] = (
+                test_results["tests_passed"] + test_results["tests_failed"]
+            )
 
             # Extract coverage
             coverage_match = re.search(r"TOTAL\s+\d+\s+\d+\s+(\d+)%", output)
@@ -453,31 +511,39 @@ class UniversalQualityLoopModule(CustomFixModule):
                             line=i,
                             column=len(line),
                             code="QUALITY_LENGTH001",
-                            message=f"Line too long ({
-                                len(line)} > {
-                                self.ZERO_TOLERANCE_LIMITS['max_line_length']})",
-                            suggestion="Break line or refactor to reduce length"))
+                            message=f"Line too long ({len(line)} > {
+                                self.ZERO_TOLERANCE_LIMITS['max_line_length']
+                            })",
+                            suggestion="Break line or refactor to reduce length",
+                        )
+                    )
 
                 # Check for print statements in production code
                 if "print(" in line and not file_path.name.startswith("test_"):
-                    issues.append(Issue(
-                        line=i,
-                        column=line.find("print(") + 1,
-                        code="QUALITY_DEBUG001",
-                        message="Print statement found in production code",
-                        suggestion="Use logging instead of print statements"
-                    ))
+                    issues.append(
+                        Issue(
+                            line=i,
+                            column=line.find("print(") + 1,
+                            code="QUALITY_DEBUG001",
+                            message="Print statement found in production code",
+                            suggestion="Use logging instead of print statements",
+                        )
+                    )
 
                 # Check for TODO/FIXME comments
-                if any(marker in line_stripped.upper()
-                       for marker in ["TODO", "FIXME", "HACK", "XXX"]):
-                    issues.append(Issue(
-                        line=i,
-                        column=1,
-                        code="QUALITY_TODO001",
-                        message="TODO/FIXME comment found",
-                        suggestion="Resolve TODO items before production"
-                    ))
+                if any(
+                    marker in line_stripped.upper()
+                    for marker in ["TODO", "FIXME", "HACK", "XXX"]
+                ):
+                    issues.append(
+                        Issue(
+                            line=i,
+                            column=1,
+                            code="QUALITY_TODO001",
+                            message="TODO/FIXME comment found",
+                            suggestion="Resolve TODO items before production",
+                        )
+                    )
 
         return issues
 
@@ -492,20 +558,21 @@ class UniversalQualityLoopModule(CustomFixModule):
                     line = lines[line_idx]
                     if "print(" in line:
                         # Comment out print statements
-                        lines[line_idx] = "# " + line + \
-                            "  # TODO: Replace with proper logging"
+                        lines[line_idx] = (
+                            "# " + line + "  # TODO: Replace with proper logging"
+                        )
 
         return "\n".join(lines)
 
-    def run_universal_quality_loop(
-            self, workspace_path: Path = None) -> dict[str, Any]:
+    def run_universal_quality_loop(self, workspace_path: Path = None) -> dict[str, Any]:
         """Run universal quality loop across workspace projects."""
         if workspace_path is None:
             workspace_path = Path.cwd()
 
         if self.verbose:
             self.console.print(
-                f"[blue]Starting Universal Quality Loop in: {workspace_path}[/blue]")
+                f"[blue]Starting Universal Quality Loop in: {workspace_path}[/blue]"
+            )
 
         # Find all projects
         projects: list = []
@@ -514,9 +581,7 @@ class UniversalQualityLoopModule(CustomFixModule):
                 projects.append(pyproject_file.parent)
 
         if self.verbose:
-            self.console.print(
-                f"[green]Found {
-                    len(projects)} projects[/green]")
+            self.console.print(f"[green]Found {len(projects)} projects[/green]")
 
         workspace_results = {
             "timestamp": time.time(),
@@ -526,16 +591,15 @@ class UniversalQualityLoopModule(CustomFixModule):
                 "successful_projects": 0,
                 "total_iterations": 0,
                 "total_fixes": 0,
-                "zero_tolerance_passed": True
-            }
+                "zero_tolerance_passed": True,
+            },
         }
 
         for project_path in projects:
             project_name = project_path.name
 
             if self.verbose:
-                self.console.print(
-                    f"\n[bold]Processing project: {project_name}[/bold]")
+                self.console.print(f"\n[bold]Processing project: {project_name}[/bold]")
 
             # Reset iteration counter for each project
             self.iteration = 0
@@ -543,7 +607,7 @@ class UniversalQualityLoopModule(CustomFixModule):
                 "project_type": self.detect_project_type(project_path),
                 "iterations": [],
                 "tests": {},
-                "final_status": "unknown"
+                "final_status": "unknown",
             }
 
             # Run quality iterations until convergence or max iterations
@@ -559,7 +623,9 @@ class UniversalQualityLoopModule(CustomFixModule):
                 elif iteration_result["total_fixes"] == 0:
                     # No progress made, stop iterations
                     converged = True
-                    project_results["final_status"] = "stable" if iteration_result["success"] else "failed"
+                    project_results["final_status"] = (
+                        "stable" if iteration_result["success"] else "failed"
+                    )
 
                 # Zero tolerance check
                 if self.zero_tolerance and not iteration_result["success"]:
@@ -574,15 +640,21 @@ class UniversalQualityLoopModule(CustomFixModule):
 
                 # Update final status based on tests
                 if self.zero_tolerance:
-                    if test_results["coverage"] < self.ZERO_TOLERANCE_LIMITS["min_test_coverage"]:
+                    if (
+                        test_results["coverage"]
+                        < self.ZERO_TOLERANCE_LIMITS["min_test_coverage"]
+                    ):
                         project_results["final_status"] = "insufficient_coverage"
                         workspace_results["summary"]["zero_tolerance_passed"] = False
 
             workspace_results["projects"][project_name] = project_results
             workspace_results["summary"]["total_iterations"] += len(
-                project_results["iterations"])
+                project_results["iterations"]
+            )
             workspace_results["summary"]["total_fixes"] += sum(
-                iter_result["total_fixes"] for iter_result in project_results["iterations"])
+                iter_result["total_fixes"]
+                for iter_result in project_results["iterations"]
+            )
 
             if project_results["final_status"] in ["perfect", "stable"]:
                 workspace_results["summary"]["successful_projects"] += 1
@@ -611,15 +683,17 @@ class UniversalQualityLoopModule(CustomFixModule):
                 "stable": "🟡 STABLE",
                 "failed": "🔴 FAILED",
                 "zero_tolerance_violation": "🚫 VIOLATION",
-                "insufficient_coverage": "📊 LOW COVERAGE"
+                "insufficient_coverage": "📊 LOW COVERAGE",
             }
 
             status = status_styles.get(
-                project_result["final_status"],
-                project_result["final_status"].upper())
+                project_result["final_status"], project_result["final_status"].upper()
+            )
             iterations = len(project_result["iterations"])
-            total_fixes = sum(iter_result["total_fixes"]
-                              for iter_result in project_result["iterations"])
+            total_fixes = sum(
+                iter_result["total_fixes"]
+                for iter_result in project_result["iterations"]
+            )
 
             test_coverage = "N/A"
             if project_result["tests"]:
@@ -627,39 +701,44 @@ class UniversalQualityLoopModule(CustomFixModule):
                 test_coverage = f"{coverage:.1f}%" if coverage > 0 else "N/A"
 
             table.add_row(
-                project_name,
-                status,
-                str(iterations),
-                str(total_fixes),
-                test_coverage
+                project_name, status, str(iterations), str(total_fixes), test_coverage
             )
 
         self.console.print(table)
 
         # Summary panel
         success_rate = (
-            summary["successful_projects"] /
-            summary["total_projects"] *
-            100) if summary["total_projects"] > 0 else 0
+            (summary["successful_projects"] / summary["total_projects"] * 100)
+            if summary["total_projects"] > 0
+            else 0
+        )
 
-        panel_text = (
-            f"🎯 Projects Processed: {
-                summary['total_projects']}\n✅ Successful: {
-                summary['successful_projects']}\n🔄 Total Iterations: {
-                summary['total_iterations']}\n🔧 Total Fixes Applied: {
-                    summary['total_fixes']}\n📊 Success Rate: {
-                        success_rate:.1f}%\n🎭 Zero Tolerance: {
-                            '✅ PASSED' if summary['zero_tolerance_passed'] else '❌ VIOLATED'}")
+        panel_text = f"🎯 Projects Processed: {
+            summary['total_projects']
+        }\n✅ Successful: {summary['successful_projects']}\n🔄 Total Iterations: {
+            summary['total_iterations']
+        }\n🔧 Total Fixes Applied: {summary['total_fixes']}\n📊 Success Rate: {
+            success_rate:.1f
+        }%\n🎭 Zero Tolerance: {
+            '✅ PASSED' if summary['zero_tolerance_passed'] else '❌ VIOLATED'
+        }"
 
-        panel_style = "green" if summary["zero_tolerance_passed"] and success_rate == 100 else "yellow" if success_rate >= 80 else "red"
+        panel_style = (
+            "green"
+            if summary["zero_tolerance_passed"] and success_rate == 100
+            else "yellow"
+            if success_rate >= 80
+            else "red"
+        )
         self.console.print(
-            Panel(
-                panel_text,
-                title="Quality Loop Summary",
-                border_style=panel_style))
+            Panel(panel_text, title="Quality Loop Summary", border_style=panel_style)
+        )
 
     def run_workspace_quality_loop(self, workspace_path: Path = None) -> bool:
         """Run universal quality loop across the entire workspace."""
         results = self.run_universal_quality_loop(workspace_path)
-        return results["summary"]["zero_tolerance_passed"] and results["summary"][
-            "successful_projects"] == results["summary"]["total_projects"]
+        return (
+            results["summary"]["zero_tolerance_passed"]
+            and results["summary"]["successful_projects"]
+            == results["summary"]["total_projects"]
+        )

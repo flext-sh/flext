@@ -95,8 +95,7 @@ async def example_adapter_comparison() -> None:
 
     # Test both adapters
     for use_modern in [False, True]:
-        client = OracleOicClientModern(
-            config=config, use_modern_adapter=use_modern)
+        client = OracleOicClientModern(config=config, use_modern_adapter=use_modern)
 
         try:
             async with client:

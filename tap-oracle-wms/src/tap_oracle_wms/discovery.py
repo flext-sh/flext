@@ -1,4 +1,5 @@
 """Dynamic entity discovery for Oracle WMS."""
+
 from __future__ import annotations
 
 import fnmatch

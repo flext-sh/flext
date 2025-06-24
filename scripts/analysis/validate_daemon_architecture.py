@@ -61,8 +61,7 @@ class ArchitectureValidator:
                             )
 
                 elif isinstance(node, ast.ImportFrom):
-                    if node.module and self._is_infrastructure_import(
-                            node.module):
+                    if node.module and self._is_infrastructure_import(node.module):
                         self.violations.append(
                             f"Core imports from infrastructure: {node.module}",
                         )
@@ -119,8 +118,8 @@ class ArchitectureValidator:
 
             if "# TODO:" in content:
                 self.warnings.append(
-                    f"TODO found in {
-                        file_path.name} - may need implementation", )
+                    f"TODO found in {file_path.name} - may need implementation",
+                )
 
     def validate_import_patterns(self) -> None:
         """Validate import patterns follow conventions."""
@@ -150,8 +149,7 @@ class ArchitectureValidator:
             "flx.daemon.infrastructure",
         ]
 
-        return any(
-            pattern in module_name for pattern in infrastructure_patterns)
+        return any(pattern in module_name for pattern in infrastructure_patterns)
 
     def _validate_layer_imports(self, file_path: Path, layer: str) -> None:
         """Validate imports for specific layer."""
@@ -168,11 +166,7 @@ class ArchitectureValidator:
         except SyntaxError as e:
             self.violations.append(f"Syntax error in {file_path.name}: {e}")
 
-    def _check_layer_import(
-            self,
-            node: ast.AST,
-            filename: str,
-            layer: str) -> None:
+    def _check_layer_import(self, node: ast.AST, filename: str, layer: str) -> None:
         """Check specific import for layer violations."""
         if isinstance(node, ast.Import):
             for alias in node.names:
@@ -187,12 +181,11 @@ class ArchitectureValidator:
         """Validate specific module import for layer."""
         # Domain layer (core.py) should not import adapters
         if layer == "domain" and any(
-            pattern in module for pattern in [
-                "fastapi",
-                "uvicorn",
-                "flx.adapters"]):
+            pattern in module for pattern in ["fastapi", "uvicorn", "flx.adapters"]
+        ):
             self.violations.append(
-                f"Domain layer ({filename}) imports adapter/infrastructure: {module}", )
+                f"Domain layer ({filename}) imports adapter/infrastructure: {module}",
+            )
 
     def report_results(self) -> bool:
         """Report validation results."""

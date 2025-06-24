@@ -166,9 +166,7 @@ def git_push(remote: str = "origin", branch: str | None = None) -> None:
     print(colorize("Push complete!", "GREEN"))
 
 
-def git_create_branch(
-        branch_name: str,
-        base_branch: str | None = None) -> None:
+def git_create_branch(branch_name: str, base_branch: str | None = None) -> None:
     """Create a new branch."""
     create_cmd = ["checkout", "-b", branch_name]
 
@@ -197,8 +195,7 @@ def git_log(count: int = 10) -> None:
     """Show git log."""
     print(colorize(f"Last {count} commits:", "YELLOW"))
 
-    result = run_git_command(
-        ["log", f"-{count}", "--oneline"], capture_output=True)
+    result = run_git_command(["log", f"-{count}", "--oneline"], capture_output=True)
     print(result.stdout)
 
 
@@ -268,12 +265,8 @@ def main() -> None:
     subparsers.add_parser("status", help="Show git status")
 
     # Fetch command
-    fetch_parser = subparsers.add_parser(
-        "fetch", help="Fetch updates from remote")
-    fetch_parser.add_argument(
-        "--remote",
-        default="origin",
-        help="Remote to fetch from")
+    fetch_parser = subparsers.add_parser("fetch", help="Fetch updates from remote")
+    fetch_parser.add_argument("--remote", default="origin", help="Remote to fetch from")
 
     # Commit command
     commit_parser = subparsers.add_parser("commit", help="Commit changes")
@@ -281,10 +274,7 @@ def main() -> None:
 
     # Push command
     push_parser = subparsers.add_parser("push", help="Push changes to remote")
-    push_parser.add_argument(
-        "--remote",
-        default="origin",
-        help="Remote to push to")
+    push_parser.add_argument("--remote", default="origin", help="Remote to push to")
     push_parser.add_argument("--branch", help="Branch to push")
 
     # Branch commands
@@ -334,14 +324,8 @@ def main() -> None:
     # Stash commands
     stash_parser = subparsers.add_parser("stash", help="Stash operations")
     stash_parser.add_argument("--pop", action="store_true", help="Pop stash")
-    stash_parser.add_argument(
-        "--apply",
-        action="store_true",
-        help="Apply stash")
-    stash_parser.add_argument(
-        "--list",
-        action="store_true",
-        help="list stashes")
+    stash_parser.add_argument("--apply", action="store_true", help="Apply stash")
+    stash_parser.add_argument("--list", action="store_true", help="list stashes")
 
     args = parser.parse_args()
 

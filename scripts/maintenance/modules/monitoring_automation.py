@@ -32,10 +32,8 @@ class MonitoringAutomationModule(CustomFixModule):
     description = "Automated monitoring, alerting, and performance tracking"
 
     def __init__(
-            self,
-            dry_run: bool = True,
-            interactive: bool = False,
-            verbose: bool = False):
+        self, dry_run: bool = True, interactive: bool = False, verbose: bool = False
+    ):
         """Initialize monitoring automation module.
 
         Args:
@@ -67,24 +65,22 @@ class MonitoringAutomationModule(CustomFixModule):
         issues: list = []
 
         # Check monitoring configuration files
-        if file_path.name in [
-            "monitoring.yaml",
-            "monitoring.yml",
-                "alerts.yaml"]:
+        if file_path.name in ["monitoring.yaml", "monitoring.yml", "alerts.yaml"]:
             issues.extend(self._analyze_monitoring_config(file_path, content))
         elif file_path.name == "prometheus.yml":
             issues.extend(self._analyze_prometheus_config(file_path, content))
         elif file_path.name == "grafana.json":
             issues.extend(self._analyze_grafana_dashboard(file_path, content))
-        elif "logging" in file_path.name and file_path.suffix in [".yaml", ".yml", ".json"]:
+        elif "logging" in file_path.name and file_path.suffix in [
+            ".yaml",
+            ".yml",
+            ".json",
+        ]:
             issues.extend(self._analyze_logging_config(file_path, content))
 
         return issues
 
-    def _analyze_monitoring_config(
-            self,
-            file_path: Path,
-            content: str) -> list[Issue]:
+    def _analyze_monitoring_config(self, file_path: Path, content: str) -> list[Issue]:
         """Analyze monitoring configuration."""
         issues: list = []
         try:
@@ -92,22 +88,26 @@ class MonitoringAutomationModule(CustomFixModule):
 
             # Check for required monitoring fields
             if "metrics" not in config:
-                issues.append(Issue(
-                    severity=Severity.HIGH,
-                    message="Missing metrics configuration",
-                    file_path=file_path,
-                    line=None,
-                    fix_description="Add metrics collection configuration"
-                ))
+                issues.append(
+                    Issue(
+                        severity=Severity.HIGH,
+                        message="Missing metrics configuration",
+                        file_path=file_path,
+                        line=None,
+                        fix_description="Add metrics collection configuration",
+                    )
+                )
 
             if "alerts" not in config:
-                issues.append(Issue(
-                    severity=Severity.MEDIUM,
-                    message="Missing alerts configuration",
-                    file_path=file_path,
-                    line=None,
-                    fix_description="Add alert rules configuration"
-                ))
+                issues.append(
+                    Issue(
+                        severity=Severity.MEDIUM,
+                        message="Missing alerts configuration",
+                        file_path=file_path,
+                        line=None,
+                        fix_description="Add alert rules configuration",
+                    )
+                )
 
             # Check alert rules
             if "alerts" in config:
@@ -117,39 +117,40 @@ class MonitoringAutomationModule(CustomFixModule):
                             Issue(
                                 severity=Severity.MEDIUM,
                                 message=f"Alert '{
-                                    alert.get(
-                                        'name',
-                                        'unknown')}' missing threshold",
+                                    alert.get('name', 'unknown')
+                                }' missing threshold",
                                 file_path=file_path,
                                 line=None,
-                                fix_description="Add threshold value to alert rule"))
+                                fix_description="Add threshold value to alert rule",
+                            )
+                        )
 
                     if "action" not in alert:
                         issues.append(
                             Issue(
                                 severity=Severity.LOW,
                                 message=f"Alert '{
-                                    alert.get(
-                                        'name',
-                                        'unknown')}' missing action",
+                                    alert.get('name', 'unknown')
+                                }' missing action",
                                 file_path=file_path,
                                 line=None,
-                                fix_description="Define action for alert (email, webhook, etc)"))
+                                fix_description="Define action for alert (email, webhook, etc)",
+                            )
+                        )
         except yaml.YAMLError as e:
-            issues.append(Issue(
-                severity=Severity.HIGH,
-                message=f"Invalid YAML in monitoring config: {e}",
-                file_path=file_path,
-                line=None,
-                fix_description="Fix YAML syntax errors"
-            ))
+            issues.append(
+                Issue(
+                    severity=Severity.HIGH,
+                    message=f"Invalid YAML in monitoring config: {e}",
+                    file_path=file_path,
+                    line=None,
+                    fix_description="Fix YAML syntax errors",
+                )
+            )
 
         return issues
 
-    def _analyze_prometheus_config(
-            self,
-            file_path: Path,
-            content: str) -> list[Issue]:
+    def _analyze_prometheus_config(self, file_path: Path, content: str) -> list[Issue]:
         """Analyze Prometheus configuration."""
         issues: list = []
         try:
@@ -157,13 +158,15 @@ class MonitoringAutomationModule(CustomFixModule):
 
             # Check scrape configs
             if "scrape_configs" not in config:
-                issues.append(Issue(
-                    severity=Severity.HIGH,
-                    message="Missing scrape_configs in Prometheus config",
-                    file_path=file_path,
-                    line=None,
-                    fix_description="Add scrape configurations"
-                ))
+                issues.append(
+                    Issue(
+                        severity=Severity.HIGH,
+                        message="Missing scrape_configs in Prometheus config",
+                        file_path=file_path,
+                        line=None,
+                        fix_description="Add scrape configurations",
+                    )
+                )
                 for job in config["scrape_configs"]:
                     if "job_name" not in job:
                         issues.append(
@@ -172,34 +175,39 @@ class MonitoringAutomationModule(CustomFixModule):
                                 message="Scrape job missing job_name",
                                 file_path=file_path,
                                 line=None,
-                                fix_description="Add job_name to scrape configuration"))
+                                fix_description="Add job_name to scrape configuration",
+                            )
+                        )
 
-                    if "static_configs" not in job and "kubernetes_sd_configs" not in job:
+                    if (
+                        "static_configs" not in job
+                        and "kubernetes_sd_configs" not in job
+                    ):
                         issues.append(
                             Issue(
                                 severity=Severity.MEDIUM,
                                 message=f"Job '{
-                                    job.get(
-                                        'job_name',
-                                        'unknown')}' missing target configuration",
+                                    job.get('job_name', 'unknown')
+                                }' missing target configuration",
                                 file_path=file_path,
                                 line=None,
-                                fix_description="Add static_configs or service discovery"))
+                                fix_description="Add static_configs or service discovery",
+                            )
+                        )
         except yaml.YAMLError as e:
-            issues.append(Issue(
-                severity=Severity.HIGH,
-                message=f"Invalid YAML in Prometheus config: {e}",
-                file_path=file_path,
-                line=None,
-                fix_description="Fix YAML syntax errors"
-            ))
+            issues.append(
+                Issue(
+                    severity=Severity.HIGH,
+                    message=f"Invalid YAML in Prometheus config: {e}",
+                    file_path=file_path,
+                    line=None,
+                    fix_description="Fix YAML syntax errors",
+                )
+            )
 
         return issues
 
-    def _analyze_grafana_dashboard(
-            self,
-            file_path: Path,
-            content: str) -> list[Issue]:
+    def _analyze_grafana_dashboard(self, file_path: Path, content: str) -> list[Issue]:
         """Analyze Grafana dashboard configuration."""
         issues: list = []
         try:
@@ -207,49 +215,54 @@ class MonitoringAutomationModule(CustomFixModule):
 
             # Check for required dashboard fields
             if "panels" not in dashboard:
-                issues.append(Issue(
-                    severity=Severity.MEDIUM,
-                    message="Dashboard missing panels",
-                    file_path=file_path,
-                    line=None,
-                    fix_description="Add visualization panels to dashboard"
-                ))
+                issues.append(
+                    Issue(
+                        severity=Severity.MEDIUM,
+                        message="Dashboard missing panels",
+                        file_path=file_path,
+                        line=None,
+                        fix_description="Add visualization panels to dashboard",
+                    )
+                )
 
             if "templating" not in dashboard:
-                issues.append(Issue(
-                    severity=Severity.LOW,
-                    message="Dashboard missing templating variables",
-                    file_path=file_path,
-                    line=None,
-                    fix_description="Add template variables for flexibility"
-                ))
+                issues.append(
+                    Issue(
+                        severity=Severity.LOW,
+                        message="Dashboard missing templating variables",
+                        file_path=file_path,
+                        line=None,
+                        fix_description="Add template variables for flexibility",
+                    )
+                )
 
             # Check panels
             if "panels" in dashboard:
                 for i, panel in enumerate(dashboard["panels"]):
                     if "datasource" not in panel:
-                        issues.append(Issue(
-                            severity=Severity.HIGH,
-                            message=f"Panel {i} missing datasource",
-                            file_path=file_path,
-                            line=None,
-                            fix_description="Configure datasource for panel"
-                        ))
+                        issues.append(
+                            Issue(
+                                severity=Severity.HIGH,
+                                message=f"Panel {i} missing datasource",
+                                file_path=file_path,
+                                line=None,
+                                fix_description="Configure datasource for panel",
+                            )
+                        )
         except json.JSONDecodeError as e:
-            issues.append(Issue(
-                severity=Severity.HIGH,
-                message=f"Invalid JSON in Grafana dashboard: {e}",
-                file_path=file_path,
-                line=None,
-                fix_description="Fix JSON syntax errors"
-            ))
+            issues.append(
+                Issue(
+                    severity=Severity.HIGH,
+                    message=f"Invalid JSON in Grafana dashboard: {e}",
+                    file_path=file_path,
+                    line=None,
+                    fix_description="Fix JSON syntax errors",
+                )
+            )
 
         return issues
 
-    def _analyze_logging_config(
-            self,
-            file_path: Path,
-            content: str) -> list[Issue]:
+    def _analyze_logging_config(self, file_path: Path, content: str) -> list[Issue]:
         """Analyze logging configuration."""
         issues: list = []
 
@@ -257,35 +270,41 @@ class MonitoringAutomationModule(CustomFixModule):
             try:
                 config = json.loads(content)
             except json.JSONDecodeError:
-                issues.append(Issue(
-                    severity=Severity.HIGH,
-                    message="Invalid JSON in logging config",
-                    file_path=file_path,
-                    line=None,
-                    fix_description="Fix JSON syntax errors"
-                ))
+                issues.append(
+                    Issue(
+                        severity=Severity.HIGH,
+                        message="Invalid JSON in logging config",
+                        file_path=file_path,
+                        line=None,
+                        fix_description="Fix JSON syntax errors",
+                    )
+                )
                 return issues
             try:
                 config = yaml.safe_load(content)
             except yaml.YAMLError:
-                issues.append(Issue(
-                    severity=Severity.HIGH,
-                    message="Invalid YAML in logging config",
-                    file_path=file_path,
-                    line=None,
-                    fix_description="Fix YAML syntax errors"
-                ))
+                issues.append(
+                    Issue(
+                        severity=Severity.HIGH,
+                        message="Invalid YAML in logging config",
+                        file_path=file_path,
+                        line=None,
+                        fix_description="Fix YAML syntax errors",
+                    )
+                )
                 return issues
 
         # Check logging levels
         if "level" not in config and "root" not in config:
-            issues.append(Issue(
-                severity=Severity.MEDIUM,
-                message="No root logging level configured",
-                file_path=file_path,
-                line=None,
-                fix_description="Set root logging level"
-            ))
+            issues.append(
+                Issue(
+                    severity=Severity.MEDIUM,
+                    message="No root logging level configured",
+                    file_path=file_path,
+                    line=None,
+                    fix_description="Set root logging level",
+                )
+            )
 
         # Check handlers
         if "handlers" not in config:
@@ -295,7 +314,9 @@ class MonitoringAutomationModule(CustomFixModule):
                     message="No logging handlers configured",
                     file_path=file_path,
                     line=None,
-                    fix_description="Configure logging handlers (console, file, etc)"))
+                    fix_description="Configure logging handlers (console, file, etc)",
+                )
+            )
 
         return issues
 
@@ -356,8 +377,7 @@ class MonitoringAutomationModule(CustomFixModule):
             },
         }
 
-    def _collect_application_metrics(
-            self, project_path: Path) -> dict[str, Any]:
+    def _collect_application_metrics(self, project_path: Path) -> dict[str, Any]:
         """Collect application-specific metrics."""
         metrics = {
             "status": "unknown",
@@ -374,7 +394,7 @@ class MonitoringAutomationModule(CustomFixModule):
                     ["python", str(metrics_script)],
                     capture_output=True,
                     text=True,
-                    timeout=5
+                    timeout=5,
                 )
                 if result.returncode == 0:
                     metrics.update(json.loads(result.stdout))
@@ -383,6 +403,7 @@ class MonitoringAutomationModule(CustomFixModule):
 
         # Simulate metrics for demo
         import random
+
         metrics["status"] = "healthy"
         metrics["response_time_ms"] = random.randint(50, 500)
         metrics["error_count"] = random.randint(0, 10)
@@ -400,7 +421,7 @@ class MonitoringAutomationModule(CustomFixModule):
                 metric="cpu_percent",
                 value=system["cpu_percent"],
                 threshold=self.thresholds["cpu_percent"],
-                project=metrics["project"]
+                project=metrics["project"],
             )
 
         if system["memory"]["percent"] > self.thresholds["memory_percent"]:
@@ -409,7 +430,7 @@ class MonitoringAutomationModule(CustomFixModule):
                 metric="memory_percent",
                 value=system["memory"]["percent"],
                 threshold=self.thresholds["memory_percent"],
-                project=metrics["project"]
+                project=metrics["project"],
             )
 
         if system["disk"]["percent"] > self.thresholds["disk_percent"]:
@@ -418,18 +439,21 @@ class MonitoringAutomationModule(CustomFixModule):
                 metric="disk_percent",
                 value=system["disk"]["percent"],
                 threshold=self.thresholds["disk_percent"],
-                project=metrics["project"]
+                project=metrics["project"],
             )
 
         # Check application metrics
         app = metrics["application"]
-        if app["response_time_ms"] and app["response_time_ms"] > self.thresholds["response_time_ms"]:
+        if (
+            app["response_time_ms"]
+            and app["response_time_ms"] > self.thresholds["response_time_ms"]
+        ):
             self._create_alert(
                 severity="medium",
                 metric="response_time_ms",
                 value=app["response_time_ms"],
                 threshold=self.thresholds["response_time_ms"],
-                project=metrics["project"]
+                project=metrics["project"],
             )
 
         if app["request_count"] > 0:
@@ -440,11 +464,12 @@ class MonitoringAutomationModule(CustomFixModule):
                     metric="error_rate_percent",
                     value=error_rate,
                     threshold=self.thresholds["error_rate_percent"],
-                    project=metrics["project"]
+                    project=metrics["project"],
                 )
 
-    def _create_alert(self, severity: str, metric: str, value: float,
-                      threshold: float, project: str) -> None:
+    def _create_alert(
+        self, severity: str, metric: str, value: float, threshold: float, project: str
+    ) -> None:
         """Create an alert."""
         alert = {
             "timestamp": datetime.now().isoformat(),
@@ -453,9 +478,7 @@ class MonitoringAutomationModule(CustomFixModule):
             "value": value,
             "threshold": threshold,
             "project": project,
-            "message": f"{metric} exceeded threshold: {
-                value:.2f} > {
-                threshold:.2f}",
+            "message": f"{metric} exceeded threshold: {value:.2f} > {threshold:.2f}",
         }
         self.alerts.append(alert)
 
@@ -463,11 +486,11 @@ class MonitoringAutomationModule(CustomFixModule):
             # Send actual alert (email, webhook, etc)
             if severity == "high":
                 console.print(
-                    f"[red]⚠ HIGH ALERT: {
-                        alert['message']} for {project}[/red]")
+                    f"[red]⚠ HIGH ALERT: {alert['message']} for {project}[/red]"
+                )
                 console.print(
-                    f"[yellow]⚠ ALERT: {
-                        alert['message']} for {project}[/yellow]")
+                    f"[yellow]⚠ ALERT: {alert['message']} for {project}[/yellow]"
+                )
 
     def start_monitoring_dashboard(self, projects: list[Path]) -> None:
         """Start live monitoring dashboard.
@@ -475,6 +498,7 @@ class MonitoringAutomationModule(CustomFixModule):
         Args:
             projects: List of project paths to monitor
         """
+
         def generate_dashboard() -> Layout:
             """Generate dashboard layout."""
             layout = Layout()
@@ -483,20 +507,22 @@ class MonitoringAutomationModule(CustomFixModule):
             layout.split_column(
                 Layout(name="header", size=3),
                 Layout(name="body"),
-                Layout(name="footer", size=4)
+                Layout(name="footer", size=4),
             )
 
             # Header
             layout["header"].update(
                 Panel(
                     f"[bold cyan]PyAuto Monitoring Dashboard[/bold cyan] - {
-                        datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
-                    border_style="cyan"))
+                        datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                    }",
+                    border_style="cyan",
+                )
+            )
 
             # Body - split into metrics and alerts
             layout["body"].split_row(
-                Layout(name="metrics", ratio=2),
-                Layout(name="alerts", ratio=1)
+                Layout(name="metrics", ratio=2), Layout(name="alerts", ratio=1)
             )
 
             # Metrics table
@@ -525,21 +551,20 @@ class MonitoringAutomationModule(CustomFixModule):
                         f"[{cpu_style}]{cpu:.1f}[/{cpu_style}]",
                         f"[{mem_style}]{mem:.1f}[/{mem_style}]",
                         f"{resp_time}ms",
-                        "[green]✓[/green]" if status == "healthy" else "[red]✗[/red]"
+                        "[green]✓[/green]" if status == "healthy" else "[red]✗[/red]",
                     )
 
             layout["metrics"].update(
-                Panel(
-                    metrics_table,
-                    title="Live Metrics",
-                    border_style="green"))
+                Panel(metrics_table, title="Live Metrics", border_style="green")
+            )
 
             # Alerts panel
             alerts_text = ""
             recent_alerts = self.alerts[-10:]  # Show last 10 alerts
             for alert in reversed(recent_alerts):
-                time_str = datetime.fromisoformat(
-                    alert["timestamp"]).strftime("%H:%M:%S")
+                time_str = datetime.fromisoformat(alert["timestamp"]).strftime(
+                    "%H:%M:%S"
+                )
                 severity_color = "red" if alert["severity"] == "high" else "yellow"
                 alerts_text += f"[{severity_color}]{time_str} - {alert['message']}[/{severity_color}]\n"
 
@@ -547,17 +572,15 @@ class MonitoringAutomationModule(CustomFixModule):
                 alerts_text = "[green]No active alerts[/green]"
 
             layout["alerts"].update(
-                Panel(
-                    alerts_text,
-                    title="Recent Alerts",
-                    border_style="yellow"))
+                Panel(alerts_text, title="Recent Alerts", border_style="yellow")
+            )
 
             # Footer - resource usage
             layout["footer"].update(
                 Panel(
                     self._get_resource_usage_text(),
                     title="Resource Usage",
-                    border_style="blue"
+                    border_style="blue",
                 )
             )
 
@@ -592,11 +615,7 @@ class MonitoringAutomationModule(CustomFixModule):
 
         return f"{cpu_bar}\n{mem_bar}\n{disk_bar}"
 
-    def _create_usage_bar(
-            self,
-            value: float,
-            max_value: float,
-            label: str) -> str:
+    def _create_usage_bar(self, value: float, max_value: float, label: str) -> str:
         """Create a usage bar visualization."""
         percent = (value / max_value) * 100
         bar_length = 40
@@ -609,8 +628,9 @@ class MonitoringAutomationModule(CustomFixModule):
             color = "yellow"
             color = "green"
 
-        bar = f"[{color}]{'█' * filled_length}[/{color}]" + \
-            "░" * (bar_length - filled_length)
+        bar = f"[{color}]{'█' * filled_length}[/{color}]" + "░" * (
+            bar_length - filled_length
+        )
         return f"{label:8} {bar} {percent:5.1f}%"
 
     def generate_monitoring_report(self) -> None:
@@ -628,40 +648,47 @@ class MonitoringAutomationModule(CustomFixModule):
         sys_metrics = self._collect_system_metrics()
 
         # Add rows
-        cpu_status = "✓" if sys_metrics["cpu_percent"] < self.thresholds["cpu_percent"] else "✗"
+        cpu_status = (
+            "✓" if sys_metrics["cpu_percent"] < self.thresholds["cpu_percent"] else "✗"
+        )
         table.add_row(
             "CPU Usage",
             f"{sys_metrics['cpu_percent']:.1f}%",
             f"{self.thresholds['cpu_percent']:.0f}%",
-            f"[{'green' if cpu_status == '✓' else 'red'}]{cpu_status}[/]"
+            f"[{'green' if cpu_status == '✓' else 'red'}]{cpu_status}[/]",
         )
 
-        mem_status = "✓" if sys_metrics["memory"]["percent"] < self.thresholds["memory_percent"] else "✗"
+        mem_status = (
+            "✓"
+            if sys_metrics["memory"]["percent"] < self.thresholds["memory_percent"]
+            else "✗"
+        )
         table.add_row(
             "Memory Usage",
             f"{sys_metrics['memory']['percent']:.1f}%",
             f"{self.thresholds['memory_percent']:.0f}%",
-            f"[{'green' if mem_status == '✓' else 'red'}]{mem_status}[/]"
+            f"[{'green' if mem_status == '✓' else 'red'}]{mem_status}[/]",
         )
 
-        disk_status = "✓" if sys_metrics["disk"]["percent"] < self.thresholds["disk_percent"] else "✗"
+        disk_status = (
+            "✓"
+            if sys_metrics["disk"]["percent"] < self.thresholds["disk_percent"]
+            else "✗"
+        )
         table.add_row(
             "Disk Usage",
             f"{sys_metrics['disk']['percent']:.1f}%",
             f"{self.thresholds['disk_percent']:.0f}%",
-            f"[{'green' if disk_status == '✓' else 'red'}]{disk_status}[/]"
+            f"[{'green' if disk_status == '✓' else 'red'}]{disk_status}[/]",
         )
 
         console.print(table)
 
         # Alert summary
         if self.alerts:
-            console.print(
-                f"\n[yellow]Total Alerts: {len(self.alerts)}[/yellow]")
-            high_alerts = sum(
-                1 for a in self.alerts if a["severity"] == "high")
-            med_alerts = sum(
-                1 for a in self.alerts if a["severity"] == "medium")
+            console.print(f"\n[yellow]Total Alerts: {len(self.alerts)}[/yellow]")
+            high_alerts = sum(1 for a in self.alerts if a["severity"] == "high")
+            med_alerts = sum(1 for a in self.alerts if a["severity"] == "medium")
             console.print(f"  [red]High: {high_alerts}[/red]")
             console.print(f"  [yellow]Medium: {med_alerts}[/yellow]")
             console.print("\n[green]No alerts generated[/green]")

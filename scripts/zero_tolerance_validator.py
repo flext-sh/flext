@@ -18,17 +18,16 @@ def validate_project(project_name: str) -> tuple[int, int, int]:
         ["poetry", "run", "ruff", "check", ".", "--quiet"],
         cwd=project_path,
         capture_output=True,
-        text=True
+        text=True,
     )
-    ruff_violations = len(
-        [l for l in ruff_result.stdout.split('\n') if l.strip()])
+    ruff_violations = len([l for l in ruff_result.stdout.split("\n") if l.strip()])
 
     # Check mypy
     mypy_result = subprocess.run(
         ["poetry", "run", "mypy", ".", "--no-error-summary"],
         cwd=project_path,
         capture_output=True,
-        text=True
+        text=True,
     )
     mypy_errors = 1 if mypy_result.returncode != 0 else 0
 
@@ -37,7 +36,7 @@ def validate_project(project_name: str) -> tuple[int, int, int]:
         ["poetry", "run", "pytest", "--tb=no", "-q"],
         cwd=project_path,
         capture_output=True,
-        text=True
+        text=True,
     )
     test_failures = 1 if test_result.returncode != 0 else 0
 
@@ -67,7 +66,8 @@ def main() -> None:
         "tap-oracle-wms",
         "target-ldap",
         "target-oracle-oic",
-        "target-oracle-wms"]
+        "target-oracle-wms",
+    ]
 
     total_ruff = 0
     total_mypy = 0
@@ -84,8 +84,9 @@ def main() -> None:
         total_mypy += mypy
         total_tests += tests
 
-        status = "✅ COMPLIANT" if (
-            ruff == 0 and mypy == 0 and tests == 0) else "❌ FAILED"
+        status = (
+            "✅ COMPLIANT" if (ruff == 0 and mypy == 0 and tests == 0) else "❌ FAILED"
+        )
         if status == "✅ COMPLIANT":
             compliant_projects += 1
 

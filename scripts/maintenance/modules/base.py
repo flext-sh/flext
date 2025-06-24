@@ -20,6 +20,7 @@ from rich.syntax import Syntax
 
 class Severity(Enum):
     """Issue severity levels."""
+
     HIGH = "high"
     MEDIUM = "medium"
     LOW = "low"
@@ -56,10 +57,8 @@ class CustomFixModule(ABC):
     """Base class for all custom fix modules."""
 
     def __init__(
-            self,
-            dry_run: bool = True,
-            interactive: bool = False,
-            verbose: bool = False):
+        self, dry_run: bool = True, interactive: bool = False, verbose: bool = False
+    ):
         """
         Initialize the fix module.
 
@@ -100,17 +99,14 @@ class CustomFixModule(ABC):
         """
         try:
             # Read file content
-            original_content = file_path.read_text(encoding='utf-8')
+            original_content = file_path.read_text(encoding="utf-8")
 
             # Analyze file for issues
             issues = self.analyze(file_path, original_content)
 
             if not issues:
                 return FixResult(
-                    success=True,
-                    file_path=file_path,
-                    issues_found=0,
-                    issues_fixed=0
+                    success=True, file_path=file_path, issues_found=0, issues_fixed=0
                 )
 
             # Show issues found
@@ -121,34 +117,34 @@ class CustomFixModule(ABC):
             if self.dry_run:
                 # Generate diff without applying
                 fixed_content = self.apply_fixes(original_content, issues)
-                diff = self._generate_diff(
-                    original_content, fixed_content, file_path)
+                diff = self._generate_diff(original_content, fixed_content, file_path)
 
                 return FixResult(
                     success=True,
                     file_path=file_path,
                     issues_found=len(issues),
                     issues_fixed=0,
-                    diff=diff
+                    diff=diff,
                 )
             # Check for confirmation if in interactive mode
             if self.interactive:
                 fixed_content = self.apply_fixes(original_content, issues)
-                diff = self._generate_diff(
-                    original_content, fixed_content, file_path)
+                diff = self._generate_diff(original_content, fixed_content, file_path)
 
-                self.console.print(Panel(
-                    Syntax(diff, "diff", theme="monokai"),
-                    title=f"Changes for {file_path.name}",
-                    border_style="yellow"
-                ))
+                self.console.print(
+                    Panel(
+                        Syntax(diff, "diff", theme="monokai"),
+                        title=f"Changes for {file_path.name}",
+                        border_style="yellow",
+                    )
+                )
 
                 if not Confirm.ask("Apply these changes?"):
                     return FixResult(
                         success=True,
                         file_path=file_path,
                         issues_found=len(issues),
-                        issues_fixed=0
+                        issues_fixed=0,
                     )
 
             # Apply fixes
@@ -161,17 +157,17 @@ class CustomFixModule(ABC):
                     file_path=file_path,
                     issues_found=len(issues),
                     issues_fixed=0,
-                    error="Fix validation failed"
+                    error="Fix validation failed",
                 )
 
             # Write fixed content
-            file_path.write_text(fixed_content, encoding='utf-8')
+            file_path.write_text(fixed_content, encoding="utf-8")
 
             return FixResult(
                 success=True,
                 file_path=file_path,
                 issues_found=len(issues),
-                issues_fixed=len(issues)
+                issues_fixed=len(issues),
             )
 
         except Exception as e:
@@ -180,13 +176,12 @@ class CustomFixModule(ABC):
                 file_path=file_path,
                 issues_found=0,
                 issues_fixed=0,
-                error=str(e)
+                error=str(e),
             )
 
     def process_directory(
-            self,
-            directory: Path,
-            pattern: str = "*.py") -> list[FixResult]:
+        self, directory: Path, pattern: str = "*.py"
+    ) -> list[FixResult]:
         """
         Process all matching files in a directory.
 
@@ -204,8 +199,8 @@ class CustomFixModule(ABC):
 
         if not files:
             self.console.print(
-                f"No {pattern} files found in {directory}",
-                style="yellow")
+                f"No {pattern} files found in {directory}", style="yellow"
+            )
             return results
 
         # Process each file
@@ -215,8 +210,7 @@ class CustomFixModule(ABC):
                 if self._should_skip(file_path):
                     continue
 
-                status.update(
-                    f"Processing [{i}/{len(files)}]: {file_path.name}")
+                status.update(f"Processing [{i}/{len(files)}]: {file_path.name}")
                 result = self.process_file(file_path)
                 results.append(result)
 
@@ -225,13 +219,14 @@ class CustomFixModule(ABC):
                     if result.issues_fixed > 0:
                         self.console.print(
                             f"✅ Fixed {result.issues_fixed}/{result.issues_found} issues in {file_path.name}",
-                            style="green"
+                            style="green",
                         )
                         self.console.print(
-                            f"🔍 Found {
-                                result.issues_found} issues in {
-                                file_path.name}",
-                            style="yellow")
+                            f"🔍 Found {result.issues_found} issues in {
+                                file_path.name
+                            }",
+                            style="yellow",
+                        )
 
         return results
 
@@ -284,32 +279,23 @@ class CustomFixModule(ABC):
                 Severity.HIGH: "red",
                 Severity.MEDIUM: "yellow",
                 Severity.LOW: "blue",
-                Severity.INFO: "blue"
+                Severity.INFO: "blue",
             }.get(issue.severity, "white")
 
             self.console.print(
-                f"  Line {
-                    issue.line}: [{severity_color}]{
-                    issue.message}[/{severity_color}]")
+                f"  Line {issue.line}: [{severity_color}]{issue.message}[/{
+                    severity_color
+                }]"
+            )
             if issue.original_line:
-                self.console.print(
-                    f"    - {issue.original_line.strip()}", style="dim")
+                self.console.print(f"    - {issue.original_line.strip()}", style="dim")
             if issue.fixed_line:
-                self.console.print(
-                    f"    + {issue.fixed_line.strip()}", style="green")
+                self.console.print(f"    + {issue.fixed_line.strip()}", style="green")
 
         if len(issues) > 10:
-            self.console.print(
-                f"  ... and {
-                    len(issues) -
-                    10} more issues",
-                style="dim")
+            self.console.print(f"  ... and {len(issues) - 10} more issues", style="dim")
 
-    def _generate_diff(
-            self,
-            original: str,
-            fixed: str,
-            file_path: Path) -> str:
+    def _generate_diff(self, original: str, fixed: str, file_path: Path) -> str:
         """Generate a unified diff."""
         original_lines = original.splitlines(keepends=True)
         fixed_lines = fixed.splitlines(keepends=True)
@@ -319,10 +305,10 @@ class CustomFixModule(ABC):
             fixed_lines,
             fromfile=f"a/{file_path}",
             tofile=f"b/{file_path}",
-            n=3
+            n=3,
         )
 
-        return ''.join(diff)
+        return "".join(diff)
 
     def _should_skip(self, file_path: Path) -> bool:
         """Check if file should be skipped."""
@@ -355,5 +341,5 @@ class CustomFixModule(ABC):
             "total_issues": total_issues,
             "total_fixed": total_fixed,
             "dry_run": self.dry_run,
-            "errors": [r.error for r in results if r.error]
+            "errors": [r.error for r in results if r.error],
         }

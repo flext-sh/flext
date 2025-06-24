@@ -66,10 +66,8 @@ def extract_all_classes_and_functions(file_path: Path) -> dict[str, Any]:
                         }
 
                         # Classify method type
-                        decorator_names = [str(dec)
-                                           for dec in item.decorator_list]
-                        if any("property" in str(dec)
-                               for dec in decorator_names):
+                        decorator_names = [str(dec) for dec in item.decorator_list]
+                        if any("property" in str(dec) for dec in decorator_names):
                             class_info["properties"].append(method_info)
                         elif any("classmethod" in str(dec) for dec in decorator_names):
                             class_info["class_methods"].append(method_info)
@@ -211,8 +209,7 @@ def generate_markdown_table() -> Any:
             continue
 
         rel_path = py_file.relative_to(flx_path)
-        directory = str(
-            rel_path.parent) if rel_path.parent != Path() else "root"
+        directory = str(rel_path.parent) if rel_path.parent != Path() else "root"
         filename = py_file.name
 
         analysis = extract_all_classes_and_functions(py_file)
@@ -228,14 +225,11 @@ def generate_markdown_table() -> Any:
             if cls["properties"]:
                 methods_summary.append(f"{len(cls['properties'])} properties")
             if cls["class_methods"]:
-                methods_summary.append(
-                    f"{len(cls['class_methods'])} classmethods")
+                methods_summary.append(f"{len(cls['class_methods'])} classmethods")
             if cls["static_methods"]:
-                methods_summary.append(
-                    f"{len(cls['static_methods'])} staticmethods")
+                methods_summary.append(f"{len(cls['static_methods'])} staticmethods")
             if cls["async_methods"]:
-                methods_summary.append(
-                    f"{len(cls['async_methods'])} async methods")
+                methods_summary.append(f"{len(cls['async_methods'])} async methods")
 
             all_methods = (
                 cls["methods"]
@@ -250,8 +244,7 @@ def generate_markdown_table() -> Any:
                 method_names.append("...")
 
             bases_str = ", ".join(cls["bases"]) if cls["bases"] else "object"
-            decorators_str = ", ".join(
-                cls["decorators"]) if cls["decorators"] else ""
+            decorators_str = ", ".join(cls["decorators"]) if cls["decorators"] else ""
 
             all_items.append(
                 {
@@ -359,8 +352,7 @@ def generate_markdown_table() -> Any:
             if func["returns"]:
                 signature += f" -> {func['returns']}"
 
-            decorators_str = ", ".join(
-                func["decorators"]) if func["decorators"] else ""
+            decorators_str = ", ".join(func["decorators"]) if func["decorators"] else ""
 
             all_items.append(
                 {
@@ -463,13 +455,11 @@ def generate_markdown_table() -> Any:
         )
 
         markdown_lines.append(
-            f"| **{i}** | `{
-                item['directory']}` | `{
-                item['file']}` | **{
-                item['type']}** | `{
-                    item['name']}` | {
-                        item['line']} | **{
-                            item['category']}** | {methods_info} | {methods} | `{signature}` |",
+            f"| **{i}** | `{item['directory']}` | `{item['file']}` | **{
+                item['type']
+            }** | `{item['name']}` | {item['line']} | **{item['category']}** | {
+                methods_info
+            } | {methods} | `{signature}` |",
         )
 
     markdown_lines.extend(

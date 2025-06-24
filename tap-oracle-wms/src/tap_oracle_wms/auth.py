@@ -1,4 +1,5 @@
 """Authentication for Oracle WMS REST API."""
+
 from __future__ import annotations
 
 import base64
@@ -192,7 +193,9 @@ class WMSOAuth2Authenticator(OAuthAuthenticator):
 
             # Calculate expiration (with 60 second buffer)
             expires_in = token_data.get("expires_in", 3600)
-            self._token_expires = datetime.now(timezone.utc) + timedelta(seconds=expires_in - 60)
+            self._token_expires = datetime.now(timezone.utc) + timedelta(
+                seconds=expires_in - 60
+            )
 
             # Store refresh token if provided
             if "refresh_token" in token_data:

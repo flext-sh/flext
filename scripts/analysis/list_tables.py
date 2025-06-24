@@ -55,10 +55,7 @@ def list_tables() -> None:
                 print(f"  {i:2d}. {table}")
 
             # Verificar especificamente as tabelas que queremos
-            target_tables = [
-                "WMS_ALLOCATION",
-                "WMS_ORDER_DTL",
-                "WMS_ORDER_HDR"]
+            target_tables = ["WMS_ALLOCATION", "WMS_ORDER_DTL", "WMS_ORDER_HDR"]
 
             print("\n--- VERIFICAÇÃO DAS TABELAS ALVO ---")
             for table in target_tables:

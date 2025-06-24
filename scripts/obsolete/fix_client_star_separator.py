@@ -14,11 +14,8 @@ from pathlib import Path
 def fix_client_file() -> bool:
     """Fix the star separator issue in client.py."""
     client_path = (
-        Path(__file__).parent.parent /
-        "dc-api-x" /
-        "src" /
-        "dc_api_x" /
-        "client.py")
+        Path(__file__).parent.parent / "dc-api-x" / "src" / "dc_api_x" / "client.py"
+    )
 
     if not client_path.exists():
         print(f"File not found: {client_path}")

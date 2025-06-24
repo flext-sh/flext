@@ -44,7 +44,8 @@ class EnterprisePEP8Enforcer:
             "tap-oracle-wms",
             "target-ldap",
             "target-oracle-oic",
-            "target-oracle-wms"]
+            "target-oracle-wms",
+        ]
 
     def ensure_pyproject_pep8_compliance(self, project_path: Path) -> None:
         """Ensure pyproject.toml has STRICT PEP8 configuration."""
@@ -65,8 +66,8 @@ class EnterprisePEP8Enforcer:
                         "ignore": [
                             "ANN101",  # self annotation
                             "ANN102",  # cls annotation
-                            "D203",    # blank line before class
-                            "D213",    # summary second line
+                            "D203",  # blank line before class
+                            "D213",  # summary second line
                             "COM812",  # trailing comma
                             "ISC001",  # implicit concat
                         ],
@@ -74,22 +75,16 @@ class EnterprisePEP8Enforcer:
                             "tests/*": ["S101", "PLR2004", "D"],
                             "examples/*": ["T201", "D", "ERA001"],
                             "__init__.py": ["D104"],
-                        }
+                        },
                     },
                     "format": {
                         "quote-style": "double",
                         "indent-style": "space",
-                        "line-ending": "lf"
-                    }
+                        "line-ending": "lf",
+                    },
                 },
-                "black": {
-                    "line-length": 88,
-                    "target-version": ["py39"]
-                },
-                "isort": {
-                    "profile": "black",
-                    "line_length": 88
-                },
+                "black": {"line-length": 88, "target-version": ["py39"]},
+                "isort": {"profile": "black", "line_length": 88},
                 "mypy": {
                     "python_version": "3.9",
                     "strict": True,
@@ -103,8 +98,8 @@ class EnterprisePEP8Enforcer:
                     "warn_unused_ignores": True,
                     "warn_no_return": True,
                     "warn_unreachable": True,
-                    "strict_equality": True
-                }
+                    "strict_equality": True,
+                },
             }
         }
 
@@ -125,24 +120,21 @@ class EnterprisePEP8Enforcer:
         except Exception:
             pass
 
-    def apply_autofix_aggressively(
-            self, project_path: Path) -> tuple[int, int]:
+    def apply_autofix_aggressively(self, project_path: Path) -> tuple[int, int]:
         """Apply ALL possible automatic fixes."""
 
         initial_violations = self._count_violations(project_path)
 
         # 1. Black formatting
         subprocess.run(
-            ["poetry", "run", "black", "."],
-            cwd=project_path,
-            capture_output=True
+            ["poetry", "run", "black", "."], cwd=project_path, capture_output=True
         )
 
         # 2. isort import ordering
         subprocess.run(
             ["poetry", "run", "isort", ".", "--profile", "black"],
             cwd=project_path,
-            capture_output=True
+            capture_output=True,
         )
 
         # 3. Ruff auto-fix - multiple passes
@@ -150,16 +142,17 @@ class EnterprisePEP8Enforcer:
             subprocess.run(
                 ["poetry", "run", "ruff", "check", ".", "--fix", "--unsafe-fixes"],
                 cwd=project_path,
-                capture_output=True
+                capture_output=True,
             )
 
         # 4. pyupgrade for modern syntax
         py_files = list(project_path.rglob("*.py"))
         if py_files:
             subprocess.run(
-                ["poetry", "run", "pyupgrade", "--py39-plus"] + [str(f) for f in py_files],
+                ["poetry", "run", "pyupgrade", "--py39-plus"]
+                + [str(f) for f in py_files],
                 cwd=project_path,
-                capture_output=True
+                capture_output=True,
             )
 
         final_violations = self._count_violations(project_path)
@@ -172,7 +165,7 @@ class EnterprisePEP8Enforcer:
             ["poetry", "run", "ruff", "check", ".", "--output-format", "json"],
             cwd=project_path,
             capture_output=True,
-            text=True
+            text=True,
         )
 
         try:
@@ -184,9 +177,9 @@ class EnterprisePEP8Enforcer:
                 ["poetry", "run", "ruff", "check", "."],
                 cwd=project_path,
                 capture_output=True,
-                text=True
+                text=True,
             )
-            return len([l for l in result.stdout.split('\n') if l.strip()])
+            return len([l for l in result.stdout.split("\n") if l.strip()])
 
     def generate_violation_report(self) -> None:
         """Generate comprehensive violation report."""
@@ -216,7 +209,10 @@ class EnterprisePEP8Enforcer:
         for submodule in self.submodules:
             project_path = self.workspace_root / submodule
 
-            if not project_path.exists() or not (project_path / "pyproject.toml").exists():
+            if (
+                not project_path.exists()
+                or not (project_path / "pyproject.toml").exists()
+            ):
                 continue
 
             # 1. Update pyproject.toml

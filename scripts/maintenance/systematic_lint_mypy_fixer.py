@@ -278,11 +278,10 @@ class SystematicFixer:
     def _count_changes(self, original: str, fixed: str) -> int:
         """Count number of changes made."""
         return sum(
-            1 for a,
-            b in zip(
-                original.split("\n"),
-                fixed.split("\n"),
-                strict=False) if a != b)
+            1
+            for a, b in zip(original.split("\n"), fixed.split("\n"), strict=False)
+            if a != b
+        )
 
     def _validate_zero_tolerance(self) -> None:
         """Validate CLAUDE.md ZERO TOLERANCE compliance."""
@@ -312,9 +311,7 @@ class SystematicFixer:
                 total_lint_errors += lint_errors
 
                 if lint_errors > 0:
-                    print(
-                        f"  ❌ {
-                            project.name}: {lint_errors} lint errors remaining")
+                    print(f"  ❌ {project.name}: {lint_errors} lint errors remaining")
                     print(f"  ✅ {project.name}: ZERO lint errors")
 
             except subprocess.SubprocessError:

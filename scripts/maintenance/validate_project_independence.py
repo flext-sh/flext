@@ -89,9 +89,7 @@ def check_pyproject_structure(project_path: Path) -> dict[str, Any]:
 
             # Para Poetry, verifica se FLX é optional
             flx_dep = dependencies.get("flx", {})
-            flx_optional = isinstance(
-                flx_dep, dict) and flx_dep.get(
-                "optional", False)
+            flx_optional = isinstance(flx_dep, dict) and flx_dep.get("optional", False)
 
             if project_path.name in FLX_DEPENDENT_PROJECTS:
                 checks["flx_dependency_optional"] = flx_optional
@@ -114,9 +112,7 @@ def check_pyproject_structure(project_path: Path) -> dict[str, Any]:
 
         # Verifica se dependências do FLX são opcionais (se existirem)
         dependencies = data.get("project", {}).get("dependencies", [])
-        optional_deps = data.get(
-            "project", {}).get(
-            "optional-dependencies", {})
+        optional_deps = data.get("project", {}).get("optional-dependencies", {})
 
         flx_in_required = any("flx" in dep for dep in dependencies)
         flx_in_optional = "flx" in str(optional_deps)
@@ -133,9 +129,7 @@ def check_pyproject_structure(project_path: Path) -> dict[str, Any]:
         }
 
     except Exception as e:
-        return {
-            "valid": False,
-            "error": f"Erro ao analisar pyproject.toml: {e}"}
+        return {"valid": False, "error": f"Erro ao analisar pyproject.toml: {e}"}
 
 
 def test_project_import(project_path: Path) -> dict[str, Any]:
@@ -254,8 +248,7 @@ def test_project_independence(project_path: Path) -> dict[str, Any]:
                 f"   - Estrutura: {results['structure'].get('error', 'Problemas diversos')}"
             )
         if not import_ok:
-            print(
-                f"   - Import: {results['import_test'].get('error', 'Falhou')}")
+            print(f"   - Import: {results['import_test'].get('error', 'Falhou')}")
         if not lazy_ok:
             print("   - Lazy imports: Não configurados corretamente")
 
@@ -270,9 +263,7 @@ def test_unified_installation() -> dict[str, Any]:
     pyproject_main = workspace_root / "pyproject.toml"
 
     if not pyproject_main.exists():
-        return {
-            "success": False,
-            "error": "pyproject.toml principal não encontrado"}
+        return {"success": False, "error": "pyproject.toml principal não encontrado"}
 
     # Verifica estrutura do pyproject principal
     try:
@@ -293,11 +284,7 @@ def test_unified_installation() -> dict[str, Any]:
             # Conta subprojetos opcionais
             subprojects_in_optional = 0
             for dep_name, dep_config in dependencies.items():
-                if isinstance(
-                        dep_config,
-                        dict) and dep_config.get(
-                        "optional",
-                        False):
+                if isinstance(dep_config, dict) and dep_config.get("optional", False):
                     if any(proj in dep_name for proj in INDEPENDENT_PROJECTS):
                         subprojects_in_optional += 1
 
@@ -317,9 +304,7 @@ def test_unified_installation() -> dict[str, Any]:
             optional_groups_count = len(extras)
 
             # Formato padrão
-            optional_deps = data.get(
-                "project", {}).get(
-                "optional-dependencies", {})
+            optional_deps = data.get("project", {}).get("optional-dependencies", {})
             all_deps = data.get("project", {}).get("dependencies", [])
 
             # Conta quantos subprojetos estão incluídos
@@ -342,14 +327,10 @@ def test_unified_installation() -> dict[str, Any]:
         }
 
     except Exception as e:
-        return {
-            "success": False,
-            "error": f"Erro ao analisar pyproject principal: {e}"}
+        return {"success": False, "error": f"Erro ao analisar pyproject principal: {e}"}
 
 
-def generate_report(
-        independence_results: list[dict],
-        unified_result: dict) -> None:
+def generate_report(independence_results: list[dict], unified_result: dict) -> None:
     """Gera relatório completo dos testes."""
     print("\n" + "=" * 80)
     print("📋 RELATÓRIO DE VALIDAÇÃO - INDEPENDÊNCIA E INTEGRAÇÃO")
@@ -358,12 +339,8 @@ def generate_report(
     # Relatório de independência
     print("\n🔍 TESTE DE INDEPENDÊNCIA DOS PROJETOS")
     print(
-        f"{
-            'Projeto':<25} {
-            'Estrutura':<12} {
-                'Import':<10} {
-                    'Lazy':<10} {
-                        'Status':<12}")
+        f"{'Projeto':<25} {'Estrutura':<12} {'Import':<10} {'Lazy':<10} {'Status':<12}"
+    )
     print("-" * 80)
 
     independent_count = 0
@@ -393,18 +370,15 @@ def generate_report(
             independent_count += 1
 
         print(
-            f"{
-                result['project']:<25} {
-                structure:<12} {
-                import_test:<10} {
-                    lazy:<10} {
-                        status:<12}")
+            f"{result['project']:<25} {structure:<12} {import_test:<10} {lazy:<10} {
+                status:<12
+            }"
+        )
 
         # Debug para problemas
         if not result["independent"]:
             if not result["structure"]["valid"]:
-                error_msg = result["structure"].get(
-                    "error", "Problemas diversos")
+                error_msg = result["structure"].get("error", "Problemas diversos")
                 print(f"   - Estrutura: {error_msg}")
             if not (
                 result["import_test"]["success"]
@@ -421,29 +395,24 @@ def generate_report(
     # Estatísticas de independência
     print("\n📊 ESTATÍSTICAS DE INDEPENDÊNCIA:")
     print(f"   ✅ Projetos independentes: {independent_count}/{total_tested}")
-    print(
-        f"   📈 Taxa de sucesso: {(independent_count / total_tested) * 100:.1f}%")
+    print(f"   📈 Taxa de sucesso: {(independent_count / total_tested) * 100:.1f}%")
 
     # Relatório de integração unificada
     print("\n🔍 TESTE DE INTEGRAÇÃO UNIFICADA")
     if unified_result["success"]:
         print("✅ PYAUTO principal configurado corretamente")
-        print(
-            f"   📦 Dependências principais: {
-                unified_result['main_dependencies']}")
+        print(f"   📦 Dependências principais: {unified_result['main_dependencies']}")
         print(f"   🔧 Grupos opcionais: {unified_result['optional_groups']}")
-        print(
-            f"   🏗️  Subprojetos incluídos: {
-                unified_result['subprojects_included']}")
+        print(f"   🏗️  Subprojetos incluídos: {unified_result['subprojects_included']}")
 
         if unified_result["structure_valid"]:
             print("✅ Estrutura de integração válida")
             print("⚠️  Poucos subprojetos incluídos na integração")
         print(
             f"❌ Falha na integração: {
-                unified_result.get(
-                    'error',
-                    'Erro desconhecido')}")
+                unified_result.get('error', 'Erro desconhecido')
+            }"
+        )
 
     # Resumo final
     print("\n🎯 RESUMO FINAL:")
@@ -465,8 +434,9 @@ def generate_report(
         print("✅ INTEGRAÇÃO OK: PYAUTO principal configurado")
         print(
             f"⚠️  INDEPENDÊNCIA: {
-                total_tested -
-                independent_count} projetos com problemas")
+                total_tested - independent_count
+            } projetos com problemas"
+        )
         print("❌ PROBLEMAS ENCONTRADOS em independência E integração")
         print("🔧 Revisar configurações de dependências e lazy imports")
 
@@ -503,7 +473,6 @@ if __name__ == "__main__":
         pass
     except ImportError:
         print("📦 Instalando tomli para análise de TOML...")
-        subprocess.run([sys.executable, "-m", "pip",
-                       "install", "tomli"], check=True)
+        subprocess.run([sys.executable, "-m", "pip", "install", "tomli"], check=True)
 
     main()

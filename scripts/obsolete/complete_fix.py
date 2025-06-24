@@ -11,12 +11,7 @@ from pathlib import Path
 def run_command(cmd, cwd=None) -> bool:
     """Run a command and return its output."""
     print(f"Running: {' '.join(cmd)}")
-    result = subprocess.run(
-        cmd,
-        cwd=cwd,
-        capture_output=True,
-        text=True,
-        check=False)
+    result = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, check=False)
     if result.returncode != 0:
         print(f"Error running command: {' '.join(cmd)}")
         print(f"Error: {result.stderr}")

@@ -64,27 +64,16 @@ def flx_run_coverage_analysis(module_path: Path) -> dict[str, Any]:
 
             return {
                 "module": module_path.name,
-                "coverage_percent": coverage_data.get(
-                    "totals",
-                    {}).get(
+                "coverage_percent": coverage_data.get("totals", {}).get(
                     "percent_covered",
                     0,
                 ),
-                "lines_covered": coverage_data.get(
-                    "totals",
-                    {}).get(
+                "lines_covered": coverage_data.get("totals", {}).get(
                     "covered_lines",
                     0,
                 ),
-                "lines_total": coverage_data.get(
-                    "totals",
-                        {}).get(
-                            "num_statements",
-                            0),
-                "files_analyzed": len(
-                    coverage_data.get(
-                        "files",
-                        {})),
+                "lines_total": coverage_data.get("totals", {}).get("num_statements", 0),
+                "files_analyzed": len(coverage_data.get("files", {})),
                 "has_tests": True,
                 "test_output": result.stdout,
                 "test_errors": result.stderr,
@@ -188,18 +177,12 @@ def flx_generate_summary_report(results: list[dict[str, Any]]) -> str:
     modules_with_tests = sum(1 for r in results if r.get("has_tests", False))
     total_lines = sum(r.get("lines_total", 0) for r in results)
     total_covered = sum(r.get("lines_covered", 0) for r in results)
-    avg_coverage = (
-        total_covered /
-        total_lines *
-        100) if total_lines > 0 else 0
+    avg_coverage = (total_covered / total_lines * 100) if total_lines > 0 else 0
 
     # Classificar módulos por cobertura
     excellent = [r for r in results if r.get("coverage_percent", 0) >= 80]
     good = [r for r in results if 60 <= r.get("coverage_percent", 0) < 80]
-    needs_work = [
-        r for r in results if 30 <= r.get(
-            "coverage_percent",
-            0) < 60]
+    needs_work = [r for r in results if 30 <= r.get("coverage_percent", 0) < 60]
     critical = [r for r in results if r.get("coverage_percent", 0) < 30]
 
     report = f"""# 📊 RELATÓRIO DE COBERTURA FLX - {datetime.now().strftime("%d/%m/%Y %H:%M")}
@@ -218,33 +201,27 @@ def flx_generate_summary_report(results: list[dict[str, Any]]) -> str:
 """
 
     for module in excellent:
-        report += f"- **{
-            module['module']}**: {
-            module['coverage_percent']:.1f}% ({
-            module['lines_covered']}/{
-                module['lines_total']} linhas)\n"
+        report += f"- **{module['module']}**: {module['coverage_percent']:.1f}% ({
+            module['lines_covered']
+        }/{module['lines_total']} linhas)\n"
 
     report += f"""
 ### 🟡 Bom (60-79%): {len(good)} módulos
 """
 
     for module in good:
-        report += f"- **{
-            module['module']}**: {
-            module['coverage_percent']:.1f}% ({
-            module['lines_covered']}/{
-                module['lines_total']} linhas)\n"
+        report += f"- **{module['module']}**: {module['coverage_percent']:.1f}% ({
+            module['lines_covered']
+        }/{module['lines_total']} linhas)\n"
 
     report += f"""
 ### ⚠️ Precisa Melhorar (30-59%): {len(needs_work)} módulos
 """
 
     for module in needs_work:
-        report += f"- **{
-            module['module']}**: {
-            module['coverage_percent']:.1f}% ({
-            module['lines_covered']}/{
-                module['lines_total']} linhas)\n"
+        report += f"- **{module['module']}**: {module['coverage_percent']:.1f}% ({
+            module['lines_covered']
+        }/{module['lines_total']} linhas)\n"
 
     report += f"""
 ### 🔴 Crítico (<30%): {len(critical)} módulos
@@ -256,11 +233,9 @@ def flx_generate_summary_report(results: list[dict[str, Any]]) -> str:
             if not module.get("has_tests", False)
             else f"{module['coverage_percent']:.1f}%"
         )
-        report += f"- **{
-            module['module']}**: {status} ({
-            module.get(
-                'lines_covered', 0)}/{
-                module['lines_total']} linhas)\n"
+        report += f"- **{module['module']}**: {status} ({
+            module.get('lines_covered', 0)
+        }/{module['lines_total']} linhas)\n"
 
     report += """
 ## 🚀 PRÓXIMAS AÇÕES RECOMENDADAS
@@ -280,9 +255,9 @@ def flx_generate_summary_report(results: list[dict[str, Any]]) -> str:
     low_coverage = [r for r in critical if r.get("has_tests", False)]
     if low_coverage:
         for module in low_coverage[:2]:  # Top 2 prioridades
-            report += f"2. **{
-                module['module']}**: Aumentar cobertura de {
-                module['coverage_percent']:.1f}% para 60%+\n"
+            report += f"2. **{module['module']}**: Aumentar cobertura de {
+                module['coverage_percent']:.1f
+            }% para 60%+\n"
 
     report += """
 ### Prioridade Média (Próximas 2 semanas):
@@ -496,10 +471,7 @@ def main(workspace: Path, output: Path, output_format: str) -> None:
     # Resumo final
     total_coverage = sum(r.get("lines_covered", 0) for r in results)
     total_lines = sum(r.get("lines_total", 0) for r in results)
-    avg_coverage = (
-        total_coverage /
-        total_lines *
-        100) if total_lines > 0 else 0
+    avg_coverage = (total_coverage / total_lines * 100) if total_lines > 0 else 0
 
     print("\n🎯 RESUMO FINAL:")
     print(f"   Cobertura Média: {avg_coverage:.2f}%")

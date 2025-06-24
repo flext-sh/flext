@@ -45,8 +45,9 @@ def find_python_files(project_path: Path) -> list[Path]:
         for py_file in search_path.rglob("*.py"):
             # Ignora arquivos de teste e exemplos para evitar quebrar
             # funcionalidade
-            if not any(part in str(py_file)
-                       for part in ["test", "example", "__pycache__"]):
+            if not any(
+                part in str(py_file) for part in ["test", "example", "__pycache__"]
+            ):
                 python_files.append(py_file)
 
     return python_files
@@ -94,8 +95,8 @@ def generate_lazy_import_replacement(
 
     if not imports:  # import flx.module
         return f"# Lazy import to avoid circular dependencies\n{
-            module.split('.')[
-                -1]} = lazy_import('flx.{module}')"
+            module.split('.')[-1]
+        } = lazy_import('flx.{module}')"
 
     # from flx.module import items
     import_items = [item.strip() for item in imports.split(",")]
@@ -109,8 +110,7 @@ def generate_lazy_import_replacement(
     for item in import_items:
         lazy_imports.append(f"{item} = lazy_import('flx.{module}', '{item}')")
 
-    return "# Lazy imports to avoid circular dependencies\n" + \
-        "\n".join(lazy_imports)
+    return "# Lazy imports to avoid circular dependencies\n" + "\n".join(lazy_imports)
 
 
 def fix_file_imports(file_path: Path) -> bool:
@@ -150,10 +150,12 @@ def fix_file_imports(file_path: Path) -> bool:
                 import_end_idx = 0
 
             lines.insert(import_end_idx, "")
-            lines.insert(import_end_idx + 1,
-                         "# Lazy imports to avoid circular dependencies")
-            lines.insert(import_end_idx + 2,
-                         "from flx.utils.lazy_import import lazy_import")
+            lines.insert(
+                import_end_idx + 1, "# Lazy imports to avoid circular dependencies"
+            )
+            lines.insert(
+                import_end_idx + 2, "from flx.utils.lazy_import import lazy_import"
+            )
             lines.insert(import_end_idx + 3, "")
 
             content = "\n".join(lines)
@@ -242,14 +244,12 @@ def fix_lazy_import_function(file_path: Path) -> bool:
                     and i + 1 < len(lines)
                     and not lines[i + 1].startswith(("import ", "from ", "#"))
                 ):
-                    new_lines.append(
-                        "from flx.utils.lazy_import import lazy_import")
+                    new_lines.append("from flx.utils.lazy_import import lazy_import")
                     import_added = True
 
             # Se não foi adicionado ainda, adiciona no início
             if not import_added:
-                new_lines.insert(
-                    0, "from flx.utils.lazy_import import lazy_import")
+                new_lines.insert(0, "from flx.utils.lazy_import import lazy_import")
                 new_lines.insert(1, "")
 
             content = "\n".join(new_lines)
@@ -274,8 +274,7 @@ def main() -> None:
         modified = fix_project_dependencies(project)
         total_modified += modified
 
-    print(
-        f"\n🎉 Correção concluída! {total_modified} arquivos modificados no total")
+    print(f"\n🎉 Correção concluída! {total_modified} arquivos modificados no total")
 
     # Relatório de dependências corrigidas
     print("\n📋 Relatório de correções:")

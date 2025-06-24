@@ -44,9 +44,7 @@ class DependencyResolver:
     def analyze_conflicts(self) -> Any:
         """Analisa conflitos entre projetos."""
         console.print(
-            Panel.fit(
-                "🔍 Analisando Conflitos de Dependências",
-                style="bold blue"),
+            Panel.fit("🔍 Analisando Conflitos de Dependências", style="bold blue"),
         )
 
         self.projects = self.find_projects()
@@ -61,13 +59,7 @@ class DependencyResolver:
                 with open(config_path, "rb") as f:
                     config = tomli.load(f)
 
-                deps = config.get(
-                    "tool",
-                    {}).get(
-                    "poetry",
-                    {}).get(
-                    "dependencies",
-                    {})
+                deps = config.get("tool", {}).get("poetry", {}).get("dependencies", {})
                 conflicts[project_path.name] = {}
 
                 for dep, version in deps.items():
@@ -76,9 +68,7 @@ class DependencyResolver:
                     conflicts[project_path.name][dep] = version
 
             except Exception as e:
-                console.print(
-                    f"[red]Erro ao analisar {
-                        project_path.name}: {e}[/red]")
+                console.print(f"[red]Erro ao analisar {project_path.name}: {e}[/red]")
 
         return conflicts
 
@@ -97,8 +87,7 @@ class DependencyResolver:
         # Identifica conflitos
         conflicted_deps: dict = {}
         for dep, projects in common_deps.items():
-            versions = {str(v)
-                        for v in projects.values()}  # Converte para string
+            versions = {str(v) for v in projects.values()}  # Converte para string
             if len(versions) > 1:
                 conflicted_deps[dep] = projects
 
@@ -194,9 +183,7 @@ class DependencyResolver:
             )
 
             for project_path in self.projects:
-                progress.update(
-                    task, description=f"Atualizando {
-                        project_path.name}")
+                progress.update(task, description=f"Atualizando {project_path.name}")
 
                 config_path = project_path / "pyproject.toml"
                 if not config_path.exists():
@@ -208,13 +195,8 @@ class DependencyResolver:
                         config = tomli.load(f)
 
                     deps = (
-                        config.get(
-                            "tool",
-                            {}).get(
-                            "poetry",
-                            {}).get(
-                            "dependencies",
-                            {}))
+                        config.get("tool", {}).get("poetry", {}).get("dependencies", {})
+                    )
 
                     # Aplica resoluções
                     updated = False
@@ -377,21 +359,26 @@ fi
         if conflicted_deps:
             console.print(
                 f"\n[yellow]Encontrados {
-                    len(conflicted_deps)} dependências conflitantes[/yellow]", )
+                    len(conflicted_deps)
+                } dependências conflitantes[/yellow]",
+            )
 
             # Propõe resoluções
             resolutions = self.propose_resolutions(conflicted_deps)
 
             # Pergunta se deseja aplicar
             apply = console.input(
-                "\n[yellow]Aplicar resoluções automaticamente? (y/N): [/yellow]", )
+                "\n[yellow]Aplicar resoluções automaticamente? (y/N): [/yellow]",
+            )
             if apply.lower() == "y":
                 self.apply_resolutions(resolutions)
                 console.print("\n[green]✅ Resoluções aplicadas![/green]")
                 console.print(
-                    "\n[blue]ℹ️ Resoluções não aplicadas. Execute novamente quando desejar aplicar.[/blue]", )
+                    "\n[blue]ℹ️ Resoluções não aplicadas. Execute novamente quando desejar aplicar.[/blue]",
+                )
             console.print(
-                "\n[green]✅ Nenhum conflito de dependência encontrado![/green]", )
+                "\n[green]✅ Nenhum conflito de dependência encontrado![/green]",
+            )
 
         # Cria scripts de isolamento
         self.create_isolation_scripts()

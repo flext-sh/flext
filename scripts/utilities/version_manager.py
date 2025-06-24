@@ -28,25 +28,26 @@ class VersionManager:
                 cwd=self.workspace_root,
                 capture_output=True,
                 text=True,
-                check=True
+                check=True,
             )
-            return [line.split()[1]
-                    for line in result.stdout.strip().split('\n') if line.strip()]
+            return [
+                line.split()[1]
+                for line in result.stdout.strip().split("\n")
+                if line.strip()
+            ]
         except subprocess.CalledProcessError:
             return []
 
     def _get_module_name(self, submodule: str) -> str:
         """Converte nome do submódulo para nome do módulo Python."""
-        return submodule.replace('-', '_')
+        return submodule.replace("-", "_")
 
-    def _ensure_version_file(
-            self,
-            submodule: str,
-            version: str = "0.5.0") -> Path:
+    def _ensure_version_file(self, submodule: str, version: str = "0.5.0") -> Path:
         """Garante que o arquivo __version__.py existe com a versão especificada."""
         module_name = self._get_module_name(submodule)
-        version_file = self.workspace_root / submodule / \
-            "src" / module_name / "__version__.py"
+        version_file = (
+            self.workspace_root / submodule / "src" / module_name / "__version__.py"
+        )
 
         # Criar diretório se não existir
         version_file.parent.mkdir(parents=True, exist_ok=True)
@@ -86,13 +87,16 @@ __version_info__ = tuple(int(x) for x in __version__.split('.'))
             print(f"✅ Updated {submodule}/pyproject.toml to version {version}")
             return True
         print(
-            f"❌ {submodule}: Não foi possível encontrar linha de versão em pyproject.toml")
+            f"❌ {submodule}: Não foi possível encontrar linha de versão em pyproject.toml"
+        )
         return False
 
     def _update_init_file(self, submodule: str) -> bool:
         """Atualiza __init__.py para importar __version__ de __version__.py."""
         module_name = self._get_module_name(submodule)
-        init_file = self.workspace_root / submodule / "src" / module_name / "__init__.py"
+        init_file = (
+            self.workspace_root / submodule / "src" / module_name / "__init__.py"
+        )
 
         if not init_file.exists():
             # Criar __init__.py se não existir
@@ -115,11 +119,13 @@ __all__ = ["__version__", "__version_info__"]
             return True
 
         # Adicionar import de versão se não existir
-        version_import = f"from {module_name}.__version__ import __version__, __version_info__"
+        version_import = (
+            f"from {module_name}.__version__ import __version__, __version_info__"
+        )
 
         if "__version__" not in content:
             # Adicionar no início do arquivo, após docstring se existir
-            lines = content.split('\n')
+            lines = content.split("\n")
             insert_index = 0
 
             # Encontrar local para inserir (após docstring)
@@ -136,20 +142,21 @@ __all__ = ["__version__", "__version_info__"]
                 if line.strip().startswith("__all__"):
                     if "__version__" not in line:
                         lines[i] = line.replace(
-                            "]", ', "__version__", "__version_info__"]')
+                            "]", ', "__version__", "__version_info__"]'
+                        )
                     break
                 # Adicionar __all__ se não existir
-                lines.insert(insert_index + 1,
-                             '\n__all__ = ["__version__", "__version_info__"]')
+                lines.insert(
+                    insert_index + 1, '\n__all__ = ["__version__", "__version_info__"]'
+                )
 
-            init_file.write_text('\n'.join(lines))
+            init_file.write_text("\n".join(lines))
             print(f"✅ Updated {init_file} to import __version__")
             return True
 
         return False
 
-    def _find_version_references(
-            self, submodule: str) -> list[tuple[Path, int, str]]:
+    def _find_version_references(self, submodule: str) -> list[tuple[Path, int, str]]:
         """Encontra todas as referências de versão hardcoded no código."""
         module_path = self.workspace_root / submodule / "src"
         references: list = []
@@ -170,29 +177,23 @@ __all__ = ["__version__", "__version_info__"]
 
             try:
                 content = py_file.read_text()
-                lines = content.split('\n')
+                lines = content.split("\n")
 
                 for line_num, line in enumerate(lines, 1):
                     for pattern in version_patterns:
                         if re.search(pattern, line):
-                            references.append(
-                                (py_file, line_num, line.strip()))
+                            references.append((py_file, line_num, line.strip()))
             except Exception as e:
                 print(f"⚠️  Erro ao ler {py_file}: {e}")
 
         return references
 
-    def set_version(
-            self,
-            version: str,
-            submodules: list[str] | None = None) -> bool:
+    def set_version(self, version: str, submodules: list[str] | None = None) -> bool:
         """Define versão em todos os submódulos ou submódulos específicos."""
         if submodules is None:
             submodules = self.submodules
 
-        print(
-            f"🚀 Definindo versão {version} em {
-                len(submodules)} submódulos...")
+        print(f"🚀 Definindo versão {version} em {len(submodules)} submódulos...")
 
         success_count = 0
         for submodule in submodules:
@@ -221,7 +222,8 @@ __all__ = ["__version__", "__version_info__"]
                 print(f"❌ {submodule}: Erro ao atualizar versão: {e}")
 
         print(
-            f"\n📊 Resultado: {success_count}/{len(submodules)} submódulos atualizados")
+            f"\n📊 Resultado: {success_count}/{len(submodules)} submódulos atualizados"
+        )
         return success_count == len(submodules)
 
     def get_versions(self) -> dict[str, str]:
@@ -251,26 +253,30 @@ __all__ = ["__version__", "__version_info__"]
         for submodule, version in versions.items():
             # Verificar se __version__.py existe e está sincronizado
             module_name = self._get_module_name(submodule)
-            version_file = self.workspace_root / submodule / \
-                "src" / module_name / "__version__.py"
+            version_file = (
+                self.workspace_root / submodule / "src" / module_name / "__version__.py"
+            )
 
             if version_file.exists():
                 try:
                     version_content = version_file.read_text()
                     version_match = re.search(
-                        r'__version__\s*=\s*"([^"]*)"', version_content)
+                        r'__version__\s*=\s*"([^"]*)"', version_content
+                    )
                     if version_match:
                         file_version = version_match.group(1)
                         if file_version != version:
                             inconsistencies.append(
-                                f"{submodule}: pyproject.toml({version}) != __version__.py({file_version})")
+                                f"{submodule}: pyproject.toml({version}) != __version__.py({file_version})"
+                            )
                         inconsistencies.append(
-                            f"{submodule}: __version__.py malformado")
+                            f"{submodule}: __version__.py malformado"
+                        )
                 except Exception as e:
                     inconsistencies.append(
-                        f"{submodule}: Erro ao ler __version__.py: {e}")
-                inconsistencies.append(
-                    f"{submodule}: __version__.py não encontrado")
+                        f"{submodule}: Erro ao ler __version__.py: {e}"
+                    )
+                inconsistencies.append(f"{submodule}: __version__.py não encontrado")
 
         if inconsistencies:
             print("❌ Inconsistências encontradas:")
@@ -280,8 +286,7 @@ __all__ = ["__version__", "__version_info__"]
         print("✅ Todas as versões estão consistentes")
         return True
 
-    def audit_hardcoded_versions(
-            self) -> dict[str, list[tuple[Path, int, str]]]:
+    def audit_hardcoded_versions(self) -> dict[str, list[tuple[Path, int, str]]]:
         """Auditoria de versões hardcoded no código."""
         print("🔍 Auditando versões hardcoded...")
 
@@ -307,22 +312,18 @@ __all__ = ["__version__", "__version_info__"]
 def main() -> None:
     """Função principal."""
     parser = argparse.ArgumentParser(description="PyAuto Version Manager")
-    parser.add_argument(
-        "--workspace",
-        default=".",
-        help="Workspace root directory")
+    parser.add_argument("--workspace", default=".", help="Workspace root directory")
 
-    subparsers = parser.add_subparsers(
-        dest="command", help="Available commands")
+    subparsers = parser.add_subparsers(dest="command", help="Available commands")
 
     # Comando set
     set_parser = subparsers.add_parser(
-        "set", help="Set version in all or specific submodules")
+        "set", help="Set version in all or specific submodules"
+    )
     set_parser.add_argument("version", help="Version to set (e.g., 0.5.0)")
     set_parser.add_argument(
-        "--submodules",
-        nargs="*",
-        help="Specific submodules (default: all)")
+        "--submodules", nargs="*", help="Specific submodules (default: all)"
+    )
 
     # Comando get
     subparsers.add_parser("get", help="Get current versions")

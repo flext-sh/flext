@@ -33,7 +33,8 @@ def fix_poetry_locks() -> None:
         "tap-oracle-wms",
         "target-ldap",
         "target-oracle-oic",
-        "target-oracle-wms"]
+        "target-oracle-wms",
+    ]
 
     fixed = 0
     failed = 0
@@ -56,7 +57,7 @@ def fix_poetry_locks() -> None:
                 cwd=project_path,
                 capture_output=True,
                 text=True,
-                timeout=60
+                timeout=60,
             )
 
             if result.returncode == 0:

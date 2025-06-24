@@ -56,8 +56,8 @@ def check_project_standards(project_path: Path) -> dict:
     mypy_config = tool_config.get("mypy", {})
     if mypy_config.get("python_version") != "3.13":
         issues.append(
-            f"Incorrect MyPy python_version: {
-                mypy_config.get('python_version')}", )
+            f"Incorrect MyPy python_version: {mypy_config.get('python_version')}",
+        )
 
     return {"issues": issues}
 

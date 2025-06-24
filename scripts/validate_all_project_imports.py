@@ -28,10 +28,10 @@ class ProjectImportValidator:
                 cwd=self.workspace_root,
                 capture_output=True,
                 text=True,
-                check=True
+                check=True,
             )
             submodules = []
-            for line in result.stdout.strip().split('\n'):
+            for line in result.stdout.strip().split("\n"):
                 if line:
                     parts = line.split()
                     if len(parts) >= 2:
@@ -67,11 +67,15 @@ class ProjectImportValidator:
         # Test actual import
         try:
             result = subprocess.run(
-                ["python", "-c", f"import sys; sys.path.insert(0, '{src_path}'); import {module_name}; print('✅ Success')"],
+                [
+                    "python",
+                    "-c",
+                    f"import sys; sys.path.insert(0, '{src_path}'); import {module_name}; print('✅ Success')",
+                ],
                 cwd=project_path,
                 capture_output=True,
                 text=True,
-                timeout=10
+                timeout=10,
             )
 
             if result.returncode == 0:
@@ -96,7 +100,7 @@ class ProjectImportValidator:
                 cwd=project_path,
                 capture_output=True,
                 text=True,
-                timeout=30
+                timeout=30,
             )
 
             if result.returncode == 0:
@@ -112,7 +116,6 @@ class ProjectImportValidator:
         """Validate all projects systematically."""
 
         for project_name in self.submodules:
-
             # Test import
             import_success, import_msg = self.test_project_import(project_name)
 
@@ -123,24 +126,28 @@ class ProjectImportValidator:
             if import_success and poetry_success:
                 self.working_projects.append(project_name)
             else:
-                self.broken_projects.append({
-                    'name': project_name,
-                    'import_error': None if import_success else import_msg,
-                    'poetry_error': None if poetry_success else poetry_msg
-                })
+                self.broken_projects.append(
+                    {
+                        "name": project_name,
+                        "import_error": None if import_success else import_msg,
+                        "poetry_error": None if poetry_success else poetry_msg,
+                    }
+                )
 
         # Summary
 
         if self.broken_projects:
             for project in self.broken_projects:
-                if project['import_error']:
+                if project["import_error"]:
                     pass
-                if project['poetry_error']:
+                if project["poetry_error"]:
                     pass
 
         # Log to token
         with open(self.workspace_root / ".token", "a") as f:
-            f.write(f"PROJECT-VALIDATION-003: {len(self.working_projects)}/{len(self.submodules)} projects working\n")
+            f.write(
+                f"PROJECT-VALIDATION-003: {len(self.working_projects)}/{len(self.submodules)} projects working\n"
+            )
 
         return self.working_projects, self.broken_projects
 

@@ -20,10 +20,27 @@ def get_project_dirs() -> list[Path]:
     """Get all project directories with pyproject.toml."""
     root = Path.cwd()
     exclude_dirs = {
-        ".venv", "venv", "__pycache__", ".git", "dist", "build",
-        "htmlcov", "node_modules", "reference", "docs", "logs",
-        "scripts", "reports", "schemas", "temp_workflows", "junit",
-        "src", "tests", "data", "meltano", "singer-sdk",
+        ".venv",
+        "venv",
+        "__pycache__",
+        ".git",
+        "dist",
+        "build",
+        "htmlcov",
+        "node_modules",
+        "reference",
+        "docs",
+        "logs",
+        "scripts",
+        "reports",
+        "schemas",
+        "temp_workflows",
+        "junit",
+        "src",
+        "tests",
+        "data",
+        "meltano",
+        "singer-sdk",
     }
 
     projects: list = []
@@ -94,13 +111,7 @@ def update_pyproject_toml(project_path: Path, dry_run: bool = False) -> None:
         if "tool" not in doc:
             doc["tool"] = {}
 
-        for section in [
-            "black",
-            "isort",
-            "ruff",
-            "mypy",
-            "pytest",
-                "coverage"]:
+        for section in ["black", "isort", "ruff", "mypy", "pytest", "coverage"]:
             if section in standard_config.get("tool", {}):
                 doc["tool"][section] = standard_config["tool"][section]
 
@@ -125,11 +136,7 @@ def run_black(project_path: Path, dry_run: bool = False) -> bool:
         cmd.append("--diff")
 
     try:
-        result = subprocess.run(
-            cmd,
-            capture_output=True,
-            text=True,
-            check=False)
+        result = subprocess.run(cmd, capture_output=True, text=True, check=False)
         if result.returncode == 0:
             print("  ✅ Black formatting complete")
             return True
@@ -150,11 +157,7 @@ def run_isort(project_path: Path, dry_run: bool = False) -> bool:
         cmd.append("--diff")
 
     try:
-        result = subprocess.run(
-            cmd,
-            capture_output=True,
-            text=True,
-            check=False)
+        result = subprocess.run(cmd, capture_output=True, text=True, check=False)
         if result.returncode == 0:
             print("  ✅ Import sorting complete")
             return True
@@ -165,10 +168,7 @@ def run_isort(project_path: Path, dry_run: bool = False) -> bool:
         return False
 
 
-def run_ruff(
-        project_path: Path,
-        dry_run: bool = False,
-        fix: bool = True) -> bool:
+def run_ruff(project_path: Path, dry_run: bool = False, fix: bool = True) -> bool:
     """Run Ruff linter on project."""
     print(f"\n🦀 Running Ruff on {project_path.name}...")
 
@@ -177,11 +177,7 @@ def run_ruff(
         cmd.append("--fix")
 
     try:
-        result = subprocess.run(
-            cmd,
-            capture_output=True,
-            text=True,
-            check=False)
+        result = subprocess.run(cmd, capture_output=True, text=True, check=False)
         if result.returncode == 0:
             print("  ✅ Ruff linting complete")
             return True
@@ -206,7 +202,8 @@ def validate_project(project_path: Path) -> dict:
     # Check Black
     result = subprocess.run(
         ["black", "--check", str(project_path)],
-        capture_output=True, check=False,
+        capture_output=True,
+        check=False,
     )
     results["black"] = result.returncode == 0
     print(f"  {'✅' if results['black'] else '❌'} Black check")
@@ -214,7 +211,8 @@ def validate_project(project_path: Path) -> dict:
     # Check isort
     result = subprocess.run(
         ["isort", "--check-only", str(project_path)],
-        capture_output=True, check=False,
+        capture_output=True,
+        check=False,
     )
     results["isort"] = result.returncode == 0
     print(f"  {'✅' if results['isort'] else '❌'} isort check")
@@ -222,32 +220,28 @@ def validate_project(project_path: Path) -> dict:
     # Check Ruff
     result = subprocess.run(
         ["ruff", "check", str(project_path)],
-        capture_output=True, check=False,
+        capture_output=True,
+        check=False,
     )
     results["ruff"] = result.returncode == 0
     print(f"  {'✅' if results['ruff'] else '❌'} Ruff check")
 
-    results["overall"] = all(
-        [results["black"], results["isort"], results["ruff"]])
+    results["overall"] = all([results["black"], results["isort"], results["ruff"]])
     return results
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Apply PEP8 standards to PyAuto projects")
+        description="Apply PEP8 standards to PyAuto projects"
+    )
     parser.add_argument(
-        "--dry-run",
-        action="store_true",
-        help="Show what would be done")
+        "--dry-run", action="store_true", help="Show what would be done"
+    )
     parser.add_argument("--project", help="Apply to specific project only")
+    parser.add_argument("--no-fix", action="store_true", help="Don't auto-fix issues")
     parser.add_argument(
-        "--no-fix",
-        action="store_true",
-        help="Don't auto-fix issues")
-    parser.add_argument(
-        "--validate-only",
-        action="store_true",
-        help="Only validate, don't modify")
+        "--validate-only", action="store_true", help="Only validate, don't modify"
+    )
 
     args = parser.parse_args()
 
@@ -299,9 +293,7 @@ def main() -> int:
     print("=" * 60)
 
     if all_results:
-        total_pass = sum(
-            1 for r in all_results.values() if r.get(
-                "overall", False))
+        total_pass = sum(1 for r in all_results.values() if r.get("overall", False))
         print(f"\n✅ Passed: {total_pass}/{len(all_results)}")
 
         for project, results in all_results.items():
@@ -316,8 +308,7 @@ def main() -> int:
             json.dump(all_results, f, indent=2)
         print(f"\n📄 Results saved to {results_file}")
 
-    return 0 if all(r.get("overall", False)
-                    for r in all_results.values()) else 1
+    return 0 if all(r.get("overall", False) for r in all_results.values()) else 1
 
 
 if __name__ == "__main__":

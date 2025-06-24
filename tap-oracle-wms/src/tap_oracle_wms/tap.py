@@ -340,8 +340,18 @@ class TapOracleWMS(Tap):
         if self._monitor:
             profile_id = self._monitor.profiler.start_profile("discovery")
 
-        # Run async discovery
-        entities = asyncio.run(self._discover_and_filter_entities())
+        # Run async discovery - Fix asyncio.run() in running loop
+        try:
+            asyncio.get_running_loop()
+            # We're in an existing event loop, run in thread pool
+            import concurrent.futures
+            with concurrent.futures.ThreadPoolExecutor() as executor:
+                entities_future = executor.submit(asyncio.run, self._discover_and_filter_entities())
+                entities = entities_future.result()
+        except RuntimeError:
+            # No running loop, safe to use asyncio.run()
+            entities = asyncio.run(self._discover_and_filter_entities())
+
         logger.info("Discovered %s accessible entities", len(entities))
 
         # Record discovery metrics
@@ -350,8 +360,17 @@ class TapOracleWMS(Tap):
                 "discovery.entities_found", len(entities)
             )
 
-        # Generate schemas for entities in parallel
-        schemas = asyncio.run(self._generate_schemas_parallel(entities))
+        # Generate schemas for entities in parallel - Fix asyncio.run() in running loop
+        try:
+            asyncio.get_running_loop()
+            # We're in an existing event loop, run in thread pool
+            import concurrent.futures
+            with concurrent.futures.ThreadPoolExecutor() as executor:
+                schemas_future = executor.submit(asyncio.run, self._generate_schemas_parallel(entities))
+                schemas = schemas_future.result()
+        except RuntimeError:
+            # No running loop, safe to use asyncio.run()
+            schemas = asyncio.run(self._generate_schemas_parallel(entities))
 
         # Record schema generation metrics
         if self._monitor:

@@ -44,11 +44,7 @@ def run_command(command: list[str], description: str) -> tuple[bool, str]:
     """
     print(f"Running {description}...")
     try:
-        result = subprocess.run(
-            command,
-            check=True,
-            capture_output=True,
-            text=True)
+        result = subprocess.run(command, check=True, capture_output=True, text=True)
         return True, result.stdout.strip()
     except subprocess.CalledProcessError as e:
         return False, e.stderr.strip()

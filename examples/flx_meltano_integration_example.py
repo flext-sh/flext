@@ -338,10 +338,8 @@ async def demonstrate_crud_interface():
         # Using CRUD interface for state
 
         state_data = {
-            "singer_state": {
-                "bookmarks": {
-                    "file1": {
-                        "last_modified": "2023-01-01"}}}}
+            "singer_state": {"bookmarks": {"file1": {"last_modified": "2023-01-01"}}}
+        }
 
         await adapter.set("state:csv-pipeline", state_data)
 

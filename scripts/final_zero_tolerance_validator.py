@@ -15,7 +15,7 @@ def validate_project_compliance(project_name: str) -> dict:
         "mypy": False,
         "black": False,
         "isort": False,
-        "violations": 0
+        "violations": 0,
     }
 
     if not project_path.exists():
@@ -26,17 +26,18 @@ def validate_project_compliance(project_name: str) -> dict:
         ["poetry", "run", "ruff", "check", ".", "--quiet"],
         cwd=project_path,
         capture_output=True,
-        text=True
+        text=True,
     )
     results["ruff"] = ruff_result.returncode == 0
     results["violations"] = len(
-        [l for l in ruff_result.stdout.split('\n') if l.strip()])
+        [l for l in ruff_result.stdout.split("\n") if l.strip()]
+    )
 
     # Check black
     black_result = subprocess.run(
         ["poetry", "run", "black", ".", "--check", "--quiet"],
         cwd=project_path,
-        capture_output=True
+        capture_output=True,
     )
     results["black"] = black_result.returncode == 0
 
@@ -44,7 +45,7 @@ def validate_project_compliance(project_name: str) -> dict:
     isort_result = subprocess.run(
         ["poetry", "run", "isort", ".", "--check", "--quiet"],
         cwd=project_path,
-        capture_output=True
+        capture_output=True,
     )
     results["isort"] = isort_result.returncode == 0
 
@@ -54,7 +55,7 @@ def validate_project_compliance(project_name: str) -> dict:
             ["poetry", "run", "mypy", ".", "--no-error-summary"],
             cwd=project_path,
             capture_output=True,
-            timeout=10
+            timeout=10,
         )
         results["mypy"] = mypy_result.returncode == 0
     except Exception:
@@ -87,7 +88,8 @@ def main() -> None:
         "tap-oracle-wms",
         "target-ldap",
         "target-oracle-oic",
-        "target-oracle-wms"]
+        "target-oracle-wms",
+    ]
 
     all_compliant = True
     compliant_count = 0
@@ -97,10 +99,10 @@ def main() -> None:
         results = validate_project_compliance(project)
 
         project_compliant = (
-            results["ruff"] and
-            results["black"] and
-            results["isort"] and
-            results["violations"] == 0
+            results["ruff"]
+            and results["black"]
+            and results["isort"]
+            and results["violations"] == 0
         )
 
         if project_compliant:
@@ -109,7 +111,6 @@ def main() -> None:
             total_violations += results["violations"]
 
     if all_compliant:
-
         # Log success
         with open("/home/marlonsc/pyauto/.token", "a") as f:
             f.write("ZERO-TOLERANCE-VALIDATION-FINAL: 100% COMPLIANCE ACHIEVED\n")

@@ -51,8 +51,7 @@ def run_fixer_script(script_name, dry_run=False) -> Any:
 
 def main() -> None:
     """Run all fixer scripts in sequence."""
-    parser = argparse.ArgumentParser(
-        description="Run all linting issue fixers")
+    parser = argparse.ArgumentParser(description="Run all linting issue fixers")
     parser.add_argument(
         "--dry-run",
         action="store_true",

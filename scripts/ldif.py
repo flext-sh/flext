@@ -47,8 +47,7 @@ class StandardLdifProcessor(BaseProcessor, ILdifProcessor):
 
     def _parse_entry(self, raw_entry: str) -> dict[str, Any] | None:
         """Parse individual LDIF entry."""
-        lines = [line.strip()
-                 for line in raw_entry.strip().split("\n") if line.strip()]
+        lines = [line.strip() for line in raw_entry.strip().split("\n") if line.strip()]
 
         if not lines:
             return None
@@ -99,9 +98,7 @@ class StandardLdifProcessor(BaseProcessor, ILdifProcessor):
                         for attr_value in attr_values:
                             file.write(f"{attr_name}: {attr_value}\n")
 
-            self.log_success(
-                "File writing", f"{
-                    len(entries)} entries to {output_file}")
+            self.log_success("File writing", f"{len(entries)} entries to {output_file}")
             return len(entries)
 
         except Exception as e:
@@ -117,9 +114,7 @@ class StandardLdifProcessor(BaseProcessor, ILdifProcessor):
             valid = all(entry.get("dn") for entry in entries)
 
             if valid:
-                self.log_success(
-                    "LDIF validation", f"{
-                        len(entries)} entries validated")
+                self.log_success("LDIF validation", f"{len(entries)} entries validated")
                 self.log_error("LDIF validation", "Some entries missing DN")
 
             return valid
@@ -137,14 +132,13 @@ class StandardLdifProcessor(BaseProcessor, ILdifProcessor):
         for entry in entries:
             dn = entry.get("dn", "").lower()
             attributes = entry.get("attributes", {})
-            object_classes = [
-                oc.lower() for oc in attributes.get(
-                    "objectclass", [])]
+            object_classes = [oc.lower() for oc in attributes.get("objectclass", [])]
 
             # Determine entry type based on DN and objectClass
             if entry_type == "user":
-                if any(oc in {"person", "inetorgperson", "user"}
-                        for oc in object_classes):
+                if any(
+                    oc in {"person", "inetorgperson", "user"} for oc in object_classes
+                ):
                     filtered.append(entry)
             elif entry_type == "group":
                 if any(
