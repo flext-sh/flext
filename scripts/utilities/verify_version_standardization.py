@@ -9,8 +9,7 @@ import sys
 from pathlib import Path
 
 
-def check_version_file(
-        project_path: Path, package_name: str) -> tuple[bool, str]:
+def check_version_file(project_path: Path, package_name: str) -> tuple[bool, str]:
     """Check if version file exists and contains correct version."""
     version_file = project_path / "src" / package_name / "__version__.py"
 
@@ -62,8 +61,7 @@ def check_pyproject_version(project_path: Path) -> tuple[bool, str]:
             if line.strip().startswith("version = "):
                 if "0.4.0" in line:
                     return True, "✓ Version 0.4.0 in pyproject.toml"
-                return False, f"Wrong version in pyproject.toml: {
-                    line.strip()}"
+                return False, f"Wrong version in pyproject.toml: {line.strip()}"
 
         return False, "Version line not found in pyproject.toml"
 
@@ -93,8 +91,7 @@ def main() -> None:
         print(f"📦 Checking {project_dir}:")
 
         # Check version file
-        version_ok, version_msg = check_version_file(
-            project_path, package_name)
+        version_ok, version_msg = check_version_file(project_path, package_name)
         print(f"  __version__.py: {version_msg}")
 
         # Check pyproject.toml
@@ -113,7 +110,8 @@ def main() -> None:
                 )
 
         flx_status = (
-            "✓ FLX dependency present" if has_flx else "✗ FLX dependency missing")
+            "✓ FLX dependency present" if has_flx else "✗ FLX dependency missing"
+        )
         print(f"  FLX dependency: {flx_status}")
 
         project_passed = version_ok and pyproject_ok and has_flx

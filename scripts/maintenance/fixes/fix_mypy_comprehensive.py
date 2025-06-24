@@ -39,9 +39,7 @@ def fix_attr_defined_errors(
             continue
 
         # Pattern: has no attribute "method"; maybe "flx_method"?
-        match = re.search(
-            r'has no attribute "(.+?)"; maybe "(.+?)"',
-            error["message"])
+        match = re.search(r'has no attribute "(.+?)"; maybe "(.+?)"', error["message"])
         if match:
             old_attr = match.group(1)
             new_attr = match.group(2)
@@ -92,20 +90,14 @@ def fix_import_errors() -> None:
             module_name = path.stem
 
             # Create basic module content
-            content = f'''"""FLX {
-                module_name.replace(
-                    "_",
-                    " ").title()} module."""
+            content = f'''"""FLX {module_name.replace("_", " ").title()} module."""
 
 from __future__ import annotations
 
 from typing import Any
 
 
-class Flx{
-                module_name.replace(
-                    "_",
-                    "").title()}:
+class Flx{module_name.replace("_", "").title()}:
     """Placeholder class for {module_name}."""
 
     def __init__(self) -> None:
@@ -113,10 +105,7 @@ class Flx{
         pass
 
 
-__all__ = ["Flx{
-                module_name.replace(
-                    "_",
-                    "").title()}"]
+__all__ = ["Flx{module_name.replace("_", "").title()}"]
 '''
             path.write_text(content)
             print(f"Created missing module: {module_path}")

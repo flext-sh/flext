@@ -24,8 +24,7 @@ def check_detected_issues() -> None:
 
         if detected_issues.exists():
             for severity in ["CRITICAL", "HIGH", "MEDIUM", "LOW", "INFO"]:
-                count = detected_issues.filter(
-                    issue_type__severity=severity).count()
+                count = detected_issues.filter(issue_type__severity=severity).count()
                 if count > 0:
                     pass
 
@@ -40,8 +39,7 @@ def check_detected_issues() -> None:
 
         # Check issue types
         for backend_name in ["ast", "external", "quality"]:
-            count = IssueType.objects.filter(
-                backend__name=backend_name).count()
+            count = IssueType.objects.filter(backend__name=backend_name).count()
 
     except AnalysisSession.DoesNotExist:
         pass

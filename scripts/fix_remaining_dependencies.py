@@ -55,7 +55,7 @@ def fix_complex_dependencies() -> None:
                 "redis>=5.0.0",
                 "kombu>=5.3.0",
             ]
-        }
+        },
     }
 
     for project, config in complex_fixes.items():
@@ -72,7 +72,7 @@ def fix_complex_dependencies() -> None:
                     cwd=project_path,
                     capture_output=True,
                     text=True,
-                    timeout=60
+                    timeout=60,
                 )
 
                 if result.returncode == 0:
@@ -87,7 +87,7 @@ def fix_complex_dependencies() -> None:
                 cwd=project_path,
                 capture_output=True,
                 text=True,
-                timeout=120
+                timeout=120,
             )
 
             if lock_result.returncode == 0:

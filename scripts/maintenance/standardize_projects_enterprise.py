@@ -27,12 +27,18 @@ class ProjectStandardizer:
         self.workspace_root = workspace_root
         self.console = Console()
         self.template_pyproject = workspace_root / "pyproject-template.toml"
-        self.backup_dir = workspace_root / "backups" / f"standardization_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+        self.backup_dir = (
+            workspace_root
+            / "backups"
+            / f"standardization_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+        )
         self.backup_dir.mkdir(parents=True, exist_ok=True)
 
         # Load template
         if not self.template_pyproject.exists():
-            raise FileNotFoundError(f"Template não encontrado: {self.template_pyproject}")
+            raise FileNotFoundError(
+                f"Template não encontrado: {self.template_pyproject}"
+            )
 
         with open(self.template_pyproject, "rb") as f:
             self.template_config = tomli.load(f)
@@ -63,18 +69,26 @@ class ProjectStandardizer:
             "flx-meltano-enterprise",
             "client-a-oud-mig",
             "dc-code-analyzer",
-            "client-b-poc-oic-wms"
+            "client-b-poc-oic-wms",
         ]
 
         for project_name in known_projects:
             project_path = self.workspace_root / project_name
             pyproject_path = project_path / "pyproject.toml"
 
-            if project_path.exists() and project_path.is_dir() and pyproject_path.exists():
+            if (
+                project_path.exists()
+                and project_path.is_dir()
+                and pyproject_path.exists()
+            ):
                 projects.append(project_path)
-                self.console.print(f"✓ Projeto encontrado: [green]{project_name}[/green]")
+                self.console.print(
+                    f"✓ Projeto encontrado: [green]{project_name}[/green]"
+                )
             else:
-                self.console.print(f"⚠ Projeto não encontrado ou sem pyproject.toml: [yellow]{project_name}[/yellow]")
+                self.console.print(
+                    f"⚠ Projeto não encontrado ou sem pyproject.toml: [yellow]{project_name}[/yellow]"
+                )
 
         return projects
 
@@ -143,7 +157,9 @@ class ProjectStandardizer:
             self._replace_placeholders(new_config, project_name, project_module)
 
             # Preservar dependências específicas do projeto
-            self._preserve_project_dependencies(new_config, current_config, project_type)
+            self._preserve_project_dependencies(
+                new_config, current_config, project_type
+            )
 
             # Preservar scripts CLI se existirem
             self._preserve_cli_scripts(new_config, current_config)
@@ -152,16 +168,25 @@ class ProjectStandardizer:
             with open(pyproject_file, "w") as f:
                 toml.dump(new_config, f)
 
-            self.console.print(f"✓ pyproject.toml padronizado: [green]{project_name}[/green]")
+            self.console.print(
+                f"✓ pyproject.toml padronizado: [green]{project_name}[/green]"
+            )
             return True
 
         except Exception as e:
-            self.console.print(f"✗ Erro ao padronizar pyproject.toml em {project_path.name}: [red]{e}[/red]")
+            self.console.print(
+                f"✗ Erro ao padronizar pyproject.toml em {project_path.name}: [red]{e}[/red]"
+            )
             return False
 
-    def _replace_placeholders(self, config: dict[str, Any], project_name: str, project_module: str) -> None:
+    def _replace_placeholders(
+        self, config: dict[str, Any], project_name: str, project_module: str
+    ) -> None:
         """Substitui placeholders no template."""
-        def replace_recursive(obj: dict[str, Any] | list[Any] | str, replacements: dict[str, str]) -> dict[str, Any] | list[Any] | str:
+
+        def replace_recursive(
+            obj: dict[str, Any] | list[Any] | str, replacements: dict[str, str]
+        ) -> dict[str, Any] | list[Any] | str:
             if isinstance(obj, dict):
                 for key, value in obj.items():
                     obj[key] = replace_recursive(value, replacements)
@@ -179,7 +204,12 @@ class ProjectStandardizer:
 
         replace_recursive(config, replacements)
 
-    def _preserve_project_dependencies(self, new_config: dict[str, Any], current_config: dict[str, Any], project_type: str) -> None:
+    def _preserve_project_dependencies(
+        self,
+        new_config: dict[str, Any],
+        current_config: dict[str, Any],
+        project_type: str,
+    ) -> None:
         """Preserva dependências específicas do projeto."""
         if "tool" not in current_config or "poetry" not in current_config["tool"]:
             return
@@ -199,14 +229,20 @@ class ProjectStandardizer:
         elif project_type == "singer_target":
             new_config["tool"]["poetry"]["dependencies"]["singer-sdk"] = "^0.45.0"
         elif project_type.startswith("flx_"):
-            new_config["tool"]["poetry"]["dependencies"]["flx"] = {"path": "../flx", "develop": True}
+            new_config["tool"]["poetry"]["dependencies"]["flx"] = {
+                "path": "../flx",
+                "develop": True,
+            }
 
-    def _preserve_cli_scripts(self, new_config: dict[str, Any], current_config: dict[str, Any]) -> None:
+    def _preserve_cli_scripts(
+        self, new_config: dict[str, Any], current_config: dict[str, Any]
+    ) -> None:
         """Preserva scripts CLI existentes."""
-        if ("tool" in current_config and
-            "poetry" in current_config["tool"] and
-            "scripts" in current_config["tool"]["poetry"]):
-
+        if (
+            "tool" in current_config
+            and "poetry" in current_config["tool"]
+            and "scripts" in current_config["tool"]["poetry"]
+        ):
             scripts = current_config["tool"]["poetry"]["scripts"]
             if scripts:
                 new_config["tool"]["poetry"]["scripts"] = scripts
@@ -273,11 +309,15 @@ repos:
             with open(precommit_file, "w") as f:
                 f.write(precommit_config)
 
-            self.console.print(f"✓ .pre-commit-config.yaml criado: [green]{project_path.name}[/green]")
+            self.console.print(
+                f"✓ .pre-commit-config.yaml criado: [green]{project_path.name}[/green]"
+            )
             return True
 
         except Exception as e:
-            self.console.print(f"✗ Erro ao criar .pre-commit-config.yaml em {project_path.name}: [red]{e}[/red]")
+            self.console.print(
+                f"✗ Erro ao criar .pre-commit-config.yaml em {project_path.name}: [red]{e}[/red]"
+            )
             return False
 
     def install_precommit_hooks(self, project_path: Path) -> bool:
@@ -288,17 +328,23 @@ repos:
                 cwd=project_path,
                 capture_output=True,
                 text=True,
-                timeout=60
+                timeout=60,
             )
 
             if result.returncode == 0:
-                self.console.print(f"✓ Pre-commit hooks instalados: [green]{project_path.name}[/green]")
+                self.console.print(
+                    f"✓ Pre-commit hooks instalados: [green]{project_path.name}[/green]"
+                )
                 return True
-            self.console.print(f"⚠ Aviso ao instalar pre-commit em {project_path.name}: {result.stderr}")
+            self.console.print(
+                f"⚠ Aviso ao instalar pre-commit em {project_path.name}: {result.stderr}"
+            )
             return False
 
         except Exception as e:
-            self.console.print(f"✗ Erro ao instalar pre-commit em {project_path.name}: [red]{e}[/red]")
+            self.console.print(
+                f"✗ Erro ao instalar pre-commit em {project_path.name}: [red]{e}[/red]"
+            )
             return False
 
     def validate_project_quality_gates(self, project_path: Path) -> dict[str, bool]:
@@ -316,10 +362,7 @@ repos:
         # Verificar se poetry check passa
         try:
             result = subprocess.run(
-                ["poetry", "check"],
-                cwd=project_path,
-                capture_output=True,
-                timeout=30
+                ["poetry", "check"], cwd=project_path, capture_output=True, timeout=30
             )
             results["poetry_check"] = result.returncode == 0
         except Exception:
@@ -331,7 +374,7 @@ repos:
                 ["pre-commit", "run", "--all-files", "--dry-run"],
                 cwd=project_path,
                 capture_output=True,
-                timeout=60
+                timeout=60,
             )
             results["precommit_valid"] = result.returncode == 0
         except Exception:
@@ -341,7 +384,9 @@ repos:
 
     def run_standardization(self) -> None:
         """Executa o processo completo de padronização."""
-        self.console.print("\n[bold blue]🚀 PyAuto Enterprise Project Standardization[/bold blue]\n")
+        self.console.print(
+            "\n[bold blue]🚀 PyAuto Enterprise Project Standardization[/bold blue]\n"
+        )
 
         # Descobrir projetos
         projects = self.discover_real_projects()
@@ -376,7 +421,9 @@ repos:
             pyproject_ok = "✓" if self.standardize_pyproject_toml(project_path) else "✗"
 
             # Criar/atualizar pre-commit config
-            precommit_ok = "✓" if self.create_standard_precommit_config(project_path) else "✗"
+            precommit_ok = (
+                "✓" if self.create_standard_precommit_config(project_path) else "✗"
+            )
 
             # Instalar hooks
             hooks_ok = "✓" if self.install_precommit_hooks(project_path) else "⚠"
@@ -394,14 +441,16 @@ repos:
                 pyproject_ok,
                 precommit_ok,
                 hooks_ok,
-                validation_ok
+                validation_ok,
             )
 
         # Mostrar resultados
         self.console.print("\n")
         self.console.print(results_table)
 
-        self.console.print(f"\n[bold green]✅ Padronização concluída: {total_success}/{len(projects)} projetos[/bold green]")
+        self.console.print(
+            f"\n[bold green]✅ Padronização concluída: {total_success}/{len(projects)} projetos[/bold green]"
+        )
         self.console.print(f"[blue]📁 Backups salvos em: {self.backup_dir}[/blue]")
 
 

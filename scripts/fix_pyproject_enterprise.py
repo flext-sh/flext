@@ -30,10 +30,10 @@ class PyProjectEnterpriseStandardizer:
                 cwd=self.workspace_root,
                 capture_output=True,
                 text=True,
-                check=True
+                check=True,
             )
             submodules = []
-            for line in result.stdout.strip().split('\n'):
+            for line in result.stdout.strip().split("\n"):
                 if line:
                     parts = line.split()
                     if len(parts) >= 2:
@@ -89,16 +89,18 @@ class PyProjectEnterpriseStandardizer:
             for potential_path in [
                 project_path / module_name,
                 project_path / project_path.name,
-                project_path / "src" / project_path.name
+                project_path / "src" / project_path.name,
             ]:
                 if potential_path.exists():
-                    structure_issues.append(f"module_in_wrong_location:{potential_path}")
+                    structure_issues.append(
+                        f"module_in_wrong_location:{potential_path}"
+                    )
                     break
                 structure_issues.append("missing_module_directory")
 
         return {
             "issues": structure_issues,
-            "needs_reorganization": len(structure_issues) > 0
+            "needs_reorganization": len(structure_issues) > 0,
         }
 
     def reorganize_file_structure(self, project_path: Path) -> bool:
@@ -117,15 +119,21 @@ class PyProjectEnterpriseStandardizer:
             # Create tests/ directory if missing
             if not tests_dir.exists():
                 tests_dir.mkdir(exist_ok=True)
-                (tests_dir / "__init__.py").write_text('"""Tests for ' + project_path.name + '."""\n')
-                (tests_dir / "conftest.py").write_text('"""Test configuration."""\n\nimport pytest\n')
-                (tests_dir / f"test_{module_name}.py").write_text(f'"""Tests for {module_name}."""\n\n\ndef test_import():\n    """Test that module imports correctly."""\n    import {module_name}\n    assert {module_name}\n')
+                (tests_dir / "__init__.py").write_text(
+                    '"""Tests for ' + project_path.name + '."""\n'
+                )
+                (tests_dir / "conftest.py").write_text(
+                    '"""Test configuration."""\n\nimport pytest\n'
+                )
+                (tests_dir / f"test_{module_name}.py").write_text(
+                    f'"""Tests for {module_name}."""\n\n\ndef test_import():\n    """Test that module imports correctly."""\n    import {module_name}\n    assert {module_name}\n'
+                )
 
             # Move module to correct location
             wrong_locations = [
                 project_path / module_name,
                 project_path / project_path.name,
-                src_dir / project_path.name
+                src_dir / project_path.name,
             ]
 
             for wrong_location in wrong_locations:
@@ -210,12 +218,18 @@ MIT
             # Basic metadata
             poetry_config["name"] = project_name
             poetry_config["version"] = "0.5.0"
-            poetry_config["description"] = f"PyAuto Enterprise - {project_name} component"
+            poetry_config["description"] = (
+                f"PyAuto Enterprise - {project_name} component"
+            )
             poetry_config["authors"] = ["Marlon Costa <marlon.costa@datacosmos.com.br>"]
             poetry_config["license"] = "MIT"
             poetry_config["readme"] = "README.md"
-            poetry_config["repository"] = f"https://github.com/datacosmos-br/{project_name}"
-            poetry_config["documentation"] = f"https://github.com/datacosmos-br/{project_name}/blob/main/README.md"
+            poetry_config["repository"] = (
+                f"https://github.com/datacosmos-br/{project_name}"
+            )
+            poetry_config["documentation"] = (
+                f"https://github.com/datacosmos-br/{project_name}/blob/main/README.md"
+            )
             poetry_config["keywords"] = ["pyauto", "enterprise", "data", "integration"]
 
             # Classifiers
@@ -233,7 +247,7 @@ MIT
                 "Topic :: Software Development :: Libraries :: Python Modules",
                 "Topic :: Database",
                 "Topic :: System :: Systems Administration",
-                "Typing :: Typed"
+                "Typing :: Typed",
             ]
 
             # Package configuration
@@ -243,7 +257,7 @@ MIT
             poetry_config["dependencies"] = {
                 "python": "^3.9,<4.0",
                 "pydantic": "^2.11.0",
-                "typing-extensions": "^4.12.0"
+                "typing-extensions": "^4.12.0",
             }
 
             # Project-specific dependencies
@@ -259,15 +273,27 @@ MIT
 
             # Development dependencies
             poetry_config["group"] = {
-                "dev": {"dependencies": template["tool"]["poetry"]["group"]["dev"]["dependencies"]},
-                "security": {"dependencies": template["tool"]["poetry"]["group"]["security"]["dependencies"]},
-                "build": {"dependencies": template["tool"]["poetry"]["group"]["build"]["dependencies"]}
+                "dev": {
+                    "dependencies": template["tool"]["poetry"]["group"]["dev"][
+                        "dependencies"
+                    ]
+                },
+                "security": {
+                    "dependencies": template["tool"]["poetry"]["group"]["security"][
+                        "dependencies"
+                    ]
+                },
+                "build": {
+                    "dependencies": template["tool"]["poetry"]["group"]["build"][
+                        "dependencies"
+                    ]
+                },
             }
 
             # URLs
             poetry_config["urls"] = {
                 "Bug Tracker": f"https://github.com/datacosmos-br/{project_name}/issues",
-                "Changelog": f"https://github.com/datacosmos-br/{project_name}/blob/main/CHANGELOG.md"
+                "Changelog": f"https://github.com/datacosmos-br/{project_name}/blob/main/CHANGELOG.md",
             }
 
             # CLI scripts for taps/targets
@@ -280,14 +306,22 @@ MIT
                     config["tool"][tool_name] = tool_config.copy()
 
             # Update tool-specific configurations
-            if "ruff" in config["tool"] and "lint" in config["tool"]["ruff"] and "isort" in config["tool"]["ruff"]["lint"]:
-                config["tool"]["ruff"]["lint"]["isort"]["known-first-party"] = [module_name]
+            if (
+                "ruff" in config["tool"]
+                and "lint" in config["tool"]["ruff"]
+                and "isort" in config["tool"]["ruff"]["lint"]
+            ):
+                config["tool"]["ruff"]["lint"]["isort"]["known-first-party"] = [
+                    module_name
+                ]
 
             if "isort" in config["tool"]:
                 config["tool"]["isort"]["known_first_party"] = [module_name]
 
             if "coverage" in config["tool"] and "html" in config["tool"]["coverage"]:
-                config["tool"]["coverage"]["html"]["title"] = f"{project_name} Coverage Report"
+                config["tool"]["coverage"]["html"]["title"] = (
+                    f"{project_name} Coverage Report"
+                )
 
             # Replace PROJECT_MODULE placeholders
             config_str = toml.dumps(config)
@@ -303,7 +337,7 @@ MIT
                 shutil.copy2(pyproject_path, backup_path)
 
             # Write new configuration
-            with open(pyproject_path, 'w', encoding='utf-8') as f:
+            with open(pyproject_path, "w", encoding="utf-8") as f:
                 f.write(config_str)
 
             return True
@@ -322,7 +356,7 @@ MIT
                 cwd=project_path,
                 capture_output=True,
                 text=True,
-                timeout=30
+                timeout=30,
             )
 
             if result.returncode != 0:
@@ -331,11 +365,17 @@ MIT
             # Check if module imports
             module_name = self.get_project_module_name(project_path.name)
             result = subprocess.run(
-                ["poetry", "run", "python", "-c", f"import {module_name}; print('✅ Import successful')"],
+                [
+                    "poetry",
+                    "run",
+                    "python",
+                    "-c",
+                    f"import {module_name}; print('✅ Import successful')",
+                ],
                 cwd=project_path,
                 capture_output=True,
                 text=True,
-                timeout=10
+                timeout=10,
             )
 
             if result.returncode != 0:
@@ -375,7 +415,9 @@ MIT
 
         # Log to token
         with open(self.workspace_root / ".token", "a") as f:
-            f.write(f"PYPROJECT-ENTERPRISE-STANDARDIZATION: {len(self.fixed_projects)}/{len(self.submodules)} projects standardized\\n")
+            f.write(
+                f"PYPROJECT-ENTERPRISE-STANDARDIZATION: {len(self.fixed_projects)}/{len(self.submodules)} projects standardized\\n"
+            )
 
         if len(self.fixed_projects) == len(self.submodules):
             pass

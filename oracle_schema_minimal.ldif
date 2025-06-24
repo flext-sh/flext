@@ -1,0 +1,15 @@
+dn: cn=schema
+changetype: modify
+add: attributeTypes
+attributeTypes: ( 2.16.840.1.113894.746875.1.1.1 NAME 'orclaci' DESC 'Oracle Access Control Information' EQUALITY caseIgnoreMatch SUBSTR caseIgnoreSubstringsMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
+attributeTypes: ( 2.16.840.1.113894.746875.1.1.2 NAME 'orclentrylevelaci' DESC 'Oracle Entry Level Access Control Information' EQUALITY caseIgnoreMatch SUBSTR caseIgnoreSubstringsMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
+attributeTypes: ( 2.16.840.1.113894.746875.1.1.3 NAME 'orclcommonname' DESC 'Oracle Common Name' EQUALITY caseIgnoreMatch SUBSTR caseIgnoreSubstringsMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
+attributeTypes: ( 2.16.840.1.113894.746875.1.1.4 NAME 'orclguid' DESC 'Oracle GUID' EQUALITY caseIgnoreMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
+-
+add: objectClasses
+objectClasses: ( 2.16.840.1.113894.746875.2.1.1 NAME 'orclcontainerOC' DESC 'Oracle Container Object Class' SUP top STRUCTURAL MUST ( cn ) MAY ( orclaci $ orclentrylevelaci $ orclcommonname ) )
+objectClasses: ( 2.16.840.1.113894.746875.2.1.2 NAME 'orclDASAppContainer' DESC 'Oracle DAS Application Container' SUP top STRUCTURAL MUST ( cn ) MAY ( orclaci $ orclentrylevelaci ) )
+objectClasses: ( 2.16.840.1.113894.746875.2.1.3 NAME 'orclDASConfigAttr' DESC 'Oracle DAS Configuration Attribute' SUP top STRUCTURAL MUST ( cn ) MAY ( orclaci $ orclentrylevelaci ) )
+objectClasses: ( 2.16.840.1.113894.746875.2.1.4 NAME 'orclDASsubscribercontainer' DESC 'Oracle DAS Subscriber Container' SUP top STRUCTURAL MUST ( cn ) MAY ( orclaci $ orclentrylevelaci ) )
+objectClasses: ( 2.16.840.1.113894.746875.2.1.5 NAME 'orclAuxiliaryGUID' DESC 'Oracle Auxiliary GUID' SUP top AUXILIARY MAY ( orclguid $ orclaci ) )
+-

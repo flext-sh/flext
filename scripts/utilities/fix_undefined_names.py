@@ -111,9 +111,7 @@ def fix_common_imports(file_path: Path, undefined_names: list[str]) -> bool:
     return modified
 
 
-def fix_flx_module_imports(
-        file_path: Path,
-        undefined_names: list[str]) -> bool:
+def fix_flx_module_imports(file_path: Path, undefined_names: list[str]) -> bool:
     """Fix imports for FLX framework modules."""
     content = file_path.read_text()
     modified = False
@@ -184,9 +182,7 @@ def fix_flx_module_imports(
     return modified
 
 
-def fix_forward_references(
-        file_path: Path,
-        undefined_names: list[str]) -> bool:
+def fix_forward_references(file_path: Path, undefined_names: list[str]) -> bool:
     """Fix forward reference issues in type annotations."""
     content = file_path.read_text()
     modified = False
@@ -223,9 +219,7 @@ def fix_forward_references(
     return modified
 
 
-def fix_variable_definitions(
-        file_path: Path,
-        undefined_names: list[str]) -> bool:
+def fix_variable_definitions(file_path: Path, undefined_names: list[str]) -> bool:
     """Fix undefined variables by adding proper definitions."""
     content = file_path.read_text()
     modified = False

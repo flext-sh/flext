@@ -50,44 +50,44 @@ class TypeAnnotationFixModule(CustomFixModule):
 
         return issues
 
-    def _check_function(
-            self,
-            node: ast.FunctionDef,
-            content: str) -> list[Issue]:
+    def _check_function(self, node: ast.FunctionDef, content: str) -> list[Issue]:
         """Check function for missing annotations."""
         issues: list = []
-        lines = content.split('\n')
+        lines = content.split("\n")
 
         # Check return annotation
         if node.returns is None and node.name != "__init__":
             if node.lineno <= len(lines):
-                issues.append(Issue(
-                    line=node.lineno,
-                    column=node.col_offset,
-                    message=f"Function '{node.name}' missing return type annotation",
-                    severity="warning",
-                    fix_description="Add return type annotation",
-                    original_line=lines[node.lineno - 1],
-                    fixed_line=self._add_return_type(lines[node.lineno - 1], node.name)
-                ))
+                issues.append(
+                    Issue(
+                        line=node.lineno,
+                        column=node.col_offset,
+                        message=f"Function '{node.name}' missing return type annotation",
+                        severity="warning",
+                        fix_description="Add return type annotation",
+                        original_line=lines[node.lineno - 1],
+                        fixed_line=self._add_return_type(
+                            lines[node.lineno - 1], node.name
+                        ),
+                    )
+                )
 
         # Check parameter annotations
         for arg in node.args.args:
-            if arg.annotation is None and arg.arg != 'self' and arg.arg != 'cls':
-                issues.append(Issue(
-                    line=node.lineno,
-                    column=node.col_offset,
-                    message=f"Parameter '{arg.arg}' missing type annotation",
-                    severity="warning",
-                    fix_description="Add parameter type annotation"
-                ))
+            if arg.annotation is None and arg.arg != "self" and arg.arg != "cls":
+                issues.append(
+                    Issue(
+                        line=node.lineno,
+                        column=node.col_offset,
+                        message=f"Parameter '{arg.arg}' missing type annotation",
+                        severity="warning",
+                        fix_description="Add parameter type annotation",
+                    )
+                )
 
         return issues
 
-    def _check_variable(
-            self,
-            node: ast.AnnAssign,
-            content: str) -> list[Issue]:
+    def _check_variable(self, node: ast.AnnAssign, content: str) -> list[Issue]:
         """Check variable assignments."""
         return []
 
@@ -97,16 +97,16 @@ class TypeAnnotationFixModule(CustomFixModule):
     def _check_patterns(self, content: str) -> list[Issue]:
         """Check for patterns that need type annotations."""
         issues: list = []
-        lines = content.split('\n')
+        lines = content.split("\n")
 
         # Pattern: variable = []  (should be: variable: list = [])
-        list_pattern = re.compile(r'^(\s*)(\w+)\s*=\s*\[\]')
+        list_pattern = re.compile(r"^(\s*)(\w+)\s*=\s*\[\]")
 
         # Pattern: variable = {}  (should be: variable: dict = {})
-        dict_pattern = re.compile(r'^(\s*)(\w+)\s*=\s*\{\}')
+        dict_pattern = re.compile(r"^(\s*)(\w+)\s*=\s*\{\}")
 
         # Pattern: variable = set()  (should be: variable: set = set())
-        set_pattern = re.compile(r'^(\s*)(\w+)\s*=\s*set\(\)')
+        set_pattern = re.compile(r"^(\s*)(\w+)\s*=\s*set\(\)")
 
         for i, line in enumerate(lines, 1):
             # Check list pattern
@@ -120,20 +120,24 @@ class TypeAnnotationFixModule(CustomFixModule):
                         severity="warning",
                         fix_description="Add list type annotation",
                         original_line=line,
-                        fixed_line=f"{indent}{var_name}: list = []"))
+                        fixed_line=f"{indent}{var_name}: list = []",
+                    )
+                )
 
             # Check dict pattern
             match = dict_pattern.match(line)
             if match:
                 indent, var_name = match.groups()
-                issues.append(Issue(
-                    line=i,
-                    message=f"Variable '{var_name}' should have type annotation",
-                    severity="warning",
-                    fix_description="Add dict type annotation",
-                    original_line=line,
-                    fixed_line=f"{indent}{var_name}: dict = {{}}"
-                ))
+                issues.append(
+                    Issue(
+                        line=i,
+                        message=f"Variable '{var_name}' should have type annotation",
+                        severity="warning",
+                        fix_description="Add dict type annotation",
+                        original_line=line,
+                        fixed_line=f"{indent}{var_name}: dict = {{}}",
+                    )
+                )
 
             # Check set pattern
             match = set_pattern.match(line)
@@ -146,7 +150,9 @@ class TypeAnnotationFixModule(CustomFixModule):
                         severity="warning",
                         fix_description="Add set type annotation",
                         original_line=line,
-                        fixed_line=f"{indent}{var_name}: set = set()"))
+                        fixed_line=f"{indent}{var_name}: set = set()",
+                    )
+                )
 
         return issues
 
@@ -155,14 +161,14 @@ class TypeAnnotationFixModule(CustomFixModule):
         # Simple heuristic - add -> None before the colon
         if " -> " not in line:
             # Find the closing parenthesis and colon
-            match = re.search(r'\)\s*:', line)
+            match = re.search(r"\)\s*:", line)
             if match:
-                return line[:match.start()] + ") -> None:" + line[match.end():]
+                return line[: match.start()] + ") -> None:" + line[match.end() :]
         return line
 
     def apply_fixes(self, content: str, issues: list[Issue]) -> str:
         """Apply type annotation fixes."""
-        lines = content.split('\n')
+        lines = content.split("\n")
 
         # Sort issues by line number in reverse order to avoid offset issues
         sorted_issues = sorted(issues, key=lambda x: x.line, reverse=True)
@@ -171,7 +177,7 @@ class TypeAnnotationFixModule(CustomFixModule):
             if issue.fixed_line and 0 < issue.line <= len(lines):
                 lines[issue.line - 1] = issue.fixed_line
 
-        return '\n'.join(lines)
+        return "\n".join(lines)
 
     def validate_fixes(self, original: str, fixed: str) -> bool:
         """Validate that fixes maintain valid Python syntax."""
@@ -189,7 +195,7 @@ class TypeAnnotationFixModule(CustomFixModule):
 # Example usage and testing
 if __name__ == "__main__":
     # Test code
-    test_content = '''
+    test_content = """
 def calculate_total(items, tax_rate):
     total = 0
     for item in items:
@@ -210,7 +216,7 @@ class ShoppingCart:
 empty_list: list = []
 empty_dict: dict = {}
 empty_set: set = set()
-'''
+"""
 
     # Run fixer in dry-run mode
     fixer = TypeAnnotationFixModule(dry_run=True, verbose=True)
@@ -218,7 +224,7 @@ empty_set: set = set()
     # Create temporary file
     from tempfile import NamedTemporaryFile
 
-    with NamedTemporaryFile(mode='w', suffix='.py', delete=False) as f:
+    with NamedTemporaryFile(mode="w", suffix=".py", delete=False) as f:
         f.write(test_content)
         temp_path = Path(f.name)
 

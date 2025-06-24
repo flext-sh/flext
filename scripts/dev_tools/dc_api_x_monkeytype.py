@@ -75,10 +75,8 @@ def generate_stub(module) -> Any:
 
 def main() -> None:
     """Main entry point."""
-    parser = argparse.ArgumentParser(
-        description="MonkeyType utility for DCApiX")
-    subparsers = parser.add_subparsers(
-        dest="command", help="Command to execute")
+    parser = argparse.ArgumentParser(description="MonkeyType utility for DCApiX")
+    subparsers = parser.add_subparsers(dest="command", help="Command to execute")
     subparsers.required = True
 
     # Run command
@@ -89,13 +87,11 @@ def main() -> None:
     subparsers.add_parser("list", help="List modules with type information")
 
     # Apply command
-    apply_parser = subparsers.add_parser(
-        "apply", help="Apply types to a module")
+    apply_parser = subparsers.add_parser("apply", help="Apply types to a module")
     apply_parser.add_argument("--module", required=True, help="Module path")
 
     # Stub command
-    stub_parser = subparsers.add_parser(
-        "stub", help="Generate stub for a module")
+    stub_parser = subparsers.add_parser("stub", help="Generate stub for a module")
     stub_parser.add_argument("--module", required=True, help="Module path")
 
     args = parser.parse_args()

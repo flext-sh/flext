@@ -48,8 +48,9 @@ def find_class_duplications() -> bool:
     # Report findings
     violations = 0
 
-    duplicate_adapters = {name: files for name,
-                          files in adapter_classes.items() if len(files) > 1}
+    duplicate_adapters = {
+        name: files for name, files in adapter_classes.items() if len(files) > 1
+    }
     if duplicate_adapters:
         for class_name, files in duplicate_adapters.items():
             for file_path in files:
@@ -85,8 +86,7 @@ def find_class_duplications() -> bool:
 
     dead_files: list[str] = []
     for pattern in dead_code_patterns:
-        dead_files.extend(str(dead_file)
-                          for dead_file in src_dir.rglob(pattern))
+        dead_files.extend(str(dead_file) for dead_file in src_dir.rglob(pattern))
 
     if dead_files:
         for file_path in dead_files:
@@ -125,7 +125,8 @@ def check_standardization() -> bool:
             ]
 
             missing_patterns = [
-                pattern for pattern in required_patterns if pattern not in content]
+                pattern for pattern in required_patterns if pattern not in content
+            ]
 
             if missing_patterns:
                 for _pattern in missing_patterns:

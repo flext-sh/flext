@@ -27,8 +27,7 @@ def test_api() -> Any:
                         routes.append(f"{method} {route.path}")
 
         # Show some example routes
-        plugin_routes = [
-            r for r in routes if "/database/" in r or "/monitoring/" in r]
+        plugin_routes = [r for r in routes if "/database/" in r or "/monitoring/" in r]
 
         if plugin_routes:
             for route in plugin_routes[:5]:

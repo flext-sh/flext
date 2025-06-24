@@ -144,8 +144,7 @@ def analyze_file(file_path: Path) -> QualityMetrics:
         analyzer = ComplexityAnalyzer()
         analyzer.visit(tree)
 
-        lines_of_code = len(
-            [line for line in content.splitlines() if line.strip()])
+        lines_of_code = len([line for line in content.splitlines() if line.strip()])
 
         return QualityMetrics(
             file_path=str(file_path),
@@ -213,8 +212,7 @@ def generate_report(metrics: list[QualityMetrics]) -> dict[str, Any]:
         if m.max_function_complexity > 15 or m.cyclomatic_complexity > 50
     ]
 
-    high_parameter_files = [
-        m for m in metrics if m.max_function_parameters > 6]
+    high_parameter_files = [m for m in metrics if m.max_function_parameters > 6]
 
     high_return_files = [m for m in metrics if m.max_function_returns > 6]
 
@@ -258,8 +256,7 @@ def compare_with_baseline(
 ) -> tuple[bool, dict[str, Any]]:
     """Compare current metrics with baseline."""
     if not baseline_file.exists():
-        print(
-            f"Baseline file {baseline_file} not found. Creating new baseline.")
+        print(f"Baseline file {baseline_file} not found. Creating new baseline.")
         save_baseline(current_metrics, baseline_file)
         return True, {}
 
@@ -301,8 +298,7 @@ def compare_with_baseline(
 
 def main() -> None:
     """Main function."""
-    parser = argparse.ArgumentParser(
-        description="Monitor code quality metrics")
+    parser = argparse.ArgumentParser(description="Monitor code quality metrics")
     parser.add_argument("directory", type=Path, help="Directory to analyze")
     parser.add_argument(
         "--baseline",
@@ -320,10 +316,7 @@ def main() -> None:
         action="store_true",
         help="Check against baseline and exit with error if regression",
     )
-    parser.add_argument(
-        "--report",
-        type=Path,
-        help="Save detailed report to file")
+    parser.add_argument("--report", type=Path, help="Save detailed report to file")
 
     args = parser.parse_args()
 
@@ -347,13 +340,12 @@ def main() -> None:
     print(f"Total complexity: {report['summary']['total_complexity']}")
     print(
         f"Average complexity per file: {
-            report['summary']['average_complexity_per_file']:.2f}",
+            report['summary']['average_complexity_per_file']:.2f
+        }",
     )
 
     print("\n=== Issues ===")
-    print(
-        f"High complexity files: {
-            report['issues']['high_complexity_files']}")
+    print(f"High complexity files: {report['issues']['high_complexity_files']}")
     print(f"High parameter files: {report['issues']['high_parameter_files']}")
     print(f"High return files: {report['issues']['high_return_files']}")
 
@@ -375,13 +367,15 @@ def main() -> None:
             print(f"Complexity change: {comparison['complexity_change']}")
             print(
                 f"High complexity files change: {
-                    comparison['high_complexity_files_change']}", )
+                    comparison['high_complexity_files_change']
+                }",
+            )
             print(
                 f"High parameter files change: {
-                    comparison['high_parameter_files_change']}", )
-            print(
-                f"High return files change: {
-                    comparison['high_return_files_change']}")
+                    comparison['high_parameter_files_change']
+                }",
+            )
+            print(f"High return files change: {comparison['high_return_files_change']}")
             sys.exit(1)
             print("\n✅ Quality check passed!")
 

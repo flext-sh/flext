@@ -74,8 +74,9 @@ def fix_specific_files() -> None:
                 # Insert after __init__ method
                 init_end = class_def.rfind("\n\n")
                 if init_end > 0:
-                    new_class = (class_def[:init_end] +
-                                 new_methods + class_def[init_end:])
+                    new_class = (
+                        class_def[:init_end] + new_methods + class_def[init_end:]
+                    )
                     content = content.replace(class_def, new_class)
 
                     # Also add time import if not present
@@ -137,14 +138,14 @@ class {class_name}(FlxStrictModel):
             # Add enum import if needed
             if "from enum import" not in content:
                 content = content.replace(
-                    "from typing import",
-                    "from enum import Enum\nfrom typing import")
+                    "from typing import", "from enum import Enum\nfrom typing import"
+                )
 
             content += new_classes
             shutdown_metrics.write_text(content)
             print(
-                f"Added {
-                    len(missing_classes)} missing classes to shutdown_metrics.py")
+                f"Added {len(missing_classes)} missing classes to shutdown_metrics.py"
+            )
 
 
 def main() -> None:

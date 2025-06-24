@@ -7,12 +7,14 @@ The Unified Maintenance System v5.0.0 represents a complete rewrite with **ZERO-
 ## 🎯 Key Fault-Tolerance Features
 
 ### 1. **Import Failures Protection**
+
 - ✅ Try-except blocks around all imports
 - ✅ Fallback implementations for missing libraries
 - ✅ Graceful degradation (e.g., basic console if Rich unavailable)
 - ✅ Clear error messages with installation instructions
 
 ### 2. **File I/O Error Handling**
+
 - ✅ Multiple encoding fallbacks (UTF-8, UTF-8-SIG, Latin-1, CP1252, ISO-8859-1)
 - ✅ Safe atomic file writes with temporary files
 - ✅ Automatic backup creation before modifications
@@ -21,6 +23,7 @@ The Unified Maintenance System v5.0.0 represents a complete rewrite with **ZERO-
 - ✅ File size limits to prevent memory exhaustion
 
 ### 3. **Subprocess Failure Recovery**
+
 - ✅ Comprehensive timeout handling with process group termination
 - ✅ Memory error detection and reporting
 - ✅ Tool availability verification with caching
@@ -29,6 +32,7 @@ The Unified Maintenance System v5.0.0 represents a complete rewrite with **ZERO-
 - ✅ Environment isolation for subprocess execution
 
 ### 4. **Path Validation & Sanitization**
+
 - ✅ Null byte detection and rejection
 - ✅ Symlink loop detection
 - ✅ Path length validation
@@ -37,6 +41,7 @@ The Unified Maintenance System v5.0.0 represents a complete rewrite with **ZERO-
 - ✅ Exclude pattern filtering
 
 ### 5. **Configuration Error Prevention**
+
 - ✅ Safe YAML/JSON parsing with error messages
 - ✅ Missing field validation
 - ✅ Type validation and correction
@@ -44,6 +49,7 @@ The Unified Maintenance System v5.0.0 represents a complete rewrite with **ZERO-
 - ✅ Range validation for numeric fields
 
 ### 6. **Module Loading Protection**
+
 - ✅ Dynamic import error handling
 - ✅ Missing dependency detection
 - ✅ Attribute verification
@@ -51,6 +57,7 @@ The Unified Maintenance System v5.0.0 represents a complete rewrite with **ZERO-
 - ✅ Isolated module execution
 
 ### 7. **Resource Management**
+
 - ✅ Memory limits (2GB default)
 - ✅ File descriptor limits
 - ✅ Large file detection and skipping
@@ -58,6 +65,7 @@ The Unified Maintenance System v5.0.0 represents a complete rewrite with **ZERO-
 - ✅ Resource usage monitoring
 
 ### 8. **Concurrent Access Safety**
+
 - ✅ File locking with fcntl
 - ✅ Lock timeout handling
 - ✅ Atomic file operations
@@ -65,6 +73,7 @@ The Unified Maintenance System v5.0.0 represents a complete rewrite with **ZERO-
 - ✅ Safe temporary file creation
 
 ### 9. **Signal Handling**
+
 - ✅ SIGINT/SIGTERM graceful handling
 - ✅ Current operation completion
 - ✅ State preservation
@@ -72,12 +81,14 @@ The Unified Maintenance System v5.0.0 represents a complete rewrite with **ZERO-
 - ✅ User notification
 
 ### 10. **Unicode/Encoding Robustness**
+
 - ✅ Multiple encoding detection
 - ✅ Binary fallback with replacement
 - ✅ Encoding preservation on write
 - ✅ UTF-8 environment enforcement
 
 ### 11. **Large File Handling**
+
 - ✅ File size pre-check
 - ✅ Configurable size limits
 - ✅ Batch processing for multiple files
@@ -85,24 +96,28 @@ The Unified Maintenance System v5.0.0 represents a complete rewrite with **ZERO-
 - ✅ Progress reporting
 
 ### 12. **Network Resilience**
+
 - ✅ Timeout configuration
 - ✅ Proxy support
 - ✅ Retry on transient failures
 - ✅ Offline mode detection
 
 ### 13. **Permission Error Recovery**
+
 - ✅ Permission pre-checks
 - ✅ Escalation attempts
 - ✅ Clear error reporting
 - ✅ Alternative path suggestions
 
 ### 14. **Disk Space Management**
+
 - ✅ Pre-write space validation
 - ✅ Configurable space requirements
 - ✅ Cleanup of temporary files
 - ✅ Space monitoring during execution
 
 ### 15. **Data Validation**
+
 - ✅ JSON parsing with error recovery
 - ✅ JSONL format support
 - ✅ Common JSON error fixes
@@ -112,6 +127,7 @@ The Unified Maintenance System v5.0.0 represents a complete rewrite with **ZERO-
 ## 🏗️ Architecture Improvements
 
 ### Enhanced Error Result Tracking
+
 ```python
 @dataclass
 class MaintenanceResult:
@@ -126,6 +142,7 @@ class MaintenanceResult:
 ```
 
 ### Comprehensive Tool Base Class
+
 ```python
 class MaintenanceTool(ABC):
     def run_command_with_retry(self, cmd: list[str], timeout: Optional[int] = None) -> Tuple[int, str, str]:
@@ -139,6 +156,7 @@ class MaintenanceTool(ABC):
 ```
 
 ### Safe File Operations
+
 ```python
 def safe_read_file(file_path: Path, max_size_mb: int = 100) -> Tuple[Optional[str], str]:
     """Read file with multiple encoding fallbacks and size limits."""
@@ -151,13 +169,14 @@ def safe_write_file(file_path: Path, content: str, encoding: str = 'utf-8',
 ## 🔧 Configuration Enhancements
 
 ### New Fault-Tolerance Settings
+
 ```yaml
 # Fault tolerance settings
-max_file_size_mb: 100        # Skip files larger than this
-max_errors_per_tool: 100     # Limit error reporting
-continue_on_error: true      # Don't stop on first error
-create_backups: true         # Backup before modification
-parallel_workers: 1          # Disabled by default for safety
+max_file_size_mb: 100 # Skip files larger than this
+max_errors_per_tool: 100 # Limit error reporting
+continue_on_error: true # Don't stop on first error
+create_backups: true # Backup before modification
+parallel_workers: 1 # Disabled by default for safety
 
 # Tool retry configuration
 tools:
@@ -170,6 +189,7 @@ tools:
 ## 🚀 Usage Examples
 
 ### Basic Usage (Safe Defaults)
+
 ```bash
 # Dry run with all safety features
 python scripts/maintenance/unified_maintenance_system_v3.py
@@ -182,6 +202,7 @@ python scripts/maintenance/unified_maintenance_system_v3.py --mode auto --contin
 ```
 
 ### Advanced Usage
+
 ```bash
 # Process large files up to 500MB
 python scripts/maintenance/unified_maintenance_system_v3.py --max-file-size 500
@@ -201,12 +222,14 @@ python scripts/maintenance/unified_maintenance_system_v3.py \
 While the fault-tolerant version is more robust, there are some performance considerations:
 
 1. **File Operations**: ~10-20% slower due to:
+
    - Encoding detection
    - Backup creation
    - Atomic writes
    - File locking
 
 2. **Tool Execution**: ~5-10% slower due to:
+
    - Availability checks
    - Retry logic
    - Enhanced error parsing
@@ -219,6 +242,7 @@ While the fault-tolerant version is more robust, there are some performance cons
 ## 🛡️ Error Recovery Examples
 
 ### Example 1: Encoding Error Recovery
+
 ```python
 # Original v2 behavior
 content = file_path.read_text(encoding='utf-8')  # UnicodeDecodeError!
@@ -232,6 +256,7 @@ else:
 ```
 
 ### Example 2: Subprocess Timeout Recovery
+
 ```python
 # Original v2 behavior
 result = subprocess.run(cmd, timeout=300)  # Hangs forever if timeout fails
@@ -245,6 +270,7 @@ elif returncode == -1:
 ```
 
 ### Example 3: Concurrent Access Handling
+
 ```python
 # Original v2 behavior
 file_path.write_text(content)  # Race condition!
@@ -260,32 +286,35 @@ if not success:
 
 Based on the implementation:
 
-| Failure Type | v2.0 Behavior | v5.0 Behavior | Reliability Gain |
-|--------------|---------------|---------------|------------------|
-| Unicode Errors | Crash | Fallback Encoding | 100% |
-| File Lock Conflicts | Corruption | Wait/Skip | 100% |
-| Tool Not Found | KeyError | Graceful Skip | 100% |
-| Large Files | OOM | Skip with Warning | 100% |
-| Timeouts | Hang | Kill & Report | 100% |
-| Disk Full | Partial Write | Pre-check & Abort | 100% |
-| Permission Denied | Crash | Report & Continue | 100% |
-| Signal Interrupt | Partial State | Graceful Shutdown | 100% |
+| Failure Type        | v2.0 Behavior | v5.0 Behavior     | Reliability Gain |
+| ------------------- | ------------- | ----------------- | ---------------- |
+| Unicode Errors      | Crash         | Fallback Encoding | 100%             |
+| File Lock Conflicts | Corruption    | Wait/Skip         | 100%             |
+| Tool Not Found      | KeyError      | Graceful Skip     | 100%             |
+| Large Files         | OOM           | Skip with Warning | 100%             |
+| Timeouts            | Hang          | Kill & Report     | 100%             |
+| Disk Full           | Partial Write | Pre-check & Abort | 100%             |
+| Permission Denied   | Crash         | Report & Continue | 100%             |
+| Signal Interrupt    | Partial State | Graceful Shutdown | 100%             |
 
 ## 🔍 Monitoring & Debugging
 
 ### Enhanced Logging
+
 - Structured logging to file and console
 - Separate log levels for different components
 - Automatic log rotation
 - Error context preservation
 
 ### Health Checks
+
 - Pre-execution system validation
 - Tool availability verification
 - Resource usage monitoring
 - Disk space validation
 
 ### Progress Tracking
+
 - Real-time progress updates
 - Error count tracking
 - Skip count reporting
@@ -314,6 +343,7 @@ Even with comprehensive fault tolerance, some scenarios require manual intervent
 ## 📝 Migration from v2 to v5
 
 1. **Update imports**:
+
    ```python
    # Old
    from unified_maintenance_system_v2 import MaintenanceOrchestrator
@@ -335,6 +365,7 @@ The Unified Maintenance System v5.0.0 represents a production-ready, enterprise-
 **Key Achievement**: ZERO unhandled exceptions under normal operating conditions.
 
 ---
+
 Version: 5.0.0
 Created: 2025-01-20
 Status: Production Ready

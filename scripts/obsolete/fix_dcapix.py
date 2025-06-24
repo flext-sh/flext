@@ -125,8 +125,7 @@ def flx_auth_token_valid(file_path: Path) -> int:
         def replacement(m) -> Any:
             return m.group(0).replace("return ", "        return ")
 
-        modified_content = re.sub(
-            pattern, replacement, content, flags=re.DOTALL)
+        modified_content = re.sub(pattern, replacement, content, flags=re.DOTALL)
 
         # Write the modified content back if changes were made
         if modified_content != content:
@@ -153,8 +152,7 @@ def flx_is_authenticated_method(file_path: Path) -> int:
         def replacement(m) -> Any:
             return m.group(0).replace("return ", "        return ")
 
-        modified_content = re.sub(
-            pattern, replacement, content, flags=re.DOTALL)
+        modified_content = re.sub(pattern, replacement, content, flags=re.DOTALL)
 
         # Write the modified content back if changes were made
         if modified_content != content:
@@ -181,8 +179,7 @@ def flx_validate_token_method(file_path: Path) -> int:
         def replacement(m) -> Any:
             return m.group(0).replace("return ", "        return ")
 
-        modified_content = re.sub(
-            pattern, replacement, content, flags=re.DOTALL)
+        modified_content = re.sub(pattern, replacement, content, flags=re.DOTALL)
 
         # Write the modified content back if changes were made
         if modified_content != content:

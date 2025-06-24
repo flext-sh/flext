@@ -100,7 +100,10 @@ def flx_generic_type_params(file_path: Path) -> dict[str, int]:
     fixes: dict = {}
 
     # Add the necessary import if it's not already there
-    if "from typing import Optional, Any" not in content and "from typing import Optional, " in content:
+    if (
+        "from typing import Optional, Any" not in content
+        and "from typing import Optional, " in content
+    ):
         # Find any typing import
         typing_import_match = re.search(
             r"from typing import Optional, (.*?)$", content, re.MULTILINE
@@ -112,8 +115,7 @@ def flx_generic_type_params(file_path: Path) -> dict[str, int]:
                 if new_imports.endswith(","):
                     new_imports += " Any"
                     new_imports += ", Any"
-                modified_content = modified_content.replace(
-                    imports, new_imports)
+                modified_content = modified_content.replace(imports, new_imports)
                 fixes["typing_import"] = 1
 
     # Apply all patterns
@@ -136,9 +138,9 @@ def flx_generic_type_params(file_path: Path) -> dict[str, int]:
             type_var = type_var.strip()
             if type_var and "TypeVar" not in content:
                 # Add type var with bound if needed
-                type_var_def = f"\n{
-                    match.group(1)}# Define TypeVar with proper bound\n{
-                    match.group(1)}{type_var} = TypeVar('{type_var}', bound=BaseModel)\n"
+                type_var_def = f"\n{match.group(1)}# Define TypeVar with proper bound\n{
+                    match.group(1)
+                }{type_var} = TypeVar('{type_var}', bound=BaseModel)\n"
                 # Add this before the class definition
                 class_start = match.start()
                 modified_content = (
@@ -152,7 +154,10 @@ def flx_generic_type_params(file_path: Path) -> dict[str, int]:
                     if "from typing import Optional, " in modified_content:
                         # Add to existing import
                         typing_import_match = re.search(
-                            r"from typing import Optional, (.*?)$", modified_content, re.MULTILINE)
+                            r"from typing import Optional, (.*?)$",
+                            modified_content,
+                            re.MULTILINE,
+                        )
                         if typing_import_match:
                             imports = typing_import_match.group(1)
                             new_imports = imports.strip()
@@ -162,14 +167,12 @@ def flx_generic_type_params(file_path: Path) -> dict[str, int]:
                             modified_content = modified_content.replace(
                                 imports, new_imports
                             )
-                            fixes["typing_import"] = fixes.get(
-                                "typing_import", 0) + 1
+                            fixes["typing_import"] = fixes.get("typing_import", 0) + 1
                         # Add new import at the top of the file
                         modified_content = (
                             "from typing import Optional, TypeVar\n" + modified_content
                         )
-                        fixes["typing_import"] = fixes.get(
-                            "typing_import", 0) + 1
+                        fixes["typing_import"] = fixes.get("typing_import", 0) + 1
 
     # Write the modified content back if changes were made
     if fixes:

@@ -28,10 +28,10 @@ class RuffFixer:
                 cwd=self.workspace_root,
                 capture_output=True,
                 text=True,
-                check=True
+                check=True,
             )
             submodules: list = []
-            for line in result.stdout.strip().split('\n'):
+            for line in result.stdout.strip().split("\n"):
                 if line:
                     parts = line.split()
                     if len(parts) >= 2:
@@ -47,11 +47,10 @@ class RuffFixer:
                 ["poetry", "run", "ruff", "check", ".", "--quiet"],
                 cwd=project_path,
                 capture_output=True,
-                text=True
+                text=True,
             )
             # Count lines in output
-            return len(
-                [line for line in result.stdout.split('\n') if line.strip()])
+            return len([line for line in result.stdout.split("\n") if line.strip()])
         except Exception:
             return 0
 
@@ -67,7 +66,7 @@ class RuffFixer:
                 ["poetry", "run", "ruff", "check", ".", "--fix", "--unsafe-fixes"],
                 cwd=project_path,
                 capture_output=True,
-                text=True
+                text=True,
             )
 
             # Count after
@@ -87,7 +86,7 @@ class RuffFixer:
                 ["poetry", "run", "isort", ".", "--profile", "black"],
                 cwd=project_path,
                 capture_output=True,
-                text=True
+                text=True,
             )
             return 1
         except Exception:
@@ -105,7 +104,7 @@ class RuffFixer:
 
             try:
                 content = py_file.read_text()
-                lines = content.split('\n')
+                lines = content.split("\n")
                 new_lines: list = []
                 modified = False
 
@@ -113,29 +112,33 @@ class RuffFixer:
                     new_lines.append(line)
 
                     # Add module docstring if missing
-                    if i == 0 and not content.startswith(
-                            '"""') and not content.startswith("'''"):
-                        if not line.startswith('#'):
-                            new_lines.insert(
-                                0, f'"""Module {
-                                    py_file.stem}."""\n')
+                    if (
+                        i == 0
+                        and not content.startswith('"""')
+                        and not content.startswith("'''")
+                    ):
+                        if not line.startswith("#"):
+                            new_lines.insert(0, f'"""Module {py_file.stem}."""\n')
                             modified = True
                             fixed_count += 1
 
                     # Add function/class docstrings if missing
-                    if line.strip().startswith(('def ', 'class ')) and line.strip().endswith(':'):
+                    if line.strip().startswith(
+                        ("def ", "class ")
+                    ) and line.strip().endswith(":"):
                         # Check if next line has docstring
                         if i + 1 < len(lines):
                             next_line = lines[i + 1].strip()
                             if not (next_line.startswith(('"""', "'''"))):
                                 indent = len(line) - len(line.lstrip())
                                 new_lines.append(
-                                    ' ' * (indent + 4) + '"""TODO: Add docstring."""')
+                                    " " * (indent + 4) + '"""TODO: Add docstring."""'
+                                )
                                 modified = True
                                 fixed_count += 1
 
                 if modified:
-                    py_file.write_text('\n'.join(new_lines))
+                    py_file.write_text("\n".join(new_lines))
 
             except Exception:
                 continue
@@ -150,7 +153,7 @@ class RuffFixer:
                 ["poetry", "run", "black", "."],
                 cwd=project_path,
                 capture_output=True,
-                text=True
+                text=True,
             )
             return 1
         except Exception:
@@ -162,11 +165,11 @@ class RuffFixer:
         try:
             # Run pyupgrade to modernize type hints
             subprocess.run(
-                ["poetry", "run", "pyupgrade", "--py39-plus"] +
-                list(map(str, project_path.rglob("*.py"))),
+                ["poetry", "run", "pyupgrade", "--py39-plus"]
+                + list(map(str, project_path.rglob("*.py"))),
                 cwd=project_path,
                 capture_output=True,
-                text=True
+                text=True,
             )
             return 1
         except Exception:
@@ -180,7 +183,7 @@ class RuffFixer:
             return
 
         # Add comprehensive ruff configuration
-        ruff_config = '''
+        ruff_config = """
 
 [tool.ruff]
 line-length = 88
@@ -204,7 +207,7 @@ ignore = [
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["S101", "PLR2004", "D"]
 "examples/*" = ["T201", "D"]
-'''
+"""
 
         try:
             content = pyproject_path.read_text()
@@ -222,7 +225,10 @@ ignore = [
         for submodule in self.submodules:
             project_path = self.workspace_root / submodule
 
-            if not project_path.exists() or not (project_path / "pyproject.toml").exists():
+            if (
+                not project_path.exists()
+                or not (project_path / "pyproject.toml").exists()
+            ):
                 continue
 
             # Configure ruff
@@ -249,7 +255,7 @@ ignore = [
             results[submodule] = {
                 "initial": initial_count,
                 "fixed": fixed + fixed2,
-                "remaining": final_remaining
+                "remaining": final_remaining,
             }
 
         # Print summary

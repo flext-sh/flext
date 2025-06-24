@@ -46,7 +46,12 @@ class FlxMeltanoRefactor:
 
     def update_imports_in_file(self, file_path: Path) -> int:
         """Update imports in a single file."""
-        if not file_path.exists() or file_path.suffix not in [".py", ".toml", ".yaml", ".yml"]:
+        if not file_path.exists() or file_path.suffix not in [
+            ".py",
+            ".toml",
+            ".yaml",
+            ".yml",
+        ]:
             return 0
 
         try:
@@ -74,10 +79,13 @@ class FlxMeltanoRefactor:
             # Update pyproject.toml package includes
             if file_path.name == "pyproject.toml":
                 # Update packages list to include flx_core
-                if 'packages = [{include = "flx_meltano_enterprise", from = "src"}]' in content:
+                if (
+                    'packages = [{include = "flx_meltano_enterprise", from = "src"}]'
+                    in content
+                ):
                     content = content.replace(
                         'packages = [{include = "flx_meltano_enterprise", from = "src"}]',
-                        'packages = [{include = "flx_meltano_enterprise", from = "src"}, {include = "flx_core", from = "src"}]'
+                        'packages = [{include = "flx_meltano_enterprise", from = "src"}, {include = "flx_core", from = "src"}]',
                     )
 
             if content != original_content:
@@ -162,11 +170,17 @@ def lazy_import(module_name: str, attribute_name: str) -> Any:
         # Try to import the package
         try:
             result = subprocess.run(
-                ["poetry", "run", "python", "-c", "import flx_core; print('✅ Import successful')"],
+                [
+                    "poetry",
+                    "run",
+                    "python",
+                    "-c",
+                    "import flx_core; print('✅ Import successful')",
+                ],
                 cwd=self.project_root,
                 capture_output=True,
                 text=True,
-                timeout=10
+                timeout=10,
             )
             if result.returncode == 0:
                 logger.info("✅ Package import validation successful")
@@ -199,7 +213,9 @@ def lazy_import(module_name: str, attribute_name: str) -> Any:
 
             # Log to token
             with open(self.project_root.parent / ".token", "a") as f:
-                f.write("FLX-MELTANO-REFACTOR-001 COMPLETED: Renamed flx → flx_core successfully\n")
+                f.write(
+                    "FLX-MELTANO-REFACTOR-001 COMPLETED: Renamed flx → flx_core successfully\n"
+                )
             logger.error("❌ Refactoring validation failed!")
 
 

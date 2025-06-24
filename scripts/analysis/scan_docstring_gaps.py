@@ -116,10 +116,7 @@ class DocstringGapFinder(ast.NodeVisitor):
 
         self.generic_visit(node)
 
-    def _get_function_description(
-            self,
-            node: ast.FunctionDef,
-            func_type: str) -> str:
+    def _get_function_description(self, node: ast.FunctionDef, func_type: str) -> str:
         """Generate description based on function characteristics."""
         name = node.name
 
@@ -148,9 +145,11 @@ class DocstringGapFinder(ast.NodeVisitor):
             return f"Set {name[4:].replace('_', ' ')}"
 
         if name.startswith(("is_", "has_")):
-            return f"Check if {name[3:].replace('_',
-                                                ' ') if name.startswith('is_') else name[4:].replace('_',
-                                                                                                     ' ')}"
+            return f"Check if {
+                name[3:].replace('_', ' ')
+                if name.startswith('is_')
+                else name[4:].replace('_', ' ')
+            }"
 
         if name in {"connect", "disconnect", "close", "open"}:
             return f"{name.capitalize()} connection"
@@ -220,11 +219,7 @@ def main() -> None:
         gaps_by_file[file_path].append(gap)
 
     # Sort files by number of gaps (descending)
-    sorted_files = sorted(
-        gaps_by_file.items(),
-        key=lambda x: len(
-            x[1]),
-        reverse=True)
+    sorted_files = sorted(gaps_by_file.items(), key=lambda x: len(x[1]), reverse=True)
 
     for file_path, file_gaps in sorted_files[:10]:
         file_path.replace("/home/marlonsc/pyauto/flx/", "")
@@ -249,8 +244,7 @@ def main() -> None:
         gap_type = gap["type"]
         gap_types[gap_type] = gap_types.get(gap_type, 0) + 1
 
-    for gap_type, _count in sorted(
-            gap_types.items(), key=lambda x: x[1], reverse=True):
+    for gap_type, _count in sorted(gap_types.items(), key=lambda x: x[1], reverse=True):
         pass
 
     return gaps

@@ -20,9 +20,7 @@ def add_return_type_annotations(file_path: Path) -> int:
         content = f.read()
 
     # Regular expressions to identify function definitions without return types
-    function_pattern = re.compile(
-        r"^(\s*)(def\s+\w+\s*\([^)]*\))(\s*:)",
-        re.MULTILINE)
+    function_pattern = re.compile(r"^(\s*)(def\s+\w+\s*\([^)]*\))(\s*:)", re.MULTILINE)
 
     # Find all function definitions without return types
     fixes_count = 0

@@ -43,6 +43,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 # Fault-tolerant imports with fallbacks
 try:
     import yaml
+
     YAML_AVAILABLE = True
 except ImportError:
     YAML_AVAILABLE = False
@@ -54,6 +55,7 @@ try:
     from rich.progress import Progress, SpinnerColumn, TextColumn
     from rich.prompt import Confirm
     from rich.table import Table
+
     RICH_AVAILABLE = True
     console = Console()
 except ImportError:
@@ -74,16 +76,12 @@ __author__ = "PyAuto DevOps Team"
 # Configure logging
 log_dir = Path("logs/maintenance")
 log_dir.mkdir(parents=True, exist_ok=True)
-log_file = log_dir / \
-    f"maintenance_{datetime.now(UTC).strftime('%Y%m%d_%H%M%S')}.log"
+log_file = log_dir / f"maintenance_{datetime.now(UTC).strftime('%Y%m%d_%H%M%S')}.log"
 
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler(log_file),
-        logging.StreamHandler(sys.stdout)
-    ]
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    handlers=[logging.FileHandler(log_file), logging.StreamHandler(sys.stdout)],
 )
 logger = logging.getLogger(__name__)
 
@@ -98,20 +96,17 @@ class SignalHandler:
 
     def __init__(self):
         self.interrupted = False
-        self.original_sigint = signal.signal(
-            signal.SIGINT, self._handle_signal)
-        self.original_sigterm = signal.signal(
-            signal.SIGTERM, self._handle_signal)
+        self.original_sigint = signal.signal(signal.SIGINT, self._handle_signal)
+        self.original_sigterm = signal.signal(signal.SIGTERM, self._handle_signal)
         logger.info("Signal handlers installed")
 
     def _handle_signal(self, signum, frame):
         """Handle interrupt signals."""
         self.interrupted = True
         console.print(
-            "\n⚠️  Interrupt received, finishing current operation...",
-            style="yellow")
-        logger.warning(
-            f"Received signal {signum}, initiating graceful shutdown")
+            "\n⚠️  Interrupt received, finishing current operation...", style="yellow"
+        )
+        logger.warning(f"Received signal {signum}, initiating graceful shutdown")
 
     def restore(self):
         """Restore original signal handlers."""
@@ -134,8 +129,7 @@ def set_resource_limits():
     if platform.system() == "Linux":
         try:
             # Limit memory usage to 2GB
-            resource.setrlimit(
-                resource.RLIMIT_AS, (2 * 1024 * 1024 * 1024, -1))
+            resource.setrlimit(resource.RLIMIT_AS, (2 * 1024 * 1024 * 1024, -1))
 
             # Limit number of open files
             _soft, hard = resource.getrlimit(resource.RLIMIT_NOFILE)
@@ -152,8 +146,7 @@ def set_resource_limits():
 # ============================================================================
 
 
-def safe_read_file(
-        file_path: Path, max_size_mb: int = 100) -> tuple[str | None, str]:
+def safe_read_file(file_path: Path, max_size_mb: int = 100) -> tuple[str | None, str]:
     """
     Safely read a file with multiple encoding fallbacks.
 
@@ -168,13 +161,12 @@ def safe_read_file(
     try:
         size_mb = file_path.stat().st_size / (1024 * 1024)
         if size_mb > max_size_mb:
-            return None, f"File too large: {
-                size_mb:.1f}MB (max: {max_size_mb}MB)"
+            return None, f"File too large: {size_mb:.1f}MB (max: {max_size_mb}MB)"
     except OSError as e:
         return None, f"Cannot stat file: {e}"
 
     # Try multiple encodings
-    encodings = ['utf-8', 'utf-8-sig', 'latin-1', 'cp1252', 'iso-8859-1']
+    encodings = ["utf-8", "utf-8-sig", "latin-1", "cp1252", "iso-8859-1"]
 
     for encoding in encodings:
         try:
@@ -189,14 +181,15 @@ def safe_read_file(
 
     # Last resort - read as binary and decode with replacement
     try:
-        content = file_path.read_bytes().decode('utf-8', errors='replace')
-        return content, 'utf-8-replace'
+        content = file_path.read_bytes().decode("utf-8", errors="replace")
+        return content, "utf-8-replace"
     except Exception as e:
         return None, f"Failed to read file: {e}"
 
 
-def safe_write_file(file_path: Path, content: str, encoding: str = 'utf-8',
-                    create_backup: bool = True) -> tuple[bool, str | None]:
+def safe_write_file(
+    file_path: Path, content: str, encoding: str = "utf-8", create_backup: bool = True
+) -> tuple[bool, str | None]:
     """
     Safely write to a file with atomic operations and backup.
 
@@ -216,7 +209,7 @@ def safe_write_file(file_path: Path, content: str, encoding: str = 'utf-8',
     # Create backup if requested
     backup_path = None
     if create_backup and file_path.exists():
-        backup_path = file_path.with_suffix(file_path.suffix + '.bak')
+        backup_path = file_path.with_suffix(file_path.suffix + ".bak")
         try:
             shutil.copy2(file_path, backup_path)
         except Exception as e:
@@ -229,13 +222,11 @@ def safe_write_file(file_path: Path, content: str, encoding: str = 'utf-8',
     try:
         # Create temporary file in same directory for atomic rename
         temp_fd, temp_path = tempfile.mkstemp(
-            dir=file_path.parent,
-            prefix=f".{file_path.name}.",
-            suffix=".tmp"
+            dir=file_path.parent, prefix=f".{file_path.name}.", suffix=".tmp"
         )
 
         # Write content
-        with os.fdopen(temp_fd, 'w', encoding=encoding) as f:
+        with os.fdopen(temp_fd, "w", encoding=encoding) as f:
             # Acquire exclusive lock
             try:
                 fcntl.flock(f.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
@@ -304,7 +295,7 @@ def validate_path(path: Path) -> tuple[bool, str | None]:
     """
     try:
         # Check for null bytes
-        if '\0' in str(path):
+        if "\0" in str(path):
             return False, "Path contains null characters"
 
         # Resolve symlinks with loop detection
@@ -340,6 +331,7 @@ def validate_path(path: Path) -> tuple[bool, str | None]:
 
 class ToolType(StrEnum):
     """Available development tools."""
+
     RUFF = "ruff"
     MYPY = "mypy"
     BLACK = "black"
@@ -357,6 +349,7 @@ class ToolType(StrEnum):
 
 class FixMode(StrEnum):
     """Fix operation modes."""
+
     DRY_RUN = "dry-run"
     INTERACTIVE = "interactive"
     AUTO = "auto"
@@ -392,10 +385,24 @@ class MaintenanceConfig:
     target_projects: list[str] = field(default_factory=list)
     exclude_patterns: list[str] = field(
         default_factory=lambda: [
-            "__pycache__", ".venv", ".git", "dist", "build",
-            ".pytest_cache", ".mypy_cache", ".ruff_cache",
-            "node_modules", "archive", "backup", "logs", "reports",
-            ".tox", "*.egg-info", "reference", "htmlcov", "coverage"
+            "__pycache__",
+            ".venv",
+            ".git",
+            "dist",
+            "build",
+            ".pytest_cache",
+            ".mypy_cache",
+            ".ruff_cache",
+            "node_modules",
+            "archive",
+            "backup",
+            "logs",
+            "reports",
+            ".tox",
+            "*.egg-info",
+            "reference",
+            "htmlcov",
+            "coverage",
         ]
     )
 
@@ -431,8 +438,7 @@ class MaintenanceConfig:
         # Validate settings
         self.max_file_size_mb = max(1, self.max_file_size_mb)
         self.max_errors_per_tool = max(1, self.max_errors_per_tool)
-        self.parallel_workers = max(
-            1, min(self.parallel_workers, os.cpu_count() or 1))
+        self.parallel_workers = max(1, min(self.parallel_workers, os.cpu_count() or 1))
 
     def _init_default_tools(self):
         """Initialize default tool configurations."""
@@ -440,46 +446,32 @@ class MaintenanceConfig:
             ToolType.RUFF: ToolConfig(
                 # FIXED: Use --output-format
                 check_args=["check", "--output-format=json"],
-                fix_args=["check", "--fix", "--unsafe-fixes"]
+                fix_args=["check", "--fix", "--unsafe-fixes"],
             ),
             ToolType.MYPY: ToolConfig(
-                check_args=[
-                    "--no-error-summary",
-                    "--ignore-missing-imports"],
+                check_args=["--no-error-summary", "--ignore-missing-imports"],
                 # FIXED: More lenient
-                fix_args=[]  # mypy doesn't auto-fix
+                fix_args=[],  # mypy doesn't auto-fix
             ),
-            ToolType.BLACK: ToolConfig(
-                check_args=["--check", "--diff"],
-                fix_args=[]
-            ),
-            ToolType.ISORT: ToolConfig(
-                check_args=["--check", "--diff"],
-                fix_args=[]
-            ),
+            ToolType.BLACK: ToolConfig(check_args=["--check", "--diff"], fix_args=[]),
+            ToolType.ISORT: ToolConfig(check_args=["--check", "--diff"], fix_args=[]),
             ToolType.AUTOFLAKE: ToolConfig(
                 fix_args=[
                     "--remove-all-unused-imports",
                     "--remove-unused-variables",
                     "--remove-duplicate-keys",
-                    "--in-place"
+                    "--in-place",
                 ]
             ),
-            ToolType.PYUPGRADE: ToolConfig(
-                fix_args=["--py313-plus"]
-            ),
+            ToolType.PYUPGRADE: ToolConfig(fix_args=["--py313-plus"]),
             ToolType.DOCFORMATTER: ToolConfig(
-                check_args=["--check"],
-                fix_args=["--in-place"]
+                check_args=["--check"], fix_args=["--in-place"]
             ),
             ToolType.BANDIT: ToolConfig(
                 check_args=["-r", "-f", "json"],
-                enabled=False  # Optional security check
+                enabled=False,  # Optional security check
             ),
-            ToolType.MARKDOWNLINT: ToolConfig(
-                check_args=[],
-                fix_args=["--fix"]
-            )
+            ToolType.MARKDOWNLINT: ToolConfig(check_args=[], fix_args=["--fix"]),
         }
 
 
@@ -528,8 +520,7 @@ class MaintenanceTool(ABC):
     def __init__(self, config: MaintenanceConfig):
         self.config = config
         self.console = console
-        self.logger = logging.getLogger(
-            f"{__name__}.{self.__class__.__name__}")
+        self.logger = logging.getLogger(f"{__name__}.{self.__class__.__name__}")
         self._tool_path = None
         self._availability_checked = False
         self._is_available = False
@@ -558,7 +549,7 @@ class MaintenanceTool(ABC):
                     [self._tool_path, "--version"],
                     capture_output=True,
                     text=True,
-                    timeout=5
+                    timeout=5,
                 )
                 self._is_available = result.returncode == 0
                 if self._is_available:
@@ -580,7 +571,8 @@ class MaintenanceTool(ABC):
         """Run tool in fix mode."""
 
     def run_command_with_retry(
-            self, cmd: list[str], timeout: int | None = None) -> tuple[int, str, str]:
+        self, cmd: list[str], timeout: int | None = None
+    ) -> tuple[int, str, str]:
         """Run command with retry logic."""
         tool_config = self.config.tools[self.tool_type]
 
@@ -604,17 +596,20 @@ class MaintenanceTool(ABC):
                 last_error = stderr
                 if attempt < tool_config.retry_count - 1:
                     self.logger.info(
-                        f"Retrying command (attempt {attempt + 2}/{tool_config.retry_count})")
+                        f"Retrying command (attempt {attempt + 2}/{tool_config.retry_count})"
+                    )
                     time.sleep(tool_config.retry_delay)
                     continue
 
             return returncode, stdout, stderr
 
-        return - \
-            1, "", f"Failed after {tool_config.retry_count} attempts. Last error: {last_error}"
+        return (
+            -1,
+            "",
+            f"Failed after {tool_config.retry_count} attempts. Last error: {last_error}",
+        )
 
-    def _run_command_once(
-            self, cmd: list[str], timeout: int) -> tuple[int, str, str]:
+    def _run_command_once(self, cmd: list[str], timeout: int) -> tuple[int, str, str]:
         """Run command once with comprehensive error handling."""
         try:
             # Validate command exists
@@ -626,7 +621,7 @@ class MaintenanceTool(ABC):
 
             # Set up environment
             env = os.environ.copy()
-            env['PYTHONIOENCODING'] = 'utf-8'
+            env["PYTHONIOENCODING"] = "utf-8"
 
             # Run command
             process = subprocess.Popen(
@@ -635,7 +630,7 @@ class MaintenanceTool(ABC):
                 stderr=subprocess.PIPE,
                 text=True,
                 env=env,
-                start_new_session=True  # Isolate process group
+                start_new_session=True,  # Isolate process group
             )
 
             try:
@@ -739,17 +734,16 @@ class RuffTool(MaintenanceTool):
             issues = self._parse_ruff_output(stdout)
             if issues:
                 result.files_checked = len(
-                    {issue.get("filename", "") for issue in issues})
+                    {issue.get("filename", "") for issue in issues}
+                )
 
                 # Add errors with limit
-                for issue in issues[:self.config.max_errors_per_tool]:
+                for issue in issues[: self.config.max_errors_per_tool]:
                     result.add_error(
                         f"{issue['filename']}:{issue['location']['row']}: {issue['message']}",
-                        self.config.max_errors_per_tool
+                        self.config.max_errors_per_tool,
                     )
-                result.add_error(
-                    f"Ruff check failed: {
-                        stderr or 'Unknown error'}")
+                result.add_error(f"Ruff check failed: {stderr or 'Unknown error'}")
 
         return result
 
@@ -764,7 +758,7 @@ class RuffTool(MaintenanceTool):
         except json.JSONDecodeError:
             # Try line-by-line parsing (JSONL format)
             issues = []
-            for line in output.split('\n'):
+            for line in output.split("\n"):
                 if line.strip():
                     try:
                         issues.append(json.loads(line))
@@ -807,7 +801,8 @@ class RuffTool(MaintenanceTool):
             # Check again to see what was fixed
             post_check = self.check(valid_targets)
             result.files_fixed = max(
-                0, check_result.files_checked - post_check.files_checked)
+                0, check_result.files_checked - post_check.files_checked
+            )
             result.add_error(stderr or "Fix command failed")
 
         return result
@@ -842,11 +837,11 @@ class MypyTool(MaintenanceTool):
         files_with_errors = set()
 
         for target in valid_targets:
-            cmd = [self.tool_type.value] + \
-                tool_config.check_args + [str(target)]
+            cmd = [self.tool_type.value] + tool_config.check_args + [str(target)]
 
             returncode, stdout, _stderr = self.run_command_with_retry(
-                cmd, timeout=60)  # Shorter timeout per file
+                cmd, timeout=60
+            )  # Shorter timeout per file
 
             if returncode == -999:  # Interrupted
                 result.add_error("Operation interrupted")
@@ -854,7 +849,7 @@ class MypyTool(MaintenanceTool):
 
             if returncode != 0 and stdout:
                 # Parse mypy output
-                lines = stdout.strip().split('\n') if stdout else []
+                lines = stdout.strip().split("\n") if stdout else []
                 for line in lines:
                     if ": error:" in line or ": note:" in line:
                         all_errors.append(line)
@@ -869,7 +864,7 @@ class MypyTool(MaintenanceTool):
         if not all_errors:
             result.success = True
             # Add errors with limit
-            for error in all_errors[:self.config.max_errors_per_tool]:
+            for error in all_errors[: self.config.max_errors_per_tool]:
                 result.add_error(error, self.config.max_errors_per_tool)
 
         return result
@@ -878,9 +873,11 @@ class MypyTool(MaintenanceTool):
         """Mypy doesn't auto-fix, but we can suggest fixes."""
         result = MaintenanceResult(self.name)
         result.success = True
-        result.changes = [{
-            "note": "Mypy doesn't auto-fix. Run custom type annotation fixes after tools."
-        }]
+        result.changes = [
+            {
+                "note": "Mypy doesn't auto-fix. Run custom type annotation fixes after tools."
+            }
+        ]
         return result
 
 
@@ -923,12 +920,11 @@ class BlackTool(MaintenanceTool):
             result.success = True
             # Black returns 1 if files would be reformatted
             if stdout:
-                lines = stdout.strip().split('\n')
-                would_reformat = [
-                    line for line in lines if "would reformat" in line]
+                lines = stdout.strip().split("\n")
+                would_reformat = [line for line in lines if "would reformat" in line]
                 result.files_checked = len(would_reformat)
 
-                for line in would_reformat[:self.config.max_errors_per_tool]:
+                for line in would_reformat[: self.config.max_errors_per_tool]:
                     result.add_error(line, self.config.max_errors_per_tool)
                 result.add_error(stderr or "Check failed")
 
@@ -951,7 +947,7 @@ class BlackTool(MaintenanceTool):
         # Process files individually for better error recovery
         files_to_format = []
         for target in valid_targets:
-            if target.is_file() and target.suffix == '.py':
+            if target.is_file() and target.suffix == ".py":
                 files_to_format.append(target)
             elif target.is_dir():
                 files_to_format.extend(target.rglob("*.py"))
@@ -964,9 +960,7 @@ class BlackTool(MaintenanceTool):
                 if size_mb <= self.config.max_file_size_mb:
                     valid_files.append(file)
                     result.files_skipped += 1
-                    result.add_warning(
-                        f"Skipped large file: {file} ({
-                            size_mb:.1f}MB)")
+                    result.add_warning(f"Skipped large file: {file} ({size_mb:.1f}MB)")
             except OSError:
                 result.files_skipped += 1
 
@@ -979,7 +973,7 @@ class BlackTool(MaintenanceTool):
         total_reformatted = 0
 
         for i in range(0, len(valid_files), batch_size):
-            batch = valid_files[i:i + batch_size]
+            batch = valid_files[i : i + batch_size]
             cmd = [self.tool_type.value] + [str(f) for f in batch]
 
             returncode, stdout, _stderr = self.run_command_with_retry(cmd)
@@ -1040,18 +1034,18 @@ class IsortTool(MaintenanceTool):
             # Parse diff output
             if stdout:
                 files_with_issues = set()
-                for line in stdout.split('\n'):
-                    if line.startswith(('---', '+++')):
+                for line in stdout.split("\n"):
+                    if line.startswith(("---", "+++")):
                         file_path = line.split()[1]
-                        if file_path != '/dev/null':
+                        if file_path != "/dev/null":
                             files_with_issues.add(file_path)
 
                 result.files_checked = len(files_with_issues)
-                for f in list(files_with_issues)[
-                        :self.config.max_errors_per_tool]:
+                for f in list(files_with_issues)[: self.config.max_errors_per_tool]:
                     result.add_error(
                         f"{f} has incorrect import order",
-                        self.config.max_errors_per_tool)
+                        self.config.max_errors_per_tool,
+                    )
 
         return result
 
@@ -1085,8 +1079,7 @@ class IsortTool(MaintenanceTool):
             result.success = True
             # Count fixed files from output
             if stdout and "Fixing" in stdout:
-                fixed_files = [
-                    line for line in stdout.split('\n') if "Fixing" in line]
+                fixed_files = [line for line in stdout.split("\n") if "Fixing" in line]
                 result.files_fixed = len(fixed_files)
             result.add_error(stderr or "Sort command failed")
 
@@ -1112,7 +1105,7 @@ class MarkdownlintTool(MaintenanceTool):
         # Find markdown files
         md_files = []
         for target in self.filter_valid_targets(targets):
-            if target.is_file() and target.suffix in ['.md', '.markdown']:
+            if target.is_file() and target.suffix in [".md", ".markdown"]:
                 md_files.append(target)
             elif target.is_dir():
                 md_files.extend(target.rglob("*.md"))
@@ -1131,9 +1124,7 @@ class MarkdownlintTool(MaintenanceTool):
                 if size_mb <= self.config.max_file_size_mb:
                     valid_files.append(file)
                     result.files_skipped += 1
-                    result.add_warning(
-                        f"Skipped large file: {file} ({
-                            size_mb:.1f}MB)")
+                    result.add_warning(f"Skipped large file: {file} ({size_mb:.1f}MB)")
             except OSError:
                 result.files_skipped += 1
 
@@ -1150,7 +1141,7 @@ class MarkdownlintTool(MaintenanceTool):
                 result.add_error("Operation interrupted")
                 break
 
-            batch = valid_files[i:i + batch_size]
+            batch = valid_files[i : i + batch_size]
             cmd = [self.tool_type.value] + [str(f) for f in batch]
 
             returncode, stdout, _stderr = self.run_command_with_retry(cmd)
@@ -1159,9 +1150,10 @@ class MarkdownlintTool(MaintenanceTool):
                 continue
             # Parse markdownlint output
             if stdout:
-                lines = stdout.strip().split('\n')
-                for line in lines[:self.config.max_errors_per_tool -
-                                  len(result.errors)]:
+                lines = stdout.strip().split("\n")
+                for line in lines[
+                    : self.config.max_errors_per_tool - len(result.errors)
+                ]:
                     if ":" in line:
                         result.add_error(line, self.config.max_errors_per_tool)
                         total_issues += 1
@@ -1183,7 +1175,7 @@ class MarkdownlintTool(MaintenanceTool):
         # Find markdown files
         md_files = []
         for target in self.filter_valid_targets(targets):
-            if target.is_file() and target.suffix in ['.md', '.markdown']:
+            if target.is_file() and target.suffix in [".md", ".markdown"]:
                 md_files.append(target)
             elif target.is_dir():
                 md_files.extend(target.rglob("*.md"))
@@ -1207,7 +1199,7 @@ class MarkdownlintTool(MaintenanceTool):
             # Create backup if requested
             if self.config.create_backups:
                 try:
-                    backup_path = file.with_suffix(file.suffix + '.bak')
+                    backup_path = file.with_suffix(file.suffix + ".bak")
                     shutil.copy2(file, backup_path)
                 except Exception as e:
                     result.add_warning(f"Could not backup {file}: {e}")
@@ -1217,9 +1209,7 @@ class MarkdownlintTool(MaintenanceTool):
 
             if returncode == 0:
                 fixed_count += 1
-                result.add_error(
-                    f"Failed to fix {file}: {
-                        stderr or 'Unknown error'}")
+                result.add_error(f"Failed to fix {file}: {stderr or 'Unknown error'}")
 
         result.duration = time.time() - start_time
         result.success = True
@@ -1281,7 +1271,7 @@ class ToolRegistry:
                 if tool.tool_type in install_commands:
                     console.print(
                         f"   Install with: {install_commands[tool.tool_type]}",
-                        style="yellow"
+                        style="yellow",
                     )
 
     def get_tools(self) -> list[MaintenanceTool]:
@@ -1290,10 +1280,10 @@ class ToolRegistry:
         order = [
             ToolType.AUTOFLAKE,  # Remove unused imports first
             ToolType.PYUPGRADE,  # Upgrade syntax
-            ToolType.ISORT,      # Sort imports
-            ToolType.BLACK,      # Format code
-            ToolType.RUFF,       # Lint
-            ToolType.MYPY,       # Type check
+            ToolType.ISORT,  # Sort imports
+            ToolType.BLACK,  # Format code
+            ToolType.RUFF,  # Lint
+            ToolType.MYPY,  # Type check
             ToolType.MARKDOWNLINT,  # Documentation
         ]
 
@@ -1328,15 +1318,19 @@ class ToolRegistry:
 class CustomFixModule(ABC):
     """Base class for custom fix modules with comprehensive error handling."""
 
-    def __init__(self, config: MaintenanceConfig, dry_run: bool = True,
-                 interactive: bool = False, verbose: bool = False):
+    def __init__(
+        self,
+        config: MaintenanceConfig,
+        dry_run: bool = True,
+        interactive: bool = False,
+        verbose: bool = False,
+    ):
         self.config = config
         self.dry_run = dry_run
         self.interactive = interactive
         self.verbose = verbose
         self.console = console
-        self.logger = logging.getLogger(
-            f"{__name__}.{self.__class__.__name__}")
+        self.logger = logging.getLogger(f"{__name__}.{self.__class__.__name__}")
 
     @property
     @abstractmethod
@@ -1378,8 +1372,7 @@ class CustomFixModule(ABC):
         """
         try:
             # Read file safely
-            content, encoding = safe_read_file(
-                file_path, self.config.max_file_size_mb)
+            content, encoding = safe_read_file(file_path, self.config.max_file_size_mb)
             if content is None:
                 # encoding contains error message
                 return False, f"Could not read file: {encoding}"
@@ -1409,16 +1402,16 @@ class CustomFixModule(ABC):
             if self.dry_run:
                 if self.verbose:
                     self.console.print(
-                        f"[cyan][DRY RUN] Would fix {
-                            len(issues)} issues in {
-                            file_path.name}[/cyan]")
+                        f"[cyan][DRY RUN] Would fix {len(issues)} issues in {
+                            file_path.name
+                        }[/cyan]"
+                    )
                 return True, None
 
             if self.interactive:
                 # Show preview
                 preview = self.preview_changes(file_path, issues)
-                self.console.print(
-                    f"\n[yellow]Changes for {file_path}:[/yellow]")
+                self.console.print(f"\n[yellow]Changes for {file_path}:[/yellow]")
                 self.console.print(preview)
 
                 if not Confirm.ask(f"Apply fixes to {file_path.name}?"):
@@ -1429,7 +1422,7 @@ class CustomFixModule(ABC):
                 file_path,
                 fixed_content,
                 encoding=encoding,
-                create_backup=self.config.create_backups
+                create_backup=self.config.create_backups,
             )
 
             if not success:
@@ -1437,9 +1430,8 @@ class CustomFixModule(ABC):
 
             if self.verbose:
                 self.console.print(
-                    f"[green]Fixed {
-                        len(issues)} issues in {
-                        file_path.name}[/green]")
+                    f"[green]Fixed {len(issues)} issues in {file_path.name}[/green]"
+                )
 
             return True, None
 
@@ -1447,21 +1439,21 @@ class CustomFixModule(ABC):
             self.logger.exception(f"Unexpected error processing {file_path}")
             return False, f"Unexpected error: {e}"
 
-    def preview_changes(self, file_path: Path,
-                        issues: list[dict[str, Any]]) -> str:
+    def preview_changes(self, file_path: Path, issues: list[dict[str, Any]]) -> str:
         """Generate preview of changes."""
         preview_lines = []
 
         for i, issue in enumerate(issues[:10]):  # Limit preview
             preview_lines.append(
-                f"{i + 1}. Line {issue.get('line', '?')}: {issue['message']}")
-            if 'fix' in issue:
+                f"{i + 1}. Line {issue.get('line', '?')}: {issue['message']}"
+            )
+            if "fix" in issue:
                 preview_lines.append(f"   Fix: {issue['fix']}")
 
         if len(issues) > 10:
             preview_lines.append(f"\n... and {len(issues) - 10} more issues")
 
-        return '\n'.join(preview_lines)
+        return "\n".join(preview_lines)
 
 
 # ============================================================================
@@ -1506,16 +1498,15 @@ class MaintenanceOrchestrator:
                 return 1
 
             # Phase 1: Run tools
-            self.console.print(
-                "\n[bold]Phase 1: Running Development Tools[/bold]")
+            self.console.print("\n[bold]Phase 1: Running Development Tools[/bold]")
             tools_success = self._run_tools_safe(targets)
 
             # Phase 2: Run custom fixes (if tools succeeded or
             # continue_on_error)
             if self.config.custom_fixes and (
-                    tools_success or self.config.continue_on_error):
-                self.console.print(
-                    "\n[bold]Phase 2: Running Custom Fix Modules[/bold]")
+                tools_success or self.config.continue_on_error
+            ):
+                self.console.print("\n[bold]Phase 2: Running Custom Fix Modules[/bold]")
                 self._run_custom_fixes_safe(targets)
 
             # Generate report
@@ -1538,9 +1529,7 @@ class MaintenanceOrchestrator:
 
             # Log completion
             duration = time.time() - self.start_time
-            self.logger.info(
-                f"Maintenance completed in {
-                    duration:.2f} seconds")
+            self.logger.info(f"Maintenance completed in {duration:.2f} seconds")
 
     def _display_header(self):
         """Display header with system information."""
@@ -1553,11 +1542,13 @@ Platform: {platform.platform()}
 Workers: {self.config.parallel_workers} """
 
         if RICH_AVAILABLE:
-            self.console.print(Panel.fit(
-                header_text,
-                title="🔧 Enterprise Maintenance System",
-                border_style="cyan"
-            ))
+            self.console.print(
+                Panel.fit(
+                    header_text,
+                    title="🔧 Enterprise Maintenance System",
+                    border_style="cyan",
+                )
+            )
             self.console.print(header_text)
 
     def _perform_health_checks(self) -> bool:
@@ -1569,8 +1560,8 @@ Workers: {self.config.parallel_workers} """
         # Check disk space
         if not check_disk_space(Path.cwd(), 500):  # Need 500MB free
             self.console.print(
-                "❌ Insufficient disk space (need 500MB free)",
-                style="red")
+                "❌ Insufficient disk space (need 500MB free)", style="red"
+            )
             all_healthy = False
             self.console.print("✅ Disk space check passed", style="green")
 
@@ -1581,9 +1572,7 @@ Workers: {self.config.parallel_workers} """
             test_file.unlink()
             self.console.print("✅ Report directory is writable", style="green")
         except Exception:
-            self.console.print(
-                "❌ Report directory is not writable",
-                style="red")
+            self.console.print("❌ Report directory is not writable", style="red")
             all_healthy = False
 
         # Check tools
@@ -1591,7 +1580,8 @@ Workers: {self.config.parallel_workers} """
             self.console.print("❌ No tools available", style="red")
             all_healthy = False
             self.console.print(
-                f"✅ {len(self.registry.tools)} tools available", style="green")
+                f"✅ {len(self.registry.tools)} tools available", style="green"
+            )
 
         return all_healthy or self.config.continue_on_error
 
@@ -1609,22 +1599,19 @@ Workers: {self.config.parallel_workers} """
 
             if not is_valid:
                 self.console.print(
-                    f"⚠️  Invalid target {target}: {error}",
-                    style="yellow")
+                    f"⚠️  Invalid target {target}: {error}", style="yellow"
+                )
                 continue
 
             if not target.exists():
-                self.console.print(
-                    f"⚠️  Target not found: {target}",
-                    style="yellow")
+                self.console.print(f"⚠️  Target not found: {target}", style="yellow")
                 continue
 
             # Check if target is in excluded patterns
-            if any(pattern in str(target)
-                   for pattern in self.config.exclude_patterns):
+            if any(pattern in str(target) for pattern in self.config.exclude_patterns):
                 self.console.print(
-                    f"⚠️  Target excluded by pattern: {target}",
-                    style="yellow")
+                    f"⚠️  Target excluded by pattern: {target}", style="yellow"
+                )
                 continue
 
             valid_targets.append(target)
@@ -1644,13 +1631,11 @@ Workers: {self.config.parallel_workers} """
         with Progress(
             SpinnerColumn(),
             TextColumn("[progress.description]{task.description}"),
-            console=self.console
+            console=self.console,
         ) as progress:
-
             for tool in tools:
                 if signal_handler.interrupted:
-                    self.console.print(
-                        "\n[yellow]Stopping due to interrupt[/yellow]")
+                    self.console.print("\n[yellow]Stopping due to interrupt[/yellow]")
                     break
 
                 task = progress.add_task(f"Running {tool.name}...", total=None)
@@ -1661,16 +1646,16 @@ Workers: {self.config.parallel_workers} """
 
                     if check_result.success:
                         progress.update(
-                            task, description=f"✅ {
-                                tool.name} - No issues found")
+                            task, description=f"✅ {tool.name} - No issues found"
+                        )
                         self.results.append(check_result)
                         continue
 
                     # Show issues if verbose
                     if self.config.verbose and check_result.errors:
                         self.console.print(
-                            f"\n[yellow]Issues found by {
-                                tool.name}:[/yellow]")
+                            f"\n[yellow]Issues found by {tool.name}:[/yellow]"
+                        )
                         for error in check_result.errors[:5]:
                             self.console.print(f"  • {error}")
 
@@ -1679,12 +1664,13 @@ Workers: {self.config.parallel_workers} """
                         # Interactive mode - ask for confirmation
                         if self.config.mode == FixMode.INTERACTIVE:
                             if not Confirm.ask(
-                                f"Fix {
-                                    check_result.files_checked} issues with {
-                                    tool.name}?"):
+                                f"Fix {check_result.files_checked} issues with {
+                                    tool.name
+                                }?"
+                            ):
                                 progress.update(
-                                    task, description=f"⏭️  {
-                                        tool.name} - Skipped")
+                                    task, description=f"⏭️  {tool.name} - Skipped"
+                                )
                                 self.results.append(check_result)
                                 continue
 
@@ -1694,30 +1680,27 @@ Workers: {self.config.parallel_workers} """
                         if fix_result.success:
                             progress.update(
                                 task,
-                                description=f"✅ {tool.name} - Fixed {fix_result.files_fixed} files"
+                                description=f"✅ {tool.name} - Fixed {fix_result.files_fixed} files",
                             )
                             progress.update(
-                                task, description=f"❌ {
-                                    tool.name} - Fix failed")
+                                task, description=f"❌ {tool.name} - Fix failed"
+                            )
                             all_success = False
 
                             if self.config.verbose and fix_result.errors:
                                 for error in fix_result.errors[:5]:
-                                    self.console.print(
-                                        f"  • {error}", style="red")
+                                    self.console.print(f"  • {error}", style="red")
 
                         self.results.append(fix_result)
                         progress.update(
                             task,
-                            description=f"🔍 {tool.name} - {check_result.files_checked} files need fixing"
+                            description=f"🔍 {tool.name} - {check_result.files_checked} files need fixing",
                         )
                         self.results.append(check_result)
 
                 except Exception as e:
                     self.logger.exception(f"Error running tool {tool.name}")
-                    progress.update(
-                        task, description=f"❌ {
-                            tool.name} - Error: {e}")
+                    progress.update(task, description=f"❌ {tool.name} - Error: {e}")
 
                     # Create error result
                     error_result = MaintenanceResult(tool.name)
@@ -1764,39 +1747,37 @@ Workers: {self.config.parallel_workers} """
 
         for module_name in self.config.custom_fixes:
             if signal_handler.interrupted:
-                self.console.print(
-                    "\n[yellow]Stopping due to interrupt[/yellow]")
+                self.console.print("\n[yellow]Stopping due to interrupt[/yellow]")
                 break
 
             try:
                 # Import module dynamically
                 if module_name not in module_imports:
                     self.console.print(
-                        f"⚠️  Unknown custom module '{module_name}'",
-                        style="yellow")
+                        f"⚠️  Unknown custom module '{module_name}'", style="yellow"
+                    )
                     continue
 
                 module_path = module_imports[module_name]
-                class_name = module_path.split('.')[-1]
+                class_name = module_path.split(".")[-1]
 
                 try:
                     # Fix import to use absolute path
-                    if module_path.startswith('.'):
+                    if module_path.startswith("."):
                         # Convert relative to absolute path
                         # Remove the class name from the module path
-                        module_only_path = '.'.join(
-                            module_path.split('.')[:-1])
+                        module_only_path = ".".join(module_path.split(".")[:-1])
                         abs_module_path = f"scripts.maintenance{module_only_path}"
                         # Remove the class name from the module path
-                        module_only_path = '.'.join(
-                            module_path.split('.')[:-1])
+                        module_only_path = ".".join(module_path.split(".")[:-1])
                         abs_module_path = module_only_path
 
                     module = importlib.import_module(abs_module_path)
                     module_class = getattr(module, class_name)
                 except (ImportError, AttributeError) as e:
                     self.console.print(
-                        f"❌ Failed to import module '{module_name}': {e}", style="red")
+                        f"❌ Failed to import module '{module_name}': {e}", style="red"
+                    )
                     if not self.config.continue_on_error:
                         return False
                     continue
@@ -1805,35 +1786,29 @@ Workers: {self.config.parallel_workers} """
                 module_instance = module_class(
                     dry_run=(self.config.mode == FixMode.DRY_RUN),
                     interactive=(self.config.mode == FixMode.INTERACTIVE),
-                    verbose=self.config.verbose
+                    verbose=self.config.verbose,
                 )
 
-                self.console.print(
-                    f"\n🔧 Running {
-                        module_instance.description}...")
+                self.console.print(f"\n🔧 Running {module_instance.description}...")
 
                 # Run module based on its type
                 success = self._run_module_safe(module_instance, targets)
 
                 if success:
                     self.console.print(
-                        f"✅ {
-                            module_instance.name} completed",
-                        style="green")
-                    self.console.print(
-                        f"❌ {
-                            module_instance.name} failed",
-                        style="red")
+                        f"✅ {module_instance.name} completed", style="green"
+                    )
+                    self.console.print(f"❌ {module_instance.name} failed", style="red")
                     all_success = False
 
                     if not self.config.continue_on_error:
                         break
 
             except Exception as e:
-                self.logger.exception(
-                    f"Error running custom module '{module_name}'")
+                self.logger.exception(f"Error running custom module '{module_name}'")
                 self.console.print(
-                    f"❌ Module '{module_name}' crashed: {e}", style="red")
+                    f"❌ Module '{module_name}' crashed: {e}", style="red"
+                )
                 all_success = False
 
                 if not self.config.continue_on_error:
@@ -1841,20 +1816,17 @@ Workers: {self.config.parallel_workers} """
 
         return all_success
 
-    def _run_module_safe(
-            self,
-            module_instance: Any,
-            targets: list[Path]) -> bool:
+    def _run_module_safe(self, module_instance: Any, targets: list[Path]) -> bool:
         """Run a single module with error isolation."""
         try:
             # Check for workspace-level methods
             workspace_methods = [
-                'run_workspace_standardization',
-                'run_workspace_cleanup',
-                'run_workspace_customization',
-                'run_workspace_testing',
-                'run_workspace_validation',
-                'run_workspace_analysis',
+                "run_workspace_standardization",
+                "run_workspace_cleanup",
+                "run_workspace_customization",
+                "run_workspace_testing",
+                "run_workspace_validation",
+                "run_workspace_analysis",
             ]
 
             for method_name in workspace_methods:
@@ -1870,9 +1842,8 @@ Workers: {self.config.parallel_workers} """
             return False
 
     def _run_file_level_module_safe(
-            self,
-            module_instance: Any,
-            targets: list[Path]) -> bool:
+        self, module_instance: Any, targets: list[Path]
+    ) -> bool:
         """Run file-level module with comprehensive error handling."""
         files_processed = 0
         files_fixed = 0
@@ -1881,14 +1852,16 @@ Workers: {self.config.parallel_workers} """
         # Collect Python files
         py_files = []
         for target in targets:
-            if target.is_file() and target.suffix == '.py':
+            if target.is_file() and target.suffix == ".py":
                 py_files.append(target)
             elif target.is_dir():
                 # Use rglob with exclude patterns
                 for py_file in target.rglob("*.py"):
                     # Skip excluded patterns
-                    if any(pattern in str(py_file)
-                           for pattern in self.config.exclude_patterns):
+                    if any(
+                        pattern in str(py_file)
+                        for pattern in self.config.exclude_patterns
+                    ):
                         continue
                     py_files.append(py_file)
 
@@ -1913,15 +1886,15 @@ Workers: {self.config.parallel_workers} """
                     files_failed += 1
                     if module_instance.verbose:
                         self.console.print(
-                            f"⚠️  Failed to process {file_path}: {
-                                result.error}", style="yellow")
+                            f"⚠️  Failed to process {file_path}: {result.error}",
+                            style="yellow",
+                        )
 
                 files_processed += 1
 
             except Exception:
                 files_failed += 1
-                self.logger.exception(
-                    f"Unexpected error processing {file_path}")
+                self.logger.exception(f"Unexpected error processing {file_path}")
 
                 if not self.config.continue_on_error:
                     return False
@@ -1940,8 +1913,9 @@ Workers: {self.config.parallel_workers} """
         """Generate report with error handling."""
         try:
             timestamp = datetime.now(UTC).strftime("%Y%m%d_%H%M%S")
-            report_file = self.config.report_dir / \
-                f"maintenance_report_{timestamp}.json"
+            report_file = (
+                self.config.report_dir / f"maintenance_report_{timestamp}.json"
+            )
 
             # Prepare report data
             report_data = {
@@ -1950,7 +1924,7 @@ Workers: {self.config.parallel_workers} """
                 "duration": time.time() - self.start_time,
                 "mode": self.config.mode.value,
                 "continue_on_error": self.config.continue_on_error,
-                "results": []
+                "results": [],
             }
 
             # Display summary table
@@ -1975,18 +1949,20 @@ Workers: {self.config.parallel_workers} """
                     status = "⚠️  Issues"
 
                 # Add to report data
-                report_data["results"].append({
-                    "tool": result.tool_name,
-                    "success": result.success,
-                    "files_checked": result.files_checked,
-                    "files_fixed": result.files_fixed,
-                    "files_skipped": result.files_skipped,
-                    "error_count": len(result.errors),
-                    "warning_count": len(result.warnings),
-                    "duration": result.duration,
-                    "errors": result.errors[:10],  # Limit errors in report
-                    "warnings": result.warnings[:10],
-                })
+                report_data["results"].append(
+                    {
+                        "tool": result.tool_name,
+                        "success": result.success,
+                        "files_checked": result.files_checked,
+                        "files_fixed": result.files_fixed,
+                        "files_skipped": result.files_skipped,
+                        "error_count": len(result.errors),
+                        "warning_count": len(result.warnings),
+                        "duration": result.duration,
+                        "errors": result.errors[:10],  # Limit errors in report
+                        "warnings": result.warnings[:10],
+                    }
+                )
 
                 # Update totals
                 total_checked += result.files_checked
@@ -2003,7 +1979,7 @@ Workers: {self.config.parallel_workers} """
                         str(result.files_fixed),
                         str(result.files_skipped),
                         str(len(result.errors)),
-                        f"{result.duration:.2f}s"
+                        f"{result.duration:.2f}s",
                     )
 
             # Add totals
@@ -2015,42 +1991,41 @@ Workers: {self.config.parallel_workers} """
                     f"[bold]{total_fixed}[/bold]",
                     f"[bold]{total_skipped}[/bold]",
                     f"[bold]{total_errors}[/bold]",
-                    f"[bold]{time.time() - self.start_time:.2f}s[/bold]"
+                    f"[bold]{time.time() - self.start_time:.2f}s[/bold]",
                 )
 
                 self.console.print("\n")
                 self.console.print(table)
                 # Fallback summary
                 self.console.print(
-                    f"\nSummary: {total_checked} checked, {total_fixed} fixed, {total_errors} errors in {
-                        time.time() - self.start_time:.2f}s")
+                    f"\nSummary: {total_checked} checked, {total_fixed} fixed, {
+                        total_errors
+                    } errors in {time.time() - self.start_time:.2f}s"
+                )
 
             # Save report
             try:
-                with open(report_file, 'w') as f:
+                with open(report_file, "w") as f:
                     json.dump(report_data, f, indent=2)
-                self.console.print(
-                    f"\n📄 Report saved to: {report_file}", style="cyan")
+                self.console.print(f"\n📄 Report saved to: {report_file}", style="cyan")
             except Exception as e:
                 self.logger.error(f"Could not save report: {e}")
-                self.console.print(
-                    f"\n⚠️  Could not save report: {e}",
-                    style="yellow")
+                self.console.print(f"\n⚠️  Could not save report: {e}", style="yellow")
 
             # Show next steps
             if self.config.mode == FixMode.DRY_RUN and total_checked > 0:
                 self.console.print("\n[yellow]Next steps:[/yellow]")
                 self.console.print("• Review the issues found")
                 self.console.print(
-                    "• Run with --mode=interactive for confirmation prompts")
+                    "• Run with --mode=interactive for confirmation prompts"
+                )
                 self.console.print(
-                    "• Run with --mode=auto to fix all issues automatically")
+                    "• Run with --mode=auto to fix all issues automatically"
+                )
 
         except Exception as e:
             self.logger.exception("Error generating report")
-            self.console.print(
-                f"\n⚠️  Error generating report: {e}",
-                style="yellow")
+            self.console.print(f"\n⚠️  Error generating report: {e}", style="yellow")
 
 
 # ============================================================================
@@ -2067,25 +2042,21 @@ def load_config_safe(args) -> MaintenanceConfig | None:
         config_path = Path(args.config)
 
         if not config_path.exists():
-            console.print(
-                f"❌ Config file not found: {config_path}",
-                style="red")
+            console.print(f"❌ Config file not found: {config_path}", style="red")
             return None
 
         try:
             content, encoding = safe_read_file(config_path)
             if content is None:
-                console.print(
-                    f"❌ Cannot read config file: {encoding}",
-                    style="red")
+                console.print(f"❌ Cannot read config file: {encoding}", style="red")
                 return None
 
             # Parse based on extension
-            if config_path.suffix in ['.yaml', '.yml']:
+            if config_path.suffix in [".yaml", ".yml"]:
                 if not YAML_AVAILABLE:
                     console.print(
-                        "❌ YAML support not available. Install pyyaml.",
-                        style="red")
+                        "❌ YAML support not available. Install pyyaml.", style="red"
+                    )
                     return None
                 data = yaml.safe_load(content)
                 data = json.loads(content)
@@ -2112,11 +2083,11 @@ def load_config_safe(args) -> MaintenanceConfig | None:
         config.verbose = True
     if args.report_dir:
         config.report_dir = Path(args.report_dir)
-    if hasattr(args, 'continue_on_error') and args.continue_on_error:
+    if hasattr(args, "continue_on_error") and args.continue_on_error:
         config.continue_on_error = True
-    if hasattr(args, 'no_backup') and args.no_backup:
+    if hasattr(args, "no_backup") and args.no_backup:
         config.create_backups = False
-    if hasattr(args, 'max_file_size') and args.max_file_size:
+    if hasattr(args, "max_file_size") and args.max_file_size:
         config.max_file_size_mb = args.max_file_size
 
     # Disable specific tools if requested
@@ -2130,7 +2101,7 @@ def load_config_safe(args) -> MaintenanceConfig | None:
                 console.print(f"⚠️  Unknown tool: {tool_name}", style="yellow")
 
     # Enable only specific tools if requested
-    if hasattr(args, 'only_tools') and args.only_tools:
+    if hasattr(args, "only_tools") and args.only_tools:
         # Disable all tools first
         for tool_type in config.tools:
             config.tools[tool_type].enabled = False
@@ -2145,7 +2116,7 @@ def load_config_safe(args) -> MaintenanceConfig | None:
                 console.print(f"⚠️  Unknown tool: {tool_name}", style="yellow")
 
     # Custom modules
-    if hasattr(args, 'modules') and args.modules:
+    if hasattr(args, "modules") and args.modules:
         config.custom_fixes = args.modules
 
     return config
@@ -2178,93 +2149,76 @@ Examples:
 
   # Run specific custom modules
   %(prog)s --modules type_annotations,logging_patterns
-        """)
+        """,
+    )
 
     # Target options
-    parser.add_argument(
-        "--projects",
-        nargs="+",
-        help="Specific projects to target"
-    )
+    parser.add_argument("--projects", nargs="+", help="Specific projects to target")
 
     # Mode options
     parser.add_argument(
         "--mode",
         choices=["dry-run", "interactive", "auto"],
         default="dry-run",
-        help="Operation mode (default: dry-run)"
+        help="Operation mode (default: dry-run)",
     )
 
     # Configuration
-    parser.add_argument(
-        "--config",
-        help="Configuration file (YAML or JSON)"
-    )
+    parser.add_argument("--config", help="Configuration file (YAML or JSON)")
 
     # Tool selection
     parser.add_argument(
         "--skip-tools",
         nargs="+",
         choices=[t.value for t in ToolType],
-        help="Tools to skip"
+        help="Tools to skip",
     )
     parser.add_argument(
         "--only-tools",
         nargs="+",
         choices=[t.value for t in ToolType],
-        help="Run only these tools"
+        help="Run only these tools",
     )
 
     # Custom modules
     parser.add_argument(
-        "--modules",
-        help="Comma-separated list of custom fix modules to run"
+        "--modules", help="Comma-separated list of custom fix modules to run"
     )
 
     # Error handling
     parser.add_argument(
         "--continue-on-error",
         action="store_true",
-        help="Continue processing even if errors occur"
+        help="Continue processing even if errors occur",
     )
 
     # File handling
     parser.add_argument(
-        "--no-backup",
-        action="store_true",
-        help="Don't create backup files"
+        "--no-backup", action="store_true", help="Don't create backup files"
     )
     parser.add_argument(
         "--max-file-size",
         type=int,
         metavar="MB",
-        help="Maximum file size to process in MB (default: 100)"
+        help="Maximum file size to process in MB (default: 100)",
     )
 
     # Output options
     parser.add_argument(
-        "--report-dir",
-        default="reports/maintenance",
-        help="Directory for reports"
+        "--report-dir", default="reports/maintenance", help="Directory for reports"
     )
-    parser.add_argument(
-        "--verbose", "-v",
-        action="store_true",
-        help="Verbose output"
-    )
+    parser.add_argument("--verbose", "-v", action="store_true", help="Verbose output")
 
     # Version
     parser.add_argument(
-        "--version",
-        action="version",
-        version=f"%(prog)s {__version__}"
+        "--version", action="version", version=f"%(prog)s {__version__}"
     )
 
     args = parser.parse_args()
 
     # Process modules argument
     if args.modules:
-        args.modules = [m.strip() for m in args.modules.split(',')]
+        args.modules = [m.strip() for m in args.modules.split(",")]
 
     # Set up logging level
     if args.verbose:

@@ -28,11 +28,7 @@ def list_modules() -> None:
 
     for name, module_class in MODULE_REGISTRY.items():
         instance = module_class()
-        table.add_row(
-            name,
-            instance.category,
-            instance.description
-        )
+        table.add_row(name, instance.category, instance.description)
 
     console.print(table)
 
@@ -42,7 +38,7 @@ def run_module(
     targets: list[Path],
     dry_run: bool = True,
     interactive: bool = False,
-    verbose: bool = False
+    verbose: bool = False,
 ) -> int:
     """Run a specific module on targets."""
 
@@ -54,21 +50,19 @@ def run_module(
         return 1
 
     # Create module instance
-    module = module_class(
-        dry_run=dry_run,
-        interactive=interactive,
-        verbose=verbose
-    )
+    module = module_class(dry_run=dry_run, interactive=interactive, verbose=verbose)
 
     # Display header
-    console.print(Panel.fit(
-        f"[bold cyan]{module.name}[/bold cyan]\n"
-        f"Category: {module.category}\n"
-        f"Mode: {'DRY RUN' if dry_run else 'APPLY FIXES'}\n"
-        f"Interactive: {'Yes' if interactive else 'No'}",
-        title=f"🔧 Running {module_name}",
-        border_style="cyan"
-    ))
+    console.print(
+        Panel.fit(
+            f"[bold cyan]{module.name}[/bold cyan]\n"
+            f"Category: {module.category}\n"
+            f"Mode: {'DRY RUN' if dry_run else 'APPLY FIXES'}\n"
+            f"Interactive: {'Yes' if interactive else 'No'}",
+            title=f"🔧 Running {module_name}",
+            border_style="cyan",
+        )
+    )
 
     # Process all targets
     all_results: list = []
@@ -100,13 +94,13 @@ def run_module(
     console.print(f"Issues found: {summary['total_issues']}")
     console.print(f"Issues fixed: {summary['total_fixed']}")
 
-    if summary['errors']:
+    if summary["errors"]:
         console.print("\n[red]Errors:[/red]")
-        for error in summary['errors'][:5]:
+        for error in summary["errors"][:5]:
             console.print(f"  • {error}")
 
     # Return exit code
-    return 0 if summary['failed_files'] == 0 else 1
+    return 0 if summary["failed_files"] == 0 else 1
 
 
 def main() -> None:
@@ -130,40 +124,30 @@ Examples:
 
   # Run multiple modules
   python run_custom_fixes.py type_annotations logging_patterns --target src/ --apply
-        """
+        """,
     )
 
+    parser.add_argument("modules", nargs="*", help="Module(s) to run")
     parser.add_argument(
-        "modules",
-        nargs="*",
-        help="Module(s) to run"
+        "--list", "-l", action="store_true", help="List available modules"
     )
     parser.add_argument(
-        "--list", "-l",
-        action="store_true",
-        help="List available modules"
-    )
-    parser.add_argument(
-        "--target", "-t",
+        "--target",
+        "-t",
         action="append",
         dest="targets",
-        help="Target file or directory (can be specified multiple times)"
+        help="Target file or directory (can be specified multiple times)",
     )
     parser.add_argument(
-        "--apply", "-a",
-        action="store_true",
-        help="Apply fixes (default is dry-run)"
+        "--apply", "-a", action="store_true", help="Apply fixes (default is dry-run)"
     )
     parser.add_argument(
-        "--interactive", "-i",
+        "--interactive",
+        "-i",
         action="store_true",
-        help="Interactive mode - confirm each fix"
+        help="Interactive mode - confirm each fix",
     )
-    parser.add_argument(
-        "--verbose", "-v",
-        action="store_true",
-        help="Verbose output"
-    )
+    parser.add_argument("--verbose", "-v", action="store_true", help="Verbose output")
 
     args = parser.parse_args()
 
@@ -199,7 +183,7 @@ Examples:
             targets,
             dry_run=not args.apply,
             interactive=args.interactive,
-            verbose=args.verbose
+            verbose=args.verbose,
         )
         if result != 0:
             exit_code = result

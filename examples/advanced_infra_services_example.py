@@ -58,11 +58,7 @@ class DatabaseConnection:
             msg = "Query execution failed"
             raise ConnectionError(msg)
 
-        return {
-    "result": f"Result for: {query}",
-    "rows": random.randint(
-        0,
-         100)}
+        return {"result": f"Result for: {query}", "rows": random.randint(0, 100)}
 
     async def ping(self) -> bool:
         """Check if connection is alive."""

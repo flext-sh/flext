@@ -103,16 +103,10 @@ def update_python_scaffold(source_project: str) -> None:
     source_path = WORKSPACE_ROOT / source_project
 
     if not source_path.exists() or not source_path.is_dir():
-        print(
-            colorize(
-                f"Error: Project {source_project} does not exist!",
-                "RED"))
+        print(colorize(f"Error: Project {source_project} does not exist!", "RED"))
         sys.exit(1)
 
-    print(
-        colorize(
-            f"Updating Python scaffold from {source_project}...",
-            "YELLOW"))
+    print(colorize(f"Updating Python scaffold from {source_project}...", "YELLOW"))
 
     # Create template directory if it doesn't exist
     if not PYTHON_TEMPLATE_DIR.exists():
@@ -272,8 +266,9 @@ def propagate_scaffold(projects: list[str], confirm: bool = False) -> None:
         if not project_path.exists():
             print(
                 colorize(
-                    f"⚠ Directory {flx_project} does not exist, skipping",
-                    "YELLOW"))
+                    f"⚠ Directory {flx_project} does not exist, skipping", "YELLOW"
+                )
+            )
             continue
 
         if not (project_path / "pyproject.toml").exists():
@@ -302,10 +297,7 @@ def propagate_scaffold(projects: list[str], confirm: bool = False) -> None:
 
         print(colorize(f"✓ {flx_project} updated", "GREEN"))
 
-    print(
-        colorize(
-            "All projects updated with the latest Python scaffold!",
-            "GREEN"))
+    print(colorize("All projects updated with the latest Python scaffold!", "GREEN"))
 
 
 def show_scaffold_status() -> None:
@@ -355,10 +347,7 @@ def create_new_project(project_name: str) -> None:
     project_path = WORKSPACE_ROOT / project_name
 
     if project_path.exists():
-        print(
-            colorize(
-                f"Error: Project {project_name} already exists!",
-                "RED"))
+        print(colorize(f"Error: Project {project_name} already exists!", "RED"))
         sys.exit(1)
 
     if not PYTHON_TEMPLATE_DIR.exists():
@@ -400,8 +389,7 @@ def create_new_project(project_name: str) -> None:
 
 def main() -> None:
     """Main entry point."""
-    parser = argparse.ArgumentParser(
-        description="Scaffold management utilities")
+    parser = argparse.ArgumentParser(description="Scaffold management utilities")
 
     subparsers = parser.add_subparsers(dest="command", help="Command to run")
 
@@ -413,15 +401,11 @@ def main() -> None:
     update_parser.add_argument("source", help="Source flx_project name")
 
     # Sync flx_project command
-    sync_parser = subparsers.add_parser(
-        "sync", help="Sync a flx_project with scaffold")
+    sync_parser = subparsers.add_parser("sync", help="Sync a flx_project with scaffold")
     sync_parser.add_argument("flx_project", help="Project name to sync")
     sync_parser.add_argument(
         "--direction",
-        choices=[
-            "s",
-            "p",
-            "b"],
+        choices=["s", "p", "b"],
         default="b",
         help="Direction: scaffold->flx_project (s), flx_project->scaffold (p), bidirectional (b)",
     )

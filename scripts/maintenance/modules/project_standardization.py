@@ -55,13 +55,41 @@ class ProjectStandardizationModule(CustomFixModule):
             },
             "ruff.lint": {
                 "select": [
-                    "E", "W", "F", "I", "UP", "N", "B", "C4", "DTZ", "T10",
-                    "ISC", "G", "PIE", "PT", "RET", "SIM", "ARG", "ERA",
-                    "PGH", "PL", "TRY", "BLE", "COM",
+                    "E",
+                    "W",
+                    "F",
+                    "I",
+                    "UP",
+                    "N",
+                    "B",
+                    "C4",
+                    "DTZ",
+                    "T10",
+                    "ISC",
+                    "G",
+                    "PIE",
+                    "PT",
+                    "RET",
+                    "SIM",
+                    "ARG",
+                    "ERA",
+                    "PGH",
+                    "PL",
+                    "TRY",
+                    "BLE",
+                    "COM",
                 ],
                 "ignore": [
-                    "E501", "UP007", "BLE001", "G004", "DTZ007", "TRY003",
-                    "PLR2004", "PLR0911", "PLR0912", "TRY401",
+                    "E501",
+                    "UP007",
+                    "BLE001",
+                    "G004",
+                    "DTZ007",
+                    "TRY003",
+                    "PLR2004",
+                    "PLR0911",
+                    "PLR0912",
+                    "TRY401",
                 ],
             },
             "ruff.lint.per-file-ignores": {
@@ -210,16 +238,20 @@ class ProjectStandardizationModule(CustomFixModule):
                             message="Project configuration needs standardization",
                             severity=Severity.MEDIUM,
                             column=1,
-                            fix_description="Apply standard PyAuto configuration template"))
+                            fix_description="Apply standard PyAuto configuration template",
+                        )
+                    )
 
             except Exception as e:
-                issues.append(Issue(
-                    line=1,
-                    message=f"Failed to analyze pyproject.toml: {e}",
-                    severity=Severity.HIGH,
-                    column=1,
-                    fix_description="Check file format and syntax"
-                ))
+                issues.append(
+                    Issue(
+                        line=1,
+                        message=f"Failed to analyze pyproject.toml: {e}",
+                        severity=Severity.HIGH,
+                        column=1,
+                        fix_description="Check file format and syntax",
+                    )
+                )
 
         return issues
 
@@ -234,7 +266,8 @@ class ProjectStandardizationModule(CustomFixModule):
         shutil.copy2(source, target)
 
     def merge_configs(
-            self, current: dict[str, Any], project_path: Path) -> dict[str, Any]:
+        self, current: dict[str, Any], project_path: Path
+    ) -> dict[str, Any]:
         """Merge current configuration with standards."""
         result = current.copy()
 
@@ -293,14 +326,13 @@ class ProjectStandardizationModule(CustomFixModule):
         """Standardize all projects in the workspace."""
         if self.verbose:
             self.console.print(
-                f"[blue]Standardizing workspace: {workspace_path}[/blue]")
+                f"[blue]Standardizing workspace: {workspace_path}[/blue]"
+            )
 
         projects = self.find_projects(workspace_path)
 
         if self.verbose:
-            self.console.print(
-                f"[green]Found {
-                    len(projects)} projects[/green]")
+            self.console.print(f"[green]Found {len(projects)} projects[/green]")
 
         success_count = 0
 
@@ -308,8 +340,8 @@ class ProjectStandardizationModule(CustomFixModule):
             try:
                 if self.verbose:
                     self.console.print(
-                        f"[yellow]Processing {
-                            project_path.name}[/yellow]")
+                        f"[yellow]Processing {project_path.name}[/yellow]"
+                    )
 
                 # Create backup
                 if not self.dry_run:
@@ -321,14 +353,15 @@ class ProjectStandardizationModule(CustomFixModule):
                     current_config = tomli.load(f)
 
                 # Merge with standards
-                standardized_config = self.merge_configs(
-                    current_config, project_path)
+                standardized_config = self.merge_configs(current_config, project_path)
 
                 if self.dry_run:
                     if self.verbose:
                         self.console.print(
                             f"[cyan][DRY RUN] Would standardize {
-                                project_path.name}[/cyan]")
+                                project_path.name
+                            }[/cyan]"
+                        )
                 else:
                     # Save standardized configuration
                     with open(config_path, "wb") as f:
@@ -336,26 +369,28 @@ class ProjectStandardizationModule(CustomFixModule):
 
                     if self.verbose:
                         self.console.print(
-                            f"[green]✅ Standardized {
-                                project_path.name}[/green]")
+                            f"[green]✅ Standardized {project_path.name}[/green]"
+                        )
 
                 success_count += 1
 
             except Exception as e:
                 if self.verbose:
                     self.console.print(
-                        f"[red]❌ Failed to standardize {
-                            project_path.name}: {e}[/red]")
+                        f"[red]❌ Failed to standardize {project_path.name}: {e}[/red]"
+                    )
 
         if self.verbose:
             action = "Would standardize" if self.dry_run else "Standardized"
             self.console.print(
-                f"[bold green]{action} {success_count}/{len(projects)} projects[/bold green]")
+                f"[bold green]{action} {success_count}/{len(projects)} projects[/bold green]"
+            )
 
         return success_count == len(projects)
 
     def run_workspace_standardization(
-            self, workspace_path: Optional[Path] = None) -> bool:
+        self, workspace_path: Optional[Path] = None
+    ) -> bool:
         """Run standardization across the entire workspace."""
         if workspace_path is None:
             workspace_path = Path.cwd()

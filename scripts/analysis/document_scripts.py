@@ -78,9 +78,7 @@ def parse_arguments() -> Any:
     return parser.parse_args()
 
 
-def get_python_files(
-        scripts_dir: Path,
-        exclude_patterns: list[str]) -> list[Path]:
+def get_python_files(scripts_dir: Path, exclude_patterns: list[str]) -> list[Path]:
     """Get all Python files in the scripts directory."""
     python_files: list = []
 
@@ -439,10 +437,7 @@ def main() -> int:
 
             if issues["module"] or issues["functions"]:
                 issues_found = True
-                print(
-                    colorize(
-                        documenter.generate_documentation_report(),
-                        "YELLOW"))
+                print(colorize(documenter.generate_documentation_report(), "YELLOW"))
             elif args.verbose:
                 print(
                     colorize(
@@ -472,22 +467,11 @@ def main() -> int:
                             "GREEN",
                         ),
                     )
-                    print(
-                        colorize(
-                            f"Failed to update {
-                                script_path.name}",
-                            "RED"))
+                    print(colorize(f"Failed to update {script_path.name}", "RED"))
             elif args.verbose:
-                print(
-                    colorize(
-                        f"No updates needed for {
-                            script_path.name}",
-                        "YELLOW"))
+                print(colorize(f"No updates needed for {script_path.name}", "YELLOW"))
 
-        print(
-            colorize(
-                f"Updated documentation for {updated_count} scripts",
-                "GREEN"))
+        print(colorize(f"Updated documentation for {updated_count} scripts", "GREEN"))
 
     # Generate summary
     print(colorize("Generating scripts summary...", "CYAN"))

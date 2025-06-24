@@ -16,7 +16,9 @@ from typing import Any
 import oracledb
 
 
-def execute_oracle_query(connection: oracledb.Connection, sql: str, params: dict[str, Any] | None = None) -> list[dict[str, Any]]:
+def execute_oracle_query(
+    connection: oracledb.Connection, sql: str, params: dict[str, Any] | None = None
+) -> list[dict[str, Any]]:
     """Execute Oracle query and return results as list of dictionaries.
 
     ZERO TOLERANCE implementation:
@@ -82,7 +84,7 @@ def debug_query() -> None:
             connection = oracledb.connect(
                 user="system",  # Ajustar conforme necessário
                 password="oracle",  # Ajustar conforme necessário
-                dsn=dsn
+                dsn=dsn,
             )
             print("✅ Oracle connection established")
         except Exception as conn_error:
@@ -93,7 +95,9 @@ def debug_query() -> None:
         test_sql = "SELECT TABLE_NAME FROM USER_TABLES WHERE ROWNUM <= 5"
 
         try:
-            result_rows: list[dict[str, Any]] = execute_oracle_query(connection, test_sql)
+            result_rows: list[dict[str, Any]] = execute_oracle_query(
+                connection, test_sql
+            )
             print(f"Resultado tipo: {type(result_rows)}")
             print(f"Resultado: {result_rows}")
 
@@ -129,13 +133,16 @@ def debug_query() -> None:
         except Exception as e:
             print(f"❌ Erro na query: {e}")
             import traceback
+
             traceback.print_exc()
 
         # Teste específico para WMS_ORDER_HDR
         print("\n--- TESTE WMS_ORDER_HDR ---")
         try:
             wms_sql = "SELECT COUNT(*) as total FROM WMS_ORDER_HDR"
-            wms_result_rows: list[dict[str, Any]] = execute_oracle_query(connection, wms_sql)
+            wms_result_rows: list[dict[str, Any]] = execute_oracle_query(
+                connection, wms_sql
+            )
             print(f"WMS resultado: {wms_result_rows}")
 
             if wms_result_rows:
@@ -165,6 +172,7 @@ def debug_query() -> None:
     except Exception as e:
         print(f"❌ Erro geral: {e}")
         import traceback
+
         traceback.print_exc()
 
 

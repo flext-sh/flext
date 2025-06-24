@@ -100,9 +100,19 @@ class MaintenanceConfig:
     target_projects: list[str] = field(default_factory=list)
     exclude_patterns: list[str] = field(
         default_factory=lambda: [
-            "__pycache__", ".venv", ".git", "dist", "build",
-            ".pytest_cache", ".mypy_cache", ".ruff_cache",
-            "node_modules", "archive", "backup", "logs", "reports"
+            "__pycache__",
+            ".venv",
+            ".git",
+            "dist",
+            "build",
+            ".pytest_cache",
+            ".mypy_cache",
+            ".ruff_cache",
+            "node_modules",
+            "archive",
+            "backup",
+            "logs",
+            "reports",
         ]
     )
 
@@ -124,44 +134,35 @@ class MaintenanceConfig:
         if not self.tools:
             self.tools = {
                 ToolType.RUFF: ToolConfig(
-                    check_args=["check"],
-                    fix_args=["check", "--fix", "--unsafe-fixes"]
+                    check_args=["check"], fix_args=["check", "--fix", "--unsafe-fixes"]
                 ),
                 ToolType.MYPY: ToolConfig(
                     check_args=["--strict", "--no-error-summary"],
-                    fix_args=[]  # mypy doesn't auto-fix
+                    fix_args=[],  # mypy doesn't auto-fix
                 ),
                 ToolType.BLACK: ToolConfig(
-                    check_args=["--check", "--diff"],
-                    fix_args=[]
+                    check_args=["--check", "--diff"], fix_args=[]
                 ),
                 ToolType.ISORT: ToolConfig(
-                    check_args=["--check", "--diff"],
-                    fix_args=[]
+                    check_args=["--check", "--diff"], fix_args=[]
                 ),
                 ToolType.AUTOFLAKE: ToolConfig(
                     fix_args=[
                         "--remove-all-unused-imports",
                         "--remove-unused-variables",
                         "--remove-duplicate-keys",
-                        "--in-place"
+                        "--in-place",
                     ]
                 ),
-                ToolType.PYUPGRADE: ToolConfig(
-                    fix_args=["--py313-plus"]
-                ),
+                ToolType.PYUPGRADE: ToolConfig(fix_args=["--py313-plus"]),
                 ToolType.DOCFORMATTER: ToolConfig(
-                    check_args=["--check"],
-                    fix_args=["--in-place"]
+                    check_args=["--check"], fix_args=["--in-place"]
                 ),
                 ToolType.BANDIT: ToolConfig(
                     check_args=["-r", "-f", "json"],
-                    enabled=False  # Optional security check
+                    enabled=False,  # Optional security check
                 ),
-                ToolType.MARKDOWNLINT: ToolConfig(
-                    check_args=[],
-                    fix_args=["--fix"]
-                )
+                ToolType.MARKDOWNLINT: ToolConfig(check_args=[], fix_args=["--fix"]),
             }
 
 
@@ -209,7 +210,7 @@ class MaintenanceTool(ABC):
                 [self.tool_type.value, "--version"],
                 capture_output=True,
                 text=True,
-                timeout=5
+                timeout=5,
             )
             return result.returncode == 0
         except (subprocess.SubprocessError, FileNotFoundError):
@@ -223,18 +224,16 @@ class MaintenanceTool(ABC):
     def fix(self, targets: list[Path]) -> MaintenanceResult:
         """Run tool in fix mode."""
 
-    def run_command(self, cmd: list[str], timeout: int |
-                    None = None) -> tuple[int, str, str]:
+    def run_command(
+        self, cmd: list[str], timeout: int | None = None
+    ) -> tuple[int, str, str]:
         """Run a command and return (returncode, stdout, stderr)."""
         if timeout is None:
             timeout = self.config.tools[self.tool_type].timeout
 
         try:
             result = subprocess.run(
-                cmd,
-                capture_output=True,
-                text=True,
-                timeout=timeout
+                cmd, capture_output=True, text=True, timeout=timeout
             )
             return result.returncode, result.stdout, result.stderr
         except subprocess.TimeoutExpired:
@@ -265,8 +264,7 @@ class RuffTool(MaintenanceTool):
         start_time = time.time()
 
         tool_config = self.config.tools[self.tool_type]
-        cmd = [self.tool_type.value] + \
-            tool_config.check_args + ["--format=json"]
+        cmd = [self.tool_type.value] + tool_config.check_args + ["--format=json"]
         cmd.extend(str(t) for t in targets)
 
         returncode, stdout, stderr = self.run_command(cmd)
@@ -279,14 +277,14 @@ class RuffTool(MaintenanceTool):
             try:
                 issues = json.loads(stdout) if stdout else []
                 result.files_checked = len(
-                    {issue.get("filename", "") for issue in issues})
-                result.errors = [f"{issue['filename']}:{issue['location']['row']}: {issue['message']}"
-                                 for issue in issues[:10]]  # First 10 issues
+                    {issue.get("filename", "") for issue in issues}
+                )
+                result.errors = [
+                    f"{issue['filename']}:{issue['location']['row']}: {issue['message']}"
+                    for issue in issues[:10]
+                ]  # First 10 issues
                 if len(issues) > 10:
-                    result.errors.append(
-                        f"... and {
-                            len(issues) -
-                            10} more issues")
+                    result.errors.append(f"... and {len(issues) - 10} more issues")
             except json.JSONDecodeError:
                 result.errors = ["Failed to parse ruff output"]
 
@@ -307,8 +305,9 @@ class RuffTool(MaintenanceTool):
         if self.config.mode == FixMode.DRY_RUN:
             result.success = True
             result.files_checked = check_result.files_checked
-            result.changes = [{"file": err.split(":")[0], "issue": err}
-                              for err in check_result.errors]
+            result.changes = [
+                {"file": err.split(":")[0], "issue": err} for err in check_result.errors
+            ]
             result.duration = time.time() - start_time
             return result
 
@@ -356,12 +355,13 @@ class MypyTool(MaintenanceTool):
         if returncode == 0:
             result.success = True
             # Parse mypy output
-            lines = stdout.strip().split('\n') if stdout else []
+            lines = stdout.strip().split("\n") if stdout else []
             result.errors = [line for line in lines if ": error:" in line][:10]
             if len(lines) > 10:
                 result.errors.append(f"... and {len(lines) - 10} more errors")
             result.files_checked = len(
-                {line.split(":")[0] for line in lines if ":" in line})
+                {line.split(":")[0] for line in lines if ":" in line}
+            )
 
         return result
 
@@ -369,9 +369,11 @@ class MypyTool(MaintenanceTool):
         """Mypy doesn't auto-fix, but we can suggest fixes."""
         result = MaintenanceResult(self.name)
         result.success = True
-        result.changes = [{
-            "note": "Mypy doesn't auto-fix. Run custom type annotation fixes after tools."
-        }]
+        result.changes = [
+            {
+                "note": "Mypy doesn't auto-fix. Run custom type annotation fixes after tools."
+            }
+        ]
         return result
 
 
@@ -403,16 +405,12 @@ class BlackTool(MaintenanceTool):
         if returncode == 0:
             result.success = True
             # Black returns 1 if files would be reformatted
-            lines = stdout.strip().split('\n') if stdout else []
-            would_reformat = [
-                line for line in lines if "would reformat" in line]
+            lines = stdout.strip().split("\n") if stdout else []
+            would_reformat = [line for line in lines if "would reformat" in line]
             result.files_checked = len(would_reformat)
             result.errors = would_reformat[:5]
             if len(would_reformat) > 5:
-                result.errors.append(
-                    f"... and {
-                        len(would_reformat) -
-                        5} more files")
+                result.errors.append(f"... and {len(would_reformat) - 5} more files")
 
         return result
 
@@ -435,7 +433,7 @@ class BlackTool(MaintenanceTool):
         if returncode == 0:
             result.success = True
             # Parse output for reformatted files
-            lines = stdout.strip().split('\n') if stdout else []
+            lines = stdout.strip().split("\n") if stdout else []
             reformatted = [line for line in lines if "reformatted" in line]
             result.files_fixed = len(reformatted)
             result.errors = [stderr] if stderr else ["Format command failed"]
@@ -473,15 +471,16 @@ class IsortTool(MaintenanceTool):
             # Parse diff output
             if stdout:
                 files_with_issues = set()
-                for line in stdout.split('\n'):
-                    if line.startswith(('---', '+++')):
+                for line in stdout.split("\n"):
+                    if line.startswith(("---", "+++")):
                         file_path = line.split()[1]
-                        if file_path != '/dev/null':
+                        if file_path != "/dev/null":
                             files_with_issues.add(file_path)
                 result.files_checked = len(files_with_issues)
                 result.errors = [
-                    f"{f} has incorrect import order" for f in list(files_with_issues)[
-                        :5]]
+                    f"{f} has incorrect import order"
+                    for f in list(files_with_issues)[:5]
+                ]
 
         return result
 
@@ -505,8 +504,7 @@ class IsortTool(MaintenanceTool):
             result.success = True
             # Isort modifies files in place, check output for details
             if "Fixing" in stdout:
-                fixed_files = [
-                    line for line in stdout.split('\n') if "Fixing" in line]
+                fixed_files = [line for line in stdout.split("\n") if "Fixing" in line]
                 result.files_fixed = len(fixed_files)
             result.errors = [stderr] if stderr else ["Sort command failed"]
 
@@ -585,9 +583,9 @@ class PyupgradeTool(MaintenanceTool):
         """Check for outdated syntax."""
         result = MaintenanceResult(self.name)
         result.success = True
-        result.changes = [{
-            "note": "Pyupgrade doesn't have a check mode. Run fix to upgrade syntax."
-        }]
+        result.changes = [
+            {"note": "Pyupgrade doesn't have a check mode. Run fix to upgrade syntax."}
+        ]
         return result
 
     def fix(self, targets: list[Path]) -> MaintenanceResult:
@@ -610,8 +608,7 @@ class PyupgradeTool(MaintenanceTool):
                 files = list(target.rglob("*.py"))
 
             for file in files:
-                cmd = [self.tool_type.value] + \
-                    tool_config.fix_args + [str(file)]
+                cmd = [self.tool_type.value] + tool_config.fix_args + [str(file)]
                 returncode, _, _ = self.run_command(cmd, timeout=30)
                 if returncode == 0:
                     files_fixed += 1
@@ -642,7 +639,7 @@ class MarkdownlintTool(MaintenanceTool):
         # Find markdown files
         md_files = []
         for target in targets:
-            if target.is_file() and target.suffix == '.md':
+            if target.is_file() and target.suffix == ".md":
                 md_files.append(target)
                 md_files.extend(target.rglob("*.md"))
 
@@ -660,15 +657,13 @@ class MarkdownlintTool(MaintenanceTool):
             result.success = True
             # Parse markdownlint output
             if stdout:
-                lines = stdout.strip().split('\n')
+                lines = stdout.strip().split("\n")
                 result.files_checked = len(
-                    {line.split(":")[0] for line in lines if ":" in line})
+                    {line.split(":")[0] for line in lines if ":" in line}
+                )
                 result.errors = lines[:10]
                 if len(lines) > 10:
-                    result.errors.append(
-                        f"... and {
-                            len(lines) -
-                            10} more issues")
+                    result.errors.append(f"... and {len(lines) - 10} more issues")
 
         return result
 
@@ -683,7 +678,7 @@ class MarkdownlintTool(MaintenanceTool):
         # Find markdown files
         md_files = []
         for target in targets:
-            if target.is_file() and target.suffix == '.md':
+            if target.is_file() and target.suffix == ".md":
                 md_files.append(target)
                 md_files.extend(target.rglob("*.md"))
 
@@ -692,8 +687,7 @@ class MarkdownlintTool(MaintenanceTool):
             return result
 
         tool_config = self.config.tools[self.tool_type]
-        cmd = [self.tool_type.value] + \
-            tool_config.fix_args + [str(f) for f in md_files]
+        cmd = [self.tool_type.value] + tool_config.fix_args + [str(f) for f in md_files]
 
         returncode, stdout, stderr = self.run_command(cmd)
         result.duration = time.time() - start_time
@@ -737,14 +731,14 @@ class ToolRegistry:
 
         for tool_class in tool_classes:
             tool = tool_class(self.config)
-            if tool.tool_type in self.config.tools and self.config.tools[tool.tool_type].enabled:
+            if (
+                tool.tool_type in self.config.tools
+                and self.config.tools[tool.tool_type].enabled
+            ):
                 if tool.is_available():
                     self.tools[tool.tool_type] = tool
                     console.print(f"✅ {tool.name} is available", style="green")
-                    console.print(
-                        f"❌ {
-                            tool.name} is not installed",
-                        style="red")
+                    console.print(f"❌ {tool.name} is not installed", style="red")
 
     def get_tools(self) -> list[MaintenanceTool]:
         """Get all registered tools in execution order."""
@@ -752,10 +746,10 @@ class ToolRegistry:
         order = [
             ToolType.AUTOFLAKE,  # Remove unused first
             ToolType.PYUPGRADE,  # Upgrade syntax
-            ToolType.ISORT,      # Sort imports
-            ToolType.BLACK,      # Format code
-            ToolType.RUFF,       # Lint
-            ToolType.MYPY,       # Type check
+            ToolType.ISORT,  # Sort imports
+            ToolType.BLACK,  # Format code
+            ToolType.RUFF,  # Lint
+            ToolType.MYPY,  # Type check
             ToolType.MARKDOWNLINT,  # Documentation
         ]
 
@@ -809,23 +803,22 @@ class CustomFixModule(ABC):
         Returns True if successful, False otherwise.
         """
 
-    def preview_changes(self, file_path: Path,
-                        issues: list[dict[str, Any]]) -> str:
+    def preview_changes(self, file_path: Path, issues: list[dict[str, Any]]) -> str:
         """Generate preview of changes."""
         content = file_path.read_text()
-        lines = content.split('\n')
+        lines = content.split("\n")
 
         preview = []
         for issue in issues:
-            line_num = issue['line'] - 1
+            line_num = issue["line"] - 1
             if 0 <= line_num < len(lines):
                 preview.append(f"Line {issue['line']}: {issue['message']}")
                 preview.append(f"  - {lines[line_num]}")
-                if 'fix' in issue:
+                if "fix" in issue:
                     preview.append(f"  + {issue['fix']}")
                 preview.append("")
 
-        return '\n'.join(preview)
+        return "\n".join(preview)
 
 
 # ============================================================================
@@ -847,12 +840,14 @@ class MaintenanceOrchestrator:
 
     def run(self) -> int:
         """Run the maintenance system."""
-        self.console.print(Panel.fit(
-            f"[bold cyan]Unified Maintenance System v{__version__}[/bold cyan]\n"
-            f"Mode: {self.config.mode.value}",
-            title="🔧 Maintenance System",
-            border_style="cyan"
-        ))
+        self.console.print(
+            Panel.fit(
+                f"[bold cyan]Unified Maintenance System v{__version__}[/bold cyan]\n"
+                f"Mode: {self.config.mode.value}",
+                title="🔧 Maintenance System",
+                border_style="cyan",
+            )
+        )
 
         # Get targets
         targets = self._get_targets()
@@ -887,9 +882,7 @@ class MaintenanceOrchestrator:
         for target in targets:
             if target.exists():
                 valid_targets.append(target)
-                self.console.print(
-                    f"⚠️  Target not found: {target}",
-                    style="yellow")
+                self.console.print(f"⚠️  Target not found: {target}", style="yellow")
 
         return valid_targets
 
@@ -904,9 +897,8 @@ class MaintenanceOrchestrator:
         with Progress(
             SpinnerColumn(),
             TextColumn("[progress.description]{task.description}"),
-            console=self.console
+            console=self.console,
         ) as progress:
-
             for tool in tools:
                 task = progress.add_task(f"Running {tool.name}...", total=None)
 
@@ -915,16 +907,16 @@ class MaintenanceOrchestrator:
 
                 if check_result.success:
                     progress.update(
-                        task, description=f"✅ {
-                            tool.name} - No issues found")
+                        task, description=f"✅ {tool.name} - No issues found"
+                    )
                     self.results.append(check_result)
                     continue
 
                 # Show issues
                 if self.config.verbose and check_result.errors:
                     self.console.print(
-                        f"\n[yellow]Issues found by {
-                            tool.name}:[/yellow]")
+                        f"\n[yellow]Issues found by {tool.name}:[/yellow]"
+                    )
                     for error in check_result.errors[:5]:
                         self.console.print(f"  • {error}")
 
@@ -933,12 +925,11 @@ class MaintenanceOrchestrator:
                     # Interactive mode - ask for confirmation
                     if self.config.mode == FixMode.INTERACTIVE:
                         if not Confirm.ask(
-                            f"Fix {
-                                check_result.files_checked} issues with {
-                                tool.name}?"):
+                            f"Fix {check_result.files_checked} issues with {tool.name}?"
+                        ):
                             progress.update(
-                                task, description=f"⏭️  {
-                                    tool.name} - Skipped")
+                                task, description=f"⏭️  {tool.name} - Skipped"
+                            )
                             continue
 
                     fix_result = tool.fix(targets)
@@ -946,11 +937,11 @@ class MaintenanceOrchestrator:
                     if fix_result.success:
                         progress.update(
                             task,
-                            description=f"✅ {tool.name} - Fixed {fix_result.files_fixed} files"
+                            description=f"✅ {tool.name} - Fixed {fix_result.files_fixed} files",
                         )
                         progress.update(
-                            task, description=f"❌ {
-                                tool.name} - Fix failed")
+                            task, description=f"❌ {tool.name} - Fix failed"
+                        )
                         if self.config.verbose and fix_result.errors:
                             for error in fix_result.errors:
                                 self.console.print(f"  • {error}", style="red")
@@ -958,7 +949,7 @@ class MaintenanceOrchestrator:
                     self.results.append(fix_result)
                     progress.update(
                         task,
-                        description=f"🔍 {tool.name} - {check_result.files_checked} files need fixing"
+                        description=f"🔍 {tool.name} - {check_result.files_checked} files need fixing",
                     )
                     self.results.append(check_result)
 
@@ -1027,51 +1018,49 @@ class MaintenanceOrchestrator:
                 module_class = module_registry.get(module_name)
                 if not module_class:
                     self.console.print(
-                        f"⚠️  Unknown custom module '{module_name}'",
-                        style="yellow")
+                        f"⚠️  Unknown custom module '{module_name}'", style="yellow"
+                    )
                     continue
 
                 # Initialize module with configuration
                 module = module_class(
                     dry_run=(self.config.mode == FixMode.DRY_RUN),
                     interactive=(self.config.mode == FixMode.INTERACTIVE),
-                    verbose=self.config.verbose
+                    verbose=self.config.verbose,
                 )
 
                 self.console.print(f"🔧 Running {module.description}...")
 
                 # Handle workspace-level modules
-                if hasattr(module, 'run_workspace_standardization'):
+                if hasattr(module, "run_workspace_standardization"):
                     success = module.run_workspace_standardization()
-                elif hasattr(module, 'run_workspace_cleanup'):
+                elif hasattr(module, "run_workspace_cleanup"):
                     success = module.run_workspace_cleanup()
-                elif hasattr(module, 'run_workspace_customization'):
+                elif hasattr(module, "run_workspace_customization"):
                     success = module.run_workspace_customization()
-                elif hasattr(module, 'run_workspace_testing'):
+                elif hasattr(module, "run_workspace_testing"):
                     success = module.run_workspace_testing()
-                elif hasattr(module, 'run_workspace_validation'):
+                elif hasattr(module, "run_workspace_validation"):
                     success = module.run_workspace_validation()
-                elif hasattr(module, 'run_workspace_analysis'):
+                elif hasattr(module, "run_workspace_analysis"):
                     success = module.run_workspace_analysis()
                     # Handle file-level modules
                     success = self._run_file_level_module(module, targets)
 
                 if success:
-                    self.console.print(
-                        f"✅ {
-                            module.name} completed",
-                        style="green")
+                    self.console.print(f"✅ {module.name} completed", style="green")
                     self.console.print(f"❌ {module.name} failed", style="red")
 
             except ImportError as e:
                 self.console.print(
                     f"❌ Failed to import custom module '{module_name}': {e}",
-                    style="red")
+                    style="red",
+                )
                 return False
             except Exception as e:
                 self.console.print(
-                    f"❌ Failed to run custom module '{module_name}': {e}",
-                    style="red")
+                    f"❌ Failed to run custom module '{module_name}': {e}", style="red"
+                )
                 return False
 
         return True
@@ -1082,13 +1071,13 @@ class MaintenanceOrchestrator:
         files_fixed = 0
 
         for target in targets:
-            if target.is_file() and target.suffix == '.py':
+            if target.is_file() and target.suffix == ".py":
                 files = [target]
                 files = list(target.rglob("*.py"))
 
             for file_path in files:
                 try:
-                    content = file_path.read_text(encoding='utf-8')
+                    content = file_path.read_text(encoding="utf-8")
                     issues = module.analyze(file_path, content)
 
                     if issues:
@@ -1097,51 +1086,60 @@ class MaintenanceOrchestrator:
                         if fixed_content != content:
                             if not module.dry_run:
                                 if module.interactive:
-                                    preview = module.preview_changes(file_path, [
-                                        {"line": issue.line, "message": issue.message}
-                                        for issue in issues
-                                    ])
+                                    preview = module.preview_changes(
+                                        file_path,
+                                        [
+                                            {
+                                                "line": issue.line,
+                                                "message": issue.message,
+                                            }
+                                            for issue in issues
+                                        ],
+                                    )
                                     self.console.print(
-                                        f"\n[yellow]Changes for {file_path}:[/yellow]")
+                                        f"\n[yellow]Changes for {file_path}:[/yellow]"
+                                    )
                                     self.console.print(preview)
 
                                     if not Confirm.ask(
-                                            f"Apply fixes to {file_path.name}?"):
+                                        f"Apply fixes to {file_path.name}?"
+                                    ):
                                         continue
 
-                                file_path.write_text(
-                                    fixed_content, encoding='utf-8')
+                                file_path.write_text(fixed_content, encoding="utf-8")
                                 files_fixed += 1
                                 self.console.print(
                                     f"[cyan][DRY RUN] Would fix {
-                                        len(issues)} issues in {
-                                        file_path.name}[/cyan]")
+                                        len(issues)
+                                    } issues in {file_path.name}[/cyan]"
+                                )
 
                     files_processed += 1
 
                 except Exception as e:
                     if module.verbose:
                         self.console.print(
-                            f"⚠️  Error processing {file_path}: {e}", style="yellow")
+                            f"⚠️  Error processing {file_path}: {e}", style="yellow"
+                        )
 
         if module.verbose:
             action = "Would fix" if module.dry_run else "Fixed"
             self.console.print(
-                f"[green]{action} {files_fixed}/{files_processed} files[/green]")
+                f"[green]{action} {files_fixed}/{files_processed} files[/green]"
+            )
 
         return True
 
     def _generate_report(self):
         """Generate maintenance report."""
         timestamp = datetime.now(UTC).strftime("%Y%m%d_%H%M%S")
-        report_file = self.config.report_dir / \
-            f"maintenance_report_{timestamp}.json"
+        report_file = self.config.report_dir / f"maintenance_report_{timestamp}.json"
 
         report_data = {
             "version": __version__,
             "timestamp": timestamp,
             "mode": self.config.mode.value,
-            "results": []
+            "results": [],
         }
 
         # Summary table
@@ -1166,7 +1164,7 @@ class MaintenanceOrchestrator:
                 status,
                 str(result.files_checked),
                 str(result.files_fixed),
-                f"{result.duration:.2f}s"
+                f"{result.duration:.2f}s",
             )
 
             total_checked += result.files_checked
@@ -1174,14 +1172,16 @@ class MaintenanceOrchestrator:
             total_duration += result.duration
 
             # Add to report data
-            report_data["results"].append({
-                "tool": result.tool_name,
-                "success": result.success,
-                "files_checked": result.files_checked,
-                "files_fixed": result.files_fixed,
-                "duration": result.duration,
-                "errors": result.errors[:10] if result.errors else []
-            })
+            report_data["results"].append(
+                {
+                    "tool": result.tool_name,
+                    "success": result.success,
+                    "files_checked": result.files_checked,
+                    "files_fixed": result.files_fixed,
+                    "duration": result.duration,
+                    "errors": result.errors[:10] if result.errors else [],
+                }
+            )
 
         # Add totals
         table.add_row(
@@ -1189,14 +1189,14 @@ class MaintenanceOrchestrator:
             "",
             f"[bold]{total_checked}[/bold]",
             f"[bold]{total_fixed}[/bold]",
-            f"[bold]{total_duration:.2f}s[/bold]"
+            f"[bold]{total_duration:.2f}s[/bold]",
         )
 
         self.console.print("\n")
         self.console.print(table)
 
         # Save report
-        with open(report_file, 'w') as f:
+        with open(report_file, "w") as f:
             json.dump(report_data, f, indent=2)
 
         self.console.print(f"\n📄 Report saved to: {report_file}", style="cyan")
@@ -1205,10 +1205,8 @@ class MaintenanceOrchestrator:
         if self.config.mode == FixMode.DRY_RUN and total_checked > 0:
             self.console.print("\n[yellow]Next steps:[/yellow]")
             self.console.print("• Review the issues found")
-            self.console.print(
-                "• Run with --mode=interactive for confirmation prompts")
-            self.console.print(
-                "• Run with --mode=auto to fix all issues automatically")
+            self.console.print("• Run with --mode=interactive for confirmation prompts")
+            self.console.print("• Run with --mode=auto to fix all issues automatically")
 
 
 # ============================================================================
@@ -1223,7 +1221,7 @@ def load_config(args) -> MaintenanceConfig:
     # Load from file if provided
     if args.config and Path(args.config).exists():
         with open(args.config) as f:
-            if args.config.endswith('.yaml'):
+            if args.config.endswith(".yaml"):
                 data = yaml.safe_load(f)
                 data = json.load(f)
 
@@ -1273,43 +1271,29 @@ Examples:
 
   # Use custom configuration
   python scripts/maintenance/unified_maintenance_system_v2.py --config config/maintenance.yaml
-        """)
-
-    parser.add_argument(
-        "--projects",
-        nargs="+",
-        help="Specific projects to target"
+        """,
     )
+
+    parser.add_argument("--projects", nargs="+", help="Specific projects to target")
     parser.add_argument(
         "--mode",
         choices=["dry-run", "interactive", "auto"],
         default="dry-run",
-        help="Operation mode (default: dry-run)"
+        help="Operation mode (default: dry-run)",
     )
-    parser.add_argument(
-        "--config",
-        help="Configuration file (YAML or JSON)"
-    )
+    parser.add_argument("--config", help="Configuration file (YAML or JSON)")
     parser.add_argument(
         "--skip-tools",
         nargs="+",
         choices=[t.value for t in ToolType],
-        help="Tools to skip"
+        help="Tools to skip",
     )
     parser.add_argument(
-        "--report-dir",
-        default="reports/maintenance",
-        help="Directory for reports"
+        "--report-dir", default="reports/maintenance", help="Directory for reports"
     )
+    parser.add_argument("--verbose", "-v", action="store_true", help="Verbose output")
     parser.add_argument(
-        "--verbose", "-v",
-        action="store_true",
-        help="Verbose output"
-    )
-    parser.add_argument(
-        "--version",
-        action="version",
-        version=f"%(prog)s {__version__}"
+        "--version", action="version", version=f"%(prog)s {__version__}"
     )
 
     args = parser.parse_args()

@@ -61,10 +61,7 @@ def main() -> None:
                 shutil.move(str(script), str(archive_path))
                 moved_count += 1
 
-    print(
-        f"\nArchived {moved_count} obsolete scripts to {
-            archive_dir /
-            timestamp}")
+    print(f"\nArchived {moved_count} obsolete scripts to {archive_dir / timestamp}")
     print("\nRemaining maintenance structure:")
     print("- scripts/maintenance/unified_maintenance_system.py (main system)")
     print("- scripts/maintenance/emergency_lint_fixer.py (emergency use)")

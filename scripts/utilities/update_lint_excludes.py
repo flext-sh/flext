@@ -15,7 +15,8 @@ from pathlib import Path
 def parse_arguments() -> argparse.Namespace:
     """Parse command line arguments."""
     parser = argparse.ArgumentParser(
-        description="Atualiza pyproject.toml com exclusões para arquivos com problemas E501", )
+        description="Atualiza pyproject.toml com exclusões para arquivos com problemas E501",
+    )
     parser.add_argument(
         "--input",
         required=True,
@@ -105,7 +106,8 @@ def update_pyproject_toml(
         if existing_lines and not existing_lines[-1].strip().startswith("#"):
             existing_lines.append("")
         existing_lines.append(
-            "# Arquivos com problemas severos de linhas longas (a serem tratados gradualmente)", )
+            "# Arquivos com problemas severos de linhas longas (a serem tratados gradualmente)",
+        )
 
         # Adicionar novas exclusões
         existing_lines.extend(exclusions)
@@ -134,9 +136,7 @@ def update_pyproject_toml(
         )
 
     # Mostrar mudanças
-    print(
-        f"Serão atualizados {
-            len(problem_files)} arquivos com exclusões para E501")
+    print(f"Serão atualizados {len(problem_files)} arquivos com exclusões para E501")
 
     if dry_run:
         print("Modo dry-run ativado. Nenhuma alteração será realizada.")
@@ -165,26 +165,18 @@ def main() -> None:
         return 1
 
     if not pyproject_file.exists():
-        print(
-            f"Erro: Arquivo {pyproject_file} não encontrado",
-            file=sys.stderr)
+        print(f"Erro: Arquivo {pyproject_file} não encontrado", file=sys.stderr)
         return 1
 
     # Ler arquivos problemáticos
     problem_files = read_problem_files(input_file, args.min_errors)
 
     if not problem_files:
-        print(
-            f"Nenhum arquivo com pelo menos {
-                args.min_errors} erros E501 encontrado.")
+        print(f"Nenhum arquivo com pelo menos {args.min_errors} erros E501 encontrado.")
         return 0
 
     # Atualizar pyproject.toml
-    update_pyproject_toml(
-        pyproject_file,
-        problem_files,
-        args.max_files,
-        args.dry_run)
+    update_pyproject_toml(pyproject_file, problem_files, args.max_files, args.dry_run)
 
     return 0
 

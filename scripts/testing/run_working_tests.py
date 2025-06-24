@@ -20,8 +20,7 @@ class WorkingTestConfig(BaseModel):
 
     verbose: bool = Field(default=True, description="Verbose output")
     coverage: bool = Field(default=True, description="Enable coverage")
-    generate_reports: bool = Field(
-        default=True, description="Generate HTML reports")
+    generate_reports: bool = Field(default=True, description="Generate HTML reports")
 
 
 class WorkingTestRunner:
@@ -324,21 +323,17 @@ if __name__ == "__main__":
         print(f"❌ Failed: {total_failed}")
         print(f"⏱️ Total Time: {total_duration:.2f}s")
 
-        success_rate = (
-            total_passed /
-            total_tests *
-            100) if total_tests > 0 else 0
+        success_rate = (total_passed / total_tests * 100) if total_tests > 0 else 0
         print(f"📊 Success Rate: {success_rate:.1f}%")
 
         print("\n📋 DETAILED RESULTS:")
         for result in self.results:
             status = "✅" if result["success"] else "❌"
             print(
-                f"  {status} {
-                    result['name']}: {
-                    result['passed']}/{
-                    result['tests']} ({
-                    result['duration']:.2f}s)")
+                f"  {status} {result['name']}: {result['passed']}/{result['tests']} ({
+                    result['duration']:.2f
+                }s)"
+            )
 
         print("\n" + "=" * 50)
 

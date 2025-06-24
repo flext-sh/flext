@@ -24,11 +24,9 @@ class FlxImportFixer(ast.NodeTransformer):
             for alias in node.names:
                 name = alias.name
                 # Add flx_ prefix to hook functions
-                if name.startswith(
-                        "register_") and not name.startswith("flx_"):
+                if name.startswith("register_") and not name.startswith("flx_"):
                     new_name = f"flx_{name}"
-                    new_alias = ast.alias(
-                        name=new_name, asname=alias.asname or name)
+                    new_alias = ast.alias(name=new_name, asname=alias.asname or name)
                     new_names.append(new_alias)
                     changed = True
                     self.changes.append(
@@ -58,9 +56,7 @@ class FlxExceptionFixer(ast.NodeTransformer):
         node = self.generic_visit(node)
 
         # Check if accessing private attributes on exception objects
-        if isinstance(
-                node.value,
-                ast.Name) and "exception" in node.value.id.lower():
+        if isinstance(node.value, ast.Name) and "exception" in node.value.id.lower():
             if node.attr in {"_context", "_details", "_error_chain"}:
                 # Replace with getattr call
                 new_node = ast.Call(
@@ -74,12 +70,12 @@ class FlxExceptionFixer(ast.NodeTransformer):
                 )
                 self.changes.append(
                     {
-                        "type": "exception_attr", "old": f"{
-                            node.value.id}.{
-                            node.attr}", "new": f"getattr({
-                            node.value.id}, '{
-                            node.attr}', None)", "line": node.lineno if hasattr(
-                            node, "lineno") else 0, })
+                        "type": "exception_attr",
+                        "old": f"{node.value.id}.{node.attr}",
+                        "new": f"getattr({node.value.id}, '{node.attr}', None)",
+                        "line": node.lineno if hasattr(node, "lineno") else 0,
+                    }
+                )
                 return new_node
 
         return node
@@ -117,9 +113,7 @@ def fix_missing_imports(filepath: Path) -> list[dict[str, any]]:
         # Check for undefined names and add imports
         added_imports = set()
         for name, import_stmt in import_map.items():
-            if re.search(
-                    rf"\b{name}\b",
-                    content) and import_stmt not in content:
+            if re.search(rf"\b{name}\b", content) and import_stmt not in content:
                 if import_stmt not in added_imports:
                     lines.insert(import_end_line, import_stmt)
                     added_imports.add(import_stmt)
@@ -241,8 +235,7 @@ def fix_constructor_calls(
             pattern = rf"{class_name}\s*\([^)]*\)"
             matches = list(re.finditer(pattern, content))
 
-            for match in reversed(
-                    matches):  # Process in reverse to maintain positions
+            for match in reversed(matches):  # Process in reverse to maintain positions
                 call_text = match.group()
 
                 # Check if it's missing required args
@@ -258,8 +251,7 @@ def fix_constructor_calls(
                             args_part = call_text[:close_idx]
 
                             # Add comma if there are existing args
-                            if "(" in args_part and args_part.split(
-                                    "(")[1].strip():
+                            if "(" in args_part and args_part.split("(")[1].strip():
                                 new_call = f"{args_part}, {arg_name}={default_value})"
                                 new_call = (
                                     f"{args_part.rstrip()}{arg_name}={default_value})"
@@ -273,7 +265,7 @@ def fix_constructor_calls(
                             content = (
                                 content[: match.start()]
                                 + new_call
-                                + content[match.end():]
+                                + content[match.end() :]
                             )
 
                             changes.append(
@@ -371,8 +363,7 @@ def main() -> None:
 
         if args.type in {"constructors", "all"}:
             if not args.dry_run:
-                constructor_changes = fix_constructor_calls(
-                    filepath, inventory)
+                constructor_changes = fix_constructor_calls(filepath, inventory)
                 file_changes.extend(constructor_changes)
                 print("  Would fix constructor calls")
 
@@ -389,10 +380,10 @@ def main() -> None:
                     print(f"  Method: {change['old']} -> {change['new']}")
                 elif change["type"] == "constructor_arg":
                     print(
-                        f"  Constructor: {
-                            change['class']} added {
-                            change['arg']}={
-                            change['value']}")
+                        f"  Constructor: {change['class']} added {change['arg']}={
+                            change['value']
+                        }"
+                    )
             print("  No changes needed")
 
     print(f"\nTotal changes: {total_changes}")

@@ -17,16 +17,18 @@ def fix_protocols_py():
     # Fix incomplete docstring - find the missing closing """
     if '"""' in content and content.count('"""') % 2 != 0:
         # Find the last line before 'from __future__' or 'import'
-        lines = content.split('\n')
+        lines = content.split("\n")
         for i, line in enumerate(lines):
-            if (line.strip().startswith('from __future__') or
-                line.strip().startswith('import ') or
-                line.strip().startswith('from typing')):
+            if (
+                line.strip().startswith("from __future__")
+                or line.strip().startswith("import ")
+                or line.strip().startswith("from typing")
+            ):
                 # Insert closing """ before this line
                 lines.insert(i, '"""')
                 break
 
-        content = '\n'.join(lines)
+        content = "\n".join(lines)
         file_path.write_text(content)
 
 
@@ -57,7 +59,7 @@ def fix_incomplete_docstrings():
         "scripts/utilities/utils/pdf_converter_advanced.py",
         "scripts/utilities/test_basic.py",
         "scripts/utilities/test_all_functionality.py",
-        "scripts/quality_loop.py"
+        "scripts/quality_loop.py",
     ]
 
     fixed_files = []
@@ -73,43 +75,56 @@ def fix_incomplete_docstrings():
 
             # Fix 1: Incomplete docstrings (odd number of """)
             if '"""' in content and content.count('"""') % 2 != 0:
-                lines = content.split('\n')
+                lines = content.split("\n")
 
                 # Find where to close the docstring
                 in_docstring = False
                 for i, line in enumerate(lines):
                     if '"""' in line:
                         in_docstring = not in_docstring
-                    elif in_docstring and (line.strip().startswith('from ') or
-                                         line.strip().startswith('import ') or
-                                         line.strip() == ''):
+                    elif in_docstring and (
+                        line.strip().startswith("from ")
+                        or line.strip().startswith("import ")
+                        or line.strip() == ""
+                    ):
                         # Close docstring before this line
                         lines.insert(i, '"""')
                         break
 
-                content = '\n'.join(lines)
+                content = "\n".join(lines)
 
             # Fix 2: Remove duplicate typing imports
-            content = re.sub(r'(from typing import [^\n]+)\n(from typing import [^\n]+)', r'\1', content)
+            content = re.sub(
+                r"(from typing import [^\n]+)\n(from typing import [^\n]+)",
+                r"\1",
+                content,
+            )
 
             # Fix 3: Remove isolated import sys
-            lines = content.split('\n')
+            lines = content.split("\n")
             filtered_lines = []
             for i, line in enumerate(lines):
-                if (line.strip() == "import sys" and
-                    i > 0 and i < len(lines) - 1 and
-                    not lines[i - 1].strip().startswith('import') and
-                    not lines[i - 1].strip().startswith('from') and
-                    not lines[i + 1].strip().startswith('import') and
-                    not lines[i + 1].strip().startswith('from')):
+                if (
+                    line.strip() == "import sys"
+                    and i > 0
+                    and i < len(lines) - 1
+                    and not lines[i - 1].strip().startswith("import")
+                    and not lines[i - 1].strip().startswith("from")
+                    and not lines[i + 1].strip().startswith("import")
+                    and not lines[i + 1].strip().startswith("from")
+                ):
                     continue  # Skip isolated import sys
                 filtered_lines.append(line)
 
-            content = '\n'.join(filtered_lines)
+            content = "\n".join(filtered_lines)
 
             # Fix 4: Remove lines that are just broken fragments
-            content = re.sub(r'^from typing import [^,\n]+(?:, [^,\n]+)*\nfrom typing import.*$',
-                           'from typing import Any, Dict, List, Optional', content, flags=re.MULTILINE)
+            content = re.sub(
+                r"^from typing import [^,\n]+(?:, [^,\n]+)*\nfrom typing import.*$",
+                "from typing import Any, Dict, List, Optional",
+                content,
+                flags=re.MULTILINE,
+            )
 
             if content != original_content:
                 file_path.write_text(content)
@@ -127,10 +142,14 @@ def test_syntax():
 
     try:
         result = subprocess.run(
-            ["python", "-c", "import sys; sys.path.insert(0, '/home/marlonsc/pyauto/flx/src'); import flx; print('✅ FLX imports successfully')"],
+            [
+                "python",
+                "-c",
+                "import sys; sys.path.insert(0, '/home/marlonsc/pyauto/flx/src'); import flx; print('✅ FLX imports successfully')",
+            ],
             capture_output=True,
             text=True,
-            timeout=10
+            timeout=10,
         )
 
         if result.returncode == 0:
@@ -141,7 +160,6 @@ def test_syntax():
 
 
 if __name__ == "__main__":
-
     # Fix specific files
     fixed_files = fix_incomplete_docstrings()
 
@@ -151,4 +169,6 @@ if __name__ == "__main__":
     # Log to token
     with open("/home/marlonsc/pyauto/.token", "a") as f:
         status = "SUCCESS" if success else "FAILED"
-        f.write(f"FLX-SYNTAX-FIX-002 {status}: Fixed {len(fixed_files)} files, import test {status}\n")
+        f.write(
+            f"FLX-SYNTAX-FIX-002 {status}: Fixed {len(fixed_files)} files, import test {status}\n"
+        )

@@ -29,9 +29,7 @@ class FlxBaseConfig(PydanticBaseSettings):
     # Common configuration fields
     debug: bool = Field(default=False, description="Enable debug mode")
     log_level: str = Field(default="INFO", description="Logging level")
-    environment: str = Field(
-        default="development",
-        description="Environment name")
+    environment: str = Field(default="development", description="Environment name")
 
     # Connection settings
     timeout: int = Field(default=30, description="Default timeout in seconds")
@@ -55,19 +53,15 @@ class FlxAdapterConfig(FlxBaseConfig):
 
     # Adapter identification
     adapter_name: str = Field(..., description="Unique adapter name")
-    adapter_version: str = Field(
-        default="1.0.0",
-        description="Adapter version")
+    adapter_version: str = Field(default="1.0.0", description="Adapter version")
 
     # Performance settings
-    connection_pool_size: int = Field(
-        default=10, description="Connection pool size")
+    connection_pool_size: int = Field(default=10, description="Connection pool size")
     enable_caching: bool = Field(default=True, description="Enable caching")
     cache_ttl: int = Field(default=300, description="Cache TTL in seconds")
 
     # Monitoring settings
-    enable_metrics: bool = Field(default=True,
-                                 description="Enable metrics collection")
+    enable_metrics: bool = Field(default=True, description="Enable metrics collection")
     enable_tracing: bool = Field(
         default=False, description="Enable distributed tracing"
     )
@@ -88,7 +82,7 @@ class FlxAdapterConfig(FlxBaseConfig):
                 # Temporarily add prefixed env vars
                 for key, value in original_env.items():
                     if key.startswith(env_prefix):
-                        clean_key = key[len(env_prefix):].lstrip("_")
+                        clean_key = key[len(env_prefix) :].lstrip("_")
                         os.environ[clean_key] = value
 
                 return cls()
@@ -112,8 +106,7 @@ class FlxDatabaseConfig(FlxAdapterConfig):
 
     # Connection pool settings
     pool_size: int = Field(default=20, description="Connection pool size")
-    max_overflow: int = Field(default=10,
-                              description="Max overflow connections")
+    max_overflow: int = Field(default=10, description="Max overflow connections")
     pool_timeout: int = Field(default=30, description="Pool checkout timeout")
 
     @property
@@ -135,15 +128,12 @@ class FlxHttpConfig(FlxAdapterConfig):
     password: str | None = Field(default=None, description="Password")
 
     # HTTP client settings
-    verify_ssl: bool = Field(default=True,
-                             description="Verify SSL certificates")
-    follow_redirects: bool = Field(
-        default=True, description="Follow HTTP redirects")
+    verify_ssl: bool = Field(default=True, description="Verify SSL certificates")
+    follow_redirects: bool = Field(default=True, description="Follow HTTP redirects")
     max_redirects: int = Field(default=5, description="Maximum redirects")
 
     # Rate limiting
-    rate_limit_requests: int = Field(
-        default=100, description="Requests per minute")
+    rate_limit_requests: int = Field(default=100, description="Requests per minute")
     rate_limit_window: int = Field(
         default=60, description="Rate limit window in seconds"
     )
@@ -199,9 +189,7 @@ def load_config_from_file[T: "BaseSettings"](
     elif path.suffix in {".toml", ".tml"}:
         with path.open("rb") as f:
             config_dict = tomllib.load(f)
-        raise ValueError(
-            f"Unsupported configuration file format: {
-                path.suffix}")
+        raise ValueError(f"Unsupported configuration file format: {path.suffix}")
 
     return create_config_from_dict(config_class, config_dict)
 

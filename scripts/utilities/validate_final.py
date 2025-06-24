@@ -68,16 +68,8 @@ def validate_final() -> bool | None:
                 print(f"    ORDER_NBR: {record.get('ORDER_NBR', 'N/A')}")
                 print(f"    COMPANY_ID: {record.get('COMPANY_ID', 'N/A')}")
                 print(f"    FACILITY_ID: {record.get('FACILITY_ID', 'N/A')}")
-                print(
-                    f"    ORDER_TYPE_ID: {
-                        record.get(
-                            'ORDER_TYPE_ID',
-                            'N/A')}")
-                print(
-                    f"    ORIG_SALE_PRICE: {
-                        record.get(
-                            'ORIG_SALE_PRICE',
-                            'N/A')}")
+                print(f"    ORDER_TYPE_ID: {record.get('ORDER_TYPE_ID', 'N/A')}")
+                print(f"    ORIG_SALE_PRICE: {record.get('ORIG_SALE_PRICE', 'N/A')}")
                 print(f"    CREATED_BY: {record.get('CREATED_BY', 'N/A')}")
                 print(f"    UPDATED_BY: {record.get('UPDATED_BY', 'N/A')}")
 

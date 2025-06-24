@@ -87,8 +87,7 @@ def get_python_files(
     return python_files
 
 
-def detect_long_lines(
-        file_path: Path, max_length: int) -> list[tuple[int, str]]:
+def detect_long_lines(file_path: Path, max_length: int) -> list[tuple[int, str]]:
     """Detecta linhas que excedem o comprimento máximo."""
     long_lines: list = []
 
@@ -119,14 +118,13 @@ def flx_string_concatenation(line: str, max_length: int) -> str:
         prefix = line[: longest_match.start()]
         string_content = longest_match.group(2)
         quote = longest_match.group(1)
-        suffix = line[longest_match.end():]
+        suffix = line[longest_match.end() :]
 
         # Divide a string em partes menores
         parts: list = []
         part = ""
         for word in string_content.split():
-            if len(part + " " + word) <= max_length - \
-                    10:  # Margem de segurança
+            if len(part + " " + word) <= max_length - 10:  # Margem de segurança
                 if part:
                     part += " " + word
                     part = word
@@ -162,8 +160,8 @@ def flx_function_args(line: str, max_length: int) -> str:
 
         # Se chegou aqui, podemos fazer parse da expressão
         prefix = line[: open_paren + 1]
-        suffix = line[line.rfind(")"):]
-        args_str = line[open_paren + 1: line.rfind(")")]
+        suffix = line[line.rfind(")") :]
+        args_str = line[open_paren + 1 : line.rfind(")")]
 
         # Divide os argumentos (isso é uma simplificação e não lida com todos
         # os casos)
@@ -239,8 +237,7 @@ def flx_function_args(line: str, max_length: int) -> str:
 def flx_long_list_dict(line: str, max_length: int) -> str:
     """Corrige linhas longas com listas ou dicionários."""
     # Verifica se a linha contém uma definição de lista ou dicionário
-    if ("[" not in line and "{" not in line) or (
-            "]" not in line and "}" not in line):
+    if ("[" not in line and "{" not in line) or ("]" not in line and "}" not in line):
         return line
 
     # Tenta identificar a estrutura
@@ -251,7 +248,7 @@ def flx_long_list_dict(line: str, max_length: int) -> str:
         close_char = match.group(3)
 
         prefix = line[: match.start()]
-        suffix = line[match.end():]
+        suffix = line[match.end() :]
 
         # Se o conteúdo for longo, quebra em múltiplas linhas
         if len(content) > max_length // 2:
@@ -467,7 +464,8 @@ def process_file(
                 fixed_lines.append(line)
                 if verbose:
                     print(
-                        f"{file_path}: Linha {line_num} não pôde ser corrigida automaticamente", )
+                        f"{file_path}: Linha {line_num} não pôde ser corrigida automaticamente",
+                    )
             fixed_lines.append(line)
 
     # Escreve as alterações se alguma linha foi corrigida
@@ -479,7 +477,9 @@ def process_file(
         print(f"{file_path}: {fixed_count}/{len(long_lines)} linhas corrigidas")
         print(
             f"{file_path}: Nenhuma linha pôde ser corrigida automaticamente ({
-                len(long_lines)} linhas longas)", )
+                len(long_lines)
+            } linhas longas)",
+        )
 
     return len(long_lines) - fixed_count
 
@@ -519,7 +519,9 @@ def main() -> int:
     if args.check:
         print(
             f"\nVerificação concluída: {remaining_issues} linhas longas encontradas em {
-                len(python_files)} arquivos.", )
+                len(python_files)
+            } arquivos.",
+        )
         print(
             f"\nProcessamento concluído: {remaining_issues} linhas longas ainda precisam ser corrigidas manualmente.",
         )

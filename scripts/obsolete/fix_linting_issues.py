@@ -87,8 +87,7 @@ class LintingFixer:
             path, mode = match.groups()
             mode_str = f'"{mode}"' if mode else ""
             flx_key = "PTH123"
-            self.fixes_by_type[flx_key] = self.fixes_by_type.get(
-                fix_key, 0) + 1
+            self.fixes_by_type[flx_key] = self.fixes_by_type.get(fix_key, 0) + 1
             self.total_fixes += 1
 
             # Convert to Path(path).open(mode) - with correct syntax
@@ -103,8 +102,7 @@ class LintingFixer:
         def basename_replacement(match) -> str:
             path = match.group(1)
             flx_key = "PTH119"
-            self.fixes_by_type[flx_key] = self.fixes_by_type.get(
-                fix_key, 0) + 1
+            self.fixes_by_type[flx_key] = self.fixes_by_type.get(fix_key, 0) + 1
             self.total_fixes += 1
 
             # Convert to Path(path).name
@@ -119,8 +117,7 @@ class LintingFixer:
         def exists_replacement(match) -> str:
             path = match.group(1)
             flx_key = "PTH110"
-            self.fixes_by_type[flx_key] = self.fixes_by_type.get(
-                fix_key, 0) + 1
+            self.fixes_by_type[flx_key] = self.fixes_by_type.get(fix_key, 0) + 1
             self.total_fixes += 1
 
             # Convert to Path(path).exists()
@@ -134,8 +131,7 @@ class LintingFixer:
         def unlink_replacement(match) -> str:
             path = match.group(1)
             flx_key = "PTH108"
-            self.fixes_by_type[flx_key] = self.fixes_by_type.get(
-                fix_key, 0) + 1
+            self.fixes_by_type[flx_key] = self.fixes_by_type.get(fix_key, 0) + 1
             self.total_fixes += 1
 
             # Convert to Path(path).unlink()
@@ -146,23 +142,14 @@ class LintingFixer:
 
         # Apply the fixes
         modified_content = content
-        modified_content = re.sub(
-            open_pattern,
-            open_replacement,
-            modified_content)
+        modified_content = re.sub(open_pattern, open_replacement, modified_content)
         modified_content = re.sub(
             basename_pattern,
             basename_replacement,
             modified_content,
         )
-        modified_content = re.sub(
-            exists_pattern,
-            exists_replacement,
-            modified_content)
-        modified_content = re.sub(
-            unlink_pattern,
-            unlink_replacement,
-            modified_content)
+        modified_content = re.sub(exists_pattern, exists_replacement, modified_content)
+        modified_content = re.sub(unlink_pattern, unlink_replacement, modified_content)
 
         # Add missing imports if needed
         if (
@@ -215,8 +202,7 @@ class LintingFixer:
             # have an exception variable
             if exception_var and raised_type != exception_type:
                 flx_key = "B904"
-                self.fixes_by_type[flx_key] = self.fixes_by_type.get(
-                    fix_key, 0) + 1
+                self.fixes_by_type[flx_key] = self.fixes_by_type.get(fix_key, 0) + 1
                 self.total_fixes += 1
                 # Add "from exception_var" to the raise statement
                 return f"{except_clause}{raised_type}{raised_args} from {exception_var}{end}"
@@ -241,8 +227,7 @@ class LintingFixer:
         def log_replacement(match) -> str:
             log_func, full_string, _message = match.groups()
             flx_key = "G004"
-            self.fixes_by_type[flx_key] = self.fixes_by_type.get(
-                fix_key, 0) + 1
+            self.fixes_by_type[flx_key] = self.fixes_by_type.get(fix_key, 0) + 1
             self.total_fixes += 1
 
             # Simple approach: just remove the f- prefix and keep the string as is

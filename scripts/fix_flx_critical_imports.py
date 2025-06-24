@@ -27,13 +27,13 @@ def fix_fake_lazy_imports(file_path: Path) -> bool:
 
     # Pattern 1: Remove fake lazy_import imports
     content = re.sub(
-        r'from flx_core\.utils\.lazy_import import lazy_import\n',
-        '',
-        content
+        r"from flx_core\.utils\.lazy_import import lazy_import\n", "", content
     )
 
     # Pattern 2: Remove lazy_import function calls and replace with direct imports
-    lazy_import_pattern = r'(\w+)\s*=\s*lazy_import\([\'"]([^"\']+)[\'"]\s*,\s*[\'"]([^"\']+)[\'"]\)'
+    lazy_import_pattern = (
+        r'(\w+)\s*=\s*lazy_import\([\'"]([^"\']+)[\'"]\s*,\s*[\'"]([^"\']+)[\'"]\)'
+    )
 
     def replace_lazy_import(match: re.Match[str]) -> str:
         var_name = match.group(1)
@@ -48,7 +48,7 @@ def fix_fake_lazy_imports(file_path: Path) -> bool:
     content = re.sub(lazy_import_pattern, replace_lazy_import, content)
 
     # Pattern 3: Clean up multiple blank lines
-    content = re.sub(r'\n\n\n+', '\n\n', content)
+    content = re.sub(r"\n\n\n+", "\n\n", content)
 
     if content != original_content:
         file_path.write_text(content, encoding="utf-8")
@@ -68,37 +68,49 @@ def add_critical_imports(file_path: Path) -> bool:
     missing_imports = []
 
     # Check for Callable usage without import
-    if re.search(r'\bCallable\b', content) and 'from collections.abc import Callable' not in content:
-        missing_imports.append('from collections.abc import Callable')
+    if (
+        re.search(r"\bCallable\b", content)
+        and "from collections.abc import Callable" not in content
+    ):
+        missing_imports.append("from collections.abc import Callable")
 
     # Check for Protocol usage without import
-    if re.search(r'\bProtocol\b', content) and 'from typing import Protocol' not in content:
-        missing_imports.append('from typing import Protocol')
+    if (
+        re.search(r"\bProtocol\b", content)
+        and "from typing import Protocol" not in content
+    ):
+        missing_imports.append("from typing import Protocol")
 
     # Check for Any usage without import
-    if re.search(r'\bAny\b', content) and 'from typing import Any' not in content:
-        missing_imports.append('from typing import Any')
+    if re.search(r"\bAny\b", content) and "from typing import Any" not in content:
+        missing_imports.append("from typing import Any")
 
     # Check for Self usage without import
-    if re.search(r'\bSelf\b', content) and 'from typing_extensions import Self' not in content:
-        missing_imports.append('from typing_extensions import Self')
+    if (
+        re.search(r"\bSelf\b", content)
+        and "from typing_extensions import Self" not in content
+    ):
+        missing_imports.append("from typing_extensions import Self")
 
     # Check for TypedDict usage without import
-    if re.search(r'\bTypedDict\b', content) and 'from typing import TypedDict' not in content:
-        missing_imports.append('from typing import TypedDict')
+    if (
+        re.search(r"\bTypedDict\b", content)
+        and "from typing import TypedDict" not in content
+    ):
+        missing_imports.append("from typing import TypedDict")
 
     if missing_imports:
         # Find insertion point after __future__ imports
-        lines = content.split('\n')
+        lines = content.split("\n")
         insert_index = 0
 
         for i, line in enumerate(lines):
-            if line.startswith('from __future__'):
+            if line.startswith("from __future__"):
                 insert_index = i + 1
             elif line.startswith(('"""', "'''")):
                 # Skip docstrings
                 continue
-            elif line.strip() and not line.startswith('#'):
+            elif line.strip() and not line.startswith("#"):
                 if insert_index == 0:
                     insert_index = i
                 break
@@ -108,7 +120,7 @@ def add_critical_imports(file_path: Path) -> bool:
             lines.insert(insert_index, import_stmt)
             insert_index += 1
 
-        content = '\n'.join(lines)
+        content = "\n".join(lines)
 
     if content != original_content:
         file_path.write_text(content, encoding="utf-8")
@@ -147,7 +159,9 @@ def main() -> None:
 
     # Log completion
     with open("/home/marlonsc/pyauto/.token", "a") as f:
-        f.write(f"FIX-CRITICAL-IMPORTS-002: Fixed {fixed_lazy_imports + fixed_missing_imports} files\n")
+        f.write(
+            f"FIX-CRITICAL-IMPORTS-002: Fixed {fixed_lazy_imports + fixed_missing_imports} files\n"
+        )
 
 
 if __name__ == "__main__":

@@ -68,8 +68,7 @@ class MethodCallFixer(ast.NodeTransformer):
 
             # Check if the flx_ version exists in inventory
             flx_method_name = f"flx_{method_name}"
-            if should_fix and self._method_exists_in_inventory(
-                    flx_method_name):
+            if should_fix and self._method_exists_in_inventory(flx_method_name):
                 # Apply fix
                 old_name = node.func.attr
                 node.func.attr = flx_method_name
@@ -140,8 +139,7 @@ def main() -> None:
     """Main function."""
     import argparse
 
-    parser = argparse.ArgumentParser(
-        description="Fix method calls missing flx_ prefix")
+    parser = argparse.ArgumentParser(description="Fix method calls missing flx_ prefix")
     parser.add_argument(
         "--dry-run",
         action="store_true",
@@ -179,11 +177,10 @@ def main() -> None:
             print(f"\n{filepath.relative_to(src_dir.parent)}:")
             for change in changes:
                 print(
-                    f"  Line {
-                        change['line']}: {
-                        change['old']} -> {
-                        change['new']} ({
-                        change['context']})")
+                    f"  Line {change['line']}: {change['old']} -> {change['new']} ({
+                        change['context']
+                    })"
+                )
 
     print("\nSummary:")
     print(f"- Files processed: {len(files)}")
