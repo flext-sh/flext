@@ -102,10 +102,7 @@ def ensure_venv() -> None:
 
     if VENV_DIR.exists():
         if not pip_path.exists():
-            print(
-                colorize(
-                    "Virtual environment is broken, recreating...",
-                    "YELLOW"))
+            print(colorize("Virtual environment is broken, recreating...", "YELLOW"))
             venv_broken = True
             shutil.rmtree(VENV_DIR)
             try:
@@ -175,8 +172,7 @@ def configure_poetry() -> None:
     poetry_cmd = str(poetry_path) if poetry_path.exists() else "poetry"
 
     # Get Poetry version
-    poetry_version_result = run_command(
-        [poetry_cmd, "--version"], capture_output=True)
+    poetry_version_result = run_command([poetry_cmd, "--version"], capture_output=True)
     poetry_version = (
         poetry_version_result.stdout.strip()
         if hasattr(poetry_version_result, "stdout")
@@ -185,11 +181,9 @@ def configure_poetry() -> None:
     print(f"Using Poetry version: {poetry_version}")
 
     # Configure Poetry to NOT create flx_project-specific virtual environments
-    run_command([poetry_cmd,
-                 "config",
-                 "virtualenvs.in-flx_project",
-                 "false"],
-                check=False)
+    run_command(
+        [poetry_cmd, "config", "virtualenvs.in-flx_project", "false"], check=False
+    )
 
     # Set the path to the root .venv directory (without trailing slash to
     # avoid ~.venv error)
@@ -201,16 +195,9 @@ def configure_poetry() -> None:
 
     # Try to set create to false to avoid creating new environments
     try:
-        run_command([poetry_cmd,
-                     "config",
-                     "virtualenvs.create",
-                     "false"],
-                    check=False)
+        run_command([poetry_cmd, "config", "virtualenvs.create", "false"], check=False)
     except Exception as e:
-        print(
-            colorize(
-                f"Note: Could not set virtualenvs.create: {e}",
-                "YELLOW"))
+        print(colorize(f"Note: Could not set virtualenvs.create: {e}", "YELLOW"))
 
     # Try to set prefer-active-python (only in newer Poetry versions)
     try:
@@ -266,12 +253,12 @@ def update_lock_file() -> None:
     poetry_lock = WORKSPACE_ROOT / "poetry.lock"
     pyproject_toml = WORKSPACE_ROOT / "pyproject.toml"
 
-    if not poetry_lock.exists() or os.path.getmtime(
-            poetry_lock) < os.path.getmtime(pyproject_toml, ):
+    if not poetry_lock.exists() or os.path.getmtime(poetry_lock) < os.path.getmtime(
+        pyproject_toml,
+    ):
         try:
             # Try to get Poetry version
-            result = run_command(
-                [poetry_cmd, "--version"], capture_output=True)
+            result = run_command([poetry_cmd, "--version"], capture_output=True)
             poetry_version = result.stdout.strip()
             print(f"Using {poetry_version}")
 
@@ -325,10 +312,7 @@ def install_dependencies(dev: bool = False) -> None:
                 )
         except Exception as e2:
             print(colorize(f"Alternative install failed: {e2}", "RED"))
-            print(
-                colorize(
-                    "Please check your Poetry version and configuration",
-                    "RED"))
+            print(colorize("Please check your Poetry version and configuration", "RED"))
             return
 
     POETRY_INSTALL_CHECK.touch()
@@ -347,13 +331,14 @@ def install_project_deps(projects: list[str], dev: bool = False) -> None:
         if not project_path.exists():
             print(
                 colorize(
-                    f"⚠ Directory {flx_project} does not exist, skipping",
-                    "YELLOW"))
+                    f"⚠ Directory {flx_project} does not exist, skipping", "YELLOW"
+                )
+            )
             continue
 
         print(
-            f"Installing {
-                'all' if dev else 'main'} dependencies for {flx_project}...")
+            f"Installing {'all' if dev else 'main'} dependencies for {flx_project}..."
+        )
 
         try:
             # Try modern Poetry syntax first with --no-root
@@ -374,9 +359,8 @@ def install_project_deps(projects: list[str], dev: bool = False) -> None:
             print(colorize(f"✓ {flx_project} installation complete", "GREEN"))
         except Exception as e:
             print(
-                colorize(
-                    f"Error with modern syntax for {flx_project}: {e}",
-                    "YELLOW"))
+                colorize(f"Error with modern syntax for {flx_project}: {e}", "YELLOW")
+            )
             try:
                 # Try alternative syntax for older Poetry versions
                 if dev:
@@ -390,10 +374,7 @@ def install_project_deps(projects: list[str], dev: bool = False) -> None:
                         cwd=project_path,
                         check=False,
                     )
-                print(
-                    colorize(
-                        f"✓ {flx_project} installation complete",
-                        "GREEN"))
+                print(colorize(f"✓ {flx_project} installation complete", "GREEN"))
             except Exception as e2:
                 print(colorize(f"Error installing {flx_project}: {e2}", "RED"))
 
@@ -406,15 +387,15 @@ def run_tests(projects: list[str]) -> None:
         if not project_path.exists():
             print(
                 colorize(
-                    f"⚠ Directory {flx_project} does not exist, skipping",
-                    "YELLOW"))
+                    f"⚠ Directory {flx_project} does not exist, skipping", "YELLOW"
+                )
+            )
             continue
 
         print(f"Testing {flx_project}...")
 
         try:
-            run_command(["poetry", "run", "pytest"],
-                        cwd=project_path, check=False)
+            run_command(["poetry", "run", "pytest"], cwd=project_path, check=False)
             print(colorize(f"✓ {flx_project} tests complete", "GREEN"))
         except Exception as e:
             print(colorize(f"Error testing {flx_project}: {e}", "RED"))
@@ -428,8 +409,9 @@ def run_linting(projects: list[str]) -> None:
         if not project_path.exists():
             print(
                 colorize(
-                    f"⚠ Directory {flx_project} does not exist, skipping",
-                    "YELLOW"))
+                    f"⚠ Directory {flx_project} does not exist, skipping", "YELLOW"
+                )
+            )
             continue
 
         print(f"Linting {flx_project}...")
@@ -449,8 +431,9 @@ def run_formatting(projects: list[str]) -> None:
         if not project_path.exists():
             print(
                 colorize(
-                    f"⚠ Directory {flx_project} does not exist, skipping",
-                    "YELLOW"))
+                    f"⚠ Directory {flx_project} does not exist, skipping", "YELLOW"
+                )
+            )
             continue
 
         print(f"Formatting {flx_project}...")
@@ -473,15 +456,13 @@ def update_python_constraints(projects: list[str]) -> None:
         if not project_path.exists():
             print(
                 colorize(
-                    f"⚠ Directory {flx_project} does not exist, skipping",
-                    "YELLOW"))
+                    f"⚠ Directory {flx_project} does not exist, skipping", "YELLOW"
+                )
+            )
             continue
 
         if not pyproject_path.exists():
-            print(
-                colorize(
-                    f"⚠ No pyproject.toml in {flx_project}, skipping",
-                    "YELLOW"))
+            print(colorize(f"⚠ No pyproject.toml in {flx_project}, skipping", "YELLOW"))
             continue
 
         print(f"Updating Python constraints in {flx_project}...")
@@ -517,15 +498,13 @@ def standardize_linting(projects: list[str]) -> None:
         if not project_path.exists():
             print(
                 colorize(
-                    f"⚠ Directory {flx_project} does not exist, skipping",
-                    "YELLOW"))
+                    f"⚠ Directory {flx_project} does not exist, skipping", "YELLOW"
+                )
+            )
             continue
 
         if not pyproject_path.exists():
-            print(
-                colorize(
-                    f"⚠ No pyproject.toml in {flx_project}, skipping",
-                    "YELLOW"))
+            print(colorize(f"⚠ No pyproject.toml in {flx_project}, skipping", "YELLOW"))
             continue
 
         print(f"Standardizing linting in {flx_project}...")
@@ -574,15 +553,13 @@ def standardize_makefiles(projects: list[str]) -> None:
         if not project_path.exists():
             print(
                 colorize(
-                    f"⚠ Directory {flx_project} does not exist, skipping",
-                    "YELLOW"))
+                    f"⚠ Directory {flx_project} does not exist, skipping", "YELLOW"
+                )
+            )
             continue
 
         if not makefile_path.exists():
-            print(
-                colorize(
-                    f"⚠ No Makefile in {flx_project}, skipping",
-                    "YELLOW"))
+            print(colorize(f"⚠ No Makefile in {flx_project}, skipping", "YELLOW"))
             continue
 
         print(f"Standardizing Makefile for {flx_project}...")
@@ -626,8 +603,7 @@ def apply_pep8_standards(projects: list[str]) -> None:
         )
         return
 
-    project_paths = [str(WORKSPACE_ROOT / flx_project)
-                     for flx_project in projects]
+    project_paths = [str(WORKSPACE_ROOT / flx_project) for flx_project in projects]
 
     run_command(
         [str(VENV_DIR / "bin" / "python"), str(pep8_script), *project_paths],
@@ -642,10 +618,7 @@ def check_pep8_standards(projects: list[str]) -> None:
     pep8_check_script = SCRIPTS_DIR / "pep8_check.py"
 
     if not pep8_check_script.exists():
-        print(
-            colorize(
-                f"⚠ Script {pep8_check_script} not found, skipping",
-                "RED"))
+        print(colorize(f"⚠ Script {pep8_check_script} not found, skipping", "RED"))
         print(
             colorize(
                 "This script may have been removed in the reorganization.",
@@ -660,11 +633,12 @@ def check_pep8_standards(projects: list[str]) -> None:
         )
         return
 
-    project_paths = [str(WORKSPACE_ROOT / flx_project)
-                     for flx_project in projects]
+    project_paths = [str(WORKSPACE_ROOT / flx_project) for flx_project in projects]
 
-    run_command([str(VENV_DIR / "bin" / "python"),
-                 str(pep8_check_script), *project_paths], check=False, )
+    run_command(
+        [str(VENV_DIR / "bin" / "python"), str(pep8_check_script), *project_paths],
+        check=False,
+    )
 
 
 def setup_precommit_hooks() -> None:
@@ -687,8 +661,9 @@ def clean_project(projects: list[str]) -> None:
         if not project_path.exists():
             print(
                 colorize(
-                    f"⚠ Directory {flx_project} does not exist, skipping",
-                    "YELLOW"))
+                    f"⚠ Directory {flx_project} does not exist, skipping", "YELLOW"
+                )
+            )
             continue
 
         print(f"Cleaning {flx_project}...")
@@ -725,27 +700,19 @@ def remove_project_venvs(projects: list[str]) -> None:
         if not project_path.exists():
             print(
                 colorize(
-                    f"⚠ Directory {flx_project} does not exist, skipping",
-                    "YELLOW"))
+                    f"⚠ Directory {flx_project} does not exist, skipping", "YELLOW"
+                )
+            )
             continue
 
         if project_venv.exists():
             print(f"Removing virtual environment from {flx_project}...")
             try:
                 shutil.rmtree(project_venv)
-                print(
-                    colorize(
-                        f"✓ {flx_project} virtual environment removed",
-                        "GREEN"))
+                print(colorize(f"✓ {flx_project} virtual environment removed", "GREEN"))
             except Exception as e:
-                print(
-                    colorize(
-                        f"Error removing venv in {flx_project}: {e}",
-                        "RED"))
-            print(
-                colorize(
-                    f"✓ No flx_project-specific venv in {flx_project}",
-                    "GREEN"))
+                print(colorize(f"Error removing venv in {flx_project}: {e}", "RED"))
+            print(colorize(f"✓ No flx_project-specific venv in {flx_project}", "GREEN"))
 
 
 def remove_lock_files(projects: list[str]) -> None:
@@ -759,8 +726,9 @@ def remove_lock_files(projects: list[str]) -> None:
         if not project_path.exists():
             print(
                 colorize(
-                    f"⚠ Directory {flx_project} does not exist, skipping",
-                    "YELLOW"))
+                    f"⚠ Directory {flx_project} does not exist, skipping", "YELLOW"
+                )
+            )
             continue
 
         if lock_file.exists():
@@ -782,15 +750,15 @@ def upgrade_dependencies(projects: list[str]) -> None:
         if not project_path.exists():
             print(
                 colorize(
-                    f"⚠ Directory {flx_project} does not exist, skipping",
-                    "YELLOW"))
+                    f"⚠ Directory {flx_project} does not exist, skipping", "YELLOW"
+                )
+            )
             continue
 
         print(f"Upgrading dependencies in {flx_project}...")
 
         try:
-            run_command(["poetry", "update", "--lock"],
-                        cwd=project_path, check=False)
+            run_command(["poetry", "update", "--lock"], cwd=project_path, check=False)
             print(colorize(f"✓ {flx_project} dependencies upgraded", "GREEN"))
         except Exception as e:
             print(colorize(f"Error upgrading {flx_project}: {e}", "RED"))
@@ -806,8 +774,9 @@ def build_project(projects: list[str]) -> None:  # noqa: PLR0912
         if not project_path.exists():
             print(
                 colorize(
-                    f"⚠ Directory {flx_project} does not exist, skipping",
-                    "YELLOW"))
+                    f"⚠ Directory {flx_project} does not exist, skipping", "YELLOW"
+                )
+            )
             continue
 
         print(f"Building {flx_project}...")
@@ -856,8 +825,7 @@ def build_project(projects: list[str]) -> None:  # noqa: PLR0912
                                 ),
                             )
                             continue
-                        run_command(["make", "build"],
-                                    cwd=project_path, check=False)
+                        run_command(["make", "build"], cwd=project_path, check=False)
                 except Exception as e:
                     print(
                         colorize(
@@ -933,10 +901,7 @@ def show_project_status(projects: list[str]) -> None:
 
         # Check if using centralized virtual environment
         if (project_path / ".venv").exists():
-            print(
-                colorize(
-                    "  Project-specific venv: Found (will be unused)",
-                    "YELLOW"))
+            print(colorize("  Project-specific venv: Found (will be unused)", "YELLOW"))
             print(colorize("  Using centralized venv", "GREEN"))
 
         # Check lock file
@@ -1006,8 +971,7 @@ def rebuild_venv() -> None:
 
 def main() -> None:  # noqa: PLR0912, PLR0915
     """Main entry point."""
-    parser = argparse.ArgumentParser(
-        description="Project management utilities")
+    parser = argparse.ArgumentParser(description="Project management utilities")
 
     subparsers = parser.add_subparsers(dest="command", help="Command to run")
 
@@ -1021,13 +985,10 @@ def main() -> None:  # noqa: PLR0912, PLR0915
     )
 
     # Fix virtualenv command
-    subparsers.add_parser(
-        "fix-venv",
-        help="Rebuild virtual environment from scratch")
+    subparsers.add_parser("fix-venv", help="Rebuild virtual environment from scratch")
 
     # Install commands
-    install_parser = subparsers.add_parser(
-        "install", help="Install dependencies")
+    install_parser = subparsers.add_parser("install", help="Install dependencies")
     install_parser.add_argument(
         "--dev",
         action="store_true",
@@ -1096,8 +1057,7 @@ def main() -> None:  # noqa: PLR0912, PLR0915
     )
 
     # Standardize commands
-    std_parser = subparsers.add_parser(
-        "standardize", help="Standardize projects")
+    std_parser = subparsers.add_parser("standardize", help="Standardize projects")
     std_parser.add_argument(
         "--python",
         action="store_true",
@@ -1108,19 +1068,13 @@ def main() -> None:  # noqa: PLR0912, PLR0915
         action="store_true",
         help="Standardize linting settings",
     )
-    std_parser.add_argument(
-        "--make",
-        action="store_true",
-        help="Standardize Makefiles")
+    std_parser.add_argument("--make", action="store_true", help="Standardize Makefiles")
     std_parser.add_argument(
         "--all",
         action="store_true",
         help="Apply all standardizations",
     )
-    std_parser.add_argument(
-        "--pep8",
-        action="store_true",
-        help="Apply PEP 8 standards")
+    std_parser.add_argument("--pep8", action="store_true", help="Apply PEP 8 standards")
     std_parser.add_argument(
         "--check",
         action="store_true",
@@ -1158,8 +1112,7 @@ def main() -> None:  # noqa: PLR0912, PLR0915
     )
 
     # Status command
-    status_parser = subparsers.add_parser(
-        "status", help="Show flx_project status")
+    status_parser = subparsers.add_parser("status", help="Show flx_project status")
     status_parser.add_argument(
         "--projects",
         nargs="+",

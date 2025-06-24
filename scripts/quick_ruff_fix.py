@@ -10,7 +10,7 @@ PRIORITY_PROJECTS = [
     "tap-ldap",
     "target-ldap",
     "ldap-core-shared",
-    "dbt-ldap"
+    "dbt-ldap",
 ]
 
 
@@ -28,7 +28,7 @@ def quick_fix_project(project_name: str) -> None:
             ["poetry", "run", "ruff", "check", ".", "--fix"],
             cwd=project_path,
             capture_output=True,
-            timeout=30
+            timeout=30,
         )
 
         # Second pass - unsafe fixes
@@ -36,7 +36,7 @@ def quick_fix_project(project_name: str) -> None:
             ["poetry", "run", "ruff", "check", ".", "--fix", "--unsafe-fixes"],
             cwd=project_path,
             capture_output=True,
-            timeout=30
+            timeout=30,
         )
 
         # Format with black
@@ -44,7 +44,7 @@ def quick_fix_project(project_name: str) -> None:
             ["poetry", "run", "black", "."],
             cwd=project_path,
             capture_output=True,
-            timeout=30
+            timeout=30,
         )
 
         # Check remaining violations
@@ -53,10 +53,10 @@ def quick_fix_project(project_name: str) -> None:
             cwd=project_path,
             capture_output=True,
             text=True,
-            timeout=10
+            timeout=10,
         )
 
-        remaining = len([l for l in result.stdout.split('\n') if l.strip()])
+        remaining = len([l for l in result.stdout.split("\n") if l.strip()])
 
         if remaining == 0:
             pass
@@ -68,6 +68,5 @@ def quick_fix_project(project_name: str) -> None:
 
 
 if __name__ == "__main__":
-
     for project in PRIORITY_PROJECTS:
         quick_fix_project(project)

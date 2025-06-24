@@ -18,10 +18,14 @@ def test_project_import(project_name: str) -> tuple[bool, str]:
 
     try:
         result = subprocess.run(
-            ["python", "-c", f"import sys; sys.path.insert(0, '{src_path}'); import {module_name}; print('✅ Success')"],
+            [
+                "python",
+                "-c",
+                f"import sys; sys.path.insert(0, '{src_path}'); import {module_name}; print('✅ Success')",
+            ],
             capture_output=True,
             text=True,
-            timeout=10
+            timeout=10,
         )
 
         if result.returncode == 0:
@@ -40,10 +44,10 @@ def get_submodules() -> list[str]:
             cwd="/home/marlonsc/pyauto",
             capture_output=True,
             text=True,
-            check=True
+            check=True,
         )
         submodules = []
-        for line in result.stdout.strip().split('\n'):
+        for line in result.stdout.strip().split("\n"):
             if line:
                 parts = line.split()
                 if len(parts) >= 2:
@@ -77,7 +81,9 @@ def main():
 
     # Log to token
     with open("/home/marlonsc/pyauto/.token", "a") as f:
-        f.write(f"FINAL-VALIDATION-005 {status}: {len(working_projects)}/{len(submodules)} projects working\n")
+        f.write(
+            f"FINAL-VALIDATION-005 {status}: {len(working_projects)}/{len(submodules)} projects working\n"
+        )
 
     return len(working_projects) == len(submodules)
 

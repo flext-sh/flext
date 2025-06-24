@@ -8,11 +8,7 @@ from pathlib import Path
 
 def run_command(command: list[str]) -> tuple[int, str]:
     """Run a command and return the return code and output."""
-    process = subprocess.run(
-        command,
-        capture_output=True,
-        text=True,
-        check=False)
+    process = subprocess.run(command, capture_output=True, text=True, check=False)
     return process.returncode, process.stdout + process.stderr
 
 
@@ -38,16 +34,15 @@ def flx_errors(directory: str) -> None:
 
     # Step 1: Fix test functions first (simplest case)
     print("\n=== Step 1: Fixing test function return types ===")
-    _returncode, output = run_command(
-        ["python", "flx_test_return_types.py", directory])
+    _returncode, output = run_command(["python", "flx_test_return_types.py", directory])
     print(output)
 
     # Re-run mypy to see the progress
     current_errors = count_mypy_errors(directory)
     print(
         f"Reduced errors from {initial_errors} to {current_errors} ({
-            initial_errors -
-            current_errors} fixed)",
+            initial_errors - current_errors
+        } fixed)",
     )
 
     # Step 2: Fix missing return type annotations for non-test functions
@@ -62,8 +57,8 @@ def flx_errors(directory: str) -> None:
     current_errors = count_mypy_errors(directory)
     print(
         f"Reduced errors from {previous_errors} to {current_errors} ({
-            previous_errors -
-            current_errors} fixed)",
+            previous_errors - current_errors
+        } fixed)",
     )
 
     # Step 3: Fix missing type parameters for generic types
@@ -78,8 +73,8 @@ def flx_errors(directory: str) -> None:
     current_errors = count_mypy_errors(directory)
     print(
         f"Reduced errors from {previous_errors} to {current_errors} ({
-            previous_errors -
-            current_errors} fixed)",
+            previous_errors - current_errors
+        } fixed)",
     )
 
     # Step 4: Remove unused type ignore comments
@@ -94,8 +89,8 @@ def flx_errors(directory: str) -> None:
     current_errors = count_mypy_errors(directory)
     print(
         f"Reduced errors from {previous_errors} to {current_errors} ({
-            previous_errors -
-            current_errors} fixed)",
+            previous_errors - current_errors
+        } fixed)",
     )
 
     # Step 5: Apply advanced fixes (more complex issues)
@@ -112,11 +107,11 @@ def flx_errors(directory: str) -> None:
     print("\n=== Summary ===")
     print(f"Initial mypy errors: {initial_errors}")
     print(f"Remaining mypy errors: {final_errors}")
-    print(f"Total fixed: {initial_errors -
-                          final_errors} ({(initial_errors -
-                                           final_errors) /
-                                          initial_errors *
-                                          100:.1f}%)", )
+    print(
+        f"Total fixed: {initial_errors - final_errors} ({
+            (initial_errors - final_errors) / initial_errors * 100:.1f
+        }%)",
+    )
 
     if final_errors > 0:
         print("\nRemaining errors require manual intervention. Common patterns to fix:")

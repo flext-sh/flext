@@ -160,10 +160,7 @@ class DependencyManagementModule(CustomFixModule):
                 with open(pyproject_path, "rb") as f:
                     config = tomllib.load(f)
 
-                self.projects[project_name] = {
-                    "path": pyproject_path,
-                    "config": config
-                }
+                self.projects[project_name] = {"path": pyproject_path, "config": config}
 
                 # Extract dependencies
                 poetry_config = config.get("tool", {}).get("poetry", {})
@@ -184,13 +181,13 @@ class DependencyManagementModule(CustomFixModule):
                     if dep_name not in self.all_dependencies:
                         self.all_dependencies[dep_name] = {}
 
-                    self.all_dependencies[dep_name][project_name] = str(
-                        dep_version)
+                    self.all_dependencies[dep_name][project_name] = str(dep_version)
 
             except Exception as e:
                 if self.verbose:
                     self.console.print(
-                        f"[red]Error parsing {pyproject_path}: {e}[/red]")
+                        f"[red]Error parsing {pyproject_path}: {e}[/red]"
+                    )
 
         # Analyze conflicts
         self._analyze_version_conflicts()
@@ -200,7 +197,7 @@ class DependencyManagementModule(CustomFixModule):
             "projects": len(self.projects),
             "dependencies": len(self.all_dependencies),
             "conflicts": len(self.version_conflicts),
-            "missing": len(self.missing_dependencies)
+            "missing": len(self.missing_dependencies),
         }
 
     def _analyze_version_conflicts(self) -> None:
@@ -212,11 +209,13 @@ class DependencyManagementModule(CustomFixModule):
             # Check for version conflicts
             versions = set(project_versions.values())
             if len(versions) > 1:
-                self.version_conflicts.append({
-                    "dependency": dep_name,
-                    "versions": dict(project_versions),
-                    "standard_version": self.STANDARD_VERSIONS.get(dep_name),
-                })
+                self.version_conflicts.append(
+                    {
+                        "dependency": dep_name,
+                        "versions": dict(project_versions),
+                        "standard_version": self.STANDARD_VERSIONS.get(dep_name),
+                    }
+                )
 
     def _analyze_missing_dependencies(self) -> None:
         """Analyze missing required dependencies."""
@@ -226,20 +225,18 @@ class DependencyManagementModule(CustomFixModule):
 
             # Check dev dependencies
             groups = poetry_config.get("group", {})
-            dev_deps = groups.get(
-                "dev",
-                {}).get(
-                "dependencies",
-                {}) if groups else {}
+            dev_deps = groups.get("dev", {}).get("dependencies", {}) if groups else {}
 
             for req_dep, req_version in self.REQUIRED_DEV_DEPS.items():
                 if req_dep not in dev_deps:
-                    self.missing_dependencies.append({
-                        "project": project_name,
-                        "dependency": req_dep,
-                        "required_version": req_version,
-                        "type": "dev"
-                    })
+                    self.missing_dependencies.append(
+                        {
+                            "project": project_name,
+                            "dependency": req_dep,
+                            "required_version": req_version,
+                            "type": "dev",
+                        }
+                    )
 
     def analyze(self, file_path: Path, content: str) -> list[Issue]:
         """Analyze individual pyproject.toml for dependency issues."""
@@ -259,21 +256,22 @@ class DependencyManagementModule(CustomFixModule):
                         continue
 
                     standard_version = self.STANDARD_VERSIONS.get(dep_name)
-                    if standard_version and str(
-                            dep_version) != standard_version:
+                    if standard_version and str(dep_version) != standard_version:
                         issues.append(
                             Issue(
                                 line=1,
                                 column=1,
                                 code="DEP001",
                                 message=f"Dependency {dep_name} version {dep_version} conflicts with standard {standard_version}",
-                                suggestion=f"Update to standard version: {standard_version}"))
+                                suggestion=f"Update to standard version: {standard_version}",
+                            )
+                        )
 
                 # Check for missing required dev dependencies
                 groups = poetry_config.get("group", {})
-                dev_deps = groups.get(
-                    "dev", {}).get(
-                    "dependencies", {}) if groups else {}
+                dev_deps = (
+                    groups.get("dev", {}).get("dependencies", {}) if groups else {}
+                )
 
                 for req_dep, req_version in self.REQUIRED_DEV_DEPS.items():
                     if req_dep not in dev_deps:
@@ -283,16 +281,20 @@ class DependencyManagementModule(CustomFixModule):
                                 column=1,
                                 code="DEP002",
                                 message=f"Missing required dev dependency: {req_dep}",
-                                suggestion=f"Add dev dependency: {req_dep} = \"{req_version}\""))
+                                suggestion=f'Add dev dependency: {req_dep} = "{req_version}"',
+                            )
+                        )
 
             except Exception as e:
-                issues.append(Issue(
-                    line=1,
-                    column=1,
-                    code="DEP003",
-                    message=f"Failed to analyze dependencies: {e}",
-                    suggestion="Check pyproject.toml format and syntax"
-                ))
+                issues.append(
+                    Issue(
+                        line=1,
+                        column=1,
+                        code="DEP003",
+                        message=f"Failed to analyze dependencies: {e}",
+                        suggestion="Check pyproject.toml format and syntax",
+                    )
+                )
 
         return issues
 
@@ -307,24 +309,30 @@ class DependencyManagementModule(CustomFixModule):
 
         if self.verbose:
             self.console.print(
-                f"[blue]Standardizing dependencies in: {workspace_path}[/blue]")
+                f"[blue]Standardizing dependencies in: {workspace_path}[/blue]"
+            )
 
         # Analyze current state
         analysis = self.analyze_dependencies(workspace_path)
 
         if self.verbose:
             self.console.print(
-                f"[green]Found {
-                    analysis['projects']} projects with {
-                    analysis['dependencies']} unique dependencies[/green]")
-            if analysis['conflicts'] > 0:
+                f"[green]Found {analysis['projects']} projects with {
+                    analysis['dependencies']
+                } unique dependencies[/green]"
+            )
+            if analysis["conflicts"] > 0:
                 self.console.print(
                     f"[yellow]Detected {
-                        analysis['conflicts']} version conflicts[/yellow]")
-            if analysis['missing'] > 0:
+                        analysis['conflicts']
+                    } version conflicts[/yellow]"
+                )
+            if analysis["missing"] > 0:
                 self.console.print(
                     f"[yellow]Found {
-                        analysis['missing']} missing required dependencies[/yellow]")
+                        analysis['missing']
+                    } missing required dependencies[/yellow]"
+                )
 
         # Show conflicts
         if self.version_conflicts and self.verbose:
@@ -339,7 +347,8 @@ class DependencyManagementModule(CustomFixModule):
         if self.verbose:
             action = "Would standardize" if self.dry_run else "Standardized"
             self.console.print(
-                f"[bold green]{action} {standardized_count} projects[/bold green]")
+                f"[bold green]{action} {standardized_count} projects[/bold green]"
+            )
 
         return True
 
@@ -359,11 +368,7 @@ class DependencyManagementModule(CustomFixModule):
             for project, version in versions.items():
                 project_versions.append(f"{project}: {version}")
 
-            table.add_row(
-                dep_name,
-                "\n".join(project_versions),
-                standard
-            )
+            table.add_row(dep_name, "\n".join(project_versions), standard)
 
         self.console.print(table)
 
@@ -386,7 +391,8 @@ class DependencyManagementModule(CustomFixModule):
             if standard_version and str(dep_version) != standard_version:
                 dependencies[dep_name] = standard_version
                 changes_made.append(
-                    f"Updated {dep_name}: {dep_version} → {standard_version}")
+                    f"Updated {dep_name}: {dep_version} → {standard_version}"
+                )
 
         # Add missing dev dependencies
         groups = poetry_config.setdefault("group", {})
@@ -396,33 +402,34 @@ class DependencyManagementModule(CustomFixModule):
         for req_dep, req_version in self.REQUIRED_DEV_DEPS.items():
             if req_dep not in dev_deps:
                 dev_deps[req_dep] = req_version
-                changes_made.append(
-                    f"Added dev dependency: {req_dep} = {req_version}")
+                changes_made.append(f"Added dev dependency: {req_dep} = {req_version}")
 
         if not changes_made:
             if self.verbose:
                 project_name = pyproject_path.parent.name
                 self.console.print(
-                    f"[green]✅ {project_name} already standardized[/green]")
+                    f"[green]✅ {project_name} already standardized[/green]"
+                )
             return True
 
         if self.dry_run:
             if self.verbose:
                 project_name = pyproject_path.parent.name
                 self.console.print(
-                    f"[cyan][DRY RUN] Would apply changes to {project_name}:[/cyan]")
+                    f"[cyan][DRY RUN] Would apply changes to {project_name}:[/cyan]"
+                )
                 for change in changes_made:
                     self.console.print(f"[cyan]  - {change}[/cyan]")
             return True
 
         if self.interactive:
             project_name = pyproject_path.parent.name
-            self.console.print(
-                f"[yellow]Proposed changes for {project_name}:[/yellow]")
+            self.console.print(f"[yellow]Proposed changes for {project_name}:[/yellow]")
             for change in changes_made:
                 self.console.print(f"[yellow]  - {change}[/yellow]")
 
             from rich.prompt import Confirm
+
             if not Confirm.ask("Apply these changes?"):
                 self.console.print("[red]Standardization cancelled[/red]")
                 return False
@@ -439,8 +446,7 @@ class DependencyManagementModule(CustomFixModule):
 
             if self.verbose:
                 project_name = pyproject_path.parent.name
-                self.console.print(
-                    f"[green]✅ Standardized {project_name}[/green]")
+                self.console.print(f"[green]✅ Standardized {project_name}[/green]")
                 for change in changes_made:
                     self.console.print(f"[green]  ✓ {change}[/green]")
 
@@ -450,10 +456,10 @@ class DependencyManagementModule(CustomFixModule):
             if self.verbose:
                 project_name = pyproject_path.parent.name
                 self.console.print(
-                    f"[red]❌ Failed to standardize {project_name}: {e}[/red]")
+                    f"[red]❌ Failed to standardize {project_name}: {e}[/red]"
+                )
             return False
 
-    def run_workspace_standardization(
-            self, workspace_path: Path = None) -> bool:
+    def run_workspace_standardization(self, workspace_path: Path = None) -> bool:
         """Run dependency standardization across the entire workspace."""
         return self.standardize_dependencies(workspace_path)

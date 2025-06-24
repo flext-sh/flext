@@ -142,7 +142,7 @@ metrics:
 - **type_annotations**: Add missing type hints
 - **logging_patterns**: Fix f-strings in logging, replace print()
 - **exception_handling**: Fix bare except, add "from e"
-- **unused_variables**: Add *_ for unused arguments
+- **unused_variables**: Add \*\_ for unused arguments
 - **import_sorting**: Organize imports properly
 - **string_quotes**: Standardize quote usage
 
@@ -375,14 +375,17 @@ The system generates comprehensive metrics:
 ### Common Issues
 
 1. **"Permission denied" errors**
+
    - Ensure files are not locked by other processes
    - Run with appropriate permissions
 
 2. **"Syntax error after fix"**
+
    - Enable syntax validation: `safety.validate_syntax: true`
    - Check the specific plugin that caused the issue
 
 3. **Performance issues**
+
    - Reduce parallel workers if system is overloaded
    - Use incremental mode for large codebases
 

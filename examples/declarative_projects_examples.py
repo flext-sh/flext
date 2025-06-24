@@ -56,9 +56,7 @@ class WmsSyncProject(FlxProject, FlxDatabaseMixin, FlxWmsMixin, FlxSyncMixin):
 
     async def custom_transform_order(self, wms_order: dict) -> dict:
         """Apenas transformação específica."""
-        return {
-            "order_number": wms_order.get("order_id"),
-            "client": self.client_name}
+        return {"order_number": wms_order.get("order_id"), "client": self.client_name}
 
 
 # ==================================================================================
@@ -78,10 +76,7 @@ class SimpleLdapProject(FlxProject, FlxLdapMixin):
 
     async def create_user(self, username: str, email: str) -> dict:
         """Apenas criação específica."""
-        return {
-            "dn": f"uid={username},dc={
-                self.company_domain}",
-            "mail": email}
+        return {"dn": f"uid={username},dc={self.company_domain}", "mail": email}
 
 
 # ==================================================================================

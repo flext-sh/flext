@@ -16,7 +16,7 @@ def clean_unused_imports(file_path: Path) -> bool:
         original_content = content
 
         # Remove specific unused imports
-        lines = content.split('\n')
+        lines = content.split("\n")
         new_lines: list = []
 
         for line in lines:
@@ -24,12 +24,12 @@ def clean_unused_imports(file_path: Path) -> bool:
             if line.strip() in [
                 "from typing import Optional",
                 "from typing import Dict",
-                "from typing import List"
+                "from typing import List",
             ]:
                 continue
             new_lines.append(line)
 
-        new_content = '\n'.join(new_lines)
+        new_content = "\n".join(new_lines)
 
         if new_content != original_content:
             file_path.write_text(new_content, encoding="utf-8")

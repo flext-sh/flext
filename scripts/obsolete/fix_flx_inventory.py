@@ -55,8 +55,7 @@ class FlxInventoryBuilder(ast.NodeVisitor):
                 )
 
             # Check defaults
-            defaults_start = len(init_method.args.args) - \
-                len(init_method.args.defaults)
+            defaults_start = len(init_method.args.args) - len(init_method.args.defaults)
             for i, default in enumerate(init_method.args.defaults):
                 arg_idx = defaults_start + i - 1  # -1 for self
                 if arg_idx >= 0 and arg_idx < len(init_args):
@@ -158,8 +157,7 @@ def build_inventory(src_dir: Path) -> dict[str, Any]:
             content = py_file.read_text()
             tree = ast.parse(content)
 
-            visitor = FlxInventoryBuilder(
-                str(py_file.relative_to(src_dir.parent)))
+            visitor = FlxInventoryBuilder(str(py_file.relative_to(src_dir.parent)))
             visitor.visit(tree)
 
             # Merge results
@@ -209,8 +207,9 @@ def build_inventory(src_dir: Path) -> dict[str, Any]:
     for class_name, class_info in inventory["classes"].items():
         if class_name.startswith("Flx"):
             for method in class_info["methods"]:
-                if not method["name"].startswith(
-                        "_") and not method["name"].startswith("flx_"):
+                if not method["name"].startswith("_") and not method["name"].startswith(
+                    "flx_"
+                ):
                     if method["name"] not in {
                         "__init__",
                         "__str__",
@@ -231,8 +230,7 @@ def build_inventory(src_dir: Path) -> dict[str, Any]:
     return inventory
 
 
-def analyze_mypy_errors(
-        inventory: dict[str, Any], mypy_output: str) -> dict[str, Any]:
+def analyze_mypy_errors(inventory: dict[str, Any], mypy_output: str) -> dict[str, Any]:
     """Analyze mypy errors against inventory."""
     analysis = {
         "attr_defined_fixes": [],
@@ -297,8 +295,7 @@ def main() -> None:
         f"- flx-prefixed functions: {sum(1 for f in inventory['functions'].values() if f['is_flx_prefixed'])}"
     )
     print(f"- Class name mappings: {len(inventory['class_name_mapping'])}")
-    print(
-        f"- Function name mappings: {len(inventory['function_name_mapping'])}")
+    print(f"- Function name mappings: {len(inventory['function_name_mapping'])}")
     print("\nMissing prefixes:")
     print(
         f"- Classes without Flx prefix: {len(inventory['missing_flx_prefixes']['classes'])}"

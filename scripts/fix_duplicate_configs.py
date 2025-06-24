@@ -22,13 +22,13 @@ def fix_pyproject_toml(project_path: Path) -> None:
             toml.loads(content)
         except toml.TomlDecodeError:
             # Manual fix for duplicates
-            lines = content.split('\n')
+            lines = content.split("\n")
             seen_sections: set = set()
             new_lines: list = []
             skip_until_next_section = False
 
             for line in lines:
-                if line.strip().startswith('['):
+                if line.strip().startswith("["):
                     section = line.strip()
                     if section in seen_sections:
                         skip_until_next_section = True
@@ -40,7 +40,7 @@ def fix_pyproject_toml(project_path: Path) -> None:
                     new_lines.append(line)
 
             # Write back
-            pyproject_path.write_text('\n'.join(new_lines))
+            pyproject_path.write_text("\n".join(new_lines))
     except Exception:
         pass
 
@@ -48,12 +48,27 @@ def fix_pyproject_toml(project_path: Path) -> None:
 # Fix all projects
 workspace = Path("/home/marlonsc/pyauto")
 submodules = [
-    "algar-oud-mig", "dbt-ldap", "dc-code-analyzer", "flx",
-    "flx-adapter-example", "flx-database-oracle", "flx-http-oracle-oic",
-    "flx-http-oracle-wms", "flx-ldap", "flx-meltano-enterprise",
-    "flx-oracle-oic", "flx-oracle-wms", "gruponos-poc-oic-wms",
-    "ldap-core-shared", "oracle-oic-ext", "tap-ldap", "tap-oracle-oic",
-    "tap-oracle-wms", "target-ldap", "target-oracle-oic", "target-oracle-wms"
+    "algar-oud-mig",
+    "dbt-ldap",
+    "dc-code-analyzer",
+    "flx",
+    "flx-adapter-example",
+    "flx-database-oracle",
+    "flx-http-oracle-oic",
+    "flx-http-oracle-wms",
+    "flx-ldap",
+    "flx-meltano-enterprise",
+    "flx-oracle-oic",
+    "flx-oracle-wms",
+    "gruponos-poc-oic-wms",
+    "ldap-core-shared",
+    "oracle-oic-ext",
+    "tap-ldap",
+    "tap-oracle-oic",
+    "tap-oracle-wms",
+    "target-ldap",
+    "target-oracle-oic",
+    "target-oracle-wms",
 ]
 
 for submodule in submodules:

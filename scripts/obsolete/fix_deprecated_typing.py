@@ -83,13 +83,11 @@ def flx_deprecated_typing(file_path: Path) -> dict[str, int]:
 
     # Replace the actual type uses in the code
     for old_type, new_type in replacements.items():
-        if old_type in {"list", "dict", "Set",
-                        "tuple"} and old_type in changes:
+        if old_type in {"list", "dict", "Set", "tuple"} and old_type in changes:
             # Replace patterns like list[int] with list[int]
             pattern = r"\b" + re.escape(old_type) + r"\["
             replacement = new_type + "["
-            modified_content, count = re.subn(
-                pattern, replacement, modified_content)
+            modified_content, count = re.subn(pattern, replacement, modified_content)
             if count > 0:
                 changes[f"{old_type}_usage"] = count
 
@@ -113,8 +111,7 @@ def process_files(files: list[Path]) -> dict[str, int]:
             print(f"Fixed {file_path}:")
             for change_type, count in changes.items():
                 print(f"  - {change_type}: {count} replacements")
-                total_changes[change_type] = total_changes.get(
-                    change_type, 0) + count
+                total_changes[change_type] = total_changes.get(change_type, 0) + count
 
     return {
         "files_modified": files_modified,

@@ -284,7 +284,10 @@ def add_missing_type_imports() -> None:
                 print(
                     f"Added imports to {filepath}: {
                         ', '.join(
-                            name for name in missing_names if name in type_imports)}")
+                            name for name in missing_names if name in type_imports
+                        )
+                    }"
+                )
 
         except Exception as e:
             print(f"Error processing {filepath}: {e}")

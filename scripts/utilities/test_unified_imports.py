@@ -34,7 +34,6 @@ for project in projects:
 def test_core_framework_import() -> bool | None:
     """Test FLX core framework import."""
     try:
-
         return True
     except ImportError:
         return False

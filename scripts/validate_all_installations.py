@@ -37,7 +37,8 @@ class InstallationValidator:
             "tap-oracle-wms",
             "target-ldap",
             "target-oracle-oic",
-            "target-oracle-wms"]
+            "target-oracle-wms",
+        ]
         self.results = {}
 
     def validate_project(self, project_name: str) -> dict:
@@ -49,7 +50,7 @@ class InstallationValidator:
             "poetry_install": False,
             "imports": False,
             "cli_works": False,
-            "errors": []
+            "errors": [],
         }
 
         if not project_path.exists():
@@ -65,14 +66,14 @@ class InstallationValidator:
                 cwd=project_path,
                 capture_output=True,
                 text=True,
-                timeout=120
+                timeout=120,
             )
 
             if install_result.returncode == 0:
                 result["poetry_install"] = True
                 result["errors"].append(
-                    f"Poetry install failed: {
-                        install_result.stderr}")
+                    f"Poetry install failed: {install_result.stderr}"
+                )
         except subprocess.TimeoutExpired:
             result["errors"].append("Poetry install timeout")
         except Exception as e:
@@ -84,17 +85,22 @@ class InstallationValidator:
 
             try:
                 import_test = subprocess.run(
-                    ["poetry", "run", "python", "-c", f"import {module_name}; logger.info('Import successful')"],
+                    [
+                        "poetry",
+                        "run",
+                        "python",
+                        "-c",
+                        f"import {module_name}; logger.info('Import successful')",
+                    ],
                     cwd=project_path,
                     capture_output=True,
                     text=True,
-                    timeout=10
+                    timeout=10,
                 )
 
                 if import_test.returncode == 0:
                     result["imports"] = True
-                    result["errors"].append(
-                        f"Import failed: {import_test.stderr}")
+                    result["errors"].append(f"Import failed: {import_test.stderr}")
             except Exception as e:
                 result["errors"].append(f"Import test error: {str(e)}")
 
@@ -108,12 +114,15 @@ class InstallationValidator:
                     cwd=project_path,
                     capture_output=True,
                     text=True,
-                    timeout=10
+                    timeout=10,
                 )
 
                 # Success if returns 0 or shows help (exit code 2)
-                if cli_test.returncode in [
-                        0, 2] or "--help" in cli_test.stdout or "Usage:" in cli_test.stdout:
+                if (
+                    cli_test.returncode in [0, 2]
+                    or "--help" in cli_test.stdout
+                    or "Usage:" in cli_test.stdout
+                ):
                     result["cli_works"] = True
                     break
             except Exception:
@@ -135,7 +144,10 @@ class InstallationValidator:
             "target-oracle-wms": [["target-oracle-wms", "--help"]],
             "flx": [["flx", "--help"], ["python", "-m", "flx", "--help"]],
             "dbt-ldap": [["dbt", "--help"]],
-            "dc-code-analyzer": [["dc-analyzer", "--help"], ["python", "-m", "dc_code_analyzer"]],
+            "dc-code-analyzer": [
+                ["dc-analyzer", "--help"],
+                ["python", "-m", "dc_code_analyzer"],
+            ],
             "algar-oud-mig": [["algar-oud-mig", "--help"], ["oud-mig", "--help"]],
         }
 
@@ -143,7 +155,7 @@ class InstallationValidator:
         default_cmds = [
             [project_name, "--help"],
             [project_name.replace("-", "_"), "--help"],
-            ["python", "-m", project_name.replace("-", "_"), "--help"]
+            ["python", "-m", project_name.replace("-", "_"), "--help"],
         ]
 
         return cli_map.get(project_name, default_cmds)

@@ -70,8 +70,7 @@ class LintFixerV2:
         logger.info("🩹 Fixing known syntax errors...")
 
         # Fix target-oracle-wms/src/target_oracle_wms/sinks_advanced.py
-        sinks_file = Path(
-            "target-oracle-wms/src/target_oracle_wms/sinks_advanced.py")
+        sinks_file = Path("target-oracle-wms/src/target_oracle_wms/sinks_advanced.py")
         if sinks_file.exists():
             self._fix_sinks_advanced_file(sinks_file)
 
@@ -82,30 +81,38 @@ class LintFixerV2:
 
             # Fix malformed logging statements
             fixes = [
-                ('logger.warning("Validation errors for record: %s", validation_errors")',
-                 'logger.warning("Validation errors for record: %s", validation_errors)',
-                 ),
-                ('logger.warning("Unknown operation: %s", operation")',
-                 'logger.warning("Unknown operation: %s", operation)',
-                 ),
-                ('logger.error("Batch processing error: %s", e")',
-                 'logger.error("Batch processing error: %s", e)',
-                 ),
-                ('logger.error("Create failed: %s", e")',
-                 'logger.error("Create failed: %s", e)',
-                 ),
-                ('logger.error("Update failed: %s", e")',
-                 'logger.error("Update failed: %s", e)',
-                 ),
-                ('logger.error("Upsert failed: %s", e")',
-                 'logger.error("Upsert failed: %s", e)',
-                 ),
-                ('logger.error("Delete failed: %s", e")',
-                 'logger.error("Delete failed: %s", e)',
-                 ),
-                ('logger.warning("Errors encountered: %s", dict(self._errors)")',
-                 'logger.warning("Errors encountered: %s", dict(self._errors))',
-                 ),
+                (
+                    'logger.warning("Validation errors for record: %s", validation_errors")',
+                    'logger.warning("Validation errors for record: %s", validation_errors)',
+                ),
+                (
+                    'logger.warning("Unknown operation: %s", operation")',
+                    'logger.warning("Unknown operation: %s", operation)',
+                ),
+                (
+                    'logger.error("Batch processing error: %s", e")',
+                    'logger.error("Batch processing error: %s", e)',
+                ),
+                (
+                    'logger.error("Create failed: %s", e")',
+                    'logger.error("Create failed: %s", e)',
+                ),
+                (
+                    'logger.error("Update failed: %s", e")',
+                    'logger.error("Update failed: %s", e)',
+                ),
+                (
+                    'logger.error("Upsert failed: %s", e")',
+                    'logger.error("Upsert failed: %s", e)',
+                ),
+                (
+                    'logger.error("Delete failed: %s", e")',
+                    'logger.error("Delete failed: %s", e)',
+                ),
+                (
+                    'logger.warning("Errors encountered: %s", dict(self._errors)")',
+                    'logger.warning("Errors encountered: %s", dict(self._errors))',
+                ),
             ]
 
             for old, new in fixes:
@@ -159,8 +166,7 @@ class LintFixerV2:
 
         # Get Python files
         python_files = list(project_path.rglob("*.py"))
-        python_files = [
-            f for f in python_files if not self._should_skip_file(f)]
+        python_files = [f for f in python_files if not self._should_skip_file(f)]
 
         result["files_processed"] = len(python_files)
 
@@ -172,8 +178,7 @@ class LintFixerV2:
                 result["fixes_applied"] += fixes
 
         result["final_errors"] = self._count_errors(project_path)
-        result["improvement"] = result["initial_errors"] - \
-            result["final_errors"]
+        result["improvement"] = result["initial_errors"] - result["final_errors"]
 
         logger.info(
             "📊 %s: %d errors → %d errors (%+d)",
@@ -203,12 +208,21 @@ class LintFixerV2:
                 try:
                     compile(content, str(file_path), "exec")
                     file_path.write_text(content, encoding="utf-8")
-                    return len([1 for a, b in zip(original_content.split(
-                        "\n"), content.split("\n"), strict=False) if a != b])
+                    return len(
+                        [
+                            1
+                            for a, b in zip(
+                                original_content.split("\n"),
+                                content.split("\n"),
+                                strict=False,
+                            )
+                            if a != b
+                        ]
+                    )
                 except SyntaxError:
                     logger.warning(
-                        "⚠️ Syntax error after fixes in %s, skipping",
-                        file_path.name)
+                        "⚠️ Syntax error after fixes in %s, skipping", file_path.name
+                    )
                     return 0
 
             return 0
@@ -228,7 +242,6 @@ class LintFixerV2:
                 and line.endswith(":")
                 and "-> " not in line
             ):
-
                 if "def __init__(" in line:
                     line = line.replace("):", ") -> None:")
                 elif "def main(" in line:
@@ -318,8 +331,9 @@ class LintFixerV2:
                 text=True,
                 cwd=self.workspace_root,
             )
-            return (len(result.stdout.strip().split("\n"))
-                    if result.stdout.strip() else 0)
+            return (
+                len(result.stdout.strip().split("\n")) if result.stdout.strip() else 0
+            )
         except subprocess.SubprocessError:
             return 0
 
@@ -367,20 +381,16 @@ def main() -> None:
         final_status = results["final_status"]
         print("\n📊 FINAL RESULTS:")
         print(
-            f"   Projects processed: {
-                results['session_stats']['projects_processed']}")
-        print(
-            f"   Files modified: {
-                results['session_stats']['files_modified']}")
+            f"   Projects processed: {results['session_stats']['projects_processed']}"
+        )
+        print(f"   Files modified: {results['session_stats']['files_modified']}")
         print(f"   Total fixes: {results['session_stats']['total_fixes']}")
         print(f"   Final errors: {final_status['total_errors']}")
 
         if final_status["zero_tolerance_achieved"]:
             print("\n🎉 SUCCESS: CLAUDE.md ZERO TOLERANCE ACHIEVED!")
             sys.exit(0)
-            print(
-                f"\n⚠️ PROGRESS: {
-                    final_status['total_errors']} errors remaining")
+            print(f"\n⚠️ PROGRESS: {final_status['total_errors']} errors remaining")
             print("   Additional fixes may be needed")
             sys.exit(1)
 

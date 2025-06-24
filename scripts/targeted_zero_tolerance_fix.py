@@ -11,7 +11,9 @@ import subprocess
 from pathlib import Path
 
 # Configure logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
 logger = logging.getLogger(__name__)
 
 
@@ -33,36 +35,40 @@ class TargetedFixer:
     def fix_print_statements_in_file(self, file_path: Path) -> bool:
         """Fix print statements in a single file."""
         try:
-            with open(file_path, encoding='utf-8') as f:
+            with open(file_path, encoding="utf-8") as f:
                 content = f.read()
 
             # Skip test files
-            if 'test' in str(file_path).lower() or str(file_path).startswith(str(self.base_path / 'tests')):
+            if "test" in str(file_path).lower() or str(file_path).startswith(
+                str(self.base_path / "tests")
+            ):
                 return False
 
-            lines = content.split('\n')
+            lines = content.split("\n")
             modified = False
 
             # Check if logging is already imported
-            has_logging = 'import logging' in content or 'from loguru import logger' in content
+            has_logging = (
+                "import logging" in content or "from loguru import logger" in content
+            )
 
             new_lines: list[str] = []
             added_imports: bool = False
 
             for i, line in enumerate(lines):
                 # Skip if it's already a logger call
-                if 'logger.' in line or line.strip().startswith('#'):
+                if "logger." in line or line.strip().startswith("#"):
                     new_lines.append(line)
                     continue
 
                 # Find print statements
-                if re.search(r'\bprint\s*\(', line):
+                if re.search(r"\bprint\s*\(", line):
                     # Extract indentation
                     indent = len(line) - len(line.lstrip())
-                    indent_str = ' ' * indent
+                    indent_str = " " * indent
 
                     # Extract print content
-                    print_match = re.search(r'print\s*\((.*?)\)\s*(?:#.*)?$', line)
+                    print_match = re.search(r"print\s*\((.*?)\)\s*(?:#.*)?$", line)
                     if print_match:
                         content_inside = print_match.group(1).strip()
 
@@ -71,35 +77,49 @@ class TargetedFixer:
                             # Find where to add imports
                             import_idx = 0
                             for j, l in enumerate(lines[:i]):
-                                if l.strip().startswith('import ') or l.strip().startswith('from '):
+                                if l.strip().startswith(
+                                    "import "
+                                ) or l.strip().startswith("from "):
                                     import_idx = j + 1
-                                elif import_idx > 0 and l.strip() and not l.strip().startswith('import') and not l.strip().startswith('from'):
+                                elif (
+                                    import_idx > 0
+                                    and l.strip()
+                                    and not l.strip().startswith("import")
+                                    and not l.strip().startswith("from")
+                                ):
                                     break
 
                             # Add imports at the right position
                             if import_idx == 0:
                                 # No imports found, add after module docstring
                                 for j, l in enumerate(lines):
-                                    if j < 3 and (l.strip().startswith('"""') or l.strip().startswith("'''")):
+                                    if j < 3 and (
+                                        l.strip().startswith('"""')
+                                        or l.strip().startswith("'''")
+                                    ):
                                         # Find end of docstring
                                         for k in range(j + 1, len(lines)):
-                                            if lines[k].strip().endswith('"""') or lines[k].strip().endswith("'''"):
+                                            if lines[k].strip().endswith(
+                                                '"""'
+                                            ) or lines[k].strip().endswith("'''"):
                                                 import_idx = k + 1
                                                 break
                                         break
 
                             # Insert imports
-                            new_lines.insert(import_idx, '')
-                            new_lines.insert(import_idx + 1, 'import logging')
-                            new_lines.insert(import_idx + 2, '')
-                            new_lines.insert(import_idx + 3, 'logger = logging.getLogger(__name__)')
-                            new_lines.insert(import_idx + 4, '')
+                            new_lines.insert(import_idx, "")
+                            new_lines.insert(import_idx + 1, "import logging")
+                            new_lines.insert(import_idx + 2, "")
+                            new_lines.insert(
+                                import_idx + 3, "logger = logging.getLogger(__name__)"
+                            )
+                            new_lines.insert(import_idx + 4, "")
                             added_imports = True
                             has_logging = True
 
                         # Convert print to logger
                         if content_inside:
-                            new_line = f'{indent_str}logger.info({content_inside})'
+                            new_line = f"{indent_str}logger.info({content_inside})"
                             new_line = f'{indent_str}logger.info("")'
 
                         new_lines.append(new_line)
@@ -110,8 +130,8 @@ class TargetedFixer:
 
             if modified:
                 # Write back
-                with open(file_path, 'w', encoding='utf-8') as f:
-                    f.write('\n'.join(new_lines))
+                with open(file_path, "w", encoding="utf-8") as f:
+                    f.write("\n".join(new_lines))
                 self.files_modified.add(file_path)
                 return True
 
@@ -124,7 +144,7 @@ class TargetedFixer:
     def fix_undefined_names_in_file(self, file_path: Path) -> bool:
         """Fix undefined names in a single file using AST analysis."""
         try:
-            with open(file_path, encoding='utf-8') as f:
+            with open(file_path, encoding="utf-8") as f:
                 content = f.read()
 
             # Parse with AST to find undefined names
@@ -136,9 +156,9 @@ class TargetedFixer:
 
             # Common undefined names and their imports
             common_imports = {
-                'Path': 'from pathlib import Path',
-                'datetime': 'from datetime import datetime',
-                'logger': 'import logging\n\nlogger = logging.getLogger(__name__)',
+                "Path": "from pathlib import Path",
+                "datetime": "from datetime import datetime",
+                "logger": "import logging\n\nlogger = logging.getLogger(__name__)",
             }
 
             # Find all names used
@@ -188,7 +208,7 @@ class TargetedFixer:
                 return False
 
             # Add imports
-            lines = content.split('\n')
+            lines = content.split("\n")
             import_lines: list = []
 
             # Group typing imports
@@ -197,7 +217,7 @@ class TargetedFixer:
 
             for name in to_import:
                 import_stmt = common_imports[name]
-                if import_stmt.startswith('from typing'):
+                if import_stmt.startswith("from typing"):
                     typing_imports.append(name)
                 else:
                     other_imports.append(import_stmt)
@@ -212,9 +232,16 @@ class TargetedFixer:
             # Find where to insert imports
             insert_idx = 0
             for i, line in enumerate(lines):
-                if line.strip().startswith('import ') or line.strip().startswith('from '):
+                if line.strip().startswith("import ") or line.strip().startswith(
+                    "from "
+                ):
                     insert_idx = i + 1
-                elif insert_idx > 0 and line.strip() and not line.strip().startswith('import') and not line.strip().startswith('from'):
+                elif (
+                    insert_idx > 0
+                    and line.strip()
+                    and not line.strip().startswith("import")
+                    and not line.strip().startswith("from")
+                ):
                     break
 
             # Insert imports
@@ -224,8 +251,8 @@ class TargetedFixer:
                 self.fixes_applied += 1
 
             # Write back
-            with open(file_path, 'w', encoding='utf-8') as f:
-                f.write('\n'.join(lines))
+            with open(file_path, "w", encoding="utf-8") as f:
+                f.write("\n".join(lines))
 
             self.files_modified.add(file_path)
             return True
@@ -239,9 +266,11 @@ class TargetedFixer:
         logger.info("Running ruff automatic fixes...")
 
         # Run ruff with all automatic fixes
-        result = subprocess.run([
-            "ruff", "check", "--fix", "--unsafe-fixes", str(self.base_path)
-        ], capture_output=True, text=True)
+        result = subprocess.run(
+            ["ruff", "check", "--fix", "--unsafe-fixes", str(self.base_path)],
+            capture_output=True,
+            text=True,
+        )
 
         if result.returncode == 0:
             logger.info("Ruff fixes applied successfully")
@@ -251,9 +280,9 @@ class TargetedFixer:
         """Run black formatter."""
         logger.info("Running black formatter...")
 
-        result = subprocess.run([
-            "black", "--quiet", str(self.base_path)
-        ], capture_output=True, text=True)
+        result = subprocess.run(
+            ["black", "--quiet", str(self.base_path)], capture_output=True, text=True
+        )
 
         if result.returncode == 0:
             logger.info("Black formatting completed")
@@ -263,9 +292,9 @@ class TargetedFixer:
         """Run isort to fix imports."""
         logger.info("Running isort...")
 
-        result = subprocess.run([
-            "isort", "--quiet", str(self.base_path)
-        ], capture_output=True, text=True)
+        result = subprocess.run(
+            ["isort", "--quiet", str(self.base_path)], capture_output=True, text=True
+        )
 
         if result.returncode == 0:
             logger.info("Import sorting completed")
@@ -277,37 +306,51 @@ class TargetedFixer:
 
         # Count print statements
         print_count = 0
-        result = subprocess.run([
-            "grep", "-r", "print(", str(self.base_path),
-            "--include=*.py", "--exclude-dir=.git"
-        ], capture_output=True, text=True)
+        result = subprocess.run(
+            [
+                "grep",
+                "-r",
+                "print(",
+                str(self.base_path),
+                "--include=*.py",
+                "--exclude-dir=.git",
+            ],
+            capture_output=True,
+            text=True,
+        )
 
         if result.returncode == 0:
-            print_count = len([l for l in result.stdout.split('\n') if l.strip()])
+            print_count = len([l for l in result.stdout.split("\n") if l.strip()])
 
         # Run ruff check
-        result = subprocess.run([
-            "ruff", "check", str(self.base_path), "--statistics"
-        ], capture_output=True, text=True)
+        result = subprocess.run(
+            ["ruff", "check", str(self.base_path), "--statistics"],
+            capture_output=True,
+            text=True,
+        )
 
         # Parse statistics
         stats: dict = {}
         total_violations = 0
 
-        for line in result.stdout.split('\n'):
+        for line in result.stdout.split("\n"):
             if line.strip():
                 parts = line.strip().split()
-                if len(parts) >= 2 and parts[1].startswith('(') and parts[1].endswith(')'):
+                if (
+                    len(parts) >= 2
+                    and parts[1].startswith("(")
+                    and parts[1].endswith(")")
+                ):
                     count = int(parts[0])
                     code = parts[1][1:-1]
                     stats[code] = count
                     total_violations += count
 
         return {
-            'print_statements': print_count,
-            'total_violations': total_violations,
-            'undefined_names': stats.get('F821', 0),
-            'stats': stats
+            "print_statements": print_count,
+            "total_violations": total_violations,
+            "undefined_names": stats.get("F821", 0),
+            "stats": stats,
         }
 
     def run(self) -> None:
@@ -329,7 +372,7 @@ class TargetedFixer:
 
         for file_path in python_files:
             # Skip test files and scripts
-            if 'test' in str(file_path).lower() or '/scripts/' in str(file_path):
+            if "test" in str(file_path).lower() or "/scripts/" in str(file_path):
                 continue
 
             self.fix_print_statements_in_file(file_path)
@@ -356,30 +399,40 @@ class TargetedFixer:
         logger.info("\n" + "=" * 80)
         logger.info("FINAL REPORT")
         logger.info("=" * 80)
-        logger.info(f"Print statements: {initial_stats['print_statements']} → {final_stats['print_statements']}")
-        logger.info(f"Undefined names: {initial_stats['undefined_names']} → {final_stats['undefined_names']}")
-        logger.info(f"Total violations: {initial_stats['total_violations']} → {final_stats['total_violations']}")
+        logger.info(
+            f"Print statements: {initial_stats['print_statements']} → {final_stats['print_statements']}"
+        )
+        logger.info(
+            f"Undefined names: {initial_stats['undefined_names']} → {final_stats['undefined_names']}"
+        )
+        logger.info(
+            f"Total violations: {initial_stats['total_violations']} → {final_stats['total_violations']}"
+        )
         logger.info(f"Files modified: {len(self.files_modified)}")
         logger.info(f"Total fixes applied: {self.fixes_applied}")
 
         # Show top remaining violations
-        if final_stats['stats']:
+        if final_stats["stats"]:
             logger.info("\nTop remaining violations:")
-            sorted_stats = sorted(final_stats['stats'].items(), key=lambda x: x[1], reverse=True)
+            sorted_stats = sorted(
+                final_stats["stats"].items(), key=lambda x: x[1], reverse=True
+            )
             for code, count in sorted_stats[:10]:
                 logger.info(f"  - {code}: {count}")
 
-        if final_stats['total_violations'] == 0:
+        if final_stats["total_violations"] == 0:
             logger.info("\n✅ ZERO TOLERANCE ACHIEVED!")
             logger.info(f"\n❌ {final_stats['total_violations']} violations remain")
 
             # Show sample violations
-            result = subprocess.run([
-                "ruff", "check", str(self.base_path), "--output-format", "concise"
-            ], capture_output=True, text=True)
+            result = subprocess.run(
+                ["ruff", "check", str(self.base_path), "--output-format", "concise"],
+                capture_output=True,
+                text=True,
+            )
 
             logger.info("\nSample violations:")
-            for _i, line in enumerate(result.stdout.split('\n')[:20]):
+            for _i, line in enumerate(result.stdout.split("\n")[:20]):
                 if line.strip():
                     logger.info(f"  {line}")
 

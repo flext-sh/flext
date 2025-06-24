@@ -212,17 +212,14 @@ def test_project(
 
         # Install project
         print("  🔧 Installing project...")
-        install_success, install_message = install_project(
-            project_path, venv_path)
+        install_success, install_message = install_project(project_path, venv_path)
 
         result = {
             "project": project_name,
             "exists": True,
             "has_pyproject": True,
             "project_info": project_info,
-            "installation": {
-                "success": install_success,
-                "message": install_message},
+            "installation": {"success": install_success, "message": install_message},
             "cli_tests": {},
         }
 
@@ -232,8 +229,7 @@ def test_project(
             result["cli_tests"] = cli_results
 
             # Summary
-            working_clis = sum(
-                1 for r in cli_results.values() if r.get("success"))
+            working_clis = sum(1 for r in cli_results.values() if r.get("success"))
             total_clis = len(cli_results)
             print(f"  ✅ CLI tests: {working_clis}/{total_clis} working")
             print(f"  ❌ Installation failed: {install_message}")
@@ -280,17 +276,14 @@ def generate_report(results: list[dict]) -> None:
 
     for result in results:
         project = result["project"]
-        install_status = "✅" if result.get(
-            "installation", {}).get("success") else "❌"
+        install_status = "✅" if result.get("installation", {}).get("success") else "❌"
         cli_count = len(result.get("cli_tests", {}))
         working_cli_count = sum(
-            1 for cli in result.get(
-                "cli_tests",
-                {}).values() if cli.get("success"))
+            1 for cli in result.get("cli_tests", {}).values() if cli.get("success")
+        )
         cli_status = f"{working_cli_count}/{cli_count}" if cli_count > 0 else "N/A"
 
-        status = "OK" if result.get(
-            "installation", {}).get("success") else "FAILED"
+        status = "OK" if result.get("installation", {}).get("success") else "FAILED"
         if "error" in result:
             status = "ERROR"
 
@@ -338,8 +331,7 @@ def main() -> None:
         pass
     except ImportError:
         print("📦 Installing tomli for TOML parsing...")
-        subprocess.run([sys.executable, "-m", "pip",
-                       "install", "tomli"], check=True)
+        subprocess.run([sys.executable, "-m", "pip", "install", "tomli"], check=True)
 
     # Create temporary directory for test environments
     with tempfile.TemporaryDirectory(prefix="pyauto_cli_test_") as temp_dir:

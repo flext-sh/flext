@@ -148,8 +148,7 @@ class SafetyConfig:
     create_backup: bool = False
     rollback_on_error: bool = True
     dry_run: bool = False
-    parallel_workers: int = field(
-        default_factory=lambda: multiprocessing.cpu_count())
+    parallel_workers: int = field(default_factory=lambda: multiprocessing.cpu_count())
 
 
 @dataclass
@@ -168,28 +167,41 @@ class MaintenanceConfig(BaseModel):
 
     # Target configuration
     target_projects: list[str] = Field(
-        default_factory=list,
-        description="Specific projects to target")
+        default_factory=list, description="Specific projects to target"
+    )
     exclude_patterns: list[str] = Field(
         default_factory=lambda: [
-            "__pycache__", ".venv", ".git", "dist", "build",
-            ".pytest_cache", ".mypy_cache", ".ruff_cache",
-            "node_modules", "archive", "backup", "logs", "reports",
-            "htmlcov", "junit", ".tox", "*.egg-info", "reference"
+            "__pycache__",
+            ".venv",
+            ".git",
+            "dist",
+            "build",
+            ".pytest_cache",
+            ".mypy_cache",
+            ".ruff_cache",
+            "node_modules",
+            "archive",
+            "backup",
+            "logs",
+            "reports",
+            "htmlcov",
+            "junit",
+            ".tox",
+            "*.egg-info",
+            "reference",
         ],
-        description="Patterns to exclude from processing"
+        description="Patterns to exclude from processing",
     )
 
     # Fix categories to enable
     fix_categories: dict[FixCategory, bool] = Field(
         default_factory=lambda: dict.fromkeys(FixCategory, True),
-        description="Which fix categories to enable"
+        description="Which fix categories to enable",
     )
 
     # Processing configuration
     processing_mode: ProcessingMode = Field(
-        default=ProcessingMode.INCREMENTAL,
-        description="How to process files"
+        default=ProcessingMode.INCREMENTAL, description="How to process files"
     )
 
     # Sub-configurations
@@ -206,8 +218,7 @@ class MaintenanceConfig(BaseModel):
         """Validate target projects exist."""
         for project in v:
             if not Path(project).exists():
-                raise ValueError(
-                    f"Project directory does not exist: {project}")
+                raise ValueError(f"Project directory does not exist: {project}")
         return v
 
 
@@ -220,10 +231,10 @@ class ColoredFormatter(logging.Formatter):
     """Colored formatter for console output."""
 
     COLORS = {
-        "DEBUG": "\033[36m",     # Cyan
-        "INFO": "\033[32m",      # Green
-        "WARNING": "\033[33m",   # Yellow
-        "ERROR": "\033[31m",     # Red
+        "DEBUG": "\033[36m",  # Cyan
+        "INFO": "\033[32m",  # Green
+        "WARNING": "\033[33m",  # Yellow
+        "ERROR": "\033[31m",  # Red
         "CRITICAL": "\033[35m",  # Magenta
     }
     RESET = "\033[0m"
@@ -243,17 +254,21 @@ def setup_logging(config: MaintenanceConfig) -> logging.Logger:
 
     # Console handler with colors
     console_handler = logging.StreamHandler(sys.stdout)
-    console_handler.setFormatter(ColoredFormatter(
-        "%(asctime)s - %(name)s - %(levelname)s - %(funcName)s:%(lineno)d - %(message)s"
-    ))
+    console_handler.setFormatter(
+        ColoredFormatter(
+            "%(asctime)s - %(name)s - %(levelname)s - %(funcName)s:%(lineno)d - %(message)s"
+        )
+    )
     logger.addHandler(console_handler)
 
     # File handler if specified
     if config.log_file:
         file_handler = logging.FileHandler(config.log_file)
-        file_handler.setFormatter(logging.Formatter(
-            "%(asctime)s - %(name)s - %(levelname)s - %(funcName)s:%(lineno)d - %(message)s"
-        ))
+        file_handler.setFormatter(
+            logging.Formatter(
+                "%(asctime)s - %(name)s - %(levelname)s - %(funcName)s:%(lineno)d - %(message)s"
+            )
+        )
         logger.addHandler(file_handler)
 
     return logger
@@ -346,18 +361,14 @@ class TypeAnnotationFixer(MaintenancePlugin):
         # Fix function return types
         def add_return_type(match) -> None:
             func_line = match.group(0)
-            if " -> " not in func_line and not func_line.strip().startswith("def __init__"):
-                changes.append(
-                    f"Added return type to function: {
-                        func_line.strip()}")
+            if " -> " not in func_line and not func_line.strip().startswith(
+                "def __init__"
+            ):
+                changes.append(f"Added return type to function: {func_line.strip()}")
                 return func_line.rstrip(":") + " -> None:"
             return func_line
 
-        fixed = re.sub(
-            r"def\s+\w+\([^)]*\)\s*:",
-            add_return_type,
-            fixed
-        )
+        fixed = re.sub(r"def\s+\w+\([^)]*\)\s*:", add_return_type, fixed)
 
         # Fix empty collection types
         replacements = [
@@ -390,9 +401,9 @@ class LoggingPatternFixer(MaintenancePlugin):
         """Check if file has logging issues."""
         patterns = [
             r'logger\.\w+\(f["\']',  # f-strings in logging
-            r'logger\.\w+\([^)]*\.format\(',  # .format in logging
-            r'logger\.\w+\([^)]*%[^)]*\)',  # % formatting in logging
-            r'\bprint\s*\(',  # print statements
+            r"logger\.\w+\([^)]*\.format\(",  # .format in logging
+            r"logger\.\w+\([^)]*%[^)]*\)",  # % formatting in logging
+            r"\bprint\s*\(",  # print statements
         ]
         return any(re.search(pattern, content) for pattern in patterns)
 
@@ -407,35 +418,32 @@ class LoggingPatternFixer(MaintenancePlugin):
             changes.append(f"Fixed f-string in logging: {full_match[:50]}...")
 
             # Extract variables from f-string
-            var_pattern = r'\{([^}]+)\}'
+            var_pattern = r"\{([^}]+)\}"
             variables = re.findall(var_pattern, full_match)
 
             # Replace f-string with % formatting
-            new_string = re.sub(var_pattern, '%s', full_match)
+            new_string = re.sub(var_pattern, "%s", full_match)
             new_string = new_string.replace('(f"', '("').replace("(f'", "('")
 
             # Add variables as arguments
             if variables:
-                closing_paren = new_string.rfind(')')
-                var_args = ', '.join(variables)
-                new_string = new_string[:closing_paren] + \
-                    f", {var_args}" + new_string[closing_paren:]
+                closing_paren = new_string.rfind(")")
+                var_args = ", ".join(variables)
+                new_string = (
+                    new_string[:closing_paren]
+                    + f", {var_args}"
+                    + new_string[closing_paren:]
+                )
 
             return new_string
 
         fixed = re.sub(
-            r'logger\.\w+\(f["\'][^"\']*["\'][^)]*\)',
-            fix_f_string_logging,
-            fixed
+            r'logger\.\w+\(f["\'][^"\']*["\'][^)]*\)', fix_f_string_logging, fixed
         )
 
         # Replace print with logger.info
         if "print(" in fixed and "logger" in fixed:
-            fixed = re.sub(
-                r'\bprint\s*\(([^)]+)\)',
-                r'logger.info(\1)',
-                fixed
-            )
+            fixed = re.sub(r"\bprint\s*\(([^)]+)\)", r"logger.info(\1)", fixed)
             changes.append("Replaced print() with logger.info()")
 
         return fixed, changes
@@ -455,9 +463,9 @@ class ExceptionHandlingFixer(MaintenancePlugin):
     def can_fix(self, file_path: Path, content: str) -> bool:
         """Check if file has exception handling issues."""
         patterns = [
-            r'except\s*:',  # Bare except
-            r'except\s+Exception\s*:',  # Too broad exception
-            r'raise\s+\w+\(',  # Raise without from
+            r"except\s*:",  # Bare except
+            r"except\s+Exception\s*:",  # Too broad exception
+            r"raise\s+\w+\(",  # Raise without from
         ]
         return any(re.search(pattern, content) for pattern in patterns)
 
@@ -467,24 +475,22 @@ class ExceptionHandlingFixer(MaintenancePlugin):
         fixed = content
 
         # Fix bare except
-        if re.search(r'except\s*:', fixed):
-            fixed = re.sub(r'except\s*:', 'except Exception:', fixed)
+        if re.search(r"except\s*:", fixed):
+            fixed = re.sub(r"except\s*:", "except Exception:", fixed)
             changes.append("Fixed bare except clause")
 
         # Fix raise without from
         def fix_raise_from(match) -> None:
             line = match.group(0)
-            if " from " not in line and "except" in content[:match.start()].split(
-                    '\n')[-3:]:
+            if (
+                " from " not in line
+                and "except" in content[: match.start()].split("\n")[-3:]
+            ):
                 changes.append(f"Added 'from e' to raise: {line}")
                 return line.rstrip() + " from e"
             return line
 
-        fixed = re.sub(
-            r'raise\s+\w+\([^)]*\)',
-            fix_raise_from,
-            fixed
-        )
+        fixed = re.sub(r"raise\s+\w+\([^)]*\)", fix_raise_from, fixed)
 
         return fixed, changes
 
@@ -516,7 +522,7 @@ class UnusedVariableFixer(MaintenancePlugin):
             args = match.group(1)
 
             # Skip if no arguments or already has *args/**kwargs
-            if not args.strip() or '*' in args:
+            if not args.strip() or "*" in args:
                 return func_def
 
             # Add *_ to catch unused positional args
@@ -524,15 +530,10 @@ class UnusedVariableFixer(MaintenancePlugin):
                 new_args = args.rstrip() + ", *_"
                 new_args = args + ", *_"
 
-            changes.append(
-                f"Added *_ to function arguments: {func_def.split('(')[0]}")
+            changes.append(f"Added *_ to function arguments: {func_def.split('(')[0]}")
             return func_def.replace(args, new_args)
 
-        fixed = re.sub(
-            r'def\s+\w+\(([^)]*)\)\s*(?:->.*?)?\s*:',
-            fix_unused_arg,
-            fixed
-        )
+        fixed = re.sub(r"def\s+\w+\(([^)]*)\)\s*(?:->.*?)?\s*:", fix_unused_arg, fixed)
 
         return fixed, changes
 
@@ -562,31 +563,31 @@ class FStringConversionFixer(MaintenancePlugin):
         fixed = content
 
         # Skip if in logging statement
-        lines = fixed.split('\n')
+        lines = fixed.split("\n")
         new_lines: list = []
 
         for line in lines:
-            if 'logger.' in line or 'logging.' in line:
+            if "logger." in line or "logging." in line:
                 new_lines.append(line)
                 continue
 
             # Convert .format() to f-string
-            if '.format(' in line and '{' in line:
+            if ".format(" in line and "{" in line:
                 # Simple conversion for basic cases
-                match = re.search(
-                    r'(["\'])([^"\']*)\1\.format\(([^)]+)\)', line)
+                match = re.search(r'(["\'])([^"\']*)\1\.format\(([^)]+)\)', line)
                 if match:
                     quote, template, _args = match.groups()
                     # This is simplified - real implementation would parse
                     # properly
                     new_line = line.replace(
-                        match.group(0), f'f{quote}{template}{quote}')
+                        match.group(0), f"f{quote}{template}{quote}"
+                    )
                     new_lines.append(new_line)
                     changes.append("Converted .format() to f-string")
                     new_lines.append(line)
                 new_lines.append(line)
 
-        fixed = '\n'.join(new_lines)
+        fixed = "\n".join(new_lines)
         return fixed, changes
 
 
@@ -604,12 +605,11 @@ class AsyncioPatternFixer(MaintenancePlugin):
     def can_fix(self, file_path: Path, content: str) -> bool:
         """Check if file has asyncio issues."""
         patterns = [
-            r'asyncio\.run\(',  # asyncio.run in wrong context
-            r'async\s+def.*\n.*time\.sleep\(',  # time.sleep in async
-            r'\.result\(\).*async',  # Blocking on async
+            r"asyncio\.run\(",  # asyncio.run in wrong context
+            r"async\s+def.*\n.*time\.sleep\(",  # time.sleep in async
+            r"\.result\(\).*async",  # Blocking on async
         ]
-        return any(re.search(pattern, content, re.MULTILINE)
-                   for pattern in patterns)
+        return any(re.search(pattern, content, re.MULTILINE) for pattern in patterns)
 
     def fix(self, file_path: Path, content: str) -> tuple[str, list[str]]:
         """Fix asyncio patterns."""
@@ -617,23 +617,23 @@ class AsyncioPatternFixer(MaintenancePlugin):
         fixed = content
 
         # Replace time.sleep with asyncio.sleep in async functions
-        lines = fixed.split('\n')
+        lines = fixed.split("\n")
         in_async_func = False
         new_lines: list = []
 
         for line in lines:
-            if re.match(r'async\s+def', line):
+            if re.match(r"async\s+def", line):
                 in_async_func = True
-            elif re.match(r'def\s+', line) and in_async_func:
+            elif re.match(r"def\s+", line) and in_async_func:
                 in_async_func = False
 
-            if in_async_func and 'time.sleep(' in line:
-                new_line = line.replace('time.sleep(', 'await asyncio.sleep(')
+            if in_async_func and "time.sleep(" in line:
+                new_line = line.replace("time.sleep(", "await asyncio.sleep(")
                 new_lines.append(new_line)
                 changes.append("Replaced time.sleep with await asyncio.sleep")
                 new_lines.append(line)
 
-        fixed = '\n'.join(new_lines)
+        fixed = "\n".join(new_lines)
         return fixed, changes
 
 
@@ -650,7 +650,10 @@ class TypeCheckingImportFixer(MaintenancePlugin):
 
     def can_fix(self, file_path: Path, content: str) -> bool:
         """Check if file needs TYPE_CHECKING fixes."""
-        return "from __future__ import annotations" in content or "TYPE_CHECKING" in content
+        return (
+            "from __future__ import annotations" in content
+            or "TYPE_CHECKING" in content
+        )
 
     def fix(self, file_path: Path, content: str) -> tuple[str, list[str]]:
         """Fix TYPE_CHECKING imports."""
@@ -658,15 +661,18 @@ class TypeCheckingImportFixer(MaintenancePlugin):
         fixed = content
 
         # Ensure proper import order
-        if "TYPE_CHECKING" in fixed and "from __future__ import annotations" not in fixed:
-            lines = fixed.split('\n')
+        if (
+            "TYPE_CHECKING" in fixed
+            and "from __future__ import annotations" not in fixed
+        ):
+            lines = fixed.split("\n")
             # Add future import at the top
             for i, line in enumerate(lines):
-                if line.strip() and not line.startswith('#'):
+                if line.strip() and not line.startswith("#"):
                     lines.insert(i, "from __future__ import annotations\n")
                     changes.append("Added from __future__ import annotations")
                     break
-            fixed = '\n'.join(lines)
+            fixed = "\n".join(lines)
 
         return fixed, changes
 
@@ -688,8 +694,7 @@ class DocstringFormattingFixer(MaintenancePlugin):
             r'def\s+\w+\([^)]*\).*:\s*\n\s*[^"\s#]',  # Missing docstring
             r'class\s+\w+.*:\s*\n\s*[^"\s#]',  # Missing class docstring
         ]
-        return any(re.search(pattern, content, re.MULTILINE)
-                   for pattern in patterns)
+        return any(re.search(pattern, content, re.MULTILINE) for pattern in patterns)
 
     def fix(self, file_path: Path, content: str) -> tuple[str, list[str]]:
         """Fix docstring formatting."""
@@ -699,12 +704,12 @@ class DocstringFormattingFixer(MaintenancePlugin):
         # Add minimal docstrings to public methods
         def add_docstring(match) -> None:
             indent = len(match.group(0)) - len(match.group(0).lstrip())
-            func_name = re.search(r'def\s+(\w+)', match.group(0)).group(1)
+            func_name = re.search(r"def\s+(\w+)", match.group(0)).group(1)
 
-            if not func_name.startswith('_') or func_name == '__init__':
+            if not func_name.startswith("_") or func_name == "__init__":
                 docstring = f'{" " * (indent + 4)}"""TODO: Add docstring."""\n'
                 changes.append(f"Added placeholder docstring to {func_name}")
-                return match.group(0) + '\n' + docstring
+                return match.group(0) + "\n" + docstring
 
             return match.group(0)
 
@@ -713,7 +718,7 @@ class DocstringFormattingFixer(MaintenancePlugin):
             r'(def\s+\w+\([^)]*\).*:)\s*\n(?=\s*[^"\s#])',
             add_docstring,
             fixed,
-            flags=re.MULTILINE
+            flags=re.MULTILINE,
         )
 
         return fixed, changes
@@ -754,9 +759,8 @@ class PluginRegistry:
                 self.logger.debug(f"Loaded plugin: {plugin.name}")
 
     def get_applicable_plugins(
-            self,
-            file_path: Path,
-            content: str) -> list[MaintenancePlugin]:
+        self, file_path: Path, content: str
+    ) -> list[MaintenancePlugin]:
         """Get all plugins that can fix this file."""
         applicable: list = []
         for plugin in self._plugins.values():
@@ -777,10 +781,11 @@ class FileProcessor:
     """Process individual files with plugins."""
 
     def __init__(
-            self,
-            config: MaintenanceConfig,
-            logger: logging.Logger,
-            registry: PluginRegistry):
+        self,
+        config: MaintenanceConfig,
+        logger: logging.Logger,
+        registry: PluginRegistry,
+    ):
         """Initialize processor."""
         self.config = config
         self.logger = logger
@@ -794,12 +799,12 @@ class FileProcessor:
             "success": False,
             "changes": [],
             "error": None,
-            "metrics": {}
+            "metrics": {},
         }
 
         try:
             # Read file
-            original_content = file_path.read_text(encoding='utf-8')
+            original_content = file_path.read_text(encoding="utf-8")
             content = original_content
 
             # Get applicable plugins
@@ -819,9 +824,7 @@ class FileProcessor:
                         content = fixed_content
                         total_changes.extend(changes)
                         self.metrics[plugin.category.value] += len(changes)
-                        self.logger.warning(
-                            f"Fix validation failed for {
-                                plugin.name}")
+                        self.logger.warning(f"Fix validation failed for {plugin.name}")
 
                 except Exception as e:
                     self.logger.error(f"Plugin {plugin.name} failed: {e}")
@@ -832,12 +835,11 @@ class FileProcessor:
                 if not self.config.safety.dry_run:
                     # Create backup if configured
                     if self.config.safety.create_backup:
-                        backup_path = file_path.with_suffix(
-                            file_path.suffix + '.bak')
+                        backup_path = file_path.with_suffix(file_path.suffix + ".bak")
                         shutil.copy2(file_path, backup_path)
 
                     # Write fixed content
-                    file_path.write_text(content, encoding='utf-8')
+                    file_path.write_text(content, encoding="utf-8")
 
                 result["success"] = True
                 result["changes"] = total_changes
@@ -882,8 +884,9 @@ class WorkspaceScanner:
             # Find Python files
             for py_file in target.rglob("*.py"):
                 # Skip excluded patterns
-                if any(pattern in str(py_file)
-                       for pattern in self.config.exclude_patterns):
+                if any(
+                    pattern in str(py_file) for pattern in self.config.exclude_patterns
+                ):
                     continue
 
                 files.append(py_file)
@@ -905,8 +908,7 @@ class MetricsReporter:
         self.config = config
         self.logger = logger
 
-    def generate_report(
-            self, results: list[dict[str, Any]], duration: float) -> None:
+    def generate_report(self, results: list[dict[str, Any]], duration: float) -> None:
         """Generate and display metrics report."""
         # Aggregate metrics
         total_files = len(results)
@@ -945,11 +947,8 @@ class MetricsReporter:
             for result in results:
                 if not result["success"]:
                     self.logger.warning(
-                        f"  {
-                            result['file']}: {
-                            result.get(
-                                'error',
-                                'Unknown error')}")
+                        f"  {result['file']}: {result.get('error', 'Unknown error')}"
+                    )
 
         # Save detailed report if configured
         if self.config.metrics.metrics_file:
@@ -960,18 +959,18 @@ class MetricsReporter:
                     "successful": successful_files,
                     "failed": failed_files,
                     "total_changes": total_changes,
-                    "duration": duration
+                    "duration": duration,
                 },
                 "category_metrics": dict(category_metrics),
-                "results": results
+                "results": results,
             }
 
-            with open(self.config.metrics.metrics_file, 'w') as f:
+            with open(self.config.metrics.metrics_file, "w") as f:
                 json.dump(report_data, f, indent=2)
 
             self.logger.info(
-                f"\nDetailed report saved to: {
-                    self.config.metrics.metrics_file}")
+                f"\nDetailed report saved to: {self.config.metrics.metrics_file}"
+            )
 
 
 # ============================================================================
@@ -1062,12 +1061,14 @@ class MaintenanceOrchestrator:
                     results.append(result)
                 except Exception as e:
                     self.logger.error(f"Failed to process {file_path}: {e}")
-                    results.append({
-                        "file": str(file_path),
-                        "success": False,
-                        "changes": [],
-                        "error": str(e)
-                    })
+                    results.append(
+                        {
+                            "file": str(file_path),
+                            "success": False,
+                            "changes": [],
+                            "error": str(e),
+                        }
+                    )
 
         return results
 
@@ -1087,7 +1088,7 @@ def load_config(config_path: Path | None) -> MaintenanceConfig:
     """Load configuration from file or defaults."""
     if config_path and config_path.exists():
         with open(config_path) as f:
-            if config_path.suffix == '.yaml':
+            if config_path.suffix == ".yaml":
                 config_data = yaml.safe_load(f)
                 config_data = json.load(f)
         return MaintenanceConfig(**config_data)
@@ -1115,56 +1116,40 @@ Examples:
 
   # Parallel processing
   python scripts/maintenance/unified_maintenance_system.py --mode parallel --workers 8
-        """
+        """,
     )
 
-    parser.add_argument(
-        "--projects",
-        nargs="+",
-        help="Specific projects to target"
-    )
-    parser.add_argument(
-        "--config",
-        type=Path,
-        help="Configuration file (YAML or JSON)"
-    )
+    parser.add_argument("--projects", nargs="+", help="Specific projects to target")
+    parser.add_argument("--config", type=Path, help="Configuration file (YAML or JSON)")
     parser.add_argument(
         "--dry-run",
         action="store_true",
-        help="Show what would be changed without modifying files"
+        help="Show what would be changed without modifying files",
     )
     parser.add_argument(
         "--mode",
         choices=["sequential", "parallel", "incremental"],
         default="incremental",
-        help="Processing mode"
+        help="Processing mode",
     )
-    parser.add_argument(
-        "--workers",
-        type=int,
-        help="Number of parallel workers"
-    )
+    parser.add_argument("--workers", type=int, help="Number of parallel workers")
     parser.add_argument(
         "--log-level",
         choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
         default="INFO",
-        help="Logging level"
+        help="Logging level",
     )
     parser.add_argument(
-        "--metrics-file",
-        type=Path,
-        help="Save detailed metrics to file"
+        "--metrics-file", type=Path, help="Save detailed metrics to file"
     )
     parser.add_argument(
         "--categories",
         nargs="+",
         choices=[cat.value for cat in FixCategory],
-        help="Specific fix categories to enable"
+        help="Specific fix categories to enable",
     )
     parser.add_argument(
-        "--version",
-        action="version",
-        version=f"%(prog)s {__version__}"
+        "--version", action="version", version=f"%(prog)s {__version__}"
     )
 
     args = parser.parse_args()

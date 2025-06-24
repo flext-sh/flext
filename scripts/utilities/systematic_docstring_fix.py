@@ -38,168 +38,164 @@ class DocstringTranslator:
             r'"""[\s]*Retorna': '"""Returns',
             r'"""[\s]*Implementa': '"""Implements',
             r'"""[\s]*Define': '"""Defines',
-
             # Common words and phrases
-            r'\bconfiguração\b': 'configuration',
-            r'\bconfiguracão\b': 'configuration',
-            r'\bconfiguracoes\b': 'configurations',
-            r'\bparâmetros\b': 'parameters',
-            r'\bparametros\b': 'parameters',
-            r'\bargumentos\b': 'arguments',
-            r'\bretorna\b': 'returns',
-            r'\bexecuta\b': 'executes',
-            r'\bprocessa\b': 'processes',
-            r'\bvalida\b': 'validates',
-            r'\bverifica\b': 'verifies',
-            r'\bcarrega\b': 'loads',
-            r'\bsalva\b': 'saves',
-            r'\bcria\b': 'creates',
-            r'\bremove\b': 'removes',
-            r'\batualiza\b': 'updates',
-            r'\bimplementa\b': 'implements',
-            r'\bdefine\b': 'defines',
-            r'\bgerencia\b': 'manages',
-            r'\butilitário\b': 'utility',
-            r'\butilitarios\b': 'utilities',
-            r'\bfunção\b': 'function',
-            r'\bfuncao\b': 'function',
-            r'\bmétodo\b': 'method',
-            r'\bmetodo\b': 'method',
-            r'\bclasse\b': 'class',
-            r'\barquivo\b': 'file',
-            r'\bdiretório\b': 'directory',
-            r'\bdiretorio\b': 'directory',
-            r'\bcaminho\b': 'path',
-            r'\bdados\b': 'data',
-            r'\bresultado\b': 'result',
-            r'\bresultados\b': 'results',
-            r'\berro\b': 'error',
-            r'\berros\b': 'errors',
-            r'\bexceção\b': 'exception',
-            r'\bexcecao\b': 'exception',
-            r'\bexceções\b': 'exceptions',
-            r'\bexcecoes\b': 'exceptions',
-            r'\bverdadeiro\b': 'true',
-            r'\bfalso\b': 'false',
-            r'\bvazio\b': 'empty',
-            r'\bnulo\b': 'null',
-            r'\bpadrão\b': 'default',
-            r'\bpadrao\b': 'default',
-            r'\bopcional\b': 'optional',
-            r'\bobrigatório\b': 'required',
-            r'\bobrigatorio\b': 'required',
-            r'\bdisponível\b': 'available',
-            r'\bdisponivel\b': 'available',
-            r'\bnecessário\b': 'necessary',
-            r'\bnecessario\b': 'necessary',
-            r'\bpossível\b': 'possible',
-            r'\bpossivel\b': 'possible',
-            r'\bválido\b': 'valid',
-            r'\bvalido\b': 'valid',
-            r'\binválido\b': 'invalid',
-            r'\binvalido\b': 'invalid',
-
+            r"\bconfiguração\b": "configuration",
+            r"\bconfiguracão\b": "configuration",
+            r"\bconfiguracoes\b": "configurations",
+            r"\bparâmetros\b": "parameters",
+            r"\bparametros\b": "parameters",
+            r"\bargumentos\b": "arguments",
+            r"\bretorna\b": "returns",
+            r"\bexecuta\b": "executes",
+            r"\bprocessa\b": "processes",
+            r"\bvalida\b": "validates",
+            r"\bverifica\b": "verifies",
+            r"\bcarrega\b": "loads",
+            r"\bsalva\b": "saves",
+            r"\bcria\b": "creates",
+            r"\bremove\b": "removes",
+            r"\batualiza\b": "updates",
+            r"\bimplementa\b": "implements",
+            r"\bdefine\b": "defines",
+            r"\bgerencia\b": "manages",
+            r"\butilitário\b": "utility",
+            r"\butilitarios\b": "utilities",
+            r"\bfunção\b": "function",
+            r"\bfuncao\b": "function",
+            r"\bmétodo\b": "method",
+            r"\bmetodo\b": "method",
+            r"\bclasse\b": "class",
+            r"\barquivo\b": "file",
+            r"\bdiretório\b": "directory",
+            r"\bdiretorio\b": "directory",
+            r"\bcaminho\b": "path",
+            r"\bdados\b": "data",
+            r"\bresultado\b": "result",
+            r"\bresultados\b": "results",
+            r"\berro\b": "error",
+            r"\berros\b": "errors",
+            r"\bexceção\b": "exception",
+            r"\bexcecao\b": "exception",
+            r"\bexceções\b": "exceptions",
+            r"\bexcecoes\b": "exceptions",
+            r"\bverdadeiro\b": "true",
+            r"\bfalso\b": "false",
+            r"\bvazio\b": "empty",
+            r"\bnulo\b": "null",
+            r"\bpadrão\b": "default",
+            r"\bpadrao\b": "default",
+            r"\bopcional\b": "optional",
+            r"\bobrigatório\b": "required",
+            r"\bobrigatorio\b": "required",
+            r"\bdisponível\b": "available",
+            r"\bdisponivel\b": "available",
+            r"\bnecessário\b": "necessary",
+            r"\bnecessario\b": "necessary",
+            r"\bpossível\b": "possible",
+            r"\bpossivel\b": "possible",
+            r"\bválido\b": "valid",
+            r"\bvalido\b": "valid",
+            r"\binválido\b": "invalid",
+            r"\binvalido\b": "invalid",
             # Specific technical terms
-            r'\bconexão\b': 'connection',
-            r'\bconexao\b': 'connection',
-            r'\bconexões\b': 'connections',
-            r'\bconexoes\b': 'connections',
-            r'\bautenticação\b': 'authentication',
-            r'\bautenticacao\b': 'authentication',
-            r'\bautorização\b': 'authorization',
-            r'\bautorizacao\b': 'authorization',
-            r'\bsessão\b': 'session',
-            r'\bsessao\b': 'session',
-            r'\bsessões\b': 'sessions',
-            r'\bsessoes\b': 'sessions',
-            r'\btransação\b': 'transaction',
-            r'\btransacao\b': 'transaction',
-            r'\btransações\b': 'transactions',
-            r'\btransacoes\b': 'transactions',
-            r'\bconsulta\b': 'query',
-            r'\bconsultas\b': 'queries',
-            r'\boperação\b': 'operation',
-            r'\boperacao\b': 'operation',
-            r'\boperações\b': 'operations',
-            r'\boperacoes\b': 'operations',
-            r'\bprocessamento\b': 'processing',
-            r'\bvalidação\b': 'validation',
-            r'\bvalidacao\b': 'validation',
-            r'\bverificação\b': 'verification',
-            r'\bverificacao\b': 'verification',
-            r'\bintegração\b': 'integration',
-            r'\bintegracao\b': 'integration',
-            r'\bmigração\b': 'migration',
-            r'\bmigracao\b': 'migration',
-            r'\bimportação\b': 'import',
-            r'\bimportacao\b': 'import',
-            r'\bexportação\b': 'export',
-            r'\bexportacao\b': 'export',
-            r'\bsincronização\b': 'synchronization',
-            r'\bsincronizacao\b': 'synchronization',
-
+            r"\bconexão\b": "connection",
+            r"\bconexao\b": "connection",
+            r"\bconexões\b": "connections",
+            r"\bconexoes\b": "connections",
+            r"\bautenticação\b": "authentication",
+            r"\bautenticacao\b": "authentication",
+            r"\bautorização\b": "authorization",
+            r"\bautorizacao\b": "authorization",
+            r"\bsessão\b": "session",
+            r"\bsessao\b": "session",
+            r"\bsessões\b": "sessions",
+            r"\bsessoes\b": "sessions",
+            r"\btransação\b": "transaction",
+            r"\btransacao\b": "transaction",
+            r"\btransações\b": "transactions",
+            r"\btransacoes\b": "transactions",
+            r"\bconsulta\b": "query",
+            r"\bconsultas\b": "queries",
+            r"\boperação\b": "operation",
+            r"\boperacao\b": "operation",
+            r"\boperações\b": "operations",
+            r"\boperacoes\b": "operations",
+            r"\bprocessamento\b": "processing",
+            r"\bvalidação\b": "validation",
+            r"\bvalidacao\b": "validation",
+            r"\bverificação\b": "verification",
+            r"\bverificacao\b": "verification",
+            r"\bintegração\b": "integration",
+            r"\bintegracao\b": "integration",
+            r"\bmigração\b": "migration",
+            r"\bmigracao\b": "migration",
+            r"\bimportação\b": "import",
+            r"\bimportacao\b": "import",
+            r"\bexportação\b": "export",
+            r"\bexportacao\b": "export",
+            r"\bsincronização\b": "synchronization",
+            r"\bsincronizacao\b": "synchronization",
             # Common phrases
-            r'\bse necessário\b': 'if necessary',
-            r'\bse necessario\b': 'if necessary',
-            r'\bpor padrão\b': 'by default',
-            r'\bpor padrao\b': 'by default',
-            r'\bem caso de erro\b': 'in case of error',
-            r'\bem caso de\b': 'in case of',
-            r'\bno caso de\b': 'in case of',
-            r'\bpara cada\b': 'for each',
-            r'\bde acordo com\b': 'according to',
-            r'\batravés de\b': 'through',
-            r'\batraves de\b': 'through',
-            r'\bpor meio de\b': 'by means of',
-            r'\bcom base em\b': 'based on',
-            r'\ba partir de\b': 'from',
-            r'\bem relação a\b': 'regarding',
-            r'\bem relacao a\b': 'regarding',
-            r'\bcom relação a\b': 'regarding',
-            r'\bcom relacao a\b': 'regarding',
+            r"\bse necessário\b": "if necessary",
+            r"\bse necessario\b": "if necessary",
+            r"\bpor padrão\b": "by default",
+            r"\bpor padrao\b": "by default",
+            r"\bem caso de erro\b": "in case of error",
+            r"\bem caso de\b": "in case of",
+            r"\bno caso de\b": "in case of",
+            r"\bpara cada\b": "for each",
+            r"\bde acordo com\b": "according to",
+            r"\batravés de\b": "through",
+            r"\batraves de\b": "through",
+            r"\bpor meio de\b": "by means of",
+            r"\bcom base em\b": "based on",
+            r"\ba partir de\b": "from",
+            r"\bem relação a\b": "regarding",
+            r"\bem relacao a\b": "regarding",
+            r"\bcom relação a\b": "regarding",
+            r"\bcom relacao a\b": "regarding",
         }
 
         # Files to process (from our analysis)
         self.target_files = [
-            'scripts/utilities/sync_dependencies.py',
-            'scripts/analysis/generate_full_coverage_report.py',
-            'scripts/utilities/standardize_projects.py',
-            'scripts/utilities/resolve_dependencies.py',
-            'scripts/analysis/validate_standards.py',
-            'scripts/dev_tools/dc_api_x_monkeytype.py',
-            'scripts/maintenance/cleanup_temp_scripts.py',
-            'gruponos-poc-oic-wms/test_real_cli.py',
-            'gruponos-poc-oic-wms/test_all_commands.py',
-            'gruponos-poc-oic-wms/show_all_commands.py',
-            'gruponos-poc-oic-wms/test_commands_mock.py',
-            'algar-mig-oud/comparison_demo.py',
-            'algar-mig-oud/create_links.py',
-            'flx/src/flx/core/commands/base.py',
-            'flx/src/flx/core/commands/bus.py',
-            'flx/src/flx/core/commands/registry.py',
-            'flx/src/flx/core/commands/__init__.py',
-            'flx/src/flx/core/commands/exceptions.py',
-            'flx/src/flx/core/domain/services/ldap.py',
-            'flx/src/flx/core/domain/services/__init__.py',
-            'flx/src/flx/core/domain/value_object_types/ldap.py',
-            'flx/src/flx/core/domain/value_object_types/__init__.py',
-            'flx/src/flx/core/domain/entities.py',
-            'flx/src/flx/core/domain/exceptions.py',
-            'flx/src/flx/core/domain/base_service.py',
-            'flx/src/flx/core/domain/__init__.py',
-            'flx/src/flx/core/domain/value_objects.py',
-            'flx/src/flx/core/domain/customer.py',
-            'flx/src/flx/core/contracts/adapters.py',
-            'flx/src/flx/core/contracts/logging.py'
+            "scripts/utilities/sync_dependencies.py",
+            "scripts/analysis/generate_full_coverage_report.py",
+            "scripts/utilities/standardize_projects.py",
+            "scripts/utilities/resolve_dependencies.py",
+            "scripts/analysis/validate_standards.py",
+            "scripts/dev_tools/dc_api_x_monkeytype.py",
+            "scripts/maintenance/cleanup_temp_scripts.py",
+            "gruponos-poc-oic-wms/test_real_cli.py",
+            "gruponos-poc-oic-wms/test_all_commands.py",
+            "gruponos-poc-oic-wms/show_all_commands.py",
+            "gruponos-poc-oic-wms/test_commands_mock.py",
+            "algar-mig-oud/comparison_demo.py",
+            "algar-mig-oud/create_links.py",
+            "flx/src/flx/core/commands/base.py",
+            "flx/src/flx/core/commands/bus.py",
+            "flx/src/flx/core/commands/registry.py",
+            "flx/src/flx/core/commands/__init__.py",
+            "flx/src/flx/core/commands/exceptions.py",
+            "flx/src/flx/core/domain/services/ldap.py",
+            "flx/src/flx/core/domain/services/__init__.py",
+            "flx/src/flx/core/domain/value_object_types/ldap.py",
+            "flx/src/flx/core/domain/value_object_types/__init__.py",
+            "flx/src/flx/core/domain/entities.py",
+            "flx/src/flx/core/domain/exceptions.py",
+            "flx/src/flx/core/domain/base_service.py",
+            "flx/src/flx/core/domain/__init__.py",
+            "flx/src/flx/core/domain/value_objects.py",
+            "flx/src/flx/core/domain/customer.py",
+            "flx/src/flx/core/contracts/adapters.py",
+            "flx/src/flx/core/contracts/logging.py",
         ]
 
-    def find_portuguese_content(
-            self, file_path: Path) -> list[tuple[int, str]]:
+    def find_portuguese_content(self, file_path: Path) -> list[tuple[int, str]]:
         """Find Portuguese content in a file."""
         portuguese_lines: list = []
 
         try:
-            with open(file_path, encoding='utf-8') as f:
+            with open(file_path, encoding="utf-8") as f:
                 lines = f.readlines()
 
             for i, line in enumerate(lines, 1):
@@ -220,10 +216,8 @@ class DocstringTranslator:
 
         for portuguese_pattern, english_replacement in self.translations.items():
             translated = re.sub(
-                portuguese_pattern,
-                english_replacement,
-                translated,
-                flags=re.IGNORECASE)
+                portuguese_pattern, english_replacement, translated, flags=re.IGNORECASE
+            )
 
         return translated
 
@@ -235,7 +229,7 @@ class DocstringTranslator:
 
         try:
             # Read original content
-            with open(file_path, encoding='utf-8') as f:
+            with open(file_path, encoding="utf-8") as f:
                 original_content = f.read()
 
             # Translate content
@@ -244,12 +238,12 @@ class DocstringTranslator:
             # Check if changes were made
             if original_content != translated_content:
                 # Create backup
-                backup_path = file_path.with_suffix(f'{file_path.suffix}.bak')
-                with open(backup_path, 'w', encoding='utf-8') as f:
+                backup_path = file_path.with_suffix(f"{file_path.suffix}.bak")
+                with open(backup_path, "w", encoding="utf-8") as f:
                     f.write(original_content)
 
                 # Write translated content
-                with open(file_path, 'w', encoding='utf-8') as f:
+                with open(file_path, "w", encoding="utf-8") as f:
                     f.write(translated_content)
 
                 print(f"✅ Translated: {file_path}")
@@ -321,12 +315,14 @@ class DocstringTranslator:
 def main() -> None:
     """Main execution function."""
     parser = argparse.ArgumentParser(
-        description='Systematic docstring translation tool')
+        description="Systematic docstring translation tool"
+    )
     parser.add_argument(
-        '--dry-run',
-        action='store_true',
-        help='Show what would be changed without making changes')
-    parser.add_argument('--file', type=str, help='Process specific file only')
+        "--dry-run",
+        action="store_true",
+        help="Show what would be changed without making changes",
+    )
+    parser.add_argument("--file", type=str, help="Process specific file only")
 
     args = parser.parse_args()
 
@@ -338,9 +334,7 @@ def main() -> None:
         if args.dry_run:
             portuguese_lines = translator.find_portuguese_content(file_path)
             if portuguese_lines:
-                print(
-                    f"Would translate {
-                        len(portuguese_lines)} items in {file_path}")
+                print(f"Would translate {len(portuguese_lines)} items in {file_path}")
                 for line_num, line in portuguese_lines:
                     print(f"  Line {line_num}: {line}")
                 print(f"No Portuguese content found in {file_path}")
@@ -357,5 +351,5 @@ def main() -> None:
         translator.generate_report(results)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

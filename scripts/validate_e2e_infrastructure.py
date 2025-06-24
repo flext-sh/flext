@@ -184,9 +184,7 @@ def test_docker_infrastructure(project_path: Path) -> dict[str, Any]:
 
     try:
         # Start containers
-        console.print(
-            f"🐳 Starting Docker containers for {
-                project_path.name}...")
+        console.print(f"🐳 Starting Docker containers for {project_path.name}...")
 
         start_result = run_command(
             ["docker-compose", "-f", str(docker_compose_file), "up", "-d"],
@@ -237,10 +235,8 @@ def test_docker_infrastructure(project_path: Path) -> dict[str, Any]:
                             server = Server("localhost", port=port)
                             conn = Connection(
                                 server,
-                                user=f"cn=admin,dc={
-                                    name.split('-')[0]},dc=com",
-                                password=f"{
-                                    name.split('-')[0]}_password",
+                                user=f"cn=admin,dc={name.split('-')[0]},dc=com",
+                                password=f"{name.split('-')[0]}_password",
                             )
                             if conn.bind():
                                 results["services_accessible"].append(name)
@@ -264,8 +260,7 @@ def test_docker_infrastructure(project_path: Path) -> dict[str, Any]:
 
                         for port, name, bind_dn, password in ldap_tests:
                             server = Server("localhost", port=port)
-                            conn = Connection(
-                                server, user=bind_dn, password=password)
+                            conn = Connection(server, user=bind_dn, password=password)
                             if conn.bind():
                                 results["services_accessible"].append(name)
                                 conn.unbind()
@@ -289,8 +284,7 @@ def test_docker_infrastructure(project_path: Path) -> dict[str, Any]:
                 except ImportError:
                     results["errors"].append("ldap3 not available for testing")
                 except Exception as e:
-                    results["errors"].append(
-                        f"Service connectivity test failed: {e}")
+                    results["errors"].append(f"Service connectivity test failed: {e}")
 
             elif project_name == "dbt-ldap":
                 # Test PostgreSQL
@@ -328,18 +322,17 @@ def test_docker_infrastructure(project_path: Path) -> dict[str, Any]:
 
 
 @click.command()
-@click.option("--project",
-              help="Specific project to validate (tap-ldap, target-ldap, dbt-ldap, flx-ldap)",
-              )
-@click.option("--run-docker-tests", is_flag=True,
-              help="Run actual Docker container tests")
+@click.option(
+    "--project",
+    help="Specific project to validate (tap-ldap, target-ldap, dbt-ldap, flx-ldap)",
+)
+@click.option(
+    "--run-docker-tests", is_flag=True, help="Run actual Docker container tests"
+)
 def main(project: str | None, run_docker_tests: bool) -> None:
     """Validate E2E test infrastructure for LDAP projects."""
 
-    console.print(
-        Panel.fit(
-            "🧪 E2E Infrastructure Validation",
-            style="bold blue"))
+    console.print(Panel.fit("🧪 E2E Infrastructure Validation", style="bold blue"))
 
     pyauto_root = Path(__file__).parent.parent
 
@@ -358,14 +351,12 @@ def main(project: str | None, run_docker_tests: bool) -> None:
             console=console,
         ) as progress:
             # Structure validation
-            task1 = progress.add_task(
-                "Checking project structure...", total=None)
+            task1 = progress.add_task("Checking project structure...", total=None)
             structure_results = validate_project_structure(project_path)
             progress.update(task1, completed=True)
 
             # Docker compose validation
-            task2 = progress.add_task(
-                "Validating docker-compose...", total=None)
+            task2 = progress.add_task("Validating docker-compose...", total=None)
             compose_results = validate_docker_compose(project_path)
             progress.update(task2, completed=True)
 
@@ -487,7 +478,8 @@ def main(project: str | None, run_docker_tests: bool) -> None:
             f"\n🎯 Summary: {valid_projects}/{total_projects} projects valid, {docker_working}/{total_projects} Docker tests passed"
         )
         console.print(
-            f"\n🎯 Summary: {valid_projects}/{total_projects} projects have complete E2E infrastructure")
+            f"\n🎯 Summary: {valid_projects}/{total_projects} projects have complete E2E infrastructure"
+        )
 
     if valid_projects == total_projects:
         console.print("✅ All E2E infrastructure is ready!")

@@ -40,12 +40,12 @@ def create_audit_columns() -> None:
 
             # Verificar se tabela existe
             table_exists_sql = (
-                f"SELECT COUNT(*) FROM USER_TABLES WHERE TABLE_NAME = '{table_name}'")
+                f"SELECT COUNT(*) FROM USER_TABLES WHERE TABLE_NAME = '{table_name}'"
+            )
 
             try:
                 result = db_client.query(table_exists_sql)
-                table_count = result[0][0] if result and len(
-                    result[0]) > 0 else 0
+                table_count = result[0][0] if result and len(result[0]) > 0 else 0
 
                 if table_count == 0:
                     print(f"❌ Tabela {table_name} NÃO existe - pulando")
@@ -96,7 +96,8 @@ def create_audit_columns() -> None:
             try:
                 # Verificar se tabela existe
                 table_exists_result = db_client.query(
-                    f"SELECT COUNT(*) FROM USER_TABLES WHERE TABLE_NAME = '{table_name}'", )
+                    f"SELECT COUNT(*) FROM USER_TABLES WHERE TABLE_NAME = '{table_name}'",
+                )
                 if not table_exists_result or table_exists_result[0][0] == 0:
                     continue
 

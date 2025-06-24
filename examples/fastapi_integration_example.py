@@ -180,18 +180,14 @@ app.mount("/metrics", metrics_app)
 async def get_db_service() -> DatabaseService:
     """Get database service dependency."""
     if not deps.db_service:
-        raise HTTPException(
-            status_code=503,
-            detail="Database service unavailable")
+        raise HTTPException(status_code=503, detail="Database service unavailable")
     return deps.db_service
 
 
 async def get_cache_service() -> OptimizedCacheService:
     """Get cache service dependency."""
     if not deps.cache_service:
-        raise HTTPException(
-            status_code=503,
-            detail="Cache service unavailable")
+        raise HTTPException(status_code=503, detail="Cache service unavailable")
     return deps.cache_service
 
 
@@ -300,9 +296,7 @@ async def create_user(
     except Exception as e:
         logger.exception("user_creation_failed", error=str(e))
         sentry_sdk.capture_exception(e)
-        raise HTTPException(
-            status_code=500,
-            detail="Failed to create user") from e
+        raise HTTPException(status_code=500, detail="Failed to create user") from e
 
 
 @app.get("/api/v1/users", response_model=list[UserResponse])
@@ -376,11 +370,7 @@ async def update_user(
     cache_key = f"user:{user_id}"
     await cache.delete(cache_key)
 
-    logger.info(
-        "user_updated",
-        user_id=user_id,
-        fields=list(
-            update_data.keys()))
+    logger.info("user_updated", user_id=user_id, fields=list(update_data.keys()))
     return UserResponse.model_validate(user)
 
 

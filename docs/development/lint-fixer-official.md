@@ -106,25 +106,25 @@ exclude_patterns:
 
 # Fix categories to apply
 fix_categories:
-  type_annotations: true      # Add missing return types
-  logging_patterns: true      # Convert f-strings in logging
-  exception_handling: true    # Add 'from e' to exceptions
-  unused_variables: true      # Prefix unused vars with _
-  path_operations: false      # Path.open() fixes (disabled)
-  datetime_timezone: false    # Timezone fixes (disabled)
-  test_patterns: false        # Test assertion fixes (disabled)
+  type_annotations: true # Add missing return types
+  logging_patterns: true # Convert f-strings in logging
+  exception_handling: true # Add 'from e' to exceptions
+  unused_variables: true # Prefix unused vars with _
+  path_operations: false # Path.open() fixes (disabled)
+  datetime_timezone: false # Timezone fixes (disabled)
+  test_patterns: false # Test assertion fixes (disabled)
 
 # Safety controls
 safety:
-  validate_syntax: true       # Validate syntax after fixes
-  max_changes_per_file: 20    # Safety limit per file
-  create_backup: false        # Backup creation (disabled)
-  batch_size: 10             # Batch processing size
+  validate_syntax: true # Validate syntax after fixes
+  max_changes_per_file: 20 # Safety limit per file
+  create_backup: false # Backup creation (disabled)
+  batch_size: 10 # Batch processing size
 
 # Output controls
 output:
-  verbose: true              # Verbose logging
-  report_format: json        # Report format
+  verbose: true # Verbose logging
+  report_format: json # Report format
   report_path: reports/lint_fixer_report.json
 ```
 
@@ -309,7 +309,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.13'
+          python-version: "3.13"
       - name: Run Lint Fixer (Dry Run)
         run: |
           python scripts/maintenance/official_pyauto_lint_fixer.py --dry-run
@@ -368,19 +368,21 @@ python scripts/maintenance/official_pyauto_lint_fixer.py --projects target-oracl
 
 **Test Environment:** PyAuto workspace with 21 projects, 94,460 errors
 
-| Mode | Time | Projects | Errors Fixed |
-|------|------|----------|--------------|
-| Dry Run | ~5 seconds | 21 | 0 (analysis only) |
-| Full Run | ~45 seconds | 21 | ~2,000 |
-| Single Project | ~2 seconds | 1 | ~200 |
+| Mode           | Time        | Projects | Errors Fixed      |
+| -------------- | ----------- | -------- | ----------------- |
+| Dry Run        | ~5 seconds  | 21       | 0 (analysis only) |
+| Full Run       | ~45 seconds | 21       | ~2,000            |
+| Single Project | ~2 seconds  | 1        | ~200              |
 
 ### Optimization Tips
 
 1. **Target Specific Projects:**
+
    - Use `--projects` for focused fixes
    - Process high-priority projects first
 
 2. **Batch Processing:**
+
    - Adjust `batch_size` in configuration
    - Balance between speed and memory
 

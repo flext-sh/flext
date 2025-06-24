@@ -99,8 +99,7 @@ def fix_type_annotations(file_path: str, line_no: int, message: str) -> bool:
 
             # Fix variable annotations
             elif "Need type annotation for" in message:
-                var_match = re.search(
-                    r'Need type annotation for "([^"]+)"', message)
+                var_match = re.search(r'Need type annotation for "([^"]+)"', message)
                 if var_match:
                     var_name = var_match.group(1)
                     # Add type annotation based on context
@@ -113,8 +112,7 @@ def fix_type_annotations(file_path: str, line_no: int, message: str) -> bool:
                             f"{var_name} = {{}}", f"{var_name}: dict[str, Any] = {{}}"
                         )
                         # Generic annotation
-                        line = line.replace(
-                            f"{var_name} = ", f"{var_name}: Any = ")
+                        line = line.replace(f"{var_name} = ", f"{var_name}: Any = ")
 
                     lines[line_no - 1] = line
 

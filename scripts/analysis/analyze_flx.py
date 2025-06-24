@@ -102,8 +102,7 @@ def extract_complete_analysis(file_path) -> Any:
                         }
 
                         # Classify method type
-                        if any("property" in str(dec)
-                               for dec in item.decorator_list):
+                        if any("property" in str(dec) for dec in item.decorator_list):
                             class_info["properties"].append(method_info)
                         elif any(
                             "classmethod" in str(dec) for dec in item.decorator_list
@@ -204,8 +203,7 @@ def get_detailed_file_purpose(file_path, analysis) -> Any:
         lines = content.split("\n")
         for line in lines[:20]:
             if '"""' in line or "'''" in line:
-                docstring_match = re.search(
-                    r'"""([^"]+)"""', content, re.DOTALL)
+                docstring_match = re.search(r'"""([^"]+)"""', content, re.DOTALL)
                 if docstring_match:
                     doc = docstring_match.group(1).strip().split("\n")[0][:200]
                     purposes.append(f"DOC: {doc}")
@@ -225,8 +223,7 @@ def get_detailed_file_purpose(file_path, analysis) -> Any:
             purposes.append(f"EXPORTS: {export_count} items")
 
         # Pattern detection
-        if any("Exception" in cls["name"]
-               for cls in analysis.get("classes", [])):
+        if any("Exception" in cls["name"] for cls in analysis.get("classes", [])):
             purposes.append("TYPE: Exception classes")
         elif any("Protocol" in cls["bases"] for cls in analysis.get("classes", [])):
             purposes.append("TYPE: Protocol definitions")
@@ -276,8 +273,7 @@ def main() -> None:
         # Try Grimp analysis first
         try:
             graph = grimp.build_graph("flx.src.flx")
-            print(
-                f"✅ Grimp analysis successful. Modules: {len(list(graph.modules))}")
+            print(f"✅ Grimp analysis successful. Modules: {len(list(graph.modules))}")
 
             # Get dependency information
             module_dependencies: dict = {}
@@ -307,8 +303,7 @@ def main() -> None:
             print(f"🔍 Analyzing: {py_file.name}")
 
             rel_path = py_file.relative_to(flx_path)
-            directory = str(
-                rel_path.parent) if rel_path.parent != Path() else "root"
+            directory = str(rel_path.parent) if rel_path.parent != Path() else "root"
             filename = py_file.name
 
             line_count = count_lines(py_file)
@@ -344,15 +339,9 @@ def main() -> None:
 
         # Header for detailed table
         print(
-            f"{
-                'Directory':<35} | {
-                'File':<30} | {
-                'Classes':<15} | {
-                    'Methods':<15} | {
-                        'Functions':<15} | {
-                            'Lines':<8} | {
-                                'Deps':<6} | {
-                                    'Purpose & Details':<60}",
+            f"{'Directory':<35} | {'File':<30} | {'Classes':<15} | {'Methods':<15} | {
+                'Functions':<15
+            } | {'Lines':<8} | {'Deps':<6} | {'Purpose & Details':<60}",
         )
         print("-" * 200)
 
@@ -394,28 +383,20 @@ def main() -> None:
             )
 
             print(
-                f"{
-                    result['directory']:<35} | {
-                    result['filename']:<30} | {
-                    classes_count:<15} | {
-                    methods_count:<15} | {
-                        functions_count:<15} | {
-                            result['line_count']:<8} | {
-                                result['dependencies']:<6} | {
-                                    purpose:<60}",
+                f"{result['directory']:<35} | {result['filename']:<30} | {
+                    classes_count:<15
+                } | {methods_count:<15} | {functions_count:<15} | {
+                    result['line_count']:<8
+                } | {result['dependencies']:<6} | {purpose:<60}",
             )
 
         print("-" * 200)
         print(
-            f"{
-                'TOTALS:':<35} | {
-                len(results)} files | {
-                total_classes:<15} | {
-                    total_methods:<15} | {
-                        total_functions:<15} | {
-                            total_lines:<8} | {
-                                'N/A':<6} | {
-                                    'Complete analysis':<60}",
+            f"{'TOTALS:':<35} | {len(results)} files | {total_classes:<15} | {
+                total_methods:<15
+            } | {total_functions:<15} | {total_lines:<8} | {'N/A':<6} | {
+                'Complete analysis':<60
+            }",
         )
         print("=" * 200)
 
@@ -477,15 +458,13 @@ def main() -> None:
 
                 # Class methods
                 if cls["class_methods"]:
-                    print(
-                        f"   ├─ CLASS METHODS ({len(cls['class_methods'])}):")
+                    print(f"   ├─ CLASS METHODS ({len(cls['class_methods'])}):")
                     for method in cls["class_methods"]:
                         print(f"   │  • @classmethod {method['name']}")
 
                 # Static methods
                 if cls["static_methods"]:
-                    print(
-                        f"   └─ STATIC METHODS ({len(cls['static_methods'])}):")
+                    print(f"   └─ STATIC METHODS ({len(cls['static_methods'])}):")
                     for method in cls["static_methods"]:
                         print(f"      • @staticmethod {method['name']}")
 
@@ -530,8 +509,7 @@ def main() -> None:
             analysis = result["analysis"]
             if "error" not in analysis:
                 dir_summary[result["directory"]]["files"] += 1
-                dir_summary[result["directory"]
-                            ]["lines"] += result["line_count"]
+                dir_summary[result["directory"]]["lines"] += result["line_count"]
                 dir_summary[result["directory"]]["classes"] += len(
                     analysis.get("classes", []),
                 )
@@ -547,30 +525,23 @@ def main() -> None:
                 ) + len(analysis.get("async_functions", []))
 
         print(
-            f"{
-                'Directory':<40} | {
-                'Files':<6} | {
-                'Lines':<8} | {
-                    'Classes':<8} | {
-                        'Methods':<8} | {
-                            'Functions':<8}",
+            f"{'Directory':<40} | {'Files':<6} | {'Lines':<8} | {'Classes':<8} | {
+                'Methods':<8
+            } | {'Functions':<8}",
         )
         print("-" * 90)
         for directory, stats in sorted(dir_summary.items()):
             print(
-                f"{
-                    directory:<40} | {
-                    stats['files']:>6} | {
-                    stats['lines']:>8} | {
-                    stats['classes']:>8} | {
-                        stats['methods']:>8} | {
-                            stats['functions']:>8}",
+                f"{directory:<40} | {stats['files']:>6} | {stats['lines']:>8} | {
+                    stats['classes']:>8
+                } | {stats['methods']:>8} | {stats['functions']:>8}",
             )
 
         print("\n✅ Analysis complete!")
         print(
-            f"📊 Total: {
-                len(results)} files, {total_classes} classes, {total_methods} methods, {total_functions} functions, {total_lines} lines",
+            f"📊 Total: {len(results)} files, {total_classes} classes, {
+                total_methods
+            } methods, {total_functions} functions, {total_lines} lines",
         )
 
     except Exception as e:

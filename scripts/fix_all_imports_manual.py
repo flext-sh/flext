@@ -6,7 +6,9 @@ import subprocess
 from pathlib import Path
 
 # Configure logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
 logger = logging.getLogger(__name__)
 
 
@@ -46,65 +48,84 @@ class ManualImportFixer:
 
         # Common imports mapping
         import_fixes = {
-            'Any': 'from typing import Any',
-            'Optional': 'from typing import Optional',
-            'List': 'from typing import List',
-            'Dict': 'from typing import Dict',
-            'Tuple': 'from typing import Tuple',
-            'Union': 'from typing import Union',
-            'Set': 'from typing import Set',
-            'Type': 'from typing import Type',
-            'Callable': 'from typing import Callable',
-            'Iterator': 'from typing import Iterator',
-            'Path': 'from pathlib import Path',
-            'datetime': 'from datetime import datetime',
-            'timedelta': 'from datetime import timedelta',
-            'json': 'import json',
-            'os': 'import os',
-            'sys': 'import sys',
-            're': 'import re',
-            'logging': 'import logging'
+            "Any": "from typing import Any",
+            "Optional": "from typing import Optional",
+            "List": "from typing import List",
+            "Dict": "from typing import Dict",
+            "Tuple": "from typing import Tuple",
+            "Union": "from typing import Union",
+            "Set": "from typing import Set",
+            "Type": "from typing import Type",
+            "Callable": "from typing import Callable",
+            "Iterator": "from typing import Iterator",
+            "Path": "from pathlib import Path",
+            "datetime": "from datetime import datetime",
+            "timedelta": "from datetime import timedelta",
+            "json": "import json",
+            "os": "import os",
+            "sys": "import sys",
+            "re": "import re",
+            "logging": "import logging",
         }
 
         # Get all undefined names
-        result = subprocess.run([
-            "ruff", "check", ".", "--select=F821",
-            "--exclude", ".venv,reference,examples,scripts,docs,legacy-*,backup_*,archive"
-        ], capture_output=True, text=True)
+        result = subprocess.run(
+            [
+                "ruff",
+                "check",
+                ".",
+                "--select=F821",
+                "--exclude",
+                ".venv,reference,examples,scripts,docs,legacy-*,backup_*,archive",
+            ],
+            capture_output=True,
+            text=True,
+        )
 
         undefined_names = set()
-        for line in result.stdout.split('\n'):
-            if 'F821' in line and 'Undefined name' in line:
+        for line in result.stdout.split("\n"):
+            if "F821" in line and "Undefined name" in line:
                 # Extract undefined name from error message
-                if '`' in line:
-                    name = line.split('`')[1]
+                if "`" in line:
+                    name = line.split("`")[1]
                     undefined_names.add(name)
 
         logger.info(f"Found {len(undefined_names)} undefined names to fix")
 
         # Fix each Python file
         for py_file in self.base_path.rglob("*.py"):
-            if any(part in str(py_file) for part in ['.venv', 'reference', 'legacy-', 'backup_', 'archive']):
+            if any(
+                part in str(py_file)
+                for part in [".venv", "reference", "legacy-", "backup_", "archive"]
+            ):
                 continue
 
             try:
-                with open(py_file, encoding='utf-8') as f:
+                with open(py_file, encoding="utf-8") as f:
                     content = f.read()
 
-                lines = content.split('\n')
+                lines = content.split("\n")
 
                 # Find imports section
                 import_end_idx = 0
                 for i, line in enumerate(lines):
-                    if line.strip().startswith(('import ', 'from ')):
+                    if line.strip().startswith(("import ", "from ")):
                         import_end_idx = i + 1
-                    elif import_end_idx > 0 and line.strip() and not line.strip().startswith(('#', '"""', "'''")):
+                    elif (
+                        import_end_idx > 0
+                        and line.strip()
+                        and not line.strip().startswith(("#", '"""', "'''"))
+                    ):
                         break
 
                 # Check which undefined names are used in this file
                 needed_imports = []
                 for name in undefined_names:
-                    if f' {name}' in content or f'({name}' in content or f'[{name}' in content:
+                    if (
+                        f" {name}" in content
+                        or f"({name}" in content
+                        or f"[{name}" in content
+                    ):
                         if name in import_fixes:
                             import_stmt = import_fixes[name]
                             if import_stmt not in content:
@@ -121,11 +142,13 @@ class ManualImportFixer:
                         lines.insert(import_end_idx, import_stmt)
 
                     # Write back
-                    new_content = '\n'.join(lines)
-                    with open(py_file, 'w', encoding='utf-8') as f:
+                    new_content = "\n".join(lines)
+                    with open(py_file, "w", encoding="utf-8") as f:
                         f.write(new_content)
 
-                    logger.info(f"Fixed imports in {py_file}: {len(needed_imports)} imports added")
+                    logger.info(
+                        f"Fixed imports in {py_file}: {len(needed_imports)} imports added"
+                    )
                     self.fixes_applied += 1
 
             except Exception as e:
@@ -136,32 +159,37 @@ class ManualImportFixer:
         logger.info("Fixing circular imports with TYPE_CHECKING pattern...")
 
         for py_file in self.base_path.rglob("*.py"):
-            if any(part in str(py_file) for part in ['.venv', 'reference', 'legacy-', 'backup_', 'archive']):
+            if any(
+                part in str(py_file)
+                for part in [".venv", "reference", "legacy-", "backup_", "archive"]
+            ):
                 continue
 
             try:
-                with open(py_file, encoding='utf-8') as f:
+                with open(py_file, encoding="utf-8") as f:
                     content = f.read()
 
                 # Look for potential circular imports
-                if 'from .' in content and 'TYPE_CHECKING' not in content:
-                    lines = content.split('\n')
+                if "from ." in content and "TYPE_CHECKING" not in content:
+                    lines = content.split("\n")
 
                     # Add TYPE_CHECKING import if not present
-                    has_typing_import = any('from typing import' in line for line in lines)
+                    has_typing_import = any(
+                        "from typing import" in line for line in lines
+                    )
 
                     if not has_typing_import:
                         # Find where to insert typing import
                         insert_idx = 0
                         for i, line in enumerate(lines):
-                            if line.strip().startswith(('import ', 'from ')):
+                            if line.strip().startswith(("import ", "from ")):
                                 insert_idx = i + 1
 
-                        lines.insert(insert_idx, 'from typing import TYPE_CHECKING')
+                        lines.insert(insert_idx, "from typing import TYPE_CHECKING")
 
                         # Write back
-                        new_content = '\n'.join(lines)
-                        with open(py_file, 'w', encoding='utf-8') as f:
+                        new_content = "\n".join(lines)
+                        with open(py_file, "w", encoding="utf-8") as f:
                             f.write(new_content)
 
                         logger.info(f"Added TYPE_CHECKING import to {py_file}")
@@ -175,31 +203,41 @@ class ManualImportFixer:
         logger.info("Validating all imports...")
 
         stats = {
-            'total_files': 0,
-            'files_with_errors': 0,
-            'import_errors': 0,
-            'syntax_errors': 0
+            "total_files": 0,
+            "files_with_errors": 0,
+            "import_errors": 0,
+            "syntax_errors": 0,
         }
 
         for py_file in self.base_path.rglob("*.py"):
-            if any(part in str(py_file) for part in ['.venv', 'reference', 'legacy-', 'backup_', 'archive']):
+            if any(
+                part in str(py_file)
+                for part in [".venv", "reference", "legacy-", "backup_", "archive"]
+            ):
                 continue
 
-            stats['total_files'] += 1
+            stats["total_files"] += 1
 
             # Test compilation
-            result = subprocess.run([
-                "python", "-m", "py_compile", str(py_file)
-            ], capture_output=True, text=True)
+            result = subprocess.run(
+                ["python", "-m", "py_compile", str(py_file)],
+                capture_output=True,
+                text=True,
+            )
 
             if result.returncode != 0:
-                stats['files_with_errors'] += 1
-                if 'SyntaxError' in result.stderr:
-                    stats['syntax_errors'] += 1
-                if 'ImportError' in result.stderr or 'ModuleNotFoundError' in result.stderr:
-                    stats['import_errors'] += 1
+                stats["files_with_errors"] += 1
+                if "SyntaxError" in result.stderr:
+                    stats["syntax_errors"] += 1
+                if (
+                    "ImportError" in result.stderr
+                    or "ModuleNotFoundError" in result.stderr
+                ):
+                    stats["import_errors"] += 1
 
-                logger.warning(f"Import/syntax error in {py_file}: {result.stderr.strip()}")
+                logger.warning(
+                    f"Import/syntax error in {py_file}: {result.stderr.strip()}"
+                )
 
         return stats
 
@@ -208,20 +246,36 @@ class ManualImportFixer:
         logger.info("Running CLAUDE.md quality gates...")
 
         # Check undefined names (F821)
-        result = subprocess.run([
-            "ruff", "check", ".", "--select=F821",
-            "--exclude", ".venv,reference,examples,scripts,docs,legacy-*,backup_*,archive"
-        ], capture_output=True, text=True)
+        result = subprocess.run(
+            [
+                "ruff",
+                "check",
+                ".",
+                "--select=F821",
+                "--exclude",
+                ".venv,reference,examples,scripts,docs,legacy-*,backup_*,archive",
+            ],
+            capture_output=True,
+            text=True,
+        )
 
-        f821_count = result.stdout.count('F821')
+        f821_count = result.stdout.count("F821")
 
         # Check import ordering (I001)
-        result = subprocess.run([
-            "ruff", "check", ".", "--select=I001",
-            "--exclude", ".venv,reference,examples,scripts,docs,legacy-*,backup_*,archive"
-        ], capture_output=True, text=True)
+        result = subprocess.run(
+            [
+                "ruff",
+                "check",
+                ".",
+                "--select=I001",
+                "--exclude",
+                ".venv,reference,examples,scripts,docs,legacy-*,backup_*,archive",
+            ],
+            capture_output=True,
+            text=True,
+        )
 
-        i001_count = result.stdout.count('I001')
+        i001_count = result.stdout.count("I001")
 
         logger.info("Quality Gates Results:")
         logger.info(f"  F821 (undefined names): {f821_count}")

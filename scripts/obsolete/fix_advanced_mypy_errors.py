@@ -42,8 +42,7 @@ def flx_union_attribute_access(file_path: Path) -> int:
             modified_lines.append(f"{indent}if {var_name} is not None:")
             modified_lines.append(f"{indent}    {line.strip()}")
             modified_lines.append(f"{indent}else:")
-            modified_lines.append(
-                f"{indent}    # Handle None case appropriately")
+            modified_lines.append(f"{indent}    # Handle None case appropriately")
             modified_lines.append(
                 f"{indent}    pass  # TODO: Implement proper None handling",
             )
@@ -142,7 +141,7 @@ def flx_abstract_class_issues(file_path: Path) -> int:
     for match in abstract_class_pattern.finditer(content):
         match.group(1)
         class_content = content[
-            match.start(): match.end() + 500
+            match.start() : match.end() + 500
         ]  # Get class content + some extra
 
         # Find abstract methods in the class
@@ -160,8 +159,7 @@ def flx_abstract_class_issues(file_path: Path) -> int:
                     + indent_str
                     + "    return None  # Implement this method\n"
                 )
-                modified_content = modified_content.replace(
-                    method_full, new_method, 1)
+                modified_content = modified_content.replace(method_full, new_method, 1)
                 fixes_count += 1
 
     # Write the modified content back if changes were made
@@ -207,12 +205,11 @@ def flx_any_returns(file_path: Path) -> int:
                 return_var = return_stmt.split("return", 1)[1].strip()
                 new_return = f"{indent_str}result = {return_var}\n"
                 new_return += f'{indent_str}assert isinstance(result, {
-                    return_type.split("[")[0]}), f"Expected {return_type}, got {
-                    type(result)} "\n'
+                    return_type.split("[")[0]
+                }), f"Expected {return_type}, got {type(result)} "\n'
                 new_return += f"{indent_str}return result"
 
-                modified_content = modified_content.replace(
-                    return_stmt, new_return, 1)
+                modified_content = modified_content.replace(return_stmt, new_return, 1)
                 fixes_count += 1
 
     # Write the modified content back if changes were made
@@ -253,8 +250,7 @@ def process_file(file_path: Path, flx_types: list[str]) -> dict[str, int]:
 def main() -> None:
     """Main function to process all files in the specified directory."""
     if len(sys.argv) < 2:
-        print(
-            "Usage: python flx_advanced_mypy_errors.py <directory> [fix_types]")
+        print("Usage: python flx_advanced_mypy_errors.py <directory> [fix_types]")
         print("Available fix types: union_attr, return_value, abstract, any_return")
         print(
             "Example: python flx_advanced_mypy_errors.py ./src union_attr return_value",
@@ -274,11 +270,7 @@ def main() -> None:
     python_files = find_python_files(directory)
 
     # Track statistics
-    total_fixes = {
-        "union_attr": 0,
-        "return_value": 0,
-        "abstract": 0,
-        "any_return": 0}
+    total_fixes = {"union_attr": 0, "return_value": 0, "abstract": 0, "any_return": 0}
     files_modified = 0
 
     # Process each file

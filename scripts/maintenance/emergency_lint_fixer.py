@@ -62,11 +62,9 @@ def fix_common_lint_issues(file_path: Path) -> int:
             # Fix 4: Add 'from e' to exception handling
             if "except " in line and " as e:" in line:
                 next_line_idx = lines.index(line) + 1
-                if next_line_idx < len(
-                        lines) and "raise " in lines[next_line_idx]:
+                if next_line_idx < len(lines) and "raise " in lines[next_line_idx]:
                     if " from e" not in lines[next_line_idx]:
-                        lines[next_line_idx] = lines[next_line_idx].rstrip() + \
-                            " from e"
+                        lines[next_line_idx] = lines[next_line_idx].rstrip() + " from e"
 
             new_lines.append(line)
 
@@ -135,8 +133,7 @@ def main() -> None:
     # Run quick validation
     print("\n🔍 QUICK VALIDATION...")
     try:
-        result = subprocess.run(
-            ["make", "lint"], capture_output=True, text=True)
+        result = subprocess.run(["make", "lint"], capture_output=True, text=True)
         if result.returncode == 0:
             print("✅ CLAUDE.md ZERO TOLERANCE: ACHIEVED")
             print("⚠️ Additional fixes may be needed")

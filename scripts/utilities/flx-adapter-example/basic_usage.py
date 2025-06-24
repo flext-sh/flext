@@ -77,10 +77,7 @@ def basic_client_example() -> int:
 
     # Make a POST request to create a resource
     try:
-        new_user = {
-            "name": "John Doe",
-            "email": "john.doe@example.com",
-            "role": "user"}
+        new_user = {"name": "John Doe", "email": "john.doe@example.com", "role": "user"}
 
         response = client.post("users", json_data=new_user)
 

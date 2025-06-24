@@ -85,8 +85,7 @@ def validate_poetry_config(project_path: Path) -> dict[str, Any]:
 
     try:
         # Check Poetry configuration
-        result = run_command(["poetry", "check"],
-                             cwd=project_path, check=False)
+        result = run_command(["poetry", "check"], cwd=project_path, check=False)
         results["poetry_check"] = result.returncode == 0
         if result.returncode != 0:
             results["errors"].append(f"Poetry check failed: {result.stderr}")
@@ -128,7 +127,8 @@ def validate_poetry_config(project_path: Path) -> dict[str, Any]:
 
         if not results["has_security_tools"]:
             results["errors"].append(
-                f"Missing security tools. Found: {found_tools}, Expected: {security_tools}")
+                f"Missing security tools. Found: {found_tools}, Expected: {security_tools}"
+            )
 
     except Exception as e:
         results["errors"].append(f"Error parsing pyproject.toml: {e}")
@@ -162,9 +162,7 @@ def validate_code_quality(
             ["poetry", "install", "--with", "dev"], cwd=project_path, check=False
         )
         if install_result.returncode != 0:
-            results["errors"].append(
-                f"Poetry install failed: {
-                    install_result.stderr}")
+            results["errors"].append(f"Poetry install failed: {install_result.stderr}")
             return results
 
         # Format check/fix
@@ -180,9 +178,7 @@ def validate_code_quality(
 
         results["format_check"] = format_result.returncode == 0
         if format_result.returncode != 0:
-            results["errors"].append(
-                f"Format check failed: {
-                    format_result.stdout}")
+            results["errors"].append(f"Format check failed: {format_result.stdout}")
 
         # Linting
         lint_args = ["poetry", "run", "ruff", "check"]
@@ -193,9 +189,7 @@ def validate_code_quality(
         lint_result = run_command(lint_args, cwd=project_path, check=False)
         results["lint_check"] = lint_result.returncode == 0
         if lint_result.returncode != 0:
-            results["errors"].append(
-                f"Lint check failed: {
-                    lint_result.stdout}")
+            results["errors"].append(f"Lint check failed: {lint_result.stdout}")
 
         # Type checking (only for projects with src/)
         if project_info.get("has_src"):
@@ -204,9 +198,7 @@ def validate_code_quality(
             )
             results["type_check"] = type_result.returncode == 0
             if type_result.returncode != 0:
-                results["errors"].append(
-                    f"Type check failed: {
-                        type_result.stdout}")
+                results["errors"].append(f"Type check failed: {type_result.stdout}")
             results["type_check"] = True  # Skip for dbt projects
 
         # Security check
@@ -216,11 +208,8 @@ def validate_code_quality(
             check=False,
         )
         results["security_check"] = security_result.returncode == 0
-        if security_result.returncode not in {
-                0, 1}:  # 1 is issues found, which is ok
-            results["errors"].append(
-                f"Security check failed: {
-                    security_result.stderr}")
+        if security_result.returncode not in {0, 1}:  # 1 is issues found, which is ok
+            results["errors"].append(f"Security check failed: {security_result.stderr}")
 
     except Exception as e:
         results["errors"].append(f"Error during code quality checks: {e}")
@@ -277,8 +266,7 @@ def validate_structure(
 
 @click.command()
 @click.option("--project", help="Specific project to validate")
-@click.option("--fix", is_flag=True,
-              help="Attempt to fix issues automatically")
+@click.option("--fix", is_flag=True, help="Attempt to fix issues automatically")
 @click.option("--verbose", "-v", is_flag=True, help="Verbose output")
 def main(project: str | None, fix: bool, verbose: bool) -> None:
     """Validate all LDAP projects for PEP8 compliance and Python 3.9+ compatibility."""
@@ -298,9 +286,7 @@ def main(project: str | None, fix: bool, verbose: bool) -> None:
         project_path = pyauto_root / project_name
         project_info = PROJECTS[project_name]
 
-        console.print(
-            f"\n📁 Validating {project_name} ({
-                project_info['type']})...")
+        console.print(f"\n📁 Validating {project_name} ({project_info['type']})...")
 
         with Progress(
             SpinnerColumn(),
@@ -308,21 +294,18 @@ def main(project: str | None, fix: bool, verbose: bool) -> None:
             console=console,
         ) as progress:
             # Poetry validation
-            task1 = progress.add_task(
-                "Checking Poetry configuration...", total=None)
+            task1 = progress.add_task("Checking Poetry configuration...", total=None)
             poetry_results = validate_poetry_config(project_path)
             progress.update(task1, completed=True)
 
             # Structure validation
-            task2 = progress.add_task(
-                "Checking project structure...", total=None)
+            task2 = progress.add_task("Checking project structure...", total=None)
             structure_results = validate_structure(project_path, project_info)
             progress.update(task2, completed=True)
 
             # Code quality validation
             task3 = progress.add_task("Checking code quality...", total=None)
-            quality_results = validate_code_quality(
-                project_path, project_info, fix)
+            quality_results = validate_code_quality(project_path, project_info, fix)
             progress.update(task3, completed=True)
 
         overall_results[project_name] = {
@@ -378,9 +361,9 @@ def main(project: str | None, fix: bool, verbose: bool) -> None:
         python_status = "✅" if poetry["python_version"] == "^3.9" else "❌"
 
         # Count issues
-        total_issues = (len(poetry["errors"]) +
-                        len(structure["errors"]) +
-                        len(quality["errors"]))
+        total_issues = (
+            len(poetry["errors"]) + len(structure["errors"]) + len(quality["errors"])
+        )
         issues_status = "✅" if total_issues == 0 else f"❌ ({total_issues})"
 
         table.add_row(

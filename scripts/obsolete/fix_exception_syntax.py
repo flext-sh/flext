@@ -103,8 +103,7 @@ class ExceptionSyntaxFixer:
 
 def main() -> None:
     """Run the script."""
-    parser = argparse.ArgumentParser(
-        description="Fix exception handling syntax issues")
+    parser = argparse.ArgumentParser(description="Fix exception handling syntax issues")
     parser.add_argument(
         "--dry-run",
         action="store_true",

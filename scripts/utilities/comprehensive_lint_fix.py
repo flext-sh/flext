@@ -57,7 +57,8 @@ def fix_unused_arguments() -> int:
                             message = error.get("message", "")
                             if "Unused method argument:" in message:
                                 arg_match = re.search(
-                                    r"Unused method argument: `([^`]+)`", message)
+                                    r"Unused method argument: `([^`]+)`", message
+                                )
                                 if arg_match:
                                     arg_name = arg_match.group(1)
                                     if not arg_name.startswith("_"):
@@ -106,9 +107,7 @@ def fix_syntax_errors() -> int:
                 fixed_line = line
 
                 # Fix missing colons in class/function definitions
-                if re.match(
-                    r"^\s*(class|def|async def)\s+[^:]+$",
-                        line.strip()):
+                if re.match(r"^\s*(class|def|async def)\s+[^:]+$", line.strip()):
                     if not line.rstrip().endswith(":"):
                         fixed_line = line.rstrip() + ":"
 
@@ -194,8 +193,7 @@ def fix_import_order() -> int:
 
             # Check if imports are after non-import code
             has_issue = False
-            for _i, line in enumerate(
-                    lines[non_import_start:], non_import_start):
+            for _i, line in enumerate(lines[non_import_start:], non_import_start):
                 if line.strip().startswith(("import ", "from ")):
                     has_issue = True
                     break
@@ -265,8 +263,7 @@ def fix_undefined_exports() -> int:
             content = py_file.read_text()
 
             # Find __all__ definition
-            all_match = re.search(
-                r"__all__\s*=\s*\[(.*?)\]", content, re.DOTALL)
+            all_match = re.search(r"__all__\s*=\s*\[(.*?)\]", content, re.DOTALL)
             if not all_match:
                 continue
 
@@ -278,8 +275,7 @@ def fix_undefined_exports() -> int:
             defined_names: set = set()
 
             # Find class definitions
-            class_matches = re.findall(
-                r"^class\s+(\w+)", content, re.MULTILINE)
+            class_matches = re.findall(r"^class\s+(\w+)", content, re.MULTILINE)
             defined_names.update(class_matches)
 
             # Find function definitions
@@ -293,17 +289,14 @@ def fix_undefined_exports() -> int:
             defined_names.update(var_matches)
 
             # Find imports that are re-exported
-            import_matches = re.findall(
-                r"from\s+[^\s]+\s+import\s+([^\n]+)", content)
+            import_matches = re.findall(r"from\s+[^\s]+\s+import\s+([^\n]+)", content)
             for imports in import_matches:
                 for name in imports.split(","):
-                    name = name.strip().split(
-                        " as ")[-1]  # Handle 'as' aliases
+                    name = name.strip().split(" as ")[-1]  # Handle 'as' aliases
                     defined_names.add(name)
 
             # Filter out undefined exports
-            valid_exports = [
-                name for name in exported_names if name in defined_names]
+            valid_exports = [name for name in exported_names if name in defined_names]
 
             if len(valid_exports) != len(exported_names):
                 # Update __all__ with only valid exports
@@ -316,10 +309,8 @@ def fix_undefined_exports() -> int:
                     new_all = "__all__ = []"
 
                 new_content = re.sub(
-                    r"__all__\s*=\s*\[[^\]]*\]",
-                    new_all,
-                    content,
-                    flags=re.DOTALL)
+                    r"__all__\s*=\s*\[[^\]]*\]", new_all, content, flags=re.DOTALL
+                )
                 py_file.write_text(new_content)
                 fixes_applied += 1
 

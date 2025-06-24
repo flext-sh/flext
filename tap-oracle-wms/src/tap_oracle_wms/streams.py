@@ -1,4 +1,5 @@
 """Dynamic streams for Oracle WMS entities."""
+
 from __future__ import annotations
 
 import logging
@@ -199,7 +200,11 @@ class WMSDynamicStream(RESTStream[dict[str, Any]]):
     def name(self) -> str:
         """Stream name."""
         # Return the Singer SDK name if set, otherwise use entity name
-        return getattr(self, "_name", None) or getattr(self, "_entity_name", "unknown") or "unknown"
+        return (
+            getattr(self, "_name", None)
+            or getattr(self, "_entity_name", "unknown")
+            or "unknown"
+        )
 
     @name.setter
     def name(self, value: str) -> None:
@@ -227,8 +232,11 @@ class WMSDynamicStream(RESTStream[dict[str, Any]]):
     def _determine_primary_keys(self) -> list[str]:
         """Determine primary keys for the entity."""
         # Check if schema has required fields that could be PKs
-        if (hasattr(self, "_entity_schema") and self._entity_schema and
-            "required" in self._entity_schema):
+        if (
+            hasattr(self, "_entity_schema")
+            and self._entity_schema
+            and "required" in self._entity_schema
+        ):
             # Look for 'id' or similar fields
             for field in ["id", f"{self._entity_name}_id", "code"]:
                 if field in self._entity_schema.get("properties", {}):
@@ -261,19 +269,19 @@ class WMSDynamicStream(RESTStream[dict[str, Any]]):
         if self.replication_key:
             # Configure for incremental replication
             metadata.get_property_metadata(".", "replication-method").selected = False
-            metadata.get_property_metadata(".", "replication-method").value = (
-                "INCREMENTAL"
-            )
+            metadata.get_property_metadata(
+                ".", "replication-method"
+            ).value = "INCREMENTAL"
             metadata.get_property_metadata(".", "replication-key").selected = False
-            metadata.get_property_metadata(".", "replication-key").value = (
-                self.replication_key
-            )
+            metadata.get_property_metadata(
+                ".", "replication-key"
+            ).value = self.replication_key
         else:
             # Configure for full table replication
             metadata.get_property_metadata(".", "replication-method").selected = False
-            metadata.get_property_metadata(".", "replication-method").value = (
-                "FULL_TABLE"
-            )
+            metadata.get_property_metadata(
+                ".", "replication-method"
+            ).value = "FULL_TABLE"
 
         return metadata
 
@@ -542,7 +550,9 @@ class WMSDynamicStream(RESTStream[dict[str, Any]]):
 
         # Check for bookmark in state
         bookmark_value = (
-            state.get("bookmarks", {}).get(self.name, {}).get("replication_key_value", None)
+            state.get("bookmarks", {})
+            .get(self.name, {})
+            .get("replication_key_value", None)
         )
 
         if bookmark_value:
@@ -559,7 +569,9 @@ class WMSDynamicStream(RESTStream[dict[str, Any]]):
 
         return None
 
-    def get_replication_key_signpost(self, context: dict[str, Any] | None = None) -> Any:
+    def get_replication_key_signpost(
+        self, context: dict[str, Any] | None = None
+    ) -> Any:
         """Get the current replication key signpost.
 
         Args:
@@ -576,7 +588,9 @@ class WMSDynamicStream(RESTStream[dict[str, Any]]):
 
         state = self.get_context_state(context or {})
         return (
-            state.get("bookmarks", {}).get(self.name, {}).get("replication_key_value", None)
+            state.get("bookmarks", {})
+            .get(self.name, {})
+            .get("replication_key_value", None)
         )
 
     def compare_replication_key_value(self, value1: str, value2: str) -> int:

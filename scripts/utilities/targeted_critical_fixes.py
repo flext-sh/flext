@@ -200,8 +200,7 @@ class Customer(Entity, Identifiable, Timestamped, Versionable):
         return customer
 '''
 
-    customer_file = Path(
-        "/home/marlonsc/pyauto/flx/src/flx/core/domain/customer.py")
+    customer_file = Path("/home/marlonsc/pyauto/flx/src/flx/core/domain/customer.py")
     customer_file.write_text(customer_content)
 
 

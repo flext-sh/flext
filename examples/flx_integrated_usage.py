@@ -185,15 +185,13 @@ async def demonstrate_unified_cli() -> None:
             logger.info("- flx-integrated oracle-resource get <table> <id>")
             logger.info("- flx-integrated oracle-resource list <table>")
             logger.info("- flx-integrated oracle-operation execute <op_name>")
-            logger.info(
-                "- flx-integrated oracle-pagination strategies <table>")
+            logger.info("- flx-integrated oracle-pagination strategies <table>")
 
             # Note: In real implementation, WMS and OIC commands would be here
             # too
             logger.info("Future WMS commands:")
             logger.info("- flx-integrated wms-resource get items <item_id>")
-            logger.info(
-                "- flx-integrated wms-operation execute create_shipment")
+            logger.info("- flx-integrated wms-operation execute create_shipment")
 
             logger.info("Future OIC commands:")
             logger.info("- flx-integrated oic-integration trigger <flow_id>")
@@ -317,8 +315,7 @@ async def demonstrate_performance_monitoring() -> None:
         }
 
         # Simulated OIC metrics
-        logger.info(
-            "Collecting OIC integration performance metrics (simulated)")
+        logger.info("Collecting OIC integration performance metrics (simulated)")
         performance_metrics["oic_integrations"] = {
             "response_time_seconds": 1.120,
             "integrations_tested": 3,
@@ -342,9 +339,7 @@ async def demonstrate_performance_monitoring() -> None:
             ),
         }
 
-        logger.info(
-    "Performance monitoring completed",
-     metrics=performance_metrics)
+        logger.info("Performance monitoring completed", metrics=performance_metrics)
 
     except Exception as e:
         logger.exception("Performance monitoring demo failed", error=str(e))

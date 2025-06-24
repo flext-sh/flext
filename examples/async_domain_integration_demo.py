@@ -121,25 +121,25 @@ async def demo_lato_integration() -> None:
     """Demo: Integration with Lato Application."""
     try:
         # Create FLX application with async infrastructure
-        # Create FLX application with async infrastructure
         # NOTE: This is a demo - actual implementation would use proper FLX app factory
-        app = None  # flx_create_application(
-            name="AsyncDomainDemo",
-            bind_dependencies=True,
-            include_modules=True,
-        )
+        # app = flx_create_application(
+        #     name="AsyncDomainDemo",
+        #     bind_dependencies=True,
+        #     include_modules=True,
+        # )
+        app = None
 
         # Test command execution through Lato
 
         async with app.transaction_context() as ctx:
             # Create a test command
-            # Create a test command
             # NOTE: This is a demo - actual implementation would use proper command
-            command = None  # FlxGetResource(
-                resource_name="orders",
-                resource_id="ORDER_123",
-                fields=["id", "status", "customer_id"],
-            )
+            # command = FlxGetResource(
+            #     resource_name="orders",
+            #     resource_id="ORDER_123",
+            #     fields=["id", "status", "customer_id"],
+            # )
+            command = None
 
             # Execute command
             ctx.execute(command)

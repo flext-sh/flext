@@ -50,9 +50,8 @@ class ConfigGenerationModule(CustomFixModule):
                 "buffer_size_bytes": ("HTTP_BUFFER_SIZE_BYTES", 8192),
                 "keepalive_timeout_seconds": ("HTTP_KEEPALIVE_TIMEOUT_SECONDS", 30.0),
                 "connection_pool_size": ("HTTP_CONNECTION_POOL_SIZE", 10),
-            }
+            },
         },
-
         "oracle_wms": {
             "database_config": {
                 "host": "ORACLE_HOST",
@@ -73,9 +72,8 @@ class ConfigGenerationModule(CustomFixModule):
                 "max_overflow": ("DB_MAX_OVERFLOW", 10),
                 "pool_timeout": ("DB_POOL_TIMEOUT", 30),
                 "pool_recycle": ("DB_POOL_RECYCLE", 3600),
-            }
+            },
         },
-
         "singer_tap": {
             "tap_config": {
                 "tap_name": lambda project: project.replace("-", "_"),
@@ -93,9 +91,8 @@ class ConfigGenerationModule(CustomFixModule):
                 "selected_streams": ("SELECTED_STREAMS", []),
                 "stream_maps": ("STREAM_MAPS", {}),
                 "metadata": ("METADATA", {}),
-            }
+            },
         },
-
         "meltano": {
             "meltano_config": {
                 "project_id": "MELTANO_PROJECT_ID",
@@ -111,9 +108,8 @@ class ConfigGenerationModule(CustomFixModule):
             "plugin_config": {
                 "auto_install": ("MELTANO_AUTO_INSTALL", True),
                 "discovery_url": ("MELTANO_DISCOVERY_URL", "https://hub.meltano.com"),
-            }
+            },
         },
-
         "ldap": {
             "ldap_config": {
                 "server_uri": "LDAP_SERVER_URI",
@@ -132,8 +128,8 @@ class ConfigGenerationModule(CustomFixModule):
                 "batch_size": ("MIGRATION_BATCH_SIZE", 100),
                 "dry_run": ("MIGRATION_DRY_RUN", True),
                 "backup_enabled": ("MIGRATION_BACKUP", True),
-            }
-        }
+            },
+        },
     }
 
     # Environment file names to look for
@@ -165,16 +161,11 @@ class ConfigGenerationModule(CustomFixModule):
         if pyproject_file.exists():
             try:
                 import tomllib
+
                 with open(pyproject_file, "rb") as f:
                     config = tomllib.load(f)
 
-                deps = config.get(
-                    "tool",
-                    {}).get(
-                    "poetry",
-                    {}).get(
-                    "dependencies",
-                    {})
+                deps = config.get("tool", {}).get("poetry", {}).get("dependencies", {})
 
                 if "singer-sdk" in deps:
                     return "singer_tap"
@@ -200,24 +191,24 @@ class ConfigGenerationModule(CustomFixModule):
                 load_dotenv(env_path)
                 if self.verbose:
                     self.console.print(
-                        f"[green]Loaded environment from: {env_file}[/green]")
+                        f"[green]Loaded environment from: {env_file}[/green]"
+                    )
 
         # Get all environment variables
         env_vars.update(os.environ)
 
         return env_vars
 
-    def resolve_config_value(self,
-                             template_value: Any,
-                             env_vars: dict[str,
-                                            str],
-                             project_name: str) -> Any:
+    def resolve_config_value(
+        self, template_value: Any, env_vars: dict[str, str], project_name: str
+    ) -> Any:
         """Resolve a configuration value from template."""
         if callable(template_value):
             # Handle lambda functions
-            if hasattr(
-                    template_value,
-                    "__name__") and "project" in template_value.__code__.co_varnames:
+            if (
+                hasattr(template_value, "__name__")
+                and "project" in template_value.__code__.co_varnames
+            ):
                 return template_value(project_name)
             return template_value(env_vars)
 
@@ -253,12 +244,14 @@ class ConfigGenerationModule(CustomFixModule):
         return None
 
     def generate_project_config(
-            self, project_path: Path, project_type: str) -> dict[str, Any]:
+        self, project_path: Path, project_type: str
+    ) -> dict[str, Any]:
         """Generate configuration for a specific project."""
         if project_type not in self.CONFIG_TEMPLATES:
             if self.verbose:
                 self.console.print(
-                    f"[yellow]Unknown project type: {project_type}[/yellow]")
+                    f"[yellow]Unknown project type: {project_type}[/yellow]"
+                )
             return {}
 
         project_name = project_path.name
@@ -272,7 +265,8 @@ class ConfigGenerationModule(CustomFixModule):
 
             for key, value_template in section_template.items():
                 resolved_value = self.resolve_config_value(
-                    value_template, env_vars, project_name)
+                    value_template, env_vars, project_name
+                )
                 config[section_name][key] = resolved_value
 
         # Add metadata
@@ -281,13 +275,14 @@ class ConfigGenerationModule(CustomFixModule):
             "project_name": project_name,
             "project_type": project_type,
             "generated_at": str(Path.cwd()),
-            "version": "1.0.0"
+            "version": "1.0.0",
         }
 
         return config
 
-    def save_config_file(self, project_path: Path,
-                         config: dict[str, Any], format: str = "json") -> bool:
+    def save_config_file(
+        self, project_path: Path, config: dict[str, Any], format: str = "json"
+    ) -> bool:
         """Save configuration to file."""
         try:
             if format == "json":
@@ -297,18 +292,19 @@ class ConfigGenerationModule(CustomFixModule):
 
             elif format == "yaml":
                 import yaml
+
                 config_file = project_path / "config.yaml"
                 with open(config_file, "w", encoding="utf-8") as f:
                     yaml.dump(config, f, default_flow_style=False, indent=2)
 
                 if self.verbose:
-                    self.console.print(
-                        f"[red]Unsupported format: {format}[/red]")
+                    self.console.print(f"[red]Unsupported format: {format}[/red]")
                 return False
 
             if self.verbose:
                 self.console.print(
-                    f"[green]Configuration saved to: {config_file}[/green]")
+                    f"[green]Configuration saved to: {config_file}[/green]"
+                )
 
             return True
 
@@ -335,7 +331,9 @@ class ConfigGenerationModule(CustomFixModule):
                             column=1,
                             code="CONFIG001",
                             message=f"Project has .env but no config file (detected type: {project_type})",
-                            suggestion="Generate configuration file from environment variables"))
+                            suggestion="Generate configuration file from environment variables",
+                        )
+                    )
 
         # Check for old generate_config.py scripts
         elif file_path.name == "generate_config.py":
@@ -345,7 +343,9 @@ class ConfigGenerationModule(CustomFixModule):
                     column=1,
                     code="CONFIG002",
                     message="Individual generate_config.py script found",
-                    suggestion="Replace with unified configuration generation module"))
+                    suggestion="Replace with unified configuration generation module",
+                )
+            )
 
         return issues
 
@@ -354,27 +354,30 @@ class ConfigGenerationModule(CustomFixModule):
         # This module works at the project level, not individual files
         return content
 
-    def generate_workspace_configs(
-            self, workspace_path: Path = None) -> dict[str, Any]:
+    def generate_workspace_configs(self, workspace_path: Path = None) -> dict[str, Any]:
         """Generate configurations for all projects in workspace."""
         if workspace_path is None:
             workspace_path = Path.cwd()
 
         if self.verbose:
             self.console.print(
-                f"[blue]Generating configurations in: {workspace_path}[/blue]")
+                f"[blue]Generating configurations in: {workspace_path}[/blue]"
+            )
 
         # Find all projects with .env files
         projects_with_env: list = []
         for env_file in workspace_path.rglob(".env"):
-            if not any(part.startswith(".") and part !=
-                       ".env" for part in env_file.parts):
+            if not any(
+                part.startswith(".") and part != ".env" for part in env_file.parts
+            ):
                 projects_with_env.append(env_file.parent)
 
         if self.verbose:
             self.console.print(
                 f"[green]Found {
-                    len(projects_with_env)} projects with .env files[/green]")
+                    len(projects_with_env)
+                } projects with .env files[/green]"
+            )
 
         generation_results = {
             "total_projects": len(projects_with_env),
@@ -390,57 +393,59 @@ class ConfigGenerationModule(CustomFixModule):
             if self.verbose:
                 self.console.print(
                     f"[yellow]Processing {project_name} (type: {
-                        project_type or 'unknown'})[/yellow]")
+                        project_type or 'unknown'
+                    })[/yellow]"
+                )
 
             if not project_type:
                 generation_results["project_results"][project_name] = {
                     "success": False,
-                    "error": "Could not detect project type"
+                    "error": "Could not detect project type",
                 }
                 generation_results["failed_generations"] += 1
                 continue
 
             # Generate configuration
             try:
-                config = self.generate_project_config(
-                    project_path, project_type)
+                config = self.generate_project_config(project_path, project_type)
 
                 if not config:
                     generation_results["project_results"][project_name] = {
                         "success": False,
-                        "error": "Failed to generate configuration"
+                        "error": "Failed to generate configuration",
                     }
                     generation_results["failed_generations"] += 1
                     continue
 
                 # Save configuration
                 if not self.dry_run:
-                    success = self.save_config_file(
-                        project_path, config, format="json")
+                    success = self.save_config_file(project_path, config, format="json")
                     if success:
                         generation_results["successful_generations"] += 1
                         self.generated_configs[project_name] = config
                         generation_results["failed_generations"] += 1
                     if self.verbose:
                         self.console.print(
-                            f"[cyan][DRY RUN] Would generate config for {project_name}[/cyan]")
+                            f"[cyan][DRY RUN] Would generate config for {project_name}[/cyan]"
+                        )
                     generation_results["successful_generations"] += 1
 
                 generation_results["project_results"][project_name] = {
                     "success": True,
                     "project_type": project_type,
-                    "config_sections": list(config.keys())
+                    "config_sections": list(config.keys()),
                 }
 
             except Exception as e:
                 generation_results["project_results"][project_name] = {
                     "success": False,
-                    "error": str(e)
+                    "error": str(e),
                 }
                 generation_results["failed_generations"] += 1
                 if self.verbose:
                     self.console.print(
-                        f"[red]Error generating config for {project_name}: {e}[/red]")
+                        f"[red]Error generating config for {project_name}: {e}[/red]"
+                    )
 
         # Show summary
         if self.verbose:
@@ -462,12 +467,11 @@ class ConfigGenerationModule(CustomFixModule):
         for project_name, result in results["project_results"].items():
             status = "✅ SUCCESS" if result["success"] else "❌ FAILED"
             project_type = result.get("project_type", "unknown")
-            sections = ", ".join(
-                result.get(
-                    "config_sections",
-                    [])) if result["success"] else result.get(
-                "error",
-                "")
+            sections = (
+                ", ".join(result.get("config_sections", []))
+                if result["success"]
+                else result.get("error", "")
+            )
 
             table.add_row(project_name, status, project_type, sections)
 
@@ -475,11 +479,13 @@ class ConfigGenerationModule(CustomFixModule):
 
         # Summary panel
         success_rate = (
-            results["successful_generations"] /
-            results["total_projects"] *
-            100) if results["total_projects"] > 0 else 0
+            (results["successful_generations"] / results["total_projects"] * 100)
+            if results["total_projects"] > 0
+            else 0
+        )
 
         from rich.panel import Panel
+
         panel_text = (
             f"📁 Projects Found: {results['total_projects']}\n"
             f"✅ Successful: {results['successful_generations']}\n"
@@ -487,15 +493,18 @@ class ConfigGenerationModule(CustomFixModule):
             f"📊 Success Rate: {success_rate:.1f}%"
         )
 
-        panel_style = "green" if success_rate == 100 else "yellow" if success_rate >= 80 else "red"
+        panel_style = (
+            "green"
+            if success_rate == 100
+            else "yellow"
+            if success_rate >= 80
+            else "red"
+        )
         self.console.print(
-            Panel(
-                panel_text,
-                title="Generation Summary",
-                border_style=panel_style))
+            Panel(panel_text, title="Generation Summary", border_style=panel_style)
+        )
 
-    def run_workspace_config_generation(
-            self, workspace_path: Path = None) -> bool:
+    def run_workspace_config_generation(self, workspace_path: Path = None) -> bool:
         """Run configuration generation across the entire workspace."""
         results = self.generate_workspace_configs(workspace_path)
         return results["failed_generations"] == 0

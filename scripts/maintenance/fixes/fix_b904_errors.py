@@ -40,8 +40,7 @@ def fix_b904_exceptions(content: str) -> str:
             except_variable = None
 
         # If we're in an except block and find a raise statement
-        if in_except_block and stripped.startswith(
-                "raise ") and except_variable:
+        if in_except_block and stripped.startswith("raise ") and except_variable:
             # Check if it already has 'from'
             if " from " not in stripped:
                 # Add exception chaining

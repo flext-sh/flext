@@ -128,8 +128,7 @@ def main() -> None:
 
         # Test version (only if import works)
         if import_ok:
-            version_ok, version_msg = test_cli_version(
-                project_path, module_path)
+            version_ok, version_msg = test_cli_version(project_path, module_path)
             print(f"  Version: {version_msg}")
             version_ok = False
             print("  Version: ⏭️ Skipped (import failed)")

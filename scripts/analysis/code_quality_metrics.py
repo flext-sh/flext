@@ -23,9 +23,7 @@ from pathlib import Path
 class CodeQualityMetrics:
     """Advanced code quality metrics analyzer."""
 
-    def __init__(
-            self,
-            project_root: str = "/home/marlonsc/pyauto/flx") -> None:
+    def __init__(self, project_root: str = "/home/marlonsc/pyauto/flx") -> None:
         """Initialize metrics analyzer."""
         self.project_root = Path(project_root)
         self.src_path = self.project_root / "src" / "flx"
@@ -143,15 +141,9 @@ class CodeQualityMetrics:
 
         return {
             "violations": architecture_violations,
-            "compliance_score": max(
-                0,
-                compliance_score),
+            "compliance_score": max(0, compliance_score),
             "architecture_pattern": "Hexagonal",
-            "layers_identified": [
-                "core",
-                "application",
-                "infrastructure",
-                "adapters"],
+            "layers_identified": ["core", "application", "infrastructure", "adapters"],
         }
 
     def analyze_security_metrics(self) -> dict[str, Any]:
@@ -173,8 +165,7 @@ class CodeQualityMetrics:
 
                 for issue in bandit_data.get("results", []):
                     severity = issue.get("issue_severity", "UNKNOWN")
-                    severity_counts[severity] = severity_counts.get(
-                        severity, 0) + 1
+                    severity_counts[severity] = severity_counts.get(severity, 0) + 1
 
                 return {
                     "total_security_issues": security_issues,
@@ -292,8 +283,7 @@ class CodeQualityMetrics:
 
         # Architecture recommendations
         if architecture_metrics.get("compliance_score", 100) < 90:
-            recommendations.append(
-                "🏗️ Address hexagonal architecture violations")
+            recommendations.append("🏗️ Address hexagonal architecture violations")
 
         # Security recommendations
         if security_metrics.get("total_security_issues", 0) > 0:

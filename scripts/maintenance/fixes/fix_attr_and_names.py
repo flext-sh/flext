@@ -23,8 +23,7 @@ def get_mypy_errors_by_type(error_type: str) -> list[dict[str, Any]]:
     errors: list = []
     for line in result.stdout.splitlines() + result.stderr.splitlines():
         if f"[{error_type}]" in line:
-            match = re.match(
-                r"(.+?):(\d+): error: (.+?) \[" + error_type + r"\]", line)
+            match = re.match(r"(.+?):(\d+): error: (.+?) \[" + error_type + r"\]", line)
             if match:
                 errors.append(
                     {
@@ -153,17 +152,17 @@ def add_missing_imports() -> None:
                 if line.startswith("from typing import Dict, Optional,"):
                     # Update existing typing import
                     current_imports = re.findall(
-                        r"from typing import Dict, Optional, (.+)", line)[0]
-                    current_names = [n.strip()
-                                     for n in current_imports.split(",")]
+                        r"from typing import Dict, Optional, (.+)", line
+                    )[0]
+                    current_names = [n.strip() for n in current_imports.split(",")]
 
                     for name in names:
                         if name not in current_names:
                             current_names.append(name)
 
                     lines[i] = f"from typing import Dict, Optional, {
-                        ', '.join(
-                            sorted(current_names))}"
+                        ', '.join(sorted(current_names))
+                    }"
                     names: set = set()
                     break
                 if line.startswith(("import", "from")):
@@ -243,10 +242,7 @@ def fix_model_attributes() -> None:
 
             # Fix json() calls
             if ".json()" in content and "response.json()" not in content:
-                content = re.sub(
-                    r"(\w+)\.json\(\)",
-                    r"\1.model_dump_json()",
-                    content)
+                content = re.sub(r"(\w+)\.json\(\)", r"\1.model_dump_json()", content)
                 modified = True
 
             # Fix validate() calls
@@ -261,8 +257,7 @@ def fix_model_attributes() -> None:
 
             # Fix parse_raw() calls
             if ".parse_raw(" in content:
-                content = content.replace(
-                    ".parse_raw(", ".model_validate_json(")
+                content = content.replace(".parse_raw(", ".model_validate_json(")
                 modified = True
 
             # Fix schema() calls

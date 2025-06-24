@@ -40,7 +40,8 @@ def fix_flx_strict_model_import() -> None:
                         for j in range(i + 1, len(lines)):
                             if not lines[j].strip():
                                 lines.insert(
-                                    j + 1, "from flx.core.base import FlxStrictModel")
+                                    j + 1, "from flx.core.base import FlxStrictModel"
+                                )
                                 break
                         break
                 content = "\n".join(lines)
@@ -77,8 +78,8 @@ class MockDataModel(BaseModel):
             # Add before BaseMockProvider
             if "class BaseMockProvider" in content:
                 content = content.replace(
-                    "class BaseMockProvider",
-                    f"{model_def}\n\nclass BaseMockProvider")
+                    "class BaseMockProvider", f"{model_def}\n\nclass BaseMockProvider"
+                )
                 content += f"\n\n{model_def}"
 
             base_file.write_text(content)
@@ -169,8 +170,7 @@ class UniversalField(FlxStrictModel):
                     re.finditer(r"^class\s+\w+", content, re.MULTILINE)
                 )
                 if class_matches:
-                    last_class_end = content.find(
-                        "\n\n", class_matches[-1].end())
+                    last_class_end = content.find("\n\n", class_matches[-1].end())
                     if last_class_end > 0:
                         content = (
                             content[:last_class_end]
@@ -238,24 +238,19 @@ def fix_missing_attributes() -> None:
 
         # Fix self.logger.error -> self.logger.flx_error
         if "self.logger.error(" in content:
-            content = content.replace(
-                "self.logger.error(",
-                "self.logger.flx_error(")
+            content = content.replace("self.logger.error(", "self.logger.flx_error(")
             path.write_text(content)
             print(f"Fixed logger.error in {path}")
 
         # Fix self.logger.info -> self.logger.flx_info
         if "self.logger.info(" in content and "self.logger.flx_info(" not in content:
-            content = content.replace(
-                "self.logger.info(", "self.logger.flx_info(")
+            content = content.replace("self.logger.info(", "self.logger.flx_info(")
             path.write_text(content)
             print(f"Fixed logger.info in {path}")
 
         # Fix self.logger.debug -> self.logger.flx_debug
         if "self.logger.debug(" in content:
-            content = content.replace(
-                "self.logger.debug(",
-                "self.logger.flx_debug(")
+            content = content.replace("self.logger.debug(", "self.logger.flx_debug(")
             path.write_text(content)
             print(f"Fixed logger.debug in {path}")
 

@@ -20,16 +20,16 @@ def fix_corrupted_imports(file_path: Path) -> bool:
 
     # Fix pattern: "from typing import ... from typing import ..."
     content = re.sub(
-        r'from typing import [^,\n]+(?:, [^,\n]+)* from typing import [^,\n]+(?:, [^,\n]+)*',
-        'from typing import Any, Dict, List, Optional',
-        content
+        r"from typing import [^,\n]+(?:, [^,\n]+)* from typing import [^,\n]+(?:, [^,\n]+)*",
+        "from typing import Any, Dict, List, Optional",
+        content,
     )
 
     # Fix constants that got mixed with imports
     content = re.sub(
-        r'from typing import [^,\n]+(?:, [^,\n]+)* ([A-Z_]+(?:, [A-Z_]+)*)',
-        r'from typing import Any, Dict, List, Optional\n\nfrom .constants import \1',
-        content
+        r"from typing import [^,\n]+(?:, [^,\n]+)* ([A-Z_]+(?:, [A-Z_]+)*)",
+        r"from typing import Any, Dict, List, Optional\n\nfrom .constants import \1",
+        content,
     )
 
     # Fix missing quotes in strings
@@ -50,15 +50,22 @@ def fix_missing_imports(file_path: Path) -> bool:
     original_content = content
 
     # Fix missing HttpClientAdapter import
-    if "HttpClientAdapter" in content and "from " not in content.split("HttpClientAdapter")[0].split('\n')[-1]:
+    if (
+        "HttpClientAdapter" in content
+        and "from " not in content.split("HttpClientAdapter")[0].split("\n")[-1]
+    ):
         # Add the missing import
-        lines = content.split('\n')
+        lines = content.split("\n")
         for i, line in enumerate(lines):
-            if line.strip().startswith('from typing') or line.strip().startswith('import '):
+            if line.strip().startswith("from typing") or line.strip().startswith(
+                "import "
+            ):
                 # Add import after typing imports
-                lines.insert(i + 1, "from flx.adapters.outbound.http import HttpClientAdapter")
+                lines.insert(
+                    i + 1, "from flx.adapters.outbound.http import HttpClientAdapter"
+                )
                 break
-        content = '\n'.join(lines)
+        content = "\n".join(lines)
 
     if content != original_content:
         file_path.write_text(content)
@@ -92,12 +99,17 @@ def fix_project(project_name: str) -> bool:
     # Test if fix worked
     module_name = project_name.replace("-", "_")
     import subprocess
+
     try:
         result = subprocess.run(
-            ["python", "-c", f"import sys; sys.path.insert(0, '{project_path}/src'); import {module_name}; print('✅ Success')"],
+            [
+                "python",
+                "-c",
+                f"import sys; sys.path.insert(0, '{project_path}/src'); import {module_name}; print('✅ Success')",
+            ],
             capture_output=True,
             text=True,
-            timeout=10
+            timeout=10,
         )
 
         if result.returncode == 0:
@@ -114,7 +126,7 @@ def main():
         "flx-oracle-oic",
         "gruponos-poc-oic-wms",  # Already fixed by linter
         "tap-oracle-oic",
-        "target-ldap"
+        "target-ldap",
     ]
 
     fixed_count = 0
@@ -125,7 +137,9 @@ def main():
 
     # Log to token
     with open("/home/marlonsc/pyauto/.token", "a") as f:
-        f.write(f"FIX-4-BROKEN-PROJECTS-004: Fixed {fixed_count}/{len(broken_projects)} projects\n")
+        f.write(
+            f"FIX-4-BROKEN-PROJECTS-004: Fixed {fixed_count}/{len(broken_projects)} projects\n"
+        )
 
     return fixed_count == len(broken_projects)
 

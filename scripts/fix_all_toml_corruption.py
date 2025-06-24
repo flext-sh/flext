@@ -17,14 +17,18 @@ def fix_toml_file(file_path: Path) -> bool:
         content = file_path.read_text()
 
         # Fix common corruption patterns
-        lines = content.split('\n')
+        lines = content.split("\n")
         fixed_lines: list = []
         in_multiline_string = False
 
         for i, line in enumerate(lines):
             # Skip empty lines at end of sections
-            if i > 0 and line.strip(
-            ) and lines[i - 1].strip() == '' and line.strip().startswith('['):
+            if (
+                i > 0
+                and line.strip()
+                and lines[i - 1].strip() == ""
+                and line.strip().startswith("[")
+            ):
                 # This is fine
                 pass
 
@@ -33,18 +37,22 @@ def fix_toml_file(file_path: Path) -> bool:
                 in_multiline_string = not in_multiline_string
 
             # Fix duplicate sections
-            if line.strip().startswith('[') and line.strip() in [
-                    l.strip() for l in fixed_lines]:
+            if line.strip().startswith("[") and line.strip() in [
+                l.strip() for l in fixed_lines
+            ]:
                 continue  # Skip duplicate section
 
             # Fix invalid values
-            if '=' in line and not in_multiline_string:
-                key, _, value = line.partition('=')
+            if "=" in line and not in_multiline_string:
+                key, _, value = line.partition("=")
                 value = value.strip()
 
                 # Fix missing quotes
-                if value and not value.startswith(
-                        ('"', "'", '[', '{', 'true', 'false')) and not value[0].isdigit():
+                if (
+                    value
+                    and not value.startswith(('"', "'", "[", "{", "true", "false"))
+                    and not value[0].isdigit()
+                ):
                     if not value.startswith('"""'):
                         line = f'{key}= "{value}"'
 
@@ -58,7 +66,7 @@ def fix_toml_file(file_path: Path) -> bool:
         section_content: list = []
 
         for line in fixed_lines:
-            if line.strip().startswith('[') and line.strip().endswith(']'):
+            if line.strip().startswith("[") and line.strip().endswith("]"):
                 # New section
                 if current_section and current_section not in seen_sections:
                     # Save previous section
@@ -77,7 +85,7 @@ def fix_toml_file(file_path: Path) -> bool:
             final_lines.extend(section_content)
 
         # Write fixed content
-        fixed_content = '\n'.join(final_lines)
+        fixed_content = "\n".join(final_lines)
 
         # Validate it's parseable
         try:
@@ -167,7 +175,8 @@ def main() -> None:
         "tap-oracle-wms",
         "target-ldap",
         "target-oracle-oic",
-        "target-oracle-wms"]
+        "target-oracle-wms",
+    ]
 
     fixed = 0
 

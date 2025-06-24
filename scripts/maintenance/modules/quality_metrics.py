@@ -23,7 +23,9 @@ class QualityMetricsModule(CustomFixModule):
     """Module for generating comprehensive code quality metrics."""
 
     name = "quality_metrics"
-    description = "Generates comprehensive code quality metrics and monitoring dashboard"
+    description = (
+        "Generates comprehensive code quality metrics and monitoring dashboard"
+    )
 
     # Quality thresholds
     QUALITY_THRESHOLDS = {
@@ -39,16 +41,16 @@ class QualityMetricsModule(CustomFixModule):
     }
 
     # File size limits (lines of code)
-    FILE_SIZE_LIMITS = {
-        "warning": 300,
-        "error": 500
-    }
+    FILE_SIZE_LIMITS = {"warning": 300, "error": 500}
 
-    def __init__(self,
-                 output_format: str = "console",
-                 save_report: bool = False,
-                 report_dir: Path = None,
-                 *args, **kwargs):
+    def __init__(
+        self,
+        output_format: str = "console",
+        save_report: bool = False,
+        report_dir: Path = None,
+        *args,
+        **kwargs,
+    ):
         super().__init__(*args, **kwargs)
         self.console = Console()
         self.output_format = output_format  # console, json, html
@@ -78,7 +80,8 @@ class QualityMetricsModule(CustomFixModule):
 
         # Filter out cache and venv files
         python_files = [
-            f for f in python_files
+            f
+            for f in python_files
             if not any(part.startswith(".") for part in f.parts)
             and "venv" not in str(f)
             and "__pycache__" not in str(f)
@@ -98,11 +101,15 @@ class QualityMetricsModule(CustomFixModule):
 
                 # Track large files
                 if file_lines > self.FILE_SIZE_LIMITS["warning"]:
-                    large_files.append({
-                        "file": str(py_file.relative_to(project_path)),
-                        "lines": file_lines,
-                        "severity": "error" if file_lines > self.FILE_SIZE_LIMITS["error"] else "warning"
-                    })
+                    large_files.append(
+                        {
+                            "file": str(py_file.relative_to(project_path)),
+                            "lines": file_lines,
+                            "severity": "error"
+                            if file_lines > self.FILE_SIZE_LIMITS["error"]
+                            else "warning",
+                        }
+                    )
 
                 # Count different line types
                 for line in lines:
@@ -134,13 +141,12 @@ class QualityMetricsModule(CustomFixModule):
             except Exception:
                 continue
 
-        metrics["average_file_size"] = sum(
-            file_sizes) / len(file_sizes) if file_sizes else 0
+        metrics["average_file_size"] = (
+            sum(file_sizes) / len(file_sizes) if file_sizes else 0
+        )
         metrics["largest_files"] = sorted(
-            large_files,
-            key=lambda x: x["lines"],
-            reverse=True)[
-            :10]
+            large_files, key=lambda x: x["lines"], reverse=True
+        )[:10]
 
         return metrics
 
@@ -154,7 +160,8 @@ class QualityMetricsModule(CustomFixModule):
         }
 
         python_files = [
-            f for f in project_path.rglob("*.py")
+            f
+            for f in project_path.rglob("*.py")
             if not any(part.startswith(".") for part in f.parts)
             and "venv" not in str(f)
         ]
@@ -168,35 +175,38 @@ class QualityMetricsModule(CustomFixModule):
                 tree = ast.parse(content)
 
                 for node in ast.walk(tree):
-                    if isinstance(node, ast.FunctionDef |
-                                  ast.AsyncFunctionDef):
-                        complexity = self._calculate_cyclomatic_complexity(
-                            node)
+                    if isinstance(node, ast.FunctionDef | ast.AsyncFunctionDef):
+                        complexity = self._calculate_cyclomatic_complexity(node)
                         complexity_metrics["total_functions"] += 1
                         total_complexity += complexity
 
-                        if complexity > self.QUALITY_THRESHOLDS["cyclomatic_complexity"]:
-                            function_complexities.append({
-                                "file": str(py_file.relative_to(project_path)),
-                                "function": node.name,
-                                "complexity": complexity,
-                                "line": node.lineno
-                            })
+                        if (
+                            complexity
+                            > self.QUALITY_THRESHOLDS["cyclomatic_complexity"]
+                        ):
+                            function_complexities.append(
+                                {
+                                    "file": str(py_file.relative_to(project_path)),
+                                    "function": node.name,
+                                    "complexity": complexity,
+                                    "line": node.lineno,
+                                }
+                            )
 
             except Exception:
                 continue
 
         if complexity_metrics["total_functions"] > 0:
-            complexity_metrics["average_complexity"] = total_complexity / \
-                complexity_metrics["total_functions"]
+            complexity_metrics["average_complexity"] = (
+                total_complexity / complexity_metrics["total_functions"]
+            )
 
         if function_complexities:
             complexity_metrics["max_complexity"] = max(
-                f["complexity"] for f in function_complexities)
+                f["complexity"] for f in function_complexities
+            )
             complexity_metrics["complex_functions"] = sorted(
-                function_complexities,
-                key=lambda x: x["complexity"],
-                reverse=True
+                function_complexities, key=lambda x: x["complexity"], reverse=True
             )[:20]  # Top 20 most complex functions
 
         return complexity_metrics
@@ -224,7 +234,7 @@ class QualityMetricsModule(CustomFixModule):
             "lines_covered": 0,
             "lines_total": 0,
             "missing_coverage": [],
-            "coverage_available": False
+            "coverage_available": False,
         }
 
         # Try to run coverage analysis
@@ -237,36 +247,40 @@ class QualityMetricsModule(CustomFixModule):
                     cwd=project_path,
                     capture_output=True,
                     text=True,
-                    timeout=60
+                    timeout=60,
                 )
 
                 if result.returncode == 0:
                     coverage_data = json.loads(result.stdout)
                     coverage_metrics["coverage_percentage"] = coverage_data.get(
-                        "totals", {}).get("percent_covered", 0.0)
+                        "totals", {}
+                    ).get("percent_covered", 0.0)
                     coverage_metrics["lines_covered"] = coverage_data.get(
-                        "totals", {}).get("covered_lines", 0)
+                        "totals", {}
+                    ).get("covered_lines", 0)
                     coverage_metrics["lines_total"] = coverage_data.get(
-                        "totals", {}).get("num_statements", 0)
+                        "totals", {}
+                    ).get("num_statements", 0)
                     coverage_metrics["coverage_available"] = True
 
                     # Find files with low coverage
                     files = coverage_data.get("files", {})
                     low_coverage: list = []
                     for file_path, file_data in files.items():
-                        file_coverage = file_data.get(
-                            "summary", {}).get(
-                            "percent_covered", 0)
+                        file_coverage = file_data.get("summary", {}).get(
+                            "percent_covered", 0
+                        )
                         if file_coverage < self.QUALITY_THRESHOLDS["test_coverage"]:
-                            low_coverage.append({
-                                "file": file_path,
-                                "coverage": file_coverage,
-                                "missing_lines": file_data.get("missing_lines", [])
-                            })
+                            low_coverage.append(
+                                {
+                                    "file": file_path,
+                                    "coverage": file_coverage,
+                                    "missing_lines": file_data.get("missing_lines", []),
+                                }
+                            )
 
                     coverage_metrics["missing_coverage"] = sorted(
-                        low_coverage,
-                        key=lambda x: x["coverage"]
+                        low_coverage, key=lambda x: x["coverage"]
                     )[:10]
 
         except Exception:
@@ -274,8 +288,7 @@ class QualityMetricsModule(CustomFixModule):
 
         return coverage_metrics
 
-    def analyze_code_quality_issues(
-            self, project_path: Path) -> dict[str, Any]:
+    def analyze_code_quality_issues(self, project_path: Path) -> dict[str, Any]:
         """Analyze code quality issues using ruff and other tools."""
         quality_issues = {
             "total_issues": 0,
@@ -286,7 +299,7 @@ class QualityMetricsModule(CustomFixModule):
             "performance_issues": 0,
             "maintainability_issues": 0,
             "issue_details": [],
-            "tools_available": {}
+            "tools_available": {},
         }
 
         # Run ruff analysis
@@ -296,7 +309,7 @@ class QualityMetricsModule(CustomFixModule):
                 cwd=project_path,
                 capture_output=True,
                 text=True,
-                timeout=60
+                timeout=60,
             )
 
             if result.stdout:
@@ -316,14 +329,18 @@ class QualityMetricsModule(CustomFixModule):
                         quality_issues["performance_issues"] += 1
                         quality_issues["warnings"] += 1
 
-                    quality_issues["issue_details"].append({
-                        "file": issue.get("filename", ""),
-                        "line": issue.get("location", {}).get("row", 0),
-                        "column": issue.get("location", {}).get("column", 0),
-                        "code": rule_code,
-                        "message": issue.get("message", ""),
-                        "severity": "error" if rule_code.startswith("E") else "warning"
-                    })
+                    quality_issues["issue_details"].append(
+                        {
+                            "file": issue.get("filename", ""),
+                            "line": issue.get("location", {}).get("row", 0),
+                            "column": issue.get("location", {}).get("column", 0),
+                            "code": rule_code,
+                            "message": issue.get("message", ""),
+                            "severity": "error"
+                            if rule_code.startswith("E")
+                            else "warning",
+                        }
+                    )
 
         except Exception:
             quality_issues["tools_available"]["ruff"] = False
@@ -335,7 +352,7 @@ class QualityMetricsModule(CustomFixModule):
                 cwd=project_path,
                 capture_output=True,
                 text=True,
-                timeout=120
+                timeout=120,
             )
 
             quality_issues["tools_available"]["mypy"] = True
@@ -370,8 +387,11 @@ class QualityMetricsModule(CustomFixModule):
                         column=1,
                         code="QUALITY001",
                         message=f"File too large: {line_count} lines (limit: {
-                            self.FILE_SIZE_LIMITS['error']})",
-                        suggestion="Consider splitting this file into smaller modules"))
+                            self.FILE_SIZE_LIMITS['error']
+                        })",
+                        suggestion="Consider splitting this file into smaller modules",
+                    )
+                )
             elif line_count > self.FILE_SIZE_LIMITS["warning"]:
                 issues.append(
                     Issue(
@@ -379,35 +399,44 @@ class QualityMetricsModule(CustomFixModule):
                         column=1,
                         code="QUALITY002",
                         message=f"File large: {line_count} lines (warning at: {
-                            self.FILE_SIZE_LIMITS['warning']})",
-                        suggestion="Consider refactoring to reduce file size"))
+                            self.FILE_SIZE_LIMITS['warning']
+                        })",
+                        suggestion="Consider refactoring to reduce file size",
+                    )
+                )
 
             # Check for complex functions
             try:
                 tree = ast.parse(content)
                 for node in ast.walk(tree):
-                    if isinstance(node, ast.FunctionDef |
-                                  ast.AsyncFunctionDef):
-                        complexity = self._calculate_cyclomatic_complexity(
-                            node)
-                        if complexity > self.QUALITY_THRESHOLDS["cyclomatic_complexity"]:
+                    if isinstance(node, ast.FunctionDef | ast.AsyncFunctionDef):
+                        complexity = self._calculate_cyclomatic_complexity(node)
+                        if (
+                            complexity
+                            > self.QUALITY_THRESHOLDS["cyclomatic_complexity"]
+                        ):
                             issues.append(
                                 Issue(
                                     line=node.lineno,
                                     column=1,
                                     code="QUALITY003",
                                     message=f"Function '{
-                                        node.name}' has high complexity: {complexity}",
-                                    suggestion="Consider breaking down this function into smaller functions"))
+                                        node.name
+                                    }' has high complexity: {complexity}",
+                                    suggestion="Consider breaking down this function into smaller functions",
+                                )
+                            )
 
             except SyntaxError:
-                issues.append(Issue(
-                    line=1,
-                    column=1,
-                    code="QUALITY004",
-                    message="Syntax error in Python file",
-                    suggestion="Fix syntax errors before quality analysis"
-                ))
+                issues.append(
+                    Issue(
+                        line=1,
+                        column=1,
+                        code="QUALITY004",
+                        message="Syntax error in Python file",
+                        suggestion="Fix syntax errors before quality analysis",
+                    )
+                )
 
         return issues
 
@@ -417,15 +446,15 @@ class QualityMetricsModule(CustomFixModule):
         # This module focuses on detection and reporting
         return content
 
-    def generate_quality_report(
-            self, workspace_path: Path = None) -> dict[str, Any]:
+    def generate_quality_report(self, workspace_path: Path = None) -> dict[str, Any]:
         """Generate comprehensive quality report for workspace."""
         if workspace_path is None:
             workspace_path = Path.cwd()
 
         if self.verbose:
             self.console.print(
-                f"[blue]Generating quality metrics for: {workspace_path}[/blue]")
+                f"[blue]Generating quality metrics for: {workspace_path}[/blue]"
+            )
 
         # Find all projects
         projects: list = []
@@ -434,9 +463,7 @@ class QualityMetricsModule(CustomFixModule):
                 projects.append(pyproject_file.parent)
 
         if self.verbose:
-            self.console.print(
-                f"[green]Analyzing {
-                    len(projects)} projects[/green]")
+            self.console.print(f"[green]Analyzing {len(projects)} projects[/green]")
 
         workspace_metrics = {
             "timestamp": time.time(),
@@ -449,8 +476,8 @@ class QualityMetricsModule(CustomFixModule):
                 "total_issues": 0,
                 "average_complexity": 0.0,
                 "overall_coverage": 0.0,
-                "quality_score": 0.0
-            }
+                "quality_score": 0.0,
+            },
         }
 
         total_complexity = 0
@@ -462,8 +489,7 @@ class QualityMetricsModule(CustomFixModule):
             project_name = project_path.name
 
             if self.verbose:
-                self.console.print(
-                    f"[yellow]Analyzing {project_name}[/yellow]")
+                self.console.print(f"[yellow]Analyzing {project_name}[/yellow]")
 
             # Analyze different aspects
             structure_metrics = self.analyze_project_structure(project_path)
@@ -475,19 +501,27 @@ class QualityMetricsModule(CustomFixModule):
                 "structure": structure_metrics,
                 "complexity": complexity_metrics,
                 "coverage": coverage_metrics,
-                "quality": quality_metrics
+                "quality": quality_metrics,
             }
 
             workspace_metrics["projects"][project_name] = project_metrics
 
             # Aggregate for summary
-            workspace_metrics["summary"]["total_files"] += structure_metrics["python_files"]
-            workspace_metrics["summary"]["total_lines"] += structure_metrics["total_lines"]
-            workspace_metrics["summary"]["total_issues"] += quality_metrics["total_issues"]
+            workspace_metrics["summary"]["total_files"] += structure_metrics[
+                "python_files"
+            ]
+            workspace_metrics["summary"]["total_lines"] += structure_metrics[
+                "total_lines"
+            ]
+            workspace_metrics["summary"]["total_issues"] += quality_metrics[
+                "total_issues"
+            ]
 
             if complexity_metrics["total_functions"] > 0:
-                total_complexity += complexity_metrics["average_complexity"] * \
-                    complexity_metrics["total_functions"]
+                total_complexity += (
+                    complexity_metrics["average_complexity"]
+                    * complexity_metrics["total_functions"]
+                )
                 total_functions += complexity_metrics["total_functions"]
 
             if coverage_metrics["coverage_available"]:
@@ -496,12 +530,14 @@ class QualityMetricsModule(CustomFixModule):
 
         # Calculate summary metrics
         if total_functions > 0:
-            workspace_metrics["summary"]["average_complexity"] = total_complexity / \
-                total_functions
+            workspace_metrics["summary"]["average_complexity"] = (
+                total_complexity / total_functions
+            )
 
         if projects_with_coverage > 0:
-            workspace_metrics["summary"]["overall_coverage"] = total_coverage / \
-                projects_with_coverage
+            workspace_metrics["summary"]["overall_coverage"] = (
+                total_coverage / projects_with_coverage
+            )
 
         # Calculate overall quality score (0-100)
         quality_score = self._calculate_quality_score(workspace_metrics)
@@ -532,16 +568,20 @@ class QualityMetricsModule(CustomFixModule):
             score -= min(issues_per_file * 5, 30)  # Max 30 point deduction
 
         # Deduct points for complexity
-        if summary["average_complexity"] > self.QUALITY_THRESHOLDS["cyclomatic_complexity"]:
+        if (
+            summary["average_complexity"]
+            > self.QUALITY_THRESHOLDS["cyclomatic_complexity"]
+        ):
             complexity_penalty = (
-                summary["average_complexity"] - self.QUALITY_THRESHOLDS["cyclomatic_complexity"]) * 2
+                summary["average_complexity"]
+                - self.QUALITY_THRESHOLDS["cyclomatic_complexity"]
+            ) * 2
             score -= min(complexity_penalty, 20)  # Max 20 point deduction
 
         # Deduct points for low coverage
         coverage_target = self.QUALITY_THRESHOLDS["test_coverage"]
         if summary["overall_coverage"] < coverage_target:
-            coverage_penalty = (
-                coverage_target - summary["overall_coverage"]) / 2
+            coverage_penalty = (coverage_target - summary["overall_coverage"]) / 2
             score -= min(coverage_penalty, 25)  # Max 25 point deduction
 
         return max(score, 0.0)
@@ -558,32 +598,45 @@ class QualityMetricsModule(CustomFixModule):
 
         # Overall quality score
         quality_score = summary["quality_score"]
-        score_status = "🟢 Excellent" if quality_score >= 90 else "🟡 Good" if quality_score >= 75 else "🔴 Needs Improvement"
+        score_status = (
+            "🟢 Excellent"
+            if quality_score >= 90
+            else "🟡 Good"
+            if quality_score >= 75
+            else "🔴 Needs Improvement"
+        )
         overview_table.add_row(
-            "Quality Score", f"{
-                quality_score:.1f}/100", score_status)
+            "Quality Score", f"{quality_score:.1f}/100", score_status
+        )
 
         # Coverage
         coverage = summary["overall_coverage"]
-        coverage_status = "✅" if coverage >= self.QUALITY_THRESHOLDS["test_coverage"] else "❌"
-        overview_table.add_row(
-            "Test Coverage", f"{coverage:.1f}%", coverage_status)
+        coverage_status = (
+            "✅" if coverage >= self.QUALITY_THRESHOLDS["test_coverage"] else "❌"
+        )
+        overview_table.add_row("Test Coverage", f"{coverage:.1f}%", coverage_status)
 
         # Complexity
         complexity = summary["average_complexity"]
-        complexity_status = "✅" if complexity <= self.QUALITY_THRESHOLDS[
-            "cyclomatic_complexity"] else "❌"
-        overview_table.add_row(
-            "Avg Complexity", f"{
-                complexity:.1f}", complexity_status)
+        complexity_status = (
+            "✅"
+            if complexity <= self.QUALITY_THRESHOLDS["cyclomatic_complexity"]
+            else "❌"
+        )
+        overview_table.add_row("Avg Complexity", f"{complexity:.1f}", complexity_status)
 
         # Issues
-        issues_per_file = summary["total_issues"] / \
-            summary["total_files"] if summary["total_files"] > 0 else 0
-        issues_status = "✅" if issues_per_file <= 1 else "⚠️" if issues_per_file <= 5 else "❌"
+        issues_per_file = (
+            summary["total_issues"] / summary["total_files"]
+            if summary["total_files"] > 0
+            else 0
+        )
+        issues_status = (
+            "✅" if issues_per_file <= 1 else "⚠️" if issues_per_file <= 5 else "❌"
+        )
         overview_table.add_row(
-            "Issues per File", f"{
-                issues_per_file:.1f}", issues_status)
+            "Issues per File", f"{issues_per_file:.1f}", issues_status
+        )
 
         self.console.print(overview_table)
 
@@ -606,9 +659,11 @@ class QualityMetricsModule(CustomFixModule):
                 project_name,
                 str(structure["python_files"]),
                 str(structure["total_lines"]),
-                f"{coverage['coverage_percentage']:.1f}%" if coverage["coverage_available"] else "N/A",
+                f"{coverage['coverage_percentage']:.1f}%"
+                if coverage["coverage_available"]
+                else "N/A",
                 f"{complexity['average_complexity']:.1f}",
-                str(quality["total_issues"])
+                str(quality["total_issues"]),
             )
 
         self.console.print(project_table)
@@ -622,12 +677,16 @@ class QualityMetricsModule(CustomFixModule):
             f"⭐ Quality Score: {quality_score:.1f}/100"
         )
 
-        panel_style = "green" if quality_score >= 90 else "yellow" if quality_score >= 75 else "red"
+        panel_style = (
+            "green"
+            if quality_score >= 90
+            else "yellow"
+            if quality_score >= 75
+            else "red"
+        )
         self.console.print(
-            Panel(
-                panel_text,
-                title="Quality Summary",
-                border_style=panel_style))
+            Panel(panel_text, title="Quality Summary", border_style=panel_style)
+        )
 
     def _save_quality_report(self, metrics: dict[str, Any]) -> None:
         """Save quality report to file."""
@@ -641,8 +700,7 @@ class QualityMetricsModule(CustomFixModule):
                 json.dump(metrics, f, indent=2, default=str)
 
         if self.verbose:
-            self.console.print(
-                f"[green]📄 Quality report saved: {report_file}[/green]")
+            self.console.print(f"[green]📄 Quality report saved: {report_file}[/green]")
 
     def run_workspace_analysis(self, workspace_path: Path = None) -> bool:
         """Run quality analysis across the entire workspace."""

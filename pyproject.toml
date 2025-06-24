@@ -112,6 +112,12 @@ ldap3 = "^2.9.0"
 tomli = "^2.0.0"
 tomli-w = "^1.1.0"
 unstructured = "^0.17.2"
+transitions = "^0.9.2"
+dependency-injector = "^4.48.1"
+orjson = "^3.10.18"
+typer = "^0.16.0"
+asyncpg = "^0.30.0"
+django-debug-toolbar = "^5.2.0"
 
 [tool.poetry.group.dev.dependencies]
 # Testing
@@ -147,6 +153,8 @@ myst-parser = {version = "^4.0.0", python = ">=3.10"}
 # Development tools (Python 3.10+ only)
 ipython = {version = "^8.29.0", python = ">=3.10"}
 jupyter = {version = "^1.1.1", python = ">=3.10"}
+rich-traceback = "^1.0.3"
+vulture = "^2.14"
 
 [tool.ruff.lint]
 select = [ "E", "W", "F", "I", "UP", "N", "B", "C4", "DTZ", "T20", "ISC", "PIE", "PT", "RET",]

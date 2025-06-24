@@ -35,10 +35,8 @@ class DeploymentAutomationModule(CustomFixModule):
         return "deployment"
 
     def __init__(
-            self,
-            dry_run: bool = True,
-            interactive: bool = False,
-            verbose: bool = False):
+        self, dry_run: bool = True, interactive: bool = False, verbose: bool = False
+    ):
         """Initialize deployment automation module.
 
         Args:
@@ -75,10 +73,7 @@ class DeploymentAutomationModule(CustomFixModule):
 
         return issues
 
-    def _analyze_docker_compose(
-            self,
-            file_path: Path,
-            content: str) -> list[Issue]:
+    def _analyze_docker_compose(self, file_path: Path, content: str) -> list[Issue]:
         """Analyze Docker Compose configuration."""
         issues: list = []
         try:
@@ -94,7 +89,9 @@ class DeploymentAutomationModule(CustomFixModule):
                                 message=f"Service '{service_name}' missing health check",
                                 file_path=file_path,
                                 line=None,
-                                fix_description=f"Add health check configuration for {service_name}"))
+                                fix_description=f"Add health check configuration for {service_name}",
+                            )
+                        )
 
                     # Check for missing restart policy
                     if "restart" not in service_config:
@@ -104,20 +101,17 @@ class DeploymentAutomationModule(CustomFixModule):
                                 message=f"Service '{service_name}' missing restart policy",
                                 file_path=file_path,
                                 line=None,
-                                fix_description=f"Add restart policy for {service_name}"))
+                                fix_description=f"Add restart policy for {service_name}",
+                            )
+                        )
 
                     # Check for hardcoded secrets
                     if "environment" in service_config:
-                        for env_var, value in service_config["environment"].items(
-                        ):
-                            if isinstance(
-                                value,
-                                str) and any(
-                                secret in env_var.lower() for secret in [
-                                    "password",
-                                    "secret",
-                                    "key",
-                                    "token"]):
+                        for env_var, value in service_config["environment"].items():
+                            if isinstance(value, str) and any(
+                                secret in env_var.lower()
+                                for secret in ["password", "secret", "key", "token"]
+                            ):
                                 if not value.startswith("${") and value != "":
                                     issues.append(
                                         Issue(
@@ -125,22 +119,23 @@ class DeploymentAutomationModule(CustomFixModule):
                                             message=f"Potential hardcoded secret in {env_var}",
                                             file_path=file_path,
                                             line=None,
-                                            fix_description=f"Use environment variable for {env_var}"))
+                                            fix_description=f"Use environment variable for {env_var}",
+                                        )
+                                    )
         except yaml.YAMLError as e:
-            issues.append(Issue(
-                severity=Severity.HIGH,
-                message=f"Invalid YAML in docker-compose: {e}",
-                file_path=file_path,
-                line=None,
-                fix_description="Fix YAML syntax errors"
-            ))
+            issues.append(
+                Issue(
+                    severity=Severity.HIGH,
+                    message=f"Invalid YAML in docker-compose: {e}",
+                    file_path=file_path,
+                    line=None,
+                    fix_description="Fix YAML syntax errors",
+                )
+            )
 
         return issues
 
-    def _analyze_dockerfile(
-            self,
-            file_path: Path,
-            content: str) -> list[Issue]:
+    def _analyze_dockerfile(self, file_path: Path, content: str) -> list[Issue]:
         """Analyze Dockerfile for best practices."""
         issues: list = []
         lines = content.splitlines()
@@ -167,43 +162,47 @@ class DeploymentAutomationModule(CustomFixModule):
                         message="apt-get install without cleanup",
                         file_path=file_path,
                         line=i,
-                        fix_description="Add && rm -rf /var/lib/apt/lists/* to reduce image size"))
+                        fix_description="Add && rm -rf /var/lib/apt/lists/* to reduce image size",
+                    )
+                )
 
             # Check for ADD instead of COPY
-            if line.startswith("ADD ") and not line.endswith(
-                    (".tar", ".gz", ".zip")):
-                issues.append(Issue(
-                    severity=Severity.LOW,
-                    message="Use COPY instead of ADD for regular files",
-                    file_path=file_path,
-                    line=i,
-                    fix_description="Replace ADD with COPY"
-                ))
+            if line.startswith("ADD ") and not line.endswith((".tar", ".gz", ".zip")):
+                issues.append(
+                    Issue(
+                        severity=Severity.LOW,
+                        message="Use COPY instead of ADD for regular files",
+                        file_path=file_path,
+                        line=i,
+                        fix_description="Replace ADD with COPY",
+                    )
+                )
 
         if not has_user:
-            issues.append(Issue(
-                severity=Severity.MEDIUM,
-                message="Dockerfile missing USER instruction",
-                file_path=file_path,
-                line=None,
-                fix_description="Add USER instruction to run as non-root"
-            ))
+            issues.append(
+                Issue(
+                    severity=Severity.MEDIUM,
+                    message="Dockerfile missing USER instruction",
+                    file_path=file_path,
+                    line=None,
+                    fix_description="Add USER instruction to run as non-root",
+                )
+            )
 
         if not has_healthcheck:
-            issues.append(Issue(
-                severity=Severity.LOW,
-                message="Dockerfile missing HEALTHCHECK",
-                file_path=file_path,
-                line=None,
-                fix_description="Add HEALTHCHECK instruction"
-            ))
+            issues.append(
+                Issue(
+                    severity=Severity.LOW,
+                    message="Dockerfile missing HEALTHCHECK",
+                    file_path=file_path,
+                    line=None,
+                    fix_description="Add HEALTHCHECK instruction",
+                )
+            )
 
         return issues
 
-    def _analyze_deployment_config(
-            self,
-            file_path: Path,
-            content: str) -> list[Issue]:
+    def _analyze_deployment_config(self, file_path: Path, content: str) -> list[Issue]:
         """Analyze deployment configuration files."""
         issues: list = []
         try:
@@ -219,35 +218,43 @@ class DeploymentAutomationModule(CustomFixModule):
                             message=f"Missing required field: {field}",
                             file_path=file_path,
                             line=None,
-                            fix_description=f"Add {field} to deployment configuration"))
+                            fix_description=f"Add {field} to deployment configuration",
+                        )
+                    )
 
             # Check for resource limits
             if "resources" not in config:
-                issues.append(Issue(
-                    severity=Severity.MEDIUM,
-                    message="Missing resource limits configuration",
-                    file_path=file_path,
-                    line=None,
-                    fix_description="Add CPU and memory limits"
-                ))
+                issues.append(
+                    Issue(
+                        severity=Severity.MEDIUM,
+                        message="Missing resource limits configuration",
+                        file_path=file_path,
+                        line=None,
+                        fix_description="Add CPU and memory limits",
+                    )
+                )
 
             # Check for health check configuration
             if "healthCheck" not in config and "health_check" not in config:
-                issues.append(Issue(
-                    severity=Severity.MEDIUM,
-                    message="Missing health check configuration",
+                issues.append(
+                    Issue(
+                        severity=Severity.MEDIUM,
+                        message="Missing health check configuration",
+                        file_path=file_path,
+                        line=None,
+                        fix_description="Add health check endpoint and parameters",
+                    )
+                )
+        except yaml.YAMLError as e:
+            issues.append(
+                Issue(
+                    severity=Severity.HIGH,
+                    message=f"Invalid YAML in deployment config: {e}",
                     file_path=file_path,
                     line=None,
-                    fix_description="Add health check endpoint and parameters"
-                ))
-        except yaml.YAMLError as e:
-            issues.append(Issue(
-                severity=Severity.HIGH,
-                message=f"Invalid YAML in deployment config: {e}",
-                file_path=file_path,
-                line=None,
-                fix_description="Fix YAML syntax errors"
-            ))
+                    fix_description="Fix YAML syntax errors",
+                )
+            )
 
         return issues
 
@@ -267,27 +274,30 @@ class DeploymentAutomationModule(CustomFixModule):
                 value = value.strip()
 
                 # Check for sensitive keys with values
-                sensitive_keys = [
-                    "PASSWORD", "SECRET", "KEY", "TOKEN", "API_KEY"]
+                sensitive_keys = ["PASSWORD", "SECRET", "KEY", "TOKEN", "API_KEY"]
                 if any(s in key.upper() for s in sensitive_keys):
                     if value and not value.startswith("${"):
-                        issues.append(Issue(
-                            severity=Severity.HIGH,
-                            message=f"Potential secret exposed: {key}",
-                            file_path=file_path,
-                            line=i,
-                            fix_description="Remove value or use placeholder"
-                        ))
+                        issues.append(
+                            Issue(
+                                severity=Severity.HIGH,
+                                message=f"Potential secret exposed: {key}",
+                                file_path=file_path,
+                                line=i,
+                                fix_description="Remove value or use placeholder",
+                            )
+                        )
 
                 # Check for missing required vars
                 if not value or value == '""' or value == "''":
-                    issues.append(Issue(
-                        severity=Severity.LOW,
-                        message=f"Empty environment variable: {key}",
-                        file_path=file_path,
-                        line=i,
-                        fix_description="Provide default value or remove"
-                    ))
+                    issues.append(
+                        Issue(
+                            severity=Severity.LOW,
+                            message=f"Empty environment variable: {key}",
+                            file_path=file_path,
+                            line=i,
+                            fix_description="Provide default value or remove",
+                        )
+                    )
 
         return issues
 
@@ -306,9 +316,8 @@ class DeploymentAutomationModule(CustomFixModule):
         return content
 
     def deploy_project(
-            self,
-            project_path: Path,
-            environment: str = "development") -> bool:
+        self, project_path: Path, environment: str = "development"
+    ) -> bool:
         """Deploy a project to specified environment.
 
         Args:
@@ -320,19 +329,18 @@ class DeploymentAutomationModule(CustomFixModule):
         """
         if self.dry_run:
             console.print(
-                f"[yellow]DRY RUN: Would deploy {
-                    project_path.name} to {environment}[/yellow]")
+                f"[yellow]DRY RUN: Would deploy {project_path.name} to {
+                    environment
+                }[/yellow]"
+            )
             return True
 
         with Progress(
             SpinnerColumn(),
             TextColumn("[progress.description]{task.description}"),
-            console=console
+            console=console,
         ) as progress:
-            task = progress.add_task(
-                f"Deploying {
-                    project_path.name}...",
-                total=5)
+            task = progress.add_task(f"Deploying {project_path.name}...", total=5)
 
             # Step 1: Build Docker image
             progress.update(task, description="Building Docker image...")
@@ -365,8 +373,10 @@ class DeploymentAutomationModule(CustomFixModule):
             progress.advance(task)
 
         console.print(
-            f"[green]✓ Successfully deployed {
-                project_path.name} to {environment}[/green]")
+            f"[green]✓ Successfully deployed {project_path.name} to {
+                environment
+            }[/green]"
+        )
         return True
 
     def _build_docker_image(self, project_path: Path) -> bool:
@@ -377,19 +387,19 @@ class DeploymentAutomationModule(CustomFixModule):
             return False
 
         try:
-            cmd = ["docker",
-                   "build",
-                   "-t",
-                   f"pyauto/{project_path.name}:latest",
-                   str(project_path)]
+            cmd = [
+                "docker",
+                "build",
+                "-t",
+                f"pyauto/{project_path.name}:latest",
+                str(project_path),
+            ]
             if self.verbose:
                 console.print(f"[dim]Running: {' '.join(cmd)}[/dim]")
 
             result = subprocess.run(cmd, capture_output=True, text=True)
             if result.returncode != 0:
-                console.print(
-                    f"[red]Docker build failed: {
-                        result.stderr}[/red]")
+                console.print(f"[red]Docker build failed: {result.stderr}[/red]")
                 return False
 
             return True
@@ -403,20 +413,14 @@ class DeploymentAutomationModule(CustomFixModule):
         try:
             cmd = ["make", "test-deployment"]
             result = subprocess.run(
-                cmd,
-                cwd=project_path,
-                capture_output=True,
-                text=True
+                cmd, cwd=project_path, capture_output=True, text=True
             )
             return result.returncode == 0
         except Exception:
             # If no deployment tests, run regular tests
             cmd = ["make", "test"]
             result = subprocess.run(
-                cmd,
-                cwd=project_path,
-                capture_output=True,
-                text=True
+                cmd, cwd=project_path, capture_output=True, text=True
             )
             return result.returncode == 0
 
@@ -428,13 +432,11 @@ class DeploymentAutomationModule(CustomFixModule):
 
         # This would push to actual registry
         console.print(
-            "[yellow]Registry push simulated (no registry configured)[/yellow]")
+            "[yellow]Registry push simulated (no registry configured)[/yellow]"
+        )
         return True
 
-    def _deploy_to_environment(
-            self,
-            project_path: Path,
-            environment: str) -> bool:
+    def _deploy_to_environment(self, project_path: Path, environment: str) -> bool:
         """Deploy to target environment."""
         # Look for deployment config
         deploy_config = project_path / "deploy" / f"{environment}.yaml"
@@ -443,7 +445,8 @@ class DeploymentAutomationModule(CustomFixModule):
 
         if not deploy_config.exists():
             console.print(
-                f"[yellow]No deployment config found for {environment}[/yellow]")
+                f"[yellow]No deployment config found for {environment}[/yellow]"
+            )
             return True
 
         # This would run actual deployment commands
@@ -458,10 +461,8 @@ class DeploymentAutomationModule(CustomFixModule):
         return True
 
     def rollback(
-            self,
-            project_path: Path,
-            environment: str,
-            version: str | None = None) -> bool:
+        self, project_path: Path, environment: str, version: str | None = None
+    ) -> bool:
         """Rollback deployment to previous version.
 
         Args:
@@ -474,13 +475,15 @@ class DeploymentAutomationModule(CustomFixModule):
         """
         if self.dry_run:
             console.print(
-                f"[yellow]DRY RUN: Would rollback {
-                    project_path.name} in {environment}[/yellow]")
+                f"[yellow]DRY RUN: Would rollback {project_path.name} in {
+                    environment
+                }[/yellow]"
+            )
             return True
 
         console.print(
-            f"[yellow]Rolling back {
-                project_path.name} in {environment}...[/yellow]")
+            f"[yellow]Rolling back {project_path.name} in {environment}...[/yellow]"
+        )
 
         # Get rollback history
         if not self.rollback_history:
@@ -490,8 +493,7 @@ class DeploymentAutomationModule(CustomFixModule):
         target_version = version or self.rollback_history[-1]["version"]
 
         # Perform rollback
-        console.print(
-            f"[green]Rolled back to version {target_version}[/green]")
+        console.print(f"[green]Rolled back to version {target_version}[/green]")
         return True
 
     def generate_deployment_report(self) -> None:

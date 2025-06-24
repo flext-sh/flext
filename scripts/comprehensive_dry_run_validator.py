@@ -21,12 +21,27 @@ class ComprehensiveDryRunValidator:
         """Initialize validator."""
         self.workspace_root = Path("/home/marlonsc/pyauto")
         self.submodules = [
-            "algar-oud-mig", "dbt-ldap", "dc-code-analyzer", "flx",
-            "flx-adapter-example", "flx-database-oracle", "flx-http-oracle-oic",
-            "flx-http-oracle-wms", "flx-ldap", "flx-meltano-enterprise",
-            "flx-oracle-oic", "flx-oracle-wms", "gruponos-poc-oic-wms",
-            "ldap-core-shared", "oracle-oic-ext", "tap-ldap", "tap-oracle-oic",
-            "tap-oracle-wms", "target-ldap", "target-oracle-oic", "target-oracle-wms"
+            "algar-oud-mig",
+            "dbt-ldap",
+            "dc-code-analyzer",
+            "flx",
+            "flx-adapter-example",
+            "flx-database-oracle",
+            "flx-http-oracle-oic",
+            "flx-http-oracle-wms",
+            "flx-ldap",
+            "flx-meltano-enterprise",
+            "flx-oracle-oic",
+            "flx-oracle-wms",
+            "gruponos-poc-oic-wms",
+            "ldap-core-shared",
+            "oracle-oic-ext",
+            "tap-ldap",
+            "tap-oracle-oic",
+            "tap-oracle-wms",
+            "target-ldap",
+            "target-oracle-oic",
+            "target-oracle-wms",
         ]
         self.results = {}
 
@@ -43,7 +58,7 @@ class ComprehensiveDryRunValidator:
                 cwd=project_path,
                 capture_output=True,
                 text=True,
-                timeout=30
+                timeout=30,
             )
             return result.returncode == 0
         except Exception:
@@ -56,11 +71,17 @@ class ComprehensiveDryRunValidator:
 
         try:
             result = subprocess.run(
-                ["poetry", "run", "python", "-c", f"import {module_name}; logger.info('OK')"],
+                [
+                    "poetry",
+                    "run",
+                    "python",
+                    "-c",
+                    f"import {module_name}; logger.info('OK')",
+                ],
                 cwd=project_path,
                 capture_output=True,
                 text=True,
-                timeout=10
+                timeout=10,
             )
             return result.returncode == 0 and "OK" in result.stdout
         except Exception:
@@ -76,9 +97,9 @@ class ComprehensiveDryRunValidator:
                 cwd=project_path,
                 capture_output=True,
                 text=True,
-                timeout=30
+                timeout=30,
             )
-            return len([l for l in result.stdout.split('\n') if l.strip()])
+            return len([l for l in result.stdout.split("\n") if l.strip()])
         except Exception:
             return -1
 
@@ -92,7 +113,7 @@ class ComprehensiveDryRunValidator:
                 cwd=project_path,
                 capture_output=True,
                 text=True,
-                timeout=30
+                timeout=30,
             )
             return result.returncode == 0
         except Exception:
@@ -108,7 +129,7 @@ class ComprehensiveDryRunValidator:
                 cwd=project_path,
                 capture_output=True,
                 text=True,
-                timeout=60
+                timeout=60,
             )
             # Accept if no tests or tests pass
             return result.returncode in [0, 5]  # 5 = no tests collected
@@ -127,7 +148,7 @@ class ComprehensiveDryRunValidator:
             "target-oracle-oic": ["target-oracle-oic", "--help"],
             "target-oracle-wms": ["target-oracle-wms", "--help"],
             "flx": ["python", "-m", "flx", "--help"],
-            "dbt-ldap": ["dbt", "--help"]
+            "dbt-ldap": ["dbt", "--help"],
         }
 
         if project_name not in cli_commands:
@@ -139,7 +160,7 @@ class ComprehensiveDryRunValidator:
                 cwd=project_path,
                 capture_output=True,
                 text=True,
-                timeout=10
+                timeout=10,
             )
             return result.returncode in [0, 2] or "--help" in result.stdout
         except Exception:
@@ -158,19 +179,25 @@ class ComprehensiveDryRunValidator:
             "mypy_check": self.test_mypy_check(project_name),
             "pytest_execution": self.test_pytest_execution(project_name),
             "cli_functionality": self.test_cli_functionality(project_name),
-            "validation_time": time.time() - start_time
+            "validation_time": time.time() - start_time,
         }
 
         # Calculate score
         score = 0
         total_tests = 5  # Exclude ruff_violations from score
 
-        if result["poetry_install"]: score += 1
-        if result["module_import"]: score += 1
-        if result["ruff_violations"] == 0: score += 1
-        if result["mypy_check"]: score += 1
-        if result["pytest_execution"]: score += 1
-        if result["cli_functionality"]: score += 1
+        if result["poetry_install"]:
+            score += 1
+        if result["module_import"]:
+            score += 1
+        if result["ruff_violations"] == 0:
+            score += 1
+        if result["mypy_check"]:
+            score += 1
+        if result["pytest_execution"]:
+            score += 1
+        if result["cli_functionality"]:
+            score += 1
 
         result["score"] = score
         result["total_tests"] = total_tests + 1  # Include CLI
@@ -185,7 +212,9 @@ class ComprehensiveDryRunValidator:
             result["status"] = "⚠️  GOOD"
             result["status"] = "❌ NEEDS_WORK"
 
-        logger.info(f"  {result['status']} - {result['percentage']:.1f}% ({score}/{total_tests + 1})")
+        logger.info(
+            f"  {result['status']} - {result['percentage']:.1f}% ({score}/{total_tests + 1})"
+        )
         if result["ruff_violations"] > 0:
             logger.info(f"  📊 Ruff violations: {result['ruff_violations']}")
 
@@ -221,7 +250,9 @@ class ComprehensiveDryRunValidator:
         logger.info("=" * 80)
 
         overall_percentage = (total_score / total_possible) * 100
-        logger.info(f"Overall Score: {total_score}/{total_possible} ({overall_percentage:.1f}%)")
+        logger.info(
+            f"Overall Score: {total_score}/{total_possible} ({overall_percentage:.1f}%)"
+        )
         logger.info(f"Perfect Projects: {len(perfect_projects)}/21")
         logger.info(f"Needs Work: {len(needs_work)}/21")
 
@@ -273,15 +304,21 @@ class ComprehensiveDryRunValidator:
 
         # Success criteria
         logger.info("\n🎯 SUCCESS CRITERIA:")
-        logger.info(f"✅ All projects install: {all(r['poetry_install'] for r in self.results.values())}")
-        logger.info(f"✅ All projects import: {all(r['module_import'] for r in self.results.values())}")
+        logger.info(
+            f"✅ All projects install: {all(r['poetry_install'] for r in self.results.values())}"
+        )
+        logger.info(
+            f"✅ All projects import: {all(r['module_import'] for r in self.results.values())}"
+        )
         logger.info(f"✅ Zero violations: {total_violations == 0}")
-        logger.info(f"✅ All CLIs work: {all(r['cli_functionality'] for r in self.results.values())}")
+        logger.info(
+            f"✅ All CLIs work: {all(r['cli_functionality'] for r in self.results.values())}"
+        )
 
         workspace_ready = (
-            all(r['poetry_install'] for r in self.results.values()) and
-            all(r['module_import'] for r in self.results.values()) and
-            all(r['cli_functionality'] for r in self.results.values())
+            all(r["poetry_install"] for r in self.results.values())
+            and all(r["module_import"] for r in self.results.values())
+            and all(r["cli_functionality"] for r in self.results.values())
         )
 
         if workspace_ready:
@@ -290,7 +327,9 @@ class ComprehensiveDryRunValidator:
 
         # Log to token
         with open(self.workspace_root / ".token", "a") as f:
-            f.write(f"DRY-RUN-VALIDATION-001: {overall_percentage:.1f}% functional, {total_violations} violations\n")
+            f.write(
+                f"DRY-RUN-VALIDATION-001: {overall_percentage:.1f}% functional, {total_violations} violations\n"
+            )
 
         return workspace_ready, total_violations
 
