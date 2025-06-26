@@ -22,7 +22,6 @@ def apply_ruff_autofixes() -> bool:
 
 def fix_unused_arguments() -> int:
     """Fix ARG002 unused method arguments by prefixing with underscore."""
-
     flx_path = Path("/home/marlonsc/pyauto/flx/src/flx")
     fixes_applied = 0
 
@@ -57,7 +56,8 @@ def fix_unused_arguments() -> int:
                             message = error.get("message", "")
                             if "Unused method argument:" in message:
                                 arg_match = re.search(
-                                    r"Unused method argument: `([^`]+)`", message
+                                    r"Unused method argument: `([^`]+)`",
+                                    message,
                                 )
                                 if arg_match:
                                     arg_name = arg_match.group(1)
@@ -90,7 +90,6 @@ def fix_unused_arguments() -> int:
 
 def fix_syntax_errors() -> int:
     """Fix syntax errors by identifying and correcting common issues."""
-
     flx_path = Path("/home/marlonsc/pyauto/flx/src/flx")
     fixes_applied = 0
 
@@ -147,7 +146,6 @@ def fix_syntax_errors() -> int:
 
 def fix_import_order() -> int:
     """Fix E402 module import not at top of file."""
-
     flx_path = Path("/home/marlonsc/pyauto/flx/src/flx")
     fixes_applied = 0
 
@@ -254,7 +252,6 @@ def fix_import_order() -> int:
 
 def fix_undefined_exports() -> int:
     """Fix F822 undefined exports in __all__."""
-
     flx_path = Path("/home/marlonsc/pyauto/flx/src/flx")
     fixes_applied = 0
 
@@ -280,7 +277,9 @@ def fix_undefined_exports() -> int:
 
             # Find function definitions
             func_matches = re.findall(
-                r"^(?:async\s+)?def\s+(\w+)", content, re.MULTILINE
+                r"^(?:async\s+)?def\s+(\w+)",
+                content,
+                re.MULTILINE,
             )
             defined_names.update(func_matches)
 
@@ -309,7 +308,10 @@ def fix_undefined_exports() -> int:
                     new_all = "__all__ = []"
 
                 new_content = re.sub(
-                    r"__all__\s*=\s*\[[^\]]*\]", new_all, content, flags=re.DOTALL
+                    r"__all__\s*=\s*\[[^\]]*\]",
+                    new_all,
+                    content,
+                    flags=re.DOTALL,
                 )
                 py_file.write_text(new_content)
                 fixes_applied += 1
@@ -322,7 +324,6 @@ def fix_undefined_exports() -> int:
 
 def fix_error_handling() -> Any:
     """Fix B904 raise without from inside except."""
-
     flx_path = Path("/home/marlonsc/pyauto/flx/src/flx")
     fixes_applied = 0
 
@@ -354,7 +355,8 @@ def fix_error_handling() -> Any:
                         # Add 'from e' to preserve original exception
                         if stripped.endswith(")"):
                             lines[i] = line.replace(
-                                stripped, stripped[:-1] + ") from e"
+                                stripped,
+                                stripped[:-1] + ") from e",
                             )
                             lines[i] = line + " from e"
 
@@ -371,7 +373,6 @@ def fix_error_handling() -> Any:
 
 def remove_remaining_stubs() -> int:
     """Remove any remaining stub implementations."""
-
     flx_path = Path("/home/marlonsc/pyauto/flx/src/flx")
     fixes_applied = 0
 
@@ -404,7 +405,6 @@ def remove_remaining_stubs() -> int:
 
 def main() -> None:
     """Run comprehensive lint and mypy fixes."""
-
     total_fixes = 0
 
     # Apply automatic fixes first

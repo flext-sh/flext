@@ -239,7 +239,7 @@ class ProjectStandardizationModule(CustomFixModule):
                             severity=Severity.MEDIUM,
                             column=1,
                             fix_description="Apply standard PyAuto configuration template",
-                        )
+                        ),
                     )
 
             except Exception as e:
@@ -250,7 +250,7 @@ class ProjectStandardizationModule(CustomFixModule):
                         severity=Severity.HIGH,
                         column=1,
                         fix_description="Check file format and syntax",
-                    )
+                    ),
                 )
 
         return issues
@@ -266,7 +266,7 @@ class ProjectStandardizationModule(CustomFixModule):
         shutil.copy2(source, target)
 
     def merge_configs(
-        self, current: dict[str, Any], project_path: Path
+        self, current: dict[str, Any], project_path: Path,
     ) -> dict[str, Any]:
         """Merge current configuration with standards."""
         result = current.copy()
@@ -326,7 +326,7 @@ class ProjectStandardizationModule(CustomFixModule):
         """Standardize all projects in the workspace."""
         if self.verbose:
             self.console.print(
-                f"[blue]Standardizing workspace: {workspace_path}[/blue]"
+                f"[blue]Standardizing workspace: {workspace_path}[/blue]",
             )
 
         projects = self.find_projects(workspace_path)
@@ -340,7 +340,7 @@ class ProjectStandardizationModule(CustomFixModule):
             try:
                 if self.verbose:
                     self.console.print(
-                        f"[yellow]Processing {project_path.name}[/yellow]"
+                        f"[yellow]Processing {project_path.name}[/yellow]",
                     )
 
                 # Create backup
@@ -360,7 +360,7 @@ class ProjectStandardizationModule(CustomFixModule):
                         self.console.print(
                             f"[cyan][DRY RUN] Would standardize {
                                 project_path.name
-                            }[/cyan]"
+                            }[/cyan]",
                         )
                 else:
                     # Save standardized configuration
@@ -369,7 +369,7 @@ class ProjectStandardizationModule(CustomFixModule):
 
                     if self.verbose:
                         self.console.print(
-                            f"[green]✅ Standardized {project_path.name}[/green]"
+                            f"[green]✅ Standardized {project_path.name}[/green]",
                         )
 
                 success_count += 1
@@ -377,19 +377,19 @@ class ProjectStandardizationModule(CustomFixModule):
             except Exception as e:
                 if self.verbose:
                     self.console.print(
-                        f"[red]❌ Failed to standardize {project_path.name}: {e}[/red]"
+                        f"[red]❌ Failed to standardize {project_path.name}: {e}[/red]",
                     )
 
         if self.verbose:
             action = "Would standardize" if self.dry_run else "Standardized"
             self.console.print(
-                f"[bold green]{action} {success_count}/{len(projects)} projects[/bold green]"
+                f"[bold green]{action} {success_count}/{len(projects)} projects[/bold green]",
             )
 
         return success_count == len(projects)
 
     def run_workspace_standardization(
-        self, workspace_path: Optional[Path] = None
+        self, workspace_path: Optional[Path] = None,
     ) -> bool:
         """Run standardization across the entire workspace."""
         if workspace_path is None:

@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-"""
-REAL Zero Tolerance Fixer - NO FAKE CODE per CLAUDE.md RULE 3.
+"""REAL Zero Tolerance Fixer - NO FAKE CODE per CLAUDE.md RULE 3.
 
 This script ACTUALLY fixes violations, not fake claims.
 """
@@ -40,6 +39,7 @@ class RealZeroToleranceFixer:
                 ["poetry", "run", "ruff", "check", ".", "--fix", "--unsafe-fixes"],
                 cwd=project_path,
                 capture_output=True,
+                check=False,
             )
 
             # Check if we're done
@@ -52,12 +52,18 @@ class RealZeroToleranceFixer:
 
         # Step 3: Format everything
         subprocess.run(
-            ["poetry", "run", "black", "."], cwd=project_path, capture_output=True
+            ["poetry", "run", "black", "."],
+            cwd=project_path,
+            capture_output=True,
+            check=False,
         )
 
         # Step 4: Fix imports
         subprocess.run(
-            ["poetry", "run", "isort", "."], cwd=project_path, capture_output=True
+            ["poetry", "run", "isort", "."],
+            cwd=project_path,
+            capture_output=True,
+            check=False,
         )
 
         # Step 5: Final ruff pass
@@ -65,6 +71,7 @@ class RealZeroToleranceFixer:
             ["poetry", "run", "ruff", "check", ".", "--fix", "--unsafe-fixes"],
             cwd=project_path,
             capture_output=True,
+            check=False,
         )
 
         # Count final violations
@@ -84,6 +91,7 @@ class RealZeroToleranceFixer:
             cwd=project_path,
             capture_output=True,
             text=True,
+            check=False,
         )
         return len([l for l in result.stdout.split("\n") if l.strip()])
 
@@ -134,6 +142,7 @@ class RealZeroToleranceFixer:
             cwd=project_path,
             capture_output=True,
             text=True,
+            check=False,
         )
 
         if not result.stdout:

@@ -262,7 +262,7 @@ class LDIFProcessingModule(CustomFixModule):
             return False, {"error": str(e)}
 
     def import_ldif(
-        self, config_type: str, input_file: Path, dry_run: bool = True
+        self, config_type: str, input_file: Path, dry_run: bool = True,
     ) -> tuple[bool, dict[str, Any]]:
         """Import LDIF entries to LDAP."""
         try:
@@ -320,7 +320,7 @@ class LDIFProcessingModule(CustomFixModule):
                         import_results["entries_imported"] += 1
                         import_results["entries_failed"] += 1
                         import_results["errors"].append(
-                            {"dn": dn, "error": conn.last_error}
+                            {"dn": dn, "error": conn.last_error},
                         )
 
                 except Exception as e:
@@ -367,10 +367,10 @@ class LDIFProcessingModule(CustomFixModule):
 
                 first_line = lines[0].strip()
                 if not re.match(
-                    self.LDIF_VALIDATION_PATTERNS["dn_pattern"], first_line
+                    self.LDIF_VALIDATION_PATTERNS["dn_pattern"], first_line,
                 ):
                     validation_results["errors"].append(
-                        f"Entry {i}: Invalid DN format: {first_line}"
+                        f"Entry {i}: Invalid DN format: {first_line}",
                     )
                     entry_valid = False
 
@@ -383,10 +383,10 @@ class LDIFProcessingModule(CustomFixModule):
                     # Check for changetype
                     if line.startswith("changetype:"):
                         if not re.match(
-                            self.LDIF_VALIDATION_PATTERNS["changetype_pattern"], line
+                            self.LDIF_VALIDATION_PATTERNS["changetype_pattern"], line,
                         ):
                             validation_results["errors"].append(
-                                f"Entry {i}, line {line_num}: Invalid changetype: {line}"
+                                f"Entry {i}, line {line_num}: Invalid changetype: {line}",
                             )
                             entry_valid = False
                         continue
@@ -394,30 +394,30 @@ class LDIFProcessingModule(CustomFixModule):
                     # Check attribute format
                     if "::" in line:  # Base64 encoded
                         if not re.match(
-                            self.LDIF_VALIDATION_PATTERNS["base64_pattern"], line
+                            self.LDIF_VALIDATION_PATTERNS["base64_pattern"], line,
                         ):
                             validation_results["errors"].append(
-                                f"Entry {i}, line {line_num}: Invalid base64 attribute: {line}"
+                                f"Entry {i}, line {line_num}: Invalid base64 attribute: {line}",
                             )
                             entry_valid = False
                     elif ":<" in line:  # URL reference
                         if not re.match(
-                            self.LDIF_VALIDATION_PATTERNS["url_pattern"], line
+                            self.LDIF_VALIDATION_PATTERNS["url_pattern"], line,
                         ):
                             validation_results["errors"].append(
-                                f"Entry {i}, line {line_num}: Invalid URL attribute: {line}"
+                                f"Entry {i}, line {line_num}: Invalid URL attribute: {line}",
                             )
                             entry_valid = False
                     elif ":" in line:  # Regular attribute
                         if not re.match(
-                            self.LDIF_VALIDATION_PATTERNS["attribute_pattern"], line
+                            self.LDIF_VALIDATION_PATTERNS["attribute_pattern"], line,
                         ):
                             validation_results["errors"].append(
-                                f"Entry {i}, line {line_num}: Invalid attribute format: {line}"
+                                f"Entry {i}, line {line_num}: Invalid attribute format: {line}",
                             )
                             entry_valid = False
                         validation_results["errors"].append(
-                            f"Entry {i}, line {line_num}: Invalid line format: {line}"
+                            f"Entry {i}, line {line_num}: Invalid line format: {line}",
                         )
                         entry_valid = False
 
@@ -428,12 +428,12 @@ class LDIFProcessingModule(CustomFixModule):
             # Check for common issues
             if "dc=example,dc=com" in content:
                 validation_results["warnings"].append(
-                    "Contains example.com domain - may need customization"
+                    "Contains example.com domain - may need customization",
                 )
 
             if re.search(r"userPassword:\s*{SSHA}", content):
                 validation_results["warnings"].append(
-                    "Contains password hashes - verify security requirements"
+                    "Contains password hashes - verify security requirements",
                 )
 
             success = validation_results["invalid_entries"] == 0
@@ -468,17 +468,17 @@ class LDIFProcessingModule(CustomFixModule):
 
             # Apply DN transformations
             for old_pattern, new_pattern in transformation_rules.get(
-                "dn_transformations", []
+                "dn_transformations", [],
             ):
                 if re.search(old_pattern, content):
                     content = re.sub(old_pattern, new_pattern, content)
                     transform_results["transformations_applied"] += content.count(
-                        new_pattern
+                        new_pattern,
                     ) - original_content.count(new_pattern)
 
             # Apply attribute name transformations
             for old_attr, new_attr in transformation_rules.get(
-                "attribute_transformations", []
+                "attribute_transformations", [],
             ):
                 pattern = f"^{old_attr}:"
                 replacement = f"{new_attr}:"
@@ -486,13 +486,13 @@ class LDIFProcessingModule(CustomFixModule):
 
             # Apply value transformations
             for old_pattern, new_pattern in transformation_rules.get(
-                "value_transformations", []
+                "value_transformations", [],
             ):
                 content = re.sub(old_pattern, new_pattern, content)
 
             # Count entries processed
             transform_results["entries_processed"] = len(
-                re.findall(r"^dn:", content, re.MULTILINE)
+                re.findall(r"^dn:", content, re.MULTILINE),
             )
 
             # Write transformed content
@@ -505,7 +505,7 @@ class LDIFProcessingModule(CustomFixModule):
             return False, {"error": str(e)}
 
     def merge_ldif_files(
-        self, input_files: list[Path], output_file: Path, deduplicate: bool = True
+        self, input_files: list[Path], output_file: Path, deduplicate: bool = True,
     ) -> tuple[bool, dict[str, Any]]:
         """Merge multiple LDIF files into one."""
         try:
@@ -557,7 +557,7 @@ class LDIFProcessingModule(CustomFixModule):
             return False, {"error": str(e)}
 
     def split_ldif_file(
-        self, input_file: Path, output_dir: Path, entries_per_file: int = 1000
+        self, input_file: Path, output_dir: Path, entries_per_file: int = 1000,
     ) -> tuple[bool, dict[str, Any]]:
         """Split large LDIF file into smaller chunks."""
         try:
@@ -621,7 +621,7 @@ class LDIFProcessingModule(CustomFixModule):
                                 code="LDIF001",
                                 message="Example domain found in DN",
                                 suggestion="Replace example.com with actual domain",
-                            )
+                            ),
                         )
 
                     # Check for spaces in DN
@@ -633,12 +633,12 @@ class LDIFProcessingModule(CustomFixModule):
                                 code="LDIF002",
                                 message="DN components not properly spaced",
                                 suggestion="Add spaces after commas in DN",
-                            )
+                            ),
                         )
 
                 # Check for unencoded special characters
                 if ":" in line_stripped and not line_stripped.startswith(
-                    ("dn:", "changetype:")
+                    ("dn:", "changetype:"),
                 ):
                     if any(
                         char in line_stripped for char in ['"', "'", "\\", "\n", "\r"]
@@ -650,7 +650,7 @@ class LDIFProcessingModule(CustomFixModule):
                                 code="LDIF003",
                                 message="Special characters may need base64 encoding",
                                 suggestion="Consider base64 encoding for special characters",
-                            )
+                            ),
                         )
 
         # Check Python files for LDAP/LDIF processing
@@ -673,7 +673,7 @@ class LDIFProcessingModule(CustomFixModule):
                                 code="LDAP001",
                                 message="Hardcoded LDAP connection found",
                                 suggestion="Use environment variables for LDAP connection details",
-                            )
+                            ),
                         )
 
                 # Check for LDIF file handling without validation
@@ -690,7 +690,7 @@ class LDIFProcessingModule(CustomFixModule):
                                 code="LDIF004",
                                 message="LDIF file processing without validation",
                                 suggestion="Add LDIF validation before processing",
-                            )
+                            ),
                         )
 
         return issues
@@ -722,7 +722,7 @@ class LDIFProcessingModule(CustomFixModule):
         return "\n".join(lines)
 
     def run_ldif_migration_pipeline(
-        self, pipeline_config: dict[str, Any]
+        self, pipeline_config: dict[str, Any],
     ) -> dict[str, Any]:
         """Run a complete LDIF migration pipeline."""
         pipeline_start = time.time()
@@ -743,7 +743,7 @@ class LDIFProcessingModule(CustomFixModule):
                     self.console.print("[blue]Testing LDAP connections[/blue]")
 
                 for conn_type in pipeline_config.get(
-                    "connection_types", ["source_ldap"]
+                    "connection_types", ["source_ldap"],
                 ):
                     success, message = self.test_ldap_connection(conn_type)
                     results["steps"].append(
@@ -751,7 +751,7 @@ class LDIFProcessingModule(CustomFixModule):
                             "step": f"test_{conn_type}_connection",
                             "success": success,
                             "message": message,
-                        }
+                        },
                     )
                     if not success:
                         results["success"] = False
@@ -775,16 +775,16 @@ class LDIFProcessingModule(CustomFixModule):
                         "step": "export_ldif",
                         "success": success,
                         "details": export_results,
-                    }
+                    },
                 )
 
                 if success:
                     results["total_entries"] += export_results.get(
-                        "entries_exported", 0
+                        "entries_exported", 0,
                     )
                     results["success"] = False
                     results["errors"].append(
-                        f"LDIF export failed: {export_results.get('error')}"
+                        f"LDIF export failed: {export_results.get('error')}",
                     )
 
             # Step 3: Validate LDIF
@@ -799,7 +799,7 @@ class LDIFProcessingModule(CustomFixModule):
                             "step": f"validate_{Path(ldif_file).name}",
                             "success": success,
                             "details": validation_results,
-                        }
+                        },
                     )
 
                     if not success:
@@ -815,7 +815,7 @@ class LDIFProcessingModule(CustomFixModule):
                 success, transform_results = self.transform_ldif(
                     input_file=Path(transform_config.get("input_file", "input.ldif")),
                     output_file=Path(
-                        transform_config.get("output_file", "transformed.ldif")
+                        transform_config.get("output_file", "transformed.ldif"),
                     ),
                     transformation_rules=transform_config.get("rules"),
                 )
@@ -825,13 +825,13 @@ class LDIFProcessingModule(CustomFixModule):
                         "step": "transform_ldif",
                         "success": success,
                         "details": transform_results,
-                    }
+                    },
                 )
 
                 if not success:
                     results["success"] = False
                     results["errors"].append(
-                        f"LDIF transformation failed: {transform_results.get('error')}"
+                        f"LDIF transformation failed: {transform_results.get('error')}",
                     )
 
             # Step 5: Import LDIF
@@ -843,7 +843,7 @@ class LDIFProcessingModule(CustomFixModule):
                 success, import_results = self.import_ldif(
                     config_type="target_ldap",
                     input_file=Path(
-                        import_config.get("input_file", "transformed.ldif")
+                        import_config.get("input_file", "transformed.ldif"),
                     ),
                     dry_run=import_config.get("dry_run", True),
                 )
@@ -853,13 +853,13 @@ class LDIFProcessingModule(CustomFixModule):
                         "step": "import_ldif",
                         "success": success,
                         "details": import_results,
-                    }
+                    },
                 )
 
                 if not success:
                     results["success"] = False
                     results["errors"].append(
-                        f"LDIF import failed: {import_results.get('error')}"
+                        f"LDIF import failed: {import_results.get('error')}",
                     )
 
         except Exception as e:
@@ -872,7 +872,7 @@ class LDIFProcessingModule(CustomFixModule):
         return results
 
     def run_workspace_ldif_processing(
-        self, workspace_path: Path = None
+        self, workspace_path: Path = None,
     ) -> dict[str, Any]:
         """Run LDIF processing workflow across the workspace."""
         if workspace_path is None:
@@ -880,7 +880,7 @@ class LDIFProcessingModule(CustomFixModule):
 
         if self.verbose:
             self.console.print(
-                f"[blue]Running LDIF processing workflow in: {workspace_path}[/blue]"
+                f"[blue]Running LDIF processing workflow in: {workspace_path}[/blue]",
             )
 
         # Find LDAP/LDIF related projects
@@ -900,7 +900,7 @@ class LDIFProcessingModule(CustomFixModule):
             self.console.print(
                 f"[green]Found {len(ldap_projects)} LDAP projects and {
                     len(ldif_files)
-                } LDIF files[/green]"
+                } LDIF files[/green]",
             )
 
         workflow_results = {
@@ -918,7 +918,7 @@ class LDIFProcessingModule(CustomFixModule):
 
             if self.verbose:
                 self.console.print(
-                    f"[yellow]Processing LDAP project: {project_name}[/yellow]"
+                    f"[yellow]Processing LDAP project: {project_name}[/yellow]",
                 )
 
             try:
@@ -940,7 +940,7 @@ class LDIFProcessingModule(CustomFixModule):
                     workflow_results["project_results"][project_name] = pipeline_results
                     if self.verbose:
                         self.console.print(
-                            f"[cyan][DRY RUN] Would process LDIF for {project_name}[/cyan]"
+                            f"[cyan][DRY RUN] Would process LDIF for {project_name}[/cyan]",
                         )
                     workflow_results["successful_processing"] += 1
 
@@ -955,7 +955,7 @@ class LDIFProcessingModule(CustomFixModule):
         for ldif_file in ldif_files:
             if self.verbose:
                 self.console.print(
-                    f"[yellow]Validating LDIF file: {ldif_file.name}[/yellow]"
+                    f"[yellow]Validating LDIF file: {ldif_file.name}[/yellow]",
                 )
 
             try:
@@ -1049,7 +1049,7 @@ class LDIFProcessingModule(CustomFixModule):
             else "red"
         )
         self.console.print(
-            Panel(panel_text, title="LDIF Processing Summary", border_style=panel_style)
+            Panel(panel_text, title="LDIF Processing Summary", border_style=panel_style),
         )
 
     def run_workspace_ldif_workflow(self, workspace_path: Path = None) -> bool:

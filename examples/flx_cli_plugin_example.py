@@ -68,7 +68,9 @@ class DatabaseCommands:
         }
 
     async def restore(
-        self, backup_path: str, target_db: str = "main"
+        self,
+        backup_path: str,
+        target_db: str = "main",
     ) -> dict[str, Any]:
         """Restore database from backup.
 

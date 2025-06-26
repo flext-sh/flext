@@ -20,7 +20,7 @@ class QuickTestConfig(BaseModel):
     model_config = ConfigDict(strict=True, extra="forbid")
 
     flx_project: str | None = Field(
-        default=None, description="Specific flx_project to test"
+        default=None, description="Specific flx_project to test",
     )
     category: str = Field(default="unit", description="Test category to run")
     verbose: bool = Field(default=False, description="Verbose output")
@@ -105,7 +105,7 @@ class QuickTestRunner:
                 print(
                     f"❌ {project_name}: {failed} failed, {passed} passed ({
                         duration:.1f
-                    }s)"
+                    }s)",
                 )
                 if self.config.verbose and result.stderr:
                     print(f"   Error: {result.stderr[:200]}...")
@@ -144,7 +144,7 @@ class QuickTestRunner:
                 "--tb=short",
                 "--disable-warnings",
                 "--color=yes",
-            ]
+            ],
         )
 
         return cmd
@@ -177,7 +177,7 @@ class QuickTestRunner:
 def main() -> None:
     """Main entry point."""
     parser = argparse.ArgumentParser(
-        description="Quick test runner for FLX development"
+        description="Quick test runner for FLX development",
     )
     parser.add_argument(
         "--flx_project",

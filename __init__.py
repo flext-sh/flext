@@ -1,5 +1,4 @@
-"""
-PyAuto Enterprise Workspace - Main package init.
+"""PyAuto Enterprise Workspace - Main package init.
 
 ZERO TOLERANCE: No fake imports allowed.
 This workspace contains 21+ independent projects with their own functionality.

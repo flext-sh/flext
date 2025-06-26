@@ -5,9 +5,9 @@ Customizes pyproject.toml templates for specific project types.
 Based on scripts/customize_project_template.py functionality.
 """
 
+import tomllib
 from pathlib import Path
 
-import tomllib
 from rich.console import Console
 
 from .base import CustomFixModule, Issue
@@ -134,12 +134,12 @@ class ProjectCustomizationModule(CustomFixModule):
         return "api_integration"
 
     def generate_project_scripts(
-        self, project_name: str, module_name: str, project_type: str
+        self, project_name: str, module_name: str, project_type: str,
     ) -> dict[str, str]:
         """Generate CLI scripts configuration for the project."""
         config = self.PROJECT_CONFIGURATIONS.get(project_type, {})
         pattern = config.get(
-            "scripts_pattern", '{project_name}-cli = "{module_name}.cli:main"'
+            "scripts_pattern", '{project_name}-cli = "{module_name}.cli:main"',
         )
 
         script_name = pattern.format(project_name=project_name, module_name=module_name)
@@ -154,7 +154,7 @@ class ProjectCustomizationModule(CustomFixModule):
         """Generate appropriate description for the project."""
         config = self.PROJECT_CONFIGURATIONS.get(project_type, {})
         template = config.get(
-            "description_template", "Enterprise Python automation component"
+            "description_template", "Enterprise Python automation component",
         )
 
         # Extract service name from project name
@@ -205,14 +205,14 @@ class ProjectCustomizationModule(CustomFixModule):
                                 ', '.join(missing_deps)
                             }",
                             suggestion=f"Add project-type specific dependencies for {detected_type}",
-                        )
+                        ),
                     )
 
                 # Check scripts
                 scripts = poetry_config.get("scripts", {})
                 module_name = project_name.replace("-", "_")
                 expected_scripts = self.generate_project_scripts(
-                    project_name, module_name, detected_type
+                    project_name, module_name, detected_type,
                 )
 
                 missing_scripts: list = []
@@ -230,7 +230,7 @@ class ProjectCustomizationModule(CustomFixModule):
                                 ', '.join(missing_scripts)
                             }",
                             suggestion=f"Add project-type specific CLI scripts for {detected_type}",
-                        )
+                        ),
                     )
 
                 # Check description
@@ -243,7 +243,7 @@ class ProjectCustomizationModule(CustomFixModule):
                             code="PROJ_CUSTOM003",
                             message="Generic project description",
                             suggestion=f"Update description for {detected_type} project type",
-                        )
+                        ),
                     )
 
                 # Check keywords
@@ -265,7 +265,7 @@ class ProjectCustomizationModule(CustomFixModule):
                                 ', '.join(missing_keywords)
                             }",
                             suggestion=f"Add project-type specific keywords for {detected_type}",
-                        )
+                        ),
                     )
 
             except Exception as e:
@@ -276,7 +276,7 @@ class ProjectCustomizationModule(CustomFixModule):
                         code="PROJ_CUSTOM_ERROR",
                         message=f"Failed to analyze project customization: {e}",
                         suggestion="Check pyproject.toml format and syntax",
-                    )
+                    ),
                 )
 
         return issues
@@ -306,14 +306,14 @@ class ProjectCustomizationModule(CustomFixModule):
         if self.verbose:
             self.console.print(
                 f"[blue]Customizing project: {project_name} "
-                f"(type: {project_type}, module: {module_name})[/blue]"
+                f"(type: {project_type}, module: {module_name})[/blue]",
             )
 
         pyproject_file = project_path / "pyproject.toml"
         if not pyproject_file.exists():
             if self.verbose:
                 self.console.print(
-                    f"[red]❌ pyproject.toml not found in {project_path}[/red]"
+                    f"[red]❌ pyproject.toml not found in {project_path}[/red]",
                 )
             return False
 
@@ -347,7 +347,7 @@ class ProjectCustomizationModule(CustomFixModule):
         # Update scripts
         scripts = config["tool"]["poetry"].setdefault("scripts", {})
         project_scripts = self.generate_project_scripts(
-            project_name, module_name, project_type
+            project_name, module_name, project_type,
         )
 
         for script_name, script_command in project_scripts.items():
@@ -362,14 +362,14 @@ class ProjectCustomizationModule(CustomFixModule):
             == "Enterprise-grade Python automation component"
         ):
             new_description = self.generate_project_description(
-                project_name, project_type
+                project_name, project_type,
             )
             poetry_config["description"] = new_description
             changes_made.append(f"Updated description: {new_description}")
 
         # Update keywords
         keywords = poetry_config.setdefault(
-            "keywords", ["automation", "enterprise", "oracle", "integration"]
+            "keywords", ["automation", "enterprise", "oracle", "integration"],
         )
         project_keywords = project_config.get("keywords", [])
 
@@ -381,14 +381,14 @@ class ProjectCustomizationModule(CustomFixModule):
         if not changes_made:
             if self.verbose:
                 self.console.print(
-                    f"[green]✅ Project {project_name} already customized[/green]"
+                    f"[green]✅ Project {project_name} already customized[/green]",
                 )
             return True
 
         if self.dry_run:
             if self.verbose:
                 self.console.print(
-                    f"[cyan][DRY RUN] Would apply changes to {project_name}:[/cyan]"
+                    f"[cyan][DRY RUN] Would apply changes to {project_name}:[/cyan]",
                 )
                 for change in changes_made:
                     self.console.print(f"[cyan]  - {change}[/cyan]")
@@ -418,7 +418,7 @@ class ProjectCustomizationModule(CustomFixModule):
 
             if self.verbose:
                 self.console.print(
-                    f"[green]✅ Successfully customized {project_name}[/green]"
+                    f"[green]✅ Successfully customized {project_name}[/green]",
                 )
                 self.console.print(f"[yellow]📁 Backup saved: {backup_file}[/yellow]")
                 for change in changes_made:
@@ -429,7 +429,7 @@ class ProjectCustomizationModule(CustomFixModule):
         except Exception as e:
             if self.verbose:
                 self.console.print(
-                    f"[red]❌ Failed to write customized pyproject.toml: {e}[/red]"
+                    f"[red]❌ Failed to write customized pyproject.toml: {e}[/red]",
                 )
             return False
 
@@ -440,7 +440,7 @@ class ProjectCustomizationModule(CustomFixModule):
 
         if self.verbose:
             self.console.print(
-                f"[blue]Customizing projects in workspace: {workspace_path}[/blue]"
+                f"[blue]Customizing projects in workspace: {workspace_path}[/blue]",
             )
 
         # Find all projects
@@ -457,7 +457,7 @@ class ProjectCustomizationModule(CustomFixModule):
 
         if self.verbose:
             self.console.print(
-                f"[green]Found {len(projects)} projects to customize[/green]"
+                f"[green]Found {len(projects)} projects to customize[/green]",
             )
 
         success_count = 0
@@ -468,7 +468,7 @@ class ProjectCustomizationModule(CustomFixModule):
         if self.verbose:
             action = "Would customize" if self.dry_run else "Customized"
             self.console.print(
-                f"[bold green]{action} {success_count}/{len(projects)} projects[/bold green]"
+                f"[bold green]{action} {success_count}/{len(projects)} projects[/bold green]",
             )
 
         return success_count == len(projects)

@@ -55,7 +55,7 @@ def analyze_missing_arguments() -> dict[str, set[str]]:
     for error in errors.get("missing_named", []):
         # Extract function/class name and missing argument
         match = re.search(
-            r'Missing named argument "(.+?)" for "(.+?)"', error["message"]
+            r'Missing named argument "(.+?)" for "(.+?)"', error["message"],
         )
         if match:
             arg_name = match.group(1)
@@ -163,7 +163,7 @@ def fix_constructor_defaults() -> None:
                                 new_pattern = rf"({param}:\s*[^,\)]+)"
                                 replacement = rf"\1 = {default}"
                                 class_body = re.sub(
-                                    new_pattern, replacement, class_body
+                                    new_pattern, replacement, class_body,
                                 )
 
                     # Replace in content
@@ -283,7 +283,7 @@ def main() -> None:
     missing_args = analyze_missing_arguments()
     print("\nFunctions/classes with missing arguments:")
     for func, args in sorted(
-        missing_args.items(), key=lambda x: len(x[1]), reverse=True
+        missing_args.items(), key=lambda x: len(x[1]), reverse=True,
     )[:10]:
         print(f"  {func}: {', '.join(sorted(args))}")
 

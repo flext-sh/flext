@@ -305,7 +305,8 @@ async def list_users(
     pagination: Annotated[PaginationParams, Depends(get_pagination)],
     db: Annotated[DatabaseService, Depends(get_db_service)],
     is_active: Annotated[
-        bool | None, Query(description="Filter by active status")
+        bool | None,
+        Query(description="Filter by active status"),
     ] = None,
 ):
     """List users with pagination."""
@@ -430,7 +431,7 @@ async def create_users_batch(
                         {
                             "email": user_data.email,
                             "error": "Already exists",
-                        }
+                        },
                     )
                     continue
 
@@ -444,7 +445,7 @@ async def create_users_batch(
                     {
                         "email": user_data.email,
                         "error": str(e),
-                    }
+                    },
                 )
 
     logger.info(
@@ -509,7 +510,7 @@ async def websocket_endpoint(
                     {
                         "type": "subscribed",
                         "message": "Subscribed to user updates",
-                    }
+                    },
                 )
 
             # In a real app, you'd have background tasks that broadcast updates

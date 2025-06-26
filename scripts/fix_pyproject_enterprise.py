@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-"""
-Fix ALL pyproject.toml files to PEP8 strict standards and reorganize file structure.
+"""Fix ALL pyproject.toml files to PEP8 strict standards and reorganize file structure.
 
 Per CLAUDE.md RULE 4: Complete delivery with zero tolerance for violations.
 ABSOLUTELY ZERO warnings/errors, PEP8 TOTAL compliance.
@@ -93,7 +92,7 @@ class PyProjectEnterpriseStandardizer:
             ]:
                 if potential_path.exists():
                     structure_issues.append(
-                        f"module_in_wrong_location:{potential_path}"
+                        f"module_in_wrong_location:{potential_path}",
                     )
                     break
                 structure_issues.append("missing_module_directory")
@@ -105,7 +104,6 @@ class PyProjectEnterpriseStandardizer:
 
     def reorganize_file_structure(self, project_path: Path) -> bool:
         """Reorganize files to correct PEP8 structure."""
-
         module_name = self.get_project_module_name(project_path.name)
         src_dir = project_path / "src"
         tests_dir = project_path / "tests"
@@ -120,13 +118,13 @@ class PyProjectEnterpriseStandardizer:
             if not tests_dir.exists():
                 tests_dir.mkdir(exist_ok=True)
                 (tests_dir / "__init__.py").write_text(
-                    '"""Tests for ' + project_path.name + '."""\n'
+                    '"""Tests for ' + project_path.name + '."""\n',
                 )
                 (tests_dir / "conftest.py").write_text(
-                    '"""Test configuration."""\n\nimport pytest\n'
+                    '"""Test configuration."""\n\nimport pytest\n',
                 )
                 (tests_dir / f"test_{module_name}.py").write_text(
-                    f'"""Tests for {module_name}."""\n\n\ndef test_import():\n    """Test that module imports correctly."""\n    import {module_name}\n    assert {module_name}\n'
+                    f'"""Tests for {module_name}."""\n\n\ndef test_import():\n    """Test that module imports correctly."""\n    import {module_name}\n    assert {module_name}\n',
                 )
 
             # Move module to correct location
@@ -198,7 +196,6 @@ MIT
 
     def create_enterprise_pyproject(self, project_path: Path) -> bool:
         """Create enterprise-standard pyproject.toml."""
-
         try:
             template = self.load_template()
             project_name = project_path.name
@@ -276,17 +273,17 @@ MIT
                 "dev": {
                     "dependencies": template["tool"]["poetry"]["group"]["dev"][
                         "dependencies"
-                    ]
+                    ],
                 },
                 "security": {
                     "dependencies": template["tool"]["poetry"]["group"]["security"][
                         "dependencies"
-                    ]
+                    ],
                 },
                 "build": {
                     "dependencies": template["tool"]["poetry"]["group"]["build"][
                         "dependencies"
-                    ]
+                    ],
                 },
             }
 
@@ -312,16 +309,16 @@ MIT
                 and "isort" in config["tool"]["ruff"]["lint"]
             ):
                 config["tool"]["ruff"]["lint"]["isort"]["known-first-party"] = [
-                    module_name
+                    module_name,
                 ]
 
             if "isort" in config["tool"]:
                 config["tool"]["isort"]["known_first_party"] = [module_name]
 
             if "coverage" in config["tool"] and "html" in config["tool"]["coverage"]:
-                config["tool"]["coverage"]["html"]["title"] = (
-                    f"{project_name} Coverage Report"
-                )
+                config["tool"]["coverage"]["html"][
+                    "title"
+                ] = f"{project_name} Coverage Report"
 
             # Replace PROJECT_MODULE placeholders
             config_str = toml.dumps(config)
@@ -348,7 +345,6 @@ MIT
 
     def validate_project(self, project_path: Path) -> bool:
         """Validate project after standardization."""
-
         try:
             # Check poetry check
             result = subprocess.run(
@@ -357,6 +353,7 @@ MIT
                 capture_output=True,
                 text=True,
                 timeout=30,
+                check=False,
             )
 
             if result.returncode != 0:
@@ -376,6 +373,7 @@ MIT
                 capture_output=True,
                 text=True,
                 timeout=10,
+                check=False,
             )
 
             if result.returncode != 0:
@@ -388,7 +386,6 @@ MIT
 
     def standardize_all_projects(self) -> None:
         """Standardize all projects to enterprise standards."""
-
         for submodule in self.submodules:
             project_path = self.workspace_root / submodule
 
@@ -416,7 +413,7 @@ MIT
         # Log to token
         with open(self.workspace_root / ".token", "a") as f:
             f.write(
-                f"PYPROJECT-ENTERPRISE-STANDARDIZATION: {len(self.fixed_projects)}/{len(self.submodules)} projects standardized\\n"
+                f"PYPROJECT-ENTERPRISE-STANDARDIZATION: {len(self.fixed_projects)}/{len(self.submodules)} projects standardized\\n",
             )
 
         if len(self.fixed_projects) == len(self.submodules):

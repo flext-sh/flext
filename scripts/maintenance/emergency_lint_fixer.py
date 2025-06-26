@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Emergency Lint Fixer for CLAUDE.md ZERO TOLERANCE Compliance.
+"""Emergency Lint Fixer for CLAUDE.md ZERO TOLERANCE Compliance.
 
 Addresses the 76,676 lint errors discovered across the workspace.
 Uses simple string operations for reliability.
@@ -23,9 +22,12 @@ def fix_common_lint_issues(file_path: Path) -> int:
         for line in lines:
             # Simple function detection and fix
             if line.strip().startswith("def ") and line.endswith(":"):
-                if "def __init__(" in line and "-> " not in line:
-                    line = line.replace("):", ") -> None:")
-                elif "def main(" in line and "-> " not in line:
+                if (
+                    "def __init__(" in line
+                    and "-> " not in line
+                    or "def main(" in line
+                    and "-> " not in line
+                ):
                     line = line.replace("):", ") -> None:")
                 elif "-> " not in line and "(" in line and ")" in line:
                     line = line.replace("):", ") -> Any:")
@@ -53,10 +55,12 @@ def fix_common_lint_issues(file_path: Path) -> int:
             # Fix 3: Replace open() with Path.open() for simple cases
             if "with open(" in line and "Path" not in line:
                 line = line.replace(
-                    'with filename.open("w")', 'with filename.open("w")'
+                    'with filename.open("w")',
+                    'with filename.open("w")',
                 )
                 line = line.replace(
-                    'with file_path.open("r")', 'with file_path.open("r")'
+                    'with file_path.open("r")',
+                    'with file_path.open("r")',
                 )
 
             # Fix 4: Add 'from e' to exception handling
@@ -133,7 +137,9 @@ def main() -> None:
     # Run quick validation
     print("\n🔍 QUICK VALIDATION...")
     try:
-        result = subprocess.run(["make", "lint"], capture_output=True, text=True)
+        result = subprocess.run(
+            ["make", "lint"], capture_output=True, text=True, check=False
+        )
         if result.returncode == 0:
             print("✅ CLAUDE.md ZERO TOLERANCE: ACHIEVED")
             print("⚠️ Additional fixes may be needed")

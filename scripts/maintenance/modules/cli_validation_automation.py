@@ -25,7 +25,10 @@ class CLIValidationAutomationModule(CustomFixModule):
     description = "Automated CLI testing, command validation, and help verification"
 
     def __init__(
-        self, dry_run: bool = True, interactive: bool = False, verbose: bool = False
+        self,
+        dry_run: bool = True,
+        interactive: bool = False,
+        verbose: bool = False,
     ):
         """Initialize CLI validation automation module.
 
@@ -78,7 +81,7 @@ class CLIValidationAutomationModule(CustomFixModule):
                     file_path=file_path,
                     line=None,
                     fix_description="Add try/except blocks for error handling",
-                )
+                ),
             )
 
         # Check for help documentation
@@ -98,7 +101,7 @@ class CLIValidationAutomationModule(CustomFixModule):
                         file_path=file_path,
                         line=None,
                         fix_description="Add help parameter to all commands",
-                    )
+                    ),
                 )
 
         # Check for version command
@@ -110,7 +113,7 @@ class CLIValidationAutomationModule(CustomFixModule):
                     file_path=file_path,
                     line=None,
                     fix_description="Add --version flag to show version info",
-                )
+                ),
             )
 
         # Check for proper import structure
@@ -122,7 +125,7 @@ class CLIValidationAutomationModule(CustomFixModule):
                     file_path=file_path,
                     line=None,
                     fix_description="Add if __name__ == '__main__': guard",
-                )
+                ),
             )
 
         # Check for logging setup
@@ -134,7 +137,7 @@ class CLIValidationAutomationModule(CustomFixModule):
                     file_path=file_path,
                     line=None,
                     fix_description="Add logging configuration for debugging",
-                )
+                ),
             )
 
         return issues
@@ -164,7 +167,7 @@ class CLIValidationAutomationModule(CustomFixModule):
                                 file_path=file_path,
                                 line=None,
                                 fix_description="Use format 'module.path:function'",
-                            )
+                            ),
                         )
 
                     # Store for validation
@@ -181,7 +184,9 @@ class CLIValidationAutomationModule(CustomFixModule):
 
         # Extract scripts section
         scripts_match = re.search(
-            r"\[tool\.poetry\.scripts\](.*?)(?:\[|$)", content, re.DOTALL
+            r"\[tool\.poetry\.scripts\](.*?)(?:\[|$)",
+            content,
+            re.DOTALL,
         )
         if scripts_match:
             scripts_content = scripts_match.group(1)
@@ -197,7 +202,7 @@ class CLIValidationAutomationModule(CustomFixModule):
                             file_path=file_path,
                             line=None,
                             fix_description="Use format 'module.path:function'",
-                        )
+                        ),
                     )
 
                 # Store for validation
@@ -224,7 +229,7 @@ class CLIValidationAutomationModule(CustomFixModule):
                         file_path=file_path,
                         line=None,
                         fix_description="Use proper logging or Rich console for output",
-                    )
+                    ),
                 )
 
         # Check for sys.exit usage
@@ -250,7 +255,7 @@ class CLIValidationAutomationModule(CustomFixModule):
                             file_path=file_path,
                             line=line_num + 1,
                             fix_description="Wrap sys.exit() in proper error handling",
-                        )
+                        ),
                     )
 
         # Check for hardcoded values that should be arguments
@@ -269,7 +274,7 @@ class CLIValidationAutomationModule(CustomFixModule):
                         file_path=file_path,
                         line=None,
                         fix_description="Make hardcoded values configurable via CLI arguments",
-                    )
+                    ),
                 )
 
         return issues
@@ -327,7 +332,9 @@ class CLIValidationAutomationModule(CustomFixModule):
             content = pyproject.read_text()
             if "[tool.poetry.scripts]" in content:
                 scripts_match = re.search(
-                    r"\[tool\.poetry\.scripts\](.*?)(?:\[|$)", content, re.DOTALL
+                    r"\[tool\.poetry\.scripts\](.*?)(?:\[|$)",
+                    content,
+                    re.DOTALL,
                 )
                 if scripts_match:
                     scripts = re.findall(r"(\w+)\s*=", scripts_match.group(1))
@@ -339,7 +346,9 @@ class CLIValidationAutomationModule(CustomFixModule):
             content = setup_py.read_text()
             if "console_scripts" in content:
                 match = re.search(
-                    r"console_scripts.*?=.*?\[(.*?)\]", content, re.DOTALL
+                    r"console_scripts.*?=.*?\[(.*?)\]",
+                    content,
+                    re.DOTALL,
                 )
                 if match:
                     scripts = re.findall(r'"([^"=]+)\s*=', match.group(1))
@@ -353,7 +362,9 @@ class CLIValidationAutomationModule(CustomFixModule):
         return list(set(commands))  # Remove duplicates
 
     def _validate_single_command(
-        self, project_path: Path, command: str
+        self,
+        project_path: Path,
+        command: str,
     ) -> dict[str, Any]:
         """Validate a single CLI command."""
         results = {
@@ -394,13 +405,16 @@ class CLIValidationAutomationModule(CustomFixModule):
         ]:  # 1 and 2 are common for missing args
             results["success"] = False
             results["issues"].append(
-                f"Unexpected exit code: {basic_result['exit_code']}"
+                f"Unexpected exit code: {basic_result['exit_code']}",
             )
 
         return results
 
     def _test_command(
-        self, project_path: Path, command: str, args: list[str]
+        self,
+        project_path: Path,
+        command: str,
+        args: list[str],
     ) -> dict[str, Any]:
         """Test a CLI command with given arguments."""
         result = {"success": False, "exit_code": None, "output": "", "error": ""}
@@ -413,7 +427,12 @@ class CLIValidationAutomationModule(CustomFixModule):
 
             # Run command
             proc = subprocess.run(
-                cmd, cwd=project_path, capture_output=True, text=True, timeout=5
+                cmd,
+                cwd=project_path,
+                capture_output=True,
+                text=True,
+                timeout=5,
+                check=False,
             )
 
             result["exit_code"] = proc.returncode
@@ -518,7 +537,7 @@ class TestCLI:
         """
         console.print(f"\n[bold cyan]Interactive CLI Test: {command}[/bold cyan]")
         console.print(
-            "[yellow]Type 'exit' to quit, 'help' for test commands[/yellow]\n"
+            "[yellow]Type 'exit' to quit, 'help' for test commands[/yellow]\n",
         )
 
         while True:

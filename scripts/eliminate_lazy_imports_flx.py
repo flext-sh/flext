@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-"""
-URGENT: Eliminate ALL lazy imports in FLX project.
+"""URGENT: Eliminate ALL lazy imports in FLX project.
 
 Per CLAUDE.md RULE 4 + user demand: "TOLERANCIA ZERO a lazy import de codigo"
 Replace all TYPE_CHECKING patterns with direct imports.
@@ -96,11 +95,10 @@ def eliminate_lazy_imports_project() -> tuple[int, list[str]]:
 
 def main():
     """Execute lazy import elimination."""
-
     # Log start
     with open("/home/marlonsc/pyauto/.token", "a") as f:
         f.write(
-            "ELIMINATE-LAZY-IMPORTS-FLX-001 STARTED: Zero tolerance elimination begins\n"
+            "ELIMINATE-LAZY-IMPORTS-FLX-001 STARTED: Zero tolerance elimination begins\n",
         )
 
     total_fixed, fixed_files = eliminate_lazy_imports_project()
@@ -116,7 +114,7 @@ def main():
     # Log completion
     with open("/home/marlonsc/pyauto/.token", "a") as f:
         f.write(
-            f"ELIMINATE-LAZY-IMPORTS-FLX-001 COMPLETED: Fixed {total_fixed} files, eliminated all TYPE_CHECKING\n"
+            f"ELIMINATE-LAZY-IMPORTS-FLX-001 COMPLETED: Fixed {total_fixed} files, eliminated all TYPE_CHECKING\n",
         )
 
     return total_fixed > 0

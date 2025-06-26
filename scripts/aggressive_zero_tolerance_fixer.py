@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-"""
-Aggressive Zero Tolerance Fixer - CLAUDE.md compliant.
+"""Aggressive Zero Tolerance Fixer - CLAUDE.md compliant.
 
 Following RULE 4: Complete Delivery - ABSOLUTE ZERO TOLERANCE
 NO warnings, NO errors, NO exceptions.
@@ -68,6 +67,7 @@ class AggressiveZeroToleranceFixer:
             ],
             cwd=project_path,
             capture_output=True,
+            check=False,
         )
 
         # Step 3: Apply black formatting
@@ -75,6 +75,7 @@ class AggressiveZeroToleranceFixer:
             ["poetry", "run", "black", ".", "--line-length", "88"],
             cwd=project_path,
             capture_output=True,
+            check=False,
         )
 
         # Step 4: Multiple ruff passes with increasing aggressiveness
@@ -84,6 +85,7 @@ class AggressiveZeroToleranceFixer:
                 cwd=project_path,
                 capture_output=True,
                 text=True,
+                check=False,
             )
             if not result.stdout.strip():
                 break
@@ -230,6 +232,7 @@ disallow_untyped_defs = true
                     cwd=project_path,
                     capture_output=True,
                     text=True,
+                    check=False,
                 )
 
                 if result.stdout:
@@ -253,12 +256,12 @@ disallow_untyped_defs = true
             cwd=project_path,
             capture_output=True,
             text=True,
+            check=False,
         )
         return len([l for l in result.stdout.split("\n") if l.strip()])
 
     def fix_all_projects(self) -> None:
         """Fix ALL projects to achieve 100% compliance."""
-
         start_time = time.time()
 
         for project in self.ordered_projects:

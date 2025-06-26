@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Script para validar independência dos projetos e integração unificada no PYAUTO.
+"""Script para validar independência dos projetos e integração unificada no PYAUTO.
 
 Este script testa:
 1. Se cada projeto pode ser instalado e usado independentemente
@@ -40,7 +39,7 @@ FLX_DEPENDENT_PROJECTS = [
 
 
 def run_command(
-    cmd: list[str], cwd: Path | None = None, capture_output: bool = True
+    cmd: list[str], cwd: Path | None = None, capture_output: bool = True,
 ) -> tuple[int, str, str]:
     """Executa um comando e retorna código de saída, stdout e stderr."""
     try:
@@ -49,7 +48,7 @@ def run_command(
             cwd=cwd,
             capture_output=capture_output,
             text=True,
-            timeout=300,  # 5 minutos timeout
+            timeout=300, check=False,  # 5 minutos timeout
         )
         return result.returncode, result.stdout, result.stderr
     except subprocess.TimeoutExpired:
@@ -170,7 +169,7 @@ except Exception as e:
 
     try:
         returncode, stdout, stderr = run_command(
-            [sys.executable, "test_import.py"], cwd=project_path
+            [sys.executable, "test_import.py"], cwd=project_path,
         )
 
         return {
@@ -245,7 +244,7 @@ def test_project_independence(project_path: Path) -> dict[str, Any]:
         print(f"❌ {project_path.name}: Problemas encontrados")
         if not structure_ok:
             print(
-                f"   - Estrutura: {results['structure'].get('error', 'Problemas diversos')}"
+                f"   - Estrutura: {results['structure'].get('error', 'Problemas diversos')}",
             )
         if not import_ok:
             print(f"   - Import: {results['import_test'].get('error', 'Falhou')}")
@@ -299,7 +298,7 @@ def test_unified_installation() -> dict[str, Any]:
                     k
                     for k, v in dependencies.items()
                     if not (isinstance(v, dict) and v.get("optional", False))
-                ]
+                ],
             )
             optional_groups_count = len(extras)
 
@@ -339,7 +338,7 @@ def generate_report(independence_results: list[dict], unified_result: dict) -> N
     # Relatório de independência
     print("\n🔍 TESTE DE INDEPENDÊNCIA DOS PROJETOS")
     print(
-        f"{'Projeto':<25} {'Estrutura':<12} {'Import':<10} {'Lazy':<10} {'Status':<12}"
+        f"{'Projeto':<25} {'Estrutura':<12} {'Import':<10} {'Lazy':<10} {'Status':<12}",
     )
     print("-" * 80)
 
@@ -372,7 +371,7 @@ def generate_report(independence_results: list[dict], unified_result: dict) -> N
         print(
             f"{result['project']:<25} {structure:<12} {import_test:<10} {lazy:<10} {
                 status:<12
-            }"
+            }",
         )
 
         # Debug para problemas
@@ -411,18 +410,18 @@ def generate_report(independence_results: list[dict], unified_result: dict) -> N
         print(
             f"❌ Falha na integração: {
                 unified_result.get('error', 'Erro desconhecido')
-            }"
+            }",
         )
 
     # Resumo final
     print("\n🎯 RESUMO FINAL:")
     integration_ok = unified_result["success"] and unified_result.get(
-        "structure_valid", False
+        "structure_valid", False,
     )
 
     if independent_count == total_tested and integration_ok:
         print(
-            "🎉 SUCESSO COMPLETO: Todos os projetos são independentes E a integração funciona!"
+            "🎉 SUCESSO COMPLETO: Todos os projetos são independentes E a integração funciona!",
         )
         print("   ✅ Arquitetura modular implementada corretamente")
         print("   ✅ Dependências circulares eliminadas")
@@ -435,7 +434,7 @@ def generate_report(independence_results: list[dict], unified_result: dict) -> N
         print(
             f"⚠️  INDEPENDÊNCIA: {
                 total_tested - independent_count
-            } projetos com problemas"
+            } projetos com problemas",
         )
         print("❌ PROBLEMAS ENCONTRADOS em independência E integração")
         print("🔧 Revisar configurações de dependências e lazy imports")

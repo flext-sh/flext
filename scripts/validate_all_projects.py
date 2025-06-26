@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Comprehensive validation script for all LDAP projects.
+"""Comprehensive validation script for all LDAP projects.
 
 This script validates that all projects follow strict PEP8 compliance,
 have proper Poetry configuration, and are ready for Python 3.9+ compatibility.
@@ -53,7 +52,9 @@ PROJECTS = {
 
 
 def run_command(
-    cmd: list[str], cwd: Path | None = None, check: bool = True
+    cmd: list[str],
+    cwd: Path | None = None,
+    check: bool = True,
 ) -> subprocess.CompletedProcess:
     """Run command and return result."""
     return subprocess.run(
@@ -107,7 +108,7 @@ def validate_poetry_config(project_path: Path) -> dict[str, Any]:
 
         if python_version != "^3.9":
             results["errors"].append(
-                f"Python version should be ^3.9, got {python_version}"
+                f"Python version should be ^3.9, got {python_version}",
             )
 
         # Check dev dependencies
@@ -127,7 +128,7 @@ def validate_poetry_config(project_path: Path) -> dict[str, Any]:
 
         if not results["has_security_tools"]:
             results["errors"].append(
-                f"Missing security tools. Found: {found_tools}, Expected: {security_tools}"
+                f"Missing security tools. Found: {found_tools}, Expected: {security_tools}",
             )
 
     except Exception as e:
@@ -137,7 +138,9 @@ def validate_poetry_config(project_path: Path) -> dict[str, Any]:
 
 
 def validate_code_quality(
-    project_path: Path, project_info: dict[str, Any], fix: bool = False
+    project_path: Path,
+    project_info: dict[str, Any],
+    fix: bool = False,
 ) -> dict[str, Any]:
     """Validate code quality with linting and formatting."""
     results = {
@@ -151,7 +154,9 @@ def validate_code_quality(
     try:
         # Check if poetry is installed
         poetry_result = run_command(
-            ["poetry", "--version"], cwd=project_path, check=False
+            ["poetry", "--version"],
+            cwd=project_path,
+            check=False,
         )
         if poetry_result.returncode != 0:
             results["errors"].append("Poetry not available")
@@ -159,7 +164,9 @@ def validate_code_quality(
 
         # Install dependencies first
         install_result = run_command(
-            ["poetry", "install", "--with", "dev"], cwd=project_path, check=False
+            ["poetry", "install", "--with", "dev"],
+            cwd=project_path,
+            check=False,
         )
         if install_result.returncode != 0:
             results["errors"].append(f"Poetry install failed: {install_result.stderr}")
@@ -168,7 +175,9 @@ def validate_code_quality(
         # Format check/fix
         if fix:
             format_result = run_command(
-                ["poetry", "run", "ruff", "format", "."], cwd=project_path, check=False
+                ["poetry", "run", "ruff", "format", "."],
+                cwd=project_path,
+                check=False,
             )
             format_result = run_command(
                 ["poetry", "run", "ruff", "format", "--check", "."],
@@ -194,7 +203,9 @@ def validate_code_quality(
         # Type checking (only for projects with src/)
         if project_info.get("has_src"):
             type_result = run_command(
-                ["poetry", "run", "mypy", "src/"], cwd=project_path, check=False
+                ["poetry", "run", "mypy", "src/"],
+                cwd=project_path,
+                check=False,
             )
             results["type_check"] = type_result.returncode == 0
             if type_result.returncode != 0:
@@ -218,7 +229,8 @@ def validate_code_quality(
 
 
 def validate_structure(
-    project_path: Path, project_info: dict[str, Any]
+    project_path: Path,
+    project_info: dict[str, Any],
 ) -> dict[str, Any]:
     """Validate project structure."""
     results = {
@@ -248,7 +260,7 @@ def validate_structure(
     # GitHub workflows
     workflows_dir = project_path / ".github" / "workflows"
     results["has_github_workflows"] = workflows_dir.exists() and any(
-        workflows_dir.glob("*.yml")
+        workflows_dir.glob("*.yml"),
     )
     if not results["has_github_workflows"]:
         results["errors"].append("Missing GitHub workflows")
@@ -270,7 +282,6 @@ def validate_structure(
 @click.option("--verbose", "-v", is_flag=True, help="Verbose output")
 def main(project: str | None, fix: bool, verbose: bool) -> None:
     """Validate all LDAP projects for PEP8 compliance and Python 3.9+ compatibility."""
-
     console.print(Panel.fit("🔍 LDAP Projects Validation", style="bold blue"))
 
     pyauto_root = Path(__file__).parent.parent
@@ -404,7 +415,7 @@ def main(project: str | None, fix: bool, verbose: bool) -> None:
 
     action_text = "Fixed and validated" if fix else "Validated"
     console.print(
-        f"\n🎯 Summary: {action_text} {valid_projects}/{total_projects} projects for Python 3.9+ compatibility and strict PEP8 compliance"
+        f"\n🎯 Summary: {action_text} {valid_projects}/{total_projects} projects for Python 3.9+ compatibility and strict PEP8 compliance",
     )
 
     if valid_projects == total_projects:

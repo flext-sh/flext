@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Unified Advanced Lint Fixer - Maximum Automation Edition.
+"""Unified Advanced Lint Fixer - Maximum Automation Edition.
 
 Versão unificada que combina todos os scripts anteriores e adiciona
 categorias de fix avançadas para reduzir ao máximo os lint errors
@@ -59,7 +58,7 @@ class AdvancedFixerConfig:
             "reports",
             "htmlcov",
             "junit",
-        ]
+        ],
     )
 
     # Comprehensive fix categories
@@ -98,7 +97,7 @@ class AdvancedFixerConfig:
             "none_comparisons": True,
             "boolean_comparisons": True,
             "isinstance_usage": True,
-        }
+        },
     )
 
     # Safety controls
@@ -109,7 +108,7 @@ class AdvancedFixerConfig:
             "create_backup": False,
             "batch_size": 5,
             "aggressive_mode": False,
-        }
+        },
     )
 
     # Output controls
@@ -119,7 +118,7 @@ class AdvancedFixerConfig:
             "report_format": "json",
             "report_path": "reports/unified_lint_fixer_report.json",
             "show_progress": True,
-        }
+        },
     )
 
 
@@ -194,7 +193,7 @@ class UnifiedAdvancedLintFixer:
         """Check if directory contains a Python project."""
         indicators = ["pyproject.toml", "src", "setup.py", "requirements.txt"]
         return any((path / indicator).exists() for indicator in indicators) or any(
-            path.glob("*.py")
+            path.glob("*.py"),
         )
 
     def _should_skip_directory(self, path: Path) -> bool:
@@ -227,7 +226,7 @@ class UnifiedAdvancedLintFixer:
                         total_fixes += potential_fixes
                     # Apply actual fixes
                     file_fixes, category_fixes = self._apply_comprehensive_fixes(
-                        py_file
+                        py_file,
                     )
                     if file_fixes > 0:
                         files_modified += 1
@@ -281,7 +280,7 @@ class UnifiedAdvancedLintFixer:
             # Count various fix opportunities
             if self.config.fix_categories["type_annotations"]:
                 potential_fixes += len(
-                    re.findall(r"def \w+\([^)]*\):\s*$", content, re.MULTILINE)
+                    re.findall(r"def \w+\([^)]*\):\s*$", content, re.MULTILINE),
                 )
 
             if self.config.fix_categories["logging_patterns"]:
@@ -296,7 +295,7 @@ class UnifiedAdvancedLintFixer:
 
             if self.config.fix_categories["trailing_whitespace"]:
                 potential_fixes += len(
-                    [line for line in content.split("\n") if line.rstrip() != line]
+                    [line for line in content.split("\n") if line.rstrip() != line],
                 )
 
             return min(potential_fixes, 50)  # Cap estimation
@@ -410,7 +409,7 @@ class UnifiedAdvancedLintFixer:
                         compile(content, str(file_path), "exec")
                     except SyntaxError as e:
                         logger.warning(
-                            "⚠️ Syntax error after fixes in %s: %s", file_path.name, e
+                            "⚠️ Syntax error after fixes in %s: %s", file_path.name, e,
                         )
                         return 0, {}
 
@@ -467,10 +466,7 @@ class UnifiedAdvancedLintFixer:
                 and "-> " not in line
                 and "__" not in line
             ):
-                if "def __init__(" in line:
-                    lines[i] = line.replace("):", ") -> None:")
-                    fixes += 1
-                elif any(
+                if "def __init__(" in line or any(
                     name in line
                     for name in ["def main(", "def test_", "def setUp", "def tearDown"]
                 ):
@@ -607,12 +603,12 @@ class UnifiedAdvancedLintFixer:
                         func_line = lines[j]
                         if "shipment_data" in func_line:
                             lines[j] = func_line.replace(
-                                "shipment_data", "_shipment_data"
+                                "shipment_data", "_shipment_data",
                             )
                             fixes += 1
                         if "inventory_data" in func_line:
                             lines[j] = func_line.replace(
-                                "inventory_data", "_inventory_data"
+                                "inventory_data", "_inventory_data",
                             )
                             fixes += 1
                         break
@@ -803,7 +799,7 @@ class UnifiedAdvancedLintFixer:
                 capture_output=True,
                 text=True,
                 cwd=self.workspace_root,
-                timeout=30,
+                timeout=30, check=False,
             )
             return (
                 len(result.stdout.strip().split("\n")) if result.stdout.strip() else 0
@@ -868,14 +864,14 @@ def main() -> None:
     import argparse
 
     parser = argparse.ArgumentParser(
-        description=f"Unified Advanced Lint Fixer v{__version__}"
+        description=f"Unified Advanced Lint Fixer v{__version__}",
     )
     parser.add_argument("--projects", nargs="+", help="Specific projects to process")
     parser.add_argument(
-        "--dry-run", action="store_true", help="Analyze without applying fixes"
+        "--dry-run", action="store_true", help="Analyze without applying fixes",
     )
     parser.add_argument(
-        "--aggressive", action="store_true", help="Enable aggressive mode"
+        "--aggressive", action="store_true", help="Enable aggressive mode",
     )
     parser.add_argument("--config", type=Path, help="Configuration file")
 
@@ -906,7 +902,7 @@ def main() -> None:
     print(f"📊 Projects: {summary['projects_processed']} processed")
     print(
         f"🔢 Errors: {summary['total_initial_errors']} → {summary['total_final_errors']} "
-        f"({summary['total_improvement']:+d})"
+        f"({summary['total_improvement']:+d})",
     )
     print(f"🔧 Fixes: {summary['total_fixes_applied']} applied")
     print(f"📈 Improvement: {summary['improvement_percentage']:.1f}%")
@@ -917,7 +913,7 @@ def main() -> None:
         print(
             f"⚠️ CLAUDE.md ZERO TOLERANCE: ❌ {
                 summary['total_final_errors']
-            } violations remain"
+            } violations remain",
         )
         sys.exit(1 if not args.dry_run else 0)
 

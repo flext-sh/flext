@@ -123,7 +123,7 @@ class TestingOrchestrationModule(CustomFixModule):
         return "python"
 
     def run_project_tests(
-        self, project_path: Path, test_type: str = "unit"
+        self, project_path: Path, test_type: str = "unit",
     ) -> dict[str, any]:
         """Run tests for a specific project."""
         project_name = project_path.name
@@ -155,7 +155,7 @@ class TestingOrchestrationModule(CustomFixModule):
                 self.console.print(
                     f"[cyan]Running {test_type} tests in {project_name}: {
                         ' '.join(cmd)
-                    }[/cyan]"
+                    }[/cyan]",
                 )
 
             # Install dependencies first if using poetry
@@ -168,7 +168,7 @@ class TestingOrchestrationModule(CustomFixModule):
                 cwd=project_path,
                 capture_output=True,
                 text=True,
-                timeout=test_config["timeout"],
+                timeout=test_config["timeout"], check=False,
             )
 
             result["duration"] = time.time() - start_time
@@ -176,7 +176,7 @@ class TestingOrchestrationModule(CustomFixModule):
 
             # Parse test output
             self._parse_test_output(
-                process_result.stdout, process_result.stderr, result
+                process_result.stdout, process_result.stderr, result,
             )
 
             if not result["success"] and self.verbose:
@@ -187,7 +187,7 @@ class TestingOrchestrationModule(CustomFixModule):
         except subprocess.TimeoutExpired:
             result["duration"] = time.time() - start_time
             result["errors"].append(
-                f"Tests timed out after {test_config['timeout']} seconds"
+                f"Tests timed out after {test_config['timeout']} seconds",
             )
             if self.verbose:
                 self.console.print(f"[red]Tests timed out in {project_name}[/red]")
@@ -197,13 +197,13 @@ class TestingOrchestrationModule(CustomFixModule):
             result["errors"].append(str(e))
             if self.verbose:
                 self.console.print(
-                    f"[red]Error running tests in {project_name}: {e}[/red]"
+                    f"[red]Error running tests in {project_name}: {e}[/red]",
                 )
 
         return result
 
     def _build_test_command(
-        self, runner: str, project_path: Path, test_type: str
+        self, runner: str, project_path: Path, test_type: str,
     ) -> list[str]:
         """Build test command based on runner and test type."""
         base_cmd = self.TEST_COMMANDS[runner].copy()
@@ -218,7 +218,7 @@ class TestingOrchestrationModule(CustomFixModule):
                     "--cov-report=term-missing",
                     "--cov-report=xml",
                     f"--cov-fail-under={self.coverage_threshold}",
-                ]
+                ],
             )
 
             # Add test type specific patterns
@@ -235,7 +235,7 @@ class TestingOrchestrationModule(CustomFixModule):
                     "--verbose",
                     "--tb=short",
                     "-x",  # Stop on first failure for faster feedback
-                ]
+                ],
             )
 
         return base_cmd
@@ -248,14 +248,14 @@ class TestingOrchestrationModule(CustomFixModule):
                 cwd=project_path,
                 capture_output=True,
                 text=True,
-                timeout=300,
+                timeout=300, check=False,
             )
             return result.returncode == 0
         except Exception:
             return False
 
     def _parse_test_output(
-        self, stdout: str, stderr: str, result: dict[str, any]
+        self, stdout: str, stderr: str, result: dict[str, any],
     ) -> None:
         """Parse pytest output to extract test metrics."""
         output = stdout + stderr
@@ -322,7 +322,7 @@ class TestingOrchestrationModule(CustomFixModule):
                             code="TEST001",
                             message="Test files should not contain print statements",
                             suggestion="Use logging or assertions instead",
-                        )
+                        ),
                     )
 
                 if "sleep(" in line and "test_" in file_path.name:
@@ -333,7 +333,7 @@ class TestingOrchestrationModule(CustomFixModule):
                             code="TEST002",
                             message="Avoid sleep() in tests - use proper async patterns or mocking",
                             suggestion="Use pytest fixtures or async testing patterns",
-                        )
+                        ),
                     )
 
             if not has_tests and file_path.name.startswith("test_"):
@@ -344,7 +344,7 @@ class TestingOrchestrationModule(CustomFixModule):
                         code="TEST003",
                         message="Test file contains no test functions",
                         suggestion="Add test functions starting with 'test_'",
-                    )
+                    ),
                 )
 
             if not has_imports and has_tests:
@@ -355,7 +355,7 @@ class TestingOrchestrationModule(CustomFixModule):
                         code="TEST004",
                         message="Test file has no imports but contains tests",
                         suggestion="Import required testing modules (pytest, unittest, etc.)",
-                    )
+                    ),
                 )
 
         return issues
@@ -384,7 +384,7 @@ class TestingOrchestrationModule(CustomFixModule):
 
         if self.verbose:
             self.console.print(
-                f"[blue]Running comprehensive tests in: {workspace_path}[/blue]"
+                f"[blue]Running comprehensive tests in: {workspace_path}[/blue]",
             )
 
         # Find all test projects
@@ -397,7 +397,7 @@ class TestingOrchestrationModule(CustomFixModule):
 
         if self.verbose:
             self.console.print(
-                f"[green]Found {len(projects)} projects with tests[/green]"
+                f"[green]Found {len(projects)} projects with tests[/green]",
             )
 
         # Run tests for each project and test type
@@ -414,7 +414,7 @@ class TestingOrchestrationModule(CustomFixModule):
 
                 for test_type in self.test_types:
                     task = progress.add_task(
-                        f"Running {test_type} tests in {project_name}...", total=None
+                        f"Running {test_type} tests in {project_name}...", total=None,
                     )
 
                     if self.dry_run:
@@ -523,7 +523,7 @@ class TestingOrchestrationModule(CustomFixModule):
                 else "red"
             )
             self.console.print(
-                Panel(summary_text, title="Overall Results", border_style=panel_style)
+                Panel(summary_text, title="Overall Results", border_style=panel_style),
             )
 
     def run_workspace_testing(self, workspace_path: Path = None) -> bool:

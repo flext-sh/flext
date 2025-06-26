@@ -38,7 +38,7 @@ def parse_mypy_errors(output: str) -> list[dict[str, str]]:
                         "line": int(line_no),
                         "message": message,
                         "code": error_code,
-                    }
+                    },
                 )
 
     return errors
@@ -105,11 +105,13 @@ def fix_type_annotations(file_path: str, line_no: int, message: str) -> bool:
                     # Add type annotation based on context
                     if f"{var_name} = []" in line:
                         line = line.replace(
-                            f"{var_name} = []", f"{var_name}: list[Any] = []"
+                            f"{var_name} = []",
+                            f"{var_name}: list[Any] = []",
                         )
                     elif f"{var_name} = {{}}" in line:
                         line = line.replace(
-                            f"{var_name} = {{}}", f"{var_name}: dict[str, Any] = {{}}"
+                            f"{var_name} = {{}}",
+                            f"{var_name}: dict[str, Any] = {{}}",
                         )
                         # Generic annotation
                         line = line.replace(f"{var_name} = ", f"{var_name}: Any = ")

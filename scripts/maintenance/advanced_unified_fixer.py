@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Advanced Unified PyAuto Lint Fixer v3.0.0-PRECISION
+"""Advanced Unified PyAuto Lint Fixer v3.0.0-PRECISION
 ===================================================
 
 An enterprise-grade, precision-focused automated lint fixer that safely resolves
@@ -85,14 +84,17 @@ class AdvancedUnifiedFixer:
             handlers=[
                 logging.StreamHandler(),
                 logging.FileHandler(
-                    f"lint_fixer_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
+                    f"lint_fixer_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log",
                 ),
             ],
         )
         self.logger = logging.getLogger(__name__)
 
     def fix_missing_type_annotations(
-        self, content: str, line_num: int, line: str
+        self,
+        content: str,
+        line_num: int,
+        line: str,
     ) -> str | None:
         """Fix missing type annotations (ANN001)."""
         # Pattern for function definitions missing type annotations
@@ -175,7 +177,10 @@ class AdvancedUnifiedFixer:
         return None
 
     def fix_nested_if_statements(
-        self, content: str, line_num: int, line: str
+        self,
+        content: str,
+        line_num: int,
+        line: str,
     ) -> str | None:
         """Fix nested if statements (SIM102)."""
         lines = content.split("\n")
@@ -204,7 +209,10 @@ class AdvancedUnifiedFixer:
         return None
 
     def fix_exception_handling(
-        self, content: str, line_num: int, line: str
+        self,
+        content: str,
+        line_num: int,
+        line: str,
     ) -> str | None:
         """Fix exception handling (B904) - add 'from e' or 'from None'."""
         # Pattern for raise statements in except blocks
@@ -227,7 +235,7 @@ class AdvancedUnifiedFixer:
         if in_except_block and "from" not in raise_stmt:
             # Prefer 'from None' for re-raised exceptions, 'from e' for new
             # ones
-            if "raise " == raise_stmt.strip()[:6]:  # Re-raising original exception
+            if raise_stmt.strip()[:6] == "raise ":  # Re-raising original exception
                 return f"{indent}{raise_stmt} from None{trailing}"
             # Raising new exception
             return f"{indent}{raise_stmt} from e{trailing}"
@@ -235,7 +243,10 @@ class AdvancedUnifiedFixer:
         return None
 
     def fix_unused_arguments(
-        self, content: str, line_num: int, line: str
+        self,
+        content: str,
+        line_num: int,
+        line: str,
     ) -> str | None:
         """Fix unused method arguments (ARG002) by prefixing with underscore."""
         # Look for function definitions
@@ -266,7 +277,10 @@ class AdvancedUnifiedFixer:
         return f"{indent}{new_params}{closing}"
 
     def _is_parameter_used(
-        self, content: str, func_line_num: int, param_name: str
+        self,
+        content: str,
+        func_line_num: int,
+        param_name: str,
     ) -> bool:
         """Check if a parameter is used in the function body."""
         lines = content.split("\n")
@@ -287,7 +301,10 @@ class AdvancedUnifiedFixer:
         return False
 
     def fix_logging_fstrings(
-        self, content: str, line_num: int, line: str
+        self,
+        content: str,
+        line_num: int,
+        line: str,
     ) -> str | None:
         """Fix logging f-strings (G004) by converting to % formatting."""
         # Pattern for logger calls with f-strings
@@ -315,7 +332,10 @@ class AdvancedUnifiedFixer:
         return None
 
     def fix_any_type_annotations(
-        self, content: str, line_num: int, line: str
+        self,
+        content: str,
+        line_num: int,
+        line: str,
     ) -> str | None:
         """Fix Any type annotations (ANN401) with more specific types."""
         # Replace typing.Any with more specific types based on context
@@ -332,13 +352,16 @@ class AdvancedUnifiedFixer:
         return None
 
     def fix_try_except_in_loop(
-        self, content: str, line_num: int, line: str
+        self,
+        content: str,
+        line_num: int,
+        line: str,
     ) -> str | None:
         """Fix try-except in loop (PERF203) by suggesting alternatives."""
         # This is a performance warning, not something we can automatically fix safely
         # We'll just log it for manual review
         self.logger.info(
-            f"Performance warning at line {line_num + 1}: try-except in loop"
+            f"Performance warning at line {line_num + 1}: try-except in loop",
         )
         return None
 
@@ -380,7 +403,7 @@ class AdvancedUnifiedFixer:
                             new_lines.append(line)
                     except Exception as e:
                         self.logger.error(
-                            f"Error fixing line {i + 1} in {file_path}: {e}"
+                            f"Error fixing line {i + 1} in {file_path}: {e}",
                         )
                         new_lines.append(line)
                         self.stats.errors_encountered += 1
@@ -404,7 +427,7 @@ class AdvancedUnifiedFixer:
     def run(self) -> dict[str, Any]:
         """Run the fixer on all Python files in the project."""
         self.logger.info(
-            f"Starting Advanced Unified Fixer v3.0.0 on {self.project_path}"
+            f"Starting Advanced Unified Fixer v3.0.0 on {self.project_path}",
         )
         self.logger.info(f"Mode: {'DRY RUN' if self.dry_run else 'LIVE'}")
 
@@ -455,7 +478,7 @@ class AdvancedUnifiedFixer:
                     "fixed": result.fixed_line.strip() if result.success else None,
                     "success": result.success,
                     "error": result.error_message,
-                }
+                },
             )
 
         return report
@@ -464,7 +487,7 @@ class AdvancedUnifiedFixer:
 def main() -> int:
     """Main entry point."""
     parser = argparse.ArgumentParser(
-        description="Advanced Unified PyAuto Lint Fixer v3.0.0"
+        description="Advanced Unified PyAuto Lint Fixer v3.0.0",
     )
     parser.add_argument(
         "project_path",
@@ -478,14 +501,19 @@ def main() -> int:
         help="Show what would be fixed without making changes",
     )
     parser.add_argument(
-        "--verbose", "-v", action="store_true", help="Enable verbose logging"
+        "--verbose",
+        "-v",
+        action="store_true",
+        help="Enable verbose logging",
     )
     parser.add_argument("--output", "-o", help="Output report to JSON file")
 
     args = parser.parse_args()
 
     fixer = AdvancedUnifiedFixer(
-        project_path=args.project_path, dry_run=args.dry_run, verbose=args.verbose
+        project_path=args.project_path,
+        dry_run=args.dry_run,
+        verbose=args.verbose,
     )
 
     try:
@@ -494,7 +522,7 @@ def main() -> int:
         # Print summary
         print(f"\n{'=' * 60}")
         print(
-            f"Advanced Unified Lint Fixer v3.0.0 - {'DRY RUN' if args.dry_run else 'LIVE'} Results"
+            f"Advanced Unified Lint Fixer v3.0.0 - {'DRY RUN' if args.dry_run else 'LIVE'} Results",
         )
         print(f"{'=' * 60}")
         print(f"Files processed: {report['statistics']['total_files_processed']}")

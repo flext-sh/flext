@@ -5,10 +5,10 @@ Validates project compliance with enterprise standards.
 Based on scripts/validate_pyproject_compliance.py functionality.
 """
 
+import tomllib
 from pathlib import Path
 from typing import Any
 
-import tomllib
 from rich.console import Console
 from rich.table import Table
 
@@ -175,7 +175,7 @@ class ProjectValidationModule(CustomFixModule):
         build_system = config.get("build-system", {})
         if build_system != self.REQUIRED_BUILD_SYSTEM:
             issues.append(
-                "Build system configuration does not match enterprise standard"
+                "Build system configuration does not match enterprise standard",
             )
 
         # Validate poetry configuration
@@ -191,7 +191,7 @@ class ProjectValidationModule(CustomFixModule):
             issues.append(
                 f"Python version {python_version} does not meet requirement: {
                     self.REQUIRED_PYTHON_VERSION
-                }"
+                }",
             )
 
         # Check required core dependencies
@@ -201,7 +201,7 @@ class ProjectValidationModule(CustomFixModule):
                 current_version = dependencies[dep]
                 if not self._version_compatible(current_version, required_version):
                     issues.append(
-                        f"Dependency {dep} version {current_version} does not meet requirement: {required_version}"
+                        f"Dependency {dep} version {current_version} does not meet requirement: {required_version}",
                     )
 
         # Check development dependencies
@@ -214,7 +214,7 @@ class ProjectValidationModule(CustomFixModule):
                 current_version = dev_deps[dep]
                 if not self._version_compatible(current_version, required_version):
                     issues.append(
-                        f"Dev dependency {dep} version {current_version} does not meet requirement: {required_version}"
+                        f"Dev dependency {dep} version {current_version} does not meet requirement: {required_version}",
                     )
 
         # Validate tool configurations
@@ -225,7 +225,7 @@ class ProjectValidationModule(CustomFixModule):
         for key, value in self.REQUIRED_BLACK_CONFIG.items():
             if black_config.get(key) != value:
                 issues.append(
-                    f"Black configuration {key} does not match enterprise standard"
+                    f"Black configuration {key} does not match enterprise standard",
                 )
 
         # Ruff configuration
@@ -233,7 +233,7 @@ class ProjectValidationModule(CustomFixModule):
         for key, value in self.REQUIRED_RUFF_CONFIG.items():
             if ruff_config.get(key) != value:
                 issues.append(
-                    f"Ruff configuration {key} does not match enterprise standard"
+                    f"Ruff configuration {key} does not match enterprise standard",
                 )
 
         # MyPy configuration
@@ -241,7 +241,7 @@ class ProjectValidationModule(CustomFixModule):
         for key, value in self.REQUIRED_MYPY_CONFIG.items():
             if mypy_config.get(key) != value:
                 issues.append(
-                    f"MyPy configuration {key} does not match enterprise standard"
+                    f"MyPy configuration {key} does not match enterprise standard",
                 )
 
         # Pytest configuration
@@ -249,7 +249,7 @@ class ProjectValidationModule(CustomFixModule):
         for key, value in self.REQUIRED_PYTEST_CONFIG.items():
             if pytest_config.get(key) != value:
                 issues.append(
-                    f"Pytest configuration {key} does not match enterprise standard"
+                    f"Pytest configuration {key} does not match enterprise standard",
                 )
 
         # Coverage configuration
@@ -259,7 +259,7 @@ class ProjectValidationModule(CustomFixModule):
             for key, value in expected_config.items():
                 if current_section.get(key) != value:
                     issues.append(
-                        f"Coverage {section}.{key} does not match enterprise standard"
+                        f"Coverage {section}.{key} does not match enterprise standard",
                     )
 
         return issues
@@ -297,7 +297,7 @@ class ProjectValidationModule(CustomFixModule):
                         issues.append(
                             f"Print statements found in production code: {
                                 py_file.relative_to(project_path)
-                            }"
+                            }",
                         )
 
                     # Check for TODO/FIXME comments
@@ -305,7 +305,7 @@ class ProjectValidationModule(CustomFixModule):
                     for i, line in enumerate(lines, 1):
                         if "TODO" in line.upper() or "FIXME" in line.upper():
                             issues.append(
-                                f"TODO/FIXME comment found: {py_file.relative_to(project_path)}:{i}"
+                                f"TODO/FIXME comment found: {py_file.relative_to(project_path)}:{i}",
                             )
 
                     # Check for long lines (basic check)
@@ -314,7 +314,7 @@ class ProjectValidationModule(CustomFixModule):
                             issues.append(
                                 f"Line too long ({len(line)} chars): {
                                     py_file.relative_to(project_path)
-                                }:{i}"
+                                }:{i}",
                             )
 
                 except Exception:
@@ -339,7 +339,7 @@ class ProjectValidationModule(CustomFixModule):
                         code="PROJ_STRUCT001",
                         message=issue_msg,
                         suggestion="Ensure project follows enterprise structure standards",
-                    )
+                    ),
                 )
 
             # Validate pyproject.toml
@@ -352,7 +352,7 @@ class ProjectValidationModule(CustomFixModule):
                         code="PROJ_CONFIG001",
                         message=issue_msg,
                         suggestion="Update configuration to match enterprise standards",
-                    )
+                    ),
                 )
 
             # Validate code quality
@@ -365,7 +365,7 @@ class ProjectValidationModule(CustomFixModule):
                         code="PROJ_QUALITY001",
                         message=issue_msg,
                         suggestion="Fix code quality issues to meet enterprise standards",
-                    )
+                    ),
                 )
 
         return issues
@@ -388,7 +388,7 @@ class ProjectValidationModule(CustomFixModule):
 
         if self.verbose:
             self.console.print(
-                f"[green]Found {len(projects)} projects to validate[/green]"
+                f"[green]Found {len(projects)} projects to validate[/green]",
             )
 
         validation_results = {
@@ -423,7 +423,7 @@ class ProjectValidationModule(CustomFixModule):
                 validation_results["total_issues"] += total_project_issues
                 if self.verbose:
                     self.console.print(
-                        f"[red]❌ {project_name} has {total_project_issues} issues[/red]"
+                        f"[red]❌ {project_name} has {total_project_issues} issues[/red]",
                     )
 
             validation_results["project_results"][project_name] = {
@@ -499,7 +499,7 @@ class ProjectValidationModule(CustomFixModule):
         from rich.panel import Panel
 
         self.console.print(
-            Panel(summary_text, title="Validation Results", border_style=panel_style)
+            Panel(summary_text, title="Validation Results", border_style=panel_style),
         )
 
     def run_workspace_validation(self, workspace_path: Path = None) -> bool:

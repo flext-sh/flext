@@ -24,7 +24,7 @@ def fix_g004_logging_fstrings(content: str) -> str:
         # Find all matches
         matches = re.finditer(pattern, content)
         for match in reversed(
-            list(matches)
+            list(matches),
         ):  # Process in reverse to maintain positions
             start, end = match.span()
             prefix = match.group(1)
@@ -76,15 +76,17 @@ def fix_b904_exception_chaining(content: str) -> str:
         if in_except_block and stripped.startswith("raise ") and except_variable:
             # Check if it already has 'from'
             if " from " not in stripped and not stripped.endswith(
-                f" from {except_variable}"
+                f" from {except_variable}",
             ):
                 # Add exception chaining
                 if stripped.endswith(")"):
                     lines[i] = line.replace(
-                        stripped, f"{stripped} from {except_variable}"
+                        stripped,
+                        f"{stripped} from {except_variable}",
                     )
                     lines[i] = line.replace(
-                        stripped, f"{stripped} from {except_variable}"
+                        stripped,
+                        f"{stripped} from {except_variable}",
                     )
 
     return "\n".join(lines)

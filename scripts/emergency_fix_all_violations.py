@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-EMERGENCY FIX SCRIPT - ZERO TOLERANCE ENFORCEMENT
+"""EMERGENCY FIX SCRIPT - ZERO TOLERANCE ENFORCEMENT
 Fixes ALL production code violations to achieve 100% compliance.
 """
 
@@ -12,7 +11,8 @@ from pathlib import Path
 
 # Configure logging
 logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
 )
 logger = logging.getLogger(__name__)
 
@@ -59,16 +59,16 @@ class EmergencyFixer:
                     if print_content.startswith(('f"', "f'")):
                         # f-string
                         modified_lines.append(
-                            f"{indent_str}logger.info({print_content})"
+                            f"{indent_str}logger.info({print_content})",
                         )
                     elif print_content.startswith(('"', "'")):
                         # Regular string
                         modified_lines.append(
-                            f"{indent_str}logger.info({print_content})"
+                            f"{indent_str}logger.info({print_content})",
                         )
                         # Variable or expression
                         modified_lines.append(
-                            f'{indent_str}logger.info(f"{{{print_content}}}")'
+                            f'{indent_str}logger.info(f"{{{print_content}}}")',
                         )
 
                     imports_needed = True
@@ -85,7 +85,7 @@ class EmergencyFixer:
 
             for i, line in enumerate(modified_lines):
                 if line.strip().startswith("import ") or line.strip().startswith(
-                    "from "
+                    "from ",
                 ):
                     found_imports = True
                     import_lines.append(line)
@@ -115,7 +115,7 @@ class EmergencyFixer:
                         # Find end of docstring
                         for j in range(i + 1, len(modified_lines)):
                             if modified_lines[j].strip().endswith(
-                                '"""'
+                                '"""',
                             ) or modified_lines[j].strip().endswith("'''"):
                                 docstring_end = j + 1
                                 break
@@ -129,7 +129,7 @@ class EmergencyFixer:
                         "",
                         "logger = logging.getLogger(__name__)",
                         "",
-                    ]
+                    ],
                 )
                 result.extend(modified_lines[docstring_end:])
                 modified_lines = result
@@ -1238,7 +1238,7 @@ class EmergencyFixer:
             import_section_end = 0
             for i, line in enumerate(lines):
                 if line.strip().startswith("import ") or line.strip().startswith(
-                    "from "
+                    "from ",
                 ):
                     import_section_end = i + 1
                 elif (
@@ -1265,24 +1265,28 @@ class EmergencyFixer:
 
         for line in lines:
             # Skip lines that are actual comments (not code)
-            if re.match(
-                r"^\s*#\s*TODO|FIXME|NOTE|WARNING|HACK|XXX", line, re.IGNORECASE
+            if (
+                re.match(
+                    r"^\s*#\s*TODO|FIXME|NOTE|WARNING|HACK|XXX",
+                    line,
+                    re.IGNORECASE,
+                )
+                or re.match(r"^\s*#\s*\w+", line)
+                and not re.match(
+                    r"^\s*#\s*\w+\s*=|if|for|while|def|class|import|from|return|raise|assert|try|except|finally|with|elif|else|pass|continue|break|yield",
+                    line,
+                )
+                or line.strip().startswith("#")
+                and "noinspection" in line
+                or line.strip().startswith("#")
+                and "type:" in line
+                or line.strip().startswith("#")
+                and "pylint:" in line
+                or line.strip().startswith("#")
+                and "pragma:" in line
+                or line.strip().startswith("#")
+                and "noqa" in line
             ):
-                fixed_lines.append(line)
-            elif re.match(r"^\s*#\s*\w+", line) and not re.match(
-                r"^\s*#\s*\w+\s*=|if|for|while|def|class|import|from|return|raise|assert|try|except|finally|with|elif|else|pass|continue|break|yield",
-                line,
-            ):
-                fixed_lines.append(line)
-            elif line.strip().startswith("#") and "noinspection" in line:
-                fixed_lines.append(line)
-            elif line.strip().startswith("#") and "type:" in line:
-                fixed_lines.append(line)
-            elif line.strip().startswith("#") and "pylint:" in line:
-                fixed_lines.append(line)
-            elif line.strip().startswith("#") and "pragma:" in line:
-                fixed_lines.append(line)
-            elif line.strip().startswith("#") and "noqa" in line:
                 fixed_lines.append(line)
             elif re.match(
                 r"^\s*#\s*(import|from|def|class|if|for|while|try|except|return|raise|assert|with|elif|else|pass|continue|break|yield|=|\+|-|\*|/|%|\(|\)|\[|\]|\{|\})",
@@ -1327,11 +1331,11 @@ class EmergencyFixer:
 
         # Run black
         logger.info("Running black...")
-        subprocess.run(["black", str(self.base_path)], capture_output=True)
+        subprocess.run(["black", str(self.base_path)], capture_output=True, check=False)
 
         # Run isort
         logger.info("Running isort...")
-        subprocess.run(["isort", str(self.base_path)], capture_output=True)
+        subprocess.run(["isort", str(self.base_path)], capture_output=True, check=False)
 
         # Run autoflake
         logger.info("Running autoflake to remove unused imports...")
@@ -1346,6 +1350,7 @@ class EmergencyFixer:
                 str(self.base_path),
             ],
             capture_output=True,
+            check=False,
         )
 
         # Run autopep8
@@ -1360,6 +1365,7 @@ class EmergencyFixer:
                 str(self.base_path),
             ],
             capture_output=True,
+            check=False,
         )
 
     def fix_remaining_with_ruff(self) -> None:
@@ -1370,6 +1376,7 @@ class EmergencyFixer:
         subprocess.run(
             ["ruff", "check", "--fix", "--unsafe-fixes", str(self.base_path)],
             capture_output=True,
+            check=False,
         )
 
     def verify_compliance(self) -> tuple[int, int, int]:
@@ -1388,7 +1395,10 @@ class EmergencyFixer:
 
         # Run ruff to count remaining violations
         result = subprocess.run(
-            ["ruff", "check", str(self.base_path)], capture_output=True, text=True
+            ["ruff", "check", str(self.base_path)],
+            capture_output=True,
+            text=True,
+            check=False,
         )
 
         # Parse ruff output
@@ -1415,7 +1425,7 @@ class EmergencyFixer:
         # Initial compliance check
         initial_print, initial_undefined, initial_total = self.verify_compliance()
         logger.info(
-            f"Initial state: {initial_print} print(), {initial_undefined} undefined names, {initial_total} total violations"
+            f"Initial state: {initial_print} print(), {initial_undefined} undefined names, {initial_total} total violations",
         )
 
         # Fix all src files
@@ -1427,7 +1437,7 @@ class EmergencyFixer:
             self.fix_file(file_path)
 
         logger.info(
-            f"Applied {self.fixes_applied} fixes to {len(self.files_modified)} files"
+            f"Applied {self.fixes_applied} fixes to {len(self.files_modified)} files",
         )
 
         # Run automatic fix tools
@@ -1452,12 +1462,15 @@ class EmergencyFixer:
             logger.info("✅ ZERO TOLERANCE ACHIEVED - 100% COMPLIANCE")
             logger.error("❌ VIOLATIONS REMAIN - MANUAL INTERVENTION REQUIRED")
             logger.error(
-                f"Remaining: {final_print} print(), {final_undefined} undefined, {final_total} total"
+                f"Remaining: {final_print} print(), {final_undefined} undefined, {final_total} total",
             )
 
             # Show sample of remaining violations
             result = subprocess.run(
-                ["ruff", "check", str(self.base_path)], capture_output=True, text=True
+                ["ruff", "check", str(self.base_path)],
+                capture_output=True,
+                text=True,
+                check=False,
             )
 
             logger.error("\nSample of remaining violations:")

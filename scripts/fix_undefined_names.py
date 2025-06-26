@@ -7,7 +7,8 @@ from pathlib import Path
 
 # Configure logging
 logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
 )
 logger = logging.getLogger(__name__)
 
@@ -112,7 +113,7 @@ class UndefinedNamesFixer:
                     insert_idx = 0
                     for i, line in enumerate(lines):
                         if line.strip().startswith("from ") or line.strip().startswith(
-                            "import "
+                            "import ",
                         ):
                             insert_idx = i + 1
                         elif (

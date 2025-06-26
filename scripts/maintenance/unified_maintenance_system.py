@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-UNIFIED ENTERPRISE MAINTENANCE SYSTEM - PyAuto Standard v3.0.0
+"""UNIFIED ENTERPRISE MAINTENANCE SYSTEM - PyAuto Standard v3.0.0
 
 Complete enterprise-grade maintenance system combining all proven patterns
 from the PyAuto workspace evolution. Follows CLAUDE.md rules with ABSOLUTE
@@ -167,7 +166,8 @@ class MaintenanceConfig(BaseModel):
 
     # Target configuration
     target_projects: list[str] = Field(
-        default_factory=list, description="Specific projects to target"
+        default_factory=list,
+        description="Specific projects to target",
     )
     exclude_patterns: list[str] = Field(
         default_factory=lambda: [
@@ -201,7 +201,8 @@ class MaintenanceConfig(BaseModel):
 
     # Processing configuration
     processing_mode: ProcessingMode = Field(
-        default=ProcessingMode.INCREMENTAL, description="How to process files"
+        default=ProcessingMode.INCREMENTAL,
+        description="How to process files",
     )
 
     # Sub-configurations
@@ -256,8 +257,8 @@ def setup_logging(config: MaintenanceConfig) -> logging.Logger:
     console_handler = logging.StreamHandler(sys.stdout)
     console_handler.setFormatter(
         ColoredFormatter(
-            "%(asctime)s - %(name)s - %(levelname)s - %(funcName)s:%(lineno)d - %(message)s"
-        )
+            "%(asctime)s - %(name)s - %(levelname)s - %(funcName)s:%(lineno)d - %(message)s",
+        ),
     )
     logger.addHandler(console_handler)
 
@@ -266,8 +267,8 @@ def setup_logging(config: MaintenanceConfig) -> logging.Logger:
         file_handler = logging.FileHandler(config.log_file)
         file_handler.setFormatter(
             logging.Formatter(
-                "%(asctime)s - %(name)s - %(levelname)s - %(funcName)s:%(lineno)d - %(message)s"
-            )
+                "%(asctime)s - %(name)s - %(levelname)s - %(funcName)s:%(lineno)d - %(message)s",
+            ),
         )
         logger.addHandler(file_handler)
 
@@ -304,8 +305,7 @@ class MaintenancePlugin(ABC):
 
     @abstractmethod
     def fix(self, file_path: Path, content: str) -> tuple[str, list[str]]:
-        """
-        Fix the file content.
+        """Fix the file content.
 
         Returns:
             Tuple of (fixed_content, list_of_changes)
@@ -362,7 +362,7 @@ class TypeAnnotationFixer(MaintenancePlugin):
         def add_return_type(match) -> None:
             func_line = match.group(0)
             if " -> " not in func_line and not func_line.strip().startswith(
-                "def __init__"
+                "def __init__",
             ):
                 changes.append(f"Added return type to function: {func_line.strip()}")
                 return func_line.rstrip(":") + " -> None:"
@@ -438,7 +438,9 @@ class LoggingPatternFixer(MaintenancePlugin):
             return new_string
 
         fixed = re.sub(
-            r'logger\.\w+\(f["\'][^"\']*["\'][^)]*\)', fix_f_string_logging, fixed
+            r'logger\.\w+\(f["\'][^"\']*["\'][^)]*\)',
+            fix_f_string_logging,
+            fixed,
         )
 
         # Replace print with logger.info
@@ -580,7 +582,8 @@ class FStringConversionFixer(MaintenancePlugin):
                     # This is simplified - real implementation would parse
                     # properly
                     new_line = line.replace(
-                        match.group(0), f"f{quote}{template}{quote}"
+                        match.group(0),
+                        f"f{quote}{template}{quote}",
                     )
                     new_lines.append(new_line)
                     changes.append("Converted .format() to f-string")
@@ -759,7 +762,9 @@ class PluginRegistry:
                 self.logger.debug(f"Loaded plugin: {plugin.name}")
 
     def get_applicable_plugins(
-        self, file_path: Path, content: str
+        self,
+        file_path: Path,
+        content: str,
     ) -> list[MaintenancePlugin]:
         """Get all plugins that can fix this file."""
         applicable: list = []
@@ -947,7 +952,7 @@ class MetricsReporter:
             for result in results:
                 if not result["success"]:
                     self.logger.warning(
-                        f"  {result['file']}: {result.get('error', 'Unknown error')}"
+                        f"  {result['file']}: {result.get('error', 'Unknown error')}",
                     )
 
         # Save detailed report if configured
@@ -969,7 +974,7 @@ class MetricsReporter:
                 json.dump(report_data, f, indent=2)
 
             self.logger.info(
-                f"\nDetailed report saved to: {self.config.metrics.metrics_file}"
+                f"\nDetailed report saved to: {self.config.metrics.metrics_file}",
             )
 
 
@@ -1045,7 +1050,7 @@ class MaintenanceOrchestrator:
         results: list = []
 
         with concurrent.futures.ProcessPoolExecutor(
-            max_workers=self.config.safety.parallel_workers
+            max_workers=self.config.safety.parallel_workers,
         ) as executor:
             # Submit all tasks
             future_to_file = {
@@ -1067,7 +1072,7 @@ class MaintenanceOrchestrator:
                             "success": False,
                             "changes": [],
                             "error": str(e),
-                        }
+                        },
                     )
 
         return results
@@ -1140,7 +1145,9 @@ Examples:
         help="Logging level",
     )
     parser.add_argument(
-        "--metrics-file", type=Path, help="Save detailed metrics to file"
+        "--metrics-file",
+        type=Path,
+        help="Save detailed metrics to file",
     )
     parser.add_argument(
         "--categories",
@@ -1149,7 +1156,9 @@ Examples:
         help="Specific fix categories to enable",
     )
     parser.add_argument(
-        "--version", action="version", version=f"%(prog)s {__version__}"
+        "--version",
+        action="version",
+        version=f"%(prog)s {__version__}",
     )
 
     args = parser.parse_args()

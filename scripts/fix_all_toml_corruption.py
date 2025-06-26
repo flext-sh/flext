@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-"""
-Fix TOML corruption in all pyproject.toml files.
+"""Fix TOML corruption in all pyproject.toml files.
 
 The aggressive fixes corrupted the TOML files.
 """
@@ -105,7 +104,7 @@ def fix_with_template(file_path: Path) -> bool:
     project_name = file_path.parent.name
     module_name = project_name.replace("-", "_")
 
-    template = f'''[tool.poetry]
+    template = f"""[tool.poetry]
 name = "{project_name}"
 version = "0.5.0"
 description = "Enterprise Python component"
@@ -142,7 +141,7 @@ line_length = 88
 [tool.mypy]
 python_version = "3.9"
 strict = true
-'''
+"""
 
     try:
         file_path.write_text(template)

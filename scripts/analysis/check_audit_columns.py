@@ -69,7 +69,8 @@ def check_and_create_audit_columns() -> None:
 
             try:
                 existing_columns = db_client.query(
-                    columns_sql, {"table_name": table_name}
+                    columns_sql,
+                    {"table_name": table_name},
                 )
                 existing_column_names = {row["COLUMN_NAME"] for row in existing_columns}
 
@@ -123,7 +124,8 @@ def check_and_create_audit_columns() -> None:
             try:
                 # Verificar se tabela existe
                 table_exists_result = db_client.query(
-                    table_exists_sql, {"table_name": table_name}
+                    table_exists_sql,
+                    {"table_name": table_name},
                 )
                 if table_exists_result[0]["table_count"] == 0:
                     continue
@@ -137,7 +139,8 @@ def check_and_create_audit_columns() -> None:
                 """
 
                 audit_result = db_client.query(
-                    audit_count_sql, {"table_name": table_name}
+                    audit_count_sql,
+                    {"table_name": table_name},
                 )
                 audit_count = audit_result[0]["audit_count"] if audit_result else 0
 

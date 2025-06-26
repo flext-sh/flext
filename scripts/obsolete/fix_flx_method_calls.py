@@ -80,7 +80,7 @@ class MethodCallFixer(ast.NodeTransformer):
                         "new": flx_method_name,
                         "line": node.lineno if hasattr(node, "lineno") else 0,
                         "context": context_info,
-                    }
+                    },
                 )
 
         return node
@@ -113,7 +113,7 @@ class MethodCallFixer(ast.NodeTransformer):
 
 
 def fix_file(
-    filepath: Path, inventory: dict[str, Any], dry_run: bool = False
+    filepath: Path, inventory: dict[str, Any], dry_run: bool = False,
 ) -> list[dict[str, Any]]:
     """Fix method calls in a single file."""
     try:
@@ -179,7 +179,7 @@ def main() -> None:
                 print(
                     f"  Line {change['line']}: {change['old']} -> {change['new']} ({
                         change['context']
-                    })"
+                    })",
                 )
 
     print("\nSummary:")

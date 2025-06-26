@@ -40,7 +40,7 @@ def get_mypy_errors() -> list[dict[str, any]]:
                     "message": message,
                     "code": error_code,
                     "suggestion": suggestion,
-                }
+                },
             )
 
     return errors
@@ -62,7 +62,8 @@ def fix_attr_defined_errors(errors: list[dict], dry_run: bool = False) -> int:
             # Pattern 1: "ClassName" has no attribute "method"; maybe
             # "flx_method"?
             match1 = re.search(
-                r'"([^"]+)" has no attribute "([^"]+)"; maybe "([^"]+)"', message
+                r'"([^"]+)" has no attribute "([^"]+)"; maybe "([^"]+)"',
+                message,
             )
             if match1:
                 _class_name, old_attr, new_attr = match1.groups()
@@ -71,7 +72,8 @@ def fix_attr_defined_errors(errors: list[dict], dry_run: bool = False) -> int:
 
             # Pattern 2: Module "x" has no attribute "y"; maybe "z"?
             match2 = re.search(
-                r'Module "[^"]+" has no attribute "([^"]+)"; maybe "([^"]+)"', message
+                r'Module "[^"]+" has no attribute "([^"]+)"; maybe "([^"]+)"',
+                message,
             )
             if match2:
                 old_attr, new_attr = match2.groups()
@@ -90,7 +92,9 @@ def fix_attr_defined_errors(errors: list[dict], dry_run: bool = False) -> int:
 
 
 def fix_name_defined_errors(
-    errors: list[dict], inventory: dict[str, any], dry_run: bool = False
+    errors: list[dict],
+    inventory: dict[str, any],
+    dry_run: bool = False,
 ) -> int:
     """Fix name-defined errors using inventory mappings."""
     fixes_by_file: dict[str, set[tuple[str, str]]] = {}
@@ -124,7 +128,9 @@ def fix_name_defined_errors(
 
 
 def fix_call_arg_errors(
-    errors: list[dict], inventory: dict[str, any], dry_run: bool = False
+    errors: list[dict],
+    inventory: dict[str, any],
+    dry_run: bool = False,
 ) -> int:
     """Fix call-arg errors by adding missing arguments."""
     fixes_by_file: dict[str, list[dict]] = {}
@@ -137,7 +143,8 @@ def fix_call_arg_errors(
 
             # Extract missing argument and class
             match = re.search(
-                r'Missing named argument "([^"]+)" for "([^"]+)"', error["message"]
+                r'Missing named argument "([^"]+)" for "([^"]+)"',
+                error["message"],
             )
             if match:
                 arg_name, class_name = match.groups()
@@ -156,7 +163,7 @@ def fix_call_arg_errors(
                                     "has_default": arg.get("has_default", False),
                                     "default": arg.get("default", None),
                                     "type": arg.get("annotation", None),
-                                }
+                                },
                             )
                             break
 
@@ -237,7 +244,9 @@ def main() -> None:
 
     parser = argparse.ArgumentParser(description="Fix mypy errors in FLX codebase")
     parser.add_argument(
-        "--dry-run", action="store_true", help="Show what would be changed"
+        "--dry-run",
+        action="store_true",
+        help="Show what would be changed",
     )
     parser.add_argument(
         "--type",

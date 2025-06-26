@@ -286,7 +286,7 @@ def add_missing_type_imports() -> None:
                         ', '.join(
                             name for name in missing_names if name in type_imports
                         )
-                    }"
+                    }",
                 )
 
         except Exception as e:

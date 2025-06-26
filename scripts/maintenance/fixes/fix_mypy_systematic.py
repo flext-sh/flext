@@ -229,21 +229,24 @@ class PluginState(StrEnum):
         if needs_dataclass and "from dataclasses import dataclass" not in content:
             if "from dataclasses import" in content:
                 content = content.replace(
-                    "from dataclasses import", "from dataclasses import dataclass,"
+                    "from dataclasses import",
+                    "from dataclasses import dataclass,",
                 )
                 import_lines.append("from dataclasses import dataclass")
 
         if needs_field and "field" not in content:
             if "from dataclasses import" in content:
                 content = content.replace(
-                    "from dataclasses import", "from dataclasses import field,"
+                    "from dataclasses import",
+                    "from dataclasses import field,",
                 )
                 import_lines.append("from dataclasses import field")
 
         if needs_strenum and "from enum import StrEnum" not in content:
             if "from enum import" in content:
                 content = content.replace(
-                    "from enum import", "from enum import StrEnum,"
+                    "from enum import",
+                    "from enum import StrEnum,",
                 )
                 import_lines.append("from enum import StrEnum")
 
@@ -253,7 +256,8 @@ class PluginState(StrEnum):
             and "Dict" not in content
         ):
             content = content.replace(
-                "from typing import Dict,", "from typing import Dict, Dict,"
+                "from typing import Dict,",
+                "from typing import Dict, Dict,",
             )
 
         # Add imports after __future__ or at the beginning
@@ -273,7 +277,9 @@ class PluginState(StrEnum):
                 # Add before the first function or at the end
                 if "\ndef " in content:
                     content = content.replace(
-                        "\ndef ", f"\n{class_def.strip()}\n\n\ndef ", 1
+                        "\ndef ",
+                        f"\n{class_def.strip()}\n\n\ndef ",
+                        1,
                     )
                     content += f"\n\n{class_def.strip()}\n"
                 print(f"Added {class_name} to {filepath}")

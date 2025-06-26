@@ -191,7 +191,7 @@ class ConfigGenerationModule(CustomFixModule):
                 load_dotenv(env_path)
                 if self.verbose:
                     self.console.print(
-                        f"[green]Loaded environment from: {env_file}[/green]"
+                        f"[green]Loaded environment from: {env_file}[/green]",
                     )
 
         # Get all environment variables
@@ -200,7 +200,7 @@ class ConfigGenerationModule(CustomFixModule):
         return env_vars
 
     def resolve_config_value(
-        self, template_value: Any, env_vars: dict[str, str], project_name: str
+        self, template_value: Any, env_vars: dict[str, str], project_name: str,
     ) -> Any:
         """Resolve a configuration value from template."""
         if callable(template_value):
@@ -244,13 +244,13 @@ class ConfigGenerationModule(CustomFixModule):
         return None
 
     def generate_project_config(
-        self, project_path: Path, project_type: str
+        self, project_path: Path, project_type: str,
     ) -> dict[str, Any]:
         """Generate configuration for a specific project."""
         if project_type not in self.CONFIG_TEMPLATES:
             if self.verbose:
                 self.console.print(
-                    f"[yellow]Unknown project type: {project_type}[/yellow]"
+                    f"[yellow]Unknown project type: {project_type}[/yellow]",
                 )
             return {}
 
@@ -265,7 +265,7 @@ class ConfigGenerationModule(CustomFixModule):
 
             for key, value_template in section_template.items():
                 resolved_value = self.resolve_config_value(
-                    value_template, env_vars, project_name
+                    value_template, env_vars, project_name,
                 )
                 config[section_name][key] = resolved_value
 
@@ -281,7 +281,7 @@ class ConfigGenerationModule(CustomFixModule):
         return config
 
     def save_config_file(
-        self, project_path: Path, config: dict[str, Any], format: str = "json"
+        self, project_path: Path, config: dict[str, Any], format: str = "json",
     ) -> bool:
         """Save configuration to file."""
         try:
@@ -303,7 +303,7 @@ class ConfigGenerationModule(CustomFixModule):
 
             if self.verbose:
                 self.console.print(
-                    f"[green]Configuration saved to: {config_file}[/green]"
+                    f"[green]Configuration saved to: {config_file}[/green]",
                 )
 
             return True
@@ -332,7 +332,7 @@ class ConfigGenerationModule(CustomFixModule):
                             code="CONFIG001",
                             message=f"Project has .env but no config file (detected type: {project_type})",
                             suggestion="Generate configuration file from environment variables",
-                        )
+                        ),
                     )
 
         # Check for old generate_config.py scripts
@@ -344,7 +344,7 @@ class ConfigGenerationModule(CustomFixModule):
                     code="CONFIG002",
                     message="Individual generate_config.py script found",
                     suggestion="Replace with unified configuration generation module",
-                )
+                ),
             )
 
         return issues
@@ -361,7 +361,7 @@ class ConfigGenerationModule(CustomFixModule):
 
         if self.verbose:
             self.console.print(
-                f"[blue]Generating configurations in: {workspace_path}[/blue]"
+                f"[blue]Generating configurations in: {workspace_path}[/blue]",
             )
 
         # Find all projects with .env files
@@ -376,7 +376,7 @@ class ConfigGenerationModule(CustomFixModule):
             self.console.print(
                 f"[green]Found {
                     len(projects_with_env)
-                } projects with .env files[/green]"
+                } projects with .env files[/green]",
             )
 
         generation_results = {
@@ -394,7 +394,7 @@ class ConfigGenerationModule(CustomFixModule):
                 self.console.print(
                     f"[yellow]Processing {project_name} (type: {
                         project_type or 'unknown'
-                    })[/yellow]"
+                    })[/yellow]",
                 )
 
             if not project_type:
@@ -426,7 +426,7 @@ class ConfigGenerationModule(CustomFixModule):
                         generation_results["failed_generations"] += 1
                     if self.verbose:
                         self.console.print(
-                            f"[cyan][DRY RUN] Would generate config for {project_name}[/cyan]"
+                            f"[cyan][DRY RUN] Would generate config for {project_name}[/cyan]",
                         )
                     generation_results["successful_generations"] += 1
 
@@ -444,7 +444,7 @@ class ConfigGenerationModule(CustomFixModule):
                 generation_results["failed_generations"] += 1
                 if self.verbose:
                     self.console.print(
-                        f"[red]Error generating config for {project_name}: {e}[/red]"
+                        f"[red]Error generating config for {project_name}: {e}[/red]",
                     )
 
         # Show summary
@@ -501,7 +501,7 @@ class ConfigGenerationModule(CustomFixModule):
             else "red"
         )
         self.console.print(
-            Panel(panel_text, title="Generation Summary", border_style=panel_style)
+            Panel(panel_text, title="Generation Summary", border_style=panel_style),
         )
 
     def run_workspace_config_generation(self, workspace_path: Path = None) -> bool:

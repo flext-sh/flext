@@ -30,7 +30,7 @@ def get_mypy_errors_by_type(error_type: str) -> list[dict[str, Any]]:
                         "file": match.group(1),
                         "line": int(match.group(2)),
                         "message": match.group(3),
-                    }
+                    },
                 )
     return errors
 
@@ -152,7 +152,7 @@ def add_missing_imports() -> None:
                 if line.startswith("from typing import Dict, Optional,"):
                     # Update existing typing import
                     current_imports = re.findall(
-                        r"from typing import Dict, Optional, (.+)", line
+                        r"from typing import Dict, Optional, (.+)", line,
                     )[0]
                     current_names = [n.strip() for n in current_imports.split(",")]
 

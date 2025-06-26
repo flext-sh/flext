@@ -29,6 +29,7 @@ def quick_fix_project(project_name: str) -> None:
             cwd=project_path,
             capture_output=True,
             timeout=30,
+            check=False,
         )
 
         # Second pass - unsafe fixes
@@ -37,6 +38,7 @@ def quick_fix_project(project_name: str) -> None:
             cwd=project_path,
             capture_output=True,
             timeout=30,
+            check=False,
         )
 
         # Format with black
@@ -45,6 +47,7 @@ def quick_fix_project(project_name: str) -> None:
             cwd=project_path,
             capture_output=True,
             timeout=30,
+            check=False,
         )
 
         # Check remaining violations
@@ -54,6 +57,7 @@ def quick_fix_project(project_name: str) -> None:
             capture_output=True,
             text=True,
             timeout=10,
+            check=False,
         )
 
         remaining = len([l for l in result.stdout.split("\n") if l.strip()])

@@ -30,7 +30,7 @@ def get_mypy_errors() -> list[dict[str, Any]]:
                         "line": int(match.group(2)),
                         "message": match.group(3),
                         "code": match.group(4),
-                    }
+                    },
                 )
     return errors
 
@@ -138,13 +138,14 @@ class {class_name}(FlxStrictModel):
             # Add enum import if needed
             if "from enum import" not in content:
                 content = content.replace(
-                    "from typing import", "from enum import Enum\nfrom typing import"
+                    "from typing import",
+                    "from enum import Enum\nfrom typing import",
                 )
 
             content += new_classes
             shutdown_metrics.write_text(content)
             print(
-                f"Added {len(missing_classes)} missing classes to shutdown_metrics.py"
+                f"Added {len(missing_classes)} missing classes to shutdown_metrics.py",
             )
 
 
@@ -168,7 +169,9 @@ def main() -> None:
 
     print("\nError distribution:")
     for code, errs in sorted(
-        error_types.items(), key=lambda x: len(x[1]), reverse=True
+        error_types.items(),
+        key=lambda x: len(x[1]),
+        reverse=True,
     )[:10]:
         print(f"  {code}: {len(errs)}")
 

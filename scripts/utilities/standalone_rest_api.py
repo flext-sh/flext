@@ -43,7 +43,6 @@ class CommandResponse(BaseModel):
 
 def create_standalone_api() -> FastAPI:
     """Create standalone REST API without full FLX imports."""
-
     app = FastAPI(
         title="FLX Framework REST API Demo",
         description="Demonstration of CLI commands exposed via REST API",
@@ -72,19 +71,25 @@ def create_standalone_api() -> FastAPI:
                 result = await command_func(**kwargs)
                 loop = asyncio.get_event_loop()
                 result = await loop.run_in_executor(
-                    None, lambda: command_func(**kwargs)
+                    None,
+                    lambda: command_func(**kwargs),
                 )
 
             execution_time = (time.time() - start_time) * 1000
 
             return CommandResponse(
-                success=True, data=result, execution_time_ms=execution_time
+                success=True,
+                data=result,
+                execution_time_ms=execution_time,
             )
 
         except Exception as e:
             execution_time = (time.time() - start_time) * 1000
             return CommandResponse(
-                success=False, data=None, error=str(e), execution_time_ms=execution_time
+                success=False,
+                data=None,
+                error=str(e),
+                execution_time_ms=execution_time,
             )
 
     @app.get("/")
@@ -126,7 +131,9 @@ def create_standalone_api() -> FastAPI:
                 raise HTTPException(status_code=400, detail="path parameter required")
 
             return await execute_plugin_command(
-                db_instance.backup, path=path, compress=compress
+                db_instance.backup,
+                path=path,
+                compress=compress,
             )
         raise HTTPException(status_code=404, detail="Database plugin not found")
 
@@ -142,11 +149,14 @@ def create_standalone_api() -> FastAPI:
 
             if not backup_path:
                 raise HTTPException(
-                    status_code=400, detail="backup_path parameter required"
+                    status_code=400,
+                    detail="backup_path parameter required",
                 )
 
             return await execute_plugin_command(
-                db_instance.restore, backup_path=backup_path, force=force
+                db_instance.restore,
+                backup_path=backup_path,
+                force=force,
             )
         raise HTTPException(status_code=404, detail="Database plugin not found")
 
@@ -161,14 +171,17 @@ def create_standalone_api() -> FastAPI:
 
     @app.get("/api/v1/monitoring/metrics")
     async def monitoring_metrics(
-        component: str = Query("all"), duration: str = Query("1h")
+        component: str = Query("all"),
+        duration: str = Query("1h"),
     ) -> Any:
         """Get monitoring metrics."""
         if "monitoring" in _command_groups:
             mon_class = _command_groups["monitoring"]
             mon_instance = mon_class()
             return await execute_plugin_command(
-                mon_instance.metrics, component=component, duration=duration
+                mon_instance.metrics,
+                component=component,
+                duration=duration,
             )
         raise HTTPException(status_code=404, detail="Monitoring plugin not found")
 
@@ -219,7 +232,6 @@ def create_standalone_api() -> FastAPI:
 
 def main() -> None:
     """Main function to run the server."""
-
     app = create_standalone_api()
 
     uvicorn.run(app, host="0.0.0.0", port=8001, log_level="info")

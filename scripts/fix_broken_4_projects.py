@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-"""
-Fix the 4 broken projects with specific syntax errors.
+"""Fix the 4 broken projects with specific syntax errors.
 
 Per CLAUDE.md RULE 4: Complete delivery with zero tolerance for violations.
 Fix: flx-oracle-oic, client-b-poc-oic-wms, tap-oracle-oic, target-ldap
@@ -58,11 +57,12 @@ def fix_missing_imports(file_path: Path) -> bool:
         lines = content.split("\n")
         for i, line in enumerate(lines):
             if line.strip().startswith("from typing") or line.strip().startswith(
-                "import "
+                "import ",
             ):
                 # Add import after typing imports
                 lines.insert(
-                    i + 1, "from flx.adapters.outbound.http import HttpClientAdapter"
+                    i + 1,
+                    "from flx.adapters.outbound.http import HttpClientAdapter",
                 )
                 break
         content = "\n".join(lines)
@@ -110,6 +110,7 @@ def fix_project(project_name: str) -> bool:
             capture_output=True,
             text=True,
             timeout=10,
+            check=False,
         )
 
         if result.returncode == 0:
@@ -121,7 +122,6 @@ def fix_project(project_name: str) -> bool:
 
 def main():
     """Fix all 4 broken projects."""
-
     broken_projects = [
         "flx-oracle-oic",
         "client-b-poc-oic-wms",  # Already fixed by linter
@@ -138,7 +138,7 @@ def main():
     # Log to token
     with open("/home/marlonsc/pyauto/.token", "a") as f:
         f.write(
-            f"FIX-4-BROKEN-PROJECTS-004: Fixed {fixed_count}/{len(broken_projects)} projects\n"
+            f"FIX-4-BROKEN-PROJECTS-004: Fixed {fixed_count}/{len(broken_projects)} projects\n",
         )
 
     return fixed_count == len(broken_projects)

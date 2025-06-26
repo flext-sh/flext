@@ -1,5 +1,4 @@
-"""
-Exception handling fix module.
+"""Exception handling fix module.
 
 Fixes common exception handling anti-patterns:
 - Bare except clauses
@@ -58,7 +57,7 @@ class ExceptionHandlingFixModule(CustomFixModule):
         return issues
 
     def _create_issue_from_finding(
-        self, finding: dict, lines: list[str]
+        self, finding: dict, lines: list[str],
     ) -> Issue | None:
         """Create an Issue from an AST finding."""
         line_num = finding["line"]
@@ -156,7 +155,7 @@ class ExceptionHandlingFixModule(CustomFixModule):
                         fix_description="Replace with if/raise pattern",
                         original_line=line,
                         fixed_line=fixed_line.split("\n")[0],  # Just show first line
-                    )
+                    ),
                 )
 
             # Check bare raise
@@ -170,7 +169,7 @@ class ExceptionHandlingFixModule(CustomFixModule):
                         severity="warning",
                         fix_description="Add descriptive error message",
                         original_line=line,
-                    )
+                    ),
                 )
 
             # Check multiple exceptions
@@ -187,7 +186,7 @@ class ExceptionHandlingFixModule(CustomFixModule):
                         fix_description="Add parentheses around exception tuple",
                         original_line=line,
                         fixed_line=fixed_line,
-                    )
+                    ),
                 )
 
             # Check for raise in except without from
@@ -209,7 +208,7 @@ class ExceptionHandlingFixModule(CustomFixModule):
                         fix_description="Add 'from' clause for better tracebacks",
                         original_line=line,
                         fixed_line=fixed_line,
-                    )
+                    ),
                 )
 
         return issues

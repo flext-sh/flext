@@ -52,7 +52,7 @@ def flx_run_coverage_analysis(module_path: Path) -> dict[str, Any]:
         ]
 
         result = subprocess.run(
-            cmd, capture_output=True, text=True, cwd=module_path, check=False
+            cmd, capture_output=True, text=True, cwd=module_path, check=False,
         )
 
         # Ler relatório JSON se existir
