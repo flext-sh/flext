@@ -136,3 +136,16 @@ __pycache__/
 # Let's maintain locks only for root
 **/poetry.lock
 !/poetry.lock # Only keep root poetry.lock
+
+# Backup files that shouldn't be tracked
+*.backup
+*.bak
+pyproject.toml.backup*
+*.py.backup
+conftest.py.backup
+
+# Additional test artifacts
+src/reports/
+**/reports/pytest.xml
+**/reports/junit.xml
+
