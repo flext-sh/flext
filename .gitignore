@@ -3,9 +3,8 @@ reports/
 .scaffold-tracking/
 .env.*
 !.env.example
-CLAUDE.md
 .doc-reorg
-.token
+.token*
 archive/
 pyproject_backups/
 meltano-plugins-extracted/
@@ -18,6 +17,22 @@ reports/
 reference/
 outputs/
 ldif_output/
+.cursorignore
+
+# Heavy documentation that shouldn't be in repository
+oracle-documentation/
+
+# Python cache and build files that might be nested in submodules  
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/htmlcov/
+**/.coverage
+**/coverage.xml
+**/build/
+**/dist/
+**/.eggs/
+**/*.log
 
 # Python
 __pycache__/
