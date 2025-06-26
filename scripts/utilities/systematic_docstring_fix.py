@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Systematic Docstring Standardization Tool
+"""Systematic Docstring Standardization Tool
 
 This script systematically identifies and translates Portuguese docstrings
 to professional English across the entire codebase.
@@ -216,7 +215,10 @@ class DocstringTranslator:
 
         for portuguese_pattern, english_replacement in self.translations.items():
             translated = re.sub(
-                portuguese_pattern, english_replacement, translated, flags=re.IGNORECASE
+                portuguese_pattern,
+                english_replacement,
+                translated,
+                flags=re.IGNORECASE,
             )
 
         return translated
@@ -315,7 +317,7 @@ class DocstringTranslator:
 def main() -> None:
     """Main execution function."""
     parser = argparse.ArgumentParser(
-        description="Systematic docstring translation tool"
+        description="Systematic docstring translation tool",
     )
     parser.add_argument(
         "--dry-run",

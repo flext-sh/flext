@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-FINAL ZERO TOLERANCE SCRIPT
+"""FINAL ZERO TOLERANCE SCRIPT
 Focuses ONLY on src directories to achieve ZERO violations.
 """
 
@@ -11,7 +10,8 @@ from pathlib import Path
 
 # Configure logging
 logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
 )
 logger = logging.getLogger(__name__)
 
@@ -70,7 +70,7 @@ class FinalZeroToleranceFixer:
                         insert_idx = 0
                         for i, line in enumerate(lines):
                             if line.strip().startswith(
-                                "import "
+                                "import ",
                             ) or line.strip().startswith("from "):
                                 insert_idx = i + 1
                             elif (
@@ -86,7 +86,8 @@ class FinalZeroToleranceFixer:
                         lines.insert(insert_idx + 1, "import logging")
                         lines.insert(insert_idx + 2, "")
                         lines.insert(
-                            insert_idx + 3, "logger = logging.getLogger(__name__)"
+                            insert_idx + 3,
+                            "logger = logging.getLogger(__name__)",
                         )
                         lines.insert(insert_idx + 4, "")
 
@@ -119,6 +120,7 @@ class FinalZeroToleranceFixer:
                     ["ruff", "check", "--fix", "--unsafe-fixes", src_dir],
                     capture_output=True,
                     text=True,
+                    check=False,
                 )
 
                 if result.returncode != 0 and result.stderr:
@@ -137,7 +139,9 @@ class FinalZeroToleranceFixer:
         if src_dirs:
             for src_dir in src_dirs:
                 logger.info(f"Running black on {src_dir}")
-                subprocess.run(["black", "--quiet", src_dir], capture_output=True)
+                subprocess.run(
+                    ["black", "--quiet", src_dir], capture_output=True, check=False
+                )
 
     def check_src_violations(self) -> dict[str, int]:
         """Check violations in src directories only."""
@@ -160,28 +164,32 @@ class FinalZeroToleranceFixer:
                     ["grep", "-r", "print(", src_dir, "--include=*.py"],
                     capture_output=True,
                     text=True,
+                    check=False,
                 )
 
                 if result.returncode == 0:
                     print_count += len(
-                        [l for l in result.stdout.split("\n") if l.strip()]
+                        [l for l in result.stdout.split("\n") if l.strip()],
                     )
 
             # Run ruff check
             for src_dir in src_dirs:
                 result = subprocess.run(
-                    ["ruff", "check", src_dir], capture_output=True, text=True
+                    ["ruff", "check", src_dir],
+                    capture_output=True,
+                    text=True,
+                    check=False,
                 )
 
                 # Count violations
                 violations = len(
-                    [l for l in result.stdout.split("\n") if l.strip() and ":" in l]
+                    [l for l in result.stdout.split("\n") if l.strip() and ":" in l],
                 )
                 total_violations += violations
 
                 # Count undefined names specifically
                 undefined_count += len(
-                    [l for l in result.stdout.split("\n") if "F821" in l]
+                    [l for l in result.stdout.split("\n") if "F821" in l],
                 )
 
         return {
@@ -221,27 +229,30 @@ class FinalZeroToleranceFixer:
         logger.info("FINAL REPORT - SRC DIRECTORIES")
         logger.info("=" * 80)
         logger.info(
-            f"Print statements: {initial_stats['print_statements']} → {final_stats['print_statements']}"
+            f"Print statements: {initial_stats['print_statements']} → {final_stats['print_statements']}",
         )
         logger.info(
-            f"Undefined names: {initial_stats['undefined_names']} → {final_stats['undefined_names']}"
+            f"Undefined names: {initial_stats['undefined_names']} → {final_stats['undefined_names']}",
         )
         logger.info(
-            f"Total violations: {initial_stats['total_violations']} → {final_stats['total_violations']}"
+            f"Total violations: {initial_stats['total_violations']} → {final_stats['total_violations']}",
         )
         logger.info(f"Fixes applied: {self.fixes_applied}")
 
         if final_stats["total_violations"] == 0:
             logger.info("\n✅ ZERO TOLERANCE ACHIEVED FOR SRC DIRECTORIES!")
             logger.info(
-                f"\n❌ {final_stats['total_violations']} violations remain in src directories"
+                f"\n❌ {final_stats['total_violations']} violations remain in src directories",
             )
 
             # Show sample violations
             for src_dir in self.base_path.rglob("src"):
                 if src_dir.is_dir():
                     result = subprocess.run(
-                        ["ruff", "check", str(src_dir)], capture_output=True, text=True
+                        ["ruff", "check", str(src_dir)],
+                        capture_output=True,
+                        text=True,
+                        check=False,
                     )
 
                     if result.stdout.strip():

@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-"""
-Validate ALL 21 projects install and run correctly.
+"""Validate ALL 21 projects install and run correctly.
 
 Following CLAUDE.md RULE 4: Complete Delivery - ABSOLUTE ZERO TOLERANCE
 """
@@ -67,17 +66,18 @@ class InstallationValidator:
                 capture_output=True,
                 text=True,
                 timeout=120,
+                check=False,
             )
 
             if install_result.returncode == 0:
                 result["poetry_install"] = True
                 result["errors"].append(
-                    f"Poetry install failed: {install_result.stderr}"
+                    f"Poetry install failed: {install_result.stderr}",
                 )
         except subprocess.TimeoutExpired:
             result["errors"].append("Poetry install timeout")
         except Exception as e:
-            result["errors"].append(f"Poetry install error: {str(e)}")
+            result["errors"].append(f"Poetry install error: {e!s}")
 
         # 2. Check if module imports
         if result["poetry_install"]:
@@ -96,13 +96,14 @@ class InstallationValidator:
                     capture_output=True,
                     text=True,
                     timeout=10,
+                    check=False,
                 )
 
                 if import_test.returncode == 0:
                     result["imports"] = True
                     result["errors"].append(f"Import failed: {import_test.stderr}")
             except Exception as e:
-                result["errors"].append(f"Import test error: {str(e)}")
+                result["errors"].append(f"Import test error: {e!s}")
 
         # 3. Check if CLI works
         cli_commands = self._get_cli_command(project_name)
@@ -115,6 +116,7 @@ class InstallationValidator:
                     capture_output=True,
                     text=True,
                     timeout=10,
+                    check=False,
                 )
 
                 # Success if returns 0 or shows help (exit code 2)
@@ -162,7 +164,6 @@ class InstallationValidator:
 
     def validate_all(self) -> None:
         """Validate all projects."""
-
         total_success = 0
         total_partial = 0
         total_failed = 0

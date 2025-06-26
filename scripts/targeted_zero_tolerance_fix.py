@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-TARGETED ZERO TOLERANCE FIX SCRIPT
+"""TARGETED ZERO TOLERANCE FIX SCRIPT
 Focuses on fixing the most critical violations systematically.
 """
 
@@ -12,7 +11,8 @@ from pathlib import Path
 
 # Configure logging
 logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
 )
 logger = logging.getLogger(__name__)
 
@@ -40,7 +40,7 @@ class TargetedFixer:
 
             # Skip test files
             if "test" in str(file_path).lower() or str(file_path).startswith(
-                str(self.base_path / "tests")
+                str(self.base_path / "tests"),
             ):
                 return False
 
@@ -78,7 +78,7 @@ class TargetedFixer:
                             import_idx = 0
                             for j, l in enumerate(lines[:i]):
                                 if l.strip().startswith(
-                                    "import "
+                                    "import ",
                                 ) or l.strip().startswith("from "):
                                     import_idx = j + 1
                                 elif (
@@ -100,7 +100,7 @@ class TargetedFixer:
                                         # Find end of docstring
                                         for k in range(j + 1, len(lines)):
                                             if lines[k].strip().endswith(
-                                                '"""'
+                                                '"""',
                                             ) or lines[k].strip().endswith("'''"):
                                                 import_idx = k + 1
                                                 break
@@ -111,7 +111,8 @@ class TargetedFixer:
                             new_lines.insert(import_idx + 1, "import logging")
                             new_lines.insert(import_idx + 2, "")
                             new_lines.insert(
-                                import_idx + 3, "logger = logging.getLogger(__name__)"
+                                import_idx + 3,
+                                "logger = logging.getLogger(__name__)",
                             )
                             new_lines.insert(import_idx + 4, "")
                             added_imports = True
@@ -233,7 +234,7 @@ class TargetedFixer:
             insert_idx = 0
             for i, line in enumerate(lines):
                 if line.strip().startswith("import ") or line.strip().startswith(
-                    "from "
+                    "from ",
                 ):
                     insert_idx = i + 1
                 elif (
@@ -270,6 +271,7 @@ class TargetedFixer:
             ["ruff", "check", "--fix", "--unsafe-fixes", str(self.base_path)],
             capture_output=True,
             text=True,
+            check=False,
         )
 
         if result.returncode == 0:
@@ -281,7 +283,10 @@ class TargetedFixer:
         logger.info("Running black formatter...")
 
         result = subprocess.run(
-            ["black", "--quiet", str(self.base_path)], capture_output=True, text=True
+            ["black", "--quiet", str(self.base_path)],
+            capture_output=True,
+            text=True,
+            check=False,
         )
 
         if result.returncode == 0:
@@ -293,7 +298,10 @@ class TargetedFixer:
         logger.info("Running isort...")
 
         result = subprocess.run(
-            ["isort", "--quiet", str(self.base_path)], capture_output=True, text=True
+            ["isort", "--quiet", str(self.base_path)],
+            capture_output=True,
+            text=True,
+            check=False,
         )
 
         if result.returncode == 0:
@@ -317,6 +325,7 @@ class TargetedFixer:
             ],
             capture_output=True,
             text=True,
+            check=False,
         )
 
         if result.returncode == 0:
@@ -327,6 +336,7 @@ class TargetedFixer:
             ["ruff", "check", str(self.base_path), "--statistics"],
             capture_output=True,
             text=True,
+            check=False,
         )
 
         # Parse statistics
@@ -400,13 +410,13 @@ class TargetedFixer:
         logger.info("FINAL REPORT")
         logger.info("=" * 80)
         logger.info(
-            f"Print statements: {initial_stats['print_statements']} → {final_stats['print_statements']}"
+            f"Print statements: {initial_stats['print_statements']} → {final_stats['print_statements']}",
         )
         logger.info(
-            f"Undefined names: {initial_stats['undefined_names']} → {final_stats['undefined_names']}"
+            f"Undefined names: {initial_stats['undefined_names']} → {final_stats['undefined_names']}",
         )
         logger.info(
-            f"Total violations: {initial_stats['total_violations']} → {final_stats['total_violations']}"
+            f"Total violations: {initial_stats['total_violations']} → {final_stats['total_violations']}",
         )
         logger.info(f"Files modified: {len(self.files_modified)}")
         logger.info(f"Total fixes applied: {self.fixes_applied}")
@@ -415,7 +425,9 @@ class TargetedFixer:
         if final_stats["stats"]:
             logger.info("\nTop remaining violations:")
             sorted_stats = sorted(
-                final_stats["stats"].items(), key=lambda x: x[1], reverse=True
+                final_stats["stats"].items(),
+                key=lambda x: x[1],
+                reverse=True,
             )
             for code, count in sorted_stats[:10]:
                 logger.info(f"  - {code}: {count}")
@@ -429,6 +441,7 @@ class TargetedFixer:
                 ["ruff", "check", str(self.base_path), "--output-format", "concise"],
                 capture_output=True,
                 text=True,
+                check=False,
             )
 
             logger.info("\nSample violations:")

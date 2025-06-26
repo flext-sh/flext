@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-"""
-Validate imports for all submodule projects.
+"""Validate imports for all submodule projects.
 
 Per CLAUDE.md RULE 4: Complete delivery with zero tolerance for violations.
 Test ALL projects to identify real broken imports vs path issues.
@@ -76,6 +75,7 @@ class ProjectImportValidator:
                 capture_output=True,
                 text=True,
                 timeout=10,
+                check=False,
             )
 
             if result.returncode == 0:
@@ -101,6 +101,7 @@ class ProjectImportValidator:
                 capture_output=True,
                 text=True,
                 timeout=30,
+                check=False,
             )
 
             if result.returncode == 0:
@@ -114,7 +115,6 @@ class ProjectImportValidator:
 
     def validate_all_projects(self) -> None:
         """Validate all projects systematically."""
-
         for project_name in self.submodules:
             # Test import
             import_success, import_msg = self.test_project_import(project_name)
@@ -131,7 +131,7 @@ class ProjectImportValidator:
                         "name": project_name,
                         "import_error": None if import_success else import_msg,
                         "poetry_error": None if poetry_success else poetry_msg,
-                    }
+                    },
                 )
 
         # Summary
@@ -146,7 +146,7 @@ class ProjectImportValidator:
         # Log to token
         with open(self.workspace_root / ".token", "a") as f:
             f.write(
-                f"PROJECT-VALIDATION-003: {len(self.working_projects)}/{len(self.submodules)} projects working\n"
+                f"PROJECT-VALIDATION-003: {len(self.working_projects)}/{len(self.submodules)} projects working\n",
             )
 
         return self.working_projects, self.broken_projects

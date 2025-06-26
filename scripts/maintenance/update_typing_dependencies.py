@@ -110,7 +110,9 @@ def get_required_deps(config: TypingConfig, project_type: str) -> dict[str, str]
 
 
 def update_pyproject_toml(
-    pyproject_path: Path, config: TypingConfig, dry_run: bool = False
+    pyproject_path: Path,
+    config: TypingConfig,
+    dry_run: bool = False,
 ) -> bool:
     """Update a single pyproject.toml file."""
     try:
@@ -239,7 +241,7 @@ def find_pyproject_files(root_path: Path) -> list[Path]:
 def main() -> int:
     """Main entry point."""
     parser = argparse.ArgumentParser(
-        description="Update typing dependencies across PyAuto workspace"
+        description="Update typing dependencies across PyAuto workspace",
     )
     parser.add_argument(
         "--config",
@@ -253,7 +255,9 @@ def main() -> int:
         help="Show what would be changed without making changes",
     )
     parser.add_argument(
-        "--project", type=str, help="Update only specific project (directory name)"
+        "--project",
+        type=str,
+        help="Update only specific project (directory name)",
     )
 
     args = parser.parse_args()

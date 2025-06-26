@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-"""
-Comprehensive dry-run validator - Tests ALL functionality before real fixes.
+"""Comprehensive dry-run validator - Tests ALL functionality before real fixes.
 
 Per CLAUDE.md RULE 4: Complete Delivery - Test before claiming success.
 """
@@ -59,6 +58,7 @@ class ComprehensiveDryRunValidator:
                 capture_output=True,
                 text=True,
                 timeout=30,
+                check=False,
             )
             return result.returncode == 0
         except Exception:
@@ -82,6 +82,7 @@ class ComprehensiveDryRunValidator:
                 capture_output=True,
                 text=True,
                 timeout=10,
+                check=False,
             )
             return result.returncode == 0 and "OK" in result.stdout
         except Exception:
@@ -98,6 +99,7 @@ class ComprehensiveDryRunValidator:
                 capture_output=True,
                 text=True,
                 timeout=30,
+                check=False,
             )
             return len([l for l in result.stdout.split("\n") if l.strip()])
         except Exception:
@@ -114,6 +116,7 @@ class ComprehensiveDryRunValidator:
                 capture_output=True,
                 text=True,
                 timeout=30,
+                check=False,
             )
             return result.returncode == 0
         except Exception:
@@ -130,6 +133,7 @@ class ComprehensiveDryRunValidator:
                 capture_output=True,
                 text=True,
                 timeout=60,
+                check=False,
             )
             # Accept if no tests or tests pass
             return result.returncode in [0, 5]  # 5 = no tests collected
@@ -161,6 +165,7 @@ class ComprehensiveDryRunValidator:
                 capture_output=True,
                 text=True,
                 timeout=10,
+                check=False,
             )
             return result.returncode in [0, 2] or "--help" in result.stdout
         except Exception:
@@ -213,7 +218,7 @@ class ComprehensiveDryRunValidator:
             result["status"] = "❌ NEEDS_WORK"
 
         logger.info(
-            f"  {result['status']} - {result['percentage']:.1f}% ({score}/{total_tests + 1})"
+            f"  {result['status']} - {result['percentage']:.1f}% ({score}/{total_tests + 1})",
         )
         if result["ruff_violations"] > 0:
             logger.info(f"  📊 Ruff violations: {result['ruff_violations']}")
@@ -251,7 +256,7 @@ class ComprehensiveDryRunValidator:
 
         overall_percentage = (total_score / total_possible) * 100
         logger.info(
-            f"Overall Score: {total_score}/{total_possible} ({overall_percentage:.1f}%)"
+            f"Overall Score: {total_score}/{total_possible} ({overall_percentage:.1f}%)",
         )
         logger.info(f"Perfect Projects: {len(perfect_projects)}/21")
         logger.info(f"Needs Work: {len(needs_work)}/21")
@@ -305,14 +310,14 @@ class ComprehensiveDryRunValidator:
         # Success criteria
         logger.info("\n🎯 SUCCESS CRITERIA:")
         logger.info(
-            f"✅ All projects install: {all(r['poetry_install'] for r in self.results.values())}"
+            f"✅ All projects install: {all(r['poetry_install'] for r in self.results.values())}",
         )
         logger.info(
-            f"✅ All projects import: {all(r['module_import'] for r in self.results.values())}"
+            f"✅ All projects import: {all(r['module_import'] for r in self.results.values())}",
         )
         logger.info(f"✅ Zero violations: {total_violations == 0}")
         logger.info(
-            f"✅ All CLIs work: {all(r['cli_functionality'] for r in self.results.values())}"
+            f"✅ All CLIs work: {all(r['cli_functionality'] for r in self.results.values())}",
         )
 
         workspace_ready = (
@@ -328,7 +333,7 @@ class ComprehensiveDryRunValidator:
         # Log to token
         with open(self.workspace_root / ".token", "a") as f:
             f.write(
-                f"DRY-RUN-VALIDATION-001: {overall_percentage:.1f}% functional, {total_violations} violations\n"
+                f"DRY-RUN-VALIDATION-001: {overall_percentage:.1f}% functional, {total_violations} violations\n",
             )
 
         return workspace_ready, total_violations

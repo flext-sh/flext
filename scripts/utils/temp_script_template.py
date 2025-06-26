@@ -102,7 +102,9 @@ def main() -> None:
 
     except Exception as e:
         logger.exception(
-            "Erro no script temporário", error=str(e), error_type=type(e).__name__
+            "Erro no script temporário",
+            error=str(e),
+            error_type=type(e).__name__,
         )
         sys.exit(1)
 

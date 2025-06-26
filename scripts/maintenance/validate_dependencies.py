@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Script para validar se as dependências circulares foram corrigidas.
+"""Script para validar se as dependências circulares foram corrigidas.
 
 Este script verifica:
 1. Se ainda existem imports diretos do FLX fora do projeto FLX
@@ -57,7 +56,7 @@ def check_direct_flx_imports() -> list[str]:
                         line.startswith(("from flx.", "import flx."))
                     ) and "lazy_import" not in line:
                         issues.append(
-                            f"{py_file}:{line_num} - Import direto do FLX: {line}"
+                            f"{py_file}:{line_num} - Import direto do FLX: {line}",
                         )
 
             except Exception as e:
@@ -102,7 +101,7 @@ def check_lazy_import_usage() -> list[str]:
                     # Verifica se o import do lazy_import está presente
                     if "from flx.utils.lazy_import import lazy_import" not in content:
                         issues.append(
-                            f"{py_file} - Usa lazy_import mas não importa a função"
+                            f"{py_file} - Usa lazy_import mas não importa a função",
                         )
 
             except Exception as e:
@@ -110,7 +109,7 @@ def check_lazy_import_usage() -> list[str]:
 
         if lazy_import_files:
             print(
-                f"✅ {project}: {len(lazy_import_files)} arquivos usando lazy imports"
+                f"✅ {project}: {len(lazy_import_files)} arquivos usando lazy imports",
             )
             print(f"⚠️  {project}: Nenhum arquivo usando lazy imports")
 
@@ -144,7 +143,7 @@ def check_pyproject_dependencies() -> list[str]:
             for project in required_optional:
                 if f'{project} = {{ path = "./{project}", develop = true }}' in content:
                     issues.append(
-                        f"pyproject.toml principal - {project} deve ser opcional"
+                        f"pyproject.toml principal - {project} deve ser opcional",
                     )
 
         except Exception as e:
@@ -167,7 +166,7 @@ def check_pyproject_dependencies() -> list[str]:
                 # Verifica se dependências do FLX são opcionais
                 if 'flx = { path = "../flx", develop = true }' in content:
                     issues.append(
-                        f"{project}/pyproject.toml - Dependência do FLX deve ser opcional"
+                        f"{project}/pyproject.toml - Dependência do FLX deve ser opcional",
                     )
 
             except Exception as e:

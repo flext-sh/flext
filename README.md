@@ -1,385 +1,249 @@
-# 🚀 PyAuto - Enterprise Python Automation Workspace
+# Oracle Database Documentation Hub 🔷
 
-> **Enterprise-grade Python automation framework implementing Hexagonal Architecture with Oracle integrations and comprehensive data pipeline capabilities**
+**The Definitive Worldwide Reference Collection for Oracle Database Development and Administration**
 
-[![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/downloads/)
-[![Architecture](https://img.shields.io/badge/architecture-hexagonal-green.svg)](./docs/architecture/index.md)
-[![Framework](https://img.shields.io/badge/framework-0.4.0-orange.svg)](./flx/README.md)
-[![Enterprise](https://img.shields.io/badge/grade-enterprise-red.svg)](./docs/deployment/production-checklist.md)
+[![Oracle Database](https://img.shields.io/badge/Oracle-Database-red.svg)](https://www.oracle.com/database/)
+[![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/)
+[![Documentation](https://img.shields.io/badge/docs-comprehensive-green.svg)](docs/)
+[![Community](https://img.shields.io/badge/community-worldwide-orange.svg)](community-tools/)
 
-## 📋 **Overview**
+## 📊 Collection Statistics
 
-Monorepo workspace containing 21+ interconnected projects for enterprise Python automation, Oracle integration, data pipelines, and LDAP management
+- **52,767** total files in the complete Oracle ecosystem collection
+- **2,955** Python implementation files
+- **1,649** SQL scripts and examples
+- **8,005** organized directories
+- **5,833** documentation and code files
+- **45+** Oracle implementations across multiple programming languages
+- **25+** official Oracle repositories and tools
+- **15+** community-driven solutions and frameworks
 
----
+## 🗺️ Navigation Map
 
-## 🧭 **Navigation Hub**
+### 📚 [Oracle Documentation](oracle-documentation/)
+Official Oracle Database documentation including concepts, SQL reference, PL/SQL guide, administration, performance tuning, security, and more.
 
-### **🎯 Quick Access**
+### ⚙️ [Implementations](implementations/)
+Complete collection of Oracle drivers, tools, and frameworks across multiple programming languages and platforms.
 
-- **📖 [Complete Documentation](./docs/index.md)** - Comprehensive guides and references
-- **🏗️ [Architecture Overview](./docs/architecture/index.md)** - Hexagonal architecture patterns
-- **🚀 [Getting Started](./docs/getting-started/index.md)** - Setup and first steps
-- **🔧 [Development Guide](./docs/development/index.md)** - Development standards and tools
+### 🛠️ [Community Tools](community-tools/)
+Community-driven Oracle tools, monitoring solutions, and third-party integrations.
 
-### **🏢 Enterprise Components**
+### 📋 [Reference Schemas](reference-schemas/)
+Oracle sample schemas, application monitoring examples, and audit vault configurations.
 
-| Component                                           | Purpose                          | Status        | Documentation                                      |
-| --------------------------------------------------- | -------------------------------- | ------------- | -------------------------------------------------- |
-| **[FLX Core](./flx/)**                              | Hexagonal architecture framework | ✅ Stable     | [FLX Docs](./flx/README.md)                        |
-| **[Meltano Enterprise](./flx-meltano-enterprise/)** | Enterprise data platform         | ✅ Production | [Meltano Docs](./flx-meltano-enterprise/README.md) |
-| **[Oracle Database](./flx-database-oracle/)**       | Oracle DB integration            | ✅ Production | [Oracle Docs](./flx-database-oracle/README.md)     |
-| **[Code Analyzer](./dc-code-analyzer/)**            | Django-based code analysis       | 🔶 Beta       | [Analyzer Docs](./dc-code-analyzer/README.md)      |
+### 🔧 [Performance Guides](performance-guides/)
+Performance tuning resources, optimization strategies, and monitoring best practices.
 
----
+### 🔒 [Security Guides](security-guides/)
+Oracle security documentation, audit configurations, and access control examples.
 
-## 🎯 **Core Architecture**
+### 🔄 [Migration Tools](migration-tools/)
+Database migration utilities, conversion scripts, and platform migration guides.
 
-### **🏗️ Hexagonal Architecture Implementation**
+### 📈 [Monitoring Tools](monitoring-tools/)
+Oracle database monitoring solutions, observability tools, and performance tracking utilities.
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                     PyAuto Enterprise                       │
-├─────────────────────────────────────────────────────────────┤
-│  🎯 Domain Layer (Business Logic)                          │
-│  ├─ flx/                    - Core framework               │
-│  ├─ ldap-core-shared/       - LDAP domain models          │
-│  └─ gruponos-poc-oic-wms/   - Business orchestration      │
-├─────────────────────────────────────────────────────────────┤
-│  🔌 Application Layer (Use Cases)                          │
-│  ├─ flx-meltano-enterprise/ - Data platform orchestration │
-│  ├─ flx-oracle-wms/         - WMS orchestration           │
-│  └─ flx-oracle-oic/         - OIC orchestration           │
-├─────────────────────────────────────────────────────────────┤
-│  🌐 Infrastructure Layer (Adapters)                        │
-│  ├─ Database Adapters                                      │
-│  │  └─ flx-database-oracle/ - Oracle DB integration       │
-│  ├─ HTTP Adapters                                          │
-│  │  ├─ flx-http-oracle-oic/ - OIC API client              │
-│  │  └─ flx-http-oracle-wms/ - WMS API client              │
-│  ├─ Singer SDK Adapters                                    │
-│  │  ├─ tap-oracle-oic/      - OIC data extractor          │
-│  │  ├─ tap-oracle-wms/      - WMS data extractor          │
-│  │  ├─ tap-ldap/            - LDAP data extractor         │
-│  │  ├─ target-oracle-oic/   - OIC data loader             │
-│  │  ├─ target-oracle-wms/   - WMS data loader             │
-│  │  └─ target-ldap/         - LDAP data loader            │
-│  └─ Migration Tools                                        │
-│     └─ algar-oud-mig/       - LDAP migration utility      │
-└─────────────────────────────────────────────────────────────┘
-```
+## 🚀 Quick Start Guides
 
-### **📊 Project Statistics**
-
-- **Total Projects**: 21 independent packages
-- **Core Framework**: 1 (FLX)
-- **Database Adapters**: 1 (Oracle)
-- **HTTP Adapters**: 2 (OIC, WMS)
-- **Singer SDK Components**: 6 (3 taps, 3 targets)
-- **Enterprise Applications**: 4 (Meltano, Orchestrators, Analyzer)
-- **Migration Tools**: 3 (LDAP, dbt, utilities)
-- **Development Tools**: 4 (Examples, templates, shared libraries)
-
----
-
-## 🚀 **Quick Start Guide**
-
-### **📦 Installation Options**
-
+### For Database Administrators
 ```bash
-# 1. Full enterprise installation (all components)
-git clone https://github.com/datacosmos-br/pyauto.git
-cd pyauto
-poetry install --extras "all"
+# Start with Oracle administration fundamentals
+cd oracle-documentation/administration-guide/
 
-# 2. Core framework only
-poetry install --extras "core"
+# Explore sample schemas for testing
+cd reference-schemas/oracle-sample-schemas/
 
-# 3. Oracle ecosystem
-poetry install --extras "oracle database"
-
-# 4. LDAP ecosystem
-poetry install --extras "ldap"
-
-# 5. Data platform (Meltano + Singer SDK)
-poetry install --extras "enterprise singer"
+# Set up monitoring
+cd monitoring-tools/oracle-observability/
 ```
 
-### **⚡ First Steps**
-
+### For Python Developers
 ```bash
-# Verify installation
-python -c "import flx; print(f'FLX {flx.__version__} ready!')"
+# Modern Oracle Python driver
+cd implementations/python-libraries/oracle-python-driver/
 
-# Run core framework tests
-cd flx && make test
+# Legacy cx_Oracle compatibility
+cd implementations/python-libraries/cx-oracle-legacy/
 
-# Start enterprise dashboard
-cd flx-meltano-enterprise && poetry run meltano ui
-
-# Test Oracle connectivity
-cd flx-database-oracle && poetry run flx-oracle-db test-connection
+# Database examples
+cd implementations/data-modeling/oracle-database-examples/
 ```
 
-### **🎯 Usage Examples**
-
-```python
-# Enterprise framework usage
-from flx.core import Application, DomainEvent
-from flx.infrastructure import OracleAdapter
-
-# Create enterprise application
-app = Application(
-    name="enterprise-automation",
-    adapters=[OracleAdapter()]
-)
-
-# Oracle database operations
-from flx_database_oracle import OracleClient
-
-client = OracleClient(
-    host="oracle-prod.company.com",
-    service_name="PROD"
-)
-
-# Data pipeline with Singer SDK
-from tap_oracle_wms import TapOracleWMS
-from target_oracle_oic import TargetOracleOIC
-
-# Extract from WMS, load to OIC
-tap = TapOracleWMS(config="wms_config.json")
-target = TargetOracleOIC(config="oic_config.json")
-```
-
----
-
-## 📁 **Workspace Structure**
-
-### **🏗️ Core Framework**
-
-```
-flx/                           # 🎯 Core hexagonal architecture framework
-├── src/flx/
-│   ├── core/                  # Domain layer abstractions
-│   ├── application/           # Use case implementations
-│   ├── infrastructure/        # Infrastructure adapters
-│   └── cli/                   # Command-line interface
-└── tests/                     # Comprehensive test suite
-```
-
-### **🔗 Database & HTTP Adapters**
-
-```
-flx-database-oracle/           # 🗄️ Oracle database integration
-flx-http-oracle-oic/          # 🌐 Oracle Integration Cloud HTTP client
-flx-http-oracle-wms/          # 📦 Oracle WMS HTTP client
-```
-
-### **📊 Singer SDK Data Pipeline Components**
-
-```
-tap-oracle-oic/               # 📤 OIC data extractor
-tap-oracle-wms/               # 📤 WMS data extractor
-tap-ldap/                     # 📤 LDAP data extractor
-target-oracle-oic/            # 📥 OIC data loader
-target-oracle-wms/            # 📥 WMS data loader
-target-ldap/                  # 📥 LDAP data loader
-```
-
-### **🏢 Enterprise Applications**
-
-```
-flx-meltano-enterprise/       # 🎯 Enterprise data platform
-gruponos-poc-oic-wms/         # 🔄 Business process orchestration
-dc-code-analyzer/             # 🔍 Django-based code analysis platform
-algar-oud-mig/               # 🔄 LDAP migration utility
-```
-
-### **🛠️ Development & Utilities**
-
-```
-examples/                     # 📚 Usage examples and tutorials
-docs/                        # 📖 Comprehensive documentation
-scripts/                     # 🔧 Development and maintenance scripts
-reference/                   # 📋 Official Meltano reference implementations
-```
-
----
-
-## 🎯 **Key Features & Capabilities**
-
-### **🏗️ Enterprise Architecture**
-
-- **Hexagonal Architecture**: Clean separation of domain, application, and infrastructure
-- **Domain-Driven Design**: Rich domain models with proper encapsulation
-- **CQRS & Event Sourcing**: Command/Query separation and event-driven architecture
-- **Dependency Injection**: Pluggable infrastructure through dependency injection
-- **Type Safety**: Full Python 3.13+ type checking with mypy strict mode
-
-### **🔗 Oracle Integration**
-
-- **Native Oracle Support**: Direct integration with Oracle Database 23c+
-- **Oracle Cloud Integration**: OIC (Oracle Integration Cloud) HTTP client
-- **WMS Integration**: Oracle Warehouse Management System integration
-- **Connection Pooling**: High-performance connection management
-- **Transaction Support**: ACID compliance with distributed transaction support
-
-### **📊 Data Pipeline Capabilities**
-
-- **Singer SDK Compliance**: Full Singer specification implementation
-- **Stream Processing**: Real-time data processing with async support
-- **Schema Evolution**: Automatic schema detection and evolution
-- **Data Quality**: Built-in data validation and quality checks
-- **Monitoring**: Comprehensive observability and metrics
-
-### **🏢 Enterprise Features**
-
-- **Multi-tenancy**: Enterprise-grade multi-tenant architecture
-- **Security**: OAuth2, JWT, RBAC, and audit logging
-- **Scalability**: Horizontal scaling with load balancing
-- **Monitoring**: OpenTelemetry, metrics, and distributed tracing
-- **Configuration**: Environment-based configuration management
-
-### **🔧 Development Experience**
-
-- **Modern Python**: Python 3.13+ with latest language features
-- **Poetry Workspace**: Monorepo management with Poetry
-- **Quality Tools**: Black, Ruff, mypy, pytest with 90%+ coverage
-- **Documentation**: Comprehensive docs with examples
-- **CI/CD Ready**: GitHub Actions workflows and deployment automation
-
----
-
-## 🛠️ **Development Standards**
-
-### **📋 Quality Requirements**
-
-- **Code Coverage**: Minimum 90% test coverage
-- **Type Safety**: 100% mypy strict compliance
-- **Code Style**: Black + Ruff formatting
-- **Documentation**: Comprehensive docstrings and guides
-- **Testing**: Unit, integration, and E2E tests
-
-### **🔧 Development Tools**
-
+### For Application Developers
 ```bash
-# Quality checks
-make lint          # Code formatting and linting
-make type-check    # Type checking with mypy
-make test          # Full test suite
-make coverage      # Coverage reporting
+# SQL development
+cd oracle-documentation/sql-reference/
 
-# Development workflow
-make dev-install   # Development environment setup
-make pre-commit    # Pre-commit hooks setup
-make docs          # Documentation generation
+# PL/SQL programming
+cd oracle-documentation/plsql-reference/
+
+# Development tools
+cd implementations/performance-analyzers/oracle-development-tools/
 ```
 
-### **📊 Supported Environments**
-
-- **Python**: 3.9, 3.10, 3.11, 3.12, 3.13
-- **Operating Systems**: Linux, macOS, Windows
-- **Databases**: Oracle 19c+, PostgreSQL 13+, SQLite 3.8+
-- **Cloud Platforms**: AWS, Azure, GCP, Oracle Cloud
-
----
-
-## 📖 **Documentation Ecosystem**
-
-### **📚 Core Documentation**
-
-- **[Architecture Guide](./docs/architecture/index.md)** - Hexagonal architecture implementation
-- **[Development Guide](./docs/development/index.md)** - Development standards and practices
-- **[Deployment Guide](./docs/deployment/index.md)** - Production deployment strategies
-- **[API Reference](./docs/api-reference/index.md)** - Complete API documentation
-
-### **🎯 Quick Reference Guides**
-
-- **[Getting Started](./docs/getting-started/index.md)** - Setup and first steps
-- **[Oracle Integration](./docs/guides/oracle-integration.md)** - Oracle-specific implementations
-- **[Data Pipelines](./docs/guides/data-pipelines.md)** - Singer SDK pipeline development
-- **[Enterprise Features](./docs/guides/enterprise-features.md)** - Enterprise-grade capabilities
-
-### **🔗 Component Documentation**
-
-Each project maintains its own comprehensive README.md with:
-
-- Purpose and scope
-- Installation instructions
-- Usage examples
-- API documentation
-- Configuration options
-- Testing guidelines
-
----
-
-## 🤝 **Contributing & Support**
-
-### **🔧 Development Setup**
-
+### For DevOps Engineers
 ```bash
-# Setup development environment
-git clone https://github.com/datacosmos-br/pyauto.git
-cd pyauto
-poetry install --extras "dev all"
-make pre-commit-install
+# Docker containers
+cd implementations/monitoring-solutions/oracle-docker-images/
 
-# Run full validation
-make validate-all
+# Kubernetes deployment
+cd implementations/monitoring-solutions/kubernetes-oracle-db/
+
+# Infrastructure as Code
+cd implementations/data-modeling/terraform-oracle-provider/
 ```
 
-### **📋 Contribution Guidelines**
+## 🎯 Essential Oracle Resources
 
-- Follow [development standards](./docs/development/index.md)
-- Maintain 90%+ test coverage
-- Update documentation for all changes
-- Follow semantic versioning
-- Submit detailed pull requests
+### Top Documentation Priorities
+1. **Database Concepts** - Core Oracle architecture and fundamentals
+2. **SQL Language Reference** - Complete SQL syntax and semantics
+3. **PL/SQL Developer's Guide** - Comprehensive PL/SQL programming
+4. **Performance Tuning Guide** - Database optimization strategies
+5. **Administrator's Guide** - Complete database administration
+6. **Security Guide** - Database security and access control
 
-### **🆘 Support Channels**
+### Essential Implementation Libraries
+1. **python-oracledb** - Modern Python driver (recommended)
+2. **cx_Oracle** - Legacy Python driver (compatibility)
+3. **node-oracledb** - Official Node.js driver
+4. **go-oracledb** - Official Go driver
+5. **oracle-dotnet-samples** - .NET integration examples
+6. **utPLSQL** - PL/SQL unit testing framework
 
-- **Issues**: [GitHub Issues](https://github.com/datacosmos-br/pyauto/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/datacosmos-br/pyauto/discussions)
-- **Documentation**: [Official Docs](./docs/index.md)
-- **Enterprise Support**: Contact maintainers for enterprise support options
+### Critical Development Tools
+1. **SQLcl** - Oracle SQL command line tool
+2. **Oracle SQL Developer** - GUI development environment
+3. **Oracle Cloud CLI** - Cloud infrastructure management
+4. **Docker Images** - Containerized Oracle deployments
+5. **Terraform Provider** - Infrastructure as Code
+6. **Sample Schemas** - HR, OE, PM, IX, SH, BI for testing
+
+## 📖 Feature Categories
+
+### 🔌 **Database Connectivity**
+- **Modern Drivers**: Latest Oracle database drivers for Python, Node.js, Go, .NET
+- **Legacy Support**: Backward compatibility with cx_Oracle and older systems
+- **Connection Pooling**: Enterprise-grade connection management
+- **Async Support**: Asynchronous database operations for high performance
+
+### 📊 **Data Management**
+- **Schema Analysis**: Complete database schema introspection tools
+- **Data Migration**: Platform migration utilities and conversion scripts
+- **ETL Operations**: Extract, Transform, Load tools and frameworks
+- **Sample Data**: Comprehensive Oracle sample schemas for development and testing
+
+### 🎯 **Performance & Monitoring**
+- **SQL Tuning**: Query optimization and performance analysis tools
+- **Database Monitoring**: Real-time monitoring and alerting solutions
+- **Performance Metrics**: Prometheus exporters and observability tools
+- **Profiling Tools**: Database performance profiling and analysis
+
+### 🔒 **Security & Compliance**
+- **Access Control**: Role-based security and fine-grained access control
+- **Audit Logging**: Comprehensive audit trail and compliance reporting
+- **Encryption**: Data encryption and security best practices
+- **Vulnerability Assessment**: Security scanning and assessment tools
+
+### ☁️ **Cloud & DevOps**
+- **Oracle Cloud**: OCI tools and cloud-native deployments
+- **Containerization**: Docker images and Kubernetes manifests
+- **Infrastructure as Code**: Terraform providers and automation scripts
+- **CI/CD Integration**: Continuous integration and deployment tools
+
+### 🧪 **Testing & Development**
+- **Unit Testing**: utPLSQL framework for PL/SQL testing
+- **Test Data**: Sample schemas and synthetic data generation
+- **Development Tools**: IDEs, command-line tools, and productivity utilities
+- **Code Quality**: Static analysis and code review tools
+
+## 🌟 Highlighted Projects
+
+### **Oracle Official Repositories**
+- [**python-oracledb**](implementations/python-libraries/oracle-python-driver/) - Next-generation Python driver
+- [**Oracle Database Examples**](implementations/data-modeling/oracle-database-examples/) - Comprehensive official examples
+- [**Oracle Sample Schemas**](implementations/performance-analyzers/oracle-sample-schemas/) - Standard test schemas
+- [**Oracle Docker Images**](implementations/monitoring-solutions/oracle-docker-images/) - Official container images
+
+### **Community Favorites**
+- [**utPLSQL Testing**](implementations/cli-tools/utplsql-testing-framework/) - Industry-standard PL/SQL testing
+- [**Prometheus Oracle Exporter**](community-tools/prometheus-oracle-exporter/) - Monitoring integration
+- [**PostgreSQL Oracle Compatibility**](community-tools/postgresql-oracle-compatibility/) - Migration support
+- [**DBA Tools PowerShell**](community-tools/dbatools-powershell/) - Database administration automation
+
+### **Enterprise Solutions**
+- [**Oracle Coherence**](implementations/etl-tools/oracle-coherence/) - In-memory data grid
+- [**GoldenGate Kafka Adapter**](implementations/etl-tools/goldengate-kafka-adapter/) - Real-time data integration
+- [**Oracle Cloud CLI**](implementations/cli-tools/oracle-cloud-cli/) - Cloud infrastructure management
+- [**Kubernetes for Oracle DB**](implementations/monitoring-solutions/kubernetes-oracle-db/) - Container orchestration
+
+## 🔍 Search and Discovery
+
+### Find by Technology Stack
+- **Python**: `implementations/python-libraries/`
+- **Node.js**: `implementations/sql-tools/oracle-nodejs-driver/`
+- **Go**: `implementations/sql-tools/oracle-golang-driver/`
+- **Docker**: `implementations/monitoring-solutions/oracle-docker-images/`
+- **Kubernetes**: `implementations/monitoring-solutions/kubernetes-oracle-db/`
+
+### Find by Use Case
+- **Performance Tuning**: `oracle-documentation/performance-tuning/`
+- **Security Configuration**: `reference-schemas/oracle-audit-vault-samples/`
+- **Database Migration**: `migration-tools/`
+- **Application Monitoring**: `monitoring-tools/`
+
+### Find by Skill Level
+- **Beginner**: Start with `oracle-documentation/database-concepts/`
+- **Intermediate**: Explore `implementations/data-modeling/oracle-database-examples/`
+- **Advanced**: Dive into `performance-guides/` and `security-guides/`
+- **Expert**: Contribute to `community-tools/` and enterprise solutions
+
+## 📚 Learning Roadmaps
+
+### Database Administrator Track
+1. Oracle Database Concepts → Administration Guide → Performance Tuning
+2. Sample Schemas → Monitoring Tools → Security Configuration
+3. Backup & Recovery → Migration Tools → Enterprise Management
+
+### Python Developer Track
+1. python-oracledb → Oracle Database Examples → Testing Frameworks
+2. Performance Optimization → Connection Pooling → Production Deployment
+3. Monitoring Integration → Cloud Deployment → Best Practices
+
+### DevOps Engineer Track
+1. Docker Images → Kubernetes Deployment → Infrastructure as Code
+2. Monitoring Setup → Security Configuration → Performance Tuning
+3. CI/CD Integration → Cloud Migration → Enterprise Scaling
+
+## 🤝 Contributing
+
+This collection is designed to be the most comprehensive Oracle Database resource worldwide. To contribute:
+
+1. **Add New Resources**: Submit Oracle-related repositories, documentation, or tools
+2. **Improve Documentation**: Enhance READMEs, add examples, or create tutorials
+3. **Report Issues**: Identify broken links, outdated information, or missing resources
+4. **Share Use Cases**: Document real-world implementations and success stories
+
+## 📄 License & Attribution
+
+This documentation collection aggregates resources from multiple sources:
+- **Oracle Official Documentation**: Copyright Oracle Corporation
+- **Community Projects**: Various open-source licenses (see individual projects)
+- **This Collection**: Apache 2.0 License for organizational structure and documentation
+
+All original copyrights and licenses are preserved. This collection serves as a comprehensive navigation and reference guide.
+
+## 🔗 External References
+
+- [Oracle Database Documentation](https://docs.oracle.com/en/database/)
+- [Oracle Technology Network](https://www.oracle.com/technical-resources/)
+- [Oracle Cloud Documentation](https://docs.oracle.com/en-us/iaas/)
+- [Oracle GitHub Organization](https://github.com/oracle)
+- [Oracle Community](https://community.oracle.com/)
 
 ---
 
-## 📄 **License & Acknowledgments**
+**Oracle Database Documentation Hub** - *Your gateway to mastering Oracle technology*
 
-### **📋 License**
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-### **🙏 Acknowledgments**
-
-- **Meltano Labs**: Reference implementations and Singer SDK patterns
-- **Oracle**: Database and cloud integration technologies
-- **Python Community**: Modern Python tooling and best practices
-- **FastAPI**: High-performance web framework foundation
-
----
-
-## 🔗 **Cross-References**
-
-### **🎯 Prerequisites**
-
-- Python 3.9+ with Poetry
-- Oracle Database or Oracle Cloud access (for Oracle components)
-- LDAP server access (for LDAP components)
-
-### **➡️ Next Steps**
-
-- [Installation Guide](./docs/getting-started/installation.md) - Detailed setup instructions
-- [Architecture Deep Dive](./docs/architecture/hexagonal-architecture.md) - Understanding the framework
-- [First Project](./docs/getting-started/first-project.md) - Building your first PyAuto application
-
-### **🔗 Related Projects**
-
-- [FLX Framework](./flx/README.md) - Core framework implementation
-- [Oracle Database Adapter](./flx-database-oracle/README.md) - Database integration
-- [Meltano Enterprise](./flx-meltano-enterprise/README.md) - Data platform implementation
-
----
-
-**🚀 PyAuto Enterprise Workspace** | **🏠 Root**: PyAuto Home | **Framework**: 0.4.0+ | **Updated**: 2025-06-19
+*This collection represents years of Oracle development wisdom, best practices, and community contributions from around the world. Use it to accelerate your Oracle journey and build enterprise-grade solutions.*

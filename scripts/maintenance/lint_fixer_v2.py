@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-PyAuto Lint Fixer v2 - Simplified Enterprise Edition.
+"""PyAuto Lint Fixer v2 - Simplified Enterprise Edition.
 
 Solução incremental e oficial para correção de lint e mypy no workspace.
 Versão simplificada que evita problemas de recursão e foca na funcionalidade core.
@@ -18,7 +17,8 @@ from typing import Any
 
 # Setup logging
 logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
 )
 logger = logging.getLogger(__name__)
 
@@ -217,11 +217,12 @@ class LintFixerV2:
                                 strict=False,
                             )
                             if a != b
-                        ]
+                        ],
                     )
                 except SyntaxError:
                     logger.warning(
-                        "⚠️ Syntax error after fixes in %s, skipping", file_path.name
+                        "⚠️ Syntax error after fixes in %s, skipping",
+                        file_path.name,
                     )
                     return 0
 
@@ -242,12 +243,13 @@ class LintFixerV2:
                 and line.endswith(":")
                 and "-> " not in line
             ):
-                if "def __init__(" in line:
-                    line = line.replace("):", ") -> None:")
-                elif "def main(" in line:
-                    line = line.replace("):", ") -> None:")
-                elif any(
-                    test in line for test in ["def test_", "def setUp", "def tearDown"]
+                if (
+                    "def __init__(" in line
+                    or "def main(" in line
+                    or any(
+                        test in line
+                        for test in ["def test_", "def setUp", "def tearDown"]
+                    )
                 ):
                     line = line.replace("):", ") -> None:")
                 elif "(" in line and ")" in line:
@@ -330,6 +332,7 @@ class LintFixerV2:
                 capture_output=True,
                 text=True,
                 cwd=self.workspace_root,
+                check=False,
             )
             return (
                 len(result.stdout.strip().split("\n")) if result.stdout.strip() else 0
@@ -381,7 +384,7 @@ def main() -> None:
         final_status = results["final_status"]
         print("\n📊 FINAL RESULTS:")
         print(
-            f"   Projects processed: {results['session_stats']['projects_processed']}"
+            f"   Projects processed: {results['session_stats']['projects_processed']}",
         )
         print(f"   Files modified: {results['session_stats']['files_modified']}")
         print(f"   Total fixes: {results['session_stats']['total_fixes']}")

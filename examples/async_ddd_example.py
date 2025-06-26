@@ -1,5 +1,4 @@
-"""
-FLX Async Domain-Driven Design Infrastructure Demo
+"""FLX Async Domain-Driven Design Infrastructure Demo
 
 This example demonstrates the async infrastructure components with enterprise patterns.
 """
@@ -186,7 +185,10 @@ class ExampleResourceService:
 
         if event.errors:
             logger.warning(
-                "Processing had %s", len(event.errors), "errors:", event.errors
+                "Processing had %s",
+                len(event.errors),
+                "errors:",
+                event.errors,
             )
 
         # Example side effects:

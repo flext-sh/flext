@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Comprehensive E2E Infrastructure Validation Script
+"""Comprehensive E2E Infrastructure Validation Script
 
 This script validates that all E2E test infrastructure is properly set up
 for the four LDAP projects: tap-ldap, target-ldap, dbt-ldap, and flx-ldap.
@@ -29,7 +28,9 @@ PROJECTS = ["tap-ldap", "target-ldap", "dbt-ldap", "flx-ldap"]
 
 
 def run_command(
-    cmd: list[str], cwd: Path | None = None, check: bool = True
+    cmd: list[str],
+    cwd: Path | None = None,
+    check: bool = True,
 ) -> subprocess.CompletedProcess:
     """Run command and return result."""
     return subprocess.run(
@@ -159,7 +160,7 @@ def validate_docker_compose(project_path: Path) -> dict[str, Any]:
                         for port in service_config["ports"]:
                             results["ports"].append(port)
             results["errors"].append(
-                f"Docker compose validation failed: {result.stderr}"
+                f"Docker compose validation failed: {result.stderr}",
             )
 
     except Exception as e:
@@ -303,7 +304,7 @@ def test_docker_infrastructure(project_path: Path) -> dict[str, Any]:
                 except Exception:
                     pass
             results["errors"].append(
-                f"Failed to start containers: {start_result.stderr}"
+                f"Failed to start containers: {start_result.stderr}",
             )
 
     except Exception as e:
@@ -327,11 +328,12 @@ def test_docker_infrastructure(project_path: Path) -> dict[str, Any]:
     help="Specific project to validate (tap-ldap, target-ldap, dbt-ldap, flx-ldap)",
 )
 @click.option(
-    "--run-docker-tests", is_flag=True, help="Run actual Docker container tests"
+    "--run-docker-tests",
+    is_flag=True,
+    help="Run actual Docker container tests",
 )
 def main(project: str | None, run_docker_tests: bool) -> None:
     """Validate E2E test infrastructure for LDAP projects."""
-
     console.print(Panel.fit("🧪 E2E Infrastructure Validation", style="bold blue"))
 
     pyauto_root = Path(__file__).parent.parent
@@ -364,7 +366,8 @@ def main(project: str | None, run_docker_tests: bool) -> None:
             docker_results: dict = {}
             if run_docker_tests and structure_results["docker_compose_exists"]:
                 task3 = progress.add_task(
-                    "Testing Docker infrastructure...", total=None
+                    "Testing Docker infrastructure...",
+                    total=None,
                 )
                 docker_results = test_docker_infrastructure(project_path)
                 progress.update(task3, completed=True)
@@ -443,7 +446,7 @@ def main(project: str | None, run_docker_tests: bool) -> None:
         # Structure errors
         if results["structure"]["missing_files"]:
             errors.extend(
-                [f"Missing: {f}" for f in results["structure"]["missing_files"]]
+                [f"Missing: {f}" for f in results["structure"]["missing_files"]],
             )
 
         # Compose errors
@@ -475,10 +478,10 @@ def main(project: str | None, run_docker_tests: bool) -> None:
             if results["docker"].get("containers_healthy", False)
         )
         console.print(
-            f"\n🎯 Summary: {valid_projects}/{total_projects} projects valid, {docker_working}/{total_projects} Docker tests passed"
+            f"\n🎯 Summary: {valid_projects}/{total_projects} projects valid, {docker_working}/{total_projects} Docker tests passed",
         )
         console.print(
-            f"\n🎯 Summary: {valid_projects}/{total_projects} projects have complete E2E infrastructure"
+            f"\n🎯 Summary: {valid_projects}/{total_projects} projects have complete E2E infrastructure",
         )
 
     if valid_projects == total_projects:

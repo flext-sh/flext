@@ -224,7 +224,7 @@ def schema_example() -> int:
 
         # Print field details
         for _i, (_field_name, field_schema) in enumerate(
-            list(schema.fields.items())[:5]
+            list(schema.fields.items())[:5],
         ):
             field_type = field_schema.get("type", "string")
             if field_schema.get("format"):

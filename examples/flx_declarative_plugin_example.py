@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-FLX Declarative Plugin Example - Demonstração do sistema de plugins
+"""FLX Declarative Plugin Example - Demonstração do sistema de plugins
 
 Este exemplo mostra como criar plugins declarativos que podem ser expostos via:
 - CLI (linha de comando)
@@ -135,7 +134,9 @@ class MonitoringCommands:
         return {"alerts": alerts, "total": len(alerts), "filter": severity}
 
     async def metrics(
-        self, component: str = "all", duration: str = "1h"
+        self,
+        component: str = "all",
+        duration: str = "1h",
     ) -> dict[str, Any]:
         """Obter métricas do sistema.
 
@@ -161,7 +162,7 @@ class MonitoringCommands:
 
         if component == "database":
             metrics.update(
-                {"connections": 25, "queries_per_second": 150, "cache_hit_ratio": 0.95}
+                {"connections": 25, "queries_per_second": 150, "cache_hit_ratio": 0.95},
             )
         elif component == "api":
             metrics.update(
@@ -169,7 +170,7 @@ class MonitoringCommands:
                     "requests_per_second": 450,
                     "avg_response_time_ms": 85,
                     "error_rate": 0.02,
-                }
+                },
             )
 
         return metrics
@@ -196,7 +197,8 @@ class MonitoringCommands:
 
 @register_command("system-report")
 async def generate_system_report(
-    format: str = "json", output: str | None = None
+    format: str = "json",
+    output: str | None = None,
 ) -> dict[str, Any]:
     """Comando standalone para gerar relatório do sistema.
 

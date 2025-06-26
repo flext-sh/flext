@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-"""
-Enterprise PEP8 Enforcer - ABSOLUTE ZERO TOLERANCE.
+"""Enterprise PEP8 Enforcer - ABSOLUTE ZERO TOLERANCE.
 
 Implements PEP8 TOTAL NA VEIA across entire PyAuto workspace.
 """
@@ -100,7 +99,7 @@ class EnterprisePEP8Enforcer:
                     "warn_unreachable": True,
                     "strict_equality": True,
                 },
-            }
+            },
         }
 
         try:
@@ -122,12 +121,14 @@ class EnterprisePEP8Enforcer:
 
     def apply_autofix_aggressively(self, project_path: Path) -> tuple[int, int]:
         """Apply ALL possible automatic fixes."""
-
         initial_violations = self._count_violations(project_path)
 
         # 1. Black formatting
         subprocess.run(
-            ["poetry", "run", "black", "."], cwd=project_path, capture_output=True
+            ["poetry", "run", "black", "."],
+            cwd=project_path,
+            capture_output=True,
+            check=False,
         )
 
         # 2. isort import ordering
@@ -135,6 +136,7 @@ class EnterprisePEP8Enforcer:
             ["poetry", "run", "isort", ".", "--profile", "black"],
             cwd=project_path,
             capture_output=True,
+            check=False,
         )
 
         # 3. Ruff auto-fix - multiple passes
@@ -143,6 +145,7 @@ class EnterprisePEP8Enforcer:
                 ["poetry", "run", "ruff", "check", ".", "--fix", "--unsafe-fixes"],
                 cwd=project_path,
                 capture_output=True,
+                check=False,
             )
 
         # 4. pyupgrade for modern syntax
@@ -153,6 +156,7 @@ class EnterprisePEP8Enforcer:
                 + [str(f) for f in py_files],
                 cwd=project_path,
                 capture_output=True,
+                check=False,
             )
 
         final_violations = self._count_violations(project_path)
@@ -166,6 +170,7 @@ class EnterprisePEP8Enforcer:
             cwd=project_path,
             capture_output=True,
             text=True,
+            check=False,
         )
 
         try:
@@ -178,12 +183,12 @@ class EnterprisePEP8Enforcer:
                 cwd=project_path,
                 capture_output=True,
                 text=True,
+                check=False,
             )
             return len([l for l in result.stdout.split("\n") if l.strip()])
 
     def generate_violation_report(self) -> None:
         """Generate comprehensive violation report."""
-
         total_violations = 0
         zero_violation_projects: list = []
 
@@ -205,7 +210,6 @@ class EnterprisePEP8Enforcer:
 
     def enforce_all_projects(self) -> None:
         """Enforce PEP8 across all projects."""
-
         for submodule in self.submodules:
             project_path = self.workspace_root / submodule
 

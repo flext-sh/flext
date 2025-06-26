@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Official PyAuto Lint & MyPy Fixer - Enterprise Edition.
+"""Official PyAuto Lint & MyPy Fixer - Enterprise Edition.
 
 CLAUDE.md COMPLIANT TOOL FOR ZERO TOLERANCE ENFORCEMENT
 
@@ -70,7 +69,7 @@ class FixerConfig:
             ".mypy_cache",
             ".ruff_cache",
             "node_modules",
-        ]
+        ],
     )
 
     # Fix categories to apply
@@ -305,7 +304,7 @@ class OfficialLintMyPyFixer:
 
                 if batch_fixes > 0:
                     result["files_modified"] += len(
-                        [f for f in batch if self._file_was_modified(f)]
+                        [f for f in batch if self._file_was_modified(f)],
                     )
 
             # Get final error count
@@ -319,7 +318,7 @@ class OfficialLintMyPyFixer:
             # Success if we reduced errors and didn't introduce syntax errors
             improvement = result["error_count_before"] - result["error_count_after"]
             result["success"] = improvement >= 0 and not self._has_syntax_errors(
-                project_path
+                project_path,
             )
 
             if result["success"]:
@@ -398,10 +397,10 @@ class OfficialLintMyPyFixer:
 
                 # Syntax validation
                 if self.config.validate_syntax and not self._validate_python_syntax(
-                    content
+                    content,
                 ):
                     logger.warning(
-                        "⚠️ Syntax validation failed for %s, skipping", file_path.name
+                        "⚠️ Syntax validation failed for %s, skipping", file_path.name,
                     )
                     return 0
 
@@ -427,11 +426,7 @@ class OfficialLintMyPyFixer:
                 and line.endswith(":")
                 and "-> " not in line
             ):
-                if "def __init__(" in line:
-                    line = line.replace("):", ") -> None:")
-                elif "def main(" in line:
-                    line = line.replace("):", ") -> None:")
-                elif any(
+                if "def __init__(" in line or "def main(" in line or any(
                     pattern in line
                     for pattern in ["def test_", "def setUp", "def tearDown"]
                 ):
@@ -640,7 +635,7 @@ class OfficialLintMyPyFixer:
                 ["ruff", "check", str(project_path)],
                 capture_output=True,
                 text=True,
-                cwd=self.workspace_root,
+                cwd=self.workspace_root, check=False,
             )
             return (
                 len(result.stdout.strip().split("\n")) if result.stdout.strip() else 0
@@ -690,10 +685,10 @@ class OfficialLintMyPyFixer:
 
             if lint_errors > 0:
                 validation_result["projects_with_errors"].append(
-                    {"project": project.name, "lint_errors": lint_errors}
+                    {"project": project.name, "lint_errors": lint_errors},
                 )
                 logger.warning(
-                    "❌ %s: %d lint errors remaining", project.name, lint_errors
+                    "❌ %s: %d lint errors remaining", project.name, lint_errors,
                 )
                 logger.info("✅ %s: ZERO lint errors", project.name)
 
@@ -795,7 +790,7 @@ def main() -> None:
             print(
                 f"\n⚠️ PARTIAL SUCCESS: {
                     results['final_validation']['total_lint_errors']
-                } violations remain"
+                } violations remain",
             )
             print("   Additional fixes may be required")
             sys.exit(1)

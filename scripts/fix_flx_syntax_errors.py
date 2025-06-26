@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-"""
-Fix systematic syntax errors in FLX project.
+"""Fix systematic syntax errors in FLX project.
 
 Per CLAUDE.md RULE 4: Complete delivery with zero tolerance for violations.
 Fixing import sys issues and other syntax problems systematically.
@@ -129,6 +128,7 @@ class FlxSyntaxFixer:
                 capture_output=True,
                 text=True,
                 timeout=5,
+                check=False,
             )
             return result.returncode == 0
         except Exception:
@@ -136,7 +136,6 @@ class FlxSyntaxFixer:
 
     def fix_all_syntax_errors(self) -> None:
         """Fix all syntax errors in FLX project."""
-
         files_to_fix = self.find_syntax_error_files()
 
         if not files_to_fix:
@@ -163,7 +162,7 @@ class FlxSyntaxFixer:
         # Log to token
         with open(self.flx_root.parent / ".token", "a") as f:
             f.write(
-                f"FLX-SYNTAX-FIX-002 PROGRESS: Fixed {len(self.fixed_files)} syntax errors\n"
+                f"FLX-SYNTAX-FIX-002 PROGRESS: Fixed {len(self.fixed_files)} syntax errors\n",
             )
 
 

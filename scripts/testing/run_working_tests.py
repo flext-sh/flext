@@ -75,7 +75,7 @@ class WorkingTestRunner:
                     "--cov=flx",
                     "--cov-report=term-missing",
                     "--cov-report=html:reports/coverage/flx_basic",
-                ]
+                ],
             )
 
         if self.config.generate_reports:
@@ -83,7 +83,7 @@ class WorkingTestRunner:
                 [
                     "--html=reports/pytest/flx_basic_tests.html",
                     "--self-contained-html",
-                ]
+                ],
             )
 
         return self._execute_test(cmd, "FLX Basic Tests")
@@ -112,7 +112,7 @@ class WorkingTestRunner:
                 [
                     "--cov=flx",
                     "--cov-report=term-missing",
-                ]
+                ],
             )
 
         return self._execute_test(cmd, "FLX Module Tests")
@@ -136,7 +136,7 @@ class WorkingTestRunner:
                 "tests": 2,
                 "passed": 2,
                 "failed": 0,
-            }
+            },
         )
 
         return True
@@ -170,13 +170,13 @@ class WorkingTestRunner:
                     "passed": passed,
                     "failed": failed,
                     "skipped": skipped,
-                }
+                },
             )
 
             # Display result
             status = "✅" if success else "❌"
             print(
-                f"   {status} {test_name}: {passed}/{passed + failed} passed ({duration:.2f}s)"
+                f"   {status} {test_name}: {passed}/{passed + failed} passed ({duration:.2f}s)",
             )
 
             if not success and self.config.verbose:
@@ -332,7 +332,7 @@ if __name__ == "__main__":
             print(
                 f"  {status} {result['name']}: {result['passed']}/{result['tests']} ({
                     result['duration']:.2f
-                }s)"
+                }s)",
             )
 
         print("\n" + "=" * 50)

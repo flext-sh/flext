@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-PyAuto Enterprise Project Standardization System
+"""PyAuto Enterprise Project Standardization System
 
 Padroniza pyproject.toml e .pre-commit-config.yaml em todos os subprojetos
 seguindo os padrões enterprise definidos no CLAUDE.md e template oficial.
@@ -37,7 +36,7 @@ class ProjectStandardizer:
         # Load template
         if not self.template_pyproject.exists():
             raise FileNotFoundError(
-                f"Template não encontrado: {self.template_pyproject}"
+                f"Template não encontrado: {self.template_pyproject}",
             )
 
         with open(self.template_pyproject, "rb") as f:
@@ -83,11 +82,11 @@ class ProjectStandardizer:
             ):
                 projects.append(project_path)
                 self.console.print(
-                    f"✓ Projeto encontrado: [green]{project_name}[/green]"
+                    f"✓ Projeto encontrado: [green]{project_name}[/green]",
                 )
             else:
                 self.console.print(
-                    f"⚠ Projeto não encontrado ou sem pyproject.toml: [yellow]{project_name}[/yellow]"
+                    f"⚠ Projeto não encontrado ou sem pyproject.toml: [yellow]{project_name}[/yellow]",
                 )
 
         return projects
@@ -158,7 +157,9 @@ class ProjectStandardizer:
 
             # Preservar dependências específicas do projeto
             self._preserve_project_dependencies(
-                new_config, current_config, project_type
+                new_config,
+                current_config,
+                project_type,
             )
 
             # Preservar scripts CLI se existirem
@@ -169,23 +170,27 @@ class ProjectStandardizer:
                 toml.dump(new_config, f)
 
             self.console.print(
-                f"✓ pyproject.toml padronizado: [green]{project_name}[/green]"
+                f"✓ pyproject.toml padronizado: [green]{project_name}[/green]",
             )
             return True
 
         except Exception as e:
             self.console.print(
-                f"✗ Erro ao padronizar pyproject.toml em {project_path.name}: [red]{e}[/red]"
+                f"✗ Erro ao padronizar pyproject.toml em {project_path.name}: [red]{e}[/red]",
             )
             return False
 
     def _replace_placeholders(
-        self, config: dict[str, Any], project_name: str, project_module: str
+        self,
+        config: dict[str, Any],
+        project_name: str,
+        project_module: str,
     ) -> None:
         """Substitui placeholders no template."""
 
         def replace_recursive(
-            obj: dict[str, Any] | list[Any] | str, replacements: dict[str, str]
+            obj: dict[str, Any] | list[Any] | str,
+            replacements: dict[str, str],
         ) -> dict[str, Any] | list[Any] | str:
             if isinstance(obj, dict):
                 for key, value in obj.items():
@@ -224,9 +229,7 @@ class ProjectStandardizer:
                 new_config["tool"]["poetry"]["dependencies"][dep_name] = dep_spec
 
         # Adicionar dependências típicas por tipo de projeto
-        if project_type == "singer_tap":
-            new_config["tool"]["poetry"]["dependencies"]["singer-sdk"] = "^0.45.0"
-        elif project_type == "singer_target":
+        if project_type == "singer_tap" or project_type == "singer_target":
             new_config["tool"]["poetry"]["dependencies"]["singer-sdk"] = "^0.45.0"
         elif project_type.startswith("flx_"):
             new_config["tool"]["poetry"]["dependencies"]["flx"] = {
@@ -235,7 +238,9 @@ class ProjectStandardizer:
             }
 
     def _preserve_cli_scripts(
-        self, new_config: dict[str, Any], current_config: dict[str, Any]
+        self,
+        new_config: dict[str, Any],
+        current_config: dict[str, Any],
     ) -> None:
         """Preserva scripts CLI existentes."""
         if (
@@ -310,13 +315,13 @@ repos:
                 f.write(precommit_config)
 
             self.console.print(
-                f"✓ .pre-commit-config.yaml criado: [green]{project_path.name}[/green]"
+                f"✓ .pre-commit-config.yaml criado: [green]{project_path.name}[/green]",
             )
             return True
 
         except Exception as e:
             self.console.print(
-                f"✗ Erro ao criar .pre-commit-config.yaml em {project_path.name}: [red]{e}[/red]"
+                f"✗ Erro ao criar .pre-commit-config.yaml em {project_path.name}: [red]{e}[/red]",
             )
             return False
 
@@ -329,21 +334,22 @@ repos:
                 capture_output=True,
                 text=True,
                 timeout=60,
+                check=False,
             )
 
             if result.returncode == 0:
                 self.console.print(
-                    f"✓ Pre-commit hooks instalados: [green]{project_path.name}[/green]"
+                    f"✓ Pre-commit hooks instalados: [green]{project_path.name}[/green]",
                 )
                 return True
             self.console.print(
-                f"⚠ Aviso ao instalar pre-commit em {project_path.name}: {result.stderr}"
+                f"⚠ Aviso ao instalar pre-commit em {project_path.name}: {result.stderr}",
             )
             return False
 
         except Exception as e:
             self.console.print(
-                f"✗ Erro ao instalar pre-commit em {project_path.name}: [red]{e}[/red]"
+                f"✗ Erro ao instalar pre-commit em {project_path.name}: [red]{e}[/red]",
             )
             return False
 
@@ -362,7 +368,11 @@ repos:
         # Verificar se poetry check passa
         try:
             result = subprocess.run(
-                ["poetry", "check"], cwd=project_path, capture_output=True, timeout=30
+                ["poetry", "check"],
+                cwd=project_path,
+                capture_output=True,
+                timeout=30,
+                check=False,
             )
             results["poetry_check"] = result.returncode == 0
         except Exception:
@@ -375,6 +385,7 @@ repos:
                 cwd=project_path,
                 capture_output=True,
                 timeout=60,
+                check=False,
             )
             results["precommit_valid"] = result.returncode == 0
         except Exception:
@@ -385,7 +396,7 @@ repos:
     def run_standardization(self) -> None:
         """Executa o processo completo de padronização."""
         self.console.print(
-            "\n[bold blue]🚀 PyAuto Enterprise Project Standardization[/bold blue]\n"
+            "\n[bold blue]🚀 PyAuto Enterprise Project Standardization[/bold blue]\n",
         )
 
         # Descobrir projetos
@@ -449,7 +460,7 @@ repos:
         self.console.print(results_table)
 
         self.console.print(
-            f"\n[bold green]✅ Padronização concluída: {total_success}/{len(projects)} projetos[/bold green]"
+            f"\n[bold green]✅ Padronização concluída: {total_success}/{len(projects)} projetos[/bold green]",
         )
         self.console.print(f"[blue]📁 Backups salvos em: {self.backup_dir}[/blue]")
 

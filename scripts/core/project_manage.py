@@ -182,7 +182,8 @@ def configure_poetry() -> None:
 
     # Configure Poetry to NOT create flx_project-specific virtual environments
     run_command(
-        [poetry_cmd, "config", "virtualenvs.in-flx_project", "false"], check=False
+        [poetry_cmd, "config", "virtualenvs.in-flx_project", "false"],
+        check=False,
     )
 
     # Set the path to the root .venv directory (without trailing slash to
@@ -331,13 +332,14 @@ def install_project_deps(projects: list[str], dev: bool = False) -> None:
         if not project_path.exists():
             print(
                 colorize(
-                    f"⚠ Directory {flx_project} does not exist, skipping", "YELLOW"
-                )
+                    f"⚠ Directory {flx_project} does not exist, skipping",
+                    "YELLOW",
+                ),
             )
             continue
 
         print(
-            f"Installing {'all' if dev else 'main'} dependencies for {flx_project}..."
+            f"Installing {'all' if dev else 'main'} dependencies for {flx_project}...",
         )
 
         try:
@@ -359,7 +361,7 @@ def install_project_deps(projects: list[str], dev: bool = False) -> None:
             print(colorize(f"✓ {flx_project} installation complete", "GREEN"))
         except Exception as e:
             print(
-                colorize(f"Error with modern syntax for {flx_project}: {e}", "YELLOW")
+                colorize(f"Error with modern syntax for {flx_project}: {e}", "YELLOW"),
             )
             try:
                 # Try alternative syntax for older Poetry versions
@@ -387,8 +389,9 @@ def run_tests(projects: list[str]) -> None:
         if not project_path.exists():
             print(
                 colorize(
-                    f"⚠ Directory {flx_project} does not exist, skipping", "YELLOW"
-                )
+                    f"⚠ Directory {flx_project} does not exist, skipping",
+                    "YELLOW",
+                ),
             )
             continue
 
@@ -409,8 +412,9 @@ def run_linting(projects: list[str]) -> None:
         if not project_path.exists():
             print(
                 colorize(
-                    f"⚠ Directory {flx_project} does not exist, skipping", "YELLOW"
-                )
+                    f"⚠ Directory {flx_project} does not exist, skipping",
+                    "YELLOW",
+                ),
             )
             continue
 
@@ -431,8 +435,9 @@ def run_formatting(projects: list[str]) -> None:
         if not project_path.exists():
             print(
                 colorize(
-                    f"⚠ Directory {flx_project} does not exist, skipping", "YELLOW"
-                )
+                    f"⚠ Directory {flx_project} does not exist, skipping",
+                    "YELLOW",
+                ),
             )
             continue
 
@@ -456,8 +461,9 @@ def update_python_constraints(projects: list[str]) -> None:
         if not project_path.exists():
             print(
                 colorize(
-                    f"⚠ Directory {flx_project} does not exist, skipping", "YELLOW"
-                )
+                    f"⚠ Directory {flx_project} does not exist, skipping",
+                    "YELLOW",
+                ),
             )
             continue
 
@@ -498,8 +504,9 @@ def standardize_linting(projects: list[str]) -> None:
         if not project_path.exists():
             print(
                 colorize(
-                    f"⚠ Directory {flx_project} does not exist, skipping", "YELLOW"
-                )
+                    f"⚠ Directory {flx_project} does not exist, skipping",
+                    "YELLOW",
+                ),
             )
             continue
 
@@ -553,8 +560,9 @@ def standardize_makefiles(projects: list[str]) -> None:
         if not project_path.exists():
             print(
                 colorize(
-                    f"⚠ Directory {flx_project} does not exist, skipping", "YELLOW"
-                )
+                    f"⚠ Directory {flx_project} does not exist, skipping",
+                    "YELLOW",
+                ),
             )
             continue
 
@@ -661,8 +669,9 @@ def clean_project(projects: list[str]) -> None:
         if not project_path.exists():
             print(
                 colorize(
-                    f"⚠ Directory {flx_project} does not exist, skipping", "YELLOW"
-                )
+                    f"⚠ Directory {flx_project} does not exist, skipping",
+                    "YELLOW",
+                ),
             )
             continue
 
@@ -700,8 +709,9 @@ def remove_project_venvs(projects: list[str]) -> None:
         if not project_path.exists():
             print(
                 colorize(
-                    f"⚠ Directory {flx_project} does not exist, skipping", "YELLOW"
-                )
+                    f"⚠ Directory {flx_project} does not exist, skipping",
+                    "YELLOW",
+                ),
             )
             continue
 
@@ -726,8 +736,9 @@ def remove_lock_files(projects: list[str]) -> None:
         if not project_path.exists():
             print(
                 colorize(
-                    f"⚠ Directory {flx_project} does not exist, skipping", "YELLOW"
-                )
+                    f"⚠ Directory {flx_project} does not exist, skipping",
+                    "YELLOW",
+                ),
             )
             continue
 
@@ -750,8 +761,9 @@ def upgrade_dependencies(projects: list[str]) -> None:
         if not project_path.exists():
             print(
                 colorize(
-                    f"⚠ Directory {flx_project} does not exist, skipping", "YELLOW"
-                )
+                    f"⚠ Directory {flx_project} does not exist, skipping",
+                    "YELLOW",
+                ),
             )
             continue
 
@@ -764,7 +776,7 @@ def upgrade_dependencies(projects: list[str]) -> None:
             print(colorize(f"Error upgrading {flx_project}: {e}", "RED"))
 
 
-def build_project(projects: list[str]) -> None:  # noqa: PLR0912
+def build_project(projects: list[str]) -> None:
     """Build projects."""
     print("Building projects...")
 
@@ -774,8 +786,9 @@ def build_project(projects: list[str]) -> None:  # noqa: PLR0912
         if not project_path.exists():
             print(
                 colorize(
-                    f"⚠ Directory {flx_project} does not exist, skipping", "YELLOW"
-                )
+                    f"⚠ Directory {flx_project} does not exist, skipping",
+                    "YELLOW",
+                ),
             )
             continue
 

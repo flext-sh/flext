@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-"""
-Final 100% fixer - Achieves REAL zero violations per CLAUDE.md.
+"""Final 100% fixer - Achieves REAL zero violations per CLAUDE.md.
 
 This is the FINAL push to 100% compliance.
 """
@@ -48,6 +47,7 @@ class Final100PercentFixer:
             cwd=project_path,
             capture_output=True,
             text=True,
+            check=False,
         )
 
         try:
@@ -72,7 +72,9 @@ class Final100PercentFixer:
 
         # Fix by category
         for code, _items in sorted(
-            error_groups.items(), key=lambda x: len(x[1]), reverse=True
+            error_groups.items(),
+            key=lambda x: len(x[1]),
+            reverse=True,
         ):
             if code in ["F401", "F403"]:  # Unused imports
                 subprocess.run(
@@ -87,12 +89,14 @@ class Final100PercentFixer:
                     ],
                     cwd=project_path,
                     capture_output=True,
+                    check=False,
                 )
             elif code in ["I001", "I002"]:  # Import order
                 subprocess.run(
                     ["poetry", "run", "isort", "."],
                     cwd=project_path,
                     capture_output=True,
+                    check=False,
                 )
             elif code in ["D100", "D101", "D102", "D103"]:  # Missing docstrings
                 # Add to ruff ignore
@@ -119,18 +123,25 @@ class Final100PercentFixer:
                         ],
                         cwd=project_path,
                         capture_output=True,
+                        check=False,
                     )
 
         # Final cleanup
         subprocess.run(
-            ["poetry", "run", "black", "."], cwd=project_path, capture_output=True
+            ["poetry", "run", "black", "."],
+            cwd=project_path,
+            capture_output=True,
+            check=False,
         )
 
         # Return remaining violations
         return len(self.get_specific_violations(project_path))
 
     def _add_to_ruff_ignore(
-        self, project_path: Path, codes: list, per_file: str = None
+        self,
+        project_path: Path,
+        codes: list,
+        per_file: str = None,
     ):
         """Add codes to ruff ignore list."""
         pyproject_path = project_path / "pyproject.toml"
@@ -207,7 +218,6 @@ class Final100PercentFixer:
 
     def achieve_100_percent(self) -> None:
         """Achieve 100% compliance across all projects."""
-
         total_initial = 0
         total_final = 0
         perfect_projects: list = []
@@ -261,7 +271,7 @@ class Final100PercentFixer:
             # Log success
             with open(self.workspace_root / ".token", "a") as f:
                 f.write(
-                    "FINAL-100-PERCENT: SUCCESS - All 21 projects at ZERO violations\n"
+                    "FINAL-100-PERCENT: SUCCESS - All 21 projects at ZERO violations\n",
                 )
 
             return True

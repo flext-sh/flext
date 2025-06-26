@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Incremental Unified Lint Fixer - Máxima Redução de Lints.
+"""Incremental Unified Lint Fixer - Máxima Redução de Lints.
 
 Combina todas as abordagens anteriores em um script unificado e incremental
 para reduzir o máximo de lint errors possível.
@@ -49,7 +48,7 @@ class UnifiedFixerConfig:
             "archive",
             "backup",
             "logs",
-        ]
+        ],
     )
 
     # All available fixes
@@ -68,7 +67,7 @@ class UnifiedFixerConfig:
             "docstring_fixes": True,
             "comprehension_improvements": True,
             "security_fixes": True,
-        }
+        },
     )
 
     # Safety settings
@@ -163,7 +162,7 @@ class IncrementalUnifiedFixer:
         """Check if directory is a Python project."""
         indicators = ["pyproject.toml", "src", "setup.py", "requirements.txt"]
         return any((path / indicator).exists() for indicator in indicators) or any(
-            path.glob("*.py")
+            path.glob("*.py"),
         )
 
     def _should_skip_directory(self, path: Path) -> bool:
@@ -171,7 +170,7 @@ class IncrementalUnifiedFixer:
         return any(pattern in path.name for pattern in self.config.exclude_patterns)
 
     def _process_project_incrementally(
-        self, project_path: Path, dry_run: bool
+        self, project_path: Path, dry_run: bool,
     ) -> dict[str, Any]:
         """Process a single project with incremental fixes."""
         # Get initial error count
@@ -200,7 +199,7 @@ class IncrementalUnifiedFixer:
                         files_modified += 1
                         total_fixes += potential_fixes
                     file_fixes, file_category_fixes = self._fix_file_comprehensively(
-                        py_file
+                        py_file,
                     )
                     if file_fixes > 0:
                         files_modified += 1
@@ -262,17 +261,17 @@ class IncrementalUnifiedFixer:
 
             if self.config.enabled_fixes["type_annotations"]:
                 potential_fixes += len(
-                    re.findall(r"def \w+\([^)]*\):\s*(?:#.*)?$", content, re.MULTILINE)
+                    re.findall(r"def \w+\([^)]*\):\s*(?:#.*)?$", content, re.MULTILINE),
                 )
 
             if self.config.enabled_fixes["logging_patterns"]:
                 potential_fixes += len(
-                    re.findall(r'logger\.\w+\(f"[^"]*\{[^}]+\}', content)
+                    re.findall(r'logger\.\w+\(f"[^"]*\{[^}]+\}', content),
                 )
 
             if self.config.enabled_fixes["whitespace_cleanup"]:
                 potential_fixes += len(
-                    [line for line in content.split("\n") if line.rstrip() != line]
+                    [line for line in content.split("\n") if line.rstrip() != line],
                 )
 
             if self.config.enabled_fixes["string_standardization"]:
@@ -374,7 +373,7 @@ class IncrementalUnifiedFixer:
                         compile(content, str(file_path), "exec")
                     except SyntaxError as e:
                         logger.warning(
-                            "⚠️ Syntax error in %s after fixes: %s", file_path.name, e
+                            "⚠️ Syntax error in %s after fixes: %s", file_path.name, e,
                         )
                         return 0, {}
 
@@ -383,7 +382,7 @@ class IncrementalUnifiedFixer:
                 total_fixes = sum(category_fixes.values())
 
                 logger.debug(
-                    "✅ Fixed %s: %d fixes applied", file_path.name, total_fixes
+                    "✅ Fixed %s: %d fixes applied", file_path.name, total_fixes,
                 )
                 return total_fixes, category_fixes
 
@@ -432,10 +431,7 @@ class IncrementalUnifiedFixer:
                 and not any(x in stripped for x in ["__init__", "__str__", "__repr__"])
             ):
                 # Add appropriate return type
-                if any(name in stripped for name in ["test_", "setUp", "tearDown"]):
-                    lines[i] = line.replace("):", ") -> None:")
-                    fixes += 1
-                elif "main(" in stripped:
+                if any(name in stripped for name in ["test_", "setUp", "tearDown"]) or "main(" in stripped:
                     lines[i] = line.replace("):", ") -> None:")
                     fixes += 1
                 elif "(" in stripped and ")" in stripped:
@@ -669,7 +665,7 @@ class IncrementalUnifiedFixer:
                 ["ruff", "check", str(project_path)],
                 capture_output=True,
                 text=True,
-                timeout=60,
+                timeout=60, check=False,
             )
             # Count actual error lines (not empty lines)
             errors = [line for line in result.stdout.split("\n") if line.strip()]
@@ -761,7 +757,7 @@ def main() -> None:
     )
     parser.add_argument("--projects", nargs="+", help="Specific projects to process")
     parser.add_argument(
-        "--dry-run", action="store_true", help="Analyze without applying fixes"
+        "--dry-run", action="store_true", help="Analyze without applying fixes",
     )
     parser.add_argument(
         "--aggressive",
@@ -769,7 +765,7 @@ def main() -> None:
         help="Enable aggressive mode with security fixes",
     )
     parser.add_argument(
-        "--max-changes", type=int, default=150, help="Maximum changes per file"
+        "--max-changes", type=int, default=150, help="Maximum changes per file",
     )
 
     args = parser.parse_args()
@@ -794,11 +790,11 @@ def main() -> None:
     print(
         f"📊 Projects: {summary['projects_successful']}/{
             summary['projects_processed']
-        } successful"
+        } successful",
     )
     print(
         f"🔢 Lint Errors: {summary['total_initial_errors']} → {summary['total_final_errors']} "
-        f"({summary['total_improvement']:+d})"
+        f"({summary['total_improvement']:+d})",
     )
     print(f"🔧 Total Fixes: {summary['total_fixes_applied']} applied")
     print(f"📈 Improvement: {summary['improvement_percentage']:.1f}%")
@@ -811,12 +807,12 @@ def main() -> None:
         print(
             f"⚠️ CLAUDE.md ZERO TOLERANCE: ❌ {
                 summary['total_final_errors']
-            } violations remain"
+            } violations remain",
         )
         print("   Additional manual fixes may be required.")
         if not args.dry_run:
             print(
-                f"📋 Detailed report: reports/incremental_unified_fixer_{fixer.session_id}.json"
+                f"📋 Detailed report: reports/incremental_unified_fixer_{fixer.session_id}.json",
             )
         sys.exit(1 if not args.dry_run else 0)
 

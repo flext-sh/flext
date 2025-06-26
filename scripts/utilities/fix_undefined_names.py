@@ -241,7 +241,8 @@ def fix_variable_definitions(file_path: Path, undefined_names: list[str]) -> boo
                 # Add the fix in __init__ method if it exists
                 if "def __init__(" in content:
                     content = content.replace(
-                        "def __init__(", f"{fix}\n        def __init__("
+                        "def __init__(",
+                        f"{fix}\n        def __init__(",
                     )
                     modified = True
 
@@ -253,7 +254,6 @@ def fix_variable_definitions(file_path: Path, undefined_names: list[str]) -> boo
 
 def main() -> None:
     """Fix F821 undefined name errors systematically."""
-
     undefined_names_by_file = analyze_undefined_names()
 
     if not undefined_names_by_file:

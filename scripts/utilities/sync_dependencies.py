@@ -104,7 +104,7 @@ def parse_requirements_txt(file_path: Path) -> dict[str, str]:
 
 
 def update_toml_dependencies(
-    file_path: Path, main_dependencies: dict[str, str], force: bool = False
+    file_path: Path, main_dependencies: dict[str, str], force: bool = False,
 ) -> None:
     """Atualiza as dependências em um arquivo pyproject.toml."""
     toml_data = load_toml(file_path)
@@ -117,7 +117,7 @@ def update_toml_dependencies(
     if "tool" in toml_data and "poetry" in toml_data["tool"]:
         if "dependencies" in toml_data["tool"]["poetry"]:
             for dep, version in list(
-                toml_data["tool"]["poetry"]["dependencies"].items()
+                toml_data["tool"]["poetry"]["dependencies"].items(),
             ):
                 if dep in main_dependencies and dep != "python":
                     if isinstance(version, str):
@@ -126,7 +126,7 @@ def update_toml_dependencies(
                                 main_dependencies[dep]
                             )
                             print(
-                                f"  Atualizando {dep}: {version} -> {main_dependencies[dep]}"
+                                f"  Atualizando {dep}: {version} -> {main_dependencies[dep]}",
                             )
                             updated = True
                     elif isinstance(version, dict) and "version" in version:
@@ -135,7 +135,7 @@ def update_toml_dependencies(
                                 "version"
                             ] = main_dependencies[dep]
                             print(
-                                f"  Atualizando {dep}: {version['version']} -> {main_dependencies[dep]}"
+                                f"  Atualizando {dep}: {version['version']} -> {main_dependencies[dep]}",
                             )
                             updated = True
 
@@ -151,7 +151,7 @@ def update_toml_dependencies(
                                         "dependencies"
                                     ][dep] = main_dependencies[dep]
                                     print(
-                                        f"  Atualizando {dep} (grupo {group_name}): {version} -> {main_dependencies[dep]}"
+                                        f"  Atualizando {dep} (grupo {group_name}): {version} -> {main_dependencies[dep]}",
                                     )
                                     updated = True
                             elif isinstance(version, dict) and "version" in version:
@@ -165,7 +165,7 @@ def update_toml_dependencies(
                                     print(
                                         f"  Atualizando {dep} (grupo {group_name}): {
                                             version['version']
-                                        } -> {main_dependencies[dep]}"
+                                        } -> {main_dependencies[dep]}",
                                     )
                                     updated = True
 
@@ -177,10 +177,10 @@ def update_toml_dependencies(
             if match and match.group(1) in main_dependencies:
                 if force or match.group(2) != main_dependencies[match.group(1)]:
                     new_deps.append(
-                        f"{match.group(1)}{main_dependencies[match.group(1)]}"
+                        f"{match.group(1)}{main_dependencies[match.group(1)]}",
                     )
                     print(
-                        f"  Atualizando {match.group(1)}: {match.group(2)} -> {main_dependencies[match.group(1)]}"
+                        f"  Atualizando {match.group(1)}: {match.group(2)} -> {main_dependencies[match.group(1)]}",
                     )
                     updated = True
                     new_deps.append(dep_spec)
@@ -194,7 +194,7 @@ def update_toml_dependencies(
 
 
 def update_requirements_txt(
-    file_path: Path, main_dependencies: dict[str, str], force: bool = False
+    file_path: Path, main_dependencies: dict[str, str], force: bool = False,
 ) -> None:
     """Atualiza as versões das dependências em um arquivo requirements.txt."""
     try:
@@ -228,7 +228,7 @@ def update_requirements_txt(
                         new_lines.append(new_line)
                         updated = True
                         print(
-                            f"  Atualizando {name}: {current_version} -> {main_dependencies[name]}"
+                            f"  Atualizando {name}: {current_version} -> {main_dependencies[name]}",
                         )
                         new_lines.append(original_line)
                     new_lines.append(original_line)
@@ -485,7 +485,7 @@ def main() -> None:
     print(
         f"Encontrados {
             len(dependency_files)
-        } arquivos de dependências nos projetos selecionados."
+        } arquivos de dependências nos projetos selecionados.",
     )
 
     if not dependency_files:
@@ -502,12 +502,12 @@ def main() -> None:
         if len(target_projects) == 1:
             source_project = target_projects[0]
             print(
-                f"Usando '{source_project}' como projeto fonte (único projeto especificado)."
+                f"Usando '{source_project}' como projeto fonte (único projeto especificado).",
             )
             # Se há múltiplos projetos, usa modo consolidação por padrão
             use_consolidation = True
             print(
-                "Múltiplos projetos detectados. Usando modo consolidação automaticamente."
+                "Múltiplos projetos detectados. Usando modo consolidação automaticamente.",
             )
 
     # Verifica se o projeto fonte existe
@@ -521,7 +521,7 @@ def main() -> None:
     # projetos
     if use_consolidation:
         print(
-            "\nModo de consolidação: coletando versões mais recentes de todos os projetos..."
+            "\nModo de consolidação: coletando versões mais recentes de todos os projetos...",
         )
         latest_versions = collect_latest_versions(dependency_files)
 
@@ -588,7 +588,7 @@ def main() -> None:
         print(
             f"\nSimulação concluída. {
                 len(dependency_files)
-            } arquivos seriam processados."
+            } arquivos seriam processados.",
         )
 
 

@@ -13,7 +13,9 @@ WORKSPACE_ROOT = Path(__file__).parent.parent.absolute()
 
 
 def run_command(
-    cmd: list[str], cwd: Path | None = None, check: bool = True
+    cmd: list[str],
+    cwd: Path | None = None,
+    check: bool = True,
 ) -> subprocess.CompletedProcess[str]:
     """Executa um comando e retorna a saída."""
     print(f"Executando: {' '.join(cmd)}")

@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Run custom fix modules independently.
+"""Run custom fix modules independently.
 
 This script allows running individual custom fix modules with full control
 over dry-run and confirmation modes.
@@ -41,7 +40,6 @@ def run_module(
     verbose: bool = False,
 ) -> int:
     """Run a specific module on targets."""
-
     # Get module class
     module_class = MODULE_REGISTRY.get(module_name)
     if not module_class:
@@ -61,7 +59,7 @@ def run_module(
             f"Interactive: {'Yes' if interactive else 'No'}",
             title=f"🔧 Running {module_name}",
             border_style="cyan",
-        )
+        ),
     )
 
     # Process all targets
@@ -129,7 +127,10 @@ Examples:
 
     parser.add_argument("modules", nargs="*", help="Module(s) to run")
     parser.add_argument(
-        "--list", "-l", action="store_true", help="List available modules"
+        "--list",
+        "-l",
+        action="store_true",
+        help="List available modules",
     )
     parser.add_argument(
         "--target",
@@ -139,7 +140,10 @@ Examples:
         help="Target file or directory (can be specified multiple times)",
     )
     parser.add_argument(
-        "--apply", "-a", action="store_true", help="Apply fixes (default is dry-run)"
+        "--apply",
+        "-a",
+        action="store_true",
+        help="Apply fixes (default is dry-run)",
     )
     parser.add_argument(
         "--interactive",

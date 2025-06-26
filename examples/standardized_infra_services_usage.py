@@ -64,7 +64,9 @@ class Application:
 
         # Cache the response
         await self.cache_service.set(
-            cache_key, user_data, ttl=300
+            cache_key,
+            user_data,
+            ttl=300,
         )  # Cache for 5 minutes
 
         return user_data
@@ -100,7 +102,7 @@ async def example_basic_usage() -> None:
         {
             "base_url": "https://api.github.com",
             "headers": {"Accept": "application/vnd.github.v3+json"},
-        }
+        },
     )
 
     # Use services with context manager
@@ -154,7 +156,7 @@ async def example_with_configuration() -> None:
             "backend": "memory",
             "ttl": 60,
             "max_size": 100,
-        }
+        },
     )
 
     await cache.start()
@@ -213,7 +215,7 @@ async def example_error_handling() -> None:
         cache = StandardizedCacheService(
             {
                 "backend": "unsupported_backend",
-            }
+            },
         )
         await cache.start()
     except ValueError:
@@ -239,7 +241,7 @@ async def example_metrics_and_monitoring() -> None:
         {
             "base_url": "https://httpbin.org",
             "max_retries": 2,
-        }
+        },
     )
 
     await http.start()

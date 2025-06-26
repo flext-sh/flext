@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Script para corrigir dependências circulares no projeto PYAUTO.
+"""Script para corrigir dependências circulares no projeto PYAUTO.
 
 Este script identifica e corrige imports circulares substituindo imports diretos
 por lazy imports onde apropriado.
@@ -54,8 +53,7 @@ def find_python_files(project_path: Path) -> list[Path]:
 
 
 def analyze_flx_imports(file_path: Path) -> list[tuple[str, str, str]]:
-    """
-    Analisa um arquivo Python e encontra imports do FLX.
+    """Analisa um arquivo Python e encontra imports do FLX.
 
     Returns:
         Lista de tuplas (linha_original, módulo_flx, imports)
@@ -89,10 +87,9 @@ def analyze_flx_imports(file_path: Path) -> list[tuple[str, str, str]]:
 
 
 def generate_lazy_import_replacement(
-    original_line: str, module: str, imports: str
+    original_line: str, module: str, imports: str,
 ) -> str:
     """Gera o código de substituição com lazy import."""
-
     if not imports:  # import flx.module
         return f"# Lazy import to avoid circular dependencies\n{
             module.split('.')[-1]
@@ -114,8 +111,7 @@ def generate_lazy_import_replacement(
 
 
 def fix_file_imports(file_path: Path) -> bool:
-    """
-    Corrige os imports de um arquivo, convertendo imports diretos do FLX para lazy imports.
+    """Corrige os imports de um arquivo, convertendo imports diretos do FLX para lazy imports.
 
     Returns:
         True se o arquivo foi modificado, False caso contrário
@@ -140,7 +136,7 @@ def fix_file_imports(file_path: Path) -> bool:
 
             for i, line in enumerate(lines):
                 if line.strip().startswith(
-                    ("import ", "from ")
+                    ("import ", "from "),
                 ) and not line.strip().startswith("from flx"):
                     import_end_idx = i + 1
                 elif line.strip() == "" and import_end_idx > 0:
@@ -151,10 +147,10 @@ def fix_file_imports(file_path: Path) -> bool:
 
             lines.insert(import_end_idx, "")
             lines.insert(
-                import_end_idx + 1, "# Lazy imports to avoid circular dependencies"
+                import_end_idx + 1, "# Lazy imports to avoid circular dependencies",
             )
             lines.insert(
-                import_end_idx + 2, "from flx.utils.lazy_import import lazy_import"
+                import_end_idx + 2, "from flx.utils.lazy_import import lazy_import",
             )
             lines.insert(import_end_idx + 3, "")
 
@@ -163,7 +159,7 @@ def fix_file_imports(file_path: Path) -> bool:
         # Substitui cada import do FLX por lazy import
         for original_line, module, imports in flx_imports:
             replacement = generate_lazy_import_replacement(
-                original_line, module, imports
+                original_line, module, imports,
             )
             content = content.replace(original_line, replacement)
 
@@ -180,8 +176,7 @@ def fix_file_imports(file_path: Path) -> bool:
 
 
 def fix_project_dependencies(project_name: str) -> int:
-    """
-    Corrige dependências circulares em um projeto específico.
+    """Corrige dependências circulares em um projeto específico.
 
     Returns:
         Número de arquivos modificados

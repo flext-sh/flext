@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Test CLI installations for PYAUTO projects.
+"""Test CLI installations for PYAUTO projects.
 
 This script creates isolated virtual environments for each project,
 installs them, and tests their CLI functionality.
@@ -33,7 +32,9 @@ PROJECTS_TO_TEST = [
 
 
 def run_command(
-    cmd: list[str], cwd: Path | None = None, capture_output: bool = True
+    cmd: list[str],
+    cwd: Path | None = None,
+    capture_output: bool = True,
 ) -> tuple[int, str, str]:
     """Execute a command and return exit code, stdout, stderr."""
     try:
@@ -42,7 +43,8 @@ def run_command(
             cwd=cwd,
             capture_output=capture_output,
             text=True,
-            timeout=300,  # 5 minutes timeout
+            timeout=300,
+            check=False,  # 5 minutes timeout
         )
         return result.returncode, result.stdout, result.stderr
     except subprocess.TimeoutExpired:
@@ -86,7 +88,7 @@ def create_test_venv(project_name: str, base_dir: Path) -> Path:
 
     # Create venv
     returncode, _stdout, stderr = run_command(
-        [sys.executable, "-m", "venv", str(venv_path)]
+        [sys.executable, "-m", "venv", str(venv_path)],
     )
 
     if returncode != 0:
@@ -103,7 +105,7 @@ def install_project(project_path: Path, venv_path: Path) -> tuple[bool, str]:
 
     # Upgrade pip first
     returncode, _stdout, stderr = run_command(
-        [str(python_exe), "-m", "pip", "install", "--upgrade", "pip"]
+        [str(python_exe), "-m", "pip", "install", "--upgrade", "pip"],
     )
 
     if returncode != 0:
@@ -111,7 +113,7 @@ def install_project(project_path: Path, venv_path: Path) -> tuple[bool, str]:
 
     # Install project in editable mode
     returncode, _stdout, stderr = run_command(
-        [str(python_exe), "-m", "pip", "install", "-e", str(project_path)]
+        [str(python_exe), "-m", "pip", "install", "-e", str(project_path)],
     )
 
     if returncode == 0:
@@ -131,7 +133,7 @@ def test_cli_commands(project_info: dict, venv_path: Path) -> dict[str, Any]:
     scripts = project_info.get("scripts", {})
     for script_name, script_entry in scripts.items():
         returncode, stdout, stderr = run_command(
-            [str(python_exe), "-m", script_entry.split(".")[0], "--help"]
+            [str(python_exe), "-m", script_entry.split(".")[0], "--help"],
         )
 
         results[f"script_{script_name}"] = {
@@ -145,7 +147,7 @@ def test_cli_commands(project_info: dict, venv_path: Path) -> dict[str, Any]:
     poetry_scripts = project_info.get("tool_poetry_scripts", {})
     for script_name, script_entry in poetry_scripts.items():
         returncode, stdout, stderr = run_command(
-            [str(venv_path / "bin" / script_name), "--help"]
+            [str(venv_path / "bin" / script_name), "--help"],
         )
 
         results[f"poetry_script_{script_name}"] = {
@@ -167,7 +169,7 @@ def test_cli_commands(project_info: dict, venv_path: Path) -> dict[str, Any]:
 
         for pattern in cli_patterns:
             returncode, stdout, stderr = run_command(
-                [str(python_exe), "-m", pattern, "--help"]
+                [str(python_exe), "-m", pattern, "--help"],
             )
 
             if returncode == 0:
@@ -183,7 +185,9 @@ def test_cli_commands(project_info: dict, venv_path: Path) -> dict[str, Any]:
 
 
 def test_project(
-    project_name: str, workspace_root: Path, temp_dir: Path
+    project_name: str,
+    workspace_root: Path,
+    temp_dir: Path,
 ) -> dict[str, Any]:
     """Test a single project installation and CLI."""
     print(f"\n🔍 Testing project: {project_name}")
@@ -264,7 +268,7 @@ def generate_report(results: list[dict]) -> None:
     print(f"   Projects with CLIs: {projects_with_clis}")
     print(f"   Working CLI commands: {working_clis}/{total_clis}")
     print(
-        f"   Installation success rate: {(successful_installs / total_projects) * 100:.1f}%"
+        f"   Installation success rate: {(successful_installs / total_projects) * 100:.1f}%",
     )
     if total_clis > 0:
         print(f"   CLI success rate: {(working_clis / total_clis) * 100:.1f}%")
@@ -298,7 +302,8 @@ def generate_report(results: list[dict]) -> None:
         for result in failed_projects:
             project = result["project"]
             error = result.get("installation", {}).get(
-                "message", result.get("error", "Unknown error")
+                "message",
+                result.get("error", "Unknown error"),
             )
             print(f"   {project}: {error}")
 

@@ -32,7 +32,7 @@ class MonitoringAutomationModule(CustomFixModule):
     description = "Automated monitoring, alerting, and performance tracking"
 
     def __init__(
-        self, dry_run: bool = True, interactive: bool = False, verbose: bool = False
+        self, dry_run: bool = True, interactive: bool = False, verbose: bool = False,
     ):
         """Initialize monitoring automation module.
 
@@ -95,7 +95,7 @@ class MonitoringAutomationModule(CustomFixModule):
                         file_path=file_path,
                         line=None,
                         fix_description="Add metrics collection configuration",
-                    )
+                    ),
                 )
 
             if "alerts" not in config:
@@ -106,7 +106,7 @@ class MonitoringAutomationModule(CustomFixModule):
                         file_path=file_path,
                         line=None,
                         fix_description="Add alert rules configuration",
-                    )
+                    ),
                 )
 
             # Check alert rules
@@ -122,7 +122,7 @@ class MonitoringAutomationModule(CustomFixModule):
                                 file_path=file_path,
                                 line=None,
                                 fix_description="Add threshold value to alert rule",
-                            )
+                            ),
                         )
 
                     if "action" not in alert:
@@ -135,7 +135,7 @@ class MonitoringAutomationModule(CustomFixModule):
                                 file_path=file_path,
                                 line=None,
                                 fix_description="Define action for alert (email, webhook, etc)",
-                            )
+                            ),
                         )
         except yaml.YAMLError as e:
             issues.append(
@@ -145,7 +145,7 @@ class MonitoringAutomationModule(CustomFixModule):
                     file_path=file_path,
                     line=None,
                     fix_description="Fix YAML syntax errors",
-                )
+                ),
             )
 
         return issues
@@ -165,7 +165,7 @@ class MonitoringAutomationModule(CustomFixModule):
                         file_path=file_path,
                         line=None,
                         fix_description="Add scrape configurations",
-                    )
+                    ),
                 )
                 for job in config["scrape_configs"]:
                     if "job_name" not in job:
@@ -176,7 +176,7 @@ class MonitoringAutomationModule(CustomFixModule):
                                 file_path=file_path,
                                 line=None,
                                 fix_description="Add job_name to scrape configuration",
-                            )
+                            ),
                         )
 
                     if (
@@ -192,7 +192,7 @@ class MonitoringAutomationModule(CustomFixModule):
                                 file_path=file_path,
                                 line=None,
                                 fix_description="Add static_configs or service discovery",
-                            )
+                            ),
                         )
         except yaml.YAMLError as e:
             issues.append(
@@ -202,7 +202,7 @@ class MonitoringAutomationModule(CustomFixModule):
                     file_path=file_path,
                     line=None,
                     fix_description="Fix YAML syntax errors",
-                )
+                ),
             )
 
         return issues
@@ -222,7 +222,7 @@ class MonitoringAutomationModule(CustomFixModule):
                         file_path=file_path,
                         line=None,
                         fix_description="Add visualization panels to dashboard",
-                    )
+                    ),
                 )
 
             if "templating" not in dashboard:
@@ -233,7 +233,7 @@ class MonitoringAutomationModule(CustomFixModule):
                         file_path=file_path,
                         line=None,
                         fix_description="Add template variables for flexibility",
-                    )
+                    ),
                 )
 
             # Check panels
@@ -247,7 +247,7 @@ class MonitoringAutomationModule(CustomFixModule):
                                 file_path=file_path,
                                 line=None,
                                 fix_description="Configure datasource for panel",
-                            )
+                            ),
                         )
         except json.JSONDecodeError as e:
             issues.append(
@@ -257,7 +257,7 @@ class MonitoringAutomationModule(CustomFixModule):
                     file_path=file_path,
                     line=None,
                     fix_description="Fix JSON syntax errors",
-                )
+                ),
             )
 
         return issues
@@ -277,7 +277,7 @@ class MonitoringAutomationModule(CustomFixModule):
                         file_path=file_path,
                         line=None,
                         fix_description="Fix JSON syntax errors",
-                    )
+                    ),
                 )
                 return issues
             try:
@@ -290,7 +290,7 @@ class MonitoringAutomationModule(CustomFixModule):
                         file_path=file_path,
                         line=None,
                         fix_description="Fix YAML syntax errors",
-                    )
+                    ),
                 )
                 return issues
 
@@ -303,7 +303,7 @@ class MonitoringAutomationModule(CustomFixModule):
                     file_path=file_path,
                     line=None,
                     fix_description="Set root logging level",
-                )
+                ),
             )
 
         # Check handlers
@@ -315,7 +315,7 @@ class MonitoringAutomationModule(CustomFixModule):
                     file_path=file_path,
                     line=None,
                     fix_description="Configure logging handlers (console, file, etc)",
-                )
+                ),
             )
 
         return issues
@@ -394,7 +394,7 @@ class MonitoringAutomationModule(CustomFixModule):
                     ["python", str(metrics_script)],
                     capture_output=True,
                     text=True,
-                    timeout=5,
+                    timeout=5, check=False,
                 )
                 if result.returncode == 0:
                     metrics.update(json.loads(result.stdout))
@@ -468,7 +468,7 @@ class MonitoringAutomationModule(CustomFixModule):
                 )
 
     def _create_alert(
-        self, severity: str, metric: str, value: float, threshold: float, project: str
+        self, severity: str, metric: str, value: float, threshold: float, project: str,
     ) -> None:
         """Create an alert."""
         alert = {
@@ -486,10 +486,10 @@ class MonitoringAutomationModule(CustomFixModule):
             # Send actual alert (email, webhook, etc)
             if severity == "high":
                 console.print(
-                    f"[red]⚠ HIGH ALERT: {alert['message']} for {project}[/red]"
+                    f"[red]⚠ HIGH ALERT: {alert['message']} for {project}[/red]",
                 )
                 console.print(
-                    f"[yellow]⚠ ALERT: {alert['message']} for {project}[/yellow]"
+                    f"[yellow]⚠ ALERT: {alert['message']} for {project}[/yellow]",
                 )
 
     def start_monitoring_dashboard(self, projects: list[Path]) -> None:
@@ -517,12 +517,12 @@ class MonitoringAutomationModule(CustomFixModule):
                         datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                     }",
                     border_style="cyan",
-                )
+                ),
             )
 
             # Body - split into metrics and alerts
             layout["body"].split_row(
-                Layout(name="metrics", ratio=2), Layout(name="alerts", ratio=1)
+                Layout(name="metrics", ratio=2), Layout(name="alerts", ratio=1),
             )
 
             # Metrics table
@@ -535,7 +535,7 @@ class MonitoringAutomationModule(CustomFixModule):
 
             for project in projects[:5]:  # Show top 5
                 # Get latest metrics
-                if project.name in self.metrics and self.metrics[project.name]:
+                if self.metrics.get(project.name):
                     latest = self.metrics[project.name][-1]
                     cpu = latest["system"]["cpu_percent"]
                     mem = latest["system"]["memory"]["percent"]
@@ -555,7 +555,7 @@ class MonitoringAutomationModule(CustomFixModule):
                     )
 
             layout["metrics"].update(
-                Panel(metrics_table, title="Live Metrics", border_style="green")
+                Panel(metrics_table, title="Live Metrics", border_style="green"),
             )
 
             # Alerts panel
@@ -563,7 +563,7 @@ class MonitoringAutomationModule(CustomFixModule):
             recent_alerts = self.alerts[-10:]  # Show last 10 alerts
             for alert in reversed(recent_alerts):
                 time_str = datetime.fromisoformat(alert["timestamp"]).strftime(
-                    "%H:%M:%S"
+                    "%H:%M:%S",
                 )
                 severity_color = "red" if alert["severity"] == "high" else "yellow"
                 alerts_text += f"[{severity_color}]{time_str} - {alert['message']}[/{severity_color}]\n"
@@ -572,7 +572,7 @@ class MonitoringAutomationModule(CustomFixModule):
                 alerts_text = "[green]No active alerts[/green]"
 
             layout["alerts"].update(
-                Panel(alerts_text, title="Recent Alerts", border_style="yellow")
+                Panel(alerts_text, title="Recent Alerts", border_style="yellow"),
             )
 
             # Footer - resource usage
@@ -581,7 +581,7 @@ class MonitoringAutomationModule(CustomFixModule):
                     self._get_resource_usage_text(),
                     title="Resource Usage",
                     border_style="blue",
-                )
+                ),
             )
 
             return layout

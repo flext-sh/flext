@@ -115,7 +115,8 @@ class AdvancedDatabaseService(BaseInfraService):
 
         # Configuration
         self._database_url = self._config.get(
-            "database_url", "postgresql://localhost/test"
+            "database_url",
+            "postgresql://localhost/test",
         )
         self._pool_size = self._config.get("pool_size", 10)
         self._max_retries = self._config.get("max_retries", 3)
@@ -390,7 +391,7 @@ async def demonstrate_advanced_features() -> None:
                 "INSERT INTO users (name) VALUES ('Alice')",
                 "INSERT INTO users (name) VALUES ('Bob')",
                 "UPDATE users SET active = true",
-            ]
+            ],
         )
 
         tasks = []

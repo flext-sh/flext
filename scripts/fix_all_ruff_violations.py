@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-"""
-Fix ALL ruff violations across PyAuto workspace - ZERO TOLERANCE.
+"""Fix ALL ruff violations across PyAuto workspace - ZERO TOLERANCE.
 
 This script systematically fixes all ruff violations to achieve
 ABSOLUTE ZERO warnings/errors as demanded: PEP8 TOTAL.
@@ -48,6 +47,7 @@ class RuffFixer:
                 cwd=project_path,
                 capture_output=True,
                 text=True,
+                check=False,
             )
             # Count lines in output
             return len([line for line in result.stdout.split("\n") if line.strip()])
@@ -56,7 +56,6 @@ class RuffFixer:
 
     def auto_fix_violations(self, project_path: Path) -> tuple[int, int]:
         """Auto-fix violations with ruff --fix."""
-
         # Count before
         before_count = self.count_violations(project_path)
 
@@ -67,6 +66,7 @@ class RuffFixer:
                 cwd=project_path,
                 capture_output=True,
                 text=True,
+                check=False,
             )
 
             # Count after
@@ -80,13 +80,13 @@ class RuffFixer:
 
     def fix_import_order(self, project_path: Path) -> int:
         """Fix import order issues with isort."""
-
         try:
             subprocess.run(
                 ["poetry", "run", "isort", ".", "--profile", "black"],
                 cwd=project_path,
                 capture_output=True,
                 text=True,
+                check=False,
             )
             return 1
         except Exception:
@@ -94,7 +94,6 @@ class RuffFixer:
 
     def add_missing_docstrings(self, project_path: Path) -> int:
         """Add missing docstrings to modules and functions."""
-
         fixed_count = 0
 
         # Find Python files
@@ -124,7 +123,7 @@ class RuffFixer:
 
                     # Add function/class docstrings if missing
                     if line.strip().startswith(
-                        ("def ", "class ")
+                        ("def ", "class "),
                     ) and line.strip().endswith(":"):
                         # Check if next line has docstring
                         if i + 1 < len(lines):
@@ -132,7 +131,7 @@ class RuffFixer:
                             if not (next_line.startswith(('"""', "'''"))):
                                 indent = len(line) - len(line.lstrip())
                                 new_lines.append(
-                                    " " * (indent + 4) + '"""TODO: Add docstring."""'
+                                    " " * (indent + 4) + '"""TODO: Add docstring."""',
                                 )
                                 modified = True
                                 fixed_count += 1
@@ -147,13 +146,13 @@ class RuffFixer:
 
     def format_with_black(self, project_path: Path) -> int:
         """Format code with Black for consistent style."""
-
         try:
             subprocess.run(
                 ["poetry", "run", "black", "."],
                 cwd=project_path,
                 capture_output=True,
                 text=True,
+                check=False,
             )
             return 1
         except Exception:
@@ -161,7 +160,6 @@ class RuffFixer:
 
     def fix_type_annotations(self, project_path: Path) -> int:
         """Add missing type annotations."""
-
         try:
             # Run pyupgrade to modernize type hints
             subprocess.run(
@@ -170,6 +168,7 @@ class RuffFixer:
                 cwd=project_path,
                 capture_output=True,
                 text=True,
+                check=False,
             )
             return 1
         except Exception:
@@ -219,7 +218,6 @@ ignore = [
 
     def fix_all_projects(self) -> None:
         """Fix all violations in all projects."""
-
         results: dict = {}
 
         for submodule in self.submodules:

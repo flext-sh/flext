@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-"""
-Fix remaining dependency issues for the 3 failed projects.
+"""Fix remaining dependency issues for the 3 failed projects.
 
 Per CLAUDE.md RULE 4: Complete Delivery
 """
@@ -32,7 +31,7 @@ def fix_complex_dependencies() -> None:
                 "opentelemetry-api>=1.20.0",
                 "opentelemetry-sdk>=1.20.0",
                 "dependency-injector>=4.41.0",
-            ]
+            ],
         },
         "dbt-ldap": {
             "additional_deps": [
@@ -41,7 +40,7 @@ def fix_complex_dependencies() -> None:
                 "ldap3>=2.9.0",
                 "pandas>=2.0.0",
                 "numpy>=1.24.0",
-            ]
+            ],
         },
         "flx-meltano-enterprise": {
             "additional_deps": [
@@ -54,7 +53,7 @@ def fix_complex_dependencies() -> None:
                 "celery>=5.3.0",
                 "redis>=5.0.0",
                 "kombu>=5.3.0",
-            ]
+            ],
         },
     }
 
@@ -73,6 +72,7 @@ def fix_complex_dependencies() -> None:
                     capture_output=True,
                     text=True,
                     timeout=60,
+                    check=False,
                 )
 
                 if result.returncode == 0:
@@ -88,6 +88,7 @@ def fix_complex_dependencies() -> None:
                 capture_output=True,
                 text=True,
                 timeout=120,
+                check=False,
             )
 
             if lock_result.returncode == 0:

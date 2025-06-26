@@ -63,7 +63,7 @@ def analyze_test_files() -> Any:
                     "project": project,
                     "count": len(adapter_tests),
                     "files": [f.name for f in adapter_tests[:5]],
-                }
+                },
             )
 
         if len(client_tests) > 3:
@@ -72,7 +72,7 @@ def analyze_test_files() -> Any:
                     "project": project,
                     "count": len(client_tests),
                     "files": [f.name for f in client_tests[:5]],
-                }
+                },
             )
 
     # Generate consolidation opportunities
@@ -92,7 +92,7 @@ def analyze_test_files() -> Any:
                         "e2e": ["test_e2e.py"],
                     },
                     "estimated_reduction": f"{stats['total_test_files']} → 5-8 files",
-                }
+                },
             )
 
     return analysis
@@ -223,8 +223,8 @@ if __name__ == "__main__":
 
     print("✅ Analysis complete!")
     print(
-        "📄 Report saved: /home/marlonsc/pyauto/reports/analysis/test_consolidation_report.md"
+        "📄 Report saved: /home/marlonsc/pyauto/reports/analysis/test_consolidation_report.md",
     )
     print(
-        "📊 Data saved: /home/marlonsc/pyauto/reports/analysis/test_consolidation_analysis.json"
+        "📊 Data saved: /home/marlonsc/pyauto/reports/analysis/test_consolidation_analysis.json",
     )

@@ -7,7 +7,8 @@ from pathlib import Path
 
 # Configure logging
 logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
 )
 logger = logging.getLogger(__name__)
 
@@ -80,6 +81,7 @@ class ManualImportFixer:
             ],
             capture_output=True,
             text=True,
+            check=False,
         )
 
         undefined_names = set()
@@ -147,7 +149,7 @@ class ManualImportFixer:
                         f.write(new_content)
 
                     logger.info(
-                        f"Fixed imports in {py_file}: {len(needed_imports)} imports added"
+                        f"Fixed imports in {py_file}: {len(needed_imports)} imports added",
                     )
                     self.fixes_applied += 1
 
@@ -223,6 +225,7 @@ class ManualImportFixer:
                 ["python", "-m", "py_compile", str(py_file)],
                 capture_output=True,
                 text=True,
+                check=False,
             )
 
             if result.returncode != 0:
@@ -236,7 +239,7 @@ class ManualImportFixer:
                     stats["import_errors"] += 1
 
                 logger.warning(
-                    f"Import/syntax error in {py_file}: {result.stderr.strip()}"
+                    f"Import/syntax error in {py_file}: {result.stderr.strip()}",
                 )
 
         return stats
@@ -257,6 +260,7 @@ class ManualImportFixer:
             ],
             capture_output=True,
             text=True,
+            check=False,
         )
 
         f821_count = result.stdout.count("F821")
@@ -273,6 +277,7 @@ class ManualImportFixer:
             ],
             capture_output=True,
             text=True,
+            check=False,
         )
 
         i001_count = result.stdout.count("I001")

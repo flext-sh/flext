@@ -63,23 +63,23 @@ class FlxTestConfig(BaseModel):
     # Coverage options
     enable_coverage: bool = Field(default=True, description="Enable coverage reporting")
     coverage_threshold: float = Field(
-        default=80.0, description="Minimum coverage threshold"
+        default=80.0, description="Minimum coverage threshold",
     )
 
     # Parallel execution
     parallel_workers: int = Field(
-        default=4, description="Number of parallel test workers"
+        default=4, description="Number of parallel test workers",
     )
 
     # Output options
     generate_html_report: bool = Field(
-        default=True, description="Generate HTML test report"
+        default=True, description="Generate HTML test report",
     )
     generate_json_report: bool = Field(
-        default=True, description="Generate JSON test report"
+        default=True, description="Generate JSON test report",
     )
     generate_junit_xml: bool = Field(
-        default=True, description="Generate JUnit XML report"
+        default=True, description="Generate JUnit XML report",
     )
 
     # Timeout settings
@@ -99,14 +99,14 @@ class FlxTestResult(BaseModel):
     skipped_tests: int = Field(description="Number of skipped tests")
     execution_time: float = Field(description="Execution time in seconds")
     coverage_percentage: float | None = Field(
-        default=None, description="Code coverage percentage"
+        default=None, description="Code coverage percentage",
     )
     success: bool = Field(description="Whether all tests passed")
     error_message: str | None = Field(
-        default=None, description="Error message if failed"
+        default=None, description="Error message if failed",
     )
     output_files: list[str] = Field(
-        default_factory=list, description="Generated output files"
+        default_factory=list, description="Generated output files",
     )
 
 
@@ -140,7 +140,7 @@ class FlxTestRunner:
         print(
             f"📊 Configuration: {len(self.config.test_directories)} projects, {
                 len(self.config.test_categories)
-            } categories"
+            } categories",
         )
 
         # Run tests for each flx_project and category combination
@@ -169,7 +169,7 @@ class FlxTestRunner:
         return self.results
 
     async def _run_project_tests(
-        self, project_dir: str, category: str
+        self, project_dir: str, category: str,
     ) -> FlxTestResult:
         """Run tests for a specific flx_project and category."""
         project_name = Path(project_dir).name
@@ -210,7 +210,7 @@ class FlxTestRunner:
             print(
                 f"{status_emoji} {project_name} {category}: {result.passed_tests}/{
                     result.total_tests
-                } passed ({execution_time:.2f}s)"
+                } passed ({execution_time:.2f}s)",
             )
 
             return result
@@ -220,7 +220,7 @@ class FlxTestRunner:
             print(
                 f"⏰ Timeout: {project_name} {category} tests exceeded {
                     self.config.test_timeout
-                }s"
+                }s",
             )
 
             return FlxTestResult(
@@ -277,13 +277,13 @@ class FlxTestRunner:
                     f"--cov-report=html:reports/coverage/{project_dir.replace('/', '_')}_{category}",
                     f"--cov-report=xml:reports/coverage/{project_dir.replace('/', '_')}_{category}.xml",
                     "--cov-report=term-missing",
-                ]
+                ],
             )
 
         # Add output files
         if self.config.generate_junit_xml:
             cmd.extend(
-                [f"--junit-xml=junit/{project_dir.replace('/', '_')}_{category}.xml"]
+                [f"--junit-xml=junit/{project_dir.replace('/', '_')}_{category}.xml"],
             )
 
         if self.config.generate_html_report:
@@ -291,7 +291,7 @@ class FlxTestRunner:
                 [
                     f"--html=reports/pytest/{project_dir.replace('/', '_')}_{category}.html",
                     "--self-contained-html",
-                ]
+                ],
             )
 
         return cmd
@@ -446,7 +446,7 @@ class FlxTestRunner:
             if stats["total"] > 0:
                 project_success = stats["passed"] / stats["total"] * 100
                 print(
-                    f"  {flx_project}: {stats['passed']}/{stats['total']} ({project_success:.1f}%)"
+                    f"  {flx_project}: {stats['passed']}/{stats['total']} ({project_success:.1f}%)",
                 )
 
         print("\n" + "=" * 80)

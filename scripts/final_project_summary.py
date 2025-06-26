@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-"""
-Final comprehensive validation and summary.
+"""Final comprehensive validation and summary.
 
 Per CLAUDE.md RULE 4: Complete delivery with zero tolerance for violations.
 Test ALL 21 projects and provide final status summary.
@@ -26,6 +25,7 @@ def test_project_import(project_name: str) -> tuple[bool, str]:
             capture_output=True,
             text=True,
             timeout=10,
+            check=False,
         )
 
         if result.returncode == 0:
@@ -59,7 +59,6 @@ def get_submodules() -> list[str]:
 
 def main():
     """Run final comprehensive validation."""
-
     submodules = get_submodules()
     working_projects = []
     broken_projects = []
@@ -82,7 +81,7 @@ def main():
     # Log to token
     with open("/home/marlonsc/pyauto/.token", "a") as f:
         f.write(
-            f"FINAL-VALIDATION-005 {status}: {len(working_projects)}/{len(submodules)} projects working\n"
+            f"FINAL-VALIDATION-005 {status}: {len(working_projects)}/{len(submodules)} projects working\n",
         )
 
     return len(working_projects) == len(submodules)

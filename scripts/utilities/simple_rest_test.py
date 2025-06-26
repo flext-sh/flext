@@ -11,7 +11,6 @@ sys.path.insert(0, str(Path(__file__).parent / "flx" / "src"))
 
 def test_rest_api() -> bool:
     """Test REST API creation and basic functionality."""
-
     try:
         # Import required modules
         from flx.adapters.inbound.fire_cli import create_cli
