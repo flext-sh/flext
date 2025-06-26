@@ -22,7 +22,11 @@ Documentation = "https://datacosmos-br.github.io/pyauto/"
 "Bug Tracker" = "https://github.com/datacosmos-br/pyauto/issues"
 
 [tool.poetry]
-package-mode = false
+name = "pyauto-workspace"
+version = "0.4.0"
+description = "PyAuto - Enterprise Python automation workspace com todos os subprojetos e dependências opcionais."
+readme = "README.md"
+packages = [{include = "pyauto", from = "src"}]
 
 [tool.black]
 line-length = 88
