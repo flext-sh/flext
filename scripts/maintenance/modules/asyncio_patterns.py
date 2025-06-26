@@ -1,5 +1,4 @@
-"""
-Asyncio pattern fix module.
+"""Asyncio pattern fix module.
 
 Fixes common asyncio anti-patterns:
 - asyncio.run() in loops or async contexts
@@ -58,7 +57,7 @@ class AsyncioPatternFixModule(CustomFixModule):
         return issues
 
     def _create_issue_from_finding(
-        self, finding: dict, lines: list[str]
+        self, finding: dict, lines: list[str],
     ) -> Issue | None:
         """Create Issue from AST finding."""
         line_num = finding["line"]
@@ -165,7 +164,7 @@ class AsyncioPatternFixModule(CustomFixModule):
                         severity="warning",
                         fix_description="Store task reference: task = asyncio.create_task(...)",
                         original_line=line,
-                    )
+                    ),
                 )
 
             # Check for synchronous requests in async
@@ -177,7 +176,7 @@ class AsyncioPatternFixModule(CustomFixModule):
                         severity="error",
                         fix_description="Use aiohttp or httpx for async HTTP requests",
                         original_line=line,
-                    )
+                    ),
                 )
 
             # Check for threading in async
@@ -189,7 +188,7 @@ class AsyncioPatternFixModule(CustomFixModule):
                         severity="warning",
                         fix_description="Use asyncio.Lock, asyncio.Event, etc.",
                         original_line=line,
-                    )
+                    ),
                 )
 
             # Check for loop.run_until_complete in async
@@ -201,7 +200,7 @@ class AsyncioPatternFixModule(CustomFixModule):
                         severity="error",
                         fix_description="Replace with await",
                         original_line=line,
-                    )
+                    ),
                 )
 
         return issues
@@ -341,7 +340,7 @@ class AsyncVisitor(ast.NodeVisitor):
             # Check if this call is already awaited
             # This is simplified - real implementation would check parent
             self.findings.append(
-                {"type": "missing_await", "line": node.lineno, "name": node.func.id}
+                {"type": "missing_await", "line": node.lineno, "name": node.func.id},
             )
 
         # Check for blocking operations

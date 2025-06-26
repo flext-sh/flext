@@ -64,7 +64,7 @@ async def demonstrate_meta_factory() -> None:
         print(f"✅ Created adapter: {wms_adapter.__class__.__name__}")
         print(f"   Class module: {wms_adapter.__class__.__module__}")
         print(
-            f"   Available methods: {[m for m in dir(wms_adapter) if not m.startswith('_') and callable(getattr(wms_adapter, m))][:5]}..."
+            f"   Available methods: {[m for m in dir(wms_adapter) if not m.startswith('_') and callable(getattr(wms_adapter, m))][:5]}...",
         )
 
         # Show adapter capabilities
@@ -343,10 +343,11 @@ async def demonstrate_meta_factory() -> None:
         }
 
         template_adapter = enhanced_factory.create_adapter(
-            basic_template, **template_config
+            basic_template,
+            **template_config,
         )
         print(
-            f"✅ Created template-based adapter: {template_adapter.__class__.__name__}"
+            f"✅ Created template-based adapter: {template_adapter.__class__.__name__}",
         )
 
     except Exception as e:

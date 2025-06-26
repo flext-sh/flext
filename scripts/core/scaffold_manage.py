@@ -266,8 +266,9 @@ def propagate_scaffold(projects: list[str], confirm: bool = False) -> None:
         if not project_path.exists():
             print(
                 colorize(
-                    f"⚠ Directory {flx_project} does not exist, skipping", "YELLOW"
-                )
+                    f"⚠ Directory {flx_project} does not exist, skipping",
+                    "YELLOW",
+                ),
             )
             continue
 

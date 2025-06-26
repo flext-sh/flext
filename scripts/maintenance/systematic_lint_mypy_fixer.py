@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Systematic Lint and MyPy Fixer for PyAuto Workspace.
+"""Systematic Lint and MyPy Fixer for PyAuto Workspace.
 
 CLAUDE.md COMPLIANCE IMPLEMENTED:
 - ABSOLUTE ZERO TOLERANCE for warnings/errors
@@ -163,9 +162,7 @@ class SystematicFixer:
         for line in lines:
             # Fix missing return type annotations
             if re.match(r"^\s*def \w+\([^)]*\):\s*$", line):
-                if "def __init__(" in line:
-                    line = line.replace("):", ") -> None:")
-                elif "def main(" in line:
+                if "def __init__(" in line or "def main(" in line:
                     line = line.replace("):", ") -> None:")
                 elif "-> " not in line:
                     # Add generic return type for other functions
@@ -302,6 +299,7 @@ class SystematicFixer:
                     capture_output=True,
                     text=True,
                     cwd=self.workspace_root,
+                    check=False,
                 )
                 lint_errors = (
                     len(result.stdout.strip().split("\n"))

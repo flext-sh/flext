@@ -63,7 +63,8 @@ class FlxAdapterConfig(FlxBaseConfig):
     # Monitoring settings
     enable_metrics: bool = Field(default=True, description="Enable metrics collection")
     enable_tracing: bool = Field(
-        default=False, description="Enable distributed tracing"
+        default=False,
+        description="Enable distributed tracing",
     )
 
     @classmethod
@@ -135,13 +136,14 @@ class FlxHttpConfig(FlxAdapterConfig):
     # Rate limiting
     rate_limit_requests: int = Field(default=100, description="Requests per minute")
     rate_limit_window: int = Field(
-        default=60, description="Rate limit window in seconds"
+        default=60,
+        description="Rate limit window in seconds",
     )
 
 
-def create_config_from_dict[T: "BaseSettings"](
-    config_class: type[T], config_dict: dict[str, Any]
-) -> T:
+def create_config_from_dict[
+    T: "BaseSettings"
+](config_class: type[T], config_dict: dict[str, Any],) -> T:
     """Create configuration instance from dictionary.
 
     Args:
@@ -157,9 +159,9 @@ def create_config_from_dict[T: "BaseSettings"](
     return config_class(**config_dict)
 
 
-def load_config_from_file[T: "BaseSettings"](
-    config_class: type[T], file_path: str | Path
-) -> T:
+def load_config_from_file[
+    T: "BaseSettings"
+](config_class: type[T], file_path: str | Path,) -> T:
     """Load configuration from file.
 
     Args:
@@ -174,9 +176,8 @@ def load_config_from_file[T: "BaseSettings"](
         ValidationError: If configuration is invalid
     """
     import json
-    from pathlib import Path
-
     import tomllib
+    from pathlib import Path
 
     path = Path(file_path)
 

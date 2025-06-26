@@ -1,5 +1,4 @@
-"""
-Base classes for custom fix modules.
+"""Base classes for custom fix modules.
 
 Provides the foundation for all custom fix modules with dry-run
 and confirmation capabilities.
@@ -57,10 +56,9 @@ class CustomFixModule(ABC):
     """Base class for all custom fix modules."""
 
     def __init__(
-        self, dry_run: bool = True, interactive: bool = False, verbose: bool = False
+        self, dry_run: bool = True, interactive: bool = False, verbose: bool = False,
     ):
-        """
-        Initialize the fix module.
+        """Initialize the fix module.
 
         Args:
             dry_run: If True, show changes without applying
@@ -88,8 +86,7 @@ class CustomFixModule(ABC):
         """Fix category (e.g., 'syntax', 'style', 'security')."""
 
     def process_file(self, file_path: Path) -> FixResult:
-        """
-        Process a single file.
+        """Process a single file.
 
         Args:
             file_path: Path to the file to process
@@ -106,7 +103,7 @@ class CustomFixModule(ABC):
 
             if not issues:
                 return FixResult(
-                    success=True, file_path=file_path, issues_found=0, issues_fixed=0
+                    success=True, file_path=file_path, issues_found=0, issues_fixed=0,
                 )
 
             # Show issues found
@@ -136,7 +133,7 @@ class CustomFixModule(ABC):
                         Syntax(diff, "diff", theme="monokai"),
                         title=f"Changes for {file_path.name}",
                         border_style="yellow",
-                    )
+                    ),
                 )
 
                 if not Confirm.ask("Apply these changes?"):
@@ -180,10 +177,9 @@ class CustomFixModule(ABC):
             )
 
     def process_directory(
-        self, directory: Path, pattern: str = "*.py"
+        self, directory: Path, pattern: str = "*.py",
     ) -> list[FixResult]:
-        """
-        Process all matching files in a directory.
+        """Process all matching files in a directory.
 
         Args:
             directory: Directory to process
@@ -199,7 +195,7 @@ class CustomFixModule(ABC):
 
         if not files:
             self.console.print(
-                f"No {pattern} files found in {directory}", style="yellow"
+                f"No {pattern} files found in {directory}", style="yellow",
             )
             return results
 
@@ -232,8 +228,7 @@ class CustomFixModule(ABC):
 
     @abstractmethod
     def analyze(self, file_path: Path, content: str) -> list[Issue]:
-        """
-        Analyze file content and return list of issues.
+        """Analyze file content and return list of issues.
 
         Args:
             file_path: Path to the file
@@ -245,8 +240,7 @@ class CustomFixModule(ABC):
 
     @abstractmethod
     def apply_fixes(self, content: str, issues: list[Issue]) -> str:
-        """
-        Apply fixes to the content.
+        """Apply fixes to the content.
 
         Args:
             content: Original file content
@@ -257,8 +251,7 @@ class CustomFixModule(ABC):
         """
 
     def validate_fixes(self, original: str, fixed: str) -> bool:
-        """
-        Validate that fixes are safe to apply.
+        """Validate that fixes are safe to apply.
 
         Args:
             original: Original content
@@ -285,7 +278,7 @@ class CustomFixModule(ABC):
             self.console.print(
                 f"  Line {issue.line}: [{severity_color}]{issue.message}[/{
                     severity_color
-                }]"
+                }]",
             )
             if issue.original_line:
                 self.console.print(f"    - {issue.original_line.strip()}", style="dim")

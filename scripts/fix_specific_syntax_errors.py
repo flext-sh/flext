@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-"""
-Fix specific critical syntax errors preventing FLX imports.
+"""Fix specific critical syntax errors preventing FLX imports.
 
 Per CLAUDE.md RULE 4: Complete delivery with zero tolerance for violations.
 """
@@ -150,6 +149,7 @@ def test_syntax():
             capture_output=True,
             text=True,
             timeout=10,
+            check=False,
         )
 
         if result.returncode == 0:
@@ -170,5 +170,5 @@ if __name__ == "__main__":
     with open("/home/marlonsc/pyauto/.token", "a") as f:
         status = "SUCCESS" if success else "FAILED"
         f.write(
-            f"FLX-SYNTAX-FIX-002 {status}: Fixed {len(fixed_files)} files, import test {status}\n"
+            f"FLX-SYNTAX-FIX-002 {status}: Fixed {len(fixed_files)} files, import test {status}\n",
         )

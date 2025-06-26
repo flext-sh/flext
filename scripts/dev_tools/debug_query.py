@@ -17,7 +17,9 @@ import oracledb
 
 
 def execute_oracle_query(
-    connection: oracledb.Connection, sql: str, params: dict[str, Any] | None = None
+    connection: oracledb.Connection,
+    sql: str,
+    params: dict[str, Any] | None = None,
 ) -> list[dict[str, Any]]:
     """Execute Oracle query and return results as list of dictionaries.
 
@@ -96,7 +98,8 @@ def debug_query() -> None:
 
         try:
             result_rows: list[dict[str, Any]] = execute_oracle_query(
-                connection, test_sql
+                connection,
+                test_sql,
             )
             print(f"Resultado tipo: {type(result_rows)}")
             print(f"Resultado: {result_rows}")
@@ -141,7 +144,8 @@ def debug_query() -> None:
         try:
             wms_sql = "SELECT COUNT(*) as total FROM WMS_ORDER_HDR"
             wms_result_rows: list[dict[str, Any]] = execute_oracle_query(
-                connection, wms_sql
+                connection,
+                wms_sql,
             )
             print(f"WMS resultado: {wms_result_rows}")
 

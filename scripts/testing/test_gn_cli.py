@@ -12,7 +12,11 @@ def run_command(command) -> None:
 
     try:
         result = subprocess.run(
-            command, shell=True, capture_output=True, text=True, check=False
+            command,
+            shell=True,
+            capture_output=True,
+            text=True,
+            check=False,
         )
         print(result.stdout)
         if result.stderr:

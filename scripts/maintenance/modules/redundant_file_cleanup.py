@@ -124,7 +124,7 @@ class RedundantFileCleanupModule(CustomFixModule):
 
         # Find potential duplicate content files
         redundant_files["duplicate_content"] = self.find_duplicate_content_files(
-            workspace_path
+            workspace_path,
         )
 
         return redundant_files
@@ -202,7 +202,7 @@ class RedundantFileCleanupModule(CustomFixModule):
         for pattern in self.REDUNDANT_PATTERNS:
             pattern_clean = pattern.replace("**/", "").replace("**", "")
             if pattern_clean in file_str or file_path.name.endswith(
-                pattern_clean.replace("*.py", ".py")
+                pattern_clean.replace("*.py", ".py"),
             ):
                 if not self.is_essential_file(file_path):
                     issues.append(
@@ -212,7 +212,7 @@ class RedundantFileCleanupModule(CustomFixModule):
                             code="REDUNDANT001",
                             message=f"File matches redundant pattern: {pattern_clean}",
                             suggestion="Consider removing this redundant file",
-                        )
+                        ),
                     )
 
         # Check for version numbers in filename
@@ -227,7 +227,7 @@ class RedundantFileCleanupModule(CustomFixModule):
                     code="REDUNDANT002",
                     message="File appears to be a versioned or backup copy",
                     suggestion="Remove if superseded by newer version",
-                )
+                ),
             )
 
         # Check for redundant imports in content
@@ -251,7 +251,7 @@ class RedundantFileCleanupModule(CustomFixModule):
                                 code="REDUNDANT003",
                                 message=f"Import from potentially redundant module: {pattern}",
                                 suggestion="Update import to use unified module",
-                            )
+                            ),
                         )
 
         return issues
@@ -288,7 +288,7 @@ class RedundantFileCleanupModule(CustomFixModule):
 
         if self.verbose:
             self.console.print(
-                f"[blue]Cleaning redundant files in: {workspace_path}[/blue]"
+                f"[blue]Cleaning redundant files in: {workspace_path}[/blue]",
             )
 
         redundant_files = self.find_redundant_files(workspace_path)
@@ -320,7 +320,7 @@ class RedundantFileCleanupModule(CustomFixModule):
                             self.console.print(
                                 f"[yellow]⚠️  Skipping essential file: {
                                     file_path.name
-                                }[/yellow]"
+                                }[/yellow]",
                             )
                         continue
 
@@ -330,7 +330,7 @@ class RedundantFileCleanupModule(CustomFixModule):
 
                     if self.interactive:
                         confirm = self.console.input(
-                            f"Remove {file_path.name}? (y/N): "
+                            f"Remove {file_path.name}? (y/N): ",
                         )
                         if confirm.lower() != "y":
                             continue
@@ -342,24 +342,24 @@ class RedundantFileCleanupModule(CustomFixModule):
 
                         if self.verbose:
                             self.console.print(
-                                f"[green]✅ Removed: {file_path.name}[/green]"
+                                f"[green]✅ Removed: {file_path.name}[/green]",
                             )
                         removed_count += 1
                         if self.verbose:
                             self.console.print(
-                                f"[cyan][DRY RUN] Would remove: {file_path.name}[/cyan]"
+                                f"[cyan][DRY RUN] Would remove: {file_path.name}[/cyan]",
                             )
 
                 except Exception as e:
                     if self.verbose:
                         self.console.print(
-                            f"[red]❌ Error removing {file_path.name}: {e}[/red]"
+                            f"[red]❌ Error removing {file_path.name}: {e}[/red]",
                         )
 
         if self.verbose:
             action = "Would remove" if self.dry_run else "Removed"
             self.console.print(
-                f"\n[bold green]{action} {removed_count} redundant files[/bold green]"
+                f"\n[bold green]{action} {removed_count} redundant files[/bold green]",
             )
 
         return True

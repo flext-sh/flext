@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-"""
-Fix all Poetry lock files across workspace.
+"""Fix all Poetry lock files across workspace.
 
 Following CLAUDE.md RULE 4: Complete Delivery
 """
@@ -58,6 +57,7 @@ def fix_poetry_locks() -> None:
                 capture_output=True,
                 text=True,
                 timeout=60,
+                check=False,
             )
 
             if result.returncode == 0:

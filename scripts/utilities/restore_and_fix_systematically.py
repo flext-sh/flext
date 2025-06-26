@@ -7,7 +7,6 @@ from pathlib import Path
 
 def restore_core_files() -> None:
     """Restore core files that were broken by automation."""
-
     flx_path = Path("/home/marlonsc/pyauto/flx/src/flx")
 
     # Restore analytics adapter
@@ -488,7 +487,6 @@ class FlxDomainEvent(DomainEvent):
 
 def fix_behavioral_init() -> None:
     """Fix the behavioral mixins __init__.py file."""
-
     behavioral_content = '''"""Behavioral mixins for FLX adapters.
 
 This package contains infrastructure mixins that were moved from
@@ -581,7 +579,7 @@ __all__ = [
 '''
 
     behavioral_file = Path(
-        "/home/marlonsc/pyauto/flx/src/flx/adapters/mixins/behavioral/__init__.py"
+        "/home/marlonsc/pyauto/flx/src/flx/adapters/mixins/behavioral/__init__.py",
     )
     behavioral_file.write_text(behavioral_content)
 
@@ -612,7 +610,6 @@ def check_progress() -> int:
 
 def main() -> None:
     """Restore and fix systematically."""
-
     # First restore core files
     restore_core_files()
 

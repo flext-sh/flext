@@ -7,7 +7,6 @@ from pathlib import Path
 
 def fix_broken_files() -> None:
     """Fix files that were broken by the previous script."""
-
     flx_path = Path("/home/marlonsc/pyauto/flx/src/flx")
 
     # Files that are known to have issues
@@ -85,7 +84,6 @@ def fix_broken_files() -> None:
 
 def restore_core_files() -> None:
     """Restore core files to a working state."""
-
     # Customer domain entity - restore essential structure
     customer_content = '''"""Customer domain entity with comprehensive enterprise business rules."""
 
@@ -206,7 +204,6 @@ class Customer(Entity, Identifiable, Timestamped, Versionable):
 
 def main() -> None:
     """Run targeted critical fixes."""
-
     # First, try to fix broken files
     fix_broken_files()
 

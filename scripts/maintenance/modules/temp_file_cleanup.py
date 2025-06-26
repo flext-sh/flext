@@ -142,7 +142,7 @@ class TempFileCleanupModule(CustomFixModule):
                 file_path.suffix in {".bak", ".tmp"},
                 file_path.name.startswith(("temp_", "tmp_", "backup_")),
                 file_path.name.endswith(("_temp.py", "_tmp.py", "_bak.py")),
-            ]
+            ],
         )
 
         if is_temp_file and file_age < cutoff_date:
@@ -160,7 +160,7 @@ class TempFileCleanupModule(CustomFixModule):
                     suggestion=f"Consider removing this temporary file. Purpose: {
                         metadata.get('purpose', 'Unknown')
                     }",
-                )
+                ),
             )
 
         return issues
@@ -176,10 +176,10 @@ class TempFileCleanupModule(CustomFixModule):
 
         if self.verbose:
             self.console.print(
-                f"[blue]Cleaning temporary files in: {workspace_path}[/blue]"
+                f"[blue]Cleaning temporary files in: {workspace_path}[/blue]",
             )
             self.console.print(
-                f"[yellow]Maximum age: {self.max_age_days} days[/yellow]"
+                f"[yellow]Maximum age: {self.max_age_days} days[/yellow]",
             )
 
         old_files = self.find_temp_files(workspace_path)
@@ -191,7 +191,7 @@ class TempFileCleanupModule(CustomFixModule):
 
         if self.verbose:
             self.console.print(
-                f"[yellow]Found {len(old_files)} old temporary files[/yellow]"
+                f"[yellow]Found {len(old_files)} old temporary files[/yellow]",
             )
 
         removed_count = 0
@@ -208,7 +208,7 @@ class TempFileCleanupModule(CustomFixModule):
                             age_days
                         } days, purpose: {
                             metadata.get('purpose', 'Not specified')
-                        })[/cyan]"
+                        })[/cyan]",
                     )
 
                 if self.interactive:
@@ -220,28 +220,28 @@ class TempFileCleanupModule(CustomFixModule):
                     file_path.unlink()
                     if self.verbose:
                         self.console.print(
-                            f"[green]✅ Removed: {file_path.name}[/green]"
+                            f"[green]✅ Removed: {file_path.name}[/green]",
                         )
                     removed_count += 1
                     if self.verbose:
                         self.console.print(
-                            f"[cyan][DRY RUN] Would remove: {file_path.name}[/cyan]"
+                            f"[cyan][DRY RUN] Would remove: {file_path.name}[/cyan]",
                         )
 
             except Exception as e:
                 if self.verbose:
                     self.console.print(
-                        f"[red]❌ Error removing {file_path.name}: {e}[/red]"
+                        f"[red]❌ Error removing {file_path.name}: {e}[/red]",
                     )
 
         if self.verbose:
             action = "Would remove" if self.dry_run else "Removed"
             self.console.print(
-                f"[bold green]{action} {len(old_files)} temporary files[/bold green]"
+                f"[bold green]{action} {len(old_files)} temporary files[/bold green]",
             )
             if not self.dry_run and removed_count > 0:
                 self.console.print(
-                    f"[green]Successfully removed {removed_count} files[/green]"
+                    f"[green]Successfully removed {removed_count} files[/green]",
                 )
 
         return True

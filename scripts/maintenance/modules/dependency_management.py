@@ -7,11 +7,11 @@ Based on scripts/utilities/dependency_analysis.py and standardize_dependencies.p
 
 import re
 import shutil
+import tomllib
 from pathlib import Path
 from typing import Any
 
 import tomli_w
-import tomllib
 from rich.console import Console
 from rich.table import Table
 
@@ -186,7 +186,7 @@ class DependencyManagementModule(CustomFixModule):
             except Exception as e:
                 if self.verbose:
                     self.console.print(
-                        f"[red]Error parsing {pyproject_path}: {e}[/red]"
+                        f"[red]Error parsing {pyproject_path}: {e}[/red]",
                     )
 
         # Analyze conflicts
@@ -214,7 +214,7 @@ class DependencyManagementModule(CustomFixModule):
                         "dependency": dep_name,
                         "versions": dict(project_versions),
                         "standard_version": self.STANDARD_VERSIONS.get(dep_name),
-                    }
+                    },
                 )
 
     def _analyze_missing_dependencies(self) -> None:
@@ -235,7 +235,7 @@ class DependencyManagementModule(CustomFixModule):
                             "dependency": req_dep,
                             "required_version": req_version,
                             "type": "dev",
-                        }
+                        },
                     )
 
     def analyze(self, file_path: Path, content: str) -> list[Issue]:
@@ -264,7 +264,7 @@ class DependencyManagementModule(CustomFixModule):
                                 code="DEP001",
                                 message=f"Dependency {dep_name} version {dep_version} conflicts with standard {standard_version}",
                                 suggestion=f"Update to standard version: {standard_version}",
-                            )
+                            ),
                         )
 
                 # Check for missing required dev dependencies
@@ -282,7 +282,7 @@ class DependencyManagementModule(CustomFixModule):
                                 code="DEP002",
                                 message=f"Missing required dev dependency: {req_dep}",
                                 suggestion=f'Add dev dependency: {req_dep} = "{req_version}"',
-                            )
+                            ),
                         )
 
             except Exception as e:
@@ -293,7 +293,7 @@ class DependencyManagementModule(CustomFixModule):
                         code="DEP003",
                         message=f"Failed to analyze dependencies: {e}",
                         suggestion="Check pyproject.toml format and syntax",
-                    )
+                    ),
                 )
 
         return issues
@@ -309,7 +309,7 @@ class DependencyManagementModule(CustomFixModule):
 
         if self.verbose:
             self.console.print(
-                f"[blue]Standardizing dependencies in: {workspace_path}[/blue]"
+                f"[blue]Standardizing dependencies in: {workspace_path}[/blue]",
             )
 
         # Analyze current state
@@ -319,19 +319,19 @@ class DependencyManagementModule(CustomFixModule):
             self.console.print(
                 f"[green]Found {analysis['projects']} projects with {
                     analysis['dependencies']
-                } unique dependencies[/green]"
+                } unique dependencies[/green]",
             )
             if analysis["conflicts"] > 0:
                 self.console.print(
                     f"[yellow]Detected {
                         analysis['conflicts']
-                    } version conflicts[/yellow]"
+                    } version conflicts[/yellow]",
                 )
             if analysis["missing"] > 0:
                 self.console.print(
                     f"[yellow]Found {
                         analysis['missing']
-                    } missing required dependencies[/yellow]"
+                    } missing required dependencies[/yellow]",
                 )
 
         # Show conflicts
@@ -347,7 +347,7 @@ class DependencyManagementModule(CustomFixModule):
         if self.verbose:
             action = "Would standardize" if self.dry_run else "Standardized"
             self.console.print(
-                f"[bold green]{action} {standardized_count} projects[/bold green]"
+                f"[bold green]{action} {standardized_count} projects[/bold green]",
             )
 
         return True
@@ -391,7 +391,7 @@ class DependencyManagementModule(CustomFixModule):
             if standard_version and str(dep_version) != standard_version:
                 dependencies[dep_name] = standard_version
                 changes_made.append(
-                    f"Updated {dep_name}: {dep_version} → {standard_version}"
+                    f"Updated {dep_name}: {dep_version} → {standard_version}",
                 )
 
         # Add missing dev dependencies
@@ -408,7 +408,7 @@ class DependencyManagementModule(CustomFixModule):
             if self.verbose:
                 project_name = pyproject_path.parent.name
                 self.console.print(
-                    f"[green]✅ {project_name} already standardized[/green]"
+                    f"[green]✅ {project_name} already standardized[/green]",
                 )
             return True
 
@@ -416,7 +416,7 @@ class DependencyManagementModule(CustomFixModule):
             if self.verbose:
                 project_name = pyproject_path.parent.name
                 self.console.print(
-                    f"[cyan][DRY RUN] Would apply changes to {project_name}:[/cyan]"
+                    f"[cyan][DRY RUN] Would apply changes to {project_name}:[/cyan]",
                 )
                 for change in changes_made:
                     self.console.print(f"[cyan]  - {change}[/cyan]")
@@ -456,7 +456,7 @@ class DependencyManagementModule(CustomFixModule):
             if self.verbose:
                 project_name = pyproject_path.parent.name
                 self.console.print(
-                    f"[red]❌ Failed to standardize {project_name}: {e}[/red]"
+                    f"[red]❌ Failed to standardize {project_name}: {e}[/red]",
                 )
             return False
 

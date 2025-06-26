@@ -21,7 +21,6 @@ logger = structlog.get_logger(__name__)
 
 async def basic_meltano_integration_example():
     """Demonstrate basic Meltano integration with FLX."""
-
     # Create project directory
     project_root = Path.cwd() / "meltano_projects" / "basic_example"
     project_root.mkdir(parents=True, exist_ok=True)
@@ -41,7 +40,8 @@ async def basic_meltano_integration_example():
 
         # Initialize Meltano project if needed
         await adapter.initialize_meltano_project(
-            project_name="basic_example", project_path=str(project_root.parent)
+            project_name="basic_example",
+            project_path=str(project_root.parent),
         )
 
         # Discover available plugins
@@ -58,10 +58,9 @@ async def basic_meltano_integration_example():
 
 async def complete_pipeline_example():
     """Demonstrate complete ELT pipeline setup."""
-
     # Setup environment
     os.environ["MELTANO_PROJECT_ROOT"] = str(
-        Path.cwd() / "meltano_projects" / "pipeline_example"
+        Path.cwd() / "meltano_projects" / "pipeline_example",
     )
     os.environ["MELTANO_CONFIG_TEMPLATE"] = "production"
 
@@ -102,7 +101,8 @@ async def complete_pipeline_example():
         }
 
         await pipeline_adapter.update_plugin_config(
-            "target-snowflake", snowflake_config
+            "target-snowflake",
+            snowflake_config,
         )
 
         # Test plugins
@@ -122,7 +122,6 @@ async def complete_pipeline_example():
 
 async def state_management_example():
     """Demonstrate state management capabilities."""
-
     project_root = Path.cwd() / "meltano_projects" / "state_example"
 
     try:
@@ -140,9 +139,9 @@ async def state_management_example():
                     "users": {
                         "replication_key": "updated_at",
                         "replication_key_value": "2023-01-01T00:00:00Z",
-                    }
-                }
-            }
+                    },
+                },
+            },
         }
 
         state_id = "tap-postgres-to-target-snowflake"
@@ -172,7 +171,6 @@ async def state_management_example():
 
 async def workflow_orchestration_example():
     """Demonstrate workflow orchestration with Airflow."""
-
     project_root = Path.cwd() / "meltano_projects" / "workflow_example"
 
     try:
@@ -184,7 +182,7 @@ async def workflow_orchestration_example():
                     "dags_directory": "/tmp/airflow_dags",
                     "webserver_host": "localhost",
                     "webserver_port": 8080,
-                }
+                },
             },
         )
 
@@ -235,7 +233,6 @@ async def workflow_orchestration_example():
 
 async def advanced_plugin_management_example():
     """Demonstrate advanced plugin management."""
-
     project_root = Path.cwd() / "meltano_projects" / "advanced_example"
 
     try:
@@ -306,7 +303,6 @@ async def advanced_plugin_management_example():
 
 async def demonstrate_crud_interface():
     """Demonstrate CRUD interface for unified access."""
-
     project_root = Path.cwd() / "meltano_projects" / "crud_example"
 
     try:
@@ -338,7 +334,7 @@ async def demonstrate_crud_interface():
         # Using CRUD interface for state
 
         state_data = {
-            "singer_state": {"bookmarks": {"file1": {"last_modified": "2023-01-01"}}}
+            "singer_state": {"bookmarks": {"file1": {"last_modified": "2023-01-01"}}},
         }
 
         await adapter.set("state:csv-pipeline", state_data)
@@ -364,7 +360,6 @@ async def demonstrate_crud_interface():
 
 async def show_available_templates():
     """Show available configuration and plugin templates."""
-
     templates = MeltanoAdapterFactory.get_available_templates()
 
     for _name, config in templates["config_templates"].items():
@@ -377,7 +372,6 @@ async def show_available_templates():
 
 async def main():
     """Run all examples."""
-
     # Show available templates
     await show_available_templates()
 

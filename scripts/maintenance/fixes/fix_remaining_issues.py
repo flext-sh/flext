@@ -40,7 +40,8 @@ def fix_flx_strict_model_import() -> None:
                         for j in range(i + 1, len(lines)):
                             if not lines[j].strip():
                                 lines.insert(
-                                    j + 1, "from flx.core.base import FlxStrictModel"
+                                    j + 1,
+                                    "from flx.core.base import FlxStrictModel",
                                 )
                                 break
                         break
@@ -78,7 +79,8 @@ class MockDataModel(BaseModel):
             # Add before BaseMockProvider
             if "class BaseMockProvider" in content:
                 content = content.replace(
-                    "class BaseMockProvider", f"{model_def}\n\nclass BaseMockProvider"
+                    "class BaseMockProvider",
+                    f"{model_def}\n\nclass BaseMockProvider",
                 )
                 content += f"\n\n{model_def}"
 
@@ -167,7 +169,7 @@ class UniversalField(FlxStrictModel):
             if "class " in content:
                 # Find last class definition
                 class_matches = list(
-                    re.finditer(r"^class\s+\w+", content, re.MULTILINE)
+                    re.finditer(r"^class\s+\w+", content, re.MULTILINE),
                 )
                 if class_matches:
                     last_class_end = content.find("\n\n", class_matches[-1].end())

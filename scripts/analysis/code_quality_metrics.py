@@ -66,9 +66,11 @@ class CodeQualityMetrics:
                 "errors_by_type": errors_by_type,
                 "total_lines": total_lines,
                 "error_density": total_errors / total_lines if total_lines > 0 else 0,
-                "quality_score": max(0, 100 - (total_errors / total_lines * 1000))
-                if total_lines > 0
-                else 0,
+                "quality_score": (
+                    max(0, 100 - (total_errors / total_lines * 1000))
+                    if total_lines > 0
+                    else 0
+                ),
             }
         except Exception as e:
             return {"error": str(e)}
@@ -101,13 +103,15 @@ class CodeQualityMetrics:
                 "missing_annotations": missing_annotations,
                 "total_functions": total_functions,
                 "annotation_coverage": (
-                    (total_functions - missing_annotations) / total_functions * 100
-                )
-                if total_functions > 0
-                else 0,
-                "type_safety_score": max(0, 100 - (type_errors / total_functions * 100))
-                if total_functions > 0
-                else 0,
+                    ((total_functions - missing_annotations) / total_functions * 100)
+                    if total_functions > 0
+                    else 0
+                ),
+                "type_safety_score": (
+                    max(0, 100 - (type_errors / total_functions * 100))
+                    if total_functions > 0
+                    else 0
+                ),
             }
         except Exception as e:
             return {"error": str(e)}
@@ -135,7 +139,7 @@ class CodeQualityMetrics:
                     ]
                 ):
                     architecture_violations.append(
-                        f"Infrastructure import in core: {py_file}"
+                        f"Infrastructure import in core: {py_file}",
                     )
                     compliance_score -= 5
 
@@ -274,7 +278,7 @@ class CodeQualityMetrics:
         # Lint recommendations
         if lint_metrics.get("total_errors", 0) > 50:
             recommendations.append(
-                "🔧 High lint error count - run aggressive auto-fixing"
+                "🔧 High lint error count - run aggressive auto-fixing",
             )
 
         # Type recommendations
@@ -291,7 +295,7 @@ class CodeQualityMetrics:
 
         if not recommendations:
             recommendations.append(
-                "✨ Excellent code quality - maintain current standards!"
+                "✨ Excellent code quality - maintain current standards!",
             )
 
         return recommendations

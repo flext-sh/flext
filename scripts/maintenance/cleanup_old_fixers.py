@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Cleanup script to archive old maintenance scripts.
+"""Cleanup script to archive old maintenance scripts.
 
 This script identifies obsolete maintenance scripts and moves them to an archive
 directory, keeping only the unified maintenance system and essential scripts.
@@ -52,7 +51,7 @@ def main() -> None:
                     continue
 
                 # Create archive path
-                relative_path = script.relative_to(Path("."))
+                relative_path = script.relative_to(Path())
                 archive_path = archive_dir / timestamp / relative_path
                 archive_path.parent.mkdir(parents=True, exist_ok=True)
 

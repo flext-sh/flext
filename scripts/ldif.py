@@ -124,7 +124,9 @@ class StandardLdifProcessor(BaseProcessor, ILdifProcessor):
             return False
 
     def filter_entries_by_type(
-        self, entries: list[dict], entry_type: str
+        self,
+        entries: list[dict],
+        entry_type: str,
     ) -> list[dict]:
         """Filter entries by type (user, group, etc)."""
         filtered: list = []
@@ -167,7 +169,8 @@ class StandardLdifProcessor(BaseProcessor, ILdifProcessor):
             ),
             "validate": lambda: self.validate_ldif(kwargs.get("filepath")),
             "filter": lambda: self.filter_entries_by_type(
-                kwargs.get("entries", []), kwargs.get("entry_type", "user")
+                kwargs.get("entries", []),
+                kwargs.get("entry_type", "user"),
             ),
         }
 

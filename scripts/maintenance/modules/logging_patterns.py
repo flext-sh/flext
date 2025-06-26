@@ -1,5 +1,4 @@
-"""
-Logging pattern fix module.
+"""Logging pattern fix module.
 
 Fixes common logging anti-patterns:
 - f-strings in logging calls
@@ -70,7 +69,7 @@ class LoggingPatternFixModule(CustomFixModule):
 
         # Pattern: logger.method(f"...") or logger.method(f'...')
         fstring_pattern = re.compile(
-            r'(logger|logging|log)\.(debug|info|warning|error|critical)\s*\(\s*f["\']([^"\']*)["\']([^)]*)\)'
+            r'(logger|logging|log)\.(debug|info|warning|error|critical)\s*\(\s*f["\']([^"\']*)["\']([^)]*)\)',
         )
 
         for i, line in enumerate(lines, 1):
@@ -99,13 +98,15 @@ class LoggingPatternFixModule(CustomFixModule):
                         fix_description="Use lazy formatting instead",
                         original_line=line,
                         fixed_line=fixed_line,
-                    )
+                    ),
                 )
 
         return issues
 
     def _check_print_statements(
-        self, lines: list[str], has_logger: bool
+        self,
+        lines: list[str],
+        has_logger: bool,
     ) -> list[Issue]:
         """Check for print statements that should be logger calls."""
         issues: list = []
@@ -135,7 +136,7 @@ class LoggingPatternFixModule(CustomFixModule):
                         fix_description=f"Replace with logger.{log_level}",
                         original_line=line,
                         fixed_line=fixed_line,
-                    )
+                    ),
                 )
 
         return issues
@@ -147,7 +148,7 @@ class LoggingPatternFixModule(CustomFixModule):
         # Pattern: logger.method("... %s ..." % variable)
         percent_pattern = re.compile(
             r'(logger|logging)\.(debug|info|warning|error|critical)\s*\(\s*["\']([^"\']*%[sdfr][^"\']*)["\']'
-            r"\s*%\s*([^)]+)\)"
+            r"\s*%\s*([^)]+)\)",
         )
 
         for i, line in enumerate(lines, 1):
@@ -157,7 +158,8 @@ class LoggingPatternFixModule(CustomFixModule):
 
                 # Create fixed version with lazy formatting
                 fixed_line = line.replace(
-                    match.group(0), f'{logger_obj}.{level}("{message}", {variables})'
+                    match.group(0),
+                    f'{logger_obj}.{level}("{message}", {variables})',
                 )
 
                 issues.append(
@@ -168,7 +170,7 @@ class LoggingPatternFixModule(CustomFixModule):
                         fix_description="Move % formatting to logger arguments",
                         original_line=line,
                         fixed_line=fixed_line,
-                    )
+                    ),
                 )
 
         return issues
@@ -180,7 +182,7 @@ class LoggingPatternFixModule(CustomFixModule):
         # Pattern: logger.method("...{}...".format(...))
         format_pattern = re.compile(
             r'(logger|logging)\.(debug|info|warning|error|critical)\s*\(\s*["\']([^"\']*\{[^"\']*\}[^"\']*)["\']'
-            r"\.format\s*\(([^)]+)\)\s*\)"
+            r"\.format\s*\(([^)]+)\)\s*\)",
         )
 
         for i, line in enumerate(lines, 1):
@@ -193,7 +195,8 @@ class LoggingPatternFixModule(CustomFixModule):
                 fixed_message = re.sub(r"\{[^}]+\}", "%s", fixed_message)
 
                 fixed_line = line.replace(
-                    match.group(0), f'{logger_obj}.{level}("{fixed_message}", {args})'
+                    match.group(0),
+                    f'{logger_obj}.{level}("{fixed_message}", {args})',
                 )
 
                 issues.append(
@@ -204,7 +207,7 @@ class LoggingPatternFixModule(CustomFixModule):
                         fix_description="Use lazy formatting instead",
                         original_line=line,
                         fixed_line=fixed_line,
-                    )
+                    ),
                 )
 
         return issues
@@ -228,7 +231,7 @@ class LoggingPatternFixModule(CustomFixModule):
                             severity="warning",
                             fix_description="Use logger.error() for errors",
                             original_line=line,
-                        )
+                        ),
                     )
 
         return issues

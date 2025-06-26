@@ -19,6 +19,7 @@ def validate_project(project_name: str) -> tuple[int, int, int]:
         cwd=project_path,
         capture_output=True,
         text=True,
+        check=False,
     )
     ruff_violations = len([l for l in ruff_result.stdout.split("\n") if l.strip()])
 
@@ -28,6 +29,7 @@ def validate_project(project_name: str) -> tuple[int, int, int]:
         cwd=project_path,
         capture_output=True,
         text=True,
+        check=False,
     )
     mypy_errors = 1 if mypy_result.returncode != 0 else 0
 
@@ -37,6 +39,7 @@ def validate_project(project_name: str) -> tuple[int, int, int]:
         cwd=project_path,
         capture_output=True,
         text=True,
+        check=False,
     )
     test_failures = 1 if test_result.returncode != 0 else 0
 

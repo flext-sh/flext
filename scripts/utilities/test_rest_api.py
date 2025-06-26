@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Test script for FLX REST API functionality.
+"""Test script for FLX REST API functionality.
 
 This script demonstrates how the CLI commands are automatically exposed
 via REST API endpoints, including plugin commands.
@@ -98,13 +97,16 @@ def test_api_endpoints() -> Any:
                 headers = {"Content-Type": "application/json"}
                 data = json.dumps(test.get("data", {}))
                 response = requests.post(
-                    test["url"], data=data, headers=headers, timeout=10
+                    test["url"],
+                    data=data,
+                    headers=headers,
+                    timeout=10,
                 )
 
             success = response.status_code == test["expected_status"]
 
             if success and response.headers.get("content-type", "").startswith(
-                "application/json"
+                "application/json",
             ):
                 try:
                     json_data = response.json()
@@ -123,7 +125,7 @@ def test_api_endpoints() -> Any:
                     "success": success,
                     "status_code": response.status_code,
                     "url": test["url"],
-                }
+                },
             )
 
         except requests.exceptions.RequestException as e:
@@ -133,7 +135,7 @@ def test_api_endpoints() -> Any:
                     "success": False,
                     "error": str(e),
                     "url": test["url"],
-                }
+                },
             )
 
     # Summary

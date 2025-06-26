@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-PyAuto Enterprise - Version Manager
+"""PyAuto Enterprise - Version Manager
 
 Gerencia versões unificadas em todos os submódulos usando __version__.py
 como fonte única da verdade.
@@ -87,7 +86,7 @@ __version_info__ = tuple(int(x) for x in __version__.split('.'))
             print(f"✅ Updated {submodule}/pyproject.toml to version {version}")
             return True
         print(
-            f"❌ {submodule}: Não foi possível encontrar linha de versão em pyproject.toml"
+            f"❌ {submodule}: Não foi possível encontrar linha de versão em pyproject.toml",
         )
         return False
 
@@ -142,12 +141,14 @@ __all__ = ["__version__", "__version_info__"]
                 if line.strip().startswith("__all__"):
                     if "__version__" not in line:
                         lines[i] = line.replace(
-                            "]", ', "__version__", "__version_info__"]'
+                            "]",
+                            ', "__version__", "__version_info__"]',
                         )
                     break
                 # Adicionar __all__ se não existir
                 lines.insert(
-                    insert_index + 1, '\n__all__ = ["__version__", "__version_info__"]'
+                    insert_index + 1,
+                    '\n__all__ = ["__version__", "__version_info__"]',
                 )
 
             init_file.write_text("\n".join(lines))
@@ -222,7 +223,7 @@ __all__ = ["__version__", "__version_info__"]
                 print(f"❌ {submodule}: Erro ao atualizar versão: {e}")
 
         print(
-            f"\n📊 Resultado: {success_count}/{len(submodules)} submódulos atualizados"
+            f"\n📊 Resultado: {success_count}/{len(submodules)} submódulos atualizados",
         )
         return success_count == len(submodules)
 
@@ -261,20 +262,21 @@ __all__ = ["__version__", "__version_info__"]
                 try:
                     version_content = version_file.read_text()
                     version_match = re.search(
-                        r'__version__\s*=\s*"([^"]*)"', version_content
+                        r'__version__\s*=\s*"([^"]*)"',
+                        version_content,
                     )
                     if version_match:
                         file_version = version_match.group(1)
                         if file_version != version:
                             inconsistencies.append(
-                                f"{submodule}: pyproject.toml({version}) != __version__.py({file_version})"
+                                f"{submodule}: pyproject.toml({version}) != __version__.py({file_version})",
                             )
                         inconsistencies.append(
-                            f"{submodule}: __version__.py malformado"
+                            f"{submodule}: __version__.py malformado",
                         )
                 except Exception as e:
                     inconsistencies.append(
-                        f"{submodule}: Erro ao ler __version__.py: {e}"
+                        f"{submodule}: Erro ao ler __version__.py: {e}",
                     )
                 inconsistencies.append(f"{submodule}: __version__.py não encontrado")
 
@@ -318,11 +320,14 @@ def main() -> None:
 
     # Comando set
     set_parser = subparsers.add_parser(
-        "set", help="Set version in all or specific submodules"
+        "set",
+        help="Set version in all or specific submodules",
     )
     set_parser.add_argument("version", help="Version to set (e.g., 0.5.0)")
     set_parser.add_argument(
-        "--submodules", nargs="*", help="Specific submodules (default: all)"
+        "--submodules",
+        nargs="*",
+        help="Specific submodules (default: all)",
     )
 
     # Comando get

@@ -6,7 +6,8 @@ import subprocess
 from pathlib import Path
 
 logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
 )
 logger = logging.getLogger(__name__)
 
@@ -152,6 +153,7 @@ class SyntaxErrorFixer:
             ["ruff", "check", str(self.base_path), "--select", "E999", "--statistics"],
             capture_output=True,
             text=True,
+            check=False,
         )
 
         syntax_errors = 0

@@ -35,7 +35,7 @@ class DeploymentAutomationModule(CustomFixModule):
         return "deployment"
 
     def __init__(
-        self, dry_run: bool = True, interactive: bool = False, verbose: bool = False
+        self, dry_run: bool = True, interactive: bool = False, verbose: bool = False,
     ):
         """Initialize deployment automation module.
 
@@ -90,7 +90,7 @@ class DeploymentAutomationModule(CustomFixModule):
                                 file_path=file_path,
                                 line=None,
                                 fix_description=f"Add health check configuration for {service_name}",
-                            )
+                            ),
                         )
 
                     # Check for missing restart policy
@@ -102,7 +102,7 @@ class DeploymentAutomationModule(CustomFixModule):
                                 file_path=file_path,
                                 line=None,
                                 fix_description=f"Add restart policy for {service_name}",
-                            )
+                            ),
                         )
 
                     # Check for hardcoded secrets
@@ -120,7 +120,7 @@ class DeploymentAutomationModule(CustomFixModule):
                                             file_path=file_path,
                                             line=None,
                                             fix_description=f"Use environment variable for {env_var}",
-                                        )
+                                        ),
                                     )
         except yaml.YAMLError as e:
             issues.append(
@@ -130,7 +130,7 @@ class DeploymentAutomationModule(CustomFixModule):
                     file_path=file_path,
                     line=None,
                     fix_description="Fix YAML syntax errors",
-                )
+                ),
             )
 
         return issues
@@ -163,7 +163,7 @@ class DeploymentAutomationModule(CustomFixModule):
                         file_path=file_path,
                         line=i,
                         fix_description="Add && rm -rf /var/lib/apt/lists/* to reduce image size",
-                    )
+                    ),
                 )
 
             # Check for ADD instead of COPY
@@ -175,7 +175,7 @@ class DeploymentAutomationModule(CustomFixModule):
                         file_path=file_path,
                         line=i,
                         fix_description="Replace ADD with COPY",
-                    )
+                    ),
                 )
 
         if not has_user:
@@ -186,7 +186,7 @@ class DeploymentAutomationModule(CustomFixModule):
                     file_path=file_path,
                     line=None,
                     fix_description="Add USER instruction to run as non-root",
-                )
+                ),
             )
 
         if not has_healthcheck:
@@ -197,7 +197,7 @@ class DeploymentAutomationModule(CustomFixModule):
                     file_path=file_path,
                     line=None,
                     fix_description="Add HEALTHCHECK instruction",
-                )
+                ),
             )
 
         return issues
@@ -219,7 +219,7 @@ class DeploymentAutomationModule(CustomFixModule):
                             file_path=file_path,
                             line=None,
                             fix_description=f"Add {field} to deployment configuration",
-                        )
+                        ),
                     )
 
             # Check for resource limits
@@ -231,7 +231,7 @@ class DeploymentAutomationModule(CustomFixModule):
                         file_path=file_path,
                         line=None,
                         fix_description="Add CPU and memory limits",
-                    )
+                    ),
                 )
 
             # Check for health check configuration
@@ -243,7 +243,7 @@ class DeploymentAutomationModule(CustomFixModule):
                         file_path=file_path,
                         line=None,
                         fix_description="Add health check endpoint and parameters",
-                    )
+                    ),
                 )
         except yaml.YAMLError as e:
             issues.append(
@@ -253,7 +253,7 @@ class DeploymentAutomationModule(CustomFixModule):
                     file_path=file_path,
                     line=None,
                     fix_description="Fix YAML syntax errors",
-                )
+                ),
             )
 
         return issues
@@ -284,7 +284,7 @@ class DeploymentAutomationModule(CustomFixModule):
                                 file_path=file_path,
                                 line=i,
                                 fix_description="Remove value or use placeholder",
-                            )
+                            ),
                         )
 
                 # Check for missing required vars
@@ -296,7 +296,7 @@ class DeploymentAutomationModule(CustomFixModule):
                             file_path=file_path,
                             line=i,
                             fix_description="Provide default value or remove",
-                        )
+                        ),
                     )
 
         return issues
@@ -316,7 +316,7 @@ class DeploymentAutomationModule(CustomFixModule):
         return content
 
     def deploy_project(
-        self, project_path: Path, environment: str = "development"
+        self, project_path: Path, environment: str = "development",
     ) -> bool:
         """Deploy a project to specified environment.
 
@@ -331,7 +331,7 @@ class DeploymentAutomationModule(CustomFixModule):
             console.print(
                 f"[yellow]DRY RUN: Would deploy {project_path.name} to {
                     environment
-                }[/yellow]"
+                }[/yellow]",
             )
             return True
 
@@ -375,7 +375,7 @@ class DeploymentAutomationModule(CustomFixModule):
         console.print(
             f"[green]✓ Successfully deployed {project_path.name} to {
                 environment
-            }[/green]"
+            }[/green]",
         )
         return True
 
@@ -397,7 +397,7 @@ class DeploymentAutomationModule(CustomFixModule):
             if self.verbose:
                 console.print(f"[dim]Running: {' '.join(cmd)}[/dim]")
 
-            result = subprocess.run(cmd, capture_output=True, text=True)
+            result = subprocess.run(cmd, capture_output=True, text=True, check=False)
             if result.returncode != 0:
                 console.print(f"[red]Docker build failed: {result.stderr}[/red]")
                 return False
@@ -413,14 +413,14 @@ class DeploymentAutomationModule(CustomFixModule):
         try:
             cmd = ["make", "test-deployment"]
             result = subprocess.run(
-                cmd, cwd=project_path, capture_output=True, text=True
+                cmd, cwd=project_path, capture_output=True, text=True, check=False,
             )
             return result.returncode == 0
         except Exception:
             # If no deployment tests, run regular tests
             cmd = ["make", "test"]
             result = subprocess.run(
-                cmd, cwd=project_path, capture_output=True, text=True
+                cmd, cwd=project_path, capture_output=True, text=True, check=False,
             )
             return result.returncode == 0
 
@@ -432,7 +432,7 @@ class DeploymentAutomationModule(CustomFixModule):
 
         # This would push to actual registry
         console.print(
-            "[yellow]Registry push simulated (no registry configured)[/yellow]"
+            "[yellow]Registry push simulated (no registry configured)[/yellow]",
         )
         return True
 
@@ -445,7 +445,7 @@ class DeploymentAutomationModule(CustomFixModule):
 
         if not deploy_config.exists():
             console.print(
-                f"[yellow]No deployment config found for {environment}[/yellow]"
+                f"[yellow]No deployment config found for {environment}[/yellow]",
             )
             return True
 
@@ -461,7 +461,7 @@ class DeploymentAutomationModule(CustomFixModule):
         return True
 
     def rollback(
-        self, project_path: Path, environment: str, version: str | None = None
+        self, project_path: Path, environment: str, version: str | None = None,
     ) -> bool:
         """Rollback deployment to previous version.
 
@@ -477,12 +477,12 @@ class DeploymentAutomationModule(CustomFixModule):
             console.print(
                 f"[yellow]DRY RUN: Would rollback {project_path.name} in {
                     environment
-                }[/yellow]"
+                }[/yellow]",
             )
             return True
 
         console.print(
-            f"[yellow]Rolling back {project_path.name} in {environment}...[/yellow]"
+            f"[yellow]Rolling back {project_path.name} in {environment}...[/yellow]",
         )
 
         # Get rollback history

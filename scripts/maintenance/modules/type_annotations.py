@@ -1,5 +1,4 @@
-"""
-Type annotation fix module.
+"""Type annotation fix module.
 
 Adds missing type annotations to functions, variables, and class attributes.
 """
@@ -67,9 +66,10 @@ class TypeAnnotationFixModule(CustomFixModule):
                         fix_description="Add return type annotation",
                         original_line=lines[node.lineno - 1],
                         fixed_line=self._add_return_type(
-                            lines[node.lineno - 1], node.name
+                            lines[node.lineno - 1],
+                            node.name,
                         ),
-                    )
+                    ),
                 )
 
         # Check parameter annotations
@@ -82,7 +82,7 @@ class TypeAnnotationFixModule(CustomFixModule):
                         message=f"Parameter '{arg.arg}' missing type annotation",
                         severity="warning",
                         fix_description="Add parameter type annotation",
-                    )
+                    ),
                 )
 
         return issues
@@ -121,7 +121,7 @@ class TypeAnnotationFixModule(CustomFixModule):
                         fix_description="Add list type annotation",
                         original_line=line,
                         fixed_line=f"{indent}{var_name}: list = []",
-                    )
+                    ),
                 )
 
             # Check dict pattern
@@ -136,7 +136,7 @@ class TypeAnnotationFixModule(CustomFixModule):
                         fix_description="Add dict type annotation",
                         original_line=line,
                         fixed_line=f"{indent}{var_name}: dict = {{}}",
-                    )
+                    ),
                 )
 
             # Check set pattern
@@ -151,7 +151,7 @@ class TypeAnnotationFixModule(CustomFixModule):
                         fix_description="Add set type annotation",
                         original_line=line,
                         fixed_line=f"{indent}{var_name}: set = set()",
-                    )
+                    ),
                 )
 
         return issues

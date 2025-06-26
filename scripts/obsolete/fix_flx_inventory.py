@@ -29,9 +29,11 @@ class FlxInventoryBuilder(ast.NodeVisitor):
                 bases.append(base.id)
             elif isinstance(base, ast.Attribute):
                 bases.append(
-                    f"{base.value.id}.{base.attr}"
-                    if isinstance(base.value, ast.Name)
-                    else base.attr
+                    (
+                        f"{base.value.id}.{base.attr}"
+                        if isinstance(base.value, ast.Name)
+                        else base.attr
+                    ),
                 )
 
         # Get required init args
@@ -48,10 +50,10 @@ class FlxInventoryBuilder(ast.NodeVisitor):
                     {
                         "name": arg.arg,
                         "has_default": False,
-                        "annotation": ast.unparse(arg.annotation)
-                        if arg.annotation
-                        else None,
-                    }
+                        "annotation": (
+                            ast.unparse(arg.annotation) if arg.annotation else None
+                        ),
+                    },
                 )
 
             # Check defaults
@@ -93,10 +95,10 @@ class FlxInventoryBuilder(ast.NodeVisitor):
                 func_info["args"].append(
                     {
                         "name": arg.arg,
-                        "annotation": ast.unparse(arg.annotation)
-                        if arg.annotation
-                        else None,
-                    }
+                        "annotation": (
+                            ast.unparse(arg.annotation) if arg.annotation else None
+                        ),
+                    },
                 )
 
         if self.current_class:
@@ -115,7 +117,7 @@ class FlxInventoryBuilder(ast.NodeVisitor):
                     "module": alias.name,
                     "name": alias.asname or alias.name,
                     "line": node.lineno,
-                }
+                },
             )
         self.generic_visit(node)
 
@@ -129,7 +131,7 @@ class FlxInventoryBuilder(ast.NodeVisitor):
                     "name": alias.name,
                     "asname": alias.asname,
                     "line": node.lineno,
-                }
+                },
             )
         self.generic_visit(node)
 
@@ -183,7 +185,7 @@ def build_inventory(src_dir: Path) -> dict[str, Any]:
                         "name": class_name,
                         "file": class_info["file"],
                         "line": class_info["line"],
-                    }
+                    },
                 )
 
     for func_name, func_info in inventory["functions"].items():
@@ -200,7 +202,7 @@ def build_inventory(src_dir: Path) -> dict[str, Any]:
                         "name": func_name,
                         "file": func_info["file"],
                         "line": func_info["line"],
-                    }
+                    },
                 )
 
     # Analyze method prefixes
@@ -208,7 +210,7 @@ def build_inventory(src_dir: Path) -> dict[str, Any]:
         if class_name.startswith("Flx"):
             for method in class_info["methods"]:
                 if not method["name"].startswith("_") and not method["name"].startswith(
-                    "flx_"
+                    "flx_",
                 ):
                     if method["name"] not in {
                         "__init__",
@@ -224,7 +226,7 @@ def build_inventory(src_dir: Path) -> dict[str, Any]:
                                 "line": method["line"],
                                 "is_method": True,
                                 "class": class_name,
-                            }
+                            },
                         )
 
     return inventory
@@ -250,7 +252,7 @@ def analyze_mypy_errors(inventory: dict[str, Any], mypy_output: str) -> dict[str
                     {
                         "line": line,
                         "suggestion": suggestion,
-                    }
+                    },
                 )
 
         elif "[name-defined]" in line:
@@ -266,7 +268,7 @@ def analyze_mypy_errors(inventory: dict[str, Any], mypy_output: str) -> dict[str
                                 "line": line,
                                 "undefined": undefined_name,
                                 "fix": inventory["class_name_mapping"][undefined_name],
-                            }
+                            },
                         )
 
     return analysis
@@ -288,20 +290,20 @@ def main() -> None:
     print("\nSummary:")
     print(f"- Total classes: {len(inventory['classes'])}")
     print(
-        f"- Flx-prefixed classes: {sum(1 for c in inventory['classes'].values() if c['is_flx_prefixed'])}"
+        f"- Flx-prefixed classes: {sum(1 for c in inventory['classes'].values() if c['is_flx_prefixed'])}",
     )
     print(f"- Total functions: {len(inventory['functions'])}")
     print(
-        f"- flx-prefixed functions: {sum(1 for f in inventory['functions'].values() if f['is_flx_prefixed'])}"
+        f"- flx-prefixed functions: {sum(1 for f in inventory['functions'].values() if f['is_flx_prefixed'])}",
     )
     print(f"- Class name mappings: {len(inventory['class_name_mapping'])}")
     print(f"- Function name mappings: {len(inventory['function_name_mapping'])}")
     print("\nMissing prefixes:")
     print(
-        f"- Classes without Flx prefix: {len(inventory['missing_flx_prefixes']['classes'])}"
+        f"- Classes without Flx prefix: {len(inventory['missing_flx_prefixes']['classes'])}",
     )
     print(
-        f"- Functions/methods without flx_ prefix: {len(inventory['missing_flx_prefixes']['functions'])}"
+        f"- Functions/methods without flx_ prefix: {len(inventory['missing_flx_prefixes']['functions'])}",
     )
 
     # Show some examples

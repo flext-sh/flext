@@ -163,7 +163,9 @@ class OracleIntegrationModule(CustomFixModule):
 
                 dsn = f"{config['host']}:{config['port']}/{config['service_name']}"
                 connection = oracledb.connect(
-                    user=config["username"], password=config["password"], dsn=dsn
+                    user=config["username"],
+                    password=config["password"],
+                    dsn=dsn,
                 )
 
                 with connection.cursor() as cursor:
@@ -200,7 +202,9 @@ class OracleIntegrationModule(CustomFixModule):
             return False, f"Connection failed: {e}"
 
     def validate_oracle_schema(
-        self, config_type: str, table_name: str
+        self,
+        config_type: str,
+        table_name: str,
     ) -> tuple[bool, dict[str, Any]]:
         """Validate Oracle schema structure."""
         try:
@@ -211,7 +215,9 @@ class OracleIntegrationModule(CustomFixModule):
 
                 dsn = f"{config['host']}:{config['port']}/{config['service_name']}"
                 connection = oracledb.connect(
-                    user=config["username"], password=config["password"], dsn=dsn
+                    user=config["username"],
+                    password=config["password"],
+                    dsn=dsn,
                 )
 
                 with connection.cursor() as cursor:
@@ -235,7 +241,7 @@ class OracleIntegrationModule(CustomFixModule):
                                 "type": row[1],
                                 "nullable": row[2] == "Y",
                                 "default": row[3],
-                            }
+                            },
                         )
 
                     # Get indexes
@@ -258,7 +264,7 @@ class OracleIntegrationModule(CustomFixModule):
                                 "name": row[0],
                                 "column": row[1],
                                 "unique": row[2] == "UNIQUE",
-                            }
+                            },
                         )
 
                 connection.close()
@@ -292,7 +298,9 @@ class OracleIntegrationModule(CustomFixModule):
 
                 dsn = f"{config['host']}:{config['port']}/{config['service_name']}"
                 connection = oracledb.connect(
-                    user=config["username"], password=config["password"], dsn=dsn
+                    user=config["username"],
+                    password=config["password"],
+                    dsn=dsn,
                 )
 
                 # Build query
@@ -337,7 +345,9 @@ class OracleIntegrationModule(CustomFixModule):
 
                 dsn = f"{config['host']}:{config['port']}/{config['service_name']}"
                 connection = oracledb.connect(
-                    user=config["username"], password=config["password"], dsn=dsn
+                    user=config["username"],
+                    password=config["password"],
+                    dsn=dsn,
                 )
 
                 results = {
@@ -369,7 +379,10 @@ class OracleIntegrationModule(CustomFixModule):
                                 key_columns = self._get_key_columns(table_name)
 
                                 merge_query = self._build_merge_query(
-                                    table_name, columns, key_columns, config["schema"]
+                                    table_name,
+                                    columns,
+                                    key_columns,
+                                    config["schema"],
                                 )
                                 cursor.execute(merge_query, record)
                                 results["updated"] += 1
@@ -377,7 +390,7 @@ class OracleIntegrationModule(CustomFixModule):
                         except Exception as e:
                             results["errors"] += 1
                             results["error_details"].append(
-                                {"record": record, "error": str(e)}
+                                {"record": record, "error": str(e)},
                             )
 
                 connection.commit()
@@ -399,13 +412,17 @@ class OracleIntegrationModule(CustomFixModule):
         return ["id"]  # Default fallback
 
     def _build_merge_query(
-        self, table_name: str, columns: list[str], key_columns: list[str], schema: str
+        self,
+        table_name: str,
+        columns: list[str],
+        key_columns: list[str],
+        schema: str,
     ) -> str:
         """Build Oracle MERGE query for upsert operations."""
         # Simplified MERGE query builder
         key_conditions = " AND ".join([f"t.{col} = :{col}" for col in key_columns])
         update_assignments = ", ".join(
-            [f"{col} = :{col}" for col in columns if col not in key_columns]
+            [f"{col} = :{col}" for col in columns if col not in key_columns],
         )
         insert_columns = ", ".join(columns)
         insert_values = ", ".join([f":{col}" for col in columns])
@@ -418,7 +435,9 @@ class OracleIntegrationModule(CustomFixModule):
         """
 
     def run_integration_pipeline(
-        self, pipeline_name: str, config: dict[str, Any]
+        self,
+        pipeline_name: str,
+        config: dict[str, Any],
     ) -> dict[str, Any]:
         """Run a complete Oracle integration pipeline."""
         pipeline_start = time.time()
@@ -436,7 +455,7 @@ class OracleIntegrationModule(CustomFixModule):
             # Step 1: Test connections
             if self.verbose:
                 self.console.print(
-                    f"[blue]Testing Oracle connections for {pipeline_name}[/blue]"
+                    f"[blue]Testing Oracle connections for {pipeline_name}[/blue]",
                 )
 
             for conn_type in config.get("connection_types", ["wms"]):
@@ -446,7 +465,7 @@ class OracleIntegrationModule(CustomFixModule):
                         "step": f"test_{conn_type}_connection",
                         "success": success,
                         "message": message,
-                    }
+                    },
                 )
                 if not success:
                     results["success"] = False
@@ -464,12 +483,12 @@ class OracleIntegrationModule(CustomFixModule):
                             "step": f"validate_schema_{table}",
                             "success": success,
                             "details": schema_info,
-                        }
+                        },
                     )
                     if not success:
                         results["success"] = False
                         results["errors"].append(
-                            f"Schema validation failed for {table}"
+                            f"Schema validation failed for {table}",
                         )
 
             # Step 3: Data extraction
@@ -482,14 +501,17 @@ class OracleIntegrationModule(CustomFixModule):
                     limit = config.get("extraction_limit", 1000)
 
                     success, data = self.extract_oracle_data(
-                        "wms", table, conditions, limit
+                        "wms",
+                        table,
+                        conditions,
+                        limit,
                     )
                     results["steps"].append(
                         {
                             "step": f"extract_data_{table}",
                             "success": success,
                             "record_count": len(data) if success else 0,
-                        }
+                        },
                     )
 
                     if success:
@@ -508,11 +530,12 @@ class OracleIntegrationModule(CustomFixModule):
 
                 # Apply transformations based on configuration
                 transform_success = self._apply_data_transformations(
-                    results.get("extracted_data", {}), config.get("transformations", {})
+                    results.get("extracted_data", {}),
+                    config.get("transformations", {}),
                 )
 
                 results["steps"].append(
-                    {"step": "transform_data", "success": transform_success}
+                    {"step": "transform_data", "success": transform_success},
                 )
 
                 if not transform_success:
@@ -529,20 +552,23 @@ class OracleIntegrationModule(CustomFixModule):
                     load_mode = config.get("load_mode", "insert")
 
                     success, load_results = self.load_oracle_data(
-                        "wms", target_table, data, load_mode
+                        "wms",
+                        target_table,
+                        data,
+                        load_mode,
                     )
                     results["steps"].append(
                         {
                             "step": f"load_data_{target_table}",
                             "success": success,
                             "details": load_results,
-                        }
+                        },
                     )
 
                     if not success:
                         results["success"] = False
                         results["errors"].append(
-                            f"Data loading failed for {target_table}"
+                            f"Data loading failed for {target_table}",
                         )
 
         except Exception as e:
@@ -555,7 +581,9 @@ class OracleIntegrationModule(CustomFixModule):
         return results
 
     def _apply_data_transformations(
-        self, data: dict[str, list[dict]], transformations: dict[str, Any]
+        self,
+        data: dict[str, list[dict]],
+        transformations: dict[str, Any],
     ) -> bool:
         """Apply data transformations based on configuration."""
         try:
@@ -620,7 +648,7 @@ class OracleIntegrationModule(CustomFixModule):
                                 code="ORACLE001",
                                 message="Hardcoded Oracle connection found",
                                 suggestion="Use environment variables or configuration files for Oracle connections",
-                            )
+                            ),
                         )
 
                 # Check for missing error handling in Oracle operations
@@ -638,7 +666,7 @@ class OracleIntegrationModule(CustomFixModule):
                                 code="ORACLE002",
                                 message="Oracle operation without error handling",
                                 suggestion="Add try/except block around Oracle operations",
-                            )
+                            ),
                         )
 
                 # Check for inefficient queries
@@ -653,7 +681,7 @@ class OracleIntegrationModule(CustomFixModule):
                             code="ORACLE003",
                             message="SELECT * query found (potentially inefficient)",
                             suggestion="Specify only required columns in SELECT statements",
-                        )
+                        ),
                     )
 
         # Check for configuration files
@@ -666,7 +694,7 @@ class OracleIntegrationModule(CustomFixModule):
                         code="ORACLE004",
                         message="Oracle configuration missing",
                         suggestion="Add Oracle connection configuration",
-                    )
+                    ),
                 )
 
         return issues
@@ -704,7 +732,8 @@ class OracleIntegrationModule(CustomFixModule):
         return "\n".join(lines)
 
     def run_oracle_integration_workflow(
-        self, workspace_path: Path = None
+        self,
+        workspace_path: Path = None,
     ) -> dict[str, Any]:
         """Run Oracle integration workflow across the workspace."""
         if workspace_path is None:
@@ -712,7 +741,7 @@ class OracleIntegrationModule(CustomFixModule):
 
         if self.verbose:
             self.console.print(
-                f"[blue]Running Oracle integration workflow in: {workspace_path}[/blue]"
+                f"[blue]Running Oracle integration workflow in: {workspace_path}[/blue]",
             )
 
         # Find Oracle-related projects
@@ -727,7 +756,7 @@ class OracleIntegrationModule(CustomFixModule):
 
         if self.verbose:
             self.console.print(
-                f"[green]Found {len(oracle_projects)} Oracle-related projects[/green]"
+                f"[green]Found {len(oracle_projects)} Oracle-related projects[/green]",
             )
 
         workflow_results = {
@@ -742,7 +771,7 @@ class OracleIntegrationModule(CustomFixModule):
 
             if self.verbose:
                 self.console.print(
-                    f"[yellow]Processing Oracle project: {project_name}[/yellow]"
+                    f"[yellow]Processing Oracle project: {project_name}[/yellow]",
                 )
 
             try:
@@ -769,7 +798,8 @@ class OracleIntegrationModule(CustomFixModule):
                 # Run integration pipeline
                 if not self.dry_run:
                     pipeline_results = self.run_integration_pipeline(
-                        project_name, integration_config
+                        project_name,
+                        integration_config,
                     )
 
                     if pipeline_results["success"]:
@@ -779,7 +809,7 @@ class OracleIntegrationModule(CustomFixModule):
                     workflow_results["project_results"][project_name] = pipeline_results
                     if self.verbose:
                         self.console.print(
-                            f"[cyan][DRY RUN] Would run integration for {project_name}[/cyan]"
+                            f"[cyan][DRY RUN] Would run integration for {project_name}[/cyan]",
                         )
                     workflow_results["successful_integrations"] += 1
 
@@ -791,7 +821,7 @@ class OracleIntegrationModule(CustomFixModule):
                 workflow_results["failed_integrations"] += 1
                 if self.verbose:
                     self.console.print(
-                        f"[red]Error processing {project_name}: {e}[/red]"
+                        f"[red]Error processing {project_name}: {e}[/red]",
                     )
 
         # Show summary
@@ -815,9 +845,7 @@ class OracleIntegrationModule(CustomFixModule):
                 integration_type = (
                     "WMS"
                     if "wms" in project_name.lower()
-                    else "OIC"
-                    if "oic" in project_name.lower()
-                    else "Mixed"
+                    else "OIC" if "oic" in project_name.lower() else "Mixed"
                 )
                 records = str(result.get("total_records", "N/A"))
                 status = "❌ ERROR"
@@ -845,14 +873,14 @@ class OracleIntegrationModule(CustomFixModule):
         panel_style = (
             "green"
             if success_rate == 100
-            else "yellow"
-            if success_rate >= 80
-            else "red"
+            else "yellow" if success_rate >= 80 else "red"
         )
         self.console.print(
             Panel(
-                panel_text, title="Oracle Integration Summary", border_style=panel_style
-            )
+                panel_text,
+                title="Oracle Integration Summary",
+                border_style=panel_style,
+            ),
         )
 
     def run_workspace_oracle_integration(self, workspace_path: Path = None) -> bool:

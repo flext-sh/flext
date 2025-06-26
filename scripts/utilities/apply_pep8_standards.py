@@ -232,15 +232,19 @@ def validate_project(project_path: Path) -> dict:
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Apply PEP8 standards to PyAuto projects"
+        description="Apply PEP8 standards to PyAuto projects",
     )
     parser.add_argument(
-        "--dry-run", action="store_true", help="Show what would be done"
+        "--dry-run",
+        action="store_true",
+        help="Show what would be done",
     )
     parser.add_argument("--project", help="Apply to specific project only")
     parser.add_argument("--no-fix", action="store_true", help="Don't auto-fix issues")
     parser.add_argument(
-        "--validate-only", action="store_true", help="Only validate, don't modify"
+        "--validate-only",
+        action="store_true",
+        help="Only validate, don't modify",
     )
 
     args = parser.parse_args()

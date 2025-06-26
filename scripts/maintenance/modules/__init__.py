@@ -1,5 +1,4 @@
-"""
-Custom fix modules for the Unified Maintenance System.
+"""Custom fix modules for the Unified Maintenance System.
 
 Each module provides specialized fixes that can't be handled by standard tools.
 """

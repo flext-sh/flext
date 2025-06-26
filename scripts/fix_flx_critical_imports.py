@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Fix critical import errors in FLX project - ZERO TOLERANCE.
+"""Fix critical import errors in FLX project - ZERO TOLERANCE.
 
 This script systematically fixes undefined name errors by:
 1. Removing fake lazy_import usage
@@ -27,7 +26,9 @@ def fix_fake_lazy_imports(file_path: Path) -> bool:
 
     # Pattern 1: Remove fake lazy_import imports
     content = re.sub(
-        r"from flx_core\.utils\.lazy_import import lazy_import\n", "", content
+        r"from flx_core\.utils\.lazy_import import lazy_import\n",
+        "",
+        content,
     )
 
     # Pattern 2: Remove lazy_import function calls and replace with direct imports
@@ -160,7 +161,7 @@ def main() -> None:
     # Log completion
     with open("/home/marlonsc/pyauto/.token", "a") as f:
         f.write(
-            f"FIX-CRITICAL-IMPORTS-002: Fixed {fixed_lazy_imports + fixed_missing_imports} files\n"
+            f"FIX-CRITICAL-IMPORTS-002: Fixed {fixed_lazy_imports + fixed_missing_imports} files\n",
         )
 
 

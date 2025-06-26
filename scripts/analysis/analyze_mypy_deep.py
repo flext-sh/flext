@@ -31,7 +31,7 @@ def get_detailed_mypy_errors() -> list[dict[str, Any]]:
                         "line": int(match.group(2)),
                         "message": match.group(3),
                         "code": match.group(4),
-                    }
+                    },
                 )
     return errors
 
@@ -156,7 +156,9 @@ def generate_fix_suggestions(errors: list[dict[str, Any]]) -> None:
     print("\n=== NAME-DEFINED ERROR ANALYSIS ===")
     print("\nMost common undefined names:")
     for name, locations in sorted(
-        name_patterns.items(), key=lambda x: len(x[1]), reverse=True
+        name_patterns.items(),
+        key=lambda x: len(x[1]),
+        reverse=True,
     )[:20]:
         print(f"\n  {name}: {len(locations)} occurrences")
         if name in class_locations:

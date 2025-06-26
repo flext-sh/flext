@@ -57,7 +57,7 @@ class FlxPatternFixer(ast.NodeTransformer):
                         "LogSeverity",
                         "BaseUrlBuilder",
                     },
-                ]
+                ],
             )
 
             if needs_flx and not name.startswith("Flx"):
@@ -71,7 +71,7 @@ class FlxPatternFixer(ast.NodeTransformer):
                         "old": name,
                         "new": new_name,
                         "line": node.lineno,
-                    }
+                    },
                 )
                 if asname:
                     self.imported_classes.add(asname)
@@ -130,7 +130,7 @@ class FlxPatternFixer(ast.NodeTransformer):
                     "ShutdownMetricsCollector",
                     "ComponentShutdownTimer",
                 },
-            ]
+            ],
         )
 
         if needs_flx and not name.startswith("Flx"):
@@ -142,7 +142,7 @@ class FlxPatternFixer(ast.NodeTransformer):
                     "old": name,
                     "new": new_name,
                     "line": node.lineno if hasattr(node, "lineno") else 0,
-                }
+                },
             )
 
         return node
@@ -192,7 +192,7 @@ class FlxPatternFixer(ast.NodeTransformer):
                             "old": attr,
                             "new": new_attr,
                             "line": node.lineno if hasattr(node, "lineno") else 0,
-                        }
+                        },
                     )
 
         return node
@@ -232,7 +232,7 @@ def fix_specific_patterns(filepath: Path) -> list[dict[str, any]]:
                         "type": "regex",
                         "pattern": pattern,
                         "file": str(filepath),
-                    }
+                    },
                 )
                 content = new_content
 
@@ -271,7 +271,9 @@ def main() -> None:
 
     parser = argparse.ArgumentParser(description="Fix FLX patterns")
     parser.add_argument(
-        "--dry-run", action="store_true", help="Show what would be changed"
+        "--dry-run",
+        action="store_true",
+        help="Show what would be changed",
     )
     parser.add_argument("--file", help="Fix specific file only")
     args = parser.parse_args()
@@ -327,15 +329,15 @@ def main() -> None:
             for change in changes:
                 if change["type"] == "import":
                     print(
-                        f"  Line {change['line']}: Import {change['old']} -> {change['new']}"
+                        f"  Line {change['line']}: Import {change['old']} -> {change['new']}",
                     )
                 elif change["type"] == "name":
                     print(
-                        f"  Line {change['line']}: Name {change['old']} -> {change['new']}"
+                        f"  Line {change['line']}: Name {change['old']} -> {change['new']}",
                     )
                 elif change["type"] == "method":
                     print(
-                        f"  Line {change['line']}: Method {change['old']} -> {change['new']}"
+                        f"  Line {change['line']}: Method {change['old']} -> {change['new']}",
                     )
                 elif change["type"] == "regex":
                     print(f"  Regex pattern: {change['pattern']}")

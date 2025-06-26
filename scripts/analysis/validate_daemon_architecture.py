@@ -176,7 +176,10 @@ class ArchitectureValidator:
             self._validate_import_for_layer(node.module, filename, layer)
 
     def _validate_import_for_layer(
-        self, module: str, filename: str, layer: str
+        self,
+        module: str,
+        filename: str,
+        layer: str,
     ) -> None:
         """Validate specific module import for layer."""
         # Domain layer (core.py) should not import adapters
@@ -212,10 +215,10 @@ class ArchitectureValidator:
 
         if success:
             print(
-                f"\n✅ Architecture validation PASSED (with {len(self.warnings)} warnings)"
+                f"\n✅ Architecture validation PASSED (with {len(self.warnings)} warnings)",
             )
             print(
-                f"\n❌ Architecture validation FAILED ({len(self.violations)} violations)"
+                f"\n❌ Architecture validation FAILED ({len(self.violations)} violations)",
             )
 
         logger.info("\n📋 ARCHITECTURE PRINCIPLES:")

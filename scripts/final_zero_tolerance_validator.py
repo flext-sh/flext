@@ -27,10 +27,11 @@ def validate_project_compliance(project_name: str) -> dict:
         cwd=project_path,
         capture_output=True,
         text=True,
+        check=False,
     )
     results["ruff"] = ruff_result.returncode == 0
     results["violations"] = len(
-        [l for l in ruff_result.stdout.split("\n") if l.strip()]
+        [l for l in ruff_result.stdout.split("\n") if l.strip()],
     )
 
     # Check black
@@ -38,6 +39,7 @@ def validate_project_compliance(project_name: str) -> dict:
         ["poetry", "run", "black", ".", "--check", "--quiet"],
         cwd=project_path,
         capture_output=True,
+        check=False,
     )
     results["black"] = black_result.returncode == 0
 
@@ -46,6 +48,7 @@ def validate_project_compliance(project_name: str) -> dict:
         ["poetry", "run", "isort", ".", "--check", "--quiet"],
         cwd=project_path,
         capture_output=True,
+        check=False,
     )
     results["isort"] = isort_result.returncode == 0
 
@@ -56,6 +59,7 @@ def validate_project_compliance(project_name: str) -> dict:
             cwd=project_path,
             capture_output=True,
             timeout=10,
+            check=False,
         )
         results["mypy"] = mypy_result.returncode == 0
     except Exception:
@@ -66,7 +70,6 @@ def validate_project_compliance(project_name: str) -> dict:
 
 def main() -> None:
     """Main validation function."""
-
     submodules = [
         "client-a-oud-mig",
         "dbt-ldap",

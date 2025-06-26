@@ -35,7 +35,7 @@ class FlxImportFixer(ast.NodeTransformer):
                             "old": name,
                             "new": new_name,
                             "line": node.lineno,
-                        }
+                        },
                     )
                     new_names.append(alias)
 
@@ -74,7 +74,7 @@ class FlxExceptionFixer(ast.NodeTransformer):
                         "old": f"{node.value.id}.{node.attr}",
                         "new": f"getattr({node.value.id}, '{node.attr}', None)",
                         "line": node.lineno if hasattr(node, "lineno") else 0,
-                    }
+                    },
                 )
                 return new_node
 
@@ -123,7 +123,7 @@ def fix_missing_imports(filepath: Path) -> list[dict[str, any]]:
                             "type": "add_import",
                             "import": import_stmt,
                             "for": name,
-                        }
+                        },
                     )
 
         if changes:
@@ -192,7 +192,7 @@ def fix_method_references(filepath: Path) -> list[dict[str, any]]:
                         "type": "method_reference",
                         "old": old,
                         "new": new,
-                    }
+                    },
                 )
 
         if content != original:
@@ -205,7 +205,7 @@ def fix_method_references(filepath: Path) -> list[dict[str, any]]:
 
 
 def fix_constructor_calls(
-    filepath: Path, inventory: dict[str, any]
+    filepath: Path, inventory: dict[str, any],
 ) -> list[dict[str, any]]:
     """Fix constructor calls with missing arguments."""
     changes = []
@@ -275,7 +275,7 @@ def fix_constructor_calls(
                                     "arg": arg_name,
                                     "value": default_value,
                                     "line": line_num + 1,
-                                }
+                                },
                             )
 
         if changes:
@@ -293,7 +293,7 @@ def main() -> None:
 
     parser = argparse.ArgumentParser(description="Fix remaining FLX issues")
     parser.add_argument(
-        "--dry-run", action="store_true", help="Show what would be changed"
+        "--dry-run", action="store_true", help="Show what would be changed",
     )
     parser.add_argument(
         "--type",
@@ -382,7 +382,7 @@ def main() -> None:
                     print(
                         f"  Constructor: {change['class']} added {change['arg']}={
                             change['value']
-                        }"
+                        }",
                     )
             print("  No changes needed")
 

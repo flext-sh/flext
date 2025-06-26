@@ -10,7 +10,6 @@ from pathlib import Path
 
 def fix_fire_cli() -> None:
     """Fix the Fire CLI adapter."""
-
     fire_cli_content = '''"""Declarative Fire CLI adapter with dependency injection and plugin support.
 
 This module implements a robust Python Fire CLI that uses command bus pattern
@@ -366,14 +365,13 @@ if __name__ == "__main__":
 '''
 
     fire_cli_file = Path(
-        "/home/marlonsc/pyauto/flx/src/flx/adapters/inbound/fire_cli.py"
+        "/home/marlonsc/pyauto/flx/src/flx/adapters/inbound/fire_cli.py",
     )
     fire_cli_file.write_text(fire_cli_content)
 
 
 def fix_fastapi_enterprise() -> None:
     """Fix the FastAPI enterprise adapter."""
-
     fastapi_content = '''"""Enterprise FastAPI adapter with advanced features and real-time capabilities.
 
 This module provides an enhanced FastAPI adapter that extends the basic REST API
@@ -699,7 +697,7 @@ if __name__ == "__main__":
 '''
 
     fastapi_file = Path(
-        "/home/marlonsc/pyauto/flx/src/flx/adapters/inbound/fastapi_enterprise.py"
+        "/home/marlonsc/pyauto/flx/src/flx/adapters/inbound/fastapi_enterprise.py",
     )
     fastapi_file.write_text(fastapi_content)
 
@@ -730,7 +728,6 @@ def check_final_status() -> int:
 
 def main() -> None:
     """Fix CLI and FastAPI adapters."""
-
     # Fix Fire CLI
     fix_fire_cli()
 

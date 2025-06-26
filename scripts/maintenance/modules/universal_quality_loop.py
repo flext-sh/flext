@@ -135,7 +135,7 @@ class UniversalQualityLoopModule(CustomFixModule):
         return test_paths
 
     def run_tool(
-        self, tool: str, project_path: Path, fix_mode: bool = False
+        self, tool: str, project_path: Path, fix_mode: bool = False,
     ) -> tuple[bool, str, str]:
         """Run a quality tool on the project."""
         tool_configs = {
@@ -211,7 +211,7 @@ class UniversalQualityLoopModule(CustomFixModule):
                 cwd=project_path,
                 capture_output=True,
                 text=True,
-                timeout=300,  # 5 minute timeout
+                timeout=300, check=False,  # 5 minute timeout
             )
 
             return result.returncode == 0, result.stdout, result.stderr
@@ -224,7 +224,7 @@ class UniversalQualityLoopModule(CustomFixModule):
             return False, "", f"Error running {tool}: {e}"
 
     def analyze_results(
-        self, tool: str, success: bool, stdout: str, stderr: str
+        self, tool: str, success: bool, stdout: str, stderr: str,
     ) -> dict[str, Any]:
         """Analyze tool results and extract metrics."""
         analysis = {
@@ -252,7 +252,7 @@ class UniversalQualityLoopModule(CustomFixModule):
                             "severity": "error"
                             if issue.get("code", "").startswith("E")
                             else "warning",
-                        }
+                        },
                     )
             except json.JSONDecodeError:
                 # Fallback to text parsing
@@ -262,7 +262,7 @@ class UniversalQualityLoopModule(CustomFixModule):
                         line
                         for line in lines
                         if line.strip() and not line.startswith("Found")
-                    ]
+                    ],
                 )
 
         elif tool == "mypy":
@@ -286,7 +286,7 @@ class UniversalQualityLoopModule(CustomFixModule):
                                 "severity": "error"
                                 if ": error:" in line
                                 else "warning",
-                            }
+                            },
                         )
 
         elif tool == "bandit" and stdout:
@@ -304,7 +304,7 @@ class UniversalQualityLoopModule(CustomFixModule):
                             "confidence": issue.get("issue_confidence", "unknown"),
                             "test_id": issue.get("test_id", ""),
                             "message": issue.get("issue_text", ""),
-                        }
+                        },
                     )
             except json.JSONDecodeError:
                 pass
@@ -321,7 +321,7 @@ class UniversalQualityLoopModule(CustomFixModule):
                             "vulnerability": issue.get("vulnerability", ""),
                             "severity": issue.get("severity", "unknown"),
                             "advisory": issue.get("advisory", ""),
-                        }
+                        },
                     )
             except json.JSONDecodeError:
                 pass
@@ -358,7 +358,7 @@ class UniversalQualityLoopModule(CustomFixModule):
 
                 # Check first
                 success, stdout, stderr = self.run_tool(
-                    tool, project_path, fix_mode=False
+                    tool, project_path, fix_mode=False,
                 )
                 check_analysis = self.analyze_results(tool, success, stdout, stderr)
 
@@ -373,10 +373,10 @@ class UniversalQualityLoopModule(CustomFixModule):
                 ]:
                     if not self.dry_run:
                         fix_success, fix_stdout, fix_stderr = self.run_tool(
-                            tool, project_path, fix_mode=True
+                            tool, project_path, fix_mode=True,
                         )
                         fix_analysis = self.analyze_results(
-                            tool, fix_success, fix_stdout, fix_stderr
+                            tool, fix_success, fix_stdout, fix_stderr,
                         )
 
                         if fix_analysis["issues_fixed"] > 0:
@@ -424,7 +424,7 @@ class UniversalQualityLoopModule(CustomFixModule):
                                         tool_result['final_issues']
                                     } issues (limit: {
                                         self.ZERO_TOLERANCE_LIMITS[limit_key]
-                                    })[/red]"
+                                    })[/red]",
                                 )
 
         return iteration_results
@@ -458,7 +458,7 @@ class UniversalQualityLoopModule(CustomFixModule):
                 cwd=project_path,
                 capture_output=True,
                 text=True,
-                timeout=600,  # 10 minute timeout for tests
+                timeout=600, check=False,  # 10 minute timeout for tests
             )
 
             test_results["success"] = result.returncode == 0
@@ -515,7 +515,7 @@ class UniversalQualityLoopModule(CustomFixModule):
                                 self.ZERO_TOLERANCE_LIMITS['max_line_length']
                             })",
                             suggestion="Break line or refactor to reduce length",
-                        )
+                        ),
                     )
 
                 # Check for print statements in production code
@@ -527,7 +527,7 @@ class UniversalQualityLoopModule(CustomFixModule):
                             code="QUALITY_DEBUG001",
                             message="Print statement found in production code",
                             suggestion="Use logging instead of print statements",
-                        )
+                        ),
                     )
 
                 # Check for TODO/FIXME comments
@@ -542,7 +542,7 @@ class UniversalQualityLoopModule(CustomFixModule):
                             code="QUALITY_TODO001",
                             message="TODO/FIXME comment found",
                             suggestion="Resolve TODO items before production",
-                        )
+                        ),
                     )
 
         return issues
@@ -571,7 +571,7 @@ class UniversalQualityLoopModule(CustomFixModule):
 
         if self.verbose:
             self.console.print(
-                f"[blue]Starting Universal Quality Loop in: {workspace_path}[/blue]"
+                f"[blue]Starting Universal Quality Loop in: {workspace_path}[/blue]",
             )
 
         # Find all projects
@@ -649,7 +649,7 @@ class UniversalQualityLoopModule(CustomFixModule):
 
             workspace_results["projects"][project_name] = project_results
             workspace_results["summary"]["total_iterations"] += len(
-                project_results["iterations"]
+                project_results["iterations"],
             )
             workspace_results["summary"]["total_fixes"] += sum(
                 iter_result["total_fixes"]
@@ -687,7 +687,7 @@ class UniversalQualityLoopModule(CustomFixModule):
             }
 
             status = status_styles.get(
-                project_result["final_status"], project_result["final_status"].upper()
+                project_result["final_status"], project_result["final_status"].upper(),
             )
             iterations = len(project_result["iterations"])
             total_fixes = sum(
@@ -701,7 +701,7 @@ class UniversalQualityLoopModule(CustomFixModule):
                 test_coverage = f"{coverage:.1f}%" if coverage > 0 else "N/A"
 
             table.add_row(
-                project_name, status, str(iterations), str(total_fixes), test_coverage
+                project_name, status, str(iterations), str(total_fixes), test_coverage,
             )
 
         self.console.print(table)
@@ -731,7 +731,7 @@ class UniversalQualityLoopModule(CustomFixModule):
             else "red"
         )
         self.console.print(
-            Panel(panel_text, title="Quality Loop Summary", border_style=panel_style)
+            Panel(panel_text, title="Quality Loop Summary", border_style=panel_style),
         )
 
     def run_workspace_quality_loop(self, workspace_path: Path = None) -> bool:

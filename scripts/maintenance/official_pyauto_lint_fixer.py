@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-OFFICIAL PYAUTO LINT FIXER - ENTERPRISE STANDARD v1.0.0
+"""OFFICIAL PYAUTO LINT FIXER - ENTERPRISE STANDARD v1.0.0
 
 Script oficial padronizado para correção sistemática de lint e mypy issues
 no workspace PyAuto e qualquer projeto Python enterprise.
@@ -97,7 +96,7 @@ def setup_logging(level: str = "INFO", log_file: Path | None = None) -> logging.
     logger.handlers.clear()
 
     formatter = logging.Formatter(
-        "%(asctime)s - %(name)s - %(levelname)s - %(funcName)s:%(lineno)d - %(message)s"
+        "%(asctime)s - %(name)s - %(levelname)s - %(funcName)s:%(lineno)d - %(message)s",
     )
 
     # Console handler
@@ -138,7 +137,7 @@ class FixerConfiguration:
             "reports",
             "htmlcov",
             "junit",
-        ]
+        ],
     )
 
     # Fix categories
@@ -151,7 +150,7 @@ class FixerConfiguration:
             "path_operations": True,
             "datetime_timezone": True,
             "test_patterns": True,
-        }
+        },
     )
 
     # Safety controls
@@ -161,7 +160,7 @@ class FixerConfiguration:
             "max_changes_per_file": 20,
             "create_backup": False,  # Disabled for production use
             "batch_size": 10,
-        }
+        },
     )
 
     # Output controls
@@ -170,7 +169,7 @@ class FixerConfiguration:
             "verbose": True,
             "report_format": "json",
             "report_path": "reports/lint_fixer_report.json",
-        }
+        },
     )
 
     @classmethod
@@ -284,7 +283,7 @@ class OfficialPyAutoLintFixer:
         # Get target projects
         projects = self._discover_projects()
         self.logger.info(
-            "📁 Found %d target projects: %s", len(projects), [p.name for p in projects]
+            "📁 Found %d target projects: %s", len(projects), [p.name for p in projects],
         )
 
         # Process each project
@@ -318,7 +317,7 @@ class OfficialPyAutoLintFixer:
                         fixes_applied=0,
                         syntax_errors_detected=0,
                         processing_time_seconds=0.0,
-                    )
+                    ),
                 )
 
         end_time = datetime.now(UTC)
@@ -379,7 +378,7 @@ class OfficialPyAutoLintFixer:
         return any(pattern in path.name for pattern in self.config.exclude_patterns)
 
     def _process_project(
-        self, project_path: Path, dry_run: bool
+        self, project_path: Path, dry_run: bool,
     ) -> ProjectProcessingResult:
         """Process a single project with enterprise controls."""
         project_start = datetime.now(UTC)
@@ -457,7 +456,7 @@ class OfficialPyAutoLintFixer:
             # Count potential type annotation fixes
             if self.config.fix_categories["type_annotations"]:
                 potential_fixes += len(
-                    re.findall(r"def \w+\([^)]*\):\s*$", content, re.MULTILINE)
+                    re.findall(r"def \w+\([^)]*\):\s*$", content, re.MULTILINE),
                 )
 
             # Count potential logging fixes
@@ -467,7 +466,7 @@ class OfficialPyAutoLintFixer:
             # Count potential exception fixes
             if self.config.fix_categories["exception_handling"]:
                 potential_fixes += len(
-                    re.findall(r"except .+ as \w+:.*\n.*raise ", content, re.DOTALL)
+                    re.findall(r"except .+ as \w+:.*\n.*raise ", content, re.DOTALL),
                 )
 
             return potential_fixes
@@ -541,9 +540,7 @@ class OfficialPyAutoLintFixer:
                 and "-> " not in line
                 and "__" not in line
             ):  # Skip dunder methods
-                if "def __init__(" in line:
-                    line = line.replace("):", ") -> None:")
-                elif any(
+                if "def __init__(" in line or any(
                     name in line
                     for name in ["def main(", "def test_", "def setUp", "def tearDown"]
                 ):
@@ -641,7 +638,7 @@ class OfficialPyAutoLintFixer:
                 capture_output=True,
                 text=True,
                 cwd=self.workspace_root,
-                timeout=60,
+                timeout=60, check=False,
             )
             return (
                 len(result.stdout.strip().split("\n")) if result.stdout.strip() else 0
@@ -749,12 +746,12 @@ Examples:
     )
 
     parser.add_argument(
-        "--version", action="version", version=f"%(prog)s {__version__}"
+        "--version", action="version", version=f"%(prog)s {__version__}",
     )
     parser.add_argument("--config", type=Path, help="Configuration file path")
     parser.add_argument("--projects", nargs="+", help="Specific projects to process")
     parser.add_argument(
-        "--dry-run", action="store_true", help="Analyze without applying fixes"
+        "--dry-run", action="store_true", help="Analyze without applying fixes",
     )
     parser.add_argument("--verbose", action="store_true", help="Enable verbose logging")
     parser.add_argument("--log-file", type=Path, help="Log file path")
@@ -803,7 +800,7 @@ Examples:
         print(
             f"🔢 Errors: {result.total_initial_errors} → {result.total_final_errors} ({
                 result.total_improvement:+d
-            })"
+            })",
         )
         print(f"📋 Report: {report_path}")
 
@@ -811,7 +808,7 @@ Examples:
             print("🎉 CLAUDE.md ZERO TOLERANCE: ✅ ACHIEVED")
             sys.exit(0)
             print(
-                f"⚠️ CLAUDE.md ZERO TOLERANCE: ❌ {result.total_final_errors} violations"
+                f"⚠️ CLAUDE.md ZERO TOLERANCE: ❌ {result.total_final_errors} violations",
             )
             sys.exit(1 if not args.dry_run else 0)
 

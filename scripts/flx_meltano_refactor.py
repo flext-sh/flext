@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-"""
-Refactor flx-meltano-enterprise: rename package flx to flx_core.
+"""Refactor flx-meltano-enterprise: rename package flx to flx_core.
 
 Per CLAUDE.md RULE 4: Complete delivery with systematic refactoring.
 """
@@ -181,6 +180,7 @@ def lazy_import(module_name: str, attribute_name: str) -> Any:
                 capture_output=True,
                 text=True,
                 timeout=10,
+                check=False,
             )
             if result.returncode == 0:
                 logger.info("✅ Package import validation successful")
@@ -214,7 +214,7 @@ def lazy_import(module_name: str, attribute_name: str) -> Any:
             # Log to token
             with open(self.project_root.parent / ".token", "a") as f:
                 f.write(
-                    "FLX-MELTANO-REFACTOR-001 COMPLETED: Renamed flx → flx_core successfully\n"
+                    "FLX-MELTANO-REFACTOR-001 COMPLETED: Renamed flx → flx_core successfully\n",
                 )
             logger.error("❌ Refactoring validation failed!")
 
