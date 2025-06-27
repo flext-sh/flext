@@ -1,27 +1,21 @@
 [submodule "dc-code-analyzer"]
 	path = dc-code-analyzer
-	url = https://github.com/datacosmos-br/dc-code-analyzer.git
+	url = git@github.com:datacosmos-br/dc-code-analyzer.git
 [submodule "flx"]
 	path = flx
-	url = https://github.com/datacosmos-br/flx.git
+	url = git@github.com:datacosmos-br/flx.git
 [submodule "flx-database-oracle"]
 	path = flx-database-oracle
-	url = https://github.com/datacosmos-br/flx-database-oracle.git
+	url = git@github.com:datacosmos-br/flx-database-oracle.git
 [submodule "flx-http-oracle-oic"]
 	path = flx-http-oracle-oic
-	url = https://github.com/datacosmos-br/flx-http-oracle-oic.git
+	url = git@github.com:datacosmos-br/flx-http-oracle-oic.git
 [submodule "flx-http-oracle-wms"]
 	path = flx-http-oracle-wms
-	url = https://github.com/datacosmos-br/flx-http-oracle-wms.git
+	url = git@github.com:datacosmos-br/flx-http-oracle-wms.git
 [submodule "client-b-poc-oic-wms"]
 	path = client-b-poc-oic-wms
-	url = https://github.com/datacosmos-br/client-b-poc-oic-wms.git
-[submodule "meltano"]
-	path = meltano
-	url = https://github.com/meltanolabs/meltano.git
-[submodule "singer-sdk"]
-	path = singer-sdk
-	url = https://github.com/meltanolabs/singer-sdk.git
+	url = git@github.com:datacosmos-br/client-b-poc-oic-wms.git
 [submodule "client-a-oud-mig"]
 	path = client-a-oud-mig
 	url = git@github.com:datacosmos-br/client-a-oud-mig.git
@@ -67,3 +61,15 @@
 [submodule "target-oracle-wms"]
 	path = target-oracle-wms
 	url = git@github.com:datacosmos-br/target-oracle-wms.git
+[submodule "community-tools"]
+	path = community-tools
+	url = git@github.com:datacosmos-br/community-tools.git
+[submodule "oracledb-core-shared"]
+	path = oracledb-core-shared
+	url = git@github.com:datacosmos-br/oracledb-core-shared.git
+[submodule "tap-oracle-advanced"]
+	path = tap-oracle-advanced
+	url = git@github.com:datacosmos-br/tap-oracle-advanced.git
+[submodule "target-oracle-advanced"]
+	path = target-oracle-advanced
+	url = git@github.com:datacosmos-br/target-oracle-advanced.git
