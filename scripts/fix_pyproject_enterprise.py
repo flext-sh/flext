@@ -316,9 +316,9 @@ MIT
                 config["tool"]["isort"]["known_first_party"] = [module_name]
 
             if "coverage" in config["tool"] and "html" in config["tool"]["coverage"]:
-                config["tool"]["coverage"]["html"][
-                    "title"
-                ] = f"{project_name} Coverage Report"
+                config["tool"]["coverage"]["html"]["title"] = (
+                    f"{project_name} Coverage Report"
+                )
 
             # Replace PROJECT_MODULE placeholders
             config_str = toml.dumps(config)

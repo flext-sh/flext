@@ -32,7 +32,10 @@ class MonitoringAutomationModule(CustomFixModule):
     description = "Automated monitoring, alerting, and performance tracking"
 
     def __init__(
-        self, dry_run: bool = True, interactive: bool = False, verbose: bool = False,
+        self,
+        dry_run: bool = True,
+        interactive: bool = False,
+        verbose: bool = False,
     ):
         """Initialize monitoring automation module.
 
@@ -394,7 +397,8 @@ class MonitoringAutomationModule(CustomFixModule):
                     ["python", str(metrics_script)],
                     capture_output=True,
                     text=True,
-                    timeout=5, check=False,
+                    timeout=5,
+                    check=False,
                 )
                 if result.returncode == 0:
                     metrics.update(json.loads(result.stdout))
@@ -468,7 +472,12 @@ class MonitoringAutomationModule(CustomFixModule):
                 )
 
     def _create_alert(
-        self, severity: str, metric: str, value: float, threshold: float, project: str,
+        self,
+        severity: str,
+        metric: str,
+        value: float,
+        threshold: float,
+        project: str,
     ) -> None:
         """Create an alert."""
         alert = {
@@ -522,7 +531,8 @@ class MonitoringAutomationModule(CustomFixModule):
 
             # Body - split into metrics and alerts
             layout["body"].split_row(
-                Layout(name="metrics", ratio=2), Layout(name="alerts", ratio=1),
+                Layout(name="metrics", ratio=2),
+                Layout(name="alerts", ratio=1),
             )
 
             # Metrics table

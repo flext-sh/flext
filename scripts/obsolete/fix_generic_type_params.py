@@ -106,7 +106,9 @@ def flx_generic_type_params(file_path: Path) -> dict[str, int]:
     ):
         # Find any typing import
         typing_import_match = re.search(
-            r"from typing import Optional, (.*?)$", content, re.MULTILINE,
+            r"from typing import Optional, (.*?)$",
+            content,
+            re.MULTILINE,
         )
         if typing_import_match:
             imports = typing_import_match.group(1)
@@ -165,7 +167,8 @@ def flx_generic_type_params(file_path: Path) -> dict[str, int]:
                                 new_imports += " TypeVar"
                                 new_imports += ", TypeVar"
                             modified_content = modified_content.replace(
-                                imports, new_imports,
+                                imports,
+                                new_imports,
                             )
                             fixes["typing_import"] = fixes.get("typing_import", 0) + 1
                         # Add new import at the top of the file

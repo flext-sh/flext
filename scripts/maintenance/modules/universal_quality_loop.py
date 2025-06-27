@@ -135,7 +135,10 @@ class UniversalQualityLoopModule(CustomFixModule):
         return test_paths
 
     def run_tool(
-        self, tool: str, project_path: Path, fix_mode: bool = False,
+        self,
+        tool: str,
+        project_path: Path,
+        fix_mode: bool = False,
     ) -> tuple[bool, str, str]:
         """Run a quality tool on the project."""
         tool_configs = {
@@ -211,7 +214,8 @@ class UniversalQualityLoopModule(CustomFixModule):
                 cwd=project_path,
                 capture_output=True,
                 text=True,
-                timeout=300, check=False,  # 5 minute timeout
+                timeout=300,
+                check=False,  # 5 minute timeout
             )
 
             return result.returncode == 0, result.stdout, result.stderr
@@ -224,7 +228,11 @@ class UniversalQualityLoopModule(CustomFixModule):
             return False, "", f"Error running {tool}: {e}"
 
     def analyze_results(
-        self, tool: str, success: bool, stdout: str, stderr: str,
+        self,
+        tool: str,
+        success: bool,
+        stdout: str,
+        stderr: str,
     ) -> dict[str, Any]:
         """Analyze tool results and extract metrics."""
         analysis = {
@@ -358,7 +366,9 @@ class UniversalQualityLoopModule(CustomFixModule):
 
                 # Check first
                 success, stdout, stderr = self.run_tool(
-                    tool, project_path, fix_mode=False,
+                    tool,
+                    project_path,
+                    fix_mode=False,
                 )
                 check_analysis = self.analyze_results(tool, success, stdout, stderr)
 
@@ -373,10 +383,15 @@ class UniversalQualityLoopModule(CustomFixModule):
                 ]:
                     if not self.dry_run:
                         fix_success, fix_stdout, fix_stderr = self.run_tool(
-                            tool, project_path, fix_mode=True,
+                            tool,
+                            project_path,
+                            fix_mode=True,
                         )
                         fix_analysis = self.analyze_results(
-                            tool, fix_success, fix_stdout, fix_stderr,
+                            tool,
+                            fix_success,
+                            fix_stdout,
+                            fix_stderr,
                         )
 
                         if fix_analysis["issues_fixed"] > 0:
@@ -458,7 +473,8 @@ class UniversalQualityLoopModule(CustomFixModule):
                 cwd=project_path,
                 capture_output=True,
                 text=True,
-                timeout=600, check=False,  # 10 minute timeout for tests
+                timeout=600,
+                check=False,  # 10 minute timeout for tests
             )
 
             test_results["success"] = result.returncode == 0
@@ -687,7 +703,8 @@ class UniversalQualityLoopModule(CustomFixModule):
             }
 
             status = status_styles.get(
-                project_result["final_status"], project_result["final_status"].upper(),
+                project_result["final_status"],
+                project_result["final_status"].upper(),
             )
             iterations = len(project_result["iterations"])
             total_fixes = sum(
@@ -701,7 +718,11 @@ class UniversalQualityLoopModule(CustomFixModule):
                 test_coverage = f"{coverage:.1f}%" if coverage > 0 else "N/A"
 
             table.add_row(
-                project_name, status, str(iterations), str(total_fixes), test_coverage,
+                project_name,
+                status,
+                str(iterations),
+                str(total_fixes),
+                test_coverage,
             )
 
         self.console.print(table)

@@ -612,7 +612,7 @@ All Oracle documentation is available for offline download in multiple formats:
 ## 📊 Documentation Statistics
 
 | Version | Total Docs | Size (HTML) | Last Updated |
-|---------|------------|-------------|--------------|
+| ------- | ---------- | ----------- | ------------ |
 | 23ai    | 245 guides | 2.5 GB      | Dec 2024     |
 | 21c     | 238 guides | 2.3 GB      | Jun 2024     |
 | 19c     | 235 guides | 2.1 GB      | Oct 2024     |

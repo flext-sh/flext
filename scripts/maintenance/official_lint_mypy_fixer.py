@@ -400,7 +400,8 @@ class OfficialLintMyPyFixer:
                     content,
                 ):
                     logger.warning(
-                        "⚠️ Syntax validation failed for %s, skipping", file_path.name,
+                        "⚠️ Syntax validation failed for %s, skipping",
+                        file_path.name,
                     )
                     return 0
 
@@ -426,9 +427,13 @@ class OfficialLintMyPyFixer:
                 and line.endswith(":")
                 and "-> " not in line
             ):
-                if "def __init__(" in line or "def main(" in line or any(
-                    pattern in line
-                    for pattern in ["def test_", "def setUp", "def tearDown"]
+                if (
+                    "def __init__(" in line
+                    or "def main(" in line
+                    or any(
+                        pattern in line
+                        for pattern in ["def test_", "def setUp", "def tearDown"]
+                    )
                 ):
                     line = line.replace("):", ") -> None:")
                 elif "(" in line and ")" in line:
@@ -635,7 +640,8 @@ class OfficialLintMyPyFixer:
                 ["ruff", "check", str(project_path)],
                 capture_output=True,
                 text=True,
-                cwd=self.workspace_root, check=False,
+                cwd=self.workspace_root,
+                check=False,
             )
             return (
                 len(result.stdout.strip().split("\n")) if result.stdout.strip() else 0
@@ -688,7 +694,9 @@ class OfficialLintMyPyFixer:
                     {"project": project.name, "lint_errors": lint_errors},
                 )
                 logger.warning(
-                    "❌ %s: %d lint errors remaining", project.name, lint_errors,
+                    "❌ %s: %d lint errors remaining",
+                    project.name,
+                    lint_errors,
                 )
                 logger.info("✅ %s: ZERO lint errors", project.name)
 

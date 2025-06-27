@@ -7,11 +7,11 @@ Based on scripts/utilities/dependency_analysis.py and standardize_dependencies.p
 
 import re
 import shutil
-import tomllib
 from pathlib import Path
 from typing import Any
 
 import tomli_w
+import tomllib
 from rich.console import Console
 from rich.table import Table
 

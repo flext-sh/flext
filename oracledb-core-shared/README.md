@@ -9,30 +9,35 @@ Shared Oracle database utilities and core components for the PyAuto framework. T
 ## Features
 
 ### 🔌 Database Connectivity
+
 - **Modern Oracle Support**: Uses `oracledb` (new Oracle Python driver) with optional `cx_Oracle` legacy support
 - **Connection Pooling**: Enterprise connection pool management
 - **Async Support**: Full async/await support for high-performance applications
 - **Security**: Built-in credential management and secure connection handling
 
 ### 📊 Schema Management
+
 - **Schema Analysis**: Complete Oracle schema introspection and metadata extraction
 - **DDL Generation**: Automated DDL script generation for tables, indexes, constraints
 - **Schema Comparison**: Advanced schema diff and synchronization tools
 - **Migration Support**: Database migration planning and execution utilities
 
 ### 🔍 SQL Tools
+
 - **SQL Parsing**: Advanced SQL statement parsing and analysis using `sqlparse`
 - **Query Optimization**: SQL performance analysis and optimization suggestions
 - **Execution Plans**: Explain plan analysis and visualization
 - **Statement Validation**: SQL syntax validation and best practices checking
 
 ### 📈 Data Operations
+
 - **Data Comparison**: Row-level data comparison between tables/schemas
 - **Bulk Operations**: High-performance bulk insert/update/delete operations
 - **ETL Support**: Extract, Transform, Load utilities for data migration
 - **Data Validation**: Comprehensive data quality and integrity checks
 
 ### 🛠️ Maintenance Tools
+
 - **Health Monitoring**: Database health checks and performance monitoring
 - **Space Management**: Tablespace and storage analysis
 - **Index Analysis**: Index usage statistics and optimization recommendations
@@ -141,6 +146,7 @@ Comprehensive documentation is available in the `/docs` directory:
 ### Oracle Official Documentation
 
 The `docs/oracle-resources/` directory contains:
+
 - Oracle Database documentation (HTML downloads)
 - SQL Language Reference
 - PL/SQL Developer's Guide

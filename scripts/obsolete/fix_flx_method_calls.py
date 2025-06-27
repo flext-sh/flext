@@ -113,7 +113,9 @@ class MethodCallFixer(ast.NodeTransformer):
 
 
 def fix_file(
-    filepath: Path, inventory: dict[str, Any], dry_run: bool = False,
+    filepath: Path,
+    inventory: dict[str, Any],
+    dry_run: bool = False,
 ) -> list[dict[str, Any]]:
     """Fix method calls in a single file."""
     try:

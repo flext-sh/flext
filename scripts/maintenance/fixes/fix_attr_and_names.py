@@ -152,7 +152,8 @@ def add_missing_imports() -> None:
                 if line.startswith("from typing import Dict, Optional,"):
                     # Update existing typing import
                     current_imports = re.findall(
-                        r"from typing import Dict, Optional, (.+)", line,
+                        r"from typing import Dict, Optional, (.+)",
+                        line,
                     )[0]
                     current_names = [n.strip() for n in current_imports.split(",")]
 

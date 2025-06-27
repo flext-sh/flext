@@ -145,7 +145,9 @@ class QualityMetricsModule(CustomFixModule):
             sum(file_sizes) / len(file_sizes) if file_sizes else 0
         )
         metrics["largest_files"] = sorted(
-            large_files, key=lambda x: x["lines"], reverse=True,
+            large_files,
+            key=lambda x: x["lines"],
+            reverse=True,
         )[:10]
 
         return metrics
@@ -206,7 +208,9 @@ class QualityMetricsModule(CustomFixModule):
                 f["complexity"] for f in function_complexities
             )
             complexity_metrics["complex_functions"] = sorted(
-                function_complexities, key=lambda x: x["complexity"], reverse=True,
+                function_complexities,
+                key=lambda x: x["complexity"],
+                reverse=True,
             )[:20]  # Top 20 most complex functions
 
         return complexity_metrics
@@ -216,7 +220,12 @@ class QualityMetricsModule(CustomFixModule):
         complexity = 1  # Base complexity
 
         for child in ast.walk(node):
-            if isinstance(child, ast.If | ast.While | ast.For | ast.AsyncFor) or isinstance(child, ast.And | ast.Or) or isinstance(child, ast.ExceptHandler) or isinstance(child, ast.With, ast.AsyncWith):
+            if (
+                isinstance(child, ast.If | ast.While | ast.For | ast.AsyncFor)
+                or isinstance(child, ast.And | ast.Or)
+                or isinstance(child, ast.ExceptHandler)
+                or isinstance(child, ast.With, ast.AsyncWith)
+            ):
                 complexity += 1
 
         return complexity
@@ -241,19 +250,23 @@ class QualityMetricsModule(CustomFixModule):
                     cwd=project_path,
                     capture_output=True,
                     text=True,
-                    timeout=60, check=False,
+                    timeout=60,
+                    check=False,
                 )
 
                 if result.returncode == 0:
                     coverage_data = json.loads(result.stdout)
                     coverage_metrics["coverage_percentage"] = coverage_data.get(
-                        "totals", {},
+                        "totals",
+                        {},
                     ).get("percent_covered", 0.0)
                     coverage_metrics["lines_covered"] = coverage_data.get(
-                        "totals", {},
+                        "totals",
+                        {},
                     ).get("covered_lines", 0)
                     coverage_metrics["lines_total"] = coverage_data.get(
-                        "totals", {},
+                        "totals",
+                        {},
                     ).get("num_statements", 0)
                     coverage_metrics["coverage_available"] = True
 
@@ -262,7 +275,8 @@ class QualityMetricsModule(CustomFixModule):
                     low_coverage: list = []
                     for file_path, file_data in files.items():
                         file_coverage = file_data.get("summary", {}).get(
-                            "percent_covered", 0,
+                            "percent_covered",
+                            0,
                         )
                         if file_coverage < self.QUALITY_THRESHOLDS["test_coverage"]:
                             low_coverage.append(
@@ -274,7 +288,8 @@ class QualityMetricsModule(CustomFixModule):
                             )
 
                     coverage_metrics["missing_coverage"] = sorted(
-                        low_coverage, key=lambda x: x["coverage"],
+                        low_coverage,
+                        key=lambda x: x["coverage"],
                     )[:10]
 
         except Exception:
@@ -303,7 +318,8 @@ class QualityMetricsModule(CustomFixModule):
                 cwd=project_path,
                 capture_output=True,
                 text=True,
-                timeout=60, check=False,
+                timeout=60,
+                check=False,
             )
 
             if result.stdout:
@@ -346,7 +362,8 @@ class QualityMetricsModule(CustomFixModule):
                 cwd=project_path,
                 capture_output=True,
                 text=True,
-                timeout=120, check=False,
+                timeout=120,
+                check=False,
             )
 
             quality_issues["tools_available"]["mypy"] = True
@@ -600,7 +617,9 @@ class QualityMetricsModule(CustomFixModule):
             else "🔴 Needs Improvement"
         )
         overview_table.add_row(
-            "Quality Score", f"{quality_score:.1f}/100", score_status,
+            "Quality Score",
+            f"{quality_score:.1f}/100",
+            score_status,
         )
 
         # Coverage
@@ -629,7 +648,9 @@ class QualityMetricsModule(CustomFixModule):
             "✅" if issues_per_file <= 1 else "⚠️" if issues_per_file <= 5 else "❌"
         )
         overview_table.add_row(
-            "Issues per File", f"{issues_per_file:.1f}", issues_status,
+            "Issues per File",
+            f"{issues_per_file:.1f}",
+            issues_status,
         )
 
         self.console.print(overview_table)

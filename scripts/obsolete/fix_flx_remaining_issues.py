@@ -205,7 +205,8 @@ def fix_method_references(filepath: Path) -> list[dict[str, any]]:
 
 
 def fix_constructor_calls(
-    filepath: Path, inventory: dict[str, any],
+    filepath: Path,
+    inventory: dict[str, any],
 ) -> list[dict[str, any]]:
     """Fix constructor calls with missing arguments."""
     changes = []
@@ -293,7 +294,9 @@ def main() -> None:
 
     parser = argparse.ArgumentParser(description="Fix remaining FLX issues")
     parser.add_argument(
-        "--dry-run", action="store_true", help="Show what would be changed",
+        "--dry-run",
+        action="store_true",
+        help="Show what would be changed",
     )
     parser.add_argument(
         "--type",

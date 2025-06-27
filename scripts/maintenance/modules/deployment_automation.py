@@ -35,7 +35,10 @@ class DeploymentAutomationModule(CustomFixModule):
         return "deployment"
 
     def __init__(
-        self, dry_run: bool = True, interactive: bool = False, verbose: bool = False,
+        self,
+        dry_run: bool = True,
+        interactive: bool = False,
+        verbose: bool = False,
     ):
         """Initialize deployment automation module.
 
@@ -316,7 +319,9 @@ class DeploymentAutomationModule(CustomFixModule):
         return content
 
     def deploy_project(
-        self, project_path: Path, environment: str = "development",
+        self,
+        project_path: Path,
+        environment: str = "development",
     ) -> bool:
         """Deploy a project to specified environment.
 
@@ -413,14 +418,22 @@ class DeploymentAutomationModule(CustomFixModule):
         try:
             cmd = ["make", "test-deployment"]
             result = subprocess.run(
-                cmd, cwd=project_path, capture_output=True, text=True, check=False,
+                cmd,
+                cwd=project_path,
+                capture_output=True,
+                text=True,
+                check=False,
             )
             return result.returncode == 0
         except Exception:
             # If no deployment tests, run regular tests
             cmd = ["make", "test"]
             result = subprocess.run(
-                cmd, cwd=project_path, capture_output=True, text=True, check=False,
+                cmd,
+                cwd=project_path,
+                capture_output=True,
+                text=True,
+                check=False,
             )
             return result.returncode == 0
 
@@ -461,7 +474,10 @@ class DeploymentAutomationModule(CustomFixModule):
         return True
 
     def rollback(
-        self, project_path: Path, environment: str, version: str | None = None,
+        self,
+        project_path: Path,
+        environment: str,
+        version: str | None = None,
     ) -> bool:
         """Rollback deployment to previous version.
 

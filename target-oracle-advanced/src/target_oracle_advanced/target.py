@@ -14,6 +14,7 @@ from singer_sdk.typing import (
     Property,
     StringType,
 )
+
 from target_oracle_advanced.sinks import OracleBulkSink, OracleSink, OracleUpsertSink
 
 if TYPE_CHECKING:
