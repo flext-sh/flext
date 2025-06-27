@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-"""Clean unused typing imports from flx-meltano-enterprise.
-"""
+"""Clean unused typing imports from flx-meltano-enterprise."""
 
 from pathlib import Path
 

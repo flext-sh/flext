@@ -57,7 +57,9 @@ class ExceptionHandlingFixModule(CustomFixModule):
         return issues
 
     def _create_issue_from_finding(
-        self, finding: dict, lines: list[str],
+        self,
+        finding: dict,
+        lines: list[str],
     ) -> Issue | None:
         """Create an Issue from an AST finding."""
         line_num = finding["line"]

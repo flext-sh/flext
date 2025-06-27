@@ -5,6 +5,7 @@ Essential maintenance scripts for Oracle database administration using the Oracl
 ## 🔧 Health Check Scripts
 
 ### Daily Health Check
+
 ```python
 """Daily Oracle database health check script."""
 
@@ -48,6 +49,7 @@ if __name__ == "__main__":
 ## 📊 Performance Monitoring
 
 ### AWR Report Generation
+
 ```python
 """Generate AWR reports automatically."""
 
@@ -81,6 +83,7 @@ if __name__ == "__main__":
 ## 🗄️ Schema Management
 
 ### Schema Backup Script
+
 ```python
 """Backup schema objects and data."""
 
@@ -119,6 +122,7 @@ if __name__ == "__main__":
 ## 🧹 Cleanup Operations
 
 ### Cleanup Temp Objects
+
 ```python
 """Clean up temporary database objects."""
 
@@ -150,6 +154,7 @@ if __name__ == "__main__":
 ## 📈 Statistics Management
 
 ### Update Statistics Script
+
 ```python
 """Update database statistics for optimal performance."""
 

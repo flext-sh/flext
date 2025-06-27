@@ -5,9 +5,9 @@ Customizes pyproject.toml templates for specific project types.
 Based on scripts/customize_project_template.py functionality.
 """
 
-import tomllib
 from pathlib import Path
 
+import tomllib
 from rich.console import Console
 
 from .base import CustomFixModule, Issue
@@ -134,12 +134,16 @@ class ProjectCustomizationModule(CustomFixModule):
         return "api_integration"
 
     def generate_project_scripts(
-        self, project_name: str, module_name: str, project_type: str,
+        self,
+        project_name: str,
+        module_name: str,
+        project_type: str,
     ) -> dict[str, str]:
         """Generate CLI scripts configuration for the project."""
         config = self.PROJECT_CONFIGURATIONS.get(project_type, {})
         pattern = config.get(
-            "scripts_pattern", '{project_name}-cli = "{module_name}.cli:main"',
+            "scripts_pattern",
+            '{project_name}-cli = "{module_name}.cli:main"',
         )
 
         script_name = pattern.format(project_name=project_name, module_name=module_name)
@@ -154,7 +158,8 @@ class ProjectCustomizationModule(CustomFixModule):
         """Generate appropriate description for the project."""
         config = self.PROJECT_CONFIGURATIONS.get(project_type, {})
         template = config.get(
-            "description_template", "Enterprise Python automation component",
+            "description_template",
+            "Enterprise Python automation component",
         )
 
         # Extract service name from project name
@@ -212,7 +217,9 @@ class ProjectCustomizationModule(CustomFixModule):
                 scripts = poetry_config.get("scripts", {})
                 module_name = project_name.replace("-", "_")
                 expected_scripts = self.generate_project_scripts(
-                    project_name, module_name, detected_type,
+                    project_name,
+                    module_name,
+                    detected_type,
                 )
 
                 missing_scripts: list = []
@@ -347,7 +354,9 @@ class ProjectCustomizationModule(CustomFixModule):
         # Update scripts
         scripts = config["tool"]["poetry"].setdefault("scripts", {})
         project_scripts = self.generate_project_scripts(
-            project_name, module_name, project_type,
+            project_name,
+            module_name,
+            project_type,
         )
 
         for script_name, script_command in project_scripts.items():
@@ -362,14 +371,16 @@ class ProjectCustomizationModule(CustomFixModule):
             == "Enterprise-grade Python automation component"
         ):
             new_description = self.generate_project_description(
-                project_name, project_type,
+                project_name,
+                project_type,
             )
             poetry_config["description"] = new_description
             changes_made.append(f"Updated description: {new_description}")
 
         # Update keywords
         keywords = poetry_config.setdefault(
-            "keywords", ["automation", "enterprise", "oracle", "integration"],
+            "keywords",
+            ["automation", "enterprise", "oracle", "integration"],
         )
         project_keywords = project_config.get("keywords", [])
 

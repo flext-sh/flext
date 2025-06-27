@@ -15,6 +15,7 @@
 ## 🎯 PROJECT-SPECIFIC CONFIGURATION
 
 ### Virtual Environment Usage
+
 ```bash
 # MANDATORY: Use workspace venv
 source /home/marlonsc/pyauto/.venv/bin/activate
@@ -22,6 +23,7 @@ source /home/marlonsc/pyauto/.venv/bin/activate
 ```
 
 ### Agent Coordination
+
 ```bash
 # Read workspace coordination first
 cat /home/marlonsc/pyauto/.token | tail -5
@@ -29,6 +31,7 @@ cat /home/marlonsc/pyauto/.token | tail -5
 ```
 
 ### Project-Specific Environment Variables
+
 ```bash
 # Oracle Core Shared specific configurations
 export ORACLE_SHARED_HOST=oracle.enterprise.com
@@ -50,6 +53,7 @@ export ORACLE_SHARED_LOG_LEVEL=DEBUG
 ## 🏗️ ORACLEDB CORE SHARED ARCHITECTURE
 
 ### **Purpose & Role**
+
 - **Enterprise Oracle Utilities**: Comprehensive shared library for Oracle database operations
 - **Cross-Project Foundation**: Common Oracle functionality for all PyAuto Oracle projects
 - **Schema Management Hub**: Advanced schema analysis, comparison, and migration tools
@@ -57,6 +61,7 @@ export ORACLE_SHARED_LOG_LEVEL=DEBUG
 - **Data Operations Platform**: ETL, validation, and bulk operation utilities
 
 ### **Core Shared Components**
+
 ```python
 # Oracle Core Shared library structure
 src/oracledb_core_shared/
@@ -92,6 +97,7 @@ src/oracledb_core_shared/
 ```
 
 ### **Enterprise Oracle Features**
+
 - **Modern Driver Support**: Uses latest oracledb driver with optional cx_Oracle legacy
 - **Connection Pooling**: Enterprise-grade connection pool management
 - **Async Operations**: Full async/await support for high-performance applications
@@ -103,6 +109,7 @@ src/oracledb_core_shared/
 ## 🔧 PROJECT-SPECIFIC TECHNICAL DETAILS
 
 ### **Development Commands**
+
 ```bash
 # MANDATORY: Always from workspace venv
 source /home/marlonsc/pyauto/.venv/bin/activate
@@ -122,6 +129,7 @@ python -c "from oracledb_core_shared.schema import SchemaAnalyzer; print('Schema
 ```
 
 ### **Oracle Utilities Testing**
+
 ```bash
 # Test connection management
 python -c "
@@ -150,6 +158,7 @@ print('Differences:', diff.row_count_diff)
 ```
 
 ### **Performance and Load Testing**
+
 ```bash
 # Test connection pool performance
 python -c "
@@ -171,6 +180,7 @@ bulk_ops = BulkOperations(connection)
 ## 🚨 PROJECT-SPECIFIC KNOWN ISSUES
 
 ### **Oracle Shared Library Challenges**
+
 - **Driver Compatibility**: Managing transition from cx_Oracle to oracledb driver
 - **Performance Optimization**: Balancing functionality with performance across all PyAuto projects
 - **Schema Complexity**: Handling diverse Oracle schema patterns across enterprise environments
@@ -178,6 +188,7 @@ bulk_ops = BulkOperations(connection)
 - **Memory Management**: Efficient memory usage for large-scale operations
 
 ### **Shared Library Design Considerations**
+
 ```python
 # Oracle shared library patterns
 class OracleSharedLibraryPatterns:
@@ -251,6 +262,7 @@ class OracleSharedLibraryPatterns:
 ```
 
 ### **Production Oracle Edge Cases**
+
 ```bash
 # Common Oracle shared library issues
 1. Connection Pool Exhaustion: High-demand scenarios overwhelming pool
@@ -265,6 +277,7 @@ class OracleSharedLibraryPatterns:
 ## 🎯 PROJECT-SPECIFIC SUCCESS METRICS
 
 ### **Shared Library Performance Goals**
+
 - **Connection Pool Efficiency**: 95% pool utilization with minimal wait times
 - **Schema Analysis Speed**: <10 seconds for complete schema analysis (1000+ objects)
 - **Data Comparison Performance**: >100,000 rows/minute comparison throughput
@@ -272,6 +285,7 @@ class OracleSharedLibraryPatterns:
 - **Cross-Project Compatibility**: 100% compatibility across all PyAuto Oracle projects
 
 ### **Enterprise Utility Goals**
+
 - **Code Reuse**: 80% reduction in Oracle-specific code duplication across projects
 - **Performance Consistency**: Standardized performance across all Oracle operations
 - **Migration Support**: Complete Oracle database migration capabilities
@@ -283,6 +297,7 @@ class OracleSharedLibraryPatterns:
 ## 🔗 PROJECT-SPECIFIC INTEGRATIONS
 
 ### **PyAuto Ecosystem Integration**
+
 - **flx-database-oracle**: Core database adapter using shared utilities
 - **tap-oracle-advanced**: Uses shared connection and schema utilities
 - **target-oracle-advanced**: Uses shared bulk operations and validation
@@ -290,6 +305,7 @@ class OracleSharedLibraryPatterns:
 - **All Oracle projects**: Foundation for Oracle operations across PyAuto
 
 ### **Enterprise Oracle Integration**
+
 ```python
 # Production Oracle shared configuration
 class ProductionOracleShared:
@@ -347,6 +363,7 @@ class ProductionOracleShared:
 ## 📊 PROJECT-SPECIFIC MONITORING
 
 ### **Shared Library Metrics**
+
 ```python
 # Key metrics for Oracle shared library monitoring
 ORACLEDB_CORE_SHARED_METRICS = {
@@ -360,6 +377,7 @@ ORACLEDB_CORE_SHARED_METRICS = {
 ```
 
 ### **Oracle Database Health Monitoring**
+
 ```bash
 # Comprehensive Oracle monitoring via shared library
 python -c "
@@ -375,12 +393,14 @@ print('Database health:', status.overall_score)
 ## 📋 PROJECT-SPECIFIC MAINTENANCE
 
 ### **Regular Maintenance Tasks**
+
 - **Daily**: Monitor connection pool health and cross-project usage statistics
 - **Weekly**: Review shared utility performance and optimize common operations
 - **Monthly**: Update Oracle driver and validate compatibility across all projects
 - **Quarterly**: Performance optimization and shared library architecture review
 
 ### **Cross-Project Coordination**
+
 ```bash
 # Coordinate updates across PyAuto Oracle projects
 python scripts/update_shared_library.py --validate-all-projects
@@ -391,6 +411,7 @@ python scripts/analyze_shared_library_usage.py --generate-report
 ```
 
 ### **Emergency Procedures**
+
 ```bash
 # Oracle shared library emergency troubleshooting
 1. Test base connectivity: python -c "from oracledb_core_shared import test_connection; test_connection()"
@@ -408,6 +429,6 @@ python scripts/analyze_shared_library_usage.py --generate-report
 
 ---
 
-*Última Atualização: 2025-06-26*
-*Próxima Revisão: Semanal durante desenvolvimento da biblioteca*
-*Status: PLANNING - Planejamento de biblioteca compartilhada abrangente*
+_Última Atualização: 2025-06-26_
+_Próxima Revisão: Semanal durante desenvolvimento da biblioteca_
+_Status: PLANNING - Planejamento de biblioteca compartilhada abrangente_

@@ -15,6 +15,7 @@
 ## 🎯 PROJECT-SPECIFIC CONFIGURATION
 
 ### Virtual Environment Usage
+
 ```bash
 # MANDATORY: Use workspace venv
 source /home/marlonsc/pyauto/.venv/bin/activate
@@ -22,6 +23,7 @@ source /home/marlonsc/pyauto/.venv/bin/activate
 ```
 
 ### Agent Coordination
+
 ```bash
 # Read workspace coordination first
 cat /home/marlonsc/pyauto/.token | tail -5
@@ -29,6 +31,7 @@ cat /home/marlonsc/pyauto/.token | tail -5
 ```
 
 ### Project-Specific Environment Variables
+
 ```bash
 # Target Oracle Advanced specific configurations
 export TARGET_ORACLE_HOST=oracle.enterprise.com
@@ -51,6 +54,7 @@ export TARGET_ORACLE_ENABLE_PERFORMANCE_LOGGING=false
 ## 🏗️ TARGET ORACLE ADVANCED ARCHITECTURE
 
 ### **Purpose & Role**
+
 - **Enterprise Oracle Loader**: Modern Singer target for high-performance Oracle data loading
 - **Advanced Loading Strategies**: Bulk loading, upsert operations, and parallel processing
 - **FLX Framework Integration**: Hexagonal architecture with robust Oracle database connections
@@ -58,6 +62,7 @@ export TARGET_ORACLE_ENABLE_PERFORMANCE_LOGGING=false
 - **Modern Development Stack**: Python 3.13+, Singer SDK 0.45.0+, latest Oracle patterns
 
 ### **Core Advanced Components**
+
 ```python
 # Target Oracle Advanced structure
 src/target_oracle_advanced/
@@ -68,6 +73,7 @@ src/target_oracle_advanced/
 ```
 
 ### **Enterprise Oracle Loading Features**
+
 - **Multiple Loading Modes**: Standard insert, bulk loading, and upsert operations
 - **Connection Pool Management**: Advanced Oracle connection pooling with lifecycle management
 - **Parallel Loading**: Multi-threaded data loading with configurable parallelism
@@ -79,6 +85,7 @@ src/target_oracle_advanced/
 ## 🔧 PROJECT-SPECIFIC TECHNICAL DETAILS
 
 ### **Development Commands**
+
 ```bash
 # MANDATORY: Always from workspace venv
 source /home/marlonsc/pyauto/.venv/bin/activate
@@ -97,6 +104,7 @@ target-oracle-advanced --config config.json --input data.jsonl
 ```
 
 ### **Oracle Loading Testing**
+
 ```bash
 # Test Oracle connectivity and loading
 echo '{"type": "RECORD", "record": {"id": 1, "name": "test"}}' | target-oracle-advanced --config config.json
@@ -111,6 +119,7 @@ target-oracle-advanced --config config.json --input update_data.jsonl
 ```
 
 ### **Performance Testing**
+
 ```bash
 # Test with debug performance logging
 export TARGET_ORACLE_ENABLE_PERFORMANCE_LOGGING=true
@@ -127,6 +136,7 @@ target-oracle-advanced --config config.json --input parallel_test.jsonl
 ## 🚨 PROJECT-SPECIFIC KNOWN ISSUES
 
 ### **Oracle Advanced Loading Challenges**
+
 - **Connection Pool Scaling**: Complex connection pool management under high load
 - **Large Transaction Handling**: Memory management for bulk loading operations
 - **Oracle Lock Management**: Handling Oracle row and table locks during loading
@@ -134,6 +144,7 @@ target-oracle-advanced --config config.json --input parallel_test.jsonl
 - **Parallel Loading Conflicts**: Coordination of parallel loading threads
 
 ### **Singer SDK Advanced Considerations**
+
 ```python
 # Oracle-specific Singer target advanced patterns
 class OracleAdvancedTargetPatterns:
@@ -197,6 +208,7 @@ class OracleAdvancedTargetPatterns:
 ```
 
 ### **Production Oracle Edge Cases**
+
 ```bash
 # Common Oracle advanced loading issues
 1. Connection Pool Exhaustion: Too many concurrent loading operations
@@ -211,6 +223,7 @@ class OracleAdvancedTargetPatterns:
 ## 🎯 PROJECT-SPECIFIC SUCCESS METRICS
 
 ### **Singer Protocol Advanced Compliance**
+
 - **Loading Throughput**: >200,000 records/minute for bulk loading operations
 - **Upsert Performance**: <2 seconds per 1000 record upsert operations
 - **Memory Efficiency**: <1GB memory usage for unlimited data loading
@@ -218,6 +231,7 @@ class OracleAdvancedTargetPatterns:
 - **Parallel Loading Scalability**: Linear performance scaling with thread count
 
 ### **Enterprise Oracle Loading Goals**
+
 - **Database Compatibility**: Support for Oracle 19c, 21c, 23c databases
 - **Loading Strategy Flexibility**: Support for insert, bulk, and upsert modes
 - **Data Integrity**: 100% ACID compliance for all loading operations
@@ -229,18 +243,21 @@ class OracleAdvancedTargetPatterns:
 ## 🔗 PROJECT-SPECIFIC INTEGRATIONS
 
 ### **Singer Ecosystem Advanced Integration**
+
 - **Tap Compatibility**: Optimized for all Singer-compliant taps
 - **Meltano Plugin**: Advanced Meltano Hub plugin with performance tuning
 - **Schema Evolution**: Automatic table schema evolution and migration
 - **State Management**: Advanced loading state tracking and recovery
 
 ### **PyAuto Ecosystem Integration**
+
 - **flx-database-oracle**: Shared Oracle connection patterns and optimization
 - **tap-oracle-advanced**: Perfect companion for round-trip Oracle operations
 - **target-oracle-wms**: Specialized WMS version based on advanced patterns
 - **oracledb-core-shared**: Shared Oracle database models and utilities
 
 ### **Enterprise Oracle Integration**
+
 ```python
 # Production Oracle advanced target configuration
 class ProductionOracleAdvancedTarget:
@@ -297,6 +314,7 @@ class ProductionOracleAdvancedTarget:
 ## 📊 PROJECT-SPECIFIC MONITORING
 
 ### **Oracle Advanced Target Metrics**
+
 ```python
 # Key metrics for Oracle advanced target monitoring
 TARGET_ORACLE_ADVANCED_METRICS = {
@@ -310,6 +328,7 @@ TARGET_ORACLE_ADVANCED_METRICS = {
 ```
 
 ### **Oracle Database Loading Health Monitoring**
+
 ```bash
 # Comprehensive Oracle loading monitoring
 target-oracle-advanced --config config.json --test-connection --detailed
@@ -322,12 +341,14 @@ target-oracle-advanced --config config.json --validate-schema --target-table tes
 ## 📋 PROJECT-SPECIFIC MAINTENANCE
 
 ### **Regular Maintenance Tasks**
+
 - **Daily**: Monitor loading performance and connection pool health
 - **Weekly**: Review loading strategies and optimize batch sizes
 - **Monthly**: Update Oracle client libraries and test compatibility
 - **Quarterly**: Performance benchmarking and loading strategy optimization
 
 ### **Singer SDK Advanced Updates**
+
 ```bash
 # Keep Singer SDK and Oracle dependencies updated
 pip install --upgrade singer-sdk oracledb sqlalchemy
@@ -338,6 +359,7 @@ singer-validate-schema --schema target_schema.json
 ```
 
 ### **Emergency Procedures**
+
 ```bash
 # Oracle advanced target emergency troubleshooting
 1. Test Oracle connectivity: sqlplus user/password@host:port/service_name
@@ -355,6 +377,6 @@ singer-validate-schema --schema target_schema.json
 
 ---
 
-*Última Atualização: 2025-06-26*
-*Próxima Revisão: Semanal durante desenvolvimento ativo*
-*Status: DEVELOPMENT - Desenvolvimento ativo de funcionalidades avançadas Oracle*
+_Última Atualização: 2025-06-26_
+_Próxima Revisão: Semanal durante desenvolvimento ativo_
+_Status: DEVELOPMENT - Desenvolvimento ativo de funcionalidades avançadas Oracle_

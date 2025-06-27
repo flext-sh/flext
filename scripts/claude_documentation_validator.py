@@ -261,29 +261,29 @@ class ClaudeDocumentationValidator:
         env_security_status = self.validate_env_security()
 
         briefing = f"""
-# CLAUDE AGENT BRIEFING - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+# CLAUDE AGENT BRIEFING - {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 
 ## 🚨 CRITICAL WORKSPACE STATUS
 
-### Documentation Hierarchy Health: {hierarchy_status['hierarchy_status']}
-- Global CLAUDE.md: {'✅' if hierarchy_status['global_files']['global_claude_md'] else '❌'}
-- Workspace CLAUDE.md: {'✅' if hierarchy_status['workspace_files']['workspace_claude_md'] else '❌'}
-- Project Documentation: {len(hierarchy_status['project_files']['projects_with_claude_local'])}/24 projects have CLAUDE.local.md
+### Documentation Hierarchy Health: {hierarchy_status["hierarchy_status"]}
+- Global CLAUDE.md: {"✅" if hierarchy_status["global_files"]["global_claude_md"] else "❌"}
+- Workspace CLAUDE.md: {"✅" if hierarchy_status["workspace_files"]["workspace_claude_md"] else "❌"}
+- Project Documentation: {len(hierarchy_status["project_files"]["projects_with_claude_local"])}/24 projects have CLAUDE.local.md
 
-### Virtual Environment Standardization: {venv_status['venv_standardization_score']}%
-- Workspace .venv: {'✅ EXISTS' if venv_status['workspace_venv_exists'] else '❌ MISSING'}
-- Violations: {len(venv_status['project_venv_violations'])} projects with individual venvs
+### Virtual Environment Standardization: {venv_status["venv_standardization_score"]}%
+- Workspace .venv: {"✅ EXISTS" if venv_status["workspace_venv_exists"] else "❌ MISSING"}
+- Violations: {len(venv_status["project_venv_violations"])} projects with individual venvs
 - MANDATORY: source /home/marlonsc/pyauto/.venv/bin/activate
 
-### .ENV Security Compliance: {env_security_status['security_compliance_score']}%
-- Security Status: {env_security_status['security_audit_status']}
-- Projects with .env: {len(env_security_status['projects_with_env'])}/{len(env_security_status['projects_with_env']) + len(env_security_status['projects_missing_env'])}
-- Security Violations: {len(env_security_status['critical_security_violations'])}
+### .ENV Security Compliance: {env_security_status["security_compliance_score"]}%
+- Security Status: {env_security_status["security_audit_status"]}
+- Projects with .env: {len(env_security_status["projects_with_env"])}/{len(env_security_status["projects_with_env"]) + len(env_security_status["projects_missing_env"])}
+- Security Violations: {len(env_security_status["critical_security_violations"])}
 - 🚨 CRITICAL: .env files are SACRED - NEVER modify without explicit authorization
 
-### Token Coordination Status: {token_status['token_coordination_health']}
-- Total .token files: {token_status['total_token_files']}
-- Workspace coordination: {'✅' if token_status['workspace_token_exists'] else '❌'}
+### Token Coordination Status: {token_status["token_coordination_health"]}
+- Total .token files: {token_status["total_token_files"]}
+- Workspace coordination: {"✅" if token_status["workspace_token_exists"] else "❌"}
 
 ## 📋 MANDATORY AGENT PROTOCOLS
 
@@ -322,9 +322,9 @@ class ClaudeDocumentationValidator:
             briefing += f"""
 ## 🎯 FOCUS PROJECT: {focus_project.upper()}
 
-### Project Status: {project_context.get('status', 'UNKNOWN')}
-### Project Type: {project_context.get('type', 'UNKNOWN')}
-### Critical Issues: {len(project_context.get('critical_issues', []))}
+### Project Status: {project_context.get("status", "UNKNOWN")}
+### Project Type: {project_context.get("type", "UNKNOWN")}
+### Critical Issues: {len(project_context.get("critical_issues", []))}
 
 ### Project-Specific Commands:
 ```bash
@@ -342,10 +342,10 @@ cat CLAUDE.local.md  # Read project-specific documentation
         briefing += f"""
 ## 📊 WORKSPACE HEALTH SUMMARY
 
-- Documentation Coverage: {len(hierarchy_status['project_files']['projects_with_claude_local'])}/24 projects
-- venv Standardization: {venv_status['venv_standardization_score']}%
-- Token Coordination: {token_status['token_coordination_health']}
-- Last Validation: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+- Documentation Coverage: {len(hierarchy_status["project_files"]["projects_with_claude_local"])}/24 projects
+- venv Standardization: {venv_status["venv_standardization_score"]}%
+- Token Coordination: {token_status["token_coordination_health"]}
+- Last Validation: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 
 **MANTRA**: READ BEFORE EDIT, COORDINATE BEFORE CONFLICT, COMPLETE BEFORE CONTINUE
 """

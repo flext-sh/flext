@@ -87,7 +87,9 @@ def analyze_flx_imports(file_path: Path) -> list[tuple[str, str, str]]:
 
 
 def generate_lazy_import_replacement(
-    original_line: str, module: str, imports: str,
+    original_line: str,
+    module: str,
+    imports: str,
 ) -> str:
     """Gera o código de substituição com lazy import."""
     if not imports:  # import flx.module
@@ -147,10 +149,12 @@ def fix_file_imports(file_path: Path) -> bool:
 
             lines.insert(import_end_idx, "")
             lines.insert(
-                import_end_idx + 1, "# Lazy imports to avoid circular dependencies",
+                import_end_idx + 1,
+                "# Lazy imports to avoid circular dependencies",
             )
             lines.insert(
-                import_end_idx + 2, "from flx.utils.lazy_import import lazy_import",
+                import_end_idx + 2,
+                "from flx.utils.lazy_import import lazy_import",
             )
             lines.insert(import_end_idx + 3, "")
 
@@ -159,7 +163,9 @@ def fix_file_imports(file_path: Path) -> bool:
         # Substitui cada import do FLX por lazy import
         for original_line, module, imports in flx_imports:
             replacement = generate_lazy_import_replacement(
-                original_line, module, imports,
+                original_line,
+                module,
+                imports,
             )
             content = content.replace(original_line, replacement)
 

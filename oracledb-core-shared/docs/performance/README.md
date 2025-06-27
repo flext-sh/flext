@@ -20,18 +20,21 @@ This comprehensive guide covers all aspects of Oracle Database performance tunin
 ### Top-Down Approach
 
 1. **Business Requirements Analysis**
+
    - Define performance objectives
    - Identify critical business processes
    - Establish baseline measurements
    - Set realistic performance targets
 
 2. **System-Level Analysis**
+
    - Operating system performance
    - Hardware resource utilization
    - Network performance
    - Storage subsystem performance
 
 3. **Database Instance Analysis**
+
    - Instance-level wait events
    - Memory allocation and usage
    - Background process efficiency
@@ -67,12 +70,14 @@ This comprehensive guide covers all aspects of Oracle Database performance tunin
 ### Key Performance Metrics
 
 #### Response Time Components
+
 - **Service Time**: Time spent processing request
 - **Wait Time**: Time spent waiting for resources
 - **Queue Time**: Time spent in queues
 - **Network Time**: Time spent in network transmission
 
 #### Throughput Metrics
+
 - **Transactions per Second (TPS)**
 - **SQL Executions per Second**
 - **Logical Reads per Second**
@@ -80,6 +85,7 @@ This comprehensive guide covers all aspects of Oracle Database performance tunin
 - **Redo Generation Rate**
 
 #### Resource Utilization
+
 - **CPU Utilization**: Percentage of CPU capacity used
 - **Memory Utilization**: SGA and PGA usage
 - **I/O Utilization**: Disk I/O throughput and latency
@@ -90,7 +96,9 @@ This comprehensive guide covers all aspects of Oracle Database performance tunin
 ### Logical Design Considerations
 
 #### Normalization vs. Denormalization
+
 - **Normalization Benefits**:
+
   - Eliminates data redundancy
   - Ensures data consistency
   - Reduces storage requirements
@@ -103,12 +111,15 @@ This comprehensive guide covers all aspects of Oracle Database performance tunin
   - Better for read-heavy workloads
 
 #### Data Type Selection
+
 - **Numeric Types**:
+
   - Use appropriate precision
   - NUMBER vs. INTEGER considerations
   - BINARY_FLOAT/BINARY_DOUBLE for scientific calculations
 
 - **Character Types**:
+
   - VARCHAR2 vs. CHAR selection
   - Character set considerations (AL32UTF8)
   - National character set usage
@@ -119,7 +130,9 @@ This comprehensive guide covers all aspects of Oracle Database performance tunin
   - Interval data types
 
 #### Constraint Design
+
 - **Primary Keys**:
+
   - Natural vs. surrogate keys
   - Sequence-based vs. UUID
   - Impact on index organization
@@ -134,21 +147,25 @@ This comprehensive guide covers all aspects of Oracle Database performance tunin
 #### Table Organization
 
 ##### Heap Tables
+
 - **Characteristics**: Default table organization
 - **Benefits**: Optimal for OLTP workloads
 - **Considerations**: Row migration and chaining
 
 ##### Index-Organized Tables (IOT)
+
 - **Benefits**: Eliminates table access by rowid
 - **Use Cases**: Tables accessed primarily by primary key
 - **Considerations**: Overflow area management
 
 ##### Clustered Tables
+
 - **Hash Clusters**: Fixed number of hash buckets
 - **Index Clusters**: Multiple tables stored together
 - **Benefits**: Reduced I/O for related data
 
 ##### External Tables
+
 - **Purpose**: Access external files as tables
 - **Benefits**: ETL operations without data loading
 - **Considerations**: Limited DML operations
@@ -156,6 +173,7 @@ This comprehensive guide covers all aspects of Oracle Database performance tunin
 #### Partitioning Strategy
 
 ##### Range Partitioning
+
 ```sql
 CREATE TABLE sales (
     sale_date DATE,
@@ -170,6 +188,7 @@ CREATE TABLE sales (
 ```
 
 ##### List Partitioning
+
 ```sql
 CREATE TABLE customers (
     customer_id NUMBER,
@@ -183,6 +202,7 @@ CREATE TABLE customers (
 ```
 
 ##### Hash Partitioning
+
 ```sql
 CREATE TABLE orders (
     order_id NUMBER,
@@ -193,6 +213,7 @@ PARTITIONS 8;
 ```
 
 ##### Composite Partitioning
+
 ```sql
 CREATE TABLE sales_data (
     sale_date DATE,
@@ -210,6 +231,7 @@ SUBPARTITION BY LIST (region) (
 ### Index Design Strategy
 
 #### B-Tree Indexes
+
 - **Standard Indexes**: Most common index type
 - **Unique Indexes**: Enforce uniqueness
 - **Composite Indexes**: Multiple columns
@@ -218,14 +240,17 @@ SUBPARTITION BY LIST (region) (
 #### Specialized Indexes
 
 ##### Bitmap Indexes
+
 ```sql
 CREATE BITMAP INDEX idx_gender ON employees(gender);
 ```
+
 - **Use Cases**: Low cardinality columns
 - **Benefits**: Efficient for data warehouse queries
 - **Considerations**: Not suitable for OLTP
 
 ##### Partial Indexes
+
 ```sql
 CREATE INDEX idx_active_orders
 ON orders(order_date)
@@ -233,12 +258,14 @@ WHERE status = 'ACTIVE';
 ```
 
 ##### Invisible Indexes
+
 ```sql
 CREATE INDEX idx_customer_name
 ON customers(customer_name) INVISIBLE;
 ```
 
 ##### Virtual Columns and Indexes
+
 ```sql
 ALTER TABLE employees
 ADD (annual_salary AS (monthly_salary * 12));
@@ -251,24 +278,28 @@ CREATE INDEX idx_annual_salary ON employees(annual_salary);
 ### SQL Tuning Process
 
 #### 1. Identify Problem SQL
+
 - **Top SQL by Resource Consumption**
 - **Long-Running Queries**
 - **Frequently Executed Statements**
 - **SQL with High Wait Times**
 
 #### 2. Analyze Execution Plans
+
 - **Cost Analysis**: Understand optimizer costs
 - **Cardinality Estimates**: Check row count estimates
 - **Access Methods**: Evaluate access paths
 - **Join Methods**: Analyze join algorithms
 
 #### 3. Gather Additional Information
+
 - **Table and Index Statistics**
 - **Bind Variable Values**
 - **System Statistics**
 - **Optimizer Parameters**
 
 #### 4. Implement Tuning Techniques
+
 - **SQL Rewriting**
 - **Hint Usage**
 - **Index Creation/Modification**
@@ -279,6 +310,7 @@ CREATE INDEX idx_annual_salary ON employees(annual_salary);
 #### Understanding Execution Plans
 
 ##### Plan Operations
+
 ```sql
 EXPLAIN PLAN FOR
 SELECT e.employee_name, d.department_name
@@ -290,6 +322,7 @@ SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY);
 ```
 
 ##### Common Operations
+
 - **TABLE ACCESS FULL**: Full table scan
 - **TABLE ACCESS BY INDEX ROWID**: Index-based access
 - **INDEX RANGE SCAN**: Range scan on index
@@ -301,6 +334,7 @@ SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY);
 #### Plan Analysis Tools
 
 ##### DBMS_XPLAN Package
+
 ```sql
 -- Basic plan display
 SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY);
@@ -313,6 +347,7 @@ SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY_AWR('sql_id'));
 ```
 
 ##### Real-Time SQL Monitoring
+
 ```sql
 SELECT * FROM TABLE(DBMS_SQLTUNE.REPORT_SQL_MONITOR(
     sql_id => 'sql_id_here',
@@ -325,6 +360,7 @@ SELECT * FROM TABLE(DBMS_SQLTUNE.REPORT_SQL_MONITOR(
 #### Query Rewriting
 
 ##### Predicate Pushdown
+
 ```sql
 -- Before: Filter applied after join
 SELECT e.employee_name, d.department_name
@@ -342,6 +378,7 @@ ON e.department_id = d.department_id;
 ```
 
 ##### Subquery Optimization
+
 ```sql
 -- Correlated subquery (potentially slow)
 SELECT employee_name
@@ -359,6 +396,7 @@ WHERE salary > avg_dept_salary;
 ```
 
 ##### Join Elimination
+
 ```sql
 -- Unnecessary join
 SELECT e.employee_name
@@ -372,6 +410,7 @@ SELECT employee_name FROM employees;
 #### Index Optimization
 
 ##### Covering Indexes
+
 ```sql
 -- Query requiring table access
 SELECT employee_id, employee_name, salary
@@ -384,6 +423,7 @@ ON employees(department_id, employee_id, employee_name, salary);
 ```
 
 ##### Index Skip Scan
+
 ```sql
 -- Composite index on (gender, employee_id)
 CREATE INDEX idx_gender_emp_id ON employees(gender, employee_id);
@@ -395,6 +435,7 @@ SELECT * FROM employees WHERE employee_id = 100;
 #### Hint Usage
 
 ##### Common Hints
+
 ```sql
 -- Force index usage
 SELECT /*+ INDEX(e, idx_emp_dept) */ employee_name
@@ -418,6 +459,7 @@ WHERE e.department_id = d.department_id;
 ```
 
 ##### Parallel Hints
+
 ```sql
 -- Parallel table scan
 SELECT /*+ PARALLEL(employees, 4) */ COUNT(*)
@@ -434,6 +476,7 @@ JOIN departments d ON e.department_id = d.department_id;
 #### SQL Plan Management
 
 ##### Creating SQL Plan Baselines
+
 ```sql
 -- Enable automatic capture
 ALTER SYSTEM SET optimizer_capture_sql_plan_baselines = TRUE;
@@ -450,6 +493,7 @@ END;
 ```
 
 ##### Managing Baselines
+
 ```sql
 -- Display baselines
 SELECT sql_handle, plan_name, enabled, accepted
@@ -471,6 +515,7 @@ END;
 #### SQL Profiles
 
 ##### Creating SQL Profiles
+
 ```sql
 -- Run SQL Tuning Advisor
 DECLARE
@@ -499,6 +544,7 @@ EXEC DBMS_SQLTUNE.ACCEPT_SQL_PROFILE('tune_sql_task');
 #### System Global Area (SGA) Sizing
 
 ##### Automatic Memory Management
+
 ```sql
 -- Enable Automatic Memory Management
 ALTER SYSTEM SET memory_target = 2G;
@@ -506,6 +552,7 @@ ALTER SYSTEM SET memory_max_target = 4G;
 ```
 
 ##### Automatic Shared Memory Management
+
 ```sql
 -- Enable ASMM for SGA only
 ALTER SYSTEM SET sga_target = 1G;
@@ -513,6 +560,7 @@ ALTER SYSTEM SET sga_max_size = 2G;
 ```
 
 ##### Manual Memory Management
+
 ```sql
 -- Manual sizing of SGA components
 ALTER SYSTEM SET shared_pool_size = 400M;
@@ -525,6 +573,7 @@ ALTER SYSTEM SET log_buffer = 16M;
 #### Program Global Area (PGA) Tuning
 
 ##### PGA Configuration
+
 ```sql
 -- Automatic PGA management
 ALTER SYSTEM SET pga_aggregate_target = 500M;
@@ -535,6 +584,7 @@ ALTER SYSTEM SET workarea_size_policy = AUTO;
 ```
 
 ##### PGA Monitoring
+
 ```sql
 -- PGA usage statistics
 SELECT name, value, unit
@@ -555,6 +605,7 @@ ORDER BY pga_target_for_estimate;
 ### Background Process Tuning
 
 #### Database Writer (DBWn) Optimization
+
 ```sql
 -- Multiple database writers
 ALTER SYSTEM SET db_writer_processes = 4;
@@ -567,6 +618,7 @@ ALTER SYSTEM SET dbwr_io_slaves = 4;
 ```
 
 #### Log Writer (LGWR) Optimization
+
 ```sql
 -- Redo log buffer sizing
 ALTER SYSTEM SET log_buffer = 32M;
@@ -578,6 +630,7 @@ ALTER SYSTEM SET log_buffer = 32M;
 ```
 
 #### Archiver Process Optimization
+
 ```sql
 -- Multiple archiver processes
 ALTER SYSTEM SET log_archive_max_processes = 4;
@@ -592,6 +645,7 @@ ALTER SYSTEM SET log_archive_dest_1 =
 #### Critical Performance Parameters
 
 ##### Optimizer Parameters
+
 ```sql
 -- Optimizer features
 ALTER SYSTEM SET optimizer_features_enable = '19.1.0';
@@ -607,6 +661,7 @@ ALTER SYSTEM SET optimizer_adaptive_features = TRUE;
 ```
 
 ##### Parallel Processing Parameters
+
 ```sql
 -- Parallel execution
 ALTER SYSTEM SET parallel_max_servers = 20;
@@ -620,6 +675,7 @@ ALTER SYSTEM SET parallel_servers_target = 16;
 ```
 
 ##### Undo Management Parameters
+
 ```sql
 -- Undo retention
 ALTER SYSTEM SET undo_retention = 3600;
@@ -636,6 +692,7 @@ ALTER SYSTEM SET undo_management = AUTO;
 ### Buffer Cache Optimization
 
 #### Buffer Cache Sizing
+
 ```sql
 -- Buffer cache advice
 SELECT size_for_estimate/1024/1024 as cache_size_mb,
@@ -648,6 +705,7 @@ ORDER BY size_for_estimate;
 ```
 
 #### Multiple Buffer Pools
+
 ```sql
 -- Create KEEP pool for frequently accessed objects
 ALTER SYSTEM SET db_keep_cache_size = 200M;
@@ -663,6 +721,7 @@ ALTER TABLE large_scan_table STORAGE (BUFFER_POOL RECYCLE);
 ```
 
 #### Buffer Cache Monitoring
+
 ```sql
 -- Buffer cache hit ratio
 SELECT name,
@@ -682,6 +741,7 @@ ORDER BY time DESC;
 ### Shared Pool Tuning
 
 #### Shared Pool Sizing
+
 ```sql
 -- Shared pool advice
 SELECT shared_pool_size_for_estimate/1024/1024 as pool_size_mb,
@@ -694,6 +754,7 @@ ORDER BY shared_pool_size_for_estimate;
 ```
 
 #### Library Cache Optimization
+
 ```sql
 -- Library cache statistics
 SELECT namespace,
@@ -720,6 +781,7 @@ ORDER BY loads DESC;
 ```
 
 #### Cursor Sharing
+
 ```sql
 -- Force cursor sharing for literals
 ALTER SYSTEM SET cursor_sharing = FORCE;
@@ -734,6 +796,7 @@ ALTER SYSTEM SET cursor_sharing = EXACT;
 ### Large Pool Configuration
 
 #### Large Pool Usage
+
 ```sql
 -- Large pool for parallel execution
 ALTER SYSTEM SET large_pool_size = 128M;
@@ -748,6 +811,7 @@ ORDER BY bytes DESC;
 ```
 
 #### RMAN Memory Configuration
+
 ```sql
 -- Configure RMAN memory usage
 CONFIGURE CHANNEL DEVICE TYPE DISK PARMS 'BLKSIZE=1048576';
@@ -761,12 +825,14 @@ ALTER SYSTEM SET large_pool_size = 256M;
 ### Storage Configuration
 
 #### Optimal File Placement
+
 - **Separate Redo Logs**: Place on fastest storage
 - **Separate Archive Logs**: Use different devices from redo
 - **Separate Temp Files**: Dedicated temporary storage
 - **Data File Distribution**: Spread across multiple devices
 
 #### Stripe Configuration
+
 - **RAID Configuration**: RAID 10 for performance, RAID 5 for capacity
 - **Stripe Size**: Match database block size multiples
 - **Controller Cache**: Enable write caching with battery backup
@@ -774,6 +840,7 @@ ALTER SYSTEM SET large_pool_size = 256M;
 ### Database File Optimization
 
 #### Redo Log Optimization
+
 ```sql
 -- Optimal redo log size (switch every 15-20 minutes)
 SELECT sequence#,
@@ -795,6 +862,7 @@ ALTER DATABASE ADD LOGFILE GROUP 1
 ```
 
 #### Temporary Tablespace Optimization
+
 ```sql
 -- Create temporary tablespace with multiple files
 CREATE TEMPORARY TABLESPACE temp_new
@@ -815,6 +883,7 @@ FROM v$sort_segment;
 ### I/O Monitoring and Analysis
 
 #### I/O Statistics
+
 ```sql
 -- File I/O statistics
 SELECT df.tablespace_name,
@@ -845,6 +914,7 @@ ORDER BY total_reads + total_writes DESC;
 ```
 
 #### Wait Event Analysis
+
 ```sql
 -- I/O related wait events
 SELECT event,
@@ -872,6 +942,7 @@ WHERE event LIKE '%file%read%' OR event LIKE '%file%write%';
 ### Asynchronous I/O Configuration
 
 #### Enable Async I/O
+
 ```sql
 -- Enable asynchronous I/O
 ALTER SYSTEM SET disk_asynch_io = TRUE;
@@ -888,6 +959,7 @@ WHERE name LIKE '%io_slaves%';
 ```
 
 #### Direct I/O Configuration
+
 ```sql
 -- Enable direct I/O (OS level configuration)
 -- For Oracle on Linux: Use O_DIRECT
@@ -903,6 +975,7 @@ ALTER SYSTEM SET filesystemio_options = SETALL;
 ### Automatic Workload Repository (AWR)
 
 #### AWR Configuration
+
 ```sql
 -- Configure AWR collection interval (60 minutes)
 EXEC DBMS_WORKLOAD_REPOSITORY.MODIFY_SNAPSHOT_SETTINGS(
@@ -922,6 +995,7 @@ EXEC DBMS_WORKLOAD_REPOSITORY.CREATE_BASELINE(
 ```
 
 #### AWR Reports
+
 ```sql
 -- Generate AWR report
 @$ORACLE_HOME/rdbms/admin/awrrpt.sql
@@ -936,6 +1010,7 @@ EXEC DBMS_WORKLOAD_REPOSITORY.CREATE_BASELINE(
 ### Active Session History (ASH)
 
 #### ASH Analysis
+
 ```sql
 -- Top wait events in last hour
 SELECT event,
@@ -971,6 +1046,7 @@ ORDER BY samples DESC;
 ```
 
 #### ASH Reports
+
 ```sql
 -- Generate ASH report
 @$ORACLE_HOME/rdbms/admin/ashrpt.sql
@@ -982,6 +1058,7 @@ ORDER BY samples DESC;
 ### Real-Time SQL Monitoring
 
 #### SQL Monitoring
+
 ```sql
 -- Monitor long-running SQL
 SELECT sql_id,
@@ -1005,6 +1082,7 @@ SELECT DBMS_SQLTUNE.REPORT_SQL_MONITOR(
 ### Performance Views
 
 #### Key Performance Views
+
 ```sql
 -- System statistics
 SELECT name, value
@@ -1049,6 +1127,7 @@ ORDER BY st.value DESC;
 ### Automatic Database Diagnostic Monitor (ADDM)
 
 #### ADDM Configuration
+
 ```sql
 -- ADDM runs automatically with each AWR snapshot
 -- Manual ADDM analysis
@@ -1068,6 +1147,7 @@ END;
 ```
 
 #### ADDM Findings Analysis
+
 ```sql
 -- View ADDM findings
 SELECT task_name,
@@ -1095,6 +1175,7 @@ ORDER BY benefit DESC;
 ### SQL Tuning Advisor
 
 #### Automatic SQL Tuning
+
 ```sql
 -- Enable automatic SQL tuning
 EXEC DBMS_AUTO_TASK_ADMIN.ENABLE(
@@ -1112,6 +1193,7 @@ EXEC DBMS_SQLTUNE.SET_TUNING_TASK_PARAMETER(
 ```
 
 #### Manual SQL Tuning
+
 ```sql
 -- Create tuning task
 DECLARE
@@ -1134,6 +1216,7 @@ END;
 ### Automatic Statistics Collection
 
 #### Statistics Configuration
+
 ```sql
 -- Enable automatic statistics collection
 EXEC DBMS_AUTO_TASK_ADMIN.ENABLE(
@@ -1160,6 +1243,7 @@ EXEC DBMS_STATS.SET_GLOBAL_PREFS(
 ```
 
 #### Manual Statistics Collection
+
 ```sql
 -- Gather table statistics
 EXEC DBMS_STATS.GATHER_TABLE_STATS(
@@ -1189,6 +1273,7 @@ EXEC DBMS_STATS.GATHER_SYSTEM_STATS('EXADATA');
 ### Oracle Enterprise Manager (OEM)
 
 #### Performance Hub
+
 - **Real-time Performance Monitoring**
 - **Historical Performance Analysis**
 - **SQL Monitoring**
@@ -1196,6 +1281,7 @@ EXEC DBMS_STATS.GATHER_SYSTEM_STATS('EXADATA');
 - **AWR and ADDM Integration**
 
 #### Performance Tools in OEM
+
 - **SQL Tuning Advisor Integration**
 - **SQL Access Advisor**
 - **Memory Advisor**
@@ -1205,6 +1291,7 @@ EXEC DBMS_STATS.GATHER_SYSTEM_STATS('EXADATA');
 ### SQL Developer Performance Tools
 
 #### SQL Tuning Features
+
 - **Explain Plan Visualization**
 - **Autotrace Functionality**
 - **SQL Worksheet with Statistics**
@@ -1213,6 +1300,7 @@ EXEC DBMS_STATS.GATHER_SYSTEM_STATS('EXADATA');
 ### Third-Party Tools
 
 #### Popular Performance Tools
+
 - **Toad for Oracle**: Database development and tuning
 - **Quest Spotlight**: Real-time performance monitoring
 - **SolarWinds Database Performance Analyzer**: Historical analysis
@@ -1221,7 +1309,8 @@ EXEC DBMS_STATS.GATHER_SYSTEM_STATS('EXADATA');
 
 ### Command-Line Tools
 
-#### SQL*Plus Performance Commands
+#### SQL\*Plus Performance Commands
+
 ```sql
 -- Enable autotrace
 SET AUTOTRACE ON EXPLAIN STATISTICS
@@ -1238,6 +1327,7 @@ SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY);
 ```
 
 #### TKPROF Utility
+
 ```bash
 # Enable SQL trace
 ALTER SESSION SET SQL_TRACE = TRUE;
@@ -1254,7 +1344,9 @@ tkprof trace_file.trc output_file.txt explain=username/password
 ### High CPU Usage
 
 #### Diagnosis Steps
+
 1. **Identify CPU-consuming sessions**
+
 ```sql
 SELECT s.sid,
        s.serial#,
@@ -1270,6 +1362,7 @@ ORDER BY s.cpu_time DESC;
 ```
 
 2. **Analyze top CPU-consuming SQL**
+
 ```sql
 SELECT sql_id,
        executions,
@@ -1282,6 +1375,7 @@ ORDER BY cpu_time DESC;
 ```
 
 #### Common Causes and Solutions
+
 - **Inefficient SQL statements**: Tune problematic queries
 - **Missing indexes**: Create appropriate indexes
 - **Full table scans**: Add indexes or improve predicates
@@ -1291,7 +1385,9 @@ ORDER BY cpu_time DESC;
 ### High I/O Wait Times
 
 #### Diagnosis Steps
+
 1. **Identify I/O wait events**
+
 ```sql
 SELECT event,
        total_waits,
@@ -1303,6 +1399,7 @@ ORDER BY time_waited DESC;
 ```
 
 2. **Analyze file I/O distribution**
+
 ```sql
 SELECT df.tablespace_name,
        df.file_name,
@@ -1317,6 +1414,7 @@ ORDER BY total_wait_time DESC;
 ```
 
 #### Common Causes and Solutions
+
 - **Hot data files**: Redistribute I/O across multiple devices
 - **Inefficient storage**: Use faster storage (SSD)
 - **Large table scans**: Create indexes or partition tables
@@ -1326,7 +1424,9 @@ ORDER BY total_wait_time DESC;
 ### Memory Pressure
 
 #### Diagnosis Steps
+
 1. **Check memory allocation**
+
 ```sql
 SELECT component,
        current_size/1024/1024 as current_mb,
@@ -1337,6 +1437,7 @@ ORDER BY current_size DESC;
 ```
 
 2. **Analyze PGA usage**
+
 ```sql
 SELECT name,
        value/1024/1024 as value_mb,
@@ -1349,6 +1450,7 @@ WHERE name IN ('aggregate PGA target parameter',
 ```
 
 #### Common Causes and Solutions
+
 - **Undersized SGA**: Increase SGA target
 - **PGA pressure**: Increase PGA aggregate target
 - **Memory leaks**: Identify and fix application issues
@@ -1358,7 +1460,9 @@ WHERE name IN ('aggregate PGA target parameter',
 ### Lock Contention
 
 #### Diagnosis Steps
+
 1. **Identify blocking sessions**
+
 ```sql
 SELECT blocking_session,
        sid,
@@ -1372,6 +1476,7 @@ WHERE blocking_session IS NOT NULL;
 ```
 
 2. **Analyze lock types**
+
 ```sql
 SELECT l.sid,
        l.type,
@@ -1387,6 +1492,7 @@ ORDER BY l.block DESC;
 ```
 
 #### Common Causes and Solutions
+
 - **Long-running transactions**: Commit more frequently
 - **Missing indexes on foreign keys**: Create indexes
 - **Application design issues**: Review transaction design
@@ -1396,7 +1502,9 @@ ORDER BY l.block DESC;
 ### Poor SQL Performance
 
 #### Diagnosis Steps
+
 1. **Identify slow SQL**
+
 ```sql
 SELECT sql_id,
        elapsed_time/1000000 as elapsed_seconds,
@@ -1411,12 +1519,14 @@ ORDER BY elapsed_time DESC;
 ```
 
 2. **Analyze execution plans**
+
 ```sql
 -- For specific SQL_ID
 SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY_CURSOR('sql_id_here', NULL, 'ALLSTATS LAST'));
 ```
 
 #### Common Causes and Solutions
+
 - **Missing statistics**: Gather current statistics
 - **Outdated statistics**: Refresh statistics
 - **Missing indexes**: Create appropriate indexes
@@ -1426,17 +1536,20 @@ SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY_CURSOR('sql_id_here', NULL, 'ALLSTATS LAS
 ## 📚 Additional Resources
 
 ### Oracle Documentation
+
 - [Database Performance Tuning Guide](https://docs.oracle.com/en/database/oracle/oracle-database/19/tgdba/)
 - [SQL Tuning Guide](https://docs.oracle.com/en/database/oracle/oracle-database/19/tgsql/)
 - [Database Reference](https://docs.oracle.com/en/database/oracle/oracle-database/19/refrn/)
 
 ### Performance Tuning Scripts
+
 - [AWR Analysis Scripts](./scripts/awr-analysis.sql)
 - [ASH Analysis Scripts](./scripts/ash-analysis.sql)
 - [SQL Tuning Scripts](./scripts/sql-tuning.sql)
 - [I/O Analysis Scripts](./scripts/io-analysis.sql)
 
 ### Best Practices
+
 - [Performance Tuning Best Practices](./best-practices/performance-tuning.md)
 - [SQL Optimization Guidelines](./best-practices/sql-optimization.md)
 - [Memory Management Best Practices](./best-practices/memory-management.md)

@@ -123,7 +123,9 @@ class TestingOrchestrationModule(CustomFixModule):
         return "python"
 
     def run_project_tests(
-        self, project_path: Path, test_type: str = "unit",
+        self,
+        project_path: Path,
+        test_type: str = "unit",
     ) -> dict[str, any]:
         """Run tests for a specific project."""
         project_name = project_path.name
@@ -168,7 +170,8 @@ class TestingOrchestrationModule(CustomFixModule):
                 cwd=project_path,
                 capture_output=True,
                 text=True,
-                timeout=test_config["timeout"], check=False,
+                timeout=test_config["timeout"],
+                check=False,
             )
 
             result["duration"] = time.time() - start_time
@@ -176,7 +179,9 @@ class TestingOrchestrationModule(CustomFixModule):
 
             # Parse test output
             self._parse_test_output(
-                process_result.stdout, process_result.stderr, result,
+                process_result.stdout,
+                process_result.stderr,
+                result,
             )
 
             if not result["success"] and self.verbose:
@@ -203,7 +208,10 @@ class TestingOrchestrationModule(CustomFixModule):
         return result
 
     def _build_test_command(
-        self, runner: str, project_path: Path, test_type: str,
+        self,
+        runner: str,
+        project_path: Path,
+        test_type: str,
     ) -> list[str]:
         """Build test command based on runner and test type."""
         base_cmd = self.TEST_COMMANDS[runner].copy()
@@ -248,14 +256,18 @@ class TestingOrchestrationModule(CustomFixModule):
                 cwd=project_path,
                 capture_output=True,
                 text=True,
-                timeout=300, check=False,
+                timeout=300,
+                check=False,
             )
             return result.returncode == 0
         except Exception:
             return False
 
     def _parse_test_output(
-        self, stdout: str, stderr: str, result: dict[str, any],
+        self,
+        stdout: str,
+        stderr: str,
+        result: dict[str, any],
     ) -> None:
         """Parse pytest output to extract test metrics."""
         output = stdout + stderr
@@ -414,7 +426,8 @@ class TestingOrchestrationModule(CustomFixModule):
 
                 for test_type in self.test_types:
                     task = progress.add_task(
-                        f"Running {test_type} tests in {project_name}...", total=None,
+                        f"Running {test_type} tests in {project_name}...",
+                        total=None,
                     )
 
                     if self.dry_run:

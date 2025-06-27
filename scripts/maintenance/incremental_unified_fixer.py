@@ -170,7 +170,9 @@ class IncrementalUnifiedFixer:
         return any(pattern in path.name for pattern in self.config.exclude_patterns)
 
     def _process_project_incrementally(
-        self, project_path: Path, dry_run: bool,
+        self,
+        project_path: Path,
+        dry_run: bool,
     ) -> dict[str, Any]:
         """Process a single project with incremental fixes."""
         # Get initial error count
@@ -373,7 +375,9 @@ class IncrementalUnifiedFixer:
                         compile(content, str(file_path), "exec")
                     except SyntaxError as e:
                         logger.warning(
-                            "⚠️ Syntax error in %s after fixes: %s", file_path.name, e,
+                            "⚠️ Syntax error in %s after fixes: %s",
+                            file_path.name,
+                            e,
                         )
                         return 0, {}
 
@@ -382,7 +386,9 @@ class IncrementalUnifiedFixer:
                 total_fixes = sum(category_fixes.values())
 
                 logger.debug(
-                    "✅ Fixed %s: %d fixes applied", file_path.name, total_fixes,
+                    "✅ Fixed %s: %d fixes applied",
+                    file_path.name,
+                    total_fixes,
                 )
                 return total_fixes, category_fixes
 
@@ -431,7 +437,10 @@ class IncrementalUnifiedFixer:
                 and not any(x in stripped for x in ["__init__", "__str__", "__repr__"])
             ):
                 # Add appropriate return type
-                if any(name in stripped for name in ["test_", "setUp", "tearDown"]) or "main(" in stripped:
+                if (
+                    any(name in stripped for name in ["test_", "setUp", "tearDown"])
+                    or "main(" in stripped
+                ):
                     lines[i] = line.replace("):", ") -> None:")
                     fixes += 1
                 elif "(" in stripped and ")" in stripped:
@@ -665,7 +674,8 @@ class IncrementalUnifiedFixer:
                 ["ruff", "check", str(project_path)],
                 capture_output=True,
                 text=True,
-                timeout=60, check=False,
+                timeout=60,
+                check=False,
             )
             # Count actual error lines (not empty lines)
             errors = [line for line in result.stdout.split("\n") if line.strip()]
@@ -757,7 +767,9 @@ def main() -> None:
     )
     parser.add_argument("--projects", nargs="+", help="Specific projects to process")
     parser.add_argument(
-        "--dry-run", action="store_true", help="Analyze without applying fixes",
+        "--dry-run",
+        action="store_true",
+        help="Analyze without applying fixes",
     )
     parser.add_argument(
         "--aggressive",
@@ -765,7 +777,10 @@ def main() -> None:
         help="Enable aggressive mode with security fixes",
     )
     parser.add_argument(
-        "--max-changes", type=int, default=150, help="Maximum changes per file",
+        "--max-changes",
+        type=int,
+        default=150,
+        help="Maximum changes per file",
     )
 
     args = parser.parse_args()

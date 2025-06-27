@@ -19,6 +19,7 @@ Comprehensive guide covering all aspects of Oracle Database administration, from
 ### Pre-Installation Requirements
 
 #### System Requirements
+
 ```bash
 # Check system resources
 cat /proc/meminfo | grep MemTotal
@@ -38,6 +39,7 @@ libgcc libstdc++ libstdc++-devel libXi libXtst make sysstat
 ```
 
 #### User and Group Creation
+
 ```bash
 # Create Oracle groups
 groupadd -g 54321 oinstall
@@ -58,6 +60,7 @@ passwd oracle
 ```
 
 #### Directory Structure
+
 ```bash
 # Create Oracle directories
 mkdir -p /opt/oracle/product/19c/dbhome_1
@@ -74,6 +77,7 @@ chmod -R 775 /opt/oracle
 ### Silent Installation
 
 #### Response File Configuration
+
 ```ini
 # db_install.rsp
 oracle.install.responseFileVersion=/oracle/install/rspfmt_dbinstall_response_schema_v19.0.0
@@ -94,6 +98,7 @@ DECLINE_SECURITY_UPDATES=true
 ```
 
 #### Installation Execution
+
 ```bash
 # Run installer in silent mode
 ./runInstaller -silent -responseFile /tmp/db_install.rsp
@@ -106,6 +111,7 @@ DECLINE_SECURITY_UPDATES=true
 ### Database Creation
 
 #### DBCA Silent Creation
+
 ```bash
 # Create database using DBCA
 dbca -silent -createDatabase \
@@ -131,6 +137,7 @@ dbca -silent -createDatabase \
 ```
 
 #### Manual Database Creation
+
 ```sql
 -- Create parameter file
 CREATE SPFILE='/opt/oracle/product/19c/dbhome_1/dbs/spfileORCL.ora' FROM PFILE;
@@ -175,6 +182,7 @@ UNDO TABLESPACE undotbs1
 ### Startup and Shutdown
 
 #### Startup Modes
+
 ```sql
 -- Start instance only (NOMOUNT)
 STARTUP NOMOUNT;
@@ -200,6 +208,7 @@ ALTER DATABASE OPEN READ ONLY;
 ```
 
 #### Shutdown Modes
+
 ```sql
 -- Normal shutdown (wait for users to disconnect)
 SHUTDOWN NORMAL;
@@ -217,6 +226,7 @@ SHUTDOWN ABORT;
 ### Parameter Management
 
 #### SPFILE Management
+
 ```sql
 -- Create SPFILE from PFILE
 CREATE SPFILE FROM PFILE;
@@ -235,6 +245,7 @@ WHERE name = 'sga_target';
 ```
 
 #### Parameter Modification
+
 ```sql
 -- Modify parameter in memory only
 ALTER SYSTEM SET sga_target = 1G SCOPE = MEMORY;
@@ -255,6 +266,7 @@ ALTER SYSTEM RESET sga_target SCOPE = SPFILE;
 ### Memory Management
 
 #### Automatic Memory Management (AMM)
+
 ```sql
 -- Enable AMM
 ALTER SYSTEM SET memory_target = 2G;
@@ -266,6 +278,7 @@ ALTER SYSTEM SET pga_aggregate_target = 0;
 ```
 
 #### Automatic Shared Memory Management (ASMM)
+
 ```sql
 -- Enable ASMM for SGA
 ALTER SYSTEM SET sga_target = 1G;
@@ -282,6 +295,7 @@ ALTER SYSTEM SET pga_aggregate_target = 500M;
 ```
 
 #### Manual Memory Management
+
 ```sql
 -- Set individual SGA components
 ALTER SYSTEM SET shared_pool_size = 400M;
@@ -298,6 +312,7 @@ ALTER SYSTEM SET memory_target = 0;
 ### Process Management
 
 #### Background Process Monitoring
+
 ```sql
 -- View background processes
 SELECT paddr, name, description
@@ -319,6 +334,7 @@ ORDER BY username;
 ```
 
 #### Session Management
+
 ```sql
 -- Kill session
 ALTER SYSTEM KILL SESSION 'sid,serial#' IMMEDIATE;
@@ -339,6 +355,7 @@ ALTER PROFILE default LIMIT
 ### Tablespace Management
 
 #### Creating Tablespaces
+
 ```sql
 -- Create permanent tablespace
 CREATE TABLESPACE sales_data
@@ -364,6 +381,7 @@ AUTOEXTEND ON NEXT 100M MAXSIZE 32G;
 ```
 
 #### Tablespace Maintenance
+
 ```sql
 -- Add datafile to tablespace
 ALTER TABLESPACE sales_data
@@ -389,6 +407,7 @@ DROP TABLESPACE sales_data INCLUDING CONTENTS AND DATAFILES;
 ```
 
 #### Space Monitoring
+
 ```sql
 -- Tablespace usage
 SELECT t.tablespace_name,
@@ -420,6 +439,7 @@ ORDER BY bytes DESC;
 ### ASM (Automatic Storage Management)
 
 #### ASM Instance Setup
+
 ```bash
 # Create ASM parameter file
 cat > $ORACLE_HOME/dbs/init+ASM.ora << EOF
@@ -436,6 +456,7 @@ STARTUP;
 ```
 
 #### Disk Group Management
+
 ```sql
 -- Create disk group
 CREATE DISKGROUP DATA EXTERNAL REDUNDANCY
@@ -464,6 +485,7 @@ ORDER BY group_number, disk_number;
 ```
 
 #### ASM File Management
+
 ```sql
 -- List ASM files
 SELECT name, space, type FROM v$asm_file
@@ -480,6 +502,7 @@ RMAN> BACKUP DATABASE FORMAT '+FRA';
 ### Redo Log Management
 
 #### Redo Log Configuration
+
 ```sql
 -- Add redo log group
 ALTER DATABASE ADD LOGFILE GROUP 4
@@ -505,6 +528,7 @@ ALTER DATABASE CLEAR LOGFILE GROUP 2;
 ```
 
 #### Archive Log Management
+
 ```sql
 -- Enable archiving
 SHUTDOWN IMMEDIATE;
@@ -542,6 +566,7 @@ ORDER BY sequence#;
 ### User Management
 
 #### Creating Users
+
 ```sql
 -- Create user with basic privileges
 CREATE USER john_doe IDENTIFIED BY "SecurePassword123!"
@@ -563,6 +588,7 @@ QUOTA UNLIMITED ON users;
 ```
 
 #### Profile Management
+
 ```sql
 -- Create profile
 CREATE PROFILE developer_profile LIMIT
@@ -595,6 +621,7 @@ WHERE profile = 'DEVELOPER_PROFILE';
 ### Role Management
 
 #### Creating Roles
+
 ```sql
 -- Create application role
 CREATE ROLE app_user;
@@ -618,6 +645,7 @@ ALTER USER john_doe DEFAULT ROLE app_user;
 ```
 
 #### Role Administration
+
 ```sql
 -- View role privileges
 SELECT role, privilege, admin_option
@@ -638,6 +666,7 @@ SET ROLE NONE;
 ### Privilege Management
 
 #### System Privileges
+
 ```sql
 -- Grant system privileges
 GRANT CREATE ANY TABLE TO john_doe;
@@ -654,6 +683,7 @@ WHERE grantee = 'JOHN_DOE';
 ```
 
 #### Object Privileges
+
 ```sql
 -- Grant object privileges
 GRANT SELECT, INSERT, UPDATE ON employees TO john_doe;
@@ -677,6 +707,7 @@ WHERE grantee = 'JOHN_DOE';
 ### System Performance
 
 #### Wait Events Analysis
+
 ```sql
 -- Top wait events
 SELECT event, total_waits, total_timeouts, time_waited,
@@ -701,6 +732,7 @@ ORDER BY time_waited_micro DESC;
 ```
 
 #### Resource Usage
+
 ```sql
 -- CPU usage by session
 SELECT s.sid, s.serial#, s.username, s.program,
@@ -730,6 +762,7 @@ ORDER BY value DESC;
 ### SQL Performance
 
 #### Top SQL Statements
+
 ```sql
 -- Top SQL by elapsed time
 SELECT sql_id, executions, elapsed_time/1000000 as elapsed_seconds,
@@ -759,6 +792,7 @@ ORDER BY buffer_gets DESC;
 ```
 
 #### Execution Plan Analysis
+
 ```sql
 -- Current execution plans
 SELECT sql_id, child_number, operation, options, object_name,
@@ -779,6 +813,7 @@ ORDER BY snap_id;
 ### Database Performance
 
 #### Buffer Cache Analysis
+
 ```sql
 -- Buffer cache hit ratio
 SELECT name,
@@ -804,6 +839,7 @@ ORDER BY value DESC;
 ```
 
 #### Shared Pool Analysis
+
 ```sql
 -- Library cache statistics
 SELECT namespace, gets, gethits,
@@ -834,6 +870,7 @@ ORDER BY parse_calls DESC;
 ### Statistics Management
 
 #### Automatic Statistics Collection
+
 ```sql
 -- Check automatic statistics job
 SELECT client_name, status, consumer_group, window_group
@@ -855,6 +892,7 @@ EXEC DBMS_STATS.SET_GLOBAL_PREFS('CASCADE', 'TRUE');
 ```
 
 #### Manual Statistics Collection
+
 ```sql
 -- Gather table statistics
 EXEC DBMS_STATS.GATHER_TABLE_STATS(
@@ -890,6 +928,7 @@ EXEC DBMS_STATS.DELETE_TABLE_STATS('HR', 'EMPLOYEES');
 ### Index Maintenance
 
 #### Index Rebuilding
+
 ```sql
 -- Check index fragmentation
 SELECT owner, index_name, blevel, leaf_blocks,
@@ -912,6 +951,7 @@ ALTER INDEX hr.emp_name_idx COALESCE;
 ```
 
 #### Index Monitoring
+
 ```sql
 -- Enable index monitoring
 ALTER INDEX hr.emp_name_idx MONITORING USAGE;
@@ -938,6 +978,7 @@ WHERE di.owner = 'HR'
 ### Space Management
 
 #### Segment Shrinking
+
 ```sql
 -- Enable row movement
 ALTER TABLE hr.employees ENABLE ROW MOVEMENT;
@@ -961,6 +1002,7 @@ WHERE owner = 'HR'
 ```
 
 #### Tablespace Cleanup
+
 ```sql
 -- Move table to different tablespace
 ALTER TABLE hr.employees MOVE TABLESPACE new_ts;
@@ -985,6 +1027,7 @@ EXEC DBMS_SPACE.SPACE_USAGE('HR', 'EMPLOYEES', 'TABLE',
 ### Database Maintenance
 
 #### Health Checks
+
 ```sql
 -- Check database status
 SELECT name, open_mode, log_mode, database_role
@@ -1009,6 +1052,7 @@ EXEC DBMS_UTILITY.COMPILE_SCHEMA('HR');
 ```
 
 #### Log File Analysis
+
 ```sql
 -- Check alert log for errors
 SELECT message_text, message_level, message_type,
@@ -1035,6 +1079,7 @@ ORDER BY first_time;
 ### Common Issues
 
 #### Database Startup Issues
+
 ```sql
 -- ORA-01078: failure in processing system parameters
 -- Check parameter file location and syntax
@@ -1054,6 +1099,7 @@ ALTER DATABASE DATAFILE 4 OFFLINE;
 ```
 
 #### Performance Issues
+
 ```sql
 -- High CPU usage
 -- Identify CPU-intensive sessions
@@ -1082,6 +1128,7 @@ FROM v$memory_dynamic_components;
 ```
 
 #### Space Issues
+
 ```sql
 -- ORA-01653: unable to extend table
 -- Check tablespace space
@@ -1107,6 +1154,7 @@ RMAN> DELETE ARCHIVELOG UNTIL TIME 'SYSDATE-7';
 ### Diagnostic Tools
 
 #### AWR Reports
+
 ```sql
 -- Generate AWR report
 @$ORACLE_HOME/rdbms/admin/awrrpt.sql
@@ -1123,6 +1171,7 @@ EXEC DBMS_WORKLOAD_REPOSITORY.CREATE_BASELINE(
 ```
 
 #### ASH Reports
+
 ```sql
 -- Generate ASH report
 @$ORACLE_HOME/rdbms/admin/ashrpt.sql
@@ -1139,6 +1188,7 @@ ORDER BY samples DESC;
 ```
 
 #### ADDM Analysis
+
 ```sql
 -- Run ADDM manually
 DECLARE
@@ -1165,6 +1215,7 @@ ORDER BY impact DESC;
 ### Scheduled Jobs
 
 #### Database Jobs (DBMS_SCHEDULER)
+
 ```sql
 -- Create job class
 EXEC DBMS_SCHEDULER.CREATE_JOB_CLASS(
@@ -1196,6 +1247,7 @@ WHERE job_name = 'GATHER_STATS_JOB';
 ```
 
 #### Backup Automation
+
 ```bash
 #!/bin/bash
 # Automated backup script
@@ -1239,6 +1291,7 @@ fi
 ### Monitoring Scripts
 
 #### Health Check Script
+
 ```bash
 #!/bin/bash
 # Database health check script
@@ -1287,6 +1340,7 @@ mail -s "Database Health Report" -a $REPORT_FILE dba@company.com < /dev/null
 ### Security Best Practices
 
 #### Password Management
+
 - Use strong, complex passwords
 - Implement password policies
 - Regular password rotation
@@ -1294,6 +1348,7 @@ mail -s "Database Health Report" -a $REPORT_FILE dba@company.com < /dev/null
 - Use external authentication when possible
 
 #### Access Control
+
 - Implement least privilege principle
 - Use roles instead of direct grants
 - Regular access reviews
@@ -1301,6 +1356,7 @@ mail -s "Database Health Report" -a $REPORT_FILE dba@company.com < /dev/null
 - Monitor privileged access
 
 #### Auditing
+
 - Enable comprehensive auditing
 - Monitor failed login attempts
 - Alert on suspicious activities
@@ -1310,12 +1366,14 @@ mail -s "Database Health Report" -a $REPORT_FILE dba@company.com < /dev/null
 ### Performance Best Practices
 
 #### Memory Management
+
 - Use Automatic Memory Management (AMM) when appropriate
 - Monitor memory usage regularly
 - Tune SGA and PGA based on workload
 - Use memory advisors for sizing guidance
 
 #### Storage Management
+
 - Use locally managed tablespaces
 - Implement appropriate extent sizing
 - Monitor space usage proactively
@@ -1323,6 +1381,7 @@ mail -s "Database Health Report" -a $REPORT_FILE dba@company.com < /dev/null
 - Separate different workload types
 
 #### SQL Performance
+
 - Gather current statistics regularly
 - Monitor top SQL statements
 - Use SQL tuning advisor
@@ -1332,6 +1391,7 @@ mail -s "Database Health Report" -a $REPORT_FILE dba@company.com < /dev/null
 ### Maintenance Best Practices
 
 #### Backup and Recovery
+
 - Test backup and recovery procedures regularly
 - Implement appropriate retention policies
 - Use RMAN for backup operations
@@ -1339,6 +1399,7 @@ mail -s "Database Health Report" -a $REPORT_FILE dba@company.com < /dev/null
 - Document recovery procedures
 
 #### Monitoring
+
 - Implement proactive monitoring
 - Set up appropriate alerts
 - Review AWR reports regularly
@@ -1346,6 +1407,7 @@ mail -s "Database Health Report" -a $REPORT_FILE dba@company.com < /dev/null
 - Track performance trends
 
 #### Change Management
+
 - Test changes in non-production first
 - Document all changes
 - Have rollback procedures ready

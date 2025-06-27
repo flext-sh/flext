@@ -104,7 +104,9 @@ def parse_requirements_txt(file_path: Path) -> dict[str, str]:
 
 
 def update_toml_dependencies(
-    file_path: Path, main_dependencies: dict[str, str], force: bool = False,
+    file_path: Path,
+    main_dependencies: dict[str, str],
+    force: bool = False,
 ) -> None:
     """Atualiza as dependências em um arquivo pyproject.toml."""
     toml_data = load_toml(file_path)
@@ -194,7 +196,9 @@ def update_toml_dependencies(
 
 
 def update_requirements_txt(
-    file_path: Path, main_dependencies: dict[str, str], force: bool = False,
+    file_path: Path,
+    main_dependencies: dict[str, str],
+    force: bool = False,
 ) -> None:
     """Atualiza as versões das dependências em um arquivo requirements.txt."""
     try:

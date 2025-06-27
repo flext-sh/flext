@@ -485,15 +485,15 @@ oracle-rest-gen \
 **License**: MIT
 
 ```javascript
-const { OracleGraphQLAdapter } = require('oracle-graphql-adapter');
+const { OracleGraphQLAdapter } = require("oracle-graphql-adapter");
 
 const adapter = new OracleGraphQLAdapter({
   connection: {
-    user: 'hr_user',
-    password: 'password',
-    connectString: 'localhost:1521/ORCL'
+    user: "hr_user",
+    password: "password",
+    connectString: "localhost:1521/ORCL",
   },
-  schema: 'HR'
+  schema: "HR",
 });
 
 // Start GraphQL server
@@ -712,17 +712,17 @@ docker run -d -p 8080:8080 \
 
 ```javascript
 // Embed in existing application
-import { OracleQueryBuilder } from 'oracle-query-builder-ui';
+import { OracleQueryBuilder } from "oracle-query-builder-ui";
 
 const queryBuilder = new OracleQueryBuilder({
-  container: '#query-builder',
+  container: "#query-builder",
   connection: {
-    endpoint: '/api/oracle',
-    schema: 'HR'
+    endpoint: "/api/oracle",
+    schema: "HR",
   },
   onQueryGenerated: (sql) => {
-    console.log('Generated SQL:', sql);
-  }
+    console.log("Generated SQL:", sql);
+  },
 });
 ```
 
@@ -789,13 +789,13 @@ Most Oracle open source projects follow similar contribution patterns:
 ### Project Maintenance Status
 
 | Project Category | Active Projects | Archived Projects | New Projects (2024) |
-|------------------|----------------|-------------------|---------------------|
-| Administration   | 45             | 12                | 8                   |
-| Monitoring       | 38             | 9                 | 12                  |
-| Development      | 67             | 23                | 15                  |
-| Security         | 29             | 7                 | 6                   |
-| Testing          | 22             | 5                 | 4                   |
-| Migration        | 18             | 8                 | 3                   |
+| ---------------- | --------------- | ----------------- | ------------------- |
+| Administration   | 45              | 12                | 8                   |
+| Monitoring       | 38              | 9                 | 12                  |
+| Development      | 67              | 23                | 15                  |
+| Security         | 29              | 7                 | 6                   |
+| Testing          | 22              | 5                 | 4                   |
+| Migration        | 18              | 8                 | 3                   |
 
 ### Getting Help
 

@@ -17,6 +17,7 @@
 ### **📊 PROJECT INVENTORY (24 ACTIVE PROJECTS)**
 
 #### **FLX FRAMEWORK ECOSYSTEM (8 projects)**
+
 ```
 ✅ flx/                          - Core framework (PRODUCTION)
 ✅ flx-adapter-example/          - Template/example (TEMPLATE)
@@ -30,6 +31,7 @@
 ```
 
 #### **SINGER/MELTANO PROTOCOL (6 projects)**
+
 ```
 ✅ tap-ldap/                     - LDAP data extraction (BETA)
 ✅ tap-oracle-advanced/          - Advanced Oracle tap (PLANNING)
@@ -42,6 +44,7 @@
 ```
 
 #### **ENTERPRISE INTEGRATIONS (3 projects)**
+
 ```
 ✅ algar-oud-mig/                - ALGAR Oracle migration (PRODUCTION)
 ✅ gruponos-poc-oic-wms/         - GrupoNOS POC (BETA)
@@ -49,6 +52,7 @@
 ```
 
 #### **SHARED LIBRARIES (4 projects)**
+
 ```
 ✅ ldap-core-shared/             - LDAP shared utilities (DEVELOPMENT)
 ✅ oracledb-core-shared/         - Oracle shared utilities (PLANNING)
@@ -57,6 +61,7 @@
 ```
 
 #### **SUPPORT/INFRASTRUCTURE (3 projects)**
+
 ```
 ✅ community-tools/              - Community utilities (MIXED)
 ✅ oracle-documentation/         - Documentation only (DOCUMENTATION)
@@ -66,6 +71,7 @@
 ### **🚨 CRITICAL PROBLEMS IDENTIFIED**
 
 #### **1. VENV CHAOS (.venv Usage)**
+
 ```bash
 # CURRENT BROKEN STATE:
 find /home/marlonsc/pyauto -name ".venv" | wc -l  # Multiple project venvs
@@ -77,6 +83,7 @@ source /home/marlonsc/pyauto/.venv/bin/activate   # ALL projects use THIS
 ```
 
 #### **2. .TOKEN FILE COORDINATION MESS**
+
 ```bash
 # CURRENT STATE: 29 .token files found
 find /home/marlonsc/pyauto -name "*.token" | wc -l  # 29 files
@@ -86,6 +93,7 @@ find /home/marlonsc/pyauto -name "*.token" | wc -l  # 29 files
 ```
 
 #### **3. DOCUMENTATION REDUNDANCY EPIDEMIC**
+
 ```bash
 # MASSIVE REDUNDANCY IDENTIFIED:
 grep -r "README.md" /home/marlonsc/pyauto | wc -l    # 50+ README files
@@ -94,6 +102,7 @@ find /home/marlonsc/pyauto -name "*REPORT*" | wc -l  # 20+ report files
 ```
 
 #### **4. CONFIGURATION STANDARDIZATION FAILURE**
+
 ```bash
 # CONFIGURATION CHAOS:
 find /home/marlonsc/pyauto -name "pyproject.toml" | wc -l  # 24 different configs
@@ -108,6 +117,7 @@ find /home/marlonsc/pyauto -name ".env*" | wc -l           # Multiple .env files
 ### **PHASE 1: ENVIRONMENT STANDARDIZATION (URGENT)**
 
 #### **1.1 Single Workspace venv Implementation**
+
 ```bash
 # MANDATORY: Create single workspace venv
 cd /home/marlonsc/pyauto
@@ -120,6 +130,7 @@ echo "source /home/marlonsc/pyauto/.venv/bin/activate" > VENV_STANDARD.txt
 ```
 
 #### **1.2 .token Coordination Centralization**
+
 ```bash
 # MANDATORY: Centralize agent coordination
 # Primary coordination: /home/marlonsc/pyauto/.token
@@ -130,6 +141,7 @@ echo "WORKSPACE_COORDINATION_CENTRALIZED_$(date)" >> /home/marlonsc/pyauto/.toke
 ### **PHASE 2: DOCUMENTATION HIERARCHY (CRITICAL)**
 
 #### **2.1 CLAUDE.local.md Creation for ALL Projects**
+
 ```bash
 # MANDATORY: Create CLAUDE.local.md for ALL 24 projects
 # Template-based creation with project-specific content
@@ -137,6 +149,7 @@ echo "WORKSPACE_COORDINATION_CENTRALIZED_$(date)" >> /home/marlonsc/pyauto/.toke
 ```
 
 #### **2.2 Pattern Extraction and Escalation**
+
 ```bash
 # IDENTIFY patterns across projects
 # EXTRACT common solutions to workspace level
@@ -147,6 +160,7 @@ echo "WORKSPACE_COORDINATION_CENTRALIZED_$(date)" >> /home/marlonsc/pyauto/.toke
 ### **PHASE 3: QUALITY STANDARDIZATION (HIGH PRIORITY)**
 
 #### **3.1 Ruff/MyPy Standardization**
+
 ```bash
 # MANDATORY: Consistent quality tools across ALL projects
 # Zero tolerance approach for production projects
@@ -154,6 +168,7 @@ echo "WORKSPACE_COORDINATION_CENTRALIZED_$(date)" >> /home/marlonsc/pyauto/.toke
 ```
 
 #### **3.2 Testing Infrastructure**
+
 ```bash
 # MANDATORY: Consistent testing approach
 # Shared test utilities in workspace
@@ -165,7 +180,8 @@ echo "WORKSPACE_COORDINATION_CENTRALIZED_$(date)" >> /home/marlonsc/pyauto/.toke
 ## 📋 PROJECT-SPECIFIC CLAUDE.local.md REQUIREMENTS
 
 ### **Template Structure (MANDATORY for ALL projects)**
-```markdown
+
+````markdown
 # CLAUDE.local.md - [PROJECT_NAME] PROJECT SPECIFICS
 
 **Hierarchy**: PROJECT-SPECIFIC
@@ -182,13 +198,16 @@ echo "WORKSPACE_COORDINATION_CENTRALIZED_$(date)" >> /home/marlonsc/pyauto/.toke
 ## 🎯 PROJECT-SPECIFIC CONFIGURATION
 
 ### Virtual Environment Usage
+
 ```bash
 # MANDATORY: Use workspace venv
 source /home/marlonsc/pyauto/.venv/bin/activate
 # NOT project-specific venv
 ```
+````
 
 ### Agent Coordination
+
 ```bash
 # Read workspace coordination first
 cat /home/marlonsc/pyauto/.token | tail -5
@@ -196,13 +215,16 @@ cat /home/marlonsc/pyauto/.token | tail -5
 ```
 
 ### Project-Specific Issues
+
 [Document ONLY issues specific to THIS project]
 
 ### Project-Specific Solutions
+
 [Document ONLY solutions that apply ONLY to THIS project]
 
 ---
-```
+
+````
 
 ### **Content Requirements (NO REDUNDANCY)**
 
@@ -234,11 +256,12 @@ cat /home/marlonsc/pyauto/.token | tail -5
 ### **Week 1: Infrastructure (CRITICAL)**
 ```bash
 # Day 1-2: Single venv setup and validation
-# Day 3-4: .token coordination centralization  
+# Day 3-4: .token coordination centralization
 # Day 5-7: Template creation and initial rollout
-```
+````
 
 ### **Week 2: Documentation Creation (HIGH PRIORITY)**
+
 ```bash
 # Day 1-3: Create CLAUDE.local.md for all FLX projects
 # Day 4-5: Create CLAUDE.local.md for all Singer projects
@@ -246,6 +269,7 @@ cat /home/marlonsc/pyauto/.token | tail -5
 ```
 
 ### **Week 3: Pattern Extraction (MEDIUM PRIORITY)**
+
 ```bash
 # Day 1-3: Extract common patterns from project docs
 # Day 4-5: Migrate patterns to workspace level
@@ -253,6 +277,7 @@ cat /home/marlonsc/pyauto/.token | tail -5
 ```
 
 ### **Week 4: Quality Standardization (ONGOING)**
+
 ```bash
 # Day 1-7: Progressive quality standard implementation
 # Continuous: Validation and refinement
@@ -260,9 +285,10 @@ cat /home/marlonsc/pyauto/.token | tail -5
 
 ---
 
-## 📊 SUCCESS METRICS (MEASURABLE)**
+## 📊 SUCCESS METRICS (MEASURABLE)\*\*
 
 ### **Quantitative Goals**
+
 - ✅ **Single venv usage**: 100% projects use workspace .venv
 - ✅ **CLAUDE.local.md coverage**: 24/24 projects have project-specific documentation
 - ✅ **Redundancy elimination**: <5 duplicate documentation pieces
@@ -270,6 +296,7 @@ cat /home/marlonsc/pyauto/.token | tail -5
 - ✅ **.token coordination**: Centralized coordination for 90% operations
 
 ### **Qualitative Goals**
+
 - ✅ **Agent efficiency**: <2 minutes to understand any project status
 - ✅ **Zero assumption failures**: All project information verified and current
 - ✅ **Seamless coordination**: Zero file modification conflicts
@@ -280,6 +307,7 @@ cat /home/marlonsc/pyauto/.token | tail -5
 ## 🚨 ACCOUNTABILITY AND ENFORCEMENT
 
 ### **Self-Validation System**
+
 ```bash
 # MANDATORY weekly execution
 python scripts/validate_pyauto_standards.py
@@ -289,6 +317,7 @@ python scripts/audit_token_coordination.py
 ```
 
 ### **Escalation Triggers**
+
 - **2+ projects with same issue** → Escalate to workspace pattern
 - **Cross-workspace pattern** → Escalate to global methodology
 - **Violation of standards** → Immediate correction protocol
@@ -306,6 +335,7 @@ python scripts/audit_token_coordination.py
 **PYAUTO-SPECIFIC .ENV SECURITY PROTOCOL:**
 
 #### **MANDATORY .ENV USAGE FOR ALL 24 PYAUTO PROJECTS**
+
 ```bash
 # ✅ MANDATORY: Every PyAuto project MUST follow this pattern
 cd /home/marlonsc/pyauto/project_name
@@ -317,6 +347,7 @@ python -m project.cli command --debug --verbose --log-level=DEBUG
 ```
 
 #### **PYAUTO PROJECT .ENV REQUIREMENTS**
+
 ```bash
 # MANDATORY: Common .env variables across PyAuto projects
 cat > PROJECT.env.template << 'EOF'
@@ -338,6 +369,7 @@ EOF
 ```
 
 #### **PYAUTO-SPECIFIC CLI DEBUG ENFORCEMENT**
+
 ```bash
 # ✅ CORRECT: PyAuto project CLI usage
 cd /home/marlonsc/pyauto/flx-database-oracle
@@ -356,37 +388,38 @@ python -m project.cli command  # SECURITY VIOLATION IN PYAUTO
 ```
 
 #### **PYAUTO PROJECT SECURITY VALIDATION**
+
 ```bash
 # MANDATORY: Validate .env security for PyAuto projects
 function validate_pyauto_project_security() {
     local project_dir="$1"
-    
+
     echo "🔒 VALIDATING PYAUTO PROJECT SECURITY: $project_dir"
-    
+
     # Check workspace venv
     if [ ! -d "/home/marlonsc/pyauto/.venv" ]; then
         echo "🚨 SECURITY VIOLATION: Workspace venv missing"
         exit 1
     fi
-    
+
     # Check project .env
     if [ ! -f "$project_dir/.env" ]; then
         echo "🚨 SECURITY VIOLATION: Project .env missing"
         echo "📋 REQUIRED: Create .env in $project_dir"
         exit 1
     fi
-    
+
     # Source and validate
     cd "$project_dir"
     source .env
-    
+
     # Check required workspace variables
     if [ -z "$WORKSPACE_ROOT" ] || [ -z "$PYTHON_VENV" ]; then
         echo "🚨 SECURITY VIOLATION: Missing workspace variables"
         echo "📋 REQUIRED: Add WORKSPACE_ROOT and PYTHON_VENV to .env"
         exit 1
     fi
-    
+
     echo "✅ SECURITY: $project_dir .env validation passed"
 }
 
@@ -401,6 +434,7 @@ done
 #### **TECHNOLOGY-SPECIFIC .ENV PATTERNS**
 
 **ORACLE PROJECTS (.env requirements):**
+
 ```bash
 # MANDATORY: Oracle-specific .env variables
 ORACLE_DSN=your_oracle_dsn
@@ -411,6 +445,7 @@ ORACLE_ENABLE_THICK_MODE=true
 ```
 
 **MELTANO PROJECTS (.env requirements):**
+
 ```bash
 # MANDATORY: Meltano-specific .env variables
 MELTANO_PROJECT_ROOT=/home/marlonsc/pyauto/project_name
@@ -420,6 +455,7 @@ MELTANO_SEND_ANONYMOUS_USAGE_STATS=false
 ```
 
 **LDAP PROJECTS (.env requirements):**
+
 ```bash
 # MANDATORY: LDAP-specific .env variables
 LDAP_SERVER=your_ldap_server
@@ -432,6 +468,7 @@ LDAP_TLS_VALIDATION=strict
 #### **PYAUTO .ENV VIOLATION RESPONSES**
 
 **IF ANY PYAUTO PROJECT VIOLATES .ENV SECURITY:**
+
 ```bash
 # IMMEDIATE PYAUTO SECURITY RESPONSE
 echo "🚨🚨🚨 PYAUTO SECURITY VIOLATION DETECTED 🚨🚨🚨"
@@ -446,10 +483,12 @@ exit 1
 ### **PYAUTO PROJECT DOCUMENTATION ENFORCEMENT**
 
 **MANDATORY: All project CLAUDE.local.md files MUST include:**
-```markdown
+
+````markdown
 ## 🔒 PROJECT .ENV SECURITY REQUIREMENTS
 
 ### MANDATORY .env Variables
+
 ```bash
 # WORKSPACE (required for all PyAuto projects)
 WORKSPACE_ROOT=/home/marlonsc/pyauto
@@ -461,8 +500,10 @@ PROJECT_DB_HOST=your_database_host
 PROJECT_API_KEY=your_api_key
 [Additional project-specific variables]
 ```
+````
 
 ### MANDATORY CLI Usage
+
 ```bash
 # ALWAYS source workspace venv + project .env + debug CLI
 source /home/marlonsc/pyauto/.venv/bin/activate
@@ -471,29 +512,31 @@ python -m project.cli command --debug --verbose
 ```
 
 ### SECURITY WARNINGS
+
 - 🚨 NEVER modify .env without explicit user authorization
 - ❌ NEVER use CLI without --debug flag
 - ✅ .env is SINGLE SOURCE OF TRUTH for this project
-```
+
+````
 
 ### **PYAUTO SECURITY AUDIT SYSTEM**
 ```bash
 # MANDATORY: Weekly PyAuto security audit
 function audit_pyauto_security() {
     echo "🔒 STARTING PYAUTO SECURITY AUDIT"
-    
+
     local violations=0
-    
+
     for project in /home/marlonsc/pyauto/*/; do
         if [ -d "$project" ] && [[ ! "$project" =~ (docs|logs|scripts|examples|backups) ]]; then
             project_name=$(basename "$project")
-            
+
             # Check .env exists
             if [ ! -f "$project/.env" ]; then
                 echo "❌ VIOLATION: $project_name missing .env"
                 violations=$((violations + 1))
             fi
-            
+
             # Check CLAUDE.local.md mentions .env security
             if [ -f "$project/CLAUDE.local.md" ]; then
                 if ! grep -q "\.env.*SECURITY\|\.env.*MANDATORY" "$project/CLAUDE.local.md"; then
@@ -503,7 +546,7 @@ function audit_pyauto_security() {
             fi
         fi
     done
-    
+
     if [ $violations -eq 0 ]; then
         echo "✅ PYAUTO SECURITY AUDIT: PASSED"
     else
@@ -514,7 +557,7 @@ function audit_pyauto_security() {
 
 # Run audit
 audit_pyauto_security
-```
+````
 
 **PYAUTO SECURITY MANTRA**: **WORKSPACE VENV + PROJECT .ENV + DEBUG CLI = ABSOLUTE SECURITY**
 

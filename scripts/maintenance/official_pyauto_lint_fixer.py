@@ -283,7 +283,9 @@ class OfficialPyAutoLintFixer:
         # Get target projects
         projects = self._discover_projects()
         self.logger.info(
-            "📁 Found %d target projects: %s", len(projects), [p.name for p in projects],
+            "📁 Found %d target projects: %s",
+            len(projects),
+            [p.name for p in projects],
         )
 
         # Process each project
@@ -378,7 +380,9 @@ class OfficialPyAutoLintFixer:
         return any(pattern in path.name for pattern in self.config.exclude_patterns)
 
     def _process_project(
-        self, project_path: Path, dry_run: bool,
+        self,
+        project_path: Path,
+        dry_run: bool,
     ) -> ProjectProcessingResult:
         """Process a single project with enterprise controls."""
         project_start = datetime.now(UTC)
@@ -638,7 +642,8 @@ class OfficialPyAutoLintFixer:
                 capture_output=True,
                 text=True,
                 cwd=self.workspace_root,
-                timeout=60, check=False,
+                timeout=60,
+                check=False,
             )
             return (
                 len(result.stdout.strip().split("\n")) if result.stdout.strip() else 0
@@ -746,12 +751,16 @@ Examples:
     )
 
     parser.add_argument(
-        "--version", action="version", version=f"%(prog)s {__version__}",
+        "--version",
+        action="version",
+        version=f"%(prog)s {__version__}",
     )
     parser.add_argument("--config", type=Path, help="Configuration file path")
     parser.add_argument("--projects", nargs="+", help="Specific projects to process")
     parser.add_argument(
-        "--dry-run", action="store_true", help="Analyze without applying fixes",
+        "--dry-run",
+        action="store_true",
+        help="Analyze without applying fixes",
     )
     parser.add_argument("--verbose", action="store_true", help="Enable verbose logging")
     parser.add_argument("--log-file", type=Path, help="Log file path")

@@ -63,23 +63,28 @@ class FlxTestConfig(BaseModel):
     # Coverage options
     enable_coverage: bool = Field(default=True, description="Enable coverage reporting")
     coverage_threshold: float = Field(
-        default=80.0, description="Minimum coverage threshold",
+        default=80.0,
+        description="Minimum coverage threshold",
     )
 
     # Parallel execution
     parallel_workers: int = Field(
-        default=4, description="Number of parallel test workers",
+        default=4,
+        description="Number of parallel test workers",
     )
 
     # Output options
     generate_html_report: bool = Field(
-        default=True, description="Generate HTML test report",
+        default=True,
+        description="Generate HTML test report",
     )
     generate_json_report: bool = Field(
-        default=True, description="Generate JSON test report",
+        default=True,
+        description="Generate JSON test report",
     )
     generate_junit_xml: bool = Field(
-        default=True, description="Generate JUnit XML report",
+        default=True,
+        description="Generate JUnit XML report",
     )
 
     # Timeout settings
@@ -99,14 +104,17 @@ class FlxTestResult(BaseModel):
     skipped_tests: int = Field(description="Number of skipped tests")
     execution_time: float = Field(description="Execution time in seconds")
     coverage_percentage: float | None = Field(
-        default=None, description="Code coverage percentage",
+        default=None,
+        description="Code coverage percentage",
     )
     success: bool = Field(description="Whether all tests passed")
     error_message: str | None = Field(
-        default=None, description="Error message if failed",
+        default=None,
+        description="Error message if failed",
     )
     output_files: list[str] = Field(
-        default_factory=list, description="Generated output files",
+        default_factory=list,
+        description="Generated output files",
     )
 
 
@@ -169,7 +177,9 @@ class FlxTestRunner:
         return self.results
 
     async def _run_project_tests(
-        self, project_dir: str, category: str,
+        self,
+        project_dir: str,
+        category: str,
     ) -> FlxTestResult:
         """Run tests for a specific flx_project and category."""
         project_name = Path(project_dir).name

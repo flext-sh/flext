@@ -20,7 +20,8 @@ class QuickTestConfig(BaseModel):
     model_config = ConfigDict(strict=True, extra="forbid")
 
     flx_project: str | None = Field(
-        default=None, description="Specific flx_project to test",
+        default=None,
+        description="Specific flx_project to test",
     )
     category: str = Field(default="unit", description="Test category to run")
     verbose: bool = Field(default=False, description="Verbose output")

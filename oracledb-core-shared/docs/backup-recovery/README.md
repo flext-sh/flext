@@ -20,12 +20,14 @@ Comprehensive guide covering all aspects of Oracle Database backup and recovery,
 ### Backup Types
 
 #### Physical Backups
+
 - **Cold Backups**: Database shutdown during backup
 - **Hot Backups**: Database online during backup
 - **RMAN Backups**: Using Recovery Manager
 - **Image Copies**: Exact copies of database files
 
 #### Logical Backups
+
 - **Data Pump Export**: Schema and table exports
 - **Traditional Export**: Legacy export utility
 - **Flashback Export**: Point-in-time logical backup
@@ -33,16 +35,19 @@ Comprehensive guide covering all aspects of Oracle Database backup and recovery,
 ### Recovery Types
 
 #### Instance Recovery
+
 - Automatic recovery after instance crash
 - Uses redo logs and undo data
 - No DBA intervention required
 
 #### Media Recovery
+
 - Recovery from disk failure
 - Uses backup files and archived logs
 - Requires DBA intervention
 
 #### Point-in-Time Recovery
+
 - Recovery to specific time/SCN
 - Uses backup and archived logs
 - May result in data loss
@@ -87,6 +92,7 @@ Comprehensive guide covering all aspects of Oracle Database backup and recovery,
 ### RMAN Configuration
 
 #### Initial RMAN Setup
+
 ```bash
 # Connect to RMAN
 rman target /
@@ -119,6 +125,7 @@ CONFIGURE ARCHIVELOG DELETION POLICY TO APPLIED ON ALL STANDBY;
 ```
 
 #### Recovery Catalog Setup
+
 ```sql
 -- Create recovery catalog database
 CREATE USER rman_catalog IDENTIFIED BY "CatalogPassword123!"
@@ -142,6 +149,7 @@ REGISTER DATABASE;
 ### RMAN Backup Operations
 
 #### Full Database Backup
+
 ```bash
 # Full database backup
 BACKUP DATABASE PLUS ARCHIVELOG;
@@ -158,6 +166,7 @@ DATABASE PLUS ARCHIVELOG;
 ```
 
 #### Incremental Backups
+
 ```bash
 # Level 0 incremental backup (equivalent to full backup)
 BACKUP INCREMENTAL LEVEL 0 DATABASE;
@@ -174,6 +183,7 @@ USING FILE '/opt/oracle/oradata/change_tracking.f';
 ```
 
 #### Tablespace and Datafile Backups
+
 ```bash
 # Backup specific tablespace
 BACKUP TABLESPACE users, temp;
@@ -189,6 +199,7 @@ BACKUP TABLESPACE readonly_data SKIP READONLY;
 ```
 
 #### Archive Log Backups
+
 ```bash
 # Backup all archive logs
 BACKUP ARCHIVELOG ALL;
@@ -206,6 +217,7 @@ BACKUP ARCHIVELOG ALL FORMAT '/backup/arch1/%U', '/backup/arch2/%U';
 ### RMAN Restore and Recovery
 
 #### Complete Database Recovery
+
 ```bash
 # Startup mount for restore
 STARTUP MOUNT;
@@ -224,6 +236,7 @@ ALTER DATABASE OPEN RESETLOGS;
 ```
 
 #### Tablespace Recovery
+
 ```bash
 # Take tablespace offline
 ALTER TABLESPACE users OFFLINE IMMEDIATE;
@@ -237,6 +250,7 @@ ALTER TABLESPACE users ONLINE;
 ```
 
 #### Datafile Recovery
+
 ```bash
 # Take datafile offline
 ALTER DATABASE DATAFILE '/opt/oracle/oradata/users01.dbf' OFFLINE;
@@ -250,6 +264,7 @@ ALTER DATABASE DATAFILE '/opt/oracle/oradata/users01.dbf' ONLINE;
 ```
 
 #### Point-in-Time Recovery
+
 ```bash
 # Restore database to specific time
 SHUTDOWN IMMEDIATE;
@@ -269,6 +284,7 @@ ALTER DATABASE OPEN RESETLOGS;
 ### RMAN Maintenance
 
 #### Backup Validation
+
 ```bash
 # Validate all backups
 VALIDATE BACKUPSET ALL;
@@ -284,6 +300,7 @@ BACKUP VALIDATE CHECK LOGICAL DATABASE;
 ```
 
 #### Backup Cleanup
+
 ```bash
 # Delete obsolete backups based on retention policy
 DELETE OBSOLETE;
@@ -307,6 +324,7 @@ LIST INCARNATION;
 ## 📊 Backup Strategies
 
 ### Full Backup Strategy
+
 ```bash
 #!/bin/bash
 # Full backup script
@@ -335,6 +353,7 @@ EOF
 ```
 
 ### Incremental Backup Strategy
+
 ```bash
 #!/bin/bash
 # Incremental backup strategy
@@ -365,6 +384,7 @@ EOF
 ```
 
 ### Hot Backup Strategy (Without RMAN)
+
 ```sql
 -- Put tablespaces in backup mode
 ALTER TABLESPACE system BEGIN BACKUP;
@@ -387,6 +407,7 @@ ALTER DATABASE BACKUP CONTROLFILE TO '/backup/hot/control.ctl';
 ## 🔧 Recovery Scenarios
 
 ### Complete Database Loss
+
 ```bash
 # 1. Restore SPFILE
 RESTORE SPFILE FROM AUTOBACKUP;
@@ -411,6 +432,7 @@ ALTER DATABASE OPEN RESETLOGS;
 ```
 
 ### Control File Loss
+
 ```bash
 # If one control file is lost (and you have multiple copies)
 SHUTDOWN IMMEDIATE;
@@ -427,6 +449,7 @@ ALTER DATABASE OPEN RESETLOGS;
 ```
 
 ### Redo Log File Loss
+
 ```sql
 -- If inactive redo log is lost
 ALTER DATABASE DROP LOGFILE GROUP 2;
@@ -443,6 +466,7 @@ ALTER DATABASE OPEN RESETLOGS;
 ```
 
 ### Temporary File Loss
+
 ```sql
 -- Drop and recreate temporary tablespace
 DROP TABLESPACE temp INCLUDING CONTENTS AND DATAFILES;
@@ -455,6 +479,7 @@ ALTER DATABASE DEFAULT TEMPORARY TABLESPACE temp;
 ```
 
 ### System Tablespace Corruption
+
 ```bash
 # Restore and recover SYSTEM tablespace
 SHUTDOWN IMMEDIATE;
@@ -503,6 +528,7 @@ ALTER DATABASE OPEN;
 ### Physical Standby Setup
 
 #### Primary Database Configuration
+
 ```sql
 -- Enable archiving
 ALTER DATABASE ARCHIVELOG;
@@ -533,6 +559,7 @@ ALTER SYSTEM SET fal_client = primary;
 ```
 
 #### Standby Database Creation
+
 ```bash
 # 1. Create parameter file for standby
 # Copy primary pfile and modify:
@@ -562,6 +589,7 @@ DUPLICATE TARGET DATABASE
 ```
 
 #### Starting Standby Database
+
 ```sql
 -- Start standby in mount mode
 STARTUP MOUNT;
@@ -577,6 +605,7 @@ FROM v$managed_standby;
 ### Logical Standby Setup
 
 #### Convert Physical to Logical Standby
+
 ```sql
 -- On primary database
 EXEC DBMS_LOGSTDBY.BUILD;
@@ -597,6 +626,7 @@ ALTER DATABASE START LOGICAL STANDBY APPLY;
 ### Data Guard Broker
 
 #### Broker Configuration
+
 ```sql
 -- Enable broker on primary
 ALTER SYSTEM SET dg_broker_start = TRUE;
@@ -623,6 +653,7 @@ SHOW DATABASE standby;
 ```
 
 #### Switchover and Failover
+
 ```sql
 -- Planned switchover
 SWITCHOVER TO standby;
@@ -637,6 +668,7 @@ REINSTATE DATABASE primary;
 ### Snapshot Standby
 
 #### Create Snapshot Standby
+
 ```sql
 -- Stop managed recovery
 ALTER DATABASE RECOVER MANAGED STANDBY DATABASE CANCEL;
@@ -661,6 +693,7 @@ ALTER DATABASE RECOVER MANAGED STANDBY DATABASE DISCONNECT FROM SESSION;
 ### Flashback Database
 
 #### Configuration
+
 ```sql
 -- Set flashback retention target
 ALTER SYSTEM SET db_flashback_retention_target = 1440; -- 24 hours
@@ -679,6 +712,7 @@ FROM v$flashback_database_log;
 ```
 
 #### Flashback Database Operations
+
 ```sql
 -- Flashback database to specific time
 SHUTDOWN IMMEDIATE;
@@ -703,6 +737,7 @@ FLASHBACK DATABASE TO RESTORE POINT before_upgrade;
 ### Flashback Table
 
 #### Table-Level Flashback
+
 ```sql
 -- Enable row movement
 ALTER TABLE employees ENABLE ROW MOVEMENT;
@@ -723,6 +758,7 @@ FLASHBACK TABLE employees TO RESTORE POINT before_delete;
 ### Flashback Query
 
 #### Query Historical Data
+
 ```sql
 -- Query data as of specific time
 SELECT * FROM employees
@@ -747,6 +783,7 @@ WHERE current.employee_id = historical.employee_id
 ### Flashback Drop (Recycle Bin)
 
 #### Recycle Bin Operations
+
 ```sql
 -- Show dropped objects
 SHOW RECYCLEBIN;
@@ -772,11 +809,13 @@ ALTER SYSTEM SET recyclebin = OFF;
 ### Disaster Recovery Planning
 
 #### Recovery Time Objective (RTO)
+
 - **Definition**: Maximum acceptable downtime
 - **Factors**: Business requirements, infrastructure, procedures
 - **Measurement**: Time from disaster to full service restoration
 
 #### Recovery Point Objective (RPO)
+
 - **Definition**: Maximum acceptable data loss
 - **Factors**: Backup frequency, replication lag, business tolerance
 - **Measurement**: Time between last backup and disaster
@@ -784,6 +823,7 @@ ALTER SYSTEM SET recyclebin = OFF;
 ### Disaster Recovery Strategies
 
 #### Cold Site Strategy
+
 ```bash
 # Characteristics:
 # - Lowest cost option
@@ -799,6 +839,7 @@ ALTER SYSTEM SET recyclebin = OFF;
 ```
 
 #### Hot Site Strategy
+
 ```sql
 -- Characteristics:
 -- - Highest cost option
@@ -815,6 +856,7 @@ FAILOVER TO standby;
 ```
 
 #### Warm Site Strategy
+
 ```bash
 # Characteristics:
 # - Moderate cost option
@@ -831,6 +873,7 @@ FAILOVER TO standby;
 ### Cross-Platform Disaster Recovery
 
 #### RMAN Cross-Platform Backup
+
 ```bash
 # Create cross-platform backup
 RMAN> CONVERT DATABASE NEW DATABASE 'target_db'
@@ -840,6 +883,7 @@ RMAN> CONVERT DATABASE NEW DATABASE 'target_db'
 ```
 
 #### Data Pump Cross-Platform Export
+
 ```bash
 # Full database export
 expdp system/password FULL=Y DIRECTORY=dp_dir DUMPFILE=full_db.dmp
@@ -853,17 +897,21 @@ impdp system/password FULL=Y DIRECTORY=dp_dir DUMPFILE=full_db.dmp
 ### Testing Disaster Recovery
 
 #### DR Testing Checklist
+
 1. **Backup Validation**
+
    - Verify backup integrity
    - Test restore procedures
    - Validate recovery time
 
 2. **Failover Testing**
+
    - Test Data Guard switchover
    - Validate application connectivity
    - Measure failover time
 
 3. **Failback Testing**
+
    - Test return to primary site
    - Validate data synchronization
    - Measure failback time
@@ -878,6 +926,7 @@ impdp system/password FULL=Y DIRECTORY=dp_dir DUMPFILE=full_db.dmp
 ### Backup Best Practices
 
 #### Strategy Guidelines
+
 - **3-2-1 Rule**: 3 copies of data, 2 different media types, 1 offsite
 - **Regular Testing**: Test restore procedures regularly
 - **Automation**: Automate backup processes
@@ -885,6 +934,7 @@ impdp system/password FULL=Y DIRECTORY=dp_dir DUMPFILE=full_db.dmp
 - **Documentation**: Maintain current procedures
 
 #### RMAN Best Practices
+
 ```bash
 # Use block change tracking for faster incrementals
 ALTER DATABASE ENABLE BLOCK CHANGE TRACKING;
@@ -910,6 +960,7 @@ VALIDATE BACKUPSET ALL;
 ### Recovery Best Practices
 
 #### Preparation
+
 - Maintain current documentation
 - Practice recovery procedures
 - Keep emergency contact list
@@ -917,6 +968,7 @@ VALIDATE BACKUPSET ALL;
 - Document network configurations
 
 #### Execution
+
 - Follow documented procedures
 - Validate each step before proceeding
 - Maintain communication with stakeholders
@@ -926,6 +978,7 @@ VALIDATE BACKUPSET ALL;
 ### Monitoring and Alerting
 
 #### Backup Monitoring
+
 ```sql
 -- Monitor backup status
 SELECT session_key, input_type, status,
@@ -948,6 +1001,7 @@ ORDER BY first_time;
 ```
 
 #### Alert Configuration
+
 ```sql
 -- Set up email notifications for backup failures
 -- (Implementation depends on your environment)
@@ -964,6 +1018,7 @@ ORDER BY originating_timestamp DESC;
 ### Common Backup Issues
 
 #### RMAN-20202: Tablespace doesn't exist
+
 ```bash
 # Cause: Tablespace dropped but still referenced in backup script
 # Solution: Update backup script or use dynamic SQL
@@ -977,6 +1032,7 @@ BACKUP TABLESPACE (SELECT tablespace_name FROM dba_tablespaces
 ```
 
 #### ORA-19809: Limit exceeded for recovery files
+
 ```sql
 -- Cause: Recovery area full
 -- Solution: Increase size or clean up old files
@@ -993,6 +1049,7 @@ DELETE EXPIRED BACKUP;
 ```
 
 #### RMAN-06059: Expected archived log not found
+
 ```bash
 # Cause: Missing archive log file
 # Solution: Restore from backup or skip if acceptable
@@ -1010,6 +1067,7 @@ RECOVER DATABASE UNTIL CANCEL;
 ### Common Recovery Issues
 
 #### ORA-01194: File needs more recovery
+
 ```sql
 -- Cause: Datafile is older than control file
 -- Solution: Restore newer backup or use backup control file
@@ -1026,6 +1084,7 @@ RECOVER DATABASE USING BACKUP CONTROLFILE;
 ```
 
 #### ORA-01547: Warning: RECOVER succeeded but OPEN RESETLOGS would fail
+
 ```sql
 -- Cause: Online redo logs needed for recovery
 -- Solution: Apply more redo or use RESETLOGS
@@ -1039,6 +1098,7 @@ ALTER DATABASE OPEN RESETLOGS;
 ```
 
 #### ORA-00283: Recovery session canceled due to errors
+
 ```bash
 # Cause: Various recovery errors
 # Solution: Check alert log and trace files

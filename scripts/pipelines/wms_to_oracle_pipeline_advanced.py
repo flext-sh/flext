@@ -1,5 +1,4 @@
-"""Cleaned version of pipeline file - syntax errors fixed
-"""
+"""Cleaned version of pipeline file - syntax errors fixed"""
 
 
 class AdvancedPipelineError(Exception):

@@ -15,6 +15,7 @@
 ## 🎯 PROJECT-SPECIFIC CONFIGURATION
 
 ### Virtual Environment Usage
+
 ```bash
 # MANDATORY: Use workspace venv
 source /home/marlonsc/pyauto/.venv/bin/activate
@@ -22,6 +23,7 @@ source /home/marlonsc/pyauto/.venv/bin/activate
 ```
 
 ### Agent Coordination
+
 ```bash
 # Read workspace coordination first
 cat /home/marlonsc/pyauto/.token | tail -5
@@ -29,6 +31,7 @@ cat /home/marlonsc/pyauto/.token | tail -5
 ```
 
 ### Project-Specific Environment Variables
+
 ```bash
 # Tap Oracle Advanced specific configurations
 export TAP_ORACLE_HOST=oracle.enterprise.com
@@ -50,6 +53,7 @@ export TAP_ORACLE_ENABLE_SQL_LOGGING=false
 ## 🏗️ TAP ORACLE ADVANCED ARCHITECTURE
 
 ### **Purpose & Role**
+
 - **Enterprise Oracle Extractor**: Modern Singer tap for high-performance Oracle data extraction
 - **Advanced SQL Support**: Custom queries, complex joins, and aggregations as Singer streams
 - **Performance Optimized**: Connection pooling, batch processing, and parallel query execution
@@ -57,6 +61,7 @@ export TAP_ORACLE_ENABLE_SQL_LOGGING=false
 - **Modern Development Stack**: Python 3.13+, Singer SDK 0.45.0+, latest Oracle patterns
 
 ### **Core Advanced Components**
+
 ```python
 # Tap Oracle Advanced structure
 src/tap_oracle_advanced/
@@ -67,6 +72,7 @@ src/tap_oracle_advanced/
 ```
 
 ### **Enterprise Oracle Features**
+
 - **Multiple Connection Types**: SID and Service Name support with connection pooling
 - **Schema Discovery**: Dynamic table, view, and materialized view detection
 - **Custom Query Streams**: SQL queries as configurable Singer streams
@@ -78,6 +84,7 @@ src/tap_oracle_advanced/
 ## 🔧 PROJECT-SPECIFIC TECHNICAL DETAILS
 
 ### **Development Commands**
+
 ```bash
 # MANDATORY: Always from workspace venv
 source /home/marlonsc/pyauto/.venv/bin/activate
@@ -97,6 +104,7 @@ tap-oracle-advanced --config config.json --catalog catalog.json --state state.js
 ```
 
 ### **Oracle Connection Testing**
+
 ```bash
 # Test Oracle connectivity
 tap-oracle-advanced --config config.json --test
@@ -111,6 +119,7 @@ tap-oracle-advanced --config config.json --catalog catalog.json --debug | head -
 ```
 
 ### **Advanced Oracle Integration Testing**
+
 ```bash
 # Test custom query streams
 cat > custom_config.json << 'EOF'
@@ -137,6 +146,7 @@ tap-oracle-advanced --config custom_config.json --discover
 ## 🚨 PROJECT-SPECIFIC KNOWN ISSUES
 
 ### **Oracle Advanced Integration Challenges**
+
 - **Connection Pool Management**: Complex connection lifecycle with Oracle Instant Client
 - **Large Object Handling**: CLOB/BLOB streaming for memory-efficient processing
 - **Oracle Data Type Complexity**: Advanced Oracle types requiring careful mapping
@@ -144,6 +154,7 @@ tap-oracle-advanced --config custom_config.json --discover
 - **Custom Query Validation**: Complex SQL query validation and error handling
 
 ### **Singer SDK Advanced Considerations**
+
 ```python
 # Oracle-specific Singer advanced patterns
 class OracleAdvancedSingerPatterns:
@@ -205,6 +216,7 @@ class OracleAdvancedSingerPatterns:
 ```
 
 ### **Production Oracle Edge Cases**
+
 ```bash
 # Common Oracle advanced extraction issues
 1. Connection Pool Exhaustion: Too many concurrent connections
@@ -219,6 +231,7 @@ class OracleAdvancedSingerPatterns:
 ## 🎯 PROJECT-SPECIFIC SUCCESS METRICS
 
 ### **Singer Protocol Advanced Compliance**
+
 - **Schema Discovery Performance**: <30 seconds discovery for 1000+ table schemas
 - **Data Extraction Throughput**: >100,000 records/minute for large Oracle tables
 - **Memory Efficiency**: <2GB memory usage for unlimited data extraction
@@ -226,6 +239,7 @@ class OracleAdvancedSingerPatterns:
 - **Custom Query Performance**: <5 seconds execution for complex analytical queries
 
 ### **Enterprise Oracle Integration Goals**
+
 - **Database Compatibility**: Support for Oracle 19c, 21c, 23c databases
 - **Schema Scalability**: Handle schemas with 10,000+ tables and views
 - **Data Type Coverage**: 100% Oracle data type mapping accuracy
@@ -237,18 +251,21 @@ class OracleAdvancedSingerPatterns:
 ## 🔗 PROJECT-SPECIFIC INTEGRATIONS
 
 ### **Singer Ecosystem Advanced Integration**
+
 - **Target Compatibility**: Optimized for all Singer-compliant targets
 - **Meltano Plugin**: Advanced Meltano Hub plugin with custom configuration
 - **Schema Evolution**: Automatic schema change detection and adaptation
 - **State Management**: Advanced incremental sync with multiple replication strategies
 
 ### **PyAuto Ecosystem Integration**
+
 - **flx-database-oracle**: Shared Oracle connection patterns and optimization
 - **target-oracle-advanced**: Perfect companion for round-trip Oracle operations
 - **tap-oracle-wms**: Specialized WMS version based on advanced patterns
 - **oracledb-core-shared**: Shared Oracle database models and utilities
 
 ### **Enterprise Oracle Integration**
+
 ```python
 # Production Oracle advanced configuration
 class ProductionOracleAdvancedConfig:
@@ -312,6 +329,7 @@ class ProductionOracleAdvancedConfig:
 ## 📊 PROJECT-SPECIFIC MONITORING
 
 ### **Oracle Advanced Tap Metrics**
+
 ```python
 # Key metrics for Oracle advanced tap monitoring
 TAP_ORACLE_ADVANCED_METRICS = {
@@ -325,6 +343,7 @@ TAP_ORACLE_ADVANCED_METRICS = {
 ```
 
 ### **Oracle Database Health Monitoring**
+
 ```bash
 # Comprehensive Oracle monitoring
 tap-oracle-advanced --config config.json --test --detailed
@@ -337,12 +356,14 @@ tap-oracle-advanced --config config.json --performance-test --duration 60
 ## 📋 PROJECT-SPECIFIC MAINTENANCE
 
 ### **Regular Maintenance Tasks**
+
 - **Daily**: Monitor extraction performance and connection pool health
 - **Weekly**: Review custom query performance and optimize SQL
 - **Monthly**: Update Oracle client libraries and test compatibility
 - **Quarterly**: Performance benchmarking and optimization review
 
 ### **Singer SDK Advanced Updates**
+
 ```bash
 # Keep Singer SDK and Oracle dependencies updated
 pip install --upgrade singer-sdk oracledb
@@ -353,6 +374,7 @@ singer-validate-schema --schema advanced_schema.json
 ```
 
 ### **Emergency Procedures**
+
 ```bash
 # Oracle advanced tap emergency troubleshooting
 1. Test Oracle connectivity: sqlplus user/password@host:port/service_name
@@ -370,6 +392,6 @@ singer-validate-schema --schema advanced_schema.json
 
 ---
 
-*Última Atualização: 2025-06-26*
-*Próxima Revisão: Semanal durante desenvolvimento ativo*
-*Status: DEVELOPMENT - Desenvolvimento ativo de funcionalidades avançadas Oracle*
+_Última Atualização: 2025-06-26_
+_Próxima Revisão: Semanal durante desenvolvimento ativo_
+_Status: DEVELOPMENT - Desenvolvimento ativo de funcionalidades avançadas Oracle_

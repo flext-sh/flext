@@ -13,12 +13,14 @@ A modern, high-performance Singer tap for extracting data from Oracle databases,
 ## ✨ Features
 
 ### 🚀 **Modern Architecture**
+
 - **Python 3.13+** with full type safety and modern syntax
 - **Singer SDK 0.45.0+** with latest features and best practices
 - **FLX Framework integration** for robust database connections
 - **Hexagonal architecture** with clear separation of concerns
 
 ### 🔧 **Advanced Oracle Support**
+
 - **Multiple connection types**: SID and Service Name support
 - **Connection pooling** with configurable pool sizes
 - **Advanced query optimization** with bind variables and array fetching
@@ -26,12 +28,14 @@ A modern, high-performance Singer tap for extracting data from Oracle databases,
 - **Custom SQL queries** as configurable streams
 
 ### ⚡ **High Performance**
+
 - **Async/await patterns** throughout for optimal performance
 - **Batch processing** with configurable batch sizes
 - **Cursor array fetching** for efficient memory usage
 - **Parallel query execution** support
 
 ### 🛡️ **Enterprise Ready**
+
 - **Comprehensive error handling** with retry mechanisms
 - **Structured logging** with contextual information
 - **Production monitoring** with performance metrics
@@ -40,16 +44,19 @@ A modern, high-performance Singer tap for extracting data from Oracle databases,
 ## 🛠️ Installation
 
 ### Prerequisites
+
 - Python 3.13 or higher
 - Oracle Database 19c or higher
 - Oracle Instant Client (for oracledb driver)
 
 ### Install from PyPI (when published)
+
 ```bash
 pip install tap-oracle-advanced
 ```
 
 ### Install from Source
+
 ```bash
 git clone <repository-url>
 cd tap-oracle-advanced
@@ -57,6 +64,7 @@ poetry install
 ```
 
 ### Development Installation
+
 ```bash
 git clone <repository-url>
 cd tap-oracle-advanced
@@ -105,39 +113,39 @@ tap-oracle-advanced --config config.json --catalog catalog.json --state state.js
 
 ### Required Settings
 
-| Setting | Type | Description |
-|---------|------|-------------|
-| `host` | string | Oracle database host |
-| `user` | string | Database username |
-| `password` | string | Database password |
+| Setting    | Type   | Description          |
+| ---------- | ------ | -------------------- |
+| `host`     | string | Oracle database host |
+| `user`     | string | Database username    |
+| `password` | string | Database password    |
 
 ### Connection Settings
 
-| Setting | Type | Default | Description |
-|---------|------|---------|-------------|
-| `port` | integer | 1521 | Database port |
-| `sid` | string | - | Oracle SID (alternative to service_name) |
-| `service_name` | string | - | Oracle service name (alternative to sid) |
-| `connection_pool_size` | integer | 5 | Maximum connections in pool |
-| `connection_timeout` | integer | 30 | Connection timeout (seconds) |
-| `command_timeout` | integer | 300 | SQL command timeout (seconds) |
+| Setting                | Type    | Default | Description                              |
+| ---------------------- | ------- | ------- | ---------------------------------------- |
+| `port`                 | integer | 1521    | Database port                            |
+| `sid`                  | string  | -       | Oracle SID (alternative to service_name) |
+| `service_name`         | string  | -       | Oracle service name (alternative to sid) |
+| `connection_pool_size` | integer | 5       | Maximum connections in pool              |
+| `connection_timeout`   | integer | 30      | Connection timeout (seconds)             |
+| `command_timeout`      | integer | 300     | SQL command timeout (seconds)            |
 
 ### Discovery and Filtering
 
-| Setting | Type | Default | Description |
-|---------|------|---------|-------------|
-| `default_schema` | string | - | Default schema for discovery |
-| `schema_filter` | array | - | Schemas to include |
-| `table_filter` | array | - | Table patterns to include |
-| `exclude_tables` | array | - | Table patterns to exclude |
+| Setting          | Type   | Default | Description                  |
+| ---------------- | ------ | ------- | ---------------------------- |
+| `default_schema` | string | -       | Default schema for discovery |
+| `schema_filter`  | array  | -       | Schemas to include           |
+| `table_filter`   | array  | -       | Table patterns to include    |
+| `exclude_tables` | array  | -       | Table patterns to exclude    |
 
 ### Performance Settings
 
-| Setting | Type | Default | Description |
-|---------|------|---------|-------------|
-| `batch_size` | integer | 10000 | Records per batch |
-| `cursor_array_size` | integer | 1000 | Cursor array size |
-| `use_binds_for_partition` | boolean | true | Use bind variables |
+| Setting                   | Type    | Default | Description        |
+| ------------------------- | ------- | ------- | ------------------ |
+| `batch_size`              | integer | 10000   | Records per batch  |
+| `cursor_array_size`       | integer | 1000    | Cursor array size  |
+| `use_binds_for_partition` | boolean | true    | Use bind variables |
 
 ### Advanced Configuration
 
@@ -188,16 +196,19 @@ tap-oracle-advanced --config config.json --catalog catalog.json --state state.js
 The tap automatically discovers:
 
 ### 🗂️ **Standard Streams**
+
 - **Tables**: All user tables in specified schemas
 - **Views**: All user views in specified schemas
 - **Materialized Views**: All user materialized views
 
 ### 🔍 **Custom Query Streams**
+
 - Configure custom SQL queries as streams
 - Support for complex joins and aggregations
 - Configurable replication methods
 
 ### 📈 **Stream Features**
+
 - **Automatic schema detection** from Oracle metadata
 - **Incremental sync support** with replication keys
 - **Primary key detection** for upsert operations
@@ -205,23 +216,25 @@ The tap automatically discovers:
 
 ## 🔄 Data Type Mapping
 
-| Oracle Type | Singer Type | Notes |
-|-------------|-------------|-------|
-| VARCHAR2, CHAR | string | Full Unicode support |
-| NUMBER | integer/number | Based on precision/scale |
-| DATE, TIMESTAMP | datetime | ISO 8601 format |
-| CLOB, LONG | string | Streamed for large values |
-| BLOB, RAW | string | Base64 encoded |
-| BOOLEAN (23c+) | boolean | Native boolean support |
+| Oracle Type     | Singer Type    | Notes                     |
+| --------------- | -------------- | ------------------------- |
+| VARCHAR2, CHAR  | string         | Full Unicode support      |
+| NUMBER          | integer/number | Based on precision/scale  |
+| DATE, TIMESTAMP | datetime       | ISO 8601 format           |
+| CLOB, LONG      | string         | Streamed for large values |
+| BLOB, RAW       | string         | Base64 encoded            |
+| BOOLEAN (23c+)  | boolean        | Native boolean support    |
 
 ## 🧪 Testing
 
 ### Run Unit Tests
+
 ```bash
 poetry run pytest
 ```
 
 ### Run Integration Tests
+
 ```bash
 # Requires Oracle database connection
 export TAP_ORACLE_TEST_HOST=localhost
@@ -231,6 +244,7 @@ poetry run pytest tests/integration/
 ```
 
 ### Run with Coverage
+
 ```bash
 poetry run pytest --cov=tap_oracle_advanced --cov-report=html
 ```
@@ -238,6 +252,7 @@ poetry run pytest --cov=tap_oracle_advanced --cov-report=html
 ## 📈 Performance Tuning
 
 ### Connection Optimization
+
 ```json
 {
   "connection_pool_size": 10,
@@ -247,6 +262,7 @@ poetry run pytest --cov=tap_oracle_advanced --cov-report=html
 ```
 
 ### Query Optimization
+
 ```json
 {
   "use_binds_for_partition": true,
@@ -256,6 +272,7 @@ poetry run pytest --cov=tap_oracle_advanced --cov-report=html
 ```
 
 ### Memory Management
+
 ```json
 {
   "stream_buffer_size": 100000,
@@ -268,6 +285,7 @@ poetry run pytest --cov=tap_oracle_advanced --cov-report=html
 ### Common Issues
 
 #### Connection Errors
+
 ```bash
 # Test connection
 tap-oracle-advanced --config config.json --test
@@ -277,6 +295,7 @@ export TAP_ORACLE_LOG_LEVEL=DEBUG
 ```
 
 #### Performance Issues
+
 ```bash
 # Monitor SQL execution
 export TAP_ORACLE_ENABLE_SQL_LOGGING=true
@@ -286,6 +305,7 @@ export TAP_ORACLE_ENABLE_SQL_LOGGING=true
 ```
 
 #### Schema Discovery Issues
+
 ```bash
 # Check user permissions
 SELECT * FROM USER_TAB_PRIVS WHERE PRIVILEGE LIKE '%SELECT%';
@@ -299,6 +319,7 @@ SELECT OWNER, TABLE_NAME FROM ALL_TABLES WHERE OWNER = 'YOUR_SCHEMA';
 We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
 
 ### Development Setup
+
 ```bash
 git clone <repository-url>
 cd tap-oracle-advanced
@@ -307,6 +328,7 @@ pre-commit install
 ```
 
 ### Code Quality
+
 ```bash
 # Linting and formatting
 poetry run ruff check .
