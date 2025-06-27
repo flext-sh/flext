@@ -61,15 +61,3 @@
 [submodule "target-oracle-wms"]
 	path = target-oracle-wms
 	url = git@github.com:datacosmos-br/target-oracle-wms.git
-[submodule "community-tools"]
-	path = community-tools
-	url = git@github.com:datacosmos-br/community-tools.git
-[submodule "oracledb-core-shared"]
-	path = oracledb-core-shared
-	url = git@github.com:datacosmos-br/oracledb-core-shared.git
-[submodule "tap-oracle-advanced"]
-	path = tap-oracle-advanced
-	url = git@github.com:datacosmos-br/tap-oracle-advanced.git
-[submodule "target-oracle-advanced"]
-	path = target-oracle-advanced
-	url = git@github.com:datacosmos-br/target-oracle-advanced.git
