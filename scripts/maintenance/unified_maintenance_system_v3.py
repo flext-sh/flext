@@ -107,7 +107,8 @@ class SignalHandler:
         """Handle interrupt signals."""
         self.interrupted = True
         console.print(
-            "\n⚠️  Interrupt received, finishing current operation...", style="yellow",
+            "\n⚠️  Interrupt received, finishing current operation...",
+            style="yellow",
         )
         logger.warning(f"Received signal {signum}, initiating graceful shutdown")
 
@@ -190,7 +191,10 @@ def safe_read_file(file_path: Path, max_size_mb: int = 100) -> tuple[str | None,
 
 
 def safe_write_file(
-    file_path: Path, content: str, encoding: str = "utf-8", create_backup: bool = True,
+    file_path: Path,
+    content: str,
+    encoding: str = "utf-8",
+    create_backup: bool = True,
 ) -> tuple[bool, str | None]:
     """Safely write to a file with atomic operations and backup.
 
@@ -223,7 +227,9 @@ def safe_write_file(
     try:
         # Create temporary file in same directory for atomic rename
         temp_fd, temp_path = tempfile.mkstemp(
-            dir=file_path.parent, prefix=f".{file_path.name}.", suffix=".tmp",
+            dir=file_path.parent,
+            prefix=f".{file_path.name}.",
+            suffix=".tmp",
         )
 
         # Write content
@@ -443,7 +449,8 @@ class MaintenanceConfig:
         """Initialize default tool configurations."""
         self.tools = {
             ToolType.RUFF: ToolConfig(
-                check_args=["check"], fix_args=["check", "--fix", "--unsafe-fixes"],
+                check_args=["check"],
+                fix_args=["check", "--fix", "--unsafe-fixes"],
             ),
             ToolType.MYPY: ToolConfig(
                 check_args=["--strict", "--no-error-summary"],
@@ -461,7 +468,8 @@ class MaintenanceConfig:
             ),
             ToolType.PYUPGRADE: ToolConfig(fix_args=["--py313-plus"]),
             ToolType.DOCFORMATTER: ToolConfig(
-                check_args=["--check"], fix_args=["--in-place"],
+                check_args=["--check"],
+                fix_args=["--in-place"],
             ),
             ToolType.BANDIT: ToolConfig(
                 check_args=["-r", "-f", "json"],
@@ -545,7 +553,8 @@ class MaintenanceTool(ABC):
                     [self._tool_path, "--version"],
                     capture_output=True,
                     text=True,
-                    timeout=5, check=False,
+                    timeout=5,
+                    check=False,
                 )
                 self._is_available = result.returncode == 0
                 if self._is_available:
@@ -567,7 +576,9 @@ class MaintenanceTool(ABC):
         """Run tool in fix mode."""
 
     def run_command_with_retry(
-        self, cmd: list[str], timeout: int | None = None,
+        self,
+        cmd: list[str],
+        timeout: int | None = None,
     ) -> tuple[int, str, str]:
         """Run command with retry logic."""
         tool_config = self.config.tools[self.tool_type]
@@ -797,7 +808,8 @@ class RuffTool(MaintenanceTool):
             # Check again to see what was fixed
             post_check = self.check(valid_targets)
             result.files_fixed = max(
-                0, check_result.files_checked - post_check.files_checked,
+                0,
+                check_result.files_checked - post_check.files_checked,
             )
             result.add_error(stderr or "Fix command failed")
 
@@ -1551,7 +1563,8 @@ Workers: {self.config.parallel_workers} """
         # Check disk space
         if not check_disk_space(Path.cwd(), 500):  # Need 500MB free
             self.console.print(
-                "❌ Insufficient disk space (need 500MB free)", style="red",
+                "❌ Insufficient disk space (need 500MB free)",
+                style="red",
             )
             all_healthy = False
             self.console.print("✅ Disk space check passed", style="green")
@@ -1571,7 +1584,8 @@ Workers: {self.config.parallel_workers} """
             self.console.print("❌ No tools available", style="red")
             all_healthy = False
             self.console.print(
-                f"✅ {len(self.registry.tools)} tools available", style="green",
+                f"✅ {len(self.registry.tools)} tools available",
+                style="green",
             )
 
         return all_healthy or self.config.continue_on_error
@@ -1590,7 +1604,8 @@ Workers: {self.config.parallel_workers} """
 
             if not is_valid:
                 self.console.print(
-                    f"⚠️  Invalid target {target}: {error}", style="yellow",
+                    f"⚠️  Invalid target {target}: {error}",
+                    style="yellow",
                 )
                 continue
 
@@ -1601,7 +1616,8 @@ Workers: {self.config.parallel_workers} """
             # Check if target is in excluded patterns
             if any(pattern in str(target) for pattern in self.config.exclude_patterns):
                 self.console.print(
-                    f"⚠️  Target excluded by pattern: {target}", style="yellow",
+                    f"⚠️  Target excluded by pattern: {target}",
+                    style="yellow",
                 )
                 continue
 
@@ -1637,7 +1653,8 @@ Workers: {self.config.parallel_workers} """
 
                     if check_result.success:
                         progress.update(
-                            task, description=f"✅ {tool.name} - No issues found",
+                            task,
+                            description=f"✅ {tool.name} - No issues found",
                         )
                         self.results.append(check_result)
                         continue
@@ -1660,7 +1677,8 @@ Workers: {self.config.parallel_workers} """
                                 }?",
                             ):
                                 progress.update(
-                                    task, description=f"⏭️  {tool.name} - Skipped",
+                                    task,
+                                    description=f"⏭️  {tool.name} - Skipped",
                                 )
                                 self.results.append(check_result)
                                 continue
@@ -1674,7 +1692,8 @@ Workers: {self.config.parallel_workers} """
                                 description=f"✅ {tool.name} - Fixed {fix_result.files_fixed} files",
                             )
                             progress.update(
-                                task, description=f"❌ {tool.name} - Fix failed",
+                                task,
+                                description=f"❌ {tool.name} - Fix failed",
                             )
                             all_success = False
 
@@ -1745,7 +1764,8 @@ Workers: {self.config.parallel_workers} """
                 # Import module dynamically
                 if module_name not in module_imports:
                     self.console.print(
-                        f"⚠️  Unknown custom module '{module_name}'", style="yellow",
+                        f"⚠️  Unknown custom module '{module_name}'",
+                        style="yellow",
                     )
                     continue
 
@@ -1757,7 +1777,8 @@ Workers: {self.config.parallel_workers} """
                     module_class = getattr(module, class_name)
                 except (ImportError, AttributeError) as e:
                     self.console.print(
-                        f"❌ Failed to import module '{module_name}': {e}", style="red",
+                        f"❌ Failed to import module '{module_name}': {e}",
+                        style="red",
                     )
                     if not self.config.continue_on_error:
                         return False
@@ -1778,7 +1799,8 @@ Workers: {self.config.parallel_workers} """
 
                 if success:
                     self.console.print(
-                        f"✅ {module_instance.name} completed", style="green",
+                        f"✅ {module_instance.name} completed",
+                        style="green",
                     )
                     self.console.print(f"❌ {module_instance.name} failed", style="red")
                     all_success = False
@@ -1789,7 +1811,8 @@ Workers: {self.config.parallel_workers} """
             except Exception as e:
                 self.logger.exception(f"Error running custom module '{module_name}'")
                 self.console.print(
-                    f"❌ Module '{module_name}' crashed: {e}", style="red",
+                    f"❌ Module '{module_name}' crashed: {e}",
+                    style="red",
                 )
                 all_success = False
 
@@ -1824,7 +1847,9 @@ Workers: {self.config.parallel_workers} """
             return False
 
     def _run_file_level_module_safe(
-        self, module_instance: Any, targets: list[Path],
+        self,
+        module_instance: Any,
+        targets: list[Path],
     ) -> bool:
         """Run file-level module with comprehensive error handling."""
         files_processed = 0
@@ -1867,7 +1892,8 @@ Workers: {self.config.parallel_workers} """
                     files_failed += 1
                     if module_instance.verbose:
                         self.console.print(
-                            f"⚠️  Failed to process {file_path}: {error}", style="yellow",
+                            f"⚠️  Failed to process {file_path}: {error}",
+                            style="yellow",
                         )
 
                 files_processed += 1
@@ -2035,7 +2061,8 @@ def load_config_safe(args) -> MaintenanceConfig | None:
             if config_path.suffix in [".yaml", ".yml"]:
                 if not YAML_AVAILABLE:
                     console.print(
-                        "❌ YAML support not available. Install pyyaml.", style="red",
+                        "❌ YAML support not available. Install pyyaml.",
+                        style="red",
                     )
                     return None
                 data = yaml.safe_load(content)
@@ -2162,7 +2189,8 @@ Examples:
 
     # Custom modules
     parser.add_argument(
-        "--modules", help="Comma-separated list of custom fix modules to run",
+        "--modules",
+        help="Comma-separated list of custom fix modules to run",
     )
 
     # Error handling
@@ -2174,7 +2202,9 @@ Examples:
 
     # File handling
     parser.add_argument(
-        "--no-backup", action="store_true", help="Don't create backup files",
+        "--no-backup",
+        action="store_true",
+        help="Don't create backup files",
     )
     parser.add_argument(
         "--max-file-size",
@@ -2185,13 +2215,17 @@ Examples:
 
     # Output options
     parser.add_argument(
-        "--report-dir", default="reports/maintenance", help="Directory for reports",
+        "--report-dir",
+        default="reports/maintenance",
+        help="Directory for reports",
     )
     parser.add_argument("--verbose", "-v", action="store_true", help="Verbose output")
 
     # Version
     parser.add_argument(
-        "--version", action="version", version=f"%(prog)s {__version__}",
+        "--version",
+        action="version",
+        version=f"%(prog)s {__version__}",
     )
 
     args = parser.parse_args()

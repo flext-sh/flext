@@ -56,7 +56,10 @@ class CustomFixModule(ABC):
     """Base class for all custom fix modules."""
 
     def __init__(
-        self, dry_run: bool = True, interactive: bool = False, verbose: bool = False,
+        self,
+        dry_run: bool = True,
+        interactive: bool = False,
+        verbose: bool = False,
     ):
         """Initialize the fix module.
 
@@ -103,7 +106,10 @@ class CustomFixModule(ABC):
 
             if not issues:
                 return FixResult(
-                    success=True, file_path=file_path, issues_found=0, issues_fixed=0,
+                    success=True,
+                    file_path=file_path,
+                    issues_found=0,
+                    issues_fixed=0,
                 )
 
             # Show issues found
@@ -177,7 +183,9 @@ class CustomFixModule(ABC):
             )
 
     def process_directory(
-        self, directory: Path, pattern: str = "*.py",
+        self,
+        directory: Path,
+        pattern: str = "*.py",
     ) -> list[FixResult]:
         """Process all matching files in a directory.
 
@@ -195,7 +203,8 @@ class CustomFixModule(ABC):
 
         if not files:
             self.console.print(
-                f"No {pattern} files found in {directory}", style="yellow",
+                f"No {pattern} files found in {directory}",
+                style="yellow",
             )
             return results
 

@@ -255,7 +255,9 @@ def parse_args() -> argparse.Namespace:
     # Run command
     run_parser = subparsers.add_parser("run", help="Run tests with MonkeyType tracing")
     run_parser.add_argument(
-        "--flx_project", required=True, help="Target flx_project directory",
+        "--flx_project",
+        required=True,
+        help="Target flx_project directory",
     )
     run_parser.add_argument("--tests", help="Specific test path within the flx_project")
 

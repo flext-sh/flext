@@ -133,17 +133,20 @@ class MaintenanceConfig:
         if not self.tools:
             self.tools = {
                 ToolType.RUFF: ToolConfig(
-                    check_args=["check"], fix_args=["check", "--fix", "--unsafe-fixes"],
+                    check_args=["check"],
+                    fix_args=["check", "--fix", "--unsafe-fixes"],
                 ),
                 ToolType.MYPY: ToolConfig(
                     check_args=["--strict", "--no-error-summary"],
                     fix_args=[],  # mypy doesn't auto-fix
                 ),
                 ToolType.BLACK: ToolConfig(
-                    check_args=["--check", "--diff"], fix_args=[],
+                    check_args=["--check", "--diff"],
+                    fix_args=[],
                 ),
                 ToolType.ISORT: ToolConfig(
-                    check_args=["--check", "--diff"], fix_args=[],
+                    check_args=["--check", "--diff"],
+                    fix_args=[],
                 ),
                 ToolType.AUTOFLAKE: ToolConfig(
                     fix_args=[
@@ -155,7 +158,8 @@ class MaintenanceConfig:
                 ),
                 ToolType.PYUPGRADE: ToolConfig(fix_args=["--py313-plus"]),
                 ToolType.DOCFORMATTER: ToolConfig(
-                    check_args=["--check"], fix_args=["--in-place"],
+                    check_args=["--check"],
+                    fix_args=["--in-place"],
                 ),
                 ToolType.BANDIT: ToolConfig(
                     check_args=["-r", "-f", "json"],
@@ -209,7 +213,8 @@ class MaintenanceTool(ABC):
                 [self.tool_type.value, "--version"],
                 capture_output=True,
                 text=True,
-                timeout=5, check=False,
+                timeout=5,
+                check=False,
             )
             return result.returncode == 0
         except (subprocess.SubprocessError, FileNotFoundError):
@@ -224,7 +229,9 @@ class MaintenanceTool(ABC):
         """Run tool in fix mode."""
 
     def run_command(
-        self, cmd: list[str], timeout: int | None = None,
+        self,
+        cmd: list[str],
+        timeout: int | None = None,
     ) -> tuple[int, str, str]:
         """Run a command and return (returncode, stdout, stderr)."""
         if timeout is None:
@@ -232,7 +239,11 @@ class MaintenanceTool(ABC):
 
         try:
             result = subprocess.run(
-                cmd, capture_output=True, text=True, timeout=timeout, check=False,
+                cmd,
+                capture_output=True,
+                text=True,
+                timeout=timeout,
+                check=False,
             )
             return result.returncode, result.stdout, result.stderr
         except subprocess.TimeoutExpired:
@@ -904,7 +915,8 @@ class MaintenanceOrchestrator:
 
                 if check_result.success:
                     progress.update(
-                        task, description=f"✅ {tool.name} - No issues found",
+                        task,
+                        description=f"✅ {tool.name} - No issues found",
                     )
                     self.results.append(check_result)
                     continue
@@ -925,7 +937,8 @@ class MaintenanceOrchestrator:
                             f"Fix {check_result.files_checked} issues with {tool.name}?",
                         ):
                             progress.update(
-                                task, description=f"⏭️  {tool.name} - Skipped",
+                                task,
+                                description=f"⏭️  {tool.name} - Skipped",
                             )
                             continue
 
@@ -937,7 +950,8 @@ class MaintenanceOrchestrator:
                             description=f"✅ {tool.name} - Fixed {fix_result.files_fixed} files",
                         )
                         progress.update(
-                            task, description=f"❌ {tool.name} - Fix failed",
+                            task,
+                            description=f"❌ {tool.name} - Fix failed",
                         )
                         if self.config.verbose and fix_result.errors:
                             for error in fix_result.errors:
@@ -1015,7 +1029,8 @@ class MaintenanceOrchestrator:
                 module_class = module_registry.get(module_name)
                 if not module_class:
                     self.console.print(
-                        f"⚠️  Unknown custom module '{module_name}'", style="yellow",
+                        f"⚠️  Unknown custom module '{module_name}'",
+                        style="yellow",
                     )
                     continue
 
@@ -1056,7 +1071,8 @@ class MaintenanceOrchestrator:
                 return False
             except Exception as e:
                 self.console.print(
-                    f"❌ Failed to run custom module '{module_name}': {e}", style="red",
+                    f"❌ Failed to run custom module '{module_name}': {e}",
+                    style="red",
                 )
                 return False
 
@@ -1116,7 +1132,8 @@ class MaintenanceOrchestrator:
                 except Exception as e:
                     if module.verbose:
                         self.console.print(
-                            f"⚠️  Error processing {file_path}: {e}", style="yellow",
+                            f"⚠️  Error processing {file_path}: {e}",
+                            style="yellow",
                         )
 
         if module.verbose:
@@ -1286,11 +1303,15 @@ Examples:
         help="Tools to skip",
     )
     parser.add_argument(
-        "--report-dir", default="reports/maintenance", help="Directory for reports",
+        "--report-dir",
+        default="reports/maintenance",
+        help="Directory for reports",
     )
     parser.add_argument("--verbose", "-v", action="store_true", help="Verbose output")
     parser.add_argument(
-        "--version", action="version", version=f"%(prog)s {__version__}",
+        "--version",
+        action="version",
+        version=f"%(prog)s {__version__}",
     )
 
     args = parser.parse_args()

@@ -266,7 +266,9 @@ class ProjectStandardizationModule(CustomFixModule):
         shutil.copy2(source, target)
 
     def merge_configs(
-        self, current: dict[str, Any], project_path: Path,
+        self,
+        current: dict[str, Any],
+        project_path: Path,
     ) -> dict[str, Any]:
         """Merge current configuration with standards."""
         result = current.copy()
@@ -389,7 +391,8 @@ class ProjectStandardizationModule(CustomFixModule):
         return success_count == len(projects)
 
     def run_workspace_standardization(
-        self, workspace_path: Optional[Path] = None,
+        self,
+        workspace_path: Optional[Path] = None,
     ) -> bool:
         """Run standardization across the entire workspace."""
         if workspace_path is None:

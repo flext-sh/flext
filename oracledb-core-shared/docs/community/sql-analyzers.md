@@ -205,12 +205,12 @@ tuning:
   enable_auto_tuning: true
   tune_new_sql: true
   tune_regressed_sql: true
-  max_tuning_time: 300  # seconds
+  max_tuning_time: 300 # seconds
 
 machine_learning:
   model_type: "gradient_boosting"
   training_data_days: 30
-  retrain_interval: 7  # days
+  retrain_interval: 7 # days
 
 notifications:
   email:
@@ -472,15 +472,15 @@ database:
       monitor_schemas: ["HR"]
 
 monitoring:
-  interval: 30  # seconds
+  interval: 30 # seconds
   collect_plans: true
   collect_bind_variables: true
   max_sql_length: 4000
 
 alerts:
-  cpu_threshold: 80  # percent
-  io_threshold: 75   # percent
-  execution_time_threshold: 30  # seconds
+  cpu_threshold: 80 # percent
+  io_threshold: 75 # percent
+  execution_time_threshold: 30 # seconds
   notification_channels:
     - type: "email"
       recipients: ["dba@company.com"]
@@ -488,7 +488,7 @@ alerts:
       webhook_url: "https://hooks.slack.com/..."
 
 dashboard:
-  refresh_interval: 10  # seconds
+  refresh_interval: 10 # seconds
   max_displayed_sqls: 100
   auto_refresh: true
 ```

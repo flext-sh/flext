@@ -13,13 +13,13 @@
 
 ### **🚀 Para Começar Agora**
 
-| **Objetivo** | **Recurso** | **Tempo** |
-|--------------|-------------|-----------|
-| **📖 Aprender LDAP** | [Core Specs (RFC 4510-4519)](#core-specs) | 2-3 horas |
-| **🔧 Implementar Cliente** | [Python: ldap3](reference/#python-implementations) | 30 min |
-| **🖥️ Interface Gráfica** | [Apache Directory Studio](reference/#gui-tools) | 15 min |
-| **🌐 Interface Web** | [phpLDAPREDACTED_LDAP_BIND_PASSWORD](reference/#web-interfaces) | 10 min |
-| **📋 Validar Schemas** | [Schema Validators](reference/#validation-tools) | 5 min |
+| **Objetivo**               | **Recurso**                                        | **Tempo** |
+| -------------------------- | -------------------------------------------------- | --------- |
+| **📖 Aprender LDAP**       | [Core Specs (RFC 4510-4519)](#core-specs)          | 2-3 horas |
+| **🔧 Implementar Cliente** | [Python: ldap3](reference/#python-implementations) | 30 min    |
+| **🖥️ Interface Gráfica**   | [Apache Directory Studio](reference/#gui-tools)    | 15 min    |
+| **🌐 Interface Web**       | [phpLDAPREDACTED_LDAP_BIND_PASSWORD](reference/#web-interfaces)          | 10 min    |
+| **📋 Validar Schemas**     | [Schema Validators](reference/#validation-tools)   | 5 min     |
 
 ### **🗺️ Mapa do Conhecimento**
 
@@ -51,18 +51,18 @@ Esta é uma **coleção completa e categorizada de RFCs LDAP**, desde as especif
 
 **📁 [`core-specs/`](core-specs/)** - A base fundamental do LDAP v3
 
-| RFC | Nome | Descrição | Prioridade |
-|-----|------|-----------|------------|
-| 4510 | Technical Specification Road Map | 🗺️ Visão geral e roteiro da especificação LDAP | ⭐⭐⭐ |
-| 4511 | The Protocol | 🔌 Protocolo LDAP core | ⭐⭐⭐ |
-| 4512 | Directory Information Models | 📊 Modelos de informação do diretório | ⭐⭐⭐ |
-| 4513 | Authentication Methods and Security Mechanisms | 🔐 Autenticação e segurança | ⭐⭐⭐ |
-| 4514 | The Distinguished Name (DN) and Relative Distinguished Name (RDN) | 🏷️ Nomes distinguidos | ⭐⭐⭐ |
-| 4515 | String Representation of Search Filters | 🔍 Filtros de busca | ⭐⭐⭐ |
-| 4516 | Internationalized String Preparation | 🌍 Strings internacionais | ⭐⭐ |
-| 4517 | Syntaxes and Matching Rules | 📝 Sintaxes e regras | ⭐⭐⭐ |
-| 4518 | String Representation of Distinguished Names | 📋 Representação de DNs | ⭐⭐⭐ |
-| 4519 | Schema for User Applications | 👤 Schema para aplicações | ⭐⭐⭐ |
+| RFC  | Nome                                                              | Descrição                                      | Prioridade |
+| ---- | ----------------------------------------------------------------- | ---------------------------------------------- | ---------- |
+| 4510 | Technical Specification Road Map                                  | 🗺️ Visão geral e roteiro da especificação LDAP | ⭐⭐⭐     |
+| 4511 | The Protocol                                                      | 🔌 Protocolo LDAP core                         | ⭐⭐⭐     |
+| 4512 | Directory Information Models                                      | 📊 Modelos de informação do diretório          | ⭐⭐⭐     |
+| 4513 | Authentication Methods and Security Mechanisms                    | 🔐 Autenticação e segurança                    | ⭐⭐⭐     |
+| 4514 | The Distinguished Name (DN) and Relative Distinguished Name (RDN) | 🏷️ Nomes distinguidos                          | ⭐⭐⭐     |
+| 4515 | String Representation of Search Filters                           | 🔍 Filtros de busca                            | ⭐⭐⭐     |
+| 4516 | Internationalized String Preparation                              | 🌍 Strings internacionais                      | ⭐⭐       |
+| 4517 | Syntaxes and Matching Rules                                       | 📝 Sintaxes e regras                           | ⭐⭐⭐     |
+| 4518 | String Representation of Distinguished Names                      | 📋 Representação de DNs                        | ⭐⭐⭐     |
+| 4519 | Schema for User Applications                                      | 👤 Schema para aplicações                      | ⭐⭐⭐     |
 
 ### 🔌 **Controls & Extensions**
 
@@ -71,26 +71,26 @@ Esta é uma **coleção completa e categorizada de RFCs LDAP**, desde as especif
 <details>
 <summary><b>📋 18 RFCs de Controles e Extensões</b></summary>
 
-| RFC | Nome | Tipo | Casos de Uso |
-|-----|------|------|--------------|
-| 2589 | LDAPv3: Extensions for Dynamic Directory Services | Extension | Diretórios dinâmicos |
-| 2696 | LDAP Control Extension for Simple Paged Results | Control | Paginação de resultados |
-| 2891 | LDAP Control Extension for Server Side Sorting | Control | Ordenação server-side |
-| 3062 | LDAP Password Modify Extended Operation | Extension | Modificação de senhas |
-| 3296 | Named Subordinate References in LDAP | Extension | Referências subordinadas |
-| 3671 | Collective Attributes in LDAP | Extension | Atributos coletivos |
-| 3672 | Subentries in LDAP | Extension | Sub-entradas |
-| 3829 | LDAPv3: Schema Definitions for LDAP Control Extensions | Schema | Definições de controles |
-| 3876 | Returning Matched Values with LDAP Search | Control | Valores correspondentes |
-| 3909 | Cancel Operation for LDAP | Extension | Cancelamento de operações |
-| 4370 | LDAP Proxied Authorization Control | Control | Autorização por proxy |
-| 4527 | LDAP Read Entry Controls | Control | Controles de leitura |
-| 4528 | LDAP Assertion Control | Control | Controles de asserção |
-| 4531 | LDAP Turn Operation | Extension | Operação Turn |
-| 4532 | LDAP "Who am I?" Operation | Extension | Identificação do usuário |
-| 4533 | The LDAP Content Synchronization Operation | Extension | Sincronização de conteúdo |
-| 5805 | LDAP Transactions | Extension | Transações LDAP |
-| 6171 | The LDAP Don't Use Copy Control | Control | Controle "não usar cópia" |
+| RFC  | Nome                                                   | Tipo      | Casos de Uso              |
+| ---- | ------------------------------------------------------ | --------- | ------------------------- |
+| 2589 | LDAPv3: Extensions for Dynamic Directory Services      | Extension | Diretórios dinâmicos      |
+| 2696 | LDAP Control Extension for Simple Paged Results        | Control   | Paginação de resultados   |
+| 2891 | LDAP Control Extension for Server Side Sorting         | Control   | Ordenação server-side     |
+| 3062 | LDAP Password Modify Extended Operation                | Extension | Modificação de senhas     |
+| 3296 | Named Subordinate References in LDAP                   | Extension | Referências subordinadas  |
+| 3671 | Collective Attributes in LDAP                          | Extension | Atributos coletivos       |
+| 3672 | Subentries in LDAP                                     | Extension | Sub-entradas              |
+| 3829 | LDAPv3: Schema Definitions for LDAP Control Extensions | Schema    | Definições de controles   |
+| 3876 | Returning Matched Values with LDAP Search              | Control   | Valores correspondentes   |
+| 3909 | Cancel Operation for LDAP                              | Extension | Cancelamento de operações |
+| 4370 | LDAP Proxied Authorization Control                     | Control   | Autorização por proxy     |
+| 4527 | LDAP Read Entry Controls                               | Control   | Controles de leitura      |
+| 4528 | LDAP Assertion Control                                 | Control   | Controles de asserção     |
+| 4531 | LDAP Turn Operation                                    | Extension | Operação Turn             |
+| 4532 | LDAP "Who am I?" Operation                             | Extension | Identificação do usuário  |
+| 4533 | The LDAP Content Synchronization Operation             | Extension | Sincronização de conteúdo |
+| 5805 | LDAP Transactions                                      | Extension | Transações LDAP           |
+| 6171 | The LDAP Don't Use Copy Control                        | Control   | Controle "não usar cópia" |
 
 </details>
 
@@ -101,19 +101,19 @@ Esta é uma **coleção completa e categorizada de RFCs LDAP**, desde as especif
 <details>
 <summary><b>📊 11 RFCs de Schema</b></summary>
 
-| RFC | Nome | Foco | Importância |
-|-----|------|------|-------------|
-| 2247 | Using Domains in LDAP/X.500 Distinguished Names | Domain Components | ⭐⭐⭐ |
-| 2798 | Definition of the inetOrgPerson LDAP Object Class | inetOrgPerson | ⭐⭐⭐ |
-| 2926 | Conversion of LDAP Schemas to and from SLP Service Templates | Schema Conversion | ⭐⭐ |
-| 3045 | Storing Vendor Information in the LDAP root DSE | Vendor Info | ⭐⭐ |
-| 3112 | LDAP Authentication Password Schema | Password Schema | ⭐⭐⭐ |
-| 3687 | LDAP Component Matching Rules | Component Matching | ⭐⭐ |
-| 3698 | LDAP: Additional Matching Rules | Additional Rules | ⭐⭐ |
-| 4523 | Anonymous LDAP | Anonymous Access | ⭐⭐ |
-| 4524 | COSINE LDAP/X.500 Schema | COSINE Schema | ⭐⭐⭐ |
-| 4530 | LDAP entryUUID Operational Attribute | Entry UUID | ⭐⭐ |
-| 5020 | LDAP entryDN Operational Attribute | Entry DN | ⭐⭐ |
+| RFC  | Nome                                                         | Foco               | Importância |
+| ---- | ------------------------------------------------------------ | ------------------ | ----------- |
+| 2247 | Using Domains in LDAP/X.500 Distinguished Names              | Domain Components  | ⭐⭐⭐      |
+| 2798 | Definition of the inetOrgPerson LDAP Object Class            | inetOrgPerson      | ⭐⭐⭐      |
+| 2926 | Conversion of LDAP Schemas to and from SLP Service Templates | Schema Conversion  | ⭐⭐        |
+| 3045 | Storing Vendor Information in the LDAP root DSE              | Vendor Info        | ⭐⭐        |
+| 3112 | LDAP Authentication Password Schema                          | Password Schema    | ⭐⭐⭐      |
+| 3687 | LDAP Component Matching Rules                                | Component Matching | ⭐⭐        |
+| 3698 | LDAP: Additional Matching Rules                              | Additional Rules   | ⭐⭐        |
+| 4523 | Anonymous LDAP                                               | Anonymous Access   | ⭐⭐        |
+| 4524 | COSINE LDAP/X.500 Schema                                     | COSINE Schema      | ⭐⭐⭐      |
+| 4530 | LDAP entryUUID Operational Attribute                         | Entry UUID         | ⭐⭐        |
+| 5020 | LDAP entryDN Operational Attribute                           | Entry DN           | ⭐⭐        |
 
 </details>
 
@@ -124,28 +124,28 @@ Esta é uma **coleção completa e categorizada de RFCs LDAP**, desde as especif
 <details>
 <summary><b>📖 20 RFCs Informativos</b></summary>
 
-| RFC | Nome | Categoria | Audiência |
-|-----|------|-----------|-----------|
-| 1823 | The LDAP Application Program Interface | API Guide | Desenvolvedores |
-| 2079 | Definition of an X.500 Attribute Type and an Object Class to Hold Uniform Resource Identifiers | URI Attributes | Administradores |
-| 2307 | An Approach for Using LDAP as a Network Information Service | NIS Integration | Administradores |
-| 2377 | Naming Plan for Internet Directory-Enabled Applications | Naming Plans | Arquitetos |
-| 2649 | An LDAP Control and Schema for Holding Operation Signatures | Digital Signatures | Segurança |
-| 2713 | Schema for Representing Java(tm) Objects in an LDAP Directory | Java Objects | Desenvolvedores |
-| 2714 | Schema for Representing CORBA Object References in an LDAP Directory | CORBA Integration | Enterprise |
-| 2739 | Calendar Attributes for vCard and LDAP | Calendar Schema | Aplicações |
-| 2820 | Access Control Requirements for LDAP | Access Control | Segurança |
-| 2849 | The LDAP Data Interchange Format (LDIF) - Technical Specification | LDIF Spec | ⭐⭐⭐ Todos |
-| 3384 | Lightweight Directory Access Protocol (version 3) Replication Requirements | Replication | Administradores |
-| 3494 | Lightweight Directory Access Protocol version 2 (LDAPv2) to Historic status | LDAPv2 Historic | Histórico |
-| 3703 | Policy Core LDAP Schema | Policy Schema | Enterprise |
-| 4403 | Lightweight Directory Access Protocol (LDAP) Schema for Universal Description, Discovery, and Integration (UDDI) | UDDI Schema | Web Services |
-| 4520 | Internet Assigned Numbers Authority (IANA) Considerations for LDAP | IANA Registry | Padronização |
-| 4521 | Considerations for LDAP Extensions | Extension Design | Desenvolvedores |
-| 4525 | LDAP: Procedures for Requesting IANA Assignments | IANA Procedures | Padronização |
-| 4529 | Requesting Attributes by Object Class in LDAP | Attribute Requests | Desenvolvedores |
-| 4876 | A Configuration Profile Schema for Lightweight Directory Access Protocol (LDAP)-Based Agents | Config Profiles | Administradores |
-| 5803 | LDAP Schema for Storing Salted Challenge Response Authentication Mechanism (SCRAM) Secrets | SCRAM Auth | Segurança |
+| RFC  | Nome                                                                                                             | Categoria          | Audiência       |
+| ---- | ---------------------------------------------------------------------------------------------------------------- | ------------------ | --------------- |
+| 1823 | The LDAP Application Program Interface                                                                           | API Guide          | Desenvolvedores |
+| 2079 | Definition of an X.500 Attribute Type and an Object Class to Hold Uniform Resource Identifiers                   | URI Attributes     | Administradores |
+| 2307 | An Approach for Using LDAP as a Network Information Service                                                      | NIS Integration    | Administradores |
+| 2377 | Naming Plan for Internet Directory-Enabled Applications                                                          | Naming Plans       | Arquitetos      |
+| 2649 | An LDAP Control and Schema for Holding Operation Signatures                                                      | Digital Signatures | Segurança       |
+| 2713 | Schema for Representing Java(tm) Objects in an LDAP Directory                                                    | Java Objects       | Desenvolvedores |
+| 2714 | Schema for Representing CORBA Object References in an LDAP Directory                                             | CORBA Integration  | Enterprise      |
+| 2739 | Calendar Attributes for vCard and LDAP                                                                           | Calendar Schema    | Aplicações      |
+| 2820 | Access Control Requirements for LDAP                                                                             | Access Control     | Segurança       |
+| 2849 | The LDAP Data Interchange Format (LDIF) - Technical Specification                                                | LDIF Spec          | ⭐⭐⭐ Todos    |
+| 3384 | Lightweight Directory Access Protocol (version 3) Replication Requirements                                       | Replication        | Administradores |
+| 3494 | Lightweight Directory Access Protocol version 2 (LDAPv2) to Historic status                                      | LDAPv2 Historic    | Histórico       |
+| 3703 | Policy Core LDAP Schema                                                                                          | Policy Schema      | Enterprise      |
+| 4403 | Lightweight Directory Access Protocol (LDAP) Schema for Universal Description, Discovery, and Integration (UDDI) | UDDI Schema        | Web Services    |
+| 4520 | Internet Assigned Numbers Authority (IANA) Considerations for LDAP                                               | IANA Registry      | Padronização    |
+| 4521 | Considerations for LDAP Extensions                                                                               | Extension Design   | Desenvolvedores |
+| 4525 | LDAP: Procedures for Requesting IANA Assignments                                                                 | IANA Procedures    | Padronização    |
+| 4529 | Requesting Attributes by Object Class in LDAP                                                                    | Attribute Requests | Desenvolvedores |
+| 4876 | A Configuration Profile Schema for Lightweight Directory Access Protocol (LDAP)-Based Agents                     | Config Profiles    | Administradores |
+| 5803 | LDAP Schema for Storing Salted Challenge Response Authentication Mechanism (SCRAM) Secrets                       | SCRAM Auth         | Segurança       |
 
 </details>
 
@@ -153,10 +153,10 @@ Esta é uma **coleção completa e categorizada de RFCs LDAP**, desde as especif
 
 **📁 [`experimental/`](experimental/)** - RFCs experimentais e propostas
 
-| RFC | Nome | Status | Descrição |
-|-----|------|--------|-----------|
-| 3088 | OpenLDAP Root Service | Experimental | Serviço raiz OpenLDAP |
-| 3663 | Domain Administrative Data in LDAP | Experimental | Dados REDACTED_LDAP_BIND_PASSWORDistrativos de domínio |
+| RFC  | Nome                                                | Status       | Descrição                        |
+| ---- | --------------------------------------------------- | ------------ | -------------------------------- |
+| 3088 | OpenLDAP Root Service                               | Experimental | Serviço raiz OpenLDAP            |
+| 3663 | Domain Administrative Data in LDAP                  | Experimental | Dados REDACTED_LDAP_BIND_PASSWORDistrativos de domínio |
 | 4373 | LBURP: Lightweight Bulk Update/Replication Protocol | Experimental | Protocolo de atualização em lote |
 
 ---
@@ -373,7 +373,7 @@ cat rfc2849.txt  # Especificação LDIF oficial
 
 **🏛️ Centro de Conhecimento LDAP Definitivo**
 
-*Documentação completa • Implementações reais • Padrões oficiais*
+_Documentação completa • Implementações reais • Padrões oficiais_
 
 [⬆️ Voltar ao topo](#-ldap-documentation-hub) | [📁 Estrutura Completa](../README.md#-estrutura-detalhada)
 

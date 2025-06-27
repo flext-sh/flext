@@ -39,7 +39,9 @@ FLX_DEPENDENT_PROJECTS = [
 
 
 def run_command(
-    cmd: list[str], cwd: Path | None = None, capture_output: bool = True,
+    cmd: list[str],
+    cwd: Path | None = None,
+    capture_output: bool = True,
 ) -> tuple[int, str, str]:
     """Executa um comando e retorna código de saída, stdout e stderr."""
     try:
@@ -48,7 +50,8 @@ def run_command(
             cwd=cwd,
             capture_output=capture_output,
             text=True,
-            timeout=300, check=False,  # 5 minutos timeout
+            timeout=300,
+            check=False,  # 5 minutos timeout
         )
         return result.returncode, result.stdout, result.stderr
     except subprocess.TimeoutExpired:
@@ -169,7 +172,8 @@ except Exception as e:
 
     try:
         returncode, stdout, stderr = run_command(
-            [sys.executable, "test_import.py"], cwd=project_path,
+            [sys.executable, "test_import.py"],
+            cwd=project_path,
         )
 
         return {
@@ -416,7 +420,8 @@ def generate_report(independence_results: list[dict], unified_result: dict) -> N
     # Resumo final
     print("\n🎯 RESUMO FINAL:")
     integration_ok = unified_result["success"] and unified_result.get(
-        "structure_valid", False,
+        "structure_valid",
+        False,
     )
 
     if independent_count == total_tested and integration_ok:

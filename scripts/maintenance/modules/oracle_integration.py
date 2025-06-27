@@ -845,7 +845,9 @@ class OracleIntegrationModule(CustomFixModule):
                 integration_type = (
                     "WMS"
                     if "wms" in project_name.lower()
-                    else "OIC" if "oic" in project_name.lower() else "Mixed"
+                    else "OIC"
+                    if "oic" in project_name.lower()
+                    else "Mixed"
                 )
                 records = str(result.get("total_records", "N/A"))
                 status = "❌ ERROR"
@@ -873,7 +875,9 @@ class OracleIntegrationModule(CustomFixModule):
         panel_style = (
             "green"
             if success_rate == 100
-            else "yellow" if success_rate >= 80 else "red"
+            else "yellow"
+            if success_rate >= 80
+            else "red"
         )
         self.console.print(
             Panel(

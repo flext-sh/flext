@@ -15,6 +15,7 @@ from singer_sdk.typing import (
     Property,
     StringType,
 )
+
 from tap_oracle_advanced.streams import CustomQueryStream, TablesStream, ViewsStream
 
 if TYPE_CHECKING:

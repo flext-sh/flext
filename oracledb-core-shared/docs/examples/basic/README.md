@@ -1036,6 +1036,7 @@ These basic examples demonstrate:
 9. **Error Handling**: Comprehensive error recovery strategies
 
 Each example includes:
+
 - ✅ Complete, runnable code
 - 🔧 Proper configuration
 - 📊 Performance considerations
@@ -1045,6 +1046,7 @@ Each example includes:
 ## 🎯 Next Steps
 
 After mastering these basic examples, explore:
+
 - **[Advanced Examples](../advanced/)** - Complex integration scenarios
 - **[Performance Examples](../performance/)** - Advanced performance optimization
 - **[Migration Examples](../migration/)** - Database migration strategies

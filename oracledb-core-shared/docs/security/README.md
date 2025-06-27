@@ -64,16 +64,19 @@ Comprehensive guide covering all aspects of Oracle Database security, from basic
 ### Security Principles
 
 #### Defense in Depth
+
 - **Multiple Security Layers**: Implement security at all levels
 - **Redundant Controls**: Backup security mechanisms
 - **Fail-Safe Defaults**: Secure by default configuration
 
 #### Least Privilege
+
 - **Minimum Required Access**: Grant only necessary privileges
 - **Role-Based Access**: Use roles instead of direct grants
 - **Regular Reviews**: Periodic access reviews
 
 #### Separation of Duties
+
 - **Administrative Separation**: Separate DBA and security roles
 - **Development vs. Production**: Different access levels
 - **Audit Independence**: Independent audit functions
@@ -83,6 +86,7 @@ Comprehensive guide covering all aspects of Oracle Database security, from basic
 ### Database Authentication
 
 #### Password Authentication
+
 ```sql
 -- Create user with password
 CREATE USER john_doe IDENTIFIED BY "SecurePassword123!";
@@ -134,6 +138,7 @@ END;
 #### External Authentication
 
 ##### Operating System Authentication
+
 ```sql
 -- Create OS authenticated user
 CREATE USER ops$oracle IDENTIFIED EXTERNALLY;
@@ -145,6 +150,7 @@ ALTER SYSTEM SET remote_os_authent = FALSE;
 ```
 
 ##### LDAP Authentication
+
 ```sql
 -- Configure LDAP authentication
 ALTER SYSTEM SET ldap_directory_access = PASSWORD;
@@ -155,6 +161,7 @@ IDENTIFIED GLOBALLY AS 'CN=John Doe,OU=People,DC=company,DC=com';
 ```
 
 ##### Kerberos Authentication
+
 ```sql
 -- Configure Kerberos
 ALTER SYSTEM SET kerberos_realm = 'COMPANY.COM';
@@ -167,6 +174,7 @@ CREATE USER john_doe IDENTIFIED EXTERNALLY AS 'john.doe@COMPANY.COM';
 ### Strong Authentication
 
 #### Multi-Factor Authentication
+
 ```sql
 -- Enable strong authentication
 ALTER SYSTEM SET sec_case_sensitive_logon = TRUE;
@@ -175,6 +183,7 @@ ALTER SYSTEM SET sec_protocol_error_further_action = DROP;
 ```
 
 #### Certificate-Based Authentication
+
 ```sql
 -- Configure SSL authentication
 ALTER SYSTEM SET ssl_client_authentication = TRUE;
@@ -187,6 +196,7 @@ CREATE USER john_doe IDENTIFIED EXTERNALLY AS
 ### Privileged User Authentication
 
 #### SYSDBA/SYSOPER Authentication
+
 ```sql
 -- Password file authentication
 orapwd file=$ORACLE_HOME/dbs/orapwORCL password=SysPassword entries=10
@@ -199,6 +209,7 @@ CONNECT john_doe/password AS SYSDBA;
 ```
 
 #### Common User Authentication (Multitenant)
+
 ```sql
 -- Create common user
 CREATE USER c##dba_user IDENTIFIED BY "SecurePassword123!"
@@ -213,6 +224,7 @@ GRANT SYSDBA TO c##dba_user CONTAINER = ALL;
 ### Privilege Management
 
 #### System Privileges
+
 ```sql
 -- Grant system privileges
 GRANT CREATE SESSION TO john_doe;
@@ -230,6 +242,7 @@ WHERE grantee = 'JOHN_DOE';
 ```
 
 #### Object Privileges
+
 ```sql
 -- Grant object privileges
 GRANT SELECT, INSERT, UPDATE ON employees TO john_doe;
@@ -253,6 +266,7 @@ WHERE grantee = 'JOHN_DOE';
 ### Role-Based Access Control
 
 #### Creating and Managing Roles
+
 ```sql
 -- Create role
 CREATE ROLE hr_manager;
@@ -276,6 +290,7 @@ SET ROLE hr_manager IDENTIFIED BY "RolePassword123!";
 ```
 
 #### Role Hierarchies
+
 ```sql
 -- Create role hierarchy
 CREATE ROLE junior_analyst;
@@ -298,6 +313,7 @@ GRANT DELETE ON reporting.sales_data TO data_manager;
 ### Virtual Private Database (VPD)
 
 #### Row-Level Security
+
 ```sql
 -- Create security policy function
 CREATE OR REPLACE FUNCTION employee_security_policy(
@@ -333,6 +349,7 @@ END;
 ```
 
 #### Application Context
+
 ```sql
 -- Create application context
 CREATE CONTEXT user_ctx USING security_pkg;
@@ -372,6 +389,7 @@ END;
 ### Fine-Grained Access Control
 
 #### Column-Level Security
+
 ```sql
 -- Create column masking policy
 CREATE OR REPLACE FUNCTION mask_ssn_policy(
@@ -407,6 +425,7 @@ END;
 ### Transparent Data Encryption (TDE)
 
 #### Wallet Management
+
 ```sql
 -- Create wallet directory
 mkdir -p /opt/oracle/wallet
@@ -429,6 +448,7 @@ FROM v$encryption_wallet;
 ```
 
 #### Column Encryption
+
 ```sql
 -- Create table with encrypted columns
 CREATE TABLE customers (
@@ -447,6 +467,7 @@ ALTER TABLE customers MODIFY (phone_number DECRYPT);
 ```
 
 #### Tablespace Encryption
+
 ```sql
 -- Create encrypted tablespace
 CREATE TABLESPACE secure_data
@@ -465,6 +486,7 @@ FROM dba_tablespaces;
 ### Network Encryption
 
 #### Oracle Net Encryption
+
 ```sql
 -- Configure sqlnet.ora for encryption
 SQLNET.ENCRYPTION_SERVER = REQUIRED
@@ -478,6 +500,7 @@ SQLNET.ENCRYPTION_TYPES_CLIENT = (AES256, AES192, AES128)
 ```
 
 #### SSL/TLS Configuration
+
 ```sql
 -- Configure SSL in listener.ora
 LISTENER =
@@ -513,6 +536,7 @@ ORCL_SSL =
 ### Data Redaction
 
 #### Full Redaction
+
 ```sql
 -- Create redaction policy for full masking
 BEGIN
@@ -529,6 +553,7 @@ END;
 ```
 
 #### Partial Redaction
+
 ```sql
 -- Partial redaction for credit card numbers
 BEGIN
@@ -546,6 +571,7 @@ END;
 ```
 
 #### Regular Expression Redaction
+
 ```sql
 -- Email redaction using regular expressions
 BEGIN
@@ -568,6 +594,7 @@ END;
 ### Connection Security
 
 #### Connection Filtering
+
 ```sql
 -- Configure connection filtering in sqlnet.ora
 TCP.INVITED_NODES = (192.168.1.*, 10.0.0.*)
@@ -578,6 +605,7 @@ TCP.VALIDNODE_CHECKING = YES
 ```
 
 #### Connection Pooling Security
+
 ```sql
 -- Configure DRCP (Database Resident Connection Pooling)
 EXEC DBMS_CONNECTION_POOL.START_POOL();
@@ -594,6 +622,7 @@ EXEC DBMS_CONNECTION_POOL.ALTER_PARAM(
 ### Firewall Integration
 
 #### Oracle Connection Manager
+
 ```sql
 -- Configure Connection Manager (cman.ora)
 CMAN = (ADDRESS_LIST =
@@ -620,6 +649,7 @@ CMAN_RULES = (
 ### Standard Auditing
 
 #### Database Auditing Configuration
+
 ```sql
 -- Enable database auditing
 ALTER SYSTEM SET audit_trail = DB;
@@ -640,6 +670,7 @@ AUDIT SELECT ON hr.employees BY ACCESS;
 ```
 
 #### OS Auditing
+
 ```sql
 -- Configure OS auditing
 ALTER SYSTEM SET audit_trail = OS;
@@ -653,6 +684,7 @@ AUDIT ALL STATEMENTS BY sys;
 ### Fine-Grained Auditing (FGA)
 
 #### Creating FGA Policies
+
 ```sql
 -- Create FGA policy for sensitive data access
 BEGIN
@@ -710,6 +742,7 @@ END;
 ### Unified Auditing
 
 #### Configuring Unified Auditing
+
 ```sql
 -- Check if unified auditing is enabled
 SELECT value FROM v$option WHERE parameter = 'Unified Auditing';
@@ -730,6 +763,7 @@ AUDIT POLICY sensitive_data_policy BY john_doe, jane_smith;
 ```
 
 #### Audit Data Analysis
+
 ```sql
 -- Query unified audit trail
 SELECT event_timestamp,
@@ -764,6 +798,7 @@ ORDER BY failed_attempts DESC;
 ### Oracle Database Vault
 
 #### Database Vault Components
+
 ```sql
 -- Enable Database Vault
 EXEC DBMS_MACADM.ENABLE_DV;
@@ -795,6 +830,7 @@ EXEC DBMS_MACADM.ADD_AUTH_TO_REALM(
 ```
 
 #### Command Rules
+
 ```sql
 -- Create command rule to restrict ALTER SYSTEM
 EXEC DBMS_MACADM.CREATE_COMMAND_RULE(
@@ -834,6 +870,7 @@ EXEC DBMS_MACADM.ADD_RULE_TO_RULE_SET(
 ### Oracle Label Security (OLS)
 
 #### OLS Configuration
+
 ```sql
 -- Enable Label Security
 EXEC LBACSYS.CONFIGURE_OLS;
@@ -905,6 +942,7 @@ EXEC SA_USER_ADMIN.SET_USER_LABELS(
 ### Privilege Analysis
 
 #### Capturing Privilege Usage
+
 ```sql
 -- Create privilege analysis policy
 EXEC DBMS_PRIVILEGE_CAPTURE.CREATE_CAPTURE(
@@ -946,6 +984,7 @@ WHERE capture = 'APP_PRIVILEGE_ANALYSIS'
 ## 📋 Security Best Practices
 
 ### Password Security
+
 - Use strong, complex passwords
 - Implement password policies
 - Regular password rotation
@@ -953,6 +992,7 @@ WHERE capture = 'APP_PRIVILEGE_ANALYSIS'
 - Use password verification functions
 
 ### Access Control
+
 - Implement least privilege principle
 - Use roles instead of direct grants
 - Regular access reviews
@@ -960,6 +1000,7 @@ WHERE capture = 'APP_PRIVILEGE_ANALYSIS'
 - Monitor privileged access
 
 ### Data Protection
+
 - Encrypt sensitive data at rest
 - Encrypt data in transit
 - Implement data masking for non-production
@@ -967,6 +1008,7 @@ WHERE capture = 'APP_PRIVILEGE_ANALYSIS'
 - Regular security assessments
 
 ### Monitoring and Alerting
+
 - Enable comprehensive auditing
 - Monitor failed login attempts
 - Alert on suspicious activities

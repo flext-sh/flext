@@ -200,7 +200,10 @@ class ConfigGenerationModule(CustomFixModule):
         return env_vars
 
     def resolve_config_value(
-        self, template_value: Any, env_vars: dict[str, str], project_name: str,
+        self,
+        template_value: Any,
+        env_vars: dict[str, str],
+        project_name: str,
     ) -> Any:
         """Resolve a configuration value from template."""
         if callable(template_value):
@@ -244,7 +247,9 @@ class ConfigGenerationModule(CustomFixModule):
         return None
 
     def generate_project_config(
-        self, project_path: Path, project_type: str,
+        self,
+        project_path: Path,
+        project_type: str,
     ) -> dict[str, Any]:
         """Generate configuration for a specific project."""
         if project_type not in self.CONFIG_TEMPLATES:
@@ -265,7 +270,9 @@ class ConfigGenerationModule(CustomFixModule):
 
             for key, value_template in section_template.items():
                 resolved_value = self.resolve_config_value(
-                    value_template, env_vars, project_name,
+                    value_template,
+                    env_vars,
+                    project_name,
                 )
                 config[section_name][key] = resolved_value
 
@@ -281,7 +288,10 @@ class ConfigGenerationModule(CustomFixModule):
         return config
 
     def save_config_file(
-        self, project_path: Path, config: dict[str, Any], format: str = "json",
+        self,
+        project_path: Path,
+        config: dict[str, Any],
+        format: str = "json",
     ) -> bool:
         """Save configuration to file."""
         try:

@@ -409,7 +409,9 @@ class UnifiedAdvancedLintFixer:
                         compile(content, str(file_path), "exec")
                     except SyntaxError as e:
                         logger.warning(
-                            "⚠️ Syntax error after fixes in %s: %s", file_path.name, e,
+                            "⚠️ Syntax error after fixes in %s: %s",
+                            file_path.name,
+                            e,
                         )
                         return 0, {}
 
@@ -603,12 +605,14 @@ class UnifiedAdvancedLintFixer:
                         func_line = lines[j]
                         if "shipment_data" in func_line:
                             lines[j] = func_line.replace(
-                                "shipment_data", "_shipment_data",
+                                "shipment_data",
+                                "_shipment_data",
                             )
                             fixes += 1
                         if "inventory_data" in func_line:
                             lines[j] = func_line.replace(
-                                "inventory_data", "_inventory_data",
+                                "inventory_data",
+                                "_inventory_data",
                             )
                             fixes += 1
                         break
@@ -799,7 +803,8 @@ class UnifiedAdvancedLintFixer:
                 capture_output=True,
                 text=True,
                 cwd=self.workspace_root,
-                timeout=30, check=False,
+                timeout=30,
+                check=False,
             )
             return (
                 len(result.stdout.strip().split("\n")) if result.stdout.strip() else 0
@@ -868,10 +873,14 @@ def main() -> None:
     )
     parser.add_argument("--projects", nargs="+", help="Specific projects to process")
     parser.add_argument(
-        "--dry-run", action="store_true", help="Analyze without applying fixes",
+        "--dry-run",
+        action="store_true",
+        help="Analyze without applying fixes",
     )
     parser.add_argument(
-        "--aggressive", action="store_true", help="Enable aggressive mode",
+        "--aggressive",
+        action="store_true",
+        help="Enable aggressive mode",
     )
     parser.add_argument("--config", type=Path, help="Configuration file")
 

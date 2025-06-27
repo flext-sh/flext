@@ -11,6 +11,7 @@ if TYPE_CHECKING:
     from collections.abc import Iterator
 
     from singer_sdk.typing import PropertiesList
+
     from tap_oracle_advanced.tap import TapOracleAdvanced
 
 logger = structlog.get_logger()
