@@ -94,3 +94,33 @@
 # - 15 repositories migrated to flext-sh with flext- prefixes
 # - FLX Framework modules (flext-core, flext-auth, etc.) are local directories
 # ============================================================================
+[submodule "flext-api"]
+	path = flext-api
+	url = https://github.com/flext-sh/flext-api.git
+[submodule "flext-auth"]
+	path = flext-auth
+	url = https://github.com/flext-sh/flext-auth.git
+[submodule "flext-cli"]
+	path = flext-cli
+	url = https://github.com/flext-sh/flext-cli.git
+[submodule "flext-core"]
+	path = flext-core
+	url = https://github.com/flext-sh/flext-core.git
+[submodule "flext-grpc"]
+	path = flext-grpc
+	url = https://github.com/flext-sh/flext-grpc.git
+[submodule "flext-meltano"]
+	path = flext-meltano
+	url = https://github.com/flext-sh/flext-meltano.git
+[submodule "flext-observability"]
+	path = flext-observability
+	url = https://github.com/flext-sh/flext-observability.git
+[submodule "flext-plugin"]
+	path = flext-plugin
+	url = https://github.com/flext-sh/flext-plugin.git
+[submodule "flext-web"]
+	path = flext-web
+	url = https://github.com/flext-sh/flext-web.git
+[submodule "flext-quality"]
+	path = flext-quality
+	url = https://github.com/flext-sh/flext-quality.git
