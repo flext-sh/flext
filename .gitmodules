@@ -1,11 +1,11 @@
 # ============================================================================
 # PYAUTO WORKSPACE - GIT SUBMODULES CONFIGURATION
 # Organized by project category and location
-# Last Updated: 2025-06-29 - MIGRATED TO FLEXT-SH ORGANIZATION
+# Last Updated: 2025-06-29 - HYBRID CONFIGURATION
 # ============================================================================
 
 # ============================================================================
-# ACTIVE ENTERPRISE INTEGRATION PROJECTS (ROOT)
+# ENTERPRISE INTEGRATION PROJECTS (DATACOSMOS-BR - ORIGINAL)
 # ============================================================================
 
 [submodule "algar-oud-mig"]
@@ -17,7 +17,7 @@
 	url = git@github.com:datacosmos-br/gruponos-poc-oic-wms.git
 
 # ============================================================================
-# ACTIVE SINGER/MELTANO PROTOCOL PROJECTS (ROOT)
+# SINGER/MELTANO PROTOCOL PROJECTS (FLEXT-SH - MIGRATED)
 # ============================================================================
 
 [submodule "flext-dbt-ldap"]
@@ -53,19 +53,15 @@
 	url = git@github.com:flext-sh/flext-target-oracle-wms.git
 
 # ============================================================================
-# ACTIVE FLX EXTENSIONS (ROOT)
+# FLX EXTENSIONS (FLEXT-SH - MIGRATED)
 # ============================================================================
 
 [submodule "flext-ldap"]
 	path = flext-ldap
-	url = git@github.com:flext-sh/flext-ldap.git
-
-[submodule "flext-quality"]
-	path = flext-quality
-	url = git@github.com:flext-sh/flext-ldap.git
+	url = https://github.com/flext-sh/flext-ldap.git
 
 # ============================================================================
-# LEGACY PROJECTS (MOVED TO LEGACY/ DIRECTORY)
+# LEGACY PROJECTS (FLEXT-SH - MIGRATED)
 # ============================================================================
 
 [submodule "legacy/flext-adapter-example"]
@@ -94,54 +90,7 @@
 
 # ============================================================================
 # NOTES:
-# - FLX Framework modules (flx-core, flx-auth, etc.) are NOT submodules
-# - They are extracted modules created from flx-meltano-enterprise modularization
-# - Source preserved in backups/flx-meltano-enterprise_source_*
+# - Enterprise projects (algar-oud-mig, gruponos-poc-oic-wms) remain in datacosmos-br
+# - 15 repositories migrated to flext-sh with flext- prefixes
+# - FLX Framework modules (flext-core, flext-auth, etc.) are local directories
 # ============================================================================
-# ============================================================================
-# ACTIVE FLX FRAMEWORK MODULES (EXTRACTED FROM flext-meltano-enterprise)
-# ============================================================================
-
-[submodule "flext-core"]
-	path = flext-core
-	url = git@github.com:flext-sh/flext-core.git
-
-[submodule "flext-auth"]
-	path = flext-auth
-	url = git@github.com:flext-sh/flext-auth.git
-
-[submodule "flext-api"]
-	path = flext-api
-	url = git@github.com:flext-sh/flext-api.git
-
-[submodule "flext-grpc"]
-	path = flext-grpc
-	url = git@github.com:flext-sh/flext-grpc.git
-
-[submodule "flext-web"]
-	path = flext-web
-	url = git@github.com:flext-sh/flext-web.git
-
-[submodule "flext-cli"]
-	path = flext-cli
-	url = git@github.com:flext-sh/flext-cli.git
-
-[submodule "flext-plugin"]
-	path = flext-plugin
-	url = git@github.com:flext-sh/flext-plugin.git
-
-[submodule "flext-observability"]
-	path = flext-observability
-	url = git@github.com:flext-sh/flext-observability.git
-
-[submodule "flext-meltano"]
-	path = flext-meltano
-	url = git@github.com:flext-sh/flext-meltano.git
-
-# ============================================================================
-# BACKUP PRESERVATION SUBMODULES
-# ============================================================================
-
-[submodule "backups/flext-meltano-enterprise_source_20250629_121126"]
-	path = backups/flext-meltano-enterprise_source_20250629_121126
-	url = git@github.com:flext-sh/flext-meltano-enterprise.git
