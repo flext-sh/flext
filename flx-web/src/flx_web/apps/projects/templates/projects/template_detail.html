@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}{{ template.name }} - FLX Meltano Enterprise{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8 max-w-4xl">
+    <a href="{% url 'projects:template-list' %}" class="text-indigo-600 hover:text-indigo-900 mb-4 inline-block">&larr; Back to Templates</a>
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h1 class="text-3xl font-bold">{{ template.name }}</h1>
+            <p class="text-gray-500">{{ template.description }}</p>
+        </div>
+        <div>
+            <span class="text-sm font-semibold inline-block py-1 px-2 uppercase rounded-full text-indigo-600 bg-indigo-200">{{ template.category }}</span>
+        </div>
+    </div>
+
+    <div class="bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-xl font-bold mb-4">Template Details</h2>
+        <dl class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <dt class="font-semibold text-gray-600">Version</dt>
+                <dd class="text-gray-900">{{ template.version }}</dd>
+            </div>
+            <div>
+                <dt class="font-semibold text-gray-600">Created By</dt>
+                <dd class="text-gray-900">{{ template.created_by.username }}</dd>
+            </div>
+            <div>
+                <dt class="font-semibold text-gray-600">Created At</dt>
+                <dd class="text-gray-900">{{ template.created_at|date:"Y-m-d H:i" }}</dd>
+            </div>
+            <div>
+                <dt class="font-semibold text-gray-600">Last Updated</dt>
+                <dd class="text-gray-900">{{ template.updated_at|date:"Y-m-d H:i" }}</dd>
+            </div>
+        </dl>
+
+        <h2 class="text-xl font-bold mt-8 mb-4">Configuration</h2>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div>
+                <h3 class="font-semibold text-lg mb-2">Plugins</h3>
+                <pre class="bg-gray-100 p-4 rounded-md text-sm overflow-auto"><code>{{ template.plugins_template|safe }}</code></pre>
+            </div>
+            <div>
+                <h3 class="font-semibold text-lg mb-2">Environments</h3>
+                <pre class="bg-gray-100 p-4 rounded-md text-sm overflow-auto"><code>{{ template.environments_template|safe }}</code></pre>
+            </div>
+            <div>
+                <h3 class="font-semibold text-lg mb-2">Base Config</h3>
+                <pre class="bg-gray-100 p-4 rounded-md text-sm overflow-auto"><code>{{ template.config_template|safe }}</code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
