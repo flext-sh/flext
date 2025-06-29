@@ -1,319 +1,270 @@
-# 🚀 LDAP Core Shared - Enterprise Python LDAP Library
+# flx-ldap
 
-[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
-[![Version](https://img.shields.io/badge/version-1.0.0-green.svg)](https://github.com/ldap-core/flx-ldap)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Type Checked](https://img.shields.io/badge/type--checked-mypy-blue.svg)](http://mypy-lang.org/)
-[![Code Style: Ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
+Unified CLI for LDAP ETL operations, orchestrating tap-ldap, target-ldap, and dbt-ldap.
 
-**Modern Python LDAP library with enterprise features and zero-complexity APIs**
-
-## ✨ Features
-
-- 🐍 **Python 3.9+ Support**: Compatible with Python 3.9 through 3.13
-- ⚡ **Async-First Design**: High-performance async operations with sync compatibility
-- 🛡️ **Enterprise Security**: SSL/TLS, SASL, and comprehensive authentication
-- 🔄 **Migration Tools**: Oracle OID → OUD, Active Directory, OpenLDAP
-- 📊 **Schema Management**: Automated discovery, comparison, and validation
-- 🎯 **Zero-Complexity APIs**: Simple interfaces for complex operations
-- 🔍 **LDIF Processing**: High-speed streaming for large datasets (12K+ entries/sec)
-- 📈 **Performance Monitoring**: Built-in metrics and health checking
-- 🧪 **100% Type Safety**: Full type hints and Pydantic validation
-
-## 🚀 Quick Start
-
-### Installation
+## Installation
 
 ```bash
-pip install flx-ldap
-```
-
-### Basic Usage
-
-```python
-import asyncio
-from ldap_core_shared import SimpleLDAPClient
-
-async def basic_example():
-    """Simple LDAP search example."""
-    async with SimpleLDAPClient("ldap://server.com") as client:
-        await client.connect("cn=admin,dc=example,dc=com", "password")
-
-        # Search for users
-        users = await client.search(
-            "dc=example,dc=com",
-            "(objectClass=user)",
-            attributes=["cn", "mail", "department"]
-        )
-
-        for user in users:
-            print(f"User: {user.dn}")
-            print(f"Email: {user.attributes.get('mail', ['N/A'])[0]}")
-
-# Run the example
-asyncio.run(basic_example())
-```
-
-### Convenience Functions
-
-```python
-from ldap_core_shared import quick_search, process_ldif_file
-
-# Quick search without connection management
-users = await quick_search(
-    server_url="ldap://server.com",
-    bind_dn="cn=admin,dc=example,dc=com",
-    password="password",
-    base_dn="dc=example,dc=com",
-    filter_str="(objectClass=user)"
-)
-
-# Process LDIF files with high performance
-stats = await process_ldif_file(
-    "export.ldif",
-    validate_schema=True,
-    batch_size=1000
-)
-print(f"Processed {stats['entries_processed']} entries at {stats['entries_per_second']:.2f}/sec")
-```
-
-## 🏢 Enterprise Migration
-
-### Oracle OID to OUD Migration
-
-```python
-from ldap_core_shared import MigrationEngine
-
-async def migrate_production():
-    """Enterprise migration example."""
-    engine = MigrationEngine()
-
-    result = await engine.migrate(
-        source="ldap://oid.company.com:389",
-        target="ldap://oud.company.com:1389",
-        schema_mapping="oid_to_oud",
-        performance_target="12000_entries_per_second"
-    )
-
-    print(f"✅ Migrated {result.entries} entries in {result.duration}s")
-    print(f"📊 Performance: {result.entries_per_second:.0f} entries/sec")
-
-asyncio.run(migrate_production())
-```
-
-### Schema Management
-
-```python
-from ldap_core_shared import SchemaDiscovery, SchemaComparator
-
-# Discover and compare schemas
-source_schema = await SchemaDiscovery.discover("ldap://source.com")
-target_schema = await SchemaDiscovery.discover("ldap://target.com")
-
-# Compare schemas
-comparison = await SchemaComparator.compare(source_schema, target_schema)
-print(f"Differences found: {len(comparison.differences)}")
-
-for diff in comparison.differences:
-    print(f"- {diff.type}: {diff.description}")
-```
-
-## 🔧 Advanced Features
-
-### Connection Pooling
-
-```python
-from ldap_core_shared import LDAPConnection
-
-# Automatic connection pooling
-async with LDAPConnection(
-    "ldap://server.com",
-    pool_size=10,
-    max_pool_size=50
-) as conn:
-    await conn.bind("cn=admin,dc=example,dc=com", "password")
-
-    # Multiple concurrent operations use connection pool
-    tasks = [
-        conn.search(f"ou=dept{i},dc=example,dc=com", "(objectClass=user)")
-        for i in range(10)
-    ]
-
-    results = await asyncio.gather(*tasks)
-    print(f"Found {sum(len(r) for r in results)} total users")
-```
-
-### High-Performance LDIF Processing
-
-```python
-from ldap_core_shared import LDIFProcessor
-
-processor = LDIFProcessor()
-
-# Configure for high performance
-config = {
-    "batch_size": 5000,
-    "validate_schema": True,
-    "memory_efficient": True,
-    "performance_target": "A+"  # 12K+ entries/sec
-}
-
-# Process large files efficiently
-async with processor.process_stream("large_export.ldif", config) as stream:
-    async for batch in stream:
-        print(f"Processing batch of {len(batch)} entries...")
-        # Process entries in batch
-        await process_batch(batch)
-```
-
-## 📋 Compatibility
-
-### Python Versions
-
-- ✅ Python 3.9
-- ✅ Python 3.10
-- ✅ Python 3.11
-- ✅ Python 3.12
-- ✅ Python 3.13
-
-### LDAP Servers
-
-- ✅ Oracle Internet Directory (OID)
-- ✅ Oracle Unified Directory (OUD)
-- ✅ Microsoft Active Directory
-- ✅ OpenLDAP
-- ✅ Apache Directory Server
-- ✅ 389 Directory Server
-- ✅ Any RFC 4511 compliant LDAP server
-
-### Protocols
-
-- ✅ LDAP v2/v3 (RFC 4511 compliant)
-- ✅ SSL/TLS encryption
-- ✅ SASL authentication
-- ✅ Simple authentication
-- ✅ Anonymous binding
-
-## 🎯 Use Cases
-
-### Enterprise Directory Migration
-
-- **Oracle OID → Oracle OUD**: Complete migration with schema mapping
-- **Active Directory Integration**: Cross-platform directory synchronization
-- **Legacy Modernization**: Migrate from older directory systems
-
-### High-Performance Applications
-
-- **User Authentication**: Fast, secure user login systems
-- **Directory Search**: High-speed directory queries and filtering
-- **Data Synchronization**: Real-time directory data sync
-
-### Development & Testing
-
-- **Local Development**: Easy LDAP testing with Docker containers
-- **CI/CD Integration**: Automated directory testing in pipelines
-- **Schema Validation**: Ensure directory schema compliance
-
-## 📚 Documentation
-
-- 📖 **[Full Documentation](https://flx-ldap.readthedocs.io)**
-- 🚀 **[Quick Start Guide](https://flx-ldap.readthedocs.io/quickstart)**
-- 🏗️ **[API Reference](https://flx-ldap.readthedocs.io/api)**
-- 🔧 **[Configuration Guide](https://flx-ldap.readthedocs.io/configuration)**
-- 🏢 **[Enterprise Migration](https://flx-ldap.readthedocs.io/migration)**
-- 📋 **[Schema Management](https://flx-ldap.readthedocs.io/schema)**
-
-## ⚡ Performance
-
-### Benchmarks
-
-- **Search Operations**: 50,000+ queries/second
-- **LDIF Processing**: 12,000+ entries/second (A+ grade)
-- **Connection Pooling**: Sub-millisecond connection acquisition
-- **Memory Usage**: <100MB for 100K+ entries
-
-### Optimization Features
-
-- Async-first design for maximum concurrency
-- Connection pooling with intelligent reuse
-- Memory-efficient streaming for large datasets
-- Built-in performance monitoring and metrics
-
-## 🛠️ Development
-
-### Requirements
-
-- Python 3.9+
-- Poetry for dependency management
-- Pre-commit hooks for code quality
-
-### Setup Development Environment
-
-```bash
-# Clone repository
-git clone https://github.com/ldap-core/flx-ldap.git
 cd flx-ldap
 
-# Install dependencies
-poetry install
+# Install with all components
+poetry install --extras all
 
-# Install pre-commit hooks
-poetry run pre-commit install
-
-# Run tests
-poetry run pytest
-
-# Run with coverage
-poetry run pytest --cov=ldap_core_shared --cov-report=html
+# Or install with specific components
+poetry install --extras tap      # Only tap-ldap
+poetry install --extras target    # Only target-ldap
+poetry install --extras dbt       # Only dbt
 ```
 
-### Code Quality
+## Configuration
 
-This project uses **ZERO TOLERANCE** code quality standards:
+### Configuration File (YAML)
 
-- **Ruff**: All rules enabled, zero violations allowed
-- **MyPy**: Strict type checking with no type: ignore
-- **Pytest**: 100% test coverage requirement
-- **Pre-commit**: Automated quality checks
+Create `config.yml`:
+
+```yaml
+tap:
+  host: source.ldap.com
+  port: 389
+  bind_dn: cn=admin,dc=source,dc=com
+  password: source_password
+  base_dn: dc=source,dc=com
+  user_filter: "(objectClass=inetOrgPerson)"
+  group_filter: "(objectClass=groupOfNames)"
+
+target:
+  host: target.ldap.com
+  port: 389
+  bind_dn: cn=admin,dc=target,dc=com
+  password: target_password
+  base_dn: dc=target,dc=com
+
+dbt:
+  project_dir: ../dbt-ldap
+  target: dev
+  threads: 4
+  vars:
+    ldap_base_dn: dc=example,dc=com
+
+catalog_path: ./catalog.json
+state_path: ./state.json
+output_path: ./output
+log_level: INFO
+```
+
+### Environment Variables
 
 ```bash
-# Check code quality
-poetry run ruff check src/ tests/
-poetry run mypy src/
-poetry run pytest --cov=ldap_core_shared --cov-fail-under=100
+# Tap configuration
+export LDAP_TAP_HOST=source.ldap.com
+export LDAP_TAP_BIND_DN=cn=admin,dc=source,dc=com
+export LDAP_TAP_PASSWORD=source_password
+export LDAP_TAP_BASE_DN=dc=source,dc=com
+
+# Target configuration
+export LDAP_TARGET_HOST=target.ldap.com
+export LDAP_TARGET_BIND_DN=cn=admin,dc=target,dc=com
+export LDAP_TARGET_PASSWORD=target_password
+export LDAP_TARGET_BASE_DN=dc=target,dc=com
+
+# DBT configuration
+export DBT_PROJECT_DIR=../dbt-ldap
+export DBT_TARGET=dev
+
+# General configuration
+export FLX_LDAP_OUTPUT_PATH=./output
+export FLX_LDAP_LOG_LEVEL=INFO
 ```
 
-## 🤝 Contributing
+## Usage
 
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+### Basic Commands
 
-### Key Areas for Contribution
+```bash
+# Validate configuration
+flx-ldap validate
 
-- 🐛 **Bug Reports**: Found an issue? Please report it!
-- ✨ **Feature Requests**: Ideas for new features are welcome
-- 📚 **Documentation**: Help improve our documentation
-- 🧪 **Testing**: Add tests for edge cases
-- 🌐 **Internationalization**: Help support more languages
+# Show current configuration
+flx-ldap show-config
 
-## 📄 License
+# Extract data from LDAP
+flx-ldap extract --catalog catalog.json --state state.json
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+# Transform data with dbt
+flx-ldap transform run
+flx-ldap transform test
+flx-ldap transform snapshot
 
-## 🏆 Acknowledgments
+# Load data to LDAP
+flx-ldap load --input output/tap-output.jsonl
 
-- **Oracle LDAP Team**: For providing production validation with 16,062+ entries
-- **Python LDAP Community**: For the excellent ldap3 library foundation
-- **Enterprise Users**: For real-world testing and feedback
+# Run complete sync pipeline
+flx-ldap sync
+```
 
-## 📞 Support
+### Advanced Usage
 
-- 🐛 **Issues**: [GitHub Issues](https://github.com/ldap-core/flx-ldap/issues)
-- 💬 **Discussions**: [GitHub Discussions](https://github.com/ldap-core/flx-ldap/discussions)
-- 📧 **Email**: [team@ldap-core.com](mailto:team@ldap-core.com)
-- 📚 **Documentation**: [ReadTheDocs](https://flx-ldap.readthedocs.io)
+#### Custom Configuration
 
----
+```bash
+# Use specific config file
+flx-ldap --config production.yml sync
 
-**Made with ❤️ by the LDAP Core Team**
+# Override log level
+flx-ldap --log-level DEBUG extract
+```
 
-_Enterprise-grade Python LDAP library for modern applications_
+#### Selective Operations
+
+```bash
+# Extract with specific output
+flx-ldap extract --output custom-output.jsonl
+
+# Transform specific models
+flx-ldap transform run --models dim_users,dim_groups
+
+# Full refresh transformation
+flx-ldap transform run --full-refresh
+
+# Dry run load
+flx-ldap load --dry-run
+```
+
+#### Complete Pipeline
+
+```bash
+# Full sync with all options
+flx-ldap sync \
+  --catalog catalog.json \
+  --state state.json \
+  --dry-run
+
+# Sync without transformation
+flx-ldap sync --no-transform
+```
+
+### Migration Commands
+
+#### Generate Migration Plan
+
+```bash
+flx-ldap migrate plan \
+  --source-host old.ldap.com \
+  --target-host new.ldap.com \
+  --base-dn dc=example,dc=com \
+  --output migration-plan.json
+```
+
+#### Run Migration
+
+```bash
+# With comparison
+flx-ldap migrate run \
+  --source-catalog source-catalog.json \
+  --target-catalog target-catalog.json
+
+# Without comparison
+flx-ldap migrate run --no-compare
+```
+
+## Integration with algar-oud-mig
+
+The CLI integrates with algar-oud-mig for complex migration scenarios:
+
+1. **Schema Migration**: Extracts and applies custom schema elements
+2. **Data Transformation**: Uses algar-oud-mig's transformation logic
+3. **Validation**: Leverages existing validation routines
+
+### Migration Configuration
+
+```yaml
+migration:
+  source_tap_config:
+    host: oid.example.com
+    port: 389
+    base_dn: dc=example,dc=com
+  target_config:
+    host: oud.example.com
+    port: 389
+    base_dn: dc=example,dc=com
+  comparison_enabled: true
+  dry_run: false
+  batch_size: 1000
+```
+
+## Pipeline Architecture
+
+```
+┌─────────────┐     ┌─────────────┐     ┌──────────────┐
+│   tap-ldap  │────▶│  dbt-ldap   │────▶│ target-ldap  │
+│  (Extract)  │     │ (Transform) │     │   (Load)     │
+└─────────────┘     └─────────────┘     └──────────────┘
+       │                    │                     │
+       └────────────────────┴─────────────────────┘
+                            │
+                      ┌─────▼──────┐
+                      │  flx-ldap  │
+                      │(Orchestrate)│
+                      └────────────┘
+```
+
+## Output Files
+
+The CLI generates several output files:
+
+- `tap-output.jsonl`: Raw extracted data in Singer format
+- `flx-ldap.log`: Detailed execution log
+- `state.json`: Incremental sync state (if using state)
+- `catalog.json`: Discovered catalog (if running discovery)
+
+## Error Handling
+
+The CLI provides comprehensive error handling:
+
+- Configuration validation before execution
+- Component availability checks
+- Detailed error messages and logs
+- Rollback support for migrations
+
+## Performance Considerations
+
+- Use pagination (`page_size`) for large directories
+- Enable incremental sync with state management
+- Adjust batch size for migrations
+- Use multiple threads for dbt transformations
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Component not found**
+
+   ```bash
+   # Install missing component
+   poetry install --extras tap
+   ```
+
+2. **Configuration errors**
+
+   ```bash
+   # Validate configuration
+   flx-ldap validate
+   ```
+
+3. **Connection failures**
+
+   ```bash
+   # Test with minimal config
+   flx-ldap extract --catalog catalog.json
+   ```
+
+### Debug Mode
+
+```bash
+# Enable debug logging
+flx-ldap --log-level DEBUG sync
+
+# Check generated files
+ls -la output/
+cat output/flx-ldap.log
+```

@@ -56,6 +56,10 @@
 # ACTIVE FLX EXTENSIONS (ROOT)
 # ============================================================================
 
+[submodule "flx-ldap"]
+	path = flx-ldap
+	url = git@github.com:datacosmos-br/flx-ldap.git
+
 [submodule "flx-quality"]
 	path = flx-quality
 	url = git@github.com:datacosmos-br/dc-code-analyzer.git

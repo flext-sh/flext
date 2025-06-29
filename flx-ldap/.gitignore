@@ -20,7 +20,6 @@ parts/
 sdist/
 var/
 wheels/
-pip-wheel-metadata/
 share/python-wheels/
 *.egg-info/
 .installed.cfg
@@ -50,6 +49,7 @@ coverage.xml
 *.py,cover
 .hypothesis/
 .pytest_cache/
+cover/
 
 # Translations
 *.mo
@@ -72,6 +72,7 @@ instance/
 docs/_build/
 
 # PyBuilder
+.pybuilder/
 target/
 
 # Jupyter Notebook
@@ -82,7 +83,9 @@ profile_default/
 ipython_config.py
 
 # pyenv
-.python-version
+#   For a library or package, you might want to ignore these files since the code is
+#   intended to run in multiple environments; otherwise, check them in:
+# .python-version
 
 # pipenv
 #   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
@@ -91,7 +94,22 @@ ipython_config.py
 #   install all needed dependencies.
 #Pipfile.lock
 
-# PEP 582; used by e.g. github.com/David-OConnor/pyflow
+# poetry
+#   Similar to Pipfile.lock, it is generally recommended to include poetry.lock in version control.
+#   This is especially recommended for binary packages to ensure reproducibility, and is more
+#   commonly ignored for libraries.
+#   https://python-poetry.org/docs/basic-usage/#commit-your-poetrylock-file-to-version-control
+#poetry.lock
+
+# pdm
+#   Similar to Pipfile.lock, it is generally recommended to include pdm.lock in version control.
+#pdm.lock
+#   pdm stores project-wide configurations in .pdm.toml, but it is recommended to not include it
+#   in version control.
+#   https://pdm.fming.dev/#use-with-ide
+.pdm.toml
+
+# PEP 582; used by e.g. github.com/David-OConnor/pyflow and github.com/pdm-project/pdm
 __pypackages__/
 
 # Celery stuff
@@ -128,14 +146,80 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# IDEs
+# pytype static type analyzer
+.pytype/
+
+# Cython debug symbols
+cython_debug/
+
+# PyCharm
+#  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
+#  be added to the global gitignore or merged into this project gitignore.  For a PyCharm
+#  project, it is generally recommended to include the directories below, but the decision
+#  belongs to the individual developer.
+#/.idea/
+
+# VS Code
 .vscode/
-.idea/
+
+# flx-ldap specific
+data/
+output/
+logs/
+state/
+extracted/
+loaded/
+transformed/
+
+# Singer SDK specific
+*.state
+state.json
+catalogs/
+
+# dbt specific (when using dbt integration)
+target/
+dbt_packages/
+dbt.log
+
+# LDAP specific
+*.ldif.bak
+ldap_data/
+ldap_backup/
+sync_state/
+migration_state/
+
+# Test artifacts
+test_output/
+test_data/
+e2e_results/
+
+# Docker
+docker-compose.override.yml
+.dockerignore
+
+# Temporary files
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
+
+# Local configuration
+config.local.json
+.env.local
+.env.*.local
+migration.local.json
+
+# Pipeline artifacts
+pipeline_state/
+execution_logs/
+workflow_data/
+
+# IDE files
 *.swp
 *.swo
 *~
 
-# OS
+# OS generated files
 .DS_Store
 .DS_Store?
 ._*
@@ -144,9 +228,7 @@ dmypy.json
 ehthumbs.db
 Thumbs.db
 
-# Project specific
-docs/reference/
-.token
-reports/
-htmlcov/
-coverage.xml
+# Runtime data
+runtime/
+cache/
+.cache/
