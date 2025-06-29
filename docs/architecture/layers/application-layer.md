@@ -56,8 +56,8 @@ This layer follows Clean Architecture pattern, depends on the domain layer, but 
 ### **Service Layer Pattern**
 
 ```python
-from flx.application.services import ApplicationService
-from flx.core.domain import Entity, AggregateRoot
+from flext.application.services import ApplicationService
+from flext.core.domain import Entity, AggregateRoot
 
 class OrderApplicationService(ApplicationService):
     """Application service orchestrating order use cases."""
@@ -95,7 +95,7 @@ class OrderApplicationService(ApplicationService):
 ### **Transaction Management**
 
 ```python
-from flx.application.transaction import TransactionManager
+from flext.application.transaction import TransactionManager
 
 class OrderApplicationService(ApplicationService):
     async def process_order(self, command: ProcessOrderCommand) -> None:

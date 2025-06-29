@@ -64,7 +64,7 @@
 - **Documents**: 8 comprehensive files
 - **Completeness**: 100%
 - **Last Updated**: June 11, 2025
-- **Source Validation**: ✅ Validated against `/flx/src/flx/infra/` implementation
+- **Source Validation**: ✅ Validated against `/flext/src/flext/infra/` implementation
 
 ---
 
@@ -102,9 +102,9 @@ The infrastructure layer implements the outbound side of hexagonal architecture,
 ### **Service Initialization Pattern**
 
 ```python
-from flx.adapters.base import BaseAdapter
-from flx.infra.cache import CacheService
-from flx.infra.http import HttpClientService
+from flext.adapters.base import BaseAdapter
+from flext.infra.cache import CacheService
+from flext.infra.http import HttpClientService
 
 # Production service initialization
 cache_adapter = CacheService(
@@ -130,7 +130,7 @@ await http_adapter.initialize()
 ### **Health Monitoring Integration**
 
 ```python
-from flx.infra.services.registry import ServiceRegistry
+from flext.infra.services.registry import ServiceRegistry
 
 # Service registry with health aggregation
 registry = ServiceRegistry()

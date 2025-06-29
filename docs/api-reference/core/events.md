@@ -17,7 +17,7 @@
 ### **📍 Learning Path Position**
 
 ```
-[Core APIs](./index.md) → [Base Classes](./base-classes.md) → **[Domain Events]** → [Complete API](../comprehensive/flx-complete-api.md)
+[Core APIs](./index.md) → [Base Classes](./base-classes.md) → **[Domain Events]** → [Complete API](../comprehensive/flext-complete-api.md)
 ```
 
 ## Overview
@@ -31,7 +31,7 @@ The Domain Events module provides the foundation for event-driven architecture i
 Base class for all domain events in the FLX hexagonal architecture.
 
 ```python
-from flx.core.events import DomainEvent
+from flext.core.events import DomainEvent
 
 class UserRegistered(DomainEvent):
     user_id: str
@@ -113,7 +113,7 @@ caused_event = follow_up_event.with_causation(original_event.event_id)
 FLX framework-specific domain event with enhanced multi-tenancy and routing.
 
 ```python
-from flx.core.events import FlxDomainEvent
+from flext.core.events import FlxDomainEvent
 
 class TenantUserRegistered(FlxDomainEvent):
     user_id: str
@@ -127,7 +127,7 @@ class TenantUserRegistered(FlxDomainEvent):
 | ----------- | ------------- | ---------------------------------------------------- |
 | `tenant_id` | `str \| None` | Tenant identifier for multi-tenant isolation         |
 | `user_id`   | `str \| None` | User who initiated the action that caused this event |
-| `source`    | `str`         | Source system identifier (default: "flx")            |
+| `source`    | `str`         | Source system identifier (default: "flext")            |
 | `version`   | `str`         | Event schema version (default: "1.0")                |
 
 #### Properties
@@ -142,8 +142,8 @@ Generate intelligent message routing key for event-driven architectures.
 
 **Format:**
 
-- With tenant: `"flx.{tenant_id}.{event_type_normalized}"`
-- Without tenant: `"flx.{event_type_normalized}"`
+- With tenant: `"flext.{tenant_id}.{event_type_normalized}"`
+- Without tenant: `"flext.{event_type_normalized}"`
 
 **Example:**
 
@@ -151,12 +151,12 @@ Generate intelligent message routing key for event-driven architectures.
 # Single-tenant event
 event = FlxDomainEvent()
 event.event_type = "UserRegistered"
-assert event.routing_key == "flx.userregistered"
+assert event.routing_key == "flext.userregistered"
 
 # Multi-tenant event
 tenant_event = FlxDomainEvent(tenant_id="acme_corp")
 tenant_event.event_type = "OrderPlaced"
-assert tenant_event.routing_key == "flx.acme_corp.orderplaced"
+assert tenant_event.routing_key == "flext.acme_corp.orderplaced"
 ```
 
 ## Usage Patterns
@@ -164,7 +164,7 @@ assert tenant_event.routing_key == "flx.acme_corp.orderplaced"
 ### Basic Event Creation
 
 ```python
-from flx.core.events import DomainEvent
+from flext.core.events import DomainEvent
 from datetime import datetime
 from uuid import uuid4
 
@@ -197,7 +197,7 @@ shipping_event = ShippingScheduled(...).with_causation(order_event.event_id)
 ### Multi-Tenant Events
 
 ```python
-from flx.core.events import FlxDomainEvent
+from flext.core.events import FlxDomainEvent
 
 class TenantOrderPlaced(FlxDomainEvent):
     order_id: str
@@ -215,7 +215,7 @@ event = TenantOrderPlaced(
 )
 
 # Automatic routing key for message brokers
-routing_key = event.routing_key  # "flx.company_abc.tenantorderplaced"
+routing_key = event.routing_key  # "flext.company_abc.tenantorderplaced"
 ```
 
 ## Architecture Integration
@@ -260,19 +260,19 @@ class PlaceOrderHandler:
 ```python
 # RabbitMQ routing patterns
 await publisher.publish(
-    routing_key=event.routing_key,  # "flx.tenant123.orderplaced"
+    routing_key=event.routing_key,  # "flext.tenant123.orderplaced"
     message=event.model_dump()
 )
 
 # Subscribe to tenant-specific events
 await subscriber.subscribe(
-    pattern="flx.tenant123.*",
+    pattern="flext.tenant123.*",
     handler=handle_tenant_events
 )
 
 # Subscribe to specific event types across tenants
 await subscriber.subscribe(
-    pattern="flx.*.orderplaced",
+    pattern="flext.*.orderplaced",
     handler=handle_order_events
 )
 ```
@@ -380,7 +380,7 @@ except ValidationError as e:
 
 - [**Infrastructure Service Patterns**](../../infrastructure/service-patterns.md) - Infrastructure services for event handling, storage, and distribution
 - [**Oracle Integration Events**](../../examples/oracle-integration-real-examples.md) - Oracle integration examples using domain events for workflow coordination
-- [**Complete Framework API**](../comprehensive/flx-complete-api.md) - Full API documentation including event handling and infrastructure integration
+- [**Complete Framework API**](../comprehensive/flext-complete-api.md) - Full API documentation including event handling and infrastructure integration
 - [**Security Event Patterns**](../../security/architecture/security-architecture.md) - Security-related events and audit trail patterns
 - [**Performance Event Optimization**](../../optimization/performance/optimization-guide.md) - Performance considerations for event processing and distribution
 - [**Production Event Monitoring**](../../infrastructure/operational-excellence.md) - Event monitoring, tracing, and observability in production systems

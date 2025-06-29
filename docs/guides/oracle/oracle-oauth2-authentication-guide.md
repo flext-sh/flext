@@ -170,7 +170,7 @@ main "$@"
 #### 1.5.1 Token Caching and Refresh
 
 ```python
-from flx.adapters.oracle.oic import OICAuthenticator
+from flext.adapters.oracle.oic import OICAuthenticator
 
 # Initialize authenticator with automatic token management
 auth = OICAuthenticator(
@@ -194,7 +194,7 @@ response = await session.get('/ic/api/integration/v1/integrations')
 
 ```python
 import asyncio
-from flx.adapters.oracle.oic import OICClient, OICAuthError
+from flext.adapters.oracle.oic import OICClient, OICAuthError
 
 async def robust_oic_call(endpoint, max_retries=3):
     """Make OIC API call with robust error handling."""
@@ -348,7 +348,7 @@ response=$(oic_api_get '/ic/api/integration/v1/integrations')
 
 ```bash
 # Use encrypted credential storage
-python -m flx.security create-credential-store \
+python -m flext.security create-credential-store \
     --encrypted \
     --output ./secure/credentials.enc \
     --key-file ./secure/encryption.key
@@ -394,7 +394,7 @@ export SSL_CERT_BUNDLE=/path/to/trusted-ca-bundle.pem
 #### 3.3.1 Authentication Monitoring
 
 ```python
-from flx.adapters.oracle.oic import OICAuthMonitor
+from flext.adapters.oracle.oic import OICAuthMonitor
 
 # Initialize monitoring
 monitor = OICAuthMonitor()
@@ -429,7 +429,7 @@ audit_report = await monitor.generate_audit_report(
 For environments supporting JWT Assertion:
 
 ```python
-from flx.adapters.oracle.oic import JWTAssertion
+from flext.adapters.oracle.oic import JWTAssertion
 
 # Configure JWT assertion
 jwt_auth = JWTAssertion(
@@ -459,7 +459,7 @@ curl -X GET "$WMS_URL/resource" \
 ### 5.1 Unified Authentication Service
 
 ```python
-from flx.adapters.oracle import OracleAuthenticationService
+from flext.adapters.oracle import OracleAuthenticationService
 
 # Initialize unified auth service
 auth_service = OracleAuthenticationService(

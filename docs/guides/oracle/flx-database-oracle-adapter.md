@@ -8,9 +8,9 @@
 
 ## Navigation Context
 
-**Current Location**: `docs/guides/oracle/flx_database_oracle-adapter.md`
+**Current Location**: `docs/guides/oracle/flext_database_oracle-adapter.md`
 **Parent**: [Oracle Integration Hub](oracle-integration-hub.md) > Oracle Database Integration
-**Quick Links**: [WMS Adapter](flx-http-oracle-wms-adapter.md) | [OIC Adapter](flx-http-oracle-oic-adapter.md) | [Architecture](../../architecture/index.md)
+**Quick Links**: [WMS Adapter](flext-http-oracle-wms-adapter.md) | [OIC Adapter](flext-http-oracle-oic-adapter.md) | [Architecture](../../architecture/index.md)
 
 ---
 
@@ -95,7 +95,7 @@ class OracleConfig(BaseModel):
 ### Core Adapter Implementation
 
 ```python
-# src/flx/adapters/outbound/oracle/database_adapter.py
+# src/flext/adapters/outbound/oracle/database_adapter.py
 import oracledb
 import asyncio
 from contextlib import asynccontextmanager
@@ -104,16 +104,16 @@ from decimal import Decimal
 from datetime import datetime, date
 from uuid import UUID
 
-from flx.core.adapters.base import BaseAdapter
-from flx.core.adapters.mixins import (
+from flext.core.adapters.base import BaseAdapter
+from flext.core.adapters.mixins import (
     UnifiedObservabilityMixin,
     AdapterErrorHandlingMixin,
     UnifiedAdapterConfigurationMixin,
     AdvancedAdapterMixin
 )
-from flx.domain.ports.outbound.database import DatabasePort
-from flx.adapters.outbound.oracle.config import OracleConfig
-from flx.adapters.outbound.oracle.exceptions import (
+from flext.domain.ports.outbound.database import DatabasePort
+from flext.adapters.outbound.oracle.config import OracleConfig
+from flext.adapters.outbound.oracle.exceptions import (
     OracleConnectionError,
     OracleQueryError,
     OracleTransactionError
@@ -498,8 +498,8 @@ class FlxOracleDbAdapter(
 ```python
 # Basic setup and usage
 import asyncio
-from flx.adapters.outbound.oracle.database_adapter import FlxOracleDbAdapter
-from flx.adapters.outbound.oracle.config import OracleConfig
+from flext.adapters.outbound.oracle.database_adapter import FlxOracleDbAdapter
+from flext.adapters.outbound.oracle.config import OracleConfig
 
 async def basic_operations_example():
     # Configure Oracle connection
@@ -701,8 +701,8 @@ async def optimized_queries_example():
 
 ### Next Steps
 
-- [Oracle WMS Integration](flx-http-oracle-wms-adapter.md) - Integrate with WMS APIs
-- [Oracle OIC Integration](flx-http-oracle-oic-adapter.md) - Connect to Oracle Integration Cloud
+- [Oracle WMS Integration](flext-http-oracle-wms-adapter.md) - Integrate with WMS APIs
+- [Oracle OIC Integration](flext-http-oracle-oic-adapter.md) - Connect to Oracle Integration Cloud
 - [Observability Setup](../../infrastructure/operational-excellence.md) - Monitor database operations
 
 ### Related Topics

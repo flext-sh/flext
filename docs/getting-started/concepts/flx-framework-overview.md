@@ -1,7 +1,7 @@
 # FLX - Hexagonal Architecture Framework Overview
 
 [![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/)
-[![Version](https://img.shields.io/badge/Version-0.4.0-green)](https://github.com/flx/flx)
+[![Version](https://img.shields.io/badge/Version-0.4.0-green)](https://github.com/flext/flext)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Type Checked](https://img.shields.io/badge/type--checked-mypy-blue)](http://mypy-lang.org/)
 [![Architecture](https://img.shields.io/badge/Architecture-Hexagonal-blue)](../architecture/INFRASTRUCTURE_ARCHITECTURE.md)
@@ -65,24 +65,24 @@
 ### Your First FLX Application
 
 ```python
-from flx import Flx
+from flext import Flx
 from decimal import Decimal
 
 # Initialize the FLX framework
-flx = Flx()
+flext = Flx()
 
 # Create rich domain entities
-customer = flx.Entities.BusinessEntity(
+customer = flext.Entities.BusinessEntity(
     name="Acme Corporation",
     business_type="Enterprise"
 )
 
 # Use composable mixins for advanced capabilities
 class AdvancedCustomer(
-    flx.Entities.BaseEntity,
-    flx.Mixins.Status,
-    flx.Mixins.Config,
-    flx.Mixins.Metadata
+    flext.Entities.BaseEntity,
+    flext.Mixins.Status,
+    flext.Mixins.Config,
+    flext.Mixins.Metadata
 ):
     pass
 
@@ -93,7 +93,7 @@ advanced_customer.add_metadata("industry", "technology")
 advanced_customer.activate()
 
 # Work with aggregate roots and domain events
-order = flx.Entities.AggregateRoot(name="Order #12345")
+order = flext.Entities.AggregateRoot(name="Order #12345")
 order.raise_domain_event("OrderCreated", {
     "customer_id": customer.id,
     "order_total": 2500.00,
@@ -101,7 +101,7 @@ order.raise_domain_event("OrderCreated", {
 })
 
 # Use value objects for immutable data
-contact = flx.ValueObjects.ContactInfo(
+contact = flext.ValueObjects.ContactInfo(
     email="orders@acme.com",
     phone="+1-555-0123"
 )
@@ -116,8 +116,8 @@ print(f"Contact: {contact.email}")
 
 ```python
 import asyncio
-from flx.infra.adapters import UnifiedAdapterManager
-from flx.adapters.outbound.cache import CacheAdapter
+from flext.infra.adapters import UnifiedAdapterManager
+from flext.adapters.outbound.cache import CacheAdapter
 
 async def main():
     # Set up infrastructure with unified management
@@ -157,15 +157,15 @@ asyncio.run(main())
 
 ```python
 import cyclopts
-from flx import Flx
+from flext import Flx
 
 app = cyclopts.App(name="myapp", help="My FLX Application")
-flx = Flx()
+flext = Flx()
 
 @app.command
 async def create_customer(name: str, email: str) -> None:
     """Create a new customer."""
-    customer = flx.Entities.BusinessEntity(
+    customer = flext.Entities.BusinessEntity(
         name=name,
         business_type="Standard"
     )
@@ -271,12 +271,12 @@ FLX follows a comprehensive testing pyramid:
 
 ```python
 import pytest
-from flx import Flx
+from flext import Flx
 
 # Unit tests - Domain logic
 def test_business_logic():
-    flx = Flx()
-    customer = flx.Entities.BusinessEntity(
+    flext = Flx()
+    customer = flext.Entities.BusinessEntity(
         name="Test Corp",
         business_type="Enterprise"
     )
@@ -286,7 +286,7 @@ def test_business_logic():
 # Integration tests - Adapter integration
 @pytest.mark.integration
 async def test_cache_integration():
-    from flx.adapters.outbound.cache import CacheAdapter
+    from flext.adapters.outbound.cache import CacheAdapter
 
     adapter = CacheAdapter()
     adapter.configure({"backend": "memory"})
@@ -308,8 +308,8 @@ async def test_complete_workflow():
 ### Project Structure
 
 ```
-flx/
-├── src/flx/
+flext/
+├── src/flext/
 │   ├── core/                   # Domain layer - pure business logic
 │   │   ├── entities.py        # Domain entities and aggregates
 │   │   ├── events.py          # Domain events
@@ -338,7 +338,7 @@ flx/
 ### Configuration Management
 
 ```python
-from flx.infra.config import FlxConfig
+from flext.infra.config import FlxConfig
 
 # Environment-based configuration
 config = FlxConfig.from_env()
@@ -358,16 +358,16 @@ config = FlxConfig(
 
 ```bash
 # Built-in commands
-flx --help                    # Show available commands
-flx --version                 # Show version information
+flext --help                    # Show available commands
+flext --version                 # Show version information
 
 # Configuration management
-flx config show               # Show current configuration
-flx config validate           # Validate configuration
+flext config show               # Show current configuration
+flext config validate           # Validate configuration
 
 # System operations
-flx system health             # Check system health
-flx system info               # Show system information
+flext system health             # Check system health
+flext system info               # Show system information
 ```
 
 ## Plugin Development
@@ -382,7 +382,7 @@ def register_adapters(registry: dict) -> None:
     registry["my_custom"] = MyCustomAdapter
 
 # Plugin configuration in pyproject.toml
-[tool.poetry.plugins."flx.plugins"]
+[tool.poetry.plugins."flext.plugins"]
 my_plugin = "my_plugin_package"
 ```
 
@@ -422,8 +422,8 @@ MIT License - see [LICENSE](../../LICENSE) file for details.
 ### Support & Community
 
 - **📖 Documentation**: [Complete FLX Documentation](../README.md)
-- **🐛 Issues**: [GitHub Issues](https://github.com/datacosmos-br/flx/issues)
-- **💬 Discussions**: [GitHub Discussions](https://github.com/datacosmos-br/flx/discussions)
+- **🐛 Issues**: [GitHub Issues](https://github.com/datacosmos-br/flext/issues)
+- **💬 Discussions**: [GitHub Discussions](https://github.com/datacosmos-br/flext/discussions)
 - **📧 Enterprise Support**: Contact us for enterprise support options
 
 ---

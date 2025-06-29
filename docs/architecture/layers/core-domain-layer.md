@@ -1,12 +1,12 @@
 # FLX Core Domain Layer - Validated Implementation Guide
 
-> **Function**: Production-validated domain-driven design implementation | **Audience**: Architects, senior developers | **Status**: **Validated against `/flx/src/flx/core/`**
+> **Function**: Production-validated domain-driven design implementation | **Audience**: Architects, senior developers | **Status**: **Validated against `/flext/src/flext/core/`**
 
 [![DDD](https://img.shields.io/badge/pattern-DDD-blue.svg)](../index.md)
 [![Validated](https://img.shields.io/badge/status-code_validated-green.svg)](./VALIDATED_IMPLEMENTATION_ANALYSIS.md)
 [![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](https://python.org)
 
-**Production-ready core domain layer implementing pure Domain-Driven Design patterns with complete infrastructure isolation. All content validated against actual source code in `/flx/src/flx/core/`.**
+**Production-ready core domain layer implementing pure Domain-Driven Design patterns with complete infrastructure isolation. All content validated against actual source code in `/flext/src/flext/core/`.**
 
 ---
 
@@ -24,12 +24,12 @@
 
 ## 🎯 **Real Implementation Overview**
 
-The FLX core domain layer (`/flx/src/flx/core/`) implements **production-grade Domain-Driven Design** with:
+The FLX core domain layer (`/flext/src/flext/core/`) implements **production-grade Domain-Driven Design** with:
 
 ### **Validated Core Components**
 
 ```
-/flx/src/flx/core/
+/flext/src/flext/core/
 ├── __init__.py           # ✅ Clean public API exports
 ├── base.py              # ✅ Foundation classes (DomainObject, Identifiable)
 ├── entities.py          # ✅ Entity and AggregateRoot implementations
@@ -53,7 +53,7 @@ The FLX core domain layer (`/flx/src/flx/core/`) implements **production-grade D
 
 ## 🏗️ **Entities - Real Implementation**
 
-Based on actual `/flx/src/flx/core/entities.py`:
+Based on actual `/flext/src/flext/core/entities.py`:
 
 ### **Entity Base Class**
 
@@ -188,7 +188,7 @@ class Order(AggregateRoot):
 
 ## 💎 **Value Objects - Real Implementation**
 
-Based on actual `/flx/src/flx/core/value_objects.py`:
+Based on actual `/flext/src/flext/core/value_objects.py`:
 
 ### **Value Object Base Class**
 
@@ -279,7 +279,7 @@ class Email(ValueObject):
 ### **Event Infrastructure**
 
 ```python
-# Based on /flx/src/flx/core/events.py
+# Based on /flext/src/flext/core/events.py
 class DomainEvent(ValueObject):
     """Base class for domain events."""
 
@@ -554,7 +554,7 @@ class CustomerActivatedEvent(DomainEvent):
 ---
 
 **Implementation Status**: ✅ **Validated and Production-Ready**
-**Source Validation**: `/flx/src/flx/core/`
+**Source Validation**: `/flext/src/flext/core/`
 **Quality Score**: **95% Test Coverage**
 **Last Updated**: January 2025
 
@@ -565,9 +565,9 @@ _This guide is validated against actual FLX framework implementation and provide
 ## Usage
 
 ```python
-from flx.core.entities import AggregateRoot, Entity
-from flx.core.domain.value_objects import ValueObject
-from flx.core.events import DomainEvent
+from flext.core.entities import AggregateRoot, Entity
+from flext.core.domain.value_objects import ValueObject
+from flext.core.events import DomainEvent
 from pydantic import field_validator
 
 # Define aggregate root (actual implementation)
@@ -617,7 +617,7 @@ The core domain integrates with Lato for DDD support:
 ```python
 # FLX integrates with Lato for DDD patterns
 from lato import Command
-from flx.application.services import CommandService
+from flext.application.services import CommandService
 
 # Commands come from Lato
 class CreateUserCommand(Command):

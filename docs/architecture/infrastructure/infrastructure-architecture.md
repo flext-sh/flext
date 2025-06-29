@@ -50,20 +50,20 @@ The Infrastructure Architecture defines how FLX Framework applications are deplo
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: flx-application
+  name: flext-application
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: flx-application
+      app: flext-application
   template:
     metadata:
       labels:
-        app: flx-application
+        app: flext-application
     spec:
       containers:
-        - name: flx-app
-          image: flx-framework:latest
+        - name: flext-app
+          image: flext-framework:latest
           resources:
             requests:
               memory: "256Mi"
@@ -77,7 +77,7 @@ spec:
 
 ```python
 # Database infrastructure with connection pooling
-from flx.infra.database import DatabaseEngine
+from flext.infra.database import DatabaseEngine
 
 class ProductionDatabaseEngine(DatabaseEngine):
     """Production-grade database engine with advanced features."""
@@ -103,7 +103,7 @@ class ProductionDatabaseEngine(DatabaseEngine):
 
 ```python
 # Load balancer and service mesh configuration
-from flx.infra.networking import LoadBalancer, ServiceMesh
+from flext.infra.networking import LoadBalancer, ServiceMesh
 
 class InfrastructureNetworking:
     """Network infrastructure management."""
@@ -127,7 +127,7 @@ class InfrastructureNetworking:
 
 ```python
 # Automatic service registration and discovery
-from flx.infra.discovery import ServiceRegistry
+from flext.infra.discovery import ServiceRegistry
 
 class ServiceDiscovery:
     """Manages service registration and discovery."""
@@ -138,7 +138,7 @@ class ServiceDiscovery:
             name=service_name,
             endpoint=endpoint,
             health_check="/health",
-            tags=["flx", "production"]
+            tags=["flext", "production"]
         )
 
     async def discover_service(self, service_name: str) -> ServiceEndpoint:
@@ -151,7 +151,7 @@ class ServiceDiscovery:
 
 ```python
 # Centralized configuration with environment-specific overrides
-from flx.infra.config import ConfigurationManager
+from flext.infra.config import ConfigurationManager
 
 class InfrastructureConfig:
     """Infrastructure configuration management."""
@@ -174,7 +174,7 @@ class InfrastructureConfig:
 
 ```python
 # Comprehensive metrics collection
-from flx.infra.monitoring import MetricsCollector, PrometheusExporter
+from flext.infra.monitoring import MetricsCollector, PrometheusExporter
 
 class InfrastructureMetrics:
     """Infrastructure metrics collection and export."""
@@ -198,7 +198,7 @@ class InfrastructureMetrics:
 
 ```python
 # Comprehensive health monitoring
-from flx.infra.health import HealthMonitor
+from flext.infra.health import HealthMonitor
 
 class InfrastructureHealth:
     """Monitor infrastructure component health."""
@@ -225,7 +225,7 @@ class InfrastructureHealth:
 
 ```python
 # Network-level security controls
-from flx.infra.security import NetworkSecurity, Firewall
+from flext.infra.security import NetworkSecurity, Firewall
 
 class SecurityInfrastructure:
     """Infrastructure security management."""
@@ -252,7 +252,7 @@ class SecurityInfrastructure:
 
 ```python
 # Centralized secret management
-from flx.infra.secrets import SecretManager, VaultIntegration
+from flext.infra.secrets import SecretManager, VaultIntegration
 
 class InfrastructureSecrets:
     """Manage infrastructure secrets securely."""
@@ -277,7 +277,7 @@ class InfrastructureSecrets:
 
 ```python
 # Auto-scaling based on metrics
-from flx.infra.scaling import AutoScaler, MetricsTrigger
+from flext.infra.scaling import AutoScaler, MetricsTrigger
 
 class InfrastructureScaling:
     """Manage infrastructure scaling policies."""
@@ -312,7 +312,7 @@ class InfrastructureScaling:
 
 ```python
 # Dynamic resource allocation
-from flx.infra.resources import ResourceManager
+from flext.infra.resources import ResourceManager
 
 class ResourceOptimization:
     """Optimize infrastructure resource utilization."""

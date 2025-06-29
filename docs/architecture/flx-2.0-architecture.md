@@ -24,8 +24,8 @@
 
 - **📂 Section Hub**: [Architecture Hub](./index.md)
 - **🏠 Documentation Root**: [Root Index](../index.md)
-- **🔗 Source Code**: [FLX 2.0 Core](../../flx/src/flx/core/)
-- **🔗 Related**: [Meltano Integration](../guides/integration/meltano-integration.md), [Migration Guide](./migration/flx-2.0-migration.md)
+- **🔗 Source Code**: [FLX 2.0 Core](../../flext/src/flext/core/)
+- **🔗 Related**: [Meltano Integration](../guides/integration/meltano-integration.md), [Migration Guide](./migration/flext-2.0-migration.md)
 
 ---
 
@@ -102,7 +102,7 @@ FLX 2.0 represents a complete architectural evolution, transforming from a compl
 
 ## Detailed Component Design
 
-### 1. FLX Core Module (`flx/core.py` - ~800 lines)
+### 1. FLX Core Module (`flext/core.py` - ~800 lines)
 
 **Replaces:** 8,200 lines of plugin management infrastructure
 
@@ -249,7 +249,7 @@ class FlxWorkflow(BaseModel):
         return True
 ```
 
-### 2. FLX Templates Module (`flx/templates.py` - ~600 lines)
+### 2. FLX Templates Module (`flext/templates.py` - ~600 lines)
 
 **Replaces:** 3,500 lines of configuration management
 
@@ -269,7 +269,7 @@ class FlxTemplate:
     MELTANO_CONFIG_TEMPLATE = {
         "version": 1,
         "default_environment": "dev",
-        "project_id": "flx-project",
+        "project_id": "flext-project",
         "environments": [
             {
                 "name": "dev",
@@ -381,7 +381,7 @@ async def create_project_from_template(
     return project
 ```
 
-### 3. FLX CLI Module (`flx/cli.py` - ~400 lines)
+### 3. FLX CLI Module (`flext/cli.py` - ~400 lines)
 
 **Replaces:** 4,200 lines of command execution infrastructure
 
@@ -395,18 +395,18 @@ import click
 from pathlib import Path
 from typing import Optional
 
-from flx.core import FlxProject, FlxWorkflow
-from flx.templates import create_project_from_template, TEMPLATES
+from flext.core import FlxProject, FlxWorkflow
+from flext.templates import create_project_from_template, TEMPLATES
 
 
 @click.group()
 @click.version_option(version="2.0.0")
-def flx():
+def flext():
     """FLX 2.0 - Meltano-Powered Data Framework"""
     pass
 
 
-@flx.command()
+@flext.command()
 @click.argument("name")
 @click.option("--path", default=".", help="Project root path")
 @click.option("--template", default="data-warehouse", type=click.Choice(list(TEMPLATES.keys())))
@@ -417,7 +417,7 @@ async def init(name: str, path: str, template: str):
     click.echo(f"📁 Location: {project.root_path}")
 
 
-@flx.command()
+@flext.command()
 @click.argument("plugin_type")
 @click.argument("plugin_name")
 @click.option("--variant", default="default")
@@ -432,7 +432,7 @@ async def add(plugin_type: str, plugin_name: str, variant: str):
         click.echo(f"❌ Failed to add plugin '{plugin_name}'")
 
 
-@flx.command()
+@flext.command()
 @click.argument("plugins", nargs=-1, required=True)
 @click.option("--state-id", help="State ID for pipeline")
 @click.option("--env", help="Environment to run in")
@@ -448,7 +448,7 @@ async def run(plugins: tuple, state_id: Optional[str], env: Optional[str]):
         click.echo(result["stderr"])
 
 
-@flx.command()
+@flext.command()
 @click.pass_context
 async def meltano(ctx):
     """Delegate to Meltano CLI."""
@@ -462,10 +462,10 @@ async def meltano(ctx):
 
 
 if __name__ == "__main__":
-    flx()
+    flext()
 ```
 
-### 4. FLX State Module (`flx/state.py` - ~300 lines)
+### 4. FLX State Module (`flext/state.py` - ~300 lines)
 
 **Replaces:** 2,800 lines of state management
 
@@ -511,7 +511,7 @@ class FlxState:
         self.state_service.merge_state(source_id, target_id)
 ```
 
-### 5. FLX Integration Module (`flx/integrations.py` - ~500 lines)
+### 5. FLX Integration Module (`flext/integrations.py` - ~500 lines)
 
 **Replaces:** 3,800 lines of orchestration
 
@@ -524,7 +524,7 @@ import asyncio
 from typing import Any, Dict, List, Optional
 from pathlib import Path
 
-from flx.core import FlxProject, FlxWorkflow
+from flext.core import FlxProject, FlxWorkflow
 
 
 class AirflowIntegration:
@@ -551,7 +551,7 @@ from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
 
 default_args = {{
-    'owner': 'flx',
+    'owner': 'flext',
     'depends_on_past': False,
     'start_date': datetime(2023, 1, 1),
     'retries': 1,
@@ -616,9 +616,9 @@ class MonitoringIntegration:
 ### FLX 2.0 Minimal Structure (~2,500 lines total)
 
 ```
-flx-2.0/
+flext-2.0/
 ├── pyproject.toml              # Dependencies: meltano + pydantic
-├── flx/
+├── flext/
 │   ├── __init__.py            # Main exports (~50 lines)
 │   ├── core.py               # Core FlxProject (~800 lines)
 │   ├── templates.py          # Project templates (~600 lines)

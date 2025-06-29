@@ -73,7 +73,7 @@ Oracle WMS Cloud provides comprehensive warehouse management capabilities throug
 #### Method 1: FLX Project Installation
 
 ```bash
-# Install from the flx_project directory
+# Install from the flext_project directory
 pip install -e .
 
 # Or install using poetry
@@ -94,11 +94,11 @@ poetry run gn-wms-cli --version
 
 ```bash
 # Install from PyPI (when available)
-pip install flx-http-oracle-wms
+pip install flext-http-oracle-wms
 
 # Or install from source
 git clone <repository>
-cd flx-http-oracle-wms
+cd flext-http-oracle-wms
 poetry install
 ```
 
@@ -165,26 +165,26 @@ poetry run gn-wms-cli config --format=json
 
 ```bash
 # List all available entities
-flx-http-oracle-wms entity-list
+flext-http-oracle-wms entity-list
 
 # Get entity details and schema
-flx-http-oracle-wms entity-schema [entity_name]
+flext-http-oracle-wms entity-schema [entity_name]
 
 # Discover entity capabilities
-flx-http-oracle-wms entity-capabilities [entity_name]
+flext-http-oracle-wms entity-capabilities [entity_name]
 ```
 
 ##### Entity Queries
 
 ```bash
 # Basic entity query
-flx-http-oracle-wms entity-query [entity] [key] [company_code] [facility_code]
+flext-http-oracle-wms entity-query [entity] [key] [company_code] [facility_code]
 
 # Advanced queries with filtering
-flx-http-oracle-wms entity-query orders ORD123 COMPANY01 WH1 --format=json
+flext-http-oracle-wms entity-query orders ORD123 COMPANY01 WH1 --format=json
 
 # Bulk entity extraction
-flx-http-oracle-wms entity-extract orders --batch-size=500 --output=orders.json
+flext-http-oracle-wms entity-extract orders --batch-size=500 --output=orders.json
 ```
 
 ##### Specialized WMS Operations
@@ -193,39 +193,39 @@ flx-http-oracle-wms entity-extract orders --batch-size=500 --output=orders.json
 
 ```bash
 # Query specific order
-flx-http-oracle-wms entity-query order_hdr ORD12345 YOURCO WH1
+flext-http-oracle-wms entity-query order_hdr ORD12345 YOURCO WH1
 
 # Extract order details
-flx-http-oracle-wms entity-query order_dtl ORD12345 YOURCO WH1
+flext-http-oracle-wms entity-query order_dtl ORD12345 YOURCO WH1
 
 # Bulk order extraction
-flx-http-oracle-wms entity-extract order_hdr --batch-size=100 --format=csv
+flext-http-oracle-wms entity-extract order_hdr --batch-size=100 --format=csv
 ```
 
 **Inventory Operations**
 
 ```bash
 # Check item inventory
-flx-http-oracle-wms entity-query items ITEM123 YOURCO WH1
+flext-http-oracle-wms entity-query items ITEM123 YOURCO WH1
 
 # Location inquiry
-flx-http-oracle-wms entity-query locations LOC-A-01 YOURCO WH1
+flext-http-oracle-wms entity-query locations LOC-A-01 YOURCO WH1
 
 # Allocation status
-flx-http-oracle-wms entity-query allocations --filter="status=ALLOCATED"
+flext-http-oracle-wms entity-query allocations --filter="status=ALLOCATED"
 ```
 
 **Facility Management**
 
 ```bash
 # List facilities
-flx-http-oracle-wms entity-query facilities
+flext-http-oracle-wms entity-query facilities
 
 # LPN tracking
-flx-http-oracle-wms entity-query lpns LPN123456 YOURCO WH1
+flext-http-oracle-wms entity-query lpns LPN123456 YOURCO WH1
 
 # Location management
-flx-http-oracle-wms entity-query locations --filter="zone=PICK"
+flext-http-oracle-wms entity-query locations --filter="zone=PICK"
 ```
 
 #### Data Export and Formatting
@@ -234,32 +234,32 @@ flx-http-oracle-wms entity-query locations --filter="zone=PICK"
 
 ```bash
 # JSON output (default)
-flx-http-oracle-wms entity-query orders ORD123 --format=json
+flext-http-oracle-wms entity-query orders ORD123 --format=json
 
 # CSV export
-flx-http-oracle-wms entity-extract orders --format=csv --output=orders.csv
+flext-http-oracle-wms entity-extract orders --format=csv --output=orders.csv
 
 # Excel export
-flx-http-oracle-wms entity-extract items --format=excel --output=items.xlsx
+flext-http-oracle-wms entity-extract items --format=excel --output=items.xlsx
 
 # Parquet format (for analytics)
-flx-http-oracle-wms entity-extract order_hdr --format=parquet --output=orders.parquet
+flext-http-oracle-wms entity-extract order_hdr --format=parquet --output=orders.parquet
 
 # YAML format
-flx-http-oracle-wms entity-query facilities --format=yaml
+flext-http-oracle-wms entity-query facilities --format=yaml
 ```
 
 **Batch Operations**
 
 ```bash
 # High-volume extraction with pagination
-flx-http-oracle-wms entity-extract order_hdr \
+flext-http-oracle-wms entity-extract order_hdr \
   --batch-size=1000 \
   --max-pages=10 \
   --output=large_orders.json
 
 # Parallel processing
-flx-http-oracle-wms entity-extract orders \
+flext-http-oracle-wms entity-extract orders \
   --parallel=4 \
   --batch-size=250 \
   --format=csv
@@ -316,7 +316,7 @@ poetry run gn-wms-cli batch-status
 #### Authentication
 
 ```python
-from flx_http_oracle_wms import WMSClient
+from flext_http_oracle_wms import WMSClient
 
 # Basic authentication
 client = WMSClient(
@@ -366,8 +366,8 @@ orders = await client.extract_entities(
 
 ```python
 # Hexagonal architecture integration
-from flx.adapters.outbound.wms import WMSAdapter
-from flx.core.entities import Order
+from flext.adapters.outbound.wms import WMSAdapter
+from flext.core.entities import Order
 
 class OrderService:
     def __init__(self, wms_adapter: WMSAdapter):
@@ -384,7 +384,7 @@ class OrderService:
 #### Standard Error Patterns
 
 ```python
-from flx_http_oracle_wms import WMSError, ConnectionError, AuthenticationError
+from flext_http_oracle_wms import WMSError, ConnectionError, AuthenticationError
 
 try:
     result = await client.get_order("ORD123")
@@ -402,7 +402,7 @@ except WMSError as e:
 #### Retry and Circuit Breaker Patterns
 
 ```python
-from flx.infrastructure.resilience import CircuitBreaker, RetryPolicy
+from flext.infrastructure.resilience import CircuitBreaker, RetryPolicy
 
 # Configure resilience patterns
 client = WMSClient(
@@ -497,7 +497,7 @@ ERROR: Authentication failed for user 'username'
 
 # Debugging
 poetry run gn-wms-cli config --show-secrets
-flx-http-oracle-wms test-connection
+flext-http-oracle-wms test-connection
 ```
 
 #### Connection and Timeout Issues
@@ -534,7 +534,7 @@ export WMS_DEFAULT_BATCH_SIZE="50"
 export WMS_ENABLE_COMPRESSION="true"
 
 3. Use pagination for large datasets
-flx-http-oracle-wms entity-extract orders \
+flext-http-oracle-wms entity-extract orders \
   --batch-size=100 \
   --max-pages=10
 
@@ -611,7 +611,7 @@ poetry run gn-wms-cli schema-compatibility
 
 ```bash
 # Enable streaming for large datasets
-flx-http-oracle-wms entity-extract orders \
+flext-http-oracle-wms entity-extract orders \
   --stream=true \
   --batch-size=100 \
   --output-format=jsonl
@@ -660,7 +660,7 @@ export WMS_METRICS_PORT="9090"
 poetry run gn-wms-cli metrics --real-time
 
 # Export metrics
-flx-http-oracle-wms metrics --export=prometheus
+flext-http-oracle-wms metrics --export=prometheus
 ```
 
 #### Alerting Configuration
@@ -678,7 +678,7 @@ export WMS_ALERT_CONNECTION_FAILURES="3"
 
 ```python
 # Webhook integration
-from flx_http_oracle_wms import WebhookServer
+from flext_http_oracle_wms import WebhookServer
 
 webhook_server = WebhookServer(
     port=5000,
@@ -702,7 +702,7 @@ async def process_wms_stream():
         await process_order_batch(batch)
 
 # Background task processing
-from flx.infrastructure.tasks import BackgroundTaskManager
+from flext.infrastructure.tasks import BackgroundTaskManager
 
 task_manager = BackgroundTaskManager()
 task_manager.schedule_task(
@@ -717,7 +717,7 @@ task_manager.schedule_task(
 ```python
 # Apache Airflow integration
 from airflow import DAG
-from flx_http_oracle_wms.airflow import WMSOperator
+from flext_http_oracle_wms.airflow import WMSOperator
 
 dag = DAG("wms_sync", schedule_interval="@hourly")
 

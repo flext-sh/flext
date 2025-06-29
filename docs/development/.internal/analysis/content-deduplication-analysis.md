@@ -27,7 +27,7 @@ Comprehensive analysis of existing documentation to identify duplicates, overlap
 
 - `/docs/getting-started/installation.md` - Complete setup guide
 - `/docs/getting-started/quickstart.md` - 5-minute tutorial
-- `/docs/getting-started/flx-framework-overview.md` - Comprehensive framework introduction
+- `/docs/getting-started/flext-framework-overview.md` - Comprehensive framework introduction
 
 **Development Documentation (⚠️ Some Overlap)**
 
@@ -108,9 +108,9 @@ Comprehensive analysis of existing documentation to identify duplicates, overlap
 
 1. **Files:**
 
-   - `/docs/guides/flx-http-oracle-oic-adapter.md`
-   - `/docs/guides/flx-http-oracle-wms-adapter.md`
-   - `/docs/guides/flx-database-oracle-adapter.md`
+   - `/docs/guides/flext-http-oracle-oic-adapter.md`
+   - `/docs/guides/flext-http-oracle-wms-adapter.md`
+   - `/docs/guides/flext-database-oracle-adapter.md`
 
 2. **Strategy:** Create unified FLX Oracle adapters guide with system-specific sections
 
@@ -218,11 +218,11 @@ Sections:
 **Action:** Merge FLX adapter guides
 
 ```
-Target: /docs/guides/flx-oracle-adapters-comprehensive-guide.md
+Target: /docs/guides/flext-oracle-adapters-comprehensive-guide.md
 Sources:
-- flx-http-oracle-oic-adapter.md
-- flx-http-oracle-wms-adapter.md
-- flx-database-oracle-adapter.md
+- flext-http-oracle-oic-adapter.md
+- flext-http-oracle-wms-adapter.md
+- flext-database-oracle-adapter.md
 
 Sections:
 1. FLX Adapter Architecture

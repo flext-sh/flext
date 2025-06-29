@@ -358,7 +358,7 @@ class ReadModelProjection:
 ```python
 # Issue: Service-to-service communication failures
 # Solution: Implement circuit breaker and retry patterns
-from flx.adapters.resilience import CircuitBreakerAdapter
+from flext.adapters.resilience import CircuitBreakerAdapter
 
 class ResilientServiceClient:
     def __init__(self):

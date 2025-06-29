@@ -70,7 +70,7 @@ python_functions = ["test_*"]
 addopts = [
     "--strict-markers",
     "--strict-config",
-    "--cov=src/flx",
+    "--cov=src/flext",
     "--cov-report=html:reports/coverage/html",
     "--cov-report=term-missing",
     "--cov-report=json:reports/coverage/coverage.json",
@@ -99,19 +99,19 @@ Unit tests focus on testing individual components in isolation, particularly dom
 # tests/unit/test_domain_entities.py
 import pytest
 from datetime import datetime
-from flx import Flx
-from flx.core.exceptions import FlxValidationError
+from flext import Flx
+from flext.core.exceptions import FlxValidationError
 
 class TestDomainEntities:
     """Unit tests for FLX domain entities."""
 
     def setup_method(self):
         """Set up test fixtures."""
-        self.flx = Flx()
+        self.flext = Flx()
 
     def test_base_entity_creation(self):
         """Test basic entity creation and properties."""
-        entity = self.flx.Entities.BaseEntity(name="Test Entity")
+        entity = self.flext.Entities.BaseEntity(name="Test Entity")
 
         assert entity.name == "Test Entity"
         assert entity.id.startswith("ent_")
@@ -121,15 +121,15 @@ class TestDomainEntities:
 
     def test_entity_id_uniqueness(self):
         """Test that entities get unique IDs."""
-        entity1 = self.flx.Entities.BaseEntity(name="Entity 1")
-        entity2 = self.flx.Entities.BaseEntity(name="Entity 2")
+        entity1 = self.flext.Entities.BaseEntity(name="Entity 1")
+        entity2 = self.flext.Entities.BaseEntity(name="Entity 2")
 
         assert entity1.id != entity2.id
 
     def test_business_entity_validation(self):
         """Test business entity validation rules."""
         # Valid business entity
-        entity = self.flx.Entities.BusinessEntity(
+        entity = self.flext.Entities.BusinessEntity(
             name="Acme Corp",
             business_type="Enterprise"
         )
@@ -138,14 +138,14 @@ class TestDomainEntities:
 
         # Invalid business entity (empty business_type)
         with pytest.raises(FlxValidationError):
-            self.flx.Entities.BusinessEntity(
+            self.flext.Entities.BusinessEntity(
                 name="Invalid Corp",
                 business_type=""
             )
 
     def test_aggregate_root_events(self):
         """Test aggregate root domain event functionality."""
-        aggregate = self.flx.Entities.AggregateRoot(name="Order Aggregate")
+        aggregate = self.flext.Entities.AggregateRoot(name="Order Aggregate")
 
         # Initially no events
         assert len(aggregate.get_domain_events()) == 0
@@ -173,11 +173,11 @@ class TestDomainEntities:
     def test_entity_name_validation(self, name, expected_valid):
         """Test entity name validation rules."""
         if expected_valid:
-            entity = self.flx.Entities.BaseEntity(name=name)
+            entity = self.flext.Entities.BaseEntity(name=name)
             assert entity.is_valid()
         else:
             with pytest.raises(FlxValidationError):
-                self.flx.Entities.BaseEntity(name=name)
+                self.flext.Entities.BaseEntity(name=name)
 ```
 
 ### Testing Value Objects
@@ -185,19 +185,19 @@ class TestDomainEntities:
 ```python
 # tests/unit/test_value_objects.py
 import pytest
-from flx import Flx
-from flx.core.exceptions import FlxValidationError
+from flext import Flx
+from flext.core.exceptions import FlxValidationError
 
 class TestValueObjects:
     """Unit tests for FLX value objects."""
 
     def setup_method(self):
         """Set up test fixtures."""
-        self.flx = Flx()
+        self.flext = Flx()
 
     def test_contact_info_creation(self):
         """Test contact info value object creation."""
-        contact = self.flx.ValueObjects.ContactInfo(
+        contact = self.flext.ValueObjects.ContactInfo(
             email="john.doe@example.com",
             phone="+1-555-0123",
             address="123 Main St, City, ST 12345"
@@ -209,7 +209,7 @@ class TestValueObjects:
 
     def test_contact_info_immutability(self):
         """Test that contact info is immutable."""
-        contact = self.flx.ValueObjects.ContactInfo(
+        contact = self.flext.ValueObjects.ContactInfo(
             email="john.doe@example.com",
             phone="+1-555-0123"
         )
@@ -220,7 +220,7 @@ class TestValueObjects:
 
     def test_domain_event_creation(self):
         """Test domain event value object creation."""
-        event = self.flx.ValueObjects.FlxDomainEvent(
+        event = self.flext.ValueObjects.FlxDomainEvent(
             event_type="UserRegistered",
             aggregate_id="user_123",
             aggregate_type="User",
@@ -245,11 +245,11 @@ class TestValueObjects:
     def test_email_validation(self, email, expected_valid):
         """Test email validation in contact info."""
         if expected_valid:
-            contact = self.flx.ValueObjects.ContactInfo(email=email)
+            contact = self.flext.ValueObjects.ContactInfo(email=email)
             assert contact.email == email
         else:
             with pytest.raises(FlxValidationError):
-                self.flx.ValueObjects.ContactInfo(email=email)
+                self.flext.ValueObjects.ContactInfo(email=email)
 ```
 
 ### Testing Mixins
@@ -257,20 +257,20 @@ class TestValueObjects:
 ```python
 # tests/unit/test_mixins.py
 import pytest
-from flx import Flx
+from flext import Flx
 
 class TestMixins:
     """Unit tests for FLX mixins."""
 
     def setup_method(self):
         """Set up test fixtures."""
-        self.flx = Flx()
+        self.flext = Flx()
 
     def test_status_mixin(self):
         """Test status mixin functionality."""
         class TestEntity(
-            self.flx.Entities.BaseEntity,
-            self.flx.Mixins.Status
+            self.flext.Entities.BaseEntity,
+            self.flext.Mixins.Status
         ):
             pass
 
@@ -293,8 +293,8 @@ class TestMixins:
     def test_config_mixin(self):
         """Test configuration mixin functionality."""
         class TestEntity(
-            self.flx.Entities.BaseEntity,
-            self.flx.Mixins.Config
+            self.flext.Entities.BaseEntity,
+            self.flext.Mixins.Config
         ):
             pass
 
@@ -323,8 +323,8 @@ class TestMixins:
     def test_metadata_mixin(self):
         """Test metadata mixin functionality."""
         class TestEntity(
-            self.flx.Entities.BaseEntity,
-            self.flx.Mixins.Metadata
+            self.flext.Entities.BaseEntity,
+            self.flext.Mixins.Metadata
         ):
             pass
 
@@ -354,10 +354,10 @@ class TestMixins:
     def test_combined_mixins(self):
         """Test entity with multiple mixins."""
         class AdvancedEntity(
-            self.flx.Entities.BaseEntity,
-            self.flx.Mixins.Status,
-            self.flx.Mixins.Config,
-            self.flx.Mixins.Metadata
+            self.flext.Entities.BaseEntity,
+            self.flext.Mixins.Status,
+            self.flext.Mixins.Config,
+            self.flext.Mixins.Metadata
         ):
             pass
 
@@ -383,9 +383,9 @@ Integration tests verify that components work correctly together, particularly t
 # tests/integration/test_cache_adapter.py
 import pytest
 import pytest_asyncio
-from flx.adapters.outbound.cache import CacheAdapter
-from flx.infra.cache.cache_service import CacheService
-from flx.core.exceptions import FlxConnectionError
+from flext.adapters.outbound.cache import CacheAdapter
+from flext.infra.cache.cache_service import CacheService
+from flext.core.exceptions import FlxConnectionError
 
 @pytest.mark.integration
 class TestCacheAdapterIntegration:
@@ -458,9 +458,9 @@ class TestCacheAdapterIntegration:
 # tests/integration/test_unified_manager.py
 import pytest
 import pytest_asyncio
-from flx.infra.adapters import UnifiedAdapterManager
-from flx.adapters.outbound.cache import CacheAdapter
-from flx.adapters.outbound.http import HttpAdapter
+from flext.infra.adapters import UnifiedAdapterManager
+from flext.adapters.outbound.cache import CacheAdapter
+from flext.adapters.outbound.http import HttpAdapter
 
 @pytest.mark.integration
 class TestUnifiedManagerIntegration:
@@ -650,10 +650,10 @@ async def postgres_container():
 # tests/e2e/test_complete_workflows.py
 import pytest
 import pytest_asyncio
-from flx import Flx
-from flx.infra.adapters import UnifiedAdapterManager
-from flx.adapters.outbound.cache import CacheAdapter
-from flx.adapters.outbound.database import DatabaseAdapter
+from flext import Flx
+from flext.infra.adapters import UnifiedAdapterManager
+from flext.adapters.outbound.cache import CacheAdapter
+from flext.adapters.outbound.database import DatabaseAdapter
 
 @pytest.mark.e2e
 class TestCompleteWorkflows:
@@ -662,7 +662,7 @@ class TestCompleteWorkflows:
     @pytest.fixture
     async def production_application(self, redis_container, postgres_container):
         """Create production-like application setup."""
-        flx = Flx()
+        flext = Flx()
 
         # Configure cache adapter with real Redis
         cache_adapter = CacheAdapter()
@@ -688,7 +688,7 @@ class TestCompleteWorkflows:
         await manager.start()
 
         yield {
-            "flx": flx,
+            "flext": flext,
             "manager": manager,
             "cache": cache_adapter,
             "database": db_adapter
@@ -703,13 +703,13 @@ class TestCompleteWorkflows:
         database = app["database"]
 
         # 1. Create domain entities
-        flx = app["flx"]
-        customer = flx.Entities.BusinessEntity(
+        flext = app["flext"]
+        customer = flext.Entities.BusinessEntity(
             name="E2E Test Customer",
             business_type="Enterprise"
         )
 
-        order = flx.Entities.AggregateRoot(name="E2E Test Order")
+        order = flext.Entities.AggregateRoot(name="E2E Test Order")
 
         # 2. Cache customer data
         customer_key = f"customer:{customer.id}"
@@ -801,12 +801,12 @@ class TestCompleteWorkflows:
 
         app = production_application
         cache = app["cache"]
-        flx = app["flx"]
+        flext = app["flext"]
 
         # Generate test data
         test_entities = []
         for i in range(100):
-            entity = flx.Entities.BaseEntity(name=f"Load Test Entity {i}")
+            entity = flext.Entities.BaseEntity(name=f"Load Test Entity {i}")
             test_entities.append(entity)
 
         # Benchmark cache operations
@@ -868,13 +868,13 @@ Use factories to generate consistent test data across all test levels.
 # tests/factories.py
 import factory
 from datetime import datetime, timezone
-from flx import Flx
+from flext import Flx
 
 class FlxEntityFactory:
     """Factory for creating FLX test entities."""
 
     def __init__(self):
-        self.flx = Flx()
+        self.flext = Flx()
 
     def create_base_entity(self, **kwargs):
         """Create a base entity with default values."""
@@ -882,7 +882,7 @@ class FlxEntityFactory:
             "name": factory.Faker("company").generate(),
         }
         defaults.update(kwargs)
-        return self.flx.Entities.BaseEntity(**defaults)
+        return self.flext.Entities.BaseEntity(**defaults)
 
     def create_business_entity(self, **kwargs):
         """Create a business entity with realistic data."""
@@ -892,7 +892,7 @@ class FlxEntityFactory:
                 elements=("Enterprise", "SMB", "Startup")).generate()
         }
         defaults.update(kwargs)
-        return self.flx.Entities.BusinessEntity(**defaults)
+        return self.flext.Entities.BusinessEntity(**defaults)
 
     def create_aggregate_root(self, **kwargs):
         """Create an aggregate root with events."""
@@ -901,7 +901,7 @@ class FlxEntityFactory:
         }
         defaults.update(kwargs)
 
-        aggregate = self.flx.Entities.AggregateRoot(**defaults)
+        aggregate = self.flext.Entities.AggregateRoot(**defaults)
 
         # Add some default events
         aggregate.raise_domain_event("EntityCreated", {
@@ -941,7 +941,7 @@ def sample_entities(entity_factory):
 ```python
 # pyproject.toml
 [tool.coverage.run]
-source = ["src/flx"]
+source = ["src/flext"]
 omit = [
     "*/tests/*",
     "*/test_*",
@@ -976,7 +976,7 @@ output = "reports/coverage/coverage.json"
 
 ```bash
 # Run all tests with coverage
-pytest --cov=src/flx --cov-report=html --cov-report=term-missing
+pytest --cov=src/flext --cov-report=html --cov-report=term-missing
 
 # Run specific test categories
 pytest -m unit                    # Unit tests only
@@ -988,7 +988,7 @@ pytest -n auto                   # Auto-detect CPU cores
 pytest -n 4                      # Use 4 workers
 
 # Generate coverage reports
-pytest --cov=src/flx --cov-report=html --cov-report=json --cov-report=term
+pytest --cov=src/flext --cov-report=html --cov-report=json --cov-report=term
 
 # Performance testing
 pytest -m performance --tb=short -v

@@ -21,8 +21,8 @@ The FLX logging system has been refactored following KISS, SOLID, and DRY princi
 │  │              Business Logic                           │  │
 │  │                     │                                 │  │
 │  │                     ▼                                 │  │
-│  │        flx.get_logger(__name__)                       │  │
-│  │        flx.get_async_logger(__name__)                 │  │
+│  │        flext.get_logger(__name__)                       │  │
+│  │        flext.get_async_logger(__name__)                 │  │
 │  └───────────────────────────────────────────────────────┘  │
 └─────────────────────────────────────────────────────────────┘
                              │
@@ -30,7 +30,7 @@ The FLX logging system has been refactored following KISS, SOLID, and DRY princi
 ┌─────────────────────────────────────────────────────────────┐
 │                    Output Ports                            │
 │  ┌───────────────────────────────────────────────────────┐  │
-│  │    flx.ports.outbound.logging                         │  │
+│  │    flext.ports.outbound.logging                         │  │
 │  │                                                       │  │
 │  │    LoggingPort (Protocol)                             │  │
 │  │    AsyncLoggingPort (Protocol)                        │  │
@@ -42,7 +42,7 @@ The FLX logging system has been refactored following KISS, SOLID, and DRY princi
 ┌─────────────────────────────────────────────────────────────┐
 │                    Adapters                                │
 │  ┌───────────────────────────────────────────────────────┐  │
-│  │    flx.adapters.outbound.logging                      │  │
+│  │    flext.adapters.outbound.logging                      │  │
 │  │                                                       │  │
 │  │    StandardLoggingImpl                                │  │
 │  │    AsyncStandardLoggingImpl                           │  │
@@ -61,7 +61,7 @@ The FLX logging system has been refactored following KISS, SOLID, and DRY princi
 
 ## Core Components
 
-### 1. Output Ports (`flx.ports.outbound.logging`)
+### 1. Output Ports (`flext.ports.outbound.logging`)
 
 **LogLevel (IntEnum)**
 
@@ -103,7 +103,7 @@ class AsyncLoggingPort(Protocol):
     def set_level(self, level: LogLevel) -> None: ...
 ```
 
-### 2. Adapters (`flx.adapters.outbound.logging`)
+### 2. Adapters (`flext.adapters.outbound.logging`)
 
 **StandardLoggingImpl**
 
@@ -122,15 +122,15 @@ class AsyncLoggingPort(Protocol):
 ### Basic Usage
 
 ```python
-import flx
+import flext
 
 # Get synchronous logger
-logger = flx.get_logger(__name__)
+logger = flext.get_logger(__name__)
 logger.info("Application started")
 logger.trace("Detailed debugging information")
 
 # Get asynchronous logger
-async_logger = flx.get_async_logger(__name__)
+async_logger = flext.get_async_logger(__name__)
 await async_logger.info("Async operation completed")
 await async_logger.error("Async error occurred")
 ```
@@ -138,13 +138,13 @@ await async_logger.error("Async error occurred")
 ### Custom Log Levels
 
 ```python
-import flx
+import flext
 
 # Logger with TRACE level (shows all messages)
-logger = flx.get_logger(__name__, flx.LogLevel.TRACE)
+logger = flext.get_logger(__name__, flext.LogLevel.TRACE)
 
 # Logger with WARNING level (only WARNING, ERROR, CRITICAL)
-prod_logger = flx.get_logger("production", flx.LogLevel.WARNING)
+prod_logger = flext.get_logger("production", flext.LogLevel.WARNING)
 ```
 
 ### All Available Levels
@@ -206,8 +206,8 @@ logger.critical("Critical system error")
 
 ```python
 # Old complex system
-from flx.utils.logging import FlxLogger, FlxLogConfig
-from flx.core.logging import FlxLogContext, FlxLogLevel
+from flext.utils.logging import FlxLogger, FlxLogConfig
+from flext.core.logging import FlxLogContext, FlxLogLevel
 
 config = FlxLogConfig(...)
 logger = FlxLogger.create_with_config(config)
@@ -219,9 +219,9 @@ logger.log_with_context(FlxLogLevel.INFO, "message", context)
 
 ```python
 # New simple system
-import flx
+import flext
 
-logger = flx.get_logger(__name__)
+logger = flext.get_logger(__name__)
 logger.info("message")
 ```
 
@@ -230,9 +230,9 @@ logger.info("message")
 ### Structured Logging
 
 ```python
-import flx
+import flext
 
-logger = flx.get_logger(__name__)
+logger = flext.get_logger(__name__)
 
 # Basic structured logging
 logger.info(
@@ -250,7 +250,7 @@ logger.info(
 
 ```python
 # Use async logging for high-throughput scenarios
-async_logger = flx.get_async_logger("high_volume_service")
+async_logger = flext.get_async_logger("high_volume_service")
 
 # Non-blocking logging operations
 await async_logger.info("Processing batch", extra={"batch_size": 1000})
@@ -280,7 +280,7 @@ except Exception as e:
 ```python
 def test_logging_levels():
     """Test all logging levels work correctly."""
-    logger = flx.get_logger("test")
+    logger = flext.get_logger("test")
 
     # Test all levels
     logger.trace("trace message")
@@ -296,7 +296,7 @@ def test_logging_levels():
 ```python
 async def test_async_logging():
     """Test async logging functionality."""
-    logger = flx.get_async_logger("test_async")
+    logger = flext.get_async_logger("test_async")
 
     await logger.info("async message")
     # Verify non-blocking behavior
@@ -314,7 +314,7 @@ def test_logging_integration():
 ## File Structure
 
 ```
-flx/
+flext/
 ├── ports/outbound/logging.py          # Port interfaces
 ├── adapters/outbound/logging.py       # Concrete implementations
 ├── __init__.py                        # Public API
@@ -345,7 +345,7 @@ flx/
 
 ```python
 # Configure for centralized logging
-logger = flx.get_logger("service_name")
+logger = flext.get_logger("service_name")
 logger.info(
     "Service event",
     extra={
@@ -362,7 +362,7 @@ logger.info(
 ```python
 # Health check logging
 async def health_check():
-    logger = flx.get_async_logger("health")
+    logger = flext.get_async_logger("health")
     await logger.info("Health check passed", extra={"timestamp": datetime.utcnow()})
 ```
 
@@ -388,9 +388,9 @@ async def health_check():
 
 The following over-engineered components were removed:
 
-- `flx.utils.logging` (entire module)
-- `flx.core.logging_simple`
-- `flx.infra.logging` (old implementations)
+- `flext.utils.logging` (entire module)
+- `flext.core.logging_simple`
+- `flext.infra.logging` (old implementations)
 - Complex domain-driven logging architecture
 - Custom logging frameworks and abstractions
 

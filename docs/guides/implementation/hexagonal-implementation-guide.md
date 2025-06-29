@@ -54,11 +54,11 @@ Based on FLX Framework source code patterns, follow this implementation sequence
 
 ### **Entity Design Patterns**
 
-Based on `flx/core/entities.py`, implement entities with proper identity management:
+Based on `flext/core/entities.py`, implement entities with proper identity management:
 
 ```python
-from flx.core.entities import Entity, AggregateRoot
-from flx.core.domain.value_objects import ValueObject
+from flext.core.entities import Entity, AggregateRoot
+from flext.core.domain.value_objects import ValueObject
 from typing import List, Optional
 from datetime import datetime
 from enum import Enum
@@ -329,11 +329,11 @@ class NotificationPort(ABC):
 
 ### **Database Adapter**
 
-Based on FLX patterns in `flx/adapters/base.py`:
+Based on FLX patterns in `flext/adapters/base.py`:
 
 ```python
-from flx.adapters.base import BaseAdapter
-from flx.ports.outbound.persistence import OrderRepositoryPort, CustomerRepositoryPort
+from flext.adapters.base import BaseAdapter
+from flext.ports.outbound.persistence import OrderRepositoryPort, CustomerRepositoryPort
 from pydantic import Field
 from typing import Dict, Any, List, Optional
 import asyncpg
@@ -510,8 +510,8 @@ class PostgreSQLAdapter(BaseAdapter, OrderRepositoryPort, CustomerRepositoryPort
 ### **Email Notification Adapter**
 
 ```python
-from flx.adapters.base import BaseAdapter
-from flx.ports.outbound.persistence import NotificationPort
+from flext.adapters.base import BaseAdapter
+from flext.ports.outbound.persistence import NotificationPort
 from pydantic import Field
 from typing import Dict, Any
 import aiosmtplib
@@ -649,12 +649,12 @@ class EmailAdapter(BaseAdapter, NotificationPort):
 
 ### **Application Service Implementation**
 
-Based on `flx/application/services.py` patterns:
+Based on `flext/application/services.py` patterns:
 
 ```python
-from flx.application.services import ApplicationService
-from flx.ports.inbound.order_management import OrderManagementPort, CustomerManagementPort
-from flx.ports.outbound.persistence import OrderRepositoryPort, CustomerRepositoryPort, NotificationPort
+from flext.application.services import ApplicationService
+from flext.ports.inbound.order_management import OrderManagementPort, CustomerManagementPort
+from flext.ports.outbound.persistence import OrderRepositoryPort, CustomerRepositoryPort, NotificationPort
 from typing import Dict, Any, List, Optional
 from datetime import datetime
 
@@ -835,12 +835,12 @@ class CustomerService(ApplicationService, CustomerManagementPort):
 
 ### **Comprehensive Test Suite**
 
-Based on `flx/testing/declarative.py`:
+Based on `flext/testing/declarative.py`:
 
 ```python
 import pytest
 import asyncio
-from flx.testing.declarative import create_test_engine, TestResult
+from flext.testing.declarative import create_test_engine, TestResult
 from entities import Order, Customer, Money, Email
 from adapters import PostgreSQLAdapter, EmailAdapter
 from services import OrderService, CustomerService
@@ -1055,11 +1055,11 @@ if __name__ == "__main__":
 
 ### **Complete Application Bootstrap**
 
-Based on `flx/application/bootstrap.py`:
+Based on `flext/application/bootstrap.py`:
 
 ```python
-from flx.application.bootstrap import Bootstrap, create_bootstrap
-from flx.infra.config.hierarchical import HierarchicalConfig
+from flext.application.bootstrap import Bootstrap, create_bootstrap
+from flext.infra.config.hierarchical import HierarchicalConfig
 from adapters import PostgreSQLAdapter, EmailAdapter
 from services import OrderService, CustomerService
 from pydantic import Field
@@ -1173,7 +1173,7 @@ if __name__ == "__main__":
 ### **⬅️ Prerequisites**
 
 - [Architecture Hub](../../architecture/index.md) - Understanding hexagonal architecture patterns and design principles
-- [FLX Technical Reference](../../api-reference/flx-technical-reference.md) - Detailed technical documentation of framework components
+- [FLX Technical Reference](../../api-reference/flext-technical-reference.md) - Detailed technical documentation of framework components
 
 ### **➡️ Next Steps**
 

@@ -6,7 +6,7 @@
 [![Implementation](https://img.shields.io/badge/implementation-real-green.svg)](#real-implementation)
 [![Production](https://img.shields.io/badge/production-ready-orange.svg)](#production-features)
 
-**Complete Oracle integration guide based on actual implementations in `flx-http-oracle-*` projects - validated against real source code**
+**Complete Oracle integration guide based on actual implementations in `flext-http-oracle-*` projects - validated against real source code**
 
 ---
 
@@ -44,12 +44,12 @@
 
 ### **Oracle WMS Implementation (Source Code Validated)**
 
-Based on actual implementation in `/flx_http_oracle_wms/src/`:
+Based on actual implementation in `/flext_http_oracle_wms/src/`:
 
 #### **WmsClient - Core Implementation**
 
 ```python
-# Real implementation from flx_http_oracle_wms/src/flx_http_oracle_wms/wms_client.py
+# Real implementation from flext_http_oracle_wms/src/flext_http_oracle_wms/wms_client.py
 class WmsClient:
     """WMS client using FLX HttpClientService with full WMS operations."""
 
@@ -139,7 +139,7 @@ class WmsClient:
 #### **WmsConfig - Configuration Management**
 
 ```python
-# Real implementation from flx_http_oracle_wms/src/flx_http_oracle_wms/config.py
+# Real implementation from flext_http_oracle_wms/src/flext_http_oracle_wms/config.py
 class WmsConfig(BaseModel):
     """Oracle WMS configuration with authentication."""
 
@@ -164,12 +164,12 @@ class WmsConfig(BaseModel):
 
 ### **Oracle OIC Implementation (Source Code Validated)**
 
-Based on actual implementation in `/flx_http_oracle_oic/src/`:
+Based on actual implementation in `/flext_http_oracle_oic/src/`:
 
 #### **OracleOicClient - Facade Pattern**
 
 ```python
-# Real implementation from flx_http_oracle_oic/src/flx_http_oracle_oic/client.py
+# Real implementation from flext_http_oracle_oic/src/flext_http_oracle_oic/client.py
 class OracleOicClient:
     """Simple client facade for Oracle Integration Cloud operations."""
 
@@ -224,7 +224,7 @@ class OracleOicClient:
 #### **OracleOicHttpAdapter - Core Adapter**
 
 ```python
-# Real implementation from flx_http_oracle_oic/src/flx_http_oracle_oic/adapter.py
+# Real implementation from flext_http_oracle_oic/src/flext_http_oracle_oic/adapter.py
 class OracleOicHttpAdapter(BaseAdapter):
     """Oracle OIC HTTP adapter with authentication and operations."""
 
@@ -281,7 +281,7 @@ class OracleOicHttpAdapter(BaseAdapter):
 
 ```python
 # Production Oracle WMS configuration
-from flx_http_oracle_wms import WmsClient, WmsConfig
+from flext_http_oracle_wms import WmsClient, WmsConfig
 
 # Production configuration with environment variables
 wms_config = WmsConfig(
@@ -319,7 +319,7 @@ async def main():
 
 ```python
 # Production Oracle OIC configuration
-from flx_http_oracle_oic import OracleOicClient, OracleOicConfig
+from flext_http_oracle_oic import OracleOicClient, OracleOicConfig
 
 # Production configuration
 oic_config = OracleOicConfig(
@@ -348,10 +348,10 @@ async def main():
 Based on actual CLI implementation:
 
 ```python
-# Real CLI from flx_http_oracle_wms/src/flx_http_oracle_wms/cli/main.py
+# Real CLI from flext_http_oracle_wms/src/flext_http_oracle_wms/cli/main.py
 import asyncio
 import click
-from flx_http_oracle_wms import WmsClient, WmsConfig
+from flext_http_oracle_wms import WmsClient, WmsConfig
 
 @click.group()
 def cli():

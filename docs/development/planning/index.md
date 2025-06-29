@@ -8,7 +8,7 @@ Strategic planning documentation for FLX framework development, covering roadmap
 
 ## Quick Links
 
-- [🚀 FLX Next Steps Planning](./flx-next-steps-planning.md) - Strategic development roadmap
+- [🚀 FLX Next Steps Planning](./flext-next-steps-planning.md) - Strategic development roadmap
 
 ## Planning Categories
 
@@ -16,21 +16,21 @@ Strategic planning documentation for FLX framework development, covering roadmap
 
 **Development Roadmaps:**
 
-1. [FLX Next Steps Planning](./flx-next-steps-planning.md)
+1. [FLX Next Steps Planning](./flext-next-steps-planning.md)
 
 ## Learning Paths
 
 ### Product Managers
 
-→ [FLX Next Steps Planning](./flx-next-steps-planning.md)
+→ [FLX Next Steps Planning](./flext-next-steps-planning.md)
 
 ### Technical Leads
 
-→ [FLX Next Steps Planning](./flx-next-steps-planning.md)
+→ [FLX Next Steps Planning](./flext-next-steps-planning.md)
 
 ### Development Teams
 
-→ [FLX Next Steps Planning](./flx-next-steps-planning.md)
+→ [FLX Next Steps Planning](./flext-next-steps-planning.md)
 
 ## Related Sections
 

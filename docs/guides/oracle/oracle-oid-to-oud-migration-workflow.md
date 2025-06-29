@@ -200,7 +200,7 @@ For large migrations:
 This migration workflow integrates with the FLX framework:
 
 ```python
-from flx.adapters.oracle.oud import OUDMigrationAdapter
+from flext.adapters.oracle.oud import OUDMigrationAdapter
 
 # Initialize migration adapter
 adapter = OUDMigrationAdapter(config)

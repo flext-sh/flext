@@ -36,7 +36,7 @@ This is the main source directory for the FLX framework, organized following Hex
 ## Directory Structure
 
 ```
-flx/
+flext/
 ├── core/       # Domain layer (pure business logic)
 ├── ports/      # Port interfaces (contracts)
 ├── adapters/   # Adapter implementations
@@ -120,17 +120,17 @@ Extensibility layer using Pluggy:
 
 ```python
 # Correct: Domain in core, interface in ports, implementation in adapters
-# /flx/src/flx/core/entities.py
+# /flext/src/flext/core/entities.py
 class Customer(Entity):
     """Pure domain entity."""
     pass
 
-# /flx/src/flx/ports/repository.py
+# /flext/src/flext/ports/repository.py
 class CustomerRepository(Protocol):
     """Repository interface."""
     async def save(self, customer: Customer) -> None: ...
 
-# /flx/src/flx/adapters/database/customer_repository.py
+# /flext/src/flext/adapters/database/customer_repository.py
 class PostgresCustomerRepository:
     """Concrete repository implementation."""
     async def save(self, customer: Customer) -> None:

@@ -39,21 +39,21 @@ The FLX project shows **excellent overall documentation coverage at 98.8%**, wit
 
 **Infrastructure Components with Multiple Gaps:**
 
-- `flx/src/flx/infra/deployment/strategies.py` (7 gaps)
-- `flx/src/flx/infra/deployment/pipeline.py` (6 gaps)
-- `flx/src/flx/infra/observability/metrics.py` (6 gaps)
-- `flx/src/flx/infra/cli/cyclopts.py` (11 gaps)
+- `flext/src/flext/infra/deployment/strategies.py` (7 gaps)
+- `flext/src/flext/infra/deployment/pipeline.py` (6 gaps)
+- `flext/src/flext/infra/observability/metrics.py` (6 gaps)
+- `flext/src/flext/infra/cli/cyclopts.py` (11 gaps)
 
 **Core API Components:**
 
-- `flx/src/flx/adapters/inbound/api.py` - Missing class docstrings for `GenericCommand`, `GenericQuery`
+- `flext/src/flext/adapters/inbound/api.py` - Missing class docstrings for `GenericCommand`, `GenericQuery`
 
 ### Critical Missing Items
 
 **Missing Class Docstrings:**
 
-1. `GenericCommand` in `flx/adapters/inbound/api.py`
-2. `GenericQuery` in `flx/adapters/inbound/api.py`
+1. `GenericCommand` in `flext/adapters/inbound/api.py`
+2. `GenericQuery` in `flext/adapters/inbound/api.py`
 
 **Missing Critical Constructor Docstrings:**
 
@@ -154,7 +154,7 @@ The following areas show excellent documentation:
 
 ### Critical Files Needing Attention
 
-#### 1. `flx/src/flx/adapters/inbound/api.py`
+#### 1. `flext/src/flext/adapters/inbound/api.py`
 
 ```python
 # Add these class docstrings:
@@ -199,13 +199,13 @@ Focus on adding `__init__` docstrings that explain:
 
 ```bash
 # Check docstring coverage
-python -m docstring_coverage flx/src/
+python -m docstring_coverage flext/src/
 
 # Validate docstring format
-python -m pydocstyle flx/src/
+python -m pydocstyle flext/src/
 
 # Check type annotations
-python -m mypy flx/src/
+python -m mypy flext/src/
 ```
 
 ### Manual Review Process

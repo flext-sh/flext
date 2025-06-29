@@ -125,7 +125,7 @@ FROM python:3.13-slim AS production
 RUN apt-get update && apt-get install -y \
     libpq5 \
     && rm -rf /var/lib/apt/lists/* \
-    && groupadd -r flx && useradd -r -g flx flx
+    && groupadd -r flext && useradd -r -g flext flext
 
 # Copy virtual environment
 COPY --from=builder /opt/venv /opt/venv
@@ -140,14 +140,14 @@ COPY pyproject.toml ./
 RUN pip install -e .
 
 # Security: run as non-root user
-USER flx
+USER flext
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
     CMD python -c "import requests; requests.get('http://localhost:8000/health')"
 
 # Default command
-CMD ["python", "-m", "flx", "serve", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["python", "-m", "flext", "serve", "--host", "0.0.0.0", "--port", "8000"]
 ```
 
 ### **Multi-stage Build with Security**
@@ -185,18 +185,18 @@ COPY --from=security-scanner /app/*-report.json /security-reports/
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: flx-production
+  name: flext-production
   labels:
-    name: flx-production
+    name: flext-production
     environment: production
     team: platform
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: flx-staging
+  name: flext-staging
   labels:
-    name: flx-staging
+    name: flext-staging
     environment: staging
     team: platform
 ```
@@ -208,14 +208,14 @@ metadata:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: flx-config
-  namespace: flx-production
+  name: flext-config
+  namespace: flext-production
 data:
   FLX_LOG_LEVEL: "INFO"
   FLX_LOG_FORMAT: "json"
   FLX_CACHE_BACKEND: "redis"
   FLX_CACHE_URL: "redis://redis-cluster:6379"
-  FLX_DATABASE_URL: "postgresql://flx-user@postgres:5432/flx_prod"
+  FLX_DATABASE_URL: "postgresql://flext-user@postgres:5432/flext_prod"
   FLX_METRICS_ENABLED: "true"
   FLX_TRACING_ENABLED: "true"
   FLX_ENVIRONMENT: "production"
@@ -223,8 +223,8 @@ data:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: flx-secrets
-  namespace: flx-production
+  name: flext-secrets
+  namespace: flext-production
 type: Opaque
 data:
   DATABASE_PASSWORD: <base64-encoded-password>
@@ -240,10 +240,10 @@ data:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: flx-app
-  namespace: flx-production
+  name: flext-app
+  namespace: flext-production
   labels:
-    app: flx
+    app: flext
     version: v0.4.0
     component: application
 spec:
@@ -255,11 +255,11 @@ spec:
       maxUnavailable: 0
   selector:
     matchLabels:
-      app: flx
+      app: flext
   template:
     metadata:
       labels:
-        app: flx
+        app: flext
         version: v0.4.0
         component: application
       annotations:
@@ -268,7 +268,7 @@ spec:
         prometheus.io/port: "8000"
         prometheus.io/path: "/metrics"
     spec:
-      serviceAccountName: flx-service-account
+      serviceAccountName: flext-service-account
 
       # Security context
       securityContext:
@@ -284,7 +284,7 @@ spec:
           command: ["sh", "-c"]
           args:
             - |
-              until pg_isready -h postgres -p 5432 -U flx-user; do
+              until pg_isready -h postgres -p 5432 -U flext-user; do
                 echo "Waiting for database..."
                 sleep 2
               done
@@ -293,7 +293,7 @@ spec:
             - name: PGPASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: flx-secrets
+                  name: flext-secrets
                   key: DATABASE_PASSWORD
 
         - name: wait-for-redis
@@ -308,8 +308,8 @@ spec:
               echo "Redis is ready!"
 
       containers:
-        - name: flx-app
-          image: flx:v0.4.0
+        - name: flext-app
+          image: flext:v0.4.0
           ports:
             - name: http
               containerPort: 8000
@@ -321,22 +321,22 @@ spec:
           # Environment configuration
           envFrom:
             - configMapRef:
-                name: flx-config
+                name: flext-config
           env:
             - name: DATABASE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: flx-secrets
+                  name: flext-secrets
                   key: DATABASE_PASSWORD
             - name: REDIS_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: flx-secrets
+                  name: flext-secrets
                   key: REDIS_PASSWORD
             - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: flx-secrets
+                  name: flext-secrets
                   key: JWT_SECRET
 
           # Resource limits
@@ -409,7 +409,7 @@ spec:
                     - key: app
                       operator: In
                       values:
-                        - flx
+                        - flext
                 topologyKey: kubernetes.io/hostname
 
       # Tolerations for node taints
@@ -427,10 +427,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: flx-service
-  namespace: flx-production
+  name: flext-service
+  namespace: flext-production
   labels:
-    app: flx
+    app: flext
     component: application
   annotations:
     service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
@@ -447,16 +447,16 @@ spec:
       targetPort: http
       protocol: TCP
   selector:
-    app: flx
+    app: flext
 ---
 # Internal service for service mesh
 apiVersion: v1
 kind: Service
 metadata:
-  name: flx-internal
-  namespace: flx-production
+  name: flext-internal
+  namespace: flext-production
   labels:
-    app: flx
+    app: flext
     component: application
 spec:
   type: ClusterIP
@@ -470,7 +470,7 @@ spec:
       targetPort: metrics
       protocol: TCP
   selector:
-    app: flx
+    app: flext
 ```
 
 ### **Horizontal Pod Autoscaler**
@@ -480,13 +480,13 @@ spec:
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: flx-hpa
-  namespace: flx-production
+  name: flext-hpa
+  namespace: flext-production
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: flx-app
+    name: flext-app
   minReplicas: 3
   maxReplicas: 20
   metrics:
@@ -505,7 +505,7 @@ spec:
     - type: Pods
       pods:
         metric:
-          name: flx_requests_per_second
+          name: flext_requests_per_second
         target:
           type: AverageValue
           averageValue: "100"
@@ -531,18 +531,18 @@ spec:
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
 metadata:
-  name: flx-vpa
-  namespace: flx-production
+  name: flext-vpa
+  namespace: flext-production
 spec:
   targetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: flx-app
+    name: flext-app
   updatePolicy:
     updateMode: "Auto"
   resourcePolicy:
     containerPolicies:
-      - containerName: flx-app
+      - containerName: flext-app
         minAllowed:
           cpu: 100m
           memory: 128Mi
@@ -561,16 +561,16 @@ spec:
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: flx-service-account
-  namespace: flx-production
+  name: flext-service-account
+  namespace: flext-production
   labels:
-    app: flx
+    app: flext
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  namespace: flx-production
-  name: flx-role
+  namespace: flext-production
+  name: flext-role
 rules:
   - apiGroups: [""]
     resources: ["configmaps", "secrets"]
@@ -582,15 +582,15 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: flx-role-binding
-  namespace: flx-production
+  name: flext-role-binding
+  namespace: flext-production
 subjects:
   - kind: ServiceAccount
-    name: flx-service-account
-    namespace: flx-production
+    name: flext-service-account
+    namespace: flext-production
 roleRef:
   kind: Role
-  name: flx-role
+  name: flext-role
   apiGroup: rbac.authorization.k8s.io
 ```
 
@@ -601,12 +601,12 @@ roleRef:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: flx-network-policy
-  namespace: flx-production
+  name: flext-network-policy
+  namespace: flext-production
 spec:
   podSelector:
     matchLabels:
-      app: flx
+      app: flext
   policyTypes:
     - Ingress
     - Egress
@@ -617,7 +617,7 @@ spec:
               name: istio-system
         - namespaceSelector:
             matchLabels:
-              name: flx-production
+              name: flext-production
       ports:
         - protocol: TCP
           port: 8000
@@ -627,7 +627,7 @@ spec:
     - to:
         - namespaceSelector:
             matchLabels:
-              name: flx-production
+              name: flext-production
       ports:
         - protocol: TCP
           port: 5432 # PostgreSQL
@@ -650,7 +650,7 @@ spec:
 apiVersion: policy/v1beta1
 kind: PodSecurityPolicy
 metadata:
-  name: flx-psp
+  name: flext-psp
 spec:
   privileged: false
   allowPrivilegeEscalation: false
@@ -680,14 +680,14 @@ spec:
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: flx-service-monitor
-  namespace: flx-production
+  name: flext-service-monitor
+  namespace: flext-production
   labels:
-    app: flx
+    app: flext
 spec:
   selector:
     matchLabels:
-      app: flx
+      app: flext
   endpoints:
     - port: metrics
       interval: 30s
@@ -695,7 +695,7 @@ spec:
       honorLabels: true
   namespaceSelector:
     matchNames:
-      - flx-production
+      - flext-production
 ```
 
 ### **PrometheusRule for Alerting**
@@ -705,24 +705,24 @@ spec:
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
-  name: flx-alerts
-  namespace: flx-production
+  name: flext-alerts
+  namespace: flext-production
   labels:
-    app: flx
+    app: flext
 spec:
   groups:
-    - name: flx.rules
+    - name: flext.rules
       rules:
         - alert: FlxHighErrorRate
           expr: |
             (
-              rate(flx_requests_total{status=~"5.."}[5m]) /
-              rate(flx_requests_total[5m])
+              rate(flext_requests_total{status=~"5.."}[5m]) /
+              rate(flext_requests_total[5m])
             ) > 0.05
           for: 5m
           labels:
             severity: critical
-            component: flx
+            component: flext
           annotations:
             summary: "FLX application has high error rate"
             description: "Error rate is {{ $value | humanizePercentage }}"
@@ -730,12 +730,12 @@ spec:
         - alert: FlxHighLatency
           expr: |
             histogram_quantile(0.95,
-              rate(flx_request_duration_seconds_bucket[5m])
+              rate(flext_request_duration_seconds_bucket[5m])
             ) > 0.5
           for: 5m
           labels:
             severity: warning
-            component: flx
+            component: flext
           annotations:
             summary: "FLX application has high latency"
             description: "95th percentile latency is {{ $value }}s"
@@ -743,13 +743,13 @@ spec:
         - alert: FlxPodCrashLooping
           expr: |
             rate(kube_pod_container_status_restarts_total{
-              namespace="flx-production",
-              pod=~"flx-.*"
+              namespace="flext-production",
+              pod=~"flext-.*"
             }[5m]) > 0
           for: 5m
           labels:
             severity: critical
-            component: flx
+            component: flext
           annotations:
             summary: "FLX pod is crash looping"
             description: "Pod {{ $labels.pod }} is restarting frequently"
@@ -764,8 +764,8 @@ spec:
 apiVersion: networking.istio.io/v1beta1
 kind: Gateway
 metadata:
-  name: flx-gateway
-  namespace: flx-production
+  name: flext-gateway
+  namespace: flext-production
 spec:
   selector:
     istio: ingressgateway
@@ -775,7 +775,7 @@ spec:
         name: http
         protocol: HTTP
       hosts:
-        - flx-api.company.com
+        - flext-api.company.com
       tls:
         httpsRedirect: true
     - port:
@@ -784,9 +784,9 @@ spec:
         protocol: HTTPS
       tls:
         mode: SIMPLE
-        credentialName: flx-tls-cert
+        credentialName: flext-tls-cert
       hosts:
-        - flx-api.company.com
+        - flext-api.company.com
 ```
 
 ### **VirtualService Configuration**
@@ -796,20 +796,20 @@ spec:
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: flx-virtual-service
-  namespace: flx-production
+  name: flext-virtual-service
+  namespace: flext-production
 spec:
   hosts:
-    - flx-api.company.com
+    - flext-api.company.com
   gateways:
-    - flx-gateway
+    - flext-gateway
   http:
     - match:
         - uri:
             prefix: /health
       route:
         - destination:
-            host: flx-internal
+            host: flext-internal
             port:
               number: 8000
       timeout: 5s
@@ -818,7 +818,7 @@ spec:
             prefix: /api/v1
       route:
         - destination:
-            host: flx-internal
+            host: flext-internal
             port:
               number: 8000
       timeout: 30s
@@ -835,7 +835,7 @@ spec:
             prefix: /
       route:
         - destination:
-            host: flx-internal
+            host: flext-internal
             port:
               number: 8000
 ```
@@ -847,10 +847,10 @@ spec:
 apiVersion: networking.istio.io/v1beta1
 kind: DestinationRule
 metadata:
-  name: flx-destination-rule
-  namespace: flx-production
+  name: flext-destination-rule
+  namespace: flext-production
 spec:
-  host: flx-internal
+  host: flext-internal
   trafficPolicy:
     connectionPool:
       tcp:
@@ -881,7 +881,7 @@ spec:
 
 set -e
 
-NAMESPACE="flx-production"
+NAMESPACE="flext-production"
 NEW_VERSION="v0.4.0"
 OLD_VERSION="v0.3.9"
 
@@ -893,16 +893,16 @@ kubectl apply -f k8s/green/ -n $NAMESPACE
 
 # Wait for green deployment to be ready
 echo "Waiting for green deployment to be ready..."
-kubectl wait --for=condition=available deployment/flx-app-green -n $NAMESPACE --timeout=600s
+kubectl wait --for=condition=available deployment/flext-app-green -n $NAMESPACE --timeout=600s
 
 # Run health checks on green environment
 echo "Running health checks on green environment..."
-GREEN_POD=$(kubectl get pods -l app=flx-green -n $NAMESPACE -o jsonpath='{.items[0].metadata.name}')
-kubectl exec $GREEN_POD -n $NAMESPACE -- flx system health
+GREEN_POD=$(kubectl get pods -l app=flext-green -n $NAMESPACE -o jsonpath='{.items[0].metadata.name}')
+kubectl exec $GREEN_POD -n $NAMESPACE -- flext system health
 
 # Switch traffic to green
 echo "Switching traffic to green environment..."
-kubectl patch service flx-service -n $NAMESPACE -p '{"spec":{"selector":{"version":"'$NEW_VERSION'"}}}'
+kubectl patch service flext-service -n $NAMESPACE -p '{"spec":{"selector":{"version":"'$NEW_VERSION'"}}}'
 
 # Monitor for 5 minutes
 echo "Monitoring green environment for 5 minutes..."
@@ -910,7 +910,7 @@ sleep 300
 
 # If everything is OK, cleanup blue environment
 echo "Cleaning up blue environment..."
-kubectl delete deployment flx-app-blue -n $NAMESPACE
+kubectl delete deployment flext-app-blue -n $NAMESPACE
 
 echo "Blue-green deployment completed successfully!"
 ```
@@ -922,11 +922,11 @@ echo "Blue-green deployment completed successfully!"
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: flx-canary
-  namespace: flx-production
+  name: flext-canary
+  namespace: flext-production
 spec:
   hosts:
-    - flx-internal
+    - flext-internal
   http:
     - match:
         - headers:
@@ -934,15 +934,15 @@ spec:
               exact: "true"
       route:
         - destination:
-            host: flx-internal
+            host: flext-internal
             subset: v0-4-0
     - route:
         - destination:
-            host: flx-internal
+            host: flext-internal
             subset: v0-3-9
           weight: 90
         - destination:
-            host: flx-internal
+            host: flext-internal
             subset: v0-4-0
           weight: 10
 ```
@@ -978,8 +978,8 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          docker build -t $ECR_REGISTRY/flx:$GITHUB_REF_NAME .
-          docker push $ECR_REGISTRY/flx:$GITHUB_REF_NAME
+          docker build -t $ECR_REGISTRY/flext:$GITHUB_REF_NAME .
+          docker push $ECR_REGISTRY/flext:$GITHUB_REF_NAME
 
       - name: Update kubeconfig
         run: |
@@ -987,17 +987,17 @@ jobs:
 
       - name: Deploy to Kubernetes
         run: |
-          sed -i 's|flx:latest|'$ECR_REGISTRY'/flx:'$GITHUB_REF_NAME'|g' k8s/production/*.yaml
-          kubectl apply -f k8s/production/ -n flx-production
+          sed -i 's|flext:latest|'$ECR_REGISTRY'/flext:'$GITHUB_REF_NAME'|g' k8s/production/*.yaml
+          kubectl apply -f k8s/production/ -n flext-production
 
       - name: Wait for deployment
         run: |
-          kubectl rollout status deployment/flx-app -n flx-production --timeout=600s
+          kubectl rollout status deployment/flext-app -n flext-production --timeout=600s
 
       - name: Run smoke tests
         run: |
-          kubectl run smoke-test --rm -i --image=$ECR_REGISTRY/flx:$GITHUB_REF_NAME \
-            --restart=Never -n flx-production -- python -m pytest tests/smoke/
+          kubectl run smoke-test --rm -i --image=$ECR_REGISTRY/flext:$GITHUB_REF_NAME \
+            --restart=Never -n flext-production -- python -m pytest tests/smoke/
 ```
 
 ## 🔍 Troubleshooting
@@ -1008,20 +1008,20 @@ jobs:
 
 ```bash
 # Check pod status
-kubectl get pods -n flx-production -l app=flx
+kubectl get pods -n flext-production -l app=flext
 
 # Get pod events
-kubectl describe pod <pod-name> -n flx-production
+kubectl describe pod <pod-name> -n flext-production
 
 # Check logs
-kubectl logs <pod-name> -n flx-production --previous
+kubectl logs <pod-name> -n flext-production --previous
 ```
 
 #### Service Discovery Issues
 
 ```bash
 # Check service endpoints
-kubectl get endpoints flx-service -n flx-production
+kubectl get endpoints flext-service -n flext-production
 
 # Test service connectivity
 kubectl run debug --rm -i --tty --image=nicolaka/netshoot -- /bin/bash
@@ -1032,11 +1032,11 @@ nslookup internal.invalid
 
 ```bash
 # Check resource usage
-kubectl top pods -n flx-production
+kubectl top pods -n flext-production
 kubectl top nodes
 
 # Check resource quotas
-kubectl describe resourcequota -n flx-production
+kubectl describe resourcequota -n flext-production
 ```
 
 ### **Performance Tuning**

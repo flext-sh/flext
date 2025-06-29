@@ -383,7 +383,7 @@ python -m src.gn_oic_wms_db.cli control stats
 ### Programmatic usage
 
 ```python
-from flx.adapters.oracle.wms import WMSCommandExecutor
+from flext.adapters.oracle.wms import WMSCommandExecutor
 
 # Initialize command executor
 executor = WMSCommandExecutor(config_path="./config/wms.json")
@@ -404,7 +404,7 @@ status = await executor.get_entity_status(detailed=True)
 ### Automated workflows
 
 ```python
-from flx.adapters.oracle.wms import WMSWorkflowOrchestrator
+from flext.adapters.oracle.wms import WMSWorkflowOrchestrator
 
 # Initialize workflow orchestrator
 orchestrator = WMSWorkflowOrchestrator()

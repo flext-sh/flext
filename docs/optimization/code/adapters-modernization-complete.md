@@ -131,7 +131,7 @@ Every modernized adapter gained:
 
 ### 1. CacheAdapterModern
 
-**File:** `src/flx/adapters/outbound/cache_modern.py`
+**File:** `src/flext/adapters/outbound/cache_modern.py`
 **Reduction:** 71.5% (758 → 216 lines)
 **Key Features:**
 
@@ -153,7 +153,7 @@ class CacheAdapterModern(AdvancedAdapterMixin):
 
 ### 2. DatabaseAdapterModern
 
-**File:** `src/flx/adapters/outbound/database_modern.py`
+**File:** `src/flext/adapters/outbound/database_modern.py`
 **Reduction:** 77.5% (794 → 179 lines)
 **Key Features:**
 
@@ -175,7 +175,7 @@ class DatabaseAdapterModern(AdvancedAdapterMixin):
 
 ### 3. HttpClientAdapterModern
 
-**File:** `src/flx/adapters/outbound/http_modern.py`
+**File:** `src/flext/adapters/outbound/http_modern.py`
 **Reduction:** 61.4% (617 → 238 lines)
 **Key Features:**
 
@@ -197,7 +197,7 @@ class HttpClientAdapterModern(AdvancedAdapterMixin):
 
 ### 4. EventPublisherAdapterModern
 
-**File:** `src/flx/adapters/outbound/events_modern.py`
+**File:** `src/flext/adapters/outbound/events_modern.py`
 **Reduction:** 70.0% (536 → 161 lines)
 **Key Features:**
 
@@ -219,7 +219,7 @@ class EventPublisherAdapterModern(AdvancedAdapterMixin):
 
 ### 5. CliAdapterModern
 
-**File:** `src/flx/adapters/inbound/cli_modern.py`
+**File:** `src/flext/adapters/inbound/cli_modern.py`
 **Reduction:** 58.4% (598 → 249 lines)
 **Key Features:**
 
@@ -378,10 +378,10 @@ async def test_cache_adapter_modern():
 
 ```python
 # Before
-from flx.adapters.outbound.cache import CacheAdapter
+from flext.adapters.outbound.cache import CacheAdapter
 
 # After
-from flx.adapters.outbound.cache_modern import CacheAdapterModern
+from flext.adapters.outbound.cache_modern import CacheAdapterModern
 ```
 
 2. **Configuration Updates:** Leverage simplified configuration patterns

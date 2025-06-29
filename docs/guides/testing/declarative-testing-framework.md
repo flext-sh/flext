@@ -1,7 +1,7 @@
 # Declarative Testing Framework
 
 **Status**: 🚧 CRITICAL DOCUMENTATION GAP - Implementation Complete, Documentation Needed
-**Implementation**: `/flx/src/flx/testing/`
+**Implementation**: `/flext/src/flext/testing/`
 **Last Updated**: 2025-01-06
 
 ## Overview
@@ -10,7 +10,7 @@ The FLX Declarative Testing Framework provides a comprehensive testing infrastru
 
 ## TODO IMPLEMENTATION ALIGNMENT
 
-- [ ] Document complete testing API from `/flx/src/flx/testing/__init__.py`
+- [ ] Document complete testing API from `/flext/src/flext/testing/__init__.py`
 - [ ] Add real usage examples from test suite
 - [ ] Document all testing engines and utilities
 - [ ] Cross-reference with actual test patterns
@@ -31,7 +31,7 @@ The FLX Declarative Testing Framework provides a comprehensive testing infrastru
 The main engine for running declarative tests across the FLX framework.
 
 ```python
-from flx.testing import DeclarativeTestEngine, create_test_engine
+from flext.testing import DeclarativeTestEngine, create_test_engine
 
 # TODO: Add real usage example from implementation
 engine = create_test_engine(config={
@@ -54,7 +54,7 @@ results = engine.run_tests()
 Pattern for making adapters testable within the framework.
 
 ```python
-from flx.testing import TestableAdapter
+from flext.testing import TestableAdapter
 
 # TODO: Add real usage example from implementation
 class TestableDatabaseAdapter(TestableAdapter):
@@ -79,7 +79,7 @@ class TestableDatabaseAdapter(TestableAdapter):
 Performance and quality metrics collection during testing.
 
 ```python
-from flx.testing import TestMetrics
+from flext.testing import TestMetrics
 
 # TODO: Add real usage example from implementation
 metrics = TestMetrics()
@@ -102,7 +102,7 @@ performance_report = metrics.generate_report()
 Comprehensive test result handling and reporting.
 
 ```python
-from flx.testing import TestResult
+from flext.testing import TestResult
 
 # TODO: Add real usage example from implementation
 def process_test_results(result: TestResult):
@@ -136,7 +136,7 @@ def process_test_results(result: TestResult):
 
 ```python
 # TODO: Add real adapter testing example from implementation
-from flx.testing import TestableAdapter, DeclarativeTestEngine
+from flext.testing import TestableAdapter, DeclarativeTestEngine
 
 class DatabaseAdapterTest(TestableAdapter):
     def test_connection(self):
@@ -156,7 +156,7 @@ class DatabaseAdapterTest(TestableAdapter):
 
 ```python
 # TODO: Add real port testing example from implementation
-from flx.testing import DeclarativeTestEngine
+from flext.testing import DeclarativeTestEngine
 
 def test_port_contract_compliance():
     # TODO: Document port contract testing
@@ -167,7 +167,7 @@ def test_port_contract_compliance():
 
 ```python
 # TODO: Add real performance testing example from implementation
-from flx.testing import TestMetrics
+from flext.testing import TestMetrics
 
 def test_adapter_performance():
     metrics = TestMetrics()
@@ -180,7 +180,7 @@ def test_adapter_performance():
 ### Running Full Test Suite
 
 ```python
-from flx.testing import run_full_test_suite
+from flext.testing import run_full_test_suite
 
 # TODO: Add real usage example from implementation
 results = run_full_test_suite(
@@ -200,7 +200,7 @@ results = run_full_test_suite(
 ### Test Coverage Validation
 
 ```python
-from flx.testing import validate_test_coverage
+from flext.testing import validate_test_coverage
 
 # TODO: Add real usage example from implementation
 coverage_report = validate_test_coverage(
@@ -219,7 +219,7 @@ coverage_report = validate_test_coverage(
 ### Critical Issues Detection
 
 ```python
-from flx.testing import has_critical_issues
+from flext.testing import has_critical_issues
 
 # TODO: Add real usage example from implementation
 if has_critical_issues(test_results):
@@ -276,7 +276,7 @@ testing:
 
 ```python
 # TODO: Add real hexagonal testing example from implementation
-from flx.testing import DeclarativeTestEngine
+from flext.testing import DeclarativeTestEngine
 
 def test_hexagonal_compliance():
     # Test that domain layer has no infrastructure dependencies
@@ -345,7 +345,7 @@ def test_hexagonal_compliance():
 
 ## Next Steps
 
-1. **🔴 CRITICAL**: Add real API examples from `/flx/src/flx/testing/`
+1. **🔴 CRITICAL**: Add real API examples from `/flext/src/flext/testing/`
 2. **🔴 CRITICAL**: Document all testing utilities and engines
 3. **🟡 HIGH**: Create comprehensive testing examples
 4. **🟡 HIGH**: Add integration guides for testing tools
@@ -353,5 +353,5 @@ def test_hexagonal_compliance():
 
 ---
 
-**Implementation Reference**: `/flx/src/flx/testing/__init__.py`
+**Implementation Reference**: `/flext/src/flext/testing/__init__.py`
 **Related Documentation**: [Testing Hub](../../development/testing/testing-hub.md) | [Hexagonal Testing](../../development/testing/hexagonal-testing-guide.md)

@@ -601,8 +601,8 @@ monitoring:
 ### FLX LDAP Adapter
 
 ```python
-from flx.adapters.oracle.ldap import OudAdapter
-from flx.core.configuration import Configuration
+from flext.adapters.oracle.ldap import OudAdapter
+from flext.core.configuration import Configuration
 
 # Initialize OUD adapter
 config = Configuration({
@@ -644,8 +644,8 @@ await oud_adapter.add_user_to_group(
 ### Migration Service Integration
 
 ```python
-from flx.services.migration import MigrationService
-from flx.adapters.oracle.ldap import OidAdapter, OudAdapter
+from flext.services.migration import MigrationService
+from flext.adapters.oracle.ldap import OidAdapter, OudAdapter
 
 # Initialize migration service
 migration_service = MigrationService(

@@ -6,7 +6,7 @@
 [![Type Checked](https://img.shields.io/badge/type--checked-mypy-blue)](http://mypy-lang.org/)
 [![Source](https://img.shields.io/badge/source-validated-green.svg)](../../index.md)
 
-**Complete API reference for FLX Framework 0.4.0+ generated from actual source code with type safety and production validation - verified against `/flx/src/flx/` implementation**
+**Complete API reference for FLX Framework 0.4.0+ generated from actual source code with type safety and production validation - verified against `/flext/src/flext/` implementation**
 
 ---
 
@@ -26,7 +26,7 @@
 ## Quick Import Reference
 
 ```python
-from flx import (
+from flext import (
     # Core Domain Layer
     AggregateRoot, Entity, ValueObject,
     DomainEvent, DomainLogger, LogLevel,
@@ -54,7 +54,7 @@ from flx import (
 
 #### `Entity(DomainObject, Identifiable, Timestamped)`
 
-**Location**: `/flx/src/flx/core/entities.py:133`
+**Location**: `/flext/src/flext/core/entities.py:133`
 
 Base class for domain entities with identity and lifecycle management.
 
@@ -80,7 +80,7 @@ class Customer(Entity):
 
 #### `AggregateRoot(Entity, Versionable)`
 
-**Location**: `/flx/src/flx/core/entities.py:247`
+**Location**: `/flext/src/flext/core/entities.py:247`
 
 Base class for aggregate roots implementing DDD consistency boundaries.
 
@@ -122,7 +122,7 @@ class Order(AggregateRoot):
 
 #### `DomainEvent(DomainObject)`
 
-**Location**: `/flx/src/flx/core/events.py:85`
+**Location**: `/flext/src/flext/core/events.py:85`
 
 Base class for all domain events with automatic metadata.
 
@@ -155,7 +155,7 @@ event = UserRegistered(
 
 #### `FlxDomainEvent(DomainEvent)`
 
-**Location**: `/flx/src/flx/core/events.py:338`
+**Location**: `/flext/src/flext/core/events.py:338`
 
 FLX-specific events with multi-tenancy and routing.
 
@@ -170,14 +170,14 @@ event = TenantUserRegistered(
     email="user@company-abc.com"
 )
 
-# Automatic routing key: "flx.company_abc.tenantuserregistered"
+# Automatic routing key: "flext.company_abc.tenantuserregistered"
 ```
 
 **Additional Fields:**
 
 - `tenant_id: str | None`: Multi-tenant isolation
 - `user_id: str | None`: User attribution
-- `source: str = "flx"`: Event source
+- `source: str = "flext"`: Event source
 - `version: str = "1.0"`: Schema version
 
 **Routing:**
@@ -192,13 +192,13 @@ event = TenantUserRegistered(
 
 #### `ApplicationService`
 
-**Location**: `/flx/src/flx/application/services.py`
+**Location**: `/flext/src/flext/application/services.py`
 
 Base application service for use case orchestration.
 
 #### `Bootstrap`
 
-**Location**: `/flx/src/flx/application/bootstrap.py`
+**Location**: `/flext/src/flext/application/bootstrap.py`
 
 Application bootstrap and lifecycle management.
 
@@ -221,13 +221,13 @@ await run_bootstrap(bootstrap)
 
 #### `CommandService`
 
-**Location**: `/flx/src/flx/application/services.py`
+**Location**: `/flext/src/flext/application/services.py`
 
 CQRS command handling service.
 
 #### `QueryService`
 
-**Location**: `/flx/src/flx/application/services.py`
+**Location**: `/flext/src/flext/application/services.py`
 
 CQRS query handling service.
 
@@ -239,7 +239,7 @@ CQRS query handling service.
 
 #### `BaseConnectionPort`
 
-**Location**: `/flx/src/flx/ports/base.py:13`
+**Location**: `/flext/src/flext/ports/base.py:13`
 
 Protocol for ports requiring connection management.
 
@@ -257,7 +257,7 @@ class MyPort(BaseConnectionPort):
 
 #### `BaseCrudPort`
 
-**Location**: `/flx/src/flx/ports/base.py:95`
+**Location**: `/flext/src/flext/ports/base.py:95`
 
 Protocol for CRUD operations.
 
@@ -272,13 +272,13 @@ async def exists(self, key: str) -> bool
 
 #### `StandardOutboundPort`
 
-**Location**: `/flx/src/flx/ports/base.py:344`
+**Location**: `/flext/src/flext/ports/base.py:344`
 
 Combines: `BaseConnectionPort + BaseAsyncContextPort + BaseCrudPort`
 
 #### `AdvancedOutboundPort`
 
-**Location**: `/flx/src/flx/ports/base.py:352`
+**Location**: `/flext/src/flext/ports/base.py:352`
 
 Adds: `BaseBatchOperationsPort + BaseQueryPort`
 
@@ -290,7 +290,7 @@ Adds: `BaseBatchOperationsPort + BaseQueryPort`
 
 #### Cache Service
 
-**Location**: `/flx/src/flx/infra/cache/`
+**Location**: `/flext/src/flext/infra/cache/`
 
 Redis-based caching with test engine support.
 
@@ -308,7 +308,7 @@ await cache_service.disconnect()
 
 #### Database Service
 
-**Location**: `/flx/src/flx/infra/database/`
+**Location**: `/flext/src/flext/infra/database/`
 
 SQLAlchemy-based database integration.
 
@@ -325,7 +325,7 @@ await db_service.disconnect()
 
 #### HTTP Service
 
-**Location**: `/flx/src/flx/infra/http/`
+**Location**: `/flext/src/flext/infra/http/`
 
 HTTP client service using httpx.
 
@@ -342,7 +342,7 @@ await http_service.disconnect()
 
 #### CLI Service
 
-**Location**: `/flx/src/flx/infra/cli/`
+**Location**: `/flext/src/flext/infra/cli/`
 
 CLI infrastructure using Cyclopts framework.
 
@@ -360,7 +360,7 @@ result = await cli_service.execute_command("process", ["--input", "data.json"])
 
 #### Observability Service
 
-**Location**: `/flx/src/flx/infra/observability/`
+**Location**: `/flext/src/flext/infra/observability/`
 
 Comprehensive monitoring with Prometheus metrics.
 
@@ -382,7 +382,7 @@ Structured event analytics and reporting.
 
 #### Security Service
 
-**Location**: `/flx/src/flx/infra/security/`
+**Location**: `/flext/src/flext/infra/security/`
 
 Authentication, authorization, and encryption.
 
@@ -404,12 +404,12 @@ is_valid = await security_service.validate_token(token)
 
 #### `DeclarativeTestEngine`
 
-**Location**: `/flx/src/flx/testing/declarative.py`
+**Location**: `/flext/src/flext/testing/declarative.py`
 
 Comprehensive testing framework for hexagonal architecture.
 
 ```python
-from flx.testing import (
+from flext.testing import (
     DeclarativeTestEngine,
     create_test_engine,
     run_full_test_suite,
@@ -434,7 +434,7 @@ coverage_ok = validate_test_coverage(results)
 
 ### Test Engines by Domain
 
-**Location**: `/flx/src/flx/testing/engines/`
+**Location**: `/flext/src/flext/testing/engines/`
 
 - `DatabaseTestEngine`: In-memory database testing
 - `CacheTestEngine`: In-memory cache testing
@@ -450,12 +450,12 @@ coverage_ok = validate_test_coverage(results)
 
 #### `StandardLoggingAdapter`
 
-**Location**: `/flx/src/flx/adapters/outbound/logging.py`
+**Location**: `/flext/src/flext/adapters/outbound/logging.py`
 
 Production-ready structured logging adapter.
 
 ```python
-from flx import get_logger
+from flext import get_logger
 
 logger = get_logger(__name__)
 
@@ -469,10 +469,10 @@ logger.info("User action", extra={
 
 #### Domain Logger Interface
 
-**Location**: `/flx/src/flx/core/logging_interface.py`
+**Location**: `/flext/src/flext/core/logging_interface.py`
 
 ```python
-from flx import DomainLogger, LogLevel
+from flext import DomainLogger, LogLevel
 
 class OrderService:
     def __init__(self, logger: DomainLogger):
@@ -490,7 +490,7 @@ class OrderService:
 
 #### `DomainObject`
 
-**Location**: `/flx/src/flx/core/base.py:200`
+**Location**: `/flext/src/flext/core/base.py:200`
 
 Immutable base class for all domain objects.
 
@@ -521,7 +521,7 @@ class Money(DomainObject):
 ### Complete Hexagonal Flow
 
 ```python
-from flx import *
+from flext import *
 
 # 1. Domain Entity
 class Order(AggregateRoot):
@@ -640,5 +640,5 @@ Infrastructure services provide specific error types:
 **📂 API Reference** | **🏠 Parent**: [Comprehensive API Hub](./index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
 
 **API Reference Version**: 1.0.0
-**Generated From**: `/flx/src/flx/` codebase
+**Generated From**: `/flext/src/flext/` codebase
 **Python Version**: 3.13+

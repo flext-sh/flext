@@ -8,9 +8,9 @@
 
 ## Navigation Context
 
-**Current Location**: `docs/guides/oracle/flx_http_oracle_wms-adapter.md`
+**Current Location**: `docs/guides/oracle/flext_http_oracle_wms-adapter.md`
 **Parent**: [Oracle Integration Hub](oracle-integration-hub.md) > Oracle WMS Integration
-**Quick Links**: [Database Adapter](flx-database-oracle-adapter.md) | [OIC Adapter](flx-http-oracle-oic-adapter.md) | [WMS Commands Reference](oracle-wms-commands-reference.md)
+**Quick Links**: [Database Adapter](flext-database-oracle-adapter.md) | [OIC Adapter](flext-http-oracle-oic-adapter.md) | [WMS Commands Reference](oracle-wms-commands-reference.md)
 
 ---
 
@@ -107,7 +107,7 @@ class WmsConfig(BaseModel):
 ### Core Adapter Implementation
 
 ```python
-# src/flx/adapters/outbound/oracle/wms_adapter.py
+# src/flext/adapters/outbound/oracle/wms_adapter.py
 import aiohttp
 import asyncio
 import json
@@ -116,16 +116,16 @@ from typing import Any, Dict, List, Optional, Union, AsyncIterator
 from urllib.parse import urljoin, urlencode
 from yarl import URL
 
-from flx.core.adapters.base import BaseAdapter
-from flx.core.adapters.mixins import (
+from flext.core.adapters.base import BaseAdapter
+from flext.core.adapters.mixins import (
     UnifiedObservabilityMixin,
     AdapterErrorHandlingMixin,
     UnifiedAdapterConfigurationMixin,
     AdvancedAdapterMixin
 )
-from flx.domain.ports.outbound.http import HttpPort
-from flx.adapters.outbound.oracle.config import WmsConfig
-from flx.adapters.outbound.oracle.exceptions import (
+from flext.domain.ports.outbound.http import HttpPort
+from flext.adapters.outbound.oracle.config import WmsConfig
+from flext.adapters.outbound.oracle.exceptions import (
     WmsAuthenticationError,
     WmsApiError,
     WmsEntityError,
@@ -610,8 +610,8 @@ class WmsRateLimiter:
 ```python
 # Basic setup and entity operations
 import asyncio
-from flx.adapters.outbound.oracle.wms_adapter import FlxOracleWmsAdapter
-from flx.adapters.outbound.oracle.config import WmsConfig
+from flext.adapters.outbound.oracle.wms_adapter import FlxOracleWmsAdapter
+from flext.adapters.outbound.oracle.config import WmsConfig
 
 async def basic_wms_example():
     # Configure WMS connection
@@ -803,8 +803,8 @@ async def bulk_operations_example():
 ### Next Steps
 
 - [Oracle WMS Commands Reference](oracle-wms-commands-reference.md) - CLI commands for WMS operations
-- [Oracle Database Integration](flx-database-oracle-adapter.md) - Combine WMS with database operations
-- [Oracle OIC Integration](flx-http-oracle-oic-adapter.md) - Workflow orchestration with OIC
+- [Oracle Database Integration](flext-database-oracle-adapter.md) - Combine WMS with database operations
+- [Oracle OIC Integration](flext-http-oracle-oic-adapter.md) - Workflow orchestration with OIC
 
 ### Related Topics
 

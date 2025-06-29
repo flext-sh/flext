@@ -37,14 +37,14 @@ I have successfully completed the comprehensive E2E test infrastructure for all 
   - `test_dbt_e2e.py` - dbt transformation testing
   - `dbt-profiles/` - dbt configuration files
 
-### 4. flx-ldap E2E Tests
+### 4. flext-ldap E2E Tests
 
-- **Location**: `/home/marlonsc/pyauto/flx-ldap/tests/e2e/`
+- **Location**: `/home/marlonsc/pyauto/flext-ldap/tests/e2e/`
 - **Infrastructure**: Complete pipeline with LDAP containers + PostgreSQL
 - **Test Coverage**: Full orchestration, migration workflows, incremental sync, client-a-oud-mig compatibility
 - **Key Files**:
   - `docker-compose.yml` - Complete infrastructure setup
-  - `test_flx_ldap_e2e.py` - End-to-end pipeline testing
+  - `test_flext_ldap_e2e.py` - End-to-end pipeline testing
   - `configs/` - Migration configuration files
 
 ## 🔧 Technical Implementation Details
@@ -82,7 +82,7 @@ Created comprehensive validation script at `/home/marlonsc/pyauto/scripts/valida
 - ✅ tap-ldap: Structure, Docker compose, test files complete
 - ✅ target-ldap: Structure, Docker compose, test files complete
 - ✅ dbt-ldap: Structure, Docker compose, test files complete
-- ✅ flx-ldap: Structure, Docker compose, test files complete
+- ✅ flext-ldap: Structure, Docker compose, test files complete
 
 ## 🚀 Usage Instructions
 
@@ -107,8 +107,8 @@ docker-compose up -d
 pytest tests/e2e/ -v
 docker-compose down -v
 
-# For flx-ldap
-cd flx-ldap
+# For flext-ldap
+cd flext-ldap
 docker-compose up -d
 pytest tests/e2e/ -v
 docker-compose down -v
@@ -121,7 +121,7 @@ docker-compose down -v
 python scripts/validate_e2e_infrastructure.py
 
 # Test specific project
-python scripts/validate_e2e_infrastructure.py --project flx-ldap
+python scripts/validate_e2e_infrastructure.py --project flext-ldap
 
 # Run actual Docker infrastructure tests
 python scripts/validate_e2e_infrastructure.py --run-docker-tests
@@ -156,7 +156,7 @@ python scripts/validate_e2e_infrastructure.py --run-docker-tests
 - **Custom Macros**: LDAP-specific transformation utilities
 - **Performance**: Large dataset transformation testing
 
-### flx-ldap E2E Tests
+### flext-ldap E2E Tests
 
 - **Pipeline Orchestration**: Complete extract-transform-load workflow
 - **Migration Workflows**: Full LDAP migration with comparison
@@ -204,4 +204,4 @@ The E2E test infrastructure is now complete and ready for use. Users can:
 
 ---
 
-**Status**: ✅ **COMPLETE** - All E2E test infrastructure has been successfully implemented and validated across all four LDAP projects (tap-ldap, target-ldap, dbt-ldap, flx-ldap).
+**Status**: ✅ **COMPLETE** - All E2E test infrastructure has been successfully implemented and validated across all four LDAP projects (tap-ldap, target-ldap, dbt-ldap, flext-ldap).

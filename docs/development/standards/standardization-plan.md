@@ -63,7 +63,7 @@ This document outlines the comprehensive enterprise standardization plan for ach
 
 - **Python Versions**: Mixed between `~3.13.0`, `^3.13`, `^3.11`
 - **Target versions**: Inconsistent `py312` vs `py313`
-- **Line-length**: Most use 88, but `flx` uses 120
+- **Line-length**: Most use 88, but `flext` uses 120
 - **Poetry core**: Different versions (`1.0.0` vs `1.9.0` vs `2.1.3`)
 - **MyPy structure**: Very different configurations across projects
 
@@ -128,7 +128,7 @@ fail-under = 80
 
 ### Phase 2: Core Projects
 
-1. flx (framework core)
+1. flext (framework core)
 2. dc-oracle-wms
 3. dc-oracle-oic
 4. dc-code-analyzer

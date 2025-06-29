@@ -24,7 +24,7 @@
 
 - **📂 Section Hub**: [API Reference Hub](../index.md)
 - **🏠 Documentation Root**: [Root Index](../../index.md)
-- **🔗 Related**: [FLX Adapters Reference](../adapters/flx-adapters-comprehensive-reference.md)
+- **🔗 Related**: [FLX Adapters Reference](../adapters/flext-adapters-comprehensive-reference.md)
 
 ---
 
@@ -39,24 +39,24 @@ The `Flx` class provides a comprehensive Domain-Driven Design framework with Hex
 The FLX framework follows Domain-Driven Design principles with clear separation of concerns:
 
 ```python
-from flx import Flx
+from flext import Flx
 
 # Initialize the framework
-flx = Flx()
+flext = Flx()
 
 # Rich domain entities
-user = flx.Entities.BaseEntity(name="John Doe")
-order = flx.Entities.AggregateRoot(name="Order #123")
-service = flx.Entities.ServiceEntity(name="Payment API", service_type="REST")
+user = flext.Entities.BaseEntity(name="John Doe")
+order = flext.Entities.AggregateRoot(name="Order #123")
+service = flext.Entities.ServiceEntity(name="Payment API", service_type="REST")
 
 # Value objects for immutable data
-contact = flx.ValueObjects.ContactInfo(
+contact = flext.ValueObjects.ContactInfo(
     email="john@example.com",
     phone="+1-555-0123"
 )
 
 # Domain events
-event = flx.ValueObjects.FlxDomainEvent(
+event = flext.ValueObjects.FlxDomainEvent(
     event_type="UserCreated",
     aggregate_id=user.id,
     aggregate_type="User",
@@ -68,24 +68,24 @@ event = flx.ValueObjects.FlxDomainEvent(
 
 | Section             | Responsibility      | Main Components                                        |
 | ------------------- | ------------------- | ------------------------------------------------------ |
-| `flx.Entities`      | Domain entities     | `BaseEntity`, `AggregateRoot`, `BusinessEntity`        |
-| `flx.ValueObjects`  | Immutable data      | `FlxDomainEvent`, `EntityId`, `Address`, `ContactInfo` |
-| `flx.Protocols`     | Type interfaces     | `Configurable`, `Activatable`, `Timestamped`           |
-| `flx.Mixins`        | Composable behavior | `Status`, `Config`, `Metadata`, `Management`           |
-| `flx.EntityFactory` | Entity creation     | `flx_create_service()`, `flx_create_configurable()`    |
+| `flext.Entities`      | Domain entities     | `BaseEntity`, `AggregateRoot`, `BusinessEntity`        |
+| `flext.ValueObjects`  | Immutable data      | `FlxDomainEvent`, `EntityId`, `Address`, `ContactInfo` |
+| `flext.Protocols`     | Type interfaces     | `Configurable`, `Activatable`, `Timestamped`           |
+| `flext.Mixins`        | Composable behavior | `Status`, `Config`, `Metadata`, `Management`           |
+| `flext.EntityFactory` | Entity creation     | `flext_create_service()`, `flext_create_configurable()`    |
 
 ---
 
 ## API Reference
 
-### Entities Module (`flx.Entities`)
+### Entities Module (`flext.Entities`)
 
 #### BaseEntity
 
 The foundation class for all domain entities with identity and lifecycle management.
 
 ```python
-user = flx.Entities.BaseEntity(name="John Doe")
+user = flext.Entities.BaseEntity(name="John Doe")
 print(f"User ID: {user.id}, Name: {user.name}")
 ```
 
@@ -106,7 +106,7 @@ print(f"User ID: {user.id}, Name: {user.name}")
 Entity with automatic timestamp management.
 
 ```python
-document = flx.Entities.TimestampedEntity()
+document = flext.Entities.TimestampedEntity()
 print(f"Created at: {document.created_at}")
 ```
 
@@ -121,7 +121,7 @@ print(f"Created at: {document.created_at}")
 Entity with version control capabilities.
 
 ```python
-contract = flx.Entities.VersionedEntity()
+contract = flext.Entities.VersionedEntity()
 contract.increment_version()
 print(f"Version: {contract.version}")
 ```
@@ -141,7 +141,7 @@ print(f"Version: {contract.version}")
 Base class for entities with domain logic and event support.
 
 ```python
-class OrderEntity(flx.Entities.BusinessEntity):
+class OrderEntity(flext.Entities.BusinessEntity):
     def process_payment(self, amount: float):
         self.raise_domain_event("PaymentRequested", {"amount": amount})
 
@@ -161,7 +161,7 @@ events = order.get_domain_events()
 Root entity for aggregate boundaries with domain event management.
 
 ```python
-order = flx.Entities.AggregateRoot(name="Order #12345")
+order = flext.Entities.AggregateRoot(name="Order #12345")
 order.raise_domain_event("OrderCreated", {"customer_id": "123"})
 ```
 
@@ -175,7 +175,7 @@ order.raise_domain_event("OrderCreated", {"customer_id": "123"})
 Entity representing technical services and external integrations.
 
 ```python
-payment_service = flx.Entities.ServiceEntity(
+payment_service = flext.Entities.ServiceEntity(
     name="Payment Gateway",
     service_type="REST",
     endpoint="https://api.payment.com"
@@ -193,14 +193,14 @@ payment_service = flx.Entities.ServiceEntity(
 - `configure_timeout(seconds: int)` → None: Sets service timeout
 - `get_service_info()` → dict: Returns service information
 
-### Value Objects Module (`flx.ValueObjects`)
+### Value Objects Module (`flext.ValueObjects`)
 
 #### ContactInfo
 
 Immutable contact information value object.
 
 ```python
-contact = flx.ValueObjects.ContactInfo(
+contact = flext.ValueObjects.ContactInfo(
     email="john@example.com",
     phone="+1-555-0123"
 )
@@ -216,7 +216,7 @@ contact = flx.ValueObjects.ContactInfo(
 Immutable address value object.
 
 ```python
-address = flx.ValueObjects.Address(
+address = flext.ValueObjects.Address(
     street="123 Main St",
     city="Springfield",
     country="USA"
@@ -235,7 +235,7 @@ address = flx.ValueObjects.Address(
 Domain event representation for business occurrences.
 
 ```python
-event = flx.ValueObjects.FlxDomainEvent(
+event = flext.ValueObjects.FlxDomainEvent(
     event_type="CustomerRegistered",
     aggregate_id="customer-123",
     aggregate_type="Customer",
@@ -255,14 +255,14 @@ event = flx.ValueObjects.FlxDomainEvent(
 - `occurred_at` (datetime): When the event occurred (auto-generated)
 - `event_id` (str): Unique event identifier (auto-generated)
 
-### Protocols Module (`flx.Protocols`)
+### Protocols Module (`flext.Protocols`)
 
 #### Configurable
 
 Protocol for entities with configuration capabilities.
 
 ```python
-def process_configurable(entity: flx.Protocols.Configurable) -> dict:
+def process_configurable(entity: flext.Protocols.Configurable) -> dict:
     return entity.config
 ```
 
@@ -277,7 +277,7 @@ def process_configurable(entity: flx.Protocols.Configurable) -> dict:
 Protocol for entities that can be activated/deactivated.
 
 ```python
-def activate_entity(entity: flx.Protocols.Activatable) -> bool:
+def activate_entity(entity: flext.Protocols.Activatable) -> bool:
     entity.activate()
     return entity.active
 ```
@@ -293,7 +293,7 @@ def activate_entity(entity: flx.Protocols.Activatable) -> bool:
 Protocol for entities with timestamp tracking.
 
 ```python
-def get_creation_time(entity: flx.Protocols.Timestamped) -> datetime:
+def get_creation_time(entity: flext.Protocols.Timestamped) -> datetime:
     return entity.created_at
 ```
 
@@ -302,14 +302,14 @@ def get_creation_time(entity: flx.Protocols.Timestamped) -> datetime:
 - `created_at` (datetime): Creation timestamp
 - `updated_at` (datetime): Last update timestamp
 
-### Mixins Module (`flx.Mixins`)
+### Mixins Module (`flext.Mixins`)
 
 #### Status
 
 Mixin providing activation/deactivation capabilities.
 
 ```python
-class AdvancedEntity(flx.Entities.BaseEntity, flx.Mixins.Status):
+class AdvancedEntity(flext.Entities.BaseEntity, flext.Mixins.Status):
     pass
 
 entity = AdvancedEntity(name="Advanced System")
@@ -332,7 +332,7 @@ print(f"Active: {entity.active}")
 Mixin providing configuration management.
 
 ```python
-class ConfigurableEntity(flx.Entities.BaseEntity, flx.Mixins.Config):
+class ConfigurableEntity(flext.Entities.BaseEntity, flext.Mixins.Config):
     pass
 
 entity = ConfigurableEntity(name="Configurable System")
@@ -356,7 +356,7 @@ print(f"Timeout: {entity.get_config('timeout')}")
 Mixin providing flexible metadata management.
 
 ```python
-class MetadataEntity(flx.Entities.BaseEntity, flx.Mixins.Metadata):
+class MetadataEntity(flext.Entities.BaseEntity, flext.Mixins.Metadata):
     pass
 
 entity = MetadataEntity(name="Metadata System")
@@ -381,7 +381,7 @@ print(f"Environment: {entity.get_metadata('environment')}")
 Combines Status and Metadata mixins for comprehensive management.
 
 ```python
-class ManagedEntity(flx.Entities.BaseEntity, flx.Mixins.Management):
+class ManagedEntity(flext.Entities.BaseEntity, flext.Mixins.Management):
     pass
 
 entity = ManagedEntity(name="Managed System")
@@ -394,7 +394,7 @@ entity.add_metadata("version", "2.0")
 Combines all mixins (Status, Config, Metadata) for maximum functionality.
 
 ```python
-class FullEntity(flx.Entities.BaseEntity, flx.Mixins.FullCapability):
+class FullEntity(flext.Entities.BaseEntity, flext.Mixins.FullCapability):
     pass
 
 entity = FullEntity(name="Full System")
@@ -410,12 +410,12 @@ entity.add_metadata("version", "2.0")
 ### Pattern 1: Simple Domain Entity
 
 ```python
-from flx import Flx
+from flext import Flx
 
-flx = Flx()
+flext = Flx()
 
 # Create a simple domain entity
-user = flx.Entities.BaseEntity(name="John Doe")
+user = flext.Entities.BaseEntity(name="John Doe")
 print(f"User created: {user.id}")
 ```
 
@@ -424,10 +424,10 @@ print(f"User created: {user.id}")
 ```python
 # Create entity with multiple capabilities
 class AdvancedUser(
-    flx.Entities.BaseEntity,
-    flx.Mixins.Status,
-    flx.Mixins.Config,
-    flx.Mixins.Metadata
+    flext.Entities.BaseEntity,
+    flext.Mixins.Status,
+    flext.Mixins.Config,
+    flext.Mixins.Metadata
 ):
     pass
 
@@ -440,7 +440,7 @@ user.add_metadata("last_login", "2024-01-15")
 ### Pattern 3: Business Logic with Events
 
 ```python
-class OrderEntity(flx.Entities.BusinessEntity):
+class OrderEntity(flext.Entities.BusinessEntity):
     def __init__(self, name: str):
         super().__init__(name=name)
         self.items = []
@@ -476,7 +476,7 @@ print(f"Events raised: {len(events)}")
 
 ```python
 # Define external service
-payment_service = flx.Entities.ServiceEntity(
+payment_service = flext.Entities.ServiceEntity(
     name="Payment Gateway",
     service_type="REST",
     endpoint="https://api.stripe.com"
@@ -492,7 +492,7 @@ class PaymentProcessor:
 
     def process_payment(self, amount: float, order_id: str):
         # Business logic
-        event = flx.ValueObjects.FlxDomainEvent(
+        event = flext.ValueObjects.FlxDomainEvent(
             event_type="PaymentRequested",
             aggregate_id=order_id,
             aggregate_type="Order",
@@ -514,7 +514,7 @@ payment_event = processor.process_payment(100.0, "order-123")
 from typing import List
 
 # Type-safe functions using protocols
-def activate_entities(entities: List[flx.Protocols.Activatable]) -> int:
+def activate_entities(entities: List[flext.Protocols.Activatable]) -> int:
     """Activate multiple entities and return count of successful activations."""
     activated_count = 0
     for entity in entities:
@@ -523,14 +523,14 @@ def activate_entities(entities: List[flx.Protocols.Activatable]) -> int:
             activated_count += 1
     return activated_count
 
-def configure_entities(entities: List[flx.Protocols.Configurable], config: dict) -> None:
+def configure_entities(entities: List[flext.Protocols.Configurable], config: dict) -> None:
     """Apply configuration to multiple entities."""
     for entity in entities:
         for key, value in config.items():
             entity.set_config(key, value)
 
 # Usage with type safety
-class ServiceManager(flx.Entities.ServiceEntity, flx.Mixins.FullCapability):
+class ServiceManager(flext.Entities.ServiceEntity, flext.Mixins.FullCapability):
     pass
 
 services = [
@@ -553,8 +553,8 @@ FLX implements hexagonal architecture with clear separation:
 
 ```python
 # Domain layer (center) - pure business logic
-user = flx.Entities.BaseEntity(name="John")
-order = flx.Entities.AggregateRoot(name="Order")
+user = flext.Entities.BaseEntity(name="John")
+order = flext.Entities.AggregateRoot(name="Order")
 
 # Application layer - use cases and orchestration
 class CreateOrderUseCase:
@@ -564,7 +564,7 @@ class CreateOrderUseCase:
 
     def execute(self, order_data: dict):
         user = self.user_repo.find_by_id(order_data["user_id"])
-        order = flx.Entities.AggregateRoot(name=f"Order {order_data['id']}")
+        order = flext.Entities.AggregateRoot(name=f"Order {order_data['id']}")
         # Business logic here...
         return order
 
@@ -580,17 +580,17 @@ Rich domain modeling with business logic encapsulation:
 
 ```python
 # Entities with identity and lifecycle
-customer = flx.Entities.BaseEntity(name="Customer")
+customer = flext.Entities.BaseEntity(name="Customer")
 
 # Aggregates for consistency boundaries
-order = flx.Entities.AggregateRoot(name="Order")
+order = flext.Entities.AggregateRoot(name="Order")
 order.raise_domain_event("OrderCreated", {"customer_id": customer.id})
 
 # Value objects for immutable concepts
-address = flx.ValueObjects.Address(street="123 Main St", city="Springfield")
+address = flext.ValueObjects.Address(street="123 Main St", city="Springfield")
 
 # Domain events for business occurrences
-event = flx.ValueObjects.FlxDomainEvent(
+event = flext.ValueObjects.FlxDomainEvent(
     event_type="CustomerMoved",
     aggregate_id=customer.id,
     event_data={"new_address": address.street}
@@ -606,7 +606,7 @@ event = flx.ValueObjects.FlxDomainEvent(
 ```python
 try:
     # Entities validate input automatically
-    contact = flx.ValueObjects.ContactInfo(
+    contact = flext.ValueObjects.ContactInfo(
         email="invalid-email",  # Will raise validation error
         phone="+1-555-0123"
     )
@@ -619,7 +619,7 @@ except ValueError as e:
 ```python
 try:
     # Domain events require valid data
-    event = flx.ValueObjects.FlxDomainEvent(
+    event = flext.ValueObjects.FlxDomainEvent(
         event_type="",  # Empty event type will raise error
         aggregate_id="123",
         aggregate_type="User",
@@ -637,15 +637,15 @@ except ValueError as e:
 
 ```python
 # Good: Focused entities with single responsibility
-class User(flx.Entities.BaseEntity):
+class User(flext.Entities.BaseEntity):
     def __init__(self, name: str, email: str):
         super().__init__(name=name)
         self.email = email
         self.profile = None
 
 # Better: Use value objects for complex data
-class User(flx.Entities.BaseEntity):
-    def __init__(self, name: str, contact_info: flx.ValueObjects.ContactInfo):
+class User(flext.Entities.BaseEntity):
+    def __init__(self, name: str, contact_info: flext.ValueObjects.ContactInfo):
         super().__init__(name=name)
         self.contact_info = contact_info
 ```
@@ -667,14 +667,14 @@ order.raise_domain_event("ItemsShipped", data)
 
 ```python
 # Good: Use specific mixins for specific needs
-class ConfigurableService(flx.Entities.ServiceEntity, flx.Mixins.Config):
+class ConfigurableService(flext.Entities.ServiceEntity, flext.Mixins.Config):
     pass
 
-class ManagedService(flx.Entities.ServiceEntity, flx.Mixins.Management):
+class ManagedService(flext.Entities.ServiceEntity, flext.Mixins.Management):
     pass
 
 # Use FullCapability only when you need all features
-class ComplexService(flx.Entities.ServiceEntity, flx.Mixins.FullCapability):
+class ComplexService(flext.Entities.ServiceEntity, flext.Mixins.FullCapability):
     pass
 ```
 
@@ -683,7 +683,7 @@ class ComplexService(flx.Entities.ServiceEntity, flx.Mixins.FullCapability):
 ```python
 # Good: Use protocols for type hints in functions
 def process_configurable_entities(
-    entities: List[flx.Protocols.Configurable],
+    entities: List[flext.Protocols.Configurable],
     config: dict
 ) -> None:
     for entity in entities:
@@ -691,7 +691,7 @@ def process_configurable_entities(
 
 # Good: Use protocols for dependency injection
 class BusinessService:
-    def __init__(self, notifier: flx.Protocols.Activatable):
+    def __init__(self, notifier: flext.Protocols.Activatable):
         self.notifier = notifier
 ```
 
@@ -709,7 +709,7 @@ class User:
         self.name = name
 
 # After: FLX entities
-class User(flx.Entities.BaseEntity):
+class User(flext.Entities.BaseEntity):
     def __init__(self, name: str):
         super().__init__(name=name)
         # ID and timestamps are automatically managed
@@ -723,7 +723,7 @@ events = []
 events.append({"type": "UserCreated", "data": {"name": "John"}})
 
 # After: Domain events
-user = flx.Entities.BusinessEntity(name="John")
+user = flext.Entities.BusinessEntity(name="John")
 user.raise_domain_event("UserCreated", {"name": "John"})
 events = user.get_domain_events()
 ```
@@ -739,7 +739,7 @@ events = user.get_domain_events()
 
 ### **Next Steps**
 
-- [FLX Adapters Reference](../adapters/flx-adapters-comprehensive-reference.md) - Working with adapter system
+- [FLX Adapters Reference](../adapters/flext-adapters-comprehensive-reference.md) - Working with adapter system
 - [Domain Entity Examples](../../examples/basic-examples.md) - Practical implementation examples
 - [Testing Guide](../../development/testing/index.md) - Testing FLX applications
 

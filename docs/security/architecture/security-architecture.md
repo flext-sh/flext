@@ -26,7 +26,7 @@ FLX implements defense-in-depth security principles with multiple layers of prot
 ### **VALIDATED Security Implementation Status** ✅
 
 > **Implementation Status**: Production Ready (January 2025)
-> **Source Validation**: `/flx/src/flx/infra/security/`
+> **Source Validation**: `/flext/src/flext/infra/security/`
 
 #### **Enterprise Authentication Service - REAL Implementation**
 
@@ -146,10 +146,10 @@ graph TB
 ### **Multi-Factor Authentication (MFA)**
 
 ```python
-# flx/security/authentication.py
-from flx.security.base import SecurityProvider
-from flx.security.mfa import MFAProvider
-from flx.security.tokens import JWTManager
+# flext/security/authentication.py
+from flext.security.base import SecurityProvider
+from flext.security.mfa import MFAProvider
+from flext.security.tokens import JWTManager
 import pyotp
 import qrcode
 from io import BytesIO
@@ -256,12 +256,12 @@ class FlxMFAProvider(MFAProvider):
 ### **JWT Token Management**
 
 ```python
-# flx/security/tokens.py
+# flext/security/tokens.py
 import jwt
 import time
 from datetime import datetime, timedelta
 from cryptography.fernet import Fernet
-from flx.security.base import SecurityError
+from flext.security.base import SecurityError
 
 class JWTManager:
     """Secure JWT token management."""
@@ -348,9 +348,9 @@ class JWTManager:
 ### **OAuth 2.0 / OIDC Integration**
 
 ```python
-# flx/security/oauth.py
+# flext/security/oauth.py
 from authlib.integrations.httpx_client import AsyncOAuth2Client
-from flx.security.base import OAuthProvider
+from flext.security.base import OAuthProvider
 
 class FlxOAuthProvider(OAuthProvider):
     """OAuth 2.0 / OpenID Connect provider."""
@@ -409,10 +409,10 @@ class FlxOAuthProvider(OAuthProvider):
 ### **Role-Based Access Control (RBAC)**
 
 ```python
-# flx/security/rbac.py
+# flext/security/rbac.py
 from enum import Enum
 from typing import List, Set
-from flx.security.base import Permission, Role, AccessControlError
+from flext.security.base import Permission, Role, AccessControlError
 
 class ResourceType(str, Enum):
     USER = "user"
@@ -551,9 +551,9 @@ def setup_standard_rbac() -> RBACManager:
 ### **Attribute-Based Access Control (ABAC)**
 
 ```python
-# flx/security/abac.py
+# flext/security/abac.py
 from typing import Any, Dict
-from flx.security.base import PolicyEngine, PolicyDecision
+from flext.security.base import PolicyEngine, PolicyDecision
 
 class ABACEngine(PolicyEngine):
     """Attribute-Based Access Control engine."""
@@ -685,7 +685,7 @@ SAMPLE_ABAC_POLICIES = {
 ### **Field-Level Encryption**
 
 ```python
-# flx/security/encryption.py
+# flext/security/encryption.py
 from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
@@ -791,7 +791,7 @@ class SecureCustomerEntity:
 ### **Password Security**
 
 ```python
-# flx/security/password.py
+# flext/security/password.py
 import bcrypt
 import secrets
 import string
@@ -856,11 +856,11 @@ class PasswordManager:
 ### **Security Event Logging**
 
 ```python
-# flx/security/audit.py
+# flext/security/audit.py
 from datetime import datetime
 from typing import Dict, Any, Optional
-from flx.core.logging import get_logger
-from flx.security.base import SecurityEvent, RiskLevel
+from flext.core.logging import get_logger
+from flext.security.base import SecurityEvent, RiskLevel
 
 class SecurityAuditLogger:
     """Security audit logging system."""
@@ -984,11 +984,11 @@ SECURITY_EVENTS = {
 ### **Intrusion Detection & Response**
 
 ```python
-# flx/security/intrusion_detection.py
+# flext/security/intrusion_detection.py
 from collections import defaultdict, deque
 from datetime import datetime, timedelta
 from typing import Dict, List
-from flx.security.base import ThreatLevel, SecurityIncident
+from flext.security.base import ThreatLevel, SecurityIncident
 
 class IntrusionDetectionSystem:
     """Intrusion detection and automated response system."""
@@ -1113,10 +1113,10 @@ class IntrusionDetectionSystem:
 ### **GDPR Compliance**
 
 ```python
-# flx/security/gdpr.py
+# flext/security/gdpr.py
 from datetime import datetime, timedelta
 from typing import List, Dict, Any
-from flx.security.base import DataProcessor, LegalBasis
+from flext.security.base import DataProcessor, LegalBasis
 
 class GDPRCompliance:
     """GDPR compliance implementation."""
@@ -1253,7 +1253,7 @@ class GDPRCompliance:
 The FLX framework includes a comprehensive security infrastructure validated against production requirements:
 
 ```
-/flx/src/flx/infra/security/
+/flext/src/flext/infra/security/
 ├── auth.py                  # Authentication providers
 ├── services.py              # Enterprise authentication services
 ├── secure_auth.py           # Secure authentication implementations
@@ -1268,7 +1268,7 @@ The FLX framework includes a comprehensive security infrastructure validated aga
 Production-ready authentication with multiple provider support:
 
 ```python
-from flx.infra.security import EnterpriseAuthService
+from flext.infra.security import EnterpriseAuthService
 
 # Enterprise authentication with multiple providers
 auth_service = EnterpriseAuthService()
@@ -1295,7 +1295,7 @@ auth_service.configure_rbac(
 Enterprise-grade cryptography with multiple encryption backends:
 
 ```python
-from flx.infra.security import CryptographicService
+from flext.infra.security import CryptographicService
 
 # Production cryptography service
 crypto = CryptographicService()
@@ -1315,7 +1315,7 @@ is_valid = crypto.verify_signature(document, signature, public_key)
 Advanced JWT handling with automatic rotation and validation:
 
 ```python
-from flx.infra.security import JWTTokenManager
+from flext.infra.security import JWTTokenManager
 
 # Production JWT management
 jwt_manager = JWTTokenManager()

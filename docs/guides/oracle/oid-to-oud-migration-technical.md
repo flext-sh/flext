@@ -32,7 +32,7 @@ OID and OUD have several schema differences that need to be addressed:
 The following tools are provided to assist with migration:
 
 - `schema_migration_helper.py`: Analyzes OID schema and generates extensions for OUD
-- `flx_ldif_for_oud.py`: Processes LDIF files to make them compatible with OUD
+- `flext_ldif_for_oud.py`: Processes LDIF files to make them compatible with OUD
 - `ldif_tools.py`: Provides utilities for LDIF analysis and reporting
 
 ## Migration Process
@@ -74,8 +74,8 @@ The migration process now:
 For specific cases, you can run the script directly with advanced parameters:
 
 ```bash
-# Run flx_ldif_for_oud.py script with custom parameters
-python scripts/flx_ldif_for_oud.py --input input.ldif --output output.ldif \
+# Run flext_ldif_for_oud.py script with custom parameters
+python scripts/flext_ldif_for_oud.py --input input.ldif --output output.ldif \
     --ldap-host localhost --ldap-port 3389 --ldap-bind-dn "cn=Directory Manager" --ldap-password "password"
 ```
 
@@ -95,7 +95,7 @@ python scripts/flx_ldif_for_oud.py --input input.ldif --output output.ldif \
 
 3. **Special characters in DNs**:
    - Symptom: Error parsing LDIF entries
-   - Solution: The `flx_ldif_for_oud.py` script handles special character escaping
+   - Solution: The `flext_ldif_for_oud.py` script handles special character escaping
 
 ### Logs
 
@@ -124,7 +124,7 @@ make ldif-migrate-oid-to-oud INPUT_LDIF=ldifs/oid_export.ldif OUTPUT_LDIF=ldifs/
 For advanced configurations, you can modify the following files:
 
 - `ldifs/oid_schema_extensions.ldif`: Add additional object class or attribute definitions
-- `scripts/flx_ldif_for_oud.py`: Customize transformation rules for specific OID attributes or object classes
+- `scripts/flext_ldif_for_oud.py`: Customize transformation rules for specific OID attributes or object classes
 
 ## Security Considerations
 

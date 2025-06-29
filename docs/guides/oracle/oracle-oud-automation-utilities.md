@@ -243,7 +243,7 @@ oud-simple-env edit -e source --template prod
 These utilities integrate seamlessly with the FLX framework:
 
 ```python
-from flx.adapters.oracle.oud import OUDUtilities
+from flext.adapters.oracle.oud import OUDUtilities
 
 # Initialize utilities
 utils = OUDUtilities()

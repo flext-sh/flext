@@ -118,12 +118,12 @@ This hub provides comprehensive guidance for implementing adapters in hexagonal 
 - **Total Documents**: 5+ comprehensive adapter guides
 - **Hub Completeness**: 100% mandatory template compliance
 - **Cross-References**: 5+ bidirectional links per document
-- **Source Validation**: ✅ Validated against `/flx/src/flx/adapters/` implementation
+- **Source Validation**: ✅ Validated against `/flext/src/flext/adapters/` implementation
 
 ### **Adapter Validation**
 
 - **Real Implementation**: ✅ Based on production FLX Framework adapter patterns
-- **Oracle Integration**: ✅ Adapter patterns validated with `/flx-*-oracle-*` implementations
+- **Oracle Integration**: ✅ Adapter patterns validated with `/flext-*-oracle-*` implementations
 - **Testing Coverage**: ✅ Adapter patterns tested with comprehensive test suites
 - **Documentation Standards**: ✅ HOW_TO_DOCUMENT.md compliance
 

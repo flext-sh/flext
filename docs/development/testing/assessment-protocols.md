@@ -24,7 +24,7 @@
 
 - **📂 Section Hub**: [Testing Hub](./index.md)
 - **🏠 Documentation Root**: [Root Index](../../index.md)
-- **🔗 Source Code**: [FLX Testing](../../../flx/src/flx/testing/)
+- **🔗 Source Code**: [FLX Testing](../../../flext/src/flext/testing/)
 - **🔗 Related**: [Validation Testing](./validation-testing.md), [Emergency Protocols](./emergency-protocols.md)
 
 ---
@@ -56,7 +56,7 @@ echo ""
 # STEP 2: UNDERSTAND PROJECT STRUCTURE (Agent keeps fucking this up)
 echo "=== PROJECT STRUCTURE VERIFICATION ==="
 echo "Available projects:"
-ls -1 | grep -E '^flx' | head -10
+ls -1 | grep -E '^flext' | head -10
 echo ""
 echo "Source code locations:"
 find . -name "src" -type d | head -5
@@ -65,12 +65,12 @@ echo ""
 # STEP 3: TEST IMPORTS WITH CORRECT PATHS (Agent's biggest failure)
 echo "=== IMPORT TESTING WITH CORRECT PATHS ==="
 echo "Testing FLX Core (src in subdirectory)..."
-python -c "import sys; sys.path.insert(0, 'flx/src'); import flx; print('✅ FLX Core OK')" 2>/dev/null || echo "❌ FLX BROKEN"
+python -c "import sys; sys.path.insert(0, 'flext/src'); import flext; print('✅ FLX Core OK')" 2>/dev/null || echo "❌ FLX BROKEN"
 
 echo "Testing Oracle adapters (separate projects)..."
-python -c "import sys; sys.path.insert(0, 'flx-database-oracle/src'); import flx_database_oracle; print('✅ DB Oracle OK')" 2>/dev/null || echo "❌ DB BROKEN"
-python -c "import sys; sys.path.insert(0, 'flx-http-oracle-oic/src'); import flx_http_oracle_oic; print('✅ OIC OK')" 2>/dev/null || echo "❌ OIC BROKEN"
-python -c "import sys; sys.path.insert(0, 'flx-http-oracle-wms/src'); import flx_http_oracle_wms; print('✅ WMS OK')" 2>/dev/null || echo "❌ WMS BROKEN"
+python -c "import sys; sys.path.insert(0, 'flext-database-oracle/src'); import flext_database_oracle; print('✅ DB Oracle OK')" 2>/dev/null || echo "❌ DB BROKEN"
+python -c "import sys; sys.path.insert(0, 'flext-http-oracle-oic/src'); import flext_http_oracle_oic; print('✅ OIC OK')" 2>/dev/null || echo "❌ OIC BROKEN"
+python -c "import sys; sys.path.insert(0, 'flext-http-oracle-wms/src'); import flext_http_oracle_wms; print('✅ WMS OK')" 2>/dev/null || echo "❌ WMS BROKEN"
 
 # STEP 4: REALITY CHECK BEFORE DECLARING FAILURE
 echo "=== REALITY CHECK SECTION ==="
@@ -102,17 +102,17 @@ echo "AGENT: Read the output above CAREFULLY before making any conclusions"
 echo "=== SYSTEMATIC ASSESSMENT STARTING ==="
 
 # Test all core imports
-python -c "import flx; print('✅ FLX Core')" || echo "❌ FLX BROKEN"
-python -c "import flx.application.bootstrap; print('✅ Bootstrap')" || echo "❌ Bootstrap BROKEN"
-python -c "import flx.adapters.outbound.cache; print('✅ Cache')" || echo "❌ Cache BROKEN"
+python -c "import flext; print('✅ FLX Core')" || echo "❌ FLX BROKEN"
+python -c "import flext.application.bootstrap; print('✅ Bootstrap')" || echo "❌ Bootstrap BROKEN"
+python -c "import flext.adapters.outbound.cache; print('✅ Cache')" || echo "❌ Cache BROKEN"
 
 # Test build system thoroughly
 make lint 2>&1 | grep -E "(error|Error|ERROR)" | wc -l && echo "Lint errors detected"
 make test 2>&1 | grep -E "(FAILED|failed)" | wc -l && echo "Test failures detected"
 
 # Test quality gates
-ruff check flx/src/ --select=F8 2>/dev/null | wc -l && echo "F8xx errors count"
-mypy flx/src/ 2>/dev/null | grep -c "error:" && echo "MyPy errors count"
+ruff check flext/src/ --select=F8 2>/dev/null | wc -l && echo "F8xx errors count"
+mypy flext/src/ 2>/dev/null | grep -c "error:" && echo "MyPy errors count"
 
 echo "=== ASSESSMENT COMPLETE ==="
 ```
@@ -126,13 +126,13 @@ echo "=== ASSESSMENT COMPLETE ==="
 echo "=== COMPLETION VALIDATION ==="
 
 # 1. All imports work
-python -c "import flx; import flx_database_oracle; import flx_http_oracle_oic; import flx_http_oracle_wms; print('✅ All imports OK')" || { echo "❌ IMPORTS BROKEN - TASK NOT COMPLETE"; exit 1; }
+python -c "import flext; import flext_database_oracle; import flext_http_oracle_oic; import flext_http_oracle_wms; print('✅ All imports OK')" || { echo "❌ IMPORTS BROKEN - TASK NOT COMPLETE"; exit 1; }
 
 # 2. Build system works
 make lint >/dev/null 2>&1 && echo "✅ Lint OK" || { echo "❌ LINT BROKEN - TASK NOT COMPLETE"; exit 1; }
 
 # 3. No critical errors
-[[ $(ruff check flx/src/ --select=F8 2>/dev/null | wc -l) -eq 0 ]] && echo "✅ No F8xx errors" || echo "⚠️ F8xx errors remain"
+[[ $(ruff check flext/src/ --select=F8 2>/dev/null | wc -l) -eq 0 ]] && echo "✅ No F8xx errors" || echo "⚠️ F8xx errors remain"
 
 echo "=== VALIDATION COMPLETE - TASK COMPLETION AUTHORIZED ==="
 ```
@@ -142,11 +142,11 @@ echo "=== VALIDATION COMPLETE - TASK COMPLETION AUTHORIZED ==="
 ```bash
 # Gate 1: All imports work
 python -c "
-import flx
-import flx_database_oracle
-import flx_http_oracle_oic
-import flx_http_oracle_wms
-import flx_adapter_example
+import flext
+import flext_database_oracle
+import flext_http_oracle_oic
+import flext_http_oracle_wms
+import flext_adapter_example
 print('✅ ALL IMPORTS WORKING')
 "
 
@@ -158,8 +158,8 @@ ruff check src/ --select=F,E9 | wc -l | grep -q "^0$" && echo "✅ NO CRITICAL E
 
 # Gate 4: Core functionality test
 python -c "
-from flx.adapters.base import BaseAdapter
-from flx.core.domain.exceptions import HttpError
+from flext.adapters.base import BaseAdapter
+from flext.core.domain.exceptions import HttpError
 print('✅ CORE CLASSES ACCESSIBLE')
 "
 ```

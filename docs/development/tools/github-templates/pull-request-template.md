@@ -25,7 +25,7 @@ Describe the tests that you ran to verify your changes:
 
 ## Checklist
 
-- [ ] My code follows the style guidelines of this flx_project
+- [ ] My code follows the style guidelines of this flext_project
 - [ ] I have performed a self-review of my own code
 - [ ] I have commented my code, particularly in hard-to-understand areas
 - [ ] I have made corresponding changes to the documentation

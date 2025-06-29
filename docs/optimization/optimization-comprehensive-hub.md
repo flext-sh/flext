@@ -38,13 +38,13 @@
 
 ### **❌ MAJOR INACCURACIES DISCOVERED**
 
-Based on **actual code inspection** of `/flx/src/flx/infra/`, the existing optimization documentation contains significant errors:
+Based on **actual code inspection** of `/flext/src/flext/infra/`, the existing optimization documentation contains significant errors:
 
 ```python
 # ❌ CLAIM IN DOCS: "Custom HTTP implementation needs replacement"
 # ✅ REALITY: FLX already uses httpx in production
 
-# ACTUAL IMPLEMENTATION in /flx/src/flx/infra/http/client_service.py:
+# ACTUAL IMPLEMENTATION in /flext/src/flext/infra/http/client_service.py:
 class HttpClientService:
     def __init__(self, ...):
         # ✅ ALREADY USING httpx, not custom implementation
@@ -75,7 +75,7 @@ class HttpClientService:
 
 ```python
 # ✅ VALIDATED: Real FLX infrastructure already uses modern libraries
-flx/src/flx/infra/
+flext/src/flext/infra/
 ├── http/client_service.py         ✅ httpx AsyncClient (enterprise-ready)
 ├── cache/cache_service.py         ✅ Redis + memory fallback
 ├── database/engine.py             ✅ AsyncEngine SQLAlchemy 2.0
@@ -139,7 +139,7 @@ class EnhancedConfigManager:
     def __init__(self):
         self.settings = Dynaconf(
             environments=True,
-            settings_files=['flx_settings.yaml', '.secrets.yaml'],
+            settings_files=['flext_settings.yaml', '.secrets.yaml'],
             environment_variables_prefix="FLX",
             load_dotenv=True,
             validators=[
@@ -352,12 +352,12 @@ memory_usage = 380MB       # 5% reduction
 
 ```markdown
 Infrastructure Services (ACTUAL):
-├── BaseInfraService → /flx/src/flx/infra/services/base.py
-├── HttpClientService → /flx/src/flx/infra/http/client_service.py
-├── CacheService → /flx/src/flx/infra/cache/cache_service.py
-├── DatabaseEngine → /flx/src/flx/infra/database/engine.py
-├── AsyncMessageBus → /flx/src/flx/infra/messaging/bus.py
-└── MetricsSystem → /flx/src/flx/infra/observability/metrics.py
+├── BaseInfraService → /flext/src/flext/infra/services/base.py
+├── HttpClientService → /flext/src/flext/infra/http/client_service.py
+├── CacheService → /flext/src/flext/infra/cache/cache_service.py
+├── DatabaseEngine → /flext/src/flext/infra/database/engine.py
+├── AsyncMessageBus → /flext/src/flext/infra/messaging/bus.py
+└── MetricsSystem → /flext/src/flext/infra/observability/metrics.py
 
 Architecture Documentation:
 ├── Infrastructure Hub → /docs/infrastructure/infrastructure-comprehensive-hub.md
@@ -453,7 +453,7 @@ Focus on **ENHANCEMENT** not **REPLACEMENT**:
 
 - **Documents**: 15+ files
 - **Completeness**: 95%
-- **Code Validation**: 100% against `/flx/src/flx/infra/`
+- **Code Validation**: 100% against `/flext/src/flext/infra/`
 - **Last Updated**: 2025-06-11
 
 ---

@@ -6,7 +6,7 @@
 [![Validated](https://img.shields.io/badge/code-source%20verified-blue.svg)](#validation-notes)
 [![Production Ready](https://img.shields.io/badge/production-engines-orange.svg)](#production-engines)
 
-**Comprehensive architectural guidance for FLX Framework unified components - validated against actual implementations in `/flx/src/`**
+**Comprehensive architectural guidance for FLX Framework unified components - validated against actual implementations in `/flext/src/`**
 
 ---
 
@@ -95,7 +95,7 @@ The FLX unified architecture is built on hexagonal architecture principles:
 
 ### 1. UnifiedAdapterManager
 
-**Location**: `/src/flx/infra/adapters/unified_manager.py`
+**Location**: `/src/flext/infra/adapters/unified_manager.py`
 
 **Purpose**: Single manager for all adapter lifecycle and messaging operations.
 
@@ -110,7 +110,7 @@ The FLX unified architecture is built on hexagonal architecture principles:
 **Basic Usage**:
 
 ```python
-from flx.infra.adapters import UnifiedAdapterManager
+from flext.infra.adapters import UnifiedAdapterManager
 
 # Initialize with all features
 manager = UnifiedAdapterManager(
@@ -160,7 +160,7 @@ print(f"Running adapters: {metrics['running_adapters']}")
 
 ### 2. FlxStandardLoggingService
 
-**Location**: `/src/flx/infra/services/logging.py`
+**Location**: `/src/flext/infra/services/logging.py`
 
 **Purpose**: Unified logging service replacing multiple logging implementations.
 
@@ -175,7 +175,7 @@ print(f"Running adapters: {metrics['running_adapters']}")
 **Basic Usage**:
 
 ```python
-from flx.infra.services.logging import FlxStandardLoggingService, LogContext
+from flext.infra.services.logging import FlxStandardLoggingService, LogContext
 
 # Initialize logging service
 logging_service = FlxStandardLoggingService("my_app")
@@ -216,7 +216,7 @@ print(current_data)  # {'request_id': 'req-123', 'correlation_id': 'corr-456'}
 
 ### 3. CacheService
 
-**Location**: `/src/flx/infra/cache/cache_service.py`
+**Location**: `/src/flext/infra/cache/cache_service.py`
 
 **Purpose**: High-performance cache service with Redis and memory fallback.
 
@@ -232,7 +232,7 @@ print(current_data)  # {'request_id': 'req-123', 'correlation_id': 'corr-456'}
 **Basic Usage**:
 
 ```python
-from flx.infra.cache.cache_service import CacheService
+from flext.infra.cache.cache_service import CacheService
 
 # Initialize with performance optimizations
 cache = CacheService(
@@ -299,7 +299,7 @@ cache = CacheService(
 )
 
 # HTTP production engine with pooling
-from flx.infra.http.production_engine import HttpProductionEngine
+from flext.infra.http.production_engine import HttpProductionEngine
 http = HttpProductionEngine(
     pool_size=100,
     pool_maxsize=200,
@@ -307,7 +307,7 @@ http = HttpProductionEngine(
 )
 
 # Database engine with pooling
-from flx.infra.database.engine import DatabaseEngine
+from flext.infra.database.engine import DatabaseEngine
 db = DatabaseEngine(
     pool_size=20,
     max_overflow=30,
@@ -382,12 +382,12 @@ print(f"Recommendations: {optimization_results['recommendations']}")
 
 ### 1. HTTP Production Engine
 
-**Location**: `/src/flx/infra/http/production_engine.py`
+**Location**: `/src/flext/infra/http/production_engine.py`
 
 Enterprise-grade HTTP client with resilience patterns:
 
 ```python
-from flx.infra.http.production_engine import HttpProductionEngine
+from flext.infra.http.production_engine import HttpProductionEngine
 
 # Initialize with production features
 http_engine = HttpProductionEngine(
@@ -415,12 +415,12 @@ health = await http_engine.health_check()
 
 ### 2. Cache Production Engine
 
-**Location**: `/src/flx/infra/cache/production_engine.py`
+**Location**: `/src/flext/infra/cache/production_engine.py`
 
 Redis cluster support with high availability:
 
 ```python
-from flx.infra.cache.production_engine import CacheProductionEngine
+from flext.infra.cache.production_engine import CacheProductionEngine
 
 # Production cache with clustering
 cache_engine = CacheProductionEngine(
@@ -443,12 +443,12 @@ metrics = cache_engine.get_metrics()
 
 ### 3. Logging Production Engine
 
-**Location**: `/src/flx/infra/logging/production_engine.py`
+**Location**: `/src/flext/infra/logging/production_engine.py`
 
 Structured logging with async buffering and security features:
 
 ```python
-from flx.infra.logging.production_engine import LoggingProductionEngine
+from flext.infra.logging.production_engine import LoggingProductionEngine
 
 # Production logging with security features
 logging_engine = LoggingProductionEngine(
@@ -473,11 +473,11 @@ logger.error("Payment failed - Order ID: %s", order_id)
 ### 1. Complete Application Setup
 
 ```python
-from flx.infra.adapters import UnifiedAdapterManager
-from flx.infra.cache.production_engine import CacheProductionEngine
-from flx.infra.http.production_engine import HttpProductionEngine
-from flx.infra.logging.production_engine import LoggingProductionEngine
-from flx.infra.database.engine import DatabaseEngine
+from flext.infra.adapters import UnifiedAdapterManager
+from flext.infra.cache.production_engine import CacheProductionEngine
+from flext.infra.http.production_engine import HttpProductionEngine
+from flext.infra.logging.production_engine import LoggingProductionEngine
+from flext.infra.database.engine import DatabaseEngine
 
 class ProductionApplication:
     def __init__(self):
@@ -642,7 +642,7 @@ class CacheApplication:
 ### 1. Error Handling
 
 ```python
-from flx.core.exceptions import FlxConnectionError, FlxTimeoutError
+from flext.core.exceptions import FlxConnectionError, FlxTimeoutError
 
 async def robust_service_operation():
     try:
@@ -671,7 +671,7 @@ async def robust_service_operation():
 
 ```python
 import time
-from flx.infra.adapters import UnifiedAdapterManager
+from flext.infra.adapters import UnifiedAdapterManager
 
 class MonitoredApplication:
     def __init__(self):
@@ -913,10 +913,10 @@ async def comprehensive_health_check():
 
 This architectural guide has been validated against actual FLX 0.4.0+ source code implementations:
 
-- ✅ **UnifiedAdapterManager**: Validated against `/flx/src/flx/infra/adapters/unified_manager.py`
-- ✅ **FlxStandardLoggingService**: Validated against `/flx/src/flx/infra/services/logging.py`
-- ✅ **CacheService**: Validated against `/flx/src/flx/infra/cache/cache_service.py`
-- ✅ **Production Engines**: All engines confirmed to exist in `/flx/src/flx/infra/*/production_engine.py`
+- ✅ **UnifiedAdapterManager**: Validated against `/flext/src/flext/infra/adapters/unified_manager.py`
+- ✅ **FlxStandardLoggingService**: Validated against `/flext/src/flext/infra/services/logging.py`
+- ✅ **CacheService**: Validated against `/flext/src/flext/infra/cache/cache_service.py`
+- ✅ **Production Engines**: All engines confirmed to exist in `/flext/src/flext/infra/*/production_engine.py`
 - ✅ **Code Examples**: All examples tested against actual API implementations
 - ✅ **Performance Features**: Batch operations, pooling, and optimization patterns verified
 

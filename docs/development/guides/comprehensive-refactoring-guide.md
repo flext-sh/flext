@@ -63,7 +63,7 @@ This guide provides a **complete refactoring methodology** for the entire FLX he
 ```markdown
 ❌ Scattered implementations with inconsistent patterns
 ❌ 60-70% duplicate code across adapters
-❌ Mixed naming conventions (Flx/FLX/flx)
+❌ Mixed naming conventions (Flx/FLX/flext)
 ❌ Complex 11+ mixin inheritance chains
 ❌ Incomplete type coverage (~60%)
 ❌ Legacy Python patterns
@@ -74,7 +74,7 @@ This guide provides a **complete refactoring methodology** for the entire FLX he
 ```markdown
 ✅ Pure hexagonal architecture with clear layer separation
 ✅ Advanced mixins eliminating 60-70% of duplicate code
-✅ Consistent Flx/FLX/flx naming throughout
+✅ Consistent Flx/FLX/flext naming throughout
 ✅ Simplified composite mixin inheritance
 ✅ 98%+ type coverage with Python 3.13
 ✅ Modern patterns and comprehensive documentation
@@ -91,7 +91,7 @@ Before beginning the refactoring process:
 python --version  # Must be >= 3.13
 
 # Navigate to project root
-cd /home/marlonsc/pyauto/flx
+cd /home/marlonsc/pyauto/flext
 
 # Ensure virtual environment is active
 source .venv/bin/activate
@@ -196,10 +196,10 @@ python scripts/validation/phase_validator.py 1
 
 ```bash
 # Run comprehensive tests
-python -m pytest tests/ -v --cov=src/flx --cov-report=html
+python -m pytest tests/ -v --cov=src/flext --cov-report=html
 
 # Type checking
-mypy src/flx/ --config-file=mypy.ini
+mypy src/flext/ --config-file=mypy.ini
 
 # Code linting
 ruff check src/ --fix
@@ -357,7 +357,7 @@ Revolutionary mixin architecture eliminating 60-70% of duplicate code:
 
 ### **Related Topics**
 
-- [Hexagonal Architecture](../../architecture/design/flx-framework-architecture-guide.md) - Architecture principles
+- [Hexagonal Architecture](../../architecture/design/flext-framework-architecture-guide.md) - Architecture principles
 - [Standardization Plan](../standards/standardization-plan.md) - Overall standardization strategy
 - [Performance Optimization](../../optimization/index.md) - Performance improvement strategies
 

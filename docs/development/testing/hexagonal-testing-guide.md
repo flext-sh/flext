@@ -24,7 +24,7 @@
 
 - **📂 Section Hub**: [Testing Hub](./index.md)
 - **🏠 Documentation Root**: [Root Index](../../index.md)
-- **🔗 Source Code**: [FLX Tests](../../../flx/tests/)
+- **🔗 Source Code**: [FLX Tests](../../../flext/tests/)
 - **🔗 Related**: [Port Testing](./ports-testing.md), [Adapter Testing](./adapters-testing.md)
 
 ---
@@ -86,9 +86,9 @@ This guide provides a comprehensive testing suite to validate hexagonal architec
 ```python
 import pytest
 from typing import get_type_hints
-from flx.ports.base import BasePort
-from flx.ports.outbound import DatabasePort, CachePort, HttpPort
-from flx.ports.inbound import ApiPort, CliPort, CommandPort
+from flext.ports.base import BasePort
+from flext.ports.outbound import DatabasePort, CachePort, HttpPort
+from flext.ports.inbound import ApiPort, CliPort, CommandPort
 
 class TestPortContracts:
     """Validate port interfaces follow hexagonal principles."""
@@ -132,7 +132,7 @@ class TestPortContracts:
 
     def test_ports_have_proper_type_hints(self):
         """Test that port methods have complete type hints."""
-        from flx.ports.outbound.database import DatabasePort
+        from flext.ports.outbound.database import DatabasePort
 
         type_hints = get_type_hints(DatabasePort.save)
         assert 'return' in type_hints
@@ -144,7 +144,7 @@ class TestPortContracts:
         import inspect
         from pathlib import Path
 
-        port_files = Path('flx/ports').glob('**/*.py')
+        port_files = Path('flext/ports').glob('**/*.py')
 
         for port_file in port_files:
             if port_file.name.startswith('__'):
@@ -172,18 +172,18 @@ class TestAdapterImplementation:
     @pytest.fixture
     def database_adapter(self):
         """Create test database adapter."""
-        from flx.adapters.database import DatabaseAdapter
+        from flext.adapters.database import DatabaseAdapter
         return DatabaseAdapter(connection_string="sqlite:///:memory:")
 
     @pytest.fixture
     def cache_adapter(self):
         """Create test cache adapter."""
-        from flx.adapters.cache import CacheAdapter
+        from flext.adapters.cache import CacheAdapter
         return CacheAdapter(backend="memory")
 
     def test_adapter_implements_all_port_methods(self, database_adapter):
         """Test adapter implements all required port methods."""
-        from flx.ports.outbound.database import DatabasePort
+        from flext.ports.outbound.database import DatabasePort
 
         port_methods = [method for method in dir(DatabasePort)
                        if not method.startswith('_') and callable(getattr(DatabasePort, method))]
@@ -221,8 +221,8 @@ class TestAdapterImplementation:
 
     def test_adapter_substitutability(self):
         """Test that different adapters can substitute each other."""
-        from flx.adapters.database import SQLiteAdapter, PostgreSQLAdapter
-        from flx.ports.outbound.database import DatabasePort
+        from flext.adapters.database import SQLiteAdapter, PostgreSQLAdapter
+        from flext.ports.outbound.database import DatabasePort
 
         # Both adapters should implement the same interface
         sqlite_methods = set(method for method in dir(SQLiteAdapter)
@@ -248,7 +248,7 @@ class TestDependencyInjection:
     @pytest.fixture
     def test_container(self):
         """Create clean DI container for testing."""
-        from flx.core.container import Container
+        from flext.core.container import Container
         container = Container()
         container.config.from_dict({
             'database': {
@@ -273,8 +273,8 @@ class TestDependencyInjection:
         assert cache_port is not None
 
         # Verify types
-        from flx.ports.outbound.database import DatabasePort
-        from flx.ports.outbound.cache import CachePort
+        from flext.ports.outbound.database import DatabasePort
+        from flext.ports.outbound.cache import CachePort
 
         assert isinstance(database_port, DatabasePort)
         assert isinstance(cache_port, CachePort)
@@ -296,7 +296,7 @@ class TestDependencyInjection:
 
     def test_container_plugin_integration(self, test_container):
         """Test container integrates with plugin system."""
-        from flx.core.plugins import PluginManager
+        from flext.core.plugins import PluginManager
 
         plugin_manager = PluginManager()
         test_container.register_plugins(plugin_manager)
@@ -319,7 +319,7 @@ class TestArchitectureBoundaries:
         import ast
         from pathlib import Path
 
-        domain_files = Path('flx/core').glob('**/*.py')
+        domain_files = Path('flext/core').glob('**/*.py')
 
         for domain_file in domain_files:
             with open(domain_file, 'r') as f:
@@ -331,7 +331,7 @@ class TestArchitectureBoundaries:
                     module_name = node.module if hasattr(node, 'module') else ''
                     if module_name:
                         # Domain should not import infrastructure
-                        forbidden_imports = ['flx.infra', 'flx.adapters', 'requests', 'sqlalchemy']
+                        forbidden_imports = ['flext.infra', 'flext.adapters', 'requests', 'sqlalchemy']
                         for forbidden in forbidden_imports:
                             assert forbidden not in module_name, \
                                 f"Domain file {domain_file} imports infrastructure: {module_name}"
@@ -342,7 +342,7 @@ class TestArchitectureBoundaries:
         import ast
         from pathlib import Path
 
-        adapter_files = Path('flx/adapters').glob('**/*.py')
+        adapter_files = Path('flext/adapters').glob('**/*.py')
 
         for adapter_file in adapter_files:
             with open(adapter_file, 'r') as f:
@@ -354,7 +354,7 @@ class TestArchitectureBoundaries:
             for node in ast.walk(tree):
                 if isinstance(node, (ast.Import, ast.ImportFrom)):
                     module_name = node.module if hasattr(node, 'module') else ''
-                    if module_name and 'flx.ports' in module_name:
+                    if module_name and 'flext.ports' in module_name:
                         imports_ports = True
                         break
 
@@ -371,7 +371,7 @@ class TestArchitectureBoundaries:
         # Build dependency graph
         G = nx.DiGraph()
 
-        all_files = list(Path('flx').glob('**/*.py'))
+        all_files = list(Path('flext').glob('**/*.py'))
 
         for file_path in all_files:
             if file_path.name.startswith('__'):
@@ -388,7 +388,7 @@ class TestArchitectureBoundaries:
                 for node in ast.walk(tree):
                     if isinstance(node, (ast.Import, ast.ImportFrom)):
                         imported_module = node.module if hasattr(node, 'module') else ''
-                        if imported_module and imported_module.startswith('flx'):
+                        if imported_module and imported_module.startswith('flext'):
                             G.add_edge(module_name, imported_module)
             except SyntaxError:
                 continue
@@ -407,10 +407,10 @@ class TestArchitectureBoundaries:
         # etc.
 
         layer_dependencies = {
-            'flx.core': [],  # Domain depends on nothing FLX-related
-            'flx.ports': ['flx.core'],  # Ports can depend on domain
-            'flx.adapters': ['flx.ports', 'flx.core'],  # Adapters depend on ports and domain
-            'flx.infra': ['flx.adapters', 'flx.ports', 'flx.core'],  # Infrastructure depends on all
+            'flext.core': [],  # Domain depends on nothing FLX-related
+            'flext.ports': ['flext.core'],  # Ports can depend on domain
+            'flext.adapters': ['flext.ports', 'flext.core'],  # Adapters depend on ports and domain
+            'flext.infra': ['flext.adapters', 'flext.ports', 'flext.core'],  # Infrastructure depends on all
         }
 
         for layer, allowed_deps in layer_dependencies.items():
@@ -435,7 +435,7 @@ class TestArchitectureBoundaries:
                 for node in ast.walk(tree):
                     if isinstance(node, (ast.Import, ast.ImportFrom)):
                         module_name = node.module if hasattr(node, 'module') else ''
-                        if module_name and module_name.startswith('flx'):
+                        if module_name and module_name.startswith('flext'):
                             # Check if this import is allowed
                             allowed = any(module_name.startswith(dep) for dep in allowed_dependencies)
                             assert allowed, \
@@ -455,8 +455,8 @@ class TestE2EHexagonalFlow:
     @pytest.fixture
     async def complete_application(self):
         """Set up complete application for E2E testing."""
-        from flx.core.container import Container
-        from flx.core.application import Application
+        from flext.core.container import Container
+        from flext.core.application import Application
 
         container = Container()
         container.config.from_dict({
@@ -563,7 +563,7 @@ class TestE2EHexagonalFlow:
 pytest tests/hexagonal/ -v
 
 # With coverage reporting
-pytest tests/hexagonal/ --cov=flx --cov-report=html
+pytest tests/hexagonal/ --cov=flext --cov-report=html
 
 # Generate XML report for CI
 pytest tests/hexagonal/ --junit-xml=reports/hexagonal-tests.xml

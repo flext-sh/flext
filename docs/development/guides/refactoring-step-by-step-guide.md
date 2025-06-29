@@ -71,7 +71,7 @@ python --version  # Must be >= 3.13
 pip install rich click pydantic mypy ruff pytest coverage
 
 # Project structure check
-ls -la src/flx/  # Ensure FLX source exists
+ls -la src/flext/  # Ensure FLX source exists
 ls -la examples/ # Ensure examples directory exists
 ls -la tests/    # Ensure tests directory exists
 ```
@@ -80,7 +80,7 @@ ls -la tests/    # Ensure tests directory exists
 
 ```bash
 # Run the master refactoring script for analysis
-cd /home/marlonsc/pyauto/flx
+cd /home/marlonsc/pyauto/flext
 python scripts/refactoring_master.py --analyze-only
 
 # Expected output:
@@ -134,7 +134,7 @@ def validate_phase(phase_number: int) -> bool:
         return False
 
     # Run mypy
-    result = subprocess.run(["mypy", "src/flx/"],
+    result = subprocess.run(["mypy", "src/flext/"],
                           capture_output=True, text=True)
     if result.returncode != 0:
         print(f"⚠️ Type checking has issues in Phase {phase_number}")
@@ -144,7 +144,7 @@ def validate_phase(phase_number: int) -> bool:
     try:
         import sys
         sys.path.insert(0, 'src')
-        import flx
+        import flext
         print(f"✅ Phase {phase_number} validation passed")
         return True
     except Exception as e:
@@ -181,16 +181,16 @@ This phase refactors the core layer with advanced mixins, factory patterns, and 
 
 ```bash
 # Create advanced mixins directory
-mkdir -p src/flx/core/mixins/
+mkdir -p src/flext/core/mixins/
 
 # Move existing mixins and enhance
-mv src/flx/core/mixins.py src/flx/core/mixins/legacy.py
+mv src/flext/core/mixins.py src/flext/core/mixins/legacy.py
 ```
 
 #### **Implement Service Connection Mixin**
 
 ```python
-# Create src/flx/core/mixins/service_connection.py
+# Create src/flext/core/mixins/service_connection.py
 """Service connection mixin eliminating duplicate connection patterns."""
 
 from __future__ import annotations
@@ -244,7 +244,7 @@ class ServiceConnectionMixin:
 #### **Implement Operation Tracking Mixin**
 
 ```python
-# Create src/flx/core/mixins/operation_tracking.py
+# Create src/flext/core/mixins/operation_tracking.py
 """Operation tracking mixin for unified monitoring."""
 
 from __future__ import annotations
@@ -299,7 +299,7 @@ class OperationTrackingMixin:
 #### **Create Composite Advanced Mixin**
 
 ```python
-# Create src/flx/core/mixins/advanced.py
+# Create src/flext/core/mixins/advanced.py
 """Advanced composite mixin combining all modern patterns."""
 
 from __future__ import annotations
@@ -343,13 +343,13 @@ class AdvancedAdapterMixin(
 
 ```bash
 # Create types directory
-mkdir -p src/flx/core/types/
+mkdir -p src/flext/core/types/
 ```
 
 #### **Implement Base Types**
 
 ```python
-# Create src/flx/core/types/base.py
+# Create src/flext/core/types/base.py
 """Base type definitions with Python 3.13 enhancements."""
 
 from __future__ import annotations
@@ -377,7 +377,7 @@ type AdapterName = Annotated[str, StringConstraints(pattern=r'^[a-z][a-z0-9_]*$'
 ### **Step 1.3: Factory System Implementation**
 
 ```python
-# Create src/flx/core/factory/base.py
+# Create src/flext/core/factory/base.py
 """Base factory system for unified object creation."""
 
 from __future__ import annotations
@@ -510,7 +510,7 @@ Each phase must meet these criteria before proceeding:
 #### **Phase 1-8 Universal Criteria**
 
 - [ ] All tests passing (`pytest tests/ -v`)
-- [ ] No import errors (`python -c "import flx"`)
+- [ ] No import errors (`python -c "import flext"`)
 - [ ] Phase validation script passes
 - [ ] Git commit created with clear message
 - [ ] Progress documented in daily log
@@ -545,9 +545,9 @@ Each phase must meet these criteria before proceeding:
 
 | File                                    | Purpose                         |
 | --------------------------------------- | ------------------------------- |
-| `src/flx/core/mixins/advanced.py`       | Advanced mixin patterns         |
-| `src/flx/core/types/__init__.py`        | Type system exports             |
-| `src/flx/adapters/base.py`              | Base adapter using new patterns |
+| `src/flext/core/mixins/advanced.py`       | Advanced mixin patterns         |
+| `src/flext/core/types/__init__.py`        | Type system exports             |
+| `src/flext/adapters/base.py`              | Base adapter using new patterns |
 | `scripts/refactoring_master.py`         | Main refactoring orchestrator   |
 | `scripts/validation/phase_validator.py` | Phase validation                |
 
@@ -561,7 +561,7 @@ python scripts/metrics_dashboard.py
 
 # Testing and quality
 python -m pytest tests/ -v
-mypy src/flx/
+mypy src/flext/
 ruff check src/
 coverage run -m pytest && coverage report
 
@@ -591,7 +591,7 @@ git diff HEAD~1 HEAD
 ### **Related Topics**
 
 - [Comprehensive Standardization Summary](../reports/comprehensive-standardization-summary.md) - Overall standardization progress
-- [Hexagonal Architecture](../../architecture/design/flx-framework-architecture-guide.md) - Architecture principles
+- [Hexagonal Architecture](../../architecture/design/flext-framework-architecture-guide.md) - Architecture principles
 - [Performance Optimization](../../optimization/index.md) - Performance improvement strategies
 
 ---

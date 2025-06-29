@@ -36,7 +36,7 @@ Complete Oracle Integration Cloud (OIC) integration guide for the FLX framework,
 
 - [**Getting Started**](#-getting-started) - Setup and basic configuration
 - [**Authentication**](#-authentication) - OAuth2 and security patterns
-- [**FLX Framework Integration**](#-flx-framework-integration) - Modern Python integration
+- [**FLX Framework Integration**](#-flext-framework-integration) - Modern Python integration
 - [**API Operations**](#-api-operations) - Integration and connection management
 - [**Advanced Patterns**](#-advanced-patterns) - Enterprise integration patterns
 - [**Troubleshooting**](#-troubleshooting) - Common issues and solutions
@@ -54,10 +54,10 @@ Complete Oracle Integration Cloud (OIC) integration guide for the FLX framework,
 
 ```bash
 # Install Oracle OIC adapter
-pip install flx-http-oracle-oic
+pip install flext-http-oracle-oic
 
 # Or install from source
-cd flx-http-oracle-oic
+cd flext-http-oracle-oic
 pip install -e .
 
 # Install with development dependencies
@@ -91,13 +91,13 @@ OIC_VERIFY_SSL=true
 
 ```bash
 # Test configuration
-python -m flx_http_oracle_oic.cli config validate --test-connection
+python -m flext_http_oracle_oic.cli config validate --test-connection
 
 # View configuration
-python -m flx_http_oracle_oic.cli config view
+python -m flext_http_oracle_oic.cli config view
 
 # Health check
-python -m flx_http_oracle_oic.cli monitoring health
+python -m flext_http_oracle_oic.cli monitoring health
 ```
 
 ## 🔐 Authentication
@@ -187,14 +187,14 @@ SCOPE="${RESOURCE_AUD} offline_access"
 
 ```python
 import asyncio
-from flx_http_oracle_oic import OicConfig, flx_create_oic_context
+from flext_http_oracle_oic import OicConfig, flext_create_oic_context
 
 async def main():
     # Load configuration
     config = OicConfig.from_env()
 
     # Use factory pattern with context manager
-    async with flx_create_oic_context(config) as factory:
+    async with flext_create_oic_context(config) as factory:
         service = factory.create_oic_service()
 
         # Health check
@@ -218,7 +218,7 @@ asyncio.run(main())
 #### Token Caching and Refresh
 
 ```python
-from flx.adapters.oracle.oic import OICAuthenticator
+from flext.adapters.oracle.oic import OICAuthenticator
 
 # Initialize authenticator with automatic token management
 auth = OICAuthenticator(
@@ -242,7 +242,7 @@ response = await session.get('/ic/api/integration/v1/integrations')
 
 ```python
 import asyncio
-from flx.adapters.oracle.oic import OICClient, OICAuthError
+from flext.adapters.oracle.oic import OICClient, OICAuthError
 
 async def robust_oic_call(endpoint, max_retries=3):
     """Make OIC API call with robust error handling."""
@@ -281,8 +281,8 @@ except Exception as e:
 ### Hexagonal Architecture Implementation
 
 ```python
-from flx.core.entities import AggregateRoot
-from flx.core.domain.value_objects import ValueObject
+from flext.core.entities import AggregateRoot
+from flext.core.domain.value_objects import ValueObject
 
 # Domain entity for OIC integrations
 class OicIntegration(AggregateRoot):
@@ -350,77 +350,77 @@ The OIC adapter provides a comprehensive CLI for all operations:
 
 ```bash
 # Validate configuration with connection test
-python -m flx_http_oracle_oic.cli config validate --test-connection
+python -m flext_http_oracle_oic.cli config validate --test-connection
 
 # View current configuration
-python -m flx_http_oracle_oic.cli config view
+python -m flext_http_oracle_oic.cli config view
 
 # Show configuration with secrets (careful!)
-python -m flx_http_oracle_oic.cli config view --show-secrets
+python -m flext_http_oracle_oic.cli config view --show-secrets
 ```
 
 #### Integration Management
 
 ```bash
 # List all integrations
-python -m flx_http_oracle_oic.cli integrations list --format table
+python -m flext_http_oracle_oic.cli integrations list --format table
 
 # Get specific integration details
-python -m flx_http_oracle_oic.cli integrations get INTEGRATION_ID
+python -m flext_http_oracle_oic.cli integrations get INTEGRATION_ID
 
 # List integrations with filters
-python -m flx_http_oracle_oic.cli integrations list --status ACTIVATED --format json
+python -m flext_http_oracle_oic.cli integrations list --status ACTIVATED --format json
 
 # Export integration details
-python -m flx_http_oracle_oic.cli integrations export INTEGRATION_ID --output integration.json
+python -m flext_http_oracle_oic.cli integrations export INTEGRATION_ID --output integration.json
 ```
 
 #### Connection Management
 
 ```bash
 # List all connections
-python -m flx_http_oracle_oic.cli connections list
+python -m flext_http_oracle_oic.cli connections list
 
 # List connections by type
-python -m flx_http_oracle_oic.cli connections list --type REST
+python -m flext_http_oracle_oic.cli connections list --type REST
 
 # Test specific connection
-python -m flx_http_oracle_oic.cli connections test CONNECTION_ID
+python -m flext_http_oracle_oic.cli connections test CONNECTION_ID
 
 # Get connection details
-python -m flx_http_oracle_oic.cli connections get CONNECTION_ID --format yaml
+python -m flext_http_oracle_oic.cli connections get CONNECTION_ID --format yaml
 ```
 
 #### Monitoring and Health Checks
 
 ```bash
 # Overall system health
-python -m flx_http_oracle_oic.cli monitoring health
+python -m flext_http_oracle_oic.cli monitoring health
 
 # Monitoring overview for last 24 hours
-python -m flx_http_oracle_oic.cli monitoring overview --hours 24
+python -m flext_http_oracle_oic.cli monitoring overview --hours 24
 
 # Integration flow monitoring
-python -m flx_http_oracle_oic.cli monitoring flows --integration-id INTEGRATION_ID
+python -m flext_http_oracle_oic.cli monitoring flows --integration-id INTEGRATION_ID
 
 # Real-time monitoring
-python -m flx_http_oracle_oic.cli monitoring real-time --refresh-interval 30
+python -m flext_http_oracle_oic.cli monitoring real-time --refresh-interval 30
 ```
 
 #### JWT Token Management
 
 ```bash
 # Check JWT token status
-python -m flx_http_oracle_oic.cli jwt status
+python -m flext_http_oracle_oic.cli jwt status
 
 # Get new token (shows token details without exposing secret)
-python -m flx_http_oracle_oic.cli jwt token
+python -m flext_http_oracle_oic.cli jwt token
 
 # Show actual token (use with caution)
-python -m flx_http_oracle_oic.cli jwt token --show-token
+python -m flext_http_oracle_oic.cli jwt token --show-token
 
 # Refresh token
-python -m flx_http_oracle_oic.cli jwt refresh
+python -m flext_http_oracle_oic.cli jwt refresh
 ```
 
 ### REST API Integration
@@ -448,7 +448,7 @@ python -m flx_http_oracle_oic.cli jwt refresh
 #### API Usage Examples
 
 ```python
-from flx_http_oracle_oic import OracleOicService, OicConfig
+from flext_http_oracle_oic import OracleOicService, OicConfig
 
 # Initialize service
 config = OicConfig.from_env()
@@ -478,8 +478,8 @@ monitoring_data = await service.get_monitoring_data(
 ### Event-Driven Integration
 
 ```python
-from flx.core.events import DomainEvent
-from flx.application.services import ApplicationService
+from flext.core.events import DomainEvent
+from flext.application.services import ApplicationService
 
 class OicIntegrationService(ApplicationService):
     def __init__(self, oic_client, event_publisher):
@@ -575,7 +575,7 @@ class ReceiptAdviceIntegration:
 ### Circuit Breaker Pattern
 
 ```python
-from flx.infrastructure.resilience import CircuitBreaker
+from flext.infrastructure.resilience import CircuitBreaker
 
 class ResilientOicClient:
     def __init__(self, oic_service):
@@ -609,7 +609,7 @@ class ResilientOicClient:
 
 ```bash
 # Use encrypted credential storage
-python -m flx.security create-credential-store \
+python -m flext.security create-credential-store \
     --encrypted \
     --output ./secure/credentials.enc \
     --key-file ./secure/encryption.key
@@ -635,7 +635,7 @@ export CLIENT_SECRET=$(vault kv get -field=client_secret secret/oic/credentials)
 #### Authentication Monitoring
 
 ```python
-from flx.adapters.oracle.oic import OICAuthMonitor
+from flext.adapters.oracle.oic import OICAuthMonitor
 
 # Initialize monitoring
 monitor = OICAuthMonitor()
@@ -729,18 +729,18 @@ echo "API_AUD: $API_AUD"
 
 ```bash
 # Configuration validation
-python -m flx_http_oracle_oic.cli config validate --verbose
+python -m flext_http_oracle_oic.cli config validate --verbose
 
 # Full debug execution
 export OIC_DEBUG=true
 export OIC_LOG_LEVEL=DEBUG
-python -m flx_http_oracle_oic.cli monitoring health
+python -m flext_http_oracle_oic.cli monitoring health
 
 # Network connectivity test
 curl -v https://$OIC_URL/ic/api/integration/v1/integrations
 
 # Token validation test
-python -m flx_http_oracle_oic.cli jwt status --verbose
+python -m flext_http_oracle_oic.cli jwt status --verbose
 ```
 
 ### Error Resolution Matrix
@@ -782,7 +782,7 @@ python -m flx_http_oracle_oic.cli jwt status --verbose
 
 ### **Related Topics**
 
-- [HTTP Adapter Patterns](../adapters/flx_http_oracle_oic-adapter.md) - FLX HTTP adapter implementation for OIC
+- [HTTP Adapter Patterns](../adapters/flext_http_oracle_oic-adapter.md) - FLX HTTP adapter implementation for OIC
 - [Security Framework](../../security/index.md) - Enterprise security patterns for Oracle integrations
 - [Infrastructure Services](../../infrastructure/index.md) - Infrastructure services supporting Oracle integrations
 
@@ -796,21 +796,21 @@ python -m flx_http_oracle_oic.cli jwt status --verbose
 
 ```bash
 # Check JWT token status
-flx-oic auth status --debug
+flext-oic auth status --debug
 ```
 
 **Connection Issues**:
 
 ```bash
 # Validate configuration
-flx-oic test-connection --config-path config.yaml
+flext-oic test-connection --config-path config.yaml
 ```
 
 **Integration Flow Problems**:
 
 ```bash
 # Monitor real-time flows
-flx-oic monitor --flow-id integration-flow-123
+flext-oic monitor --flow-id integration-flow-123
 ```
 
 ---

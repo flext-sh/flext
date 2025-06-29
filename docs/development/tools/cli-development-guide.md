@@ -72,15 +72,15 @@ cli = [
 ]
 
 [project.scripts]
-flx = "flx.cli.main:app"
-flx-dev = "flx.cli.dev:app"
-flx-REDACTED_LDAP_BIND_PASSWORD = "flx.cli.REDACTED_LDAP_BIND_PASSWORD:app"
+flext = "flext.cli.main:app"
+flext-dev = "flext.cli.dev:app"
+flext-REDACTED_LDAP_BIND_PASSWORD = "flext.cli.REDACTED_LDAP_BIND_PASSWORD:app"
 ```
 
 ### CLI Project Structure
 
 ```
-src/flx/cli/
+src/flext/cli/
 ├── __init__.py
 ├── main.py                    # Main CLI entry point
 ├── dev.py                     # Development commands
@@ -119,17 +119,17 @@ src/flx/cli/
 ### Main CLI Application
 
 ```python
-# src/flx/cli/main.py
+# src/flext/cli/main.py
 from typing import Optional
 import typer
 from rich.console import Console
 from rich.table import Table
 from rich import print as rprint
 
-from flx.cli.core.app import create_cli_app
-from flx.cli.core.config import CLIConfig
-from flx.cli.core.context import CLIContext
-from flx.cli.commands import (
+from flext.cli.core.app import create_cli_app
+from flext.cli.core.config import CLIConfig
+from flext.cli.core.context import CLIContext
+from flext.cli.commands import (
     project_commands,
     database_commands,
     testing_commands,
@@ -138,9 +138,9 @@ from flx.cli.commands import (
 
 # Create main CLI application
 app = typer.Typer(
-    name="flx",
+    name="flext",
     help="FLX Framework Development CLI",
-    epilog="For more information, visit: https://docs.flx-framework.dev",
+    epilog="For more information, visit: https://docs.flext-framework.dev",
     no_args_is_help=True,
     rich_markup_mode="rich",
     context_settings={"help_option_names": ["-h", "--help"]}
@@ -254,7 +254,7 @@ if __name__ == "__main__":
 ### CLI Context and Configuration
 
 ```python
-# src/flx/cli/core/context.py
+# src/flext/cli/core/context.py
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional, Dict, Any
@@ -263,8 +263,8 @@ import platform
 import sys
 from rich.console import Console
 
-from flx.cli.core.config import CLIConfig
-from flx.core.version import __version__
+from flext.cli.core.config import CLIConfig
+from flext.core.version import __version__
 
 @dataclass
 class CLIContext:
@@ -391,7 +391,7 @@ class CLIContext:
 
         self.console.print(table)
 
-# src/flx/cli/core/config.py
+# src/flext/cli/core/config.py
 from pathlib import Path
 from typing import Optional, Dict, Any
 from pydantic import BaseModel, Field
@@ -466,11 +466,11 @@ class CLIConfig(BaseModel):
     def _find_config_file() -> Optional[Path]:
         """Find configuration file in standard locations."""
         possible_locations = [
-            Path.cwd() / ".flx.yaml",
-            Path.cwd() / ".flx.yml",
-            Path.cwd() / "flx.config.yaml",
-            Path.home() / ".config" / "flx" / "config.yaml",
-            Path.home() / ".flx.yaml"
+            Path.cwd() / ".flext.yaml",
+            Path.cwd() / ".flext.yml",
+            Path.cwd() / "flext.config.yaml",
+            Path.home() / ".config" / "flext" / "config.yaml",
+            Path.home() / ".flext.yaml"
         ]
 
         for location in possible_locations:
@@ -513,14 +513,14 @@ class CLIConfig(BaseModel):
 ### Command Implementation Patterns
 
 ```python
-# src/flx/cli/commands/base.py
+# src/flext/cli/commands/base.py
 from abc import ABC, abstractmethod
 from typing import Optional, Dict, Any
 import typer
 from rich.progress import Progress, TaskID
 
-from flx.cli.core.context import CLIContext
-from flx.cli.core.exceptions import CLIError
+from flext.cli.core.context import CLIContext
+from flext.cli.core.exceptions import CLIError
 
 class BaseCommand(ABC):
     """Base class for CLI commands with common functionality."""
@@ -569,17 +569,17 @@ class BaseCommand(ABC):
         """Create a progress context for long-running operations."""
         return Progress(console=self.console)
 
-# src/flx/cli/commands/project.py
+# src/flext/cli/commands/project.py
 from typing import Optional, List, Dict, Any
 from pathlib import Path
 import typer
 from rich.table import Table
 import asyncio
 
-from flx.cli.commands.base import BaseCommand
-from flx.cli.core.context import CLIContext
-from flx.project.manager import ProjectManager
-from flx.project.models import ProjectConfig, ProjectTemplate
+from flext.cli.commands.base import BaseCommand
+from flext.cli.core.context import CLIContext
+from flext.project.manager import ProjectManager
+from flext.project.models import ProjectConfig, ProjectTemplate
 
 # Create command group
 app = typer.Typer(name="project", help="Project management commands")
@@ -803,7 +803,7 @@ def validate(
 ### Testing Commands Implementation
 
 ```python
-# src/flx/cli/commands/testing.py
+# src/flext/cli/commands/testing.py
 from typing import Optional, List, Dict, Any
 from pathlib import Path
 import typer
@@ -812,8 +812,8 @@ import subprocess
 from rich.live import Live
 from rich.table import Table
 
-from flx.cli.commands.base import BaseCommand
-from flx.cli.core.context import CLIContext
+from flext.cli.commands.base import BaseCommand
+from flext.cli.core.context import CLIContext
 
 # Create command group
 app = typer.Typer(name="test", help="Testing utilities and commands")
@@ -853,7 +853,7 @@ class TestRunnerCommand(BaseCommand):
 
         if coverage:
             cmd_parts.extend([
-                "--cov=flx",
+                "--cov=flext",
                 "--cov-report=term-missing",
                 "--cov-report=html:reports/coverage",
                 "--cov-fail-under=90"
@@ -955,7 +955,7 @@ def coverage(
     cmd_parts = [
         "pytest",
         "tests/",
-        f"--cov=flx",
+        f"--cov=flext",
         f"--cov-fail-under={threshold}"
     ]
 
@@ -1026,12 +1026,12 @@ def benchmark(
 ### Plugin Interface
 
 ```python
-# src/flx/cli/plugins/base.py
+# src/flext/cli/plugins/base.py
 from abc import ABC, abstractmethod
 from typing import Dict, Any, List
 import typer
 
-from flx.cli.core.context import CLIContext
+from flext.cli.core.context import CLIContext
 
 class CLIPlugin(ABC):
     """Base class for CLI plugins."""

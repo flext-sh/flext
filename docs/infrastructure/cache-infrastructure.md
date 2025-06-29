@@ -53,11 +53,11 @@ The FLX cache infrastructure provides a unified caching layer with multiple back
 
 ### **Cache Service Hierarchy**
 
-Based on actual implementation in `/flx/src/flx/infra/cache/`:
+Based on actual implementation in `/flext/src/flext/infra/cache/`:
 
 ```python
-from flx.infra.cache import CacheService
-from flx.infra.services.base import BaseInfraService
+from flext.infra.cache import CacheService
+from flext.infra.services.base import BaseInfraService
 
 class CacheService(BaseInfraService):
     """Unified cache service with multiple backend support."""
@@ -85,7 +85,7 @@ The cache service automatically selects the appropriate backend:
 ### **Basic Usage**
 
 ```python
-from flx.infra.cache import CacheService
+from flext.infra.cache import CacheService
 
 # Initialize cache service
 cache = CacheService(backend="redis", redis_url="redis://localhost:6379")
@@ -233,7 +233,7 @@ print(f"Evictions: {metrics.evictions}")
 
 ```python
 import pytest
-from flx.infra.cache import CacheService
+from flext.infra.cache import CacheService
 
 @pytest.fixture
 async def cache():

@@ -126,7 +126,7 @@ This hub provides comprehensive guidance for implementing domain-driven design, 
 - **Total Documents**: 8+ comprehensive pattern guides
 - **Hub Completeness**: 100% mandatory template compliance
 - **Cross-References**: 5+ bidirectional links per document
-- **Source Validation**: ✅ Validated against `/flx/src/flx/core/` implementation
+- **Source Validation**: ✅ Validated against `/flext/src/flext/core/` implementation
 
 ### **Pattern Validation**
 

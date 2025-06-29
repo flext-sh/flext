@@ -44,9 +44,9 @@ This comprehensive guide covers Oracle system integration patterns within the FL
 
 | Oracle System                      | Integration Type | FLX Component         | Status        |
 | ---------------------------------- | ---------------- | --------------------- | ------------- |
-| **Oracle Fusion Cloud WMS**        | REST/HTTP        | `flx-http-oracle-wms` | ✅ Production |
-| **Oracle Integration Cloud (OIC)** | REST/OAuth2      | `flx-http-oracle-oic` | ✅ Production |
-| **Oracle Database**                | SQL/Async        | `flx-database-oracle` | ✅ Production |
+| **Oracle Fusion Cloud WMS**        | REST/HTTP        | `flext-http-oracle-wms` | ✅ Production |
+| **Oracle Integration Cloud (OIC)** | REST/OAuth2      | `flext-http-oracle-oic` | ✅ Production |
+| **Oracle Database**                | SQL/Async        | `flext-database-oracle` | ✅ Production |
 | **Oracle Inventory Management**    | Pre-built OIC    | Integration recipes   | 📋 Documented |
 
 ### **Architecture Pattern**
@@ -65,9 +65,9 @@ FLX Hexagonal Architecture
 │   ├── Inbound: Oracle REST APIs
 │   └── Outbound: Oracle system clients
 └── Adapters (Infrastructure)
-    ├── WmsClient (flx-http-oracle-wms)
-    ├── OracleOicClient (flx-http-oracle-oic)
-    └── FlxOracleDbAdapter (flx-database-oracle)
+    ├── WmsClient (flext-http-oracle-wms)
+    ├── OracleOicClient (flext-http-oracle-oic)
+    └── FlxOracleDbAdapter (flext-database-oracle)
 ```
 
 ### **Oracle WMS Integration**
@@ -84,7 +84,7 @@ Oracle Warehouse Management System (WMS) integration provides:
 #### **Basic WMS Integration**
 
 ```python
-from flx_http_oracle_wms import WmsClient, WmsConfig
+from flext_http_oracle_wms import WmsClient, WmsConfig
 
 # Configuration
 wms_config = WmsConfig(
@@ -121,8 +121,8 @@ async with WmsClient(wms_config) as wms:
 Oracle Integration Cloud requires OAuth2 authentication:
 
 ```python
-from flx.infrastructure.http import FlxJwtService
-from flx_http_oracle_oic import OracleOicService, OicConfig
+from flext.infrastructure.http import FlxJwtService
+from flext_http_oracle_oic import OracleOicService, OicConfig
 
 # JWT service for OIC authentication
 jwt_service = FlxJwtService.create_for_oracle_oic(
@@ -150,16 +150,16 @@ async with OracleOicService(oic_config) as oic:
 #### **Async Database Operations**
 
 ```python
-from flx.infrastructure.database import DatabaseAdapter
-from flx.adapters.outbound.database import OracleAdapter
+from flext.infrastructure.database import DatabaseAdapter
+from flext.adapters.outbound.database import OracleAdapter
 
 # Oracle database configuration
 oracle_config = {
     "host": "oracle-db.company.com",
     "port": 1521,
     "service_name": "ORCL",
-    "user": "flx_user",
-    "password": "flx_password"
+    "user": "flext_user",
+    "password": "flext_password"
 }
 
 # Database adapter

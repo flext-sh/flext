@@ -37,7 +37,7 @@ FLX has enabled GitHub's Private Vulnerability Reporting feature for secure and 
 
 **Process:**
 
-1. Navigate to the [Security tab](https://github.com/datacosmos-br/flx/security) of the FLX repository
+1. Navigate to the [Security tab](https://github.com/datacosmos-br/flext/security) of the FLX repository
 2. Select "Report a vulnerability"
 3. Complete the vulnerability report form with detailed information
 4. GitHub will maintain confidentiality and notify FLX maintainers
@@ -160,7 +160,7 @@ If you prefer not to use GitHub's reporting feature:
 ```python
 from pydantic import BaseModel, field_validator
 from typing import Annotated
-from flx.core.validation import SecureString
+from flext.core.validation import SecureString
 
 class UserInput(BaseModel):
     """Secure user input validation."""
@@ -181,7 +181,7 @@ class UserInput(BaseModel):
 
 ```python
 from pydantic import SecretStr, Field
-from flx.core.config import BaseConfig
+from flext.core.config import BaseConfig
 
 class DatabaseConfig(BaseConfig):
     """Secure database configuration."""
@@ -202,7 +202,7 @@ class DatabaseConfig(BaseConfig):
 
 ```python
 import logging
-from flx.core.exceptions import SecurityError
+from flext.core.exceptions import SecurityError
 
 logger = logging.getLogger(__name__)
 

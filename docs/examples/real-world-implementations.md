@@ -34,15 +34,15 @@ This document contains real implementation examples extracted from production FL
 
 ### **Source Projects**
 
-- **FLX Core Framework**: `/flx/src/flx/` - Core framework implementation
-- **Oracle WMS Integration**: `/flx_http_oracle_wms/` - Production WMS system
-- **Oracle OIC Integration**: `/flx_http_oracle_oic/` - Integration Cloud platform
-- **Oracle Database**: `/flx_database_oracle/` - Database connectivity
+- **FLX Core Framework**: `/flext/src/flext/` - Core framework implementation
+- **Oracle WMS Integration**: `/flext_http_oracle_wms/` - Production WMS system
+- **Oracle OIC Integration**: `/flext_http_oracle_oic/` - Integration Cloud platform
+- **Oracle Database**: `/flext_database_oracle/` - Database connectivity
 - **client-b POC**: `/client-b_oic_wms/` - Multi-system orchestration
 
 ### **Prerequisites**
 
-- Understanding of [FLX Framework Architecture](../architecture/design/flx-framework-architecture-guide.md)
+- Understanding of [FLX Framework Architecture](../architecture/design/flext-framework-architecture-guide.md)
 - Knowledge of [Hexagonal Architecture](../architecture/hexagonal-architecture-hub.md)
 - Familiarity with Python 3.13+ async/await patterns
 
@@ -55,13 +55,13 @@ This document contains real implementation examples extracted from production FL
 Real implementation of a WMS inventory item entity:
 
 ```python
-# Real implementation from flx_http_oracle_wms/src/domain/
+# Real implementation from flext_http_oracle_wms/src/domain/
 from decimal import Decimal
 from datetime import datetime
 from typing import Optional, List
 from uuid import UUID, uuid4
-from flx.core.entities import AggregateRoot
-from flx.core.events import DomainEvent
+from flext.core.entities import AggregateRoot
+from flext.core.events import DomainEvent
 from pydantic import Field, field_validator
 
 class InventoryItem(AggregateRoot):
@@ -193,7 +193,7 @@ class InventoryReceivedEvent(DomainEvent):
 Real WMS application service with event handling:
 
 ```python
-# Real implementation from flx_http_oracle_wms/src/application/
+# Real implementation from flext_http_oracle_wms/src/application/
 class InventoryApplicationService:
     """Production inventory application service."""
 
@@ -302,7 +302,7 @@ class InventoryApplicationService:
 Real OAuth2-enabled HTTP adapter:
 
 ```python
-# Real implementation from flx_http_oracle_oic/src/adapters/
+# Real implementation from flext_http_oracle_oic/src/adapters/
 class OracleOicHttpAdapter(BaseAdapter, HttpClientPort):
     """Production Oracle Integration Cloud HTTP adapter."""
 
@@ -415,7 +415,7 @@ class OracleOicHttpAdapter(BaseAdapter, HttpClientPort):
 Real Oracle database adapter with connection pooling:
 
 ```python
-# Real implementation from flx_database_oracle/src/adapters/
+# Real implementation from flext_database_oracle/src/adapters/
 class FlxOracleDbAdapter(BaseAdapter, DatabasePort):
     """Production Oracle database adapter with advanced features."""
 
@@ -688,7 +688,7 @@ class IntegrationOrchestrator:
 
 ### **Prerequisites**
 
-- [FLX Framework Architecture](../architecture/design/flx-framework-architecture-guide.md) - Understanding framework patterns used in examples
+- [FLX Framework Architecture](../architecture/design/flext-framework-architecture-guide.md) - Understanding framework patterns used in examples
 - [Hexagonal Architecture](../architecture/hexagonal-architecture-hub.md) - Architectural foundation for all implementations
 - [Oracle Implementation Patterns](../guides/oracle/oracle-implementation-patterns.md) - Oracle-specific patterns demonstrated
 

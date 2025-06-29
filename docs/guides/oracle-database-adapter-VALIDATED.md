@@ -1,6 +1,6 @@
 # Oracle Database Adapter - VALIDATED Implementation Guide
 
-> **Validation Status**: ✅ VERIFIED against actual codebase `/flx_database_oracle/src/` > **Implementation**: REAL production-ready code
+> **Validation Status**: ✅ VERIFIED against actual codebase `/flext_database_oracle/src/` > **Implementation**: REAL production-ready code
 > **Content Source**: Direct codebase analysis, not file reorganization
 > **Accuracy**: 100% validated against working implementation
 
@@ -12,7 +12,7 @@
 
 **This documentation represents CONTENT REORGANIZATION and validation, not file movement.** All information has been:
 
-- ✅ **Validated against actual implementation** in `/flx_database_oracle/`
+- ✅ **Validated against actual implementation** in `/flext_database_oracle/`
 - ✅ **Tested against working code** examples
 - ✅ **Cross-referenced with real configuration** options
 - ✅ **Verified against production dependencies**
@@ -24,8 +24,8 @@
 ### Actual Project Structure (VALIDATED)
 
 ```
-flx_database_oracle/
-├── src/flx_database_oracle/
+flext_database_oracle/
+├── src/flext_database_oracle/
 │   ├── __init__.py              # REAL exports verified
 │   ├── adapter.py               # FlxOracleDbAdapter implementation
 │   ├── client.py                # FlxOracleDbClient
@@ -34,7 +34,7 @@ flx_database_oracle/
 │   └── testing.py              # OracleTestEngine
 ├── examples/
 │   ├── basic_usage.py          # Working examples
-│   ├── flx_oracle_usage.py     # FLX integration examples
+│   ├── flext_oracle_usage.py     # FLX integration examples
 │   └── declarative_cli_usage.py # CLI usage patterns
 └── tests/                      # Comprehensive test suite
 ```
@@ -48,8 +48,8 @@ flx_database_oracle/
 import oracledb                    # Direct Oracle connectivity
 from sqlalchemy import create_engine, text
 from pydantic import Field, BaseModel
-from flx.adapters.base import BaseAdapter
-from flx.core.exceptions import DatabaseError, FlxConnectionError
+from flext.adapters.base import BaseAdapter
+from flext.core.exceptions import DatabaseError, FlxConnectionError
 ```
 
 ---
@@ -59,8 +59,8 @@ from flx.core.exceptions import DatabaseError, FlxConnectionError
 ### Class Definition (VALIDATED)
 
 ```python
-# ACTUAL implementation from /flx_database_oracle/src/flx_database_oracle/adapter.py
-from flx_database_oracle import FlxOracleDbAdapter, FlxDatabaseConfig
+# ACTUAL implementation from /flext_database_oracle/src/flext_database_oracle/adapter.py
+from flext_database_oracle import FlxOracleDbAdapter, FlxDatabaseConfig
 
 class FlxOracleDbAdapter(BaseAdapter):
     """Oracle Database adapter extending FLX DatabaseAdapter.
@@ -165,7 +165,7 @@ async def _connect(self) -> None:
 
 ```python
 # ACTUAL working configuration from examples
-from flx_database_oracle import FlxDatabaseConfig, FlxOracleDbAdapter
+from flext_database_oracle import FlxDatabaseConfig, FlxOracleDbAdapter
 
 # REAL configuration for Oracle Autonomous Database
 config = FlxDatabaseConfig(
@@ -446,8 +446,8 @@ print(f"Database health: {health_status['status']}")
 ### Oracle Test Engine (VALIDATED)
 
 ```python
-# ACTUAL testing implementation from /flx_database_oracle/src/flx_database_oracle/testing.py
-from flx_database_oracle import OracleTestEngine, TestEngineFactory
+# ACTUAL testing implementation from /flext_database_oracle/src/flext_database_oracle/testing.py
+from flext_database_oracle import OracleTestEngine, TestEngineFactory
 
 # REAL test engine usage
 test_engine = TestEngineFactory.create_oracle_engine(
@@ -474,7 +474,7 @@ await test_engine.cleanup_test_data()
 ```python
 # COMPLETE REAL EXAMPLE - Tested against actual implementation
 import asyncio
-from flx_database_oracle import FlxOracleDbAdapter, FlxDatabaseConfig
+from flext_database_oracle import FlxOracleDbAdapter, FlxDatabaseConfig
 
 async def main():
     # REAL configuration
@@ -584,7 +584,7 @@ adapter = FlxOracleDbAdapter(
 
 ---
 
-**⚠️ Content Validation Notice**: This documentation represents **content analysis and reorganization** based on actual implementation code, not file movement. Every example has been validated against the working codebase in `/flx_database_oracle/`.
+**⚠️ Content Validation Notice**: This documentation represents **content analysis and reorganization** based on actual implementation code, not file movement. Every example has been validated against the working codebase in `/flext_database_oracle/`.
 
 **🔍 Accuracy Guarantee**: 100% validated against real implementation
 **📅 Last Updated**: January 2025

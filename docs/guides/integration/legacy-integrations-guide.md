@@ -74,7 +74,7 @@ When working with legacy integrations:
 legacy_pattern:
   source: "inv.wms.receipt-advice-for-ASN-mapping-23.4.0"
   business_logic: "ASN receipt processing with inventory updates"
-  modern_equivalent: "flx-http-oracle-wms receipt adapter with event sourcing"
+  modern_equivalent: "flext-http-oracle-wms receipt adapter with event sourcing"
   migration_complexity: "medium"
   modernization_notes:
     - "Replace direct API calls with adapter pattern"
@@ -87,9 +87,9 @@ legacy_pattern:
 
 ```python
 # Modern FLX implementation of legacy pattern
-from flx.adapters.outbound.oracle import OracleWmsAdapter
-from flx.core.events import DomainEvent
-from flx.ports.inbound.receipt import ReceiptPort
+from flext.adapters.outbound.oracle import OracleWmsAdapter
+from flext.core.events import DomainEvent
+from flext.ports.inbound.receipt import ReceiptPort
 
 class ModernReceiptProcessor(ReceiptPort):
     """Modern implementation of legacy ASN receipt processing."""
@@ -230,7 +230,7 @@ class LegacyPatternExtractor:
 
     def generate_modern_implementation(self, analysis: IntegrationAnalysis) -> str:
         """Generate modern FLX implementation based on analysis."""
-        return self._template_generator.create_flx_adapter(
+        return self._template_generator.create_flext_adapter(
             business_logic=analysis.business_logic,
             port_interfaces=self._design_ports(analysis),
             adapter_implementation=self._design_adapters(analysis)
@@ -260,8 +260,8 @@ class LegacyPatternExtractor:
 
 ```python
 # Modern FLX pattern
-from flx.core.domain.value_objects import ASNNumber, SKU, Quantity
-from flx.core.entities import ReceiptAdvice, ReceiptItem
+from flext.core.domain.value_objects import ASNNumber, SKU, Quantity
+from flext.core.entities import ReceiptAdvice, ReceiptItem
 
 # Type-safe value objects
 asn_number = ASNNumber("ASN-001")
@@ -288,8 +288,8 @@ try {
 
 ```python
 # Modern comprehensive error handling
-from flx.core.exceptions import ReceiptProcessingError, ValidationError
-from flx.infra.observability import MetricsCollector
+from flext.core.exceptions import ReceiptProcessingError, ValidationError
+from flext.infra.observability import MetricsCollector
 
 async def process_receipt(self, receipt_data: dict) -> ReceiptConfirmation:
     """Process receipt with comprehensive error handling."""

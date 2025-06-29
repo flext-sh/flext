@@ -39,7 +39,7 @@ All original functionality has been preserved, while adding new features for scr
 3. **Created Utility Wrappers**:
 
    - Added `create_utility_wrappers.sh` - Creates bin wrappers for utility scripts
-   - Created bin wrappers for all utility scripts (flx_long_lines.py, update_packages.py, etc.)
+   - Created bin wrappers for all utility scripts (flext_long_lines.py, update_packages.py, etc.)
    - All scripts accessible through simple commands (fix-longlines, update-packages, etc.)
 
 4. **Updated Documentation**:
@@ -52,11 +52,11 @@ After sourcing `~/.bashrc`, you can use the following commands from anywhere in 
 
 ### Core Commands
 
-- `flx_project-manage` - Manage projects
+- `flext_project-manage` - Manage projects
 - `scaffold-manage` - Manage scaffolds
 - `git-manage` - Git operations
 - `setup` - Setup the workspace
-- `status` - Show flx_project status
+- `status` - Show flext_project status
 - `scaffold` - Manage scaffolds (shorthand)
 - `git-op` - Git operations (shorthand)
 
@@ -80,7 +80,7 @@ After sourcing `~/.bashrc`, you can use the following commands from anywhere in 
 2. Try some of the commands:
 
    ```bash
-   # Show flx_project status
+   # Show flext_project status
    status
 
    # Document Python scripts
@@ -101,7 +101,7 @@ After sourcing `~/.bashrc`, you can use the following commands from anywhere in 
 ```asciidoc
 /home/marlonsc/pyauto/scripts/
 ├── bin/                       # Symbolic links for easy access
-│   ├── flx_project-manage         -> ../project_manage.py
+│   ├── flext_project-manage         -> ../project_manage.py
 │   ├── scaffold-manage        -> ../scaffold_manage.py
 │   ├── git-manage             -> ../git_manage.py
 │   ├── setup                  # Wrapper for project_manage.py setup
@@ -113,7 +113,7 @@ After sourcing `~/.bashrc`, you can use the following commands from anywhere in 
 ├── project_manage.py          # Project management operations
 ├── scaffold_manage.py         # Scaffold & template management
 ├── git_manage.py              # Git operations
-├── flx_long_lines.py          # Fix long lines in Python files
+├── flext_long_lines.py          # Fix long lines in Python files
 ├── update_packages.py         # Update or reinstall packages
 ├── update_lint_excludes.py    # Update lint exclusions
 ├── pep8_check.py              # Check PEP 8 compliance

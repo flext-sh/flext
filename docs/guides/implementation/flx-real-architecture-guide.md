@@ -6,7 +6,7 @@
 [![Source Validated](https://img.shields.io/badge/source-code%20validated-blue.svg)](#source-code-analysis)
 [![Production Ready](https://img.shields.io/badge/production-ready-orange.svg)](#production-components)
 
-**Complete architectural guide based on actual FLX Framework implementation in `/flx/src/` - validated against real source code**
+**Complete architectural guide based on actual FLX Framework implementation in `/flext/src/` - validated against real source code**
 
 ---
 
@@ -42,10 +42,10 @@
 
 ### **Source Code Structure (Validated)**
 
-Based on actual implementation in `/flx/src/flx/`:
+Based on actual implementation in `/flext/src/flext/`:
 
 ```
-flx/
+flext/
 ├── core/                    # Domain Layer
 │   ├── entities.py         # DDD Entities with event emission
 │   ├── events.py           # Domain events system
@@ -84,7 +84,7 @@ flx/
 #### **Entity System - entities.py**
 
 ```python
-# Real implementation from /flx/src/flx/core/entities.py
+# Real implementation from /flext/src/flext/core/entities.py
 from datetime import UTC, datetime
 from typing import Self
 from pydantic import BaseModel, Field
@@ -131,7 +131,7 @@ class AggregateRoot(Entity):
 #### **Adapter Pattern - base.py**
 
 ```python
-# Real implementation from /flx/src/flx/adapters/base.py
+# Real implementation from /flext/src/flext/adapters/base.py
 class BaseAdapter(BaseModel):
     """Base adapter for hexagonal architecture with lifecycle management."""
 
@@ -183,7 +183,7 @@ class BaseAdapter(BaseModel):
 #### **Unified Adapter Manager - unified_manager.py**
 
 ```python
-# Real implementation from /flx/src/flx/infra/adapters/unified_manager.py
+# Real implementation from /flext/src/flext/infra/adapters/unified_manager.py
 class UnifiedAdapterManager(BaseLifecycleManager):
     """Unified adapter manager consolidating lifecycle and messaging."""
 
@@ -195,7 +195,7 @@ class UnifiedAdapterManager(BaseLifecycleManager):
         **kwargs: Any,
     ) -> None:
         """Initialize unified adapter manager."""
-        self._registry = registry or flx_get_adapter_registry()
+        self._registry = registry or flext_get_adapter_registry()
         self._instance_cache: dict[str, FlxBaseAdapter] = {}
         self._messaging_enabled = enable_messaging_features
 
@@ -230,7 +230,7 @@ class UnifiedAdapterManager(BaseLifecycleManager):
 #### **HTTP Client Service - client_service.py**
 
 ```python
-# Real implementation from /flx/src/flx/infra/http/client_service.py
+# Real implementation from /flext/src/flext/infra/http/client_service.py
 class HttpClientService:
     """HTTP client service with authentication and error handling."""
 
@@ -277,7 +277,7 @@ class HttpClientService:
 #### **WMS Client - wms_client.py**
 
 ```python
-# Real implementation from /flx_http_oracle_wms/src/flx_http_oracle_wms/wms_client.py
+# Real implementation from /flext_http_oracle_wms/src/flext_http_oracle_wms/wms_client.py
 class WmsClient:
     """WMS client using FLX HttpClientService with full WMS operations."""
 
@@ -325,7 +325,7 @@ class WmsClient:
 #### **OIC Client - client.py**
 
 ```python
-# Real implementation from /flx_http_oracle_oic/src/flx_http_oracle_oic/client.py
+# Real implementation from /flext_http_oracle_oic/src/flext_http_oracle_oic/client.py
 class OracleOicClient:
     """Simple client facade for Oracle Integration Cloud operations."""
 
@@ -386,7 +386,7 @@ infra/
 Real testing engine implementation:
 
 ```python
-# From /flx/src/flx/testing/engines/
+# From /flext/src/flext/testing/engines/
 class HexagonalTestEngine:
     """Test engine for hexagonal architecture testing."""
 

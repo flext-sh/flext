@@ -8,7 +8,7 @@
 
 ## Navigation Context
 
-**Current Location**: `docs/guides/integration/meltano-flx-integration-plan.md`
+**Current Location**: `docs/guides/integration/meltano-flext-integration-plan.md`
 **Parent**: [Integration Hub](index.md) > Meltano Integration
 **Quick Links**: [Framework Integration](meltano-framework-integration.md) | [Plugins Integration](meltano-plugins-integration.md) | [Architecture](../../architecture/index.md)
 
@@ -41,7 +41,7 @@ This document outlines the step-by-step plan to integrate Meltano's complete dat
 ### **Meltano Dependencies Already Available**
 
 ```toml
-# From flx/pyproject.toml - Already integrated!
+# From flext/pyproject.toml - Already integrated!
 meltano = "3.7.8"
 singer-sdk = "^0.46.4"
 ```
@@ -135,17 +135,17 @@ class MeltanoCLIAdapter(
 
 ```bash
 # Create Meltano integration structure
-mkdir -p flx/src/flx/domain/meltano
-mkdir -p flx/src/flx/application/meltano
-mkdir -p flx/src/flx/adapters/outbound/meltano
-mkdir -p flx/src/flx/infra/meltano
-mkdir -p flx/src/flx/cli/meltano
+mkdir -p flext/src/flext/domain/meltano
+mkdir -p flext/src/flext/application/meltano
+mkdir -p flext/src/flext/adapters/outbound/meltano
+mkdir -p flext/src/flext/infra/meltano
+mkdir -p flext/src/flext/cli/meltano
 ```
 
 #### **Day 3-5: Domain Model Implementation**
 
 ```python
-# flx/src/flx/domain/meltano/entities.py
+# flext/src/flext/domain/meltano/entities.py
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Dict, List, Optional
@@ -182,10 +182,10 @@ class PipelineRun:
 #### **Day 6-7: Core Service Implementation**
 
 ```python
-# flx/src/flx/application/meltano/service.py
-from flx.core.application import ApplicationService
-from flx.domain.meltano.entities import MeltanoProject, PipelineRun
-from flx.ports.outbound.meltano import MeltanoPort
+# flext/src/flext/application/meltano/service.py
+from flext.core.application import ApplicationService
+from flext.domain.meltano.entities import MeltanoProject, PipelineRun
+from flext.ports.outbound.meltano import MeltanoPort
 
 class MeltanoOrchestrationService(ApplicationService):
     """Application service for Meltano pipeline orchestration."""
@@ -213,7 +213,7 @@ class MeltanoOrchestrationService(ApplicationService):
 #### **Day 8-10: Meltano CLI Adapter**
 
 ```python
-# flx/src/flx/adapters/outbound/meltano/cli_adapter.py
+# flext/src/flext/adapters/outbound/meltano/cli_adapter.py
 import asyncio
 import subprocess
 from pathlib import Path
@@ -280,7 +280,7 @@ class MeltanoCLIAdapter(
 #### **Day 11-14: Singer SDK Integration**
 
 ```python
-# flx/src/flx/adapters/outbound/meltano/singer_adapter.py
+# flext/src/flext/adapters/outbound/meltano/singer_adapter.py
 from singer_sdk import Tap, Target
 from singer_sdk.streams import Stream
 
@@ -322,7 +322,7 @@ class SingerSDKAdapter(
 #### **Day 15-17: Configuration Integration**
 
 ```python
-# flx/src/flx/adapters/mixins/meltano_configuration.py
+# flext/src/flext/adapters/mixins/meltano_configuration.py
 from pydantic import Field, validator
 from pathlib import Path
 from typing import Dict, List, Optional
@@ -337,7 +337,7 @@ class MeltanoConfigurationMixin(BaseModel):
     )
 
     default_project_name: str = Field(
-        default="flx_data_platform",
+        default="flext_data_platform",
         description="Default project name for new installations"
     )
 
@@ -392,7 +392,7 @@ class MeltanoConfigurationMixin(BaseModel):
 #### **Day 18-21: State Management Implementation**
 
 ```python
-# flx/src/flx/domain/meltano/state.py
+# flext/src/flext/domain/meltano/state.py
 from abc import ABC, abstractmethod
 from typing import Dict, Any, Optional
 import json
@@ -443,13 +443,13 @@ class FileStateStore(StateStore):
 #### **Day 22-25: Meltano CLI Commands**
 
 ```python
-# flx/src/flx/cli/meltano/commands.py
+# flext/src/flext/cli/meltano/commands.py
 import cyclopts
 from pathlib import Path
 from typing import Optional, List
 
-from flx.application.meltano.service import MeltanoOrchestrationService
-from flx.cli.common import get_container
+from flext.application.meltano.service import MeltanoOrchestrationService
+from flext.cli.common import get_container
 
 meltano_app = cyclopts.App(name="meltano", help="Meltano data pipeline operations")
 
@@ -567,15 +567,15 @@ async def _create_status_table(service: MeltanoOrchestrationService, project_pat
 #### **Day 29-31: FastAPI Application Setup**
 
 ```python
-# flx/src/flx/infra/web/app.py
+# flext/src/flext/infra/web/app.py
 from fastapi import FastAPI, Depends, HTTPException, BackgroundTasks
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from contextlib import asynccontextmanager
 
-from flx.application.container import ApplicationContainer
-from flx.infra.web.middleware import add_middleware
-from flx.infra.web.routes import meltano_router, health_router
+from flext.application.container import ApplicationContainer
+from flext.infra.web.middleware import add_middleware
+from flext.infra.web.routes import meltano_router, health_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -623,14 +623,14 @@ app = create_app()
 #### **Day 32-35: Meltano API Endpoints**
 
 ```python
-# flx/src/flx/infra/web/routes/meltano.py
+# flext/src/flext/infra/web/routes/meltano.py
 from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
 from typing import List, Optional
 from datetime import datetime
 
-from flx.application.meltano.service import MeltanoOrchestrationService
-from flx.infra.web.dependencies import get_meltano_service
-from flx.infra.web.schemas import *
+from flext.application.meltano.service import MeltanoOrchestrationService
+from flext.infra.web.dependencies import get_meltano_service
+from flext.infra.web.schemas import *
 
 router = APIRouter()
 
@@ -729,7 +729,7 @@ async def stream_run_logs(
 #### **Day 36-38: Dashboard Templates**
 
 ```html
-<!-- flx/src/flx/infra/web/templates/dashboard.html -->
+<!-- flext/src/flext/infra/web/templates/dashboard.html -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -832,7 +832,7 @@ async def stream_run_logs(
 #### **Day 39-42: Interactive Components**
 
 ```html
-<!-- flx/src/flx/infra/web/templates/components/pipeline_runs_table.html -->
+<!-- flext/src/flext/infra/web/templates/components/pipeline_runs_table.html -->
 <div class="overflow-x-auto">
   <table class="min-w-full divide-y divide-gray-200">
     <thead class="bg-gray-50">
@@ -934,7 +934,7 @@ async def stream_run_logs(
 #### **Day 43-45: WebSocket Implementation**
 
 ```python
-# flx/src/flx/infra/web/websocket.py
+# flext/src/flext/infra/web/websocket.py
 from fastapi import WebSocket, WebSocketDisconnect
 from typing import List, Dict
 import json
@@ -1008,7 +1008,7 @@ async def websocket_endpoint(websocket: WebSocket):
 #### **Day 46-49: Live Monitoring Dashboard**
 
 ```python
-# flx/src/flx/infra/web/routes/monitoring.py
+# flext/src/flext/infra/web/routes/monitoring.py
 from fastapi import APIRouter, Depends
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
@@ -1070,7 +1070,7 @@ async def broadcast_metrics_updates():
 #### **Day 50-52: Caching & Performance**
 
 ```python
-# flx/src/flx/infra/web/middleware.py
+# flext/src/flext/infra/web/middleware.py
 from fastapi import Request, Response
 from fastapi.middleware.base import BaseHTTPMiddleware
 import time
@@ -1146,7 +1146,7 @@ def add_middleware(app: FastAPI):
 #### **Day 53-56: Error Handling & Logging**
 
 ```python
-# flx/src/flx/infra/web/error_handlers.py
+# flext/src/flext/infra/web/error_handlers.py
 from fastapi import Request, HTTPException
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
@@ -1260,7 +1260,7 @@ RUN pip install poetry
 
 # Copy dependency files
 WORKDIR /app
-COPY flx/pyproject.toml flx/poetry.lock ./
+COPY flext/pyproject.toml flext/poetry.lock ./
 
 # Configure Poetry
 RUN poetry config virtualenvs.create false
@@ -1282,7 +1282,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Create non-root user
-RUN groupadd -r flx && useradd -r -g flx flx
+RUN groupadd -r flext && useradd -r -g flext flext
 
 # Copy Python packages from builder
 COPY --from=builder /usr/local/lib/python3.13/site-packages /usr/local/lib/python3.13/site-packages
@@ -1291,20 +1291,20 @@ COPY --from=builder /usr/local/bin /usr/local/bin
 # Create directories
 WORKDIR /app
 RUN mkdir -p /app/data /app/logs /app/config && \
-    chown -R flx:flx /app
+    chown -R flext:flext /app
 
 # Copy application code
-COPY flx/src ./src
-COPY flx/config ./config
-COPY flx/static ./static
-COPY flx/templates ./templates
+COPY flext/src ./src
+COPY flext/config ./config
+COPY flext/static ./static
+COPY flext/templates ./templates
 
 # Copy entrypoint
 COPY docker/entrypoint.sh ./entrypoint.sh
 RUN chmod +x ./entrypoint.sh
 
 # Switch to non-root user
-USER flx
+USER flext
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
@@ -1327,7 +1327,7 @@ CMD ["web"]
 version: "3.8"
 
 services:
-  flx-web:
+  flext-web:
     build:
       context: .
       dockerfile: Dockerfile
@@ -1336,7 +1336,7 @@ services:
       - "8000:8000"
     environment:
       - FLX_ENVIRONMENT=production
-      - FLX_DATABASE_URL=postgresql://flx:flx@postgres:5432/flx
+      - FLX_DATABASE_URL=postgresql://flext:flext@postgres:5432/flext
       - FLX_REDIS_URL=redis://redis:6379/0
       - FLX_LOG_LEVEL=INFO
     volumes:
@@ -1354,7 +1354,7 @@ services:
       retries: 3
       start_period: 40s
 
-  flx-worker:
+  flext-worker:
     build:
       context: .
       dockerfile: Dockerfile
@@ -1362,7 +1362,7 @@ services:
     command: ["worker"]
     environment:
       - FLX_ENVIRONMENT=production
-      - FLX_DATABASE_URL=postgresql://flx:flx@postgres:5432/flx
+      - FLX_DATABASE_URL=postgresql://flext:flext@postgres:5432/flext
       - FLX_REDIS_URL=redis://redis:6379/0
       - FLX_LOG_LEVEL=INFO
     volumes:
@@ -1376,7 +1376,7 @@ services:
     deploy:
       replicas: 2
 
-  flx-scheduler:
+  flext-scheduler:
     build:
       context: .
       dockerfile: Dockerfile
@@ -1384,7 +1384,7 @@ services:
     command: ["scheduler"]
     environment:
       - FLX_ENVIRONMENT=production
-      - FLX_DATABASE_URL=postgresql://flx:flx@postgres:5432/flx
+      - FLX_DATABASE_URL=postgresql://flext:flext@postgres:5432/flext
       - FLX_REDIS_URL=redis://redis:6379/0
       - FLX_LOG_LEVEL=INFO
     volumes:
@@ -1399,9 +1399,9 @@ services:
   postgres:
     image: postgres:15-alpine
     environment:
-      - POSTGRES_DB=flx
-      - POSTGRES_USER=flx
-      - POSTGRES_PASSWORD=flx
+      - POSTGRES_DB=flext
+      - POSTGRES_USER=flext
+      - POSTGRES_PASSWORD=flext
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
@@ -1426,7 +1426,7 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf
       - ./ssl:/etc/nginx/ssl
     depends_on:
-      - flx-web
+      - flext-web
     restart: unless-stopped
 
 volumes:
@@ -1439,16 +1439,16 @@ volumes:
 #### **Day 64-66: Service Management**
 
 ```python
-# flx/src/flx/infra/daemon/service.py
+# flext/src/flext/infra/daemon/service.py
 import asyncio
 import signal
 import sys
 from typing import Optional
 from pathlib import Path
 
-from flx.application.container import ApplicationContainer
-from flx.application.meltano.service import MeltanoOrchestrationService
-from flx.infra.web.app import create_app
+from flext.application.container import ApplicationContainer
+from flext.application.meltano.service import MeltanoOrchestrationService
+from flext.infra.web.app import create_app
 import uvicorn
 
 class FlxDaemonService:
@@ -1664,7 +1664,7 @@ python -m alembic upgrade head
 echo "Initializing Meltano..."
 python -c "
 import asyncio
-from flx.application.container import ApplicationContainer
+from flext.application.container import ApplicationContainer
 
 async def init():
     container = ApplicationContainer()
@@ -1680,25 +1680,25 @@ asyncio.run(init())
 case "$1" in
     "web")
         echo "Starting FLX web server..."
-        exec python -m flx.infra.daemon.service
+        exec python -m flext.infra.daemon.service
         ;;
     "worker")
         echo "Starting FLX worker..."
-        exec celery -A flx.infra.tasks.celery_app worker --loglevel=info
+        exec celery -A flext.infra.tasks.celery_app worker --loglevel=info
         ;;
     "scheduler")
         echo "Starting FLX scheduler..."
-        exec celery -A flx.infra.tasks.celery_app beat --loglevel=info
+        exec celery -A flext.infra.tasks.celery_app beat --loglevel=info
         ;;
     "cli")
         echo "Starting FLX CLI..."
-        exec python -m flx.cli.main "${@:2}"
+        exec python -m flext.cli.main "${@:2}"
         ;;
     "shell")
         echo "Starting interactive shell..."
         exec python -c "
 import asyncio
-from flx.application.container import ApplicationContainer
+from flext.application.container import ApplicationContainer
 
 async def shell():
     container = ApplicationContainer()
@@ -1738,19 +1738,19 @@ esac
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: flx-platform
+  name: flext-platform
 
 ---
 # k8s/configmap.yaml
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: flx-config
-  namespace: flx-platform
+  name: flext-config
+  namespace: flext-platform
 data:
   FLX_ENVIRONMENT: "production"
   FLX_LOG_LEVEL: "INFO"
-  FLX_DATABASE_URL: "postgresql://flx:flx@postgres:5432/flx"
+  FLX_DATABASE_URL: "postgresql://flext:flext@postgres:5432/flext"
   FLX_REDIS_URL: "redis://redis:6379/0"
 
 ---
@@ -1758,33 +1758,33 @@ data:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: flx-web
-  namespace: flx-platform
+  name: flext-web
+  namespace: flext-platform
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: flx-web
+      app: flext-web
   template:
     metadata:
       labels:
-        app: flx-web
+        app: flext-web
     spec:
       containers:
-        - name: flx-web
-          image: flx-platform:latest
+        - name: flext-web
+          image: flext-platform:latest
           ports:
             - containerPort: 8000
           env:
             - name: FLX_ENVIRONMENT
               valueFrom:
                 configMapKeyRef:
-                  name: flx-config
+                  name: flext-config
                   key: FLX_ENVIRONMENT
             - name: FLX_DATABASE_URL
               valueFrom:
                 secretKeyRef:
-                  name: flx-secrets
+                  name: flext-secrets
                   key: database-url
           resources:
             requests:
@@ -1811,11 +1811,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: flx-web-service
-  namespace: flx-platform
+  name: flext-web-service
+  namespace: flext-platform
 spec:
   selector:
-    app: flx-web
+    app: flext-web
   ports:
     - protocol: TCP
       port: 80
@@ -1827,25 +1827,25 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: flx-ingress
-  namespace: flx-platform
+  name: flext-ingress
+  namespace: flext-platform
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
     cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
   tls:
     - hosts:
-        - flx.yourdomain.com
-      secretName: flx-tls
+        - flext.yourdomain.com
+      secretName: flext-tls
   rules:
-    - host: flx.yourdomain.com
+    - host: flext.yourdomain.com
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: flx-web-service
+                name: flext-web-service
                 port:
                   number: 80
 ```
@@ -1857,12 +1857,12 @@ spec:
 apiVersion: v1
 kind: ServiceMonitor
 metadata:
-  name: flx-metrics
-  namespace: flx-platform
+  name: flext-metrics
+  namespace: flext-platform
 spec:
   selector:
     matchLabels:
-      app: flx-web
+      app: flext-web
   endpoints:
     - port: metrics
       interval: 30s
@@ -1872,14 +1872,14 @@ spec:
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
-  name: flx-alerts
-  namespace: flx-platform
+  name: flext-alerts
+  namespace: flext-platform
 spec:
   groups:
-    - name: flx.rules
+    - name: flext.rules
       rules:
         - alert: FlxPipelineFailure
-          expr: increase(flx_pipeline_failures_total[5m]) > 0
+          expr: increase(flext_pipeline_failures_total[5m]) > 0
           for: 0m
           labels:
             severity: warning
@@ -1888,7 +1888,7 @@ spec:
             description: "Pipeline {{ $labels.pipeline }} has failed"
 
         - alert: FlxHighMemoryUsage
-          expr: flx_memory_usage_percent > 90
+          expr: flext_memory_usage_percent > 90
           for: 5m
           labels:
             severity: critical
@@ -1902,7 +1902,7 @@ spec:
 #### **Day 78-80: Performance Tuning**
 
 ```python
-# flx/src/flx/infra/performance/optimization.py
+# flext/src/flext/infra/performance/optimization.py
 from functools import lru_cache
 import asyncio
 from typing import Dict, Any
@@ -1979,7 +1979,7 @@ class OptimizedConnectionPool:
 ```bash
 # Clone repository
 git clone <repository-url>
-cd flx-platform
+cd flext-platform
 
 # Install dependencies
 make venv-install-dev
@@ -1999,7 +1999,7 @@ make dev
 
 ```bash
 # Build production image
-docker build -t flx-platform:latest .
+docker build -t flext-platform:latest .
 
 # Deploy with Docker Compose
 docker-compose -f docker-compose.prod.yml up -d
@@ -2025,7 +2025,7 @@ The platform automatically initializes a default Meltano project. You can custom
 
 ```yaml
 # config/meltano.yml
-project_id: flx-data-platform
+project_id: flext-data-platform
 default_environment: prod
 environments:
   prod:
@@ -2212,27 +2212,27 @@ python -c "import meltano; print(meltano.__version__)"
 python -c "from singer_sdk import Tap, Target; print('Singer SDK available')"
 
 # Check FLX adapter integration
-flx meltano --help
+flext meltano --help
 ````
 
 #### Container Build Issues
 
 ```bash
 # Debug Docker build process
-docker build --no-cache --progress=plain -t flx-meltano:debug .
+docker build --no-cache --progress=plain -t flext-meltano:debug .
 
 # Check container dependencies
-docker run --rm flx-meltano:debug python -c "import meltano, flx; print('Dependencies OK')"
+docker run --rm flext-meltano:debug python -c "import meltano, flext; print('Dependencies OK')"
 
 # Verify volume mounts
-docker run --rm -v $(pwd)/data:/app/data flx-meltano:debug ls -la /app/data
+docker run --rm -v $(pwd)/data:/app/data flext-meltano:debug ls -la /app/data
 ```
 
 #### Web Interface Problems
 
 ```bash
 # Test FastAPI application startup
-uvicorn flx.infra.web.app:app --reload --port 8000
+uvicorn flext.infra.web.app:app --reload --port 8000
 
 # Check WebSocket connections
 curl -H "Connection: Upgrade" -H "Upgrade: websocket" http://localhost:8000/ws/updates
@@ -2251,7 +2251,7 @@ psql $FLX_DATABASE_URL -c "SELECT version();"
 alembic upgrade head
 
 # Check Meltano state storage
-flx meltano config --show-state-backend
+flext meltano config --show-state-backend
 ```
 
 ### Performance Issues
@@ -2283,14 +2283,14 @@ flx meltano config --show-state-backend
 
 ```yaml
 # Debug pod issues
-kubectl describe pod flx-web-pod-name
-kubectl logs flx-web-pod-name -f
+kubectl describe pod flext-web-pod-name
+kubectl logs flext-web-pod-name -f
 
 # Check service connectivity
-kubectl port-forward service/flx-web-service 8000:80
+kubectl port-forward service/flext-web-service 8000:80
 
 # Verify configuration
-kubectl get configmap flx-config -o yaml
+kubectl get configmap flext-config -o yaml
 ```
 
 #### Docker Compose Issues
@@ -2298,14 +2298,14 @@ kubectl get configmap flx-config -o yaml
 ```bash
 # Check service dependencies
 docker-compose ps
-docker-compose logs flx-web
+docker-compose logs flext-web
 
 # Test network connectivity
-docker-compose exec flx-web ping postgres
-docker-compose exec flx-web ping redis
+docker-compose exec flext-web ping postgres
+docker-compose exec flext-web ping redis
 
 # Verify volume mounts
-docker-compose exec flx-web ls -la /app/data
+docker-compose exec flext-web ls -la /app/data
 ```
 
 ### Getting Help
@@ -2314,13 +2314,13 @@ docker-compose exec flx-web ls -la /app/data
 
 ```bash
 # Generate system diagnostic report
-flx system-info --include-meltano --output diagnostic-report.json
+flext system-info --include-meltano --output diagnostic-report.json
 
 # Check all service health
-flx health-check --comprehensive
+flext health-check --comprehensive
 
 # Export configuration for review
-flx config export --include-secrets=false > config-review.yaml
+flext config export --include-secrets=false > config-review.yaml
 ```
 
 #### Community Resources

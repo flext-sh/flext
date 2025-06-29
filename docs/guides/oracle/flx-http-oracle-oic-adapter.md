@@ -8,9 +8,9 @@
 
 ## Navigation Context
 
-**Current Location**: `docs/guides/oracle/flx_http_oracle_oic-adapter.md`
+**Current Location**: `docs/guides/oracle/flext_http_oracle_oic-adapter.md`
 **Parent**: [Oracle Integration Hub](oracle-integration-hub.md) > Oracle OIC Integration
-**Quick Links**: [Database Adapter](flx-database-oracle-adapter.md) | [WMS Adapter](flx-http-oracle-wms-adapter.md) | [OAuth2 Guide](oracle-oauth2-authentication-guide.md)
+**Quick Links**: [Database Adapter](flext-database-oracle-adapter.md) | [WMS Adapter](flext-http-oracle-wms-adapter.md) | [OAuth2 Guide](oracle-oauth2-authentication-guide.md)
 
 ---
 
@@ -101,7 +101,7 @@ class OicConfig(BaseModel):
 ### Core Adapter Implementation
 
 ```python
-# src/flx/adapters/outbound/oracle/oic_adapter.py
+# src/flext/adapters/outbound/oracle/oic_adapter.py
 import aiohttp
 import asyncio
 import json
@@ -111,16 +111,16 @@ from urllib.parse import urljoin
 from authlib.integrations.httpx_client import AsyncOAuth2Client
 from tenacity import retry, stop_after_attempt, wait_exponential
 
-from flx.core.adapters.base import BaseAdapter
-from flx.core.adapters.mixins import (
+from flext.core.adapters.base import BaseAdapter
+from flext.core.adapters.mixins import (
     UnifiedObservabilityMixin,
     AdapterErrorHandlingMixin,
     UnifiedAdapterConfigurationMixin,
     AdvancedAdapterMixin
 )
-from flx.domain.ports.outbound.http import HttpPort
-from flx.adapters.outbound.oracle.config import OicConfig
-from flx.adapters.outbound.oracle.exceptions import (
+from flext.domain.ports.outbound.http import HttpPort
+from flext.adapters.outbound.oracle.config import OicConfig
+from flext.adapters.outbound.oracle.exceptions import (
     OicAuthenticationError,
     OicApiError,
     OicWorkflowError,
@@ -564,8 +564,8 @@ class RateLimiter:
 ```python
 # Basic setup and integration triggering
 import asyncio
-from flx.adapters.outbound.oracle.oic_adapter import FlxOracleOicAdapter
-from flx.adapters.outbound.oracle.config import OicConfig
+from flext.adapters.outbound.oracle.oic_adapter import FlxOracleOicAdapter
+from flext.adapters.outbound.oracle.config import OicConfig
 
 async def basic_oic_example():
     # Configure OIC connection
@@ -748,8 +748,8 @@ async def batch_processing_example():
 
 ### Next Steps
 
-- [Oracle WMS Integration](flx-http-oracle-wms-adapter.md) - Combine OIC with WMS operations
-- [Database Integration](flx-database-oracle-adapter.md) - Integrate OIC workflows with database operations
+- [Oracle WMS Integration](flext-http-oracle-wms-adapter.md) - Combine OIC with WMS operations
+- [Database Integration](flext-database-oracle-adapter.md) - Integrate OIC workflows with database operations
 - [Observability Setup](../../infrastructure/operational-excellence.md) - Monitor OIC integrations
 
 ### Related Topics

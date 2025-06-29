@@ -53,10 +53,10 @@ The FLX messaging infrastructure provides a robust event-driven architecture fou
 
 ### **Message Bus Components**
 
-Based on actual implementation in `/flx/src/flx/infra/messaging/`:
+Based on actual implementation in `/flext/src/flext/infra/messaging/`:
 
 ```python
-from flx.infra.messaging import AsyncMessageBus
+from flext.infra.messaging import AsyncMessageBus
 from lato import ApplicationContainer
 import dramatiq
 
@@ -83,7 +83,7 @@ class AsyncMessageBus:
 ### **Basic Message Bus Setup**
 
 ```python
-from flx.infra.messaging import AsyncMessageBus
+from flext.infra.messaging import AsyncMessageBus
 from lato import Command, Query, Event
 
 # Initialize message bus
@@ -106,7 +106,7 @@ class GetUserQuery(Query):
 ### **Command Handling**
 
 ```python
-from flx.infra.messaging.handlers import CommandHandler
+from flext.infra.messaging.handlers import CommandHandler
 
 class CreateUserHandler(CommandHandler[CreateUserCommand, str]):
     """Handle user creation commands."""
@@ -139,7 +139,7 @@ user_id = await bus.send_command(CreateUserCommand(
 ### **Event Handling**
 
 ```python
-from flx.infra.messaging.handlers import EventHandler
+from flext.infra.messaging.handlers import EventHandler
 
 class UserCreatedHandler(EventHandler[UserCreatedEvent]):
     """React to user creation events."""
@@ -164,7 +164,7 @@ bus.subscribe(UserCreatedEvent, NotificationHandler())
 
 ```python
 import dramatiq
-from flx.infra.messaging.decorators import background_task
+from flext.infra.messaging.decorators import background_task
 
 @background_task(queue="emails", max_retries=3)
 async def send_email(recipient: str, subject: str, body: str):
@@ -260,7 +260,7 @@ messaging:
   broker: redis
   redis:
     url: redis://redis-cluster:6379/0
-    namespace: flx
+    namespace: flext
     queue_ttl: 86400 # 24 hours
     result_ttl: 3600 # 1 hour
 
@@ -287,7 +287,7 @@ bus = AsyncMessageBus(
     broker_type="rabbitmq",
     broker_config={
         "url": "amqp://user:pass@rabbitmq:5672/",
-        "exchange": "flx.events",
+        "exchange": "flext.events",
         "exchange_type": "topic",
         "durable": True,
         "delivery_mode": "PERSISTENT"
@@ -317,7 +317,7 @@ for queue_name, stats in metrics.queues.items():
 
 ```python
 import pytest
-from flx.infra.messaging import AsyncMessageBus
+from flext.infra.messaging import AsyncMessageBus
 
 @pytest.fixture
 async def bus():

@@ -44,11 +44,11 @@ This guide provides real implementation patterns discovered through source code 
 
 ### **Bootstrap Application Pattern**
 
-Based on actual `/flx/src/flx/application/bootstrap.py` implementation:
+Based on actual `/flext/src/flext/application/bootstrap.py` implementation:
 
 ```python
-from flx.application import Bootstrap, create_bootstrap
-from flx.infra.config import ConfigManager
+from flext.application import Bootstrap, create_bootstrap
+from flext.infra.config import ConfigManager
 
 # Real bootstrap pattern used in production
 async def create_production_app() -> Bootstrap:
@@ -84,7 +84,7 @@ async def main():
 
 ### **Configuration Management Pattern**
 
-Real configuration pattern from `/flx_database_oracle/src/flx_database_oracle/config.py`:
+Real configuration pattern from `/flext_database_oracle/src/flext_database_oracle/config.py`:
 
 ```python
 from pydantic import BaseModel, Field, SecretStr
@@ -140,11 +140,11 @@ class ProductionConfig(BaseModel):
 
 ### **Oracle WMS Integration (Real Implementation)**
 
-Based on `/flx_http_oracle_wms/src/flx_http_oracle_wms/wms_client.py`:
+Based on `/flext_http_oracle_wms/src/flext_http_oracle_wms/wms_client.py`:
 
 ```python
-from flx_http_oracle_wms import WmsClient, WmsConfig
-from flx.infra.http import HttpClientService
+from flext_http_oracle_wms import WmsClient, WmsConfig
+from flext.infra.http import HttpClientService
 import base64
 
 class WmsIntegration:
@@ -231,11 +231,11 @@ async def wms_integration_example():
 
 ### **Oracle OIC Integration (Real Implementation)**
 
-Based on `/flx_http_oracle_oic/src/flx_http_oracle_oic/`:
+Based on `/flext_http_oracle_oic/src/flext_http_oracle_oic/`:
 
 ```python
-from flx_http_oracle_oic import OicClient, OracleOicConfig
-from flx.infra.http import HttpClientService
+from flext_http_oracle_oic import OicClient, OracleOicConfig
+from flext.infra.http import HttpClientService
 import time
 import jwt
 
@@ -354,10 +354,10 @@ async def oic_integration_example():
 
 ### **Oracle Database Integration (Real Implementation)**
 
-Based on `/flx_database_oracle/src/flx_database_oracle/adapter.py`:
+Based on `/flext_database_oracle/src/flext_database_oracle/adapter.py`:
 
 ```python
-from flx_database_oracle import FlxOracleDbAdapter, FlxDatabaseConfig
+from flext_database_oracle import FlxOracleDbAdapter, FlxDatabaseConfig
 import oracledb
 from typing import Any, Dict, List
 
@@ -473,10 +473,10 @@ async def database_integration_example():
 
 ### **Enterprise Error Management**
 
-Based on `/flx/src/flx/core/exceptions.py`:
+Based on `/flext/src/flext/core/exceptions.py`:
 
 ```python
-from flx.core.exceptions import DomainError, ErrorContext
+from flext.core.exceptions import DomainError, ErrorContext
 from typing import Dict, Any, Optional
 import traceback
 import time
@@ -604,12 +604,12 @@ async def error_handling_example():
 
 ### **Real Test Patterns**
 
-Based on `/flx_http_oracle_wms/tests/test_client_comprehensive.py`:
+Based on `/flext_http_oracle_wms/tests/test_client_comprehensive.py`:
 
 ```python
 import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
-from flx_http_oracle_wms import WmsClient, WmsConfig
+from flext_http_oracle_wms import WmsClient, WmsConfig
 
 class TestWmsIntegration:
     """Real test patterns used in production."""
@@ -892,7 +892,7 @@ export LOG_FORMAT="json"
 export ORACLE_DB_HOST="prod-oracle.company.com"
 export ORACLE_DB_PORT="1522"
 export ORACLE_DB_SERVICE_NAME="ORCL"
-export ORACLE_DB_USERNAME="flx_prod"
+export ORACLE_DB_USERNAME="flext_prod"
 export ORACLE_DB_PASSWORD="$(cat /secrets/oracle_password)"
 export DB_POOL_SIZE="50"
 export DB_USE_SSL="true"
@@ -928,8 +928,8 @@ export HEALTH_CHECK_INTERVAL="30"
 # production_app.py
 import asyncio
 import signal
-from flx.application import create_bootstrap
-from flx.infra.config import ConfigManager
+from flext.application import create_bootstrap
+from flext.infra.config import ConfigManager
 
 class ProductionApplication:
     """Production application with graceful shutdown."""

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Update import paths in extracted FLX modules.
 
-This script updates all imports from the monolithic flx_core structure
+This script updates all imports from the monolithic flext_core structure
 to the new modular structure based on the extracted modules.
 """
 
@@ -10,54 +10,54 @@ from pathlib import Path
 
 # Import mapping from old to new structure
 IMPORT_MAPPINGS = {
-    # Core remains as flx_core
-    "from flx_core.domain": "from flx_core.domain",
-    "from flx_core.application": "from flx_core.application",
-    "from flx_core.infrastructure": "from flx_core.infrastructure",
-    "from flx_core.config": "from flx_core.config",
-    "from flx_core.events": "from flx_core.events",
-    "from flx_core.plugins": "from flx_core.plugins",
+    # Core remains as flext_core
+    "from flext_core.domain": "from flext_core.domain",
+    "from flext_core.application": "from flext_core.application",
+    "from flext_core.infrastructure": "from flext_core.infrastructure",
+    "from flext_core.config": "from flext_core.config",
+    "from flext_core.events": "from flext_core.events",
+    "from flext_core.plugins": "from flext_core.plugins",
 
-    # Auth module (special case - auth is extracted to flx-auth)
-    "from flx_core.auth.interfaces": "from flx_auth.interfaces",
-    "from flx_core.auth.models": "from flx_auth.models",
-    "from flx_core.auth.user_service": "from flx_auth.user_service",
-    "from flx_core.auth.jwt_service": "from flx_auth.jwt_service",
-    "from flx_core.auth.tokens": "from flx_auth.tokens",
-    "from flx_core.auth.types": "from flx_auth.types",
-    "from flx_core.auth.security": "from flx_auth.security",
-    "from flx_core.auth.repositories": "from flx_auth.repositories",
-    "from flx_core.auth.authorization_service": "from flx_auth.authorization_service",
-    "from flx_core.auth.authentication_implementation": "from flx_auth.authentication_implementation",
-    "from flx_core.auth": "from flx_auth",
+    # Auth module (special case - auth is extracted to flext-auth)
+    "from flext_core.auth.interfaces": "from flext_auth.interfaces",
+    "from flext_core.auth.models": "from flext_auth.models",
+    "from flext_core.auth.user_service": "from flext_auth.user_service",
+    "from flext_core.auth.jwt_service": "from flext_auth.jwt_service",
+    "from flext_core.auth.tokens": "from flext_auth.tokens",
+    "from flext_core.auth.types": "from flext_auth.types",
+    "from flext_core.auth.security": "from flext_auth.security",
+    "from flext_core.auth.repositories": "from flext_auth.repositories",
+    "from flext_core.auth.authorization_service": "from flext_auth.authorization_service",
+    "from flext_core.auth.authentication_implementation": "from flext_auth.authentication_implementation",
+    "from flext_core.auth": "from flext_auth",
 
     # gRPC module
-    "from flx_core.grpc.converters": "from flx_grpc.converters",
-    "from flx_core.grpc.interceptors": "from flx_grpc.interceptors",
-    "from flx_core.grpc.server": "from flx_grpc.server",
-    "from flx_core.grpc.server_implementation": "from flx_grpc.server_implementation",
-    "from flx_core.grpc.client": "from flx_grpc.client",
-    "from flx_core.grpc.proto": "from flx_grpc.proto",
-    "from flx_core.grpc": "from flx_grpc",
+    "from flext_core.grpc.converters": "from flext_grpc.converters",
+    "from flext_core.grpc.interceptors": "from flext_grpc.interceptors",
+    "from flext_core.grpc.server": "from flext_grpc.server",
+    "from flext_core.grpc.server_implementation": "from flext_grpc.server_implementation",
+    "from flext_core.grpc.client": "from flext_grpc.client",
+    "from flext_core.grpc.proto": "from flext_grpc.proto",
+    "from flext_core.grpc": "from flext_grpc",
 
     # Meltano module
-    "from flx_core.meltano.runner": "from flx_meltano.runner",
-    "from flx_core.meltano.meltano_orchestrator": "from flx_meltano.meltano_orchestrator",
-    "from flx_core.meltano.state_manager": "from flx_meltano.state_manager",
-    "from flx_core.meltano.adapters": "from flx_meltano.adapters",
-    "from flx_core.meltano.config": "from flx_meltano.config",
-    "from flx_core.meltano.models": "from flx_meltano.models",
-    "from flx_core.meltano": "from flx_meltano",
+    "from flext_core.meltano.runner": "from flext_meltano.runner",
+    "from flext_core.meltano.meltano_orchestrator": "from flext_meltano.meltano_orchestrator",
+    "from flext_core.meltano.state_manager": "from flext_meltano.state_manager",
+    "from flext_core.meltano.adapters": "from flext_meltano.adapters",
+    "from flext_core.meltano.config": "from flext_meltano.config",
+    "from flext_core.meltano.models": "from flext_meltano.models",
+    "from flext_core.meltano": "from flext_meltano",
 
     # Observability module
-    "from flx_core.observability.structured_logging": "from flx_observability.structured_logging",
-    "from flx_core.observability.metrics_collector": "from flx_observability.metrics_collector",
-    "from flx_core.observability.tracing": "from flx_observability.tracing",
-    "from flx_core.observability": "from flx_observability",
-    "from flx_core.monitoring.health": "from flx_observability.health",
-    "from flx_core.monitoring.metrics": "from flx_observability.metrics",
-    "from flx_core.monitoring.tracing": "from flx_observability.tracing",
-    "from flx_core.monitoring": "from flx_observability.monitoring",
+    "from flext_core.observability.structured_logging": "from flext_observability.structured_logging",
+    "from flext_core.observability.metrics_collector": "from flext_observability.metrics_collector",
+    "from flext_core.observability.tracing": "from flext_observability.tracing",
+    "from flext_core.observability": "from flext_observability",
+    "from flext_core.monitoring.health": "from flext_observability.health",
+    "from flext_core.monitoring.metrics": "from flext_observability.metrics",
+    "from flext_core.monitoring.tracing": "from flext_observability.tracing",
+    "from flext_core.monitoring": "from flext_observability.monitoring",
 
     # API module (imports FROM core, doesn't export TO other modules)
     # Web module (imports FROM core, doesn't export TO other modules)
@@ -65,12 +65,12 @@ IMPORT_MAPPINGS = {
 
 # Cross-module dependencies (module -> module)
 CROSS_MODULE_DEPS = {
-    "flx_api": ["flx_core", "flx_auth"],
-    "flx_web": ["flx_core", "flx_auth", "flx_grpc"],
-    "flx_grpc": ["flx_core"],
-    "flx_meltano": ["flx_core"],
-    "flx_observability": ["flx_core"],
-    "flx_auth": ["flx_core"],  # Auth depends on core for domain models
+    "flext_api": ["flext_core", "flext_auth"],
+    "flext_web": ["flext_core", "flext_auth", "flext_grpc"],
+    "flext_grpc": ["flext_core"],
+    "flext_meltano": ["flext_core"],
+    "flext_observability": ["flext_core"],
+    "flext_auth": ["flext_core"],  # Auth depends on core for domain models
 }
 
 
@@ -137,9 +137,9 @@ def get_module_name(file_path: Path) -> str:
     """Get the module name from the file path."""
     # Extract module name from path structure
     parts = file_path.parts
-    if "flx-" in str(file_path):
+    if "flext-" in str(file_path):
         for i, part in enumerate(parts):
-            if part.startswith("flx-") and i + 2 < len(parts) and parts[i + 1] == "src":
+            if part.startswith("flext-") and i + 2 < len(parts) and parts[i + 1] == "src":
                 return parts[i + 2].replace("-", "_")
     return ""
 
@@ -187,13 +187,13 @@ def main():
 
     # Modules to update
     modules = [
-        "flx-core",
-        "flx-auth",
-        "flx-api",
-        "flx-web",
-        "flx-grpc",
-        "flx-meltano",
-        "flx-observability"
+        "flext-core",
+        "flext-auth",
+        "flext-api",
+        "flext-web",
+        "flext-grpc",
+        "flext-meltano",
+        "flext-observability"
     ]
 
     results = {}

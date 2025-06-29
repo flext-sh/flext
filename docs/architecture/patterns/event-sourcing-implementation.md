@@ -47,9 +47,9 @@ Event Sourcing in FLX provides a complete audit trail and enables sophisticated 
 ### **Core Event Store**
 
 ```python
-# flx/infrastructure/event_store.py
-from flx.core.events import EventStore, Event, EventStream
-from flx.adapters.outbound.database import DatabaseAdapter
+# flext/infrastructure/event_store.py
+from flext.core.events import EventStore, Event, EventStream
+from flext.adapters.outbound.database import DatabaseAdapter
 
 class FLXEventStore(EventStore):
     """FLX Event Store implementation with optimistic concurrency."""
@@ -219,8 +219,8 @@ class EventSourcedCustomer(AggregateRoot):
 ### **Read Model Projections**
 
 ```python
-# flx/projections/customer_projections.py
-from flx.core.projections import Projection, ProjectionHandler
+# flext/projections/customer_projections.py
+from flext.core.projections import Projection, ProjectionHandler
 
 class CustomerListProjection(Projection):
     """Customer list view projection."""

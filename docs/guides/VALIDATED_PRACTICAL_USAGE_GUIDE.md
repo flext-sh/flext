@@ -30,7 +30,7 @@
 
 ## 🎯 **Real-World Integration Patterns**
 
-Based on `/examples/flx_integrated_usage.py`:
+Based on `/examples/flext_integrated_usage.py`:
 
 ### **Multi-System Integration**
 
@@ -63,7 +63,7 @@ class FlxIntegratedApplication:
         await self.oracle_app.__aenter__()
 
         # Create unified CLI
-        self.unified_cli = FlxDeclarativeCli("flx-integrated")
+        self.unified_cli = FlxDeclarativeCli("flext-integrated")
 
         # Register all adapters
         if self.oracle_app.app:

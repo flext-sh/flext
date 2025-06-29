@@ -25,7 +25,7 @@
 ### **📋 Learning Path**
 
 1. **🎯 Start Here**: [Hexagonal Implementation Guide](./hexagonal-implementation-guide.md) - Complete implementation walkthrough
-2. **⚡ Quick Path**: [FLX Technical Reference](../../api-reference/flx-technical-reference.md) - Source code analysis
+2. **⚡ Quick Path**: [FLX Technical Reference](../../api-reference/flext-technical-reference.md) - Source code analysis
 3. **📚 Deep Dive**: [Testing Guide](../testing/index.md) - Testing strategies for hexagonal architecture
 
 ---

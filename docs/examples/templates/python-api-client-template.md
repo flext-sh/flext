@@ -2,7 +2,7 @@
 
 > **Related Documentation:**
 >
-> - [FLX Framework Overview](../getting-started/flx-framework-overview.md) - Main framework introduction
+> - [FLX Framework Overview](../getting-started/flext-framework-overview.md) - Main framework introduction
 > - [Development Standards](../development/standardization-plan.md) - Code quality standards
 > - [Testing Comprehensive Guide](../development/testing-comprehensive-guide.md) - Testing strategies
 > - [Hexagonal Architecture Guide](../architecture/UNIFIED_ARCHITECTURE_GUIDE.md) - Architecture principles
@@ -580,7 +580,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## See Also
 
-- [FLX Framework Overview](../getting-started/flx-framework-overview.md) - Framework introduction
+- [FLX Framework Overview](../getting-started/flext-framework-overview.md) - Framework introduction
 - [Hexagonal Architecture Guide](../architecture/UNIFIED_ARCHITECTURE_GUIDE.md) - Architecture principles
 - [Testing Patterns](../development/testing-comprehensive-guide.md) - Testing strategies
 - [Development Standards](../development/standardization-plan.md) - Code quality guidelines

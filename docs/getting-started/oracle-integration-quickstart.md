@@ -30,7 +30,7 @@
 
 ## 📋 **Overview**
 
-This quickstart guide shows you how to integrate Oracle systems (WMS, OIC, Database) with FLX Framework using real patterns from production implementations. All examples are based on actual working code from `/flx-*-oracle-*` projects.
+This quickstart guide shows you how to integrate Oracle systems (WMS, OIC, Database) with FLX Framework using real patterns from production implementations. All examples are based on actual working code from `/flext-*-oracle-*` projects.
 
 ### **What You'll Build**
 
@@ -51,9 +51,9 @@ cd /home/marlonsc/pyauto
 source .venv/bin/activate
 
 # Install Oracle adapters
-cd flx-database-oracle && pip install -e . && cd ..
-cd flx-http-oracle-wms && pip install -e . && cd ..
-cd flx-http-oracle-oic && pip install -e . && cd ..
+cd flext-database-oracle && pip install -e . && cd ..
+cd flext-http-oracle-wms && pip install -e . && cd ..
+cd flext-http-oracle-oic && pip install -e . && cd ..
 ```
 
 ### **Step 2: Configure Environment**
@@ -90,7 +90,7 @@ OIC_IDCS_URL="https://your-idcs.identity.oraclecloud.com"
 ```python
 # test_oracle_db.py - based on real implementation
 import asyncio
-from flx_database_oracle import FlxOracleDbAdapter, FlxDatabaseConfig
+from flext_database_oracle import FlxOracleDbAdapter, FlxDatabaseConfig
 
 async def test_oracle_database():
     """Test Oracle database connection."""
@@ -135,7 +135,7 @@ asyncio.run(test_oracle_database())
 ```python
 # test_oracle_wms.py - based on real WMS client implementation
 import asyncio
-from flx_http_oracle_wms import WmsClient, WmsConfig
+from flext_http_oracle_wms import WmsClient, WmsConfig
 
 async def test_oracle_wms():
     """Test Oracle WMS integration."""
@@ -180,7 +180,7 @@ asyncio.run(test_oracle_wms())
 ```python
 # test_oracle_oic.py - based on real OIC implementation
 import asyncio
-from flx_http_oracle_oic import OicClient, OracleOicConfig
+from flext_http_oracle_oic import OicClient, OracleOicConfig
 
 async def test_oracle_oic():
     """Test Oracle OIC integration."""
@@ -227,10 +227,10 @@ asyncio.run(test_oracle_oic())
 ```python
 # oracle_integration_app.py - complete Oracle integration
 import asyncio
-from flx.application import create_bootstrap
-from flx_database_oracle import FlxOracleDbAdapter, FlxDatabaseConfig
-from flx_http_oracle_wms import WmsClient, WmsConfig
-from flx_http_oracle_oic import OicClient, OracleOicConfig
+from flext.application import create_bootstrap
+from flext_database_oracle import FlxOracleDbAdapter, FlxDatabaseConfig
+from flext_http_oracle_wms import WmsClient, WmsConfig
+from flext_http_oracle_oic import OicClient, OracleOicConfig
 
 class OracleIntegrationApp:
     """Complete Oracle integration application."""
@@ -715,7 +715,7 @@ oracle:
 # Test individual components
 python -c "
 import asyncio
-from flx_database_oracle import FlxOracleDbAdapter, FlxDatabaseConfig
+from flext_database_oracle import FlxOracleDbAdapter, FlxDatabaseConfig
 config = FlxDatabaseConfig.from_env()
 adapter = FlxOracleDbAdapter(config)
 asyncio.run(adapter.test_connection())

@@ -2,9 +2,9 @@
 
 > **Function**: Framework fundamentals and architectural concepts | **Audience**: Developers, architects, technical leads
 
-[![Concepts](https://img.shields.io/badge/concepts-hexagonal-blue.svg)](./flx-framework-overview.md)
+[![Concepts](https://img.shields.io/badge/concepts-hexagonal-blue.svg)](./flext-framework-overview.md)
 [![Architecture](https://img.shields.io/badge/architecture-DDD-green.svg)](./concepts.md)
-[![Fundamentals](https://img.shields.io/badge/fundamentals-complete-orange.svg)](./flx-framework-overview.md)
+[![Fundamentals](https://img.shields.io/badge/fundamentals-complete-orange.svg)](./flext-framework-overview.md)
 
 **Essential conceptual understanding of FLX Framework hexagonal architecture and design principles**
 
@@ -20,12 +20,12 @@
 
 | **Topic**                                         | **Function**                    | **Audience**          | **Status**  |
 | ------------------------------------------------- | ------------------------------- | --------------------- | ----------- |
-| [Framework Overview](./flx-framework-overview.md) | Complete architectural overview | All users             | ✅ Complete |
+| [Framework Overview](./flext-framework-overview.md) | Complete architectural overview | All users             | ✅ Complete |
 | [Core Concepts](./concepts.md)                    | Fundamental design principles   | Developers/Architects | ✅ Complete |
 
 ### **📋 Learning Path**
 
-1. **🎯 Start Here**: [Framework Overview](./flx-framework-overview.md) - Complete FLX architecture understanding
+1. **🎯 Start Here**: [Framework Overview](./flext-framework-overview.md) - Complete FLX architecture understanding
 2. **⚡ Quick Path**: [Core Concepts](./concepts.md) - Essential design principles and patterns
 3. **📚 Deep Dive**: [Architecture Hub](../../architecture/index.md) - Advanced architectural patterns
 

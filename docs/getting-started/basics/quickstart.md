@@ -17,14 +17,14 @@
 ### **📍 Learning Path Position**
 
 ```
-[Installation Guide](../setup/installation-guide.md) → **[QUICKSTART]** → [Framework Overview](../concepts/flx-framework-overview.md)
+[Installation Guide](../setup/installation-guide.md) → **[QUICKSTART]** → [Framework Overview](../concepts/flext-framework-overview.md)
 ```
 
 ## 🎯 **Quick Links**
 
 - **📂 Section Hub**: [Basics Hub](./index.md)
 - **🏠 Documentation Root**: [Root Index](../../index.md)
-- **🔗 Next Step**: [Framework Overview](../concepts/flx-framework-overview.md)
+- **🔗 Next Step**: [Framework Overview](../concepts/flext-framework-overview.md)
 
 ## 🎯 Prerequisites
 
@@ -38,10 +38,10 @@
 
 ```bash
 # Check FLX version
-flx --version
+flext --version
 
 # Test CLI help
-flx --help
+flext --help
 ```
 
 ### Step 2: Create Your First Pipeline
@@ -50,8 +50,8 @@ Create a simple hello world pipeline:
 
 ```python
 # hello_world.py
-from flx.application.pipelines import Pipeline
-from flx.domain.entities import DataSource, DataTarget
+from flext.application.pipelines import Pipeline
+from flext.domain.entities import DataSource, DataTarget
 
 # Create simple data pipeline
 pipeline = Pipeline(
@@ -90,9 +90,9 @@ Enhance your pipeline with data transformation:
 
 ```python
 # enhanced_pipeline.py
-from flx.application.pipelines import Pipeline
-from flx.domain.entities import DataSource, DataTarget
-from flx.transformers.basic import DataCleaner
+from flext.application.pipelines import Pipeline
+from flext.domain.entities import DataSource, DataTarget
+from flext.transformers.basic import DataCleaner
 
 # Enhanced pipeline with transformation
 pipeline = Pipeline(
@@ -122,7 +122,7 @@ Create a basic configuration file:
 
 ```yaml
 # config.yaml
-flx:
+flext:
   version: "0.2.0"
 
   core:
@@ -138,8 +138,8 @@ flx:
 
 ```python
 # configured_pipeline.py
-from flx.core import ConfigManager
-from flx.application.pipelines import Pipeline
+from flext.core import ConfigManager
+from flext.application.pipelines import Pipeline
 
 # Load configuration
 config = ConfigManager.load_config("config.yaml")
@@ -162,7 +162,7 @@ Congratulations! You've created your first FLX pipeline. Now explore more advanc
 Connect to Oracle systems:
 
 ```python
-from flx.adapters.oracle import OracleAdapter
+from flext.adapters.oracle import OracleAdapter
 
 # Oracle Database connection
 oracle_adapter = OracleAdapter(
@@ -205,7 +205,7 @@ except ConnectionError as e:
 
 ### **Next Steps**
 
-- [Framework Overview](../concepts/flx-framework-overview.md) - Deep dive into FLX hexagonal architecture patterns
+- [Framework Overview](../concepts/flext-framework-overview.md) - Deep dive into FLX hexagonal architecture patterns
 - [First Pipeline Tutorial](./first-pipeline.md) - Build more complex data processing pipelines
 - [Basic Examples](../../examples/basic/index.md) - Explore additional working code examples
 
