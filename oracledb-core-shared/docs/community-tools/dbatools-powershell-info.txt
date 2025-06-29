@@ -1,1 +1,0 @@
-dbatools PowerShell - SQL Server and Oracle database administration tools
