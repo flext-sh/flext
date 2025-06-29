@@ -124,3 +124,6 @@
 [submodule "flext-quality"]
 	path = flext-quality
 	url = https://github.com/flext-sh/flext-quality.git
+[submodule "flext-db-oracle"]
+	path = flext-db-oracle
+	url = https://github.com/flext-sh/flext-db-oracle.git
