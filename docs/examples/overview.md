@@ -55,10 +55,10 @@ Complex scenarios showcasing current framework capabilities:
 ```bash
 # Set up environment (from project root)
 source .venv/bin/activate
-export PYTHONPATH=/home/marlonsc/pyauto/flx/src:$PYTHONPATH
+export PYTHONPATH=/home/marlonsc/pyauto/flext/src:$PYTHONPATH
 
 # Verify FLX installation
-python -c "import flx; print('FLX framework loaded successfully')"
+python -c "import flext; print('FLX framework loaded successfully')"
 ```
 
 ### Basic Examples
@@ -90,14 +90,14 @@ python -m examples.advanced.declarative_example
 import asyncio
 from typing import Any
 
-from flx import ApiClient
-from flx.adapters.outbound.http import HttpClientAdapter
-from flx.core.logging import FlxLogger
+from flext import ApiClient
+from flext.adapters.outbound.http import HttpClientAdapter
+from flext.core.logging import FlxLogger
 
 async def main() -> None:
     """Enhanced FLX usage example with current structure."""
     # Setup structured logging
-    logger = FlxLogger("flx.examples.quickstart")
+    logger = FlxLogger("flext.examples.quickstart")
 
     # Create client
     client = ApiClient()
@@ -139,12 +139,12 @@ if __name__ == "__main__":
 
 ```python
 # examples/advanced/domain_example.py (enhanced version)
-from flx import AggregateRoot, Entity, DomainEvent, ValueObject
-from flx.core.exceptions import BusinessRuleViolationError
-from flx.core.logging import FlxLogger
+from flext import AggregateRoot, Entity, DomainEvent, ValueObject
+from flext.core.exceptions import BusinessRuleViolationError
+from flext.core.logging import FlxLogger
 
 # Enhanced with structured logging
-logger = FlxLogger("flx.examples.domain")
+logger = FlxLogger("flext.examples.domain")
 
 # Value Object with validation
 class SKU(ValueObject):
@@ -218,13 +218,13 @@ class InventoryAdjustedEvent(DomainEvent):
 
 ```python
 # examples/advanced/declarative_example.py (new)
-from flx import FlxProject, flx_project
-from flx.declarative.mixins import (
+from flext import FlxProject, flext_project
+from flext.declarative.mixins import (
     FlxApiMixin, FlxDatabaseMixin, FlxHttpClientMixin, FlxIntegrationMixin
 )
-from flx.declarative.testing import run_full_test_suite, validate_test_coverage
+from flext.declarative.testing import run_full_test_suite, validate_test_coverage
 
-@flx_project
+@flext_project
 class ECommerceProject(
     FlxProject,
     FlxApiMixin,
@@ -266,7 +266,7 @@ async def main():
 
 ### Framework Features
 
-5. **Declarative System** - Project setup using `@flx_project` and mixins
+5. **Declarative System** - Project setup using `@flext_project` and mixins
 6. **Testing Framework** - Comprehensive testing with coverage validation
 7. **Health Monitoring** - Built-in health checks and metrics collection
 8. **Plugin Architecture** - Enhanced plugin system with proper hook management
@@ -297,7 +297,7 @@ http_adapter = HttpClientAdapter(
 
 ```python
 # Using mixins and decorators
-@flx_project
+@flext_project
 class MyProject(FlxProject, FlxHttpClientMixin):
     http_timeout = 30.0
     http_max_connections = 100
@@ -322,7 +322,7 @@ adapter = HttpClientAdapter(
 
 ```bash
 # Run unit tests
-make test PROJECT=flx
+make test PROJECT=flext
 pytest tests/unit/test_adapters.py -v
 
 # Run integration tests
@@ -340,7 +340,7 @@ make test-cov
 ```python
 import pytest
 from unittest.mock import AsyncMock
-from flx.examples.advanced.domain_example import Warehouse, SKU
+from flext.examples.advanced.domain_example import Warehouse, SKU
 
 @pytest.fixture
 def warehouse():
@@ -457,10 +457,10 @@ Create your own projects using demonstrated patterns:
 source .venv/bin/activate
 
 # Verify FLX installation
-python -c "import flx; print('FLX framework loaded successfully')"
+python -c "import flext; print('FLX framework loaded successfully')"
 
 # Set Python path for examples
-export PYTHONPATH=/home/marlonsc/pyauto/flx/src:$PYTHONPATH
+export PYTHONPATH=/home/marlonsc/pyauto/flext/src:$PYTHONPATH
 
 # Install development dependencies
 pip install -r requirements-dev.txt

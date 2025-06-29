@@ -54,7 +54,7 @@
 | **Guide**                                                | **Function**                    | **Audience**       | **Status**  |
 | -------------------------------------------------------- | ------------------------------- | ------------------ | ----------- |
 | [Database Complete](./database-complete-guide.md)        | Complete database integration   | Database Engineers | ✅ Complete |
-| [FLX Database Adapter](./flx-database-oracle-adapter.md) | Database adapter implementation | Backend Developers | ✅ Complete |
+| [FLX Database Adapter](./flext-database-oracle-adapter.md) | Database adapter implementation | Backend Developers | ✅ Complete |
 
 ---
 
@@ -65,7 +65,7 @@
 | **Guide**                                                                | **Function**                    | **Audience**          | **Status**  |
 | ------------------------------------------------------------------------ | ------------------------------- | --------------------- | ----------- |
 | [OIC Complete](./oic-complete-guide.md)                                  | Complete OIC integration        | Integration Engineers | ✅ Complete |
-| [FLX OIC Adapter](./flx-http-oracle-oic-adapter.md)                      | OIC HTTP adapter implementation | API Developers        | ✅ Complete |
+| [FLX OIC Adapter](./flext-http-oracle-oic-adapter.md)                      | OIC HTTP adapter implementation | API Developers        | ✅ Complete |
 | [Integration Comprehensive](./oracle-integration-comprehensive-guide.md) | Comprehensive OIC guide         | Integration Teams     | ✅ Complete |
 | [Integration API](./oracle-integration-api-guide.md)                     | OIC API patterns                | API Developers        | ✅ Complete |
 | [OIC Log Levels](./oracle-oic-log-levels.md)                             | Logging configuration           | Operations Teams      | ✅ Complete |
@@ -79,7 +79,7 @@
 | **Guide**                                                   | **Function**                    | **Audience**     | **Status**  |
 | ----------------------------------------------------------- | ------------------------------- | ---------------- | ----------- |
 | [WMS Complete](./wms-complete-guide.md)                     | Complete WMS integration        | WMS Developers   | ✅ Complete |
-| [FLX WMS Adapter](./flx-http-oracle-wms-adapter.md)         | WMS HTTP adapter implementation | API Developers   | ✅ Complete |
+| [FLX WMS Adapter](./flext-http-oracle-wms-adapter.md)         | WMS HTTP adapter implementation | API Developers   | ✅ Complete |
 | [WMS Comprehensive](./oracle-wms-comprehensive-guide.md)    | Comprehensive WMS guide         | WMS Teams        | ✅ Complete |
 | [WMS API Reference](./oracle-wms-complete-api-reference.md) | Complete API documentation      | API Developers   | ✅ Complete |
 | [WMS CLI Guide](./oracle-wms-cli-guide.md)                  | Command-line interface          | DevOps Teams     | ✅ Complete |

@@ -41,8 +41,8 @@
 
 | Projeto Original | Projeto Migrado | URL |
 |-------------------|-----------------|-----|
-| flx-ldap | flext-ldap | git@github.com:flext-sh/flext-ldap.git |
-| flx-quality | flext-quality | git@github.com:flext-sh/flext-ldap.git |
+| flext-ldap | flext-ldap | git@github.com:flext-sh/flext-ldap.git |
+| flext-quality | flext-quality | git@github.com:flext-sh/flext-ldap.git |
 
 ### 🔧 MÓDULOS FLX FRAMEWORK (locais)
 **Localização**: Diretórios locais
@@ -51,15 +51,15 @@
 
 | Módulo Original | Módulo Local | Futuro Repositório |
 |-----------------|--------------|-------------------|
-| flx-core | flext-core/ | git@github.com:flext-sh/flext-core.git |
-| flx-auth | flext-auth/ | git@github.com:flext-sh/flext-auth.git |
-| flx-api | flext-api/ | git@github.com:flext-sh/flext-api.git |
-| flx-grpc | flext-grpc/ | git@github.com:flext-sh/flext-grpc.git |
-| flx-web | flext-web/ | git@github.com:flext-sh/flext-web.git |
-| flx-cli | flext-cli/ | git@github.com:flext-sh/flext-cli.git |
-| flx-plugin | flext-plugin/ | git@github.com:flext-sh/flext-plugin.git |
-| flx-observability | flext-observability/ | git@github.com:flext-sh/flext-observability.git |
-| flx-meltano | flext-meltano/ | git@github.com:flext-sh/flext-meltano.git |
+| flext-core | flext-core/ | git@github.com:flext-sh/flext-core.git |
+| flext-auth | flext-auth/ | git@github.com:flext-sh/flext-auth.git |
+| flext-api | flext-api/ | git@github.com:flext-sh/flext-api.git |
+| flext-grpc | flext-grpc/ | git@github.com:flext-sh/flext-grpc.git |
+| flext-web | flext-web/ | git@github.com:flext-sh/flext-web.git |
+| flext-cli | flext-cli/ | git@github.com:flext-sh/flext-cli.git |
+| flext-plugin | flext-plugin/ | git@github.com:flext-sh/flext-plugin.git |
+| flext-observability | flext-observability/ | git@github.com:flext-sh/flext-observability.git |
+| flext-meltano | flext-meltano/ | git@github.com:flext-sh/flext-meltano.git |
 
 ### 📦 PROJETOS LEGACY (flext-sh)
 **Organização**: flext-sh
@@ -69,12 +69,12 @@
 
 | Projeto Original | Projeto Migrado | URL |
 |-------------------|-----------------|-----|
-| flx-adapter-example | legacy/flext-adapter-example | git@github.com:flext-sh/flext-adapter-example.git |
-| flx-database-oracle | legacy/flext-database-oracle | git@github.com:flext-sh/flext-database-oracle.git |
-| flx-http-oracle-oic | legacy/flext-http-oracle-oic | git@github.com:flext-sh/flext-http-oracle-oic.git |
-| flx-http-oracle-wms | legacy/flext-http-oracle-wms | git@github.com:flext-sh/flext-http-oracle-wms.git |
-| flx-oracle-oic | legacy/flext-oracle-oic | git@github.com:flext-sh/flext-oracle-oic.git |
-| flx-oracle-wms | legacy/flext-oracle-wms | git@github.com:flext-sh/flext-oracle-wms.git |
+| flext-adapter-example | legacy/flext-adapter-example | git@github.com:flext-sh/flext-adapter-example.git |
+| flext-database-oracle | legacy/flext-database-oracle | git@github.com:flext-sh/flext-database-oracle.git |
+| flext-http-oracle-oic | legacy/flext-http-oracle-oic | git@github.com:flext-sh/flext-http-oracle-oic.git |
+| flext-http-oracle-wms | legacy/flext-http-oracle-wms | git@github.com:flext-sh/flext-http-oracle-wms.git |
+| flext-oracle-oic | legacy/flext-oracle-oic | git@github.com:flext-sh/flext-oracle-oic.git |
+| flext-oracle-wms | legacy/flext-oracle-wms | git@github.com:flext-sh/flext-oracle-wms.git |
 
 ---
 

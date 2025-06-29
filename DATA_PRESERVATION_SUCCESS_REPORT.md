@@ -45,8 +45,8 @@ gruponos-poc-oic-wms: 973b6f7 - preserve: save all development progress and docu
 ✅ tap-oracle-oic:        No changes needed
 ✅ target-ldap:           No changes needed
 ✅ target-oracle-wms:     No changes needed
-✅ flx-ldap:              Clean state preserved
-✅ flx-quality:           Clean state preserved
+✅ flext-ldap:              Clean state preserved
+✅ flext-quality:           Clean state preserved
 ```
 
 ---
@@ -72,8 +72,8 @@ gruponos-poc-oic-wms: 973b6f7 - preserve: save all development progress and docu
 
 ```
 backups/
-├── flx-meltano-enterprise_source_*  ✅ Source preservation
-├── flx-*_local_content_*            ✅ Content backups
+├── flext-meltano-enterprise_source_*  ✅ Source preservation
+├── flext-*_local_content_*            ✅ Content backups
 ├── pre_submodule_conversion_*       ✅ Pre-conversion state
 └── [Legacy projects]                ✅ Historical preservation
 ```
@@ -113,7 +113,7 @@ backups/
 ```
 /home/marlonsc/pyauto/     # ← FLX PROJECT (fully preserved)
 ├── 9 FLX Framework modules (all extracted code preserved)
-├── 2 FLX Extensions (flx-ldap, flx-quality)
+├── 2 FLX Extensions (flext-ldap, flext-quality)
 ├── 8 Singer/Meltano projects (all ETL tools preserved)
 ├── 2 Enterprise integrations (production systems preserved)
 ├── backups/ (comprehensive preservation strategy)

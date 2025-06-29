@@ -338,14 +338,14 @@ class FlxDatabaseBaseModel(BaseModel):
 
    ```python
    # Before
-   from flx.core.mixins import (
+   from flext.core.mixins import (
        MetricsMixin, HealthCheckMixin, ErrorHandlingMixin,
        ConnectionMixin, LoggingMixin, ConfigurationMixin,
        ResourceMixin, TestEngineConnectionMixin
    )
 
    # After
-   from flx.core.mixins import FullAdapterMixin  # or CoreAdapterMixin
+   from flext.core.mixins import FullAdapterMixin  # or CoreAdapterMixin
    ```
 
 2. **Inheritance Update**:
@@ -366,14 +366,14 @@ class FlxDatabaseBaseModel(BaseModel):
    timeout: Optional[float] = None
 
    # After
-   from flx.core.types import TimeoutSeconds
+   from flext.core.types import TimeoutSeconds
    timeout: TimeoutSeconds | None = None
    ```
 
 ### Using Enhanced Types
 
 ```python
-from flx.core.types import (
+from flext.core.types import (
     PositiveInt, NonNegativeFloat, TimeoutSeconds,
     DatabaseUrl, HttpUrl, PortNumber, HostName
 )
@@ -423,9 +423,9 @@ def handle_status(status):
 ### Complete Adapter Implementation
 
 ```python
-from flx.adapters.base import BaseAdapter
-from flx.core.mixins import FullAdapterMixin
-from flx.core.types import TimeoutSeconds, PortNumber, HostName
+from flext.adapters.base import BaseAdapter
+from flext.core.mixins import FullAdapterMixin
+from flext.core.types import TimeoutSeconds, PortNumber, HostName
 
 class ModernDatabaseAdapter(FullAdapterMixin, BaseAdapter):
     """Modern database adapter using Python 3.13 features."""
@@ -461,8 +461,8 @@ class ModernDatabaseAdapter(FullAdapterMixin, BaseAdapter):
 ### Enhanced Model Usage
 
 ```python
-from flx.core.models import FlxConnectionModel
-from flx.core.types import TimeoutSeconds
+from flext.core.models import FlxConnectionModel
+from flext.core.types import TimeoutSeconds
 
 # Create connection with automatic validation
 connection = FlxConnectionModel(

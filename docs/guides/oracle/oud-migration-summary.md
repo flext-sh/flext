@@ -62,7 +62,7 @@ class TraditionalLdapAdapter:
 class LdapAdapter(AdvancedAdapterMixin, BaseAdapter):
     async def _connect(self) -> None:
         self._ldap_service = await self._connect_service(
-            lambda: FlxLdapClient(flx_config),
+            lambda: FlxLdapClient(flext_config),
             "ldap_service",
             f"LDAP Server ({self.host}:{self.port})"
         )

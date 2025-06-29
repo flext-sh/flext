@@ -24,7 +24,7 @@
 
 - **📂 Section Hub**: [Development Standards](./index.md)
 - **🏠 Documentation Root**: [Root Index](../../index.md)
-- **🔗 Source Code**: [FLX Type Safety](../../../flx/src/flx/core/types/)
+- **🔗 Source Code**: [FLX Type Safety](../../../flext/src/flext/core/types/)
 - **🔗 Related**: [Testing Standards](../testing/index.md), [Code Quality](./code-quality.md)
 
 ---

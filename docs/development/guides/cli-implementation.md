@@ -24,7 +24,7 @@
 
 - **📂 Section Hub**: [Development Hub](../index.md)
 - **🏠 Documentation Root**: [Root Index](../../index.md)
-- **🔗 Related**: [CLI Adapter](../../api-reference/adapters/flx-adapters-comprehensive-reference.md)
+- **🔗 Related**: [CLI Adapter](../../api-reference/adapters/flext-adapters-comprehensive-reference.md)
 
 ---
 
@@ -56,13 +56,13 @@ The FLX CLI provides a modern, user-friendly command-line interface for framewor
 The CLI is implemented through the FLX adapter system:
 
 ```python
-from flx.adapters.inbound import CliAdapter
-from flx.core import DomainService
+from flext.adapters.inbound import CliAdapter
+from flext.core import DomainService
 
 class FLXCLIService(DomainService):
     def __init__(self):
         self.cli_adapter = CliAdapter(
-            app_name="flx",
+            app_name="flext",
             app_version="0.4.0",
             auto_completion=True
         )
@@ -71,7 +71,7 @@ class FLXCLIService(DomainService):
 ### **Command Structure**
 
 ```
-flx/
+flext/
 ├── init           # Project initialization
 ├── config         # Configuration management
 ├── test           # Testing commands
@@ -87,7 +87,7 @@ flx/
 ### **Prerequisites**
 
 - [Development Hub](../index.md) - Understanding development environment setup
-- [CLI Adapter Reference](../../api-reference/adapters/flx-adapters-comprehensive-reference.md) - Technical CLI adapter details
+- [CLI Adapter Reference](../../api-reference/adapters/flext-adapters-comprehensive-reference.md) - Technical CLI adapter details
 
 ### **Next Steps**
 

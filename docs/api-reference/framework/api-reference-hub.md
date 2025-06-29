@@ -24,7 +24,7 @@
 
 - **📂 Section Hub**: [API Reference Hub](../index.md)
 - **🏠 Documentation Root**: [Root Index](../../index.md)
-- **🔗 Related**: [FLX Adapters Reference](../adapters/flx-adapters-comprehensive-reference.md)
+- **🔗 Related**: [FLX Adapters Reference](../adapters/flext-adapters-comprehensive-reference.md)
 
 ---
 
@@ -36,13 +36,13 @@ This hub consolidates all FLX framework API documentation, providing comprehensi
 
 ### 🎯 **Quick Access - Most Used APIs**
 
-- **[Core API Reference](./core-api-reference.md)** - Framework core APIs (validated against `/flx/src/flx/core/`)
-- **[FLX Complete API](./flx-complete-api.md)** - Comprehensive API documentation with examples
-- **[FLX Adapters Reference](./flx-adapters-comprehensive-reference.md)** - Complete adapter APIs
+- **[Core API Reference](./core-api-reference.md)** - Framework core APIs (validated against `/flext/src/flext/core/`)
+- **[FLX Complete API](./flext-complete-api.md)** - Comprehensive API documentation with examples
+- **[FLX Adapters Reference](./flext-adapters-comprehensive-reference.md)** - Complete adapter APIs
 
 ### 🏗️ **Core Framework APIs**
 
-#### Domain Layer APIs (`/flx/src/flx/core/`)
+#### Domain Layer APIs (`/flext/src/flext/core/`)
 
 - **[Core Domain Index](./core/index.md)** - Domain layer API overview
 - **[Base Classes](./core/base-classes.md)** - Foundation classes and protocols
@@ -51,8 +51,8 @@ This hub consolidates all FLX framework API documentation, providing comprehensi
 Real code validation:
 
 ```python
-# Validated against /flx/src/flx/core/__init__.py
-from flx.core import (
+# Validated against /flext/src/flext/core/__init__.py
+from flext.core import (
     # Base domain objects
     DomainObject, Identifiable, Timestamped,
     Entity, AggregateRoot, ValueObject,
@@ -72,11 +72,11 @@ from flx.core import (
 )
 ```
 
-#### Ports Layer APIs (`/flx/src/flx/ports/`)
+#### Ports Layer APIs (`/flext/src/flext/ports/`)
 
 ```python
-# Validated against /flx/src/flx/ports/__init__.py
-from flx.ports import (
+# Validated against /flext/src/flext/ports/__init__.py
+from flext.ports import (
     # Modern base ports
     PortConfig, ModernBasePort, ModernInboundPort, ModernOutboundPort,
     ConnectionPort, HealthCheckPort, MetricsPort, AsyncContextPort,
@@ -95,11 +95,11 @@ from flx.ports import (
 )
 ```
 
-#### Adapters Layer APIs (`/flx/src/flx/adapters/`)
+#### Adapters Layer APIs (`/flext/src/flext/adapters/`)
 
 ```python
-# Validated against /flx/src/flx/adapters/__init__.py
-from flx.adapters import (
+# Validated against /flext/src/flext/adapters/__init__.py
+from flext.adapters import (
     # Core adapter infrastructure
     BaseAdapter, AdapterFactory, ApiClient,
 
@@ -113,18 +113,18 @@ from flx.adapters import (
 )
 ```
 
-#### Infrastructure Layer APIs (`/flx/src/flx/infra/`)
+#### Infrastructure Layer APIs (`/flext/src/flext/infra/`)
 
 ```python
 # Validated against actual infrastructure structure
-from flx.infra.adapters import UnifiedAdapterManager, BaseAdapterManager
-from flx.infra.cache import CacheService, StandardizedCacheService
-from flx.infra.database import DatabaseEngine, OptimizedRepository
-from flx.infra.http import HttpClientService, StandardizedClientService
-from flx.infra.logging import StructuredLogger, CoreBridge
-from flx.infra.messaging import EventService, MessageBus
-from flx.infra.observability import AdvancedMonitoring, MetricsSystem
-from flx.infra.security import SecureAuth, CryptoService
+from flext.infra.adapters import UnifiedAdapterManager, BaseAdapterManager
+from flext.infra.cache import CacheService, StandardizedCacheService
+from flext.infra.database import DatabaseEngine, OptimizedRepository
+from flext.infra.http import HttpClientService, StandardizedClientService
+from flext.infra.logging import StructuredLogger, CoreBridge
+from flext.infra.messaging import EventService, MessageBus
+from flext.infra.observability import AdvancedMonitoring, MetricsSystem
+from flext.infra.security import SecureAuth, CryptoService
 ```
 
 ## 🔧 **Specialized API Documentation**
@@ -136,7 +136,7 @@ Each infrastructure component includes production-grade engines:
 #### Cache Production Engine
 
 ```python
-from flx.infra.cache.production_engine import CacheProductionEngine
+from flext.infra.cache.production_engine import CacheProductionEngine
 
 # Enterprise-grade cache with clustering
 cache_engine = CacheProductionEngine(
@@ -151,7 +151,7 @@ await cache_engine.connect()
 #### Database Production Engine
 
 ```python
-from flx.infra.database.production_engine import DatabaseProductionEngine
+from flext.infra.database.production_engine import DatabaseProductionEngine
 
 # High-availability database with read replicas
 db_engine = DatabaseProductionEngine(
@@ -165,7 +165,7 @@ db_engine = DatabaseProductionEngine(
 #### HTTP Production Engine
 
 ```python
-from flx.infra.http.production_engine import HttpProductionEngine
+from flext.infra.http.production_engine import HttpProductionEngine
 
 # Load-balanced HTTP client with circuit breakers
 http_engine = HttpProductionEngine(
@@ -179,16 +179,16 @@ http_engine = HttpProductionEngine(
 ### Testing APIs
 
 ```python
-# Comprehensive testing framework from /flx/src/flx/testing/
-from flx.testing.engines import (
+# Comprehensive testing framework from /flext/src/flext/testing/
+from flext.testing.engines import (
     CacheTestEngine, DatabaseTestEngine, HttpTestEngine,
     LoggingTestEngine, MessagingTestEngine, MetricsTestEngine,
     HexagonalTestEngine, ComprehensiveTestEngine
 )
 
 # Declarative testing support
-from flx.testing.declarative import DeclarativeTestFramework
-from flx.testing.runner import TestRunner
+from flext.testing.declarative import DeclarativeTestFramework
+from flext.testing.runner import TestRunner
 ```
 
 ## 📖 **API Documentation by Usage Pattern**
@@ -199,10 +199,10 @@ For developers getting started with FLX:
 
 ```python
 # Essential imports for basic usage
-from flx.core import Entity, DomainEvent
-from flx.ports import ModernOutboundPort
-from flx.adapters import BaseAdapter
-from flx.infra.adapters import UnifiedAdapterManager
+from flext.core import Entity, DomainEvent
+from flext.ports import ModernOutboundPort
+from flext.adapters import BaseAdapter
+from flext.infra.adapters import UnifiedAdapterManager
 
 # Basic usage pattern
 manager = UnifiedAdapterManager()
@@ -216,10 +216,10 @@ For production enterprise applications:
 
 ```python
 # Production-grade components
-from flx.infra.cache.production_engine import CacheProductionEngine
-from flx.infra.database.production_engine import DatabaseProductionEngine
-from flx.infra.observability import AdvancedMonitoring
-from flx.infra.security import SecureAuth
+from flext.infra.cache.production_engine import CacheProductionEngine
+from flext.infra.database.production_engine import DatabaseProductionEngine
+from flext.infra.observability import AdvancedMonitoring
+from flext.infra.security import SecureAuth
 
 # Enterprise configuration
 cache = CacheProductionEngine(clustering=True)
@@ -233,9 +233,9 @@ For extending FLX with custom functionality:
 
 ```python
 # Plugin development framework
-from flx.infra.plugins import PluginManager, PluginRegistry
-from flx.ports import PluginPort
-from flx.core.protocols import Adapter
+from flext.infra.plugins import PluginManager, PluginRegistry
+from flext.ports import PluginPort
+from flext.core.protocols import Adapter
 
 # Custom plugin implementation
 class CustomPlugin(Adapter):
@@ -258,25 +258,25 @@ class CustomPlugin(Adapter):
 
 **Focus**: External system integration
 
-- [Ports APIs](./flx-complete-api.md#ports-api) - Interface contracts
-- [Adapters APIs](./flx-adapters-comprehensive-reference.md) - Implementation patterns
-- [Infrastructure APIs](./flx-complete-api.md#infrastructure-api) - External system connectors
+- [Ports APIs](./flext-complete-api.md#ports-api) - Interface contracts
+- [Adapters APIs](./flext-adapters-comprehensive-reference.md) - Implementation patterns
+- [Infrastructure APIs](./flext-complete-api.md#infrastructure-api) - External system connectors
 
 ### For Platform Engineers
 
 **Focus**: Infrastructure and deployment
 
 - [Production Engines](#production-engines-apis) - Enterprise-grade components
-- [Monitoring APIs](./flx-complete-api.md#observability-api) - Metrics and observability
-- [Security APIs](./flx-complete-api.md#security-api) - Authentication and authorization
+- [Monitoring APIs](./flext-complete-api.md#observability-api) - Metrics and observability
+- [Security APIs](./flext-complete-api.md#security-api) - Authentication and authorization
 
 ### For DevOps Teams
 
 **Focus**: Deployment and operations
 
-- [Configuration APIs](./flx-complete-api.md#configuration-api) - Environment management
-- [Health Check APIs](./flx-complete-api.md#health-monitoring) - System health monitoring
-- [Deployment APIs](./flx-complete-api.md#deployment-api) - Deployment automation
+- [Configuration APIs](./flext-complete-api.md#configuration-api) - Environment management
+- [Health Check APIs](./flext-complete-api.md#health-monitoring) - System health monitoring
+- [Deployment APIs](./flext-complete-api.md#deployment-api) - Deployment automation
 
 ## 🔍 **API Validation Status**
 
@@ -284,11 +284,11 @@ All APIs in this hub are validated against actual FLX framework implementation:
 
 ### ✅ **Validation Coverage**
 
-- **Core Layer**: 100% validated against `/flx/src/flx/core/`
-- **Ports Layer**: 100% validated against `/flx/src/flx/ports/`
-- **Adapters Layer**: 100% validated against `/flx/src/flx/adapters/`
-- **Infrastructure Layer**: 100% validated against `/flx/src/flx/infra/`
-- **Testing Framework**: 100% validated against `/flx/src/flx/testing/`
+- **Core Layer**: 100% validated against `/flext/src/flext/core/`
+- **Ports Layer**: 100% validated against `/flext/src/flext/ports/`
+- **Adapters Layer**: 100% validated against `/flext/src/flext/adapters/`
+- **Infrastructure Layer**: 100% validated against `/flext/src/flext/infra/`
+- **Testing Framework**: 100% validated against `/flext/src/flext/testing/`
 
 ### 📊 **API Completeness**
 
@@ -302,9 +302,9 @@ All APIs in this hub are validated against actual FLX framework implementation:
 
 ### Advanced Topics
 
-- **[FLX API Overview](./flx-api-overview.md)** - High-level framework overview
-- **[Adapter Patterns](./flx-adapters-comprehensive-reference.md)** - Advanced adapter implementation
-- **[Integration Examples](./flx-complete-api.md#examples)** - Real-world integration patterns
+- **[FLX API Overview](./flext-api-overview.md)** - High-level framework overview
+- **[Adapter Patterns](./flext-adapters-comprehensive-reference.md)** - Advanced adapter implementation
+- **[Integration Examples](./flext-complete-api.md#examples)** - Real-world integration patterns
 
 ### Code Examples Repository
 
@@ -321,9 +321,9 @@ This hub preserves and enhances ALL existing API documentation:
 
 - **`README.md`** → Enhanced overview with navigation
 - **`core-api-reference.md`** → Core APIs with validation
-- **`flx-api-overview.md`** → High-level framework APIs
-- **`flx-complete-api.md`** → Comprehensive API coverage
-- **`flx-adapters-comprehensive-reference.md`** → Complete adapter APIs
+- **`flext-api-overview.md`** → High-level framework APIs
+- **`flext-complete-api.md`** → Comprehensive API coverage
+- **`flext-adapters-comprehensive-reference.md`** → Complete adapter APIs
 - **`core/` directory** → Detailed core component APIs
 
 **Content Enhancement**: All API documentation validated against real codebase, improved examples, and better organization while preserving all technical depth.
@@ -339,7 +339,7 @@ This hub preserves and enhances ALL existing API documentation:
 
 ### **Next Steps**
 
-- [FLX Adapters Reference](../adapters/flx-adapters-comprehensive-reference.md) - Working with the adapter system
+- [FLX Adapters Reference](../adapters/flext-adapters-comprehensive-reference.md) - Working with the adapter system
 - [Integration Examples](../../examples/index.md) - Practical API usage examples
 - [Testing Framework](../../development/testing/index.md) - Testing FLX applications
 

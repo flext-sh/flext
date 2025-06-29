@@ -32,7 +32,7 @@ This hub provides comprehensive architectural guidance for implementing FLX Fram
 | [**Domain Patterns**](./patterns/index.md)                | DDD, CQRS, Event Sourcing          | Senior developers      | ⭐⭐⭐⭐       | ✅ Updated |
 | [**Layer Organization**](./layers/index.md)               | Application layer structure        | All developers         | ⭐⭐           | ✅ Updated |
 | [**Architecture Standards**](./architecture-standards.md) | Enterprise architecture guidelines | Architects, developers | ⭐⭐⭐         | ✅ Updated |
-| [**FLX 2.0 Architecture**](./flx-2.0-architecture.md)     | Meltano-powered evolution          | Technical leads        | ⭐⭐⭐⭐       | ✅ Updated |
+| [**FLX 2.0 Architecture**](./flext-2.0-architecture.md)     | Meltano-powered evolution          | Technical leads        | ⭐⭐⭐⭐       | ✅ Updated |
 
 ### **Integration & Implementation**
 
@@ -52,7 +52,7 @@ This hub provides comprehensive architectural guidance for implementing FLX Fram
 1. [Architecture Overview](./design/unified-architecture-guide.md) →
 2. [Port Definitions](./ports/index.md) →
 3. [Basic Patterns](./patterns/domain-driven-design-patterns.md) →
-4. [Implementation Guide](./implementation/flx-framework-implementation-guide.md)
+4. [Implementation Guide](./implementation/flext-framework-implementation-guide.md)
 ```
 
 ### **⚡ For Experienced Developers**
@@ -130,13 +130,13 @@ This hub provides comprehensive architectural guidance for implementing FLX Fram
 - **Total Documents**: 35+ architecture documents
 - **Hub Completeness**: 100% mandatory template compliance
 - **Cross-References**: 5+ bidirectional links per document
-- **Source Validation**: ✅ Validated against `/flx/src/flx/` implementation
+- **Source Validation**: ✅ Validated against `/flext/src/flext/` implementation
 
 ### **Architecture Validation**
 
 - **Real Implementation**: ✅ Based on production FLX Framework code
-- **Hexagonal Implementation**: ✅ Validated against `/flx/src/flx/ports/` and `/flx/src/flx/adapters/`
-- **Oracle Integration**: ✅ Validated with `/flx-*-oracle-*` projects
+- **Hexagonal Implementation**: ✅ Validated against `/flext/src/flext/ports/` and `/flext/src/flext/adapters/`
+- **Oracle Integration**: ✅ Validated with `/flext-*-oracle-*` projects
 - **Testing Coverage**: ✅ Architecture patterns tested in test suites
 - **Documentation Standards**: ✅ HOW_TO_DOCUMENT.md compliance
 
@@ -164,7 +164,7 @@ This hub provides comprehensive architectural guidance for implementing FLX Fram
 └─────────────────────────────────────────────────────────────┘
 ```
 
-**Source Validation**: All layers validated against actual implementation in `/flx/src/flx/`
+**Source Validation**: All layers validated against actual implementation in `/flext/src/flext/`
 
 ### **Last Updated**: 2025-06-11
 

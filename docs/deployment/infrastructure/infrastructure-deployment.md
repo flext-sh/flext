@@ -73,7 +73,7 @@ The deployment infrastructure implements the hexagonal architecture pattern with
 **Usage:**
 
 ```python
-from flx.infra.deployment.environments import EnvironmentManager
+from flext.infra.deployment.environments import EnvironmentManager
 
 env_manager = EnvironmentManager()
 
@@ -108,11 +108,11 @@ await env_manager.configure_environment("dev", dev_config)
 - Complete validation before traffic switching
 
 ```python
-from flx.infra.deployment.strategies import BlueGreenStrategy
+from flext.infra.deployment.strategies import BlueGreenStrategy
 
 strategy = BlueGreenStrategy()
 deployment = await strategy.deploy({
-    "application": "flx-api",
+    "application": "flext-api",
     "version": "v1.2.0",
     "environment": "production",
     "validation_checks": ["health", "smoke_tests"]
@@ -126,11 +126,11 @@ deployment = await strategy.deploy({
 - Automated rollback on metric thresholds
 
 ```python
-from flx.infra.deployment.strategies import CanaryStrategy
+from flext.infra.deployment.strategies import CanaryStrategy
 
 strategy = CanaryStrategy()
 deployment = await strategy.deploy({
-    "application": "flx-api",
+    "application": "flext-api",
     "version": "v1.2.0",
     "traffic_distribution": [
         {"version": "v1.1.0", "percentage": 90},
@@ -150,11 +150,11 @@ deployment = await strategy.deploy({
 - Built-in health checking and rollback
 
 ```python
-from flx.infra.deployment.strategies import RollingStrategy
+from flext.infra.deployment.strategies import RollingStrategy
 
 strategy = RollingStrategy()
 deployment = await strategy.deploy({
-    "application": "flx-api",
+    "application": "flext-api",
     "version": "v1.2.0",
     "batch_size": 2,
     "max_unavailable": 1,
@@ -169,11 +169,11 @@ deployment = await strategy.deploy({
 - Minimal complexity with controlled downtime
 
 ```python
-from flx.infra.deployment.strategies import RecreateStrategy
+from flext.infra.deployment.strategies import RecreateStrategy
 
 strategy = RecreateStrategy()
 deployment = await strategy.deploy({
-    "application": "flx-worker",
+    "application": "flext-worker",
     "version": "v1.2.0",
     "pre_stop_hook": "graceful_shutdown",
     "startup_timeout": 120
@@ -204,13 +204,13 @@ deployment = await strategy.deploy({
 **Usage:**
 
 ```python
-from flx.infra.deployment.pipeline import DeploymentPipeline
+from flext.infra.deployment.pipeline import DeploymentPipeline
 
 pipeline = DeploymentPipeline()
 
 # Define pipeline configuration
 pipeline_config = {
-    "name": "flx-api-pipeline",
+    "name": "flext-api-pipeline",
     "stages": {
         "build": {
             "type": "docker",
@@ -257,13 +257,13 @@ result = await pipeline.execute(pipeline_config)
 **Usage:**
 
 ```python
-from flx.infra.deployment.monitoring import DeploymentMonitor
+from flext.infra.deployment.monitoring import DeploymentMonitor
 
 monitor = DeploymentMonitor()
 
 # Configure monitoring for deployment
 monitoring_config = {
-    "deployment_id": "flx-api-v1.2.0",
+    "deployment_id": "flext-api-v1.2.0",
     "metrics": {
         "response_time": {"threshold": 200, "unit": "ms"},
         "error_rate": {"threshold": 1, "unit": "percentage"},
@@ -278,7 +278,7 @@ monitoring_config = {
 await monitor.start_monitoring(monitoring_config)
 
 # Check deployment health
-health_status = await monitor.get_deployment_health("flx-api-v1.2.0")
+health_status = await monitor.get_deployment_health("flext-api-v1.2.0")
 ```
 
 ## Deployment Workflow Examples
@@ -286,7 +286,7 @@ health_status = await monitor.get_deployment_health("flx-api-v1.2.0")
 ### Complete Production Deployment
 
 ```python
-from flx.infra.deployment import (
+from flext.infra.deployment import (
     EnvironmentManager,
     DeploymentPipeline,
     BlueGreenStrategy,
@@ -306,7 +306,7 @@ async def deploy_to_production():
 
         # Execute deployment pipeline
         pipeline_result = await pipeline.execute({
-            "application": "flx-api",
+            "application": "flext-api",
             "version": "v1.2.0",
             "target_environment": "production"
         })
@@ -431,7 +431,7 @@ strategies:
 ```yaml
 # pipeline.yaml
 pipelines:
-  flx-api:
+  flext-api:
     trigger:
       branch: ["main", "release/*"]
       event: ["push", "pull_request"]
@@ -473,11 +473,11 @@ pipelines:
 ### Kubernetes Integration
 
 ```python
-from flx.infra.deployment.strategies import KubernetesStrategy
+from flext.infra.deployment.strategies import KubernetesStrategy
 
 k8s_strategy = KubernetesStrategy()
 deployment = await k8s_strategy.deploy({
-    "namespace": "flx-production",
+    "namespace": "flext-production",
     "manifest_path": "k8s/deployment.yaml",
     "values": {
         "image.tag": "v1.2.0",
@@ -490,23 +490,23 @@ deployment = await k8s_strategy.deploy({
 
 ```python
 # AWS ECS Integration
-from flx.infra.deployment.strategies import ECSStrategy
+from flext.infra.deployment.strategies import ECSStrategy
 
 ecs_strategy = ECSStrategy()
 deployment = await ecs_strategy.deploy({
-    "cluster": "flx-cluster",
-    "service": "flx-api",
-    "task_definition": "flx-api:v1.2.0"
+    "cluster": "flext-cluster",
+    "service": "flext-api",
+    "task_definition": "flext-api:v1.2.0"
 })
 
 # Azure Container Instances
-from flx.infra.deployment.strategies import ACIStrategy
+from flext.infra.deployment.strategies import ACIStrategy
 
 aci_strategy = ACIStrategy()
 deployment = await aci_strategy.deploy({
-    "resource_group": "flx-resources",
-    "container_group": "flx-api",
-    "image": "flx/api:v1.2.0"
+    "resource_group": "flext-resources",
+    "container_group": "flext-api",
+    "image": "flext/api:v1.2.0"
 })
 ```
 

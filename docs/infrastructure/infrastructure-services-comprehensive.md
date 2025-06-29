@@ -4,7 +4,7 @@
 
 [![Services](https://img.shields.io/badge/services-production_ready-blue.svg)](./service-patterns.md)
 [![Architecture](https://img.shields.io/badge/architecture-hexagonal-green.svg)](../architecture/index.md)
-[![Validated](https://img.shields.io/badge/source-validated-orange.svg)](../reference/specifications/flx-framework-technical-specification.md)
+[![Validated](https://img.shields.io/badge/source-validated-orange.svg)](../reference/specifications/flext-framework-technical-specification.md)
 
 **Complete guide to FLX Framework infrastructure services - validated against real source code implementation**
 
@@ -304,7 +304,7 @@ class AsyncMessageBus(BaseAdapter):
     # Configuration
     backend: str = "dramatiq"  # dramatiq, celery, sqs
     broker_url: str = "redis://localhost:6379"
-    exchange_name: str = "flx.events"
+    exchange_name: str = "flext.events"
 
     # Routing configuration
     routing_strategies: list[str] = ["topic", "fanout"]
@@ -472,19 +472,19 @@ class MetricsCollectionService(BaseAdapter):
 
             # Standard metrics
             self._request_counter = Counter(
-                "flx_requests_total",
+                "flext_requests_total",
                 "Total requests",
                 ["method", "endpoint", "status"]
             )
 
             self._request_duration = Histogram(
-                "flx_request_duration_seconds",
+                "flext_request_duration_seconds",
                 "Request duration",
                 ["method", "endpoint"]
             )
 
             self._active_connections = Gauge(
-                "flx_active_connections",
+                "flext_active_connections",
                 "Active connections",
                 ["service_type"]
             )
@@ -537,7 +537,7 @@ class AuthenticationService(BaseAdapter):
     # JWT Configuration
     jwt_secret: str
     jwt_algorithm: str = "HS256"
-    jwt_issuer: str = "flx-framework"
+    jwt_issuer: str = "flext-framework"
 
     async def authenticate(self, credentials: dict) -> AuthResult:
         """Authenticate user with multiple provider support"""
@@ -599,7 +599,7 @@ class AuthenticationService(BaseAdapter):
 
 ### **⬅️ Prerequisites**
 
-- [FLX Framework Technical Specification](../reference/specifications/flx-framework-technical-specification.md) - Core framework architecture required for infrastructure service implementation
+- [FLX Framework Technical Specification](../reference/specifications/flext-framework-technical-specification.md) - Core framework architecture required for infrastructure service implementation
 - [Architecture Hub](../architecture/index.md) - Hexagonal architecture patterns essential for service design and port-adapter implementation
 - [Getting Started](../getting-started/index.md) - Framework installation and basic concepts needed for infrastructure setup
 
@@ -622,7 +622,7 @@ class AuthenticationService(BaseAdapter):
 
 ### **Source Code Validation Results**
 
-**Validation Status**: ✅ Comprehensive validation against `/flx/src/flx/infra/` implementation completed
+**Validation Status**: ✅ Comprehensive validation against `/flext/src/flext/infra/` implementation completed
 
 | Component                | Documentation | Implementation | Validation Status              |
 | ------------------------ | ------------- | -------------- | ------------------------------ |
@@ -655,20 +655,20 @@ class AuthenticationService(BaseAdapter):
 
 | Service Category       | Implementation Path                 | Validation  | Production Ready |
 | ---------------------- | ----------------------------------- | ----------- | ---------------- |
-| **Data Persistence**   | `/flx/src/flx/infra/database/`      | ✅ Verified | ✅ Production    |
-| **Cache Services**     | `/flx/src/flx/infra/cache/`         | ✅ Verified | ✅ Production    |
-| **HTTP Communication** | `/flx/src/flx/infra/http/`          | ✅ Verified | ✅ Production    |
-| **Message Bus**        | `/flx/src/flx/infra/messaging/`     | ✅ Verified | ✅ Production    |
-| **Observability**      | `/flx/src/flx/infra/observability/` | ✅ Verified | ✅ Production    |
-| **Authentication**     | `/flx/src/flx/infra/auth/`          | ✅ Verified | ✅ Production    |
-| **Configuration**      | `/flx/src/flx/infra/config/`        | ✅ Verified | ✅ Production    |
+| **Data Persistence**   | `/flext/src/flext/infra/database/`      | ✅ Verified | ✅ Production    |
+| **Cache Services**     | `/flext/src/flext/infra/cache/`         | ✅ Verified | ✅ Production    |
+| **HTTP Communication** | `/flext/src/flext/infra/http/`          | ✅ Verified | ✅ Production    |
+| **Message Bus**        | `/flext/src/flext/infra/messaging/`     | ✅ Verified | ✅ Production    |
+| **Observability**      | `/flext/src/flext/infra/observability/` | ✅ Verified | ✅ Production    |
+| **Authentication**     | `/flext/src/flext/infra/auth/`          | ✅ Verified | ✅ Production    |
+| **Configuration**      | `/flext/src/flext/infra/config/`        | ✅ Verified | ✅ Production    |
 
 ### **Resilience Implementation Validation**
 
 **✅ Implemented Patterns**:
 
-- **Circuit Breakers**: `/flx/src/flx/infra/resilience/circuit_breaker.py` - Full implementation
-- **Retry Logic**: `/flx/src/flx/infra/resilience/retry.py` - Exponential backoff with jitter
+- **Circuit Breakers**: `/flext/src/flext/infra/resilience/circuit_breaker.py` - Full implementation
+- **Retry Logic**: `/flext/src/flext/infra/resilience/retry.py` - Exponential backoff with jitter
 - **Timeout Management**: Implemented across all HTTP and database services
 - **Health Monitoring**: Multi-tier health checks with dependency mapping
 
@@ -703,7 +703,7 @@ class AuthenticationService(BaseAdapter):
 
 - **Guide Version**: 1.0.0
 - **Framework Compatibility**: FLX 0.4.0+
-- **Source Validation**: ✅ Validated against `/flx/src/flx/infra/` implementation
+- **Source Validation**: ✅ Validated against `/flext/src/flext/infra/` implementation
 - **Last Updated**: June 11, 2025
 - **Production Status**: ✅ Production-ready patterns and implementations
 

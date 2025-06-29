@@ -27,7 +27,7 @@ E2E tests should represent ~5% of your total test suite:
 ### 1. API Endpoint Testing
 
 ```python
-from flx.testing.e2e import APITestClient
+from flext.testing.e2e import APITestClient
 import pytest
 
 class TestOrderAPIWorkflow:
@@ -111,14 +111,14 @@ class TestOrderAPIWorkflow:
 ### 2. CLI Application Testing
 
 ```python
-from flx.testing.e2e import CLITestRunner
+from flext.testing.e2e import CLITestRunner
 import tempfile
 import os
 
 class TestCLIWorkflow:
     @pytest.fixture
     def cli_runner(self):
-        return CLITestRunner(cli_command="flx-cli")
+        return CLITestRunner(cli_command="flext-cli")
 
     @pytest.fixture
     def temp_project_dir(self):
@@ -135,7 +135,7 @@ class TestCLIWorkflow:
         init_result = await cli_runner.run([
             "init", "test-project",
             "--template", "basic",
-            "--framework", "flx"
+            "--framework", "flext"
         ])
         assert init_result.exit_code == 0
         assert "Project created successfully" in init_result.output
@@ -180,8 +180,8 @@ class TestCLIWorkflow:
 ### 3. Business Scenario Testing
 
 ```python
-from flx.testing.e2e import BusinessScenarioTest
-from flx.testing.fixtures import e2e_database, external_services
+from flext.testing.e2e import BusinessScenarioTest
+from flext.testing.fixtures import e2e_database, external_services
 
 class TestECommerceBusinessScenarios(BusinessScenarioTest):
 
@@ -305,7 +305,7 @@ class TestECommerceBusinessScenarios(BusinessScenarioTest):
 ### 4. Performance and Load Testing
 
 ```python
-from flx.testing.e2e import LoadTestRunner
+from flext.testing.e2e import LoadTestRunner
 import asyncio
 
 class TestSystemPerformance:
@@ -367,7 +367,7 @@ class TestSystemPerformance:
 ### Test Data Management
 
 ```python
-from flx.testing.data import TestDataManager
+from flext.testing.data import TestDataManager
 
 class E2ETestDataManager(TestDataManager):
     """Manage test data for E2E tests."""
@@ -402,7 +402,7 @@ class E2ETestDataManager(TestDataManager):
 ### External Service Configuration
 
 ```python
-from flx.testing.external import ExternalServiceManager
+from flext.testing.external import ExternalServiceManager
 
 @pytest.fixture(scope="session")
 async def external_services():
@@ -486,7 +486,7 @@ jobs:
 
       - name: Start application
         run: |
-          flx-cli start --environment test --background
+          flext-cli start --environment test --background
           sleep 10  # Wait for application to start
 
       - name: Run E2E tests

@@ -121,7 +121,7 @@ exclude = [
 max-complexity = 10
 
 [tool.ruff.isort]
-known-first-party = ["flx"]
+known-first-party = ["flext"]
 section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
 ```
 
@@ -148,13 +148,13 @@ disallow_untyped_defs = false
 disallow_incomplete_defs = false
 
 [[tool.mypy.overrides]]
-module = "flx.core.*"
+module = "flext.core.*"
 strict = true
 disallow_any_generics = true
 disallow_subclassing_any = true
 
 [[tool.mypy.overrides]]
-module = "flx.adapters.*"
+module = "flext.adapters.*"
 warn_return_any = true
 disallow_untyped_calls = true
 ```
@@ -172,7 +172,7 @@ addopts = [
     "--strict-config",
     "--verbose",
     "--tb=short",
-    "--cov=flx",
+    "--cov=flext",
     "--cov-report=term-missing",
     "--cov-report=html:reports/coverage",
     "--cov-report=xml:reports/coverage.xml",
@@ -744,7 +744,7 @@ class QualityReporter:
         """Generate comprehensive quality report."""
         return {
             'timestamp': datetime.now().isoformat(),
-            'project': 'flx-framework',
+            'project': 'flext-framework',
             'metrics': {
                 'test_coverage': self._calculate_test_coverage(),
                 'type_coverage': self._calculate_type_coverage(),
@@ -804,10 +804,10 @@ class Repository(Generic[T]):
 ```python
 # Problem: Disorganized imports
 import os
-from flx.core import Entity
+from flext.core import Entity
 import sys
 from typing import List
-from flx.adapters import DatabaseAdapter
+from flext.adapters import DatabaseAdapter
 import asyncio
 
 # Solution: Organized imports (handled by ruff)
@@ -816,8 +816,8 @@ import os
 import sys
 from typing import List
 
-from flx.adapters import DatabaseAdapter
-from flx.core import Entity
+from flext.adapters import DatabaseAdapter
+from flext.core import Entity
 ```
 
 #### Complexity Issues
@@ -895,7 +895,7 @@ pre-commit run --all-files
 make quality-check
 
 # 2. Check coverage requirements
-pytest --cov=flx --cov-fail-under=90
+pytest --cov=flext --cov-fail-under=90
 
 # 3. Validate security
 bandit -r . -f json

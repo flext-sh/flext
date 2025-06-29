@@ -28,7 +28,7 @@ Start here for understanding Oracle integrations within FLX framework:
 #### **WmsClient - REAL Implementation**
 
 ```python
-# VALIDATED: Actual working API from flx_http_oracle_wms v2.0.0
+# VALIDATED: Actual working API from flext_http_oracle_wms v2.0.0
 config = WmsConfig(
     base_url="https://wms.oracle.com",
     username="wms_user",
@@ -80,15 +80,15 @@ schema = await client.get_entity_schema("SHIPMENT")
 
 ### **🔌 FLX Framework Adapters**
 
-- **[FLX HTTP Oracle WMS Adapter](flx-http-oracle-wms-adapter.md)**
+- **[FLX HTTP Oracle WMS Adapter](flext-http-oracle-wms-adapter.md)**
   - _Framework Integration: WMS adapter implementation_
   - Hexagonal architecture patterns, error handling
-- **[FLX HTTP Oracle OIC Adapter](flx-http-oracle-oic-adapter.md)**
+- **[FLX HTTP Oracle OIC Adapter](flext-http-oracle-oic-adapter.md)**
 
   - _Framework Integration: OIC adapter implementation_
   - OAuth2 integration, workflow orchestration
 
-- **[FLX Database Oracle Adapter](flx-database-oracle-adapter.md)**
+- **[FLX Database Oracle Adapter](flext-database-oracle-adapter.md)**
   - _Framework Integration: Database adapter implementation_
   - Connection pooling, async operations, transaction management
 
@@ -98,7 +98,7 @@ schema = await client.get_entity_schema("SHIPMENT")
 
 ### **📋 Technical Validation Summary**
 
-> **Validated Implementation Status**: ✅ Production Ready (flx-database-oracle v1.0.0)
+> **Validated Implementation Status**: ✅ Production Ready (flext-database-oracle v1.0.0)
 
 #### **FlxOracleDbAdapter - REAL Implementation**
 
@@ -126,7 +126,7 @@ result = adapter.upsert_data(
 
 ### **Database Operations**
 
-- **[FLX Database Oracle Adapter](flx-database-oracle-adapter.md)**
+- **[FLX Database Oracle Adapter](flext-database-oracle-adapter.md)**
   - Complete database integration guide
   - Connection management, async operations, pooling
   - SQL execution, transaction handling
@@ -217,7 +217,7 @@ result = adapter.upsert_data(
 
 1. [Oracle WMS Complete API Reference](oracle-wms-complete-api-reference.md) - API documentation
 2. [Oracle OAuth2 Authentication Guide](oracle-oauth2-authentication-guide.md) - Authentication
-3. [FLX HTTP Oracle WMS Adapter](flx-http-oracle-wms-adapter.md) - Code implementation
+3. [FLX HTTP Oracle WMS Adapter](flext-http-oracle-wms-adapter.md) - Code implementation
 
 ### **⚙️ DevOps Engineers**
 
@@ -318,13 +318,13 @@ After reviewing this hub, proceed to:
 
 ```bash
 # Test Oracle database connectivity
-flx oracle-db test-connection --host your-host --port 1521
+flext oracle-db test-connection --host your-host --port 1521
 
 # Verify Oracle WMS endpoint availability
-flx oracle-wms health-check --base-url https://your-wms-host
+flext oracle-wms health-check --base-url https://your-wms-host
 
 # Check OUD/LDAP connectivity
-flx oracle-oud test-ldap --host ldap-host --port 389
+flext oracle-oud test-ldap --host ldap-host --port 389
 ```
 
 #### Authentication Issues
@@ -335,7 +335,7 @@ flx oracle-oud test-ldap --host ldap-host --port 389
 
 #### Performance Issues
 
-- **Slow Database Queries**: Review connection pooling in [FLX Database Oracle Adapter](flx-database-oracle-adapter.md#performance-tuning)
+- **Slow Database Queries**: Review connection pooling in [FLX Database Oracle Adapter](flext-database-oracle-adapter.md#performance-tuning)
 - **API Rate Limits**: Configure backoff strategies in WMS adapter settings
 - **Memory Usage**: Monitor JVM settings for OUD operations
 

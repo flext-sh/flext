@@ -140,7 +140,7 @@ class TechnicalRiskAssessment:
             risk_score += 1
 
         # Team experience
-        experience = project_characteristics.get("team_flx_experience", "low")
+        experience = project_characteristics.get("team_flext_experience", "low")
         if experience == "low":
             risk_score += 3
         elif experience == "medium":
@@ -524,7 +524,7 @@ class MigrationMonitoring:
 
 - [Migration Hub](../index.md) - Understanding overall migration framework and requirements
 - [Architecture Hub](../../architecture/index.md) - Understanding current and target architecture patterns
-- [FLX Technical Reference](../../api-reference/flx-technical-reference.md) - Technical details for migration planning
+- [FLX Technical Reference](../../api-reference/flext-technical-reference.md) - Technical details for migration planning
 
 ### **➡️ Next Steps**
 

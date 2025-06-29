@@ -36,12 +36,12 @@
 1. **Complete Refactoring**: Simplified logging system following KISS, SOLID and DRY principles
 2. **Hexagonal Architecture**: Clear separation between abstractions (core), implementations (infra) and adapters
 3. **Custom TRACE Level**: Added TRACE logging level (value 5) beyond Python standards
-4. **Simplified Interface**: Access via `flx.get_logger()` and `flx.get_async_logger()`
+4. **Simplified Interface**: Access via `flext.get_logger()` and `flext.get_async_logger()`
 
 ### 📁 File Structure
 
 ```
-flx/src/flx/
+flext/src/flext/
 ├── core/
 │   └── logging_simple.py      # Abstractions: LoggingPort, AsyncLoggingPort, LogLevel
 ├── infra/
@@ -65,9 +65,9 @@ flx/src/flx/
 #### Synchronous Logging
 
 ```python
-import flx
+import flext
 
-logger = flx.get_logger(__name__, flx.LogLevel.TRACE)
+logger = flext.get_logger(__name__, flext.LogLevel.TRACE)
 
 logger.trace("Very detailed information")
 logger.debug("Debug info")
@@ -80,9 +80,9 @@ logger.critical("Critical error")
 #### Asynchronous Logging
 
 ```python
-import flx
+import flext
 
-logger = flx.get_async_logger(__name__, flx.LogLevel.TRACE)
+logger = flext.get_async_logger(__name__, flext.LogLevel.TRACE)
 
 await logger.trace("Async trace message")
 await logger.debug("Async debug message")
@@ -104,8 +104,8 @@ await logger.info("Async info message")
 
 #### Public API
 
-- `flx.get_logger(name, level)`: Returns synchronous logger
-- `flx.get_async_logger(name, level)`: Returns asynchronous logger
+- `flext.get_logger(name, level)`: Returns synchronous logger
+- `flext.get_async_logger(name, level)`: Returns asynchronous logger
 
 ### ✨ Key Characteristics
 
@@ -191,12 +191,12 @@ logger.info("User login - ID: %s, IP: %s, Status: %s",
 ### With FLX Core Services
 
 ```python
-from flx.core.services import BaseService
-import flx
+from flext.core.services import BaseService
+import flext
 
 class UserService(BaseService):
     def __init__(self):
-        self.logger = flx.get_logger(__name__, flx.LogLevel.INFO)
+        self.logger = flext.get_logger(__name__, flext.LogLevel.INFO)
 
     async def create_user(self, user_data):
         self.logger.info("Creating user: %s", user_data.email)
@@ -207,13 +207,13 @@ class UserService(BaseService):
 ### With HTTP Adapters
 
 ```python
-from flx.adapters.outbound.http import HttpAdapter
-import flx
+from flext.adapters.outbound.http import HttpAdapter
+import flext
 
 class ApiClientAdapter(HttpAdapter):
     def __init__(self):
         super().__init__()
-        self.logger = flx.get_logger(__name__, flx.LogLevel.DEBUG)
+        self.logger = flext.get_logger(__name__, flext.LogLevel.DEBUG)
 
     async def make_request(self, endpoint):
         self.logger.trace("Making request to: %s", endpoint)
@@ -225,13 +225,13 @@ class ApiClientAdapter(HttpAdapter):
 ### With Database Adapters
 
 ```python
-from flx.adapters.outbound.database import DatabaseAdapter
-import flx
+from flext.adapters.outbound.database import DatabaseAdapter
+import flext
 
 class UserRepositoryAdapter(DatabaseAdapter):
     def __init__(self):
         super().__init__()
-        self.logger = flx.get_logger(__name__, flx.LogLevel.INFO)
+        self.logger = flext.get_logger(__name__, flext.LogLevel.INFO)
 
     async def save_user(self, user):
         self.logger.debug("Saving user to database: %s", user.id)
@@ -246,13 +246,13 @@ class UserRepositoryAdapter(DatabaseAdapter):
 
 ```python
 import os
-import flx
+import flext
 
 # Configure logging level from environment
 log_level_name = os.getenv("LOG_LEVEL", "INFO")
-log_level = getattr(flx.LogLevel, log_level_name)
+log_level = getattr(flext.LogLevel, log_level_name)
 
-logger = flx.get_logger(__name__, log_level)
+logger = flext.get_logger(__name__, log_level)
 ```
 
 ### Application-Wide Configuration
@@ -260,13 +260,13 @@ logger = flx.get_logger(__name__, log_level)
 ```python
 # Application initialization
 def configure_logging():
-    base_level = flx.LogLevel.INFO
+    base_level = flext.LogLevel.INFO
 
     # Different levels for different modules
     loggers = {
-        "app.services": flx.get_logger("app.services", base_level),
-        "app.adapters": flx.get_logger("app.adapters", flx.LogLevel.DEBUG),
-        "app.domain": flx.get_logger("app.domain", flx.LogLevel.TRACE),
+        "app.services": flext.get_logger("app.services", base_level),
+        "app.adapters": flext.get_logger("app.adapters", flext.LogLevel.DEBUG),
+        "app.domain": flext.get_logger("app.domain", flext.LogLevel.TRACE),
     }
 
     return loggers
@@ -282,7 +282,7 @@ import pytest
 
 @pytest.fixture
 def mock_logger():
-    return Mock(spec=flx.LoggingPort)
+    return Mock(spec=flext.LoggingPort)
 
 def test_service_with_logging(mock_logger):
     service = UserService()
@@ -297,11 +297,11 @@ def test_service_with_logging(mock_logger):
 
 ```python
 import pytest
-import flx
+import flext
 
 @pytest.mark.asyncio
 async def test_async_logging():
-    logger = flx.get_async_logger("test", flx.LogLevel.DEBUG)
+    logger = flext.get_async_logger("test", flext.LogLevel.DEBUG)
 
     # Test that async logging works
     await logger.info("Test message")
@@ -319,8 +319,8 @@ logger = logging.getLogger(__name__)
 logger.info("Message", extra={"key": "value"})  # ❌ Problematic
 
 # New approach
-import flx
-logger = flx.get_logger(__name__, flx.LogLevel.INFO)
+import flext
+logger = flext.get_logger(__name__, flext.LogLevel.INFO)
 logger.info("Message - Key: %s", "value")  # ✅ Type-safe
 ```
 
@@ -333,8 +333,8 @@ logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 # New approach
-import flx
-logger = flx.get_logger(__name__, flx.LogLevel.DEBUG)
+import flext
+logger = flext.get_logger(__name__, flext.LogLevel.DEBUG)
 ```
 
 ## Performance Benchmarks
@@ -413,7 +413,7 @@ logging.addLevelName(5, "TRACE")
 **Solution**: Use proper async logging implementation:
 
 ```python
-logger = flx.get_async_logger(__name__, flx.LogLevel.INFO)
+logger = flext.get_async_logger(__name__, flext.LogLevel.INFO)
 await logger.info("Message")  # Non-blocking
 ```
 
@@ -422,8 +422,8 @@ await logger.info("Message")  # Non-blocking
 **Solution**: Follow protocol strictly:
 
 ```python
-from flx.core.logging_simple import LoggingPort
-logger: LoggingPort = flx.get_logger(__name__)
+from flext.core.logging_simple import LoggingPort
+logger: LoggingPort = flext.get_logger(__name__)
 ```
 
 **Issue**: Logger not respecting level configuration
@@ -431,7 +431,7 @@ logger: LoggingPort = flx.get_logger(__name__)
 **Solution**: Configure level during logger creation:
 
 ```python
-logger = flx.get_logger(__name__, flx.LogLevel.DEBUG)
+logger = flext.get_logger(__name__, flext.LogLevel.DEBUG)
 ```
 
 ---

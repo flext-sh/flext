@@ -101,8 +101,8 @@ feature:
 #!/bin/bash
 
 # 1. Clone repository and setup workspace
-git clone https://github.com/your-org/flx-framework.git
-cd flx-framework
+git clone https://github.com/your-org/flext-framework.git
+cd flext-framework
 
 # 2. Create and activate virtual environment
 python -m venv .venv
@@ -603,7 +603,7 @@ jobs:
         image: postgres:15
         env:
           POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: test_flx
+          POSTGRES_DB: test_flext
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -637,18 +637,18 @@ jobs:
           pip install -e ".[dev]"
 
       - name: Run unit tests
-        run: pytest tests/unit/ -v --cov=flx --cov-report=xml:reports/coverage-unit.xml
+        run: pytest tests/unit/ -v --cov=flext --cov-report=xml:reports/coverage-unit.xml
 
       - name: Run integration tests
-        run: pytest tests/integration/ -v --cov=flx --cov-append --cov-report=xml:reports/coverage-integration.xml
+        run: pytest tests/integration/ -v --cov=flext --cov-append --cov-report=xml:reports/coverage-integration.xml
         env:
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_flx
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_flext
           REDIS_URL: redis://localhost:6379/0
 
       - name: Run E2E tests
-        run: pytest tests/e2e/ -v --cov=flx --cov-append --cov-report=xml:reports/coverage-e2e.xml
+        run: pytest tests/e2e/ -v --cov=flext --cov-append --cov-report=xml:reports/coverage-e2e.xml
         env:
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_flx
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_flext
           REDIS_URL: redis://localhost:6379/0
 
       - name: Upload coverage to Codecov
@@ -656,7 +656,7 @@ jobs:
         with:
           file: reports/coverage-*.xml
           flags: unittests
-          name: codecov-flx
+          name: codecov-flext
 
   build:
     name: Build & Package

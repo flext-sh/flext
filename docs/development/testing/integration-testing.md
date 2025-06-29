@@ -18,9 +18,9 @@ Integration testing in the FLX framework validates component interactions and en
 #### 1. Port-Adapter Contract Testing
 
 ```python
-from flx.testing.contracts import PortContractTest
-from flx.ports.outbound import UserRepositoryPort
-from flx.adapters.outbound import PostgreSQLUserRepository
+from flext.testing.contracts import PortContractTest
+from flext.ports.outbound import UserRepositoryPort
+from flext.adapters.outbound import PostgreSQLUserRepository
 
 class TestUserRepositoryContract(PortContractTest):
     """Verify that PostgreSQL adapter conforms to UserRepository port contract."""
@@ -70,9 +70,9 @@ class TestUserRepositoryContract(PortContractTest):
 #### 2. Application-Domain Integration
 
 ```python
-from flx.application.services import OrderApplicationService
-from flx.domain.services import PricingService
-from flx.testing.fixtures import test_database, test_repositories
+from flext.application.services import OrderApplicationService
+from flext.domain.services import PricingService
+from flext.testing.fixtures import test_database, test_repositories
 
 class TestOrderApplicationIntegration:
     @pytest.fixture
@@ -128,8 +128,8 @@ class TestOrderApplicationIntegration:
 #### 3. External Service Integration
 
 ```python
-from flx.adapters.outbound import EmailServiceAdapter
-from flx.testing.external import ExternalServiceTest
+from flext.adapters.outbound import EmailServiceAdapter
+from flext.testing.external import ExternalServiceTest
 
 class TestEmailServiceIntegration(ExternalServiceTest):
     """Integration tests with real email service (using test environment)."""
@@ -169,9 +169,9 @@ class TestEmailServiceIntegration(ExternalServiceTest):
 #### 4. Database Integration Testing
 
 ```python
-from flx.infra.database import DatabaseConnectionManager
-from flx.adapters.outbound import OrderRepository
-from flx.testing.database import DatabaseIntegrationTest
+from flext.infra.database import DatabaseConnectionManager
+from flext.adapters.outbound import OrderRepository
+from flext.testing.database import DatabaseIntegrationTest
 
 class TestDatabaseIntegration(DatabaseIntegrationTest):
     """Test database operations with real database transactions."""
@@ -223,8 +223,8 @@ class TestDatabaseIntegration(DatabaseIntegrationTest):
 ### Message Queue Integration
 
 ```python
-from flx.infra.messaging import MessageBroker
-from flx.testing.messaging import MessageBrokerTest
+from flext.infra.messaging import MessageBroker
+from flext.testing.messaging import MessageBrokerTest
 
 class TestMessageBrokerIntegration(MessageBrokerTest):
     @pytest.fixture
@@ -273,7 +273,7 @@ class TestMessageBrokerIntegration(MessageBrokerTest):
 @pytest.fixture(scope="session")
 async def test_database():
     """Setup isolated test database for integration tests."""
-    test_db_name = f"test_flx_{uuid.uuid4().hex[:8]}"
+    test_db_name = f"test_flext_{uuid.uuid4().hex[:8]}"
 
     # Create test database
     admin_conn = await create_admin_connection()
@@ -301,7 +301,7 @@ async def test_database():
 ### External Service Mocking
 
 ```python
-from flx.testing.external import ExternalServiceMockServer
+from flext.testing.external import ExternalServiceMockServer
 
 @pytest.fixture(scope="session")
 async def mock_payment_service():
@@ -336,7 +336,7 @@ markers =
 
 addopts =
     --strict-markers
-    --cov=src/flx
+    --cov=src/flext
     --cov-report=html
     --cov-report=term-missing
     -v
@@ -355,7 +355,7 @@ pytest -m integration
 pytest -m "not slow" --external-services
 
 # Run with coverage
-pytest --cov=src/flx --cov-report=html
+pytest --cov=src/flext --cov-report=html
 ```
 
 ## Best Practices

@@ -58,13 +58,13 @@
 
 ### **✅ VALIDATED HEXAGONAL ARCHITECTURE ANALYSIS**
 
-Based on **actual code inspection** of `/flx/src/flx/`, the architecture documentation is **EXCEPTIONALLY ACCURATE** and comprehensive:
+Based on **actual code inspection** of `/flext/src/flext/`, the architecture documentation is **EXCEPTIONALLY ACCURATE** and comprehensive:
 
 ```python
 # ✅ VALIDATED: Real FLX hexagonal architecture implementation
 
 # Ports Infrastructure - Actual Implementation
-flx/src/flx/ports/base_modern.py:
+flext/src/flext/ports/base_modern.py:
 class PortConfig(BaseModel):
     """Base configuration for all ports with standardized fields."""
     name: AdapterName = Field(..., description="Unique name for this port")
@@ -73,7 +73,7 @@ class PortConfig(BaseModel):
     # ✅ DOCS ACCURATE: Type-safe implementation
 
 # Core Domain - Pure Business Logic
-flx/src/flx/core/:
+flext/src/flext/core/:
 ├── entities.py              ✅ Domain entities with DDD patterns
 ├── value_objects.py         ✅ Immutable value objects
 ├── aggregates.py           ✅ Aggregate root patterns
@@ -120,8 +120,8 @@ Domain Patterns:
 
 ```python
 # ✅ DOMAIN DOCS MATCH REALITY: Actual pure domain implementation
-from flx.core.entities import Entity, AggregateRoot
-from flx.core.domain.value_objects import ValueObject
+from flext.core.entities import Entity, AggregateRoot
+from flext.core.domain.value_objects import ValueObject
 
 class CustomerAggregate(AggregateRoot):
     """Real aggregate implementation matches documentation exactly."""
@@ -155,7 +155,7 @@ Port Implementation:
 
 ```python
 # ✅ PORT DOCS ACCURATE: Real port infrastructure
-from flx.ports.base_modern import PortConfig, ConnectionPort, HealthCheckPort
+from flext.ports.base_modern import PortConfig, ConnectionPort, HealthCheckPort
 
 @runtime_checkable
 class DatabasePort(ConnectionPort, HealthCheckPort, Protocol):
@@ -195,8 +195,8 @@ Adapter Architecture:
 
 ```python
 # ✅ ADAPTER DOCS ACCURATE: Real adapter infrastructure
-from flx.adapters.base import BaseAdapter
-from flx.ports.database import DatabasePort
+from flext.adapters.base import BaseAdapter
+from flext.ports.database import DatabasePort
 
 class PostgreSQLAdapter(BaseAdapter, DatabasePort):
     """Real adapter implementation matches documentation patterns."""
@@ -234,14 +234,14 @@ Infrastructure Architecture:
 ```python
 # ✅ INFRASTRUCTURE DOCS ACCURATE: Real separation from domain
 # Infrastructure Layer (Adapters)
-flx/src/flx/adapters/           # ✅ Infrastructure adapters
-flx/src/flx/infra/             # ✅ Infrastructure services
+flext/src/flext/adapters/           # ✅ Infrastructure adapters
+flext/src/flext/infra/             # ✅ Infrastructure services
 
 # Domain Layer (Pure)
-flx/src/flx/core/              # ✅ Zero infrastructure dependencies
+flext/src/flext/core/              # ✅ Zero infrastructure dependencies
 
 # Application Layer (Orchestration)
-flx/src/flx/application/       # ✅ Application services coordination
+flext/src/flext/application/       # ✅ Application services coordination
 ```
 
 ---
@@ -270,8 +270,8 @@ Pattern Implementation:
 
 ```python
 # ✅ PATTERNS DOCS ACCURATE: Real DDD implementation
-from flx.core.aggregates import AggregateRoot
-from flx.core.domain_events import DomainEvent
+from flext.core.aggregates import AggregateRoot
+from flext.core.domain_events import DomainEvent
 
 class OrderAggregate(AggregateRoot):
     """Real DDD aggregate implementation matches pattern documentation."""
@@ -311,7 +311,7 @@ Integration Implementation:
 ```markdown
 Architecture Standards:
 ├── architectural-consistency-guide.md ✅ Consistency guidelines
-├── flx-architecture-standards.md ✅ FLX standards
+├── flext-architecture-standards.md ✅ FLX standards
 ├── modernization-roadmap.md ✅ Modernization strategy
 └── unified-architecture-guide.md ✅ Unified architecture
 
@@ -416,7 +416,7 @@ Architects:
 ├── HEXAGONAL_VALIDATED_IMPLEMENTATION.md # Complete architecture
 ├── architectural-consistency-guide.md # Consistency guidelines
 ├── modernization-roadmap.md # Strategic roadmap
-└── flx-architecture-standards.md # Architecture standards
+└── flext-architecture-standards.md # Architecture standards
 
 Senior Developers:
 ├── advanced-patterns-hub.md # Advanced patterns
@@ -470,10 +470,10 @@ Integration Developers:
 
 ```markdown
 Architecture ↔ Real Implementation:
-├── Domain Layer → /flx/src/flx/core/ (pure domain)
-├── Ports → /flx/src/flx/ports/ (interface contracts)
-├── Adapters → /flx/src/flx/adapters/ (infrastructure)
-└── Infrastructure → /flx/src/flx/infra/ (services)
+├── Domain Layer → /flext/src/flext/core/ (pure domain)
+├── Ports → /flext/src/flext/ports/ (interface contracts)
+├── Adapters → /flext/src/flext/adapters/ (infrastructure)
+└── Infrastructure → /flext/src/flext/infra/ (services)
 
 Architecture ↔ Other Hubs:
 ├── Domain Patterns → Development Hub (domain testing)

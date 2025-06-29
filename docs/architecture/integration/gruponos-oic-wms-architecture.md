@@ -2,14 +2,14 @@
 
 ## Overview
 
-This document describes the standardized architecture implemented for the `gn_oic_wms_db` flx_project, which eliminates code duplication and maximizes reuse of existing `dc-oracle-db`, `dc-oracle-wms`, and `dc-oracle-oic` flx_project functionality.
+This document describes the standardized architecture implemented for the `gn_oic_wms_db` flext_project, which eliminates code duplication and maximizes reuse of existing `dc-oracle-db`, `dc-oracle-wms`, and `dc-oracle-oic` flext_project functionality.
 
 ## Architecture Principles
 
 ### 1. Layered Architecture
 
 - **Core Layer**: Foundation services (config, logging, exceptions)
-- **Operations Layer**: Business logic using existing flx_project components
+- **Operations Layer**: Business logic using existing flext_project components
 - **CLI Layer**: User interface and command orchestration
 - **Scripts Layer**: Specific automation tasks
 
@@ -62,7 +62,7 @@ src/gn_oic_wms_db/
 
 - Pydantic-based validation for type safety
 - Environment variable loading with defaults
-- Integration with existing flx_project patterns
+- Integration with existing flext_project patterns
 - Credential masking for security
 - Configuration validation and display
 
@@ -90,7 +90,7 @@ wms_config = config.wms
 
 - Base `GnWmsDbError` with context information
 - Specialized exceptions for different operation types
-- Integration with existing flx_project exception patterns
+- Integration with existing flext_project exception patterns
 - Structured error information for debugging
 
 **Exception Hierarchy**:
@@ -111,7 +111,7 @@ wms_config = config.wms
 - Structured logging using `structlog`
 - Environment-based configuration
 - Context preservation across operations
-- Integration with existing flx_project logging patterns
+- Integration with existing flext_project logging patterns
 - Support for different output formats
 
 ## Operations Layer
@@ -236,11 +236,11 @@ class GnPipelineOrchestrator:
 
 ### Poetry Dependencies
 
-The flx_project is configured to use the existing projects as local dependencies:
+The flext_project is configured to use the existing projects as local dependencies:
 
 ```toml
 [tool.poetry.dependencies]
-# Local flx_project dependencies
+# Local flext_project dependencies
 dc-oracle-db = { path = "../dc-oracle-db", develop = true }
 dc-oracle-wms = { path = "../dc-oracle-wms", develop = true }
 dc-oracle-oic = { path = "../dc-oracle-oic", develop = true }
@@ -267,7 +267,7 @@ from oic.exceptions import OicError
 
 ### Configuration Integration
 
-Reuses existing flx_project configuration patterns while extending them:
+Reuses existing flext_project configuration patterns while extending them:
 
 ```python
 # Database configuration follows dc-oracle-db patterns
@@ -484,4 +484,4 @@ gn-wms-cli backup WMS_ORDER_HDR --format csv
 
 ---
 
-This standardized architecture provides a solid foundation for WMS-OIC database operations while maximizing reuse of existing Datacosmos flx_project functionality and maintaining clear separation of concerns.
+This standardized architecture provides a solid foundation for WMS-OIC database operations while maximizing reuse of existing Datacosmos flext_project functionality and maintaining clear separation of concerns.

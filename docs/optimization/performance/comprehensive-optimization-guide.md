@@ -48,11 +48,11 @@ Replace custom FLX infrastructure implementations with mature, battle-tested Pyt
 
 ### **🔍 Infrastructure Assessment**
 
-Based on actual codebase analysis in `/flx/src/flx/infra/`:
+Based on actual codebase analysis in `/flext/src/flext/infra/`:
 
 ```python
 # Current FLX infrastructure components
-flx/infra/
+flext/infra/
 ├── http/                     # Custom HTTP client implementation
 ├── auth/                     # Custom authentication system
 ├── cache/                    # Custom caching infrastructure
@@ -82,7 +82,7 @@ flx/infra/
 **Current Implementation:**
 
 ```python
-# Custom retry in flx/infra/resilience/
+# Custom retry in flext/infra/resilience/
 class CustomRetryHandler:
     def __init__(self, max_attempts=3):
         self.max_attempts = max_attempts
@@ -114,7 +114,7 @@ async def reliable_api_call():
 **Current Implementation:**
 
 ```python
-# Custom logging in flx/infra/observability/
+# Custom logging in flext/infra/observability/
 class FlxLogger:
     def __init__(self, service_name):
         # ... custom structured logging
@@ -125,7 +125,7 @@ class FlxLogger:
 ```python
 import structlog
 
-logger = structlog.get_logger("flx.service")
+logger = structlog.get_logger("flext.service")
 await logger.ainfo(
     "Operation completed",
     user_id=123,
@@ -148,7 +148,7 @@ await logger.ainfo(
 **Current Implementation:**
 
 ```python
-# Custom HTTP client in flx/infra/http/
+# Custom HTTP client in flext/infra/http/
 class FlxHttpClient:
     def __init__(self, config):
         # ... custom HTTP implementation
@@ -181,7 +181,7 @@ async with httpx.AsyncClient(
 **Current Implementation:**
 
 ```python
-# Custom auth in flx/infra/auth/
+# Custom auth in flext/infra/auth/
 class FlxAuthManager:
     def __init__(self):
         # ... custom JWT/OAuth implementation
@@ -224,7 +224,7 @@ cache = Cache(
     Cache.REDIS,
     endpoint="redis://localhost",
     serializer=PickleSerializer(),
-    namespace="flx"
+    namespace="flext"
 )
 
 @cached(ttl=60, cache=cache, key="user:{user_id}")

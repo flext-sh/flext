@@ -61,9 +61,9 @@ The original 1,179-line document has been restructured into focused modules foll
 ### **Bounded Contexts**
 
 ```python
-# flx/domain/customers/context.py
-from flx.core.base import DomainContext
-from flx.core.domain import AggregateRoot, ValueObject, DomainEvent
+# flext/domain/customers/context.py
+from flext.core.base import DomainContext
+from flext.core.domain import AggregateRoot, ValueObject, DomainEvent
 
 class CustomerContext(DomainContext):
     """Customer management bounded context."""
@@ -229,8 +229,8 @@ class CustomerDeactivated(DomainEvent):
 ### **Domain Services**
 
 ```python
-# flx/domain/customers/services.py
-from flx.core.domain import DomainService
+# flext/domain/customers/services.py
+from flext.core.domain import DomainService
 
 class CustomerDuplicationService(DomainService):
     """Service to check for customer duplication."""
@@ -327,9 +327,9 @@ class CustomerLifecycleService(DomainService):
 ### **Event Store Implementation**
 
 ```python
-# flx/infrastructure/event_store.py
-from flx.core.events import EventStore, Event, EventStream
-from flx.adapters.outbound.database import DatabaseAdapter
+# flext/infrastructure/event_store.py
+from flext.core.events import EventStore, Event, EventStream
+from flext.adapters.outbound.database import DatabaseAdapter
 
 class FLXEventStore(EventStore):
     """FLX Event Store implementation with optimistic concurrency."""
@@ -488,8 +488,8 @@ class EventSourcedCustomer(AggregateRoot):
 ### **Event Projections**
 
 ```python
-# flx/projections/customer_projections.py
-from flx.core.projections import Projection, ProjectionHandler
+# flext/projections/customer_projections.py
+from flext.core.projections import Projection, ProjectionHandler
 
 class CustomerListProjection(Projection):
     """Customer list view projection."""
@@ -577,9 +577,9 @@ class CustomerStatisticsProjection(Projection):
 ### **Command Side**
 
 ```python
-# flx/application/commands/customer_commands.py
-from flx.core.commands import Command, CommandHandler
-from flx.core.events import EventBus
+# flext/application/commands/customer_commands.py
+from flext.core.commands import Command, CommandHandler
+from flext.core.events import EventBus
 
 class RegisterCustomerCommand(Command):
     """Command to register a new customer."""
@@ -695,9 +695,9 @@ class CustomerCommandHandlers:
 ### **Query Side**
 
 ```python
-# flx/application/queries/customer_queries.py
-from flx.core.queries import Query, QueryHandler
-from flx.infrastructure.read_models import CustomerReadModel
+# flext/application/queries/customer_queries.py
+from flext.core.queries import Query, QueryHandler
+from flext.infrastructure.read_models import CustomerReadModel
 
 class GetCustomerQuery(Query):
     """Query to get customer by ID."""
@@ -858,8 +858,8 @@ class CustomerStatistics(BaseModel):
 ### **Service Boundaries**
 
 ```python
-# flx/microservices/customer_service.py
-from flx.core.microservices import MicroserviceBase
+# flext/microservices/customer_service.py
+from flext.core.microservices import MicroserviceBase
 
 class CustomerMicroservice(MicroserviceBase):
     """Customer management microservice."""
@@ -1057,8 +1057,8 @@ class InterServiceClient:
 ### **Service Orchestration**
 
 ```python
-# flx/microservices/orchestration.py
-from flx.core.orchestration import Saga, SagaStep
+# flext/microservices/orchestration.py
+from flext.core.orchestration import Saga, SagaStep
 
 class CustomerRegistrationSaga(Saga):
     """Saga for customer registration across multiple services."""
@@ -1223,7 +1223,7 @@ class SagaExecutionEngine:
 ### **⬅️ Essential Prerequisites**
 
 - [**Hexagonal Architecture Foundation**](../design/unified-architecture-guide.md) - Core architectural patterns essential for understanding advanced patterns
-- [**Framework Architecture Guide**](../design/flx-framework-architecture-guide.md) - FLX Framework architecture foundations required for advanced pattern implementation
+- [**Framework Architecture Guide**](../design/flext-framework-architecture-guide.md) - FLX Framework architecture foundations required for advanced pattern implementation
 - [**Port-Adapter Patterns**](../ports/index.md) - Port and adapter concepts fundamental to advanced pattern implementation
 
 ### **➡️ Implementation Next Steps**

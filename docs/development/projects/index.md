@@ -21,7 +21,7 @@
 - [🏢 GrupoNos Project Plan](gruponos-project-plan.md) - GrupoNos project overview
 - [🔧 OUD CLI Final Tested](oud-cli-final-tested.md) - OUD CLI implementation
 - [🧹 OUD Ultra Clean Implementation](oud-ultra-clean-implementation.md) - Clean implementation guide
-- [🧪 FLX WMS E2E Testing](flx-wms-e2e-testing.md) - WMS end-to-end testing
+- [🧪 FLX WMS E2E Testing](flext-wms-e2e-testing.md) - WMS end-to-end testing
 
 ## Project Categories
 
@@ -42,9 +42,9 @@
 
 ### FLX Integration Projects
 
-- [FLX WMS E2E Testing](flx-wms-e2e-testing.md) - WMS end-to-end testing strategies
-- [FLX WMS Validation Proofs](flx-wms-validation-proofs.md) - WMS validation documentation
-- [FLX OIC E2E Testing](flx-oic-e2e-testing.md) - OIC end-to-end testing strategies
+- [FLX WMS E2E Testing](flext-wms-e2e-testing.md) - WMS end-to-end testing strategies
+- [FLX WMS Validation Proofs](flext-wms-validation-proofs.md) - WMS validation documentation
+- [FLX OIC E2E Testing](flext-oic-e2e-testing.md) - OIC end-to-end testing strategies
 - Framework integration patterns
 
 ## Project Workflows
@@ -71,9 +71,9 @@
 
 **Testing Path:**
 
-1. Execute [FLX WMS E2E Testing](flx-wms-e2e-testing.md)
-2. Run [FLX OIC E2E Testing](flx-oic-e2e-testing.md)
-3. Validate [WMS Proofs](flx-wms-validation-proofs.md)
+1. Execute [FLX WMS E2E Testing](flext-wms-e2e-testing.md)
+2. Run [FLX OIC E2E Testing](flext-oic-e2e-testing.md)
+3. Validate [WMS Proofs](flext-wms-validation-proofs.md)
 4. Test [CLI Functionality](oud-cli-functionality-summary.md)
 
 ## Learning Paths
@@ -101,9 +101,9 @@
 
 ### QA Engineers
 
-→ [FLX WMS E2E Testing](flx-wms-e2e-testing.md)
-→ [FLX OIC E2E Testing](flx-oic-e2e-testing.md)
-→ [WMS Validation Proofs](flx-wms-validation-proofs.md)
+→ [FLX WMS E2E Testing](flext-wms-e2e-testing.md)
+→ [FLX OIC E2E Testing](flext-oic-e2e-testing.md)
+→ [WMS Validation Proofs](flext-wms-validation-proofs.md)
 → [Testing Strategies](../testing/index.md)
 
 ## Related Sections

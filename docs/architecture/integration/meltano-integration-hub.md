@@ -243,7 +243,7 @@ _Performance-critical data pipelines_
 # meltano.yml - Basic pipeline configuration
 version: 1
 default_environment: dev
-project_id: flx-pipeline
+project_id: flext-pipeline
 
 environments:
   - name: dev
@@ -282,9 +282,9 @@ jobs:
 
 ```python
 # Quick start Python integration
-from flx.application.container import get_container
-from flx.ports.factory import PortFactory, SupportedSystem
-from flx.domain.data_pipeline.entities import PipelineExecutionContext
+from flext.application.container import get_container
+from flext.ports.factory import PortFactory, SupportedSystem
+from flext.domain.data_pipeline.entities import PipelineExecutionContext
 
 async def run_meltano_pipeline():
     """Example Meltano pipeline execution."""
@@ -315,10 +315,10 @@ async def run_meltano_pipeline():
 
 ```bash
 # FLX CLI with Meltano extensions
-flx meltano install tap-postgres
-flx meltano run postgres-to-snowflake
-flx meltano test tap-postgres
-flx meltano discover tap-postgres
+flext meltano install tap-postgres
+flext meltano run postgres-to-snowflake
+flext meltano test tap-postgres
+flext meltano discover tap-postgres
 ```
 
 ### 🌐 **Web API Integration**
@@ -392,4 +392,4 @@ Ready to integrate Meltano with FLX? Choose your starting point:
 **Integration Hub**: Meltano within FLX Framework
 **Maintained By**: FLX Data Engineering Team
 **Last Updated**: January 2025
-**Feedback**: [Integration Issues](https://github.com/flx/flx/issues)
+**Feedback**: [Integration Issues](https://github.com/flext/flext/issues)

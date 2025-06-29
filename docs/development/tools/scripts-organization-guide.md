@@ -144,7 +144,7 @@ Unified script for managing the Python virtual environment:
 
 ## Code Quality Utilities
 
-### 1. Code Standards: `flx_long_lines.py`, `pep8_check.py`, `pep8_apply.py`
+### 1. Code Standards: `flext_long_lines.py`, `pep8_check.py`, `pep8_apply.py`
 
 Tools for enforcing **[Coding Standards](../architecture/ARCHITECTURAL_CONSISTENCY_GUIDE.md#code-example-standards)**:
 
@@ -154,7 +154,7 @@ Tools for enforcing **[Coding Standards](../architecture/ARCHITECTURAL_CONSISTEN
 
 ```bash
 # Fix long lines
-./flx_long_lines.py [--max-length=88] [--check] [--aggressive]
+./flext_long_lines.py [--max-length=88] [--check] [--aggressive]
 
 # Check PEP 8 compliance
 ./pep8_check.py [project_dir]
@@ -502,7 +502,7 @@ def main():
 ├── project_manage.py          # Project management operations
 ├── scaffold_manage.py         # Scaffold & template management
 ├── git_manage.py              # Git operations
-├── flx_long_lines.py          # Fix long lines in Python files
+├── flext_long_lines.py          # Fix long lines in Python files
 ├── update_packages.py         # Update or reinstall packages
 ├── update_lint_excludes.py    # Update lint exclusions
 ├── pep8_check.py              # Check PEP 8 compliance

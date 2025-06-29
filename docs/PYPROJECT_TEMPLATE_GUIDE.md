@@ -16,8 +16,8 @@ cp pyproject-template.toml <project-dir>/pyproject.toml
 
 Replace these placeholders in the copied file:
 
-- `PROJECT_NAME` → Actual project name (e.g., "flx-oracle-oic")
-- `PROJECT_MODULE` → Python module name (e.g., "flx_oracle_oic")
+- `PROJECT_NAME` → Actual project name (e.g., "flext-oracle-oic")
+- `PROJECT_MODULE` → Python module name (e.g., "flext_oracle_oic")
 
 ### Step 3: Project-Specific Dependencies
 

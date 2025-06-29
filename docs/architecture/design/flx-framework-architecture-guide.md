@@ -30,7 +30,7 @@
 
 ## 📋 **Overview**
 
-This guide documents the actual architecture of the FLX Framework as implemented in production code. All patterns, examples, and recommendations are extracted from real implementation in `/flx/src/flx/` and validated in production environments.
+This guide documents the actual architecture of the FLX Framework as implemented in production code. All patterns, examples, and recommendations are extracted from real implementation in `/flext/src/flext/` and validated in production environments.
 
 ### **Framework Characteristics**
 
@@ -49,14 +49,14 @@ This guide documents the actual architecture of the FLX Framework as implemented
 
 ## 🏗️ **Core Architecture Layers**
 
-### **Domain Layer (`/flx/core/`)**
+### **Domain Layer (`/flext/core/`)**
 
 The heart of the FLX Framework implementing pure domain logic:
 
 #### **Entities and Aggregates**
 
 ```python
-# Real implementation from /flx/src/flx/core/entities.py
+# Real implementation from /flext/src/flext/core/entities.py
 class Entity(DomainObject):
     """Base entity with identity-based equality and lifecycle management."""
 
@@ -98,7 +98,7 @@ class AggregateRoot(Entity):
 #### **Value Objects**
 
 ```python
-# Real implementation from /flx/src/flx/core/value_objects.py
+# Real implementation from /flext/src/flext/core/value_objects.py
 class ValueObject(DomainObject):
     """Base value object with value-based equality."""
 
@@ -132,7 +132,7 @@ class Money(ValueObject):
 #### **Domain Events**
 
 ```python
-# Real implementation from /flx/src/flx/core/events.py
+# Real implementation from /flext/src/flext/core/events.py
 class DomainEvent(DomainObject):
     """Base domain event with correlation tracking."""
 
@@ -156,14 +156,14 @@ class FlxDomainEvent(DomainEvent):
         return self.model_copy(update={"correlation_id": correlation_id})
 ```
 
-### **Application Layer (`/flx/application/`)**
+### **Application Layer (`/flext/application/`)**
 
 Orchestrates domain objects and implements use cases:
 
 #### **Application Services**
 
 ```python
-# Real implementation from /flx/src/flx/application/
+# Real implementation from /flext/src/flext/application/
 class ApplicationService:
     """Base application service with domain integration."""
 
@@ -207,7 +207,7 @@ class CommandService(ApplicationService):
 #### **CQRS Implementation**
 
 ```python
-# Real implementation pattern from /flx/src/flx/application/
+# Real implementation pattern from /flext/src/flext/application/
 class QueryService(ApplicationService):
     """Service for handling read operations with caching."""
 
@@ -235,14 +235,14 @@ class QueryService(ApplicationService):
         return result
 ```
 
-### **Port Interfaces (`/flx/ports/`)**
+### **Port Interfaces (`/flext/ports/`)**
 
 Modern port interfaces with Python 3.13+ features:
 
 #### **Inbound Ports**
 
 ```python
-# Real implementation from /flx/src/flx/ports/inbound/
+# Real implementation from /flext/src/flext/ports/inbound/
 from typing import Protocol, runtime_checkable
 
 @runtime_checkable
@@ -276,7 +276,7 @@ class ApiPort(Protocol):
 #### **Outbound Ports**
 
 ```python
-# Real implementation from /flx/src/flx/ports/outbound/
+# Real implementation from /flext/src/flext/ports/outbound/
 @runtime_checkable
 class RepositoryPort(Protocol, Generic[T]):
     """Generic repository port for entity persistence."""
@@ -306,14 +306,14 @@ class EventPublisherPort(Protocol):
         ...
 ```
 
-### **Adapter Layer (`/flx/adapters/`)**
+### **Adapter Layer (`/flext/adapters/`)**
 
 Production-ready adapters with comprehensive features:
 
 #### **Base Adapter**
 
 ```python
-# Real implementation from /flx/src/flx/adapters/base.py
+# Real implementation from /flext/src/flext/adapters/base.py
 class BaseAdapter(
     Connectable,
     Transactional,
@@ -362,7 +362,7 @@ class BaseAdapter(
 #### **Specialized Adapters**
 
 ```python
-# Real implementation patterns from /flx/src/flx/adapters/
+# Real implementation patterns from /flext/src/flext/adapters/
 class DatabaseAdapter(BaseAdapter, RepositoryPort[T]):
     """Database adapter implementing repository port."""
 
@@ -395,14 +395,14 @@ class DatabaseAdapter(BaseAdapter, RepositoryPort[T]):
             await self._update_entity(conn, entity.increment_version())
 ```
 
-### **Infrastructure Layer (`/flx/infra/`)**
+### **Infrastructure Layer (`/flext/infra/`)**
 
 Comprehensive infrastructure services:
 
 #### **Configuration Management**
 
 ```python
-# Real implementation from /flx/src/flx/infra/config/
+# Real implementation from /flext/src/flext/infra/config/
 class HierarchicalConfig(BaseModel):
     """Hierarchical configuration with multiple sources."""
 
@@ -437,7 +437,7 @@ class HierarchicalConfig(BaseModel):
 #### **Service Registry**
 
 ```python
-# Real implementation from /flx/src/flx/infra/services/
+# Real implementation from /flext/src/flext/infra/services/
 class ServiceRegistry:
     """Dependency injection and service discovery."""
 
@@ -473,7 +473,7 @@ class ServiceRegistry:
 ### **Error Handling Strategy**
 
 ```python
-# Real implementation from /flx/src/flx/core/
+# Real implementation from /flext/src/flext/core/
 class FlxException(Exception):
     """Base exception with structured error information."""
 
@@ -503,7 +503,7 @@ class InfrastructureError(FlxException):
 ### **Observability Integration**
 
 ```python
-# Real implementation from /flx/src/flx/infra/observability/
+# Real implementation from /flext/src/flext/infra/observability/
 class ObservabilityMixin:
     """Mixin for comprehensive observability."""
 
@@ -543,7 +543,7 @@ class ObservabilityMixin:
 ### **Testing Infrastructure**
 
 ```python
-# Real implementation from /flx/src/flx/testing/
+# Real implementation from /flext/src/flext/testing/
 class DeclarativeTestEngine:
     """Production-grade test framework."""
 
@@ -616,4 +616,4 @@ class DeclarativeTestEngine:
 
 ---
 
-**Last Updated**: 2025-06-11 | **Validation**: ✅ Production Implementation | **Source**: `/flx/src/flx/`
+**Last Updated**: 2025-06-11 | **Validation**: ✅ Production Implementation | **Source**: `/flext/src/flext/`

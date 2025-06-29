@@ -34,9 +34,9 @@ This guide documents actual implementation patterns extracted from production Or
 
 ### **Validated Projects**
 
-- **flx_http_oracle_wms/**: Warehouse Management System integration
-- **flx_http_oracle_oic/**: Oracle Integration Cloud platform
-- **flx_database_oracle/**: Oracle Database connectivity
+- **flext_http_oracle_wms/**: Warehouse Management System integration
+- **flext_http_oracle_oic/**: Oracle Integration Cloud platform
+- **flext_database_oracle/**: Oracle Database connectivity
 - **oud-automation/**: Oracle Unified Directory automation
 
 ### **Prerequisites**
@@ -54,7 +54,7 @@ This guide documents actual implementation patterns extracted from production Or
 Based on actual implementation in production systems:
 
 ```python
-# Real pattern from flx_http_oracle_wms/src/
+# Real pattern from flext_http_oracle_wms/src/
 class WmsClient(BaseAdapter):
     """Production WMS client following hexagonal architecture."""
 
@@ -95,7 +95,7 @@ class WmsClient(BaseAdapter):
 Production-validated configuration management:
 
 ```python
-# Real implementation from flx_database_oracle/src/
+# Real implementation from flext_database_oracle/src/
 class FlxDatabaseConfig(BaseModel):
     """Hierarchical configuration with environment support."""
 
@@ -141,7 +141,7 @@ class FlxDatabaseConfig(BaseModel):
 Production implementation supporting multiple auth methods:
 
 ```python
-# Real implementation from flx_http_oracle_oic/src/
+# Real implementation from flext_http_oracle_oic/src/
 class OICAuthenticator:
     """Multi-strategy authentication for Oracle Integration Cloud."""
 
@@ -196,7 +196,7 @@ class OICAuthenticator:
 Production Oracle database authentication:
 
 ```python
-# Real implementation from flx_database_oracle/src/
+# Real implementation from flext_database_oracle/src/
 class FlxOracleDbAdapter(BaseAdapter, DatabasePort):
     """Production Oracle database adapter."""
 
@@ -240,7 +240,7 @@ class FlxOracleDbAdapter(BaseAdapter, DatabasePort):
 Production WMS schema discovery:
 
 ```python
-# Real implementation pattern from flx_http_oracle_wms/
+# Real implementation pattern from flext_http_oracle_wms/
 class WmsSchemaInference:
     """Production schema inference from WMS endpoints."""
 
@@ -295,7 +295,7 @@ class WmsSchemaInference:
 Production Oracle MERGE operations:
 
 ```python
-# Real implementation from flx_database_oracle/
+# Real implementation from flext_database_oracle/
 class OracleBulkOperations:
     """Production bulk operations with Oracle MERGE."""
 

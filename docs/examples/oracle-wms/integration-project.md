@@ -4,7 +4,7 @@ A comprehensive integration solution between Oracle Warehouse Management System 
 
 ## Overview
 
-This flx_project implements a robust integration solution for synchronizing data between Oracle WMS Cloud (v25A/25B) and Oracle Autonomous Database, with OIC handling the orchestration of workflows. The system addresses key business needs through automated data flows:
+This flext_project implements a robust integration solution for synchronizing data between Oracle WMS Cloud (v25A/25B) and Oracle Autonomous Database, with OIC handling the orchestration of workflows. The system addresses key business needs through automated data flows:
 
 1. **Direct API Extraction** - Retrieving real-time data from WMS APIs and loading to Autonomous Database
 2. **Batch File Processing** - Handling CSV files via SFTP with transformation pipelines for initial loads
@@ -146,9 +146,9 @@ Follow these steps to set up the integration environment:
 
 ## Configuration
 
-The flx_project uses a layered configuration approach:
+The flext_project uses a layered configuration approach:
 
-- **meltano.yml** - Main Meltano flx_project configuration defining plugins and pipelines
+- **meltano.yml** - Main Meltano flext_project configuration defining plugins and pipelines
 - **config/config.yml** - Detailed configuration for WMS, OIC, and Autonomous DB
 - **dcauto.yml** - DCauto-specific configuration for custom plugins
 - **.env** - Environment variables containing credentials and connection details
@@ -192,7 +192,7 @@ python scripts/oic_extract_integration_metadata.py
 
 ### Scheduled Operations
 
-The flx_project includes scheduled tasks:
+The flext_project includes scheduled tasks:
 
 - `wms_to_oracle_daily` - Daily extraction from WMS
 - `ftp_to_oracle_hourly` - Hourly processing of FTP files
@@ -260,7 +260,7 @@ gruponos-oic-wms/
 │   ├── plan_full.md         # Detailed technical plan
 │   └── project_plan.md      # Project overview
 ├── logs/                    # Log files directory
-├── meltano.yml              # Meltano flx_project configuration
+├── meltano.yml              # Meltano flext_project configuration
 ├── output/                  # Output data files
 │   ├── oic/                 # OIC extraction results
 │   ├── wms/                 # WMS extraction results
@@ -323,5 +323,5 @@ The transition to production follows these steps:
 For additional details, refer to:
 
 - `docs/plan_full.md` - Complete technical implementation plan
-- `docs/project_plan.md` - High-level flx_project overview
+- `docs/project_plan.md` - High-level flext_project overview
 - Oracle Documentation for [WMS Cloud](https://docs.oracle.com/en/cloud/saas/warehouse-management.html), [OIC](https://docs.oracle.com/en/cloud/paas/integration-cloud/), and [Autonomous DB](https://docs.oracle.com/en/cloud/paas/autonomous-database/)

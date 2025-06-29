@@ -20,22 +20,22 @@
 #### FLX Framework Modules (9 módulos)
 | Módulo | Arquivos Preservados | Status |
 |--------|---------------------|--------|
-| flx-core | 146 arquivos | ✅ Backup criado |
-| flx-auth | 43 arquivos | ✅ Backup criado |
-| flx-api | 41 arquivos | ✅ Backup criado |
-| flx-web | 104 arquivos | ✅ Backup criado |
-| flx-grpc | 34 arquivos | ✅ Backup criado |
-| flx-cli | 24 arquivos | ✅ Backup criado |
-| flx-plugin | 36 arquivos | ✅ Backup criado |
-| flx-observability | 31 arquivos | ✅ Backup criado |
-| flx-meltano | 34 arquivos | ✅ Backup criado |
+| flext-core | 146 arquivos | ✅ Backup criado |
+| flext-auth | 43 arquivos | ✅ Backup criado |
+| flext-api | 41 arquivos | ✅ Backup criado |
+| flext-web | 104 arquivos | ✅ Backup criado |
+| flext-grpc | 34 arquivos | ✅ Backup criado |
+| flext-cli | 24 arquivos | ✅ Backup criado |
+| flext-plugin | 36 arquivos | ✅ Backup criado |
+| flext-observability | 31 arquivos | ✅ Backup criado |
+| flext-meltano | 34 arquivos | ✅ Backup criado |
 | **TOTAL** | **493 arquivos** | ✅ **100% preservado** |
 
 #### FLX Extensions (2 módulos)
 | Módulo | Arquivos Preservados | Status |
 |--------|---------------------|--------|
-| flx-ldap | 389 arquivos | ✅ Backup criado |
-| flx-quality | 0 arquivos | ✅ Verificado (vazio) |
+| flext-ldap | 389 arquivos | ✅ Backup criado |
+| flext-quality | 0 arquivos | ✅ Verificado (vazio) |
 | **TOTAL** | **389 arquivos** | ✅ **100% preservado** |
 
 ---
@@ -45,29 +45,29 @@
 ### 📦 Backups de Conteúdo Local
 ```
 backups/
-├── flx-core_local_content_20250629_130817/     (146 arquivos)
-├── flx-auth_local_content_20250629_130818/     (43 arquivos)
-├── flx-api_local_content_20250629_130818/      (41 arquivos)
-├── flx-grpc_local_content_20250629_130818/     (34 arquivos)
-├── flx-web_local_content_20250629_130818/      (104 arquivos)
-├── flx-cli_local_content_20250629_130818/      (24 arquivos)
-├── flx-plugin_local_content_20250629_130818/   (36 arquivos)
-├── flx-observability_local_content_20250629_130818/ (31 arquivos)
-├── flx-meltano_local_content_20250629_130818/  (34 arquivos)
-├── flx-ldap_local_content_20250629_130829/     (389 arquivos)
-└── flx-quality_local_content_20250629_130829/  (0 arquivos)
+├── flext-core_local_content_20250629_130817/     (146 arquivos)
+├── flext-auth_local_content_20250629_130818/     (43 arquivos)
+├── flext-api_local_content_20250629_130818/      (41 arquivos)
+├── flext-grpc_local_content_20250629_130818/     (34 arquivos)
+├── flext-web_local_content_20250629_130818/      (104 arquivos)
+├── flext-cli_local_content_20250629_130818/      (24 arquivos)
+├── flext-plugin_local_content_20250629_130818/   (36 arquivos)
+├── flext-observability_local_content_20250629_130818/ (31 arquivos)
+├── flext-meltano_local_content_20250629_130818/  (34 arquivos)
+├── flext-ldap_local_content_20250629_130829/     (389 arquivos)
+└── flext-quality_local_content_20250629_130829/  (0 arquivos)
 ```
 
 ### 💾 Backups Anteriores Preservados
 ```
 backups/
 ├── claude_refactor_20250629/
-├── flx-meltano-enterprise_source_20250629_121126/
-├── flx-meltano-enterprise_current_20250629_124748/
-├── flx-oracle-wms_20250629_122800/
-├── flx-oracle-oic_20250629_122657/
-├── flx-adapter-example_20250629_122539/
-├── flx_original_20250629_121011/
+├── flext-meltano-enterprise_source_20250629_121126/
+├── flext-meltano-enterprise_current_20250629_124748/
+├── flext-oracle-wms_20250629_122800/
+├── flext-oracle-oic_20250629_122657/
+├── flext-adapter-example_20250629_122539/
+├── flext_original_20250629_121011/
 └── ldap-core-shared_backup_20250629_124622/
 ```
 
@@ -78,10 +78,10 @@ backups/
 ### .gitmodules Organizado (27 submodules)
 1. **Active Enterprise Integration** (2): algar-oud-mig, gruponos-poc-oic-wms
 2. **Active Singer/Meltano** (8): tap-*, target-*, dbt-ldap, oracle-oic-ext
-3. **Active FLX Extensions** (2): flx-ldap, flx-quality
-4. **Active FLX Framework** (9): flx-core, flx-auth, flx-api, etc.
-5. **Legacy Projects** (6): legacy/flx-*
-6. **Backup Preservation** (1): backups/flx-meltano-enterprise_source_*
+3. **Active FLX Extensions** (2): flext-ldap, flext-quality
+4. **Active FLX Framework** (9): flext-core, flext-auth, flext-api, etc.
+5. **Legacy Projects** (6): legacy/flext-*
+6. **Backup Preservation** (1): backups/flext-meltano-enterprise_source_*
 
 ---
 
@@ -131,8 +131,8 @@ backups/
 ### 🏗️ Architecture Transformation Achieved
 ```
 /home/marlonsc/pyauto/     # ← NOW THE FLX PROJECT
-├── 9 FLX Framework modules (flx-core, flx-auth, etc.)
-├── 2 FLX Extensions (flx-ldap, flx-quality)
+├── 9 FLX Framework modules (flext-core, flext-auth, etc.)
+├── 2 FLX Extensions (flext-ldap, flext-quality)
 ├── 8 Singer/Meltano submodules
 ├── 2 Enterprise integration submodules
 ├── backups/ (all superseded content preserved)

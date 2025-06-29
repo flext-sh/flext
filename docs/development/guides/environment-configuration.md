@@ -251,8 +251,8 @@ WMS_CIRCUIT_BREAKER_ENABLED=true
 ### FLX Framework Configuration
 
 ```python
-from flx.core.config import FlxConfig
-from flx.core.logging import FlxLogger
+from flext.core.config import FlxConfig
+from flext.core.logging import FlxLogger
 
 class FlxIntegrationConfig(FlxConfig):
     """FLX framework configuration for Oracle integration."""
@@ -298,8 +298,8 @@ class FlxIntegrationConfig(FlxConfig):
 ### Oracle WMS Adapter Configuration
 
 ```python
-from flx.adapters.outbound.oracle import OracleWmsAdapter
-from flx.core.exceptions import ConfigurationError
+from flext.adapters.outbound.oracle import OracleWmsAdapter
+from flext.core.exceptions import ConfigurationError
 
 class WmsAdapterFactory:
     """Factory for creating configured WMS adapters."""
@@ -600,7 +600,7 @@ python validate_config.py
 The FLX framework includes a sophisticated configuration system with hierarchical management and multiple backend support:
 
 ```
-/flx/src/flx/infra/config/
+/flext/src/flext/infra/config/
 ├── hierarchical.py      # Multi-level configuration management
 ├── backends.py          # YAML, Vault, KMS backend support
 ├── adapter.py           # Configuration adapter for hexagonal architecture
@@ -613,7 +613,7 @@ The FLX framework includes a sophisticated configuration system with hierarchica
 Production configuration system with automatic precedence handling:
 
 ```python
-from flx.infra.config import ConfigManager
+from flext.infra.config import ConfigManager
 
 # Hierarchical configuration with automatic resolution
 config = ConfigManager()

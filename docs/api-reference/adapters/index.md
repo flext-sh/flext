@@ -2,8 +2,8 @@
 
 > **Function**: Adapter APIs for hexagonal architecture integration | **Audience**: Integration engineers, adapter developers | **Status**: ✅ Source Validated
 
-[![Adapters](https://img.shields.io/badge/adapters-integration_apis-purple.svg)](./flx-adapters-comprehensive-reference.md)
-[![Hexagonal](https://img.shields.io/badge/hexagonal-ports_adapters-orange.svg)](./flx-adapters-comprehensive-reference.md)
+[![Adapters](https://img.shields.io/badge/adapters-integration_apis-purple.svg)](./flext-adapters-comprehensive-reference.md)
+[![Hexagonal](https://img.shields.io/badge/hexagonal-ports_adapters-orange.svg)](./flext-adapters-comprehensive-reference.md)
 [![Oracle](https://img.shields.io/badge/oracle-native_support-red.svg)](../../guides/adapters/index.md)
 
 Complete adapter APIs for FLX Framework 0.4.0+ hexagonal architecture with Oracle integration support
@@ -24,7 +24,7 @@ Complete adapter APIs for FLX Framework 0.4.0+ hexagonal architecture with Oracl
 
 - **📂 Parent Hub**: [API Reference Hub](../index.md)
 - **🏠 Documentation Root**: [Root Index](../../index.md)
-- **🔌 Complete Reference**: [FLX Adapters Reference](./flx-adapters-comprehensive-reference.md)
+- **🔌 Complete Reference**: [FLX Adapters Reference](./flext-adapters-comprehensive-reference.md)
 
 ---
 
@@ -36,7 +36,7 @@ The Adapters APIs Hub provides complete API documentation for hexagonal architec
 
 | **API Documentation**                                                   | **Architecture** | **Validation**   | **Status**    | **Key Features**                        |
 | ----------------------------------------------------------------------- | ---------------- | ---------------- | ------------- | --------------------------------------- |
-| **[FLX Adapters Reference](./flx-adapters-comprehensive-reference.md)** | Hexagonal        | Source Validated | ✅ Production | Inbound/outbound ports, Oracle adapters |
+| **[FLX Adapters Reference](./flext-adapters-comprehensive-reference.md)** | Hexagonal        | Source Validated | ✅ Production | Inbound/outbound ports, Oracle adapters |
 
 ### **🚀 Adapter API Features**
 
@@ -50,11 +50,11 @@ The Adapters APIs Hub provides complete API documentation for hexagonal architec
 
 ### **🆕 New Integration Engineers**
 
-1. **Foundation**: [FLX Adapters Reference](./flx-adapters-comprehensive-reference.md)
+1. **Foundation**: [FLX Adapters Reference](./flext-adapters-comprehensive-reference.md)
 
 ### **🏗️ Adapter Developers**
 
-1. **Complete Reference**: [FLX Adapters Reference](./flx-adapters-comprehensive-reference.md)
+1. **Complete Reference**: [FLX Adapters Reference](./flext-adapters-comprehensive-reference.md)
 
 ## 🔗 **Cross-References**
 
@@ -80,7 +80,7 @@ The Adapters APIs Hub provides complete API documentation for hexagonal architec
 
 ## 📊 **Source Validation**
 
-- **Validation Source**: `/flx/src/flx/adapters/` codebase
+- **Validation Source**: `/flext/src/flext/adapters/` codebase
 - **Coverage**: Adapter APIs (100%)
 - **Oracle Integration**: Database, OIC, WMS complete
 - **Last Validation**: 2025-06-11

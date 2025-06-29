@@ -24,7 +24,7 @@
 
 - **📂 Section Hub**: [Testing Hub](./index.md)
 - **🏠 Documentation Root**: [Root Index](../../index.md)
-- **🔗 Source Code**: [FLX Tests](../../../flx/tests/)
+- **🔗 Source Code**: [FLX Tests](../../../flext/tests/)
 - **🔗 Related**: [Hexagonal Testing Guide](./hexagonal-testing-guide.md), [Port Testing](./ports-testing.md)
 
 ---
@@ -59,7 +59,7 @@ def test_user_domain_logic():
 
 # ❌ BAD - Domain test importing infrastructure concerns
 def test_user_with_database():
-    from flx.infra.database import DatabaseConnection  # Wrong layer!
+    from flext.infra.database import DatabaseConnection  # Wrong layer!
     # ... domain test should not know about database
 ```
 
@@ -85,8 +85,8 @@ def test_user_with_database():
 ```python
 import pytest
 from datetime import UTC, datetime
-from flx.core.entities import User, AggregateRoot
-from flx.core.domain.value_objects import Email, UserId
+from flext.core.entities import User, AggregateRoot
+from flext.core.domain.value_objects import Email, UserId
 
 class TestUserAggregate:
     """Test user aggregate root following DDD patterns."""

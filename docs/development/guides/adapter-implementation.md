@@ -24,7 +24,7 @@
 
 - **📂 Section Hub**: [Development Guides](./index.md)
 - **🏠 Documentation Root**: [Root Index](../../index.md)
-- **🔗 Source Code**: [FLX Adapters](../../../flx/src/flx/adapters/)
+- **🔗 Source Code**: [FLX Adapters](../../../flext/src/flext/adapters/)
 - **🔗 Related**: [Architecture Patterns](../../architecture/patterns/adapter-patterns.md), [Testing Guidelines](../testing/adapter-testing.md)
 
 ---
@@ -100,7 +100,7 @@ class YourAdapter(BaseAdapter):
 **For adapters using observability mixins:**
 
 ```python
-from flx.adapters.behavioral import ObservabilityMixin
+from flext.adapters.behavioral import ObservabilityMixin
 
 class RedisCacheAdapter(BaseAdapter, ObservabilityMixin):
     def __init__(self, **data):
@@ -207,7 +207,7 @@ CacheAdapter().exists()   # ❌ Method not implemented
 
 ```python
 import pytest
-from flx.adapters.your_adapter import YourAdapter
+from flext.adapters.your_adapter import YourAdapter
 
 @pytest.mark.asyncio
 async def test_adapter_lifecycle():
@@ -307,7 +307,7 @@ def create_core_adapters() -> dict[str, BaseAdapter]:
 ### Bootstrap Registration
 
 ```python
-from flx.application.bootstrap import bootstrap
+from flext.application.bootstrap import bootstrap
 
 def register_adapters():
     """Register all adapters with bootstrap."""

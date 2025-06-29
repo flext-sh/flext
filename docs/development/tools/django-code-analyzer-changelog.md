@@ -12,9 +12,9 @@
 
 #### 🔧 **URL Routing Corrections**
 
-- ✅ Fixed UUID/integer mismatch in flx_project URLs
+- ✅ Fixed UUID/integer mismatch in flext_project URLs
 - ✅ Changed `<uuid:project_id>` to `<int:project_id>` in dashboard URLs
-- ✅ All flx_project detail pages now accessible
+- ✅ All flext_project detail pages now accessible
 
 #### ⚡ **Performance Optimizations**
 
@@ -27,7 +27,7 @@
 
 ##### 🔍 **Smart Package Filtering**
 
-- ✅ Prioritizes custom packages (flx*, gruponos*)
+- ✅ Prioritizes custom packages (flext*, gruponos*)
 - ✅ Filters out common system packages (pip, setuptools, etc.)
 - ✅ Enhanced source package detection
 - ✅ Better editable installation recognition
@@ -86,10 +86,10 @@
 
 #### **Packages Discovered** 📦
 
-- ✅ flx (main framework)
-- ✅ flx-database-oracle
-- ✅ flx-http-oracle-oic
-- ✅ flx-http-oracle-wms
+- ✅ flext (main framework)
+- ✅ flext-database-oracle
+- ✅ flext-http-oracle-oic
+- ✅ flext-http-oracle-wms
 - ✅ gruponos-poc-oic-wms
 - ✅ And other relevant development packages
 

@@ -3,7 +3,7 @@
 > **Function**: Standards for maintaining architectural consistency across FLX Framework | **Audience**: Developers, Technical Writers, QA Engineers | **Status**: Stable
 
 [![Consistency](https://img.shields.io/badge/consistency-enforced-blue.svg)](./index.md)
-[![Standards](https://img.shields.io/badge/standards-mandatory-red.svg)](./flx-architecture-standards.md)
+[![Standards](https://img.shields.io/badge/standards-mandatory-red.svg)](./flext-architecture-standards.md)
 [![Quality](https://img.shields.io/badge/quality-assurance-green.svg)](../../development/standards/index.md)
 
 **Comprehensive guide for maintaining architectural consistency across FLX hexagonal architecture framework documentation and implementation**
@@ -17,7 +17,7 @@
 ### **📍 Learning Path Position**
 
 ```
-[FLX Architecture Standards](./flx-architecture-standards.md) → **[Consistency Guide]** → [Modernization Roadmap](./modernization-roadmap.md)
+[FLX Architecture Standards](./flext-architecture-standards.md) → **[Consistency Guide]** → [Modernization Roadmap](./modernization-roadmap.md)
 ```
 
 ## 🎯 **Quick Links**
@@ -25,7 +25,7 @@
 - **📂 Standards Hub**: [Standards Hub](./index.md)
 - **🏛️ Architecture Root**: [Architecture Hub](../index.md)
 - **🏠 Documentation Root**: [Documentation Home](../../index.md)
-- **🔗 Related**: [FLX Architecture Standards](./flx-architecture-standards.md)
+- **🔗 Related**: [FLX Architecture Standards](./flext-architecture-standards.md)
 
 ---
 
@@ -100,10 +100,10 @@ from typing import Any, Dict
 import httpx
 from pydantic import BaseModel, Field
 
-from flx.core.entities import User
-from flx.ports.outbound.repository import UserRepository
-from flx.adapters.base import BaseAdapter
-from flx.infra.config.adapter import ConfigAdapter
+from flext.core.entities import User
+from flext.ports.outbound.repository import UserRepository
+from flext.adapters.base import BaseAdapter
+from flext.infra.config.adapter import ConfigAdapter
 ```
 
 ### Example Complexity Progression
@@ -300,7 +300,7 @@ class UserService:
         """
         self.user_repository = user_repository
         self.email_service = email_service
-        self.logger = logger or logging.getLogger("flx.services.user")
+        self.logger = logger or logging.getLogger("flext.services.user")
 ```
 
 ### Error Handling Pattern
@@ -378,14 +378,14 @@ class ExampleAdapter(BaseAdapter):
 
 ```python
 # ✅ CORRECT Layer-based Import Order
-from flx.core.entities import User, Order                    # Domain layer
-from flx.core.domain.value_objects import Email, Money             # Domain layer
-from flx.ports.inbound.commands import CreateUserCommand    # Port layer
-from flx.ports.outbound.repository import UserRepository    # Port layer
-from flx.adapters.base import BaseAdapter                   # Adapter layer
-from flx.application.services import UserApplicationService # Application layer
-from flx.infra.config.adapter import ConfigAdapter         # Infrastructure layer
-from flx.infra.database.session import DatabaseSession     # Infrastructure layer
+from flext.core.entities import User, Order                    # Domain layer
+from flext.core.domain.value_objects import Email, Money             # Domain layer
+from flext.ports.inbound.commands import CreateUserCommand    # Port layer
+from flext.ports.outbound.repository import UserRepository    # Port layer
+from flext.adapters.base import BaseAdapter                   # Adapter layer
+from flext.application.services import UserApplicationService # Application layer
+from flext.infra.config.adapter import ConfigAdapter         # Infrastructure layer
+from flext.infra.database.session import DatabaseSession     # Infrastructure layer
 ```
 
 ### Type Hint Standards
@@ -493,7 +493,7 @@ By following these standards, the FLX framework maintains architectural consiste
 
 ### **Prerequisites**
 
-- [FLX Architecture Standards](./flx-architecture-standards.md) - Foundational architectural standards before implementing consistency patterns
+- [FLX Architecture Standards](./flext-architecture-standards.md) - Foundational architectural standards before implementing consistency patterns
 - [Development Standards](../../development/standards/standardization-plan.md) - General development quality standards complementing architectural consistency
 - [Documentation Standards](../../development/standards/documentation-standards.md) - Documentation quality standards for consistent technical writing
 
@@ -592,7 +592,7 @@ class UserService:
 
 ```python
 # Wrong: Domain importing infrastructure
-from flx.infra.database import PostgresConnection
+from flext.infra.database import PostgresConnection
 
 class User(Entity):
     def save(self):

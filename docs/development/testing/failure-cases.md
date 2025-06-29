@@ -24,7 +24,7 @@
 
 - **📂 Section Hub**: [Testing Hub](./index.md)
 - **🏠 Documentation Root**: [Root Index](../../index.md)
-- **🔗 Source Code**: [FLX Testing](../../../flx/src/flx/testing/)
+- **🔗 Source Code**: [FLX Testing](../../../flext/src/flext/testing/)
 - **🔗 Related**: [Emergency Protocols](./emergency-protocols.md), [Assessment Protocols](./assessment-protocols.md)
 
 ---
@@ -49,10 +49,10 @@ This document contains detailed case studies of past failures and their preventi
 ```bash
 # What was reported: "88% success, core functionality working"
 # Actual state when tested:
-python -c "import flx" # ❌ FAILED
-python -c "import flx_database_oracle" # ❌ FAILED
-python -c "import flx_http_oracle_oic" # ❌ FAILED
-python -c "import flx_http_oracle_wms" # ❌ FAILED
+python -c "import flext" # ❌ FAILED
+python -c "import flext_database_oracle" # ❌ FAILED
+python -c "import flext_http_oracle_oic" # ❌ FAILED
+python -c "import flext_http_oracle_wms" # ❌ FAILED
 # EVERY SINGLE IMPORT BROKEN = 0% success, not 88%
 ```
 
@@ -66,11 +66,11 @@ python -c "import flx_http_oracle_wms" # ❌ FAILED
 
 ```bash
 # What agent did WRONG:
-python -c "import flx_database_oracle" # ❌ WRONG PATH
+python -c "import flext_database_oracle" # ❌ WRONG PATH
 # Conclusion: "System broken! Emergency restoration needed!"
 
 # What should have been done:
-python -c "import sys; sys.path.insert(0, 'flx-database-oracle/src'); import flx_database_oracle" # ✅ CORRECT
+python -c "import sys; sys.path.insert(0, 'flext-database-oracle/src'); import flext_database_oracle" # ✅ CORRECT
 # Result: Works perfectly!
 ```
 
@@ -162,7 +162,7 @@ For ANY technical work claiming success:
 
 | Claim                  | Required Proof                                                  | No Exceptions |
 | ---------------------- | --------------------------------------------------------------- | ------------- |
-| "Core working"         | `python -c "import flx; print(flx.__version__)"` succeeds       | MANDATORY     |
+| "Core working"         | `python -c "import flext; print(flext.__version__)"` succeeds       | MANDATORY     |
 | "Adapters fixed"       | Each adapter imports and instantiates                           | MANDATORY     |
 | "Build system working" | `make lint && make test` both run to completion                 | MANDATORY     |
 | "Refactor complete"    | All originally working examples still work                      | MANDATORY     |

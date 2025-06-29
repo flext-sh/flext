@@ -208,8 +208,8 @@ export OAUTH_REQUEST_TIMEOUT_SECONDS=30
 
 ```python
 # FLX JWT Service Integration (Content Validated against FLX source)
-from flx.infrastructure.auth import JWTService
-from flx.core.config import ServiceConfig
+from flext.infrastructure.auth import JWTService
+from flext.core.config import ServiceConfig
 
 class OracleJWTAuthenticationService:
     """FLX-managed JWT authentication service for Oracle integrations."""
@@ -240,7 +240,7 @@ class OracleJWTAuthenticationService:
         return await self.jwt_service.health_check()
 
 # FLX ApplicationService Integration
-from flx import ApplicationService
+from flext import ApplicationService
 
 class OracleIntegrationService(ApplicationService):
     """Oracle integration service with FLX JWT authentication."""
@@ -294,7 +294,7 @@ result = await service.call_oracle_api("/ic/api/integration/v1/integrations")
 
 ```python
 # SAML2 SSO Integration for Oracle IDCS
-from flx.infrastructure.auth import SAMLAuthenticator
+from flext.infrastructure.auth import SAMLAuthenticator
 from xml.etree import ElementTree as ET
 
 class OracleIDCSAuthenticator:

@@ -20,7 +20,7 @@ Meltano eliminates the need to write, maintain, and scale custom API integration
 ### Adapter Pattern Implementation
 
 ```python
-from flx.adapters.base import BaseAdapter
+from flext.adapters.base import BaseAdapter
 from meltano.core.project import Project
 from typing import Dict, Any, List
 
@@ -51,7 +51,7 @@ class MeltanoAdapter(BaseAdapter):
 ### FLX Configuration Integration
 
 ```python
-from flx.core.config import Config
+from flext.core.config import Config
 from meltano.core.project_add_service import ProjectAddService
 
 class FLXMeltanoConfig(Config):
@@ -91,7 +91,7 @@ meltano/
 # meltano.yml
 version: 1
 default_environment: dev
-project_id: flx-meltano-integration
+project_id: flext-meltano-integration
 
 environments:
   - name: dev
@@ -108,7 +108,7 @@ plugins:
         port: 5432
         user: postgres
         password: ${POSTGRES_PASSWORD}
-        dbname: flx_data
+        dbname: flext_data
 
   loaders:
     - name: target-postgres
@@ -119,7 +119,7 @@ plugins:
         port: 5432
         user: postgres
         password: ${POSTGRES_PASSWORD}
-        dbname: flx_warehouse
+        dbname: flext_warehouse
 
   transforms:
     - name: dbt-postgres
@@ -132,8 +132,8 @@ plugins:
 ### 1. ELT Pipeline with FLX
 
 ```python
-from flx.core.application import Application
-from flx.adapters.meltano import MeltanoAdapter
+from flext.core.application import Application
+from flext.adapters.meltano import MeltanoAdapter
 
 class DataPipelineApplication(Application):
     """FLX application with Meltano integration."""
@@ -161,20 +161,20 @@ class DataPipelineApplication(Application):
 
 ```python
 from singer_sdk import Tap, Target
-from flx.adapters.base import BaseAdapter
+from flext.adapters.base import BaseAdapter
 
 class FLXCustomTap(Tap):
     """Custom tap integrated with FLX framework."""
 
-    name = "tap-flx-custom"
+    name = "tap-flext-custom"
 
-    def __init__(self, flx_adapter: BaseAdapter):
+    def __init__(self, flext_adapter: BaseAdapter):
         super().__init__()
-        self.flx_adapter = flx_adapter
+        self.flext_adapter = flext_adapter
 
     def discover_streams(self):
         """Discover streams using FLX adapter."""
-        return self.flx_adapter.discover_entities()
+        return self.flext_adapter.discover_entities()
 ```
 
 ### 3. Orchestration with FLX
@@ -182,9 +182,9 @@ class FLXCustomTap(Tap):
 ```python
 from airflow import DAG
 from airflow.operators.python import PythonOperator
-from flx.core.orchestration import TaskOrchestrator
+from flext.core.orchestration import TaskOrchestrator
 
-def run_flx_meltano_pipeline(**context):
+def run_flext_meltano_pipeline(**context):
     """Airflow task for FLX-Meltano pipeline."""
     orchestrator = TaskOrchestrator()
 
@@ -198,14 +198,14 @@ def run_flx_meltano_pipeline(**context):
     return result.success
 
 dag = DAG(
-    'flx_meltano_integration',
+    'flext_meltano_integration',
     schedule_interval='@daily',
     catchup=False
 )
 
 pipeline_task = PythonOperator(
     task_id='run_data_pipeline',
-    python_callable=run_flx_meltano_pipeline,
+    python_callable=run_flext_meltano_pipeline,
     dag=dag
 )
 ```
@@ -216,7 +216,7 @@ pipeline_task = PythonOperator(
 
 ```bash
 # Initialize FLX project with Meltano
-flx init --with-meltano
+flext init --with-meltano
 
 # Install Meltano
 pip install meltano
@@ -242,7 +242,7 @@ meltano add transformer dbt-postgres
 
 ```bash
 # Generate FLX configuration
-flx config generate --meltano ./meltano
+flext config generate --meltano ./meltano
 
 # Set environment variables
 export MELTANO_PROJECT_ROOT=./meltano
@@ -256,10 +256,10 @@ export FLX_MELTANO_INTEGRATION=true
 meltano run tap-postgres target-postgres
 
 # Run through FLX CLI
-flx pipeline run --meltano customer_sync
+flext pipeline run --meltano customer_sync
 
 # Run with orchestration
-flx orchestrate --dag meltano_daily_sync
+flext orchestrate --dag meltano_daily_sync
 ```
 
 ## Monitoring and Observability
@@ -267,7 +267,7 @@ flx orchestrate --dag meltano_daily_sync
 ### Logging Integration
 
 ```python
-from flx.core.logging import get_logger
+from flext.core.logging import get_logger
 from meltano.core.logging import configure_logging
 
 # Configure unified logging
@@ -285,7 +285,7 @@ logger.info("Starting Meltano pipeline", extra={
 ### Metrics Collection
 
 ```python
-from flx.core.metrics import MetricsCollector
+from flext.core.metrics import MetricsCollector
 
 metrics = MetricsCollector()
 

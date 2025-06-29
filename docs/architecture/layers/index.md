@@ -3,7 +3,7 @@
 > **Function**: Layer organization and source structure for hexagonal architecture | **Audience**: Framework developers, system architects, backend developers
 
 [![Layers](https://img.shields.io/badge/layers-hexagonal-blue.svg)](./core-domain-layer.md)
-[![Structure](https://img.shields.io/badge/structure-validated-green.svg)](./flx-source-structure.md)
+[![Structure](https://img.shields.io/badge/structure-validated-green.svg)](./flext-source-structure.md)
 [![Domain](https://img.shields.io/badge/domain-DDD-orange.svg)](./application-layer.md)
 
 **Complete layer organization patterns for FLX Framework hexagonal architecture with production validation**
@@ -28,7 +28,7 @@ This hub provides comprehensive guidance for organizing application layers in he
 | ----------------------------------------------------- | --------------------------------- | -------------------------- | -------------- | ---------- |
 | [**Core Domain Layer**](./core-domain-layer.md)       | Domain layer design patterns      | Domain experts, architects | ⭐⭐⭐         | ✅ Updated |
 | [**Application Layer**](./application-layer.md)       | Application coordination patterns | Backend developers         | ⭐⭐           | ✅ Updated |
-| [**FLX Source Structure**](./flx-source-structure.md) | Framework organization patterns   | Framework developers       | ⭐⭐           | ✅ Updated |
+| [**FLX Source Structure**](./flext-source-structure.md) | Framework organization patterns   | Framework developers       | ⭐⭐           | ✅ Updated |
 
 ---
 
@@ -53,7 +53,7 @@ This hub provides comprehensive guidance for organizing application layers in he
 ### **🏢 For Framework Developers**
 
 ```
-1. [FLX Source Structure](./flx-source-structure.md) →
+1. [FLX Source Structure](./flext-source-structure.md) →
 2. [Core Domain Layer](./core-domain-layer.md) →
 3. [Standards](../standards/index.md)
 ```
@@ -126,7 +126,7 @@ This hub provides comprehensive guidance for organizing application layers in he
 - **Total Documents**: 3 comprehensive layer guides
 - **Hub Completeness**: 100% mandatory template compliance
 - **Cross-References**: 5+ bidirectional links per document
-- **Source Validation**: ✅ Validated against `/flx/src/flx/` structure
+- **Source Validation**: ✅ Validated against `/flext/src/flext/` structure
 
 ### **Layer Validation**
 

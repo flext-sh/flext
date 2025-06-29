@@ -100,19 +100,19 @@ Start here for understanding testing within hexagonal architecture:
 
 #### **FLX Oracle Integration Testing**
 
-- **[FLX OIC E2E Testing](flx-oic-e2e-testing.md)**
+- **[FLX OIC E2E Testing](flext-oic-e2e-testing.md)**
 
   - _Oracle Integration Cloud testing_
   - End-to-end OIC workflow testing
   - Authentication and integration testing
 
-- **[FLX WMS E2E Testing](flx-wms-e2e-testing.md)**
+- **[FLX WMS E2E Testing](flext-wms-e2e-testing.md)**
 
   - _Oracle WMS testing strategies_
   - WMS API testing, workflow validation
   - Data integration testing
 
-- **[FLX WMS Validation Proofs](flx-wms-validation-proofs.md)**
+- **[FLX WMS Validation Proofs](flext-wms-validation-proofs.md)**
   - _WMS validation and proof testing_
   - Validation logic testing, business rule verification
   - Compliance and audit testing
@@ -145,8 +145,8 @@ Hexagonal Architecture Testing
 
 ```
 Integration Testing
-├── Oracle WMS → [FLX WMS E2E Testing](flx-wms-e2e-testing.md)
-├── Oracle OIC → [FLX OIC E2E Testing](flx-oic-e2e-testing.md)
+├── Oracle WMS → [FLX WMS E2E Testing](flext-wms-e2e-testing.md)
+├── Oracle OIC → [FLX OIC E2E Testing](flext-oic-e2e-testing.md)
 ├── Oracle Database → [Integration Testing Guide](integration-testing-guide.md)
 └── REST APIs → [E2E Testing Guide](e2e-testing-guide.md)
 ```
@@ -171,7 +171,7 @@ Integration Testing
 
 1. [E2E Testing Guide](e2e-testing-guide.md) - End-to-end testing
 2. [Testing Guide](../guides/testing-guide.md) - General QA practices
-3. [FLX WMS E2E Testing](flx-wms-e2e-testing.md) - WMS testing procedures
+3. [FLX WMS E2E Testing](flext-wms-e2e-testing.md) - WMS testing procedures
 
 ### **⚙️ DevOps Engineers**
 
@@ -181,9 +181,9 @@ Integration Testing
 
 ### **🌐 Integration Specialists**
 
-1. [FLX OIC E2E Testing](flx-oic-e2e-testing.md) - OIC integration testing
-2. [FLX WMS E2E Testing](flx-wms-e2e-testing.md) - WMS integration testing
-3. [FLX WMS Validation Proofs](flx-wms-validation-proofs.md) - Validation testing
+1. [FLX OIC E2E Testing](flext-oic-e2e-testing.md) - OIC integration testing
+2. [FLX WMS E2E Testing](flext-wms-e2e-testing.md) - WMS integration testing
+3. [FLX WMS Validation Proofs](flext-wms-validation-proofs.md) - Validation testing
 
 ---
 
@@ -222,8 +222,8 @@ Integration Testing
 ```
 E2E Testing (Few, Slow, Expensive)
 ├── [E2E Testing Guide](e2e-testing-guide.md)
-├── [FLX WMS E2E Testing](flx-wms-e2e-testing.md)
-└── [FLX OIC E2E Testing](flx-oic-e2e-testing.md)
+├── [FLX WMS E2E Testing](flext-wms-e2e-testing.md)
+└── [FLX OIC E2E Testing](flext-oic-e2e-testing.md)
 
 Integration Testing (Some, Medium, Moderate)
 ├── [Integration Testing Guide](integration-testing-guide.md)

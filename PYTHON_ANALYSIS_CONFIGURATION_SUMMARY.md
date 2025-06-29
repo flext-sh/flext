@@ -103,12 +103,12 @@ python scripts/test_python_analysis.py
 
 ### **FLX Framework (11 projetos)**
 
-- flx-core, flx-api, flx-auth, flx-cli, flx-grpc
-- flx-ldap, flx-meltano, flx-observability, flx-plugin, flx-quality, flx-web
+- flext-core, flext-api, flext-auth, flext-cli, flext-grpc
+- flext-ldap, flext-meltano, flext-observability, flext-plugin, flext-quality, flext-web
 
 ### **Database (2 projetos)**
 
-- flx-db-oracle, oracledb-core-shared
+- flext-db-oracle, oracledb-core-shared
 
 ### **Taps & Targets (6 projetos)**
 

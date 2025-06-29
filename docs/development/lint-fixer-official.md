@@ -56,7 +56,7 @@ The script requires:
 python scripts/maintenance/official_pyauto_lint_fixer.py
 
 # Specific projects only
-python scripts/maintenance/official_pyauto_lint_fixer.py --projects target-oracle-wms flx
+python scripts/maintenance/official_pyauto_lint_fixer.py --projects target-oracle-wms flext
 
 # Using configuration file
 python scripts/maintenance/official_pyauto_lint_fixer.py --config config/lint_fixer.yaml
@@ -135,7 +135,7 @@ output:
    ```yaml
    target_projects:
      - target-oracle-wms
-     - flx
+     - flext
    ```
 
 2. **Enable More Fix Categories:**

@@ -41,7 +41,7 @@ This documentation details how to integrate mature Python libraries into the FLX
 
 #### FastAPI - Custom HTTP Server Replacement
 
-**Code to Eliminate**: `/flx/src/flx/infra/http/` (~600 lines)
+**Code to Eliminate**: `/flext/src/flext/infra/http/` (~600 lines)
 
 ```toml
 # Dependencies
@@ -61,7 +61,7 @@ class CustomHTTPServer:
 
 # After: FastAPI application
 from fastapi import FastAPI
-from flx.core.enhanced_factory import get_enhanced_factory
+from flext.core.enhanced_factory import get_enhanced_factory
 
 app = FastAPI(
     title="FLX Framework API",
@@ -90,7 +90,7 @@ async def health_check():
 
 #### Dependency Injector - Custom DI Replacement
 
-**Code to Eliminate**: `/flx/src/flx/core/services.py` (~300 lines)
+**Code to Eliminate**: `/flext/src/flext/core/services.py` (~300 lines)
 
 ```toml
 dependency-injector = "^4.42.0"
@@ -153,7 +153,7 @@ async def process_user(
 
 #### **Loguru - Substituição de Logging Customizado**
 
-**Código a Eliminar**: `/flx/src/flx/infra/logging/` (~200 linhas)
+**Código a Eliminar**: `/flext/src/flext/infra/logging/` (~200 linhas)
 
 ```toml
 loguru = "^0.7.0"
@@ -188,7 +188,7 @@ logger.add(
 
 # Rich integration for beautiful output
 logger.add(
-    "logs/flx.log",
+    "logs/flext.log",
     format="{time} | {level} | {name}:{function}:{line} | {extra[correlation_id]} - {message}",
     rotation="1 day",
     retention="30 days",
@@ -387,7 +387,7 @@ class AdapterCache:
         )
 
 # Integration with meta-factory
-from flx.core.enhanced_factory import create_adapter
+from flext.core.enhanced_factory import create_adapter
 
 async def cached_adapter_operation(schema_name: str, operation: str, **kwargs):
     # Create adapter with caching
@@ -448,10 +448,10 @@ class BackgroundTaskManager:
 
 # Depois: Celery with meta-factory integration
 from celery import Celery
-from flx.core.enhanced_factory import create_adapter
+from flext.core.enhanced_factory import create_adapter
 
 # Celery app
-celery_app = Celery('flx_tasks')
+celery_app = Celery('flext_tasks')
 celery_app.config_from_object({
     'broker_url': 'redis://localhost:6379/0',
     'result_backend': 'redis://localhost:6379/0',
@@ -499,7 +499,7 @@ def schedule_wms_inventory_sync():
     )
 
 # Monitoring with Flower
-# flower -A flx_tasks --port=5555
+# flower -A flext_tasks --port=5555
 ```
 
 **Benefits**:
@@ -527,7 +527,7 @@ hypothesis-jsonschema = "^0.23.1"
 # Property-based testing for meta-factory
 from hypothesis import given, strategies as st
 from hypothesis_jsonschema import from_schema
-from flx.core.meta_factory import AdapterConfig, generate_adapter
+from flext.core.meta_factory import AdapterConfig, generate_adapter
 
 # Schema strategy
 adapter_config_strategy = st.builds(
@@ -602,17 +602,17 @@ def test_adapter_error_handling(invalid_schema, invalid_config):
 ```python
 code_reduction = {
     "fastapi": {
-        "files_eliminated": ["/flx/src/flx/infra/http/"],
+        "files_eliminated": ["/flext/src/flext/infra/http/"],
         "lines_reduced": 600,
         "percentage": 4.0
     },
     "dependency_injector": {
-        "files_simplified": ["/flx/src/flx/core/services.py"],
+        "files_simplified": ["/flext/src/flext/core/services.py"],
         "lines_reduced": 300,
         "percentage": 2.0
     },
     "loguru": {
-        "files_eliminated": ["/flx/src/flx/infra/logging/"],
+        "files_eliminated": ["/flext/src/flext/infra/logging/"],
         "lines_reduced": 200,
         "percentage": 1.3
     },

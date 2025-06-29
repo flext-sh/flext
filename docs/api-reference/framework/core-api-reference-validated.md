@@ -4,9 +4,9 @@
 
 [![Core API](https://img.shields.io/badge/api-core_validated-blue.svg)](../index.md)
 [![Validation](https://img.shields.io/badge/validation-100%25-green.svg)](../../development/testing/index.md)
-[![Implementation](https://img.shields.io/badge/implementation-verified-brightgreen.svg)](/flx/src/flx/core/)
+[![Implementation](https://img.shields.io/badge/implementation-verified-brightgreen.svg)](/flext/src/flext/core/)
 
-**Complete API documentation based on ACTUAL implementation in `/flx/src/flx/core/` - not speculation**
+**Complete API documentation based on ACTUAL implementation in `/flext/src/flext/core/` - not speculation**
 
 ---
 
@@ -17,20 +17,20 @@
 ### **📍 Learning Path Position**
 
 ```
-[Framework API Hub](./api-reference-hub.md) → **[CORE API REFERENCE]** → [FLX API Overview](../comprehensive/flx-api-overview.md)
+[Framework API Hub](./api-reference-hub.md) → **[CORE API REFERENCE]** → [FLX API Overview](../comprehensive/flext-api-overview.md)
 ```
 
 ## 🎯 **Quick Links**
 
 - **📂 Section Hub**: [API Reference Hub](../index.md)
 - **🏠 Documentation Root**: [Root Index](../../index.md)
-- **🔗 Related**: [FLX Adapters Reference](../adapters/flx-adapters-comprehensive-reference.md)
+- **🔗 Related**: [FLX Adapters Reference](../adapters/flext-adapters-comprehensive-reference.md)
 
 ---
 
 ## 🎯 **Validation Notice**
 
-**This documentation is generated from and validated against the real codebase implementation.** All examples have been tested against the actual code in `/flx/src/flx/`.
+**This documentation is generated from and validated against the real codebase implementation.** All examples have been tested against the actual code in `/flext/src/flext/`.
 
 ---
 
@@ -38,12 +38,12 @@
 
 ### 📁 Module Structure (VALIDATED)
 
-**Real Import Structure** (from `/flx/src/flx/core/__init__.py`):
+**Real Import Structure** (from `/flext/src/flext/core/__init__.py`):
 
 ```python
-from flx.core.base import DomainObject, Identifiable, Timestamped
-from flx.core.entities import AggregateRoot, Entity
-from flx.core.enums import (
+from flext.core.base import DomainObject, Identifiable, Timestamped
+from flext.core.entities import AggregateRoot, Entity
+from flext.core.enums import (
     FlxAdapterStatus,
     FlxConnectionStatus,
     FlxDataType,
@@ -51,10 +51,10 @@ from flx.core.enums import (
     FlxQueryType,
     FlxTransactionStatus,
 )
-from flx.core.events import DomainEvent
-from flx.core.exceptions import BusinessRuleViolationError, DomainError, ValidationError
-from flx.core.logging_interface import DomainLogger, LoggerInterface
-from flx.core.mixins import (
+from flext.core.events import DomainEvent
+from flext.core.exceptions import BusinessRuleViolationError, DomainError, ValidationError
+from flext.core.logging_interface import DomainLogger, LoggerInterface
+from flext.core.mixins import (
     ConfigurationMixin,
     ConnectionMixin,
     ErrorHandlingMixin,
@@ -64,7 +64,7 @@ from flx.core.mixins import (
     ResourceMixin,
     TestEngineConnectionMixin,
 )
-from flx.core.models import (
+from flext.core.models import (
     FlxAdapterModel,
     FlxConfigModel,
     FlxConnectionModel,
@@ -74,9 +74,9 @@ from flx.core.models import (
     FlxQueryModel,
     FlxTransactionModel,
 )
-from flx.core.protocols import Adapter
-from flx.core.services import DomainService
-from flx.core.domain.value_objects import ValueObject
+from flext.core.protocols import Adapter
+from flext.core.services import DomainService
+from flext.core.domain.value_objects import ValueObject
 ```
 
 ---
@@ -85,12 +85,12 @@ from flx.core.domain.value_objects import ValueObject
 
 ### Entity Class - IMMUTABLE PATTERN
 
-**Location**: `flx.core.entities.Entity`
+**Location**: `flext.core.entities.Entity`
 **Validation**: ✅ VERIFIED
 
 ```python
 # REAL IMPLEMENTATION (VALIDATED):
-from flx.core.entities import Entity
+from flext.core.entities import Entity
 from typing import Self
 from datetime import datetime, UTC
 
@@ -147,13 +147,13 @@ def __hash__(self) -> int:
 
 ### AggregateRoot Class - ACTUAL Implementation
 
-**Location**: `flx.core.entities.AggregateRoot`
+**Location**: `flext.core.entities.AggregateRoot`
 **Validation**: ✅ VERIFIED
 
 ```python
 # REAL IMPLEMENTATION (VALIDATED):
-from flx.core.entities import AggregateRoot
-from flx.core.events import DomainEvent
+from flext.core.entities import AggregateRoot
+from flext.core.events import DomainEvent
 from typing import Self
 
 class Order(AggregateRoot):
@@ -230,12 +230,12 @@ def uncommitted_events(self) -> list[DomainEvent]:
 
 ### ValueObject Base Class
 
-**Location**: `flx.core.domain.value_objects.ValueObject`
+**Location**: `flext.core.domain.value_objects.ValueObject`
 **Validation**: ✅ VERIFIED
 
 ```python
 # REAL IMPLEMENTATION:
-from flx.core.domain.value_objects import ValueObject
+from flext.core.domain.value_objects import ValueObject
 from dataclasses import dataclass
 
 @dataclass(frozen=True, slots=True)
@@ -268,12 +268,12 @@ class Money(ValueObject):
 
 ### DomainEvent Class
 
-**Location**: `flx.core.events.DomainEvent`
+**Location**: `flext.core.events.DomainEvent`
 **Validation**: ✅ VERIFIED
 
 ```python
 # REAL IMPLEMENTATION STRUCTURE:
-from flx.core.events import DomainEvent
+from flext.core.events import DomainEvent
 from datetime import datetime, UTC
 from dataclasses import dataclass
 from typing import Any
@@ -301,10 +301,10 @@ class OrderConfirmedEvent(DomainEvent):
 
 ## 🎯 **Core Enums - ACTUAL Implementation**
 
-**Validation**: ✅ ALL 6 ENUMS VERIFIED from `/flx/src/flx/core/enums.py`
+**Validation**: ✅ ALL 6 ENUMS VERIFIED from `/flext/src/flext/core/enums.py`
 
 ```python
-from flx.core.enums import (
+from flext.core.enums import (
     FlxAdapterStatus,      # Adapter operational status
     FlxConnectionStatus,   # Connection state management
     FlxDataType,          # Data type definitions
@@ -326,10 +326,10 @@ transaction = FlxTransactionStatus.COMMITTED
 
 ## 🎯 **Core Models - ACTUAL Implementation**
 
-**Validation**: ✅ ALL 7 MODELS VERIFIED from `/flx/src/flx/core/models.py`
+**Validation**: ✅ ALL 7 MODELS VERIFIED from `/flext/src/flext/core/models.py`
 
 ```python
-from flx.core.models import (
+from flext.core.models import (
     FlxAdapterModel,       # Adapter configuration model
     FlxConfigModel,        # Framework configuration
     FlxConnectionModel,    # Connection parameters
@@ -352,10 +352,10 @@ adapter_config = FlxAdapterModel(
 
 ## 🎯 **Core Mixins - ACTUAL Implementation**
 
-**Validation**: ✅ ALL 8 MIXINS VERIFIED from `/flx/src/flx/core/mixins.py`
+**Validation**: ✅ ALL 8 MIXINS VERIFIED from `/flext/src/flext/core/mixins.py`
 
 ```python
-from flx.core.mixins import (
+from flext.core.mixins import (
     ConfigurationMixin,        # Configuration management
     ConnectionMixin,          # Connection handling
     ErrorHandlingMixin,       # Error management
@@ -380,9 +380,9 @@ class DatabaseAdapter(BaseAdapter, ConnectionMixin, ErrorHandlingMixin):
 
 ```python
 # COMPLETE EXAMPLE - TESTED AGAINST REAL CODE:
-from flx.core.entities import AggregateRoot, Entity
-from flx.core.events import DomainEvent
-from flx.core.domain.value_objects import ValueObject
+from flext.core.entities import AggregateRoot, Entity
+from flext.core.events import DomainEvent
+from flext.core.domain.value_objects import ValueObject
 from datetime import datetime, UTC
 from typing import Self
 
@@ -484,7 +484,7 @@ events = aggregate.collect_events()  # Real method for event retrieval
 
 ---
 
-**🔍 VALIDATION GUARANTEE**: Every API, method signature, and example in this documentation has been verified against the actual codebase in `/flx/src/flx/core/`. No speculative or aspirational content included.
+**🔍 VALIDATION GUARANTEE**: Every API, method signature, and example in this documentation has been verified against the actual codebase in `/flext/src/flext/core/`. No speculative or aspirational content included.
 
 ---
 
@@ -497,7 +497,7 @@ events = aggregate.collect_events()  # Real method for event retrieval
 
 ### **Next Steps**
 
-- [FLX Adapters Reference](../adapters/flx-adapters-comprehensive-reference.md) - Working with adapters that use core APIs
+- [FLX Adapters Reference](../adapters/flext-adapters-comprehensive-reference.md) - Working with adapters that use core APIs
 - [Testing Core Components](../../development/testing/core-testing.md) - Testing domain entities and services
 - [Advanced Patterns](../../architecture/patterns/advanced-patterns-hub.md) - Advanced domain modeling patterns
 

@@ -75,7 +75,7 @@ The Development Hub provides a comprehensive ecosystem for FLX Framework develop
 
 1. **Standards Enforcement**: [Standardization Plan](./standards/standardization-plan.md)
 2. **Quality Metrics**: [Coverage Analysis](./reports/test-coverage-analysis.md)
-3. **Project Management**: [Project Planning](./planning/flx-next-steps-planning.md)
+3. **Project Management**: [Project Planning](./planning/flext-next-steps-planning.md)
 4. **Automation**: [Scripts Organization](./tools/scripts-organization-guide.md)
 
 ## 🔗 **Cross-References**

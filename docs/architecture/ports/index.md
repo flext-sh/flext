@@ -116,7 +116,7 @@ This hub provides comprehensive guidance for defining and implementing port inte
 - **Total Documents**: 8+ port implementation guides
 - **Hub Completeness**: 100% mandatory template compliance
 - **Cross-References**: 5+ bidirectional links per document
-- **Source Validation**: ✅ Validated against `/flx/src/flx/ports/` implementation
+- **Source Validation**: ✅ Validated against `/flext/src/flext/ports/` implementation
 
 ### **Port Validation**
 

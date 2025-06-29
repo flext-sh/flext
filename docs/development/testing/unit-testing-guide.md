@@ -567,9 +567,9 @@ from unittest.mock import Mock
 from uuid import uuid4
 from datetime import datetime
 
-from flx.core.entities import User
-from flx.core.domain.value_objects import Email
-from flx.core.events import UserCreatedEvent
+from flext.core.entities import User
+from flext.core.domain.value_objects import Email
+from flext.core.events import UserCreatedEvent
 
 @pytest.fixture
 def sample_user():

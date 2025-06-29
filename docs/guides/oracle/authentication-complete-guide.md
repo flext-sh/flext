@@ -145,8 +145,8 @@ WMS_PASSWORD=wms_password
 #### Using FLX OAuth2 Service
 
 ```python
-from flx.adapters.oracle.auth import OracleAuthenticationService
-from flx.infrastructure.http import FlxJwtService
+from flext.adapters.oracle.auth import OracleAuthenticationService
+from flext.infrastructure.http import FlxJwtService
 
 # Initialize OAuth2 authentication
 auth_service = OracleAuthenticationService(
@@ -171,7 +171,7 @@ orders = await wms_client.get_orders()
 #### Token Management with Caching
 
 ```python
-from flx.adapters.oracle.oic import OICAuthenticator
+from flext.adapters.oracle.oic import OICAuthenticator
 
 # Initialize with automatic token management
 auth = OICAuthenticator(
@@ -196,7 +196,7 @@ response = await session.get('/ic/api/integration/v1/integrations')
 
 ```python
 import asyncio
-from flx.adapters.oracle.oic import OICClient, OICAuthError
+from flext.adapters.oracle.oic import OICClient, OICAuthError
 from tenacity import retry, stop_after_attempt, wait_exponential
 
 @retry(
@@ -324,7 +324,7 @@ STATE=random_secure_state_value
 ### Implementation Example
 
 ```python
-from flx.adapters.oracle.auth import OAuthAuthorizationCodeFlow
+from flext.adapters.oracle.auth import OAuthAuthorizationCodeFlow
 
 # Initialize authorization code flow
 auth_flow = OAuthAuthorizationCodeFlow(
@@ -360,14 +360,14 @@ For direct Oracle Database connections, use secure authentication methods:
 #### Connection String Authentication
 
 ```python
-from flx_database_oracle import DatabaseConfig, DatabasePlugin
+from flext_database_oracle import DatabaseConfig, DatabasePlugin
 
 # Secure database configuration
 config = DatabaseConfig(
     host="oracle-db.company.com",
     port=1521,
     service_name="ORCL",
-    username="flx_service_user",
+    username="flext_service_user",
     password=os.getenv("ORACLE_PASSWORD"),  # From secure storage
     # SSL Configuration
     ssl_mode=True,
@@ -408,7 +408,7 @@ config = DatabaseConfig(
 ORACLE_HOST=oracle-db.company.com
 ORACLE_PORT=1521
 ORACLE_SERVICE_NAME=ORCL
-ORACLE_USERNAME=flx_service_user
+ORACLE_USERNAME=flext_service_user
 ORACLE_PASSWORD=secure_password_from_vault
 
 # SSL Configuration
@@ -431,7 +431,7 @@ ORACLE_WALLET_PASSWORD=wallet_password
 
 ```bash
 # Use encrypted credential storage
-python -m flx.security create-credential-store \
+python -m flext.security create-credential-store \
     --encrypted \
     --output ./secure/credentials.enc \
     --key-file ./secure/encryption.key
@@ -456,7 +456,7 @@ export ORACLE_PASSWORD=$(aws ssm get-parameter --name "/oracle/password" --with-
 **Secret Rotation**
 
 ```python
-from flx.security import CredentialRotationService
+from flext.security import CredentialRotationService
 
 # Automatic credential rotation
 rotation_service = CredentialRotationService(
@@ -490,7 +490,7 @@ config = {
 
 ```python
 import ssl
-from flx.security import CertificatePinner
+from flext.security import CertificatePinner
 
 # Pin Oracle Cloud certificates
 cert_pinner = CertificatePinner([
@@ -519,7 +519,7 @@ cert_pinner.configure_context(ssl_context)
 **Monitor Authentication Events**
 
 ```python
-from flx.adapters.oracle.auth import AuthenticationMonitor
+from flext.adapters.oracle.auth import AuthenticationMonitor
 
 # Initialize monitoring
 auth_monitor = AuthenticationMonitor(
@@ -547,7 +547,7 @@ security_report = await auth_monitor.generate_security_report(
 **Audit Logging**
 
 ```python
-from flx.logging import SecurityAuditLogger
+from flext.logging import SecurityAuditLogger
 
 # Configure security audit logging
 audit_logger = SecurityAuditLogger(
@@ -576,7 +576,7 @@ await audit_logger.log_security_event(
 **Token Lifecycle Management**
 
 ```python
-from flx.adapters.oracle.auth import TokenManager
+from flext.adapters.oracle.auth import TokenManager
 
 # Secure token management
 token_manager = TokenManager(
@@ -597,7 +597,7 @@ token = await token_manager.get_valid_token(
 **Token Validation**
 
 ```python
-from flx.adapters.oracle.auth import TokenValidator
+from flext.adapters.oracle.auth import TokenValidator
 
 # Validate token before use
 validator = TokenValidator()

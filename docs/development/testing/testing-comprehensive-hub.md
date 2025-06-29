@@ -34,8 +34,8 @@ This hub organizes all FLX testing documentation into logical sections. Each spe
 
 ### 🔗 **Integration-Specific Testing**
 
-- **[FLX-WMS E2E Testing](./flx-wms-e2e-testing.md)** - Oracle WMS integration testing
-- **[FLX-OIC E2E Testing](./flx-oic-e2e-testing.md)** - Oracle OIC integration testing
+- **[FLX-WMS E2E Testing](./flext-wms-e2e-testing.md)** - Oracle WMS integration testing
+- **[FLX-OIC E2E Testing](./flext-oic-e2e-testing.md)** - Oracle OIC integration testing
 
 ### 📊 **Testing Analysis & Reports**
 
@@ -102,8 +102,8 @@ The testing framework follows a hierarchical pattern with clear separation betwe
 ### Basic Test Setup
 
 ```python
-from flx.testing import DeclarativeTestEngine, create_test_engine
-from flx.testing.adapters import MockHttpAdapter, MockDatabaseAdapter
+from flext.testing import DeclarativeTestEngine, create_test_engine
+from flext.testing.adapters import MockHttpAdapter, MockDatabaseAdapter
 
 # Create test engine with mock adapters
 engine = create_test_engine({
@@ -120,8 +120,8 @@ async def test_basic_workflow():
 ### Advanced Testing Patterns
 
 ```python
-from flx.testing import TestOrchestrator
-from flx.testing.engines import (
+from flext.testing import TestOrchestrator
+from flext.testing.engines import (
     ComponentTestEngine,
     InfrastructureTestEngine,
     IntegrationTestEngine
@@ -234,7 +234,7 @@ test_pipeline:
   e2e_tests:
     - pytest tests/e2e/ -v
   coverage:
-    - pytest --cov=flx tests/ --cov-report=html
+    - pytest --cov=flext tests/ --cov-report=html
 ```
 
 ### Development Commands
@@ -275,8 +275,8 @@ Specialized approaches for testing performance in hexagonal architecture:
 
 Comprehensive testing approaches for Oracle system integrations:
 
-- [WMS Integration Testing](./flx-wms-e2e-testing.md)
-- [OIC Integration Testing](./flx-oic-e2e-testing.md)
+- [WMS Integration Testing](./flext-wms-e2e-testing.md)
+- [OIC Integration Testing](./flext-oic-e2e-testing.md)
 
 ## Troubleshooting
 

@@ -16,8 +16,8 @@ This document outlines a **realistic and practical** refactoring strategy for th
 
 ```bash
 # Real framework size (not aspirational)
-find flx/src/ -name "*.py" | wc -l           # ~85 Python files
-find flx/src/ -name "*.py" -exec wc -l {} + | tail -1  # ~12,000 lines of code
+find flext/src/ -name "*.py" | wc -l           # ~85 Python files
+find flext/src/ -name "*.py" -exec wc -l {} + | tail -1  # ~12,000 lines of code
 find tests/ -name "test_*.py" | wc -l        # ~25 test files
 find examples/ -name "*.py" | wc -l          # ~8 example files
 ```
@@ -86,7 +86,7 @@ async def health_check():
 
 #### 2.1 Type Annotation Audit
 
-- Start with core modules (`flx/core/`)
+- Start with core modules (`flext/core/`)
 - Add type hints to public APIs
 - Use mypy to validate changes
 

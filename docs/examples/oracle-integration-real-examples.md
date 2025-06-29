@@ -22,9 +22,9 @@
 
 | **Integration**     | **Use Case**                       | **Complexity** | **Source Code**         |
 | ------------------- | ---------------------------------- | -------------- | ----------------------- |
-| **Oracle Database** | Data persistence and transactions  | ⭐⭐           | `/flx_database_oracle/` |
-| **Oracle WMS**      | Inventory and warehouse operations | ⭐⭐⭐         | `/flx_http_oracle_wms/` |
-| **Oracle OIC**      | Integration orchestration          | ⭐⭐⭐⭐       | `/flx_http_oracle_oic/` |
+| **Oracle Database** | Data persistence and transactions  | ⭐⭐           | `/flext_database_oracle/` |
+| **Oracle WMS**      | Inventory and warehouse operations | ⭐⭐⭐         | `/flext_http_oracle_wms/` |
+| **Oracle OIC**      | Integration orchestration          | ⭐⭐⭐⭐       | `/flext_http_oracle_oic/` |
 | **Multi-System**    | End-to-end business process        | ⭐⭐⭐⭐⭐     | Combined projects       |
 
 ### **Architecture Patterns Demonstrated**
@@ -45,8 +45,8 @@
 ```python
 # examples/oracle_database_basic.py
 import asyncio
-from flx.adapters.oracle.database import FlxOracleDbAdapter
-from flx.core.entities import Entity, AggregateRoot
+from flext.adapters.oracle.database import FlxOracleDbAdapter
+from flext.core.entities import Entity, AggregateRoot
 from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
@@ -93,8 +93,8 @@ async def database_crud_example():
         host="localhost",
         port=1521,
         service_name="XEPDB1",
-        username="flx_user",
-        password="flx_password"
+        username="flext_user",
+        password="flext_password"
     )
 
     try:
@@ -164,8 +164,8 @@ if __name__ == "__main__":
 ```python
 # examples/oracle_database_advanced.py
 import asyncio
-from flx.adapters.oracle.database import FlxOracleDbAdapter
-from flx.core.services import ApplicationService
+from flext.adapters.oracle.database import FlxOracleDbAdapter
+from flext.core.services import ApplicationService
 from contextlib import asynccontextmanager
 from typing import List
 
@@ -271,8 +271,8 @@ async def advanced_database_example():
         host="localhost",
         port=1521,
         service_name="XEPDB1",
-        username="flx_user",
-        password="flx_password",
+        username="flext_user",
+        password="flext_password",
         pool_min=2,
         pool_max=10
     )
@@ -314,8 +314,8 @@ if __name__ == "__main__":
 ```python
 # examples/oracle_wms_inventory.py
 import asyncio
-from flx.adapters.oracle.wms import WmsClient
-from flx.core.services import ApplicationService
+from flext.adapters.oracle.wms import WmsClient
+from flext.core.services import ApplicationService
 from datetime import datetime
 from typing import List, Optional
 
@@ -451,8 +451,8 @@ if __name__ == "__main__":
 ```python
 # examples/oracle_wms_lpn_workflow.py
 import asyncio
-from flx.adapters.oracle.wms import WmsClient
-from flx.core.services import ApplicationService
+from flext.adapters.oracle.wms import WmsClient
+from flext.core.services import ApplicationService
 from typing import List, Dict
 
 class LpnWorkflowService(ApplicationService):
@@ -658,9 +658,9 @@ if __name__ == "__main__":
 ```python
 # examples/oracle_oic_integration.py
 import asyncio
-from flx.adapters.oracle.oic import OicClient
-from flx.core.services import ApplicationService
-from flx.core.events import DomainEvent
+from flext.adapters.oracle.oic import OicClient
+from flext.core.services import ApplicationService
+from flext.core.events import DomainEvent
 from typing import Dict, List
 import json
 
@@ -914,10 +914,10 @@ if __name__ == "__main__":
 
 ### **Source Code Validation**
 
-- **Database Examples**: Validated against `/flx_database_oracle/` implementation
-- **WMS Examples**: Validated against `/flx_http_oracle_wms/` implementation
-- **OIC Examples**: Validated against `/flx_http_oracle_oic/` implementation
-- **Architecture Patterns**: Validated against `/flx/src/flx/` core framework
+- **Database Examples**: Validated against `/flext_database_oracle/` implementation
+- **WMS Examples**: Validated against `/flext_http_oracle_wms/` implementation
+- **OIC Examples**: Validated against `/flext_http_oracle_oic/` implementation
+- **Architecture Patterns**: Validated against `/flext/src/flext/` core framework
 
 ### **Testing Coverage**
 

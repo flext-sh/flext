@@ -320,7 +320,7 @@ class HttpAdapter:
 
 ```python
 # Centralized type definitions with validation
-from flx.core.types import TimeoutSeconds, PortNumber
+from flext.core.types import TimeoutSeconds, PortNumber
 
 class DatabaseAdapter:
     timeout: TimeoutSeconds  # Shared type with validation

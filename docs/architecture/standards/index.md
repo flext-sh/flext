@@ -4,7 +4,7 @@
 
 [![Standards](https://img.shields.io/badge/standards-consistency-blue.svg)](./architectural-consistency-guide.md)
 [![Modern](https://img.shields.io/badge/modern-Python313-green.svg)](./modernization-roadmap.md)
-[![Guidelines](https://img.shields.io/badge/guidelines-validated-orange.svg)](./flx-architecture-standards.md)
+[![Guidelines](https://img.shields.io/badge/guidelines-validated-orange.svg)](./flext-architecture-standards.md)
 
 **Complete architecture standards and consistency guidelines for FLX Framework with production validation**
 
@@ -27,7 +27,7 @@ This hub provides comprehensive architecture standards and consistency guideline
 | **Topic**                                                             | **Function**                       | **Audience**                  | **Complexity** | **Status** |
 | --------------------------------------------------------------------- | ---------------------------------- | ----------------------------- | -------------- | ---------- |
 | [**Architectural Consistency**](./architectural-consistency-guide.md) | Consistency guidelines & standards | Technical leads, teams        | ⭐⭐           | ✅ Updated |
-| [**FLX Architecture Standards**](./flx-architecture-standards.md)     | Core architecture design standards | Architects, senior developers | ⭐⭐⭐         | ✅ Updated |
+| [**FLX Architecture Standards**](./flext-architecture-standards.md)     | Core architecture design standards | Architects, senior developers | ⭐⭐⭐         | ✅ Updated |
 | [**Modernization Roadmap**](./modernization-roadmap.md)               | Framework evolution strategy       | Framework developers          | ⭐⭐⭐⭐       | ✅ Updated |
 
 ---
@@ -38,14 +38,14 @@ This hub provides comprehensive architecture standards and consistency guideline
 
 ```
 1. [Architectural Consistency](./architectural-consistency-guide.md) →
-2. [FLX Architecture Standards](./flx-architecture-standards.md) →
+2. [FLX Architecture Standards](./flext-architecture-standards.md) →
 3. [Team Implementation](../../development/index.md)
 ```
 
 ### **⚡ For Architects**
 
 ```
-1. [FLX Architecture Standards](./flx-architecture-standards.md) →
+1. [FLX Architecture Standards](./flext-architecture-standards.md) →
 2. [Modernization Roadmap](./modernization-roadmap.md) →
 3. [Design Patterns](../design/index.md)
 ```
@@ -126,7 +126,7 @@ This hub provides comprehensive architecture standards and consistency guideline
 - **Total Documents**: 3 comprehensive standards guides
 - **Hub Completeness**: 100% mandatory template compliance
 - **Cross-References**: 5+ bidirectional links per document
-- **Source Validation**: ✅ Validated against `/flx/` architecture implementation
+- **Source Validation**: ✅ Validated against `/flext/` architecture implementation
 
 ### **Standards Validation**
 

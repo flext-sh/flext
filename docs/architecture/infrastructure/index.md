@@ -121,7 +121,7 @@ This hub provides comprehensive infrastructure architecture patterns for FLX Fra
 - **Total Documents**: 1+ comprehensive infrastructure architecture guide
 - **Hub Completeness**: 100% mandatory template compliance
 - **Cross-References**: 5+ bidirectional links per document
-- **Source Validation**: ✅ Validated against `/flx/src/flx/infra/` implementation
+- **Source Validation**: ✅ Validated against `/flext/src/flext/infra/` implementation
 
 ### **Infrastructure Validation**
 

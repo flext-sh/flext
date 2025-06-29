@@ -42,7 +42,7 @@ include_trailing_comma = true
 force_grid_wrap = 0
 use_parentheses = true
 ensure_newline_before_comments = true
-known_first_party = [ "flx", "flx_database_oracle", "flx_http_oracle_oic", "flx_http_oracle_wms", "flx_adapter_example", "algar_oud_mig", "gn_oic_wms_db",]
+known_first_party = [ "flext", "flext_database_oracle", "flext_http_oracle_oic", "flext_http_oracle_wms", "flext_adapter_example", "algar_oud_mig", "gn_oic_wms_db",]
 known_local_folder = [ "algar_oud_mig", "gn_oic_wms_db",]
 
 [tool.mypy]
@@ -72,7 +72,7 @@ disallow_untyped_defs = false
 [tool.ruff]
 target-version = "py39"
 line-length = 88
-src = [ "src", "tests", "scripts", "flx/src", "*/src",]
+src = [ "src", "tests", "scripts", "flext/src", "*/src",]
 extend-exclude = [ "__pycache__", ".git", ".mypy_cache", ".pytest_cache", ".ruff_cache", ".venv", "venv", "build", "dist", "htmlcov",]
 
 [tool.bandit]
@@ -85,13 +85,13 @@ init_typed = true
 warn_required_dynamic_aliases = true
 
 [tool.poetry.extras]
-database = [ "flx-database-oracle",]
-http = [ "flx-http-oracle-oic", "flx-http-oracle-wms",]
-integration = [ "flx-oracle-oic", "flx-oracle-wms",]
-ldap = [ "flx-ldap", "tap-ldap", "target-ldap", "dbt-ldap",]
+database = [ "flext-database-oracle",]
+http = [ "flext-http-oracle-oic", "flext-http-oracle-wms",]
+integration = [ "flext-oracle-oic", "flext-oracle-wms",]
+ldap = [ "flext-ldap", "tap-ldap", "target-ldap", "dbt-ldap",]
 oracle = [ "target-oracle-wms", "target-oracle-oic", "tap-oracle-oic", "tap-oracle-wms", "oracle-oic-ext",]
 singer = [ "singer-sdk",]
-all = [ "flx-database-oracle", "flx-http-oracle-oic", "flx-http-oracle-wms", "flx-oracle-oic", "flx-oracle-wms", "flx-ldap", "tap-ldap", "target-ldap", "dbt-ldap", "target-oracle-wms", "target-oracle-oic", "tap-oracle-oic", "tap-oracle-wms", "oracle-oic-ext", "singer-sdk",]
+all = [ "flext-database-oracle", "flext-http-oracle-oic", "flext-http-oracle-wms", "flext-oracle-oic", "flext-oracle-wms", "flext-ldap", "tap-ldap", "target-ldap", "dbt-ldap", "target-oracle-wms", "target-oracle-oic", "tap-oracle-oic", "tap-oracle-wms", "oracle-oic-ext", "singer-sdk",]
 
 [tool.poetry.dependencies]
 python = "^3.9,<4.0"
@@ -172,43 +172,43 @@ markers = [ "unit: Unit tests", "integration: Integration tests", "e2e: End-to-e
 asyncio_default_fixture_loop_scope = "function"
 
 [tool.coverage.run]
-source = [ "src", "flx/src", "*/src",]
+source = [ "src", "flext/src", "*/src",]
 omit = [ "*/tests/*", "*/migrations/*", "*/__pycache__/*", "*/venv/*", "*/.venv/*",]
 
 [tool.coverage.report]
 exclude_lines = [ "pragma: no cover", "def __repr__", "if self.debug:", "if settings.DEBUG", "raise AssertionError", "raise NotImplementedError", "if 0:", "if __name__ == .__main__.:", "class .*\\bProtocol\\):", "@(abc\\.)?abstractmethod",]
 
-[tool.poetry.dependencies.flx]
-path = "flx"
+[tool.poetry.dependencies.flext]
+path = "flext"
 develop = true
 
-[tool.poetry.dependencies.flx-database-oracle]
-path = "flx-database-oracle"
-develop = true
-optional = true
-
-[tool.poetry.dependencies.flx-http-oracle-oic]
-path = "flx-http-oracle-oic"
+[tool.poetry.dependencies.flext-database-oracle]
+path = "flext-database-oracle"
 develop = true
 optional = true
 
-[tool.poetry.dependencies.flx-http-oracle-wms]
-path = "flx-http-oracle-wms"
+[tool.poetry.dependencies.flext-http-oracle-oic]
+path = "flext-http-oracle-oic"
 develop = true
 optional = true
 
-[tool.poetry.dependencies.flx-oracle-oic]
-path = "flx-oracle-oic"
+[tool.poetry.dependencies.flext-http-oracle-wms]
+path = "flext-http-oracle-wms"
 develop = true
 optional = true
 
-[tool.poetry.dependencies.flx-oracle-wms]
-path = "flx-oracle-wms"
+[tool.poetry.dependencies.flext-oracle-oic]
+path = "flext-oracle-oic"
 develop = true
 optional = true
 
-[tool.poetry.dependencies.flx-ldap]
-path = "./flx-ldap"
+[tool.poetry.dependencies.flext-oracle-wms]
+path = "flext-oracle-wms"
+develop = true
+optional = true
+
+[tool.poetry.dependencies.flext-ldap]
+path = "./flext-ldap"
 develop = true
 optional = true
 

@@ -214,7 +214,7 @@ SFTP_PRIVATE_KEY_PATH=/path/to/private/key
 
 ### CLI Commands
 
-The flx_project provides a comprehensive CLI for operations:
+The flext_project provides a comprehensive CLI for operations:
 
 ```bash
 # Database operations

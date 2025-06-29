@@ -36,7 +36,7 @@ This directory contains essential scripts for maintaining the FLX codebase, perf
 
 ```bash
 # Applies all auto-fixable Ruff violations including unsafe fixes
-python -m ruff check src/flx/ --fix --unsafe-fixes
+python -m ruff check src/flext/ --fix --unsafe-fixes
 ```
 
 - Import sorting and organization
@@ -49,7 +49,7 @@ python -m ruff check src/flx/ --fix --unsafe-fixes
 
 ```bash
 # Consistent code formatting with 120-character line length
-python -m black src/flx/ --line-length 120
+python -m black src/flext/ --line-length 120
 ```
 
 - String quote normalization
@@ -61,7 +61,7 @@ python -m black src/flx/ --line-length 120
 
 ```bash
 # Professional import organization with isort
-python -m isort src/flx/ --profile black --line-length 120
+python -m isort src/flext/ --profile black --line-length 120
 ```
 
 - PEP 8 compliant import ordering
@@ -72,8 +72,8 @@ python -m isort src/flx/ --profile black --line-length 120
 
 ```bash
 # Zero-tolerance validation of code quality
-python -m mypy src/flx/ --no-error-summary
-python -m ruff check src/flx/ --statistics
+python -m mypy src/flext/ --no-error-summary
+python -m ruff check src/flext/ --statistics
 ```
 
 - Type checking compliance verification
@@ -241,7 +241,7 @@ def analyze_imports(file_path: Path) -> set[str]:
 ```python
 def find_duplicate_imports():
     """Find duplicate import patterns across adapter files."""
-    # Scans src/flx/adapters and src/flx/infra directories
+    # Scans src/flext/adapters and src/flext/infra directories
     # Groups files by import usage patterns
     # Identifies frequently duplicated imports (used in 3+ files)
 ```
@@ -270,7 +270,7 @@ Import Pattern Analysis:
 
 Most common duplicated imports:
 - "from typing import Protocol": used in 15 files
-- "from flx.core.logging import FlxLogger": used in 12 files
+- "from flext.core.logging import FlxLogger": used in 12 files
 - "from abc import ABC, abstractmethod": used in 10 files
 ```
 
@@ -434,8 +434,8 @@ python validate_no_duplications.py
    import sys
    from pathlib import Path
    from typing import Optional
-   from flx.core.logging import FlxLogger
-   from flx.infra.logging.structured import StructuredLogger
+   from flext.core.logging import FlxLogger
+   from flext.infra.logging.structured import StructuredLogger
 
    def setup_script_logging(
        script_name: str,
@@ -443,7 +443,7 @@ python validate_no_duplications.py
        log_file: Optional[Path] = None
    ) -> FlxLogger:
        """Set up comprehensive logging for scripts."""
-       logger = FlxLogger(f"flx.scripts.{script_name}")
+       logger = FlxLogger(f"flext.scripts.{script_name}")
 
        # Configure structured logging
        if log_file:
@@ -514,7 +514,7 @@ python validate_no_duplications.py
        parser = argparse.ArgumentParser(
            description="FLX maintenance script with comprehensive options",
            epilog="Examples:\n"
-                  "  %(prog)s --target src/flx/core --dry-run\n"
+                  "  %(prog)s --target src/flext/core --dry-run\n"
                   "  %(prog)s --operations imports,cleanup --parallel 4\n"
                   "  %(prog)s --config custom_config.yaml --verbose",
            formatter_class=argparse.RawDescriptionHelpFormatter
@@ -753,7 +753,7 @@ class TestUltraRigorousCleanup:
             (0, "Fixed 10 issues", ""),
             (0, "Formatted 25 files", ""),
             (0, "Sorted imports in 25 files", ""),
-            (1, "", "src/flx/core/test.py:42: error: Cannot resolve name"),
+            (1, "", "src/flext/core/test.py:42: error: Cannot resolve name"),
             (0, "", "Found 3 errors")
         ]
         mock_run_command.side_effect = mock_responses
@@ -771,15 +771,15 @@ class TestUltraRigorousCleanup:
         mock_result.returncode = 1
         mock_result.stdout = ""
         mock_result.stderr = """
-src/flx/core/test.py:42: error: Cannot resolve name
-src/flx/core/other.py:15: error: Missing type annotation
+src/flext/core/test.py:42: error: Cannot resolve name
+src/flext/core/other.py:15: error: Missing type annotation
 Found 2 errors in 2 files
 """
         mock_subprocess_run.return_value = mock_result
 
         # Execute command directly
         returncode, stdout, stderr = run_command(
-            ["python", "-m", "mypy", "src/flx/"],
+            ["python", "-m", "mypy", "src/flext/"],
             "Testing MyPy"
         )
 
@@ -794,7 +794,7 @@ Found 2 errors in 2 files
         mock_result.returncode = 1
         mock_result.stdout = ""
         mock_result.stderr = """
-3	F401	[*] `flx.core.unused` imported but unused
+3	F401	[*] `flext.core.unused` imported but unused
 2	E302	[*] Expected 2 blank lines, found 1
 1	W291	[*] Trailing whitespace
 """
@@ -802,7 +802,7 @@ Found 2 errors in 2 files
 
         # Execute
         returncode, stdout, stderr = run_command(
-            ["python", "-m", "ruff", "check", "src/flx/", "--statistics"],
+            ["python", "-m", "ruff", "check", "src/flext/", "--statistics"],
             "Testing Ruff statistics"
         )
 
@@ -881,28 +881,28 @@ from typing import List as ListType
         # Setup mock file structure
         mock_exists.return_value = True
         mock_files = [
-            Path("src/flx/adapters/http.py"),
-            Path("src/flx/adapters/database.py"),
-            Path("src/flx/infra/logging.py")
+            Path("src/flext/adapters/http.py"),
+            Path("src/flext/adapters/database.py"),
+            Path("src/flext/infra/logging.py")
         ]
         mock_rglob.return_value = mock_files
 
         # Mock file contents
         file_contents = {
-            "src/flx/adapters/http.py": """
+            "src/flext/adapters/http.py": """
 import asyncio
 from typing import Protocol
-from flx.core.logging import FlxLogger
+from flext.core.logging import FlxLogger
 """,
-            "src/flx/adapters/database.py": """
+            "src/flext/adapters/database.py": """
 import asyncio
 from typing import Protocol, Dict
-from flx.core.base import BaseAdapter
+from flext.core.base import BaseAdapter
 """,
-            "src/flx/infra/logging.py": """
+            "src/flext/infra/logging.py": """
 import logging
 from typing import Protocol
-from flx.core.base import BaseClass
+from flext.core.base import BaseClass
 """
         }
 
@@ -911,11 +911,11 @@ from flx.core.base import BaseClass
             def side_effect(file_path):
                 content = file_contents.get(str(file_path), "")
                 if "http.py" in str(file_path):
-                    return {"import asyncio", "from typing import Protocol", "from flx.core.logging import FlxLogger"}
+                    return {"import asyncio", "from typing import Protocol", "from flext.core.logging import FlxLogger"}
                 elif "database.py" in str(file_path):
-                    return {"import asyncio", "from typing import Protocol", "from flx.core.base import BaseAdapter"}
+                    return {"import asyncio", "from typing import Protocol", "from flext.core.base import BaseAdapter"}
                 elif "logging.py" in str(file_path):
-                    return {"import logging", "from typing import Protocol", "from flx.core.base import BaseClass"}
+                    return {"import logging", "from typing import Protocol", "from flext.core.base import BaseClass"}
                 return set()
 
             mock_analyze.side_effect = side_effect
@@ -940,7 +940,7 @@ class TestValidationScript:
     def test_find_class_duplications_no_violations(self, mock_exists, mock_rglob):
         """Test class duplication detection with no violations."""
         mock_exists.return_value = True
-        mock_rglob.return_value = [Path("src/flx/adapters/http.py")]
+        mock_rglob.return_value = [Path("src/flext/adapters/http.py")]
 
         code = """
 class HttpAdapter:
@@ -961,11 +961,11 @@ class HttpClientMixin:
     def test_check_standardization_compliance(self, mock_exists, mock_rglob):
         """Test adapter standardization compliance checking."""
         mock_exists.return_value = True
-        mock_rglob.return_value = [Path("src/flx/adapters/http.py")]
+        mock_rglob.return_value = [Path("src/flext/adapters/http.py")]
 
         # Code with all required patterns
         compliant_code = """
-from flx.adapters.base import EnhancedAdapter
+from flext.adapters.base import EnhancedAdapter
 
 class HttpAdapter(EnhancedAdapter):
     # Configuration fields organized hierarchically
@@ -991,7 +991,7 @@ class HttpAdapter(EnhancedAdapter):
     def test_check_standardization_non_compliance(self, mock_exists, mock_rglob):
         """Test detection of non-compliant adapters."""
         mock_exists.return_value = True
-        mock_rglob.return_value = [Path("src/flx/adapters/http.py")]
+        mock_rglob.return_value = [Path("src/flext/adapters/http.py")]
 
         # Code missing required patterns
         non_compliant_code = """
@@ -1017,7 +1017,7 @@ repos:
   - repo: local
     hooks:
       # Ultra rigorous cleanup validation
-      - id: flx-zero-tolerance-check
+      - id: flext-zero-tolerance-check
         name: FLX Zero Tolerance Validation
         entry: python scripts/ultra_rigorous_cleanup.py
         language: python
@@ -1026,7 +1026,7 @@ repos:
         description: "Ensures zero MyPy and Ruff violations"
 
       # Import consolidation check
-      - id: flx-import-analysis
+      - id: flext-import-analysis
         name: FLX Import Pattern Analysis
         entry: python consolidate_imports.py
         language: python
@@ -1035,7 +1035,7 @@ repos:
         description: "Analyzes import patterns for consolidation opportunities"
 
       # Duplication validation
-      - id: flx-duplication-check
+      - id: flext-duplication-check
         name: FLX Duplication Validation
         entry: python validate_no_duplications.py
         language: python
@@ -1125,7 +1125,7 @@ jobs:
 
           # MyPy validation results
           echo "## MyPy Validation" >> compliance_report.md
-          python -m mypy src/flx/ --no-error-summary > mypy_results.txt 2>&1 || true
+          python -m mypy src/flext/ --no-error-summary > mypy_results.txt 2>&1 || true
           echo '```' >> compliance_report.md
           cat mypy_results.txt >> compliance_report.md
           echo '```' >> compliance_report.md
@@ -1133,7 +1133,7 @@ jobs:
 
           # Ruff validation results
           echo "## Ruff Validation" >> compliance_report.md
-          python -m ruff check src/flx/ --statistics > ruff_results.txt 2>&1 || true
+          python -m ruff check src/flext/ --statistics > ruff_results.txt 2>&1 || true
           echo '```' >> compliance_report.md
           cat ruff_results.txt >> compliance_report.md
           echo '```' >> compliance_report.md
@@ -1191,7 +1191,7 @@ jobs:
 
       - name: Run Bandit Security Check
         run: |
-          bandit -r src/flx/ -f json -o bandit_report.json || true
+          bandit -r src/flext/ -f json -o bandit_report.json || true
 
       - name: Upload Security Reports
         uses: actions/upload-artifact@v3
@@ -1266,7 +1266,7 @@ export FLX_CLEANUP_BLACK_LINE_LENGTH="120"        # Black line length
 export FLX_CLEANUP_ISORT_PROFILE="black"          # isort profile
 
 # Import analysis configuration
-export FLX_IMPORT_ANALYSIS_DIRS="src/flx/adapters,src/flx/infra"  # Directories to analyze
+export FLX_IMPORT_ANALYSIS_DIRS="src/flext/adapters,src/flext/infra"  # Directories to analyze
 export FLX_IMPORT_MIN_DUPLICATES="3"              # Minimum files for duplicate reporting
 
 # Validation configuration
@@ -1296,18 +1296,18 @@ scripts:
       ruff_autofix:
         enabled: true
         unsafe_fixes: true
-        target_dir: "src/flx/"
+        target_dir: "src/flext/"
 
       black_formatting:
         enabled: true
         line_length: 120
-        target_dir: "src/flx/"
+        target_dir: "src/flext/"
 
       import_sorting:
         enabled: true
         profile: "black"
         line_length: 120
-        target_dir: "src/flx/"
+        target_dir: "src/flext/"
 
       validation:
         mypy:
@@ -1317,14 +1317,14 @@ scripts:
         ruff:
           enabled: true
           statistics: true
-          target_dir: "src/flx/"
+          target_dir: "src/flext/"
 
   # Import consolidation configuration
   import_analysis:
     enabled: true
     target_directories:
-      - "src/flx/adapters"
-      - "src/flx/infra"
+      - "src/flext/adapters"
+      - "src/flext/infra"
     min_duplicate_threshold: 3
     exclude_patterns:
       - "__init__.py"
@@ -1419,12 +1419,12 @@ cleanup:
   execution_phases:
     phase_1_ruff_autofix:
       command:
-        ["python", "-m", "ruff", "check", "src/flx/", "--fix", "--unsafe-fixes"]
+        ["python", "-m", "ruff", "check", "src/flext/", "--fix", "--unsafe-fixes"]
       description: "Applying all Ruff auto-fixes with unsafe fixes enabled"
       continue_on_error: false
 
     phase_2_black_formatting:
-      command: ["python", "-m", "black", "src/flx/", "--line-length", "120"]
+      command: ["python", "-m", "black", "src/flext/", "--line-length", "120"]
       description: "Applying Black formatting with 120 character line length"
       continue_on_error: false
 
@@ -1434,7 +1434,7 @@ cleanup:
           "python",
           "-m",
           "isort",
-          "src/flx/",
+          "src/flext/",
           "--profile",
           "black",
           "--line-length",
@@ -1444,13 +1444,13 @@ cleanup:
       continue_on_error: false
 
     phase_4_mypy_validation:
-      command: ["python", "-m", "mypy", "src/flx/", "--no-error-summary"]
+      command: ["python", "-m", "mypy", "src/flext/", "--no-error-summary"]
       description: "Running final MyPy validation"
       continue_on_error: true
       parse_errors: true
 
     phase_5_ruff_validation:
-      command: ["python", "-m", "ruff", "check", "src/flx/", "--statistics"]
+      command: ["python", "-m", "ruff", "check", "src/flext/", "--statistics"]
       description: "Running final Ruff validation"
       continue_on_error: true
       parse_statistics: true
@@ -2090,15 +2090,15 @@ class RecoveryStrategies:
 
 ### Core Framework Documentation
 
-- [**Hexagonal Architecture Guide**](../docs/architecture/flx-architecture-standards.md) - Architecture principles and patterns
-- [**Testing Framework**](../src/flx/testing/README.md) - Comprehensive testing infrastructure
+- [**Hexagonal Architecture Guide**](../docs/architecture/flext-architecture-standards.md) - Architecture principles and patterns
+- [**Testing Framework**](../src/flext/testing/README.md) - Comprehensive testing infrastructure
 - [**Development Workflow**](../docs/guides/) - Development process and best practices
 
 ### Infrastructure & Deployment
 
 - [**CI/CD Pipeline**](../.github/workflows/) - Continuous integration and deployment setup
-- [**Deployment Automation**](../src/flx/infra/deployment/) - Production deployment scripts
-- [**Observability**](../src/flx/infra/observability/) - Monitoring and logging infrastructure
+- [**Deployment Automation**](../src/flext/infra/deployment/) - Production deployment scripts
+- [**Observability**](../src/flext/infra/observability/) - Monitoring and logging infrastructure
 
 ### Code Quality & Standards
 

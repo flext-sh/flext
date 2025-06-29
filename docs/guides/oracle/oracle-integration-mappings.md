@@ -76,8 +76,8 @@ This document provides reference information for Oracle Cloud WMS and Inventory 
 For new integrations, use the FLX framework patterns:
 
 ```python
-from flx.adapters.oracle.wms import WMSIntegrationAdapter
-from flx.adapters.oracle.inventory import InventoryAdapter
+from flext.adapters.oracle.wms import WMSIntegrationAdapter
+from flext.adapters.oracle.inventory import InventoryAdapter
 
 class OrderLockIntegration:
     def __init__(self):
@@ -168,7 +168,7 @@ Key changes in Oracle Cloud WMS 24.x series:
 
    ```python
    # Check current mappings
-   from flx.adapters.oracle.migration import MappingAnalyzer
+   from flext.adapters.oracle.migration import MappingAnalyzer
 
    analyzer = MappingAnalyzer()
    compatibility = analyzer.check_version_compatibility(
@@ -181,7 +181,7 @@ Key changes in Oracle Cloud WMS 24.x series:
 
    ```python
    # Test mapping compatibility
-   from flx.testing.oracle import OracleIntegrationTester
+   from flext.testing.oracle import OracleIntegrationTester
 
    tester = OracleIntegrationTester()
    results = await tester.test_mapping_compatibility(
@@ -193,7 +193,7 @@ Key changes in Oracle Cloud WMS 24.x series:
 
    ```python
    # Execute migration
-   from flx.adapters.oracle.migration import MappingMigrator
+   from flext.adapters.oracle.migration import MappingMigrator
 
    migrator = MappingMigrator()
    await migrator.migrate_mappings(
@@ -210,8 +210,8 @@ Key changes in Oracle Cloud WMS 24.x series:
 #### Repository Pattern
 
 ```python
-from flx.core.entities import AggregateRoot
-from flx.adapters.oracle.repositories import OracleWMSRepository
+from flext.core.entities import AggregateRoot
+from flext.adapters.oracle.repositories import OracleWMSRepository
 
 class OrderAggregate(AggregateRoot):
     order_id: str
@@ -239,8 +239,8 @@ class OrderRepository(OracleWMSRepository[OrderAggregate]):
 #### Event-Driven Integration
 
 ```python
-from flx.core.events import DomainEvent
-from flx.adapters.oracle.events import OracleEventHandler
+from flext.core.events import DomainEvent
+from flext.adapters.oracle.events import OracleEventHandler
 
 class InventoryUpdatedHandler(OracleEventHandler):
     async def handle(self, event: DomainEvent) -> None:
@@ -304,7 +304,7 @@ mappings:
 ### Mapping Configuration
 
 ```python
-from flx.adapters.oracle.config import OracleMappingConfig
+from flext.adapters.oracle.config import OracleMappingConfig
 
 config = OracleMappingConfig.load_from_file("mappings/24.4.0/config.yaml")
 
@@ -327,7 +327,7 @@ receipt_advice_mapping = config.get_mapping(
 ### 2. Error Handling
 
 ```python
-from flx.adapters.oracle.exceptions import OracleIntegrationError
+from flext.adapters.oracle.exceptions import OracleIntegrationError
 
 try:
     await wms_adapter.send_receipt_advice(data)
@@ -340,7 +340,7 @@ except OracleIntegrationError as e:
 ### 3. Data Validation
 
 ```python
-from flx.adapters.oracle.validation import OracleDataValidator
+from flext.adapters.oracle.validation import OracleDataValidator
 
 validator = OracleDataValidator(version="24.4.0")
 validation_result = validator.validate_receipt_advice(data)
@@ -352,7 +352,7 @@ if not validation_result.is_valid:
 ### 4. Monitoring and Logging
 
 ```python
-from flx.adapters.oracle.monitoring import OracleIntegrationMonitor
+from flext.adapters.oracle.monitoring import OracleIntegrationMonitor
 
 monitor = OracleIntegrationMonitor()
 
@@ -378,7 +378,7 @@ async def send_receipt_advice(data: dict) -> bool:
 
    ```python
    # Verify mapping compatibility
-   from flx.adapters.oracle.diagnostics import MappingDiagnostics
+   from flext.adapters.oracle.diagnostics import MappingDiagnostics
 
    diagnostics = MappingDiagnostics()
    issues = diagnostics.check_mapping_conflicts()
@@ -389,7 +389,7 @@ async def send_receipt_advice(data: dict) -> bool:
    ```python
    # Enable detailed validation logging
    import logging
-   logging.getLogger('flx.adapters.oracle.validation').setLevel(logging.DEBUG)
+   logging.getLogger('flext.adapters.oracle.validation').setLevel(logging.DEBUG)
    ```
 
 ## Migration from Legacy Mappings
@@ -399,7 +399,7 @@ To migrate from legacy mappings to FLX framework:
 1. **Analyze Current Mappings**
 
    ```bash
-   python -m flx.tools.oracle.analyze_legacy_mappings \
+   python -m flext.tools.oracle.analyze_legacy_mappings \
        --input-dir /path/to/legacy/mappings \
        --output-report mapping_analysis.json
    ```
@@ -407,7 +407,7 @@ To migrate from legacy mappings to FLX framework:
 2. **Generate FLX Adapters**
 
    ```bash
-   python -m flx.tools.oracle.generate_adapters \
+   python -m flext.tools.oracle.generate_adapters \
        --mapping-analysis mapping_analysis.json \
        --output-dir src/adapters/oracle/
    ```

@@ -5,7 +5,7 @@
 
 ## Executive Summary
 
-Successfully extracted all working components from `flx-meltano-enterprise` into 8 modular projects. Each module now has:
+Successfully extracted all working components from `flext-meltano-enterprise` into 8 modular projects. Each module now has:
 
 - Source code copied from original project
 - `pyproject.toml` with proper dependencies
@@ -13,10 +13,10 @@ Successfully extracted all working components from `flx-meltano-enterprise` into
 
 ## Extraction Details
 
-### 1. ✅ flx-core
+### 1. ✅ flext-core
 
 - **Extracted**: Domain layer (3,721 lines), Application layer, Infrastructure layer, Plugins
-- **Path**: `/home/marlonsc/pyauto/flx-core/src/flx_core/`
+- **Path**: `/home/marlonsc/pyauto/flext-core/src/flext_core/`
 - **Components**:
   - `domain/` - Complete DDD implementation
   - `application/` - Use cases and handlers
@@ -25,10 +25,10 @@ Successfully extracted all working components from `flx-meltano-enterprise` into
   - `config/` - Configuration management
   - `events/` - Event bus system
 
-### 2. ✅ flx-auth
+### 2. ✅ flext-auth
 
 - **Extracted**: Complete authentication module (70KB+)
-- **Path**: `/home/marlonsc/pyauto/flx-auth/src/flx_auth/`
+- **Path**: `/home/marlonsc/pyauto/flext-auth/src/flext_auth/`
 - **Components**:
   - `user_service.py` - 32KB fully implemented
   - `jwt_service.py` - 28KB fully implemented
@@ -36,41 +36,41 @@ Successfully extracted all working components from `flx-meltano-enterprise` into
   - `models.py` - User and role models
   - `security.py` - Password policies
 
-### 3. ✅ flx-api
+### 3. ✅ flext-api
 
 - **Extracted**: API gateway (5,047 lines)
-- **Path**: `/home/marlonsc/pyauto/flx-api/src/flx_api/`
+- **Path**: `/home/marlonsc/pyauto/flext-api/src/flext_api/`
 - **Status**: 100% complete, 0 NotImplementedError
 
-### 4. ✅ flx-grpc
+### 4. ✅ flext-grpc
 
 - **Extracted**: gRPC services (6,647 lines)
-- **Path**: `/home/marlonsc/pyauto/flx-grpc/src/flx_grpc/`
+- **Path**: `/home/marlonsc/pyauto/flext-grpc/src/flext_grpc/`
 - **Components**:
   - `server_implementation.py` - 3,125 lines
   - `proto/` - Service definitions
   - `converters/` - Proto ↔ Domain mapping
   - `interceptors/` - Auth, logging, metrics
 
-### 5. ✅ flx-meltano
+### 5. ✅ flext-meltano
 
 - **Extracted**: Meltano integration (241KB)
-- **Path**: `/home/marlonsc/pyauto/flx-meltano/src/flx_meltano/`
+- **Path**: `/home/marlonsc/pyauto/flext-meltano/src/flext_meltano/`
 - **Status**: 100% complete integration
 
-### 6. ✅ flx-web
+### 6. ✅ flext-web
 
 - **Extracted**: Django web application
-- **Path**: `/home/marlonsc/pyauto/flx-web/src/flx_web/`
+- **Path**: `/home/marlonsc/pyauto/flext-web/src/flext_web/`
 - **Components**:
   - Django apps: dashboard, projects, pipelines, monitoring, users
   - Templates and static files
   - Django settings structure
 
-### 7. ✅ flx-observability
+### 7. ✅ flext-observability
 
 - **Extracted**: Monitoring and observability (150KB+)
-- **Path**: `/home/marlonsc/pyauto/flx-observability/src/flx_observability/`
+- **Path**: `/home/marlonsc/pyauto/flext-observability/src/flext_observability/`
 - **Components**:
   - Both `observability/` and `monitoring/` directories
   - Prometheus, OpenTelemetry, health checks
@@ -87,13 +87,13 @@ Successfully extracted all working components from `flx-meltano-enterprise` into
 
 ### .env.example Files
 
-- ✅ flx-core: JWT, database, Redis, plugin configuration
-- ✅ flx-auth: Token storage, password policies, security settings
-- ⏳ flx-api: (pending)
-- ⏳ flx-grpc: (pending)
-- ⏳ flx-meltano: (pending)
-- ⏳ flx-web: (pending)
-- ⏳ flx-observability: (pending)
+- ✅ flext-core: JWT, database, Redis, plugin configuration
+- ✅ flext-auth: Token storage, password policies, security settings
+- ⏳ flext-api: (pending)
+- ⏳ flext-grpc: (pending)
+- ⏳ flext-meltano: (pending)
+- ⏳ flext-web: (pending)
+- ⏳ flext-observability: (pending)
 
 ## Import Path Updates Required
 
@@ -101,12 +101,12 @@ The extracted code still uses import paths from the monolith:
 
 ```python
 # Current (needs update):
-from flx_core.domain.entities import Pipeline
-from flx_core.auth.services import UserService
+from flext_core.domain.entities import Pipeline
+from flext_core.auth.services import UserService
 
 # Should become:
-from flx_core.domain.entities import Pipeline  # In flx-core
-from flx_auth.services import UserService      # In flx-auth
+from flext_core.domain.entities import Pipeline  # In flext-core
+from flext_auth.services import UserService      # In flext-auth
 ```
 
 ## Next Steps
@@ -120,8 +120,8 @@ from flx_auth.services import UserService      # In flx-auth
 
 ### Week 1 Priorities
 
-1. Complete 6 token storage methods in flx-auth
-2. Implement plugin hot reload in flx-core
+1. Complete 6 token storage methods in flext-auth
+2. Implement plugin hot reload in flext-core
 3. Update all NotImplementedError instances
 4. Create integration tests
 

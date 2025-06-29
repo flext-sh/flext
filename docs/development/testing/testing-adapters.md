@@ -38,7 +38,7 @@ Mock implementation for analytics and metrics collection.
 **Usage:**
 
 ```python
-from flx.testing.adapters.analytics import MockAnalyticsAdapter
+from flext.testing.adapters.analytics import MockAnalyticsAdapter
 
 adapter = MockAnalyticsAdapter()
 await adapter.track_event("user_action", {"user_id": "123"})
@@ -59,7 +59,7 @@ Mock HTTP API client for testing external service integrations.
 **Usage:**
 
 ```python
-from flx.testing.adapters.api import MockApiAdapter
+from flext.testing.adapters.api import MockApiAdapter
 
 adapter = MockApiAdapter()
 adapter.set_response("/users/123", {"id": "123", "name": "Test User"})
@@ -80,7 +80,7 @@ In-memory cache implementation for testing cache-dependent functionality.
 **Usage:**
 
 ```python
-from flx.testing.adapters.cache import MockCacheAdapter
+from flext.testing.adapters.cache import MockCacheAdapter
 
 adapter = MockCacheAdapter()
 await adapter.set("key", "value", ttl=60)
@@ -101,7 +101,7 @@ Mock command-line interface for testing CLI interactions.
 **Usage:**
 
 ```python
-from flx.testing.adapters.cli import MockCliAdapter
+from flext.testing.adapters.cli import MockCliAdapter
 
 adapter = MockCliAdapter()
 adapter.set_command_result("status", 0, "All systems operational")
@@ -122,7 +122,7 @@ In-memory database adapter for testing data persistence logic.
 **Usage:**
 
 ```python
-from flx.testing.adapters.database import MockDatabaseAdapter
+from flext.testing.adapters.database import MockDatabaseAdapter
 
 adapter = MockDatabaseAdapter()
 await adapter.execute("INSERT INTO users (name) VALUES (?)", ["Test User"])
@@ -143,7 +143,7 @@ Event publishing and subscription testing adapter.
 **Usage:**
 
 ```python
-from flx.testing.adapters.events import MockEventsAdapter
+from flext.testing.adapters.events import MockEventsAdapter
 
 adapter = MockEventsAdapter()
 await adapter.publish("user.created", {"user_id": "123"})
@@ -164,7 +164,7 @@ HTTP client adapter for testing external HTTP service integrations.
 **Usage:**
 
 ```python
-from flx.testing.adapters.http import MockHttpAdapter
+from flext.testing.adapters.http import MockHttpAdapter
 
 adapter = MockHttpAdapter()
 adapter.set_response("GET", "/api/users", 200, {"users": []})
@@ -185,7 +185,7 @@ Logging adapter for testing log output and levels.
 **Usage:**
 
 ```python
-from flx.testing.adapters.logging import MockLoggingAdapter
+from flext.testing.adapters.logging import MockLoggingAdapter
 
 adapter = MockLoggingAdapter()
 adapter.info("Test message", extra={"user_id": "123"})
@@ -197,9 +197,9 @@ logs = adapter.get_captured_logs()
 ### Dependency Injection Testing
 
 ```python
-from flx.application.container import ServiceContainer
-from flx.ports.outbound.database import DatabasePort
-from flx.testing.adapters.database import MockDatabaseAdapter
+from flext.application.container import ServiceContainer
+from flext.ports.outbound.database import DatabasePort
+from flext.testing.adapters.database import MockDatabaseAdapter
 
 # Setup container with mock adapter
 container = ServiceContainer()
@@ -254,7 +254,7 @@ assert cached_prefs == preferences
 These adapters integrate seamlessly with the FLX testing engines:
 
 ```python
-from flx.testing.engines import ComprehensiveTestEngine
+from flext.testing.engines import ComprehensiveTestEngine
 
 engine = ComprehensiveTestEngine()
 engine.register_adapter("database", MockDatabaseAdapter())

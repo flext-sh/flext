@@ -1,7 +1,7 @@
 # Adapter Development Guide
 
 **Status**: 🚧 CRITICAL DOCUMENTATION GAP - Implementation Complete, Documentation Needed
-**Implementation**: `/flx/src/flx/adapters/`
+**Implementation**: `/flext/src/flext/adapters/`
 **Last Updated**: 2025-01-06
 
 ## Overview
@@ -10,7 +10,7 @@ This guide covers developing adapters for the FLX framework using hexagonal arch
 
 ## TODO IMPLEMENTATION ALIGNMENT
 
-- [ ] Document complete adapter API from `/flx/src/flx/adapters/__init__.py`
+- [ ] Document complete adapter API from `/flext/src/flext/adapters/__init__.py`
 - [ ] Add real adapter examples from implementation
 - [ ] Document adapter factory patterns
 - [ ] Cross-reference with actual adapter implementations
@@ -31,8 +31,8 @@ This guide covers developing adapters for the FLX framework using hexagonal arch
 All adapters inherit from BaseAdapter which provides common functionality.
 
 ```python
-from flx.adapters import BaseAdapter
-from flx.ports.outbound import DatabasePort
+from flext.adapters import BaseAdapter
+from flext.ports.outbound import DatabasePort
 
 # TODO: Add real example from implementation
 class DatabaseAdapter(BaseAdapter):
@@ -61,7 +61,7 @@ class DatabaseAdapter(BaseAdapter):
 Factory pattern for dynamic adapter creation and registration.
 
 ```python
-from flx.adapters import AdapterFactory
+from flext.adapters import AdapterFactory
 
 # TODO: Add real usage example from implementation
 factory = AdapterFactory()
@@ -87,7 +87,7 @@ Inbound adapters handle requests coming into the system.
 ### API Adapter
 
 ```python
-from flx.adapters.inbound import ApiAdapter
+from flext.adapters.inbound import ApiAdapter
 
 # TODO: Add real example from implementation
 class RESTApiAdapter(ApiAdapter):
@@ -103,7 +103,7 @@ class RESTApiAdapter(ApiAdapter):
 ### CLI Adapter
 
 ```python
-from flx.adapters.inbound import CliAdapter
+from flext.adapters.inbound import CliAdapter
 
 # TODO: Add real example from implementation
 class CommandLineAdapter(CliAdapter):
@@ -130,7 +130,7 @@ Outbound adapters integrate with external systems.
 ### Database Adapter
 
 ```python
-from flx.adapters.outbound import DatabaseAdapter
+from flext.adapters.outbound import DatabaseAdapter
 
 # TODO: Add real example from implementation
 class PostgreSQLAdapter(DatabaseAdapter):
@@ -150,7 +150,7 @@ class PostgreSQLAdapter(DatabaseAdapter):
 ### HTTP Client Adapter
 
 ```python
-from flx.adapters.outbound import HttpClientAdapter
+from flext.adapters.outbound import HttpClientAdapter
 
 # TODO: Add real example from implementation
 class RESTClientAdapter(HttpClientAdapter):
@@ -166,7 +166,7 @@ class RESTClientAdapter(HttpClientAdapter):
 ### Cache Adapter
 
 ```python
-from flx.adapters.outbound import CacheAdapter
+from flext.adapters.outbound import CacheAdapter
 
 # TODO: Add real example from implementation
 class RedisAdapter(CacheAdapter):
@@ -193,7 +193,7 @@ class RedisAdapter(CacheAdapter):
 All adapters use this mixin for standardized functionality.
 
 ```python
-from flx.adapters.mixins import AdvancedAdapterMixin
+from flext.adapters.mixins import AdvancedAdapterMixin
 
 # TODO: Add real usage example from implementation
 class CustomAdapter(AdvancedAdapterMixin):
@@ -212,7 +212,7 @@ class CustomAdapter(AdvancedAdapterMixin):
 ### Configuration Mixin
 
 ```python
-from flx.adapters.mixins import ConfigurationMixin
+from flext.adapters.mixins import ConfigurationMixin
 
 # TODO: Add real example from implementation
 class ConfigurableAdapter(ConfigurationMixin):
@@ -224,7 +224,7 @@ class ConfigurableAdapter(ConfigurationMixin):
 ### Error Handling Mixin
 
 ```python
-from flx.adapters.mixins import ErrorHandlingMixin
+from flext.adapters.mixins import ErrorHandlingMixin
 
 # TODO: Add real example from implementation
 class RobustAdapter(ErrorHandlingMixin):
@@ -236,7 +236,7 @@ class RobustAdapter(ErrorHandlingMixin):
 ### Observability Mixin
 
 ```python
-from flx.adapters.mixins import ObservabilityMixin
+from flext.adapters.mixins import ObservabilityMixin
 
 # TODO: Add real example from implementation
 class MonitorableAdapter(ObservabilityMixin):
@@ -266,8 +266,8 @@ class MonitorableAdapter(ObservabilityMixin):
 
 ```python
 # TODO: Add complete development example
-from flx.adapters import BaseAdapter
-from flx.ports.outbound import MessageQueuePort
+from flext.adapters import BaseAdapter
+from flext.ports.outbound import MessageQueuePort
 
 class KafkaAdapter(BaseAdapter, MessageQueuePort):
     def __init__(self, config: KafkaConfig):
@@ -306,8 +306,8 @@ class KafkaAdapter(BaseAdapter, MessageQueuePort):
 
 ```python
 # TODO: Add real port binding example
-from flx.ports.outbound import DatabasePort
-from flx.adapters import BaseAdapter
+from flext.ports.outbound import DatabasePort
+from flext.adapters import BaseAdapter
 
 class PostgreSQLAdapter(BaseAdapter, DatabasePort):
     """Adapter implementing DatabasePort contract."""
@@ -343,7 +343,7 @@ class PostgreSQLAdapter(BaseAdapter, DatabasePort):
 
 ```python
 # TODO: Add real circuit breaker example
-from flx.adapters.resilience import CircuitBreakerMixin
+from flext.adapters.resilience import CircuitBreakerMixin
 
 class ResilientAdapter(BaseAdapter, CircuitBreakerMixin):
     async def make_request(self):
@@ -356,7 +356,7 @@ class ResilientAdapter(BaseAdapter, CircuitBreakerMixin):
 
 ```python
 # TODO: Add real retry example
-from flx.adapters.resilience import RetryMixin
+from flext.adapters.resilience import RetryMixin
 
 class RetryableAdapter(BaseAdapter, RetryMixin):
     @retry(max_attempts=3, backoff_strategy="exponential")
@@ -379,7 +379,7 @@ class RetryableAdapter(BaseAdapter, RetryMixin):
 ```python
 # TODO: Add real testing example from implementation
 import pytest
-from flx.testing import TestableAdapter
+from flext.testing import TestableAdapter
 
 class TestDatabaseAdapter(TestableAdapter):
     def setup_test_environment(self):
@@ -485,7 +485,7 @@ adapters:
 
 ## Next Steps
 
-1. **🔴 CRITICAL**: Add real adapter examples from `/flx/src/flx/adapters/`
+1. **🔴 CRITICAL**: Add real adapter examples from `/flext/src/flext/adapters/`
 2. **🔴 CRITICAL**: Document all adapter types and patterns
 3. **🟡 HIGH**: Create comprehensive development workflow
 4. **🟡 HIGH**: Add testing and configuration guides
@@ -493,5 +493,5 @@ adapters:
 
 ---
 
-**Implementation Reference**: `/flx/src/flx/adapters/__init__.py`
+**Implementation Reference**: `/flext/src/flext/adapters/__init__.py`
 **Related Documentation**: [Ports Guide](../../architecture/ports/) | [Adapter Patterns](../../architecture/adapters/)

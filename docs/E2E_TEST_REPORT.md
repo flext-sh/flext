@@ -8,7 +8,7 @@
 
 - ✅ `tap-oracle-wms/generate_config.py` - Gera config.json do .env
 - ✅ `target-oracle-wms/generate_config.py` - Gera config.json do .env
-- ✅ `flx-oracle-wms/generate_config.py` - Gera todas as configs necessárias
+- ✅ `flext-oracle-wms/generate_config.py` - Gera todas as configs necessárias
 
 #### 2. **Testes E2E Abrangentes**
 
@@ -34,7 +34,7 @@
   - Formatos de saída
   - Importação de módulos
 
-- ✅ `flx-oracle-wms/tests/e2e/test_flx_e2e.py`
+- ✅ `flext-oracle-wms/tests/e2e/test_flext_e2e.py`
   - Teste de help/version
   - Geração de configuração
   - Comando init
@@ -98,7 +98,7 @@ WMS_TEST_MODE=false
 - [x] Tratamento de erros
 - [x] Importação de módulos
 
-#### flx-oracle-wms
+#### flext-oracle-wms
 
 - [x] CLI unificada
 - [x] Orquestração de pipeline
@@ -122,10 +122,10 @@ cd ../target-oracle-wms
 python generate_config.py
 python tests/e2e/test_target_e2e.py
 
-# Testar flx-oracle-wms
-cd ../flx-oracle-wms
+# Testar flext-oracle-wms
+cd ../flext-oracle-wms
 python generate_config.py
-python tests/e2e/test_flx_e2e.py
+python tests/e2e/test_flext_e2e.py
 ```
 
 ### 2. Teste Completo E2E
@@ -168,7 +168,7 @@ python run_all_e2e_tests.py
 ```bash
 cd tap-oracle-wms && poetry install
 cd ../target-oracle-wms && poetry install
-cd ../flx-oracle-wms && poetry install
+cd ../flext-oracle-wms && poetry install
 ```
 
 2. **Executar Testes Completos**:

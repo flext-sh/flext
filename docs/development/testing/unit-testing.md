@@ -19,8 +19,8 @@ Unit testing in the FLX framework focuses on testing individual components in is
 #### Testing Entities and Value Objects
 
 ```python
-from flx.core.entities import Customer
-from flx.core.domain.value_objects import Email, Money
+from flext.core.entities import Customer
+from flext.core.domain.value_objects import Email, Money
 import pytest
 
 class TestCustomer:
@@ -53,8 +53,8 @@ class TestCustomer:
 #### Testing Domain Services
 
 ```python
-from flx.domain.services import PricingService
-from flx.testing.fixtures import product_factory, discount_factory
+from flext.domain.services import PricingService
+from flext.testing.fixtures import product_factory, discount_factory
 
 class TestPricingService:
     @pytest.fixture
@@ -83,9 +83,9 @@ class TestPricingService:
 #### Testing Command Handlers
 
 ```python
-from flx.application.handlers import CreateOrderHandler
-from flx.application.commands import CreateOrderCommand
-from flx.testing.mocks import MockOrderRepository, MockEventPublisher
+from flext.application.handlers import CreateOrderHandler
+from flext.application.commands import CreateOrderCommand
+from flext.testing.mocks import MockOrderRepository, MockEventPublisher
 
 class TestCreateOrderHandler:
     @pytest.fixture
@@ -121,8 +121,8 @@ class TestCreateOrderHandler:
 #### Testing Outbound Adapters
 
 ```python
-from flx.adapters.outbound import EmailAdapter
-from flx.testing.mocks import MockEmailService
+from flext.adapters.outbound import EmailAdapter
+from flext.testing.mocks import MockEmailService
 
 class TestEmailAdapter:
     @pytest.fixture
@@ -156,8 +156,8 @@ class TestEmailAdapter:
 #### Testing Inbound Adapters
 
 ```python
-from flx.adapters.inbound import OrderWebhookAdapter
-from flx.testing.mocks import MockOrderService
+from flext.adapters.inbound import OrderWebhookAdapter
+from flext.testing.mocks import MockOrderService
 
 class TestOrderWebhookAdapter:
     @pytest.fixture
@@ -195,7 +195,7 @@ class TestOrderWebhookAdapter:
 ```python
 # tests/factories.py
 import factory
-from flx.core.entities import Customer, Product, Order
+from flext.core.entities import Customer, Product, Order
 
 class CustomerFactory(factory.Factory):
     class Meta:

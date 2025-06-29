@@ -19,14 +19,14 @@ Based on **actual code inspection** of FLX Oracle projects, the guides documenta
 # ✅ VALIDATED: Real Oracle implementations match guide documentation
 
 # FLX-HTTP-Oracle-WMS Project (KISS Implementation)
-flx_http_oracle_wms/src/__init__.py:
+flext_http_oracle_wms/src/__init__.py:
 class FlxHttpOracleWmsProject(ApplicationService):
     # ✅ GUIDES ACCURATE: 15 lines vs 1500+ = 99% code reduction
     # ✅ GUIDES ACCURATE: Uses FLX Declarative patterns
     # ✅ GUIDES ACCURATE: Focuses on business logic only
 
 # FLX-HTTP-Oracle-OIC Project (Enterprise Implementation)
-flx_http_oracle_oic/src/flx_http_oracle_oic/__init__.py:
+flext_http_oracle_oic/src/flext_http_oracle_oic/__init__.py:
 class OracleOicHttpAdapter:
     # ✅ GUIDES ACCURATE: Modern FLX 0.4.0 patterns
     # ✅ GUIDES ACCURATE: OAuth2/JWT authentication
@@ -62,7 +62,7 @@ Business Implementation:
 └── oracle-wms-operations-guide.md ✅ Operations procedures
 
 Technical Implementation:
-├── flx-http-oracle-wms-adapter.md ✅ Framework integration
+├── flext-http-oracle-wms-adapter.md ✅ Framework integration
 ├── oracle-wms-commands-reference.md ✅ CLI reference
 ├── oracle-oauth2-authentication-guide.md ✅ Security implementation
 └── oracle-wms-integration-validated.md ✅ Validation results
@@ -72,7 +72,7 @@ Technical Implementation:
 
 ```python
 # ✅ GUIDES MATCH REALITY: Actual WMS implementation
-from flx_http_oracle_wms import FlxHttpOracleWmsProject
+from flext_http_oracle_wms import FlxHttpOracleWmsProject
 
 class WmsBusinessLogic(FlxHttpOracleWmsProject):
     """Real implementation matches guide patterns exactly."""
@@ -91,7 +91,7 @@ Integration Cloud:
 ├── oracle-integration-comprehensive-guide.md ✅ Architecture overview
 ├── oic-complete-guide.md ✅ OIC-specific guide
 ├── oracle-oauth2-authentication-guide.md ✅ Authentication patterns
-└── flx-http-oracle-oic-adapter.md ✅ Framework adapter
+└── flext-http-oracle-oic-adapter.md ✅ Framework adapter
 
 Monitoring & Operations:
 ├── oracle-oic-log-levels.md ✅ Logging configuration
@@ -103,7 +103,7 @@ Monitoring & Operations:
 
 ```python
 # ✅ GUIDES MATCH REALITY: Actual OIC implementation
-from flx_http_oracle_oic import OracleOicHttpAdapterModern
+from flext_http_oracle_oic import OracleOicHttpAdapterModern
 
 class ProductionOicAdapter(OracleOicHttpAdapterModern):
     """Real implementation validates guide accuracy."""
@@ -119,7 +119,7 @@ class ProductionOicAdapter(OracleOicHttpAdapterModern):
 ```markdown
 Database Operations:
 ├── database-complete-guide.md ✅ Database patterns
-├── flx-database-oracle-adapter.md ✅ Adapter implementation
+├── flext-database-oracle-adapter.md ✅ Adapter implementation
 └── oracle-integration-api-guide.md ✅ API integration patterns
 ```
 
@@ -197,7 +197,7 @@ Integration Patterns:
 ├── integration-examples-patterns.md ✅ Integration examples
 ├── legacy-integrations-guide.md ✅ Legacy system integration
 ├── legacy-integrations-reference.md ✅ Legacy reference
-├── meltano-flx-integration-plan.md ✅ Meltano integration
+├── meltano-flext-integration-plan.md ✅ Meltano integration
 ├── meltano-framework-integration.md ✅ Framework integration
 └── meltano-plugins-integration.md ✅ Plugin integration
 ```
@@ -206,7 +206,7 @@ Integration Patterns:
 
 ```python
 # ✅ GUIDES ACCURATE: Hexagonal architecture patterns
-from flx.adapters.base import BaseAdapter
+from flext.adapters.base import BaseAdapter
 
 class ProductionIntegration(BaseAdapter):
     """Integration patterns match guide documentation."""
@@ -292,7 +292,7 @@ Business Stakeholders:
 Developers:
 ├── oracle-wms-complete-api-reference.md # API documentation
 ├── oracle-oauth2-authentication-guide.md # Authentication
-├── flx-http-oracle-wms-adapter.md # Code implementation
+├── flext-http-oracle-wms-adapter.md # Code implementation
 └── plugin-development-guide.md # Extension development
 
 Operations:
@@ -374,9 +374,9 @@ Guides ↔ Infrastructure:
 └── CLI Operations → CLI Infrastructure
 
 Guides ↔ Real Code:
-├── WMS Guide → /flx_http_oracle_wms/src/
-├── OIC Guide → /flx_http_oracle_oic/src/
-├── Database Guide → /flx_database_oracle/src/
+├── WMS Guide → /flext_http_oracle_wms/src/
+├── OIC Guide → /flext_http_oracle_oic/src/
+├── Database Guide → /flext_database_oracle/src/
 └── Authentication → Real OAuth2 implementations
 ```
 

@@ -24,7 +24,7 @@
 
 - **📂 Section Hub**: [Oracle Integration Hub](./index.md)
 - **🏠 Documentation Root**: [Root Index](../../index.md)
-- **🔗 Source Code**: [FLX Oracle WMS CLI](../../../flx_http_oracle_wms/scripts/)
+- **🔗 Source Code**: [FLX Oracle WMS CLI](../../../flext_http_oracle_wms/scripts/)
 - **🔗 Related**: [WMS Integration Guide](./oracle-wms-comprehensive-integration-guide.md), [CLI Implementation](../../development/guides/cli-implementation.md)
 
 ---
@@ -65,7 +65,7 @@ This guide provides comprehensive command-line interface usage for Oracle WMS op
 ## Installation
 
 ```bash
-# Install from the flx_project directory
+# Install from the flext_project directory
 pip install -e .
 
 # Or install using poetry
@@ -110,16 +110,16 @@ Create a configuration file in JSON format:
 
 ```bash
 # General help
-flx-http-oracle-wms --help
+flext-http-oracle-wms --help
 
 # Command-specific help
-flx-http-oracle-wms test-connection --help
+flext-http-oracle-wms test-connection --help
 ```
 
 ### Version Information
 
 ```bash
-flx-http-oracle-wms --version
+flext-http-oracle-wms --version
 ```
 
 ## Core Commands
@@ -129,7 +129,7 @@ flx-http-oracle-wms --version
 Test your connection to the Oracle WMS system:
 
 ```bash
-flx-http-oracle-wms test-connection
+flext-http-oracle-wms test-connection
 ```
 
 ### 2. Entity Discovery
@@ -137,7 +137,7 @@ flx-http-oracle-wms test-connection
 Discover all available entities in the WMS system:
 
 ```bash
-flx-http-oracle-wms discover-entities
+flext-http-oracle-wms discover-entities
 ```
 
 ### 3. Schema Operations
@@ -146,13 +146,13 @@ Get the schema for a specific entity:
 
 ```bash
 # Basic schema retrieval
-flx-http-oracle-wms get-schema items
+flext-http-oracle-wms get-schema items
 
 # Output in JSON format
-flx-http-oracle-wms --output-format json get-schema items
+flext-http-oracle-wms --output-format json get-schema items
 
 # Output in YAML format
-flx-http-oracle-wms --output-format yaml get-schema orders
+flext-http-oracle-wms --output-format yaml get-schema orders
 ```
 
 ### 4. Record Operations
@@ -161,31 +161,31 @@ flx-http-oracle-wms --output-format yaml get-schema orders
 
 ```bash
 # List first 10 records (default)
-flx-http-oracle-wms list-records items
+flext-http-oracle-wms list-records items
 
 # List with custom limit and pagination
-flx-http-oracle-wms list-records items --limit 50 --offset 100
+flext-http-oracle-wms list-records items --limit 50 --offset 100
 
 # Output in different formats
-flx-http-oracle-wms list-records items --format-output json
-flx-http-oracle-wms list-records items --format-output yaml
+flext-http-oracle-wms list-records items --format-output json
+flext-http-oracle-wms list-records items --format-output yaml
 ```
 
 #### Get Specific Record
 
 ```bash
 # Get record by ID
-flx-http-oracle-wms get-record items ITEM001
+flext-http-oracle-wms get-record items ITEM001
 
 # Output in specific format
-flx-http-oracle-wms get-record orders ORD-2024-001 --format-output json
+flext-http-oracle-wms get-record orders ORD-2024-001 --format-output json
 ```
 
 #### Create New Record
 
 ```bash
 # Create record from JSON file
-flx-http-oracle-wms create-record items --data-file new_item.json
+flext-http-oracle-wms create-record items --data-file new_item.json
 ```
 
 Example `new_item.json`:
@@ -204,17 +204,17 @@ Example `new_item.json`:
 
 ```bash
 # Update record from JSON file
-flx-http-oracle-wms update-record items ITEM001 --data-file updated_item.json
+flext-http-oracle-wms update-record items ITEM001 --data-file updated_item.json
 ```
 
 #### Delete Record
 
 ```bash
 # Delete with confirmation prompt
-flx-http-oracle-wms delete-record items ITEM001
+flext-http-oracle-wms delete-record items ITEM001
 
 # Delete without prompt (use with caution!)
-flx-http-oracle-wms delete-record items ITEM001 --confirm
+flext-http-oracle-wms delete-record items ITEM001 --confirm
 ```
 
 ### 5. Data Export
@@ -223,16 +223,16 @@ Export entity data to various formats:
 
 ```bash
 # Export to JSON (default)
-flx-http-oracle-wms export-data items items_backup.json
+flext-http-oracle-wms export-data items items_backup.json
 
 # Export to CSV
-flx-http-oracle-wms export-data orders orders.csv --format-export csv
+flext-http-oracle-wms export-data orders orders.csv --format-export csv
 
 # Export to YAML with limit
-flx-http-oracle-wms export-data locations locations.yaml --format-export yaml --limit 1000
+flext-http-oracle-wms export-data locations locations.yaml --format-export yaml --limit 1000
 
 # Export all records (no limit)
-flx-http-oracle-wms export-data items all_items.json
+flext-http-oracle-wms export-data items all_items.json
 ```
 
 ### 6. Configuration
@@ -241,10 +241,10 @@ Show current configuration:
 
 ```bash
 # Display configuration
-flx-http-oracle-wms show-config
+flext-http-oracle-wms show-config
 
 # Output as JSON
-flx-http-oracle-wms --output-format json show-config
+flext-http-oracle-wms --output-format json show-config
 ```
 
 ## Global Options
@@ -255,33 +255,33 @@ All commands support these global options:
 
 ```bash
 # Enable debug mode
-flx-http-oracle-wms --debug test-connection
+flext-http-oracle-wms --debug test-connection
 
 # Enable verbose output
-flx-http-oracle-wms --verbose discover-entities
+flext-http-oracle-wms --verbose discover-entities
 
 # Combine both
-flx-http-oracle-wms --debug --verbose list-records items
+flext-http-oracle-wms --debug --verbose list-records items
 ```
 
 ### Output Formats
 
 ```bash
 # JSON output
-flx-http-oracle-wms --output-format json get-schema items
+flext-http-oracle-wms --output-format json get-schema items
 
 # YAML output
-flx-http-oracle-wms --output-format yaml show-config
+flext-http-oracle-wms --output-format yaml show-config
 
 # Table output (default)
-flx-http-oracle-wms --output-format table list-records items
+flext-http-oracle-wms --output-format table list-records items
 ```
 
 ### Custom Configuration File
 
 ```bash
 # Use custom config file
-flx-http-oracle-wms --config-file /path/to/config.json test-connection
+flext-http-oracle-wms --config-file /path/to/config.json test-connection
 ```
 
 ## Advanced Usage
@@ -298,7 +298,7 @@ entities=("items" "orders" "locations" "customers")
 
 for entity in "${entities[@]}"; do
     echo "Exporting ${entity}..."
-    flx-http-oracle-wms export-data "$entity" "${entity}_backup.json"
+    flext-http-oracle-wms export-data "$entity" "${entity}_backup.json"
 done
 ```
 
@@ -308,11 +308,11 @@ Use the CLI in data pipelines:
 
 ```bash
 # 1. Discover entities
-flx-http-oracle-wms discover-entities --output-format json > entities.json
+flext-http-oracle-wms discover-entities --output-format json > entities.json
 
 # 2. Export data for each entity
 cat entities.json | jq -r '.[]' | while read entity; do
-    flx-http-oracle-wms export-data "$entity" "data/${entity}.json"
+    flext-http-oracle-wms export-data "$entity" "data/${entity}.json"
 done
 
 # 3. Validate export
@@ -329,21 +329,21 @@ The CLI provides comprehensive error messages:
 ### Connection Errors
 
 ```bash
-$ flx-http-oracle-wms test-connection
+$ flext-http-oracle-wms test-connection
 ❌ Connection failed: Unable to connect to host your-wms-host.com
 ```
 
 ### Authentication Errors
 
 ```bash
-$ flx-http-oracle-wms discover-entities
+$ flext-http-oracle-wms discover-entities
 ❌ Discovery failed: Authentication failed - invalid credentials
 ```
 
 ### Not Found Errors
 
 ```bash
-$ flx-http-oracle-wms get-record items NON_EXISTENT
+$ flext-http-oracle-wms get-record items NON_EXISTENT
 ❌ Failed to get record: Record NON_EXISTENT not found in entity items
 ```
 
@@ -352,19 +352,19 @@ $ flx-http-oracle-wms get-record items NON_EXISTENT
 1. **Use pagination** for large datasets:
 
    ```bash
-   flx-http-oracle-wms list-records items --limit 100 --offset 0
+   flext-http-oracle-wms list-records items --limit 100 --offset 0
    ```
 
 2. **Enable debug mode** for troubleshooting:
 
    ```bash
-   flx-http-oracle-wms --debug --verbose command
+   flext-http-oracle-wms --debug --verbose command
    ```
 
 3. **Use specific output formats** for integration:
 
    ```bash
-   flx-http-oracle-wms --output-format json discover-entities
+   flext-http-oracle-wms --output-format json discover-entities
    ```
 
 ## Integration with FLX Framework
@@ -408,7 +408,7 @@ The CLI is built on the FLX framework extension architecture, providing:
 
    ```bash
    # Check credentials
-   flx-http-oracle-wms test-connection --debug
+   flext-http-oracle-wms test-connection --debug
    ```
 
 ### Debug Mode
@@ -416,7 +416,7 @@ The CLI is built on the FLX framework extension architecture, providing:
 Enable debug mode for detailed logging:
 
 ```bash
-flx-http-oracle-wms --debug --verbose command
+flext-http-oracle-wms --debug --verbose command
 ```
 
 This will show:

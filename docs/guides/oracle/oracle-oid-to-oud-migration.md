@@ -204,7 +204,7 @@ Transforme os arquivos LDIF exportados do OID para compatibilidade com OUD:
 
 ```bash
 # Via script direto
-python scripts/flx_ldif_for_oud.py caminho/para/oid_export.ldif ldifs/fixed_oid_export.ldif --config config/schema_config.json
+python scripts/flext_ldif_for_oud.py caminho/para/oid_export.ldif ldifs/fixed_oid_export.ldif --config config/schema_config.json
 
 # Via Makefile
 make ldif-fix-for-oud LDIF=caminho/para/oid_export.ldif
@@ -276,7 +276,7 @@ Por padrão, o sistema estende o esquema OUD para incluir atributos específicos
 É possível processar diretórios inteiros contendo múltiplos arquivos LDIF:
 
 ```bash
-python scripts/flx_ldif_for_oud.py diretorio_entrada/ diretorio_saida/ --config config/schema_config.json
+python scripts/flext_ldif_for_oud.py diretorio_entrada/ diretorio_saida/ --config config/schema_config.json
 ```
 
 ### Monitoramento e Estatísticas

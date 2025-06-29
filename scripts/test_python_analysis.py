@@ -45,18 +45,18 @@ def main() -> None:
     # 3. Verificar projetos incluídos na análise
     print("\n3. Verificando projetos da workspace...")
     expected_projects = [
-        "flx-core/src",
-        "flx-api/src",
-        "flx-auth/src",
-        "flx-cli/src",
-        "flx-grpc/src",
-        "flx-ldap/src",
-        "flx-meltano/src",
-        "flx-observability/src",
-        "flx-plugin/src",
-        "flx-quality/src",
-        "flx-web/src",
-        "flx-db-oracle/src",
+        "flext-core/src",
+        "flext-api/src",
+        "flext-auth/src",
+        "flext-cli/src",
+        "flext-grpc/src",
+        "flext-ldap/src",
+        "flext-meltano/src",
+        "flext-observability/src",
+        "flext-plugin/src",
+        "flext-quality/src",
+        "flext-web/src",
+        "flext-db-oracle/src",
         "oracledb-core-shared/src",
         "tap-ldap/src",
         "tap-oracle-oic/src",
@@ -66,7 +66,7 @@ def main() -> None:
         "target-oracle-wms/src",
         "algar-oud-mig/src",
         "gruponos-poc-oic-wms/src",
-        "flx-meltano-enterprise-github/src",
+        "flext-meltano-enterprise-github/src",
         "dbt-ldap/src",
     ]
 
@@ -106,7 +106,7 @@ def main() -> None:
             print(f"✅ MyPy instalado: {result.stdout.strip()}")
 
             # Testar em um arquivo exemplo se existir
-            test_file = workspace_root / "flx-core" / "src" / "flx_core" / "__init__.py"
+            test_file = workspace_root / "flext-core" / "src" / "flext_core" / "__init__.py"
             if test_file.exists():
                 result = subprocess.run(
                     [str(venv_python), "-m", "mypy", str(test_file)],

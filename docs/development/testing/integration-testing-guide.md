@@ -555,7 +555,7 @@ async def test_database_engine():
     """Create test database engine for integration tests."""
     # Use test database
     engine = create_async_engine(
-        "postgresql+asyncpg://test:test@localhost/test_flx",
+        "postgresql+asyncpg://test:test@localhost/test_flext",
         echo=False,  # Set to True for SQL debugging
         pool_size=5,
         max_overflow=10

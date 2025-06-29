@@ -56,9 +56,9 @@ FLX provides robust integration capabilities using proven enterprise integration
 ### **REST API Client**
 
 ```python
-# flx/integrations/rest_client.py
-from flx.adapters.outbound.http_client import HTTPClientAdapter
-from flx.core.integration import APIClient, RateLimiter, CircuitBreaker
+# flext/integrations/rest_client.py
+from flext.adapters.outbound.http_client import HTTPClientAdapter
+from flext.core.integration import APIClient, RateLimiter, CircuitBreaker
 
 class RestAPIClient(APIClient):
     """Enterprise REST API client with resilience patterns."""
@@ -277,8 +277,8 @@ class PaymentGatewayIntegration(RestAPIClient):
 ### **GraphQL Client**
 
 ```python
-# flx/integrations/graphql_client.py
-from flx.core.integration import GraphQLClient
+# flext/integrations/graphql_client.py
+from flext.core.integration import GraphQLClient
 
 class FLXGraphQLClient(GraphQLClient):
     """GraphQL client with advanced features."""
@@ -424,9 +424,9 @@ class ContentManagementIntegration(FLXGraphQLClient):
 ### **Message Broker Adapter**
 
 ```python
-# flx/integrations/message_brokers.py
-from flx.adapters.outbound.message_queue import MessageQueueAdapter
-from flx.core.events import EventBus, DomainEvent
+# flext/integrations/message_brokers.py
+from flext.adapters.outbound.message_queue import MessageQueueAdapter
+from flext.core.events import EventBus, DomainEvent
 
 class RabbitMQAdapter(MessageQueueAdapter):
     """RabbitMQ message broker adapter."""
@@ -567,7 +567,7 @@ class EventDrivenIntegration:
                     message=message_data,
                     headers={
                         'event_type': event_type,
-                        'source_service': 'flx-application',
+                        'source_service': 'flext-application',
                         'correlation_id': str(event.event_id)
                     }
                 )
@@ -648,8 +648,8 @@ class EventDrivenIntegration:
 ### **Multi-Database Support**
 
 ```python
-# flx/integrations/multi_database.py
-from flx.adapters.outbound.database import DatabaseAdapter
+# flext/integrations/multi_database.py
+from flext.adapters.outbound.database import DatabaseAdapter
 
 class MultiDatabaseManager:
     """Manager for multiple database connections."""
@@ -826,8 +826,8 @@ class LegacyDatabaseIntegration:
 ### **ETL Pipeline**
 
 ```python
-# flx/integrations/etl_pipeline.py
-from flx.core.processing import ETLPipeline, Extractor, Transformer, Loader
+# flext/integrations/etl_pipeline.py
+from flext.core.processing import ETLPipeline, Extractor, Transformer, Loader
 
 class CustomerDataETL(ETLPipeline):
     """ETL pipeline for customer data processing."""

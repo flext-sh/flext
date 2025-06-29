@@ -56,9 +56,9 @@ FLX applications can achieve enterprise-scale performance through proper optimiz
 ### **Query Optimization**
 
 ```python
-# flx/performance/database_optimization.py
-from flx.adapters.outbound.database import DatabaseAdapter
-from flx.core.performance import QueryOptimizer, IndexAnalyzer
+# flext/performance/database_optimization.py
+from flext.adapters.outbound.database import DatabaseAdapter
+from flext.core.performance import QueryOptimizer, IndexAnalyzer
 
 class OptimizedRepository:
     """Repository with built-in query optimization."""
@@ -257,7 +257,7 @@ class OptimizedDatabaseAdapter(DatabaseAdapter):
             command_timeout=30,
             server_settings={
                 'jit': 'off',  # Disable JIT for better connection times
-                'application_name': 'flx_application',
+                'application_name': 'flext_application',
                 'search_path': 'public',
             }
         )
@@ -392,9 +392,9 @@ class IndexOptimizer:
 ### **Multi-Level Caching**
 
 ```python
-# flx/performance/caching.py
-from flx.adapters.outbound.cache import CacheAdapter
-from flx.adapters.outbound.memory_cache import MemoryCacheAdapter
+# flext/performance/caching.py
+from flext.adapters.outbound.cache import CacheAdapter
+from flext.adapters.outbound.memory_cache import MemoryCacheAdapter
 
 class MultiLevelCache:
     """Multi-level caching with L1 (memory) and L2 (Redis) cache."""
@@ -674,7 +674,7 @@ class CacheInvalidationService:
 ### **Concurrent Processing Patterns**
 
 ```python
-# flx/performance/async_patterns.py
+# flext/performance/async_patterns.py
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
 from typing import List, Any, Callable

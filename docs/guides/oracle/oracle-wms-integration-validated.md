@@ -3,7 +3,7 @@
 > **Function**: Complete Oracle WMS integration using FLX KISS pattern | **Audience**: Integration engineers, Oracle developers | **Status**: ✅ VALIDATED
 
 [![WMS Integration](https://img.shields.io/badge/wms-validated-green.svg)](./oracle-wms-integration-validated.md)
-[![Source Code](https://img.shields.io/badge/source-validated-blue.svg)](../../../flx_http_oracle_wms/src/__init__.py)
+[![Source Code](https://img.shields.io/badge/source-validated-blue.svg)](../../../flext_http_oracle_wms/src/__init__.py)
 [![KISS Pattern](https://img.shields.io/badge/pattern-KISS-orange.svg)](./oracle-wms-integration-validated.md)
 
 **Modern Oracle WMS integration using FLX's ultra-simplified KISS pattern - validated against actual source code**
@@ -24,7 +24,7 @@
 
 - **🎯 Guides Hub**: [Guides Index](../index.md)
 - **📚 Documentation Root**: [Root Index](../../index.md)
-- **🔗 Source Code**: [WMS Implementation](../../../flx_http_oracle_wms/src/__init__.py)
+- **🔗 Source Code**: [WMS Implementation](../../../flext_http_oracle_wms/src/__init__.py)
 
 ---
 
@@ -41,10 +41,10 @@ The Oracle WMS integration has been **completely rewritten** using FLX's KISS (K
 
 ### **🎯 Real Implementation (Validated)**
 
-**Source**: `/flx_http_oracle_wms/src/__init__.py` (86 lines total)
+**Source**: `/flext_http_oracle_wms/src/__init__.py` (86 lines total)
 
 ```python
-from flx import ApplicationService
+from flext import ApplicationService
 
 class FlxHttpOracleWmsProject(ApplicationService):
     """Projeto HTTP Oracle WMS - VERSÃO KISS.
@@ -104,29 +104,29 @@ class FlxHttpOracleWmsProject(ApplicationService):
 
 ```bash
 # Install from project directory (validated)
-cd /path/to/pyauto/flx_http_oracle_wms
+cd /path/to/pyauto/flext_http_oracle_wms
 pip install -e .
 
 # Verify installation
-python -c "from flx_http_oracle_wms import FlxHttpOracleWmsProject; print('✅ Installation successful')"
+python -c "from flext_http_oracle_wms import FlxHttpOracleWmsProject; print('✅ Installation successful')"
 ```
 
 #### **Method 2: Poetry Installation (Recommended)**
 
 ```bash
 # Install with poetry (validated)
-cd flx-http-oracle-wms
+cd flext-http-oracle-wms
 poetry install
 
 # Run with poetry
-poetry run python -m flx_http_oracle_wms --help
+poetry run python -m flext_http_oracle_wms --help
 ```
 
 #### **Method 3: Direct Usage (Development)**
 
 ```bash
 # Run examples directly (validated)
-cd flx_http_oracle_wms/examples
+cd flext_http_oracle_wms/examples
 python cli_usage.py
 python adapter_demo.py
 python declarative_cli_usage.py
@@ -176,7 +176,7 @@ wms_project = FlxHttpOracleWmsProject(
 
 ```python
 # Real usage pattern (validated against examples)
-from flx_http_oracle_wms import create_http_oracle_wms_project
+from flext_http_oracle_wms import create_http_oracle_wms_project
 
 # Create project instance
 wms = create_http_oracle_wms_project(warehouse_code="MAIN_WH")
@@ -236,10 +236,10 @@ oracle_table = wms.entity_mappings.get(entity_type, "UNKNOWN")
 
 ```bash
 # Run WMS project (validated command)
-python -m flx_http_oracle_wms
+python -m flext_http_oracle_wms
 
 # Run with configuration (validated)
-python -m flx_http_oracle_wms --warehouse-code MAIN_WH --enable-webhooks
+python -m flext_http_oracle_wms --warehouse-code MAIN_WH --enable-webhooks
 
 # Run examples (validated paths)
 cd examples/
@@ -362,9 +362,9 @@ class FlxHttpOracleWmsProject(ApplicationService):
 
 ### **Source Code References**
 
-- **Implementation**: [`/flx_http_oracle_wms/src/__init__.py`](../../../flx_http_oracle_wms/src/__init__.py)
-- **Examples**: [`/flx_http_oracle_wms/examples/`](../../../flx_http_oracle_wms/examples/)
-- **Tests**: [`/flx_http_oracle_wms/tests/`](../../../flx_http_oracle_wms/tests/)
+- **Implementation**: [`/flext_http_oracle_wms/src/__init__.py`](../../../flext_http_oracle_wms/src/__init__.py)
+- **Examples**: [`/flext_http_oracle_wms/examples/`](../../../flext_http_oracle_wms/examples/)
+- **Tests**: [`/flext_http_oracle_wms/tests/`](../../../flext_http_oracle_wms/tests/)
 
 ---
 

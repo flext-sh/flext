@@ -53,11 +53,11 @@ Adapter testing ensures that all FLX Framework adapters correctly implement port
 
 ### **Adapter Test Structure**
 
-Based on the FLX testing framework in `/flx/src/flx/testing/`:
+Based on the FLX testing framework in `/flext/src/flext/testing/`:
 
 ```python
-from flx.testing.engines import HexagonalTestEngine
-from flx.adapters.outbound import DatabaseAdapter
+from flext.testing.engines import HexagonalTestEngine
+from flext.adapters.outbound import DatabaseAdapter
 
 class TestDatabaseAdapter:
     def setup_method(self):
@@ -78,7 +78,7 @@ class TestDatabaseAdapter:
 ### **Prerequisites**
 
 - [Testing Hub](./index.md) - Understanding FLX testing framework
-- [Adapters Reference](../../api-reference/adapters/flx-adapters-comprehensive-reference.md) - Adapter implementations being tested
+- [Adapters Reference](../../api-reference/adapters/flext-adapters-comprehensive-reference.md) - Adapter implementations being tested
 
 ### **Next Steps**
 

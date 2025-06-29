@@ -44,7 +44,7 @@ The Core APIs Hub provides complete domain and business logic API documentation 
 ### **🚀 Core API Features**
 
 - **Domain-Driven Design**: Pure domain logic isolation
-- **Source Validation**: Validated against `/flx/src/flx/core/`
+- **Source Validation**: Validated against `/flext/src/flext/core/`
 - **Type Safety**: Strict Python 3.13+ annotations with Pydantic
 - **Event-Driven**: Complete domain event system
 - **SOLID Principles**: Enterprise architecture patterns
@@ -87,7 +87,7 @@ The Core APIs Hub provides complete domain and business logic API documentation 
 
 ## 📊 **Source Validation**
 
-- **Validation Source**: `/flx/src/flx/core/` codebase
+- **Validation Source**: `/flext/src/flext/core/` codebase
 - **Coverage**: Domain APIs (100%)
 - **DDD Compliance**: Complete domain isolation
 - **Last Validation**: 2025-06-11

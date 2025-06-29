@@ -30,7 +30,7 @@
 
 ## 📊 **Overview**
 
-The Framework APIs Hub provides core framework API documentation for FLX Framework 0.4.0+. All APIs are validated against actual source code in `/flx/src/` and provide comprehensive coverage of framework-level functionality.
+The Framework APIs Hub provides core framework API documentation for FLX Framework 0.4.0+. All APIs are validated against actual source code in `/flext/src/` and provide comprehensive coverage of framework-level functionality.
 
 ### **Framework API Categories**
 
@@ -41,7 +41,7 @@ The Framework APIs Hub provides core framework API documentation for FLX Framewo
 
 ### **🚀 Framework API Features**
 
-- **Source Validation**: Validated against `/flx/src/flx/` source code
+- **Source Validation**: Validated against `/flext/src/flext/` source code
 - **Application Layer**: Bootstrap, lifecycle, dependency injection
 - **Infrastructure Layer**: Services, observability, security
 - **Plugin System**: Discovery, loading, lifecycle management
@@ -83,7 +83,7 @@ The Framework APIs Hub provides core framework API documentation for FLX Framewo
 
 ## 📊 **Source Validation**
 
-- **Validation Source**: `/flx/src/flx/` codebase
+- **Validation Source**: `/flext/src/flext/` codebase
 - **Coverage**: Framework core APIs (100%)
 - **Type Safety**: Python 3.13+ strict annotations
 - **Last Validation**: 2025-06-11

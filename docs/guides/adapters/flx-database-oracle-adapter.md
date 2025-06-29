@@ -41,12 +41,12 @@ pip install oracledb pydantic
 
 ```python
 import asyncio
-from flx_database_oracle import flx_create_database_plugin
-from flx.plugins.base import FlxPluginMode
+from flext_database_oracle import flext_create_database_plugin
+from flext.plugins.base import FlxPluginMode
 
 async def main():
     # Create plugin
-    plugin = flx_create_database_plugin(
+    plugin = flext_create_database_plugin(
         host="localhost",
         username="hr",
         password="oracle",
@@ -72,7 +72,7 @@ asyncio.run(main())
 ### Advanced Configuration
 
 ```python
-from flx_database_oracle import DatabaseConfig, DatabasePlugin
+from flext_database_oracle import DatabaseConfig, DatabasePlugin
 
 # Advanced configuration
 config = DatabaseConfig(
@@ -313,7 +313,7 @@ When `log_performance=True`:
 Run the example:
 
 ```bash
-cd flx-database-oracle
+cd flext-database-oracle
 python examples/basic_usage.py
 ```
 
@@ -345,26 +345,26 @@ export FLX_ORACLE_USERNAME=hr
 export FLX_ORACLE_PASSWORD=password
 
 # Run CLI
-python -m flx_database_oracle.cli --help
+python -m flext_database_oracle.cli --help
 ```
 
 #### Core Commands
 
 ```bash
 # CLI information and capabilities
-flx-oracle-db info                           # Show CLI information
-flx-oracle-db version                        # Show Oracle version
-flx-oracle-db capabilities                   # Show available operations
+flext-oracle-db info                           # Show CLI information
+flext-oracle-db version                        # Show Oracle version
+flext-oracle-db capabilities                   # Show available operations
 ```
 
 #### Database Operations
 
 ```bash
 # SQL execution
-flx-oracle-db query "SELECT * FROM employees"
-flx-oracle-db query "SELECT * FROM departments" --output-format json --output-file results.json
-flx-oracle-db execute "CREATE TABLE test (id NUMBER, name VARCHAR2(100))"
-flx-oracle-db script /path/to/script.sql --commit
+flext-oracle-db query "SELECT * FROM employees"
+flext-oracle-db query "SELECT * FROM departments" --output-format json --output-file results.json
+flext-oracle-db execute "CREATE TABLE test (id NUMBER, name VARCHAR2(100))"
+flext-oracle-db script /path/to/script.sql --commit
 ```
 
 #### ORM Repository Commands
@@ -373,20 +373,20 @@ The CLI leverages SQLAlchemy ORM for type-safe database operations:
 
 ```bash
 # List tables using ORM
-flx-oracle-db tables --schema-name HR --output-format table
-flx-oracle-db tables --output-format json --limit 10
+flext-oracle-db tables --schema-name HR --output-format table
+flext-oracle-db tables --output-format json --limit 10
 
 # List columns with metadata
-flx-oracle-db columns HR EMPLOYEES --output-format table
+flext-oracle-db columns HR EMPLOYEES --output-format table
 
 # List indexes
-flx-oracle-db indexes HR EMPLOYEES --output-format json
+flext-oracle-db indexes HR EMPLOYEES --output-format json
 
 # Monitor connections
-flx-oracle-db connections --status CONNECTED --output-format table
+flext-oracle-db connections --status CONNECTED --output-format table
 
 # Track transactions
-flx-oracle-db transactions --status ACTIVE --output-format table
+flext-oracle-db transactions --status ACTIVE --output-format table
 ```
 
 #### Session Management
@@ -395,10 +395,10 @@ Monitor SQLAlchemy sessions and connection pools:
 
 ```bash
 # View session statistics
-flx-oracle-db session-info --output-format yaml
+flext-oracle-db session-info --output-format yaml
 
 # Monitor connection pool
-flx-oracle-db pool-stats --output-format table
+flext-oracle-db pool-stats --output-format table
 ```
 
 #### Output Formats
@@ -412,22 +412,22 @@ The CLI supports multiple output formats:
 
 ```bash
 # Rich table output
-flx-oracle-db tables --output-format table
+flext-oracle-db tables --output-format table
 
 # JSON for APIs
-flx-oracle-db tables --output-format json
+flext-oracle-db tables --output-format json
 
 # CSV for Excel
-flx-oracle-db tables --output-format csv
+flext-oracle-db tables --output-format csv
 
 # YAML for config
-flx-oracle-db session-info --output-format yaml
+flext-oracle-db session-info --output-format yaml
 ```
 
 #### Programmatic Usage
 
 ```python
-from flx_database_oracle import create_oracle_cli, FlxOracleDbDeclarativeCli
+from flext_database_oracle import create_oracle_cli, FlxOracleDbDeclarativeCli
 
 # Factory function
 cli = create_oracle_cli()
@@ -456,13 +456,13 @@ See [CLI_MIGRATION_GUIDE.md](CLI_MIGRATION_GUIDE.md) for detailed migration inst
 **Legacy:**
 
 ```bash
-flx-oracle oracle query "SELECT * FROM employees"
+flext-oracle oracle query "SELECT * FROM employees"
 ```
 
 **New:**
 
 ```bash
-flx-oracle-db query "SELECT * FROM employees"
+flext-oracle-db query "SELECT * FROM employees"
 ```
 
 ## 🔧 Configuration Options
@@ -538,9 +538,9 @@ The plugin integrates seamlessly with:
 
 This simplified architecture can be applied to other FLX plugins:
 
-1. **flx-oracle-oic** - Oracle Integration Cloud plugin
-2. **flx-oracle-wms** - Already implemented with same patterns
-3. **flx-http-adapters** - HTTP integration plugins
-4. **flx-messaging** - Message queue plugins
+1. **flext-oracle-oic** - Oracle Integration Cloud plugin
+2. **flext-oracle-wms** - Already implemented with same patterns
+3. **flext-http-adapters** - HTTP integration plugins
+4. **flext-messaging** - Message queue plugins
 
 The consistent plugin pattern makes the entire FLX ecosystem more maintainable and easier to extend.

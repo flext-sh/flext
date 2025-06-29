@@ -63,7 +63,7 @@ Testing engines provide specialized testing infrastructure for different types o
 #### Base Testing Engine (`base.py`)
 
 ```python
-from flx.testing.engines.base import BaseTestEngine
+from flext.testing.engines.base import BaseTestEngine
 
 class MyTestEngine(BaseTestEngine):
     async def setup_test_environment(self):
@@ -77,10 +77,10 @@ class MyTestEngine(BaseTestEngine):
 
 #### Database Testing Engine (`database_engine.py`)
 
-**⚠️ Validated Implementation**: Based on actual source code in `/flx/src/flx/testing/engines/database_engine.py`
+**⚠️ Validated Implementation**: Based on actual source code in `/flext/src/flext/testing/engines/database_engine.py`
 
 ```python
-from flx.testing.engines.database_engine import DatabaseTestEngine
+from flext.testing.engines.database_engine import DatabaseTestEngine
 
 async def test_user_repository():
     # Actual API - no context manager support in current implementation
@@ -107,7 +107,7 @@ async def test_user_repository():
 #### HTTP Testing Engine (`http_engine.py`)
 
 ```python
-from flx.testing.engines.http_engine import HTTPTestEngine
+from flext.testing.engines.http_engine import HTTPTestEngine
 
 async def test_api_client():
     async with HTTPTestEngine() as engine:
@@ -128,7 +128,7 @@ Mock adapters provide test doubles for external systems, allowing isolated testi
 #### Database Mock (`database.py`)
 
 ```python
-from flx.testing.adapters.database import MockDatabaseAdapter
+from flext.testing.adapters.database import MockDatabaseAdapter
 
 async def test_user_service():
     # Setup mock database
@@ -147,7 +147,7 @@ async def test_user_service():
 #### HTTP Mock (`http.py`)
 
 ```python
-from flx.testing.adapters.http import MockHTTPAdapter
+from flext.testing.adapters.http import MockHTTPAdapter
 
 async def test_external_api_integration():
     # Setup mock HTTP adapter
@@ -171,7 +171,7 @@ async def test_external_api_integration():
 
 ```python
 import pytest
-from flx.testing.adapters import MockDatabaseAdapter, MockEventAdapter
+from flext.testing.adapters import MockDatabaseAdapter, MockEventAdapter
 
 class TestUserService:
     @pytest.fixture
@@ -212,7 +212,7 @@ class TestUserService:
 
 ```python
 import pytest
-from flx.testing.engines import (
+from flext.testing.engines import (
     DatabaseTestEngine,
     HTTPTestEngine,
     MessagingTestEngine
@@ -278,8 +278,8 @@ class TestUserWorkflow:
 
 ```python
 import pytest
-from flx.testing.contracts import PortContractTest
-from flx.ports.outbound.database import UserRepositoryPort
+from flext.testing.contracts import PortContractTest
+from flext.ports.outbound.database import UserRepositoryPort
 
 class TestUserRepositoryContract(PortContractTest):
     """Test that database adapters conform to UserRepositoryPort contract."""
@@ -287,9 +287,9 @@ class TestUserRepositoryContract(PortContractTest):
     port_interface = UserRepositoryPort
 
     @pytest.fixture(params=[
-        "flx.adapters.outbound.database.PostgreSQLUserRepository",
-        "flx.adapters.outbound.database.MySQLUserRepository",
-        "flx.adapters.outbound.database.MongoUserRepository"
+        "flext.adapters.outbound.database.PostgreSQLUserRepository",
+        "flext.adapters.outbound.database.MySQLUserRepository",
+        "flext.adapters.outbound.database.MongoUserRepository"
     ])
     async def adapter(self, request):
         # Create adapter instance for testing
@@ -337,8 +337,8 @@ class TestUserRepositoryContract(PortContractTest):
 import pytest
 import asyncio
 import time
-from flx.testing.engines import DatabaseTestEngine
-from flx.testing.performance import PerformanceTest
+from flext.testing.engines import DatabaseTestEngine
+from flext.testing.performance import PerformanceTest
 
 class TestUserServicePerformance(PerformanceTest):
     """Performance tests for user service operations."""
@@ -469,7 +469,7 @@ markers =
 addopts =
     --strict-markers
     --tb=short
-    --cov=src/flx
+    --cov=src/flext
     --cov-report=html
     --cov-report=term-missing
 
@@ -574,16 +574,16 @@ import pytest
 import logging
 
 # Enable debug logging for specific modules
-logging.getLogger("flx.adapters").setLevel(logging.DEBUG)
-logging.getLogger("flx.testing").setLevel(logging.DEBUG)
+logging.getLogger("flext.adapters").setLevel(logging.DEBUG)
+logging.getLogger("flext.testing").setLevel(logging.DEBUG)
 
 @pytest.fixture
 def debug_mode():
     """Enable debug mode for detailed test output."""
-    import flx.testing
-    flx.testing.set_debug_mode(True)
+    import flext.testing
+    flext.testing.set_debug_mode(True)
     yield
-    flx.testing.set_debug_mode(False)
+    flext.testing.set_debug_mode(False)
 
 async def test_with_debugging(debug_mode):
     """Test with debug output enabled."""

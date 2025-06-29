@@ -24,7 +24,7 @@
 
 1. [Authentication Overview](#authentication-overview)
 2. [OAuth2 Configuration and Patterns](#oauth2-configuration-and-patterns)
-3. [JWT Service Implementation (FLX)](#jwt-service-implementation-flx)
+3. [JWT Service Implementation (FLX)](#jwt-service-implementation-flext)
 4. [SAML2 SSO Setup and Configuration](#saml2-sso-setup-and-configuration)
 5. [Oracle WMS Authentication](#oracle-wms-authentication)
 6. [OIC-Specific Authentication](#oic-specific-authentication)
@@ -271,7 +271,7 @@ FLX Infrastructure
 │   ├── FlxJwtService (New high-level service)
 │   └── FlxOAuth2TokenData (Token data model)
 └── Applications
-    └── flx-http-oracle-oic (Uses JWT service)
+    └── flext-http-oracle-oic (Uses JWT service)
 ```
 
 ### Basic FLX JWT Usage
@@ -279,7 +279,7 @@ FLX Infrastructure
 #### Oracle OIC Configuration
 
 ```python
-from flx.infrastructure.http.auth import FlxJwtService
+from flext.infrastructure.http.auth import FlxJwtService
 
 # For Oracle Integration Cloud
 jwt_service = FlxJwtService.for_oracle_oic(
@@ -305,7 +305,7 @@ jwt_service = FlxJwtService.for_oauth2(
 #### Advanced Configuration
 
 ```python
-from flx.infrastructure.http.auth import FlxOAuth2Config
+from flext.infrastructure.http.auth import FlxOAuth2Config
 
 # Custom configuration
 config = FlxOAuth2Config(
@@ -329,7 +329,7 @@ jwt_service = FlxJwtService(config)
 
 ```python
 import asyncio
-from flx.adapters.outbound.http import HTTPAdapter
+from flext.adapters.outbound.http import HTTPAdapter
 
 async def main():
     # Initialize JWT service
@@ -638,7 +638,7 @@ async def monitor_oic_integrations(jwt_service: FlxJwtService):
 #### Error Handling for OIC
 
 ```python
-from flx.core.exceptions import AuthenticationError, ConnectionError
+from flext.core.exceptions import AuthenticationError, ConnectionError
 
 async def handle_oic_authentication_errors():
     try:
@@ -991,12 +991,12 @@ export LOG_LEVEL="DEBUG"
 ### FLX Framework Integration Example
 
 ```python
-from flx.infrastructure.http.auth import FlxJwtService
-from flx.adapters.outbound.http import HTTPAdapter
-from flx.core.config import Config
+from flext.infrastructure.http.auth import FlxJwtService
+from flext.adapters.outbound.http import HTTPAdapter
+from flext.core.config import Config
 import asyncio
 
-async def setup_flx_authentication():
+async def setup_flext_authentication():
     """Complete FLX authentication setup example."""
 
     # Load configuration
@@ -1032,7 +1032,7 @@ async def setup_flx_authentication():
     }
 
 # Usage
-adapters = await setup_flx_authentication()
+adapters = await setup_flext_authentication()
 oic_response = await adapters["oic_adapter"].get("/ic/api/integrations")
 wms_response = await adapters["wms_adapter"].get("/wms/api/orders")
 ```

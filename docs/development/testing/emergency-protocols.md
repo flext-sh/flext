@@ -24,7 +24,7 @@
 
 - **📂 Section Hub**: [Testing Hub](./index.md)
 - **🏠 Documentation Root**: [Root Index](../../index.md)
-- **🔗 Source Code**: [FLX Emergency](../../../flx/src/flx/emergency/)
+- **🔗 Source Code**: [FLX Emergency](../../../flext/src/flext/emergency/)
 - **🔗 Related**: [Assessment Protocols](./assessment-protocols.md), [Failure Cases](./failure-cases.md)
 
 ---
@@ -61,10 +61,10 @@ cd /home/marlonsc/pyauto
 
 # Count broken imports
 BROKEN_IMPORTS=0
-python -c "import sys; sys.path.insert(0, 'flx/src'); import flx" 2>/dev/null || ((BROKEN_IMPORTS++))
-python -c "import sys; sys.path.insert(0, 'flx-database-oracle/src'); import flx_database_oracle" 2>/dev/null || ((BROKEN_IMPORTS++))
-python -c "import sys; sys.path.insert(0, 'flx-http-oracle-oic/src'); import flx_http_oracle_oic" 2>/dev/null || ((BROKEN_IMPORTS++))
-python -c "import sys; sys.path.insert(0, 'flx-http-oracle-wms/src'); import flx_http_oracle_wms" 2>/dev/null || ((BROKEN_IMPORTS++))
+python -c "import sys; sys.path.insert(0, 'flext/src'); import flext" 2>/dev/null || ((BROKEN_IMPORTS++))
+python -c "import sys; sys.path.insert(0, 'flext-database-oracle/src'); import flext_database_oracle" 2>/dev/null || ((BROKEN_IMPORTS++))
+python -c "import sys; sys.path.insert(0, 'flext-http-oracle-oic/src'); import flext_http_oracle_oic" 2>/dev/null || ((BROKEN_IMPORTS++))
+python -c "import sys; sys.path.insert(0, 'flext-http-oracle-wms/src'); import flext_http_oracle_wms" 2>/dev/null || ((BROKEN_IMPORTS++))
 
 echo "Broken imports: $BROKEN_IMPORTS"
 
@@ -102,10 +102,10 @@ echo "EMERGENCY RESTORATION STARTED: $(date)" >> .token
 echo "BROKEN COMPONENTS:" >> .token
 
 # Test all major components
-python -c "import flx" 2>&1 || echo "- FLX Core BROKEN" >> .token
-python -c "import flx_database_oracle" 2>&1 || echo "- Database Oracle BROKEN" >> .token
-python -c "import flx_http_oracle_oic" 2>&1 || echo "- OIC BROKEN" >> .token
-python -c "import flx_http_oracle_wms" 2>&1 || echo "- WMS BROKEN" >> .token
+python -c "import flext" 2>&1 || echo "- FLX Core BROKEN" >> .token
+python -c "import flext_database_oracle" 2>&1 || echo "- Database Oracle BROKEN" >> .token
+python -c "import flext_http_oracle_oic" 2>&1 || echo "- OIC BROKEN" >> .token
+python -c "import flext_http_oracle_wms" 2>&1 || echo "- WMS BROKEN" >> .token
 
 # Test build system
 make lint >/dev/null 2>&1 || echo "- Build system BROKEN" >> .token
@@ -130,8 +130,8 @@ echo "DAMAGE ASSESSMENT COMPLETE" >> .token
 echo "PHASE 2: Core stabilization starting" >> .token
 
 # Fix core imports first
-cd flx/src
-python -c "import flx" && echo "✅ FLX Core restored" >> .token || echo "❌ FLX Core still broken" >> .token
+cd flext/src
+python -c "import flext" && echo "✅ FLX Core restored" >> .token || echo "❌ FLX Core still broken" >> .token
 
 # Then build system
 cd /home/marlonsc/pyauto
@@ -148,7 +148,7 @@ echo "PHASE 2: Core stabilization complete" >> .token
 echo "PHASE 3: Component restoration starting" >> .token
 
 # Fix each adapter individually
-for component in "flx-database-oracle" "flx-http-oracle-oic" "flx-http-oracle-wms"; do
+for component in "flext-database-oracle" "flext-http-oracle-oic" "flext-http-oracle-wms"; do
     echo "Fixing $component..." >> .token
     cd "$component/src"
     python -c "import ${component//-/_}" && echo "✅ $component restored" >> .token || echo "❌ $component still broken" >> .token
@@ -168,15 +168,15 @@ echo "PHASE 4: Integration validation starting" >> .token
 # Test all imports together
 python -c "
 import sys
-sys.path.insert(0, 'flx/src')
-sys.path.insert(0, 'flx-database-oracle/src')
-sys.path.insert(0, 'flx-http-oracle-oic/src')
-sys.path.insert(0, 'flx-http-oracle-wms/src')
+sys.path.insert(0, 'flext/src')
+sys.path.insert(0, 'flext-database-oracle/src')
+sys.path.insert(0, 'flext-http-oracle-oic/src')
+sys.path.insert(0, 'flext-http-oracle-wms/src')
 
-import flx
-import flx_database_oracle
-import flx_http_oracle_oic
-import flx_http_oracle_wms
+import flext
+import flext_database_oracle
+import flext_http_oracle_oic
+import flext_http_oracle_wms
 
 print('✅ ALL IMPORTS WORKING')
 " && echo "✅ Integration test passed" >> .token || echo "❌ Integration still broken" >> .token
@@ -260,7 +260,7 @@ echo "ETA: [realistic time estimate]" >> .token
 
    ```bash
    # Work on one component at a time
-   cd flx
+   cd flext
    # Fix FLX first, then add adapters one by one
    ```
 
@@ -276,7 +276,7 @@ git add -A && git commit -m "Restoration point before [CHANGE]"
 
 # Document current state
 echo "PRE-CHANGE STATE: $(date)" >> .token
-echo "ALL IMPORTS: $(python -c 'import flx, flx_database_oracle, flx_http_oracle_oic, flx_http_oracle_wms; print("OK")' 2>/dev/null || echo 'BROKEN')" >> .token
+echo "ALL IMPORTS: $(python -c 'import flext, flext_database_oracle, flext_http_oracle_oic, flext_http_oracle_wms; print("OK")' 2>/dev/null || echo 'BROKEN')" >> .token
 echo "BUILD: $(make lint >/dev/null 2>&1 && echo 'OK' || echo 'BROKEN')" >> .token
 ```
 

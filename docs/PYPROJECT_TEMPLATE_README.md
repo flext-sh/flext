@@ -22,7 +22,7 @@ make pyproject-template-apply FORCE=1
 ### 3. Customize Individual Projects
 
 ```bash
-make pyproject-template-customize PROJECT=flx-oracle-oic
+make pyproject-template-customize PROJECT=flext-oracle-oic
 ```
 
 ### 4. Check Status
@@ -257,9 +257,9 @@ Failed Projects: 5/21
 Total Violations: 23
 
 Failed Projects:
-  - flx-oracle-oic
+  - flext-oracle-oic
   - tap-oracle-wms
-  - flx-ldap
+  - flext-ldap
 
 Action Required:
 1. Apply pyproject-template.toml to all failed projects

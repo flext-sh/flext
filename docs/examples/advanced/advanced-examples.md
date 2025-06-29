@@ -40,7 +40,7 @@ The advanced examples demonstrate enterprise-level patterns for:
 
 **Configuration-Driven Development**
 
-- 🎨 **Declarative Setup**: `@flx_project` decorator patterns
+- 🎨 **Declarative Setup**: `@flext_project` decorator patterns
 - 🧩 **Mixin Architecture**: Composable functionality mixins
 - 🧪 **Testing Framework**: Integrated testing with coverage
 - 📊 **Metrics Integration**: Built-in performance monitoring
@@ -58,14 +58,14 @@ pip install -e . --no-deps
 
 # Verify advanced features are available
 python -c "
-import flx
-from flx.declarative import FlxProject
-from flx.core.events import DomainEvent
+import flext
+from flext.declarative import FlxProject
+from flext.core.events import DomainEvent
 print('Advanced FLX features loaded successfully')
 "
 
 # Set up environment
-export PYTHONPATH=/home/marlonsc/pyauto/flx/src:$PYTHONPATH
+export PYTHONPATH=/home/marlonsc/pyauto/flext/src:$PYTHONPATH
 export ENVIRONMENT=development
 ```
 
@@ -169,7 +169,7 @@ class CustomProtocolAdapter(BaseAdapter):
 
 ```python
 # Declarative project setup with mixins
-@flx_project
+@flext_project
 class EnterpriseApplication(
     FlxProject,
     FlxDatabaseMixin,

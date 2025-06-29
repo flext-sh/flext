@@ -58,7 +58,7 @@
 - ✅ `git submodule status` - No fatal errors
 - ✅ `ls` command - No git errors displayed
 - ✅ All project references - Working correctly
-- ✅ flx-database-oracle - Available in legacy/ directory for gruponos-poc-oic-wms
+- ✅ flext-database-oracle - Available in legacy/ directory for gruponos-poc-oic-wms
 
 **Priority**: COMPLETED - All functionality restored
 
@@ -79,10 +79,10 @@
 
 - ✅ **FLX modularization**: 10 modules active (9 extracted + 1 renamed)
 - ✅ **Project reorganization**: Superseded projects moved to backups/
-  - `backups/flx-oracle-wms_20250629_122800/` (superseded by flx-meltano)
-  - `backups/flx-oracle-oic_20250629_122657/` (superseded by flx-meltano)
-  - `backups/flx-adapter-example_20250629_122539/` (superseded by new templates)
-- ✅ **Renaming**: `flx-ldap/` → `flx-ldap/` (consistent naming)
+  - `backups/flext-oracle-wms_20250629_122800/` (superseded by flext-meltano)
+  - `backups/flext-oracle-oic_20250629_122657/` (superseded by flext-meltano)
+  - `backups/flext-adapter-example_20250629_122539/` (superseded by new templates)
+- ✅ **Renaming**: `flext-ldap/` → `flext-ldap/` (consistent naming)
 - ✅ **Backup organization**: All sources preserved in backups/
 - ✅ **gruponos-poc-oic-wms**: Production-ready integration
 - ✅ **algar-oud-mig**: LDIF processing functional

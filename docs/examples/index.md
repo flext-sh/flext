@@ -22,7 +22,7 @@
 | ------------------------------------------------------------- | ---------------------------------------- | -------------------- | ----------- |
 | [Real-World Implementations](./real-world-implementations.md) | **NEW** Production-verified examples     | All developers       | ✅ Complete |
 | [Oracle Real Examples](./oracle-integration-real-examples.md) | Real Oracle implementations              | Oracle developers    | ✅ Complete |
-| [FLX Framework Patterns](./flx-framework-patterns.md)         | **NEW** Modern FLX architecture showcase | Framework developers | ✅ Complete |
+| [FLX Framework Patterns](./flext-framework-patterns.md)         | **NEW** Modern FLX architecture showcase | Framework developers | ✅ Complete |
 | [Adapter Patterns](./adapter-patterns/index.md)               | Hexagonal adapter implementations        | Framework developers | ✅ Complete |
 | [Basic](./basic/index.md)                                     | Fundamental examples                     | New developers       | ✅ Complete |
 | [Advanced](./advanced/index.md)                               | Complex patterns                         | Senior developers    | ✅ Complete |
@@ -32,7 +32,7 @@
 
 ### **📋 Learning Path**
 
-1. **🎯 Start Here**: [FLX Framework Patterns](./flx-framework-patterns.md) - **NEW** Modern FLX architecture showcase with 70% code reduction
+1. **🎯 Start Here**: [FLX Framework Patterns](./flext-framework-patterns.md) - **NEW** Modern FLX architecture showcase with 70% code reduction
 2. **⚡ Quick Path**: [Real-World Implementations](./real-world-implementations.md) - Production-verified examples from actual systems
 3. **📚 Deep Dive**: [Oracle Real Examples](./oracle-integration-real-examples.md) - Complete Oracle integration examples
 
@@ -54,7 +54,7 @@
 ### **🔗 Related Sections**
 
 - [Oracle Implementation Patterns](../guides/oracle/oracle-implementation-patterns.md) - **NEW** Detailed Oracle patterns used in real-world examples
-- [FLX Framework Architecture](../architecture/design/flx-framework-architecture-guide.md) - **NEW** Complete architecture guide with production examples
+- [FLX Framework Architecture](../architecture/design/flext-framework-architecture-guide.md) - **NEW** Complete architecture guide with production examples
 - [Infrastructure Hub](../infrastructure/index.md) - Infrastructure service examples and production implementation patterns
 - [Security Hub](../security/index.md) - Security implementation examples and authentication patterns
 - [Optimization Hub](../optimization/index.md) - Performance optimization examples and best practices

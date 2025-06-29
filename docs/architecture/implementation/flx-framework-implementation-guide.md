@@ -6,7 +6,7 @@
 [![Code Analysis](https://img.shields.io/badge/analysis-source_verified-blue.svg)](#source-code-validation)
 [![Hexagonal](https://img.shields.io/badge/architecture-hexagonal-orange.svg)](../design/unified-architecture-guide.md)
 
-**Comprehensive implementation guide for FLX Framework 0.4.0+ based on actual source code analysis and production patterns - validated against `/flx/src/` implementations**
+**Comprehensive implementation guide for FLX Framework 0.4.0+ based on actual source code analysis and production patterns - validated against `/flext/src/` implementations**
 
 ---
 
@@ -24,13 +24,13 @@
 
 - **📂 Section Hub**: [Architecture Hub](../index.md)
 - **🏠 Documentation Root**: [Root Index](../../index.md)
-- **🔗 Source Code**: [`/flx/src/`](../../../flx/src/)
+- **🔗 Source Code**: [`/flext/src/`](../../../flext/src/)
 
 ---
 
 ## 📋 **Overview**
 
-This implementation guide is based on comprehensive analysis of the FLX Framework 0.4.0+ source code in `/flx/src/`. Unlike theoretical documentation, this guide reflects the actual production implementation with three Oracle integration adapters, enterprise infrastructure, and comprehensive testing frameworks.
+This implementation guide is based on comprehensive analysis of the FLX Framework 0.4.0+ source code in `/flext/src/`. Unlike theoretical documentation, this guide reflects the actual production implementation with three Oracle integration adapters, enterprise infrastructure, and comprehensive testing frameworks.
 
 ## 🏗️ **Core Architecture Implementation**
 
@@ -40,7 +40,7 @@ This implementation guide is based on comprehensive analysis of the FLX Framewor
 
 ```python
 # Domain Layer - Pure Business Logic
-flx/core/
+flext/core/
 ├── entities.py           # AggregateRoot, Entity base classes
 ├── value_objects.py      # Immutable value objects with validation
 ├── events.py            # Domain events with UUID tracking
@@ -49,7 +49,7 @@ flx/core/
 └── base.py             # Foundation classes
 
 # Ports Layer - Interface Definitions
-flx/ports/
+flext/ports/
 ├── inbound/            # Entry points into the application
 │   ├── api.py         # REST API port definitions
 │   ├── cli.py         # Command-line interface ports
@@ -67,7 +67,7 @@ flx/ports/
     └── observability.py    # Monitoring mixins
 
 # Adapters Layer - Concrete Implementations
-flx/adapters/
+flext/adapters/
 ├── inbound/           # External system entry points
 │   ├── api/          # REST API implementations
 │   ├── cli/          # CLI command implementations
@@ -80,7 +80,7 @@ flx/adapters/
 └── base.py           # Common adapter functionality
 
 # Infrastructure Layer - Production Services
-flx/infra/
+flext/infra/
 ├── services/         # Infrastructure services
 ├── deployment/       # Deployment automation
 ├── observability/    # Monitoring and metrics
@@ -92,14 +92,14 @@ flx/infra/
 
 **Three Production Oracle Adapters** (verified against actual source code):
 
-#### **Oracle Database Adapter** (`flx_database_oracle/`)
+#### **Oracle Database Adapter** (`flext_database_oracle/`)
 
 ```python
 # Actual implementation patterns from source analysis:
-from flx.core.protocols import Adapter
-from flx.core.models import FlxDatabaseBaseModel, FlxConnectionModel
-from flx.infra.database import DatabaseEngine
-from flx.adapters.outbound.database import DatabaseAdapter
+from flext.core.protocols import Adapter
+from flext.core.models import FlxDatabaseBaseModel, FlxConnectionModel
+from flext.infra.database import DatabaseEngine
+from flext.adapters.outbound.database import DatabaseAdapter
 
 class OracleProductionAdapter(DatabaseAdapter):
     """Production Oracle database adapter with connection pooling and monitoring.
@@ -148,18 +148,18 @@ class OracleProductionAdapter(DatabaseAdapter):
         return results
 ```
 
-#### **Oracle Integration Cloud (OIC) Adapter** (`flx_http_oracle_oic/`)
+#### **Oracle Integration Cloud (OIC) Adapter** (`flext_http_oracle_oic/`)
 
 ```python
 # Real JWT authentication and REST integration verified in source:
-from flx_http_oracle_oic import OracleOicHttpAdapterModern, OracleOicConfigModern
-from flx.core.protocols import Adapter
-from flx.infra.http import HttpClientAdapter
+from flext_http_oracle_oic import OracleOicHttpAdapterModern, OracleOicConfigModern
+from flext.core.protocols import Adapter
+from flext.infra.http import HttpClientAdapter
 
 class OracleOICAdapter(OracleOicHttpAdapterModern):
     """Production OIC adapter with JWT authentication.
 
-    Uses actual implementation from flx_http_oracle_oic source.
+    Uses actual implementation from flext_http_oracle_oic source.
     """
 
     def __init__(self, config: OracleOicConfigModern):
@@ -196,11 +196,11 @@ class OracleOICAdapter(OracleOicHttpAdapterModern):
             return await self._process_oic_response(response)
 ```
 
-#### **Oracle WMS Adapter** (`flx_http_oracle_wms/`)
+#### **Oracle WMS Adapter** (`flext_http_oracle_wms/`)
 
 ```python
 # Warehouse management operations:
-from flx.adapters.outbound.http import WMSAdapter
+from flext.adapters.outbound.http import WMSAdapter
 
 class OracleWMSAdapter(HttpAdapter):
     """Production WMS adapter for warehouse operations."""
@@ -227,9 +227,9 @@ class OracleWMSAdapter(HttpAdapter):
 #### **Application Bootstrap & Lifecycle**
 
 ```python
-# Production application management (flx/application/bootstrap.py):
-from flx.application.bootstrap import ApplicationBootstrap
-from flx.infra.config import ConfigurationManager
+# Production application management (flext/application/bootstrap.py):
+from flext.application.bootstrap import ApplicationBootstrap
+from flext.infra.config import ConfigurationManager
 
 class ProductionApplication:
     """Enterprise application with complete lifecycle management."""
@@ -263,8 +263,8 @@ class ProductionApplication:
 #### **CLI Framework Implementation**
 
 ```python
-# Type-safe CLI system (flx/infra/cli/cyclopts.py):
-from flx.infra.cli.cyclopts import FlxCLI
+# Type-safe CLI system (flext/infra/cli/cyclopts.py):
+from flext.infra.cli.cyclopts import FlxCLI
 from cyclopts import App
 
 class OracleCLI(FlxCLI):
@@ -307,8 +307,8 @@ class OracleCLI(FlxCLI):
 #### **Observability Stack**
 
 ```python
-# Real production monitoring from flx/infra/observability/ source:
-from flx.infra.observability import (
+# Real production monitoring from flext/infra/observability/ source:
+from flext.infra.observability import (
     MetricsCollector,
     MetricsRegistry,
     Tracer,
@@ -378,8 +378,8 @@ class ProductionObservability:
 #### **Declarative Testing Engine**
 
 ```python
-# Real zero-mock testing from flx/testing/ source:
-from flx.testing import (
+# Real zero-mock testing from flext/testing/ source:
+from flext.testing import (
     DeclarativeTestEngine,
     TestResult,
     TestMetrics,
@@ -461,8 +461,8 @@ class ProductionTestEngine:
 #### **Plugin System**
 
 ```python
-# Real extensible plugin framework from flx/infra/plugins/ source:
-from flx.infra.plugins import PluginManager, PluginRegistry, Plugin, ProtocolPlugin
+# Real extensible plugin framework from flext/infra/plugins/ source:
+from flext.infra.plugins import PluginManager, PluginRegistry, Plugin, ProtocolPlugin
 import pluggy
 from typing import Dict, List
 
@@ -539,8 +539,8 @@ class FlxPluginManager:
 #### **Multi-Environment Deployment**
 
 ```python
-# Production deployment (flx/infra/deployment/):
-from flx.infra.deployment import EnvironmentManager, DeploymentPipeline
+# Production deployment (flext/infra/deployment/):
+from flext.infra.deployment import EnvironmentManager, DeploymentPipeline
 
 class ProductionDeployment:
     """Enterprise deployment with multiple strategies."""
@@ -584,8 +584,8 @@ class ProductionDeployment:
 ### **1. Configuration Management**
 
 ```python
-# Hierarchical configuration (flx/infra/config/):
-from flx.infra.config import ConfigurationManager
+# Hierarchical configuration (flext/infra/config/):
+from flext.infra.config import ConfigurationManager
 
 config_manager = ConfigurationManager()
 
@@ -593,8 +593,8 @@ config_manager = ConfigurationManager()
 config = await config_manager.load_configuration([
     ConfigSource.environment_variables(),
     ConfigSource.file("config.yaml"),
-    ConfigSource.vault("vault://secrets/flx"),
-    ConfigSource.consul("consul://config/flx")
+    ConfigSource.vault("vault://secrets/flext"),
+    ConfigSource.consul("consul://config/flext")
 ])
 
 # Type-safe access with validation
@@ -606,7 +606,7 @@ deployment_config = config.get_deployment_config()
 
 ```python
 # Circuit breaker and retry patterns:
-from flx.infra.resilience import CircuitBreaker, RetryPolicy
+from flext.infra.resilience import CircuitBreaker, RetryPolicy
 
 @CircuitBreaker(failure_threshold=5, recovery_timeout=60)
 @RetryPolicy(max_attempts=3, backoff_factor=2.0)
@@ -632,7 +632,7 @@ async def get_user_profile(user_id: str) -> UserProfile:
 
 ```python
 # Production performance patterns:
-from flx.infra.performance import ConnectionPool, BatchProcessor
+from flext.infra.performance import ConnectionPool, BatchProcessor
 
 # Connection pooling
 async def bulk_database_operations(operations: List[Operation]):
@@ -674,7 +674,7 @@ async def process_events(events: List[DomainEvent]):
 
 ## 📊 **Source Code Validation**
 
-✅ **Validated Against**: `/flx/src/` source code analysis
+✅ **Validated Against**: `/flext/src/` source code analysis
 ✅ **Production Integrations**: 3 Oracle adapters verified
 ✅ **Enterprise Features**: Infrastructure, testing, deployment confirmed
 ✅ **Framework Quality**: SOLID principles and hexagonal architecture validated
@@ -687,31 +687,31 @@ async def process_events(events: List[DomainEvent]):
 
 **✅ FLX Core Components Verified**:
 
-- `flx.core.protocols.Adapter` - Base adapter protocol
-- `flx.core.models.*` - All core data models (FlxDatabaseBaseModel, FlxConnectionModel, etc.)
-- `flx.core.enums.*` - Operation status enums and connection status
-- `flx.core.entities` - AggregateRoot and Entity classes
-- `flx.core.events.DomainEvent` - Domain event system
+- `flext.core.protocols.Adapter` - Base adapter protocol
+- `flext.core.models.*` - All core data models (FlxDatabaseBaseModel, FlxConnectionModel, etc.)
+- `flext.core.enums.*` - Operation status enums and connection status
+- `flext.core.entities` - AggregateRoot and Entity classes
+- `flext.core.events.DomainEvent` - Domain event system
 
 **✅ Infrastructure Layer Verified**:
 
-- `flx.infra.observability.*` - MetricsCollector, Tracer, HealthCheck, AnalyticsService
-- `flx.infra.plugins.*` - PluginManager, PluginRegistry, Plugin, ProtocolPlugin
-- `flx.infra.cli.cyclopts` - Type-safe CLI framework
-- `flx.infra.database` - Database engine and transaction management
+- `flext.infra.observability.*` - MetricsCollector, Tracer, HealthCheck, AnalyticsService
+- `flext.infra.plugins.*` - PluginManager, PluginRegistry, Plugin, ProtocolPlugin
+- `flext.infra.cli.cyclopts` - Type-safe CLI framework
+- `flext.infra.database` - Database engine and transaction management
 
 **✅ Testing Framework Verified**:
 
-- `flx.testing.DeclarativeTestEngine` - Zero-mock testing engine
-- `flx.testing.TestResult` - Test result aggregation
-- `flx.testing.TestMetrics` - Coverage and performance metrics
-- `flx.testing.*` - Complete testing utilities
+- `flext.testing.DeclarativeTestEngine` - Zero-mock testing engine
+- `flext.testing.TestResult` - Test result aggregation
+- `flext.testing.TestMetrics` - Coverage and performance metrics
+- `flext.testing.*` - Complete testing utilities
 
 **✅ Oracle Adapters Verified**:
 
-- `flx-http-oracle-oic` - OracleOicHttpAdapterModern, JWT auth service
-- `flx-database-oracle` - Database adapter with connection pooling
-- `flx-http-oracle-wms` - WMS operations adapter
+- `flext-http-oracle-oic` - OracleOicHttpAdapterModern, JWT auth service
+- `flext-database-oracle` - Database adapter with connection pooling
+- `flext-http-oracle-wms` - WMS operations adapter
 
 **✅ Framework Configuration Verified**:
 

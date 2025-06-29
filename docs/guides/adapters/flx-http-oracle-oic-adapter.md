@@ -48,14 +48,14 @@ OIC_VERIFY_SSL=true
 
 ```python
 import asyncio
-from flx_http_oracle_oic import OicConfig, flx_create_oic_context
+from flext_http_oracle_oic import OicConfig, flext_create_oic_context
 
 async def main():
     # Load configuration
     config = OicConfig.from_env()
 
     # Use factory pattern with context manager
-    async with flx_create_oic_context(config) as factory:
+    async with flext_create_oic_context(config) as factory:
         service = factory.create_oic_service()
 
         # Health check
@@ -78,24 +78,24 @@ asyncio.run(main())
 
 ```bash
 # Configuration management
-python -m flx_http_oracle_oic.cli config validate --test-connection
-python -m flx_http_oracle_oic.cli config view
+python -m flext_http_oracle_oic.cli config validate --test-connection
+python -m flext_http_oracle_oic.cli config view
 
 # Integration management
-python -m flx_http_oracle_oic.cli integrations list --format table
-python -m flx_http_oracle_oic.cli integrations get INTEGRATION_ID
+python -m flext_http_oracle_oic.cli integrations list --format table
+python -m flext_http_oracle_oic.cli integrations get INTEGRATION_ID
 
 # Connection management
-python -m flx_http_oracle_oic.cli connections list --type REST
-python -m flx_http_oracle_oic.cli connections test CONNECTION_ID
+python -m flext_http_oracle_oic.cli connections list --type REST
+python -m flext_http_oracle_oic.cli connections test CONNECTION_ID
 
 # Monitoring
-python -m flx_http_oracle_oic.cli monitoring overview --hours 24
-python -m flx_http_oracle_oic.cli monitoring health
+python -m flext_http_oracle_oic.cli monitoring overview --hours 24
+python -m flext_http_oracle_oic.cli monitoring health
 
 # JWT management
-python -m flx_http_oracle_oic.cli jwt status
-python -m flx_http_oracle_oic.cli jwt token --show-token
+python -m flext_http_oracle_oic.cli jwt status
+python -m flext_http_oracle_oic.cli jwt token --show-token
 ```
 
 ## Architecture
@@ -149,10 +149,10 @@ This package follows FLX framework patterns:
 pytest tests/
 
 # Run with coverage
-pytest tests/ --cov=src/flx_http_oracle_oic
+pytest tests/ --cov=src/flext_http_oracle_oic
 
 # Type checking
-mypy src/flx_http_oracle_oic/
+mypy src/flext_http_oracle_oic/
 ```
 
 ### Building
@@ -205,7 +205,7 @@ factory = OicFactory(config, debug_mode=True)
 
 ## License
 
-This flx_project follows the enterprise licensing patterns of the FLX framework.
+This flext_project follows the enterprise licensing patterns of the FLX framework.
 
 ## Contributing
 

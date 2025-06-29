@@ -53,11 +53,11 @@ The FLX security infrastructure provides comprehensive security services includi
 
 ### **Security Service Components**
 
-Based on actual implementation in `/flx/src/flx/infra/security/`:
+Based on actual implementation in `/flext/src/flext/infra/security/`:
 
 ```python
-from flx.infra.security import AuthenticationService, AuthorizationService, EncryptionService
-from flx.infra.services.base import BaseInfraService
+from flext.infra.security import AuthenticationService, AuthorizationService, EncryptionService
+from flext.infra.services.base import BaseInfraService
 
 class AuthenticationService(BaseInfraService):
     """Multi-provider authentication with JWT support."""
@@ -82,7 +82,7 @@ class AuthenticationService(BaseInfraService):
 ### **Authentication Setup**
 
 ```python
-from flx.infra.security import AuthenticationService, LDAPProvider, OAuth2Provider
+from flext.infra.security import AuthenticationService, LDAPProvider, OAuth2Provider
 
 # Configure authentication providers
 auth_service = AuthenticationService(providers=[
@@ -111,7 +111,7 @@ claims = await auth_service.verify_token(token.access_token)
 ### **JWT Token Management**
 
 ```python
-from flx.infra.security.tokens import JWTService
+from flext.infra.security.tokens import JWTService
 
 jwt_service = JWTService(
     secret_key="your-secret-key",
@@ -136,7 +136,7 @@ payload = jwt_service.decode_token(tokens.access_token)
 ### **RBAC Authorization**
 
 ```python
-from flx.infra.security import AuthorizationService, Permission, Role
+from flext.infra.security import AuthorizationService, Permission, Role
 
 # Define permissions
 permissions = [
@@ -167,7 +167,7 @@ can_write = await auth_service.authorize(
 ### **Field-Level Encryption**
 
 ```python
-from flx.infra.security import EncryptionService
+from flext.infra.security import EncryptionService
 from cryptography.fernet import Fernet
 
 # Initialize encryption service
@@ -205,7 +205,7 @@ class User:
 ### **Security Context**
 
 ```python
-from flx.infra.security.context import SecurityContext
+from flext.infra.security.context import SecurityContext
 
 # Middleware to set security context
 async def security_middleware(request, call_next):
@@ -290,7 +290,7 @@ async def security_headers_middleware(request, call_next):
 ### **Audit Logging**
 
 ```python
-from flx.infra.security.audit import AuditLogger
+from flext.infra.security.audit import AuditLogger
 
 audit_logger = AuditLogger()
 
@@ -319,7 +319,7 @@ await audit_logger.log_authorization(
 
 ```python
 import pytest
-from flx.infra.security import AuthenticationService
+from flext.infra.security import AuthenticationService
 
 @pytest.fixture
 async def auth_service():

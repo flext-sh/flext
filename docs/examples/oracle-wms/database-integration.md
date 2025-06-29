@@ -4,7 +4,7 @@ A complete solution for WMS (Warehouse Management System) to Oracle database int
 
 ## 🏗️ Architecture Overview
 
-This flx_project follows a layered architecture that promotes separation of concerns and maintainability:
+This flext_project follows a layered architecture that promotes separation of concerns and maintainability:
 
 ```
 ┌─────────────────────┐

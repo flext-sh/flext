@@ -20,7 +20,7 @@
 
 ### **Service-Oriented Infrastructure**
 
-Based on `flx/infra/` source code analysis, FLX implements a comprehensive service-oriented infrastructure:
+Based on `flext/infra/` source code analysis, FLX implements a comprehensive service-oriented infrastructure:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -56,7 +56,7 @@ Based on `flx/infra/` source code analysis, FLX implements a comprehensive servi
 
 ### **1. Core Infrastructure Services**
 
-Based on `flx/infra/services/base.py`, all services extend `BaseInfraService`:
+Based on `flext/infra/services/base.py`, all services extend `BaseInfraService`:
 
 ```python
 # Base service implementation pattern
@@ -77,7 +77,7 @@ class BaseInfraService:
 
 ### **2. Data Services**
 
-#### **Cache Service** (`flx/infra/cache/cache_service.py`)
+#### **Cache Service** (`flext/infra/cache/cache_service.py`)
 
 ```python
 class CacheService(BaseInfraService):
@@ -92,7 +92,7 @@ class CacheService(BaseInfraService):
     # - Atomic operations and distributed locking
 ```
 
-#### **Database Engine** (`flx/infra/database/engine.py`)
+#### **Database Engine** (`flext/infra/database/engine.py`)
 
 ```python
 class DatabaseEngine(BaseInfraService):
@@ -109,7 +109,7 @@ class DatabaseEngine(BaseInfraService):
 
 ### **3. Communication Services**
 
-#### **HTTP Client Service** (`flx/infra/http/client_service.py`)
+#### **HTTP Client Service** (`flext/infra/http/client_service.py`)
 
 ```python
 class HttpClientService(BaseInfraService):
@@ -124,7 +124,7 @@ class HttpClientService(BaseInfraService):
     # - SSL/TLS configuration and validation
 ```
 
-#### **Messaging Bus** (`flx/infra/messaging/bus.py`)
+#### **Messaging Bus** (`flext/infra/messaging/bus.py`)
 
 ```python
 class AsyncMessageBus(BaseInfraService):
@@ -141,7 +141,7 @@ class AsyncMessageBus(BaseInfraService):
 
 ### **4. Security Framework**
 
-#### **Authentication Service** (`flx/infra/security/auth.py`)
+#### **Authentication Service** (`flext/infra/security/auth.py`)
 
 ```python
 class AuthService(BaseInfraService):
@@ -156,7 +156,7 @@ class AuthService(BaseInfraService):
     # - Audit logging and compliance
 ```
 
-#### **Cryptographic Service** (`flx/infra/security/crypto.py`)
+#### **Cryptographic Service** (`flext/infra/security/crypto.py`)
 
 ```python
 class CryptoService(BaseInfraService):
@@ -180,8 +180,8 @@ class CryptoService(BaseInfraService):
 All FLX infrastructure services follow consistent implementation patterns:
 
 ```python
-from flx.infra.services.base import BaseInfraService
-from flx.infra.services.protocols import ServiceHealthStatus
+from flext.infra.services.base import BaseInfraService
+from flext.infra.services.protocols import ServiceHealthStatus
 from typing import Dict, Any, Optional
 import asyncio
 
@@ -248,7 +248,7 @@ class ExampleService(BaseInfraService):
 
 ### **Configuration Management**
 
-Based on `flx/infra/config/hierarchical.py`:
+Based on `flext/infra/config/hierarchical.py`:
 
 ```python
 class ServiceConfiguration(HierarchicalConfig):
@@ -288,7 +288,7 @@ class ServiceConfiguration(HierarchicalConfig):
 
 ### **Production Engine Pattern**
 
-Based on `flx/infra/*/production_engine.py` files, FLX provides production-ready engines:
+Based on `flext/infra/*/production_engine.py` files, FLX provides production-ready engines:
 
 #### **Cache Production Engine** (`cache/production_engine.py`)
 
@@ -343,7 +343,7 @@ class DatabaseProductionEngine:
             pool_recycle=3600,
             connect_args={
                 "server_settings": {
-                    "application_name": "flx_production",
+                    "application_name": "flext_production",
                     "jit": "off"  # Disable JIT for consistent performance
                 }
             }
@@ -390,7 +390,7 @@ class HttpProductionEngine:
 
 ### **Comprehensive Monitoring**
 
-Based on `flx/infra/observability/`, FLX provides enterprise-grade observability:
+Based on `flext/infra/observability/`, FLX provides enterprise-grade observability:
 
 #### **Metrics System** (`observability/metrics.py`)
 
@@ -520,7 +520,7 @@ class TracingSystem(BaseInfraService):
 
 ### **Enterprise Security Implementation**
 
-Based on `flx/infra/security/`, FLX implements comprehensive security:
+Based on `flext/infra/security/`, FLX implements comprehensive security:
 
 #### **Authentication Framework** (`security/secure_auth.py`)
 
@@ -609,7 +609,7 @@ class EncryptionService(BaseInfraService):
 
 ### **Auto-Scaling Framework**
 
-Based on `flx/infra/scaling/auto_scaler.py`:
+Based on `flext/infra/scaling/auto_scaler.py`:
 
 ```python
 class AutoScalingFramework(BaseInfraService):
@@ -705,7 +705,7 @@ class IntelligentProfiler(BaseInfraService):
 ### **⬅️ Prerequisites**
 
 - [Architecture Hub](../architecture/index.md) - Understanding hexagonal architecture patterns supporting infrastructure design
-- [FLX Technical Reference](../api-reference/flx-technical-reference.md) - Detailed technical documentation of infrastructure components
+- [FLX Technical Reference](../api-reference/flext-technical-reference.md) - Detailed technical documentation of infrastructure components
 
 ### **➡️ Next Steps**
 

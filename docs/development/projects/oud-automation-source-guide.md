@@ -187,7 +187,7 @@ This will create:
 
 1. Default configuration files in the specified directory
 2. A `.env` file with the specified values
-3. Necessary directories for the flx_project
+3. Necessary directories for the flext_project
 
 ### Viewing Current Configuration
 
@@ -237,7 +237,7 @@ Use `--help` with any command to see specific options.
 
 ## Usage Examples
 
-See the flx_project's main README for detailed usage examples.
+See the flext_project's main README for detailed usage examples.
 
 ## Uso de LDIF
 

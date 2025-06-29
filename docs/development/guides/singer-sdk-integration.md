@@ -18,7 +18,7 @@ The Meltano Singer SDK is the fastest way to build custom data extractors and lo
 The Singer SDK integrates with FLX's hexagonal architecture through adapter patterns:
 
 ```python
-from flx.adapters.base import BaseAdapter
+from flext.adapters.base import BaseAdapter
 from singer_sdk import Tap, Target
 from typing import Dict, Any
 
@@ -156,14 +156,14 @@ cookiecutter ./singer_sdk/cookiecutter/mapper-template
 poetry add singer-sdk
 
 # Link with FLX adapters
-poetry add --path ../flx
+poetry add --path ../flext
 ```
 
 ### 4. Testing with FLX Framework
 
 ```python
 import pytest
-from flx.testing.engines import BaseTestEngine
+from flext.testing.engines import BaseTestEngine
 from your_tap import CustomTap
 
 class TestSingerIntegration(BaseTestEngine):

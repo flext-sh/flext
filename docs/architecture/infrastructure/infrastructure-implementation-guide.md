@@ -3,10 +3,10 @@
 > **Function**: Complete infrastructure layer implementation guide validated against real source code | **Audience**: Architects, Infrastructure engineers, DevOps teams | **Status**: ✅ VALIDATED
 
 [![Infrastructure](https://img.shields.io/badge/layer-infrastructure-blue.svg)](./index.md)
-[![Validated](https://img.shields.io/badge/source-validated-orange.svg)](../../../flx/src/flx/infra/)
+[![Validated](https://img.shields.io/badge/source-validated-orange.svg)](../../../flext/src/flext/infra/)
 [![Framework](https://img.shields.io/badge/framework-FLX%200.4.0-orange.svg)](../index.md)
 
-**Comprehensive infrastructure layer implementation guide validated against actual production code in `/flx/src/flx/infra/`**
+**Comprehensive infrastructure layer implementation guide validated against actual production code in `/flext/src/flext/infra/`**
 
 ---
 
@@ -24,7 +24,7 @@
 
 - **📂 Section Hub**: [Architecture Hub](../index.md)
 - **🏠 Documentation Root**: [Root Index](../../index.md)
-- **🔗 Source Code**: [FLX Infrastructure](../../../flx/src/flx/infra/)
+- **🔗 Source Code**: [FLX Infrastructure](../../../flext/src/flext/infra/)
 - **🔗 Related**: [Ports Hub](../ports/index.md), [Adapters Hub](../adapters/index.md)
 
 ---
@@ -92,15 +92,15 @@ FLX infrastructure follows strict hexagonal architecture with clear layer separa
 
 ## 🔧 **Current Infrastructure Components**
 
-### **Validated Infrastructure Structure** (from `/flx/src/flx/infra/`)
+### **Validated Infrastructure Structure** (from `/flext/src/flext/infra/`)
 
 #### **1. Service Management (`/services/`)**
 
 **Real Implementation**:
 
 ```python
-from flx.infra.services.base import BaseInfraService, ServiceRegistry
-from flx.infra.services.registry import service_registry
+from flext.infra.services.base import BaseInfraService, ServiceRegistry
+from flext.infra.services.registry import service_registry
 
 # Service lifecycle management (validated against actual code)
 class InfrastructureService(BaseInfraService):
@@ -134,14 +134,14 @@ await service_registry.start_all()
 **Real Implementation**:
 
 ```python
-from flx.infra.cache.cache_service import CacheService
-from flx.infra.cache.production_engine import CacheProductionEngine
+from flext.infra.cache.cache_service import CacheService
+from flext.infra.cache.production_engine import CacheProductionEngine
 
 # Production cache with Redis cluster (validated implementation)
 cache = CacheService(
     backend="redis",
     redis_url="redis://localhost:6379",
-    key_prefix="flx:",
+    key_prefix="flext:",
     default_ttl=3600,
     max_connections=10,
     enable_compression=True,
@@ -173,9 +173,9 @@ production_cache = CacheProductionEngine(
 **Real Implementation**:
 
 ```python
-from flx.infra.database.engine import DatabaseEngine
-from flx.infra.database.repository import Repository
-from flx.infra.database.session import SessionManager
+from flext.infra.database.engine import DatabaseEngine
+from flext.infra.database.repository import Repository
+from flext.infra.database.session import SessionManager
 
 # Database engine with connection pooling (validated implementation)
 db_engine = DatabaseEngine(
@@ -209,8 +209,8 @@ async with SessionManager() as session:
 **Real Implementation**:
 
 ```python
-from flx.infra.http.client_service import HttpClientService
-from flx.infra.http.production_engine import HttpProductionEngine
+from flext.infra.http.client_service import HttpClientService
+from flext.infra.http.production_engine import HttpProductionEngine
 
 # HTTP client with advanced features (validated implementation)
 http_client = HttpClientService(
@@ -248,8 +248,8 @@ http_client.set_basic_auth("username", "password")
 **Real Implementation**:
 
 ```python
-from flx.infra.messaging.bus import AsyncMessageBus
-from flx.infra.messaging.event_service import EventService
+from flext.infra.messaging.bus import AsyncMessageBus
+from flext.infra.messaging.event_service import EventService
 
 # Message bus with Redis backend (validated implementation)
 message_bus = AsyncMessageBus(
@@ -287,7 +287,7 @@ async def handle_user_created(event_data: dict):
 **Real Implementation**:
 
 ```python
-from flx.infra.config.hierarchical import ConfigManager, load_config
+from flext.infra.config.hierarchical import ConfigManager, load_config
 
 # Hierarchical configuration (validated implementation)
 config = ConfigManager(
@@ -318,8 +318,8 @@ oracle_settings = config.get_section("oracle")
 **Real Implementation**:
 
 ```python
-from flx.infra.observability.metrics_system import MetricsCollector, get_metrics_collector
-from flx.infra.observability.health import HealthCheck, CompositeHealthCheck
+from flext.infra.observability.metrics_system import MetricsCollector, get_metrics_collector
+from flext.infra.observability.health import HealthCheck, CompositeHealthCheck
 
 # Metrics collection (validated implementation)
 collector = get_metrics_collector("production")
@@ -347,7 +347,7 @@ class DatabaseHealthCheck(HealthCheck):
             details={"connection": "active"}
         )
 
-system_health = CompositeHealthCheck("flx_system", [
+system_health = CompositeHealthCheck("flext_system", [
     DatabaseHealthCheck(database_engine),
     CacheHealthCheck(cache_service)
 ])
@@ -400,8 +400,8 @@ _trace_context: ContextVar[TraceContext | None] = ContextVar("trace_context", de
 **Real Implementation**:
 
 ```python
-from flx.infra.security.auth import AuthProvider, MultiAuthProvider
-from flx.infra.security.crypto import CryptoService
+from flext.infra.security.auth import AuthProvider, MultiAuthProvider
+from flext.infra.security.crypto import CryptoService
 
 # Authentication provider (validated implementation)
 auth_provider = AuthProvider()
@@ -437,7 +437,7 @@ decrypted = await crypto.decrypt_sensitive_data(encrypted)
 **Real Implementation**:
 
 ```python
-from flx.infra.resilience.circuit_breaker import CircuitBreaker, circuit_breaker
+from flext.infra.resilience.circuit_breaker import CircuitBreaker, circuit_breaker
 
 # Circuit breaker decorator (validated implementation)
 @circuit_breaker(
@@ -472,7 +472,7 @@ result = await breaker.call(risky_operation, param1, param2)
 **✅ CORRECT: Infrastructure Service Implementation**
 
 ```python
-from flx.infra.services.base import BaseInfraService
+from flext.infra.services.base import BaseInfraService
 
 class CacheService(BaseInfraService):
     def __init__(self, redis_url: str, use_test_engine: bool = False):
@@ -508,7 +508,7 @@ class CacheService(BaseInfraService):
 **✅ CORRECT: Service Registry Usage**
 
 ```python
-from flx.infra.services.registry import service_registry
+from flext.infra.services.registry import service_registry
 
 # Register services
 service_registry.register("cache", cache_service)
@@ -649,7 +649,7 @@ for service_name, result in health.items():
 
 ```python
 # Monitor service metrics
-from flx.infra.observability.metrics_system import get_metrics_collector
+from flext.infra.observability.metrics_system import get_metrics_collector
 collector = get_metrics_collector()
 metrics = collector.get_all_metrics()
 ```
@@ -658,7 +658,7 @@ metrics = collector.get_all_metrics()
 
 ```python
 # Validate configuration
-from flx.infra.config.hierarchical import load_config
+from flext.infra.config.hierarchical import load_config
 config = load_config()
 # Configuration automatically validated against schema
 ```

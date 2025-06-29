@@ -52,17 +52,17 @@ The Application Layer orchestrates the flow between presentation (adapters) and 
 
 ### **Layer Dependencies**
 
-Based on actual implementation in `/flx/src/flx/application/`:
+Based on actual implementation in `/flext/src/flext/application/`:
 
 ```python
 # Application layer depends ONLY on domain layer
-from flx.domain.entities import Customer, Order
-from flx.domain.services import PricingService
-from flx.domain.repositories import CustomerRepository
+from flext.domain.entities import Customer, Order
+from flext.domain.services import PricingService
+from flext.domain.repositories import CustomerRepository
 
 # NO infrastructure imports allowed
-# ❌ from flx.infra.database import DatabaseConnection
-# ❌ from flx.adapters.http import HttpClient
+# ❌ from flext.infra.database import DatabaseConnection
+# ❌ from flext.adapters.http import HttpClient
 ```
 
 ### **Core Components**
@@ -70,8 +70,8 @@ from flx.domain.repositories import CustomerRepository
 #### **Application Services**
 
 ```python
-from flx.application.services import ApplicationService
-from flx.domain.repositories import Repository
+from flext.application.services import ApplicationService
+from flext.domain.repositories import Repository
 
 class OrderApplicationService(ApplicationService):
     """Orchestrates order-related use cases."""
@@ -113,7 +113,7 @@ class OrderApplicationService(ApplicationService):
 #### **Dependency Injection Container**
 
 ```python
-from flx.application.container import ApplicationContainer
+from flext.application.container import ApplicationContainer
 
 class ApplicationContainer:
     """Manages application service dependencies."""
@@ -139,7 +139,7 @@ class ApplicationContainer:
 #### **Bootstrap Process**
 
 ```python
-from flx.application.bootstrap import ApplicationBootstrap
+from flext.application.bootstrap import ApplicationBootstrap
 
 class ApplicationBootstrap:
     """Initializes application with all dependencies."""
@@ -181,7 +181,7 @@ class ApplicationBootstrap:
 ### **Command Pattern for Use Cases**
 
 ```python
-from flx.application.commands import Command, CommandHandler
+from flext.application.commands import Command, CommandHandler
 
 class CreateOrderCommand(Command):
     """Command representing order creation request."""
@@ -204,7 +204,7 @@ class CreateOrderHandler(CommandHandler[CreateOrderCommand, str]):
 ### **Transaction Management**
 
 ```python
-from flx.application.transactions import TransactionManager
+from flext.application.transactions import TransactionManager
 
 class TransactionalApplicationService:
     """Base class for transactional services."""
@@ -227,7 +227,7 @@ class TransactionalApplicationService:
 ### **Query Services**
 
 ```python
-from flx.application.queries import QueryService
+from flext.application.queries import QueryService
 
 class OrderQueryService(QueryService):
     """Read-only queries for orders."""

@@ -108,7 +108,7 @@ tests/
 
 ```python
 # Example: Testing a domain service
-from flx.testing import TestCase, MockRepository
+from flext.testing import TestCase, MockRepository
 
 class TestUserService(TestCase):
     async def test_create_user_success(self):
