@@ -8,13 +8,13 @@
 # ACTIVE ENTERPRISE INTEGRATION PROJECTS (ROOT)
 # ============================================================================
 
-[submodule "flext-algar-oud-mig"]
-	path = flext-algar-oud-mig
-	url = git@github.com:flext-sh/flext-algar-oud-mig.git
+[submodule "algar-oud-mig"]
+	path = algar-oud-mig
+	url = git@github.com:datacosmos-br/algar-oud-mig.git
 
-[submodule "flext-gruponos-poc-oic-wms"]
-	path = flext-gruponos-poc-oic-wms
-	url = git@github.com:flext-sh/flext-gruponos-poc-oic-wms.git
+[submodule "gruponos-poc-oic-wms"]
+	path = gruponos-poc-oic-wms
+	url = git@github.com:datacosmos-br/gruponos-poc-oic-wms.git
 
 # ============================================================================
 # ACTIVE SINGER/MELTANO PROTOCOL PROJECTS (ROOT)
