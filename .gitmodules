@@ -1,96 +1,96 @@
 # ============================================================================
 # PYAUTO WORKSPACE - GIT SUBMODULES CONFIGURATION
 # Organized by project category and location
-# Last Updated: 2025-06-29
+# Last Updated: 2025-06-29 - MIGRATED TO FLEXT-SH ORGANIZATION
 # ============================================================================
 
 # ============================================================================
 # ACTIVE ENTERPRISE INTEGRATION PROJECTS (ROOT)
 # ============================================================================
 
-[submodule "algar-oud-mig"]
-	path = algar-oud-mig
-	url = git@github.com:datacosmos-br/algar-oud-mig.git
+[submodule "flext-algar-oud-mig"]
+	path = flext-algar-oud-mig
+	url = git@github.com:flext-sh/flext-algar-oud-mig.git
 
-[submodule "gruponos-poc-oic-wms"]
-	path = gruponos-poc-oic-wms
-	url = git@github.com:datacosmos-br/gruponos-poc-oic-wms.git
+[submodule "flext-gruponos-poc-oic-wms"]
+	path = flext-gruponos-poc-oic-wms
+	url = git@github.com:flext-sh/flext-gruponos-poc-oic-wms.git
 
 # ============================================================================
 # ACTIVE SINGER/MELTANO PROTOCOL PROJECTS (ROOT)
 # ============================================================================
 
-[submodule "dbt-ldap"]
-	path = dbt-ldap
-	url = git@github.com:datacosmos-br/dbt-ldap.git
+[submodule "flext-dbt-ldap"]
+	path = flext-dbt-ldap
+	url = git@github.com:flext-sh/flext-dbt-ldap.git
 
-[submodule "oracle-oic-ext"]
-	path = oracle-oic-ext
-	url = git@github.com:datacosmos-br/oracle-oic-ext.git
+[submodule "flext-oracle-oic-ext"]
+	path = flext-oracle-oic-ext
+	url = git@github.com:flext-sh/flext-oracle-oic-ext.git
 
-[submodule "tap-ldap"]
-	path = tap-ldap
-	url = git@github.com:datacosmos-br/tap-ldap.git
+[submodule "flext-tap-ldap"]
+	path = flext-tap-ldap
+	url = git@github.com:flext-sh/flext-tap-ldap.git
 
-[submodule "tap-oracle-oic"]
-	path = tap-oracle-oic
-	url = git@github.com:datacosmos-br/tap-oracle-oic.git
+[submodule "flext-tap-oracle-oic"]
+	path = flext-tap-oracle-oic
+	url = git@github.com:flext-sh/flext-tap-oracle-oic.git
 
-[submodule "tap-oracle-wms"]
-	path = tap-oracle-wms
-	url = git@github.com:datacosmos-br/tap-oracle-wms.git
+[submodule "flext-tap-oracle-wms"]
+	path = flext-tap-oracle-wms
+	url = git@github.com:flext-sh/flext-tap-oracle-wms.git
 
-[submodule "target-ldap"]
-	path = target-ldap
-	url = git@github.com:datacosmos-br/target-ldap.git
+[submodule "flext-target-ldap"]
+	path = flext-target-ldap
+	url = git@github.com:flext-sh/flext-target-ldap.git
 
-[submodule "target-oracle-oic"]
-	path = target-oracle-oic
-	url = git@github.com:datacosmos-br/target-oracle-oic.git
+[submodule "flext-target-oracle-oic"]
+	path = flext-target-oracle-oic
+	url = git@github.com:flext-sh/flext-target-oracle-oic.git
 
-[submodule "target-oracle-wms"]
-	path = target-oracle-wms
-	url = git@github.com:datacosmos-br/target-oracle-wms.git
+[submodule "flext-target-oracle-wms"]
+	path = flext-target-oracle-wms
+	url = git@github.com:flext-sh/flext-target-oracle-wms.git
 
 # ============================================================================
 # ACTIVE FLX EXTENSIONS (ROOT)
 # ============================================================================
 
-[submodule "flx-ldap"]
-	path = flx-ldap
-	url = git@github.com:datacosmos-br/flx-ldap.git
+[submodule "flext-ldap"]
+	path = flext-ldap
+	url = git@github.com:flext-sh/flext-ldap.git
 
-[submodule "flx-quality"]
-	path = flx-quality
-	url = git@github.com:datacosmos-br/dc-code-analyzer.git
+[submodule "flext-quality"]
+	path = flext-quality
+	url = git@github.com:flext-sh/flext-ldap.git
 
 # ============================================================================
 # LEGACY PROJECTS (MOVED TO LEGACY/ DIRECTORY)
 # ============================================================================
 
-[submodule "legacy/flx-adapter-example"]
-	path = legacy/flx-adapter-example
-	url = git@github.com:datacosmos-br/flx-adapter-example.git
+[submodule "legacy/flext-adapter-example"]
+	path = legacy/flext-adapter-example
+	url = git@github.com:flext-sh/flext-adapter-example.git
 
-[submodule "legacy/flx-database-oracle"]
-	path = legacy/flx-database-oracle
-	url = git@github.com:datacosmos-br/flx-database-oracle.git
+[submodule "legacy/flext-database-oracle"]
+	path = legacy/flext-database-oracle
+	url = git@github.com:flext-sh/flext-database-oracle.git
 
-[submodule "legacy/flx-http-oracle-oic"]
-	path = legacy/flx-http-oracle-oic
-	url = git@github.com:datacosmos-br/flx-http-oracle-oic.git
+[submodule "legacy/flext-http-oracle-oic"]
+	path = legacy/flext-http-oracle-oic
+	url = git@github.com:flext-sh/flext-http-oracle-oic.git
 
-[submodule "legacy/flx-http-oracle-wms"]
-	path = legacy/flx-http-oracle-wms
-	url = git@github.com:datacosmos-br/flx-http-oracle-wms.git
+[submodule "legacy/flext-http-oracle-wms"]
+	path = legacy/flext-http-oracle-wms
+	url = git@github.com:flext-sh/flext-http-oracle-wms.git
 
-[submodule "legacy/flx-oracle-oic"]
-	path = legacy/flx-oracle-oic
-	url = git@github.com:datacosmos-br/flx-oracle-oic.git
+[submodule "legacy/flext-oracle-oic"]
+	path = legacy/flext-oracle-oic
+	url = git@github.com:flext-sh/flext-oracle-oic.git
 
-[submodule "legacy/flx-oracle-wms"]
-	path = legacy/flx-oracle-wms
-	url = git@github.com:datacosmos-br/flx-oracle-wms.git
+[submodule "legacy/flext-oracle-wms"]
+	path = legacy/flext-oracle-wms
+	url = git@github.com:flext-sh/flext-oracle-wms.git
 
 # ============================================================================
 # NOTES:
@@ -99,50 +99,49 @@
 # - Source preserved in backups/flx-meltano-enterprise_source_*
 # ============================================================================
 # ============================================================================
-# ACTIVE FLX FRAMEWORK MODULES (EXTRACTED FROM flx-meltano-enterprise)
+# ACTIVE FLX FRAMEWORK MODULES (EXTRACTED FROM flext-meltano-enterprise)
 # ============================================================================
 
-[submodule "flx-core"]
-	path = flx-core
-	url = git@github.com:datacosmos-br/flx-core.git
+[submodule "flext-core"]
+	path = flext-core
+	url = git@github.com:flext-sh/flext-core.git
 
-[submodule "flx-auth"]
-	path = flx-auth
-	url = git@github.com:datacosmos-br/flx-auth.git
+[submodule "flext-auth"]
+	path = flext-auth
+	url = git@github.com:flext-sh/flext-auth.git
 
-[submodule "flx-api"]
-	path = flx-api
-	url = git@github.com:datacosmos-br/flx-api.git
+[submodule "flext-api"]
+	path = flext-api
+	url = git@github.com:flext-sh/flext-api.git
 
-[submodule "flx-grpc"]
-	path = flx-grpc
-	url = git@github.com:datacosmos-br/flx-grpc.git
+[submodule "flext-grpc"]
+	path = flext-grpc
+	url = git@github.com:flext-sh/flext-grpc.git
 
-[submodule "flx-web"]
-	path = flx-web
-	url = git@github.com:datacosmos-br/flx-web.git
+[submodule "flext-web"]
+	path = flext-web
+	url = git@github.com:flext-sh/flext-web.git
 
-[submodule "flx-cli"]
-	path = flx-cli
-	url = git@github.com:datacosmos-br/flx-cli.git
+[submodule "flext-cli"]
+	path = flext-cli
+	url = git@github.com:flext-sh/flext-cli.git
 
-[submodule "flx-plugin"]
-	path = flx-plugin
-	url = git@github.com:datacosmos-br/flx-plugin.git
+[submodule "flext-plugin"]
+	path = flext-plugin
+	url = git@github.com:flext-sh/flext-plugin.git
 
-[submodule "flx-observability"]
-	path = flx-observability
-	url = git@github.com:datacosmos-br/flx-observability.git
+[submodule "flext-observability"]
+	path = flext-observability
+	url = git@github.com:flext-sh/flext-observability.git
 
-[submodule "flx-meltano"]
-	path = flx-meltano
-	url = git@github.com:datacosmos-br/flx-meltano.git
+[submodule "flext-meltano"]
+	path = flext-meltano
+	url = git@github.com:flext-sh/flext-meltano.git
 
 # ============================================================================
 # BACKUP PRESERVATION SUBMODULES
 # ============================================================================
 
-[submodule "backups/flx-meltano-enterprise_source_20250629_121126"]
-	path = backups/flx-meltano-enterprise_source_20250629_121126
-	url = git@github.com:datacosmos-br/flx-meltano-enterprise.git
-
+[submodule "backups/flext-meltano-enterprise_source_20250629_121126"]
+	path = backups/flext-meltano-enterprise_source_20250629_121126
+	url = git@github.com:flext-sh/flext-meltano-enterprise.git
