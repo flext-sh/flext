@@ -8,13 +8,13 @@
 # ACTIVE ENTERPRISE INTEGRATION PROJECTS (ROOT)
 # ============================================================================
 
-[submodule "flext-client-a-oud-mig"]
-	path = flext-client-a-oud-mig
-	url = git@github.com:flext-sh/flext-client-a-oud-mig.git
+[submodule "client-a-oud-mig"]
+	path = client-a-oud-mig
+	url = git@github.com:datacosmos-br/client-a-oud-mig.git
 
-[submodule "flext-client-b-poc-oic-wms"]
-	path = flext-client-b-poc-oic-wms
-	url = git@github.com:flext-sh/flext-client-b-poc-oic-wms.git
+[submodule "client-b-poc-oic-wms"]
+	path = client-b-poc-oic-wms
+	url = git@github.com:datacosmos-br/client-b-poc-oic-wms.git
 
 # ============================================================================
 # ACTIVE SINGER/MELTANO PROTOCOL PROJECTS (ROOT)
