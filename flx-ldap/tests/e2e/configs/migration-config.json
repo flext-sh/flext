@@ -1,0 +1,108 @@
+{
+  "tap": {
+    "host": "source-ldap",
+    "port": 389,
+    "bind_dn": "cn=REDACTED_LDAP_BIND_PASSWORD,dc=source,dc=com",
+    "password": "source_password",
+    "base_dn": "dc=source,dc=com",
+    "use_ssl": false,
+    "page_size": 100,
+    "user_filter": "(&(objectClass=inetOrgPerson)(employeeType=active))",
+    "group_filter": "(objectClass=groupOfNames)",
+    "custom_streams": [
+      {
+        "name": "service_accounts",
+        "search_filter": "(&(objectClass=account)(uid=svc-*))",
+        "primary_keys": ["dn"],
+        "schema": {
+          "properties": {
+            "dn": { "type": "string" },
+            "uid": { "type": "string" },
+            "description": { "type": "string" }
+          }
+        }
+      },
+      {
+        "name": "access_groups",
+        "search_filter": "(&(objectClass=groupOfNames)(|(cn=*-REDACTED_LDAP_BIND_PASSWORDs)(cn=vpn-*)))",
+        "primary_keys": ["dn"],
+        "schema": {
+          "properties": {
+            "dn": { "type": "string" },
+            "cn": { "type": "string" },
+            "description": { "type": "string" },
+            "member": { "type": "array", "items": { "type": "string" } }
+          }
+        }
+      }
+    ]
+  },
+  "target": {
+    "host": "target-ldap",
+    "port": 389,
+    "bind_dn": "cn=REDACTED_LDAP_BIND_PASSWORD,dc=target,dc=com",
+    "password": "target_password",
+    "base_dn": "dc=target,dc=com",
+    "use_ssl": false,
+    "validate_records": true,
+    "dn_templates": {
+      "users": "uid={uid},ou=users,ou=migrated,{base_dn}",
+      "groups": "cn={cn},ou=groups,{base_dn}",
+      "organizational_units": "ou={ou},ou=departments,{base_dn}",
+      "service_accounts": "uid={uid},ou=service-accounts,{base_dn}",
+      "access_groups": "cn={cn},ou=access,{base_dn}"
+    },
+    "default_object_classes": {
+      "users": ["inetOrgPerson", "organizationalPerson", "person", "top"],
+      "groups": ["groupOfNames", "top"],
+      "organizational_units": ["organizationalUnit", "top"],
+      "service_accounts": ["account", "simpleSecurityObject", "top"],
+      "access_groups": ["groupOfNames", "top"]
+    }
+  },
+  "dbt": {
+    "project_dir": "/app/dbt_project",
+    "profiles_dir": "/app/profiles",
+    "target": "test",
+    "vars": {
+      "ldap_base_dn": "dc=source,dc=com",
+      "target_base_dn": "dc=target,dc=com"
+    },
+    "models": ["staging", "marts"]
+  },
+  "migration": {
+    "source_tap_config": {
+      "host": "source-ldap",
+      "port": 389,
+      "bind_dn": "cn=REDACTED_LDAP_BIND_PASSWORD,dc=source,dc=com",
+      "password": "source_password",
+      "base_dn": "dc=source,dc=com",
+      "use_ssl": false
+    },
+    "target_tap_config": {
+      "host": "target-ldap",
+      "port": 389,
+      "bind_dn": "cn=REDACTED_LDAP_BIND_PASSWORD,dc=target,dc=com",
+      "password": "target_password",
+      "base_dn": "dc=target,dc=com",
+      "use_ssl": false
+    },
+    "target_config": {
+      "host": "target-ldap",
+      "port": 389,
+      "bind_dn": "cn=REDACTED_LDAP_BIND_PASSWORD,dc=target,dc=com",
+      "password": "target_password",
+      "base_dn": "dc=target,dc=com",
+      "use_ssl": false,
+      "dn_templates": {
+        "users": "uid={uid},ou=users,ou=migrated,{base_dn}",
+        "groups": "cn={cn},ou=groups,{base_dn}"
+      }
+    },
+    "comparison_enabled": true,
+    "dry_run": false,
+    "batch_size": 50
+  },
+  "output_path": "/app/data",
+  "log_level": "INFO"
+}

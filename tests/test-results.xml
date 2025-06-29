@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="1" failures="0" skipped="0" tests="1" time="0.203" timestamp="2025-06-09T23:00:32.362611-03:00" hostname="tungs"><testcase classname="" name="src.test_cli" time="0.000"><error message="collection failure">ImportError while importing test module '/home/marlonsc/pyauto/flx/src/test_cli.py'.
-Hint: make sure your test modules/packages have valid Python names.
-Traceback:
-/usr/lib/python3.13/importlib/__init__.py:88: in import_module
-    return _bootstrap._gcd_import(name[level:], package, level)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-flx/src/test_cli.py:7: in &lt;module&gt;
-    from flx.application.simple_cli import simple_main
-E   ModuleNotFoundError: No module named 'flx.application.simple_cli'</error></testcase></testsuite></testsuites>
