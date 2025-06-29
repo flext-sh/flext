@@ -27,7 +27,7 @@
 ## 🎯 Quick Navigation
 
 - [**Getting Started**](#-getting-started) - Setup and basic configuration
-- [**FLX Database Plugin**](#-flx-database-plugin) - Modern simplified architecture
+- [**FLX Database Plugin**](#-flext-database-plugin) - Modern simplified architecture
 - [**Database Operations**](#-database-operations) - Queries, transactions, and schema
 - [**CLI Interface**](#-cli-interface) - Command-line database operations
 - [**Advanced Features**](#-advanced-features) - Monitoring, pooling, and performance
@@ -46,7 +46,7 @@
 
 ```bash
 # Install Oracle database adapter
-pip install flx-database-oracle
+pip install flext-database-oracle
 
 # Install Oracle client dependencies
 pip install oracledb pydantic
@@ -80,13 +80,13 @@ export FLX_ORACLE_POOL_MAX=20
 
 ```bash
 # Test CLI connectivity
-python -m flx_database_oracle.cli info
+python -m flext_database_oracle.cli info
 
 # Check Oracle version
-python -m flx_database_oracle.cli version
+python -m flext_database_oracle.cli version
 
 # Show capabilities
-python -m flx_database_oracle.cli capabilities
+python -m flext_database_oracle.cli capabilities
 ```
 
 ## 🔌 FLX Database Plugin
@@ -133,12 +133,12 @@ The FLX Database Oracle adapter features a dramatically simplified architecture 
 
 ```python
 import asyncio
-from flx_database_oracle import flx_create_database_plugin
-from flx.plugins.base import FlxPluginMode
+from flext_database_oracle import flext_create_database_plugin
+from flext.plugins.base import FlxPluginMode
 
 async def main():
     # Create plugin
-    plugin = flx_create_database_plugin(
+    plugin = flext_create_database_plugin(
         host="localhost",
         username="hr",
         password="oracle",
@@ -164,7 +164,7 @@ asyncio.run(main())
 ### Advanced Configuration
 
 ```python
-from flx_database_oracle import DatabaseConfig, DatabasePlugin
+from flext_database_oracle import DatabaseConfig, DatabasePlugin
 
 # Advanced configuration
 config = DatabaseConfig(
@@ -400,57 +400,57 @@ The module includes a modern CLI built with **FlxDeclarativeCli** that provides 
 
 ```bash
 # CLI information and capabilities
-python -m flx_database_oracle.cli info                    # Show CLI information
-python -m flx_database_oracle.cli version                 # Show Oracle version
-python -m flx_database_oracle.cli capabilities            # Show available operations
+python -m flext_database_oracle.cli info                    # Show CLI information
+python -m flext_database_oracle.cli version                 # Show Oracle version
+python -m flext_database_oracle.cli capabilities            # Show available operations
 ```
 
 #### SQL Execution
 
 ```bash
 # Simple queries
-python -m flx_database_oracle.cli query "SELECT * FROM hr.employees"
-python -m flx_database_oracle.cli query "SELECT * FROM hr.departments" --output-format json
+python -m flext_database_oracle.cli query "SELECT * FROM hr.employees"
+python -m flext_database_oracle.cli query "SELECT * FROM hr.departments" --output-format json
 
 # Execute DDL/DML
-python -m flx_database_oracle.cli execute "CREATE TABLE test (id NUMBER, name VARCHAR2(100))"
-python -m flx_database_oracle.cli execute "INSERT INTO test VALUES (1, 'Test')" --commit
+python -m flext_database_oracle.cli execute "CREATE TABLE test (id NUMBER, name VARCHAR2(100))"
+python -m flext_database_oracle.cli execute "INSERT INTO test VALUES (1, 'Test')" --commit
 
 # Run SQL scripts
-python -m flx_database_oracle.cli script /path/to/script.sql --commit
+python -m flext_database_oracle.cli script /path/to/script.sql --commit
 ```
 
 #### Schema Operations
 
 ```bash
 # List tables using ORM
-python -m flx_database_oracle.cli tables --schema-name HR --output-format table
-python -m flx_database_oracle.cli tables --output-format json --limit 10
+python -m flext_database_oracle.cli tables --schema-name HR --output-format table
+python -m flext_database_oracle.cli tables --output-format json --limit 10
 
 # List columns with metadata
-python -m flx_database_oracle.cli columns HR EMPLOYEES --output-format table
+python -m flext_database_oracle.cli columns HR EMPLOYEES --output-format table
 
 # List indexes
-python -m flx_database_oracle.cli indexes HR EMPLOYEES --output-format json
+python -m flext_database_oracle.cli indexes HR EMPLOYEES --output-format json
 
 # Get table statistics
-python -m flx_database_oracle.cli table-stats HR EMPLOYEES --output-format yaml
+python -m flext_database_oracle.cli table-stats HR EMPLOYEES --output-format yaml
 ```
 
 #### Connection and Session Management
 
 ```bash
 # Monitor connections
-python -m flx_database_oracle.cli connections --status CONNECTED --output-format table
+python -m flext_database_oracle.cli connections --status CONNECTED --output-format table
 
 # Track transactions
-python -m flx_database_oracle.cli transactions --status ACTIVE --output-format table
+python -m flext_database_oracle.cli transactions --status ACTIVE --output-format table
 
 # View session statistics
-python -m flx_database_oracle.cli session-info --output-format yaml
+python -m flext_database_oracle.cli session-info --output-format yaml
 
 # Monitor connection pool
-python -m flx_database_oracle.cli pool-stats --output-format table
+python -m flext_database_oracle.cli pool-stats --output-format table
 ```
 
 #### Output Formats
@@ -459,29 +459,29 @@ The CLI supports multiple output formats:
 
 ```bash
 # Rich table output (default)
-python -m flx_database_oracle.cli tables --output-format table
+python -m flext_database_oracle.cli tables --output-format table
 
 # JSON for APIs
-python -m flx_database_oracle.cli tables --output-format json
+python -m flext_database_oracle.cli tables --output-format json
 
 # CSV for Excel
-python -m flx_database_oracle.cli tables --output-format csv
+python -m flext_database_oracle.cli tables --output-format csv
 
 # YAML for configuration
-python -m flx_database_oracle.cli session-info --output-format yaml
+python -m flext_database_oracle.cli session-info --output-format yaml
 ```
 
 #### Data Export and Import
 
 ```bash
 # Export table data
-python -m flx_database_oracle.cli export-table HR EMPLOYEES --output-file employees.json --format json
+python -m flext_database_oracle.cli export-table HR EMPLOYEES --output-file employees.json --format json
 
 # Export with filters
-python -m flx_database_oracle.cli export-table HR EMPLOYEES --where "salary > 50000" --format csv
+python -m flext_database_oracle.cli export-table HR EMPLOYEES --where "salary > 50000" --format csv
 
 # Import data
-python -m flx_database_oracle.cli import-data HR EMPLOYEES --input-file employees.json --format json
+python -m flext_database_oracle.cli import-data HR EMPLOYEES --input-file employees.json --format json
 ```
 
 ## 🚀 Advanced Features
@@ -552,8 +552,8 @@ is_responsive = await connection_port.ping()
 ### Domain Entities
 
 ```python
-from flx.core.entities import AggregateRoot
-from flx.core.domain.value_objects import ValueObject
+from flext.core.entities import AggregateRoot
+from flext.core.domain.value_objects import ValueObject
 
 # Domain entity for database records
 class DatabaseRecord(AggregateRoot):
@@ -605,7 +605,7 @@ class DatabaseConnection(ValueObject):
 ### Repository Pattern
 
 ```python
-from flx.adapters.outbound.database import DatabaseRepository
+from flext.adapters.outbound.database import DatabaseRepository
 
 class OracleEmployeeRepository(DatabaseRepository):
     def __init__(self, database_plugin: DatabasePlugin):
@@ -672,7 +672,7 @@ class OracleEmployeeRepository(DatabaseRepository):
 ### Application Services
 
 ```python
-from flx.application.services import ApplicationService
+from flext.application.services import ApplicationService
 
 class EmployeeService(ApplicationService):
     def __init__(self, employee_repository: OracleEmployeeRepository):

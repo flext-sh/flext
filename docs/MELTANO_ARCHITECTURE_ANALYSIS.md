@@ -201,8 +201,8 @@ class Schedule:
 3. **Plugin Types for FLX Components**
    - `tap-oracle-oic` as EXTRACTOR
    - `target-oracle-wms` as LOADER
-   - `flx-orchestrator` as UTILITY
-   - `flx-transform` as TRANSFORMER
+   - `flext-orchestrator` as UTILITY
+   - `flext-transform` as TRANSFORMER
 
 ## 7. Hub Integration
 
@@ -259,8 +259,8 @@ This could be replaced with FLX's own UI components if needed.
 
 ### Phase 1: Core FLX Extensions
 
-1. Create `flx-oracle-oic-ext` using EDK
-2. Create `flx-oracle-wms-ext` using EDK
+1. Create `flext-oracle-oic-ext` using EDK
+2. Create `flext-oracle-wms-ext` using EDK
 3. Implement state management adapters
 4. Configure plugin definitions
 
@@ -290,9 +290,9 @@ This could be replaced with FLX's own UI components if needed.
 ## Example FLX Extension Structure
 
 ```
-flx-oracle-oic-ext/
+flext-oracle-oic-ext/
 ├── pyproject.toml
-├── flx_oracle_oic_ext/
+├── flext_oracle_oic_ext/
 │   ├── __init__.py
 │   ├── extension.py      # ExtensionBase implementation
 │   ├── main.py          # Entry point

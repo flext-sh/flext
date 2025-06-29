@@ -267,7 +267,7 @@ Unnamed: 0: , Unnamed: 1: , Unnamed: 2: , Unnamed: 3: , Unnamed: 4:
 Unnamed: 0: , Unnamed: 1: RMA Discussions/Assumptions, Unnamed: 2: , Unnamed: 3: , Unnamed: 4:
 Unnamed: 0: , Unnamed: 1: , Unnamed: 2: , Unnamed: 3: , Unnamed: 4:
 Unnamed: 0: , Unnamed: 1: Need to have Fusion RMA and line number and Original SO and Line number reference in WMS Inbound Shipment/Line level.
-Per Mike: Original SO and Line number: Should/Nice to have... doesn't need to be part of this flx_project
+Per Mike: Original SO and Line number: Should/Nice to have... doesn't need to be part of this flext_project
 Decision:
 Short term: Use RMA+datetimestamp as the document reference for each payload coming from INV; Document that customers can additionally add the RMA and/or SO reference into the custom fields.
 Longer Term: GAP: WMS to add document number and line number columns to the inbound shipment

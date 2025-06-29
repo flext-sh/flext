@@ -26,7 +26,7 @@ A modern Django-based web application for comprehensive Python code analysis wit
 - **Real-time Charts**: Chart.js powered visualizations
 - **Quality Trends**: Track quality metrics over time
 - **Security Distribution**: Visual breakdown of security issues
-- **Project Comparison**: Side-by-side flx_project analysis
+- **Project Comparison**: Side-by-side flext_project analysis
 - **Radar Charts**: Multi-dimensional quality assessment
 
 ### 🎯 **No Authentication Required**
@@ -119,7 +119,7 @@ The system automatically discovers Python packages using:
 - **Source**: Development installations (`pip install -e`)
 - **Wheel**: Standard installations
 - **System**: System-wide packages
-- **Local**: Custom flx_project directories
+- **Local**: Custom flext_project directories
 
 ### **Smart Filtering**
 
@@ -149,7 +149,7 @@ The system automatically discovers Python packages using:
 
 - **Visual Charts**: Interactive Chart.js visualizations
 - **Trend Analysis**: Quality metrics over time
-- **Comparative Analysis**: Project-to-flx_project comparison
+- **Comparative Analysis**: Project-to-flext_project comparison
 - **Detailed Reports**: File-level analysis results
 
 ## 🖥️ Web Interface
@@ -175,11 +175,11 @@ The system automatically discovers Python packages using:
 - Discovered Python packages
 - Package type filtering
 - Search functionality
-- One-click flx_project creation
+- One-click flext_project creation
 
 #### **Project Details** (`/dashboard/projects/<id>/`)
 
-- Detailed flx_project information
+- Detailed flext_project information
 - Analysis session history
 - Quality metrics breakdown
 - Issue summaries
@@ -211,7 +211,7 @@ GET /dashboard/charts/complexity-distribution/ # Complexity histogram
 
 ```
 GET /dashboard/packages/                      # Package discovery interface
-POST /dashboard/packages/create/              # Create flx_project from package
+POST /dashboard/packages/create/              # Create flext_project from package
 GET /dashboard/packages/refresh/              # Refresh package cache
 ```
 
@@ -219,7 +219,7 @@ GET /dashboard/packages/refresh/              # Refresh package cache
 
 ```
 GET /dashboard/projects/                      # Project list
-POST /dashboard/projects/create/              # Create new flx_project
+POST /dashboard/projects/create/              # Create new flext_project
 GET /dashboard/projects/<id>/                 # Project details
 POST /dashboard/projects/<id>/analyze/        # Start analysis
 ```
@@ -231,11 +231,11 @@ POST /dashboard/projects/<id>/analyze/        # Start analysis
 1. Navigate to **Python Packages** in sidebar
 2. Search or filter packages
 3. Click **Create Project** on desired package
-4. System automatically configures flx_project settings
+4. System automatically configures flext_project settings
 
 ### **Start Analysis**
 
-1. Go to flx_project details page
+1. Go to flext_project details page
 2. Click **Start Analysis** button
 3. Monitor analysis progress
 4. Review results in charts and reports
@@ -251,7 +251,7 @@ POST /dashboard/projects/<id>/analyze/        # Start analysis
 
 ### **Analysis Settings**
 
-Configure analysis parameters in flx_project settings:
+Configure analysis parameters in flext_project settings:
 
 - **Security Analysis**: Enable/disable Bandit scanning
 - **Dead Code Detection**: Enable/disable Vulture analysis
@@ -299,7 +299,7 @@ DEBUG = True
 
 ## 📈 Performance Tips
 
-1. **Large Projects**: Analysis time scales with flx_project size
+1. **Large Projects**: Analysis time scales with flext_project size
 2. **Package Filtering**: Use filters to focus on relevant packages
 3. **Cache Management**: Refresh package cache periodically
 4. **Database Cleanup**: Archive old analysis sessions
@@ -309,7 +309,7 @@ DEBUG = True
 - **No Authentication**: Application is open by default
 - **File Access**: Analyzer can read any accessible Python files
 - **Network Access**: CDN dependencies for charts and styling
-- **Database**: Contains analysis results and flx_project metadata
+- **Database**: Contains analysis results and flext_project metadata
 
 ## 🔄 Updates & Maintenance
 

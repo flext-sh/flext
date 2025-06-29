@@ -53,7 +53,7 @@ Complete reorganization of documentation structure to follow the standardized pa
   - Added cross-references to patterns and development
   - Included troubleshooting section
 
-- ✅ `flx-2.0-architecture.md` - Moved from root to architecture
+- ✅ `flext-2.0-architecture.md` - Moved from root to architecture
   - Updated to follow template format
   - Added navigation context for FLX 2.0 evolution
   - Included cross-references to migration guides
@@ -96,7 +96,7 @@ Complete reorganization of documentation structure to follow the standardized pa
 
 5. **Architecture Hub** (`/architecture/index.md`)
 
-   - Added architecture-standards.md and flx-2.0-architecture.md
+   - Added architecture-standards.md and flext-2.0-architecture.md
    - Updated core architecture topics table
    - Included Meltano-powered evolution reference
 

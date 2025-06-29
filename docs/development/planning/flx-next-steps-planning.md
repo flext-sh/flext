@@ -39,7 +39,7 @@
 
 **Current Situation**:
 
-- Custom HTTP infrastructure in `/flx/src/flx/infra/http/`
+- Custom HTTP infrastructure in `/flext/src/flext/infra/http/`
 - Approximately 800 lines of custom HTTP code
 - Missing automatic API documentation
 - Complex dependency management
@@ -84,7 +84,7 @@ python-multipart = "^0.0.6"
 
 **Current Situation**:
 
-- Custom IoC container in `/flx/src/flx/application/container.py`
+- Custom IoC container in `/flext/src/flext/application/container.py`
 - Manual dependency wiring
 - Limited type safety in dependency resolution
 - Complex testing setup
@@ -206,7 +206,7 @@ dependency-injector = "^4.41.0"
 # Target Architecture
 from fastapi import FastAPI, Depends, HTTPException
 from contextlib import asynccontextmanager
-from flx.application.container import ApplicationContainer
+from flext.application.container import ApplicationContainer
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -378,10 +378,10 @@ def display_health_status(health_data: dict):
 
 ```bash
 # Comprehensive test suite
-pytest tests/ --cov=flx --cov-report=html --cov-fail-under=95
-mypy flx/src/ --strict
-ruff check flx/src/
-black --check flx/src/
+pytest tests/ --cov=flext --cov-report=html --cov-fail-under=95
+mypy flext/src/ --strict
+ruff check flext/src/
+black --check flext/src/
 ```
 
 #### **Performance Benchmarking**

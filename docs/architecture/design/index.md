@@ -3,7 +3,7 @@
 > **Function**: Hexagonal architecture design patterns and principles | **Audience**: System architects, framework developers, technical leads
 
 [![Architecture](https://img.shields.io/badge/architecture-hexagonal-blue.svg)](./unified-architecture-guide.md)
-[![Framework](https://img.shields.io/badge/framework-comprehensive-green.svg)](./flx-framework-architecture-guide.md)
+[![Framework](https://img.shields.io/badge/framework-comprehensive-green.svg)](./flext-framework-architecture-guide.md)
 [![Design](https://img.shields.io/badge/design-validated-orange.svg)](./unified-architecture-guide.md)
 
 **Comprehensive hexagonal architecture design patterns and implementation frameworks for FLX**
@@ -27,8 +27,8 @@ This hub provides foundational design patterns and architectural principles for 
 | **Topic**                                                               | **Function**                      | **Audience**         | **Complexity** | **Status** |
 | ----------------------------------------------------------------------- | --------------------------------- | -------------------- | -------------- | ---------- |
 | [**Unified Architecture Guide**](./unified-architecture-guide.md)       | Hexagonal architecture principles | System architects    | ⭐⭐           | ✅ Updated |
-| [**FLX Framework Architecture**](./flx-framework-architecture-guide.md) | Complete framework design         | Framework developers | ⭐⭐⭐         | ✅ Updated |
-| [**Comprehensive Hub**](./flx-architecture-comprehensive-hub.md)        | All-in-one architecture reference | Technical leads      | ⭐⭐⭐⭐       | ✅ Updated |
+| [**FLX Framework Architecture**](./flext-framework-architecture-guide.md) | Complete framework design         | Framework developers | ⭐⭐⭐         | ✅ Updated |
+| [**Comprehensive Hub**](./flext-architecture-comprehensive-hub.md)        | All-in-one architecture reference | Technical leads      | ⭐⭐⭐⭐       | ✅ Updated |
 
 ---
 
@@ -38,20 +38,20 @@ This hub provides foundational design patterns and architectural principles for 
 
 ```
 1. [Unified Architecture Guide](./unified-architecture-guide.md) →
-2. [FLX Framework Architecture](./flx-framework-architecture-guide.md)
+2. [FLX Framework Architecture](./flext-framework-architecture-guide.md)
 ```
 
 ### **⚡ For Framework Developers**
 
 ```
-1. [FLX Framework Architecture](./flx-framework-architecture-guide.md) →
-2. [Comprehensive Hub](./flx-architecture-comprehensive-hub.md)
+1. [FLX Framework Architecture](./flext-framework-architecture-guide.md) →
+2. [Comprehensive Hub](./flext-architecture-comprehensive-hub.md)
 ```
 
 ### **🏢 For Technical Leadership**
 
 ```
-1. [Comprehensive Hub](./flx-architecture-comprehensive-hub.md) →
+1. [Comprehensive Hub](./flext-architecture-comprehensive-hub.md) →
 2. [Standards](../standards/index.md) →
 3. [Implementation](../implementation/index.md)
 ```
@@ -114,12 +114,12 @@ This hub provides foundational design patterns and architectural principles for 
 - **Total Documents**: 3 comprehensive design guides
 - **Hub Completeness**: 100% mandatory template compliance
 - **Cross-References**: 5+ bidirectional links per document
-- **Source Validation**: ✅ Validated against `/flx/src/flx/` architecture
+- **Source Validation**: ✅ Validated against `/flext/src/flext/` architecture
 
 ### **Design Validation**
 
 - **Real Implementation**: ✅ Based on production FLX Framework architecture
-- **Oracle Integration**: ✅ Patterns validated with `/flx-*-oracle-*` projects
+- **Oracle Integration**: ✅ Patterns validated with `/flext-*-oracle-*` projects
 - **Pattern Consistency**: ✅ Design patterns used across all framework components
 - **Documentation Standards**: ✅ HOW_TO_DOCUMENT.md compliance
 

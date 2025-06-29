@@ -35,10 +35,10 @@ For example:
 
 ```bash
 # Run all tests in a project with MonkeyType
-make monkeytype-test PROJECT=flx
+make monkeytype-test PROJECT=flext
 
 # Run a specific test file with MonkeyType
-make monkeytype-test PROJECT=flx TEST_PATH=tests/unit/test_entities.py
+make monkeytype-test PROJECT=flext TEST_PATH=tests/unit/test_entities.py
 ```
 
 ### Viewing Collected Types
@@ -60,7 +60,7 @@ make monkeytype-apply PROJECT=<project_name> MODULE=<module_path>
 For example:
 
 ```bash
-make monkeytype-apply PROJECT=flx MODULE=flx.core.entities
+make monkeytype-apply PROJECT=flext MODULE=flext.core.entities
 ```
 
 ### Generating Type Stubs
@@ -106,7 +106,7 @@ class UserData:
         self.age = age
 
 # Convert to FLX Entity
-from flx.core.entities import Entity
+from flext.core.entities import Entity
 
 class User(Entity):
     name: str
@@ -136,7 +136,7 @@ class OracleWmsAdapter:
         pass
 
 # Convert to proper FLX adapter
-from flx.ports.outbound import WmsPort
+from flext.ports.outbound import WmsPort
 
 class OracleWmsAdapter(WmsPort):
     async def list_items(self, facility_id: str, filters: Dict[str, Any]) -> List[WmsItem]:
@@ -169,7 +169,7 @@ class MyModel:
 Convert to FLX Value Object:
 
 ```python
-from flx.core.domain.value_objects import ValueObject
+from flext.core.domain.value_objects import ValueObject
 from pydantic import Field
 
 class MyModel(ValueObject):
@@ -184,7 +184,7 @@ class MyModel(ValueObject):
 2. **Focus on Core Domain**: Use MonkeyType primarily on core domain logic where types are most critical:
 
    ```bash
-   make monkeytype-test PROJECT=flx TEST_PATH=tests/unit/core/
+   make monkeytype-test PROJECT=flext TEST_PATH=tests/unit/core/
    ```
 
 3. **Review Applied Types**: Always review the types applied by MonkeyType and refine them for FLX patterns:
@@ -208,33 +208,33 @@ class MyModel(ValueObject):
 
    ```bash
    # Collect types from domain tests
-   make monkeytype-test PROJECT=flx TEST_PATH=tests/unit/core/
+   make monkeytype-test PROJECT=flext TEST_PATH=tests/unit/core/
 
    # Apply to core entities
-   make monkeytype-apply PROJECT=flx MODULE=flx.core.entities
+   make monkeytype-apply PROJECT=flext MODULE=flext.core.entities
 
    # Apply to value objects
-   make monkeytype-apply PROJECT=flx MODULE=flx.core.domain.value_objects
+   make monkeytype-apply PROJECT=flext MODULE=flext.core.domain.value_objects
    ```
 
 2. **Application Layer Types**:
 
    ```bash
    # Collect from application service tests
-   make monkeytype-test PROJECT=flx TEST_PATH=tests/unit/application/
+   make monkeytype-test PROJECT=flext TEST_PATH=tests/unit/application/
 
    # Apply to services
-   make monkeytype-apply PROJECT=flx MODULE=flx.application.services
+   make monkeytype-apply PROJECT=flext MODULE=flext.application.services
    ```
 
 3. **Infrastructure Layer Types**:
 
    ```bash
    # Collect from adapter tests
-   make monkeytype-test PROJECT=flx-http-oracle-wms TEST_PATH=tests/
+   make monkeytype-test PROJECT=flext-http-oracle-wms TEST_PATH=tests/
 
    # Apply to adapters
-   make monkeytype-apply PROJECT=flx-http-oracle-wms MODULE=flx_http_oracle_wms.adapters
+   make monkeytype-apply PROJECT=flext-http-oracle-wms MODULE=flext_http_oracle_wms.adapters
    ```
 
 ## Customization
@@ -255,19 +255,19 @@ The underlying implementation is in `scripts/monkeytype_runner.py`, which you ca
 2. Run MonkeyType collection:
 
    ```bash
-   make monkeytype-test PROJECT=flx-http-oracle-wms
+   make monkeytype-test PROJECT=flext-http-oracle-wms
    ```
 
 3. View collected modules:
 
    ```bash
-   make monkeytype-list PROJECT=flx-http-oracle-wms
+   make monkeytype-list PROJECT=flext-http-oracle-wms
    ```
 
 4. Apply types to WMS client:
 
    ```bash
-   make monkeytype-apply PROJECT=flx-http-oracle-wms MODULE=flx_http_oracle_wms.client
+   make monkeytype-apply PROJECT=flext-http-oracle-wms MODULE=flext_http_oracle_wms.client
    ```
 
 5. Convert to proper FLX patterns:
@@ -299,8 +299,8 @@ MonkeyType integrates with the FLX development workflow:
 
 ```bash
 # 1. Development cycle with type discovery
-make monkeytype-test PROJECT=flx
-make monkeytype-apply PROJECT=flx MODULE=flx.core.entities
+make monkeytype-test PROJECT=flext
+make monkeytype-apply PROJECT=flext MODULE=flext.core.entities
 
 # 2. Validate with FLX standards
 make lint

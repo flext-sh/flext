@@ -58,7 +58,7 @@ validation_status: "⚠️ DISCREPANCY - Code examples don't match actual implem
 
 - **Current**: `Protocol` without generics, Pydantic-based events with UUIDs
 - **Proposed**: Generic `Port[T, R]`, dataclass-based events with strings
-- **Validation**: Checked against `/flx/src/flx/ports/` and `/flx/src/flx/core/events.py`
+- **Validation**: Checked against `/flext/src/flext/ports/` and `/flext/src/flext/core/events.py`
 
 ## Executive Summary
 

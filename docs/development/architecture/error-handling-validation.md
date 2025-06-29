@@ -18,7 +18,7 @@ This report validates the consistency and quality of error handling patterns acr
 The unified architecture uses a consistent exception hierarchy:
 
 ```python
-# Core FLX exceptions (from flx.core.exceptions)
+# Core FLX exceptions (from flext.core.exceptions)
 FlxConnectionError    # Connection and connectivity issues
 FlxTimeoutError      # Operation timeout errors
 ValidationError      # Data validation failures
@@ -39,7 +39,7 @@ All unified components follow these patterns:
 
 ### 1. UnifiedAdapterManager
 
-**Location**: `/src/flx/infra/adapters/unified_manager.py`
+**Location**: `/src/flext/infra/adapters/unified_manager.py`
 
 **Error Handling Patterns**:
 
@@ -70,7 +70,7 @@ except Exception as e:
 
 ### 2. CacheService
 
-**Location**: `/src/flx/infra/cache/cache_service.py`
+**Location**: `/src/flext/infra/cache/cache_service.py`
 
 **Error Handling Patterns**:
 
@@ -104,7 +104,7 @@ except Exception:
 
 ### 3. FlxStandardLoggingService
 
-**Location**: `/src/flx/infra/services/logging.py`
+**Location**: `/src/flext/infra/services/logging.py`
 
 **Error Handling Patterns**:
 
@@ -136,7 +136,7 @@ except Exception:
 
 ### 4. DatabaseEngine
 
-**Location**: `/src/flx/infra/database/engine.py`
+**Location**: `/src/flext/infra/database/engine.py`
 
 **Error Handling Patterns**:
 
@@ -175,7 +175,7 @@ except Exception:
 
 ### 5. CLI Service
 
-**Location**: `/src/flx/infra/cli/cli_service.py`
+**Location**: `/src/flext/infra/cli/cli_service.py`
 
 **Error Handling Patterns**:
 
@@ -215,7 +215,7 @@ except TypeError:
 
 ### ErrorHandlingMixin
 
-**Location**: `/src/flx/infra/adapters/base_manager.py`
+**Location**: `/src/flext/infra/adapters/base_manager.py`
 
 The unified architecture provides a standardized error handling mixin:
 

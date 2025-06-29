@@ -22,7 +22,7 @@ This CLI provides full access to Oracle WMS Cloud Integration API operations wit
 Query specific entities with full parameter support:
 
 ```bash
-flx-http-oracle-wms entity-query [entity] [key] [company_code] [facility_code]
+flext-http-oracle-wms entity-query [entity] [key] [company_code] [facility_code]
 ```
 
 **Parameters:**
@@ -37,7 +37,7 @@ flx-http-oracle-wms entity-query [entity] [key] [company_code] [facility_code]
 **Example:**
 
 ```bash
-flx-http-oracle-wms entity-query items ITEM001 001 DC1 --format-output table
+flext-http-oracle-wms entity-query items ITEM001 001 DC1 --format-output table
 ```
 
 #### Entity Status
@@ -45,7 +45,7 @@ flx-http-oracle-wms entity-query items ITEM001 001 DC1 --format-output table
 Get status information for any entity:
 
 ```bash
-flx-http-oracle-wms get-status [entity] [key] [company_code] [facility_code]
+flext-http-oracle-wms get-status [entity] [key] [company_code] [facility_code]
 ```
 
 ### 2. LPN Operations
@@ -55,7 +55,7 @@ flx-http-oracle-wms get-status [entity] [key] [company_code] [facility_code]
 Create License Plate Numbers with comprehensive parameters:
 
 ```bash
-flx-http-oracle-wms create-lpn [lpn_nbr] [qty] [options...]
+flext-http-oracle-wms create-lpn [lpn_nbr] [qty] [options...]
 ```
 
 **Parameters:**
@@ -78,7 +78,7 @@ flx-http-oracle-wms create-lpn [lpn_nbr] [qty] [options...]
 **Example:**
 
 ```bash
-flx-http-oracle-wms create-lpn LPN001 100 \
+flext-http-oracle-wms create-lpn LPN001 100 \
     --item-barcode ITEM001 \
     --company-code 001 \
     --facility-code DC1 \
@@ -91,7 +91,7 @@ flx-http-oracle-wms create-lpn LPN001 100 \
 Receive LPNs with tracking information:
 
 ```bash
-flx-http-oracle-wms receive-lpn [lpn_nbr] [options...]
+flext-http-oracle-wms receive-lpn [lpn_nbr] [options...]
 ```
 
 **Parameters:**
@@ -107,7 +107,7 @@ flx-http-oracle-wms receive-lpn [lpn_nbr] [options...]
 **Example:**
 
 ```bash
-flx-http-oracle-wms receive-lpn LPN001 \
+flext-http-oracle-wms receive-lpn LPN001 \
     --company-code 001 \
     --facility-code DC1 \
     --rcvd-trailer-nbr TRAILER001 \
@@ -121,7 +121,7 @@ flx-http-oracle-wms receive-lpn LPN001 \
 Ship outbound License Plate Numbers:
 
 ```bash
-flx-http-oracle-wms ship-oblpn [oblpn_nbr] [company_code] [facility_code] [locn_barcode]
+flext-http-oracle-wms ship-oblpn [oblpn_nbr] [company_code] [facility_code] [locn_barcode]
 ```
 
 **Parameters:**
@@ -135,7 +135,7 @@ flx-http-oracle-wms ship-oblpn [oblpn_nbr] [company_code] [facility_code] [locn_
 **Example:**
 
 ```bash
-flx-http-oracle-wms ship-oblpn OBLPN001 001 DC1 SHIP01 \
+flext-http-oracle-wms ship-oblpn OBLPN001 001 DC1 SHIP01 \
     --output-file-to-generate shipping_label.pdf
 ```
 
@@ -144,7 +144,7 @@ flx-http-oracle-wms ship-oblpn OBLPN001 001 DC1 SHIP01 \
 Assign outbound LPNs to loads:
 
 ```bash
-flx-http-oracle-wms assign-oblpn-to-load [load_nbr] [oblpn_nbr] [options...]
+flext-http-oracle-wms assign-oblpn-to-load [load_nbr] [oblpn_nbr] [options...]
 ```
 
 **Parameters:**
@@ -162,7 +162,7 @@ flx-http-oracle-wms assign-oblpn-to-load [load_nbr] [oblpn_nbr] [options...]
 **Example:**
 
 ```bash
-flx-http-oracle-wms assign-oblpn-to-load LOAD001 OBLPN001 \
+flext-http-oracle-wms assign-oblpn-to-load LOAD001 OBLPN001 \
     --carrier-code UPS \
     --company-code 001 \
     --facility-code DC1 \
@@ -176,7 +176,7 @@ flx-http-oracle-wms assign-oblpn-to-load LOAD001 OBLPN001 \
 Update inventory with comprehensive parameters:
 
 ```bash
-flx-http-oracle-wms update-inventory [location_barcode] [reason_code] [options...]
+flext-http-oracle-wms update-inventory [location_barcode] [reason_code] [options...]
 ```
 
 **Parameters:**
@@ -199,7 +199,7 @@ flx-http-oracle-wms update-inventory [location_barcode] [reason_code] [options..
 **Example:**
 
 ```bash
-flx-http-oracle-wms update-inventory LOC001 ADJUST \
+flext-http-oracle-wms update-inventory LOC001 ADJUST \
     --actual-qty 100 \
     --adjustment-qty 5 \
     --item-barcode ITEM001 \
@@ -214,7 +214,7 @@ flx-http-oracle-wms update-inventory LOC001 ADJUST \
 Generate sequence numbers for various counters:
 
 ```bash
-flx-http-oracle-wms get-next-numbers [counter_code] [options...]
+flext-http-oracle-wms get-next-numbers [counter_code] [options...]
 ```
 
 **Parameters:**
@@ -227,7 +227,7 @@ flx-http-oracle-wms get-next-numbers [counter_code] [options...]
 **Example:**
 
 ```bash
-flx-http-oracle-wms get-next-numbers LPN_SEQ \
+flext-http-oracle-wms get-next-numbers LPN_SEQ \
     --company-code 001 \
     --facility-code DC1 \
     --count 10
@@ -240,7 +240,7 @@ flx-http-oracle-wms get-next-numbers LPN_SEQ \
 Extract large datasets efficiently using paged queries:
 
 ```bash
-flx-http-oracle-wms extract [entity_name] [output_file] [company_code] [facility_code] [options...]
+flext-http-oracle-wms extract [entity_name] [output_file] [company_code] [facility_code] [options...]
 ```
 
 **Parameters:**
@@ -258,19 +258,19 @@ flx-http-oracle-wms extract [entity_name] [output_file] [company_code] [facility
 
 ```bash
 # High-speed extraction to JSON
-flx-http-oracle-wms extract items items_data.json 001 DC1 \
+flext-http-oracle-wms extract items items_data.json 001 DC1 \
     --high-speed --page-size 5000 --format-export json
 
 # Extract to CSV with limit
-flx-http-oracle-wms extract orders orders.csv 001 DC1 \
+flext-http-oracle-wms extract orders orders.csv 001 DC1 \
     --format-export csv --max-records 10000
 
 # Extract to Excel
-flx-http-oracle-wms extract inventory inventory.xlsx 001 DC1 \
+flext-http-oracle-wms extract inventory inventory.xlsx 001 DC1 \
     --format-export xlsx
 
 # Extract to Parquet for big data
-flx-http-oracle-wms extract transactions data.parquet 001 DC1 \
+flext-http-oracle-wms extract transactions data.parquet 001 DC1 \
     --format-export parquet --high-speed
 ```
 
@@ -279,7 +279,7 @@ flx-http-oracle-wms extract transactions data.parquet 001 DC1 \
 Process multiple operations from JSON files:
 
 ```bash
-flx-http-oracle-wms bulk-operations [operation_file] [operation_type] [options...]
+flext-http-oracle-wms bulk-operations [operation_file] [operation_type] [options...]
 ```
 
 **Parameters:**
@@ -313,7 +313,7 @@ flx-http-oracle-wms bulk-operations [operation_file] [operation_type] [options..
 **Usage:**
 
 ```bash
-flx-http-oracle-wms bulk-operations bulk_lpn_create.json create_lpn \
+flext-http-oracle-wms bulk-operations bulk_lpn_create.json create_lpn \
     --batch-size 50 --continue-on-error
 ```
 
@@ -324,7 +324,7 @@ flx-http-oracle-wms bulk-operations bulk_lpn_create.json create_lpn \
 Retrieve entity schemas with validation:
 
 ```bash
-flx-http-oracle-wms get-schema [entity_name] [options...]
+flext-http-oracle-wms get-schema [entity_name] [options...]
 ```
 
 **Parameters:**
@@ -336,7 +336,7 @@ flx-http-oracle-wms get-schema [entity_name] [options...]
 **Example:**
 
 ```bash
-flx-http-oracle-wms get-schema items --save-schema --validate
+flext-http-oracle-wms get-schema items --save-schema --validate
 ```
 
 This creates: `schemas/entities/items.json`
@@ -445,7 +445,7 @@ The CLI provides comprehensive error handling:
 entities=("items" "orders" "locations" "inventory")
 for entity in "${entities[@]}"; do
     echo "Extracting ${entity}..."
-    flx-http-oracle-wms extract "$entity" "backup/${entity}.parquet" 001 DC1 \
+    flext-http-oracle-wms extract "$entity" "backup/${entity}.parquet" 001 DC1 \
         --format-export parquet --high-speed
 done
 ```
@@ -457,16 +457,16 @@ done
 # Daily WMS operations script
 
 # 1. Check system status
-flx-http-oracle-wms test-connection
+flext-http-oracle-wms test-connection
 
 # 2. Process inbound LPNs
-flx-http-oracle-wms bulk-operations daily_receives.json receive_lpn
+flext-http-oracle-wms bulk-operations daily_receives.json receive_lpn
 
 # 3. Generate shipping labels
-flx-http-oracle-wms bulk-operations daily_ships.json ship_oblpn
+flext-http-oracle-wms bulk-operations daily_ships.json ship_oblpn
 
 # 4. Export daily reports
-flx-http-oracle-wms extract orders "reports/daily_orders_$(date +%Y%m%d).xlsx" 001 DC1 \
+flext-http-oracle-wms extract orders "reports/daily_orders_$(date +%Y%m%d).xlsx" 001 DC1 \
     --format-export xlsx
 ```
 
@@ -477,7 +477,7 @@ flx-http-oracle-wms extract orders "reports/daily_orders_$(date +%Y%m%d).xlsx" 0
 Enable detailed logging:
 
 ```bash
-flx-http-oracle-wms --debug --verbose test-connection
+flext-http-oracle-wms --debug --verbose test-connection
 ```
 
 ### Configuration Validation
@@ -485,7 +485,7 @@ flx-http-oracle-wms --debug --verbose test-connection
 Test configuration and connection:
 
 ```bash
-flx-http-oracle-wms show-config --validate-connection
+flext-http-oracle-wms show-config --validate-connection
 ```
 
 ### Schema Issues
@@ -493,7 +493,7 @@ flx-http-oracle-wms show-config --validate-connection
 Validate entity schemas:
 
 ```bash
-flx-http-oracle-wms get-schema [entity] --validate
+flext-http-oracle-wms get-schema [entity] --validate
 ```
 
 ## Support

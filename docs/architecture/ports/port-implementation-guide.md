@@ -3,10 +3,10 @@
 > **Function**: Complete port interface implementation guide validated against real FLX port code | **Audience**: Port designers, framework developers | **Status**: ✅ VALIDATED
 
 [![Ports](https://img.shields.io/badge/layer-ports-purple.svg)](./index.md)
-[![Validated](https://img.shields.io/badge/source-validated-orange.svg)](../../../flx/src/flx/ports/)
+[![Validated](https://img.shields.io/badge/source-validated-orange.svg)](../../../flext/src/flext/ports/)
 [![Framework](https://img.shields.io/badge/framework-FLX%200.4.0-orange.svg)](../index.md)
 
-**Comprehensive port interface implementation guide validated against actual production port code in `/flx/src/flx/ports/`**
+**Comprehensive port interface implementation guide validated against actual production port code in `/flext/src/flext/ports/`**
 
 ---
 
@@ -24,7 +24,7 @@
 
 - **📂 Section Hub**: [Architecture Hub](../index.md)
 - **🏠 Documentation Root**: [Root Index](../../index.md)
-- **🔗 Source Code**: [FLX Ports](../../../flx/src/flx/ports/)
+- **🔗 Source Code**: [FLX Ports](../../../flext/src/flext/ports/)
 - **🔗 Related**: [Adapters Hub](../adapters/index.md), [Core Domain](../layers/core-domain-layer.md)
 
 ---
@@ -81,14 +81,14 @@ Ports define the interfaces between the domain layer and external systems in FLX
 
 ## 🔧 **Validated Port Structure**
 
-### **Real Port Implementation** (from `/flx/src/flx/ports/`)
+### **Real Port Implementation** (from `/flext/src/flext/ports/`)
 
 #### **Base Port Protocol**
 
-**Source**: `/flx/src/flx/ports/base.py` (validated)
+**Source**: `/flext/src/flext/ports/base.py` (validated)
 
 ```python
-from flx.ports.base import BasePort
+from flext.ports.base import BasePort
 from abc import ABC, abstractmethod
 from typing import Protocol, Any
 
@@ -108,7 +108,7 @@ class BasePort(Protocol):
         ...
 
 # Modern port implementation pattern (validated)
-from flx.ports.base_modern import ModernPortBase
+from flext.ports.base_modern import ModernPortBase
 
 class ModernPort(ModernPortBase):
     """Modern port with enhanced features."""
@@ -122,11 +122,11 @@ class ModernPort(ModernPortBase):
 
 #### **Port Mixins** (validated implementation)
 
-**Source**: `/flx/src/flx/ports/mixins/` (validated)
+**Source**: `/flext/src/flext/ports/mixins/` (validated)
 
 ```python
 # Circuit breaker mixin (from circuit_breaker.py)
-from flx.ports.mixins.circuit_breaker import CircuitBreakerMixin
+from flext.ports.mixins.circuit_breaker import CircuitBreakerMixin
 
 class ProtectedPort(BasePort, CircuitBreakerMixin):
     """Port with circuit breaker protection."""
@@ -136,7 +136,7 @@ class ProtectedPort(BasePort, CircuitBreakerMixin):
     circuit_breaker_recovery_timeout: float = 60.0
 
 # Observability mixin (from observability.py)
-from flx.ports.mixins.observability import ObservabilityMixin
+from flext.ports.mixins.observability import ObservabilityMixin
 
 class MonitoredPort(BasePort, ObservabilityMixin):
     """Port with comprehensive monitoring."""
@@ -147,7 +147,7 @@ class MonitoredPort(BasePort, ObservabilityMixin):
         ...
 
 # Retry mixin (from retry.py)
-from flx.ports.mixins.retry import RetryMixin
+from flext.ports.mixins.retry import RetryMixin
 
 class ResilientPort(BasePort, RetryMixin):
     """Port with retry logic."""
@@ -164,10 +164,10 @@ class ResilientPort(BasePort, RetryMixin):
 
 ### **API Port** (validated implementation)
 
-**Source**: `/flx/src/flx/ports/inbound/api.py` (validated)
+**Source**: `/flext/src/flext/ports/inbound/api.py` (validated)
 
 ```python
-from flx.ports.inbound.api import ApiPort, ApiRequest, ApiResponse
+from flext.ports.inbound.api import ApiPort, ApiRequest, ApiResponse
 from typing import Dict, Any, Optional
 
 class ApiPort(Protocol):
@@ -216,10 +216,10 @@ class OrderService:
 
 ### **CLI Port** (validated implementation)
 
-**Source**: `/flx/src/flx/ports/inbound/cli.py` (validated)
+**Source**: `/flext/src/flext/ports/inbound/cli.py` (validated)
 
 ```python
-from flx.ports.inbound.cli import CliPort, CliCommand, CliResult
+from flext.ports.inbound.cli import CliPort, CliCommand, CliResult
 from typing import List, Any
 
 class CliPort(Protocol):
@@ -275,10 +275,10 @@ class SyncService:
 
 ### **Command Port** (validated implementation)
 
-**Source**: `/flx/src/flx/ports/inbound/command.py` (validated)
+**Source**: `/flext/src/flext/ports/inbound/command.py` (validated)
 
 ```python
-from flx.ports.inbound.command import CommandPort
+from flext.ports.inbound.command import CommandPort
 from lato import Command, CommandResult
 from typing import Type, Any
 
@@ -323,10 +323,10 @@ class OrderCommandService:
 
 ### **Query Port** (validated implementation)
 
-**Source**: `/flx/src/flx/ports/inbound/query.py` (validated)
+**Source**: `/flext/src/flext/ports/inbound/query.py` (validated)
 
 ```python
-from flx.ports.inbound.query import QueryPort
+from flext.ports.inbound.query import QueryPort
 from lato import Query, QueryResult
 from typing import Type, Any, Optional
 
@@ -374,10 +374,10 @@ class OrderQueryService:
 
 ### **Database Port** (validated implementation)
 
-**Source**: `/flx/src/flx/ports/outbound/database.py` (validated)
+**Source**: `/flext/src/flext/ports/outbound/database.py` (validated)
 
 ```python
-from flx.ports.outbound.database import DatabasePort, DatabaseModernPort
+from flext.ports.outbound.database import DatabasePort, DatabaseModernPort
 from typing import Any, Optional, List, Dict
 
 class DatabasePort(Protocol):
@@ -404,7 +404,7 @@ class DatabasePort(Protocol):
         ...
 
 # Modern database port (validated)
-from flx.ports.outbound.database_modern import DatabaseModernPort
+from flext.ports.outbound.database_modern import DatabaseModernPort
 
 class DatabaseModernPort(DatabasePort):
     """Modern database port with enhanced features."""
@@ -438,10 +438,10 @@ class OrderRepository:
 
 ### **Cache Port** (validated implementation)
 
-**Source**: `/flx/src/flx/ports/outbound/cache.py` (validated)
+**Source**: `/flext/src/flext/ports/outbound/cache.py` (validated)
 
 ```python
-from flx.ports.outbound.cache import CachePort
+from flext.ports.outbound.cache import CachePort
 from typing import Any, Optional, List, Dict
 
 class CachePort(Protocol):
@@ -493,10 +493,10 @@ class UserService:
 
 ### **HTTP Port** (validated implementation)
 
-**Source**: `/flx/src/flx/ports/outbound/http.py` (validated)
+**Source**: `/flext/src/flext/ports/outbound/http.py` (validated)
 
 ```python
-from flx.ports.outbound.http import HttpPort, HttpModernPort, HttpRequest, HttpResponse
+from flext.ports.outbound.http import HttpPort, HttpModernPort, HttpRequest, HttpResponse
 from typing import Dict, Any, Optional
 
 class HttpPort(Protocol):
@@ -523,7 +523,7 @@ class HttpPort(Protocol):
         ...
 
 # Modern HTTP port (validated)
-from flx.ports.outbound.http_modern import HttpModernPort
+from flext.ports.outbound.http_modern import HttpModernPort
 
 class HttpModernPort(HttpPort):
     """Modern HTTP port with enhanced features."""
@@ -557,10 +557,10 @@ class ExternalApiService:
 
 ### **Messaging Port** (validated implementation)
 
-**Source**: `/flx/src/flx/ports/outbound/messaging.py` (validated)
+**Source**: `/flext/src/flext/ports/outbound/messaging.py` (validated)
 
 ```python
-from flx.ports.outbound.messaging import MessagingPort, Message
+from flext.ports.outbound.messaging import MessagingPort, Message
 from typing import Any, Callable, Dict, List
 
 class MessagingPort(Protocol):
@@ -678,7 +678,7 @@ class OrderService:
 **✅ CORRECT: Input validation in ports**
 
 ```python
-from flx.ports.validation import validate_input
+from flext.ports.validation import validate_input
 
 class ValidatedPort(Protocol):
     """Port with input validation."""
@@ -830,7 +830,7 @@ class CachePort(Protocol):
 
 ```python
 # ✅ CORRECT - Port with validation
-from flx.ports.validation import validate_input
+from flext.ports.validation import validate_input
 
 class ValidatedPort(Protocol):
     @validate_input

@@ -1,7 +1,7 @@
 # FLX Core API Reference
 
 **Status**: 🚧 CRITICAL DOCUMENTATION GAP - Implementation Complete, Documentation Needed
-**Implementation**: `/flx/src/flx/core/`
+**Implementation**: `/flext/src/flext/core/`
 **Last Updated**: 2025-01-06
 
 ## Overview
@@ -10,7 +10,7 @@ The FLX Core module implements the domain layer of the hexagonal architecture, c
 
 ## TODO IMPLEMENTATION ALIGNMENT
 
-- [ ] Document all 40+ exported components from `/flx/src/flx/core/__init__.py`
+- [ ] Document all 40+ exported components from `/flext/src/flext/core/__init__.py`
 - [ ] Add code examples for each domain component
 - [ ] Cross-reference with actual implementation patterns
 - [ ] Link to architecture documentation
@@ -30,7 +30,7 @@ The FLX Core module implements the domain layer of the hexagonal architecture, c
 #### AggregateRoot
 
 ```python
-from flx.core import AggregateRoot
+from flext.core import AggregateRoot
 
 # TODO: Add real usage example from implementation
 class OrderAggregate(AggregateRoot):
@@ -47,7 +47,7 @@ class OrderAggregate(AggregateRoot):
 #### Entity
 
 ```python
-from flx.core import Entity
+from flext.core import Entity
 
 # TODO: Add real usage example from implementation
 class OrderItem(Entity):
@@ -63,7 +63,7 @@ class OrderItem(Entity):
 #### ValueObject
 
 ```python
-from flx.core import ValueObject
+from flext.core import ValueObject
 
 # TODO: Add real usage example from implementation
 class Money(ValueObject):
@@ -81,7 +81,7 @@ class Money(ValueObject):
 #### DomainEvent
 
 ```python
-from flx.core import DomainEvent
+from flext.core import DomainEvent
 
 # TODO: Add real usage example from implementation
 class OrderCreated(DomainEvent):
@@ -99,7 +99,7 @@ class OrderCreated(DomainEvent):
 #### DomainService
 
 ```python
-from flx.core import DomainService
+from flext.core import DomainService
 
 # TODO: Add real usage example from implementation
 class OrderPricingService(DomainService):
@@ -117,7 +117,7 @@ class OrderPricingService(DomainService):
 #### Adapter Protocol
 
 ```python
-from flx.core import Adapter
+from flext.core import Adapter
 
 # TODO: Add real usage example from implementation
 class DatabaseAdapter(Adapter):
@@ -133,7 +133,7 @@ class DatabaseAdapter(Adapter):
 #### LoggerInterface
 
 ```python
-from flx.core import LoggerInterface, DomainLogger
+from flext.core import LoggerInterface, DomainLogger
 
 # TODO: Add real usage example from implementation
 def create_domain_logger() -> DomainLogger:
@@ -151,7 +151,7 @@ def create_domain_logger() -> DomainLogger:
 #### FlxAdapterModel
 
 ```python
-from flx.core import FlxAdapterModel
+from flext.core import FlxAdapterModel
 
 # TODO: Add real usage example from implementation
 model = FlxAdapterModel(...)
@@ -166,7 +166,7 @@ model = FlxAdapterModel(...)
 #### Status Enums
 
 ```python
-from flx.core import (
+from flext.core import (
     FlxAdapterStatus,
     FlxConnectionStatus,
     FlxOperationStatus,
@@ -187,7 +187,7 @@ from flx.core import (
 #### ConfigurationMixin
 
 ```python
-from flx.core import ConfigurationMixin
+from flext.core import ConfigurationMixin
 
 # TODO: Add real usage example from implementation
 class ConfigurableService(ConfigurationMixin):
@@ -197,7 +197,7 @@ class ConfigurableService(ConfigurationMixin):
 #### ErrorHandlingMixin
 
 ```python
-from flx.core import ErrorHandlingMixin
+from flext.core import ErrorHandlingMixin
 
 # TODO: Add real usage example from implementation
 class RobustService(ErrorHandlingMixin):
@@ -207,7 +207,7 @@ class RobustService(ErrorHandlingMixin):
 #### HealthCheckMixin
 
 ```python
-from flx.core import HealthCheckMixin
+from flext.core import HealthCheckMixin
 
 # TODO: Add real usage example from implementation
 class MonitorableService(HealthCheckMixin):
@@ -226,7 +226,7 @@ class MonitorableService(HealthCheckMixin):
 #### DomainError
 
 ```python
-from flx.core import DomainError
+from flext.core import DomainError
 
 # TODO: Add real usage example from implementation
 raise DomainError("Business rule violation")
@@ -235,7 +235,7 @@ raise DomainError("Business rule violation")
 #### ValidationError
 
 ```python
-from flx.core import ValidationError
+from flext.core import ValidationError
 
 # TODO: Add real usage example from implementation
 raise ValidationError("Invalid entity state")
@@ -244,7 +244,7 @@ raise ValidationError("Invalid entity state")
 #### BusinessRuleViolationError
 
 ```python
-from flx.core import BusinessRuleViolationError
+from flext.core import BusinessRuleViolationError
 
 # TODO: Add real usage example from implementation
 raise BusinessRuleViolationError("Order cannot be modified after shipping")
@@ -280,7 +280,7 @@ raise BusinessRuleViolationError("Order cannot be modified after shipping")
 
 ## Next Steps
 
-1. **🔴 CRITICAL**: Add real code examples from `/flx/src/flx/core/`
+1. **🔴 CRITICAL**: Add real code examples from `/flext/src/flext/core/`
 2. **🔴 CRITICAL**: Document all exported components
 3. **🟡 HIGH**: Create domain modeling guide
 4. **🟡 HIGH**: Add comprehensive usage patterns
@@ -288,5 +288,5 @@ raise BusinessRuleViolationError("Order cannot be modified after shipping")
 
 ---
 
-**Implementation Reference**: `/flx/src/flx/core/__init__.py`
+**Implementation Reference**: `/flext/src/flext/core/__init__.py`
 **Related Documentation**: [Architecture Guide](../architecture/core-domain-layer.md) | [DDD Patterns](../architecture/patterns/domain-driven-design-patterns.md)

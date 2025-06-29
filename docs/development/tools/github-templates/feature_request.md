@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Suggest an idea for this flx_project
+about: Suggest an idea for this flext_project
 title: "[FEATURE] "
 labels: enhancement
 assignees: ""

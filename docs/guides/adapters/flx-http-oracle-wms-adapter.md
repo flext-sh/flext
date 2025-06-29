@@ -55,30 +55,30 @@ The CLI automatically loads `.env` files and uses table output by default:
 
 ```bash
 # Show help
-python -m flx_http_oracle_wms --help
+python -m flext_http_oracle_wms --help
 
 # Discover WMS operations
-python -m flx_http_oracle_wms discover
+python -m flext_http_oracle_wms discover
 
 # Test connection
-python -m flx_http_oracle_wms test-connection
+python -m flext_http_oracle_wms test-connection
 
 # Execute operation
-python -m flx_http_oracle_wms execute getStockCount '{"warehouse": "WH01"}'
+python -m flext_http_oracle_wms execute getStockCount '{"warehouse": "WH01"}'
 
 # Show configuration
-python -m flx_http_oracle_wms show-config
+python -m flext_http_oracle_wms show-config
 
 # Different output formats
-python -m flx_http_oracle_wms --json api-info
-python -m flx_http_oracle_wms --yaml discover
-python -m flx_http_oracle_wms --csv show-config
+python -m flext_http_oracle_wms --json api-info
+python -m flext_http_oracle_wms --yaml discover
+python -m flext_http_oracle_wms --csv show-config
 ```
 
 ### Python API
 
 ```python
-from flx_http_oracle_wms import WmsService, WmsConfig
+from flext_http_oracle_wms import WmsService, WmsConfig
 
 # Create service from environment
 config = WmsConfig.from_env()
@@ -173,9 +173,9 @@ python -m bandit -r src
 ## Project Structure
 
 ```
-flx_http_oracle_wms/
+flext_http_oracle_wms/
 ├── src/
-│   └── flx_http_oracle_wms/
+│   └── flext_http_oracle_wms/
 │       ├── __init__.py
 │       ├── __main__.py      # CLI entry point
 │       ├── cli.py           # CLI implementation

@@ -53,11 +53,11 @@ graph TB
 A plugin is a Python module that **implements one or more hooks** defined in the FLX hook specifications. Each hook receives a mutable registry that the plugin can modify.
 
 ```python
-# flx/ports/plugin/hookspecs.py
+# flext/ports/plugin/hookspecs.py
 import pluggy
 from typing import Type, Protocol
 
-hookspec = pluggy.HookspecMarker("flx")
+hookspec = pluggy.HookspecMarker("flext")
 
 @hookspec
 def register_adapters(registry: dict[str, Type["FlxAdapter"]]) -> None:
@@ -100,8 +100,8 @@ Each registry is a dictionary mapping names to component classes, enabling easy 
 A typical FLX plugin follows this organized structure:
 
 ```
-my-flx-plugin/
-├── my_flx_plugin/
+my-flext-plugin/
+├── my_flext_plugin/
 │   ├── __init__.py          # Plugin registration and exports
 │   ├── adapter.py           # Main adapter implementation
 │   ├── config.py            # Configuration models
@@ -146,7 +146,7 @@ class RedisCacheConfig(BaseModel):
 
     # Cache settings
     default_ttl: int = Field(3600, ge=1)  # 1 hour default
-    key_prefix: str = Field("flx:", description="Key prefix for all cache keys")
+    key_prefix: str = Field("flext:", description="Key prefix for all cache keys")
 
     # Performance settings
     enable_compression: bool = False
@@ -162,9 +162,9 @@ class RedisCacheConfig(BaseModel):
 #### Main Adapter (`adapter.py`)
 
 ```python
-from flx.adapters.base import BaseAdapter
-from flx.infra.cache.cache_service import CacheService
-from flx.core.exceptions import FlxConnectionError, FlxTimeoutError
+from flext.adapters.base import BaseAdapter
+from flext.infra.cache.cache_service import CacheService
+from flext.core.exceptions import FlxConnectionError, FlxTimeoutError
 from .config import RedisCacheConfig
 import redis.asyncio as redis
 import json
@@ -302,7 +302,7 @@ def register_cache_providers(registry: dict) -> None:
     }
 
 # Plugin metadata
-PLUGIN_NAME = "flx-redis-cache"
+PLUGIN_NAME = "flext-redis-cache"
 PLUGIN_VERSION = "1.0.0"
 PLUGIN_DESCRIPTION = "Redis cache adapter for FLX with advanced features"
 ```
@@ -315,19 +315,19 @@ requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
-name = "flx-redis-cache"
+name = "flext-redis-cache"
 version = "1.0.0"
 description = "Redis cache adapter for FLX framework"
 authors = ["Your Name <your.email@example.com>"]
 license = "MIT"
 readme = "README.md"
-homepage = "https://github.com/yourorg/flx-redis-cache"
-repository = "https://github.com/yourorg/flx-redis-cache"
-keywords = ["flx", "redis", "cache", "plugin"]
+homepage = "https://github.com/yourorg/flext-redis-cache"
+repository = "https://github.com/yourorg/flext-redis-cache"
+keywords = ["flext", "redis", "cache", "plugin"]
 
 [tool.poetry.dependencies]
 python = "^3.9,<4.0"
-flx = "^0.4.0"
+flext = "^0.4.0"
 redis = "^5.0.0"
 pydantic = "^2.0.0"
 
@@ -338,14 +338,14 @@ pytest-mock = "^3.10.0"
 fakeredis = "^2.0.0"  # For testing without Redis
 
 # Plugin entry points
-[tool.poetry.plugins."flx.plugins"]
-redis_cache = "flx_redis_cache"
+[tool.poetry.plugins."flext.plugins"]
+redis_cache = "flext_redis_cache"
 
-[tool.poetry.plugins."flx.cache_providers"]
-redis = "flx_redis_cache:register_cache_providers"
+[tool.poetry.plugins."flext.cache_providers"]
+redis = "flext_redis_cache:register_cache_providers"
 
-[tool.poetry.plugins."flx.adapters"]
-redis_cache = "flx_redis_cache:register_adapters"
+[tool.poetry.plugins."flext.adapters"]
+redis_cache = "flext_redis_cache:register_adapters"
 ```
 
 ### Using the Plugin
@@ -354,19 +354,19 @@ Once installed, the plugin can be used seamlessly:
 
 ```python
 import asyncio
-from flx import Flx
-from flx.infra.adapters import UnifiedAdapterManager
+from flext import Flx
+from flext.infra.adapters import UnifiedAdapterManager
 
 async def main():
     # Initialize FLX with plugin discovery
-    flx = Flx()
-    flx.discover_plugins()  # Auto-discovers all installed plugins
+    flext = Flx()
+    flext.discover_plugins()  # Auto-discovers all installed plugins
 
     # Get Redis cache adapter from registry
-    cache_adapter = flx.get_adapter("redis_cache")
+    cache_adapter = flext.get_adapter("redis_cache")
 
     # Configure with connection details
-    from flx_redis_cache import RedisCacheConfig
+    from flext_redis_cache import RedisCacheConfig
     config = RedisCacheConfig(
         url="redis://localhost:6379",
         max_connections=20,
@@ -433,7 +433,7 @@ Plugins can extend the FLX command-line interface:
 
 ```python
 import cyclopts
-from flx.ports.inbound.cli import CLICommandGroup
+from flext.ports.inbound.cli import CLICommandGroup
 
 class RedisCLIExtension:
     """CLI commands for Redis cache management."""
@@ -490,7 +490,7 @@ def register_cli_commands(registry: dict) -> None:
 Plugins can register handlers for application lifecycle events:
 
 ```python
-from flx.ports.plugin.hooks import LifecycleHook
+from flext.ports.plugin.hooks import LifecycleHook
 
 class RedisCacheLifecycleHook(LifecycleHook):
     """Lifecycle management for Redis cache."""
@@ -526,7 +526,7 @@ def register_lifecycle_hooks(registry: list) -> None:
 # tests/conftest.py
 import pytest
 import pytest_asyncio
-from flx_redis_cache import RedisCacheAdapter, RedisCacheConfig
+from flext_redis_cache import RedisCacheAdapter, RedisCacheConfig
 from fakeredis import aioredis
 
 @pytest.fixture
@@ -565,8 +565,8 @@ async def integration_redis_adapter(redis_config):
 ```python
 # tests/test_adapter.py
 import pytest
-from flx_redis_cache import RedisCacheAdapter, RedisCacheConfig
-from flx.core.exceptions import FlxConnectionError
+from flext_redis_cache import RedisCacheAdapter, RedisCacheConfig
+from flext.core.exceptions import FlxConnectionError
 
 class TestRedisCacheAdapter:
     """Unit tests for Redis cache adapter."""
@@ -630,8 +630,8 @@ class TestRedisCacheAdapter:
 ```python
 # tests/test_integration.py
 import pytest
-from flx import Flx
-from flx.infra.adapters import UnifiedAdapterManager
+from flext import Flx
+from flext.infra.adapters import UnifiedAdapterManager
 
 @pytest.mark.integration
 class TestRedisIntegration:
@@ -639,11 +639,11 @@ class TestRedisIntegration:
 
     async def test_plugin_discovery(self):
         """Test automatic plugin discovery."""
-        flx = Flx()
-        flx.discover_plugins()
+        flext = Flx()
+        flext.discover_plugins()
 
         # Verify plugin is discovered
-        adapters = flx.get_available_adapters()
+        adapters = flext.get_available_adapters()
         assert "redis_cache" in adapters
 
     async def test_unified_manager_integration(self, integration_redis_adapter):

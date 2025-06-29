@@ -38,7 +38,7 @@ This document details the revolutionary architectural modernization of the FLX f
 
 ### 1. Unified Exception Hierarchy ✅
 
-**File**: `/home/marlonsc/pyauto/flx/src/flx/core/exceptions.py` (620 lines)
+**File**: `/home/marlonsc/pyauto/flext/src/flext/core/exceptions.py` (620 lines)
 **Reference**: [Exception System Design](../development/reports/circular-import-resolution.md)
 
 **What was implemented:**
@@ -69,7 +69,7 @@ with error_context("database_connection", "OrderService"):
 
 ### 2. Capability-based Composition System ✅
 
-**File**: `/home/marlonsc/pyauto/flx/src/flx/core/capabilities.py` (555 lines)
+**File**: `/home/marlonsc/pyauto/flext/src/flext/core/capabilities.py` (555 lines)
 **Reference**: [Capability Patterns](./capability-patterns.md)
 
 **What was implemented:**
@@ -105,7 +105,7 @@ assert adapter.health_check.is_healthy()
 
 ### **3. Production Engine Registry** ✅
 
-**Arquivo**: `/home/marlonsc/pyauto/flx/src/flx/core/engines.py` (659 linhas)
+**Arquivo**: `/home/marlonsc/pyauto/flext/src/flext/core/engines.py` (659 linhas)
 
 **O que foi implementado:**
 
@@ -146,8 +146,8 @@ status = registry.get_overall_status()  # Health de todos os engines
 
 **Arquivos**:
 
-- `/home/marlonsc/pyauto/flx/src/flx/core/meta_factory.py` (1.100+ linhas)
-- `/home/marlonsc/pyauto/flx/src/flx/core/enhanced_factory.py` (600+ linhas)
+- `/home/marlonsc/pyauto/flext/src/flext/core/meta_factory.py` (1.100+ linhas)
+- `/home/marlonsc/pyauto/flext/src/flext/core/enhanced_factory.py` (600+ linhas)
 
 **O que foi implementado:**
 
@@ -189,7 +189,7 @@ class OracleWMSAdapter(AdvancedAdapterMixin, BaseAdapter):
 
 ### **5. Enhanced Integration System** ✅
 
-**Arquivo**: `/home/marlonsc/pyauto/flx/src/flx/core/enhanced_factory.py`
+**Arquivo**: `/home/marlonsc/pyauto/flext/src/flext/core/enhanced_factory.py`
 
 **O que foi implementado:**
 
@@ -315,12 +315,12 @@ sqlmodel = "^0.0.22"              # +ORM type-safe
 
 - [ ] **FastAPI Integration**
   - Migrar HTTP server customizado para FastAPI
-  - Eliminar `/home/marlonsc/pyauto/flx/src/flx/infra/http/` (~600 linhas)
+  - Eliminar `/home/marlonsc/pyauto/flext/src/flext/infra/http/` (~600 linhas)
   - Auto-documentation APIs
 - [ ] **Dependency Injector Implementation**
 
   - Substituir sistema DI customizado
-  - Simplificar `/home/marlonsc/pyauto/flx/src/flx/core/services.py`
+  - Simplificar `/home/marlonsc/pyauto/flext/src/flext/core/services.py`
   - Integration com meta-factory
 
 - [ ] **Loguru Migration**
@@ -397,9 +397,9 @@ sqlmodel = "^0.0.22"              # +ORM type-safe
   - Debugging integration
 
 - [ ] **CLI Tools Enhancement**
-  - `flx generate adapter`
-  - `flx validate schema`
-  - `flx migrate legacy`
+  - `flext generate adapter`
+  - `flext validate schema`
+  - `flext migrate legacy`
 
 **Sprint 12: Documentation & Migration**
 

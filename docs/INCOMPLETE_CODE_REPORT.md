@@ -2,7 +2,7 @@
 
 ## Summary
 
-After searching through all Python files in the three projects (tap-oracle-wms, target-oracle-wms, flx-oracle-wms), I found the following incomplete implementations:
+After searching through all Python files in the three projects (tap-oracle-wms, target-oracle-wms, flext-oracle-wms), I found the following incomplete implementations:
 
 ## 1. Mock/Dummy Implementations
 
@@ -83,7 +83,7 @@ The following CLI groups are defined but have no implementation beyond subcomman
 
 - Lines 243, 246, 249: `get_entity_sample()` returns empty list on errors
 
-### flx-oracle-wms/src/flx_oracle_wms/monitoring.py
+### flext-oracle-wms/src/flext_oracle_wms/monitoring.py
 
 - Lines 237, 243: Methods return empty lists in error conditions
 

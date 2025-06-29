@@ -299,7 +299,7 @@ class EmailNotificationAdapter:
 FLX uses dependency injection to wire components together:
 
 ```python
-from flx.core.container import Container
+from flext.core.container import Container
 
 def configure_container() -> Container:
     """Configure dependency injection container."""

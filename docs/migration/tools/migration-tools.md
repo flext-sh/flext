@@ -93,19 +93,19 @@ class FLXCodeAnalyzer:
             },
             "deprecated_manager_imports": {
                 "patterns": [
-                    "from flx.adapters.manager import AdapterManager",
-                    "from flx.cache.manager import CacheManager"
+                    "from flext.adapters.manager import AdapterManager",
+                    "from flext.cache.manager import CacheManager"
                 ],
                 "description": "Deprecated manager imports",
-                "fix": "Replace with UnifiedAdapterManager from flx.infra.adapters"
+                "fix": "Replace with UnifiedAdapterManager from flext.infra.adapters"
             },
             "cache_service_imports": {
                 "patterns": [
-                    "from flx.cache import CacheService",
-                    "from flx.adapters.cache import CacheAdapter"
+                    "from flext.cache import CacheService",
+                    "from flext.adapters.cache import CacheAdapter"
                 ],
                 "description": "Cache service import changes",
-                "fix": "Use consolidated CacheService from flx.infra.cache"
+                "fix": "Use consolidated CacheService from flext.infra.cache"
             }
         }
 
@@ -216,9 +216,9 @@ class FLXCodeAnalyzer:
             def _is_deprecated_import(self, import_name: str) -> bool:
                 """Check if import is deprecated."""
                 deprecated_imports = [
-                    "flx.adapters.manager",
-                    "flx.cache.manager",
-                    "flx.adapters.cache"
+                    "flext.adapters.manager",
+                    "flext.cache.manager",
+                    "flext.adapters.cache"
                 ]
                 return any(dep in import_name for dep in deprecated_imports)
 
@@ -369,7 +369,7 @@ class FLXCodeAnalyzer:
 def main():
     """CLI entry point for FLX code analyzer."""
     if len(sys.argv) != 2:
-        print("Usage: python flx_analyzer.py <project_root>")
+        print("Usage: python flext_analyzer.py <project_root>")
         sys.exit(1)
 
     project_root = sys.argv[1]
@@ -382,7 +382,7 @@ def main():
     summary = analyzer.analyze_project()
 
     # Save detailed report
-    report_file = "flx_migration_analysis.json"
+    report_file = "flext_migration_analysis.json"
     with open(report_file, 'w') as f:
         json.dump(summary, f, indent=2)
 
@@ -548,9 +548,9 @@ class FLXCodeTransformer:
 
                     # Transform deprecated imports
                     import_mappings = {
-                        "flx.adapters.manager": "flx.infra.adapters.unified_manager",
-                        "flx.cache.manager": "flx.infra.cache.cache_service",
-                        "flx.adapters.cache": "flx.infra.cache.cache_service"
+                        "flext.adapters.manager": "flext.infra.adapters.unified_manager",
+                        "flext.cache.manager": "flext.infra.cache.cache_service",
+                        "flext.adapters.cache": "flext.infra.cache.cache_service"
                     }
 
                     for old_import, new_import in import_mappings.items():
@@ -820,15 +820,15 @@ class MigrationValidator:
         # This would test that the migrated code correctly uses new APIs
         try:
             # Test basic FLX imports
-            import flx
-            from flx.adapters.base import BaseAdapter
-            from flx.infra.cache.cache_service import CacheService
-            from flx.infra.adapters.unified_manager import UnifiedAdapterManager
+            import flext
+            from flext.adapters.base import BaseAdapter
+            from flext.infra.cache.cache_service import CacheService
+            from flext.infra.adapters.unified_manager import UnifiedAdapterManager
 
             return {
                 "status": "pass",
                 "message": "FLX 0.4.0+ APIs are accessible",
-                "details": {"flx_version": getattr(flx, "__version__", "unknown")}
+                "details": {"flext_version": getattr(flext, "__version__", "unknown")}
             }
         except ImportError as e:
             return {
@@ -1129,7 +1129,7 @@ set -euo pipefail
 # Configuration
 PROJECT_ROOT="${1:-$(pwd)}"
 BACKUP_DIR="${PROJECT_ROOT}_backup_$(date +%Y%m%d_%H%M%S)"
-LOG_FILE="flx_migration_$(date +%Y%m%d_%H%M%S).log"
+LOG_FILE="flext_migration_$(date +%Y%m%d_%H%M%S).log"
 DRY_RUN="${DRY_RUN:-true}"
 SKIP_TESTS="${SKIP_TESTS:-false}"
 
@@ -1212,7 +1212,7 @@ check_prerequisites() {
     fi
 
     # Check if FLX is installed
-    if ! python3 -c "import flx" 2>/dev/null; then
+    if ! python3 -c "import flext" 2>/dev/null; then
         log_warning "FLX not found - will attempt to install"
     fi
 
@@ -1223,15 +1223,15 @@ check_prerequisites() {
 run_analysis() {
     log_info "Running code analysis..."
 
-    if ! python3 migration_tools/flx_analyzer.py "$PROJECT_ROOT" >> "$LOG_FILE" 2>&1; then
+    if ! python3 migration_tools/flext_analyzer.py "$PROJECT_ROOT" >> "$LOG_FILE" 2>&1; then
         handle_error "Code analysis failed"
     fi
 
     # Check if analysis found critical issues
-    if [[ -f "flx_migration_analysis.json" ]]; then
+    if [[ -f "flext_migration_analysis.json" ]]; then
         local breaking_changes=$(python3 -c "
 import json
-with open('flx_migration_analysis.json') as f:
+with open('flext_migration_analysis.json') as f:
     data = json.load(f)
     print(data.get('total_breaking_changes', 0))
 " 2>/dev/null || echo "0")
@@ -1253,7 +1253,7 @@ run_transformation() {
 
     log_info "Running code transformation (dry_run=$DRY_RUN)..."
 
-    if ! python3 migration_tools/flx_transformer.py "$PROJECT_ROOT" $apply_flag >> "$LOG_FILE" 2>&1; then
+    if ! python3 migration_tools/flext_transformer.py "$PROJECT_ROOT" $apply_flag >> "$LOG_FILE" 2>&1; then
         handle_error "Code transformation failed"
     fi
 
@@ -1324,7 +1324,7 @@ check_performance() {
 import time
 start = time.time()
 try:
-    import flx
+    import flext
     end = time.time()
     print(f'{end - start:.3f}')
 except ImportError as e:
@@ -1346,7 +1346,7 @@ except ImportError as e:
 generate_report() {
     log_info "Generating migration report..."
 
-    local report_file="flx_migration_report_$(date +%Y%m%d_%H%M%S).md"
+    local report_file="flext_migration_report_$(date +%Y%m%d_%H%M%S).md"
 
     cat > "$report_file" << EOF
 # FLX Migration Report
@@ -1357,10 +1357,10 @@ generate_report() {
 
 ## Summary
 
-$(if [[ -f "flx_migration_analysis.json" ]]; then
+$(if [[ -f "flext_migration_analysis.json" ]]; then
     python3 -c "
 import json
-with open('flx_migration_analysis.json') as f:
+with open('flext_migration_analysis.json') as f:
     data = json.load(f)
     print(f'- Files analyzed: {data.get(\"files_requiring_migration\", 0)}')
     print(f'- Issues found: {data.get(\"total_migration_issues\", 0)}')
@@ -1394,7 +1394,7 @@ fi)
 ## Files
 
 - Log file: $LOG_FILE
-- Analysis report: flx_migration_analysis.json
+- Analysis report: flext_migration_analysis.json
 - Validation report: migration_validation_report.json
 $(if [[ "$DRY_RUN" == "false" && -d "$BACKUP_DIR" ]]; then echo "- Backup: $BACKUP_DIR"; fi)
 

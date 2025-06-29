@@ -17,7 +17,7 @@ Complete reference for FLX Framework's hexagonal adapter system with production-
 ### **📍 Learning Path Position**
 
 ```
-[Core API Reference](../framework/core-api-reference-validated.md) → **[FLX ADAPTERS]** → [Framework API Overview](../comprehensive/flx-api-overview.md)
+[Core API Reference](../framework/core-api-reference-validated.md) → **[FLX ADAPTERS]** → [Framework API Overview](../comprehensive/flext-api-overview.md)
 ```
 
 ## 🎯 **Quick Links**
@@ -52,7 +52,7 @@ Domain Layer ← Ports Layer ← Adapters Layer ← Infrastructure Layer ← Ext
 
 ### **BaseAdapter**
 
-**File**: `/flx/src/flx/adapters/base.py`
+**File**: `/flext/src/flext/adapters/base.py`
 **Status**: ✅ **PRODUCTION READY** (1,089 lines)
 **Description**: Foundation class providing comprehensive adapter capabilities
 
@@ -103,7 +103,7 @@ class MyAdapter(BaseAdapter):
 
 ### **AdapterFactory**
 
-**File**: `/flx/src/flx/adapters/factory.py`
+**File**: `/flext/src/flext/adapters/factory.py`
 **Status**: ✅ **PRODUCTION READY** (331 lines)
 **Description**: Centralized adapter creation and management
 
@@ -140,7 +140,7 @@ adapter = await factory.create_adapter(
 
 ### **ApiAdapter**
 
-**File**: `/flx/src/flx/adapters/inbound/api.py`
+**File**: `/flext/src/flext/adapters/inbound/api.py`
 **Status**: ✅ **PRODUCTION READY** (506 lines)
 **Description**: HTTP/gRPC interface handling with CQRS support
 
@@ -225,7 +225,7 @@ async def subscribe_to_events(self, event_types: List[str]) -> None:
 
 ### **CliAdapter**
 
-**File**: `/flx/src/flx/adapters/inbound/cli.py`
+**File**: `/flext/src/flext/adapters/inbound/cli.py`
 **Status**: ✅ **PRODUCTION READY** (599 lines)
 **Description**: Command-line interface management with Cyclopts integration
 
@@ -234,7 +234,7 @@ async def subscribe_to_events(self, event_types: List[str]) -> None:
 ```python
 class CliAdapterConfig:
     # Interface Configuration
-    app_name: str = "flx"
+    app_name: str = "flext"
     app_version: str = "0.4.0"
     colors_enabled: bool = True
     help_text_template: str = "default"
@@ -312,7 +312,7 @@ async def validate_command(self, command: str, args: List[str]) -> ValidationRes
 
 ### **DatabaseAdapter**
 
-**File**: `/flx/src/flx/adapters/outbound/database.py`
+**File**: `/flext/src/flext/adapters/outbound/database.py`
 **Status**: ✅ **PRODUCTION READY** (264 lines, 90% code reduction)
 **Description**: Database operations with SQLite/PostgreSQL support
 
@@ -320,7 +320,7 @@ async def validate_command(self, command: str, args: List[str]) -> ValidationRes
 
 ```python
 class DatabaseAdapterConfig:
-    connection_url: str = "sqlite:///flx.db"
+    connection_url: str = "sqlite:///flext.db"
     enable_wal_mode: bool = True
     connection_pool_size: int = 5
     query_timeout: int = 30
@@ -385,7 +385,7 @@ async def begin_transaction(self) -> AsyncContextManager:
 
 ### **CacheAdapter**
 
-**File**: `/flx/src/flx/adapters/outbound/cache.py`
+**File**: `/flext/src/flext/adapters/outbound/cache.py`
 **Status**: ✅ **PRODUCTION READY** (264 lines, 85% code reduction)
 **Description**: Redis-based caching with comprehensive operations
 
@@ -394,7 +394,7 @@ async def begin_transaction(self) -> AsyncContextManager:
 ```python
 class CacheAdapterConfig:
     redis_url: str = "redis://localhost:6379/0"
-    key_prefix: str = "flx:"
+    key_prefix: str = "flext:"
     default_ttl: int = 3600
     max_connections: int = 10
     use_test_engine: bool = False
@@ -458,7 +458,7 @@ async def increment(self, key: str, amount: int = 1) -> int:
 
 ### **HttpClientAdapter**
 
-**File**: `/flx/src/flx/adapters/outbound/http.py`
+**File**: `/flext/src/flext/adapters/outbound/http.py`
 **Status**: ✅ **PRODUCTION READY** (656 lines)
 **Description**: HTTP client operations with comprehensive features
 
@@ -551,7 +551,7 @@ async def request(self, method: str, url: str, **kwargs) -> HttpResponse:
 
 ### **AnalyticsAdapter**
 
-**File**: `/flx/src/flx/adapters/outbound/analytics.py`
+**File**: `/flext/src/flext/adapters/outbound/analytics.py`
 **Status**: ✅ **PRODUCTION READY** (853 lines)
 **Description**: Event tracking and metrics collection
 
@@ -641,7 +641,7 @@ async def flush(self) -> None:
 
 ### **EventPublisherAdapter**
 
-**File**: `/flx/src/flx/adapters/outbound/events.py`
+**File**: `/flext/src/flext/adapters/outbound/events.py`
 **Status**: ✅ **PRODUCTION READY** (544 lines)
 **Description**: Domain event publishing with Dramatiq integration
 
@@ -730,7 +730,7 @@ async def create_actor(self, actor_config: ActorConfig) -> None:
 
 ### **StandardLoggingAdapter**
 
-**File**: `/flx/src/flx/adapters/outbound/logging.py`
+**File**: `/flext/src/flext/adapters/outbound/logging.py`
 **Status**: ✅ **PRODUCTION READY** (548 lines)
 **Description**: Structured logging with multiple levels and features
 
@@ -739,7 +739,7 @@ async def create_actor(self, actor_config: ActorConfig) -> None:
 ```python
 class StandardLoggingAdapterConfig:
     # Logger Configuration
-    logger_name: str = "flx"
+    logger_name: str = "flext"
     log_level: str = "INFO"
     log_format: str = "structured"
 
@@ -823,7 +823,7 @@ async def set_context(self, context: Dict[str, Any]) -> None:
 
 ### **MemoryCacheAdapter**
 
-**File**: `/flx/src/flx/adapters/outbound/memory_cache.py`
+**File**: `/flext/src/flext/adapters/outbound/memory_cache.py`
 **Status**: ✅ **PRODUCTION READY** (585 lines)
 **Description**: In-memory caching with TTL and LRU eviction
 

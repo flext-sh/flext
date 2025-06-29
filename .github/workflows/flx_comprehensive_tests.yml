@@ -73,17 +73,17 @@ jobs:
           poetry install --with dev,test
           poetry run pip install --upgrade pip
 
-      - name: Validate flx_project structure
+      - name: Validate flext_project structure
         run: |
-          echo "🔍 Validating FLX flx_project structure..."
+          echo "🔍 Validating FLX flext_project structure..."
           poetry run python -c "
           import sys
           from pathlib import Path
 
           required_dirs = [
-              'flx/src', 'flx/tests',
-              'flx-database-oracle/src', 'flx-database-oracle/tests',
-              'flx-http-oracle-wms/src', 'flx-http-oracle-wms/tests'
+              'flext/src', 'flext/tests',
+              'flext-database-oracle/src', 'flext-database-oracle/tests',
+              'flext-http-oracle-wms/src', 'flext-http-oracle-wms/tests'
           ]
 
           missing = [d for d in required_dirs if not Path(d).exists()]
@@ -111,18 +111,18 @@ jobs:
           {
             "include": [
               {
-                "flx_project": "flx-core",
-                "path": "flx/tests",
+                "flext_project": "flext-core",
+                "path": "flext/tests",
                 "categories": $CATEGORIES
               },
               {
-                "flx_project": "flx-database-oracle",
-                "path": "flx-database-oracle/tests",
+                "flext_project": "flext-database-oracle",
+                "path": "flext-database-oracle/tests",
                 "categories": $CATEGORIES
               },
               {
-                "flx_project": "flx-http-oracle-wms",
-                "path": "flx-http-oracle-wms/tests",
+                "flext_project": "flext-http-oracle-wms",
+                "path": "flext-http-oracle-wms/tests",
                 "categories": $CATEGORIES
               }
             ]
@@ -135,7 +135,7 @@ jobs:
       - name: Discover projects
         id: projects
         run: |
-          PROJECTS=$(find . -name "tests" -type d | grep -E "(flx|dc-)" | head -10 | jq -R -s -c 'split("\n")[:-1]')
+          PROJECTS=$(find . -name "tests" -type d | grep -E "(flext|dc-)" | head -10 | jq -R -s -c 'split("\n")[:-1]')
           echo "list=$PROJECTS" >> $GITHUB_OUTPUT
 
   # ============================================================================
@@ -149,11 +149,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        flx_project:
+        flext_project:
           [
-            { name: "flx-core", path: "flx/tests" },
-            { name: "flx-database-oracle", path: "flx-database-oracle/tests" },
-            { name: "flx-http-oracle-wms", path: "flx-http-oracle-wms/tests" },
+            { name: "flext-core", path: "flext/tests" },
+            { name: "flext-database-oracle", path: "flext-database-oracle/tests" },
+            { name: "flext-http-oracle-wms", path: "flext-http-oracle-wms/tests" },
           ]
 
     steps:
@@ -181,22 +181,22 @@ jobs:
 
       - name: Run unit tests
         run: |
-          echo "🧪 Running unit tests for ${{ matrix.flx_project.name }}..."
-          poetry run python -m pytest ${{ matrix.flx_project.path }} \
+          echo "🧪 Running unit tests for ${{ matrix.flext_project.name }}..."
+          poetry run python -m pytest ${{ matrix.flext_project.path }} \
             -m "unit" \
             --verbose \
             --tb=short \
             --color=yes \
             --durations=10 \
             --maxfail=5 \
-            --cov=flx \
+            --cov=flext \
             --cov=wms \
             --cov=db \
-            --cov-report=xml:coverage-${{ matrix.flx_project.name }}.xml \
-            --cov-report=html:htmlcov-${{ matrix.flx_project.name }} \
+            --cov-report=xml:coverage-${{ matrix.flext_project.name }}.xml \
+            --cov-report=html:htmlcov-${{ matrix.flext_project.name }} \
             --cov-report=term-missing \
-            --junit-xml=junit-${{ matrix.flx_project.name }}.xml \
-            --html=report-${{ matrix.flx_project.name }}.html \
+            --junit-xml=junit-${{ matrix.flext_project.name }}.xml \
+            --html=report-${{ matrix.flext_project.name }}.html \
             --self-contained-html \
             || true
 
@@ -204,7 +204,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: unit-test-results-${{ matrix.flx_project.name }}
+          name: unit-test-results-${{ matrix.flext_project.name }}
           path: |
             junit-*.xml
             report-*.html
@@ -215,9 +215,9 @@ jobs:
         uses: codecov/codecov-action@v4
         if: always()
         with:
-          file: coverage-${{ matrix.flx_project.name }}.xml
-          flags: unit,${{ matrix.flx_project.name }}
-          name: ${{ matrix.flx_project.name }}-unit-coverage
+          file: coverage-${{ matrix.flext_project.name }}.xml
+          flags: unit,${{ matrix.flext_project.name }}
+          name: ${{ matrix.flext_project.name }}-unit-coverage
 
   # ============================================================================
   # INTEGRATION TESTS
@@ -275,7 +275,7 @@ jobs:
             --color=yes \
             --durations=10 \
             --maxfail=3 \
-            --cov=flx \
+            --cov=flext \
             --cov-report=xml:coverage-integration.xml \
             --cov-report=term-missing \
             --junit-xml=junit-integration.xml \
@@ -372,7 +372,7 @@ jobs:
           echo "🔒 Running security scans..."
 
           # Bandit security scan
-          poetry run bandit -r flx/ -f json -o bandit-report.json || true
+          poetry run bandit -r flext/ -f json -o bandit-report.json || true
 
           # Safety check for vulnerabilities
           poetry run safety check --json --output safety-report.json || true
@@ -428,10 +428,10 @@ jobs:
           poetry run ruff check . --output-format=json --output-file=ruff-report.json || true
 
           # MyPy type checking
-          poetry run mypy flx/ --json-report mypy-report || true
+          poetry run mypy flext/ --json-report mypy-report || true
 
           # Black formatting check
-          poetry run black --check --diff flx/ || true
+          poetry run black --check --diff flext/ || true
 
       - name: Upload quality reports
         uses: actions/upload-artifact@v4
@@ -473,11 +473,11 @@ jobs:
           echo "📦 Testing package builds..."
 
           # Test FLX core build
-          cd flx && poetry build && cd ..
+          cd flext && poetry build && cd ..
 
           # Test client packages build
-          cd flx-database-oracle && poetry build && cd ..
-          cd flx-http-oracle-wms && poetry build && cd ..
+          cd flext-database-oracle && poetry build && cd ..
+          cd flext-http-oracle-wms && poetry build && cd ..
 
       - name: Test installation
         run: |
@@ -488,14 +488,14 @@ jobs:
           source test-env/bin/activate
 
           # Install built packages
-          pip install flx/dist/*.whl
-          pip install flx-database-oracle/dist/*.whl
-          pip install flx-http-oracle-wms/dist/*.whl
+          pip install flext/dist/*.whl
+          pip install flext-database-oracle/dist/*.whl
+          pip install flext-http-oracle-wms/dist/*.whl
 
           # Test imports
-          python -c "import flx; print('✅ FLX core imported successfully')"
-          python -c "import flx_database_oracle; print('✅ FLX Oracle imported successfully')" || true
-          python -c "import flx_http_oracle_wms; print('✅ FLX WMS imported successfully')" || true
+          python -c "import flext; print('✅ FLX core imported successfully')"
+          python -c "import flext_database_oracle; print('✅ FLX Oracle imported successfully')" || true
+          python -c "import flext_http_oracle_wms; print('✅ FLX WMS imported successfully')" || true
 
   # ============================================================================
   # COMPREHENSIVE REPORT

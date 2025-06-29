@@ -45,10 +45,10 @@ Core domain testing ensures the correctness and integrity of business logic, dom
 
 ```python
 # Core domain components being tested
-from flx.core.entities import Entity, AggregateRoot
-from flx.core.domain.value_objects import ValueObject
-from flx.core.services import DomainService
-from flx.core.events import DomainEvent
+from flext.core.entities import Entity, AggregateRoot
+from flext.core.domain.value_objects import ValueObject
+from flext.core.services import DomainService
+from flext.core.events import DomainEvent
 ```
 
 ---
@@ -57,11 +57,11 @@ from flx.core.events import DomainEvent
 
 ### **Domain Test Structure**
 
-Based on validated implementation in `/flx/src/flx/testing/`:
+Based on validated implementation in `/flext/src/flext/testing/`:
 
 ```python
-from flx.testing.engines import ComprehensiveTestEngine
-from flx.core.entities import Entity
+from flext.testing.engines import ComprehensiveTestEngine
+from flext.core.entities import Entity
 
 class TestDomainEntity:
     def setup_method(self):

@@ -24,7 +24,7 @@
 
 - **📂 Section Hub**: [Oracle Hub](./index.md)
 - **🏠 Documentation Root**: [Root Index](../../index.md)
-- **🔗 Related**: [WMS Adapter](./flx-http-oracle-wms-adapter.md) | [WMS Commands](./oracle-wms-commands-reference.md)
+- **🔗 Related**: [WMS Adapter](./flext-http-oracle-wms-adapter.md) | [WMS Commands](./oracle-wms-commands-reference.md)
 
 ---
 
@@ -10015,7 +10015,7 @@ GET .../lgfapi/v10/entity/lgf_async_task/{id}
 ### **Next Steps**
 
 - [WMS Complete Guide](./wms-complete-guide.md) - Complete WMS integration implementation with FLX Framework
-- [WMS Adapter](./flx-http-oracle-wms-adapter.md) - FLX HTTP adapter implementation for Oracle WMS
+- [WMS Adapter](./flext-http-oracle-wms-adapter.md) - FLX HTTP adapter implementation for Oracle WMS
 - [WMS Commands Reference](./oracle-wms-commands-reference.md) - Command-line tools and operations
 
 ### **Related Topics**

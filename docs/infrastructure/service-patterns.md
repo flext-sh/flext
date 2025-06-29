@@ -426,7 +426,7 @@ class HighAvailability:
 
 ### **Source Code Validation Status**
 
-This documentation has been validated against the actual FLX framework implementation in `/flx/src/flx/infra/`:
+This documentation has been validated against the actual FLX framework implementation in `/flext/src/flext/infra/`:
 
 **✅ Validated Patterns:**
 

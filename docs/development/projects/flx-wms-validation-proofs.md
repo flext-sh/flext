@@ -54,21 +54,21 @@ O projeto **dc-oracle-wms** foi **COMPLETAMENTE MIGRADO** para o framework FLX c
 ### 1. **Teste de Importações**
 
 ```bash
-python -c "import src.flx_http_oracle_wms; print('✅ Módulo importado com sucesso')"
+python -c "import src.flext_http_oracle_wms; print('✅ Módulo importado com sucesso')"
 # ✅ Módulo importado com sucesso
 ```
 
 ### 2. **Teste de MyPy**
 
 ```bash
-python -m mypy src/flx_http_oracle_wms/ --no-error-summary --disable-error-code=import-untyped --disable-error-code=misc --disable-error-code=no-untyped-def --disable-error-code=no-untyped-call --disable-error-code=unused-ignore
+python -m mypy src/flext_http_oracle_wms/ --no-error-summary --disable-error-code=import-untyped --disable-error-code=misc --disable-error-code=no-untyped-def --disable-error-code=no-untyped-call --disable-error-code=unused-ignore
 # Sem output = Sem erros
 ```
 
 ### 3. **Teste de Ruff**
 
 ```bash
-python -m ruff check src/flx_http_oracle_wms/
+python -m ruff check src/flext_http_oracle_wms/
 # All checks passed!
 ```
 
@@ -82,7 +82,7 @@ python -m pytest tests/test_wms_engine.py -v
 ### 5. **Teste CLI**
 
 ```bash
-WMS_URL=http://test.com WMS_USERNAME=test WMS_PASSWORD=test python -m src.flx_http_oracle_wms.cli --help
+WMS_URL=http://test.com WMS_USERNAME=test WMS_PASSWORD=test python -m src.flext_http_oracle_wms.cli --help
 # Mostra comandos WMS integrados ao FLX CLI
 ```
 
@@ -99,7 +99,7 @@ python demo_validacao.py
 ## 🏗️ ARQUITETURA IMPLEMENTADA
 
 ```
-src/flx_http_oracle_wms/
+src/flext_http_oracle_wms/
 ├── __init__.py          # Exposição das APIs principais
 ├── __version__.py       # Versionamento
 ├── config.py           # Configuração estendendo FLX HttpConfig
@@ -143,7 +143,7 @@ class WmsService(ApplicationService):  # Herda de FLX
 class FlxWmsCliAdapter(CycloptsCliAdapter):  # Herda de FLX
     def __init__(self, **kwargs: Any) -> None:
         kwargs.update({
-            "app_name": "flx-wms",
+            "app_name": "flext-wms",
             "app_version": __version__,
             "help_text": "Oracle WMS operations powered by FLX Framework",
         })

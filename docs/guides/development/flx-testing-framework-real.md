@@ -6,7 +6,7 @@
 [![Source Validated](https://img.shields.io/badge/source-validated-blue.svg)](#source-validation)
 [![Hexagonal](https://img.shields.io/badge/architecture-hexagonal-orange.svg)](#hexagonal-testing)
 
-**Complete testing framework guide based on actual implementations in `/flx/src/flx/testing/` - validated against real source code**
+**Complete testing framework guide based on actual implementations in `/flext/src/flext/testing/` - validated against real source code**
 
 ---
 
@@ -44,10 +44,10 @@
 
 ### **Testing Architecture (Source Code Validated)**
 
-Based on actual implementation in `/flx/src/flx/testing/`:
+Based on actual implementation in `/flext/src/flext/testing/`:
 
 ```
-flx/testing/
+flext/testing/
 ├── __init__.py                    # Testing framework exports
 ├── config.py                     # Test configuration management
 ├── declarative.py                # Declarative test patterns
@@ -81,7 +81,7 @@ flx/testing/
 ### **Hexagonal Test Engine (Real Implementation)**
 
 ```python
-# Real implementation from /flx/src/flx/testing/engines/hexagonal_test_engine.py
+# Real implementation from /flext/src/flext/testing/engines/hexagonal_test_engine.py
 class HexagonalTestEngine:
     """Test engine specifically designed for hexagonal architecture testing.
 
@@ -233,7 +233,7 @@ class HexagonalTestEngine:
 #### **HTTP Test Engine**
 
 ```python
-# Real implementation from /flx/src/flx/testing/engines/http_engine.py
+# Real implementation from /flext/src/flext/testing/engines/http_engine.py
 class HttpTestEngine:
     """Test engine for HTTP client and server testing."""
 
@@ -287,7 +287,7 @@ class HttpTestEngine:
 #### **Database Test Engine**
 
 ```python
-# Real implementation from /flx/src/flx/testing/engines/database_engine.py
+# Real implementation from /flext/src/flext/testing/engines/database_engine.py
 class DatabaseTestEngine:
     """Test engine for database operations and connections."""
 
@@ -362,7 +362,7 @@ class DatabaseTestEngine:
 #### **Cache Test Adapter**
 
 ```python
-# Real implementation from /flx/src/flx/testing/adapters/cache.py
+# Real implementation from /flext/src/flext/testing/adapters/cache.py
 class CacheTestAdapter:
     """Test adapter for cache operations testing."""
 
@@ -426,7 +426,7 @@ class CacheTestAdapter:
 ### **Test Orchestrator (Real Implementation)**
 
 ```python
-# Real implementation from /flx/src/flx/testing/engines/test_orchestrator.py
+# Real implementation from /flext/src/flext/testing/engines/test_orchestrator.py
 class TestOrchestrator:
     """Orchestrates comprehensive testing across all framework components."""
 
@@ -505,8 +505,8 @@ class TestOrchestrator:
 ```python
 # Production Oracle testing example
 import pytest
-from flx_http_oracle_wms import WmsClient, WmsConfig
-from flx.testing.engines import HexagonalTestEngine
+from flext_http_oracle_wms import WmsClient, WmsConfig
+from flext.testing.engines import HexagonalTestEngine
 
 @pytest.mark.asyncio
 async def test_oracle_wms_integration():
@@ -546,8 +546,8 @@ async def test_oracle_wms_integration():
 async def test_hexagonal_architecture_compliance():
     """Test that Oracle adapters comply with hexagonal architecture."""
 
-    from flx_http_oracle_wms.wms_client import WmsClient
-    from flx.testing.engines import HexagonalTestEngine
+    from flext_http_oracle_wms.wms_client import WmsClient
+    from flext.testing.engines import HexagonalTestEngine
 
     config = WmsConfig(base_url="https://test.example.com")
     client = WmsClient(config)

@@ -58,28 +58,28 @@ class InfrastructureMetrics:
 
     # Latency metrics
     request_duration = Histogram(
-        "flx_request_duration_seconds",
+        "flext_request_duration_seconds",
         "Request processing time",
         ["service", "method", "endpoint"]
     )
 
     # Traffic metrics
     request_rate = Counter(
-        "flx_requests_total",
+        "flext_requests_total",
         "Total requests processed",
         ["service", "method", "status_code"]
     )
 
     # Error metrics
     error_rate = Counter(
-        "flx_errors_total",
+        "flext_errors_total",
         "Total errors encountered",
         ["service", "error_type", "severity"]
     )
 
     # Saturation metrics
     resource_utilization = Gauge(
-        "flx_resource_utilization_percent",
+        "flext_resource_utilization_percent",
         "Resource utilization percentage",
         ["service", "resource_type"]
     )
@@ -91,19 +91,19 @@ class InfrastructureMetrics:
 # Database service metrics
 class DatabaseMetrics:
     connection_pool_active = Gauge(
-        "flx_db_connections_active",
+        "flext_db_connections_active",
         "Active database connections",
         ["database", "pool"]
     )
 
     query_execution_time = Histogram(
-        "flx_db_query_duration_seconds",
+        "flext_db_query_duration_seconds",
         "Database query execution time",
         ["database", "operation"]
     )
 
     transaction_duration = Histogram(
-        "flx_db_transaction_duration_seconds",
+        "flext_db_transaction_duration_seconds",
         "Database transaction duration",
         ["database", "isolation_level"]
     )
@@ -111,13 +111,13 @@ class DatabaseMetrics:
 # Cache service metrics
 class CacheMetrics:
     cache_hit_rate = Counter(
-        "flx_cache_operations_total",
+        "flext_cache_operations_total",
         "Cache operations",
         ["cache", "operation", "result"]  # result: hit, miss
     )
 
     cache_memory_usage = Gauge(
-        "flx_cache_memory_bytes",
+        "flext_cache_memory_bytes",
         "Cache memory usage in bytes",
         ["cache", "type"]
     )
@@ -616,10 +616,10 @@ class MultiTierCache:
 
 ### **Production Observability Infrastructure**
 
-The FLX framework includes a comprehensive observability stack validated against the `/flx/src/flx/infra/observability/` implementation with production-grade monitoring:
+The FLX framework includes a comprehensive observability stack validated against the `/flext/src/flext/infra/observability/` implementation with production-grade monitoring:
 
 ```
-/flx/src/flx/infra/observability/
+/flext/src/flext/infra/observability/
 ├── metrics_system.py        # Comprehensive metrics collection
 ├── health.py                # Multi-level health monitoring
 ├── tracing.py               # Distributed tracing with OpenTelemetry
@@ -642,7 +642,7 @@ The FLX framework includes a comprehensive observability stack validated against
 
 ```python
 # Production observability initialization
-from flx.infra.observability import ObservabilityStack
+from flext.infra.observability import ObservabilityStack
 
 observability = ObservabilityStack(
     metrics_backend="prometheus",
@@ -665,7 +665,7 @@ await observability.start_monitoring()
 Enterprise-grade metrics collection with automatic instrumentation:
 
 ```python
-from flx.infra.observability import MetricsSystem
+from flext.infra.observability import MetricsSystem
 
 # Production metrics system with multiple backends
 metrics = MetricsSystem()
@@ -688,10 +688,10 @@ metrics.gauge("inventory.current_levels").set(current_inventory)
 OpenTelemetry-based distributed tracing for complex request flows:
 
 ```python
-from flx.infra.observability import Tracer
+from flext.infra.observability import Tracer
 
 # Production tracing with automatic span creation
-tracer = Tracer("flx-application")
+tracer = Tracer("flext-application")
 
 with tracer.start_span("order-processing") as span:
     span.set_attribute("order.id", order_id)
@@ -707,7 +707,7 @@ with tracer.start_span("order-processing") as span:
 Multi-level health monitoring with dependency checking:
 
 ```python
-from flx.infra.observability import HealthCheck
+from flext.infra.observability import HealthCheck
 
 # Production health check system
 health = HealthCheck()
@@ -725,7 +725,7 @@ status = await health.check_all_components()
 Business event analytics with real-time processing:
 
 ```python
-from flx.infra.observability import AnalyticsService
+from flext.infra.observability import AnalyticsService
 
 # Production analytics with multiple sinks
 analytics = AnalyticsService()

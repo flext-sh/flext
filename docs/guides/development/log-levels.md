@@ -27,13 +27,13 @@ There are three ways to set the log level:
 
 ```bash
 # Using --log-level flag
-flx-oic --log-level INFO integration list
-flx-oic --log-level ERROR config show
-flx-oic --log-level=WARNING health check
+flext-oic --log-level INFO integration list
+flext-oic --log-level ERROR config show
+flext-oic --log-level=WARNING health check
 
 # Shortcuts for common levels
-flx-oic --debug version    # Same as --log-level DEBUG
-flx-oic --trace version    # Same as --log-level TRACE
+flext-oic --debug version    # Same as --log-level DEBUG
+flext-oic --trace version    # Same as --log-level TRACE
 ```
 
 ### 2. Environment Variable
@@ -41,10 +41,10 @@ flx-oic --trace version    # Same as --log-level TRACE
 ```bash
 # Set via environment variable
 export LOG_LEVEL=WARNING
-flx-oic integration list
+flext-oic integration list
 
 # Or inline
-LOG_LEVEL=ERROR flx-oic health check
+LOG_LEVEL=ERROR flext-oic health check
 ```
 
 ### 3. Default (TRACE)
@@ -52,7 +52,7 @@ LOG_LEVEL=ERROR flx-oic health check
 If no log level is specified, the CLI defaults to TRACE for maximum visibility.
 
 ```bash
-flx-oic version  # Uses TRACE level by default
+flext-oic version  # Uses TRACE level by default
 ```
 
 ## Priority Order
@@ -75,7 +75,7 @@ Shows everything including:
 - All debug and info messages
 
 ```bash
-flx-oic --log-level TRACE integration list
+flext-oic --log-level TRACE integration list
 ```
 
 ### DEBUG Level
@@ -88,7 +88,7 @@ Shows:
 - Error details with stack traces
 
 ```bash
-flx-oic --debug config show
+flext-oic --debug config show
 ```
 
 ### INFO Level
@@ -100,7 +100,7 @@ Shows:
 - Success/failure notifications
 
 ```bash
-flx-oic --log-level INFO auth login
+flext-oic --log-level INFO auth login
 ```
 
 ### WARNING Level
@@ -112,7 +112,7 @@ Shows:
 - Deprecation notices
 
 ```bash
-flx-oic --log-level WARNING health check
+flext-oic --log-level WARNING health check
 ```
 
 ### ERROR Level
@@ -124,7 +124,7 @@ Shows:
 - Connection errors
 
 ```bash
-flx-oic --log-level ERROR integration status INVALID_ID
+flext-oic --log-level ERROR integration status INVALID_ID
 ```
 
 ### CRITICAL Level
@@ -136,7 +136,7 @@ Shows:
 - Unrecoverable errors
 
 ```bash
-flx-oic --log-level CRITICAL config validate
+flext-oic --log-level CRITICAL config validate
 ```
 
 ## Best Practices
@@ -155,13 +155,13 @@ This separation allows you to redirect them independently:
 
 ```bash
 # Save output to file, show only logs on screen
-flx-oic integration list > integrations.json
+flext-oic integration list > integrations.json
 
 # Save logs to file, show only output on screen
-flx-oic integration list 2> debug.log
+flext-oic integration list 2> debug.log
 
 # Save both to different files
-flx-oic integration list > output.json 2> debug.log
+flext-oic integration list > output.json 2> debug.log
 ```
 
 ## Environment-Specific Configuration

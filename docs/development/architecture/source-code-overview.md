@@ -17,28 +17,28 @@ The FLX framework follows a clean architecture approach with clear separation of
 
 ### Core Components
 
-#### Domain Layer (`flx/core/`)
+#### Domain Layer (`flext/core/`)
 
 - **Pure domain logic** - Business rules and entities
 - **Domain events** - Event-driven architecture patterns
 - **Value objects** - Immutable domain representations
 - **Domain services** - Complex business operations
 
-#### Ports Layer (`flx/ports/`)
+#### Ports Layer (`flext/ports/`)
 
 - **Inbound ports** - External system interfaces (CLI, API, events)
 - **Outbound ports** - Infrastructure interfaces (database, HTTP, cache)
 - **Protocol definitions** - Type-safe interface contracts
 - **Port abstractions** - Clean interface boundaries
 
-#### Adapters Layer (`flx/adapters/`)
+#### Adapters Layer (`flext/adapters/`)
 
 - **Inbound adapters** - External system implementations
 - **Outbound adapters** - Infrastructure implementations
 - **Base adapters** - Common adapter functionality
 - **Adapter patterns** - Reusable adapter components
 
-#### Infrastructure Layer (`flx/infra/`)
+#### Infrastructure Layer (`flext/infra/`)
 
 - **Configuration management** - Environment and settings
 - **Logging system** - Structured logging infrastructure
@@ -47,21 +47,21 @@ The FLX framework follows a clean architecture approach with clear separation of
 - **Security components** - Authentication and authorization
 - **Observability tools** - Monitoring and metrics
 
-#### Application Layer (`flx/application/`)
+#### Application Layer (`flext/application/`)
 
 - **Application services** - Use case orchestration
 - **Service containers** - Dependency injection
 - **Application bootstrap** - Application lifecycle management
 - **Service registry** - Service discovery and management
 
-#### CLI Layer (`flx/cli/`)
+#### CLI Layer (`flext/cli/`)
 
 - **Command-line interface** - CLI application framework
 - **Command handlers** - CLI command implementations
 - **Output formatters** - Result presentation
 - **CLI configuration** - Command-line setup
 
-#### Testing Framework (`flx/testing/`)
+#### Testing Framework (`flext/testing/`)
 
 - **Test utilities** - Testing helper functions
 - **Mock engines** - Test double implementations
@@ -164,7 +164,7 @@ class EmailNotificationHandler(EventHandler[UserCreatedEvent]):
 ### Directory Structure
 
 ```
-flx/src/flx/
+flext/src/flext/
 ├── core/                   # Domain layer
 │   ├── entities.py         # Domain entities
 │   ├── value_objects.py    # Value objects
@@ -212,25 +212,25 @@ flx/src/flx/
 
 ```python
 # Core imports (domain layer)
-from flx.core.entities import User, Order, Product
-from flx.core.domain.value_objects import Email, Money, SKU
-from flx.core.events import UserCreatedEvent, OrderProcessedEvent
+from flext.core.entities import User, Order, Product
+from flext.core.domain.value_objects import Email, Money, SKU
+from flext.core.events import UserCreatedEvent, OrderProcessedEvent
 
 # Port imports (interface layer)
-from flx.ports.inbound.api import ApiPort
-from flx.ports.outbound.database import DatabasePort
+from flext.ports.inbound.api import ApiPort
+from flext.ports.outbound.database import DatabasePort
 
 # Adapter imports (implementation layer)
-from flx.adapters.inbound.api import FastApiAdapter
-from flx.adapters.outbound.database import PostgreSQLAdapter
+from flext.adapters.inbound.api import FastApiAdapter
+from flext.adapters.outbound.database import PostgreSQLAdapter
 
 # Infrastructure imports
-from flx.infra.config import FlxConfig
-from flx.infra.logging import FlxLogger
+from flext.infra.config import FlxConfig
+from flext.infra.logging import FlxLogger
 
 # Application imports
-from flx.application.services import UserService
-from flx.application.container import ServiceContainer
+from flext.application.services import UserService
+from flext.application.container import ServiceContainer
 ```
 
 ## Code Quality Standards
@@ -284,7 +284,7 @@ class UserService:
 
 ```python
 # Structured logging throughout
-from flx.infra.logging import FlxLogger
+from flext.infra.logging import FlxLogger
 
 class UserService:
     def __init__(self, repository: UserRepository) -> None:
@@ -311,7 +311,7 @@ class UserService:
 ```python
 # Comprehensive testing support
 import pytest
-from flx.testing.fixtures import user_repository_mock, event_publisher_mock
+from flext.testing.fixtures import user_repository_mock, event_publisher_mock
 
 class TestUserService:
     @pytest.mark.asyncio
@@ -358,7 +358,7 @@ class TestUserService:
 
 ```python
 # Environment-based configuration
-from flx.infra.config import FlxConfig
+from flext.infra.config import FlxConfig
 
 config = FlxConfig()
 database_url = config.get_required("DATABASE_URL")

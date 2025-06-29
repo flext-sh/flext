@@ -5,9 +5,9 @@
 [![API Docs](https://img.shields.io/badge/api-documented-green.svg)](./framework/core-api-reference-validated.md)
 [![Source Validated](https://img.shields.io/badge/source-validated-blue.svg)](./core/index.md)
 [![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](../getting-started/setup/installation-guide.md)
-[![Type Safety](https://img.shields.io/badge/types-strict-purple.svg)](./comprehensive/flx-complete-api.md)
+[![Type Safety](https://img.shields.io/badge/types-strict-purple.svg)](./comprehensive/flext-complete-api.md)
 
-**Enterprise API reference for FLX Framework 0.4.0+ validated against actual `/flx/src/` source code with strict type safety**
+**Enterprise API reference for FLX Framework 0.4.0+ validated against actual `/flext/src/` source code with strict type safety**
 
 ---
 
@@ -31,7 +31,7 @@
 
 ## 📊 **Overview**
 
-The API Reference Hub provides complete, source-validated API documentation for FLX Framework 0.4.0+. All APIs are validated against actual `/flx/src/` source code and include strict type annotations for Python 3.13+ development.
+The API Reference Hub provides complete, source-validated API documentation for FLX Framework 0.4.0+. All APIs are validated against actual `/flext/src/` source code and include strict type annotations for Python 3.13+ development.
 
 ### **API Categories**
 
@@ -44,7 +44,7 @@ The API Reference Hub provides complete, source-validated API documentation for 
 
 ### **🚀 Enterprise API Features**
 
-- **Source Validation**: 100% validated against `/flx/src/` source code
+- **Source Validation**: 100% validated against `/flext/src/` source code
 - **Type Safety**: Strict Python 3.13+ type annotations
 - **Hexagonal Architecture**: Clear port/adapter API separation
 - **Oracle Integration**: Complete Oracle adapter API coverage
@@ -60,14 +60,14 @@ The API Reference Hub provides complete, source-validated API documentation for 
 
 ### **🏗️ Integration Engineers**
 
-1. **Adapter Development**: [Adapters API](./adapters/flx-adapters-comprehensive-reference.md)
+1. **Adapter Development**: [Adapters API](./adapters/flext-adapters-comprehensive-reference.md)
 2. **Oracle Integration**: [Oracle Adapter APIs](./adapters/index.md)
-3. **Advanced Patterns**: [Comprehensive API](./comprehensive/flx-complete-api.md)
+3. **Advanced Patterns**: [Comprehensive API](./comprehensive/flext-complete-api.md)
 
 ### **🚀 Framework Developers**
 
-1. **Complete Reference**: [Comprehensive API](./comprehensive/flx-complete-api.md)
-2. **Technical Reference**: [FLX Technical Reference](./flx-technical-reference.md)
+1. **Complete Reference**: [Comprehensive API](./comprehensive/flext-complete-api.md)
+2. **Technical Reference**: [FLX Technical Reference](./flext-technical-reference.md)
 3. **Advanced Architecture**: [Core Events](./core/events.md)
 
 ## 🔗 **Cross-References**
@@ -96,7 +96,7 @@ The API Reference Hub provides complete, source-validated API documentation for 
 ## 📊 **Section Metrics**
 
 - **API Categories**: 4 comprehensive coverage areas
-- **Source Validation**: 100% validated against `/flx/src/`
+- **Source Validation**: 100% validated against `/flext/src/`
 - **Type Safety**: Strict Python 3.13+ annotations
 - **Oracle Integration**: Complete adapter API coverage
 - **Production Readiness**: Enterprise-grade documentation

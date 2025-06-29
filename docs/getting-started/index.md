@@ -29,7 +29,7 @@
 
 1. **🎯 Start Here**: [Installation Guide](./setup/installation-guide.md) - Get FLX running
 2. **⚡ Quick Path**: [Quickstart](./basics/quickstart.md) - First working project
-3. **📚 Deep Dive**: [Framework Concepts](./concepts/flx-framework-overview.md) - Architecture understanding
+3. **📚 Deep Dive**: [Framework Concepts](./concepts/flext-framework-overview.md) - Architecture understanding
 
 ---
 

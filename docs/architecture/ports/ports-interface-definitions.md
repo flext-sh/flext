@@ -4,7 +4,7 @@
 
 [![Ports](https://img.shields.io/badge/layer-ports-yellow.svg)](./index.md)
 [![Hexagonal](https://img.shields.io/badge/pattern-hexagonal-blue.svg)](../index.md)
-[![Validated](https://img.shields.io/badge/source-validated-green.svg)](../../reference/specifications/flx-framework-technical-specification.md)
+[![Validated](https://img.shields.io/badge/source-validated-green.svg)](../../reference/specifications/flext-framework-technical-specification.md)
 
 **Complete reference for all port interfaces that define contracts between domain and infrastructure layers**
 
@@ -49,7 +49,7 @@ Port interfaces define the **contracts** between the domain layer and external s
 
 ## 📚 **Port Categories**
 
-Based on actual implementation in `/flx/src/flx/ports/`:
+Based on actual implementation in `/flext/src/flext/ports/`:
 
 ### **📥 Inbound Ports (Driving Side)**
 
@@ -59,7 +59,7 @@ Inbound ports are implemented by adapters and called by external systems:
 
 ```python
 from typing import Protocol
-from flx.domain.commands import Command
+from flext.domain.commands import Command
 
 class CommandPort(Protocol):
     """Port for executing domain commands."""
@@ -77,7 +77,7 @@ class CommandPort(Protocol):
 
 ```python
 from typing import Protocol, TypeVar, Generic
-from flx.domain.queries import Query
+from flext.domain.queries import Query
 
 TQuery = TypeVar('TQuery', bound=Query)
 TResult = TypeVar('TResult')
@@ -94,7 +94,7 @@ class QueryPort(Protocol, Generic[TQuery, TResult]):
 
 ```python
 from typing import Protocol, Dict, Any
-from flx.core.types import RequestContext, ResponseContext
+from flext.core.types import RequestContext, ResponseContext
 
 class ApiPort(Protocol):
     """Port for HTTP API operations."""
@@ -142,7 +142,7 @@ Outbound ports are called by the domain and implemented by adapters:
 ```python
 from abc import ABC, abstractmethod
 from typing import Optional, List, TypeVar, Generic
-from flx.domain.entities import Entity
+from flext.domain.entities import Entity
 
 T = TypeVar('T', bound=Entity)
 
@@ -175,7 +175,7 @@ class RepositoryPort(ABC, Generic[T]):
 ```python
 from abc import ABC, abstractmethod
 from typing import List
-from flx.domain.events import DomainEvent
+from flext.domain.events import DomainEvent
 
 class EventPublisherPort(ABC):
     """Port for publishing domain events."""
@@ -373,7 +373,7 @@ class UserServicePort(UserRepositoryPort, EventPublisherPort, CachePort):
 
 - [Architecture Hub](../index.md) - Essential hexagonal architecture patterns for understanding port definitions
 - [Getting Started](../../getting-started/index.md) - Framework installation and basic concepts required for port implementation
-- [FLX Framework Technical Specification](../../reference/specifications/flx-framework-technical-specification.md) - Core framework architecture underlying port contracts
+- [FLX Framework Technical Specification](../../reference/specifications/flext-framework-technical-specification.md) - Core framework architecture underlying port contracts
 
 ### **➡️ Next Steps**
 

@@ -59,7 +59,7 @@ Payload: JSON or binary data
 **Usage Example:**
 
 ```python
-from flx.examples.plugins.custom_protocol import CustomProtocolPlugin
+from flext.examples.plugins.custom_protocol import CustomProtocolPlugin
 
 # Initialize plugin
 plugin = CustomProtocolPlugin({
@@ -311,7 +311,7 @@ plugins:
     config:
       provider: "redis"
       connection_string: "redis://localhost:6379"
-      queue_prefix: "flx"
+      queue_prefix: "flext"
 ```
 
 #### Python Configuration
@@ -345,7 +345,7 @@ for plugin_name, plugin_config in plugin_configs.items():
 
 ```python
 import pytest
-from flx.examples.plugins.custom_protocol import CustomProtocolPlugin
+from flext.examples.plugins.custom_protocol import CustomProtocolPlugin
 
 class TestCustomProtocolPlugin:
 

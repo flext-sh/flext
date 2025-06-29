@@ -53,7 +53,7 @@ python sync_dependencies.py [options]
 ### Available Options
 
 - `--force`, `-f`: Forces update of all dependencies, even when versions are equal
-- `--flx_project NAME`, `-p NAME`: Updates only a specific project (directory name)
+- `--flext_project NAME`, `-p NAME`: Updates only a specific project (directory name)
 - `--dry-run`, `-d`: Runs in simulation mode without making real changes
 - `--consolidate`, `-c`: Activates consolidation mode (uses most recent versions from all projects)
 - `--source NAME`, `-s NAME`: Specifies the source project for versions (default: dc-api-x)
@@ -74,7 +74,7 @@ python sync_dependencies.py --force
 python sync_dependencies.py --source dc-oracle-wms
 
 # Update only a specific project
-python sync_dependencies.py --flx_project dc-oracle-wms
+python sync_dependencies.py --flext_project dc-oracle-wms
 
 # Simulate update without making changes
 python sync_dependencies.py --dry-run
@@ -166,10 +166,10 @@ This dependency synchronization is particularly important for the FLX framework 
 
 The FLX workspace contains multiple related projects:
 
-- `flx/` - Core FLX framework
-- `flx_http_oracle_oic/` - Oracle OIC integration
-- `flx_http_oracle_wms/` - Oracle WMS integration
-- `flx_database_oracle/` - Oracle database integration
+- `flext/` - Core FLX framework
+- `flext_http_oracle_oic/` - Oracle OIC integration
+- `flext_http_oracle_wms/` - Oracle WMS integration
+- `flext_database_oracle/` - Oracle database integration
 - And many more...
 
 ### **Hexagonal Architecture Dependencies**
@@ -187,11 +187,11 @@ Each project in the workspace implements hexagonal architecture patterns and nee
 make sync-dependencies CONSOLIDATE=true
 
 # 2. Verify the core framework works
-cd flx && make test
+cd flext && make test
 
 # 3. Verify Oracle integrations work
-cd flx-http-oracle-oic && make test
-cd flx-http-oracle-wms && make test
+cd flext-http-oracle-oic && make test
+cd flext-http-oracle-wms && make test
 
 # 4. Check for any compatibility issues
 make test-all

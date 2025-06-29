@@ -2,9 +2,9 @@
 
 > **Function**: Complete FLX testing strategy with real implementation validation | **Audience**: Developers, QA engineers | **Status**: ✅ CONTENT_CONSOLIDATED
 
-[![Testing](https://img.shields.io/badge/testing-comprehensive-green.svg)](./flx-testing-comprehensive-guide.md)
+[![Testing](https://img.shields.io/badge/testing-comprehensive-green.svg)](./flext-testing-comprehensive-guide.md)
 [![Hexagonal](https://img.shields.io/badge/architecture-hexagonal-blue.svg)](../../architecture/index.md)
-[![Source Validated](https://img.shields.io/badge/source-validated-orange.svg)](../../../flx/tests/)
+[![Source Validated](https://img.shields.io/badge/source-validated-orange.svg)](../../../flext/tests/)
 [![Content Based](https://img.shields.io/badge/reorganization-content%20based-purple.svg)](../../analysis/content-based-reorganization-strategy.md)
 
 **Unified testing guide consolidating all FLX testing strategies with zero content loss and validation against real test implementations**
@@ -34,7 +34,7 @@
 
 - **🎯 Testing Hub**: [Testing Index](./index.md)
 - **🏠 Documentation Root**: [Root Index](../../index.md)
-- **🔗 Source Code**: [FLX Tests](../../../flx/tests/)
+- **🔗 Source Code**: [FLX Tests](../../../flext/tests/)
 
 ---
 
@@ -76,11 +76,11 @@ FLX implements comprehensive testing following hexagonal architecture principles
 
 ### **📁 Real Test Structure (Validated)**
 
-**Source**: `/flx/tests/` directory analysis
+**Source**: `/flext/tests/` directory analysis
 
 ```bash
-# ACTUAL TEST STRUCTURE (validated against /flx/tests/)
-flx/tests/
+# ACTUAL TEST STRUCTURE (validated against /flext/tests/)
+flext/tests/
 ├── unit/                              # Unit tests (isolated components)
 │   ├── core/                          # Core domain testing
 │   │   ├── test_entities.py           # ✅ Entity testing (validated)
@@ -104,15 +104,15 @@ flx/tests/
 
 ### **1.1 Entity Testing (Validated Against Source)**
 
-**Source Analysis**: `/flx/tests/unit/core/test_entities.py` (50+ lines analyzed)
+**Source Analysis**: `/flext/tests/unit/core/test_entities.py` (50+ lines analyzed)
 
 ```python
 # Real Entity Testing Implementation (Validated)
-"""Unit tests for domain entities - validated against /flx/tests/unit/core/test_entities.py"""
+"""Unit tests for domain entities - validated against /flext/tests/unit/core/test_entities.py"""
 
 from datetime import datetime
 from uuid import UUID
-from flx import Entity, AggregateRoot, DomainEvent
+from flext import Entity, AggregateRoot, DomainEvent
 
 class TestEntity:
     """Test Entity base class - validated against real implementation."""
@@ -442,7 +442,7 @@ class TestSqlAlchemyOrderRepository:
 
 ### **4.1 Port-Adapter Integration Testing**
 
-**Source Analysis**: `/flx/tests/integration/test_logging_integration.py` reference
+**Source Analysis**: `/flext/tests/integration/test_logging_integration.py` reference
 
 ```python
 # Integration Testing (Component Interactions)
@@ -522,9 +522,9 @@ class TestE2EOrderProcessing:
     """End-to-end tests for complete order processing."""
 
     @pytest.fixture
-    async def flx_application(self):
+    async def flext_application(self):
         """Create complete FLX application for E2E testing."""
-        from flx import create_application
+        from flext import create_application
 
         app = create_application(
             config={
@@ -538,9 +538,9 @@ class TestE2EOrderProcessing:
         yield app
         await app.stop()
 
-    async def test_complete_order_lifecycle(self, flx_application):
+    async def test_complete_order_lifecycle(self, flext_application):
         """Test complete order lifecycle through all layers."""
-        app = flx_application
+        app = flext_application
 
         # 1. Create order via HTTP API (inbound adapter)
         order_data = {
@@ -572,9 +572,9 @@ class TestE2EOrderProcessing:
         order_events = [e for e in events if getattr(e, 'order_id', None) == order_id]
         assert len(order_events) >= 2
 
-    async def test_error_handling_across_layers(self, flx_application):
+    async def test_error_handling_across_layers(self, flext_application):
         """Test error propagation across hexagonal layers."""
-        app = flx_application
+        app = flext_application
 
         # Test invalid order creation
         invalid_order_data = {
@@ -588,9 +588,9 @@ class TestE2EOrderProcessing:
         error_response = response.json()
         assert 'validation_errors' in error_response
 
-    async def test_resilience_and_recovery(self, flx_application):
+    async def test_resilience_and_recovery(self, flext_application):
         """Test system resilience and recovery patterns."""
-        app = flx_application
+        app = flext_application
 
         # Simulate database failure
         await app.services.database.simulate_failure()
@@ -621,8 +621,8 @@ class TestArchitectureBoundaries:
     def test_dependency_direction(self):
         """Test that dependencies point inward (hexagonal principle)."""
         import inspect
-        from flx.core import entities, services
-        from flx.adapters import database, http
+        from flext.core import entities, services
+        from flext.adapters import database, http
 
         # Core domain should not depend on adapters
         core_modules = [entities, services]
@@ -644,7 +644,7 @@ class TestArchitectureBoundaries:
 
     def test_layer_isolation(self):
         """Test that domain layer is isolated from infrastructure."""
-        from flx.core.entities import Entity, AggregateRoot
+        from flext.core.entities import Entity, AggregateRoot
 
         # Domain entities should not have infrastructure dependencies
         entity_source = inspect.getsource(Entity)
@@ -660,8 +660,8 @@ class TestArchitectureBoundaries:
 
     def test_port_adapter_pattern(self):
         """Test proper port-adapter pattern implementation."""
-        from flx.ports import RepositoryPort
-        from flx.adapters.database import SqlAlchemyRepository
+        from flext.ports import RepositoryPort
+        from flext.adapters.database import SqlAlchemyRepository
 
         # Adapter should implement port interface
         assert hasattr(SqlAlchemyRepository, 'save')

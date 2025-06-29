@@ -336,7 +336,7 @@ Para questões sobre os testes E2E:
 
 1. Verifique a documentação da API OIC
 2. Execute `python run_e2e_tests.py --env-info` para diagnóstico
-3. Revise os logs em `logs/flx.log`
+3. Revise os logs em `logs/flext.log`
 4. Consulte as respostas gravadas para debug
 
 ---

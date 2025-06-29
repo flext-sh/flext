@@ -31,7 +31,7 @@ The Core Base module provides foundational abstractions for building domain obje
 Abstract base class for all domain objects in the FLX hexagonal architecture.
 
 ```python
-from flx.core.base import DomainObject
+from flext.core.base import DomainObject
 from pydantic import Field
 
 class Product(DomainObject):
@@ -67,7 +67,7 @@ class Product(DomainObject):
 Mixin providing unique identity semantics for domain entities.
 
 ```python
-from flx.core.base import DomainObject, Identifiable, Timestamped
+from flext.core.base import DomainObject, Identifiable, Timestamped
 from uuid import UUID
 from pydantic import Field
 
@@ -140,7 +140,7 @@ assert len(customers) == 1
 Mixin providing comprehensive temporal tracking for domain entities.
 
 ```python
-from flx.core.base import DomainObject, Identifiable, Timestamped
+from flext.core.base import DomainObject, Identifiable, Timestamped
 from datetime import datetime, UTC
 
 class Order(DomainObject, Identifiable, Timestamped):
@@ -192,7 +192,7 @@ assert updated_entity.updated_at > entity.updated_at
 Mixin providing optimistic concurrency control for domain entities.
 
 ```python
-from flx.core.base import DomainObject, Identifiable, Versionable
+from flext.core.base import DomainObject, Identifiable, Versionable
 from decimal import Decimal
 
 class BankAccount(DomainObject, Identifiable, Timestamped, Versionable):
@@ -584,7 +584,7 @@ async def test_optimistic_locking():
 ### **➡️ Implementation Next Steps**
 
 - [**Domain Events API**](./events.md) - Event-driven patterns building on base domain objects for cross-aggregate communication
-- [**Complete API Reference**](../comprehensive/flx-complete-api.md) - Full framework API documentation extending base class concepts
+- [**Complete API Reference**](../comprehensive/flext-complete-api.md) - Full framework API documentation extending base class concepts
 - [**Real-World Implementation Examples**](../../examples/real-world-implementations.md) - Production examples demonstrating base class usage patterns
 
 ### **🔗 Related Implementation Topics**

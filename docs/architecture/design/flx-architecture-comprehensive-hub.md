@@ -36,7 +36,7 @@ This document serves as the central hub for all FLX architecture documentation, 
 
 ### 1. Hexagonal Architecture Foundation
 
-- **[Infrastructure Architecture](./infrastructure-comprehensive-guide.md)** - Complete infrastructure layer documentation (validated against `/flx/src/flx/infra/`)
+- **[Infrastructure Architecture](./infrastructure-comprehensive-guide.md)** - Complete infrastructure layer documentation (validated against `/flext/src/flext/infra/`)
 - **[Unified Architecture Guide](./unified-architecture-guide.md)** - Consolidated framework architecture patterns
 - **[Core Domain Layer](./core-domain-layer.md)** - Domain-driven design implementation
 
@@ -64,21 +64,21 @@ This document serves as the central hub for all FLX architecture documentation, 
 ### Cache Infrastructure
 
 - **[Cache Infrastructure](./cache-infrastructure.md)** - Redis and memory caching patterns
-- Related code: `/flx/src/flx/infra/cache/`
+- Related code: `/flext/src/flext/infra/cache/`
 
 ### Database Infrastructure
 
-- Related code: `/flx/src/flx/infra/database/`
+- Related code: `/flext/src/flext/infra/database/`
 - Patterns: Connection pooling, repository patterns, transaction management
 
 ### Security Infrastructure
 
-- Related code: `/flx/src/flx/infra/security/`
+- Related code: `/flext/src/flext/infra/security/`
 - Patterns: Authentication, authorization, secure communication
 
 ### Observability Infrastructure
 
-- Related code: `/flx/src/flx/infra/observability/`
+- Related code: `/flext/src/flext/infra/observability/`
 - Patterns: Metrics, tracing, health monitoring
 
 ## 📊 Project-Specific Architectures
@@ -86,7 +86,7 @@ This document serves as the central hub for all FLX architecture documentation, 
 ### Oracle Integration Architectures
 
 - **[client-b OIC-WMS Architecture](./client-b-oic-wms-architecture.md)** - Enterprise Oracle WMS integration
-- Related projects: `flx_http_oracle_wms/`, `flx_http_oracle_oic/`, `flx_database_oracle/`
+- Related projects: `flext_http_oracle_wms/`, `flext_http_oracle_oic/`, `flext_database_oracle/`
 
 ### Meltano Integration Architecture
 
@@ -97,13 +97,13 @@ This document serves as the central hub for all FLX architecture documentation, 
 
 ### Architecture Standards
 
-- **[FLX Architecture Standards](./flx-architecture-standards.md)** - Framework-wide architectural standards
+- **[FLX Architecture Standards](./flext-architecture-standards.md)** - Framework-wide architectural standards
 - **[Architectural Consistency Guide](./architectural-consistency-guide.md)** - Consistency patterns and enforcement
 
 ### Modernization Roadmaps
 
 - **[Modernization Roadmap](./modernization-roadmap.md)** - Framework evolution strategy
-- **[FLX Source Structure](./flx-source-structure.md)** - Source code organization
+- **[FLX Source Structure](./flext-source-structure.md)** - Source code organization
 
 ## 🔍 Validation Against Real Code
 
@@ -112,19 +112,19 @@ This hub is validated against actual FLX framework implementation:
 ### Core Validation
 
 ```python
-# Real imports from /flx/src/flx/
-from flx.core import (
+# Real imports from /flext/src/flext/
+from flext.core import (
     Entity, AggregateRoot, DomainEvent,
     ConfigurationMixin, ConnectionMixin, HealthCheckMixin
 )
-from flx.ports import (
+from flext.ports import (
     ModernBasePort, ModernInboundPort, ModernOutboundPort,
     ApiPort, DatabasePort, CachePort
 )
-from flx.adapters import (
+from flext.adapters import (
     BaseAdapter, ApiAdapter, DatabaseAdapter, CacheAdapter
 )
-from flx.infra import (
+from flext.infra import (
     UnifiedAdapterManager, CacheService, DatabaseEngine,
     StructuredLogger, AdvancedMonitoring
 )
@@ -158,7 +158,7 @@ from flx.infra import (
 1. Study [Oracle Integration Architectures](#oracle-integration-architectures)
 2. Review [Messaging Infrastructure](./messaging-infrastructure.md)
 3. Implement [Security patterns](./infrastructure-comprehensive-guide.md#security-infrastructure)
-4. Follow [Standards](./flx-architecture-standards.md)
+4. Follow [Standards](./flext-architecture-standards.md)
 
 ## 📚 Content Preservation Notice
 
@@ -219,7 +219,7 @@ class DatabaseAdapter:
 # Solution: Use dependency inversion
 
 # Wrong: Domain importing infrastructure
-# from flx.infra.database import PostgresConnection
+# from flext.infra.database import PostgresConnection
 
 # Correct: Domain defines interface, infrastructure implements
 class UserRepository(ABC):

@@ -365,7 +365,7 @@ python -m oud_automation schema detect --verbose --debug
 ### Programmatic Usage
 
 ```python
-from flx.adapters.oracle.oud import OUDSchemaMigrator
+from flext.adapters.oracle.oud import OUDSchemaMigrator
 
 # Initialize migrator
 migrator = OUDSchemaMigrator(
@@ -386,7 +386,7 @@ result = await migrator.apply_extensions(extensions)
 ### Automated Migration Pipeline
 
 ```python
-from flx.adapters.oracle.oud import OUDMigrationPipeline
+from flext.adapters.oracle.oud import OUDMigrationPipeline
 
 # Configure pipeline
 pipeline = OUDMigrationPipeline(

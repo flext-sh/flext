@@ -6,7 +6,7 @@
 [![Validated](https://img.shields.io/badge/content-source%20verified-blue.svg)](#validation-and-testing)
 [![Production Ready](https://img.shields.io/badge/production-engines-orange.svg)](#production-engines-migration)
 
-**Complete migration procedures for upgrading to FLX 0.4.0+ unified architecture - validated against actual source code implementations in `/flx/src/`**
+**Complete migration procedures for upgrading to FLX 0.4.0+ unified architecture - validated against actual source code implementations in `/flext/src/`**
 
 ---
 
@@ -72,9 +72,9 @@ This guide helps developers migrate from legacy FLX implementations to the new u
 
 ```python
 # Multiple different logging implementations
-from flx.infra.observability.logging import logger
-from flx.infra.utils.logging import get_logger
-from flx.infra.services.logging import FlxLogger
+from flext.infra.observability.logging import logger
+from flext.infra.utils.logging import get_logger
+from flext.infra.services.logging import FlxLogger
 
 # Using extra parameter (causes MyPy errors)
 logger.info("User created", extra={"user_id": 123, "email": "user@example.com"})
@@ -84,8 +84,8 @@ logger.info("User created", extra={"user_id": 123, "email": "user@example.com"})
 
 ```python
 # Single unified logging service
-from flx.infra.services.logging import FlxStandardLoggingService
-from flx.core.logging_interface import LoggerProtocol
+from flext.infra.services.logging import FlxStandardLoggingService
+from flext.core.logging_interface import LoggerProtocol
 
 # Initialize logging service
 logging_service = FlxStandardLoggingService()
@@ -105,7 +105,7 @@ with logging_service.log_context(operation="user_creation"):
 
 ```python
 # For production deployments
-from flx.infra.logging.production_engine import LoggingProductionEngine
+from flext.infra.logging.production_engine import LoggingProductionEngine
 
 # Initialize with production settings
 logging_engine = LoggingProductionEngine(
@@ -126,8 +126,8 @@ logger = logging_engine.get_logger("production_app")
 
 ```python
 # Multiple cache implementations
-from flx.infra.cache.backends import RedisBackend
-from flx.infra.cache.base import CacheBase
+from flext.infra.cache.backends import RedisBackend
+from flext.infra.cache.base import CacheBase
 
 # Direct backend usage
 cache = RedisBackend(url="redis://localhost:6379")
@@ -137,7 +137,7 @@ cache = RedisBackend(url="redis://localhost:6379")
 
 ```python
 # Unified cache service
-from flx.infra.cache.cache_service import CacheService
+from flext.infra.cache.cache_service import CacheService
 
 # For development/testing
 cache_service = CacheService(
@@ -146,7 +146,7 @@ cache_service = CacheService(
 )
 
 # For production
-from flx.infra.cache.production_engine import CacheProductionEngine
+from flext.infra.cache.production_engine import CacheProductionEngine
 
 cache_engine = CacheProductionEngine(
     backend="redis",
@@ -183,8 +183,8 @@ success = await cache_service.set_if_not_exists("lock_key", "lock_value")
 
 ```python
 # Multiple manager implementations
-from flx.infra.adapters.manager import FlxAdapterManager
-from flx.infra.messaging.adapter_manager import FlxMessagingAdapterManager
+from flext.infra.adapters.manager import FlxAdapterManager
+from flext.infra.messaging.adapter_manager import FlxMessagingAdapterManager
 
 # Separate managers for different concerns
 adapter_manager = FlxAdapterManager()
@@ -195,7 +195,7 @@ messaging_manager = FlxMessagingAdapterManager()
 
 ```python
 # Single unified manager
-from flx.infra.adapters import UnifiedAdapterManager
+from flext.infra.adapters import UnifiedAdapterManager
 
 # All functionality in one manager
 manager = UnifiedAdapterManager(
@@ -244,7 +244,7 @@ async with aiohttp.ClientSession() as session:
 
 ```python
 # Production HTTP engine with resilience patterns
-from flx.infra.http.production_engine import HttpProductionEngine
+from flext.infra.http.production_engine import HttpProductionEngine
 
 http_engine = HttpProductionEngine(
     timeout=30.0,
@@ -276,7 +276,7 @@ Session = sessionmaker(bind=engine)
 
 ```python
 # Production database engine
-from flx.infra.database.engine import DatabaseEngine
+from flext.infra.database.engine import DatabaseEngine
 
 db_engine = DatabaseEngine(
     url="postgresql://user:pass@localhost/db",
@@ -309,20 +309,20 @@ success = await db_engine.save_record("users", user_data)
 
    ```python
    # BROKEN
-   from flx.infra.cache.backends import RedisBackend
+   from flext.infra.cache.backends import RedisBackend
 
    # FIXED
-   from flx.infra.cache.cache_service import CacheService
+   from flext.infra.cache.cache_service import CacheService
    ```
 
 3. **Multiple manager classes**: Use unified manager
 
    ```python
    # BROKEN
-   from flx.infra.messaging.adapter_manager import FlxMessagingAdapterManager
+   from flext.infra.messaging.adapter_manager import FlxMessagingAdapterManager
 
    # FIXED
-   from flx.infra.adapters import UnifiedAdapterManager
+   from flext.infra.adapters import UnifiedAdapterManager
    ```
 
 ### Backward Compatibility
@@ -331,8 +331,8 @@ The following deprecated patterns still work but will issue warnings:
 
 ```python
 # These imports work but are deprecated
-from flx.infra.adapters.manager import FlxAdapterManager  # Warning issued
-from flx.infra.cache.base import CacheBase  # Warning issued
+from flext.infra.adapters.manager import FlxAdapterManager  # Warning issued
+from flext.infra.cache.base import CacheBase  # Warning issued
 
 # Migration path provided in warning messages
 ```
@@ -343,7 +343,7 @@ from flx.infra.cache.base import CacheBase  # Warning issued
 
 ```python
 # HTTP connection pooling
-from flx.infra.http.production_engine import HttpProductionEngine
+from flext.infra.http.production_engine import HttpProductionEngine
 
 http_engine = HttpProductionEngine(
     pool_size=100,           # Connection pool size
@@ -357,7 +357,7 @@ http_engine = HttpProductionEngine(
 
 ```python
 # Database connection pooling and optimization
-from flx.infra.database.engine import DatabaseEngine
+from flext.infra.database.engine import DatabaseEngine
 
 db_engine = DatabaseEngine(
     url="postgresql://user:pass@localhost/db",
@@ -373,7 +373,7 @@ db_engine = DatabaseEngine(
 
 ```python
 # Redis cluster with performance optimization
-from flx.infra.cache.production_engine import CacheProductionEngine
+from flext.infra.cache.production_engine import CacheProductionEngine
 
 cache_engine = CacheProductionEngine(
     backend="redis",
@@ -397,9 +397,9 @@ cache_engine = CacheProductionEngine(
 
 ```python
 # old_api.py
-from flx.infra.cache.backends import RedisBackend
-from flx.infra.adapters.manager import FlxAdapterManager
-from flx.core.logging import get_logger
+from flext.infra.cache.backends import RedisBackend
+from flext.infra.adapters.manager import FlxAdapterManager
+from flext.core.logging import get_logger
 
 logger = get_logger(__name__)
 cache = RedisBackend(url="redis://localhost:6379")
@@ -416,9 +416,9 @@ async def create_user(user_data: dict):
 
 ```python
 # new_api.py
-from flx.infra.cache.production_engine import CacheProductionEngine
-from flx.infra.adapters import UnifiedAdapterManager
-from flx.infra.services.logging import FlxStandardLoggingService
+from flext.infra.cache.production_engine import CacheProductionEngine
+from flext.infra.adapters import UnifiedAdapterManager
+from flext.infra.services.logging import FlxStandardLoggingService
 
 # Initialize services
 logging_service = FlxStandardLoggingService()
@@ -446,10 +446,10 @@ async def create_user(user_data: dict):
 
 ```python
 # old_app.py
-from flx.infra.cache.base import CacheBase
-from flx.infra.adapters.manager import FlxAdapterManager
-from flx.infra.messaging.adapter_manager import FlxMessagingAdapterManager
-from flx.core.logging import FlxLogger
+from flext.infra.cache.base import CacheBase
+from flext.infra.adapters.manager import FlxAdapterManager
+from flext.infra.messaging.adapter_manager import FlxMessagingAdapterManager
+from flext.core.logging import FlxLogger
 
 class OldApplication:
     def __init__(self):
@@ -468,11 +468,11 @@ class OldApplication:
 
 ```python
 # new_app.py
-from flx.infra.cache.cache_service import CacheService
-from flx.infra.adapters import UnifiedAdapterManager
-from flx.infra.services.logging import FlxStandardLoggingService
-from flx.infra.http.production_engine import HttpProductionEngine
-from flx.infra.database.engine import DatabaseEngine
+from flext.infra.cache.cache_service import CacheService
+from flext.infra.adapters import UnifiedAdapterManager
+from flext.infra.services.logging import FlxStandardLoggingService
+from flext.infra.http.production_engine import HttpProductionEngine
+from flext.infra.database.engine import DatabaseEngine
 
 class NewApplication:
     def __init__(self):
@@ -514,7 +514,7 @@ class NewApplication:
 1. **Run MyPy validation**:
 
    ```bash
-   python -m mypy src/flx/ --config-file mypy.ini
+   python -m mypy src/flext/ --config-file mypy.ini
    ```
 
 2. **Check for deprecation warnings**:
@@ -528,7 +528,7 @@ class NewApplication:
 3. **Performance benchmarking**:
 
    ```python
-   from flx.testing.engines.comprehensive_test_engine import ComprehensiveTestEngine
+   from flext.testing.engines.comprehensive_test_engine import ComprehensiveTestEngine
 
    test_engine = ComprehensiveTestEngine()
    await test_engine.benchmark_cache_performance()

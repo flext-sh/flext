@@ -48,21 +48,21 @@ FLX implements clean hexagonal architecture with strict layer separation:
 
 ### **Layer Responsibilities**
 
-1. **Domain Layer** (`flx.core.*`)
+1. **Domain Layer** (`flext.core.*`)
 
    - Pure business logic and rules
    - Entities with identity and lifecycle
    - Domain events for communication
    - Value objects for immutable data
 
-2. **Application Layer** (`flx.application.*`)
+2. **Application Layer** (`flext.application.*`)
 
    - Use case orchestration
    - Application services coordination
    - Bootstrap and dependency injection
    - Service container management
 
-3. **Infrastructure Layer** (`flx.infra.*`, `flx.adapters.*`)
+3. **Infrastructure Layer** (`flext.infra.*`, `flext.adapters.*`)
    - External system integration
    - Database, cache, HTTP services
    - Security and authentication
@@ -74,10 +74,10 @@ FLX implements clean hexagonal architecture with strict layer separation:
 
 ### **Entity Implementation**
 
-Based on `flx/core/entities.py`, entities provide identity and lifecycle management:
+Based on `flext/core/entities.py`, entities provide identity and lifecycle management:
 
 ```python
-from flx.core.entities import Entity, AggregateRoot
+from flext.core.entities import Entity, AggregateRoot
 from typing import Optional
 from datetime import datetime
 
@@ -137,12 +137,12 @@ class Order(AggregateRoot):
 
 ### **Port Interfaces**
 
-Based on `flx/ports/`, the framework defines clear contracts:
+Based on `flext/ports/`, the framework defines clear contracts:
 
 #### **Inbound Ports** - External actors driving the application
 
 ```python
-# flx/ports/inbound/api.py
+# flext/ports/inbound/api.py
 from abc import ABC, abstractmethod
 from typing import Any, Dict
 
@@ -159,7 +159,7 @@ class ApiPort(ABC):
         """Authenticate incoming request."""
         ...
 
-# flx/ports/inbound/cli.py
+# flext/ports/inbound/cli.py
 class CliPort(ABC):
     """Port for CLI operations."""
 
@@ -172,7 +172,7 @@ class CliPort(ABC):
 #### **Outbound Ports** - Application driving external systems
 
 ```python
-# flx/ports/outbound/database.py
+# flext/ports/outbound/database.py
 from typing import Any, Dict, List, Optional
 
 class DatabasePort(ABC):
@@ -198,7 +198,7 @@ class DatabasePort(ABC):
         """Delete entity by ID."""
         ...
 
-# flx/ports/outbound/cache.py
+# flext/ports/outbound/cache.py
 class CachePort(ABC):
     """Port for cache operations."""
 
@@ -220,11 +220,11 @@ class CachePort(ABC):
 
 ### **Adapter Implementation**
 
-Based on `flx/adapters/base.py`, all adapters follow consistent patterns:
+Based on `flext/adapters/base.py`, all adapters follow consistent patterns:
 
 ```python
-from flx.adapters.base import BaseAdapter
-from flx.ports.outbound.cache import CachePort
+from flext.adapters.base import BaseAdapter
+from flext.ports.outbound.cache import CachePort
 from pydantic import Field
 from typing import Any, Optional
 import redis.asyncio as redis
@@ -319,10 +319,10 @@ class RedisAdapter(BaseAdapter, CachePort):
 
 ### **Base Service Implementation**
 
-Based on `flx/infra/services/base.py`, all infrastructure services extend `BaseInfraService`:
+Based on `flext/infra/services/base.py`, all infrastructure services extend `BaseInfraService`:
 
 ```python
-from flx.infra.services.base import BaseInfraService
+from flext.infra.services.base import BaseInfraService
 from typing import Any, Dict, Optional
 
 class CacheService(BaseInfraService):
@@ -391,7 +391,7 @@ class CacheService(BaseInfraService):
 
 ### **Service Categories**
 
-Based on the source code structure in `flx/infra/`:
+Based on the source code structure in `flext/infra/`:
 
 1. **Cache Service** (`cache/cache_service.py`)
 
@@ -428,10 +428,10 @@ Based on the source code structure in `flx/infra/`:
 
 ### **Declarative Testing Engine**
 
-Based on `flx/testing/declarative.py`, FLX provides comprehensive testing:
+Based on `flext/testing/declarative.py`, FLX provides comprehensive testing:
 
 ```python
-from flx.testing.declarative import (
+from flext.testing.declarative import (
     DeclarativeTestEngine,
     create_test_engine,
     run_full_test_suite
@@ -475,10 +475,10 @@ results = await run_full_test_suite([cache_adapter])
 
 ### **Hierarchical Configuration**
 
-Based on `flx/infra/config/hierarchical.py`:
+Based on `flext/infra/config/hierarchical.py`:
 
 ```python
-from flx.infra.config.hierarchical import HierarchicalConfig
+from flext.infra.config.hierarchical import HierarchicalConfig
 from pydantic import Field
 from typing import Optional
 
@@ -522,11 +522,11 @@ config = ApplicationConfig(
 
 ### **Metrics Collection**
 
-Based on `flx/infra/observability/metrics.py`:
+Based on `flext/infra/observability/metrics.py`:
 
 ```python
-from flx.infra.observability.metrics import MetricsService
-from flx.infra.observability.health import HealthService
+from flext.infra.observability.metrics import MetricsService
+from flext.infra.observability.health import HealthService
 
 class ObservabilityService(BaseInfraService):
     """Comprehensive observability service."""
@@ -562,7 +562,7 @@ class ObservabilityService(BaseInfraService):
 ### **Health Monitoring**
 
 ```python
-from flx.infra.observability.health import HealthCheck, HealthStatus
+from flext.infra.observability.health import HealthCheck, HealthStatus
 
 class DatabaseHealthCheck(HealthCheck):
     """Database health check implementation."""

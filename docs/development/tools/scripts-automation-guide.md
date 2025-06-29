@@ -17,7 +17,7 @@ This guide covers the comprehensive script organization and automation capabilit
 ```
 /home/marlonsc/pyauto/scripts/
 ├── bin/                           # Symbolic links for easy access
-│   ├── flx_project-manage        # → ../project_manage.py
+│   ├── flext_project-manage        # → ../project_manage.py
 │   ├── scaffold-manage           # → ../scaffold_manage.py
 │   ├── git-manage               # → ../git_manage.py
 │   ├── setup                    # Wrapper for project_manage.py setup
@@ -49,15 +49,15 @@ After sourcing `~/.bashrc`, you can use the following commands from anywhere in 
 
 ### Core Project Management Commands
 
-#### `flx_project-manage` - Project Management Operations
+#### `flext_project-manage` - Project Management Operations
 
 ```bash
 # Project setup and management
-flx_project-manage setup          # Complete workspace setup
-flx_project-manage status         # Show project status
-flx_project-manage build          # Build all projects
-flx_project-manage test           # Run all tests
-flx_project-manage clean          # Clean build artifacts
+flext_project-manage setup          # Complete workspace setup
+flext_project-manage status         # Show project status
+flext_project-manage build          # Build all projects
+flext_project-manage test           # Run all tests
+flext_project-manage clean          # Clean build artifacts
 ```
 
 #### `scaffold-manage` - Template and Scaffold Management
@@ -96,7 +96,7 @@ fix-longlines --max-length 88   # Custom line length
 ```bash
 # Package management
 update-packages                  # Update all packages
-update-packages --project flx    # Update specific project
+update-packages --project flext    # Update specific project
 update-packages --dev           # Update dev dependencies only
 ```
 
@@ -245,16 +245,16 @@ pep8-check --help
 
 ```bash
 # Complete setup
-flx_project-manage setup
+flext_project-manage setup
 
 # Build specific project
-flx_project-manage build --project flx
+flext_project-manage build --project flext
 
 # Run tests with coverage
-flx_project-manage test --coverage
+flext_project-manage test --coverage
 
 # Clean all build artifacts
-flx_project-manage clean --all
+flext_project-manage clean --all
 ```
 
 ### Scaffold Management (`scaffold_manage.py`)
@@ -299,7 +299,7 @@ scaffold-manage update --name adapter --version 2.0
 git-manage status --all
 
 # Sync with remote repositories
-git-manage sync --projects flx,dc-oracle-wms
+git-manage sync --projects flext,dc-oracle-wms
 
 # Clean up merged branches
 git-manage cleanup --merged
@@ -322,7 +322,7 @@ git-manage cleanup --merged
 
 ```bash
 # Fix long lines in directory
-fix-longlines src/flx/
+fix-longlines src/flext/
 
 # Check without fixing
 fix-longlines --check src/

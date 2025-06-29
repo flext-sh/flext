@@ -63,7 +63,7 @@ cd pyauto
 make setup
 
 # Verify installation
-python -c "import flx; print(f'FLX {flx.__version__} installed successfully')"
+python -c "import flext; print(f'FLX {flext.__version__} installed successfully')"
 ```
 
 **✅ Validated**: Installation commands verified against actual `/home/marlonsc/pyauto/Makefile` - `make setup` target exists and calls `venv-setup`.
@@ -85,7 +85,7 @@ cd pyauto
 make setup
 
 # Verify installation with tests
-make test PROJECT=flx
+make test PROJECT=flext
 ```
 
 **✅ Validated**: Commands verified against actual Makefile targets.
@@ -97,7 +97,7 @@ make test PROJECT=flx
 ```bash
 # Clone and navigate to FLX
 git clone https://github.com/datacosmos-br/pyauto.git
-cd pyauto/flx
+cd pyauto/flext
 
 # Create dedicated virtual environment
 python3.13 -m venv .venv
@@ -112,7 +112,7 @@ pip install -e ".[dev,test,docs]"
 **Best for**: Poetry-based workflows
 
 ```bash
-cd pyauto/flx
+cd pyauto/flext
 poetry install --extras "dev test docs"
 poetry shell
 ```
@@ -126,14 +126,14 @@ The PyAuto workspace implements a monorepo structure with shared virtual environ
 ```
 pyauto/
 ├── .venv/                       # Shared virtual environment
-├── flx/                         # Core FLX Framework
-│   ├── src/flx/                # Framework source (core, ports, adapters)
+├── flext/                         # Core FLX Framework
+│   ├── src/flext/                # Framework source (core, ports, adapters)
 │   ├── tests/                  # Comprehensive test suite
 │   ├── pyproject.toml          # Framework dependencies
 │   └── mypy.ini                # Type checking configuration
-├── flx_database_oracle/        # Oracle Database adapter
-├── flx_http_oracle_wms/        # Oracle WMS HTTP adapter
-├── flx_http_oracle_oic/        # Oracle OIC HTTP adapter
+├── flext_database_oracle/        # Oracle Database adapter
+├── flext_http_oracle_wms/        # Oracle WMS HTTP adapter
+├── flext_http_oracle_oic/        # Oracle OIC HTTP adapter
 ├── docs/                       # Documentation hub
 ├── examples/                   # Usage examples and patterns
 ├── scripts/                    # Shared utilities and tools
@@ -153,11 +153,11 @@ source .venv/bin/activate
 
 # Core development workflow
 make test                        # Run all tests
-make test PROJECT=flx            # Test specific project
+make test PROJECT=flext            # Test specific project
 make test-cov                    # Run tests with coverage
 make lint                        # Run linting checks
 make format                      # Format code with Black
-make build PROJECT=flx           # Build project packages
+make build PROJECT=flext           # Build project packages
 
 # Dependency management
 make sync-dependencies           # Sync versions across projects
@@ -170,11 +170,11 @@ FLX Framework uses strict type checking with Python 3.13+ features:
 
 ```bash
 # Run mypy on FLX framework
-.venv/bin/python -m mypy flx/src/
+.venv/bin/python -m mypy flext/src/
 
 # Configuration files:
-# - flx/mypy.ini (standalone configuration)
-# - flx/pyproject.toml (comprehensive project config)
+# - flext/mypy.ini (standalone configuration)
+# - flext/pyproject.toml (comprehensive project config)
 ```
 
 ---
@@ -206,15 +206,15 @@ Download Oracle Instant Client from Oracle website and configure PATH.
 source .venv/bin/activate
 
 # Database adapter
-cd flx-database-oracle
+cd flext-database-oracle
 pip install -e .
 
 # WMS HTTP adapter
-cd ../flx_http_oracle_wms
+cd ../flext_http_oracle_wms
 pip install -e .
 
 # OIC HTTP adapter
-cd ../flx_http_oracle_oic
+cd ../flext_http_oracle_oic
 pip install -e .
 ```
 
@@ -226,18 +226,18 @@ pip install -e .
 
 ```bash
 # Copy example configuration
-cp flx/config.example.yaml flx/config.yaml
+cp flext/config.example.yaml flext/config.yaml
 
 # Edit configuration
-vim flx/config.yaml
+vim flext/config.yaml
 ```
 
 Example configuration structure:
 
 ```yaml
-# flx/config.yaml
+# flext/config.yaml
 database:
-  url: "postgresql://localhost/flx_dev"
+  url: "postgresql://localhost/flext_dev"
   pool_size: 5
 
 cache:
@@ -267,7 +267,7 @@ FLX_CACHE_BACKEND=redis
 FLX_CACHE_URL=redis://localhost:6379
 
 # Database configuration
-FLX_DATABASE_URL=postgresql://localhost/flx_dev
+FLX_DATABASE_URL=postgresql://localhost/flext_dev
 
 # Oracle integration
 ORACLE_CLIENT_PATH=/opt/oracle/instantclient
@@ -289,12 +289,12 @@ Create and run this verification script:
 def verify_installation():
     try:
         # Core framework imports
-        import flx
-        from flx.core import Entity, AggregateRoot, DomainEvent
-        from flx.ports import ModernBasePort, CliPort
-        from flx.adapters.inbound.cli import CliAdapter
+        import flext
+        from flext.core import Entity, AggregateRoot, DomainEvent
+        from flext.ports import ModernBasePort, CliPort
+        from flext.adapters.inbound.cli import CliAdapter
 
-        print(f"✅ FLX {flx.__version__} - Core framework installed")
+        print(f"✅ FLX {flext.__version__} - Core framework installed")
 
         # Test entity system
         class TestEntity(Entity):
@@ -305,19 +305,19 @@ def verify_installation():
 
         # Test Oracle adapters (if available)
         try:
-            import flx_database_oracle
+            import flext_database_oracle
             print("✅ Oracle Database adapter available")
         except ImportError:
             print("ℹ️  Oracle Database adapter not installed")
 
         try:
-            import flx_http_oracle_wms
+            import flext_http_oracle_wms
             print("✅ Oracle WMS adapter available")
         except ImportError:
             print("ℹ️  Oracle WMS adapter not installed")
 
         try:
-            import flx_http_oracle_oic
+            import flext_http_oracle_oic
             print("✅ Oracle OIC adapter available")
         except ImportError:
             print("ℹ️  Oracle OIC adapter not installed")
@@ -340,18 +340,18 @@ if __name__ == "__main__":
 
 ```bash
 # Test core framework
-make test PROJECT=flx
+make test PROJECT=flext
 
 # Test with coverage reporting
-make test-cov PROJECT=flx
+make test-cov PROJECT=flext
 
 # Test specific functionality
 make test k="test_entity"
 
 # Test Oracle adapters (if installed)
-make test PROJECT=flx-database-oracle
-make test PROJECT=flx-http-oracle-wms
-make test PROJECT=flx-http-oracle-oic
+make test PROJECT=flext-database-oracle
+make test PROJECT=flext-http-oracle-wms
+make test PROJECT=flext-http-oracle-oic
 ```
 
 Expected output:
@@ -361,10 +361,10 @@ Expected output:
 platform linux -- Python 3.13.x
 collected 150+ items
 
-flx/tests/test_core/ ........... [ 25%]
-flx/tests/test_ports/ .......... [ 50%]
-flx/tests/test_adapters/ ....... [ 75%]
-flx/tests/test_infra/ .......... [100%]
+flext/tests/test_core/ ........... [ 25%]
+flext/tests/test_ports/ .......... [ 50%]
+flext/tests/test_adapters/ ....... [ 75%]
+flext/tests/test_infra/ .......... [100%]
 
 ===== 150+ passed in 5.23s =====
 ```
@@ -395,7 +395,7 @@ source .venv/bin/activate
 
 ```bash
 # Install in development mode
-cd flx
+cd flext
 pip install -e .
 # Or use workspace setup
 make venv-install-dev
@@ -420,7 +420,7 @@ export LD_LIBRARY_PATH=$ORACLE_HOME/lib:$LD_LIBRARY_PATH
 ### **Next Steps**
 
 - [Quickstart Guide](./quickstart.md) - Build your first FLX application
-- [Framework Overview](./flx-framework-overview.md) - Core concepts and architecture
+- [Framework Overview](./flext-framework-overview.md) - Core concepts and architecture
 
 ### **Related Topics**
 

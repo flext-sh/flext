@@ -2,7 +2,7 @@
 
 > **Function**: Module import and configuration patterns | **Audience**: Developers, integration engineers | **Status**: Stable
 
-[![Imports](https://img.shields.io/badge/imports-validated-green.svg)](#core-imports-from-flx)
+[![Imports](https://img.shields.io/badge/imports-validated-green.svg)](#core-imports-from-flext)
 [![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](./installation-guide.md)
 [![Architecture](https://img.shields.io/badge/architecture-hexagonal-orange.svg)](../../architecture/index.md)
 
@@ -32,11 +32,11 @@
 
 This guide provides the correct import paths for the FLX 0.4.0 framework based on the current modern codebase structure with hexagonal architecture patterns.
 
-## Core Imports (from `flx`)
+## Core Imports (from `flext`)
 
 ```python
 # Core domain entities
-from flx import (
+from flext import (
     Entity,
     AggregateRoot,
     ValueObject,
@@ -44,7 +44,7 @@ from flx import (
 )
 
 # Application services
-from flx import (
+from flext import (
     ApplicationService,
     CommandService,
     QueryService,
@@ -52,7 +52,7 @@ from flx import (
 )
 
 # Logging
-from flx import (
+from flext import (
     StandardLoggingAdapter,
     DomainLogger,
     LoggerInterface,
@@ -61,7 +61,7 @@ from flx import (
 )
 
 # API Client
-from flx import ApiClient
+from flext import ApiClient
 ```
 
 ## Modern Adapter Imports (Unified Architecture)
@@ -72,40 +72,40 @@ All adapters now use the unified architecture pattern with significant code redu
 
 ```python
 # API/HTTP Interface Adapter
-from flx.adapters.inbound.api import ApiAdapter
+from flext.adapters.inbound.api import ApiAdapter
 
 # CLI Interface Adapter
-from flx.adapters.inbound.cli import CliAdapter
+from flext.adapters.inbound.cli import CliAdapter
 ```
 
 ### Outbound Adapters (Driven Side)
 
 ```python
 # Database operations (SQLite/PostgreSQL)
-from flx.adapters.outbound.database import DatabaseAdapter
+from flext.adapters.outbound.database import DatabaseAdapter
 
 # Cache operations (Redis/Memory)
-from flx.adapters.outbound.cache import CacheAdapter
-from flx.adapters.outbound.memory_cache import MemoryCacheAdapter
+from flext.adapters.outbound.cache import CacheAdapter
+from flext.adapters.outbound.memory_cache import MemoryCacheAdapter
 
 # HTTP client operations
-from flx.adapters.outbound.http import HttpClientAdapter
+from flext.adapters.outbound.http import HttpClientAdapter
 
 # Event publishing (Dramatiq integration)
-from flx.adapters.outbound.events import EventPublisherAdapter
+from flext.adapters.outbound.events import EventPublisherAdapter
 
 # Analytics and metrics
-from flx.adapters.outbound.analytics import AnalyticsAdapter
+from flext.adapters.outbound.analytics import AnalyticsAdapter
 
 # Structured logging
-from flx.adapters.outbound.logging import StandardLoggingAdapter
+from flext.adapters.outbound.logging import StandardLoggingAdapter
 ```
 
 ## Application Layer
 
 ```python
 # Application services
-from flx.application import (
+from flext.application import (
     ApplicationService,
     CommandHandler,
     CommandService,
@@ -115,13 +115,13 @@ from flx.application import (
 )
 
 # Dependency injection
-from flx.application import (
+from flext.application import (
     DIContainer,
     ServiceContainer,
 )
 
 # Bootstrap
-from flx.application import (
+from flext.application import (
     Bootstrap,
     create_bootstrap,
     run_bootstrap,
@@ -132,14 +132,14 @@ from flx.application import (
 
 ```python
 # Entities and value objects
-from flx.core.entities import Entity, AggregateRoot
-from flx.core.domain.value_objects import ValueObject
+from flext.core.entities import Entity, AggregateRoot
+from flext.core.domain.value_objects import ValueObject
 
 # Events
-from flx.core.events import DomainEvent
+from flext.core.events import DomainEvent
 
 # Exceptions
-from flx.core.exceptions import (
+from flext.core.exceptions import (
     DomainError,
     ValidationError,
     BusinessRuleViolation,
@@ -149,40 +149,40 @@ from flx.core.exceptions import (
 )
 
 # Base classes
-from flx.core.base import DomainObject
+from flext.core.base import DomainObject
 
 # Modern mixins
-from flx.core.mixins import TimestampMixin, VersionedMixin
-from flx.adapters.mixins.advanced import AdvancedAdapterMixin
+from flext.core.mixins import TimestampMixin, VersionedMixin
+from flext.adapters.mixins.advanced import AdvancedAdapterMixin
 ```
 
 ## Infrastructure Services
 
 ```python
 # Cache service
-from flx.infra.cache.cache_service import CacheService
+from flext.infra.cache.cache_service import CacheService
 
 # Database engine
-from flx.infra.database.engine import DatabaseEngine
+from flext.infra.database.engine import DatabaseEngine
 
 # CLI service
-from flx.infra.cli.cli_service import CliService
+from flext.infra.cli.cli_service import CliService
 
 # HTTP client service
-from flx.infra.http.client_service import HttpClientService
+from flext.infra.http.client_service import HttpClientService
 
 # Analytics service
-from flx.infra.analytics.analytics_service import AnalyticsService
+from flext.infra.analytics.analytics_service import AnalyticsService
 
 # Event service
-from flx.infra.events.event_service import EventService
+from flext.infra.events.event_service import EventService
 ```
 
 ## Adapter Factory System
 
 ```python
 # Centralized adapter creation
-from flx.adapters.factory import AdapterFactory
+from flext.adapters.factory import AdapterFactory
 
 # Create adapters dynamically
 factory = AdapterFactory()
@@ -193,17 +193,17 @@ database_adapter = await factory.create_adapter("database", config)
 
 ```python
 # Unified adapter mixins
-from flx.adapters.mixins.error_handling import (
+from flext.adapters.mixins.error_handling import (
     UnifiedErrorHandlingMixin,
     AdapterErrorHandlingMixin
 )
 
-from flx.adapters.mixins.configuration import (
+from flext.adapters.mixins.configuration import (
     UnifiedAdapterConfigurationMixin,
     ConfigurationValidationMixin
 )
 
-from flx.adapters.mixins.observability import (
+from flext.adapters.mixins.observability import (
     UnifiedObservabilityMixin,
     ComprehensiveMetricsMixin
 )
@@ -214,7 +214,7 @@ from flx.adapters.mixins.observability import (
 ### Modern Database Adapter Usage
 
 ```python
-from flx.adapters.outbound.database import DatabaseAdapter
+from flext.adapters.outbound.database import DatabaseAdapter
 
 async def main():
     # Modern pattern with unified configuration
@@ -239,7 +239,7 @@ async def main():
 ### Modern HTTP Client Usage
 
 ```python
-from flx.adapters.outbound.http import HttpClientAdapter
+from flext.adapters.outbound.http import HttpClientAdapter
 
 async def main():
     # Modern pattern with comprehensive configuration
@@ -264,8 +264,8 @@ async def main():
 ### CLI Adapter Pattern
 
 ```python
-from flx.adapters.inbound.cli import CliAdapter
-from flx.application import CommandService
+from flext.adapters.inbound.cli import CliAdapter
+from flext.application import CommandService
 
 class MyCliAdapter(CliAdapter):
     def __init__(self, command_service: CommandService):
@@ -289,9 +289,9 @@ class MyCliAdapter(CliAdapter):
 ### Application Service Pattern
 
 ```python
-from flx import ApplicationService, Entity
-from flx.adapters.outbound.database import DatabaseAdapter
-from flx.adapters.outbound.cache import CacheAdapter
+from flext import ApplicationService, Entity
+from flext.adapters.outbound.database import DatabaseAdapter
+from flext.adapters.outbound.cache import CacheAdapter
 
 class UserEntity(Entity):
     username: str
@@ -337,8 +337,8 @@ class UserService(ApplicationService):
 ## Testing with Test Engines
 
 ```python
-from flx.adapters.outbound.database import DatabaseAdapter
-from flx.adapters.outbound.http import HttpClientAdapter
+from flext.adapters.outbound.database import DatabaseAdapter
+from flext.adapters.outbound.http import HttpClientAdapter
 
 async def test_user_service():
     # All adapters support test engines for isolation
@@ -372,7 +372,7 @@ async def test_user_service():
 ## Framework Architecture
 
 ```
-flx/src/flx/
+flext/src/flext/
 ├── __init__.py              # Top-level exports
 ├── adapters/                # Infrastructure adapters (hexagonal architecture)
 │   ├── inbound/             # Driving side (CLI, API)
@@ -392,7 +392,7 @@ flx/src/flx/
 ### Database Configuration
 
 ```python
-from flx.adapters.outbound.database import DatabaseAdapter
+from flext.adapters.outbound.database import DatabaseAdapter
 
 # SQLite configuration
 db = DatabaseAdapter(
@@ -412,7 +412,7 @@ db = DatabaseAdapter(
 ### Cache Configuration
 
 ```python
-from flx.adapters.outbound.cache import CacheAdapter
+from flext.adapters.outbound.cache import CacheAdapter
 
 # Redis configuration
 cache = CacheAdapter(
@@ -426,7 +426,7 @@ cache = CacheAdapter(
 ### HTTP Client Configuration
 
 ```python
-from flx.adapters.outbound.http import HttpClientAdapter
+from flext.adapters.outbound.http import HttpClientAdapter
 
 # Comprehensive HTTP configuration
 http = HttpClientAdapter(
@@ -453,7 +453,7 @@ http = HttpClientAdapter(
 ### **Next Steps**
 
 - [Quickstart Guide](../basics/quickstart.md) - Build your first FLX application using these imports
-- [Framework Concepts](../concepts/flx-framework-overview.md) - Deep dive into architecture concepts behind imports
+- [Framework Concepts](../concepts/flext-framework-overview.md) - Deep dive into architecture concepts behind imports
 - [Basic Examples](../../examples/basic/index.md) - Working code examples demonstrating import patterns
 
 ### **Related Topics**

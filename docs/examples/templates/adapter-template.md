@@ -48,7 +48,7 @@ export API_MAX_RETRIES=3
 
 ### Profile-Based Configuration
 
-Create a `.env.{profile}` file in your flx_project directory:
+Create a `.env.{profile}` file in your flext_project directory:
 
 ```bash
 # .env.dev
@@ -368,7 +368,7 @@ schemas/                      # Schema cache directory
 
 This template is designed to be customized for your specific API:
 
-1. Replace `project_name` with your actual flx_project name
+1. Replace `project_name` with your actual flext_project name
 2. Update configuration variables to match your API's requirements
 3. Add domain-specific models and entities for your API
 4. Extend the CLI with commands for your API's operations
@@ -376,7 +376,7 @@ This template is designed to be customized for your specific API:
 
 ## License
 
-This flx_project is licensed under the MIT License - see the LICENSE file for details.
+This flext_project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Contributing
 
@@ -388,7 +388,7 @@ This flx_project is licensed under the MIT License - see the LICENSE file for de
 
 ## PEP 8 Compliance
 
-This flx_project follows strict PEP 8 guidelines using the following tools:
+This flext_project follows strict PEP 8 guidelines using the following tools:
 
 - **Black**: Code formatter with a line length of 88 characters
 - **isort**: Import sorting with Black-compatible settings
@@ -425,7 +425,7 @@ make format
 
 ### Pre-commit Hooks
 
-This flx_project includes a pre-commit configuration to enforce PEP 8 standards before each commit.
+This flext_project includes a pre-commit configuration to enforce PEP 8 standards before each commit.
 To set up pre-commit hooks:
 
 ```bash
@@ -445,4 +445,4 @@ Pre-commit will automatically:
 - Run Ruff linting
 - Check type hints with mypy
 
-This ensures all committed code follows the flx_project standards.
+This ensures all committed code follows the flext_project standards.

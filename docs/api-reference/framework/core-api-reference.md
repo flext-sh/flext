@@ -4,7 +4,7 @@
 
 [![API](https://img.shields.io/badge/api-documented-green.svg)](../index.md)
 [![Core](https://img.shields.io/badge/component-core-blue.svg)](../../architecture/index.md)
-[![Validated](https://img.shields.io/badge/source-validated-orange.svg)](../../reference/specifications/flx-framework-technical-specification.md)
+[![Validated](https://img.shields.io/badge/source-validated-orange.svg)](../../reference/specifications/flext-framework-technical-specification.md)
 
 **Complete API documentation for FLX Core framework components, validated against actual codebase implementation**
 
@@ -26,16 +26,16 @@ All APIs documented here are **actively maintained** and verified against the ac
 
 ## Core Domain Layer
 
-### Entities (`flx.core.entities`)
+### Entities (`flext.core.entities`)
 
 #### Entity
 
-**Location**: `flx.core.entities.Entity`
+**Location**: `flext.core.entities.Entity`
 
 Base class for domain entities with identity and lifecycle management.
 
 ```python
-from flx.core.entities import Entity
+from flext.core.entities import Entity
 
 class User(Entity):
     username: str
@@ -61,12 +61,12 @@ class User(Entity):
 
 #### AggregateRoot
 
-**Location**: `flx.core.entities.AggregateRoot`
+**Location**: `flext.core.entities.AggregateRoot`
 
 Root entity for aggregates with domain event support.
 
 ```python
-from flx.core.entities import AggregateRoot
+from flext.core.entities import AggregateRoot
 
 class Order(AggregateRoot):
     customer_id: str
@@ -99,16 +99,16 @@ class Order(AggregateRoot):
 - `collect_events()` → List[DomainEvent]: Collect and clear pending events for publishing
 - `events` → List[DomainEvent]: Property to get current pending events without clearing them
 
-### Value Objects (`flx.core.domain.value_objects`)
+### Value Objects (`flext.core.domain.value_objects`)
 
 #### ValueObject
 
-**Location**: `flx.core.domain.value_objects.ValueObject`
+**Location**: `flext.core.domain.value_objects.ValueObject`
 
 Base class for immutable value objects.
 
 ```python
-from flx.core.domain.value_objects import ValueObject
+from flext.core.domain.value_objects import ValueObject
 
 class Money(ValueObject):
     amount: float
@@ -135,7 +135,7 @@ class Money(ValueObject):
 **Email**
 
 ```python
-from flx.core.domain.value_objects import Email
+from flext.core.domain.value_objects import Email
 
 email = Email(value="user@example.com")
 print(email.domain)  # "example.com"
@@ -145,7 +145,7 @@ print(email.local_part)  # "user"
 **Address**
 
 ```python
-from flx.core.domain.value_objects import Address
+from flext.core.domain.value_objects import Address
 
 address = Address(
     street="123 Main St",
@@ -159,7 +159,7 @@ print(address.formatted())  # "123 Main St, Springfield, 12345, USA"
 **DateRange**
 
 ```python
-from flx.core.domain.value_objects import DateRange
+from flext.core.domain.value_objects import DateRange
 from datetime import date
 
 range1 = DateRange(start=date(2024, 1, 1), end=date(2024, 1, 31))
@@ -169,16 +169,16 @@ print(range1.overlaps(range2))  # True
 print(range1.duration_days())   # 30
 ```
 
-### Domain Events (`flx.core.events`)
+### Domain Events (`flext.core.events`)
 
 #### DomainEvent
 
-**Location**: `flx.core.events.DomainEvent`
+**Location**: `flext.core.events.DomainEvent`
 
 Represents something important that happened in the domain.
 
 ```python
-from flx.core.events import DomainEvent
+from flext.core.events import DomainEvent
 from datetime import datetime
 
 event = DomainEvent(
@@ -204,14 +204,14 @@ event = DomainEvent(
 
 ## Application Layer
 
-### Bootstrap (`flx.application.Bootstrap`)
+### Bootstrap (`flext.application.Bootstrap`)
 
-**Location**: `flx.application.Bootstrap`
+**Location**: `flext.application.Bootstrap`
 
 Application bootstrap and dependency injection container.
 
 ```python
-from flx.application import Bootstrap, create_bootstrap
+from flext.application import Bootstrap, create_bootstrap
 
 # Create and configure bootstrap
 bootstrap = create_bootstrap()
@@ -238,12 +238,12 @@ user_repo = bootstrap.get_service("user_repo")
 
 #### ApplicationService
 
-**Location**: `flx.application.ApplicationService`
+**Location**: `flext.application.ApplicationService`
 
 Base class for application services (use cases).
 
 ```python
-from flx.application import ApplicationService
+from flext.application import ApplicationService
 
 class CreateUserService(ApplicationService):
     def __init__(self, user_repo: UserRepository, email_service: EmailService):
@@ -273,12 +273,12 @@ class CreateUserService(ApplicationService):
 
 #### CommandService & QueryService
 
-**Location**: `flx.application.CommandService`, `flx.application.QueryService`
+**Location**: `flext.application.CommandService`, `flext.application.QueryService`
 
 Specialized application services for CQRS pattern.
 
 ```python
-from flx.application import CommandService, QueryService
+from flext.application import CommandService, QueryService
 
 class UserCommandService(CommandService):
     async def create_user(self, command: CreateUserCommand) -> None:
@@ -295,14 +295,14 @@ class UserQueryService(QueryService):
 
 ## Adapter Layer
 
-### API Client (`flx.adapters.api_client`)
+### API Client (`flext.adapters.api_client`)
 
-**Location**: `flx.adapters.api_client.ApiClient`
+**Location**: `flext.adapters.api_client.ApiClient`
 
 HTTP client adapter for external API integration.
 
 ```python
-from flx.adapters.api_client import ApiClient
+from flext.adapters.api_client import ApiClient
 
 client = ApiClient(base_url="https://api.example.com")
 
@@ -324,14 +324,14 @@ response = await client.post("/users", json={
 - `put(path: str, **kwargs)` → Response: HTTP PUT request
 - `delete(path: str, **kwargs)` → Response: HTTP DELETE request
 
-### Logging Adapter (`flx.adapters.outbound.logging`)
+### Logging Adapter (`flext.adapters.outbound.logging`)
 
-**Location**: `flx.adapters.outbound.logging.StandardLoggingAdapter`
+**Location**: `flext.adapters.outbound.logging.StandardLoggingAdapter`
 
 Structured logging adapter implementing the domain logging interface.
 
 ```python
-from flx.adapters.outbound.logging import StandardLoggingAdapter
+from flext.adapters.outbound.logging import StandardLoggingAdapter
 
 logger = StandardLoggingAdapter(name="my_service")
 
@@ -351,16 +351,16 @@ logger.error("Database connection failed", extra={
 
 ## Testing Framework
 
-### Declarative Testing (`flx.testing.declarative`)
+### Declarative Testing (`flext.testing.declarative`)
 
 #### TestEngine
 
-**Location**: `flx.testing.declarative.DeclarativeTestEngine`
+**Location**: `flext.testing.declarative.DeclarativeTestEngine`
 
 Modern testing engine for hexagonal architecture.
 
 ```python
-from flx.testing.declarative import create_test_engine, TestMetrics
+from flext.testing.declarative import create_test_engine, TestMetrics
 
 # Create test engine
 engine = create_test_engine()
@@ -382,12 +382,12 @@ assert results.failed == 0
 
 #### TestableAdapter
 
-**Location**: `flx.testing.declarative.TestableAdapter`
+**Location**: `flext.testing.declarative.TestableAdapter`
 
 Base class for creating testable adapters.
 
 ```python
-from flx.testing.declarative import TestableAdapter
+from flext.testing.declarative import TestableAdapter
 
 class MockEmailAdapter(TestableAdapter):
     def __init__(self):
@@ -407,16 +407,16 @@ class MockEmailAdapter(TestableAdapter):
 
 ## Core Interfaces
 
-### Logging Interface (`flx.core.logging_interface`)
+### Logging Interface (`flext.core.logging_interface`)
 
 #### LoggerInterface
 
-**Location**: `flx.core.logging_interface.LoggerInterface`
+**Location**: `flext.core.logging_interface.LoggerInterface`
 
 Domain interface for logging (hexagonal architecture port).
 
 ```python
-from flx.core.logging_interface import LoggerInterface, LogLevel
+from flext.core.logging_interface import LoggerInterface, LogLevel
 
 class MyDomainService:
     def __init__(self, logger: LoggerInterface):
@@ -431,12 +431,12 @@ class MyDomainService:
 
 #### LogLevel
 
-**Location**: `flx.core.logging_interface.LogLevel`
+**Location**: `flext.core.logging_interface.LogLevel`
 
 Enumeration for log levels.
 
 ```python
-from flx.core.logging_interface import LogLevel
+from flext.core.logging_interface import LogLevel
 
 # Available log levels
 LogLevel.DEBUG
@@ -454,12 +454,12 @@ LogLevel.CRITICAL
 
 #### create_bootstrap
 
-**Location**: `flx.application.create_bootstrap`
+**Location**: `flext.application.create_bootstrap`
 
 Factory function for creating configured bootstrap instances.
 
 ```python
-from flx.application import create_bootstrap
+from flext.application import create_bootstrap
 
 bootstrap = create_bootstrap(
     config_path="./config.yaml",
@@ -470,12 +470,12 @@ bootstrap = create_bootstrap(
 
 #### get_logger
 
-**Location**: `flx.get_logger`
+**Location**: `flext.get_logger`
 
 Factory function for creating logger instances.
 
 ```python
-from flx import get_logger
+from flext import get_logger
 
 logger = get_logger(__name__)
 logger.info("Service started")
@@ -489,19 +489,19 @@ logger.info("Service started")
 
 The following APIs from old documentation are **obsolete** and should not be used:
 
-❌ `flx.Entities.BaseEntity` - Use `flx.core.entities.Entity`
-❌ `flx.ValueObjects.ContactInfo` - Use `flx.core.domain.value_objects.Email` + custom value objects
-❌ `flx.Protocols.*` - Use proper Python protocols or interfaces
-❌ `flx.Mixins.*` - Use composition over inheritance
-❌ `UnifiedAdapterManager` - Use `flx.application.Bootstrap`
+❌ `flext.Entities.BaseEntity` - Use `flext.core.entities.Entity`
+❌ `flext.ValueObjects.ContactInfo` - Use `flext.core.domain.value_objects.Email` + custom value objects
+❌ `flext.Protocols.*` - Use proper Python protocols or interfaces
+❌ `flext.Mixins.*` - Use composition over inheritance
+❌ `UnifiedAdapterManager` - Use `flext.application.Bootstrap`
 
 ### Current Best Practices
 
-✅ Use `flx.core.entities.Entity` and `AggregateRoot` for domain entities
-✅ Use `flx.core.domain.value_objects.ValueObject` for immutable domain concepts
-✅ Use `flx.application.ApplicationService` for use cases
-✅ Use `flx.adapters.*` for infrastructure integration
-✅ Use `flx.testing.declarative.*` for testing
+✅ Use `flext.core.entities.Entity` and `AggregateRoot` for domain entities
+✅ Use `flext.core.domain.value_objects.ValueObject` for immutable domain concepts
+✅ Use `flext.application.ApplicationService` for use cases
+✅ Use `flext.adapters.*` for infrastructure integration
+✅ Use `flext.testing.declarative.*` for testing
 
 ---
 
@@ -514,8 +514,8 @@ The following APIs from old documentation are **obsolete** and should not be use
 
 ### **Next Steps**
 
-- [Adapters API Reference](./flx-adapters-comprehensive-reference.md) - Infrastructure adapter APIs
-- [Complete API Documentation](./flx-complete-api.md) - Full framework API coverage
+- [Adapters API Reference](./flext-adapters-comprehensive-reference.md) - Infrastructure adapter APIs
+- [Complete API Documentation](./flext-complete-api.md) - Full framework API coverage
 
 ### **Related Topics**
 
@@ -528,18 +528,18 @@ The following APIs from old documentation are **obsolete** and should not be use
 
 ### **Common API Issues**
 
-- **Import Errors**: Ensure proper module path imports from `flx.core.*`
+- **Import Errors**: Ensure proper module path imports from `flext.core.*`
 - **Type Validation**: Use Pydantic models for complex data validation
 - **Entity Identity**: Always use proper entity ID management patterns
 - **Value Object Immutability**: Ensure value objects remain immutable after creation
 
 ### **API Best Practices**
 
-- Use `flx.core.entities.Entity` and `AggregateRoot` for domain entities
-- Use `flx.core.domain.value_objects.ValueObject` for immutable domain concepts
-- Use `flx.application.ApplicationService` for use cases
-- Use `flx.adapters.*` for infrastructure integration
-- Use `flx.testing.declarative.*` for comprehensive testing
+- Use `flext.core.entities.Entity` and `AggregateRoot` for domain entities
+- Use `flext.core.domain.value_objects.ValueObject` for immutable domain concepts
+- Use `flext.application.ApplicationService` for use cases
+- Use `flext.adapters.*` for infrastructure integration
+- Use `flext.testing.declarative.*` for comprehensive testing
 
 ---
 
@@ -566,7 +566,7 @@ The following APIs from old documentation are **obsolete** and should not be use
 - [Infrastructure Hub](../../infrastructure/index.md) - Infrastructure service APIs that extend core framework functionality
 - [Oracle Integration Guide](../../guides/oracle/index.md) - Oracle integration patterns utilizing these core APIs
 - [Testing Guide](../../development/testing/index.md) - Testing strategies for applications using core framework APIs
-- [Specifications](../../reference/specifications/flx-framework-technical-specification.md) - Technical specifications for core API components
+- [Specifications](../../reference/specifications/flext-framework-technical-specification.md) - Technical specifications for core API components
 
 ---
 

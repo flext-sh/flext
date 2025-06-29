@@ -19,23 +19,23 @@
       "status": "completed", 
       "source_files": 25,
       "consolidated_files": 6,
-      "validation": "validated_against_flx-http-oracle-wms_and_flx-http-oracle-oic_implementations",
+      "validation": "validated_against_flext-http-oracle-wms_and_flext-http-oracle-oic_implementations",
       "location": "/home/marlonsc/pyauto/docs/guides/oracle/"
     },
     "infrastructure_hub_foundation": {
       "status": "completed",
       "source_files": 14,
       "consolidated_files": 1,
-      "validation": "validated_against_/flx/src/flx/infra/_real_code",
+      "validation": "validated_against_/flext/src/flext/infra/_real_code",
       "location": "/home/marlonsc/pyauto/docs/infrastructure/README.md",
       "real_code_validation": {
-        "services_base": "validated_against_/flx/src/flx/infra/services/base.py",
-        "cache_service": "validated_against_/flx/src/flx/infra/cache/cache_service.py", 
-        "http_client": "validated_against_/flx/src/flx/infra/http/client_service.py",
-        "database_engine": "validated_against_/flx/src/flx/infra/database/engine.py",
-        "messaging_bus": "validated_against_/flx/src/flx/infra/messaging/bus.py",
-        "resilience_circuit_breaker": "validated_against_/flx/src/flx/infra/resilience/circuit_breaker.py",
-        "base_adapter": "validated_against_/flx/src/flx/adapters/base.py",
+        "services_base": "validated_against_/flext/src/flext/infra/services/base.py",
+        "cache_service": "validated_against_/flext/src/flext/infra/cache/cache_service.py", 
+        "http_client": "validated_against_/flext/src/flext/infra/http/client_service.py",
+        "database_engine": "validated_against_/flext/src/flext/infra/database/engine.py",
+        "messaging_bus": "validated_against_/flext/src/flext/infra/messaging/bus.py",
+        "resilience_circuit_breaker": "validated_against_/flext/src/flext/infra/resilience/circuit_breaker.py",
+        "base_adapter": "validated_against_/flext/src/flext/adapters/base.py",
         "production_engines": "validated_against_production_engine_implementations"
       }
     }
@@ -95,14 +95,14 @@
         "testing_framework_analysis": "COMPLETED_testing_index_md_updated_to_mandatory_template_format",
         "installation_guide_analysis": "COMPLETED_installation_guide_repository_url_corrected_validated_against_makefile",
         "rfc_architecture_analysis": "✅ COMPLETED_RFC_PROPERLY_MARKED_AS_PROPOSAL_WITH_VALIDATION_NOTES_EXCELLENT_EXAMPLE",
-        "source_code_validation": "✅ FlxStandardLoggingService validated against /flx/src/flx/infra/services/logging.py",
-        "cache_service_validation": "✅ CacheService validated against /flx/src/flx/infra/cache/cache_service.py",
-        "unified_manager_validation": "✅ UnifiedAdapterManager validated against /flx/src/flx/infra/adapters/unified_manager.py",
-        "production_engines_validation": "✅ All production engines exist in /flx/src/flx/infra/*/production_engine.py",
+        "source_code_validation": "✅ FlxStandardLoggingService validated against /flext/src/flext/infra/services/logging.py",
+        "cache_service_validation": "✅ CacheService validated against /flext/src/flext/infra/cache/cache_service.py",
+        "unified_manager_validation": "✅ UnifiedAdapterManager validated against /flext/src/flext/infra/adapters/unified_manager.py",
+        "production_engines_validation": "✅ All production engines exist in /flext/src/flext/infra/*/production_engine.py",
         "oracle_wms_implementation_validation": "❌ CRITICAL_ISSUE_FOUND - Document references OracleWmsRestAdapter but actual implementation is WmsClient in wms_client.py",
         "template_compliance_update": "✅ Applied HOW_TO_DOCUMENT.md content template to migration-guide.md and unified-architecture-guide.md",
         "cross_references_added": "✅ Navigation context and related guides added",
-        "api_reference_validation": "✅ Core API Reference validated against /flx/src/flx/core/entities.py - Entity, AggregateRoot, touch(), add_event() methods confirmed",
+        "api_reference_validation": "✅ Core API Reference validated against /flext/src/flext/core/entities.py - Entity, AggregateRoot, touch(), add_event() methods confirmed",
         "testing_framework_validation": "❌ ➜ ✅ CRITICAL_ISSUE_FOUND - Testing framework documentation showed async with context manager but actual implementation doesn't support it - corrected",
         "content_accuracy": "RIGOROUS_VALIDATION_ONGOING - Migration guide 100%, Oracle WMS corrected, Core API 100%, Testing framework corrected"
       },
@@ -390,7 +390,7 @@
 
   "validation_methodology": {
     "approach": "content_based_validation_against_real_source_code",
-    "source_projects": ["flx-*", "project-*", "oud-*"],
+    "source_projects": ["flext-*", "project-*", "oud-*"],
     "validation_criteria": [
       "accuracy_against_current_implementation",
       "completeness_of_technical_details", 

@@ -25,7 +25,7 @@
 - [🎼 Meltano Integration Guide](./meltano-integration.md) - Complete FLX-Meltano integration guide
 - [🎼 Meltano Plugins Integration](./meltano-plugins-integration.md) - Meltano plugin development and integration
 - [🔧 Meltano Framework Integration](./meltano-framework-integration.md) - Framework-level Meltano integration
-- [📋 Meltano FLX Integration Plan](./meltano-flx-integration-plan.md) - Comprehensive integration roadmap
+- [📋 Meltano FLX Integration Plan](./meltano-flext-integration-plan.md) - Comprehensive integration roadmap
 - [🔄 Legacy Integrations Guide](./legacy-integrations-guide.md) - Legacy system integration patterns
 - [📚 Legacy Integrations Reference](./legacy-integrations-reference.md) - Legacy integration reference materials
 - [💡 Integration Examples & Patterns](./integration-examples-patterns.md) - Practical integration examples
@@ -39,7 +39,7 @@
 1. [Meltano Integration Guide](./meltano-integration.md) - Complete FLX-Meltano integration
 2. [Meltano Plugins Integration](./meltano-plugins-integration.md) - Plugin development and integration
 3. [Meltano Framework Integration](./meltano-framework-integration.md) - Framework-level integration
-4. [Meltano FLX Integration Plan](./meltano-flx-integration-plan.md) - Comprehensive roadmap
+4. [Meltano FLX Integration Plan](./meltano-flext-integration-plan.md) - Comprehensive roadmap
 
 ### Legacy System Integration
 
@@ -61,11 +61,11 @@
 → [Meltano Plugins Integration](./meltano-plugins-integration.md)
 → [Integration Examples & Patterns](./integration-examples-patterns.md)
 → [Meltano Framework Integration](./meltano-framework-integration.md)
-→ [Meltano FLX Integration Plan](./meltano-flx-integration-plan.md)
+→ [Meltano FLX Integration Plan](./meltano-flext-integration-plan.md)
 
 ### Data Engineers
 
-→ [Meltano FLX Integration Plan](./meltano-flx-integration-plan.md)
+→ [Meltano FLX Integration Plan](./meltano-flext-integration-plan.md)
 → [Meltano Plugins Integration](./meltano-plugins-integration.md)
 → [Integration Examples & Patterns](./integration-examples-patterns.md)
 → [Meltano Framework Integration](./meltano-framework-integration.md)
@@ -79,7 +79,7 @@
 
 ### Solution Architects
 
-→ [Meltano FLX Integration Plan](./meltano-flx-integration-plan.md)
+→ [Meltano FLX Integration Plan](./meltano-flext-integration-plan.md)
 → [Integration Examples & Patterns](./integration-examples-patterns.md)
 → [Legacy Integrations Guide](./legacy-integrations-guide.md)
 → [Meltano Framework Integration](./meltano-framework-integration.md)

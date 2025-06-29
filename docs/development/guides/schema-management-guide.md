@@ -4,7 +4,7 @@
 
 [![Schema](https://img.shields.io/badge/schema-JSON_Schema-blue.svg)](#schema-format)
 [![Validation](https://img.shields.io/badge/validation-automated-green.svg)](#schema-validation-adapter)
-[![Integration](https://img.shields.io/badge/integration-FLX_Framework-orange.svg)](#integration-with-flx-framework)
+[![Integration](https://img.shields.io/badge/integration-FLX_Framework-orange.svg)](#integration-with-flext-framework)
 
 **Enterprise schema management for API integration projects using FLX Framework 0.4.0+ with schema extraction, caching, validation, and hexagonal architecture integration**
 
@@ -50,13 +50,13 @@ schemas/
 
 ```bash
 # Extract all schemas from API
-flx schema extract --all --output-dir ./schemas
+flext schema extract --all --output-dir ./schemas
 
 # Extract specific entity schema
-flx schema extract --entity users --output-dir ./schemas
+flext schema extract --entity users --output-dir ./schemas
 
 # Extract with validation
-flx schema extract --entity users --validate --output-dir ./schemas
+flext schema extract --entity users --validate --output-dir ./schemas
 ```
 
 ### Using Make Commands
@@ -75,8 +75,8 @@ make validate-schemas
 ### Programmatic Extraction
 
 ```python
-from flx.adapters.schema import SchemaAdapter
-from flx.core.config import Config
+from flext.adapters.schema import SchemaAdapter
+from flext.core.config import Config
 
 async def extract_schemas():
     config = Config.from_env()
@@ -134,8 +134,8 @@ Schemas follow JSON Schema specification:
 ### Schema Validation Adapter
 
 ```python
-from flx.adapters.base import BaseAdapter
-from flx.core.exceptions import ValidationError
+from flext.adapters.base import BaseAdapter
+from flext.core.exceptions import ValidationError
 import jsonschema
 
 class SchemaValidationAdapter(BaseAdapter):
@@ -166,7 +166,7 @@ class SchemaValidationAdapter(BaseAdapter):
 ### Model Generation from Schemas
 
 ```python
-from flx.core.entities import BaseEntity
+from flext.core.entities import BaseEntity
 from pydantic import create_model
 import json
 
@@ -220,7 +220,7 @@ SCHEMA_LOG_FILE=./logs/schema.log
 ### FLX Configuration
 
 ```python
-from flx.core.config import Config
+from flext.core.config import Config
 
 class SchemaConfig(Config):
     """Configuration for schema management."""
@@ -243,7 +243,7 @@ Log files are generated with specific naming conventions:
 
 ```python
 import logging
-from flx.core.logging import configure_logging
+from flext.core.logging import configure_logging
 
 # Configure schema-specific logging
 configure_logging({

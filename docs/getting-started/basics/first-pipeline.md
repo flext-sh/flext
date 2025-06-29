@@ -60,13 +60,13 @@ Let's start by implementing the core business logic following domain-driven desi
 
 ```python
 # tutorial/domain/models.py
-from flx import Flx
+from flext import Flx
 from typing import List, Optional
 from decimal import Decimal
 from enum import Enum
 
 # Initialize FLX framework
-flx = Flx()
+flext = Flx()
 
 class OrderStatus(str, Enum):
     """Order status enumeration."""
@@ -77,10 +77,10 @@ class OrderStatus(str, Enum):
     CANCELLED = "cancelled"
 
 class CustomerEntity(
-    flx.Entities.BusinessEntity,
-    flx.Mixins.Status,
-    flx.Mixins.Config,
-    flx.Mixins.Metadata
+    flext.Entities.BusinessEntity,
+    flext.Mixins.Status,
+    flext.Mixins.Config,
+    flext.Mixins.Metadata
 ):
     """Customer entity with business capabilities."""
 
@@ -129,7 +129,7 @@ class CustomerEntity(
             "created_at": self.created_at.isoformat()
         }
 
-class OrderEntity(flx.Entities.AggregateRoot):
+class OrderEntity(flext.Entities.AggregateRoot):
     """Order aggregate root that manages domain events."""
 
     def __init__(self, customer_id: str, **kwargs):
@@ -241,7 +241,7 @@ class OrderEntity(flx.Entities.AggregateRoot):
 # Create contact value object
 def create_contact_info(email: str, phone: str = None, address: str = None):
     """Factory function to create contact information."""
-    return flx.ValueObjects.ContactInfo(
+    return flext.ValueObjects.ContactInfo(
         email=email,
         phone=phone or "",
         address=address or ""
@@ -351,9 +351,9 @@ Now let's implement the infrastructure services that our adapters will use.
 # tutorial/application/order_service.py
 from typing import List, Optional
 from decimal import Decimal
-from flx.infra.adapters import UnifiedAdapterManager
-from flx.infra.cache.cache_service import CacheService
-from flx.core.exceptions import FlxApplicationError
+from flext.infra.adapters import UnifiedAdapterManager
+from flext.infra.cache.cache_service import CacheService
+from flext.core.exceptions import FlxApplicationError
 from tutorial.domain.models import CustomerEntity, OrderEntity, OrderStatus
 
 class OrderManagementService:
@@ -566,9 +566,9 @@ import asyncio
 import cyclopts
 from decimal import Decimal
 from typing import Optional
-from flx.infra.adapters import UnifiedAdapterManager
-from flx.adapters.outbound.cache import CacheAdapter
-from flx.infra.services.logging import FlxStandardLoggingService
+from flext.infra.adapters import UnifiedAdapterManager
+from flext.adapters.outbound.cache import CacheAdapter
+from flext.infra.services.logging import FlxStandardLoggingService
 from tutorial.application.order_service import OrderManagementService
 
 app = cyclopts.App(
@@ -957,8 +957,8 @@ import pytest_asyncio
 from decimal import Decimal
 from tutorial.domain.models import CustomerEntity, OrderEntity, OrderStatus
 from tutorial.application.order_service import OrderManagementService
-from flx.infra.adapters import UnifiedAdapterManager
-from flx.adapters.outbound.cache import CacheAdapter
+from flext.infra.adapters import UnifiedAdapterManager
+from flext.adapters.outbound.cache import CacheAdapter
 
 class TestOrderManagement:
     """Comprehensive tests for order management system."""

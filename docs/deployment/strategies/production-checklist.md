@@ -105,30 +105,30 @@ This comprehensive checklist ensures your FLX application is ready for productio
 ```bash
 # Verify infrastructure components
 kubectl get nodes                    # Kubernetes cluster health
-kubectl get pods -n flx-system      # FLX system pods status
+kubectl get pods -n flext-system      # FLX system pods status
 redis-cli -c cluster info           # Redis cluster status
 psql -h db-host -c "SELECT version()"  # Database connectivity
 
 # Resource availability
 kubectl top nodes                   # Node resource usage
-kubectl top pods -n flx-production  # Pod resource usage
+kubectl top pods -n flext-production  # Pod resource usage
 ```
 
 #### Configuration Validation
 
 ```bash
 # Validate FLX configuration
-flx config validate --env production
-flx config show --env production --mask-secrets
+flext config validate --env production
+flext config show --env production --mask-secrets
 
 # Test database connectivity
-flx system health --component database
+flext system health --component database
 
 # Test cache connectivity
-flx system health --component cache
+flext system health --component cache
 
 # Test external integrations
-flx system health --component integrations
+flext system health --component integrations
 ```
 
 ### **Phase 2: Deployment Execution**
@@ -140,30 +140,30 @@ flx system health --component integrations
 kubectl apply -f k8s/production/green/
 
 # Wait for pods to be ready
-kubectl wait --for=condition=ready pod -l app=flx,env=green --timeout=300s
+kubectl wait --for=condition=ready pod -l app=flext,env=green --timeout=300s
 
 # Run smoke tests on green environment
-kubectl exec -it flx-green-pod -- flx system health
+kubectl exec -it flext-green-pod -- flext system health
 
 # Switch traffic to green (if tests pass)
-kubectl patch service flx-service -p '{"spec":{"selector":{"env":"green"}}}'
+kubectl patch service flext-service -p '{"spec":{"selector":{"env":"green"}}}'
 
 # Monitor for 15 minutes, then cleanup blue
-kubectl delete deployment flx-blue
+kubectl delete deployment flext-blue
 ```
 
 #### Rolling Deployment (Alternative)
 
 ```bash
 # Update deployment with new image
-kubectl set image deployment/flx-app flx-container=flx:v0.4.0
+kubectl set image deployment/flext-app flext-container=flext:v0.4.0
 
 # Monitor rollout
-kubectl rollout status deployment/flx-app --timeout=600s
+kubectl rollout status deployment/flext-app --timeout=600s
 
 # Verify deployment
-kubectl get pods -l app=flx
-kubectl logs -l app=flx --tail=100
+kubectl get pods -l app=flext
+kubectl logs -l app=flext --tail=100
 ```
 
 ### **Phase 3: Post-Deployment Validation**
@@ -172,14 +172,14 @@ kubectl logs -l app=flx --tail=100
 
 ```bash
 # Application health
-curl -f https://flx-api.company.com/health
-curl -f https://flx-api.company.com/ready
+curl -f https://flext-api.company.com/health
+curl -f https://flext-api.company.com/ready
 
 # Component health
-flx system health --all --verbose
+flext system health --all --verbose
 
 # Performance check
-flx system info --include-metrics
+flext system info --include-metrics
 ```
 
 #### Smoke Testing
@@ -187,14 +187,14 @@ flx system info --include-metrics
 ```python
 import asyncio
 import aiohttp
-from flx import Flx
+from flext import Flx
 
 async def smoke_test():
     """Basic smoke test for production deployment."""
 
     # Test application creation
-    flx = Flx()
-    customer = flx.Entities.BusinessEntity(
+    flext = Flx()
+    customer = flext.Entities.BusinessEntity(
         name="Smoke Test Customer",
         business_type="Test"
     )
@@ -224,7 +224,7 @@ asyncio.run(smoke_test())
 ```python
 # load_test_config.py
 LOAD_TEST_CONFIG = {
-    "target_url": "https://flx-api.company.com",
+    "target_url": "https://flext-api.company.com",
     "concurrent_users": 100,
     "ramp_up_time": 60,  # seconds
     "test_duration": 300,  # 5 minutes
@@ -247,7 +247,7 @@ LOAD_TEST_CONFIG = {
 
 ```bash
 # Run load test with Locust
-locust -f load_test.py --host https://flx-api.company.com \
+locust -f load_test.py --host https://flext-api.company.com \
        --users 100 --spawn-rate 10 --run-time 5m \
        --html load_test_report.html
 
@@ -255,7 +255,7 @@ locust -f load_test.py --host https://flx-api.company.com \
 k6 run --vus 100 --duration 5m load_test.js
 
 # Analyze results
-flx system metrics --during-load-test
+flext system metrics --during-load-test
 ```
 
 ### **Performance Metrics**
@@ -301,10 +301,10 @@ flx system metrics --during-load-test
 docker run --rm -v $(pwd):/workspace securityscan:latest /workspace
 
 # Check TLS configuration
-testssl.sh https://flx-api.company.com
+testssl.sh https://flext-api.company.com
 
 # Verify access controls
-kubectl auth can-i create pods --as=system:serviceaccount:flx:default
+kubectl auth can-i create pods --as=system:serviceaccount:flext:default
 
 # Check secret encryption
 kubectl get secrets -o yaml | grep -c "encryptionConfig"
@@ -320,12 +320,12 @@ kubectl get secrets -o yaml | grep -c "encryptionConfig"
 # Monitor these key metrics
 CRITICAL_METRICS = {
     "application": [
-        "flx_requests_total",
-        "flx_request_duration_seconds",
-        "flx_active_connections",
-        "flx_cache_hit_ratio",
-        "flx_database_connections",
-        "flx_error_rate"
+        "flext_requests_total",
+        "flext_request_duration_seconds",
+        "flext_active_connections",
+        "flext_cache_hit_ratio",
+        "flext_database_connections",
+        "flext_error_rate"
     ],
     "infrastructure": [
         "cpu_usage_percent",
@@ -349,10 +349,10 @@ CRITICAL_METRICS = {
 ```yaml
 # alerting-rules.yml
 groups:
-  - name: flx-application
+  - name: flext-application
     rules:
       - alert: HighErrorRate
-        expr: flx_error_rate > 0.05
+        expr: flext_error_rate > 0.05
         for: 5m
         labels:
           severity: critical
@@ -360,7 +360,7 @@ groups:
           summary: "High error rate detected"
 
       - alert: SlowResponseTime
-        expr: flx_request_duration_95th > 0.5
+        expr: flext_request_duration_95th > 0.5
         for: 5m
         labels:
           severity: warning
@@ -368,7 +368,7 @@ groups:
           summary: "Slow response times detected"
 
       - alert: DatabaseConnectionPool
-        expr: flx_database_connections / flx_database_pool_size > 0.8
+        expr: flext_database_connections / flext_database_pool_size > 0.8
         for: 5m
         labels:
           severity: warning
@@ -384,10 +384,10 @@ groups:
 # Dashboard metrics configuration
 DASHBOARD_METRICS = {
     "overview": {
-        "requests_per_minute": "rate(flx_requests_total[1m]) * 60",
-        "error_percentage": "flx_error_rate * 100",
-        "avg_response_time": "avg(flx_request_duration_seconds)",
-        "active_users": "flx_active_sessions"
+        "requests_per_minute": "rate(flext_requests_total[1m]) * 60",
+        "error_percentage": "flext_error_rate * 100",
+        "avg_response_time": "avg(flext_request_duration_seconds)",
+        "active_users": "flext_active_sessions"
     },
     "infrastructure": {
         "cpu_usage": "avg(cpu_usage_percent)",
@@ -396,9 +396,9 @@ DASHBOARD_METRICS = {
         "cache_health": "up{job='redis'}"
     },
     "business": {
-        "orders_per_hour": "rate(flx_orders_total[1h]) * 3600",
-        "customer_growth": "increase(flx_customers_total[24h])",
-        "revenue_rate": "rate(flx_revenue_total[1h]) * 3600"
+        "orders_per_hour": "rate(flext_orders_total[1h]) * 3600",
+        "customer_growth": "increase(flext_customers_total[24h])",
+        "revenue_rate": "rate(flext_revenue_total[1h]) * 3600"
     }
 }
 ```
@@ -427,25 +427,25 @@ DASHBOARD_METRICS = {
 
 ```bash
 # Kubernetes rollback
-kubectl rollout undo deployment/flx-app
-kubectl rollout status deployment/flx-app
+kubectl rollout undo deployment/flext-app
+kubectl rollout status deployment/flext-app
 
 # Database rollback (if needed)
-flx db rollback --to-version previous
+flext db rollback --to-version previous
 
 # Cache invalidation
-flx cache clear --pattern "app:*"
+flext cache clear --pattern "app:*"
 ```
 
 #### Manual Rollback
 
 ```bash
 # Switch to previous version
-kubectl patch deployment flx-app -p '{"spec":{"template":{"spec":{"containers":[{"name":"flx","image":"flx:v0.3.9"}]}}}}'
+kubectl patch deployment flext-app -p '{"spec":{"template":{"spec":{"containers":[{"name":"flext","image":"flext:v0.3.9"}]}}}}'
 
 # Verify rollback
-kubectl get pods -l app=flx
-flx system health --all
+kubectl get pods -l app=flext
+flext system health --all
 ```
 
 ## ✅ **Final Validation**

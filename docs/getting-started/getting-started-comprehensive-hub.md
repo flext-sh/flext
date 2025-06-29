@@ -22,14 +22,14 @@ Based on **actual inspection** of CLAUDE.md and project structure, the getting-s
 source .venv/bin/activate       # ✅ DOCS ACCURATE: Virtual environment
 make setup                      # ✅ DOCS ACCURATE: Complete setup
 make venv-install-dev          # ✅ DOCS ACCURATE: Dev dependencies
-make test PROJECT=flx          # ✅ DOCS ACCURATE: Project-specific testing
+make test PROJECT=flext          # ✅ DOCS ACCURATE: Project-specific testing
 make lint                      # ✅ DOCS ACCURATE: Code quality
-.venv/bin/python -m mypy flx/src/  # ✅ DOCS ACCURATE: Type checking
+.venv/bin/python -m mypy flext/src/  # ✅ DOCS ACCURATE: Type checking
 
 # Project Structure - Real Monorepo:
 PyAuto/
-├── flx/                       # ✅ DOCS ACCURATE: Core framework
-├── flx-*-oracle-*/           # ✅ DOCS ACCURATE: Oracle adapters
+├── flext/                       # ✅ DOCS ACCURATE: Core framework
+├── flext-*-oracle-*/           # ✅ DOCS ACCURATE: Oracle adapters
 ├── dc-oracle-*/              # ✅ DOCS ACCURATE: Legacy projects
 ├── projeto-*/                # ✅ DOCS ACCURATE: Real implementations
 └── CLAUDE.md                 # ✅ DOCS ACCURATE: Development guide
@@ -80,10 +80,10 @@ make venv-install-dev                     # ✅ All dev dependencies
 
 # Project Structure (Real monorepo)
 PyAuto/                                   # ✅ Workspace root
-├── flx/                                 # ✅ Core framework
-├── flx_http_oracle_wms/                # ✅ WMS adapter
-├── flx_http_oracle_oic/                # ✅ OIC adapter
-├── flx_database_oracle/                # ✅ Database adapter
+├── flext/                                 # ✅ Core framework
+├── flext_http_oracle_wms/                # ✅ WMS adapter
+├── flext_http_oracle_oic/                # ✅ OIC adapter
+├── flext_database_oracle/                # ✅ Database adapter
 └── CLAUDE.md                           # ✅ Development guide
 ```
 
@@ -101,7 +101,7 @@ Basic Learning Journey:
 └── [Progressive learning design] ✅ Beginner to advanced
 
 Concept Foundation:
-├── flx-framework-overview.md ✅ Framework overview
+├── flext-framework-overview.md ✅ Framework overview
 ├── concepts.md ✅ Core concepts
 └── [Hexagonal architecture intro] ✅ Architecture understanding
 ```
@@ -110,7 +110,7 @@ Concept Foundation:
 
 ```python
 # ✅ QUICKSTART MATCHES REALITY: Real FLX usage patterns
-from flx import ApplicationService         # ✅ Core import matches docs
+from flext import ApplicationService         # ✅ Core import matches docs
 
 class MyFirstApp(ApplicationService):     # ✅ Pattern matches quickstart
     """First application exactly as documented."""
@@ -132,7 +132,7 @@ class MyFirstApp(ApplicationService):     # ✅ Pattern matches quickstart
 
 ```markdown
 Core Concepts:
-├── flx-framework-overview.md ✅ Framework architecture
+├── flext-framework-overview.md ✅ Framework architecture
 ├── concepts.md ✅ Fundamental concepts
 └── [Hexagonal architecture principles] ✅ Design patterns
 
@@ -156,8 +156,8 @@ Advanced Concepts:
 # Clear separation: domain and infrastructure    ✅
 
 # Real FLX Components (CLAUDE.md validated):
-# 1. FLX Framework (/flx/) - Core implementation     ✅
-# 2. Oracle Adapters (/flx-*-oracle-*/) - Specialized ✅
+# 1. FLX Framework (/flext/) - Core implementation     ✅
+# 2. Oracle Adapters (/flext-*-oracle-*/) - Specialized ✅
 # 3. Legacy Projects (/dc-oracle-*/) - Migration     ✅
 # 4. Implementation Projects (/projeto-*/) - Real    ✅
 ```
@@ -178,8 +178,8 @@ Development Environment:
 Common Development Tasks:
 ├── Testing workflows ✅ make test, make test-cov
 ├── Code quality automation ✅ make lint, make fix, make format
-├── Type checking procedures ✅ mypy flx/src/
-└── Build automation ✅ make build PROJECT=flx
+├── Type checking procedures ✅ mypy flext/src/
+└── Build automation ✅ make build PROJECT=flext
 
 Project Management:
 ├── Dependency synchronization ✅ make sync-dependencies
@@ -195,13 +195,13 @@ Project Management:
 
 # Daily Development (CLAUDE.md validated)
 source .venv/bin/activate                 # ✅ Environment activation
-make test PROJECT=flx                     # ✅ Project-specific testing
+make test PROJECT=flext                     # ✅ Project-specific testing
 make test k="test_name"                   # ✅ Specific test execution
 make lint                                 # ✅ Code quality checks
 make fix                                  # ✅ Auto-fix issues
 
 # Type Checking (CLAUDE.md specific)
-.venv/bin/python -m mypy flx/src/         # ✅ Type checking command
+.venv/bin/python -m mypy flext/src/         # ✅ Type checking command
 
 # Project Management (CLAUDE.md workflow)
 make sync-dependencies                    # ✅ Dependency synchronization
@@ -249,7 +249,7 @@ make status                              # ✅ Workspace status
 Complete Beginners:
 ├── installation-guide.md # Environment setup
 ├── quickstart.md # First steps
-├── flx-framework-overview.md # Framework understanding
+├── flext-framework-overview.md # Framework understanding
 └── first-pipeline.md # First practical work
 
 Experienced Developers:
@@ -259,7 +259,7 @@ Experienced Developers:
 └── [CLAUDE.md reference] # Development commands
 
 Team Leads & Architects:
-├── flx-framework-overview.md # Architecture overview
+├── flext-framework-overview.md # Architecture overview
 ├── concepts.md # Design principles
 ├── [Architecture documentation] # System design
 └── [Development standards] # Team guidelines
@@ -272,7 +272,7 @@ Quick Proof of Concept:
 ├── installation-guide.md → quickstart.md → first-pipeline.md
 
 Deep Framework Understanding:
-├── installation-guide.md → flx-framework-overview.md → concepts.md
+├── installation-guide.md → flext-framework-overview.md → concepts.md
 
 Production Development:
 ├── installation-guide.md → quickstart-advanced.md → [Development Hub]

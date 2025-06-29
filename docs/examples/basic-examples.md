@@ -76,10 +76,10 @@ The basic examples serve as your entry point to understanding FLX's hexagonal ar
 source .venv/bin/activate
 
 # Verify FLX installation
-python -c "import flx; print('FLX framework loaded successfully')"
+python -c "import flext; print('FLX framework loaded successfully')"
 
 # Set Python path for examples
-export PYTHONPATH=/home/marlonsc/pyauto/flx/src:$PYTHONPATH
+export PYTHONPATH=/home/marlonsc/pyauto/flext/src:$PYTHONPATH
 ```
 
 ### Execution Methods
@@ -214,7 +214,7 @@ except Exception as e:
 
 ```python
 # Initialize structured logger
-logger = FlxLogger("flx.examples.quickstart")
+logger = FlxLogger("flext.examples.quickstart")
 
 # Log with structured metadata
 logger.info("Operation completed", extra={

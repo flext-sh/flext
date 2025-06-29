@@ -47,16 +47,16 @@ This document showcases the spectacular improvements achieved through comprehens
 import asyncio
 from typing import Any
 
-from flx import ApiClient
-from flx.adapters.outbound.http import HttpClientAdapter
-from flx.core.logging import FlxLogger
-from flx.core.advanced_mixins import AdvancedAdapterMixin
+from flext import ApiClient
+from flext.adapters.outbound.http import HttpClientAdapter
+from flext.core.logging import FlxLogger
+from flext.core.advanced_mixins import AdvancedAdapterMixin
 
 
 async def main() -> None:
     """Enhanced FLX usage example showcasing modern patterns."""
     # Setup structured logging with enterprise features
-    logger = FlxLogger("flx.examples.modern_quickstart")
+    logger = FlxLogger("flext.examples.modern_quickstart")
 
     # Create client with advanced configuration
     client = ApiClient()
@@ -120,9 +120,9 @@ if __name__ == "__main__":
 
 ```python
 # examples/basic/multi_protocol.py
-from flx import FlxProject, flx_project
-from flx.adapters import DatabaseAdapter, HttpClientAdapter, MessagingAdapter
-from flx.core.advanced_mixins import AdvancedAdapterMixin
+from flext import FlxProject, flext_project
+from flext.adapters import DatabaseAdapter, HttpClientAdapter, MessagingAdapter
+from flext.core.advanced_mixins import AdvancedAdapterMixin
 
 
 class EnterpriseAdapter(AdvancedAdapterMixin):
@@ -136,7 +136,7 @@ class EnterpriseAdapter(AdvancedAdapterMixin):
         )
 
 
-@flx_project
+@flext_project
 class MultiProtocolProject(FlxProject):
     """Modern multi-protocol project with declarative configuration."""
 
@@ -198,12 +198,12 @@ async def demonstrate_multi_protocol():
 from typing import List, Dict, Any
 from dataclasses import dataclass
 
-from flx import AggregateRoot, DomainEvent
-from flx.infrastructure import (
+from flext import AggregateRoot, DomainEvent
+from flext.infrastructure import (
     ServiceRegistry, MessageBus, CircuitBreaker,
     ServiceDiscovery, APIGateway, DistributedTracing
 )
-from flx.core.advanced_mixins import (
+from flext.core.advanced_mixins import (
     ServiceConnectionMixin, OperationTrackingMixin, ServiceDelegationMixin
 )
 
@@ -335,10 +335,10 @@ class OrderProcessingFailedEvent(DomainEvent):
 
 ```python
 # examples/advanced/domain_example_enhanced.py
-from flx import AggregateRoot, Entity, ValueObject, DomainEvent
-from flx.core.exceptions import BusinessRuleViolationError
-from flx.core.logging import FlxLogger
-from flx.core.advanced_mixins import HierarchicalConfigMixin
+from flext import AggregateRoot, Entity, ValueObject, DomainEvent
+from flext.core.exceptions import BusinessRuleViolationError
+from flext.core.logging import FlxLogger
+from flext.core.advanced_mixins import HierarchicalConfigMixin
 
 
 # Enhanced Value Object with validation
@@ -634,15 +634,15 @@ async def demonstrate_enhanced_domain():
 
 ```python
 # examples/advanced/declarative_example_enhanced.py
-from flx import FlxProject, flx_project
-from flx.declarative.mixins import (
+from flext import FlxProject, flext_project
+from flext.declarative.mixins import (
     FlxApiMixin, FlxDatabaseMixin, FlxHttpClientMixin,
     FlxIntegrationMixin, FlxSecurityMixin, FlxMonitoringMixin
 )
-from flx.declarative.testing import run_full_test_suite, validate_test_coverage
+from flext.declarative.testing import run_full_test_suite, validate_test_coverage
 
 
-@flx_project
+@flext_project
 class EnterpriseECommerceProject(
     FlxProject,
     FlxApiMixin,
@@ -845,11 +845,11 @@ class ModernHttpAdapter(AdvancedAdapterMixin, BaseAdapter):
 
 ```python
 # examples/enterprise/complete_platform.py
-from flx.infrastructure import (
+from flext.infrastructure import (
     DatabaseEngine, CacheEngine, MessagingEngine, HTTPEngine,
     SecurityEngine, MonitoringEngine, WorkflowEngine
 )
-from flx.core.advanced_mixins import AdvancedAdapterMixin
+from flext.core.advanced_mixins import AdvancedAdapterMixin
 
 
 class EnterprisePlatform(AdvancedAdapterMixin):
@@ -962,7 +962,7 @@ class EnterprisePlatform(AdvancedAdapterMixin):
 ### **Prerequisites**
 
 - [Getting Started Guide](../getting-started/basics/quickstart.md) - Basic FLX framework understanding
-- [Architecture Overview](../architecture/design/flx-framework-architecture-guide.md) - Hexagonal architecture concepts
+- [Architecture Overview](../architecture/design/flext-framework-architecture-guide.md) - Hexagonal architecture concepts
 - [Development Standards](../development/standards/index.md) - Code quality and standards
 
 ### **Next Steps**

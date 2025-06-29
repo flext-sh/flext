@@ -35,9 +35,9 @@ Domain-Driven Design (DDD) patterns in FLX enable sophisticated enterprise appli
 ### **Context Definition**
 
 ```python
-# flx/domain/customers/context.py
-from flx.core.base import DomainContext
-from flx.core.domain import AggregateRoot, ValueObject, DomainEvent
+# flext/domain/customers/context.py
+from flext.core.base import DomainContext
+from flext.core.domain import AggregateRoot, ValueObject, DomainEvent
 
 class CustomerContext(DomainContext):
     """Customer management bounded context."""

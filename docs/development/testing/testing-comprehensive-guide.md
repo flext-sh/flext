@@ -171,7 +171,7 @@ pytest tests/integration/test_logging_integration.py
 
 ```bash
 # Run with coverage reporting
-pytest --cov=flx --cov-report=html --cov-report=term-missing
+pytest --cov=flext --cov-report=html --cov-report=term-missing
 
 # Run specific test methods
 pytest tests/unit/core/test_entities.py::TestEntity::test_entity_creation
@@ -223,7 +223,7 @@ async def event_loop():
     loop.close()
 
 @pytest.fixture
-async def flx_application():
+async def flext_application():
     """Create test FLX application with all adapters."""
     app = FlxApplication(
         name="test-app",
@@ -432,13 +432,13 @@ class TestUserServiceIntegration:
     @pytest.mark.asyncio
     async def test_complete_user_registration_flow(
         self,
-        flx_application,
+        flext_application,
         db_session
     ):
         """Test complete user registration with all components."""
         # Get services from container
-        user_service = flx_application.get_service(UserService)
-        event_bus = flx_application.get_service(EventBus)
+        user_service = flext_application.get_service(UserService)
+        event_bus = flext_application.get_service(EventBus)
 
         # Setup event handler to capture events
         captured_events = []
@@ -460,7 +460,7 @@ class TestUserServiceIntegration:
         assert result.user_id is not None
 
         # Verify user was persisted
-        user_repo = flx_application.get_service(UserRepository)
+        user_repo = flext_application.get_service(UserRepository)
         saved_user = await user_repo.get_by_id(result.user_id)
         assert saved_user is not None
         assert saved_user.username == "integration_test"
@@ -507,7 +507,7 @@ markers =
 
 ```ini
 [run]
-source = src/flx
+source = src/flext
 omit =
     */tests/*
     */migrations/*

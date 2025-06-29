@@ -25,7 +25,7 @@
 
 - **📂 Section Hub**: [Meltano Plugins Hub](#) (Current)
 - **🏠 Documentation Root**: [Root Index](../index.md)
-- **🔧 Integration Guide**: [Meltano-FLX Integration](../guides/integration/meltano-flx-integration-plan.md)
+- **🔧 Integration Guide**: [Meltano-FLX Integration](../guides/integration/meltano-flext-integration-plan.md)
 
 ---
 

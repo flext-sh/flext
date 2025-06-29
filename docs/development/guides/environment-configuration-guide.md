@@ -43,7 +43,7 @@ Project Root/
 
 ```python
 # Configuration loading order (highest to lowest priority)
-from flx.core.config import ConfigLoader
+from flext.core.config import ConfigLoader
 
 config = ConfigLoader.load_with_priority([
     ".internal.invalid",      # Local development (highest priority)
@@ -56,7 +56,7 @@ config = ConfigLoader.load_with_priority([
 ### 3. Validation and Security
 
 ```python
-from flx.core.config import ConfigValidator, RequiredConfig
+from flext.core.config import ConfigValidator, RequiredConfig
 
 class WMSConfig(RequiredConfig):
     """WMS configuration with validation."""
@@ -539,7 +539,7 @@ def decrypt_config_value(encrypted_value: str, key: str) -> str:
 ### 1. Configuration Health Checks
 
 ```python
-from flx.adapters.health import HealthCheck
+from flext.adapters.health import HealthCheck
 
 class ConfigurationHealthCheck(HealthCheck):
     """Health check for configuration validation."""

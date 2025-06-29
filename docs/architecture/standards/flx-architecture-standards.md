@@ -64,12 +64,12 @@ Leverage modern Python features for code reduction:
 
 ## Hexagonal Architecture Implementation
 
-### 4. Core Domain (`flx.core`)
+### 4. Core Domain (`flext.core`)
 
 The domain layer contains pure business logic with zero external dependencies:
 
 ```
-flx.core/
+flext.core/
 ├── base.py          # Base abstractions (Entity, ValueObject, DomainService)
 ├── entities.py      # Domain entities and aggregate roots
 ├── value_objects.py # Immutable value objects
@@ -86,12 +86,12 @@ flx.core/
 - Leverage Python 3.13 protocols for interfaces
 - Keep domain pure - no infrastructure dependencies
 
-### 5. Infrastructure Layer (`flx.infra`)
+### 5. Infrastructure Layer (`flext.infra`)
 
 All concrete implementations and external integrations:
 
 ```
-flx.infra/
+flext.infra/
 ├── adapters/        # Protocol adapter implementations
 ├── config/          # Configuration management
 ├── logging/         # Structured logging with Logfire
@@ -102,12 +102,12 @@ flx.infra/
 └── plugins/         # Plugin discovery and management
 ```
 
-### 6. Ports Architecture (`flx.ports`)
+### 6. Ports Architecture (`flext.ports`)
 
 Clean interfaces between domain and infrastructure:
 
 ```
-flx.ports/
+flext.ports/
 ├── inbound/         # Driving ports (API, CLI, Events)
 │   ├── api.py       # HTTP/gRPC API ports
 │   ├── cli.py       # CLI command ports
@@ -118,12 +118,12 @@ flx.ports/
     └── messaging.py # Message queue ports
 ```
 
-### 7. Adapter Pattern (`flx.adapters`)
+### 7. Adapter Pattern (`flext.adapters`)
 
 Protocol-specific implementations as hexagonal adapters:
 
 ```
-flx.adapters/
+flext.adapters/
 ├── inbound/         # Driving adapters
 │   ├── api/         # FastAPI/Flask adapters
 │   ├── cli/         # Cyclopts CLI adapter
@@ -168,12 +168,12 @@ class ProtocolPlugin(Protocol):
 
 | Component | Implementation                  | Location                        |
 | --------- | ------------------------------- | ------------------------------- |
-| Logging   | Structured logging with Logfire | `flx.infra.logging.structured`  |
-| Config    | YAML + Environment variables    | `flx.infra.config.hierarchical` |
-| CLI       | Cyclopts with auto-discovery    | `flx.infra.cli.cyclopts`        |
-| Output    | Rich console output             | `flx.infra.output.rich`         |
-| Auth      | Multi-provider authentication   | `flx.infra.security.auth`       |
-| Cache     | Redis with local fallback       | `flx.infra.cache.hybrid`        |
+| Logging   | Structured logging with Logfire | `flext.infra.logging.structured`  |
+| Config    | YAML + Environment variables    | `flext.infra.config.hierarchical` |
+| CLI       | Cyclopts with auto-discovery    | `flext.infra.cli.cyclopts`        |
+| Output    | Rich console output             | `flext.infra.output.rich`         |
+| Auth      | Multi-provider authentication   | `flext.infra.security.auth`       |
+| Cache     | Redis with local fallback       | `flext.infra.cache.hybrid`        |
 
 ### 11. Configuration Hierarchy
 
@@ -197,7 +197,7 @@ export FLX_PROFILE=production
 The unified `ApiClient` facade:
 
 ```python
-from flx import ApiClient
+from flext import ApiClient
 
 # One client for all protocols
 client = ApiClient()
@@ -220,7 +220,7 @@ user = await client.auth.authenticate(username="user", password="pass")
 Event-driven integration using domain events:
 
 ```python
-from flx.core.events import FlxDomainEvent
+from flext.core.events import FlxDomainEvent
 from pydantic import Field
 
 class InventoryUpdatedEvent(FlxDomainEvent):
@@ -262,7 +262,7 @@ Coverage requirements:
 ## Example: E-commerce Integration
 
 ```python
-# Domain entity (flx/core/entities.py)
+# Domain entity (flext/core/entities.py)
 class ShoppingCart(AggregateRoot):
     """Shopping cart aggregate."""
 
@@ -280,14 +280,14 @@ class ShoppingCart(AggregateRoot):
             quantity=quantity
         )
 
-# Port definition (flx/ports/outbound/commerce.py)
+# Port definition (flext/ports/outbound/commerce.py)
 class CommercePort(Protocol):
     """E-commerce integration port."""
 
     async def get_cart(self, cart_id: str) -> ShoppingCart: ...
     async def update_cart(self, event: ItemAddedEvent) -> None: ...
 
-# Adapter implementation (flx/adapters/outbound/http/commerce_adapter.py)
+# Adapter implementation (flext/adapters/outbound/http/commerce_adapter.py)
 class HTTPCommerceAdapter(CommercePort):
     """HTTP commerce adapter."""
 

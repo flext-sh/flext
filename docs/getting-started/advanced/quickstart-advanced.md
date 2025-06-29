@@ -7,23 +7,23 @@ Get up and running with FLX in minutes! This guide will walk you through creatin
 ### 1. Basic Setup
 
 ```python
-from flx import Flx
+from flext import Flx
 
 # Initialize the FLX framework
-flx = Flx()
+flext = Flx()
 
 # Access organized domain components
-entities = flx.Entities              # Rich entity classes
-protocols = flx.Protocols            # Type protocols for interfaces
-mixins = flx.Mixins                  # Composable functionality
-value_objects = flx.ValueObjects     # Immutable data structures
+entities = flext.Entities              # Rich entity classes
+protocols = flext.Protocols            # Type protocols for interfaces
+mixins = flext.Mixins                  # Composable functionality
+value_objects = flext.ValueObjects     # Immutable data structures
 ```
 
 ### 2. Create Your First Entity
 
 ```python
 # Create a simple domain entity
-user = flx.Entities.BaseEntity(name="John Doe")
+user = flext.Entities.BaseEntity(name="John Doe")
 
 print(f"Created user: {user.name}")
 print(f"Entity ID: {user.id}")
@@ -44,16 +44,16 @@ Is active: True
 
 ```python
 # Create different types of entities
-customer = flx.Entities.BusinessEntity(
+customer = flext.Entities.BusinessEntity(
     name="Acme Corporation",
     business_type="Enterprise"
 )
 
-order = flx.Entities.AggregateRoot(
+order = flext.Entities.AggregateRoot(
     name="Order #12345"
 )
 
-service = flx.Entities.ServiceEntity(
+service = flext.Entities.ServiceEntity(
     name="Payment Gateway",
     service_type="REST",
     endpoint="https://api.payments.com"
@@ -69,10 +69,10 @@ print(f"Service: {service.name} at {service.endpoint}")
 ```python
 # Create entities with specific capabilities
 class AdvancedCustomer(
-    flx.Entities.BaseEntity,    # Identity and lifecycle
-    flx.Mixins.Status,          # Activation/deactivation
-    flx.Mixins.Config,          # Configuration management
-    flx.Mixins.Metadata         # Flexible metadata storage
+    flext.Entities.BaseEntity,    # Identity and lifecycle
+    flext.Mixins.Status,          # Activation/deactivation
+    flext.Mixins.Config,          # Configuration management
+    flext.Mixins.Metadata         # Flexible metadata storage
 ):
     pass
 
@@ -97,7 +97,7 @@ print(f"Active: {customer.active}")
 
 ```python
 # Create value objects for structured data
-contact_info = flx.ValueObjects.ContactInfo(
+contact_info = flext.ValueObjects.ContactInfo(
     email="john.doe@acme.com",
     phone="+1-555-0123",
     address="123 Business St, Tech City, TC 12345"
@@ -108,7 +108,7 @@ print(f"Email: {contact_info.email}")
 print(f"Phone: {contact_info.phone}")
 
 # Create business events
-event = flx.ValueObjects.FlxDomainEvent(
+event = flext.ValueObjects.FlxDomainEvent(
     event_type="CustomerRegistered",
     aggregate_id=customer.id,
     aggregate_type="Customer",
@@ -128,7 +128,7 @@ print(f"Event ID: {event.event_id}")
 
 ```python
 # Aggregate roots can raise domain events
-order = flx.Entities.AggregateRoot(name="Order #12345")
+order = flext.Entities.AggregateRoot(name="Order #12345")
 
 # Raise business events
 order.raise_domain_event("OrderCreated", {
@@ -165,11 +165,11 @@ FLX implements hexagonal architecture with clear layer separation:
 
 ```python
 # Domain Layer - Pure business logic
-user = flx.Entities.BaseEntity(name="User")     # No external dependencies
+user = flext.Entities.BaseEntity(name="User")     # No external dependencies
 
 # Ports Layer - Define contracts
-from flx.ports.secondary.events import FlxEventPublisher
-from flx.ports.secondary.external import FlxHttpService
+from flext.ports.secondary.events import FlxEventPublisher
+from flext.ports.secondary.external import FlxHttpService
 
 # Adapters Layer - Implement contracts
 # (Covered in advanced tutorials)
@@ -182,25 +182,25 @@ from flx.ports.secondary.external import FlxHttpService
 
 ```python
 # Base entity - fundamental identity and lifecycle
-base = flx.Entities.BaseEntity(name="Base Entity")
+base = flext.Entities.BaseEntity(name="Base Entity")
 
 # Business entity - domain-specific entities
-business = flx.Entities.BusinessEntity(
+business = flext.Entities.BusinessEntity(
     name="Business Entity",
     business_type="Service"
 )
 
 # Aggregate root - manages domain events
-aggregate = flx.Entities.AggregateRoot(name="Aggregate Root")
+aggregate = flext.Entities.AggregateRoot(name="Aggregate Root")
 
 # Service entity - represents external services
-service = flx.Entities.ServiceEntity(
+service = flext.Entities.ServiceEntity(
     name="External API",
     service_type="REST"
 )
 
 # Timestamped entity - automatic timestamp management
-timestamped = flx.Entities.TimestampedEntity(name="Time Tracked")
+timestamped = flext.Entities.TimestampedEntity(name="Time Tracked")
 ```
 
 ### 3. Type Safety and Validation
@@ -209,7 +209,7 @@ timestamped = flx.Entities.TimestampedEntity(name="Time Tracked")
 # All entities use Pydantic for validation
 try:
     # This will validate automatically
-    user = flx.Entities.BaseEntity(
+    user = flext.Entities.BaseEntity(
         name="Valid User",
         active=True  # Boolean validation
     )
@@ -219,7 +219,7 @@ except ValueError as e:
     print(f"❌ Validation error: {e}")
 
 # Type hints provide IDE support
-def process_entity(entity: flx.Entities.BaseEntity) -> str:
+def process_entity(entity: flext.Entities.BaseEntity) -> str:
     """Process an entity and return its description."""
     return f"Processing {entity.name} (ID: {entity.id})"
 
@@ -231,7 +231,7 @@ print(result)
 
 ```python
 # Use factory for complex entity creation
-factory = flx.EntityFactory()
+factory = flext.EntityFactory()
 
 # Factory can create entities with predefined configurations
 customer_entity = factory.create_entity(
@@ -253,18 +253,18 @@ print(f"Type: {type(customer_entity).__name__}")
 Let's build a simple order management system combining all concepts:
 
 ```python
-from flx import Flx
+from flext import Flx
 from datetime import datetime
 
 # Initialize FLX
-flx = Flx()
+flext = Flx()
 
 # Create a customer with advanced capabilities
 class Customer(
-    flx.Entities.BusinessEntity,
-    flx.Mixins.Status,
-    flx.Mixins.Config,
-    flx.Mixins.Metadata
+    flext.Entities.BusinessEntity,
+    flext.Mixins.Status,
+    flext.Mixins.Config,
+    flext.Mixins.Metadata
 ):
     pass
 
@@ -279,14 +279,14 @@ customer.add_metadata("industry", "electronics")
 customer.activate()
 
 # Create contact information
-contact = flx.ValueObjects.ContactInfo(
+contact = flext.ValueObjects.ContactInfo(
     email="orders@acme-electronics.com",
     phone="+1-555-ACME",
     address="456 Commerce Blvd, Business City, BC 67890"
 )
 
 # Create an order (aggregate root for events)
-order = flx.Entities.AggregateRoot(name="Order #ORD-2024-001")
+order = flext.Entities.AggregateRoot(name="Order #ORD-2024-001")
 
 # Raise domain events for the order
 order.raise_domain_event("OrderStarted", {

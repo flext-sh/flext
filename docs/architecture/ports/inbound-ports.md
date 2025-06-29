@@ -49,7 +49,7 @@ Inbound ports (driving ports) define the interfaces through which external actor
 
 ## 📚 **Inbound Port Types**
 
-Based on actual implementation in `/flx/src/flx/ports/inbound/`:
+Based on actual implementation in `/flext/src/flext/ports/inbound/`:
 
 ### **1. Command Ports**
 
@@ -57,7 +57,7 @@ For executing domain commands (write operations):
 
 ```python
 from typing import Protocol, TypeVar, Any
-from flx.domain.commands import Command
+from flext.domain.commands import Command
 
 TCommand = TypeVar('TCommand', bound=Command)
 TResult = TypeVar('TResult')
@@ -77,7 +77,7 @@ class CommandPort(Protocol):
 **Real Implementation Example:**
 
 ```python
-from flx.application.commands import CreateOrderCommand
+from flext.application.commands import CreateOrderCommand
 
 class OrderCommandPort(Protocol):
     """Port for order-related commands."""
@@ -97,7 +97,7 @@ For executing domain queries (read operations):
 
 ```python
 from typing import Protocol, TypeVar, List
-from flx.domain.queries import Query
+from flext.domain.queries import Query
 
 TQuery = TypeVar('TQuery', bound=Query)
 TResult = TypeVar('TResult')
@@ -117,7 +117,7 @@ class QueryPort(Protocol):
 **Real Implementation Example:**
 
 ```python
-from flx.application.queries import GetOrderQuery, OrderDTO
+from flext.application.queries import GetOrderQuery, OrderDTO
 
 class OrderQueryPort(Protocol):
     """Port for order-related queries."""
@@ -137,7 +137,7 @@ For HTTP REST/GraphQL endpoints:
 
 ```python
 from typing import Protocol, Dict, Any
-from flx.core.types import RequestContext, ResponseContext
+from flext.core.types import RequestContext, ResponseContext
 
 class ApiPort(Protocol):
     """Port for HTTP API operations."""
@@ -240,7 +240,7 @@ For receiving external events:
 
 ```python
 from typing import Protocol, Any
-from flx.domain.events import ExternalEvent
+from flext.domain.events import ExternalEvent
 
 class EventHandlerPort(Protocol):
     """Port for handling external events."""
@@ -311,7 +311,7 @@ class CustomerManagementPort(Protocol):
 Including request context for security and tracing:
 
 ```python
-from flx.core.context import ExecutionContext
+from flext.core.context import ExecutionContext
 
 class SecureOrderPort(Protocol):
     """Security-aware order port."""

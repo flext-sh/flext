@@ -40,12 +40,12 @@
 
 #### Adapter System Optimization
 
-Based on `/flx/src/flx/adapters/` real implementation:
+Based on `/flext/src/flext/adapters/` real implementation:
 
 ```python
 # Optimized adapter pattern with 90% code reduction
-from flx.adapters.mixins import AdvancedAdapterMixin
-from flx.adapters.base import BaseAdapter
+from flext.adapters.mixins import AdvancedAdapterMixin
+from flext.adapters.base import BaseAdapter
 
 class OptimizedDatabaseAdapter(BaseAdapter, AdvancedAdapterMixin):
     """90% code reduction through mixin consolidation."""
@@ -66,11 +66,11 @@ class OptimizedDatabaseAdapter(BaseAdapter, AdvancedAdapterMixin):
 
 #### Cache System Optimization
 
-From `/flx/src/flx/infra/cache/` implementation:
+From `/flext/src/flext/infra/cache/` implementation:
 
 ```python
 # Redis clustering with memory fallback
-from flx.infra.cache.production_engine import CacheProductionEngine
+from flext.infra.cache.production_engine import CacheProductionEngine
 
 cache = CacheProductionEngine(
     redis_cluster_urls=["redis://node1:6379", "redis://node2:6379"],
@@ -85,11 +85,11 @@ cache = CacheProductionEngine(
 
 #### Database Engine Optimization
 
-From `/flx/src/flx/infra/database/` implementation:
+From `/flext/src/flext/infra/database/` implementation:
 
 ```python
 # High-performance database with read replicas
-from flx.infra.database.production_engine import DatabaseProductionEngine
+from flext.infra.database.production_engine import DatabaseProductionEngine
 
 db_engine = DatabaseProductionEngine(
     connection_pool_size=50,
@@ -235,7 +235,7 @@ From **[Logging Implementation Summary](./logging-implementation-summary.md)**:
 
 ```python
 # High-performance structured logging
-from flx.infra.logging import StructuredLogger
+from flext.infra.logging import StructuredLogger
 
 class OptimizedLogger(StructuredLogger):
     def __init__(self, service_name: str):
@@ -300,7 +300,7 @@ Logging optimization results:
 
 ```python
 # Performance monitoring integration
-from flx.infra.observability import AdvancedMonitoring
+from flext.infra.observability import AdvancedMonitoring
 
 monitoring = AdvancedMonitoring()
 

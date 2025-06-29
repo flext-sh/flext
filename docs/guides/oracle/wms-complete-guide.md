@@ -39,10 +39,10 @@ Complete Oracle Warehouse Management System (WMS) integration guide for the FLX 
 
 ```bash
 # Install Oracle WMS adapter
-pip install flx-http-oracle-wms
+pip install flext-http-oracle-wms
 
 # Or install from source
-cd flx-http-oracle-wms
+cd flext-http-oracle-wms
 pip install -e .
 
 # Install with development dependencies
@@ -75,20 +75,20 @@ WMS_TIMEOUT=30
 
 ```bash
 # Test connection
-python -m flx_http_oracle_wms test-connection
+python -m flext_http_oracle_wms test-connection
 
 # Show configuration
-python -m flx_http_oracle_wms show-config
+python -m flext_http_oracle_wms show-config
 
 # Discover available operations
-python -m flx_http_oracle_wms discover
+python -m flext_http_oracle_wms discover
 ```
 
 ## 🌐 REST API Integration
 
 ### FLX HTTP Oracle WMS Adapter
 
-The `flx-http-oracle-wms` package provides a modern Python client for Oracle WMS operations with the following features:
+The `flext-http-oracle-wms` package provides a modern Python client for Oracle WMS operations with the following features:
 
 - ✅ Pure Python implementation (no shell scripts)
 - ✅ PEP8 compliant code style
@@ -101,7 +101,7 @@ The `flx-http-oracle-wms` package provides a modern Python client for Oracle WMS
 ### Python API Usage
 
 ```python
-from flx_http_oracle_wms import WmsService, WmsConfig
+from flext_http_oracle_wms import WmsService, WmsConfig
 
 # Create service from environment
 config = WmsConfig.from_env()
@@ -120,8 +120,8 @@ result = await service.execute_operation(
 ### Hexagonal Architecture Integration
 
 ```python
-from flx.core.entities import AggregateRoot
-from flx.core.domain.value_objects import ValueObject
+from flext.core.entities import AggregateRoot
+from flext.core.domain.value_objects import ValueObject
 
 # Domain entity for WMS items
 class WmsItem(AggregateRoot):
@@ -170,7 +170,7 @@ The WMS CLI follows a hierarchical command structure organized by action verbs:
 
 ```bash
 # General pattern
-python -m flx_http_oracle_wms [global_options] <command> [command_options]
+python -m flext_http_oracle_wms [global_options] <command> [command_options]
 
 # Alternative for legacy CLI
 python -m src.gn_oic_wms_db.cli <category> <action> [options]
@@ -184,17 +184,17 @@ python -m src.gn_oic_wms_db.cli <category> <action> [options]
 
 ```bash
 # Query specific entities
-flx-http-oracle-wms entity-query [entity] [key] [company_code] [facility_code]
+flext-http-oracle-wms entity-query [entity] [key] [company_code] [facility_code]
 
 # Example
-flx-http-oracle-wms entity-query items ITEM001 001 DC1 --format-output table
+flext-http-oracle-wms entity-query items ITEM001 001 DC1 --format-output table
 ```
 
 **Entity Status**
 
 ```bash
 # Get status information
-flx-http-oracle-wms get-status [entity] [key] [company_code] [facility_code]
+flext-http-oracle-wms get-status [entity] [key] [company_code] [facility_code]
 ```
 
 #### 2. LPN Operations
@@ -203,10 +203,10 @@ flx-http-oracle-wms get-status [entity] [key] [company_code] [facility_code]
 
 ```bash
 # Create License Plate Numbers
-flx-http-oracle-wms create-lpn [lpn_nbr] [qty] [options...]
+flext-http-oracle-wms create-lpn [lpn_nbr] [qty] [options...]
 
 # Example with full parameters
-flx-http-oracle-wms create-lpn LPN001 100 \
+flext-http-oracle-wms create-lpn LPN001 100 \
     --item-barcode ITEM001 \
     --company-code 001 \
     --facility-code DC1 \
@@ -218,7 +218,7 @@ flx-http-oracle-wms create-lpn LPN001 100 \
 
 ```bash
 # Receive LPNs with tracking information
-flx-http-oracle-wms receive-lpn LPN001 \
+flext-http-oracle-wms receive-lpn LPN001 \
     --company-code 001 \
     --facility-code DC1 \
     --rcvd-trailer-nbr TRAILER001 \
@@ -231,7 +231,7 @@ flx-http-oracle-wms receive-lpn LPN001 \
 
 ```bash
 # Ship outbound License Plate Numbers
-flx-http-oracle-wms ship-oblpn OBLPN001 001 DC1 SHIP01 \
+flext-http-oracle-wms ship-oblpn OBLPN001 001 DC1 SHIP01 \
     --output-file-to-generate shipping_label.pdf
 ```
 
@@ -239,7 +239,7 @@ flx-http-oracle-wms ship-oblpn OBLPN001 001 DC1 SHIP01 \
 
 ```bash
 # Assign outbound LPNs to loads
-flx-http-oracle-wms assign-oblpn-to-load LOAD001 OBLPN001 \
+flext-http-oracle-wms assign-oblpn-to-load LOAD001 OBLPN001 \
     --carrier-code UPS \
     --company-code 001 \
     --facility-code DC1 \
@@ -252,7 +252,7 @@ flx-http-oracle-wms assign-oblpn-to-load LOAD001 OBLPN001 \
 
 ```bash
 # Update inventory with comprehensive parameters
-flx-http-oracle-wms update-inventory LOC001 ADJUST \
+flext-http-oracle-wms update-inventory LOC001 ADJUST \
     --actual-qty 100 \
     --adjustment-qty 5 \
     --item-barcode ITEM001 \
@@ -266,7 +266,7 @@ flx-http-oracle-wms update-inventory LOC001 ADJUST \
 
 ```bash
 # Generate sequence numbers for various counters
-flx-http-oracle-wms get-next-numbers LPN_SEQ \
+flext-http-oracle-wms get-next-numbers LPN_SEQ \
     --company-code 001 \
     --facility-code DC1 \
     --count 10
@@ -401,15 +401,15 @@ Extract large datasets efficiently using paged queries:
 
 ```bash
 # High-speed extraction to JSON
-flx-http-oracle-wms extract items items_data.json 001 DC1 \
+flext-http-oracle-wms extract items items_data.json 001 DC1 \
     --high-speed --page-size 5000 --format-export json
 
 # Extract to CSV with limit
-flx-http-oracle-wms extract orders orders.csv 001 DC1 \
+flext-http-oracle-wms extract orders orders.csv 001 DC1 \
     --format-export csv --max-records 10000
 
 # Extract to Parquet for big data
-flx-http-oracle-wms extract transactions data.parquet 001 DC1 \
+flext-http-oracle-wms extract transactions data.parquet 001 DC1 \
     --format-export parquet --high-speed
 ```
 
@@ -419,7 +419,7 @@ Process multiple operations from JSON files:
 
 ```bash
 # Bulk operations with JSON file
-flx-http-oracle-wms bulk-operations bulk_lpn_create.json create_lpn \
+flext-http-oracle-wms bulk-operations bulk_lpn_create.json create_lpn \
     --batch-size 50 --continue-on-error
 ```
 
@@ -448,7 +448,7 @@ flx-http-oracle-wms bulk-operations bulk_lpn_create.json create_lpn \
 
 ```bash
 # Get and validate schema
-flx-http-oracle-wms get-schema items --save-schema --validate
+flext-http-oracle-wms get-schema items --save-schema --validate
 
 # This creates: schemas/entities/items.json
 ```
@@ -464,10 +464,10 @@ The CLI supports multiple output formats:
 
 ```bash
 # Different output formats
-flx-http-oracle-wms --format-output table entity-query items ITEM001
-flx-http-oracle-wms --format-output json entity-query items ITEM001
-flx-http-oracle-wms --format-output yaml entity-query items ITEM001
-flx-http-oracle-wms --format-output csv entity-query items ITEM001
+flext-http-oracle-wms --format-output table entity-query items ITEM001
+flext-http-oracle-wms --format-output json entity-query items ITEM001
+flext-http-oracle-wms --format-output yaml entity-query items ITEM001
+flext-http-oracle-wms --format-output csv entity-query items ITEM001
 ```
 
 ## 🏗️ Architecture Integration
@@ -475,8 +475,8 @@ flx-http-oracle-wms --format-output csv entity-query items ITEM001
 ### Event-Driven Integration
 
 ```python
-from flx.core.events import DomainEvent
-from flx.application.services import ApplicationService
+from flext.core.events import DomainEvent
+from flext.application.services import ApplicationService
 
 class OracleWmsIntegrationService(ApplicationService):
     def __init__(self, wms_client, db_repository):
@@ -502,8 +502,8 @@ class OracleWmsIntegrationService(ApplicationService):
 ### Repository Pattern with Oracle
 
 ```python
-from flx.infrastructure.database import DatabaseAdapter
-from flx.adapters.outbound.database import OracleAdapter
+from flext.infrastructure.database import DatabaseAdapter
+from flext.adapters.outbound.database import OracleAdapter
 
 class OracleWmsRepository:
     def __init__(self, db_adapter: DatabaseAdapter):
@@ -571,7 +571,7 @@ python -m src.gn_oic_wms_db.cli control status --detailed
 entities=("items" "orders" "locations" "inventory")
 for entity in "${entities[@]}"; do
     echo "Extracting ${entity}..."
-    flx-http-oracle-wms extract "$entity" "backup/${entity}.parquet" 001 DC1 \
+    flext-http-oracle-wms extract "$entity" "backup/${entity}.parquet" 001 DC1 \
         --format-export parquet --high-speed
 done
 ```
@@ -608,21 +608,21 @@ done
 
 ```bash
 # Enable detailed logging
-flx-http-oracle-wms --debug --verbose test-connection
+flext-http-oracle-wms --debug --verbose test-connection
 ```
 
 ### Configuration Validation
 
 ```bash
 # Test configuration and connection
-flx-http-oracle-wms show-config --validate-connection
+flext-http-oracle-wms show-config --validate-connection
 ```
 
 ### Schema Issues
 
 ```bash
 # Validate entity schemas
-flx-http-oracle-wms get-schema [entity] --validate
+flext-http-oracle-wms get-schema [entity] --validate
 ```
 
 ## 📊 Performance Optimization
@@ -649,8 +649,8 @@ flx-http-oracle-wms get-schema [entity] --validate
 ### Modern FLX 0.4.0+ Usage
 
 ```python
-from flx.adapters.oracle.wms import WMSAdapter
-from flx.core.application import Application
+from flext.adapters.oracle.wms import WMSAdapter
+from flext.core.application import Application
 
 # Create application with WMS adapter
 app = Application()

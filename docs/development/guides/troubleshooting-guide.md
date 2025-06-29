@@ -31,8 +31,8 @@ This guide provides comprehensive troubleshooting strategies for common issues i
 
 ```bash
 # Error examples
-ModuleNotFoundError: No module named 'flx.core'
-ImportError: cannot import name 'BaseAdapter' from 'flx.adapters'
+ModuleNotFoundError: No module named 'flext.core'
+ImportError: cannot import name 'BaseAdapter' from 'flext.adapters'
 ImportError: attempted relative import with no known parent package
 ```
 
@@ -40,7 +40,7 @@ ImportError: attempted relative import with no known parent package
 
 ```bash
 # 1. Verify installation
-pip list | grep flx
+pip list | grep flext
 
 # 2. Check Python path
 python -c "import sys; print('\n'.join(sys.path))"
@@ -51,10 +51,10 @@ ls -la
 
 # 4. Check virtual environment
 which python
-pip show flx
+pip show flext
 
 # 5. Test specific import
-python -c "import flx; print(flx.__file__)"
+python -c "import flext; print(flext.__file__)"
 
 # 6. Check for __pycache__ conflicts
 find . -name "__pycache__" -type d -exec rm -rf {} +
@@ -65,18 +65,18 @@ find . -name "*.pyc" -delete
 
 ```bash
 # Scenario 1: Development installation
-cd /path/to/flx
+cd /path/to/flext
 python -m venv .venv
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 pip install -e ".[dev]"
 
 # Scenario 2: Package conflicts
-pip uninstall flx -y
+pip uninstall flext -y
 pip cache purge
 pip install -e ".[dev]"
 
 # Scenario 3: PYTHONPATH issues
-export PYTHONPATH="/path/to/flx/src:$PYTHONPATH"
+export PYTHONPATH="/path/to/flext/src:$PYTHONPATH"
 
 # Scenario 4: IDE-specific issues (PyCharm, VSCode)
 # Mark src/ as sources root in IDE settings
@@ -88,8 +88,8 @@ python -m pytest tests/
 # Not: cd tests && python -m pytest
 
 # Scenario 6: Missing __init__.py files
-find src/ -type d -name "flx" -exec touch {}/__init__.py \;
-find src/ -type d -path "*/flx/*" -exec touch {}/__init__.py \;
+find src/ -type d -name "flext" -exec touch {}/__init__.py \;
+find src/ -type d -path "*/flext/*" -exec touch {}/__init__.py \;
 ```
 
 **Environment Validation Script**:
@@ -115,8 +115,8 @@ def check_environment():
 
     # Check FLX installation
     try:
-        import flx
-        print(f"✓ FLX installed at: {flx.__file__}")
+        import flext
+        print(f"✓ FLX installed at: {flext.__file__}")
     except ImportError as e:
         issues.append(f"FLX not importable: {e}")
 
@@ -130,7 +130,7 @@ def check_environment():
             issues.append(f"Missing development dependency: {dep}")
 
     # Check project structure
-    expected_dirs = ['src/flx', 'tests', 'docs']
+    expected_dirs = ['src/flext', 'tests', 'docs']
     for dir_path in expected_dirs:
         if not Path(dir_path).exists():
             issues.append(f"Missing directory: {dir_path}")
@@ -170,8 +170,8 @@ PermissionError: [Errno 13] Permission denied: 'config/production.yaml'
 import os
 import yaml
 from pathlib import Path
-from flx.infra.config.adapter import ConfigAdapter
-from flx.infra.config.hierarchical import ConfigManager
+from flext.infra.config.adapter import ConfigAdapter
+from flext.infra.config.hierarchical import ConfigManager
 
 def diagnose_config_issues():
     """Run comprehensive configuration diagnostics."""
@@ -181,9 +181,9 @@ def diagnose_config_issues():
 
     # 1. Check environment variables
     print("\n1. Environment Variables:")
-    flx_vars = {k: v for k, v in os.environ.items() if k.startswith('FLX_')}
-    if flx_vars:
-        for key, value in flx_vars.items():
+    flext_vars = {k: v for k, v in os.environ.items() if k.startswith('FLX_')}
+    if flext_vars:
+        for key, value in flext_vars.items():
             # Mask potentially sensitive values
             masked_value = value if 'password' not in key.lower() and 'secret' not in key.lower() else '*' * len(value)
             print(f"   {key} = {masked_value}")
@@ -195,7 +195,7 @@ def diagnose_config_issues():
     config_patterns = [
         "config.yaml", "config.yml",
         "config/base.yaml", "config/development.yaml", "config/production.yaml",
-        ".flx.yaml", "flx.config.yaml"
+        ".flext.yaml", "flext.config.yaml"
     ]
 
     found_configs = []

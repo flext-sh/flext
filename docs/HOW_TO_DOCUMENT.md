@@ -38,7 +38,7 @@ Essential guide for contributors, maintainers, and agents working on FLX Framewo
 
 - **English Only**: All documentation in English for global accessibility
 - **Current Content**: Focus on current implementation, remove obsolete content
-- **Code Validation**: API docs validated against actual `/flx/src/` code
+- **Code Validation**: API docs validated against actual `/flext/src/` code
 - **Professional Grade**: Enterprise-level documentation standards
 - **Date Tracking**: All reorganized documents must include date 2025-06-11
 
@@ -304,7 +304,7 @@ This date must appear in the footer metadata line alongside Framework version.
 
 ### **API Documentation**
 
-- **Validate Against Code**: All API docs must reflect actual implementation in `/flx/src/`
+- **Validate Against Code**: All API docs must reflect actual implementation in `/flext/src/`
 - **Complete Examples**: Every API includes working code examples
 - **Error Cases**: Document common error scenarios and solutions
 - **Type Information**: Include complete type information for Python 3.13+
@@ -313,7 +313,7 @@ This date must appear in the footer metadata line alongside Framework version.
 
 ```python
 # Good: Complete, runnable example
-from flx.core import Entity
+from flext.core import Entity
 from datetime import datetime, UTC
 
 class Customer(Entity):
@@ -398,7 +398,7 @@ Before publishing any documentation:
 
 - **Link Checker**: Automated validation of all internal links
 - **Template Checker**: Validation against mandatory templates
-- **Code Sync**: Verification that API docs match `/flx/src/` code
+- **Code Sync**: Verification that API docs match `/flext/src/` code
 - **Language Check**: Automated detection of non-English content
 
 ### **Maintenance Workflow**
@@ -483,7 +483,7 @@ Each agent must deliver:
 ### **Code Validation Failures**
 
 **Issue**: API documentation doesn't match actual code
-**Solution**: Review `/flx/src/` code and update documentation
+**Solution**: Review `/flext/src/` code and update documentation
 **Prevention**: Regular sync validation between docs and code
 
 ---
@@ -512,7 +512,7 @@ Each agent must deliver:
 
 ### **For API Documentation**
 
-- [ ] Validated against actual `/flx/src/` code
+- [ ] Validated against actual `/flext/src/` code
 - [ ] Complete type information
 - [ ] Working code examples
 - [ ] Error case documentation

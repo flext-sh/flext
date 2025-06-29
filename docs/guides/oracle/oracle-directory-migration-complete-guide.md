@@ -444,7 +444,7 @@ python -m oud_automation configure-network \
 ### FLX Framework Integration
 
 ```python
-from flx.adapters.oracle.oud import OUDMigrationOrchestrator
+from flext.adapters.oracle.oud import OUDMigrationOrchestrator
 
 # Initialize migration orchestrator
 orchestrator = OUDMigrationOrchestrator(

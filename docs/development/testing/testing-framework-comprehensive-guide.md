@@ -64,7 +64,7 @@ The testing framework follows a hierarchical pattern with clear separation betwe
 **Usage:**
 
 ```python
-from flx.testing.engines.base import BaseTestEngine
+from flext.testing.engines.base import BaseTestEngine
 
 class CustomTestEngine(BaseTestEngine):
     async def run_specific_tests(self) -> TestResult:
@@ -90,7 +90,7 @@ class CustomTestEngine(BaseTestEngine):
 **Implementation Example:**
 
 ```python
-from flx.testing.engines.authentication_engine import AuthenticationEngine
+from flext.testing.engines.authentication_engine import AuthenticationEngine
 
 engine = AuthenticationEngine()
 results = await engine.test_user_authentication({
@@ -121,7 +121,7 @@ assert results.token_expiry > datetime.utcnow()
 **Performance Testing:**
 
 ```python
-from flx.testing.engines.cache_engine import CacheEngine
+from flext.testing.engines.cache_engine import CacheEngine
 
 engine = CacheEngine()
 results = await engine.test_cache_performance({
@@ -152,7 +152,7 @@ assert results.memory_usage < engine.max_memory
 **Load Testing Example:**
 
 ```python
-from flx.testing.engines.http_engine import HttpEngine
+from flext.testing.engines.http_engine import HttpEngine
 
 engine = HttpEngine()
 results = await engine.test_api_endpoints({
@@ -185,7 +185,7 @@ assert results.p95_response_time < 200  # ms
 **Transaction Testing:**
 
 ```python
-from flx.testing.engines.database_engine import DatabaseEngine
+from flext.testing.engines.database_engine import DatabaseEngine
 
 engine = DatabaseEngine()
 results = await engine.test_transaction_integrity({
@@ -216,7 +216,7 @@ assert results.concurrent_safety_maintained
 **Throughput Testing:**
 
 ```python
-from flx.testing.engines.messaging_engine import MessagingEngine
+from flext.testing.engines.messaging_engine import MessagingEngine
 
 engine = MessagingEngine()
 results = await engine.test_message_throughput({
@@ -250,7 +250,7 @@ assert results.average_processing_time < 10  # ms
 **System Monitoring:**
 
 ```python
-from flx.testing.engines.observability_engine import ObservabilityEngine
+from flext.testing.engines.observability_engine import ObservabilityEngine
 
 engine = ObservabilityEngine()
 results = await engine.test_system_observability({
@@ -281,7 +281,7 @@ assert len(results.detected_dependencies) >= 3
 **System Performance:**
 
 ```python
-from flx.testing.engines.runtime_engine import RuntimeEngine
+from flext.testing.engines.runtime_engine import RuntimeEngine
 
 engine = RuntimeEngine()
 results = await engine.test_system_performance({
@@ -312,7 +312,7 @@ assert results.cpu_usage < 80  # percent
 **Full System Test:**
 
 ```python
-from flx.testing.engines.comprehensive_test_engine import ComprehensiveTestEngine
+from flext.testing.engines.comprehensive_test_engine import ComprehensiveTestEngine
 
 engine = ComprehensiveTestEngine()
 results = await engine.run_comprehensive_test_suite({
@@ -351,7 +351,7 @@ In-memory database adapter for testing data persistence logic.
 **Usage:**
 
 ```python
-from flx.testing.adapters.database import MockDatabaseAdapter
+from flext.testing.adapters.database import MockDatabaseAdapter
 
 adapter = MockDatabaseAdapter()
 await adapter.execute("INSERT INTO users (name) VALUES (?)", ["Test User"])
@@ -376,7 +376,7 @@ In-memory cache implementation for testing cache-dependent functionality.
 **TTL Testing:**
 
 ```python
-from flx.testing.adapters.cache import MockCacheAdapter
+from flext.testing.adapters.cache import MockCacheAdapter
 import asyncio
 
 adapter = MockCacheAdapter()
@@ -406,7 +406,7 @@ HTTP client adapter for testing external HTTP service integrations.
 **Response Mocking:**
 
 ```python
-from flx.testing.adapters.http import MockHttpAdapter
+from flext.testing.adapters.http import MockHttpAdapter
 
 adapter = MockHttpAdapter()
 adapter.set_response("GET", "/api/users", 200, {"users": []})
@@ -435,7 +435,7 @@ Event publishing and subscription testing adapter.
 **Event Flow Testing:**
 
 ```python
-from flx.testing.adapters.events import MockEventsAdapter
+from flext.testing.adapters.events import MockEventsAdapter
 
 adapter = MockEventsAdapter()
 
@@ -490,9 +490,9 @@ class ApiIntegrationEngine(BaseTestEngine):
 ### Dependency Injection Testing
 
 ```python
-from flx.application.container import ServiceContainer
-from flx.ports.outbound.database import DatabasePort
-from flx.testing.adapters.database import MockDatabaseAdapter
+from flext.application.container import ServiceContainer
+from flext.ports.outbound.database import DatabasePort
+from flext.testing.adapters.database import MockDatabaseAdapter
 
 # Setup container with mock adapter
 container = ServiceContainer()
@@ -597,7 +597,7 @@ testing:
 
 ```python
 import pytest
-from flx.testing import TestEnvironment
+from flext.testing import TestEnvironment
 
 @pytest.fixture(scope="session")
 async def test_environment():
@@ -644,7 +644,7 @@ The Test Orchestrator coordinates execution of multiple testing engines:
 **Usage:**
 
 ```python
-from flx.testing.engines.test_orchestrator import TestOrchestrator
+from flext.testing.engines.test_orchestrator import TestOrchestrator
 
 orchestrator = TestOrchestrator()
 orchestrator.register_engine("auth", AuthenticationEngine())
@@ -785,17 +785,17 @@ jobs:
       - name: Run Comprehensive Tests
         run: |
           python -m pytest tests/ --cov=src/ --cov-report=xml
-          python -m flx.testing.orchestrator --config=test_config.yaml
+          python -m flext.testing.orchestrator --config=test_config.yaml
 
       - name: Generate Test Report
         run: |
-          python -m flx.testing.reporting --output=test_report.html
+          python -m flext.testing.reporting --output=test_report.html
 ```
 
 ### Test Reporting
 
 ```python
-from flx.testing.reporting import TestReportGenerator
+from flext.testing.reporting import TestReportGenerator
 
 generator = TestReportGenerator()
 report = await generator.generate_comprehensive_report({

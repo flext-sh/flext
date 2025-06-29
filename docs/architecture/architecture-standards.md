@@ -24,7 +24,7 @@
 
 - **📂 Section Hub**: [Architecture Hub](./index.md)
 - **🏠 Documentation Root**: [Root Index](../index.md)
-- **🔗 Source Code**: [FLX Core Architecture](../../flx/src/flx/core/)
+- **🔗 Source Code**: [FLX Core Architecture](../../flext/src/flext/core/)
 - **🔗 Related**: [Design Patterns](./patterns/index.md), [Development Standards](../development/standards/index.md)
 
 ---
@@ -60,7 +60,7 @@ Hexagonal architecture guidelines and standards for FLX Framework enterprise dev
 
 ## 📋 LAYER RESPONSIBILITIES
 
-### Domain Layer (`flx/core/domain/`)
+### Domain Layer (`flext/core/domain/`)
 
 **CONTAINS**:
 
@@ -91,7 +91,7 @@ class User(Entity):
 from requests import get  # FORBIDDEN in domain
 ```
 
-### Application Layer (`flx/application/`)
+### Application Layer (`flext/application/`)
 
 **CONTAINS**:
 
@@ -119,7 +119,7 @@ class UserService:
 from sqlalchemy import create_engine  # FORBIDDEN in application
 ```
 
-### Infrastructure Layer (`flx/infra/`)
+### Infrastructure Layer (`flext/infra/`)
 
 **CONTAINS**:
 
@@ -197,10 +197,10 @@ class DatabaseUserRepository(UserRepositoryPort):
 
 ```python
 # ❌ VIOLATION
-from flx.infra.database import DatabaseEngine  # Domain importing infra
+from flext.infra.database import DatabaseEngine  # Domain importing infra
 
 # ✅ CORRECT
-from flx.ports.outbound import DatabasePort  # Domain using port
+from flext.ports.outbound import DatabasePort  # Domain using port
 ```
 
 #### 2. Application Layer Direct Infrastructure Usage
@@ -220,7 +220,7 @@ def __init__(self, db_port: DatabasePort):
 ```python
 # ❌ VIOLATION
 # domain/user.py
-from flx.application.services import UserService  # Domain → Application
+from flext.application.services import UserService  # Domain → Application
 
 # ✅ CORRECT
 # Use domain events instead
@@ -235,9 +235,9 @@ class User(Entity):
 ### Factory Pattern for Adapter Creation
 
 ```python
-from flx.infra.database import DatabaseEngine
-from flx.infra.cache import RedisCache
-from flx.adapters.outbound.database import DatabaseAdapter
+from flext.infra.database import DatabaseEngine
+from flext.infra.cache import RedisCache
+from flext.adapters.outbound.database import DatabaseAdapter
 
 def create_infrastructure_adapters(config: Config) -> dict[str, Any]:
     """Create infrastructure adapters with proper dependency injection."""
@@ -292,7 +292,7 @@ def check_layer_dependencies():
     violations = []
 
     # Check domain layer doesn't import infrastructure
-    domain_files = Path("flx/core/domain").rglob("*.py")
+    domain_files = Path("flext/core/domain").rglob("*.py")
     for file_path in domain_files:
         with open(file_path) as f:
             content = f.read()

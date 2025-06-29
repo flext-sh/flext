@@ -24,8 +24,8 @@
 
 - **📂 Section Hub**: [Integration Guides](./index.md)
 - **🏠 Documentation Root**: [Root Index](../../index.md)
-- **🔗 Source Code**: [FLX Meltano](../../../flx/src/flx/integrations/meltano/)
-- **🔗 Related**: [Architecture Evolution](../../architecture/flx-2.0-architecture.md), [Meltano Plugins](../../meltano-plugins/index.md)
+- **🔗 Source Code**: [FLX Meltano](../../../flext/src/flext/integrations/meltano/)
+- **🔗 Related**: [Architecture Evolution](../../architecture/flext-2.0-architecture.md), [Meltano Plugins](../../meltano-plugins/index.md)
 
 ---
 
@@ -75,7 +75,7 @@ The FLX framework now includes complete integration with Meltano, allowing you t
 ### Basic Usage
 
 ```python
-from flx.adapters.outbound.meltano_factory import MeltanoAdapterFactory
+from flext.adapters.outbound.meltano_factory import MeltanoAdapterFactory
 
 # Create adapter with development configuration
 adapter = MeltanoAdapterFactory.create_adapter(
@@ -91,7 +91,7 @@ plugins = await adapter.discover_plugins(plugin_type="extractors")
 print(f"Found {len(plugins)} extractors")
 
 # Install a plugin
-from flx.ports.outbound.meltano_plugins import MeltanoPluginConfig
+from flext.ports.outbound.meltano_plugins import MeltanoPluginConfig
 
 plugin_config = MeltanoPluginConfig(
     name="tap-postgres",
@@ -135,7 +135,7 @@ print(f"Pipeline {'succeeded' if result['success'] else 'failed'}")
 ### Workflow Creation and Scheduling
 
 ```python
-from flx.ports.outbound.meltano_plugins import MeltanoWorkflowConfig
+from flext.ports.outbound.meltano_plugins import MeltanoWorkflowConfig
 
 # Create workflow
 workflow_config = MeltanoWorkflowConfig(
@@ -316,7 +316,7 @@ for plugin in plugins:
 ## Error Handling
 
 ```python
-from flx.core.exceptions import (
+from flext.core.exceptions import (
     ConfigurationError,
     ConnectionError,
     OperationError,
@@ -398,7 +398,7 @@ meltano_projects/
 ### With Database Adapters
 
 ```python
-from flx.adapters.outbound.database import DatabaseAdapter
+from flext.adapters.outbound.database import DatabaseAdapter
 
 # Use with existing database adapters
 db_adapter = DatabaseAdapter(config)
@@ -410,7 +410,7 @@ meltano_adapter = MeltanoAdapterFactory.create_adapter(project_root)
 ### With CLI Interface
 
 ```python
-from flx.adapters.inbound.cli import CliAdapter
+from flext.adapters.inbound.cli import CliAdapter
 
 # Expose Meltano functionality through FLX CLI
 cli_adapter = CliAdapter()
@@ -420,7 +420,7 @@ cli_adapter = CliAdapter()
 ### With Application Services
 
 ```python
-from flx.application import ApplicationService
+from flext.application import ApplicationService
 
 class DataPipelineService(ApplicationService):
     def __init__(self, meltano_adapter: MeltanoAdapter):
@@ -489,8 +489,8 @@ class DataPipelineService(ApplicationService):
 
 Complete examples are available in:
 
-- `examples/flx_meltano_integration_example.py` - Comprehensive usage examples
-- `flx/tests/test_meltano_integration.py` - Test cases and patterns
+- `examples/flext_meltano_integration_example.py` - Comprehensive usage examples
+- `flext/tests/test_meltano_integration.py` - Test cases and patterns
 
 ## API Reference
 
@@ -535,7 +535,7 @@ This integration brings the full power of the Meltano ecosystem into the FLX fra
 
 ### **Related Topics**
 
-- [Architecture Evolution](../../architecture/flx-2.0-architecture.md) - FLX 2.0 Meltano-powered architecture
+- [Architecture Evolution](../../architecture/flext-2.0-architecture.md) - FLX 2.0 Meltano-powered architecture
 - [API Reference](../../api-reference/meltano/index.md) - Complete Meltano integration API
 - [Performance Optimization](../../optimization/meltano/index.md) - Meltano performance tuning
 
