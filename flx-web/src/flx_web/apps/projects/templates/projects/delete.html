@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Delete {{ project.display_name }} - FLX Meltano Enterprise{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8 max-w-2xl">
+    <a href="{% url 'projects:detail' project.pk %}" class="text-indigo-600 hover:text-indigo-900 mb-4 inline-block">&larr; Back to Project</a>
+    <h1 class="text-3xl font-bold mb-6">Confirm Deletion</h1>
+
+    <div class="bg-white p-8 rounded-lg shadow-md">
+        <p class="text-lg mb-4">Are you sure you want to delete the project "<strong>{{ project.display_name }}</strong>"?</p>
+        <p class="text-red-600 mb-6">This action cannot be undone. All associated data will be permanently removed.</p>
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="flex justify-end">
+                <a href="{% url 'projects:detail' project.pk %}" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300 mr-2">Cancel</a>
+                <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">Confirm Delete</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
