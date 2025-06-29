@@ -1,0 +1,535 @@
+{% extends "base.html" %}
+
+{% block title %}Monitoring - FLX Enterprise{% endblock %}
+
+{% block content %}
+<div class="py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2">System Monitoring</h1>
+        <div>
+            <select class="form-select" id="timeRange" onchange="changeTimeRange()">
+                <option value="1h">Last Hour</option>
+                <option value="6h" selected>Last 6 Hours</option>
+                <option value="24h">Last 24 Hours</option>
+                <option value="7d">Last 7 Days</option>
+                <option value="30d">Last 30 Days</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- System Health Overview -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <h6 class="text-muted mb-3">System Health</h6>
+                    <div class="display-4 mb-3">
+                        {% if health.healthy %}
+                            <i class="fas fa-check-circle text-success"></i>
+                        {% else %}
+                            <i class="fas fa-exclamation-circle text-danger"></i>
+                        {% endif %}
+                    </div>
+                    <h5 class="mb-0">
+                        {% if health.healthy %}
+                            <span class="text-success">Healthy</span>
+                        {% else %}
+                            <span class="text-danger">Issues Detected</span>
+                        {% endif %}
+                    </h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h6 class="text-muted mb-2">Uptime</h6>
+                    <h3 class="mb-0">{{ uptime_display }}</h3>
+                    <small class="text-muted">Since {{ start_time|date:"Y-m-d H:i" }}</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h6 class="text-muted mb-2">Active Connections</h6>
+                    <h3 class="mb-0">{{ stats.active_connections|default:"0" }}</h3>
+                    <small class="text-muted">WebSocket + gRPC</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h6 class="text-muted mb-2">Error Rate</h6>
+                    <h3 class="mb-0">{{ error_rate }}%</h3>
+                    <small class="text-muted">Last {{ time_range_display }}</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Performance Metrics -->
+    <div class="row mb-4">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">CPU Usage</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="cpuChart" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Memory Usage</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="memoryChart" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Component Status -->
+    <div class="row mb-4">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Component Status</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Component</th>
+                                    <th>Status</th>
+                                    <th>Health Check</th>
+                                    <th>Last Updated</th>
+                                    <th>Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for name, component in health.components.items %}
+                                <tr>
+                                    <td>
+                                        <i class="fas fa-cube me-2 text-muted"></i>
+                                        <strong>{{ name|title }}</strong>
+                                    </td>
+                                    <td>
+                                        {% if component.healthy %}
+                                            <span class="badge bg-success">Healthy</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">Unhealthy</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="progress" style="width: 100px; height: 20px;">
+                                            <div class="progress-bar {% if component.healthy %}bg-success{% else %}bg-danger{% endif %}"
+                                                 role="progressbar" style="width: 100%"></div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <small class="text-muted">{{ component.last_check|default:"Just now" }}</small>
+                                    </td>
+                                    <td>
+                                        {% if component.message %}
+                                            <button class="btn btn-sm btn-outline-secondary"
+                                                    data-bs-toggle="tooltip"
+                                                    title="{{ component.message }}">
+                                                <i class="fas fa-info-circle"></i>
+                                            </button>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Recent Alerts</h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group list-group-flush">
+                        {% for alert in recent_alerts %}
+                        <div class="list-group-item px-0">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6 class="mb-1">
+                                        {% if alert.severity == 'critical' %}
+                                            <i class="fas fa-exclamation-circle text-danger me-2"></i>
+                                        {% elif alert.severity == 'warning' %}
+                                            <i class="fas fa-exclamation-triangle text-warning me-2"></i>
+                                        {% else %}
+                                            <i class="fas fa-info-circle text-info me-2"></i>
+                                        {% endif %}
+                                        {{ alert.title }}
+                                    </h6>
+                                    <p class="mb-1 text-muted small">{{ alert.message }}</p>
+                                    <small class="text-muted">{{ alert.timestamp|timesince }} ago</small>
+                                </div>
+                                <button class="btn btn-sm btn-outline-secondary"
+                                        onclick="dismissAlert('{{ alert.id }}')">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <p class="text-muted text-center mb-0">No recent alerts</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Metrics Summary -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Performance Metrics</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <h6 class="text-muted">Request Rate</h6>
+                            <h3>{{ metrics.request_rate|default:"0" }} <small class="text-muted">req/s</small></h3>
+                            <canvas id="requestRateSparkline" height="50"></canvas>
+                        </div>
+                        <div class="col-md-3">
+                            <h6 class="text-muted">Response Time</h6>
+                            <h3>{{ metrics.avg_response_time|default:"0" }} <small class="text-muted">ms</small></h3>
+                            <canvas id="responseTimeSparkline" height="50"></canvas>
+                        </div>
+                        <div class="col-md-3">
+                            <h6 class="text-muted">Queue Size</h6>
+                            <h3>{{ metrics.queue_size|default:"0" }} <small class="text-muted">items</small></h3>
+                            <canvas id="queueSizeSparkline" height="50"></canvas>
+                        </div>
+                        <div class="col-md-3">
+                            <h6 class="text-muted">Active Workers</h6>
+                            <h3>{{ metrics.active_workers|default:"0" }} <small class="text-muted">/ {{ metrics.total_workers|default:"0" }}</small></h3>
+                            <div class="progress mt-2" style="height: 20px;">
+                                <div class="progress-bar bg-primary" role="progressbar"
+                                     style="width: {{ metrics.worker_utilization|default:0 }}%">
+                                    {{ metrics.worker_utilization|default:0 }}%
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+<script>
+// WebSocket connection for real-time updates
+let ws = null;
+const WS_URL = `ws://${window.location.host}/api/ws/monitoring-{{ user.id }}`;
+
+// Chart instances
+let cpuChart = null;
+let memoryChart = null;
+let sparklineCharts = {};
+
+// Time range
+let timeRange = '6h';
+
+function initCharts() {
+    // CPU Chart
+    const cpuCtx = document.getElementById('cpuChart').getContext('2d');
+    cpuChart = new Chart(cpuCtx, {
+        type: 'line',
+        data: {
+            labels: {{ cpu_labels|safe }},
+            datasets: [{
+                label: 'CPU Usage %',
+                data: {{ cpu_data|safe }},
+                borderColor: 'rgb(52, 152, 219)',
+                backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                tension: 0.4,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    ticks: {
+                        callback: function(value) {
+                            return value + '%';
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Memory Chart
+    const memoryCtx = document.getElementById('memoryChart').getContext('2d');
+    memoryChart = new Chart(memoryCtx, {
+        type: 'line',
+        data: {
+            labels: {{ memory_labels|safe }},
+            datasets: [{
+                label: 'Memory Usage %',
+                data: {{ memory_data|safe }},
+                borderColor: 'rgb(231, 76, 60)',
+                backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                tension: 0.4,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    ticks: {
+                        callback: function(value) {
+                            return value + '%';
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Initialize sparklines
+    initSparklines();
+}
+
+function initSparklines() {
+    const sparklineOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: false
+            },
+            tooltip: {
+                enabled: false
+            }
+        },
+        scales: {
+            x: {
+                display: false
+            },
+            y: {
+                display: false
+            }
+        },
+        elements: {
+            point: {
+                radius: 0
+            }
+        }
+    };
+
+    // Request Rate Sparkline
+    const requestRateCtx = document.getElementById('requestRateSparkline').getContext('2d');
+    sparklineCharts.requestRate = new Chart(requestRateCtx, {
+        type: 'line',
+        data: {
+            labels: {{ sparkline_labels|safe }},
+            datasets: [{
+                data: {{ request_rate_data|safe }},
+                borderColor: 'rgb(46, 204, 113)',
+                borderWidth: 2
+            }]
+        },
+        options: sparklineOptions
+    });
+
+    // Response Time Sparkline
+    const responseTimeCtx = document.getElementById('responseTimeSparkline').getContext('2d');
+    sparklineCharts.responseTime = new Chart(responseTimeCtx, {
+        type: 'line',
+        data: {
+            labels: {{ sparkline_labels|safe }},
+            datasets: [{
+                data: {{ response_time_data|safe }},
+                borderColor: 'rgb(241, 196, 15)',
+                borderWidth: 2
+            }]
+        },
+        options: sparklineOptions
+    });
+
+    // Queue Size Sparkline
+    const queueSizeCtx = document.getElementById('queueSizeSparkline').getContext('2d');
+    sparklineCharts.queueSize = new Chart(queueSizeCtx, {
+        type: 'line',
+        data: {
+            labels: {{ sparkline_labels|safe }},
+            datasets: [{
+                data: {{ queue_size_data|safe }},
+                borderColor: 'rgb(155, 89, 182)',
+                borderWidth: 2
+            }]
+        },
+        options: sparklineOptions
+    });
+}
+
+function connectWebSocket() {
+    ws = new WebSocket(WS_URL);
+
+    ws.onopen = function() {
+        console.log('Monitoring WebSocket connected');
+
+        // Subscribe to monitoring events
+        ws.send(JSON.stringify({
+            type: 'subscribe',
+            event: 'monitoring.metrics'
+        }));
+
+        ws.send(JSON.stringify({
+            type: 'subscribe',
+            event: 'monitoring.alerts'
+        }));
+    };
+
+    ws.onmessage = function(event) {
+        const data = JSON.parse(event.data);
+
+        if (data.type === 'metrics_update') {
+            updateMetrics(data.metrics);
+        } else if (data.type === 'alert') {
+            addAlert(data.alert);
+        }
+    };
+
+    ws.onerror = function(error) {
+        console.error('WebSocket error:', error);
+    };
+
+    ws.onclose = function() {
+        console.log('WebSocket disconnected, reconnecting in 5s...');
+        setTimeout(connectWebSocket, 5000);
+    };
+}
+
+function updateMetrics(metrics) {
+    // Update CPU chart
+    if (cpuChart && metrics.cpu_usage !== undefined) {
+        addDataPoint(cpuChart, new Date().toLocaleTimeString(), metrics.cpu_usage);
+    }
+
+    // Update Memory chart
+    if (memoryChart && metrics.memory_usage !== undefined) {
+        addDataPoint(memoryChart, new Date().toLocaleTimeString(), metrics.memory_usage);
+    }
+
+    // Update sparklines
+    if (sparklineCharts.requestRate && metrics.request_rate !== undefined) {
+        addDataPoint(sparklineCharts.requestRate, '', metrics.request_rate);
+    }
+
+    if (sparklineCharts.responseTime && metrics.avg_response_time !== undefined) {
+        addDataPoint(sparklineCharts.responseTime, '', metrics.avg_response_time);
+    }
+
+    if (sparklineCharts.queueSize && metrics.queue_size !== undefined) {
+        addDataPoint(sparklineCharts.queueSize, '', metrics.queue_size);
+    }
+
+    // Update text values
+    if (metrics.request_rate !== undefined) {
+        $('#requestRate').text(metrics.request_rate.toFixed(2));
+    }
+
+    if (metrics.avg_response_time !== undefined) {
+        $('#responseTime').text(metrics.avg_response_time.toFixed(0));
+    }
+
+    if (metrics.queue_size !== undefined) {
+        $('#queueSize').text(metrics.queue_size);
+    }
+}
+
+function addDataPoint(chart, label, value) {
+    chart.data.labels.push(label);
+    chart.data.datasets[0].data.push(value);
+
+    // Keep only last 50 points
+    if (chart.data.labels.length > 50) {
+        chart.data.labels.shift();
+        chart.data.datasets[0].data.shift();
+    }
+
+    chart.update('none');
+}
+
+function changeTimeRange() {
+    timeRange = document.getElementById('timeRange').value;
+
+    // Reload page with new time range
+    window.location.href = `?range=${timeRange}`;
+}
+
+function dismissAlert(alertId) {
+    $.post(`/api/alerts/${alertId}/dismiss/`, {
+        csrfmiddlewaretoken: getCookie('csrftoken')
+    })
+    .done(function() {
+        $(`[data-alert-id="${alertId}"]`).fadeOut();
+    });
+}
+
+// Initialize
+$(document).ready(function() {
+    // Initialize tooltips
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+
+    // Initialize charts
+    initCharts();
+
+    // Connect WebSocket
+    connectWebSocket();
+});
+
+// Cleanup
+window.addEventListener('beforeunload', function() {
+    if (ws) {
+        ws.close();
+    }
+});
+</script>
+{% endblock %}

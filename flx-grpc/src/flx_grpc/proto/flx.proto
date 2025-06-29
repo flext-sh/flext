@@ -1,0 +1,612 @@
+syntax = "proto3";
+
+package flx;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/struct.proto";
+
+// Main FLX service definition
+service FlxService {
+  // System operations
+  rpc GetSystemStats(google.protobuf.Empty) returns (SystemStats);
+  rpc HealthCheck(google.protobuf.Empty) returns (HealthStatus);
+  rpc GetSystemInfo(google.protobuf.Empty) returns (SystemInfo);
+
+  // Pipeline operations
+  rpc ListPipelines(ListPipelinesRequest) returns (ListPipelinesResponse);
+  rpc GetPipeline(GetPipelineRequest) returns (Pipeline);
+  rpc CreatePipeline(CreatePipelineRequest) returns (Pipeline);
+  rpc UpdatePipeline(UpdatePipelineRequest) returns (Pipeline);
+  rpc DeletePipeline(DeletePipelineRequest) returns (google.protobuf.Empty);
+  rpc RunPipeline(RunPipelineRequest) returns (Execution);
+
+  // Execution operations
+  rpc GetExecution(GetExecutionRequest) returns (Execution);
+  rpc ListExecutions(ListExecutionsRequest) returns (ListExecutionsResponse);
+  rpc CancelExecution(CancelExecutionRequest) returns (google.protobuf.Empty);
+  rpc StreamExecution(StreamExecutionRequest) returns (stream ExecutionUpdate);
+
+  // Plugin operations
+  rpc ListPlugins(ListPluginsRequest) returns (ListPluginsResponse);
+  rpc InstallPlugin(InstallPluginRequest) returns (Plugin);
+  rpc UninstallPlugin(UninstallPluginRequest) returns (google.protobuf.Empty);
+  rpc GetPluginConfig(GetPluginConfigRequest) returns (PluginConfig);
+  rpc UpdatePluginConfig(UpdatePluginConfigRequest) returns (PluginConfig);
+
+  // State operations
+  rpc GetState(GetStateRequest) returns (State);
+  rpc SetState(SetStateRequest) returns (google.protobuf.Empty);
+  rpc ClearState(ClearStateRequest) returns (google.protobuf.Empty);
+
+  // Schedule operations
+  rpc ListSchedules(ListSchedulesRequest) returns (ListSchedulesResponse);
+  rpc CreateSchedule(CreateScheduleRequest) returns (Schedule);
+  rpc UpdateSchedule(UpdateScheduleRequest) returns (Schedule);
+  rpc DeleteSchedule(DeleteScheduleRequest) returns (google.protobuf.Empty);
+
+  // Meltano orchestration operations
+  rpc InitializeMeltanoProject(InitializeMeltanoProjectRequest) returns (MeltanoProject);
+  rpc LoadMeltanoProject(LoadMeltanoProjectRequest) returns (MeltanoProject);
+  rpc RunMeltanoPipeline(RunMeltanoPipelineRequest) returns (MeltanoExecution);
+  rpc GetMeltanoJobStatus(GetMeltanoJobStatusRequest) returns (MeltanoJobStatus);
+  rpc ListMeltanoJobs(ListMeltanoJobsRequest) returns (ListMeltanoJobsResponse);
+  rpc GetMeltanoState(GetMeltanoStateRequest) returns (MeltanoState);
+  rpc SetMeltanoState(SetMeltanoStateRequest) returns (google.protobuf.Empty);
+  rpc GetMeltanoJobStatistics(GetMeltanoJobStatisticsRequest) returns (MeltanoJobStatistics);
+  rpc CleanupStaleMeltanoJobs(CleanupStaleMeltanoJobsRequest) returns (MeltanoJobCleanupResult);
+  rpc RunMeltanoCommand(RunMeltanoCommandRequest) returns (MeltanoCommandResult);
+
+  // Enterprise advanced operations (PHASE 1.3)
+  rpc BatchOperations(BatchOperationsRequest) returns (BatchOperationsResponse);
+  rpc GetAdvancedMetrics(AdvancedMetricsRequest) returns (AdvancedMetricsResponse);
+  rpc SystemMaintenance(SystemMaintenanceRequest) returns (SystemMaintenanceResponse);
+  rpc ManagePlugins(PluginManagementRequest) returns (PluginManagementResponse);
+  rpc ManageConfiguration(ConfigurationManagementRequest) returns (ConfigurationManagementResponse);
+}
+
+// Common enums
+enum Status {
+  STATUS_UNSPECIFIED = 0;
+  STATUS_PENDING = 1;
+  STATUS_RUNNING = 2;
+  STATUS_SUCCESS = 3;
+  STATUS_FAILED = 4;
+  STATUS_CANCELLED = 5;
+}
+
+enum PluginType {
+  PLUGIN_TYPE_UNSPECIFIED = 0;
+  PLUGIN_TYPE_EXTRACTOR = 1;
+  PLUGIN_TYPE_LOADER = 2;
+  PLUGIN_TYPE_TRANSFORMER = 3;
+  PLUGIN_TYPE_ORCHESTRATOR = 4;
+  PLUGIN_TYPE_UTILITY = 5;
+}
+
+// System messages
+message SystemStats {
+  int32 active_pipelines = 1;
+  int64 total_executions = 2;
+  double success_rate = 3;
+  int64 uptime_seconds = 4;
+  double cpu_usage = 5;
+  double memory_usage = 6;
+  int32 active_connections = 7;
+}
+
+message HealthStatus {
+  bool healthy = 1;
+  map<string, ComponentHealth> components = 2;
+  google.protobuf.Timestamp timestamp = 3;
+}
+
+message ComponentHealth {
+  string name = 1;
+  bool healthy = 2;
+  string message = 3;
+  map<string, string> metadata = 4;
+}
+
+message SystemInfo {
+  string version = 1;
+  string environment = 2;
+  string python_version = 3;
+  string meltano_version = 4;
+  map<string, string> features = 5;
+}
+
+// Pipeline messages
+message Pipeline {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  string extractor = 4;
+  string loader = 5;
+  string transform = 6;
+  google.protobuf.Struct config = 7;
+  string schedule = 8;
+  bool is_active = 9;
+  string created_by = 10;
+  google.protobuf.Timestamp created_at = 11;
+  google.protobuf.Timestamp updated_at = 12;
+  Status last_status = 13;
+  google.protobuf.Timestamp last_run = 14;
+}
+
+message ListPipelinesRequest {
+  int32 limit = 1;
+  int32 offset = 2;
+  string filter = 3;
+  string sort_by = 4;
+  bool descending = 5;
+}
+
+message ListPipelinesResponse {
+  repeated Pipeline pipelines = 1;
+  int32 total = 2;
+  int32 limit = 3;
+  int32 offset = 4;
+}
+
+message GetPipelineRequest {
+  string id = 1;
+}
+
+message CreatePipelineRequest {
+  string name = 1;
+  string description = 2;
+  string extractor = 3;
+  string loader = 4;
+  string transform = 5;
+  google.protobuf.Struct config = 6;
+  string schedule = 7;
+}
+
+message UpdatePipelineRequest {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  string extractor = 4;
+  string loader = 5;
+  string transform = 6;
+  google.protobuf.Struct config = 7;
+  string schedule = 8;
+  bool is_active = 9;
+}
+
+message DeletePipelineRequest {
+  string id = 1;
+}
+
+message RunPipelineRequest {
+  string pipeline_id = 1;
+  bool full_refresh = 2;
+  map<string, string> env_vars = 3;
+}
+
+// Execution messages
+message Execution {
+  string id = 1;
+  string pipeline_id = 2;
+  Status status = 3;
+  google.protobuf.Timestamp started_at = 4;
+  google.protobuf.Timestamp finished_at = 5;
+  int64 duration_seconds = 6;
+  string error_message = 7;
+  map<string, string> metadata = 8;
+  int64 records_processed = 9;
+  string triggered_by = 10;
+}
+
+message GetExecutionRequest {
+  string id = 1;
+}
+
+message ListExecutionsRequest {
+  string pipeline_id = 1;
+  int32 limit = 2;
+  int32 offset = 3;
+  Status status = 4;
+  google.protobuf.Timestamp start_date = 5;
+  google.protobuf.Timestamp end_date = 6;
+}
+
+message ListExecutionsResponse {
+  repeated Execution executions = 1;
+  int32 total = 2;
+  int32 limit = 3;
+  int32 offset = 4;
+}
+
+message CancelExecutionRequest {
+  string id = 1;
+}
+
+message StreamExecutionRequest {
+  string execution_id = 1;
+}
+
+message ExecutionUpdate {
+  string execution_id = 1;
+  string type = 2;  // log, progress, status, complete
+  string message = 3;
+  google.protobuf.Timestamp timestamp = 4;
+  double progress = 5;
+  Status status = 6;
+  map<string, string> metadata = 7;
+}
+
+// Plugin messages
+message Plugin {
+  string name = 1;
+  PluginType type = 2;
+  string variant = 3;
+  string version = 4;
+  string description = 5;
+  bool installed = 6;
+  google.protobuf.Struct settings = 7;
+  google.protobuf.Timestamp installed_at = 8;
+}
+
+message ListPluginsRequest {
+  PluginType type = 1;
+  bool installed_only = 2;
+}
+
+message ListPluginsResponse {
+  repeated Plugin plugins = 1;
+  int32 total = 2;
+}
+
+message InstallPluginRequest {
+  string name = 1;
+  PluginType type = 2;
+  string variant = 3;
+}
+
+message UninstallPluginRequest {
+  string name = 1;
+  PluginType type = 2;
+}
+
+message GetPluginConfigRequest {
+  string name = 1;
+  PluginType type = 2;
+}
+
+message UpdatePluginConfigRequest {
+  string name = 1;
+  PluginType type = 2;
+  google.protobuf.Struct config = 3;
+}
+
+message PluginConfig {
+  string name = 1;
+  PluginType type = 2;
+  google.protobuf.Struct config = 3;
+}
+
+// State messages
+message State {
+  string id = 1;
+  google.protobuf.Struct data = 2;
+  google.protobuf.Timestamp updated_at = 3;
+}
+
+message GetStateRequest {
+  string id = 1;
+}
+
+message SetStateRequest {
+  string id = 1;
+  google.protobuf.Struct data = 2;
+}
+
+message ClearStateRequest {
+  string id = 1;
+}
+
+// Schedule messages
+message Schedule {
+  string id = 1;
+  string pipeline_id = 2;
+  string cron = 3;
+  bool is_active = 4;
+  google.protobuf.Timestamp next_run = 5;
+  google.protobuf.Timestamp last_run = 6;
+}
+
+message ListSchedulesRequest {
+  string pipeline_id = 1;
+  bool active_only = 2;
+}
+
+message ListSchedulesResponse {
+  repeated Schedule schedules = 1;
+  int32 total = 2;
+}
+
+message CreateScheduleRequest {
+  string pipeline_id = 1;
+  string cron = 2;
+}
+
+message UpdateScheduleRequest {
+  string id = 1;
+  string cron = 2;
+  bool is_active = 3;
+}
+
+message DeleteScheduleRequest {
+  string id = 1;
+}
+
+// Meltano orchestration messages
+enum MeltanoJobState {
+  MELTANO_JOB_STATE_UNSPECIFIED = 0;
+  MELTANO_JOB_STATE_IDLE = 1;
+  MELTANO_JOB_STATE_RUNNING = 2;
+  MELTANO_JOB_STATE_SUCCESS = 3;
+  MELTANO_JOB_STATE_FAIL = 4;
+  MELTANO_JOB_STATE_CANCELLED = 5;
+}
+
+enum MeltanoExecutionMode {
+  MELTANO_EXECUTION_MODE_UNSPECIFIED = 0;
+  MELTANO_EXECUTION_MODE_SYNC = 1;
+  MELTANO_EXECUTION_MODE_ASYNC = 2;
+}
+
+message MeltanoProject {
+  string name = 1;
+  string environment = 2;
+  string project_root = 3;
+  google.protobuf.Struct configuration = 4;
+  bool is_initialized = 5;
+  google.protobuf.Timestamp created_at = 6;
+  google.protobuf.Timestamp updated_at = 7;
+}
+
+message InitializeMeltanoProjectRequest {
+  string project_name = 1;
+  string environment = 2;
+  bool force = 3;
+}
+
+message LoadMeltanoProjectRequest {
+  string project_name = 1;
+  string environment = 2;
+}
+
+message RunMeltanoPipelineRequest {
+  string project_name = 1;
+  google.protobuf.Struct pipeline_definition = 2;
+  string environment = 3;
+  MeltanoExecutionMode execution_mode = 4;
+  map<string, string> env_vars = 5;
+}
+
+message MeltanoExecution {
+  string execution_id = 1;
+  string project_name = 2;
+  string pipeline_name = 3;
+  MeltanoJobState state = 4;
+  google.protobuf.Timestamp started_at = 5;
+  google.protobuf.Timestamp finished_at = 6;
+  int64 duration_seconds = 7;
+  string error_message = 8;
+  google.protobuf.Struct result_data = 9;
+  string environment = 10;
+}
+
+message GetMeltanoJobStatusRequest {
+  string project_name = 1;
+  string job_id = 2;
+}
+
+message MeltanoJobStatus {
+  string job_id = 1;
+  string run_id = 2;
+  MeltanoJobState state = 3;
+  google.protobuf.Timestamp started_at = 4;
+  google.protobuf.Timestamp last_heartbeat_at = 5;
+  string payload = 6;
+  google.protobuf.Struct metadata = 7;
+}
+
+message ListMeltanoJobsRequest {
+  string project_name = 1;
+  MeltanoJobState state = 2;
+  string run_id = 3;
+  int32 limit = 4;
+  int32 offset = 5;
+}
+
+message ListMeltanoJobsResponse {
+  repeated MeltanoJobStatus jobs = 1;
+  int32 total = 2;
+  int32 limit = 3;
+  int32 offset = 4;
+}
+
+message GetMeltanoStateRequest {
+  string project_name = 1;
+  string state_id = 2;
+  bool use_cache = 3;
+}
+
+message MeltanoState {
+  string state_id = 1;
+  google.protobuf.Struct state_data = 2;
+  string version = 3;
+  google.protobuf.Timestamp updated_at = 4;
+  string backend = 5;
+}
+
+message SetMeltanoStateRequest {
+  string project_name = 1;
+  string state_id = 2;
+  google.protobuf.Struct state_data = 3;
+  bool create_backup = 4;
+}
+
+message GetMeltanoJobStatisticsRequest {
+  string project_name = 1;
+  int32 days = 2;
+}
+
+message MeltanoJobStatistics {
+  int32 period_days = 1;
+  int64 total_jobs = 2;
+  map<string, int64> state_counts = 3;
+  double success_rate = 4;
+  google.protobuf.Timestamp generated_at = 5;
+  string cutoff_date = 6;
+}
+
+message CleanupStaleMeltanoJobsRequest {
+  string project_name = 1;
+  int32 heartbeat_timeout_minutes = 2;
+  bool dry_run = 3;
+}
+
+message MeltanoJobCleanupResult {
+  bool dry_run = 1;
+  int32 stale_jobs_found = 2;
+  int32 jobs_cleaned = 3;
+  int32 heartbeat_timeout_minutes = 4;
+  google.protobuf.Timestamp cleaned_at = 5;
+  repeated string cleaned_job_ids = 6;
+}
+
+message RunMeltanoCommandRequest {
+  string project_name = 1;
+  repeated string command_args = 2;
+  string environment = 3;
+  map<string, string> env_vars = 4;
+}
+
+message MeltanoCommandResult {
+  int32 return_code = 1;
+  string stdout = 2;
+  string stderr = 3;
+  int64 duration_seconds = 4;
+  repeated string command = 5;
+}
+
+// Enterprise advanced operations messages (PHASE 1.3)
+
+// Batch operations for high-throughput scenarios
+message BatchOperationsRequest {
+  repeated BatchOperation operations = 1;
+  bool fail_fast = 2;
+  int32 max_parallel = 3;
+  int32 timeout_seconds = 4;
+}
+
+message BatchOperation {
+  string operation_id = 1;
+  string operation_type = 2;  // create_pipeline, run_pipeline, install_plugin, etc
+  google.protobuf.Struct parameters = 3;
+  int32 priority = 4;
+}
+
+message BatchOperationsResponse {
+  repeated BatchOperationResult results = 1;
+  int32 total_operations = 2;
+  int32 successful_operations = 3;
+  int32 failed_operations = 4;
+  int64 total_duration_ms = 5;
+}
+
+message BatchOperationResult {
+  string operation_id = 1;
+  bool success = 2;
+  string error_message = 3;
+  google.protobuf.Struct result_data = 4;
+  int64 duration_ms = 5;
+}
+
+// Advanced metrics for enterprise monitoring
+message AdvancedMetricsRequest {
+  repeated string metric_types = 1;  // system, pipelines, plugins, performance
+  google.protobuf.Timestamp start_time = 2;
+  google.protobuf.Timestamp end_time = 3;
+  string granularity = 4;  // minute, hour, day
+  bool include_predictions = 5;
+}
+
+message AdvancedMetricsResponse {
+  map<string, MetricSeries> metrics = 1;
+  google.protobuf.Timestamp generated_at = 2;
+  string granularity = 3;
+  map<string, google.protobuf.Struct> predictions = 4;
+}
+
+message MetricSeries {
+  string name = 1;
+  string unit = 2;
+  repeated MetricDataPoint data_points = 3;
+  google.protobuf.Struct metadata = 4;
+}
+
+message MetricDataPoint {
+  google.protobuf.Timestamp timestamp = 1;
+  double value = 2;
+  map<string, string> labels = 3;
+}
+
+// System maintenance operations
+message SystemMaintenanceRequest {
+  string operation = 1;  // cleanup_logs, optimize_db, restart_services, backup, restore
+  google.protobuf.Struct parameters = 2;
+  bool dry_run = 3;
+  bool force = 4;
+}
+
+message SystemMaintenanceResponse {
+  bool success = 1;
+  string operation = 2;
+  string status_message = 3;
+  google.protobuf.Struct operation_details = 4;
+  int64 duration_ms = 5;
+  repeated string warnings = 6;
+}
+
+// Plugin management operations
+message PluginManagementRequest {
+  string action = 1;  // install, uninstall, update, configure, list_available, validate
+  string plugin_name = 2;
+  PluginType plugin_type = 3;
+  google.protobuf.Struct parameters = 4;
+  bool force = 5;
+}
+
+message PluginManagementResponse {
+  bool success = 1;
+  string action = 2;
+  string plugin_name = 3;
+  google.protobuf.Struct result_data = 4;
+  repeated string messages = 5;
+  repeated Plugin affected_plugins = 6;
+}
+
+// Configuration management operations
+message ConfigurationManagementRequest {
+  string action = 1;  // get, set, delete, validate, backup, restore, export, import
+  string config_path = 2;
+  google.protobuf.Struct config_data = 3;
+  bool create_backup = 4;
+  string environment = 5;
+}
+
+message ConfigurationManagementResponse {
+  bool success = 1;
+  string action = 2;
+  string config_path = 3;
+  google.protobuf.Struct config_data = 4;
+  string validation_status = 5;
+  repeated string warnings = 6;
+  string backup_id = 7;
+}
