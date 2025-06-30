@@ -1,78 +1,38 @@
 package main
 
 import (
-	"log"
-	"net/http"
+	"os"
 
+	"github.com/flext-sh/flext/internal/infrastructure/config"
 	"github.com/flext-sh/flext/internal/infrastructure/container"
-	"github.com/go-playground/validator/v10"
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
+	"github.com/flext-sh/flext/internal/infrastructure/logging"
+	"github.com/flext-sh/flext/internal/infrastructure/server"
 )
 
-// CustomValidator implementa a interface echo.Validator
-type CustomValidator struct {
-	validator *validator.Validate
-}
-
-func (cv *CustomValidator) Validate(i interface{}) error {
-	return cv.validator.Struct(i)
-}
-
 func main() {
+	// Carregar configuração
+	cfg := config.LoadConfig()
+
+	// Inicializar logging
+	logging.InitLogger(cfg.Logging)
+	logger := logging.GetLogger()
+
+	logger.Info("Initializing FLEXT application",
+		logging.F("version", "1.0.0"),
+		logging.F("environment", os.Getenv("ENVIRONMENT")),
+	)
+
 	// Inicializar container de dependências
-	container := container.NewContainer()
+	appContainer := container.NewContainer()
 
-	// Criar instância do Echo
-	e := echo.New()
+	// Criar e configurar servidor
+	srv := server.NewServer(cfg, appContainer)
 
-	// Configurar validator
-	e.Validator = &CustomValidator{validator: validator.New()}
+	// Iniciar servidor com graceful shutdown
+	if err := srv.Start(); err != nil {
+		logger.Error("Server failed to start", logging.F("error", err.Error()))
+		os.Exit(1)
+	}
 
-	// Middleware
-	e.Use(middleware.Logger())
-	e.Use(middleware.Recover())
-	e.Use(middleware.CORS())
-
-	// Health check
-	e.GET("/health", func(c echo.Context) error {
-		return c.JSON(http.StatusOK, map[string]string{
-			"status":  "ok",
-			"version": "1.0.0",
-		})
-	})
-
-	// Registrar rotas dos handlers
-	pipelineHandler := container.GetPipelineHandler()
-	pipelineHandler.RegisterRoutes(e)
-
-	pluginHandler := container.GetPluginHandler()
-	pluginHandler.RegisterRoutes(e)
-
-	// Documentação da API
-	e.GET("/", func(c echo.Context) error {
-		return c.JSON(http.StatusOK, map[string]interface{}{
-			"name":        "FLEXT API",
-			"description": "Unified Hexagonal Architecture + DDD Implementation",
-			"version":     "1.0.0",
-			"endpoints": map[string]interface{}{
-				"health":    "GET /health",
-				"pipelines": map[string]string{
-					"create":    "POST /api/v1/pipelines",
-					"get":       "GET /api/v1/pipelines/:id",
-					"list":      "GET /api/v1/pipelines",
-					"add_step":  "POST /api/v1/pipelines/:id/steps",
-				},
-				"plugins": map[string]string{
-					"register": "POST /api/v1/plugins",
-					"get":      "GET /api/v1/plugins/:id",
-					"list":     "GET /api/v1/plugins",
-				},
-			},
-		})
-	})
-
-	// Iniciar servidor
-	log.Println("Starting FLEXT server on :8080")
-	log.Fatal(e.Start(":8080"))
+	logger.Info("Application shutdown complete")
 }
