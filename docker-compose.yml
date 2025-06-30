@@ -1,0 +1,237 @@
+# FLEXT Development Environment
+# =============================
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: flext-postgres
+    environment:
+      POSTGRES_DB: flext_db
+      POSTGRES_USER: flext
+      POSTGRES_PASSWORD: flext_dev_password
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U flext -d flext_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - flext-network
+
+  # Redis Cache & Session Store
+  redis:
+    image: redis:7-alpine
+    container_name: flext-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes --requirepass flext_redis_password
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - flext-network
+
+  # Prometheus Metrics Collection
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: flext-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    networks:
+      - flext-network
+
+  # Grafana Dashboard
+  grafana:
+    image: grafana/grafana:latest
+    container_name: flext-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: flext_admin
+      GF_USERS_ALLOW_SIGN_UP: false
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
+    networks:
+      - flext-network
+
+  # Jaeger Tracing
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: flext-jaeger
+    ports:
+      - "16686:16686"
+      - "14268:14268"
+      - "6831:6831/udp"
+      - "6832:6832/udp"
+    environment:
+      COLLECTOR_OTLP_ENABLED: true
+    networks:
+      - flext-network
+
+  # LDAP Server for Testing
+  openldap:
+    image: osixia/openldap:latest
+    container_name: flext-ldap
+    ports:
+      - "389:389"
+      - "636:636"
+    environment:
+      LDAP_ORGANISATION: "FLEXT Development"
+      LDAP_DOMAIN: "flext.dev"
+      LDAP_ADMIN_PASSWORD: "flext_ldap_admin"
+      LDAP_CONFIG_PASSWORD: "flext_ldap_config"
+      LDAP_READONLY_USER: true
+      LDAP_READONLY_USER_USERNAME: "readonly"
+      LDAP_READONLY_USER_PASSWORD: "readonly"
+    volumes:
+      - ldap_data:/var/lib/ldap
+      - ldap_config:/etc/ldap/slapd.d
+      - ./docker/ldap/bootstrap.ldif:/container/service/slapd/assets/config/bootstrap/ldif/50-bootstrap.ldif
+    networks:
+      - flext-network
+
+  # LDAP Admin Interface
+  phpldapadmin:
+    image: osixia/phpldapadmin:latest
+    container_name: flext-ldap-admin
+    ports:
+      - "8080:80"
+    environment:
+      PHPLDAPADMIN_LDAP_HOSTS: openldap
+      PHPLDAPADMIN_HTTPS: false
+    depends_on:
+      - openldap
+    networks:
+      - flext-network
+
+  # Oracle Database XE (for testing Oracle integrations)
+  oracle-xe:
+    image: gvenzl/oracle-xe:21-slim
+    container_name: flext-oracle
+    ports:
+      - "1521:1521"
+    environment:
+      ORACLE_PASSWORD: flext_oracle_password
+      APP_USER: flext_user
+      APP_USER_PASSWORD: flext_user_password
+    volumes:
+      - oracle_data:/opt/oracle/oradata
+      - ./docker/oracle/init.sql:/docker-entrypoint-initdb.d/init.sql
+    profiles:
+      - oracle  # Use with: docker-compose --profile oracle up
+    networks:
+      - flext-network
+
+  # FLEXT API (Go)
+  flext-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: flext-api
+    ports:
+      - "8081:8081"
+    environment:
+      FLEXT_PORT: 8081
+      FLEXT_DB_URL: postgres://flext:flext_dev_password@postgres:5432/flext_db
+      REDIS_URL: redis://:flext_redis_password@redis:6379/0
+      PROMETHEUS_URL: http://prometheus:9090
+      JAEGER_ENDPOINT: http://jaeger:14268/api/traces
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./logs:/var/log/flext
+    profiles:
+      - api  # Use with: docker-compose --profile api up
+    networks:
+      - flext-network
+
+  # FLEXT Web (Django)
+  flext-web:
+    build:
+      context: ./flext-web
+      dockerfile: Dockerfile
+    container_name: flext-web
+    ports:
+      - "8000:8000"
+    environment:
+      DJANGO_DATABASE_URL: postgres://flext:flext_dev_password@postgres:5432/flext_web
+      REDIS_URL: redis://:flext_redis_password@redis:6379/1
+      FLEXT_API_URL: http://flext-api:8081
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./flext-web/static:/app/static
+      - ./flext-web/media:/app/media
+    profiles:
+      - web  # Use with: docker-compose --profile web up
+    networks:
+      - flext-network
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: flext-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./docker/nginx/ssl:/etc/nginx/ssl
+    depends_on:
+      - flext-api
+      - flext-web
+    profiles:
+      - proxy  # Use with: docker-compose --profile proxy up
+    networks:
+      - flext-network
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  prometheus_data:
+    driver: local
+  grafana_data:
+    driver: local
+  ldap_data:
+    driver: local
+  ldap_config:
+    driver: local
+  oracle_data:
+    driver: local
+
+networks:
+  flext-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
