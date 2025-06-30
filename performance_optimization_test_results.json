@@ -1,0 +1,90 @@
+{
+  "test_suite": "Performance Optimization for Large Volumes",
+  "execution_time": "2025-06-29T22:01:39.026517",
+  "total_duration_seconds": 2.6832094660494477,
+  "tests": {
+    "memory_efficient_streaming": {
+      "memory_streaming": true,
+      "records_processed": 1000,
+      "processing_rate": 5286.686876895162,
+      "memory_increase_mb": 5.1875,
+      "memory_per_record_mb": 0.0051875,
+      "memory_efficient": true,
+      "streaming_status": "success"
+    },
+    "adaptive_batch_optimization": {
+      "adaptive_batching": true,
+      "scenarios_tested": 4,
+      "correct_adaptations": 4,
+      "adaptation_accuracy": 1.0,
+      "compression_tests": 3,
+      "correct_compression_decisions": 3,
+      "compression_accuracy": 1.0,
+      "connection_pool_optimized": true,
+      "optimization_status": "success"
+    },
+    "concurrent_processing": {
+      "concurrent_processing": true,
+      "streams_tested": 3,
+      "sequential_duration": 0.6605474109528586,
+      "concurrent_duration": 0.39428352005779743,
+      "speedup": 1.6753107278134018,
+      "efficiency": 0.558436909271134,
+      "total_records_processed": 150,
+      "performance_improvement": true,
+      "concurrent_status": "success"
+    },
+    "large_dataset_handling": {
+      "large_dataset_handling": true,
+      "total_records_processed": 2500,
+      "total_duration": 0.5917965719709173,
+      "overall_rate": 4224.424605357223,
+      "chunks_processed": 5,
+      "average_chunk_rate": 43514.96441424956,
+      "rate_consistency": 0.01600594550928275,
+      "good_throughput": true,
+      "consistent_performance": false,
+      "chunk_details": [
+        {
+          "chunk": 1,
+          "records": 500,
+          "duration": 0.5531821890035644,
+          "rate": 903.8613497311611
+        },
+        {
+          "chunk": 2,
+          "records": 500,
+          "duration": 0.009058094001375139,
+          "rate": 55199.25051827607
+        },
+        {
+          "chunk": 3,
+          "records": 500,
+          "duration": 0.00967411499004811,
+          "rate": 51684.31432894446
+        },
+        {
+          "chunk": 4,
+          "records": 500,
+          "duration": 0.009377863956615329,
+          "rate": 53317.0455780914
+        },
+        {
+          "chunk": 5,
+          "records": 500,
+          "duration": 0.008854203973896801,
+          "rate": 56470.35029620469
+        }
+      ],
+      "dataset_status": "success"
+    }
+  },
+  "performance_summary": {
+    "memory_efficiency": true,
+    "adaptive_optimization": true,
+    "concurrent_processing": true,
+    "large_dataset_capable": true,
+    "overall_performance_optimized": true
+  },
+  "overall_status": "production_optimized"
+}
