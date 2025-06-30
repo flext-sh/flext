@@ -1,12 +1,12 @@
-# FLX Framework Reference Materials Guide - Reference
+# FLEXT Framework Reference Materials Guide - Reference
 
-> **Function**: Comprehensive reference materials for FLX Framework development and Oracle integrations | **Audience**: Developers, architects, technical writers | **Status**: ✅ VALIDATED
+> **Function**: Comprehensive reference materials for FLEXT Framework development and Oracle integrations | **Audience**: Developers, architects, technical writers | **Status**: ✅ VALIDATED
 
 [![Reference](https://img.shields.io/badge/reference-materials-blue.svg)](./index.md)
 [![Oracle](https://img.shields.io/badge/oracle-integrations-red.svg)](../../guides/oracle/index.md)
-[![Framework](https://img.shields.io/badge/framework-FLX%200.4.0-orange.svg)](../../index.md)
+[![Framework](https://img.shields.io/badge/framework-FLEXT%200.4.0-orange.svg)](../../index.md)
 
-**Centralized reference materials, examples, SDKs, and integration resources supporting FLX Framework implementation following hexagonal architecture patterns**
+**Centralized reference materials, examples, SDKs, and integration resources supporting FLEXT Framework implementation following hexagonal architecture patterns**
 
 ---
 
@@ -31,7 +31,7 @@
 
 ## 📋 **Overview**
 
-This guide centralizes reference materials, examples, SDKs, and legacy integrations to support the FLX Framework implementation following hexagonal architecture patterns.
+This guide centralizes reference materials, examples, SDKs, and legacy integrations to support the FLEXT Framework implementation following hexagonal architecture patterns.
 
 ### **Prerequisites**
 
@@ -95,12 +95,12 @@ Materials in this directory should be used as:
 1. **Technical reference** to understand APIs, formats, and patterns
 2. **Source of best practices** for developing new integrations following Hexagonal Architecture
 3. **Knowledge base** for troubleshooting and debugging
-4. **Adaptation source** for implementing adapters and ports in the FLX framework
+4. **Adaptation source** for implementing adapters and ports in the FLEXT framework
 
 **Important:** When using code examples or configurations:
 
 - Always verify the version/date of material and current compatibility
-- Adapt to follow project patterns and libraries (FLX framework, hexagonal architecture)
+- Adapt to follow project patterns and libraries (FLEXT framework, hexagonal architecture)
 - Document any reuse or adaptation
 - Consider how examples fit into inbound/outbound port patterns
 
@@ -171,7 +171,7 @@ This directory follows governance guidelines to maintain its usefulness:
 For questions about reference materials:
 
 1. Check the specific Oracle documentation links for current versions
-2. Verify compatibility with current FLX Framework version
+2. Verify compatibility with current FLEXT Framework version
 3. Consult [Development Standards](../../development/index.md) for adaptation guidelines
 4. Review [Examples](../../examples/index.md) for practical implementation patterns
 
@@ -184,4 +184,4 @@ For questions about reference materials:
 
 ---
 
-**📂 Hub**: [Reference Materials Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Reference Materials Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

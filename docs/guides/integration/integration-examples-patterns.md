@@ -6,7 +6,7 @@
 [![Patterns](https://img.shields.io/badge/patterns-enterprise-green.svg)](../../architecture/patterns/index.md)
 [![Examples](https://img.shields.io/badge/examples-validated-orange.svg)](../../examples/index.md)
 
-**Complete guide to enterprise integration patterns with FLX Framework - validated against production implementations**
+**Complete guide to enterprise integration patterns with FLEXT Framework - validated against production implementations**
 
 ---
 
@@ -21,7 +21,7 @@
 ### **⬅️ Prerequisites**
 
 - [Architecture Hub](../../architecture/index.md) - Essential understanding of hexagonal architecture and integration patterns
-- [Getting Started Hub](../../getting-started/index.md) - FLX Framework installation and basic concepts required
+- [Getting Started Hub](../../getting-started/index.md) - FLEXT Framework installation and basic concepts required
 - [API Reference Hub](../../api-reference/index.md) - Understanding adapter APIs and integration interfaces
 
 ### **➡️ Next Steps**
@@ -40,7 +40,7 @@
 
 ## 🔌 Overview
 
-FLX provides robust integration capabilities using proven enterprise integration patterns to connect with various external systems while maintaining loose coupling and high reliability.
+FLEXT provides robust integration capabilities using proven enterprise integration patterns to connect with various external systems while maintaining loose coupling and high reliability.
 
 ### **Supported Integration Patterns**
 
@@ -1106,8 +1106,8 @@ class DatabaseLoader(Loader):
 
 ---
 
-**🔌 Your FLX application now supports comprehensive integration patterns for connecting with external systems, APIs, databases, and message brokers!**
+**🔌 Your FLEXT application now supports comprehensive integration patterns for connecting with external systems, APIs, databases, and message brokers!**
 
 ---
 
-**📄 Content Document** | **🏠 Parent**: [Integration Hub](./index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📄 Content Document** | **🏠 Parent**: [Integration Hub](./index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

@@ -1,4 +1,4 @@
-# FLX Core Domain Layer - Validated Implementation Guide
+# FLEXT Core Domain Layer - Validated Implementation Guide
 
 > **Function**: Production-validated domain-driven design implementation | **Audience**: Architects, senior developers | **Status**: **Validated against `/flext/src/flext/core/`**
 
@@ -24,7 +24,7 @@
 
 ## 🎯 **Real Implementation Overview**
 
-The FLX core domain layer (`/flext/src/flext/core/`) implements **production-grade Domain-Driven Design** with:
+The FLEXT core domain layer (`/flext/src/flext/core/`) implements **production-grade Domain-Driven Design** with:
 
 ### **Validated Core Components**
 
@@ -133,7 +133,7 @@ class AggregateRoot(Entity, Versionable):
 ### **Real-World Entity Example**
 
 ```python
-# Based on actual FLX patterns
+# Based on actual FLEXT patterns
 class Customer(Entity):
     """Customer entity with business behavior."""
     name: str
@@ -560,7 +560,7 @@ class CustomerActivatedEvent(DomainEvent):
 
 ---
 
-_This guide is validated against actual FLX framework implementation and provides production-ready patterns for domain-driven design._ 5. **Event-Driven**: Domain events for decoupling
+_This guide is validated against actual FLEXT framework implementation and provides production-ready patterns for domain-driven design._ 5. **Event-Driven**: Domain events for decoupling
 
 ## Usage
 
@@ -615,7 +615,7 @@ class EmailChangedEvent(DomainEvent):
 The core domain integrates with Lato for DDD support:
 
 ```python
-# FLX integrates with Lato for DDD patterns
+# FLEXT integrates with Lato for DDD patterns
 from lato import Command
 from flext.application.services import CommandService
 
@@ -625,7 +625,7 @@ class CreateUserCommand(Command):
     username: str
     email: str
 
-# Services handle commands in FLX
+# Services handle commands in FLEXT
 class UserCommandService(CommandService):
     """Service for handling user commands."""
 
@@ -651,7 +651,7 @@ class UserCommandService(CommandService):
 ### **Prerequisites**
 
 - [Architecture Hub](../index.md) - Understanding hexagonal architecture foundations and design principles essential for proper domain modeling and separation of concerns
-- [Getting Started Guide](../../getting-started/index.md) - Basic FLX Framework concepts including configuration, dependency injection, and core patterns before implementing domain entities
+- [Getting Started Guide](../../getting-started/index.md) - Basic FLEXT Framework concepts including configuration, dependency injection, and core patterns before implementing domain entities
 - [Development Standards](../../development/standards/standardization-plan.md) - Code quality standards for domain implementation including type safety, immutability patterns, and testing approaches
 
 ### **Next Steps**
@@ -794,4 +794,4 @@ class CustomerRepository(ABC):
 
 ---
 
-**📂 Hub**: [Architecture Hub](../index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Architecture Hub](../index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

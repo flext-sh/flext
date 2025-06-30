@@ -6,7 +6,7 @@
 [![Messaging](https://img.shields.io/badge/component-messaging-purple.svg)](../api-reference/infrastructure/messaging.md)
 [![DDD](https://img.shields.io/badge/pattern-domain_driven-orange.svg)](../architecture/patterns/domain-driven-design.md)
 
-**Asynchronous messaging infrastructure implementing DDD patterns with Dramatiq and Lato for the FLX Framework**
+**Asynchronous messaging infrastructure implementing DDD patterns with Dramatiq and Lato for the FLEXT Framework**
 
 ---
 
@@ -30,7 +30,7 @@
 
 ## 📋 **Overview**
 
-The FLX messaging infrastructure provides a robust event-driven architecture foundation, integrating Dramatiq for background task processing and Lato for Domain-Driven Design (DDD) command/query handling.
+The FLEXT messaging infrastructure provides a robust event-driven architecture foundation, integrating Dramatiq for background task processing and Lato for Domain-Driven Design (DDD) command/query handling.
 
 ### **Key Features**
 
@@ -234,7 +234,7 @@ class OrderSaga:
 
 ### **Broker Auto-Detection**
 
-FLX implements intelligent broker detection with automatic fallback:
+FLEXT implements intelligent broker detection with automatic fallback:
 
 ```python
 # Default behavior - no configuration needed
@@ -435,4 +435,4 @@ await bus.publish(
 
 ---
 
-**📂 Hub**: [Infrastructure Hub](./index.md) | **🏠 Root**: [Documentation Home](../index.md) | **Framework**: FLX 0.4.0+
+**📂 Hub**: [Infrastructure Hub](./index.md) | **🏠 Root**: [Documentation Home](../index.md) | **Framework**: FLEXT 0.4.0+

@@ -97,7 +97,7 @@ OIC_URL=https://instance-name.integration.ocp.oraclecloud.com
 - In `RESOURCE_AUD`: NO slash between port (443) and "urn"
 - In `API_AUD`: There IS a slash after port (443)
 
-### 1.4 Implementation with FLX Framework
+### 1.4 Implementation with FLEXT Framework
 
 #### 1.4.1 Using the OIC Library
 
@@ -454,7 +454,7 @@ curl -X GET "$WMS_URL/resource" \
   -H "Content-Type: application/json"
 ```
 
-## 5. Integration with FLX Framework
+## 5. Integration with FLEXT Framework
 
 ### 5.1 Unified Authentication Service
 
@@ -604,7 +604,7 @@ export MINIMAL_TEST=true
 
 - [Oracle Hub](./index.md) - Understanding Oracle integration architecture before implementing authentication
 - [Security Hub](../../security/index.md) - Framework security patterns and enterprise security concepts
-- [Getting Started Hub](../../getting-started/index.md) - FLX Framework installation and basic configuration
+- [Getting Started Hub](../../getting-started/index.md) - FLEXT Framework installation and basic configuration
 
 ### **Next Steps**
 
@@ -622,4 +622,4 @@ export MINIMAL_TEST=true
 
 ---
 
-**📂 Hub**: [Oracle Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Oracle Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

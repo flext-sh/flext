@@ -20,7 +20,7 @@ Implementação ultra-clean que usa **maximamente** a infraestrutura FLX, elimin
 3. **OudLdifService** - Processamento LDIF real (61 linhas)
 4. **OudCliApplication** - Herda de UnifiedCliApplication (157 linhas)
 
-## 🏗️ Infraestrutura FLX Reutilizada
+## 🏗️ Infraestrutura FLEXT Reutilizada
 
 ### Completamente Delegado para FLX
 

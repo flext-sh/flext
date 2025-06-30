@@ -1,19 +1,19 @@
-# 🧪 FLX Testing Comprehensive Guide - Content-Based Consolidation
+# 🧪 FLEXT Testing Comprehensive Guide - Content-Based Consolidation
 
-> **Function**: Complete FLX testing strategy with real implementation validation | **Audience**: Developers, QA engineers | **Status**: ✅ CONTENT_CONSOLIDATED
+> **Function**: Complete FLEXT testing strategy with real implementation validation | **Audience**: Developers, QA engineers | **Status**: ✅ CONTENT_CONSOLIDATED
 
 [![Testing](https://img.shields.io/badge/testing-comprehensive-green.svg)](./flext-testing-comprehensive-guide.md)
 [![Hexagonal](https://img.shields.io/badge/architecture-hexagonal-blue.svg)](../../architecture/index.md)
 [![Source Validated](https://img.shields.io/badge/source-validated-orange.svg)](../../../flext/tests/)
 [![Content Based](https://img.shields.io/badge/reorganization-content%20based-purple.svg)](../../analysis/content-based-reorganization-strategy.md)
 
-**Unified testing guide consolidating all FLX testing strategies with zero content loss and validation against real test implementations**
+**Unified testing guide consolidating all FLEXT testing strategies with zero content loss and validation against real test implementations**
 
 ---
 
 ## 🧭 **Navigation Context**
 
-**🏠 Hub**: [Development Hub](../index.md) → **📂 Testing**: [Testing Hub](./index.md) → **📄 Current**: FLX Testing Comprehensive
+**🏠 Hub**: [Development Hub](../index.md) → **📂 Testing**: [Testing Hub](./index.md) → **📄 Current**: FLEXT Testing Comprehensive
 
 ### **📍 Content Consolidation Source**
 
@@ -34,19 +34,19 @@
 
 - **🎯 Testing Hub**: [Testing Index](./index.md)
 - **🏠 Documentation Root**: [Root Index](../../index.md)
-- **🔗 Source Code**: [FLX Tests](../../../flext/tests/)
+- **🔗 Source Code**: [FLEXT Tests](../../../flext/tests/)
 
 ---
 
-## 🏗️ **FLX TESTING ARCHITECTURE**
+## 🏗️ **FLEXT TESTING ARCHITECTURE**
 
 ### **🎯 Testing Strategy Overview (Validated Against Source)**
 
-FLX implements comprehensive testing following hexagonal architecture principles:
+FLEXT implements comprehensive testing following hexagonal architecture principles:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    FLX Testing Pyramid                     │
+│                    FLEXT Testing Pyramid                     │
 ├─────────────────────────────────────────────────────────────┤
 │  🎭 E2E Tests (Integration Flows)                          │
 │     ├── Complete hexagonal flow validation                 │
@@ -523,7 +523,7 @@ class TestE2EOrderProcessing:
 
     @pytest.fixture
     async def flext_application(self):
-        """Create complete FLX application for E2E testing."""
+        """Create complete FLEXT application for E2E testing."""
         from flext import create_application
 
         app = create_application(
@@ -690,7 +690,7 @@ class TestArchitectureBoundaries:
 
 ### **Prerequisites**
 
-- [FLX Framework Setup](../getting-started/installation.md) - Required framework installation
+- [FLEXT Framework Setup](../getting-started/installation.md) - Required framework installation
 - [Hexagonal Architecture](../../architecture/hexagonal/index.md) - Architectural principles
 
 ### **Next Steps**
@@ -701,10 +701,10 @@ class TestArchitectureBoundaries:
 
 ### **Related Topics**
 
-- [FLX Core API](../../api-reference/core/index.md) - Framework APIs for testing
+- [FLEXT Core API](../../api-reference/core/index.md) - Framework APIs for testing
 - [Adapter Development](../adapters/adapter-development-guide.md) - Creating testable adapters
 - [Domain Modeling](../../architecture/hexagonal/domain.md) - Domain design for testability
 
 ---
 
-**📍 Location**: [Development Hub](../index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Approach**: 🎯 CONTENT-BASED
+**📍 Location**: [Development Hub](../index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Approach**: 🎯 CONTENT-BASED

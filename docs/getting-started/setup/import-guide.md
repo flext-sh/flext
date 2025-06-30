@@ -6,7 +6,7 @@
 [![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](./installation-guide.md)
 [![Architecture](https://img.shields.io/badge/architecture-hexagonal-orange.svg)](../../architecture/index.md)
 
-**Complete import guide for FLX 0.4.0 framework - validated against current source code implementation**
+**Complete import guide for FLEXT 0.4.0 framework - validated against current source code implementation**
 
 ---
 
@@ -30,7 +30,7 @@
 
 ## 📋 **Overview**
 
-This guide provides the correct import paths for the FLX 0.4.0 framework based on the current modern codebase structure with hexagonal architecture patterns.
+This guide provides the correct import paths for the FLEXT 0.4.0 framework based on the current modern codebase structure with hexagonal architecture patterns.
 
 ## Core Imports (from `flext`)
 
@@ -447,12 +447,12 @@ http = HttpClientAdapter(
 ### **Prerequisites**
 
 - [Installation Guide](./installation-guide.md) - Essential framework installation before importing modules
-- [Python 3.13+ Environment](https://python.org) - Required runtime environment for FLX imports
+- [Python 3.13+ Environment](https://python.org) - Required runtime environment for FLEXT imports
 - [Architecture Overview](../../architecture/index.md) - Understanding hexagonal architecture patterns for proper imports
 
 ### **Next Steps**
 
-- [Quickstart Guide](../basics/quickstart.md) - Build your first FLX application using these imports
+- [Quickstart Guide](../basics/quickstart.md) - Build your first FLEXT application using these imports
 - [Framework Concepts](../concepts/flext-framework-overview.md) - Deep dive into architecture concepts behind imports
 - [Basic Examples](../../examples/basic/index.md) - Working code examples demonstrating import patterns
 
@@ -470,7 +470,7 @@ http = HttpClientAdapter(
 
 ### **Import Errors**
 
-- **ModuleNotFoundError**: Ensure FLX Framework is properly installed via [Installation Guide](./installation-guide.md)
+- **ModuleNotFoundError**: Ensure FLEXT Framework is properly installed via [Installation Guide](./installation-guide.md)
 - **Version Conflicts**: Verify Python 3.13+ and framework version compatibility
 - **Path Issues**: Use absolute imports as shown in examples above
 
@@ -482,4 +482,4 @@ http = HttpClientAdapter(
 
 ---
 
-**📂 Hub**: [Setup Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Setup Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

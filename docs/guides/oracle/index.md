@@ -54,7 +54,7 @@
 | **Guide**                                                | **Function**                    | **Audience**       | **Status**  |
 | -------------------------------------------------------- | ------------------------------- | ------------------ | ----------- |
 | [Database Complete](./database-complete-guide.md)        | Complete database integration   | Database Engineers | ✅ Complete |
-| [FLX Database Adapter](./flext-database-oracle-adapter.md) | Database adapter implementation | Backend Developers | ✅ Complete |
+| [FLEXT Database Adapter](./flext-database-oracle-adapter.md) | Database adapter implementation | Backend Developers | ✅ Complete |
 
 ---
 
@@ -65,7 +65,7 @@
 | **Guide**                                                                | **Function**                    | **Audience**          | **Status**  |
 | ------------------------------------------------------------------------ | ------------------------------- | --------------------- | ----------- |
 | [OIC Complete](./oic-complete-guide.md)                                  | Complete OIC integration        | Integration Engineers | ✅ Complete |
-| [FLX OIC Adapter](./flext-http-oracle-oic-adapter.md)                      | OIC HTTP adapter implementation | API Developers        | ✅ Complete |
+| [FLEXT OIC Adapter](./flext-http-oracle-oic-adapter.md)                      | OIC HTTP adapter implementation | API Developers        | ✅ Complete |
 | [Integration Comprehensive](./oracle-integration-comprehensive-guide.md) | Comprehensive OIC guide         | Integration Teams     | ✅ Complete |
 | [Integration API](./oracle-integration-api-guide.md)                     | OIC API patterns                | API Developers        | ✅ Complete |
 | [OIC Log Levels](./oracle-oic-log-levels.md)                             | Logging configuration           | Operations Teams      | ✅ Complete |
@@ -79,7 +79,7 @@
 | **Guide**                                                   | **Function**                    | **Audience**     | **Status**  |
 | ----------------------------------------------------------- | ------------------------------- | ---------------- | ----------- |
 | [WMS Complete](./wms-complete-guide.md)                     | Complete WMS integration        | WMS Developers   | ✅ Complete |
-| [FLX WMS Adapter](./flext-http-oracle-wms-adapter.md)         | WMS HTTP adapter implementation | API Developers   | ✅ Complete |
+| [FLEXT WMS Adapter](./flext-http-oracle-wms-adapter.md)         | WMS HTTP adapter implementation | API Developers   | ✅ Complete |
 | [WMS Comprehensive](./oracle-wms-comprehensive-guide.md)    | Comprehensive WMS guide         | WMS Teams        | ✅ Complete |
 | [WMS API Reference](./oracle-wms-complete-api-reference.md) | Complete API documentation      | API Developers   | ✅ Complete |
 | [WMS CLI Guide](./oracle-wms-cli-guide.md)                  | Command-line interface          | DevOps Teams     | ✅ Complete |
@@ -112,7 +112,7 @@
 
 ### **⬅️ Prerequisites**
 
-- [Getting Started Hub](../../getting-started/index.md) - FLX Framework fundamentals before Oracle integration
+- [Getting Started Hub](../../getting-started/index.md) - FLEXT Framework fundamentals before Oracle integration
 - [Architecture Hub](../../architecture/index.md) - System design patterns and hexagonal architecture
 - [Development Hub](../../development/index.md) - Development standards and testing patterns
 
@@ -139,4 +139,4 @@
 
 ---
 
-**📂 Section Hub** | **🏠 Parent**: [Guides Hub](../index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Section Hub** | **🏠 Parent**: [Guides Hub](../index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

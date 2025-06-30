@@ -6,7 +6,7 @@
 [![Plugins](https://img.shields.io/badge/plugins-extensible-green.svg)](./plugin-development-guide.md)
 [![Logging](https://img.shields.io/badge/logging-structured-orange.svg)](./log-levels.md)
 
-**Development-focused guides covering plugin development, logging configuration, and specialized development topics for FLX framework**
+**Development-focused guides covering plugin development, logging configuration, and specialized development topics for FLEXT framework**
 
 ---
 
@@ -104,4 +104,4 @@
 
 ---
 
-**📂 Hub**: [Guides Hub](../index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Guides Hub](../index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

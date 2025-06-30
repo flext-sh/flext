@@ -6,7 +6,7 @@
 [![Proposals](https://img.shields.io/badge/proposals-community-blue.svg)](./active.md)
 [![Architecture](https://img.shields.io/badge/architecture-modernization-orange.svg)](./0001-hexagonal-architecture-modernization.md)
 
-**Complete request for comments system for FLX Framework - technical proposals, community feedback, and collaborative architectural improvements**
+**Complete request for comments system for FLEXT Framework - technical proposals, community feedback, and collaborative architectural improvements**
 
 ---
 
@@ -150,4 +150,4 @@
 
 ---
 
-**📂 Section Hub** | **🏠 Parent**: [Engineering Hub](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Section Hub** | **🏠 Parent**: [Engineering Hub](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

@@ -4,7 +4,7 @@
 
 [![Oracle OUD](https://img.shields.io/badge/Oracle-OUD-red.svg)](./index.md)
 [![Automation](https://img.shields.io/badge/automation-utilities-blue.svg)](./oracle-oud-automation-guide.md)
-[![Framework](https://img.shields.io/badge/framework-FLX_0.4.0-orange.svg)](../../index.md)
+[![Framework](https://img.shields.io/badge/framework-FLEXT_0.4.0-orange.svg)](../../index.md)
 
 **Complete Oracle Unified Directory automation utilities guide providing streamlined tools for OUD operations, testing, configuration management, and migration tasks**
 
@@ -30,14 +30,14 @@
 
 ## 📋 **Overview**
 
-This comprehensive guide covers the simplified utility tools for Oracle Unified Directory (OUD) Automation. These enterprise-grade tools provide streamlined interfaces for common OUD operations, testing, configuration management, and migration tasks within the FLX Framework ecosystem.
+This comprehensive guide covers the simplified utility tools for Oracle Unified Directory (OUD) Automation. These enterprise-grade tools provide streamlined interfaces for common OUD operations, testing, configuration management, and migration tasks within the FLEXT Framework ecosystem.
 
 ## 🚀 **Getting Started**
 
 ### **Prerequisites**
 
 - Oracle Unified Directory (OUD) environment configured
-- Python 3.13+ with FLX Framework installed
+- Python 3.13+ with FLEXT Framework installed
 - Administrative access to OUD instances
 - Network connectivity to target LDAP servers
 
@@ -238,9 +238,9 @@ oud-simple-env edit -e source --template dev
 oud-simple-env edit -e source --template prod
 ```
 
-### Integration with FLX Framework
+### Integration with FLEXT Framework
 
-These utilities integrate seamlessly with the FLX framework:
+These utilities integrate seamlessly with the FLEXT framework:
 
 ```python
 from flext.adapters.oracle.oud import OUDUtilities
@@ -391,7 +391,7 @@ oud-simple-test --debug --verbose
 
 - [Oracle Hub](./index.md) - Understanding Oracle integration architecture before using OUD utilities
 - [OUD Automation Guide](./oracle-oud-automation-guide.md) - Core OUD automation concepts and framework setup
-- [Getting Started Hub](../../getting-started/index.md) - FLX Framework installation and basic configuration
+- [Getting Started Hub](../../getting-started/index.md) - FLEXT Framework installation and basic configuration
 
 ### **Next Steps**
 
@@ -409,4 +409,4 @@ oud-simple-test --debug --verbose
 
 ---
 
-**📂 Hub**: [Oracle Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Oracle Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

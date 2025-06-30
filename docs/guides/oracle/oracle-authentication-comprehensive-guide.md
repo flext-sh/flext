@@ -6,7 +6,7 @@
 [![JWT](https://img.shields.io/badge/jwt-service-blue.svg)](../authentication/jwt-service-guide.md)
 [![Security](https://img.shields.io/badge/security-enterprise-red.svg)](../../security/index.md)
 
-**Complete authentication guide for Oracle Cloud services including OAuth2, JWT, SAML2 SSO, and legacy authentication methods covering Oracle Integration Cloud (OIC), Oracle WMS Cloud, and FLX framework integration patterns**
+**Complete authentication guide for Oracle Cloud services including OAuth2, JWT, SAML2 SSO, and legacy authentication methods covering Oracle Integration Cloud (OIC), Oracle WMS Cloud, and FLEXT framework integration patterns**
 
 ---
 
@@ -24,7 +24,7 @@
 
 1. [Authentication Overview](#authentication-overview)
 2. [OAuth2 Configuration and Patterns](#oauth2-configuration-and-patterns)
-3. [JWT Service Implementation (FLX)](#jwt-service-implementation-flext)
+3. [JWT Service Implementation (FLEXT)](#jwt-service-implementation-flext)
 4. [SAML2 SSO Setup and Configuration](#saml2-sso-setup-and-configuration)
 5. [Oracle WMS Authentication](#oracle-wms-authentication)
 6. [OIC-Specific Authentication](#oic-specific-authentication)
@@ -39,7 +39,7 @@ Oracle Cloud services support multiple authentication methods to accommodate dif
 - **OAuth2 Client Credentials** - Recommended for machine-to-machine integration
 - **OAuth2 Resource Owner Password Credentials (ROPC)** - For user authentication with delegation
 - **SAML2 Single Sign-On (SSO)** - Web-based single sign-on
-- **JWT Service (FLX)** - Managed JWT authentication within FLX framework
+- **JWT Service (FLEXT)** - Managed JWT authentication within FLEXT framework
 - **Basic Authentication** - Legacy authentication for older integrations
 - **Native Authentication** - Direct username/password authentication
 
@@ -47,12 +47,12 @@ Oracle Cloud services support multiple authentication methods to accommodate dif
 
 | Use Case              | Recommended Method        | Alternative               |
 | --------------------- | ------------------------- | ------------------------- |
-| **Automation/CI/CD**  | OAuth2 Client Credentials | JWT Service (FLX)         |
+| **Automation/CI/CD**  | OAuth2 Client Credentials | JWT Service (FLEXT)         |
 | **Server-to-Server**  | OAuth2 Client Credentials | Basic Auth (legacy)       |
-| **MFA Environments**  | OAuth2 Client Credentials | JWT Service (FLX)         |
+| **MFA Environments**  | OAuth2 Client Credentials | JWT Service (FLEXT)         |
 | **Web Applications**  | SAML2 SSO                 | OAuth2 ROPC               |
 | **Mobile/RF Devices** | OAuth2 ROPC               | Native Authentication     |
-| **FLX Framework**     | JWT Service               | OAuth2 Client Credentials |
+| **FLEXT Framework**     | JWT Service               | OAuth2 Client Credentials |
 
 ## OAuth2 Configuration and Patterns
 
@@ -247,11 +247,11 @@ def get_access_token_ropc(self, username: str, password: str, resource_aud: str)
     return response.json()
 ```
 
-## JWT Service Implementation (FLX)
+## JWT Service Implementation (FLEXT)
 
 ### Overview
 
-The **FLX JWT Service** provides OAuth2 JWT authentication and token management as a reusable service within the FLX ecosystem.
+The **FLEXT JWT Service** provides OAuth2 JWT authentication and token management as a reusable service within the FLEXT ecosystem.
 
 ### Key Features
 
@@ -260,29 +260,29 @@ The **FLX JWT Service** provides OAuth2 JWT authentication and token management 
 - 🔄 **Auto-Refresh** - Automatically refreshes tokens before expiry
 - 📊 **Health Monitoring** - Built-in health checks and service monitoring
 - 🏗️ **Multiple Patterns** - Supports Oracle OIC, generic OAuth2, and custom configurations
-- 🎯 **FLX Integration** - Seamlessly integrates with FLX HTTP infrastructure
+- 🎯 **FLEXT Integration** - Seamlessly integrates with FLEXT HTTP infrastructure
 
-### FLX Architecture Integration
+### FLEXT Architecture Integration
 
 ```
-FLX Infrastructure
+FLEXT Infrastructure
 ├── HTTP Layer
-│   ├── FlxHttpAuthManager (Extended with OAuth2 JWT)
-│   ├── FlxJwtService (New high-level service)
-│   └── FlxOAuth2TokenData (Token data model)
+│   ├── FlextHttpAuthManager (Extended with OAuth2 JWT)
+│   ├── FlextJwtService (New high-level service)
+│   └── FlextOAuth2TokenData (Token data model)
 └── Applications
     └── flext-http-oracle-oic (Uses JWT service)
 ```
 
-### Basic FLX JWT Usage
+### Basic FLEXT JWT Usage
 
 #### Oracle OIC Configuration
 
 ```python
-from flext.infrastructure.http.auth import FlxJwtService
+from flext.infrastructure.http.auth import FlextJwtService
 
 # For Oracle Integration Cloud
-jwt_service = FlxJwtService.for_oracle_oic(
+jwt_service = FlextJwtService.for_oracle_oic(
     idcs_url="idcs-xxxx.identity.oraclecloud.com",
     client_id="your_client_id",
     client_secret="your_client_secret",
@@ -294,7 +294,7 @@ jwt_service = FlxJwtService.for_oracle_oic(
 
 ```python
 # For generic OAuth2 providers
-jwt_service = FlxJwtService.for_oauth2(
+jwt_service = FlextJwtService.for_oauth2(
     token_url="https://provider.com/oauth2/token",
     client_id="your_client_id",
     client_secret="your_client_secret",
@@ -305,10 +305,10 @@ jwt_service = FlxJwtService.for_oauth2(
 #### Advanced Configuration
 
 ```python
-from flext.infrastructure.http.auth import FlxOAuth2Config
+from flext.infrastructure.http.auth import FlextOAuth2Config
 
 # Custom configuration
-config = FlxOAuth2Config(
+config = FlextOAuth2Config(
     token_url="https://idcs-xxxx.identity.oraclecloud.com/oauth2/v1/token",
     client_id="your_client_id",
     client_secret="your_client_secret",
@@ -322,7 +322,7 @@ config = FlxOAuth2Config(
     timeout_seconds=30
 )
 
-jwt_service = FlxJwtService(config)
+jwt_service = FlextJwtService(config)
 ```
 
 ### Using JWT Service in Applications
@@ -333,7 +333,7 @@ from flext.adapters.outbound.http import HTTPAdapter
 
 async def main():
     # Initialize JWT service
-    jwt_service = FlxJwtService.for_oracle_oic(
+    jwt_service = FlextJwtService.for_oracle_oic(
         idcs_url="idcs-xxxx.identity.oraclecloud.com",
         client_id="your_client_id",
         client_secret="your_client_secret",
@@ -611,7 +611,7 @@ echo "Integrations: $integrations"
 #### Integration Monitoring
 
 ```python
-async def monitor_oic_integrations(jwt_service: FlxJwtService):
+async def monitor_oic_integrations(jwt_service: FlextJwtService):
     """Monitor OIC integrations using JWT authentication."""
 
     http_adapter = HTTPAdapter(auth_manager=jwt_service)
@@ -642,7 +642,7 @@ from flext.core.exceptions import AuthenticationError, ConnectionError
 
 async def handle_oic_authentication_errors():
     try:
-        jwt_service = FlxJwtService.for_oracle_oic(
+        jwt_service = FlextJwtService.for_oracle_oic(
             idcs_url="idcs-xxxx.identity.oraclecloud.com",
             client_id="invalid_client",
             client_secret="invalid_secret",
@@ -988,22 +988,22 @@ export READ_TIMEOUT="600"
 export LOG_LEVEL="DEBUG"
 ```
 
-### FLX Framework Integration Example
+### FLEXT Framework Integration Example
 
 ```python
-from flext.infrastructure.http.auth import FlxJwtService
+from flext.infrastructure.http.auth import FlextJwtService
 from flext.adapters.outbound.http import HTTPAdapter
 from flext.core.config import Config
 import asyncio
 
 async def setup_flext_authentication():
-    """Complete FLX authentication setup example."""
+    """Complete FLEXT authentication setup example."""
 
     # Load configuration
     config = Config.from_env()
 
     # Setup JWT service for OIC
-    oic_jwt_service = FlxJwtService.for_oracle_oic(
+    oic_jwt_service = FlextJwtService.for_oracle_oic(
         idcs_url=config.get("IDCS_URL"),
         client_id=config.get("CLIENT_ID"),
         client_secret=config.get("CLIENT_SECRET"),
@@ -1043,7 +1043,7 @@ wms_response = await adapters["wms_adapter"].get("/wms/api/orders")
 
 - [Oracle Hub](./index.md) - Understanding Oracle integration architecture before authentication setup
 - [Security Hub](../../security/index.md) - Security architecture patterns and authentication policies
-- [Getting Started Hub](../../getting-started/index.md) - FLX Framework installation and basic configuration
+- [Getting Started Hub](../../getting-started/index.md) - FLEXT Framework installation and basic configuration
 
 ### **Next Steps**
 
@@ -1065,10 +1065,10 @@ wms_response = await adapters["wms_adapter"].get("/wms/api/orders")
 - **Implementation Status**: ✅ Production Ready
 - **Authentication Methods**: 6 comprehensive methods (OAuth2, JWT, SAML2, Basic, Native, ROPC)
 - **Security Level**: Enterprise-grade with MFA support
-- **Integration Coverage**: Oracle OIC, WMS, IDCS, and FLX Framework
+- **Integration Coverage**: Oracle OIC, WMS, IDCS, and FLEXT Framework
 - **Testing Coverage**: Comprehensive with production examples
 - **Last Updated**: June 11, 2025
 
 ---
 
-**📂 Guide**: [Oracle Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Guide**: [Oracle Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

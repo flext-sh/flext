@@ -1,8 +1,8 @@
-# FLX Framework Refactoring Strategy - Practical Approach
+# FLEXT Framework Refactoring Strategy - Practical Approach
 
 ## Executive Summary
 
-This document outlines a **realistic and practical** refactoring strategy for the FLX framework, based on **actual codebase analysis** and focusing on **incremental improvements** rather than complete rewrites.
+This document outlines a **realistic and practical** refactoring strategy for the FLEXT framework, based on **actual codebase analysis** and focusing on **incremental improvements** rather than complete rewrites.
 
 ## Related Documentation
 
@@ -93,14 +93,14 @@ async def health_check():
 #### 2.2 Error Handling Standardization
 
 ```python
-# Standardize on FlxException hierarchy
-class FlxException(Exception):
-    """Base exception for FLX framework."""
+# Standardize on FlextException hierarchy
+class FlextException(Exception):
+    """Base exception for FLEXT framework."""
 
-class FlxValidationError(FlxException):
+class FlextValidationError(FlextException):
     """Validation-related errors."""
 
-class FlxConnectionError(FlxException):
+class FlextConnectionError(FlextException):
     """Connection-related errors."""
 ```
 
@@ -190,7 +190,7 @@ class UserService:
             return await self._create_user_impl(user_data)
         except Exception as e:
             logger.error("User creation failed", extra={"error": str(e)})  # Add logging
-            raise FlxValidationError("User creation failed") from e  # Standardize exceptions
+            raise FlextValidationError("User creation failed") from e  # Standardize exceptions
 ```
 
 ### Risk Mitigation

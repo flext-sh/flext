@@ -6,7 +6,7 @@
 [![Core](https://img.shields.io/badge/component-core-blue.svg)](../../architecture/index.md)
 [![Validated](https://img.shields.io/badge/source-validated-orange.svg)](../../reference/specifications/flext-framework-technical-specification.md)
 
-**Complete API documentation for FLX Core framework components, validated against actual codebase implementation**
+**Complete API documentation for FLEXT Core framework components, validated against actual codebase implementation**
 
 ---
 
@@ -18,7 +18,7 @@
 
 ## 📋 **Overview**
 
-The FLX Core API provides foundational components for building enterprise-grade domain-driven applications with hexagonal architecture. This reference documents **current, validated APIs** based on actual codebase implementation.
+The FLEXT Core API provides foundational components for building enterprise-grade domain-driven applications with hexagonal architecture. This reference documents **current, validated APIs** based on actual codebase implementation.
 
 ### **✅ Implementation Status**
 
@@ -543,7 +543,7 @@ The following APIs from old documentation are **obsolete** and should not be use
 
 ---
 
-**📂 Hub**: [API Reference Hub](./index.md) | **🏠 Root**: [Documentation Home](../index.md) | **Framework**: FLX 0.4.0+
+**📂 Hub**: [API Reference Hub](./index.md) | **🏠 Root**: [Documentation Home](../index.md) | **Framework**: FLEXT 0.4.0+
 
 ---
 
@@ -570,4 +570,4 @@ The following APIs from old documentation are **obsolete** and should not be use
 
 ---
 
-**📂 API Reference**: [Framework Hub](../index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 API Reference**: [Framework Hub](../index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

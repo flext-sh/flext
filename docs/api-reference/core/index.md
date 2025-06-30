@@ -7,7 +7,7 @@
 [![Source Validated](https://img.shields.io/badge/source-validated-green.svg)](#source-validation)
 [![Type Safety](https://img.shields.io/badge/types-strict-purple.svg)](./events.md)
 
-**Core domain APIs for FLX Framework 0.4.0+ implementing Domain-Driven Design with complete source validation**
+**Core domain APIs for FLEXT Framework 0.4.0+ implementing Domain-Driven Design with complete source validation**
 
 ---
 
@@ -31,7 +31,7 @@
 
 ## 📊 **Overview**
 
-The Core APIs Hub provides complete domain and business logic API documentation for FLX Framework 0.4.0+. All APIs implement Domain-Driven Design principles with complete isolation from infrastructure concerns and are validated against actual source code.
+The Core APIs Hub provides complete domain and business logic API documentation for FLEXT Framework 0.4.0+. All APIs implement Domain-Driven Design principles with complete isolation from infrastructure concerns and are validated against actual source code.
 
 ### **Core API Categories**
 
@@ -94,4 +94,4 @@ The Core APIs Hub provides complete domain and business logic API documentation 
 
 ---
 
-**📂 Hub**: [Core APIs Hub](#) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Core APIs Hub](#) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

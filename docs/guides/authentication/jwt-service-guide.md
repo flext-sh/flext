@@ -6,7 +6,7 @@
 [![OAuth2](https://img.shields.io/badge/oauth2-compliant-blue.svg)](https://oauth.net/2/)
 [![Security](https://img.shields.io/badge/security-production-red.svg)](../security/index.md)
 
-**Complete guide for implementing and using the FLX JWT Service for OAuth2 authentication and token management**
+**Complete guide for implementing and using the FLEXT JWT Service for OAuth2 authentication and token management**
 
 ---
 
@@ -20,7 +20,7 @@
 
 ### **⬅️ Prerequisites**
 
-- [Getting Started Hub](../../getting-started/index.md) - FLX Framework installation and basic configuration required
+- [Getting Started Hub](../../getting-started/index.md) - FLEXT Framework installation and basic configuration required
 - [Security Hub](../../security/index.md) - Understanding security architecture patterns and authentication principles
 - [Architecture Hub](../../architecture/index.md) - Hexagonal architecture fundamentals underlying the JWT service
 
@@ -42,7 +42,7 @@
 
 ## 📋 **Overview**
 
-This guide demonstrates how to use the **FLX JWT Service** infrastructure that provides OAuth2 JWT authentication and token management as a reusable service within the FLX ecosystem.
+This guide demonstrates how to use the **FLEXT JWT Service** infrastructure that provides OAuth2 JWT authentication and token management as a reusable service within the FLEXT ecosystem.
 
 ## Key Features
 
@@ -51,18 +51,18 @@ This guide demonstrates how to use the **FLX JWT Service** infrastructure that p
 - 🔄 **Auto-Refresh** - Automatically refreshes tokens before expiry
 - 📊 **Health Monitoring** - Built-in health checks and service monitoring
 - 🏗️ **Multiple Patterns** - Supports Oracle OIC, generic OAuth2, and custom configurations
-- 🎯 **FLX Integration** - Seamlessly integrates with FLX HTTP infrastructure
+- 🎯 **FLEXT Integration** - Seamlessly integrates with FLEXT HTTP infrastructure
 
 ## Architecture
 
-The JWT service is implemented in the FLX HTTP infrastructure layer:
+The JWT service is implemented in the FLEXT HTTP infrastructure layer:
 
 ```
-FLX Infrastructure
+FLEXT Infrastructure
 ├── HTTP Layer
-│   ├── FlxHttpAuthManager (Extended with OAuth2 JWT)
-│   ├── FlxJwtService (New high-level service)
-│   └── FlxOAuth2TokenData (Token data model)
+│   ├── FlextHttpAuthManager (Extended with OAuth2 JWT)
+│   ├── FlextJwtService (New high-level service)
+│   └── FlextOAuth2TokenData (Token data model)
 └── Applications
     └── flext-http-oracle-oic (Uses JWT service)
 ```
@@ -74,10 +74,10 @@ FLX Infrastructure
 For Oracle Integration Cloud, use the specialized factory method:
 
 ```python
-from flext.infrastructure.http import FlxJwtService
+from flext.infrastructure.http import FlextJwtService
 
 # Create JWT service for Oracle OIC
-jwt_service = FlxJwtService.create_for_oracle_oic(
+jwt_service = FlextJwtService.create_for_oracle_oic(
     client_id="your-idcs-client-id",
     client_secret="your-idcs-client-secret",
     idcs_url="your-idcs-domain.identity.oracle.com",
@@ -104,7 +104,7 @@ headers = {
 For any OAuth2 provider:
 
 ```python
-jwt_service = FlxJwtService.create_generic(
+jwt_service = FlextJwtService.create_generic(
     client_id="your-client-id",
     client_secret="your-client-secret",
     token_url="https://auth.example.com/oauth2/token",
@@ -119,7 +119,7 @@ jwt_service = FlxJwtService.create_generic(
 ```python
 import os
 
-jwt_service = FlxJwtService.create_for_oracle_oic(
+jwt_service = FlextJwtService.create_for_oracle_oic(
     client_id=os.getenv("IDCS_CLIENT_ID"),
     client_secret=os.getenv("IDCS_CLIENT_SECRET"),
     idcs_url=os.getenv("IDCS_URL"),
@@ -160,9 +160,9 @@ print(f"Expires in: {token_info['expires_in']} seconds")
 ```python
 # Manage multiple JWT services
 services = {
-    "dev": FlxJwtService.create_generic(...),
-    "staging": FlxJwtService.create_generic(...),
-    "prod": FlxJwtService.create_for_oracle_oic(...)
+    "dev": FlextJwtService.create_generic(...),
+    "staging": FlextJwtService.create_generic(...),
+    "prod": FlextJwtService.create_for_oracle_oic(...)
 }
 
 # Use appropriate service based on environment
@@ -170,22 +170,22 @@ current_env = os.getenv("ENVIRONMENT", "dev")
 jwt_service = services[current_env]
 ```
 
-## Integration with FLX HTTP Client
+## Integration with FLEXT HTTP Client
 
-The JWT service integrates seamlessly with FLX HTTP infrastructure:
+The JWT service integrates seamlessly with FLEXT HTTP infrastructure:
 
 ```python
-from flext.infrastructure.http import FlxHttpClient, FlxHttpConfig
+from flext.infrastructure.http import FlextHttpClient, FlextHttpConfig
 
 # Create JWT service
-jwt_service = FlxJwtService.create_for_oracle_oic(...)
+jwt_service = FlextJwtService.create_for_oracle_oic(...)
 
 # Create HTTP client
-http_config = FlxHttpConfig(
+http_config = FlextHttpConfig(
     base_url="https://api.example.com",
     timeout=30.0
 )
-http_client = FlxHttpClient(http_config)
+http_client = FlextHttpClient(http_config)
 
 # Make authenticated requests
 auth_headers = await jwt_service.get_auth_headers()
@@ -237,7 +237,7 @@ The JWT service automatically:
 
 ## Configuration Reference
 
-### FlxJwtServiceConfig
+### FlextJwtServiceConfig
 
 | Field                 | Type        | Description                                                     | Required |
 | --------------------- | ----------- | --------------------------------------------------------------- | -------- |
@@ -267,11 +267,11 @@ export OIC_REGION="us-phoenix-1"  # Oracle Cloud region
 ## Error Handling
 
 ```python
-from flext.infrastructure.http.exceptions import FlxHttpAuthenticationError
+from flext.infrastructure.http.exceptions import FlextHttpAuthenticationError
 
 try:
     token = await jwt_service.get_valid_token()
-except FlxHttpAuthenticationError as e:
+except FlextHttpAuthenticationError as e:
     logger.error(f"Authentication failed: {e}")
     # Handle authentication error
 except Exception as e:
@@ -285,7 +285,7 @@ except Exception as e:
 
 ```python
 # Initialize once at application startup
-jwt_service = FlxJwtService.create_for_oracle_oic(...)
+jwt_service = FlextJwtService.create_for_oracle_oic(...)
 
 # Use throughout application lifecycle
 async def make_api_call():
@@ -313,7 +313,7 @@ async def monitor_jwt_service():
 
 ```python
 # Use environment variables for secrets
-jwt_service = FlxJwtService.create_for_oracle_oic(
+jwt_service = FlextJwtService.create_for_oracle_oic(
     client_id=os.getenv("IDCS_CLIENT_ID"),
     client_secret=os.getenv("IDCS_CLIENT_SECRET"),
     # ... other config from environment
@@ -333,7 +333,7 @@ async def robust_api_call():
             auth_headers = await jwt_service.get_auth_headers()
             response = await http_client.get("/api/data", headers=auth_headers)
             return response
-        except FlxHttpAuthenticationError:
+        except FlextHttpAuthenticationError:
             if attempt < max_retries - 1:
                 # Force token refresh and retry
                 await jwt_service.refresh_token()
@@ -347,11 +347,11 @@ async def robust_api_call():
 
 ```python
 import pytest
-from flext.infrastructure.http import FlxJwtService
+from flext.infrastructure.http import FlextJwtService
 
 @pytest.mark.asyncio
 async def test_jwt_service_creation():
-    jwt_service = FlxJwtService.create_generic(
+    jwt_service = FlextJwtService.create_generic(
         client_id="test-client",
         client_secret="test-secret",
         token_url="https://test.auth.com/token"
@@ -367,7 +367,7 @@ async def test_jwt_service_creation():
 ```python
 @pytest.mark.asyncio
 async def test_oic_integration(oic_test_config):
-    jwt_service = FlxJwtService.create_for_oracle_oic(**oic_test_config)
+    jwt_service = FlextJwtService.create_for_oracle_oic(**oic_test_config)
 
     # Test health check
     is_healthy = await jwt_service.health_check()
@@ -381,28 +381,28 @@ async def test_oic_integration(oic_test_config):
 
 ## Migration Guide
 
-### From Direct FlxHttpAuthManager
+### From Direct FlextHttpAuthManager
 
 Before:
 
 ```python
-from flext.infrastructure.http import FlxHttpAuthManager, FlxHttpAuthConfig
+from flext.infrastructure.http import FlextHttpAuthManager, FlextHttpAuthConfig
 
-auth_config = FlxHttpAuthConfig(
-    auth_type=FlxHttpAuthType.OAUTH2_JWT,
+auth_config = FlextHttpAuthConfig(
+    auth_type=FlextHttpAuthType.OAUTH2_JWT,
     client_id="...",
     client_secret="...",
     token_url="..."
 )
-auth_manager = FlxHttpAuthManager(auth_config)
+auth_manager = FlextHttpAuthManager(auth_config)
 ```
 
 After:
 
 ```python
-from flext.infrastructure.http import FlxJwtService
+from flext.infrastructure.http import FlextJwtService
 
-jwt_service = FlxJwtService.create_generic(
+jwt_service = FlextJwtService.create_generic(
     client_id="...",
     client_secret="...",
     token_url="..."
@@ -423,8 +423,8 @@ async def get_token():
 After:
 
 ```python
-# Use FLX JWT service
-jwt_service = FlxJwtService.create_for_oracle_oic(...)
+# Use FLEXT JWT service
+jwt_service = FlextJwtService.create_for_oracle_oic(...)
 token = await jwt_service.get_valid_token()
 ```
 
@@ -471,7 +471,7 @@ import logging
 logging.getLogger("flext.infrastructure.http").setLevel(logging.DEBUG)
 
 # This will show detailed OAuth2 flow information
-jwt_service = FlxJwtService.create_for_oracle_oic(...)
+jwt_service = FlextJwtService.create_for_oracle_oic(...)
 ```
 
 ---
@@ -495,4 +495,4 @@ jwt_service = FlxJwtService.create_for_oracle_oic(...)
 
 ---
 
-**📄 Content Document** | **🏠 Parent**: [Authentication Hub](./index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📄 Content Document** | **🏠 Parent**: [Authentication Hub](./index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

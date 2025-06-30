@@ -71,9 +71,9 @@ To generate stub files with the collected types (without modifying your code):
 make monkeytype-stub PROJECT=<project_name> MODULE=<module_path>
 ```
 
-## Integration with FLX Framework
+## Integration with FLEXT Framework
 
-MonkeyType is particularly valuable for the FLX framework because:
+MonkeyType is particularly valuable for the FLEXT framework because:
 
 ### **Domain-Driven Design Types**
 
@@ -105,7 +105,7 @@ class UserData:
         self.email = email
         self.age = age
 
-# Convert to FLX Entity
+# Convert to FLEXT Entity
 from flext.core.entities import Entity
 
 class User(Entity):
@@ -135,7 +135,7 @@ class OracleWmsAdapter:
         # Implementation...
         pass
 
-# Convert to proper FLX adapter
+# Convert to proper FLEXT adapter
 from flext.ports.outbound import WmsPort
 
 class OracleWmsAdapter(WmsPort):
@@ -166,7 +166,7 @@ class MyModel:
         self.value = value or {}
 ```
 
-Convert to FLX Value Object:
+Convert to FLEXT Value Object:
 
 ```python
 from flext.core.domain.value_objects import ValueObject
@@ -177,7 +177,7 @@ class MyModel(ValueObject):
     value: Dict[str, Any] = Field(default_factory=dict)
 ```
 
-## Best Practices for FLX Development
+## Best Practices for FLEXT Development
 
 1. **Run with Comprehensive Tests**: Make sure your tests exercise a wide range of code paths for the most accurate type collection.
 
@@ -187,13 +187,13 @@ class MyModel(ValueObject):
    make monkeytype-test PROJECT=flext TEST_PATH=tests/unit/core/
    ```
 
-3. **Review Applied Types**: Always review the types applied by MonkeyType and refine them for FLX patterns:
+3. **Review Applied Types**: Always review the types applied by MonkeyType and refine them for FLEXT patterns:
 
    - Convert to proper Entity/ValueObject/AggregateRoot
    - Use proper port interfaces
    - Follow hexagonal architecture patterns
 
-4. **Integration with Type Checking**: After applying types, run the FLX type checking:
+4. **Integration with Type Checking**: After applying types, run the FLEXT type checking:
 
    ```bash
    make lint  # Includes mypy
@@ -202,7 +202,7 @@ class MyModel(ValueObject):
 
 5. **Iterative Process**: Type collection and application is an iterative process. You may need to run MonkeyType multiple times with different tests to get comprehensive coverage.
 
-## FLX-Specific Workflow
+## FLEXT-Specific Workflow
 
 1. **Domain Layer Types**:
 
@@ -270,7 +270,7 @@ The underlying implementation is in `scripts/monkeytype_runner.py`, which you ca
    make monkeytype-apply PROJECT=flext-http-oracle-wms MODULE=flext_http_oracle_wms.client
    ```
 
-5. Convert to proper FLX patterns:
+5. Convert to proper FLEXT patterns:
 
    ```python
    # Before
@@ -281,12 +281,12 @@ The underlying implementation is in `scripts/monkeytype_runner.py`, which you ca
    def list_items(self, facility_id: str) -> List[Dict[str, Any]]:
        # ...
 
-   # After FLX conversion
+   # After FLEXT conversion
    async def list_items(self, facility_id: str) -> List[WmsItem]:
        # ...
    ```
 
-6. Run FLX validation:
+6. Run FLEXT validation:
 
    ```bash
    make lint
@@ -295,14 +295,14 @@ The underlying implementation is in `scripts/monkeytype_runner.py`, which you ca
 
 ## Integration with Development Workflow
 
-MonkeyType integrates with the FLX development workflow:
+MonkeyType integrates with the FLEXT development workflow:
 
 ```bash
 # 1. Development cycle with type discovery
 make monkeytype-test PROJECT=flext
 make monkeytype-apply PROJECT=flext MODULE=flext.core.entities
 
-# 2. Validate with FLX standards
+# 2. Validate with FLEXT standards
 make lint
 make typecheck
 
@@ -319,21 +319,21 @@ make test
 - Some complex types (generics, unions) may need manual refinement
 - Pydantic-specific features (Field, validator, etc.) need to be added manually
 - Types for functions or methods never called in tests won't be collected
-- FLX-specific patterns (Entity lifecycle, domain events) need manual implementation
+- FLEXT-specific patterns (Entity lifecycle, domain events) need manual implementation
 
 ## Related Documentation
 
 - [Development Standardization Plan](standardization-plan.md) - Type checking standards
 - [Dependency Synchronization Guide](dependency-synchronization-guide.md) - Managing dependencies
-- [FLX Core API Reference](../api-reference/core-api-reference.md) - Type patterns to follow
+- [FLEXT Core API Reference](../api-reference/core-api-reference.md) - Type patterns to follow
 
 ---
 
 **Implementation Status**: ✅ Current and Active
 **Script Location**: `/scripts/monkeytype_runner.py`
 **Last Updated**: January 2025
-**Maintained By**: FLX Development Team
+**Maintained By**: FLEXT Development Team
 
 ---
 
-MonkeyType integration helps maintain type safety across the FLX hexagonal architecture while reducing manual type annotation effort.
+MonkeyType integration helps maintain type safety across the FLEXT hexagonal architecture while reducing manual type annotation effort.

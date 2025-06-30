@@ -5,7 +5,7 @@
 [![Production](https://img.shields.io/badge/production-checklist-critical.svg)](./index.md)
 [![Deployment](https://img.shields.io/badge/deployment-validated-green.svg)](./index.md)
 
-**Comprehensive checklist ensuring FLX application readiness for production deployment with enterprise-grade reliability, security, and performance**
+**Comprehensive checklist ensuring FLEXT application readiness for production deployment with enterprise-grade reliability, security, and performance**
 
 ---
 
@@ -29,7 +29,7 @@
 
 ## 📋 **Overview**
 
-This comprehensive checklist ensures your FLX application is ready for production deployment with enterprise-grade reliability, security, and performance.
+This comprehensive checklist ensures your FLEXT application is ready for production deployment with enterprise-grade reliability, security, and performance.
 
 ## 🎯 Pre-Deployment Validation
 
@@ -105,7 +105,7 @@ This comprehensive checklist ensures your FLX application is ready for productio
 ```bash
 # Verify infrastructure components
 kubectl get nodes                    # Kubernetes cluster health
-kubectl get pods -n flext-system      # FLX system pods status
+kubectl get pods -n flext-system      # FLEXT system pods status
 redis-cli -c cluster info           # Redis cluster status
 psql -h db-host -c "SELECT version()"  # Database connectivity
 
@@ -117,7 +117,7 @@ kubectl top pods -n flext-production  # Pod resource usage
 #### Configuration Validation
 
 ```bash
-# Validate FLX configuration
+# Validate FLEXT configuration
 flext config validate --env production
 flext config show --env production --mask-secrets
 
@@ -505,4 +505,4 @@ flext system health --all
 
 ---
 
-**📂 Hub**: [Deployment Strategies](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Deployment Strategies](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

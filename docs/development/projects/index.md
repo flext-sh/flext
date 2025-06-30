@@ -4,7 +4,7 @@
 
 [![Development](https://img.shields.io/badge/docs-project--specific-blue.svg)](../index.md)
 
-**Project-specific development documentation and implementation guides for FLX framework integrations**
+**Project-specific development documentation and implementation guides for FLEXT framework integrations**
 
 ---
 
@@ -21,7 +21,7 @@
 - [🏢 client-b Project Plan](client-b-project-plan.md) - client-b project overview
 - [🔧 OUD CLI Final Tested](oud-cli-final-tested.md) - OUD CLI implementation
 - [🧹 OUD Ultra Clean Implementation](oud-ultra-clean-implementation.md) - Clean implementation guide
-- [🧪 FLX WMS E2E Testing](flext-wms-e2e-testing.md) - WMS end-to-end testing
+- [🧪 FLEXT WMS E2E Testing](flext-wms-e2e-testing.md) - WMS end-to-end testing
 
 ## Project Categories
 
@@ -40,11 +40,11 @@
 - [OUD PEP8 Guidelines](oud-pep8-guidelines.md) - Code style guidelines
 - [OUD Automation Source Guide](oud-automation-source-guide.md) - Source code guide
 
-### FLX Integration Projects
+### FLEXT Integration Projects
 
-- [FLX WMS E2E Testing](flext-wms-e2e-testing.md) - WMS end-to-end testing strategies
-- [FLX WMS Validation Proofs](flext-wms-validation-proofs.md) - WMS validation documentation
-- [FLX OIC E2E Testing](flext-oic-e2e-testing.md) - OIC end-to-end testing strategies
+- [FLEXT WMS E2E Testing](flext-wms-e2e-testing.md) - WMS end-to-end testing strategies
+- [FLEXT WMS Validation Proofs](flext-wms-validation-proofs.md) - WMS validation documentation
+- [FLEXT OIC E2E Testing](flext-oic-e2e-testing.md) - OIC end-to-end testing strategies
 - Framework integration patterns
 
 ## Project Workflows
@@ -71,8 +71,8 @@
 
 **Testing Path:**
 
-1. Execute [FLX WMS E2E Testing](flext-wms-e2e-testing.md)
-2. Run [FLX OIC E2E Testing](flext-oic-e2e-testing.md)
+1. Execute [FLEXT WMS E2E Testing](flext-wms-e2e-testing.md)
+2. Run [FLEXT OIC E2E Testing](flext-oic-e2e-testing.md)
 3. Validate [WMS Proofs](flext-wms-validation-proofs.md)
 4. Test [CLI Functionality](oud-cli-functionality-summary.md)
 
@@ -101,8 +101,8 @@
 
 ### QA Engineers
 
-→ [FLX WMS E2E Testing](flext-wms-e2e-testing.md)
-→ [FLX OIC E2E Testing](flext-oic-e2e-testing.md)
+→ [FLEXT WMS E2E Testing](flext-wms-e2e-testing.md)
+→ [FLEXT OIC E2E Testing](flext-oic-e2e-testing.md)
 → [WMS Validation Proofs](flext-wms-validation-proofs.md)
 → [Testing Strategies](../testing/index.md)
 
@@ -115,4 +115,4 @@
 
 ---
 
-_Part of the [FLX Framework Documentation](../../index.md)_
+_Part of the [FLEXT Framework Documentation](../../index.md)_

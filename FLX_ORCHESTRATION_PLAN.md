@@ -1,4 +1,4 @@
-# FLX WORKSPACE TRANSFORMATION PLAN - PYAUTO → FLX
+# FLEXT WORKSPACE TRANSFORMATION PLAN - PYAUTO → FLEXT
 
 **Hierarquia**: WORKSPACE-CRITICAL - Plano mestre para transformação completa
 **Referência**: `/home/marlonsc/CLAUDE.md` → Princípios universais
@@ -12,7 +12,7 @@
 **REALIDADE BRUTAL**: Eu me confundi no plano anterior. A transformação correta é:
 
 - **❌ ERRADO**: Criar orquestrador em `/home/marlonsc/pyauto/flext/`
-- **✅ CORRETO**: O workspace inteiro `/home/marlonsc/pyauto/` se torna o projeto FLX
+- **✅ CORRETO**: O workspace inteiro `/home/marlonsc/pyauto/` se torna o projeto FLEXT
 - **🗑️ AÇÃO**: Remover `/home/marlonsc/pyauto/flext/` que está vazio (apenas .git e CLAUDE.md)
 
 ---
@@ -20,6 +20,7 @@
 ## 📊 ARQUITETURA CORRETA
 
 ### **Antes da Transformação (Estado Atual)**
+
 ```
 /home/marlonsc/pyauto/                    # Workspace PyAuto
 ├── flext/                                  # 🗑️ VAZIO - Para remoção
@@ -45,8 +46,9 @@
 ```
 
 ### **Depois da Transformação (Objetivo)**
+
 ```
-/home/marlonsc/pyauto/                    # 🎯 AGORA É O PROJETO FLX
+/home/marlonsc/pyauto/                    # 🎯 AGORA É O PROJETO FLEXT
 ├── .flext-orchestrator/                   # Configuração do orquestrador
 │   ├── config/                          # Configurações centrais
 │   ├── logs/                            # Logs centralizados
@@ -65,9 +67,9 @@
 ├── flext-orchestrator.py                   # 🎯 ORQUESTRADOR: coordenação central
 ├── flext-cli.py                            # 🎯 ORQUESTRADOR: CLI unificado
 ├── .env.example                          # 🎯 ORQUESTRADOR: configuração
-├── CLAUDE.md                             # 🎯 FLX PROJECT: documentação do projeto FLX
-├── internal.invalid.md                       # Issues temporários do projeto FLX
-├── legacy/                               # 📦 LEGACY: projetos não-FLX
+├── CLAUDE.md                             # 🎯 FLEXT PROJECT: documentação do projeto FLEXT
+├── internal.invalid.md                       # Issues temporários do projeto FLEXT
+├── legacy/                               # 📦 LEGACY: projetos não-FLEXT
 │   ├── tap-oracle-wms/                   # Singer projects
 │   ├── target-oracle-oic/                # Singer projects
 │   ├── client-a-oud-mig/                    # Enterprise integrations
@@ -101,7 +103,7 @@ tar -czf backups/pre_flext_transformation_$(date +%Y%m%d_%H%M%S).tar.gz \
     flext-* *.md .env* pyproject.toml docker-compose.yml 2>/dev/null || true
 ```
 
-### **FASE 2: TRANSFORMAÇÃO DO WORKSPACE EM PROJETO FLX**
+### **FASE 2: TRANSFORMAÇÃO DO WORKSPACE EM PROJETO FLEXT**
 
 #### **2.1 - Criar Estrutura de Orquestração**
 
@@ -112,20 +114,20 @@ mkdir -p tests/{integration,e2e}
 mkdir -p legacy
 ```
 
-#### **2.2 - pyproject.toml do Projeto FLX**
+#### **2.2 - pyproject.toml do Projeto FLEXT**
 
 ```toml
 [tool.poetry]
 name = "flext"
 version = "2.0.0"
-description = "FLX Enterprise Framework - Complete Platform"
-authors = ["FLX Team"]
+description = "FLEXT Enterprise Framework - Complete Platform"
+authors = ["FLEXT Team"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
 
-# Módulos FLX locais (develop mode)
+# Módulos FLEXT locais (develop mode)
 flext-core = {path = "./flext-core", develop = true}
 flext-auth = {path = "./flext-auth", develop = true}
 flext-api = {path = "./flext-api", develop = true}
@@ -169,7 +171,7 @@ build-backend = "poetry.core.masonry.api"
 
 ```python
 """
-FLX Orchestrator - Central coordination for the entire FLX platform
+FLEXT Orchestrator - Central coordination for the entire FLEXT platform
 """
 import asyncio
 import logging
@@ -191,9 +193,9 @@ logger = logging.getLogger(__name__)
 
 class FLXOrchestrator:
     """
-    Orquestra todos os módulos FLX no workspace completo.
+    Orquestra todos os módulos FLEXT no workspace completo.
     
-    O workspace /home/marlonsc/pyauto É o projeto FLX.
+    O workspace /home/marlonsc/pyauto É o projeto FLEXT.
     """
     
     def __init__(self, workspace_root: Path = Path("/home/marlonsc/pyauto")):
@@ -209,7 +211,7 @@ class FLXOrchestrator:
         self._init_services()
     
     def _init_services(self):
-        """Inicializa todos os serviços FLX"""
+        """Inicializa todos os serviços FLEXT"""
         self._services.update({
             'auth': AuthService(self.config),
             'metrics': MetricsCollector(self.config),
@@ -221,10 +223,10 @@ class FLXOrchestrator:
     async def start(self) -> None:
         """Inicia todos os serviços em ordem correta"""
         if self._started:
-            logger.warning("FLX already started")
+            logger.warning("FLEXT already started")
             return
         
-        logger.info("🚀 Starting FLX Enterprise Platform...")
+        logger.info("🚀 Starting FLEXT Enterprise Platform...")
         
         try:
             # 1. Infrastructure services
@@ -260,10 +262,10 @@ class FLXOrchestrator:
             logger.info("✅ Integration services started")
             
             self._started = True
-            logger.info("🎉 FLX Enterprise Platform started successfully!")
+            logger.info("🎉 FLEXT Enterprise Platform started successfully!")
             
         except Exception as e:
-            logger.error(f"❌ Failed to start FLX: {e}")
+            logger.error(f"❌ Failed to start FLEXT: {e}")
             await self.stop()
             raise
     
@@ -272,7 +274,7 @@ class FLXOrchestrator:
         if not self._started:
             return
         
-        logger.info("⏹️ Stopping FLX Enterprise Platform...")
+        logger.info("⏹️ Stopping FLEXT Enterprise Platform...")
         
         # Parar na ordem reversa
         for service_name in ['web', 'grpc', 'meltano', 'plugins', 'auth', 'metrics', 'tracing']:
@@ -286,7 +288,7 @@ class FLXOrchestrator:
         
         await self.event_bus.stop()
         self._started = False
-        logger.info("✅ FLX Enterprise Platform stopped")
+        logger.info("✅ FLEXT Enterprise Platform stopped")
     
     @asynccontextmanager
     async def lifespan(self):
@@ -313,12 +315,12 @@ orchestrator = FLXOrchestrator()
 if __name__ == "__main__":
     async def main():
         async with orchestrator.lifespan():
-            logger.info("🔄 FLX running... Press Ctrl+C to stop")
+            logger.info("🔄 FLEXT running... Press Ctrl+C to stop")
             try:
                 while True:
                     await asyncio.sleep(1)
             except KeyboardInterrupt:
-                logger.info("👋 Stopping FLX...")
+                logger.info("👋 Stopping FLEXT...")
     
     asyncio.run(main())
 ```
@@ -327,7 +329,7 @@ if __name__ == "__main__":
 
 ```python
 """
-FLX CLI - Interface unificada para toda a plataforma
+FLEXT CLI - Interface unificada para toda a plataforma
 """
 import typer
 import asyncio
@@ -339,7 +341,7 @@ from flext_orchestrator import orchestrator
 
 app = typer.Typer(
     name="flext",
-    help="FLX Enterprise Framework - Complete Platform CLI",
+    help="FLEXT Enterprise Framework - Complete Platform CLI",
     rich_markup_mode="rich"
 )
 
@@ -350,7 +352,7 @@ def start(
     debug: bool = typer.Option(False, help="Enable debug mode"),
     detach: bool = typer.Option(False, help="Run in background")
 ):
-    """Start the complete FLX platform"""
+    """Start the complete FLEXT platform"""
     
     async def _start():
         if debug:
@@ -358,7 +360,7 @@ def start(
             logging.basicConfig(level=logging.DEBUG)
         
         async with orchestrator.lifespan():
-            console.print("[green]🚀 FLX Enterprise Platform started![/green]")
+            console.print("[green]🚀 FLEXT Enterprise Platform started![/green]")
             
             status = orchestrator.get_status()
             _display_status(status)
@@ -369,19 +371,19 @@ def start(
                     while True:
                         await asyncio.sleep(1)
                 except KeyboardInterrupt:
-                    console.print("\n[yellow]Stopping FLX...[/yellow]")
+                    console.print("\n[yellow]Stopping FLEXT...[/yellow]")
     
     asyncio.run(_start())
 
 @app.command()
 def status():
-    """Show status of all FLX modules"""
+    """Show status of all FLEXT modules"""
     status = orchestrator.get_status()
     _display_status(status)
 
 @app.command()
 def modules():
-    """List all available FLX modules"""
+    """List all available FLEXT modules"""
     modules = [
         ("flext-core", "Foundation & Domain", "95%"),
         ("flext-auth", "Authentication", "100%"),
@@ -394,7 +396,7 @@ def modules():
         ("flext-meltano", "ETL Integration", "100%"),
     ]
     
-    table = Table(title="FLX Modules")
+    table = Table(title="FLEXT Modules")
     table.add_column("Module", style="cyan")
     table.add_column("Description", style="white")
     table.add_column("Completion", style="green")
@@ -406,7 +408,7 @@ def modules():
 
 def _display_status(status: dict):
     """Display system status table"""
-    table = Table(title="FLX Platform Status")
+    table = Table(title="FLEXT Platform Status")
     table.add_column("Component", style="cyan")
     table.add_column("Status", style="green")
     table.add_column("Details")
@@ -434,7 +436,7 @@ if __name__ == "__main__":
 # 3.1 - Criar estrutura legacy
 mkdir -p legacy
 
-# 3.2 - Mover projetos não-FLX para legacy/
+# 3.2 - Mover projetos não-FLEXT para legacy/
 # NOTA: flext-meltano-enterprise já foi movido para backups/
 mv tap-oracle-wms legacy/
 mv target-oracle-oic legacy/
@@ -448,23 +450,23 @@ ls -la backups/
 # - flext-meltano-enterprise_source_20250629_121126/ (fonte da modularização)
 # - flext_original_20250629_121011/ (diretório flext/ original vazio)
 
-# 3.4 - Manter apenas módulos FLX no root
+# 3.4 - Manter apenas módulos FLEXT no root
 # flext-core/ flext-auth/ flext-api/ etc. permanecem no root
 ```
 
 ### **FASE 4: ATUALIZAR DOCUMENTAÇÃO**
 
-#### **4.1 - Novo CLAUDE.md do Projeto FLX**
+#### **4.1 - Novo CLAUDE.md do Projeto FLEXT**
 
-O workspace todo agora é documentado como projeto FLX único.
+O workspace todo agora é documentado como projeto FLEXT único.
 
 #### **4.2 - Atualizar Hierarquia**
 
 ```
 /home/marlonsc/CLAUDE.md                    ← Global (princípios universais)
 /home/marlonsc/internal.invalid.md              ← Cross-workspace issues
-/home/marlonsc/pyauto/CLAUDE.md             ← FLX PROJECT documentation
-/home/marlonsc/pyauto/internal.invalid.md       ← FLX project temporary issues
+/home/marlonsc/pyauto/CLAUDE.md             ← FLEXT PROJECT documentation
+/home/marlonsc/pyauto/internal.invalid.md       ← FLEXT project temporary issues
 /home/marlonsc/pyauto/flext-*/CLAUDE.md       ← Module-specific docs
 /home/marlonsc/pyauto/legacy/*/CLAUDE.md    ← Legacy project docs
 ```
@@ -474,6 +476,7 @@ O workspace todo agora é documentado como projeto FLX único.
 ## 🔒 SEGURANÇA E VALIDAÇÃO
 
 ### **Backup Antes da Transformação**
+
 ```bash
 cd /home/marlonsc/pyauto
 tar -czf ~/backups/pre_flext_transformation_$(date +%Y%m%d_%H%M%S).tar.gz \
@@ -481,6 +484,7 @@ tar -czf ~/backups/pre_flext_transformation_$(date +%Y%m%d_%H%M%S).tar.gz \
 ```
 
 ### **Validação Pós-Transformação**
+
 ```bash
 # 1. Verificar estrutura
 ls -la | grep -E "flext-|pyproject.toml|docker-compose.yml"
@@ -494,7 +498,7 @@ python -c "
 import sys
 sys.path.append('.')
 from flext_orchestrator import orchestrator
-print('✅ FLX Orchestrator importado com sucesso')
+print('✅ FLEXT Orchestrator importado com sucesso')
 "
 
 # 4. Testar CLI
@@ -506,15 +510,17 @@ python flext-cli.py modules
 ## 📊 MÉTRICAS DE SUCESSO
 
 ### **Transformação Completa**
-- ✅ Workspace `/home/marlonsc/pyauto` É o projeto FLX
+
+- ✅ Workspace `/home/marlonsc/pyauto` É o projeto FLEXT
 - ✅ Diretório `flext/` removido completamente
 - ✅ Orquestrador funciona no nível workspace
-- ✅ Módulos FLX acessíveis através do orquestrador
+- ✅ Módulos FLEXT acessíveis através do orquestrador
 - ✅ Projetos legacy organizados em `legacy/`
 - ✅ CLI unificado `python flext-cli.py` funcional
 
 ### **Documentação Alinhada**
-- ✅ CLAUDE.md do workspace documenta projeto FLX
+
+- ✅ CLAUDE.md do workspace documenta projeto FLEXT
 - ✅ Hierarquia corrigida sem confusão
 - ✅ Módulos documentados individualmente
 - ✅ Legacy projects organizados
@@ -524,13 +530,15 @@ python flext-cli.py modules
 ## ✅ STATUS DA TRANSFORMAÇÃO (ATUALIZADO 2025-06-29)
 
 ### **COMPLETED**
+
 1. ✅ **Remover `flext/` vazio**: Diretório removido completamente
-2. ✅ **Extrair módulos FLX**: 9 módulos funcionais extraídos de flext-meltano-enterprise
+2. ✅ **Extrair módulos FLEXT**: 9 módulos funcionais extraídos de flext-meltano-enterprise
 3. ✅ **Organizar backups**: flext-meltano-enterprise_source preservado em backups/
 4. ✅ **Atualizar documentação**: CLAUDE.md hierarquia corrigida
-5. ✅ **Criar estrutura modular**: FLX agora é workspace-level architecture
+5. ✅ **Criar estrutura modular**: FLEXT agora é workspace-level architecture
 
 ### **DISCOVERED ISSUES**
+
 6. 🚨 **flext-database-oracle**: Git submodule issue encontrado
    - **Status**: Commit e8fe4da6b74bc69a existe mas checkout falhou
    - **Usado por**: client-b-poc-oic-wms (9 referências de arquivo)
@@ -538,8 +546,9 @@ python flext-cli.py modules
    - **Ação necessária**: Usuário deve resolver configuração do submodule
 
 ### **ARCHITECTURE ACHIEVED**
+
 ```
-/home/marlonsc/pyauto/                    # ✅ É O PROJETO FLX
+/home/marlonsc/pyauto/                    # ✅ É O PROJETO FLEXT
 ├── flext-core/                             # ✅ Módulo core
 ├── flext-auth/                             # ✅ Módulo auth (100%)
 ├── flext-api/                              # ✅ Módulo API (100%)
@@ -562,6 +571,7 @@ python flext-cli.py modules
 ## 🎯 PRÓXIMOS PASSOS REAIS
 
 ### **IMMEDIATE PRIORITIES**
+
 1. 🚨 **Resolver flext-database-oracle**:
    - Usuário deve verificar configuração git submodule
    - Ou fornecer código/cópia manual para legacy/
@@ -573,12 +583,13 @@ python flext-cli.py modules
    - Configurar docker-compose para desenvolvimento
 
 ### **OPTIONAL ENHANCEMENTS**
-3. 📊 **Completar FLX-CLI**: 95% → 100% (modo interativo)
-4. 🧪 **Testes de integração**: Entre módulos FLX
+
+3. 📊 **Completar FLEXT-CLI**: 95% → 100% (modo interativo)
+4. 🧪 **Testes de integração**: Entre módulos FLEXT
 5. 📖 **Documentação técnica**: Cada módulo com CLAUDE.md específico
 
 ---
 
-**STATUS REAL**: Transformação FLX workspace COMPLETADA com sucesso
+**STATUS REAL**: Transformação FLEXT workspace COMPLETADA com sucesso
 **PROBLEMA IDENTIFICADO**: flext-database-oracle precisa resolução manual
 **RESULTADO**: 19 projetos ativos organizados + backups preservados + 1 submodule issue

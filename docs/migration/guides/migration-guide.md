@@ -1,12 +1,12 @@
-# 🔄 FLX 0.4.0+ Migration Guide
+# 🔄 FLEXT 0.4.0+ Migration Guide
 
-> **Function**: Complete migration procedures for FLX Framework upgrades | **Audience**: Development teams, technical leads | **Status**: ✅ Validated
+> **Function**: Complete migration procedures for FLEXT Framework upgrades | **Audience**: Development teams, technical leads | **Status**: ✅ Validated
 
-[![Migration Guide](https://img.shields.io/badge/guide-FLX%200.4.0+-green.svg)](../index.md)
+[![Migration Guide](https://img.shields.io/badge/guide-FLEXT%200.4.0+-green.svg)](../index.md)
 [![Validated](https://img.shields.io/badge/content-source%20verified-blue.svg)](#validation-and-testing)
 [![Production Ready](https://img.shields.io/badge/production-engines-orange.svg)](#production-engines-migration)
 
-**Complete migration procedures for upgrading to FLX 0.4.0+ unified architecture - validated against actual source code implementations in `/flext/src/`**
+**Complete migration procedures for upgrading to FLEXT 0.4.0+ unified architecture - validated against actual source code implementations in `/flext/src/`**
 
 ---
 
@@ -18,12 +18,12 @@
 
 ## Overview
 
-This guide helps developers migrate from legacy FLX implementations to the new unified, consolidated architecture. The new architecture eliminates code duplication, improves performance, and provides production-ready engines while maintaining backward compatibility.
+This guide helps developers migrate from legacy FLEXT implementations to the new unified, consolidated architecture. The new architecture eliminates code duplication, improves performance, and provides production-ready engines while maintaining backward compatibility.
 
 ### **Prerequisites**
 
-- [Architecture Overview](../../architecture/index.md) - Understanding FLX hexagonal architecture
-- [Getting Started](../../getting-started/index.md) - FLX Framework fundamentals
+- [Architecture Overview](../../architecture/index.md) - Understanding FLEXT hexagonal architecture
+- [Getting Started](../../getting-started/index.md) - FLEXT Framework fundamentals
 - [Development Setup](../../development/guides/setup-guide.md) - Development environment
 
 ### **Related Guides**
@@ -74,7 +74,7 @@ This guide helps developers migrate from legacy FLX implementations to the new u
 # Multiple different logging implementations
 from flext.infra.observability.logging import logger
 from flext.infra.utils.logging import get_logger
-from flext.infra.services.logging import FlxLogger
+from flext.infra.services.logging import FlextLogger
 
 # Using extra parameter (causes MyPy errors)
 logger.info("User created", extra={"user_id": 123, "email": "user@example.com"})
@@ -183,12 +183,12 @@ success = await cache_service.set_if_not_exists("lock_key", "lock_value")
 
 ```python
 # Multiple manager implementations
-from flext.infra.adapters.manager import FlxAdapterManager
-from flext.infra.messaging.adapter_manager import FlxMessagingAdapterManager
+from flext.infra.adapters.manager import FlextAdapterManager
+from flext.infra.messaging.adapter_manager import FlextMessagingAdapterManager
 
 # Separate managers for different concerns
-adapter_manager = FlxAdapterManager()
-messaging_manager = FlxMessagingAdapterManager()
+adapter_manager = FlextAdapterManager()
+messaging_manager = FlextMessagingAdapterManager()
 ```
 
 ### New Pattern (RECOMMENDED)
@@ -295,7 +295,7 @@ success = await db_engine.save_record("users", user_data)
 
 ### Breaking Changes
 
-1. **Logging `extra=` parameter**: No longer supported in `FlxLogger.info()`
+1. **Logging `extra=` parameter**: No longer supported in `FlextLogger.info()`
 
    ```python
    # BROKEN
@@ -319,7 +319,7 @@ success = await db_engine.save_record("users", user_data)
 
    ```python
    # BROKEN
-   from flext.infra.messaging.adapter_manager import FlxMessagingAdapterManager
+   from flext.infra.messaging.adapter_manager import FlextMessagingAdapterManager
 
    # FIXED
    from flext.infra.adapters import UnifiedAdapterManager
@@ -331,7 +331,7 @@ The following deprecated patterns still work but will issue warnings:
 
 ```python
 # These imports work but are deprecated
-from flext.infra.adapters.manager import FlxAdapterManager  # Warning issued
+from flext.infra.adapters.manager import FlextAdapterManager  # Warning issued
 from flext.infra.cache.base import CacheBase  # Warning issued
 
 # Migration path provided in warning messages
@@ -398,12 +398,12 @@ cache_engine = CacheProductionEngine(
 ```python
 # old_api.py
 from flext.infra.cache.backends import RedisBackend
-from flext.infra.adapters.manager import FlxAdapterManager
+from flext.infra.adapters.manager import FlextAdapterManager
 from flext.core.logging import get_logger
 
 logger = get_logger(__name__)
 cache = RedisBackend(url="redis://localhost:6379")
-manager = FlxAdapterManager()
+manager = FlextAdapterManager()
 
 async def create_user(user_data: dict):
     logger.info("Creating user", extra={"user_id": user_data["id"]})
@@ -447,16 +447,16 @@ async def create_user(user_data: dict):
 ```python
 # old_app.py
 from flext.infra.cache.base import CacheBase
-from flext.infra.adapters.manager import FlxAdapterManager
-from flext.infra.messaging.adapter_manager import FlxMessagingAdapterManager
-from flext.core.logging import FlxLogger
+from flext.infra.adapters.manager import FlextAdapterManager
+from flext.infra.messaging.adapter_manager import FlextMessagingAdapterManager
+from flext.core.logging import FlextLogger
 
 class OldApplication:
     def __init__(self):
         self.cache = CacheBase()
-        self.adapter_manager = FlxAdapterManager()
-        self.messaging_manager = FlxMessagingAdapterManager()
-        self.logger = FlxLogger()
+        self.adapter_manager = FlextAdapterManager()
+        self.messaging_manager = FlextMessagingAdapterManager()
+        self.logger = FlextLogger()
 
     async def start(self):
         self.logger.info("Starting application", extra={"app": "old_app"})
@@ -592,4 +592,4 @@ class NewApplication:
 
 ---
 
-**📂 Hub**: [Migration Hub](../index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Migration Hub](../index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

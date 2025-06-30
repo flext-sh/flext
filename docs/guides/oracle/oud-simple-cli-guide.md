@@ -8,7 +8,7 @@ A simplified CLI for Oracle Unified Directory automation with standardized table
 - ✅ **Automatic .env loading**
 - ✅ **Standardized logging with logger.info**
 - ✅ **Support for multiple output formats** (table, json, csv, yaml)
-- ✅ **Simplified design** without FLX CLI dependencies
+- ✅ **Simplified design** without FLEXT CLI dependencies
 
 ## Installation
 

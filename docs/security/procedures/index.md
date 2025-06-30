@@ -6,7 +6,7 @@
 [![Incident](https://img.shields.io/badge/incident-response-blue.svg)](./security-procedures.md)
 [![Operations](https://img.shields.io/badge/operations-security-green.svg)](./security-procedures.md)
 
-**Complete security operational procedures and incident response framework for FLX Framework**
+**Complete security operational procedures and incident response framework for FLEXT Framework**
 
 ---
 
@@ -60,4 +60,4 @@
 
 ---
 
-**📂 Section Hub** | **🏠 Parent**: [Security Hub](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Section Hub** | **🏠 Parent**: [Security Hub](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

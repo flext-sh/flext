@@ -1,10 +1,10 @@
 # Meltano Integration Hub
 
-**Navigation Center**: Complete Meltano & Singer SDK integration within FLX Framework
+**Navigation Center**: Complete Meltano & Singer SDK integration within FLEXT Framework
 **Purpose**: Unified data pipeline functionality via hexagonal architecture
 **Audience**: Data Engineers, Integration Architects, Platform Teams
 
-> **Central navigation hub for all Meltano integration patterns and implementations. This hub provides structured pathways to master data pipeline orchestration within the FLX hexagonal architecture.**
+> **Central navigation hub for all Meltano integration patterns and implementations. This hub provides structured pathways to master data pipeline orchestration within the FLEXT hexagonal architecture.**
 
 ---
 
@@ -12,7 +12,7 @@
 
 ### **Strategic Goals**
 
-- **🔄 Unified Data Platform**: Complete Meltano functionality within FLX architecture
+- **🔄 Unified Data Platform**: Complete Meltano functionality within FLEXT architecture
 - **🔀 Bidirectional Ports**: Ports that can act as both data sources and destinations
 - **🎵 Singer Protocol Compliance**: Full Singer SDK integration with type safety
 - **🔌 Plugin Ecosystem**: Leverage Meltano's extensive plugin ecosystem
@@ -21,7 +21,7 @@
 ### **Architecture Integration**
 
 ```
-FLX Hexagonal Architecture + Meltano Integration
+FLEXT Hexagonal Architecture + Meltano Integration
 ┌─────────────────────────────────────────────────────────┐
 │                  Application Layer                      │
 ├─────────────────────────────────────────────────────────┤
@@ -108,7 +108,7 @@ _Practical implementations and integrations_
   - _Complexity: Advanced | Time: 2-3 hours_
 
 - **[CLI Integration Examples](meltano-cli-integration.md)** ⭐ **Command-Line Interface**
-  - FLX CLI extensions
+  - FLEXT CLI extensions
   - Pipeline execution commands
   - Development workflows
   - _Complexity: Intermediate | Time: 1 hour_
@@ -314,7 +314,7 @@ async def run_meltano_pipeline():
 ### 🖥️ **CLI Integration**
 
 ```bash
-# FLX CLI with Meltano extensions
+# FLEXT CLI with Meltano extensions
 flext meltano install tap-postgres
 flext meltano run postgres-to-snowflake
 flext meltano test tap-postgres
@@ -345,7 +345,7 @@ class PipelineMetrics:
 
 ## 🔗 **Related Documentation**
 
-### **FLX Framework**
+### **FLEXT Framework**
 
 - **[Hexagonal Architecture](../architecture/unified-architecture-guide.md)** - Core framework patterns
 - **[Plugin Development](../guides/plugin-development-guide.md)** - General plugin patterns
@@ -367,7 +367,7 @@ class PipelineMetrics:
 
 ## 🚀 **Getting Started Now**
 
-Ready to integrate Meltano with FLX? Choose your starting point:
+Ready to integrate Meltano with FLEXT? Choose your starting point:
 
 ### **🏃‍♂️ Quick Start (30 minutes)**
 
@@ -389,7 +389,7 @@ Ready to integrate Meltano with FLX? Choose your starting point:
 
 ---
 
-**Integration Hub**: Meltano within FLX Framework
-**Maintained By**: FLX Data Engineering Team
+**Integration Hub**: Meltano within FLEXT Framework
+**Maintained By**: FLEXT Data Engineering Team
 **Last Updated**: January 2025
 **Feedback**: [Integration Issues](https://github.com/flext/flext/issues)

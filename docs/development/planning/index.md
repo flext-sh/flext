@@ -4,11 +4,11 @@
 
 ## Overview
 
-Strategic planning documentation for FLX framework development, covering roadmaps, feature planning, architectural decisions, and development milestones.
+Strategic planning documentation for FLEXT framework development, covering roadmaps, feature planning, architectural decisions, and development milestones.
 
 ## Quick Links
 
-- [🚀 FLX Next Steps Planning](./flext-next-steps-planning.md) - Strategic development roadmap
+- [🚀 FLEXT Next Steps Planning](./flext-next-steps-planning.md) - Strategic development roadmap
 
 ## Planning Categories
 
@@ -16,21 +16,21 @@ Strategic planning documentation for FLX framework development, covering roadmap
 
 **Development Roadmaps:**
 
-1. [FLX Next Steps Planning](./flext-next-steps-planning.md)
+1. [FLEXT Next Steps Planning](./flext-next-steps-planning.md)
 
 ## Learning Paths
 
 ### Product Managers
 
-→ [FLX Next Steps Planning](./flext-next-steps-planning.md)
+→ [FLEXT Next Steps Planning](./flext-next-steps-planning.md)
 
 ### Technical Leads
 
-→ [FLX Next Steps Planning](./flext-next-steps-planning.md)
+→ [FLEXT Next Steps Planning](./flext-next-steps-planning.md)
 
 ### Development Teams
 
-→ [FLX Next Steps Planning](./flext-next-steps-planning.md)
+→ [FLEXT Next Steps Planning](./flext-next-steps-planning.md)
 
 ## Related Sections
 
@@ -41,4 +41,4 @@ Strategic planning documentation for FLX framework development, covering roadmap
 
 ---
 
-_Part of the [FLX Framework Documentation](../../../index.md)_
+_Part of the [FLEXT Framework Documentation](../../../index.md)_

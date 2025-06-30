@@ -6,7 +6,7 @@
 [![Patterns](https://img.shields.io/badge/patterns-validated-green.svg)](./infrastructure-implementation-guide.md)
 [![Production](https://img.shields.io/badge/production-ready-orange.svg)](./infrastructure-implementation-guide.md)
 
-**Infrastructure layer architecture patterns and implementation guides for FLX Framework with production validation**
+**Infrastructure layer architecture patterns and implementation guides for FLEXT Framework with production validation**
 
 ---
 
@@ -16,7 +16,7 @@
 
 ### **🎯 Hub Purpose**
 
-This hub provides comprehensive infrastructure architecture patterns for FLX Framework, covering infrastructure layer implementation, deployment patterns, and production infrastructure strategies.
+This hub provides comprehensive infrastructure architecture patterns for FLEXT Framework, covering infrastructure layer implementation, deployment patterns, and production infrastructure strategies.
 
 ---
 
@@ -125,7 +125,7 @@ This hub provides comprehensive infrastructure architecture patterns for FLX Fra
 
 ### **Infrastructure Validation**
 
-- **Real Implementation**: ✅ Based on production FLX Framework infrastructure patterns
+- **Real Implementation**: ✅ Based on production FLEXT Framework infrastructure patterns
 - **Oracle Integration**: ✅ Infrastructure patterns validated with Oracle system implementations
 - **Testing Coverage**: ✅ Infrastructure patterns tested with comprehensive validation suites
 - **Documentation Standards**: ✅ HOW_TO_DOCUMENT.md compliance
@@ -138,4 +138,4 @@ This hub provides comprehensive infrastructure architecture patterns for FLX Fra
 
 ---
 
-**📂 Section Hub** | **🏠 Parent**: [Architecture Hub](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Section Hub** | **🏠 Parent**: [Architecture Hub](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

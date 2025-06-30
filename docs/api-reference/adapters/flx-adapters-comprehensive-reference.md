@@ -1,4 +1,4 @@
-# FLX Adapters - Comprehensive API Reference
+# FLEXT Adapters - Comprehensive API Reference
 
 > **Function**: Complete adapter system documentation | **Audience**: Developers, architects | **Status**: Stable
 
@@ -6,18 +6,18 @@
 [![Architecture](https://img.shields.io/badge/architecture-hexagonal-blue.svg)](../../architecture/index.md)
 [![Code Coverage](https://img.shields.io/badge/coverage-85%--90%25-brightgreen.svg)](../../development/testing/index.md)
 
-Complete reference for FLX Framework's hexagonal adapter system with production-ready implementations
+Complete reference for FLEXT Framework's hexagonal adapter system with production-ready implementations
 
 ---
 
 ## 🧭 **Navigation Context**
 
-**🏠 Root**: [Documentation Home](../../index.md) → **📂 Hub**: [API Reference](../index.md) → **📄 Current**: FLX Adapters Reference
+**🏠 Root**: [Documentation Home](../../index.md) → **📂 Hub**: [API Reference](../index.md) → **📄 Current**: FLEXT Adapters Reference
 
 ### **📍 Learning Path Position**
 
 ```
-[Core API Reference](../framework/core-api-reference-validated.md) → **[FLX ADAPTERS]** → [Framework API Overview](../comprehensive/flext-api-overview.md)
+[Core API Reference](../framework/core-api-reference-validated.md) → **[FLEXT ADAPTERS]** → [Framework API Overview](../comprehensive/flext-api-overview.md)
 ```
 
 ## 🎯 **Quick Links**
@@ -30,7 +30,7 @@ Complete reference for FLX Framework's hexagonal adapter system with production-
 
 ## 🎯 Overview
 
-The FLX adapter system implements a world-class hexagonal architecture with strict separation between adapters and infrastructure. All adapters achieve 85-90% code reduction through the `AdvancedAdapterMixin` pattern while maintaining full functionality and enterprise-grade capabilities.
+The FLEXT adapter system implements a world-class hexagonal architecture with strict separation between adapters and infrastructure. All adapters achieve 85-90% code reduction through the `AdvancedAdapterMixin` pattern while maintaining full functionality and enterprise-grade capabilities.
 
 ### **Architecture Pattern**
 
@@ -478,7 +478,7 @@ class HttpClientAdapterConfig:
 
     # Request Configuration
     default_headers: Dict[str, str] = {}
-    user_agent: str = "FLX-HttpClient/0.4.0"
+    user_agent: str = "FLEXT-HttpClient/0.4.0"
     max_retries: int = 3
     retry_delay: float = 1.0
 
@@ -1227,7 +1227,7 @@ MEDIUM PRIORITY:
 
 ## 🎉 Conclusion
 
-The FLX adapter system represents a **world-class implementation** of hexagonal architecture with:
+The FLEXT adapter system represents a **world-class implementation** of hexagonal architecture with:
 
 - **10 production-ready adapters** covering all essential operations
 - **85-90% code reduction** through advanced mixin patterns
@@ -1245,7 +1245,7 @@ The system provides a solid foundation for adding the remaining adapters and int
 
 ### **Prerequisites**
 
-- [FLX Core API Reference](../framework/core-api-reference-validated.md) - Understanding core domain concepts
+- [FLEXT Core API Reference](../framework/core-api-reference-validated.md) - Understanding core domain concepts
 - [Hexagonal Architecture Guide](../../architecture/design/unified-architecture-guide.md) - Architecture principles used by adapters
 
 ### **Next Steps**
@@ -1262,4 +1262,4 @@ The system provides a solid foundation for adding the remaining adapters and int
 
 ---
 
-**📂 Hub**: [API Reference](../index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [API Reference](../index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

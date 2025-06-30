@@ -1,6 +1,6 @@
-# FLX HTTP Oracle WMS
+# FLEXT HTTP Oracle WMS
 
-Modern Python client for Oracle Warehouse Management System (WMS) operations, built on the FLX framework with PEP8 compliance.
+Modern Python client for Oracle Warehouse Management System (WMS) operations, built on the FLEXT framework with PEP8 compliance.
 
 ## Features
 

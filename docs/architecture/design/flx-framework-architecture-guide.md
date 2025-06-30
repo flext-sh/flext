@@ -1,23 +1,23 @@
-# FLX Framework Architecture Guide - Production Implementation
+# FLEXT Framework Architecture Guide - Production Implementation
 
-> **Function**: Complete architecture guide based on actual FLX Framework implementation | **Audience**: System architects, framework developers | **Status**: Production-validated
+> **Function**: Complete architecture guide based on actual FLEXT Framework implementation | **Audience**: System architects, framework developers | **Status**: Production-validated
 
 [![Architecture](https://img.shields.io/badge/architecture-hexagonal-blue.svg)](../hexagonal-architecture-hub.md)
 [![Framework](https://img.shields.io/badge/framework-production_ready-green.svg)](../index.md)
 [![Implementation](https://img.shields.io/badge/implementation-validated-orange.svg)](../../index.md)
 
-**Complete architecture guide based on actual production FLX Framework implementation with real code examples and validated patterns**
+**Complete architecture guide based on actual production FLEXT Framework implementation with real code examples and validated patterns**
 
 ---
 
 ## 🧭 **Navigation Context**
 
-**🏠 Root**: [Documentation Home](../../index.md) → **📂 Hub**: [Architecture Hub](../index.md) → **📂 Sub-Hub**: [Design Hub](./index.md) → **📄 Current**: FLX Framework Architecture
+**🏠 Root**: [Documentation Home](../../index.md) → **📂 Hub**: [Architecture Hub](../index.md) → **📂 Sub-Hub**: [Design Hub](./index.md) → **📄 Current**: FLEXT Framework Architecture
 
 ### **📍 Learning Path Position**
 
 ```
-[Hexagonal Architecture Hub](../hexagonal-architecture-hub.md) → **[FLX Framework Architecture]** → [Unified Architecture Guide](./unified-architecture-guide.md)
+[Hexagonal Architecture Hub](../hexagonal-architecture-hub.md) → **[FLEXT Framework Architecture]** → [Unified Architecture Guide](./unified-architecture-guide.md)
 ```
 
 ## 🎯 **Quick Links**
@@ -30,7 +30,7 @@
 
 ## 📋 **Overview**
 
-This guide documents the actual architecture of the FLX Framework as implemented in production code. All patterns, examples, and recommendations are extracted from real implementation in `/flext/src/flext/` and validated in production environments.
+This guide documents the actual architecture of the FLEXT Framework as implemented in production code. All patterns, examples, and recommendations are extracted from real implementation in `/flext/src/flext/` and validated in production environments.
 
 ### **Framework Characteristics**
 
@@ -51,7 +51,7 @@ This guide documents the actual architecture of the FLX Framework as implemented
 
 ### **Domain Layer (`/flext/core/`)**
 
-The heart of the FLX Framework implementing pure domain logic:
+The heart of the FLEXT Framework implementing pure domain logic:
 
 #### **Entities and Aggregates**
 
@@ -143,7 +143,7 @@ class DomainEvent(DomainObject):
     correlation_id: Optional[UUID] = Field(default=None, frozen=True)
     causation_id: Optional[UUID] = Field(default=None, frozen=True)
 
-class FlxDomainEvent(DomainEvent):
+class FlextDomainEvent(DomainEvent):
     """Enhanced domain event with multi-tenancy and routing."""
 
     tenant_id: Optional[str] = Field(default=None, frozen=True)
@@ -151,7 +151,7 @@ class FlxDomainEvent(DomainEvent):
     event_version: int = Field(default=1, frozen=True)
     metadata: Dict[str, Any] = Field(default_factory=dict, frozen=True)
 
-    def with_correlation(self, correlation_id: UUID) -> "FlxDomainEvent":
+    def with_correlation(self, correlation_id: UUID) -> "FlextDomainEvent":
         """Create event with correlation ID."""
         return self.model_copy(update={"correlation_id": correlation_id})
 ```
@@ -410,7 +410,7 @@ class HierarchicalConfig(BaseModel):
     def load(
         cls,
         config_files: Optional[list[str]] = None,
-        env_prefix: str = "FLX",
+        env_prefix: str = "FLEXT",
         environment: str = "development"
     ) -> "HierarchicalConfig":
         """Load configuration from multiple sources."""
@@ -474,7 +474,7 @@ class ServiceRegistry:
 
 ```python
 # Real implementation from /flext/src/flext/core/
-class FlxException(Exception):
+class FlextException(Exception):
     """Base exception with structured error information."""
 
     def __init__(
@@ -491,11 +491,11 @@ class FlxException(Exception):
         self.cause = cause
         self.occurred_at = datetime.now(UTC)
 
-class DomainError(FlxException):
+class DomainError(FlextException):
     """Domain layer exceptions."""
     pass
 
-class InfrastructureError(FlxException):
+class InfrastructureError(FlextException):
     """Infrastructure layer exceptions."""
     pass
 ```
@@ -576,21 +576,21 @@ class DeclarativeTestEngine:
 
 ### **Prerequisites**
 
-- [Hexagonal Architecture Hub](../hexagonal-architecture-hub.md) - Foundational architectural patterns implemented in FLX
+- [Hexagonal Architecture Hub](../hexagonal-architecture-hub.md) - Foundational architectural patterns implemented in FLEXT
 - [Core Domain Layer](../core-domain-layer.md) - Detailed domain layer implementation patterns
 - [Architecture Ports](../ports/index.md) - Port interface definitions and contracts
 
 ### **Next Steps**
 
-- [Infrastructure Hub](../../infrastructure/index.md) - Infrastructure services supporting FLX Framework
-- [Development Hub](../../development/index.md) - Development practices and tools for FLX
-- [Oracle Integration Guide](../../guides/oracle/oracle-integration-comprehensive-guide.md) - Real Oracle implementations using FLX
+- [Infrastructure Hub](../../infrastructure/index.md) - Infrastructure services supporting FLEXT Framework
+- [Development Hub](../../development/index.md) - Development practices and tools for FLEXT
+- [Oracle Integration Guide](../../guides/oracle/oracle-integration-comprehensive-guide.md) - Real Oracle implementations using FLEXT
 
 ### **Related Topics**
 
-- [Testing Strategies](../../development/testing/index.md) - Testing approaches for FLX Framework applications
-- [Security Architecture](../../security/index.md) - Security patterns integrated into FLX Framework
-- [Performance Optimization](../../optimization/index.md) - Performance considerations for FLX applications
+- [Testing Strategies](../../development/testing/index.md) - Testing approaches for FLEXT Framework applications
+- [Security Architecture](../../security/index.md) - Security patterns integrated into FLEXT Framework
+- [Performance Optimization](../../optimization/index.md) - Performance considerations for FLEXT applications
 
 ---
 
@@ -612,7 +612,7 @@ class DeclarativeTestEngine:
 
 ---
 
-**📂 Hub**: [Design Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+
+**📂 Hub**: [Design Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+
 
 ---
 

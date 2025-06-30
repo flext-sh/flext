@@ -6,7 +6,7 @@
 [![Hexagonal](https://img.shields.io/badge/hexagonal-ports_adapters-orange.svg)](./flext-adapters-comprehensive-reference.md)
 [![Oracle](https://img.shields.io/badge/oracle-native_support-red.svg)](../../guides/adapters/index.md)
 
-Complete adapter APIs for FLX Framework 0.4.0+ hexagonal architecture with Oracle integration support
+Complete adapter APIs for FLEXT Framework 0.4.0+ hexagonal architecture with Oracle integration support
 
 ---
 
@@ -24,7 +24,7 @@ Complete adapter APIs for FLX Framework 0.4.0+ hexagonal architecture with Oracl
 
 - **📂 Parent Hub**: [API Reference Hub](../index.md)
 - **🏠 Documentation Root**: [Root Index](../../index.md)
-- **🔌 Complete Reference**: [FLX Adapters Reference](./flext-adapters-comprehensive-reference.md)
+- **🔌 Complete Reference**: [FLEXT Adapters Reference](./flext-adapters-comprehensive-reference.md)
 
 ---
 
@@ -36,7 +36,7 @@ The Adapters APIs Hub provides complete API documentation for hexagonal architec
 
 | **API Documentation**                                                   | **Architecture** | **Validation**   | **Status**    | **Key Features**                        |
 | ----------------------------------------------------------------------- | ---------------- | ---------------- | ------------- | --------------------------------------- |
-| **[FLX Adapters Reference](./flext-adapters-comprehensive-reference.md)** | Hexagonal        | Source Validated | ✅ Production | Inbound/outbound ports, Oracle adapters |
+| **[FLEXT Adapters Reference](./flext-adapters-comprehensive-reference.md)** | Hexagonal        | Source Validated | ✅ Production | Inbound/outbound ports, Oracle adapters |
 
 ### **🚀 Adapter API Features**
 
@@ -50,11 +50,11 @@ The Adapters APIs Hub provides complete API documentation for hexagonal architec
 
 ### **🆕 New Integration Engineers**
 
-1. **Foundation**: [FLX Adapters Reference](./flext-adapters-comprehensive-reference.md)
+1. **Foundation**: [FLEXT Adapters Reference](./flext-adapters-comprehensive-reference.md)
 
 ### **🏗️ Adapter Developers**
 
-1. **Complete Reference**: [FLX Adapters Reference](./flext-adapters-comprehensive-reference.md)
+1. **Complete Reference**: [FLEXT Adapters Reference](./flext-adapters-comprehensive-reference.md)
 
 ## 🔗 **Cross-References**
 
@@ -87,4 +87,4 @@ The Adapters APIs Hub provides complete API documentation for hexagonal architec
 
 ---
 
-**📂 Hub**: [Adapters APIs Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Adapters APIs Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

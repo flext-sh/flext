@@ -20,7 +20,7 @@
 
 ### **⬅️ Prerequisites**
 
-- [Getting Started Hub](../../getting-started/index.md) - FLX Framework installation and setup required for Oracle integrations
+- [Getting Started Hub](../../getting-started/index.md) - FLEXT Framework installation and setup required for Oracle integrations
 - [Architecture Hub](../../architecture/index.md) - Understanding hexagonal architecture patterns underlying Oracle adapters
 - [Authentication Hub](../authentication/index.md) - OAuth2 and JWT authentication setup required for Oracle Cloud access
 
@@ -51,10 +51,10 @@ Based on actual implementation in `/flext_http_oracle_wms/src/`:
 ```python
 # Real implementation from flext_http_oracle_wms/src/flext_http_oracle_wms/wms_client.py
 class WmsClient:
-    """WMS client using FLX HttpClientService with full WMS operations."""
+    """WMS client using FLEXT HttpClientService with full WMS operations."""
 
     def __init__(self, config: WmsConfig) -> None:
-        """Initialize WMS client with FLX infrastructure."""
+        """Initialize WMS client with FLEXT infrastructure."""
         self._config = config
         self._http_client = HttpClientService(
             base_url=config.base_url,
@@ -131,7 +131,7 @@ class WmsClient:
 **Key Implementation Features (Actually Built):**
 
 - ✅ **Dynamic Discovery**: Automatically discovers Oracle WMS entities
-- ✅ **FLX Integration**: Uses FLX HttpClientService infrastructure
+- ✅ **FLEXT Integration**: Uses FLEXT HttpClientService infrastructure
 - ✅ **Production Timeouts**: 300-second timeout for large Oracle operations
 - ✅ **Error Recovery**: Robust error handling with endpoint fallbacks
 - ✅ **Oracle Specifics**: Handles Oracle WMS API v10 patterns and responses
@@ -153,7 +153,7 @@ class WmsConfig(BaseModel):
         headers = {
             "Content-Type": "application/json",
             "Accept": "application/json",
-            "User-Agent": "FLX-Oracle-WMS-Client/1.0"
+            "User-Agent": "FLEXT-Oracle-WMS-Client/1.0"
         }
 
         if self.tenant:
@@ -355,7 +355,7 @@ from flext_http_oracle_wms import WmsClient, WmsConfig
 
 @click.group()
 def cli():
-    """Oracle WMS CLI using FLX Framework."""
+    """Oracle WMS CLI using FLEXT Framework."""
     pass
 
 @cli.command()
@@ -402,13 +402,13 @@ if __name__ == "__main__":
 
 ### **Architecture Benefits (Proven in Production)**
 
-#### **FLX Integration Benefits**
+#### **FLEXT Integration Benefits**
 
-- ✅ **Infrastructure Reuse**: Oracle clients use FLX HttpClientService
+- ✅ **Infrastructure Reuse**: Oracle clients use FLEXT HttpClientService
 - ✅ **Configuration**: Pydantic validation and environment integration
-- ✅ **Error Handling**: FLX error handling and retry patterns
+- ✅ **Error Handling**: FLEXT error handling and retry patterns
 - ✅ **Monitoring**: Built-in health checks and observability
-- ✅ **Testing**: FLX testing infrastructure for Oracle adapters
+- ✅ **Testing**: FLEXT testing infrastructure for Oracle adapters
 
 #### **Oracle-Specific Features**
 
@@ -428,4 +428,4 @@ if __name__ == "__main__":
 
 ---
 
-**📄 Content Document** | **🏠 Parent**: [Oracle Hub](./index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📄 Content Document** | **🏠 Parent**: [Oracle Hub](./index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

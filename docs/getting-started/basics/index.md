@@ -1,12 +1,12 @@
 # 🚀 Basics - Navigation Hub
 
-> **Function**: First steps and quickstart guides for FLX Framework | **Audience**: New developers, beginners
+> **Function**: First steps and quickstart guides for FLEXT Framework | **Audience**: New developers, beginners
 
 [![Quickstart](https://img.shields.io/badge/quickstart-ready-green.svg)](./quickstart.md)
 [![Tutorial](https://img.shields.io/badge/tutorial-guided-blue.svg)](./first-pipeline.md)
 [![Beginner](https://img.shields.io/badge/level-beginner-orange.svg)](./quickstart.md)
 
-**Essential first steps and hands-on tutorials for new FLX Framework developers**
+**Essential first steps and hands-on tutorials for new FLEXT Framework developers**
 
 ---
 
@@ -25,7 +25,7 @@
 
 ### **📋 Learning Path**
 
-1. **🎯 Start Here**: [Quickstart](./quickstart.md) - Build your first FLX application in minutes
+1. **🎯 Start Here**: [Quickstart](./quickstart.md) - Build your first FLEXT application in minutes
 2. **⚡ Quick Path**: [First Pipeline](./first-pipeline.md) - Create a complete data processing pipeline
 3. **📚 Deep Dive**: [Framework Concepts](../concepts/index.md) - Understand hexagonal architecture principles
 
@@ -35,7 +35,7 @@
 
 ### **⬅️ Prerequisites**
 
-- [Installation Complete](../setup/installation-guide.md) - FLX Framework must be installed and configured
+- [Installation Complete](../setup/installation-guide.md) - FLEXT Framework must be installed and configured
 - [Import Guide](../setup/import-guide.md) - Understanding module imports for hands-on tutorials
 
 ### **➡️ Next Steps**
@@ -62,4 +62,4 @@
 
 ---
 
-**📂 Section Hub** | **🏠 Parent**: [Getting Started Hub](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Section Hub** | **🏠 Parent**: [Getting Started Hub](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

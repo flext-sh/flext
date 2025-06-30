@@ -1,12 +1,12 @@
 # 🎯 Architectural Consistency Guide - Implementation Standards
 
-> **Function**: Standards for maintaining architectural consistency across FLX Framework | **Audience**: Developers, Technical Writers, QA Engineers | **Status**: Stable
+> **Function**: Standards for maintaining architectural consistency across FLEXT Framework | **Audience**: Developers, Technical Writers, QA Engineers | **Status**: Stable
 
 [![Consistency](https://img.shields.io/badge/consistency-enforced-blue.svg)](./index.md)
 [![Standards](https://img.shields.io/badge/standards-mandatory-red.svg)](./flext-architecture-standards.md)
 [![Quality](https://img.shields.io/badge/quality-assurance-green.svg)](../../development/standards/index.md)
 
-**Comprehensive guide for maintaining architectural consistency across FLX hexagonal architecture framework documentation and implementation**
+**Comprehensive guide for maintaining architectural consistency across FLEXT hexagonal architecture framework documentation and implementation**
 
 ---
 
@@ -17,7 +17,7 @@
 ### **📍 Learning Path Position**
 
 ```
-[FLX Architecture Standards](./flext-architecture-standards.md) → **[Consistency Guide]** → [Modernization Roadmap](./modernization-roadmap.md)
+[FLEXT Architecture Standards](./flext-architecture-standards.md) → **[Consistency Guide]** → [Modernization Roadmap](./modernization-roadmap.md)
 ```
 
 ## 🎯 **Quick Links**
@@ -25,13 +25,13 @@
 - **📂 Standards Hub**: [Standards Hub](./index.md)
 - **🏛️ Architecture Root**: [Architecture Hub](../index.md)
 - **🏠 Documentation Root**: [Documentation Home](../../index.md)
-- **🔗 Related**: [FLX Architecture Standards](./flext-architecture-standards.md)
+- **🔗 Related**: [FLEXT Architecture Standards](./flext-architecture-standards.md)
 
 ---
 
 ## 📋 **Overview**
 
-This guide establishes standards for maintaining architectural consistency across the FLX hexagonal architecture framework documentation and implementation. It addresses terminology, coding patterns, documentation style, and architectural principles to ensure a cohesive developer experience.
+This guide establishes standards for maintaining architectural consistency across the FLEXT hexagonal architecture framework documentation and implementation. It addresses terminology, coding patterns, documentation style, and architectural principles to ensure a cohesive developer experience.
 
 ## Table of Contents
 
@@ -58,9 +58,9 @@ This guide establishes standards for maintaining architectural consistency acros
 
 ### Framework-Specific Terms
 
-**FLX Component Naming:**
+**FLEXT Component Naming:**
 
-- **FLX framework** (not "FLX Framework")
+- **FLEXT framework** (not "FLEXT Framework")
 - **configuration adapter** (not "Configuration Adapter")
 - **plugin manager** (not "Plugin Manager")
 - **session manager** (not "Session Manager")
@@ -87,7 +87,7 @@ and Infrastructure concerns."""
 
 1. Standard library imports
 2. Third-party library imports
-3. FLX framework imports (grouped by layer)
+3. FLEXT framework imports (grouped by layer)
 
 ```python
 # ✅ CORRECT Import Order
@@ -343,7 +343,7 @@ class ExampleAdapter(BaseAdapter):
     Architecture Integration:
         - Outbound Port: Implements [PortInterface] for domain services
         - Infrastructure Layer: Handles [external system] protocol details
-        - Configuration: Uses FLX hierarchical configuration system
+        - Configuration: Uses FLEXT hierarchical configuration system
         - Monitoring: Provides health status for system monitoring
     """
 
@@ -372,9 +372,9 @@ class ExampleAdapter(BaseAdapter):
 
 ## Import and Dependency Standards
 
-### FLX Import Hierarchy
+### FLEXT Import Hierarchy
 
-**Import FLX modules in layer order:**
+**Import FLEXT modules in layer order:**
 
 ```python
 # ✅ CORRECT Layer-based Import Order
@@ -409,12 +409,12 @@ def process_users(
 
 ### Exception Hierarchy
 
-**FLX framework exceptions follow this hierarchy:**
+**FLEXT framework exceptions follow this hierarchy:**
 
 ```python
 # Standard exception hierarchy
 class FLXError(Exception):
-    """Base exception for all FLX framework errors."""
+    """Base exception for all FLEXT framework errors."""
 
 class ConfigurationError(FLXError):
     """Configuration-related errors."""
@@ -459,7 +459,7 @@ async def method_with_errors(self) -> Any:
 ### Before Committing Documentation
 
 - [ ] **Terminology**: All architectural terms use lowercase standard forms
-- [ ] **Imports**: Follow standard library → third-party → FLX layer ordering
+- [ ] **Imports**: Follow standard library → third-party → FLEXT layer ordering
 - [ ] **Examples**: Include basic → intermediate → advanced progression
 - [ ] **Docstrings**: Use Google style with consistent section headers
 - [ ] **Types**: Use modern Python type hints (dict[str, Any], not Dict[str, Any])
@@ -485,7 +485,7 @@ async def method_with_errors(self) -> Any:
 - [ ] **Maintainability**: Documentation will remain current as code evolves
 - [ ] **Testing**: Documentation includes testing patterns and strategies
 
-By following these standards, the FLX framework maintains architectural consistency that enables developers to quickly understand and effectively use the hexagonal architecture implementation across all components and integrations.
+By following these standards, the FLEXT framework maintains architectural consistency that enables developers to quickly understand and effectively use the hexagonal architecture implementation across all components and integrations.
 
 ---
 
@@ -493,7 +493,7 @@ By following these standards, the FLX framework maintains architectural consiste
 
 ### **Prerequisites**
 
-- [FLX Architecture Standards](./flext-architecture-standards.md) - Foundational architectural standards before implementing consistency patterns
+- [FLEXT Architecture Standards](./flext-architecture-standards.md) - Foundational architectural standards before implementing consistency patterns
 - [Development Standards](../../development/standards/standardization-plan.md) - General development quality standards complementing architectural consistency
 - [Documentation Standards](../../development/standards/documentation-standards.md) - Documentation quality standards for consistent technical writing
 
@@ -637,4 +637,4 @@ class DatabaseAdapter(BaseAdapter):
 
 ---
 
-**📂 Hub**: [Standards Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Standards Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

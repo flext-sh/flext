@@ -6,7 +6,7 @@
 [![Patterns](https://img.shields.io/badge/patterns-production-green.svg)](./hexagonal-implementation-guide.md)
 [![Examples](https://img.shields.io/badge/examples-realworld-orange.svg)](./hexagonal-implementation-guide.md)
 
-**Complete implementation guides for building production-ready applications with FLX Framework**
+**Complete implementation guides for building production-ready applications with FLEXT Framework**
 
 ---
 
@@ -25,7 +25,7 @@
 ### **📋 Learning Path**
 
 1. **🎯 Start Here**: [Hexagonal Implementation Guide](./hexagonal-implementation-guide.md) - Complete implementation walkthrough
-2. **⚡ Quick Path**: [FLX Technical Reference](../../api-reference/flext-technical-reference.md) - Source code analysis
+2. **⚡ Quick Path**: [FLEXT Technical Reference](../../api-reference/flext-technical-reference.md) - Source code analysis
 3. **📚 Deep Dive**: [Testing Guide](../testing/index.md) - Testing strategies for hexagonal architecture
 
 ---
@@ -35,7 +35,7 @@
 ### **⬅️ Prerequisites**
 
 - [Architecture Hub](../../architecture/index.md) - Understanding hexagonal architecture patterns and design principles
-- [Getting Started Hub](../../getting-started/index.md) - Basic FLX Framework installation and setup
+- [Getting Started Hub](../../getting-started/index.md) - Basic FLEXT Framework installation and setup
 
 ### **➡️ Next Steps**
 
@@ -60,4 +60,4 @@
 
 ---
 
-**📂 Section Hub** | **🏠 Parent**: [Guides Hub](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Section Hub** | **🏠 Parent**: [Guides Hub](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

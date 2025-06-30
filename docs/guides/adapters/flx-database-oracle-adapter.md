@@ -1,4 +1,4 @@
-# FLX Database Oracle - Simplified Oracle Database Plugin
+# FLEXT Database Oracle - Simplified Oracle Database Plugin
 
 A modern, simplified Oracle database integration plugin that dramatically reduces complexity while maintaining full functionality through clean, consistent patterns.
 
@@ -14,7 +14,7 @@ A modern, simplified Oracle database integration plugin that dramatically reduce
 ### Modern Plugin System
 
 - **Hexagonal Architecture**: Clean separation of concerns with ports/adapters
-- **Plugin-Based**: Follows FLX bidirectional plugin patterns
+- **Plugin-Based**: Follows FLEXT bidirectional plugin patterns
 - **Thread-Safe**: Safe for concurrent operations
 - **Health Monitoring**: Built-in health checks and monitoring
 
@@ -32,7 +32,7 @@ A modern, simplified Oracle database integration plugin that dramatically reduce
 # Install dependencies
 pip install oracledb pydantic
 
-# The plugin is designed to work with the FLX framework
+# The plugin is designed to work with the FLEXT framework
 ```
 
 ## 🔧 Quick Start
@@ -42,7 +42,7 @@ pip install oracledb pydantic
 ```python
 import asyncio
 from flext_database_oracle import flext_create_database_plugin
-from flext.plugins.base import FlxPluginMode
+from flext.plugins.base import FlextPluginMode
 
 async def main():
     # Create plugin
@@ -51,7 +51,7 @@ async def main():
         username="hr",
         password="oracle",
         service_name="XEPDB1",
-        mode=FlxPluginMode.BIDIRECTIONAL
+        mode=FlextPluginMode.BIDIRECTIONAL
     )
 
     # Initialize and start
@@ -111,12 +111,12 @@ The plugin follows hexagonal architecture with clear separation:
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                    DatabasePlugin                          │
-│  (Main plugin implementing FlxBidirectionalPlugin)            │
+│  (Main plugin implementing FlextBidirectionalPlugin)            │
 └─────────────────────┬───────────────────────────────────────┘
                       │
 ┌─────────────────────┼───────────────────────────────────────┐
 │                   Ports                                     │
-│  ├─ FlxConnectionPort   (Database connections)                 │
+│  ├─ FlextConnectionPort   (Database connections)                 │
 │  ├─ QueryPort        (SQL execution)                        │
 │  ├─ SchemaPort       (Schema introspection)                 │
 │  └─ TransactionPort  (Transaction management)               │
@@ -135,12 +135,12 @@ The plugin follows hexagonal architecture with clear separation:
 
 Strong typing with Pydantic 2.0:
 
-- `FlxDatabaseConnection` - Connection information
-- `FlxQueryResult` - Query execution results
-- `FlxTableInfo` - Table metadata
-- `FlxColumnInfo` - Column information
-- `FlxIndexInfo` - Index metadata
-- `FlxTransactionInfo` - Transaction status
+- `FlextDatabaseConnection` - Connection information
+- `FlextQueryResult` - Query execution results
+- `FlextTableInfo` - Table metadata
+- `FlextColumnInfo` - Column information
+- `FlextIndexInfo` - Index metadata
+- `FlextTransactionInfo` - Transaction status
 
 ## 🔌 Plugin Operations
 
@@ -327,9 +327,9 @@ The example demonstrates:
 
 ## 💻 Command Line Interface (CLI)
 
-### FlxDeclarativeCli Implementation
+### FlextDeclarativeCli Implementation
 
-The module includes a modern CLI built with **FlxDeclarativeCli** that provides comprehensive Oracle Database operations through a declarative architecture.
+The module includes a modern CLI built with **FlextDeclarativeCli** that provides comprehensive Oracle Database operations through a declarative architecture.
 
 #### Installation and Setup
 
@@ -427,14 +427,14 @@ flext-oracle-db session-info --output-format yaml
 #### Programmatic Usage
 
 ```python
-from flext_database_oracle import create_oracle_cli, FlxOracleDbDeclarativeCli
+from flext_database_oracle import create_oracle_cli, FlextOracleDbDeclarativeCli
 
 # Factory function
 cli = create_oracle_cli()
 cli.run(["info"])
 
 # Direct instantiation
-cli = FlxOracleDbDeclarativeCli()
+cli = FlextOracleDbDeclarativeCli()
 await cli.initialize()
 cli.run(["query", "SELECT 1 FROM dual"])
 ```
@@ -528,19 +528,19 @@ See the `examples/` directory for:
 
 The plugin integrates seamlessly with:
 
-- FLX Plugin Registry
-- FLX Application lifecycle
-- FLX Logging system
-- FLX Configuration management
-- Other FLX plugins (WMS, OIC, etc.)
+- FLEXT Plugin Registry
+- FLEXT Application lifecycle
+- FLEXT Logging system
+- FLEXT Configuration management
+- Other FLEXT plugins (WMS, OIC, etc.)
 
 ## 🚀 Next Steps
 
-This simplified architecture can be applied to other FLX plugins:
+This simplified architecture can be applied to other FLEXT plugins:
 
 1. **flext-oracle-oic** - Oracle Integration Cloud plugin
 2. **flext-oracle-wms** - Already implemented with same patterns
 3. **flext-http-adapters** - HTTP integration plugins
 4. **flext-messaging** - Message queue plugins
 
-The consistent plugin pattern makes the entire FLX ecosystem more maintainable and easier to extend.
+The consistent plugin pattern makes the entire FLEXT ecosystem more maintainable and easier to extend.

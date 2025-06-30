@@ -1,12 +1,12 @@
 # Testing Strategy and Philosophy - Development
 
-> **Function**: Comprehensive testing strategy and philosophy for FLX Framework | **Audience**: Developers, QA Engineers, Test Architects | **Status**: Stable
+> **Function**: Comprehensive testing strategy and philosophy for FLEXT Framework | **Audience**: Developers, QA Engineers, Test Architects | **Status**: Stable
 
 [![Testing](https://img.shields.io/badge/testing-comprehensive-blue.svg)](./index.md)
 [![Strategy](https://img.shields.io/badge/strategy-hexagonal-orange.svg)](../../architecture/index.md)
 [![Quality](https://img.shields.io/badge/quality-enterprise-green.svg)](../standards/index.md)
 
-**Complete testing strategy and philosophy guide for FLX Framework implementing hexagonal architecture testing principles**
+**Complete testing strategy and philosophy guide for FLEXT Framework implementing hexagonal architecture testing principles**
 
 ---
 
@@ -30,7 +30,7 @@
 
 ## 📋 **Overview**
 
-The FLX framework implements a comprehensive testing strategy based on hexagonal architecture principles, providing enterprise-grade testing capabilities for complex domain-driven applications.
+The FLEXT framework implements a comprehensive testing strategy based on hexagonal architecture principles, providing enterprise-grade testing capabilities for complex domain-driven applications.
 
 ## Testing Philosophy
 
@@ -90,7 +90,7 @@ tests/
 - **FakeRedis**: Redis testing without external dependencies
 - **SQLAlchemy Testing**: Database testing with transaction isolation
 
-### FLX Testing Framework
+### FLEXT Testing Framework
 
 - **Testing Engines**: Specialized infrastructure for different components
 - **Mock Adapters**: Test doubles for external systems
@@ -172,4 +172,4 @@ mock_adapter.configure_response("/api/test", {"status": "success"})
 
 ---
 
-**📂 Hub**: [Testing Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Testing Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

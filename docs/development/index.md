@@ -1,13 +1,13 @@
 # 🛠️ Development Hub - Enterprise Development Ecosystem
 
-> **Function**: Complete development ecosystem for FLX Framework | **Audience**: Developers, technical leads, QA engineers | **Status**: ✅ Production Ready
+> **Function**: Complete development ecosystem for FLEXT Framework | **Audience**: Developers, technical leads, QA engineers | **Status**: ✅ Production Ready
 
 [![Development](https://img.shields.io/badge/development-standardized-green.svg)](./standards/index.md)
 [![Testing](https://img.shields.io/badge/testing-comprehensive-blue.svg)](./testing/index.md)
 [![Python](https://img.shields.io/badge/python-3.13%2B-blue.svg)](./standards/python-modernization-guide.md)
-[![Framework](https://img.shields.io/badge/framework-FLX%200.4.0-orange.svg)](../index.md)
+[![Framework](https://img.shields.io/badge/framework-FLEXT%200.4.0-orange.svg)](../index.md)
 
-**Enterprise development ecosystem for FLX Framework 0.4.0+ including testing strategies, code standards, automation tools, and quality assurance**
+**Enterprise development ecosystem for FLEXT Framework 0.4.0+ including testing strategies, code standards, automation tools, and quality assurance**
 
 ---
 
@@ -31,7 +31,7 @@
 
 ## 📊 **Overview**
 
-The Development Hub provides a comprehensive ecosystem for FLX Framework development, including enterprise-grade testing strategies, code quality standards, automation tools, and project management resources. Built for Python 3.13+ with modern development practices.
+The Development Hub provides a comprehensive ecosystem for FLEXT Framework development, including enterprise-grade testing strategies, code quality standards, automation tools, and project management resources. Built for Python 3.13+ with modern development practices.
 
 ### **Development Categories**
 
@@ -113,4 +113,4 @@ The Development Hub provides a comprehensive ecosystem for FLX Framework develop
 
 ---
 
-**📂 Hub**: [Development Hub](#) | **🏠 Root**: [Documentation Home](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Development Hub](#) | **🏠 Root**: [Documentation Home](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

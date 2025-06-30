@@ -1,11 +1,11 @@
-# FLX HTTP Oracle OIC
+# FLEXT HTTP Oracle OIC
 
-Enhanced Oracle Integration Cloud HTTP client using FLX infrastructure with comprehensive API capabilities.
+Enhanced Oracle Integration Cloud HTTP client using FLEXT infrastructure with comprehensive API capabilities.
 
 ## Features
 
-- **FLX Framework Integration**: Uses FLX infrastructure patterns for dependency injection and service architecture
-- **JWT Authentication**: Automatic token management using FLX JWT service patterns
+- **FLEXT Framework Integration**: Uses FLEXT infrastructure patterns for dependency injection and service architecture
+- **JWT Authentication**: Automatic token management using FLEXT JWT service patterns
 - **HTTP Client**: Robust HTTP client with retry logic, rate limiting, and error handling
 - **Configuration Management**: Environment-based configuration with validation
 - **CLI Interface**: Comprehensive command-line interface for all OIC operations
@@ -100,11 +100,11 @@ python -m flext_http_oracle_oic.cli jwt token --show-token
 
 ## Architecture
 
-This package follows FLX framework patterns:
+This package follows FLEXT framework patterns:
 
 - **Factory Pattern**: `OicFactory` manages dependency injection
 - **Service Layer**: `OracleOicService` implements business logic
-- **Infrastructure**: Uses FLX HTTP client and JWT service
+- **Infrastructure**: Uses FLEXT HTTP client and JWT service
 - **Configuration**: Environment-based with validation
 - **CLI**: Command-based interface with proper separation of concerns
 
@@ -112,9 +112,9 @@ This package follows FLX framework patterns:
 
 ### Core Services
 
-- **OracleOicService**: Main service implementing FlxHttpService interface
-- **FlxJwtService**: JWT authentication using FLX patterns
-- **FlxHttpClient**: HTTP client with retry and rate limiting
+- **OracleOicService**: Main service implementing FlextHttpService interface
+- **FlextJwtService**: JWT authentication using FLEXT patterns
+- **FlextHttpClient**: HTTP client with retry and rate limiting
 - **OicFactory**: Dependency injection factory
 
 ### Models
@@ -137,7 +137,7 @@ This package follows FLX framework patterns:
 ### Requirements
 
 - Python 3.13+
-- FLX framework
+- FLEXT framework
 - Pydantic for data validation
 - Click for CLI
 - AsyncIO for async operations
@@ -190,7 +190,7 @@ The package provides comprehensive error handling:
 
 ## Logging
 
-Uses structured logging with FLX patterns:
+Uses structured logging with FLEXT patterns:
 
 ```python
 import logging
@@ -205,12 +205,12 @@ factory = OicFactory(config, debug_mode=True)
 
 ## License
 
-This flext_project follows the enterprise licensing patterns of the FLX framework.
+This flext_project follows the enterprise licensing patterns of the FLEXT framework.
 
 ## Contributing
 
 1. Follow SOLID principles
 2. Use strong typing (Python 3.13+)
 3. Write comprehensive tests
-4. Follow FLX framework patterns
+4. Follow FLEXT framework patterns
 5. Update documentation

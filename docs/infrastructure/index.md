@@ -6,7 +6,7 @@
 [![Observability](https://img.shields.io/badge/observability-complete-green.svg)](./operational-excellence.md)
 [![Security](https://img.shields.io/badge/security-enterprise-orange.svg)](./security-infrastructure.md)
 
-**Production infrastructure patterns, services, and operational excellence for the FLX Framework**
+**Production infrastructure patterns, services, and operational excellence for the FLEXT Framework**
 
 ---
 
@@ -70,7 +70,7 @@
 
 ## 📚 **Infrastructure Architecture Overview**
 
-### **FLX Infrastructure Layer**
+### **FLEXT Infrastructure Layer**
 
 The infrastructure layer implements the outbound side of hexagonal architecture, providing concrete implementations for external system integration:
 
@@ -172,4 +172,4 @@ print(f"System health: {health.overall_status}")
 
 ---
 
-**📂 Section Hub** | **🏠 Parent**: [Documentation Root](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Section Hub** | **🏠 Parent**: [Documentation Root](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

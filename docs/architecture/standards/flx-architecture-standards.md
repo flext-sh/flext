@@ -1,18 +1,18 @@
-# 🏛️ FLX Architecture Standards - Implementation Guide
+# 🏛️ FLEXT Architecture Standards - Implementation Guide
 
-> **Function**: Mandatory architectural standards and patterns for FLX Framework | **Audience**: Architects, Senior Developers, Technical Leads | **Status**: Stable
+> **Function**: Mandatory architectural standards and patterns for FLEXT Framework | **Audience**: Architects, Senior Developers, Technical Leads | **Status**: Stable
 
 [![Standards](https://img.shields.io/badge/standards-mandatory-red.svg)](./index.md)
 [![Architecture](https://img.shields.io/badge/architecture-hexagonal-blue.svg)](../index.md)
-[![Framework](https://img.shields.io/badge/framework-FLX-green.svg)](../../index.md)
+[![Framework](https://img.shields.io/badge/framework-FLEXT-green.svg)](../../index.md)
 
-**Comprehensive architectural standards and mandatory patterns for FLX Hexagonal Architecture Multi-Protocol Client Framework**
+**Comprehensive architectural standards and mandatory patterns for FLEXT Hexagonal Architecture Multi-Protocol Client Framework**
 
 ---
 
 ## 🧭 **Navigation Context**
 
-**🏠 Root**: [Documentation Home](../../index.md) → **📂 Hub**: [Architecture Hub](../index.md) → **📂 Standards**: [Standards Hub](./index.md) → **📄 Current**: FLX Architecture Standards
+**🏠 Root**: [Documentation Home](../../index.md) → **📂 Hub**: [Architecture Hub](../index.md) → **📂 Standards**: [Standards Hub](./index.md) → **📄 Current**: FLEXT Architecture Standards
 
 ### **📍 Learning Path Position**
 
@@ -31,7 +31,7 @@
 
 ## 📋 **Overview**
 
-FLX is a **Hexagonal Architecture Multi-Protocol Client Framework** for Python that provides enterprise-grade integration capabilities for modern systems. This document outlines the mandatory architectural standards and patterns for the FLX ecosystem.
+FLEXT is a **Hexagonal Architecture Multi-Protocol Client Framework** for Python that provides enterprise-grade integration capabilities for modern systems. This document outlines the mandatory architectural standards and patterns for the FLEXT ecosystem.
 
 ## Core Philosophy
 
@@ -73,7 +73,7 @@ flext.core/
 ├── base.py          # Base abstractions (Entity, ValueObject, DomainService)
 ├── entities.py      # Domain entities and aggregate roots
 ├── value_objects.py # Immutable value objects
-├── events.py        # Domain events (FlxDomainEvent)
+├── events.py        # Domain events (FlextDomainEvent)
 ├── services.py      # Domain services interfaces
 ├── exceptions.py    # Domain-specific exceptions
 ├── protocols.py     # Protocol definitions using typing.Protocol
@@ -220,10 +220,10 @@ user = await client.auth.authenticate(username="user", password="pass")
 Event-driven integration using domain events:
 
 ```python
-from flext.core.events import FlxDomainEvent
+from flext.core.events import FlextDomainEvent
 from pydantic import Field
 
-class InventoryUpdatedEvent(FlxDomainEvent):
+class InventoryUpdatedEvent(FlextDomainEvent):
     """Inventory update domain event."""
 
     warehouse_id: str
@@ -315,7 +315,7 @@ This architecture ensures:
 ### **Prerequisites**
 
 - [Architecture Hub](../index.md) - Understanding hexagonal architecture foundations and design principles
-- [Getting Started Guide](../../getting-started/index.md) - Basic FLX Framework concepts before implementing standards
+- [Getting Started Guide](../../getting-started/index.md) - Basic FLEXT Framework concepts before implementing standards
 - [Development Standards](../../development/standards/standardization-plan.md) - General development standards that complement architecture standards
 
 ### **Next Steps**
@@ -350,4 +350,4 @@ This architecture ensures:
 
 ---
 
-**📂 Hub**: [Standards Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Standards Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

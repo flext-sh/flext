@@ -1,13 +1,13 @@
 # 📋 Development Standardization Plan - Core Quality Standards
 
-> **Function**: Enterprise development standardization strategy for FLX Framework | **Audience**: Development teams, technical leads, quality engineers | **Status**: ✅ Production Ready
+> **Function**: Enterprise development standardization strategy for FLEXT Framework | **Audience**: Development teams, technical leads, quality engineers | **Status**: ✅ Production Ready
 
 [![PEP8](https://img.shields.io/badge/standard-PEP8-blue.svg)](https://peps.python.org/pep-0008/)
 [![Python](https://img.shields.io/badge/python-3.13%2B-blue.svg)](./python-modernization-guide.md)
 [![Poetry](https://img.shields.io/badge/tool-poetry-orange.svg)](https://python-poetry.org/)
 [![Standards](https://img.shields.io/badge/standards-enforced-green.svg)](./index.md)
 
-**Comprehensive enterprise standardization plan for FLX Framework 0.4.0+ covering PEP8 compliance, Poetry configuration, Python 3.13+ modernization, and development tool standardization**
+**Comprehensive enterprise standardization plan for FLEXT Framework 0.4.0+ covering PEP8 compliance, Poetry configuration, Python 3.13+ modernization, and development tool standardization**
 
 ---
 
@@ -55,7 +55,7 @@
 
 ## 📋 **Overview**
 
-This document outlines the comprehensive enterprise standardization plan for achieving consistent PEP8 compliance, Python 3.13+ modernization, and development tool configuration across all FLX Framework projects.
+This document outlines the comprehensive enterprise standardization plan for achieving consistent PEP8 compliance, Python 3.13+ modernization, and development tool configuration across all FLEXT Framework projects.
 
 ## Identified Issues
 
@@ -150,7 +150,7 @@ fail-under = 80
 ### **Standardization Progress**
 
 - **Core Projects**: 95% PEP8 compliance achieved
-- **Python 3.13+ Migration**: 100% complete for FLX Framework
+- **Python 3.13+ Migration**: 100% complete for FLEXT Framework
 - **Poetry Configuration**: Standardized across all projects
 - **Code Quality Tools**: Unified Ruff, Black, MyPy configurations
 - **Documentation Standards**: 98% template compliance
@@ -164,4 +164,4 @@ fail-under = 80
 
 ---
 
-**📄 Standards Document** | **🏠 Parent**: [Standards Hub](./index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📄 Standards Document** | **🏠 Parent**: [Standards Hub](./index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

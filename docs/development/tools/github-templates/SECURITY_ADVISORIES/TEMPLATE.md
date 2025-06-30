@@ -15,7 +15,7 @@ A clear and concise description of the security vulnerability.
 
 ### Affected Version(s)
 
-Which versions of FLX are affected?
+Which versions of FLEXT are affected?
 
 ### Steps to Reproduce
 

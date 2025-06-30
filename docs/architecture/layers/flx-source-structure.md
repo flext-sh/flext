@@ -1,4 +1,4 @@
-# 📁 FLX Source Structure - Architecture Guide
+# 📁 FLEXT Source Structure - Architecture Guide
 
 > **Function**: Source code organization and hexagonal architecture implementation | **Audience**: Developers, Architects | **Status**: Stable
 
@@ -6,13 +6,13 @@
 [![Architecture](https://img.shields.io/badge/architecture-validated-green.svg)](../index.md)
 [![Organization](https://img.shields.io/badge/organization-DDD-orange.svg)](./core-domain-layer.md)
 
-**Complete guide to FLX Framework source code organization following hexagonal architecture and domain-driven design principles**
+**Complete guide to FLEXT Framework source code organization following hexagonal architecture and domain-driven design principles**
 
 ---
 
 ## 🧭 **Navigation Context**
 
-**🏠 Root**: [Documentation Home](../../index.md) → **📂 Hub**: [Architecture Hub](../index.md) → **📂 Layers**: [Layers Hub](./index.md) → **📄 Current**: FLX Source Structure
+**🏠 Root**: [Documentation Home](../../index.md) → **📂 Hub**: [Architecture Hub](../index.md) → **📂 Layers**: [Layers Hub](./index.md) → **📄 Current**: FLEXT Source Structure
 
 ### **📍 Learning Path Position**
 
@@ -31,7 +31,7 @@
 
 ## 📋 **Overview**
 
-This is the main source directory for the FLX framework, organized following Hexagonal Architecture principles with clear separation of concerns and dependency management.
+This is the main source directory for the FLEXT framework, organized following Hexagonal Architecture principles with clear separation of concerns and dependency management.
 
 ## Directory Structure
 
@@ -155,7 +155,7 @@ class PostgresCustomerRepository:
 ### **Prerequisites**
 
 - [Architecture Hub](../index.md) - Understanding hexagonal architecture principles and layer separation
-- [Getting Started Guide](../../getting-started/index.md) - Basic FLX Framework concepts before diving into source structure
+- [Getting Started Guide](../../getting-started/index.md) - Basic FLEXT Framework concepts before diving into source structure
 
 ### **Next Steps**
 
@@ -188,4 +188,4 @@ class PostgresCustomerRepository:
 
 ---
 
-**📂 Hub**: [Layers Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Layers Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

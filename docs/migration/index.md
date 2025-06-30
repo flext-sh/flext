@@ -2,11 +2,11 @@
 
 > **Function**: System migration guides and strategies | **Audience**: Migration teams, system REDACTED_LDAP_BIND_PASSWORDistrators
 
-[![Migration](https://img.shields.io/badge/migration-FLX%200.4.0-green.svg)](./guides/index.md)
+[![Migration](https://img.shields.io/badge/migration-FLEXT%200.4.0-green.svg)](./guides/index.md)
 [![Tools](https://img.shields.io/badge/tools-automated-blue.svg)](./tools/index.md)
 [![Strategy](https://img.shields.io/badge/strategy-validated-orange.svg)](./strategies/index.md)
 
-**Complete migration documentation for FLX Framework - system migration guides and automated migration tools**
+**Complete migration documentation for FLEXT Framework - system migration guides and automated migration tools**
 
 ---
 
@@ -26,7 +26,7 @@
 
 ### **📋 Learning Path**
 
-1. **🎯 Start Here**: [Migration Guide](./guides/migration-guide.md) - FLX 0.4.0 migration procedures
+1. **🎯 Start Here**: [Migration Guide](./guides/migration-guide.md) - FLEXT 0.4.0 migration procedures
 2. **⚡ Quick Path**: [Migration Tools](./tools/index.md) - Automated migration utilities
 3. **📚 Deep Dive**: [Migration Strategies](./strategies/index.md) - Complete migration planning
 
@@ -38,7 +38,7 @@
 
 - [**Hexagonal Architecture Understanding**](../architecture/design/unified-architecture-guide.md) - Complete understanding of current and target hexagonal architecture patterns essential for migration planning
 - [**Development Environment Setup**](../development/guides/environment-configuration.md) - Development environment configuration and toolchain setup required for migration execution
-- [**Framework Installation**](../getting-started/setup/installation-guide.md) - FLX Framework installation and basic configuration prerequisites for migration process
+- [**Framework Installation**](../getting-started/setup/installation-guide.md) - FLEXT Framework installation and basic configuration prerequisites for migration process
 
 ### **➡️ Migration Implementation Steps**
 
@@ -63,4 +63,4 @@
 
 ---
 
-**📂 Section Hub** | **🏠 Parent**: [Documentation Root](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Section Hub** | **🏠 Parent**: [Documentation Root](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

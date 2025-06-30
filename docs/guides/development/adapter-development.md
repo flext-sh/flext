@@ -6,7 +6,7 @@
 
 ## Overview
 
-This guide covers developing adapters for the FLX framework using hexagonal architecture principles. Adapters are the bridge between the domain layer and external systems, implementing port contracts while maintaining clean separation of concerns.
+This guide covers developing adapters for the FLEXT framework using hexagonal architecture principles. Adapters are the bridge between the domain layer and external systems, implementing port contracts while maintaining clean separation of concerns.
 
 ## TODO IMPLEMENTATION ALIGNMENT
 

@@ -1,6 +1,6 @@
-# FLX HTTP Oracle OIC Adapter Guide
+# FLEXT HTTP Oracle OIC Adapter Guide
 
-**Function**: Complete guide for Oracle Integration Cloud (OIC) connectivity within the FLX framework using REST APIs and OAuth2 authentication
+**Function**: Complete guide for Oracle Integration Cloud (OIC) connectivity within the FLEXT framework using REST APIs and OAuth2 authentication
 **Audience**: Integration developers, API specialists, and cloud architects working with Oracle OIC
 **Status**: Production Ready - Validated Implementation
 
@@ -16,7 +16,7 @@
 
 ## Overview
 
-The FLX HTTP Oracle OIC Adapter provides seamless integration with Oracle Integration Cloud through REST APIs, supporting workflow orchestration, data transformation, and real-time messaging. Built on hexagonal architecture principles, it serves as both an inbound and outbound adapter for OIC integrations.
+The FLEXT HTTP Oracle OIC Adapter provides seamless integration with Oracle Integration Cloud through REST APIs, supporting workflow orchestration, data transformation, and real-time messaging. Built on hexagonal architecture principles, it serves as both an inbound and outbound adapter for OIC integrations.
 
 ### Key Features
 
@@ -127,14 +127,14 @@ from flext.adapters.outbound.oracle.exceptions import (
     OicRateLimitError
 )
 
-class FlxOracleOicAdapter(
+class FlextOracleOicAdapter(
     UnifiedObservabilityMixin,
     AdapterErrorHandlingMixin,
     UnifiedAdapterConfigurationMixin,
     AdvancedAdapterMixin,
     BaseAdapter
 ):
-    """FLX Oracle Integration Cloud HTTP Adapter."""
+    """FLEXT Oracle Integration Cloud HTTP Adapter."""
 
     def __init__(self, config: OicConfig):
         super().__init__()
@@ -164,7 +164,7 @@ class FlxOracleOicAdapter(
                     connector=connector,
                     timeout=timeout,
                     headers={
-                        "User-Agent": "FLX-OIC-Adapter/1.0",
+                        "User-Agent": "FLEXT-OIC-Adapter/1.0",
                         "Accept": "application/json",
                         "Content-Type": "application/json"
                     }
@@ -564,7 +564,7 @@ class RateLimiter:
 ```python
 # Basic setup and integration triggering
 import asyncio
-from flext.adapters.outbound.oracle.oic_adapter import FlxOracleOicAdapter
+from flext.adapters.outbound.oracle.oic_adapter import FlextOracleOicAdapter
 from flext.adapters.outbound.oracle.config import OicConfig
 
 async def basic_oic_example():
@@ -578,7 +578,7 @@ async def basic_oic_example():
     )
 
     # Initialize adapter
-    oic_adapter = FlxOracleOicAdapter(config)
+    oic_adapter = FlextOracleOicAdapter(config)
 
     try:
         # Connect to OIC
@@ -651,7 +651,7 @@ asyncio.run(basic_oic_example())
 
 ```python
 async def webhook_integration_example():
-    oic_adapter = FlxOracleOicAdapter(config)
+    oic_adapter = FlextOracleOicAdapter(config)
     await oic_adapter.connect()
 
     try:
@@ -682,7 +682,7 @@ async def webhook_integration_example():
 
 ```python
 async def batch_processing_example():
-    oic_adapter = FlxOracleOicAdapter(config)
+    oic_adapter = FlextOracleOicAdapter(config)
     await oic_adapter.connect()
 
     try:
@@ -743,7 +743,7 @@ async def batch_processing_example():
 ### Prerequisites
 
 - [Oracle OAuth2 Authentication Guide](oracle-oauth2-authentication-guide.md) - Essential for OIC authentication setup
-- [FLX Core Framework Setup](../../getting-started/index.md) - Framework installation and configuration
+- [FLEXT Core Framework Setup](../../getting-started/index.md) - Framework installation and configuration
 - [HTTP Client Configuration](../../infrastructure/index.md) - HTTP infrastructure setup
 
 ### Next Steps
@@ -813,7 +813,7 @@ curl -H "Authorization: Bearer YOUR_TOKEN" \
 # Reuse adapter instance across operations
 class OicService:
     def __init__(self, config: OicConfig):
-        self.adapter = FlxOracleOicAdapter(config)
+        self.adapter = FlextOracleOicAdapter(config)
         self._connected = False
 
     async def __aenter__(self):
@@ -841,7 +841,7 @@ async with OicService(config) as oic:
 
 ---
 
-**Documentation Framework**: FLX Enterprise Documentation Standard
+**Documentation Framework**: FLEXT Enterprise Documentation Standard
 **Implementation Status**: Production Ready - Validated with Oracle OIC
 **Last Updated**: 2025-06-11
-**Maintained by**: FLX Framework Integration Team
+**Maintained by**: FLEXT Framework Integration Team

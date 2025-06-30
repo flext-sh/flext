@@ -1,4 +1,4 @@
-# FLX Logging System - Complete Implementation with TRACE Level
+# FLEXT Logging System - Complete Implementation with TRACE Level
 
 > **Function**: Complete logging implementation guide with TRACE level | **Audience**: Developers, System Architects | **Status**: Stable
 
@@ -6,7 +6,7 @@
 [![Architecture](https://img.shields.io/badge/architecture-hexagonal-blue.svg)](../../architecture/index.md)
 [![Logging](https://img.shields.io/badge/logging-custom_trace-orange.svg)](./index.md)
 
-**Complete reference for FLX Framework's enhanced logging system with custom TRACE level and hexagonal architecture compliance**
+**Complete reference for FLEXT Framework's enhanced logging system with custom TRACE level and hexagonal architecture compliance**
 
 ---
 
@@ -188,7 +188,7 @@ logger.info("User login - ID: %s, IP: %s, Status: %s",
 
 ## Integration Patterns
 
-### With FLX Core Services
+### With FLEXT Core Services
 
 ```python
 from flext.core.services import BaseService
@@ -436,4 +436,4 @@ logger = flext.get_logger(__name__, flext.LogLevel.DEBUG)
 
 ---
 
-**📂 Hub**: [Code Optimization](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Code Optimization](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

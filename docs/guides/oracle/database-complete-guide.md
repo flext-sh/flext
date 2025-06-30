@@ -1,16 +1,16 @@
 # 🗄️ Oracle Database Complete Integration Guide
 
-> **Function**: Complete Oracle Database integration with FLX Framework | **Audience**: Database engineers, backend developers | **Status**: Production-ready
+> **Function**: Complete Oracle Database integration with FLEXT Framework | **Audience**: Database engineers, backend developers | **Status**: Production-ready
 
 [![Database](https://img.shields.io/badge/Oracle-Database-red.svg)](./index.md)
 [![Integration](https://img.shields.io/badge/integration-async-blue.svg)](./oracle-integration-comprehensive-guide.md)
-[![FLX](https://img.shields.io/badge/framework-FLX%200.4.0-orange.svg)](../../index.md)
+[![FLEXT](https://img.shields.io/badge/framework-FLEXT%200.4.0-orange.svg)](../../index.md)
 
-**Complete Oracle Database integration guide for FLX framework covering modern async database operations, schema introspection, transaction management, and hexagonal architecture patterns - validated against production implementations**
+**Complete Oracle Database integration guide for FLEXT framework covering modern async database operations, schema introspection, transaction management, and hexagonal architecture patterns - validated against production implementations**
 
 ## Overview
 
-**Complete Oracle Database integration guide for FLX framework covering modern async database operations, schema introspection, transaction management, and hexagonal architecture patterns**
+**Complete Oracle Database integration guide for FLEXT framework covering modern async database operations, schema introspection, transaction management, and hexagonal architecture patterns**
 
 ---
 
@@ -27,7 +27,7 @@
 ## 🎯 Quick Navigation
 
 - [**Getting Started**](#-getting-started) - Setup and basic configuration
-- [**FLX Database Plugin**](#-flext-database-plugin) - Modern simplified architecture
+- [**FLEXT Database Plugin**](#-flext-database-plugin) - Modern simplified architecture
 - [**Database Operations**](#-database-operations) - Queries, transactions, and schema
 - [**CLI Interface**](#-cli-interface) - Command-line database operations
 - [**Advanced Features**](#-advanced-features) - Monitoring, pooling, and performance
@@ -40,7 +40,7 @@
 - Python 3.13+
 - Oracle Database (11g or higher)
 - Oracle Client libraries (cx_Oracle or oracledb)
-- FLX Framework installed
+- FLEXT Framework installed
 
 ### Installation
 
@@ -89,11 +89,11 @@ python -m flext_database_oracle.cli version
 python -m flext_database_oracle.cli capabilities
 ```
 
-## 🔌 FLX Database Plugin
+## 🔌 FLEXT Database Plugin
 
 ### Simplified Modern Architecture
 
-The FLX Database Oracle adapter features a dramatically simplified architecture that reduces complexity while maintaining full functionality:
+The FLEXT Database Oracle adapter features a dramatically simplified architecture that reduces complexity while maintaining full functionality:
 
 #### Key Features
 
@@ -109,12 +109,12 @@ The FLX Database Oracle adapter features a dramatically simplified architecture 
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                    DatabasePlugin                          │
-│  (Main plugin implementing FlxBidirectionalPlugin)         │
+│  (Main plugin implementing FlextBidirectionalPlugin)         │
 └─────────────────────┬───────────────────────────────────────┘
                       │
 ┌─────────────────────┼───────────────────────────────────────┐
 │                   Ports                                     │
-│  ├─ FlxConnectionPort   (Database connections)             │
+│  ├─ FlextConnectionPort   (Database connections)             │
 │  ├─ QueryPort        (SQL execution)                       │
 │  ├─ SchemaPort       (Schema introspection)                │
 │  └─ TransactionPort  (Transaction management)              │
@@ -134,7 +134,7 @@ The FLX Database Oracle adapter features a dramatically simplified architecture 
 ```python
 import asyncio
 from flext_database_oracle import flext_create_database_plugin
-from flext.plugins.base import FlxPluginMode
+from flext.plugins.base import FlextPluginMode
 
 async def main():
     # Create plugin
@@ -143,7 +143,7 @@ async def main():
         username="hr",
         password="oracle",
         service_name="XEPDB1",
-        mode=FlxPluginMode.BIDIRECTIONAL
+        mode=FlextPluginMode.BIDIRECTIONAL
     )
 
     # Initialize and start
@@ -392,9 +392,9 @@ except Exception as e:
 
 ## 🖥️ CLI Interface
 
-### FlxDeclarativeCli Implementation
+### FlextDeclarativeCli Implementation
 
-The module includes a modern CLI built with **FlxDeclarativeCli** that provides comprehensive Oracle Database operations.
+The module includes a modern CLI built with **FlextDeclarativeCli** that provides comprehensive Oracle Database operations.
 
 #### Core Commands
 
@@ -770,7 +770,7 @@ oracle_database:
 ### **Prerequisites**
 
 - [Oracle Hub](./index.md) - Understanding Oracle integration architecture before database setup
-- [Getting Started Hub](../../getting-started/index.md) - FLX Framework installation and basic configuration
+- [Getting Started Hub](../../getting-started/index.md) - FLEXT Framework installation and basic configuration
 - [Architecture Hub](../../architecture/index.md) - Hexagonal architecture patterns for database integration
 
 ### **Next Steps**
@@ -800,4 +800,4 @@ oracle_database:
 
 ---
 
-**📂 Guide**: [Oracle Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Guide**: [Oracle Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

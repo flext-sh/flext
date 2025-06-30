@@ -1,4 +1,4 @@
-# 🧪 FLX Testing Framework - Real Implementation
+# 🧪 FLEXT Testing Framework - Real Implementation
 
 > **Function**: Complete testing framework implementation based on actual source code | **Audience**: Developers, QA engineers | **Status**: ✅ Source Code Validated
 
@@ -12,7 +12,7 @@
 
 ## 🧭 **Navigation Context**
 
-**🏠 Root**: [Documentation Home](../../index.md) → **📂 Hub**: [Guides](../index.md) → **📂 Section**: [Development](./index.md) → **📄 Current**: FLX Testing Framework Real
+**🏠 Root**: [Documentation Home](../../index.md) → **📂 Hub**: [Guides](../index.md) → **📂 Section**: [Development](./index.md) → **📄 Current**: FLEXT Testing Framework Real
 
 ---
 
@@ -22,7 +22,7 @@
 
 - [Development Hub](../../development/index.md) - Understanding development environment and standards before testing setup
 - [Architecture Hub](../../architecture/index.md) - Hexagonal architecture patterns essential for effective testing strategy
-- [Getting Started Hub](../../getting-started/index.md) - FLX Framework installation and configuration required for test environment
+- [Getting Started Hub](../../getting-started/index.md) - FLEXT Framework installation and configuration required for test environment
 
 ### **➡️ Next Steps**
 
@@ -510,7 +510,7 @@ from flext.testing.engines import HexagonalTestEngine
 
 @pytest.mark.asyncio
 async def test_oracle_wms_integration():
-    """Test Oracle WMS integration with FLX testing framework."""
+    """Test Oracle WMS integration with FLEXT testing framework."""
 
     # Configure test environment
     config = WmsConfig(
@@ -585,4 +585,4 @@ async def test_hexagonal_architecture_compliance():
 
 ---
 
-**📄 Content Document** | **🏠 Parent**: [Development Hub](./index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📄 Content Document** | **🏠 Parent**: [Development Hub](./index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

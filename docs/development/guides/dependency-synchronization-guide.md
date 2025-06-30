@@ -8,7 +8,7 @@
 
 ## Overview
 
-This guide describes the comprehensive dependency synchronization system for maintaining consistent library versions across all projects in the FLX hexagonal architecture workspace.
+This guide describes the comprehensive dependency synchronization system for maintaining consistent library versions across all projects in the FLEXT hexagonal architecture workspace.
 
 ## Objective
 
@@ -158,15 +158,15 @@ To keep all projects with consistent versions:
 - Dependencies with specific requirements (like extras) maintain their configurations, only the version is updated
 - In consolidation mode, the algorithm tries to determine which is the most recent version, but there may be cases where comparison is not trivial
 
-## Integration with FLX Framework
+## Integration with FLEXT Framework
 
-This dependency synchronization is particularly important for the FLX framework workspace because:
+This dependency synchronization is particularly important for the FLEXT framework workspace because:
 
 ### **Multi-Project Architecture**
 
-The FLX workspace contains multiple related projects:
+The FLEXT workspace contains multiple related projects:
 
-- `flext/` - Core FLX framework
+- `flext/` - Core FLEXT framework
 - `flext_http_oracle_oic/` - Oracle OIC integration
 - `flext_http_oracle_wms/` - Oracle WMS integration
 - `flext_database_oracle/` - Oracle database integration
@@ -211,15 +211,15 @@ The synchronization pays special attention to:
 
 - [Development Standardization Plan](standardization-plan.md) - Overall development standards
 - [Scripts Organization Guide](scripts-organization-guide.md) - Development scripts overview
-- [FLX Core API Reference](../api-reference/core-api-reference.md) - Framework dependencies
+- [FLEXT Core API Reference](../api-reference/core-api-reference.md) - Framework dependencies
 
 ---
 
 **Implementation Status**: ✅ Current and Active  
 **Script Location**: `/scripts/sync_dependencies.py`  
 **Last Updated**: January 2025  
-**Maintained By**: FLX Development Team
+**Maintained By**: FLEXT Development Team
 
 ---
 
-This dependency synchronization is essential for maintaining the integrity of the FLX hexagonal architecture across all Oracle integration projects.
+This dependency synchronization is essential for maintaining the integrity of the FLEXT hexagonal architecture across all Oracle integration projects.

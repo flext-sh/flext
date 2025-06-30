@@ -4,7 +4,7 @@
 
 [![Testing](https://img.shields.io/badge/testing-emergency-red.svg)](./index.md)
 [![Protocols](https://img.shields.io/badge/protocols-restoration-orange.svg)](./failure-cases.md)
-[![Framework](https://img.shields.io/badge/framework-FLX%200.4.0-green.svg)](../../index.md)
+[![Framework](https://img.shields.io/badge/framework-FLEXT%200.4.0-green.svg)](../../index.md)
 
 **System restoration procedures for critical failures and emergency situations**
 
@@ -24,7 +24,7 @@
 
 - **📂 Section Hub**: [Testing Hub](./index.md)
 - **🏠 Documentation Root**: [Root Index](../../index.md)
-- **🔗 Source Code**: [FLX Emergency](../../../flext/src/flext/emergency/)
+- **🔗 Source Code**: [FLEXT Emergency](../../../flext/src/flext/emergency/)
 - **🔗 Related**: [Assessment Protocols](./assessment-protocols.md), [Failure Cases](./failure-cases.md)
 
 ---
@@ -102,7 +102,7 @@ echo "EMERGENCY RESTORATION STARTED: $(date)" >> .token
 echo "BROKEN COMPONENTS:" >> .token
 
 # Test all major components
-python -c "import flext" 2>&1 || echo "- FLX Core BROKEN" >> .token
+python -c "import flext" 2>&1 || echo "- FLEXT Core BROKEN" >> .token
 python -c "import flext_database_oracle" 2>&1 || echo "- Database Oracle BROKEN" >> .token
 python -c "import flext_http_oracle_oic" 2>&1 || echo "- OIC BROKEN" >> .token
 python -c "import flext_http_oracle_wms" 2>&1 || echo "- WMS BROKEN" >> .token
@@ -120,7 +120,7 @@ echo "DAMAGE ASSESSMENT COMPLETE" >> .token
 
 **Priority order:**
 
-1. **Fix FLX Core** - Everything depends on this
+1. **Fix FLEXT Core** - Everything depends on this
 2. **Restore build system** - Required for all validation
 3. **Fix imports** - Core dependency resolution
 4. **Restore testing** - Required for validation
@@ -131,7 +131,7 @@ echo "PHASE 2: Core stabilization starting" >> .token
 
 # Fix core imports first
 cd flext/src
-python -c "import flext" && echo "✅ FLX Core restored" >> .token || echo "❌ FLX Core still broken" >> .token
+python -c "import flext" && echo "✅ FLEXT Core restored" >> .token || echo "❌ FLEXT Core still broken" >> .token
 
 # Then build system
 cd /home/marlonsc/pyauto
@@ -193,7 +193,7 @@ echo "PHASE 4: Integration validation complete" >> .token
 
 | Condition           | Action                  | Timeline   |
 | ------------------- | ----------------------- | ---------- |
-| FLX Core broken     | **IMMEDIATE EMERGENCY** | 8-20 hours |
+| FLEXT Core broken     | **IMMEDIATE EMERGENCY** | 8-20 hours |
 | 3+ adapters broken  | **EMERGENCY MODE**      | 8-20 hours |
 | Build system broken | **EMERGENCY MODE**      | 4-8 hours  |
 | 1-2 adapters broken | Component repair        | 2-4 hours  |
@@ -261,7 +261,7 @@ echo "ETA: [realistic time estimate]" >> .token
    ```bash
    # Work on one component at a time
    cd flext
-   # Fix FLX first, then add adapters one by one
+   # Fix FLEXT first, then add adapters one by one
    ```
 
 ## ⚡ EMERGENCY PREVENTION

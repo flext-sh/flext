@@ -4,7 +4,7 @@
 
 ## Overview
 
-Security advisory templates and procedures for the FLX framework. Documentation covering vulnerability reporting, security incident response, and advisory publication processes.
+Security advisory templates and procedures for the FLEXT framework. Documentation covering vulnerability reporting, security incident response, and advisory publication processes.
 
 ## Quick Links
 
@@ -107,4 +107,4 @@ Security advisory templates and procedures for the FLX framework. Documentation 
 
 ---
 
-_Part of the [FLX Framework Documentation](../../../../index.md)_
+_Part of the [FLEXT Framework Documentation](../../../../index.md)_

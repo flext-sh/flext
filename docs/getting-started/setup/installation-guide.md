@@ -5,7 +5,7 @@
 [![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**Complete installation instructions for FLX Framework and its ecosystem based on current project structure**
+**Complete installation instructions for FLEXT Framework and its ecosystem based on current project structure**
 
 ---
 
@@ -29,7 +29,7 @@
 
 ## 📋 **Overview**
 
-FLX Framework is distributed as part of the PyAuto monorepo, providing a complete hexagonal architecture implementation with Oracle integration capabilities. This guide covers installation from local development to production deployment.
+FLEXT Framework is distributed as part of the PyAuto monorepo, providing a complete hexagonal architecture implementation with Oracle integration capabilities. This guide covers installation from local development to production deployment.
 
 ## Prerequisites
 
@@ -50,7 +50,7 @@ FLX Framework is distributed as part of the PyAuto monorepo, providing a complet
 
 ## Quick Installation
 
-For immediate setup of the complete FLX development environment:
+For immediate setup of the complete FLEXT development environment:
 
 **⚠️ Repository URL**: The actual repository location should be provided by your organization - this is a private monorepo.
 
@@ -63,7 +63,7 @@ cd pyauto
 make setup
 
 # Verify installation
-python -c "import flext; print(f'FLX {flext.__version__} installed successfully')"
+python -c "import flext; print(f'FLEXT {flext.__version__} installed successfully')"
 ```
 
 **✅ Validated**: Installation commands verified against actual `/home/marlonsc/pyauto/Makefile` - `make setup` target exists and calls `venv-setup`.
@@ -90,12 +90,12 @@ make test PROJECT=flext
 
 **✅ Validated**: Commands verified against actual Makefile targets.
 
-### Method 2: FLX Framework Only
+### Method 2: FLEXT Framework Only
 
 **Best for**: Core framework development without Oracle adapters
 
 ```bash
-# Clone and navigate to FLX
+# Clone and navigate to FLEXT
 git clone https://github.com/datacosmos-br/pyauto.git
 cd pyauto/flext
 
@@ -126,7 +126,7 @@ The PyAuto workspace implements a monorepo structure with shared virtual environ
 ```
 pyauto/
 ├── .venv/                       # Shared virtual environment
-├── flext/                         # Core FLX Framework
+├── flext/                         # Core FLEXT Framework
 │   ├── src/flext/                # Framework source (core, ports, adapters)
 │   ├── tests/                  # Comprehensive test suite
 │   ├── pyproject.toml          # Framework dependencies
@@ -166,10 +166,10 @@ make venv-install-dev            # Install development dependencies
 
 ### Type Checking Configuration
 
-FLX Framework uses strict type checking with Python 3.13+ features:
+FLEXT Framework uses strict type checking with Python 3.13+ features:
 
 ```bash
-# Run mypy on FLX framework
+# Run mypy on FLEXT framework
 .venv/bin/python -m mypy flext/src/
 
 # Configuration files:
@@ -257,7 +257,7 @@ testing:
 Create `.env` file in project root:
 
 ```bash
-# Core FLX settings
+# Core FLEXT settings
 FLX_LOG_LEVEL=INFO
 FLX_LOG_FORMAT=structured
 FLX_DEBUG=false
@@ -284,7 +284,7 @@ Create and run this verification script:
 
 ```python
 #!/usr/bin/env python3
-"""FLX Installation Verification Script"""
+"""FLEXT Installation Verification Script"""
 
 def verify_installation():
     try:
@@ -294,7 +294,7 @@ def verify_installation():
         from flext.ports import ModernBasePort, CliPort
         from flext.adapters.inbound.cli import CliAdapter
 
-        print(f"✅ FLX {flext.__version__} - Core framework installed")
+        print(f"✅ FLEXT {flext.__version__} - Core framework installed")
 
         # Test entity system
         class TestEntity(Entity):
@@ -322,7 +322,7 @@ def verify_installation():
         except ImportError:
             print("ℹ️  Oracle OIC adapter not installed")
 
-        print("\n🎉 FLX Framework successfully installed and verified!")
+        print("\n🎉 FLEXT Framework successfully installed and verified!")
         return True
 
     except ImportError as e:
@@ -419,7 +419,7 @@ export LD_LIBRARY_PATH=$ORACLE_HOME/lib:$LD_LIBRARY_PATH
 
 ### **Next Steps**
 
-- [Quickstart Guide](./quickstart.md) - Build your first FLX application
+- [Quickstart Guide](./quickstart.md) - Build your first FLEXT application
 - [Framework Overview](./flext-framework-overview.md) - Core concepts and architecture
 
 ### **Related Topics**
@@ -430,4 +430,4 @@ export LD_LIBRARY_PATH=$ORACLE_HOME/lib:$LD_LIBRARY_PATH
 
 ---
 
-**📂 Hub**: [Getting Started Hub](./index.md) | **🏠 Root**: [Documentation Home](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Getting Started Hub](./index.md) | **🏠 Root**: [Documentation Home](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

@@ -4,9 +4,9 @@
 
 [![Materials](https://img.shields.io/badge/materials-technical-blue.svg)](./reference-materials.md)
 [![Oracle](https://img.shields.io/badge/oracle-references-red.svg)](../../guides/oracle/index.md)
-[![Framework](https://img.shields.io/badge/framework-FLX%200.4.0-orange.svg)](../../index.md)
+[![Framework](https://img.shields.io/badge/framework-FLEXT%200.4.0-orange.svg)](../../index.md)
 
-**Comprehensive technical reference materials supporting FLX Framework development and Oracle integrations**
+**Comprehensive technical reference materials supporting FLEXT Framework development and Oracle integrations**
 
 ---
 
@@ -98,4 +98,4 @@
 
 ---
 
-**📂 Hub**: [Reference Hub](../index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Reference Hub](../index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

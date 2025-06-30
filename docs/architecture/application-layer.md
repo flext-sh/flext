@@ -4,9 +4,9 @@
 
 [![Architecture](https://img.shields.io/badge/layer-application-purple.svg)](./index.md)
 [![Domain](https://img.shields.io/badge/depends_on-domain_layer-blue.svg)](./core-domain-layer.md)
-[![Framework](https://img.shields.io/badge/framework-FLX%200.4.0-orange.svg)](../index.md)
+[![Framework](https://img.shields.io/badge/framework-FLEXT%200.4.0-orange.svg)](../index.md)
 
-**Orchestration layer implementing application use cases and coordinating domain objects in the FLX Framework**
+**Orchestration layer implementing application use cases and coordinating domain objects in the FLEXT Framework**
 
 ---
 
@@ -368,4 +368,4 @@ async def create_order_with_payment(self, command: CreateOrderCommand):
 
 ---
 
-**📂 Hub**: [Architecture Hub](./index.md) | **🏠 Root**: [Documentation Home](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Architecture Hub](./index.md) | **🏠 Root**: [Documentation Home](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

@@ -1,11 +1,11 @@
 # Plugin Development Guide
 
 > _"The power of a system lies in its extensibility."_
-> This guide explains how FLX's plugin architecture enables seamless extension without modifying the core codebase.
+> This guide explains how FLEXT's plugin architecture enables seamless extension without modifying the core codebase.
 
 ## Overview
 
-FLX implements a sophisticated plugin system where **every external connector**—Oracle DB, Cache, HTTP, Message Queues—is treated as a _plugin_ discovered at runtime via Python entry-points. This design enables developers to add new functionality, support additional protocols, or integrate with different systems while maintaining compatibility with the existing ecosystem.
+FLEXT implements a sophisticated plugin system where **every external connector**—Oracle DB, Cache, HTTP, Message Queues—is treated as a _plugin_ discovered at runtime via Python entry-points. This design enables developers to add new functionality, support additional protocols, or integrate with different systems while maintaining compatibility with the existing ecosystem.
 
 The core framework stays dependency-free while teams add features on their own cadence.
 
@@ -50,7 +50,7 @@ graph TB
 
 ### Hook Specification System
 
-A plugin is a Python module that **implements one or more hooks** defined in the FLX hook specifications. Each hook receives a mutable registry that the plugin can modify.
+A plugin is a Python module that **implements one or more hooks** defined in the FLEXT hook specifications. Each hook receives a mutable registry that the plugin can modify.
 
 ```python
 # flext/ports/plugin/hookspecs.py
@@ -60,7 +60,7 @@ from typing import Type, Protocol
 hookspec = pluggy.HookspecMarker("flext")
 
 @hookspec
-def register_adapters(registry: dict[str, Type["FlxAdapter"]]) -> None:
+def register_adapters(registry: dict[str, Type["FlextAdapter"]]) -> None:
     """Add custom adapters keyed by a user-friendly name."""
 
 @hookspec
@@ -97,7 +97,7 @@ Each registry is a dictionary mapping names to component classes, enabling easy 
 
 ### Plugin Structure
 
-A typical FLX plugin follows this organized structure:
+A typical FLEXT plugin follows this organized structure:
 
 ```
 my-flext-plugin/
@@ -164,7 +164,7 @@ class RedisCacheConfig(BaseModel):
 ```python
 from flext.adapters.base import BaseAdapter
 from flext.infra.cache.cache_service import CacheService
-from flext.core.exceptions import FlxConnectionError, FlxTimeoutError
+from flext.core.exceptions import FlextConnectionError, FlextTimeoutError
 from .config import RedisCacheConfig
 import redis.asyncio as redis
 import json
@@ -204,7 +204,7 @@ class RedisCacheAdapter(BaseAdapter):
             self.logger.info(f"Connected to Redis: {self.config.url}")
 
         except Exception as e:
-            raise FlxConnectionError(f"Failed to connect to Redis: {e}")
+            raise FlextConnectionError(f"Failed to connect to Redis: {e}")
 
     async def _disconnect(self) -> None:
         """Close Redis connections gracefully."""
@@ -217,18 +217,18 @@ class RedisCacheAdapter(BaseAdapter):
     async def get(self, key: str) -> Optional[Any]:
         """Get value from cache with automatic decompression."""
         if not self._cache_service:
-            raise FlxConnectionError("Not connected to Redis")
+            raise FlextConnectionError("Not connected to Redis")
 
         try:
             return await self._cache_service.get(key)
         except Exception as e:
             self.logger.error(f"Cache get failed for key {key}: {e}")
-            raise FlxTimeoutError(f"Cache operation timeout: {e}")
+            raise FlextTimeoutError(f"Cache operation timeout: {e}")
 
     async def set(self, key: str, value: Any, ttl: Optional[int] = None) -> bool:
         """Set value in cache with automatic compression."""
         if not self._cache_service:
-            raise FlxConnectionError("Not connected to Redis")
+            raise FlextConnectionError("Not connected to Redis")
 
         try:
             await self._cache_service.set(key, value, ttl)
@@ -240,7 +240,7 @@ class RedisCacheAdapter(BaseAdapter):
     async def delete(self, key: str) -> bool:
         """Delete key from cache."""
         if not self._cache_service:
-            raise FlxConnectionError("Not connected to Redis")
+            raise FlextConnectionError("Not connected to Redis")
 
         try:
             return await self._cache_service.delete(key)
@@ -251,7 +251,7 @@ class RedisCacheAdapter(BaseAdapter):
     async def exists(self, key: str) -> bool:
         """Check if key exists in cache."""
         if not self._cache_service:
-            raise FlxConnectionError("Not connected to Redis")
+            raise FlextConnectionError("Not connected to Redis")
 
         try:
             return await self._cache_service.exists(key)
@@ -279,7 +279,7 @@ class RedisCacheAdapter(BaseAdapter):
 #### Plugin Registration (`__init__.py`)
 
 ```python
-"""Redis Cache Plugin for FLX."""
+"""Redis Cache Plugin for FLEXT."""
 
 from .adapter import RedisCacheAdapter
 from .config import RedisCacheConfig
@@ -304,7 +304,7 @@ def register_cache_providers(registry: dict) -> None:
 # Plugin metadata
 PLUGIN_NAME = "flext-redis-cache"
 PLUGIN_VERSION = "1.0.0"
-PLUGIN_DESCRIPTION = "Redis cache adapter for FLX with advanced features"
+PLUGIN_DESCRIPTION = "Redis cache adapter for FLEXT with advanced features"
 ```
 
 #### Package Configuration (`pyproject.toml`)
@@ -317,7 +317,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry]
 name = "flext-redis-cache"
 version = "1.0.0"
-description = "Redis cache adapter for FLX framework"
+description = "Redis cache adapter for FLEXT framework"
 authors = ["Your Name <your.email@example.com>"]
 license = "MIT"
 readme = "README.md"
@@ -358,7 +358,7 @@ from flext import Flx
 from flext.infra.adapters import UnifiedAdapterManager
 
 async def main():
-    # Initialize FLX with plugin discovery
+    # Initialize FLEXT with plugin discovery
     flext = Flx()
     flext.discover_plugins()  # Auto-discovers all installed plugins
 
@@ -403,7 +403,7 @@ asyncio.run(main())
 
 ### Bidirectional Plugin Architecture
 
-FLX plugins support bidirectional patterns - they can act as both inbound (driving) and outbound (driven) adapters:
+FLEXT plugins support bidirectional patterns - they can act as both inbound (driving) and outbound (driven) adapters:
 
 ```python
 class BidirectionalHttpPlugin(BaseAdapter):
@@ -429,7 +429,7 @@ class BidirectionalHttpPlugin(BaseAdapter):
 
 ### CLI Extensions
 
-Plugins can extend the FLX command-line interface:
+Plugins can extend the FLEXT command-line interface:
 
 ```python
 import cyclopts
@@ -566,7 +566,7 @@ async def integration_redis_adapter(redis_config):
 # tests/test_adapter.py
 import pytest
 from flext_redis_cache import RedisCacheAdapter, RedisCacheConfig
-from flext.core.exceptions import FlxConnectionError
+from flext.core.exceptions import FlextConnectionError
 
 class TestRedisCacheAdapter:
     """Unit tests for Redis cache adapter."""
@@ -618,10 +618,10 @@ class TestRedisCacheAdapter:
         adapter = RedisCacheAdapter(redis_config)
 
         # Test operations without connection
-        with pytest.raises(FlxConnectionError):
+        with pytest.raises(FlextConnectionError):
             await adapter.get("test_key")
 
-        with pytest.raises(FlxConnectionError):
+        with pytest.raises(FlextConnectionError):
             await adapter.set("test_key", "value")
 ```
 
@@ -635,7 +635,7 @@ from flext.infra.adapters import UnifiedAdapterManager
 
 @pytest.mark.integration
 class TestRedisIntegration:
-    """Integration tests with FLX framework."""
+    """Integration tests with FLEXT framework."""
 
     async def test_plugin_discovery(self):
         """Test automatic plugin discovery."""
@@ -719,7 +719,7 @@ class TestRedisIntegration:
 
 ## Plugin Ecosystem Roadmap
 
-FLX is building an extensive plugin ecosystem with planned expansions:
+FLEXT is building an extensive plugin ecosystem with planned expansions:
 
 ### Infrastructure Plugins
 
@@ -756,4 +756,4 @@ FLX is building an extensive plugin ecosystem with planned expansions:
 
 ---
 
-**🔌 Ready to extend FLX with powerful plugins!**
+**🔌 Ready to extend FLEXT with powerful plugins!**

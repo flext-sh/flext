@@ -58,7 +58,7 @@ These are **legacy implementations for reference purposes only**. Do not use dir
 4. **Deprecated APIs**: Oracle may have discontinued older services
 5. **Monolithic Architecture**: Violates hexagonal architecture principles
 
-## Adaptation Strategy for FLX Framework
+## Adaptation Strategy for FLEXT Framework
 
 ### 1. Pattern Extraction Process
 
@@ -73,7 +73,7 @@ def process_order(order_data):
     call_oracle_wms(order_data)
     send_notification(order_data)
 
-# FLX Pattern (Hexagonal)
+# FLEXT Pattern (Hexagonal)
 class OrderProcessingService:  # Domain Service
     def __init__(self, order_repo: OrderRepositoryPort, wms_client: WmsClientPort):
         self._order_repo = order_repo
@@ -142,7 +142,7 @@ class OracleInventoryAdapter:  # Infrastructure Adapter
 </integration>
 ```
 
-**FLX Approach:**
+**FLEXT Approach:**
 
 ```python
 # Domain Event
@@ -184,7 +184,7 @@ def sync_inventory_legacy():
         wms_client.update_inventory(wms_item)
 ```
 
-**FLX Pattern (Separated Concerns):**
+**FLEXT Pattern (Separated Concerns):**
 
 ```python
 # Domain Service (Business Logic)
@@ -227,7 +227,7 @@ The reference directory contains Oracle WMS mapping specifications:
 - **Inventory Transaction Mappings**: Real-time inventory updates
 - **Backorder Mappings**: Partial fulfillment handling
 
-### Modern FLX Mapping Approach
+### Modern FLEXT Mapping Approach
 
 ```python
 # Legacy: Procedural mapping functions
@@ -287,7 +287,7 @@ def process_order_legacy(order_data):
         raise
 ```
 
-### FLX Error Handling Strategy
+### FLEXT Error Handling Strategy
 
 ```python
 # Domain Exceptions
@@ -358,7 +358,7 @@ TIMEOUT = 30
 # config_prod.py, config_test.py, config_dev.py
 ```
 
-### FLX Configuration Approach
+### FLEXT Configuration Approach
 
 ```python
 # Type-safe configuration with validation
@@ -397,7 +397,7 @@ class OracleWmsAdapter:
 - Integration tests require full Oracle environment
 - No clear separation between business and technical logic
 
-### FLX Testing Approach
+### FLEXT Testing Approach
 
 ```python
 # Unit Testing Domain Logic
@@ -461,7 +461,7 @@ async def test_oracle_wms_adapter_integration():
 - Repeated Oracle API authentication
 - Large data sets processed in memory
 
-### FLX Performance Optimizations
+### FLEXT Performance Optimizations
 
 ```python
 # Asynchronous processing
@@ -505,7 +505,7 @@ class InventoryStreamProcessor:
 - Basic authentication patterns
 - No audit logging
 
-### FLX Security Improvements
+### FLEXT Security Improvements
 
 ```python
 # Secure credential management

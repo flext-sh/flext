@@ -4,9 +4,9 @@
 
 [![Resources](https://img.shields.io/badge/resources-external-green.svg)](./index.md)
 [![Links](https://img.shields.io/badge/links-validated-blue.svg)](../../guides/index.md)
-[![Framework](https://img.shields.io/badge/framework-FLX%200.4.0-orange.svg)](../../index.md)
+[![Framework](https://img.shields.io/badge/framework-FLEXT%200.4.0-orange.svg)](../../index.md)
 
-**Curated external resources, official documentation links, and supplementary materials supporting FLX Framework development**
+**Curated external resources, official documentation links, and supplementary materials supporting FLEXT Framework development**
 
 ---
 
@@ -27,14 +27,14 @@
 | **Category** | **Function** | **Audience** | **Status** |
 |--------------|--------------|--------------|------------|
 | **Oracle Resources** | Oracle official documentation links | Oracle developers | ✅ Available |
-| **Framework Resources** | FLX Framework external resources | Framework developers | ✅ Available |
+| **Framework Resources** | FLEXT Framework external resources | Framework developers | ✅ Available |
 | **Development Resources** | Development tools and utilities | All developers | ✅ Available |
 | **Community Resources** | Community contributions and examples | Community members | 🔶 Growing |
 
 ### **📋 Learning Path**
 
 1. **🎯 Start Here**: Oracle Official Documentation - Latest Oracle Cloud documentation
-2. **⚡ Framework Focus**: FLX Framework GitHub and community resources
+2. **⚡ Framework Focus**: FLEXT Framework GitHub and community resources
 3. **📚 Deep Dive**: Development tools, SDKs, and supplementary materials
 
 ---
@@ -50,16 +50,16 @@
 
 ### **Framework Resources**
 
-- [FLX Framework GitHub](https://github.com/flx-framework) - Source code and community contributions
+- [FLEXT Framework GitHub](https://github.com/flx-framework) - Source code and community contributions
 - [Python Hexagonal Architecture Patterns](https://python-patterns.guide/gang-of-four/adapter/) - Architecture design patterns
-- [FastAPI Documentation](https://fastapi.tiangolo.com/) - API framework used in FLX
-- [Pydantic Documentation](https://docs.pydantic.dev/) - Data validation library used in FLX
+- [FastAPI Documentation](https://fastapi.tiangolo.com/) - API framework used in FLEXT
+- [Pydantic Documentation](https://docs.pydantic.dev/) - Data validation library used in FLEXT
 
 ### **Development Tools**
 
 - [Postman Collections](../../examples/tools/postman/) - API testing collections for Oracle services
 - [OpenAPI Specifications](../../api-reference/index.md) - Framework API specifications
-- [Docker Resources](https://docs.docker.com/) - Containerization for FLX applications
+- [Docker Resources](https://docs.docker.com/) - Containerization for FLEXT applications
 - [Poetry Documentation](https://python-poetry.org/docs/) - Python dependency management
 
 ### **Community Resources**
@@ -110,4 +110,4 @@
 
 ---
 
-**📂 Hub**: [Reference Hub](../index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Reference Hub](../index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

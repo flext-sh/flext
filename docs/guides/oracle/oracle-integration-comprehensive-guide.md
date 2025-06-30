@@ -5,9 +5,9 @@
 [![Oracle WMS](https://img.shields.io/badge/Oracle-WMS_25B-red.svg)](./oracle-wms-integration-validated.md)
 [![Oracle OIC](https://img.shields.io/badge/Oracle-OIC-blue.svg)](./oic-complete-guide.md)
 [![Oracle DB](https://img.shields.io/badge/Oracle-Database-orange.svg)](./database-complete-guide.md)
-[![Framework](https://img.shields.io/badge/framework-FLX_0.4.0-orange.svg)](../../index.md)
+[![Framework](https://img.shields.io/badge/framework-FLEXT_0.4.0-orange.svg)](../../index.md)
 
-**Complete Oracle systems integration guide for FLX Framework covering WMS, OIC, Database, and enterprise patterns - validated against production implementations**
+**Complete Oracle systems integration guide for FLEXT Framework covering WMS, OIC, Database, and enterprise patterns - validated against production implementations**
 
 ---
 
@@ -31,18 +31,18 @@
 
 ## 📋 **Overview**
 
-This comprehensive guide covers Oracle system integration patterns within the FLX hexagonal architecture framework, including Oracle Fusion Cloud WMS, Oracle Integration Cloud (OIC), Oracle Database integration, and enterprise integration patterns.
+This comprehensive guide covers Oracle system integration patterns within the FLEXT hexagonal architecture framework, including Oracle Fusion Cloud WMS, Oracle Integration Cloud (OIC), Oracle Database integration, and enterprise integration patterns.
 
 ### **Prerequisites**
 
-- FLX Framework 0.4.0+ installed and configured
+- FLEXT Framework 0.4.0+ installed and configured
 - Oracle system access credentials (WMS, OIC, Database)
 - Python 3.13+ development environment
 - Understanding of hexagonal architecture patterns
 
 ### **Supported Oracle Systems**
 
-| Oracle System                      | Integration Type | FLX Component         | Status        |
+| Oracle System                      | Integration Type | FLEXT Component         | Status        |
 | ---------------------------------- | ---------------- | --------------------- | ------------- |
 | **Oracle Fusion Cloud WMS**        | REST/HTTP        | `flext-http-oracle-wms` | ✅ Production |
 | **Oracle Integration Cloud (OIC)** | REST/OAuth2      | `flext-http-oracle-oic` | ✅ Production |
@@ -52,7 +52,7 @@ This comprehensive guide covers Oracle system integration patterns within the FL
 ### **Architecture Pattern**
 
 ```
-FLX Hexagonal Architecture
+FLEXT Hexagonal Architecture
 ├── Domain Layer (Oracle-agnostic)
 │   ├── Entities (WMS Items, Orders, Shipments)
 │   ├── Value Objects (Oracle IDs, Status codes)
@@ -67,7 +67,7 @@ FLX Hexagonal Architecture
 └── Adapters (Infrastructure)
     ├── WmsClient (flext-http-oracle-wms)
     ├── OracleOicClient (flext-http-oracle-oic)
-    └── FlxOracleDbAdapter (flext-database-oracle)
+    └── FlextOracleDbAdapter (flext-database-oracle)
 ```
 
 ### **Oracle WMS Integration**
@@ -121,11 +121,11 @@ async with WmsClient(wms_config) as wms:
 Oracle Integration Cloud requires OAuth2 authentication:
 
 ```python
-from flext.infrastructure.http import FlxJwtService
+from flext.infrastructure.http import FlextJwtService
 from flext_http_oracle_oic import OracleOicService, OicConfig
 
 # JWT service for OIC authentication
-jwt_service = FlxJwtService.create_for_oracle_oic(
+jwt_service = FlextJwtService.create_for_oracle_oic(
     client_id=os.getenv("IDCS_CLIENT_ID"),
     client_secret=os.getenv("IDCS_CLIENT_SECRET"),
     idcs_url=os.getenv("IDCS_URL"),
@@ -233,7 +233,7 @@ For detailed implementation guides and real-world examples:
 ### **Prerequisites**
 
 - [Oracle Hub](./index.md) - Understanding Oracle integration architecture and patterns before implementation
-- [Getting Started Hub](../../getting-started/index.md) - FLX Framework installation and basic configuration setup
+- [Getting Started Hub](../../getting-started/index.md) - FLEXT Framework installation and basic configuration setup
 - [OAuth2 Authentication Guide](./oracle-oauth2-authentication-guide.md) - Required authentication setup for Oracle Cloud systems
 
 ### **Next Steps**
@@ -252,4 +252,4 @@ For detailed implementation guides and real-world examples:
 
 ---
 
-**📂 Hub**: [Oracle Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Oracle Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

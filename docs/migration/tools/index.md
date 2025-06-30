@@ -6,7 +6,7 @@
 [![Scripts](https://img.shields.io/badge/scripts-migration-green.svg)](./migration-tools.md)
 [![Utilities](https://img.shields.io/badge/utilities-validation-orange.svg)](./migration-tools.md)
 
-**Complete automation tools and utilities for FLX Framework migration execution**
+**Complete automation tools and utilities for FLEXT Framework migration execution**
 
 ---
 
@@ -60,4 +60,4 @@
 
 ---
 
-**📂 Section Hub** | **🏠 Parent**: [Migration Hub](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Section Hub** | **🏠 Parent**: [Migration Hub](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

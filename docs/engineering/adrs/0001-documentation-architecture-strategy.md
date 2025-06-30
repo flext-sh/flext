@@ -6,7 +6,7 @@
 
 ## Context
 
-The FLX Framework requires a comprehensive documentation architecture that supports enterprise-grade software engineering practices. Current documentation, while organized, lacks the sophisticated engineering approach needed for a production framework serving multiple enterprise clients.
+The FLEXT Framework requires a comprehensive documentation architecture that supports enterprise-grade software engineering practices. Current documentation, while organized, lacks the sophisticated engineering approach needed for a production framework serving multiple enterprise clients.
 
 ### Current State Analysis
 

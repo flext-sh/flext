@@ -4,9 +4,9 @@
 
 [![Engineering](https://img.shields.io/badge/engineering-decisions-blue.svg)](./index.md)
 [![ADRs](https://img.shields.io/badge/ADRs-documented-green.svg)](./adrs/index.md)
-[![Framework](https://img.shields.io/badge/framework-FLX%200.4.0-orange.svg)](../index.md)
+[![Framework](https://img.shields.io/badge/framework-FLEXT%200.4.0-orange.svg)](../index.md)
 
-**Engineering decision-making, architectural decision records (ADRs), and request for comments (RFCs) for FLX framework development**
+**Engineering decision-making, architectural decision records (ADRs), and request for comments (RFCs) for FLEXT framework development**
 
 ---
 
@@ -74,7 +74,7 @@
 
 - [Architecture Hub](../architecture/index.md) - Essential understanding of hexagonal architecture patterns and design principles informing engineering decisions
 - [Development Hub](../development/index.md) - Development standards, processes, and quality frameworks that guide engineering decision-making
-- [Getting Started Hub](../getting-started/index.md) - FLX Framework fundamentals required for understanding technical context of engineering decisions
+- [Getting Started Hub](../getting-started/index.md) - FLEXT Framework fundamentals required for understanding technical context of engineering decisions
 
 ### **➡️ Next Steps**
 
@@ -100,4 +100,4 @@
 
 ---
 
-**📂 Section Hub** | **🏠 Parent**: [Documentation Root](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Section Hub** | **🏠 Parent**: [Documentation Root](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

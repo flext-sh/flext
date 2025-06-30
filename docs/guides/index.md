@@ -6,7 +6,7 @@
 [![Authentication](https://img.shields.io/badge/auth-JWT%2BOAuth2-green.svg)](./authentication/index.md)
 [![Integration](https://img.shields.io/badge/integration-patterns-orange.svg)](./integration/index.md)
 
-**Complete practical implementation guides for FLX Framework integrations and development**
+**Complete practical implementation guides for FLEXT Framework integrations and development**
 
 ---
 
@@ -40,7 +40,7 @@
 
 ### **⬅️ Prerequisites**
 
-- [Getting Started Hub](../getting-started/index.md) - Essential FLX Framework installation and setup before implementation
+- [Getting Started Hub](../getting-started/index.md) - Essential FLEXT Framework installation and setup before implementation
 - [Architecture Hub](../architecture/index.md) - Understanding hexagonal architecture patterns for effective integration design
 
 ### **➡️ Next Steps**
@@ -67,4 +67,4 @@
 
 ---
 
-**📂 Hub**: [Guides Hub](#) | **🏠 Root**: [Documentation Home](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Guides Hub](#) | **🏠 Root**: [Documentation Home](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

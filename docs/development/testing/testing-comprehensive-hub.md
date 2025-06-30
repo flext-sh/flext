@@ -1,6 +1,6 @@
-# FLX Testing Framework - Complete Documentation Hub
+# FLEXT Testing Framework - Complete Documentation Hub
 
-> **Comprehensive testing documentation for FLX hexagonal architecture applications**
+> **Comprehensive testing documentation for FLEXT hexagonal architecture applications**
 >
 > **Cross-References:**
 >
@@ -10,7 +10,7 @@
 
 ## Documentation Navigation
 
-This hub organizes all FLX testing documentation into logical sections. Each specialized guide provides detailed coverage of specific testing aspects while maintaining cross-references to related topics.
+This hub organizes all FLEXT testing documentation into logical sections. Each specialized guide provides detailed coverage of specific testing aspects while maintaining cross-references to related topics.
 
 ### 🧪 **Core Testing Framework**
 
@@ -34,8 +34,8 @@ This hub organizes all FLX testing documentation into logical sections. Each spe
 
 ### 🔗 **Integration-Specific Testing**
 
-- **[FLX-WMS E2E Testing](./flext-wms-e2e-testing.md)** - Oracle WMS integration testing
-- **[FLX-OIC E2E Testing](./flext-oic-e2e-testing.md)** - Oracle OIC integration testing
+- **[FLEXT-WMS E2E Testing](./flext-wms-e2e-testing.md)** - Oracle WMS integration testing
+- **[FLEXT-OIC E2E Testing](./flext-oic-e2e-testing.md)** - Oracle OIC integration testing
 
 ### 📊 **Testing Analysis & Reports**
 
@@ -45,7 +45,7 @@ This hub organizes all FLX testing documentation into logical sections. Each spe
 
 ## Framework Overview
 
-The FLX Testing Framework provides a comprehensive testing infrastructure specifically designed for hexagonal architecture applications. It offers specialized testing engines, adapter mocks, and utilities that understand the unique patterns and requirements of port-adapter architecture.
+The FLEXT Testing Framework provides a comprehensive testing infrastructure specifically designed for hexagonal architecture applications. It offers specialized testing engines, adapter mocks, and utilities that understand the unique patterns and requirements of port-adapter architecture.
 
 ### Architecture Principles
 
@@ -298,7 +298,7 @@ Comprehensive testing approaches for Oracle system integrations:
 
 ### Framework Documentation
 
-- [FLX Core Framework](../architecture/core-domain-layer.md)
+- [FLEXT Core Framework](../architecture/core-domain-layer.md)
 - [Hexagonal Architecture](../architecture/hexagonal-architecture-guide.md)
 - [Adapter Implementation](../architecture/adapters-implementation-guide.md)
 
@@ -310,4 +310,4 @@ Comprehensive testing approaches for Oracle system integrations:
 
 ---
 
-**This hub provides comprehensive access to all FLX testing documentation while preserving the specialized focus of individual guides. Each linked document provides detailed coverage of specific testing aspects, ensuring no valuable information is lost while improving overall organization and accessibility.**
+**This hub provides comprehensive access to all FLEXT testing documentation while preserving the specialized focus of individual guides. Each linked document provides detailed coverage of specific testing aspects, ensuring no valuable information is lost while improving overall organization and accessibility.**

@@ -1,30 +1,30 @@
-# FLX 2.0 Architecture: Meltano-Powered Framework - Architecture Hub
+# FLEXT 2.0 Architecture: Meltano-Powered Framework - Architecture Hub
 
-> **Function**: Complete architectural evolution from FLX 1.0 to Meltano-powered FLX 2.0 | **Audience**: Architects, technical leads | **Status**: ✅ VALIDATED
+> **Function**: Complete architectural evolution from FLEXT 1.0 to Meltano-powered FLEXT 2.0 | **Audience**: Architects, technical leads | **Status**: ✅ VALIDATED
 
 [![Architecture](https://img.shields.io/badge/architecture-evolution-blue.svg)](./index.md)
 [![Meltano](https://img.shields.io/badge/meltano-powered-orange.svg)](../guides/integration/meltano-integration.md)
-[![Framework](https://img.shields.io/badge/framework-FLX%202.0-green.svg)](../index.md)
+[![Framework](https://img.shields.io/badge/framework-FLEXT%202.0-green.svg)](../index.md)
 
-**Complete architectural evolution transforming FLX from complex hexagonal framework to streamlined Meltano-powered orchestration layer**
+**Complete architectural evolution transforming FLEXT from complex hexagonal framework to streamlined Meltano-powered orchestration layer**
 
 ---
 
 ## 🧭 **Navigation Context**
 
-**🏠 Root**: [Documentation Home](../index.md) → **📂 Hub**: [Architecture](./index.md) → **📄 Current**: FLX 2.0 Architecture
+**🏠 Root**: [Documentation Home](../index.md) → **📂 Hub**: [Architecture](./index.md) → **📄 Current**: FLEXT 2.0 Architecture
 
 ### **📍 Learning Path Position**
 
 ```
-[Architecture Overview](./index.md) → **[FLX 2.0 Architecture]** → [Migration Patterns](./migration/index.md)
+[Architecture Overview](./index.md) → **[FLEXT 2.0 Architecture]** → [Migration Patterns](./migration/index.md)
 ```
 
 ## 🎯 **Quick Links**
 
 - **📂 Section Hub**: [Architecture Hub](./index.md)
 - **🏠 Documentation Root**: [Root Index](../index.md)
-- **🔗 Source Code**: [FLX 2.0 Core](../../flext/src/flext/core/)
+- **🔗 Source Code**: [FLEXT 2.0 Core](../../flext/src/flext/core/)
 - **🔗 Related**: [Meltano Integration](../guides/integration/meltano-integration.md), [Migration Guide](./migration/flext-2.0-migration.md)
 
 ---
@@ -33,13 +33,13 @@
 
 ## Executive Summary
 
-FLX 2.0 represents a complete architectural evolution, transforming from a complex 60,568-line hexagonal framework into a streamlined 15,000-line orchestration layer built on Meltano's proven foundation. This redesign eliminates **21,300 lines of redundant code (35%)** while enhancing capabilities through Meltano's mature ecosystem.
+FLEXT 2.0 represents a complete architectural evolution, transforming from a complex 60,568-line hexagonal framework into a streamlined 15,000-line orchestration layer built on Meltano's proven foundation. This redesign eliminates **21,300 lines of redundant code (35%)** while enhancing capabilities through Meltano's mature ecosystem.
 
 ## Architectural Philosophy
 
 ### From Custom Infrastructure to Ecosystem Leverage
 
-**FLX 1.0 Approach:**
+**FLEXT 1.0 Approach:**
 
 - Custom plugin system
 - Complex hexagonal architecture
@@ -47,7 +47,7 @@ FLX 2.0 represents a complete architectural evolution, transforming from a compl
 - Manual state handling
 - Custom command infrastructure
 
-**FLX 2.0 Approach:**
+**FLEXT 2.0 Approach:**
 
 - Meltano as core orchestration engine
 - Thin abstraction layer for enterprise patterns
@@ -72,11 +72,11 @@ FLX 2.0 represents a complete architectural evolution, transforming from a compl
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### 2. FLX 2.0 Orchestration Layer (Thin Abstraction)
+### 2. FLEXT 2.0 Orchestration Layer (Thin Abstraction)
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                    FLX 2.0 ORCHESTRATION                        │
+│                    FLEXT 2.0 ORCHESTRATION                        │
 ├─────────────────────────────────────────────────────────────────┤
 │ • Enterprise Patterns (SOLID, DRY, KISS)                       │
 │ • Workflow Templates & Factories                               │
@@ -102,12 +102,12 @@ FLX 2.0 represents a complete architectural evolution, transforming from a compl
 
 ## Detailed Component Design
 
-### 1. FLX Core Module (`flext/core.py` - ~800 lines)
+### 1. FLEXT Core Module (`flext/core.py` - ~800 lines)
 
 **Replaces:** 8,200 lines of plugin management infrastructure
 
 ```python
-"""FLX 2.0 Core - Meltano-Powered Framework"""
+"""FLEXT 2.0 Core - Meltano-Powered Framework"""
 
 from __future__ import annotations
 
@@ -121,8 +121,8 @@ from meltano.core.state_service import StateService
 from pydantic import BaseModel, Field
 
 
-class FlxProject(BaseModel):
-    """FLX project built on Meltano foundation."""
+class FlextProject(BaseModel):
+    """FLEXT project built on Meltano foundation."""
 
     name: str = Field(..., description="Project name")
     root_path: Path = Field(..., description="Project root directory")
@@ -139,8 +139,8 @@ class FlxProject(BaseModel):
         name: str,
         root_path: str | Path,
         template: str = "minimal",
-    ) -> FlxProject:
-        """Create new FLX project with Meltano foundation."""
+    ) -> FlextProject:
+        """Create new FLEXT project with Meltano foundation."""
         root = Path(root_path)
         root.mkdir(parents=True, exist_ok=True)
 
@@ -219,8 +219,8 @@ class FlxProject(BaseModel):
         }
 
 
-class FlxWorkflow(BaseModel):
-    """FLX workflow definition."""
+class FlextWorkflow(BaseModel):
+    """FLEXT workflow definition."""
 
     name: str = Field(..., description="Workflow name")
     extractors: List[str] = Field(default_factory=list, description="Extractor plugins")
@@ -229,8 +229,8 @@ class FlxWorkflow(BaseModel):
     schedule: Optional[str] = Field(None, description="Cron schedule")
     environment: str = Field(default="dev", description="Target environment")
 
-    async def deploy_to_project(self, project: FlxProject) -> bool:
-        """Deploy workflow to FLX project."""
+    async def deploy_to_project(self, project: FlextProject) -> bool:
+        """Deploy workflow to FLEXT project."""
         # Generate meltano.yml job definition
         job_config = {
             "name": self.name,
@@ -249,12 +249,12 @@ class FlxWorkflow(BaseModel):
         return True
 ```
 
-### 2. FLX Templates Module (`flext/templates.py` - ~600 lines)
+### 2. FLEXT Templates Module (`flext/templates.py` - ~600 lines)
 
 **Replaces:** 3,500 lines of configuration management
 
 ```python
-"""FLX 2.0 Templates - Pre-configured Meltano setups"""
+"""FLEXT 2.0 Templates - Pre-configured Meltano setups"""
 
 from __future__ import annotations
 
@@ -263,8 +263,8 @@ from pathlib import Path
 import yaml
 
 
-class FlxTemplate:
-    """Base class for FLX project templates."""
+class FlextTemplate:
+    """Base class for FLEXT project templates."""
 
     MELTANO_CONFIG_TEMPLATE = {
         "version": 1,
@@ -295,7 +295,7 @@ class FlxTemplate:
     }
 
 
-class DataWarehouseTemplate(FlxTemplate):
+class DataWarehouseTemplate(FlextTemplate):
     """Template for data warehouse projects."""
 
     PLUGINS = {
@@ -315,8 +315,8 @@ class DataWarehouseTemplate(FlxTemplate):
     }
 
     @classmethod
-    async def apply_to_project(cls, project: FlxProject) -> None:
-        """Apply template to FLX project."""
+    async def apply_to_project(cls, project: FlextProject) -> None:
+        """Apply template to FLEXT project."""
         for plugin_type, plugins in cls.PLUGINS.items():
             for plugin in plugins:
                 await project.add_plugin(
@@ -326,7 +326,7 @@ class DataWarehouseTemplate(FlxTemplate):
                 )
 
 
-class DataLakeTemplate(FlxTemplate):
+class DataLakeTemplate(FlextTemplate):
     """Template for data lake projects."""
 
     PLUGINS = {
@@ -345,7 +345,7 @@ class DataLakeTemplate(FlxTemplate):
     }
 
 
-class StreamingTemplate(FlxTemplate):
+class StreamingTemplate(FlextTemplate):
     """Template for real-time streaming projects."""
 
     PLUGINS = {
@@ -371,9 +371,9 @@ async def create_project_from_template(
     name: str,
     root_path: str,
     template: str = "data-warehouse"
-) -> FlxProject:
-    """Create FLX project from template."""
-    project = await FlxProject.create(name, root_path)
+) -> FlextProject:
+    """Create FLEXT project from template."""
+    project = await FlextProject.create(name, root_path)
 
     if template in TEMPLATES:
         await TEMPLATES[template].apply_to_project(project)
@@ -381,12 +381,12 @@ async def create_project_from_template(
     return project
 ```
 
-### 3. FLX CLI Module (`flext/cli.py` - ~400 lines)
+### 3. FLEXT CLI Module (`flext/cli.py` - ~400 lines)
 
 **Replaces:** 4,200 lines of command execution infrastructure
 
 ```python
-"""FLX 2.0 CLI - Meltano delegation layer"""
+"""FLEXT 2.0 CLI - Meltano delegation layer"""
 
 from __future__ import annotations
 
@@ -395,14 +395,14 @@ import click
 from pathlib import Path
 from typing import Optional
 
-from flext.core import FlxProject, FlxWorkflow
+from flext.core import FlextProject, FlextWorkflow
 from flext.templates import create_project_from_template, TEMPLATES
 
 
 @click.group()
 @click.version_option(version="2.0.0")
 def flext():
-    """FLX 2.0 - Meltano-Powered Data Framework"""
+    """FLEXT 2.0 - Meltano-Powered Data Framework"""
     pass
 
 
@@ -411,9 +411,9 @@ def flext():
 @click.option("--path", default=".", help="Project root path")
 @click.option("--template", default="data-warehouse", type=click.Choice(list(TEMPLATES.keys())))
 async def init(name: str, path: str, template: str):
-    """Initialize new FLX project."""
+    """Initialize new FLEXT project."""
     project = await create_project_from_template(name, path, template)
-    click.echo(f"✅ FLX project '{name}' created with {template} template")
+    click.echo(f"✅ FLEXT project '{name}' created with {template} template")
     click.echo(f"📁 Location: {project.root_path}")
 
 
@@ -423,7 +423,7 @@ async def init(name: str, path: str, template: str):
 @click.option("--variant", default="default")
 async def add(plugin_type: str, plugin_name: str, variant: str):
     """Add plugin to current project."""
-    project = FlxProject(name="current", root_path=Path.cwd())
+    project = FlextProject(name="current", root_path=Path.cwd())
     success = await project.add_plugin(plugin_type, plugin_name, variant)
 
     if success:
@@ -438,7 +438,7 @@ async def add(plugin_type: str, plugin_name: str, variant: str):
 @click.option("--env", help="Environment to run in")
 async def run(plugins: tuple, state_id: Optional[str], env: Optional[str]):
     """Run ELT pipeline."""
-    project = FlxProject(name="current", root_path=Path.cwd())
+    project = FlextProject(name="current", root_path=Path.cwd())
     result = await project.run_pipeline(*plugins, state_id=state_id, environment=env)
 
     if result["success"]:
@@ -465,12 +465,12 @@ if __name__ == "__main__":
     flext()
 ```
 
-### 4. FLX State Module (`flext/state.py` - ~300 lines)
+### 4. FLEXT State Module (`flext/state.py` - ~300 lines)
 
 **Replaces:** 2,800 lines of state management
 
 ```python
-"""FLX 2.0 State - Meltano state backend wrapper"""
+"""FLEXT 2.0 State - Meltano state backend wrapper"""
 
 from __future__ import annotations
 
@@ -483,8 +483,8 @@ from meltano.core.state_service import StateService
 from meltano.core.project import Project
 
 
-class FlxState:
-    """FLX state management using Meltano backends."""
+class FlextState:
+    """FLEXT state management using Meltano backends."""
 
     def __init__(self, project_path: Path):
         self.project = Project.find(str(project_path))
@@ -511,12 +511,12 @@ class FlxState:
         self.state_service.merge_state(source_id, target_id)
 ```
 
-### 5. FLX Integration Module (`flext/integrations.py` - ~500 lines)
+### 5. FLEXT Integration Module (`flext/integrations.py` - ~500 lines)
 
 **Replaces:** 3,800 lines of orchestration
 
 ```python
-"""FLX 2.0 Integrations - Enterprise patterns"""
+"""FLEXT 2.0 Integrations - Enterprise patterns"""
 
 from __future__ import annotations
 
@@ -524,16 +524,16 @@ import asyncio
 from typing import Any, Dict, List, Optional
 from pathlib import Path
 
-from flext.core import FlxProject, FlxWorkflow
+from flext.core import FlextProject, FlextWorkflow
 
 
 class AirflowIntegration:
     """Simplified Airflow integration using Meltano."""
 
-    def __init__(self, project: FlxProject):
+    def __init__(self, project: FlextProject):
         self.project = project
 
-    async def deploy_workflow(self, workflow: FlxWorkflow, dags_path: Path) -> bool:
+    async def deploy_workflow(self, workflow: FlextWorkflow, dags_path: Path) -> bool:
         """Deploy workflow as Airflow DAG."""
         dag_content = self._generate_dag(workflow)
         dag_file = dags_path / f"{workflow.name}.py"
@@ -543,7 +543,7 @@ class AirflowIntegration:
 
         return True
 
-    def _generate_dag(self, workflow: FlxWorkflow) -> str:
+    def _generate_dag(self, workflow: FlextWorkflow) -> str:
         """Generate Airflow DAG code."""
         return f'''
 from datetime import datetime, timedelta
@@ -569,7 +569,7 @@ dag = DAG(
 {self._generate_tasks(workflow)}
 '''
 
-    def _generate_tasks(self, workflow: FlxWorkflow) -> str:
+    def _generate_tasks(self, workflow: FlextWorkflow) -> str:
         """Generate task definitions."""
         tasks = []
         for i, extractor in enumerate(workflow.extractors):
@@ -590,7 +590,7 @@ dag = DAG(
 class MonitoringIntegration:
     """Simplified monitoring using Meltano's observability."""
 
-    def __init__(self, project: FlxProject):
+    def __init__(self, project: FlextProject):
         self.project = project
 
     async def health_check(self) -> Dict[str, Any]:
@@ -613,14 +613,14 @@ class MonitoringIntegration:
 
 ## New Project Structure
 
-### FLX 2.0 Minimal Structure (~2,500 lines total)
+### FLEXT 2.0 Minimal Structure (~2,500 lines total)
 
 ```
 flext-2.0/
 ├── pyproject.toml              # Dependencies: meltano + pydantic
 ├── flext/
 │   ├── __init__.py            # Main exports (~50 lines)
-│   ├── core.py               # Core FlxProject (~800 lines)
+│   ├── core.py               # Core FlextProject (~800 lines)
 │   ├── templates.py          # Project templates (~600 lines)
 │   ├── cli.py               # CLI wrapper (~400 lines)
 │   ├── state.py             # State management (~300 lines)
@@ -634,9 +634,9 @@ flext-2.0/
 └── docs/                   # Updated documentation
 ```
 
-## Comparison: FLX 1.0 vs FLX 2.0
+## Comparison: FLEXT 1.0 vs FLEXT 2.0
 
-| Aspect               | FLX 1.0              | FLX 2.0              | Reduction |
+| Aspect               | FLEXT 1.0              | FLEXT 2.0              | Reduction |
 | -------------------- | -------------------- | -------------------- | --------- |
 | **Lines of Code**    | 60,568               | ~15,000              | 75%       |
 | **Core Files**       | 245                  | 7                    | 97%       |
@@ -651,7 +651,7 @@ flext-2.0/
 
 ### Phase 1: Foundation (Week 1-2)
 
-1. **Create FLX 2.0 core module** with Meltano integration
+1. **Create FLEXT 2.0 core module** with Meltano integration
 2. **Implement project templates** for common use cases
 3. **Build CLI wrapper** that delegates to Meltano
 4. **Basic testing infrastructure**
@@ -667,7 +667,7 @@ flext-2.0/
 
 1. **Template expansion** for more use cases
 2. **Enterprise integrations** (monitoring, alerting)
-3. **Migration tools** from FLX 1.0
+3. **Migration tools** from FLEXT 1.0
 4. **Community feedback** and refinement
 
 ## Benefits Realization
@@ -713,18 +713,18 @@ flext-2.0/
 
 ### 3. **Learning Curve**
 
-- **Benefit**: Standard Meltano patterns vs FLX-specific patterns
+- **Benefit**: Standard Meltano patterns vs FLEXT-specific patterns
 - **Mitigation**: Better documentation and larger community
 
 ## Conclusion
 
-FLX 2.0 represents a strategic evolution from custom infrastructure to ecosystem leverage. By building on Meltano's proven foundation, we achieve:
+FLEXT 2.0 represents a strategic evolution from custom infrastructure to ecosystem leverage. By building on Meltano's proven foundation, we achieve:
 
 - **75% code reduction** (45,568 lines eliminated)
 - **Enhanced capabilities** through 700+ plugins
 - **Simplified maintenance** through proven components
 - **Accelerated development** through standard patterns
 
-This transformation positions FLX as a streamlined orchestration layer that amplifies Meltano's capabilities with enterprise patterns, rather than competing with its infrastructure.
+This transformation positions FLEXT as a streamlined orchestration layer that amplifies Meltano's capabilities with enterprise patterns, rather than competing with its infrastructure.
 
-**Strategic Recommendation**: Proceed with FLX 2.0 implementation to realize these substantial benefits while maintaining and enhancing the framework's value proposition.
+**Strategic Recommendation**: Proceed with FLEXT 2.0 implementation to realize these substantial benefits while maintaining and enhancing the framework's value proposition.

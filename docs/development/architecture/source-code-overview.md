@@ -1,8 +1,8 @@
-# FLX Source Code Overview
+# FLEXT Source Code Overview
 
 ## Overview
 
-This document provides a comprehensive overview of the FLX framework source code structure, implementing hexagonal architecture patterns for enterprise-grade Python applications.
+This document provides a comprehensive overview of the FLEXT framework source code structure, implementing hexagonal architecture patterns for enterprise-grade Python applications.
 
 ## Related Documentation
 
@@ -13,7 +13,7 @@ This document provides a comprehensive overview of the FLX framework source code
 
 ## Source Code Structure
 
-The FLX framework follows a clean architecture approach with clear separation of concerns:
+The FLEXT framework follows a clean architecture approach with clear separation of concerns:
 
 ### Core Components
 
@@ -225,8 +225,8 @@ from flext.adapters.inbound.api import FastApiAdapter
 from flext.adapters.outbound.database import PostgreSQLAdapter
 
 # Infrastructure imports
-from flext.infra.config import FlxConfig
-from flext.infra.logging import FlxLogger
+from flext.infra.config import FlextConfig
+from flext.infra.logging import FlextLogger
 
 # Application imports
 from flext.application.services import UserService
@@ -284,12 +284,12 @@ class UserService:
 
 ```python
 # Structured logging throughout
-from flext.infra.logging import FlxLogger
+from flext.infra.logging import FlextLogger
 
 class UserService:
     def __init__(self, repository: UserRepository) -> None:
         self.repository = repository
-        self.logger = FlxLogger("user.service")
+        self.logger = FlextLogger("user.service")
 
     async def create_user(self, username: str, email: str) -> User:
         self.logger.info("Creating user - Username: %s", username)
@@ -358,9 +358,9 @@ class TestUserService:
 
 ```python
 # Environment-based configuration
-from flext.infra.config import FlxConfig
+from flext.infra.config import FlextConfig
 
-config = FlxConfig()
+config = FlextConfig()
 database_url = config.get_required("DATABASE_URL")
 api_key = config.get_required("API_KEY")
 debug_mode = config.get_bool("DEBUG_MODE", False)

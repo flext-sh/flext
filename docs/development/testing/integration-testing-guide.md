@@ -1,12 +1,12 @@
-# 🔗 FLX Integration Testing Guide
+# 🔗 FLEXT Integration Testing Guide
 
 > **Function**: Component interaction testing for hexagonal architecture | **Audience**: Developers, test engineers, system architects | **Status**: Production-Ready
 
 [![Testing](https://img.shields.io/badge/testing-integration-blue.svg)](./index.md)
 [![Architecture](https://img.shields.io/badge/architecture-hexagonal-green.svg)](../../architecture/index.md)
-[![Framework](https://img.shields.io/badge/framework-FLX%200.4.0-orange.svg)](../../index.md)
+[![Framework](https://img.shields.io/badge/framework-FLEXT%200.4.0-orange.svg)](../../index.md)
 
-**Comprehensive integration testing guide for FLX component interactions, port-adapter contracts, and cross-layer data flow validation with realistic testing scenarios**
+**Comprehensive integration testing guide for FLEXT component interactions, port-adapter contracts, and cross-layer data flow validation with realistic testing scenarios**
 
 ---
 
@@ -24,7 +24,7 @@ Advanced testing guide focusing on component interactions, boundary validation, 
 
 ## Integration Testing Philosophy
 
-FLX integration testing embodies:
+FLEXT integration testing embodies:
 
 - **Realistic Interactions**: Test actual component integration with minimal mocking
 - **Boundary Validation**: Verify port-adapter contracts and layer boundaries
@@ -192,7 +192,7 @@ class TestUserServiceIntegration:
         event_bus = InMemoryEventBus()
 
         # Real logger with test configuration
-        logger = FlxLogger(
+        logger = FlextLogger(
             level=LogLevel.DEBUG,
             format=LogFormat.JSON
         )
@@ -294,7 +294,7 @@ class TestCrossLayerIntegration:
         """Create complete application stack for testing."""
         # Infrastructure layer
         config = TestConfiguration()
-        logger = FlxLogger(level=LogLevel.DEBUG)
+        logger = FlextLogger(level=LogLevel.DEBUG)
         event_bus = InMemoryEventBus()
 
         # Adapter layer
@@ -433,7 +433,7 @@ class TestInfrastructureIntegration:
         """Test logging integration across all application layers."""
         # Arrange
         log_capture = LogCapture()
-        logger = FlxLogger(
+        logger = FlextLogger(
             level=LogLevel.DEBUG,
             handlers=[log_capture]
         )
@@ -768,4 +768,4 @@ class TestResourceManagement:
 
 ---
 
-**📂 Content Document** | **🏠 Parent**: [Testing Hub](./index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Content Document** | **🏠 Parent**: [Testing Hub](./index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

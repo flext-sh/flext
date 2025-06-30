@@ -4,7 +4,7 @@
 
 [![Oracle Security](https://img.shields.io/badge/Oracle-Security-red.svg)](./index.md)
 [![Security](https://img.shields.io/badge/security-enterprise-critical.svg)](../../security/index.md)
-[![Framework](https://img.shields.io/badge/framework-FLX_0.4.0-orange.svg)](../../index.md)
+[![Framework](https://img.shields.io/badge/framework-FLEXT_0.4.0-orange.svg)](../../index.md)
 
 **Complete Oracle Warehouse Management Cloud security guide covering shared responsibility models, authentication mechanisms, authorization controls, and secure configuration practices for enterprise implementations**
 
@@ -469,7 +469,7 @@ Oracle WMS Cloud supports secure multi-tenancy through hierarchical organization
 
 - [Oracle Hub](./index.md) - Understanding Oracle integration architecture before implementing security
 - [Security Hub](../../security/index.md) - Framework security patterns and enterprise security concepts
-- [Getting Started Hub](../../getting-started/index.md) - FLX Framework installation and basic configuration
+- [Getting Started Hub](../../getting-started/index.md) - FLEXT Framework installation and basic configuration
 
 ### **Next Steps**
 
@@ -487,4 +487,4 @@ Oracle WMS Cloud supports secure multi-tenancy through hierarchical organization
 
 ---
 
-**📂 Hub**: [Oracle Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Oracle Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

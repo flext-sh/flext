@@ -6,7 +6,7 @@
 [![Decisions](https://img.shields.io/badge/decisions-tracked-blue.svg)](./0002-quality-gates-framework.md)
 [![Architecture](https://img.shields.io/badge/architecture-guided-orange.svg)](../../architecture/index.md)
 
-**Complete architectural decision records for FLX Framework - documenting key technical decisions, context, and rationale for engineering transparency**
+**Complete architectural decision records for FLEXT Framework - documenting key technical decisions, context, and rationale for engineering transparency**
 
 ---
 
@@ -137,4 +137,4 @@
 
 ---
 
-**📂 Section Hub** | **🏠 Parent**: [Engineering Hub](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Section Hub** | **🏠 Parent**: [Engineering Hub](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

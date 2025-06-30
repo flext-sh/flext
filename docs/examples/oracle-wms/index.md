@@ -4,7 +4,7 @@
 
 ## Overview
 
-Oracle Warehouse Management System (WMS) integration examples using FLX framework. Comprehensive examples covering API integrations, data transformations, and enterprise patterns.
+Oracle Warehouse Management System (WMS) integration examples using FLEXT framework. Comprehensive examples covering API integrations, data transformations, and enterprise patterns.
 
 ## Quick Links
 
@@ -74,4 +74,4 @@ Oracle Warehouse Management System (WMS) integration examples using FLX framewor
 
 ---
 
-_Part of the [FLX Framework Documentation](../../index.md)_
+_Part of the [FLEXT Framework Documentation](../../index.md)_

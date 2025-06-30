@@ -2,7 +2,7 @@
 
 > **Navigation**: [Documentation Home](../../index.md) → [Guides Hub](../index.md) → Hexagonal Implementation Guide
 
-**Practical guide for implementing hexagonal architecture with FLX Framework based on production patterns and source code analysis**
+**Practical guide for implementing hexagonal architecture with FLEXT Framework based on production patterns and source code analysis**
 
 ## 📋 **Table of Contents**
 
@@ -20,7 +20,7 @@
 
 ### **Step-by-Step Approach**
 
-Based on FLX Framework source code patterns, follow this implementation sequence:
+Based on FLEXT Framework source code patterns, follow this implementation sequence:
 
 ```
 1. Domain Layer (Core Business Logic)
@@ -329,7 +329,7 @@ class NotificationPort(ABC):
 
 ### **Database Adapter**
 
-Based on FLX patterns in `flext/adapters/base.py`:
+Based on FLEXT patterns in `flext/adapters/base.py`:
 
 ```python
 from flext.adapters.base import BaseAdapter
@@ -1173,7 +1173,7 @@ if __name__ == "__main__":
 ### **⬅️ Prerequisites**
 
 - [Architecture Hub](../../architecture/index.md) - Understanding hexagonal architecture patterns and design principles
-- [FLX Technical Reference](../../api-reference/flext-technical-reference.md) - Detailed technical documentation of framework components
+- [FLEXT Technical Reference](../../api-reference/flext-technical-reference.md) - Detailed technical documentation of framework components
 
 ### **➡️ Next Steps**
 
@@ -1199,4 +1199,4 @@ if __name__ == "__main__":
 
 ---
 
-**📂 Content Guide** | **🏠 Hub**: [Guides](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Content Guide** | **🏠 Hub**: [Guides](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

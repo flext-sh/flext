@@ -1,10 +1,10 @@
 # 🔧 Adapters - Implementation Hub
 
-> **Function**: FLX adapter implementation guides | **Audience**: Adapter developers
+> **Function**: FLEXT adapter implementation guides | **Audience**: Adapter developers
 
 [![Adapters](https://img.shields.io/badge/docs-adapter--guides-blue.svg)](../index.md)
 
-**Complete implementation guides for FLX framework adapters including Oracle integrations**
+**Complete implementation guides for FLEXT framework adapters including Oracle integrations**
 
 ---
 
@@ -35,7 +35,7 @@
 ### **⬅️ Prerequisites**
 
 - [Architecture Hub](../../architecture/index.md) - Essential understanding of hexagonal architecture and adapter patterns
-- [Getting Started Hub](../../getting-started/index.md) - FLX Framework installation and basic concepts required
+- [Getting Started Hub](../../getting-started/index.md) - FLEXT Framework installation and basic concepts required
 - [API Reference Hub](../../api-reference/index.md) - Understanding adapter interfaces and base classes
 
 ### **➡️ Next Steps**
@@ -148,4 +148,4 @@
 
 ---
 
-**📂 Section Hub** | **🏠 Parent**: [Guides Hub](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Section Hub** | **🏠 Parent**: [Guides Hub](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

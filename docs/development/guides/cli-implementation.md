@@ -1,12 +1,12 @@
-# FLX CLI Implementation Guide
+# FLEXT CLI Implementation Guide
 
 > **Function**: CLI development and implementation guide | **Audience**: CLI developers, tool maintainers | **Status**: Stable
 
 [![CLI](https://img.shields.io/badge/cli-cyclopts-blue.svg)](../tools/index.md)
 [![Implementation](https://img.shields.io/badge/implementation-modern-green.svg)](../index.md)
-[![Framework](https://img.shields.io/badge/framework-FLX_0.4.0-orange.svg)](../../index.md)
+[![Framework](https://img.shields.io/badge/framework-FLEXT_0.4.0-orange.svg)](../../index.md)
 
-**Complete guide for implementing and extending the FLX Framework command-line interface**
+**Complete guide for implementing and extending the FLEXT Framework command-line interface**
 
 ---
 
@@ -30,7 +30,7 @@
 
 ## 📋 **Overview**
 
-The FLX CLI provides a modern, user-friendly command-line interface for framework operations, project management, and development workflows. Built with Cyclopts for superior developer experience.
+The FLEXT CLI provides a modern, user-friendly command-line interface for framework operations, project management, and development workflows. Built with Cyclopts for superior developer experience.
 
 ### **Core Components**
 
@@ -53,7 +53,7 @@ The FLX CLI provides a modern, user-friendly command-line interface for framewor
 
 ### **CLI Adapter Integration**
 
-The CLI is implemented through the FLX adapter system:
+The CLI is implemented through the FLEXT adapter system:
 
 ```python
 from flext.adapters.inbound import CliAdapter
@@ -103,4 +103,4 @@ flext/
 
 ---
 
-**📂 Hub**: [Development Hub](../index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Development Hub](../index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

@@ -5,7 +5,7 @@
 [![Infrastructure](https://img.shields.io/badge/infrastructure-comprehensive-green.svg)](./index.md)
 [![Services](https://img.shields.io/badge/services-inventory-blue.svg)](../development/index.md)
 
-**Complete inventory of FLX infrastructure services with implementation roadmap and optimization guidelines**
+**Complete inventory of FLEXT infrastructure services with implementation roadmap and optimization guidelines**
 
 ---
 
@@ -60,7 +60,7 @@
 
 - `UnifiedAdapterManager`: Central adapter lifecycle management
 - `BaseLifecycleManager`: Common patterns for all managers
-- `FlxAdapterRegistry`: Service discovery and registration
+- `FlextAdapterRegistry`: Service discovery and registration
 
 **Features**:
 
@@ -523,4 +523,4 @@
 
 ---
 
-**📂 Hub**: [Infrastructure Hub](./index.md) | **🏠 Root**: [Documentation Home](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Infrastructure Hub](./index.md) | **🏠 Root**: [Documentation Home](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

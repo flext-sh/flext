@@ -4,7 +4,7 @@
 
 [![Testing](https://img.shields.io/badge/testing-failure--analysis-red.svg)](./index.md)
 [![Cases](https://img.shields.io/badge/cases-lessons--learned-orange.svg)](./assessment-protocols.md)
-[![Framework](https://img.shields.io/badge/framework-FLX%200.4.0-green.svg)](../../index.md)
+[![Framework](https://img.shields.io/badge/framework-FLEXT%200.4.0-green.svg)](../../index.md)
 
 **Detailed case studies of past failures and their prevention protocols for learning and improvement**
 
@@ -24,7 +24,7 @@
 
 - **📂 Section Hub**: [Testing Hub](./index.md)
 - **🏠 Documentation Root**: [Root Index](../../index.md)
-- **🔗 Source Code**: [FLX Testing](../../../flext/src/flext/testing/)
+- **🔗 Source Code**: [FLEXT Testing](../../../flext/src/flext/testing/)
 - **🔗 Related**: [Emergency Protocols](./emergency-protocols.md), [Assessment Protocols](./assessment-protocols.md)
 
 ---
@@ -112,7 +112,7 @@ python -c "import sys; sys.path.insert(0, 'flext-database-oracle/src'); import f
 
 ## 🚨 CASE STUDY: The Context Directory Catastrophe (2025-06-13)
 
-**FAILURE**: Tested FLX functionality from wrong directory, claimed entire system broken
+**FAILURE**: Tested FLEXT functionality from wrong directory, claimed entire system broken
 **ROOT CAUSE**: No directory context verification before technical assessment
 **IMPACT**: Hours wasted diagnosing non-existent problems
 **LESSON**: ALWAYS verify pwd before any import/functionality testing

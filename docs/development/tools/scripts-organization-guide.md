@@ -1,8 +1,8 @@
 # Scripts Organization and Management Guide
 
-> **Comprehensive guide for script organization, development, and maintenance across the FLX framework workspace**
+> **Comprehensive guide for script organization, development, and maintenance across the FLEXT framework workspace**
 
-This guide establishes the complete framework for managing Python scripts within the FLX workspace, implementing **[Development Standards](standardization-plan.md)** and following **[Architectural Consistency](../architecture/ARCHITECTURAL_CONSISTENCY_GUIDE.md)** principles.
+This guide establishes the complete framework for managing Python scripts within the FLEXT workspace, implementing **[Development Standards](standardization-plan.md)** and following **[Architectural Consistency](../architecture/ARCHITECTURAL_CONSISTENCY_GUIDE.md)** principles.
 
 ## Overview
 
@@ -553,4 +553,4 @@ For more information, consult:
 - **[Documentation Standards](../architecture/ARCHITECTURAL_CONSISTENCY_GUIDE.md)** - Framework conventions
 - **[Testing Strategies](TESTING_HEXAGONAL_ARCHITECTURE.md)** - Testing methodologies
 
-_This guide provides comprehensive coverage of script organization and management within the FLX framework workspace, ensuring consistency and maintainability across all development activities._
+_This guide provides comprehensive coverage of script organization and management within the FLEXT framework workspace, ensuring consistency and maintainability across all development activities._

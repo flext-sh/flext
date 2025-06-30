@@ -1,12 +1,12 @@
-# 🌱 Basic Examples - FLX Framework Fundamentals
+# 🌱 Basic Examples - FLEXT Framework Fundamentals
 
-> **Document Type**: Example Collection | **Audience**: New developers, framework beginners | **Scope**: Foundational FLX Framework patterns
+> **Document Type**: Example Collection | **Audience**: New developers, framework beginners | **Scope**: Foundational FLEXT Framework patterns
 
 [![Examples](https://img.shields.io/badge/examples-basic-green.svg)](../index.md)
-[![Framework](https://img.shields.io/badge/framework-FLX%200.4.0-blue.svg)](../../index.md)
+[![Framework](https://img.shields.io/badge/framework-FLEXT%200.4.0-blue.svg)](../../index.md)
 [![Beginner](https://img.shields.io/badge/level-beginner-brightgreen.svg)](../../getting-started/index.md)
 
-**Foundational examples demonstrating core FLX Framework concepts and hexagonal architecture patterns**
+**Foundational examples demonstrating core FLEXT Framework concepts and hexagonal architecture patterns**
 
 ---
 
@@ -16,9 +16,9 @@
 
 ## 📋 Overview
 
-The basic examples serve as your entry point to understanding FLX's hexagonal architecture, showcasing:
+The basic examples serve as your entry point to understanding FLEXT's hexagonal architecture, showcasing:
 
-- **Core Framework Patterns**: Fundamental usage of FLX's client, adapters, and lifecycle management
+- **Core Framework Patterns**: Fundamental usage of FLEXT's client, adapters, and lifecycle management
 - **Hexagonal Architecture**: Clear separation between domain logic and infrastructure adapters
 - **Production-Ready Patterns**: Best practices for configuration, error handling, and logging
 - **Essential Integrations**: HTTP clients, CLI interfaces, and adapter management
@@ -27,17 +27,17 @@ The basic examples serve as your entry point to understanding FLX's hexagonal ar
 
 ### `quickstart.py` - Framework Fundamentals
 
-**Purpose**: Demonstrates minimal yet production-ready FLX setup
+**Purpose**: Demonstrates minimal yet production-ready FLEXT setup
 
 - ✅ Basic client configuration and lifecycle management
 - ✅ HTTP adapter setup with production configurations
-- ✅ Structured logging with FlxLogger
+- ✅ Structured logging with FlextLogger
 - ✅ Health monitoring and metrics collection
 - ✅ Comprehensive error handling and resource cleanup
 
 ### `multi_protocol.py` - Multi-Adapter Integration
 
-**Purpose**: Shows how FLX coordinates multiple input/output mechanisms
+**Purpose**: Shows how FLEXT coordinates multiple input/output mechanisms
 
 - ✅ Multiple adapter registration (HTTP, CLI, Database)
 - ✅ Adapter lifecycle coordination and dependency management
@@ -62,8 +62,8 @@ The basic examples serve as your entry point to understanding FLX's hexagonal ar
 # Ensure virtual environment is activated
 source .venv/bin/activate
 
-# Verify FLX installation
-python -c "import flext; print('FLX framework loaded successfully')"
+# Verify FLEXT installation
+python -c "import flext; print('FLEXT framework loaded successfully')"
 
 # Set Python path for examples
 export PYTHONPATH=/home/marlonsc/pyauto/flext/src:$PYTHONPATH
@@ -93,7 +93,7 @@ FLX_LOG_LEVEL=DEBUG python examples/basic/multi_protocol.py
 
 Begin with the quickstart example to understand:
 
-- Basic FLX client setup and configuration
+- Basic FLEXT client setup and configuration
 - HTTP adapter integration with production settings
 - Structured logging and observability patterns
 - Proper resource management and cleanup
@@ -154,7 +154,7 @@ client = ApiClient()
 http_adapter = HttpClientAdapter(
     name="production_api",
     timeout=30.0,
-    headers={"User-Agent": "FLX/1.0"},
+    headers={"User-Agent": "FLEXT/1.0"},
     max_connections=10,
     enable_metrics=True
 )
@@ -201,7 +201,7 @@ except Exception as e:
 
 ```python
 # Initialize structured logger
-logger = FlxLogger("flext.examples.quickstart")
+logger = FlextLogger("flext.examples.quickstart")
 
 # Log with structured metadata
 logger.info("Operation completed", extra={
@@ -277,4 +277,4 @@ import asyncio
 
 ---
 
-**📂 Examples**: [Basic Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Examples**: [Basic Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

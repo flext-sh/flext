@@ -6,7 +6,7 @@
 [![Enterprise](https://img.shields.io/badge/enterprise-SOC2-blue.svg)](./security-architecture.md)
 [![Authentication](https://img.shields.io/badge/auth-JWT%2BRBAC-green.svg)](../../guides/authentication/index.md)
 
-**Complete security architecture patterns and threat models for enterprise FLX Framework applications**
+**Complete security architecture patterns and threat models for enterprise FLEXT Framework applications**
 
 ---
 
@@ -60,4 +60,4 @@
 
 ---
 
-**📂 Section Hub** | **🏠 Parent**: [Security Hub](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Section Hub** | **🏠 Parent**: [Security Hub](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

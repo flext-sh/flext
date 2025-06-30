@@ -1,12 +1,12 @@
-# 🏗️ FLX Unified Architecture Guide
+# 🏗️ FLEXT Unified Architecture Guide
 
-> **Function**: Complete architectural guide for FLX 0.4.0+ unified components | **Audience**: Architects, senior developers | **Status**: ✅ Validated
+> **Function**: Complete architectural guide for FLEXT 0.4.0+ unified components | **Audience**: Architects, senior developers | **Status**: ✅ Validated
 
 [![Architecture](https://img.shields.io/badge/architecture-unified-green.svg)](../../index.md)
 [![Validated](https://img.shields.io/badge/code-source%20verified-blue.svg)](#validation-notes)
 [![Production Ready](https://img.shields.io/badge/production-engines-orange.svg)](#production-engines)
 
-**Comprehensive architectural guidance for FLX Framework unified components - validated against actual implementations in `/flext/src/`**
+**Comprehensive architectural guidance for FLEXT Framework unified components - validated against actual implementations in `/flext/src/`**
 
 ---
 
@@ -18,12 +18,12 @@
 
 ## Overview
 
-The FLX framework has undergone comprehensive consolidation to eliminate code duplication, improve performance, and provide production-ready components. This guide explains the new unified architecture, its benefits, and implementation patterns.
+The FLEXT framework has undergone comprehensive consolidation to eliminate code duplication, improve performance, and provide production-ready components. This guide explains the new unified architecture, its benefits, and implementation patterns.
 
 ### **⬅️ Prerequisites**
 
-- [Architecture Hub](../index.md) - Essential understanding of FLX hexagonal architecture patterns and design principles
-- [Getting Started Hub](../../getting-started/index.md) - FLX Framework fundamentals including installation and basic concepts
+- [Architecture Hub](../index.md) - Essential understanding of FLEXT hexagonal architecture patterns and design principles
+- [Getting Started Hub](../../getting-started/index.md) - FLEXT Framework fundamentals including installation and basic concepts
 - [Migration Guide](../../migration/guides/migration-guide.md) - Critical migration patterns from legacy architectures to unified components
 
 ### **➡️ Next Steps**
@@ -54,7 +54,7 @@ The FLX framework has undergone comprehensive consolidation to eliminate code du
 
 ### Hexagonal Architecture Foundation
 
-The FLX unified architecture is built on hexagonal architecture principles:
+The FLEXT unified architecture is built on hexagonal architecture principles:
 
 ```
 ┌─────────────────┐
@@ -158,7 +158,7 @@ print(f"Cache utilization: {metrics['cache_utilization']}%")
 print(f"Running adapters: {metrics['running_adapters']}")
 ```
 
-### 2. FlxStandardLoggingService
+### 2. FlextStandardLoggingService
 
 **Location**: `/src/flext/infra/services/logging.py`
 
@@ -175,10 +175,10 @@ print(f"Running adapters: {metrics['running_adapters']}")
 **Basic Usage**:
 
 ```python
-from flext.infra.services.logging import FlxStandardLoggingService, LogContext
+from flext.infra.services.logging import FlextStandardLoggingService, LogContext
 
 # Initialize logging service
-logging_service = FlxStandardLoggingService("my_app")
+logging_service = FlextStandardLoggingService("my_app")
 logger = logging_service.get_logger("module_name")
 
 # Basic logging
@@ -642,7 +642,7 @@ class CacheApplication:
 ### 1. Error Handling
 
 ```python
-from flext.core.exceptions import FlxConnectionError, FlxTimeoutError
+from flext.core.exceptions import FlextConnectionError, FlextTimeoutError
 
 async def robust_service_operation():
     try:
@@ -654,11 +654,11 @@ async def robust_service_operation():
         await cache.set("key", "value")
         value = await cache.get("key")
 
-    except FlxConnectionError as e:
+    except FlextConnectionError as e:
         logger.error("Connection failed - Error: %s", str(e))
         # Fallback to alternative service or graceful degradation
 
-    except FlxTimeoutError as e:
+    except FlextTimeoutError as e:
         logger.warning("Operation timed out - Error: %s", str(e))
         # Retry with exponential backoff or use cached data
 
@@ -738,7 +738,7 @@ from typing import Optional
 
 @dataclass
 class UnifiedConfig:
-    """Unified configuration for all FLX components."""
+    """Unified configuration for all FLEXT components."""
 
     # Cache configuration
     cache_backend: str = "redis"
@@ -911,10 +911,10 @@ async def comprehensive_health_check():
 
 ## Validation Notes
 
-This architectural guide has been validated against actual FLX 0.4.0+ source code implementations:
+This architectural guide has been validated against actual FLEXT 0.4.0+ source code implementations:
 
 - ✅ **UnifiedAdapterManager**: Validated against `/flext/src/flext/infra/adapters/unified_manager.py`
-- ✅ **FlxStandardLoggingService**: Validated against `/flext/src/flext/infra/services/logging.py`
+- ✅ **FlextStandardLoggingService**: Validated against `/flext/src/flext/infra/services/logging.py`
 - ✅ **CacheService**: Validated against `/flext/src/flext/infra/cache/cache_service.py`
 - ✅ **Production Engines**: All engines confirmed to exist in `/flext/src/flext/infra/*/production_engine.py`
 - ✅ **Code Examples**: All examples tested against actual API implementations
@@ -927,7 +927,7 @@ This architectural guide has been validated against actual FLX 0.4.0+ source cod
 ### **⬅️ Prerequisites**
 
 - [Hexagonal Architecture](../index.md) - Core architectural patterns
-- [FLX Framework Basics](../../getting-started/index.md) - Framework fundamentals
+- [FLEXT Framework Basics](../../getting-started/index.md) - Framework fundamentals
 
 ### **➡️ Next Steps**
 
@@ -943,4 +943,4 @@ This architectural guide has been validated against actual FLX 0.4.0+ source cod
 
 ---
 
-**📄 Content Document** | **🏠 Parent**: [Architecture Section](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📄 Content Document** | **🏠 Parent**: [Architecture Section](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

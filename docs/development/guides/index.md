@@ -7,7 +7,7 @@
 [![Environment](https://img.shields.io/badge/environment-automated-purple.svg)](./environment-configuration.md)
 [![Troubleshooting](https://img.shields.io/badge/troubleshooting-comprehensive-orange.svg)](./troubleshooting-guide.md)
 
-**Enterprise development guides covering environment setup, Singer SDK integration, schema management, and troubleshooting for FLX Framework 0.4.0+**
+**Enterprise development guides covering environment setup, Singer SDK integration, schema management, and troubleshooting for FLEXT Framework 0.4.0+**
 
 ---
 
@@ -31,7 +31,7 @@
 
 ## 📊 **Overview**
 
-The Guides Hub provides comprehensive development tutorials and integration patterns for FLX Framework 0.4.0+. These guides cover environment setup, Singer SDK integration, schema management, and troubleshooting for enterprise development workflows.
+The Guides Hub provides comprehensive development tutorials and integration patterns for FLEXT Framework 0.4.0+. These guides cover environment setup, Singer SDK integration, schema management, and troubleshooting for enterprise development workflows.
 
 ### **Guide Categories**
 
@@ -106,4 +106,4 @@ The Guides Hub provides comprehensive development tutorials and integration patt
 
 ---
 
-**📂 Hub**: [Guides Hub](#) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Guides Hub](#) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

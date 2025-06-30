@@ -4,9 +4,9 @@
 
 [![Oracle WMS](https://img.shields.io/badge/oracle-wms-red.svg)](./index.md)
 [![CLI](https://img.shields.io/badge/cli-interface-blue.svg)](../../development/guides/cli-implementation.md)
-[![Framework](https://img.shields.io/badge/framework-FLX%200.4.0-orange.svg)](../../index.md)
+[![Framework](https://img.shields.io/badge/framework-FLEXT%200.4.0-orange.svg)](../../index.md)
 
-**Comprehensive command-line interface for Oracle WMS operations using the FLX Framework with validated implementation examples**
+**Comprehensive command-line interface for Oracle WMS operations using the FLEXT Framework with validated implementation examples**
 
 ---
 
@@ -24,21 +24,21 @@
 
 - **📂 Section Hub**: [Oracle Integration Hub](./index.md)
 - **🏠 Documentation Root**: [Root Index](../../index.md)
-- **🔗 Source Code**: [FLX Oracle WMS CLI](../../../flext_http_oracle_wms/scripts/)
+- **🔗 Source Code**: [FLEXT Oracle WMS CLI](../../../flext_http_oracle_wms/scripts/)
 - **🔗 Related**: [WMS Integration Guide](./oracle-wms-comprehensive-integration-guide.md), [CLI Implementation](../../development/guides/cli-implementation.md)
 
 ---
 
 ## 📋 **Overview**
 
-This guide provides comprehensive command-line interface usage for Oracle WMS operations using the FLX Framework. It covers installation, configuration, and all available CLI commands with practical examples.
+This guide provides comprehensive command-line interface usage for Oracle WMS operations using the FLEXT Framework. It covers installation, configuration, and all available CLI commands with practical examples.
 
 ## 🔗 **Cross-Section Navigation**
 
 ### **⬅️ Prerequisites**
 
 - [Oracle WMS Integration Guide](./oracle-wms-comprehensive-integration-guide.md) - Essential understanding of WMS client implementation and architecture
-- [Getting Started Hub](../../getting-started/index.md) - FLX Framework installation and environment setup required
+- [Getting Started Hub](../../getting-started/index.md) - FLEXT Framework installation and environment setup required
 - [Development Hub](../../development/index.md) - CLI development patterns and command-line interface fundamentals
 
 ### **➡️ Next Steps**
@@ -367,14 +367,14 @@ $ flext-http-oracle-wms get-record items NON_EXISTENT
    flext-http-oracle-wms --output-format json discover-entities
    ```
 
-## Integration with FLX Framework
+## Integration with FLEXT Framework
 
-The CLI is built on the FLX framework extension architecture, providing:
+The CLI is built on the FLEXT framework extension architecture, providing:
 
 - **Dynamic Discovery**: Automatically discovers available entities and operations
 - **Type Safety**: Runtime validation using Pydantic models
 - **Extensibility**: Easy to add new commands and functionality
-- **Standards Compliance**: Follows FLX framework patterns and conventions
+- **Standards Compliance**: Follows FLEXT framework patterns and conventions
 
 ## Troubleshooting
 
@@ -437,7 +437,7 @@ See the `examples/cli_usage.py` file for programmatic usage examples and additio
 ### **Prerequisites**
 
 - [Oracle WMS Integration Guide](./oracle-wms-comprehensive-integration-guide.md) - Understanding WMS client and configuration
-- [Getting Started](../../getting-started/index.md) - FLX Framework installation and environment setup
+- [Getting Started](../../getting-started/index.md) - FLEXT Framework installation and environment setup
 - [CLI Implementation Guide](../../development/guides/cli-implementation.md) - CLI development patterns and best practices
 
 ### **Next Steps**
@@ -473,4 +473,4 @@ For issues and questions:
 
 ---
 
-**📂 Hub**: [Oracle Integration Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Oracle Integration Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

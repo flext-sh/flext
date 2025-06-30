@@ -1,32 +1,32 @@
-# 🏆 PROVAS DE VALIDAÇÃO - PROJETO WMS FLX
+# 🏆 PROVAS DE VALIDAÇÃO - PROJETO WMS FLEXT
 
 **Data**: 06/01/2025
 **Status**: ✅ **TODAS AS VALIDAÇÕES PASSARAM**
 
 ## 📋 RESUMO EXECUTIVO
 
-O projeto **dc-oracle-wms** foi **COMPLETAMENTE MIGRADO** para o framework FLX conforme todos os requisitos solicitados. Todas as funcionalidades originais foram preservadas e agora utilizam a arquitetura hexagonal do FLX sem nenhuma redundância.
+O projeto **dc-oracle-wms** foi **COMPLETAMENTE MIGRADO** para o framework FLEXT conforme todos os requisitos solicitados. Todas as funcionalidades originais foram preservadas e agora utilizam a arquitetura hexagonal do FLEXT sem nenhuma redundância.
 
 ## 🎯 REQUISITOS ATENDIDOS
 
 ### ✅ 1. ZERO TOLERÂNCIA A FALHAS
 
-- **MyPy**: ✅ Sem erros de tipo (com configurações mínimas para FLX)
+- **MyPy**: ✅ Sem erros de tipo (com configurações mínimas para FLEXT)
 - **Ruff**: ✅ Sem erros de linting
 - **Pytest**: ✅ 20/20 testes passando
 - **Importações**: ✅ Todos os módulos importam sem erro
 
-### ✅ 2. ZERO REDUNDÂNCIA COM FLX
+### ✅ 2. ZERO REDUNDÂNCIA COM FLEXT
 
-- **WmsClient**: Herda de `HttpClientAdapter` do FLX (não reimplementa HTTP)
-- **WmsService**: Herda de `ApplicationService` do FLX (não reimplementa aplicação)
-- **WmsCli**: Usa `CycloptsCliAdapter` do FLX (não reimplementa CLI)
-- **Configuração**: Estende configuração HTTP do FLX (não duplica)
+- **WmsClient**: Herda de `HttpClientAdapter` do FLEXT (não reimplementa HTTP)
+- **WmsService**: Herda de `ApplicationService` do FLEXT (não reimplementa aplicação)
+- **WmsCli**: Usa `CycloptsCliAdapter` do FLEXT (não reimplementa CLI)
+- **Configuração**: Estende configuração HTTP do FLEXT (não duplica)
 
 ### ✅ 3. PRINCÍPIOS KISS, DRY, SOLID
 
 - **KISS**: Classes simples, uma responsabilidade cada
-- **DRY**: Zero duplicação de código entre projeto e FLX
+- **DRY**: Zero duplicação de código entre projeto e FLEXT
 - **SOLID**: Interfaces bem definidas, herança apropriada
 
 ### ✅ 4. TEST ENGINE SEM MOCKS
@@ -47,7 +47,7 @@ O projeto **dc-oracle-wms** foi **COMPLETAMENTE MIGRADO** para o framework FLX c
 - **WMS Operations**: create_lpn, receive_lpn, induct_lpn, pick_confirm
 - **Inquiries**: object_inquiry, inventory_inquiry, system_status
 - **Entities**: LPN, INVENTORY, ORDER, LOCATION, TASK com todas as operações
-- **CLI**: Todos os comandos WMS disponíveis via CLI integrado ao FLX
+- **CLI**: Todos os comandos WMS disponíveis via CLI integrado ao FLEXT
 
 ## 🧪 EVIDÊNCIAS DE EXECUÇÃO
 
@@ -83,7 +83,7 @@ python -m pytest tests/test_wms_engine.py -v
 
 ```bash
 WMS_URL=http://test.com WMS_USERNAME=test WMS_PASSWORD=test python -m src.flext_http_oracle_wms.cli --help
-# Mostra comandos WMS integrados ao FLX CLI
+# Mostra comandos WMS integrados ao FLEXT CLI
 ```
 
 ### 6. **Demonstração Completa**
@@ -102,20 +102,20 @@ python demo_validacao.py
 src/flext_http_oracle_wms/
 ├── __init__.py          # Exposição das APIs principais
 ├── __version__.py       # Versionamento
-├── config.py           # Configuração estendendo FLX HttpConfig
-├── client.py           # Cliente HTTP usando FLX HttpClientAdapter
-├── service.py          # Serviço de aplicação usando FLX Application
+├── config.py           # Configuração estendendo FLEXT HttpConfig
+├── client.py           # Cliente HTTP usando FLEXT HttpClientAdapter
+├── service.py          # Serviço de aplicação usando FLEXT Application
 ├── entities.py         # Factory de entidades WMS
-├── cli.py              # CLI usando FLX CycloptsCliAdapter
+├── cli.py              # CLI usando FLEXT CycloptsCliAdapter
 └── test_engine.py      # Engine de teste com implementações reais
 ```
 
-## 🔗 INTEGRAÇÃO COM FLX
+## 🔗 INTEGRAÇÃO COM FLEXT
 
 ### HttpClientAdapter
 
 ```python
-class WmsClient(HttpAdapter):  # Herda de FLX
+class WmsClient(HttpAdapter):  # Herda de FLEXT
     def __init__(self, config: WmsConfig) -> None:
         super().__init__(
             base_url=config.base_url,
@@ -128,7 +128,7 @@ class WmsClient(HttpAdapter):  # Herda de FLX
 ### ApplicationService
 
 ```python
-class WmsService(ApplicationService):  # Herda de FLX
+class WmsService(ApplicationService):  # Herda de FLEXT
     def __init__(self, config: WmsConfig) -> None:
         super().__init__(
             name="WmsService",
@@ -140,12 +140,12 @@ class WmsService(ApplicationService):  # Herda de FLX
 ### CycloptsCliAdapter
 
 ```python
-class FlxWmsCliAdapter(CycloptsCliAdapter):  # Herda de FLX
+class FlextWmsCliAdapter(CycloptsCliAdapter):  # Herda de FLEXT
     def __init__(self, **kwargs: Any) -> None:
         kwargs.update({
             "app_name": "flext-wms",
             "app_version": __version__,
-            "help_text": "Oracle WMS operations powered by FLX Framework",
+            "help_text": "Oracle WMS operations powered by FLEXT Framework",
         })
         super().__init__(**kwargs)
 ```
@@ -159,7 +159,7 @@ class FlxWmsCliAdapter(CycloptsCliAdapter):  # Herda de FLX
 | **Test Coverage**           | 42%   | ⚠️ (CLI/Client não testados em E2E) |
 | **Tests Passing**           | 20/20 | ✅                                  |
 | **Code Redundancy**         | 0%    | ✅                                  |
-| **FLX Integration**         | 100%  | ✅                                  |
+| **FLEXT Integration**         | 100%  | ✅                                  |
 | **Functionality Preserved** | 100%  | ✅                                  |
 
 ## 🚀 FUNCIONALIDADES DEMONSTRADAS
@@ -191,7 +191,7 @@ class FlxWmsCliAdapter(CycloptsCliAdapter):  # Herda de FLX
 
 ### ✅ CLI Integrado
 
-- Comandos WMS no CLI do FLX
+- Comandos WMS no CLI do FLEXT
 - Help contextual
 - Configuração via environment
 - Output formatado
@@ -207,13 +207,13 @@ class FlxWmsCliAdapter(CycloptsCliAdapter):  # Herda de FLX
 
 **✅ PROJETO 100% VALIDADO**
 
-Todas as funcionalidades do módulo WMS foram **MIGRADAS COM SUCESSO** para o framework FLX, atendendo a **TODOS** os requisitos:
+Todas as funcionalidades do módulo WMS foram **MIGRADAS COM SUCESSO** para o framework FLEXT, atendendo a **TODOS** os requisitos:
 
 1. **✅ Zero tolerância a falhas**: MyPy e Ruff limpos
-2. **✅ Zero redundância**: Reutiliza 100% do FLX onde aplicável
+2. **✅ Zero redundância**: Reutiliza 100% do FLEXT onde aplicável
 3. **✅ Princípios KISS/DRY/SOLID**: Aplicados rigorosamente
 4. **✅ Test engine real**: Sem mocks, implementações completas
 5. **✅ Funcionalidades preservadas**: 100% das operações WMS mantidas
-6. **✅ Integração FLX**: Herança apropriada de todos componentes
+6. **✅ Integração FLEXT**: Herança apropriada de todos componentes
 
 O projeto está **PRONTO PARA PRODUÇÃO** e demonstra a **EXCELÊNCIA TÉCNICA** solicitada.

@@ -6,7 +6,7 @@
 [![DDD](https://img.shields.io/badge/DDD-patterns-green.svg)](../../architecture/patterns/domain-driven-design-patterns.md)
 [![Python](https://img.shields.io/badge/python-3.13+-orange.svg)](../../getting-started/setup/installation-guide.md)
 
-**Foundational abstractions for building domain objects in FLX hexagonal architecture implementing Domain-Driven Design patterns with Python 3.13+ features and Pydantic validation - validated against production implementations**
+**Foundational abstractions for building domain objects in FLEXT hexagonal architecture implementing Domain-Driven Design patterns with Python 3.13+ features and Pydantic validation - validated against production implementations**
 
 ---
 
@@ -22,13 +22,13 @@
 
 ## Overview
 
-The Core Base module provides foundational abstractions for building domain objects in the FLX hexagonal architecture framework. It implements Domain-Driven Design (DDD) patterns using Python 3.13+ features and Pydantic for robust domain modeling with validation, immutability, and type safety.
+The Core Base module provides foundational abstractions for building domain objects in the FLEXT hexagonal architecture framework. It implements Domain-Driven Design (DDD) patterns using Python 3.13+ features and Pydantic for robust domain modeling with validation, immutability, and type safety.
 
 ## Classes
 
 ### DomainObject
 
-Abstract base class for all domain objects in the FLX hexagonal architecture.
+Abstract base class for all domain objects in the FLEXT hexagonal architecture.
 
 ```python
 from flext.core.base import DomainObject
@@ -598,7 +598,7 @@ async def test_optimistic_locking():
 
 ---
 
-**📂 API Reference** | **🏠 Parent**: [Core APIs Hub](./index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 API Reference** | **🏠 Parent**: [Core APIs Hub](./index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11
 
 ```
 

@@ -6,7 +6,7 @@
 [![Reliability](https://img.shields.io/badge/reliability-SLA_focused-green.svg)](./service-patterns.md)
 [![Observability](https://img.shields.io/badge/observability-complete-orange.svg)](../development/testing/index.md)
 
-**Production operational excellence patterns for FLX Framework infrastructure services**
+**Production operational excellence patterns for FLEXT Framework infrastructure services**
 
 ---
 
@@ -20,7 +20,7 @@
 
 ### **Production Readiness Principles**
 
-Operational excellence in FLX infrastructure focuses on **reliability**, **observability**, and **performance** in production environments:
+Operational excellence in FLEXT infrastructure focuses on **reliability**, **observability**, and **performance** in production environments:
 
 **🔍 Observability Foundation**
 
@@ -616,7 +616,7 @@ class MultiTierCache:
 
 ### **Production Observability Infrastructure**
 
-The FLX framework includes a comprehensive observability stack validated against the `/flext/src/flext/infra/observability/` implementation with production-grade monitoring:
+The FLEXT framework includes a comprehensive observability stack validated against the `/flext/src/flext/infra/observability/` implementation with production-grade monitoring:
 
 ```
 /flext/src/flext/infra/observability/
@@ -752,11 +752,11 @@ analytics.track_event("order.completed", {
 ## 📋 **Operational Metadata**
 
 - **Guide Version**: 1.0.0
-- **Framework Compatibility**: FLX 0.4.0+
+- **Framework Compatibility**: FLEXT 0.4.0+
 - **Operational Standards**: Production SLA compliance
 - **Last Updated**: June 11, 2025
 - **Implementation Status**: ✅ Production-ready operational patterns
 
 ---
 
-**📂 Infrastructure**: [Infrastructure Hub](./index.md) | **🏠 Root**: [Documentation Home](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Infrastructure**: [Infrastructure Hub](./index.md) | **🏠 Root**: [Documentation Home](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

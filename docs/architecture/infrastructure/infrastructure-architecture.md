@@ -6,7 +6,7 @@
 [![Architecture](https://img.shields.io/badge/architecture-hexagonal-orange.svg)](../index.md)
 [![Implementation](https://img.shields.io/badge/implementation-enterprise-green.svg)](../../guides/index.md)
 
-**Complete infrastructure architecture guide for FLX Framework deployment, service management, and enterprise-grade infrastructure patterns**
+**Complete infrastructure architecture guide for FLEXT Framework deployment, service management, and enterprise-grade infrastructure patterns**
 
 ---
 
@@ -31,7 +31,7 @@
 
 ## =� **Overview**
 
-The Infrastructure Architecture defines how FLX Framework applications are deployed, managed, and scaled in production environments. This includes service management, resource orchestration, monitoring, and operational excellence patterns.
+The Infrastructure Architecture defines how FLEXT Framework applications are deployed, managed, and scaled in production environments. This includes service management, resource orchestration, monitoring, and operational excellence patterns.
 
 ### **Architecture Principles**
 
@@ -376,4 +376,4 @@ class ResourceOptimization:
 
 ---
 
-**=� Hub**: [Infrastructure Hub](./index.md) | **<� Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**=� Hub**: [Infrastructure Hub](./index.md) | **<� Root**: [Documentation Home](../../index.md) | **FrameworkFLEXT FLEXT 0.4.0+ | **Updated**: 2025-06-11

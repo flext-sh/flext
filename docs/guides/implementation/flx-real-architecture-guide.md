@@ -1,12 +1,12 @@
-# 🏗️ FLX Real Architecture Implementation Guide
+# 🏗️ FLEXT Real Architecture Implementation Guide
 
-> **Function**: Complete guide to FLX Framework implementation based on actual source code | **Audience**: Architects, senior developers | **Status**: ✅ Source Code Validated
+> **Function**: Complete guide to FLEXT Framework implementation based on actual source code | **Audience**: Architects, senior developers | **Status**: ✅ Source Code Validated
 
 [![Architecture](https://img.shields.io/badge/architecture-hexagonal-green.svg)](../../architecture/index.md)
 [![Source Validated](https://img.shields.io/badge/source-code%20validated-blue.svg)](#source-code-analysis)
 [![Production Ready](https://img.shields.io/badge/production-ready-orange.svg)](#production-components)
 
-**Complete architectural guide based on actual FLX Framework implementation in `/flext/src/` - validated against real source code**
+**Complete architectural guide based on actual FLEXT Framework implementation in `/flext/src/` - validated against real source code**
 
 ---
 
@@ -21,7 +21,7 @@
 ### **⬅️ Prerequisites**
 
 - [Architecture Hub](../../architecture/index.md) - Understanding hexagonal architecture principles before implementation details
-- [Getting Started Hub](../../getting-started/index.md) - FLX Framework installation and environment setup required
+- [Getting Started Hub](../../getting-started/index.md) - FLEXT Framework installation and environment setup required
 - [API Reference Hub](../../api-reference/index.md) - Understanding core APIs and interfaces used in implementation
 
 ### **➡️ Next Steps**
@@ -189,21 +189,21 @@ class UnifiedAdapterManager(BaseLifecycleManager):
 
     def __init__(
         self,
-        registry: FlxAdapterRegistry | None = None,
+        registry: FlextAdapterRegistry | None = None,
         enable_messaging_features: bool = True,
         instance_cache_size: int = 100,
         **kwargs: Any,
     ) -> None:
         """Initialize unified adapter manager."""
         self._registry = registry or flext_get_adapter_registry()
-        self._instance_cache: dict[str, FlxBaseAdapter] = {}
+        self._instance_cache: dict[str, FlextBaseAdapter] = {}
         self._messaging_enabled = enable_messaging_features
 
     async def initialize_adapter(
         self,
         adapter_type: str,
         config: dict[str, Any]
-    ) -> FlxBaseAdapter:
+    ) -> FlextBaseAdapter:
         """Initialize adapter with caching and lifecycle management."""
         cache_key = f"{adapter_type}:{hash(str(config))}"
 
@@ -279,7 +279,7 @@ class HttpClientService:
 ```python
 # Real implementation from /flext_http_oracle_wms/src/flext_http_oracle_wms/wms_client.py
 class WmsClient:
-    """WMS client using FLX HttpClientService with full WMS operations."""
+    """WMS client using FLEXT HttpClientService with full WMS operations."""
 
     def __init__(self, config: WmsConfig) -> None:
         """Initialize WMS client."""
@@ -317,7 +317,7 @@ class WmsClient:
 **Key Features (Actually Implemented):**
 
 - ✅ **Endpoint Discovery**: Dynamic Oracle WMS endpoint discovery
-- ✅ **FLX Integration**: Uses FLX HttpClientService
+- ✅ **FLEXT Integration**: Uses FLEXT HttpClientService
 - ✅ **Error Handling**: Robust error recovery
 - ✅ **Production Timeouts**: 300s timeout for large operations
 - ✅ **Header Management**: Oracle-specific authentication headers
@@ -433,4 +433,4 @@ class HexagonalTestEngine:
 
 ---
 
-**📄 Content Document** | **🏠 Parent**: [Implementation Hub](./index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📄 Content Document** | **🏠 Parent**: [Implementation Hub](./index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

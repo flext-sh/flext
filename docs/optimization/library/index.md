@@ -6,7 +6,7 @@
 [![Dependencies](https://img.shields.io/badge/dependencies-optimized-blue.svg)](../index.md)
 [![Modernization](https://img.shields.io/badge/modernization-planned-orange.svg)](./library-integration-plan.md)
 
-**Complete library optimization strategies for FLX Framework - integration planning, dependency management, and library modernization**
+**Complete library optimization strategies for FLEXT Framework - integration planning, dependency management, and library modernization**
 
 ---
 
@@ -124,4 +124,4 @@
 
 ---
 
-**📂 Section Hub** | **🏠 Parent**: [Optimization Hub](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Section Hub** | **🏠 Parent**: [Optimization Hub](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

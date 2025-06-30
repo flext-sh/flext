@@ -2,12 +2,12 @@
 
 > **Related Documentation:**
 >
-> - [FLX Framework Overview](../getting-started/flext-framework-overview.md) - Main framework introduction
+> - [FLEXT Framework Overview](../getting-started/flext-framework-overview.md) - Main framework introduction
 > - [Development Standards](../development/standardization-plan.md) - Code quality standards
 > - [Testing Comprehensive Guide](../development/testing-comprehensive-guide.md) - Testing strategies
 > - [Hexagonal Architecture Guide](../architecture/UNIFIED_ARCHITECTURE_GUIDE.md) - Architecture principles
 
-A comprehensive Python client library and CLI tools template for RESTful APIs, inspired by production-grade implementations and following FLX framework patterns.
+A comprehensive Python client library and CLI tools template for RESTful APIs, inspired by production-grade implementations and following FLEXT framework patterns.
 
 ## Features
 
@@ -19,7 +19,7 @@ A comprehensive Python client library and CLI tools template for RESTful APIs, i
 - **Advanced Pagination**: Automatic handling of various pagination formats with iterator interface
 - **Rich CLI Tools**: Command-line tools for configuration, entity, and schema operations
 - **Type Safety**: Full type annotations and validation with Pydantic
-- **Hexagonal Architecture**: Follows FLX framework architectural patterns
+- **Hexagonal Architecture**: Follows FLEXT framework architectural patterns
 
 ## Installation
 
@@ -37,7 +37,7 @@ poetry install
 
 ## Configuration
 
-The API client can be configured in several ways, following FLX configuration patterns:
+The API client can be configured in several ways, following FLEXT configuration patterns:
 
 ### Environment Variables
 
@@ -77,7 +77,7 @@ You can also create JSON configuration files:
 ```json
 {
   "url": "https://api.example.com",
-  "username": "your-username", 
+  "username": "your-username",
   "password": "your-password",
   "timeout": 60,
   "verify_ssl": true
@@ -86,7 +86,7 @@ You can also create JSON configuration files:
 
 ## CLI Usage
 
-The API client provides several command-line tools following FLX CLI patterns:
+The API client provides several command-line tools following FLEXT CLI patterns:
 
 ### Configuration Management
 
@@ -134,7 +134,7 @@ cli-tool schema view users --schema-dir schemas --format json
 
 ## Python API Usage
 
-### Basic Client Usage (Following FLX Adapter Patterns)
+### Basic Client Usage (Following FLEXT Adapter Patterns)
 
 ```python
 from project_name import ApiClient, ApiResponse
@@ -272,7 +272,7 @@ if response.page_info.has_next:
     )
 ```
 
-## Error Handling (Following FLX Exception Patterns)
+## Error Handling (Following FLEXT Exception Patterns)
 
 ```python
 from project_name import ApiClient, ApiError, ConnectionError, AuthenticationError
@@ -280,15 +280,15 @@ from project_name import ApiClient, ApiError, ConnectionError, AuthenticationErr
 try:
     client = ApiClient()
     response = client.get("users")
-    
+
     if not response.success:
         print(f"API returned an error: {response.error}")
         if response.error_details:
             print(f"Details: {response.error_details}")
-    
+
     # Process successful response
     users = response.data
-    
+
 except ConnectionError as e:
     print(f"Connection error: {str(e)}")
 except AuthenticationError as e:
@@ -299,7 +299,7 @@ except ApiError as e:
 
 ## Architecture Pattern (Hexagonal Architecture)
 
-This template follows FLX hexagonal architecture principles:
+This template follows FLEXT hexagonal architecture principles:
 
 ```python
 # Domain Layer - Pure business logic
@@ -309,7 +309,7 @@ class User:
         self.id = id
         self.name = name
         self.email = email
-    
+
     def is_active(self) -> bool:
         """Business logic for determining if user is active."""
         return self.status == "active"
@@ -319,12 +319,12 @@ from abc import ABC, abstractmethod
 
 class UserRepositoryPort(ABC):
     """Port interface for user repository."""
-    
+
     @abstractmethod
     async def get_user(self, user_id: str) -> User:
         """Get user by ID."""
         pass
-    
+
     @abstractmethod
     async def create_user(self, user: User) -> User:
         """Create a new user."""
@@ -333,10 +333,10 @@ class UserRepositoryPort(ABC):
 # Adapter Implementation - Concrete API integration
 class ApiUserRepository(UserRepositoryPort):
     """Adapter implementing user repository via API."""
-    
+
     def __init__(self, api_client: ApiClient):
         self._api_client = api_client
-    
+
     async def get_user(self, user_id: str) -> User:
         """Get user from API."""
         response = await self._api_client.get(f"users/{user_id}")
@@ -348,7 +348,7 @@ class ApiUserRepository(UserRepositoryPort):
                 email=data["email"]
             )
         raise UserNotFoundError(f"User {user_id} not found")
-    
+
     async def create_user(self, user: User) -> User:
         """Create user via API."""
         user_data = {
@@ -368,10 +368,10 @@ class ApiUserRepository(UserRepositoryPort):
 # Application Service - Coordinates domain and infrastructure
 class UserService:
     """Application service for user operations."""
-    
+
     def __init__(self, user_repository: UserRepositoryPort):
         self._user_repository = user_repository
-    
+
     async def get_active_user(self, user_id: str) -> User:
         """Get user and validate they are active."""
         user = await self._user_repository.get_user(user_id)
@@ -392,7 +392,7 @@ poetry install --with dev
 pre-commit install
 ```
 
-### Testing (Following FLX Testing Patterns)
+### Testing (Following FLEXT Testing Patterns)
 
 ```bash
 # Run tests
@@ -410,7 +410,7 @@ pytest tests/unit/
 # Run integration tests
 pytest tests/integration/
 
-# Run with FLX test markers
+# Run with FLEXT test markers
 pytest -m "not slow"
 pytest -m "integration"
 ```
@@ -423,18 +423,18 @@ from unittest.mock import AsyncMock
 from project_name import UserService, User
 
 class TestUserService:
-    """Test user service following FLX testing patterns."""
-    
+    """Test user service following FLEXT testing patterns."""
+
     @pytest.fixture
     def mock_user_repository(self):
         """Mock user repository for testing."""
         return AsyncMock(spec=UserRepositoryPort)
-    
+
     @pytest.fixture
     def user_service(self, mock_user_repository):
         """User service with mocked dependencies."""
         return UserService(mock_user_repository)
-    
+
     @pytest.mark.asyncio
     async def test_get_active_user_success(self, user_service, mock_user_repository):
         """Test getting an active user."""
@@ -442,14 +442,14 @@ class TestUserService:
         user = User(id="123", name="John Doe", email="john@example.com")
         user.status = "active"
         mock_user_repository.get_user.return_value = user
-        
+
         # Act
         result = await user_service.get_active_user("123")
-        
+
         # Assert
         assert result == user
         mock_user_repository.get_user.assert_called_once_with("123")
-    
+
     @pytest.mark.asyncio
     async def test_get_active_user_inactive_raises_error(self, user_service, mock_user_repository):
         """Test that inactive user raises error."""
@@ -457,7 +457,7 @@ class TestUserService:
         user = User(id="123", name="John Doe", email="john@example.com")
         user.status = "inactive"
         mock_user_repository.get_user.return_value = user
-        
+
         # Act & Assert
         with pytest.raises(InactiveUserError):
             await user_service.get_active_user("123")
@@ -477,26 +477,26 @@ black .
 isort .
 ```
 
-## Project Structure (FLX-Aligned)
+## Project Structure (FLEXT-Aligned)
 
 ```
 project_name/                 # Main package
 ├── __init__.py               # Package initialization and exports
-├── core/                     # Domain layer (FLX pattern)
+├── core/                     # Domain layer (FLEXT pattern)
 │   ├── entities.py          # Domain entities
 │   ├── value_objects.py     # Value objects
 │   ├── events.py            # Domain events
 │   └── exceptions.py        # Domain exceptions
-├── ports/                    # Port interfaces (FLX pattern)
+├── ports/                    # Port interfaces (FLEXT pattern)
 │   ├── inbound/             # Inbound ports
 │   └── outbound/            # Outbound ports (repository, etc.)
-├── adapters/                 # Adapter implementations (FLX pattern)
+├── adapters/                 # Adapter implementations (FLEXT pattern)
 │   ├── inbound/             # CLI adapters
 │   └── outbound/            # API client adapters
-├── application/              # Application services (FLX pattern)
+├── application/              # Application services (FLEXT pattern)
 │   ├── services.py          # Application services
 │   └── commands.py          # Command handlers
-├── infrastructure/           # Infrastructure layer (FLX pattern)
+├── infrastructure/           # Infrastructure layer (FLEXT pattern)
 │   ├── config.py            # Configuration management
 │   ├── client.py            # HTTP client implementation
 │   └── logging.py           # Logging utilities
@@ -504,7 +504,7 @@ project_name/                 # Main package
 │   ├── __init__.py
 │   ├── commands.py          # CLI commands
 │   └── formatters.py        # Output formatters
-tests/                        # Test suite (FLX pattern)
+tests/                        # Test suite (FLEXT pattern)
 ├── unit/                     # Unit tests
 │   ├── core/                # Domain tests
 │   ├── application/         # Application service tests
@@ -522,9 +522,9 @@ examples/                     # Example code
 └── entity_example.py        # Entity API example
 ```
 
-## Customization for FLX Framework
+## Customization for FLEXT Framework
 
-This template is designed to be customized for your specific API while following FLX patterns:
+This template is designed to be customized for your specific API while following FLEXT patterns:
 
 1. **Replace `project_name`** with your actual project name
 2. **Update domain entities** to match your API's business domain
@@ -532,9 +532,9 @@ This template is designed to be customized for your specific API while following
 4. **Implement adapters** for your API's endpoints
 5. **Create application services** for your business workflows
 6. **Extend CLI** with commands for your API's operations
-7. **Add comprehensive tests** following FLX testing patterns
+7. **Add comprehensive tests** following FLEXT testing patterns
 
-## Best Practices (FLX Aligned)
+## Best Practices (FLEXT Aligned)
 
 ### Domain-Driven Design
 
@@ -572,7 +572,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Follow FLX development standards
+3. Follow FLEXT development standards
 4. Write comprehensive tests
 5. Commit your changes (`git commit -m 'Add some amazing feature'`)
 6. Push to the branch (`git push origin feature/amazing-feature`)
@@ -580,7 +580,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## See Also
 
-- [FLX Framework Overview](../getting-started/flext-framework-overview.md) - Framework introduction
+- [FLEXT Framework Overview](../getting-started/flext-framework-overview.md) - Framework introduction
 - [Hexagonal Architecture Guide](../architecture/UNIFIED_ARCHITECTURE_GUIDE.md) - Architecture principles
 - [Testing Patterns](../development/testing-comprehensive-guide.md) - Testing strategies
 - [Development Standards](../development/standardization-plan.md) - Code quality guidelines

@@ -1,10 +1,10 @@
 # Port Implementation Guide - Architecture
 
-> **Function**: Complete port interface implementation guide validated against real FLX port code | **Audience**: Port designers, framework developers | **Status**: ✅ VALIDATED
+> **Function**: Complete port interface implementation guide validated against real FLEXT port code | **Audience**: Port designers, framework developers | **Status**: ✅ VALIDATED
 
 [![Ports](https://img.shields.io/badge/layer-ports-purple.svg)](./index.md)
 [![Validated](https://img.shields.io/badge/source-validated-orange.svg)](../../../flext/src/flext/ports/)
-[![Framework](https://img.shields.io/badge/framework-FLX%200.4.0-orange.svg)](../index.md)
+[![Framework](https://img.shields.io/badge/framework-FLEXT%200.4.0-orange.svg)](../index.md)
 
 **Comprehensive port interface implementation guide validated against actual production port code in `/flext/src/flext/ports/`**
 
@@ -24,7 +24,7 @@
 
 - **📂 Section Hub**: [Architecture Hub](../index.md)
 - **🏠 Documentation Root**: [Root Index](../../index.md)
-- **🔗 Source Code**: [FLX Ports](../../../flext/src/flext/ports/)
+- **🔗 Source Code**: [FLEXT Ports](../../../flext/src/flext/ports/)
 - **🔗 Related**: [Adapters Hub](../adapters/index.md), [Core Domain](../layers/core-domain-layer.md)
 
 ---
@@ -33,7 +33,7 @@
 
 ### Hexagonal Architecture Position
 
-Ports define the interfaces between the domain layer and external systems in FLX hexagonal architecture:
+Ports define the interfaces between the domain layer and external systems in FLEXT hexagonal architecture:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -93,7 +93,7 @@ from abc import ABC, abstractmethod
 from typing import Protocol, Any
 
 class BasePort(Protocol):
-    """Base protocol for all FLX ports."""
+    """Base protocol for all FLEXT ports."""
 
     async def connect(self) -> None:
         """Establish connection to external system."""
@@ -840,4 +840,4 @@ class ValidatedPort(Protocol):
 
 ---
 
-**📂 Hub**: [Architecture Hub](../index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Architecture Hub](../index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

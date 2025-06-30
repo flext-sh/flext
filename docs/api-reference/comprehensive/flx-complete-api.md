@@ -1,12 +1,12 @@
-# 📚 FLX Framework - Complete API Reference
+# 📚 FLEXT Framework - Complete API Reference
 
-> **Function**: Complete FLX Framework API documentation | **Audience**: All developers, architects | **Status**: Production-Ready
+> **Function**: Complete FLEXT Framework API documentation | **Audience**: All developers, architects | **Status**: Production-Ready
 
 [![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/)
 [![Type Checked](https://img.shields.io/badge/type--checked-mypy-blue)](http://mypy-lang.org/)
 [![Source](https://img.shields.io/badge/source-validated-green.svg)](../../index.md)
 
-**Complete API reference for FLX Framework 0.4.0+ generated from actual source code with type safety and production validation - verified against `/flext/src/flext/` implementation**
+**Complete API reference for FLEXT Framework 0.4.0+ generated from actual source code with type safety and production validation - verified against `/flext/src/flext/` implementation**
 
 ---
 
@@ -153,14 +153,14 @@ event = UserRegistered(
 - `with_correlation(correlation_id: UUID) -> DomainEvent`
 - `with_causation(causation_id: UUID) -> DomainEvent`
 
-#### `FlxDomainEvent(DomainEvent)`
+#### `FlextDomainEvent(DomainEvent)`
 
 **Location**: `/flext/src/flext/core/events.py:338`
 
-FLX-specific events with multi-tenancy and routing.
+FLEXT-specific events with multi-tenancy and routing.
 
 ```python
-class TenantUserRegistered(FlxDomainEvent):
+class TenantUserRegistered(FlextDomainEvent):
     user_id: str
     email: str
 
@@ -616,7 +616,7 @@ Infrastructure services provide specific error types:
 
 ### **⬅️ Essential Prerequisites**
 
-- [**Framework Installation**](../../getting-started/setup/installation-guide.md) - Python 3.13+ setup and FLX Framework installation required for API usage
+- [**Framework Installation**](../../getting-started/setup/installation-guide.md) - Python 3.13+ setup and FLEXT Framework installation required for API usage
 - [**Core API Concepts**](../core/index.md) - Core API foundation including base classes and domain events essential for understanding complete API
 - [**Architecture Understanding**](../../architecture/design/unified-architecture-guide.md) - Hexagonal architecture patterns underlying all API design decisions
 
@@ -637,7 +637,7 @@ Infrastructure services provide specific error types:
 
 ---
 
-**📂 API Reference** | **🏠 Parent**: [Comprehensive API Hub](./index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 API Reference** | **🏠 Parent**: [Comprehensive API Hub](./index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11
 
 **API Reference Version**: 1.0.0
 **Generated From**: `/flext/src/flext/` codebase

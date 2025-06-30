@@ -1,10 +1,10 @@
-# FLX-Meltano Integration Guide - Integration Guides
+# FLEXT-Meltano Integration Guide - Integration Guides
 
 > **Function**: Complete integration with Meltano for data pipeline orchestration | **Audience**: Data engineers, integration developers | **Status**: ✅ VALIDATED
 
 [![Integration](https://img.shields.io/badge/integration-meltano-blue.svg)](./index.md)
 [![Meltano](https://img.shields.io/badge/meltano-native-orange.svg)](https://meltano.com)
-[![Framework](https://img.shields.io/badge/framework-FLX%200.4.0-green.svg)](../../index.md)
+[![Framework](https://img.shields.io/badge/framework-FLEXT%200.4.0-green.svg)](../../index.md)
 
 **Complete integration with Meltano enabling native plugin usage, workflow orchestration, and Airflow integration**
 
@@ -24,23 +24,23 @@
 
 - **📂 Section Hub**: [Integration Guides](./index.md)
 - **🏠 Documentation Root**: [Root Index](../../index.md)
-- **🔗 Source Code**: [FLX Meltano](../../../flext/src/flext/integrations/meltano/)
+- **🔗 Source Code**: [FLEXT Meltano](../../../flext/src/flext/integrations/meltano/)
 - **🔗 Related**: [Architecture Evolution](../../architecture/flext-2.0-architecture.md), [Meltano Plugins](../../meltano-plugins/index.md)
 
 ---
 
 ## 📋 **Overview**
 
-The FLX framework now includes complete integration with Meltano, allowing you to use all Meltano plugins (tap-_, target-_, etc.) as native FLX adapters with full workflow orchestration, state management, and Airflow integration.
+The FLEXT framework now includes complete integration with Meltano, allowing you to use all Meltano plugins (tap-_, target-_, etc.) as native FLEXT adapters with full workflow orchestration, state management, and Airflow integration.
 
 ## Key Features
 
 ### 🔌 **Native Plugin Integration**
 
-- Use any Meltano plugin as a native FLX adapter
+- Use any Meltano plugin as a native FLEXT adapter
 - Full support for extractors (tap-_), loaders (target-_), transformers (dbt), and utilities
 - Automatic plugin discovery from Meltano Hub
-- Plugin configuration management through FLX interfaces
+- Plugin configuration management through FLEXT interfaces
 
 ### 🔄 **Workflow Orchestration**
 
@@ -245,7 +245,7 @@ adapter = MeltanoAdapterFactory.create_from_environment()
 
 ## CRUD Interface
 
-The Meltano adapter implements the standard FLX CRUD interface:
+The Meltano adapter implements the standard FLEXT CRUD interface:
 
 ```python
 # Plugin management via CRUD
@@ -393,7 +393,7 @@ meltano_projects/
 - Configure timeouts based on data volume
 - Monitor resource usage and scale accordingly
 
-## Integration with Existing FLX Components
+## Integration with Existing FLEXT Components
 
 ### With Database Adapters
 
@@ -412,7 +412,7 @@ meltano_adapter = MeltanoAdapterFactory.create_adapter(project_root)
 ```python
 from flext.adapters.inbound.cli import CliAdapter
 
-# Expose Meltano functionality through FLX CLI
+# Expose Meltano functionality through FLEXT CLI
 cli_adapter = CliAdapter()
 # Register Meltano commands with CLI adapter
 ```
@@ -515,7 +515,7 @@ Complete examples are available in:
 - `MeltanoWorkflowConfig` - Workflow configuration
 - `MeltanoAdapterConfig` - Adapter configuration
 
-This integration brings the full power of the Meltano ecosystem into the FLX framework while maintaining clean architecture principles and enterprise-grade reliability.
+This integration brings the full power of the Meltano ecosystem into the FLEXT framework while maintaining clean architecture principles and enterprise-grade reliability.
 
 ---
 
@@ -524,8 +524,8 @@ This integration brings the full power of the Meltano ecosystem into the FLX fra
 ### **Prerequisites**
 
 - [Integration Overview](./index.md) - Understanding integration patterns and strategies
-- [Architecture Overview](../../architecture/index.md) - FLX hexagonal architecture fundamentals
-- [Getting Started](../../getting-started/index.md) - FLX Framework installation and setup
+- [Architecture Overview](../../architecture/index.md) - FLEXT hexagonal architecture fundamentals
+- [Getting Started](../../getting-started/index.md) - FLEXT Framework installation and setup
 
 ### **Next Steps**
 
@@ -535,7 +535,7 @@ This integration brings the full power of the Meltano ecosystem into the FLX fra
 
 ### **Related Topics**
 
-- [Architecture Evolution](../../architecture/flext-2.0-architecture.md) - FLX 2.0 Meltano-powered architecture
+- [Architecture Evolution](../../architecture/flext-2.0-architecture.md) - FLEXT 2.0 Meltano-powered architecture
 - [API Reference](../../api-reference/meltano/index.md) - Complete Meltano integration API
 - [Performance Optimization](../../optimization/meltano/index.md) - Meltano performance tuning
 
@@ -560,4 +560,4 @@ For Meltano integration issues:
 
 ---
 
-**📂 Hub**: [Integration Guides](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-19
+**📂 Hub**: [Integration Guides](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-19

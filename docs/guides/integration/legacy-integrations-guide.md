@@ -86,7 +86,7 @@ legacy_pattern:
 #### Modern Implementation
 
 ```python
-# Modern FLX implementation of legacy pattern
+# Modern FLEXT implementation of legacy pattern
 from flext.adapters.outbound.oracle import OracleWmsAdapter
 from flext.core.events import DomainEvent
 from flext.ports.inbound.receipt import ReceiptPort
@@ -206,7 +206,7 @@ Legacy patterns for inventory data synchronization:
 
 ## Modernization Plan
 
-- **Target Architecture**: FLX Hexagonal with Oracle adapters
+- **Target Architecture**: FLEXT Hexagonal with Oracle adapters
 - **Implementation Approach**: Event-driven with async processing
 - **Migration Complexity**: Medium (requires data mapping updates)
 - **Risk Assessment**: Low (well-understood business logic)
@@ -229,7 +229,7 @@ class LegacyPatternExtractor:
         )
 
     def generate_modern_implementation(self, analysis: IntegrationAnalysis) -> str:
-        """Generate modern FLX implementation based on analysis."""
+        """Generate modern FLEXT implementation based on analysis."""
         return self._template_generator.create_flext_adapter(
             business_logic=analysis.business_logic,
             port_interfaces=self._design_ports(analysis),
@@ -259,7 +259,7 @@ class LegacyPatternExtractor:
 ```
 
 ```python
-# Modern FLX pattern
+# Modern FLEXT pattern
 from flext.core.domain.value_objects import ASNNumber, SKU, Quantity
 from flext.core.entities import ReceiptAdvice, ReceiptItem
 

@@ -1,6 +1,6 @@
-# Meltano Integration into FLX Framework - Implementation Plan
+# Meltano Integration into FLEXT Framework - Implementation Plan
 
-**Function**: Strategic implementation plan for complete Meltano data pipeline integration within the FLX framework
+**Function**: Strategic implementation plan for complete Meltano data pipeline integration within the FLEXT framework
 **Audience**: Technical architects, data engineers, and development teams implementing data platforms
 **Status**: Comprehensive Implementation Roadmap - Production Planning
 
@@ -16,11 +16,11 @@
 
 ## 🎯 Executive Summary
 
-This document outlines the step-by-step plan to integrate Meltano's complete data pipeline functionality into the FLX framework, enabling the system to run as a containerized service with web interface and daemon mode capabilities. This integration positions FLX as a comprehensive enterprise data platform combining hexagonal architecture principles with modern data pipeline orchestration.
+This document outlines the step-by-step plan to integrate Meltano's complete data pipeline functionality into the FLEXT framework, enabling the system to run as a containerized service with web interface and daemon mode capabilities. This integration positions FLEXT as a comprehensive enterprise data platform combining hexagonal architecture principles with modern data pipeline orchestration.
 
 ### **Strategic Objectives**
 
-- **Complete Meltano Integration**: All ELT functionality within FLX framework
+- **Complete Meltano Integration**: All ELT functionality within FLEXT framework
 - **Container-Native**: Full Docker support with orchestration capabilities
 - **Web Interface**: Professional dashboard for pipeline management
 - **Daemon Mode**: Background service operation with monitoring
@@ -30,7 +30,7 @@ This document outlines the step-by-step plan to integrate Meltano's complete dat
 
 ## 📊 Current State Analysis
 
-### **FLX Framework Status**
+### **FLEXT Framework Status**
 
 - ✅ **Hexagonal Architecture**: Complete implementation with adapters
 - ✅ **Modern Python**: Python 3.13 with advanced type safety
@@ -58,11 +58,11 @@ singer-sdk = "^0.46.4"
 
 ## 🏗️ Architecture Design
 
-### **Meltano-FLX Integration Architecture**
+### **Meltano-FLEXT Integration Architecture**
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                    FLX Enterprise Platform                     │
+│                    FLEXT Enterprise Platform                     │
 ├─────────────────────────────────────────────────────────────────┤
 │  Web Interface (FastAPI + Rich Dashboard)                      │
 │  ┌─────────────┬─────────────┬─────────────┬─────────────────┐  │
@@ -70,7 +70,7 @@ singer-sdk = "^0.46.4"
 │  │ Management  │ Dashboard   │ & Alerts    │ & Settings      │  │
 │  └─────────────┴─────────────┴─────────────┴─────────────────┘  │
 ├─────────────────────────────────────────────────────────────────┤
-│  FLX Core Application Layer                                     │
+│  FLEXT Core Application Layer                                     │
 │  ┌─────────────────────────────────────────────────────────────┐  │
 │  │              Meltano Integration Service                    │  │
 │  │  ┌───────────┬────────────┬───────────┬─────────────────┐  │  │
@@ -79,7 +79,7 @@ singer-sdk = "^0.46.4"
 │  │  └───────────┴────────────┴───────────┴─────────────────┘  │  │
 │  └─────────────────────────────────────────────────────────────┘  │
 ├─────────────────────────────────────────────────────────────────┤
-│  FLX Adapter Layer (Hexagonal Architecture)                    │
+│  FLEXT Adapter Layer (Hexagonal Architecture)                    │
 │  ┌─────────────┬─────────────┬─────────────┬─────────────────┐  │
 │  │ Meltano     │ Singer      │ File System │ State Store     │  │
 │  │ CLI Adapter │ SDK Adapter │ Adapter     │ Adapter         │  │
@@ -98,7 +98,7 @@ singer-sdk = "^0.46.4"
 #### **1. Meltano Core Integration**
 
 ```python
-# New FLX Domain Service
+# New FLEXT Domain Service
 class MeltanoOrchestrationService:
     """Domain service for Meltano pipeline orchestration."""
 
@@ -108,7 +108,7 @@ class MeltanoOrchestrationService:
     async def get_run_status(self, run_id: str) -> RunStatus
 ```
 
-#### **2. FLX Adapter Implementation**
+#### **2. FLEXT Adapter Implementation**
 
 ```python
 # Meltano CLI Adapter (Outbound)
@@ -597,7 +597,7 @@ async def lifespan(app: FastAPI):
 def create_app() -> FastAPI:
     """Create FastAPI application."""
     app = FastAPI(
-        title="FLX Data Platform",
+        title="FLEXT Data Platform",
         version="0.4.0",
         description="Enterprise data platform with Meltano integration",
         lifespan=lifespan,
@@ -735,7 +735,7 @@ async def stream_run_logs(
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FLX Data Platform</title>
+    <title>FLEXT Data Platform</title>
     <script src="https://unpkg.com/htmx.org@1.9.9"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/chart.js"></script>
@@ -744,7 +744,7 @@ async def stream_run_logs(
     <!-- Navigation -->
     <nav class="bg-blue-600 text-white p-4">
       <div class="container mx-auto flex justify-between items-center">
-        <h1 class="text-xl font-bold">🔄 FLX Data Platform</h1>
+        <h1 class="text-xl font-bold">🔄 FLEXT Data Platform</h1>
         <div class="space-x-4">
           <a href="/dashboard" class="hover:text-blue-200">Dashboard</a>
           <a href="/projects" class="hover:text-blue-200">Projects</a>
@@ -1451,8 +1451,8 @@ from flext.application.meltano.service import MeltanoOrchestrationService
 from flext.infra.web.app import create_app
 import uvicorn
 
-class FlxDaemonService:
-    """Main daemon service for FLX platform."""
+class FlextDaemonService:
+    """Main daemon service for FLEXT platform."""
 
     def __init__(self, config_path: Optional[Path] = None):
         self.config_path = config_path
@@ -1463,7 +1463,7 @@ class FlxDaemonService:
 
     async def start(self):
         """Start the daemon service."""
-        logger.info("Starting FLX daemon service...")
+        logger.info("Starting FLEXT daemon service...")
 
         # Initialize container
         self.container = ApplicationContainer()
@@ -1484,11 +1484,11 @@ class FlxDaemonService:
         # Setup signal handlers
         self._setup_signal_handlers()
 
-        logger.info("FLX daemon service started successfully")
+        logger.info("FLEXT daemon service started successfully")
 
     async def stop(self):
         """Stop the daemon service."""
-        logger.info("Stopping FLX daemon service...")
+        logger.info("Stopping FLEXT daemon service...")
 
         # Set shutdown event
         self.shutdown_event.set()
@@ -1509,7 +1509,7 @@ class FlxDaemonService:
         if self.container:
             await self.container.shutdown_resources()
 
-        logger.info("FLX daemon service stopped")
+        logger.info("FLEXT daemon service stopped")
 
     async def _start_web_server(self):
         """Start the web server."""
@@ -1608,7 +1608,7 @@ class FlxDaemonService:
 # Entry point for daemon mode
 async def main():
     """Main entry point for daemon mode."""
-    daemon = FlxDaemonService()
+    daemon = FlextDaemonService()
 
     try:
         await daemon.start()
@@ -1679,19 +1679,19 @@ asyncio.run(init())
 # Execute command based on argument
 case "$1" in
     "web")
-        echo "Starting FLX web server..."
+        echo "Starting FLEXT web server..."
         exec python -m flext.infra.daemon.service
         ;;
     "worker")
-        echo "Starting FLX worker..."
+        echo "Starting FLEXT worker..."
         exec celery -A flext.infra.tasks.celery_app worker --loglevel=info
         ;;
     "scheduler")
-        echo "Starting FLX scheduler..."
+        echo "Starting FLEXT scheduler..."
         exec celery -A flext.infra.tasks.celery_app beat --loglevel=info
         ;;
     "cli")
-        echo "Starting FLX CLI..."
+        echo "Starting FLEXT CLI..."
         exec python -m flext.cli.main "${@:2}"
         ;;
     "shell")
@@ -1878,22 +1878,22 @@ spec:
   groups:
     - name: flext.rules
       rules:
-        - alert: FlxPipelineFailure
+        - alert: FlextPipelineFailure
           expr: increase(flext_pipeline_failures_total[5m]) > 0
           for: 0m
           labels:
             severity: warning
           annotations:
-            summary: "FLX pipeline failure detected"
+            summary: "FLEXT pipeline failure detected"
             description: "Pipeline {{ $labels.pipeline }} has failed"
 
-        - alert: FlxHighMemoryUsage
+        - alert: FlextHighMemoryUsage
           expr: flext_memory_usage_percent > 90
           for: 5m
           labels:
             severity: critical
           annotations:
-            summary: "FLX high memory usage"
+            summary: "FLEXT high memory usage"
             description: "Memory usage is {{ $value }}%"
 ```
 
@@ -1962,7 +1962,7 @@ class OptimizedConnectionPool:
 #### **Day 81-84: Complete Documentation**
 
 ````markdown
-# FLX Platform - Deployment Guide
+# FLEXT Platform - Deployment Guide
 
 ## Prerequisites
 
@@ -2179,7 +2179,7 @@ For support and documentation, see:
 
 ### Prerequisites
 Before implementing Meltano integration, ensure you have:
-- [FLX Core Framework Understanding](../../getting-started/index.md) - Complete FLX framework setup and configuration
+- [FLEXT Core Framework Understanding](../../getting-started/index.md) - Complete FLEXT framework setup and configuration
 - [Hexagonal Architecture Mastery](../../architecture/application-layer.md) - Understanding of adapter patterns and domain boundaries
 - [Container Infrastructure](../../infrastructure/index.md) - Docker and container orchestration knowledge
 - [Data Platform Concepts](../../examples/index.md) - Data pipeline fundamentals and ELT patterns
@@ -2211,7 +2211,7 @@ python -c "import meltano; print(meltano.__version__)"
 # Verify Singer SDK integration
 python -c "from singer_sdk import Tap, Target; print('Singer SDK available')"
 
-# Check FLX adapter integration
+# Check FLEXT adapter integration
 flext meltano --help
 ````
 
@@ -2327,14 +2327,14 @@ flext config export --include-secrets=false > config-review.yaml
 
 - **Meltano Documentation**: [docs.meltano.com](https://docs.meltano.com)
 - **Singer SDK Reference**: [sdk.meltano.com](https://sdk.meltano.com)
-- **FLX Framework Guide**: [Architecture Documentation](../../architecture/index.md)
+- **FLEXT Framework Guide**: [Architecture Documentation](../../architecture/index.md)
 - **Container Best Practices**: [Deployment Guide](../../deployment/index.md)
 
 ---
 
-**This comprehensive plan provides a clear roadmap for integrating Meltano functionality into the FLX framework while maintaining architectural integrity and adding enterprise-grade capabilities for container deployment and web-based management.**
+**This comprehensive plan provides a clear roadmap for integrating Meltano functionality into the FLEXT framework while maintaining architectural integrity and adding enterprise-grade capabilities for container deployment and web-based management.**
 
-**Documentation Framework**: FLX Enterprise Documentation Standard
+**Documentation Framework**: FLEXT Enterprise Documentation Standard
 **Implementation Status**: Strategic Roadmap - Production Planning Phase
 **Last Updated**: 2025-06-11
-**Maintained by**: FLX Framework Data Platform Team
+**Maintained by**: FLEXT Framework Data Platform Team

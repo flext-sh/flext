@@ -209,10 +209,10 @@ For detailed workflow steps, see [Migration Workflow Guide](README_MIGRATION_WOR
 
 ## License
 
-**Documentation Framework**: FLX Enterprise Documentation Standard
+**Documentation Framework**: FLEXT Enterprise Documentation Standard
 **Implementation Status**: Production Ready - Validated Migration Tools
 **Last Updated**: 2025-06-11
-**Maintained by**: FLX Framework Directory Services Team
+**Maintained by**: FLEXT Framework Directory Services Team
 
 ## License
 
@@ -228,7 +228,7 @@ Before starting OUD automation, ensure you have:
 
 - [LDAP Operations Guide](ldap-complete-guide.md) - Understanding LDAP fundamentals and operations
 - [Oracle Directory Migration Guide](oracle-directory-migration-complete-guide.md) - Overall migration strategy and planning
-- [FLX Core Framework Setup](../../getting-started/index.md) - Framework installation for automation tools
+- [FLEXT Core Framework Setup](../../getting-started/index.md) - Framework installation for automation tools
 
 ### Next Steps
 

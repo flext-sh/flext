@@ -1,12 +1,12 @@
 # 🏗️ RFC-0001: Hexagonal Architecture Modernization Strategy
 
-> **Function**: Comprehensive architectural modernization proposal for FLX Framework | **Audience**: Technical architects, engineering leads | **Status**: 📋 Proposal
+> **Function**: Comprehensive architectural modernization proposal for FLEXT Framework | **Audience**: Technical architects, engineering leads | **Status**: 📋 Proposal
 
 [![RFC](https://img.shields.io/badge/RFC-0001-blue.svg)](./index.md)
 [![Architecture](https://img.shields.io/badge/architecture-modernization-green.svg)](../../architecture/index.md)
 [![Proposal](https://img.shields.io/badge/status-proposal-orange.svg)](#rfc-metadata)
 
-**Comprehensive hexagonal architecture modernization proposal for FLX Framework - enhanced patterns, type safety, and enterprise extensibility**
+**Comprehensive hexagonal architecture modernization proposal for FLEXT Framework - enhanced patterns, type safety, and enterprise extensibility**
 
 ---
 
@@ -54,7 +54,7 @@ impact_level: HIGH
 validation_status: "⚠️ DISCREPANCY - Code examples don't match actual implementation"
 ```
 
-**⚠️ Implementation Note**: This RFC proposes future architecture changes. The current FLX implementation uses different patterns:
+**⚠️ Implementation Note**: This RFC proposes future architecture changes. The current FLEXT implementation uses different patterns:
 
 - **Current**: `Protocol` without generics, Pydantic-based events with UUIDs
 - **Proposed**: Generic `Port[T, R]`, dataclass-based events with strings
@@ -62,7 +62,7 @@ validation_status: "⚠️ DISCREPANCY - Code examples don't match actual implem
 
 ## Executive Summary
 
-This RFC proposes a comprehensive modernization of the FLX Framework's hexagonal architecture implementation, introducing advanced software engineering patterns, improved separation of concerns, and enterprise-grade extensibility mechanisms.
+This RFC proposes a comprehensive modernization of the FLEXT Framework's hexagonal architecture implementation, introducing advanced software engineering patterns, improved separation of concerns, and enterprise-grade extensibility mechanisms.
 
 ### Key Proposals
 
@@ -581,4 +581,4 @@ class ObservabilityFramework:
 
 ---
 
-**📄 RFC Document** | **🏠 Parent**: [RFCs Hub](./index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📄 RFC Document** | **🏠 Parent**: [RFCs Hub](./index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11
