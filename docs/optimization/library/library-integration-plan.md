@@ -1,4 +1,4 @@
-# FLX Framework - Library Integration Plan
+# FLEXT Framework - Library Integration Plan
 
 > **Function**: Strategic plan for integrating mature Python libraries to replace custom code | **Audience**: Framework developers, architects | **Status**: Implementation
 
@@ -33,7 +33,7 @@
 
 ## 📋 Integration Overview
 
-This documentation details how to integrate mature Python libraries into the FLX framework to eliminate custom code and maximize productivity, based on comprehensive architectural analysis performed.
+This documentation details how to integrate mature Python libraries into the FLEXT framework to eliminate custom code and maximize productivity, based on comprehensive architectural analysis performed.
 
 ## 🎯 Selected Libraries by Category
 
@@ -64,7 +64,7 @@ from fastapi import FastAPI
 from flext.core.enhanced_factory import get_enhanced_factory
 
 app = FastAPI(
-    title="FLX Framework API",
+    title="FLEXT Framework API",
     description="Auto-generated API from meta-factory",
     version="2.0.0"
 )
@@ -1102,4 +1102,4 @@ rollback_triggers = {
 
 ---
 
-**📂 Hub**: [Library Optimization](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Library Optimization](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

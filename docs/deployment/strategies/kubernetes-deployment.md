@@ -1,12 +1,12 @@
 # 🚢 Kubernetes Deployment Guide - Production Orchestration
 
-> **Function**: Complete Kubernetes deployment guide for FLX applications | **Audience**: Platform engineers, DevOps teams, SRE | **Status**: Production-Ready
+> **Function**: Complete Kubernetes deployment guide for FLEXT applications | **Audience**: Platform engineers, DevOps teams, SRE | **Status**: Production-Ready
 
 [![Kubernetes](https://img.shields.io/badge/kubernetes-1.25+-blue.svg)](https://kubernetes.io/)
 [![Production](https://img.shields.io/badge/deployment-production_grade-green.svg)](./production-checklist.md)
 [![Scaling](https://img.shields.io/badge/scaling-auto_scaling-orange.svg)](#auto-scaling)
 
-**Complete guide for deploying FLX applications on Kubernetes with production-grade configurations, scaling strategies, and operational best practices**
+**Complete guide for deploying FLEXT applications on Kubernetes with production-grade configurations, scaling strategies, and operational best practices**
 
 ---
 
@@ -30,7 +30,7 @@
 
 ## 🎯 Overview
 
-This guide covers deploying FLX applications on Kubernetes with:
+This guide covers deploying FLEXT applications on Kubernetes with:
 
 - **High Availability**: Multi-zone deployment with redundancy
 - **Auto-scaling**: Horizontal and vertical pod autoscaling
@@ -55,10 +55,10 @@ graph TB
             VS[Virtual Service]
         end
 
-        subgraph "FLX Application"
-            FLX1[FLX Pod 1]
-            FLX2[FLX Pod 2]
-            FLX3[FLX Pod 3]
+        subgraph "FLEXT Application"
+            FLX1[FLEXT Pod 1]
+            FLX2[FLEXT Pod 2]
+            FLX3[FLEXT Pod 3]
         end
 
         subgraph "Data Layer"
@@ -136,7 +136,7 @@ WORKDIR /app
 COPY src/ ./src/
 COPY pyproject.toml ./
 
-# Install FLX in production mode
+# Install FLEXT in production mode
 RUN pip install -e .
 
 # Security: run as non-root user
@@ -713,7 +713,7 @@ spec:
   groups:
     - name: flext.rules
       rules:
-        - alert: FlxHighErrorRate
+        - alert: FlextHighErrorRate
           expr: |
             (
               rate(flext_requests_total{status=~"5.."}[5m]) /
@@ -724,10 +724,10 @@ spec:
             severity: critical
             component: flext
           annotations:
-            summary: "FLX application has high error rate"
+            summary: "FLEXT application has high error rate"
             description: "Error rate is {{ $value | humanizePercentage }}"
 
-        - alert: FlxHighLatency
+        - alert: FlextHighLatency
           expr: |
             histogram_quantile(0.95,
               rate(flext_request_duration_seconds_bucket[5m])
@@ -737,10 +737,10 @@ spec:
             severity: warning
             component: flext
           annotations:
-            summary: "FLX application has high latency"
+            summary: "FLEXT application has high latency"
             description: "95th percentile latency is {{ $value }}s"
 
-        - alert: FlxPodCrashLooping
+        - alert: FlextPodCrashLooping
           expr: |
             rate(kube_pod_container_status_restarts_total{
               namespace="flext-production",
@@ -751,7 +751,7 @@ spec:
             severity: critical
             component: flext
           annotations:
-            summary: "FLX pod is crash looping"
+            summary: "FLEXT pod is crash looping"
             description: "Pod {{ $labels.pod }} is restarting frequently"
 ```
 
@@ -1063,7 +1063,7 @@ resources:
 
 ---
 
-**🚀 Your FLX application is now running on Kubernetes with enterprise-grade scalability and reliability!**
+**🚀 Your FLEXT application is now running on Kubernetes with enterprise-grade scalability and reliability!**
 
 ---
 
@@ -1090,4 +1090,4 @@ resources:
 
 ---
 
-**📂 Hub**: [Deployment Strategies](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Deployment Strategies](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

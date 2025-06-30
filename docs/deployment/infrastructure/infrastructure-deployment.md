@@ -1,4 +1,4 @@
-# 🏗️ FLX Infrastructure Deployment Guide - Complete Automation
+# 🏗️ FLEXT Infrastructure Deployment Guide - Complete Automation
 
 > **Function**: Complete infrastructure deployment automation and management | **Audience**: Infrastructure engineers, DevOps teams, platform engineers | **Status**: Production-Ready
 
@@ -6,7 +6,7 @@
 [![Terraform](https://img.shields.io/badge/automation-terraform-green.svg)](#infrastructure-as-code)
 [![Multi-Cloud](https://img.shields.io/badge/cloud-multi_provider-orange.svg)](#cloud-providers)
 
-**Comprehensive infrastructure deployment automation for FLX applications using Infrastructure as Code, multi-cloud support, and hexagonal architecture principles**
+**Comprehensive infrastructure deployment automation for FLEXT applications using Infrastructure as Code, multi-cloud support, and hexagonal architecture principles**
 
 ---
 
@@ -30,7 +30,7 @@
 
 ## Overview
 
-This module provides comprehensive deployment management capabilities for FLX applications, supporting multiple environments, deployment strategies, and monitoring integration. The deployment infrastructure follows the ports and adapters pattern to enable pluggable deployment backends.
+This module provides comprehensive deployment management capabilities for FLEXT applications, supporting multiple environments, deployment strategies, and monitoring integration. The deployment infrastructure follows the ports and adapters pattern to enable pluggable deployment backends.
 
 ## Architecture
 
@@ -601,4 +601,4 @@ deployment = await aci_strategy.deploy({
 
 ---
 
-**📂 Hub**: [Infrastructure Deployment](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Infrastructure Deployment](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

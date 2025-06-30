@@ -6,7 +6,7 @@
 [![Enterprise](https://img.shields.io/badge/enterprise-ready-green.svg)](./quickstart-advanced.md)
 [![Patterns](https://img.shields.io/badge/patterns-complex-blue.svg)](./quickstart-advanced.md)
 
-**Advanced FLX Framework implementation patterns for enterprise-grade applications**
+**Advanced FLEXT Framework implementation patterns for enterprise-grade applications**
 
 ---
 
@@ -62,4 +62,4 @@
 
 ---
 
-**📂 Section Hub** | **🏠 Parent**: [Getting Started Hub](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Section Hub** | **🏠 Parent**: [Getting Started Hub](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

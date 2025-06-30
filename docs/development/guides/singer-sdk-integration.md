@@ -1,21 +1,21 @@
 # Singer SDK Integration Guide
 
-> **Building custom data extractors and loaders with the Meltano Singer SDK for FLX framework integration**
+> **Building custom data extractors and loaders with the Meltano Singer SDK for FLEXT framework integration**
 
 ## Overview
 
-The Meltano Singer SDK is the fastest way to build custom data extractors and loaders that automatically comply with the Singer Specification. When integrated with the FLX framework, it provides a powerful foundation for enterprise data integration pipelines.
+The Meltano Singer SDK is the fastest way to build custom data extractors and loaders that automatically comply with the Singer Specification. When integrated with the FLEXT framework, it provides a powerful foundation for enterprise data integration pipelines.
 
 ## Key Benefits
 
 - **70% less code**: Developers report significant code reduction using the SDK
 - **Future-proof**: Automatic access to new features and bug fixes through SDK updates
 - **Singer Spec compliant**: Built-in compliance with the de-facto open source standard
-- **FLX integration ready**: Seamless integration with hexagonal architecture patterns
+- **FLEXT integration ready**: Seamless integration with hexagonal architecture patterns
 
-## Integration with FLX Framework
+## Integration with FLEXT Framework
 
-The Singer SDK integrates with FLX's hexagonal architecture through adapter patterns:
+The Singer SDK integrates with FLEXT's hexagonal architecture through adapter patterns:
 
 ```python
 from flext.adapters.base import BaseAdapter
@@ -23,7 +23,7 @@ from singer_sdk import Tap, Target
 from typing import Dict, Any
 
 class FLXSingerAdapter(BaseAdapter):
-    """Adapter for Singer SDK integration with FLX framework."""
+    """Adapter for Singer SDK integration with FLEXT framework."""
 
     def __init__(self, tap_class: type[Tap], target_class: type[Target]):
         self.tap_class = tap_class
@@ -149,17 +149,17 @@ cookiecutter https://github.com/meltano/sdk --directory="cookiecutter/mapper-tem
 cookiecutter ./singer_sdk/cookiecutter/mapper-template
 ```
 
-### 3. Integration with FLX Workspace
+### 3. Integration with FLEXT Workspace
 
 ```bash
-# Add to FLX project dependencies
+# Add to FLEXT project dependencies
 poetry add singer-sdk
 
-# Link with FLX adapters
+# Link with FLEXT adapters
 poetry add --path ../flext
 ```
 
-### 4. Testing with FLX Framework
+### 4. Testing with FLEXT Framework
 
 ```python
 import pytest
@@ -167,7 +167,7 @@ from flext.testing.engines import BaseTestEngine
 from your_tap import CustomTap
 
 class TestSingerIntegration(BaseTestEngine):
-    """Test Singer SDK integration with FLX."""
+    """Test Singer SDK integration with FLEXT."""
 
     async def test_tap_extraction(self):
         tap = CustomTap(config=self.test_config)
@@ -184,21 +184,21 @@ class TestSingerIntegration(BaseTestEngine):
 
 ### Configuration Management
 
-- Use FLX configuration patterns for consistent setup
-- Leverage environment variables through FLX config adapters
+- Use FLEXT configuration patterns for consistent setup
+- Leverage environment variables through FLEXT config adapters
 - Implement validation using Pydantic models
 
 ### Error Handling
 
-- Integrate with FLX error handling patterns
+- Integrate with FLEXT error handling patterns
 - Use structured logging for better observability
 - Implement retry mechanisms for robust data pipelines
 
 ### Performance Optimization
 
-- Utilize FLX async patterns for better throughput
+- Utilize FLEXT async patterns for better throughput
 - Implement proper connection pooling
-- Use FLX caching mechanisms where appropriate
+- Use FLEXT caching mechanisms where appropriate
 
 ## Meltano Integration
 
@@ -219,7 +219,7 @@ plugins:
 ## Related Documentation
 
 - [Meltano Plugins Integration](meltano-plugins-integration.md)
-- [FLX Adapters Guide](../architecture/adapters-implementation-guide.md)
+- [FLEXT Adapters Guide](../architecture/adapters-implementation-guide.md)
 - [Oracle Integration Patterns](../guides/oracle-platform-resources.md)
 - [Development Tools](development-tools.md)
 

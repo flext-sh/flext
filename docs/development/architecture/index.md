@@ -6,7 +6,7 @@
 [![Error Handling](https://img.shields.io/badge/error_handling-patterns-red.svg)](./error-handling-validation.md)
 [![Logging](https://img.shields.io/badge/logging-architecture-green.svg)](./logging-architecture.md)
 
-**Complete development architecture covering system design patterns, error handling strategies, logging architecture, and code organization principles for enterprise FLX framework**
+**Complete development architecture covering system design patterns, error handling strategies, logging architecture, and code organization principles for enterprise FLEXT framework**
 
 ---
 
@@ -87,4 +87,4 @@
 
 ---
 
-**📂 Section Hub** | **🏠 Parent**: [Development Hub](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Section Hub** | **🏠 Parent**: [Development Hub](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

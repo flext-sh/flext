@@ -1,4 +1,4 @@
-# FLX Infrastructure Architecture - Unified Content Guide
+# FLEXT Infrastructure Architecture - Unified Content Guide
 
 > **Semantic Organization**: Infrastructure concepts by architectural purpose, not file structure | **Status**: Validated against real implementation
 
@@ -6,7 +6,7 @@
 [![Validated](https://img.shields.io/badge/status-semantically_organized-green.svg)](./validation-status.md)
 [![Architecture](https://img.shields.io/badge/pattern-hexagonal_architecture-orange.svg)](../architecture/HEXAGONAL_VALIDATED_IMPLEMENTATION.md)
 
-**This guide consolidates all FLX infrastructure documentation based on semantic architectural concepts. Content is organized by what the infrastructure actually does, not by how files are structured.**
+**This guide consolidates all FLEXT infrastructure documentation based on semantic architectural concepts. Content is organized by what the infrastructure actually does, not by how files are structured.**
 
 ---
 
@@ -14,7 +14,7 @@
 
 ### **1. Service Foundation Pattern**
 
-All FLX infrastructure follows a unified service pattern that provides consistency across different external system integrations:
+All FLEXT infrastructure follows a unified service pattern that provides consistency across different external system integrations:
 
 ```python
 # The semantic concept: Every infrastructure service is a managed, configurable, testable unit
@@ -426,7 +426,7 @@ class HighAvailability:
 
 ### **Source Code Validation Status**
 
-This documentation has been validated against the actual FLX framework implementation in `/flext/src/flext/infra/`:
+This documentation has been validated against the actual FLEXT framework implementation in `/flext/src/flext/infra/`:
 
 **✅ Validated Patterns:**
 
@@ -474,4 +474,4 @@ This documentation has been validated against the actual FLX framework implement
 
 ---
 
-**📂 Hub**: [Infrastructure Hub](./index.md) | **🏠 Root**: [Documentation Home](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Infrastructure Hub](./index.md) | **🏠 Root**: [Documentation Home](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

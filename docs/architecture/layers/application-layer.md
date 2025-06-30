@@ -6,7 +6,7 @@
 [![Architecture](https://img.shields.io/badge/architecture-hexagonal-orange.svg)](../index.md)
 [![Use Cases](https://img.shields.io/badge/patterns-use%20cases-green.svg)](./core-domain-layer.md)
 
-**Complete application layer implementation guide for orchestrating use cases and coordinating domain objects in FLX Framework**
+**Complete application layer implementation guide for orchestrating use cases and coordinating domain objects in FLEXT Framework**
 
 ---
 
@@ -243,4 +243,4 @@ class ReliableEventPublisher:
 
 ---
 
-**📂 Hub**: [Architecture Layers](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Architecture Layers](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

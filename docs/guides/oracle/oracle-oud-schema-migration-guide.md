@@ -4,7 +4,7 @@
 
 [![Oracle OUD](https://img.shields.io/badge/Oracle-OUD-red.svg)](./index.md)
 [![Migration](https://img.shields.io/badge/migration-OID_to_OUD-blue.svg)](./ldap-complete-guide.md)
-[![Framework](https://img.shields.io/badge/framework-FLX_0.4.0-orange.svg)](../../index.md)
+[![Framework](https://img.shields.io/badge/framework-FLEXT_0.4.0-orange.svg)](../../index.md)
 
 **Complete Oracle Internet Directory (OID) to Oracle Unified Directory (OUD) schema migration guide covering automated tools, schema transformation, LDIF processing, and enterprise migration workflows**
 
@@ -56,7 +56,7 @@ OID Schema → Analysis & Mapping → OUD Compatible Schema → Validation → P
 - Oracle Internet Directory (OID) source environment
 - Oracle Unified Directory (OUD) target environment
 - Administrative access to both systems
-- FLX Framework OUD automation tools installed
+- FLEXT Framework OUD automation tools installed
 - Network connectivity between source and target
 
 ### **Installation**
@@ -76,7 +76,7 @@ python -m oud_automation.cli setup --environment production
 
 ## 🖥️ **Command Line Interface**
 
-All functionality is available through the unified CLI interface. The previous standalone script (`auto_schema_adjuster.py`) has been deprecated in favor of the integrated FLX automation approach.
+All functionality is available through the unified CLI interface. The previous standalone script (`auto_schema_adjuster.py`) has been deprecated in favor of the integrated FLEXT automation approach.
 
 ### **Core Schema Operations**
 
@@ -360,7 +360,7 @@ export OUD_LOG_LEVEL=DEBUG
 python -m oud_automation schema detect --verbose --debug
 ```
 
-## Integration with FLX Framework
+## Integration with FLEXT Framework
 
 ### Programmatic Usage
 
@@ -509,7 +509,7 @@ python -m oud_automation schema rollback \
 
 - [Oracle Hub](./index.md) - Understanding Oracle integration architecture before schema migration
 - [LDAP Complete Guide](./ldap-complete-guide.md) - LDAP fundamentals and directory services concepts
-- [Getting Started Hub](../../getting-started/index.md) - FLX Framework installation and basic configuration
+- [Getting Started Hub](../../getting-started/index.md) - FLEXT Framework installation and basic configuration
 
 ### **Next Steps**
 
@@ -527,4 +527,4 @@ python -m oud_automation schema rollback \
 
 ---
 
-**📂 Hub**: [Oracle Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Oracle Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

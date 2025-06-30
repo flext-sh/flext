@@ -1,12 +1,12 @@
-# Testing Strategies for Hexagonal Architecture in FLX
+# Testing Strategies for Hexagonal Architecture in FLEXT
 
 > **Function**: Comprehensive testing strategies for hexagonal architecture (Ports & Adapters) patterns | **Audience**: Test engineers, developers | **Status**: ✅ Stable
 
 [![Testing](https://img.shields.io/badge/testing-strategies-blue.svg)](./index.md)
 [![Architecture](https://img.shields.io/badge/architecture-hexagonal-green.svg)](../../architecture/index.md)
-[![Framework](https://img.shields.io/badge/framework-FLX%200.4.0-orange.svg)](../../index.md)
+[![Framework](https://img.shields.io/badge/framework-FLEXT%200.4.0-orange.svg)](../../index.md)
 
-**Complete testing strategies specifically tailored for hexagonal architecture (Ports & Adapters) patterns implemented in the FLX framework**
+**Complete testing strategies specifically tailored for hexagonal architecture (Ports & Adapters) patterns implemented in the FLEXT framework**
 
 ---
 
@@ -24,12 +24,12 @@
 
 - **📂 Section Hub**: [Testing Hub](./index.md)
 - **🏠 Documentation Root**: [Root Index](../../index.md)
-- **🔗 Source Code**: [FLX Tests](../../../flext/tests/)
+- **🔗 Source Code**: [FLEXT Tests](../../../flext/tests/)
 - **🔗 Related**: [Hexagonal Testing Guide](./hexagonal-testing-guide.md), [Port Testing](./ports-testing.md)
 
 ---
 
-This guide provides comprehensive testing strategies specifically tailored for hexagonal architecture (Ports & Adapters) patterns implemented in the FLX framework. It covers domain-driven testing approaches, port-adapter testing, and integration strategies that maintain architectural boundaries.
+This guide provides comprehensive testing strategies specifically tailored for hexagonal architecture (Ports & Adapters) patterns implemented in the FLEXT framework. It covers domain-driven testing approaches, port-adapter testing, and integration strategies that maintain architectural boundaries.
 
 ## Table of Contents
 
@@ -852,6 +852,6 @@ async def test_user_registration_with_real_email_service():
 
 ---
 
-**📂 Hub**: [Testing Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Testing Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11
 
 This comprehensive testing guide ensures that your hexagonal architecture implementation is thoroughly tested at all levels while maintaining architectural boundaries and principles.

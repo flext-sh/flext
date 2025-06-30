@@ -1,11 +1,11 @@
 # 🏗️ Architecture - Navigation Hub
 
-> **Function**: Comprehensive architectural guidance for FLX Framework | **Audience**: Architects, senior developers, framework developers
+> **Function**: Comprehensive architectural guidance for FLEXT Framework | **Audience**: Architects, senior developers, framework developers
 
 [![Architecture](https://img.shields.io/badge/architecture-hexagonal-blue.svg)](./index.md)
 [![Validation](https://img.shields.io/badge/validation-100%25-green.svg)](../development/index.md)
 
-**Complete architectural documentation validated against real FLX hexagonal implementation**
+**Complete architectural documentation validated against real FLEXT hexagonal implementation**
 
 ---
 
@@ -38,7 +38,7 @@
 
 ### **⬅️ Prerequisites**
 
-- [Getting Started](../getting-started/index.md) - Basic FLX Framework understanding required
+- [Getting Started](../getting-started/index.md) - Basic FLEXT Framework understanding required
 - [Development Standards](../development/index.md) - Code standards and practices needed
 
 ### **➡️ Next Steps**
@@ -61,7 +61,7 @@
 Based on **actual code inspection** of `/flext/src/flext/`, the architecture documentation is **EXCEPTIONALLY ACCURATE** and comprehensive:
 
 ```python
-# ✅ VALIDATED: Real FLX hexagonal architecture implementation
+# ✅ VALIDATED: Real FLEXT hexagonal architecture implementation
 
 # Ports Infrastructure - Actual Implementation
 flext/src/flext/ports/base_modern.py:
@@ -311,7 +311,7 @@ Integration Implementation:
 ```markdown
 Architecture Standards:
 ├── architectural-consistency-guide.md ✅ Consistency guidelines
-├── flext-architecture-standards.md ✅ FLX standards
+├── flext-architecture-standards.md ✅ FLEXT standards
 ├── modernization-roadmap.md ✅ Modernization strategy
 └── unified-architecture-guide.md ✅ Unified architecture
 
@@ -531,7 +531,7 @@ Architecture Hub ↔ Design Knowledge:
 
 ### **Prerequisites**
 
-- [Getting Started Guide](../getting-started/index.md) - Essential FLX Framework concepts needed before architecture
+- [Getting Started Guide](../getting-started/index.md) - Essential FLEXT Framework concepts needed before architecture
 - [Development Standards](../development/index.md) - Code quality and testing practices required
 
 ### **Next Steps**
@@ -547,4 +547,4 @@ Architecture Hub ↔ Design Knowledge:
 
 ---
 
-**📂 Section Hub** | **🏠 Parent**: [Documentation Root](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Section Hub** | **🏠 Parent**: [Documentation Root](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

@@ -6,7 +6,7 @@
 [![Oracle OIC](https://img.shields.io/badge/Oracle-OIC-green.svg)](#oracle-oic-setup)
 [![Oracle DB](https://img.shields.io/badge/Oracle-Database-orange.svg)](#oracle-database-setup)
 
-**Get Oracle systems integrated with FLX Framework in 10 minutes - based on real production implementations**
+**Get Oracle systems integrated with FLEXT Framework in 10 minutes - based on real production implementations**
 
 ---
 
@@ -30,7 +30,7 @@
 
 ## 📋 **Overview**
 
-This quickstart guide shows you how to integrate Oracle systems (WMS, OIC, Database) with FLX Framework using real patterns from production implementations. All examples are based on actual working code from `/flext-*-oracle-*` projects.
+This quickstart guide shows you how to integrate Oracle systems (WMS, OIC, Database) with FLEXT Framework using real patterns from production implementations. All examples are based on actual working code from `/flext-*-oracle-*` projects.
 
 ### **What You'll Build**
 
@@ -90,14 +90,14 @@ OIC_IDCS_URL="https://your-idcs.identity.oraclecloud.com"
 ```python
 # test_oracle_db.py - based on real implementation
 import asyncio
-from flext_database_oracle import FlxOracleDbAdapter, FlxDatabaseConfig
+from flext_database_oracle import FlextOracleDbAdapter, FlextDatabaseConfig
 
 async def test_oracle_database():
     """Test Oracle database connection."""
 
     # Load configuration from environment
-    config = FlxDatabaseConfig.from_env()
-    adapter = FlxOracleDbAdapter(config)
+    config = FlextDatabaseConfig.from_env()
+    adapter = FlextOracleDbAdapter(config)
 
     try:
         # Connect to database
@@ -228,7 +228,7 @@ asyncio.run(test_oracle_oic())
 # oracle_integration_app.py - complete Oracle integration
 import asyncio
 from flext.application import create_bootstrap
-from flext_database_oracle import FlxOracleDbAdapter, FlxDatabaseConfig
+from flext_database_oracle import FlextOracleDbAdapter, FlextDatabaseConfig
 from flext_http_oracle_wms import WmsClient, WmsConfig
 from flext_http_oracle_oic import OicClient, OracleOicConfig
 
@@ -237,12 +237,12 @@ class OracleIntegrationApp:
 
     def __init__(self):
         # Initialize configurations
-        self.db_config = FlxDatabaseConfig.from_env()
+        self.db_config = FlextDatabaseConfig.from_env()
         self.wms_config = WmsConfig.from_env()
         self.oic_config = OracleOicConfig.from_env()
 
         # Initialize clients
-        self.db_adapter = FlxOracleDbAdapter(self.db_config)
+        self.db_adapter = FlextOracleDbAdapter(self.db_config)
         self.wms_client = WmsClient(self.wms_config)
         self.oic_client = OicClient(self.oic_config)
 
@@ -667,7 +667,7 @@ oracle:
 
 ### **Prerequisites**
 
-- [Installation Guide](./setup/installation-guide.md) - FLX Framework and Oracle adapters installation
+- [Installation Guide](./setup/installation-guide.md) - FLEXT Framework and Oracle adapters installation
 - [Import Guide](./setup/import-guide.md) - Oracle adapter import patterns and configuration
 - [Environment Setup](https://docs.oracle.com/en/cloud/) - Oracle Cloud account and credentials
 
@@ -715,9 +715,9 @@ oracle:
 # Test individual components
 python -c "
 import asyncio
-from flext_database_oracle import FlxOracleDbAdapter, FlxDatabaseConfig
-config = FlxDatabaseConfig.from_env()
-adapter = FlxOracleDbAdapter(config)
+from flext_database_oracle import FlextOracleDbAdapter, FlextDatabaseConfig
+config = FlextDatabaseConfig.from_env()
+adapter = FlextOracleDbAdapter(config)
 asyncio.run(adapter.test_connection())
 "
 
@@ -728,4 +728,4 @@ python oracle_cli.py health
 
 ---
 
-**📂 Hub**: [Getting Started Hub](./index.md) | **🏠 Root**: [Documentation Home](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Getting Started Hub](./index.md) | **🏠 Root**: [Documentation Home](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

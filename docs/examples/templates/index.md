@@ -4,12 +4,12 @@
 
 ## Overview
 
-Code templates and scaffolding examples for the FLX framework, providing ready-to-use templates for API clients, adapters, and common development patterns.
+Code templates and scaffolding examples for the FLEXT framework, providing ready-to-use templates for API clients, adapters, and common development patterns.
 
 ## Quick Links
 
 - [🐍 Python API Client Template](./python-api-client-template.md) - Python API client implementation template
-- [🔌 Adapter Template](./adapter-template.md) - FLX adapter development template
+- [🔌 Adapter Template](./adapter-template.md) - FLEXT adapter development template
 
 ## Template Categories
 
@@ -51,4 +51,4 @@ Code templates and scaffolding examples for the FLX framework, providing ready-t
 
 ---
 
-*Part of the [FLX Framework Documentation](../../index.md)*
+_Part of the [FLEXT Framework Documentation](../../index.md)_

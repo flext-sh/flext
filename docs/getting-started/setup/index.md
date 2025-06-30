@@ -1,12 +1,12 @@
 # 🛠️ Setup - Navigation Hub
 
-> **Function**: Installation and environment setup for FLX Framework | **Audience**: New developers, system REDACTED_LDAP_BIND_PASSWORDistrators
+> **Function**: Installation and environment setup for FLEXT Framework | **Audience**: New developers, system REDACTED_LDAP_BIND_PASSWORDistrators
 
 [![Installation](https://img.shields.io/badge/setup-automated-green.svg)](./installation-guide.md)
 [![Python](https://img.shields.io/badge/python-3.13+-blue.svg)](./installation-guide.md)
 [![Environment](https://img.shields.io/badge/environment-ready-orange.svg)](./import-guide.md)
 
-**Complete installation and setup guidance for FLX Framework development environment**
+**Complete installation and setup guidance for FLEXT Framework development environment**
 
 ---
 
@@ -25,9 +25,9 @@
 
 ### **📋 Learning Path**
 
-1. **🎯 Start Here**: [Installation Guide](./installation-guide.md) - Get FLX Framework running on your system
+1. **🎯 Start Here**: [Installation Guide](./installation-guide.md) - Get FLEXT Framework running on your system
 2. **⚡ Quick Path**: [Import Guide](./import-guide.md) - Configure modules and imports
-3. **📚 Deep Dive**: [Quickstart](../basics/quickstart.md) - Build your first FLX application
+3. **📚 Deep Dive**: [Quickstart](../basics/quickstart.md) - Build your first FLEXT application
 
 ---
 
@@ -35,18 +35,18 @@
 
 ### **⬅️ Prerequisites**
 
-- [Python 3.13+ Environment](https://python.org) - Required runtime environment for FLX Framework installation
+- [Python 3.13+ Environment](https://python.org) - Required runtime environment for FLEXT Framework installation
 - [Git Version Control](https://git-scm.com) - Required for repository cloning and version management
 
 ### **➡️ Next Steps**
 
-- [Quickstart Guide](../basics/quickstart.md) - Build your first FLX application after installation
+- [Quickstart Guide](../basics/quickstart.md) - Build your first FLEXT application after installation
 - [Framework Concepts](../concepts/index.md) - Understand hexagonal architecture principles
 - [Basic Examples](../../examples/basic/index.md) - Explore working code examples
 
 ### **🔗 Related Sections**
 
-- [Development Hub](../../development/index.md) - Development tools and coding standards for FLX projects
+- [Development Hub](../../development/index.md) - Development tools and coding standards for FLEXT projects
 - [Infrastructure Hub](../../infrastructure/index.md) - Production infrastructure setup and deployment patterns
 - [Deployment Hub](../../deployment/index.md) - Production deployment strategies and configuration
 - [Security Hub](../../security/index.md) - Security configuration and authentication setup
@@ -62,4 +62,4 @@
 
 ---
 
-**📂 Section Hub** | **🏠 Parent**: [Getting Started Hub](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Section Hub** | **🏠 Parent**: [Getting Started Hub](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

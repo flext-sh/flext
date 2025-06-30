@@ -1,6 +1,6 @@
-# FLX Testing Adapters
+# FLEXT Testing Adapters
 
-Mock and stub implementations for testing infrastructure components in the FLX hexagonal architecture framework.
+Mock and stub implementations for testing infrastructure components in the FLEXT hexagonal architecture framework.
 
 ## Overview
 
@@ -251,7 +251,7 @@ assert cached_prefs == preferences
 
 ## Integration with Testing Engines
 
-These adapters integrate seamlessly with the FLX testing engines:
+These adapters integrate seamlessly with the FLEXT testing engines:
 
 ```python
 from flext.testing.engines import ComprehensiveTestEngine

@@ -6,7 +6,7 @@
 [![Enterprise](https://img.shields.io/badge/enterprise-architecture-green.svg)](./client-b-oic-wms-architecture.md)
 [![Patterns](https://img.shields.io/badge/patterns-validated-orange.svg)](./meltano-integration-hub.md)
 
-**Cross-system integration patterns and enterprise architecture implementations using FLX Framework**
+**Cross-system integration patterns and enterprise architecture implementations using FLEXT Framework**
 
 ---
 
@@ -16,7 +16,7 @@
 
 ### **🎯 Hub Purpose**
 
-This hub provides comprehensive patterns for integrating FLX Framework with external systems, covering data integration patterns, enterprise architectures, and cross-system communication strategies.
+This hub provides comprehensive patterns for integrating FLEXT Framework with external systems, covering data integration patterns, enterprise architectures, and cross-system communication strategies.
 
 ---
 
@@ -139,4 +139,4 @@ This hub provides comprehensive patterns for integrating FLX Framework with exte
 
 ---
 
-**📂 Section Hub** | **🏠 Parent**: [Architecture Hub](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Section Hub** | **🏠 Parent**: [Architecture Hub](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

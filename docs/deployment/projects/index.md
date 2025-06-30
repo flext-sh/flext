@@ -6,7 +6,7 @@
 [![Enterprise](https://img.shields.io/badge/enterprise-customized-green.svg)](./client-b-deployment.md)
 [![Integration](https://img.shields.io/badge/integration-oracle-orange.svg)](./client-b-deployment.md)
 
-**Project-specific deployment guides for FLX Framework with organization-tailored procedures and enterprise integration patterns**
+**Project-specific deployment guides for FLEXT Framework with organization-tailored procedures and enterprise integration patterns**
 
 ---
 
@@ -61,4 +61,4 @@
 
 ---
 
-**📂 Section Hub** | **🏠 Parent**: [Deployment Hub](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Section Hub** | **🏠 Parent**: [Deployment Hub](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

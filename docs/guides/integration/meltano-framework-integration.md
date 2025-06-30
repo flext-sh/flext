@@ -1,10 +1,10 @@
 # Meltano Framework Integration
 
-> **Integrating Meltano's declarative code-first data integration engine with FLX framework**
+> **Integrating Meltano's declarative code-first data integration engine with FLEXT framework**
 
 ## Overview
 
-Meltano is a declarative code-first data integration engine that unlocks 600+ APIs and databases. When integrated with the FLX framework, it provides powerful capabilities for enterprise data pipelines while maintaining hexagonal architecture principles.
+Meltano is a declarative code-first data integration engine that unlocks 600+ APIs and databases. When integrated with the FLEXT framework, it provides powerful capabilities for enterprise data pipelines while maintaining hexagonal architecture principles.
 
 ## What is Meltano?
 
@@ -15,7 +15,7 @@ Meltano eliminates the need to write, maintain, and scale custom API integration
 - **Code-First Approach**: Version control your data pipelines
 - **Production Ready**: Battle-tested in enterprise environments
 
-## Integration with FLX Framework
+## Integration with FLEXT Framework
 
 ### Adapter Pattern Implementation
 
@@ -25,13 +25,13 @@ from meltano.core.project import Project
 from typing import Dict, Any, List
 
 class MeltanoAdapter(BaseAdapter):
-    """FLX adapter for Meltano integration."""
+    """FLEXT adapter for Meltano integration."""
 
     def __init__(self, project_dir: str):
         self.project = Project(project_dir)
 
     async def run_extraction(self, tap: str, target: str) -> bool:
-        """Run Meltano ELT pipeline through FLX adapter."""
+        """Run Meltano ELT pipeline through FLEXT adapter."""
         try:
             result = await self.project.run([tap, target])
             return result.success
@@ -48,21 +48,21 @@ class MeltanoAdapter(BaseAdapter):
         return [plugin.name for plugin in self.project.plugins.loaders()]
 ```
 
-### FLX Configuration Integration
+### FLEXT Configuration Integration
 
 ```python
 from flext.core.config import Config
 from meltano.core.project_add_service import ProjectAddService
 
 class FLXMeltanoConfig(Config):
-    """FLX configuration for Meltano integration."""
+    """FLEXT configuration for Meltano integration."""
 
     meltano_project_dir: str = "./meltano"
     auto_discover_plugins: bool = True
     plugin_install_timeout: int = 300
 
     async def setup_meltano_project(self):
-        """Initialize Meltano project with FLX integration."""
+        """Initialize Meltano project with FLEXT integration."""
         project = Project(self.meltano_project_dir)
 
         # Add common extractors
@@ -129,14 +129,14 @@ plugins:
 
 ## Integration Patterns
 
-### 1. ELT Pipeline with FLX
+### 1. ELT Pipeline with FLEXT
 
 ```python
 from flext.core.application import Application
 from flext.adapters.meltano import MeltanoAdapter
 
 class DataPipelineApplication(Application):
-    """FLX application with Meltano integration."""
+    """FLEXT application with Meltano integration."""
 
     def __init__(self):
         super().__init__()
@@ -164,7 +164,7 @@ from singer_sdk import Tap, Target
 from flext.adapters.base import BaseAdapter
 
 class FLXCustomTap(Tap):
-    """Custom tap integrated with FLX framework."""
+    """Custom tap integrated with FLEXT framework."""
 
     name = "tap-flext-custom"
 
@@ -173,11 +173,11 @@ class FLXCustomTap(Tap):
         self.flext_adapter = flext_adapter
 
     def discover_streams(self):
-        """Discover streams using FLX adapter."""
+        """Discover streams using FLEXT adapter."""
         return self.flext_adapter.discover_entities()
 ```
 
-### 3. Orchestration with FLX
+### 3. Orchestration with FLEXT
 
 ```python
 from airflow import DAG
@@ -185,10 +185,10 @@ from airflow.operators.python import PythonOperator
 from flext.core.orchestration import TaskOrchestrator
 
 def run_flext_meltano_pipeline(**context):
-    """Airflow task for FLX-Meltano pipeline."""
+    """Airflow task for FLEXT-Meltano pipeline."""
     orchestrator = TaskOrchestrator()
 
-    # Run Meltano pipeline through FLX
+    # Run Meltano pipeline through FLEXT
     result = await orchestrator.run_pipeline(
         pipeline_name="customer_data_sync",
         source="crm_api",
@@ -215,7 +215,7 @@ pipeline_task = PythonOperator(
 ### 1. Setup Integration
 
 ```bash
-# Initialize FLX project with Meltano
+# Initialize FLEXT project with Meltano
 flext init --with-meltano
 
 # Install Meltano
@@ -238,10 +238,10 @@ meltano add loader target-postgres
 meltano add transformer dbt-postgres
 ```
 
-### 3. Configure with FLX
+### 3. Configure with FLEXT
 
 ```bash
-# Generate FLX configuration
+# Generate FLEXT configuration
 flext config generate --meltano ./meltano
 
 # Set environment variables
@@ -255,7 +255,7 @@ export FLX_MELTANO_INTEGRATION=true
 # Run through Meltano CLI
 meltano run tap-postgres target-postgres
 
-# Run through FLX CLI
+# Run through FLEXT CLI
 flext pipeline run --meltano customer_sync
 
 # Run with orchestration
@@ -303,18 +303,18 @@ metrics.track_pipeline_execution(
 ### 1. Environment Management
 
 - Use separate Meltano environments for dev/staging/prod
-- Integrate with FLX environment configuration
-- Secure credential management through FLX adapters
+- Integrate with FLEXT environment configuration
+- Secure credential management through FLEXT adapters
 
 ### 2. Error Handling
 
-- Implement FLX error handling patterns
+- Implement FLEXT error handling patterns
 - Use structured logging for debugging
 - Set up alerting for pipeline failures
 
 ### 3. Performance Optimization
 
-- Leverage FLX async capabilities
+- Leverage FLEXT async capabilities
 - Use incremental extraction where possible
 - Implement proper resource management
 
@@ -322,7 +322,7 @@ metrics.track_pipeline_execution(
 
 - [Singer SDK Integration](singer-sdk-integration.md)
 - [Meltano Plugins Integration](meltano-plugins-integration.md)
-- [FLX Orchestration Guide](../architecture/orchestration-patterns.md)
+- [FLEXT Orchestration Guide](../architecture/orchestration-patterns.md)
 - [Data Pipeline Architecture](../architecture/data-pipeline-patterns.md)
 
 ## External Resources

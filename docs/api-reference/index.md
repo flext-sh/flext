@@ -1,13 +1,13 @@
 # 📚 API Reference Hub - Complete Framework Documentation
 
-> **Function**: Complete API documentation for FLX Framework 0.4.0+ | **Audience**: Developers, integration engineers, API consumers | **Status**: ✅ Source Validated
+> **Function**: Complete API documentation for FLEXT Framework 0.4.0+ | **Audience**: Developers, integration engineers, API consumers | **Status**: ✅ Source Validated
 
 [![API Docs](https://img.shields.io/badge/api-documented-green.svg)](./framework/core-api-reference-validated.md)
 [![Source Validated](https://img.shields.io/badge/source-validated-blue.svg)](./core/index.md)
 [![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](../getting-started/setup/installation-guide.md)
 [![Type Safety](https://img.shields.io/badge/types-strict-purple.svg)](./comprehensive/flext-complete-api.md)
 
-**Enterprise API reference for FLX Framework 0.4.0+ validated against actual `/flext/src/` source code with strict type safety**
+**Enterprise API reference for FLEXT Framework 0.4.0+ validated against actual `/flext/src/` source code with strict type safety**
 
 ---
 
@@ -31,7 +31,7 @@
 
 ## 📊 **Overview**
 
-The API Reference Hub provides complete, source-validated API documentation for FLX Framework 0.4.0+. All APIs are validated against actual `/flext/src/` source code and include strict type annotations for Python 3.13+ development.
+The API Reference Hub provides complete, source-validated API documentation for FLEXT Framework 0.4.0+. All APIs are validated against actual `/flext/src/` source code and include strict type annotations for Python 3.13+ development.
 
 ### **API Categories**
 
@@ -67,7 +67,7 @@ The API Reference Hub provides complete, source-validated API documentation for 
 ### **🚀 Framework Developers**
 
 1. **Complete Reference**: [Comprehensive API](./comprehensive/flext-complete-api.md)
-2. **Technical Reference**: [FLX Technical Reference](./flext-technical-reference.md)
+2. **Technical Reference**: [FLEXT Technical Reference](./flext-technical-reference.md)
 3. **Advanced Architecture**: [Core Events](./core/events.md)
 
 ## 🔗 **Cross-References**
@@ -104,4 +104,4 @@ The API Reference Hub provides complete, source-validated API documentation for 
 
 ---
 
-**📂 Hub**: [API Reference Hub](#) | **🏠 Root**: [Documentation Home](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [API Reference Hub](#) | **🏠 Root**: [Documentation Home](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

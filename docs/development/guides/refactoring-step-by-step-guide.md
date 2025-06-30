@@ -1,11 +1,11 @@
 # Refactoring Step-by-Step Guide - Development
 
-> **Function**: Detailed systematic FLX framework refactoring roadmap | **Audience**: Framework developers, refactoring teams | **Status**: Stable
+> **Function**: Detailed systematic FLEXT framework refactoring roadmap | **Audience**: Framework developers, refactoring teams | **Status**: Stable
 
 [![Development](https://img.shields.io/badge/development-guides-green.svg)](../index.md)
 [![Refactoring](https://img.shields.io/badge/refactoring-systematic-blue.svg)](./index.md)
 
-**Comprehensive step-by-step roadmap for FLX framework refactoring with phase-by-phase validation and progress tracking**
+**Comprehensive step-by-step roadmap for FLEXT framework refactoring with phase-by-phase validation and progress tracking**
 
 ---
 
@@ -27,7 +27,7 @@
 
 ## 📋 **Overview**
 
-This guide provides a detailed roadmap for the comprehensive FLX framework refactoring. Follow this step-by-step to ensure you never lose track of progress and maintain focus on achieving spectacular standardization.
+This guide provides a detailed roadmap for the comprehensive FLEXT framework refactoring. Follow this step-by-step to ensure you never lose track of progress and maintain focus on achieving spectacular standardization.
 
 ### **Never Get Lost Navigation Guide**
 
@@ -71,7 +71,7 @@ python --version  # Must be >= 3.13
 pip install rich click pydantic mypy ruff pytest coverage
 
 # Project structure check
-ls -la src/flext/  # Ensure FLX source exists
+ls -la src/flext/  # Ensure FLEXT source exists
 ls -la examples/ # Ensure examples directory exists
 ls -la tests/    # Ensure tests directory exists
 ```
@@ -388,8 +388,8 @@ from pydantic import BaseModel, Field
 
 T = TypeVar("T")
 
-class FlxFactoryConfig(BaseModel):
-    """Configuration for FLX factories."""
+class FlextFactoryConfig(BaseModel):
+    """Configuration for FLEXT factories."""
 
     factory_name: str = Field(..., description="Name of the factory")
     enabled: bool = Field(default=True, description="Whether factory is enabled")
@@ -400,7 +400,7 @@ class FlxFactoryConfig(BaseModel):
 class BaseFlxFactory(Generic[T], ABC):
     """Abstract base factory providing common functionality."""
 
-    def __init__(self, config: FlxFactoryConfig):
+    def __init__(self, config: FlextFactoryConfig):
         self.config = config
         self._instances: dict[str, T] = {}
         self._validators: list[callable] = []
@@ -487,7 +487,7 @@ def display_dashboard():
     """Display metrics dashboard."""
     metrics = get_current_metrics()
 
-    print("🎯 FLX Refactoring Metrics Dashboard")
+    print("🎯 FLEXT Refactoring Metrics Dashboard")
     print("=" * 40)
     print(f"📁 Python Files: {metrics.get('file_count', 'N/A')}")
     print(f"📝 Lines of Code: {metrics.get('total_lines', 'N/A'):,}")
@@ -596,8 +596,8 @@ git diff HEAD~1 HEAD
 
 ---
 
-This comprehensive step-by-step guide ensures systematic progress through the FLX framework refactoring process. Follow the phase-by-phase approach, validate at each step, and maintain continuous progress tracking for successful completion of the spectacular standardization effort.
+This comprehensive step-by-step guide ensures systematic progress through the FLEXT framework refactoring process. Follow the phase-by-phase approach, validate at each step, and maintain continuous progress tracking for successful completion of the spectacular standardization effort.
 
 ---
 
-**📂 Hub**: [Development Guides](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Development Guides](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

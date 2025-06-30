@@ -1,8 +1,8 @@
-# FLX Testing Framework
+# FLEXT Testing Framework
 
 ## Overview
 
-The FLX Testing Framework provides a comprehensive testing infrastructure specifically designed for hexagonal architecture applications. It offers specialized testing engines, adapter mocks, and utilities that understand the unique patterns and requirements of port-adapter architecture.
+The FLEXT Testing Framework provides a comprehensive testing infrastructure specifically designed for hexagonal architecture applications. It offers specialized testing engines, adapter mocks, and utilities that understand the unique patterns and requirements of port-adapter architecture.
 
 ## Architecture Principles
 
@@ -617,4 +617,4 @@ async def test_with_debugging(debug_mode):
 
 ---
 
-**📂 Hub**: [Testing Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Testing Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

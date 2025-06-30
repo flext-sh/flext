@@ -6,7 +6,7 @@
 
 ## Overview
 
-The FLX Declarative Testing Framework provides a comprehensive testing infrastructure following hexagonal architecture principles. This framework enables testing of adapters, ports, domain logic, and infrastructure components with declarative patterns.
+The FLEXT Declarative Testing Framework provides a comprehensive testing infrastructure following hexagonal architecture principles. This framework enables testing of adapters, ports, domain logic, and infrastructure components with declarative patterns.
 
 ## TODO IMPLEMENTATION ALIGNMENT
 
@@ -28,7 +28,7 @@ The FLX Declarative Testing Framework provides a comprehensive testing infrastru
 
 ### DeclarativeTestEngine
 
-The main engine for running declarative tests across the FLX framework.
+The main engine for running declarative tests across the FLEXT framework.
 
 ```python
 from flext.testing import DeclarativeTestEngine, create_test_engine

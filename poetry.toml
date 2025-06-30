@@ -1,7 +1,7 @@
 [virtualenvs]
 create = false
 in-project = true
-path = ".venv"
+path = "/home/marlonsc/flext/.venv"
 prefer-active-python = true
 
 [installer]

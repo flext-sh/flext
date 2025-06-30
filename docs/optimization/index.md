@@ -6,7 +6,7 @@
 [![Infrastructure](https://img.shields.io/badge/infrastructure-efficient-blue.svg)](./infrastructure/index.md)
 [![Code Quality](https://img.shields.io/badge/code-modernized-orange.svg)](./code/index.md)
 
-**Complete optimization strategies for FLX Framework - performance tuning, infrastructure efficiency, and code modernization**
+**Complete optimization strategies for FLEXT Framework - performance tuning, infrastructure efficiency, and code modernization**
 
 ---
 
@@ -40,7 +40,7 @@
 
 - [Architecture Hub](../architecture/index.md) - Essential understanding of hexagonal architecture patterns and design principles for optimization
 - [Development Hub](../development/index.md) - Development standards, testing frameworks, and code quality practices required for optimization
-- [Getting Started Hub](../getting-started/index.md) - FLX Framework fundamentals and installation setup before optimization implementation
+- [Getting Started Hub](../getting-started/index.md) - FLEXT Framework fundamentals and installation setup before optimization implementation
 
 ### **➡️ Next Steps**
 
@@ -66,4 +66,4 @@
 
 ---
 
-**📂 Section Hub** | **🏠 Parent**: [Documentation Root](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Section Hub** | **🏠 Parent**: [Documentation Root](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

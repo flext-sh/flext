@@ -1,4 +1,4 @@
-name: FLX Comprehensive Tests
+name: FLEXT Comprehensive Tests
 
 on:
   push:
@@ -75,7 +75,7 @@ jobs:
 
       - name: Validate flext_project structure
         run: |
-          echo "🔍 Validating FLX flext_project structure..."
+          echo "🔍 Validating FLEXT flext_project structure..."
           poetry run python -c "
           import sys
           from pathlib import Path
@@ -152,8 +152,14 @@ jobs:
         flext_project:
           [
             { name: "flext-core", path: "flext/tests" },
-            { name: "flext-database-oracle", path: "flext-database-oracle/tests" },
-            { name: "flext-http-oracle-wms", path: "flext-http-oracle-wms/tests" },
+            {
+              name: "flext-database-oracle",
+              path: "flext-database-oracle/tests",
+            },
+            {
+              name: "flext-http-oracle-wms",
+              path: "flext-http-oracle-wms/tests",
+            },
           ]
 
     steps:
@@ -472,7 +478,7 @@ jobs:
         run: |
           echo "📦 Testing package builds..."
 
-          # Test FLX core build
+          # Test FLEXT core build
           cd flext && poetry build && cd ..
 
           # Test client packages build
@@ -493,9 +499,9 @@ jobs:
           pip install flext-http-oracle-wms/dist/*.whl
 
           # Test imports
-          python -c "import flext; print('✅ FLX core imported successfully')"
-          python -c "import flext_database_oracle; print('✅ FLX Oracle imported successfully')" || true
-          python -c "import flext_http_oracle_wms; print('✅ FLX WMS imported successfully')" || true
+          python -c "import flext; print('✅ FLEXT core imported successfully')"
+          python -c "import flext_database_oracle; print('✅ FLEXT Oracle imported successfully')" || true
+          python -c "import flext_http_oracle_wms; print('✅ FLEXT WMS imported successfully')" || true
 
   # ============================================================================
   # COMPREHENSIVE REPORT
@@ -554,7 +560,7 @@ jobs:
         uses: dorny/test-reporter@v1
         if: always()
         with:
-          name: FLX Test Results
+          name: FLEXT Test Results
           path: "test-results/**/*.xml"
           reporter: java-junit
 
@@ -567,7 +573,7 @@ jobs:
             const path = require('path');
 
             // Read test results and generate comment
-            let comment = '## 🧪 FLX Test Results\n\n';
+            let comment = '## 🧪 FLEXT Test Results\n\n';
 
             // Add summary
             comment += '### Summary\n';
@@ -605,12 +611,12 @@ jobs:
       - name: Notify success
         if: ${{ needs.comprehensive-report.result == 'success' }}
         run: |
-          echo "✅ All FLX tests completed successfully!"
+          echo "✅ All FLEXT tests completed successfully!"
           echo "🎉 Ready for deployment"
 
       - name: Notify failure
         if: ${{ needs.comprehensive-report.result == 'failure' }}
         run: |
-          echo "❌ Some FLX tests failed"
+          echo "❌ Some FLEXT tests failed"
           echo "🔧 Please review the test results and fix issues"
           exit 1

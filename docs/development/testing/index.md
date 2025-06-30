@@ -7,7 +7,7 @@
 [![Coverage](https://img.shields.io/badge/coverage-comprehensive-purple.svg)](./testing-comprehensive-guide.md)
 [![E2E](https://img.shields.io/badge/e2e-automated-orange.svg)](./e2e-testing-guide.md)
 
-**Enterprise testing ecosystem for FLX Framework with hexagonal architecture patterns, declarative testing engines, and comprehensive test coverage**
+**Enterprise testing ecosystem for FLEXT Framework with hexagonal architecture patterns, declarative testing engines, and comprehensive test coverage**
 
 ---
 
@@ -31,7 +31,7 @@
 
 ## 📊 **Overview**
 
-The Testing Hub provides enterprise-grade testing strategies specifically designed for hexagonal architecture patterns. Built with declarative testing engines, comprehensive coverage analysis, and modern testing frameworks for FLX Framework 0.4.0+.
+The Testing Hub provides enterprise-grade testing strategies specifically designed for hexagonal architecture patterns. Built with declarative testing engines, comprehensive coverage analysis, and modern testing frameworks for FLEXT Framework 0.4.0+.
 
 ### **Testing Categories**
 
@@ -108,4 +108,4 @@ The Testing Hub provides enterprise-grade testing strategies specifically design
 
 ---
 
-**📂 Hub**: [Testing Hub](#) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Testing Hub](#) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

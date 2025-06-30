@@ -1,12 +1,12 @@
-# 🧪 FLX Unit Testing Guide
+# 🧪 FLEXT Unit Testing Guide
 
 > **Function**: Foundation-level testing for individual components | **Audience**: Developers, test engineers | **Status**: Production-Ready
 
 [![Testing](https://img.shields.io/badge/testing-unit-blue.svg)](./index.md)
 [![Architecture](https://img.shields.io/badge/architecture-hexagonal-green.svg)](../../architecture/index.md)
-[![Framework](https://img.shields.io/badge/framework-FLX%200.4.0-orange.svg)](../../index.md)
+[![Framework](https://img.shields.io/badge/framework-FLEXT%200.4.0-orange.svg)](../../index.md)
 
-**Comprehensive unit testing guide for FLX hexagonal architecture components with isolation patterns, mocking strategies, and domain-driven testing principles**
+**Comprehensive unit testing guide for FLEXT hexagonal architecture components with isolation patterns, mocking strategies, and domain-driven testing principles**
 
 ---
 
@@ -24,7 +24,7 @@ Foundational testing guide focusing on individual component isolation, fast exec
 
 ## Unit Testing Philosophy
 
-FLX unit testing embodies:
+FLEXT unit testing embodies:
 
 - **Complete Isolation**: Each component tested independently with mocked dependencies
 - **Fast Execution**: Tests run in <100ms each, full suite in <5 seconds
@@ -268,7 +268,7 @@ class TestCreateUserCommandHandler:
         return {
             'user_repository': mocker.Mock(spec=UserRepository),
             'event_bus': mocker.Mock(spec=EventBus),
-            'logger': mocker.Mock(spec=FlxLogger)
+            'logger': mocker.Mock(spec=FlextLogger)
         }
 
     @pytest.fixture
@@ -601,7 +601,7 @@ def sample_domain_event():
 @pytest.fixture
 def mock_logger(mocker):
     """Create mock logger for testing."""
-    return mocker.Mock(spec=FlxLogger)
+    return mocker.Mock(spec=FlextLogger)
 
 @pytest.fixture
 def mock_event_bus(mocker):
@@ -945,7 +945,7 @@ def test_user_creation(user_fixture):
 
 ---
 
-**📂 Content Document** | **🏠 Parent**: [Testing Hub](./index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Content Document** | **🏠 Parent**: [Testing Hub](./index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11
 
 ```
 

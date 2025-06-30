@@ -4,7 +4,7 @@
 
 ## Overview
 
-GitHub repository templates, issue templates, pull request templates, and workflow templates for FLX framework development. Standardized templates for consistent project setup and collaboration.
+GitHub repository templates, issue templates, pull request templates, and workflow templates for FLEXT framework development. Standardized templates for consistent project setup and collaboration.
 
 ## Quick Links
 
@@ -69,4 +69,4 @@ GitHub repository templates, issue templates, pull request templates, and workfl
 
 ---
 
-_Part of the [FLX Framework Documentation](../../../index.md)_
+_Part of the [FLEXT Framework Documentation](../../../index.md)_

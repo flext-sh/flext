@@ -106,7 +106,7 @@ python scripts/project_manage.py [command] [options]
 
 **Scaffold Management Script**
 
-Manages FLX project templates and scaffolds:
+Manages FLEXT project templates and scaffolds:
 
 - Template creation and management
 - Project scaffolding

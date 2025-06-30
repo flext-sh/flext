@@ -4,7 +4,7 @@
 
 [![Standards](https://img.shields.io/badge/standards-type--safety-blue.svg)](./index.md)
 [![MyPy](https://img.shields.io/badge/mypy-validation-orange.svg)](../testing/validation-testing.md)
-[![Framework](https://img.shields.io/badge/framework-FLX%200.4.0-green.svg)](../../index.md)
+[![Framework](https://img.shields.io/badge/framework-FLEXT%200.4.0-green.svg)](../../index.md)
 
 **Complete guide for type checking best practices and systematic error resolution using MyPy**
 
@@ -24,7 +24,7 @@
 
 - **📂 Section Hub**: [Development Standards](./index.md)
 - **🏠 Documentation Root**: [Root Index](../../index.md)
-- **🔗 Source Code**: [FLX Type Safety](../../../flext/src/flext/core/types/)
+- **🔗 Source Code**: [FLEXT Type Safety](../../../flext/src/flext/core/types/)
 - **🔗 Related**: [Testing Standards](../testing/index.md), [Code Quality](./code-quality.md)
 
 ---
@@ -242,7 +242,7 @@ class SampleCommand(Command):
 
 - [Development Standards](./index.md) - Understanding development standards and patterns
 - [Coding Standards](./coding-standards.md) - Code style and quality guidelines
-- [Getting Started](../../getting-started/index.md) - FLX Framework installation and setup
+- [Getting Started](../../getting-started/index.md) - FLEXT Framework installation and setup
 
 ### **Next Steps**
 
@@ -277,7 +277,7 @@ For type safety issues:
 
 ---
 
-**📂 Hub**: [Development Standards](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-19
+**📂 Hub**: [Development Standards](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-19
 
 ## 📊 REAL-WORLD SYSTEMATIC RESULTS
 

@@ -2,7 +2,7 @@
 
 ## Overview
 
-Integration testing in the FLX framework validates component interactions and ensures that different layers of the hexagonal architecture work together correctly while maintaining clear boundaries and contracts.
+Integration testing in the FLEXT framework validates component interactions and ensures that different layers of the hexagonal architecture work together correctly while maintaining clear boundaries and contracts.
 
 ## Integration Testing Strategy
 
@@ -389,4 +389,4 @@ pytest --cov=src/flext --cov-report=html
 
 ---
 
-_This guide provides comprehensive patterns for integration testing in the FLX framework, ensuring robust component interactions while maintaining architectural boundaries._
+_This guide provides comprehensive patterns for integration testing in the FLEXT framework, ensuring robust component interactions while maintaining architectural boundaries._

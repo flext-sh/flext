@@ -4,7 +4,7 @@
 
 ## Overview
 
-Complete Oracle authentication guide for the FLX framework, covering OAuth2, JWT, SSO, database authentication, and security best practices for all Oracle systems including OIC, WMS, and Database integrations.
+Complete Oracle authentication guide for the FLEXT framework, covering OAuth2, JWT, SSO, database authentication, and security best practices for all Oracle systems including OIC, WMS, and Database integrations.
 
 ## 🎯 Quick Navigation
 
@@ -65,8 +65,8 @@ OAuth2 Client Credentials is the **gold standard** for machine-to-machine integr
 
    ```
    Applications → Add → Confidential Application
-   Name: "FLX-Oracle-Integration"
-   Description: "FLX Framework Oracle Integration Client"
+   Name: "FLEXT-Oracle-Integration"
+   Description: "FLEXT Framework Oracle Integration Client"
    ```
 
 3. **Configure Client Settings**
@@ -140,13 +140,13 @@ WMS_PASSWORD=wms_password
 - In `API_AUD`: There IS a slash after port (443)
 - URLs must include `https://`
 
-### FLX Framework Implementation
+### FLEXT Framework Implementation
 
-#### Using FLX OAuth2 Service
+#### Using FLEXT OAuth2 Service
 
 ```python
 from flext.adapters.oracle.auth import OracleAuthenticationService
-from flext.infrastructure.http import FlxJwtService
+from flext.infrastructure.http import FlextJwtService
 
 # Initialize OAuth2 authentication
 auth_service = OracleAuthenticationService(
@@ -878,7 +878,7 @@ nslookup $ORACLE_HOST
 - [Oracle WMS Integration](wms-complete-guide.md) - WMS authentication patterns
 - [Oracle OIC Integration](oic-complete-guide.md) - OIC OAuth2 implementation
 - [Oracle Database Integration](database-complete-guide.md) - Database security
-- [FLX Security Architecture](../../architecture/security-architecture.md) - Framework security
+- [FLEXT Security Architecture](../../architecture/security-architecture.md) - Framework security
 - [Production Deployment](../../deployment/oracle-deployment.md) - Production security
 
 ## 🆘 Support
@@ -899,4 +899,4 @@ For authentication support:
 
 ---
 
-_This comprehensive authentication guide provides complete security implementation for all Oracle integrations within the FLX framework, ensuring enterprise-grade security and compliance._
+_This comprehensive authentication guide provides complete security implementation for all Oracle integrations within the FLEXT framework, ensuring enterprise-grade security and compliance._

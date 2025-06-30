@@ -1,12 +1,12 @@
 # 🏗️ Infrastructure Deployment - Navigation Hub
 
-> **Function**: Infrastructure provisioning and automation for FLX deployments | **Audience**: Infrastructure engineers, platform teams, DevOps
+> **Function**: Infrastructure provisioning and automation for FLEXT deployments | **Audience**: Infrastructure engineers, platform teams, DevOps
 
 [![Infrastructure](https://img.shields.io/badge/infrastructure-as_code-blue.svg)](./infrastructure-deployment.md)
 [![Automation](https://img.shields.io/badge/automation-terraform-green.svg)](./infrastructure-deployment.md)
 [![Cloud](https://img.shields.io/badge/cloud-multi_provider-orange.svg)](./infrastructure-deployment.md)
 
-**Complete infrastructure deployment automation for FLX Framework with Infrastructure as Code and multi-cloud support**
+**Complete infrastructure deployment automation for FLEXT Framework with Infrastructure as Code and multi-cloud support**
 
 ---
 
@@ -61,4 +61,4 @@
 
 ---
 
-**📂 Section Hub** | **🏠 Parent**: [Deployment Hub](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Section Hub** | **🏠 Parent**: [Deployment Hub](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

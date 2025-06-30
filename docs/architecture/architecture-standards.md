@@ -4,9 +4,9 @@
 
 [![Architecture](https://img.shields.io/badge/architecture-standards-blue.svg)](./index.md)
 [![Hexagonal](https://img.shields.io/badge/pattern-hexagonal-orange.svg)](./patterns/hexagonal-architecture.md)
-[![Framework](https://img.shields.io/badge/framework-FLX%200.4.0-green.svg)](../index.md)
+[![Framework](https://img.shields.io/badge/framework-FLEXT%200.4.0-green.svg)](../index.md)
 
-**Hexagonal architecture guidelines and standards for FLX Framework enterprise development**
+**Hexagonal architecture guidelines and standards for FLEXT Framework enterprise development**
 
 ---
 
@@ -24,14 +24,14 @@
 
 - **📂 Section Hub**: [Architecture Hub](./index.md)
 - **🏠 Documentation Root**: [Root Index](../index.md)
-- **🔗 Source Code**: [FLX Core Architecture](../../flext/src/flext/core/)
+- **🔗 Source Code**: [FLEXT Core Architecture](../../flext/src/flext/core/)
 - **🔗 Related**: [Design Patterns](./patterns/index.md), [Development Standards](../development/standards/index.md)
 
 ---
 
 ## 📋 **Overview**
 
-Hexagonal architecture guidelines and standards for FLX Framework enterprise development.
+Hexagonal architecture guidelines and standards for FLEXT Framework enterprise development.
 
 ## 🏗️ HEXAGONAL ARCHITECTURE PRINCIPLES
 
@@ -437,7 +437,7 @@ jobs:
 ### **Prerequisites**
 
 - [Architecture Overview](./index.md) - Understanding hexagonal architecture fundamentals
-- [Getting Started](../getting-started/index.md) - FLX Framework installation and setup
+- [Getting Started](../getting-started/index.md) - FLEXT Framework installation and setup
 - [Development Environment](../development/setup/environment.md) - Development environment configuration
 
 ### **Next Steps**
@@ -473,4 +473,4 @@ For architectural violations:
 
 ---
 
-**📂 Hub**: [Architecture Hub](./index.md) | **🏠 Root**: [Documentation Home](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-19
+**📂 Hub**: [Architecture Hub](./index.md) | **🏠 Root**: [Documentation Home](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-19

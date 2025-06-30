@@ -30,7 +30,7 @@
 
 ## 📊 **Overview**
 
-Meltano loader plugins (targets) provide enterprise-grade data loading capabilities to Oracle databases and integration platforms. Built on Singer SDK standards with FLX Framework integration for production data pipeline destinations.
+Meltano loader plugins (targets) provide enterprise-grade data loading capabilities to Oracle databases and integration platforms. Built on Singer SDK standards with FLEXT Framework integration for production data pipeline destinations.
 
 ### **Loader Categories**
 
@@ -100,4 +100,4 @@ Meltano loader plugins (targets) provide enterprise-grade data loading capabilit
 
 ---
 
-**📂 Hub**: [Loaders Hub](#) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Loaders Hub](#) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

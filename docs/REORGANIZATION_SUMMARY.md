@@ -1,6 +1,6 @@
 # Documentation Reorganization Summary
 
-> **Date**: 2025-06-19 | **Status**: ✅ COMPLETED | **Framework**: FLX 0.4.0+
+> **Date**: 2025-06-19 | **Status**: ✅ COMPLETED | **Framework**: FLEXT 0.4.0+
 
 ## 📋 **Overview**
 
@@ -55,7 +55,7 @@ Complete reorganization of documentation structure to follow the standardized pa
 
 - ✅ `flext-2.0-architecture.md` - Moved from root to architecture
   - Updated to follow template format
-  - Added navigation context for FLX 2.0 evolution
+  - Added navigation context for FLEXT 2.0 evolution
   - Included cross-references to migration guides
 
 ### **Integration Category**
@@ -185,4 +185,4 @@ All moved files now comply with the mandatory template structure:
 
 ---
 
-**📂 Type**: Reorganization Summary | **🏠 Root**: [Documentation Home](./index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-19
+**📂 Type**: Reorganization Summary | **🏠 Root**: [Documentation Home](./index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-19

@@ -98,4 +98,4 @@ Meltano transformer plugins provide enterprise-grade data transformation capabil
 
 ---
 
-**📂 Hub**: [Transformers Hub](#) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Transformers Hub](#) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

@@ -6,7 +6,7 @@
 [![Architecture](https://img.shields.io/badge/architecture-event_driven-green.svg)](../../architecture/patterns/event-sourcing-implementation.md)
 [![DDD](https://img.shields.io/badge/DDD-events-blue.svg)](../../architecture/patterns/domain-driven-design-patterns.md)
 
-**Event-driven architecture foundation for FLX hexagonal framework implementing Domain Events pattern for business occurrences and loose coupling between bounded contexts - validated against production implementations**
+**Event-driven architecture foundation for FLEXT hexagonal framework implementing Domain Events pattern for business occurrences and loose coupling between bounded contexts - validated against production implementations**
 
 ---
 
@@ -22,13 +22,13 @@
 
 ## Overview
 
-The Domain Events module provides the foundation for event-driven architecture in the FLX hexagonal framework. It implements the Domain Events pattern to capture important business occurrences and enable loose coupling between bounded contexts.
+The Domain Events module provides the foundation for event-driven architecture in the FLEXT hexagonal framework. It implements the Domain Events pattern to capture important business occurrences and enable loose coupling between bounded contexts.
 
 ## Classes
 
 ### DomainEvent
 
-Base class for all domain events in the FLX hexagonal architecture.
+Base class for all domain events in the FLEXT hexagonal architecture.
 
 ```python
 from flext.core.events import DomainEvent
@@ -108,14 +108,14 @@ Create a new event instance with causation ID for event chain tracking.
 caused_event = follow_up_event.with_causation(original_event.event_id)
 ```
 
-### FlxDomainEvent
+### FlextDomainEvent
 
-FLX framework-specific domain event with enhanced multi-tenancy and routing.
+FLEXT framework-specific domain event with enhanced multi-tenancy and routing.
 
 ```python
-from flext.core.events import FlxDomainEvent
+from flext.core.events import FlextDomainEvent
 
-class TenantUserRegistered(FlxDomainEvent):
+class TenantUserRegistered(FlextDomainEvent):
     user_id: str
     email: str
     plan_type: str
@@ -149,12 +149,12 @@ Generate intelligent message routing key for event-driven architectures.
 
 ```python
 # Single-tenant event
-event = FlxDomainEvent()
+event = FlextDomainEvent()
 event.event_type = "UserRegistered"
 assert event.routing_key == "flext.userregistered"
 
 # Multi-tenant event
-tenant_event = FlxDomainEvent(tenant_id="acme_corp")
+tenant_event = FlextDomainEvent(tenant_id="acme_corp")
 tenant_event.event_type = "OrderPlaced"
 assert tenant_event.routing_key == "flext.acme_corp.orderplaced"
 ```
@@ -197,9 +197,9 @@ shipping_event = ShippingScheduled(...).with_causation(order_event.event_id)
 ### Multi-Tenant Events
 
 ```python
-from flext.core.events import FlxDomainEvent
+from flext.core.events import FlextDomainEvent
 
-class TenantOrderPlaced(FlxDomainEvent):
+class TenantOrderPlaced(FlextDomainEvent):
     order_id: str
     customer_id: str
     items: list[dict]
@@ -328,7 +328,7 @@ await subscriber.subscribe(
 2. **Tenant Isolation**: Use tenant_id for proper isolation
 
    ```python
-   event = FlxDomainEvent(
+   event = FlextDomainEvent(
        tenant_id="tenant123",  # Ensures proper routing
        # ... other fields
    )
@@ -387,4 +387,4 @@ except ValidationError as e:
 
 ---
 
-**📂 API Reference** | **🏠 Parent**: [Core APIs Hub](./index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 API Reference** | **🏠 Parent**: [Core APIs Hub](./index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

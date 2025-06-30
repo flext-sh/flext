@@ -6,7 +6,7 @@
 [![Framework](https://img.shields.io/badge/framework-comprehensive-green.svg)](./flext-framework-architecture-guide.md)
 [![Design](https://img.shields.io/badge/design-validated-orange.svg)](./unified-architecture-guide.md)
 
-**Comprehensive hexagonal architecture design patterns and implementation frameworks for FLX**
+**Comprehensive hexagonal architecture design patterns and implementation frameworks for FLEXT**
 
 ---
 
@@ -16,7 +16,7 @@
 
 ### **🎯 Hub Purpose**
 
-This hub provides foundational design patterns and architectural principles for implementing hexagonal architecture with FLX Framework, including comprehensive guides and validated patterns.
+This hub provides foundational design patterns and architectural principles for implementing hexagonal architecture with FLEXT Framework, including comprehensive guides and validated patterns.
 
 ---
 
@@ -27,7 +27,7 @@ This hub provides foundational design patterns and architectural principles for 
 | **Topic**                                                               | **Function**                      | **Audience**         | **Complexity** | **Status** |
 | ----------------------------------------------------------------------- | --------------------------------- | -------------------- | -------------- | ---------- |
 | [**Unified Architecture Guide**](./unified-architecture-guide.md)       | Hexagonal architecture principles | System architects    | ⭐⭐           | ✅ Updated |
-| [**FLX Framework Architecture**](./flext-framework-architecture-guide.md) | Complete framework design         | Framework developers | ⭐⭐⭐         | ✅ Updated |
+| [**FLEXT Framework Architecture**](./flext-framework-architecture-guide.md) | Complete framework design         | Framework developers | ⭐⭐⭐         | ✅ Updated |
 | [**Comprehensive Hub**](./flext-architecture-comprehensive-hub.md)        | All-in-one architecture reference | Technical leads      | ⭐⭐⭐⭐       | ✅ Updated |
 
 ---
@@ -38,13 +38,13 @@ This hub provides foundational design patterns and architectural principles for 
 
 ```
 1. [Unified Architecture Guide](./unified-architecture-guide.md) →
-2. [FLX Framework Architecture](./flext-framework-architecture-guide.md)
+2. [FLEXT Framework Architecture](./flext-framework-architecture-guide.md)
 ```
 
 ### **⚡ For Framework Developers**
 
 ```
-1. [FLX Framework Architecture](./flext-framework-architecture-guide.md) →
+1. [FLEXT Framework Architecture](./flext-framework-architecture-guide.md) →
 2. [Comprehensive Hub](./flext-architecture-comprehensive-hub.md)
 ```
 
@@ -63,7 +63,7 @@ This hub provides foundational design patterns and architectural principles for 
 ### **⬅️ Essential Prerequisites**
 
 - [**Architecture Hub**](../index.md) - Overall architectural concepts and framework organization structure
-- [**Framework Concepts**](../../getting-started/concepts/index.md) - Core FLX Framework concepts before design pattern implementation
+- [**Framework Concepts**](../../getting-started/concepts/index.md) - Core FLEXT Framework concepts before design pattern implementation
 - [**Installation Guide**](../../getting-started/setup/installation-guide.md) - Framework setup required for architectural design
 
 ### **➡️ Implementation Next Steps**
@@ -118,7 +118,7 @@ This hub provides foundational design patterns and architectural principles for 
 
 ### **Design Validation**
 
-- **Real Implementation**: ✅ Based on production FLX Framework architecture
+- **Real Implementation**: ✅ Based on production FLEXT Framework architecture
 - **Oracle Integration**: ✅ Patterns validated with `/flext-*-oracle-*` projects
 - **Pattern Consistency**: ✅ Design patterns used across all framework components
 - **Documentation Standards**: ✅ HOW_TO_DOCUMENT.md compliance
@@ -131,4 +131,4 @@ This hub provides foundational design patterns and architectural principles for 
 
 ---
 
-**📂 Section Hub** | **🏠 Parent**: [Architecture Hub](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Section Hub** | **🏠 Parent**: [Architecture Hub](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

@@ -1,12 +1,12 @@
-# 🛠️ FLX CLI Development Guide
+# 🛠️ FLEXT CLI Development Guide
 
-> **Function**: Command-line interface development for FLX framework tools | **Audience**: CLI developers, automation engineers, DevOps teams | **Status**: Production-Ready
+> **Function**: Command-line interface development for FLEXT framework tools | **Audience**: CLI developers, automation engineers, DevOps teams | **Status**: Production-Ready
 
 [![CLI](https://img.shields.io/badge/cli-development-blue.svg)](./index.md)
 [![Architecture](https://img.shields.io/badge/architecture-hexagonal-green.svg)](../../architecture/index.md)
-[![Framework](https://img.shields.io/badge/framework-FLX%200.4.0-orange.svg)](../../index.md)
+[![Framework](https://img.shields.io/badge/framework-FLEXT%200.4.0-orange.svg)](../../index.md)
 
-**Comprehensive guide for developing command-line interfaces and automation tools for FLX hexagonal architecture framework with modern CLI patterns and best practices**
+**Comprehensive guide for developing command-line interfaces and automation tools for FLEXT hexagonal architecture framework with modern CLI patterns and best practices**
 
 ---
 
@@ -20,11 +20,11 @@
 [Development Hub](../index.md) → [Development Workflow](../guides/development-workflow.md) → **[CLI Development Guide]** → [GitHub Workflow Setup](./github-workflow-setup.md)
 ```
 
-Essential guide for building professional command-line interfaces that integrate with FLX framework development workflow and automation requirements.
+Essential guide for building professional command-line interfaces that integrate with FLEXT framework development workflow and automation requirements.
 
 ## CLI Development Philosophy
 
-FLX CLI development embodies:
+FLEXT CLI development embodies:
 
 - **User-Centric Design**: CLIs designed for developer productivity
 - **Consistent Interface**: Uniform command patterns across tools
@@ -39,7 +39,7 @@ graph TD
     A[CLI Entry Point] --> B[Command Router]
     B --> C[Command Handlers]
     C --> D[Business Logic Layer]
-    D --> E[FLX Application Services]
+    D --> E[FLEXT Application Services]
     E --> F[Domain Layer]
 
     G[Configuration Manager] --> C
@@ -139,7 +139,7 @@ from flext.cli.commands import (
 # Create main CLI application
 app = typer.Typer(
     name="flext",
-    help="FLX Framework Development CLI",
+    help="FLEXT Framework Development CLI",
     epilog="For more information, visit: https://docs.flext-framework.dev",
     no_args_is_help=True,
     rich_markup_mode="rich",
@@ -183,9 +183,9 @@ def main(
     )
 ):
     """
-    FLX Framework Development CLI
+    FLEXT Framework Development CLI
 
-    A comprehensive command-line interface for FLX hexagonal architecture
+    A comprehensive command-line interface for FLEXT hexagonal architecture
     framework development, testing, and deployment operations.
     """
     # Initialize CLI context
@@ -211,12 +211,12 @@ def version(
         help="Show detailed version information"
     )
 ):
-    """Show FLX CLI version information."""
+    """Show FLEXT CLI version information."""
     cli_context: CLIContext = ctx.obj
 
     if detailed:
         version_info = cli_context.get_detailed_version_info()
-        table = Table(title="FLX CLI Version Information")
+        table = Table(title="FLEXT CLI Version Information")
         table.add_column("Component", style="cyan")
         table.add_column("Version", style="green")
         table.add_column("Build", style="yellow")
@@ -226,7 +226,7 @@ def version(
 
         console.print(table)
     else:
-        rprint(f"[green]FLX CLI[/green] version [cyan]{cli_context.version}[/cyan]")
+        rprint(f"[green]FLEXT CLI[/green] version [cyan]{cli_context.version}[/cyan]")
 
 @app.command()
 def info(ctx: typer.Context):
@@ -282,13 +282,13 @@ class CLIContext:
 
     @property
     def version(self) -> str:
-        """Get FLX CLI version."""
+        """Get FLEXT CLI version."""
         return __version__
 
     def get_detailed_version_info(self) -> Dict[str, Dict[str, str]]:
         """Get detailed version information."""
         return {
-            "FLX CLI": {
+            "FLEXT CLI": {
                 "version": self.version,
                 "build": "release"
             },
@@ -585,7 +585,7 @@ from flext.project.models import ProjectConfig, ProjectTemplate
 app = typer.Typer(name="project", help="Project management commands")
 
 class CreateProjectCommand(BaseCommand):
-    """Command to create new FLX projects."""
+    """Command to create new FLEXT projects."""
 
     async def execute(
         self,
@@ -594,7 +594,7 @@ class CreateProjectCommand(BaseCommand):
         directory: Optional[Path] = None,
         **kwargs
     ) -> Dict[str, Any]:
-        """Create a new FLX project."""
+        """Create a new FLEXT project."""
 
         project_dir = directory or Path.cwd() / name
 
@@ -643,7 +643,7 @@ def create(
     directory: Optional[str] = typer.Option(None, help="Target directory"),
     interactive: bool = typer.Option(False, help="Interactive project setup")
 ):
-    """Create a new FLX project."""
+    """Create a new FLEXT project."""
     cli_context: CLIContext = ctx.obj
 
     # Interactive mode
@@ -684,7 +684,7 @@ def list_templates(ctx: typer.Context):
     templates = [
         {
             "name": "basic",
-            "description": "Basic FLX project with core structure",
+            "description": "Basic FLEXT project with core structure",
             "features": "Core architecture, basic testing, documentation"
         },
         {
@@ -736,10 +736,10 @@ def status(
 
     project_dir = Path(project_path) if project_path else Path.cwd()
 
-    # Check if this is an FLX project
+    # Check if this is an FLEXT project
     config_file = project_dir / "pyproject.toml"
     if not config_file.exists():
-        cli_context.print_error("Not an FLX project (no pyproject.toml found)")
+        cli_context.print_error("Not an FLEXT project (no pyproject.toml found)")
         raise typer.Exit(1)
 
     # Gather project information
@@ -1300,4 +1300,4 @@ async def async_operation(
 
 ---
 
-**📂 Content Document** | **🏠 Parent**: [Development Tools](./index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Content Document** | **🏠 Parent**: [Development Tools](./index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

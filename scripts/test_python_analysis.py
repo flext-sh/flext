@@ -59,18 +59,18 @@ def main() -> None:
         "flext-web/src",
         "flext-db-oracle/src",
 =======
-        "flx-core/src",
-        "flx-api/src",
-        "flx-auth/src",
-        "flx-cli/src",
-        "flx-grpc/src",
-        "flx-ldap/src",
-        "flx-meltano/src",
-        "flx-observability/src",
-        "flx-plugin/src",
-        "flx-quality/src",
-        "flx-web/src",
-        "flx-db-oracle/src",
+        "flext-core/src",
+        "flext-api/src",
+        "flext-auth/src",
+        "flext-cli/src",
+        "flext-grpc/src",
+        "flext-ldap/src",
+        "flext-meltano/src",
+        "flext-observability/src",
+        "flext-plugin/src",
+        "flext-quality/src",
+        "flext-web/src",
+        "flext-db-oracle/src",
 >>>>>>> refs/remotes/origin/main
         "oracledb-core-shared/src",
         "tap-ldap/src",
@@ -84,7 +84,7 @@ def main() -> None:
 <<<<<<< HEAD
         "flext-meltano-enterprise-github/src",
 =======
-        "flx-meltano-enterprise-github/src",
+        "flext-meltano-enterprise-github/src",
 >>>>>>> refs/remotes/origin/main
         "dbt-ldap/src",
     ]
@@ -128,7 +128,7 @@ def main() -> None:
 <<<<<<< HEAD
             test_file = workspace_root / "flext-core" / "src" / "flext_core" / "__init__.py"
 =======
-            test_file = workspace_root / "flx-core" / "src" / "flx_core" / "__init__.py"
+            test_file = workspace_root / "flext-core" / "src" / "flext_core" / "__init__.py"
 >>>>>>> refs/remotes/origin/main
             if test_file.exists():
                 result = subprocess.run(

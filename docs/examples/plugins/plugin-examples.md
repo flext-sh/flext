@@ -1,14 +1,14 @@
-# FLX Plugin Examples
+# FLEXT Plugin Examples
 
-Comprehensive examples demonstrating plugin development patterns and custom protocol implementations for the FLX hexagonal architecture framework.
+Comprehensive examples demonstrating plugin development patterns and custom protocol implementations for the FLEXT hexagonal architecture framework.
 
 ## Overview
 
-This directory contains practical examples of how to develop plugins for the FLX framework, including custom protocol implementations, bidirectional adapters, and integration patterns. These examples demonstrate the extensibility and flexibility of the FLX plugin system.
+This directory contains practical examples of how to develop plugins for the FLEXT framework, including custom protocol implementations, bidirectional adapters, and integration patterns. These examples demonstrate the extensibility and flexibility of the FLEXT plugin system.
 
 ## Plugin Architecture
 
-FLX plugins follow the hexagonal architecture pattern, allowing them to act as both inbound and outbound adapters while maintaining clean separation of concerns:
+FLEXT plugins follow the hexagonal architecture pattern, allowing them to act as both inbound and outbound adapters while maintaining clean separation of concerns:
 
 ```
 ┌─────────────────────┐    ┌──────────────────────┐    ┌─────────────────────┐
@@ -50,7 +50,7 @@ Message Format:
 │  (4 bytes)  │  (2 bytes)  │  (4 bytes)  │ (variable)  │
 └─────────────┴─────────────┴─────────────┴─────────────┘
 
-Header: 0x464C5800 (FLX\0)
+Header: 0x464C5800 (FLEXT\0)
 Version: Protocol version (currently 0x0001)
 Length: Payload length in bytes
 Payload: JSON or binary data
@@ -209,7 +209,7 @@ class StatefulPlugin(BasePlugin):
 
 ```python
 class EventDrivenPlugin(BasePlugin):
-    """Plugin that integrates with the FLX event system."""
+    """Plugin that integrates with the FLEXT event system."""
 
     async def initialize(self, event_bus: EventBus) -> None:
         """Initialize plugin with event bus integration."""
@@ -391,7 +391,7 @@ class TestCustomProtocolPlugin:
 
 ```python
 async def test_plugin_integration():
-    """Test plugin integration with FLX application."""
+    """Test plugin integration with FLEXT application."""
     app = create_test_application()
 
     # Register plugin

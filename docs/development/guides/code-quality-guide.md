@@ -1,12 +1,12 @@
-# 🎯 FLX Code Quality Guide
+# 🎯 FLEXT Code Quality Guide
 
-> **Function**: Code quality standards and static analysis for FLX development | **Audience**: Developers, code reviewers, team leads | **Status**: Production-Ready
+> **Function**: Code quality standards and static analysis for FLEXT development | **Audience**: Developers, code reviewers, team leads | **Status**: Production-Ready
 
 [![Quality](https://img.shields.io/badge/quality-standards-blue.svg)](./index.md)
 [![Architecture](https://img.shields.io/badge/architecture-hexagonal-green.svg)](../../architecture/index.md)
-[![Framework](https://img.shields.io/badge/framework-FLX%200.4.0-orange.svg)](../../index.md)
+[![Framework](https://img.shields.io/badge/framework-FLEXT%200.4.0-orange.svg)](../../index.md)
 
-**Comprehensive code quality standards, static analysis tools, and best practices for maintaining high-quality code in FLX hexagonal architecture projects**
+**Comprehensive code quality standards, static analysis tools, and best practices for maintaining high-quality code in FLEXT hexagonal architecture projects**
 
 ---
 
@@ -20,11 +20,11 @@
 [Development Hub](../index.md) → [Guides](./index.md) → **[Code Quality Guide]** → [Development Workflow](./development-workflow.md)
 ```
 
-Essential code quality standards and tooling guide for maintaining professional-grade code in FLX framework development.
+Essential code quality standards and tooling guide for maintaining professional-grade code in FLEXT framework development.
 
 ## Code Quality Philosophy
 
-FLX code quality embodies:
+FLEXT code quality embodies:
 
 - **Readability First**: Code is written to be read by humans
 - **Consistency**: Uniform style and patterns across the codebase
@@ -205,7 +205,7 @@ async def create_user(
     *,
     user_repo: UserRepository,
     event_bus: EventBus,
-    logger: FlxLogger
+    logger: FlextLogger
 ) -> CreateUserResult:
     """Create a new user with validation and event publishing.
 
@@ -262,7 +262,7 @@ class UserService:
         *,
         user_repo: UserRepository,
         event_bus: EventBus,
-        logger: FlxLogger
+        logger: FlextLogger
     ) -> None:
         self._user_repo = user_repo
         self._event_bus = event_bus
@@ -604,7 +604,7 @@ class UserRegistrationService:
         user_repo: UserRepository,
         email_service: EmailService,
         event_bus: EventBus,
-        logger: FlxLogger
+        logger: FlextLogger
     ) -> None:
         """Initialize the registration service.
 
@@ -958,4 +958,4 @@ git diff --name-only --diff-filter=A | xargs ls -la
 
 ---
 
-**📂 Content Document** | **🏠 Parent**: [Development Guides](./index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Content Document** | **🏠 Parent**: [Development Guides](./index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

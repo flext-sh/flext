@@ -7,7 +7,7 @@
 [![Documentation](https://img.shields.io/badge/docs-standardized-orange.svg)](./documentation-standards.md)
 [![Quality](https://img.shields.io/badge/quality-enterprise-gold.svg)](./documentation-guide.md)
 
-**Enterprise code quality standards, development guidelines, and documentation requirements for FLX Framework 0.4.0+ development**
+**Enterprise code quality standards, development guidelines, and documentation requirements for FLEXT Framework 0.4.0+ development**
 
 ---
 
@@ -31,7 +31,7 @@
 
 ## 📊 **Overview**
 
-The Standards Hub establishes enterprise-grade code quality standards and development guidelines for FLX Framework 0.4.0+. These standards ensure consistency, maintainability, and quality across all development activities.
+The Standards Hub establishes enterprise-grade code quality standards and development guidelines for FLEXT Framework 0.4.0+. These standards ensure consistency, maintainability, and quality across all development activities.
 
 ### **Standards Categories**
 
@@ -113,4 +113,4 @@ The Standards Hub establishes enterprise-grade code quality standards and develo
 
 ---
 
-**📂 Hub**: [Standards Hub](#) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Standards Hub](#) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

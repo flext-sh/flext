@@ -6,7 +6,7 @@
 [![Protocols](https://img.shields.io/badge/protocols-framework-blue.svg)](../../api-reference/index.md)
 [![Standards](https://img.shields.io/badge/standards-formal-green.svg)](../../development/index.md)
 
-**Formal technical specifications, protocols, and standards documentation for FLX Framework architecture and implementation**
+**Formal technical specifications, protocols, and standards documentation for FLEXT Framework architecture and implementation**
 
 ---
 
@@ -26,14 +26,14 @@
 
 | **Category** | **Function** | **Audience** | **Status** |
 |--------------|--------------|--------------|------------|
-| **Framework Specifications** | Core FLX Framework technical specifications | System architects | ✅ Available |
+| **Framework Specifications** | Core FLEXT Framework technical specifications | System architects | ✅ Available |
 | **Protocol Specifications** | Communication protocols and interfaces | Protocol developers | ✅ Available |
 | **Integration Specifications** | Oracle and external system integration specs | Integration architects | ✅ Available |
 | **API Specifications** | Complete API specification documents | API developers | ✅ Available |
 
 ### **📋 Learning Path**
 
-1. **🎯 Start Here**: Framework Core Specifications - FLX hexagonal architecture specifications
+1. **🎯 Start Here**: Framework Core Specifications - FLEXT hexagonal architecture specifications
 2. **⚡ Protocol Focus**: Communication Protocols - Port and adapter interface specifications
 3. **📚 Integration Specs**: Oracle Integration Specifications - Oracle platform integration standards
 
@@ -43,11 +43,11 @@
 
 ### **Core Architecture Specifications**
 
-- **[FLX Framework Technical Specification](./flx-framework-technical-specification.md)** - Complete framework implementation specification based on real source code
+- **[FLEXT Framework Technical Specification](./flx-framework-technical-specification.md)** - Complete framework implementation specification based on real source code
 - **[Hexagonal Architecture Specification](../../architecture/index.md)** - Complete hexagonal architecture patterns and implementation standards
 - **[Port Interface Specifications](../../architecture/ports/index.md)** - Formal port interface protocols and contracts
 - **[Adapter Implementation Standards](../../architecture/adapters/index.md)** - Adapter pattern specifications and requirements
-- **[Domain Layer Specifications](../../architecture/layers/core-domain-layer.md)** - Domain-driven design specifications for FLX
+- **[Domain Layer Specifications](../../architecture/layers/core-domain-layer.md)** - Domain-driven design specifications for FLEXT
 
 ### **Integration Specifications**
 
@@ -59,7 +59,7 @@
 
 ### **API Specifications**
 
-- **[Core API Specification](../../api-reference/index.md)** - Complete FLX Framework API specification
+- **[Core API Specification](../../api-reference/index.md)** - Complete FLEXT Framework API specification
 - **[REST API Standards](../../development/standards/index.md)** - REST API design and implementation standards
 - **[Authentication Protocols](../../guides/authentication/index.md)** - Authentication and authorization specifications
 - **[Data Validation Specifications](../../development/standards/data-validation.md)** - Data validation and serialization standards
@@ -83,7 +83,7 @@
 
 ### **⬅️ Prerequisites**
 
-- [Architecture Hub](../../architecture/index.md) - Essential understanding of FLX hexagonal architecture before utilizing specifications
+- [Architecture Hub](../../architecture/index.md) - Essential understanding of FLEXT hexagonal architecture before utilizing specifications
 - [Reference Materials](../materials/index.md) - Technical reference materials providing context for specifications
 - [API Reference Hub](../../api-reference/index.md) - Complete API documentation complementing formal specifications
 
@@ -131,4 +131,4 @@
 
 ---
 
-**📂 Hub**: [Reference Hub](../index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Reference Hub](../index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

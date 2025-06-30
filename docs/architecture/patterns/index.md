@@ -6,7 +6,7 @@
 [![Enterprise](https://img.shields.io/badge/enterprise-CQRS%2BES-green.svg)](./event-sourcing-implementation.md)
 [![Design](https://img.shields.io/badge/design-SOLID-orange.svg)](./solid-principles-implementation.md)
 
-**Complete architectural and design patterns for enterprise FLX Framework applications with production validation**
+**Complete architectural and design patterns for enterprise FLEXT Framework applications with production validation**
 
 ---
 
@@ -16,7 +16,7 @@
 
 ### **🎯 Hub Purpose**
 
-This hub provides comprehensive guidance for implementing domain-driven design, SOLID principles, and enterprise patterns within FLX Framework's hexagonal architecture.
+This hub provides comprehensive guidance for implementing domain-driven design, SOLID principles, and enterprise patterns within FLEXT Framework's hexagonal architecture.
 
 ---
 
@@ -66,7 +66,7 @@ This hub provides comprehensive guidance for implementing domain-driven design, 
 ### **⬅️ Essential Prerequisites**
 
 - [**Design Patterns**](../design/index.md) - Hexagonal architecture foundations and design principles
-- [**Framework Concepts**](../../getting-started/concepts/index.md) - Core FLX Framework understanding before advanced patterns
+- [**Framework Concepts**](../../getting-started/concepts/index.md) - Core FLEXT Framework understanding before advanced patterns
 - [**Ports & Interfaces**](../ports/index.md) - Port interface patterns supporting domain design
 
 ### **➡️ Implementation Next Steps**
@@ -130,7 +130,7 @@ This hub provides comprehensive guidance for implementing domain-driven design, 
 
 ### **Pattern Validation**
 
-- **Real Implementation**: ✅ Based on production FLX Framework domain patterns
+- **Real Implementation**: ✅ Based on production FLEXT Framework domain patterns
 - **Oracle Integration**: ✅ Domain patterns validated with Oracle adapter implementations
 - **Testing Coverage**: ✅ Domain patterns tested with comprehensive test suites
 - **Documentation Standards**: ✅ HOW_TO_DOCUMENT.md compliance
@@ -143,4 +143,4 @@ This hub provides comprehensive guidance for implementing domain-driven design, 
 
 ---
 
-**📂 Section Hub** | **🏠 Parent**: [Architecture Hub](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Section Hub** | **🏠 Parent**: [Architecture Hub](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

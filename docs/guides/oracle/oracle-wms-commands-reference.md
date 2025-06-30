@@ -378,7 +378,7 @@ python -m src.gn_oic_wms_db.cli control stats
 
 ---
 
-## 🔗 **FLX Framework Integration**
+## 🔗 **FLEXT Framework Integration**
 
 ### Programmatic usage
 

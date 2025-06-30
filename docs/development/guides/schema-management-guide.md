@@ -6,7 +6,7 @@
 [![Validation](https://img.shields.io/badge/validation-automated-green.svg)](#schema-validation-adapter)
 [![Integration](https://img.shields.io/badge/integration-FLX_Framework-orange.svg)](#integration-with-flext-framework)
 
-**Enterprise schema management for API integration projects using FLX Framework 0.4.0+ with schema extraction, caching, validation, and hexagonal architecture integration**
+**Enterprise schema management for API integration projects using FLEXT Framework 0.4.0+ with schema extraction, caching, validation, and hexagonal architecture integration**
 
 ---
 
@@ -30,7 +30,7 @@
 
 ## 📋 **Overview**
 
-The FLX framework provides robust schema management capabilities for API integration projects. This guide covers schema extraction, caching, validation, and integration patterns within the hexagonal architecture.
+The FLEXT framework provides robust schema management capabilities for API integration projects. This guide covers schema extraction, caching, validation, and integration patterns within the hexagonal architecture.
 
 ## Schema Directory Structure
 
@@ -129,7 +129,7 @@ Schemas follow JSON Schema specification:
 }
 ```
 
-## Integration with FLX Framework
+## Integration with FLEXT Framework
 
 ### Schema Validation Adapter
 
@@ -139,7 +139,7 @@ from flext.core.exceptions import ValidationError
 import jsonschema
 
 class SchemaValidationAdapter(BaseAdapter):
-    """Adapter for schema validation within FLX framework."""
+    """Adapter for schema validation within FLEXT framework."""
 
     def __init__(self, schema_cache_dir: str = "./schemas"):
         self.schema_cache_dir = schema_cache_dir
@@ -217,7 +217,7 @@ SCHEMA_LOG_LEVEL=INFO
 SCHEMA_LOG_FILE=./logs/schema.log
 ```
 
-### FLX Configuration
+### FLEXT Configuration
 
 ```python
 from flext.core.config import Config
@@ -287,7 +287,7 @@ configure_logging({
 
 - [Environment Configuration](./environment-configuration.md) - Environment setup for schema management configuration
 - [Development Hub](../index.md) - Development fundamentals before working with schemas
-- [API Reference Hub](../../api-reference/index.md) - Understanding FLX Framework API for schema integration
+- [API Reference Hub](../../api-reference/index.md) - Understanding FLEXT Framework API for schema integration
 
 ### **Next Steps**
 
@@ -304,4 +304,4 @@ configure_logging({
 
 ---
 
-**📂 Hub**: [Guides Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Guides Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

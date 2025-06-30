@@ -1,12 +1,12 @@
-# 🔄 FLX Development Workflow Guide
+# 🔄 FLEXT Development Workflow Guide
 
 > **Function**: Complete development process and workflow integration | **Audience**: Developers, team leads, project managers | **Status**: Production-Ready
 
 [![Workflow](https://img.shields.io/badge/workflow-development-blue.svg)](./index.md)
 [![Architecture](https://img.shields.io/badge/architecture-hexagonal-green.svg)](../../architecture/index.md)
-[![Framework](https://img.shields.io/badge/framework-FLX%200.4.0-orange.svg)](../../index.md)
+[![Framework](https://img.shields.io/badge/framework-FLEXT%200.4.0-orange.svg)](../../index.md)
 
-**Comprehensive development workflow guide covering feature development, quality gates, testing cycles, and deployment processes for FLX hexagonal architecture projects**
+**Comprehensive development workflow guide covering feature development, quality gates, testing cycles, and deployment processes for FLEXT hexagonal architecture projects**
 
 ---
 
@@ -20,11 +20,11 @@
 [Development Hub](../index.md) → [Code Quality](./code-quality-guide.md) → **[Development Workflow]** → [Testing Guidelines](../testing/index.md)
 ```
 
-Essential workflow guide for professional FLX development covering the complete development lifecycle from feature planning to production deployment.
+Essential workflow guide for professional FLEXT development covering the complete development lifecycle from feature planning to production deployment.
 
 ## Development Workflow Philosophy
 
-FLX development workflow embodies:
+FLEXT development workflow embodies:
 
 - **Quality First**: Quality gates prevent defects from progressing
 - **Automated Testing**: Comprehensive testing at every stage
@@ -133,7 +133,7 @@ make test
 ### Branch Strategy
 
 ```bash
-# Git flow for FLX development
+# Git flow for FLEXT development
 
 # 1. Create feature branch from main
 git checkout main
@@ -1026,4 +1026,4 @@ KNOWLEDGE_SHARING_PRACTICES = {
 
 ---
 
-**📂 Content Document** | **🏠 Parent**: [Development Guides](./index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Content Document** | **🏠 Parent**: [Development Guides](./index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

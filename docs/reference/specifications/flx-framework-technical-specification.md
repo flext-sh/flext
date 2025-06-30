@@ -1,4 +1,4 @@
-# 📋 FLX Framework Technical Specification
+# 📋 FLEXT Framework Technical Specification
 
 > **Document Type**: Technical Specification | **Audience**: System architects, senior developers | **Scope**: Complete framework implementation
 
@@ -6,13 +6,13 @@
 [![Python](https://img.shields.io/badge/python-3.13+-green.svg)](../../getting-started/setup/installation-guide.md)
 [![Oracle](https://img.shields.io/badge/oracle-enterprise-orange.svg)](../../guides/oracle/index.md)
 
-**Formal technical specification for FLX Framework implementation based on real source code analysis**
+**Formal technical specification for FLEXT Framework implementation based on real source code analysis**
 
 ---
 
 ## 🧭 **Navigation Context**
 
-**🏠 Root**: [Documentation Home](../../index.md) → **📂 Hub**: [Reference](../index.md) → **📂 Specifications**: [Index](./index.md) → **📂 Current**: FLX Framework Technical Specification
+**🏠 Root**: [Documentation Home](../../index.md) → **📂 Hub**: [Reference](../index.md) → **📂 Specifications**: [Index](./index.md) → **📂 Current**: FLEXT Framework Technical Specification
 
 ---
 
@@ -20,7 +20,7 @@
 
 ### **Framework Identity**
 
-- **Name**: FLX Framework (Flexible Architecture Framework)
+- **Name**: FLEXT Framework (Flexible Architecture Framework)
 - **Version**: 0.4.0+
 - **Architecture**: Hexagonal Architecture with DDD patterns
 - **Target Platform**: Python 3.13+ enterprise environments
@@ -216,10 +216,10 @@ database:
 
 ### **1. Oracle Database Integration**
 
-#### **FlxOracleDbAdapter Implementation**
+#### **FlextOracleDbAdapter Implementation**
 
 ```python
-class FlxOracleDbAdapter(BaseAdapter):
+class FlextOracleDbAdapter(BaseAdapter):
     """Oracle Database adapter with enterprise features"""
     
     # Connection configuration
@@ -414,7 +414,7 @@ async def test_entity_event_collection():
 # Integration test example
 @pytest.mark.integration
 async def test_oracle_adapter_connection():
-    adapter = FlxOracleDbAdapter(
+    adapter = FlextOracleDbAdapter(
         host="localhost", port=1521, service_name="XEPDB1",
         username="test", password="test"
     )
@@ -472,11 +472,11 @@ async def test_oracle_adapter_connection():
 ## 📋 **Specification Metadata**
 
 - **Specification Version**: 1.0.0
-- **Framework Version**: FLX 0.4.0+
+- **Framework Version**: FLEXT 0.4.0+
 - **Validation Date**: June 11, 2025
 - **Source Code Base**: `/flx/src/flx/` and Oracle integration projects
 - **Compliance Status**: ✅ 100% validated against implementation
 
 ---
 
-**📂 Specification**: [Technical Specifications Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Specification**: [Technical Specifications Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

@@ -1,12 +1,12 @@
 # ⚡ Performance Optimization Guide
 
-> **Function**: Comprehensive performance optimization strategies for FLX applications | **Audience**: Performance engineers, developers | **Status**: ✅ Production Validated
+> **Function**: Comprehensive performance optimization strategies for FLEXT applications | **Audience**: Performance engineers, developers | **Status**: ✅ Production Validated
 
 [![Performance](https://img.shields.io/badge/performance-optimized-green.svg)](./index.md)
 [![Database](https://img.shields.io/badge/database-optimized-blue.svg)](#database-optimization)
 [![Caching](https://img.shields.io/badge/caching-multi--level-orange.svg)](#caching-strategies)
 
-**Complete performance optimization guide for FLX Framework - database optimization, caching strategies, async patterns, and production tuning**
+**Complete performance optimization guide for FLEXT Framework - database optimization, caching strategies, async patterns, and production tuning**
 
 ---
 
@@ -40,7 +40,7 @@
 
 ## ⚡ Overview
 
-FLX applications can achieve enterprise-scale performance through proper optimization techniques, efficient resource utilization, and strategic caching implementations.
+FLEXT applications can achieve enterprise-scale performance through proper optimization techniques, efficient resource utilization, and strategic caching implementations.
 
 ### **Performance Optimization Areas**
 
@@ -1027,8 +1027,8 @@ async def optimized_customer_processing():
 
 ---
 
-**⚡ Your FLX application now has enterprise-grade performance optimization with advanced database querying, multi-level caching, and efficient async processing patterns!**
+**⚡ Your FLEXT application now has enterprise-grade performance optimization with advanced database querying, multi-level caching, and efficient async processing patterns!**
 
 ---
 
-**📄 Content Document** | **🏠 Parent**: [Performance Hub](./index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📄 Content Document** | **🏠 Parent**: [Performance Hub](./index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

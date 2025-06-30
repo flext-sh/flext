@@ -1,10 +1,10 @@
-# FLX Test Suite - Comprehensive Testing Framework
+# FLEXT Test Suite - Comprehensive Testing Framework
 
-Enterprise-grade test suite for the FLX framework following hexagonal architecture principles, domain-driven design patterns, and modern testing best practices.
+Enterprise-grade test suite for the FLEXT framework following hexagonal architecture principles, domain-driven design patterns, and modern testing best practices.
 
 ## 🧪 Testing Philosophy
 
-The FLX test suite embodies:
+The FLEXT test suite embodies:
 
 - **Hexagonal Architecture Testing**: Clear separation between domain logic, ports, and adapters
 - **Test Pyramid Compliance**: Strong foundation of unit tests, selective integration tests, minimal E2E tests
@@ -66,10 +66,10 @@ tests/
   - Event creation and immutability
   - Event type name generation
   - Event serialization/deserialization
-  - FLX domain event extensions
+  - FLEXT domain event extensions
 - **`test_logging.py`**: Logging system core functionality
-  - FlxLogLevel enumeration and ordering
-  - FlxLogger synchronous/asynchronous patterns
+  - FlextLogLevel enumeration and ordering
+  - FlextLogger synchronous/asynchronous patterns
   - Structured logging with metadata
 - **`test_value_objects.py`**: Value object implementations
   - Immutability and equality enforcement
@@ -206,8 +206,8 @@ async def event_loop():
 
 @pytest.fixture
 async def flext_application():
-    """Create test FLX application with all adapters."""
-    app = FlxApplication(
+    """Create test FLEXT application with all adapters."""
+    app = FlextApplication(
         name="test-app",
         config=TestConfig(),
         adapters=[
@@ -369,7 +369,7 @@ class TestCommandHandlers:
         # Setup mocks
         mock_repo = mocker.Mock(spec=UserRepository)
         mock_event_bus = mocker.Mock(spec=EventBus)
-        mock_logger = mocker.Mock(spec=FlxLogger)
+        mock_logger = mocker.Mock(spec=FlextLogger)
 
         # Configure mock behavior
         mock_repo.get_by_username.return_value = None  # User doesn't exist
@@ -664,4 +664,4 @@ def assert_event_published(event_bus_mock, event_type: Type[DomainEvent]):
 - [E2E Testing Framework](./e2e/README.md)
 - [Test Configuration Guide](./conftest.py)
 
-The FLX test suite provides comprehensive validation of the framework's hexagonal architecture, ensuring production-ready quality and architectural compliance through systematic testing at all levels.
+The FLEXT test suite provides comprehensive validation of the framework's hexagonal architecture, ensuring production-ready quality and architectural compliance through systematic testing at all levels.

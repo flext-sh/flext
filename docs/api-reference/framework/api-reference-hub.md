@@ -1,12 +1,12 @@
-# FLX Framework API - Navigation Hub
+# FLEXT Framework API - Navigation Hub
 
 > **Function**: Central API reference navigation | **Audience**: Developers, integrators | **Status**: Stable
 
 [![API Reference](https://img.shields.io/badge/api-comprehensive-blue.svg)](../index.md)
 [![Validation](https://img.shields.io/badge/validation-100%25-green.svg)](../../development/testing/index.md)
-[![Framework](https://img.shields.io/badge/framework-FLX_0.4.0-orange.svg)](../../index.md)
+[![Framework](https://img.shields.io/badge/framework-FLEXT_0.4.0-orange.svg)](../../index.md)
 
-**Comprehensive navigation hub for all FLX Framework API documentation with role-based access patterns**
+**Comprehensive navigation hub for all FLEXT Framework API documentation with role-based access patterns**
 
 ---
 
@@ -24,21 +24,21 @@
 
 - **📂 Section Hub**: [API Reference Hub](../index.md)
 - **🏠 Documentation Root**: [Root Index](../../index.md)
-- **🔗 Related**: [FLX Adapters Reference](../adapters/flext-adapters-comprehensive-reference.md)
+- **🔗 Related**: [FLEXT Adapters Reference](../adapters/flext-adapters-comprehensive-reference.md)
 
 ---
 
 ## Hub Navigation Strategy
 
-This hub consolidates all FLX framework API documentation, providing comprehensive navigation while preserving all technical content through validated, role-based access patterns.
+This hub consolidates all FLEXT framework API documentation, providing comprehensive navigation while preserving all technical content through validated, role-based access patterns.
 
 ## 📚 Complete API Documentation
 
 ### 🎯 **Quick Access - Most Used APIs**
 
 - **[Core API Reference](./core-api-reference.md)** - Framework core APIs (validated against `/flext/src/flext/core/`)
-- **[FLX Complete API](./flext-complete-api.md)** - Comprehensive API documentation with examples
-- **[FLX Adapters Reference](./flext-adapters-comprehensive-reference.md)** - Complete adapter APIs
+- **[FLEXT Complete API](./flext-complete-api.md)** - Comprehensive API documentation with examples
+- **[FLEXT Adapters Reference](./flext-adapters-comprehensive-reference.md)** - Complete adapter APIs
 
 ### 🏗️ **Core Framework APIs**
 
@@ -68,7 +68,7 @@ from flext.core import (
     HealthCheckMixin, LoggingMixin, MetricsMixin,
 
     # Core models and enums
-    FlxAdapterStatus, FlxConnectionStatus, FlxOperationStatus
+    FlextAdapterStatus, FlextConnectionStatus, FlextOperationStatus
 )
 ```
 
@@ -195,7 +195,7 @@ from flext.testing.runner import TestRunner
 
 ### 1. **Quick Start APIs**
 
-For developers getting started with FLX:
+For developers getting started with FLEXT:
 
 ```python
 # Essential imports for basic usage
@@ -229,7 +229,7 @@ monitoring = AdvancedMonitoring(distributed_tracing=True)
 
 ### 3. **Plugin Development APIs**
 
-For extending FLX with custom functionality:
+For extending FLEXT with custom functionality:
 
 ```python
 # Plugin development framework
@@ -280,7 +280,7 @@ class CustomPlugin(Adapter):
 
 ## 🔍 **API Validation Status**
 
-All APIs in this hub are validated against actual FLX framework implementation:
+All APIs in this hub are validated against actual FLEXT framework implementation:
 
 ### ✅ **Validation Coverage**
 
@@ -302,7 +302,7 @@ All APIs in this hub are validated against actual FLX framework implementation:
 
 ### Advanced Topics
 
-- **[FLX API Overview](./flext-api-overview.md)** - High-level framework overview
+- **[FLEXT API Overview](./flext-api-overview.md)** - High-level framework overview
 - **[Adapter Patterns](./flext-adapters-comprehensive-reference.md)** - Advanced adapter implementation
 - **[Integration Examples](./flext-complete-api.md#examples)** - Real-world integration patterns
 
@@ -334,14 +334,14 @@ This hub preserves and enhances ALL existing API documentation:
 
 ### **Prerequisites**
 
-- [Getting Started Guide](../../getting-started/index.md) - Basic FLX setup and concepts
+- [Getting Started Guide](../../getting-started/index.md) - Basic FLEXT setup and concepts
 - [Core API Reference](./core-api-reference-validated.md) - Essential framework APIs
 
 ### **Next Steps**
 
-- [FLX Adapters Reference](../adapters/flext-adapters-comprehensive-reference.md) - Working with the adapter system
+- [FLEXT Adapters Reference](../adapters/flext-adapters-comprehensive-reference.md) - Working with the adapter system
 - [Integration Examples](../../examples/index.md) - Practical API usage examples
-- [Testing Framework](../../development/testing/index.md) - Testing FLX applications
+- [Testing Framework](../../development/testing/index.md) - Testing FLEXT applications
 
 ### **Related Topics**
 
@@ -351,4 +351,4 @@ This hub preserves and enhances ALL existing API documentation:
 
 ---
 
-**📂 Hub**: [API Reference](../index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [API Reference](../index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

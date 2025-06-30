@@ -1,12 +1,12 @@
 # Validated Practical Usage Guide - Implementation
 
-> **Function**: Real-world usage patterns validated against code examples | **Audience**: Developers implementing FLX | **Status**: ✅ Production Validated
+> **Function**: Real-world usage patterns validated against code examples | **Audience**: Developers implementing FLEXT | **Status**: ✅ Production Validated
 
 [![Practical](https://img.shields.io/badge/type-practical-green.svg)](#real-world-integration-patterns)
 [![Validated](https://img.shields.io/badge/status-code_validated-blue.svg)](#best-practices-summary)
 [![Examples](https://img.shields.io/badge/examples-verified-orange.svg)](#application-context-pattern)
 
-**Production-ready usage patterns demonstrating real FLX Framework 0.4.0+ implementation with validated examples and best practices**
+**Production-ready usage patterns demonstrating real FLEXT Framework 0.4.0+ implementation with validated examples and best practices**
 
 ---
 
@@ -35,12 +35,12 @@ Based on `/examples/flext_integrated_usage.py`:
 ### **Multi-System Integration**
 
 ```python
-class FlxIntegratedApplication:
-    """Integrated FLX Application combining multiple system adapters."""
+class FlextIntegratedApplication:
+    """Integrated FLEXT Application combining multiple system adapters."""
 
     def __init__(self):
         # Oracle Database configuration
-        self.oracle_config = FlxOracleConfig(
+        self.oracle_config = FlextOracleConfig(
             host="localhost",
             port=1521,
             service_name="XEPDB1",
@@ -49,21 +49,21 @@ class FlxIntegratedApplication:
         )
 
         # Application instances
-        self.oracle_app: FlxOracleApplicationContext = None
+        self.oracle_app: FlextOracleApplicationContext = None
         self.wms_app: WmsApplication = None
         self.oic_app: OicApplication = None
 
         # Unified CLI across all systems
-        self.unified_cli: FlxDeclarativeCli = None
+        self.unified_cli: FlextDeclarativeCli = None
 
     async def initialize(self):
         """Initialize all integrated applications."""
         # Initialize Oracle Database
-        self.oracle_app = FlxOracleApplicationContext(self.oracle_config)
+        self.oracle_app = FlextOracleApplicationContext(self.oracle_config)
         await self.oracle_app.__aenter__()
 
         # Create unified CLI
-        self.unified_cli = FlxDeclarativeCli("flext-integrated")
+        self.unified_cli = FlextDeclarativeCli("flext-integrated")
 
         # Register all adapters
         if self.oracle_app.app:
@@ -81,7 +81,7 @@ Real implementation pattern from examples:
 ```python
 async def demonstrate_cross_system_workflow():
     """Workflow spanning multiple systems."""
-    app = FlxIntegratedApplication()
+    app = FlextIntegratedApplication()
     await app.initialize()
 
     try:
@@ -124,7 +124,7 @@ Based on actual Oracle adapter implementation:
 ### **Resource Management**
 
 ```python
-class FlxOracleApplicationContext:
+class FlextOracleApplicationContext:
     """Context manager for Oracle application lifecycle."""
 
     async def __aenter__(self):
@@ -149,7 +149,7 @@ class FlxOracleApplicationContext:
         }
 
         # Create application
-        self.app = FlxOracleApplication(
+        self.app = FlextOracleApplication(
             config=self.config,
             repos=self.repos,
             services=self.services
@@ -168,7 +168,7 @@ class FlxOracleApplicationContext:
 ```python
 async def main():
     # Automatic resource management
-    async with FlxOracleApplicationContext(config) as ctx:
+    async with FlextOracleApplicationContext(config) as ctx:
         # Use application
         customers = await ctx.app.customer_service.find_active()
 
@@ -191,7 +191,7 @@ Based on actual CLI implementation:
 
 ```python
 # Create unified CLI
-cli = FlxDeclarativeCli("my-app")
+cli = FlextDeclarativeCli("my-app")
 
 # Register Oracle adapter
 cli.register_adapter("oracle", oracle_adapter)
@@ -533,7 +533,7 @@ async def test_cross_system_workflow():
         )
 
         # Execute workflow
-        app = FlxIntegratedApplication()
+        app = FlextIntegratedApplication()
         await app.initialize()
 
         # Test order creation
@@ -708,7 +708,7 @@ Based on real implementation analysis:
 
 ### **Prerequisites**
 
-- [Getting Started Hub](../getting-started/index.md) - Basic FLX Framework setup and installation
+- [Getting Started Hub](../getting-started/index.md) - Basic FLEXT Framework setup and installation
 - [Architecture Hub](../architecture/index.md) - Understanding hexagonal architecture patterns before implementation
 - [Core Domain Guide](../architecture/layers/core-domain-layer.md) - Domain layer concepts used in practical examples
 
@@ -730,4 +730,4 @@ Based on real implementation analysis:
 
 ---
 
-**📂 Hub**: [Guides Hub](./index.md) | **🏠 Root**: [Documentation Home](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Guides Hub](./index.md) | **🏠 Root**: [Documentation Home](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

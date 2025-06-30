@@ -6,7 +6,7 @@
 [![SOC2](https://img.shields.io/badge/compliance-SOC2-blue.svg)](./security-policy.md)
 [![Governance](https://img.shields.io/badge/governance-enterprise-green.svg)](./security-policy.md)
 
-**Complete security policies and compliance framework for enterprise FLX Framework implementations**
+**Complete security policies and compliance framework for enterprise FLEXT Framework implementations**
 
 ---
 
@@ -60,4 +60,4 @@
 
 ---
 
-**📂 Section Hub** | **🏠 Parent**: [Security Hub](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Section Hub** | **🏠 Parent**: [Security Hub](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

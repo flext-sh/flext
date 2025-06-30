@@ -1,8 +1,8 @@
-# FLX Framework Troubleshooting and Debugging Guide
+# FLEXT Framework Troubleshooting and Debugging Guide
 
-> **Comprehensive troubleshooting strategies for FLX hexagonal architecture framework**
+> **Comprehensive troubleshooting strategies for FLEXT hexagonal architecture framework**
 
-This guide provides comprehensive troubleshooting strategies for common issues in the FLX hexagonal architecture framework, debugging techniques, and solutions for typical problems encountered during development and deployment.
+This guide provides comprehensive troubleshooting strategies for common issues in the FLEXT hexagonal architecture framework, debugging techniques, and solutions for typical problems encountered during development and deployment.
 
 **Related Documentation**:
 
@@ -96,7 +96,7 @@ find src/ -type d -path "*/flext/*" -exec touch {}/__init__.py \;
 
 ```python
 #!/usr/bin/env python3
-"""Validate FLX development environment setup."""
+"""Validate FLEXT development environment setup."""
 
 import sys
 import subprocess
@@ -113,12 +113,12 @@ def check_environment():
     if not hasattr(sys, 'real_prefix') and not (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix):
         issues.append("Not in a virtual environment")
 
-    # Check FLX installation
+    # Check FLEXT installation
     try:
         import flext
-        print(f"✓ FLX installed at: {flext.__file__}")
+        print(f"✓ FLEXT installed at: {flext.__file__}")
     except ImportError as e:
-        issues.append(f"FLX not importable: {e}")
+        issues.append(f"FLEXT not importable: {e}")
 
     # Check development dependencies
     dev_deps = ['pytest', 'mypy', 'black', 'ruff']
@@ -165,7 +165,7 @@ PermissionError: [Errno 13] Permission denied: 'config/production.yaml'
 
 ```python
 #!/usr/bin/env python3
-"""Configuration troubleshooting script for FLX framework."""
+"""Configuration troubleshooting script for FLEXT framework."""
 
 import os
 import yaml
@@ -176,7 +176,7 @@ from flext.infra.config.hierarchical import ConfigManager
 def diagnose_config_issues():
     """Run comprehensive configuration diagnostics."""
 
-    print("🔍 FLX Configuration Diagnostics")
+    print("🔍 FLEXT Configuration Diagnostics")
     print("=" * 50)
 
     # 1. Check environment variables
@@ -353,4 +353,4 @@ engine = create_async_engine(
 
 ---
 
-_This troubleshooting guide provides comprehensive coverage of common issues and debugging strategies for the FLX hexagonal architecture framework. Use it as a reference when encountering problems during development, testing, or production deployment._
+_This troubleshooting guide provides comprehensive coverage of common issues and debugging strategies for the FLEXT hexagonal architecture framework. Use it as a reference when encountering problems during development, testing, or production deployment._

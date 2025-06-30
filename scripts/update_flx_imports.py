@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Update import paths in extracted FLX modules.
+"""Update import paths in extracted FLEXT modules.
 
 This script updates all imports from the monolithic flext_core structure
 to the new modular structure based on the extracted modules.
@@ -179,7 +179,7 @@ def update_module(module_path: Path) -> dict[str, any]:
 
 def main():
     """Main entry point."""
-    print("FLX Import Path Updater")
+    print("FLEXT Import Path Updater")
     print("=" * 50)
 
     # Base directory
@@ -225,7 +225,7 @@ def main():
     # Write detailed report
     report_path = base_dir / "FLX_IMPORT_UPDATE_REPORT.md"
     with open(report_path, "w") as f:
-        f.write("# FLX Import Update Report\n\n")
+        f.write("# FLEXT Import Update Report\n\n")
         f.write(f"**Date**: {Path(__file__).stat().st_mtime}\n")
         f.write(f"**Total Files Updated**: {total_files}\n")
         f.write(f"**Total Import Changes**: {total_changes}\n\n")

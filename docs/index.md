@@ -1,12 +1,12 @@
-# 🎯 FLX Framework Documentation - Navigation Hub
+# 🎯 FLEXT Framework Documentation - Navigation Hub
 
-> **Function**: Central navigation hub for all FLX Framework documentation | **Audience**: All users
+> **Function**: Central navigation hub for all FLEXT Framework documentation | **Audience**: All users
 
 [![Documentation](https://img.shields.io/badge/docs-standardized-green.svg)](./HOW_TO_DOCUMENT.md)
-[![Framework](https://img.shields.io/badge/FLX-0.4.0+-blue.svg)](./getting-started/index.md)
+[![Framework](https://img.shields.io/badge/FLEXT-0.4.0+-blue.svg)](./getting-started/index.md)
 [![Python](https://img.shields.io/badge/python-3.13+-blue.svg)](./getting-started/setup/installation-guide.md)
 
-Complete documentation hub for FLX Framework - Python 3.13+ hexagonal architecture framework for Oracle integrations
+Complete documentation hub for FLEXT Framework - Python 3.13+ hexagonal architecture framework for Oracle integrations
 
 ---
 
@@ -61,7 +61,7 @@ Complete documentation hub for FLX Framework - Python 3.13+ hexagonal architectu
 
 ### **🆕 New Developers**
 
-Getting started with FLX Framework
+Getting started with FLEXT Framework
 
 ```
 [Installation](./getting-started/setup/installation-guide.md) →
@@ -71,7 +71,7 @@ Getting started with FLX Framework
 
 ### **👨‍💻 Application Developers**
 
-Building applications with FLX
+Building applications with FLEXT
 
 ```
 [Architecture](./architecture/index.md) →
@@ -130,7 +130,7 @@ Deployment and operations
 
 ### **Next Steps**
 
-- [Getting Started Hub](./getting-started/index.md) - Begin your FLX Framework journey with installation and setup
+- [Getting Started Hub](./getting-started/index.md) - Begin your FLEXT Framework journey with installation and setup
 - [Architecture Hub](./architecture/index.md) - Understand hexagonal architecture patterns and design principles
 - [Examples Hub](./examples/index.md) - Explore working code examples and implementation patterns
 
@@ -155,7 +155,7 @@ Deployment and operations
 
 ### **Current Version**
 
-- **FLX Framework**: v0.4.0+
+- **FLEXT Framework**: v0.4.0+
 - **Python**: 3.13+ (with modern type hints)
 - **Architecture**: Hexagonal/Ports & Adapters
 - **Documentation**: Hub-based navigation system
@@ -170,4 +170,4 @@ Deployment and operations
 
 ---
 
-**📂 Documentation Hub** | **🏠 Root**: Documentation Home | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Documentation Hub** | **🏠 Root**: Documentation Home | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

@@ -1,6 +1,6 @@
 # Oracle WMS Operations Guide
 
-A comprehensive guide to Oracle WMS operations available through the FLX HTTP Oracle WMS CLI.
+A comprehensive guide to Oracle WMS operations available through the FLEXT HTTP Oracle WMS CLI.
 
 ## Overview
 

@@ -1,22 +1,22 @@
-# FLX Framework Patterns - Examples
+# FLEXT Framework Patterns - Examples
 
-> **Function**: Modern FLX architecture showcase with advanced patterns | **Audience**: Framework developers, architects | **Status**: Stable
+> **Function**: Modern FLEXT architecture showcase with advanced patterns | **Audience**: Framework developers, architects | **Status**: Stable
 
 [![Examples](https://img.shields.io/badge/examples-modern-green.svg)](./index.md)
 [![Architecture](https://img.shields.io/badge/architecture-hexagonal-blue.svg)](../architecture/index.md)
 [![Patterns](https://img.shields.io/badge/patterns-advanced-orange.svg)](./advanced/index.md)
 
-**Comprehensive showcase of modern FLX framework patterns demonstrating spectacular code reduction and enterprise capabilities**
+**Comprehensive showcase of modern FLEXT framework patterns demonstrating spectacular code reduction and enterprise capabilities**
 
 ---
 
 ## 🧭 **Navigation Context**
 
-**🏠 Root**: [Documentation Home](../index.md) → **📂 Hub**: [Examples Hub](./index.md) → **📄 Current**: FLX Framework Patterns
+**🏠 Root**: [Documentation Home](../index.md) → **📂 Hub**: [Examples Hub](./index.md) → **📄 Current**: FLEXT Framework Patterns
 
 ### **📍 Learning Path Position**
 
-[Templates](./templates/index.md) → **[FLX FRAMEWORK PATTERNS]** → [Real-World Implementations](./real-world-implementations.md)
+[Templates](./templates/index.md) → **[FLEXT FRAMEWORK PATTERNS]** → [Real-World Implementations](./real-world-implementations.md)
 
 ## 🎯 **Quick Links**
 
@@ -28,7 +28,7 @@
 
 ## 📋 **Overview**
 
-This document showcases the spectacular improvements achieved through comprehensive FLX framework refactoring, demonstrating enterprise-grade capabilities with dramatically reduced code complexity. These examples highlight the modern hexagonal architecture patterns that enable **70% code reduction** while maintaining full functionality.
+This document showcases the spectacular improvements achieved through comprehensive FLEXT framework refactoring, demonstrating enterprise-grade capabilities with dramatically reduced code complexity. These examples highlight the modern hexagonal architecture patterns that enable **70% code reduction** while maintaining full functionality.
 
 ### **Key Achievements**
 
@@ -49,14 +49,14 @@ from typing import Any
 
 from flext import ApiClient
 from flext.adapters.outbound.http import HttpClientAdapter
-from flext.core.logging import FlxLogger
+from flext.core.logging import FlextLogger
 from flext.core.advanced_mixins import AdvancedAdapterMixin
 
 
 async def main() -> None:
-    """Enhanced FLX usage example showcasing modern patterns."""
+    """Enhanced FLEXT usage example showcasing modern patterns."""
     # Setup structured logging with enterprise features
-    logger = FlxLogger("flext.examples.modern_quickstart")
+    logger = FlextLogger("flext.examples.modern_quickstart")
 
     # Create client with advanced configuration
     client = ApiClient()
@@ -120,7 +120,7 @@ if __name__ == "__main__":
 
 ```python
 # examples/basic/multi_protocol.py
-from flext import FlxProject, flext_project
+from flext import FlextProject, flext_project
 from flext.adapters import DatabaseAdapter, HttpClientAdapter, MessagingAdapter
 from flext.core.advanced_mixins import AdvancedAdapterMixin
 
@@ -137,7 +137,7 @@ class EnterpriseAdapter(AdvancedAdapterMixin):
 
 
 @flext_project
-class MultiProtocolProject(FlxProject):
+class MultiProtocolProject(FlextProject):
     """Modern multi-protocol project with declarative configuration."""
 
     project_name = "multi-protocol-demo"
@@ -337,7 +337,7 @@ class OrderProcessingFailedEvent(DomainEvent):
 # examples/advanced/domain_example_enhanced.py
 from flext import AggregateRoot, Entity, ValueObject, DomainEvent
 from flext.core.exceptions import BusinessRuleViolationError
-from flext.core.logging import FlxLogger
+from flext.core.logging import FlextLogger
 from flext.core.advanced_mixins import HierarchicalConfigMixin
 
 
@@ -376,7 +376,7 @@ class InventoryItem(Entity, HierarchicalConfigMixin):
 
     def __post_init__(self):
         super().__post_init__()
-        self.logger = FlxLogger(f"inventory.item.{self.sku.value}")
+        self.logger = FlextLogger(f"inventory.item.{self.sku.value}")
 
     @property
     def available_quantity(self) -> int:
@@ -463,7 +463,7 @@ class Warehouse(AggregateRoot, HierarchicalConfigMixin):
     def __post_init__(self):
         super().__post_init__()
         self.items: Dict[str, InventoryItem] = {}
-        self.logger = FlxLogger(f"warehouse.{self.code}")
+        self.logger = FlextLogger(f"warehouse.{self.code}")
 
     @property
     def total_items(self) -> int:
@@ -634,58 +634,58 @@ async def demonstrate_enhanced_domain():
 
 ```python
 # examples/advanced/declarative_example_enhanced.py
-from flext import FlxProject, flext_project
+from flext import FlextProject, flext_project
 from flext.declarative.mixins import (
-    FlxApiMixin, FlxDatabaseMixin, FlxHttpClientMixin,
-    FlxIntegrationMixin, FlxSecurityMixin, FlxMonitoringMixin
+    FlextApiMixin, FlextDatabaseMixin, FlextHttpClientMixin,
+    FlextIntegrationMixin, FlextSecurityMixin, FlextMonitoringMixin
 )
 from flext.declarative.testing import run_full_test_suite, validate_test_coverage
 
 
 @flext_project
 class EnterpriseECommerceProject(
-    FlxProject,
-    FlxApiMixin,
-    FlxDatabaseMixin,
-    FlxHttpClientMixin,
-    FlxIntegrationMixin,
-    FlxSecurityMixin,
-    FlxMonitoringMixin
+    FlextProject,
+    FlextApiMixin,
+    FlextDatabaseMixin,
+    FlextHttpClientMixin,
+    FlextIntegrationMixin,
+    FlextSecurityMixin,
+    FlextMonitoringMixin
 ):
     """Enterprise e-commerce project with comprehensive configuration."""
 
     # Project metadata
     project_name = "enterprise-ecommerce"
     version = "2.0.0"
-    description = "Enterprise e-commerce platform with FLX framework"
+    description = "Enterprise e-commerce platform with FLEXT framework"
 
-    # Database configuration (auto-configured through FlxDatabaseMixin)
+    # Database configuration (auto-configured through FlextDatabaseMixin)
     database_url = "postgresql://user:pass@localhost/ecommerce"
     database_pool_size = 20
     database_enable_ssl = True
 
-    # API configuration (auto-configured through FlxApiMixin)
+    # API configuration (auto-configured through FlextApiMixin)
     api_host = "0.0.0.0"
     api_port = 8000
     api_enable_cors = True
     api_enable_rate_limiting = True
 
-    # HTTP client configuration (auto-configured through FlxHttpClientMixin)
+    # HTTP client configuration (auto-configured through FlextHttpClientMixin)
     http_timeout = 30.0
     http_max_connections = 100
     http_enable_circuit_breaker = True
 
-    # Security configuration (auto-configured through FlxSecurityMixin)
+    # Security configuration (auto-configured through FlextSecurityMixin)
     security_jwt_secret = "your-secret-key"
     security_enable_oauth2 = True
     security_enable_rbac = True
 
-    # Monitoring configuration (auto-configured through FlxMonitoringMixin)
+    # Monitoring configuration (auto-configured through FlextMonitoringMixin)
     monitoring_enable_metrics = True
     monitoring_enable_tracing = True
     monitoring_enable_health_checks = True
 
-    # Integration configuration (auto-configured through FlxIntegrationMixin)
+    # Integration configuration (auto-configured through FlextIntegrationMixin)
     integration_message_broker = "redis://localhost:6379"
     integration_enable_event_sourcing = True
 
@@ -961,7 +961,7 @@ class EnterprisePlatform(AdvancedAdapterMixin):
 
 ### **Prerequisites**
 
-- [Getting Started Guide](../getting-started/basics/quickstart.md) - Basic FLX framework understanding
+- [Getting Started Guide](../getting-started/basics/quickstart.md) - Basic FLEXT framework understanding
 - [Architecture Overview](../architecture/design/flext-framework-architecture-guide.md) - Hexagonal architecture concepts
 - [Development Standards](../development/standards/index.md) - Code quality and standards
 
@@ -981,7 +981,7 @@ class EnterprisePlatform(AdvancedAdapterMixin):
 
 ## 🎯 **Key Takeaways**
 
-The modern FLX framework demonstrates:
+The modern FLEXT framework demonstrates:
 
 1. **70% Code Reduction**: Through advanced mixin patterns and factory systems
 2. **Enterprise Ready**: Complete infrastructure with 7 production engines
@@ -993,4 +993,4 @@ These examples showcase the evolution from traditional verbose implementations t
 
 ---
 
-**📂 Hub**: [Examples Hub](./index.md) | **🏠 Root**: [Documentation Home](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Examples Hub](./index.md) | **🏠 Root**: [Documentation Home](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

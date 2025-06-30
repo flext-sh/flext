@@ -4,9 +4,9 @@
 
 [![Oracle WMS](https://img.shields.io/badge/oracle-wms-red.svg)](./index.md)
 [![Validated](https://img.shields.io/badge/code-validated-green.svg)](../../../flext_http_oracle_wms/)
-[![Framework](https://img.shields.io/badge/framework-FLX%200.4.0-orange.svg)](../../index.md)
+[![Framework](https://img.shields.io/badge/framework-FLEXT%200.4.0-orange.svg)](../../index.md)
 
-**Complete Oracle Warehouse Management System (WMS) integration guide validated against actual FLX implementation**
+**Complete Oracle Warehouse Management System (WMS) integration guide validated against actual FLEXT implementation**
 
 ---
 
@@ -24,19 +24,19 @@
 
 - **📂 Section Hub**: [Oracle Integration Hub](./index.md)
 - **🏠 Documentation Root**: [Root Index](../../index.md)
-- **🔗 Source Code**: [FLX Oracle WMS](../../../flext_http_oracle_wms/)
+- **🔗 Source Code**: [FLEXT Oracle WMS](../../../flext_http_oracle_wms/)
 - **🔗 Related**: [Oracle Authentication](./oracle-authentication-unified-guide.md), [WMS CLI Guide](./oracle-wms-cli-guide.md)
 
 ---
 
 ## 📋 **Overview**
 
-This guide provides comprehensive Oracle WMS integration using the FLX framework. It covers the actual `WmsClient` implementation, authentication, REST API operations, and practical examples validated against production systems.
+This guide provides comprehensive Oracle WMS integration using the FLEXT framework. It covers the actual `WmsClient` implementation, authentication, REST API operations, and practical examples validated against production systems.
 
 ### **Prerequisites**
 
 - [Oracle Authentication Guide](./oracle-authentication-unified-guide.md) - Authentication setup and configuration
-- [Getting Started](../../getting-started/index.md) - FLX Framework basics
+- [Getting Started](../../getting-started/index.md) - FLEXT Framework basics
 - [HTTP Integration Patterns](../development/http-integration-patterns.md) - HTTP client patterns
 
 ### **What You'll Learn**
@@ -629,7 +629,7 @@ async def scheduled_sync():
 ### **Prerequisites**
 
 - [Oracle Authentication Guide](./oracle-authentication-unified-guide.md) - Required authentication setup
-- [Getting Started](../../getting-started/index.md) - FLX Framework fundamentals
+- [Getting Started](../../getting-started/index.md) - FLEXT Framework fundamentals
 - [HTTP Client Configuration](../../guides/development/http-integration-patterns.md) - HTTP patterns
 
 ### **Next Steps**
@@ -704,4 +704,4 @@ async with WmsClient(config) as wms:
 
 ---
 
-**📂 Hub**: [Oracle Integration Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Oracle Integration Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

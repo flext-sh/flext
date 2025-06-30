@@ -98,4 +98,4 @@ Meltano utility plugins provide enterprise-grade orchestration and automation ca
 
 ---
 
-**📂 Hub**: [Utilities Hub](#) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Utilities Hub](#) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

@@ -6,7 +6,7 @@
 [![GitHub](https://img.shields.io/badge/github-workflows-green.svg)](./github-workflow-setup.md)
 [![Scripts](https://img.shields.io/badge/scripts-organized-orange.svg)](./scripts-organization-guide.md)
 
-**Complete development tools ecosystem for FLX framework including automation scripts, CI/CD workflows, and code analysis tools**
+**Complete development tools ecosystem for FLEXT framework including automation scripts, CI/CD workflows, and code analysis tools**
 
 ---
 
@@ -67,4 +67,4 @@
 
 ---
 
-**📂 Section Hub** | **🏠 Parent**: [Development Hub](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Section Hub** | **🏠 Parent**: [Development Hub](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

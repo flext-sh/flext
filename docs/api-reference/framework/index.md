@@ -1,12 +1,12 @@
 # 🏗️ Framework APIs Hub - Core Framework Reference
 
-> **Function**: Core FLX Framework API documentation | **Audience**: Framework developers, architects | **Status**: ✅ Source Validated
+> **Function**: Core FLEXT Framework API documentation | **Audience**: Framework developers, architects | **Status**: ✅ Source Validated
 
 [![Framework](https://img.shields.io/badge/framework-core_apis-blue.svg)](./core-api-reference-validated.md)
 [![Source Validated](https://img.shields.io/badge/source-validated-green.svg)](#source-validation)
 [![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](../../getting-started/setup/installation-guide.md)
 
-**Core framework API reference for FLX Framework 0.4.0+ validated against actual source code**
+**Core framework API reference for FLEXT Framework 0.4.0+ validated against actual source code**
 
 ---
 
@@ -30,7 +30,7 @@
 
 ## 📊 **Overview**
 
-The Framework APIs Hub provides core framework API documentation for FLX Framework 0.4.0+. All APIs are validated against actual source code in `/flext/src/` and provide comprehensive coverage of framework-level functionality.
+The Framework APIs Hub provides core framework API documentation for FLEXT Framework 0.4.0+. All APIs are validated against actual source code in `/flext/src/` and provide comprehensive coverage of framework-level functionality.
 
 ### **Framework API Categories**
 
@@ -90,4 +90,4 @@ The Framework APIs Hub provides core framework API documentation for FLX Framewo
 
 ---
 
-**📂 Hub**: [Framework APIs Hub](#) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Framework APIs Hub](#) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

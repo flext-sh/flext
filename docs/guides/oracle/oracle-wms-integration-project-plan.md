@@ -4,7 +4,7 @@
 
 [![Oracle WMS](https://img.shields.io/badge/Oracle-WMS_25B-red.svg)](./index.md)
 [![Integration](https://img.shields.io/badge/integration-OIC-blue.svg)](./oracle-integration-comprehensive-guide.md)
-[![Framework](https://img.shields.io/badge/framework-FLX_0.4.0-orange.svg)](../../index.md)
+[![Framework](https://img.shields.io/badge/framework-FLEXT_0.4.0-orange.svg)](../../index.md)
 
 **Complete technical implementation plan for Oracle WMS Cloud and Autonomous Database integration using Oracle Integration Cloud (OIC) as orchestration platform**
 
@@ -653,4 +653,4 @@ This project is **BUSINESS-CRITICAL** and directly impacts operational efficienc
 
 ---
 
-**📂 Hub**: [Oracle Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Oracle Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

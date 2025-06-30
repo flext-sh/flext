@@ -4,7 +4,7 @@
 
 [![Ports](https://img.shields.io/badge/layer-ports-yellow.svg)](./index.md)
 [![Hexagonal](https://img.shields.io/badge/pattern-hexagonal-blue.svg)](../hexagonal-architecture-hub.md)
-[![Framework](https://img.shields.io/badge/framework-FLX%200.4.0-orange.svg)](../../index.md)
+[![Framework](https://img.shields.io/badge/framework-FLEXT%200.4.0-orange.svg)](../../index.md)
 
 **Complete guide for inbound ports that enable external systems to drive the application**
 
@@ -442,7 +442,7 @@ class OrderPort(Protocol):
 
 ---
 
-**📂 Hub**: [Ports Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+
+**📂 Hub**: [Ports Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+
 
 ---
 

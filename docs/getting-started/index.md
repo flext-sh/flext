@@ -1,12 +1,12 @@
 # 🚀 Getting Started - Navigation Hub
 
-> **Function**: Installation, setup, and first steps with FLX Framework | **Audience**: New developers
+> **Function**: Installation, setup, and first steps with FLEXT Framework | **Audience**: New developers
 
 [![Installation](https://img.shields.io/badge/setup-automated-green.svg)](./setup/installation-guide.md)
 [![Python](https://img.shields.io/badge/python-3.13+-blue.svg)](./setup/installation-guide.md)
 [![Quickstart](https://img.shields.io/badge/quickstart-ready-orange.svg)](./basics/quickstart.md)
 
-**Complete onboarding experience for new FLX Framework developers**
+**Complete onboarding experience for new FLEXT Framework developers**
 
 ---
 
@@ -27,7 +27,7 @@
 
 ### **📋 Learning Path**
 
-1. **🎯 Start Here**: [Installation Guide](./setup/installation-guide.md) - Get FLX running
+1. **🎯 Start Here**: [Installation Guide](./setup/installation-guide.md) - Get FLEXT running
 2. **⚡ Quick Path**: [Quickstart](./basics/quickstart.md) - First working project
 3. **📚 Deep Dive**: [Framework Concepts](./concepts/flext-framework-overview.md) - Architecture understanding
 
@@ -37,7 +37,7 @@
 
 ### **⬅️ Prerequisites**
 
-- [Python 3.13+ Installation](https://python.org) - Required Python runtime environment for FLX Framework
+- [Python 3.13+ Installation](https://python.org) - Required Python runtime environment for FLEXT Framework
 - [Documentation Standards](../HOW_TO_DOCUMENT.md) - Understanding documentation structure and navigation
 
 ### **➡️ Next Steps**
@@ -63,4 +63,4 @@
 
 ---
 
-**📂 Section Hub** | **🏠 Parent**: [Documentation Root](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Section Hub** | **🏠 Parent**: [Documentation Root](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

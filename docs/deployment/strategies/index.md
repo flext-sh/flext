@@ -6,7 +6,7 @@
 [![Kubernetes](https://img.shields.io/badge/orchestration-kubernetes-blue.svg)](./kubernetes-deployment.md)
 [![Automation](https://img.shields.io/badge/automation-CI_CD-orange.svg)](./kubernetes-deployment.md)
 
-**Complete deployment strategy guides for FLX Framework production environments with Kubernetes orchestration and automation**
+**Complete deployment strategy guides for FLEXT Framework production environments with Kubernetes orchestration and automation**
 
 ---
 
@@ -62,4 +62,4 @@
 
 ---
 
-**📂 Section Hub** | **🏠 Parent**: [Deployment Hub](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Section Hub** | **🏠 Parent**: [Deployment Hub](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

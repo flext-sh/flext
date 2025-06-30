@@ -1,6 +1,6 @@
-# FLX HTTP Oracle WMS Adapter Guide
+# FLEXT HTTP Oracle WMS Adapter Guide
 
-**Function**: Complete guide for Oracle Warehouse Management System (WMS) REST API integration within the FLX framework
+**Function**: Complete guide for Oracle Warehouse Management System (WMS) REST API integration within the FLEXT framework
 **Audience**: WMS developers, supply chain integrators, and warehouse automation specialists
 **Status**: Production Ready - Validated Implementation
 
@@ -16,7 +16,7 @@
 
 ## Overview
 
-The FLX HTTP Oracle WMS Adapter provides comprehensive integration with Oracle Warehouse Management System through REST APIs, supporting entity management, inventory operations, and real-time warehouse orchestration. Built on hexagonal architecture principles, it serves as both an inbound and outbound adapter for WMS operations.
+The FLEXT HTTP Oracle WMS Adapter provides comprehensive integration with Oracle Warehouse Management System through REST APIs, supporting entity management, inventory operations, and real-time warehouse orchestration. Built on hexagonal architecture principles, it serves as both an inbound and outbound adapter for WMS operations.
 
 ### Key Features
 
@@ -132,14 +132,14 @@ from flext.adapters.outbound.oracle.exceptions import (
     WmsRateLimitError
 )
 
-class FlxOracleWmsAdapter(
+class FlextOracleWmsAdapter(
     UnifiedObservabilityMixin,
     AdapterErrorHandlingMixin,
     UnifiedAdapterConfigurationMixin,
     AdvancedAdapterMixin,
     BaseAdapter
 ):
-    """FLX Oracle WMS HTTP Adapter with comprehensive entity management."""
+    """FLEXT Oracle WMS HTTP Adapter with comprehensive entity management."""
 
     def __init__(self, config: WmsConfig):
         super().__init__()
@@ -163,7 +163,7 @@ class FlxOracleWmsAdapter(
                 self._session = aiohttp.ClientSession(
                     timeout=timeout,
                     headers={
-                        "User-Agent": "FLX-WMS-Adapter/2.0",
+                        "User-Agent": "FLEXT-WMS-Adapter/2.0",
                         "Accept": "application/json",
                         "Content-Type": "application/json"
                     }
@@ -610,7 +610,7 @@ class WmsRateLimiter:
 ```python
 # Basic setup and entity operations
 import asyncio
-from flext.adapters.outbound.oracle.wms_adapter import FlxOracleWmsAdapter
+from flext.adapters.outbound.oracle.wms_adapter import FlextOracleWmsAdapter
 from flext.adapters.outbound.oracle.config import WmsConfig
 
 async def basic_wms_example():
@@ -626,7 +626,7 @@ async def basic_wms_example():
     )
 
     # Initialize adapter
-    wms_adapter = FlxOracleWmsAdapter(config)
+    wms_adapter = FlextOracleWmsAdapter(config)
 
     try:
         # Connect to WMS
@@ -687,7 +687,7 @@ asyncio.run(basic_wms_example())
 
 ```python
 async def inventory_management_example():
-    wms_adapter = FlxOracleWmsAdapter(config)
+    wms_adapter = FlextOracleWmsAdapter(config)
     await wms_adapter.connect()
 
     try:
@@ -753,7 +753,7 @@ async def inventory_management_example():
 
 ```python
 async def bulk_operations_example():
-    wms_adapter = FlxOracleWmsAdapter(config)
+    wms_adapter = FlextOracleWmsAdapter(config)
     await wms_adapter.connect()
 
     try:
@@ -797,7 +797,7 @@ async def bulk_operations_example():
 ### Prerequisites
 
 - [Oracle OAuth2 Authentication Guide](oracle-oauth2-authentication-guide.md) - Essential for WMS API authentication
-- [FLX Core Framework Setup](../../getting-started/index.md) - Framework installation and configuration
+- [FLEXT Core Framework Setup](../../getting-started/index.md) - Framework installation and configuration
 - [Hexagonal Architecture Guide](../../architecture/application-layer.md) - Understanding adapter patterns
 
 ### Next Steps
@@ -857,7 +857,7 @@ curl -X POST "https://wms.oracle.com/wms/lgfapi/oauth/token" \
 # Reuse adapter instance for multiple operations
 class WmsService:
     def __init__(self, config: WmsConfig):
-        self.adapter = FlxOracleWmsAdapter(config)
+        self.adapter = FlextOracleWmsAdapter(config)
         self._connected = False
 
     async def __aenter__(self):
@@ -896,7 +896,7 @@ async with WmsService(config) as wms:
 
 ---
 
-**Documentation Framework**: FLX Enterprise Documentation Standard
+**Documentation Framework**: FLEXT Enterprise Documentation Standard
 **Implementation Status**: Production Ready - Validated with Oracle WMS Cloud
 **Last Updated**: 2025-06-11
-**Maintained by**: FLX Framework WMS Integration Team
+**Maintained by**: FLEXT Framework WMS Integration Team

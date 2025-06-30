@@ -1,8 +1,8 @@
-# FLX Logging System - Architecture and Implementation
+# FLEXT Logging System - Architecture and Implementation
 
 ## Executive Summary
 
-The FLX logging system has been refactored following KISS, SOLID, and DRY principles, using hexagonal architecture with ports and adapters. The previous complex system was removed for being overly complex and reimplementing entire project architecture within the logging module.
+The FLEXT logging system has been refactored following KISS, SOLID, and DRY principles, using hexagonal architecture with ports and adapters. The previous complex system was removed for being overly complex and reimplementing entire project architecture within the logging module.
 
 ## Related Documentation
 
@@ -206,13 +206,13 @@ logger.critical("Critical system error")
 
 ```python
 # Old complex system
-from flext.utils.logging import FlxLogger, FlxLogConfig
-from flext.core.logging import FlxLogContext, FlxLogLevel
+from flext.utils.logging import FlextLogger, FlextLogConfig
+from flext.core.logging import FlextLogContext, FlextLogLevel
 
-config = FlxLogConfig(...)
-logger = FlxLogger.create_with_config(config)
-context = FlxLogContext(...)
-logger.log_with_context(FlxLogLevel.INFO, "message", context)
+config = FlextLogConfig(...)
+logger = FlextLogger.create_with_config(config)
+context = FlextLogContext(...)
+logger.log_with_context(FlextLogLevel.INFO, "message", context)
 ```
 
 ### After (KISS/Simple)

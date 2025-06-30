@@ -1,6 +1,6 @@
 # 📖 Comprehensive APIs Hub - Complete Framework Reference
 
-> **Function**: Complete FLX Framework API documentation | **Audience**: Senior developers, architects, technical writers | **Status**: ✅ Source Validated
+> **Function**: Complete FLEXT Framework API documentation | **Audience**: Senior developers, architects, technical writers | **Status**: ✅ Source Validated
 
 [![Complete API](https://img.shields.io/badge/api-complete_reference-green.svg)](./flext-complete-api.md)
 [![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen.svg)](./flext-api-overview.md)
@@ -8,7 +8,7 @@
 [![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](../../getting-started/setup/installation-guide.md)
 [![Type Safety](https://img.shields.io/badge/types-strict-purple.svg)](./flext-complete-api.md)
 
-**Complete API reference for FLX Framework 0.4.0+ with 100% source code validation validated against actual `/flext/src/` source code with comprehensive enterprise coverage**
+**Complete API reference for FLEXT Framework 0.4.0+ with 100% source code validation validated against actual `/flext/src/` source code with comprehensive enterprise coverage**
 
 ---
 
@@ -26,7 +26,7 @@
 
 - **📂 Parent Hub**: [API Reference Hub](../index.md)
 - **🏠 Documentation Root**: [Root Index](../../index.md)
-- **📋 Complete API**: [FLX Complete API](./flext-complete-api.md)
+- **📋 Complete API**: [FLEXT Complete API](./flext-complete-api.md)
 
 ## Comprehensive Categories
 
@@ -34,19 +34,19 @@
 
 **Full Framework Coverage:**
 
-1. [FLX Complete API](./flext-complete-api.md)
-2. [FLX API Overview](./flext-api-overview.md)
+1. [FLEXT Complete API](./flext-complete-api.md)
+2. [FLEXT API Overview](./flext-api-overview.md)
 
 ## 📊 **Overview**
 
-The Comprehensive APIs Hub provides complete, enterprise-grade API documentation for FLX Framework 0.4.0+ with 100% source code validation. This section serves as the definitive reference for senior developers, architects, and technical writers requiring complete framework coverage.
+The Comprehensive APIs Hub provides complete, enterprise-grade API documentation for FLEXT Framework 0.4.0+ with 100% source code validation. This section serves as the definitive reference for senior developers, architects, and technical writers requiring complete framework coverage.
 
 ### **Comprehensive API Categories**
 
 | **API Documentation**                         | **Coverage**       | **Validation**   | **Status**    | **Key Features**                 |
 | --------------------------------------------- | ------------------ | ---------------- | ------------- | -------------------------------- |
-| **[FLX Complete API](./flext-complete-api.md)** | Complete Framework | Source Validated | ✅ Production | All APIs, patterns, examples     |
-| **[FLX API Overview](./flext-api-overview.md)** | Architecture Guide | Source Validated | ✅ Production | High-level patterns, integration |
+| **[FLEXT Complete API](./flext-complete-api.md)** | Complete Framework | Source Validated | ✅ Production | All APIs, patterns, examples     |
+| **[FLEXT API Overview](./flext-api-overview.md)** | Architecture Guide | Source Validated | ✅ Production | High-level patterns, integration |
 
 ### **🚀 Enterprise API Features**
 
@@ -60,23 +60,23 @@ The Comprehensive APIs Hub provides complete, enterprise-grade API documentation
 
 ### **🎯 API Architects**
 
-1. **Overview**: [FLX API Overview](./flext-api-overview.md)
-2. **Complete Reference**: [FLX Complete API](./flext-complete-api.md)
+1. **Overview**: [FLEXT API Overview](./flext-api-overview.md)
+2. **Complete Reference**: [FLEXT Complete API](./flext-complete-api.md)
 
 ### **🚀 Senior Developers**
 
-1. **Complete Reference**: [FLX Complete API](./flext-complete-api.md)
-2. **Architecture Patterns**: [FLX API Overview](./flext-api-overview.md)
+1. **Complete Reference**: [FLEXT Complete API](./flext-complete-api.md)
+2. **Architecture Patterns**: [FLEXT API Overview](./flext-api-overview.md)
 
 ### **🔧 Integration Engineers**
 
-1. **Architecture Guide**: [FLX API Overview](./flext-api-overview.md)
-2. **Implementation Reference**: [FLX Complete API](./flext-complete-api.md)
+1. **Architecture Guide**: [FLEXT API Overview](./flext-api-overview.md)
+2. **Implementation Reference**: [FLEXT Complete API](./flext-complete-api.md)
 
 ### **📝 Technical Writers**
 
-1. **Complete Documentation**: [FLX Complete API](./flext-complete-api.md)
-2. **Overview Documentation**: [FLX API Overview](./flext-api-overview.md)
+1. **Complete Documentation**: [FLEXT Complete API](./flext-complete-api.md)
+2. **Overview Documentation**: [FLEXT API Overview](./flext-api-overview.md)
 
 ## 🔗 **Cross-References**
 
@@ -111,4 +111,4 @@ The Comprehensive APIs Hub provides complete, enterprise-grade API documentation
 
 ---
 
-**📂 Hub**: [Comprehensive APIs Hub](#) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Comprehensive APIs Hub](#) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

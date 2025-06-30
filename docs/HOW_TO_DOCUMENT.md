@@ -1,12 +1,12 @@
-# 📝 FLX Framework - Documentation Standards Guide
+# 📝 FLEXT Framework - Documentation Standards Guide
 
-> **Complete guide for writing, maintaining, and organizing documentation in the FLX Framework ecosystem**
+> **Complete guide for writing, maintaining, and organizing documentation in the FLEXT Framework ecosystem**
 
 [![Documentation](https://img.shields.io/badge/docs-standardized-green.svg)](./index.md)
 [![Standards](https://img.shields.io/badge/standards-PEP8-blue.svg)](./development/standardization-plan.md)
 [![Templates](https://img.shields.io/badge/templates-unified-orange.svg)](./MANDATORY_COMPLIANCE_DIRECTIVE.md)
 
-Essential guide for contributors, maintainers, and agents working on FLX Framework documentation
+Essential guide for contributors, maintainers, and agents working on FLEXT Framework documentation
 
 ---
 
@@ -136,7 +136,7 @@ Cross-references & Navigation
 
 ---
 
-**📂 Section Hub** | **🏠 Parent**: [Documentation Root](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Section Hub** | **🏠 Parent**: [Documentation Root](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11
 ```
 
 ### **📄 Document Template (content files)**
@@ -213,7 +213,7 @@ Cross-references & Navigation
 
 ---
 
-**📂 Hub**: [Section Hub](./index.md) | **🏠 Root**: [Home](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Section Hub](./index.md) | **🏠 Root**: [Home](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11
 ```
 
 ---
@@ -540,4 +540,4 @@ Each agent must deliver:
 
 ---
 
-**📂 Hub**: [Documentation Root](./index.md) | **🏠 Root**: [Documentation Home](./index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Documentation Root](./index.md) | **🏠 Root**: [Documentation Home](./index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

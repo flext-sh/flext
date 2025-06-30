@@ -5,9 +5,9 @@
 [![Oracle WMS](https://img.shields.io/badge/Oracle-WMS_25B-red.svg)](./index.md)
 [![CLI](https://img.shields.io/badge/CLI-validated-green.svg)](./oracle-wms-cli-guide.md)
 [![Integration](https://img.shields.io/badge/integration-patterns-orange.svg)](./oracle-wms-integration-validated.md)
-[![Framework](https://img.shields.io/badge/framework-FLX_0.4.0-orange.svg)](../../index.md)
+[![Framework](https://img.shields.io/badge/framework-FLEXT_0.4.0-orange.svg)](../../index.md)
 
-**Complete Oracle Warehouse Management System operations guide with FLX Framework - validated against production implementations and enterprise deployment patterns**
+**Complete Oracle Warehouse Management System operations guide with FLEXT Framework - validated against production implementations and enterprise deployment patterns**
 
 ---
 
@@ -31,7 +31,7 @@
 
 ## 📋 **Overview**
 
-Complete Oracle Warehouse Management System operations guide with FLX Framework, covering CLI operations, API integration, database REDACTED_LDAP_BIND_PASSWORDistration, and production deployment patterns validated against enterprise implementations.
+Complete Oracle Warehouse Management System operations guide with FLEXT Framework, covering CLI operations, API integration, database REDACTED_LDAP_BIND_PASSWORDistration, and production deployment patterns validated against enterprise implementations.
 
 ## Overview and Architecture
 
@@ -39,7 +39,7 @@ Oracle WMS Cloud provides comprehensive warehouse management capabilities throug
 
 ### Core Components
 
-- **FLX HTTP Oracle WMS CLI**: High-performance CLI for WMS operations
+- **FLEXT HTTP Oracle WMS CLI**: High-performance CLI for WMS operations
 - **GN WMS CLI**: Database REDACTED_LDAP_BIND_PASSWORDistration and configuration tool
 - **Oracle WMS Cloud API**: RESTful integration endpoints
 - **WMS Entity Models**: Type-safe Pydantic models for validation
@@ -70,7 +70,7 @@ Oracle WMS Cloud provides comprehensive warehouse management capabilities throug
 
 ### Installation Methods
 
-#### Method 1: FLX Project Installation
+#### Method 1: FLEXT Project Installation
 
 ```bash
 # Install from the flext_project directory
@@ -157,7 +157,7 @@ poetry run gn-wms-cli config --format=json
 
 ## CLI Operations and Commands
 
-### FLX HTTP Oracle WMS CLI
+### FLEXT HTTP Oracle WMS CLI
 
 #### Core Entity Operations
 
@@ -737,7 +737,7 @@ sync_orders = WMSOperator(
 ### **Prerequisites**
 
 - [Oracle Hub](./index.md) - Understanding Oracle integration architecture before implementing WMS operations
-- [Getting Started Hub](../../getting-started/index.md) - FLX Framework installation and basic configuration setup
+- [Getting Started Hub](../../getting-started/index.md) - FLEXT Framework installation and basic configuration setup
 - [OAuth2 Authentication Guide](./oracle-oauth2-authentication-guide.md) - Required authentication setup for Oracle WMS access
 
 ### **Next Steps**
@@ -757,4 +757,4 @@ sync_orders = WMSOperator(
 
 ---
 
-**📂 Hub**: [Oracle Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Oracle Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

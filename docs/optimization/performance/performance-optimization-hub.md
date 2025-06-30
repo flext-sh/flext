@@ -1,11 +1,11 @@
 # 🚀 Performance & Optimization - Navigation Hub
 
-> **Function**: Central hub for all FLX Framework performance optimization strategies and implementation guides | **Audience**: Performance engineers, developers implementing optimizations
+> **Function**: Central hub for all FLEXT Framework performance optimization strategies and implementation guides | **Audience**: Performance engineers, developers implementing optimizations
 
 [![Performance](https://img.shields.io/badge/performance-optimized-green.svg)](./index.md)
-[![Framework](https://img.shields.io/badge/framework-FLX-blue.svg)](../../index.md)
+[![Framework](https://img.shields.io/badge/framework-FLEXT-blue.svg)](../../index.md)
 
-**Complete performance optimization guidance for FLX Framework development and deployment**
+**Complete performance optimization guidance for FLEXT Framework development and deployment**
 
 ---
 
@@ -345,7 +345,7 @@ This hub consolidates and preserves ALL optimization content:
 
 ### **Prerequisites**
 
-- [Architecture Guide](../../architecture/index.md) - Understanding FLX Framework architecture before optimization
+- [Architecture Guide](../../architecture/index.md) - Understanding FLEXT Framework architecture before optimization
 - [Development Standards](../../development/index.md) - Code quality standards that enable effective optimization
 
 ### **Next Steps**
@@ -369,4 +369,4 @@ This hub consolidates and preserves ALL optimization content:
 
 ---
 
-**📂 Section Hub** | **🏠 Parent**: [Documentation Root](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Section Hub** | **🏠 Parent**: [Documentation Root](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

@@ -1,4 +1,4 @@
-# 🚀 FLX Operational Excellence Guide
+# 🚀 FLEXT Operational Excellence Guide
 
 > **Function**: Production operational excellence patterns and monitoring | **Audience**: DevOps engineers, SRE teams, infrastructure architects | **Status**: Production-Ready
 
@@ -6,7 +6,7 @@
 [![Resilience](https://img.shields.io/badge/resilience-patterns-blue.svg)](./service-patterns.md)
 [![Production](https://img.shields.io/badge/production-ready-orange.svg)](../deployment/index.md)
 
-**Complete operational excellence guide for FLX Framework including observability, resilience patterns, and production monitoring - validated against real implementations**
+**Complete operational excellence guide for FLEXT Framework including observability, resilience patterns, and production monitoring - validated against real implementations**
 
 ---
 
@@ -473,7 +473,7 @@ class ObservabilityFirst:
 
 - [**Infrastructure Service Patterns**](./service-patterns.md) - Core infrastructure service architecture required for operational excellence implementation
 - [**Architecture Foundation**](../architecture/design/unified-architecture-guide.md) - Hexagonal architecture patterns essential for understanding operational concerns
-- [**Framework Installation**](../getting-started/setup/installation-guide.md) - FLX Framework setup required for operational excellence configuration
+- [**Framework Installation**](../getting-started/setup/installation-guide.md) - FLEXT Framework setup required for operational excellence configuration
 
 ### **➡️ Implementation Next Steps**
 
@@ -492,6 +492,6 @@ class ObservabilityFirst:
 
 ---
 
-**📂 Content Document** | **🏠 Parent**: [Infrastructure Hub](./index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Content Document** | **🏠 Parent**: [Infrastructure Hub](./index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11
 
 **Key Insight**: Operational excellence isn't about tools (Prometheus, Jaeger, etc.) but about **patterns and practices** that ensure systems are observable, resilient, and secure. The same patterns apply whether using simple logs or advanced APM solutions.

@@ -6,7 +6,7 @@
 [![Integration](https://img.shields.io/badge/integration-patterns-blue.svg)](../../guides/integration/index.md)
 [![Authentication](https://img.shields.io/badge/auth-JWT%2BOAuth2-green.svg)](../../guides/authentication/index.md)
 
-**Formal specification for Oracle system integration patterns within FLX Framework architecture**
+**Formal specification for Oracle system integration patterns within FLEXT Framework architecture**
 
 ---
 
@@ -40,10 +40,10 @@
 
 ### **1. Database Adapter Architecture**
 
-#### **FlxOracleDbAdapter Class Structure**
+#### **FlextOracleDbAdapter Class Structure**
 
 ```python
-class FlxOracleDbAdapter(BaseAdapter):
+class FlextOracleDbAdapter(BaseAdapter):
     """Enterprise Oracle Database adapter with comprehensive features"""
     
     # Connection Configuration
@@ -460,7 +460,7 @@ class SecurityConfiguration:
 
 ### **⬅️ Prerequisites**
 
-- [FLX Framework Technical Specification](./flx-framework-technical-specification.md) - Core framework architecture required for Oracle integration implementation
+- [FLEXT Framework Technical Specification](./flx-framework-technical-specification.md) - Core framework architecture required for Oracle integration implementation
 - [Architecture Hub](../../architecture/index.md) - Hexagonal architecture patterns essential for Oracle adapter development
 - [Authentication Guide](../../guides/authentication/index.md) - Authentication patterns used in Oracle integrations
 
@@ -514,4 +514,4 @@ class SecurityConfiguration:
 
 ---
 
-**📂 Specification**: [Technical Specifications Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Specification**: [Technical Specifications Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

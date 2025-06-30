@@ -4,9 +4,9 @@
 
 [![Testing](https://img.shields.io/badge/testing-hexagonal-blue.svg)](./index.md)
 [![Architecture](https://img.shields.io/badge/architecture-validated-green.svg)](../../architecture/index.md)
-[![Framework](https://img.shields.io/badge/framework-FLX%200.4.0-orange.svg)](../../index.md)
+[![Framework](https://img.shields.io/badge/framework-FLEXT%200.4.0-orange.svg)](../../index.md)
 
-**Comprehensive testing suite ensuring proper hexagonal architecture implementation and separation of concerns in FLX Framework**
+**Comprehensive testing suite ensuring proper hexagonal architecture implementation and separation of concerns in FLEXT Framework**
 
 ---
 
@@ -24,14 +24,14 @@
 
 - **📂 Section Hub**: [Testing Hub](./index.md)
 - **🏠 Documentation Root**: [Root Index](../../index.md)
-- **🔗 Source Code**: [FLX Tests](../../../flext/tests/)
+- **🔗 Source Code**: [FLEXT Tests](../../../flext/tests/)
 - **🔗 Related**: [Port Testing](./ports-testing.md), [Adapter Testing](./adapters-testing.md)
 
 ---
 
 ## 📋 **Overview**
 
-This guide provides a comprehensive testing suite to validate hexagonal architecture implementation in the FLX framework. It ensures proper separation of concerns, dependency direction, and architectural boundaries.
+This guide provides a comprehensive testing suite to validate hexagonal architecture implementation in the FLEXT framework. It ensures proper separation of concerns, dependency direction, and architectural boundaries.
 
 ### **⬅️ Prerequisites**
 
@@ -407,7 +407,7 @@ class TestArchitectureBoundaries:
         # etc.
 
         layer_dependencies = {
-            'flext.core': [],  # Domain depends on nothing FLX-related
+            'flext.core': [],  # Domain depends on nothing FLEXT-related
             'flext.ports': ['flext.core'],  # Ports can depend on domain
             'flext.adapters': ['flext.ports', 'flext.core'],  # Adapters depend on ports and domain
             'flext.infra': ['flext.adapters', 'flext.ports', 'flext.core'],  # Infrastructure depends on all
@@ -692,4 +692,4 @@ pytest tests/hexagonal/ -m ports
 
 ---
 
-**📂 Hub**: [Testing Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Testing Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11
