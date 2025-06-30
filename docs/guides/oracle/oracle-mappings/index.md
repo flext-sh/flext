@@ -178,4 +178,4 @@
 
 ---
 
-**📂 Section Hub** | **🏠 Parent**: [Oracle Hub](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Section Hub** | **🏠 Parent**: [Oracle Hub](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

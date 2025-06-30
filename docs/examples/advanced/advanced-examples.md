@@ -1,6 +1,6 @@
-# Advanced Examples - Enterprise-Grade FLX Patterns
+# Advanced Examples - Enterprise-Grade FLEXT Patterns
 
-This directory showcases sophisticated architectural patterns and enterprise-grade implementations using the FLX framework's advanced capabilities.
+This directory showcases sophisticated architectural patterns and enterprise-grade implementations using the FLEXT framework's advanced capabilities.
 
 ## 🏗️ Architecture Focus
 
@@ -59,9 +59,9 @@ pip install -e . --no-deps
 # Verify advanced features are available
 python -c "
 import flext
-from flext.declarative import FlxProject
+from flext.declarative import FlextProject
 from flext.core.events import DomainEvent
-print('Advanced FLX features loaded successfully')
+print('Advanced FLEXT features loaded successfully')
 "
 
 # Set up environment
@@ -92,7 +92,7 @@ python -i examples/advanced/domain_example.py
 
 ### 1. **Domain Mastery**: `domain_example.py`
 
-**Prerequisites**: Basic FLX knowledge, understanding of DDD concepts
+**Prerequisites**: Basic FLEXT knowledge, understanding of DDD concepts
 
 **Learning Objectives**:
 
@@ -124,7 +124,7 @@ class Warehouse(AggregateRoot):
 
 ### 2. **Plugin Development**: `plugin_example.py`
 
-**Prerequisites**: Understanding of FLX adapters and dependency injection
+**Prerequisites**: Understanding of FLEXT adapters and dependency injection
 
 **Learning Objectives**:
 
@@ -171,11 +171,11 @@ class CustomProtocolAdapter(BaseAdapter):
 # Declarative project setup with mixins
 @flext_project
 class EnterpriseApplication(
-    FlxProject,
-    FlxDatabaseMixin,
-    FlxHttpClientMixin,
-    FlxMonitoringMixin,
-    FlxSecurityMixin
+    FlextProject,
+    FlextDatabaseMixin,
+    FlextHttpClientMixin,
+    FlextMonitoringMixin,
+    FlextSecurityMixin
 ):
     """Enterprise application with declarative configuration."""
 
@@ -321,10 +321,10 @@ python -m examples.advanced.declarative_example --benchmark-setup
 After mastering the advanced examples:
 
 1. **Enterprise Deployment**: Study production deployment patterns
-2. **Microservices**: Build distributed systems with FLX
+2. **Microservices**: Build distributed systems with FLEXT
 3. **Event Streaming**: Implement event-driven microservices
 4. **Cloud Integration**: Deploy to cloud platforms with observability
-5. **Custom Framework**: Build domain-specific frameworks on FLX
+5. **Custom Framework**: Build domain-specific frameworks on FLEXT
 
 ## 📚 Related Documentation
 
@@ -339,9 +339,9 @@ After mastering the advanced examples:
 
 These advanced examples prepare you for:
 
-- **FLX Enterprise Architect**: Advanced architectural patterns
-- **FLX Plugin Developer**: Custom adapter and plugin development
-- **FLX Domain Expert**: Domain-driven design mastery
-- **FLX Performance Engineer**: Optimization and scalability patterns
+- **FLEXT Enterprise Architect**: Advanced architectural patterns
+- **FLEXT Plugin Developer**: Custom adapter and plugin development
+- **FLEXT Domain Expert**: Domain-driven design mastery
+- **FLEXT Performance Engineer**: Optimization and scalability patterns
 
-The advanced examples represent the culmination of FLX framework capabilities, demonstrating how to build enterprise-grade, scalable, and maintainable applications using sophisticated architectural patterns.
+The advanced examples represent the culmination of FLEXT framework capabilities, demonstrating how to build enterprise-grade, scalable, and maintainable applications using sophisticated architectural patterns.

@@ -4,11 +4,11 @@
 
 ## Overview
 
-Basic code examples for the FLX framework, covering fundamental concepts, simple implementations, and getting started examples for new developers.
+Basic code examples for the FLEXT framework, covering fundamental concepts, simple implementations, and getting started examples for new developers.
 
 ## Quick Links
 
-- [📚 Basic Examples](./basic-examples.md) - Fundamental FLX framework examples
+- [📚 Basic Examples](./basic-examples.md) - Fundamental FLEXT framework examples
 
 ## Basic Categories
 
@@ -41,4 +41,4 @@ Basic code examples for the FLX framework, covering fundamental concepts, simple
 
 ---
 
-_Part of the [FLX Framework Documentation](../../index.md)_
+_Part of the [FLEXT Framework Documentation](../../index.md)_

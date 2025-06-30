@@ -1,8 +1,8 @@
-# Meltano Architecture Analysis for FLX Integration
+# Meltano Architecture Analysis for FLEXT Integration
 
 ## Executive Summary
 
-Meltano is a powerful open-source ELT platform built on a plugin-based architecture that allows for extensible data pipeline operations. Based on the codebase analysis, FLX features can be seamlessly integrated as Meltano extensions without duplicating functionality, leveraging Meltano's existing infrastructure for configuration management, state handling, job execution, and orchestration.
+Meltano is a powerful open-source ELT platform built on a plugin-based architecture that allows for extensible data pipeline operations. Based on the codebase analysis, FLEXT features can be seamlessly integrated as Meltano extensions without duplicating functionality, leveraging Meltano's existing infrastructure for configuration management, state handling, job execution, and orchestration.
 
 ## 1. Core Architecture
 
@@ -176,18 +176,18 @@ class Schedule:
 # @once, @hourly, @daily, @weekly, @monthly, @yearly
 ```
 
-## 6. Extension Points for FLX Integration
+## 6. Extension Points for FLEXT Integration
 
 ### Recommended Integration Strategy
 
-1. **Create FLX Extensions using EDK**
+1. **Create FLEXT Extensions using EDK**
 
    ```python
-   class FlxOracleOICExtension(ExtensionBase):
-       """FLX Oracle OIC Extension for Meltano."""
+   class FlextOracleOICExtension(ExtensionBase):
+       """FLEXT Oracle OIC Extension for Meltano."""
 
        def invoke(self, command_name: str | None, *command_args) -> None:
-           # Delegate to FLX adapter logic
+           # Delegate to FLEXT adapter logic
            pass
    ```
 
@@ -198,7 +198,7 @@ class Schedule:
    - Utilize built-in scheduling capabilities
    - Benefit from existing logging and monitoring
 
-3. **Plugin Types for FLX Components**
+3. **Plugin Types for FLEXT Components**
    - `tap-oracle-oic` as EXTRACTOR
    - `target-oracle-wms` as LOADER
    - `flext-orchestrator` as UTILITY
@@ -217,7 +217,7 @@ class HubClient:
         pass
 ```
 
-FLX plugins can be:
+FLEXT plugins can be:
 
 - Published to Meltano Hub for discovery
 - Distributed via pip packages
@@ -253,11 +253,11 @@ While Meltano UI is deprecated, the architecture shows:
 - Pipeline monitoring
 - Job execution tracking
 
-This could be replaced with FLX's own UI components if needed.
+This could be replaced with FLEXT's own UI components if needed.
 
 ## 10. Implementation Recommendations
 
-### Phase 1: Core FLX Extensions
+### Phase 1: Core FLEXT Extensions
 
 1. Create `flext-oracle-oic-ext` using EDK
 2. Create `flext-oracle-wms-ext` using EDK
@@ -266,14 +266,14 @@ This could be replaced with FLX's own UI components if needed.
 
 ### Phase 2: Advanced Integration
 
-1. Hub integration for FLX plugins
+1. Hub integration for FLEXT plugins
 2. Custom orchestration patterns
 3. Advanced state merging strategies
 4. Performance optimizations
 
 ### Phase 3: Ecosystem Enhancement
 
-1. FLX-specific utilities
+1. FLEXT-specific utilities
 2. Monitoring dashboards
 3. Custom transformers
 4. Integration templates
@@ -287,7 +287,7 @@ This could be replaced with FLX's own UI components if needed.
 5. **Scalability**: Built-in scaling capabilities
 6. **Flexibility**: Extensible architecture
 
-## Example FLX Extension Structure
+## Example FLEXT Extension Structure
 
 ```
 flext-oracle-oic-ext/
@@ -303,11 +303,11 @@ flext-oracle-oic-ext/
 
 ## Conclusion
 
-Meltano provides an excellent foundation for FLX features through its extensible architecture. By creating FLX components as Meltano extensions, we can:
+Meltano provides an excellent foundation for FLEXT features through its extensible architecture. By creating FLEXT components as Meltano extensions, we can:
 
 1. Avoid duplicating complex functionality
 2. Benefit from proven patterns and infrastructure
 3. Integrate seamlessly with the broader data ecosystem
 4. Focus on domain-specific logic rather than infrastructure
 
-The EDK makes it straightforward to wrap existing FLX functionality while gaining all the benefits of Meltano's orchestration, state management, and configuration capabilities.
+The EDK makes it straightforward to wrap existing FLEXT functionality while gaining all the benefits of Meltano's orchestration, state management, and configuration capabilities.

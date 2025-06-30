@@ -2,7 +2,7 @@
 
 > **Function**: Complete Oracle LDAP integration and OID to OUD migration | **Audience**: Directory administrators, migration teams | **Status**: Production-ready
 
-**Complete Oracle LDAP and Directory Services guide for FLX framework covering Oracle Internet Directory (OID) to Oracle Unified Directory (OUD) migration, automation tools, schema management, and LDIF processing with enterprise-grade workflows**
+**Complete Oracle LDAP and Directory Services guide for FLEXT framework covering Oracle Internet Directory (OID) to Oracle Unified Directory (OUD) migration, automation tools, schema management, and LDIF processing with enterprise-grade workflows**
 
 ---
 
@@ -83,7 +83,7 @@ Phase 6: Cutover & Go-Live
 
 ### OUD Automation Framework
 
-The FLX OUD automation framework provides comprehensive tools for managing the entire migration lifecycle:
+The FLEXT OUD automation framework provides comprehensive tools for managing the entire migration lifecycle:
 
 #### Core Features
 
@@ -596,9 +596,9 @@ monitoring:
       refresh_interval: 30s
 ```
 
-## 🔧 Integration with FLX Framework
+## 🔧 Integration with FLEXT Framework
 
-### FLX LDAP Adapter
+### FLEXT LDAP Adapter
 
 ```python
 from flext.adapters.oracle.ldap import OudAdapter
@@ -616,7 +616,7 @@ config = Configuration({
 
 oud_adapter = OudAdapter(config)
 
-# LDAP operations through FLX
+# LDAP operations through FLEXT
 await oud_adapter.search(
     base_dn="ou=users,dc=company,dc=com",
     filter="(objectClass=inetOrgPerson)",
@@ -671,7 +671,7 @@ print(f"Errors: {migration_result.error_count}")
 ### **Prerequisites**
 
 - [Oracle Hub](./index.md) - Understanding Oracle integration architecture before LDAP setup
-- [Getting Started Hub](../../getting-started/index.md) - FLX Framework installation and configuration
+- [Getting Started Hub](../../getting-started/index.md) - FLEXT Framework installation and configuration
 - [Security Hub](../../security/index.md) - Security architecture and directory service patterns
 
 ### **Next Steps**
@@ -693,10 +693,10 @@ print(f"Errors: {migration_result.error_count}")
 
 - **Migration Status**: ✅ Enterprise Production Ready
 - **Supported Versions**: OID 11g/12c → OUD 12c/21c
-- **Architecture**: Hexagonal with FLX Integration
+- **Architecture**: Hexagonal with FLEXT Integration
 - **Automation Level**: Full CLI and programmatic support
 - **Last Updated**: June 11, 2025
 
 ---
 
-**📂 Guide**: [Oracle Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Guide**: [Oracle Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

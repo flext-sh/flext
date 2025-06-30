@@ -1,4 +1,4 @@
-# FLX Architecture - Comprehensive Hub
+# FLEXT Architecture - Comprehensive Hub
 
 > **Function**: Central architecture documentation hub | **Audience**: Architects, senior developers | **Status**: Stable
 
@@ -6,7 +6,7 @@
 [![Patterns](https://img.shields.io/badge/patterns-DDD_SOLID-green.svg)](../patterns/advanced-patterns-hub.md)
 [![Infrastructure](https://img.shields.io/badge/infrastructure-validated-orange.svg)](../infrastructure/infrastructure-architecture.md)
 
-**Comprehensive architecture hub consolidating all FLX Framework architecture patterns and design principles**
+**Comprehensive architecture hub consolidating all FLEXT Framework architecture patterns and design principles**
 
 ---
 
@@ -30,7 +30,7 @@
 
 ## Navigation Hub Strategy
 
-This document serves as the central hub for all FLX architecture documentation, consolidating and preserving all valuable content while improving organization through validated architectural patterns.
+This document serves as the central hub for all FLEXT architecture documentation, consolidating and preserving all valuable content while improving organization through validated architectural patterns.
 
 ## 🏗️ Core Architecture Components
 
@@ -49,7 +49,7 @@ This document serves as the central hub for all FLX architecture documentation, 
 
 ### 3. Advanced Architectural Patterns
 
-- **[SOLID Principles Implementation](./solid-principles-implementation.md)** - SOLID principles in FLX
+- **[SOLID Principles Implementation](./solid-principles-implementation.md)** - SOLID principles in FLEXT
 - **[Advanced Patterns](./advanced-patterns.md)** - Enterprise patterns and practices
 - **[Messaging & Broker Configuration](./messaging-broker-configuration.md)** - Event-driven architecture
 
@@ -97,17 +97,17 @@ This document serves as the central hub for all FLX architecture documentation, 
 
 ### Architecture Standards
 
-- **[FLX Architecture Standards](./flext-architecture-standards.md)** - Framework-wide architectural standards
+- **[FLEXT Architecture Standards](./flext-architecture-standards.md)** - Framework-wide architectural standards
 - **[Architectural Consistency Guide](./architectural-consistency-guide.md)** - Consistency patterns and enforcement
 
 ### Modernization Roadmaps
 
 - **[Modernization Roadmap](./modernization-roadmap.md)** - Framework evolution strategy
-- **[FLX Source Structure](./flext-source-structure.md)** - Source code organization
+- **[FLEXT Source Structure](./flext-source-structure.md)** - Source code organization
 
 ## 🔍 Validation Against Real Code
 
-This hub is validated against actual FLX framework implementation:
+This hub is validated against actual FLEXT framework implementation:
 
 ### Core Validation
 
@@ -177,20 +177,20 @@ This hub preserves ALL valuable architectural content from the following consoli
 
 ### **Prerequisites**
 
-- [Getting Started Guide](../../getting-started/index.md) - Essential FLX Framework concepts including installation, configuration, and basic usage patterns needed before diving into architecture
+- [Getting Started Guide](../../getting-started/index.md) - Essential FLEXT Framework concepts including installation, configuration, and basic usage patterns needed before diving into architecture
 - [Architecture Hub](../index.md) - Main architecture navigation and overview understanding hexagonal architecture principles and layer separation
 
 ### **Next Steps**
 
 - [Hexagonal Implementation](../HEXAGONAL_VALIDATED_IMPLEMENTATION.md) - Detailed implementation of hexagonal architecture with validated code examples and production patterns
 - [Implementation Guides](../../guides/index.md) - Apply architectural patterns in real projects with step-by-step implementation guidance
-- [Oracle Integration](../../guides/oracle/index.md) - Enterprise integration using FLX architecture demonstrating real-world architectural application
+- [Oracle Integration](../../guides/oracle/index.md) - Enterprise integration using FLEXT architecture demonstrating real-world architectural application
 
 ### **Related Topics**
 
 - [Infrastructure Services](../../infrastructure/index.md) - Supporting infrastructure for architectural patterns including observability, caching, and messaging systems
 - [API Reference](../../api-reference/index.md) - Technical specifications of architectural components with complete interface documentation
-- [Design Patterns](../patterns/advanced-patterns-hub.md) - Advanced patterns within FLX architecture including DDD, CQRS, and event sourcing implementations
+- [Design Patterns](../patterns/advanced-patterns-hub.md) - Advanced patterns within FLEXT architecture including DDD, CQRS, and event sourcing implementations
 
 ---
 
@@ -295,4 +295,4 @@ class TestOrderService:
 
 ---
 
-**📂 Hub**: [Architecture Hub](../index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Architecture Hub](../index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

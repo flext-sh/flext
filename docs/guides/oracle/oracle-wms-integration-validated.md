@@ -1,12 +1,12 @@
 # 🏭 Oracle WMS Integration - Source Code Validated
 
-> **Function**: Complete Oracle WMS integration using FLX KISS pattern | **Audience**: Integration engineers, Oracle developers | **Status**: ✅ VALIDATED
+> **Function**: Complete Oracle WMS integration using FLEXT KISS pattern | **Audience**: Integration engineers, Oracle developers | **Status**: ✅ VALIDATED
 
 [![WMS Integration](https://img.shields.io/badge/wms-validated-green.svg)](./oracle-wms-integration-validated.md)
 [![Source Code](https://img.shields.io/badge/source-validated-blue.svg)](../../../flext_http_oracle_wms/src/__init__.py)
 [![KISS Pattern](https://img.shields.io/badge/pattern-KISS-orange.svg)](./oracle-wms-integration-validated.md)
 
-**Modern Oracle WMS integration using FLX's ultra-simplified KISS pattern - validated against actual source code**
+**Modern Oracle WMS integration using FLEXT's ultra-simplified KISS pattern - validated against actual source code**
 
 ---
 
@@ -28,14 +28,14 @@
 
 ---
 
-## 🚀 **MODERN APPROACH: FLX KISS PATTERN**
+## 🚀 **MODERN APPROACH: FLEXT KISS PATTERN**
 
 ### **✅ VALIDATED AGAINST SOURCE CODE**
 
-The Oracle WMS integration has been **completely rewritten** using FLX's KISS (Keep It Simple, Stupid) pattern. The new implementation is:
+The Oracle WMS integration has been **completely rewritten** using FLEXT's KISS (Keep It Simple, Stupid) pattern. The new implementation is:
 
 - **99% code reduction**: 86 lines vs 1500+ previous versions
-- **FLX automation**: HTTP client, database, adapters, CLI, logging auto-configured
+- **FLEXT automation**: HTTP client, database, adapters, CLI, logging auto-configured
 - **Business logic focus**: Only WMS-specific code required
 - **Type safety included**: Full Pydantic validation automatic
 
@@ -46,16 +46,16 @@ The Oracle WMS integration has been **completely rewritten** using FLX's KISS (K
 ```python
 from flext import ApplicationService
 
-class FlxHttpOracleWmsProject(ApplicationService):
+class FlextHttpOracleWmsProject(ApplicationService):
     """Projeto HTTP Oracle WMS - VERSÃO KISS.
 
     15 linhas vs 1500+ anteriores = 99% redução!
-    FLX automaticamente: HTTP client, database, WMS adapters, CLI, logging, etc.
+    FLEXT automaticamente: HTTP client, database, WMS adapters, CLI, logging, etc.
     """
 
     def __init__(self, **kwargs) -> None:
         """Initialize the HTTP Oracle WMS project."""
-        super().__init__(service_name="FlxHttpOracleWms", **kwargs)
+        super().__init__(service_name="FlextHttpOracleWms", **kwargs)
 
         # Only business-specific configuration needed
         self.enable_webhook_mode = False
@@ -70,7 +70,7 @@ class FlxHttpOracleWmsProject(ApplicationService):
 
     async def start(self) -> None:
         """Start the application service."""
-        pass  # FLX handles all infrastructure startup
+        pass  # FLEXT handles all infrastructure startup
 
     # Only WMS-specific business logic required
     async def handle_wms_webhook(
@@ -94,13 +94,13 @@ class FlxHttpOracleWmsProject(ApplicationService):
 
 ### **Prerequisites (Updated for 2025)**
 
-- **Python 3.13+** (required for FLX 0.4.0+)
+- **Python 3.13+** (required for FLEXT 0.4.0+)
 - **Oracle WMS Cloud v25A/25B+**
 - **Valid Oracle credentials** with integration permissions
 
 ### **Installation Methods (Real Commands)**
 
-#### **Method 1: FLX Project Installation**
+#### **Method 1: FLEXT Project Installation**
 
 ```bash
 # Install from project directory (validated)
@@ -108,7 +108,7 @@ cd /path/to/pyauto/flext_http_oracle_wms
 pip install -e .
 
 # Verify installation
-python -c "from flext_http_oracle_wms import FlxHttpOracleWmsProject; print('✅ Installation successful')"
+python -c "from flext_http_oracle_wms import FlextHttpOracleWmsProject; print('✅ Installation successful')"
 ```
 
 #### **Method 2: Poetry Installation (Recommended)**
@@ -149,10 +149,10 @@ export WMS_WEBHOOK_SECRET="your_webhook_secret"
 export WMS_WAREHOUSE_CODE="MAIN_WH"
 ```
 
-### **FLX Configuration (Auto-Generated)**
+### **FLEXT Configuration (Auto-Generated)**
 
 ```python
-# FLX automatically handles:
+# FLEXT automatically handles:
 # - HTTP client configuration
 # - Database connections
 # - Logging setup
@@ -161,7 +161,7 @@ export WMS_WAREHOUSE_CODE="MAIN_WH"
 # - Type validation
 
 # You only configure business logic:
-wms_project = FlxHttpOracleWmsProject(
+wms_project = FlextHttpOracleWmsProject(
     warehouse_code="MAIN_WH",
     enable_webhook_mode=True,
     webhook_secret="your_secret"
@@ -181,7 +181,7 @@ from flext_http_oracle_wms import create_http_oracle_wms_project
 # Create project instance
 wms = create_http_oracle_wms_project(warehouse_code="MAIN_WH")
 
-# Start the service (FLX handles all infrastructure)
+# Start the service (FLEXT handles all infrastructure)
 await wms.start()
 
 # Process business events
@@ -253,8 +253,8 @@ python discovery_example.py            # Entity discovery
 
 ```bash
 $ python examples/cli_usage.py
-✅ FLX HTTP Oracle WMS - KISS Version
-📦 Service: FlxHttpOracleWms
+✅ FLEXT HTTP Oracle WMS - KISS Version
+📦 Service: FlextHttpOracleWms
 🏭 Warehouse: DEFAULT_WH
 🔗 Entity mappings: 4 configured
 ⚡ Webhook mode: Disabled
@@ -271,12 +271,12 @@ $ python examples/cli_usage.py
 | ----------------- | -------------------- | ---------------- | --------------- |
 | **Total Lines**   | 1500+                | 86               | 94% reduction   |
 | **Configuration** | 200+ lines           | 15 lines         | 92% reduction   |
-| **Dependencies**  | 25+ manual           | 1 (FLX)          | 96% reduction   |
+| **Dependencies**  | 25+ manual           | 1 (FLEXT)          | 96% reduction   |
 | **Setup Time**    | 2+ hours             | 5 minutes        | 95% reduction   |
 
-### **FLX Automation Benefits**
+### **FLEXT Automation Benefits**
 
-**Automatically Handled by FLX:**
+**Automatically Handled by FLEXT:**
 
 - ✅ HTTP client configuration and connection pooling
 - ✅ Database connections and transaction management
@@ -322,13 +322,13 @@ class ComplexWMSAdapter:
     # ... massive amount of infrastructure code
 ```
 
-### **After: FLX KISS Pattern**
+### **After: FLEXT KISS Pattern**
 
 ```python
 # NEW APPROACH (86 lines total)
-class FlxHttpOracleWmsProject(ApplicationService):
+class FlextHttpOracleWmsProject(ApplicationService):
     def __init__(self, **kwargs):
-        super().__init__(service_name="FlxHttpOracleWms", **kwargs)
+        super().__init__(service_name="FlextHttpOracleWms", **kwargs)
         # Only business configuration
         self.entity_mappings = {"orders": "WMS_ORDERS"}
 
@@ -343,7 +343,7 @@ class FlxHttpOracleWmsProject(ApplicationService):
 
 ### **Prerequisites**
 
-- [FLX Framework Installation](../../getting-started/installation.md) - Required framework setup
+- [FLEXT Framework Installation](../../getting-started/installation.md) - Required framework setup
 - [Oracle Authentication](./oracle-authentication-comprehensive-guide.md) - Authentication patterns
 
 ### **Next Steps**
@@ -354,7 +354,7 @@ class FlxHttpOracleWmsProject(ApplicationService):
 
 ### **Related Topics**
 
-- [FLX ApplicationService](../../api-reference/core/application-service.md) - Base service pattern
+- [FLEXT ApplicationService](../../api-reference/core/application-service.md) - Base service pattern
 - [Webhook Processing](../integration/webhook-patterns.md) - Event processing patterns
 - [Oracle Integration Hub](./index.md) - Complete Oracle integration suite
 
@@ -368,4 +368,4 @@ class FlxHttpOracleWmsProject(ApplicationService):
 
 ---
 
-**📍 Location**: [Guides Hub](../index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Validated**: ✅ Source Code
+**📍 Location**: [Guides Hub](../index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Validated**: ✅ Source Code

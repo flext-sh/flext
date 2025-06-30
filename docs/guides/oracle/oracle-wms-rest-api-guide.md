@@ -4,9 +4,9 @@
 
 [![Oracle WMS](https://img.shields.io/badge/oracle-WMS_25B-red.svg)](./index.md)
 [![REST API](https://img.shields.io/badge/api-REST-blue.svg)](../../api-reference/index.md)
-[![Framework](https://img.shields.io/badge/framework-FLX_0.4.0-orange.svg)](../../index.md)
+[![Framework](https://img.shields.io/badge/framework-FLEXT_0.4.0-orange.svg)](../../index.md)
 
-**Comprehensive Oracle Warehouse Management Cloud REST API guide (Release 25B) covering all entities, operations, authentication patterns, and integration best practices using FLX Framework**
+**Comprehensive Oracle Warehouse Management Cloud REST API guide (Release 25B) covering all entities, operations, authentication patterns, and integration best practices using FLEXT Framework**
 
 ---
 
@@ -30,7 +30,7 @@
 
 ## 📋 **Overview**
 
-This guide covers the Oracle Warehouse Management Cloud REST API (version 25B) integration patterns using the FLX Framework. The Oracle WMS REST API provides comprehensive access to warehouse operations through structured endpoints.
+This guide covers the Oracle Warehouse Management Cloud REST API (version 25B) integration patterns using the FLEXT Framework. The Oracle WMS REST API provides comprehensive access to warehouse operations through structured endpoints.
 
 ### **API Overview**
 
@@ -5406,8 +5406,8 @@ record is updated to Failed status with error string as "Inventory not found in 
 Batch/Inventory attribute combination".
 • If the anticipated Item/Batch/Inventory attribute combination found for the sku in the location or
 LPN, but the qty passed exceeds the inventory qty then the corresponding detail record is updated
-to Failed status with error string as "Insufficient inventory for _Item/Batch/Inventory attribute
-combination{_}".
+to Failed status with error string as "Insufficient inventory for *Item/Batch/Inventory attribute
+combination{*}".
 • If the active location/reserve location passed has a Permanent Sku assignment and the qty
 passed is a postive value where the item passed is not the same as the permanent dedicated
 item, the corresponding detail record is updated to Failed status with error string as "Item passed
@@ -10010,12 +10010,12 @@ GET .../lgfapi/v10/entity/lgf_async_task/{id}
 
 - [Oracle Hub](./index.md) - Understanding Oracle integration architecture before WMS API implementation
 - [Authentication Complete Guide](./authentication-complete-guide.md) - OAuth2 and authentication setup for Oracle WMS
-- [Getting Started Hub](../../getting-started/index.md) - FLX Framework installation and basic configuration
+- [Getting Started Hub](../../getting-started/index.md) - FLEXT Framework installation and basic configuration
 
 ### **Next Steps**
 
-- [WMS Complete Guide](./wms-complete-guide.md) - Complete WMS integration implementation with FLX Framework
-- [WMS Adapter](./flext-http-oracle-wms-adapter.md) - FLX HTTP adapter implementation for Oracle WMS
+- [WMS Complete Guide](./wms-complete-guide.md) - Complete WMS integration implementation with FLEXT Framework
+- [WMS Adapter](./flext-http-oracle-wms-adapter.md) - FLEXT HTTP adapter implementation for Oracle WMS
 - [WMS Commands Reference](./oracle-wms-commands-reference.md) - Command-line tools and operations
 
 ### **Related Topics**
@@ -10028,4 +10028,4 @@ GET .../lgfapi/v10/entity/lgf_async_task/{id}
 
 ---
 
-**📂 Hub**: [Oracle Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Oracle Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

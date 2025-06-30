@@ -6,7 +6,7 @@
 [![Tuning](https://img.shields.io/badge/tuning-comprehensive-blue.svg)](./comprehensive-optimization-guide.md)
 [![Monitoring](https://img.shields.io/badge/monitoring-validated-orange.svg)](../../infrastructure/index.md)
 
-**Complete performance optimization strategies for FLX Framework - system tuning, application performance, and enterprise deployment optimization**
+**Complete performance optimization strategies for FLEXT Framework - system tuning, application performance, and enterprise deployment optimization**
 
 ---
 
@@ -145,4 +145,4 @@
 
 ---
 
-**📂 Section Hub** | **🏠 Parent**: [Optimization Hub](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Section Hub** | **🏠 Parent**: [Optimization Hub](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

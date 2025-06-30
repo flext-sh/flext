@@ -1,6 +1,6 @@
 # Oracle Integration Cloud (OIC) Complete Guide - Guides
 
-> **Function**: Complete Oracle Integration Cloud integration with FLX Framework | **Audience**: Integration developers, Oracle specialists | **Status**: Stable
+> **Function**: Complete Oracle Integration Cloud integration with FLEXT Framework | **Audience**: Integration developers, Oracle specialists | **Status**: Stable
 
 [![OIC](https://img.shields.io/badge/Oracle-OIC-red.svg)](./oracle-integration-hub.md)
 [![Integration](https://img.shields.io/badge/integration-cloud-blue.svg)](../integration/index.md)
@@ -30,13 +30,13 @@
 
 ## 📋 **Overview**
 
-Complete Oracle Integration Cloud (OIC) integration guide for the FLX framework, covering OAuth2 authentication, REST API integration, advanced patterns, and hexagonal architecture implementation.
+Complete Oracle Integration Cloud (OIC) integration guide for the FLEXT framework, covering OAuth2 authentication, REST API integration, advanced patterns, and hexagonal architecture implementation.
 
 ## 🎯 Quick Navigation
 
 - [**Getting Started**](#-getting-started) - Setup and basic configuration
 - [**Authentication**](#-authentication) - OAuth2 and security patterns
-- [**FLX Framework Integration**](#-flext-framework-integration) - Modern Python integration
+- [**FLEXT Framework Integration**](#-flext-framework-integration) - Modern Python integration
 - [**API Operations**](#-api-operations) - Integration and connection management
 - [**Advanced Patterns**](#-advanced-patterns) - Enterprise integration patterns
 - [**Troubleshooting**](#-troubleshooting) - Common issues and solutions
@@ -48,7 +48,7 @@ Complete Oracle Integration Cloud (OIC) integration guide for the FLX framework,
 - Python 3.13+
 - Oracle Cloud account with OIC access
 - IDCS (Identity Cloud Service) application configured
-- FLX Framework installed
+- FLEXT Framework installed
 
 ### Installation
 
@@ -181,7 +181,7 @@ REDIRECT_URI=https://idcs-xxxx.identity.oraclecloud.com/callback
 SCOPE="${RESOURCE_AUD} offline_access"
 ```
 
-## 🏗️ FLX Framework Integration
+## 🏗️ FLEXT Framework Integration
 
 ### Modern Python API Usage
 
@@ -761,7 +761,7 @@ python -m flext_http_oracle_oic.cli jwt status --verbose
 - [Oracle WMS Integration](wms-complete-guide.md) - WMS integration patterns
 - [Oracle Database Integration](database-complete-guide.md) - Database connections
 - [Oracle Authentication](authentication-complete-guide.md) - Complete auth guide
-- [FLX Architecture](../../architecture/infrastructure-architecture.md) - Framework architecture
+- [FLEXT Architecture](../../architecture/infrastructure-architecture.md) - Framework architecture
 - [Testing Oracle Integrations](../../development/testing/oracle-testing.md) - Testing strategies
 
 ---
@@ -772,7 +772,7 @@ python -m flext_http_oracle_oic.cli jwt status --verbose
 
 - [Oracle Integration Hub](./oracle-integration-hub.md) - Overview of Oracle integration patterns and entry point
 - [Authentication Complete Guide](./authentication-complete-guide.md) - OAuth2 and IDCS authentication fundamentals
-- [Getting Started](../../getting-started/index.md) - FLX Framework installation and basic configuration
+- [Getting Started](../../getting-started/index.md) - FLEXT Framework installation and basic configuration
 
 ### **Next Steps**
 
@@ -782,7 +782,7 @@ python -m flext_http_oracle_oic.cli jwt status --verbose
 
 ### **Related Topics**
 
-- [HTTP Adapter Patterns](../adapters/flext_http_oracle_oic-adapter.md) - FLX HTTP adapter implementation for OIC
+- [HTTP Adapter Patterns](../adapters/flext_http_oracle_oic-adapter.md) - FLEXT HTTP adapter implementation for OIC
 - [Security Framework](../../security/index.md) - Enterprise security patterns for Oracle integrations
 - [Infrastructure Services](../../infrastructure/index.md) - Infrastructure services supporting Oracle integrations
 
@@ -815,4 +815,4 @@ flext-oic monitor --flow-id integration-flow-123
 
 ---
 
-**📂 Hub**: [Oracle Integration Hub](./oracle-integration-hub.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Oracle Integration Hub](./oracle-integration-hub.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

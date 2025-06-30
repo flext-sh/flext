@@ -6,7 +6,7 @@
 [![Structure](https://img.shields.io/badge/structure-validated-green.svg)](./flext-source-structure.md)
 [![Domain](https://img.shields.io/badge/domain-DDD-orange.svg)](./application-layer.md)
 
-**Complete layer organization patterns for FLX Framework hexagonal architecture with production validation**
+**Complete layer organization patterns for FLEXT Framework hexagonal architecture with production validation**
 
 ---
 
@@ -28,7 +28,7 @@ This hub provides comprehensive guidance for organizing application layers in he
 | ----------------------------------------------------- | --------------------------------- | -------------------------- | -------------- | ---------- |
 | [**Core Domain Layer**](./core-domain-layer.md)       | Domain layer design patterns      | Domain experts, architects | ⭐⭐⭐         | ✅ Updated |
 | [**Application Layer**](./application-layer.md)       | Application coordination patterns | Backend developers         | ⭐⭐           | ✅ Updated |
-| [**FLX Source Structure**](./flext-source-structure.md) | Framework organization patterns   | Framework developers       | ⭐⭐           | ✅ Updated |
+| [**FLEXT Source Structure**](./flext-source-structure.md) | Framework organization patterns   | Framework developers       | ⭐⭐           | ✅ Updated |
 
 ---
 
@@ -53,7 +53,7 @@ This hub provides comprehensive guidance for organizing application layers in he
 ### **🏢 For Framework Developers**
 
 ```
-1. [FLX Source Structure](./flext-source-structure.md) →
+1. [FLEXT Source Structure](./flext-source-structure.md) →
 2. [Core Domain Layer](./core-domain-layer.md) →
 3. [Standards](../standards/index.md)
 ```
@@ -66,7 +66,7 @@ This hub provides comprehensive guidance for organizing application layers in he
 
 - [**Design Patterns**](../design/index.md) - Hexagonal architecture foundations required for proper layer organization
 - [**Domain Patterns**](../patterns/index.md) - DDD and SOLID patterns essential for layer design
-- [**Framework Concepts**](../../getting-started/concepts/index.md) - Core FLX understanding before layer implementation
+- [**Framework Concepts**](../../getting-started/concepts/index.md) - Core FLEXT understanding before layer implementation
 
 ### **➡️ Implementation Next Steps**
 
@@ -130,7 +130,7 @@ This hub provides comprehensive guidance for organizing application layers in he
 
 ### **Layer Validation**
 
-- **Real Implementation**: ✅ Based on production FLX Framework layer organization
+- **Real Implementation**: ✅ Based on production FLEXT Framework layer organization
 - **Oracle Integration**: ✅ Layer patterns validated with Oracle adapter implementations
 - **Testing Coverage**: ✅ Layer organization tested with comprehensive test suites
 - **Documentation Standards**: ✅ HOW_TO_DOCUMENT.md compliance
@@ -143,4 +143,4 @@ This hub provides comprehensive guidance for organizing application layers in he
 
 ---
 
-**📂 Section Hub** | **🏠 Parent**: [Architecture Hub](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Section Hub** | **🏠 Parent**: [Architecture Hub](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

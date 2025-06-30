@@ -4,7 +4,7 @@
 
 [![Testing](https://img.shields.io/badge/testing-protocols-blue.svg)](./index.md)
 [![Assessment](https://img.shields.io/badge/assessment-validation-orange.svg)](./validation-testing.md)
-[![Framework](https://img.shields.io/badge/framework-FLX%200.4.0-green.svg)](../../index.md)
+[![Framework](https://img.shields.io/badge/framework-FLEXT%200.4.0-green.svg)](../../index.md)
 
 **Complete verification procedures for system state assessment and validation**
 
@@ -24,7 +24,7 @@
 
 - **📂 Section Hub**: [Testing Hub](./index.md)
 - **🏠 Documentation Root**: [Root Index](../../index.md)
-- **🔗 Source Code**: [FLX Testing](../../../flext/src/flext/testing/)
+- **🔗 Source Code**: [FLEXT Testing](../../../flext/src/flext/testing/)
 - **🔗 Related**: [Validation Testing](./validation-testing.md), [Emergency Protocols](./emergency-protocols.md)
 
 ---
@@ -64,8 +64,8 @@ echo ""
 
 # STEP 3: TEST IMPORTS WITH CORRECT PATHS (Agent's biggest failure)
 echo "=== IMPORT TESTING WITH CORRECT PATHS ==="
-echo "Testing FLX Core (src in subdirectory)..."
-python -c "import sys; sys.path.insert(0, 'flext/src'); import flext; print('✅ FLX Core OK')" 2>/dev/null || echo "❌ FLX BROKEN"
+echo "Testing FLEXT Core (src in subdirectory)..."
+python -c "import sys; sys.path.insert(0, 'flext/src'); import flext; print('✅ FLEXT Core OK')" 2>/dev/null || echo "❌ FLEXT BROKEN"
 
 echo "Testing Oracle adapters (separate projects)..."
 python -c "import sys; sys.path.insert(0, 'flext-database-oracle/src'); import flext_database_oracle; print('✅ DB Oracle OK')" 2>/dev/null || echo "❌ DB BROKEN"
@@ -92,7 +92,7 @@ echo "AGENT: Read the output above CAREFULLY before making any conclusions"
 - **✅ All systems OK** = Normal work (proceed with tasks)
 - **❌ 1-2 components broken** = Component repair mode (2-4 hours)
 - **❌ 3+ broken OR build system down** = **EMERGENCY RESTORATION** (8-20 hours)
-- **❌ FLX Core broken** = **CRITICAL SYSTEM FAILURE** (immediate action required)
+- **❌ FLEXT Core broken** = **CRITICAL SYSTEM FAILURE** (immediate action required)
 
 ## 🔧 COMPREHENSIVE SYSTEM ASSESSMENT
 
@@ -102,7 +102,7 @@ echo "AGENT: Read the output above CAREFULLY before making any conclusions"
 echo "=== SYSTEMATIC ASSESSMENT STARTING ==="
 
 # Test all core imports
-python -c "import flext; print('✅ FLX Core')" || echo "❌ FLX BROKEN"
+python -c "import flext; print('✅ FLEXT Core')" || echo "❌ FLEXT BROKEN"
 python -c "import flext.application.bootstrap; print('✅ Bootstrap')" || echo "❌ Bootstrap BROKEN"
 python -c "import flext.adapters.outbound.cache; print('✅ Cache')" || echo "❌ Cache BROKEN"
 
@@ -217,7 +217,7 @@ cat .token | tail -20 | grep -E "(✅|WORKING|SUCCESS|COMPLETED)"
 
 - [Testing Overview](./index.md) - Understanding testing frameworks and strategies
 - [Development Environment](../setup/environment.md) - Proper development environment setup
-- [Getting Started](../../getting-started/index.md) - FLX Framework installation and configuration
+- [Getting Started](../../getting-started/index.md) - FLEXT Framework installation and configuration
 
 ### **Next Steps**
 
@@ -252,7 +252,7 @@ For assessment protocol issues:
 
 ---
 
-**📂 Hub**: [Testing Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-19
+**📂 Hub**: [Testing Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-19
 
 ## 🎯 POST-HEAVY-REFACTOR MANDATORY CHECKLIST
 

@@ -2,7 +2,7 @@
 
 ## Overview
 
-Unit testing in the FLX framework focuses on testing individual components in isolation, following hexagonal architecture principles where domain logic is completely separated from infrastructure concerns.
+Unit testing in the FLEXT framework focuses on testing individual components in isolation, following hexagonal architecture principles where domain logic is completely separated from infrastructure concerns.
 
 ## Unit Testing Principles
 
@@ -271,4 +271,4 @@ def assert_repository_interaction(mock_repo, method, times=1, **expected_args):
 
 ---
 
-_This guide provides comprehensive patterns for unit testing in the FLX framework following hexagonal architecture principles._
+_This guide provides comprehensive patterns for unit testing in the FLEXT framework following hexagonal architecture principles._

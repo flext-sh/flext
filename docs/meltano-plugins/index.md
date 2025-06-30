@@ -4,10 +4,10 @@
 
 [![Meltano](https://img.shields.io/badge/meltano-3.7.8-blue.svg)](./extractors/index.md)
 [![Singer SDK](https://img.shields.io/badge/singer--sdk-0.46.4-green.svg)](../development/guides/singer_sdk-integration.md)
-[![Framework](https://img.shields.io/badge/framework-FLX%200.4.0-orange.svg)](../index.md)
+[![Framework](https://img.shields.io/badge/framework-FLEXT%200.4.0-orange.svg)](../index.md)
 [![Plugins](https://img.shields.io/badge/plugins-13_available-purple.svg)](#section-metrics)
 
-**Enterprise-grade Meltano plugin ecosystem for Oracle integration, data extraction, loading, transformation, and orchestration with FLX Framework 0.4.0+**
+**Enterprise-grade Meltano plugin ecosystem for Oracle integration, data extraction, loading, transformation, and orchestration with FLEXT Framework 0.4.0+**
 
 ---
 
@@ -25,13 +25,13 @@
 
 - **📂 Section Hub**: [Meltano Plugins Hub](#) (Current)
 - **🏠 Documentation Root**: [Root Index](../index.md)
-- **🔧 Integration Guide**: [Meltano-FLX Integration](../guides/integration/meltano-flext-integration-plan.md)
+- **🔧 Integration Guide**: [Meltano-FLEXT Integration](../guides/integration/meltano-flext-integration-plan.md)
 
 ---
 
 ## 📊 **Overview**
 
-The Meltano Plugins Hub provides a comprehensive ecosystem of data integration plugins built on the Singer SDK standard and integrated with FLX Framework 0.4.0+. These plugins enable enterprise-grade Oracle data integration, extraction, loading, transformation, and orchestration capabilities.
+The Meltano Plugins Hub provides a comprehensive ecosystem of data integration plugins built on the Singer SDK standard and integrated with FLEXT Framework 0.4.0+. These plugins enable enterprise-grade Oracle data integration, extraction, loading, transformation, and orchestration capabilities.
 
 ### **Plugin Categories**
 
@@ -46,7 +46,7 @@ The Meltano Plugins Hub provides a comprehensive ecosystem of data integration p
 
 - **Oracle Integration**: Native Oracle ADB, OIC, and WMS support
 - **Singer SDK Compatibility**: Full Singer specification compliance
-- **FLX Framework Integration**: Hexagonal architecture patterns
+- **FLEXT Framework Integration**: Hexagonal architecture patterns
 - **Production Ready**: Enterprise-grade monitoring and error handling
 - **Scalable Architecture**: Plugin-based extensible design
 
@@ -104,4 +104,4 @@ The Meltano Plugins Hub provides a comprehensive ecosystem of data integration p
 
 ---
 
-**📂 Hub**: [Meltano Plugins Hub](#) | **🏠 Root**: [Documentation Home](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Meltano Plugins Hub](#) | **🏠 Root**: [Documentation Home](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

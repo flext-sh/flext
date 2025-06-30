@@ -101,7 +101,7 @@ python scripts/test_python_analysis.py
 
 ## 🎯 Projetos Monitorados
 
-### **FLX Framework (11 projetos)**
+### **FLEXT Framework (11 projetos)**
 
 - flext-core, flext-api, flext-auth, flext-cli, flext-grpc
 - flext-ldap, flext-meltano, flext-observability, flext-plugin, flext-quality, flext-web

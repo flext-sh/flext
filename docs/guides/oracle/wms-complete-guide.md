@@ -4,9 +4,9 @@
 
 [![Oracle WMS](https://img.shields.io/badge/Oracle-WMS-blue.svg)](./index.md)
 [![Integration](https://img.shields.io/badge/integration-complete-green.svg)](./oracle-integration-comprehensive-guide.md)
-[![Framework](https://img.shields.io/badge/framework-FLX%200.4.0-orange.svg)](../../index.md)
+[![Framework](https://img.shields.io/badge/framework-FLEXT%200.4.0-orange.svg)](../../index.md)
 
-**Complete Oracle Warehouse Management System integration guide for FLX framework covering REST API integration, CLI operations, entity management, and hexagonal architecture patterns - validated against production implementations**
+**Complete Oracle Warehouse Management System integration guide for FLEXT framework covering REST API integration, CLI operations, entity management, and hexagonal architecture patterns - validated against production implementations**
 
 ---
 
@@ -16,7 +16,7 @@
 
 ## Overview
 
-Complete Oracle Warehouse Management System (WMS) integration guide for the FLX framework, covering REST API integration, CLI operations, entity management, and hexagonal architecture patterns.
+Complete Oracle Warehouse Management System (WMS) integration guide for the FLEXT framework, covering REST API integration, CLI operations, entity management, and hexagonal architecture patterns.
 
 ## 🎯 Quick Navigation
 
@@ -25,7 +25,7 @@ Complete Oracle Warehouse Management System (WMS) integration guide for the FLX 
 - [**CLI Operations**](#-cli-operations) - Command-line interface
 - [**Entity Reference**](#-entity-reference) - Complete API entities
 - [**Advanced Operations**](#-advanced-operations) - High-performance features
-- [**Architecture Integration**](#-architecture-integration) - FLX framework patterns
+- [**Architecture Integration**](#-architecture-integration) - FLEXT framework patterns
 
 ## 🚀 Getting Started
 
@@ -33,7 +33,7 @@ Complete Oracle Warehouse Management System (WMS) integration guide for the FLX 
 
 - Python 3.13+
 - Oracle WMS Cloud access
-- FLX Framework installed
+- FLEXT Framework installed
 
 ### Installation
 
@@ -86,7 +86,7 @@ python -m flext_http_oracle_wms discover
 
 ## 🌐 REST API Integration
 
-### FLX HTTP Oracle WMS Adapter
+### FLEXT HTTP Oracle WMS Adapter
 
 The `flext-http-oracle-wms` package provides a modern Python client for Oracle WMS operations with the following features:
 
@@ -646,7 +646,7 @@ flext-http-oracle-wms get-schema [entity] --validate
 
 ## 🎓 Integration Examples
 
-### Modern FLX 0.4.0+ Usage
+### Modern FLEXT 0.4.0+ Usage
 
 ```python
 from flext.adapters.oracle.wms import WMSAdapter
@@ -684,7 +684,7 @@ async def process_inventory_adjustment(item_id: str, adjustment: int):
 - [Oracle OIC Integration](oic-complete-guide.md) - Oracle Integration Cloud
 - [Oracle Database Integration](database-complete-guide.md) - Database connections
 - [Oracle Authentication](authentication-complete-guide.md) - OAuth2 and JWT setup
-- [FLX Architecture](../../architecture/infrastructure-architecture.md) - Framework architecture
+- [FLEXT Architecture](../../architecture/infrastructure-architecture.md) - Framework architecture
 - [Testing Oracle Integrations](../../development/testing/oracle-testing.md) - Testing strategies
 
 ## 🆘 Support
@@ -703,7 +703,7 @@ For additional support:
 ### **⬅️ Essential Prerequisites**
 
 - [**Oracle Integration Foundation**](./oracle-integration-comprehensive-guide.md) - Oracle integration architecture and authentication setup required for WMS implementation
-- [**FLX Framework Installation**](../../getting-started/setup/installation-guide.md) - Framework setup and basic configuration required for WMS adapter installation
+- [**FLEXT Framework Installation**](../../getting-started/setup/installation-guide.md) - Framework setup and basic configuration required for WMS adapter installation
 - [**Authentication Configuration**](./authentication-complete-guide.md) - OAuth2 and JWT setup essential for Oracle WMS Cloud access
 
 ### **➡️ Implementation Next Steps**
@@ -723,9 +723,9 @@ For additional support:
 
 ---
 
-**📂 Content Document** | **🏠 Parent**: [Oracle Guides Hub](./index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Content Document** | **🏠 Parent**: [Oracle Guides Hub](./index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11
 
 **Implementation Status**: ✅ **Production Ready**
 **Documentation**: Complete WMS integration guide
 
-_This comprehensive guide consolidates all Oracle WMS integration documentation for the FLX framework, providing complete implementation instructions, examples, and best practices._
+_This comprehensive guide consolidates all Oracle WMS integration documentation for the FLEXT framework, providing complete implementation instructions, examples, and best practices._

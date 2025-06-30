@@ -1,4 +1,4 @@
-# FLX - Hexagonal Architecture Framework Overview
+# FLEXT - Hexagonal Architecture Framework Overview
 
 [![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/)
 [![Version](https://img.shields.io/badge/Version-0.4.0-green)](https://github.com/flext/flext)
@@ -14,7 +14,7 @@
 > - [Hexagonal Architecture Guide](../architecture/UNIFIED_ARCHITECTURE_GUIDE.md) - Architecture overview
 > - [Development Standards](../development/standardization-plan.md) - Development guidelines
 
-**FLX** is a comprehensive Python framework that implements **Hexagonal Architecture** (Ports & Adapters) with **Domain-Driven Design** patterns. Built with Python 3.13+, it provides a production-ready foundation for building scalable, maintainable, and testable enterprise applications.
+**FLEXT** is a comprehensive Python framework that implements **Hexagonal Architecture** (Ports & Adapters) with **Domain-Driven Design** patterns. Built with Python 3.13+, it provides a production-ready foundation for building scalable, maintainable, and testable enterprise applications.
 
 ## Key Features
 
@@ -62,13 +62,13 @@
 
 ## Quick Start Examples
 
-### Your First FLX Application
+### Your First FLEXT Application
 
 ```python
 from flext import Flx
 from decimal import Decimal
 
-# Initialize the FLX framework
+# Initialize the FLEXT framework
 flext = Flx()
 
 # Create rich domain entities
@@ -159,7 +159,7 @@ asyncio.run(main())
 import cyclopts
 from flext import Flx
 
-app = cyclopts.App(name="myapp", help="My FLX Application")
+app = cyclopts.App(name="myapp", help="My FLEXT Application")
 flext = Flx()
 
 @app.command
@@ -185,7 +185,7 @@ if __name__ == "__main__":
 
 ## Architecture Overview
 
-FLX implements **Hexagonal Architecture** (Ports & Adapters) with clear layer separation:
+FLEXT implements **Hexagonal Architecture** (Ports & Adapters) with clear layer separation:
 
 ```mermaid
 graph TB
@@ -267,7 +267,7 @@ Production-ready infrastructure components:
 
 ### Testing Strategy
 
-FLX follows a comprehensive testing pyramid:
+FLEXT follows a comprehensive testing pyramid:
 
 ```python
 import pytest
@@ -338,16 +338,16 @@ flext/
 ### Configuration Management
 
 ```python
-from flext.infra.config import FlxConfig
+from flext.infra.config import FlextConfig
 
 # Environment-based configuration
-config = FlxConfig.from_env()
+config = FlextConfig.from_env()
 
 # YAML configuration
-config = FlxConfig.from_file("config.yaml")
+config = FlextConfig.from_file("config.yaml")
 
 # Programmatic configuration
-config = FlxConfig(
+config = FlextConfig(
     cache_backend="redis",
     cache_url="redis://localhost:6379",
     log_level="INFO"
@@ -372,7 +372,7 @@ flext system info               # Show system information
 
 ## Plugin Development
 
-Create powerful plugins that extend FLX:
+Create powerful plugins that extend FLEXT:
 
 ```python
 # Plugin entry point
@@ -417,18 +417,18 @@ MIT License - see [LICENSE](../../LICENSE) file for details.
 
 ## About
 
-**FLX** is developed and maintained by [Datacosmos](https://datacosmos.com.br), a Brazilian company specializing in enterprise data integration solutions with Oracle systems.
+**FLEXT** is developed and maintained by [Datacosmos](https://datacosmos.com.br), a Brazilian company specializing in enterprise data integration solutions with Oracle systems.
 
 ### Support & Community
 
-- **📖 Documentation**: [Complete FLX Documentation](../README.md)
+- **📖 Documentation**: [Complete FLEXT Documentation](../README.md)
 - **🐛 Issues**: [GitHub Issues](https://github.com/datacosmos-br/flext/issues)
 - **💬 Discussions**: [GitHub Discussions](https://github.com/datacosmos-br/flext/discussions)
 - **📧 Enterprise Support**: Contact us for enterprise support options
 
 ---
 
-**🏗️ FLX Framework v0.4.0 - Enterprise Python with Hexagonal Architecture and Modern Infrastructure**
+**🏗️ FLEXT Framework v0.4.0 - Enterprise Python with Hexagonal Architecture and Modern Infrastructure**
 
 ## See Also
 

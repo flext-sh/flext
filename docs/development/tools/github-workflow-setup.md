@@ -4,9 +4,9 @@
 
 [![GitHub](https://img.shields.io/badge/GitHub-workflows-black.svg)](./index.md)
 [![CI/CD](https://img.shields.io/badge/CI_CD-automated-green.svg)](../standards/index.md)
-[![Framework](https://img.shields.io/badge/framework-FLX%200.4.0-orange.svg)](../../index.md)
+[![Framework](https://img.shields.io/badge/framework-FLEXT%200.4.0-orange.svg)](../../index.md)
 
-**Complete GitHub workflow setup guide for FLX Framework including CI/CD pipeline configuration, automated testing, and deployment workflows - validated against production implementations**
+**Complete GitHub workflow setup guide for FLEXT Framework including CI/CD pipeline configuration, automated testing, and deployment workflows - validated against production implementations**
 
 ---
 
@@ -94,4 +94,4 @@ Add these workflow files:
 
 ---
 
-**📂 Content Document** | **🏠 Parent**: [Development Tools Hub](./index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Content Document** | **🏠 Parent**: [Development Tools Hub](./index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

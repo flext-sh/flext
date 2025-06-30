@@ -1,4 +1,4 @@
-# FLX Development - Comprehensive Hub
+# FLEXT Development - Comprehensive Hub
 
 > **Function**: Complete development lifecycle documentation | **Audience**: Developers, QA engineers, DevOps | **Status**: Validated
 
@@ -41,7 +41,7 @@ This hub consolidates development documentation using validated semantic analysi
 Based on **actual code inspection** of `/flext/src/flext/`, the development documentation is **EXCEPTIONALLY COMPREHENSIVE** and accurate:
 
 ```python
-# ✅ VALIDATED: Real FLX testing framework matches documentation
+# ✅ VALIDATED: Real FLEXT testing framework matches documentation
 
 # Testing Framework - Actual Implementation
 flext/src/flext/testing/engines/base.py:
@@ -494,13 +494,13 @@ Development Hub ↔ Other Domains:
 
 ### **Prerequisites**
 
-- [Getting Started Guide](../getting-started/index.md) - Basic FLX setup needed before development
+- [Getting Started Guide](../getting-started/index.md) - Basic FLEXT setup needed before development
 - [Development Hub](./index.md) - Main development navigation and overview
 
 ### **Next Steps**
 
-- [Testing Framework](./testing/index.md) - Comprehensive testing strategies for FLX applications
-- [Development Tools](./tools/index.md) - Essential tools and utilities for FLX development
+- [Testing Framework](./testing/index.md) - Comprehensive testing strategies for FLEXT applications
+- [Development Tools](./tools/index.md) - Essential tools and utilities for FLEXT development
 - [Standards Guide](./standards/index.md) - Code quality and development standards
 
 ### **Related Topics**
@@ -511,4 +511,4 @@ Development Hub ↔ Other Domains:
 
 ---
 
-**📂 Hub**: [Development Hub](./index.md) | **🏠 Root**: [Documentation Home](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Development Hub](./index.md) | **🏠 Root**: [Documentation Home](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

@@ -1,10 +1,10 @@
-# FLX Testing Guide
+# FLEXT Testing Guide
 
-Comprehensive testing strategies for FLX applications, plugins, and integrations. This guide covers the complete testing pyramid from unit tests to end-to-end testing with practical examples and best practices.
+Comprehensive testing strategies for FLEXT applications, plugins, and integrations. This guide covers the complete testing pyramid from unit tests to end-to-end testing with practical examples and best practices.
 
 ## 🎯 Testing Philosophy
 
-FLX follows a comprehensive testing strategy based on the testing pyramid, ensuring reliable and maintainable code through multiple levels of testing that align with hexagonal architecture principles.
+FLEXT follows a comprehensive testing strategy based on the testing pyramid, ensuring reliable and maintainable code through multiple levels of testing that align with hexagonal architecture principles.
 
 ### Core Testing Principles
 
@@ -46,7 +46,7 @@ FLX follows a comprehensive testing strategy based on the testing pyramid, ensur
 
 ### Core Testing Tools
 
-| Tool               | Purpose                   | Usage in FLX            |
+| Tool               | Purpose                   | Usage in FLEXT            |
 | ------------------ | ------------------------- | ----------------------- |
 | **pytest**         | Test runner and framework | Primary testing tool    |
 | **pytest-asyncio** | Async testing support     | Test async operations   |
@@ -100,10 +100,10 @@ Unit tests focus on testing individual components in isolation, particularly dom
 import pytest
 from datetime import datetime
 from flext import Flx
-from flext.core.exceptions import FlxValidationError
+from flext.core.exceptions import FlextValidationError
 
 class TestDomainEntities:
-    """Unit tests for FLX domain entities."""
+    """Unit tests for FLEXT domain entities."""
 
     def setup_method(self):
         """Set up test fixtures."""
@@ -137,7 +137,7 @@ class TestDomainEntities:
         assert entity.business_type == "Enterprise"
 
         # Invalid business entity (empty business_type)
-        with pytest.raises(FlxValidationError):
+        with pytest.raises(FlextValidationError):
             self.flext.Entities.BusinessEntity(
                 name="Invalid Corp",
                 business_type=""
@@ -176,7 +176,7 @@ class TestDomainEntities:
             entity = self.flext.Entities.BaseEntity(name=name)
             assert entity.is_valid()
         else:
-            with pytest.raises(FlxValidationError):
+            with pytest.raises(FlextValidationError):
                 self.flext.Entities.BaseEntity(name=name)
 ```
 
@@ -186,10 +186,10 @@ class TestDomainEntities:
 # tests/unit/test_value_objects.py
 import pytest
 from flext import Flx
-from flext.core.exceptions import FlxValidationError
+from flext.core.exceptions import FlextValidationError
 
 class TestValueObjects:
-    """Unit tests for FLX value objects."""
+    """Unit tests for FLEXT value objects."""
 
     def setup_method(self):
         """Set up test fixtures."""
@@ -220,7 +220,7 @@ class TestValueObjects:
 
     def test_domain_event_creation(self):
         """Test domain event value object creation."""
-        event = self.flext.ValueObjects.FlxDomainEvent(
+        event = self.flext.ValueObjects.FlextDomainEvent(
             event_type="UserRegistered",
             aggregate_id="user_123",
             aggregate_type="User",
@@ -248,7 +248,7 @@ class TestValueObjects:
             contact = self.flext.ValueObjects.ContactInfo(email=email)
             assert contact.email == email
         else:
-            with pytest.raises(FlxValidationError):
+            with pytest.raises(FlextValidationError):
                 self.flext.ValueObjects.ContactInfo(email=email)
 ```
 
@@ -260,7 +260,7 @@ import pytest
 from flext import Flx
 
 class TestMixins:
-    """Unit tests for FLX mixins."""
+    """Unit tests for FLEXT mixins."""
 
     def setup_method(self):
         """Set up test fixtures."""
@@ -385,7 +385,7 @@ import pytest
 import pytest_asyncio
 from flext.adapters.outbound.cache import CacheAdapter
 from flext.infra.cache.cache_service import CacheService
-from flext.core.exceptions import FlxConnectionError
+from flext.core.exceptions import FlextConnectionError
 
 @pytest.mark.integration
 class TestCacheAdapterIntegration:
@@ -426,10 +426,10 @@ class TestCacheAdapterIntegration:
         await cache_adapter.disconnect()
 
         # Operations should raise appropriate errors
-        with pytest.raises(FlxConnectionError):
+        with pytest.raises(FlextConnectionError):
             await cache_adapter.get("test_key")
 
-        with pytest.raises(FlxConnectionError):
+        with pytest.raises(FlextConnectionError):
             await cache_adapter.set("test_key", "value")
 
     async def test_adapter_lifecycle_management(self):
@@ -657,7 +657,7 @@ from flext.adapters.outbound.database import DatabaseAdapter
 
 @pytest.mark.e2e
 class TestCompleteWorkflows:
-    """End-to-end tests for complete FLX workflows."""
+    """End-to-end tests for complete FLEXT workflows."""
 
     @pytest.fixture
     async def production_application(self, redis_container, postgres_container):
@@ -870,8 +870,8 @@ import factory
 from datetime import datetime, timezone
 from flext import Flx
 
-class FlxEntityFactory:
-    """Factory for creating FLX test entities."""
+class FlextEntityFactory:
+    """Factory for creating FLEXT test entities."""
 
     def __init__(self):
         self.flext = Flx()
@@ -915,7 +915,7 @@ class FlxEntityFactory:
 @pytest.fixture
 def entity_factory():
     """Provide entity factory for tests."""
-    return FlxEntityFactory()
+    return FlextEntityFactory()
 
 @pytest.fixture
 def sample_entities(entity_factory):
@@ -1113,4 +1113,4 @@ async def wait_for_condition(condition_func, timeout: float = 5.0):
 
 ---
 
-**🧪 Ready to build reliable FLX applications with comprehensive testing!**
+**🧪 Ready to build reliable FLEXT applications with comprehensive testing!**

@@ -36,7 +36,7 @@
 | target-oracle-oic | flext-target-oracle-oic | <git@github.com>:flext-sh/flext-target-oracle-oic.git |
 | target-oracle-wms | flext-target-oracle-wms | <git@github.com>:flext-sh/flext-target-oracle-wms.git |
 
-### 🔗 EXTENSÕES FLX (flext-sh)
+### 🔗 EXTENSÕES FLEXT (flext-sh)
 
 **Organização**: flext-sh
 **Prefixo**: flext-
@@ -47,7 +47,7 @@
 | flext-ldap | flext-ldap | <git@github.com>:flext-sh/flext-ldap.git |
 | flext-quality | flext-quality | <git@github.com>:flext-sh/flext-ldap.git |
 
-### 🔧 MÓDULOS FLX FRAMEWORK (locais)
+### 🔧 MÓDULOS FLEXT FRAMEWORK (locais)
 
 **Localização**: Diretórios locais
 **Prefixo**: flext-
@@ -93,7 +93,7 @@
 
 ### Outros Projetos (flext-sh)
 
-- **Singer/Meltano**, **FLX Extensions** e **Legacy** migrados para flext-sh
+- **Singer/Meltano**, **FLEXT Extensions** e **Legacy** migrados para flext-sh
 - Razão: Componentes reutilizáveis e framework geral
 - Benefício: Nova identidade organizacional com prefixos flext
 
@@ -105,7 +105,7 @@
 
 - **datacosmos-br**: 2 repositórios (projetos enterprise)
 - **flext-sh**: 16 repositórios (8 Singer/Meltano + 2 Extensions + 6 Legacy)
-- **Locais**: 9 módulos FLX Framework (aguardando criação de repositórios)
+- **Locais**: 9 módulos FLEXT Framework (aguardando criação de repositórios)
 
 ### Prefixos Implementados
 
@@ -129,7 +129,7 @@
 
 ### Médio Prazo
 
-1. **Criar repositórios GitHub** para módulos FLX Framework quando necessário
+1. **Criar repositórios GitHub** para módulos FLEXT Framework quando necessário
 2. **Configurar CI/CD** respeitando a divisão organizacional
 3. **Atualizar documentação** de desenvolvimento
 
@@ -167,7 +167,7 @@ Workspace PyAuto (Configuração Híbrida):
 │   ├── flext-ldap/              ← Extensions (migrados)
 │   └── legacy/flext-*/          ← Legacy (migrados)
 └── local/
-    └── flext-*/                 ← FLX Framework (renomeados)
+    └── flext-*/                 ← FLEXT Framework (renomeados)
 ```
 
 ---

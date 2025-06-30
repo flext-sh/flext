@@ -6,7 +6,7 @@
 [![Compliance](https://img.shields.io/badge/compliance-SOC2-blue.svg)](./policies/index.md)
 [![Authentication](https://img.shields.io/badge/auth-JWT%2BOAuth2-green.svg)](../guides/authentication/index.md)
 
-**Complete security documentation for FLX Framework - enterprise-grade security implementation and compliance**
+**Complete security documentation for FLEXT Framework - enterprise-grade security implementation and compliance**
 
 ---
 
@@ -61,4 +61,4 @@
 
 ---
 
-**📂 Section Hub** | **🏠 Parent**: [Documentation Root](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Section Hub** | **🏠 Parent**: [Documentation Root](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

@@ -6,7 +6,7 @@
 [![Examples](https://img.shields.io/badge/examples-working-green.svg)](./index.md)
 [![Code](https://img.shields.io/badge/code-validated-blue.svg)](../reference/specifications/oracle-integration-specification.md)
 
-**Real working examples of Oracle system integrations using FLX Framework architecture patterns**
+**Real working examples of Oracle system integrations using FLEXT Framework architecture patterns**
 
 ---
 
@@ -45,7 +45,7 @@
 ```python
 # examples/oracle_database_basic.py
 import asyncio
-from flext.adapters.oracle.database import FlxOracleDbAdapter
+from flext.adapters.oracle.database import FlextOracleDbAdapter
 from flext.core.entities import Entity, AggregateRoot
 from pydantic import BaseModel
 from typing import Optional
@@ -89,7 +89,7 @@ async def database_crud_example():
     """Demonstrate basic CRUD operations with Oracle Database"""
 
     # Initialize Oracle Database adapter
-    db_adapter = FlxOracleDbAdapter(
+    db_adapter = FlextOracleDbAdapter(
         host="localhost",
         port=1521,
         service_name="XEPDB1",
@@ -164,7 +164,7 @@ if __name__ == "__main__":
 ```python
 # examples/oracle_database_advanced.py
 import asyncio
-from flext.adapters.oracle.database import FlxOracleDbAdapter
+from flext.adapters.oracle.database import FlextOracleDbAdapter
 from flext.core.services import ApplicationService
 from contextlib import asynccontextmanager
 from typing import List
@@ -172,7 +172,7 @@ from typing import List
 class OrderProcessingService(ApplicationService):
     """Application service for order processing with transactions"""
 
-    def __init__(self, db_adapter: FlxOracleDbAdapter):
+    def __init__(self, db_adapter: FlextOracleDbAdapter):
         self.db_adapter = db_adapter
 
     async def process_order(self, order_data: dict) -> str:
@@ -267,7 +267,7 @@ class OrderProcessingService(ApplicationService):
 async def advanced_database_example():
     """Demonstrate advanced database operations with transactions"""
 
-    db_adapter = FlxOracleDbAdapter(
+    db_adapter = FlextOracleDbAdapter(
         host="localhost",
         port=1521,
         service_name="XEPDB1",
@@ -931,11 +931,11 @@ if __name__ == "__main__":
 ## 📋 **Example Metadata**
 
 - **Example Version**: 1.0.0
-- **Framework Compatibility**: FLX 0.4.0+
+- **Framework Compatibility**: FLEXT 0.4.0+
 - **Oracle Compatibility**: 19c+, Autonomous Database, Cloud Services
 - **Validation Date**: June 11, 2025
 - **Implementation Status**: ✅ Production-ready examples
 
 ---
 
-**📂 Examples**: [Examples Hub](./index.md) | **🏠 Root**: [Documentation Home](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Examples**: [Examples Hub](./index.md) | **🏠 Root**: [Documentation Home](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

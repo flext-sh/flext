@@ -27,14 +27,14 @@
 flext_database_oracle/
 ├── src/flext_database_oracle/
 │   ├── __init__.py              # REAL exports verified
-│   ├── adapter.py               # FlxOracleDbAdapter implementation
-│   ├── client.py                # FlxOracleDbClient
+│   ├── adapter.py               # FlextOracleDbAdapter implementation
+│   ├── client.py                # FlextOracleDbClient
 │   ├── config.py               # Configuration classes
 │   ├── operations.py           # Schema and SQL operations
 │   └── testing.py              # OracleTestEngine
 ├── examples/
 │   ├── basic_usage.py          # Working examples
-│   ├── flext_oracle_usage.py     # FLX integration examples
+│   ├── flext_oracle_usage.py     # FLEXT integration examples
 │   └── declarative_cli_usage.py # CLI usage patterns
 └── tests/                      # Comprehensive test suite
 ```
@@ -49,21 +49,21 @@ import oracledb                    # Direct Oracle connectivity
 from sqlalchemy import create_engine, text
 from pydantic import Field, BaseModel
 from flext.adapters.base import BaseAdapter
-from flext.core.exceptions import DatabaseError, FlxConnectionError
+from flext.core.exceptions import DatabaseError, FlextConnectionError
 ```
 
 ---
 
-## 🔧 **FlxOracleDbAdapter - REAL Implementation**
+## 🔧 **FlextOracleDbAdapter - REAL Implementation**
 
 ### Class Definition (VALIDATED)
 
 ```python
 # ACTUAL implementation from /flext_database_oracle/src/flext_database_oracle/adapter.py
-from flext_database_oracle import FlxOracleDbAdapter, FlxDatabaseConfig
+from flext_database_oracle import FlextOracleDbAdapter, FlextDatabaseConfig
 
-class FlxOracleDbAdapter(BaseAdapter):
-    """Oracle Database adapter extending FLX DatabaseAdapter.
+class FlextOracleDbAdapter(BaseAdapter):
+    """Oracle Database adapter extending FLEXT DatabaseAdapter.
 
     VALIDATED: This is the actual class definition from the codebase.
     """
@@ -84,7 +84,7 @@ class FlxOracleDbAdapter(BaseAdapter):
 ```python
 # VERIFIED: Actual factory method from implementation
 @classmethod
-def from_config(cls, config: FlxDatabaseConfig, **overrides: Any) -> FlxOracleDbAdapter:
+def from_config(cls, config: FlextDatabaseConfig, **overrides: Any) -> FlextOracleDbAdapter:
     """Factory method to create adapter from configuration (DRY principle)."""
     adapter_kwargs = {
         "name": "oracle-db-adapter",
@@ -165,10 +165,10 @@ async def _connect(self) -> None:
 
 ```python
 # ACTUAL working configuration from examples
-from flext_database_oracle import FlxDatabaseConfig, FlxOracleDbAdapter
+from flext_database_oracle import FlextDatabaseConfig, FlextOracleDbAdapter
 
 # REAL configuration for Oracle Autonomous Database
-config = FlxDatabaseConfig(
+config = FlextDatabaseConfig(
     host="autonomous-db.oraclecloud.com",
     port=1522,
     service_name="my_atp_service_high",  # REAL service name format
@@ -180,7 +180,7 @@ config = FlxDatabaseConfig(
 )
 
 # VERIFIED: Create adapter from configuration
-adapter = FlxOracleDbAdapter.from_config(config)
+adapter = FlextOracleDbAdapter.from_config(config)
 ```
 
 ---
@@ -197,7 +197,7 @@ async def execute_query(self, sql: str, params: dict[str, Any] | None = None) ->
     VALIDATED: This is the actual method signature and implementation.
     """
     if not self._oracle_connection:
-        raise FlxConnectionError("Oracle database not connected")
+        raise FlextConnectionError("Oracle database not connected")
 
     start_time = self._record_operation_start()
 
@@ -243,7 +243,7 @@ async def execute_command(self, sql: str, params: dict[str, Any] | None = None) 
     VALIDATED: Real implementation with transaction handling.
     """
     if not self._oracle_connection:
-        raise FlxConnectionError("Oracle database not connected")
+        raise FlextConnectionError("Oracle database not connected")
 
     start_time = self._record_operation_start()
 
@@ -474,11 +474,11 @@ await test_engine.cleanup_test_data()
 ```python
 # COMPLETE REAL EXAMPLE - Tested against actual implementation
 import asyncio
-from flext_database_oracle import FlxOracleDbAdapter, FlxDatabaseConfig
+from flext_database_oracle import FlextOracleDbAdapter, FlextDatabaseConfig
 
 async def main():
     # REAL configuration
-    config = FlxDatabaseConfig(
+    config = FlextDatabaseConfig(
         host="autonomous-db.oraclecloud.com",
         port=1522,
         service_name="myatp_high",
@@ -488,7 +488,7 @@ async def main():
     )
 
     # VERIFIED: Create adapter
-    adapter = FlxOracleDbAdapter.from_config(config)
+    adapter = FlextOracleDbAdapter.from_config(config)
 
     try:
         # REAL: Connect to Oracle Autonomous Database
@@ -572,7 +572,7 @@ dsn = (
 
 ```python
 # REAL pool configuration
-adapter = FlxOracleDbAdapter(
+adapter = FlextOracleDbAdapter(
     host="your-host",
     port=1522,
     service_name="your_service",

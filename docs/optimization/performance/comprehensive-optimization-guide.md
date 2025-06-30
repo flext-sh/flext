@@ -1,4 +1,4 @@
-# 🚀 FLX Comprehensive Optimization Guide
+# 🚀 FLEXT Comprehensive Optimization Guide
 
 > **Function**: Complete performance optimization and library integration strategy | **Audience**: Performance engineers, architects, technical leads | **Status**: Production-Ready
 
@@ -6,7 +6,7 @@
 [![Performance](https://img.shields.io/badge/performance-enterprise-green.svg)](./optimization-guide.md)
 [![Libraries](https://img.shields.io/badge/libraries-integrated-orange.svg)](../library/index.md)
 
-**Comprehensive optimization strategy for FLX Framework including infrastructure optimization, library integration, and performance enhancement - validated against production implementations**
+**Comprehensive optimization strategy for FLEXT Framework including infrastructure optimization, library integration, and performance enhancement - validated against production implementations**
 
 ---
 
@@ -27,7 +27,7 @@
 
 ### **Optimization Objectives**
 
-Replace custom FLX infrastructure implementations with mature, battle-tested Python ecosystem libraries to:
+Replace custom FLEXT infrastructure implementations with mature, battle-tested Python ecosystem libraries to:
 
 - **Reduce maintenance overhead** by 40-50%
 - **Improve development velocity** by 60%
@@ -51,7 +51,7 @@ Replace custom FLX infrastructure implementations with mature, battle-tested Pyt
 Based on actual codebase analysis in `/flext/src/flext/infra/`:
 
 ```python
-# Current FLX infrastructure components
+# Current FLEXT infrastructure components
 flext/infra/
 ├── http/                     # Custom HTTP client implementation
 ├── auth/                     # Custom authentication system
@@ -115,7 +115,7 @@ async def reliable_api_call():
 
 ```python
 # Custom logging in flext/infra/observability/
-class FlxLogger:
+class FlextLogger:
     def __init__(self, service_name):
         # ... custom structured logging
 ```
@@ -149,7 +149,7 @@ await logger.ainfo(
 
 ```python
 # Custom HTTP client in flext/infra/http/
-class FlxHttpClient:
+class FlextHttpClient:
     def __init__(self, config):
         # ... custom HTTP implementation
 ```
@@ -182,7 +182,7 @@ async with httpx.AsyncClient(
 
 ```python
 # Custom auth in flext/infra/auth/
-class FlxAuthManager:
+class FlextAuthManager:
     def __init__(self):
         # ... custom JWT/OAuth implementation
 ```
@@ -242,7 +242,7 @@ from dynaconf import Dynaconf
 settings = Dynaconf(
     environments=True,
     settings_files=['settings.yaml', '.secrets.yaml'],
-    environment_variables_prefix="FLX",
+    environment_variables_prefix="FLEXT",
     redis_enabled=True,
     vault_enabled=True
 )
@@ -406,9 +406,9 @@ class HybridService:
 
 ---
 
-**📂 Content Document** | **🏠 Parent**: [Performance Optimization Hub](./index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Content Document** | **🏠 Parent**: [Performance Optimization Hub](./index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11
 
 **Implementation Status**: 📋 **Planning Phase**
-**Maintained By**: FLX Development Team
+**Maintained By**: FLEXT Development Team
 
-This comprehensive optimization guide provides the strategic framework for modernizing FLX infrastructure while maintaining architectural integrity and development team productivity.
+This comprehensive optimization guide provides the strategic framework for modernizing FLEXT infrastructure while maintaining architectural integrity and development team productivity.

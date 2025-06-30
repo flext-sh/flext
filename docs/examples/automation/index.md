@@ -4,7 +4,7 @@
 
 ## Overview
 
-Automation examples for the FLX framework, covering Oracle OUD automation, infrastructure automation, and operational automation patterns.
+Automation examples for the FLEXT framework, covering Oracle OUD automation, infrastructure automation, and operational automation patterns.
 
 ## Quick Links
 
@@ -41,4 +41,4 @@ Automation examples for the FLX framework, covering Oracle OUD automation, infra
 
 ---
 
-_Part of the [FLX Framework Documentation](../../index.md)_
+_Part of the [FLEXT Framework Documentation](../../index.md)_

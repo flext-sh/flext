@@ -1,18 +1,18 @@
-# CLAUDE.md - PYAUTO WORKSPACE STANDARDS
+# CLAUDE.md - FLEXT WORKSPACE STANDARDS
 
-**Hierarquia**: WORKSPACE-SPECIFIC
-**Referência**: `/home/marlonsc/CLAUDE.md` → Metodologia universal
-**Referência**: `/home/marlonsc/CLAUDE.local.md` → Issues cross-workspace
-**Referência**: `./CLAUDE.local.md` → Issues temporários PyAuto
-**Última Atualização**: 2025-06-29
+**Hierarchy**: WORKSPACE-SPECIFIC
+**Reference**: `/home/marlonsc/CLAUDE.md` → Universal methodology
+**Reference**: `/home/marlonsc/CLAUDE.local.md` → Cross-workspace issues
+**Reference**: `./CLAUDE.local.md` → Temporary FLEXT issues
+**Last Updated**: 2025-06-29
 
 ---
 
-## 📊 PYAUTO PROJECT STRUCTURE (COMPREHENSIVE INVENTORY)
+## 📊 FLEXT PROJECT STRUCTURE (COMPREHENSIVE INVENTORY)
 
-### 🏗️ FLX FRAMEWORK MODULES - STATUS REQUIRES VERIFICATION ⚠️
+### 🏗️ FLEXT FRAMEWORK MODULES - STATUS REQUIRES VERIFICATION ⚠️
 
-**Location**: Root workspace `/home/marlonsc/pyauto/`
+**Location**: Root workspace `/home/marlonsc/flext/`
 
 - `flext-core/` - Foundation & Domain (STATUS UNKNOWN - NEEDS VERIFICATION)
 - `flext-auth/` - Authentication (STATUS UNKNOWN - NEEDS VERIFICATION)
@@ -26,26 +26,28 @@
 
 ### 🔄 ADDITIONAL PROJECTS
 
-**Location**: Root workspace `/home/marlonsc/pyauto/`
+**Location**: Root workspace `/home/marlonsc/flext/`
 
 - `flext-ldap/` - LDAP Operations (STATUS NEEDS VERIFICATION)
+- `flext-quality/` - Code Quality Analysis (STATUS NEEDS VERIFICATION)
+- `flext-db-oracle/` - Oracle Database Integration (STATUS NEEDS VERIFICATION)
 
 ### 🎵 SINGER/MELTANO PROTOCOL PROJECTS - STATUS VERIFICATION REQUIRED
 
-**Location**: Root workspace `/home/marlonsc/pyauto/`
+**Location**: Root workspace `/home/marlonsc/flext/`
 
-- `tap-ldap/` - LDAP data extraction (STATUS UNKNOWN)
-- `tap-oracle-oic/` - OIC data extraction (STATUS UNKNOWN)  
-- `tap-oracle-wms/` - WMS data extraction (STATUS UNKNOWN)
-- `target-ldap/` - LDAP data loading (STATUS UNKNOWN)
-- `target-oracle-oic/` - OIC data loading (STATUS UNKNOWN)
-- `target-oracle-wms/` - WMS data loading (STATUS UNKNOWN)
-- `dbt-ldap/` - dbt LDAP models (STATUS UNKNOWN)
-- `oracle-oic-ext/` - OIC extensions (STATUS UNKNOWN)
+- `flext-tap-ldap/` - LDAP data extraction (STATUS UNKNOWN)
+- `flext-tap-oracle-oic/` - OIC data extraction (STATUS UNKNOWN)  
+- `flext-tap-oracle-wms/` - WMS data extraction (STATUS UNKNOWN)
+- `flext-target-ldap/` - LDAP data loading (STATUS UNKNOWN)
+- `flext-target-oracle-oic/` - OIC data loading (STATUS UNKNOWN)
+- `flext-target-oracle-wms/` - WMS data loading (STATUS UNKNOWN)
+- `flext-dbt-ldap/` - dbt LDAP models (STATUS UNKNOWN)
+- `flext-oracle-oic-ext/` - OIC extensions (STATUS UNKNOWN)
 
 ### 🏢 ENTERPRISE INTEGRATIONS - STATUS VERIFICATION REQUIRED
 
-**Location**: Root workspace `/home/marlonsc/pyauto/`
+**Location**: Root workspace `/home/marlonsc/flext/`
 
 - `algar-oud-mig/` - ALGAR Oracle migration (STATUS NEEDS ASSESSMENT)
 - `gruponos-poc-oic-wms/` - GrupoNOS POC (STATUS NEEDS ASSESSMENT)
@@ -57,7 +59,7 @@
 - `backups/flext-meltano-enterprise_source_20250629_121126/` - Original modularization source
 - `backups/flext_original_20250629_121011/` - Empty flext/ directory removed
 
-**Superseded FLX Projects** (moved to backups):
+**Superseded FLEXT Projects** (moved to backups):
 
 - `backups/flext-oracle-wms_20250629_122800/` - Superseded by modular structure
 - `backups/flext-oracle-oic_*/` - Superseded by enterprise integration
@@ -79,14 +81,14 @@
 ### 📊 FINAL PROJECT ORGANIZATION
 
 ```
-ACTIVE IN ROOT (20 projects):
-├── FLX Framework (9): flext-core, flext-auth, flext-api, flext-grpc, flext-web, flext-cli, flext-plugin, flext-observability, flext-meltano
-├── FLX Extensions (2): flext-ldap, flext-quality (renamed from dc-code-analyzer)
-├── Singer/Meltano (8): tap-ldap, tap-oracle-oic, tap-oracle-wms, target-ldap, target-oracle-oic, target-oracle-wms, dbt-ldap, oracle-oic-ext
+ACTIVE IN ROOT (22 projects):
+├── FLEXT Framework (9): flext-core, flext-auth, flext-api, flext-grpc, flext-web, flext-cli, flext-plugin, flext-observability, flext-meltano
+├── FLEXT Extensions (3): flext-ldap, flext-quality, flext-db-oracle
+├── Singer/Meltano (8): flext-tap-ldap, flext-tap-oracle-oic, flext-tap-oracle-wms, flext-target-ldap, flext-target-oracle-oic, flext-target-oracle-wms, flext-dbt-ldap, flext-oracle-oic-ext
 └── Enterprise (2): algar-oud-mig, gruponos-poc-oic-wms
 
 STORED IN LEGACY (6 projects):
-└── Superseded FLX projects: flext-adapter-example, flext-database-oracle, flext-http-oracle-*, flext-oracle-*
+└── Superseded FLEXT projects: flext-adapter-example, flext-database-oracle, flext-http-oracle-*, flext-oracle-*
 
 STORED IN BACKUPS (8+ items):
 ├── Sources: flext-meltano-enterprise_source_*, flext-meltano-enterprise_current_*
@@ -100,7 +102,7 @@ STORED IN BACKUPS (8+ items):
 
 ### Environment Management
 
-**Single workspace venv**: `/home/marlonsc/pyauto/.venv`
+**Single workspace venv**: `/home/marlonsc/flext/.venv`
 **Rule**: NO project-specific venvs allowed
 
 ### Project Documentation
@@ -111,7 +113,7 @@ STORED IN BACKUPS (8+ items):
 
 ### Multi-Agent Coordination
 
-**Primary coordination**: `/home/marlonsc/pyauto/.token`
+**Primary coordination**: `/home/marlonsc/flext/.token`
 **Rule**: Read .token before ANY file modification in workspace
 
 ---
@@ -188,7 +190,7 @@ STORED IN BACKUPS (8+ items):
 
 ### To Cross-Workspace
 
-**Trigger**: Pattern used in 2+ PyAuto projects + applicable to other workspaces
+**Trigger**: Pattern used in 2+ FLEXT projects + applicable to other workspaces
 
 ### To Global  
 

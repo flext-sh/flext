@@ -1,4 +1,4 @@
-# FLX Core API Reference
+# FLEXT Core API Reference
 
 **Status**: 🚧 CRITICAL DOCUMENTATION GAP - Implementation Complete, Documentation Needed
 **Implementation**: `/flext/src/flext/core/`
@@ -6,7 +6,7 @@
 
 ## Overview
 
-The FLX Core module implements the domain layer of the hexagonal architecture, containing pure business logic with no external dependencies. This is the heart of the FLX framework, providing domain-driven design (DDD) patterns and clean architecture compliance.
+The FLEXT Core module implements the domain layer of the hexagonal architecture, containing pure business logic with no external dependencies. This is the heart of the FLEXT framework, providing domain-driven design (DDD) patterns and clean architecture compliance.
 
 ## TODO IMPLEMENTATION ALIGNMENT
 
@@ -148,13 +148,13 @@ def create_domain_logger() -> DomainLogger:
 
 ### Models and Enums
 
-#### FlxAdapterModel
+#### FlextAdapterModel
 
 ```python
-from flext.core import FlxAdapterModel
+from flext.core import FlextAdapterModel
 
 # TODO: Add real usage example from implementation
-model = FlxAdapterModel(...)
+model = FlextAdapterModel(...)
 ```
 
 **TODO DOCUMENTATION GAPS:**
@@ -167,10 +167,10 @@ model = FlxAdapterModel(...)
 
 ```python
 from flext.core import (
-    FlxAdapterStatus,
-    FlxConnectionStatus,
-    FlxOperationStatus,
-    FlxTransactionStatus
+    FlextAdapterStatus,
+    FlextConnectionStatus,
+    FlextOperationStatus,
+    FlextTransactionStatus
 )
 
 # TODO: Add real usage examples from implementation
@@ -260,7 +260,7 @@ raise BusinessRuleViolationError("Order cannot be modified after shipping")
 
 ### TODO: Complete Usage Documentation
 
-- [ ] **Domain Modeling**: How to model business domains using FLX core
+- [ ] **Domain Modeling**: How to model business domains using FLEXT core
 - [ ] **Event Sourcing**: Implementing event-driven business logic
 - [ ] **Aggregate Design**: Designing aggregates for complex business logic
 - [ ] **Service Composition**: Composing domain services

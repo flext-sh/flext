@@ -65,7 +65,7 @@ This hub provides comprehensive guidance for defining and implementing port inte
 ### **⬅️ Essential Prerequisites**
 
 - [**Design Patterns**](../design/index.md) - Hexagonal architecture foundations required for port understanding
-- [**Framework Concepts**](../../getting-started/concepts/index.md) - Core FLX concepts before port implementation
+- [**Framework Concepts**](../../getting-started/concepts/index.md) - Core FLEXT concepts before port implementation
 - [**Layer Organization**](../layers/index.md) - Understanding domain and infrastructure layer separation
 
 ### **➡️ Implementation Next Steps**
@@ -120,7 +120,7 @@ This hub provides comprehensive guidance for defining and implementing port inte
 
 ### **Port Validation**
 
-- **Real Implementation**: ✅ Based on production FLX Framework ports
+- **Real Implementation**: ✅ Based on production FLEXT Framework ports
 - **Oracle Integration**: ✅ Port patterns validated with Oracle adapter implementations
 - **Testing Coverage**: ✅ Port contracts tested with comprehensive test suites
 - **Documentation Standards**: ✅ HOW_TO_DOCUMENT.md compliance
@@ -133,4 +133,4 @@ This hub provides comprehensive guidance for defining and implementing port inte
 
 ---
 
-**📂 Section Hub** | **🏠 Parent**: [Architecture Hub](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Section Hub** | **🏠 Parent**: [Architecture Hub](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

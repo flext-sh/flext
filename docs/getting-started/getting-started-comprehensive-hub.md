@@ -1,4 +1,4 @@
-# FLX Getting Started Comprehensive Hub
+# FLEXT Getting Started Comprehensive Hub
 
 > **🎯 CONTENT-BASED CONSOLIDATION**: This hub consolidates getting-started documentation using **VALIDATED SEMANTIC ANALYSIS** against CLAUDE.md and real project setup.
 
@@ -109,7 +109,7 @@ Concept Foundation:
 **VALIDATED LEARNING PROGRESSION**:
 
 ```python
-# ✅ QUICKSTART MATCHES REALITY: Real FLX usage patterns
+# ✅ QUICKSTART MATCHES REALITY: Real FLEXT usage patterns
 from flext import ApplicationService         # ✅ Core import matches docs
 
 class MyFirstApp(ApplicationService):     # ✅ Pattern matches quickstart
@@ -155,8 +155,8 @@ Advanced Concepts:
 # Plugin System: Bidirectional adapters          ✅
 # Clear separation: domain and infrastructure    ✅
 
-# Real FLX Components (CLAUDE.md validated):
-# 1. FLX Framework (/flext/) - Core implementation     ✅
+# Real FLEXT Components (CLAUDE.md validated):
+# 1. FLEXT Framework (/flext/) - Core implementation     ✅
 # 2. Oracle Adapters (/flext-*-oracle-*/) - Specialized ✅
 # 3. Legacy Projects (/dc-oracle-*/) - Migration     ✅
 # 4. Implementation Projects (/projeto-*/) - Real    ✅
@@ -230,7 +230,7 @@ make status                              # ✅ Workspace status
 
 3. CONCEPT MASTERY (Understanding Domain)
    ├── Hexagonal Architecture Principles
-   ├── FLX Framework Overview
+   ├── FLEXT Framework Overview
    ├── Port-Adapter Patterns
    └── Domain-Infrastructure Separation
 
@@ -315,7 +315,7 @@ Team Onboarding:
 ```markdown
 Getting Started ↔ Real Projects:
 ├── Installation → CLAUDE.md commands
-├── Quickstart → Real FLX ApplicationService
+├── Quickstart → Real FLEXT ApplicationService
 ├── Concepts → Real hexagonal architecture
 └── Workflow → Real development commands
 

@@ -1,8 +1,8 @@
-# 🔧 FLX Technical Reference - Source Code Analysis
+# 🔧 FLEXT Technical Reference - Source Code Analysis
 
-> **Navigation**: [Documentation Home](../index.md) → [API Reference Hub](./index.md) → FLX Technical Reference
+> **Navigation**: [Documentation Home](../index.md) → [API Reference Hub](./index.md) → FLEXT Technical Reference
 
-**Comprehensive technical reference based on actual FLX Framework source code implementation and architecture patterns**
+**Comprehensive technical reference based on actual FLEXT Framework source code implementation and architecture patterns**
 
 ## 📋 **Table of Contents**
 
@@ -20,7 +20,7 @@
 
 ### **Hexagonal Architecture Implementation**
 
-FLX implements clean hexagonal architecture with strict layer separation:
+FLEXT implements clean hexagonal architecture with strict layer separation:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -428,7 +428,7 @@ Based on the source code structure in `flext/infra/`:
 
 ### **Declarative Testing Engine**
 
-Based on `flext/testing/declarative.py`, FLX provides comprehensive testing:
+Based on `flext/testing/declarative.py`, FLEXT provides comprehensive testing:
 
 ```python
 from flext.testing.declarative import (
@@ -592,7 +592,7 @@ health_service.register_check("http_client", HttpHealthCheck(http_service))
 ### **⬅️ Prerequisites**
 
 - [Architecture Hub](../architecture/index.md) - Understanding hexagonal architecture patterns before diving into technical implementation
-- [Getting Started Hub](../getting-started/index.md) - Basic FLX Framework installation and setup
+- [Getting Started Hub](../getting-started/index.md) - Basic FLEXT Framework installation and setup
 
 ### **➡️ Next Steps**
 
@@ -618,4 +618,4 @@ health_service.register_check("http_client", HttpHealthCheck(http_service))
 
 ---
 
-**📂 Content Guide** | **🏠 Hub**: [API Reference](./index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Content Guide** | **🏠 Hub**: [API Reference](./index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

@@ -6,7 +6,7 @@
 [![Patterns](https://img.shields.io/badge/patterns-validated-green.svg)](./adapter-patterns.md)
 [![Integration](https://img.shields.io/badge/integration-production-orange.svg)](./outbound-adapters.md)
 
-**Complete adapter implementation patterns bridging ports and external systems in FLX Framework hexagonal architecture**
+**Complete adapter implementation patterns bridging ports and external systems in FLEXT Framework hexagonal architecture**
 
 ---
 
@@ -122,7 +122,7 @@ This hub provides comprehensive guidance for implementing adapters in hexagonal 
 
 ### **Adapter Validation**
 
-- **Real Implementation**: ✅ Based on production FLX Framework adapter patterns
+- **Real Implementation**: ✅ Based on production FLEXT Framework adapter patterns
 - **Oracle Integration**: ✅ Adapter patterns validated with `/flext-*-oracle-*` implementations
 - **Testing Coverage**: ✅ Adapter patterns tested with comprehensive test suites
 - **Documentation Standards**: ✅ HOW_TO_DOCUMENT.md compliance
@@ -135,4 +135,4 @@ This hub provides comprehensive guidance for implementing adapters in hexagonal 
 
 ---
 
-**📂 Section Hub** | **🏠 Parent**: [Architecture Hub](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Section Hub** | **🏠 Parent**: [Architecture Hub](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

@@ -1,30 +1,30 @@
-# FLX Framework - Comprehensive API Overview
+# FLEXT Framework - Comprehensive API Overview
 
-> **Function**: Complete FLX API reference documentation | **Audience**: Developers, architects | **Status**: Stable
+> **Function**: Complete FLEXT API reference documentation | **Audience**: Developers, architects | **Status**: Stable
 
-[![Framework](https://img.shields.io/badge/framework-FLX_0.4.0-blue.svg)](../../index.md)
+[![Framework](https://img.shields.io/badge/framework-FLEXT_0.4.0-blue.svg)](../../index.md)
 [![Architecture](https://img.shields.io/badge/architecture-hexagonal-green.svg)](../../architecture/index.md)
 [![DDD](https://img.shields.io/badge/pattern-DDD-orange.svg)](../../guides/patterns/index.md)
 
-**Complete API reference for the FLX Framework's Domain-Driven Design implementation with Hexagonal Architecture**
+**Complete API reference for the FLEXT Framework's Domain-Driven Design implementation with Hexagonal Architecture**
 
 ---
 
 ## 🧭 **Navigation Context**
 
-**🏠 Root**: [Documentation Home](../../index.md) → **📂 Hub**: [API Reference](../index.md) → **📄 Current**: FLX API Overview
+**🏠 Root**: [Documentation Home](../../index.md) → **📂 Hub**: [API Reference](../index.md) → **📄 Current**: FLEXT API Overview
 
 ### **📍 Learning Path Position**
 
 ```
-[API Reference Hub](../index.md) → **[FLX API OVERVIEW]** → [Core API Reference](../framework/core-api-reference-validated.md)
+[API Reference Hub](../index.md) → **[FLEXT API OVERVIEW]** → [Core API Reference](../framework/core-api-reference-validated.md)
 ```
 
 ## 🎯 **Quick Links**
 
 - **📂 Section Hub**: [API Reference Hub](../index.md)
 - **🏠 Documentation Root**: [Root Index](../../index.md)
-- **🔗 Related**: [FLX Adapters Reference](../adapters/flext-adapters-comprehensive-reference.md)
+- **🔗 Related**: [FLEXT Adapters Reference](../adapters/flext-adapters-comprehensive-reference.md)
 
 ---
 
@@ -36,7 +36,7 @@ The `Flx` class provides a comprehensive Domain-Driven Design framework with Hex
 
 ### 1. **Domain-Oriented Architecture**
 
-The FLX framework follows Domain-Driven Design principles with clear separation of concerns:
+The FLEXT framework follows Domain-Driven Design principles with clear separation of concerns:
 
 ```python
 from flext import Flx
@@ -56,7 +56,7 @@ contact = flext.ValueObjects.ContactInfo(
 )
 
 # Domain events
-event = flext.ValueObjects.FlxDomainEvent(
+event = flext.ValueObjects.FlextDomainEvent(
     event_type="UserCreated",
     aggregate_id=user.id,
     aggregate_type="User",
@@ -69,7 +69,7 @@ event = flext.ValueObjects.FlxDomainEvent(
 | Section             | Responsibility      | Main Components                                        |
 | ------------------- | ------------------- | ------------------------------------------------------ |
 | `flext.Entities`      | Domain entities     | `BaseEntity`, `AggregateRoot`, `BusinessEntity`        |
-| `flext.ValueObjects`  | Immutable data      | `FlxDomainEvent`, `EntityId`, `Address`, `ContactInfo` |
+| `flext.ValueObjects`  | Immutable data      | `FlextDomainEvent`, `EntityId`, `Address`, `ContactInfo` |
 | `flext.Protocols`     | Type interfaces     | `Configurable`, `Activatable`, `Timestamped`           |
 | `flext.Mixins`        | Composable behavior | `Status`, `Config`, `Metadata`, `Management`           |
 | `flext.EntityFactory` | Entity creation     | `flext_create_service()`, `flext_create_configurable()`    |
@@ -153,7 +153,7 @@ events = order.get_domain_events()
 **Methods:**
 
 - `raise_domain_event(event_type: str, data: dict)` → None: Raises a domain event
-- `get_domain_events()` → List[FlxDomainEvent]: Returns all raised events
+- `get_domain_events()` → List[FlextDomainEvent]: Returns all raised events
 - `clear_domain_events()` → None: Clears all domain events
 
 #### AggregateRoot
@@ -230,12 +230,12 @@ address = flext.ValueObjects.Address(
 - `country` (str): Country name
 - `postal_code` (str, optional): Postal/ZIP code
 
-#### FlxDomainEvent
+#### FlextDomainEvent
 
 Domain event representation for business occurrences.
 
 ```python
-event = flext.ValueObjects.FlxDomainEvent(
+event = flext.ValueObjects.FlextDomainEvent(
     event_type="CustomerRegistered",
     aggregate_id="customer-123",
     aggregate_type="Customer",
@@ -492,7 +492,7 @@ class PaymentProcessor:
 
     def process_payment(self, amount: float, order_id: str):
         # Business logic
-        event = flext.ValueObjects.FlxDomainEvent(
+        event = flext.ValueObjects.FlextDomainEvent(
             event_type="PaymentRequested",
             aggregate_id=order_id,
             aggregate_type="Order",
@@ -549,7 +549,7 @@ configure_entities(services, {"timeout": 30, "retries": 3})
 
 ### Hexagonal Architecture
 
-FLX implements hexagonal architecture with clear separation:
+FLEXT implements hexagonal architecture with clear separation:
 
 ```python
 # Domain layer (center) - pure business logic
@@ -590,7 +590,7 @@ order.raise_domain_event("OrderCreated", {"customer_id": customer.id})
 address = flext.ValueObjects.Address(street="123 Main St", city="Springfield")
 
 # Domain events for business occurrences
-event = flext.ValueObjects.FlxDomainEvent(
+event = flext.ValueObjects.FlextDomainEvent(
     event_type="CustomerMoved",
     aggregate_id=customer.id,
     event_data={"new_address": address.street}
@@ -619,7 +619,7 @@ except ValueError as e:
 ```python
 try:
     # Domain events require valid data
-    event = flext.ValueObjects.FlxDomainEvent(
+    event = flext.ValueObjects.FlextDomainEvent(
         event_type="",  # Empty event type will raise error
         aggregate_id="123",
         aggregate_type="User",
@@ -708,7 +708,7 @@ class User:
         self.id = str(uuid.uuid4())
         self.name = name
 
-# After: FLX entities
+# After: FLEXT entities
 class User(flext.Entities.BaseEntity):
     def __init__(self, name: str):
         super().__init__(name=name)
@@ -734,14 +734,14 @@ events = user.get_domain_events()
 
 ### **Prerequisites**
 
-- [Getting Started Guide](../../getting-started/index.md) - Setting up FLX Framework
+- [Getting Started Guide](../../getting-started/index.md) - Setting up FLEXT Framework
 - [Core API Reference](../framework/core-api-reference-validated.md) - Understanding core components
 
 ### **Next Steps**
 
-- [FLX Adapters Reference](../adapters/flext-adapters-comprehensive-reference.md) - Working with adapter system
+- [FLEXT Adapters Reference](../adapters/flext-adapters-comprehensive-reference.md) - Working with adapter system
 - [Domain Entity Examples](../../examples/basic-examples.md) - Practical implementation examples
-- [Testing Guide](../../development/testing/index.md) - Testing FLX applications
+- [Testing Guide](../../development/testing/index.md) - Testing FLEXT applications
 
 ### **Related Topics**
 
@@ -751,4 +751,4 @@ events = user.get_domain_events()
 
 ---
 
-**📂 Hub**: [API Reference](../index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [API Reference](../index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

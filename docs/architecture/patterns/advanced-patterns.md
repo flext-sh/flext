@@ -6,7 +6,7 @@
 [![DDD](https://img.shields.io/badge/DDD-implemented-green.svg)](./domain-driven-design-patterns.md)
 [![Event](https://img.shields.io/badge/event_sourcing-validated-orange.svg)](./event-sourcing-implementation.md)
 
-**Advanced architectural patterns for FLX Framework including DDD, Event Sourcing, CQRS, and microservices patterns - validated against production implementations**
+**Advanced architectural patterns for FLEXT Framework including DDD, Event Sourcing, CQRS, and microservices patterns - validated against production implementations**
 
 ---
 
@@ -332,7 +332,7 @@ from flext.core.events import EventStore, Event, EventStream
 from flext.adapters.outbound.database import DatabaseAdapter
 
 class FLXEventStore(EventStore):
-    """FLX Event Store implementation with optimistic concurrency."""
+    """FLEXT Event Store implementation with optimistic concurrency."""
 
     def __init__(self, database: DatabaseAdapter):
         self.database = database
@@ -1223,7 +1223,7 @@ class SagaExecutionEngine:
 ### **⬅️ Essential Prerequisites**
 
 - [**Hexagonal Architecture Foundation**](../design/unified-architecture-guide.md) - Core architectural patterns essential for understanding advanced patterns
-- [**Framework Architecture Guide**](../design/flext-framework-architecture-guide.md) - FLX Framework architecture foundations required for advanced pattern implementation
+- [**Framework Architecture Guide**](../design/flext-framework-architecture-guide.md) - FLEXT Framework architecture foundations required for advanced pattern implementation
 - [**Port-Adapter Patterns**](../ports/index.md) - Port and adapter concepts fundamental to advanced pattern implementation
 
 ### **➡️ Implementation Next Steps**
@@ -1243,6 +1243,6 @@ class SagaExecutionEngine:
 
 ---
 
-**📂 Content Document** | **🏠 Parent**: [Architecture Patterns Hub](./index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Content Document** | **🏠 Parent**: [Architecture Patterns Hub](./index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11
 
-**🏛️ Your FLX application now supports enterprise-grade architectural patterns with domain-driven design, event sourcing, CQRS, and microservices!**
+**🏛️ Your FLEXT application now supports enterprise-grade architectural patterns with domain-driven design, event sourcing, CQRS, and microservices!**

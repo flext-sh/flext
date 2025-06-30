@@ -1,10 +1,10 @@
-# FLX Testing Engines
+# FLEXT Testing Engines
 
-Comprehensive testing engines for orchestrating and executing tests across different system components in the FLX hexagonal architecture framework.
+Comprehensive testing engines for orchestrating and executing tests across different system components in the FLEXT hexagonal architecture framework.
 
 ## Overview
 
-The testing engines provide specialized test execution capabilities for different aspects of the FLX system, from individual components to comprehensive end-to-end scenarios. Each engine is designed to test specific architectural layers while maintaining clear separation of concerns.
+The testing engines provide specialized test execution capabilities for different aspects of the FLEXT system, from individual components to comprehensive end-to-end scenarios. Each engine is designed to test specific architectural layers while maintaining clear separation of concerns.
 
 ## Architecture
 

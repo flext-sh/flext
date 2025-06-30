@@ -4,9 +4,9 @@
 
 [![Testing](https://img.shields.io/badge/testing-core_domain-blue.svg)](./index.md)
 [![Domain](https://img.shields.io/badge/layer-domain-purple.svg)](../../architecture/core-domain-layer.md)
-[![Framework](https://img.shields.io/badge/framework-FLX_0.4.0-orange.svg)](../../index.md)
+[![Framework](https://img.shields.io/badge/framework-FLEXT_0.4.0-orange.svg)](../../index.md)
 
-**Comprehensive guide for testing FLX Framework core domain components with business logic validation**
+**Comprehensive guide for testing FLEXT Framework core domain components with business logic validation**
 
 ---
 
@@ -30,7 +30,7 @@
 
 ## 📋 **Overview**
 
-Core domain testing ensures the correctness and integrity of business logic, domain entities, value objects, and domain services in the FLX Framework.
+Core domain testing ensures the correctness and integrity of business logic, domain entities, value objects, and domain services in the FLEXT Framework.
 
 ### **Testing Objectives**
 
@@ -84,7 +84,7 @@ class TestDomainEntity:
 
 ### **Prerequisites**
 
-- [Testing Hub](./index.md) - Understanding FLX testing framework architecture
+- [Testing Hub](./index.md) - Understanding FLEXT testing framework architecture
 - [Core API Reference](../../api-reference/framework/core-api-reference-validated.md) - Core domain APIs being tested
 
 ### **Next Steps**
@@ -101,4 +101,4 @@ class TestDomainEntity:
 
 ---
 
-**📂 Hub**: [Testing Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Testing Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

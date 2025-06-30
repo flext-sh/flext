@@ -4,7 +4,7 @@
 
 [![Development](https://img.shields.io/badge/development-guides-blue.svg)](../index.md)
 [![Adapters](https://img.shields.io/badge/adapters-implementation-orange.svg)](../../architecture/patterns/adapter-patterns.md)
-[![Framework](https://img.shields.io/badge/framework-FLX%200.4.0-green.svg)](../../index.md)
+[![Framework](https://img.shields.io/badge/framework-FLEXT%200.4.0-green.svg)](../../index.md)
 
 **Complete guide for adapter development and validation with zero tolerance for unvalidated claims**
 
@@ -24,7 +24,7 @@
 
 - **📂 Section Hub**: [Development Guides](./index.md)
 - **🏠 Documentation Root**: [Root Index](../../index.md)
-- **🔗 Source Code**: [FLX Adapters](../../../flext/src/flext/adapters/)
+- **🔗 Source Code**: [FLEXT Adapters](../../../flext/src/flext/adapters/)
 - **🔗 Related**: [Architecture Patterns](../../architecture/patterns/adapter-patterns.md), [Testing Guidelines](../testing/adapter-testing.md)
 
 ---
@@ -354,7 +354,7 @@ def register_adapters():
 
 - [Development Standards](../standards/index.md) - Essential development standards and coding patterns
 - [Architecture Patterns](../../architecture/patterns/adapter-patterns.md) - Understanding hexagonal architecture patterns
-- [Getting Started](../../getting-started/index.md) - FLX Framework installation and environment setup
+- [Getting Started](../../getting-started/index.md) - FLEXT Framework installation and environment setup
 
 ### **Next Steps**
 
@@ -389,4 +389,4 @@ For adapter implementation issues:
 
 ---
 
-**📂 Hub**: [Development Guides](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-19
+**📂 Hub**: [Development Guides](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-19

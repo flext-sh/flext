@@ -1,12 +1,12 @@
 # 🏢 Domain-Driven Design Patterns
 
-> **Document Type**: Implementation Guide | **Audience**: Senior developers, domain architects | **Scope**: Advanced DDD patterns in FLX Framework
+> **Document Type**: Implementation Guide | **Audience**: Senior developers, domain architects | **Scope**: Advanced DDD patterns in FLEXT Framework
 
 [![DDD](https://img.shields.io/badge/patterns-DDD-blue.svg)](./index.md)
 [![Architecture](https://img.shields.io/badge/architecture-hexagonal-green.svg)](../index.md)
 [![Advanced](https://img.shields.io/badge/complexity-advanced-orange.svg)](../../development/index.md)
 
-**Complete implementation guide for Domain-Driven Design patterns within FLX Framework hexagonal architecture**
+**Complete implementation guide for Domain-Driven Design patterns within FLEXT Framework hexagonal architecture**
 
 ---
 
@@ -18,7 +18,7 @@
 
 ## 🎯 Overview
 
-Domain-Driven Design (DDD) patterns in FLX enable sophisticated enterprise applications with complex business domains. This guide focuses on practical implementation of DDD concepts within the hexagonal architecture.
+Domain-Driven Design (DDD) patterns in FLEXT enable sophisticated enterprise applications with complex business domains. This guide focuses on practical implementation of DDD concepts within the hexagonal architecture.
 
 ### **Key DDD Concepts**
 
@@ -439,4 +439,4 @@ class TestCustomerAggregate:
 
 ---
 
-**📂 Architecture**: [Patterns Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Architecture**: [Patterns Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

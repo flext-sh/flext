@@ -1,6 +1,6 @@
 # Grupo Nos OIC-WMS Integration Project
 
-A comprehensive integration solution between Oracle Warehouse Management System (WMS) Cloud v25A/25B, Oracle Integration Cloud (OIC), and Oracle Autonomous Database using FLX Framework and Meltano.
+A comprehensive integration solution between Oracle Warehouse Management System (WMS) Cloud v25A/25B, Oracle Integration Cloud (OIC), and Oracle Autonomous Database using FLEXT Framework and Meltano.
 
 ## Overview
 

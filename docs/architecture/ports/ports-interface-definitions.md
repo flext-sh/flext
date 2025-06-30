@@ -373,7 +373,7 @@ class UserServicePort(UserRepositoryPort, EventPublisherPort, CachePort):
 
 - [Architecture Hub](../index.md) - Essential hexagonal architecture patterns for understanding port definitions
 - [Getting Started](../../getting-started/index.md) - Framework installation and basic concepts required for port implementation
-- [FLX Framework Technical Specification](../../reference/specifications/flext-framework-technical-specification.md) - Core framework architecture underlying port contracts
+- [FLEXT Framework Technical Specification](../../reference/specifications/flext-framework-technical-specification.md) - Core framework architecture underlying port contracts
 
 ### **➡️ Next Steps**
 
@@ -429,4 +429,4 @@ class NotificationPort(ABC):
 
 ---
 
-**📂 Architecture**: [Ports Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Architecture**: [Ports Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

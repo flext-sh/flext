@@ -1,13 +1,13 @@
 # 📚 Documentation Guide - Technical Writing Practices
 
-> **Function**: Comprehensive documentation strategy and writing guidelines for FLX Framework | **Audience**: Technical writers, developers, documentation contributors | **Status**: ✅ Production Ready
+> **Function**: Comprehensive documentation strategy and writing guidelines for FLEXT Framework | **Audience**: Technical writers, developers, documentation contributors | **Status**: ✅ Production Ready
 
 [![Documentation](https://img.shields.io/badge/docs-strategy-green.svg)](./index.md)
 [![Writing](https://img.shields.io/badge/writing-guidelines-blue.svg)](./documentation-standards.md)
-[![Framework](https://img.shields.io/badge/framework-FLX%200.4.0-orange.svg)](../../index.md)
+[![Framework](https://img.shields.io/badge/framework-FLEXT%200.4.0-orange.svg)](../../index.md)
 [![Quality](https://img.shields.io/badge/quality-enterprise-purple.svg)](./standardization-plan.md)
 
-**Comprehensive enterprise documentation strategy and technical writing guidelines for FLX Framework 0.4.0+ ensuring consistent, discoverable, and maintainable documentation across all projects**
+**Comprehensive enterprise documentation strategy and technical writing guidelines for FLEXT Framework 0.4.0+ ensuring consistent, discoverable, and maintainable documentation across all projects**
 
 ---
 
@@ -55,7 +55,7 @@
 
 ## 📚 **Documentation Strategy**
 
-This document outlines the comprehensive enterprise documentation strategy for the FLX Framework ecosystem, ensuring consistent, discoverable, and maintainable technical writing across all projects.
+This document outlines the comprehensive enterprise documentation strategy for the FLEXT Framework ecosystem, ensuring consistent, discoverable, and maintainable technical writing across all projects.
 
 ## 🏗️ Documentation Architecture
 
@@ -304,7 +304,7 @@ Fine-grained information
 
 ### **Documentation Health**
 
-- **Accuracy**: Alignment with current FLX Framework implementation
+- **Accuracy**: Alignment with current FLEXT Framework implementation
 - **Completeness**: All required sections and examples present
 - **Accessibility**: Easy navigation and discoverability
 - **Consistency**: Standardized terminology and formatting patterns
@@ -320,4 +320,4 @@ Fine-grained information
 
 ---
 
-**📄 Documentation Guide** | **🏠 Parent**: [Standards Hub](./index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📄 Documentation Guide** | **🏠 Parent**: [Standards Hub](./index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

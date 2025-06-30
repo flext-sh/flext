@@ -6,7 +6,7 @@
 [![Architecture](https://img.shields.io/badge/architecture-DDD-green.svg)](./concepts.md)
 [![Fundamentals](https://img.shields.io/badge/fundamentals-complete-orange.svg)](./flext-framework-overview.md)
 
-**Essential conceptual understanding of FLX Framework hexagonal architecture and design principles**
+**Essential conceptual understanding of FLEXT Framework hexagonal architecture and design principles**
 
 ---
 
@@ -25,7 +25,7 @@
 
 ### **📋 Learning Path**
 
-1. **🎯 Start Here**: [Framework Overview](./flext-framework-overview.md) - Complete FLX architecture understanding
+1. **🎯 Start Here**: [Framework Overview](./flext-framework-overview.md) - Complete FLEXT architecture understanding
 2. **⚡ Quick Path**: [Core Concepts](./concepts.md) - Essential design principles and patterns
 3. **📚 Deep Dive**: [Architecture Hub](../../architecture/index.md) - Advanced architectural patterns
 
@@ -35,7 +35,7 @@
 
 ### **⬅️ Prerequisites**
 
-- [Quickstart Complete](../basics/quickstart.md) - Hands-on experience with FLX Framework before conceptual learning
+- [Quickstart Complete](../basics/quickstart.md) - Hands-on experience with FLEXT Framework before conceptual learning
 - [Installation Guide](../setup/installation-guide.md) - Framework installed for concept validation through practice
 
 ### **➡️ Next Steps**
@@ -62,4 +62,4 @@
 
 ---
 
-**📂 Section Hub** | **🏠 Parent**: [Getting Started Hub](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Section Hub** | **🏠 Parent**: [Getting Started Hub](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

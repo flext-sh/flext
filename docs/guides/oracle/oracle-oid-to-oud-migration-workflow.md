@@ -195,9 +195,9 @@ For large migrations:
 - Backup all data before starting migration
 - Test migration in development environment first
 
-## Integration with FLX Framework
+## Integration with FLEXT Framework
 
-This migration workflow integrates with the FLX framework:
+This migration workflow integrates with the FLEXT framework:
 
 ```python
 from flext.adapters.oracle.oud import OUDMigrationAdapter

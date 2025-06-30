@@ -2,7 +2,7 @@
 
 ## Overview
 
-End-to-end (E2E) testing in the FLX framework validates complete business workflows from the user's perspective, ensuring that all system components work together correctly in realistic scenarios.
+End-to-end (E2E) testing in the FLEXT framework validates complete business workflows from the user's perspective, ensuring that all system components work together correctly in realistic scenarios.
 
 ## E2E Testing Strategy
 
@@ -536,4 +536,4 @@ jobs:
 
 ---
 
-_This guide provides comprehensive patterns for end-to-end testing in the FLX framework, ensuring complete business workflows function correctly in production-like environments._
+_This guide provides comprehensive patterns for end-to-end testing in the FLEXT framework, ensuring complete business workflows function correctly in production-like environments._

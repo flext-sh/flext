@@ -1,4 +1,4 @@
-# FLX Testing Framework - Comprehensive Guide
+# FLEXT Testing Framework - Comprehensive Guide
 
 > **Cross-References:**
 >
@@ -8,7 +8,7 @@
 
 ## Overview
 
-The FLX testing framework provides comprehensive testing capabilities designed specifically for hexagonal architecture applications. It includes specialized testing engines for different system components and mock adapters that implement the same port contracts as production counterparts.
+The FLEXT testing framework provides comprehensive testing capabilities designed specifically for hexagonal architecture applications. It includes specialized testing engines for different system components and mock adapters that implement the same port contracts as production counterparts.
 
 ## Architecture Overview
 

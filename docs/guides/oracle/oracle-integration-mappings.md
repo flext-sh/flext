@@ -4,13 +4,13 @@
 >
 > - [Oracle Integration Comprehensive Guide](../guides/oracle-integration-comprehensive-guide.md) - Complete Oracle integration guide
 > - [WMS Integration Guide](../guides/oracle-wms-integration.md) - WMS-specific integration patterns
-> - [API Reference](../api-reference/core-api-reference.md) - FLX framework API
+> - [API Reference](../api-reference/core-api-reference.md) - FLEXT framework API
 
 ## Overview
 
 This document provides reference information for Oracle Cloud WMS and Inventory Management integration mappings. The mappings define data transformation between different Oracle Cloud versions and external systems.
 
-> **⚠️ Legacy Content**: This reference contains historical integration mappings from previous implementations. Use current FLX framework patterns for new integrations.
+> **⚠️ Legacy Content**: This reference contains historical integration mappings from previous implementations. Use current FLEXT framework patterns for new integrations.
 
 ## Integration Architecture
 
@@ -71,9 +71,9 @@ This document provides reference information for Oracle Cloud WMS and Inventory 
 
 ## Mapping Categories
 
-### Current Implementation (FLX Framework)
+### Current Implementation (FLEXT Framework)
 
-For new integrations, use the FLX framework patterns:
+For new integrations, use the FLEXT framework patterns:
 
 ```python
 from flext.adapters.oracle.wms import WMSIntegrationAdapter
@@ -205,7 +205,7 @@ Key changes in Oracle Cloud WMS 24.x series:
 
 ## Integration Patterns
 
-### Modern FLX Patterns (Recommended)
+### Modern FLEXT Patterns (Recommended)
 
 #### Repository Pattern
 
@@ -394,7 +394,7 @@ async def send_receipt_advice(data: dict) -> bool:
 
 ## Migration from Legacy Mappings
 
-To migrate from legacy mappings to FLX framework:
+To migrate from legacy mappings to FLEXT framework:
 
 1. **Analyze Current Mappings**
 
@@ -404,7 +404,7 @@ To migrate from legacy mappings to FLX framework:
        --output-report mapping_analysis.json
    ```
 
-2. **Generate FLX Adapters**
+2. **Generate FLEXT Adapters**
 
    ```bash
    python -m flext.tools.oracle.generate_adapters \
@@ -425,7 +425,7 @@ To migrate from legacy mappings to FLX framework:
 ### Framework Integration
 
 - [Oracle Integration Comprehensive Guide](../guides/oracle-integration-comprehensive-guide.md) - Complete integration setup
-- [API Reference](../api-reference/core-api-reference.md) - FLX framework APIs
+- [API Reference](../api-reference/core-api-reference.md) - FLEXT framework APIs
 
 ### Specific Integration Types
 
@@ -440,5 +440,5 @@ To migrate from legacy mappings to FLX framework:
 ---
 
 **Mapping Status**: Reference and Historical
-**Recommended Approach**: Use FLX framework for new integrations
+**Recommended Approach**: Use FLEXT framework for new integrations
 **Legacy Support**: Available for migration and reference

@@ -6,7 +6,7 @@
 [![Patterns](https://img.shields.io/badge/patterns-step--by--step-green.svg)](./flext-framework-implementation-guide.md)
 [![Framework](https://img.shields.io/badge/framework-production-orange.svg)](./flext-framework-implementation-guide.md)
 
-**Step-by-step implementation guides for FLX Framework hexagonal architecture with production validation**
+**Step-by-step implementation guides for FLEXT Framework hexagonal architecture with production validation**
 
 ---
 
@@ -16,7 +16,7 @@
 
 ### **🎯 Hub Purpose**
 
-This hub provides comprehensive step-by-step implementation guides for FLX Framework, covering practical implementation patterns, real-world examples, and production deployment strategies.
+This hub provides comprehensive step-by-step implementation guides for FLEXT Framework, covering practical implementation patterns, real-world examples, and production deployment strategies.
 
 ---
 
@@ -26,7 +26,7 @@ This hub provides comprehensive step-by-step implementation guides for FLX Frame
 
 | **Topic**                                                                   | **Function**                  | **Audience**   | **Complexity** | **Status** |
 | --------------------------------------------------------------------------- | ----------------------------- | -------------- | -------------- | ---------- |
-| [**FLX Framework Implementation**](./flext-framework-implementation-guide.md) | Complete implementation guide | All developers | ⭐⭐⭐         | ✅ Updated |
+| [**FLEXT Framework Implementation**](./flext-framework-implementation-guide.md) | Complete implementation guide | All developers | ⭐⭐⭐         | ✅ Updated |
 
 ---
 
@@ -35,7 +35,7 @@ This hub provides comprehensive step-by-step implementation guides for FLX Frame
 ### **🎯 For New Developers**
 
 ```
-1. [FLX Framework Implementation](./flext-framework-implementation-guide.md) →
+1. [FLEXT Framework Implementation](./flext-framework-implementation-guide.md) →
 2. [Getting Started](../../getting-started/index.md) →
 3. [Working Examples](../../examples/index.md)
 ```
@@ -43,7 +43,7 @@ This hub provides comprehensive step-by-step implementation guides for FLX Frame
 ### **⚡ For Implementation Teams**
 
 ```
-1. [FLX Framework Implementation](./flext-framework-implementation-guide.md) →
+1. [FLEXT Framework Implementation](./flext-framework-implementation-guide.md) →
 2. [Oracle Integration](../../guides/oracle/index.md) →
 3. [Production Deployment](../../deployment/index.md)
 ```
@@ -51,7 +51,7 @@ This hub provides comprehensive step-by-step implementation guides for FLX Frame
 ### **🏢 For Technical Leads**
 
 ```
-1. [FLX Framework Implementation](./flext-framework-implementation-guide.md) →
+1. [FLEXT Framework Implementation](./flext-framework-implementation-guide.md) →
 2. [Architecture Standards](../standards/index.md) →
 3. [Development Practices](../../development/index.md)
 ```
@@ -86,7 +86,7 @@ This hub provides comprehensive step-by-step implementation guides for FLX Frame
 
 ### **Framework Implementation**
 
-- **Project Structure**: Standard FLX Framework project organization
+- **Project Structure**: Standard FLEXT Framework project organization
 - **Dependency Management**: Managing framework and adapter dependencies
 - **Configuration Setup**: Environment-specific configuration patterns
 - **Bootstrap Implementation**: Application startup and initialization patterns
@@ -121,11 +121,11 @@ This hub provides comprehensive step-by-step implementation guides for FLX Frame
 - **Total Documents**: 1+ comprehensive implementation guide
 - **Hub Completeness**: 100% mandatory template compliance
 - **Cross-References**: 5+ bidirectional links per document
-- **Source Validation**: ✅ Validated against production FLX implementations
+- **Source Validation**: ✅ Validated against production FLEXT implementations
 
 ### **Implementation Validation**
 
-- **Real Implementation**: ✅ Based on production FLX Framework implementations
+- **Real Implementation**: ✅ Based on production FLEXT Framework implementations
 - **Oracle Integration**: ✅ Implementation patterns validated with Oracle system deployments
 - **Testing Coverage**: ✅ Implementation patterns tested with comprehensive validation suites
 - **Documentation Standards**: ✅ HOW_TO_DOCUMENT.md compliance
@@ -138,4 +138,4 @@ This hub provides comprehensive step-by-step implementation guides for FLX Frame
 
 ---
 
-**📂 Section Hub** | **🏠 Parent**: [Architecture Hub](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Section Hub** | **🏠 Parent**: [Architecture Hub](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

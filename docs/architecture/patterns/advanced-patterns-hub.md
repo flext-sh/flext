@@ -6,7 +6,7 @@
 [![Architecture](https://img.shields.io/badge/architecture-expert-orange.svg)](./event-sourcing-implementation.md)
 [![Learning](https://img.shields.io/badge/learning-progressive-green.svg)](./solid-principles-implementation.md)
 
-**Master sophisticated architectural patterns for enterprise-grade FLX Framework development with structured learning paths**
+**Master sophisticated architectural patterns for enterprise-grade FLEXT Framework development with structured learning paths**
 
 ---
 
@@ -388,4 +388,4 @@ class OrderAggregate(AggregateRoot):
 
 ---
 
-**📂 Section Hub** | **🏠 Parent**: [Architecture Hub](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Section Hub** | **🏠 Parent**: [Architecture Hub](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

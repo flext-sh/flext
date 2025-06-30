@@ -1,12 +1,12 @@
 # 🏛️ SOLID Principles Implementation - Architecture Guide
 
-> **Function**: SOLID principles implementation patterns in FLX Framework | **Audience**: Architects, Senior Developers | **Status**: Stable
+> **Function**: SOLID principles implementation patterns in FLEXT Framework | **Audience**: Architects, Senior Developers | **Status**: Stable
 
 [![Patterns](https://img.shields.io/badge/patterns-SOLID-blue.svg)](./domain-driven-design-patterns.md)
 [![Architecture](https://img.shields.io/badge/architecture-principles-orange.svg)](../index.md)
 [![Implementation](https://img.shields.io/badge/implementation-validated-green.svg)](../../development/index.md)
 
-**Comprehensive guide to SOLID principles implementation in FLX Framework through Python 3.13 modernization, mixin consolidation, and Pydantic v2 enhancements**
+**Comprehensive guide to SOLID principles implementation in FLEXT Framework through Python 3.13 modernization, mixin consolidation, and Pydantic v2 enhancements**
 
 ---
 
@@ -31,7 +31,7 @@
 
 ## 📋 **Overview**
 
-This document details how the FLX framework implements SOLID principles through its Python 3.13 modernization, mixin consolidation, and Pydantic v2 enhancements.
+This document details how the FLEXT framework implements SOLID principles through its Python 3.13 modernization, mixin consolidation, and Pydantic v2 enhancements.
 
 ## SOLID Principles Implementation
 
@@ -441,7 +441,7 @@ class ErrorHandlingMixin:
 
 ## Conclusion
 
-The FLX framework's implementation of SOLID principles through Python 3.13 modernization creates a robust, maintainable, and extensible architecture. By consolidating mixins, using modern Python features, and applying DRY/KISS principles, the framework provides a clean foundation for enterprise applications while maintaining backward compatibility and improving developer experience.
+The FLEXT framework's implementation of SOLID principles through Python 3.13 modernization creates a robust, maintainable, and extensible architecture. By consolidating mixins, using modern Python features, and applying DRY/KISS principles, the framework provides a clean foundation for enterprise applications while maintaining backward compatibility and improving developer experience.
 
 ---
 
@@ -450,7 +450,7 @@ The FLX framework's implementation of SOLID principles through Python 3.13 moder
 ### **Prerequisites**
 
 - [Advanced Patterns Hub](./index.md) - Entry point for advanced architectural patterns
-- [Architecture Hub](../index.md) - Understanding FLX architecture foundations
+- [Architecture Hub](../index.md) - Understanding FLEXT architecture foundations
 - [Core Domain Layer](../layers/core-domain-layer.md) - Domain model implementation context
 
 ### **Next Steps**
@@ -483,4 +483,4 @@ The FLX framework's implementation of SOLID principles through Python 3.13 moder
 
 ---
 
-**📂 Hub**: [Advanced Patterns Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Advanced Patterns Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

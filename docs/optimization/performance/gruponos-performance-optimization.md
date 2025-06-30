@@ -255,7 +255,7 @@ from wms import (
 ### **Prerequisites**
 
 - [Oracle WMS Guide](../../guides/oracle/oracle-wms-comprehensive-guide.md) - Understanding Oracle WMS integration fundamentals
-- [Performance Hub](./index.md) - General performance optimization principles for FLX Framework
+- [Performance Hub](./index.md) - General performance optimization principles for FLEXT Framework
 
 ### **Next Steps**
 
@@ -281,4 +281,4 @@ from wms import (
 
 ---
 
-**📂 Hub**: [Performance & Optimization](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Performance & Optimization](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

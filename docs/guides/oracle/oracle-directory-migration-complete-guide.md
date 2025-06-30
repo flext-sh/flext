@@ -441,7 +441,7 @@ python -m oud_automation configure-network \
 
 ## 🔗 Integration Points
 
-### FLX Framework Integration
+### FLEXT Framework Integration
 
 ```python
 from flext.adapters.oracle.oud import OUDMigrationOrchestrator
@@ -560,6 +560,6 @@ For migration issues:
 
 ---
 
-**📂 Guide**: [Oracle Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Guide**: [Oracle Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11
 
 **⚠️ CRITICAL REMINDER: This migration is mandatory and must be executed with extreme care. Always test in non-production environments first and ensure all stakeholders are informed of the migration schedule.**

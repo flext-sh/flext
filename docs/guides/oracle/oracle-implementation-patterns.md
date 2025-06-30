@@ -4,9 +4,9 @@
 
 [![Oracle](https://img.shields.io/badge/oracle-integration-red.svg)](./oracle-integration-comprehensive-guide.md)
 [![Patterns](https://img.shields.io/badge/patterns-production_ready-green.svg)](./oracle-wms-comprehensive-guide.md)
-[![Framework](https://img.shields.io/badge/framework-FLX%200.4.0-orange.svg)](../../index.md)
+[![Framework](https://img.shields.io/badge/framework-FLEXT%200.4.0-orange.svg)](../../index.md)
 
-**Real implementation patterns extracted from production Oracle integrations using FLX Framework hexagonal architecture**
+**Real implementation patterns extracted from production Oracle integrations using FLEXT Framework hexagonal architecture**
 
 ---
 
@@ -30,7 +30,7 @@
 
 ## 📋 **Overview**
 
-This guide documents actual implementation patterns extracted from production Oracle integrations: **WMS**, **OIC**, **Database**, and **OUD/LDAP** systems. All patterns are validated in production environments and follow FLX Framework hexagonal architecture principles.
+This guide documents actual implementation patterns extracted from production Oracle integrations: **WMS**, **OIC**, **Database**, and **OUD/LDAP** systems. All patterns are validated in production environments and follow FLEXT Framework hexagonal architecture principles.
 
 ### **Validated Projects**
 
@@ -41,7 +41,7 @@ This guide documents actual implementation patterns extracted from production Or
 
 ### **Prerequisites**
 
-- Understanding of [FLX Framework Architecture](../../architecture/index.md)
+- Understanding of [FLEXT Framework Architecture](../../architecture/index.md)
 - Knowledge of [Hexagonal Architecture Patterns](../../architecture/hexagonal-architecture-hub.md)
 - Familiarity with [Oracle Technologies](./oracle-integration-comprehensive-guide.md)
 
@@ -96,7 +96,7 @@ Production-validated configuration management:
 
 ```python
 # Real implementation from flext_database_oracle/src/
-class FlxDatabaseConfig(BaseModel):
+class FlextDatabaseConfig(BaseModel):
     """Hierarchical configuration with environment support."""
 
     # Connection parameters
@@ -115,7 +115,7 @@ class FlxDatabaseConfig(BaseModel):
     max_overflow: int = Field(10, ge=0, le=100)
 
     @classmethod
-    def from_environment(cls, prefix: str = "FLX_DB") -> "FlxDatabaseConfig":
+    def from_environment(cls, prefix: str = "FLX_DB") -> "FlextDatabaseConfig":
         """Load configuration from environment variables."""
         env_vars = {}
         for key, value in os.environ.items():
@@ -197,7 +197,7 @@ Production Oracle database authentication:
 
 ```python
 # Real implementation from flext_database_oracle/src/
-class FlxOracleDbAdapter(BaseAdapter, DatabasePort):
+class FlextOracleDbAdapter(BaseAdapter, DatabasePort):
     """Production Oracle database adapter."""
 
     async def _connect(self) -> None:
@@ -420,7 +420,7 @@ class IntegrationOrchestrator:
 
 - [Oracle Integration Guide](./oracle-integration-comprehensive-guide.md) - Essential Oracle technology overview and concepts
 - [Architecture Adapters](../../architecture/adapters/index.md) - Hexagonal architecture adapter patterns used in implementations
-- [FLX Framework Core](../../architecture/core-domain-layer.md) - Domain layer concepts supporting Oracle integrations
+- [FLEXT Framework Core](../../architecture/core-domain-layer.md) - Domain layer concepts supporting Oracle integrations
 
 ### **Next Steps**
 
@@ -478,7 +478,7 @@ async def resilient_api_call(self, operation_func, *args, **kwargs):
 
 ---
 
-**📂 Hub**: [Oracle Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+
+**📂 Hub**: [Oracle Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+
 
 ---
 

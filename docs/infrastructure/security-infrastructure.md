@@ -6,7 +6,7 @@
 [![Security](https://img.shields.io/badge/component-security-red.svg)](../security/index.md)
 [![Production](https://img.shields.io/badge/status-production_ready-green.svg)](../deployment/security/production-security.md)
 
-**Enterprise security infrastructure with JWT authentication, RBAC authorization, and field-level encryption for the FLX Framework**
+**Enterprise security infrastructure with JWT authentication, RBAC authorization, and field-level encryption for the FLEXT Framework**
 
 ---
 
@@ -30,7 +30,7 @@
 
 ## 📋 **Overview**
 
-The FLX security infrastructure provides comprehensive security services including multi-provider authentication, role-based access control (RBAC), JWT token management, and field-level encryption for sensitive data.
+The FLEXT security infrastructure provides comprehensive security services including multi-provider authentication, role-based access control (RBAC), JWT token management, and field-level encryption for sensitive data.
 
 ### **Key Features**
 
@@ -450,4 +450,4 @@ async def debug_authorization(user_id: str, resource: str, action: str):
 
 ---
 
-**📂 Hub**: [Infrastructure Hub](./index.md) | **🏠 Root**: [Documentation Home](../index.md) | **Framework**: FLX 0.4.0+
+**📂 Hub**: [Infrastructure Hub](./index.md) | **🏠 Root**: [Documentation Home](../index.md) | **Framework**: FLEXT 0.4.0+

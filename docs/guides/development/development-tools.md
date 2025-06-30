@@ -87,7 +87,7 @@ quicktype --src oracle-wms-order.schema.json --out order-types.ts
 openapi-generator generate -i oracle-api.yaml -g python -o ./generated/
 ```
 
-#### Integration with FLX
+#### Integration with FLEXT
 
 - **Port Definitions**: Use schemas to define port interface contracts
 - **Adapter Validation**: Validate Oracle responses against schemas
@@ -190,7 +190,7 @@ def test_oracle_contract_compliance():
 - **Postman**: Version 10+ with Newman CLI
 - **JSON Schema Tools**: quicktype, ajv-cli for validation
 - **Oracle Access**: Valid credentials for target Oracle instances
-- **FLX Framework**: Local development environment with adapter interfaces
+- **FLEXT Framework**: Local development environment with adapter interfaces
 
 #### Installation
 
@@ -289,7 +289,7 @@ jobs:
 - **Tool Compatibility**: Postman 10+, Newman CLI, JSON Schema Draft 7+
 - **Oracle Versions**: WMS Cloud 24c+, OIC 3.0+, Database 23c+
 - **Last Updated**: January 2025
-- **Project Alignment**: FLX Framework, Hexagonal Architecture
+- **Project Alignment**: FLEXT Framework, Hexagonal Architecture
 
 ## See Also
 

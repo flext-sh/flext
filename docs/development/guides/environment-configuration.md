@@ -1,12 +1,12 @@
 # Environment Configuration Guide - Development
 
-> **Function**: Comprehensive environment configuration for FLX Framework | **Audience**: Developers, DevOps engineers | **Status**: ✅ Production Ready
+> **Function**: Comprehensive environment configuration for FLEXT Framework | **Audience**: Developers, DevOps engineers | **Status**: ✅ Production Ready
 
 [![Configuration](https://img.shields.io/badge/configuration-secure-green.svg)](#security-best-practices)
 [![Environment](https://img.shields.io/badge/environment-automated-blue.svg)](#configuration-strategy)
 [![Security](https://img.shields.io/badge/security-enterprise-red.svg)](#security-best-practices)
 
-Enterprise-grade environment configuration guide for FLX Framework 0.4.0+ emphasizing security best practices and flexible configuration management
+Enterprise-grade environment configuration guide for FLEXT Framework 0.4.0+ emphasizing security best practices and flexible configuration management
 
 ---
 
@@ -30,7 +30,7 @@ Enterprise-grade environment configuration guide for FLX Framework 0.4.0+ emphas
 
 ## 📋 **Overview**
 
-This guide provides comprehensive environment configuration management for FLX Framework and Oracle WMS integration projects, emphasizing security best practices and flexible configuration management.
+This guide provides comprehensive environment configuration management for FLEXT Framework and Oracle WMS integration projects, emphasizing security best practices and flexible configuration management.
 
 ## Problems Addressed
 
@@ -193,7 +193,7 @@ API_SECRET=your_api_secret
 API_BASE_URL=https://api.example.com/v1
 API_TIMEOUT=60
 
-# FLX Framework Configuration
+# FLEXT Framework Configuration
 FLX_LOG_LEVEL=INFO
 FLX_ENVIRONMENT=development
 FLX_DEBUG_MODE=false
@@ -248,14 +248,14 @@ WMS_CIRCUIT_BREAKER_ENABLED=true
 
 ## Implementation Examples
 
-### FLX Framework Configuration
+### FLEXT Framework Configuration
 
 ```python
-from flext.core.config import FlxConfig
-from flext.core.logging import FlxLogger
+from flext.core.config import FlextConfig
+from flext.core.logging import FlextLogger
 
-class FlxIntegrationConfig(FlxConfig):
-    """FLX framework configuration for Oracle integration."""
+class FlextIntegrationConfig(FlextConfig):
+    """FLEXT framework configuration for Oracle integration."""
 
     def __init__(self):
         super().__init__()
@@ -273,7 +273,7 @@ class FlxIntegrationConfig(FlxConfig):
         self.db_user = self.get_required("DB_USER")
         self.db_password = self.get_required("DB_PASSWORD")
 
-        # FLX Framework Settings
+        # FLEXT Framework Settings
         self.log_level = self.get("FLX_LOG_LEVEL", "INFO")
         self.debug_mode = self.get_bool("FLX_DEBUG_MODE", False)
         self.metrics_enabled = self.get_bool("FLX_METRICS_ENABLED", True)
@@ -307,7 +307,7 @@ class WmsAdapterFactory:
     @staticmethod
     def create_wms_adapter() -> OracleWmsAdapter:
         """Create WMS adapter with environment configuration."""
-        config = FlxIntegrationConfig()
+        config = FlextIntegrationConfig()
 
         try:
             adapter = OracleWmsAdapter(
@@ -330,7 +330,7 @@ class WmsAdapterFactory:
             return adapter
 
         except ConfigurationError as e:
-            logger = FlxLogger("wms.adapter.factory")
+            logger = FlextLogger("wms.adapter.factory")
             logger.error("Failed to create WMS adapter: %s", str(e))
             raise
 ```
@@ -347,7 +347,7 @@ cp .env.example .env.local
 nano .env.local
 
 # 3. Verify configuration
-python -c "from config import FlxIntegrationConfig; config = FlxIntegrationConfig(); print('Configuration valid')"
+python -c "from config import FlextIntegrationConfig; config = FlextIntegrationConfig(); print('Configuration valid')"
 ```
 
 ### 2. Configuration Validation Script
@@ -513,7 +513,7 @@ def audit_configuration() -> Dict[str, Any]:
 import pytest
 import os
 from unittest.mock import patch
-from config import FlxIntegrationConfig, ConfigurationError
+from config import FlextIntegrationConfig, ConfigurationError
 
 class TestConfiguration:
     """Test configuration management."""
@@ -532,7 +532,7 @@ class TestConfiguration:
         }
 
         with patch.dict(os.environ, env_vars):
-            config = FlxIntegrationConfig()
+            config = FlextIntegrationConfig()
             assert config.wms_url == "https://test.wms.oraclecloud.com"
             assert config.db_port == 5432
 
@@ -540,7 +540,7 @@ class TestConfiguration:
         """Test configuration with missing required variables."""
         with patch.dict(os.environ, {}, clear=True):
             with pytest.raises(ConfigurationError):
-                FlxIntegrationConfig()
+                FlextIntegrationConfig()
 
     def test_database_url_generation(self):
         """Test database URL generation."""
@@ -553,7 +553,7 @@ class TestConfiguration:
         }
 
         with patch.dict(os.environ, env_vars):
-            config = FlxIntegrationConfig()
+            config = FlextIntegrationConfig()
             expected_url = "postgresql://test_user:test_password@localhost:5432/test_db"
             assert config.get_database_url() == expected_url
 ```
@@ -597,7 +597,7 @@ python validate_config.py
 
 ### **Enterprise Configuration System**
 
-The FLX framework includes a sophisticated configuration system with hierarchical management and multiple backend support:
+The FLEXT framework includes a sophisticated configuration system with hierarchical management and multiple backend support:
 
 ```
 /flext/src/flext/infra/config/
@@ -696,4 +696,4 @@ database_config = config.get_profile_config("database")
 
 ---
 
-**📂 Hub**: [Guides Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Guides Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

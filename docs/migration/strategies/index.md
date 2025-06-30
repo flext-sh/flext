@@ -6,7 +6,7 @@
 [![Assessment](https://img.shields.io/badge/assessment-risk-green.svg)](./migration-strategies.md)
 [![Planning](https://img.shields.io/badge/planning-enterprise-orange.svg)](./migration-strategies.md)
 
-**Complete strategic planning frameworks and methodologies for FLX Framework migrations**
+**Complete strategic planning frameworks and methodologies for FLEXT Framework migrations**
 
 ---
 
@@ -60,4 +60,4 @@
 
 ---
 
-**📂 Section Hub** | **🏠 Parent**: [Migration Hub](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Section Hub** | **🏠 Parent**: [Migration Hub](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

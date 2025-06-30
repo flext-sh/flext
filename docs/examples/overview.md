@@ -1,12 +1,12 @@
-# 🎯 FLX Examples Overview
+# 🎯 FLEXT Examples Overview
 
 > **Function**: Comprehensive examples guidance and framework demonstrations | **Audience**: All developers, learners | **Status**: Production-Ready
 
 [![Examples](https://img.shields.io/badge/examples-comprehensive-green.svg)](./index.md)
 [![Architecture](https://img.shields.io/badge/architecture-hexagonal-blue.svg)](../architecture/index.md)
-[![Framework](https://img.shields.io/badge/framework-FLX%200.4.0-orange.svg)](../index.md)
+[![Framework](https://img.shields.io/badge/framework-FLEXT%200.4.0-orange.svg)](../index.md)
 
-**Comprehensive guidance for FLX framework examples demonstrating hexagonal architecture, declarative systems, and enterprise-grade patterns - validated against production implementations**
+**Comprehensive guidance for FLEXT framework examples demonstrating hexagonal architecture, declarative systems, and enterprise-grade patterns - validated against production implementations**
 
 ---
 
@@ -22,7 +22,7 @@
 
 ## Overview
 
-This document provides comprehensive guidance for understanding and using the FLX framework examples that demonstrate hexagonal architecture, declarative systems, and enterprise-grade patterns.
+This document provides comprehensive guidance for understanding and using the FLEXT framework examples that demonstrate hexagonal architecture, declarative systems, and enterprise-grade patterns.
 
 ## Related Documentation
 
@@ -35,9 +35,9 @@ This document provides comprehensive guidance for understanding and using the FL
 
 ### Basic Usage (`basic/`)
 
-Enhanced examples for getting started with current FLX structure:
+Enhanced examples for getting started with current FLEXT structure:
 
-- **`quickstart.py`** - Basic FLX usage with enhanced HTTP client, health checks, and structured logging
+- **`quickstart.py`** - Basic FLEXT usage with enhanced HTTP client, health checks, and structured logging
 - **`multi_protocol.py`** - Multi-protocol integration with comprehensive error handling and metrics
 
 ### Advanced Patterns (`advanced/`)
@@ -57,8 +57,8 @@ Complex scenarios showcasing current framework capabilities:
 source .venv/bin/activate
 export PYTHONPATH=/home/marlonsc/pyauto/flext/src:$PYTHONPATH
 
-# Verify FLX installation
-python -c "import flext; print('FLX framework loaded successfully')"
+# Verify FLEXT installation
+python -c "import flext; print('FLEXT framework loaded successfully')"
 ```
 
 ### Basic Examples
@@ -92,12 +92,12 @@ from typing import Any
 
 from flext import ApiClient
 from flext.adapters.outbound.http import HttpClientAdapter
-from flext.core.logging import FlxLogger
+from flext.core.logging import FlextLogger
 
 async def main() -> None:
-    """Enhanced FLX usage example with current structure."""
+    """Enhanced FLEXT usage example with current structure."""
     # Setup structured logging
-    logger = FlxLogger("flext.examples.quickstart")
+    logger = FlextLogger("flext.examples.quickstart")
 
     # Create client
     client = ApiClient()
@@ -141,10 +141,10 @@ if __name__ == "__main__":
 # examples/advanced/domain_example.py (enhanced version)
 from flext import AggregateRoot, Entity, DomainEvent, ValueObject
 from flext.core.exceptions import BusinessRuleViolationError
-from flext.core.logging import FlxLogger
+from flext.core.logging import FlextLogger
 
 # Enhanced with structured logging
-logger = FlxLogger("flext.examples.domain")
+logger = FlextLogger("flext.examples.domain")
 
 # Value Object with validation
 class SKU(ValueObject):
@@ -218,19 +218,19 @@ class InventoryAdjustedEvent(DomainEvent):
 
 ```python
 # examples/advanced/declarative_example.py (new)
-from flext import FlxProject, flext_project
+from flext import FlextProject, flext_project
 from flext.declarative.mixins import (
-    FlxApiMixin, FlxDatabaseMixin, FlxHttpClientMixin, FlxIntegrationMixin
+    FlextApiMixin, FlextDatabaseMixin, FlextHttpClientMixin, FlextIntegrationMixin
 )
 from flext.declarative.testing import run_full_test_suite, validate_test_coverage
 
 @flext_project
 class ECommerceProject(
-    FlxProject,
-    FlxApiMixin,
-    FlxDatabaseMixin,
-    FlxHttpClientMixin,
-    FlxIntegrationMixin
+    FlextProject,
+    FlextApiMixin,
+    FlextDatabaseMixin,
+    FlextHttpClientMixin,
+    FlextIntegrationMixin
 ):
     """E-commerce project with declarative configuration."""
 
@@ -261,7 +261,7 @@ async def main():
 
 1. **Enhanced Hexagonal Architecture** - Clear separation with comprehensive lifecycle management
 2. **Enhanced Adapter Pattern** - BaseAdapter and EnhancedAdapter with health monitoring
-3. **Structured Logging** - FlxLogger integration for observability
+3. **Structured Logging** - FlextLogger integration for observability
 4. **Dependency Injection** - Flexible configuration with declarative setup
 
 ### Framework Features
@@ -298,7 +298,7 @@ http_adapter = HttpClientAdapter(
 ```python
 # Using mixins and decorators
 @flext_project
-class MyProject(FlxProject, FlxHttpClientMixin):
+class MyProject(FlextProject, FlextHttpClientMixin):
     http_timeout = 30.0
     http_max_connections = 100
 ```
@@ -310,7 +310,7 @@ class MyProject(FlxProject, FlxHttpClientMixin):
 adapter = HttpClientAdapter(
     name="production_api",
     timeout=60.0,
-    headers={"User-Agent": "FLX/1.0"},
+    headers={"User-Agent": "FLEXT/1.0"},
     verify_ssl=True,
     max_connections=200
 )
@@ -391,7 +391,7 @@ async def test_warehouse_inventory_addition(warehouse):
 
 Run `quickstart.py` to understand current client usage:
 
-- Basic FLX setup and configuration
+- Basic FLEXT setup and configuration
 - HTTP adapter integration
 - Health check implementation
 - Structured logging patterns
@@ -446,7 +446,7 @@ Create your own projects using demonstrated patterns:
 ### System Requirements
 
 - **Python 3.13+** (as specified in project requirements)
-- **FLX framework** installed with all dependencies
+- **FLEXT framework** installed with all dependencies
 - **Virtual environment** activated (`.venv`)
 - **Optional**: External services for testing (PostgreSQL, Redis, etc.)
 
@@ -456,8 +456,8 @@ Create your own projects using demonstrated patterns:
 # Ensure virtual environment is activated
 source .venv/bin/activate
 
-# Verify FLX installation
-python -c "import flext; print('FLX framework loaded successfully')"
+# Verify FLEXT installation
+python -c "import flext; print('FLEXT framework loaded successfully')"
 
 # Set Python path for examples
 export PYTHONPATH=/home/marlonsc/pyauto/flext/src:$PYTHONPATH
@@ -478,13 +478,13 @@ When adding examples, follow these guidelines:
 
 ### 2. Architecture Compliance
 
-- Use current FLX architecture patterns and imports
+- Use current FLEXT architecture patterns and imports
 - Follow hexagonal architecture principles
 - Implement proper separation of concerns
 
 ### 3. Production Readiness
 
-- Include structured logging with FlxLogger
+- Include structured logging with FlextLogger
 - Implement comprehensive error handling with proper context
 - Show both basic and production-ready configuration approaches
 
@@ -502,7 +502,7 @@ When adding examples, follow these guidelines:
 
 ## Architecture Evolution
 
-These examples showcase the evolution of FLX from a basic hexagonal architecture framework to a comprehensive enterprise-grade platform featuring:
+These examples showcase the evolution of FLEXT from a basic hexagonal architecture framework to a comprehensive enterprise-grade platform featuring:
 
 ### Core Evolution
 
@@ -525,7 +525,7 @@ These examples showcase the evolution of FLX from a basic hexagonal architecture
 - **Configuration Management** - Hierarchical configuration with validation
 - **Testing Support** - Comprehensive testing frameworks and utilities
 
-The examples demonstrate both the foundational patterns and the latest framework capabilities, providing a complete learning path for FLX development from basic concepts to enterprise-grade implementations.
+The examples demonstrate both the foundational patterns and the latest framework capabilities, providing a complete learning path for FLEXT development from basic concepts to enterprise-grade implementations.
 
 ## See Also
 
@@ -561,7 +561,7 @@ The examples demonstrate both the foundational patterns and the latest framework
 
 ---
 
-**📂 Content Document** | **🏠 Parent**: [Examples Hub](./index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Content Document** | **🏠 Parent**: [Examples Hub](./index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11
 
 **Status**: Production Ready
 **Python Support**: 3.13+

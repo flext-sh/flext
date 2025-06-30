@@ -1,13 +1,13 @@
 # 📝 Documentation Standards - Enterprise Technical Writing
 
-> **Function**: Enterprise documentation standards for FLX Framework technical writing | **Audience**: Technical writers, developers, documentation maintainers | **Status**: ✅ Production Ready
+> **Function**: Enterprise documentation standards for FLEXT Framework technical writing | **Audience**: Technical writers, developers, documentation maintainers | **Status**: ✅ Production Ready
 
 [![Documentation](https://img.shields.io/badge/docs-enterprise-green.svg)](./index.md)
 [![Standards](https://img.shields.io/badge/standards-HOW_TO_DOCUMENT-blue.svg)](../../HOW_TO_DOCUMENT.md)
-[![Framework](https://img.shields.io/badge/framework-FLX%200.4.0-orange.svg)](../../index.md)
+[![Framework](https://img.shields.io/badge/framework-FLEXT%200.4.0-orange.svg)](../../index.md)
 [![Quality](https://img.shields.io/badge/quality-validated-purple.svg)](./standardization-plan.md)
 
-**Comprehensive enterprise documentation standards for FLX Framework 0.4.0+ establishing consistent, high-quality technical writing across hexagonal architecture components**
+**Comprehensive enterprise documentation standards for FLEXT Framework 0.4.0+ establishing consistent, high-quality technical writing across hexagonal architecture components**
 
 ---
 
@@ -55,7 +55,7 @@
 
 ## 📝 **Documentation Philosophy**
 
-The FLX Framework documentation follows these enterprise principles:
+The FLEXT Framework documentation follows these enterprise principles:
 
 - **Architectural Clarity**: Every component's role in hexagonal architecture is clearly explained
 - **Implementation Guidance**: Practical examples and usage patterns for all public APIs
@@ -339,4 +339,4 @@ Use automated tools to ensure:
 
 ---
 
-**📄 Standards Document** | **🏠 Parent**: [Standards Hub](./index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📄 Standards Document** | **🏠 Parent**: [Standards Hub](./index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

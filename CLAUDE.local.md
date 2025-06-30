@@ -1,10 +1,10 @@
-# CLAUDE.local.md - PYAUTO WORKSPACE TEMPORARY ISSUES
+# CLAUDE.local.md - FLEXT WORKSPACE TEMPORARY ISSUES
 
-**Hierarquia**: WORKSPACE-TEMPORARY
-**Referência**: `/home/marlonsc/CLAUDE.md` → Metodologia universal
-**Referência**: `/home/marlonsc/CLAUDE.local.md` → Issues cross-workspace  
-**Referência**: `./CLAUDE.md` → Padrões PyAuto workspace
-**Última Atualização**: 2025-06-29
+**Hierarchy**: WORKSPACE-TEMPORARY
+**Reference**: `/home/marlonsc/CLAUDE.md` → Universal methodology
+**Reference**: `/home/marlonsc/CLAUDE.local.md` → Cross-workspace issues  
+**Reference**: `./CLAUDE.md` → FLEXT workspace standards
+**Last Updated**: 2025-06-29
 
 ---
 
@@ -18,21 +18,21 @@
 **VERIFIED REALITY**:
 
 - 23+ individual projects exist in workspace
-- Each FLX project has own CLAUDE.md
+- Each FLEXT project has own CLAUDE.md
 - This IS a multi-project workspace, NOT single project
 
 **Resolution Applied**: Corrected documentation to reflect actual structure
 
 ---
 
-### FLX Framework Coordination
+### FLEXT Framework Coordination
 
-**Status**: ACTIVE - 10 modularized FLX projects need coordination
+**Status**: ACTIVE - 10 modularized FLEXT projects need coordination
 **Impact**: Modules need integration without losing independence
 
 **Progress**:
 
-- ✅ FLX modules documented individually
+- ✅ FLEXT modules documented individually
 - ✅ Each has own CLAUDE.md for project-specific issues
 - ⏳ Cross-module coordination patterns needed
 
@@ -77,7 +77,7 @@
 
 ### Recently Completed
 
-- ✅ **FLX modularization**: 10 modules active (9 extracted + 1 renamed)
+- ✅ **FLEXT modularization**: 10 modules active (9 extracted + 1 renamed)
 - ✅ **Project reorganization**: Superseded projects moved to backups/
   - `backups/flext-oracle-wms_20250629_122800/` (superseded by flext-meltano)
   - `backups/flext-oracle-oic_20250629_122657/` (superseded by flext-meltano)
@@ -89,7 +89,7 @@
 
 ### In Progress  
 
-- 🔄 **FLX coordination**: Cross-module patterns
+- 🔄 **FLEXT coordination**: Cross-module patterns
 - 🔄 **Project documentation**: CLAUDE.md/CLAUDE.local.md standardization
 - 🔄 **Environment conflicts**: Variable namespace resolution
 
@@ -105,7 +105,7 @@
 ### Environment Variable Conflicts
 
 **Problem**: 23+ projects with potential variable name conflicts
-**Fix**: Project-specific prefixes (GRUPONOS_*, ALGAR_*, FLX_*)
+**Fix**: Project-specific prefixes (GRUPONOS_*, ALGAR_*, FLEXT_*)
 **Permanent Solution Needed**: Workspace-wide namespacing standard
 
 ### Multi-Agent Coordination
@@ -153,7 +153,7 @@
 ### Next Week
 
 1. Implement enhanced .token coordination
-2. Create FLX cross-module coordination patterns
+2. Create FLEXT cross-module coordination patterns
 3. Automate workspace validation
 
 ---
@@ -173,6 +173,6 @@
 
 ---
 
-**Status**: ACTIVE - Multi-agent coordination and FLX integration ongoing
+**Status**: ACTIVE - Multi-agent coordination and FLEXT integration ongoing
 **Review**: Daily until coordination stable
-**Authority**: Temporary solutions for PyAuto workspace only
+**Authority**: Temporary solutions for FLEXT workspace only

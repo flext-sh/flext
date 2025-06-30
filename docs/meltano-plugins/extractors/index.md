@@ -30,7 +30,7 @@
 
 ## 📊 **Overview**
 
-Meltano extractor plugins (taps) provide enterprise-grade data extraction capabilities from Oracle databases, integration platforms, and warehouse management systems. Built on Singer SDK standards with FLX Framework integration.
+Meltano extractor plugins (taps) provide enterprise-grade data extraction capabilities from Oracle databases, integration platforms, and warehouse management systems. Built on Singer SDK standards with FLEXT Framework integration.
 
 ### **Extractor Categories**
 
@@ -100,4 +100,4 @@ Meltano extractor plugins (taps) provide enterprise-grade data extraction capabi
 
 ---
 
-**📂 Hub**: [Extractors Hub](#) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Extractors Hub](#) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

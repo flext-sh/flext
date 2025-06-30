@@ -6,7 +6,7 @@
 [![OIC-WMS](https://img.shields.io/badge/integration-oracle_oic_wms-green.svg)](../../guides/oracle/index.md)
 [![Production](https://img.shields.io/badge/deployment-production_ready-orange.svg)](../strategies/production-checklist.md)
 
-**Complete deployment guide for Grupo NOS Oracle Integration Cloud (OIC) and Warehouse Management System (WMS) integration using FLX Framework**
+**Complete deployment guide for Grupo NOS Oracle Integration Cloud (OIC) and Warehouse Management System (WMS) integration using FLEXT Framework**
 
 ---
 
@@ -567,4 +567,4 @@ tail -f logs/gruponos-oic-wms.log | jq 'select(.component=="wms")'
 
 ---
 
-**📂 Hub**: [Project Deployment](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Project Deployment](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

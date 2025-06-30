@@ -1,4 +1,4 @@
-# ⚡ FLX Quick Start - Getting Started
+# ⚡ FLEXT Quick Start - Getting Started
 
 > **Function**: First application in 5 minutes | **Audience**: All developers | **Status**: ✅ Active
 
@@ -6,7 +6,7 @@
 [![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/)
 [![Getting Started](https://img.shields.io/badge/getting--started-active-green.svg)](./index.md)
 
-**Build your first Oracle integration pipeline using FLX Framework in just 5 minutes**
+**Build your first Oracle integration pipeline using FLEXT Framework in just 5 minutes**
 
 ---
 
@@ -28,7 +28,7 @@
 
 ## 🎯 Prerequisites
 
-- **FLX installed**: Follow the [installation guide](../setup/installation-guide.md) if not yet installed
+- **FLEXT installed**: Follow the [installation guide](../setup/installation-guide.md) if not yet installed
 - **Python 3.13+**: Verify with `python --version`
 - **Basic Python knowledge**: Understanding of classes and functions
 
@@ -37,7 +37,7 @@
 ### Step 1: Verify Installation
 
 ```bash
-# Check FLX version
+# Check FLEXT version
 flext --version
 
 # Test CLI help
@@ -58,7 +58,7 @@ pipeline = Pipeline(
     name="hello_world",
     source=DataSource(
         type="console",
-        data=["Hello", "FLX", "World"]
+        data=["Hello", "FLEXT", "World"]
     ),
     target=DataTarget(type="console")
 )
@@ -79,7 +79,7 @@ python hello_world.py
 
 ```
 Hello
-FLX
+FLEXT
 World
 ✅ Success! Processed 3 records
 ```
@@ -155,7 +155,7 @@ pipeline = Pipeline(
 
 ## 🎯 Next Steps
 
-Congratulations! You've created your first FLX pipeline. Now explore more advanced features:
+Congratulations! You've created your first FLEXT pipeline. Now explore more advanced features:
 
 ### **Oracle Integration**
 
@@ -205,7 +205,7 @@ except ConnectionError as e:
 
 ### **Next Steps**
 
-- [Framework Overview](../concepts/flext-framework-overview.md) - Deep dive into FLX hexagonal architecture patterns
+- [Framework Overview](../concepts/flext-framework-overview.md) - Deep dive into FLEXT hexagonal architecture patterns
 - [First Pipeline Tutorial](./first-pipeline.md) - Build more complex data processing pipelines
 - [Basic Examples](../../examples/basic/index.md) - Explore additional working code examples
 
@@ -219,4 +219,4 @@ except ConnectionError as e:
 
 ---
 
-**📂 Hub**: [Basics Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Basics Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

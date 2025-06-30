@@ -2,7 +2,7 @@
 
 > **Navigation**: [Documentation Home](../../index.md) → [Migration Hub](../index.md) → [Migration Strategies Hub](./index.md) → Migration Strategies
 
-**Comprehensive strategic planning framework for FLX Framework migrations including risk assessment, planning methodologies, and enterprise migration patterns**
+**Comprehensive strategic planning framework for FLEXT Framework migrations including risk assessment, planning methodologies, and enterprise migration patterns**
 
 ## 📋 **Table of Contents**
 
@@ -19,7 +19,7 @@
 
 ### **Strategic Planning Principles**
 
-Successful FLX Framework migrations require comprehensive strategic planning based on proven methodologies:
+Successful FLEXT Framework migrations require comprehensive strategic planning based on proven methodologies:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -235,7 +235,7 @@ big_bang_approach:
 ```yaml
 strangler_fig_approach:
   phase_1_foundation:
-    - Deploy new FLX infrastructure alongside legacy
+    - Deploy new FLEXT infrastructure alongside legacy
     - Migrate non-critical components first
     - Implement routing layer for gradual traffic shift
     - Monitor performance and stability
@@ -285,7 +285,7 @@ blue_green_approach:
     - Maintained until migration validation
 
   green_environment:
-    - New FLX 0.4.0+ system
+    - New FLEXT 0.4.0+ system
     - Complete parallel infrastructure
     - Isolated testing and validation
     - Data synchronization from blue
@@ -331,7 +331,7 @@ Week 3-4: Migration Planning
 ```markdown
 Week 1-3: Development Environment Setup
 
-- New FLX 0.4.0+ environment configuration
+- New FLEXT 0.4.0+ environment configuration
 - Development tooling and CI/CD pipeline setup
 - Team training and knowledge transfer
 - Initial code migration and adaptation
@@ -524,7 +524,7 @@ class MigrationMonitoring:
 
 - [Migration Hub](../index.md) - Understanding overall migration framework and requirements
 - [Architecture Hub](../../architecture/index.md) - Understanding current and target architecture patterns
-- [FLX Technical Reference](../../api-reference/flext-technical-reference.md) - Technical details for migration planning
+- [FLEXT Technical Reference](../../api-reference/flext-technical-reference.md) - Technical details for migration planning
 
 ### **➡️ Next Steps**
 
@@ -550,4 +550,4 @@ class MigrationMonitoring:
 
 ---
 
-**📂 Content Guide** | **🏠 Hub**: [Migration Strategies](./index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Content Guide** | **🏠 Hub**: [Migration Strategies](./index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

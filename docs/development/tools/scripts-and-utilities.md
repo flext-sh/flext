@@ -1,10 +1,10 @@
-# FLX Scripts & Utilities
+# FLEXT Scripts & Utilities
 
-Comprehensive collection of utility scripts for project maintenance, cleanup, code quality enforcement, and development workflow automation in the FLX hexagonal architecture framework.
+Comprehensive collection of utility scripts for project maintenance, cleanup, code quality enforcement, and development workflow automation in the FLEXT hexagonal architecture framework.
 
 ## 📖 Overview
 
-This directory contains essential scripts for maintaining the FLX codebase, performing automated refactoring, cleanup operations, and supporting development workflows. These scripts follow the UNIX philosophy of doing one thing well and are designed to be composable, reusable, and production-ready.
+This directory contains essential scripts for maintaining the FLEXT codebase, performing automated refactoring, cleanup operations, and supporting development workflows. These scripts follow the UNIX philosophy of doing one thing well and are designed to be composable, reusable, and production-ready.
 
 ## 🛠️ Available Scripts
 
@@ -173,7 +173,7 @@ cleanup:
 **Example Output:**
 
 ```
-🧹 FLX Ultra Rigorous Cleanup Starting...
+🧹 FLEXT Ultra Rigorous Cleanup Starting...
 
 📊 Scanning codebase...
    - Files scanned: 247
@@ -270,7 +270,7 @@ Import Pattern Analysis:
 
 Most common duplicated imports:
 - "from typing import Protocol": used in 15 files
-- "from flext.core.logging import FlxLogger": used in 12 files
+- "from flext.core.logging import FlextLogger": used in 12 files
 - "from abc import ABC, abstractmethod": used in 10 files
 ```
 
@@ -434,16 +434,16 @@ python validate_no_duplications.py
    import sys
    from pathlib import Path
    from typing import Optional
-   from flext.core.logging import FlxLogger
+   from flext.core.logging import FlextLogger
    from flext.infra.logging.structured import StructuredLogger
 
    def setup_script_logging(
        script_name: str,
        log_level: str = "INFO",
        log_file: Optional[Path] = None
-   ) -> FlxLogger:
+   ) -> FlextLogger:
        """Set up comprehensive logging for scripts."""
-       logger = FlxLogger(f"flext.scripts.{script_name}")
+       logger = FlextLogger(f"flext.scripts.{script_name}")
 
        # Configure structured logging
        if log_file:
@@ -512,7 +512,7 @@ python validate_no_duplications.py
    def create_comprehensive_parser() -> argparse.ArgumentParser:
        """Create comprehensive CLI parser following best practices."""
        parser = argparse.ArgumentParser(
-           description="FLX maintenance script with comprehensive options",
+           description="FLEXT maintenance script with comprehensive options",
            epilog="Examples:\n"
                   "  %(prog)s --target src/flext/core --dry-run\n"
                   "  %(prog)s --operations imports,cleanup --parallel 4\n"
@@ -892,7 +892,7 @@ from typing import List as ListType
             "src/flext/adapters/http.py": """
 import asyncio
 from typing import Protocol
-from flext.core.logging import FlxLogger
+from flext.core.logging import FlextLogger
 """,
             "src/flext/adapters/database.py": """
 import asyncio
@@ -911,7 +911,7 @@ from flext.core.base import BaseClass
             def side_effect(file_path):
                 content = file_contents.get(str(file_path), "")
                 if "http.py" in str(file_path):
-                    return {"import asyncio", "from typing import Protocol", "from flext.core.logging import FlxLogger"}
+                    return {"import asyncio", "from typing import Protocol", "from flext.core.logging import FlextLogger"}
                 elif "database.py" in str(file_path):
                     return {"import asyncio", "from typing import Protocol", "from flext.core.base import BaseAdapter"}
                 elif "logging.py" in str(file_path):
@@ -1018,7 +1018,7 @@ repos:
     hooks:
       # Ultra rigorous cleanup validation
       - id: flext-zero-tolerance-check
-        name: FLX Zero Tolerance Validation
+        name: FLEXT Zero Tolerance Validation
         entry: python scripts/ultra_rigorous_cleanup.py
         language: python
         pass_filenames: false
@@ -1027,7 +1027,7 @@ repos:
 
       # Import consolidation check
       - id: flext-import-analysis
-        name: FLX Import Pattern Analysis
+        name: FLEXT Import Pattern Analysis
         entry: python consolidate_imports.py
         language: python
         pass_filenames: false
@@ -1036,7 +1036,7 @@ repos:
 
       # Duplication validation
       - id: flext-duplication-check
-        name: FLX Duplication Validation
+        name: FLEXT Duplication Validation
         entry: python validate_no_duplications.py
         language: python
         pass_filenames: false
@@ -2108,7 +2108,7 @@ class RecoveryStrategies:
 
 ### Examples & Tutorials
 
-- [**Basic Examples**](../examples/basic/README.md) - Getting started with FLX
+- [**Basic Examples**](../examples/basic/README.md) - Getting started with FLEXT
 - [**Advanced Examples**](../examples/advanced/README.md) - Enterprise patterns and complex scenarios
 - [**Plugin Development**](../examples/plugins/) - Custom adapter and plugin creation
 
@@ -2116,7 +2116,7 @@ class RecoveryStrategies:
 
 ## 🎯 Summary
 
-The FLX Scripts & Utilities collection provides a comprehensive suite of tools for maintaining code quality, enforcing architectural standards, and automating development workflows. Built with a zero-tolerance philosophy for code violations, these scripts ensure production-ready code quality through:
+The FLEXT Scripts & Utilities collection provides a comprehensive suite of tools for maintaining code quality, enforcing architectural standards, and automating development workflows. Built with a zero-tolerance philosophy for code violations, these scripts ensure production-ready code quality through:
 
 - **Zero-tolerance compliance validation** with automated fixes
 - **Advanced import analysis and consolidation** for cleaner codebases

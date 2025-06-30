@@ -1,4 +1,4 @@
-# FLX Guides Comprehensive Hub
+# FLEXT Guides Comprehensive Hub
 
 > **🎯 CONTENT-BASED CONSOLIDATION**: This hub consolidates guide documentation using **VALIDATED SEMANTIC ANALYSIS** of real implementations.
 
@@ -13,22 +13,22 @@
 
 ### **✅ VALIDATED IMPLEMENTATION ANALYSIS**
 
-Based on **actual code inspection** of FLX Oracle projects, the guides documentation is **HIGHLY ACCURATE** and well-organized:
+Based on **actual code inspection** of FLEXT Oracle projects, the guides documentation is **HIGHLY ACCURATE** and well-organized:
 
 ```python
 # ✅ VALIDATED: Real Oracle implementations match guide documentation
 
-# FLX-HTTP-Oracle-WMS Project (KISS Implementation)
+# FLEXT-HTTP-Oracle-WMS Project (KISS Implementation)
 flext_http_oracle_wms/src/__init__.py:
-class FlxHttpOracleWmsProject(ApplicationService):
+class FlextHttpOracleWmsProject(ApplicationService):
     # ✅ GUIDES ACCURATE: 15 lines vs 1500+ = 99% code reduction
-    # ✅ GUIDES ACCURATE: Uses FLX Declarative patterns
+    # ✅ GUIDES ACCURATE: Uses FLEXT Declarative patterns
     # ✅ GUIDES ACCURATE: Focuses on business logic only
 
-# FLX-HTTP-Oracle-OIC Project (Enterprise Implementation)
+# FLEXT-HTTP-Oracle-OIC Project (Enterprise Implementation)
 flext_http_oracle_oic/src/flext_http_oracle_oic/__init__.py:
 class OracleOicHttpAdapter:
-    # ✅ GUIDES ACCURATE: Modern FLX 0.4.0 patterns
+    # ✅ GUIDES ACCURATE: Modern FLEXT 0.4.0 patterns
     # ✅ GUIDES ACCURATE: OAuth2/JWT authentication
     # ✅ GUIDES ACCURATE: Comprehensive monitoring
 ```
@@ -72,9 +72,9 @@ Technical Implementation:
 
 ```python
 # ✅ GUIDES MATCH REALITY: Actual WMS implementation
-from flext_http_oracle_wms import FlxHttpOracleWmsProject
+from flext_http_oracle_wms import FlextHttpOracleWmsProject
 
-class WmsBusinessLogic(FlxHttpOracleWmsProject):
+class WmsBusinessLogic(FlextHttpOracleWmsProject):
     """Real implementation matches guide patterns exactly."""
 
     async def handle_wms_webhook(self, webhook_data):
@@ -109,7 +109,7 @@ class ProductionOicAdapter(OracleOicHttpAdapterModern):
     """Real implementation validates guide accuracy."""
 
     def __init__(self, config=None, **kwargs):
-        # ✅ GUIDES ACCURATE: Modern FLX 0.4.0 patterns
+        # ✅ GUIDES ACCURATE: Modern FLEXT 0.4.0 patterns
         super().__init__(config=config, **kwargs)
         # ✅ GUIDES ACCURATE: OAuth2 integration documented correctly
 ```
@@ -321,11 +321,11 @@ Oracle OIC:
 ├── Comprehensive Guide
 ├── OAuth2 Authentication
 ├── Log Levels Configuration
-└── FLX Adapter Implementation
+└── FLEXT Adapter Implementation
 
 Oracle Database:
 ├── Database Complete Guide
-├── FLX Database Adapter
+├── FLEXT Database Adapter
 └── Integration API Guide
 
 Oracle Directory:
@@ -358,7 +358,7 @@ Oracle Directory:
 **Zero Content Loss**: ✅ **All guide content preserved and enhanced**
 **Intelligent Merging**: ✅ **API references consolidated without duplication**
 **Practical Focus**: ✅ **Real implementation examples throughout**
-**Framework Integration**: ✅ **FLX patterns consistently documented**
+**Framework Integration**: ✅ **FLEXT patterns consistently documented**
 
 ---
 

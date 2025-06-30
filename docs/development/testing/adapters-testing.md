@@ -4,9 +4,9 @@
 
 [![Testing](https://img.shields.io/badge/testing-adapters-blue.svg)](./index.md)
 [![Coverage](https://img.shields.io/badge/coverage-comprehensive-green.svg)](./testing-comprehensive-hub.md)
-[![Framework](https://img.shields.io/badge/framework-FLX_0.4.0-orange.svg)](../../index.md)
+[![Framework](https://img.shields.io/badge/framework-FLEXT_0.4.0-orange.svg)](../../index.md)
 
-**Complete guide for testing FLX Framework adapters with unit, integration, and end-to-end strategies**
+**Complete guide for testing FLEXT Framework adapters with unit, integration, and end-to-end strategies**
 
 ---
 
@@ -30,7 +30,7 @@
 
 ## 📋 **Overview**
 
-Adapter testing ensures that all FLX Framework adapters correctly implement port interfaces, handle data transformations, and maintain reliable external integrations.
+Adapter testing ensures that all FLEXT Framework adapters correctly implement port interfaces, handle data transformations, and maintain reliable external integrations.
 
 ### **Testing Objectives**
 
@@ -53,7 +53,7 @@ Adapter testing ensures that all FLX Framework adapters correctly implement port
 
 ### **Adapter Test Structure**
 
-Based on the FLX testing framework in `/flext/src/flext/testing/`:
+Based on the FLEXT testing framework in `/flext/src/flext/testing/`:
 
 ```python
 from flext.testing.engines import HexagonalTestEngine
@@ -77,7 +77,7 @@ class TestDatabaseAdapter:
 
 ### **Prerequisites**
 
-- [Testing Hub](./index.md) - Understanding FLX testing framework
+- [Testing Hub](./index.md) - Understanding FLEXT testing framework
 - [Adapters Reference](../../api-reference/adapters/flext-adapters-comprehensive-reference.md) - Adapter implementations being tested
 
 ### **Next Steps**
@@ -94,4 +94,4 @@ class TestDatabaseAdapter:
 
 ---
 
-**📂 Hub**: [Testing Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Testing Hub](./index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

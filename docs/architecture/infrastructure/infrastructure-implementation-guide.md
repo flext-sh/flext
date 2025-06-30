@@ -4,7 +4,7 @@
 
 [![Infrastructure](https://img.shields.io/badge/layer-infrastructure-blue.svg)](./index.md)
 [![Validated](https://img.shields.io/badge/source-validated-orange.svg)](../../../flext/src/flext/infra/)
-[![Framework](https://img.shields.io/badge/framework-FLX%200.4.0-orange.svg)](../index.md)
+[![Framework](https://img.shields.io/badge/framework-FLEXT%200.4.0-orange.svg)](../index.md)
 
 **Comprehensive infrastructure layer implementation guide validated against actual production code in `/flext/src/flext/infra/`**
 
@@ -24,7 +24,7 @@
 
 - **📂 Section Hub**: [Architecture Hub](../index.md)
 - **🏠 Documentation Root**: [Root Index](../../index.md)
-- **🔗 Source Code**: [FLX Infrastructure](../../../flext/src/flext/infra/)
+- **🔗 Source Code**: [FLEXT Infrastructure](../../../flext/src/flext/infra/)
 - **🔗 Related**: [Ports Hub](../ports/index.md), [Adapters Hub](../adapters/index.md)
 
 ---
@@ -33,7 +33,7 @@
 
 ### Hexagonal Architecture Implementation
 
-FLX infrastructure follows strict hexagonal architecture with clear layer separation:
+FLEXT infrastructure follows strict hexagonal architecture with clear layer separation:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -491,7 +491,7 @@ class CacheService(BaseInfraService):
     async def get(self, key: str) -> Any:
         """Get value from cache."""
         if not self._redis_client:
-            raise FlxConnectionError("Cache not connected")
+            raise FlextConnectionError("Cache not connected")
         return await self._redis_client.get(key)
 
     async def health_check(self) -> dict[str, Any]:
@@ -665,4 +665,4 @@ config = load_config()
 
 ---
 
-**📂 Hub**: [Architecture Hub](../index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Architecture Hub](../index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

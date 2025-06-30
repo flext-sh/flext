@@ -2,7 +2,7 @@
 
 > **Navigation**: [Documentation Home](../../index.md) → [Security Hub](../index.md) → [Security Architecture Hub](./index.md) → Security Architecture Guide
 
-**Comprehensive enterprise security architecture for FLX Framework applications covering authentication, authorization, data protection, and compliance with enterprise security standards**
+**Comprehensive enterprise security architecture for FLEXT Framework applications covering authentication, authorization, data protection, and compliance with enterprise security standards**
 
 ## 📋 **Table of Contents**
 
@@ -15,7 +15,7 @@
 
 ## 🛡️ Security Overview
 
-FLX implements defense-in-depth security principles with multiple layers of protection:
+FLEXT implements defense-in-depth security principles with multiple layers of protection:
 
 - **🔐 Authentication & Authorization**: Multi-factor authentication with RBAC/ABAC
 - **🔒 Data Protection**: Encryption at rest and in transit
@@ -154,10 +154,10 @@ import pyotp
 import qrcode
 from io import BytesIO
 
-class FlxMFAProvider(MFAProvider):
-    """Multi-factor authentication provider for FLX."""
+class FlextMFAProvider(MFAProvider):
+    """Multi-factor authentication provider for FLEXT."""
 
-    def __init__(self, issuer_name: str = "FLX Application"):
+    def __init__(self, issuer_name: str = "FLEXT Application"):
         self.issuer_name = issuer_name
         self.jwt_manager = JWTManager()
 
@@ -352,7 +352,7 @@ class JWTManager:
 from authlib.integrations.httpx_client import AsyncOAuth2Client
 from flext.security.base import OAuthProvider
 
-class FlxOAuthProvider(OAuthProvider):
+class FlextOAuthProvider(OAuthProvider):
     """OAuth 2.0 / OpenID Connect provider."""
 
     def __init__(self, config: dict):
@@ -1250,7 +1250,7 @@ class GDPRCompliance:
 
 ### **Production Security Infrastructure**
 
-The FLX framework includes a comprehensive security infrastructure validated against production requirements:
+The FLEXT framework includes a comprehensive security infrastructure validated against production requirements:
 
 ```
 /flext/src/flext/infra/security/
@@ -1365,4 +1365,4 @@ validated_token = jwt_manager.validate_and_refresh(token)
 
 ---
 
-**📂 Content Guide** | **🏠 Hub**: [Security Architecture](./index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Content Guide** | **🏠 Hub**: [Security Architecture](./index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

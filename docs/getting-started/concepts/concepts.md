@@ -6,7 +6,7 @@
 [![Architecture](https://img.shields.io/badge/architecture-hexagonal-orange.svg)](../architecture/index.md)
 [![Getting Started](https://img.shields.io/badge/getting--started-active-green.svg)](./index.md)
 
-**Understanding the foundational concepts of FLX Framework's hexagonal architecture and domain-driven design**
+**Understanding the foundational concepts of FLEXT Framework's hexagonal architecture and domain-driven design**
 
 ---
 
@@ -215,7 +215,7 @@ class OrderConfirmedEvent:
 
 ---
 
-## ⚙️ **FLX Framework Implementation**
+## ⚙️ **FLEXT Framework Implementation**
 
 ### **🎯 Application Services**
 
@@ -296,7 +296,7 @@ class EmailNotificationAdapter:
 
 ## 🏗️ **Dependency Injection**
 
-FLX uses dependency injection to wire components together:
+FLEXT uses dependency injection to wire components together:
 
 ```python
 from flext.core.container import Container
@@ -342,4 +342,4 @@ def configure_container() -> Container:
 
 ---
 
-**📍 Location**: [Getting Started Hub](./index.md) | **🏠 Root**: [Documentation Home](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📍 Location**: [Getting Started Hub](./index.md) | **🏠 Root**: [Documentation Home](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

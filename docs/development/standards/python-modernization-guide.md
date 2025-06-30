@@ -1,13 +1,13 @@
 # 🐍 Python 3.13+ Modernization Guide - Development Standards
 
-> **Function**: Enterprise Python 3.13+ modernization strategies for FLX Framework | **Audience**: Developers, framework maintainers, technical leads | **Status**: ✅ Production Ready
+> **Function**: Enterprise Python 3.13+ modernization strategies for FLEXT Framework | **Audience**: Developers, framework maintainers, technical leads | **Status**: ✅ Production Ready
 
 [![Python 3.13](https://img.shields.io/badge/python-3.13%2B-blue.svg)](https://www.python.org/downloads/)
 [![Modernization](https://img.shields.io/badge/modernization-enterprise-green.svg)](./index.md)
 [![Pydantic](https://img.shields.io/badge/pydantic-v2-orange.svg)](https://docs.pydantic.dev/latest/)
 [![SOLID](https://img.shields.io/badge/principles-SOLID-purple.svg)](./standardization-plan.md)
 
-**Comprehensive enterprise modernization guide for upgrading FLX Framework 0.4.0+ to Python 3.13+ with enhanced type safety, Pydantic v2 validation, and SOLID principles**
+**Comprehensive enterprise modernization guide for upgrading FLEXT Framework 0.4.0+ to Python 3.13+ with enhanced type safety, Pydantic v2 validation, and SOLID principles**
 
 ---
 
@@ -55,7 +55,7 @@
 
 ## 📋 **Modernization Overview**
 
-This guide describes comprehensive enterprise modernization of the FLX Framework to leverage Python 3.13+ features, enhanced mixins, and Pydantic v2 capabilities following SOLID, DRY, and KISS principles.
+This guide describes comprehensive enterprise modernization of the FLEXT Framework to leverage Python 3.13+ features, enhanced mixins, and Pydantic v2 capabilities following SOLID, DRY, and KISS principles.
 
 ## Table of Contents
 
@@ -264,7 +264,7 @@ def validate_connection_config(self) -> Self:
 ### Enhanced Base Model
 
 ```python
-class FlxDatabaseBaseModel(BaseModel):
+class FlextDatabaseBaseModel(BaseModel):
     """Enhanced base model with Python 3.13 and Pydantic v2 features."""
 
     model_config = ConfigDict(
@@ -461,11 +461,11 @@ class ModernDatabaseAdapter(FullAdapterMixin, BaseAdapter):
 ### Enhanced Model Usage
 
 ```python
-from flext.core.models import FlxConnectionModel
+from flext.core.models import FlextConnectionModel
 from flext.core.types import TimeoutSeconds
 
 # Create connection with automatic validation
-connection = FlxConnectionModel(
+connection = FlextConnectionModel(
     name="prod_database",
     host="db.example.com",
     port=5432,
@@ -507,7 +507,7 @@ connection = FlxConnectionModel(
 
 ## Conclusion
 
-This modernization brings the FLX framework to the cutting edge of Python development while maintaining backward compatibility and improving code quality. The combination of Python 3.13 features, consolidated mixins, and enhanced Pydantic validation creates a robust, maintainable, and high-performance foundation for enterprise applications.
+This modernization brings the FLEXT framework to the cutting edge of Python development while maintaining backward compatibility and improving code quality. The combination of Python 3.13 features, consolidated mixins, and enhanced Pydantic validation creates a robust, maintainable, and high-performance foundation for enterprise applications.
 
 All existing functionality is preserved while gaining significant improvements in type safety, code clarity, and development experience.
 
@@ -515,7 +515,7 @@ All existing functionality is preserved while gaining significant improvements i
 
 ### **Implementation Progress**
 
-- **Python 3.13+ Compliance**: 100% for FLX Framework core
+- **Python 3.13+ Compliance**: 100% for FLEXT Framework core
 - **Type Safety Enhancement**: 95% coverage with modern type aliases
 - **Pydantic v2 Migration**: Complete with validation improvements
 - **Mixin Consolidation**: 50% reduction in inheritance complexity
@@ -538,4 +538,4 @@ All existing functionality is preserved while gaining significant improvements i
 
 ---
 
-**📄 Modernization Guide** | **🏠 Parent**: [Standards Hub](./index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📄 Modernization Guide** | **🏠 Parent**: [Standards Hub](./index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

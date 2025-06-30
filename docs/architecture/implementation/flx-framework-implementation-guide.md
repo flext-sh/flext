@@ -1,4 +1,4 @@
-# 🏗️ FLX Framework Implementation Guide - Production Architecture
+# 🏗️ FLEXT Framework Implementation Guide - Production Architecture
 
 > **Function**: Complete implementation guide based on actual source code analysis | **Audience**: Framework developers, architects, integration teams | **Status**: ✅ Validated
 
@@ -6,7 +6,7 @@
 [![Code Analysis](https://img.shields.io/badge/analysis-source_verified-blue.svg)](#source-code-validation)
 [![Hexagonal](https://img.shields.io/badge/architecture-hexagonal-orange.svg)](../design/unified-architecture-guide.md)
 
-**Comprehensive implementation guide for FLX Framework 0.4.0+ based on actual source code analysis and production patterns - validated against `/flext/src/` implementations**
+**Comprehensive implementation guide for FLEXT Framework 0.4.0+ based on actual source code analysis and production patterns - validated against `/flext/src/` implementations**
 
 ---
 
@@ -30,7 +30,7 @@
 
 ## 📋 **Overview**
 
-This implementation guide is based on comprehensive analysis of the FLX Framework 0.4.0+ source code in `/flext/src/`. Unlike theoretical documentation, this guide reflects the actual production implementation with three Oracle integration adapters, enterprise infrastructure, and comprehensive testing frameworks.
+This implementation guide is based on comprehensive analysis of the FLEXT Framework 0.4.0+ source code in `/flext/src/`. Unlike theoretical documentation, this guide reflects the actual production implementation with three Oracle integration adapters, enterprise infrastructure, and comprehensive testing frameworks.
 
 ## 🏗️ **Core Architecture Implementation**
 
@@ -97,19 +97,19 @@ flext/infra/
 ```python
 # Actual implementation patterns from source analysis:
 from flext.core.protocols import Adapter
-from flext.core.models import FlxDatabaseBaseModel, FlxConnectionModel
+from flext.core.models import FlextDatabaseBaseModel, FlextConnectionModel
 from flext.infra.database import DatabaseEngine
 from flext.adapters.outbound.database import DatabaseAdapter
 
 class OracleProductionAdapter(DatabaseAdapter):
     """Production Oracle database adapter with connection pooling and monitoring.
 
-    Implements actual FLX patterns verified in source code.
+    Implements actual FLEXT patterns verified in source code.
     """
 
-    def __init__(self, config: FlxDatabaseBaseModel):
-        # Use actual FLX core models from source
-        self.connection_model = FlxConnectionModel(
+    def __init__(self, config: FlextDatabaseBaseModel):
+        # Use actual FLEXT core models from source
+        self.connection_model = FlextConnectionModel(
             url=config.connection_url,
             pool_size=config.pool_size or 10,
             max_overflow=config.max_overflow or 20,
@@ -117,32 +117,32 @@ class OracleProductionAdapter(DatabaseAdapter):
         )
         self.engine = DatabaseEngine(self.connection_model)
 
-    async def execute_query(self, query: FlxQueryModel) -> FlxOperationModel:
+    async def execute_query(self, query: FlextQueryModel) -> FlextOperationModel:
         """Execute query with automatic transaction management."""
         async with self.engine.transaction() as tx:
             result = await tx.execute(query)
-            return FlxOperationModel(
+            return FlextOperationModel(
                 operation_id=query.query_id,
-                status=FlxOperationStatus.SUCCESS,
+                status=FlextOperationStatus.SUCCESS,
                 result_data=result
             )
 
-    async def bulk_operations(self, operations: List[FlxOperationModel]) -> List[FlxOperationModel]:
+    async def bulk_operations(self, operations: List[FlextOperationModel]) -> List[FlextOperationModel]:
         """Optimized bulk operations for Oracle with proper error handling."""
         results = []
         async with self.engine.bulk_context() as bulk_ctx:
             for operation in operations:
                 try:
                     result = await bulk_ctx.execute(operation)
-                    results.append(FlxOperationModel(
+                    results.append(FlextOperationModel(
                         operation_id=operation.operation_id,
-                        status=FlxOperationStatus.SUCCESS,
+                        status=FlextOperationStatus.SUCCESS,
                         result_data=result
                     ))
                 except Exception as e:
-                    results.append(FlxOperationModel(
+                    results.append(FlextOperationModel(
                         operation_id=operation.operation_id,
-                        status=FlxOperationStatus.ERROR,
+                        status=FlextOperationStatus.ERROR,
                         error_message=str(e)
                     ))
         return results
@@ -264,10 +264,10 @@ class ProductionApplication:
 
 ```python
 # Type-safe CLI system (flext/infra/cli/cyclopts.py):
-from flext.infra.cli.cyclopts import FlxCLI
+from flext.infra.cli.cyclopts import FlextCLI
 from cyclopts import App
 
-class OracleCLI(FlxCLI):
+class OracleCLI(FlextCLI):
     """Production CLI for Oracle operations."""
 
     def __init__(self):
@@ -323,7 +323,7 @@ from typing import AsyncContextManager
 class ProductionObservability:
     """Enterprise observability with Prometheus and OpenTelemetry.
 
-    Uses actual FLX observability components verified in source.
+    Uses actual FLEXT observability components verified in source.
     """
 
     def __init__(self):
@@ -335,7 +335,7 @@ class ProductionObservability:
         self.analytics_service = AnalyticsService()
 
     async def track_operation(self, operation_name: str) -> AsyncContextManager[TraceContext]:
-        """Context manager for operation tracking using real FLX patterns."""
+        """Context manager for operation tracking using real FLEXT patterns."""
         trace_context = TraceContext(operation_name)
 
         async with self.tracer.span(trace_context) as span:
@@ -365,7 +365,7 @@ class ProductionObservability:
                 raise
 
     async def comprehensive_health_check(self) -> HealthStatus:
-        """Comprehensive system health check using real FLX health components."""
+        """Comprehensive system health check using real FLEXT health components."""
         return await self.health_check.check_all_systems()
 
     async def get_system_metrics(self) -> dict:
@@ -395,7 +395,7 @@ from typing import List
 class ProductionTestEngine:
     """Enterprise testing with real infrastructure engines.
 
-    Uses actual FLX testing components verified in source.
+    Uses actual FLEXT testing components verified in source.
     """
 
     def __init__(self):
@@ -409,7 +409,7 @@ class ProductionTestEngine:
         }
 
     async def run_integration_tests(self, adapters: List[TestableAdapter]) -> TestResult:
-        """Run tests against real infrastructure using actual FLX patterns."""
+        """Run tests against real infrastructure using actual FLEXT patterns."""
         test_results = []
 
         for adapter in adapters:
@@ -466,14 +466,14 @@ from flext.infra.plugins import PluginManager, PluginRegistry, Plugin, ProtocolP
 import pluggy
 from typing import Dict, List
 
-class FlxPluginManager:
+class FlextPluginManager:
     """Production plugin system with lifecycle management.
 
-    Uses actual FLX plugin components verified in source.
+    Uses actual FLEXT plugin components verified in source.
     """
 
     def __init__(self):
-        # Use actual FLX plugin components
+        # Use actual FLEXT plugin components
         self.plugin_manager = PluginManager()
         self.plugin_registry = PluginRegistry()
         self.loaded_plugins: Dict[str, Plugin] = {}
@@ -522,7 +522,7 @@ class FlxPluginManager:
         return plugin
 
     async def load_protocol_plugin(self, protocol_name: str, plugin_config: dict) -> ProtocolPlugin:
-        """Load protocol-specific plugin using real FLX patterns."""
+        """Load protocol-specific plugin using real FLEXT patterns."""
         protocol_plugin = ProtocolPlugin(protocol_name, plugin_config)
         await protocol_plugin.initialize()
 
@@ -681,14 +681,14 @@ async def process_events(events: List[DomainEvent]):
 
 ---
 
-**📂 Hub**: [Architecture Hub](../index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Architecture Hub](../index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11
 
 ## 📋 **Source Code Verification Summary**
 
-**✅ FLX Core Components Verified**:
+**✅ FLEXT Core Components Verified**:
 
 - `flext.core.protocols.Adapter` - Base adapter protocol
-- `flext.core.models.*` - All core data models (FlxDatabaseBaseModel, FlxConnectionModel, etc.)
+- `flext.core.models.*` - All core data models (FlextDatabaseBaseModel, FlextConnectionModel, etc.)
 - `flext.core.enums.*` - Operation status enums and connection status
 - `flext.core.entities` - AggregateRoot and Entity classes
 - `flext.core.events.DomainEvent` - Domain event system
@@ -724,4 +724,4 @@ All code examples in this implementation guide are now **100% validated** agains
 
 ---
 
-**📂 Hub**: [Architecture Hub](../index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Architecture Hub](../index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

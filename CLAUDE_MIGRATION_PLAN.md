@@ -81,7 +81,7 @@ Esta migração reorganiza ~1,500 linhas de documentação em 4 arquivos, elimin
 
 **MANTER:**
 
-- ✅ FLX modularization status
+- ✅ FLEXT modularization status
 - ✅ Project-specific issues
 - ✅ Temporary workarounds
 

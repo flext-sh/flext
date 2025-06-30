@@ -1,12 +1,12 @@
 # Real-World Implementation Examples
 
-> **Function**: Production-validated examples from actual FLX Framework implementations | **Audience**: Developers, architects, integration engineers | **Status**: Production-verified
+> **Function**: Production-validated examples from actual FLEXT Framework implementations | **Audience**: Developers, architects, integration engineers | **Status**: Production-verified
 
 [![Examples](https://img.shields.io/badge/examples-production_verified-green.svg)](./index.md)
 [![Implementation](https://img.shields.io/badge/implementation-real_world-blue.svg)](./adapter-patterns/index.md)
-[![Framework](https://img.shields.io/badge/framework-FLX%200.4.0-orange.svg)](../index.md)
+[![Framework](https://img.shields.io/badge/framework-FLEXT%200.4.0-orange.svg)](../index.md)
 
-**Real implementation examples extracted from production FLX Framework applications with validated patterns and working code**
+**Real implementation examples extracted from production FLEXT Framework applications with validated patterns and working code**
 
 ---
 
@@ -30,11 +30,11 @@
 
 ## 📋 **Overview**
 
-This document contains real implementation examples extracted from production FLX Framework applications. All code examples are from actual working systems and demonstrate validated architectural patterns.
+This document contains real implementation examples extracted from production FLEXT Framework applications. All code examples are from actual working systems and demonstrate validated architectural patterns.
 
 ### **Source Projects**
 
-- **FLX Core Framework**: `/flext/src/flext/` - Core framework implementation
+- **FLEXT Core Framework**: `/flext/src/flext/` - Core framework implementation
 - **Oracle WMS Integration**: `/flext_http_oracle_wms/` - Production WMS system
 - **Oracle OIC Integration**: `/flext_http_oracle_oic/` - Integration Cloud platform
 - **Oracle Database**: `/flext_database_oracle/` - Database connectivity
@@ -42,7 +42,7 @@ This document contains real implementation examples extracted from production FL
 
 ### **Prerequisites**
 
-- Understanding of [FLX Framework Architecture](../architecture/design/flext-framework-architecture-guide.md)
+- Understanding of [FLEXT Framework Architecture](../architecture/design/flext-framework-architecture-guide.md)
 - Knowledge of [Hexagonal Architecture](../architecture/hexagonal-architecture-hub.md)
 - Familiarity with Python 3.13+ async/await patterns
 
@@ -416,10 +416,10 @@ Real Oracle database adapter with connection pooling:
 
 ```python
 # Real implementation from flext_database_oracle/src/adapters/
-class FlxOracleDbAdapter(BaseAdapter, DatabasePort):
+class FlextOracleDbAdapter(BaseAdapter, DatabasePort):
     """Production Oracle database adapter with advanced features."""
 
-    def __init__(self, config: FlxDatabaseConfig):
+    def __init__(self, config: FlextDatabaseConfig):
         super().__init__()
         self._config = config
         self._connection_pool = None
@@ -688,7 +688,7 @@ class IntegrationOrchestrator:
 
 ### **Prerequisites**
 
-- [FLX Framework Architecture](../architecture/design/flext-framework-architecture-guide.md) - Understanding framework patterns used in examples
+- [FLEXT Framework Architecture](../architecture/design/flext-framework-architecture-guide.md) - Understanding framework patterns used in examples
 - [Hexagonal Architecture](../architecture/hexagonal-architecture-hub.md) - Architectural foundation for all implementations
 - [Oracle Implementation Patterns](../guides/oracle/oracle-implementation-patterns.md) - Oracle-specific patterns demonstrated
 
@@ -709,7 +709,7 @@ class IntegrationOrchestrator:
 
 ---
 
-**📂 Hub**: [Examples Hub](./index.md) | **🏠 Root**: [Documentation Home](../index.md) | **Framework**: FLX 0.4.0+
+**📂 Hub**: [Examples Hub](./index.md) | **🏠 Root**: [Documentation Home](../index.md) | **Framework**: FLEXT 0.4.0+
 
 ---
 

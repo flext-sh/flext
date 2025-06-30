@@ -2,11 +2,11 @@
 
 > **Function**: Step-by-step migration procedures and version upgrades | **Audience**: Migration teams, system administrators
 
-[![Migration](https://img.shields.io/badge/migration-FLX%200.4.0-green.svg)](./migration-guide.md)
+[![Migration](https://img.shields.io/badge/migration-FLEXT%200.4.0-green.svg)](./migration-guide.md)
 [![Procedures](https://img.shields.io/badge/procedures-validated-blue.svg)](./migration-guide.md)
 [![Upgrades](https://img.shields.io/badge/upgrades-automated-orange.svg)](./migration-guide.md)
 
-**Complete migration procedures and step-by-step guides for FLX Framework transitions**
+**Complete migration procedures and step-by-step guides for FLEXT Framework transitions**
 
 ---
 
@@ -24,7 +24,7 @@
 
 ### **📋 Learning Path**
 
-1. **🎯 Start Here**: [Migration Guide](./migration-guide.md) - Complete FLX Framework migration procedures
+1. **🎯 Start Here**: [Migration Guide](./migration-guide.md) - Complete FLEXT Framework migration procedures
 2. **⚡ Quick Path**: [Migration Tools](../tools/index.md) - Automated migration utilities and scripts
 3. **📚 Deep Dive**: [Migration Strategies](../strategies/index.md) - Strategic planning for complex migrations
 
@@ -60,4 +60,4 @@
 
 ---
 
-**📂 Section Hub** | **🏠 Parent**: [Migration Hub](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Section Hub** | **🏠 Parent**: [Migration Hub](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

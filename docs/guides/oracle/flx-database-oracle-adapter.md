@@ -1,6 +1,6 @@
-# FLX Database Oracle Adapter Guide
+# FLEXT Database Oracle Adapter Guide
 
-**Function**: Complete guide for implementing Oracle database connectivity within the FLX framework using hexagonal architecture patterns
+**Function**: Complete guide for implementing Oracle database connectivity within the FLEXT framework using hexagonal architecture patterns
 **Audience**: Backend developers, database administrators, and system integrators
 **Status**: Production Ready - Validated Implementation
 
@@ -16,7 +16,7 @@
 
 ## Overview
 
-The FLX Database Oracle Adapter provides enterprise-grade Oracle database connectivity with async operations, connection pooling, transaction management, and comprehensive error handling. Built on the hexagonal architecture pattern, it serves as an outbound adapter that abstracts Oracle-specific database operations.
+The FLEXT Database Oracle Adapter provides enterprise-grade Oracle database connectivity with async operations, connection pooling, transaction management, and comprehensive error handling. Built on the hexagonal architecture pattern, it serves as an outbound adapter that abstracts Oracle-specific database operations.
 
 ### Key Features
 
@@ -119,14 +119,14 @@ from flext.adapters.outbound.oracle.exceptions import (
     OracleTransactionError
 )
 
-class FlxOracleDbAdapter(
+class FlextOracleDbAdapter(
     UnifiedObservabilityMixin,
     AdapterErrorHandlingMixin,
     UnifiedAdapterConfigurationMixin,
     AdvancedAdapterMixin,
     BaseAdapter
 ):
-    """FLX Oracle Database Adapter with comprehensive enterprise features."""
+    """FLEXT Oracle Database Adapter with comprehensive enterprise features."""
 
     def __init__(self, config: OracleConfig):
         super().__init__()
@@ -498,7 +498,7 @@ class FlxOracleDbAdapter(
 ```python
 # Basic setup and usage
 import asyncio
-from flext.adapters.outbound.oracle.database_adapter import FlxOracleDbAdapter
+from flext.adapters.outbound.oracle.database_adapter import FlextOracleDbAdapter
 from flext.adapters.outbound.oracle.config import OracleConfig
 
 async def basic_operations_example():
@@ -514,7 +514,7 @@ async def basic_operations_example():
     )
 
     # Initialize adapter
-    db_adapter = FlxOracleDbAdapter(config)
+    db_adapter = FlextOracleDbAdapter(config)
 
     try:
         # Connect to database
@@ -567,7 +567,7 @@ asyncio.run(basic_operations_example())
 
 ```python
 async def transaction_example():
-    db_adapter = FlxOracleDbAdapter(config)
+    db_adapter = FlextOracleDbAdapter(config)
     await db_adapter.connect()
 
     try:
@@ -614,7 +614,7 @@ async def transaction_example():
 
 ```python
 async def batch_operations_example():
-    db_adapter = FlxOracleDbAdapter(config)
+    db_adapter = FlextOracleDbAdapter(config)
     await db_adapter.connect()
 
     try:
@@ -695,7 +695,7 @@ async def optimized_queries_example():
 
 ### Prerequisites
 
-- [FLX Core Framework Setup](../../getting-started/index.md) - Essential framework installation
+- [FLEXT Core Framework Setup](../../getting-started/index.md) - Essential framework installation
 - [Hexagonal Architecture Guide](../../architecture/application-layer.md) - Understanding adapter patterns
 - [Configuration Management](../../development/index.md) - Environment and credential setup
 
@@ -754,7 +754,7 @@ lsnrctl status
 
 ---
 
-**Documentation Framework**: FLX Enterprise Documentation Standard
+**Documentation Framework**: FLEXT Enterprise Documentation Standard
 **Implementation Status**: Production Ready - Fully Validated
 **Last Updated**: 2025-06-11
-**Maintained by**: FLX Framework Database Integration Team
+**Maintained by**: FLEXT Framework Database Integration Team

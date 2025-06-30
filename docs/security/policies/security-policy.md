@@ -2,7 +2,7 @@
 
 > **Navigation**: [Documentation Home](../../index.md) → [Security Hub](../index.md) → [Security Policies Hub](./index.md) → Security Policy
 
-**Comprehensive security policy for FLX Framework including vulnerability reporting procedures, supported versions, and enterprise security governance**
+**Comprehensive security policy for FLEXT Framework including vulnerability reporting procedures, supported versions, and enterprise security governance**
 
 ## 📋 **Table of Contents**
 
@@ -16,11 +16,11 @@
 
 ## 📋 **Overview**
 
-This document outlines the security policy for the FLX framework, including vulnerability reporting procedures, supported versions, and security best practices.
+This document outlines the security policy for the FLEXT framework, including vulnerability reporting procedures, supported versions, and security best practices.
 
 ## Supported Versions
 
-The following FLX versions are currently supported with security updates:
+The following FLEXT versions are currently supported with security updates:
 
 | Version | Supported          | Status                                   |
 | ------- | ------------------ | ---------------------------------------- |
@@ -29,23 +29,23 @@ The following FLX versions are currently supported with security updates:
 
 ## Reporting Security Vulnerabilities
 
-We take the security of FLX seriously. If you believe you've found a security vulnerability, please follow these guidelines to ensure responsible disclosure.
+We take the security of FLEXT seriously. If you believe you've found a security vulnerability, please follow these guidelines to ensure responsible disclosure.
 
 ### Preferred Method: GitHub Private Vulnerability Reporting
 
-FLX has enabled GitHub's Private Vulnerability Reporting feature for secure and tracked vulnerability management.
+FLEXT has enabled GitHub's Private Vulnerability Reporting feature for secure and tracked vulnerability management.
 
 **Process:**
 
-1. Navigate to the [Security tab](https://github.com/datacosmos-br/flext/security) of the FLX repository
+1. Navigate to the [Security tab](https://github.com/datacosmos-br/flext/security) of the FLEXT repository
 2. Select "Report a vulnerability"
 3. Complete the vulnerability report form with detailed information
-4. GitHub will maintain confidentiality and notify FLX maintainers
+4. GitHub will maintain confidentiality and notify FLEXT maintainers
 
 **Required Information:**
 
 - **Vulnerability Description**: Clear explanation of the security issue
-- **Affected Components**: Which parts of FLX are impacted
+- **Affected Components**: Which parts of FLEXT are impacted
 - **Attack Scenario**: How the vulnerability could be exploited
 - **Proof of Concept**: Steps to reproduce (if safe to share)
 - **Impact Assessment**: Potential consequences of exploitation
@@ -58,7 +58,7 @@ If you prefer not to use GitHub's reporting feature:
 **Contact Information:**
 
 - **Email**: <security@datacosmos.com.br>
-- **Subject Line**: "FLX Security Vulnerability - [Brief Description]"
+- **Subject Line**: "FLEXT Security Vulnerability - [Brief Description]"
 - **Encryption**: Use our [PGP key](https://datacosmos.com.br/keys/security-pgp-key.txt) for sensitive information
 
 **Email Requirements:**
@@ -87,11 +87,11 @@ If you prefer not to use GitHub's reporting feature:
 
 - **Private Coordination**: Work with reporter on disclosure timeline
 - **Security Advisory**: Publication of GitHub Security Advisory
-- **Patch Release**: Updated FLX version with security fixes
+- **Patch Release**: Updated FLEXT version with security fixes
 - **Public Notification**: Community notification through multiple channels
 - **Credit Attribution**: Recognition of reporter (unless anonymity requested)
 
-## FLX Security Measures
+## FLEXT Security Measures
 
 ### Development Security
 
@@ -116,11 +116,11 @@ If you prefer not to use GitHub's reporting feature:
 - **Hashing**: Strong hashing algorithms for passwords and sensitive data
 - **Random Generation**: Cryptographically secure random number generation
 
-## Security Best Practices for FLX Users
+## Security Best Practices for FLEXT Users
 
 ### Installation and Configuration
 
-1. **Use Latest Stable Version**: Always install the most recent stable FLX release
+1. **Use Latest Stable Version**: Always install the most recent stable FLEXT release
 2. **Secure Dependencies**: Keep all dependency packages updated to latest secure versions
 3. **Environment Isolation**: Use virtual environments and container isolation
 4. **Configuration Security**: Externalize sensitive configuration from code
@@ -143,7 +143,7 @@ If you prefer not to use GitHub's reporting feature:
 
 1. **HTTPS Enforcement**: Use HTTPS for all production communications
 2. **Certificate Validation**: Properly validate SSL/TLS certificates
-3. **Network Segmentation**: Isolate FLX applications appropriately
+3. **Network Segmentation**: Isolate FLEXT applications appropriately
 4. **Firewall Configuration**: Configure restrictive firewall rules
 
 ### Monitoring and Incident Response
@@ -239,7 +239,7 @@ async def secure_operation(user_id: str, data: dict) -> dict:
 - **GitHub Security Advisories**: Automatic notifications for repository watchers
 - **Release Notes**: Security updates highlighted in all release documentation
 - **Security Mailing List**: Subscribe at <security-announce@datacosmos.com.br>
-- **FLX Documentation**: Security updates reflected in documentation
+- **FLEXT Documentation**: Security updates reflected in documentation
 
 ### Update Process
 
@@ -278,7 +278,7 @@ async def secure_operation(user_id: str, data: dict) -> dict:
 
 - **Dependency Management**: Careful vetting of third-party dependencies
 - **Supply Chain Security**: Protection against supply chain attacks
-- **Plugin Security**: Security requirements for FLX extensions
+- **Plugin Security**: Security requirements for FLEXT extensions
 - **Integration Security**: Secure integration patterns for external systems
 
 ## Incident Response
@@ -346,10 +346,10 @@ async def secure_operation(user_id: str, data: dict) -> dict:
 
 ---
 
-**📂 Content Guide** | **🏠 Hub**: [Security Policies](./index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Content Guide** | **🏠 Hub**: [Security Policies](./index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11
 
 ---
 
-**Thank you for helping keep FLX and its community secure!**
+**Thank you for helping keep FLEXT and its community secure!**
 
 _This security policy is reviewed and updated quarterly to ensure continued effectiveness and alignment with current security best practices._

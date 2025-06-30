@@ -1,4 +1,4 @@
-# FLX Log Levels Guide
+# FLEXT Log Levels Guide
 
 > **Related Documentation:**
 >
@@ -6,7 +6,7 @@
 > - [JWT Service Guide](./jwt-service-guide.md) - Authentication logging patterns
 > - [Quick Start](../getting-started/quickstart.md) - CLI usage examples
 
-The FLX CLI supports 6 different log levels for controlling the verbosity of output. By default, the CLI runs with **TRACE** level enabled for maximum visibility.
+The FLEXT CLI supports 6 different log levels for controlling the verbosity of output. By default, the CLI runs with **TRACE** level enabled for maximum visibility.
 
 ## Available Log Levels
 

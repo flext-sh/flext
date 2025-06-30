@@ -1,15 +1,15 @@
 # Quick Start Guide
 
-Get up and running with FLX in minutes! This guide will walk you through creating your first domain entities and understanding the core concepts.
+Get up and running with FLEXT in minutes! This guide will walk you through creating your first domain entities and understanding the core concepts.
 
-## Your First FLX Application
+## Your First FLEXT Application
 
 ### 1. Basic Setup
 
 ```python
 from flext import Flx
 
-# Initialize the FLX framework
+# Initialize the FLEXT framework
 flext = Flx()
 
 # Access organized domain components
@@ -108,7 +108,7 @@ print(f"Email: {contact_info.email}")
 print(f"Phone: {contact_info.phone}")
 
 # Create business events
-event = flext.ValueObjects.FlxDomainEvent(
+event = flext.ValueObjects.FlextDomainEvent(
     event_type="CustomerRegistered",
     aggregate_id=customer.id,
     aggregate_type="Customer",
@@ -161,15 +161,15 @@ print(f"Events after clearing: {len(order.get_domain_events())}")
 
 ### 1. Hexagonal Architecture
 
-FLX implements hexagonal architecture with clear layer separation:
+FLEXT implements hexagonal architecture with clear layer separation:
 
 ```python
 # Domain Layer - Pure business logic
 user = flext.Entities.BaseEntity(name="User")     # No external dependencies
 
 # Ports Layer - Define contracts
-from flext.ports.secondary.events import FlxEventPublisher
-from flext.ports.secondary.external import FlxHttpService
+from flext.ports.secondary.events import FlextEventPublisher
+from flext.ports.secondary.external import FlextHttpService
 
 # Adapters Layer - Implement contracts
 # (Covered in advanced tutorials)
@@ -256,7 +256,7 @@ Let's build a simple order management system combining all concepts:
 from flext import Flx
 from datetime import datetime
 
-# Initialize FLX
+# Initialize FLEXT
 flext = Flx()
 
 # Create a customer with advanced capabilities
@@ -385,12 +385,12 @@ Now that you understand the basics:
 1. **[First Pipeline Tutorial](first-pipeline.md)** - Build a complete application with ports and adapters
 2. **[Architecture Guide](../INFRASTRUCTURE_ARCHITECTURE.md)** - Understand the hexagonal architecture implementation
 3. **[API Reference](../api-reference/)** - Explore all available components and methods
-4. **[Testing Guide](../guides/testing.md)** - Learn how to test your FLX applications
+4. **[Testing Guide](../guides/testing.md)** - Learn how to test your FLEXT applications
 5. **[Examples](../examples/)** - See more complex real-world scenarios
 
 ## Helpful Resources
 
-- **Type Safety**: All FLX components are fully typed for excellent IDE support
+- **Type Safety**: All FLEXT components are fully typed for excellent IDE support
 - **Validation**: Pydantic models provide automatic data validation
 - **Events**: Use domain events to capture business occurrences
 - **Mixins**: Compose functionality with mixins for flexible entity design
@@ -398,4 +398,4 @@ Now that you understand the basics:
 
 ---
 
-**🎉 Congratulations! You've created your first FLX entities and learned the core concepts. Ready to build enterprise applications!**
+**🎉 Congratulations! You've created your first FLEXT entities and learned the core concepts. Ready to build enterprise applications!**

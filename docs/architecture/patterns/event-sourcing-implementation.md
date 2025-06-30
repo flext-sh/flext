@@ -6,7 +6,7 @@
 [![Architecture](https://img.shields.io/badge/architecture-advanced-blue.svg)](./advanced-patterns-hub.md)
 [![Audit](https://img.shields.io/badge/audit-complete_trail-green.svg)](#temporal-queries)
 
-**Advanced event sourcing implementation with event store, temporal queries, and optimistic concurrency for FLX Framework 0.4.0+**
+**Advanced event sourcing implementation with event store, temporal queries, and optimistic concurrency for FLEXT Framework 0.4.0+**
 
 ---
 
@@ -30,7 +30,7 @@
 
 ## 📋 **Overview**
 
-Event Sourcing in FLX provides a complete audit trail and enables sophisticated event-driven architectures. Instead of storing current state, we store a sequence of events that led to the current state.
+Event Sourcing in FLEXT provides a complete audit trail and enables sophisticated event-driven architectures. Instead of storing current state, we store a sequence of events that led to the current state.
 
 ### **Key Benefits**
 
@@ -52,7 +52,7 @@ from flext.core.events import EventStore, Event, EventStream
 from flext.adapters.outbound.database import DatabaseAdapter
 
 class FLXEventStore(EventStore):
-    """FLX Event Store implementation with optimistic concurrency."""
+    """FLEXT Event Store implementation with optimistic concurrency."""
 
     def __init__(self, database: DatabaseAdapter):
         self.database = database
@@ -596,4 +596,4 @@ class EventStoreMetrics:
 
 ---
 
-**📂 Hub**: [Advanced Patterns Hub](./advanced-patterns-hub.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Advanced Patterns Hub](./advanced-patterns-hub.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

@@ -6,7 +6,7 @@
 [![Kubernetes](https://img.shields.io/badge/kubernetes-supported-blue.svg)](./strategies/kubernetes-deployment.md)
 [![Infrastructure](https://img.shields.io/badge/infrastructure-automated-orange.svg)](./infrastructure/index.md)
 
-**Complete deployment guides for FLX Framework - production-ready deployment strategies and infrastructure automation**
+**Complete deployment guides for FLEXT Framework - production-ready deployment strategies and infrastructure automation**
 
 ---
 
@@ -63,4 +63,4 @@
 
 ---
 
-**📂 Section Hub** | **🏠 Parent**: [Documentation Root](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Section Hub** | **🏠 Parent**: [Documentation Root](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

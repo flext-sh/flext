@@ -1,4 +1,4 @@
-# FLX Core API Reference - Validated Implementation
+# FLEXT Core API Reference - Validated Implementation
 
 > **Function**: Complete core domain API documentation | **Audience**: Developers, architects | **Status**: Stable
 
@@ -17,14 +17,14 @@
 ### **📍 Learning Path Position**
 
 ```
-[Framework API Hub](./api-reference-hub.md) → **[CORE API REFERENCE]** → [FLX API Overview](../comprehensive/flext-api-overview.md)
+[Framework API Hub](./api-reference-hub.md) → **[CORE API REFERENCE]** → [FLEXT API Overview](../comprehensive/flext-api-overview.md)
 ```
 
 ## 🎯 **Quick Links**
 
 - **📂 Section Hub**: [API Reference Hub](../index.md)
 - **🏠 Documentation Root**: [Root Index](../../index.md)
-- **🔗 Related**: [FLX Adapters Reference](../adapters/flext-adapters-comprehensive-reference.md)
+- **🔗 Related**: [FLEXT Adapters Reference](../adapters/flext-adapters-comprehensive-reference.md)
 
 ---
 
@@ -44,12 +44,12 @@
 from flext.core.base import DomainObject, Identifiable, Timestamped
 from flext.core.entities import AggregateRoot, Entity
 from flext.core.enums import (
-    FlxAdapterStatus,
-    FlxConnectionStatus,
-    FlxDataType,
-    FlxOperationStatus,
-    FlxQueryType,
-    FlxTransactionStatus,
+    FlextAdapterStatus,
+    FlextConnectionStatus,
+    FlextDataType,
+    FlextOperationStatus,
+    FlextQueryType,
+    FlextTransactionStatus,
 )
 from flext.core.events import DomainEvent
 from flext.core.exceptions import BusinessRuleViolationError, DomainError, ValidationError
@@ -65,14 +65,14 @@ from flext.core.mixins import (
     TestEngineConnectionMixin,
 )
 from flext.core.models import (
-    FlxAdapterModel,
-    FlxConfigModel,
-    FlxConnectionModel,
-    FlxDatabaseBaseModel,
-    FlxDataTypeModel,
-    FlxOperationModel,
-    FlxQueryModel,
-    FlxTransactionModel,
+    FlextAdapterModel,
+    FlextConfigModel,
+    FlextConnectionModel,
+    FlextDatabaseBaseModel,
+    FlextDataTypeModel,
+    FlextOperationModel,
+    FlextQueryModel,
+    FlextTransactionModel,
 )
 from flext.core.protocols import Adapter
 from flext.core.services import DomainService
@@ -305,21 +305,21 @@ class OrderConfirmedEvent(DomainEvent):
 
 ```python
 from flext.core.enums import (
-    FlxAdapterStatus,      # Adapter operational status
-    FlxConnectionStatus,   # Connection state management
-    FlxDataType,          # Data type definitions
-    FlxOperationStatus,   # Operation execution status
-    FlxQueryType,         # Query operation types
-    FlxTransactionStatus, # Transaction state tracking
+    FlextAdapterStatus,      # Adapter operational status
+    FlextConnectionStatus,   # Connection state management
+    FlextDataType,          # Data type definitions
+    FlextOperationStatus,   # Operation execution status
+    FlextQueryType,         # Query operation types
+    FlextTransactionStatus, # Transaction state tracking
 )
 
 # Example usage (REAL enums):
-status = FlxAdapterStatus.ACTIVE
-connection = FlxConnectionStatus.CONNECTED
-data_type = FlxDataType.JSON
-operation = FlxOperationStatus.SUCCESS
-query = FlxQueryType.SELECT
-transaction = FlxTransactionStatus.COMMITTED
+status = FlextAdapterStatus.ACTIVE
+connection = FlextConnectionStatus.CONNECTED
+data_type = FlextDataType.JSON
+operation = FlextOperationStatus.SUCCESS
+query = FlextQueryType.SELECT
+transaction = FlextTransactionStatus.COMMITTED
 ```
 
 ---
@@ -330,21 +330,21 @@ transaction = FlxTransactionStatus.COMMITTED
 
 ```python
 from flext.core.models import (
-    FlxAdapterModel,       # Adapter configuration model
-    FlxConfigModel,        # Framework configuration
-    FlxConnectionModel,    # Connection parameters
-    FlxDatabaseBaseModel,  # Database operation model
-    FlxDataTypeModel,      # Data type specification
-    FlxOperationModel,     # Operation definition
-    FlxQueryModel,         # Query specification
-    FlxTransactionModel,   # Transaction model
+    FlextAdapterModel,       # Adapter configuration model
+    FlextConfigModel,        # Framework configuration
+    FlextConnectionModel,    # Connection parameters
+    FlextDatabaseBaseModel,  # Database operation model
+    FlextDataTypeModel,      # Data type specification
+    FlextOperationModel,     # Operation definition
+    FlextQueryModel,         # Query specification
+    FlextTransactionModel,   # Transaction model
 )
 
 # Example usage (REAL models):
-adapter_config = FlxAdapterModel(
+adapter_config = FlextAdapterModel(
     name="oracle_adapter",
     type="database",
-    status=FlxAdapterStatus.ACTIVE
+    status=FlextAdapterStatus.ACTIVE
 )
 ```
 
@@ -497,7 +497,7 @@ events = aggregate.collect_events()  # Real method for event retrieval
 
 ### **Next Steps**
 
-- [FLX Adapters Reference](../adapters/flext-adapters-comprehensive-reference.md) - Working with adapters that use core APIs
+- [FLEXT Adapters Reference](../adapters/flext-adapters-comprehensive-reference.md) - Working with adapters that use core APIs
 - [Testing Core Components](../../development/testing/core-testing.md) - Testing domain entities and services
 - [Advanced Patterns](../../architecture/patterns/advanced-patterns-hub.md) - Advanced domain modeling patterns
 
@@ -509,4 +509,4 @@ events = aggregate.collect_events()  # Real method for event retrieval
 
 ---
 
-**📂 Hub**: [API Reference](../index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [API Reference](../index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

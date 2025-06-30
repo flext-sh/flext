@@ -1,6 +1,6 @@
 # Ports Unit Tests
 
-This directory contains unit tests for the port interfaces of the FLX framework.
+This directory contains unit tests for the port interfaces of the FLEXT framework.
 
 ## Purpose
 

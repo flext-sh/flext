@@ -52,7 +52,7 @@ Technical implementation documentation:
 - **Consider hexagonal patterns** when implementing Oracle adapter components
 - **Separate concerns** between domain logic and Oracle-specific implementations
 - **Use documentation** to define port interfaces clearly
-- **Map Oracle concepts** to FLX framework patterns
+- **Map Oracle concepts** to FLEXT framework patterns
 
 ### 3. Adapter Development
 
@@ -68,7 +68,7 @@ Technical implementation documentation:
 - **Use environment-specific configurations** for different deployment stages
 - **Monitor compliance** with Oracle security requirements
 
-## Integration with FLX Framework
+## Integration with FLEXT Framework
 
 ### Port Definitions
 
@@ -94,7 +94,7 @@ Documentation supports:
 
 - **English Language**: All documentation standardized to English
 - **Current Content**: Focus on Oracle Cloud 23c+ versions
-- **Cross-References**: Links to related FLX framework documentation
+- **Cross-References**: Links to related FLEXT framework documentation
 - **Practical Examples**: Code samples and configuration examples
 
 ### Maintenance Practices
@@ -108,7 +108,7 @@ Documentation supports:
 
 - **Last Updated**: January 2025
 - **Oracle Compatibility**: Oracle Cloud 23c+, WMS Cloud 24c+, OIC 3.0+
-- **Project Alignment**: FLX Framework, Hexagonal Architecture
+- **Project Alignment**: FLEXT Framework, Hexagonal Architecture
 - **Content Status**: Current and validated
 
 ## See Also
@@ -116,4 +116,4 @@ Documentation supports:
 - [Oracle WMS CLI Guide](./wms-cli-guide.md) - Command-line operations for WMS
 - [Integration Examples Guide](./integration-examples-patterns.md) - Practical implementation patterns
 - [Development Tools Guide](./development-tools.md) - Testing and validation tools
-- [Architecture Documentation](../architecture/) - FLX framework design patterns
+- [Architecture Documentation](../architecture/) - FLEXT framework design patterns

@@ -6,7 +6,7 @@
 [![Cache](https://img.shields.io/badge/component-cache-orange.svg)](../api-reference/infrastructure/cache.md)
 [![Production](https://img.shields.io/badge/status-production_ready-green.svg)](../deployment/production/cache-deployment.md)
 
-**High-performance caching infrastructure with Redis and memory backends for the FLX Framework**
+**High-performance caching infrastructure with Redis and memory backends for the FLEXT Framework**
 
 ---
 
@@ -30,7 +30,7 @@
 
 ## 📋 **Overview**
 
-The FLX cache infrastructure provides a unified caching layer with multiple backend support, designed for high-performance distributed applications. It implements cache-aside, write-through, and write-behind patterns with automatic failover.
+The FLEXT cache infrastructure provides a unified caching layer with multiple backend support, designed for high-performance distributed applications. It implements cache-aside, write-through, and write-behind patterns with automatic failover.
 
 ### **Key Features**
 
@@ -45,7 +45,7 @@ The FLX cache infrastructure provides a unified caching layer with multiple back
 - Python 3.13+ with async support
 - Redis 6.0+ (for distributed caching)
 - Understanding of caching patterns
-- Basic knowledge of FLX infrastructure services
+- Basic knowledge of FLEXT infrastructure services
 
 ---
 
@@ -360,4 +360,4 @@ async def get_with_lock(key: str):
 
 ---
 
-**📂 Hub**: [Infrastructure Hub](./index.md) | **🏠 Root**: [Documentation Home](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Infrastructure Hub](./index.md) | **🏠 Root**: [Documentation Home](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

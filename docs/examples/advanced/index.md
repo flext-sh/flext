@@ -4,11 +4,11 @@
 
 ## Overview
 
-Advanced code examples for the FLX framework, showcasing complex integration patterns, enterprise implementations, and sophisticated use cases for experienced developers.
+Advanced code examples for the FLEXT framework, showcasing complex integration patterns, enterprise implementations, and sophisticated use cases for experienced developers.
 
 ## Quick Links
 
-- [🚀 Advanced Examples](./advanced-examples.md) - Complex FLX framework implementations
+- [🚀 Advanced Examples](./advanced-examples.md) - Complex FLEXT framework implementations
 
 ## Advanced Categories
 
@@ -41,4 +41,4 @@ Advanced code examples for the FLX framework, showcasing complex integration pat
 
 ---
 
-_Part of the [FLX Framework Documentation](../../index.md)_
+_Part of the [FLEXT Framework Documentation](../../index.md)_

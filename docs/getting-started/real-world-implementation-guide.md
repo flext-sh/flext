@@ -30,7 +30,7 @@
 
 ## 📋 **Overview**
 
-This guide provides real implementation patterns discovered through source code analysis of the FLX Framework and active Oracle integration projects. All examples are based on actual working code from production systems.
+This guide provides real implementation patterns discovered through source code analysis of the FLEXT Framework and active Oracle integration projects. All examples are based on actual working code from production systems.
 
 ### **What You'll Learn**
 
@@ -52,7 +52,7 @@ from flext.infra.config import ConfigManager
 
 # Real bootstrap pattern used in production
 async def create_production_app() -> Bootstrap:
-    """Create production-ready FLX application."""
+    """Create production-ready FLEXT application."""
 
     # Load hierarchical configuration
     config = ConfigManager()
@@ -357,16 +357,16 @@ async def oic_integration_example():
 Based on `/flext_database_oracle/src/flext_database_oracle/adapter.py`:
 
 ```python
-from flext_database_oracle import FlxOracleDbAdapter, FlxDatabaseConfig
+from flext_database_oracle import FlextOracleDbAdapter, FlextDatabaseConfig
 import oracledb
 from typing import Any, Dict, List
 
 class DatabaseIntegration:
     """Real Oracle database integration with connection pooling."""
 
-    def __init__(self, config: FlxDatabaseConfig):
+    def __init__(self, config: FlextDatabaseConfig):
         self.config = config
-        self.adapter = FlxOracleDbAdapter(config)
+        self.adapter = FlextOracleDbAdapter(config)
         self._pool: Optional[oracledb.ConnectionPool] = None
 
     async def connect(self) -> None:
@@ -438,7 +438,7 @@ class DatabaseIntegration:
 # Usage example
 async def database_integration_example():
     """Real database integration usage."""
-    config = FlxDatabaseConfig.from_env()
+    config = FlextDatabaseConfig.from_env()
     db = DatabaseIntegration(config)
 
     async with db:
@@ -1061,4 +1061,4 @@ if __name__ == "__main__":
 
 ---
 
-**📂 Hub**: [Getting Started Hub](./index.md) | **🏠 Root**: [Documentation Home](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Getting Started Hub](./index.md) | **🏠 Root**: [Documentation Home](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

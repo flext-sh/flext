@@ -6,7 +6,7 @@
 [![Architecture](https://img.shields.io/badge/architecture-hexagonal-green.svg)](../architecture/index.md)
 [![Validated](https://img.shields.io/badge/source-validated-orange.svg)](../reference/specifications/flext-framework-technical-specification.md)
 
-**Complete guide to FLX Framework infrastructure services - validated against real source code implementation**
+**Complete guide to FLEXT Framework infrastructure services - validated against real source code implementation**
 
 ---
 
@@ -20,7 +20,7 @@
 
 ### **Service Architecture Foundation**
 
-All FLX infrastructure services follow a unified architecture pattern that ensures consistency, testability, and production readiness:
+All FLEXT infrastructure services follow a unified architecture pattern that ensures consistency, testability, and production readiness:
 
 ```python
 # Base infrastructure service pattern
@@ -53,10 +53,10 @@ class BaseAdapter(ABC):
 
 ### **1. Database Service (Oracle Integration)**
 
-#### **FlxOracleDbAdapter Implementation**
+#### **FlextOracleDbAdapter Implementation**
 
 ```python
-class FlxOracleDbAdapter(BaseAdapter):
+class FlextOracleDbAdapter(BaseAdapter):
     """Production Oracle Database service with enterprise features"""
 
     # Configuration
@@ -599,7 +599,7 @@ class AuthenticationService(BaseAdapter):
 
 ### **⬅️ Prerequisites**
 
-- [FLX Framework Technical Specification](../reference/specifications/flext-framework-technical-specification.md) - Core framework architecture required for infrastructure service implementation
+- [FLEXT Framework Technical Specification](../reference/specifications/flext-framework-technical-specification.md) - Core framework architecture required for infrastructure service implementation
 - [Architecture Hub](../architecture/index.md) - Hexagonal architecture patterns essential for service design and port-adapter implementation
 - [Getting Started](../getting-started/index.md) - Framework installation and basic concepts needed for infrastructure setup
 
@@ -702,11 +702,11 @@ class AuthenticationService(BaseAdapter):
 ## 📋 **Implementation Metadata**
 
 - **Guide Version**: 1.0.0
-- **Framework Compatibility**: FLX 0.4.0+
+- **Framework Compatibility**: FLEXT 0.4.0+
 - **Source Validation**: ✅ Validated against `/flext/src/flext/infra/` implementation
 - **Last Updated**: June 11, 2025
 - **Production Status**: ✅ Production-ready patterns and implementations
 
 ---
 
-**📂 Infrastructure**: [Infrastructure Hub](./index.md) | **🏠 Root**: [Documentation Home](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Infrastructure**: [Infrastructure Hub](./index.md) | **🏠 Root**: [Documentation Home](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

@@ -2,7 +2,7 @@
 
 > **Navigation**: [Documentation Home](../../index.md) → [Migration Hub](../index.md) → [Migration Tools Hub](./index.md) → Migration Tools
 
-**Comprehensive automated migration utilities and helper scripts for FLX Framework migrations including code analysis, transformation, and validation tools**
+**Comprehensive automated migration utilities and helper scripts for FLEXT Framework migrations including code analysis, transformation, and validation tools**
 
 ## 📋 **Table of Contents**
 
@@ -19,7 +19,7 @@
 
 ### **Migration Tool Ecosystem**
 
-FLX Framework provides comprehensive tooling for automated migration execution:
+FLEXT Framework provides comprehensive tooling for automated migration execution:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -48,15 +48,15 @@ FLX Framework provides comprehensive tooling for automated migration execution:
 
 ## 📊 Code Analysis Tools
 
-### **FLX Code Analyzer**
+### **FLEXT Code Analyzer**
 
 Automated analysis tool for identifying migration requirements and potential issues:
 
 ```python
 #!/usr/bin/env python3
 """
-FLX Migration Code Analyzer
-Analyzes codebase for FLX 0.4.0+ migration requirements
+FLEXT Migration Code Analyzer
+Analyzes codebase for FLEXT 0.4.0+ migration requirements
 """
 
 import ast
@@ -78,13 +78,13 @@ class AnalysisResult:
     confidence_level: str
 
 class FLXCodeAnalyzer:
-    """Analyzes Python code for FLX migration requirements."""
+    """Analyzes Python code for FLEXT migration requirements."""
 
     def __init__(self, project_root: str):
         self.project_root = Path(project_root)
         self.analysis_results: List[AnalysisResult] = []
 
-        # Known breaking changes in FLX 0.4.0+
+        # Known breaking changes in FLEXT 0.4.0+
         self.breaking_changes = {
             "logging_extra_parameter": {
                 "pattern": r"\.log\([^)]*extra\s*=",
@@ -111,7 +111,7 @@ class FLXCodeAnalyzer:
 
     def analyze_project(self) -> Dict[str, any]:
         """Analyze entire project for migration requirements."""
-        print("🔍 Starting FLX code analysis...")
+        print("🔍 Starting FLEXT code analysis...")
 
         # Find all Python files
         python_files = list(self.project_root.rglob("*.py"))
@@ -361,13 +361,13 @@ class FLXCodeAnalyzer:
             "🧪 Run migration tools on a copy of your codebase first",
             "📝 Review generated migration report carefully",
             "🔄 Test thoroughly after applying automated fixes",
-            "📚 Consult FLX 0.4.0+ migration guide for manual steps"
+            "📚 Consult FLEXT 0.4.0+ migration guide for manual steps"
         ])
 
         return recommendations
 
 def main():
-    """CLI entry point for FLX code analyzer."""
+    """CLI entry point for FLEXT code analyzer."""
     if len(sys.argv) != 2:
         print("Usage: python flext_analyzer.py <project_root>")
         sys.exit(1)
@@ -388,7 +388,7 @@ def main():
 
     # Print summary
     print("\n" + "="*60)
-    print("📊 FLX MIGRATION ANALYSIS SUMMARY")
+    print("📊 FLEXT MIGRATION ANALYSIS SUMMARY")
     print("="*60)
     print(f"Status: {summary['status']}")
     print(f"Files requiring migration: {summary['files_requiring_migration']}")
@@ -421,7 +421,7 @@ Tool for automatically applying migration transformations:
 ```python
 #!/usr/bin/env python3
 """
-FLX Migration Code Transformer
+FLEXT Migration Code Transformer
 Automatically applies migration transformations to codebase
 """
 
@@ -433,7 +433,7 @@ import libcst as cst
 from libcst import matchers as m
 
 class FLXCodeTransformer:
-    """Transforms code for FLX 0.4.0+ migration."""
+    """Transforms code for FLEXT 0.4.0+ migration."""
 
     def __init__(self, project_root: str, dry_run: bool = True):
         self.project_root = Path(project_root)
@@ -592,7 +592,7 @@ def main():
     """CLI entry point for code transformer."""
     import argparse
 
-    parser = argparse.ArgumentParser(description="FLX Code Transformer")
+    parser = argparse.ArgumentParser(description="FLEXT Code Transformer")
     parser.add_argument("project_root", help="Root directory of project to transform")
     parser.add_argument("--dry-run", action="store_true", default=True,
                        help="Preview changes without applying them")
@@ -650,7 +650,7 @@ Comprehensive validation framework for migration verification:
 ```python
 #!/usr/bin/env python3
 """
-FLX Migration Validator
+FLEXT Migration Validator
 Validates migration results and system compatibility
 """
 
@@ -816,10 +816,10 @@ class MigrationValidator:
             }
 
     async def _validate_api_compatibility(self) -> Dict[str, Any]:
-        """Validate API compatibility with FLX 0.4.0+."""
+        """Validate API compatibility with FLEXT 0.4.0+."""
         # This would test that the migrated code correctly uses new APIs
         try:
-            # Test basic FLX imports
+            # Test basic FLEXT imports
             import flext
             from flext.adapters.base import BaseAdapter
             from flext.infra.cache.cache_service import CacheService
@@ -827,13 +827,13 @@ class MigrationValidator:
 
             return {
                 "status": "pass",
-                "message": "FLX 0.4.0+ APIs are accessible",
+                "message": "FLEXT 0.4.0+ APIs are accessible",
                 "details": {"flext_version": getattr(flext, "__version__", "unknown")}
             }
         except ImportError as e:
             return {
                 "status": "fail",
-                "message": f"FLX API import failed: {e}",
+                "message": f"FLEXT API import failed: {e}",
                 "details": {"import_error": str(e)}
             }
 
@@ -1120,8 +1120,8 @@ End-to-end migration automation script:
 ```bash
 #!/bin/bash
 #
-# FLX Migration Orchestrator
-# Automates complete FLX Framework migration process
+# FLEXT Migration Orchestrator
+# Automates complete FLEXT Framework migration process
 #
 
 set -euo pipefail
@@ -1211,9 +1211,9 @@ check_prerequisites() {
         exit 1
     fi
 
-    # Check if FLX is installed
+    # Check if FLEXT is installed
     if ! python3 -c "import flext" 2>/dev/null; then
-        log_warning "FLX not found - will attempt to install"
+        log_warning "FLEXT not found - will attempt to install"
     fi
 
     log_success "Prerequisites check completed"
@@ -1332,11 +1332,11 @@ except ImportError as e:
 " 2>/dev/null)
 
     if [[ "$import_time" == "ERROR" ]]; then
-        log_error "FLX import failed"
+        log_error "FLEXT import failed"
     elif (( $(echo "$import_time > 2.0" | bc -l) )); then
-        log_warning "FLX import took ${import_time}s (slow)"
+        log_warning "FLEXT import took ${import_time}s (slow)"
     else
-        log_success "FLX import time: ${import_time}s"
+        log_success "FLEXT import time: ${import_time}s"
     fi
 
     cd - > /dev/null
@@ -1349,7 +1349,7 @@ generate_report() {
     local report_file="flext_migration_report_$(date +%Y%m%d_%H%M%S).md"
 
     cat > "$report_file" << EOF
-# FLX Migration Report
+# FLEXT Migration Report
 
 **Date**: $(date)
 **Project**: $PROJECT_ROOT
@@ -1405,7 +1405,7 @@ EOF
 
 # Main migration function
 main() {
-    echo "🚀 FLX Framework Migration Orchestrator"
+    echo "🚀 FLEXT Framework Migration Orchestrator"
     echo "======================================"
     echo "Project: $PROJECT_ROOT"
     echo "Mode: $(if [[ "$DRY_RUN" == "true" ]]; then echo "DRY RUN"; else echo "LIVE MIGRATION"; fi)"
@@ -1466,7 +1466,7 @@ Dashboard for monitoring migration progress and system health:
 ```python
 #!/usr/bin/env python3
 """
-FLX Migration Monitor
+FLEXT Migration Monitor
 Real-time monitoring dashboard for migration progress
 """
 
@@ -1616,7 +1616,7 @@ class MigrationMonitor:
                 print("\033[2J\033[H", end="")
 
                 # Display header
-                print("🚀 FLX Migration Monitor")
+                print("🚀 FLEXT Migration Monitor")
                 print("=" * 50)
                 print(f"Project: {self.project_root}")
                 print(f"Started: {datetime.fromtimestamp(self.start_time).strftime('%H:%M:%S')}")
@@ -1848,4 +1848,4 @@ if __name__ == "__main__":
 
 ---
 
-**📂 Content Guide** | **🏠 Hub**: [Migration Tools](./index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Content Guide** | **🏠 Hub**: [Migration Tools](./index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

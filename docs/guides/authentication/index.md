@@ -6,7 +6,7 @@
 [![OAuth2](https://img.shields.io/badge/OAuth2-patterns-blue.svg)](./jwt-service-guide.md)
 [![Security](https://img.shields.io/badge/security-enterprise-red.svg)](./jwt-service-guide.md)
 
-**Complete authentication and authorization guides for enterprise FLX Framework integrations with JWT, OAuth2, and security patterns**
+**Complete authentication and authorization guides for enterprise FLEXT Framework integrations with JWT, OAuth2, and security patterns**
 
 ---
 
@@ -76,4 +76,4 @@
 
 ---
 
-**📂 Hub**: [Guides Hub](../index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Hub**: [Guides Hub](../index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

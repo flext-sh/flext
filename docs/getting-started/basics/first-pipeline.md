@@ -1,6 +1,6 @@
 # First Pipeline Tutorial
 
-This comprehensive tutorial will guide you through building your first complete FLX application using hexagonal architecture principles. You'll learn how to create domain entities, implement adapters, and build a production-ready data pipeline.
+This comprehensive tutorial will guide you through building your first complete FLEXT application using hexagonal architecture principles. You'll learn how to create domain entities, implement adapters, and build a production-ready data pipeline.
 
 ## 🎯 What You'll Build
 
@@ -48,7 +48,7 @@ graph TB
 Before starting, ensure you have:
 
 - **Python 3.13+** installed
-- **FLX framework** installed (`pip install -e .`)
+- **FLEXT framework** installed (`pip install -e .`)
 - **Redis** running locally (optional, we'll use memory cache as fallback)
 - **Basic understanding** of async/await in Python
 
@@ -65,7 +65,7 @@ from typing import List, Optional
 from decimal import Decimal
 from enum import Enum
 
-# Initialize FLX framework
+# Initialize FLEXT framework
 flext = Flx()
 
 class OrderStatus(str, Enum):
@@ -353,7 +353,7 @@ from typing import List, Optional
 from decimal import Decimal
 from flext.infra.adapters import UnifiedAdapterManager
 from flext.infra.cache.cache_service import CacheService
-from flext.core.exceptions import FlxApplicationError
+from flext.core.exceptions import FlextApplicationError
 from tutorial.domain.models import CustomerEntity, OrderEntity, OrderStatus
 
 class OrderManagementService:
@@ -380,7 +380,7 @@ class OrderManagementService:
 
         except Exception as e:
             self.logger.error(f"Failed to create customer: {e}")
-            raise FlxApplicationError(f"Customer creation failed: {e}")
+            raise FlextApplicationError(f"Customer creation failed: {e}")
 
     async def get_customer(self, customer_id: str) -> Optional[dict]:
         """Get customer by ID."""
@@ -406,7 +406,7 @@ class OrderManagementService:
             # Verify customer exists
             customer_data = await self.get_customer(customer_id)
             if not customer_data:
-                raise FlxApplicationError(f"Customer not found: {customer_id}")
+                raise FlextApplicationError(f"Customer not found: {customer_id}")
 
             order = OrderEntity(customer_id=customer_id)
 
@@ -421,7 +421,7 @@ class OrderManagementService:
 
         except Exception as e:
             self.logger.error(f"Failed to create order: {e}")
-            raise FlxApplicationError(f"Order creation failed: {e}")
+            raise FlextApplicationError(f"Order creation failed: {e}")
 
     async def add_order_item(self, order_id: str, product_id: str,
                            quantity: int, unit_price: Decimal) -> dict:
@@ -432,7 +432,7 @@ class OrderManagementService:
                 order_key = f"order:{order_id}"
                 order_data = await self.cache.get(order_key)
                 if not order_data:
-                    raise FlxApplicationError(f"Order not found: {order_id}")
+                    raise FlextApplicationError(f"Order not found: {order_id}")
 
                 # Recreate order entity from cached data
                 order = OrderEntity(customer_id=order_data["customer_id"])
@@ -450,11 +450,11 @@ class OrderManagementService:
                 self.logger.info(f"Item added to order {order_id}: {product_id} x{quantity}")
                 return order.get_order_summary()
             else:
-                raise FlxApplicationError("Cache not available for order management")
+                raise FlextApplicationError("Cache not available for order management")
 
         except Exception as e:
             self.logger.error(f"Failed to add item to order {order_id}: {e}")
-            raise FlxApplicationError(f"Add item failed: {e}")
+            raise FlextApplicationError(f"Add item failed: {e}")
 
     async def confirm_order(self, order_id: str) -> dict:
         """Confirm an order."""
@@ -463,7 +463,7 @@ class OrderManagementService:
                 order_key = f"order:{order_id}"
                 order_data = await self.cache.get(order_key)
                 if not order_data:
-                    raise FlxApplicationError(f"Order not found: {order_id}")
+                    raise FlextApplicationError(f"Order not found: {order_id}")
 
                 # Recreate order entity
                 order = OrderEntity(customer_id=order_data["customer_id"])
@@ -493,11 +493,11 @@ class OrderManagementService:
 
                 return order.get_order_summary()
             else:
-                raise FlxApplicationError("Cache not available for order management")
+                raise FlextApplicationError("Cache not available for order management")
 
         except Exception as e:
             self.logger.error(f"Failed to confirm order {order_id}: {e}")
-            raise FlxApplicationError(f"Order confirmation failed: {e}")
+            raise FlextApplicationError(f"Order confirmation failed: {e}")
 
     async def get_order(self, order_id: str) -> Optional[dict]:
         """Get order by ID."""
@@ -568,7 +568,7 @@ from decimal import Decimal
 from typing import Optional
 from flext.infra.adapters import UnifiedAdapterManager
 from flext.adapters.outbound.cache import CacheAdapter
-from flext.infra.services.logging import FlxStandardLoggingService
+from flext.infra.services.logging import FlextStandardLoggingService
 from tutorial.application.order_service import OrderManagementService
 
 app = cyclopts.App(
@@ -585,7 +585,7 @@ async def get_service() -> OrderManagementService:
 
     if _service is None:
         # Initialize logging
-        logging_service = FlxStandardLoggingService("order_manager")
+        logging_service = FlextStandardLoggingService("order_manager")
         logger = logging_service.get_logger("cli")
 
         # Create unified adapter manager
@@ -831,9 +831,9 @@ if __name__ == "__main__":
 ```python
 # tutorial/main.py
 """
-FLX Order Management System Tutorial
+FLEXT Order Management System Tutorial
 
-This script demonstrates a complete FLX application with:
+This script demonstrates a complete FLEXT application with:
 - Domain entities and business logic
 - Infrastructure adapters and services
 - CLI interface for user interaction
@@ -845,7 +845,7 @@ from tutorial.cli.commands import app
 
 def main():
     """Main application entry point."""
-    print("🏗️ FLX Order Management System")
+    print("🏗️ FLEXT Order Management System")
     print("Built with Hexagonal Architecture")
     print("-" * 40)
 
@@ -1090,7 +1090,7 @@ python -m pytest tests/test_order_management.py -v
 
 ## 🎉 Congratulations
 
-You've successfully built a complete FLX application that demonstrates:
+You've successfully built a complete FLEXT application that demonstrates:
 
 ### ✅ What You've Accomplished
 
@@ -1119,4 +1119,4 @@ You've successfully built a complete FLX application that demonstrates:
 
 ---
 
-**🏗️ You've mastered FLX hexagonal architecture! Ready to build enterprise applications.**
+**🏗️ You've mastered FLEXT hexagonal architecture! Ready to build enterprise applications.**

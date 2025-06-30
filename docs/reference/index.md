@@ -6,7 +6,7 @@
 [![Resources](https://img.shields.io/badge/resources-external-green.svg)](./resources/index.md)
 [![Specs](https://img.shields.io/badge/specs-framework-orange.svg)](./specifications/index.md)
 
-**Complete technical reference documentation for FLX Framework including materials, resources, and specifications**
+**Complete technical reference documentation for FLEXT Framework including materials, resources, and specifications**
 
 ---
 
@@ -36,7 +36,7 @@
 
 ### **⬅️ Prerequisites**
 
-- [Architecture Hub](../architecture/index.md) - Understanding FLX hexagonal architecture patterns before referencing technical specifications
+- [Architecture Hub](../architecture/index.md) - Understanding FLEXT hexagonal architecture patterns before referencing technical specifications
 - [API Reference Hub](../api-reference/index.md) - Complete API documentation providing context for technical reference materials
 - [Getting Started](../getting-started/index.md) - Framework fundamentals required for understanding reference contexts
 
@@ -64,4 +64,4 @@
 
 ---
 
-**📂 Section Hub** | **🏠 Parent**: [Documentation Root](../index.md) | **Framework**: FLX 0.4.0+ | **Updated**: 2025-06-11
+**📂 Section Hub** | **🏠 Parent**: [Documentation Root](../index.md) | **Framework**: FLEXT 0.4.0+ | **Updated**: 2025-06-11

@@ -50,7 +50,7 @@ Oracle Cloud provides multiple authentication methods for different use cases:
 │     ├── Oracle WMS Cloud                                   │
 │     └── Oracle Database Cloud                              │
 │                                                             │
-│  🎟️ JWT Token Management (FLX Service)                     │
+│  🎟️ JWT Token Management (FLEXT Service)                     │
 │     ├── Automatic token acquisition                        │
 │     ├── Refresh token handling                             │
 │     └── Health monitoring                                  │
@@ -72,7 +72,7 @@ Oracle Cloud provides multiple authentication methods for different use cases:
 | **Method**                    | **Use Case**                | **Complexity** | **Security Level** |
 | ----------------------------- | --------------------------- | -------------- | ------------------ |
 | **OAuth2 Client Credentials** | API integration, automation | Low            | High               |
-| **JWT Service (FLX)**         | Framework-managed auth      | Very Low       | High               |
+| **JWT Service (FLEXT)**         | Framework-managed auth      | Very Low       | High               |
 | **SSO/SAML2**                 | User authentication         | Medium         | Very High          |
 | **Basic Auth**                | Development only            | Very Low       | Low                |
 
@@ -200,19 +200,19 @@ export OAUTH_REQUEST_TIMEOUT_SECONDS=30
 
 ---
 
-## 🎟️ **2. FLX JWT SERVICE INTEGRATION**
+## 🎟️ **2. FLEXT JWT SERVICE INTEGRATION**
 
-### **2.1 FLX JWT Service Implementation**
+### **2.1 FLEXT JWT Service Implementation**
 
-**Source Consolidated**: `jwt-service-guide.md` + FLX framework integration patterns
+**Source Consolidated**: `jwt-service-guide.md` + FLEXT framework integration patterns
 
 ```python
-# FLX JWT Service Integration (Content Validated against FLX source)
+# FLEXT JWT Service Integration (Content Validated against FLEXT source)
 from flext.infrastructure.auth import JWTService
 from flext.core.config import ServiceConfig
 
 class OracleJWTAuthenticationService:
-    """FLX-managed JWT authentication service for Oracle integrations."""
+    """FLEXT-managed JWT authentication service for Oracle integrations."""
 
     def __init__(self, config: ServiceConfig):
         self.jwt_service = JWTService(
@@ -239,11 +239,11 @@ class OracleJWTAuthenticationService:
         """JWT service health check."""
         return await self.jwt_service.health_check()
 
-# FLX ApplicationService Integration
+# FLEXT ApplicationService Integration
 from flext import ApplicationService
 
 class OracleIntegrationService(ApplicationService):
-    """Oracle integration service with FLX JWT authentication."""
+    """Oracle integration service with FLEXT JWT authentication."""
 
     def __init__(self, **kwargs):
         super().__init__(service_name="OracleIntegration", **kwargs)
@@ -251,7 +251,7 @@ class OracleIntegrationService(ApplicationService):
 
     async def start(self):
         """Start service with authentication validation."""
-        # FLX automatically validates JWT service health
+        # FLEXT automatically validates JWT service health
         health = await self.auth_service.health_check()
         self.logger.info(f"JWT Service Health: {health}")
 
@@ -262,7 +262,7 @@ class OracleIntegrationService(ApplicationService):
                 response.raise_for_status()
                 return await response.json()
 
-# Usage with FLX (Validated Pattern)
+# Usage with FLEXT (Validated Pattern)
 service = OracleIntegrationService(
     oracle_client_id="your_client_id",
     oracle_client_secret="your_client_secret",
@@ -275,7 +275,7 @@ result = await service.call_oracle_api("/ic/api/integration/v1/integrations")
 
 ### **2.2 JWT Token Management Features**
 
-**Automatic Features (FLX Managed)**:
+**Automatic Features (FLEXT Managed)**:
 
 - ✅ **Token Acquisition**: Automatic OAuth2 client credentials flow
 - ✅ **Token Refresh**: Auto-refresh 5 minutes before expiry
@@ -533,14 +533,14 @@ class OracleSecretRotationManager:
 ### **Content Sources (Consolidated)**
 
 - **OAuth2 Patterns**: `oracle-oauth2-authentication-guide.md` - Client credentials implementation
-- **JWT Service**: `jwt-service-guide.md` - FLX JWT service integration
+- **JWT Service**: `jwt-service-guide.md` - FLEXT JWT service integration
 - **SSO Setup**: `oracle-sso-authentication-setup.md` - Enterprise SSO configuration
 - **Security Guide**: `oracle-security-guide.md` - Security best practices
 - **Real Implementation**: `gruponos-oic-oauth-guide.md` - Production examples
 
 ### **Prerequisites**
 
-- [FLX Framework Setup](../getting-started/installation.md) - Required framework installation
+- [FLEXT Framework Setup](../getting-started/installation.md) - Required framework installation
 - [Oracle Cloud Access](../oracle/oracle-platform-resources.md) - Oracle service credentials
 
 ### **Next Steps**
@@ -551,10 +551,10 @@ class OracleSecretRotationManager:
 
 ### **Related Topics**
 
-- [FLX ApplicationService](../../api-reference/core/application-service.md) - Framework service patterns
+- [FLEXT ApplicationService](../../api-reference/core/application-service.md) - Framework service patterns
 - [Infrastructure Security](../../architecture/infrastructure/security-architecture.md) - Overall security architecture
 - [Production Deployment](../deployment/production-security-guide.md) - Production security patterns
 
 ---
 
-**📍 Location**: [Guides Hub](../index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLX 0.4.0+ | **Approach**: 🎯 CONTENT-BASED
+**📍 Location**: [Guides Hub](../index.md) | **🏠 Root**: [Documentation Home](../../index.md) | **Framework**: FLEXT 0.4.0+ | **Approach**: 🎯 CONTENT-BASED
