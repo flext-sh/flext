@@ -1,0 +1,240 @@
+---
+# OUDSM Final Fix - 100% Functional
+- name: OUDSM Final Fix - Make 100% Functional
+  hosts: oud-srv1.ctbc.local
+  become: yes
+  vars:
+    oudsm_web_path: "/u01/app/oracle/product/14.1/oud_1/oud_management_web"
+    oudsm_port: 8080
+    oracle_user: oracle
+    oracle_group: oinstall
+  
+  tasks:
+    - name: Clean existing processes and check OUD nodes
+      shell: |
+        echo "=== CLEANING EXISTING PROCESSES ==="
+        pkill -f "oud_web_interface.py" || echo "No OUDSM process found"
+        sleep 2
+        
+        echo "=== CHECKING OUD NODES ==="
+        echo "Checking OUD instances..."
+        for node_dir in /u01/domain/oud-node*-instance; do
+          if [ -d "$node_dir" ]; then
+            node_name=$(basename "$node_dir")
+            echo "Found: $node_name"
+            
+            # Check if node is running
+            cd "$node_dir"
+            if [ -f "logs/server.pid" ]; then
+              pid=$(cat logs/server.pid 2>/dev/null)
+              if ps -p "$pid" > /dev/null 2>&1; then
+                port=$(grep "^ds-cfg-listen-port:" config/config.ldif 2>/dev/null | awk '{print $2}' | head -1)
+                echo "✅ $node_name running (PID: $pid, Port: $port)"
+              else
+                echo "❌ $node_name not running (stale PID)"
+                rm -f logs/server.pid
+              fi
+            else
+              echo "❌ $node_name not running (no PID file)"
+            fi
+          fi
+        done
+        
+        echo ""
+        echo "=== ACTIVE OUD PORTS ==="
+        netstat -tlnp | grep ":1389\|:2389\|:3389" || echo "No OUD ports active"
+      register: cleanup_and_check
+
+    - name: Display cleanup results
+      debug:
+        var: cleanup_and_check.stdout_lines
+
+    - name: Start OUD nodes if needed
+      shell: |
+        echo "=== STARTING OUD NODES ==="
+        
+        export ORACLE_HOME=/u01/app/oracle/product/14.1/oud_1
+        export JAVA_HOME=/u01/app/oracle/product/jdk
+        
+        started_any=false
+        
+        for node_dir in /u01/domain/oud-node*-instance; do
+          if [ -d "$node_dir" ]; then
+            node_name=$(basename "$node_dir")
+            cd "$node_dir"
+            
+            # Check if already running
+            if [ -f "logs/server.pid" ]; then
+              pid=$(cat logs/server.pid 2>/dev/null)
+              if ps -p "$pid" > /dev/null 2>&1; then
+                echo "✅ $node_name already running"
+                continue
+              fi
+            fi
+            
+            # Start the node
+            if [ -f "bin/start-ds" ]; then
+              echo "🚀 Starting $node_name..."
+              ./bin/start-ds --nodetach &
+              sleep 3
+              
+              # Check if started
+              if [ -f "logs/server.pid" ]; then
+                pid=$(cat logs/server.pid 2>/dev/null)
+                if ps -p "$pid" > /dev/null 2>&1; then
+                  port=$(grep "^ds-cfg-listen-port:" config/config.ldif 2>/dev/null | awk '{print $2}' | head -1)
+                  echo "✅ $node_name started successfully (PID: $pid, Port: $port)"
+                  started_any=true
+                else
+                  echo "❌ $node_name failed to start"
+                fi
+              else
+                echo "❌ $node_name no PID file created"
+              fi
+            else
+              echo "❌ $node_name missing start-ds script"
+            fi
+          fi
+        done
+        
+        if [ "$started_any" = true ]; then
+          echo ""
+          echo "Waiting for nodes to stabilize..."
+          sleep 5
+        fi
+        
+        echo ""
+        echo "=== FINAL OUD STATUS ==="
+        netstat -tlnp | grep ":1389\|:2389\|:3389" || echo "No OUD nodes listening"
+      become_user: oracle
+      register: start_oud_result
+
+    - name: Display OUD startup results
+      debug:
+        var: start_oud_result.stdout_lines
+
+    - name: Create corrected SystemD service
+      copy:
+        content: |
+          [Unit]
+          Description=Oracle Unified Directory Services Manager - Web Interface
+          Documentation=https://docs.oracle.com/en/middleware/idm/unified-directory/14.1.2/
+          After=network-online.target time-sync.target
+          Wants=network-online.target
+
+          [Service]
+          Type=simple
+          User={{ oracle_user }}
+          Group={{ oracle_group }}
+          WorkingDirectory={{ oudsm_web_path }}
+
+          Environment="ORACLE_HOME=/u01/app/oracle/product/14.1/oud_1"
+          Environment="OUD_HOME=/u01/app/oracle/product/14.1/oud_1/oud"
+
+          # Kill any existing process first
+          ExecStartPre=/bin/bash -c 'pkill -f "oud_web_interface.py" || true'
+          ExecStartPre=/bin/bash -c 'sleep 2'
+          
+          ExecStart=/usr/bin/python3 {{ oudsm_web_path }}/oud_web_interface.py
+          ExecStop=/bin/kill -TERM $MAINPID
+
+          TimeoutStartSec=30
+          TimeoutStopSec=10
+          Restart=no
+
+          StandardOutput=journal
+          StandardError=journal
+          SyslogIdentifier=oudsm
+
+          [Install]
+          WantedBy=multi-user.target
+        dest: /etc/systemd/system/oudsm.service
+        owner: root
+        group: root
+        mode: "0644"
+
+    - name: Reload systemd and start OUDSM
+      systemd:
+        name: oudsm
+        enabled: yes
+        state: started
+        daemon_reload: yes
+
+    - name: Wait for OUDSM to be ready
+      wait_for:
+        port: "{{ oudsm_port }}"
+        host: localhost
+        timeout: 30
+
+    - name: Complete functionality test
+      shell: |
+        echo "=== COMPLETE OUDSM FUNCTIONALITY TEST ==="
+        echo ""
+        
+        echo "1. ✅ OUDSM Process:"
+        if ps aux | grep oud_web_interface | grep -v grep; then
+          echo "✅ OUDSM process running"
+        else
+          echo "❌ OUDSM process not found"
+        fi
+        
+        echo ""
+        echo "2. ✅ OUDSM Port:"
+        if netstat -tlnp | grep ":{{ oudsm_port }}"; then
+          echo "✅ Port {{ oudsm_port }} active"
+        else
+          echo "❌ Port {{ oudsm_port }} not listening"
+        fi
+        
+        echo ""
+        echo "3. ✅ SystemD Service:"
+        service_status=$(systemctl is-active oudsm 2>/dev/null)
+        service_enabled=$(systemctl is-enabled oudsm 2>/dev/null)
+        echo "Service active: $service_status"
+        echo "Service enabled: $service_enabled"
+        
+        echo ""
+        echo "4. ✅ Web Interface:"
+        web_status=$(curl -s -w "%{http_code}" "http://localhost:{{ oudsm_port }}/" -o /dev/null)
+        echo "HTTP Status: $web_status"
+        
+        echo ""
+        echo "5. ✅ API Status:"
+        api_status=$(curl -s -w "%{http_code}" "http://localhost:{{ oudsm_port }}/status" -o /dev/null)
+        echo "API Status: $api_status"
+        
+        echo ""
+        echo "6. ✅ OUD Nodes Connectivity:"
+        curl -s "http://localhost:{{ oudsm_port }}/status" | jq -r '.nodes[] | "\(.name): port \(.port) - status: \(.status)"' 2>/dev/null || echo "API response not in JSON format"
+        
+        echo ""
+        echo "7. ✅ Active OUD Instances:"
+        active_nodes=$(netstat -tlnp | grep ":1389\|:2389\|:3389" | wc -l)
+        echo "Active OUD nodes: $active_nodes/3"
+        
+        echo ""
+        echo "=== SUMMARY ==="
+        if [ "$service_status" = "active" ] && [ "$web_status" = "200" ] && [ "$api_status" = "200" ]; then
+          echo "🎉 OUDSM IS 100% FUNCTIONAL!"
+        else
+          echo "⚠️ OUDSM has issues that need attention"
+        fi
+      register: functionality_test
+
+    - name: Display final results
+      debug:
+        msg:
+          - "=================================================="
+          - "🎯 OUDSM 100% FUNCTIONAL STATUS"
+          - "=================================================="
+          - "{{ functionality_test.stdout_lines }}"
+          - ""
+          - "🌐 Access URLs:"
+          - "   Interface: http://{{ ansible_hostname }}:{{ oudsm_port }}/"
+          - "   API Status: http://{{ ansible_hostname }}:{{ oudsm_port }}/status"
+          - ""
+          - "🔧 Management:"
+          - "   systemctl status oudsm"
+          - "   systemctl start|stop|restart oudsm"
+          - ""
+          - "📄 Logs: journalctl -u oudsm -f"

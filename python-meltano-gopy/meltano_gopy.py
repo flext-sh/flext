@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
-"""
-Python wrapper for Meltano Go functions via ctypes
-This provides a proper Python interface for the gopy-generated Go library
+"""Python wrapper for Meltano Go functions via ctypes
+This provides a proper Python interface for the gopy-generated Go library.
 """
 
 import ctypes
@@ -11,34 +10,36 @@ from pathlib import Path
 
 
 class MeltanoGopyError(Exception):
-    """Custom exception for Meltano Gopy errors"""
+    """Custom exception for Meltano Gopy errors."""
 
 
 class MeltanoGopy:
-    """Python interface to Go-based Meltano functionality"""
+    """Python interface to Go-based Meltano functionality."""
 
     def __init__(self):
-        """Initialize the Meltano Gopy interface"""
+        """Initialize the Meltano Gopy interface."""
         self._lib = None
         self._load_library()
         self._setup_functions()
 
     def _load_library(self):
-        """Load the Go shared library"""
+        """Load the Go shared library."""
         lib_path = Path(__file__).parent / "gopy_go.so"
 
         if not lib_path.exists():
-            raise MeltanoGopyError(f"Go library not found at {lib_path}")
+            msg = f"Go library not found at {lib_path}"
+            raise MeltanoGopyError(msg)
 
         try:
             self._lib = ctypes.CDLL(str(lib_path))
             # Initialize the Go library
             self._lib.GoPyInit()
         except Exception as e:
-            raise MeltanoGopyError(f"Failed to load Go library: {e}")
+            msg = f"Failed to load Go library: {e}"
+            raise MeltanoGopyError(msg)
 
     def _setup_functions(self):
-        """Setup function signatures for ctypes"""
+        """Setup function signatures for ctypes."""
         # CheckMeltanoAvailable() bool
         self._lib.gopy_CheckMeltanoAvailable.restype = ctypes.c_bool
         self._lib.gopy_CheckMeltanoAvailable.argtypes = []
@@ -72,7 +73,7 @@ class MeltanoGopy:
         self._lib.gopy_GetProjectPlugins.argtypes = []
 
     def _call_string_function(self, func, *args):
-        """Helper to call Go functions that return JSON strings"""
+        """Helper to call Go functions that return JSON strings."""
         try:
             # Convert string arguments to bytes
             byte_args = [
@@ -92,34 +93,35 @@ class MeltanoGopy:
             return {"success": False, "error": f"Function call failed: {e}"}
 
     def check_meltano_available(self):
-        """Check if Meltano CLI is available"""
+        """Check if Meltano CLI is available."""
         try:
             return self._lib.gopy_CheckMeltanoAvailable()
         except Exception as e:
-            raise MeltanoGopyError(f"Failed to check Meltano availability: {e}")
+            msg = f"Failed to check Meltano availability: {e}"
+            raise MeltanoGopyError(msg)
 
     def get_meltano_version(self):
-        """Get Meltano version information"""
+        """Get Meltano version information."""
         return self._call_string_function(self._lib.gopy_GetMeltanoVersion)
 
     def create_project(self, directory, name):
-        """Create a new Meltano project"""
+        """Create a new Meltano project."""
         return self._call_string_function(self._lib.gopy_CreateProject, directory, name)
 
     def add_plugin(self, plugin_type, name, variant=""):
-        """Add a plugin to the current project"""
+        """Add a plugin to the current project."""
         return self._call_string_function(
             self._lib.gopy_AddPluginToProject, plugin_type, name, variant
         )
 
     def run_pipeline(self, extractor, loader, transformer=""):
-        """Run a Meltano ELT pipeline"""
+        """Run a Meltano ELT pipeline."""
         return self._call_string_function(
             self._lib.gopy_RunMeltanoPipeline, extractor, loader, transformer
         )
 
     def get_plugins(self):
-        """Get all plugins in the current project"""
+        """Get all plugins in the current project."""
         return self._call_string_function(self._lib.gopy_GetProjectPlugins)
 
 
@@ -128,7 +130,7 @@ _meltano_instance = None
 
 
 def get_meltano_instance():
-    """Get or create the global Meltano instance"""
+    """Get or create the global Meltano instance."""
     global _meltano_instance
     if _meltano_instance is None:
         _meltano_instance = MeltanoGopy()
@@ -136,17 +138,17 @@ def get_meltano_instance():
 
 
 def CheckMeltanoAvailable():
-    """Check if Meltano is available (compatibility function)"""
+    """Check if Meltano is available (compatibility function)."""
     return get_meltano_instance().check_meltano_available()
 
 
 def GetMeltanoVersion():
-    """Get Meltano version (compatibility function)"""
+    """Get Meltano version (compatibility function)."""
     return get_meltano_instance().get_meltano_version()
 
 
 def CreateProject(directory, name):
-    """Create project (compatibility function)"""
+    """Create project (compatibility function)."""
     return get_meltano_instance().create_project(directory, name)
 
 

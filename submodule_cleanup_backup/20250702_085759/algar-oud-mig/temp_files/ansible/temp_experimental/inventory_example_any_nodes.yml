@@ -1,0 +1,123 @@
+---
+# Example Inventory for ANY Number of OUD Nodes
+# Supports 1 to N nodes dynamically
+
+all:
+  vars:
+    # ========================================
+    # DEPLOYMENT CONTROL PARAMETERS  
+    # ========================================
+    clean_deployment: false  # NEVER breaks existing OUD
+    
+    # Global cluster configuration
+    cluster_name: "dynamic-oud-cluster"
+    cluster_domain: "example.local"
+    
+    # Oracle Environment - Shared across all nodes
+    oracle_oud_14_oracle_user: oracle
+    oracle_oud_14_oracle_group: oinstall
+    oracle_oud_14_oracle_base: /u01/app/oracle
+    oracle_oud_14_oracle_home: /u01/app/oracle/product/14.1/oud_1
+    oracle_oud_14_bin_path: /u01/app/oracle/product/14.1/oud_1/oud/bin
+    oracle_oud_14_java_home: /u01/app/oracle/product/jdk
+    
+    # LDAP Configuration
+    oracle_oud_14_base_dn: "dc=example,dc=com"
+    oracle_oud_14_admin_user: "cn=orcladmin"
+    oracle_oud_14_admin_password: "AdminPass123#"
+    oracle_oud_14_replication_password: "Replication123#"
+    oracle_oud_14_replication_admin_uid: admin
+    
+    # Cluster Features
+    oracle_oud_14_replication_enabled: true
+    oracle_oud_14_monitoring_enabled: true
+    oracle_oud_14_security_enabled: true
+    oracle_oud_14_ssl_enabled: true
+    oracle_oud_14_firewall_enabled: false
+    
+    # Global settings
+    ansible_become: true
+    ansible_become_method: sudo
+    environment: production
+
+  children:
+    oud_cluster:
+      children:
+        # ============================================
+        # ADD AS MANY NODES AS YOU WANT!
+        # The code will automatically:
+        # - Detect total number of nodes
+        # - Assign ports dynamically (no conflicts)
+        # - Configure replication between all nodes
+        # - Set first node as primary, others as replicas
+        # - Enable OUDSM only on primary node
+        # ============================================
+        
+        oud_node1:
+          hosts:
+            oud-srv1.example.com:
+              ansible_host: 192.168.1.10
+              ansible_user: opc
+              # Domain path will be /u01/domain/node1 (auto-generated)
+              oracle_oud_14_domain_home: /u01/domain/node1
+              # OUDSM only on first node (auto-detected as primary)
+              # Ports auto-assigned: LDAP=1089, Admin=4045, etc.
+              
+        oud_node2:
+          hosts:
+            oud-srv2.example.com:
+              ansible_host: 192.168.1.11  
+              ansible_user: opc
+              oracle_oud_14_domain_home: /u01/domain/node2
+              # Auto-detected as replica node
+              # Ports auto-assigned: LDAP=1189, Admin=4145, etc.
+              
+        oud_node3:
+          hosts:
+            oud-srv3.example.com:
+              ansible_host: 192.168.1.12
+              ansible_user: opc
+              oracle_oud_14_domain_home: /u01/domain/node3
+              # Auto-detected as replica node
+              # Ports auto-assigned: LDAP=1289, Admin=4245, etc.
+              
+        # ============================================
+        # WANT MORE NODES? JUST ADD THEM!
+        # ============================================
+        # oud_node4:
+        #   hosts:
+        #     oud-srv4.example.com:
+        #       ansible_host: 192.168.1.13
+        #       ansible_user: opc
+        #       oracle_oud_14_domain_home: /u01/domain/node4
+        #       # Ports auto-assigned: LDAP=1389, Admin=4345, etc.
+        #
+        # oud_node5:
+        #   hosts:
+        #     oud-srv5.example.com:
+        #       ansible_host: 192.168.1.14
+        #       ansible_user: opc  
+        #       oracle_oud_14_domain_home: /u01/domain/node5
+        #       # Ports auto-assigned: LDAP=1489, Admin=4445, etc.
+        # ============================================
+
+    # All production nodes (used by playbook)
+    oud_production:
+      children:
+        oud_cluster:
+
+# ============================================  
+# HOW IT WORKS:
+# ============================================
+# 1. Code detects ALL nodes in oud_cluster group
+# 2. First node = Primary (gets OUDSM)
+# 3. All others = Replicas  
+# 4. Ports assigned dynamically:
+#    - Node 1: LDAP=1089, Admin=4045, Repl=8089
+#    - Node 2: LDAP=1189, Admin=4145, Repl=8189  
+#    - Node 3: LDAP=1289, Admin=4245, Repl=8289
+#    - Node N: LDAP=1000+(N*100)+89, etc.
+# 5. Replication configured between ALL nodes
+# 6. 100% idempotent - only changes what's wrong
+# 7. NEVER breaks existing working OUD
+# ============================================

@@ -19,10 +19,10 @@ from __future__ import annotations
 import logging
 import threading
 import time
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import IntEnum
 from pathlib import Path
-from typing import Any, ClassVar
+from typing import Any, ClassVar, Self
 
 from pydantic import BaseModel, Field
 from rich.console import Console
@@ -118,7 +118,7 @@ class EnterpriseFormatter(logging.Formatter):
     def format(self, record: logging.LogRecord) -> str:
         """Format log record with level-specific formatting."""
         # Add custom fields
-        record.timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S.%f")[
+        record.timestamp = datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S.%f")[
             :-3
         ]
         record.module = (
@@ -192,7 +192,7 @@ class EnterpriseFormatter(logging.Formatter):
             return self.standard_format.format(**record.__dict__)
         except (KeyError, ValueError):
             # Ultimate fallback
-            timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
+            timestamp = datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
             return f"[{timestamp}] {record.levelname} | {record.name} | {record.getMessage()}"
 
 
@@ -435,7 +435,7 @@ class TraceOperationContext:
         self.operation_name = operation_name
         self.start_time: float | None = None
 
-    def __enter__(self) -> TraceOperationContext:
+    def __enter__(self) -> Self:
         self.start_time = time.perf_counter()
         self.logger.trace(
             f"Starting operation: {self.operation_name}",
@@ -519,12 +519,12 @@ configure_flext_logging()
 
 
 __all__ = [
-    "LogLevel",
-    "TraceContext",
-    "LoggingConfig",
     "FlextEnterpriseLogger",
+    "LogLevel",
+    "LoggingConfig",
+    "TraceContext",
     "TraceOperationContext",
+    "configure_cli_logging",
     "configure_flext_logging",
     "get_flext_logger",
-    "configure_cli_logging",
 ]

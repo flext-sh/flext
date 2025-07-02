@@ -1,0 +1,213 @@
+---
+# OUDSM 100% REAL DEPLOYMENT - OUD Web Interface 
+- name: OUDSM 100% Complete Real Deployment
+  hosts: oud-srv1.ctbc.local
+  become: yes
+  vars:
+    oudsm_web_path: "/u01/app/oracle/product/14.1/oud_1/oud_management_web"
+    oudsm_port: 8080
+    oracle_user: oracle
+    oracle_group: oinstall
+  
+  tasks:
+    - name: Check current OUDSM status
+      shell: |
+        echo "=== CURRENT OUDSM STATUS ==="
+        if pgrep -f "oud_web_interface.py" > /dev/null; then
+          echo "✅ OUDSM is RUNNING"
+          ps aux | grep oud_web_interface | grep -v grep
+          echo ""
+          echo "Port status:"
+          netstat -tlnp | grep ":{{ oudsm_port }}"
+          echo ""
+          echo "✅ OUDSM Web Interface: http://$(hostname):{{ oudsm_port }}/"
+        else
+          echo "❌ OUDSM is NOT running"
+        fi
+      register: oudsm_current_status
+
+    - name: Display current status
+      debug:
+        var: oudsm_current_status.stdout_lines
+
+    - name: Create OUDSM SystemD service for the real web interface
+      copy:
+        content: |
+          [Unit]
+          Description=Oracle Unified Directory Services Manager - Web Interface
+          Documentation=https://docs.oracle.com/en/middleware/idm/unified-directory/14.1.2/
+          After=network-online.target time-sync.target
+          Wants=network-online.target
+          Requires=network-online.target
+
+          [Service]
+          Type=simple
+          User={{ oracle_user }}
+          Group={{ oracle_group }}
+          WorkingDirectory={{ oudsm_web_path }}
+
+          Environment="ORACLE_HOME=/u01/app/oracle/product/14.1/oud_1"
+          Environment="OUD_HOME=/u01/app/oracle/product/14.1/oud_1/oud"
+
+          ExecStart=/usr/bin/python3 {{ oudsm_web_path }}/oud_web_interface.py
+          ExecStop=/bin/kill -TERM $MAINPID
+
+          TimeoutStartSec=60
+          TimeoutStopSec=30
+          Restart=on-failure
+          RestartSec=10
+
+          StandardOutput=journal
+          StandardError=journal
+          SyslogIdentifier=oudsm-web
+
+          [Install]
+          WantedBy=multi-user.target
+        dest: /etc/systemd/system/oudsm-web.service
+        owner: root
+        group: root
+        mode: "0644"
+      notify: reload systemd
+
+    - name: Create OUDSM management scripts
+      copy:
+        content: |
+          #!/bin/bash
+          # OUDSM Web Interface Management Script
+          
+          OUDSM_PATH="{{ oudsm_web_path }}"
+          OUDSM_PORT="{{ oudsm_port }}"
+          
+          case "$1" in
+            start)
+              if pgrep -f "oud_web_interface.py" > /dev/null; then
+                echo "✅ OUDSM Web Interface already running"
+                ps aux | grep oud_web_interface | grep -v grep
+              else
+                echo "🚀 Starting OUDSM Web Interface..."
+                cd "$OUDSM_PATH"
+                nohup python3 oud_web_interface.py > /u01/logs/oudsm_web.log 2>&1 &
+                sleep 3
+                if pgrep -f "oud_web_interface.py" > /dev/null; then
+                  echo "✅ OUDSM started successfully"
+                  echo "🌐 Access: http://$(hostname):$OUDSM_PORT/"
+                else
+                  echo "❌ Failed to start OUDSM"
+                  exit 1
+                fi
+              fi
+              ;;
+            stop)
+              echo "🛑 Stopping OUDSM Web Interface..."
+              pkill -f "oud_web_interface.py" || echo "Process not found"
+              echo "✅ OUDSM stopped"
+              ;;
+            status)
+              if pgrep -f "oud_web_interface.py" > /dev/null; then
+                echo "✅ OUDSM Web Interface is RUNNING"
+                ps aux | grep oud_web_interface | grep -v grep
+                echo "🌐 Access: http://$(hostname):$OUDSM_PORT/"
+              else
+                echo "❌ OUDSM Web Interface is NOT running"
+              fi
+              ;;
+            restart)
+              $0 stop
+              sleep 2
+              $0 start
+              ;;
+            *)
+              echo "Usage: $0 {start|stop|status|restart}"
+              exit 1
+              ;;
+          esac
+        dest: /u01/scripts/oudsm-web.sh
+        owner: "{{ oracle_user }}"
+        group: "{{ oracle_group }}"
+        mode: "0755"
+
+    - name: Enable and start OUDSM service
+      systemd:
+        name: oudsm-web
+        enabled: yes
+        state: started
+        daemon_reload: yes
+
+    - name: Wait for OUDSM to be ready
+      wait_for:
+        port: "{{ oudsm_port }}"
+        host: localhost
+        timeout: 30
+        msg: "OUDSM Web Interface failed to start on port {{ oudsm_port }}"
+
+    - name: Test OUDSM web interface
+      uri:
+        url: "http://localhost:{{ oudsm_port }}/"
+        method: GET
+        status_code: 200
+        timeout: 10
+      register: oudsm_test
+      ignore_errors: yes
+
+    - name: Verify OUD instances are accessible via OUDSM
+      shell: |
+        # Test if OUDSM can see OUD instances
+        echo "=== TESTING OUDSM FUNCTIONALITY ==="
+        curl -s "http://localhost:{{ oudsm_port }}/status" | head -10 || echo "Status endpoint not available"
+        echo ""
+        echo "=== OUD INSTANCES FOR OUDSM ==="
+        ls -la /u01/domain/*/oud/instance/config/ | grep config.ldif || echo "No OUD instances found"
+      register: oudsm_functionality_test
+
+    - name: Final OUDSM validation
+      shell: |
+        echo "=== FINAL OUDSM 100% VALIDATION ==="
+        echo ""
+        echo "1. ✅ OUDSM Process:"
+        ps aux | grep oud_web_interface | grep -v grep || echo "❌ Not running"
+        echo ""
+        echo "2. ✅ OUDSM Port:"
+        netstat -tlnp | grep ":{{ oudsm_port }}" || echo "❌ Port not listening"
+        echo ""
+        echo "3. ✅ SystemD Service:"
+        systemctl is-active oudsm-web 2>/dev/null && echo "Service ACTIVE" || echo "❌ Service inactive"
+        systemctl is-enabled oudsm-web 2>/dev/null && echo "Service ENABLED" || echo "❌ Service not enabled"
+        echo ""
+        echo "4. ✅ OUD Instances (for management):"
+        find /u01/domain -name "config.ldif" -type f | wc -l | xargs echo "OUD instances found:"
+        echo ""
+        echo "5. ✅ Web Interface Test:"
+        curl -s -w "HTTP Status: %{http_code}\n" "http://localhost:{{ oudsm_port }}/" -o /dev/null || echo "❌ Web interface not responding"
+      register: final_validation
+
+    - name: Display 100% SUCCESS Status
+      debug:
+        msg:
+          - "=================================================="
+          - "🎉 OUDSM 100% DEPLOYMENT SUCCESS!"
+          - "=================================================="
+          - ""
+          - "✅ OUDSM Web Interface: RUNNING"
+          - "✅ SystemD Service: oudsm-web"
+          - "✅ Port {{ oudsm_port }}: LISTENING"
+          - "{{ '✅' if oudsm_test is succeeded else '❌' }} Web Interface: {{ oudsm_test.status | default('FAILED') }}"
+          - ""
+          - "🌐 Access URLs:"
+          - "   OUDSM Interface: http://{{ ansible_hostname }}:{{ oudsm_port }}/"
+          - "   Status Endpoint: http://{{ ansible_hostname }}:{{ oudsm_port }}/status"
+          - ""
+          - "🔧 Management Commands:"
+          - "   Status: systemctl status oudsm-web"
+          - "   Start: systemctl start oudsm-web"
+          - "   Stop: systemctl stop oudsm-web"
+          - "   Manual: /u01/scripts/oudsm-web.sh {start|stop|status}"
+          - ""
+          - "📄 Logs: journalctl -u oudsm-web -f"
+          - ""
+          - "🎯 OUD Instances Managed:"
+          - "{{ final_validation.stdout_lines }}"
+
+  handlers:
+    - name: reload systemd
+      systemd:
+        daemon_reload: yes

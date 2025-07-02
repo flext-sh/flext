@@ -1,0 +1,61 @@
+---
+# Fix SystemD templates - Serial execution to ensure correct templates per host
+- name: Fix SystemD templates serially
+  hosts: oud_cluster
+  become: yes
+  gather_facts: yes
+  serial: 1  # CRITICAL: Process one host at a time
+  
+  tasks:
+    - name: Display current host and instances
+      ansible.builtin.debug:
+        msg:
+          - "Processing host: {{ inventory_hostname }}"
+          - "Instances: {{ oracle_oud_14_instances | map(attribute='name') | list }}"
+          
+    - name: Deploy SystemD template for current host only
+      ansible.builtin.template:
+        src: roles/oracle_oud_14/templates/oud_systemd.service.j2
+        dest: /etc/systemd/system/oud@.service
+        owner: root
+        group: root
+        mode: "0644"
+        backup: yes
+        force: yes
+      delegate_to: "{{ inventory_hostname }}"
+      
+    - name: Reload systemd daemon
+      ansible.builtin.systemd:
+        daemon_reload: yes
+        
+    - name: Reset failed units for this host
+      ansible.builtin.shell: |
+        {% for instance in oracle_oud_14_instances %}
+        systemctl reset-failed "oud@{{ instance.name }}" || true
+        {% endfor %}
+        
+    - name: Start services for this host only  
+      ansible.builtin.systemd:
+        name: "oud@{{ item.name }}"
+        state: started
+        enabled: yes
+      loop: "{{ oracle_oud_14_instances }}"
+      when: item.enabled | default(true)
+      
+    - name: Wait for services to be ready
+      ansible.builtin.wait_for:
+        port: "{{ item.ldap_port }}"
+        host: localhost
+        timeout: 30
+      loop: "{{ oracle_oud_14_instances }}"
+      when: item.enabled | default(true)
+      
+    - name: Show final status for this host
+      ansible.builtin.shell: |
+        echo "=== {{ inventory_hostname }} ==="
+        systemctl status oud@{{ oracle_oud_14_instances[0].name }} --no-pager | grep -E "(Active:|Main PID:)"
+      register: status_output
+      
+    - name: Display status
+      ansible.builtin.debug:
+        var: status_output.stdout_lines

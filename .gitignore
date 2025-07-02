@@ -19,6 +19,7 @@ outputs/
 ldif_output/
 .cursorignore
 .meltano/
+deprecated*/
 
 # Heavy documentation that shouldn't be in repository
 oracle-documentation/

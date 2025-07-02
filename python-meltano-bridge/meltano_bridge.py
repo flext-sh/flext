@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Meltano Bridge for Go Integration
+"""Meltano Bridge for Go Integration.
 
 This module creates a simple Python interface that can be called from Go
 using gopy to provide Meltano functionality as a library.
@@ -55,8 +54,7 @@ class MeltanoResult:
 
 
 class MeltanoBridge:
-    """
-    Bridge class to expose Meltano functionality to Go via gopy.
+    """Bridge class to expose Meltano functionality to Go via gopy.
 
     This class provides a simplified interface to common Meltano operations
     that can be easily called from Go code.
@@ -86,8 +84,7 @@ class MeltanoBridge:
         return MELTANO_AVAILABLE
 
     def init_project(self, project_name: str, project_dir: str = "") -> str:
-        """
-        Initialize a new Meltano project.
+        """Initialize a new Meltano project.
 
         Args:
             project_name: Name of the project
@@ -95,6 +92,7 @@ class MeltanoBridge:
 
         Returns:
             JSON string with result
+
         """
         try:
             if not project_dir:
@@ -107,7 +105,7 @@ class MeltanoBridge:
             cmd = ["meltano", "init", project_dir]
 
             result = subprocess.run(
-                cmd, cwd=self.project_root, capture_output=True, text=True
+                cmd, cwd=self.project_root, capture_output=True, text=True, check=False
             )
 
             if result.returncode == 0:
@@ -129,8 +127,7 @@ class MeltanoBridge:
     def add_plugin(
         self, plugin_type: str, plugin_name: str, plugin_variant: str = ""
     ) -> str:
-        """
-        Add a plugin to the Meltano project.
+        """Add a plugin to the Meltano project.
 
         Args:
             plugin_type: Type of plugin (extractor, loader, transformer, etc.)
@@ -139,6 +136,7 @@ class MeltanoBridge:
 
         Returns:
             JSON string with result
+
         """
         try:
             if not self.project:
@@ -153,7 +151,7 @@ class MeltanoBridge:
                 cmd.append(plugin_variant)
 
             result = subprocess.run(
-                cmd, capture_output=True, text=True, cwd=self.project.root
+                cmd, capture_output=True, text=True, cwd=self.project.root, check=False
             )
 
             if result.returncode == 0:
@@ -172,11 +170,11 @@ class MeltanoBridge:
             return json.dumps(MeltanoResult(success=False, error=str(e)).to_dict())
 
     def install_plugins(self) -> str:
-        """
-        Install all plugins in the project.
+        """Install all plugins in the project.
 
         Returns:
             JSON string with result
+
         """
         try:
             if not self.project:
@@ -190,7 +188,7 @@ class MeltanoBridge:
                 ["meltano", "install"],
                 capture_output=True,
                 text=True,
-                cwd=self.project.root,
+                cwd=self.project.root, check=False,
             )
 
             if result.returncode == 0:
@@ -209,8 +207,7 @@ class MeltanoBridge:
             return json.dumps(MeltanoResult(success=False, error=str(e)).to_dict())
 
     def run_pipeline(self, extractor: str, loader: str, transformer: str = "") -> str:
-        """
-        Run a Meltano pipeline.
+        """Run a Meltano pipeline.
 
         Args:
             extractor: Name of the extractor plugin
@@ -219,6 +216,7 @@ class MeltanoBridge:
 
         Returns:
             JSON string with result
+
         """
         try:
             if not self.project:
@@ -234,7 +232,7 @@ class MeltanoBridge:
             cmd.append(loader)
 
             result = subprocess.run(
-                cmd, capture_output=True, text=True, cwd=self.project.root
+                cmd, capture_output=True, text=True, cwd=self.project.root, check=False
             )
 
             if result.returncode == 0:
@@ -254,11 +252,11 @@ class MeltanoBridge:
             return json.dumps(MeltanoResult(success=False, error=str(e)).to_dict())
 
     def get_plugins(self) -> str:
-        """
-        Get list of all plugins in the project.
+        """Get list of all plugins in the project.
 
         Returns:
             JSON string with plugin list
+
         """
         try:
             if not self.project:
@@ -272,7 +270,7 @@ class MeltanoBridge:
                 ["meltano", "config", "meltano", "list"],
                 capture_output=True,
                 text=True,
-                cwd=self.project.root,
+                cwd=self.project.root, check=False,
             )
 
             if result.returncode == 0:
@@ -289,11 +287,11 @@ class MeltanoBridge:
             return json.dumps(MeltanoResult(success=False, error=str(e)).to_dict())
 
     def get_project_info(self) -> str:
-        """
-        Get information about the current project.
+        """Get information about the current project.
 
         Returns:
             JSON string with project information
+
         """
         try:
             if not self.project:
@@ -315,9 +313,8 @@ class MeltanoBridge:
         except Exception as e:
             return json.dumps(MeltanoResult(success=False, error=str(e)).to_dict())
 
-    def execute_command(self, command: str, args: list[str] = None) -> str:
-        """
-        Execute a raw Meltano command.
+    def execute_command(self, command: str, args: list[str] | None = None) -> str:
+        """Execute a raw Meltano command.
 
         Args:
             command: Meltano command to execute
@@ -325,6 +322,7 @@ class MeltanoBridge:
 
         Returns:
             JSON string with result
+
         """
         try:
             if not self.project:
@@ -339,7 +337,7 @@ class MeltanoBridge:
                 cmd.extend(args)
 
             result = subprocess.run(
-                cmd, capture_output=True, text=True, cwd=self.project.root
+                cmd, capture_output=True, text=True, cwd=self.project.root, check=False
             )
 
             return json.dumps(

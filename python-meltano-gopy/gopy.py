@@ -1,7 +1,4 @@
-"""
-Package gopy provides Go bindings for Meltano functionality via gopy
-
-"""
+"""Package gopy provides Go bindings for Meltano functionality via gopy."""
 
 # python wrapper for package github.com/flext-sh/flext/internal/gopy within overall package gopy
 # This is what you import to use the package.
@@ -39,9 +36,8 @@ class Map_string_interface_(go.GoClass):
     """"""
 
     def __init__(self, *args, **kwargs):
-        """
-        handle=A Go-side object is always initialized with an explicit handle=arg
-        otherwise parameter is a python list that we copy from
+        """handle=A Go-side object is always initialized with an explicit handle=arg
+        otherwise parameter is a python list that we copy from.
         """
         self.index = 0
         if len(kwargs) == 1 and "handle" in kwargs:
@@ -55,8 +51,9 @@ class Map_string_interface_(go.GoClass):
             _gopy.IncRef(self.handle)
             if len(args) > 0:
                 if not isinstance(args[0], _collections_abc.Mapping):
+                    msg = "Map_string_interface_.__init__ takes a mapping as argument"
                     raise TypeError(
-                        "Map_string_interface_.__init__ takes a mapping as argument"
+                        msg
                     )
                 for k, v in args[0].items():
                     _gopy.Map_string_interface__set(self.handle, k, v)
@@ -99,18 +96,12 @@ class Map_string_interface_(go.GoClass):
         return go.Slice_string(handle=_gopy.Map_string_interface__keys(self.handle))
 
     def values(self):
-        vls = []
         kys = self.keys()
-        for k in kys:
-            vls.append(self[k])
-        return vls
+        return [self[k] for k in kys]
 
     def items(self):
-        vls = []
         kys = self.keys()
-        for k in kys:
-            vls.append((k, self[k]))
-        return vls
+        return [(k, self[k]) for k in kys]
 
     def __iter__(self):
         return iter(self.items())
@@ -136,13 +127,12 @@ class Map_string_interface_(go.GoClass):
 
 # Python type for struct gopy.MeltanoAdapter
 class MeltanoAdapter(go.GoClass):
-    """MeltanoAdapter provides a gopy-compatible interface to Meltano functionality\n"""
+    r"""MeltanoAdapter provides a gopy-compatible interface to Meltano functionality\n."""
 
     def __init__(self, *args, **kwargs):
-        """
-        handle=A Go-side object is always initialized with an explicit handle=arg
+        """handle=A Go-side object is always initialized with an explicit handle=arg
         otherwise parameters can be unnamed in order of field names or named fields
-        in which case a new Go object is constructed first
+        in which case a new Go object is constructed first.
         """
         if len(kwargs) == 1 and "handle" in kwargs:
             self.handle = kwargs["handle"]
@@ -180,28 +170,28 @@ class MeltanoAdapter(go.GoClass):
         return sv + ")"
 
     def IsAvailable(self):
-        """IsAvailable() bool
+        """IsAvailable() bool.
 
         IsAvailable checks if Meltano is available in the system
         """
         return _gopy.gopy_MeltanoAdapter_IsAvailable(self.handle)
 
     def InitProject(self, name, directory):
-        """InitProject(str name, str directory) str
+        """InitProject(str name, str directory) str.
 
         InitProject initializes a new Meltano project
         """
         return _gopy.gopy_MeltanoAdapter_InitProject(self.handle, name, directory)
 
     def GetProjectInfo(self):
-        """GetProjectInfo() str
+        """GetProjectInfo() str.
 
         GetProjectInfo retrieves information about the current project
         """
         return _gopy.gopy_MeltanoAdapter_GetProjectInfo(self.handle)
 
     def AddPlugin(self, pluginType, name, variant):
-        """AddPlugin(str pluginType, str name, str variant) str
+        """AddPlugin(str pluginType, str name, str variant) str.
 
         AddPlugin adds a plugin to the project
         """
@@ -210,14 +200,14 @@ class MeltanoAdapter(go.GoClass):
         )
 
     def InstallPlugins(self):
-        """InstallPlugins() str
+        """InstallPlugins() str.
 
         InstallPlugins installs all plugins in the project
         """
         return _gopy.gopy_MeltanoAdapter_InstallPlugins(self.handle)
 
     def RunPipeline(self, extractor, loader, transformer):
-        """RunPipeline(str extractor, str loader, str transformer) str
+        """RunPipeline(str extractor, str loader, str transformer) str.
 
         RunPipeline executes a Meltano pipeline
         """
@@ -226,7 +216,7 @@ class MeltanoAdapter(go.GoClass):
         )
 
     def ExecuteCommand(self, command, args):
-        """ExecuteCommand(str command, []str args) str
+        """ExecuteCommand(str command, []str args) str.
 
         ExecuteCommand executes a raw Meltano command
         """
@@ -235,14 +225,14 @@ class MeltanoAdapter(go.GoClass):
         )
 
     def GetPlugins(self):
-        """GetPlugins() str
+        """GetPlugins() str.
 
         GetPlugins retrieves all plugins in the project
         """
         return _gopy.gopy_MeltanoAdapter_GetPlugins(self.handle)
 
     def CreateAdapter(self, adapterType, config):
-        """CreateAdapter(str adapterType, object config) str
+        """CreateAdapter(str adapterType, object config) str.
 
         CreateAdapter creates a new Meltano adapter
         """
@@ -251,28 +241,28 @@ class MeltanoAdapter(go.GoClass):
         )
 
     def ListProjects(self, rootDir):
-        """ListProjects(str rootDir) str
+        """ListProjects(str rootDir) str.
 
         ListProjects lists available Meltano projects
         """
         return _gopy.gopy_MeltanoAdapter_ListProjects(self.handle, rootDir)
 
     def GetProcessPoolStats(self):
-        """GetProcessPoolStats() str
+        """GetProcessPoolStats() str.
 
         GetProcessPoolStats returns statistics about the process pool
         """
         return _gopy.gopy_MeltanoAdapter_GetProcessPoolStats(self.handle)
 
     def GetStateStats(self):
-        """GetStateStats() str
+        """GetStateStats() str.
 
         GetStateStats returns state management statistics
         """
         return _gopy.gopy_MeltanoAdapter_GetStateStats(self.handle)
 
     def SavePluginState(self, project, plugin, state):
-        """SavePluginState(str project, str plugin, object state) str
+        """SavePluginState(str project, str plugin, object state) str.
 
         SavePluginState saves state for a specific plugin
         """
@@ -281,28 +271,28 @@ class MeltanoAdapter(go.GoClass):
         )
 
     def LoadPluginState(self, project, plugin):
-        """LoadPluginState(str project, str plugin) str
+        """LoadPluginState(str project, str plugin) str.
 
         LoadPluginState loads state for a specific plugin
         """
         return _gopy.gopy_MeltanoAdapter_LoadPluginState(self.handle, project, plugin)
 
     def DeletePluginState(self, project, plugin):
-        """DeletePluginState(str project, str plugin) str
+        """DeletePluginState(str project, str plugin) str.
 
         DeletePluginState deletes state for a specific plugin
         """
         return _gopy.gopy_MeltanoAdapter_DeletePluginState(self.handle, project, plugin)
 
     def GetVersion(self):
-        """GetVersion() str
+        """GetVersion() str.
 
         GetVersion returns the version information
         """
         return _gopy.gopy_MeltanoAdapter_GetVersion(self.handle)
 
     def Close(self):
-        """Close() str
+        """Close() str.
 
         Close cleans up resources (for compatibility)
         """
@@ -311,13 +301,12 @@ class MeltanoAdapter(go.GoClass):
 
 # Python type for struct gopy.ProjectInfo
 class ProjectInfo(go.GoClass):
-    """ProjectInfo contains basic project information\n"""
+    r"""ProjectInfo contains basic project information\n."""
 
     def __init__(self, *args, **kwargs):
-        """
-        handle=A Go-side object is always initialized with an explicit handle=arg
+        """handle=A Go-side object is always initialized with an explicit handle=arg
         otherwise parameters can be unnamed in order of field names or named fields
-        in which case a new Go object is constructed first
+        in which case a new Go object is constructed first.
         """
         if len(kwargs) == 1 and "handle" in kwargs:
             self.handle = kwargs["handle"]
@@ -328,15 +317,15 @@ class ProjectInfo(go.GoClass):
         else:
             self.handle = _gopy.gopy_ProjectInfo_CTor()
             _gopy.IncRef(self.handle)
-            if 0 < len(args):
+            if len(args) > 0:
                 self.Name = args[0]
             if "Name" in kwargs:
                 self.Name = kwargs["Name"]
-            if 1 < len(args):
+            if len(args) > 1:
                 self.Path = args[1]
             if "Path" in kwargs:
                 self.Path = kwargs["Path"]
-            if 2 < len(args):
+            if len(args) > 2:
                 self.Environment = args[2]
             if "Environment" in kwargs:
                 self.Environment = kwargs["Environment"]
@@ -402,13 +391,12 @@ class ProjectInfo(go.GoClass):
 
 # Python type for struct gopy.Result
 class Result(go.GoClass):
-    """Result represents a standard result format for gopy compatibility\n"""
+    r"""Result represents a standard result format for gopy compatibility\n."""
 
     def __init__(self, *args, **kwargs):
-        """
-        handle=A Go-side object is always initialized with an explicit handle=arg
+        """handle=A Go-side object is always initialized with an explicit handle=arg
         otherwise parameters can be unnamed in order of field names or named fields
-        in which case a new Go object is constructed first
+        in which case a new Go object is constructed first.
         """
         if len(kwargs) == 1 and "handle" in kwargs:
             self.handle = kwargs["handle"]
@@ -419,11 +407,11 @@ class Result(go.GoClass):
         else:
             self.handle = _gopy.gopy_Result_CTor()
             _gopy.IncRef(self.handle)
-            if 0 < len(args):
+            if len(args) > 0:
                 self.Success = args[0]
             if "Success" in kwargs:
                 self.Success = kwargs["Success"]
-            if 2 < len(args):
+            if len(args) > 2:
                 self.Error = args[2]
             if "Error" in kwargs:
                 self.Error = kwargs["Error"]
@@ -484,7 +472,7 @@ class Result(go.GoClass):
 
 # ---- Constructors ---
 def NewMeltanoAdapter():
-    """NewMeltanoAdapter() object, str
+    """NewMeltanoAdapter() object, str.
 
     NewMeltanoAdapter creates a new Meltano adapter instance
     """
@@ -492,7 +480,7 @@ def NewMeltanoAdapter():
 
 
 def QuickInit():
-    """QuickInit() object, str
+    """QuickInit() object, str.
 
     QuickInit initializes Meltano with auto-detection
     """
@@ -500,7 +488,7 @@ def QuickInit():
 
 
 def NewMeltanoAdapterWithConfig(pythonPath, projectRoot):
-    """NewMeltanoAdapterWithConfig(str pythonPath, str projectRoot) object, str
+    """NewMeltanoAdapterWithConfig(str pythonPath, str projectRoot) object, str.
 
     NewMeltanoAdapterWithConfig creates adapter with custom configuration
     """
@@ -510,7 +498,7 @@ def NewMeltanoAdapterWithConfig(pythonPath, projectRoot):
 
 
 def QuickInitWithConfig(pythonPath, projectRoot):
-    """QuickInitWithConfig(str pythonPath, str projectRoot) object, str
+    """QuickInitWithConfig(str pythonPath, str projectRoot) object, str.
 
     QuickInitWithConfig initializes Meltano with custom paths
     """
@@ -521,7 +509,7 @@ def QuickInitWithConfig(pythonPath, projectRoot):
 
 # ---- Functions ---
 def QuickCheck():
-    """QuickCheck() bool
+    """QuickCheck() bool.
 
     QuickCheck checks if Meltano is available (static function)
     """
@@ -529,7 +517,7 @@ def QuickCheck():
 
 
 def AddPluginToProject(pluginType, name, variant):
-    """AddPluginToProject(str pluginType, str name, str variant) str
+    """AddPluginToProject(str pluginType, str name, str variant) str.
 
     AddPluginToProject adds a plugin to an existing project
     """
@@ -537,7 +525,7 @@ def AddPluginToProject(pluginType, name, variant):
 
 
 def GetMeltanoVersion():
-    """GetMeltanoVersion() str
+    """GetMeltanoVersion() str.
 
     GetMeltanoVersion returns Meltano version information
     """
@@ -545,7 +533,7 @@ def GetMeltanoVersion():
 
 
 def RunMeltanoPipeline(extractor, loader, transformer):
-    """RunMeltanoPipeline(str extractor, str loader, str transformer) str
+    """RunMeltanoPipeline(str extractor, str loader, str transformer) str.
 
     RunMeltanoPipeline runs a Meltano ELT pipeline
     """
@@ -553,7 +541,7 @@ def RunMeltanoPipeline(extractor, loader, transformer):
 
 
 def CheckMeltanoAvailable():
-    """CheckMeltanoAvailable() bool
+    """CheckMeltanoAvailable() bool.
 
     CheckMeltanoAvailable checks if Meltano CLI is available
     """
@@ -561,7 +549,7 @@ def CheckMeltanoAvailable():
 
 
 def CreateProject(directory, name):
-    """CreateProject(str directory, str name) str
+    """CreateProject(str directory, str name) str.
 
     CreateProject creates a new Meltano project
     """
@@ -569,7 +557,7 @@ def CreateProject(directory, name):
 
 
 def ExecuteMeltanoCommand(command, args):
-    """ExecuteMeltanoCommand(str command, []str args) str
+    """ExecuteMeltanoCommand(str command, []str args) str.
 
     ExecuteMeltanoCommand executes a raw Meltano CLI command
     """
@@ -577,7 +565,7 @@ def ExecuteMeltanoCommand(command, args):
 
 
 def GetProjectPlugins():
-    """GetProjectPlugins() str
+    """GetProjectPlugins() str.
 
     GetProjectPlugins lists all plugins in the current project
     """

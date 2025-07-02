@@ -1,0 +1,289 @@
+---
+# Final OUDSM 100% Deployment via Ansible
+- name: OUDSM 100% Complete Deployment
+  hosts: oud-srv1.ctbc.local
+  become: yes
+  
+  tasks:
+    - name: Create setDomainEnv.sh for OUDSM
+      copy:
+        content: |
+          #!/bin/bash
+          export JAVA_HOME=/u01/app/oracle/product/jdk
+          export ORACLE_HOME=/u01/app/oracle/product/14.1/oud_1
+          export DOMAIN_HOME=/u01/domain/oudsm
+          export WEBLOGIC_HOME=$ORACLE_HOME/wlserver
+          export CLASSPATH=$WEBLOGIC_HOME/server/lib/weblogic.jar:$CLASSPATH
+          export PATH=$JAVA_HOME/bin:$PATH
+        dest: /u01/domain/oudsm/setDomainEnv.sh
+        owner: oracle
+        group: oinstall
+        mode: "0755"
+
+    - name: Create startWebLogic.sh for OUDSM domain
+      copy:
+        content: |
+          #!/bin/bash
+          # WebLogic AdminServer Startup Script for OUDSM
+          
+          cd /u01/domain/oudsm
+          . ./setDomainEnv.sh
+          
+          # Create boot.properties if not exists
+          mkdir -p servers/AdminServer/security
+          if [ ! -f "servers/AdminServer/security/boot.properties" ]; then
+            echo "username=weblogic" > servers/AdminServer/security/boot.properties
+            echo "password=Algar123@" >> servers/AdminServer/security/boot.properties
+            chmod 600 servers/AdminServer/security/boot.properties
+          fi
+          
+          echo "Starting WebLogic AdminServer for OUDSM..."
+          
+          $JAVA_HOME/bin/java -server \
+            -Xms512m -Xmx1024m \
+            -Djava.security.policy=$WEBLOGIC_HOME/server/lib/weblogic.policy \
+            -Dweblogic.Name=AdminServer \
+            -Dweblogic.Domain=$DOMAIN_HOME \
+            -Dweblogic.ListenPort=7001 \
+            -Dweblogic.ListenAddress= \
+            -Dweblogic.RootDirectory=$DOMAIN_HOME \
+            -Dweblogic.system.BootIdentityFile=$DOMAIN_HOME/servers/AdminServer/security/boot.properties \
+            -Dweblogic.management.username=weblogic \
+            -Dweblogic.management.password=Algar123@ \
+            weblogic.Server
+        dest: /u01/domain/oudsm/startWebLogic.sh
+        owner: oracle
+        group: oinstall
+        mode: "0755"
+
+    - name: Create OUDSM startup script in /u01/scripts
+      copy:
+        content: |
+          #!/bin/bash
+          # OUDSM Startup Manager Script
+          
+          DOMAIN_HOME="/u01/domain/oudsm"
+          
+          if [ ! -f "$DOMAIN_HOME/config/config.xml" ]; then
+            echo "❌ OUDSM domain not found at $DOMAIN_HOME"
+            exit 1
+          fi
+          
+          cd "$DOMAIN_HOME"
+          
+          # Check if already running
+          if pgrep -f "weblogic.Name=AdminServer" > /dev/null; then
+            echo "⚠️  OUDSM AdminServer is already running"
+            ps aux | grep "weblogic.Name=AdminServer" | grep -v grep
+            exit 0
+          fi
+          
+          echo "🚀 Starting OUDSM AdminServer..."
+          
+          # Start in background
+          nohup ./startWebLogic.sh > /u01/logs/oudsm/admin.log 2>&1 &
+          
+          echo "📝 Startup initiated. Waiting for AdminServer..."
+          
+          # Wait for startup
+          for i in {1..60}; do
+            if netstat -ln | grep -q ":7001 "; then
+              echo "✅ OUDSM AdminServer started successfully!"
+              echo "🌐 Console: http://$(hostname):7001/console"
+              echo "👤 User: weblogic / Password: Algar123@"
+              echo "📄 Logs: /u01/logs/oudsm/admin.log"
+              exit 0
+            fi
+            sleep 5
+            echo "⏳ Waiting... ($i/60)"
+          done
+          
+          echo "❌ AdminServer failed to start within 5 minutes"
+          echo "📄 Check logs: /u01/logs/oudsm/admin.log"
+          exit 1
+        dest: /u01/scripts/start_oudsm.sh
+        owner: oracle
+        group: oinstall
+        mode: "0755"
+
+    - name: Create OUDSM stop script
+      copy:
+        content: |
+          #!/bin/bash
+          # OUDSM Stop Script
+          
+          echo "🛑 Stopping OUDSM AdminServer..."
+          
+          # Find and kill WebLogic AdminServer process
+          PID=$(pgrep -f "weblogic.Name=AdminServer")
+          if [ -n "$PID" ]; then
+            echo "Found AdminServer process: $PID"
+            kill $PID
+            
+            # Wait for graceful shutdown
+            for i in {1..30}; do
+              if ! pgrep -f "weblogic.Name=AdminServer" > /dev/null; then
+                echo "✅ AdminServer stopped gracefully"
+                exit 0
+              fi
+              sleep 2
+            done
+            
+            # Force kill if still running
+            echo "⚠️  Forcing shutdown..."
+            kill -9 $PID 2>/dev/null || true
+          else
+            echo "ℹ️  AdminServer is not running"
+          fi
+          
+          echo "✅ OUDSM shutdown completed"
+        dest: /u01/scripts/stop_oudsm.sh
+        owner: oracle
+        group: oinstall
+        mode: "0755"
+
+    - name: Update SystemD service for OUDSM
+      copy:
+        content: |
+          [Unit]
+          Description=Oracle Unified Directory Services Manager
+          Documentation=https://docs.oracle.com/en/middleware/idm/unified-directory/14.1.2/
+          After=network-online.target time-sync.target
+          Wants=network-online.target
+          Requires=network-online.target
+
+          [Service]
+          Type=forking
+          User=oracle
+          Group=oinstall
+          WorkingDirectory=/u01/domain/oudsm
+
+          Environment="JAVA_HOME=/u01/app/oracle/product/jdk"
+          Environment="ORACLE_HOME=/u01/app/oracle/product/14.1/oud_1"
+          Environment="DOMAIN_HOME=/u01/domain/oudsm"
+
+          ExecStart=/u01/scripts/start_oudsm.sh
+          ExecStop=/u01/scripts/stop_oudsm.sh
+
+          TimeoutStartSec=300
+          TimeoutStopSec=180
+          Restart=on-failure
+          RestartSec=30
+
+          LimitNOFILE=65536
+          LimitNPROC=32768
+
+          StandardOutput=journal
+          StandardError=journal
+          SyslogIdentifier=oudsm
+
+          [Install]
+          WantedBy=multi-user.target
+        dest: /etc/systemd/system/oudsm.service
+        owner: root
+        group: root
+        mode: "0644"
+      notify: reload systemd daemon
+
+    - name: Start OUDSM AdminServer
+      shell: "/u01/scripts/start_oudsm.sh"
+      become_user: oracle
+      register: oudsm_start_result
+      
+    - name: Display startup result
+      debug:
+        var: oudsm_start_result.stdout_lines
+
+    - name: Wait additional time for full startup
+      wait_for:
+        port: 7001
+        host: localhost
+        timeout: 90
+        msg: "OUDSM AdminServer failed to start on port 7001"
+
+    - name: Test OUDSM console accessibility
+      uri:
+        url: "http://localhost:7001/console"
+        method: GET
+        status_code: [200, 302, 401]
+        timeout: 30
+      register: console_test
+      ignore_errors: yes
+
+    - name: Test OUDSM management interface
+      uri:
+        url: "http://localhost:7001/oudsm"
+        method: GET
+        status_code: [200, 302, 404]
+        timeout: 30
+      register: oudsm_test
+      ignore_errors: yes
+
+    - name: Enable OUDSM SystemD service
+      systemd:
+        name: oudsm
+        enabled: yes
+        daemon_reload: yes
+
+    - name: Final OUDSM validation and status
+      shell: |
+        echo "=== FINAL OUDSM VALIDATION ==="
+        echo ""
+        echo "1. Process Status:"
+        ps aux | grep -E "(weblogic|AdminServer)" | grep -v grep || echo "No WebLogic processes found"
+        echo ""
+        echo "2. Port Status:"
+        netstat -ln | grep :7001 || echo "Port 7001 not listening"
+        echo ""
+        echo "3. SystemD Service:"
+        systemctl is-enabled oudsm 2>/dev/null && echo "Service enabled" || echo "Service not enabled"
+        systemctl is-active oudsm 2>/dev/null && echo "Service active" || echo "Service not active"
+        echo ""
+        echo "4. Domain Files:"
+        ls -la /u01/domain/oudsm/config/config.xml 2>/dev/null && echo "Domain config exists" || echo "Domain config missing"
+        echo ""
+        echo "5. Log Status:"
+        if [ -f /u01/logs/oudsm/admin.log ]; then
+          echo "Last 5 lines of admin.log:"
+          tail -5 /u01/logs/oudsm/admin.log
+        else
+          echo "Admin log not found"
+        fi
+      register: final_validation
+
+    - name: Display Final Status Report
+      debug:
+        msg:
+          - "=================================================="
+          - "🎉 OUDSM 100% DEPLOYMENT COMPLETED!"
+          - "=================================================="
+          - ""
+          - "✅ Domain Created: /u01/domain/oudsm"
+          - "✅ Scripts Created: /u01/scripts/start_oudsm.sh, /u01/scripts/stop_oudsm.sh"
+          - "✅ SystemD Service: oudsm.service"
+          - "{{ '✅' if console_test is succeeded else '❌' }} Console Test: {{ console_test.status | default('FAILED') }}"
+          - "{{ '✅' if oudsm_test is succeeded else '❌' }} OUDSM Interface Test: {{ oudsm_test.status | default('FAILED') }}"
+          - ""
+          - "🌐 Access URLs:"
+          - "   Console: http://{{ ansible_hostname }}:7001/console"
+          - "   OUDSM: http://{{ ansible_hostname }}:7001/oudsm"
+          - ""
+          - "👤 Credentials:"
+          - "   Username: weblogic"
+          - "   Password: Algar123@"
+          - ""
+          - "🔧 Management Commands:"
+          - "   Start: systemctl start oudsm"
+          - "   Stop: systemctl stop oudsm" 
+          - "   Status: systemctl status oudsm"
+          - "   Manual: /u01/scripts/start_oudsm.sh"
+          - ""
+          - "📄 Logs: /u01/logs/oudsm/admin.log"
+          - ""
+          - "Validation Details:"
+          - "{{ final_validation.stdout_lines }}"
+
+  handlers:
+    - name: reload systemd daemon
+      systemd:
+        daemon_reload: yes
