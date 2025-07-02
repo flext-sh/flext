@@ -18,11 +18,11 @@
 
 ### **Core Topics**
 
-| **Topic** | **Function** | **Audience** | **Status** |
-|-----------|--------------|--------------|------------|
-| [Materials](./materials/index.md) | Technical reference materials | Developers | ✅ Complete |
-| [Resources](./resources/index.md) | External resources and links | Researchers | ✅ Complete |
-| [Specifications](./specifications/index.md) | Framework specifications | System architects | ✅ Complete |
+| **Topic**                                   | **Function**                  | **Audience**      | **Status**  |
+| ------------------------------------------- | ----------------------------- | ----------------- | ----------- |
+| [Materials](./materials/index.md)           | Technical reference materials | Developers        | ✅ Complete |
+| [Resources](./resources/index.md)           | External resources and links  | Researchers       | ✅ Complete |
+| [Specifications](./specifications/index.md) | Framework specifications      | System architects | ✅ Complete |
 
 ### **📋 Learning Path**
 

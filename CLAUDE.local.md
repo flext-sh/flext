@@ -87,7 +87,7 @@
 - ✅ **gruponos-poc-oic-wms**: Production-ready integration
 - ✅ **algar-oud-mig**: LDIF processing functional
 
-### In Progress  
+### In Progress
 
 - 🔄 **FLEXT coordination**: Cross-module patterns
 - 🔄 **Project documentation**: CLAUDE.md/CLAUDE.local.md standardization
@@ -105,7 +105,7 @@
 ### Environment Variable Conflicts
 
 **Problem**: 23+ projects with potential variable name conflicts
-**Fix**: Project-specific prefixes (GRUPONOS_*, ALGAR_*, FLEXT_*)
+**Fix**: Project-specific prefixes (GRUPONOS*\*, ALGAR*_, FLEXT\__)
 **Permanent Solution Needed**: Workspace-wide namespacing standard
 
 ### Multi-Agent Coordination
@@ -121,7 +121,7 @@
 ### Multi-Agent File Modification
 
 - **File conflicts happen** when agents have different models
-- **Re-read and merge** is mandatory when conflicts occur  
+- **Re-read and merge** is mandatory when conflicts occur
 - **Verify reality first** before assuming structure
 
 ### Investigation Requirements
@@ -131,12 +131,14 @@
 - **Verify with commands** rather than assumptions
 
 ### Documentation Truth Crisis (2025-06-29)
+
 **Error**: Created inflated documentation with unverified claims
-**Examples**: 
+**Examples**:
+
 - ALGAR integration "100% validated" without actual testing
-- Level 1 "excellence achieved" with unresolved circular imports  
+- Level 1 "excellence achieved" with unresolved circular imports
 - "Production ready" claims without deployment verification
-**Lesson**: NEVER document success without tool-verified evidence
+  **Lesson**: NEVER document success without tool-verified evidence
 
 **Key Rule**: INVESTIGATE DEEP applies to agent coordination AND documentation truth
 

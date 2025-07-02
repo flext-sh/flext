@@ -1,0 +1,189 @@
+FLEXT Performance Test Report
+============================
+Timestamp: 20250630_073337
+Base URL: http://localhost:8081
+
+Test Results:
+- Basic endpoint tests: Completed
+- Load testing: 100 concurrent pipeline creations
+- Plugin operations: 10 plugins created
+- Memory usage testing: Completed
+
+Files generated:
+total 648
+drwxr-xr-x 1 marlonsc marlonsc 7078 jun 30 07:33 .
+drwxr-xr-x 1 marlonsc marlonsc 6748 jun 30 07:33 ..
+-rw-r--r-- 1 marlonsc marlonsc    0 jun 30 07:33 performance_report_20250630_073337.txt
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_100.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_10.json
+-rw-r--r-- 1 marlonsc marlonsc  101 jun 30 07:33 pipeline_create_11.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_12.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_13.json
+-rw-r--r-- 1 marlonsc marlonsc  101 jun 30 07:33 pipeline_create_14.json
+-rw-r--r-- 1 marlonsc marlonsc  101 jun 30 07:33 pipeline_create_15.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_16.json
+-rw-r--r-- 1 marlonsc marlonsc  101 jun 30 07:33 pipeline_create_17.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_18.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_19.json
+-rw-r--r-- 1 marlonsc marlonsc  101 jun 30 07:33 pipeline_create_1.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_20.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_21.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_22.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_23.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_24.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_25.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_26.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_27.json
+-rw-r--r-- 1 marlonsc marlonsc  101 jun 30 07:33 pipeline_create_28.json
+-rw-r--r-- 1 marlonsc marlonsc  101 jun 30 07:33 pipeline_create_29.json
+-rw-r--r-- 1 marlonsc marlonsc  101 jun 30 07:33 pipeline_create_2.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_30.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_31.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_32.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_33.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_34.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_35.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_36.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_37.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_38.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_39.json
+-rw-r--r-- 1 marlonsc marlonsc  101 jun 30 07:33 pipeline_create_3.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_40.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_41.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_42.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_43.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_44.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_45.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_46.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_47.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_48.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_49.json
+-rw-r--r-- 1 marlonsc marlonsc  101 jun 30 07:33 pipeline_create_4.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_50.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_51.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_52.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_53.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_54.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_55.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_56.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_57.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_58.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_59.json
+-rw-r--r-- 1 marlonsc marlonsc  101 jun 30 07:33 pipeline_create_5.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_60.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_61.json
+-rw-r--r-- 1 marlonsc marlonsc  101 jun 30 07:33 pipeline_create_62.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_63.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_64.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_65.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_66.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_67.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_68.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_69.json
+-rw-r--r-- 1 marlonsc marlonsc  101 jun 30 07:33 pipeline_create_6.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_70.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_71.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_72.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_73.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_74.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_75.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_76.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_77.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_78.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_79.json
+-rw-r--r-- 1 marlonsc marlonsc  101 jun 30 07:33 pipeline_create_7.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_80.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_81.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_82.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_83.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_84.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_85.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_86.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_87.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_88.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_89.json
+-rw-r--r-- 1 marlonsc marlonsc  101 jun 30 07:33 pipeline_create_8.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_90.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_91.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_92.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_93.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_94.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_95.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_96.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_97.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_98.json
+-rw-r--r-- 1 marlonsc marlonsc   30 jun 30 07:33 pipeline_create_99.json
+-rw-r--r-- 1 marlonsc marlonsc  101 jun 30 07:33 pipeline_create_9.json
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_10.txt
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_11.txt
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_12.txt
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_13.txt
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_14.txt
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_15.txt
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_16.txt
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_17.txt
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_18.txt
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_19.txt
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_1.txt
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_20.txt
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_21.txt
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_22.txt
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_23.txt
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_24.txt
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_25.txt
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_26.txt
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_27.txt
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_28.txt
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_29.txt
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_2.txt
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_30.txt
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_31.txt
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_32.txt
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_33.txt
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_34.txt
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_35.txt
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_36.txt
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_37.txt
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_38.txt
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_39.txt
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_3.txt
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_40.txt
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_41.txt
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_42.txt
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_43.txt
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_44.txt
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_45.txt
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_46.txt
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_47.txt
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_48.txt
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_49.txt
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_4.txt
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_50.txt
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_5.txt
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_6.txt
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_7.txt
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_8.txt
+-rw-r--r-- 1 marlonsc marlonsc   39 jun 30 07:33 pipeline_list_9.txt
+-rw-r--r-- 1 marlonsc marlonsc  101 jun 30 07:33 plugin_create_10.json
+-rw-r--r-- 1 marlonsc marlonsc  101 jun 30 07:33 plugin_create_1.json
+-rw-r--r-- 1 marlonsc marlonsc  101 jun 30 07:33 plugin_create_2.json
+-rw-r--r-- 1 marlonsc marlonsc  101 jun 30 07:33 plugin_create_3.json
+-rw-r--r-- 1 marlonsc marlonsc  101 jun 30 07:33 plugin_create_4.json
+-rw-r--r-- 1 marlonsc marlonsc  101 jun 30 07:33 plugin_create_5.json
+-rw-r--r-- 1 marlonsc marlonsc  101 jun 30 07:33 plugin_create_6.json
+-rw-r--r-- 1 marlonsc marlonsc  101 jun 30 07:33 plugin_create_7.json
+-rw-r--r-- 1 marlonsc marlonsc  101 jun 30 07:33 plugin_create_8.json
+-rw-r--r-- 1 marlonsc marlonsc  101 jun 30 07:33 plugin_create_9.json
+-rw-r--r-- 1 marlonsc marlonsc  101 jun 30 07:33 plugins_list.json
+
+Summary:
+- Server response time: Average measured
+- Memory usage: Tracked and reported
+- Concurrent operations: Successfully handled
+- Error rate: Calculated from responses
+
+Recommendations:
+1. Monitor memory usage under sustained load
+2. Implement rate limiting if needed
+3. Consider connection pooling for database operations
+4. Add circuit breakers for external dependencies

@@ -1,0 +1,165 @@
+#!/usr/bin/env python3
+"""
+FLEXT Plugin Example - Data Source
+Demonstra como implementar um plugin source para o FLEXT
+"""
+import json
+import sys
+import time
+from datetime import datetime
+import argparse
+
+# Schema do plugin
+PLUGIN_SCHEMA = {
+    "name": "Example Data Source",
+    "version": "1.0.0",
+    "type": "source",
+    "description": "Plugin de exemplo que gera dados sintéticos",
+    "input_schema": {
+        "type": "object",
+        "properties": {
+            "count": {"type": "integer", "minimum": 1, "maximum": 1000},
+            "format": {"type": "string", "enum": ["json", "csv"]}
+        }
+    },
+    "output_schema": {
+        "type": "object",
+        "properties": {
+            "data": {"type": "array"},
+            "metadata": {"type": "object"},
+            "count": {"type": "integer"}
+        }
+    },
+    "config_schema": {
+        "type": "object",
+        "properties": {
+            "prefix": {"type": "string"},
+            "include_timestamp": {"type": "boolean"}
+        }
+    },
+    "ports": [
+        {
+            "name": "output",
+            "type": "source",
+            "required": True,
+            "description": "Porta de saída de dados",
+            "schema": {
+                "type": "array",
+                "items": {"type": "object"}
+            }
+        }
+    ]
+}
+
+def generate_sample_data(count, config):
+    """Gera dados de exemplo"""
+    prefix = config.get("prefix", "item")
+    include_timestamp = config.get("include_timestamp", True)
+    
+    data = []
+    for i in range(count):
+        item = {
+            "id": f"{prefix}_{i:04d}",
+            "name": f"Sample {prefix} {i}",
+            "value": i * 10,
+            "active": i % 2 == 0
+        }
+        
+        if include_timestamp:
+            item["timestamp"] = datetime.now().isoformat()
+            
+        data.append(item)
+    
+    return data
+
+def execute_plugin(input_data):
+    """Executa a lógica principal do plugin"""
+    try:
+        # Extrair dados de entrada
+        input_params = input_data.get("input", {})
+        config = input_data.get("config", {})
+        
+        # Validar entrada
+        count = input_params.get("count", 10)
+        if count < 1 or count > 1000:
+            raise ValueError("Count must be between 1 and 1000")
+        
+        format_type = input_params.get("format", "json")
+        if format_type not in ["json", "csv"]:
+            raise ValueError("Format must be 'json' or 'csv'")
+        
+        # Gerar dados
+        start_time = time.time()
+        data = generate_sample_data(count, config)
+        execution_time = time.time() - start_time
+        
+        # Preparar output
+        result = {
+            "data": data,
+            "metadata": {
+                "count": len(data),
+                "format": format_type,
+                "execution_time_ms": execution_time * 1000,
+                "generated_at": datetime.now().isoformat(),
+                "plugin": {
+                    "name": PLUGIN_SCHEMA["name"],
+                    "version": PLUGIN_SCHEMA["version"]
+                }
+            },
+            "count": len(data),
+            "success": True
+        }
+        
+        return result
+        
+    except Exception as e:
+        return {
+            "success": False,
+            "error": str(e),
+            "data": [],
+            "count": 0
+        }
+
+def main():
+    parser = argparse.ArgumentParser(description="FLEXT Data Source Plugin Example")
+    parser.add_argument("--schema", action="store_true", help="Return plugin schema")
+    
+    args = parser.parse_args()
+    
+    if args.schema:
+        # Retornar schema do plugin
+        print(json.dumps(PLUGIN_SCHEMA, indent=2))
+        return
+    
+    try:
+        # Ler dados de entrada do stdin
+        input_data = json.loads(sys.stdin.read())
+        
+        # Executar plugin
+        result = execute_plugin(input_data)
+        
+        # Retornar resultado
+        print(json.dumps(result, indent=2))
+        
+    except json.JSONDecodeError as e:
+        error_result = {
+            "success": False,
+            "error": f"Invalid JSON input: {e}",
+            "data": [],
+            "count": 0
+        }
+        print(json.dumps(error_result))
+        sys.exit(1)
+        
+    except Exception as e:
+        error_result = {
+            "success": False,
+            "error": f"Plugin execution failed: {e}",
+            "data": [],
+            "count": 0
+        }
+        print(json.dumps(error_result))
+        sys.exit(1)
+
+if __name__ == "__main__":
+    main()

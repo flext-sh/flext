@@ -1,0 +1,391 @@
+package persistence
+
+import (
+	"context"
+	"encoding/json"
+	"fmt"
+	"strings"
+	"time"
+
+	"github.com/flext-sh/flext/internal/bounded_contexts/plugin/application/ports"
+	"github.com/flext-sh/flext/internal/bounded_contexts/plugin/domain/entities"
+	"github.com/flext-sh/flext/internal/infrastructure/logging"
+	"github.com/google/uuid"
+	"github.com/pkg/errors"
+	"github.com/samber/lo"
+	"gorm.io/gorm"
+)
+
+// GormPluginAdapter implements PluginRepository using GORM with advanced libraries
+type GormPluginAdapter struct {
+	db     *gorm.DB
+	logger logging.Logger
+}
+
+// NewGormPluginAdapter creates a new GORM-based plugin repository
+func NewGormPluginAdapter(db *gorm.DB, logger logging.Logger) ports.PluginRepository {
+	return &GormPluginAdapter{
+		db:     db,
+		logger: logger.With(logging.F("component", "gorm_plugin_adapter")),
+	}
+}
+
+// PluginGormModel represents the GORM model for plugins
+type PluginGormModel struct {
+	// BaseEntity fields
+	ID           uuid.UUID  `gorm:"type:uuid;primaryKey"`
+	CreatedAt    time.Time  `gorm:"autoCreateTime"`
+	UpdatedAt    time.Time  `gorm:"autoUpdateTime"`
+	DeletedAt    *time.Time `gorm:"index"`
+	Version      int64      `gorm:"default:1"`
+	Metadata     string     `gorm:"type:jsonb"` // JSON stored as string
+	
+	// Plugin-specific fields  
+	Name          string `gorm:"not null;uniqueIndex"`
+	Type          string `gorm:"index"`
+	Version_      string `gorm:"column:plugin_version"` // Renamed to avoid conflict with BaseEntity.Version
+	Description   string
+	Author        string
+	Status        string    `gorm:"default:'registered'"`
+	EntryPoint    string
+	Ports         string    `gorm:"type:jsonb"` // JSON stored as string
+	Dependencies  string    `gorm:"type:jsonb"` // JSON stored as string
+	Configuration string    `gorm:"type:jsonb"` // JSON stored as string
+	Capabilities  string    `gorm:"type:jsonb"` // JSON stored as string
+	IsActive      bool      `gorm:"default:false"`
+}
+
+// TableName specifies the table name for GORM
+func (PluginGormModel) TableName() string {
+	return "plugins"
+}
+
+// Save plugin using GORM upsert functionality
+func (r *GormPluginAdapter) Save(ctx context.Context, plugin *entities.Plugin) error {
+	model := r.domainToModel(plugin)
+	
+	result := r.db.WithContext(ctx).Save(&model)
+	if result.Error != nil {
+		return errors.Wrap(result.Error, "failed to save plugin with GORM")
+	}
+	
+	r.logger.Debug("Plugin saved with GORM",
+		logging.F("plugin_id", plugin.ID.String()),
+		logging.F("rows_affected", result.RowsAffected),
+	)
+	
+	return nil
+}
+
+// Create creates a new plugin
+func (r *GormPluginAdapter) Create(ctx context.Context, plugin *entities.Plugin) (*entities.Plugin, error) {
+	// Check if plugin with same name exists
+	exists, err := r.ExistsByName(ctx, plugin.Name)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to check plugin existence")
+	}
+	if exists {
+		return nil, fmt.Errorf("plugin with name '%s' already exists", plugin.Name)
+	}
+	
+	// Ensure ID is set
+	if plugin.ID == uuid.Nil {
+		plugin.ID = uuid.New()
+	}
+	
+	model := r.domainToModel(plugin)
+	
+	result := r.db.WithContext(ctx).Create(&model)
+	if result.Error != nil {
+		return nil, errors.Wrap(result.Error, "failed to create plugin")
+	}
+	
+	r.logger.Info("Plugin created with GORM",
+		logging.F("plugin_id", plugin.ID.String()),
+		logging.F("name", plugin.Name),
+	)
+	
+	return plugin, nil
+}
+
+// Update updates an existing plugin
+func (r *GormPluginAdapter) Update(ctx context.Context, plugin *entities.Plugin) (*entities.Plugin, error) {
+	model := r.domainToModel(plugin)
+	
+	result := r.db.WithContext(ctx).Model(&model).
+		Where("id = ? AND deleted_at IS NULL", plugin.ID).
+		Updates(&model)
+	
+	if result.Error != nil {
+		return nil, errors.Wrap(result.Error, "failed to update plugin")
+	}
+	
+	if result.RowsAffected == 0 {
+		return nil, fmt.Errorf("plugin with ID %s not found", plugin.ID)
+	}
+	
+	r.logger.Info("Plugin updated with GORM",
+		logging.F("plugin_id", plugin.ID.String()),
+		logging.F("name", plugin.Name),
+	)
+	
+	return plugin, nil
+}
+
+// Delete removes a plugin by ID
+func (r *GormPluginAdapter) Delete(ctx context.Context, id uuid.UUID) error {
+	result := r.db.WithContext(ctx).Model(&PluginGormModel{}).
+		Where("id = ? AND deleted_at IS NULL", id).
+		Update("deleted_at", time.Now())
+	
+	if result.Error != nil {
+		return errors.Wrap(result.Error, "failed to delete plugin")
+	}
+	
+	if result.RowsAffected == 0 {
+		return fmt.Errorf("plugin with ID %s not found", id)
+	}
+	
+	r.logger.Info("Plugin deleted with GORM", logging.F("plugin_id", id.String()))
+	return nil
+}
+
+// GetByID retrieves a plugin by ID
+func (r *GormPluginAdapter) GetByID(ctx context.Context, id uuid.UUID) (*entities.Plugin, error) {
+	var model PluginGormModel
+	
+	result := r.db.WithContext(ctx).
+		Where("id = ? AND deleted_at IS NULL", id).
+		First(&model)
+	
+	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			return nil, fmt.Errorf("plugin with ID %s not found", id)
+		}
+		return nil, errors.Wrap(result.Error, "failed to get plugin by ID")
+	}
+	
+	return r.modelToDomain(&model), nil
+}
+
+// GetByName retrieves a plugin by name
+func (r *GormPluginAdapter) GetByName(ctx context.Context, name string) (*entities.Plugin, error) {
+	var model PluginGormModel
+	
+	result := r.db.WithContext(ctx).
+		Where("name = ? AND deleted_at IS NULL", name).
+		First(&model)
+	
+	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			return nil, fmt.Errorf("plugin with name '%s' not found", name)
+		}
+		return nil, errors.Wrap(result.Error, "failed to get plugin by name")
+	}
+	
+	return r.modelToDomain(&model), nil
+}
+
+// FindByID retrieves a plugin by string ID (UUID compatibility)
+func (r *GormPluginAdapter) FindByID(ctx context.Context, id string) (*entities.Plugin, error) {
+	pluginID, err := uuid.Parse(id)
+	if err != nil {
+		return nil, errors.Wrap(err, "invalid UUID format")
+	}
+	
+	return r.GetByID(ctx, pluginID)
+}
+
+// FindByName finds a plugin by name (returns nil if not found)
+func (r *GormPluginAdapter) FindByName(ctx context.Context, name string) (*entities.Plugin, error) {
+	plugin, err := r.GetByName(ctx, name)
+	if err != nil {
+		// Return nil for not found instead of error
+		if strings.Contains(err.Error(), "not found") {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return plugin, nil
+}
+
+// ExistsByName checks if a plugin exists by name
+func (r *GormPluginAdapter) ExistsByName(ctx context.Context, name string) (bool, error) {
+	var count int64
+	result := r.db.WithContext(ctx).
+		Model(&PluginGormModel{}).
+		Where("name = ? AND deleted_at IS NULL", name).
+		Count(&count)
+	
+	if result.Error != nil {
+		return false, errors.Wrap(result.Error, "failed to check plugin existence")
+	}
+	
+	return count > 0, nil
+}
+
+// List retrieves plugins with filtering and pagination using functional programming
+func (r *GormPluginAdapter) List(ctx context.Context, filter ports.ListPluginsFilter) ([]*entities.Plugin, int, error) {
+	query := r.db.WithContext(ctx).Model(&PluginGormModel{}).
+		Where("deleted_at IS NULL")
+	
+	// Apply filters using samber/lo for functional programming
+	if filter.Type != nil {
+		query = query.Where("type = ?", string(*filter.Type))
+	}
+	
+	if filter.Status != nil {
+		query = query.Where("status = ?", string(*filter.Status))
+	}
+	
+	if filter.Active != nil {
+		query = query.Where("is_active = ?", *filter.Active)
+	}
+	
+	// Count total using GORM
+	var total int64
+	if err := query.Count(&total).Error; err != nil {
+		return nil, 0, errors.Wrap(err, "failed to count plugins")
+	}
+	
+	// Apply pagination
+	var models []PluginGormModel
+	result := query.
+		Order("created_at DESC").
+		Limit(filter.Limit).
+		Offset(filter.Offset).
+		Find(&models)
+	
+	if result.Error != nil {
+		return nil, 0, errors.Wrap(result.Error, "failed to list plugins")
+	}
+	
+	// Convert to domain using functional programming with samber/lo
+	plugins := lo.Map(models, func(model PluginGormModel, _ int) *entities.Plugin {
+		return r.modelToDomain(&model)
+	})
+	
+	r.logger.Debug("Plugins listed with GORM",
+		logging.F("count", len(plugins)),
+		logging.F("total", total),
+		logging.F("limit", filter.Limit),
+		logging.F("offset", filter.Offset),
+	)
+	
+	return plugins, int(total), nil
+}
+
+// Count returns total number of plugins
+func (r *GormPluginAdapter) Count(ctx context.Context) (int, error) {
+	var count int64
+	result := r.db.WithContext(ctx).
+		Model(&PluginGormModel{}).
+		Where("deleted_at IS NULL").
+		Count(&count)
+	
+	if result.Error != nil {
+		return 0, errors.Wrap(result.Error, "failed to count plugins")
+	}
+	
+	return int(count), nil
+}
+
+// Conversion methods with functional programming using samber/lo
+
+func (r *GormPluginAdapter) domainToModel(p *entities.Plugin) *PluginGormModel {
+	// Handle JSON marshaling safely
+	metadataJSON := "{}"
+	if p.Metadata != nil {
+		if data, err := json.Marshal(p.Metadata); err == nil {
+			metadataJSON = string(data)
+		}
+	}
+	
+	portsJSON := "[]"
+	if p.Ports != nil {
+		if data, err := json.Marshal(p.Ports); err == nil {
+			portsJSON = string(data)
+		}
+	}
+	
+	dependenciesJSON := "[]"
+	if p.Dependencies != nil {
+		if data, err := json.Marshal(p.Dependencies); err == nil {
+			dependenciesJSON = string(data)
+		}
+	}
+	
+	configJSON := "{}"
+	if p.Configuration != nil {
+		if data, err := json.Marshal(p.Configuration); err == nil {
+			configJSON = string(data)
+		}
+	}
+	
+	capabilitiesJSON := "[]"
+	if p.Capabilities != nil {
+		if data, err := json.Marshal(p.Capabilities); err == nil {
+			capabilitiesJSON = string(data)
+		}
+	}
+	
+	return &PluginGormModel{
+		// BaseEntity fields  
+		ID:        p.ID,
+		CreatedAt: p.CreatedAt,
+		UpdatedAt: p.UpdatedAt,
+		DeletedAt: p.DeletedAt,
+		Version:   p.Version,
+		Metadata:  metadataJSON,
+		
+		// Plugin-specific fields
+		Name:          p.Name,
+		Type:          string(p.Type),
+		Version_:      p.Version,
+		Description:   p.Description,
+		Author:        p.Author,
+		Status:        string(p.Status),
+		EntryPoint:    p.EntryPoint,
+		Ports:         portsJSON,
+		Dependencies:  dependenciesJSON,
+		Configuration: configJSON,
+		Capabilities:  capabilitiesJSON,
+		IsActive:      p.IsActive,
+	}
+}
+
+func (r *GormPluginAdapter) modelToDomain(model *PluginGormModel) *entities.Plugin {
+	// Handle JSON unmarshaling safely
+	var metadata map[string]interface{}
+	var ports []entities.Port
+	var dependencies []string
+	var configuration map[string]interface{}
+	var capabilities []string
+	
+	json.Unmarshal([]byte(model.Metadata), &metadata)
+	json.Unmarshal([]byte(model.Ports), &ports)
+	json.Unmarshal([]byte(model.Dependencies), &dependencies)
+	json.Unmarshal([]byte(model.Configuration), &configuration)
+	json.Unmarshal([]byte(model.Capabilities), &capabilities)
+	
+	// Create plugin using the constructor to ensure proper initialization
+	plugin, _ := entities.NewPlugin(model.Name, model.Version_, model.EntryPoint, entities.PluginType(model.Type))
+	
+	// Set fields manually after creation
+	plugin.ID = model.ID
+	plugin.CreatedAt = model.CreatedAt
+	plugin.UpdatedAt = model.UpdatedAt
+	plugin.DeletedAt = model.DeletedAt
+	plugin.Version = model.Version
+	plugin.Description = model.Description
+	plugin.Author = model.Author
+	plugin.Status = entities.PluginStatus(model.Status)
+	plugin.Ports = ports
+	plugin.Dependencies = dependencies
+	plugin.Configuration = configuration
+	plugin.Metadata = metadata
+	plugin.Capabilities = capabilities
+	plugin.IsActive = model.IsActive
+	
+	return plugin
+}

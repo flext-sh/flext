@@ -194,22 +194,22 @@ logger = logging.getLogger(__name__)
 class FLXOrchestrator:
     """
     Orquestra todos os módulos FLEXT no workspace completo.
-    
+
     O workspace /home/marlonsc/pyauto É o projeto FLEXT.
     """
-    
+
     def __init__(self, workspace_root: Path = Path("/home/marlonsc/pyauto")):
         self.workspace_root = workspace_root
         self.config = Config(workspace_root=workspace_root)
         self.event_bus = EventBus()
-        
+
         # Estado da orquestração
         self._services: Dict[str, Any] = {}
         self._started = False
-        
+
         # Inicializar serviços
         self._init_services()
-    
+
     def _init_services(self):
         """Inicializa todos os serviços FLEXT"""
         self._services.update({
@@ -219,63 +219,63 @@ class FLXOrchestrator:
             'plugins': PluginManager(self.config),
             'meltano': MeltanoOrchestrator(self.config),
         })
-    
+
     async def start(self) -> None:
         """Inicia todos os serviços em ordem correta"""
         if self._started:
             logger.warning("FLEXT already started")
             return
-        
+
         logger.info("🚀 Starting FLEXT Enterprise Platform...")
-        
+
         try:
             # 1. Infrastructure services
             await self._services['tracing'].start()
             await self._services['metrics'].start()
             await self.event_bus.start()
             logger.info("✅ Infrastructure services started")
-            
+
             # 2. Core services
             await self._services['auth'].initialize()
             await self._services['plugins'].discover_and_load()
             logger.info("✅ Core services started")
-            
+
             # 3. Interface services
             self._services['api'] = create_app(
                 auth_service=self._services['auth'],
                 plugin_manager=self._services['plugins'],
                 event_bus=self.event_bus
             )
-            
+
             self._services['grpc'] = GRPCServer(
                 auth_service=self._services['auth'],
                 metrics=self._services['metrics']
             )
             await self._services['grpc'].start()
-            
+
             self._services['web'] = WebService(self.config)
             await self._services['web'].start()
             logger.info("✅ Interface services started")
-            
+
             # 4. Integration services
             await self._services['meltano'].initialize()
             logger.info("✅ Integration services started")
-            
+
             self._started = True
             logger.info("🎉 FLEXT Enterprise Platform started successfully!")
-            
+
         except Exception as e:
             logger.error(f"❌ Failed to start FLEXT: {e}")
             await self.stop()
             raise
-    
+
     async def stop(self) -> None:
         """Para todos os serviços gracefully"""
         if not self._started:
             return
-        
+
         logger.info("⏹️ Stopping FLEXT Enterprise Platform...")
-        
+
         # Parar na ordem reversa
         for service_name in ['web', 'grpc', 'meltano', 'plugins', 'auth', 'metrics', 'tracing']:
             service = self._services.get(service_name)
@@ -285,11 +285,11 @@ class FLXOrchestrator:
                     logger.info(f"✅ {service_name} stopped")
                 except Exception as e:
                     logger.error(f"❌ Error stopping {service_name}: {e}")
-        
+
         await self.event_bus.stop()
         self._started = False
         logger.info("✅ FLEXT Enterprise Platform stopped")
-    
+
     @asynccontextmanager
     async def lifespan(self):
         """Context manager para gerenciar ciclo de vida"""
@@ -298,7 +298,7 @@ class FLXOrchestrator:
             yield self
         finally:
             await self.stop()
-    
+
     def get_status(self) -> Dict[str, Any]:
         """Status de todos os módulos"""
         return {
@@ -321,7 +321,7 @@ if __name__ == "__main__":
                     await asyncio.sleep(1)
             except KeyboardInterrupt:
                 logger.info("👋 Stopping FLEXT...")
-    
+
     asyncio.run(main())
 ```
 
@@ -353,18 +353,18 @@ def start(
     detach: bool = typer.Option(False, help="Run in background")
 ):
     """Start the complete FLEXT platform"""
-    
+
     async def _start():
         if debug:
             import logging
             logging.basicConfig(level=logging.DEBUG)
-        
+
         async with orchestrator.lifespan():
             console.print("[green]🚀 FLEXT Enterprise Platform started![/green]")
-            
+
             status = orchestrator.get_status()
             _display_status(status)
-            
+
             if not detach:
                 console.print("\n[yellow]Press Ctrl+C to stop[/yellow]")
                 try:
@@ -372,7 +372,7 @@ def start(
                         await asyncio.sleep(1)
                 except KeyboardInterrupt:
                     console.print("\n[yellow]Stopping FLEXT...[/yellow]")
-    
+
     asyncio.run(_start())
 
 @app.command()
@@ -395,15 +395,15 @@ def modules():
         ("flext-observability", "Monitoring", "100%"),
         ("flext-meltano", "ETL Integration", "100%"),
     ]
-    
+
     table = Table(title="FLEXT Modules")
     table.add_column("Module", style="cyan")
     table.add_column("Description", style="white")
     table.add_column("Completion", style="green")
-    
+
     for module, desc, completion in modules:
         table.add_row(module, desc, completion)
-    
+
     console.print(table)
 
 def _display_status(status: dict):
@@ -412,18 +412,18 @@ def _display_status(status: dict):
     table.add_column("Component", style="cyan")
     table.add_column("Status", style="green")
     table.add_column("Details")
-    
+
     # Platform status
     platform = status.get("flext_platform", {})
     platform_status = "🟢 Running" if platform.get("started") else "🔴 Stopped"
     table.add_row("Platform", platform_status, platform.get("workspace", ""))
-    
+
     # Module status
     for name, info in status.get("modules", {}).items():
         module_status = "🟢 OK" if info.get("status") == "running" else "🟡 Unknown"
         details = str(info.get("details", ""))
         table.add_row(f"Module: {name}", module_status, details)
-    
+
     console.print(table)
 
 if __name__ == "__main__":
@@ -573,6 +573,7 @@ python flext-cli.py modules
 ### **IMMEDIATE PRIORITIES**
 
 1. 🚨 **Resolver flext-database-oracle**:
+
    - Usuário deve verificar configuração git submodule
    - Ou fornecer código/cópia manual para legacy/
    - Ou atualizar gruponos-poc-oic-wms para remover dependência

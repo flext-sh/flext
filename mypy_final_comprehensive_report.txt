@@ -1,0 +1,136 @@
+=== FINAL FLEXT MyPy Comprehensive Analysis ===
+Generated on: seg 30 jun 2025 02:22:11 -03
+
+=== flext-api ===
+❌ ERRORS FOUND:
+src/flx_api/models/pipeline.py:574: error: Name "PipelineExecutionResponse" already defined on line 302  [no-redef]
+src/flx_api/models/pipeline.py:601: error: Name "PipelineExecutionListResponse" already defined on line 344  [no-redef]
+src/flx_api/database_plugin_endpoints.py:107: error: Returning Any from function declared to return "PluginInstallationResponse"  [no-any-return]
+src/flx_api/database_plugin_endpoints.py:159: error: Returning Any from function declared to return "PluginResponse"  [no-any-return]
+src/flx_api/database_plugin_endpoints.py:216: error: Returning Any from function declared to return "PluginResponse"  [no-any-return]
+src/flx_api/database_plugin_endpoints.py:270: error: Returning Any from function declared to return "dict[str, str]"  [no-any-return]
+src/flx_api/database_plugin_endpoints.py:330: error: Returning Any from function declared to return "PluginListResponse"  [no-any-return]
+src/flx_api/database_endpoints.py:33: error: Module "flx_api.models.auth" has no attribute "APIResponse"  [attr-defined]
+src/flx_api/database_endpoints.py:108: error: Returning Any from function declared to return "PipelineResponse"  [no-any-return]
+src/flx_api/database_endpoints.py:169: error: Returning Any from function declared to return "PipelineResponse"  [no-any-return]
+src/flx_api/database_endpoints.py:235: error: Returning Any from function declared to return "PipelineResponse"  [no-any-return]
+src/flx_api/database_endpoints.py:364: error: Returning Any from function declared to return "dict[str, Any]"  [no-any-return]
+src/flx_api/database_endpoints.py:455: error: Dict entry 7 has incompatible type "str": "dict[Any, Any]"; expected "str": "str"  [dict-item]
+src/flext_api/database_plugin_endpoints.py:107: error: Returning Any from function declared to return "PluginInstallationResponse"  [no-any-return]
+src/flext_api/database_plugin_endpoints.py:159: error: Returning Any from function declared to return "PluginResponse"  [no-any-return]
+src/flext_api/database_plugin_endpoints.py:216: error: Returning Any from function declared to return "PluginResponse"  [no-any-return]
+src/flext_api/database_plugin_endpoints.py:270: error: Returning Any from function declared to return "dict[str, str]"  [no-any-return]
+src/flext_api/database_plugin_endpoints.py:330: error: Returning Any from function declared to return "PluginListResponse"  [no-any-return]
+src/flext_api/database_endpoints.py:33: error: Module "flext_api.models.auth" has no attribute "APIResponse"  [attr-defined]
+src/flext_api/database_endpoints.py:108: error: Returning Any from function declared to return "PipelineResponse"  [no-any-return]
+... (output truncated)
+
+=== flext-auth ===
+❌ ERRORS FOUND:
+flext-auth is not a valid Python package name
+
+=== flext-cli ===
+❌ ERRORS FOUND:
+src/flx_cli/utils/output.py:132: error: Returning Any from function declared to return "str"  [no-any-return]
+src/flx_cli/utils/output.py:132: error: No overload variant of "dump" matches argument types "Any", "bool", "type[str]"  [call-overload]
+src/flx_cli/utils/output.py:132: note: Possible overload variants:
+src/flx_cli/utils/output.py:132: note:     def dump(data: Any, stream: _WriteStream[Any], Dumper: Any = ..., *, default_style: str | None = ..., default_flow_style: bool | None = ..., canonical: bool | None = ..., indent: int | None = ..., width: int | float | None = ..., allow_unicode: bool | None = ..., line_break: str | None = ..., encoding: str | None = ..., explicit_start: bool | None = ..., explicit_end: bool | None = ..., version: tuple[int, int] | None = ..., tags: Mapping[str, str] | None = ..., sort_keys: bool = ...) -> None
+src/flx_cli/utils/output.py:132: note:     def dump(data: Any, stream: None = ..., Dumper: Any = ..., *, default_style: str | None = ..., default_flow_style: bool | None = ..., canonical: bool | None = ..., indent: int | None = ..., width: int | float | None = ..., allow_unicode: bool | None = ..., line_break: str | None = ..., encoding: None = ..., explicit_start: bool | None = ..., explicit_end: bool | None = ..., version: tuple[int, int] | None = ..., tags: Mapping[str, str] | None = ..., sort_keys: bool = ...) -> str
+src/flx_cli/utils/output.py:132: note:     def dump(data: Any, stream: None = ..., Dumper: Any = ..., *, default_style: str | None = ..., default_flow_style: bool | None = ..., canonical: bool | None = ..., indent: int | None = ..., width: int | float | None = ..., allow_unicode: bool | None = ..., line_break: str | None = ..., encoding: str, explicit_start: bool | None = ..., explicit_end: bool | None = ..., version: tuple[int, int] | None = ..., tags: Mapping[str, str] | None = ..., sort_keys: bool = ...) -> bytes
+src/flext_cli/utils/output.py:26: error: "object" has no attribute "pipelines"  [attr-defined]
+src/flext_cli/utils/output.py:31: error: "object" has no attribute "total"  [attr-defined]
+src/flext_cli/utils/output.py:31: error: "object" has no attribute "page_size"  [attr-defined]
+src/flext_cli/utils/output.py:32: error: "object" has no attribute "page_size"  [attr-defined]
+src/flext_cli/utils/output.py:33: error: "object" has no attribute "page"  [attr-defined]
+src/flext_cli/utils/output.py:40: error: "object" has no attribute "pipelines"  [attr-defined]
+src/flext_cli/utils/output.py:56: error: "object" has no attribute "total"  [attr-defined]
+src/flext_cli/utils/output.py:61: error: "object" has no attribute "name"  [attr-defined]
+src/flext_cli/utils/output.py:62: error: "object" has no attribute "id"  [attr-defined]
+src/flext_cli/utils/output.py:63: error: "object" has no attribute "status"  [attr-defined]
+src/flext_cli/utils/output.py:64: error: "object" has no attribute "created_at"  [attr-defined]
+src/flext_cli/utils/output.py:65: error: "object" has no attribute "updated_at"  [attr-defined]
+src/flext_cli/utils/output.py:67: error: "object" has no attribute "config"  [attr-defined]
+src/flext_cli/utils/output.py:69: error: "object" has no attribute "config"  [attr-defined]
+... (output truncated)
+
+=== flext-core ===
+❌ ERRORS FOUND:
+src/flext_core/security/ssl_utils.py:8: error: Unused "type: ignore" comment  [unused-ignore]
+src/flext_core/services/scheduler_service.py:129: error: Returning Any from function declared to return "datetime | None"  [no-any-return]
+src/flext_core/error_handling/robust_handlers.py:89: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+src/flext_core/error_handling/robust_handlers.py:99: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+src/flext_core/error_handling/robust_handlers.py:107: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+src/flext_core/error_handling/robust_handlers.py:116: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+src/flext_core/error_handling/robust_handlers.py:124: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+src/flext_core/error_handling/robust_handlers.py:134: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+src/flext_core/error_handling/robust_handlers.py:142: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+src/flext_core/error_handling/robust_handlers.py:152: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+src/flext_core/error_handling/robust_handlers.py:270: error: Need type annotation for "category_counts" (hint: "category_counts: dict[<type>, <type>] = ...")  [var-annotated]
+src/flext_core/error_handling/robust_handlers.py:276: error: Need type annotation for "severity_counts" (hint: "severity_counts: dict[<type>, <type>] = ...")  [var-annotated]
+src/flext_core/error_handling/robust_handlers.py:307: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+src/flext_core/error_handling/robust_handlers.py:321: error: Unused "type: ignore" comment  [unused-ignore]
+src/flext_core/error_handling/robust_handlers.py:337: error: Function is missing a type annotation for one or more arguments  [no-untyped-def]
+src/flext_core/error_handling/robust_handlers.py:339: error: Returning Any from function declared to return "T"  [no-any-return]
+src/flext_core/error_handling/robust_handlers.py:339: error: Incompatible types in "await" (actual type "T", expected type "Awaitable[Any]")  [misc]
+src/flext_core/error_handling/robust_handlers.py:350: error: Unused "type: ignore" comment  [unused-ignore]
+src/flext_core/error_handling/robust_handlers.py:352: error: Incompatible return value type (got "_Wrapped[[VarArg(Any), KwArg(Any)], T, [VarArg(Any), KwArg(Any)], Coroutine[Any, Any, T]]", expected "Callable[..., T]")  [return-value]
+src/flext_core/error_handling/robust_handlers.py:352: note: "_Wrapped[[VarArg(Any), KwArg(Any)], T, [VarArg(Any), KwArg(Any)], Coroutine[Any, Any, T]].__call__" has type "Callable[[VarArg(Any), KwArg(Any)], Coroutine[Any, Any, T]]"
+... (output truncated)
+
+=== flext-db-oracle ===
+❌ ERRORS FOUND:
+src/flext_db_oracle/sql/parser.py:107: error: Statement is unreachable  [unreachable]
+src/flext_db_oracle/connection/pool.py:80: error: Right operand of "and" is never evaluated  [unreachable]
+src/flext_db_oracle/connection/pool.py:81: error: Statement is unreachable  [unreachable]
+src/flext_db_oracle/connection/pool.py:114: error: "None" has no attribute "acquire"  [attr-defined]
+src/flext_db_oracle/connection/pool.py:118: error: "None" has no attribute "release"  [attr-defined]
+src/flext_db_oracle/connection/pool.py:161: error: Returning Any from function declared to return "int"  [no-any-return]
+src/flext_db_oracle/connection/pool.py:205: error: Returning Any from function declared to return "list[Any]"  [no-any-return]
+src/flext_db_oracle/connection/pool.py:246: error: "None" has no attribute "opened"  [attr-defined]
+src/flext_db_oracle/connection/pool.py:248: error: "None" has no attribute "busy"  [attr-defined]
+src/flext_db_oracle/connection/connection.py:70: error: Right operand of "and" is never evaluated  [unreachable]
+src/flext_db_oracle/connection/connection.py:71: error: Statement is unreachable  [unreachable]
+src/flext_db_oracle/connection/connection.py:105: error: "None" has no attribute "cursor"  [attr-defined]
+src/flext_db_oracle/connection/connection.py:137: error: "None" has no attribute "cursor"  [attr-defined]
+src/flext_db_oracle/connection/connection.py:140: error: Returning Any from function declared to return "int"  [no-any-return]
+src/flext_db_oracle/connection/connection.py:160: error: "None" has no attribute "cursor"  [attr-defined]
+src/flext_db_oracle/connection/connection.py:188: error: "None" has no attribute "cursor"  [attr-defined]
+src/flext_db_oracle/connection/connection.py:194: error: Returning Any from function declared to return "list[Any]"  [no-any-return]
+src/flext_db_oracle/connection/connection.py:207: error: "None" has no attribute "commit"  [attr-defined]
+src/flext_db_oracle/connection/connection.py:218: error: "None" has no attribute "rollback"  [attr-defined]
+src/flext_db_oracle/sql/validator.py:123: error: Statement is unreachable  [unreachable]
+... (output truncated)
+
+=== flext-grpc ===
+❌ ERRORS FOUND:
+src/flext_grpc/client.py:74: error: Returning Any from function declared to return "int"  [no-any-return]
+src/flx_grpc/interceptors.py:76: error: Returning Any from function declared to return "Callable[..., Awaitable[Any]]"  [no-any-return]
+src/flx_grpc/interceptors.py:120: error: Returning Any from function declared to return "Callable[..., Awaitable[Any]]"  [no-any-return]
+src/flx_grpc/interceptors.py:199: error: Returning Any from function declared to return "Callable[..., Awaitable[Any]]"  [no-any-return]
+src/flx_grpc/interceptors.py:247: error: Returning Any from function declared to return "Callable[..., Awaitable[Any]]"  [no-any-return]
+src/flx_grpc/interceptors.py:317: error: Returning Any from function declared to return "Callable[..., Awaitable[Any]]"  [no-any-return]
+src/flx_grpc/interceptors.py:370: error: Returning Any from function declared to return "Callable[..., Awaitable[Any]]"  [no-any-return]
+src/flx_grpc/interceptors.py:398: error: Returning Any from function declared to return "Callable[..., Awaitable[Any]]"  [no-any-return]
+src/flext_grpc/interceptors.py:78: error: Returning Any from function declared to return "Callable[..., Awaitable[Any]]"  [no-any-return]
+src/flext_grpc/interceptors.py:122: error: Returning Any from function declared to return "Callable[..., Awaitable[Any]]"  [no-any-return]
+src/flext_grpc/interceptors.py:203: error: Returning Any from function declared to return "Callable[..., Awaitable[Any]]"  [no-any-return]
+src/flext_grpc/interceptors.py:253: error: Returning Any from function declared to return "Callable[..., Awaitable[Any]]"  [no-any-return]
+src/flext_grpc/interceptors.py:323: error: Returning Any from function declared to return "Callable[..., Awaitable[Any]]"  [no-any-return]
+src/flext_grpc/interceptors.py:378: error: Returning Any from function declared to return "Callable[..., Awaitable[Any]]"  [no-any-return]
+src/flext_grpc/interceptors.py:406: error: Returning Any from function declared to return "Callable[..., Awaitable[Any]]"  [no-any-return]
+src/flx_grpc/context.py:94: error: Returning Any from function declared to return "UUID | None"  [no-any-return]
+src/flx_grpc/context.py:112: error: Returning Any from function declared to return "str | None"  [no-any-return]
+src/flext_grpc/context.py:93: error: Returning Any from function declared to return "UUID | None"  [no-any-return]
+src/flext_grpc/context.py:111: error: Returning Any from function declared to return "str | None"  [no-any-return]
+src/flext_grpc/server_implementation.py:46: error: Cannot assign to a type  [misc]
+... (output truncated)
+
+=== flext-ldap ===
+❌ ERRORS FOUND:
+src/flext_ldap/async_ops/manager.py:66:6: error: expected an indented block
+after 'try' statement on line 65  [syntax]
+        from typing import TypeAlias
+         ^
+Found 1 error in 1 file (errors prevented further checking)
+
+=== flext-meltano ===

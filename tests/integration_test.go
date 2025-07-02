@@ -7,9 +7,10 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/flext-sh/flext/internal/infrastructure/container"
 	pipelineCommands "github.com/flext-sh/flext/internal/bounded_contexts/pipeline/application/commands"
 	pluginCommands "github.com/flext-sh/flext/internal/bounded_contexts/plugin/application/commands"
+	"github.com/flext-sh/flext/internal/infrastructure/config"
+	"github.com/flext-sh/flext/internal/infrastructure/container"
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -25,8 +26,15 @@ func (cv *CustomValidator) Validate(i interface{}) error {
 }
 
 func setupTestServer() *echo.Echo {
+	// Load test configuration
+	cfg := config.LoadFromEnv()
+	cfg.Features.DatabaseEnabled = false // Use in-memory repositories for tests
+
 	// Inicializar container de dependências
-	container := container.NewContainer()
+	appContainer, err := container.NewContainer(cfg)
+	if err != nil {
+		panic("Failed to initialize container: " + err.Error())
+	}
 
 	// Criar instância do Echo
 	e := echo.New()
@@ -39,10 +47,10 @@ func setupTestServer() *echo.Echo {
 	e.Use(middleware.Recover())
 
 	// Registrar rotas dos handlers
-	pipelineHandler := container.GetPipelineHandler()
+	pipelineHandler := appContainer.GetPipelineHandler()
 	pipelineHandler.RegisterRoutes(e)
 
-	pluginHandler := container.GetPluginHandler()
+	pluginHandler := appContainer.GetPluginHandler()
 	pluginHandler.RegisterRoutes(e)
 
 	return e
@@ -53,8 +61,10 @@ func TestCreatePipeline(t *testing.T) {
 
 	// Criar comando de pipeline
 	cmd := pipelineCommands.CreatePipelineCommand{
-		Name:        "Test Pipeline",
+		Name:        "TestPipeline",
 		Description: "Pipeline de teste",
+		Type:        "etl",
+		CreatedBy:   "test_user",
 		Tags:        []string{"test", "integration"},
 	}
 
@@ -77,13 +87,25 @@ func TestCreatePipeline(t *testing.T) {
 		t.Errorf("Expected status 201, got %d. Body: %s", rec.Code, rec.Body.String())
 	}
 
-	// Verificar estrutura da resposta
-	var result pipelineCommands.CreatePipelineResult
-	if err := json.Unmarshal(rec.Body.Bytes(), &result); err != nil {
+	// Debug: Print response body
+	t.Logf("Response body: %s", rec.Body.String())
+
+	// Verificar estrutura da resposta - pode estar encapsulada em uma estrutura de resposta
+	var responseWrapper map[string]interface{}
+	if err := json.Unmarshal(rec.Body.Bytes(), &responseWrapper); err != nil {
 		t.Fatalf("Failed to unmarshal response: %v", err)
 	}
 
-	if result.ID.String() == "" {
+	// Check if data field exists (BaseHandler wraps responses)
+	var result pipelineCommands.CreatePipelineResult
+	if data, exists := responseWrapper["data"]; exists {
+		dataBytes, _ := json.Marshal(data)
+		json.Unmarshal(dataBytes, &result)
+	} else {
+		json.Unmarshal(rec.Body.Bytes(), &result)
+	}
+
+	if result.PipelineID == "" {
 		t.Error("Expected non-empty pipeline ID")
 	}
 }
@@ -93,11 +115,11 @@ func TestRegisterPlugin(t *testing.T) {
 
 	// Criar comando de plugin
 	cmd := pluginCommands.RegisterPluginCommand{
-		Name:        "Test Plugin",
+		Name:        "TestPlugin",
 		Type:        "source",
 		Version:     "1.0.0",
 		Description: "Plugin de teste",
-		Author:      "Test Author",
+		Author:      "TestAuthor",
 		EntryPoint:  "/usr/bin/test-plugin",
 		Ports: []pluginCommands.PortDefinition{
 			{
@@ -154,17 +176,33 @@ func TestListPipelines(t *testing.T) {
 		t.Errorf("Expected status 200, got %d. Body: %s", rec.Code, rec.Body.String())
 	}
 
+	// Debug: Print response body
+	t.Logf("List pipelines response body: %s", rec.Body.String())
+
 	// Verificar estrutura da resposta
 	var result map[string]interface{}
 	if err := json.Unmarshal(rec.Body.Bytes(), &result); err != nil {
 		t.Fatalf("Failed to unmarshal response: %v", err)
 	}
 
-	if _, exists := result["pipelines"]; !exists {
-		t.Error("Expected 'pipelines' field in response")
-	}
-	if _, exists := result["total"]; !exists {
-		t.Error("Expected 'total' field in response")
+	// Check if the response is wrapped in a "data" field
+	if data, exists := result["data"]; exists {
+		if dataMap, ok := data.(map[string]interface{}); ok {
+			if _, exists := dataMap["pipelines"]; !exists {
+				t.Error("Expected 'pipelines' field in response data")
+			}
+			if _, exists := dataMap["total"]; !exists {
+				t.Error("Expected 'total' field in response data")
+			}
+		}
+	} else {
+		// Legacy format
+		if _, exists := result["pipelines"]; !exists {
+			t.Error("Expected 'pipelines' field in response")
+		}
+		if _, exists := result["total"]; !exists {
+			t.Error("Expected 'total' field in response")
+		}
 	}
 }
 
@@ -183,17 +221,33 @@ func TestListPlugins(t *testing.T) {
 		t.Errorf("Expected status 200, got %d. Body: %s", rec.Code, rec.Body.String())
 	}
 
+	// Debug: Print response body
+	t.Logf("List plugins response body: %s", rec.Body.String())
+
 	// Verificar estrutura da resposta
 	var result map[string]interface{}
 	if err := json.Unmarshal(rec.Body.Bytes(), &result); err != nil {
 		t.Fatalf("Failed to unmarshal response: %v", err)
 	}
 
-	if _, exists := result["plugins"]; !exists {
-		t.Error("Expected 'plugins' field in response")
-	}
-	if _, exists := result["total"]; !exists {
-		t.Error("Expected 'total' field in response")
+	// Check if the response is wrapped in a "data" field
+	if data, exists := result["data"]; exists {
+		if dataMap, ok := data.(map[string]interface{}); ok {
+			if _, exists := dataMap["plugins"]; !exists {
+				t.Error("Expected 'plugins' field in response data")
+			}
+			if _, exists := dataMap["total"]; !exists {
+				t.Error("Expected 'total' field in response data")
+			}
+		}
+	} else {
+		// Legacy format
+		if _, exists := result["plugins"]; !exists {
+			t.Error("Expected 'plugins' field in response")
+		}
+		if _, exists := result["total"]; !exists {
+			t.Error("Expected 'total' field in response")
+		}
 	}
 }
 

@@ -636,7 +636,7 @@ flext-2.0/
 
 ## Comparison: FLEXT 1.0 vs FLEXT 2.0
 
-| Aspect               | FLEXT 1.0              | FLEXT 2.0              | Reduction |
+| Aspect               | FLEXT 1.0            | FLEXT 2.0            | Reduction |
 | -------------------- | -------------------- | -------------------- | --------- |
 | **Lines of Code**    | 60,568               | ~15,000              | 75%       |
 | **Core Files**       | 245                  | 7                    | 97%       |

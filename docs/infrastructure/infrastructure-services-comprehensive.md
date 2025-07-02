@@ -653,8 +653,8 @@ class AuthenticationService(BaseAdapter):
 
 ### **Service Categories Implementation Status**
 
-| Service Category       | Implementation Path                 | Validation  | Production Ready |
-| ---------------------- | ----------------------------------- | ----------- | ---------------- |
+| Service Category       | Implementation Path                     | Validation  | Production Ready |
+| ---------------------- | --------------------------------------- | ----------- | ---------------- |
 | **Data Persistence**   | `/flext/src/flext/infra/database/`      | ✅ Verified | ✅ Production    |
 | **Cache Services**     | `/flext/src/flext/infra/cache/`         | ✅ Verified | ✅ Production    |
 | **HTTP Communication** | `/flext/src/flext/infra/http/`          | ✅ Verified | ✅ Production    |

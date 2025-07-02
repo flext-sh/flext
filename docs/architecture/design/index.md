@@ -24,11 +24,11 @@ This hub provides foundational design patterns and architectural principles for 
 
 ### **Core Design Topics**
 
-| **Topic**                                                               | **Function**                      | **Audience**         | **Complexity** | **Status** |
-| ----------------------------------------------------------------------- | --------------------------------- | -------------------- | -------------- | ---------- |
-| [**Unified Architecture Guide**](./unified-architecture-guide.md)       | Hexagonal architecture principles | System architects    | ⭐⭐           | ✅ Updated |
+| **Topic**                                                                   | **Function**                      | **Audience**         | **Complexity** | **Status** |
+| --------------------------------------------------------------------------- | --------------------------------- | -------------------- | -------------- | ---------- |
+| [**Unified Architecture Guide**](./unified-architecture-guide.md)           | Hexagonal architecture principles | System architects    | ⭐⭐           | ✅ Updated |
 | [**FLEXT Framework Architecture**](./flext-framework-architecture-guide.md) | Complete framework design         | Framework developers | ⭐⭐⭐         | ✅ Updated |
-| [**Comprehensive Hub**](./flext-architecture-comprehensive-hub.md)        | All-in-one architecture reference | Technical leads      | ⭐⭐⭐⭐       | ✅ Updated |
+| [**Comprehensive Hub**](./flext-architecture-comprehensive-hub.md)          | All-in-one architecture reference | Technical leads      | ⭐⭐⭐⭐       | ✅ Updated |
 
 ---
 

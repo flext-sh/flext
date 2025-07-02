@@ -20,26 +20,26 @@
 
 #### FLEXT Framework Modules (9 módulos)
 
-| Módulo | Arquivos Preservados | Status |
-|--------|---------------------|--------|
-| flext-core | 146 arquivos | ✅ Backup criado |
-| flext-auth | 43 arquivos | ✅ Backup criado |
-| flext-api | 41 arquivos | ✅ Backup criado |
-| flext-web | 104 arquivos | ✅ Backup criado |
-| flext-grpc | 34 arquivos | ✅ Backup criado |
-| flext-cli | 24 arquivos | ✅ Backup criado |
-| flext-plugin | 36 arquivos | ✅ Backup criado |
-| flext-observability | 31 arquivos | ✅ Backup criado |
-| flext-meltano | 34 arquivos | ✅ Backup criado |
-| **TOTAL** | **493 arquivos** | ✅ **100% preservado** |
+| Módulo              | Arquivos Preservados | Status                 |
+| ------------------- | -------------------- | ---------------------- |
+| flext-core          | 146 arquivos         | ✅ Backup criado       |
+| flext-auth          | 43 arquivos          | ✅ Backup criado       |
+| flext-api           | 41 arquivos          | ✅ Backup criado       |
+| flext-web           | 104 arquivos         | ✅ Backup criado       |
+| flext-grpc          | 34 arquivos          | ✅ Backup criado       |
+| flext-cli           | 24 arquivos          | ✅ Backup criado       |
+| flext-plugin        | 36 arquivos          | ✅ Backup criado       |
+| flext-observability | 31 arquivos          | ✅ Backup criado       |
+| flext-meltano       | 34 arquivos          | ✅ Backup criado       |
+| **TOTAL**           | **493 arquivos**     | ✅ **100% preservado** |
 
 #### FLEXT Extensions (2 módulos)
 
-| Módulo | Arquivos Preservados | Status |
-|--------|---------------------|--------|
-| flext-ldap | 389 arquivos | ✅ Backup criado |
-| flext-quality | 0 arquivos | ✅ Verificado (vazio) |
-| **TOTAL** | **389 arquivos** | ✅ **100% preservado** |
+| Módulo        | Arquivos Preservados | Status                 |
+| ------------- | -------------------- | ---------------------- |
+| flext-ldap    | 389 arquivos         | ✅ Backup criado       |
+| flext-quality | 0 arquivos           | ✅ Verificado (vazio)  |
+| **TOTAL**     | **389 arquivos**     | ✅ **100% preservado** |
 
 ---
 
@@ -83,11 +83,11 @@ backups/
 ### .gitmodules Organizado (27 submodules)
 
 1. **Active Enterprise Integration** (2): algar-oud-mig, gruponos-poc-oic-wms
-2. **Active Singer/Meltano** (8): tap-*, target-*, dbt-ldap, oracle-oic-ext
+2. **Active Singer/Meltano** (8): tap-_, target-_, dbt-ldap, oracle-oic-ext
 3. **Active FLEXT Extensions** (2): flext-ldap, flext-quality
 4. **Active FLEXT Framework** (9): flext-core, flext-auth, flext-api, etc.
-5. **Legacy Projects** (6): legacy/flext-*
-6. **Backup Preservation** (1): backups/flext-meltano-enterprise_source_*
+5. **Legacy Projects** (6): legacy/flext-\*
+6. **Backup Preservation** (1): backups/flext-meltano-enterprise*source*\*
 
 ---
 

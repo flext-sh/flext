@@ -36,11 +36,7 @@
       "entity_extraction_tracked": true,
       "incremental_sync_tracked": true,
       "business_summary_available": true,
-      "entities_tracked": [
-        "item",
-        "orders",
-        "inventory"
-      ],
+      "entities_tracked": ["item", "orders", "inventory"],
       "business_status": "success"
     },
     "end_to_end_monitoring": {

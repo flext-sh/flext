@@ -20,12 +20,12 @@
 
 ### **Real Implementation Examples**
 
-| **Integration**     | **Use Case**                       | **Complexity** | **Source Code**         |
-| ------------------- | ---------------------------------- | -------------- | ----------------------- |
+| **Integration**     | **Use Case**                       | **Complexity** | **Source Code**           |
+| ------------------- | ---------------------------------- | -------------- | ------------------------- |
 | **Oracle Database** | Data persistence and transactions  | ⭐⭐           | `/flext_database_oracle/` |
 | **Oracle WMS**      | Inventory and warehouse operations | ⭐⭐⭐         | `/flext_http_oracle_wms/` |
 | **Oracle OIC**      | Integration orchestration          | ⭐⭐⭐⭐       | `/flext_http_oracle_oic/` |
-| **Multi-System**    | End-to-end business process        | ⭐⭐⭐⭐⭐     | Combined projects       |
+| **Multi-System**    | End-to-end business process        | ⭐⭐⭐⭐⭐     | Combined projects         |
 
 ### **Architecture Patterns Demonstrated**
 

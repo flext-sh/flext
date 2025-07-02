@@ -1,6 +1,6 @@
 # FLEXT Development Environment
 # =============================
-version: '3.8'
+version: "3.8"
 
 services:
   # PostgreSQL Database
@@ -52,11 +52,11 @@ services:
       - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus_data:/prometheus
     command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-      - '--web.console.libraries=/etc/prometheus/console_libraries'
-      - '--web.console.templates=/etc/prometheus/consoles'
-      - '--web.enable-lifecycle'
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.console.libraries=/etc/prometheus/console_libraries"
+      - "--web.console.templates=/etc/prometheus/consoles"
+      - "--web.enable-lifecycle"
     networks:
       - flext-network
 
@@ -140,7 +140,7 @@ services:
       - oracle_data:/opt/oracle/oradata
       - ./docker/oracle/init.sql:/docker-entrypoint-initdb.d/init.sql
     profiles:
-      - oracle  # Use with: docker-compose --profile oracle up
+      - oracle # Use with: docker-compose --profile oracle up
     networks:
       - flext-network
 
@@ -166,7 +166,7 @@ services:
     volumes:
       - ./logs:/var/log/flext
     profiles:
-      - api  # Use with: docker-compose --profile api up
+      - api # Use with: docker-compose --profile api up
     networks:
       - flext-network
 
@@ -191,7 +191,7 @@ services:
       - ./flext-web/static:/app/static
       - ./flext-web/media:/app/media
     profiles:
-      - web  # Use with: docker-compose --profile web up
+      - web # Use with: docker-compose --profile web up
     networks:
       - flext-network
 
@@ -209,7 +209,7 @@ services:
       - flext-api
       - flext-web
     profiles:
-      - proxy  # Use with: docker-compose --profile proxy up
+      - proxy # Use with: docker-compose --profile proxy up
     networks:
       - flext-network
 

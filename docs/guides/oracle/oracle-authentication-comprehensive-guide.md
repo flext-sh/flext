@@ -47,12 +47,12 @@ Oracle Cloud services support multiple authentication methods to accommodate dif
 
 | Use Case              | Recommended Method        | Alternative               |
 | --------------------- | ------------------------- | ------------------------- |
-| **Automation/CI/CD**  | OAuth2 Client Credentials | JWT Service (FLEXT)         |
+| **Automation/CI/CD**  | OAuth2 Client Credentials | JWT Service (FLEXT)       |
 | **Server-to-Server**  | OAuth2 Client Credentials | Basic Auth (legacy)       |
-| **MFA Environments**  | OAuth2 Client Credentials | JWT Service (FLEXT)         |
+| **MFA Environments**  | OAuth2 Client Credentials | JWT Service (FLEXT)       |
 | **Web Applications**  | SAML2 SSO                 | OAuth2 ROPC               |
 | **Mobile/RF Devices** | OAuth2 ROPC               | Native Authentication     |
-| **FLEXT Framework**     | JWT Service               | OAuth2 Client Credentials |
+| **FLEXT Framework**   | JWT Service               | OAuth2 Client Credentials |
 
 ## OAuth2 Configuration and Patterns
 

@@ -218,7 +218,8 @@ WORKSPACE TEMP (pyauto/CLAUDE.local.md)
 Para seções movidas, deixar:
 
 ```markdown
-### [NOME DA SEÇÃO] 
+### [NOME DA SEÇÃO]
+
 **MOVIDO PARA**: `[novo/caminho/arquivo.md]` → [Nome da nova seção]
 **Motivo**: [Workspace-specific | Temporário | etc]
 ```

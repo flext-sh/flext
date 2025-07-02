@@ -1,0 +1,66 @@
+=== MyPy Results After Fixes ===
+
+=== flext-ldap ===
+src/flext_ldap/async_ops/callbacks.py:54:6: error: expected an indented block
+after 'try' statement on line 53  [syntax]
+        from typing import TypeAlias
+         ^
+
+=== flext-tap-ldap ===
+src/tap_ldap/client.py:448: error: Returning Any from function declared to return "list[str]"  [no-any-return]
+src/flext_tap_ldap/client.py:448: error: Returning Any from function declared to return "list[str]"  [no-any-return]
+src/tap_ldap/ldif_stream.py:157: error: Unsupported operand types for + ("object" and "int")  [operator]
+src/tap_ldap/ldif_stream.py:162: error: "object" has no attribute "append"  [attr-defined]
+src/tap_ldap/ldif_stream.py:240: error: Unsupported operand types for + ("object" and "int")  [operator]
+src/tap_ldap/ldif_stream.py:241: error: Unsupported operand types for + ("object" and "int")  [operator]
+src/tap_ldap/ldif_stream.py:248: error: Unsupported operand types for + ("object" and "int")  [operator]
+src/tap_ldap/ldif_stream.py:272: error: Unsupported operand types for + ("object" and "int")  [operator]
+src/tap_ldap/ldif_stream.py:277: error: "object" has no attribute "append"  [attr-defined]
+src/tap_ldap/ldif_stream.py:463: error: "LDIFAnalysisStream" has no attribute "tap"  [attr-defined]
+src/tap_ldap/ldif_stream.py:569: error: "LDIFAnalysisStream" has no attribute "tap"  [attr-defined]
+src/flext_tap_ldap/tap.py:201: error: Argument 1 to "LDIFStream" has incompatible type "flext_tap_ldap.tap.TapLDAP"; expected "tap_ldap.tap.TapLDAP"  [arg-type]
+src/flext_tap_ldap/tap.py:202: error: Argument 1 to "LDIFAnalysisStream" has incompatible type "flext_tap_ldap.tap.TapLDAP"; expected "tap_ldap.tap.TapLDAP"  [arg-type]
+src/flext_tap_ldap/tap.py:208: error: Argument 1 to "UsersStream" has incompatible type "flext_tap_ldap.tap.TapLDAP"; expected "tap_ldap.tap.TapLDAP"  [arg-type]
+src/flext_tap_ldap/tap.py:209: error: Argument 1 to "GroupsStream" has incompatible type "flext_tap_ldap.tap.TapLDAP"; expected "tap_ldap.tap.TapLDAP"  [arg-type]
+src/flext_tap_ldap/tap.py:210: error: Argument 1 to "OrganizationalUnitsStream" has incompatible type "flext_tap_ldap.tap.TapLDAP"; expected "tap_ldap.tap.TapLDAP"  [arg-type]
+src/flext_tap_ldap/tap.py:211: error: Argument 1 to "SchemaStream" has incompatible type "flext_tap_ldap.tap.TapLDAP"; expected "tap_ldap.tap.TapLDAP"  [arg-type]
+src/flext_tap_ldap/tap.py:219: error: Argument "tap" to "CustomStream" has incompatible type "flext_tap_ldap.tap.TapLDAP"; expected "tap_ldap.tap.TapLDAP"  [arg-type]
+src/flext_tap_ldap/ldif_stream.py:157: error: Unsupported operand types for + ("object" and "int")  [operator]
+src/flext_tap_ldap/ldif_stream.py:162: error: "object" has no attribute "append"  [attr-defined]
+src/flext_tap_ldap/ldif_stream.py:240: error: Unsupported operand types for + ("object" and "int")  [operator]
+src/flext_tap_ldap/ldif_stream.py:241: error: Unsupported operand types for + ("object" and "int")  [operator]
+src/flext_tap_ldap/ldif_stream.py:248: error: Unsupported operand types for + ("object" and "int")  [operator]
+src/flext_tap_ldap/ldif_stream.py:272: error: Unsupported operand types for + ("object" and "int")  [operator]
+src/flext_tap_ldap/ldif_stream.py:277: error: "object" has no attribute "append"  [attr-defined]
+src/flext_tap_ldap/ldif_stream.py:463: error: "LDIFAnalysisStream" has no attribute "tap"  [attr-defined]
+src/flext_tap_ldap/ldif_stream.py:569: error: "LDIFAnalysisStream" has no attribute "tap"  [attr-defined]
+src/flext_tap_ldap/__init__.py:18: error: Cannot assign to a type  [misc]
+
+=== flext-target-ldap ===
+src/flext_target_ldap/client.py:109: error: invalid syntax  [syntax]
+
+=== flext-db-oracle ===
+src/flext_db_oracle/sql/parser.py:107: error: Statement is unreachable  [unreachable]
+src/flext_db_oracle/connection/pool.py:80: error: Right operand of "and" is never evaluated  [unreachable]
+src/flext_db_oracle/connection/pool.py:81: error: Statement is unreachable  [unreachable]
+src/flext_db_oracle/connection/pool.py:114: error: "None" has no attribute "acquire"  [attr-defined]
+src/flext_db_oracle/connection/pool.py:118: error: "None" has no attribute "release"  [attr-defined]
+src/flext_db_oracle/connection/pool.py:161: error: Returning Any from function declared to return "int"  [no-any-return]
+src/flext_db_oracle/connection/pool.py:205: error: Returning Any from function declared to return "list[Any]"  [no-any-return]
+src/flext_db_oracle/connection/pool.py:246: error: "None" has no attribute "opened"  [attr-defined]
+src/flext_db_oracle/connection/pool.py:248: error: "None" has no attribute "busy"  [attr-defined]
+src/flext_db_oracle/connection/connection.py:70: error: Right operand of "and" is never evaluated  [unreachable]
+src/flext_db_oracle/connection/connection.py:71: error: Statement is unreachable  [unreachable]
+src/flext_db_oracle/connection/connection.py:105: error: "None" has no attribute "cursor"  [attr-defined]
+src/flext_db_oracle/connection/connection.py:137: error: "None" has no attribute "cursor"  [attr-defined]
+src/flext_db_oracle/connection/connection.py:140: error: Returning Any from function declared to return "int"  [no-any-return]
+src/flext_db_oracle/connection/connection.py:160: error: "None" has no attribute "cursor"  [attr-defined]
+src/flext_db_oracle/connection/connection.py:188: error: "None" has no attribute "cursor"  [attr-defined]
+src/flext_db_oracle/connection/connection.py:194: error: Returning Any from function declared to return "list[Any]"  [no-any-return]
+src/flext_db_oracle/connection/connection.py:207: error: "None" has no attribute "commit"  [attr-defined]
+src/flext_db_oracle/connection/connection.py:218: error: "None" has no attribute "rollback"  [attr-defined]
+src/flext_db_oracle/sql/validator.py:123: error: Statement is unreachable  [unreachable]
+src/flext_db_oracle/schema/analyzer.py:420: error: Returning Any from function declared to return "int | None"  [no-any-return]
+src/flext_db_oracle/schema/analyzer.py:441: error: Returning Any from function declared to return "str | None"  [no-any-return]
+src/flext_db_oracle/maintenance/optimizer.py:115: error: Dict entry 3 has incompatible type "str": "list[dict[str, Any]]"; expected "str": "Sequence[str]"  [dict-item]
+src/flext_db_oracle/cli/main.py:207: error: Returning Any from function declared to return "int"  [no-any-return]

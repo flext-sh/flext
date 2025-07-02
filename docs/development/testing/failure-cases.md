@@ -162,7 +162,7 @@ For ANY technical work claiming success:
 
 | Claim                  | Required Proof                                                  | No Exceptions |
 | ---------------------- | --------------------------------------------------------------- | ------------- |
-| "Core working"         | `python -c "import flext; print(flext.__version__)"` succeeds       | MANDATORY     |
+| "Core working"         | `python -c "import flext; print(flext.__version__)"` succeeds   | MANDATORY     |
 | "Adapters fixed"       | Each adapter imports and instantiates                           | MANDATORY     |
 | "Build system working" | `make lint && make test` both run to completion                 | MANDATORY     |
 | "Refactor complete"    | All originally working examples still work                      | MANDATORY     |

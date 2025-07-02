@@ -3,7 +3,7 @@
 **Data**: 2025-06-29  
 **Status**: ✅ RECUPERAÇÃO COMPLETA COM SUCESSO  
 **Repositórios Recuperados**: 15 repositórios  
-**Tempo de Recuperação**: ~30 minutos  
+**Tempo de Recuperação**: ~30 minutos
 
 ---
 
@@ -27,33 +27,33 @@ Durante o processo de migração, os repositórios foram **acidentalmente deleta
 
 ### 🎵 Singer/Meltano Protocol (8 repositórios)
 
-| Repositório | Status | Arquivos | Commit |
-|-------------|--------|----------|---------|
-| flext-dbt-ldap | ✅ Recuperado | 37 arquivos | f5df74f |
-| flext-oracle-oic-ext | ✅ Recuperado | 25 arquivos | c564d84 |
-| flext-tap-ldap | ✅ Recuperado | 32 arquivos | 36a6e90 |
-| flext-tap-oracle-oic | ✅ Recuperado | 39 arquivos | d89a926 |
-| flext-tap-oracle-wms | ✅ Recuperado | 11134 arquivos | existente |
-| flext-target-ldap | ✅ Recuperado | 29 arquivos | ff3398d |
-| flext-target-oracle-oic | ✅ Recuperado | 9611 arquivos | existente |
-| flext-target-oracle-wms | ✅ Recuperado | 34 arquivos | 756d689 |
+| Repositório             | Status        | Arquivos       | Commit    |
+| ----------------------- | ------------- | -------------- | --------- |
+| flext-dbt-ldap          | ✅ Recuperado | 37 arquivos    | f5df74f   |
+| flext-oracle-oic-ext    | ✅ Recuperado | 25 arquivos    | c564d84   |
+| flext-tap-ldap          | ✅ Recuperado | 32 arquivos    | 36a6e90   |
+| flext-tap-oracle-oic    | ✅ Recuperado | 39 arquivos    | d89a926   |
+| flext-tap-oracle-wms    | ✅ Recuperado | 11134 arquivos | existente |
+| flext-target-ldap       | ✅ Recuperado | 29 arquivos    | ff3398d   |
+| flext-target-oracle-oic | ✅ Recuperado | 9611 arquivos  | existente |
+| flext-target-oracle-wms | ✅ Recuperado | 34 arquivos    | 756d689   |
 
 ### 🔗 FLEXT Extensions (1 repositório)
 
-| Repositório | Status | Arquivos | Commit |
-|-------------|--------|----------|---------|
-| flext-ldap | ✅ Recuperado | 63 arquivos | existente |
+| Repositório | Status        | Arquivos    | Commit    |
+| ----------- | ------------- | ----------- | --------- |
+| flext-ldap  | ✅ Recuperado | 63 arquivos | existente |
 
 ### 📦 Legacy Projects (6 repositórios)
 
-| Repositório | Status | Arquivos | Commit |
-|-------------|--------|----------|---------|
-| flext-adapter-example | ✅ Recuperado | legacy/ | existente |
-| flext-database-oracle | ✅ Recuperado | legacy/ | existente |
-| flext-http-oracle-oic | ✅ Recuperado | legacy/ | existente |
-| flext-http-oracle-wms | ✅ Recuperado | legacy/ | existente |
-| flext-oracle-oic | ✅ Recuperado | legacy/ | existente |
-| flext-oracle-wms | ✅ Recuperado | legacy/ | existente |
+| Repositório           | Status        | Arquivos | Commit    |
+| --------------------- | ------------- | -------- | --------- |
+| flext-adapter-example | ✅ Recuperado | legacy/  | existente |
+| flext-database-oracle | ✅ Recuperado | legacy/  | existente |
+| flext-http-oracle-oic | ✅ Recuperado | legacy/  | existente |
+| flext-http-oracle-wms | ✅ Recuperado | legacy/  | existente |
+| flext-oracle-oic      | ✅ Recuperado | legacy/  | existente |
+| flext-oracle-wms      | ✅ Recuperado | legacy/  | existente |
 
 ---
 
@@ -132,7 +132,7 @@ git push -u origin main
 **Preservados localmente** - aguardando criação de repositórios:
 
 - ✅ flext-core/ (157 arquivos)
-- ✅ flext-auth/ (47 arquivos)  
+- ✅ flext-auth/ (47 arquivos)
 - ✅ flext-api/ (45 arquivos)
 - ✅ flext-grpc/ (38 arquivos)
 - ✅ flext-web/ (108 arquivos)
@@ -156,7 +156,7 @@ Status: TODOS OS REPOSITÓRIOS RECUPERADOS
 ### Repositórios Críticos Verificados
 
 - ✅ flext-tap-oracle-wms: Funcional
-- ✅ flext-target-oracle-oic: Funcional  
+- ✅ flext-target-oracle-oic: Funcional
 - ✅ flext-ldap: Funcional
 - ✅ flext-dbt-ldap: Funcional
 - ✅ flext-adapter-example: Funcional

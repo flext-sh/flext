@@ -94,11 +94,8 @@ init_forbid_extra = true
 init_typed = true
 warn_required_dynamic_aliases = true
 
-[tool.poetry.extras]
-oracle = ["flext-tap-oracle-oic", "flext-tap-oracle-wms", "flext-target-oracle-oic", "flext-target-oracle-wms", "flext-oracle-oic-ext"]
-ldap = ["flext-tap-ldap", "flext-target-ldap", "flext-dbt-ldap"]
-singer = ["flext-tap-ldap", "flext-tap-oracle-oic", "flext-tap-oracle-wms", "flext-target-ldap", "flext-target-oracle-oic", "flext-target-oracle-wms", "flext-dbt-ldap", "singer-sdk"]
-all = ["flext-tap-ldap", "flext-tap-oracle-oic", "flext-tap-oracle-wms", "flext-target-ldap", "flext-target-oracle-oic", "flext-target-oracle-wms", "flext-dbt-ldap", "flext-oracle-oic-ext", "singer-sdk"]
+# No extras for workspace coordinator - each submodule has its own extras
+# [tool.poetry.extras]
 
 # No scripts - cada submodule tem seus próprios scripts
 # [tool.poetry.scripts]
@@ -194,8 +191,8 @@ omit = [ "*/tests/*", "*/migrations/*", "*/__pycache__/*", "*/venv/*", "*/.venv/
 [tool.coverage.report]
 exclude_lines = [ "pragma: no cover", "def __repr__", "if self.debug:", "if settings.DEBUG", "raise AssertionError", "raise NotImplementedError", "if 0:", "if __name__ == .__main__.:", "class .*\\bProtocol\\):", "@(abc\\.)?abstractmethod",]
 
-# Singer/Meltano SDK for optional integrations
-singer-sdk = {version = "^0.44.0", optional = true}
+# Singer/Meltano SDK for individual submodules if needed
+# singer-sdk = {version = "^0.44.0", optional = true}
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = [ "S101", "PLR2004", "ARG001",]
