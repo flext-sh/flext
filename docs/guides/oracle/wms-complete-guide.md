@@ -339,7 +339,7 @@ https://a29.wms.ocs.oraclecloud.com:443/raizen/wms/lgfapi/v10/entity/
 **Test Environment**
 
 ```
-https://ta29.wms.ocs.oraclecloud.com:443/raizen_test/wms/lgfapi/v10/entity/
+https://a29.wms.ocs.oraclecloud.com:443/raizen/wms/lgfapi/v10/entity/
 ```
 
 ### Core Entity Categories

@@ -1,0 +1,302 @@
+#!/usr/bin/env python3
+"""FLX - Unified Command Line Interface for FLEXT Platform.
+
+This replaces all custom scripts with a single, organized interface.
+"""
+
+import sys
+import os
+from pathlib import Path
+
+# Add the workspace to Python path
+workspace_root = Path(__file__).parent
+sys.path.insert(0, str(workspace_root))
+
+# Ensure we use the workspace virtual environment
+if 'VIRTUAL_ENV' not in os.environ:
+    venv_path = workspace_root / '.venv'
+    if venv_path.exists():
+        print(f"⚠️  Please activate the virtual environment first:")
+        print(f"   source {venv_path}/bin/activate")
+        sys.exit(1)
+
+import click
+from rich.console import Console
+from rich.table import Table
+from rich import print as rprint
+
+console = Console()
+
+@click.group(context_settings={'help_option_names': ['-h', '--help']})
+@click.version_option(version="2.0.0", prog_name="FLX")
+@click.option('--debug', is_flag=True, help='Enable debug mode')
+@click.option('--verbose', '-v', is_flag=True, help='Verbose output')
+@click.pass_context
+def cli(ctx, debug, verbose):
+    """🚀 FLX - Unified Command Line Interface for FLEXT Platform.
+    
+    This CLI provides organized access to all FLEXT operations:
+    - Quality management (replace quality scripts)
+    - Migration operations (replace migration scripts)  
+    - Development workflow (replace dev scripts)
+    - Infrastructure management
+    """
+    ctx.ensure_object(dict)
+    ctx.obj['debug'] = debug
+    ctx.obj['verbose'] = verbose
+    
+    if debug:
+        console.print("🐛 Debug mode enabled", style="yellow")
+
+@cli.group()
+@click.pass_context
+def quality(ctx):
+    """🔍 Code quality management.
+    
+    Replace scripts like:
+    - achieve_100_percent_compliance.py
+    - fix_all_quality_issues.py
+    - All fix_*.py scripts
+    """
+    pass
+
+@quality.command()
+@click.option('--auto-fix', is_flag=True, help='Automatically fix violations when possible')
+@click.option('--category', help='Target specific violation category (E402, G004, etc.)')
+@click.pass_context
+def check(ctx, auto_fix, category):
+    """Check and optionally fix code quality violations."""
+    from flxt.quality import QualityManager
+    
+    manager = QualityManager(debug=ctx.obj['debug'])
+    
+    if category:
+        console.print(f"🎯 Targeting {category} violations...")
+        violations = manager.check_category(category)
+    else:
+        console.print("🔍 Running comprehensive quality check...")
+        violations = manager.check_all()
+    
+    if auto_fix and violations:
+        console.print("🔧 Auto-fixing violations...")
+        fixed = manager.auto_fix(violations)
+        console.print(f"✅ Fixed {fixed} violations")
+    
+    manager.report_progress()
+
+@quality.command()
+@click.option('--target', type=click.IntRange(0, 100), default=100, help='Target compliance percentage')
+@click.pass_context
+def compliance(ctx, target):
+    """Achieve systematic compliance with quality standards."""
+    from flxt.quality import ComplianceManager
+    
+    manager = ComplianceManager(debug=ctx.obj['debug'])
+    current = manager.get_current_compliance()
+    
+    console.print(f"📊 Current compliance: {current:.1f}%")
+    console.print(f"🎯 Target compliance: {target}%")
+    
+    if current >= target:
+        console.print("🎉 Target already achieved!", style="green")
+        return
+    
+    console.print("🐜 Starting systematic compliance improvement...")
+    manager.achieve_compliance(target)
+
+@cli.group()
+@click.pass_context  
+def migration(ctx):
+    """📦 Migration and data operations.
+    
+    Replace scripts like:
+    - All client-a OUD migration scripts
+    - Groups migration scripts
+    - Hierarchy scripts
+    """
+    pass
+
+@migration.command()
+@click.argument('project', type=click.Choice(['client-a-oud', 'client-b']))
+@click.option('--dry-run', is_flag=True, help='Show what would be done without executing')
+@click.pass_context
+def run(ctx, project, dry_run):
+    """Run migration for specified project."""
+    if project == 'client-a-oud':
+        from flxt.migration import client-aMigration
+        migrator = client-aMigration(debug=ctx.obj['debug'])
+    else:
+        from flxt.migration import client-bMigration
+        migrator = client-bMigration(debug=ctx.obj['debug'])
+    
+    if dry_run:
+        console.print("🔍 Dry run mode - showing planned actions...")
+        migrator.preview()
+    else:
+        console.print(f"🚀 Starting {project} migration...")
+        migrator.execute()
+
+@migration.command()
+@click.argument('project', type=click.Choice(['client-a-oud', 'client-b']))
+@click.pass_context
+def status(ctx, project):
+    """Check migration status for project."""
+    if project == 'client-a-oud':
+        from flxt.migration import client-aMigration
+        migrator = client-aMigration(debug=ctx.obj['debug'])
+    else:
+        from flxt.migration import client-bMigration
+        migrator = client-bMigration(debug=ctx.obj['debug'])
+    
+    status_info = migrator.get_status()
+    
+    table = Table(title=f"{project.title()} Migration Status")
+    table.add_column("Component", style="cyan")
+    table.add_column("Status", style="green")
+    table.add_column("Progress")
+    
+    for component, info in status_info.items():
+        table.add_row(component, info['status'], info['progress'])
+    
+    console.print(table)
+
+@cli.group()
+@click.pass_context
+def dev(ctx):
+    """⚙️ Development workflow commands.
+    
+    Organized development operations.
+    """
+    pass
+
+@dev.command()
+@click.option('--service', type=click.Choice(['api', 'web', 'grpc', 'all']), default='all')
+@click.pass_context
+def start(ctx, service):
+    """Start development services."""
+    import subprocess
+    
+    if service == 'all':
+        console.print("🚀 Starting all development services...")
+        subprocess.run(['make', 'dev'], cwd=workspace_root)
+    else:
+        console.print(f"🚀 Starting {service} service...")
+        subprocess.run(['make', f'dev-{service}'], cwd=workspace_root)
+
+@dev.command()
+@click.option('--coverage', is_flag=True, help='Run with coverage report')
+@click.option('--type', type=click.Choice(['unit', 'integration', 'all']), default='all')
+@click.pass_context
+def test(ctx, coverage, type):
+    """Run tests with organized output."""
+    import subprocess
+    
+    if coverage:
+        subprocess.run(['make', 'test-coverage'], cwd=workspace_root)
+    elif type == 'unit':
+        subprocess.run(['make', 'test-unit'], cwd=workspace_root)
+    elif type == 'integration':
+        subprocess.run(['make', 'test-integration'], cwd=workspace_root)
+    else:
+        subprocess.run(['make', 'test'], cwd=workspace_root)
+
+@dev.command()
+@click.pass_context
+def validate(ctx):
+    """Validate entire architecture and setup."""
+    import subprocess
+    
+    console.print("🏗️ Validating architecture...")
+    subprocess.run(['make', 'validate-architecture'], cwd=workspace_root)
+    
+    console.print("🔍 Validating API...")
+    subprocess.run(['make', 'validate-api'], cwd=workspace_root)
+
+@cli.group()
+@click.pass_context
+def workspace(ctx):
+    """🏢 Workspace management commands."""
+    pass
+
+@workspace.command()
+@click.pass_context
+def status(ctx):
+    """Show comprehensive workspace status."""
+    from flxt.workspace import WorkspaceManager
+    
+    manager = WorkspaceManager(debug=ctx.obj['debug'])
+    status_info = manager.get_comprehensive_status()
+    
+    # Display modules status
+    table = Table(title="FLEXT Modules Status")
+    table.add_column("Module", style="cyan")
+    table.add_column("Status", style="green")
+    table.add_column("Version")
+    table.add_column("Tests")
+    
+    for module, info in status_info['modules'].items():
+        table.add_row(
+            module,
+            info['status'],
+            info.get('version', 'N/A'),
+            info.get('tests', 'N/A')
+        )
+    
+    console.print(table)
+    
+    # Display quality metrics
+    console.print(f"\n📊 Quality Metrics:")
+    console.print(f"   Code compliance: {status_info['quality']['compliance']:.1f}%")
+    console.print(f"   Test coverage: {status_info['quality']['coverage']:.1f}%")
+
+@workspace.command()
+@click.option('--clean', is_flag=True, help='Clean before building')
+@click.pass_context
+def build(ctx, clean):
+    """Build entire workspace."""
+    import subprocess
+    
+    if clean:
+        console.print("🧹 Cleaning workspace...")
+        subprocess.run(['make', 'clean'], cwd=workspace_root)
+    
+    console.print("🔨 Building workspace...")
+    subprocess.run(['make', 'build'], cwd=workspace_root)
+
+@workspace.command()
+@click.pass_context
+def setup(ctx):
+    """Complete workspace setup for new developers."""
+    import subprocess
+    
+    console.print("🎯 Setting up FLEXT workspace...")
+    subprocess.run(['make', 'setup'], cwd=workspace_root)
+
+@cli.command()
+@click.pass_context
+def info(ctx):
+    """Show workspace information and available commands."""
+    
+    rprint("[bold blue]🚀 FLEXT Platform CLI[/bold blue]")
+    rprint("Unified interface for all FLEXT operations\n")
+    
+    rprint("[bold]📁 Workspace Structure:[/bold]")
+    rprint("  • Core modules: flext-core, flext-auth, flext-api")
+    rprint("  • Interfaces: flext-web, flext-cli, flext-grpc")  
+    rprint("  • Extensions: flext-meltano, flext-plugin, flext-observability")
+    rprint("  • Data: flext-ldap, flext-db-oracle, flext-quality")
+    rprint("  • Projects: client-a-oud-mig, client-b-meltano-native\n")
+    
+    rprint("[bold]🔧 Quick Start:[/bold]")
+    rprint("  flx workspace setup      # Complete setup")
+    rprint("  flx dev start            # Start development")
+    rprint("  flx quality check        # Check code quality")
+    rprint("  flx migration status     # Check migrations")
+    rprint("  flx workspace status     # Overall status\n")
+    
+    rprint("[bold]📖 More Help:[/bold]")
+    rprint("  flx --help              # Show all commands")
+    rprint("  flx <command> --help    # Help for specific command")
+
+if __name__ == '__main__':
+    cli()

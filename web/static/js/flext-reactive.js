@@ -150,6 +150,8 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Notification system
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.4.0/purify.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.4.0/purify.min.js"></script>
 function showNotification(message, type = 'info') {
     const notification = document.createElement('div');
     notification.className = `fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg transition-all duration-300 transform translate-x-full`;
@@ -164,8 +166,7 @@ function showNotification(message, type = 'info') {
     notification.className += ` ${colors[type] || colors.info}`;
     notification.innerHTML = `
         <div class="flex items-center">
-            <i class="fas fa-${type === 'error' ? 'exclamation-triangle' : type === 'success' ? 'check' : 'info-circle'} mr-2"></i>
-            <span>${message}</span>
+            <span>${DOMPurify.sanitize(message)}</span>
             <button class="ml-4 text-lg" onclick="this.parentElement.parentElement.remove()">&times;</button>
         </div>
     `;
