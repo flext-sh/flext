@@ -18,13 +18,13 @@ class MockMeltanoService:
         self.is_active = True
         return True
 
-    def run_pipeline(self, pipeline_name: str) -> Dict[str, Any]:
+    def run_pipeline(self, pipeline_name: str) -> dict[str, Any]:
         """Mock pipeline execution."""
         return {
             "success": True,
             "pipeline": pipeline_name,
             "output": f"Mock execution of {pipeline_name}",
-            "return_code": 0
+            "return_code": 0,
         }
 
     def install_plugin(self, plugin_type: str, plugin_name: str) -> bool:
@@ -65,9 +65,9 @@ class _MockFlextMeltanoModule:
 
 def install_flext_meltano_mock() -> None:
     """Install mock flext_meltano in sys.modules."""
-    if 'flext_meltano' not in sys.modules:
+    if "flext_meltano" not in sys.modules:
         mock_module = _MockFlextMeltanoModule()
-        sys.modules['flext_meltano'] = mock_module
+        sys.modules["flext_meltano"] = mock_module
         print("✅ Mock flext_meltano installed")
 
 

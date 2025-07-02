@@ -83,7 +83,7 @@ func testClusterHealth() map[string]interface{} {
 
 	for _, node := range nodes {
 		url := fmt.Sprintf("http://localhost:%d/health", node.port)
-		
+
 		resp, err := http.Get(url)
 		if err != nil {
 			healthResults[node.name] = map[string]interface{}{
@@ -141,7 +141,7 @@ func testClusterCoordination() map[string]interface{} {
 
 	for _, port := range nodes {
 		url := fmt.Sprintf("http://localhost:%d/cluster/nodes", port)
-		
+
 		resp, err := http.Get(url)
 		if err != nil {
 			coordinationResults[fmt.Sprintf("node-%d", port)] = map[string]interface{}{
@@ -177,10 +177,10 @@ func testClusterCoordination() map[string]interface{} {
 	for _, port := range nodes {
 		url := fmt.Sprintf("http://localhost:%d/health", port)
 		start := time.Now()
-		
+
 		resp, err := http.Get(url)
 		latency := time.Since(start).Milliseconds()
-		
+
 		if err == nil {
 			resp.Body.Close()
 			lockResults[fmt.Sprintf("node-%d", port)] = map[string]interface{}{
@@ -204,7 +204,7 @@ func testEventBroadcasting() map[string]interface{} {
 
 	for _, port := range nodes {
 		url := fmt.Sprintf("http://localhost:%d/events/test?type=integration.test", port)
-		
+
 		resp, err := http.Post(url, "application/json", strings.NewReader("{}"))
 		if err != nil {
 			eventResults[fmt.Sprintf("node-%d", port)] = map[string]interface{}{
@@ -249,7 +249,7 @@ func testEventBroadcasting() map[string]interface{} {
 
 func testLoadDistribution() map[string]interface{} {
 	results := make(map[string]interface{})
-	
+
 	nodes := []int{8081, 8082, 8083}
 	loadResults := make(map[string]interface{})
 
@@ -262,7 +262,7 @@ func testLoadDistribution() map[string]interface{} {
 		wg.Add(1)
 		go func(p int) {
 			defer wg.Done()
-			
+
 			nodeResults := make(map[string]interface{})
 			successCount := 0
 			totalLatency := int64(0)
@@ -270,7 +270,7 @@ func testLoadDistribution() map[string]interface{} {
 			for i := 0; i < requestsPerNode; i++ {
 				start := time.Now()
 				url := fmt.Sprintf("http://localhost:%d/health", p)
-				
+
 				resp, err := http.Get(url)
 				latency := time.Since(start).Milliseconds()
 				totalLatency += latency
@@ -298,7 +298,7 @@ func testLoadDistribution() map[string]interface{} {
 			}()
 
 			loadResults[fmt.Sprintf("node-%d", p)] = nodeResults
-			log.Printf("   ✅ Load test on port %d: %.1f%% success, %.1fms avg latency", 
+			log.Printf("   ✅ Load test on port %d: %.1f%% success, %.1fms avg latency",
 				p, successRate, avgLatency)
 		}(port)
 	}

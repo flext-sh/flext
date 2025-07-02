@@ -32,12 +32,12 @@ class MockMeltanoInvoker:
     def __init__(self, project: MockMeltanoProject):
         self.project = project
 
-    def invoke(self, command: List[str]) -> Dict[str, Any]:
+    def invoke(self, command: list[str]) -> dict[str, Any]:
         """Mock command invocation."""
         return {
             "success": True,
             "output": f"Mock execution of: {' '.join(command)}",
-            "return_code": 0
+            "return_code": 0,
         }
 
 
@@ -57,6 +57,7 @@ class MockMeltanoPlugin:
 @dataclass
 class MockMeltanoRun:
     """Mock Meltano run result."""
+
     success: bool = True
     output: str = "Mock run completed"
     return_code: int = 0
@@ -96,44 +97,53 @@ class _MockMeltanoModule:
 
         # Mock additional common imports
         self.Project = MockMeltanoProject
-        self.ProjectAddService = type('MockProjectAddService', (), {})
-        self.PluginType = type('MockPluginType', (), {
-            'EXTRACTORS': 'extractors',
-            'LOADERS': 'loaders',
-            'TRANSFORMS': 'transforms'
-        })
-        self.PluginInstallService = type('MockPluginInstallService', (), {})
+        self.ProjectAddService = type("MockProjectAddService", (), {})
+        self.PluginType = type(
+            "MockPluginType",
+            (),
+            {
+                "EXTRACTORS": "extractors",
+                "LOADERS": "loaders",
+                "TRANSFORMS": "transforms",
+            },
+        )
+        self.PluginInstallService = type("MockPluginInstallService", (), {})
 
     def __getattr__(self, name: str) -> Any:
         """Return mock objects for any missing attributes."""
-        if name in ['Project', 'PluginType', 'ProjectAddService', 'PluginInstallService']:
-            return getattr(self, name, type(f'Mock{name}', (), {}))
+        if name in [
+            "Project",
+            "PluginType",
+            "ProjectAddService",
+            "PluginInstallService",
+        ]:
+            return getattr(self, name, type(f"Mock{name}", (), {}))
         return lambda *args, **kwargs: f"Mock {name} called"
 
 
 # Install mock meltano in sys.modules if not already present
 import sys
 
-if 'meltano' not in sys.modules:
+if "meltano" not in sys.modules:
     mock_meltano = _MockMeltanoModule()
-    sys.modules['meltano'] = mock_meltano
-    sys.modules['meltano.core'] = mock_meltano
-    sys.modules['meltano.cli'] = mock_meltano
-    sys.modules['meltano.core.project'] = mock_meltano
-    sys.modules['meltano.core.invoker'] = mock_meltano
-    sys.modules['meltano.core.plugin'] = mock_meltano
+    sys.modules["meltano"] = mock_meltano
+    sys.modules["meltano.core"] = mock_meltano
+    sys.modules["meltano.cli"] = mock_meltano
+    sys.modules["meltano.core.project"] = mock_meltano
+    sys.modules["meltano.core.invoker"] = mock_meltano
+    sys.modules["meltano.core.plugin"] = mock_meltano
 
 
 def install_meltano_mock() -> None:
     """Install the meltano mock in sys.modules."""
-    if 'meltano' not in sys.modules:
+    if "meltano" not in sys.modules:
         mock_meltano = _MockMeltanoModule()
-        sys.modules['meltano'] = mock_meltano
-        sys.modules['meltano.core'] = mock_meltano
-        sys.modules['meltano.cli'] = mock_meltano
-        sys.modules['meltano.core.project'] = mock_meltano
-        sys.modules['meltano.core.invoker'] = mock_meltano
-        sys.modules['meltano.core.plugin'] = mock_meltano
+        sys.modules["meltano"] = mock_meltano
+        sys.modules["meltano.core"] = mock_meltano
+        sys.modules["meltano.cli"] = mock_meltano
+        sys.modules["meltano.core.project"] = mock_meltano
+        sys.modules["meltano.core.invoker"] = mock_meltano
+        sys.modules["meltano.core.plugin"] = mock_meltano
         print("✅ Mock Meltano compatibility layer installed")
     else:
         print("⚠️ Meltano already available in sys.modules")

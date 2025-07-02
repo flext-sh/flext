@@ -95,7 +95,7 @@ func main() {
 			checkpointHour++
 			checkpoint := createCheckpoint(checkpointHour)
 			metrics.HourlyCheckpoints = append(metrics.HourlyCheckpoints, checkpoint)
-			
+
 			log.Printf("📊 CHECKPOINT %d (Hour %.1f):", checkpointHour, float64(checkpointHour)*0.33)
 			log.Printf("   Operations: %d", checkpoint.OperationsCount)
 			log.Printf("   Errors: %d", checkpoint.ErrorsCount)
@@ -218,14 +218,14 @@ func systemHealthMonitor() {
 			ops := atomic.LoadInt64(&totalOps)
 			errs := atomic.LoadInt64(&totalErrs)
 			errorRate := float64(errs) / float64(ops) * 100
-			
+
 			healthStatus := "EXCELLENT"
 			if errorRate > 5 {
 				healthStatus = "POOR"
 			} else if errorRate > 1 {
 				healthStatus = "GOOD"
 			}
-			
+
 			log.Printf("💚 System Health: %s (%.2f%% error rate)", healthStatus, errorRate)
 		}
 	}
@@ -234,10 +234,10 @@ func systemHealthMonitor() {
 func createCheckpoint(checkpointHour int) HourlyCheckpoint {
 	ops := atomic.LoadInt64(&totalOps)
 	errs := atomic.LoadInt64(&totalErrs)
-	
+
 	// Calculate ops per second for this checkpoint period
 	opsPerSecond := float64(ops) / float64(checkpointHour * 20 * 60) // 20 minutes per checkpoint
-	
+
 	healthStatus := "EXCELLENT"
 	errorRate := float64(errs) / float64(ops) * 100
 	if errorRate > 5 {
@@ -273,7 +273,7 @@ func calculateFinalMetrics(metrics *HourValidationMetrics) {
 
 	// Calculate stability scores
 	errorRate := float64(metrics.TotalErrors) / float64(metrics.TotalOperations) * 100
-	
+
 	if errorRate <= 0.1 {
 		metrics.SystemStabilityScore = 100.0
 	} else if errorRate <= 1 {
@@ -328,7 +328,7 @@ func printHourValidationReport(metrics *HourValidationMetrics) {
 	log.Printf("   🌐 Network Stability: %.1f%%", metrics.NetworkStabilityScore)
 	log.Printf("")
 	log.Printf("📈 Checkpoints: %d total", len(metrics.HourlyCheckpoints))
-	
+
 	if metrics.ProductionRecommended {
 		log.Printf("")
 		log.Printf("🏆 SISTEMA APROVADO PARA PRODUÇÃO!")

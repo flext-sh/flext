@@ -109,9 +109,9 @@ func NewMultiTenantAuthService() (*MultiTenantAuthService, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to generate private key: %w", err)
 	}
-	
+
 	publicKey := &privateKey.PublicKey
-	
+
 	auth := &MultiTenantAuthService{
 		tenants:    make(map[string]*Tenant),
 		users:      make(map[string]*User),
@@ -121,10 +121,10 @@ func NewMultiTenantAuthService() (*MultiTenantAuthService, error) {
 		sessions:   make(map[string]*Session),
 		blacklist:  make(map[string]time.Time),
 	}
-	
+
 	// Initialize demo data
 	auth.initializeDemoData()
-	
+
 	return auth, nil
 }
 
@@ -168,11 +168,11 @@ func (auth *MultiTenantAuthService) initializeDemoData() {
 			},
 		},
 	}
-	
+
 	for _, tenant := range tenants {
 		auth.tenants[tenant.ID] = tenant
 	}
-	
+
 	// Create demo roles
 	roles := []*Role{
 		{
@@ -192,15 +192,15 @@ func (auth *MultiTenantAuthService) initializeDemoData() {
 			CreatedAt: time.Now(),
 		},
 	}
-	
+
 	for _, role := range roles {
 		auth.roles[role.ID] = role
 	}
-	
+
 	// Create demo users
 	REDACTED_LDAP_BIND_PASSWORDHash, _ := bcrypt.GenerateFromPassword([]byte("flexcore100"), bcrypt.DefaultCost)
 	userHash, _ := bcrypt.GenerateFromPassword([]byte("user123"), bcrypt.DefaultCost)
-	
+
 	users := []*User{
 		{
 			ID:          "user-1",
@@ -235,7 +235,7 @@ func (auth *MultiTenantAuthService) initializeDemoData() {
 			Active:    true,
 		},
 	}
-	
+
 	for _, user := range users {
 		auth.users[user.ID] = user
 	}
@@ -244,7 +244,7 @@ func (auth *MultiTenantAuthService) initializeDemoData() {
 func (auth *MultiTenantAuthService) generateJWT(user *User, tenant *Tenant) (string, error) {
 	now := time.Now()
 	expirationTime := now.Add(24 * time.Hour)
-	
+
 	claims := &FlexCoreClaims{
 		UserID:      user.ID,
 		TenantID:    user.TenantID,
@@ -264,13 +264,13 @@ func (auth *MultiTenantAuthService) generateJWT(user *User, tenant *Tenant) (str
 			ID:        uuid.New().String(),
 		},
 	}
-	
+
 	token := jwt.NewWithClaims(jwt.SigningMethodRS256, claims)
 	tokenString, err := token.SignedString(auth.privateKey)
 	if err != nil {
 		return "", fmt.Errorf("failed to sign token: %w", err)
 	}
-	
+
 	// Store session
 	session := &Session{
 		ID:        claims.ID,
@@ -284,11 +284,11 @@ func (auth *MultiTenantAuthService) generateJWT(user *User, tenant *Tenant) (str
 			"ip_address": "127.0.0.1",
 		},
 	}
-	
+
 	auth.mu.Lock()
 	auth.sessions[session.ID] = session
 	auth.mu.Unlock()
-	
+
 	return tokenString, nil
 }
 
@@ -299,20 +299,20 @@ func (auth *MultiTenantAuthService) validateJWT(tokenString string) (*FlexCoreCl
 		}
 		return auth.publicKey, nil
 	})
-	
+
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse token: %w", err)
 	}
-	
+
 	if !token.Valid {
 		return nil, fmt.Errorf("invalid token")
 	}
-	
+
 	claims, ok := token.Claims.(*FlexCoreClaims)
 	if !ok {
 		return nil, fmt.Errorf("invalid claims")
 	}
-	
+
 	// Check blacklist
 	auth.mu.RLock()
 	if _, blacklisted := auth.blacklist[claims.ID]; blacklisted {
@@ -320,7 +320,7 @@ func (auth *MultiTenantAuthService) validateJWT(tokenString string) (*FlexCoreCl
 		return nil, fmt.Errorf("token is blacklisted")
 	}
 	auth.mu.RUnlock()
-	
+
 	return claims, nil
 }
 
@@ -329,19 +329,19 @@ func (auth *MultiTenantAuthService) loginHandler(w http.ResponseWriter, r *http.
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	
+
 	var loginReq struct {
 		Username string `json:"username"`
 		Password string `json:"password"`
 		TenantID string `json:"tenant_id"`
 		Domain   string `json:"domain"`
 	}
-	
+
 	if err := json.NewDecoder(r.Body).Decode(&loginReq); err != nil {
 		http.Error(w, "Invalid JSON", http.StatusBadRequest)
 		return
 	}
-	
+
 	// Find tenant
 	auth.mu.RLock()
 	var tenant *Tenant
@@ -356,12 +356,12 @@ func (auth *MultiTenantAuthService) loginHandler(w http.ResponseWriter, r *http.
 		}
 	}
 	auth.mu.RUnlock()
-	
+
 	if tenant == nil || !tenant.Active {
 		http.Error(w, "Tenant not found or inactive", http.StatusUnauthorized)
 		return
 	}
-	
+
 	// Find user
 	auth.mu.RLock()
 	var user *User
@@ -372,29 +372,29 @@ func (auth *MultiTenantAuthService) loginHandler(w http.ResponseWriter, r *http.
 		}
 	}
 	auth.mu.RUnlock()
-	
+
 	if user == nil || !user.Active {
 		http.Error(w, "User not found or inactive", http.StatusUnauthorized)
 		return
 	}
-	
+
 	// Verify password
 	if err := bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(loginReq.Password)); err != nil {
 		http.Error(w, "Invalid credentials", http.StatusUnauthorized)
 		return
 	}
-	
+
 	// Generate JWT
 	token, err := auth.generateJWT(user, tenant)
 	if err != nil {
 		http.Error(w, "Failed to generate token", http.StatusInternalServerError)
 		return
 	}
-	
+
 	// Update last login
 	now := time.Now()
 	user.LastLogin = &now
-	
+
 	// Response
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]interface{}{
@@ -411,14 +411,14 @@ func (auth *MultiTenantAuthService) validateHandler(w http.ResponseWriter, r *ht
 		http.Error(w, "Authorization header required", http.StatusUnauthorized)
 		return
 	}
-	
+
 	tokenString := strings.TrimPrefix(authHeader, "Bearer ")
 	claims, err := auth.validateJWT(tokenString)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusUnauthorized)
 		return
 	}
-	
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]interface{}{
 		"valid":   true,
@@ -434,26 +434,26 @@ func (auth *MultiTenantAuthService) logoutHandler(w http.ResponseWriter, r *http
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	
+
 	authHeader := r.Header.Get("Authorization")
 	if authHeader == "" {
 		http.Error(w, "Authorization header required", http.StatusUnauthorized)
 		return
 	}
-	
+
 	tokenString := strings.TrimPrefix(authHeader, "Bearer ")
 	claims, err := auth.validateJWT(tokenString)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusUnauthorized)
 		return
 	}
-	
+
 	// Add to blacklist
 	auth.mu.Lock()
 	auth.blacklist[claims.ID] = time.Now()
 	delete(auth.sessions, claims.ID)
 	auth.mu.Unlock()
-	
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]interface{}{
 		"success": true,
@@ -470,7 +470,7 @@ func (auth *MultiTenantAuthService) tenantsHandler(w http.ResponseWriter, r *htt
 		}
 	}
 	auth.mu.RUnlock()
-	
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]interface{}{
 		"tenants": tenants,
@@ -490,7 +490,7 @@ func (auth *MultiTenantAuthService) healthHandler(w http.ResponseWriter, r *http
 		"blacklisted_tokens": len(auth.blacklist),
 	}
 	auth.mu.RUnlock()
-	
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(stats)
 }
@@ -502,12 +502,12 @@ func (auth *MultiTenantAuthService) publicKeyHandler(w http.ResponseWriter, r *h
 		http.Error(w, "Failed to marshal public key", http.StatusInternalServerError)
 		return
 	}
-	
+
 	pubKeyPEM := pem.EncodeToMemory(&pem.Block{
 		Type:  "PUBLIC KEY",
 		Bytes: pubKeyBytes,
 	})
-	
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]interface{}{
 		"public_key": string(pubKeyPEM),
@@ -524,19 +524,19 @@ func generateKeyID(publicKey *rsa.PublicKey) string {
 
 func (auth *MultiTenantAuthService) setupRoutes() {
 	mux := http.NewServeMux()
-	
+
 	// Auth endpoints
 	mux.HandleFunc("/auth/login", auth.loginHandler)
 	mux.HandleFunc("/auth/validate", auth.validateHandler)
 	mux.HandleFunc("/auth/logout", auth.logoutHandler)
 	mux.HandleFunc("/auth/public-key", auth.publicKeyHandler)
-	
+
 	// Tenant management
 	mux.HandleFunc("/tenants", auth.tenantsHandler)
-	
+
 	// Health check
 	mux.HandleFunc("/health", auth.healthHandler)
-	
+
 	auth.server = &http.Server{
 		Addr:    ":8998",
 		Handler: mux,
@@ -545,7 +545,7 @@ func (auth *MultiTenantAuthService) setupRoutes() {
 
 func (auth *MultiTenantAuthService) Start() error {
 	auth.setupRoutes()
-	
+
 	log.Println("🔐 FlexCore Multi-Tenant Auth Server starting on :8998")
 	log.Println("🏢 Login endpoint: /auth/login")
 	log.Println("✅ Validate endpoint: /auth/validate")
@@ -553,7 +553,7 @@ func (auth *MultiTenantAuthService) Start() error {
 	log.Println("🔑 Public key endpoint: /auth/public-key")
 	log.Println("🏢 Tenants endpoint: /tenants")
 	log.Println("🩺 Health check: /health")
-	
+
 	return auth.server.ListenAndServe()
 }
 
@@ -570,12 +570,12 @@ func main() {
 	fmt.Println("📊 Role-based access control (RBAC)")
 	fmt.Println("⏱️ Session management and blacklisting")
 	fmt.Println()
-	
+
 	auth, err := NewMultiTenantAuthService()
 	if err != nil {
 		log.Fatalf("Failed to create auth service: %v", err)
 	}
-	
+
 	if err := auth.Start(); err != nil {
 		log.Fatalf("Auth server failed: %v", err)
 	}

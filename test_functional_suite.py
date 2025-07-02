@@ -21,9 +21,17 @@ class FunctionalTestSuite:
         """Initialize test suite."""
         self.project_root = Path.cwd()
         self.flext_modules = [
-            "flext-core", "flext-auth", "flext-api", "flext-grpc",
-            "flext-web", "flext-cli", "flext-plugin", "flext-observability",
-            "flext-ldap", "flext-quality", "flext-db-oracle"
+            "flext-core",
+            "flext-auth",
+            "flext-api",
+            "flext-grpc",
+            "flext-web",
+            "flext-cli",
+            "flext-plugin",
+            "flext-observability",
+            "flext-ldap",
+            "flext-quality",
+            "flext-db-oracle",
         ]
         # Note: flext-meltano temporarily excluded due to iterator TypeError
 
@@ -33,14 +41,24 @@ class FunctionalTestSuite:
         syntax_errors = []
 
         for file_path in python_files:
-            if any(skip in str(file_path) for skip in [
-                ".venv", "__pycache__", ".git", "venv", "site-packages",
-                ".meltano", "node_modules", "target-jsonl", "tap-sample"
-            ]):
+            if any(
+                skip in str(file_path)
+                for skip in [
+                    ".venv",
+                    "__pycache__",
+                    ".git",
+                    "venv",
+                    "site-packages",
+                    ".meltano",
+                    "node_modules",
+                    "target-jsonl",
+                    "tap-sample",
+                ]
+            ):
                 continue
 
             try:
-                with open(file_path, 'r', encoding='utf-8') as f:
+                with open(file_path, "r", encoding="utf-8") as f:
                     content = f.read()
                 ast.parse(content, filename=str(file_path))
             except SyntaxError as e:
@@ -65,7 +83,7 @@ class FunctionalTestSuite:
                 ["ruff", "check", "."],
                 capture_output=True,
                 text=True,
-                cwd=self.project_root
+                cwd=self.project_root,
             )
 
             # Check both return code and actual output
@@ -83,7 +101,7 @@ class FunctionalTestSuite:
                 print("✅ RUFF: 0 violations")
                 return True
             else:
-                lines = violations.split('\n') if violations else []
+                lines = violations.split("\n") if violations else []
                 print(f"❌ RUFF: {len(lines)} violations found")
                 print(f"Debug - stdout: {violations}")
                 print(f"Debug - stderr: {stderr}")
@@ -100,7 +118,7 @@ class FunctionalTestSuite:
                 ["mypy", ".", "--ignore-missing-imports", "--show-error-codes"],
                 capture_output=True,
                 text=True,
-                cwd=self.project_root
+                cwd=self.project_root,
             )
 
             error_count = result.stdout.count("error:") if result.stdout else 0
@@ -122,8 +140,10 @@ class FunctionalTestSuite:
         try:
             sys.path.insert(0, str(self.project_root))
             import mock_meltano_compatibility
+
             mock_meltano_compatibility.install_meltano_mock()
             import mock_flext_meltano
+
             # mock_flext_meltano auto-installs
         except ImportError:
             print("⚠️ Mock compatibility layers not available")
@@ -138,7 +158,9 @@ class FunctionalTestSuite:
             # Find main module file
             src_paths = [
                 module_path / "src" / module_name.replace("-", "_"),
-                module_path / "src" / module_name.replace("-", "_").replace("flext_", ""),
+                module_path
+                / "src"
+                / module_name.replace("-", "_").replace("flext_", ""),
                 module_path / module_name.replace("-", "_"),
             ]
 
@@ -162,7 +184,9 @@ class FunctionalTestSuite:
                             module_found = True
                             break
                     except Exception as e:
-                        import_results.append(f"❌ {module_name}: {type(e).__name__}: {e}")
+                        import_results.append(
+                            f"❌ {module_name}: {type(e).__name__}: {e}"
+                        )
                         module_found = True
                         break
 
@@ -209,11 +233,7 @@ class FunctionalTestSuite:
 
     def test_documentation_exists(self) -> bool:
         """Test that documentation files exist."""
-        doc_files = [
-            "README.md",
-            "CLAUDE.md",
-            "pyproject.toml"
-        ]
+        doc_files = ["README.md", "CLAUDE.md", "pyproject.toml"]
 
         existing_docs = []
         for doc_file in doc_files:

@@ -317,7 +317,7 @@ func (rm *ResilienceManager) GetStats() map[string]interface{} {
 	defer rm.mutex.RUnlock()
 
 	stats := make(map[string]interface{})
-	
+
 	for name, cb := range rm.circuitBreakers {
 		counts := cb.Counts()
 		stats[name] = map[string]interface{}{
@@ -339,7 +339,7 @@ func (rm *ResilienceManager) HealthCheck() map[string]bool {
 	defer rm.mutex.RUnlock()
 
 	health := make(map[string]bool)
-	
+
 	for name, cb := range rm.circuitBreakers {
 		health[name] = cb.State() != StateOpen
 	}

@@ -135,10 +135,10 @@ function validate(input) {
 					Script: `
 function execute(input) {
     console.log("Executing pipeline:", input.pipeline_id);
-    return { 
-        status: "completed", 
+    return {
+        status: "completed",
         pipeline_id: input.pipeline_id,
-        execution_time: new Date().toISOString() 
+        execution_time: new Date().toISOString()
     };
 }`,
 					Timeout: 300 * time.Second,
@@ -202,7 +202,7 @@ function execute(input) {
 function validateSchema(input) {
     const schema = input.schema;
     const data = input.data;
-    
+
     // Simple validation logic
     if (schema.required) {
         for (const field of schema.required) {
@@ -211,7 +211,7 @@ function validateSchema(input) {
             }
         }
     }
-    
+
     return { valid: true, validated_data: data };
 }`,
 					Timeout: 60 * time.Second,
@@ -232,14 +232,14 @@ function validateSchema(input) {
 function processEvent(input) {
     const event = input.event;
     console.log("Processing event:", event.type);
-    
+
     // Event processing logic
     const result = {
         event_id: event.id,
         processed_at: new Date().toISOString(),
         status: "processed"
     };
-    
+
     return result;
 }`,
 					Timeout: 30 * time.Second,
@@ -290,7 +290,7 @@ func (c *WindmillClient) DeleteWorkflow(ctx context.Context, workflowID string) 
 func (c *WindmillClient) simulateWorkflowExecution(execution *WorkflowExecution) {
 	// Simulate processing time
 	time.Sleep(2 * time.Second)
-	
+
 	// Update execution status
 	execution.Status = "completed"
 	now := time.Now()

@@ -20,7 +20,7 @@ type PluginInfo struct {
 	Health      map[string]string `json:"health"`
 }
 
-// Demo structures for workflows  
+// Demo structures for workflows
 type WorkflowDefinition struct {
 	ID          string `json:"id"`
 	Name        string `json:"name"`
@@ -39,13 +39,13 @@ type WorkflowExecution struct {
 // Demo server with all missing APIs
 func main() {
 	fmt.Println("🚀 FlexCore 100% Complete Demo Server")
-	
+
 	// Initialize demo data
 	plugins := initializeDemoPlugins()
 	workflows := initializeDemoWorkflows()
-	
+
 	mux := http.NewServeMux()
-	
+
 	// Plugins APIs
 	mux.HandleFunc("/plugins/list", func(w http.ResponseWriter, r *http.Request) {
 		handlePluginsList(w, r, plugins)
@@ -56,8 +56,8 @@ func main() {
 	mux.HandleFunc("/plugins/health", func(w http.ResponseWriter, r *http.Request) {
 		handlePluginsHealth(w, r, plugins)
 	})
-	
-	// Workflows APIs  
+
+	// Workflows APIs
 	mux.HandleFunc("/workflows/list", func(w http.ResponseWriter, r *http.Request) {
 		handleWorkflowsList(w, r, workflows)
 	})
@@ -67,10 +67,10 @@ func main() {
 	mux.HandleFunc("/workflows/status", func(w http.ResponseWriter, r *http.Request) {
 		handleWorkflowStatus(w, r)
 	})
-	
+
 	// Event streaming API
 	mux.HandleFunc("/events/stream", handleEventStream)
-	
+
 	// Health check
 	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
@@ -79,7 +79,7 @@ func main() {
 			"timestamp": time.Now(),
 		})
 	})
-	
+
 	// Start server
 	fmt.Println("🌐 Starting FlexCore 100% Complete Demo on port 8081...")
 	log.Fatal(http.ListenAndServe(":8081", mux))
@@ -97,7 +97,7 @@ func initializeDemoPlugins() []PluginInfo {
 		},
 		{
 			Name:        "data-validator",
-			Version:     "1.0.0", 
+			Version:     "1.0.0",
 			Description: "Validates data schemas and formats",
 			Type:        "validator",
 			Status:      "loaded",
@@ -107,7 +107,7 @@ func initializeDemoPlugins() []PluginInfo {
 			Name:        "event-processor",
 			Version:     "1.0.0",
 			Description: "Processes FlexCore domain events",
-			Type:        "processor", 
+			Type:        "processor",
 			Status:      "loaded",
 			Health:      map[string]string{"status": "healthy", "initialized": "true"},
 		},
@@ -124,7 +124,7 @@ func initializeDemoWorkflows() []WorkflowDefinition {
 		},
 		{
 			ID:          "data-validator",
-			Name:        "Data Validator", 
+			Name:        "Data Validator",
 			Description: "Validates data schemas and formats",
 			Version:     "1.0.0",
 		},
@@ -326,10 +326,10 @@ func handleEventStream(w http.ResponseWriter, r *http.Request) {
 		"node_id":   "demo-node",
 		"timestamp": time.Now(),
 	}
-	
+
 	eventData, _ := json.Marshal(event)
 	fmt.Fprintf(w, "data: %s\n\n", eventData)
-	
+
 	if flusher, ok := w.(http.Flusher); ok {
 		flusher.Flush()
 	}
@@ -352,10 +352,10 @@ func handleEventStream(w http.ResponseWriter, r *http.Request) {
 				"timestamp": time.Now(),
 				"data":      "FlexCore 100% operational",
 			}
-			
+
 			eventData, _ := json.Marshal(event)
 			fmt.Fprintf(w, "data: %s\n\n", eventData)
-			
+
 			if flusher, ok := w.(http.Flusher); ok {
 				flusher.Flush()
 			}

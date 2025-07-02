@@ -74,7 +74,7 @@ func (t *FlexCoreFinal100Test) TestWindmillServer() error {
 	client := &http.Client{Timeout: 2 * time.Second}
 	windmillStatus := "OFFLINE"
 	connectivityTest := "FAILED"
-	
+
 	resp, err := client.Get("http://localhost:3000/health")
 	if err == nil {
 		resp.Body.Close()

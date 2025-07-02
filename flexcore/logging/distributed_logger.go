@@ -72,18 +72,18 @@ func NewDistributedLogger(config LoggerConfig) (*DistributedLogger, error) {
 		Username:  config.Username,
 		Password:  config.Password,
 	}
-	
+
 	esClient, err := elasticsearch.NewClient(cfg)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create elasticsearch client: %w", err)
 	}
-	
+
 	// Initialize logrus for local logging
 	logrusLogger := logrus.New()
 	logrusLogger.SetFormatter(&logrus.JSONFormatter{
 		TimestampFormat: time.RFC3339Nano,
 	})
-	
+
 	// Set log level
 	switch strings.ToUpper(config.LogLevel) {
 	case "DEBUG":
@@ -97,7 +97,7 @@ func NewDistributedLogger(config LoggerConfig) (*DistributedLogger, error) {
 	default:
 		logrusLogger.SetLevel(logrus.InfoLevel)
 	}
-	
+
 	dl := &DistributedLogger{
 		esClient:    esClient,
 		indexPrefix: config.IndexPrefix,
@@ -109,11 +109,11 @@ func NewDistributedLogger(config LoggerConfig) (*DistributedLogger, error) {
 		batchSize:   config.BatchSize,
 		logrus:      logrusLogger,
 	}
-	
+
 	// Start flush timer
 	dl.flushTimer = time.NewTimer(time.Duration(config.FlushIntervalSeconds) * time.Second)
 	go dl.flushLoop()
-	
+
 	return dl, nil
 }
 
@@ -138,7 +138,7 @@ func (dl *DistributedLogger) createLogEntry(level LogLevel, message string, fiel
 		file = "unknown"
 		line = 0
 	}
-	
+
 	// Extract function name
 	pc, _, _, ok := runtime.Caller(3)
 	function := "unknown"
@@ -147,7 +147,7 @@ func (dl *DistributedLogger) createLogEntry(level LogLevel, message string, fiel
 			function = fn.Name()
 		}
 	}
-	
+
 	entry := LogEntry{
 		Timestamp:   time.Now().UTC(),
 		Level:       level,
@@ -162,12 +162,12 @@ func (dl *DistributedLogger) createLogEntry(level LogLevel, message string, fiel
 		Environment: dl.environment,
 		Version:     dl.version,
 	}
-	
+
 	// Add stack trace for errors
 	if level == LOG_ERROR || level == LOG_FATAL {
 		entry.StackTrace = getStackTrace()
 	}
-	
+
 	return entry
 }
 
@@ -187,7 +187,7 @@ func getStackTrace() string {
 
 func (dl *DistributedLogger) log(level LogLevel, message string, fields map[string]interface{}) {
 	entry := dl.createLogEntry(level, message, fields)
-	
+
 	// Log locally with logrus
 	logFields := logrus.Fields{
 		"service":   entry.Service,
@@ -195,12 +195,12 @@ func (dl *DistributedLogger) log(level LogLevel, message string, fields map[stri
 		"component": entry.Component,
 		"function":  entry.Function,
 	}
-	
+
 	// Add custom fields
 	for k, v := range fields {
 		logFields[k] = v
 	}
-	
+
 	switch level {
 	case LOG_DEBUG:
 		dl.logrus.WithFields(logFields).Debug(message)
@@ -213,13 +213,13 @@ func (dl *DistributedLogger) log(level LogLevel, message string, fields map[stri
 	case LOG_FATAL:
 		dl.logrus.WithFields(logFields).Fatal(message)
 	}
-	
+
 	// Add to buffer for Elasticsearch
 	dl.bufferMu.Lock()
 	dl.buffer = append(dl.buffer, entry)
 	shouldFlush := len(dl.buffer) >= dl.batchSize
 	dl.bufferMu.Unlock()
-	
+
 	if shouldFlush {
 		go dl.flush()
 	}
@@ -292,12 +292,12 @@ func (cl *ContextLogger) Info(message string, fields ...map[string]interface{}) 
 	entry.SpanID = cl.spanID
 	entry.UserID = cl.userID
 	entry.RequestID = cl.requestID
-	
+
 	cl.dl.bufferMu.Lock()
 	cl.dl.buffer = append(cl.dl.buffer, entry)
 	shouldFlush := len(cl.dl.buffer) >= cl.dl.batchSize
 	cl.dl.bufferMu.Unlock()
-	
+
 	if shouldFlush {
 		go cl.dl.flush()
 	}
@@ -319,15 +319,15 @@ func (dl *DistributedLogger) flush() {
 		dl.bufferMu.Unlock()
 		return
 	}
-	
+
 	entriesToFlush := make([]LogEntry, len(dl.buffer))
 	copy(entriesToFlush, dl.buffer)
 	dl.buffer = dl.buffer[:0] // Clear buffer
 	dl.bufferMu.Unlock()
-	
+
 	// Create index name with date
 	indexName := fmt.Sprintf("%s-%s", dl.indexPrefix, time.Now().Format("2006.01.02"))
-	
+
 	// Prepare bulk request
 	var buf bytes.Buffer
 	for _, entry := range entriesToFlush {
@@ -340,26 +340,26 @@ func (dl *DistributedLogger) flush() {
 		actionJSON, _ := json.Marshal(action)
 		buf.Write(actionJSON)
 		buf.WriteString("\n")
-		
+
 		// Document
 		entryJSON, _ := json.Marshal(entry)
 		buf.Write(entryJSON)
 		buf.WriteString("\n")
 	}
-	
+
 	// Send to Elasticsearch
 	resp, err := dl.esClient.Bulk(
 		bytes.NewReader(buf.Bytes()),
 		dl.esClient.Bulk.WithContext(context.Background()),
 	)
-	
+
 	if err != nil {
 		log.Printf("Failed to send logs to Elasticsearch: %v", err)
 		return
 	}
-	
+
 	defer resp.Body.Close()
-	
+
 	if resp.IsError() {
 		log.Printf("Elasticsearch bulk request failed: %s", resp.Status())
 	}
@@ -380,7 +380,7 @@ type LogServer struct {
 
 func NewLogServer(logger *DistributedLogger, port string) *LogServer {
 	mux := http.NewServeMux()
-	
+
 	ls := &LogServer{
 		logger: logger,
 		server: &http.Server{
@@ -388,12 +388,12 @@ func NewLogServer(logger *DistributedLogger, port string) *LogServer {
 			Handler: mux,
 		},
 	}
-	
+
 	// Log ingestion endpoint
 	mux.HandleFunc("/logs/ingest", ls.ingestHandler)
 	mux.HandleFunc("/logs/health", ls.healthHandler)
 	mux.HandleFunc("/logs/search", ls.searchHandler)
-	
+
 	return ls
 }
 
@@ -402,23 +402,23 @@ func (ls *LogServer) ingestHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	
+
 	var entries []LogEntry
 	if err := json.NewDecoder(r.Body).Decode(&entries); err != nil {
 		http.Error(w, "Invalid JSON", http.StatusBadRequest)
 		return
 	}
-	
+
 	// Add entries to buffer
 	ls.logger.bufferMu.Lock()
 	ls.logger.buffer = append(ls.logger.buffer, entries...)
 	shouldFlush := len(ls.logger.buffer) >= ls.logger.batchSize
 	ls.logger.bufferMu.Unlock()
-	
+
 	if shouldFlush {
 		go ls.logger.flush()
 	}
-	
+
 	w.WriteHeader(http.StatusAccepted)
 	json.NewEncoder(w).Encode(map[string]interface{}{
 		"accepted": len(entries),
@@ -441,7 +441,7 @@ func (ls *LogServer) searchHandler(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query().Get("q")
 	service := r.URL.Query().Get("service")
 	level := r.URL.Query().Get("level")
-	
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]interface{}{
 		"query": query,
@@ -469,7 +469,7 @@ func main() {
 	fmt.Println("🔗 Distributed tracing correlation")
 	fmt.Println("⏱️ Batch processing and buffering")
 	fmt.Println()
-	
+
 	// Load configuration
 	config := LoggerConfig{
 		ElasticsearchURLs:    []string{"http://localhost:9200"},
@@ -482,25 +482,25 @@ func main() {
 		BatchSize:            50,
 		FlushIntervalSeconds: 30,
 	}
-	
+
 	logger, err := NewDistributedLogger(config)
 	if err != nil {
 		log.Fatalf("Failed to create distributed logger: %v", err)
 	}
-	
+
 	logServer := NewLogServer(logger, "8999")
-	
+
 	// Test logging
 	logger.Info("Distributed logging system started", map[string]interface{}{
 		"component": "main",
 		"config": config,
 	})
-	
+
 	logger.WithTraceID("trace-123").Info("Example traced log entry", map[string]interface{}{
 		"operation": "startup",
 		"duration_ms": 150,
 	})
-	
+
 	if err := logServer.Start(); err != nil {
 		log.Fatalf("Log server failed: %v", err)
 	}

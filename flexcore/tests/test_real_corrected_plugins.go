@@ -55,7 +55,7 @@ func main() {
 
 func testPostgresProcessorPlugin() map[string]interface{} {
 	result := make(map[string]interface{})
-	
+
 	// Test plugin binary exists and is executable
 	pluginPath := "/home/marlonsc/flext/flexcore/plugins/postgres-processor/postgres-processor"
 	if _, err := os.Stat(pluginPath); err != nil {
@@ -67,7 +67,7 @@ func testPostgresProcessorPlugin() map[string]interface{} {
 	// Test plugin starts without crashing (timeout after 3 seconds)
 	cmd := exec.Command(pluginPath)
 	cmd.Env = append(os.Environ(), "PLUGIN_TEST_MODE=true")
-	
+
 	if err := cmd.Start(); err != nil {
 		result["status"] = "FAILED"
 		result["error"] = "Plugin failed to start: " + err.Error()
@@ -86,7 +86,7 @@ func testPostgresProcessorPlugin() map[string]interface{} {
 
 func testJSONProcessorPlugin() map[string]interface{} {
 	result := make(map[string]interface{})
-	
+
 	// Test plugin binary exists and is executable
 	pluginPath := "/home/marlonsc/flext/flexcore/plugins/json-processor/json-processor"
 	if _, err := os.Stat(pluginPath); err != nil {
@@ -98,7 +98,7 @@ func testJSONProcessorPlugin() map[string]interface{} {
 	// Test plugin starts without crashing (timeout after 3 seconds)
 	cmd := exec.Command(pluginPath)
 	cmd.Env = append(os.Environ(), "PLUGIN_TEST_MODE=true")
-	
+
 	if err := cmd.Start(); err != nil {
 		result["status"] = "FAILED"
 		result["error"] = "Plugin failed to start: " + err.Error()
@@ -117,34 +117,34 @@ func testJSONProcessorPlugin() map[string]interface{} {
 
 func testPluginLoadingPerformance() map[string]interface{} {
 	result := make(map[string]interface{})
-	
+
 	startTime := time.Now()
-	
+
 	// Test loading both plugins sequentially
 	plugins := []string{
 		"/home/marlonsc/flext/flexcore/plugins/postgres-processor/postgres-processor",
 		"/home/marlonsc/flext/flexcore/plugins/json-processor/json-processor",
 	}
-	
+
 	loadedCount := 0
 	for _, pluginPath := range plugins {
 		cmd := exec.Command(pluginPath)
 		cmd.Env = append(os.Environ(), "PLUGIN_TEST_MODE=true")
-		
+
 		if err := cmd.Start(); err == nil {
 			loadedCount++
 			time.Sleep(500 * time.Millisecond)
 			cmd.Process.Kill()
 		}
 	}
-	
+
 	duration := time.Since(startTime)
-	
+
 	result["status"] = "SUCCESS"
 	result["plugins_tested"] = len(plugins)
 	result["plugins_loaded"] = loadedCount
 	result["loading_duration_ms"] = duration.Milliseconds()
 	result["average_load_time_ms"] = duration.Milliseconds() / int64(len(plugins))
-	
+
 	return result
 }
