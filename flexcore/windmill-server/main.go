@@ -483,7 +483,8 @@ func main() {
 	http.HandleFunc("/workflows/execute", server.handleWorkflowExecute)
 	http.HandleFunc("/workflows/status", server.handleExecutionStatus)
 
-	fmt.Println("🌐 Windmill server listening on :3000")
+	port := ":3001"
+	fmt.Printf("🌐 Windmill server listening on %s\n", port)
 	fmt.Println("🔗 Compatible with both Windmill API and FlexCore API")
-	log.Fatal(http.ListenAndServe(":3000", nil))
+	log.Fatal(http.ListenAndServe(port, nil))
 }
