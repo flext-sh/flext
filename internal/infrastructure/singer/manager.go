@@ -373,10 +373,10 @@ func (sm *SingerManager) executeFullSync(
 		defer close(outputChan)
 		tapCmd := exec.CommandContext(ctx, "meltano", "invoke", tap.Name, "--discover")
 		targetCmd := exec.CommandContext(ctx, "meltano", "invoke", target.Name, "--config", string(configJSON))
-		
+
 		// Criar pipe entre tap e target
 		targetCmd.Stdin, _ = tapCmd.StdoutPipe()
-		
+
 		// Iniciar comandos
 		if err := tapCmd.Start(); err != nil {
 			select {
@@ -388,23 +388,23 @@ func (sm *SingerManager) executeFullSync(
 			}
 			return
 		}
-		
+
 		if err := targetCmd.Start(); err != nil {
 			tapCmd.Process.Kill()
 			select {
 			case outputChan <- &entities.SingerMessage{
-				Type:    "ERROR", 
+				Type:    "ERROR",
 				Message: fmt.Sprintf("Failed to start target: %v", err),
 			}:
 			case <-ctx.Done():
 			}
 			return
 		}
-		
+
 		// Aguardar conclusão
 		tapErr := tapCmd.Wait()
 		targetErr := targetCmd.Wait()
-		
+
 		if tapErr != nil || targetErr != nil {
 			select {
 			case outputChan <- &entities.SingerMessage{
