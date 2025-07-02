@@ -647,7 +647,7 @@ async def basic_wms_example():
             filters={"status": "PENDING", "warehouse": "MAIN_WH"},
             page=1,
             page_size=10,
-            order_by="shipment_date DESC"
+            ordering="-shipment_date"
         )
 
         print(f"Found {shipments.get('totalRecords', 0)} pending shipments")

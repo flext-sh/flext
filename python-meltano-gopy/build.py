@@ -639,4 +639,4 @@ add_checked_string_function(
 )
 add_checked_string_function(mod, "gopy_GetProjectPlugins", retval("char*"), [])
 
-mod.generate(open("gopy.c", "w"))
+mod.generate(open("gopy.c", "w", encoding="utf-8"))

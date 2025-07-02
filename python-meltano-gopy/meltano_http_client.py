@@ -1,28 +1,27 @@
 #!/usr/bin/env python3
-"""
-Python HTTP client for Go Meltano API - 100% functional alternative to gopy
-"""
+"""Python HTTP client for Go Meltano API - 100% functional alternative to gopy."""
 
 import json
-from typing import Any, Optional
+from typing import Any
 from urllib.parse import urljoin
 
 import requests
 
 
 class MeltanoHTTPClientError(Exception):
-    """Custom exception for Meltano HTTP client errors"""
+    """Custom exception for Meltano HTTP client errors."""
 
 
 class MeltanoHTTPClient:
-    """HTTP client for Go-based Meltano functionality"""
+    """HTTP client for Go-based Meltano functionality."""
 
     def __init__(self, base_url: str = "http://localhost:8080", timeout: int = 30):
-        """Initialize the Meltano HTTP client
+        """Initialize the Meltano HTTP client.
 
         Args:
             base_url: Base URL of the Go server
             timeout: Request timeout in seconds
+
         """
         self.base_url = base_url.rstrip("/")
         self.api_base = f"{self.base_url}/api/v1/gopy"
@@ -39,10 +38,10 @@ class MeltanoHTTPClient:
         self,
         method: str,
         endpoint: str,
-        data: Optional[dict] = None,
-        params: Optional[dict] = None,
+        data: dict | None = None,
+        params: dict | None = None,
     ) -> dict[str, Any]:
-        """Make HTTP request to the Go server
+        """Make HTTP request to the Go server.
 
         Args:
             method: HTTP method (GET, POST, etc.)
@@ -55,6 +54,7 @@ class MeltanoHTTPClient:
 
         Raises:
             MeltanoHTTPClientError: If request fails
+
         """
         url = urljoin(f"{self.api_base}/", endpoint.lstrip("/"))
 
@@ -68,20 +68,24 @@ class MeltanoHTTPClient:
 
             # Check if the API returned an error
             if not result.get("success", False) and result.get("error"):
-                raise MeltanoHTTPClientError(f"API Error: {result['error']}")
+                msg = f"API Error: {result['error']}"
+                raise MeltanoHTTPClientError(msg)
 
             return result
 
         except requests.exceptions.RequestException as e:
-            raise MeltanoHTTPClientError(f"HTTP request failed: {e}")
+            msg = f"HTTP request failed: {e}"
+            raise MeltanoHTTPClientError(msg)
         except json.JSONDecodeError as e:
-            raise MeltanoHTTPClientError(f"Invalid JSON response: {e}")
+            msg = f"Invalid JSON response: {e}"
+            raise MeltanoHTTPClientError(msg)
 
     def check_meltano_available(self) -> bool:
-        """Check if Meltano CLI is available
+        """Check if Meltano CLI is available.
 
         Returns:
             True if Meltano is available, False otherwise
+
         """
         try:
             result = self._make_request("GET", "available")
@@ -92,16 +96,17 @@ class MeltanoHTTPClient:
             return False
 
     def get_meltano_version(self) -> dict[str, Any]:
-        """Get Meltano version information
+        """Get Meltano version information.
 
         Returns:
             Version information dictionary
+
         """
         result = self._make_request("GET", "version")
         return result.get("data", {})
 
     def create_project(self, directory: str, name: str) -> dict[str, Any]:
-        """Create a new Meltano project
+        """Create a new Meltano project.
 
         Args:
             directory: Directory where to create the project
@@ -109,28 +114,31 @@ class MeltanoHTTPClient:
 
         Returns:
             Project creation result
+
         """
         data = {"directory": directory, "name": name}
         result = self._make_request("POST", "projects", data)
         return result.get("data", {})
 
     def get_project_info(self) -> dict[str, Any]:
-        """Get information about the current project
+        """Get information about the current project.
 
         Returns:
             Project information
+
         """
         result = self._make_request("GET", "projects/info")
         return result.get("data", {})
 
     def list_projects(self, root_dir: str = ".") -> dict[str, Any]:
-        """List available Meltano projects
+        """List available Meltano projects.
 
         Args:
             root_dir: Root directory to search for projects
 
         Returns:
             List of projects
+
         """
         params = {"root_dir": root_dir}
         result = self._make_request("GET", "projects/list", params=params)
@@ -139,7 +147,7 @@ class MeltanoHTTPClient:
     def add_plugin(
         self, plugin_type: str, name: str, variant: str = ""
     ) -> dict[str, Any]:
-        """Add a plugin to the current project
+        """Add a plugin to the current project.
 
         Args:
             plugin_type: Type of plugin (extractor, loader, transformer, etc.)
@@ -148,25 +156,28 @@ class MeltanoHTTPClient:
 
         Returns:
             Plugin addition result
+
         """
         data = {"plugin_type": plugin_type, "name": name, "variant": variant}
         result = self._make_request("POST", "plugins", data)
         return result.get("data", {})
 
     def get_plugins(self) -> dict[str, Any]:
-        """Get all plugins in the current project
+        """Get all plugins in the current project.
 
         Returns:
             List of plugins
+
         """
         result = self._make_request("GET", "plugins")
         return result.get("data", {})
 
     def install_plugins(self) -> dict[str, Any]:
-        """Install all plugins in the current project
+        """Install all plugins in the current project.
 
         Returns:
             Installation result
+
         """
         result = self._make_request("POST", "plugins/install")
         return result.get("data", {})
@@ -174,7 +185,7 @@ class MeltanoHTTPClient:
     def run_pipeline(
         self, extractor: str, loader: str, transformer: str = ""
     ) -> dict[str, Any]:
-        """Run a Meltano ELT pipeline
+        """Run a Meltano ELT pipeline.
 
         Args:
             extractor: Extractor plugin name
@@ -183,13 +194,14 @@ class MeltanoHTTPClient:
 
         Returns:
             Pipeline execution result
+
         """
         data = {"extractor": extractor, "loader": loader, "transformer": transformer}
         result = self._make_request("POST", "pipelines/run", data)
         return result.get("data", {})
 
-    def execute_command(self, command: str, args: list[str] = None) -> dict[str, Any]:
-        """Execute a raw Meltano CLI command
+    def execute_command(self, command: str, args: list[str] | None = None) -> dict[str, Any]:
+        """Execute a raw Meltano CLI command.
 
         Args:
             command: Meltano command to execute
@@ -197,16 +209,18 @@ class MeltanoHTTPClient:
 
         Returns:
             Command execution result
+
         """
         data = {"command": command, "args": args or []}
         result = self._make_request("POST", "commands/execute", data)
         return result.get("data", {})
 
     def get_state_stats(self) -> dict[str, Any]:
-        """Get state management statistics
+        """Get state management statistics.
 
         Returns:
             State statistics
+
         """
         result = self._make_request("GET", "state/stats")
         return result.get("data", {})
@@ -214,7 +228,7 @@ class MeltanoHTTPClient:
     def save_state(
         self, project: str, plugin: str, state: dict[str, Any]
     ) -> dict[str, Any]:
-        """Save state for a specific plugin
+        """Save state for a specific plugin.
 
         Args:
             project: Project name
@@ -223,13 +237,14 @@ class MeltanoHTTPClient:
 
         Returns:
             Save operation result
+
         """
         data = {"project": project, "plugin": plugin, "state": state}
         result = self._make_request("POST", "state/save", data)
         return result.get("data", {})
 
     def load_state(self, project: str, plugin: str) -> dict[str, Any]:
-        """Load state for a specific plugin
+        """Load state for a specific plugin.
 
         Args:
             project: Project name
@@ -237,13 +252,14 @@ class MeltanoHTTPClient:
 
         Returns:
             Loaded state data
+
         """
         params = {"project": project, "plugin": plugin}
         result = self._make_request("GET", "state/load", params=params)
         return result.get("data", {})
 
     def delete_state(self, project: str, plugin: str) -> dict[str, Any]:
-        """Delete state for a specific plugin
+        """Delete state for a specific plugin.
 
         Args:
             project: Project name
@@ -251,16 +267,18 @@ class MeltanoHTTPClient:
 
         Returns:
             Delete operation result
+
         """
         params = {"project": project, "plugin": plugin}
         result = self._make_request("DELETE", "state/delete", params=params)
         return result.get("data", {})
 
     def health_check(self) -> bool:
-        """Check if the Go server is healthy and responding
+        """Check if the Go server is healthy and responding.
 
         Returns:
             True if server is healthy, False otherwise
+
         """
         try:
             result = self._make_request("GET", "version")
@@ -269,7 +287,7 @@ class MeltanoHTTPClient:
             return False
 
     def close(self):
-        """Close the HTTP session"""
+        """Close the HTTP session."""
         if self.session:
             self.session.close()
 
@@ -279,7 +297,7 @@ _client_instance = None
 
 
 def get_client_instance(base_url: str = "http://localhost:8080") -> MeltanoHTTPClient:
-    """Get or create the global client instance"""
+    """Get or create the global client instance."""
     global _client_instance
     if _client_instance is None:
         _client_instance = MeltanoHTTPClient(base_url)
@@ -287,41 +305,41 @@ def get_client_instance(base_url: str = "http://localhost:8080") -> MeltanoHTTPC
 
 
 def CheckMeltanoAvailable() -> bool:
-    """Check if Meltano is available (compatibility function)"""
+    """Check if Meltano is available (compatibility function)."""
     return get_client_instance().check_meltano_available()
 
 
 def GetMeltanoVersion() -> dict[str, Any]:
-    """Get Meltano version (compatibility function)"""
+    """Get Meltano version (compatibility function)."""
     return get_client_instance().get_meltano_version()
 
 
 def CreateProject(directory: str, name: str) -> dict[str, Any]:
-    """Create project (compatibility function)"""
+    """Create project (compatibility function)."""
     return get_client_instance().create_project(directory, name)
 
 
 def AddPluginToProject(
     plugin_type: str, name: str, variant: str = ""
 ) -> dict[str, Any]:
-    """Add plugin (compatibility function)"""
+    """Add plugin (compatibility function)."""
     return get_client_instance().add_plugin(plugin_type, name, variant)
 
 
 def RunMeltanoPipeline(
     extractor: str, loader: str, transformer: str = ""
 ) -> dict[str, Any]:
-    """Run pipeline (compatibility function)"""
+    """Run pipeline (compatibility function)."""
     return get_client_instance().run_pipeline(extractor, loader, transformer)
 
 
 def GetProjectPlugins() -> dict[str, Any]:
-    """Get plugins (compatibility function)"""
+    """Get plugins (compatibility function)."""
     return get_client_instance().get_plugins()
 
 
-def ExecuteMeltanoCommand(command: str, args: list[str] = None) -> dict[str, Any]:
-    """Execute command (compatibility function)"""
+def ExecuteMeltanoCommand(command: str, args: list[str] | None = None) -> dict[str, Any]:
+    """Execute command (compatibility function)."""
     return get_client_instance().execute_command(command, args or [])
 
 
