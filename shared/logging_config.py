@@ -32,10 +32,10 @@ from rich.logging import RichHandler
 class LogLevel(IntEnum):
     """5-Level logging system with TRACE receiving maximum weight."""
 
-    TRACE = 5      # Most verbose - function entry/exit, variable states
-    DEBUG = 10     # Debug information - data flows, conditions
-    INFO = 20      # Normal operations - major steps, confirmations
-    WARNING = 30   # Warnings - recoverable issues, deprecations
+    TRACE = 5  # Most verbose - function entry/exit, variable states
+    DEBUG = 10  # Debug information - data flows, conditions
+    INFO = 20  # Normal operations - major steps, confirmations
+    WARNING = 30  # Warnings - recoverable issues, deprecations
     CRITICAL = 50  # Critical errors - system failures, data corruption
 
 
@@ -48,12 +48,20 @@ class TraceContext(BaseModel):
     sql_query: str | None = Field(default=None, description="SQL query being executed")
     api_endpoint: str | None = Field(default=None, description="API endpoint")
     http_method: str | None = Field(default=None, description="HTTP method")
-    connection_id: str | None = Field(default=None, description="Database connection ID")
+    connection_id: str | None = Field(
+        default=None, description="Database connection ID"
+    )
     transaction_id: str | None = Field(default=None, description="Transaction ID")
     request_id: str | None = Field(default=None, description="Request ID")
-    timing_ms: float | None = Field(default=None, description="Operation timing in milliseconds")
-    params: dict[str, Any] = Field(default_factory=dict, description="Operation parameters")
-    metadata: dict[str, Any] = Field(default_factory=dict, description="Additional metadata")
+    timing_ms: float | None = Field(
+        default=None, description="Operation timing in milliseconds"
+    )
+    params: dict[str, Any] = Field(
+        default_factory=dict, description="Operation parameters"
+    )
+    metadata: dict[str, Any] = Field(
+        default_factory=dict, description="Additional metadata"
+    )
 
 
 class LoggingConfig(BaseModel):
@@ -67,25 +75,35 @@ class LoggingConfig(BaseModel):
 
     # File settings
     log_dir: str = Field(default="logs", description="Log directory")
-    main_log_file: str = Field(default="flext_oracle_wms.log", description="Main log file")
-    error_log_file: str = Field(default="flext_oracle_wms_errors.log", description="Error log file")
-    trace_log_file: str = Field(default="flext_oracle_wms_trace.log", description="TRACE-only log file")
-    max_file_size: int = Field(default=100_000_000, description="Max file size in bytes")
+    main_log_file: str = Field(
+        default="flext_oracle_wms.log", description="Main log file"
+    )
+    error_log_file: str = Field(
+        default="flext_oracle_wms_errors.log", description="Error log file"
+    )
+    trace_log_file: str = Field(
+        default="flext_oracle_wms_trace.log", description="TRACE-only log file"
+    )
+    max_file_size: int = Field(
+        default=100_000_000, description="Max file size in bytes"
+    )
     backup_count: int = Field(default=15, description="Number of backup files")
 
     # Format settings with TRACE emphasis
     trace_format: str = Field(
         default="[{timestamp}] TRACE | {module}:{function}:{line} | {operation} | {message} | {context}",
-        description="TRACE level format template"
+        description="TRACE level format template",
     )
     standard_format: str = Field(
         default="[{timestamp}] {level} | {module} | {message}",
-        description="Standard format template"
+        description="Standard format template",
     )
 
     # Performance settings
     buffer_size: int = Field(default=16384, description="Log buffer size")
-    flush_interval: float = Field(default=0.5, description="Auto-flush interval in seconds")
+    flush_interval: float = Field(
+        default=0.5, description="Auto-flush interval in seconds"
+    )
 
 
 class EnterpriseFormatter(logging.Formatter):
@@ -100,8 +118,12 @@ class EnterpriseFormatter(logging.Formatter):
     def format(self, record: logging.LogRecord) -> str:
         """Format log record with level-specific formatting."""
         # Add custom fields
-        record.timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
-        record.module = record.name.split(".")[-1] if "." in record.name else record.name
+        record.timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S.%f")[
+            :-3
+        ]
+        record.module = (
+            record.name.split(".")[-1] if "." in record.name else record.name
+        )
         record.function = getattr(record, "funcName", "unknown")
         record.line = getattr(record, "lineno", 0)
 
@@ -113,7 +135,11 @@ class EnterpriseFormatter(logging.Formatter):
 
             record.context = context_str
             record.level = "TRACE"
-            record.operation = trace_context.get("operation", "unknown") if isinstance(trace_context, dict) else getattr(trace_context, "operation", "unknown")
+            record.operation = (
+                trace_context.get("operation", "unknown")
+                if isinstance(trace_context, dict)
+                else getattr(trace_context, "operation", "unknown")
+            )
 
             try:
                 return self.trace_format.format(**record.__dict__)
@@ -123,7 +149,9 @@ class EnterpriseFormatter(logging.Formatter):
         else:
             return self._format_standard(record)
 
-    def _format_trace_context(self, context: TraceContext | dict[str, Any] | Any) -> str:
+    def _format_trace_context(
+        self, context: TraceContext | dict[str, Any] | Any
+    ) -> str:
         """Format trace context for optimal readability."""
         if isinstance(context, TraceContext):
             parts = []
@@ -241,7 +269,7 @@ class FlextEnterpriseLogger:
                 main_file_path,
                 maxBytes=config.max_file_size,
                 backupCount=config.backup_count,
-                encoding="utf-8"
+                encoding="utf-8",
             )
             main_handler.setLevel(config.level)
             main_handler.setFormatter(formatter)
@@ -253,7 +281,7 @@ class FlextEnterpriseLogger:
                 error_file_path,
                 maxBytes=config.max_file_size // 2,
                 backupCount=config.backup_count,
-                encoding="utf-8"
+                encoding="utf-8",
             )
             error_handler.setLevel(LogLevel.WARNING)
             error_handler.setFormatter(formatter)
@@ -266,7 +294,7 @@ class FlextEnterpriseLogger:
                     trace_file_path,
                     maxBytes=config.max_file_size * 2,  # Larger for TRACE
                     backupCount=config.backup_count * 2,
-                    encoding="utf-8"
+                    encoding="utf-8",
                 )
                 trace_handler.setLevel(LogLevel.TRACE)
                 trace_handler.addFilter(lambda record: record.levelno == LogLevel.TRACE)
@@ -295,7 +323,7 @@ class FlextEnterpriseLogger:
         self,
         message: str,
         context: TraceContext | dict[str, Any] | None = None,
-        **kwargs: Any
+        **kwargs: Any,
     ) -> None:
         """Log TRACE level message with rich context - MAXIMUM WEIGHT."""
         if self.logger.isEnabledFor(LogLevel.TRACE):
@@ -308,7 +336,7 @@ class FlextEnterpriseLogger:
                 msg=message,
                 args=(),
                 exc_info=None,
-                extra={"trace_context": context, **kwargs}
+                extra={"trace_context": context, **kwargs},
             )
             self.logger.handle(record)
 
@@ -334,7 +362,7 @@ class FlextEnterpriseLogger:
         params: dict[str, Any] | None = None,
         connection_id: str | None = None,
         timing_ms: float | None = None,
-        **kwargs: Any
+        **kwargs: Any,
     ) -> None:
         """Specialized TRACE logging for SQL operations - HEAVY EMPHASIS."""
         context = TraceContext(
@@ -344,7 +372,7 @@ class FlextEnterpriseLogger:
             connection_id=connection_id,
             timing_ms=timing_ms,
             params=params or {},
-            metadata=kwargs
+            metadata=kwargs,
         )
         self.trace("SQL execution", context)
 
@@ -354,7 +382,7 @@ class FlextEnterpriseLogger:
         endpoint: str,
         status_code: int | None = None,
         timing_ms: float | None = None,
-        **kwargs: Any
+        **kwargs: Any,
     ) -> None:
         """Specialized TRACE logging for API operations - HEAVY EMPHASIS."""
         context = TraceContext(
@@ -363,7 +391,7 @@ class FlextEnterpriseLogger:
             api_endpoint=endpoint,
             http_method=method,
             timing_ms=timing_ms,
-            metadata={"status_code": status_code, **kwargs}
+            metadata={"status_code": status_code, **kwargs},
         )
         self.trace(f"API call: {method} {endpoint}", context)
 
@@ -374,10 +402,10 @@ class FlextEnterpriseLogger:
     def start_operation(self, operation: str) -> None:
         """Start timing an operation for performance monitoring."""
         self._start_times[operation] = time.perf_counter()
-        self.trace(f"Operation started: {operation}", TraceContext(
-            operation=operation,
-            module=self.name
-        ))
+        self.trace(
+            f"Operation started: {operation}",
+            TraceContext(operation=operation, module=self.name),
+        )
 
     def end_operation(self, operation: str, **kwargs: Any) -> None:
         """End timing an operation and log duration."""
@@ -386,12 +414,15 @@ class FlextEnterpriseLogger:
             del self._start_times[operation]
             duration_ms = round(duration * 1000, 2)
 
-            self.trace(f"Operation completed: {operation}", TraceContext(
-                operation=operation,
-                module=self.name,
-                timing_ms=duration_ms,
-                metadata=kwargs
-            ))
+            self.trace(
+                f"Operation completed: {operation}",
+                TraceContext(
+                    operation=operation,
+                    module=self.name,
+                    timing_ms=duration_ms,
+                    metadata=kwargs,
+                ),
+            )
         else:
             self.warning(f"Operation {operation} was not started or already ended")
 
@@ -408,14 +439,16 @@ class TraceOperationContext:
         self.start_time = time.perf_counter()
         self.logger.trace(
             f"Starting operation: {self.operation_name}",
-            TraceContext(
-                operation=self.operation_name,
-                module=self.logger.name
-            )
+            TraceContext(operation=self.operation_name, module=self.logger.name),
         )
         return self
 
-    def __exit__(self, exc_type: type[BaseException] | None, exc_val: BaseException | None, exc_tb: Any) -> None:
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: Any,
+    ) -> None:
         if self.start_time is not None:
             duration_ms = (time.perf_counter() - self.start_time) * 1000
 
@@ -426,8 +459,8 @@ class TraceOperationContext:
                         operation=self.operation_name,
                         module=self.logger.name,
                         timing_ms=duration_ms,
-                        metadata={"status": "success"}
-                    )
+                        metadata={"status": "success"},
+                    ),
                 )
             else:
                 self.logger.critical(
@@ -435,7 +468,7 @@ class TraceOperationContext:
                     operation=self.operation_name,
                     error=str(exc_val),
                     timing_ms=duration_ms,
-                    status="failed"
+                    status="failed",
                 )
 
 
@@ -446,7 +479,7 @@ def configure_flext_logging(
     enable_trace: bool = True,
     log_dir: str = "logs",
     enable_console: bool = True,
-    enable_file: bool = True
+    enable_file: bool = True,
 ) -> None:
     """Configure global FLEXT logging with TRACE emphasis."""
     config = LoggingConfig(
@@ -454,7 +487,7 @@ def configure_flext_logging(
         enable_trace=enable_trace,
         log_dir=log_dir,
         enable_console=enable_console,
-        enable_file=enable_file
+        enable_file=enable_file,
     )
     FlextEnterpriseLogger.configure(config)
 
@@ -477,10 +510,7 @@ def configure_cli_logging(level: str = "TRACE") -> None:
     log_level = level_map.get(level.upper(), LogLevel.TRACE)
 
     configure_flext_logging(
-        level=log_level,
-        enable_trace=True,
-        enable_console=True,
-        enable_file=True
+        level=log_level, enable_trace=True, enable_console=True, enable_file=True
     )
 
 
@@ -496,5 +526,5 @@ __all__ = [
     "TraceOperationContext",
     "configure_flext_logging",
     "get_flext_logger",
-    "configure_cli_logging"
+    "configure_cli_logging",
 ]

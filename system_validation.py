@@ -23,7 +23,6 @@ sys.path.insert(0, str(Path(__file__).parent / "flext-auth" / "src"))
 sys.path.insert(0, str(Path(__file__).parent / "flext-api" / "src"))
 
 
-
 class ValidationResults:
     """Tracks validation results across all modules."""
 
@@ -67,9 +66,7 @@ class ValidationResults:
                 for _test in failed_tests:
                     pass
 
-        (
-            (overall_success / overall_total) * 100 if overall_total > 0 else 0
-        )
+        ((overall_success / overall_total) * 100 if overall_total > 0 else 0)
 
 
 # Initialize results tracker
@@ -82,7 +79,6 @@ def validate_core_modules():
     try:
         # Test 1: Core domain models
         try:
-
             results.add_result("flext-core", "domain_models_import", True)
         except Exception as e:
             results.add_result("flext-core", "domain_models_import", False, str(e))
@@ -113,9 +109,7 @@ def validate_core_modules():
         try:
             from flext_core.utils.import_fallback_patterns import SQLALCHEMY_DEPENDENCY
 
-            SQLALCHEMY_DEPENDENCY.try_import(
-                "sqlalchemy.engine", "make_url"
-            )
+            SQLALCHEMY_DEPENDENCY.try_import("sqlalchemy.engine", "make_url")
             results.add_result("flext-core", "import_fallbacks", True)
         except Exception as e:
             results.add_result("flext-core", "import_fallbacks", False, str(e))

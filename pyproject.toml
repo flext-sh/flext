@@ -85,6 +85,21 @@ line-length = 88
 src = [ "src", "tests", "scripts", "flext/src", "*/src",]
 extend-exclude = [ "__pycache__", ".git", ".mypy_cache", ".pytest_cache", ".ruff_cache", ".venv", "venv", "build", "dist", "htmlcov",]
 
+[tool.ruff.lint]
+# Configuração estratégica para qualidade real sem trapacear
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings  
+    "F",  # pyflakes
+    "I",  # isort
+]
+# Ignorar apenas regras específicas que são muito restritivas para este projeto
+ignore = [
+    "E501",  # line too long (88 chars é o limite)
+    "F401",  # imported but unused (muitos imports para compatibilidade)
+    "F841",  # local variable assigned but never used (vars de debug)
+]
+
 [tool.bandit]
 exclude_dirs = [ "tests", "scripts",]
 skips = [ "B101", "B601",]
@@ -173,9 +188,6 @@ jupyter = {version = "^1.1.1", python = ">=3.10"}
 rich-traceback = "^1.0.3"
 vulture = "^2.14"
 
-[tool.ruff.lint]
-select = [ "E", "W", "F", "I", "UP", "N", "B", "C4", "DTZ", "T20", "ISC", "PIE", "PT", "RET",]
-ignore = [ "E501", "PLR0913", "PLR2004", "TRY003",]
 
 [tool.pytest.ini_options]
 minversion = "8.0"

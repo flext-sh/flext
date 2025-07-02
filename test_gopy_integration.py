@@ -12,7 +12,6 @@ sys.path.append("/home/marlonsc/flext/python-meltano-gopy")
 try:
     import flext_meltano
 
-
     available = flext_meltano.check_meltano()
 
     if available:
@@ -36,7 +35,6 @@ try:
 
     import meltano
 
-
     available = meltano.QuickCheck()
 
     if available:
@@ -50,4 +48,3 @@ except Exception:
     pass
 finally:
     os.chdir(old_cwd)
-

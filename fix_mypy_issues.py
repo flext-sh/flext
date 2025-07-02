@@ -33,16 +33,16 @@ class MyPyFixer:
             # Check if file has TypeAlias import
             if "from typing import" in content and "TypeAlias" in content:
                 # Pattern to match existing TypeAlias import
-                pattern = r'from typing import ([^\\n]*TypeAlias[^\\n]*)'
+                pattern = r"from typing import ([^\\n]*TypeAlias[^\\n]*)"
 
                 if re.search(pattern, content):
                     # Replace with version-compatible import
-                    new_import = '''try:
+                    new_import = """try:
     from typing import TypeAlias
 except ImportError:
     from typing_extensions import TypeAlias
 
-from typing import '''
+from typing import """
 
                     # Extract other imports
                     match = re.search(pattern, content)
@@ -56,7 +56,9 @@ from typing import '''
 
                         content = re.sub(pattern, new_import, content)
                         file_path.write_text(content)
-                        self.fixes_applied.append(f"Fixed TypeAlias import in {file_path}")
+                        self.fixes_applied.append(
+                            f"Fixed TypeAlias import in {file_path}"
+                        )
                         return True
         except Exception:
             pass
@@ -68,11 +70,13 @@ from typing import '''
             content = file_path.read_text()
 
             # Fix __post_init__ methods
-            pattern = r'def __post_init__\\(self\\):'
+            pattern = r"def __post_init__\\(self\\):"
             if re.search(pattern, content):
-                content = re.sub(pattern, r'def __post_init__(self) -> None:', content)
+                content = re.sub(pattern, r"def __post_init__(self) -> None:", content)
                 file_path.write_text(content)
-                self.fixes_applied.append(f"Fixed __post_init__ return annotation in {file_path}")
+                self.fixes_applied.append(
+                    f"Fixed __post_init__ return annotation in {file_path}"
+                )
                 return True
         except Exception:
             pass
@@ -86,10 +90,10 @@ from typing import '''
 
             # Fix dict without type parameters in annotations
             patterns = [
-                (r': dict = \\{\\}', r': dict[str, Any] = {}'),
-                (r': dict = None', r': dict[str, Any] = None'),
-                (r': list = \\[\\]', r': list[Any] = []'),
-                (r': list = None', r': list[Any] = None'),
+                (r": dict = \\{\\}", r": dict[str, Any] = {}"),
+                (r": dict = None", r": dict[str, Any] = None"),
+                (r": list = \\[\\]", r": list[Any] = []"),
+                (r": list = None", r": list[Any] = None"),
             ]
 
             for pattern, replacement in patterns:
@@ -101,13 +105,15 @@ from typing import '''
                 # Ensure Any is imported
                 if "from typing import" in content and "Any" not in content:
                     content = re.sub(
-                        r'from typing import ([^\\n]*)',
-                        r'from typing import \\1, Any',
-                        content
+                        r"from typing import ([^\\n]*)",
+                        r"from typing import \\1, Any",
+                        content,
                     )
 
                 file_path.write_text(content)
-                self.fixes_applied.append(f"Fixed generic type parameters in {file_path}")
+                self.fixes_applied.append(
+                    f"Fixed generic type parameters in {file_path}"
+                )
                 return True
         except Exception:
             pass
@@ -120,14 +126,14 @@ from typing import '''
 
             # Common unused type ignore patterns
             patterns = [
-                r'  # type: ignore\[no-untyped-call\]',
-                r'  # type: ignore\[unused-ignore\]',
+                r"  # type: ignore\[no-untyped-call\]",
+                r"  # type: ignore\[unused-ignore\]",
             ]
 
             changes_made = False
             for pattern in patterns:
                 if re.search(pattern, content):
-                    content = re.sub(pattern, '', content)
+                    content = re.sub(pattern, "", content)
                     changes_made = True
 
             if changes_made:
@@ -157,11 +163,18 @@ from typing import '''
         project_path = self.workspace_root / project_name
         try:
             result = subprocess.run(
-                ["python", "-m", "mypy", "src/", "--ignore-missing-imports", "--no-strict-optional"],
+                [
+                    "python",
+                    "-m",
+                    "mypy",
+                    "src/",
+                    "--ignore-missing-imports",
+                    "--no-strict-optional",
+                ],
                 cwd=project_path,
                 capture_output=True,
                 text=True,
-                timeout=60
+                timeout=60,
             )
             return result.returncode == 0, result.stdout + result.stderr
         except subprocess.TimeoutExpired:
@@ -189,15 +202,26 @@ def main():
 
     # List of FLEXT projects to fix
     projects = [
-        "flext-ldap", "flext-tap-ldap", "flext-target-ldap",
-        "flext-db-oracle", "flext-plugin", "flext-core",
-        "flext-api", "flext-auth", "flext-cli", "flext-web",
-        "flext-grpc", "flext-meltano", "flext-observability",
-        "flext-tap-oracle-oic", "flext-tap-oracle-wms",
-        "flext-target-oracle-oic", "flext-target-oracle-wms",
-        "flext-oracle-oic-ext", "flext-dbt-ldap"
+        "flext-ldap",
+        "flext-tap-ldap",
+        "flext-target-ldap",
+        "flext-db-oracle",
+        "flext-plugin",
+        "flext-core",
+        "flext-api",
+        "flext-auth",
+        "flext-cli",
+        "flext-web",
+        "flext-grpc",
+        "flext-meltano",
+        "flext-observability",
+        "flext-tap-oracle-oic",
+        "flext-tap-oracle-wms",
+        "flext-target-oracle-oic",
+        "flext-target-oracle-wms",
+        "flext-oracle-oic-ext",
+        "flext-dbt-ldap",
     ]
-
 
     for project in projects:
         fixer.fix_project(project)
@@ -206,7 +230,6 @@ def main():
     report = fixer.generate_report()
     report_path = Path("/home/marlonsc/flext/mypy_fixes_report.md")
     report_path.write_text(report)
-
 
 
 if __name__ == "__main__":

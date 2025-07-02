@@ -13,6 +13,7 @@ from pathlib import Path
 class MeltanoGopyError(Exception):
     """Custom exception for Meltano Gopy errors"""
 
+
 class MeltanoGopy:
     """Python interface to Go-based Meltano functionality"""
 
@@ -52,11 +53,19 @@ class MeltanoGopy:
 
         # AddPluginToProject(pluginType, name, variant string) string
         self._lib.gopy_AddPluginToProject.restype = ctypes.c_char_p
-        self._lib.gopy_AddPluginToProject.argtypes = [ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p]
+        self._lib.gopy_AddPluginToProject.argtypes = [
+            ctypes.c_char_p,
+            ctypes.c_char_p,
+            ctypes.c_char_p,
+        ]
 
         # RunMeltanoPipeline(extractor, loader, transformer string) string
         self._lib.gopy_RunMeltanoPipeline.restype = ctypes.c_char_p
-        self._lib.gopy_RunMeltanoPipeline.argtypes = [ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p]
+        self._lib.gopy_RunMeltanoPipeline.argtypes = [
+            ctypes.c_char_p,
+            ctypes.c_char_p,
+            ctypes.c_char_p,
+        ]
 
         # GetProjectPlugins() string
         self._lib.gopy_GetProjectPlugins.restype = ctypes.c_char_p
@@ -66,14 +75,16 @@ class MeltanoGopy:
         """Helper to call Go functions that return JSON strings"""
         try:
             # Convert string arguments to bytes
-            byte_args = [arg.encode('utf-8') if isinstance(arg, str) else arg for arg in args]
+            byte_args = [
+                arg.encode("utf-8") if isinstance(arg, str) else arg for arg in args
+            ]
 
             # Call the function
             result = func(*byte_args)
 
             # Convert result to string and parse JSON
             if result:
-                json_str = result.decode('utf-8')
+                json_str = result.decode("utf-8")
                 return json.loads(json_str)
             return {"success": False, "error": "No result returned"}
 
@@ -97,18 +108,24 @@ class MeltanoGopy:
 
     def add_plugin(self, plugin_type, name, variant=""):
         """Add a plugin to the current project"""
-        return self._call_string_function(self._lib.gopy_AddPluginToProject, plugin_type, name, variant)
+        return self._call_string_function(
+            self._lib.gopy_AddPluginToProject, plugin_type, name, variant
+        )
 
     def run_pipeline(self, extractor, loader, transformer=""):
         """Run a Meltano ELT pipeline"""
-        return self._call_string_function(self._lib.gopy_RunMeltanoPipeline, extractor, loader, transformer)
+        return self._call_string_function(
+            self._lib.gopy_RunMeltanoPipeline, extractor, loader, transformer
+        )
 
     def get_plugins(self):
         """Get all plugins in the current project"""
         return self._call_string_function(self._lib.gopy_GetProjectPlugins)
 
+
 # Module-level convenience functions
 _meltano_instance = None
+
 
 def get_meltano_instance():
     """Get or create the global Meltano instance"""
@@ -117,17 +134,21 @@ def get_meltano_instance():
         _meltano_instance = MeltanoGopy()
     return _meltano_instance
 
+
 def CheckMeltanoAvailable():
     """Check if Meltano is available (compatibility function)"""
     return get_meltano_instance().check_meltano_available()
+
 
 def GetMeltanoVersion():
     """Get Meltano version (compatibility function)"""
     return get_meltano_instance().get_meltano_version()
 
+
 def CreateProject(directory, name):
     """Create project (compatibility function)"""
     return get_meltano_instance().create_project(directory, name)
+
 
 if __name__ == "__main__":
     # Test the wrapper
@@ -140,7 +161,6 @@ if __name__ == "__main__":
 
         # Test version
         version = meltano.get_meltano_version()
-
 
     except Exception:
         pass
