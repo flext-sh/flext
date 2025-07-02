@@ -16,11 +16,11 @@
 
 ### **Core Topics**
 
-| **Topic**                                             | **Function**                   | **Audience**      | **Status**    |
-| ----------------------------------------------------- | ------------------------------ | ----------------- | ------------- |
+| **Topic**                                               | **Function**                   | **Audience**      | **Status**    |
+| ------------------------------------------------------- | ------------------------------ | ----------------- | ------------- |
 | [Oracle Adapters](./flext_http_oracle_oic-adapter.md)   | Oracle integration adapters    | Oracle developers | ✅ Complete   |
 | [Database Adapters](./flext_database_oracle-adapter.md) | Database connectivity patterns | Data engineers    | ✅ Complete   |
-| [HTTP Adapters](./http-client-adapters.md)            | HTTP client implementations    | API developers    | 📋 Documented |
+| [HTTP Adapters](./http-client-adapters.md)              | HTTP client implementations    | API developers    | 📋 Documented |
 
 ### **📋 Learning Path**
 

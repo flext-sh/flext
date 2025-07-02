@@ -5406,8 +5406,8 @@ record is updated to Failed status with error string as "Inventory not found in 
 Batch/Inventory attribute combination".
 • If the anticipated Item/Batch/Inventory attribute combination found for the sku in the location or
 LPN, but the qty passed exceeds the inventory qty then the corresponding detail record is updated
-to Failed status with error string as "Insufficient inventory for *Item/Batch/Inventory attribute
-combination{*}".
+to Failed status with error string as "Insufficient inventory for _Item/Batch/Inventory attribute
+combination{_}".
 • If the active location/reserve location passed has a Permanent Sku assignment and the qty
 passed is a postive value where the item passed is not the same as the permanent dedicated
 item, the corresponding detail record is updated to Failed status with error string as "Item passed

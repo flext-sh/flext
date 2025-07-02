@@ -21,8 +21,8 @@ curl -s http://localhost:8081/ | jq .
 # Criar pipeline
 echo -e "\n3. Criando Pipeline:"
 PIPELINE_RESPONSE=$(curl -s -X POST http://localhost:8081/api/v1/pipelines \
-  -H "Content-Type: application/json" \
-  -d '{
+	-H "Content-Type: application/json" \
+	-d '{
     "name": "Pipeline de Teste",
     "description": "Pipeline para validação da API",
     "tags": ["test", "validation"]
@@ -33,8 +33,8 @@ PIPELINE_ID=$(echo $PIPELINE_RESPONSE | jq -r .id)
 # Registrar plugin
 echo -e "\n4. Registrando Plugin:"
 PLUGIN_RESPONSE=$(curl -s -X POST http://localhost:8081/api/v1/plugins \
-  -H "Content-Type: application/json" \
-  -d '{
+	-H "Content-Type: application/json" \
+	-d '{
     "name": "Plugin de Teste",
     "type": "source",
     "version": "1.0.0",
@@ -72,8 +72,8 @@ curl -s http://localhost:8081/api/v1/plugins/$PLUGIN_ID | jq .
 # Adicionar step ao pipeline
 echo -e "\n9. Adicionando Step ao Pipeline:"
 curl -s -X POST http://localhost:8081/api/v1/pipelines/$PIPELINE_ID/steps \
-  -H "Content-Type: application/json" \
-  -d "{
+	-H "Content-Type: application/json" \
+	-d "{
     \"name\": \"Step de Teste\",
     \"plugin_id\": \"$PLUGIN_ID\",
     \"configuration\": {

@@ -1,342 +1,259 @@
-# Flext 🚀
+# FLEXT - Unified Hexagonal Architecture + DDD Implementation
 
-## Flex Your Data Pipeline - The Next-Generation Data Platform That Bends But Never Breaks
+FLEXT é uma implementação moderna de um sistema de pipelines usando **Arquitetura Hexagonal** (Ports & Adapters) combinada com **Domain-Driven Design (DDD)**.
 
-[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
-[![Go](https://img.shields.io/badge/go-1.21+-00ADD8.svg)](https://golang.org/)
-[![License](https://img.shields.io/badge/license-Apache%202.0-green.svg)](LICENSE)
-[![Documentation](https://img.shields.io/badge/docs-comprehensive-brightgreen.svg)](docs/)
-[![Community](https://img.shields.io/badge/community-worldwide-orange.svg)](https://github.com/flext-sh)
+## 🏗️ Arquitetura
 
-## 🎯 What is Flext?
+### Bounded Contexts
 
-**F.L.E.X.T** = **F**lexible **L**ightweight **E**xtraction & **T**ransformation
+O sistema é organizado em bounded contexts seguindo os princípios do DDD:
 
-Flext is a revolutionary data platform that combines the flexibility of modern data engineering with built-in enterprise governance. One 10MB agent can run anywhere—from IoT devices to cloud clusters—while maintaining complete data lineage, quality, and compliance.
+#### 1. **Pipeline Context** (`internal/bounded_contexts/pipeline/`)
 
-### Key Features
+- **Domain**: Entidades (`Pipeline`, `PipelineStep`) e eventos de domínio
+- **Application**: Commands, Queries e Application Services
+- **Ports**: Interfaces que definem contratos (Repository, EventPublisher)
 
-- **🔄 Universal ETL/ELT**: Extract, Transform, Load anywhere with the same codebase
-- **📊 Built-in Governance**: Native DAMA-DMBOK implementation for enterprise compliance
-- **⚡ Hybrid Architecture**: Python/Go for optimal performance and flexibility  
-- **🌍 Run Everywhere**: From Raspberry Pi to Kubernetes clusters
-- **🔗 400+ Connectors**: Native integrations with databases, APIs, files, and cloud services
-- **📈 10x Performance**: Optimized for speed without sacrificing reliability
-- **🛡️ Security First**: End-to-end encryption, audit trails, and access control
+#### 2. **Plugin Context** (`internal/bounded_contexts/plugin/`)
 
-## 🏗️ Architecture Overview
+- **Domain**: Entidades (`Plugin`, `Port`) e eventos de domínio
+- **Application**: Commands para registro e gerenciamento de plugins
+- **Ports**: Interfaces para persistência e eventos
 
-```mermaid
-graph TB
-    A[Flext CLI] --> B[Core Engine]
-    B --> C[Python Runtime]
-    B --> D[Go Runtime]
-    B --> E[Governance Layer]
-    
-    C --> F[Singer Taps/Targets]
-    C --> G[Custom Transformations]
-    D --> H[High-Performance Operations]
-    
-    E --> I[Data Lineage]
-    E --> J[Quality Monitoring]
-    E --> K[Compliance Reporting]
-    
-    B --> L[Edge Deployment]
-    B --> M[Cloud Deployment]
-    B --> N[Hybrid Deployment]
+### Shared Kernel (`internal/shared_kernel/`)
+
+- **Domain**: Aggregate Root base, eventos de domínio, interfaces
+- **Errors**: Tratamento centralizado de erros
+
+### Infrastructure (`internal/infrastructure/`)
+
+- **HTTP**: Handlers, middleware, servidor
+- **Persistence**: Implementações in-memory dos repositórios
+- **Events**: Publisher de eventos em memória
+- **Config**: Configuração centralizada
+- **Logging**: Sistema de logging estruturado
+
+## 🚀 Funcionalidades
+
+### Pipelines
+
+- ✅ Criação de pipelines
+- ✅ Adição de steps aos pipelines
+- ✅ Execução de pipelines
+- ✅ Listagem e consulta de pipelines
+- ✅ Sistema de tags e configuração
+
+### Plugins
+
+- ✅ Registro de plugins
+- ✅ Diferentes tipos: source, target, transformer, utility
+- ✅ Sistema de portas para comunicação
+- ✅ Listagem e consulta de plugins
+
+### Sistema de Eventos
+
+- ✅ Eventos de domínio para pipeline e plugin
+- ✅ Event Publisher em memória
+- ✅ Padrão Observer para handlers
+
+## 📋 API Endpoints
+
+### Health & Documentation
+
+```
+GET /health          - Health check
+GET /                - API documentation
+GET /metrics         - Basic metrics
 ```
 
-## 🚀 Quick Start
+### Pipelines
 
-### Installation
+```
+POST   /api/v1/pipelines           - Criar pipeline
+GET    /api/v1/pipelines           - Listar pipelines
+GET    /api/v1/pipelines/:id       - Obter pipeline
+POST   /api/v1/pipelines/:id/steps - Adicionar step
+POST   /api/v1/pipelines/:id/execute - Executar pipeline
+```
+
+### Plugins
+
+```
+POST   /api/v1/plugins        - Registrar plugin
+GET    /api/v1/plugins        - Listar plugins
+GET    /api/v1/plugins/:id    - Obter plugin
+```
+
+## 🛠️ Como Usar
+
+### Executar o Servidor
 
 ```bash
-# Install Flext CLI
-curl -sSL https://flext.sh | sh
-
-# Or with pip
-pip install flext
-
-# Verify installation
-flext --version
+go run cmd/flext/main.go
 ```
 
-### Your First Pipeline
-
-```yaml
-# pipeline.yaml
-name: customer_360
-description: Customer data integration pipeline
-
-sources:
-  - name: postgres_customers
-    type: tap-postgres
-    config:
-      host: localhost
-      database: customers
-      
-  - name: api_orders
-    type: tap-rest-api
-    config:
-      base_url: https://api.company.com/orders
-
-transforms:
-  - name: customer_enrichment
-    type: python
-    script: |
-      def transform(record):
-          record['full_name'] = f"{record['first_name']} {record['last_name']}"
-          return record
-
-targets:
-  - name: warehouse
-    type: target-snowflake
-    config:
-      account: your_account
-      warehouse: COMPUTE_WH
-
-governance:
-  data_quality:
-    - check: not_null
-      columns: [customer_id, email]
-    - check: unique
-      columns: [customer_id]
-  
-  lineage: enabled
-  encryption: enabled
-```
+### Criar um Pipeline
 
 ```bash
-# Run the pipeline
-flext run pipeline.yaml
-
-# Deploy to production
-flext deploy pipeline.yaml --env production
-
-# Monitor governance
-flext govern --dashboard
+curl -X POST http://localhost:8081/api/v1/pipelines \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "my-pipeline",
+    "description": "Exemplo de pipeline",
+    "tags": ["example"]
+  }'
 ```
 
-## 📁 Project Structure
+### Registrar um Plugin
+
+```bash
+curl -X POST http://localhost:8081/api/v1/plugins \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "example-source",
+    "type": "source",
+    "version": "1.0.0",
+    "entry_point": "./plugins/example-source",
+    "description": "Plugin de exemplo"
+  }'
+```
+
+### Executar um Pipeline
+
+```bash
+curl -X POST http://localhost:8081/api/v1/pipelines/{id}/execute \
+  -H "Content-Type: application/json" \
+  -d '{
+    "context": {
+      "input": "example data"
+    }
+  }'
+```
+
+## 🏛️ Princípios Arquiteturais
+
+### Hexagonal Architecture (Ports & Adapters)
+
+- **Ports**: Interfaces que definem contratos
+- **Adapters**: Implementações concretas (HTTP, DB, etc.)
+- **Domain**: Isolado de detalhes de infraestrutura
+
+### Domain-Driven Design
+
+- **Bounded Contexts**: Pipeline e Plugin
+- **Aggregates**: Pipeline e Plugin como raízes de agregado
+- **Domain Events**: Comunicação entre contextos
+- **Application Services**: Coordenação de operações
+
+### SOLID Principles
+
+- **Single Responsibility**: Cada classe tem uma responsabilidade
+- **Open/Closed**: Extensível via interfaces
+- **Liskov Substitution**: Implementações intercambiáveis
+- **Interface Segregation**: Interfaces pequenas e específicas
+- **Dependency Inversion**: Dependência de abstrações
+
+## 🔧 Configuração
+
+### Variáveis de Ambiente
+
+```bash
+FLEXT_SERVER_HOST=0.0.0.0
+FLEXT_SERVER_PORT=8081
+FLEXT_LOG_LEVEL=info
+FLEXT_LOG_FORMAT=json
+FLEXT_SERVER_ENABLE_CORS=true
+```
+
+### Estrutura de Configuração
+
+- **Server**: Host, porta, timeouts, CORS
+- **Database**: Tipo, conexão (futuro)
+- **Logging**: Nível, formato, saída
+- **Events**: Publisher, buffer, workers
+- **Auth**: JWT, expiração (futuro)
+
+## 🧪 Testes
+
+### Executar Testes
+
+```bash
+go test ./...
+```
+
+### Testes de Integração
+
+```bash
+go test ./tests/integration/...
+```
+
+## 📁 Estrutura de Pastas
 
 ```
 flext/
-├── 🎯 Core Framework
-│   ├── flext-core/          # Core engine and runtime
-│   ├── flext-cli/           # Command-line interface
-│   └── flext-api/           # REST API server
-│
-├── 🔐 Security & Auth
-│   ├── flext-auth/          # Authentication & authorization
-│   └── flext-observability/ # Monitoring & logging
-│
-├── 🔌 Connectivity
-│   ├── flext-tap-*/         # Source connectors (Singer protocol)
-│   ├── flext-target-*/      # Destination connectors
-│   └── flext-db-oracle/     # Oracle database adapter
-│
-├── 🧪 Development Tools
-│   ├── flext-dbt-ldap/      # LDAP transformation models
-│   ├── flext-quality/       # Data quality framework
-│   └── flext-web/           # Web dashboard
-│
-├── 🏛️ Enterprise
-│   ├── flext-ldap/          # LDAP integration
-│   ├── flext-grpc/          # gRPC services
-│   └── flext-meltano/       # Meltano compatibility
-│
-└── 🔄 Legacy Support
-    └── legacy/              # Backward compatibility modules
+├── cmd/flext/                    # Entry point da aplicação
+├── internal/
+│   ├── bounded_contexts/         # Bounded contexts DDD
+│   │   ├── pipeline/            # Context de Pipeline
+│   │   │   ├── application/     # Commands, Queries, Services
+│   │   │   ├── domain/          # Entities, Events, Services
+│   │   │   └── ports/           # Interfaces
+│   │   └── plugin/              # Context de Plugin
+│   │       ├── application/     # Commands, Services
+│   │       ├── domain/          # Entities, Events
+│   │       └── ports/           # Interfaces
+│   ├── infrastructure/          # Infraestrutura
+│   │   ├── auth/               # Autenticação JWT
+│   │   ├── config/             # Configuração
+│   │   ├── container/          # Dependency Injection
+│   │   ├── events/             # Event Publisher
+│   │   ├── http/               # HTTP handlers/middleware
+│   │   ├── logging/            # Sistema de logs
+│   │   ├── persistence/        # Repositórios
+│   │   ├── plugins/            # Plugin loader
+│   │   └── server/             # Servidor HTTP
+│   └── shared_kernel/           # Shared Kernel DDD
+│       ├── domain/             # Base entities, events
+│       └── errors/             # Error handling
+├── tests/
+│   └── integration/            # Testes de integração
+└── api/
+    └── openapi.yaml           # Especificação OpenAPI
 ```
 
-## 🌟 Core Components
+## 🔮 Próximos Passos
 
-### Flext Core Engine
+### Implementações Futuras
 
-- **Hybrid Runtime**: Python for flexibility, Go for performance
-- **Smart Scheduling**: Adaptive execution based on data patterns
-- **Resource Management**: Automatic scaling and optimization
+- [ ] Persistência em banco de dados (PostgreSQL)
+- [ ] Sistema de autenticação completo
+- [ ] Plugin loader dinâmico
+- [ ] Scheduler para execução automática
+- [ ] Dashboard web
+- [ ] Métricas e observabilidade
+- [ ] API de streaming para execuções em tempo real
+- [ ] Suporte a múltiplos formatos de plugin
 
-### Built-in Governance
+### Melhorias da Arquitetura
 
-- **Data Lineage**: Track data from source to destination
-- **Quality Monitoring**: Real-time data quality checks
-- **Compliance Reporting**: GDPR, DAMA-DMBOK, SOX compliance
+- [ ] Event Sourcing para auditoria
+- [ ] CQRS para separação de leitura/escrita
+- [ ] Circuit Breaker para resiliência
+- [ ] Rate limiting avançado
+- [ ] Cache distribuído
 
-### Universal Connectors
+## 🤝 Contribuição
 
-- **Databases**: PostgreSQL, MySQL, Oracle, SQL Server, MongoDB
-- **Cloud Services**: AWS S3, Azure Blob, GCP BigQuery
-- **APIs**: REST, GraphQL, SOAP, custom protocols
-- **Files**: CSV, JSON, Parquet, Avro, XML
+1. Fork o projeto
+2. Crie uma branch (`git checkout -b feature/amazing-feature`)
+3. Commit suas mudanças (`git commit -m 'Add amazing feature'`)
+4. Push para a branch (`git push origin feature/amazing-feature`)
+5. Abra um Pull Request
 
-## 🎯 Use Cases
+## 📝 Licença
 
-### IoT & Edge Computing
-
-```bash
-# Deploy to Raspberry Pi
-flext deploy sensor-pipeline.yaml --target raspberry-pi
-
-# Process 1M+ sensor readings with 10MB footprint
-flext run iot-aggregation.yaml --edge-mode
-```
-
-### Enterprise Data Warehouse
-
-```bash
-# Full enterprise ETL with governance
-flext run enterprise-dwh.yaml --governance-strict
-
-# Generate compliance reports
-flext govern --report --format pdf
-```
-
-### Real-time Streaming
-
-```bash
-# Kafka to warehouse pipeline
-flext stream kafka-to-warehouse.yaml --real-time
-
-# Handle 100K+ events per second
-flext run high-volume.yaml --performance-mode
-```
-
-### Cloud Migration
-
-```bash
-# Migrate from Oracle to Snowflake
-flext migrate oracle-to-snowflake.yaml --validate-schema
-
-# Parallel data transfer with validation
-flext run migration.yaml --parallel 8 --validate
-```
-
-## 📊 Performance Benchmarks
-
-| Metric | Traditional ETL | Flext | Improvement |
-|--------|----------------|-------|------------|
-| **Startup Time** | 30-60 seconds | 2-5 seconds | **10x faster** |
-| **Memory Usage** | 500MB-2GB | 50-200MB | **5x less** |
-| **Throughput** | 10K records/sec | 100K+ records/sec | **10x more** |
-| **Deployment Size** | 100MB-1GB | 10MB | **50x smaller** |
-
-## 🛡️ Enterprise Features
-
-### Security
-
-- **End-to-end Encryption**: Data encrypted in transit and at rest
-- **Access Control**: Role-based permissions and fine-grained access
-- **Audit Trails**: Complete operation logging for compliance
-
-### Scalability
-
-- **Horizontal Scaling**: Auto-scale across multiple nodes
-- **Cloud Native**: Kubernetes-ready with Helm charts
-- **Multi-tenancy**: Isolated workspaces for different teams
-
-### Monitoring
-
-- **Real-time Dashboards**: Monitor pipelines and data quality
-- **Alerting**: Proactive notifications for issues
-- **Metrics**: Prometheus/Grafana integration
-
-## 🔧 Installation Options
-
-### Single Binary (Recommended)
-
-```bash
-curl -sSL https://flext.sh | sh
-```
-
-### Docker
-
-```bash
-docker run -v $(pwd):/workspace flext/flext run pipeline.yaml
-```
-
-### Kubernetes
-
-```bash
-helm repo add flext https://charts.flext.sh
-helm install flext flext/flext
-```
-
-### Python Package
-
-```bash
-pip install flext
-```
-
-## 📚 Documentation
-
-- **[Getting Started](docs/getting-started/)** - Quick start guide and tutorials
-- **[Architecture](docs/architecture/)** - Deep dive into Flext's design
-- **[Connectors](docs/connectors/)** - All available taps and targets
-- **[Governance](docs/governance/)** - Data quality and compliance
-- **[API Reference](docs/api-reference/)** - Complete API documentation
-- **[Examples](docs/examples/)** - Real-world implementation examples
-
-## 🤝 Community
-
-### Links
-
-- **[GitHub](https://github.com/flext-sh)** - Source code and issues
-- **[Discord](https://discord.gg/flext)** - Community chat
-- **[Documentation](https://docs.flext.sh)** - Complete documentation
-- **[Blog](https://blog.flext.sh)** - Latest updates and tutorials
-
-### Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests
-5. Submit a pull request
-
-## 📄 License
-
-Apache 2.0 License - see [LICENSE](LICENSE) file for details.
-
-## 🚀 Roadmap
-
-### Current Version (v1.0)
-
-- ✅ Core ETL engine
-- ✅ 50+ native connectors
-- ✅ Basic governance features
-- ✅ CLI and Python API
-
-### Next Release (v1.1)
-
-- 🔄 Real-time streaming support
-- 🔄 Advanced ML transformations
-- 🔄 Enhanced web dashboard
-- 🔄 Kubernetes operator
-
-### Future Vision
-
-- 🎯 Quantum-ready architecture
-- 🎯 AI-powered pipeline optimization
-- 🎯 Global data mesh support
-- 🎯 Zero-code pipeline builder
+Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para detalhes.
 
 ---
 
-## 💡 Why Choose Flext?
-
-> **"Flext is not just another ETL tool - it's a paradigm shift. We've combined the best of traditional data engineering with modern cloud-native principles, all while embedding governance at the core."**
-
-### The Flext Advantage
-
-- **Simplicity**: One tool, infinite possibilities
-- **Flexibility**: Runs anywhere, connects to everything
-- **Performance**: 10x faster than traditional solutions
-- **Governance**: Compliance built-in, not bolted-on
-- **Community**: Open source with enterprise support
-
-**Flex Your Data Pipeline. From Edge to Cloud. Simple to Enterprise.**
-
----
-
-**Flext** - *The Data Platform That Bends But Never Breaks* 🚀
+**FLEXT** - Framework for Lightweight EXtractable Transformations

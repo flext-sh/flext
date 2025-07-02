@@ -1,0 +1,95 @@
+package main
+
+import (
+	"context"
+	"fmt"
+	"log"
+
+	"github.com/flext-sh/flext/internal/bounded_contexts/pipeline/application/commands"
+	"github.com/flext-sh/flext/internal/bounded_contexts/pipeline/domain/entities"
+	"github.com/flext-sh/flext/internal/bounded_contexts/pipeline/domain/services"
+	"github.com/flext-sh/flext/internal/infrastructure/persistence"
+	"github.com/google/uuid"
+)
+
+func main() {
+	fmt.Println("Testing Real Pipeline Execution Engine...")
+
+	// Initialize repositories
+	pipelineRepo := persistence.NewInMemoryPipelineRepository()
+	pluginRepo := persistence.NewInMemoryPluginRepository()
+
+	// Create a pipeline executor
+	executor := services.NewPipelineExecutor(pluginRepo)
+
+	// Create execute handler with real executor
+	executeHandler := commands.NewExecutePipelineHandler(pipelineRepo, executor)
+
+	// Create a test pipeline
+	pipeline, err := entities.NewPipeline("test-execution-pipeline", "Test pipeline for execution engine")
+	if err \!= nil {
+		log.Fatalf("Failed to create pipeline: %v", err)
+	}
+
+	// Add a test step
+	step := entities.PipelineStep{
+		ID:       uuid.New(),
+		Name:     "test-step",
+		PluginID: uuid.New(),
+		Order:    1,
+		Configuration: map[string]interface{}{
+			"source": "test-data",
+			"target": "test-output",
+		},
+	}
+	pipeline.AddStep(step)
+
+	// Activate the pipeline
+	if err := pipeline.Activate(); err \!= nil {
+		log.Fatalf("Failed to activate pipeline: %v", err)
+	}
+
+	// Save the pipeline
+	ctx := context.Background()
+	if err := pipelineRepo.Save(ctx, pipeline); err \!= nil {
+		log.Fatalf("Failed to save pipeline: %v", err)
+	}
+
+	fmt.Printf("Created pipeline: %s (ID: %s)\n", pipeline.Name, pipeline.GetID())
+	fmt.Printf("Pipeline status: %s, IsActive: %t\n", pipeline.Status, pipeline.IsActive)
+	fmt.Printf("Pipeline steps: %d\n", len(pipeline.Steps))
+
+	// Test execution command
+	cmd := commands.ExecutePipelineCommand{
+		PipelineID: pipeline.GetID(),
+		Context: map[string]interface{}{
+			"execution_mode": "test",
+			"timeout":        30000,
+		},
+	}
+
+	fmt.Println("\n=== EXECUTING PIPELINE ===")
+	result, err := executeHandler.Handle(ctx, cmd)
+	if err \!= nil {
+		log.Fatalf("Pipeline execution failed: %v", err)
+	}
+
+	// Display execution results
+	fmt.Printf("\nExecution Results:\n")
+	fmt.Printf("  Execution ID: %s\n", result.ExecutionID)
+	fmt.Printf("  Pipeline ID: %s\n", result.PipelineID)
+	fmt.Printf("  Status: %s\n", result.Status)
+	fmt.Printf("  Started At: %s\n", result.StartedAt.Format("2006-01-02 15:04:05"))
+	if result.CompletedAt \!= nil {
+		fmt.Printf("  Completed At: %s\n", result.CompletedAt.Format("2006-01-02 15:04:05"))
+	}
+	if result.Duration \!= nil {
+		fmt.Printf("  Duration: %s\n", *result.Duration)
+	}
+	fmt.Printf("  Steps Executed: %d/%d\n", result.StepsExecuted, result.StepsTotal)
+	fmt.Printf("  Message: %s\n", result.Message)
+
+	fmt.Println("\n=== TEST COMPLETED SUCCESSFULLY ===")
+	fmt.Println("Real pipeline execution engine is working\!")
+}
+EOF < /dev/null

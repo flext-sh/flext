@@ -17,21 +17,20 @@ type ListPipelinesFilter struct {
 
 // PipelineRepository define a interface do repositório de pipelines
 type PipelineRepository interface {
-	// GetByID busca um pipeline por ID
-	GetByID(ctx context.Context, id uuid.UUID) (*entities.Pipeline, error)
-	
-	// Save persiste um pipeline
+	// Core CRUD operations
 	Save(ctx context.Context, pipeline *entities.Pipeline) error
-	
-	// Delete remove um pipeline
+	Create(ctx context.Context, pipeline *entities.Pipeline) (*entities.Pipeline, error)
+	Update(ctx context.Context, pipeline *entities.Pipeline) (*entities.Pipeline, error)
 	Delete(ctx context.Context, id uuid.UUID) error
-	
-	// List lista pipelines com filtros
-	List(ctx context.Context, filter ListPipelinesFilter) ([]*entities.Pipeline, int, error)
-	
-	// GetByName busca um pipeline por nome
+
+	// Query operations
+	GetByID(ctx context.Context, id uuid.UUID) (*entities.Pipeline, error)
 	GetByName(ctx context.Context, name string) (*entities.Pipeline, error)
-	
-	// ExistsByName verifica se existe um pipeline com o nome
+	FindByID(ctx context.Context, id string) (*entities.Pipeline, error) // For string UUID compatibility
+	FindByName(ctx context.Context, name string) (*entities.Pipeline, error)
 	ExistsByName(ctx context.Context, name string) (bool, error)
+
+	// List operations
+	List(ctx context.Context, filter ListPipelinesFilter) ([]*entities.Pipeline, int, error)
+	Count(ctx context.Context) (int, error)
 }

@@ -1419,7 +1419,15 @@ cleanup:
   execution_phases:
     phase_1_ruff_autofix:
       command:
-        ["python", "-m", "ruff", "check", "src/flext/", "--fix", "--unsafe-fixes"]
+        [
+          "python",
+          "-m",
+          "ruff",
+          "check",
+          "src/flext/",
+          "--fix",
+          "--unsafe-fixes",
+        ]
       description: "Applying all Ruff auto-fixes with unsafe fixes enabled"
       continue_on_error: false
 

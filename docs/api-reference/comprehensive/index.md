@@ -43,8 +43,8 @@ The Comprehensive APIs Hub provides complete, enterprise-grade API documentation
 
 ### **Comprehensive API Categories**
 
-| **API Documentation**                         | **Coverage**       | **Validation**   | **Status**    | **Key Features**                 |
-| --------------------------------------------- | ------------------ | ---------------- | ------------- | -------------------------------- |
+| **API Documentation**                             | **Coverage**       | **Validation**   | **Status**    | **Key Features**                 |
+| ------------------------------------------------- | ------------------ | ---------------- | ------------- | -------------------------------- |
 | **[FLEXT Complete API](./flext-complete-api.md)** | Complete Framework | Source Validated | ✅ Production | All APIs, patterns, examples     |
 | **[FLEXT API Overview](./flext-api-overview.md)** | Architecture Guide | Source Validated | ✅ Production | High-level patterns, integration |
 

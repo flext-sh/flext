@@ -3,21 +3,22 @@ package commands
 import (
 	"context"
 
-	"github.com/flext-sh/flext/internal/bounded_contexts/plugin/domain/entities"
 	"github.com/flext-sh/flext/internal/bounded_contexts/plugin/application/ports"
+	"github.com/flext-sh/flext/internal/bounded_contexts/plugin/domain/entities"
 	"github.com/google/uuid"
 )
 
 // RegisterPluginCommand representa o comando para registrar um plugin
 type RegisterPluginCommand struct {
-	Name        string                 `json:"name" validate:"required,max=100"`
-	Type        string                 `json:"type" validate:"required,oneof=source target transformer utility"`
-	Version     string                 `json:"version" validate:"required"`
-	Description string                 `json:"description,omitempty"`
-	Author      string                 `json:"author,omitempty"`
-	EntryPoint  string                 `json:"entry_point" validate:"required"`
-	Ports       []PortDefinition       `json:"ports,omitempty"`
-	Config      map[string]interface{} `json:"configuration,omitempty"`
+	Name         string                 `json:"name" validate:"required,max=100"`
+	Type         string                 `json:"type" validate:"required,oneof=source target transformer utility"`
+	Version      string                 `json:"version" validate:"required"`
+	Description  string                 `json:"description,omitempty"`
+	Author       string                 `json:"author,omitempty"`
+	EntryPoint   string                 `json:"entry_point" validate:"required"`
+	Ports        []PortDefinition       `json:"ports,omitempty"`
+	Dependencies []string               `json:"dependencies,omitempty"`
+	Config       map[string]interface{} `json:"configuration,omitempty"`
 }
 
 // PortDefinition define uma porta do plugin
@@ -82,6 +83,11 @@ func (h *RegisterPluginHandler) Handle(ctx context.Context, cmd RegisterPluginCo
 		if err := plugin.AddPort(port); err != nil {
 			return nil, err
 		}
+	}
+
+	// Adicionar dependências se fornecidas
+	for _, dep := range cmd.Dependencies {
+		plugin.AddDependency(dep)
 	}
 
 	// Atualizar configuração se fornecida

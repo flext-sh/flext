@@ -14,9 +14,9 @@
 **Nomes**: Originais (sem prefixo flext)
 **Motivo**: Mantidos na organização original conforme solicitado
 
-| Projeto | URL | Status |
-|---------|-----|--------|
-| client-a-oud-mig | <git@github.com>:datacosmos-br/client-a-oud-mig.git | ✅ Original |
+| Projeto              | URL                                                     | Status      |
+| -------------------- | ------------------------------------------------------- | ----------- |
+| client-a-oud-mig        | <git@github.com>:datacosmos-br/client-a-oud-mig.git        | ✅ Original |
 | client-b-poc-oic-wms | <git@github.com>:datacosmos-br/client-b-poc-oic-wms.git | ✅ Original |
 
 ### 🎵 PROJETOS SINGER/MELTANO (flext-sh)
@@ -25,14 +25,14 @@
 **Prefixo**: flext-
 **Status**: Migrados com sucesso
 
-| Projeto Original | Projeto Migrado | URL |
-|-------------------|-----------------|-----|
-| dbt-ldap | flext-dbt-ldap | <git@github.com>:flext-sh/flext-dbt-ldap.git |
-| oracle-oic-ext | flext-oracle-oic-ext | <git@github.com>:flext-sh/flext-oracle-oic-ext.git |
-| tap-ldap | flext-tap-ldap | <git@github.com>:flext-sh/flext-tap-ldap.git |
-| tap-oracle-oic | flext-tap-oracle-oic | <git@github.com>:flext-sh/flext-tap-oracle-oic.git |
-| tap-oracle-wms | flext-tap-oracle-wms | <git@github.com>:flext-sh/flext-tap-oracle-wms.git |
-| target-ldap | flext-target-ldap | <git@github.com>:flext-sh/flext-target-ldap.git |
+| Projeto Original  | Projeto Migrado         | URL                                                   |
+| ----------------- | ----------------------- | ----------------------------------------------------- |
+| dbt-ldap          | flext-dbt-ldap          | <git@github.com>:flext-sh/flext-dbt-ldap.git          |
+| oracle-oic-ext    | flext-oracle-oic-ext    | <git@github.com>:flext-sh/flext-oracle-oic-ext.git    |
+| tap-ldap          | flext-tap-ldap          | <git@github.com>:flext-sh/flext-tap-ldap.git          |
+| tap-oracle-oic    | flext-tap-oracle-oic    | <git@github.com>:flext-sh/flext-tap-oracle-oic.git    |
+| tap-oracle-wms    | flext-tap-oracle-wms    | <git@github.com>:flext-sh/flext-tap-oracle-wms.git    |
+| target-ldap       | flext-target-ldap       | <git@github.com>:flext-sh/flext-target-ldap.git       |
 | target-oracle-oic | flext-target-oracle-oic | <git@github.com>:flext-sh/flext-target-oracle-oic.git |
 | target-oracle-wms | flext-target-oracle-wms | <git@github.com>:flext-sh/flext-target-oracle-wms.git |
 
@@ -42,10 +42,10 @@
 **Prefixo**: flext-
 **Status**: Migrados com sucesso
 
-| Projeto Original | Projeto Migrado | URL |
-|-------------------|-----------------|-----|
-| flext-ldap | flext-ldap | <git@github.com>:flext-sh/flext-ldap.git |
-| flext-quality | flext-quality | <git@github.com>:flext-sh/flext-ldap.git |
+| Projeto Original | Projeto Migrado | URL                                      |
+| ---------------- | --------------- | ---------------------------------------- |
+| flext-ldap       | flext-ldap      | <git@github.com>:flext-sh/flext-ldap.git |
+| flext-quality    | flext-quality   | <git@github.com>:flext-sh/flext-ldap.git |
 
 ### 🔧 MÓDULOS FLEXT FRAMEWORK (locais)
 
@@ -53,17 +53,17 @@
 **Prefixo**: flext-
 **Status**: Renomeados localmente, aguardando criação de repositórios
 
-| Módulo Original | Módulo Local | Futuro Repositório |
-|-----------------|--------------|-------------------|
-| flext-core | flext-core/ | <git@github.com>:flext-sh/flext-core.git |
-| flext-auth | flext-auth/ | <git@github.com>:flext-sh/flext-auth.git |
-| flext-api | flext-api/ | <git@github.com>:flext-sh/flext-api.git |
-| flext-grpc | flext-grpc/ | <git@github.com>:flext-sh/flext-grpc.git |
-| flext-web | flext-web/ | <git@github.com>:flext-sh/flext-web.git |
-| flext-cli | flext-cli/ | <git@github.com>:flext-sh/flext-cli.git |
-| flext-plugin | flext-plugin/ | <git@github.com>:flext-sh/flext-plugin.git |
+| Módulo Original     | Módulo Local         | Futuro Repositório                                |
+| ------------------- | -------------------- | ------------------------------------------------- |
+| flext-core          | flext-core/          | <git@github.com>:flext-sh/flext-core.git          |
+| flext-auth          | flext-auth/          | <git@github.com>:flext-sh/flext-auth.git          |
+| flext-api           | flext-api/           | <git@github.com>:flext-sh/flext-api.git           |
+| flext-grpc          | flext-grpc/          | <git@github.com>:flext-sh/flext-grpc.git          |
+| flext-web           | flext-web/           | <git@github.com>:flext-sh/flext-web.git           |
+| flext-cli           | flext-cli/           | <git@github.com>:flext-sh/flext-cli.git           |
+| flext-plugin        | flext-plugin/        | <git@github.com>:flext-sh/flext-plugin.git        |
 | flext-observability | flext-observability/ | <git@github.com>:flext-sh/flext-observability.git |
-| flext-meltano | flext-meltano/ | <git@github.com>:flext-sh/flext-meltano.git |
+| flext-meltano       | flext-meltano/       | <git@github.com>:flext-sh/flext-meltano.git       |
 
 ### 📦 PROJETOS LEGACY (flext-sh)
 
@@ -72,14 +72,14 @@
 **Prefixo**: flext-
 **Status**: Migrados com sucesso
 
-| Projeto Original | Projeto Migrado | URL |
-|-------------------|-----------------|-----|
+| Projeto Original      | Projeto Migrado              | URL                                                 |
+| --------------------- | ---------------------------- | --------------------------------------------------- |
 | flext-adapter-example | legacy/flext-adapter-example | <git@github.com>:flext-sh/flext-adapter-example.git |
 | flext-database-oracle | legacy/flext-database-oracle | <git@github.com>:flext-sh/flext-database-oracle.git |
 | flext-http-oracle-oic | legacy/flext-http-oracle-oic | <git@github.com>:flext-sh/flext-http-oracle-oic.git |
 | flext-http-oracle-wms | legacy/flext-http-oracle-wms | <git@github.com>:flext-sh/flext-http-oracle-wms.git |
-| flext-oracle-oic | legacy/flext-oracle-oic | <git@github.com>:flext-sh/flext-oracle-oic.git |
-| flext-oracle-wms | legacy/flext-oracle-wms | <git@github.com>:flext-sh/flext-oracle-wms.git |
+| flext-oracle-oic      | legacy/flext-oracle-oic      | <git@github.com>:flext-sh/flext-oracle-oic.git      |
+| flext-oracle-wms      | legacy/flext-oracle-wms      | <git@github.com>:flext-sh/flext-oracle-wms.git      |
 
 ---
 

@@ -66,13 +66,13 @@ event = flext.ValueObjects.FlextDomainEvent(
 
 ### 2. **Component Organization**
 
-| Section             | Responsibility      | Main Components                                        |
-| ------------------- | ------------------- | ------------------------------------------------------ |
-| `flext.Entities`      | Domain entities     | `BaseEntity`, `AggregateRoot`, `BusinessEntity`        |
+| Section               | Responsibility      | Main Components                                          |
+| --------------------- | ------------------- | -------------------------------------------------------- |
+| `flext.Entities`      | Domain entities     | `BaseEntity`, `AggregateRoot`, `BusinessEntity`          |
 | `flext.ValueObjects`  | Immutable data      | `FlextDomainEvent`, `EntityId`, `Address`, `ContactInfo` |
-| `flext.Protocols`     | Type interfaces     | `Configurable`, `Activatable`, `Timestamped`           |
-| `flext.Mixins`        | Composable behavior | `Status`, `Config`, `Metadata`, `Management`           |
-| `flext.EntityFactory` | Entity creation     | `flext_create_service()`, `flext_create_configurable()`    |
+| `flext.Protocols`     | Type interfaces     | `Configurable`, `Activatable`, `Timestamped`             |
+| `flext.Mixins`        | Composable behavior | `Status`, `Config`, `Metadata`, `Management`             |
+| `flext.EntityFactory` | Entity creation     | `flext_create_service()`, `flext_create_configurable()`  |
 
 ---
 

@@ -4,6 +4,8 @@ import (
 	"context"
 
 	"github.com/flext-sh/flext/internal/bounded_contexts/pipeline/application/ports"
+	"github.com/flext-sh/flext/internal/bounded_contexts/pipeline/domain/entities"
+	"github.com/samber/lo"
 )
 
 // ListPipelinesQuery consulta para listar pipelines
@@ -49,12 +51,11 @@ func (h *ListPipelinesHandler) Handle(ctx context.Context, query ListPipelinesQu
 		return nil, err
 	}
 
-	// Converter para DTOs
-	pipelineDTOs := make([]PipelineDTO, len(pipelines))
-	for i, pipeline := range pipelines {
-		stepsDTO := make([]PipelineStepDTO, len(pipeline.Steps))
-		for j, step := range pipeline.Steps {
-			stepsDTO[j] = PipelineStepDTO{
+	// Converter para DTOs usando functional programming
+	pipelineDTOs := lo.Map(pipelines, func(pipeline *entities.Pipeline, _ int) PipelineDTO {
+		// Converter steps usando functional programming
+		stepsDTO := lo.Map(pipeline.Steps, func(step entities.PipelineStep, _ int) PipelineStepDTO {
+			return PipelineStepDTO{
 				ID:            step.ID,
 				Name:          step.Name,
 				PluginID:      step.PluginID,
@@ -62,9 +63,9 @@ func (h *ListPipelinesHandler) Handle(ctx context.Context, query ListPipelinesQu
 				Order:         step.Order,
 				DependsOn:     step.DependsOn,
 			}
-		}
+		})
 
-		pipelineDTOs[i] = PipelineDTO{
+		return PipelineDTO{
 			ID:            pipeline.ID,
 			Name:          pipeline.Name,
 			Description:   pipeline.Description,
@@ -72,12 +73,12 @@ func (h *ListPipelinesHandler) Handle(ctx context.Context, query ListPipelinesQu
 			Steps:         stepsDTO,
 			Tags:          pipeline.Tags,
 			Configuration: pipeline.Configuration,
-			Schedule:      pipeline.Schedule,
-			CreatedAt:     pipeline.CreatedAt,
-			UpdatedAt:     pipeline.UpdatedAt,
-			Version:       pipeline.Version,
+			Schedule:      nil, // TODO: Convert string to PipelineScheduleDTO
+			CreatedAt:     pipeline.GetCreatedAt(),
+			UpdatedAt:     pipeline.GetUpdatedAt(),
+			Version:       int(pipeline.GetVersion()),
 		}
-	}
+	})
 
 	return &ListPipelinesResult{
 		Pipelines: pipelineDTOs,

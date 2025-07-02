@@ -46,7 +46,7 @@ FLEXT follows a comprehensive testing strategy based on the testing pyramid, ens
 
 ### Core Testing Tools
 
-| Tool               | Purpose                   | Usage in FLEXT            |
+| Tool               | Purpose                   | Usage in FLEXT          |
 | ------------------ | ------------------------- | ----------------------- |
 | **pytest**         | Test runner and framework | Primary testing tool    |
 | **pytest-asyncio** | Async testing support     | Test async operations   |

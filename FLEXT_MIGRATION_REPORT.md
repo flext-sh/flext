@@ -23,43 +23,43 @@
 
 ### Enterprise Integration (2 repositórios)
 
-| Original | Novo | Status |
-|----------|------|--------|
-| client-a-oud-mig | flext-client-a-oud-mig | ✅ Migrado |
+| Original             | Novo                       | Status     |
+| -------------------- | -------------------------- | ---------- |
+| client-a-oud-mig        | flext-client-a-oud-mig        | ✅ Migrado |
 | client-b-poc-oic-wms | flext-client-b-poc-oic-wms | ✅ Migrado |
 
 ### Singer/Meltano Protocol (8 repositórios)
 
-| Original | Novo | Status |
-|----------|------|--------|
-| dbt-ldap | flext-dbt-ldap | ✅ Migrado |
-| oracle-oic-ext | flext-oracle-oic-ext | ✅ Migrado |
-| tap-ldap | flext-tap-ldap | ✅ Migrado |
-| tap-oracle-oic | flext-tap-oracle-oic | ✅ Migrado |
-| tap-oracle-wms | flext-tap-oracle-wms | ✅ Migrado |
-| target-ldap | flext-target-ldap | ✅ Migrado |
+| Original          | Novo                    | Status     |
+| ----------------- | ----------------------- | ---------- |
+| dbt-ldap          | flext-dbt-ldap          | ✅ Migrado |
+| oracle-oic-ext    | flext-oracle-oic-ext    | ✅ Migrado |
+| tap-ldap          | flext-tap-ldap          | ✅ Migrado |
+| tap-oracle-oic    | flext-tap-oracle-oic    | ✅ Migrado |
+| tap-oracle-wms    | flext-tap-oracle-wms    | ✅ Migrado |
+| target-ldap       | flext-target-ldap       | ✅ Migrado |
 | target-oracle-oic | flext-target-oracle-oic | ✅ Migrado |
 | target-oracle-wms | flext-target-oracle-wms | ✅ Migrado |
 
 ### FLEXT Extensions (2 repositórios)
 
-| Original | Novo | Status |
-|----------|------|--------|
-| flext-ldap | flext-ldap | ✅ Migrado |
-| flext-quality* | flext-quality | ✅ Migrado |
+| Original        | Novo          | Status     |
+| --------------- | ------------- | ---------- |
+| flext-ldap      | flext-ldap    | ✅ Migrado |
+| flext-quality\* | flext-quality | ✅ Migrado |
 
-*Note: flext-quality era fork de dc-code-analyzer
+\*Note: flext-quality era fork de dc-code-analyzer
 
 ### Legacy Projects (6 repositórios)
 
-| Original | Novo | Status |
-|----------|------|--------|
+| Original              | Novo                  | Status     |
+| --------------------- | --------------------- | ---------- |
 | flext-adapter-example | flext-adapter-example | ✅ Migrado |
 | flext-database-oracle | flext-database-oracle | ✅ Migrado |
 | flext-http-oracle-oic | flext-http-oracle-oic | ✅ Migrado |
 | flext-http-oracle-wms | flext-http-oracle-wms | ✅ Migrado |
-| flext-oracle-oic | flext-oracle-oic | ✅ Migrado |
-| flext-oracle-wms | flext-oracle-wms | ✅ Migrado |
+| flext-oracle-oic      | flext-oracle-oic      | ✅ Migrado |
+| flext-oracle-wms      | flext-oracle-wms      | ✅ Migrado |
 
 ---
 
@@ -69,17 +69,17 @@
 
 Todos os módulos foram renomeados localmente e configurados no .gitmodules:
 
-| Original | Novo | Status |
-|----------|------|--------|
-| flext-core | flext-core | ✅ Renomeado localmente |
-| flext-auth | flext-auth | ✅ Renomeado localmente |
-| flext-api | flext-api | ✅ Renomeado localmente |
-| flext-grpc | flext-grpc | ✅ Renomeado localmente |
-| flext-web | flext-web | ✅ Renomeado localmente |
-| flext-cli | flext-cli | ✅ Renomeado localmente |
-| flext-plugin | flext-plugin | ✅ Renomeado localmente |
+| Original            | Novo                | Status                  |
+| ------------------- | ------------------- | ----------------------- |
+| flext-core          | flext-core          | ✅ Renomeado localmente |
+| flext-auth          | flext-auth          | ✅ Renomeado localmente |
+| flext-api           | flext-api           | ✅ Renomeado localmente |
+| flext-grpc          | flext-grpc          | ✅ Renomeado localmente |
+| flext-web           | flext-web           | ✅ Renomeado localmente |
+| flext-cli           | flext-cli           | ✅ Renomeado localmente |
+| flext-plugin        | flext-plugin        | ✅ Renomeado localmente |
 | flext-observability | flext-observability | ✅ Renomeado localmente |
-| flext-meltano | flext-meltano | ✅ Renomeado localmente |
+| flext-meltano       | flext-meltano       | ✅ Renomeado localmente |
 
 ---
 
@@ -125,7 +125,7 @@ legacy/flext-*/ → legacy/flext-*/
 
 - **Diretórios renomeados**: 21+ diretórios
 - **Arquivos afetados**: .gitmodules, documentação
-- **Backup criado**: .gitmodules.backup-20250629_*
+- **Backup criado**: .gitmodules.backup-20250629\_\*
 
 ### Git Configuration
 

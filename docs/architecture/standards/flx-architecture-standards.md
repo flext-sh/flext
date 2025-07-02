@@ -166,8 +166,8 @@ class ProtocolPlugin(Protocol):
 
 ### 10. Default Infrastructure Stack
 
-| Component | Implementation                  | Location                        |
-| --------- | ------------------------------- | ------------------------------- |
+| Component | Implementation                  | Location                          |
+| --------- | ------------------------------- | --------------------------------- |
 | Logging   | Structured logging with Logfire | `flext.infra.logging.structured`  |
 | Config    | YAML + Environment variables    | `flext.infra.config.hierarchical` |
 | CLI       | Cyclopts with auto-discovery    | `flext.infra.cli.cyclopts`        |

@@ -24,8 +24,8 @@ This hub provides comprehensive step-by-step implementation guides for FLEXT Fra
 
 ### **Core Implementation Topics**
 
-| **Topic**                                                                   | **Function**                  | **Audience**   | **Complexity** | **Status** |
-| --------------------------------------------------------------------------- | ----------------------------- | -------------- | -------------- | ---------- |
+| **Topic**                                                                       | **Function**                  | **Audience**   | **Complexity** | **Status** |
+| ------------------------------------------------------------------------------- | ----------------------------- | -------------- | -------------- | ---------- |
 | [**FLEXT Framework Implementation**](./flext-framework-implementation-guide.md) | Complete implementation guide | All developers | ⭐⭐⭐         | ✅ Updated |
 
 ---

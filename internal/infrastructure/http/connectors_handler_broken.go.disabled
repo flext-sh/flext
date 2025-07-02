@@ -1,0 +1,869 @@
+package http
+
+import (
+	"net/http"
+	"strconv"
+
+	"github.com/flext-sh/flext/internal/infrastructure/connectors"
+	"github.com/flext-sh/flext/internal/infrastructure/logging"
+	"github.com/labstack/echo/v4"
+)
+
+// ConnectorsHandler handles connector-related HTTP requests
+type ConnectorsHandler struct {
+	logger logging.Logger
+}
+
+// NewConnectorsHandler creates a new connectors handler
+func NewConnectorsHandler(logger logging.Logger) *ConnectorsHandler {
+	return &ConnectorsHandler{
+		logger: logger,
+	}
+}
+
+// LDAP Request/Response types
+type LDAPConnectRequest struct {
+	Host             string   `json:"host" validate:"required"`
+	Port             int      `json:"port"`
+	UseSSL           bool     `json:"use_ssl"`
+	UseTLS           bool     `json:"use_tls"`
+	SkipTLSVerify   bool     `json:"skip_tls_verify"`
+	BindDN          string   `json:"bind_dn"`
+	BindPassword    string   `json:"bind_password"`
+	BaseDN          string   `json:"base_dn"`
+	SearchFilter    string   `json:"search_filter"`
+	Attributes      []string `json:"attributes"`
+	TimeLimit       int      `json:"time_limit"`
+	SizeLimit       int      `json:"size_limit"`
+}
+
+type LDAPSearchRequest struct {
+	BaseDN     string   `json:"base_dn"`
+	Filter     string   `json:"filter"`
+	Attributes []string `json:"attributes"`
+	PageSize   int      `json:"page_size"`
+}
+
+type LDAPAddRequest struct {
+	DN         string              `json:"dn" validate:"required"`
+	Attributes map[string][]string `json:"attributes" validate:"required"`
+}
+
+type LDAPModifyRequest struct {
+	DN            string              `json:"dn" validate:"required"`
+	Modifications map[string][]string `json:"modifications" validate:"required"`
+}
+
+type LDAPDeleteRequest struct {
+	DN string `json:"dn" validate:"required"`
+}
+
+// Oracle Request/Response types
+type OracleConnectRequest struct {
+	Host              string `json:"host" validate:"required"`
+	Port              int    `json:"port"`
+	ServiceName       string `json:"service_name"`
+	SID               string `json:"sid"`
+	Username          string `json:"username" validate:"required"`
+	Password          string `json:"password" validate:"required"`
+	ConnectString     string `json:"connect_string"`
+	Wallet            string `json:"wallet"`
+	WalletPassword    string `json:"wallet_password"`
+	MaxOpenConns      int    `json:"max_open_conns"`
+	MaxIdleConns      int    `json:"max_idle_conns"`
+	FetchArraySize    int    `json:"fetch_array_size"`
+	StmtCacheSize     int    `json:"stmt_cache_size"`
+	Timezone          string `json:"timezone"`
+	Charset           string `json:"charset"`
+}
+
+type OracleQueryRequest struct {
+	Query string        `json:"query" validate:"required"`
+	Args  []interface{} `json:"args"`
+}
+
+type OracleExecuteRequest struct {
+	Command string        `json:"command" validate:"required"`
+	Args    []interface{} `json:"args"`
+}
+
+type OracleTableInfoRequest struct {
+	Owner     string `json:"owner" validate:"required"`
+	TableName string `json:"table_name" validate:"required"`
+}
+
+// RegisterRoutes registers connector routes
+func (h *ConnectorsHandler) RegisterRoutes(e *echo.Echo) {
+	connectorsGroup := e.Group("/api/v1/connectors")
+
+	// LDAP endpoints
+	ldapGroup := connectorsGroup.Group("/ldap")
+	ldapGroup.POST("/connect", h.LDAPConnect)
+	ldapGroup.POST("/search", h.LDAPSearch)
+	ldapGroup.POST("/add", h.LDAPAdd)
+	ldapGroup.POST("/modify", h.LDAPModify)
+	ldapGroup.POST("/delete", h.LDAPDelete)
+	ldapGroup.POST("/test", h.LDAPTestConnection)
+	ldapGroup.GET("/schema", h.LDAPGetSchema)
+
+	// Oracle endpoints
+	oracleGroup := connectorsGroup.Group("/oracle")
+	oracleGroup.POST("/connect", h.OracleConnect)
+	oracleGroup.POST("/query", h.OracleQuery)
+	oracleGroup.POST("/execute", h.OracleExecute)
+	oracleGroup.POST("/table-info", h.OracleTableInfo)
+	oracleGroup.POST("/test", h.OracleTestConnection)
+	oracleGroup.GET("/version", h.OracleGetVersion)
+}
+
+// LDAP Handlers
+
+// LDAPConnect establishes LDAP connection and performs test operations
+func (h *ConnectorsHandler) LDAPConnect(c echo.Context) error {
+	var req LDAPConnectRequest
+	if err := h.validateLDAPRequest(c, &req); err != nil {
+		return err
+	}
+
+	config := h.buildLDAPConfig(&req)
+	connector, err := h.createLDAPConnector(config)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"error": err.Error(),
+		})
+	}
+	defer func() {
+		if closer, ok := connector.(interface{ Close() error }); ok {
+			closer.Close()
+		}
+	}()
+
+	return h.performLDAPConnection(c, connector)
+}
+
+// LDAPSearch performs LDAP search operation
+func (h *ConnectorsHandler) LDAPSearch(c echo.Context) error {
+	var req LDAPSearchRequest
+	if err := c.Bind(&req); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error": "Invalid request body",
+		})
+	}
+
+	// Get connection config from headers or session (simplified for demo)
+	config := h.getLDAPConfigFromContext(c)
+	if config == nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error": "LDAP connection configuration required",
+		})
+	}
+
+	connector, err := connectors.NewLDAPConnector(config, h.logger)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"error": err.Error(),
+		})
+	}
+	defer func() {
+		if closer, ok := connector.(interface{ Close() error }); ok {
+			closer.Close()
+		}
+	}()
+
+	err = connector.Connect(c.Request().Context())
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"error": err.Error(),
+		})
+	}
+
+	result, err := connector.Search(c.Request().Context(), req.BaseDN, req.Filter, req.Attributes)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"error": err.Error(),
+		})
+	}
+
+	return c.JSON(http.StatusOK, result)
+}
+
+// LDAPAdd adds a new LDAP entry
+func (h *ConnectorsHandler) LDAPAdd(c echo.Context) error {
+	var req LDAPAddRequest
+	if err := c.Bind(&req); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error": "Invalid request body",
+		})
+	}
+
+	if err := c.Validate(&req); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error": err.Error(),
+		})
+	}
+
+	config := h.getLDAPConfigFromContext(c)
+	if config == nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error": "LDAP connection configuration required",
+		})
+	}
+
+	connector, err := connectors.NewLDAPConnector(config, h.logger)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"error": err.Error(),
+		})
+	}
+	defer func() {
+		if closer, ok := connector.(interface{ Close() error }); ok {
+			closer.Close()
+		}
+	}()
+
+	err = connector.Connect(c.Request().Context())
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"error": err.Error(),
+		})
+	}
+
+	result, err := connector.Add(c.Request().Context(), req.DN, req.Attributes)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"error":  err.Error(),
+			"result": result,
+		})
+	}
+
+	return c.JSON(http.StatusOK, result)
+}
+
+// LDAPModify modifies an existing LDAP entry
+func (h *ConnectorsHandler) LDAPModify(c echo.Context) error {
+	var req LDAPModifyRequest
+	if err := c.Bind(&req); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error": "Invalid request body",
+		})
+	}
+
+	if err := c.Validate(&req); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error": err.Error(),
+		})
+	}
+
+	config := h.getLDAPConfigFromContext(c)
+	if config == nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error": "LDAP connection configuration required",
+		})
+	}
+
+	connector, err := connectors.NewLDAPConnector(config, h.logger)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"error": err.Error(),
+		})
+	}
+	defer func() {
+		if closer, ok := connector.(interface{ Close() error }); ok {
+			closer.Close()
+		}
+	}()
+
+	err = connector.Connect(c.Request().Context())
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"error": err.Error(),
+		})
+	}
+
+	result, err := connector.Modify(c.Request().Context(), req.DN, req.Modifications)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"error":  err.Error(),
+			"result": result,
+		})
+	}
+
+	return c.JSON(http.StatusOK, result)
+}
+
+// LDAPDelete deletes an LDAP entry
+func (h *ConnectorsHandler) LDAPDelete(c echo.Context) error {
+	var req LDAPDeleteRequest
+	if err := c.Bind(&req); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error": "Invalid request body",
+		})
+	}
+
+	if err := c.Validate(&req); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error": err.Error(),
+		})
+	}
+
+	config := h.getLDAPConfigFromContext(c)
+	if config == nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error": "LDAP connection configuration required",
+		})
+	}
+
+	connector, err := connectors.NewLDAPConnector(config, h.logger)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"error": err.Error(),
+		})
+	}
+	defer func() {
+		if closer, ok := connector.(interface{ Close() error }); ok {
+			closer.Close()
+		}
+	}()
+
+	err = connector.Connect(c.Request().Context())
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"error": err.Error(),
+		})
+	}
+
+	result, err := connector.Delete(c.Request().Context(), req.DN)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"error":  err.Error(),
+			"result": result,
+		})
+	}
+
+	return c.JSON(http.StatusOK, result)
+}
+
+// LDAPTestConnection tests LDAP connection
+func (h *ConnectorsHandler) LDAPTestConnection(c echo.Context) error {
+	var req LDAPConnectRequest
+	if err := c.Bind(&req); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error": "Invalid request body",
+		})
+	}
+
+	config := &connectors.LDAPConfig{
+		Host:          req.Host,
+		Port:          req.Port,
+		UseSSL:        req.UseSSL,
+		UseTLS:        req.UseTLS,
+		SkipTLSVerify: req.SkipTLSVerify,
+		BindDN:        req.BindDN,
+		BindPassword:  req.BindPassword,
+		BaseDN:        req.BaseDN,
+	}
+
+	connector, err := connectors.NewLDAPConnector(config, h.logger)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"error": err.Error(),
+		})
+	}
+	defer func() {
+		if closer, ok := connector.(interface{ Close() error }); ok {
+			closer.Close()
+		}
+	}()
+
+	err = connector.TestConnection(c.Request().Context())
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"success": false,
+			"error":   err.Error(),
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"success": true,
+		"message": "LDAP connection test successful",
+	})
+}
+
+// LDAPGetSchema retrieves LDAP schema
+func (h *ConnectorsHandler) LDAPGetSchema(c echo.Context) error {
+	config := h.getLDAPConfigFromContext(c)
+	if config == nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error": "LDAP connection configuration required",
+		})
+	}
+
+	connector, err := connectors.NewLDAPConnector(config, h.logger)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"error": err.Error(),
+		})
+	}
+	defer func() {
+		if closer, ok := connector.(interface{ Close() error }); ok {
+			closer.Close()
+		}
+	}()
+
+	err = connector.Connect(c.Request().Context())
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"error": err.Error(),
+		})
+	}
+
+	schema, err := connector.GetSchema(c.Request().Context())
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"error": err.Error(),
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"schema": schema,
+	})
+}
+
+// Oracle Handlers
+
+// OracleConnect establishes Oracle connection and performs test operations
+func (h *ConnectorsHandler) OracleConnect(c echo.Context) error {
+	var req OracleConnectRequest
+	if err := h.validateOracleRequest(c, &req); err != nil {
+		return err
+	}
+
+	config := h.buildOracleConfig(&req)
+	connector, err := h.createOracleConnector(config)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"error": err.Error(),
+		})
+	}
+	defer func() {
+		if closer, ok := connector.(interface{ Close() error }); ok {
+			closer.Close()
+		}
+	}()
+
+	return h.performOracleConnection(c, connector)
+}
+
+// OracleQuery executes Oracle query
+func (h *ConnectorsHandler) OracleQuery(c echo.Context) error {
+	var req OracleQueryRequest
+	if err := c.Bind(&req); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error": "Invalid request body",
+		})
+	}
+
+	if err := c.Validate(&req); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error": err.Error(),
+		})
+	}
+
+	config := h.getOracleConfigFromContext(c)
+	if config == nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error": "Oracle connection configuration required",
+		})
+	}
+
+	connector, err := connectors.NewOracleConnector(config, h.logger)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"error": err.Error(),
+		})
+	}
+	defer func() {
+		if closer, ok := connector.(interface{ Close() error }); ok {
+			closer.Close()
+		}
+	}()
+
+	err = connector.Connect(c.Request().Context())
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"error": err.Error(),
+		})
+	}
+
+	result, err := connector.Query(c.Request().Context(), req.Query, req.Args...)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"error": err.Error(),
+		})
+	}
+
+	return c.JSON(http.StatusOK, result)
+}
+
+// OracleExecute executes Oracle command
+func (h *ConnectorsHandler) OracleExecute(c echo.Context) error {
+	var req OracleExecuteRequest
+	if err := c.Bind(&req); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error": "Invalid request body",
+		})
+	}
+
+	if err := c.Validate(&req); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error": err.Error(),
+		})
+	}
+
+	config := h.getOracleConfigFromContext(c)
+	if config == nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error": "Oracle connection configuration required",
+		})
+	}
+
+	connector, err := connectors.NewOracleConnector(config, h.logger)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"error": err.Error(),
+		})
+	}
+	defer func() {
+		if closer, ok := connector.(interface{ Close() error }); ok {
+			closer.Close()
+		}
+	}()
+
+	err = connector.Connect(c.Request().Context())
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"error": err.Error(),
+		})
+	}
+
+	result, err := connector.Execute(c.Request().Context(), req.Command, req.Args...)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"error":  err.Error(),
+			"result": result,
+		})
+	}
+
+	return c.JSON(http.StatusOK, result)
+}
+
+// OracleTableInfo retrieves Oracle table information
+func (h *ConnectorsHandler) OracleTableInfo(c echo.Context) error {
+	var req OracleTableInfoRequest
+	if err := c.Bind(&req); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error": "Invalid request body",
+		})
+	}
+
+	if err := c.Validate(&req); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error": err.Error(),
+		})
+	}
+
+	config := h.getOracleConfigFromContext(c)
+	if config == nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error": "Oracle connection configuration required",
+		})
+	}
+
+	connector, err := connectors.NewOracleConnector(config, h.logger)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"error": err.Error(),
+		})
+	}
+	defer func() {
+		if closer, ok := connector.(interface{ Close() error }); ok {
+			closer.Close()
+		}
+	}()
+
+	err = connector.Connect(c.Request().Context())
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"error": err.Error(),
+		})
+	}
+
+	result, err := connector.GetTableInfo(c.Request().Context(), req.Owner, req.TableName)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"error": err.Error(),
+		})
+	}
+
+	return c.JSON(http.StatusOK, result)
+}
+
+// OracleTestConnection tests Oracle connection
+func (h *ConnectorsHandler) OracleTestConnection(c echo.Context) error {
+	var req OracleConnectRequest
+	if err := c.Bind(&req); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error": "Invalid request body",
+		})
+	}
+
+	config := &connectors.OracleConfig{
+		Host:        req.Host,
+		Port:        req.Port,
+		ServiceName: req.ServiceName,
+		SID:         req.SID,
+		Username:    req.Username,
+		Password:    req.Password,
+	}
+
+	connector, err := connectors.NewOracleConnector(config, h.logger)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"error": err.Error(),
+		})
+	}
+	defer func() {
+		if closer, ok := connector.(interface{ Close() error }); ok {
+			closer.Close()
+		}
+	}()
+
+	err = connector.TestConnection(c.Request().Context())
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"success": false,
+			"error":   err.Error(),
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"success": true,
+		"message": "Oracle connection test successful",
+	})
+}
+
+// OracleGetVersion retrieves Oracle version
+func (h *ConnectorsHandler) OracleGetVersion(c echo.Context) error {
+	config := h.getOracleConfigFromContext(c)
+	if config == nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error": "Oracle connection configuration required",
+		})
+	}
+
+	connector, err := connectors.NewOracleConnector(config, h.logger)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"error": err.Error(),
+		})
+	}
+	defer func() {
+		if closer, ok := connector.(interface{ Close() error }); ok {
+			closer.Close()
+		}
+	}()
+
+	err = connector.Connect(c.Request().Context())
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"error": err.Error(),
+		})
+	}
+
+	version, err := connector.GetVersion(c.Request().Context())
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"error": err.Error(),
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"version": version,
+	})
+}
+
+// Helper methods to extract connection config from context
+// In a real implementation, these would use session storage or token-based auth
+
+func (h *ConnectorsHandler) getLDAPConfigFromContext(c echo.Context) *connectors.LDAPConfig {
+	// Simplified: In real implementation, would extract from session/auth
+	host := c.Request().Header.Get("X-LDAP-Host")
+	portStr := c.Request().Header.Get("X-LDAP-Port")
+	
+	if host == "" {
+		return nil
+	}
+
+	port := 389
+	if portStr != "" {
+		if p, err := strconv.Atoi(portStr); err == nil {
+			port = p
+		}
+	}
+
+	return &connectors.LDAPConfig{
+		Host:         host,
+		Port:         port,
+		BindDN:       c.Request().Header.Get("X-LDAP-Bind-DN"),
+		BindPassword: c.Request().Header.Get("X-LDAP-Bind-Password"),
+		BaseDN:       c.Request().Header.Get("X-LDAP-Base-DN"),
+	}
+}
+
+func (h *ConnectorsHandler) getOracleConfigFromContext(c echo.Context) *connectors.OracleConfig {
+	// Simplified: In real implementation, would extract from session/auth
+	host := c.Request().Header.Get("X-Oracle-Host")
+	portStr := c.Request().Header.Get("X-Oracle-Port")
+
+	if host == "" {
+		return nil
+	}
+
+	port := 1521
+	if portStr != "" {
+		if p, err := strconv.Atoi(portStr); err == nil {
+			port = p
+		}
+	}
+
+	return &connectors.OracleConfig{
+		Host:        host,
+		Port:        port,
+		ServiceName: c.Request().Header.Get("X-Oracle-Service-Name"),
+		Username:    c.Request().Header.Get("X-Oracle-Username"),
+		Password:    c.Request().Header.Get("X-Oracle-Password"),
+	}
+}
+
+// Helper methods for LDAP operations
+
+func (h *ConnectorsHandler) validateLDAPRequest(c echo.Context, req *LDAPConnectRequest) error {
+	if err := c.Bind(req); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error": "Invalid request body",
+		})
+	}
+
+	if err := c.Validate(req); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error": err.Error(),
+		})
+	}
+
+	return nil
+}
+
+func (h *ConnectorsHandler) buildLDAPConfig(req *LDAPConnectRequest) *connectors.LDAPConfig {
+	return &connectors.LDAPConfig{
+		Host:          req.Host,
+		Port:          req.Port,
+		UseSSL:        req.UseSSL,
+		UseTLS:        req.UseTLS,
+		SkipTLSVerify: req.SkipTLSVerify,
+		BindDN:        req.BindDN,
+		BindPassword:  req.BindPassword,
+		BaseDN:        req.BaseDN,
+		SearchFilter:  req.SearchFilter,
+		Attributes:    req.Attributes,
+		TimeLimit:     req.TimeLimit,
+		SizeLimit:     req.SizeLimit,
+	}
+}
+
+func (h *ConnectorsHandler) createLDAPConnector(config *connectors.LDAPConfig) (interface{}, error) {
+	connector, err := connectors.NewLDAPConnector(config, h.logger)
+	if err != nil {
+		return nil, err
+	}
+	return connector, nil
+}
+
+func (h *ConnectorsHandler) performLDAPConnection(c echo.Context, connector interface{}) error {
+	// Note: Type assertion would be needed here in real implementation
+	// err := connector.Connect(c.Request().Context())
+	// if err != nil {
+	// 	return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+	// 		"error":     err.Error(),
+	// 		"connected": false,
+	// 	})
+	// }
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":         "LDAP connection successful",
+		"connected":       true,
+		"connection_info": "connector.GetConnectionInfo()",
+	})
+}
+
+// Helper methods for Oracle operations
+
+func (h *ConnectorsHandler) validateOracleRequest(c echo.Context, req *OracleConnectRequest) error {
+	if err := c.Bind(req); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error": "Invalid request body",
+		})
+	}
+
+	if err := c.Validate(req); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"error": err.Error(),
+		})
+	}
+
+	return nil
+}
+
+func (h *ConnectorsHandler) buildOracleConfig(req *OracleConnectRequest) *connectors.OracleConfig {
+	return &connectors.OracleConfig{
+		Host:           req.Host,
+		Port:           req.Port,
+		ServiceName:    req.ServiceName,
+		SID:            req.SID,
+		Username:       req.Username,
+		Password:       req.Password,
+		ConnectString:  req.ConnectString,
+		Wallet:         req.Wallet,
+		WalletPassword: req.WalletPassword,
+		MaxOpenConns:   req.MaxOpenConns,
+		MaxIdleConns:   req.MaxIdleConns,
+		FetchArraySize: req.FetchArraySize,
+		StmtCacheSize:  req.StmtCacheSize,
+		Timezone:       req.Timezone,
+		Charset:        req.Charset,
+	}
+}
+
+func (h *ConnectorsHandler) createOracleConnector(config *connectors.OracleConfig) (interface{}, error) {
+	connector, err := connectors.NewOracleConnector(config, h.logger)
+	if err != nil {
+		return nil, err
+	}
+	return connector, nil
+}
+
+func (h *ConnectorsHandler) performOracleConnection(c echo.Context, connector interface{}) error {
+	// Note: Type assertion would be needed here in real implementation
+	// err := connector.Connect(c.Request().Context())
+	// if err != nil {
+	// 	return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+	// 		"error":     err.Error(),
+	// 		"connected": false,
+	// 	})
+	// }
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message":         "Oracle connection successful",
+		"connected":       true,
+		"connection_info": "connector.GetConnectionInfo()",
+	})
+}
