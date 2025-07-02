@@ -137,3 +137,6 @@
 [submodule "legacy/flx-meltano-enterprise"]
 	path = legacy/flx-meltano-enterprise
 	url = git@github.com:flext-sh/flx-meltano-enterprise.git
+[submodule "flexcore"]
+	path = flexcore
+	url = git@github.com:flext-sh/flexcore.git
