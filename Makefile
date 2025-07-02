@@ -1,7 +1,7 @@
 # FLEXT Workspace Makefile
 # ========================
 
-.PHONY: help build test clean dev deps lint format check validate-api
+.PHONY: help build test clean dev deps lint format check validate-api example-pipeline example-plugin list-pipelines list-plugins validate-architecture test-unit test-integration test-coverage benchmark dev-api load-test all
 
 # Default target
 help: ## Show this help message
@@ -12,8 +12,9 @@ help: ## Show this help message
 # Build targets
 build: ## Build the Go API server
 	@echo "🔨 Building FLEXT Go API..."
-	go build -o flext cmd/flext/main.go
-	@echo "✅ Build complete: ./flext"
+	@mkdir -p bin
+	go build -o bin/flext cmd/flext/main.go
+	@echo "✅ Build complete: ./bin/flext"
 
 build-docker: ## Build Docker image
 	@echo "🐳 Building Docker image..."
@@ -24,11 +25,12 @@ build-docker: ## Build Docker image
 dev: ## Start development environment
 	@echo "🚀 Starting FLEXT development environment..."
 	@if [ ! -f .env ]; then echo "⚠️  Creating .env from example..."; cp .env.example .env; fi
-	source .env && ./flext
+	@if [ ! -f bin/flext ]; then echo "⚠️  Binary not found, building..."; $(MAKE) build; fi
+	source .env && ./bin/flext
 
 run: build ## Build and run the application
 	@echo "🏃 Running FLEXT..."
-	./flext
+	./bin/flext
 
 # Python environment targets
 venv: ## Create and activate Python virtual environment
@@ -127,6 +129,7 @@ sync-submodules: ## Sync all submodules
 # Cleanup targets
 clean: ## Clean build artifacts
 	@echo "🧹 Cleaning build artifacts..."
+	rm -rf bin/
 	rm -f flext
 	go clean
 	@echo "🧹 Cleaning Python cache..."
@@ -207,3 +210,70 @@ check: lint test ## Run all quality checks
 export WORKSPACE_ROOT ?= $(PWD)
 export PYTHON_VENV ?= $(PWD)/.venv
 export DEBUG_MODE ?= true
+
+# Example API calls
+example-pipeline: ## Create an example pipeline
+	@echo "📝 Creating example pipeline..."
+	@curl -X POST http://localhost:8081/api/v1/pipelines \
+		-H "Content-Type: application/json" \
+		-d '{"name": "example-pipeline", "description": "Example pipeline for testing", "tags": ["example", "test"]}' | jq . || echo "❌ Failed to create pipeline (server running?)"
+
+example-plugin: ## Register an example plugin
+	@echo "🔌 Registering example plugin..."
+	@curl -X POST http://localhost:8081/api/v1/plugins \
+		-H "Content-Type: application/json" \
+		-d '{"name": "example-source", "type": "source", "version": "1.0.0", "entry_point": "./plugins/example-source", "description": "Example source plugin"}' | jq . || echo "❌ Failed to register plugin (server running?)"
+
+list-pipelines: ## List all pipelines
+	@echo "📋 Listing pipelines..."
+	@curl -s http://localhost:8081/api/v1/pipelines | jq . || echo "❌ Failed to list pipelines (server running?)"
+
+list-plugins: ## List all plugins
+	@echo "🔌 Listing plugins..."
+	@curl -s http://localhost:8081/api/v1/plugins | jq . || echo "❌ Failed to list plugins (server running?)"
+
+# Architecture validation
+validate-architecture: ## Validate hexagonal architecture compliance
+	@echo "🏗️  Validating architecture compliance..."
+	@echo "Checking bounded contexts..."
+	@find internal/bounded_contexts -name "*.go" | wc -l | xargs echo "Domain files:"
+	@echo "Checking ports/adapters..."
+	@find internal/infrastructure -name "*.go" | wc -l | xargs echo "Infrastructure files:"
+	@echo "Checking shared kernel..."
+	@find internal/shared_kernel -name "*.go" | wc -l | xargs echo "Shared kernel files:"
+
+# Testing improvements
+test-unit: ## Run unit tests only
+	@echo "🧪 Running unit tests..."
+	go test -v -short ./internal/...
+
+test-integration: ## Run integration tests only
+	@echo "🧪 Running integration tests..."
+	go test -v ./tests/integration/...
+
+test-coverage: ## Run tests with coverage report
+	@echo "🧪 Running tests with coverage..."
+	go test -coverprofile=coverage.out ./internal/...
+	go tool cover -html=coverage.out -o coverage.html
+	@echo "📊 Coverage report generated: coverage.html"
+
+benchmark: ## Run performance benchmarks
+	@echo "🏃 Running benchmarks..."
+	go test -bench=. -benchmem ./internal/...
+
+# Development workflow
+dev-api: build ## Run API in development mode
+	@echo "🚀 Starting FLEXT API in development mode..."
+	FLEXT_LOG_LEVEL=debug FLEXT_SERVER_PORT=8081 ./flext
+
+# Load testing  
+load-test: ## Run basic load test
+	@echo "⚡ Running load test..."
+	@if command -v ab >/dev/null 2>&1; then \
+		ab -n 100 -c 10 http://localhost:8081/health; \
+	else \
+		echo "⚠️  apache-bench (ab) not installed. Install with: apt-get install apache2-utils"; \
+	fi
+
+all: setup build test validate-architecture ## Complete build and validation pipeline
+	@echo "🎉 All checks passed! Ready for development."

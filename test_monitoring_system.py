@@ -16,9 +16,11 @@ from datetime import datetime
 from pathlib import Path
 
 # Add module paths
-sys.path.extend([
-    "flext-tap-oracle-wms/src",
-])
+sys.path.extend(
+    [
+        "flext-tap-oracle-wms/src",
+    ]
+)
 
 
 async def test_monitoring_integration():
@@ -58,18 +60,20 @@ async def test_monitoring_integration():
 
         return {
             "monitoring_integration": True,
-            "components_available": all([has_monitor, has_health_checker, has_business_metrics]),
+            "components_available": all(
+                [has_monitor, has_health_checker, has_business_metrics]
+            ),
             "streams_discovered": len(streams),
             "discovery_duration": discovery_duration,
             "performance_metrics_available": bool(performance_metrics),
-            "integration_status": "success"
+            "integration_status": "success",
         }
 
     except Exception as e:
         return {
             "monitoring_integration": False,
             "error": str(e),
-            "integration_status": "error"
+            "integration_status": "error",
         }
 
 
@@ -106,7 +110,7 @@ async def test_performance_monitoring():
         monitor.record_data_processing(
             records=1000,
             bytes_size=1024 * 1024,  # 1MB
-            duration_ms=2500
+            duration_ms=2500,
         )
 
         processing_summary = perf_summary["data_processing"]
@@ -115,12 +119,18 @@ async def test_performance_monitoring():
         with timer("test_operation"):
             await asyncio.sleep(0.1)  # Simulate work
 
-        timer_value = monitor.get_current_metric_value("test_operation", MetricType.TIMER)
+        timer_value = monitor.get_current_metric_value(
+            "test_operation", MetricType.TIMER
+        )
 
         # Test 5: Stream metrics
-        monitor.record_stream_metrics("test_stream", records=500, errors=2, duration_ms=1500)
+        monitor.record_stream_metrics(
+            "test_stream", records=500, errors=2, duration_ms=1500
+        )
 
-        stream_efficiency = monitor.get_current_metric_value("stream_efficiency", MetricType.GAUGE)
+        stream_efficiency = monitor.get_current_metric_value(
+            "stream_efficiency", MetricType.GAUGE
+        )
 
         return {
             "performance_monitoring": True,
@@ -129,14 +139,14 @@ async def test_performance_monitoring():
             "data_processing_tracking": processing_summary["records_processed"] > 0,
             "timer_context_working": timer_value > 0,
             "stream_metrics_working": stream_efficiency > 0,
-            "performance_status": "success"
+            "performance_status": "success",
         }
 
     except Exception as e:
         return {
             "performance_monitoring": False,
             "error": str(e),
-            "performance_status": "error"
+            "performance_status": "error",
         }
 
 
@@ -169,7 +179,9 @@ async def test_health_checking():
         health_summary = monitor.get_health_summary()
 
         # Count healthy checks
-        healthy_checks = sum(1 for check in all_checks.values() if check.status == HealthStatus.HEALTHY)
+        healthy_checks = sum(
+            1 for check in all_checks.values() if check.status == HealthStatus.HEALTHY
+        )
 
         return {
             "health_checking": True,
@@ -179,15 +191,11 @@ async def test_health_checking():
             "comprehensive_checks": len(all_checks) >= 3,
             "healthy_checks": healthy_checks,
             "overall_health_status": health_summary["status"],
-            "health_status": "success"
+            "health_status": "success",
         }
 
     except Exception as e:
-        return {
-            "health_checking": False,
-            "error": str(e),
-            "health_status": "error"
-        }
+        return {"health_checking": False, "error": str(e), "health_status": "error"}
 
 
 async def test_business_metrics():
@@ -203,10 +211,17 @@ async def test_business_metrics():
         business_metrics = BusinessMetricsCollector(monitor)
 
         # Test 1: Stream discovery metrics
-        business_metrics.record_stream_discovery(stream_count=21, discovery_time_ms=850.0)
+        business_metrics.record_stream_discovery(
+            stream_count=21, discovery_time_ms=850.0
+        )
 
-        discovery_time = monitor.get_current_metric_value("stream_discovery_duration_ms", monitor.metrics["stream_discovery_duration_ms"][0].metric_type)
-        monitor.get_current_metric_value("streams_available", monitor.metrics["streams_available"][0].metric_type)
+        discovery_time = monitor.get_current_metric_value(
+            "stream_discovery_duration_ms",
+            monitor.metrics["stream_discovery_duration_ms"][0].metric_type,
+        )
+        monitor.get_current_metric_value(
+            "streams_available", monitor.metrics["streams_available"][0].metric_type
+        )
 
         # Test 2: Entity extraction metrics
         test_entities = ["item", "orders", "inventory"]
@@ -220,7 +235,7 @@ async def test_business_metrics():
                 entity_name=entity,
                 records_extracted=records,
                 processing_time_ms=processing_time,
-                data_quality_score=quality_score
+                data_quality_score=quality_score,
             )
 
         # Test 3: Incremental sync efficiency
@@ -228,7 +243,7 @@ async def test_business_metrics():
             entity_name="item",
             full_sync_records=1000,
             incremental_records=250,
-            time_saved_percent=75.0
+            time_saved_percent=75.0,
         )
 
         # Test 4: Business summary
@@ -246,15 +261,11 @@ async def test_business_metrics():
             "incremental_sync_tracked": True,
             "business_summary_available": bool(business_summary),
             "entities_tracked": list(business_summary["entity_metrics"].keys()),
-            "business_status": "success"
+            "business_status": "success",
         }
 
     except Exception as e:
-        return {
-            "business_metrics": False,
-            "error": str(e),
-            "business_status": "error"
-        }
+        return {"business_metrics": False, "error": str(e), "business_status": "error"}
 
 
 async def test_end_to_end_monitoring():
@@ -304,14 +315,14 @@ async def test_end_to_end_monitoring():
             "health_status_available": bool(health_summary),
             "business_metrics_collected": bool(business_summary),
             "metrics_snapshot_working": len(metrics_snapshot) > 0,
-            "end_to_end_status": "success"
+            "end_to_end_status": "success",
         }
 
     except Exception as e:
         return {
             "end_to_end_monitoring": False,
             "error": str(e),
-            "end_to_end_status": "error"
+            "end_to_end_status": "error",
         }
 
 
@@ -342,19 +353,29 @@ async def main():
             "end_to_end_monitoring": end_to_end_results,
         },
         "summary": {
-            "monitoring_integration_working": integration_results.get("monitoring_integration", False),
-            "performance_monitoring_working": performance_results.get("performance_monitoring", False),
+            "monitoring_integration_working": integration_results.get(
+                "monitoring_integration", False
+            ),
+            "performance_monitoring_working": performance_results.get(
+                "performance_monitoring", False
+            ),
             "health_checking_working": health_results.get("health_checking", False),
             "business_metrics_working": business_results.get("business_metrics", False),
-            "end_to_end_monitoring_working": end_to_end_results.get("end_to_end_monitoring", False),
+            "end_to_end_monitoring_working": end_to_end_results.get(
+                "end_to_end_monitoring", False
+            ),
         },
-        "overall_status": "production_ready" if all([
-            integration_results.get("monitoring_integration", False),
-            performance_results.get("performance_monitoring", False),
-            health_results.get("health_checking", False),
-            business_results.get("business_metrics", False),
-            end_to_end_results.get("end_to_end_monitoring", False),
-        ]) else "needs_optimization"
+        "overall_status": "production_ready"
+        if all(
+            [
+                integration_results.get("monitoring_integration", False),
+                performance_results.get("performance_monitoring", False),
+                health_results.get("health_checking", False),
+                business_results.get("business_metrics", False),
+                end_to_end_results.get("end_to_end_monitoring", False),
+            ]
+        )
+        else "needs_optimization",
     }
 
     # Save results

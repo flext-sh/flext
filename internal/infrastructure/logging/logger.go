@@ -162,16 +162,16 @@ func (l *StructuredLogger) output(entry LogEntry) {
 // Global logger instance
 var defaultLogger Logger
 
-// InitLogger inicializa o logger global
+// InitLogger inicializa o logger global com zerolog
 func InitLogger(cfg config.LoggingConfig) {
-	defaultLogger = NewLogger(cfg)
+	defaultLogger = NewZerologLogger(cfg)
 }
 
 // GetLogger retorna o logger global
 func GetLogger() Logger {
 	if defaultLogger == nil {
-		// Fallback para logger padrão
-		defaultLogger = NewLogger(config.LoggingConfig{
+		// Fallback para logger zerolog padrão
+		defaultLogger = NewZerologLogger(config.LoggingConfig{
 			Level:      "info",
 			Format:     "json",
 			Output:     "stdout",

@@ -25,12 +25,14 @@ internal/
 ### Bounded Contexts
 
 #### Pipeline Context
+
 - **Domain**: Pipeline management and execution
 - **Entities**: Pipeline, Step, Execution
 - **Commands**: CreatePipeline, AddStep
 - **Queries**: GetPipeline, ListPipelines
 
 #### Plugin Context
+
 - **Domain**: Plugin registration and lifecycle
 - **Entities**: Plugin, Port, Configuration
 - **Commands**: RegisterPlugin, UpdatePlugin
@@ -39,6 +41,7 @@ internal/
 ### Clean Architecture Layers
 
 #### 1. Domain Layer
+
 ```go
 // Domain entities with business rules
 type Pipeline struct {
@@ -58,6 +61,7 @@ type PipelineCreated struct {
 ```
 
 #### 2. Application Layer
+
 ```go
 // Commands for state changes
 type CreatePipelineCommand struct {
@@ -74,6 +78,7 @@ type PipelineService struct {
 ```
 
 #### 3. Infrastructure Layer
+
 ```go
 // HTTP handlers
 func (h *PipelineHandler) CreatePipeline(c echo.Context) error {
@@ -81,12 +86,12 @@ func (h *PipelineHandler) CreatePipeline(c echo.Context) error {
     if err := c.Bind(&cmd); err != nil {
         return err
     }
-    
+
     pipeline, err := h.service.CreatePipeline(cmd)
     if err != nil {
         return err
     }
-    
+
     return c.JSON(http.StatusCreated, pipeline)
 }
 ```
@@ -94,17 +99,20 @@ func (h *PipelineHandler) CreatePipeline(c echo.Context) error {
 ### API Endpoints
 
 #### Pipeline Management
+
 - `POST /api/v1/pipelines` - Create pipeline
 - `GET /api/v1/pipelines` - List pipelines
 - `GET /api/v1/pipelines/:id` - Get pipeline
 - `POST /api/v1/pipelines/:id/steps` - Add step
 
 #### Plugin Management
+
 - `POST /api/v1/plugins` - Register plugin
 - `GET /api/v1/plugins` - List plugins
 - `GET /api/v1/plugins/:id` - Get plugin
 
 #### System Endpoints
+
 - `GET /health` - Health check
 - `GET /` - API information
 
@@ -157,16 +165,19 @@ FLEXT_LOG_FORMAT=json
 ### Building and Running
 
 #### Build Binary
+
 ```bash
 go build -o flext cmd/flext/main.go
 ```
 
 #### Run Application
+
 ```bash
 ./flext
 ```
 
 #### Run with Environment Variables
+
 ```bash
 FLEXT_PORT=8082 ./flext
 ```
@@ -174,16 +185,19 @@ FLEXT_PORT=8082 ./flext
 ### Testing
 
 #### Unit Tests
+
 ```bash
 go test ./internal/...
 ```
 
 #### Integration Tests
+
 ```bash
 go test ./tests/...
 ```
 
 #### API Validation
+
 ```bash
 ./validate_api.sh
 ```
@@ -191,10 +205,12 @@ go test ./tests/...
 ### Dependencies
 
 #### Core Dependencies
+
 - `github.com/labstack/echo/v4` - HTTP framework
 - `github.com/google/uuid` - UUID generation
 
 #### Development Dependencies
+
 - `github.com/stretchr/testify` - Testing framework
 
 ### Error Handling
@@ -214,6 +230,7 @@ func (e DomainError) Error() string {
 ### Best Practices
 
 #### 1. Dependency Injection
+
 ```go
 // Use constructor pattern for dependencies
 func NewPipelineService(
@@ -228,6 +245,7 @@ func NewPipelineService(
 ```
 
 #### 2. Interface Segregation
+
 ```go
 // Small, focused interfaces
 type PipelineReader interface {
@@ -242,6 +260,7 @@ type PipelineWriter interface {
 ```
 
 #### 3. Immutable Domain Events
+
 ```go
 type DomainEvent interface {
     EventType() string
@@ -262,6 +281,7 @@ The Go API serves as the gateway to Python-based FLEXT components:
 ### Deployment
 
 #### Docker
+
 ```dockerfile
 FROM golang:1.21-alpine AS builder
 WORKDIR /app
@@ -276,6 +296,7 @@ CMD ["./flext"]
 ```
 
 #### Kubernetes
+
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -292,13 +313,13 @@ spec:
         app: flext-api
     spec:
       containers:
-      - name: flext-api
-        image: flext/api:latest
-        ports:
-        - containerPort: 8081
-        env:
-        - name: FLEXT_PORT
-          value: "8081"
+        - name: flext-api
+          image: flext/api:latest
+          ports:
+            - containerPort: 8081
+          env:
+            - name: FLEXT_PORT
+              value: "8081"
 ```
 
 This Go implementation provides a high-performance, type-safe API gateway for the FLEXT framework while maintaining clean architecture principles and seamless integration with Python components.

@@ -193,7 +193,7 @@ echo "PHASE 4: Integration validation complete" >> .token
 
 | Condition           | Action                  | Timeline   |
 | ------------------- | ----------------------- | ---------- |
-| FLEXT Core broken     | **IMMEDIATE EMERGENCY** | 8-20 hours |
+| FLEXT Core broken   | **IMMEDIATE EMERGENCY** | 8-20 hours |
 | 3+ adapters broken  | **EMERGENCY MODE**      | 8-20 hours |
 | Build system broken | **EMERGENCY MODE**      | 4-8 hours  |
 | 1-2 adapters broken | Component repair        | 2-4 hours  |

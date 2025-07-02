@@ -16,9 +16,11 @@ from datetime import datetime
 from pathlib import Path
 
 # Add module paths
-sys.path.extend([
-    "flext-tap-oracle-wms/src",
-])
+sys.path.extend(
+    [
+        "flext-tap-oracle-wms/src",
+    ]
+)
 
 
 class PerformanceOptimizer:
@@ -36,7 +38,9 @@ class PerformanceOptimizer:
         self.current_batch_size = self.batch_size
         self.processing_times = []
 
-    def calculate_optimal_batch_size(self, processing_time_ms: float, memory_usage_mb: float) -> int:
+    def calculate_optimal_batch_size(
+        self, processing_time_ms: float, memory_usage_mb: float
+    ) -> int:
         """Calculate optimal batch size based on performance metrics."""
         if not self.adaptive_batching:
             return self.batch_size
@@ -61,7 +65,10 @@ class PerformanceOptimizer:
             new_batch_size = max(min_batch, min(max_batch, new_batch_size))
 
             # Smooth changes to avoid oscillation
-            if abs(new_batch_size - self.current_batch_size) / self.current_batch_size > 0.5:
+            if (
+                abs(new_batch_size - self.current_batch_size) / self.current_batch_size
+                > 0.5
+            ):
                 # Large change - apply incrementally
                 if new_batch_size > self.current_batch_size:
                     new_batch_size = int(self.current_batch_size * 1.5)
@@ -96,7 +103,6 @@ async def test_memory_efficient_streaming():
         import os
 
         import psutil
-
         from flext_tap_oracle_wms.tap import TapOracleWMS
 
         # Configuration for large volume processing
@@ -161,69 +167,84 @@ async def test_memory_efficient_streaming():
                 "memory_increase_mb": memory_increase,
                 "memory_per_record_mb": memory_per_record,
                 "memory_efficient": memory_efficient,
-                "streaming_status": "success"
+                "streaming_status": "success",
             }
 
         return {
             "memory_streaming": False,
             "error": "No streams available for testing",
-            "streaming_status": "no_streams"
+            "streaming_status": "no_streams",
         }
 
     except Exception as e:
-        return {
-            "memory_streaming": False,
-            "error": str(e),
-            "streaming_status": "error"
-        }
+        return {"memory_streaming": False, "error": str(e), "streaming_status": "error"}
 
 
 async def test_adaptive_batch_optimization():
     """Test adaptive batch size optimization."""
 
     try:
-        optimizer = PerformanceOptimizer({
-            "batch_size": 1000,
-            "adaptive_batching": True,
-            "memory_threshold_mb": 256,
-        })
+        optimizer = PerformanceOptimizer(
+            {
+                "batch_size": 1000,
+                "adaptive_batching": True,
+                "memory_threshold_mb": 256,
+            }
+        )
 
         # Simulate different performance scenarios
         test_scenarios = [
-            {"time_ms": 1000, "memory_mb": 50, "expected_increase": True},   # Fast processing - increase batch
-            {"time_ms": 8000, "memory_mb": 100, "expected_increase": False},  # Slow processing - decrease batch
-            {"time_ms": 3000, "memory_mb": 300, "expected_increase": False},  # High memory - decrease batch
-            {"time_ms": 2000, "memory_mb": 80, "expected_increase": True},   # Optimal conditions
+            {
+                "time_ms": 1000,
+                "memory_mb": 50,
+                "expected_increase": True,
+            },  # Fast processing - increase batch
+            {
+                "time_ms": 8000,
+                "memory_mb": 100,
+                "expected_increase": False,
+            },  # Slow processing - decrease batch
+            {
+                "time_ms": 3000,
+                "memory_mb": 300,
+                "expected_increase": False,
+            },  # High memory - decrease batch
+            {
+                "time_ms": 2000,
+                "memory_mb": 80,
+                "expected_increase": True,
+            },  # Optimal conditions
         ]
 
         results = []
         for i, scenario in enumerate(test_scenarios):
             old_batch_size = optimizer.current_batch_size
             new_batch_size = optimizer.calculate_optimal_batch_size(
-                scenario["time_ms"],
-                scenario["memory_mb"]
+                scenario["time_ms"], scenario["memory_mb"]
             )
 
             increased = new_batch_size > old_batch_size
             correct_direction = increased == scenario["expected_increase"]
 
-            results.append({
-                "scenario": i + 1,
-                "old_batch_size": old_batch_size,
-                "new_batch_size": new_batch_size,
-                "correct_adaptation": correct_direction,
-                "processing_time_ms": scenario["time_ms"],
-                "memory_mb": scenario["memory_mb"]
-            })
+            results.append(
+                {
+                    "scenario": i + 1,
+                    "old_batch_size": old_batch_size,
+                    "new_batch_size": new_batch_size,
+                    "correct_adaptation": correct_direction,
+                    "processing_time_ms": scenario["time_ms"],
+                    "memory_mb": scenario["memory_mb"],
+                }
+            )
 
         # Test connection pool optimization
         pool_config = optimizer.get_connection_pool_config()
 
         # Test compression decision
         compression_tests = [
-            (500, False),    # Small payload - no compression
-            (2000, True),    # Large payload - compression
-            (10000, True),   # Very large payload - compression
+            (500, False),  # Small payload - no compression
+            (2000, True),  # Large payload - compression
+            (10000, True),  # Very large payload - compression
         ]
 
         compression_results = []
@@ -244,14 +265,14 @@ async def test_adaptive_batch_optimization():
             "correct_compression_decisions": correct_compression,
             "compression_accuracy": correct_compression / len(compression_tests),
             "connection_pool_optimized": bool(pool_config),
-            "optimization_status": "success"
+            "optimization_status": "success",
         }
 
     except Exception as e:
         return {
             "adaptive_batching": False,
             "error": str(e),
-            "optimization_status": "error"
+            "optimization_status": "error",
         }
 
 
@@ -279,7 +300,7 @@ async def test_concurrent_processing():
             return {
                 "concurrent_processing": False,
                 "error": "Not enough streams for concurrent testing",
-                "concurrent_status": "insufficient_streams"
+                "concurrent_status": "insufficient_streams",
             }
 
         # Test concurrent stream processing
@@ -302,7 +323,7 @@ async def test_concurrent_processing():
                 "stream": stream.name,
                 "records": len(records),
                 "duration": duration,
-                "rate": len(records) / duration if duration > 0 else 0
+                "rate": len(records) / duration if duration > 0 else 0,
             }
 
         # Sequential processing (baseline)
@@ -311,7 +332,9 @@ async def test_concurrent_processing():
 
         for stream in test_streams:
             result = await asyncio.create_task(
-                asyncio.to_thread(lambda s=stream: asyncio.run(process_stream_concurrent(s)))
+                asyncio.to_thread(
+                    lambda s=stream: asyncio.run(process_stream_concurrent(s))
+                )
             )
             sequential_results.append(result)
 
@@ -325,7 +348,9 @@ async def test_concurrent_processing():
         tasks = []
         for stream in test_streams:
             task = asyncio.create_task(
-                asyncio.to_thread(lambda s=stream: asyncio.run(process_stream_concurrent(s)))
+                asyncio.to_thread(
+                    lambda s=stream: asyncio.run(process_stream_concurrent(s))
+                )
             )
             tasks.append(task)
 
@@ -337,7 +362,9 @@ async def test_concurrent_processing():
             pass
 
         # Calculate performance improvement
-        speedup = sequential_duration / concurrent_duration if concurrent_duration > 0 else 0
+        speedup = (
+            sequential_duration / concurrent_duration if concurrent_duration > 0 else 0
+        )
         efficiency = speedup / len(test_streams)  # Ideal speedup would be # of streams
 
         return {
@@ -349,14 +376,14 @@ async def test_concurrent_processing():
             "efficiency": efficiency,
             "total_records_processed": concurrent_total_records,
             "performance_improvement": speedup > 1.2,  # At least 20% improvement
-            "concurrent_status": "success"
+            "concurrent_status": "success",
         }
 
     except Exception as e:
         return {
             "concurrent_processing": False,
             "error": str(e),
-            "concurrent_status": "error"
+            "concurrent_status": "error",
         }
 
 
@@ -404,14 +431,18 @@ async def test_large_dataset_handling():
                 # Process chunk
                 if chunk_records >= chunk_size:
                     chunk_duration = time.perf_counter() - chunk_start
-                    chunk_rate = chunk_records / chunk_duration if chunk_duration > 0 else 0
+                    chunk_rate = (
+                        chunk_records / chunk_duration if chunk_duration > 0 else 0
+                    )
 
-                    chunk_results.append({
-                        "chunk": current_chunk + 1,
-                        "records": chunk_records,
-                        "duration": chunk_duration,
-                        "rate": chunk_rate
-                    })
+                    chunk_results.append(
+                        {
+                            "chunk": current_chunk + 1,
+                            "records": chunk_records,
+                            "duration": chunk_duration,
+                            "rate": chunk_rate,
+                        }
+                    )
 
                     # Reset for next chunk
                     current_chunk += 1
@@ -452,20 +483,20 @@ async def test_large_dataset_handling():
                     "good_throughput": good_throughput,
                     "consistent_performance": consistent_performance,
                     "chunk_details": chunk_results,
-                    "dataset_status": "success"
+                    "dataset_status": "success",
                 }
 
         return {
             "large_dataset_handling": False,
             "error": "No data processed",
-            "dataset_status": "no_data"
+            "dataset_status": "no_data",
         }
 
     except Exception as e:
         return {
             "large_dataset_handling": False,
             "error": str(e),
-            "dataset_status": "error"
+            "dataset_status": "error",
         }
 
 
@@ -496,16 +527,22 @@ async def main():
         "performance_summary": {
             "memory_efficiency": memory_results.get("memory_efficient", False),
             "adaptive_optimization": batch_results.get("adaptive_batching", False),
-            "concurrent_processing": concurrent_results.get("performance_improvement", False),
+            "concurrent_processing": concurrent_results.get(
+                "performance_improvement", False
+            ),
             "large_dataset_capable": dataset_results.get("good_throughput", False),
             "overall_performance_optimized": True,
         },
-        "overall_status": "production_optimized" if all([
-            memory_results.get("memory_streaming", False),
-            batch_results.get("adaptive_batching", False),
-            concurrent_results.get("concurrent_processing", False),
-            dataset_results.get("large_dataset_handling", False),
-        ]) else "needs_optimization"
+        "overall_status": "production_optimized"
+        if all(
+            [
+                memory_results.get("memory_streaming", False),
+                batch_results.get("adaptive_batching", False),
+                concurrent_results.get("concurrent_processing", False),
+                dataset_results.get("large_dataset_handling", False),
+            ]
+        )
+        else "needs_optimization",
     }
 
     # Performance metrics summary
@@ -521,6 +558,7 @@ async def main():
     # Save results
     results_file = Path("performance_optimization_test_results.json")
     import json
+
     with open(results_file, "w") as f:
         json.dump(final_results, f, indent=2, default=str)
 

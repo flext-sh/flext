@@ -24,8 +24,8 @@
 
 ### **Core Materials**
 
-| **Material** | **Function** | **Audience** | **Status** |
-|--------------|--------------|--------------|------------|
+| **Material**                                    | **Function**                       | **Audience**           | **Status**  |
+| ----------------------------------------------- | ---------------------------------- | ---------------------- | ----------- |
 | [Reference Materials](./reference-materials.md) | Technical documentation and guides | Developers, architects | ✅ Complete |
 
 ### **📋 Learning Path**

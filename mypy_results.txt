@@ -1,0 +1,1 @@
+flext-auth is not a valid Python package name

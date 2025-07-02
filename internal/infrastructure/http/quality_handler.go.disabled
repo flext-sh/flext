@@ -1,0 +1,423 @@
+package http
+
+import (
+	"net/http"
+	"strconv"
+
+	"github.com/flext-sh/flext/internal/infrastructure/quality"
+	"github.com/google/uuid"
+	"github.com/labstack/echo/v4"
+)
+
+// QualityHandler handles quality-related HTTP requests
+type QualityHandler struct {
+	qualityManager *quality.QualityManager
+}
+
+// NewQualityHandler creates a new quality handler
+func NewQualityHandler(qualityManager *quality.QualityManager) *QualityHandler {
+	return &QualityHandler{
+		qualityManager: qualityManager,
+	}
+}
+
+// RunQualityCheck handles POST /api/v1/quality/check
+func (h *QualityHandler) RunQualityCheck(c echo.Context) error {
+	var request struct {
+		ResourceID   string      `json:"resource_id" validate:"required"`
+		ResourceType string      `json:"resource_type" validate:"required"`
+		Data         interface{} `json:"data"`
+	}
+
+	if err := c.Bind(&request); err != nil {
+		return c.JSON(http.StatusBadRequest, ErrorResponse{
+			Error:   "Bad Request",
+			Message: "Invalid request body format",
+			Code:    http.StatusBadRequest,
+		})
+	}
+
+	if err := c.Validate(&request); err != nil {
+		return c.JSON(http.StatusBadRequest, ValidationErrorResponse(err))
+	}
+
+	// Run quality checks
+	report, err := h.qualityManager.RunQualityChecks(
+		c.Request().Context(),
+		request.ResourceID,
+		request.ResourceType,
+		request.Data,
+	)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, ErrorResponse{
+			Error:   "Internal Server Error",
+			Message: "Failed to run quality checks",
+			Code:    http.StatusInternalServerError,
+		})
+	}
+
+	return c.JSON(http.StatusCreated, map[string]interface{}{
+		"success": true,
+		"data":    report,
+	})
+}
+
+// GetQualityReport handles GET /api/v1/quality/reports/:id
+func (h *QualityHandler) GetQualityReport(c echo.Context) error {
+	reportID := c.Param("id")
+
+	// Validate report ID
+	if _, err := uuid.Parse(reportID); err != nil {
+		return c.JSON(http.StatusBadRequest, ErrorResponse{
+			Error:   "Bad Request",
+			Message: "Invalid report ID format",
+			Code:    http.StatusBadRequest,
+		})
+	}
+
+	report, exists := h.qualityManager.GetQualityReport(reportID)
+	if !exists {
+		return c.JSON(http.StatusNotFound, ErrorResponse{
+			Error:   "Not Found",
+			Message: "Quality report not found",
+			Code:    http.StatusNotFound,
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"success": true,
+		"data":    report,
+	})
+}
+
+// ListQualityReports handles GET /api/v1/quality/reports
+func (h *QualityHandler) ListQualityReports(c echo.Context) error {
+	resourceID := c.QueryParam("resource_id")
+	limitStr := c.QueryParam("limit")
+	offsetStr := c.QueryParam("offset")
+
+	// Parse pagination parameters
+	limit := 50
+	offset := 0
+
+	if limitStr != "" {
+		if l, err := strconv.Atoi(limitStr); err == nil && l > 0 && l <= 100 {
+			limit = l
+		}
+	}
+
+	if offsetStr != "" {
+		if o, err := strconv.Atoi(offsetStr); err == nil && o >= 0 {
+			offset = o
+		}
+	}
+
+	var reports []*quality.QualityReport
+
+	if resourceID != "" {
+		// Get reports for specific resource
+		reports = h.qualityManager.ListQualityReports(resourceID)
+	} else {
+		// Get all reports (in a real implementation, this would be paginated)
+		reports = h.getAllReports()
+	}
+
+	// Apply pagination
+	total := len(reports)
+	end := offset + limit
+	if end > total {
+		end = total
+	}
+
+	if offset >= total {
+		reports = []*quality.QualityReport{}
+	} else {
+		reports = reports[offset:end]
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"success": true,
+		"data": map[string]interface{}{
+			"reports": reports,
+			"total":   total,
+			"limit":   limit,
+			"offset":  offset,
+		},
+	})
+}
+
+// GetQualityMetrics handles GET /api/v1/quality/metrics
+func (h *QualityHandler) GetQualityMetrics(c echo.Context) error {
+	metrics := h.qualityManager.GetQualityMetrics()
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"success": true,
+		"data":    metrics,
+	})
+}
+
+// GetQualityTrends handles GET /api/v1/quality/trends
+func (h *QualityHandler) GetQualityTrends(c echo.Context) error {
+	resourceID := c.QueryParam("resource_id")
+	daysStr := c.QueryParam("days")
+
+	// Parse days parameter
+	days := 30 // default
+	if daysStr != "" {
+		if d, err := strconv.Atoi(daysStr); err == nil && d > 0 && d <= 365 {
+			days = d
+		}
+	}
+
+	// Generate trend data (simplified implementation)
+	trends := h.generateQualityTrends(resourceID, days)
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"success": true,
+		"data":    trends,
+	})
+}
+
+// GetQualityDashboard handles GET /api/v1/quality/dashboard
+func (h *QualityHandler) GetQualityDashboard(c echo.Context) error {
+	// Get overall metrics
+	metrics := h.qualityManager.GetQualityMetrics()
+
+	// Get recent reports
+	recentReports := h.getRecentReports(10)
+
+	// Calculate dashboard statistics
+	dashboardData := map[string]interface{}{
+		"overview": metrics,
+		"recent_reports": recentReports,
+		"quality_distribution": h.calculateQualityDistribution(),
+		"top_issues": h.getTopIssues(),
+		"improvement_suggestions": h.getImprovementSuggestions(),
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"success": true,
+		"data":    dashboardData,
+	})
+}
+
+// ValidateQualityRules handles POST /api/v1/quality/validate
+func (h *QualityHandler) ValidateQualityRules(c echo.Context) error {
+	var request struct {
+		Rules []map[string]interface{} `json:"rules" validate:"required"`
+		Data  interface{}             `json:"data" validate:"required"`
+	}
+
+	if err := c.Bind(&request); err != nil {
+		return c.JSON(http.StatusBadRequest, ErrorResponse{
+			Error:   "Bad Request",
+			Message: "Invalid request body format",
+			Code:    http.StatusBadRequest,
+		})
+	}
+
+	// Validate quality rules against data
+	validationResults := h.validateRules(request.Rules, request.Data)
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"success": true,
+		"data":    validationResults,
+	})
+}
+
+// Helper methods
+
+func (h *QualityHandler) getAllReports() []*quality.QualityReport {
+	// In a real implementation, this would query a database
+	// For now, return empty slice as this is a simplified version
+	return []*quality.QualityReport{}
+}
+
+func (h *QualityHandler) generateQualityTrends(resourceID string, days int) map[string]interface{} {
+	// Generate mock trend data
+	trends := map[string]interface{}{
+		"resource_id": resourceID,
+		"period_days": days,
+		"score_trend": []map[string]interface{}{
+			{"date": "2024-01-01", "score": 85.2},
+			{"date": "2024-01-02", "score": 87.1},
+			{"date": "2024-01-03", "score": 86.8},
+			{"date": "2024-01-04", "score": 88.5},
+			{"date": "2024-01-05", "score": 89.2},
+		},
+		"issue_trend": []map[string]interface{}{
+			{"date": "2024-01-01", "critical": 2, "major": 5, "minor": 8},
+			{"date": "2024-01-02", "critical": 1, "major": 4, "minor": 7},
+			{"date": "2024-01-03", "critical": 1, "major": 3, "minor": 6},
+			{"date": "2024-01-04", "critical": 0, "major": 3, "minor": 5},
+			{"date": "2024-01-05", "critical": 0, "major": 2, "minor": 4},
+		},
+	}
+
+	return trends
+}
+
+func (h *QualityHandler) getRecentReports(limit int) []map[string]interface{} {
+	// Get recent reports (simplified)
+	return []map[string]interface{}{
+		{
+			"id":            uuid.New().String(),
+			"resource_id":   "pipeline-123",
+			"resource_type": "pipeline",
+			"overall_score": 87.5,
+			"status":        "completed",
+			"timestamp":     "2024-01-05T10:00:00Z",
+		},
+		{
+			"id":            uuid.New().String(),
+			"resource_id":   "plugin-456",
+			"resource_type": "plugin",
+			"overall_score": 92.1,
+			"status":        "completed",
+			"timestamp":     "2024-01-05T09:30:00Z",
+		},
+	}
+}
+
+func (h *QualityHandler) calculateQualityDistribution() map[string]interface{} {
+	return map[string]interface{}{
+		"excellent": map[string]interface{}{
+			"count":      15,
+			"percentage": 30.0,
+			"range":      "90-100",
+		},
+		"good": map[string]interface{}{
+			"count":      20,
+			"percentage": 40.0,
+			"range":      "70-89",
+		},
+		"fair": map[string]interface{}{
+			"count":      10,
+			"percentage": 20.0,
+			"range":      "50-69",
+		},
+		"poor": map[string]interface{}{
+			"count":      5,
+			"percentage": 10.0,
+			"range":      "0-49",
+		},
+	}
+}
+
+func (h *QualityHandler) getTopIssues() []map[string]interface{} {
+	return []map[string]interface{}{
+		{
+			"category":    "security",
+			"count":       8,
+			"severity":    "critical",
+			"description": "Hardcoded secrets detected",
+		},
+		{
+			"category":    "performance",
+			"count":       12,
+			"severity":    "major",
+			"description": "Performance anti-patterns found",
+		},
+		{
+			"category":    "data_quality",
+			"count":       6,
+			"severity":    "major",
+			"description": "Data completeness issues",
+		},
+		{
+			"category":    "code_quality",
+			"count":       15,
+			"severity":    "minor",
+			"description": "Inconsistent naming conventions",
+		},
+	}
+}
+
+func (h *QualityHandler) getImprovementSuggestions() []map[string]interface{} {
+	return []map[string]interface{}{
+		{
+			"priority":    "high",
+			"category":    "security",
+			"suggestion":  "Implement secret management system",
+			"impact":      "Eliminates security vulnerabilities",
+			"effort":      "medium",
+		},
+		{
+			"priority":    "medium",
+			"category":    "performance",
+			"suggestion":  "Add caching mechanisms",
+			"impact":      "Improves response times by 40%",
+			"effort":      "low",
+		},
+		{
+			"priority":    "medium",
+			"category":    "data_quality",
+			"suggestion":  "Implement data validation rules",
+			"impact":      "Reduces data quality issues by 60%",
+			"effort":      "medium",
+		},
+	}
+}
+
+func (h *QualityHandler) validateRules(rules []map[string]interface{}, data interface{}) map[string]interface{} {
+	// Simplified rule validation
+	passed := 0
+	failed := 0
+	warnings := 0
+
+	for _, rule := range rules {
+		// Mock validation logic
+		if ruleType, ok := rule["type"].(string); ok {
+			switch ruleType {
+			case "required":
+				if data != nil {
+					passed++
+				} else {
+					failed++
+				}
+			case "format":
+				// Mock format validation
+				if dataStr, ok := data.(string); ok && len(dataStr) > 0 {
+					passed++
+				} else {
+					warnings++
+				}
+			default:
+				passed++
+			}
+		}
+	}
+
+	return map[string]interface{}{
+		"total_rules": len(rules),
+		"passed":      passed,
+		"failed":      failed,
+		"warnings":    warnings,
+		"success_rate": float64(passed) / float64(len(rules)) * 100,
+		"details": []map[string]interface{}{
+			{
+				"rule":    "data_presence",
+				"status":  "passed",
+				"message": "Data is present and not null",
+			},
+			{
+				"rule":    "format_validation",
+				"status":  "warning",
+				"message": "Data format could be improved",
+			},
+		},
+	}
+}
+
+// RegisterRoutes registers quality-related routes
+func (h *QualityHandler) RegisterRoutes(e *echo.Echo) {
+	quality := e.Group("/api/v1/quality")
+
+	quality.POST("/check", h.RunQualityCheck)
+	quality.GET("/reports/:id", h.GetQualityReport)
+	quality.GET("/reports", h.ListQualityReports)
+	quality.GET("/metrics", h.GetQualityMetrics)
+	quality.GET("/trends", h.GetQualityTrends)
+	quality.GET("/dashboard", h.GetQualityDashboard)
+	quality.POST("/validate", h.ValidateQualityRules)
+}

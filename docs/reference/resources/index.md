@@ -24,12 +24,12 @@
 
 ### **External Resources Categories**
 
-| **Category** | **Function** | **Audience** | **Status** |
-|--------------|--------------|--------------|------------|
-| **Oracle Resources** | Oracle official documentation links | Oracle developers | ✅ Available |
-| **Framework Resources** | FLEXT Framework external resources | Framework developers | ✅ Available |
-| **Development Resources** | Development tools and utilities | All developers | ✅ Available |
-| **Community Resources** | Community contributions and examples | Community members | 🔶 Growing |
+| **Category**              | **Function**                         | **Audience**         | **Status**   |
+| ------------------------- | ------------------------------------ | -------------------- | ------------ |
+| **Oracle Resources**      | Oracle official documentation links  | Oracle developers    | ✅ Available |
+| **Framework Resources**   | FLEXT Framework external resources   | Framework developers | ✅ Available |
+| **Development Resources** | Development tools and utilities      | All developers       | ✅ Available |
+| **Community Resources**   | Community contributions and examples | Community members    | 🔶 Growing   |
 
 ### **📋 Learning Path**
 

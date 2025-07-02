@@ -43,11 +43,11 @@ This comprehensive guide covers Oracle system integration patterns within the FL
 ### **Supported Oracle Systems**
 
 | Oracle System                      | Integration Type | FLEXT Component         | Status        |
-| ---------------------------------- | ---------------- | --------------------- | ------------- |
+| ---------------------------------- | ---------------- | ----------------------- | ------------- |
 | **Oracle Fusion Cloud WMS**        | REST/HTTP        | `flext-http-oracle-wms` | ✅ Production |
 | **Oracle Integration Cloud (OIC)** | REST/OAuth2      | `flext-http-oracle-oic` | ✅ Production |
 | **Oracle Database**                | SQL/Async        | `flext-database-oracle` | ✅ Production |
-| **Oracle Inventory Management**    | Pre-built OIC    | Integration recipes   | 📋 Documented |
+| **Oracle Inventory Management**    | Pre-built OIC    | Integration recipes     | 📋 Documented |
 
 ### **Architecture Pattern**
 

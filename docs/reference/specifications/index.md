@@ -24,12 +24,12 @@
 
 ### **Specification Categories**
 
-| **Category** | **Function** | **Audience** | **Status** |
-|--------------|--------------|--------------|------------|
-| **Framework Specifications** | Core FLEXT Framework technical specifications | System architects | ✅ Available |
-| **Protocol Specifications** | Communication protocols and interfaces | Protocol developers | ✅ Available |
-| **Integration Specifications** | Oracle and external system integration specs | Integration architects | ✅ Available |
-| **API Specifications** | Complete API specification documents | API developers | ✅ Available |
+| **Category**                   | **Function**                                  | **Audience**           | **Status**   |
+| ------------------------------ | --------------------------------------------- | ---------------------- | ------------ |
+| **Framework Specifications**   | Core FLEXT Framework technical specifications | System architects      | ✅ Available |
+| **Protocol Specifications**    | Communication protocols and interfaces        | Protocol developers    | ✅ Available |
+| **Integration Specifications** | Oracle and external system integration specs  | Integration architects | ✅ Available |
+| **API Specifications**         | Complete API specification documents          | API developers         | ✅ Available |
 
 ### **📋 Learning Path**
 
@@ -114,13 +114,13 @@
 
 ### **Specification Categories**
 
-| **Category** | **Documents** | **Compliance** | **Status** |
-|--------------|---------------|----------------|------------|
-| **Architecture** | 5 specifications | ✅ 100% | Current |
-| **Integration** | 5 specifications | ✅ 100% | Current |
-| **API** | 4 specifications | ✅ 100% | Current |
-| **Infrastructure** | 4 specifications | ✅ 100% | Current |
-| **Testing** | 3 specifications | ✅ 100% | Current |
+| **Category**       | **Documents**    | **Compliance** | **Status** |
+| ------------------ | ---------------- | -------------- | ---------- |
+| **Architecture**   | 5 specifications | ✅ 100%        | Current    |
+| **Integration**    | 5 specifications | ✅ 100%        | Current    |
+| **API**            | 4 specifications | ✅ 100%        | Current    |
+| **Infrastructure** | 4 specifications | ✅ 100%        | Current    |
+| **Testing**        | 3 specifications | ✅ 100%        | Current    |
 
 ## 📊 **Section Metrics**
 

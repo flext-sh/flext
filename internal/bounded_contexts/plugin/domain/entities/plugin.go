@@ -40,17 +40,19 @@ type Port struct {
 // Plugin é o agregado raiz para o contexto de plugin
 type Plugin struct {
 	domain.AggregateRoot
-	Name         string                 `json:"name"`
-	Type         PluginType             `json:"type"`
-	Version      string                 `json:"version"`
-	Description  string                 `json:"description"`
-	Author       string                 `json:"author"`
-	Status       PluginStatus           `json:"status"`
-	EntryPoint   string                 `json:"entry_point"`
-	Ports        []Port                 `json:"ports"`
-	Dependencies []string               `json:"dependencies"`
-	Config       map[string]interface{} `json:"configuration"`
-	Metadata     map[string]interface{} `json:"metadata"`
+	Name          string                 `json:"name"`
+	Type          PluginType             `json:"type"`
+	Version       string                 `json:"version"`
+	Description   string                 `json:"description"`
+	Author        string                 `json:"author"`
+	Status        PluginStatus           `json:"status"`
+	EntryPoint    string                 `json:"entry_point"`
+	Ports         []Port                 `json:"ports"`
+	Dependencies  []string               `json:"dependencies"`
+	Configuration map[string]interface{} `json:"configuration"`
+	Metadata      map[string]interface{} `json:"metadata"`
+	Capabilities  []string               `json:"capabilities"`
+	IsActive      bool                   `json:"is_active"`
 }
 
 // NewPlugin cria um novo agregado plugin
@@ -77,8 +79,10 @@ func NewPlugin(name, version, entryPoint string, pluginType PluginType) (*Plugin
 		Status:        PluginStatusRegistered,
 		Ports:         make([]Port, 0),
 		Dependencies:  make([]string, 0),
-		Config:        make(map[string]interface{}),
+		Configuration: make(map[string]interface{}),
 		Metadata:      make(map[string]interface{}),
+		Capabilities:  make([]string, 0),
+		IsActive:      false,
 	}
 
 	// Adicionar evento de domínio
@@ -147,12 +151,12 @@ func (p *Plugin) MarkAsFailed(reason string) {
 
 // UpdateConfiguration atualiza a configuração do plugin
 func (p *Plugin) UpdateConfiguration(config map[string]interface{}) {
-	if p.Config == nil {
-		p.Config = make(map[string]interface{})
+	if p.Configuration == nil {
+		p.Configuration = make(map[string]interface{})
 	}
 
 	for k, v := range config {
-		p.Config[k] = v
+		p.Configuration[k] = v
 	}
 
 	p.UpdateTimestamp()
@@ -183,6 +187,14 @@ func (p *Plugin) GetPortByName(name string) (*Port, error) {
 		}
 	}
 	return nil, fmt.Errorf("port %s not found", name)
+}
+
+// CanExecute checks if plugin can execute
+func (p *Plugin) CanExecute() error {
+	if p.Status != PluginStatusActive {
+		return errors.New("plugin is not active")
+	}
+	return nil
 }
 
 // Helper methods

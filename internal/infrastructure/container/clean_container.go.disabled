@@ -1,0 +1,792 @@
+package container
+
+import (
+	"context"
+	"database/sql"
+
+	// Use cases
+	dbtUC "github.com/flext-sh/flext/internal/usecases/dbt"
+	meltanoUC "github.com/flext-sh/flext/internal/usecases/meltano"
+	pipelineUC "github.com/flext-sh/flext/internal/usecases/pipeline"
+	pluginUC "github.com/flext-sh/flext/internal/usecases/plugin"
+
+	// Infrastructure implementations
+	"github.com/flext-sh/flext/internal/infrastructure/config"
+	"github.com/flext-sh/flext/internal/infrastructure/events"
+	"github.com/flext-sh/flext/internal/infrastructure/http"
+	"github.com/flext-sh/flext/internal/infrastructure/persistence/postgresql"
+	"github.com/flext-sh/flext/internal/shared_kernel/validation"
+
+	// Domain entities
+	dbtEntities "github.com/flext-sh/flext/internal/bounded_contexts/dbt/domain/entities"
+	meltanoEntities "github.com/flext-sh/flext/internal/bounded_contexts/meltano/domain/entities"
+	pipelineEntities "github.com/flext-sh/flext/internal/bounded_contexts/pipeline/domain/entities"
+	pluginEntities "github.com/flext-sh/flext/internal/bounded_contexts/plugin/domain/entities"
+
+	"github.com/google/uuid"
+	"github.com/pkg/errors"
+)
+
+// CleanContainer contains all Clean Architecture components
+type CleanContainer struct {
+	config *config.Config
+	db     *sql.DB
+
+	// Event publisher
+	eventPublisher EventPublisherInterface
+
+	// Repositories
+	pipelineRepo pipelineUC.PipelineRepository
+	pluginRepo   pluginUC.PluginRepository
+	dbtRepo      dbtUC.ProjectRepository
+	meltanoRepo  meltanoUC.ProjectRepository
+
+	// Use cases - Pipeline
+	createPipelineUC  *pipelineUC.CreatePipelineUseCase
+	executePipelineUC *pipelineUC.ExecutePipelineUseCase
+	getPipelineUC     *pipelineUC.GetPipelineUseCase
+	listPipelinesUC   *pipelineUC.ListPipelinesUseCase
+	deletePipelineUC  *pipelineUC.DeletePipelineUseCase
+
+	// Use cases - Plugin
+	registerPluginUC *pluginUC.RegisterPluginUseCase
+	getPluginUC      *pluginUC.GetPluginUseCase
+	listPluginsUC    *pluginUC.ListPluginsUseCase
+	deletePluginUC   *pluginUC.DeletePluginUseCase
+
+	// Use cases - DBT
+	createDbtProjectUC  *dbtUC.CreateProjectUseCase
+	executeDbtProjectUC *dbtUC.ExecuteProjectUseCase
+	getDbtProjectUC     *dbtUC.GetProjectUseCase
+	listDbtProjectsUC   *dbtUC.ListProjectsUseCase
+	deleteDbtProjectUC  *dbtUC.DeleteProjectUseCase
+
+	// Use cases - Meltano
+	createMeltanoProjectUC *meltanoUC.CreateProjectUseCase
+	addMeltanoPluginUC     *meltanoUC.AddPluginUseCase
+	runMeltanoPipelineUC   *meltanoUC.RunPipelineUseCase
+	addMeltanoScheduleUC   *meltanoUC.AddScheduleUseCase
+	getMeltanoProjectUC    *meltanoUC.GetProjectUseCase
+	listMeltanoProjectsUC  *meltanoUC.ListProjectsUseCase
+	deleteMeltanoProjectUC *meltanoUC.DeleteProjectUseCase
+
+	// HTTP Handlers
+	// cleanPipelineHandler *http.CleanPipelineHandler // DISABLED temporarily
+	cleanPluginHandler   *http.CleanPluginHandler
+	cleanDbtHandler      *http.CleanDbtHandler
+	cleanMeltanoHandler  *http.CleanMeltanoHandler
+}
+
+// EventPublisherInterface unified interface for event publishing
+type EventPublisherInterface interface {
+	Publish(ctx context.Context, event interface{}) error
+}
+
+// NewCleanContainer creates a new Clean Architecture container
+func NewCleanContainer(cfg *config.Config, db *sql.DB) (*CleanContainer, error) {
+	container := &CleanContainer{
+		config: cfg,
+		db:     db,
+	}
+
+	if err := container.initializeComponents(); err != nil {
+		return nil, errors.Wrap(err, "failed to initialize Clean Architecture components")
+	}
+
+	return container, nil
+}
+
+// initializeComponents initializes all Clean Architecture components
+func (c *CleanContainer) initializeComponents() error {
+	// Initialize event publisher
+	eventPub := events.NewInMemoryEventPublisher()
+	c.eventPublisher = &EventAdapter{publisher: eventPub}
+
+	// Initialize repositories
+	if err := c.initializeRepositories(); err != nil {
+		return errors.Wrap(err, "failed to initialize repositories")
+	}
+
+	// Initialize validators
+	validator := validation.NewValidator()
+
+	// Initialize use cases
+	if err := c.initializeUseCases(validator); err != nil {
+		return errors.Wrap(err, "failed to initialize use cases")
+	}
+
+	// Initialize HTTP handlers
+	c.initializeHandlers()
+
+	return nil
+}
+
+// initializeRepositories creates repository implementations
+func (c *CleanContainer) initializeRepositories() error {
+	if c.db == nil {
+		// Use in-memory repositories when database is not available
+		c.pipelineRepo = &InMemoryPipelineRepository{}
+		c.pluginRepo = &InMemoryPluginRepository{}
+		c.dbtRepo = &InMemoryDbtRepository{}
+		c.meltanoRepo = &InMemoryMeltanoRepository{}
+		return nil
+	}
+
+	// Initialize PostgreSQL repositories
+	c.pipelineRepo = postgresql.NewCleanPipelineRepository(c.db)
+	c.pluginRepo = postgresql.NewCleanPluginRepository(c.db)
+
+	// TODO: Initialize DBT and Meltano repositories when PostgreSQL implementations are ready
+	c.dbtRepo = &InMemoryDbtRepository{}
+	c.meltanoRepo = &InMemoryMeltanoRepository{}
+
+	return nil
+}
+
+// initializeUseCases creates use case implementations
+func (c *CleanContainer) initializeUseCases(validator *validation.Validator) error {
+	// Pipeline use cases
+	c.createPipelineUC = pipelineUC.NewCreatePipelineUseCase(
+		c.pipelineRepo,
+		&PipelineValidator{validator: validator},
+		c.eventPublisher,
+	)
+
+	c.executePipelineUC = pipelineUC.NewExecutePipelineUseCase(
+		c.pipelineRepo,
+		&PipelineExecutor{},
+		&PipelineValidator{validator: validator},
+		c.eventPublisher,
+	)
+
+	c.getPipelineUC = pipelineUC.NewGetPipelineUseCase(
+		c.pipelineRepo,
+		&PipelineValidator{validator: validator},
+	)
+
+	c.listPipelinesUC = pipelineUC.NewListPipelinesUseCase(
+		c.pipelineRepo,
+		&PipelineValidator{validator: validator},
+	)
+
+	c.deletePipelineUC = pipelineUC.NewDeletePipelineUseCase(
+		c.pipelineRepo,
+		&PipelineValidator{validator: validator},
+		c.eventPublisher,
+	)
+
+	// Plugin use cases (using stub validators for now)
+	c.registerPluginUC = pluginUC.NewRegisterPluginUseCase(
+		c.pluginRepo,
+		&PluginValidator{validator: validator},
+		c.eventPublisher,
+	)
+
+	c.getPluginUC = pluginUC.NewGetPluginUseCase(
+		c.pluginRepo,
+		&PluginValidator{validator: validator},
+	)
+
+	c.listPluginsUC = pluginUC.NewListPluginsUseCase(
+		c.pluginRepo,
+		&PluginValidator{validator: validator},
+	)
+
+	c.deletePluginUC = pluginUC.NewDeletePluginUseCase(
+		c.pluginRepo,
+		&PluginValidator{validator: validator},
+		c.eventPublisher,
+	)
+
+	// DBT use cases (using stub implementations for now)
+	c.createDbtProjectUC = dbtUC.NewCreateProjectUseCase(
+		c.dbtRepo,
+		&DbtValidator{validator: validator},
+		c.eventPublisher,
+	)
+
+	c.executeDbtProjectUC = dbtUC.NewExecuteProjectUseCase(
+		c.dbtRepo,
+		&DbtExecutor{},
+		&DbtValidator{validator: validator},
+		c.eventPublisher,
+	)
+
+	c.getDbtProjectUC = dbtUC.NewGetProjectUseCase(
+		c.dbtRepo,
+	)
+
+	c.listDbtProjectsUC = dbtUC.NewListProjectsUseCase(
+		c.dbtRepo,
+	)
+
+	c.deleteDbtProjectUC = dbtUC.NewDeleteProjectUseCase(
+		c.dbtRepo,
+		&DbtValidator{validator: validator},
+		c.eventPublisher,
+	)
+
+	// Meltano use cases (using corrected signatures)
+	c.createMeltanoProjectUC = meltanoUC.NewCreateProjectUseCase(
+		c.meltanoRepo,
+		&MeltanoValidator{validator: validator},
+		c.eventPublisher,
+	)
+
+	c.addMeltanoPluginUC = meltanoUC.NewAddPluginUseCase(
+		c.meltanoRepo,
+		&MeltanoValidator{validator: validator},
+		c.eventPublisher,
+	)
+
+	// Create RunPipelineUseCase with in-memory run repository and executor
+	c.runMeltanoPipelineUC = meltanoUC.NewRunPipelineUseCase(
+		c.meltanoRepo,
+		&InMemoryMeltanoRunRepository{},
+		&MeltanoExecutor{},
+		&MeltanoValidator{validator: validator},
+		c.eventPublisher,
+	)
+
+	c.addMeltanoScheduleUC = meltanoUC.NewAddScheduleUseCase(
+		c.meltanoRepo,
+		&MeltanoValidator{validator: validator},
+		c.eventPublisher,
+	)
+
+	c.getMeltanoProjectUC = meltanoUC.NewGetProjectUseCase(
+		c.meltanoRepo,
+		&MeltanoValidator{validator: validator},
+	)
+
+	c.listMeltanoProjectsUC = meltanoUC.NewListProjectsUseCase(
+		c.meltanoRepo,
+		&MeltanoValidator{validator: validator},
+	)
+
+	c.deleteMeltanoProjectUC = meltanoUC.NewDeleteProjectUseCase(
+		c.meltanoRepo,
+		&MeltanoValidator{validator: validator},
+		c.eventPublisher,
+	)
+
+	return nil
+}
+
+// initializeHandlers creates HTTP handlers
+func (c *CleanContainer) initializeHandlers() {
+	// Enable Clean Architecture HTTP handlers
+	// c.cleanPipelineHandler = http.NewCleanPipelineHandler( // DISABLED temporarily
+	//	c.createPipelineUC,
+	//	c.executePipelineUC,
+	//	c.getPipelineUC,
+	//	c.listPipelinesUC,
+	//	c.deletePipelineUC,
+	// )
+
+	c.cleanPluginHandler = http.NewCleanPluginHandler(
+		c.registerPluginUC,
+		c.getPluginUC,
+		c.listPluginsUC,
+		c.deletePluginUC,
+	)
+
+	c.cleanDbtHandler = http.NewCleanDbtHandler(
+		c.createDbtProjectUC,
+		c.executeDbtProjectUC,
+		c.getDbtProjectUC,
+		c.listDbtProjectsUC,
+		c.deleteDbtProjectUC,
+	)
+
+	c.cleanMeltanoHandler = http.NewCleanMeltanoHandler(
+		c.createMeltanoProjectUC,
+		c.addMeltanoPluginUC,
+		c.runMeltanoPipelineUC,
+		c.addMeltanoScheduleUC,
+		c.getMeltanoProjectUC,
+		c.listMeltanoProjectsUC,
+		c.deleteMeltanoProjectUC,
+	)
+}
+
+// GetHandlers returns all Clean Architecture HTTP handlers
+func (c *CleanContainer) GetHandlers() (interface{}, *http.CleanPluginHandler, *http.CleanDbtHandler, *http.CleanMeltanoHandler) {
+	return nil, c.cleanPluginHandler, c.cleanDbtHandler, c.cleanMeltanoHandler // cleanPipelineHandler disabled temporarily
+}
+
+// HealthCheck performs health checks on all Clean Architecture components
+func (c *CleanContainer) HealthCheck(ctx context.Context) error {
+	if c.db != nil {
+		if err := c.db.PingContext(ctx); err != nil {
+			return errors.Wrap(err, "database health check failed")
+		}
+	}
+	return nil
+}
+
+// Shutdown gracefully shuts down all Clean Architecture components
+func (c *CleanContainer) Shutdown(ctx context.Context) error {
+	return nil
+}
+
+// EventAdapter adapts events.EventPublisher to unified interface
+type EventAdapter struct {
+	publisher events.EventPublisher
+}
+
+func (a *EventAdapter) Publish(ctx context.Context, event interface{}) error {
+	return a.publisher.Publish(ctx, event)
+}
+
+// Placeholder validator implementations (simplified)
+
+type PipelineValidator struct {
+	validator *validation.Validator
+}
+
+func (v *PipelineValidator) ValidateCreatePipeline(input pipelineUC.CreatePipelineInput) error {
+	return nil // Stub implementation
+}
+
+func (v *PipelineValidator) ValidateExecutePipeline(input pipelineUC.ExecutePipelineInput) error {
+	return nil // Stub implementation
+}
+
+func (v *PipelineValidator) ValidateGetPipeline(input pipelineUC.GetPipelineInput) error {
+	return nil // Stub implementation
+}
+
+func (v *PipelineValidator) ValidateGetPipelineByName(input pipelineUC.GetPipelineByNameInput) error {
+	return nil // Stub implementation
+}
+
+func (v *PipelineValidator) ValidateListPipelines(input pipelineUC.ListPipelinesInput) error {
+	return nil // Stub implementation
+}
+
+func (v *PipelineValidator) ValidateDeletePipeline(input pipelineUC.DeletePipelineInput) error {
+	return nil // Stub implementation
+}
+
+func (v *PipelineValidator) ValidateAddStep(input pipelineUC.AddStepInput) error {
+	return nil // Stub implementation
+}
+
+type PipelineExecutor struct{}
+
+func (e *PipelineExecutor) Execute(ctx context.Context, pipeline *pipelineEntities.Pipeline) error {
+	return nil // Stub implementation
+}
+
+type PluginValidator struct {
+	validator *validation.Validator
+}
+
+func (v *PluginValidator) ValidateRegisterPlugin(input pluginUC.RegisterPluginInput) error {
+	return nil // Stub implementation
+}
+
+func (v *PluginValidator) ValidateActivatePlugin(input pluginUC.ActivatePluginInput) error {
+	return nil // Stub implementation
+}
+
+func (v *PluginValidator) ValidateUpdatePlugin(input pluginUC.UpdatePluginInput) error {
+	return nil // Stub implementation
+}
+
+func (v *PluginValidator) ValidateGetPlugin(input pluginUC.GetPluginInput) error {
+	return nil // Stub implementation
+}
+
+func (v *PluginValidator) ValidateGetPluginByName(input pluginUC.GetPluginByNameInput) error {
+	return nil // Stub implementation
+}
+
+func (v *PluginValidator) ValidateListPlugins(input pluginUC.ListPluginsInput) error {
+	return nil // Stub implementation
+}
+
+func (v *PluginValidator) ValidateListPluginsByType(input pluginUC.ListPluginsByTypeInput) error {
+	return nil // Stub implementation
+}
+
+func (v *PluginValidator) ValidateDeletePlugin(input pluginUC.DeletePluginInput) error {
+	return nil // Stub implementation
+}
+
+func (v *PluginValidator) ValidatePluginHealthCheck(input pluginUC.PluginHealthCheckInput) error {
+	return nil // Stub implementation
+}
+
+type DbtValidator struct {
+	validator *validation.Validator
+}
+
+func (v *DbtValidator) ValidateCreateProject(input dbtUC.CreateProjectInput) error {
+	return nil // Stub implementation
+}
+
+func (v *DbtValidator) ValidateExecuteProject(input dbtUC.ExecuteProjectInput) error {
+	return nil // Stub implementation
+}
+
+func (v *DbtValidator) ValidateDeleteProject(input dbtUC.DeleteProjectInput) error {
+	return nil // Stub implementation
+}
+
+func (v *DbtValidator) ValidateGetProject(input dbtUC.GetProjectInput) error {
+	return nil // Stub implementation
+}
+
+func (v *DbtValidator) ValidateListProjects(input dbtUC.ListProjectsInput) error {
+	return nil // Stub implementation
+}
+
+func (v *DbtValidator) ValidateUpdateProject(input dbtUC.UpdateProjectInput) error {
+	return nil // Stub implementation
+}
+
+func (v *DbtValidator) ValidateAddPackage(input dbtUC.AddPackageInput) error {
+	return nil // Stub implementation
+}
+
+func (v *DbtValidator) ValidateAddSource(input dbtUC.AddSourceInput) error {
+	return nil // Stub implementation
+}
+
+type DbtExecutor struct{}
+
+func (e *DbtExecutor) Run(ctx context.Context, project *dbtEntities.DbtProject, execCtx *dbtUC.ExecutionContext) (*dbtUC.ExecutionResult, error) {
+	return &dbtUC.ExecutionResult{
+		ID:        uuid.New(),
+		ProjectID: project.ID,
+		Command:   "run",
+		Status:    "success",
+	}, nil
+}
+
+func (e *DbtExecutor) Test(ctx context.Context, project *dbtEntities.DbtProject, execCtx *dbtUC.ExecutionContext) (*dbtUC.ExecutionResult, error) {
+	return &dbtUC.ExecutionResult{
+		ID:        uuid.New(),
+		ProjectID: project.ID,
+		Command:   "test",
+		Status:    "success",
+	}, nil
+}
+
+func (e *DbtExecutor) Compile(ctx context.Context, project *dbtEntities.DbtProject, execCtx *dbtUC.ExecutionContext) (*dbtUC.ExecutionResult, error) {
+	return &dbtUC.ExecutionResult{
+		ID:        uuid.New(),
+		ProjectID: project.ID,
+		Command:   "compile",
+		Status:    "success",
+	}, nil
+}
+
+func (e *DbtExecutor) Snapshot(ctx context.Context, project *dbtEntities.DbtProject, execCtx *dbtUC.ExecutionContext) (*dbtUC.ExecutionResult, error) {
+	return &dbtUC.ExecutionResult{
+		ID:        uuid.New(),
+		ProjectID: project.ID,
+		Command:   "snapshot",
+		Status:    "success",
+	}, nil
+}
+
+func (e *DbtExecutor) Seed(ctx context.Context, project *dbtEntities.DbtProject, execCtx *dbtUC.ExecutionContext) (*dbtUC.ExecutionResult, error) {
+	return &dbtUC.ExecutionResult{
+		ID:        uuid.New(),
+		ProjectID: project.ID,
+		Command:   "seed",
+		Status:    "success",
+	}, nil
+}
+
+func (e *DbtExecutor) Docs(ctx context.Context, project *dbtEntities.DbtProject, execCtx *dbtUC.ExecutionContext) (*dbtUC.ExecutionResult, error) {
+	return &dbtUC.ExecutionResult{
+		ID:        uuid.New(),
+		ProjectID: project.ID,
+		Command:   "docs",
+		Status:    "success",
+	}, nil
+}
+
+func (e *DbtExecutor) Source(ctx context.Context, project *dbtEntities.DbtProject, execCtx *dbtUC.ExecutionContext) (*dbtUC.ExecutionResult, error) {
+	return &dbtUC.ExecutionResult{
+		ID:        uuid.New(),
+		ProjectID: project.ID,
+		Command:   "source",
+		Status:    "success",
+	}, nil
+}
+
+func (e *DbtExecutor) Clean(ctx context.Context, project *dbtEntities.DbtProject) error {
+	return nil
+}
+
+func (e *DbtExecutor) Deps(ctx context.Context, project *dbtEntities.DbtProject) error {
+	return nil
+}
+
+type MeltanoValidator struct {
+	validator *validation.Validator
+}
+
+func (v *MeltanoValidator) ValidateCreateProject(input meltanoUC.CreateProjectInput) error {
+	return nil // Stub implementation
+}
+
+func (v *MeltanoValidator) ValidateUpdateProject(input meltanoUC.UpdateProjectInput) error {
+	return nil // Stub implementation
+}
+
+func (v *MeltanoValidator) ValidateAddPlugin(input meltanoUC.AddPluginInput) error {
+	return nil // Stub implementation
+}
+
+func (v *MeltanoValidator) ValidateRunPipeline(input meltanoUC.RunPipelineInput) error {
+	return nil // Stub implementation
+}
+
+func (v *MeltanoValidator) ValidateAddSchedule(input meltanoUC.AddScheduleInput) error {
+	return nil // Stub implementation
+}
+
+func (v *MeltanoValidator) ValidateGetProject(input meltanoUC.GetProjectInput) error {
+	return nil // Stub implementation
+}
+
+func (v *MeltanoValidator) ValidateListProjects(input meltanoUC.ListProjectsInput) error {
+	return nil // Stub implementation
+}
+
+func (v *MeltanoValidator) ValidateDeleteProject(input meltanoUC.DeleteProjectInput) error {
+	return nil // Stub implementation
+}
+
+type MeltanoExecutor struct{}
+
+func (e *MeltanoExecutor) Execute(ctx context.Context, project *meltanoEntities.MeltanoProject, run *meltanoEntities.MeltanoRun) error {
+	return nil
+}
+
+func (e *MeltanoExecutor) Install(ctx context.Context, project *meltanoEntities.MeltanoProject, pluginName string) error {
+	return nil
+}
+
+func (e *MeltanoExecutor) Invoke(ctx context.Context, project *meltanoEntities.MeltanoProject, pluginName string, args []string) error {
+	return nil
+}
+
+func (e *MeltanoExecutor) Test(ctx context.Context, project *meltanoEntities.MeltanoProject, pluginName string) error {
+	return nil
+}
+
+func (e *MeltanoExecutor) Discover(ctx context.Context, project *meltanoEntities.MeltanoProject, pluginName string) (map[string]interface{}, error) {
+	return make(map[string]interface{}), nil
+}
+
+func (e *MeltanoExecutor) Config(ctx context.Context, project *meltanoEntities.MeltanoProject, pluginName string) (map[string]interface{}, error) {
+	return make(map[string]interface{}), nil
+}
+
+func (e *MeltanoExecutor) State(ctx context.Context, project *meltanoEntities.MeltanoProject, jobName string) (map[string]interface{}, error) {
+	return make(map[string]interface{}), nil
+}
+
+func (e *MeltanoExecutor) Schedule(ctx context.Context, project *meltanoEntities.MeltanoProject, scheduleName string) error {
+	return nil
+}
+
+func (e *MeltanoExecutor) Environment(ctx context.Context, project *meltanoEntities.MeltanoProject, envName string) error {
+	return nil
+}
+
+// Placeholder in-memory repository implementations
+
+type InMemoryPipelineRepository struct{}
+
+func (r *InMemoryPipelineRepository) Save(ctx context.Context, pipeline *pipelineEntities.Pipeline) error {
+	return nil
+}
+
+func (r *InMemoryPipelineRepository) FindByID(ctx context.Context, id uuid.UUID) (*pipelineEntities.Pipeline, error) {
+	return nil, errors.New("pipeline not found")
+}
+
+func (r *InMemoryPipelineRepository) FindByName(ctx context.Context, name string) (*pipelineEntities.Pipeline, error) {
+	return nil, errors.New("pipeline not found")
+}
+
+func (r *InMemoryPipelineRepository) ExistsByName(ctx context.Context, name string) (bool, error) {
+	return false, nil
+}
+
+func (r *InMemoryPipelineRepository) List(ctx context.Context, criteria pipelineUC.ListCriteria) ([]*pipelineEntities.Pipeline, int, error) {
+	return []*pipelineEntities.Pipeline{}, 0, nil
+}
+
+func (r *InMemoryPipelineRepository) Delete(ctx context.Context, id uuid.UUID) error {
+	return errors.New("pipeline not found")
+}
+
+type InMemoryPluginRepository struct{}
+
+func (r *InMemoryPluginRepository) Save(ctx context.Context, plugin *pluginEntities.Plugin) error {
+	return nil
+}
+
+func (r *InMemoryPluginRepository) FindByID(ctx context.Context, id uuid.UUID) (*pluginEntities.Plugin, error) {
+	return nil, errors.New("plugin not found")
+}
+
+func (r *InMemoryPluginRepository) FindByName(ctx context.Context, name string) (*pluginEntities.Plugin, error) {
+	return nil, errors.New("plugin not found")
+}
+
+func (r *InMemoryPluginRepository) ExistsByName(ctx context.Context, name string) (bool, error) {
+	return false, nil
+}
+
+func (r *InMemoryPluginRepository) List(ctx context.Context, criteria pluginUC.ListCriteria) ([]*pluginEntities.Plugin, int, error) {
+	return []*pluginEntities.Plugin{}, 0, nil
+}
+
+func (r *InMemoryPluginRepository) ListByType(ctx context.Context, pluginType pluginEntities.PluginType) ([]*pluginEntities.Plugin, error) {
+	return []*pluginEntities.Plugin{}, nil
+}
+
+func (r *InMemoryPluginRepository) ListActive(ctx context.Context) ([]*pluginEntities.Plugin, error) {
+	return []*pluginEntities.Plugin{}, nil
+}
+
+func (r *InMemoryPluginRepository) Delete(ctx context.Context, id uuid.UUID) error {
+	return errors.New("plugin not found")
+}
+
+type InMemoryDbtRepository struct{}
+
+func (r *InMemoryDbtRepository) Save(ctx context.Context, project *dbtEntities.DbtProject) error {
+	return nil
+}
+
+func (r *InMemoryDbtRepository) FindByID(ctx context.Context, id uuid.UUID) (*dbtEntities.DbtProject, error) {
+	return nil, errors.New("project not found")
+}
+
+func (r *InMemoryDbtRepository) FindByName(ctx context.Context, name string) (*dbtEntities.DbtProject, error) {
+	return nil, errors.New("project not found")
+}
+
+func (r *InMemoryDbtRepository) ExistsByName(ctx context.Context, name string) (bool, error) {
+	return false, nil
+}
+
+func (r *InMemoryDbtRepository) List(ctx context.Context, criteria dbtUC.ListCriteria) ([]*dbtEntities.DbtProject, int, error) {
+	return []*dbtEntities.DbtProject{}, 0, nil
+}
+
+func (r *InMemoryDbtRepository) Delete(ctx context.Context, id uuid.UUID) error {
+	return errors.New("project not found")
+}
+
+func (r *InMemoryDbtRepository) FindByProfileName(ctx context.Context, profileName string) ([]*dbtEntities.DbtProject, error) {
+	return []*dbtEntities.DbtProject{}, nil
+}
+
+func (r *InMemoryDbtRepository) FindActiveProjects(ctx context.Context) ([]*dbtEntities.DbtProject, error) {
+	return []*dbtEntities.DbtProject{}, nil
+}
+
+type InMemoryMeltanoRepository struct{}
+
+func (r *InMemoryMeltanoRepository) Save(ctx context.Context, project *meltanoEntities.MeltanoProject) error {
+	return nil
+}
+
+func (r *InMemoryMeltanoRepository) FindByID(ctx context.Context, id uuid.UUID) (*meltanoEntities.MeltanoProject, error) {
+	return nil, errors.New("project not found")
+}
+
+func (r *InMemoryMeltanoRepository) FindByName(ctx context.Context, name string) (*meltanoEntities.MeltanoProject, error) {
+	return nil, errors.New("project not found")
+}
+
+func (r *InMemoryMeltanoRepository) ExistsByName(ctx context.Context, name string) (bool, error) {
+	return false, nil
+}
+
+func (r *InMemoryMeltanoRepository) List(ctx context.Context, criteria meltanoUC.ListCriteria) ([]*meltanoEntities.MeltanoProject, int, error) {
+	return []*meltanoEntities.MeltanoProject{}, 0, nil
+}
+
+func (r *InMemoryMeltanoRepository) Delete(ctx context.Context, id uuid.UUID) error {
+	return errors.New("project not found")
+}
+
+func (r *InMemoryMeltanoRepository) FindByStatus(ctx context.Context, status meltanoEntities.ProjectStatus) ([]*meltanoEntities.MeltanoProject, error) {
+	return []*meltanoEntities.MeltanoProject{}, nil
+}
+
+func (r *InMemoryMeltanoRepository) FindActiveProjects(ctx context.Context) ([]*meltanoEntities.MeltanoProject, error) {
+	return []*meltanoEntities.MeltanoProject{}, nil
+}
+
+type InMemoryMeltanoRunRepository struct{}
+
+func (r *InMemoryMeltanoRunRepository) Save(ctx context.Context, run *meltanoEntities.MeltanoRun) error {
+	return nil
+}
+
+func (r *InMemoryMeltanoRunRepository) FindByID(ctx context.Context, id uuid.UUID) (*meltanoEntities.MeltanoRun, error) {
+	return nil, errors.New("run not found")
+}
+
+func (r *InMemoryMeltanoRunRepository) FindByRunID(ctx context.Context, runID string) (*meltanoEntities.MeltanoRun, error) {
+	return nil, errors.New("run not found")
+}
+
+func (r *InMemoryMeltanoRunRepository) FindByProjectID(ctx context.Context, projectID uuid.UUID, criteria meltanoUC.RunListCriteria) ([]*meltanoEntities.MeltanoRun, int, error) {
+	return []*meltanoEntities.MeltanoRun{}, 0, nil
+}
+
+func (r *InMemoryMeltanoRunRepository) List(ctx context.Context, criteria meltanoUC.RunListCriteria) ([]*meltanoEntities.MeltanoRun, int, error) {
+	return []*meltanoEntities.MeltanoRun{}, 0, nil
+}
+
+func (r *InMemoryMeltanoRunRepository) Delete(ctx context.Context, id uuid.UUID) error {
+	return errors.New("run not found")
+}
+
+func (r *InMemoryMeltanoRunRepository) FindActiveRuns(ctx context.Context) ([]*meltanoEntities.MeltanoRun, error) {
+	return []*meltanoEntities.MeltanoRun{}, nil
+}
+
+func (r *InMemoryMeltanoRunRepository) FindByStatus(ctx context.Context, status meltanoEntities.RunStatus) ([]*meltanoEntities.MeltanoRun, error) {
+	return []*meltanoEntities.MeltanoRun{}, nil
+}
+
+// Compile-time interface conformance checks
+// These lines ensure that our implementations satisfy the required interfaces
+// If any implementation doesn't match its interface, compilation will fail here
+var (
+	// Pipeline interfaces
+	_ pipelineUC.PipelineRepository = (*InMemoryPipelineRepository)(nil)
+	_ pipelineUC.PipelineRepository = (*postgresql.CleanPipelineRepository)(nil)
+	_ pipelineUC.PipelineExecutor   = (*PipelineExecutor)(nil)
+	_ pipelineUC.InputValidator     = (*PipelineValidator)(nil)
+	_ pipelineUC.EventPublisher     = (*EventAdapter)(nil)
+
+	// Plugin interfaces
+	_ pluginUC.PluginRepository = (*InMemoryPluginRepository)(nil)
+	_ pluginUC.PluginRepository = (*postgresql.CleanPluginRepository)(nil)
+	_ pluginUC.InputValidator   = (*PluginValidator)(nil)
+
+	// DBT interfaces
+	_ dbtUC.ProjectRepository = (*InMemoryDbtRepository)(nil)
+	_ dbtUC.InputValidator    = (*DbtValidator)(nil)
+
+	// Meltano interfaces
+	_ meltanoUC.ProjectRepository = (*InMemoryMeltanoRepository)(nil)
+	_ meltanoUC.InputValidator    = (*MeltanoValidator)(nil)
+)

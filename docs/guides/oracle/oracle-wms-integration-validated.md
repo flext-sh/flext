@@ -271,7 +271,7 @@ $ python examples/cli_usage.py
 | ----------------- | -------------------- | ---------------- | --------------- |
 | **Total Lines**   | 1500+                | 86               | 94% reduction   |
 | **Configuration** | 200+ lines           | 15 lines         | 92% reduction   |
-| **Dependencies**  | 25+ manual           | 1 (FLEXT)          | 96% reduction   |
+| **Dependencies**  | 25+ manual           | 1 (FLEXT)        | 96% reduction   |
 | **Setup Time**    | 2+ hours             | 5 minutes        | 95% reduction   |
 
 ### **FLEXT Automation Benefits**

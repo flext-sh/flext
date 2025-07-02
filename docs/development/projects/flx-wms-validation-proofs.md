@@ -159,7 +159,7 @@ class FlextWmsCliAdapter(CycloptsCliAdapter):  # Herda de FLEXT
 | **Test Coverage**           | 42%   | ⚠️ (CLI/Client não testados em E2E) |
 | **Tests Passing**           | 20/20 | ✅                                  |
 | **Code Redundancy**         | 0%    | ✅                                  |
-| **FLEXT Integration**         | 100%  | ✅                                  |
+| **FLEXT Integration**       | 100%  | ✅                                  |
 | **Functionality Preserved** | 100%  | ✅                                  |
 
 ## 🚀 FUNCIONALIDADES DEMONSTRADAS
