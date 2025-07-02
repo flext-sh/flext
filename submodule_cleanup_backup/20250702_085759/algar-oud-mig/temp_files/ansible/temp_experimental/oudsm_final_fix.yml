@@ -8,21 +8,21 @@
     oudsm_port: 8080
     oracle_user: oracle
     oracle_group: oinstall
-  
+
   tasks:
     - name: Clean existing processes and check OUD nodes
       shell: |
         echo "=== CLEANING EXISTING PROCESSES ==="
         pkill -f "oud_web_interface.py" || echo "No OUDSM process found"
         sleep 2
-        
+
         echo "=== CHECKING OUD NODES ==="
         echo "Checking OUD instances..."
         for node_dir in /u01/domain/oud-node*-instance; do
           if [ -d "$node_dir" ]; then
             node_name=$(basename "$node_dir")
             echo "Found: $node_name"
-            
+
             # Check if node is running
             cd "$node_dir"
             if [ -f "logs/server.pid" ]; then
@@ -39,7 +39,7 @@
             fi
           fi
         done
-        
+
         echo ""
         echo "=== ACTIVE OUD PORTS ==="
         netstat -tlnp | grep ":1389\|:2389\|:3389" || echo "No OUD ports active"
@@ -52,17 +52,17 @@
     - name: Start OUD nodes if needed
       shell: |
         echo "=== STARTING OUD NODES ==="
-        
+
         export ORACLE_HOME=/u01/app/oracle/product/14.1/oud_1
         export JAVA_HOME=/u01/app/oracle/product/jdk
-        
+
         started_any=false
-        
+
         for node_dir in /u01/domain/oud-node*-instance; do
           if [ -d "$node_dir" ]; then
             node_name=$(basename "$node_dir")
             cd "$node_dir"
-            
+
             # Check if already running
             if [ -f "logs/server.pid" ]; then
               pid=$(cat logs/server.pid 2>/dev/null)
@@ -71,13 +71,13 @@
                 continue
               fi
             fi
-            
+
             # Start the node
             if [ -f "bin/start-ds" ]; then
               echo "🚀 Starting $node_name..."
               ./bin/start-ds --nodetach &
               sleep 3
-              
+
               # Check if started
               if [ -f "logs/server.pid" ]; then
                 pid=$(cat logs/server.pid 2>/dev/null)
@@ -96,13 +96,13 @@
             fi
           fi
         done
-        
+
         if [ "$started_any" = true ]; then
           echo ""
           echo "Waiting for nodes to stabilize..."
           sleep 5
         fi
-        
+
         echo ""
         echo "=== FINAL OUD STATUS ==="
         netstat -tlnp | grep ":1389\|:2389\|:3389" || echo "No OUD nodes listening"
@@ -134,7 +134,7 @@
           # Kill any existing process first
           ExecStartPre=/bin/bash -c 'pkill -f "oud_web_interface.py" || true'
           ExecStartPre=/bin/bash -c 'sleep 2'
-          
+
           ExecStart=/usr/bin/python3 {{ oudsm_web_path }}/oud_web_interface.py
           ExecStop=/bin/kill -TERM $MAINPID
 
@@ -170,14 +170,14 @@
       shell: |
         echo "=== COMPLETE OUDSM FUNCTIONALITY TEST ==="
         echo ""
-        
+
         echo "1. ✅ OUDSM Process:"
         if ps aux | grep oud_web_interface | grep -v grep; then
           echo "✅ OUDSM process running"
         else
           echo "❌ OUDSM process not found"
         fi
-        
+
         echo ""
         echo "2. ✅ OUDSM Port:"
         if netstat -tlnp | grep ":{{ oudsm_port }}"; then
@@ -185,33 +185,33 @@
         else
           echo "❌ Port {{ oudsm_port }} not listening"
         fi
-        
+
         echo ""
         echo "3. ✅ SystemD Service:"
         service_status=$(systemctl is-active oudsm 2>/dev/null)
         service_enabled=$(systemctl is-enabled oudsm 2>/dev/null)
         echo "Service active: $service_status"
         echo "Service enabled: $service_enabled"
-        
+
         echo ""
         echo "4. ✅ Web Interface:"
         web_status=$(curl -s -w "%{http_code}" "http://localhost:{{ oudsm_port }}/" -o /dev/null)
         echo "HTTP Status: $web_status"
-        
+
         echo ""
         echo "5. ✅ API Status:"
         api_status=$(curl -s -w "%{http_code}" "http://localhost:{{ oudsm_port }}/status" -o /dev/null)
         echo "API Status: $api_status"
-        
+
         echo ""
         echo "6. ✅ OUD Nodes Connectivity:"
         curl -s "http://localhost:{{ oudsm_port }}/status" | jq -r '.nodes[] | "\(.name): port \(.port) - status: \(.status)"' 2>/dev/null || echo "API response not in JSON format"
-        
+
         echo ""
         echo "7. ✅ Active OUD Instances:"
         active_nodes=$(netstat -tlnp | grep ":1389\|:2389\|:3389" | wc -l)
         echo "Active OUD nodes: $active_nodes/3"
-        
+
         echo ""
         echo "=== SUMMARY ==="
         if [ "$service_status" = "active" ] && [ "$web_status" = "200" ] && [ "$api_status" = "200" ]; then

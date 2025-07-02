@@ -3,7 +3,7 @@
   hosts: oud-srv1.ctbc.local
   become: true
   gather_facts: false
-  
+
   roles:
     - role: oracle_oud_14
       tags:

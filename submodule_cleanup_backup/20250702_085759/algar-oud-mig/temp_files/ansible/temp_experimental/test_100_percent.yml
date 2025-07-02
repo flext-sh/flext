@@ -4,13 +4,13 @@
   hosts: oud-srv1.ctbc.local
   become: true
   gather_facts: true
-  
+
   vars:
     # FORCE SAFE MODE
     clean_deployment: false
     protection_mode: true
     require_100_percent: false  # Set to true only when confident
-    
+
   tasks:
     - name: "🛡️  SAFE MODE: Display protection settings"
       ansible.builtin.debug:

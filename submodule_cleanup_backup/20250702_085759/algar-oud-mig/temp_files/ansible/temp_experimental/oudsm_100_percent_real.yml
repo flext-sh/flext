@@ -1,5 +1,5 @@
 ---
-# OUDSM 100% REAL DEPLOYMENT - OUD Web Interface 
+# OUDSM 100% REAL DEPLOYMENT - OUD Web Interface
 - name: OUDSM 100% Complete Real Deployment
   hosts: oud-srv1.ctbc.local
   become: yes
@@ -8,7 +8,7 @@
     oudsm_port: 8080
     oracle_user: oracle
     oracle_group: oinstall
-  
+
   tasks:
     - name: Check current OUDSM status
       shell: |
@@ -74,10 +74,10 @@
         content: |
           #!/bin/bash
           # OUDSM Web Interface Management Script
-          
+
           OUDSM_PATH="{{ oudsm_web_path }}"
           OUDSM_PORT="{{ oudsm_port }}"
-          
+
           case "$1" in
             start)
               if pgrep -f "oud_web_interface.py" > /dev/null; then

@@ -3,7 +3,7 @@
 - name: Complete OUDSM Startup and Configuration
   hosts: oud-srv1.ctbc.local
   become: yes
-  
+
   tasks:
     - name: Create scripts directory
       file:
@@ -12,7 +12,7 @@
         owner: oracle
         group: oinstall
         mode: "0755"
-    
+
     - name: Create OUDSM startup script
       copy:
         content: |
@@ -41,7 +41,7 @@
             echo "⚠️  OUDSM Admin Server already running"
           else
             echo "🚀 Starting OUDSM Admin Server..."
-            
+
             # Start AdminServer using the startComponent.sh script
             if [ -f "bin/startComponent.sh" ]; then
               echo "🚀 Starting WebLogic AdminServer via startComponent..."
@@ -51,7 +51,7 @@
               echo "❌ startComponent.sh not found in domain"
               exit 1
             fi
-            
+
             # Wait for Admin Server to start
             echo "⏳ Waiting for Admin Server to start..."
             for i in {1..60}; do
@@ -70,7 +70,7 @@
         owner: oracle
         group: oinstall
         mode: "0755"
-    
+
     - name: Create OUDSM logs directory
       file:
         path: "/u01/logs/oudsm"
@@ -78,7 +78,7 @@
         owner: oracle
         group: oinstall
         mode: "0755"
-    
+
     - name: Create OUDSM SystemD service
       copy:
         content: |
@@ -121,7 +121,7 @@
         group: root
         mode: "0644"
       notify: reload systemd daemon
-    
+
     - name: Create OUDSM stop script
       copy:
         content: |
@@ -159,7 +159,7 @@
         owner: oracle
         group: oinstall
         mode: "0755"
-    
+
     - name: Start OUDSM AdminServer
       shell: "/u01/scripts/start_oudsm.sh"
       become: true

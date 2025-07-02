@@ -3,7 +3,7 @@
 - name: Fix WebLogic OUDSM with Modular Structure
   hosts: oud-srv1.ctbc.local
   become: yes
-  
+
   tasks:
     - name: Create WebLogic startup script using modular approach
       copy:
@@ -63,14 +63,14 @@
     - name: Start WebLogic using the corrected script
       shell: |
         cd /u01/domain/oudsm
-        
+
         # Kill any existing processes
         pkill -f "weblogic.Name=AdminServer" || true
         sleep 3
-        
+
         echo "Starting WebLogic with modular approach..."
         nohup ./startWebLogic.sh > /u01/logs/oudsm/weblogic_modular.log 2>&1 &
-        
+
         echo "Waiting for WebLogic to start..."
         for i in {1..45}; do
           if netstat -ln | grep -q ":7001 "; then
@@ -80,7 +80,7 @@
           sleep 5
           echo "Waiting... ($i/45)"
         done
-        
+
         # Final status
         if netstat -ln | grep -q ":7001 "; then
           echo "WebLogic is RUNNING on port 7001"
@@ -91,7 +91,7 @@
         fi
       become_user: oracle
       register: weblogic_modular_start
-      
+
     - name: Display startup result
       debug:
         var: weblogic_modular_start.stdout_lines

@@ -9,7 +9,7 @@ Files were categorized and removed to clean up the workspace.
 
 - **temp_files** - Temporary files and logs
 - **build_artifacts** - Python build artifacts and cache
-- **editor_files** - Editor configuration and system files  
+- **editor_files** - Editor configuration and system files
 - **old_scripts** - Deprecated test and debug scripts
 - **output_files** - Runtime output and database files
 

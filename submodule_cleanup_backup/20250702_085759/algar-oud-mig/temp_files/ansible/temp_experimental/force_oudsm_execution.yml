@@ -15,14 +15,14 @@
     oracle_oud_14_oracle_group: oinstall
     oracle_oud_14_logs_path: /u01/logs
     oracle_oud_14_scripts_path: /u01/scripts
-  
+
   tasks:
     - name: Check if OUDSM domain already exists
       stat:
         path: "{{ oracle_oud_14_oudsm_domain_path }}/config/config.xml"
       register: oudsm_domain_exists
 
-    - name: Check WLST and Infrastructure availability  
+    - name: Check WLST and Infrastructure availability
       stat:
         path: "{{ oracle_oud_14_oracle_home }}/oracle_common/common/bin/wlst.sh"
       register: wlst_available
@@ -39,16 +39,16 @@
         cd {{ oracle_oud_14_oudsm_domain_path }}
         export JAVA_HOME={{ oracle_oud_14_java_home }}
         export ORACLE_HOME={{ oracle_oud_14_oracle_home }}
-        
+
         # Check if already running
         if pgrep -f "weblogic.Name=AdminServer" > /dev/null; then
           echo "OUDSM AdminServer already running"
           exit 0
         fi
-        
+
         echo "Starting OUDSM AdminServer..."
         nohup ./startWebLogic.sh > {{ oracle_oud_14_logs_path }}/oudsm/admin.log 2>&1 &
-        
+
         echo "Waiting for startup..."
         for i in {1..60}; do
           if netstat -ln | grep -q ":{{ oracle_oud_14_oudsm_port }} "; then
@@ -58,7 +58,7 @@
           fi
           sleep 5
         done
-        
+
         echo "Startup timeout - check logs"
         exit 1
       become_user: oracle

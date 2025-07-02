@@ -8,7 +8,7 @@
     oudsm_port: 8080
     oracle_user: oracle
     oracle_group: oinstall
-  
+
   tasks:
     - name: Stop all OUDSM processes and services
       shell: |
@@ -52,15 +52,15 @@
           import socket
           import sys
           from http.server import HTTPServer, BaseHTTPRequestHandler
-          
+
           class OUDHandler(BaseHTTPRequestHandler):
-              
+
               def do_GET(self):
                   if self.path == '/':
                       self.send_response(200)
                       self.send_header('Content-type', 'text/html')
                       self.end_headers()
-                      
+
                       html = """
                       <html>
                       <head>
@@ -83,7 +83,7 @@
                               <h1>🏛️ Oracle Unified Directory Services Manager</h1>
                               <p>ALGAR OUD 14.1 Production Cluster Management</p>
                           </div>
-                          
+
                           <div class="container">
                               <div class="info">
                                   <h3>📊 Cluster Status Monitor</h3>
@@ -91,13 +91,13 @@
                                   <p><strong>API Endpoint:</strong> <a href="/status" target="_blank">/status</a> (JSON)</p>
                                   <p><strong>Last Update:</strong> <span id="timestamp">Loading...</span></p>
                               </div>
-                              
+
                               <div id="cluster-status">
                                   <h3>🔧 OUD Cluster Nodes</h3>
                                   <p>Loading cluster status...</p>
                               </div>
                           </div>
-                          
+
                           <script>
                               function updateStatus() {
                                   fetch('/status')
@@ -105,13 +105,13 @@
                                       .then(data => {
                                           let html = '<h3>🔧 OUD Cluster Nodes</h3>';
                                           html += '<table><thead><tr><th>Node</th><th>Port</th><th>Status</th><th>Replication</th><th>Details</th></tr></thead><tbody>';
-                                          
+
                                           data.nodes.forEach(node => {
                                               let statusClass = node.status ? 'status-ok' : 'status-error';
                                               let statusText = node.status ? '✅ ONLINE' : '❌ OFFLINE';
                                               let replClass = node.replication ? 'status-ok' : 'status-error';
                                               let replText = node.replication ? '✅ ACTIVE' : '❌ INACTIVE';
-                                              
+
                                               html += `
                                                   <tr>
                                                       <td><strong>${node.name}</strong></td>
@@ -122,13 +122,13 @@
                                                   </tr>
                                               `;
                                           });
-                                          
+
                                           html += '</tbody></table>';
-                                          
+
                                           if (data.summary) {
                                               html += '<div class="info"><h4>📈 Cluster Summary</h4>' + data.summary + '</div>';
                                           }
-                                          
+
                                           document.getElementById('cluster-status').innerHTML = html;
                                           document.getElementById('timestamp').textContent = new Date().toLocaleString();
                                       })
@@ -137,7 +137,7 @@
                                           console.error('Status update error:', error);
                                       });
                               }
-                              
+
                               // Update immediately and then every 30 seconds
                               updateStatus();
                               setInterval(updateStatus, 30000);
@@ -146,16 +146,16 @@
                       </html>
                       """
                       self.wfile.write(html.encode())
-                      
+
                   elif self.path == '/status':
                       self.send_response(200)
                       self.send_header('Content-type', 'application/json')
                       self.send_header('Access-Control-Allow-Origin', '*')
                       self.end_headers()
-                      
+
                       # Check real OUD nodes with BOTH IPv4 and IPv6
                       nodes = []
-                      
+
                       # Node 1 - Port 1389
                       node1_status, node1_details = self.check_oud_node_comprehensive('localhost', 1389)
                       nodes.append({
@@ -165,27 +165,27 @@
                           "replication": node1_status,  # Assume replication works if node is up
                           "details": node1_details
                       })
-                      
+
                       # Node 2 - Port 2389
                       node2_status, node2_details = self.check_oud_node_comprehensive('localhost', 2389)
                       nodes.append({
-                          "name": "oud-node2-instance", 
+                          "name": "oud-node2-instance",
                           "port": 2389,
                           "status": node2_status,
                           "replication": node2_status,
                           "details": node2_details
                       })
-                      
+
                       # Node 3 - Port 3389
                       node3_status, node3_details = self.check_oud_node_comprehensive('localhost', 3389)
                       nodes.append({
                           "name": "oud-node3-instance",
-                          "port": 3389, 
+                          "port": 3389,
                           "status": node3_status,
                           "replication": node3_status,
                           "details": node3_details
                       })
-                      
+
                       # Generate summary
                       online_count = sum(1 for node in nodes if node['status'])
                       summary = f"{online_count}/3 nodes online"
@@ -195,7 +195,7 @@
                           summary += " - Cluster DEGRADED"
                       else:
                           summary += " - Cluster DOWN"
-                      
+
                       response = {
                           "nodes": nodes,
                           "summary": summary,
@@ -204,16 +204,16 @@
                           "online_nodes": online_count
                       }
                       self.wfile.write(json.dumps(response, indent=2).encode())
-                      
+
                   else:
                       self.send_response(404)
                       self.end_headers()
                       self.wfile.write(b'Not Found')
-              
+
               def check_oud_node_comprehensive(self, host, port):
                   """Comprehensive OUD node check with IPv4 and IPv6"""
                   details = []
-                  
+
                   # Try IPv4 first
                   try:
                       sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -227,7 +227,7 @@
                           details.append(f"IPv4: Failed (code {result})")
                   except Exception as e:
                       details.append(f"IPv4: Error ({str(e)})")
-                  
+
                   # Try IPv6
                   try:
                       sock = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
@@ -241,7 +241,7 @@
                           details.append(f"IPv6: Failed (code {result})")
                   except Exception as e:
                       details.append(f"IPv6: Error ({str(e)})")
-                  
+
                   # Try hostname resolution
                   try:
                       sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -255,19 +255,19 @@
                           details.append(f"Hostname: Failed (code {result})")
                   except Exception as e:
                       details.append(f"Hostname: Error ({str(e)})")
-                  
+
                   return False, "; ".join(details)
-              
+
               def log_message(self, format, *args):
                   # Log to stdout for systemd
                   print(f"[{__import__('datetime').datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] {format % args}")
-          
+
           if __name__ == '__main__':
               print("🚀 OUDSM Web Interface starting...")
               print("🌐 Interface: http://localhost:8080/")
               print("📊 API: http://localhost:8080/status")
               print("👥 User: Running as UID", __import__('os').getuid())
-              
+
               try:
                   server = HTTPServer(('0.0.0.0', 8080), OUDHandler)
                   print("✅ OUDSM Web Interface ready on port 8080")
@@ -305,7 +305,7 @@
           # Ensure clean start
           ExecStartPre=/bin/bash -c 'pkill -f "oud_web_interface.py" 2>/dev/null || true'
           ExecStartPre=/bin/bash -c 'sleep 2'
-          
+
           ExecStart=/usr/bin/python3 {{ oudsm_web_path }}/oud_web_interface.py
           ExecStop=/bin/kill -TERM $MAINPID
 
@@ -351,7 +351,7 @@
       shell: |
         echo "=== COMPREHENSIVE OUDSM FUNCTIONALITY TEST ==="
         echo ""
-        
+
         echo "1. ✅ Process Check:"
         if ps aux | grep "oud_web_interface" | grep -v grep; then
           echo "✅ OUDSM process running"
@@ -360,7 +360,7 @@
           echo "❌ OUDSM process not found"
           process_ok=0
         fi
-        
+
         echo ""
         echo "2. ✅ Port Check:"
         if netstat -tlnp | grep ":{{ oudsm_port }}"; then
@@ -370,7 +370,7 @@
           echo "❌ Port {{ oudsm_port }} not listening"
           port_ok=0
         fi
-        
+
         echo ""
         echo "3. ✅ SystemD Service:"
         service_status=$(systemctl is-active oudsm 2>/dev/null)
@@ -383,7 +383,7 @@
           service_ok=0
         fi
         echo "Service enabled: $service_enabled"
-        
+
         echo ""
         echo "4. ✅ Web Interface Test:"
         web_status=$(curl -s -w "%{http_code}" "http://localhost:{{ oudsm_port }}/" -o /dev/null 2>/dev/null)
@@ -394,7 +394,7 @@
           echo "❌ Web interface: HTTP $web_status"
           web_ok=0
         fi
-        
+
         echo ""
         echo "5. ✅ API Status Test:"
         api_status=$(curl -s -w "%{http_code}" "http://localhost:{{ oudsm_port }}/status" -o /dev/null 2>/dev/null)
@@ -405,7 +405,7 @@
           echo "❌ API status: HTTP $api_status"
           api_ok=0
         fi
-        
+
         echo ""
         echo "6. ✅ OUD Node Connectivity:"
         api_response=$(curl -s "http://localhost:{{ oudsm_port }}/status" 2>/dev/null)
@@ -421,7 +421,7 @@
           echo "❌ API JSON invalid or unreachable"
           connectivity_ok=0
         fi
-        
+
         echo ""
         echo "7. ✅ Service Management:"
         if systemctl status oudsm >/dev/null 2>&1; then
@@ -431,12 +431,12 @@
           echo "❌ Service management issues"
           management_ok=0
         fi
-        
+
         echo ""
         echo "=== FINAL SCORE ==="
         total_score=$((process_ok + port_ok + service_ok + web_ok + api_ok + connectivity_ok + management_ok))
         echo "Score: $total_score/7"
-        
+
         if [ "$total_score" -eq 7 ]; then
           echo "🎉 OUDSM IS 100% FUNCTIONAL!"
           exit 0

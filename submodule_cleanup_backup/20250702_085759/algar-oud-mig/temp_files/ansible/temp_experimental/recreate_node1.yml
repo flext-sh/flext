@@ -4,25 +4,25 @@
   hosts: oud-srv1.ctbc.local
   become: yes
   gather_facts: yes
-  
+
   tasks:
     - name: Stop Node1 service
       ansible.builtin.systemd:
         name: "oud-oud-srv1@oud-node1-instance"
         state: stopped
       failed_when: false
-      
+
     - name: Remove Node1 instance directory completely
       ansible.builtin.file:
         path: "{{ oracle_oud_14_instances[0].instance_path }}"
         state: absent
-        
+
     - name: Remove any pid files
       ansible.builtin.file:
         path: "/tmp/{{ oracle_oud_14_instances[0].name }}.pid"
         state: absent
       failed_when: false
-      
+
     - name: Create instance directory
       ansible.builtin.file:
         path: "{{ oracle_oud_14_instances[0].instance_path }}"
@@ -30,7 +30,7 @@
         owner: "{{ oracle_oud_14_oracle_user }}"
         group: "{{ oracle_oud_14_oracle_group }}"
         mode: "0755"
-        
+
     - name: Create admin password file
       ansible.builtin.copy:
         content: "{{ oracle_oud_14_admin_password }}"
@@ -38,7 +38,7 @@
         owner: "{{ oracle_oud_14_oracle_user }}"
         group: "{{ oracle_oud_14_oracle_group }}"
         mode: "0600"
-        
+
     - name: Create new OUD instance with CORRECT port
       ansible.builtin.shell:
         cmd: |
@@ -65,7 +65,7 @@
         creates: "{{ oracle_oud_14_instances[0].instance_path }}/config/config.ldif"
       become: true
       become_user: "{{ oracle_oud_14_oracle_user }}"
-      
+
     - name: Fix ownership
       ansible.builtin.file:
         path: "{{ oracle_oud_14_instances[0].instance_path }}"
@@ -73,31 +73,31 @@
         owner: "{{ oracle_oud_14_oracle_user }}"
         group: "{{ oracle_oud_14_oracle_group }}"
         recurse: true
-        
+
     - name: Configure JVM settings
       ansible.builtin.copy:
         content: |
           # Java Properties for OUD Instance
           start-ds.java-args=-server -Xms{{ oracle_oud_14_jvm_heap_min }} -Xmx{{ oracle_oud_14_jvm_heap_max }} -XX:+Use{{ oracle_oud_14_jvm_gc_type }}{% if oracle_oud_14_jvm_gc_type == 'G1GC' %} -XX:MaxGCPauseMillis={{ oracle_oud_14_jvm_gc_pause_target }}{% endif %}
-          
+
         dest: "{{ oracle_oud_14_instances[0].instance_path }}/config/java.properties"
         owner: "{{ oracle_oud_14_oracle_user }}"
         group: "{{ oracle_oud_14_oracle_group }}"
         mode: "0644"
-        
+
     - name: Start Node1 service
       ansible.builtin.systemd:
         name: "oud-oud-srv1@oud-node1-instance"
         state: started
         enabled: yes
         daemon_reload: yes
-        
+
     - name: Wait for port to be ready
       ansible.builtin.wait_for:
         port: "{{ oracle_oud_14_instances[0].ldap_port }}"
         host: localhost
         timeout: 60
-        
+
     - name: Verify service status
       ansible.builtin.shell: |
         echo "=== Service Status ==="
@@ -109,7 +109,7 @@
         echo "=== Config Check ==="
         grep ds-cfg-listen-port {{ oracle_oud_14_instances[0].instance_path }}/config/config.ldif | head -5
       register: final_check
-      
+
     - name: Display results
       ansible.builtin.debug:
         var: final_check.stdout_lines

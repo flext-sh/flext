@@ -3,7 +3,7 @@
 - name: Fix WebLogic OUDSM Domain Startup
   hosts: oud-srv1.ctbc.local
   become: yes
-  
+
   tasks:
     - name: Create corrected startWebLogic.sh with proper CLASSPATH
       copy:
@@ -50,16 +50,16 @@
         cd /u01/domain/oudsm
         export JAVA_HOME=/u01/app/oracle/product/jdk
         export ORACLE_HOME=/u01/app/oracle/product/14.1/oud_1
-        
+
         # Kill any existing WebLogic processes
         pkill -f "weblogic.Name=AdminServer" || true
         sleep 2
-        
+
         # Start WebLogic in background
         nohup ./startWebLogic.sh > /u01/logs/oudsm/weblogic_startup.log 2>&1 &
-        
+
         echo "WebLogic startup initiated, waiting for port..."
-        
+
         # Wait for WebLogic to start
         for i in {1..60}; do
           if netstat -ln | grep -q ":7001 "; then
@@ -69,7 +69,7 @@
           sleep 5
           echo "Waiting... ($i/60)"
         done
-        
+
         if netstat -ln | grep -q ":7001 "; then
           echo "FINAL STATUS: WebLogic is RUNNING"
         else
@@ -79,7 +79,7 @@
         fi
       become_user: oracle
       register: weblogic_startup
-      
+
     - name: Display startup results
       debug:
         var: weblogic_startup.stdout_lines

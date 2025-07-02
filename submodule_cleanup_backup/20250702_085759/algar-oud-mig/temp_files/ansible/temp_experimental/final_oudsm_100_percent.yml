@@ -3,7 +3,7 @@
 - name: OUDSM 100% Complete Deployment
   hosts: oud-srv1.ctbc.local
   become: yes
-  
+
   tasks:
     - name: Create setDomainEnv.sh for OUDSM
       copy:
@@ -25,10 +25,10 @@
         content: |
           #!/bin/bash
           # WebLogic AdminServer Startup Script for OUDSM
-          
+
           cd /u01/domain/oudsm
           . ./setDomainEnv.sh
-          
+
           # Create boot.properties if not exists
           mkdir -p servers/AdminServer/security
           if [ ! -f "servers/AdminServer/security/boot.properties" ]; then
@@ -36,9 +36,9 @@
             echo "password=Algar123@" >> servers/AdminServer/security/boot.properties
             chmod 600 servers/AdminServer/security/boot.properties
           fi
-          
+
           echo "Starting WebLogic AdminServer for OUDSM..."
-          
+
           $JAVA_HOME/bin/java -server \
             -Xms512m -Xmx1024m \
             -Djava.security.policy=$WEBLOGIC_HOME/server/lib/weblogic.policy \
@@ -61,30 +61,30 @@
         content: |
           #!/bin/bash
           # OUDSM Startup Manager Script
-          
+
           DOMAIN_HOME="/u01/domain/oudsm"
-          
+
           if [ ! -f "$DOMAIN_HOME/config/config.xml" ]; then
             echo "❌ OUDSM domain not found at $DOMAIN_HOME"
             exit 1
           fi
-          
+
           cd "$DOMAIN_HOME"
-          
+
           # Check if already running
           if pgrep -f "weblogic.Name=AdminServer" > /dev/null; then
             echo "⚠️  OUDSM AdminServer is already running"
             ps aux | grep "weblogic.Name=AdminServer" | grep -v grep
             exit 0
           fi
-          
+
           echo "🚀 Starting OUDSM AdminServer..."
-          
+
           # Start in background
           nohup ./startWebLogic.sh > /u01/logs/oudsm/admin.log 2>&1 &
-          
+
           echo "📝 Startup initiated. Waiting for AdminServer..."
-          
+
           # Wait for startup
           for i in {1..60}; do
             if netstat -ln | grep -q ":7001 "; then
@@ -97,7 +97,7 @@
             sleep 5
             echo "⏳ Waiting... ($i/60)"
           done
-          
+
           echo "❌ AdminServer failed to start within 5 minutes"
           echo "📄 Check logs: /u01/logs/oudsm/admin.log"
           exit 1
@@ -111,15 +111,15 @@
         content: |
           #!/bin/bash
           # OUDSM Stop Script
-          
+
           echo "🛑 Stopping OUDSM AdminServer..."
-          
+
           # Find and kill WebLogic AdminServer process
           PID=$(pgrep -f "weblogic.Name=AdminServer")
           if [ -n "$PID" ]; then
             echo "Found AdminServer process: $PID"
             kill $PID
-            
+
             # Wait for graceful shutdown
             for i in {1..30}; do
               if ! pgrep -f "weblogic.Name=AdminServer" > /dev/null; then
@@ -128,14 +128,14 @@
               fi
               sleep 2
             done
-            
+
             # Force kill if still running
             echo "⚠️  Forcing shutdown..."
             kill -9 $PID 2>/dev/null || true
           else
             echo "ℹ️  AdminServer is not running"
           fi
-          
+
           echo "✅ OUDSM shutdown completed"
         dest: /u01/scripts/stop_oudsm.sh
         owner: oracle
@@ -189,7 +189,7 @@
       shell: "/u01/scripts/start_oudsm.sh"
       become_user: oracle
       register: oudsm_start_result
-      
+
     - name: Display startup result
       debug:
         var: oudsm_start_result.stdout_lines
@@ -274,7 +274,7 @@
           - ""
           - "🔧 Management Commands:"
           - "   Start: systemctl start oudsm"
-          - "   Stop: systemctl stop oudsm" 
+          - "   Stop: systemctl stop oudsm"
           - "   Status: systemctl status oudsm"
           - "   Manual: /u01/scripts/start_oudsm.sh"
           - ""

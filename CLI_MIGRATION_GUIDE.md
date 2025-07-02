@@ -122,16 +122,16 @@ flxt/                          # Support modules
 ```python
 class QualityManager:
     """Unified quality management to replace scattered scripts."""
-    
+
     def check_all(self) -> Dict[str, int]:
         """Get comprehensive quality metrics."""
-    
+
     def auto_fix(self, violations: List[Dict]) -> int:
         """Auto-fix violations when possible."""
 
 class ComplianceManager:
     """Systematic compliance improvement."""
-    
+
     def achieve_compliance(self, target: float):
         """Apply proven 'formiguinha' methodology."""
 ```
@@ -141,13 +141,13 @@ class ComplianceManager:
 ```python
 class AlgarMigration(BaseMigration):
     """ALGAR OUD migration - replaces all ALGAR scripts."""
-    
+
     def execute(self):
         """Execute complete ALGAR migration pipeline."""
 
-class GruponosMigration(BaseMigration): 
+class GruponosMigration(BaseMigration):
     """GrupoNOS migration - replaces GrupoNOS scripts."""
-    
+
     def execute(self):
         """Execute GrupoNOS migration pipeline."""
 ```

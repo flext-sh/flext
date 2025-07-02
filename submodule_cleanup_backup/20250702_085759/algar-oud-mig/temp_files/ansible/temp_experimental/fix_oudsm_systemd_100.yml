@@ -8,17 +8,17 @@
     oudsm_port: 8080
     oracle_user: oracle
     oracle_group: oinstall
-  
+
   tasks:
     - name: Parar todos os processos OUDSM existentes
       shell: |
         echo "=== LIMPANDO PROCESSOS EXISTENTES ==="
         pkill -f "oud_web_interface.py" || echo "Nenhum processo encontrado"
         sleep 2
-        
+
         echo "=== VERIFICANDO PORTA 8080 ==="
         netstat -tlnp | grep ":8080" || echo "Porta 8080 livre"
-        
+
         echo "=== PARANDO SERVICE SYSTEMD ==="
         systemctl stop oudsm || echo "Service não estava rodando"
         sleep 2
@@ -33,17 +33,17 @@
         echo "=== VERIFICANDO NODES OUD REAIS ==="
         echo "Node 1 (porta 1389):"
         netstat -tlnp | grep ":1389" || echo "❌ Node 1 não ativo"
-        
+
         echo "Node 2 (porta 2389):"
         netstat -tlnp | grep ":2389" || echo "❌ Node 2 não ativo"
-        
+
         echo "Node 3 (porta 3389):"
         netstat -tlnp | grep ":3389" || echo "❌ Node 3 não ativo"
-        
+
         echo ""
         echo "=== PROCESSOS OUD ==="
         ps aux | grep "oud-" | grep -v grep || echo "❌ Nenhum processo OUD encontrado"
-        
+
         echo ""
         echo "=== DIRETÓRIOS OUD ==="
         find /u01/domain -name "config.ldif" -type f 2>/dev/null || echo "❌ Nenhuma configuração OUD encontrada"
@@ -56,13 +56,13 @@
     - name: Iniciar nodes OUD se não estiverem rodando
       shell: |
         echo "=== INICIANDO NODES OUD ==="
-        
+
         # Verificar e iniciar cada node OUD
         for node_dir in /u01/domain/oud-node*-instance; do
           if [ -d "$node_dir" ]; then
             node_name=$(basename "$node_dir")
             echo "Verificando $node_name..."
-            
+
             cd "$node_dir"
             if [ -f "bin/start-ds" ]; then
               # Verificar se já está rodando
@@ -79,7 +79,7 @@
             fi
           fi
         done
-        
+
         echo ""
         echo "=== VERIFICAÇÃO FINAL DOS NODES ==="
         netstat -tlnp | grep ":1389\|:2389\|:3389" || echo "❌ Nenhum node OUD ativo"
@@ -151,28 +151,28 @@
         echo ""
         echo "1. ✅ OUDSM Process:"
         ps aux | grep oud_web_interface | grep -v grep || echo "❌ Processo não encontrado"
-        
+
         echo ""
         echo "2. ✅ OUDSM Port 8080:"
         netstat -tlnp | grep ":{{ oudsm_port }}" || echo "❌ Porta não ativa"
-        
+
         echo ""
         echo "3. ✅ SystemD Service:"
         systemctl is-active oudsm 2>/dev/null && echo "Service ATIVO" || echo "❌ Service inativo"
         systemctl is-enabled oudsm 2>/dev/null && echo "Service HABILITADO" || echo "❌ Service não habilitado"
-        
+
         echo ""
         echo "4. ✅ Web Interface Test:"
         curl -s -w "HTTP %{http_code}\n" "http://localhost:{{ oudsm_port }}/" -o /dev/null || echo "❌ Interface não responde"
-        
+
         echo ""
         echo "5. ✅ API Status Test:"
         curl -s -w "HTTP %{http_code}\n" "http://localhost:{{ oudsm_port }}/status" -o /dev/null || echo "❌ API não responde"
-        
+
         echo ""
         echo "6. ✅ Nodes OUD Status:"
         curl -s "http://localhost:{{ oudsm_port }}/status" | jq -r '.nodes[] | "\(.name): \(.status)"' 2>/dev/null || echo "❌ Status não disponível"
-        
+
         echo ""
         echo "7. ✅ Conectividade Real OUD:"
         netstat -tlnp | grep ":1389\|:2389\|:3389" | wc -l | xargs echo "Nodes OUD ativos:"

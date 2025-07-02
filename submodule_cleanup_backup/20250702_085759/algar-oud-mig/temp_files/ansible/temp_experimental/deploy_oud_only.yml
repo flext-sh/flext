@@ -3,11 +3,11 @@
   hosts: oud-srv1.ctbc.local
   become: true
   gather_facts: true
-  
+
   vars:
     # Override to ensure no cleaning
     clean_deployment: false
-    
+
   tasks:
     - name: Display safe deployment information
       ansible.builtin.debug:

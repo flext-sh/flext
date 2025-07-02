@@ -4,7 +4,7 @@
   hosts: oud_cluster
   become: yes
   gather_facts: yes
-  
+
   tasks:
     - name: Check if all hosts share same ansible_host
       ansible.builtin.set_fact:
@@ -12,18 +12,18 @@
       delegate_to: localhost
       delegate_facts: yes
       run_once: yes
-      
+
     - name: Determine if running on same physical host
       ansible.builtin.set_fact:
         same_physical_host: "{{ hostvars['localhost']['unique_physical_hosts'] | length == 1 }}"
       delegate_to: localhost
       delegate_facts: yes
       run_once: yes
-      
+
     - name: Set service name for each host
       ansible.builtin.set_fact:
         systemd_service_name: "oud-{{ inventory_hostname_short }}@"
-        
+
     - name: Display detection results
       ansible.builtin.debug:
         msg:
@@ -35,17 +35,17 @@
   hosts: oud_cluster
   become: yes
   serial: 1  # Process one at a time to avoid conflicts
-  
+
   vars:
     same_physical_host: "{{ hostvars['localhost']['same_physical_host'] }}"
     systemd_service_name: "oud-{{ inventory_hostname_short }}@"
-    
+
   tasks:
     - name: Stop all OUD services on this host
       ansible.builtin.shell: |
         systemctl stop oud@* oud-*@* 2>/dev/null || true
         systemctl reset-failed oud@* oud-*@* 2>/dev/null || true
-        
+
     - name: Create host-specific SystemD template (same physical host)
       ansible.builtin.template:
         src: roles/oracle_oud_14/templates/oud_systemd.service.j2
@@ -55,7 +55,7 @@
         mode: "0644"
         force: yes
       when: same_physical_host
-      
+
     - name: Create standard SystemD template (different physical hosts)
       ansible.builtin.template:
         src: roles/oracle_oud_14/templates/oud_systemd.service.j2
@@ -65,37 +65,37 @@
         mode: "0644"
         force: yes
       when: not same_physical_host
-      
+
     - name: Reload systemd daemon
       ansible.builtin.systemd:
         daemon_reload: yes
-        
+
     - name: Start host-specific service (same physical host)
       ansible.builtin.systemd:
         name: "{{ systemd_service_name }}{{ item.name }}"
         state: started
         enabled: yes
       loop: "{{ oracle_oud_14_instances }}"
-      when: 
+      when:
         - same_physical_host
         - item.enabled | default(true)
       register: service_start_specific
-      
+
     - name: Start standard service (different physical hosts)
       ansible.builtin.systemd:
         name: "oud@{{ item.name }}"
         state: started
         enabled: yes
       loop: "{{ oracle_oud_14_instances }}"
-      when: 
+      when:
         - not same_physical_host
         - item.enabled | default(true)
       register: service_start_standard
-      
+
     - name: Wait 10 seconds for service to stabilize
       ansible.builtin.pause:
         seconds: 10
-        
+
     - name: Verify port connectivity
       ansible.builtin.wait_for:
         port: "{{ item.ldap_port }}"
@@ -104,7 +104,7 @@
         msg: "Port {{ item.ldap_port }} not responding for {{ item.name }}"
       loop: "{{ oracle_oud_14_instances }}"
       when: item.enabled | default(true)
-      
+
     - name: Display final service status
       ansible.builtin.shell: |
         echo "=== {{ inventory_hostname }} ==="
@@ -114,18 +114,18 @@
         systemctl status "oud@{{ oracle_oud_14_instances[0].name }}" --no-pager | grep -E "(Active:|Main PID:)" || echo "Service not found"
         {% endif %}
       register: final_status
-      
+
     - name: Show results
       ansible.builtin.debug:
         msg:
           - "Host: {{ inventory_hostname }}"
           - "Service name: {% if same_physical_host %}{{ systemd_service_name }}{{ oracle_oud_14_instances[0].name }}{% else %}oud@{{ oracle_oud_14_instances[0].name }}{% endif %}"
           - "Status: {{ final_status.stdout_lines }}"
-          
+
 - name: Final summary
   hosts: localhost
   gather_facts: no
-  
+
   tasks:
     - name: Display deployment summary
       ansible.builtin.debug:
@@ -137,6 +137,6 @@
           - "Solution: Host-specific SystemD templates"
           - "Services:"
           - "  - oud-srv1@oud-node1-instance"
-          - "  - oud-srv2@oud-node2-instance"  
+          - "  - oud-srv2@oud-node2-instance"
           - "  - oud-srv3@oud-node3-instance"
           - "========================================="

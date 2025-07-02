@@ -4,12 +4,12 @@
   hosts: oud-srv1.ctbc.local
   become: yes
   gather_facts: yes
-  
+
   tasks:
     - name: Enable debug mode
       ansible.builtin.set_fact:
         ansible_verbosity: 4
-        
+
     - name: Find all OUD-related files and directories
       ansible.builtin.shell: |
         echo "=== SEARCHING FOR OUDSM ==="
@@ -24,12 +24,12 @@
         echo "=== CHECKING ORACLE INVENTORY ==="
         cat {{ oracle_oud_14_oracle_home }}/inventory/registry.xml 2>/dev/null || echo "No inventory found"
       register: oudsm_search
-      
+
     - name: Display OUDSM search results
       ansible.builtin.debug:
         var: oudsm_search.stdout_lines
         verbosity: 0
-        
+
     - name: Check OUD installation type
       ansible.builtin.shell: |
         echo "=== OUD VERSION INFO ==="
@@ -41,7 +41,7 @@
         echo "=== CHECK FOR FUSION MIDDLEWARE ==="
         test -f {{ oracle_oud_14_oracle_home }}/oracle_common/bin/wlst.sh && echo "WLST FOUND" || echo "WLST NOT FOUND"
       register: oud_version
-      
+
     - name: Display OUD version info
       ansible.builtin.debug:
         var: oud_version.stdout_lines
@@ -55,7 +55,7 @@
             content: |
               #!/usr/bin/python
               import os, sys
-              
+
               # Domain Configuration
               domain_name = 'oudsm_domain'
               domain_path = '{{ oracle_oud_14_oudsm_domain_path }}'
@@ -63,32 +63,32 @@
               admin_pass = '{{ oracle_oud_14_oudsm_admin_password }}'
               admin_port = '{{ oracle_oud_14_oudsm_port }}'
               ssl_port = '{{ oracle_oud_14_oudsm_ssl_port }}'
-              
+
               print('Creating OUDSM domain...')
-              
+
               # Read template
               readTemplate('{{ oracle_oud_14_oracle_home }}/oracle_common/common/templates/wls/wls.jar')
-              
+
               # Configure AdminServer
               cd('Servers/AdminServer')
               set('ListenAddress', '')
               set('ListenPort', int(admin_port))
-              
+
               cd('/Security/base_domain/User/' + admin_user)
               cmo.setPassword(admin_pass)
-              
+
               # Write domain
               setOption('OverwriteDomain', 'true')
               writeDomain(domain_path)
               closeTemplate()
-              
+
               print('Domain created successfully')
               exit()
             dest: /tmp/create_oudsm_domain.py
             owner: "{{ oracle_oud_14_oracle_user }}"
             group: "{{ oracle_oud_14_oracle_group }}"
             mode: "0600"
-            
+
         - name: Execute WLST to create domain
           ansible.builtin.shell: |
             export ORACLE_HOME={{ oracle_oud_14_oracle_home }}
@@ -96,7 +96,7 @@
             {{ oracle_oud_14_oracle_home }}/oracle_common/common/bin/wlst.sh /tmp/create_oudsm_domain.py
           become_user: "{{ oracle_oud_14_oracle_user }}"
           register: wlst_result
-          
+
         - name: Display WLST result
           ansible.builtin.debug:
             var: wlst_result
@@ -112,7 +112,7 @@
             owner: "{{ oracle_oud_14_oracle_user }}"
             group: "{{ oracle_oud_14_oracle_group }}"
             mode: "0755"
-            
+
         - name: Create cluster status script
           ansible.builtin.copy:
             content: |
@@ -121,14 +121,14 @@
               echo "=== OUD CLUSTER STATUS ==="
               echo "Generated: $(date)"
               echo ""
-              
+
               # Check all nodes
               for node in 1 2 3; do
                 echo "=== NODE${node} STATUS ==="
                 systemctl status oud-oud-srv${node}@oud-node${node}-instance --no-pager | grep -E "(Active:|Main PID:)"
                 echo ""
               done
-              
+
               # Check replication
               echo "=== REPLICATION STATUS ==="
               cd {{ oracle_oud_14_oracle_home }}/oud
@@ -139,7 +139,7 @@
                 --adminPasswordFile /tmp/repl_pwd.txt \
                 --trustAll \
                 --no-prompt 2>&1
-              
+
               # Check ports
               echo ""
               echo "=== ACTIVE PORTS ==="
@@ -148,18 +148,18 @@
             owner: "{{ oracle_oud_14_oracle_user }}"
             group: "{{ oracle_oud_14_oracle_group }}"
             mode: "0755"
-            
+
         - name: Create cluster health check script
           ansible.builtin.copy:
             content: |
               #!/bin/bash
               # OUD Cluster Health Check
-              
+
               check_ldap_port() {
                 local port=$1
                 timeout 2 bash -c "echo -n > /dev/tcp/localhost/$port" 2>/dev/null && echo "OK" || echo "FAIL"
               }
-              
+
               echo "=== LDAP HEALTH CHECK ==="
               echo "Node1 LDAP (1389): $(check_ldap_port 1389)"
               echo "Node1 LDAPS (1637): $(check_ldap_port 1637)"
@@ -202,7 +202,7 @@
         echo "=== CLUSTER HEALTH ==="
         {{ oracle_oud_14_oracle_home }}/oud_management/health_check.sh 2>/dev/null || echo "Health check script not yet created"
       register: final_verify
-      
+
     - name: Display final verification with full detail
       ansible.builtin.debug:
         msg:

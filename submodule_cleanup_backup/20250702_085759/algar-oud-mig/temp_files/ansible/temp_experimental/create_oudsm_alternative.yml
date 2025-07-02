@@ -4,7 +4,7 @@
   hosts: oud-srv1.ctbc.local
   become: yes
   gather_facts: yes
-  
+
   tasks:
     - name: Check WebLogic components
       ansible.builtin.shell: |
@@ -14,7 +14,7 @@
         echo "=== CHECKING FOR CONFIG TOOLS ==="
         find {{ oracle_oud_14_oracle_home }} -name "config.sh" -o -name "config.py" | grep -v ".patch_storage"
       register: wls_check
-      
+
     - name: Display WebLogic check
       ansible.builtin.debug:
         var: wls_check.stdout_lines
@@ -32,16 +32,16 @@
         content: |
           #!/usr/bin/env python3
           # OUD Cluster Management Interface
-          
+
           import subprocess
           import json
           from http.server import HTTPServer, BaseHTTPRequestHandler
           import os
-          
+
           OUD_HOME = "{{ oracle_oud_14_oracle_home }}/oud"
           ADMIN_PORT = {{ oracle_oud_14_instances[0].admin_port }}
           ADMIN_DN = "{{ oracle_oud_14_admin_user }}"
-          
+
           class OUDHandler(BaseHTTPRequestHandler):
               def do_GET(self):
                   if self.path == '/':
@@ -56,7 +56,7 @@
                       self.wfile.write(json.dumps(self.get_cluster_status()).encode())
                   else:
                       self.send_error(404)
-                      
+
               def get_main_page(self):
                   return '''
                   <html>
@@ -79,26 +79,26 @@
                                       document.getElementById('status').innerHTML = formatStatus(data);
                                   });
                           }
-                          
+
                           function formatStatus(data) {
                               let html = '<h2>Cluster Status</h2>';
                               html += '<table>';
                               html += '<tr><th>Node</th><th>LDAP Port</th><th>Status</th><th>Replication</th></tr>';
-                              
+
                               data.nodes.forEach(node => {
                                   html += '<tr>';
                                   html += '<td>' + node.name + '</td>';
                                   html += '<td>' + node.port + '</td>';
-                                  html += '<td class="' + (node.status ? 'online' : 'offline') + '">' + 
+                                  html += '<td class="' + (node.status ? 'online' : 'offline') + '">' +
                                           (node.status ? 'ONLINE' : 'OFFLINE') + '</td>';
                                   html += '<td>' + (node.replication ? 'Active' : 'Inactive') + '</td>';
                                   html += '</tr>';
                               });
-                              
+
                               html += '</table>';
                               return html;
                           }
-                          
+
                           setInterval(refreshStatus, 5000);
                           window.onload = refreshStatus;
                       </script>
@@ -109,10 +109,10 @@
                   </body>
                   </html>
                   '''
-                  
+
               def get_cluster_status(self):
                   nodes = []
-                  
+
                   # Check each node
                   for i, (name, port) in enumerate([
                       ('oud-node1-instance', 1389),
@@ -126,9 +126,9 @@
                           'replication': self.check_port(8989 + i)
                       }
                       nodes.append(node)
-                      
+
                   return {'nodes': nodes}
-                  
+
               def check_port(self, port):
                   try:
                       result = subprocess.run(
@@ -139,7 +139,7 @@
                       return result.returncode == 0
                   except:
                       return False
-          
+
           if __name__ == '__main__':
               server = HTTPServer(('0.0.0.0', 8080), OUDHandler)
               print('OUD Management Interface running on http://localhost:8080')
@@ -155,7 +155,7 @@
           [Unit]
           Description=OUD Management Web Interface
           After=network.target
-          
+
           [Service]
           Type=simple
           User={{ oracle_oud_14_oracle_user }}
@@ -164,7 +164,7 @@
           ExecStart=/usr/bin/python3 {{ oracle_oud_14_oracle_home }}/oud_management_web/oud_web_interface.py
           Restart=on-failure
           RestartSec=10
-          
+
           [Install]
           WantedBy=multi-user.target
         dest: /etc/systemd/system/oud-management-web.service
@@ -184,11 +184,11 @@
         content: |
           #!/bin/bash
           # OUD Cluster Management CLI
-          
+
           OUD_HOME="{{ oracle_oud_14_oracle_home }}/oud"
           ADMIN_PWD_FILE="/tmp/admin_pwd.txt"
           REPL_PWD_FILE="/tmp/repl_pwd.txt"
-          
+
           function show_menu() {
               echo "================================"
               echo "OUD CLUSTER MANAGEMENT"
@@ -201,7 +201,7 @@
               echo "6. Exit"
               echo "================================"
           }
-          
+
           function cluster_status() {
               echo "=== CLUSTER STATUS ==="
               for i in 1 2 3; do
@@ -209,7 +209,7 @@
                   systemctl is-active oud-oud-srv$i@oud-node$i-instance
               done
           }
-          
+
           function replication_status() {
               echo "=== REPLICATION STATUS ==="
               cd $OUD_HOME
@@ -221,12 +221,12 @@
                   --trustAll \
                   --no-prompt
           }
-          
+
           function check_services() {
               echo "=== ALL SERVICES ==="
               systemctl list-units 'oud-*' --all
           }
-          
+
           function view_logs() {
               echo "=== RECENT ACCESS LOGS ==="
               for i in 1 2 3; do
@@ -235,7 +235,7 @@
                   echo ""
               done
           }
-          
+
           function export_config() {
               echo "=== EXPORTING CONFIG ==="
               cd $OUD_HOME
@@ -252,11 +252,11 @@
                       --no-prompt 2>&1 | grep -E "(Exported|ERROR)"
               done
           }
-          
+
           while true; do
               show_menu
               read -p "Select option: " choice
-              
+
               case $choice in
                   1) cluster_status ;;
                   2) replication_status ;;
@@ -266,7 +266,7 @@
                   6) exit 0 ;;
                   *) echo "Invalid option" ;;
               esac
-              
+
               echo ""
               read -p "Press Enter to continue..."
               clear
@@ -303,7 +303,7 @@
             --trustAll \
             --no-prompt 2>&1 | grep -E "(Server|Normal)" | head -10
       register: final_validation
-      
+
     - name: Display final 100% status
       ansible.builtin.debug:
         msg:

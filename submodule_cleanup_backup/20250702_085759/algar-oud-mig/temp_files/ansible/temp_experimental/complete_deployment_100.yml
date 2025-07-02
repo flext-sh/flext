@@ -4,7 +4,7 @@
   hosts: oud_cluster
   become: yes
   gather_facts: yes
-  
+
   tasks:
     - name: Create password file for replication
       ansible.builtin.copy:
@@ -13,7 +13,7 @@
         owner: "{{ oracle_oud_14_oracle_user }}"
         group: "{{ oracle_oud_14_oracle_group }}"
         mode: "0600"
-        
+
     - name: Create replication password file
       ansible.builtin.copy:
         content: "{{ oracle_oud_14_replication_password }}"
@@ -26,7 +26,7 @@
   hosts: oud-srv1.ctbc.local
   become: yes
   become_user: "{{ oracle_oud_14_oracle_user }}"
-  
+
   tasks:
     - name: Enable replication on node1
       ansible.builtin.shell: |
@@ -44,7 +44,7 @@
           --no-prompt
       register: repl_enable
       failed_when: false
-      
+
     - name: Display replication enable result
       ansible.builtin.debug:
         var: repl_enable
@@ -54,7 +54,7 @@
   become: yes
   become_user: "{{ oracle_oud_14_oracle_user }}"
   serial: 1
-  
+
   tasks:
     - name: Add node to replication topology
       ansible.builtin.shell: |
@@ -76,7 +76,7 @@
           --no-prompt
       register: repl_add
       failed_when: false
-      
+
     - name: Display replication add result
       ansible.builtin.debug:
         var: repl_add
@@ -85,7 +85,7 @@
   hosts: oud-srv1.ctbc.local
   become: yes
   become_user: "{{ oracle_oud_14_oracle_user }}"
-  
+
   tasks:
     - name: Initialize all replicas from node1
       ansible.builtin.shell: |
@@ -100,7 +100,7 @@
           --no-prompt
       register: repl_init
       failed_when: false
-      
+
     - name: Check replication status
       ansible.builtin.shell: |
         cd {{ oracle_oud_14_oracle_home }}/oud
@@ -112,7 +112,7 @@
           --trustAll \
           --no-prompt
       register: repl_status
-      
+
     - name: Display replication status
       ansible.builtin.debug:
         var: repl_status.stdout_lines
@@ -120,13 +120,13 @@
 - name: Install and Configure OUDSM
   hosts: oud-srv1.ctbc.local
   become: yes
-  
+
   tasks:
     - name: Check if OUDSM domain exists
       ansible.builtin.stat:
         path: "{{ oracle_oud_14_oudsm_domain_path }}"
       register: oudsm_domain_check
-      
+
     - name: Create OUDSM domain directory
       ansible.builtin.file:
         path: "{{ oracle_oud_14_oudsm_domain_path | dirname }}"
@@ -135,13 +135,13 @@
         group: "{{ oracle_oud_14_oracle_group }}"
         mode: "0755"
       when: not oudsm_domain_check.stat.exists
-      
+
     - name: Create OUDSM response file
       ansible.builtin.copy:
         content: |
           [ENGINE]
           Response File Version=1.0.0.0.0
-          
+
           [GENERIC]
           ORACLE_HOME={{ oracle_oud_14_oracle_home }}
           JAVA_HOME={{ oracle_oud_14_java_home }}
@@ -161,7 +161,7 @@
         group: "{{ oracle_oud_14_oracle_group }}"
         mode: "0600"
       when: not oudsm_domain_check.stat.exists
-      
+
     - name: Create OUDSM domain
       ansible.builtin.shell: |
         export ORACLE_HOME={{ oracle_oud_14_oracle_home }}
@@ -171,14 +171,14 @@
       become_user: "{{ oracle_oud_14_oracle_user }}"
       when: not oudsm_domain_check.stat.exists
       register: oudsm_create
-      
+
     - name: Create OUDSM SystemD service
       ansible.builtin.copy:
         content: |
           [Unit]
           Description=Oracle Unified Directory Services Manager
           After=network.target
-          
+
           [Service]
           Type=simple
           User={{ oracle_oud_14_oracle_user }}
@@ -189,14 +189,14 @@
           ExecStop={{ oracle_oud_14_oudsm_domain_path }}/bin/stopWebLogic.sh
           Restart=on-failure
           RestartSec=30
-          
+
           [Install]
           WantedBy=multi-user.target
         dest: /etc/systemd/system/oudsm.service
         owner: root
         group: root
         mode: "0644"
-        
+
     - name: Start OUDSM service
       ansible.builtin.systemd:
         name: oudsm
@@ -204,13 +204,13 @@
         enabled: yes
         daemon_reload: yes
       register: oudsm_start
-      
+
     - name: Wait for OUDSM to be ready
       ansible.builtin.wait_for:
         port: "{{ oracle_oud_14_oudsm_port }}"
         host: localhost
         timeout: 300
-        
+
     - name: Register OUD instances in OUDSM
       ansible.builtin.uri:
         url: "http://localhost:{{ oracle_oud_14_oudsm_port }}/oudsm/rest/directory/register"
@@ -231,7 +231,7 @@
 - name: Final Validation
   hosts: oud-srv1.ctbc.local
   become: yes
-  
+
   tasks:
     - name: Verify all components
       ansible.builtin.shell: |
@@ -245,7 +245,7 @@
         echo "=== ALL OUD INSTANCES ==="
         systemctl list-units 'oud-*@*.service' --all --no-pager | grep running | wc -l && echo "OUD services running"
       register: final_check
-      
+
     - name: Display final status
       ansible.builtin.debug:
         msg:

@@ -5,13 +5,13 @@
   become: true
   gather_facts: true
   serial: 1  # Deploy one node at a time for safety
-  
+
   vars:
     # FORCE SAFETY SETTINGS
     clean_deployment: false  # NEVER break existing OUD
     protection_mode: true   # ALWAYS protect running instances
     require_100_percent: false  # Set true when confident
-    
+
   pre_tasks:
     - name: "🌟 Display dynamic deployment information"
       ansible.builtin.debug:
@@ -76,7 +76,7 @@
   hosts: oud_production
   become: true
   gather_facts: false
-  
+
   tasks:
     - name: "🏁 Final cluster validation"
       ansible.builtin.debug:
