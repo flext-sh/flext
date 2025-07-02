@@ -10,6 +10,7 @@ from pybindgen import Function, Module, param, retval
 This module provides build functionality.
 """
 
+
 class CheckedFunction(Function):
     def __init__(self, *a, **kw):
         super().__init__(*a, **kw)

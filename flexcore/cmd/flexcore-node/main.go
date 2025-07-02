@@ -63,14 +63,14 @@ func main() {
 func parseFlags() *NodeConfig {
 	config := &NodeConfig{}
 	var peersStr string
-	
+
 	flag.StringVar(&config.NodeID, "node-id", "", "Unique node identifier (auto-generated if empty)")
 	flag.IntVar(&config.HTTPPort, "port", 8080, "HTTP port for this node")
 	flag.StringVar(&config.RedisURL, "redis", "redis://localhost:6379", "Redis URL for cluster coordination")
 	flag.StringVar(&config.ClusterMode, "cluster", "redis", "Cluster coordination mode (redis, etcd, inmemory, network)")
 	flag.StringVar(&peersStr, "peers", "", "Comma-separated list of peer nodes (e.g., localhost:8081,localhost:8082)")
 	flag.BoolVar(&config.Debug, "debug", true, "Enable debug mode")
-	
+
 	flag.Parse()
 
 	// Parse peer nodes
@@ -93,14 +93,14 @@ func parseFlags() *NodeConfig {
 func NewFlexCoreNode(config *NodeConfig) *FlexCoreNode {
 	// Initialize plugin registry
 	pluginRegistry := plugins.NewPluginRegistry("./plugins")
-	
+
 	// Initialize Windmill client
 	windmillClient := windmill.NewWindmillClient(
 		"http://localhost:3000", // Default Windmill URL
 		"demo-token",            // Demo token
 		"default",               // Default workspace
 	)
-	
+
 	return &FlexCoreNode{
 		config:         config,
 		pluginRegistry: pluginRegistry,
@@ -128,7 +128,7 @@ func (node *FlexCoreNode) Start() error {
 
 	// Build application with custom DI container for distributed setup
 	container := di.NewContainer()
-	
+
 	// Register cluster coordinator BEFORE building application
 	container.RegisterSingleton(func() scheduler.ClusterCoordinator {
 		return coordinator
@@ -172,36 +172,36 @@ func (node *FlexCoreNode) createClusterCoordinator() (scheduler.ClusterCoordinat
 	case "redis":
 		fmt.Printf("🔗 Using REAL Redis cluster coordination: %s\n", node.config.RedisURL)
 		coordinator := scheduler.NewRealRedisClusterCoordinator(node.config.RedisURL)
-		
+
 		// Start the REAL Redis coordinator
 		if err := coordinator.Start(context.Background()); err != nil {
 			return nil, fmt.Errorf("failed to start REAL Redis coordinator: %w", err)
 		}
-		
+
 		return coordinator, nil
-		
+
 	case "network":
 		fmt.Printf("🔗 Using REAL network cluster coordination with peers: %v\n", node.config.PeerNodes)
 		coordinator := scheduler.NewNetworkClusterCoordinator("localhost", node.config.HTTPPort, node.config.PeerNodes)
-		
+
 		// Start the network coordinator
 		if err := coordinator.Start(context.Background()); err != nil {
 			return nil, fmt.Errorf("failed to start network coordinator: %w", err)
 		}
-		
+
 		return coordinator, nil
-		
+
 	case "etcd":
 		fmt.Println("🔗 Using REAL etcd cluster coordination")
 		coordinator := scheduler.NewRealEtcdClusterCoordinator([]string{"localhost:2379"})
-		
+
 		// Start the REAL etcd coordinator
 		if err := coordinator.Start(context.Background()); err != nil {
 			return nil, fmt.Errorf("failed to start REAL etcd coordinator: %w", err)
 		}
-		
+
 		return coordinator, nil
-		
+
 	default:
 		fmt.Println("🔗 Using in-memory cluster coordination")
 		coordinator := scheduler.NewInMemoryClusterCoordinator()
@@ -214,16 +214,16 @@ func (node *FlexCoreNode) createClusterCoordinator() (scheduler.ClusterCoordinat
 
 func (node *FlexCoreNode) startHTTPServer() error {
 	mux := http.NewServeMux()
-	
+
 	// Cluster status endpoint
 	mux.HandleFunc("/cluster/status", node.handleClusterStatus)
-	
+
 	// Node health endpoint
 	mux.HandleFunc("/health", node.handleHealth)
-	
+
 	// Distributed event test endpoint
 	mux.HandleFunc("/events/test", node.handleEventTest)
-	
+
 	// Cluster communication endpoints (for NetworkClusterCoordinator)
 	mux.HandleFunc("/cluster/broadcast", node.handleClusterBroadcast)
 	mux.HandleFunc("/cluster/heartbeat", node.handleClusterHeartbeat)
@@ -238,7 +238,7 @@ func (node *FlexCoreNode) startHTTPServer() error {
 	mux.HandleFunc("/plugins/execute", node.handlePluginExecute)
 	mux.HandleFunc("/plugins/health", node.handlePluginsHealth)
 
-	// Workflows API endpoints (Windmill integration)  
+	// Workflows API endpoints (Windmill integration)
 	mux.HandleFunc("/workflows/list", node.handleWorkflowsList)
 	mux.HandleFunc("/workflows/", node.handleWorkflowsAction)
 	mux.HandleFunc("/workflows/execute", node.handleWorkflowExecute)
@@ -261,7 +261,7 @@ func (node *FlexCoreNode) startHTTPServer() error {
 
 	// Wait for server to be ready
 	time.Sleep(100 * time.Millisecond)
-	
+
 	// Test if server is responsive
 	resp, err := http.Get(fmt.Sprintf("http://localhost:%d/health", node.config.HTTPPort))
 	if err != nil {
@@ -274,11 +274,11 @@ func (node *FlexCoreNode) startHTTPServer() error {
 
 func (node *FlexCoreNode) handleClusterStatus(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	
+
 	// Get active nodes from cluster coordinator
 	activeNodes := node.coordinator.GetActiveNodes(ctx)
 	isLeader := node.coordinator.IsLeader(ctx)
-	
+
 	response := map[string]interface{}{
 		"node_id":      node.coordinator.GetNodeID(),
 		"is_leader":    isLeader,
@@ -320,7 +320,7 @@ func (node *FlexCoreNode) handleEventTest(w http.ResponseWriter, r *http.Request
 	}
 
 	eventBus := eventBusResult.Value()
-	
+
 	// Create and broadcast test event
 	testEventData := map[string]interface{}{
 		"source_node": node.coordinator.GetNodeID(),
@@ -422,11 +422,11 @@ func (node *FlexCoreNode) testDistributedCommunication() error {
 		testEvent := createTestEvent("test.distributed.communication", map[string]interface{}{
 			"node_id": node.coordinator.GetNodeID(),
 		})
-		
+
 		if err := eventBus.BroadcastToCluster(ctx, testEvent); err != nil {
 			return fmt.Errorf("event broadcast test failed: %w", err)
 		}
-		
+
 		stats := eventBus.GetClusterStats()
 		fmt.Printf("   📡 Event broadcast test completed - cluster events: %d\n", stats.ClusterEvents)
 	}
@@ -505,7 +505,7 @@ func (node *FlexCoreNode) handleClusterHeartbeat(w http.ResponseWriter, r *http.
 
 func (node *FlexCoreNode) handleClusterNodes(w http.ResponseWriter, r *http.Request) {
 	activeNodes := node.coordinator.GetActiveNodes(r.Context())
-	
+
 	response := map[string]interface{}{
 		"nodes": activeNodes,
 		"count": len(activeNodes),
@@ -602,7 +602,7 @@ func waitForShutdown(node *FlexCoreNode) {
 	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
 
 	fmt.Printf("🎯 FlexCore node %s is running. Press Ctrl+C to stop.\n", node.config.NodeID)
-	
+
 	// Print cluster status every 30 seconds
 	ticker := time.NewTicker(30 * time.Second)
 	defer ticker.Stop()
@@ -613,12 +613,12 @@ func waitForShutdown(node *FlexCoreNode) {
 			fmt.Println("\n🛑 Shutdown signal received")
 			node.Stop()
 			return
-			
+
 		case <-ticker.C:
 			// Print cluster status
 			activeNodes := node.coordinator.GetActiveNodes(context.Background())
 			isLeader := node.coordinator.IsLeader(context.Background())
-			fmt.Printf("📊 Cluster Status - Node: %s, Leader: %t, Active Nodes: %d\n", 
+			fmt.Printf("📊 Cluster Status - Node: %s, Leader: %t, Active Nodes: %d\n",
 				node.coordinator.GetNodeID(), isLeader, len(activeNodes))
 		}
 	}
@@ -671,7 +671,7 @@ func (node *FlexCoreNode) handlePluginsList(w http.ResponseWriter, r *http.Reque
 	}
 
 	pluginInfos := node.pluginRegistry.ListPlugins()
-	
+
 	response := map[string]interface{}{
 		"plugins": pluginInfos,
 		"count":   len(pluginInfos),
@@ -700,7 +700,7 @@ func (node *FlexCoreNode) handlePluginsAction(w http.ResponseWriter, r *http.Req
 			http.Error(w, err.Error(), http.StatusNotFound)
 			return
 		}
-		
+
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(pluginInfo)
 
@@ -790,7 +790,7 @@ func (node *FlexCoreNode) handlePluginsHealth(w http.ResponseWriter, r *http.Req
 	}
 
 	health := node.pluginRegistry.HealthCheck()
-	
+
 	response := map[string]interface{}{
 		"plugins_health": health,
 		"checked_at":     time.Now(),
@@ -845,7 +845,7 @@ func (node *FlexCoreNode) handleWorkflowsAction(w http.ResponseWriter, r *http.R
 			http.Error(w, err.Error(), http.StatusNotFound)
 			return
 		}
-		
+
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(workflow)
 
@@ -978,7 +978,7 @@ func (node *FlexCoreNode) handleEventStream(w http.ResponseWriter, r *http.Reque
 
 	// Create a channel for events
 	eventChan := make(chan map[string]interface{}, 10)
-	
+
 	// Send initial connection event
 	eventChan <- map[string]interface{}{
 		"type":      "connection",

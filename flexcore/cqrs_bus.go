@@ -144,7 +144,7 @@ func (bus *CQRSBus) createTables() error {
 		executed_at DATETIME,
 		duration_ms INTEGER
 	);
-	
+
 	CREATE INDEX IF NOT EXISTS idx_commands_type ON commands(type);
 	CREATE INDEX IF NOT EXISTS idx_commands_aggregate ON commands(aggregate_id);
 	CREATE INDEX IF NOT EXISTS idx_commands_status ON commands(status);
@@ -165,7 +165,7 @@ func (bus *CQRSBus) createTables() error {
 		created_at DATETIME NOT NULL,
 		updated_at DATETIME NOT NULL
 	);
-	
+
 	CREATE TABLE IF NOT EXISTS query_results (
 		id TEXT PRIMARY KEY,
 		query_type TEXT NOT NULL,
@@ -175,7 +175,7 @@ func (bus *CQRSBus) createTables() error {
 		executed_at DATETIME NOT NULL,
 		duration_ms INTEGER NOT NULL
 	);
-	
+
 	CREATE INDEX IF NOT EXISTS idx_projections_type ON projections(type);
 	CREATE INDEX IF NOT EXISTS idx_query_results_type ON query_results(query_type);
 	CREATE INDEX IF NOT EXISTS idx_query_results_executed_at ON query_results(executed_at);
@@ -346,7 +346,7 @@ func (bus *CQRSBus) storeCommand(command Command) error {
 
 func (bus *CQRSBus) updateCommandStatus(commandID, status, error, result string, duration time.Duration) error {
 	query := `
-	UPDATE commands 
+	UPDATE commands
 	SET status = ?, error = ?, result = ?, executed_at = ?, duration_ms = ?
 	WHERE id = ?
 	`

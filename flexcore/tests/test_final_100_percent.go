@@ -243,9 +243,9 @@ func testMultiNodeCoordination() bool {
 		wg.Add(1)
 		go func(nodeID int) {
 			defer wg.Done()
-			
+
 			config := &core.FlexCoreConfig{
-				ClusterName: "multi-node-test", 
+				ClusterName: "multi-node-test",
 				NodeID: fmt.Sprintf("node-%d", nodeID),
 				PluginDirectory: "./plugins", WindmillURL: "http://localhost:8000",
 				WindmillToken: "test-token", WindmillWorkspace: "demo",
@@ -262,7 +262,7 @@ func testMultiNodeCoordination() bool {
 
 			messageQueue := core.NewDistributedMessageQueue(windmillClient, config)
 			scheduler := core.NewDistributedScheduler(windmillClient, config)
-			
+
 			ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 			defer cancel()
 
@@ -307,14 +307,14 @@ func testPerformanceLoad() bool {
 	// Send 100 messages quickly
 	messageCount := 100
 	successCount := int32(0)
-	
+
 	for i := 0; i < messageCount; i++ {
 		message := &core.Message{
 			ID: fmt.Sprintf("perf-msg-%d", i), Queue: "perf-queue",
 			Content: map[string]interface{}{"msg_id": i, "data": "performance test"},
 			Priority: 1, CreatedAt: time.Now(), MaxAttempts: 3,
 		}
-		
+
 		if sendResult := messageQueue.SendMessage(ctx, "perf-queue", message); sendResult.IsSuccess() {
 			atomic.AddInt32(&successCount, 1)
 		}

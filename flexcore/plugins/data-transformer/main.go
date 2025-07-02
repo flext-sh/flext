@@ -59,7 +59,7 @@ func (p *DataTransformerPlugin) Execute(ctx context.Context, input interface{}) 
 		"plugin_version": p.Version(),
 		"processing_steps": []string{
 			"input_validation",
-			"format_normalization", 
+			"format_normalization",
 			"data_enrichment",
 			"output_formatting",
 		},

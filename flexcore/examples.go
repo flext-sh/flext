@@ -171,13 +171,13 @@ func (h *PipelineCommandHandler) handleCreatePipeline(ctx context.Context, cmd *
 		"status":      "created",
 		"created_at":  time.Now(),
 	}
-	
+
 	// Update read-side projection
 	err := h.cqrsBus.UpdateProjection("pipeline", cmd.AggregateID(), pipelineData, 1)
 	if err != nil {
 		return fmt.Errorf("failed to update pipeline projection: %w", err)
 	}
-	
+
 	return nil
 }
 
@@ -187,26 +187,26 @@ func (h *PipelineCommandHandler) handleUpdatePipelineStatus(ctx context.Context,
 	if err != nil {
 		return fmt.Errorf("failed to get pipeline projection: %w", err)
 	}
-	
+
 	if projection == nil {
 		return fmt.Errorf("pipeline not found: %s", cmd.AggregateID())
 	}
-	
+
 	// Update pipeline data
 	pipelineData := projection["data"].(map[string]interface{})
 	pipelineData["status"] = cmd.Status
 	pipelineData["status_message"] = cmd.Message
 	pipelineData["updated_at"] = time.Now()
-	
+
 	currentVersion := projection["version"].(int)
 	newVersion := currentVersion + 1
-	
+
 	// Update projection
 	err = h.cqrsBus.UpdateProjection("pipeline", cmd.AggregateID(), pipelineData, newVersion)
 	if err != nil {
 		return fmt.Errorf("failed to update pipeline projection: %w", err)
 	}
-	
+
 	return nil
 }
 
@@ -239,11 +239,11 @@ func (h *PipelineQueryHandler) handleGetPipeline(ctx context.Context, query *Get
 	if err != nil {
 		return nil, fmt.Errorf("failed to get pipeline: %w", err)
 	}
-	
+
 	if projection == nil {
 		return nil, fmt.Errorf("pipeline not found: %s", query.PipelineID)
 	}
-	
+
 	return projection, nil
 }
 
@@ -266,7 +266,7 @@ func (h *PipelineQueryHandler) handleListPipelines(ctx context.Context, query *L
 			"created_at":  time.Now().Add(-1 * time.Hour),
 		},
 	}
-	
+
 	// Apply status filter if specified
 	if query.Status != "" {
 		filtered := []map[string]interface{}{}
@@ -277,7 +277,7 @@ func (h *PipelineQueryHandler) handleListPipelines(ctx context.Context, query *L
 		}
 		pipelines = filtered
 	}
-	
+
 	// Apply pagination
 	if query.Limit > 0 && query.Offset >= 0 {
 		start := query.Offset
@@ -291,7 +291,7 @@ func (h *PipelineQueryHandler) handleListPipelines(ctx context.Context, query *L
 			pipelines = pipelines[start:end]
 		}
 	}
-	
+
 	return map[string]interface{}{
 		"items": pipelines,
 		"total": len(pipelines),

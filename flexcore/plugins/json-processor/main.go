@@ -20,7 +20,7 @@ func init() {
 	gob.Register(map[string]interface{}{})
 	gob.Register([]interface{}{})
 	gob.Register([]map[string]interface{}{})
-	
+
 	// Register primitive types
 	gob.Register(string(""))
 	gob.Register(int(0))
@@ -28,7 +28,7 @@ func init() {
 	gob.Register(float64(0))
 	gob.Register(bool(false))
 	gob.Register(time.Time{})
-	
+
 	// Register plugin types
 	gob.Register(PluginInfo{})
 	gob.Register(ProcessingStats{})
@@ -180,7 +180,7 @@ func (jp *JSONProcessor) minifyJSON(data interface{}) (interface{}, error) {
 // validateJSON checks if data is valid JSON
 func (jp *JSONProcessor) validateJSON(data interface{}) (interface{}, error) {
 	_, err := json.Marshal(data)
-	
+
 	return map[string]interface{}{
 		"is_valid": err == nil,
 		"data":     data,
@@ -210,13 +210,13 @@ func (jp *JSONProcessor) applyTransformations(data interface{}) (interface{}, er
 // transformMap applies transformations to a map
 func (jp *JSONProcessor) transformMap(data map[string]interface{}) map[string]interface{} {
 	transformed := make(map[string]interface{})
-	
+
 	for key, value := range data {
 		// Transform key to snake_case if configured
 		if jp.config["snake_case_keys"] == true {
 			key = jp.toSnakeCase(key)
 		}
-		
+
 		// Transform value recursively
 		switch v := value.(type) {
 		case map[string]interface{}:
@@ -229,18 +229,18 @@ func (jp *JSONProcessor) transformMap(data map[string]interface{}) map[string]in
 			transformed[key] = value
 		}
 	}
-	
+
 	// Add metadata
 	transformed["_json_processed"] = true
 	transformed["_processed_at"] = time.Now().Unix()
-	
+
 	return transformed
 }
 
 // transformArray applies transformations to an array
 func (jp *JSONProcessor) transformArray(data []interface{}) []interface{} {
 	transformed := make([]interface{}, len(data))
-	
+
 	for i, item := range data {
 		switch v := item.(type) {
 		case map[string]interface{}:
@@ -253,7 +253,7 @@ func (jp *JSONProcessor) transformArray(data []interface{}) []interface{} {
 			transformed[i] = item
 		}
 	}
-	
+
 	return transformed
 }
 
@@ -262,11 +262,11 @@ func (jp *JSONProcessor) transformString(data string) string {
 	if jp.config["trim_strings"] == true {
 		data = strings.TrimSpace(data)
 	}
-	
+
 	if jp.config["lowercase_strings"] == true {
 		data = strings.ToLower(data)
 	}
-	
+
 	return data
 }
 
@@ -277,7 +277,7 @@ func (jp *JSONProcessor) parseJSONString(jsonStr string) (interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return map[string]interface{}{
 		"parsed_data": parsed,
 		"original":    jsonStr,
@@ -288,15 +288,15 @@ func (jp *JSONProcessor) parseJSONString(jsonStr string) (interface{}, error) {
 // processRawData processes raw input data
 func (jp *JSONProcessor) processRawData(input map[string]interface{}) map[string]interface{} {
 	processed := make(map[string]interface{})
-	
+
 	for key, value := range input {
 		processed[key] = value
 	}
-	
+
 	processed["_json_processed"] = true
 	processed["_raw_processing"] = true
 	processed["_processed_at"] = time.Now().Unix()
-	
+
 	return processed
 }
 
@@ -339,13 +339,13 @@ func (jp *JSONProcessor) HealthCheck(ctx context.Context) error {
 // Cleanup releases resources
 func (jp *JSONProcessor) Cleanup() error {
 	log.Printf("[JSONProcessor] Cleanup called - processed %d records total", jp.stats.RecordsProcessed)
-	
+
 	// Save statistics to file (optional)
 	if statsFile, ok := jp.config["stats_file"].(string); ok {
 		data, _ := json.MarshalIndent(jp.stats, "", "  ")
 		os.WriteFile(statsFile, data, 0644)
 	}
-	
+
 	return nil
 }
 
@@ -399,21 +399,21 @@ func (JSONProcessorPlugin) Client(b *plugin.MuxBroker, c *rpc.Client) (interface
 func main() {
 	log.SetPrefix("[json-processor-plugin] ")
 	log.SetFlags(log.Ldate | log.Ltime | log.Lmicroseconds)
-	
+
 	log.Println("Starting JSON processor plugin...")
-	
+
 	// Handshake configuration
 	handshakeConfig := plugin.HandshakeConfig{
 		ProtocolVersion:  1,
 		MagicCookieKey:   "FLEXCORE_PLUGIN",
 		MagicCookieValue: "flexcore-plugin-magic-cookie",
 	}
-	
+
 	// Plugin map
 	pluginMap := map[string]plugin.Plugin{
 		"flexcore": &JSONProcessorPlugin{},
 	}
-	
+
 	// Serve the plugin
 	plugin.Serve(&plugin.ServeConfig{
 		HandshakeConfig: handshakeConfig,
