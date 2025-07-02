@@ -143,3 +143,6 @@
 [submodule "client-b-meltano-native"]
 	path = client-b-meltano-native
 	url = https://github.com/flext-sh/client-b-meltano-native.git
+[submodule "flext-target-oracle"]
+	path = flext-target-oracle
+	url = git@github.com:flext-sh/flext-target-oracle.git
