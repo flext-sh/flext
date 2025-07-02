@@ -18,7 +18,7 @@ def fix_syntax_errors():
             r'logger\.info\("Log message"\)\s+"HTTP request successful.*?\)\s+response\.get\("status_code", "unknown"\),\s+len\(str\(response\)\),\s+"slideshow" in str\(response\),',
             'logger.info(\n                    "HTTP request successful - Status: %s, Response size: %s, Has JSON: %s",\n                    response.get("status_code", "unknown"),\n                    len(str(response)),\n                    "slideshow" in str(response)\n                )',
             content,
-            flags=re.DOTALL
+            flags=re.DOTALL,
         )
 
         file_path.write_text(content)
@@ -32,31 +32,26 @@ def fix_fastapi_simple_demo():
 
         # Fix function call on line 345
         content = content.replace(
-            "app = create_fastapi_demo()",
-            "app = create_demo_app()"
+            "app = create_fastapi_demo()", "app = create_demo_app()"
         )
 
         # Fix missing types
-        content = content.replace(
-            "request: Any,",
-            "request: DemoModels.TaskRequest,"
-        )
+        content = content.replace("request: Any,", "request: DemoModels.TaskRequest,")
 
         content = content.replace(
             "async def broadcast_message(message: Any):",
-            "async def broadcast_message(message: dict[str, Any]):"
+            "async def broadcast_message(message: dict[str, Any]):",
         )
 
         # Fix missing background_tasks attribute
         content = content.replace(
-            "# Track background tasks",
-            "background_tasks = set()"
+            "# Track background tasks", "background_tasks = set()"
         )
 
         # Add missing attribute initialization
         content = content.replace(
-            "    def __init__(self) -> None:\n        \"\"\"TODO: Add docstring.\"\"\"\n        self.connections: dict[str, WebSocket] = {}",
-            "    def __init__(self) -> None:\n        \"\"\"TODO: Add docstring.\"\"\"\n        self.connections: dict[str, WebSocket] = {}\n        self.background_tasks: set = set()"
+            '    def __init__(self) -> None:\n        """TODO: Add docstring."""\n        self.connections: dict[str, WebSocket] = {}',
+            '    def __init__(self) -> None:\n        """TODO: Add docstring."""\n        self.connections: dict[str, WebSocket] = {}\n        self.background_tasks: set = set()',
         )
 
         file_path.write_text(content)
@@ -71,18 +66,18 @@ def fix_fire_cli_example():
         # Fix missing aliases
         content = content.replace(
             "class GetDeploymentStatus:",
-            "GetDeploymentStatusQuery = GetDeploymentStatus\n\nclass GetDeploymentStatus:"
+            "GetDeploymentStatusQuery = GetDeploymentStatus\n\nclass GetDeploymentStatus:",
         )
 
         # Fix QueryHandler import and usage
         content = content.replace(
             "from flx.core.commands.base import Command, QueryHandler",
-            "from flx.core.commands.base import Command\nfrom flx.core.queries import Query, QueryHandler"
+            "from flx.core.commands.base import Command\nfrom flx.core.queries import Query, QueryHandler",
         )
 
         content = content.replace(
             "@query_handler\nclass GetDeploymentStatusHandler(QueryHandler[GetDeploymentStatusQuery, dict]):",
-            "@query_handler\nclass GetDeploymentStatusHandler:"
+            "@query_handler\nclass GetDeploymentStatusHandler:",
         )
 
         file_path.write_text(content)
@@ -106,16 +101,16 @@ def fix_major_undefined_names():
     # Process all Python files
     for py_file in Path("legacy").rglob("*.py"):
         try:
-            content = py_file.read_text(encoding='utf-8')
+            content = py_file.read_text(encoding="utf-8")
             modified = False
 
             for old, new in fixes:
-                if old in content and new.split('\n')[0] not in content:
+                if old in content and new.split("\n")[0] not in content:
                     content = new + "\n" + content
                     modified = True
 
             if modified:
-                py_file.write_text(content, encoding='utf-8')
+                py_file.write_text(content, encoding="utf-8")
 
         except Exception:
             pass
@@ -126,24 +121,29 @@ def fix_major_syntax_patterns():
 
     for py_file in Path("legacy").rglob("*.py"):
         try:
-            content = py_file.read_text(encoding='utf-8')
+            content = py_file.read_text(encoding="utf-8")
             original_content = content
 
             # Fix trailing commas in bare tuples
-            content = re.sub(r'\(([^,\(\)]+),\s*\)', r'(\1)', content)
+            content = re.sub(r"\(([^,\(\)]+),\s*\)", r"(\1)", content)
 
             # Fix TODO comments
-            content = re.sub(r'# TODO:([^\n]+)', r'# TODO: \1', content)
+            content = re.sub(r"# TODO:([^\n]+)", r"# TODO: \1", content)
 
             # Fix missing newlines at end of files
-            if content and not content.endswith('\n'):
-                content += '\n'
+            if content and not content.endswith("\n"):
+                content += "\n"
 
             # Fix shebang lines
-            content = re.sub(r'^#!\s*/usr/bin/env\s+python$', '#!/usr/bin/env python3', content, flags=re.MULTILINE)
+            content = re.sub(
+                r"^#!\s*/usr/bin/env\s+python$",
+                "#!/usr/bin/env python3",
+                content,
+                flags=re.MULTILINE,
+            )
 
             if content != original_content:
-                py_file.write_text(content, encoding='utf-8')
+                py_file.write_text(content, encoding="utf-8")
 
         except Exception:
             pass

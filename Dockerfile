@@ -30,8 +30,8 @@ FROM alpine:latest
 RUN apk --no-cache add ca-certificates tzdata curl
 
 # Create non-root user
-RUN addgroup -g 1001 -S flext && \
-    adduser -u 1001 -S flext -G flext
+RUN addgroup -g 1001 -S flext \
+    && adduser -u 1001 -S flext -G flext
 
 # Set working directory
 WORKDIR /app
@@ -40,8 +40,8 @@ WORKDIR /app
 COPY --from=builder /app/flext .
 
 # Create directories
-RUN mkdir -p /var/log/flext && \
-    chown -R flext:flext /app /var/log/flext
+RUN mkdir -p /var/log/flext \
+    && chown -R flext:flext /app /var/log/flext
 
 # Switch to non-root user
 USER flext

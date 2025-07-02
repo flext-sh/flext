@@ -27,7 +27,7 @@ This hub provides comprehensive architecture standards and consistency guideline
 | **Topic**                                                             | **Function**                       | **Audience**                  | **Complexity** | **Status** |
 | --------------------------------------------------------------------- | ---------------------------------- | ----------------------------- | -------------- | ---------- |
 | [**Architectural Consistency**](./architectural-consistency-guide.md) | Consistency guidelines & standards | Technical leads, teams        | ⭐⭐           | ✅ Updated |
-| [**FLEXT Architecture Standards**](./flext-architecture-standards.md)     | Core architecture design standards | Architects, senior developers | ⭐⭐⭐         | ✅ Updated |
+| [**FLEXT Architecture Standards**](./flext-architecture-standards.md) | Core architecture design standards | Architects, senior developers | ⭐⭐⭐         | ✅ Updated |
 | [**Modernization Roadmap**](./modernization-roadmap.md)               | Framework evolution strategy       | Framework developers          | ⭐⭐⭐⭐       | ✅ Updated |
 
 ---

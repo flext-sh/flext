@@ -32,7 +32,7 @@ This hub provides comprehensive architectural guidance for implementing FLEXT Fr
 | [**Domain Patterns**](./patterns/index.md)                | DDD, CQRS, Event Sourcing          | Senior developers      | ⭐⭐⭐⭐       | ✅ Updated |
 | [**Layer Organization**](./layers/index.md)               | Application layer structure        | All developers         | ⭐⭐           | ✅ Updated |
 | [**Architecture Standards**](./architecture-standards.md) | Enterprise architecture guidelines | Architects, developers | ⭐⭐⭐         | ✅ Updated |
-| [**FLEXT 2.0 Architecture**](./flext-2.0-architecture.md)     | Meltano-powered evolution          | Technical leads        | ⭐⭐⭐⭐       | ✅ Updated |
+| [**FLEXT 2.0 Architecture**](./flext-2.0-architecture.md) | Meltano-powered evolution          | Technical leads        | ⭐⭐⭐⭐       | ✅ Updated |
 
 ### **Integration & Implementation**
 

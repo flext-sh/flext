@@ -2,65 +2,55 @@ package queries
 
 import (
 	"context"
-	"time"
 
 	"github.com/flext-sh/flext/internal/bounded_contexts/pipeline/application/ports"
 	"github.com/google/uuid"
 )
 
-// GetPipelineQuery consulta para obter um pipeline por ID
+// GetPipelineQuery represents a query to get a pipeline by ID
 type GetPipelineQuery struct {
-	ID uuid.UUID `json:"id" validate:"required"`
+	PipelineID uuid.UUID `json:"pipeline_id" validate:"required"`
 }
 
-// PipelineStepDTO representa um passo do pipeline na resposta
-type PipelineStepDTO struct {
-	ID            uuid.UUID              `json:"id"`
-	Name          string                 `json:"name"`
-	PluginID      uuid.UUID              `json:"plugin_id"`
-	Configuration map[string]interface{} `json:"configuration"`
-	Order         int                    `json:"order"`
-	DependsOn     []uuid.UUID            `json:"depends_on"`
-}
-
-// PipelineDTO representa um pipeline na resposta
-type PipelineDTO struct {
-	ID            uuid.UUID              `json:"id"`
-	Name          string                 `json:"name"`
-	Description   string                 `json:"description"`
-	IsActive      bool                   `json:"is_active"`
-	Steps         []PipelineStepDTO      `json:"steps"`
-	Tags          []string               `json:"tags"`
-	Configuration map[string]interface{} `json:"configuration"`
-	Schedule      *string                `json:"schedule,omitempty"`
-	CreatedAt     time.Time              `json:"created_at"`
-	UpdatedAt     time.Time              `json:"updated_at"`
-	Version       int                    `json:"version"`
-}
-
-// GetPipelineHandler manipula consultas de pipeline
+// GetPipelineHandler handles getting a pipeline by ID
 type GetPipelineHandler struct {
 	repo ports.PipelineRepository
 }
 
-// NewGetPipelineHandler cria um novo handler
+// NewGetPipelineHandler creates a new GetPipelineHandler
 func NewGetPipelineHandler(repo ports.PipelineRepository) *GetPipelineHandler {
 	return &GetPipelineHandler{
 		repo: repo,
 	}
 }
 
-// Handle executa a consulta
+// Handle executes the GetPipelineQuery
 func (h *GetPipelineHandler) Handle(ctx context.Context, query GetPipelineQuery) (*PipelineDTO, error) {
-	pipeline, err := h.repo.GetByID(ctx, query.ID)
+	pipeline, err := h.repo.GetByID(ctx, query.PipelineID)
 	if err != nil {
 		return nil, err
 	}
 
-	// Converter steps para DTO
-	stepsDTO := make([]PipelineStepDTO, len(pipeline.Steps))
-	for i, step := range pipeline.Steps {
-		stepsDTO[i] = PipelineStepDTO{
+	if pipeline == nil {
+		return nil, nil
+	}
+
+	// Convert domain entity to DTO
+	dto := &PipelineDTO{
+		ID:            pipeline.GetID(),
+		Name:          pipeline.Name,
+		Description:   pipeline.Description,
+		IsActive:      pipeline.IsActive,
+		Tags:          pipeline.Tags,
+		Configuration: pipeline.Configuration,
+		CreatedAt:     pipeline.GetCreatedAt(),
+		UpdatedAt:     pipeline.GetUpdatedAt(),
+		Version:       int(pipeline.GetVersion()),
+	}
+
+	// Convert steps to DTOs
+	for _, step := range pipeline.Steps {
+		stepDTO := PipelineStepDTO{
 			ID:            step.ID,
 			Name:          step.Name,
 			PluginID:      step.PluginID,
@@ -68,19 +58,16 @@ func (h *GetPipelineHandler) Handle(ctx context.Context, query GetPipelineQuery)
 			Order:         step.Order,
 			DependsOn:     step.DependsOn,
 		}
+		dto.Steps = append(dto.Steps, stepDTO)
 	}
 
-	return &PipelineDTO{
-		ID:            pipeline.ID,
-		Name:          pipeline.Name,
-		Description:   pipeline.Description,
-		IsActive:      pipeline.IsActive,
-		Steps:         stepsDTO,
-		Tags:          pipeline.Tags,
-		Configuration: pipeline.Configuration,
-		Schedule:      pipeline.Schedule,
-		CreatedAt:     pipeline.CreatedAt,
-		UpdatedAt:     pipeline.UpdatedAt,
-		Version:       pipeline.Version,
-	}, nil
+	// Convert schedule if exists
+	if pipeline.Schedule != "" {
+		dto.Schedule = &PipelineScheduleDTO{
+			CronExpression: pipeline.Schedule,
+			IsActive:       pipeline.IsActive,
+		}
+	}
+
+	return dto, nil
 }

@@ -1,0 +1,56 @@
+server:
+  host: "0.0.0.0"
+  port: 8081
+  environment: "development"
+  debug: true
+  enable_cors: true
+
+database:
+  driver: "postgres"
+  host: "localhost"
+  port: 5432
+  database: "flext"
+  username: "flext"
+  password: "flext"
+  ssl_mode: "disable"
+  max_open_conns: 25
+  max_idle_conns: 25
+
+redis:
+  host: "localhost"
+  port: 6379
+  database: 0
+  pool_size: 10
+  min_idle_conns: 5
+
+jwt:
+  secret_key: "development-super-secret-jwt-key-minimum-32-characters-long"
+  expiry_time: "24h"
+  refresh_time: "168h"
+  issuer: "flext-api"
+  audience: "flext-users"
+  signing_method: "HS256"
+
+logging:
+  level: "debug"
+  format: "json"
+  output: "stdout"
+  structured: true
+
+monitoring:
+  enabled: true
+  metrics_path: "/metrics"
+  health_path: "/health"
+
+features:
+  websocket_enabled: true
+  metrics_enabled: true
+  swagger_enabled: true
+  database_enabled: false # Disabled for development without DB
+  auth_required: false
+  plugin_system_enabled: true
+  pipeline_execution: true
+  redis_enabled: false # Disabled for development without Redis
+  gorm_enabled: false # Disabled when database_enabled is false
+  sqlx_enabled: false # Disabled when database_enabled is false
+  gin_server_enabled: false # Keep disabled to avoid conflicts

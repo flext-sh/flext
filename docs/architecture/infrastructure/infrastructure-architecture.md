@@ -376,4 +376,4 @@ class ResourceOptimization:
 
 ---
 
-**=� Hub**: [Infrastructure Hub](./index.md) | **<� Root**: [Documentation Home](../../index.md) | **FrameworkFLEXT FLEXT 0.4.0+ | **Updated**: 2025-06-11
+**=� Hub**: [Infrastructure Hub](./index.md) | **<� Root**: [Documentation Home](../../index.md) | **FrameworkFLEXT FLEXT 0.4.0+ | **Updated\*\*: 2025-06-11

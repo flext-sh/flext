@@ -37,7 +37,9 @@ def fix_syntax_errors():
         return f'logger.info("{message}")'
 
     # Apply the fix
-    fixed_content = re.sub(pattern, fix_logger_call, content, flags=re.MULTILINE | re.DOTALL)
+    fixed_content = re.sub(
+        pattern, fix_logger_call, content, flags=re.MULTILINE | re.DOTALL
+    )
 
     # Fix function call formatting issues
     # Pattern like: func(\n    param)\n    another_param\n)
@@ -50,11 +52,15 @@ def fix_syntax_errors():
         # Add comma between parameters
         return func_part + ",\n    " + param_part
 
-    fixed_content = re.sub(func_pattern, fix_func_call, fixed_content, flags=re.MULTILINE)
+    fixed_content = re.sub(
+        func_pattern, fix_func_call, fixed_content, flags=re.MULTILINE
+    )
 
     # Fix standalone closing parentheses that should be part of function calls
     standalone_paren_pattern = r"(\s+)([^)]+)\s*\n\s*\)\s*\n\s*\)"
-    fixed_content = re.sub(standalone_paren_pattern, r"\1\2\n)", fixed_content, flags=re.MULTILINE)
+    fixed_content = re.sub(
+        standalone_paren_pattern, r"\1\2\n)", fixed_content, flags=re.MULTILINE
+    )
 
     if fixed_content != content:
         file_path.write_text(fixed_content)

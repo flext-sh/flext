@@ -29,26 +29,26 @@ echo
 
 # Função para fazer requests e validar
 make_request() {
-    local method=$1
-    local endpoint=$2
-    local data=$3
-    local description=$4
-    
-    echo "📡 $description"
-    echo "   $method $endpoint"
-    
-    if [ -n "$data" ]; then
-        response=$(curl -s -X $method "http://localhost:$FLEXT_SERVER_PORT$endpoint" \
-            -H "Content-Type: application/json" \
-            -d "$data")
-    else
-        response=$(curl -s -X $method "http://localhost:$FLEXT_SERVER_PORT$endpoint")
-    fi
-    
-    echo "   Response: $(echo $response | jq -c . 2>/dev/null || echo $response)"
-    echo
-    
-    echo $response
+	local method=$1
+	local endpoint=$2
+	local data=$3
+	local description=$4
+
+	echo "📡 $description"
+	echo "   $method $endpoint"
+
+	if [ -n "$data" ]; then
+		response=$(curl -s -X $method "http://localhost:$FLEXT_SERVER_PORT$endpoint" \
+			-H "Content-Type: application/json" \
+			-d "$data")
+	else
+		response=$(curl -s -X $method "http://localhost:$FLEXT_SERVER_PORT$endpoint")
+	fi
+
+	echo "   Response: $(echo $response | jq -c . 2>/dev/null || echo $response)"
+	echo
+
+	echo $response
 }
 
 # Testar endpoints básicos

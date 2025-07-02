@@ -24,10 +24,10 @@ This hub provides comprehensive guidance for organizing application layers in he
 
 ### **Core Layer Topics**
 
-| **Topic**                                             | **Function**                      | **Audience**               | **Complexity** | **Status** |
-| ----------------------------------------------------- | --------------------------------- | -------------------------- | -------------- | ---------- |
-| [**Core Domain Layer**](./core-domain-layer.md)       | Domain layer design patterns      | Domain experts, architects | ⭐⭐⭐         | ✅ Updated |
-| [**Application Layer**](./application-layer.md)       | Application coordination patterns | Backend developers         | ⭐⭐           | ✅ Updated |
+| **Topic**                                                 | **Function**                      | **Audience**               | **Complexity** | **Status** |
+| --------------------------------------------------------- | --------------------------------- | -------------------------- | -------------- | ---------- |
+| [**Core Domain Layer**](./core-domain-layer.md)           | Domain layer design patterns      | Domain experts, architects | ⭐⭐⭐         | ✅ Updated |
+| [**Application Layer**](./application-layer.md)           | Application coordination patterns | Backend developers         | ⭐⭐           | ✅ Updated |
 | [**FLEXT Source Structure**](./flext-source-structure.md) | Framework organization patterns   | Framework developers       | ⭐⭐           | ✅ Updated |
 
 ---

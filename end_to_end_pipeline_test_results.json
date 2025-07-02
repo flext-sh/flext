@@ -16,11 +16,7 @@
         "advanced_error_recovery": true,
         "page_size": 100,
         "enable_incremental": true,
-        "business_areas": [
-          "inventory",
-          "orders",
-          "warehouse"
-        ],
+        "business_areas": ["inventory", "orders", "warehouse"],
         "data_quality": {
           "validate_schemas": true,
           "require_valid_timestamps": true,
@@ -181,27 +177,21 @@
             "scenario": "minimal_config",
             "valid": false,
             "message": {
-              "authentication": [
-                "Password must be at least 6 characters"
-              ]
+              "authentication": ["Password must be at least 6 characters"]
             }
           },
           {
             "scenario": "full_featured_config",
             "valid": false,
             "message": {
-              "authentication": [
-                "Password must be at least 6 characters"
-              ]
+              "authentication": ["Password must be at least 6 characters"]
             }
           },
           {
             "scenario": "invalid_config",
             "valid": false,
             "message": {
-              "connection": [
-                "Base URL: URL must include scheme (http/https)"
-              ],
+              "connection": ["Base URL: URL must include scheme (http/https)"],
               "authentication": [
                 "Basic authentication requires username and password",
                 "Username must be at least 3 characters",

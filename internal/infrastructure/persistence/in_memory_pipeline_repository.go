@@ -7,6 +7,7 @@ import (
 
 	"github.com/flext-sh/flext/internal/bounded_contexts/pipeline/domain/entities"
 	"github.com/flext-sh/flext/internal/bounded_contexts/pipeline/application/ports"
+	pipelineUC "github.com/flext-sh/flext/internal/usecases/pipeline"
 	"github.com/google/uuid"
 )
 
@@ -38,17 +39,43 @@ func (r *InMemoryPipelineRepository) GetByID(ctx context.Context, id uuid.UUID) 
 	return pipeline, nil
 }
 
+// FindByID busca um pipeline por ID (compatibilidade string)
+func (r *InMemoryPipelineRepository) FindByID(ctx context.Context, id string) (*entities.Pipeline, error) {
+	uuid, err := uuid.Parse(id)
+	if err != nil {
+		return nil, errors.New("invalid UUID format")
+	}
+	return r.GetByID(ctx, uuid)
+}
+
+// Count retorna o número total de pipelines
+func (r *InMemoryPipelineRepository) Count(ctx context.Context) (int, error) {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+	return len(r.pipelines), nil
+}
+
 // Save persiste um pipeline
 func (r *InMemoryPipelineRepository) Save(ctx context.Context, pipeline *entities.Pipeline) error {
+	if pipeline == nil {
+		return errors.New("pipeline cannot be nil")
+	}
+	
 	r.mu.Lock()
 	defer r.mu.Unlock()
 	
+	// Garantir que o pipeline tem um ID
+	pipelineID := pipeline.GetID()
+	if pipelineID == uuid.Nil {
+		return errors.New("pipeline must have a valid ID")
+	}
+	
 	// Verificar se nome já existe (para outro pipeline)
-	if existingPipeline, exists := r.byName[pipeline.Name]; exists && existingPipeline.ID != pipeline.ID {
+	if existingPipeline, exists := r.byName[pipeline.Name]; exists && existingPipeline.GetID() != pipelineID {
 		return errors.New("pipeline name already exists")
 	}
 	
-	r.pipelines[pipeline.ID] = pipeline
+	r.pipelines[pipelineID] = pipeline
 	r.byName[pipeline.Name] = pipeline
 	
 	return nil
@@ -144,3 +171,56 @@ func (r *InMemoryPipelineRepository) ExistsByName(ctx context.Context, name stri
 	_, exists := r.byName[name]
 	return exists, nil
 }
+
+// Create cria um novo pipeline (método adicional para compatibilidade)
+func (r *InMemoryPipelineRepository) Create(ctx context.Context, pipeline *entities.Pipeline) (*entities.Pipeline, error) {
+	err := r.Save(ctx, pipeline)
+	if err != nil {
+		return nil, err
+	}
+	return pipeline, nil
+}
+
+// FindByName alias para GetByName para compatibilidade
+func (r *InMemoryPipelineRepository) FindByName(ctx context.Context, name string) (*entities.Pipeline, error) {
+	return r.GetByName(ctx, name)
+}
+
+// Update atualiza um pipeline existente
+func (r *InMemoryPipelineRepository) Update(ctx context.Context, pipeline *entities.Pipeline) (*entities.Pipeline, error) {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	
+	// Garantir que o pipeline tem um ID válido
+	pipelineID := pipeline.GetID()
+	if pipelineID == uuid.Nil {
+		return nil, errors.New("pipeline must have a valid ID")
+	}
+	
+	// Verificar se o pipeline existe
+	if _, exists := r.pipelines[pipelineID]; !exists {
+		return nil, errors.New("pipeline not found")
+	}
+	
+	// Verificar se nome já existe (para outro pipeline)
+	if existingPipeline, exists := r.byName[pipeline.Name]; exists && existingPipeline.GetID() != pipelineID {
+		return nil, errors.New("pipeline name already exists")
+	}
+	
+	r.pipelines[pipelineID] = pipeline
+	r.byName[pipeline.Name] = pipeline
+	
+	return pipeline, nil
+}
+
+// List com compatibilidade para ListCriteria
+func (r *InMemoryPipelineRepository) ListWithCriteria(ctx context.Context, criteria pipelineUC.ListCriteria) ([]*entities.Pipeline, int, error) {
+	filter := ports.ListPipelinesFilter{
+		Limit:  criteria.Limit,
+		Offset: criteria.Offset,
+		Active: criteria.Active,
+		Tags:   criteria.Tags,
+	}
+	return r.List(ctx, filter)
+}
+

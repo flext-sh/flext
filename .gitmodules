@@ -133,7 +133,7 @@
 	url = git@github.com:flext-sh/flx-ldap.git
 [submodule "legacy/flx"]
 	path = legacy/flx
-	url = git@github.com:flext-sh/flx.git
+	url = https://github.com/flext-sh/flx.git
 [submodule "legacy/flx-meltano-enterprise"]
 	path = legacy/flx-meltano-enterprise
 	url = git@github.com:flext-sh/flx-meltano-enterprise.git

@@ -72,7 +72,7 @@ Oracle Cloud provides multiple authentication methods for different use cases:
 | **Method**                    | **Use Case**                | **Complexity** | **Security Level** |
 | ----------------------------- | --------------------------- | -------------- | ------------------ |
 | **OAuth2 Client Credentials** | API integration, automation | Low            | High               |
-| **JWT Service (FLEXT)**         | Framework-managed auth      | Very Low       | High               |
+| **JWT Service (FLEXT)**       | Framework-managed auth      | Very Low       | High               |
 | **SSO/SAML2**                 | User authentication         | Medium         | Very High          |
 | **Basic Auth**                | Development only            | Very Low       | Low                |
 

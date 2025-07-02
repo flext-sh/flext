@@ -18,17 +18,17 @@
 
 ### **Core Topics**
 
-| **Topic**                                                     | **Function**                             | **Audience**         | **Status**  |
-| ------------------------------------------------------------- | ---------------------------------------- | -------------------- | ----------- |
-| [Real-World Implementations](./real-world-implementations.md) | **NEW** Production-verified examples     | All developers       | ✅ Complete |
-| [Oracle Real Examples](./oracle-integration-real-examples.md) | Real Oracle implementations              | Oracle developers    | ✅ Complete |
-| [FLEXT Framework Patterns](./flext-framework-patterns.md)         | **NEW** Modern FLEXT architecture showcase | Framework developers | ✅ Complete |
-| [Adapter Patterns](./adapter-patterns/index.md)               | Hexagonal adapter implementations        | Framework developers | ✅ Complete |
-| [Basic](./basic/index.md)                                     | Fundamental examples                     | New developers       | ✅ Complete |
-| [Advanced](./advanced/index.md)                               | Complex patterns                         | Senior developers    | ✅ Complete |
-| [Oracle WMS](./oracle-wms/index.md)                           | Oracle WMS integration                   | Oracle engineers     | ✅ Complete |
-| [Plugins](./plugins/index.md)                                 | Plugin development                       | Plugin developers    | ✅ Complete |
-| [Templates](./templates/index.md)                             | Code scaffolding                         | All developers       | ✅ Complete |
+| **Topic**                                                     | **Function**                               | **Audience**         | **Status**  |
+| ------------------------------------------------------------- | ------------------------------------------ | -------------------- | ----------- |
+| [Real-World Implementations](./real-world-implementations.md) | **NEW** Production-verified examples       | All developers       | ✅ Complete |
+| [Oracle Real Examples](./oracle-integration-real-examples.md) | Real Oracle implementations                | Oracle developers    | ✅ Complete |
+| [FLEXT Framework Patterns](./flext-framework-patterns.md)     | **NEW** Modern FLEXT architecture showcase | Framework developers | ✅ Complete |
+| [Adapter Patterns](./adapter-patterns/index.md)               | Hexagonal adapter implementations          | Framework developers | ✅ Complete |
+| [Basic](./basic/index.md)                                     | Fundamental examples                       | New developers       | ✅ Complete |
+| [Advanced](./advanced/index.md)                               | Complex patterns                           | Senior developers    | ✅ Complete |
+| [Oracle WMS](./oracle-wms/index.md)                           | Oracle WMS integration                     | Oracle engineers     | ✅ Complete |
+| [Plugins](./plugins/index.md)                                 | Plugin development                         | Plugin developers    | ✅ Complete |
+| [Templates](./templates/index.md)                             | Code scaffolding                           | All developers       | ✅ Complete |
 
 ### **📋 Learning Path**
 

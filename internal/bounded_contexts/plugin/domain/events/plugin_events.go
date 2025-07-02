@@ -11,6 +11,7 @@ const (
 	PluginActivatedEventType   = "plugin.activated"
 	PluginDeactivatedEventType = "plugin.deactivated"
 	PluginFailedEventType      = "plugin.failed"
+	PluginDeletedEventType     = "plugin.deleted"
 )
 
 // PluginRegisteredEvent é emitido quando um novo plugin é registrado
@@ -82,5 +83,19 @@ func NewPluginFailedEvent(pluginID uuid.UUID, reason string) PluginFailedEvent {
 	return PluginFailedEvent{
 		BaseDomainEvent: domain.NewBaseDomainEvent(PluginFailedEventType, pluginID),
 		Reason:          reason,
+	}
+}
+
+// PluginDeletedEvent é emitido quando um plugin é deletado
+type PluginDeletedEvent struct {
+	domain.BaseDomainEvent
+	PluginName string `json:"plugin_name"`
+}
+
+// NewPluginDeletedEvent cria um novo evento de plugin deletado
+func NewPluginDeletedEvent(pluginID uuid.UUID, pluginName string) PluginDeletedEvent {
+	return PluginDeletedEvent{
+		BaseDomainEvent: domain.NewBaseDomainEvent(PluginDeletedEventType, pluginID),
+		PluginName:      pluginName,
 	}
 }

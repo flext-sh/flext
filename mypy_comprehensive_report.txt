@@ -1,0 +1,178 @@
+=== FLEXT MyPy Comprehensive Analysis ===
+
+=== flext-ldap ===
+src/flext_ldap/api/ldif.py: note: In member "__post_init__" of class "LDIFHeaderConfig":
+src/flext_ldap/api/ldif.py:17:5: error: Function is missing a return type
+annotation  [no-untyped-def]
+        def __post_init__(self):
+        ^
+src/flext_ldap/api/ldif.py:17:5: note: Use "-> None" if function does not return a value
+src/flext_ldap/api/ldif.py: note: In member "__post_init__" of class "LDIFWriterConfig":
+src/flext_ldap/api/ldif.py:42:5: error: Function is missing a return type
+annotation  [no-untyped-def]
+        def __post_init__(self):
+        ^
+src/flext_ldap/api/ldif.py:42:5: note: Use "-> None" if function does not return a value
+src/flext_ldap/api/ldif.py: note: In member "write_header" of class "LDIFWriter":
+src/flext_ldap/api/ldif.py:70:5: error: Function is missing a type annotation
+for one or more arguments  [no-untyped-def]
+        def write_header(self, output_file) -> None:
+        ^
+src/flext_ldap/api/ldif.py: note: In member "write_entry" of class "LDIFWriter":
+src/flext_ldap/api/ldif.py:79:5: error: Function is missing a type annotation
+for one or more arguments  [no-untyped-def]
+        def write_entry(self, entry: dict[str, Any], output_file) -> None:
+        ^
+src/flext_ldap/api/ldif.py: note: In member "process_file" of class "DefaultLDIFProcessor":
+src/flext_ldap/api/ldif.py:116:13: error: Need type annotation for
+"current_entry" (hint: "current_entry: dict[<type>, <type>] = ...") 
+[var-annotated]
+                current_entry = {}
+                ^~~~~~~~~~~~~
+src/flext_ldap/api/ldif.py:131:47: error: Incompatible types in assignment
+(expression has type "str", target has type "list[Any]")  [assignment]
+                            current_entry[attr] = value
+                                                  ^~~~~
+src/ldap_core_shared/types/aliases.py:19:1: error: Module "typing" has no
+attribute "TypeAlias"  [attr-defined]
+    from typing import Any, Literal, TypeAlias
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/ldap_core_shared/types/aliases.py:19:1: note: Use `from typing_extensions import TypeAlias` instead
+src/ldap_core_shared/types/aliases.py:19:1: note: See https://mypy.readthedocs.io/en/stable/runtime_troubles.html#using-new-additions-to-the-typing-module
+src/ldap_core_shared/types/aliases.py:24:1: error: Type of variable becomes
+"Any" due to an unfollowed import  [no-any-unimported]
+    DN: TypeAlias = str
+    ^~~~~~~~~~~~~~~~~~~
+src/ldap_core_shared/types/aliases.py:27:1: error: Type of variable becomes
+"Any" due to an unfollowed import  [no-any-unimported]
+    RDN: TypeAlias = str
+    ^~~~~~~~~~~~~~~~~~~~
+src/ldap_core_shared/types/aliases.py:30:1: error: Type of variable becomes
+"Any" due to an unfollowed import  [no-any-unimported]
+    AttributeName: TypeAlias = str
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+=== flext-plugin ===
+/home/marlonsc/flext/flext-grpc/src/flx_grpc/proto/flx_pb2_grpc.py:740: error: invalid syntax  [syntax]
+
+=== flext-tap-ldap ===
+src/tap_ldap/ldif_processor.py:540: error: Missing type parameters for generic type "dict"  [type-arg]
+src/flext_tap_ldap/ldif_processor.py:540: error: Missing type parameters for generic type "dict"  [type-arg]
+src/tap_ldap/client.py:448: error: Returning Any from function declared to return "list[str]"  [no-any-return]
+src/flext_tap_ldap/client.py:448: error: Returning Any from function declared to return "list[str]"  [no-any-return]
+src/tap_ldap/ldif_stream.py:157: error: Unsupported operand types for + ("object" and "int")  [operator]
+src/tap_ldap/ldif_stream.py:162: error: "object" has no attribute "append"  [attr-defined]
+src/tap_ldap/ldif_stream.py:181: error: Missing type parameters for generic type "list"  [type-arg]
+src/tap_ldap/ldif_stream.py:240: error: Unsupported operand types for + ("object" and "int")  [operator]
+src/tap_ldap/ldif_stream.py:241: error: Unsupported operand types for + ("object" and "int")  [operator]
+src/tap_ldap/ldif_stream.py:248: error: Unsupported operand types for + ("object" and "int")  [operator]
+src/tap_ldap/ldif_stream.py:272: error: Unsupported operand types for + ("object" and "int")  [operator]
+src/tap_ldap/ldif_stream.py:277: error: "object" has no attribute "append"  [attr-defined]
+src/tap_ldap/ldif_stream.py:463: error: "LDIFAnalysisStream" has no attribute "tap"  [attr-defined]
+src/tap_ldap/ldif_stream.py:486: error: Missing type parameters for generic type "dict"  [type-arg]
+src/tap_ldap/ldif_stream.py:487: error: Missing type parameters for generic type "dict"  [type-arg]
+src/tap_ldap/ldif_stream.py:488: error: Missing type parameters for generic type "dict"  [type-arg]
+src/tap_ldap/ldif_stream.py:489: error: Missing type parameters for generic type "dict"  [type-arg]
+src/tap_ldap/ldif_stream.py:569: error: "LDIFAnalysisStream" has no attribute "tap"  [attr-defined]
+src/tap_ldap/ldif_stream.py:593: error: Missing type parameters for generic type "list"  [type-arg]
+src/flext_tap_ldap/tap.py:201: error: Argument 1 to "LDIFStream" has incompatible type "flext_tap_ldap.tap.TapLDAP"; expected "tap_ldap.tap.TapLDAP"  [arg-type]
+src/flext_tap_ldap/tap.py:202: error: Argument 1 to "LDIFAnalysisStream" has incompatible type "flext_tap_ldap.tap.TapLDAP"; expected "tap_ldap.tap.TapLDAP"  [arg-type]
+src/flext_tap_ldap/tap.py:208: error: Argument 1 to "UsersStream" has incompatible type "flext_tap_ldap.tap.TapLDAP"; expected "tap_ldap.tap.TapLDAP"  [arg-type]
+src/flext_tap_ldap/tap.py:209: error: Argument 1 to "GroupsStream" has incompatible type "flext_tap_ldap.tap.TapLDAP"; expected "tap_ldap.tap.TapLDAP"  [arg-type]
+src/flext_tap_ldap/tap.py:210: error: Argument 1 to "OrganizationalUnitsStream" has incompatible type "flext_tap_ldap.tap.TapLDAP"; expected "tap_ldap.tap.TapLDAP"  [arg-type]
+src/flext_tap_ldap/tap.py:211: error: Argument 1 to "SchemaStream" has incompatible type "flext_tap_ldap.tap.TapLDAP"; expected "tap_ldap.tap.TapLDAP"  [arg-type]
+src/flext_tap_ldap/tap.py:219: error: Argument "tap" to "CustomStream" has incompatible type "flext_tap_ldap.tap.TapLDAP"; expected "tap_ldap.tap.TapLDAP"  [arg-type]
+src/flext_tap_ldap/ldif_stream.py:157: error: Unsupported operand types for + ("object" and "int")  [operator]
+src/flext_tap_ldap/ldif_stream.py:162: error: "object" has no attribute "append"  [attr-defined]
+src/flext_tap_ldap/ldif_stream.py:181: error: Missing type parameters for generic type "list"  [type-arg]
+src/flext_tap_ldap/ldif_stream.py:240: error: Unsupported operand types for + ("object" and "int")  [operator]
+src/flext_tap_ldap/ldif_stream.py:241: error: Unsupported operand types for + ("object" and "int")  [operator]
+src/flext_tap_ldap/ldif_stream.py:248: error: Unsupported operand types for + ("object" and "int")  [operator]
+src/flext_tap_ldap/ldif_stream.py:272: error: Unsupported operand types for + ("object" and "int")  [operator]
+src/flext_tap_ldap/ldif_stream.py:277: error: "object" has no attribute "append"  [attr-defined]
+src/flext_tap_ldap/ldif_stream.py:463: error: "LDIFAnalysisStream" has no attribute "tap"  [attr-defined]
+src/flext_tap_ldap/ldif_stream.py:486: error: Missing type parameters for generic type "dict"  [type-arg]
+src/flext_tap_ldap/ldif_stream.py:487: error: Missing type parameters for generic type "dict"  [type-arg]
+src/flext_tap_ldap/ldif_stream.py:488: error: Missing type parameters for generic type "dict"  [type-arg]
+src/flext_tap_ldap/ldif_stream.py:489: error: Missing type parameters for generic type "dict"  [type-arg]
+src/flext_tap_ldap/ldif_stream.py:569: error: "LDIFAnalysisStream" has no attribute "tap"  [attr-defined]
+src/flext_tap_ldap/ldif_stream.py:593: error: Missing type parameters for generic type "list"  [type-arg]
+src/flext_tap_ldap/__init__.py:18: error: Cannot assign to a type  [misc]
+
+=== flext-target-ldap ===
+src/target_ldap/client.py:109: error: Unused "type: ignore" comment  [unused-ignore]
+src/target_ldap/client.py:145: error: Unused "type: ignore" comment  [unused-ignore]
+src/target_ldap/client.py:198: error: Unused "type: ignore" comment  [unused-ignore]
+src/target_ldap/client.py:225: error: Unused "type: ignore" comment  [unused-ignore]
+src/flext_target_ldap/client.py:109: error: Unused "type: ignore" comment  [unused-ignore]
+src/flext_target_ldap/client.py:145: error: Unused "type: ignore" comment  [unused-ignore]
+src/flext_target_ldap/client.py:198: error: Unused "type: ignore" comment  [unused-ignore]
+src/flext_target_ldap/client.py:225: error: Unused "type: ignore" comment  [unused-ignore]
+src/target_ldap/transformation.py:320: error: Missing type parameters for generic type "list"  [type-arg]
+src/target_ldap/transformation.py:350: error: Unsupported operand types for + ("object" and "int")  [operator]
+src/target_ldap/transformation.py:380: error: Unsupported target for indexed assignment ("object")  [index]
+src/target_ldap/transformation.py:381: error: "object" has no attribute "get"  [attr-defined]
+src/target_ldap/transformation.py:392: error: Unsupported operand types for + ("object" and "int")  [operator]
+src/target_ldap/transformation.py:398: error: Unexpected keyword argument "dn" for "TransformationAppliedEvent"  [call-arg]
+src/target_ldap/transformation.py:398: error: Unexpected keyword argument "transformation_rules" for "TransformationAppliedEvent"; did you mean "transformation_rules_applied"?  [call-arg]
+src/target_ldap/transformation.py:398: error: Unexpected keyword argument "original_data" for "TransformationAppliedEvent"  [call-arg]
+src/target_ldap/transformation.py:398: error: Unexpected keyword argument "transformed_data" for "TransformationAppliedEvent"  [call-arg]
+src/target_ldap/transformation.py:409: error: "object" has no attribute "append"  [attr-defined]
+src/target_ldap/transformation.py:509: error: Missing type parameters for generic type "list"  [type-arg]
+src/target_ldap/transformation.py:510: error: Missing type parameters for generic type "dict"  [type-arg]
+src/target_ldap/transformation.py:536: error: Missing type parameters for generic type "dict"  [type-arg]
+src/target_ldap/transformation.py:566: error: Missing type parameters for generic type "list"  [type-arg]
+src/target_ldap/transformation.py:598: error: Missing type parameters for generic type "list"  [type-arg]
+src/target_ldap/transformation.py:621: error: No overload variant of "max" matches argument types "object", "int"  [call-overload]
+src/target_ldap/transformation.py:621: note: Possible overload variants:
+src/target_ldap/transformation.py:621: note:     def [SupportsRichComparisonT: Union[SupportsDunderLT[Any], SupportsDunderGT[Any]]] max(SupportsRichComparisonT, SupportsRichComparisonT, /, *_args: SupportsRichComparisonT, key: None = ...) -> SupportsRichComparisonT
+src/target_ldap/transformation.py:621: note:     def [_T] max(_T, _T, /, *_args: _T, key: Callable[[_T], Union[SupportsDunderLT[Any], SupportsDunderGT[Any]]]) -> _T
+src/target_ldap/transformation.py:621: note:     def [SupportsRichComparisonT: Union[SupportsDunderLT[Any], SupportsDunderGT[Any]]] max(Iterable[SupportsRichComparisonT], /, *, key: None = ...) -> SupportsRichComparisonT
+src/target_ldap/transformation.py:621: note:     def [_T] max(Iterable[_T], /, *, key: Callable[[_T], Union[SupportsDunderLT[Any], SupportsDunderGT[Any]]]) -> _T
+src/target_ldap/transformation.py:621: note:     def [SupportsRichComparisonT: Union[SupportsDunderLT[Any], SupportsDunderGT[Any]], _T] max(Iterable[SupportsRichComparisonT], /, *, key: None = ..., default: _T) -> Union[SupportsRichComparisonT, _T]
+src/target_ldap/transformation.py:621: note:     def [_T1, _T2] max(Iterable[_T1], /, *, key: Callable[[_T1], Union[SupportsDunderLT[Any], SupportsDunderGT[Any]]], default: _T2) -> Union[_T1, _T2]
+src/target_ldap/transformation.py:624: error: No overload variant of "dict" matches argument type "object"  [call-overload]
+src/target_ldap/transformation.py:624: note: Possible overload variants:
+src/target_ldap/transformation.py:624: note:     def [_KT, _VT] __init__(self) -> dict[_KT, _VT]
+src/target_ldap/transformation.py:624: note:     def [_KT, _VT] __init__(self, **kwargs: _VT) -> dict[str, _VT]
+src/target_ldap/transformation.py:624: note:     def [_KT, _VT] __init__(self, SupportsKeysAndGetItem[_KT, _VT], /) -> dict[_KT, _VT]
+src/target_ldap/transformation.py:624: note:     def [_KT, _VT] __init__(self, SupportsKeysAndGetItem[str, _VT], /, **kwargs: _VT) -> dict[str, _VT]
+src/target_ldap/transformation.py:624: note:     def [_KT, _VT] __init__(self, Iterable[tuple[_KT, _VT]], /) -> dict[_KT, _VT]
+src/target_ldap/transformation.py:624: note:     def [_KT, _VT] __init__(self, Iterable[tuple[str, _VT]], /, **kwargs: _VT) -> dict[str, _VT]
+src/target_ldap/transformation.py:624: note:     def [_KT, _VT] __init__(self, Iterable[list[str]], /) -> dict[str, str]
+src/target_ldap/transformation.py:624: note:     def [_KT, _VT] __init__(self, Iterable[list[bytes]], /) -> dict[bytes, bytes]
+src/target_ldap/transformation.py:625: error: Argument 1 to "len" has incompatible type "object"; expected "Sized"  [arg-type]
+src/target_ldap/transformation.py:626: error: Argument 1 to "len" has incompatible type "object"; expected "Sized"  [arg-type]
+src/target_ldap/transformation.py:660: error: Unsupported operand types for + ("object" and "int")  [operator]
+src/target_ldap/transformation.py:672: error: "object" has no attribute "append"  [attr-defined]
+src/target_ldap/transformation.py:675: error: "object" has no attribute "append"  [attr-defined]
+src/target_ldap/transformation.py:677: error: "object" has no attribute "append"  [attr-defined]
+src/target_ldap/transformation.py:682: error: "object" has no attribute "append"  [attr-defined]
+src/target_ldap/transformation.py:685: error: "object" has no attribute "append"  [attr-defined]
+src/target_ldap/transformation.py:686: error: "object" has no attribute "append"  [attr-defined]
+
+=== flext-db-oracle ===
+src/flext_db_oracle/sql/parser.py:107: error: Statement is unreachable  [unreachable]
+src/flext_db_oracle/connection/pool.py:80: error: Right operand of "and" is never evaluated  [unreachable]
+src/flext_db_oracle/connection/pool.py:81: error: Statement is unreachable  [unreachable]
+src/flext_db_oracle/connection/pool.py:114: error: "None" has no attribute "acquire"  [attr-defined]
+src/flext_db_oracle/connection/pool.py:118: error: "None" has no attribute "release"  [attr-defined]
+src/flext_db_oracle/connection/pool.py:161: error: Returning Any from function declared to return "int"  [no-any-return]
+src/flext_db_oracle/connection/pool.py:205: error: Returning Any from function declared to return "list[Any]"  [no-any-return]
+src/flext_db_oracle/connection/pool.py:246: error: "None" has no attribute "opened"  [attr-defined]
+src/flext_db_oracle/connection/pool.py:248: error: "None" has no attribute "busy"  [attr-defined]
+src/flext_db_oracle/connection/connection.py:70: error: Right operand of "and" is never evaluated  [unreachable]
+src/flext_db_oracle/connection/connection.py:71: error: Statement is unreachable  [unreachable]
+src/flext_db_oracle/connection/connection.py:105: error: "None" has no attribute "cursor"  [attr-defined]
+src/flext_db_oracle/connection/connection.py:137: error: "None" has no attribute "cursor"  [attr-defined]
+src/flext_db_oracle/connection/connection.py:140: error: Returning Any from function declared to return "int"  [no-any-return]
+src/flext_db_oracle/connection/connection.py:160: error: "None" has no attribute "cursor"  [attr-defined]
+src/flext_db_oracle/connection/connection.py:188: error: "None" has no attribute "cursor"  [attr-defined]
+src/flext_db_oracle/connection/connection.py:194: error: Returning Any from function declared to return "list[Any]"  [no-any-return]
+src/flext_db_oracle/connection/connection.py:207: error: "None" has no attribute "commit"  [attr-defined]
+src/flext_db_oracle/connection/connection.py:218: error: "None" has no attribute "rollback"  [attr-defined]
+src/flext_db_oracle/sql/validator.py:123: error: Statement is unreachable  [unreachable]
+src/flext_db_oracle/schema/analyzer.py:420: error: Returning Any from function declared to return "int | None"  [no-any-return]
+src/flext_db_oracle/schema/analyzer.py:441: error: Returning Any from function declared to return "str | None"  [no-any-return]
+src/flext_db_oracle/maintenance/optimizer.py:115: error: Dict entry 3 has incompatible type "str": "list[dict[str, Any]]"; expected "str": "Sequence[str]"  [dict-item]
+src/flext_db_oracle/cli/main.py:207: error: Returning Any from function declared to return "int"  [no-any-return]

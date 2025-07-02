@@ -18,10 +18,10 @@
 
 ### **Core Topics**
 
-| **Topic**                                         | **Function**                    | **Audience**          | **Status**  |
-| ------------------------------------------------- | ------------------------------- | --------------------- | ----------- |
+| **Topic**                                           | **Function**                    | **Audience**          | **Status**  |
+| --------------------------------------------------- | ------------------------------- | --------------------- | ----------- |
 | [Framework Overview](./flext-framework-overview.md) | Complete architectural overview | All users             | ✅ Complete |
-| [Core Concepts](./concepts.md)                    | Fundamental design principles   | Developers/Architects | ✅ Complete |
+| [Core Concepts](./concepts.md)                      | Fundamental design principles   | Developers/Architects | ✅ Complete |
 
 ### **📋 Learning Path**
 

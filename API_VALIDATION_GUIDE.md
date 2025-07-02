@@ -17,22 +17,26 @@ chmod +x validate_api.sh
 ### API Endpoints Tested
 
 #### 1. Health Check
+
 - **Endpoint**: `GET /health`
 - **Purpose**: Verify server is running
 - **Expected**: `{"status": "ok"}`
 
 #### 2. Root Endpoint
+
 - **Endpoint**: `GET /`
 - **Purpose**: API information and available endpoints
 - **Expected**: JSON with API metadata
 
 #### 3. Pipeline Management
+
 - **Create**: `POST /api/v1/pipelines`
 - **List**: `GET /api/v1/pipelines`
 - **Get**: `GET /api/v1/pipelines/{id}`
 - **Add Step**: `POST /api/v1/pipelines/{id}/steps`
 
 #### 4. Plugin Management
+
 - **Register**: `POST /api/v1/plugins`
 - **List**: `GET /api/v1/plugins`
 - **Get**: `GET /api/v1/plugins/{id}`
@@ -40,6 +44,7 @@ chmod +x validate_api.sh
 ### Sample Requests
 
 #### Create Pipeline
+
 ```json
 {
   "name": "Pipeline de Teste",
@@ -49,6 +54,7 @@ chmod +x validate_api.sh
 ```
 
 #### Register Plugin
+
 ```json
 {
   "name": "Plugin de Teste",
@@ -77,6 +83,7 @@ chmod +x validate_api.sh
 ### Troubleshooting
 
 #### Server Not Starting
+
 ```bash
 # Check if port 8081 is available
 lsof -i :8081
@@ -86,6 +93,7 @@ pkill -f flext
 ```
 
 #### Dependencies Missing
+
 ```bash
 # Install jq on Ubuntu/Debian
 sudo apt-get install jq

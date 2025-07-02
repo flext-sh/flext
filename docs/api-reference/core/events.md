@@ -127,7 +127,7 @@ class TenantUserRegistered(FlextDomainEvent):
 | ----------- | ------------- | ---------------------------------------------------- |
 | `tenant_id` | `str \| None` | Tenant identifier for multi-tenant isolation         |
 | `user_id`   | `str \| None` | User who initiated the action that caused this event |
-| `source`    | `str`         | Source system identifier (default: "flext")            |
+| `source`    | `str`         | Source system identifier (default: "flext")          |
 | `version`   | `str`         | Event schema version (default: "1.0")                |
 
 #### Properties
