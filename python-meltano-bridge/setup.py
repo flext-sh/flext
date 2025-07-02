@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-Setup script for Meltano Bridge for Go integration.
-"""
+"""Setup script for Meltano Bridge for Go integration."""
 
 from setuptools import setup
 

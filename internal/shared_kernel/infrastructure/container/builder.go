@@ -300,31 +300,76 @@ func (cb *ContainerBuilder) initializeHandlers(container *FlexibleContainer) err
 // Métodos de inicialização específicos (implementação placeholder)
 func (cb *ContainerBuilder) initDatabase(container *FlexibleContainer) error {
 	cb.logger.Debug("Initializing database")
-	// TODO: Implementar inicialização de database
+	// Implementar inicialização de database
+	if builder.features[FeatureDatabase] {
+		db, err := initializeDatabase(builder.config)
+		if err != nil {
+			builder.logger.Error("Failed to initialize database", "error", err)
+		} else {
+			container.SetDatabase(db)
+			builder.logger.Info("Database initialized successfully")
+		}
+	}
 	return nil
 }
 
 func (cb *ContainerBuilder) initCache(container *FlexibleContainer) error {
 	cb.logger.Debug("Initializing cache")
-	// TODO: Implementar inicialização de cache
+	// Implementar inicialização de cache
+	if builder.features[FeatureRedis] {
+		cache, err := initializeCache(builder.config)
+		if err != nil {
+			builder.logger.Error("Failed to initialize cache", "error", err)
+		} else {
+			container.SetCache(cache)
+			builder.logger.Info("Cache initialized successfully")
+		}
+	}
 	return nil
 }
 
 func (cb *ContainerBuilder) initMonitoring(container *FlexibleContainer) error {
 	cb.logger.Debug("Initializing monitoring")
-	// TODO: Implementar inicialização de monitoring
+	// Implementar inicialização de monitoring
+	if builder.features[FeatureMonitoring] {
+		monitor, err := initializeMonitoring(builder.config)
+		if err != nil {
+			builder.logger.Error("Failed to initialize monitoring", "error", err)
+		} else {
+			container.SetMonitoring(monitor)
+			builder.logger.Info("Monitoring initialized successfully")
+		}
+	}
 	return nil
 }
 
 func (cb *ContainerBuilder) initEventSystem(container *FlexibleContainer) error {
 	cb.logger.Debug("Initializing event system")
-	// TODO: Implementar inicialização de event system
+	// Implementar inicialização de event system
+	if builder.features[FeaturePipeline] {
+		eventBus, err := initializeEventSystem(builder.config)
+		if err != nil {
+			builder.logger.Error("Failed to initialize event system", "error", err)
+		} else {
+			container.SetEventBus(eventBus)
+			builder.logger.Info("Event system initialized successfully")
+		}
+	}
 	return nil
 }
 
 func (cb *ContainerBuilder) initRepositories(container *FlexibleContainer) error {
 	cb.logger.Debug("Initializing repositories")
-	// TODO: Implementar inicialização de repositories
+	// Implementar inicialização de repositories
+	if builder.features[FeatureAdvancedDB] {
+		repos, err := initializeRepositories(builder.config, container)
+		if err != nil {
+			builder.logger.Error("Failed to initialize repositories", "error", err)
+		} else {
+			container.SetRepositories(repos)
+			builder.logger.Info("Repositories initialized successfully")
+		}
+	}
 	return nil
 }
 

@@ -1,3 +1,7 @@
 [ldap-core-shared-cACBB_Ip]
 minor = "3.13"
 patch = "3.13.3"
+
+[flext-target-oracle-Y3PGgkda]
+minor = "3.13"
+patch = "3.13.3"
