@@ -59,7 +59,7 @@ These scripts are preserved for reference but should no longer be used.
 # Old: python achieve_100_percent_compliance.py
 ./flx quality compliance --target 100
 
-# Old: python fix_all_quality_issues.py  
+# Old: python fix_all_quality_issues.py
 ./flx quality check --auto-fix
 
 # Old: python fix_mypy_issues.py
@@ -90,7 +90,7 @@ These scripts are preserved for reference but should no longer be used.
 
 - `01_quality_management/` - Scripts for code quality, linting, fixing
 - `02_migration_operations/` - Data migration and transformation scripts
-- `03_temporary_scripts/` - Temporary/experimental scripts  
+- `03_temporary_scripts/` - Temporary/experimental scripts
 - `04_test_scripts/` - Test and validation scripts
 - `05_analysis_reporting/` - Analysis and reporting scripts
 
@@ -181,7 +181,7 @@ echo "  {backup_path}"
 echo ""
 echo "Available categories:"
 echo "  1) Quality Management Scripts ({moved_counts.get('quality_scripts', 0)} files)"
-echo "  2) Migration Operations Scripts ({moved_counts.get('migration_scripts', 0)} files)"  
+echo "  2) Migration Operations Scripts ({moved_counts.get('migration_scripts', 0)} files)"
 echo "  3) Temporary Scripts ({moved_counts.get('temp_scripts', 0)} files)"
 echo "  4) Test Scripts ({moved_counts.get('test_scripts', 0)} files)"
 echo "  5) Analysis Scripts ({moved_counts.get('analysis_scripts', 0)} files)"
