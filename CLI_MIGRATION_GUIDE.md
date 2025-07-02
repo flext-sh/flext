@@ -122,16 +122,16 @@ flxt/                          # Support modules
 ```python
 class QualityManager:
     """Unified quality management to replace scattered scripts."""
-    
+
     def check_all(self) -> Dict[str, int]:
         """Get comprehensive quality metrics."""
-    
+
     def auto_fix(self, violations: List[Dict]) -> int:
         """Auto-fix violations when possible."""
 
 class ComplianceManager:
     """Systematic compliance improvement."""
-    
+
     def achieve_compliance(self, target: float):
         """Apply proven 'formiguinha' methodology."""
 ```
@@ -141,13 +141,13 @@ class ComplianceManager:
 ```python
 class client-aMigration(BaseMigration):
     """client-a OUD migration - replaces all client-a scripts."""
-    
+
     def execute(self):
         """Execute complete client-a migration pipeline."""
 
-class client-bMigration(BaseMigration): 
+class client-bMigration(BaseMigration):
     """client-b migration - replaces client-b scripts."""
-    
+
     def execute(self):
         """Execute client-b migration pipeline."""
 ```

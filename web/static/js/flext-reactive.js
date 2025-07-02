@@ -7,20 +7,20 @@ const chartInstances = new Map();
 function chart(chartId, chartType) {
     return {
         chart: null,
-        
+
         initChart() {
             const ctx = document.getElementById(chartId);
             if (!ctx) return;
-            
+
             // Create chart based on type
             const config = this.getChartConfig(chartType);
             this.chart = new Chart(ctx, config);
             chartInstances.set(chartId, this.chart);
-            
+
             // Load initial data
             this.loadChartData();
         },
-        
+
         getChartConfig(type) {
             const baseConfig = {
                 responsive: true,
@@ -31,7 +31,7 @@ function chart(chartId, chartType) {
                     }
                 }
             };
-            
+
             switch (type) {
                 case 'doughnut':
                     return {
@@ -69,7 +69,7 @@ function chart(chartId, chartType) {
                     };
             }
         },
-        
+
         async loadChartData() {
             try {
                 const response = await fetch(`/api/charts/${chartId}/data`);
@@ -81,7 +81,7 @@ function chart(chartId, chartType) {
                 console.error('Error loading chart data:', error);
             }
         },
-        
+
         updateChart(data) {
             if (this.chart) {
                 this.chart.data = data;
@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
-    
+
     document.body.addEventListener('htmx:afterRequest', function(evt) {
         const target = evt.target;
         if (target.hasAttribute('hx-indicator')) {
@@ -128,19 +128,19 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
-    
+
     // Add error handling
     document.body.addEventListener('htmx:responseError', function(evt) {
         showNotification('Error loading data. Please try again.', 'error');
     });
-    
+
     // Add success notifications
     document.body.addEventListener('htmx:afterSwap', function(evt) {
         // Add smooth transitions to new content
         const newContent = evt.target;
         newContent.style.opacity = '0';
         newContent.style.transform = 'translateY(10px)';
-        
+
         requestAnimationFrame(() => {
             newContent.style.transition = 'all 0.3s ease';
             newContent.style.opacity = '1';
@@ -155,14 +155,14 @@ document.addEventListener('DOMContentLoaded', function() {
 function showNotification(message, type = 'info') {
     const notification = document.createElement('div');
     notification.className = `fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg transition-all duration-300 transform translate-x-full`;
-    
+
     const colors = {
         info: 'bg-blue-500 text-white',
         success: 'bg-green-500 text-white',
         warning: 'bg-yellow-500 text-black',
         error: 'bg-red-500 text-white'
     };
-    
+
     notification.className += ` ${colors[type] || colors.info}`;
     notification.innerHTML = `
         <div class="flex items-center">
@@ -170,14 +170,14 @@ function showNotification(message, type = 'info') {
             <button class="ml-4 text-lg" onclick="this.parentElement.parentElement.remove()">&times;</button>
         </div>
     `;
-    
+
     document.body.appendChild(notification);
-    
+
     // Slide in
     requestAnimationFrame(() => {
         notification.style.transform = 'translateX(0)';
     });
-    
+
     // Auto remove after 5 seconds
     setTimeout(() => {
         notification.style.transform = 'translateX(full)';
@@ -195,13 +195,13 @@ function dashboard() {
             systemStatus: 'checking'
         },
         loading: true,
-        
+
         init() {
             this.loadStats();
             // Auto-refresh every 30 seconds
             setInterval(() => this.loadStats(), 30000);
         },
-        
+
         async loadStats() {
             try {
                 this.loading = true;
@@ -225,11 +225,11 @@ function form(action, method) {
     return {
         submitting: false,
         errors: {},
-        
+
         async submit(formData) {
             this.submitting = true;
             this.errors = {};
-            
+
             try {
                 const response = await fetch(action, {
                     method: method.toUpperCase(),
@@ -238,7 +238,7 @@ function form(action, method) {
                     },
                     body: JSON.stringify(formData)
                 });
-                
+
                 if (response.ok) {
                     showNotification('Operation completed successfully!', 'success');
                     this.$dispatch('form-success', { response });
@@ -267,28 +267,28 @@ function monitor() {
             uptime: '0d 0h 0m'
         },
         alerts: [],
-        
+
         init() {
             this.startMonitoring();
         },
-        
+
         startMonitoring() {
             // Simulate real-time data
             setInterval(() => {
                 this.updateMetrics();
             }, 5000);
         },
-        
+
         updateMetrics() {
             // Simulate fluctuating metrics
             this.metrics.cpu = Math.floor(Math.random() * 100);
             this.metrics.memory = Math.floor(Math.random() * 100);
             this.metrics.connections = Math.floor(Math.random() * 50);
-            
+
             // Check for alerts
             this.checkAlerts();
         },
-        
+
         checkAlerts() {
             if (this.metrics.cpu > 90) {
                 this.addAlert('High CPU usage detected', 'warning');
@@ -297,7 +297,7 @@ function monitor() {
                 this.addAlert('High memory usage detected', 'warning');
             }
         },
-        
+
         addAlert(message, type) {
             const alert = {
                 id: Date.now(),
@@ -305,13 +305,13 @@ function monitor() {
                 type,
                 timestamp: new Date().toLocaleTimeString()
             };
-            
+
             this.alerts.unshift(alert);
             // Keep only last 10 alerts
             if (this.alerts.length > 10) {
                 this.alerts = this.alerts.slice(0, 10);
             }
-            
+
             showNotification(message, type);
         }
     }
@@ -330,7 +330,7 @@ function registerPlugin() {
 
 function runDiagnostics() {
     showNotification('Running system diagnostics...', 'info');
-    
+
     // Simulate diagnostics
     setTimeout(() => {
         fetch('/health')
