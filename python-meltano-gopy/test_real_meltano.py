@@ -18,15 +18,13 @@ def test_meltano_integration():
     with tempfile.TemporaryDirectory() as temp_dir:
         project_dir = Path(temp_dir) / "test_meltano_project"
 
-
         # Test 1: Create Meltano project
-        result = subprocess.run([
-            "meltano", "init", str(project_dir)
-        ], capture_output=True, text=True)
+        result = subprocess.run(
+            ["meltano", "init", str(project_dir)], capture_output=True, text=True
+        )
 
         if result.returncode != 0:
             return False
-
 
         # Change to project directory
         original_cwd = os.getcwd()
@@ -34,9 +32,11 @@ def test_meltano_integration():
 
         try:
             # Test 2: Add a tap (data source)
-            result = subprocess.run([
-                "meltano", "add", "extractor", "tap-csv"
-            ], capture_output=True, text=True)
+            result = subprocess.run(
+                ["meltano", "add", "extractor", "tap-csv"],
+                capture_output=True,
+                text=True,
+            )
 
             if result.returncode != 0:
                 pass
@@ -44,9 +44,11 @@ def test_meltano_integration():
                 pass
 
             # Test 3: List extractors
-            result = subprocess.run([
-                "meltano", "invoke", "tap-csv", "--help"
-            ], capture_output=True, text=True)
+            result = subprocess.run(
+                ["meltano", "invoke", "tap-csv", "--help"],
+                capture_output=True,
+                text=True,
+            )
 
             if result.returncode == 0:
                 pass
@@ -54,9 +56,9 @@ def test_meltano_integration():
                 pass
 
             # Test 4: Check Meltano status
-            result = subprocess.run([
-                "meltano", "config", "list"
-            ], capture_output=True, text=True)
+            result = subprocess.run(
+                ["meltano", "config", "list"], capture_output=True, text=True
+            )
 
             if result.returncode == 0:
                 pass
@@ -67,6 +69,7 @@ def test_meltano_integration():
             os.chdir(original_cwd)
 
     return True
+
 
 def test_gopy_meltano_bridge():
     """Test calling Meltano functions via HTTP bridge"""
@@ -118,8 +121,8 @@ def test_gopy_meltano_bridge():
     except Exception:
         return False
 
-if __name__ == "__main__":
 
+if __name__ == "__main__":
     # Test 1: Real Meltano operations
     meltano_success = test_meltano_integration()
 

@@ -37,10 +37,10 @@ if TYPE_CHECKING:
 class LogLevel(IntEnum):
     """5-Level logging system with TRACE as primary focus."""
 
-    TRACE = 5      # Maximum detail - 60% of operations
-    DEBUG = 10     # Debug information - 20% of operations
-    INFO = 20      # Normal operations - 15% of operations
-    WARNING = 30   # Warning conditions - 4% of operations
+    TRACE = 5  # Maximum detail - 60% of operations
+    DEBUG = 10  # Debug information - 20% of operations
+    INFO = 20  # Normal operations - 15% of operations
+    WARNING = 30  # Warning conditions - 4% of operations
     CRITICAL = 50  # Critical errors - 1% of operations
 
 
@@ -122,7 +122,9 @@ class EnterpriseFormatter(logging.Formatter):
             return self._format_trace(record, timestamp, module_name)
         return self._format_standard(record, timestamp, module_name)
 
-    def _format_trace(self, record: logging.LogRecord, timestamp: str, module: str) -> str:
+    def _format_trace(
+        self, record: logging.LogRecord, timestamp: str, module: str
+    ) -> str:
         """Format TRACE level with maximum detail."""
         # Base format
         base = f"[{timestamp}] TRACE | {module}:{record.funcName}:{record.lineno}"
@@ -148,18 +150,24 @@ class EnterpriseFormatter(logging.Formatter):
                 context_parts.append(f"time={trace_context.timing_ms:.2f}ms")
 
             if trace_context.params:
-                param_str = " ".join(f"{k}={v}" for k, v in trace_context.params.items())
+                param_str = " ".join(
+                    f"{k}={v}" for k, v in trace_context.params.items()
+                )
                 context_parts.append(f"params=[{param_str}]")
 
             if trace_context.variables:
-                var_str = " ".join(f"{k}={v}" for k, v in trace_context.variables.items())
+                var_str = " ".join(
+                    f"{k}={v}" for k, v in trace_context.variables.items()
+                )
                 context_parts.append(f"vars=[{var_str}]")
 
             context = " | ".join(context_parts)
             return f"{base} | {record.getMessage()} | {context}"
         return f"{base} | {record.getMessage()}"
 
-    def _format_standard(self, record: logging.LogRecord, timestamp: str, module: str) -> str:
+    def _format_standard(
+        self, record: logging.LogRecord, timestamp: str, module: str
+    ) -> str:
         """Format standard log levels."""
         level_name = record.levelname
         message = record.getMessage()
@@ -167,6 +175,7 @@ class EnterpriseFormatter(logging.Formatter):
         # Add exception info if present
         if record.exc_info:
             import traceback
+
             exc_text = "\n" + "".join(traceback.format_exception(*record.exc_info))
             message += exc_text
 
@@ -236,7 +245,7 @@ class EnterpriseLogger:
                     file_path,
                     maxBytes=config.max_file_size,
                     backupCount=config.backup_count,
-                    encoding="utf-8"
+                    encoding="utf-8",
                 )
                 file_handler.setLevel(config.level)
                 file_handler.setFormatter(formatter)
@@ -303,10 +312,12 @@ class EnterpriseLogger:
                     context.variables.update(variables)
 
             # Add correlation context
-            context.metadata.update({
-                "correlation_id": self._correlation_id.get(),
-                "request_id": self._request_id.get(),
-            })
+            context.metadata.update(
+                {
+                    "correlation_id": self._correlation_id.get(),
+                    "request_id": self._request_id.get(),
+                }
+            )
 
             record = self.logger.makeRecord(
                 name=self.name,
@@ -316,7 +327,7 @@ class EnterpriseLogger:
                 msg=message,
                 args=(),
                 exc_info=None,
-                extra={"trace_context": context, **kwargs}
+                extra={"trace_context": context, **kwargs},
             )
             self.logger.handle(record)
 
@@ -327,13 +338,11 @@ class EnterpriseLogger:
             if frame and frame.f_back:
                 func_name = frame.f_back.f_code.co_name
 
-        self.trace(
-            f"ENTER {func_name}",
-            operation=f"enter_{func_name}",
-            params=params
-        )
+        self.trace(f"ENTER {func_name}", operation=f"enter_{func_name}", params=params)
 
-    def trace_function_exit(self, func_name: str | None = None, return_value: Any = None) -> None:
+    def trace_function_exit(
+        self, func_name: str | None = None, return_value: Any = None
+    ) -> None:
         """Trace function exit with return value."""
         if func_name is None:
             frame = inspect.currentframe()
@@ -345,9 +354,7 @@ class EnterpriseLogger:
             variables["return_value"] = str(return_value)
 
         self.trace(
-            f"EXIT {func_name}",
-            operation=f"exit_{func_name}",
-            variables=variables
+            f"EXIT {func_name}", operation=f"exit_{func_name}", variables=variables
         )
 
     def trace_sql(
@@ -363,7 +370,7 @@ class EnterpriseLogger:
             sql_query=sql,
             connection_id=connection_id,
             timing_ms=timing_ms,
-            params=params or {}
+            params=params or {},
         )
         self.trace("SQL execution", context)
 
@@ -392,7 +399,9 @@ class EnterpriseLogger:
         self._operation_timers[operation] = time.perf_counter()
         self.trace(f"Operation started: {operation}", operation=f"start_{operation}")
 
-    def end_operation(self, operation: str, success: bool = True, **metadata: Any) -> None:
+    def end_operation(
+        self, operation: str, success: bool = True, **metadata: Any
+    ) -> None:
         """End timing an operation and log duration."""
         if operation in self._operation_timers:
             duration = time.perf_counter() - self._operation_timers[operation]
@@ -404,7 +413,7 @@ class EnterpriseLogger:
                 f"Operation {status}: {operation}",
                 operation=f"end_{operation}",
                 variables={"duration_ms": duration_ms, "status": status},
-                **metadata
+                **metadata,
             )
         else:
             self.warning(f"Operation {operation} was not started or already ended")
@@ -445,13 +454,17 @@ class TraceOperationContext:
                 self.logger.trace(
                     f"Completed operation: {self.operation_name}",
                     operation=self.operation_name,
-                    variables={"duration_ms": duration_ms, "status": "success"}
+                    variables={"duration_ms": duration_ms, "status": "success"},
                 )
             else:
                 self.logger.trace(
                     f"Failed operation: {self.operation_name}",
                     operation=self.operation_name,
-                    variables={"duration_ms": duration_ms, "status": "error", "error": str(exc_val)}
+                    variables={
+                        "duration_ms": duration_ms,
+                        "status": "error",
+                        "error": str(exc_val),
+                    },
                 )
 
 
