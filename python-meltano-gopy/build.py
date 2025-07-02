@@ -5,6 +5,10 @@
 
 from pybindgen import Function, Module, param, retval
 
+"""Build module.
+
+This module provides build functionality.
+"""
 
 class CheckedFunction(Function):
     def __init__(self, *a, **kw):

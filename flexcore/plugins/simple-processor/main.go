@@ -3,6 +3,7 @@ package main
 
 import (
 	"context"
+	"encoding/gob"
 	"encoding/json"
 	"log"
 	"net/rpc"
@@ -11,6 +12,26 @@ import (
 
 	"github.com/hashicorp/go-plugin"
 )
+
+// init registers types for gob encoding/decoding
+func init() {
+	// Register types for RPC serialization
+	gob.Register(map[string]interface{}{})
+	gob.Register([]interface{}{})
+	gob.Register([]map[string]interface{}{})
+	
+	// Register primitive types
+	gob.Register(string(""))
+	gob.Register(int(0))
+	gob.Register(int64(0))
+	gob.Register(float64(0))
+	gob.Register(bool(false))
+	gob.Register(time.Time{})
+	
+	// Register plugin types
+	gob.Register(PluginInfo{})
+	gob.Register(ProcessingStats{})
+}
 
 // SimpleProcessor implements a basic data processing plugin
 type SimpleProcessor struct {
@@ -94,7 +115,7 @@ func (sp *SimpleProcessor) Execute(ctx context.Context, input map[string]interfa
 		"records_processed":   sp.stats.RecordsProcessed,
 		"records_filtered":    sp.stats.RecordsFiltered,
 		"processing_time_ms":  sp.stats.ProcessingTimeMs,
-		"last_processed_at":   sp.stats.LastProcessedAt,
+		"last_processed_at":   sp.stats.LastProcessedAt.Unix(),
 	}
 
 	sp.stats.RecordsProcessed++

@@ -18,15 +18,13 @@ def test_meltano_cli_operations():
     with tempfile.TemporaryDirectory() as temp_dir:
         project_dir = Path(temp_dir) / "cli_test_project"
 
-
         # Test 1: Create Meltano project
-        result = subprocess.run([
-            "meltano", "init", str(project_dir)
-        ], capture_output=True, text=True)
+        result = subprocess.run(
+            ["meltano", "init", str(project_dir)], capture_output=True, text=True
+        )
 
         if result.returncode != 0:
             return False
-
 
         # Change to project directory
         original_cwd = os.getcwd()
@@ -34,9 +32,11 @@ def test_meltano_cli_operations():
 
         try:
             # Test 2: Add tap-csv
-            result = subprocess.run([
-                "meltano", "add", "extractor", "tap-csv"
-            ], capture_output=True, text=True)
+            result = subprocess.run(
+                ["meltano", "add", "extractor", "tap-csv"],
+                capture_output=True,
+                text=True,
+            )
 
             if result.returncode == 0:
                 pass
@@ -44,12 +44,12 @@ def test_meltano_cli_operations():
                 pass
 
             # Test 3: Check project status
-            result = subprocess.run([
-                "meltano", "config", "list"
-            ], capture_output=True, text=True)
+            result = subprocess.run(
+                ["meltano", "config", "list"], capture_output=True, text=True
+            )
 
             if result.returncode == 0:
-                result.stdout.strip().split('\n')
+                result.stdout.strip().split("\n")
             else:
                 pass
 
@@ -57,6 +57,7 @@ def test_meltano_cli_operations():
             os.chdir(original_cwd)
 
     return True
+
 
 def test_python_go_http_bridge():
     """Test Python-Go HTTP bridge integration"""
@@ -70,7 +71,6 @@ def test_python_go_http_bridge():
         # Test server availability (expecting server not running)
         healthy = client.health_check()
         if healthy:
-
             # Test all endpoints
             client.check_meltano_available()
 
@@ -107,6 +107,7 @@ def test_python_go_http_bridge():
     except Exception:
         return False
 
+
 def test_python_compatibility_functions():
     """Test compatibility functions for gopy replacement"""
 
@@ -140,6 +141,7 @@ def test_python_compatibility_functions():
     except Exception:
         return False
 
+
 def test_integration_architecture():
     """Test the overall integration architecture"""
 
@@ -150,7 +152,7 @@ def test_integration_architecture():
     required_files = [
         "meltano_http_client.py",
         "test_real_meltano.py",
-        "test_complete_integration.py"
+        "test_complete_integration.py",
     ]
 
     for file in required_files:
@@ -165,10 +167,9 @@ def test_integration_architecture():
         import meltano_http_client
 
         # Check key classes and functions
-        assert hasattr(meltano_http_client, 'MeltanoHTTPClient')
-        assert hasattr(meltano_http_client, 'CheckMeltanoAvailable')
-        assert hasattr(meltano_http_client, 'GetMeltanoVersion')
-
+        assert hasattr(meltano_http_client, "MeltanoHTTPClient")
+        assert hasattr(meltano_http_client, "CheckMeltanoAvailable")
+        assert hasattr(meltano_http_client, "GetMeltanoVersion")
 
     except Exception:
         return False
@@ -179,8 +180,13 @@ def test_integration_architecture():
 
     # Check that client has all required methods
     required_methods = [
-        'check_meltano_available', 'get_meltano_version', 'create_project',
-        'add_plugin', 'run_pipeline', 'execute_command', 'health_check'
+        "check_meltano_available",
+        "get_meltano_version",
+        "create_project",
+        "add_plugin",
+        "run_pipeline",
+        "execute_command",
+        "health_check",
     ]
 
     for method in required_methods:
@@ -192,22 +198,23 @@ def test_integration_architecture():
     client.close()
     return True
 
+
 def run_comprehensive_test():
     """Run all integration tests"""
 
     test_results = {}
 
     # Test 1: Meltano CLI Operations
-    test_results['meltano_cli'] = test_meltano_cli_operations()
+    test_results["meltano_cli"] = test_meltano_cli_operations()
 
     # Test 2: Python-Go HTTP Bridge
-    test_results['http_bridge'] = test_python_go_http_bridge()
+    test_results["http_bridge"] = test_python_go_http_bridge()
 
     # Test 3: Compatibility Functions
-    test_results['compatibility'] = test_python_compatibility_functions()
+    test_results["compatibility"] = test_python_compatibility_functions()
 
     # Test 4: Integration Architecture
-    test_results['architecture'] = test_integration_architecture()
+    test_results["architecture"] = test_integration_architecture()
 
     # Results Summary
 
@@ -217,10 +224,10 @@ def run_comprehensive_test():
     total_tests = len(test_results)
     passed_tests = sum(test_results.values())
 
-
     if passed_tests == total_tests:
         return True
     return False
+
 
 if __name__ == "__main__":
     success = run_comprehensive_test()
