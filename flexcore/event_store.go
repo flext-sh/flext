@@ -94,7 +94,7 @@ func (es *EventStore) createTables() error {
 		created_at DATETIME NOT NULL,
 		UNIQUE(aggregate_id, version)
 	);
-	
+
 	CREATE INDEX IF NOT EXISTS idx_events_aggregate ON events(aggregate_id, version);
 	CREATE INDEX IF NOT EXISTS idx_events_type ON events(type);
 	CREATE INDEX IF NOT EXISTS idx_events_occurred_at ON events(occurred_at);
@@ -113,7 +113,7 @@ func (es *EventStore) createTables() error {
 		data TEXT NOT NULL,
 		created_at DATETIME NOT NULL
 	);
-	
+
 	CREATE INDEX IF NOT EXISTS idx_snapshots_version ON snapshots(version);
 	`
 
@@ -450,7 +450,7 @@ func (es *EventStore) GetEventsByType(eventType string, fromTime, toTime *time.T
 
 func (es *EventStore) getCurrentVersion(aggregateID string) (int, error) {
 	query := `SELECT COALESCE(MAX(version), 0) FROM events WHERE aggregate_id = ?`
-	
+
 	var version int
 	err := es.db.QueryRow(query, aggregateID).Scan(&version)
 	if err != nil {
@@ -493,9 +493,9 @@ func (es *EventStore) GetStats() (map[string]interface{}, error) {
 
 	// Count events by type
 	eventTypeQuery := `
-	SELECT type, COUNT(*) 
-	FROM events 
-	GROUP BY type 
+	SELECT type, COUNT(*)
+	FROM events
+	GROUP BY type
 	ORDER BY COUNT(*) DESC
 	`
 	rows, err := es.db.Query(eventTypeQuery)

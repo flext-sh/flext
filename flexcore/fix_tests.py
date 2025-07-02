@@ -6,6 +6,7 @@ import re
 This module provides fix_tests functionality.
 """
 
+
 def fix_pipeline_tests(content):
     # Fix all err := pipeline.AddStep to res := pipeline.AddStep
     content = re.sub(

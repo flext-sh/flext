@@ -22,7 +22,7 @@ func init() {
 	gob.Register(map[string]interface{}{})
 	gob.Register([]interface{}{})
 	gob.Register([]map[string]interface{}{})
-	
+
 	// Register primitive types
 	gob.Register(string(""))
 	gob.Register(int(0))
@@ -30,7 +30,7 @@ func init() {
 	gob.Register(float64(0))
 	gob.Register(bool(false))
 	gob.Register(time.Time{})
-	
+
 	// Register plugin types
 	gob.Register(PluginInfo{})
 	gob.Register(ProcessingStats{})
@@ -73,35 +73,35 @@ type DataProcessorPlugin interface {
 // Initialize the plugin with configuration
 func (pp *PostgresProcessor) Initialize(ctx context.Context, config map[string]interface{}) error {
 	log.Printf("[PostgresProcessor] Initializing with config: %+v", config)
-	
+
 	pp.config = config
 	pp.stats = ProcessingStats{}
-	
+
 	// Try to connect to PostgreSQL if config provided
 	if host, ok := config["postgres_host"].(string); ok {
 		port := "5432"
 		if p, ok := config["postgres_port"].(string); ok {
 			port = p
 		}
-		
+
 		dbname := "postgres"
 		if db, ok := config["postgres_db"].(string); ok {
 			dbname = db
 		}
-		
+
 		user := "postgres"
 		if u, ok := config["postgres_user"].(string); ok {
 			user = u
 		}
-		
+
 		password := ""
 		if pw, ok := config["postgres_password"].(string); ok {
 			password = pw
 		}
-		
+
 		connStr := fmt.Sprintf("host=%s port=%s dbname=%s user=%s password=%s sslmode=disable",
 			host, port, dbname, user, password)
-		
+
 		db, err := sql.Open("postgres", connStr)
 		if err != nil {
 			log.Printf("[PostgresProcessor] Warning: PostgreSQL connection failed: %v", err)
@@ -117,7 +117,7 @@ func (pp *PostgresProcessor) Initialize(ctx context.Context, config map[string]i
 			}
 		}
 	}
-	
+
 	return nil
 }
 
@@ -199,29 +199,29 @@ func (pp *PostgresProcessor) executeQuery(ctx context.Context, query string) ([]
 	}
 
 	var results []map[string]interface{}
-	
+
 	for rows.Next() {
 		// Create a slice to hold values
 		values := make([]interface{}, len(columns))
 		valuePtrs := make([]interface{}, len(columns))
-		
+
 		for i := range values {
 			valuePtrs[i] = &values[i]
 		}
-		
+
 		if err := rows.Scan(valuePtrs...); err != nil {
 			return nil, fmt.Errorf("failed to scan row: %w", err)
 		}
-		
+
 		// Convert to map
 		rowMap := make(map[string]interface{})
 		for i, col := range columns {
 			rowMap[col] = values[i]
 		}
-		
+
 		results = append(results, rowMap)
 	}
-	
+
 	return results, nil
 }
 
@@ -245,32 +245,32 @@ func (pp *PostgresProcessor) GetInfo() PluginInfo {
 // HealthCheck verifies plugin health
 func (pp *PostgresProcessor) HealthCheck(ctx context.Context) error {
 	log.Printf("[PostgresProcessor] Health check - processed %d records", pp.stats.RecordsProcessed)
-	
+
 	// Check database connection if available
 	if pp.db != nil {
 		if err := pp.db.PingContext(ctx); err != nil {
 			log.Printf("[PostgresProcessor] Warning: Database ping failed: %v", err)
 		}
 	}
-	
+
 	return nil
 }
 
 // Cleanup releases resources
 func (pp *PostgresProcessor) Cleanup() error {
 	log.Printf("[PostgresProcessor] Cleanup called - processed %d records total", pp.stats.RecordsProcessed)
-	
+
 	if pp.db != nil {
 		pp.db.Close()
 		log.Printf("[PostgresProcessor] Database connection closed")
 	}
-	
+
 	// Save statistics to file (optional)
 	if statsFile, ok := pp.config["stats_file"].(string); ok {
 		data, _ := json.MarshalIndent(pp.stats, "", "  ")
 		os.WriteFile(statsFile, data, 0644)
 	}
-	
+
 	return nil
 }
 
@@ -278,7 +278,7 @@ func (pp *PostgresProcessor) Cleanup() error {
 
 func (pp *PostgresProcessor) processArray(data []interface{}) []interface{} {
 	processed := make([]interface{}, 0, len(data))
-	
+
 	for _, item := range data {
 		// Add metadata
 		if itemMap, ok := item.(map[string]interface{}); ok {
@@ -289,21 +289,21 @@ func (pp *PostgresProcessor) processArray(data []interface{}) []interface{} {
 			processed = append(processed, item)
 		}
 	}
-	
+
 	return processed
 }
 
 func (pp *PostgresProcessor) processMap(data map[string]interface{}) map[string]interface{} {
 	processed := make(map[string]interface{})
-	
+
 	for key, value := range data {
 		processed[key] = value
 	}
-	
+
 	// Add metadata
 	processed["_processed_at"] = time.Now().Unix()
 	processed["_processor"] = "postgres-processor"
-	
+
 	return processed
 }
 
@@ -361,21 +361,21 @@ func (PostgresProcessorPlugin) Client(b *plugin.MuxBroker, c *rpc.Client) (inter
 func main() {
 	log.SetPrefix("[postgres-processor-plugin] ")
 	log.SetFlags(log.Ldate | log.Ltime | log.Lmicroseconds)
-	
+
 	log.Println("Starting postgres processor plugin...")
-	
+
 	// Handshake configuration
 	handshakeConfig := plugin.HandshakeConfig{
 		ProtocolVersion:  1,
 		MagicCookieKey:   "FLEXCORE_PLUGIN",
 		MagicCookieValue: "flexcore-plugin-magic-cookie",
 	}
-	
+
 	// Plugin map
 	pluginMap := map[string]plugin.Plugin{
 		"flexcore": &PostgresProcessorPlugin{},
 	}
-	
+
 	// Serve the plugin
 	plugin.Serve(&plugin.ServeConfig{
 		HandshakeConfig: handshakeConfig,

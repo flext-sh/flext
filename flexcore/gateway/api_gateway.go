@@ -64,7 +64,7 @@ func (lb *LoadBalancer) NextBackend() *Backend {
 	for attempts < len(lb.backends)*2 {
 		backend := &lb.backends[lb.current]
 		lb.current = (lb.current + 1) % len(lb.backends)
-		
+
 		if backend.Healthy {
 			// Apply weight (simple implementation)
 			if attempts%backend.Weight == 0 {
@@ -73,21 +73,21 @@ func (lb *LoadBalancer) NextBackend() *Backend {
 		}
 		attempts++
 	}
-	
+
 	// Fallback to any healthy backend
 	for i := range lb.backends {
 		if lb.backends[i].Healthy {
 			return &lb.backends[i]
 		}
 	}
-	
+
 	return nil
 }
 
 func (lb *LoadBalancer) UpdateBackendHealth(id string, healthy bool) {
 	lb.mu.Lock()
 	defer lb.mu.Unlock()
-	
+
 	for i := range lb.backends {
 		if lb.backends[i].ID == id {
 			lb.backends[i].Healthy = healthy
@@ -106,7 +106,7 @@ var (
 		},
 		[]string{"backend", "method", "status"},
 	)
-	
+
 	gatewayRequestDuration = prometheus.NewHistogramVec(
 		prometheus.HistogramOpts{
 			Name: "gateway_request_duration_seconds",
@@ -114,7 +114,7 @@ var (
 		},
 		[]string{"backend", "method"},
 	)
-	
+
 	gatewayBackendsHealthy = prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
 			Name: "gateway_backends_healthy",
@@ -138,18 +138,18 @@ func NewAPIGateway(configPath string) (*APIGateway, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to read config: %w", err)
 	}
-	
+
 	var config GatewayConfig
 	if err := json.Unmarshal(configData, &config); err != nil {
 		return nil, fmt.Errorf("failed to parse config: %w", err)
 	}
-	
+
 	// Initialize load balancer
 	lb := NewLoadBalancer(config.Backends)
-	
+
 	// Register metrics
 	prometheus.MustRegister(gatewayRequestsTotal, gatewayRequestDuration, gatewayBackendsHealthy)
-	
+
 	return &APIGateway{
 		config:       &config,
 		loadBalancer: lb,
@@ -164,15 +164,15 @@ func (gw *APIGateway) validateJWT(tokenString string) (*jwt.Token, error) {
 		}
 		return gw.jwtSecret, nil
 	})
-	
+
 	if err != nil {
 		return nil, err
 	}
-	
+
 	if !token.Valid {
 		return nil, fmt.Errorf("invalid token")
 	}
-	
+
 	return token, nil
 }
 
@@ -183,7 +183,7 @@ func (gw *APIGateway) authMiddleware(next http.Handler) http.Handler {
 			next.ServeHTTP(w, r)
 			return
 		}
-		
+
 		// Extract JWT token
 		authHeader := r.Header.Get("Authorization")
 		if authHeader == "" {
@@ -195,27 +195,27 @@ func (gw *APIGateway) authMiddleware(next http.Handler) http.Handler {
 			http.Error(w, "Authorization header required", http.StatusUnauthorized)
 			return
 		}
-		
+
 		tokenString := strings.TrimPrefix(authHeader, "Bearer ")
 		token, err := gw.validateJWT(tokenString)
 		if err != nil {
 			http.Error(w, "Invalid token", http.StatusUnauthorized)
 			return
 		}
-		
+
 		// Add user info to context
 		if claims, ok := token.Claims.(jwt.MapClaims); ok {
 			ctx := context.WithValue(r.Context(), "user", claims)
 			r = r.WithContext(ctx)
 		}
-		
+
 		next.ServeHTTP(w, r)
 	})
 }
 
 func (gw *APIGateway) proxyHandler(w http.ResponseWriter, r *http.Request) {
 	startTime := time.Now()
-	
+
 	// Get next backend
 	backend := gw.loadBalancer.NextBackend()
 	if backend == nil {
@@ -223,7 +223,7 @@ func (gw *APIGateway) proxyHandler(w http.ResponseWriter, r *http.Request) {
 		gatewayRequestsTotal.WithLabelValues("none", r.Method, "503").Inc()
 		return
 	}
-	
+
 	// Parse backend URL
 	targetURL, err := url.Parse(backend.URL)
 	if err != nil {
@@ -231,16 +231,16 @@ func (gw *APIGateway) proxyHandler(w http.ResponseWriter, r *http.Request) {
 		gatewayRequestsTotal.WithLabelValues(backend.ID, r.Method, "500").Inc()
 		return
 	}
-	
+
 	// Create reverse proxy
 	proxy := httputil.NewSingleHostReverseProxy(targetURL)
-	
+
 	// Custom transport with timeout
 	proxy.Transport = &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 		DialTimeout:     time.Duration(gw.config.TimeoutSeconds) * time.Second,
 	}
-	
+
 	// Custom error handler
 	proxy.ErrorHandler = func(w http.ResponseWriter, r *http.Request, err error) {
 		log.Printf("Backend %s error: %v", backend.ID, err)
@@ -248,16 +248,16 @@ func (gw *APIGateway) proxyHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Backend unavailable", http.StatusBadGateway)
 		gatewayRequestsTotal.WithLabelValues(backend.ID, r.Method, "502").Inc()
 	}
-	
+
 	// Modify request
 	r.URL.Host = targetURL.Host
 	r.URL.Scheme = targetURL.Scheme
 	r.Header.Set("X-Forwarded-For", r.RemoteAddr)
 	r.Header.Set("X-Gateway-Backend", backend.ID)
-	
+
 	// Serve the request
 	proxy.ServeHTTP(w, r)
-	
+
 	// Record metrics
 	duration := time.Since(startTime)
 	gatewayRequestDuration.WithLabelValues(backend.ID, r.Method).Observe(duration.Seconds())
@@ -272,7 +272,7 @@ func (gw *APIGateway) healthCheckHandler(w http.ResponseWriter, r *http.Request)
 		"version": "1.0.0",
 		"backends": gw.loadBalancer.backends,
 	}
-	
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(health)
 }
@@ -284,7 +284,7 @@ func (gw *APIGateway) generateJWT(userID, role string) (string, error) {
 		"exp":     time.Now().Add(time.Hour * 24).Unix(),
 		"iat":     time.Now().Unix(),
 	}
-	
+
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString(gw.jwtSecret)
 }
@@ -294,17 +294,17 @@ func (gw *APIGateway) loginHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	
+
 	var loginReq struct {
 		Username string `json:"username"`
 		Password string `json:"password"`
 	}
-	
+
 	if err := json.NewDecoder(r.Body).Decode(&loginReq); err != nil {
 		http.Error(w, "Invalid JSON", http.StatusBadRequest)
 		return
 	}
-	
+
 	// Simple auth check (in production, use real auth service)
 	if loginReq.Username == "REDACTED_LDAP_BIND_PASSWORD" && loginReq.Password == "flexcore100" {
 		token, err := gw.generateJWT(loginReq.Username, "REDACTED_LDAP_BIND_PASSWORD")
@@ -312,7 +312,7 @@ func (gw *APIGateway) loginHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Failed to generate token", http.StatusInternalServerError)
 			return
 		}
-		
+
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(map[string]string{
 			"token": token,
@@ -327,22 +327,22 @@ func (gw *APIGateway) loginHandler(w http.ResponseWriter, r *http.Request) {
 func (gw *APIGateway) healthChecker() {
 	ticker := time.NewTicker(30 * time.Second)
 	defer ticker.Stop()
-	
+
 	for range ticker.C {
 		for _, backend := range gw.loadBalancer.backends {
 			go func(b Backend) {
 				client := &http.Client{Timeout: 5 * time.Second}
 				resp, err := client.Get(b.URL + "/health")
-				
+
 				healthy := err == nil && resp != nil && resp.StatusCode == 200
 				gw.loadBalancer.UpdateBackendHealth(b.ID, healthy)
-				
+
 				if healthy {
 					gatewayBackendsHealthy.WithLabelValues(b.ID).Set(1)
 				} else {
 					gatewayBackendsHealthy.WithLabelValues(b.ID).Set(0)
 				}
-				
+
 				if resp != nil {
 					resp.Body.Close()
 				}
@@ -353,17 +353,17 @@ func (gw *APIGateway) healthChecker() {
 
 func (gw *APIGateway) setupRoutes() {
 	mux := http.NewServeMux()
-	
+
 	// Auth endpoints
 	mux.HandleFunc("/auth/login", gw.loginHandler)
-	
+
 	// Health and metrics
 	mux.HandleFunc("/health", gw.healthCheckHandler)
 	mux.Handle("/metrics", promhttp.Handler())
-	
+
 	// Protected proxy endpoints
 	mux.Handle("/", gw.authMiddleware(http.HandlerFunc(gw.proxyHandler)))
-	
+
 	gw.server = &http.Server{
 		Addr:    ":" + gw.config.Port,
 		Handler: mux,
@@ -372,16 +372,16 @@ func (gw *APIGateway) setupRoutes() {
 
 func (gw *APIGateway) Start() error {
 	gw.setupRoutes()
-	
+
 	// Start health checker
 	go gw.healthChecker()
-	
+
 	log.Printf("🌐 FlexCore API Gateway starting on port %s", gw.config.Port)
 	log.Println("🔐 Auth endpoint: /auth/login")
 	log.Println("🩺 Health check: /health")
 	log.Println("📊 Metrics: /metrics")
 	log.Printf("🔄 Load balancing %d backends", len(gw.config.Backends))
-	
+
 	return gw.server.ListenAndServe()
 }
 
@@ -398,30 +398,30 @@ func main() {
 	fmt.Println("🩺 Health checking")
 	fmt.Println("📊 Prometheus metrics")
 	fmt.Println()
-	
+
 	gateway, err := NewAPIGateway("gateway_config.json")
 	if err != nil {
 		log.Fatalf("Failed to create gateway: %v", err)
 	}
-	
+
 	// Handle graceful shutdown
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
-	
+
 	go func() {
 		if err := gateway.Start(); err != nil && err != http.ErrServerClosed {
 			log.Fatalf("Gateway failed: %v", err)
 		}
 	}()
-	
+
 	<-sigChan
-	
+
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	
+
 	if err := gateway.Stop(ctx); err != nil {
 		log.Printf("Gateway shutdown error: %v", err)
 	}
-	
+
 	fmt.Println("🏁 API Gateway shutdown complete")
 }

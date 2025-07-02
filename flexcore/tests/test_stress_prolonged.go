@@ -39,7 +39,7 @@ func main() {
 
 	// Test 1: Setup sistemas
 	fmt.Println("\n1. ⚙️ Configurando sistemas para stress test...")
-	
+
 	config := &core.FlexCoreConfig{
 		ClusterName:       "stress-test-cluster",
 		NodeID:           "stress-test-node",
@@ -64,40 +64,40 @@ func main() {
 		Timeout:   30 * time.Second,
 	}
 	windmillClient := windmill.NewClient(windmillConfig)
-	
+
 	messageQueue := core.NewDistributedMessageQueue(windmillClient, config)
 	scheduler := core.NewDistributedScheduler(windmillClient, config)
 
 	ctx, cancel := context.WithTimeout(context.Background(), testDuration+2*time.Minute)
 	defer cancel()
-	
+
 	// Start systems
 	if err := messageQueue.Start(ctx); err != nil {
 		log.Fatalf("❌ Erro ao iniciar message queue: %v", err)
 	}
-	
+
 	startResult := scheduler.Start(ctx)
 	if startResult.IsFailure() {
 		log.Printf("⚠️ Scheduler em modo fallback: %v", startResult.Error())
 	}
-	
+
 	fmt.Println("✅ Sistemas iniciados para stress test")
 
 	// Test 2: Stress test producer
 	fmt.Println("\n2. 🚀 Iniciando STRESS TEST PROLONGADO...")
-	
+
 	var wg sync.WaitGroup
 	stopChan := make(chan bool)
-	
+
 	// Produtores de mensagens
 	for w := 0; w < workerCount; w++ {
 		wg.Add(1)
 		go func(workerID int) {
 			defer wg.Done()
-			
+
 			ticker := time.NewTicker(time.Second / time.Duration(messagesPerSec/workerCount))
 			defer ticker.Stop()
-			
+
 			messageCount := 0
 			for {
 				select {
@@ -118,14 +118,14 @@ func main() {
 						CreatedAt:   time.Now(),
 						MaxAttempts: 3,
 					}
-					
+
 					sendResult := messageQueue.SendMessage(ctx, "stress-queue", message)
 					if sendResult.IsSuccess() {
 						atomic.AddInt64(&messagesSent, 1)
 					} else {
 						atomic.AddInt64(&errorsCount, 1)
 					}
-					
+
 					messageCount++
 				}
 			}
@@ -137,7 +137,7 @@ func main() {
 		wg.Add(1)
 		go func(consumerID int) {
 			defer wg.Done()
-			
+
 			for {
 				select {
 				case <-stopChan:
@@ -150,7 +150,7 @@ func main() {
 					} else {
 						atomic.AddInt64(&errorsCount, 1)
 					}
-					
+
 					// Pequeno delay para não sobrecarregar
 					time.Sleep(10 * time.Millisecond)
 				}
@@ -162,7 +162,7 @@ func main() {
 	go func() {
 		ticker := time.NewTicker(30 * time.Second)
 		defer ticker.Stop()
-		
+
 		for {
 			select {
 			case <-stopChan:
@@ -172,11 +172,11 @@ func main() {
 				sent := atomic.LoadInt64(&messagesSent)
 				received := atomic.LoadInt64(&messagesReceived)
 				errors := atomic.LoadInt64(&errorsCount)
-				
+
 				fmt.Printf("📊 PROGRESSO [%v]: Enviadas=%d, Recebidas=%d, Erros=%d, Taxa=%.1f/s\n",
-					elapsed.Round(time.Second), sent, received, errors, 
+					elapsed.Round(time.Second), sent, received, errors,
 					float64(sent)/elapsed.Seconds())
-				
+
 				// Verificar métricas do sistema
 				metrics := messageQueue.GetMetrics()
 				fmt.Printf("   📈 Queue: Depth=%d, Delivered=%d, Expired=%d\n",
@@ -187,22 +187,22 @@ func main() {
 
 	// Test 3: Executar por tempo determinado
 	fmt.Printf("⏱️ Executando stress test por %v...\n", testDuration)
-	
+
 	timer := time.NewTimer(testDuration)
 	<-timer.C
-	
+
 	fmt.Println("\n⏱️ TEMPO ESGOTADO - Parando stress test...")
 	close(stopChan)
-	
+
 	// Aguardar workers terminarem
 	wg.Wait()
-	
+
 	// Test 4: Resultados finais
 	totalDuration := time.Since(startTime)
 	finalSent := atomic.LoadInt64(&messagesSent)
 	finalReceived := atomic.LoadInt64(&messagesReceived)
 	finalErrors := atomic.LoadInt64(&errorsCount)
-	
+
 	fmt.Println("\n📊 RESULTADOS DO STRESS TEST PROLONGADO:")
 	fmt.Printf("✅ Duração total: %v\n", totalDuration.Round(time.Second))
 	fmt.Printf("✅ Mensagens enviadas: %d\n", finalSent)
@@ -211,7 +211,7 @@ func main() {
 	fmt.Printf("✅ Taxa média de envio: %.2f msgs/seg\n", float64(finalSent)/totalDuration.Seconds())
 	fmt.Printf("✅ Taxa média de recebimento: %.2f msgs/seg\n", float64(finalReceived)/totalDuration.Seconds())
 	fmt.Printf("✅ Taxa de sucesso: %.2f%%\n", float64(finalSent-finalErrors)/float64(finalSent)*100)
-	
+
 	// Métricas finais do sistema
 	finalMetrics := messageQueue.GetMetrics()
 	fmt.Printf("✅ Métricas finais:\n")
@@ -221,14 +221,14 @@ func main() {
 
 	// Test 5: Verificar estabilidade
 	fmt.Println("\n5. 🔍 Verificando estabilidade do sistema...")
-	
+
 	if finalErrors < finalSent/100 { // Menos de 1% de erro
 		fmt.Println("✅ SISTEMA ESTÁVEL: Taxa de erro aceitável")
 	} else {
-		fmt.Printf("⚠️ SISTEMA INSTÁVEL: Taxa de erro alta: %.2f%%\n", 
+		fmt.Printf("⚠️ SISTEMA INSTÁVEL: Taxa de erro alta: %.2f%%\n",
 			float64(finalErrors)/float64(finalSent)*100)
 	}
-	
+
 	if finalMetrics.QueueDepth < 1000 { // Queue não muito cheia
 		fmt.Println("✅ QUEUE ESTÁVEL: Profundidade aceitável")
 	} else {
@@ -237,11 +237,11 @@ func main() {
 
 	// Test 6: Cleanup
 	fmt.Println("\n6. 🛑 Cleanup sistemas...")
-	
+
 	if err := messageQueue.Stop(ctx); err != nil {
 		log.Printf("⚠️ Erro ao parar message queue: %v", err)
 	}
-	
+
 	stopResult := scheduler.Stop(ctx)
 	if stopResult.IsFailure() {
 		log.Printf("⚠️ Erro ao parar scheduler: %v", stopResult.Error())

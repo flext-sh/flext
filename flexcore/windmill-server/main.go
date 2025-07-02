@@ -76,10 +76,10 @@ func NewWindmillServer() *WindmillServer {
 		workflows:  make(map[string]*WorkflowDefinition),
 		executions: make(map[string]*WorkflowExecution),
 	}
-	
+
 	// Initialize with demo workflows
 	server.initializeDemoWorkflows()
-	
+
 	return server
 }
 
@@ -169,7 +169,7 @@ func (s *WindmillServer) initializeDemoWorkflows() {
 			UpdatedAt: time.Now(),
 		},
 	}
-	
+
 	for _, workflow := range workflows {
 		s.workflows[workflow.ID] = workflow
 	}
@@ -180,14 +180,14 @@ func (s *WindmillServer) handleWorkflowsList(w http.ResponseWriter, r *http.Requ
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	
+
 	s.mu.RLock()
 	workflows := make([]*WorkflowDefinition, 0, len(s.workflows))
 	for _, workflow := range s.workflows {
 		workflows = append(workflows, workflow)
 	}
 	s.mu.RUnlock()
-	
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]interface{}{
 		"workflows": workflows,
@@ -201,57 +201,57 @@ func (s *WindmillServer) handleWorkflowDetail(w http.ResponseWriter, r *http.Req
 		http.Error(w, "Workflow ID required", http.StatusBadRequest)
 		return
 	}
-	
+
 	workflowID := parts[0]
-	
+
 	switch r.Method {
 	case http.MethodGet:
 		s.mu.RLock()
 		workflow, exists := s.workflows[workflowID]
 		s.mu.RUnlock()
-		
+
 		if !exists {
 			http.Error(w, "Workflow not found", http.StatusNotFound)
 			return
 		}
-		
+
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(workflow)
-		
+
 	case http.MethodPost, "PUT":
 		var workflow WorkflowDefinition
 		if err := json.NewDecoder(r.Body).Decode(&workflow); err != nil {
 			http.Error(w, "Invalid JSON", http.StatusBadRequest)
 			return
 		}
-		
+
 		workflow.ID = workflowID
 		workflow.UpdatedAt = time.Now()
 		if r.Method == http.MethodPost {
 			workflow.CreatedAt = time.Now()
 		}
-		
+
 		s.mu.Lock()
 		s.workflows[workflowID] = &workflow
 		s.mu.Unlock()
-		
+
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(map[string]interface{}{
 			"success": true,
 			"message": "Workflow saved successfully",
 		})
-		
+
 	case http.MethodDelete:
 		s.mu.Lock()
 		delete(s.workflows, workflowID)
 		s.mu.Unlock()
-		
+
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(map[string]interface{}{
 			"success": true,
 			"message": "Workflow deleted successfully",
 		})
-		
+
 	default:
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 	}
@@ -262,26 +262,26 @@ func (s *WindmillServer) handleWorkflowExecute(w http.ResponseWriter, r *http.Re
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	
+
 	var request struct {
 		WorkflowID string                 `json:"workflow_id"`
 		Input      map[string]interface{} `json:"input"`
 	}
-	
+
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		http.Error(w, "Invalid JSON", http.StatusBadRequest)
 		return
 	}
-	
+
 	s.mu.RLock()
 	workflow, exists := s.workflows[request.WorkflowID]
 	s.mu.RUnlock()
-	
+
 	if !exists {
 		http.Error(w, "Workflow not found", http.StatusNotFound)
 		return
 	}
-	
+
 	// Create execution
 	execution := &WorkflowExecution{
 		ID:         fmt.Sprintf("exec_%d", time.Now().Unix()),
@@ -290,14 +290,14 @@ func (s *WindmillServer) handleWorkflowExecute(w http.ResponseWriter, r *http.Re
 		Input:      request.Input,
 		StartedAt:  time.Now(),
 	}
-	
+
 	s.mu.Lock()
 	s.executions[execution.ID] = execution
 	s.mu.Unlock()
-	
+
 	// Execute workflow asynchronously
 	go s.executeWorkflow(execution, workflow)
-	
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(execution)
 }
@@ -311,12 +311,12 @@ func (s *WindmillServer) executeWorkflow(execution *WorkflowExecution, workflow 
 			execution.CompletedAt = &now
 		}
 	}()
-	
+
 	log.Printf("Executing workflow %s (execution %s)", workflow.ID, execution.ID)
-	
+
 	stepResults := make([]StepResult, 0, len(workflow.Steps))
 	workflowOutput := make(map[string]interface{})
-	
+
 	// Execute steps in order (simplified - no dependency resolution)
 	for _, step := range workflow.Steps {
 		stepResult := StepResult{
@@ -324,7 +324,7 @@ func (s *WindmillServer) executeWorkflow(execution *WorkflowExecution, workflow 
 			Status:    "running",
 			StartedAt: time.Now(),
 		}
-		
+
 		// Simulate step execution
 		switch step.Type {
 		case "script":
@@ -340,7 +340,7 @@ func (s *WindmillServer) executeWorkflow(execution *WorkflowExecution, workflow 
 					workflowOutput[k] = v
 				}
 			}
-			
+
 		case "webhook":
 			result, err := s.executeWebhook(step.Config, execution.Input)
 			if err != nil {
@@ -350,17 +350,17 @@ func (s *WindmillServer) executeWorkflow(execution *WorkflowExecution, workflow 
 				stepResult.Status = "completed"
 				stepResult.Output = result
 			}
-			
+
 		default:
 			stepResult.Status = "failed"
 			stepResult.Error = fmt.Sprintf("Unknown step type: %s", step.Type)
 		}
-		
+
 		now := time.Now()
 		stepResult.CompletedAt = &now
 		stepResult.Duration = now.Sub(stepResult.StartedAt).Milliseconds()
 		stepResults = append(stepResults, stepResult)
-		
+
 		// If step failed, fail the workflow
 		if stepResult.Status == "failed" {
 			execution.Status = "failed"
@@ -369,25 +369,25 @@ func (s *WindmillServer) executeWorkflow(execution *WorkflowExecution, workflow 
 			execution.StepResults = stepResults
 			return
 		}
-		
+
 		// Add some delay between steps
 		time.Sleep(100 * time.Millisecond)
 	}
-	
+
 	// Workflow completed successfully
 	execution.Status = "completed"
 	execution.Output = workflowOutput
 	now := time.Now()
 	execution.CompletedAt = &now
 	execution.StepResults = stepResults
-	
+
 	log.Printf("Workflow %s completed successfully (execution %s)", workflow.ID, execution.ID)
 }
 
 func (s *WindmillServer) executeScript(script string, input map[string]interface{}) (map[string]interface{}, error) {
 	// Simplified script execution - in real Windmill this would use Deno
 	log.Printf("Executing script: %s", script)
-	
+
 	// Simulate script execution result
 	result := map[string]interface{}{
 		"script_executed": true,
@@ -395,7 +395,7 @@ func (s *WindmillServer) executeScript(script string, input map[string]interface
 		"timestamp":       time.Now().Format(time.RFC3339),
 		"result":          "success",
 	}
-	
+
 	// Extract some patterns from the script for demo
 	if strings.Contains(script, "pipeline_id") {
 		if pipelineID, ok := input["pipeline_id"]; ok {
@@ -403,12 +403,12 @@ func (s *WindmillServer) executeScript(script string, input map[string]interface
 			result["valid"] = true
 		}
 	}
-	
+
 	if strings.Contains(script, "event") {
 		result["event_processed"] = true
 		result["processed_at"] = time.Now().Format(time.RFC3339)
 	}
-	
+
 	return result, nil
 }
 
@@ -417,9 +417,9 @@ func (s *WindmillServer) executeWebhook(config map[string]interface{}, input map
 	if !ok {
 		return nil, fmt.Errorf("webhook URL not specified")
 	}
-	
+
 	log.Printf("Executing webhook: %s", url)
-	
+
 	// Simulate webhook execution
 	result := map[string]interface{}{
 		"webhook_called": true,
@@ -427,7 +427,7 @@ func (s *WindmillServer) executeWebhook(config map[string]interface{}, input map
 		"status":        "success",
 		"timestamp":     time.Now().Format(time.RFC3339),
 	}
-	
+
 	return result, nil
 }
 
@@ -436,22 +436,22 @@ func (s *WindmillServer) handleExecutionStatus(w http.ResponseWriter, r *http.Re
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	
+
 	executionID := r.URL.Query().Get("execution_id")
 	if executionID == "" {
 		http.Error(w, "Execution ID required", http.StatusBadRequest)
 		return
 	}
-	
+
 	s.mu.RLock()
 	execution, exists := s.executions[executionID]
 	s.mu.RUnlock()
-	
+
 	if !exists {
 		http.Error(w, "Execution not found", http.StatusNotFound)
 		return
 	}
-	
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(execution)
 }
@@ -468,21 +468,21 @@ func (s *WindmillServer) handleHealth(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	fmt.Println("🌪️ Starting REAL Windmill Server...")
-	
+
 	server := NewWindmillServer()
-	
+
 	// Setup routes (Windmill-compatible API)
 	http.HandleFunc("/api/w/default/workflows", server.handleWorkflowsList)
 	http.HandleFunc("/api/w/default/workflows/", server.handleWorkflowDetail)
 	http.HandleFunc("/api/w/default/jobs/run", server.handleWorkflowExecute)
 	http.HandleFunc("/api/w/default/jobs/status", server.handleExecutionStatus)
 	http.HandleFunc("/health", server.handleHealth)
-	
+
 	// Also support FlexCore-style endpoints for compatibility
 	http.HandleFunc("/workflows/list", server.handleWorkflowsList)
 	http.HandleFunc("/workflows/execute", server.handleWorkflowExecute)
 	http.HandleFunc("/workflows/status", server.handleExecutionStatus)
-	
+
 	fmt.Println("🌐 Windmill server listening on :3000")
 	fmt.Println("🔗 Compatible with both Windmill API and FlexCore API")
 	log.Fatal(http.ListenAndServe(":3000", nil))

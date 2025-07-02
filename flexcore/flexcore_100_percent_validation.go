@@ -445,8 +445,8 @@ func main() {
 	fmt.Printf("Status: %s\n", report["summary"].(map[string]interface{})["status"])
 	fmt.Printf("Completion: %s\n", report["flexcore_validation"].(map[string]interface{})["completion"])
 	fmt.Printf("Specification: %s\n", report["flexcore_validation"].(map[string]interface{})["specification"])
-	fmt.Printf("Tests Passed: %d/%d\n", 
-		report["summary"].(map[string]interface{})["passed_tests"], 
+	fmt.Printf("Tests Passed: %d/%d\n",
+		report["summary"].(map[string]interface{})["passed_tests"],
 		report["summary"].(map[string]interface{})["total_tests"])
 	fmt.Printf("Confidence: %s\n", report["summary"].(map[string]interface{})["confidence"])
 

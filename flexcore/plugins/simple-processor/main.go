@@ -19,7 +19,7 @@ func init() {
 	gob.Register(map[string]interface{}{})
 	gob.Register([]interface{}{})
 	gob.Register([]map[string]interface{}{})
-	
+
 	// Register primitive types
 	gob.Register(string(""))
 	gob.Register(int(0))
@@ -27,7 +27,7 @@ func init() {
 	gob.Register(float64(0))
 	gob.Register(bool(false))
 	gob.Register(time.Time{})
-	
+
 	// Register plugin types
 	gob.Register(PluginInfo{})
 	gob.Register(ProcessingStats{})
@@ -147,13 +147,13 @@ func (sp *SimpleProcessor) HealthCheck(ctx context.Context) error {
 // Cleanup releases resources
 func (sp *SimpleProcessor) Cleanup() error {
 	log.Printf("[SimpleProcessor] Cleanup called - processed %d records total", sp.stats.RecordsProcessed)
-	
+
 	// Save stats to file (optional)
 	if statsFile, ok := sp.config["stats_file"].(string); ok {
 		data, _ := json.MarshalIndent(sp.stats, "", "  ")
 		os.WriteFile(statsFile, data, 0644)
 	}
-	
+
 	return nil
 }
 
@@ -161,7 +161,7 @@ func (sp *SimpleProcessor) Cleanup() error {
 
 func (sp *SimpleProcessor) processArray(data []interface{}) []interface{} {
 	processed := make([]interface{}, 0, len(data))
-	
+
 	for _, item := range data {
 		// Simple processing: add metadata
 		if itemMap, ok := item.(map[string]interface{}); ok {
@@ -172,21 +172,21 @@ func (sp *SimpleProcessor) processArray(data []interface{}) []interface{} {
 			processed = append(processed, item)
 		}
 	}
-	
+
 	return processed
 }
 
 func (sp *SimpleProcessor) processMap(data map[string]interface{}) map[string]interface{} {
 	processed := make(map[string]interface{})
-	
+
 	for key, value := range data {
 		processed[key] = value
 	}
-	
+
 	// Add metadata
 	processed["_processed_at"] = time.Now().Unix()
 	processed["_processor"] = "simple-processor"
-	
+
 	return processed
 }
 
@@ -244,21 +244,21 @@ func (SimpleProcessorPlugin) Client(b *plugin.MuxBroker, c *rpc.Client) (interfa
 func main() {
 	log.SetPrefix("[simple-processor-plugin] ")
 	log.SetFlags(log.Ldate | log.Ltime | log.Lmicroseconds)
-	
+
 	log.Println("Starting simple processor plugin...")
-	
+
 	// Handshake configuration
 	handshakeConfig := plugin.HandshakeConfig{
 		ProtocolVersion:  1,
 		MagicCookieKey:   "FLEXCORE_PLUGIN",
 		MagicCookieValue: "flexcore-plugin-magic-cookie",
 	}
-	
+
 	// Plugin map
 	pluginMap := map[string]plugin.Plugin{
 		"flexcore": &SimpleProcessorPlugin{},
 	}
-	
+
 	// Serve the plugin
 	plugin.Serve(&plugin.ServeConfig{
 		HandshakeConfig: handshakeConfig,

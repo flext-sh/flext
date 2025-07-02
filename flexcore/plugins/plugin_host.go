@@ -54,49 +54,49 @@ func NewPluginManager() *PluginManager {
 
 func (pm *PluginManager) DiscoverPlugins(pluginDir string) ([]string, error) {
 	var plugins []string
-	
+
 	err := filepath.Walk(pluginDir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
-		
+
 		// Check if file is executable and not a directory
 		if !info.IsDir() && info.Mode()&0111 != 0 {
 			// Additional check: try to identify if it's a plugin
-			if strings.Contains(info.Name(), "extractor") || 
-			   strings.Contains(info.Name(), "processor") || 
+			if strings.Contains(info.Name(), "extractor") ||
+			   strings.Contains(info.Name(), "processor") ||
 			   strings.Contains(info.Name(), "transformer") {
 				plugins = append(plugins, path)
 			}
 		}
 		return nil
 	})
-	
+
 	return plugins, err
 }
 
 func (pm *PluginManager) LoadPlugin(pluginPath string) error {
 	pluginName := filepath.Base(pluginPath)
-	
+
 	// Check if plugin exists and is executable
 	if _, err := os.Stat(pluginPath); os.IsNotExist(err) {
 		return fmt.Errorf("plugin %s does not exist", pluginPath)
 	}
-	
+
 	// Test if plugin responds to plugin protocol
 	cmd := exec.Command(pluginPath)
 	cmd.Env = append(os.Environ(), "PLUGIN_PROTOCOL_VERSION=1")
-	
+
 	// Try to start the plugin briefly to validate it
 	if err := cmd.Start(); err != nil {
 		return fmt.Errorf("failed to start plugin %s: %v", pluginName, err)
 	}
-	
+
 	// Kill the test process
 	if cmd.Process != nil {
 		cmd.Process.Kill()
 	}
-	
+
 	// Create plugin client configuration
 	config := &plugin.ClientConfig{
 		HandshakeConfig: plugin.HandshakeConfig{
@@ -110,7 +110,7 @@ func (pm *PluginManager) LoadPlugin(pluginPath string) error {
 		Cmd: exec.Command(pluginPath),
 		AllowedProtocols: []plugin.Protocol{plugin.ProtocolGRPC},
 	}
-	
+
 	pm.configs[pluginName] = config
 	log.Printf("✅ Plugin loaded: %s", pluginName)
 	return nil
@@ -121,20 +121,20 @@ func (pm *PluginManager) StartPlugin(pluginName string) error {
 	if !exists {
 		return fmt.Errorf("plugin %s not found", pluginName)
 	}
-	
+
 	client := plugin.NewClient(config)
 	rpcClient, err := client.Client()
 	if err != nil {
 		client.Kill()
 		return fmt.Errorf("failed to get RPC client for %s: %v", pluginName, err)
 	}
-	
+
 	// Test the connection
 	if rpcClient == nil {
 		client.Kill()
 		return fmt.Errorf("RPC client is nil for %s", pluginName)
 	}
-	
+
 	pm.plugins[pluginName] = client
 	log.Printf("🚀 Plugin started: %s", pluginName)
 	return nil
@@ -145,7 +145,7 @@ func (pm *PluginManager) StopPlugin(pluginName string) error {
 	if !exists {
 		return fmt.Errorf("plugin %s not running", pluginName)
 	}
-	
+
 	client.Kill()
 	delete(pm.plugins, pluginName)
 	log.Printf("🛑 Plugin stopped: %s", pluginName)
@@ -154,7 +154,7 @@ func (pm *PluginManager) StopPlugin(pluginName string) error {
 
 func (pm *PluginManager) ListPlugins() map[string]string {
 	result := make(map[string]string)
-	
+
 	for name, client := range pm.plugins {
 		if client.Exited() {
 			result[name] = "stopped"
@@ -162,13 +162,13 @@ func (pm *PluginManager) ListPlugins() map[string]string {
 			result[name] = "running"
 		}
 	}
-	
+
 	for name := range pm.configs {
 		if _, running := pm.plugins[name]; !running {
 			result[name] = "loaded"
 		}
 	}
-	
+
 	return result
 }
 
@@ -177,14 +177,14 @@ func (pm *PluginManager) GetPluginInfo(pluginName string) (map[string]interface{
 	if !exists {
 		return nil, fmt.Errorf("plugin %s not running", pluginName)
 	}
-	
+
 	info := map[string]interface{}{
 		"name":    pluginName,
 		"status":  "running",
 		"exited":  client.Exited(),
 		"pid":     client.ReattachConfig().Pid,
 	}
-	
+
 	return info, nil
 }
 
@@ -198,13 +198,13 @@ func (api *PluginAPI) handleDiscovery(w http.ResponseWriter, r *http.Request) {
 	if pluginDir == "" {
 		pluginDir = "./plugins"
 	}
-	
+
 	plugins, err := api.manager.DiscoverPlugins(pluginDir)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]interface{}{
 		"discovered_plugins": plugins,
@@ -218,21 +218,21 @@ func (api *PluginAPI) handleLoad(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	
+
 	var req struct {
 		PluginPath string `json:"plugin_path"`
 	}
-	
+
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, "Invalid JSON", http.StatusBadRequest)
 		return
 	}
-	
+
 	if err := api.manager.LoadPlugin(req.PluginPath); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]interface{}{
 		"success": true,
@@ -246,21 +246,21 @@ func (api *PluginAPI) handleStart(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	
+
 	var req struct {
 		PluginName string `json:"plugin_name"`
 	}
-	
+
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, "Invalid JSON", http.StatusBadRequest)
 		return
 	}
-	
+
 	if err := api.manager.StartPlugin(req.PluginName); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]interface{}{
 		"success": true,
@@ -274,21 +274,21 @@ func (api *PluginAPI) handleStop(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	
+
 	var req struct {
 		PluginName string `json:"plugin_name"`
 	}
-	
+
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, "Invalid JSON", http.StatusBadRequest)
 		return
 	}
-	
+
 	if err := api.manager.StopPlugin(req.PluginName); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]interface{}{
 		"success": true,
@@ -299,7 +299,7 @@ func (api *PluginAPI) handleStop(w http.ResponseWriter, r *http.Request) {
 
 func (api *PluginAPI) handleList(w http.ResponseWriter, r *http.Request) {
 	plugins := api.manager.ListPlugins()
-	
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]interface{}{
 		"plugins": plugins,
@@ -314,13 +314,13 @@ func (api *PluginAPI) handleInfo(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Plugin name required", http.StatusBadRequest)
 		return
 	}
-	
+
 	info, err := api.manager.GetPluginInfo(pluginName)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	}
-	
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(info)
 }
@@ -328,13 +328,13 @@ func (api *PluginAPI) handleInfo(w http.ResponseWriter, r *http.Request) {
 func (api *PluginAPI) handleHealth(w http.ResponseWriter, r *http.Request) {
 	plugins := api.manager.ListPlugins()
 	runningCount := 0
-	
+
 	for _, status := range plugins {
 		if status == "running" {
 			runningCount++
 		}
 	}
-	
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]interface{}{
 		"status": "healthy",
@@ -355,17 +355,17 @@ func main() {
 	fmt.Println("⚡ Dynamic plugin loading with gRPC communication")
 	fmt.Println("🚀 RESTful API for plugin operations")
 	fmt.Println()
-	
+
 	manager := NewPluginManager()
 	api := &PluginAPI{manager: manager}
-	
+
 	// Auto-discover plugins in current directory
 	fmt.Println("🔍 Auto-discovering plugins...")
 	pluginDir := "."
 	if len(os.Args) > 1 {
 		pluginDir = os.Args[1]
 	}
-	
+
 	plugins, err := manager.DiscoverPlugins(pluginDir)
 	if err != nil {
 		log.Printf("❌ Error discovering plugins: %v", err)
@@ -380,7 +380,7 @@ func main() {
 			}
 		}
 	}
-	
+
 	// Setup HTTP API
 	http.HandleFunc("/plugins/discover", api.handleDiscovery)
 	http.HandleFunc("/plugins/load", api.handleLoad)
@@ -389,7 +389,7 @@ func main() {
 	http.HandleFunc("/plugins/list", api.handleList)
 	http.HandleFunc("/plugins/info", api.handleInfo)
 	http.HandleFunc("/health", api.handleHealth)
-	
+
 	fmt.Println("🌐 Plugin API Server starting on :8997")
 	fmt.Println("📊 Endpoints:")
 	fmt.Println("  GET  /plugins/discover - Discover plugins")
@@ -400,6 +400,6 @@ func main() {
 	fmt.Println("  GET  /plugins/info     - Get plugin info")
 	fmt.Println("  GET  /health           - Health check")
 	fmt.Println()
-	
+
 	log.Fatal(http.ListenAndServe(":8997", nil))
 }

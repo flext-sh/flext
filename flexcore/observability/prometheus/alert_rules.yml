@@ -10,7 +10,7 @@ groups:
         annotations:
           summary: "FlexCore node {{ $labels.instance }} is down"
           description: "FlexCore cluster node has been down for more than 30 seconds"
-          
+
       - alert: HighErrorRate
         expr: rate(http_requests_total{status=~"5.."}[5m]) > 0.1
         for: 2m
@@ -19,7 +19,7 @@ groups:
         annotations:
           summary: "High error rate on {{ $labels.instance }}"
           description: "Error rate is {{ $value }} errors per second"
-          
+
       - alert: HighLatency
         expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 0.5
         for: 2m
@@ -28,7 +28,7 @@ groups:
         annotations:
           summary: "High latency on {{ $labels.instance }}"
           description: "95th percentile latency is {{ $value }}s"
-          
+
   - name: cqrs_alerts
     rules:
       - alert: CQRSCommandFailures
@@ -39,7 +39,7 @@ groups:
         annotations:
           summary: "High CQRS command failure rate"
           description: "CQRS command failure rate is {{ $value }} per second"
-          
+
       - alert: EventSourcingErrors
         expr: rate(eventsourcing_errors_total[5m]) > 0.01
         for: 1m
@@ -48,7 +48,7 @@ groups:
         annotations:
           summary: "Event sourcing errors detected"
           description: "Event sourcing error rate is {{ $value }} per second"
-          
+
   - name: windmill_alerts
     rules:
       - alert: WorkflowExecutionFailures
