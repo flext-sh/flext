@@ -70,7 +70,7 @@ func (rp *RetryPolicy) Execute(fn func() (interface{}, error)) (interface{}, err
 // ExecuteContext executes a function with retry logic and context
 func (rp *RetryPolicy) ExecuteContext(ctx context.Context, fn func(context.Context) (interface{}, error)) (interface{}, error) {
 	var lastErr error
-	
+
 	for attempt := 1; attempt <= rp.MaxAttempts; attempt++ {
 		select {
 		case <-ctx.Done():
@@ -97,7 +97,7 @@ func (rp *RetryPolicy) ExecuteContext(ctx context.Context, fn func(context.Conte
 
 		// Calculate delay with exponential backoff
 		delay := rp.calculateDelay(attempt)
-		
+
 		select {
 		case <-ctx.Done():
 			return nil, ctx.Err()
@@ -111,7 +111,7 @@ func (rp *RetryPolicy) ExecuteContext(ctx context.Context, fn func(context.Conte
 
 func (rp *RetryPolicy) calculateDelay(attempt int) time.Duration {
 	delay := float64(rp.InitialDelay) * math.Pow(rp.BackoffFactor, float64(attempt-1))
-	
+
 	if delay > float64(rp.MaxDelay) {
 		delay = float64(rp.MaxDelay)
 	}
@@ -193,13 +193,13 @@ func (fm *FailoverManager) GetHealthyEndpoint(ctx context.Context, serviceName s
 	}
 
 	healthChecker := fm.healthCheckers[serviceName]
-	
+
 	// Check current endpoint first
 	currentIdx := fm.currentEndpoint[serviceName]
 	if currentIdx < len(endpoints) {
 		endpoint := &endpoints[currentIdx]
 		cbName := fmt.Sprintf("%s_%s", serviceName, endpoint.ID)
-		
+
 		if cb, exists := fm.circuitBreakers[cbName]; exists && cb.State() != StateOpen {
 			if healthChecker != nil {
 				if err := healthChecker.CheckHealth(ctx, *endpoint); err == nil {
@@ -263,7 +263,7 @@ func (fm *FailoverManager) ExecuteWithFailover(ctx context.Context, serviceName 
 // GetServiceStats returns statistics for all services
 func (fm *FailoverManager) GetServiceStats() map[string]interface{} {
 	stats := make(map[string]interface{})
-	
+
 	for serviceName, endpoints := range fm.services {
 		serviceStats := map[string]interface{}{
 			"current_endpoint": fm.currentEndpoint[serviceName],
@@ -303,7 +303,7 @@ func (fm *FailoverManager) GetServiceStats() map[string]interface{} {
 // PerformHealthChecks runs health checks on all endpoints
 func (fm *FailoverManager) PerformHealthChecks(ctx context.Context) map[string]map[string]bool {
 	results := make(map[string]map[string]bool)
-	
+
 	for serviceName, endpoints := range fm.services {
 		healthChecker := fm.healthCheckers[serviceName]
 		if healthChecker == nil {

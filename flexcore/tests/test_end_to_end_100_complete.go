@@ -198,7 +198,7 @@ func testCompliance(results *E2ETestResults) {
 
 func testRedisComponent() map[string]interface{} {
 	result := make(map[string]interface{})
-	
+
 	// Connect to Redis
 	rdb := redis.NewClient(&redis.Options{
 		Addr: "localhost:6380",
@@ -207,7 +207,7 @@ func testRedisComponent() map[string]interface{} {
 	defer rdb.Close()
 
 	ctx := context.Background()
-	
+
 	// Test basic connectivity
 	if err := rdb.Ping(ctx).Err(); err != nil {
 		result["status"] = "FAILED"
@@ -218,7 +218,7 @@ func testRedisComponent() map[string]interface{} {
 	// Test read/write operations
 	testKey := "e2e_test_key"
 	testValue := "e2e_test_value"
-	
+
 	if err := rdb.Set(ctx, testKey, testValue, time.Minute).Err(); err != nil {
 		result["status"] = "FAILED"
 		result["error"] = "Failed to set value: " + err.Error()
@@ -242,7 +242,7 @@ func testRedisComponent() map[string]interface{} {
 
 func testPluginSystemComponent() map[string]interface{} {
 	result := make(map[string]interface{})
-	
+
 	// Check if plugin binaries exist
 	plugins := []string{
 		"/home/marlonsc/flext/flexcore/plugins/postgres-processor/postgres-processor",
@@ -271,7 +271,7 @@ func testPluginSystemComponent() map[string]interface{} {
 
 func testMessageQueueComponent() map[string]interface{} {
 	result := make(map[string]interface{})
-	
+
 	// Test message queue functionality using Redis
 	rdb := redis.NewClient(&redis.Options{
 		Addr: "localhost:6380",
@@ -310,7 +310,7 @@ func testMessageQueueComponent() map[string]interface{} {
 
 func testEventSystemComponent() map[string]interface{} {
 	result := make(map[string]interface{})
-	
+
 	// Simulate event system testing
 	events := []string{"user.created", "data.processed", "system.health"}
 	processedEvents := 0
@@ -331,7 +331,7 @@ func testEventSystemComponent() map[string]interface{} {
 
 func testAPIComponent() map[string]interface{} {
 	result := make(map[string]interface{})
-	
+
 	// Test if any local API is running
 	endpoints := []string{
 		"http://localhost:8080/health",
@@ -561,7 +561,7 @@ func printFinalReport(results *E2ETestResults) {
 	log.Printf("   🚀 Performance: %d tests", len(results.PerformanceResults))
 	log.Printf("   🛡️  Stability: %d tests", len(results.StabilityResults))
 	log.Printf("   📋 Compliance: %d tests", len(results.ComplianceResults))
-	
+
 	if results.SystemReadinessPercent >= 95 {
 		log.Printf("")
 		log.Printf("🏆 SISTEMA FLEXCORE 100%% PRONTO PARA PRODUÇÃO!")

@@ -12,16 +12,17 @@ import oracledb
 # Load environment variables
 from dotenv import load_dotenv
 
-load_dotenv('.env')
+load_dotenv(".env")
+
 
 class SimpleOracleTarget:
     """Simple Oracle target using direct connections - NO SQLAlchemy pooling."""
 
-    def __init__(self, config: Dict[str, Any]):
+    def __init__(self, config: dict[str, Any]):
         """Initialize simple Oracle target."""
         self.config = config
         self.connection = None
-        self.logger = logging.getLogger('simple-oracle-target')
+        self.logger = logging.getLogger("simple-oracle-target")
         logging.basicConfig(level=logging.INFO)
 
         # Statistics
@@ -52,11 +53,7 @@ class SimpleOracleTarget:
         self.logger.info(f"Connecting to Oracle: {username}@{host}:{port} ({protocol})")
 
         # Direct Oracle connection - NO SQLAlchemy
-        self.connection = oracledb.connect(
-            user=username,
-            password=password,
-            dsn=dsn
-        )
+        self.connection = oracledb.connect(user=username, password=password, dsn=dsn)
 
         # Test connection
         cursor = self.connection.cursor()
@@ -66,7 +63,7 @@ class SimpleOracleTarget:
 
         self.logger.info(f"✅ Oracle connection successful: {result[0]}")
 
-    def create_table(self, stream_name: str, schema: Dict[str, Any]):
+    def create_table(self, stream_name: str, schema: dict[str, Any]):
         """Create Oracle table if not exists."""
         table_name = stream_name.upper()
 
@@ -90,11 +87,13 @@ class SimpleOracleTarget:
             columns.append(f"{col_name} {col_type}")
 
         # Add metadata columns
-        columns.extend([
-            "_LOADED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP",
-            "_ENTITY_NAME VARCHAR2(100)",
-            "_BATCH_ID VARCHAR2(50)"
-        ])
+        columns.extend(
+            [
+                "_LOADED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP",
+                "_ENTITY_NAME VARCHAR2(100)",
+                "_BATCH_ID VARCHAR2(50)",
+            ]
+        )
 
         create_sql = f"""
         CREATE TABLE {table_name} (
@@ -115,7 +114,7 @@ class SimpleOracleTarget:
         finally:
             cursor.close()
 
-    def insert_records(self, stream_name: str, records: List[Dict[str, Any]]):
+    def insert_records(self, stream_name: str, records: list[dict[str, Any]]):
         """Insert records into Oracle table."""
         if not records:
             return
@@ -237,6 +236,7 @@ class SimpleOracleTarget:
             self.connection.close()
             self.logger.info("Oracle connection closed")
 
+
 def main():
     """Main entry point."""
     # Configuration from environment variables
@@ -247,7 +247,7 @@ def main():
         "username": "oic",
         "password": "aehaz232dfNuupah_#",
         "protocol": "tcps",
-        "batch_size": 1000
+        "batch_size": 1000,
     }
 
     target = SimpleOracleTarget(config)
@@ -257,6 +257,7 @@ def main():
         target.process_messages()
     finally:
         target.close()
+
 
 if __name__ == "__main__":
     main()

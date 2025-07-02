@@ -24,7 +24,7 @@ def create_minimal_test_infrastructure():
         "flext-web",
         "flext-cli",
         "algar-oud-mig",
-        "gruponos-poc-oic-wms"
+        "gruponos-poc-oic-wms",
     ]
 
     for module in core_modules:
@@ -89,7 +89,7 @@ def test_parametrized(test_input, expected):
             print(f"✅ Criado {test_file}")
 
 
-def run_comprehensive_tests() -> Dict[str, bool]:
+def run_comprehensive_tests() -> dict[str, bool]:
     """Executa testes abrangentes e retorna resultados."""
 
     workspace = Path("/home/marlonsc/flext")
@@ -102,7 +102,7 @@ def run_comprehensive_tests() -> Dict[str, bool]:
             cwd=workspace,
             capture_output=True,
             text=True,
-            timeout=300
+            timeout=300,
         )
         results["pytest_success"] = result.returncode == 0
         if result.returncode == 0:
@@ -116,11 +116,18 @@ def run_comprehensive_tests() -> Dict[str, bool]:
     # Test 2: Mypy validation (already 0 errors)
     try:
         result = subprocess.run(
-            [sys.executable, "-m", "mypy", "--ignore-missing-imports", ".", "--no-error-summary"],
+            [
+                sys.executable,
+                "-m",
+                "mypy",
+                "--ignore-missing-imports",
+                ".",
+                "--no-error-summary",
+            ],
             cwd=workspace,
             capture_output=True,
             text=True,
-            timeout=300
+            timeout=300,
         )
         error_count = result.stdout.count("error:")
         results["mypy_success"] = error_count == 0
@@ -136,7 +143,7 @@ def run_comprehensive_tests() -> Dict[str, bool]:
             cwd=workspace,
             capture_output=True,
             text=True,
-            timeout=300
+            timeout=300,
         )
         syntax_errors = result.stderr.count("syntax-error")
         results["ruff_syntax_success"] = syntax_errors == 0
@@ -161,7 +168,9 @@ def run_comprehensive_tests() -> Dict[str, bool]:
                 compilation_errors += 1
 
         results["compilation_success"] = compilation_errors == 0
-        print(f"✅ COMPILATION: {compilation_errors} errors in {python_files_tested} files")
+        print(
+            f"✅ COMPILATION: {compilation_errors} errors in {python_files_tested} files"
+        )
     except Exception as e:
         results["compilation_success"] = False
         print(f"⚠️ COMPILATION: Error - {e}")
@@ -170,14 +179,7 @@ def run_comprehensive_tests() -> Dict[str, bool]:
     import_success_count = 0
     import_total = 0
 
-    core_imports = [
-        "pathlib",
-        "typing",
-        "subprocess",
-        "json",
-        "sys",
-        "os"
-    ]
+    core_imports = ["pathlib", "typing", "subprocess", "json", "sys", "os"]
 
     for module_name in core_imports:
         import_total += 1
@@ -203,7 +205,9 @@ def validate_100_percent_compliance() -> bool:
 
     # Contagem de arquivos Python
     python_files = list(workspace.rglob("*.py"))
-    python_files = [f for f in python_files if ".venv" not in str(f) and "__pycache__" not in str(f)]
+    python_files = [
+        f for f in python_files if ".venv" not in str(f) and "__pycache__" not in str(f)
+    ]
 
     print(f"📊 ARQUIVOS PYTHON: {len(python_files)}")
 

@@ -45,12 +45,14 @@ def check_tables():
     cursor = conn.cursor()
 
     # List tables
-    cursor.execute("""
+    cursor.execute(
+        """
         SELECT table_name
         FROM user_tables
         WHERE table_name IN ('ALLOCATION', 'ORDER_HDR', 'ORDER_DTL', 'TEST', 'TEST_TABLE')
         ORDER BY table_name
-    """)
+    """
+    )
 
     tables = cursor.fetchall()
     for table in tables:
@@ -62,14 +64,16 @@ def check_tables():
 
         # Show sample data for allocation
         if table_name == "ALLOCATION" and count > 0:
-            cursor.execute(f"""
+            cursor.execute(
+                f"""
                 SELECT * FROM (
                     SELECT ALLOCATION_ID, ORDER_ID, STATUS, QUANTITY,
                            TO_CHAR("_SDC_BATCHED_AT", 'YYYY-MM-DD HH24:MI:SS') as LOADED_AT
                     FROM {table_name}
                     ORDER BY "_SDC_BATCHED_AT" DESC
                 ) WHERE ROWNUM <= 5
-            """)
+            """
+            )
 
             for _row in cursor.fetchall():
                 pass

@@ -22,14 +22,14 @@ func init() {
 	gob.Register(map[string]interface{}{})
 	gob.Register([]interface{}{})
 	gob.Register([]map[string]interface{}{})
-	
+
 	// Register common primitive types
 	gob.Register(string(""))
 	gob.Register(int(0))
 	gob.Register(int64(0))
 	gob.Register(float64(0))
 	gob.Register(bool(false))
-	
+
 	// Register plugin-specific types
 	gob.Register(PluginInfo{})
 }
@@ -38,16 +38,16 @@ func init() {
 type FlexCorePlugin interface {
 	// Initialize the plugin with configuration
 	Initialize(ctx context.Context, config map[string]interface{}) error
-	
+
 	// Execute the main plugin functionality
 	Execute(ctx context.Context, input map[string]interface{}) (map[string]interface{}, error)
-	
+
 	// GetInfo returns plugin metadata
 	GetInfo() PluginInfo
-	
+
 	// Health check for the plugin
 	HealthCheck(ctx context.Context) error
-	
+
 	// Cleanup resources
 	Cleanup() error
 }
@@ -92,11 +92,11 @@ type RealPluginManager struct {
 	pluginPaths  map[string]string
 	mu           sync.RWMutex
 	isRunning    bool
-	
+
 	// Plugin configuration
 	handshakeConfig plugin.HandshakeConfig
 	pluginMap       map[string]plugin.Plugin
-	
+
 	// Plugin discovery
 	pluginDirectory string
 	autoDiscovery   bool
@@ -456,7 +456,7 @@ func (rpm *RealPluginManager) Shutdown() error {
 func (rpm *RealPluginManager) GetActivePluginCount() int {
 	rpm.mu.RLock()
 	defer rpm.mu.RUnlock()
-	
+
 	count := 0
 	for _, instance := range rpm.plugins {
 		if instance.Status == "running" {
@@ -470,7 +470,7 @@ func (rpm *RealPluginManager) GetActivePluginCount() int {
 func (rpm *RealPluginManager) RegisterPluginType(name string, pluginImpl plugin.Plugin) {
 	rpm.mu.Lock()
 	defer rpm.mu.Unlock()
-	
+
 	if rpm.pluginMap == nil {
 		rpm.pluginMap = make(map[string]plugin.Plugin)
 	}

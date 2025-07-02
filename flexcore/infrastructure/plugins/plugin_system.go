@@ -347,7 +347,7 @@ func (r *PluginRegistry) ConfigurePlugin(pluginName string, config map[string]in
 
 	// Update configuration
 	loadedPlugin.Config = config
-	
+
 	// Re-initialize with new config
 	return loadedPlugin.Plugin.Initialize(config)
 }
@@ -363,7 +363,7 @@ func (r *PluginRegistry) CreateDemoPlugins() error {
 
 	// Demo plugin 2: Data Validator
 	demoPlugin2 := &DemoPlugin{
-		name:    "data-validator", 
+		name:    "data-validator",
 		version: "1.0.0",
 		pluginType: "validator",
 	}
@@ -371,7 +371,7 @@ func (r *PluginRegistry) CreateDemoPlugins() error {
 	// Demo plugin 3: Event Processor
 	demoPlugin3 := &DemoPlugin{
 		name:    "event-processor",
-		version: "1.0.0", 
+		version: "1.0.0",
 		pluginType: "processor",
 	}
 
@@ -380,7 +380,7 @@ func (r *PluginRegistry) CreateDemoPlugins() error {
 	defer r.mu.Unlock()
 
 	plugins := []*DemoPlugin{demoPlugin1, demoPlugin2, demoPlugin3}
-	
+
 	for _, p := range plugins {
 		// Initialize demo plugin
 		config := map[string]interface{}{

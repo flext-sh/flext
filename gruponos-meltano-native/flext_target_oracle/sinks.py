@@ -57,10 +57,12 @@ class OracleSink(SQLSink):
         "date-time": oracle.TIMESTAMP,
         "time": oracle.TIMESTAMP,
         "object": oracle.CLOB,  # Store as JSON
-        "array": oracle.CLOB,   # Store as JSON
+        "array": oracle.CLOB,  # Store as JSON
     }
 
-    def __init__(self, target, stream_name: str, schema: Dict, key_properties: List[str]):
+    def __init__(
+        self, target, stream_name: str, schema: Dict, key_properties: list[str]
+    ):
         """Initialize Oracle sink with advanced features."""
         # Set target first
         self.target = target
@@ -76,7 +78,7 @@ class OracleSink(SQLSink):
         self._lock = threading.Lock()
 
         # Batch management
-        self._current_batch: List[Dict[str, Any]] = []
+        self._current_batch: list[dict[str, Any]] = []
         self._batch_size = self.config.get("batch_size", 5000)
 
         # Connection management
@@ -95,7 +97,7 @@ class OracleSink(SQLSink):
         )
 
     @property
-    def config(self) -> Dict[str, Any]:
+    def config(self) -> dict[str, Any]:
         """Get target configuration."""
         return self.target.config
 
@@ -119,17 +121,17 @@ class OracleSink(SQLSink):
             username = self.config["username"]
             password = self.config["password"]
             # Handle SecretStr from pydantic
-            if hasattr(password, 'get_secret_value'):
+            if hasattr(password, "get_secret_value"):
                 password = password.get_secret_value()
             # Remove quotes if present (from .env files)
             if isinstance(password, str):
-                password = password.strip('"\'')
+                password = password.strip("\"'")
             protocol = self.config.get("protocol", "tcp").lower()
 
             # Build DSN based on service_name or database - USING PROVEN LEGACY PATTERN
             if self.config.get("service_name"):
                 # For Autonomous Database - use EXACT format from working legacy code
-                service_name = self.config['service_name']
+                service_name = self.config["service_name"]
                 if protocol == "tcps":
                     # PROVEN WORKING TCPS DSN FORMAT from legacy/flx-database-oracle
                     dsn = (
@@ -157,26 +159,32 @@ class OracleSink(SQLSink):
                 else:
                     dsn = f"{host}:{port}/{database}"
 
-            self.logger.info(f"🔌 Creating Oracle connection pool for TCPS: {username}@{host}:{port}")
+            self.logger.info(
+                f"🔌 Creating Oracle connection pool for TCPS: {username}@{host}:{port}"
+            )
 
             # RESEARCH-BASED SOLUTION: Use Oracle native pooling for TCPS
             import oracledb
 
             # Create Oracle native connection pool (handles TCPS better than SQLAlchemy)
-            pool_size = min(self.config.get("pool_size", 5), 3)  # LEGACY: max 3 for stability
+            pool_size = min(
+                self.config.get("pool_size", 5), 3
+            )  # LEGACY: max 3 for stability
             self._oracle_pool = oracledb.create_pool(
                 user=username,
                 password=password,
                 dsn=dsn,
-                min=1,                    # Minimum connections
-                max=pool_size,            # Maximum connections
-                increment=1,              # Pool growth increment
-                ping_interval=60,         # Keep connections alive
-                timeout=30,               # Connection timeout
-                getmode=oracledb.POOL_GETMODE_WAIT  # Wait for connection if pool full
+                min=1,  # Minimum connections
+                max=pool_size,  # Maximum connections
+                increment=1,  # Pool growth increment
+                ping_interval=60,  # Keep connections alive
+                timeout=30,  # Connection timeout
+                getmode=oracledb.POOL_GETMODE_WAIT,  # Wait for connection if pool full
             )
 
-            self.logger.info(f"✅ Oracle connection pool created: min=1, max={pool_size}")
+            self.logger.info(
+                f"✅ Oracle connection pool created: min=1, max={pool_size}"
+            )
 
             # Oracle connection function using native pool
             def get_oracle_connection():
@@ -187,7 +195,9 @@ class OracleSink(SQLSink):
                     self.logger.debug("🔗 Acquired connection from Oracle native pool")
                     return connection
                 except Exception as e:
-                    self.logger.error(f"❌ Failed to acquire connection from Oracle pool: {e}")
+                    self.logger.error(
+                        f"❌ Failed to acquire connection from Oracle pool: {e}"
+                    )
                     raise
 
             # RESEARCH-BASED: Use NullPool to disable SQLAlchemy pooling for TCPS
@@ -198,7 +208,7 @@ class OracleSink(SQLSink):
                 "oracle+oracledb://",  # Empty URL - connection via creator
                 creator=get_oracle_connection,
                 poolclass=NullPool,  # CRITICAL: Disable SQLAlchemy pooling for TCPS
-                echo=self.config.get("log_sql_statements", False)
+                echo=self.config.get("log_sql_statements", False),
             )
 
             # Add DPY-4011 error handling for TCPS disconnections
@@ -206,10 +216,13 @@ class OracleSink(SQLSink):
             def handle_tcps_errors(context):
                 """Handle Oracle TCPS-specific disconnection errors."""
                 import re
+
                 if not context.is_disconnect and re.match(
                     r"^(?:DPY-1001|DPY-4011)", str(context.original_exception)
                 ):
-                    self.logger.warning(f"🔄 Detected Oracle TCPS disconnection: {context.original_exception}")
+                    self.logger.warning(
+                        f"🔄 Detected Oracle TCPS disconnection: {context.original_exception}"
+                    )
                     context.is_disconnect = True
 
             # Test the connection pool
@@ -220,11 +233,15 @@ class OracleSink(SQLSink):
             cursor.close()
             self._oracle_pool.release(test_conn)
 
-            self.logger.info(f"✅ Oracle TCPS connection pool test successful: {test_result}")
+            self.logger.info(
+                f"✅ Oracle TCPS connection pool test successful: {test_result}"
+            )
 
         except Exception as e:
             self.logger.error(f"❌ Oracle TCPS connection pool creation failed: {e}")
-            self.logger.warning("🔄 Falling back to file-based storage for this session")
+            self.logger.warning(
+                "🔄 Falling back to file-based storage for this session"
+            )
 
             # Set fallback mode
             self._fallback_mode = True
@@ -241,18 +258,24 @@ class OracleSink(SQLSink):
         self._session_factory = sessionmaker(bind=engine)
 
         if engine is not None:
-            self.logger.info(f"🚀 Created Oracle TCPS engine with native pooling: {self.config['username']}@{self.config['host']}:{self.config.get('port', 1521)}")
+            self.logger.info(
+                f"🚀 Created Oracle TCPS engine with native pooling: {self.config['username']}@{self.config['host']}:{self.config.get('port', 1521)}"
+            )
         return engine
 
     def _setup_engine_events(self, engine: Engine) -> None:
         """Setup SQLAlchemy event listeners for monitoring."""
 
         @event.listens_for(engine, "before_cursor_execute")
-        def before_cursor_execute(conn, cursor, statement, parameters, context, executemany):
+        def before_cursor_execute(
+            conn, cursor, statement, parameters, context, executemany
+        ):
             context._query_start_time = time.time()
 
         @event.listens_for(engine, "after_cursor_execute")
-        def after_cursor_execute(conn, cursor, statement, parameters, context, executemany):
+        def after_cursor_execute(
+            conn, cursor, statement, parameters, context, executemany
+        ):
             total = time.time() - context._query_start_time
             self.target.update_metrics("total_processing_time", total)
 
@@ -292,12 +315,18 @@ class OracleSink(SQLSink):
 
         # Add metadata columns if enabled
         if self.config.get("add_record_metadata", True):
-            columns.extend([
-                Column("_LOADED_AT", oracle.TIMESTAMP, default=sa.func.current_timestamp()),
-                Column("_EXTRACTED_AT", oracle.TIMESTAMP),
-                Column("_ENTITY_NAME", oracle.VARCHAR2(100)),
-                Column("_BATCH_ID", oracle.VARCHAR2(50)),
-            ])
+            columns.extend(
+                [
+                    Column(
+                        "_LOADED_AT",
+                        oracle.TIMESTAMP,
+                        default=sa.func.current_timestamp(),
+                    ),
+                    Column("_EXTRACTED_AT", oracle.TIMESTAMP),
+                    Column("_ENTITY_NAME", oracle.VARCHAR2(100)),
+                    Column("_BATCH_ID", oracle.VARCHAR2(50)),
+                ]
+            )
 
         # Create table
         table = Table(table_name, metadata, *columns)
@@ -326,7 +355,7 @@ class OracleSink(SQLSink):
 
         return table
 
-    def _get_oracle_type(self, property_def: Dict[str, Any]) -> sa.types.TypeEngine:
+    def _get_oracle_type(self, property_def: dict[str, Any]) -> sa.types.TypeEngine:
         """Map JSON schema property to Oracle type."""
 
         # Handle anyOf structures
@@ -378,7 +407,7 @@ class OracleSink(SQLSink):
             # Default to VARCHAR2
             return oracle.VARCHAR2(4000)
 
-    def process_record(self, record: Dict[str, Any], context: Dict) -> None:
+    def process_record(self, record: dict[str, Any], context: Dict) -> None:
         """Process a single record with batching."""
 
         # Add to current batch
@@ -423,7 +452,9 @@ class OracleSink(SQLSink):
             self.target.update_metrics("batches_processed", 1)
             self.target.update_metrics("total_processing_time", batch_time)
 
-            destination = self._fallback_file if self._fallback_mode else "Oracle database"
+            destination = (
+                self._fallback_file if self._fallback_mode else "Oracle database"
+            )
             self.logger.info(
                 f"Flushed batch of {batch_size:,} records to {destination} "
                 f"in {batch_time:.2f}s ({batch_size/batch_time:.0f} records/sec)"
@@ -439,14 +470,16 @@ class OracleSink(SQLSink):
             else:
                 # Fallback to file if Oracle fails
                 if not self._fallback_mode:
-                    self.logger.warning("🔄 Switching to fallback file mode due to Oracle error")
+                    self.logger.warning(
+                        "🔄 Switching to fallback file mode due to Oracle error"
+                    )
                     self._fallback_mode = True
                     self._fallback_file = f"{self.stream_name}_data.jsonl"
                     self._flush_to_file(batch_records)
                 else:
                     raise
 
-    def _flush_to_file(self, records: List[Dict[str, Any]]) -> None:
+    def _flush_to_file(self, records: list[dict[str, Any]]) -> None:
         """Flush records to JSONL file as fallback."""
         import json
 
@@ -457,11 +490,11 @@ class OracleSink(SQLSink):
                     **record,
                     "_loaded_at": datetime.utcnow().isoformat(),
                     "_entity_name": self.stream_name,
-                    "_target_mode": "fallback_file"
+                    "_target_mode": "fallback_file",
                 }
                 f.write(json.dumps(enhanced_record) + "\n")
 
-    def _bulk_insert_batch(self, table: Table, records: List[Dict[str, Any]]) -> None:
+    def _bulk_insert_batch(self, table: Table, records: list[dict[str, Any]]) -> None:
         """Insert batch using Oracle bulk operations."""
 
         # Prepare records for bulk insert
@@ -485,11 +518,15 @@ class OracleSink(SQLSink):
                     if self.config.get("ignore_duplicate_keys", True):
                         self.logger.warning(f"Ignoring duplicate key error: {e}")
                         # Try individual inserts to identify duplicates
-                        self._insert_with_duplicate_handling(conn, table, prepared_records)
+                        self._insert_with_duplicate_handling(
+                            conn, table, prepared_records
+                        )
                     else:
                         raise
 
-    def _standard_insert_batch(self, table: Table, records: List[Dict[str, Any]]) -> None:
+    def _standard_insert_batch(
+        self, table: Table, records: list[dict[str, Any]]
+    ) -> None:
         """Insert batch using standard individual inserts."""
 
         batch_id = f"batch_{int(time.time())}_{threading.current_thread().ident}"
@@ -506,14 +543,18 @@ class OracleSink(SQLSink):
                     else:
                         raise
 
-    def _execute_merge_upsert(self, conn, table: Table, records: List[Dict[str, Any]]) -> None:
+    def _execute_merge_upsert(
+        self, conn, table: Table, records: list[dict[str, Any]]
+    ) -> None:
         """Execute MERGE statement for upsert operations."""
 
         # Build MERGE statement
-        source_data = ", ".join([
-            f"SELECT {', '.join([f':{k}_{i} as {k}' for k in records[0].keys()])} FROM dual"
-            for i, _ in enumerate(records)
-        ])
+        source_data = ", ".join(
+            [
+                f"SELECT {', '.join([f':{k}_{i} as {k}' for k in records[0].keys()])} FROM dual"
+                for i, _ in enumerate(records)
+            ]
+        )
 
         merge_sql = f"""
         MERGE INTO {table.name} target
@@ -534,7 +575,9 @@ class OracleSink(SQLSink):
 
         conn.execute(text(merge_sql), params)
 
-    def _insert_with_duplicate_handling(self, conn, table: Table, records: List[Dict[str, Any]]) -> None:
+    def _insert_with_duplicate_handling(
+        self, conn, table: Table, records: list[dict[str, Any]]
+    ) -> None:
         """Insert records individually to handle duplicates gracefully."""
 
         successful_inserts = 0
@@ -547,9 +590,11 @@ class OracleSink(SQLSink):
                 # Skip duplicate
                 continue
 
-        self.logger.info(f"Inserted {successful_inserts}/{len(records)} records (skipped duplicates)")
+        self.logger.info(
+            f"Inserted {successful_inserts}/{len(records)} records (skipped duplicates)"
+        )
 
-    def _prepare_record(self, record: Dict[str, Any], batch_id: str) -> Dict[str, Any]:
+    def _prepare_record(self, record: dict[str, Any], batch_id: str) -> dict[str, Any]:
         """Prepare record for Oracle insertion with proper date formatting."""
 
         prepared = {}
@@ -638,7 +683,7 @@ class OracleSink(SQLSink):
 
         return prepared
 
-    def _retry_batch(self, table: Table, records: List[Dict[str, Any]]) -> None:
+    def _retry_batch(self, table: Table, records: list[dict[str, Any]]) -> None:
         """Retry failed batch with exponential backoff."""
 
         max_retries = self.config.get("max_retries", 3)
@@ -649,7 +694,7 @@ class OracleSink(SQLSink):
                 self.target.update_metrics("retry_attempts", 1)
 
                 # Wait before retry
-                time.sleep(retry_delay * (2 ** attempt))
+                time.sleep(retry_delay * (2**attempt))
 
                 # Retry the operation
                 self._bulk_insert_batch(table, records)
@@ -682,11 +727,11 @@ class OracleSink(SQLSink):
         """Cleanup when sink is destroyed."""
         try:
             # Final flush
-            if hasattr(self, '_current_batch') and self._current_batch:
+            if hasattr(self, "_current_batch") and self._current_batch:
                 self._flush_batch()
 
             # Close Oracle native pool first (TCPS-specific cleanup)
-            if hasattr(self, '_oracle_pool') and self._oracle_pool:
+            if hasattr(self, "_oracle_pool") and self._oracle_pool:
                 try:
                     self._oracle_pool.close()
                     self.logger.info("🔒 Oracle native connection pool closed")
@@ -694,7 +739,7 @@ class OracleSink(SQLSink):
                     self.logger.warning(f"Warning closing Oracle pool: {pool_e}")
 
             # Close SQLAlchemy engine
-            if hasattr(self, '_engine') and self._engine:
+            if hasattr(self, "_engine") and self._engine:
                 self._engine.dispose()
 
         except Exception as e:

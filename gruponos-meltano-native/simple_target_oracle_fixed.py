@@ -41,11 +41,7 @@ def get_oracle_connection():
             dsn = f"{host}:{port}/{service_name}"
 
             # Try with minimal configuration first
-            connection = oracledb.connect(
-                user=username,
-                password=password,
-                dsn=dsn
-            )
+            connection = oracledb.connect(user=username, password=password, dsn=dsn)
         else:
             # Standard TCP connection
             dsn = f"{host}:{port}/{service_name}"
@@ -63,6 +59,7 @@ def get_oracle_connection():
     except Exception as e:
         print(f"❌ Oracle connection failed: {e}", file=sys.stderr)
         import traceback
+
         traceback.print_exc(file=sys.stderr)
         return None
 
@@ -118,17 +115,19 @@ def create_table_if_not_exists(connection, table_name: str, schema: dict[str, An
             columns.append(f'"{field_name.upper()}" {sql_type}')
 
         # Add Singer metadata columns
-        columns.extend([
-            '"_EXTRACTED_AT" TIMESTAMP',
-            '"_ENTITY_NAME" VARCHAR2(100)',
-            '"_LOADED_AT" TIMESTAMP'
-        ])
+        columns.extend(
+            [
+                '"_EXTRACTED_AT" TIMESTAMP',
+                '"_ENTITY_NAME" VARCHAR2(100)',
+                '"_LOADED_AT" TIMESTAMP',
+            ]
+        )
 
-        create_sql = f'''
+        create_sql = f"""
         CREATE TABLE "{table_name.upper()}" (
             {', '.join(columns)}
         )
-        '''
+        """
 
         print(f"🏗️ Creating table with {len(columns)} columns", file=sys.stderr)
 
@@ -267,9 +266,15 @@ def process_singer_messages():
                     if insert_record(connection, stream_name, record):
                         record_count += 1
                         if record_count % 100 == 0:
-                            print(f"📊 Inserted {record_count} records for {stream_name}", file=sys.stderr)
+                            print(
+                                f"📊 Inserted {record_count} records for {stream_name}",
+                                file=sys.stderr,
+                            )
                     else:
-                        print(f"❌ Failed to insert record #{record_count+1} for {stream_name}", file=sys.stderr)
+                        print(
+                            f"❌ Failed to insert record #{record_count+1} for {stream_name}",
+                            file=sys.stderr,
+                        )
 
             elif message.get("type") == "STATE":
                 state_count += 1
@@ -281,7 +286,10 @@ def process_singer_messages():
         except Exception as e:
             print(f"❌ Processing error at line {line_num}: {e}", file=sys.stderr)
 
-    print(f"🏁 Processing complete: {schema_count} schemas, {record_count} records, {state_count} states", file=sys.stderr)
+    print(
+        f"🏁 Processing complete: {schema_count} schemas, {record_count} records, {state_count} states",
+        file=sys.stderr,
+    )
     connection.close()
 
 

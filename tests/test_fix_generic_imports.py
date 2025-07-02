@@ -7,6 +7,7 @@ def test_module_imports():
     """Test that module can be imported."""
     try:
         import fix_generic_imports
+
         assert True
     except ImportError:
         pytest.skip("Module fix_generic_imports not importable")
@@ -16,8 +17,9 @@ def test_basic_functionality():
     """Test basic functionality exists."""
     try:
         import fix_generic_imports
+
         # Basic smoke test
-        assert hasattr(fix_generic_imports, '__file__')
+        assert hasattr(fix_generic_imports, "__file__")
     except (ImportError, AttributeError):
         pytest.skip("Module not testable")
 
@@ -29,6 +31,7 @@ class TestBasicCoverage:
         """Test module has expected attributes."""
         try:
             import fix_generic_imports
+
             assert fix_generic_imports.__file__
         except ImportError:
             pytest.skip("Module not importable")

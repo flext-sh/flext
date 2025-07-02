@@ -31,13 +31,17 @@ class OracleConnector(SQLConnector):
                 url = f"oracle+oracledb://{username}:{password}@{host}:{port}/{database}?protocol=tcps"
             else:
                 # Standard connection
-                url = f"oracle+oracledb://{username}:{password}@{host}:{port}/{database}"
+                url = (
+                    f"oracle+oracledb://{username}:{password}@{host}:{port}/{database}"
+                )
         else:
             database = config.get("database", "XE")
             if protocol == "tcps":
                 url = f"oracle+oracledb://{username}:{password}@{host}:{port}/{database}?protocol=tcps"
             else:
-                url = f"oracle+oracledb://{username}:{password}@{host}:{port}/{database}"
+                url = (
+                    f"oracle+oracledb://{username}:{password}@{host}:{port}/{database}"
+                )
 
         return url
 
@@ -81,7 +85,9 @@ class OracleConnector(SQLConnector):
             try:
                 with self._engine.begin() as conn:
                     # Analyze table for optimizer statistics
-                    conn.execute(sa.text(f"ANALYZE TABLE {full_table_name} COMPUTE STATISTICS"))
+                    conn.execute(
+                        sa.text(f"ANALYZE TABLE {full_table_name} COMPUTE STATISTICS")
+                    )
             except Exception:
                 # Ignore if analyze fails
                 pass

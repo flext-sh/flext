@@ -30,7 +30,7 @@ setup(
         "performance": [
             "pandas>=1.5.0",
             "pyarrow>=10.0.0",
-        ]
+        ],
     },
     entry_points={
         "console_scripts": [

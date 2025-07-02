@@ -6,6 +6,7 @@ import re
 This module provides fix_all_tests functionality.
 """
 
+
 def fix_pipeline_test_complete(content):
     # Fix all PipelineStep literals - add missing fields
     content = re.sub(

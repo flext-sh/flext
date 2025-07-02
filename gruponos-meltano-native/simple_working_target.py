@@ -17,6 +17,7 @@ env_path = Path(__file__).parent / ".env"
 if env_path.exists():
     load_dotenv(env_path)
 
+
 def get_oracle_connection():
     """Get working Oracle connection."""
     try:
@@ -31,11 +32,7 @@ def get_oracle_connection():
 
         print(f"🔌 Connecting to: {dsn}", file=sys.stderr)
 
-        connection = oracledb.connect(
-            user=username,
-            password=password,
-            dsn=dsn
-        )
+        connection = oracledb.connect(user=username, password=password, dsn=dsn)
 
         # Test connection
         cursor = connection.cursor()
@@ -51,6 +48,7 @@ def get_oracle_connection():
         # Create fallback to file
         return None
 
+
 def create_table_if_needed(connection, table_name):
     """Create simple table structure."""
     if not connection:
@@ -60,7 +58,7 @@ def create_table_if_needed(connection, table_name):
         cursor = connection.cursor()
 
         # Simple allocation table
-        if table_name.upper() == 'ALLOCATION':
+        if table_name.upper() == "ALLOCATION":
             create_sql = """
             CREATE TABLE ALLOCATION (
                 ID VARCHAR2(100) PRIMARY KEY,
@@ -101,6 +99,7 @@ def create_table_if_needed(connection, table_name):
     except Exception as e:
         print(f"❌ Table creation error: {e}", file=sys.stderr)
 
+
 def insert_record(connection, table_name, record):
     """Insert record with simple mapping."""
     if not connection:
@@ -113,7 +112,7 @@ def insert_record(connection, table_name, record):
         cursor = connection.cursor()
 
         # Simple insert for allocation
-        if table_name.upper() == 'ALLOCATION':
+        if table_name.upper() == "ALLOCATION":
             insert_sql = """
             INSERT INTO ALLOCATION (
                 ID, ALLOC_QTY, FROM_INVENTORY_ID, ORDER_DTL_ID, STATUS_ID,
@@ -130,26 +129,30 @@ def insert_record(connection, table_name, record):
 
             if record.get("create_ts"):
                 try:
-                    create_ts = datetime.fromisoformat(record["create_ts"].replace("Z", "+00:00"))
+                    create_ts = datetime.fromisoformat(
+                        record["create_ts"].replace("Z", "+00:00")
+                    )
                 except:
                     pass
 
             if record.get("mod_ts"):
                 try:
-                    mod_ts = datetime.fromisoformat(record["mod_ts"].replace("Z", "+00:00"))
+                    mod_ts = datetime.fromisoformat(
+                        record["mod_ts"].replace("Z", "+00:00")
+                    )
                 except:
                     pass
 
             params = {
-                'id': record.get('id'),
-                'alloc_qty': record.get('alloc_qty'),
-                'from_inventory_id': record.get('from_inventory_id'),
-                'order_dtl_id': record.get('order_dtl_id'),
-                'status_id': record.get('status_id'),
-                'create_ts': create_ts,
-                'mod_ts': mod_ts,
-                'entity_name': 'allocation',
-                'record_data': json.dumps(record)
+                "id": record.get("id"),
+                "alloc_qty": record.get("alloc_qty"),
+                "from_inventory_id": record.get("from_inventory_id"),
+                "order_dtl_id": record.get("order_dtl_id"),
+                "status_id": record.get("status_id"),
+                "create_ts": create_ts,
+                "mod_ts": mod_ts,
+                "entity_name": "allocation",
+                "record_data": json.dumps(record),
             }
         else:
             # Generic insert for other entities
@@ -162,9 +165,9 @@ def insert_record(connection, table_name, record):
             """
 
             params = {
-                'id': record.get('id', 'NO_ID'),
-                'entity_name': table_name,
-                'record_data': json.dumps(record)
+                "id": record.get("id", "NO_ID"),
+                "entity_name": table_name,
+                "record_data": json.dumps(record),
             }
 
         cursor.execute(insert_sql, params)
@@ -176,6 +179,7 @@ def insert_record(connection, table_name, record):
     except Exception as e:
         print(f"❌ Insert error: {e}", file=sys.stderr)
         return False
+
 
 def process_singer_messages():
     """Process Singer messages with FOCUS ON WORKING."""
@@ -211,7 +215,9 @@ def process_singer_messages():
                     if insert_record(connection, stream_name, record):
                         record_count += 1
                         if record_count % 100 == 0:
-                            print(f"📊 Processed {record_count} records", file=sys.stderr)
+                            print(
+                                f"📊 Processed {record_count} records", file=sys.stderr
+                            )
 
             elif msg_type == "STATE":
                 # Just acknowledge
@@ -226,6 +232,7 @@ def process_singer_messages():
 
     if connection:
         connection.close()
+
 
 if __name__ == "__main__":
     process_singer_messages()

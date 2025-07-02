@@ -13,7 +13,7 @@ plugins:
     capabilities:
     - discover
     - catalog
-    - properties  
+    - properties
     - state
     config:
       base_url: $TAP_ORACLE_WMS_BASE_URL
@@ -42,14 +42,14 @@ plugins:
       password: $DATABASE__PASSWORD
       schema: $DATABASE__SCHEMA
       protocol: $DATABASE__PROTOCOL
-      
-      # Performance settings  
+
+      # Performance settings
       batch_size: 1000
       max_workers: 4
       pool_size: 5
       pool_recycle: 3600
       connection_timeout: 30
-      
+
       # Advanced features
       use_bulk_insert: true
       parallel_degree: 4
@@ -63,15 +63,15 @@ jobs:
 - name: allocation-full-sync
   tasks:
   - tap-oracle-wms target-oracle
-  
+
 - name: allocation-incremental-sync
   tasks:
   - tap-oracle-wms target-oracle
 
-- name: order-hdr-full-sync  
+- name: order-hdr-full-sync
   tasks:
   - tap-oracle-wms target-oracle
-  
+
 - name: order-hdr-incremental-sync
   tasks:
   - tap-oracle-wms target-oracle
@@ -79,7 +79,7 @@ jobs:
 - name: order-dtl-full-sync
   tasks:
   - tap-oracle-wms target-oracle
-  
+
 - name: order-dtl-incremental-sync
   tasks:
   - tap-oracle-wms target-oracle
@@ -88,23 +88,23 @@ schedules:
 - name: allocation-full-schedule
   job: allocation-full-sync
   interval: '0 0 * * 0'  # Weekly on Sunday at midnight
-  
+
 - name: allocation-incremental-schedule
-  job: allocation-incremental-sync  
+  job: allocation-incremental-sync
   interval: '*/1 * * * *'  # Every minute
-  
+
 - name: order-hdr-full-schedule
   job: order-hdr-full-sync
   interval: '0 1 * * 0'  # Weekly on Sunday at 1 AM
-  
+
 - name: order-hdr-incremental-schedule
   job: order-hdr-incremental-sync
   interval: '*/1 * * * *'  # Every minute
-  
+
 - name: order-dtl-full-schedule
   job: order-dtl-full-sync
   interval: '0 2 * * 0'  # Weekly on Sunday at 2 AM
-  
+
 - name: order-dtl-incremental-schedule
   job: order-dtl-incremental-sync
   interval: '*/1 * * * *'  # Every minute

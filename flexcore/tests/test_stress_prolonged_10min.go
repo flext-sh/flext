@@ -61,7 +61,7 @@ func main() {
 	if err := rdb.Ping(ctx).Err(); err != nil {
 		log.Fatalf("❌ Redis connection failed: %v", err)
 	}
-	
+
 	log.Printf("✅ Redis connected - Starting 10-minute stress test...")
 
 	// Configurar métricas
@@ -98,11 +98,11 @@ func main() {
 	metrics.TotalMessagesSent = atomic.LoadInt64(&messagesSent)
 	metrics.TotalMessagesReceived = atomic.LoadInt64(&messagesReceived)
 	metrics.ErrorCount = atomic.LoadInt64(&errorCount)
-	
+
 	if metrics.TestDurationSeconds > 0 {
 		metrics.AverageMessagesPerSec = float64(metrics.TotalMessagesSent) / float64(metrics.TestDurationSeconds)
 	}
-	
+
 	if metrics.TotalMessagesSent > 0 {
 		metrics.SuccessRate = (float64(metrics.TotalMessagesReceived) / float64(metrics.TotalMessagesSent)) * 100
 	}

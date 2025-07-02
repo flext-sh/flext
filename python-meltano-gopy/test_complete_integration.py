@@ -122,7 +122,6 @@ def test_python_compatibility_functions():
         )
 
         # Test function signatures (they should not crash)
-
         # These will fail with connection error but that's expected
         try:
             CheckMeltanoAvailable()

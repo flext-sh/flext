@@ -143,9 +143,9 @@ func backgroundLoadGenerator(ctx context.Context) {
 
 func testNodeKillRecovery() map[string]interface{} {
 	result := make(map[string]interface{})
-	
+
 	log.Printf("   🎯 Killing node on port 8082...")
-	
+
 	// Find and kill node 2
 	killStart := time.Now()
 	if err := killNodeByPort(8082); err != nil {
@@ -155,15 +155,15 @@ func testNodeKillRecovery() map[string]interface{} {
 	}
 
 	log.Printf("   💀 Node 8082 killed, monitoring cluster response...")
-	
+
 	// Monitor cluster response
 	recoveryStart := time.Now()
 	var recoveryTime time.Duration
-	
+
 	// Wait for cluster to detect failure and adjust
 	for i := 0; i < 30; i++ { // 30 seconds max
 		time.Sleep(1 * time.Second)
-		
+
 		// Check if remaining nodes are still responding
 		healthyNodes := 0
 		for _, port := range []int{8081, 8083} {
@@ -173,7 +173,7 @@ func testNodeKillRecovery() map[string]interface{} {
 				resp.Body.Close()
 			}
 		}
-		
+
 		if healthyNodes >= 2 {
 			recoveryTime = time.Since(recoveryStart)
 			break
@@ -213,12 +213,12 @@ func testNodeKillRecovery() map[string]interface{} {
 
 func testNetworkPartition() map[string]interface{} {
 	result := make(map[string]interface{})
-	
+
 	log.Printf("   🔌 Simulating network partition by overloading node 8083...")
-	
+
 	// Simulate network partition by flooding one node
 	partitionStart := time.Now()
-	
+
 	// Send burst of requests to node 8083 to simulate network issues
 	var wg sync.WaitGroup
 	for i := 0; i < 100; i++ {
@@ -231,10 +231,10 @@ func testNetworkPartition() map[string]interface{} {
 			}
 		}()
 	}
-	
+
 	wg.Wait()
 	partitionDuration := time.Since(partitionStart)
-	
+
 	// Check if other nodes are still responsive
 	healthyNodes := 0
 	for _, port := range []int{8081, 8082} {
@@ -258,27 +258,27 @@ func testNetworkPartition() map[string]interface{} {
 
 func testResourceExhaustion() map[string]interface{} {
 	result := make(map[string]interface{})
-	
+
 	log.Printf("   💾 Testing resource exhaustion resilience...")
-	
+
 	// Simulate memory pressure by creating many concurrent requests
 	exhaustionStart := time.Now()
-	
+
 	var wg sync.WaitGroup
 	requestCount := 500
 	successCount := int64(0)
 	errorCount := int64(0)
 
 	client := &http.Client{Timeout: 2 * time.Second}
-	
+
 	for i := 0; i < requestCount; i++ {
 		wg.Add(1)
 		go func(reqNum int) {
 			defer wg.Done()
-			
+
 			port := 8081 + (reqNum % 3) // Distribute across all nodes
 			resp, err := client.Get(fmt.Sprintf("http://localhost:%d/health", 8081+port%3))
-			
+
 			if err == nil && resp.StatusCode == 200 {
 				atomic.AddInt64(&successCount, 1)
 				resp.Body.Close()
@@ -308,17 +308,17 @@ func testResourceExhaustion() map[string]interface{} {
 
 func testCircuitBreakerBehavior() map[string]interface{} {
 	result := make(map[string]interface{})
-	
+
 	log.Printf("   ⚡ Testing circuit breaker behavior...")
-	
+
 	// This test validates that the system can handle failures gracefully
 	// Since we don't have circuit breakers directly exposed, we test resilience patterns
-	
+
 	breakerStart := time.Now()
-	
+
 	// Test with intentionally bad requests to trigger defensive mechanisms
 	client := &http.Client{Timeout: 1 * time.Second}
-	
+
 	// Send requests to non-existent endpoints
 	badRequests := 20
 	goodRequests := 20
@@ -357,7 +357,7 @@ func testCircuitBreakerBehavior() map[string]interface{} {
 	result["good_success_rate"] = float64(goodSuccesses) / float64(goodRequests) * 100
 	result["circuit_breaker_behavior"] = "GRACEFUL"
 
-	log.Printf("   ✅ Circuit breaker behavior: %.1f%% graceful failures, %.1f%% good successes", 
+	log.Printf("   ✅ Circuit breaker behavior: %.1f%% graceful failures, %.1f%% good successes",
 		result["graceful_failure_rate"], result["good_success_rate"])
 
 	return result
@@ -365,15 +365,15 @@ func testCircuitBreakerBehavior() map[string]interface{} {
 
 func testLeaderElectionChaos() map[string]interface{} {
 	result := make(map[string]interface{})
-	
+
 	log.Printf("   👑 Testing leader election under chaos...")
-	
+
 	electionStart := time.Now()
-	
+
 	// Monitor leader changes during stress
 	leaderChanges := 0
 	lastLeader := ""
-	
+
 	// Create some stress while monitoring leadership
 	go func() {
 		client := &http.Client{Timeout: 500 * time.Millisecond}
@@ -388,14 +388,14 @@ func testLeaderElectionChaos() map[string]interface{} {
 	// Monitor leader election for 10 seconds
 	for i := 0; i < 20; i++ {
 		time.Sleep(500 * time.Millisecond)
-		
+
 		// Try to determine current leader by checking cluster status
 		for _, port := range []int{8081, 8082, 8083} {
 			resp, err := http.Get(fmt.Sprintf("http://localhost:%d/cluster/status", port))
 			if err == nil {
 				body, _ := io.ReadAll(resp.Body)
 				resp.Body.Close()
-				
+
 				var clusterData map[string]interface{}
 				if json.Unmarshal(body, &clusterData) == nil {
 					if isLeader, ok := clusterData["is_leader"].(bool); ok && isLeader {
@@ -450,21 +450,21 @@ func killNodeByPort(port int) error {
 func restartNode(port int) error {
 	// Restart the node in background
 	nodeID := fmt.Sprintf("node-%d", port)
-	cmd := exec.Command("./flexcore-node", 
-		"-node-id="+nodeID, 
-		"-port="+strconv.Itoa(port), 
-		"-cluster=redis", 
+	cmd := exec.Command("./flexcore-node",
+		"-node-id="+nodeID,
+		"-port="+strconv.Itoa(port),
+		"-cluster=redis",
 		"-debug=true")
-	
+
 	logFile := fmt.Sprintf("node%d.log", port-8080)
 	file, err := os.OpenFile(logFile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
 	if err != nil {
 		return err
 	}
-	
+
 	cmd.Stdout = file
 	cmd.Stderr = file
-	
+
 	return cmd.Start()
 }
 

@@ -29,207 +29,185 @@ class TargetOracle(Target):
     config_jsonschema = th.PropertiesList(
         # Connection settings
         th.Property(
-            "host",
-            th.StringType,
-            required=True,
-            description="Oracle database host"
+            "host", th.StringType, required=True, description="Oracle database host"
         ),
         th.Property(
-            "port",
-            th.StringType,
-            default="1521",
-            description="Oracle database port"
+            "port", th.StringType, default="1521", description="Oracle database port"
         ),
         th.Property(
-            "database",
-            th.StringType,
-            description="Oracle database SID or service name"
+            "database", th.StringType, description="Oracle database SID or service name"
         ),
         th.Property(
             "service_name",
             th.StringType,
-            description="Oracle service name (preferred over SID)"
+            description="Oracle service name (preferred over SID)",
         ),
         th.Property(
-            "username",
-            th.StringType,
-            required=True,
-            description="Oracle username"
+            "username", th.StringType, required=True, description="Oracle username"
         ),
         th.Property(
             "password",
             th.StringType,
             required=True,
             secret=True,
-            description="Oracle password"
+            description="Oracle password",
         ),
-        th.Property(
-            "schema",
-            th.StringType,
-            description="Oracle schema name"
-        ),
-
+        th.Property("schema", th.StringType, description="Oracle schema name"),
         # Protocol settings for Autonomous Database
         th.Property(
             "protocol",
             th.StringType,
             default="tcp",
-            description="Connection protocol (tcp/tcps for Autonomous DB)"
+            description="Connection protocol (tcp/tcps for Autonomous DB)",
         ),
         th.Property(
             "wallet_location",
             th.StringType,
-            description="Oracle wallet location for TCPS connections"
+            description="Oracle wallet location for TCPS connections",
         ),
-
         # Performance settings
         th.Property(
             "batch_size",
             th.IntegerType,
             default=5000,
-            description="Number of records to batch before inserting"
+            description="Number of records to batch before inserting",
         ),
         th.Property(
             "max_workers",
             th.IntegerType,
             default=4,
-            description="Maximum number of worker threads for parallel processing"
+            description="Maximum number of worker threads for parallel processing",
         ),
         th.Property(
             "pool_size",
             th.IntegerType,
             default=10,
-            description="SQLAlchemy connection pool size"
+            description="SQLAlchemy connection pool size",
         ),
         th.Property(
             "pool_recycle",
             th.IntegerType,
             default=3600,
-            description="Connection pool recycle time in seconds"
+            description="Connection pool recycle time in seconds",
         ),
         th.Property(
             "pool_pre_ping",
             th.BooleanType,
             default=True,
-            description="Enable connection pool pre-ping validation"
+            description="Enable connection pool pre-ping validation",
         ),
-
         # Table management
         th.Property(
             "table_prefix",
             th.StringType,
             default="",
-            description="Prefix for table names"
+            description="Prefix for table names",
         ),
         th.Property(
             "table_suffix",
             th.StringType,
             default="",
-            description="Suffix for table names"
+            description="Suffix for table names",
         ),
         th.Property(
             "add_record_metadata",
             th.BooleanType,
             default=True,
-            description="Add _loaded_at and other metadata columns"
+            description="Add _loaded_at and other metadata columns",
         ),
         th.Property(
             "hard_delete",
             th.BooleanType,
             default=False,
-            description="Hard delete records (vs soft delete)"
+            description="Hard delete records (vs soft delete)",
         ),
-
         # Data processing options
         th.Property(
             "validate_records",
             th.BooleanType,
             default=True,
-            description="Validate records against schema before insert"
+            description="Validate records against schema before insert",
         ),
         th.Property(
             "default_target_schema",
             th.StringType,
-            description="Default schema for new tables"
+            description="Default schema for new tables",
         ),
         th.Property(
             "denest_properties",
             th.BooleanType,
             default=False,
-            description="Denest JSON properties into columns"
+            description="Denest JSON properties into columns",
         ),
         th.Property(
             "max_varchar_length",
             th.IntegerType,
             default=4000,
-            description="Maximum VARCHAR2 length before using CLOB"
+            description="Maximum VARCHAR2 length before using CLOB",
         ),
-
         # Advanced performance features
         th.Property(
             "use_bulk_insert",
             th.BooleanType,
             default=True,
-            description="Use Oracle bulk insert operations"
+            description="Use Oracle bulk insert operations",
         ),
         th.Property(
             "parallel_degree",
             th.IntegerType,
             default=4,
-            description="Oracle parallel processing degree"
+            description="Oracle parallel processing degree",
         ),
         th.Property(
             "commit_frequency",
             th.IntegerType,
             default=1000,
-            description="Commit every N records for large batches"
+            description="Commit every N records for large batches",
         ),
         th.Property(
             "use_merge_upsert",
             th.BooleanType,
             default=False,
-            description="Use MERGE statements for upserts instead of INSERT"
+            description="Use MERGE statements for upserts instead of INSERT",
         ),
-
         # Monitoring and debugging
         th.Property(
             "enable_performance_metrics",
             th.BooleanType,
             default=True,
-            description="Enable detailed performance metrics logging"
+            description="Enable detailed performance metrics logging",
         ),
         th.Property(
             "log_sql_statements",
             th.BooleanType,
             default=False,
-            description="Log SQL statements (debug mode)"
+            description="Log SQL statements (debug mode)",
         ),
         th.Property(
             "connection_timeout",
             th.IntegerType,
             default=60,
-            description="Database connection timeout in seconds"
+            description="Database connection timeout in seconds",
         ),
-
         # Error handling
         th.Property(
             "max_retries",
             th.IntegerType,
             default=3,
-            description="Maximum retry attempts for failed operations"
+            description="Maximum retry attempts for failed operations",
         ),
         th.Property(
             "retry_delay",
             th.NumberType,
             default=1.0,
-            description="Delay between retry attempts in seconds"
+            description="Delay between retry attempts in seconds",
         ),
         th.Property(
             "ignore_duplicate_keys",
             th.BooleanType,
             default=True,
-            description="Ignore duplicate key errors during insert"
-        )
+            description="Ignore duplicate key errors during insert",
+        ),
     ).to_dict()
 
     default_sink_class = OracleSink
@@ -240,12 +218,12 @@ class TargetOracle(Target):
 
         # Performance metrics
         self._metrics = {
-            'records_processed': 0,
-            'records_failed': 0,
-            'batches_processed': 0,
-            'total_processing_time': 0.0,
-            'connection_errors': 0,
-            'retry_attempts': 0
+            "records_processed": 0,
+            "records_failed": 0,
+            "batches_processed": 0,
+            "total_processing_time": 0.0,
+            "connection_errors": 0,
+            "retry_attempts": 0,
         }
 
         # Thread safety
@@ -272,7 +250,7 @@ class TargetOracle(Target):
             else:
                 self._metrics[metric_name] = value
 
-    def get_metrics(self) -> Dict[str, Any]:
+    def get_metrics(self) -> dict[str, Any]:
         """Get current performance metrics."""
         with self._metrics_lock:
             return self._metrics.copy()
@@ -285,23 +263,33 @@ class TargetOracle(Target):
         self.logger.info(f"Records processed: {metrics['records_processed']:,}")
         self.logger.info(f"Records failed: {metrics['records_failed']:,}")
         self.logger.info(f"Batches processed: {metrics['batches_processed']:,}")
-        self.logger.info(f"Total processing time: {metrics['total_processing_time']:.2f}s")
+        self.logger.info(
+            f"Total processing time: {metrics['total_processing_time']:.2f}s"
+        )
         self.logger.info(f"Connection errors: {metrics['connection_errors']:,}")
         self.logger.info(f"Retry attempts: {metrics['retry_attempts']:,}")
 
-        if metrics['records_processed'] > 0:
-            avg_time = metrics['total_processing_time'] / metrics['records_processed']
-            throughput = metrics['records_processed'] / metrics['total_processing_time'] if metrics['total_processing_time'] > 0 else 0
+        if metrics["records_processed"] > 0:
+            avg_time = metrics["total_processing_time"] / metrics["records_processed"]
+            throughput = (
+                metrics["records_processed"] / metrics["total_processing_time"]
+                if metrics["total_processing_time"] > 0
+                else 0
+            )
             self.logger.info(f"Average time per record: {avg_time*1000:.2f}ms")
             self.logger.info(f"Throughput: {throughput:.2f} records/second")
 
     def __del__(self):
         """Cleanup resources."""
         try:
-            if hasattr(self, '_executor'):
+            if hasattr(self, "_executor"):
                 self._executor.shutdown(wait=True)
 
-            if hasattr(self, 'config') and hasattr(self, '_metrics_lock') and self.config.get("enable_performance_metrics"):
+            if (
+                hasattr(self, "config")
+                and hasattr(self, "_metrics_lock")
+                and self.config.get("enable_performance_metrics")
+            ):
                 self.log_performance_summary()
         except Exception:
             # Ignore cleanup errors

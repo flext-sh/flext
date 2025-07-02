@@ -109,7 +109,7 @@ func validateClusterHealth() bool {
 
 func executeDistributedLoadTest(concurrency, requestsPerWorker int, duration time.Duration) {
 	nodes := []int{8081, 8082, 8083}
-	
+
 	var wg sync.WaitGroup
 	startTime := time.Now()
 	endTime := startTime.Add(duration)
@@ -117,10 +117,10 @@ func executeDistributedLoadTest(concurrency, requestsPerWorker int, duration tim
 	// Start workers targeting different nodes
 	for i := 0; i < concurrency; i++ {
 		wg.Add(1)
-		
+
 		nodeIndex := i % len(nodes)
 		targetPort := nodes[nodeIndex]
-		
+
 		go func(workerID, port int) {
 			defer wg.Done()
 			runWorker(workerID, port, requestsPerWorker, endTime)
@@ -128,12 +128,12 @@ func executeDistributedLoadTest(concurrency, requestsPerWorker int, duration tim
 	}
 
 	log.Printf("   🚀 Started %d workers targeting %d nodes", concurrency, len(nodes))
-	
+
 	// Monitor progress
 	go func() {
 		ticker := time.NewTicker(10 * time.Second)
 		defer ticker.Stop()
-		
+
 		for time.Now().Before(endTime) {
 			select {
 			case <-ticker.C:
@@ -141,15 +141,15 @@ func executeDistributedLoadTest(concurrency, requestsPerWorker int, duration tim
 				successful := atomic.LoadInt64(&totalSuccessful)
 				failed := atomic.LoadInt64(&totalFailed)
 				elapsed := time.Since(startTime).Seconds()
-				
-				log.Printf("   📊 Progress: %d total, %d success, %d failed, %.1f req/sec", 
+
+				log.Printf("   📊 Progress: %d total, %d success, %d failed, %.1f req/sec",
 					requests, successful, failed, float64(requests)/elapsed)
 			}
 		}
 	}()
 
 	wg.Wait()
-	
+
 	totalTime := time.Since(startTime)
 	log.Printf("   ✅ Load test completed in %v", totalTime)
 }
@@ -160,10 +160,10 @@ func runWorker(workerID, port, maxRequests int, endTime time.Time) {
 	}
 
 	requestCount := 0
-	
+
 	for time.Now().Before(endTime) && requestCount < maxRequests {
 		start := time.Now()
-		
+
 		// Alternate between different endpoints
 		var url string
 		switch requestCount % 3 {
@@ -176,20 +176,20 @@ func runWorker(workerID, port, maxRequests int, endTime time.Time) {
 		}
 
 		atomic.AddInt64(&totalRequests, 1)
-		
+
 		resp, err := client.Get(url)
 		latency := time.Since(start).Milliseconds()
-		
+
 		// Update latency statistics
 		atomic.AddInt64(&totalLatency, latency)
-		
+
 		for {
 			current := atomic.LoadInt64(&maxLatency)
 			if latency <= current || atomic.CompareAndSwapInt64(&maxLatency, current, latency) {
 				break
 			}
 		}
-		
+
 		for {
 			current := atomic.LoadInt64(&minLatency)
 			if latency >= current || atomic.CompareAndSwapInt64(&minLatency, current, latency) {
@@ -205,7 +205,7 @@ func runWorker(workerID, port, maxRequests int, endTime time.Time) {
 		}
 
 		requestCount++
-		
+
 		// Small delay to prevent overwhelming
 		time.Sleep(10 * time.Millisecond)
 	}
@@ -230,7 +230,7 @@ func analyzeClusterPerformance(results *MultiNodeLoadResults) {
 
 func testNodePerformance(port int) map[string]interface{} {
 	result := make(map[string]interface{})
-	
+
 	// Quick performance test for individual node
 	requestCount := 20
 	successCount := 0
@@ -239,7 +239,7 @@ func testNodePerformance(port int) map[string]interface{} {
 	for i := 0; i < requestCount; i++ {
 		start := time.Now()
 		url := fmt.Sprintf("http://localhost:%d/health", port)
-		
+
 		resp, err := http.Get(url)
 		latency := time.Since(start).Milliseconds()
 		totalLatency += latency
@@ -271,14 +271,14 @@ func testNodePerformance(port int) map[string]interface{} {
 
 func testClusterCoordinationUnderLoad() map[string]interface{} {
 	result := make(map[string]interface{})
-	
+
 	// Test cluster endpoints under load
 	nodes := []int{8081, 8082, 8083}
 	coordinationResults := make(map[string]interface{})
 
 	for _, port := range nodes {
 		url := fmt.Sprintf("http://localhost:%d/cluster/nodes", port)
-		
+
 		start := time.Now()
 		resp, err := http.Get(url)
 		latency := time.Since(start).Milliseconds()
@@ -286,7 +286,7 @@ func testClusterCoordinationUnderLoad() map[string]interface{} {
 		if err == nil {
 			defer resp.Body.Close()
 			body, _ := io.ReadAll(resp.Body)
-			
+
 			var clusterData map[string]interface{}
 			if json.Unmarshal(body, &clusterData) == nil {
 				coordinationResults[fmt.Sprintf("node-%d", port)] = map[string]interface{}{
@@ -305,14 +305,14 @@ func testClusterCoordinationUnderLoad() map[string]interface{} {
 
 	result["coordination_tests"] = coordinationResults
 	result["test_timestamp"] = time.Now().Unix()
-	
+
 	return result
 }
 
 func calculateLoadResults(results *MultiNodeLoadResults) {
 	results.TestCompletedAt = time.Now().Unix()
 	results.TestDurationSeconds = results.TestCompletedAt - results.TestStartedAt
-	
+
 	results.TotalRequests = atomic.LoadInt64(&totalRequests)
 	results.TotalSuccessful = atomic.LoadInt64(&totalSuccessful)
 	results.TotalFailed = atomic.LoadInt64(&totalFailed)
@@ -382,7 +382,7 @@ func printLoadReport(results *MultiNodeLoadResults) {
 			status := nodeMap["status"].(string)
 			successRate := nodeMap["success_rate"].(float64)
 			avgLatency := nodeMap["average_latency_ms"].(float64)
-			log.Printf("   %s: %s (%.1f%% success, %.1fms latency)", 
+			log.Printf("   %s: %s (%.1f%% success, %.1fms latency)",
 				nodeName, status, successRate, avgLatency)
 		}
 	}

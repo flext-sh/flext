@@ -22,7 +22,7 @@ receivers:
     webhook_configs:
       - url: 'http://localhost:8090/api/alerts/webhook'
         send_resolved: true
-        
+
   - name: 'critical-alerts'
     email_configs:
       - to: 'ops-team@company.com'
@@ -36,7 +36,7 @@ receivers:
           {{ end }}
     webhook_configs:
       - url: 'http://localhost:8090/api/alerts/critical'
-        
+
   - name: 'warning-alerts'
     webhook_configs:
       - url: 'http://localhost:8090/api/alerts/warning'
