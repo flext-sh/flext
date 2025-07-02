@@ -20,6 +20,8 @@ import (
 	"github.com/flext/flexcore/infrastructure/di"
 	"github.com/flext/flexcore/infrastructure/events"
 	"github.com/flext/flexcore/infrastructure/scheduler"
+	"github.com/flext/flexcore/infrastructure/plugins"
+	"github.com/flext/flexcore/infrastructure/windmill"
 )
 
 // NodeConfig holds configuration for a FlexCore node
@@ -34,10 +36,12 @@ type NodeConfig struct {
 
 // FlexCoreNode represents a single node in the FlexCore cluster
 type FlexCoreNode struct {
-	config      *NodeConfig
-	app         *flexcore.Application
-	httpServer  *http.Server
-	coordinator scheduler.ClusterCoordinator
+	config         *NodeConfig
+	app            *flexcore.Application
+	httpServer     *http.Server
+	coordinator    scheduler.ClusterCoordinator
+	pluginRegistry *plugins.PluginRegistry
+	windmillClient *windmill.WindmillClient
 }
 
 func main() {
@@ -87,8 +91,20 @@ func parseFlags() *NodeConfig {
 }
 
 func NewFlexCoreNode(config *NodeConfig) *FlexCoreNode {
+	// Initialize plugin registry
+	pluginRegistry := plugins.NewPluginRegistry("./plugins")
+	
+	// Initialize Windmill client
+	windmillClient := windmill.NewWindmillClient(
+		"http://localhost:3000", // Default Windmill URL
+		"demo-token",            // Demo token
+		"default",               // Default workspace
+	)
+	
 	return &FlexCoreNode{
-		config: config,
+		config:         config,
+		pluginRegistry: pluginRegistry,
+		windmillClient: windmillClient,
 	}
 }
 
@@ -129,6 +145,13 @@ func (node *FlexCoreNode) Start() error {
 
 	// Give application time to initialize
 	time.Sleep(2 * time.Second)
+
+	// Initialize demo plugins
+	if err := node.pluginRegistry.CreateDemoPlugins(); err != nil {
+		log.Printf("⚠️ Failed to create demo plugins: %v", err)
+	} else {
+		fmt.Println("✅ Demo plugins initialized")
+	}
 
 	// Start HTTP API for cluster communication
 	if err := node.startHTTPServer(); err != nil {
@@ -208,6 +231,21 @@ func (node *FlexCoreNode) startHTTPServer() error {
 	mux.HandleFunc("/cluster/join", node.handleClusterJoin)
 	mux.HandleFunc("/cluster/leave", node.handleClusterLeave)
 	mux.HandleFunc("/cluster/message", node.handleClusterMessage)
+
+	// Plugins API endpoints
+	mux.HandleFunc("/plugins/list", node.handlePluginsList)
+	mux.HandleFunc("/plugins/", node.handlePluginsAction)
+	mux.HandleFunc("/plugins/execute", node.handlePluginExecute)
+	mux.HandleFunc("/plugins/health", node.handlePluginsHealth)
+
+	// Workflows API endpoints (Windmill integration)  
+	mux.HandleFunc("/workflows/list", node.handleWorkflowsList)
+	mux.HandleFunc("/workflows/", node.handleWorkflowsAction)
+	mux.HandleFunc("/workflows/execute", node.handleWorkflowExecute)
+	mux.HandleFunc("/workflows/status", node.handleWorkflowStatus)
+
+	// Event streaming endpoint
+	mux.HandleFunc("/events/stream", node.handleEventStream)
 
 	node.httpServer = &http.Server{
 		Addr:    fmt.Sprintf(":%d", node.config.HTTPPort),
@@ -621,3 +659,368 @@ func (e TestDomainEvent) EventID() string     { return e.id }
 func (e TestDomainEvent) EventType() string  { return e.eventType }
 func (e TestDomainEvent) AggregateID() string { return e.aggregateID }
 func (e TestDomainEvent) OccurredAt() time.Time { return e.occurredAt }
+
+// =================================================================================
+// PLUGINS API HANDLERS - Dynamic Plugin System Integration
+// =================================================================================
+
+func (node *FlexCoreNode) handlePluginsList(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	pluginInfos := node.pluginRegistry.ListPlugins()
+	
+	response := map[string]interface{}{
+		"plugins": pluginInfos,
+		"count":   len(pluginInfos),
+		"node_id": node.config.NodeID,
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(response)
+}
+
+func (node *FlexCoreNode) handlePluginsAction(w http.ResponseWriter, r *http.Request) {
+	// Extract plugin name from URL path
+	path := strings.TrimPrefix(r.URL.Path, "/plugins/")
+	pluginName := strings.Split(path, "/")[0]
+
+	if pluginName == "" {
+		http.Error(w, "Plugin name required", http.StatusBadRequest)
+		return
+	}
+
+	switch r.Method {
+	case http.MethodGet:
+		// Get specific plugin info
+		pluginInfo, err := node.pluginRegistry.GetPlugin(pluginName)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusNotFound)
+			return
+		}
+		
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(pluginInfo)
+
+	case http.MethodPost:
+		// Configure plugin
+		var config map[string]interface{}
+		if err := json.NewDecoder(r.Body).Decode(&config); err != nil {
+			http.Error(w, "Invalid JSON", http.StatusBadRequest)
+			return
+		}
+
+		if err := node.pluginRegistry.ConfigurePlugin(pluginName, config); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(map[string]interface{}{
+			"success": true,
+			"message": "Plugin configured successfully",
+		})
+
+	case http.MethodDelete:
+		// Unload plugin
+		if err := node.pluginRegistry.UnloadPlugin(pluginName); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(map[string]interface{}{
+			"success": true,
+			"message": "Plugin unloaded successfully",
+		})
+
+	default:
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+	}
+}
+
+func (node *FlexCoreNode) handlePluginExecute(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	var request struct {
+		PluginName string      `json:"plugin_name"`
+		Input      interface{} `json:"input"`
+	}
+
+	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
+		http.Error(w, "Invalid JSON", http.StatusBadRequest)
+		return
+	}
+
+	if request.PluginName == "" {
+		http.Error(w, "Plugin name required", http.StatusBadRequest)
+		return
+	}
+
+	// Execute plugin with timeout context
+	ctx, cancel := context.WithTimeout(r.Context(), 30*time.Second)
+	defer cancel()
+
+	result, err := node.pluginRegistry.ExecutePlugin(ctx, request.PluginName, request.Input)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	response := map[string]interface{}{
+		"success":     true,
+		"plugin_name": request.PluginName,
+		"result":      result,
+		"executed_at": time.Now(),
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(response)
+}
+
+func (node *FlexCoreNode) handlePluginsHealth(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	health := node.pluginRegistry.HealthCheck()
+	
+	response := map[string]interface{}{
+		"plugins_health": health,
+		"checked_at":     time.Now(),
+		"node_id":        node.config.NodeID,
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(response)
+}
+
+// =================================================================================
+// WORKFLOWS API HANDLERS - Windmill Integration
+// =================================================================================
+
+func (node *FlexCoreNode) handleWorkflowsList(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	workflows, err := node.windmillClient.ListWorkflows(r.Context())
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	response := map[string]interface{}{
+		"workflows": workflows,
+		"count":     len(workflows),
+		"node_id":   node.config.NodeID,
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(response)
+}
+
+func (node *FlexCoreNode) handleWorkflowsAction(w http.ResponseWriter, r *http.Request) {
+	// Extract workflow ID from URL path
+	path := strings.TrimPrefix(r.URL.Path, "/workflows/")
+	workflowID := strings.Split(path, "/")[0]
+
+	if workflowID == "" {
+		http.Error(w, "Workflow ID required", http.StatusBadRequest)
+		return
+	}
+
+	switch r.Method {
+	case http.MethodGet:
+		// Get specific workflow
+		workflow, err := node.windmillClient.GetWorkflow(r.Context(), workflowID)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusNotFound)
+			return
+		}
+		
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(workflow)
+
+	case http.MethodPost:
+		// Create new workflow
+		var workflow windmill.WorkflowDefinition
+		if err := json.NewDecoder(r.Body).Decode(&workflow); err != nil {
+			http.Error(w, "Invalid JSON", http.StatusBadRequest)
+			return
+		}
+
+		if err := node.windmillClient.CreateWorkflow(r.Context(), &workflow); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(map[string]interface{}{
+			"success": true,
+			"message": "Workflow created successfully",
+		})
+
+	case http.MethodPUT:
+		// Update workflow
+		var workflow windmill.WorkflowDefinition
+		if err := json.NewDecoder(r.Body).Decode(&workflow); err != nil {
+			http.Error(w, "Invalid JSON", http.StatusBadRequest)
+			return
+		}
+
+		if err := node.windmillClient.UpdateWorkflow(r.Context(), workflowID, &workflow); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(map[string]interface{}{
+			"success": true,
+			"message": "Workflow updated successfully",
+		})
+
+	case http.MethodDelete:
+		// Delete workflow
+		if err := node.windmillClient.DeleteWorkflow(r.Context(), workflowID); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(map[string]interface{}{
+			"success": true,
+			"message": "Workflow deleted successfully",
+		})
+
+	default:
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+	}
+}
+
+func (node *FlexCoreNode) handleWorkflowExecute(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	var request struct {
+		WorkflowID string                 `json:"workflow_id"`
+		Input      map[string]interface{} `json:"input"`
+	}
+
+	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
+		http.Error(w, "Invalid JSON", http.StatusBadRequest)
+		return
+	}
+
+	if request.WorkflowID == "" {
+		http.Error(w, "Workflow ID required", http.StatusBadRequest)
+		return
+	}
+
+	// Execute workflow
+	execution, err := node.windmillClient.ExecuteWorkflow(r.Context(), request.WorkflowID, request.Input)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(execution)
+}
+
+func (node *FlexCoreNode) handleWorkflowStatus(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	executionID := r.URL.Query().Get("execution_id")
+	if executionID == "" {
+		http.Error(w, "Execution ID required", http.StatusBadRequest)
+		return
+	}
+
+	// Get workflow execution status
+	execution, err := node.windmillClient.GetWorkflowExecution(r.Context(), executionID)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(execution)
+}
+
+// =================================================================================
+// EVENT STREAMING HANDLER
+// =================================================================================
+
+func (node *FlexCoreNode) handleEventStream(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	// Set headers for Server-Sent Events (SSE)
+	w.Header().Set("Content-Type", "text/event-stream")
+	w.Header().Set("Cache-Control", "no-cache")
+	w.Header().Set("Connection", "keep-alive")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+
+	// Create a channel for events
+	eventChan := make(chan map[string]interface{}, 10)
+	
+	// Send initial connection event
+	eventChan <- map[string]interface{}{
+		"type":      "connection",
+		"message":   "Connected to FlexCore event stream",
+		"node_id":   node.config.NodeID,
+		"timestamp": time.Now(),
+	}
+
+	// Send periodic heartbeat events (demo)
+	ticker := time.NewTicker(5 * time.Second)
+	defer ticker.Stop()
+
+	go func() {
+		defer close(eventChan)
+		for {
+			select {
+			case <-r.Context().Done():
+				return
+			case <-ticker.C:
+				eventChan <- map[string]interface{}{
+					"type":      "heartbeat",
+					"node_id":   node.config.NodeID,
+					"timestamp": time.Now(),
+					"cluster_status": map[string]interface{}{
+						"active_nodes": len(node.coordinator.GetActiveNodes(r.Context())),
+						"is_leader":    node.coordinator.IsLeader(r.Context()),
+					},
+				}
+			}
+		}
+	}()
+
+	// Stream events to client
+	flusher, ok := w.(http.Flusher)
+	if !ok {
+		http.Error(w, "Streaming not supported", http.StatusInternalServerError)
+		return
+	}
+
+	for event := range eventChan {
+		eventData, _ := json.Marshal(event)
+		fmt.Fprintf(w, "data: %s\n\n", eventData)
+		flusher.Flush()
+	}
+}

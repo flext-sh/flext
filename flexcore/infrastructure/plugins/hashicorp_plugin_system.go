@@ -3,6 +3,7 @@ package plugins
 
 import (
 	"context"
+	"encoding/gob"
 	"fmt"
 	"os"
 	"os/exec"
@@ -14,6 +15,24 @@ import (
 	"github.com/flext/flexcore/shared/errors"
 	"github.com/flext/flexcore/shared/result"
 )
+
+// init registers types for gob encoding/decoding
+func init() {
+	// Register common types for map[string]interface{} serialization
+	gob.Register(map[string]interface{}{})
+	gob.Register([]interface{}{})
+	gob.Register([]map[string]interface{}{})
+	
+	// Register common primitive types
+	gob.Register(string(""))
+	gob.Register(int(0))
+	gob.Register(int64(0))
+	gob.Register(float64(0))
+	gob.Register(bool(false))
+	
+	// Register plugin-specific types
+	gob.Register(PluginInfo{})
+}
 
 // FlexCorePlugin defines the interface for FlexCore plugins
 type FlexCorePlugin interface {

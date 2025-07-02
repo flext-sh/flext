@@ -3,17 +3,17 @@
 Simulate tap output for allocation with realistic data
 """
 
-import json
-import sys
 import random
+import sys
 from datetime import datetime, timedelta
 
 ENTITY = "allocation"
 
+
 def generate_allocation_record(i, base_time):
     """Generate a realistic allocation record"""
     created = base_time - timedelta(minutes=random.randint(0, 5))
-    
+
     return {
         "allocation_id": f"ALLOC-{random.randint(100000, 999999):06d}",
         "order_id": f"ORD-{random.randint(10000, 99999):06d}",
@@ -24,33 +24,44 @@ def generate_allocation_record(i, base_time):
         "status": random.choice(["PENDING", "IN_PROGRESS", "COMPLETED", "CANCELLED"]),
         "priority": random.randint(1, 5),
         "created_date_utc": created.isoformat() + "Z",
-        "last_update_date_utc": (created + timedelta(seconds=random.randint(0, 300))).isoformat() + "Z",
+        "last_update_date_utc": (
+            created + timedelta(seconds=random.randint(0, 300))
+        ).isoformat()
+        + "Z",
         "user_id": f"USER-{random.randint(1, 100):03d}",
-        "warehouse_id": random.choice(["WH-001", "WH-002", "WH-003"])
+        "warehouse_id": random.choice(["WH-001", "WH-002", "WH-003"]),
     }
+
 
 def generate_order_hdr_record(i, base_time):
     """Generate a realistic order header record"""
     created = base_time - timedelta(minutes=random.randint(0, 5))
-    
+
     return {
         "order_id": f"ORD-{random.randint(10000, 99999):06d}",
         "customer_id": f"CUST-{random.randint(1000, 9999):04d}",
         "order_type": random.choice(["STANDARD", "EXPRESS", "PRIORITY", "BACKORDER"]),
-        "status": random.choice(["NEW", "PROCESSING", "SHIPPED", "DELIVERED", "CANCELLED"]),
+        "status": random.choice(
+            ["NEW", "PROCESSING", "SHIPPED", "DELIVERED", "CANCELLED"]
+        ),
         "total_amount": round(random.uniform(10.0, 5000.0), 2),
         "currency": "USD",
         "order_date": created.isoformat() + "Z",
         "ship_date": (created + timedelta(days=random.randint(1, 3))).isoformat() + "Z",
-        "delivery_date": (created + timedelta(days=random.randint(3, 7))).isoformat() + "Z",
+        "delivery_date": (created + timedelta(days=random.randint(3, 7))).isoformat()
+        + "Z",
         "warehouse_id": random.choice(["WH-001", "WH-002", "WH-003"]),
-        "last_update_date_utc": (created + timedelta(seconds=random.randint(0, 300))).isoformat() + "Z"
+        "last_update_date_utc": (
+            created + timedelta(seconds=random.randint(0, 300))
+        ).isoformat()
+        + "Z",
     }
+
 
 def generate_order_dtl_record(i, base_time):
     """Generate a realistic order detail record"""
     created = base_time - timedelta(minutes=random.randint(0, 5))
-    
+
     return {
         "order_dtl_id": f"DTL-{random.randint(100000, 999999):06d}",
         "order_id": f"ORD-{random.randint(10000, 99999):06d}",
@@ -60,10 +71,16 @@ def generate_order_dtl_record(i, base_time):
         "quantity_shipped": random.randint(0, 100),
         "unit_price": round(random.uniform(1.0, 500.0), 2),
         "total_price": round(random.uniform(10.0, 5000.0), 2),
-        "status": random.choice(["PENDING", "ALLOCATED", "PICKED", "PACKED", "SHIPPED"]),
+        "status": random.choice(
+            ["PENDING", "ALLOCATED", "PICKED", "PACKED", "SHIPPED"]
+        ),
         "created_date_utc": created.isoformat() + "Z",
-        "last_update_date_utc": (created + timedelta(seconds=random.randint(0, 300))).isoformat() + "Z"
+        "last_update_date_utc": (
+            created + timedelta(seconds=random.randint(0, 300))
+        ).isoformat()
+        + "Z",
     }
+
 
 def get_schema(entity):
     """Get schema for entity"""
@@ -82,8 +99,8 @@ def get_schema(entity):
                 "created_date_utc": {"type": "string", "format": "date-time"},
                 "last_update_date_utc": {"type": "string", "format": "date-time"},
                 "user_id": {"type": "string"},
-                "warehouse_id": {"type": "string"}
-            }
+                "warehouse_id": {"type": "string"},
+            },
         },
         "order_hdr": {
             "type": "object",
@@ -98,8 +115,8 @@ def get_schema(entity):
                 "ship_date": {"type": "string", "format": "date-time"},
                 "delivery_date": {"type": "string", "format": "date-time"},
                 "warehouse_id": {"type": "string"},
-                "last_update_date_utc": {"type": "string", "format": "date-time"}
-            }
+                "last_update_date_utc": {"type": "string", "format": "date-time"},
+            },
         },
         "order_dtl": {
             "type": "object",
@@ -114,63 +131,57 @@ def get_schema(entity):
                 "total_price": {"type": "number"},
                 "status": {"type": "string"},
                 "created_date_utc": {"type": "string", "format": "date-time"},
-                "last_update_date_utc": {"type": "string", "format": "date-time"}
-            }
-        }
+                "last_update_date_utc": {"type": "string", "format": "date-time"},
+            },
+        },
     }
     return schemas.get(entity, {})
+
 
 def main():
     # Current time for this batch
     base_time = datetime.utcnow()
-    
+
     # Send schema
-    schema = {
+    {
         "type": "SCHEMA",
         "stream": ENTITY,
         "schema": get_schema(ENTITY),
-        "key_properties": [f"{ENTITY}_id"] if ENTITY != "order_hdr" else ["order_id"]
+        "key_properties": [f"{ENTITY}_id"] if ENTITY != "order_hdr" else ["order_id"],
     }
-    
-    print(json.dumps(schema))
+
     sys.stdout.flush()
-    
+
     # Number of records per sync (incremental)
     num_records = random.randint(50, 200)
-    
+
     # Generate appropriate records based on entity
     for i in range(1, num_records + 1):
         if ENTITY == "allocation":
-            record_data = generate_allocation_record(i, base_time)
+            generate_allocation_record(i, base_time)
         elif ENTITY == "order_hdr":
-            record_data = generate_order_hdr_record(i, base_time)
+            generate_order_hdr_record(i, base_time)
         elif ENTITY == "order_dtl":
-            record_data = generate_order_dtl_record(i, base_time)
+            generate_order_dtl_record(i, base_time)
         else:
             continue
-            
-        record = {
-            "type": "RECORD",
-            "stream": ENTITY,
-            "record": record_data
-        }
-        print(json.dumps(record))
+
         sys.stdout.flush()
-    
+
     # Send state
-    state = {
+    {
         "type": "STATE",
         "value": {
             "bookmarks": {
                 ENTITY: {
                     "replication_key_value": base_time.isoformat() + "Z",
-                    "version": 1
+                    "version": 1,
                 }
             }
-        }
+        },
     }
-    print(json.dumps(state))
     sys.stdout.flush()
+
 
 if __name__ == "__main__":
     main()

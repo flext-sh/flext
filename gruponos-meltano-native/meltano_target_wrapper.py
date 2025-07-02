@@ -2,12 +2,12 @@
 """Meltano-compatible wrapper for target-oracle."""
 
 import sys
-import os
 
 # Add current path
-sys.path.insert(0, '.')
+sys.path.insert(0, ".")
 
-# Import and run simple_target_oracle
+# Import and run simple_target_oracle_fixed
 if __name__ == "__main__":
-    import simple_target_oracle
-    simple_target_oracle.process_singer_messages()
+    import simple_target_oracle_fixed
+
+    simple_target_oracle_fixed.process_singer_messages()

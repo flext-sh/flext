@@ -2,14 +2,14 @@
 """Meltano-compatible wrapper for tap-oracle-wms."""
 
 import sys
-import os
 
 # Add tap path
-sys.path.insert(0, '/home/marlonsc/flext/flext-tap-oracle-wms/src')
+sys.path.insert(0, "/home/marlonsc/flext/flext-tap-oracle-wms/src")
 
 # Apply jsonschema patch silently
 import jsonschema
-if not hasattr(jsonschema, 'Draft7Validator'):
+
+if not hasattr(jsonschema, "Draft7Validator"):
     jsonschema.Draft7Validator = jsonschema.Draft4Validator
 
 # Import and run the tap

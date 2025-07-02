@@ -31,8 +31,33 @@ plugins:
 
   loaders:
   - name: target-oracle
-    namespace: target_oracle_custom
-    executable: ./meltano_target_wrapper.py
+    namespace: target_oracle_advanced
+    executable: ./oracle_target_wrapper.py
+    config:
+      # Connection settings
+      host: $DATABASE__HOST
+      port: $DATABASE__PORT
+      service_name: $DATABASE__SERVICE_NAME
+      username: $DATABASE__USERNAME
+      password: $DATABASE__PASSWORD
+      schema: $DATABASE__SCHEMA
+      protocol: $DATABASE__PROTOCOL
+      
+      # Performance settings  
+      batch_size: 1000
+      max_workers: 4
+      pool_size: 5
+      pool_recycle: 3600
+      connection_timeout: 30
+      
+      # Advanced features
+      use_bulk_insert: true
+      parallel_degree: 4
+      enable_performance_metrics: true
+      add_record_metadata: true
+      ignore_duplicate_keys: true
+      max_retries: 3
+      retry_delay: 1.0
 
 jobs:
 - name: allocation-full-sync

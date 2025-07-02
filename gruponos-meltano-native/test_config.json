@@ -1,12 +1,13 @@
 {
-  "base_url": "https://ta29.wms.ocs.oraclecloud.com/raizen_test",
-  "username": "USER_WMS_INTEGRA",
-  "password": "jmCyS7BK94YvhS@",
-  "page_size": 10,
-  "timeout": 60,
-  "enable_incremental": false,
-  "verify_ssl": true,
-  "entities": ["allocation"],
-  "company_code": "*",
-  "facility_code": "*"
+  "host": "10.93.10.114",
+  "port": "1522",
+  "service_name": "gbe8f3f2dbbc562_dwpdb_low.adb.oraclecloud.com",
+  "username": "oic",
+  "password": "aehaz232dfNuupah_#",
+  "protocol": "tcps",
+  "batch_size": 1000,
+  "pool_size": 3,
+  "enable_performance_metrics": true,
+  "use_bulk_insert": true,
+  "add_record_metadata": true
 }

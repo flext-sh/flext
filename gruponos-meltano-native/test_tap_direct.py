@@ -4,12 +4,11 @@ Test tap-oracle-wms directly without meltano
 """
 
 import json
-import sys
-import subprocess
 import os
 
 # Load environment
 from dotenv import load_dotenv
+
 load_dotenv()
 
 # Configuration
@@ -20,7 +19,7 @@ tap_config = {
     "api_key": os.getenv("WMS_API_KEY"),
     "timeout": 300,
     "page_size": 10,
-    "start_date": "2025-06-01T00:00:00Z"
+    "start_date": "2025-06-01T00:00:00Z",
 }
 
 # Simple catalog for allocation
@@ -29,10 +28,7 @@ catalog = {
         {
             "tap_stream_id": "allocation",
             "stream": "allocation",
-            "schema": {
-                "type": "object",
-                "properties": {}
-            },
+            "schema": {"type": "object", "properties": {}},
             "metadata": [
                 {
                     "breadcrumb": [],
@@ -41,10 +37,10 @@ catalog = {
                         "selected": True,
                         "table-key-properties": [],
                         "forced-replication-method": "incremental",
-                        "replication-key": "last_update_date_utc"
-                    }
+                        "replication-key": "last_update_date_utc",
+                    },
                 }
-            ]
+            ],
         }
     ]
 }
@@ -55,6 +51,3 @@ with open("test_tap_config.json", "w") as f:
 
 with open("test_catalog.json", "w") as f:
     json.dump(catalog, f)
-
-print("Configuration created. Now you can run:")
-print("meltano invoke tap-oracle-wms --config test_tap_config.json --catalog test_catalog.json | python simple_target_oracle.py")

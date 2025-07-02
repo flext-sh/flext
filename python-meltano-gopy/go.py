@@ -8,6 +8,11 @@ import collections
 import inspect
 import os
 
+"""Go module.
+
+This module provides go functionality.
+"""
+
 try:
     import collections.abc as _collections_abc
 except ImportError:
