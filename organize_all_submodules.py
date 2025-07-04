@@ -13,6 +13,7 @@ from rich.table import Table
 
 console = Console()
 
+
 class SubmoduleOrganizer:
     """Organize all FLEXT submodules comprehensively."""
 
@@ -90,10 +91,7 @@ class SubmoduleOrganizer:
                     candidates.extend(module_path.rglob(pattern))
 
             # Filter out false positives
-            valid_candidates = []
-            for candidate in candidates:
-                if self._should_cleanup(candidate, module_path):
-                    valid_candidates.append(candidate.relative_to(module_path))
+            valid_candidates = [candidate.relative_to(module_path) for candidate in candidates if self._should_cleanup(candidate, module_path)]
 
             if valid_candidates:
                 analysis["cleanup_candidates"][category] = valid_candidates
@@ -172,7 +170,7 @@ Each module maintains its directory structure in the backup.
 Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 """
 
-        with open(backup_dir / "README.md", "w") as f:
+        with open(backup_dir / "README.md", "w", encoding="utf-8") as f:
             f.write(readme_content)
 
         return backup_dir
@@ -301,7 +299,7 @@ export PYTHONPATH := $(PYTHONPATH):$(PWD)/src
 """
 
         try:
-            with open(makefile_path, "w") as f:
+            with open(makefile_path, "w", encoding="utf-8") as f:
                 f.write(makefile_content)
             return True
         except Exception as e:
@@ -400,6 +398,7 @@ export PYTHONPATH := $(PYTHONPATH):$(PWD)/src
 
         return test_results
 
+
 def main():
     """Main execution."""
     organizer = SubmoduleOrganizer()
@@ -484,6 +483,7 @@ def main():
     console.print(f"🔬 Module tests passed: {sum(1 for r in pytest_results.values() if r.get('status') == 'passed')}")
 
     console.print("\n✅ Ready for development with clean, standardized modules!")
+
 
 if __name__ == "__main__":
     main()

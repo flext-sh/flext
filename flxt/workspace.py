@@ -9,6 +9,7 @@ from rich.console import Console
 
 console = Console()
 
+
 class WorkspaceManager:
     """Unified workspace management."""
 

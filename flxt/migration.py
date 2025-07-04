@@ -9,6 +9,7 @@ from rich.console import Console
 
 console = Console()
 
+
 class BaseMigration:
     """Base class for migration operations."""
 
