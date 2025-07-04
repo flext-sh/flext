@@ -10,6 +10,7 @@ from rich.table import Table
 
 console = Console()
 
+
 class DeprecatedScriptIdentifier:
     """Identify scripts that are now replaced by the unified CLI."""
 
@@ -115,7 +116,7 @@ class DeprecatedScriptIdentifier:
             r"^setup\.py$",       # Setup scripts
             r"^conftest\.py$",    # Pytest configuration
             r"^manage\.py$",      # Django management
-            r"tests/test_.*\.py$", # Actual test files
+            r"tests/test_.*\.py$",  # Actual test files
         ]
 
         # Keep scripts in certain directories
@@ -142,7 +143,7 @@ class DeprecatedScriptIdentifier:
                 return True
 
         # Keep if it's the CLI itself
-        return filename in ["flx", "identify_deprecated_scripts.py"]
+        return filename in {"flx", "identify_deprecated_scripts.py"}
 
     def generate_cleanup_script(self, deprecated: dict[str, list[str]]) -> str:
         """Generate a script to safely remove deprecated files."""
@@ -173,11 +174,7 @@ class DeprecatedScriptIdentifier:
             if files:
                 script_lines.append(f"# {category.replace('_', ' ').title()}")
                 for file_path in files:
-                    script_lines.append(f'if [ -f "{file_path}" ]; then')
-                    script_lines.append(f'    cp "{file_path}" "$backup_dir/"')
-                    script_lines.append(f'    rm "{file_path}"')
-                    script_lines.append(f'    echo "✅ Removed {file_path}"')
-                    script_lines.append("fi")
+                    script_lines.extend((f'if [ -f "{file_path}" ]; then', f'    cp "{file_path}" "$backup_dir/"', f'    rm "{file_path}"', f'    echo "✅ Removed {file_path}"', "fi"))
                     total_files += 1
                 script_lines.append("")
 
@@ -194,6 +191,7 @@ class DeprecatedScriptIdentifier:
         ])
 
         return "\n".join(script_lines)
+
 
 def main():
     """Main execution."""
@@ -243,7 +241,7 @@ def main():
     cleanup_script = identifier.generate_cleanup_script(deprecated)
     cleanup_path = Path("cleanup_deprecated_scripts.sh")
 
-    with open(cleanup_path, "w") as f:
+    with open(cleanup_path, "w", encoding="utf-8") as f:
         f.write(cleanup_script)
 
     cleanup_path.chmod(0o755)  # Make executable
@@ -256,6 +254,7 @@ def main():
     console.print("\n✅ Analysis complete! Use the unified CLI:")
     console.print("  ./flx --help")
     console.print("  ./flx info")
+
 
 if __name__ == "__main__":
     main()
