@@ -56,24 +56,24 @@ if [ ${#MISSING_REPOS[@]} -eq 0 ]; then
 else
     echo ""
     echo "=' Initializing missing git repositories..."
-    
+
     for module in "${MISSING_REPOS[@]}"; do
         echo "  =Á Initializing git repo in: $module"
         cd "$module"
-        
+
         # Initialize git repo
         git init
-        
+
         # Add initial files
         git add .
-        
+
         # Make initial commit
         git commit -m "feat: initial commit for $module
 
 - Initialize git repository
 - Add existing project files
 - Setup module structure" || echo "       No files to commit"
-        
+
         cd ..
         INITIALIZED_REPOS+=("$module")
         echo "     Initialized: $module"

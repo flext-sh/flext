@@ -248,7 +248,7 @@ O projeto agora tem uma arquitetura limpa, testável e manutenível, com cobertu
 ### 🎯 MISSÃO CUMPRIDA
 
 ✅ **Domain Layer**: Entidades puras sem dependências externas
-✅ **Use Cases Layer**: Orquestração de business logic com interfaces  
+✅ **Use Cases Layer**: Orquestração de business logic com interfaces
 ✅ **Interface Adapters**: Controllers, Gateways e Presenters implementados
 ✅ **Infrastructure Layer**: Persistence, Events, Validation e DI Container
 ✅ **Testes Unitários**: 37 testes com cobertura completa de cenários

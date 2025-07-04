@@ -21,18 +21,18 @@ test_endpoint() {
     local url="$2"
     local method="${3:-GET}"
     local expected_content="$4"
-    
+
     echo -n "🔍 Testing $name... "
-    
+
     if [ "$method" = "POST" ]; then
         response=$(curl -s -X POST "$url")
     else
         response=$(curl -s "$url")
     fi
-    
+
     # Check HTTP status
     status=$(curl -s -o /dev/null -w "%{http_code}" "$url")
-    
+
     if [ "$status" = "200" ]; then
         if [ -n "$expected_content" ]; then
             if echo "$response" | grep -q "$expected_content"; then
