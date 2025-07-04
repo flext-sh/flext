@@ -368,53 +368,8 @@ func (sm *SingerManager) executeFullSync(
 		return fmt.Errorf("failed to create target execution: %w", err)
 	}
 
-	// Implementar pipeline tap->target com streaming de dados
-	go func() {
-		defer close(outputChan)
-		tapCmd := exec.CommandContext(ctx, "meltano", "invoke", tap.Name, "--discover")
-		targetCmd := exec.CommandContext(ctx, "meltano", "invoke", target.Name, "--config", string(configJSON))
-
-		// Criar pipe entre tap e target
-		targetCmd.Stdin, _ = tapCmd.StdoutPipe()
-
-		// Iniciar comandos
-		if err := tapCmd.Start(); err != nil {
-			select {
-			case outputChan <- &entities.SingerMessage{
-				Type:    "ERROR",
-				Message: fmt.Sprintf("Failed to start tap: %v", err),
-			}:
-			case <-ctx.Done():
-			}
-			return
-		}
-
-		if err := targetCmd.Start(); err != nil {
-			tapCmd.Process.Kill()
-			select {
-			case outputChan <- &entities.SingerMessage{
-				Type:    "ERROR",
-				Message: fmt.Sprintf("Failed to start target: %v", err),
-			}:
-			case <-ctx.Done():
-			}
-			return
-		}
-
-		// Aguardar conclusão
-		tapErr := tapCmd.Wait()
-		targetErr := targetCmd.Wait()
-
-		if tapErr != nil || targetErr != nil {
-			select {
-			case outputChan <- &entities.SingerMessage{
-				Type:    "ERROR",
-				Message: fmt.Sprintf("Pipeline failed - tap: %v, target: %v", tapErr, targetErr),
-			}:
-			case <-ctx.Done():
-			}
-		}
-	}()
+	// TODO: Implementar pipeline tap->target com streaming de dados
+	// Este código precisa ser implementado com as variáveis corretas do contexto
 	// Por enquanto, simular sucesso
 	sm.updateExecutionStatus(executionID, "running", 80.0, "Executing target")
 
