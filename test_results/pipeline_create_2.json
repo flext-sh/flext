@@ -1,1 +1,0 @@
-{"error":"Validation failed","message":"Multiple validation errors occurred","code":"VALIDATION_ERROR","details":[{"field":"type","message":"type is required","value":""},{"field":"created_by","message":"created_by is required","value":""}],"timestamp":"2025-06-30T11:23:43.495989053Z"}
