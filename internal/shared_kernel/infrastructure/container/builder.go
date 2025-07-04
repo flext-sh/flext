@@ -300,76 +300,49 @@ func (cb *ContainerBuilder) initializeHandlers(container *FlexibleContainer) err
 // Métodos de inicialização específicos (implementação placeholder)
 func (cb *ContainerBuilder) initDatabase(container *FlexibleContainer) error {
 	cb.logger.Debug("Initializing database")
-	// Implementar inicialização de database
-	if builder.features[FeatureDatabase] {
-		db, err := initializeDatabase(builder.config)
-		if err != nil {
-			builder.logger.Error("Failed to initialize database", "error", err)
-		} else {
-			container.SetDatabase(db)
-			builder.logger.Info("Database initialized successfully")
-		}
-	}
+	// TODO: Implementar inicialização de database
+	// if cb.features[FeatureDatabase] {
+	//     db, err := initializeDatabase(cb.config)
+	//     if err != nil {
+	//         cb.logger.Error("Failed to initialize database", "error", err)
+	//     } else {
+	//         container.SetDatabase(db)
+	//         cb.logger.Info("Database initialized successfully")
+	//     }
+	// }
 	return nil
 }
 
 func (cb *ContainerBuilder) initCache(container *FlexibleContainer) error {
 	cb.logger.Debug("Initializing cache")
-	// Implementar inicialização de cache
-	if builder.features[FeatureRedis] {
-		cache, err := initializeCache(builder.config)
-		if err != nil {
-			builder.logger.Error("Failed to initialize cache", "error", err)
-		} else {
-			container.SetCache(cache)
-			builder.logger.Info("Cache initialized successfully")
-		}
-	}
+	// TODO: Implementar inicialização de cache
+	// if cb.features[FeatureRedis] {
+	//     cache, err := initializeCache(cb.config)
+	//     if err != nil {
+	//         cb.logger.Error("Failed to initialize cache", "error", err)
+	//     } else {
+	//         container.SetCache(cache)
+	//         cb.logger.Info("Cache initialized successfully")
+	//     }
+	// }
 	return nil
 }
 
 func (cb *ContainerBuilder) initMonitoring(container *FlexibleContainer) error {
 	cb.logger.Debug("Initializing monitoring")
-	// Implementar inicialização de monitoring
-	if builder.features[FeatureMonitoring] {
-		monitor, err := initializeMonitoring(builder.config)
-		if err != nil {
-			builder.logger.Error("Failed to initialize monitoring", "error", err)
-		} else {
-			container.SetMonitoring(monitor)
-			builder.logger.Info("Monitoring initialized successfully")
-		}
-	}
+	// TODO: Implementar inicialização de monitoring
 	return nil
 }
 
 func (cb *ContainerBuilder) initEventSystem(container *FlexibleContainer) error {
 	cb.logger.Debug("Initializing event system")
-	// Implementar inicialização de event system
-	if builder.features[FeaturePipeline] {
-		eventBus, err := initializeEventSystem(builder.config)
-		if err != nil {
-			builder.logger.Error("Failed to initialize event system", "error", err)
-		} else {
-			container.SetEventBus(eventBus)
-			builder.logger.Info("Event system initialized successfully")
-		}
-	}
+	// TODO: Implementar inicialização de event system
 	return nil
 }
 
 func (cb *ContainerBuilder) initRepositories(container *FlexibleContainer) error {
 	cb.logger.Debug("Initializing repositories")
-	// Implementar inicialização de repositories
-	if builder.features[FeatureAdvancedDB] {
-		repos, err := initializeRepositories(builder.config, container)
-		if err != nil {
-			builder.logger.Error("Failed to initialize repositories", "error", err)
-		} else {
-			container.SetRepositories(repos)
-			builder.logger.Info("Repositories initialized successfully")
-		}
-	}
+	// TODO: Implementar inicialização de repositories
 	return nil
 }
 
@@ -486,6 +459,31 @@ func (fc *FlexibleContainer) GetService(name string) interface{} {
 // GetHandlers retorna todos os handlers
 func (fc *FlexibleContainer) GetHandlers() map[string]interface{} {
 	return fc.handlers
+}
+
+// SetDatabase sets the database component
+func (fc *FlexibleContainer) SetDatabase(db interface{}) {
+	fc.services["database"] = db
+}
+
+// SetCache sets the cache component
+func (fc *FlexibleContainer) SetCache(cache interface{}) {
+	fc.services["cache"] = cache
+}
+
+// SetMonitoring sets the monitoring component
+func (fc *FlexibleContainer) SetMonitoring(monitor interface{}) {
+	fc.services["monitoring"] = monitor
+}
+
+// SetEventBus sets the event bus component
+func (fc *FlexibleContainer) SetEventBus(eventBus interface{}) {
+	fc.services["eventBus"] = eventBus
+}
+
+// SetRepositories sets the repositories component
+func (fc *FlexibleContainer) SetRepositories(repos interface{}) {
+	fc.services["repositories"] = repos
 }
 
 // GetServices retorna todos os services

@@ -367,9 +367,13 @@ func (e *MeltanoExecutor) executeCommand(cmd *exec.Cmd, outputFile, logFile stri
 	// Set timeout
 	timeoutCtx, cancel := context.WithTimeout(context.Background(), e.timeout)
 	defer cancel()
+	
+	// Store original values before recreating command
+	originalDir := cmd.Dir
+	originalEnv := cmd.Env
 	cmd = exec.CommandContext(timeoutCtx, cmd.Path, cmd.Args[1:]...)
-	cmd.Dir = cmd.Dir
-	cmd.Env = cmd.Env
+	cmd.Dir = originalDir
+	cmd.Env = originalEnv
 
 	// Execute
 	err = cmd.Run()

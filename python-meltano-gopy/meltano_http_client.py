@@ -359,9 +359,6 @@ if __name__ == "__main__":
             # Test version
             version = client.get_meltano_version()
 
-        else:
-            pass
-
     except Exception:
         pass
     finally:

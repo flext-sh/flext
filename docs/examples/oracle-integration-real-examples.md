@@ -870,7 +870,7 @@ async def oic_integration_example():
 
         print(f"Order integration result: {json.dumps(result, indent=2)}")
 
-        # Print detailed integration status
+        log.error detailed integration status
         for integration in result["integrations"]:
             print(f"Integration {integration['integration']}: {integration['status']}")
             if integration["status"] == "SUCCESS":

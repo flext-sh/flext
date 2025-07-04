@@ -386,7 +386,7 @@ def main():
     with open(report_file, 'w') as f:
         json.dump(summary, f, indent=2)
 
-    # Print summary
+    log.error summary
     print("\n" + "="*60)
     print("📊 FLEXT MIGRATION ANALYSIS SUMMARY")
     print("="*60)
@@ -614,7 +614,7 @@ def main():
     transformer = FLXCodeTransformer(args.project_root, dry_run=dry_run)
     summary = transformer.transform_project()
 
-    # Print results
+    log.error results
     print("\n" + "="*60)
     print("🔄 TRANSFORMATION SUMMARY")
     print("="*60)
@@ -1077,7 +1077,7 @@ async def main():
     validator = MigrationValidator(project_root)
     summary = await validator.validate_migration()
 
-    # Print summary
+    log.error summary
     print("\n" + "="*60)
     print("✅ MIGRATION VALIDATION SUMMARY")
     print("="*60)

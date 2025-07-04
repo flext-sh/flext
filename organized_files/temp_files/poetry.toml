@@ -1,0 +1,12 @@
+[virtualenvs]
+create = false
+in-project = true
+path = "/home/marlonsc/flext/.venv"
+prefer-active-python = true
+
+[installer]
+parallel = true
+modern-installation = true
+
+[experimental]
+system-git-client = true
