@@ -118,7 +118,7 @@ func (e *PluginExecutor) Execute(ctx context.Context, plugin *entities.Plugin, e
 	}
 
 	result.Duration = time.Since(startTime)
-	
+
 	e.logger.Info("Plugin execution completed",
 		logging.F("plugin_id", plugin.ID.String()),
 		logging.F("success", result.Success),
@@ -155,7 +155,7 @@ func (e *PluginExecutor) executeTap(ctx context.Context, plugin *entities.Plugin
 		if _, err := os.Stat(stateFile); err == nil {
 			args = append(args, "--state", stateFile)
 		}
-		
+
 		cmd = exec.CommandContext(ctx, e.pythonPath, args...)
 	} else {
 		// Custom binary or script
@@ -233,7 +233,7 @@ func (e *PluginExecutor) executeTransformer(ctx context.Context, plugin *entitie
 
 	// Prepare transformer command
 	outputFile := filepath.Join(execDir, "transform_output.json")
-	cmd := exec.CommandContext(ctx, e.pythonPath, plugin.EntryPoint, 
+	cmd := exec.CommandContext(ctx, e.pythonPath, plugin.EntryPoint,
 		"--config", configFile, "--input", inputFile, "--output", outputFile)
 
 	// Set up environment
@@ -283,7 +283,7 @@ func (e *PluginExecutor) executeCommand(cmd *exec.Cmd, outputFile, pluginType st
 	// Execute command with timeout
 	timeoutCtx, cancel := context.WithTimeout(context.Background(), e.timeout)
 	defer cancel()
-	
+
 	// Store original values before recreating command
 	originalDir := cmd.Dir
 	originalEnv := cmd.Env
@@ -388,7 +388,7 @@ func (e *PluginExecutor) countJSONLRecords(output string) int {
 }
 
 func (e *PluginExecutor) parseTargetStats(output string) int {
-	// Simple heuristic: count lines that mention "records" 
+	// Simple heuristic: count lines that mention "records"
 	lines := strings.Split(output, "\n")
 	for _, line := range lines {
 		if strings.Contains(line, "loaded") && strings.Contains(line, "records") {
@@ -401,7 +401,7 @@ func (e *PluginExecutor) parseTargetStats(output string) int {
 
 func (e *PluginExecutor) parseTransformerOutput(outputFile string) (map[string]interface{}, int) {
 	data := make(map[string]interface{})
-	
+
 	if content, err := os.ReadFile(outputFile); err == nil {
 		var output map[string]interface{}
 		if json.Unmarshal(content, &output) == nil {
@@ -411,7 +411,7 @@ func (e *PluginExecutor) parseTransformerOutput(outputFile string) (map[string]i
 			}
 		}
 	}
-	
+
 	return data, 0
 }
 
