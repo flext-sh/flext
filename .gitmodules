@@ -142,7 +142,7 @@
 	url = git@github.com:flext-sh/flexcore.git
 [submodule "gruponos-meltano-native"]
 	path = gruponos-meltano-native
-	url = https://github.com/flext-sh/gruponos-meltano-native.git
+	url = git@github.com:datacosmos-br/gruponos-meltano-native.git
 [submodule "flext-target-oracle"]
 	path = flext-target-oracle
 	url = git@github.com:flext-sh/flext-target-oracle.git
