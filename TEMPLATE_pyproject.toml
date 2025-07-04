@@ -216,13 +216,13 @@ ignore = [
     "ISC001",  # implicit-str-concat (conflicts with formatter)
     "D203",    # one-blank-line-before-class (conflicts with D211)
     "D213",    # multi-line-docstring-summary-second-line (conflicts with D212)
-    
+
     # STRICT MODE: Only allow critical exceptions
     "E501",    # line-too-long (handled by formatter)
     "PLR0913", # too-many-arguments (context-dependent)
     "PLR0915", # too-many-statements (context-dependent)
     "C901",    # too-complex (context-dependent)
-    
+
     # TEMPORARY: Project-specific exceptions (remove progressively)
     "T201",    # print statements (remove in production)
     "S101",    # assert statements (allowed in tests)

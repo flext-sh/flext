@@ -239,7 +239,7 @@ func (e *MeltanoExecutor) setupMeltanoEnvironment(execDir string, config *Meltan
 func (e *MeltanoExecutor) executeMeltanoRun(ctx context.Context, config *MeltanoConfig, execDir string) (*MeltanoRunResult, error) {
 	// Prepare Meltano run command
 	args := []string{"run"}
-	
+
 	// Add tap and target
 	if config.TargetName != "" {
 		args = append(args, fmt.Sprintf("%s:%s", config.TapName, config.TargetName))
@@ -367,7 +367,7 @@ func (e *MeltanoExecutor) executeCommand(cmd *exec.Cmd, outputFile, logFile stri
 	// Set timeout
 	timeoutCtx, cancel := context.WithTimeout(context.Background(), e.timeout)
 	defer cancel()
-	
+
 	// Store original values before recreating command
 	originalDir := cmd.Dir
 	originalEnv := cmd.Env
@@ -485,10 +485,10 @@ func (e *MeltanoExecutor) parseMeltanoOutput(result *MeltanoRunResult, outputFil
 	// Read and parse output files for Meltano-specific metrics
 	if content, err := os.ReadFile(outputFile); err == nil {
 		output := string(content)
-		
+
 		// Extract records count from Meltano output
 		result.RecordsCount = e.countJSONLRecords(outputFile)
-		
+
 		// Add metadata
 		result.Metadata["output_size"] = len(content)
 		result.Metadata["has_catalog"] = strings.Contains(output, "catalog")
