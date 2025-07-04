@@ -1,6 +1,6 @@
 # PLANO DE MIGRAÇÃO - REFATORAÇÃO CLAUDE.md
 
-**Data**: 2025-06-29  
+**Data**: 2025-06-29
 **Objetivo**: Eliminar duplicações, resolver contradições e otimizar hierarquia
 
 ## 🎯 RESUMO EXECUTIVO

@@ -77,12 +77,12 @@ func InitMeltano() *C.char {
     if err != nil {
         return C.CString(`{"success": false, "error": "` + err.Error() + `"}`)
     }
-    
+
     result := map[string]interface{}{
         "success": true,
         "data": "Meltano adapter initialized successfully",
     }
-    
+
     jsonBytes, _ := json.Marshal(result)
     return C.CString(string(jsonBytes))
 }
@@ -94,7 +94,7 @@ func CheckMeltano() *C.char {
         "success": true,
         "data": map[string]bool{"available": available},
     }
-    
+
     jsonBytes, _ := json.Marshal(result)
     return C.CString(string(jsonBytes))
 }
@@ -106,7 +106,7 @@ func RunMeltanoPipeline(extractor, loader, transformer *C.char) *C.char {
         return C.CString(`{"success": false, "error": "Failed to create adapter"}`)
     }
     defer adapter.Close()
-    
+
     result := adapter.RunPipeline(C.GoString(extractor), C.GoString(loader), C.GoString(transformer))
     return C.CString(result)
 }
@@ -144,21 +144,21 @@ lib.RunMeltanoPipeline.restype = ctypes.c_char_p
 
 class MeltanoAdapter:
     """Python wrapper for FLEXT Meltano functionality"""
-    
+
     def __init__(self):
         """Initialize the Meltano adapter"""
         result_str = lib.InitMeltano().decode('utf-8')
         result = json.loads(result_str)
         if not result['success']:
             raise RuntimeError(f"Failed to initialize Meltano: {result['error']}")
-    
+
     @staticmethod
     def is_available() -> bool:
         """Check if Meltano is available in the system"""
         result_str = lib.CheckMeltano().decode('utf-8')
         result = json.loads(result_str)
         return result['data']['available'] if result['success'] else False
-    
+
     def run_pipeline(self, extractor: str, loader: str, transformer: str = "") -> Dict[str, Any]:
         """Run a Meltano pipeline"""
         result_str = lib.RunMeltanoPipeline(
@@ -204,13 +204,13 @@ def main():
     print("🔍 Checking Meltano availability...")
     if flext_meltano.check_meltano():
         print("✅ Meltano is available!")
-        
+
         print("🚀 Initializing Meltano adapter...")
         adapter = flext_meltano.init_meltano()
-        
+
         print("📊 Running sample pipeline...")
         result = adapter.run_pipeline("tap-sample", "target-sample")
-        
+
         print(f"📋 Pipeline result: {result}")
     else:
         print("❌ Meltano is not available")

@@ -136,7 +136,7 @@ class OracleConfig(BaseModel):
     user: str
     password: SecretStr
     schema: str | None = None
-    
+
     class Config:
         frozen = True  # Imutável
 ```
@@ -151,7 +151,7 @@ class OracleConnectionManager(IConnectionManager):
         self._logger = logger
         self._connection: Connection | None = None
         self._lock = threading.Lock()
-    
+
     def connect(self) -> Connection:
         # Implementação específica Oracle
         # Usa oracledb com otimizações
@@ -185,7 +185,7 @@ class BatchService:
         self._processor = processor
         self._validator = validator
         self._monitor = monitor
-    
+
     async def process_batch_async(self, batch: Batch) -> BatchResult:
         # Valida, processa, monitora
         # Coordena mas não implementa lógica
@@ -197,13 +197,13 @@ class BatchService:
 ```python
 class OracleTarget(Target):
     """Singer SDK Target adaptado."""
-    
+
     def __init__(self, config: dict, **kwargs):
         # Inicializa serviços via DI container
         self._container = DIContainer()
         self._setup_services()
         super().__init__(config, **kwargs)
-    
+
     def get_sink(self, stream_name: str) -> OracleSink:
         # Cria sink com serviços injetados
         return OracleSink(
@@ -312,10 +312,10 @@ class ITypeValidator(Protocol):
 # Single Responsibility + Open/Closed
 class OracleTypeMapper(ITypeMapper):
     """Mapeia tipos para Oracle."""
-    
+
     def __init__(self, strategies: dict[str, ITypeStrategy]):
         self._strategies = strategies
-    
+
     def map_type(self, source_type: str, context: TypeContext) -> str:
         strategy = self._strategies.get(source_type)
         if not strategy:
@@ -347,16 +347,16 @@ class BatchService:
         validation = self._validator.validate(batch)
         if not validation.is_valid:
             return BatchResult.failure(validation.errors)
-        
+
         # Transformar
         transformed = self._transformer.transform(batch)
-        
+
         # Persistir
         result = self._persister.persist(transformed)
-        
+
         # Monitorar
         self._monitor.record_batch(result)
-        
+
         return result
 ```
 
@@ -366,13 +366,13 @@ class BatchService:
 # shared/config_base.py
 class BaseConfig(BaseModel):
     """Configuração base compartilhada."""
-    
+
     # Campos comuns
     debug: bool = False
     log_level: str = "INFO"
     retry_count: int = 3
     timeout: int = 120
-    
+
     # Validações comuns
     @validator('log_level')
     def validate_log_level(cls, v):
@@ -386,7 +386,7 @@ class OracleConfig(BaseConfig):
     host: str
     port: int = 1521
     service_name: str
-    
+
 # WMS Tap herda configuração base
 class WMSConfig(BaseConfig):
     base_url: HttpUrl

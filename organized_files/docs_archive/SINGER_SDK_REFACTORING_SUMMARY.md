@@ -77,7 +77,7 @@ config:
   password: your-password
   service_name: your-service
   default_target_schema: YOUR_SCHEMA
-  
+
   # Optional: Custom type mapping rules
   custom_type_rules:
     FIELD_PATTERNS_TO_ORACLE:

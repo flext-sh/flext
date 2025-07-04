@@ -205,13 +205,13 @@ func main() {
 
 	fmt.Printf("✓ Found %d pipelines:\n", listResult.Total)
 	for _, p := range listResult.Pipelines {
-		fmt.Printf("  - %s (%s) - Status: %s, Active: %t\n", 
+		fmt.Printf("  - %s (%s) - Status: %s, Active: %t\n",
 			p.Name, p.ID.String()[:8], p.Status, p.IsActive)
 	}
 
 	// === FINAL VALIDATION ===
 	fmt.Println("\n=== VALIDATION RESULTS ===")
-	
+
 	// Check that all operations were successful
 	validations := []struct {
 		name   string

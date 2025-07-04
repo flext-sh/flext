@@ -75,7 +75,7 @@ func main() {
 		"email":   "test@example.com",
 		"roles":   []string{"user", "REDACTED_LDAP_BIND_PASSWORD"},
 	}
-	
+
 	token, err := authService.GenerateToken(userCtx)
 	if err != nil {
 		fmt.Printf("❌ Token generation failed: %v\n", err)
@@ -95,7 +95,7 @@ func main() {
 	fmt.Println("\n🗄️ Phase 4: Testing Unified Repositories")
 	pipelineRepo := unifiedContainer.GetUnifiedPipelineRepo()
 	pluginRepo := unifiedContainer.GetUnifiedPluginRepo()
-	
+
 	if pipelineRepo == nil || pluginRepo == nil {
 		fmt.Println("❌ Unified repositories not available")
 		os.Exit(1)
@@ -107,7 +107,7 @@ func main() {
 	fmt.Println("\n⚙️ Phase 5: Testing Application Services")
 	pipelineService := unifiedContainer.GetPipelineService()
 	pluginService := unifiedContainer.GetPluginService()
-	
+
 	if pipelineService == nil || pluginService == nil {
 		fmt.Println("❌ Application services not available")
 		os.Exit(1)
@@ -117,26 +117,26 @@ func main() {
 
 	// Phase 6: Test Functional Utilities
 	fmt.Println("\n🔧 Phase 6: Testing Functional Utilities")
-	
+
 	// Test Map function
 	numbers := []int{1, 2, 3, 4, 5}
 	doubled := utils.Map(numbers, func(n int) int { return n * 2 })
 	fmt.Printf("✅ Map function: %v -> %v\n", numbers, doubled)
-	
+
 	// Test Filter function
 	filtered := utils.Filter(numbers, func(n int) bool { return n%2 == 0 })
 	fmt.Printf("✅ Filter function: %v -> %v\n", numbers, filtered)
-	
+
 	// Test Optional type
 	some := utils.Some("test-value")
 	none := utils.None[string]()
 	fmt.Printf("✅ Optional type - Some: %t, None: %t\n", some.IsPresent(), none.IsEmpty())
-	
+
 	// Test Either type for error handling
 	rightValue := utils.Right[error, string]("success")
 	leftValue := utils.Left[error, string](fmt.Errorf("error"))
 	fmt.Printf("✅ Either type - Right: %t, Left: %t\n", rightValue.IsRight(), leftValue.IsLeft())
-	
+
 	testResults = append(testResults, "✅ Functional Utilities")
 
 	// Phase 7: Test HTTP Handler Base
@@ -153,21 +153,21 @@ func main() {
 	fmt.Println("\n" + "="*60)
 	fmt.Println("🎉 UNIFIED GO LAYER INTEGRATION TEST RESULTS")
 	fmt.Println("="*60)
-	
+
 	for _, result := range testResults {
 		fmt.Println(result)
 	}
-	
+
 	fmt.Printf("\n✅ ALL PHASES COMPLETED SUCCESSFULLY (%d/7)\n", len(testResults))
 	fmt.Println("🚀 Go Layer Unification is 100% OPERATIONAL")
-	
+
 	// Performance metrics
 	fmt.Println("\n📊 Performance Metrics:")
 	fmt.Printf("  - Config load time: < 10ms\n")
 	fmt.Printf("  - Container init time: < 100ms\n")
 	fmt.Printf("  - Memory usage: Optimized with caching\n")
 	fmt.Printf("  - Auth token ops: < 1ms per operation\n")
-	
+
 	// Cleanup
 	fmt.Println("\n🧹 Cleaning up...")
 	if err := unifiedContainer.Shutdown(); err != nil {
@@ -175,6 +175,6 @@ func main() {
 	} else {
 		fmt.Println("✅ Container shutdown completed")
 	}
-	
+
 	fmt.Println("\n🎯 Integration test completed successfully!")
 }

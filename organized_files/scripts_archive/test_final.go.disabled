@@ -113,7 +113,7 @@ func main() {
 
 	// === FINAL VALIDATION ===
 	fmt.Println("\n=== VALIDATION RESULTS ===")
-	
+
 	validations := []struct {
 		name   string
 		passed bool

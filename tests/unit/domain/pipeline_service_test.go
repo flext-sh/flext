@@ -103,7 +103,7 @@ func (suite *PipelineServiceTestSuite) TearDownTest() {
 func (suite *PipelineServiceTestSuite) TestCreatePipeline_DISABLED() {
 	// DISABLED: These tests need to be rewritten for PipelineExecutor interface
 	return
-	
+
 	/* Test successful creation
 	suite.Run("Successful Creation", func() {
 		// pipeline := &entities.Pipeline{
@@ -195,7 +195,7 @@ func (suite *PipelineServiceTestSuite) TestCreatePipeline_DISABLED() {
 func (suite *PipelineServiceTestSuite) TestGetPipeline_DISABLED() {
 	// DISABLED: These tests need to be rewritten for PipelineExecutor interface
 	return
-	
+
 	/* pipelineID := uuid.New()
 
 	// Test successful retrieval
@@ -244,7 +244,7 @@ func (suite *PipelineServiceTestSuite) TestGetPipeline_DISABLED() {
 func (suite *PipelineServiceTestSuite) TestListPipelines_DISABLED() {
 	// DISABLED: These tests need to be rewritten for PipelineExecutor interface
 	return
-	
+
 	/* Test successful listing
 	suite.Run("Successful Listing", func() {
 		// expectedPipelines := []*domain.Pipeline{
