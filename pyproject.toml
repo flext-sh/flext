@@ -43,7 +43,7 @@ Changelog = "https://github.com/flext-sh/flext/blob/main/CHANGELOG.md"
 
 [tool.poetry]
 # Workspace coordinator mode - no package installation
-package-mode = false
+package-mode = true
 
 [tool.poetry.dependencies]
 python = "^3.13"
