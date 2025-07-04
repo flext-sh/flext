@@ -130,12 +130,7 @@ class SubmoduleOrganizer:
             return False
 
         # Check if it's a proper test file (not temp test)
-        if (file_path.name.startswith("test_") and
-            "tests/" in str(relative_path) and
-            not any(x in file_path.name for x in ["temp", "old", "backup"])):
-            return False
-
-        return True
+        return not (file_path.name.startswith("test_") and "tests/" in str(relative_path) and not any(x in file_path.name for x in ["temp", "old", "backup"]))
 
     def create_backup_structure(self) -> Path:
         """Create backup directory structure."""
