@@ -142,10 +142,7 @@ class DeprecatedScriptIdentifier:
                 return True
 
         # Keep if it's the CLI itself
-        if filename in ["flx", "identify_deprecated_scripts.py"]:
-            return True
-
-        return False
+        return filename in ["flx", "identify_deprecated_scripts.py"]
 
     def generate_cleanup_script(self, deprecated: dict[str, list[str]]) -> str:
         """Generate a script to safely remove deprecated files."""

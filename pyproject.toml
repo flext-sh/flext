@@ -200,7 +200,7 @@ ignore_errors = false
 disallow_untyped_defs = false
 
 [tool.ruff]
-target-version = "py313"
+target-version = "py312"
 line-length = 88
 fix = true
 src = ["src", "tests", "scripts", "*/src"]
