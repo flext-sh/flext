@@ -13,6 +13,7 @@ from rich.table import Table
 
 console = Console()
 
+
 class ScriptOrganizer:
     """Organize deprecated scripts into categorized backup directories."""
 
@@ -116,7 +117,7 @@ chmod +x script.py
 **Note**: The unified CLI is the recommended approach. Only restore scripts if absolutely necessary.
 """
 
-        with open(backup_base / "README.md", "w") as f:
+        with open(backup_base / "README.md", "w", encoding="utf-8") as f:
             f.write(readme_content)
 
     def organize_scripts(self, deprecated_scripts: dict[str, list[str]]) -> dict[str, int]:
@@ -268,11 +269,12 @@ echo "  ./flx dev start"
 """
 
         restore_script_path = backup_path / "restore_scripts.sh"
-        with open(restore_script_path, "w") as f:
+        with open(restore_script_path, "w", encoding="utf-8") as f:
             f.write(restore_script)
 
         restore_script_path.chmod(0o755)
         return restore_script_path
+
 
 def main():
     """Main execution."""
@@ -346,6 +348,7 @@ def main():
     console.print("  ./flx quality check")
     console.print("  ./flx migration run <project>")
     console.print("  ./flx workspace status")
+
 
 if __name__ == "__main__":
     main()

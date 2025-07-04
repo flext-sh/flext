@@ -14,6 +14,7 @@ from rich.table import Table
 
 console = Console()
 
+
 class QualityManager:
     """Systematic quality management using proven methodologies."""
 
