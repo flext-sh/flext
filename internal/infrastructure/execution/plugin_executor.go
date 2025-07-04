@@ -283,9 +283,13 @@ func (e *PluginExecutor) executeCommand(cmd *exec.Cmd, outputFile, pluginType st
 	// Execute command with timeout
 	timeoutCtx, cancel := context.WithTimeout(context.Background(), e.timeout)
 	defer cancel()
+	
+	// Store original values before recreating command
+	originalDir := cmd.Dir
+	originalEnv := cmd.Env
 	cmd = exec.CommandContext(timeoutCtx, cmd.Path, cmd.Args[1:]...)
-	cmd.Env = cmd.Env
-	cmd.Dir = cmd.Dir
+	cmd.Env = originalEnv
+	cmd.Dir = originalDir
 
 	startTime := time.Now()
 	err = cmd.Run()

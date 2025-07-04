@@ -392,7 +392,7 @@ class EnterpriseLogger:
 
     def exception(self, message: str, **kwargs: Any) -> None:
         """Log exception with full traceback."""
-        self.logger.exception(message, extra=kwargs)
+        self.logger.error(message, extra=kwargs)
 
     def start_operation(self, operation: str) -> None:
         """Start timing an operation."""
