@@ -42,13 +42,12 @@ class SyntaxErrorFixer:
     def check_syntax(self, file_path: Path) -> tuple[bool, str]:
         """Check if a Python file has syntax errors."""
         try:
-            with open(file_path, encoding="utf-8") as f:
-                content = f.read()
+            content = file_path.read_text(encoding="utf-8")
             ast.parse(content)
             return True, ""
         except SyntaxError as e:
             return False, str(e)
-        except Exception as e:
+        except (OSError, ValueError, UnicodeDecodeError) as e:
             return False, f"Error reading file: {e}"
 
     def fix_malformed_imports(self, content: str) -> str:
@@ -119,8 +118,7 @@ class SyntaxErrorFixer:
     def fix_syntax_errors(self, file_path: Path) -> bool:
         """Fix common syntax errors in a Python file."""
         try:
-            with open(file_path, encoding="utf-8") as f:
-                original_content = f.read()
+            original_content = file_path.read_text(encoding="utf-8")
 
             # Apply fixes
             fixed_content = original_content
@@ -131,14 +129,13 @@ class SyntaxErrorFixer:
             try:
                 ast.parse(fixed_content)
                 # If parsing succeeds, write the fixed file
-                with open(file_path, "w", encoding="utf-8") as f:
-                    f.write(fixed_content)
+                file_path.write_text(fixed_content, encoding="utf-8")
                 return True
             except SyntaxError:
                 # If still has errors, we need more complex fixes
                 return False
 
-        except Exception as e:
+        except (OSError, ValueError, UnicodeDecodeError) as e:
             print(f"Error fixing {file_path}: {e}")
             return False
 
