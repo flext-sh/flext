@@ -87,10 +87,12 @@ class MeltanoBridge:
         """Initialize a new Meltano project.
 
         Args:
+        ----
             project_name: Name of the project
             project_dir: Directory to create project in (optional)
 
         Returns:
+        -------
             JSON string with result
 
         """
@@ -130,11 +132,13 @@ class MeltanoBridge:
         """Add a plugin to the Meltano project.
 
         Args:
+        ----
             plugin_type: Type of plugin (extractor, loader, transformer, etc.)
             plugin_name: Name of the plugin
             plugin_variant: Variant of the plugin (optional)
 
         Returns:
+        -------
             JSON string with result
 
         """
@@ -172,7 +176,8 @@ class MeltanoBridge:
     def install_plugins(self) -> str:
         """Install all plugins in the project.
 
-        Returns:
+        Returns
+        -------
             JSON string with result
 
         """
@@ -211,11 +216,13 @@ class MeltanoBridge:
         """Run a Meltano pipeline.
 
         Args:
+        ----
             extractor: Name of the extractor plugin
             loader: Name of the loader plugin
             transformer: Name of the transformer plugin (optional)
 
         Returns:
+        -------
             JSON string with result
 
         """
@@ -255,7 +262,8 @@ class MeltanoBridge:
     def get_plugins(self) -> str:
         """Get list of all plugins in the project.
 
-        Returns:
+        Returns
+        -------
             JSON string with plugin list
 
         """
@@ -291,7 +299,8 @@ class MeltanoBridge:
     def get_project_info(self) -> str:
         """Get information about the current project.
 
-        Returns:
+        Returns
+        -------
             JSON string with project information
 
         """
@@ -319,10 +328,12 @@ class MeltanoBridge:
         """Execute a raw Meltano command.
 
         Args:
+        ----
             command: Meltano command to execute
             args: List of arguments for the command
 
         Returns:
+        -------
             JSON string with result
 
         """

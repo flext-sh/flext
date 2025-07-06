@@ -46,7 +46,13 @@ class QualityMetrics:
     @property
     def total_issues(self) -> int:
         """Total de issues encontradas."""
-        return self.ruff_issues + self.mypy_issues + self.bandit_issues + self.syntax_errors + self.test_failures
+        return (
+            self.ruff_issues
+            + self.mypy_issues
+            + self.bandit_issues
+            + self.syntax_errors
+            + self.test_failures
+        )
 
     @property
     def quality_score(self) -> float:
@@ -106,20 +112,22 @@ class BaseValidator(ABC):
                 file_path=file_path,
                 before_metrics=QualityMetrics(file_path),
                 after_metrics=QualityMetrics(file_path),
-                errors=["Arquivo não existe"]
+                errors=["Arquivo não existe"],
             )
 
         # Backup do arquivo original
         backup_path = file_path.with_suffix(file_path.suffix + ".backup")
         try:
-            backup_path.write_text(file_path.read_text(encoding="utf-8"), encoding="utf-8")
+            backup_path.write_text(
+                file_path.read_text(encoding="utf-8"), encoding="utf-8"
+            )
         except Exception as e:
             return ValidationResult(
                 validator_name=self.get_validator_name(),
                 file_path=file_path,
                 before_metrics=QualityMetrics(file_path),
                 after_metrics=QualityMetrics(file_path),
-                errors=[f"Erro ao criar backup: {e}"]
+                errors=[f"Erro ao criar backup: {e}"],
             )
 
         # Medição antes das mudanças
@@ -137,7 +145,7 @@ class BaseValidator(ABC):
                     file_path=file_path,
                     before_metrics=before_metrics,
                     after_metrics=before_metrics,
-                    warnings=["Nenhuma mudança aplicada"]
+                    warnings=["Nenhuma mudança aplicada"],
                 )
 
             # Medição após as mudanças
@@ -146,7 +154,9 @@ class BaseValidator(ABC):
             # Verificar se houve melhoria
             if after_metrics.total_issues > before_metrics.total_issues:
                 # Reverter mudanças - piorou
-                file_path.write_text(backup_path.read_text(encoding="utf-8"), encoding="utf-8")
+                file_path.write_text(
+                    backup_path.read_text(encoding="utf-8"), encoding="utf-8"
+                )
                 backup_path.unlink(missing_ok=True)
 
                 return ValidationResult(
@@ -155,7 +165,9 @@ class BaseValidator(ABC):
                     before_metrics=before_metrics,
                     after_metrics=after_metrics,
                     changes_applied=True,
-                    errors=[f"Mudanças rejeitadas: issues aumentaram de {before_metrics.total_issues} para {after_metrics.total_issues}"]
+                    errors=[
+                        f"Mudanças rejeitadas: issues aumentaram de {before_metrics.total_issues} para {after_metrics.total_issues}"
+                    ],
                 )
 
             # Sucesso - manter mudanças
@@ -166,13 +178,15 @@ class BaseValidator(ABC):
                 file_path=file_path,
                 before_metrics=before_metrics,
                 after_metrics=after_metrics,
-                changes_applied=True
+                changes_applied=True,
             )
 
         except Exception as e:
             # Erro - reverter mudanças
             with contextlib.suppress(builtins.BaseException):
-                file_path.write_text(backup_path.read_text(encoding="utf-8"), encoding="utf-8")
+                file_path.write_text(
+                    backup_path.read_text(encoding="utf-8"), encoding="utf-8"
+                )
             backup_path.unlink(missing_ok=True)
 
             return ValidationResult(
@@ -180,7 +194,7 @@ class BaseValidator(ABC):
                 file_path=file_path,
                 before_metrics=before_metrics,
                 after_metrics=before_metrics,
-                errors=[f"Erro durante validação: {e}"]
+                errors=[f"Erro durante validação: {e}"],
             )
 
 
@@ -196,10 +210,18 @@ class RuffValidator(BaseValidator):
 
         try:
             result = subprocess.run(
-                [str(self.python_executable), "-m", "ruff", "check", "--output-format=json", str(file_path)],
-                check=False, capture_output=True,
+                [
+                    str(self.python_executable),
+                    "-m",
+                    "ruff",
+                    "check",
+                    "--output-format=json",
+                    str(file_path),
+                ],
+                check=False,
+                capture_output=True,
                 text=True,
-                timeout=60
+                timeout=60,
             )
 
             if result.returncode == 0:
@@ -209,7 +231,9 @@ class RuffValidator(BaseValidator):
                     issues = json.loads(result.stdout)
                     metrics.ruff_issues = len(issues)
                 except json.JSONDecodeError:
-                    metrics.ruff_issues = len([line for line in result.stdout.split("\n") if line.strip()])
+                    metrics.ruff_issues = len(
+                        [line for line in result.stdout.split("\n") if line.strip()]
+                    )
 
         except Exception:
             metrics.ruff_issues = 0
@@ -220,18 +244,27 @@ class RuffValidator(BaseValidator):
         """Aplica correções do Ruff."""
         try:
             result = subprocess.run(
-                [str(self.python_executable), "-m", "ruff", "check", "--fix", str(file_path)],
-                check=False, capture_output=True,
+                [
+                    str(self.python_executable),
+                    "-m",
+                    "ruff",
+                    "check",
+                    "--fix",
+                    str(file_path),
+                ],
+                check=False,
+                capture_output=True,
                 text=True,
-                timeout=60
+                timeout=60,
             )
 
             # Aplica formatação também
             format_result = subprocess.run(
                 [str(self.python_executable), "-m", "ruff", "format", str(file_path)],
-                check=False, capture_output=True,
+                check=False,
+                capture_output=True,
                 text=True,
-                timeout=60
+                timeout=60,
             )
 
             return result.returncode != 0 or format_result.returncode == 0
@@ -253,10 +286,18 @@ class ComprehensiveValidator(BaseValidator):
         # Ruff
         try:
             result = subprocess.run(
-                [str(self.python_executable), "-m", "ruff", "check", "--output-format=json", str(file_path)],
-                check=False, capture_output=True,
+                [
+                    str(self.python_executable),
+                    "-m",
+                    "ruff",
+                    "check",
+                    "--output-format=json",
+                    str(file_path),
+                ],
+                check=False,
+                capture_output=True,
                 text=True,
-                timeout=60
+                timeout=60,
             )
 
             if result.returncode != 0:
@@ -264,7 +305,9 @@ class ComprehensiveValidator(BaseValidator):
                     issues = json.loads(result.stdout)
                     metrics.ruff_issues = len(issues)
                 except json.JSONDecodeError:
-                    metrics.ruff_issues = len([line for line in result.stdout.split("\n") if line.strip()])
+                    metrics.ruff_issues = len(
+                        [line for line in result.stdout.split("\n") if line.strip()]
+                    )
         except Exception:
             pass
 
@@ -272,14 +315,18 @@ class ComprehensiveValidator(BaseValidator):
         try:
             result = subprocess.run(
                 [str(self.python_executable), "-m", "mypy", str(file_path)],
-                check=False, capture_output=True,
+                check=False,
+                capture_output=True,
                 text=True,
-                timeout=60
+                timeout=60,
             )
 
             if result.returncode != 0:
-                error_lines = [line for line in result.stdout.split("\n")
-                              if line.strip() and ": error:" in line]
+                error_lines = [
+                    line
+                    for line in result.stdout.split("\n")
+                    if line.strip() and ": error:" in line
+                ]
                 metrics.mypy_issues = len(error_lines)
         except Exception:
             pass
@@ -287,10 +334,18 @@ class ComprehensiveValidator(BaseValidator):
         # Bandit
         try:
             result = subprocess.run(
-                [str(self.python_executable), "-m", "bandit", "-f", "json", str(file_path)],
-                check=False, capture_output=True,
+                [
+                    str(self.python_executable),
+                    "-m",
+                    "bandit",
+                    "-f",
+                    "json",
+                    str(file_path),
+                ],
+                check=False,
+                capture_output=True,
                 text=True,
-                timeout=60
+                timeout=60,
             )
 
             if result.returncode != 0:
@@ -331,15 +386,24 @@ class ComprehensiveValidator(BaseValidator):
 
             # Ruff check e format
             subprocess.run(
-                [str(self.python_executable), "-m", "ruff", "check", "--fix", str(file_path)],
-                check=False, capture_output=True,
-                timeout=60
+                [
+                    str(self.python_executable),
+                    "-m",
+                    "ruff",
+                    "check",
+                    "--fix",
+                    str(file_path),
+                ],
+                check=False,
+                capture_output=True,
+                timeout=60,
             )
 
             subprocess.run(
                 [str(self.python_executable), "-m", "ruff", "format", str(file_path)],
-                check=False, capture_output=True,
-                timeout=60
+                check=False,
+                capture_output=True,
+                timeout=60,
             )
 
             return content != original_content
@@ -353,23 +417,18 @@ class ComprehensiveValidator(BaseValidator):
         content = re.sub(
             r"#\s*type:\s*ignore\[misc\]\s*#\s*type:\s*ignore\[misc\]",
             "# type: ignore[misc]",
-            content
+            content,
         )
 
         # Corrige hasattr com sintaxe quebrada
         content = re.sub(
             r"if hasattr\(([^)]+)\)\s+#[^:]*#[^:]*:",
             r"if hasattr(\1):  # type: ignore[misc]",
-            content
+            content,
         )
 
         # Remove comentários desnecessários
-        return re.sub(
-            r'^\s*#\s*"[^"]*",?\s*#.*$',
-            "",
-            content,
-            flags=re.MULTILINE
-        )
+        return re.sub(r'^\s*#\s*"[^"]*",?\s*#.*$', "", content, flags=re.MULTILINE)
 
     def _fix_common_patterns(self, content: str) -> str:
         """Corrige padrões comuns de problemas."""
@@ -377,7 +436,7 @@ class ComprehensiveValidator(BaseValidator):
         content = re.sub(
             r'(def __init__\([^)]*\) -> None:)\n(\s*)((?!"""|\'\'\')[^\n])',
             r'\1\n\2"""Initialize instance."""\n\2\3',
-            content
+            content,
         )
 
         # Corrige imports não utilizados básicos
@@ -407,7 +466,12 @@ class QualityGateway:
         if not project_path.exists():
             return []
 
-        return [py_file for py_file in project_path.rglob("*.py") if py_file.is_file() and not any(part.startswith(".") for part in py_file.parts)]
+        return [
+            py_file
+            for py_file in project_path.rglob("*.py")
+            if py_file.is_file()
+            and not any(part.startswith(".") for part in py_file.parts)
+        ]
 
     def validate_file(self, file_path: Path) -> ValidationResult:
         """Valida um arquivo individual."""
@@ -418,12 +482,14 @@ class QualityGateway:
         results = {}
         python_files = self.scan_project(project_path)
 
-        console.print(f"[cyan]🔍 Validando {len(python_files)} arquivos em {project_path.name}[/cyan]")
+        console.print(
+            f"[cyan]🔍 Validando {len(python_files)} arquivos em {project_path.name}[/cyan]"
+        )
 
         with Progress(
             SpinnerColumn(),
             TextColumn("[progress.description]{task.description}"),
-            console=console
+            console=console,
         ) as progress:
             task = progress.add_task("Validando arquivos...", total=len(python_files))
 
@@ -439,20 +505,36 @@ class QualityGateway:
         """Valida todo o workspace FLEXT."""
         # Projetos ativos do FLEXT
         active_projects = [
-            "flext-core", "flext-auth", "flext-api", "flext-grpc",
-            "flext-web", "flext-cli", "flext-plugin", "flext-observability",
-            "flext-meltano", "flext-ldap", "flext-db-oracle", "flext-quality",
-            "flext-tap-ldap", "flext-tap-oracle-oic", "flext-tap-oracle-wms",
-            "flext-target-ldap", "flext-target-oracle", "flext-target-oracle-oic",
-            "flext-dbt-ldap", "flext-oracle-oic-ext"
+            "flext-core",
+            "flext-auth",
+            "flext-api",
+            "flext-grpc",
+            "flext-web",
+            "flext-cli",
+            "flext-plugin",
+            "flext-observability",
+            "flext-meltano",
+            "flext-ldap",
+            "flext-db-oracle",
+            "flext-quality",
+            "flext-tap-ldap",
+            "flext-tap-oracle-oic",
+            "flext-tap-oracle-wms",
+            "flext-target-ldap",
+            "flext-target-oracle",
+            "flext-target-oracle-oic",
+            "flext-dbt-ldap",
+            "flext-oracle-oic-ext",
         ]
 
         workspace_results = {}
 
-        console.print(Panel.fit(
-            f"[bold cyan]🎯 FLEXT Quality Gateway[/bold cyan]\n"
-            f"Validando {len(active_projects)} projetos no workspace"
-        ))
+        console.print(
+            Panel.fit(
+                f"[bold cyan]🎯 FLEXT Quality Gateway[/bold cyan]\n"
+                f"Validando {len(active_projects)} projetos no workspace"
+            )
+        )
 
         for project_name in active_projects:
             project_path = self.workspace_root / project_name
@@ -469,7 +551,7 @@ class QualityGateway:
             "# FLEXT Quality Gateway Report",
             f"**Workspace**: {self.workspace_root}",
             f"**Data**: {self._get_timestamp()}",
-            ""
+            "",
         ]
 
         # Sumário executivo
@@ -488,16 +570,18 @@ class QualityGateway:
                 if result.errors:
                     total_errors += len(result.errors)
 
-        report_lines.extend([
-            "## 📊 Sumário Executivo",
-            f"- **Projetos validados**: {total_projects}",
-            f"- **Arquivos processados**: {total_files}",
-            f"- **Validações bem-sucedidas**: {successful_validations}",
-            f"- **Melhorias aplicadas**: {total_improvements}",
-            f"- **Erros encontrados**: {total_errors}",
-            f"- **Taxa de sucesso**: {(successful_validations / total_files * 100):.1f}%",
-            ""
-        ])
+        report_lines.extend(
+            [
+                "## 📊 Sumário Executivo",
+                f"- **Projetos validados**: {total_projects}",
+                f"- **Arquivos processados**: {total_files}",
+                f"- **Validações bem-sucedidas**: {successful_validations}",
+                f"- **Melhorias aplicadas**: {total_improvements}",
+                f"- **Erros encontrados**: {total_errors}",
+                f"- **Taxa de sucesso**: {(successful_validations / total_files * 100):.1f}%",
+                "",
+            ]
+        )
 
         # Detalhes por projeto
         report_lines.append("## 🔍 Detalhes por Projeto")
@@ -508,19 +592,24 @@ class QualityGateway:
 
             project_files = len(project_results)
             project_successes = sum(1 for r in project_results.values() if r.success)
-            project_improvements = sum(1 for r in project_results.values() if r.changes_applied and r.success)
+            project_improvements = sum(
+                1 for r in project_results.values() if r.changes_applied and r.success
+            )
 
-            report_lines.extend([
-                f"### {project_name}",
-                f"- Arquivos: {project_files}",
-                f"- Sucessos: {project_successes}",
-                f"- Melhorias: {project_improvements}",
-                ""
-            ])
+            report_lines.extend(
+                [
+                    f"### {project_name}",
+                    f"- Arquivos: {project_files}",
+                    f"- Sucessos: {project_successes}",
+                    f"- Melhorias: {project_improvements}",
+                    "",
+                ]
+            )
 
             # Top 5 arquivos com mais melhorias
             improved_files = [
-                (path, result) for path, result in project_results.items()
+                (path, result)
+                for path, result in project_results.items()
                 if result.changes_applied and result.success
             ]
 
@@ -531,10 +620,14 @@ class QualityGateway:
                     before_issues = result.before_metrics.total_issues
                     after_issues = result.after_metrics.total_issues
                     improvement = before_issues - after_issues
-                    report_lines.append(f"- `{file_name}`: {before_issues} → {after_issues} issues (-{improvement})")
+                    report_lines.append(
+                        f"- `{file_name}`: {before_issues} → {after_issues} issues (-{improvement})"
+                    )
 
                 if len(improved_files) > 5:
-                    report_lines.append(f"- ... e mais {len(improved_files) - 5} arquivos")
+                    report_lines.append(
+                        f"- ... e mais {len(improved_files) - 5} arquivos"
+                    )
 
                 report_lines.append("")
 
@@ -548,10 +641,7 @@ class QualityGateway:
                 all_warnings.extend(result.warnings)
 
         if all_errors:
-            report_lines.extend([
-                "## ❌ Erros Encontrados",
-                ""
-            ])
+            report_lines.extend(["## ❌ Erros Encontrados", ""])
 
             # Agrupa erros similares
             error_counts = {}
@@ -559,24 +649,29 @@ class QualityGateway:
                 error_type = error.split(":")[0] if ":" in error else error
                 error_counts[error_type] = error_counts.get(error_type, 0) + 1
 
-            for error_type, count in sorted(error_counts.items(), key=operator.itemgetter(1), reverse=True):
+            for error_type, count in sorted(
+                error_counts.items(), key=operator.itemgetter(1), reverse=True
+            ):
                 report_lines.append(f"- **{error_type}**: {count} ocorrências")
 
             report_lines.append("")
 
         # Recomendações
-        report_lines.extend([
-            "## 🎯 Recomendações",
-            ""
-        ])
+        report_lines.extend(["## 🎯 Recomendações", ""])
 
         if total_improvements > 0:
-            report_lines.append(f"✅ **{total_improvements} melhorias aplicadas com sucesso**")
+            report_lines.append(
+                f"✅ **{total_improvements} melhorias aplicadas com sucesso**"
+            )
 
         if total_errors > 0:
-            report_lines.append(f"⚠️ **{total_errors} erros precisam de atenção manual**")
+            report_lines.append(
+                f"⚠️ **{total_errors} erros precisam de atenção manual**"
+            )
 
-        success_rate = (successful_validations / total_files * 100) if total_files > 0 else 0
+        success_rate = (
+            (successful_validations / total_files * 100) if total_files > 0 else 0
+        )
 
         if success_rate >= 90:
             report_lines.append("🏆 **Excelente qualidade de código!**")
@@ -591,6 +686,7 @@ class QualityGateway:
         """Obtém timestamp atual."""
         try:
             import datetime
+
             return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         except Exception:
             return "2024-01-01 00:00:00"
@@ -607,23 +703,15 @@ def main() -> None:
         "--workspace",
         type=Path,
         default=Path("/home/marlonsc/flext"),
-        help="Diretório raiz do workspace FLEXT"
+        help="Diretório raiz do workspace FLEXT",
     )
     parser.add_argument(
-        "--project",
-        type=str,
-        help="Validar apenas um projeto específico"
+        "--project", type=str, help="Validar apenas um projeto específico"
     )
     parser.add_argument(
-        "--file",
-        type=Path,
-        help="Validar apenas um arquivo específico"
+        "--file", type=Path, help="Validar apenas um arquivo específico"
     )
-    parser.add_argument(
-        "--report",
-        type=Path,
-        help="Caminho para salvar o relatório"
-    )
+    parser.add_argument("--report", type=Path, help="Caminho para salvar o relatório")
 
     args = parser.parse_args()
 
@@ -666,7 +754,9 @@ def main() -> None:
         # Mostra sumário
         total_files = len(project_results)
         successes = sum(1 for r in project_results.values() if r.success)
-        improvements = sum(1 for r in project_results.values() if r.changes_applied and r.success)
+        improvements = sum(
+            1 for r in project_results.values() if r.changes_applied and r.success
+        )
 
         console.print(f"[green]📊 Projeto {args.project}:[/green]")
         console.print(f"  - Arquivos: {total_files}")
@@ -676,7 +766,9 @@ def main() -> None:
         return
 
     # Validação completa do workspace
-    console.print("[bold cyan]🚀 Iniciando validação completa do workspace FLEXT[/bold cyan]")
+    console.print(
+        "[bold cyan]🚀 Iniciando validação completa do workspace FLEXT[/bold cyan]"
+    )
 
     results = gateway.validate_workspace()
 
@@ -694,10 +786,12 @@ def main() -> None:
         console.print(f"[green]📄 Relatório salvo em: {report_path}[/green]")
 
     # Mostra sumário no terminal
-    console.print(Panel.fit(
-        f"[bold green]✅ Validação completa do workspace![/bold green]\n"
-        f"Ver relatório detalhado em: {report_path if not args.report else args.report}"
-    ))
+    console.print(
+        Panel.fit(
+            f"[bold green]✅ Validação completa do workspace![/bold green]\n"
+            f"Ver relatório detalhado em: {report_path if not args.report else args.report}"
+        )
+    )
 
 
 if __name__ == "__main__":

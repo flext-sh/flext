@@ -32,8 +32,8 @@ class BlindExceptFixer:
             for i, line in enumerate(lines, 1):
                 if "except Exception" in line and "as " in line:
                     # Found a blind except - get context
-                    context_start = max(0, i-3)
-                    context_end = min(len(lines), i+5)
+                    context_start = max(0, i - 3)
+                    context_end = min(len(lines), i + 5)
                     context = "\n".join(lines[context_start:context_end])
 
                     blind_excepts.append((py_file, i, context))
@@ -46,14 +46,17 @@ class BlindExceptFixer:
 
         # Analysis patterns for different contexts
         if any(
-            keyword in context.lower(
-                ) for keyword in ["file", "path", "open", "read", "write"]):
+            keyword in context.lower()
+            for keyword in ["file", "path", "open", "read", "write"]
+        ):
             specific_exceptions.extend(
-                ["OSError", "FileNotFoundError", "PermissionError"])
+                ["OSError", "FileNotFoundError", "PermissionError"]
+            )
 
         if any(
-            keyword in context.lower(
-                ) for keyword in ["json", "parse", "loads", "dumps"]):
+            keyword in context.lower()
+            for keyword in ["json", "parse", "loads", "dumps"]
+        ):
             specific_exceptions.extend(["json.JSONDecodeError", "ValueError"])
 
         if any(keyword in context.lower() for keyword in ["int(", "float(", "convert"]):
@@ -63,13 +66,16 @@ class BlindExceptFixer:
             specific_exceptions.extend(["KeyError", "AttributeError"])
 
         if any(
-            keyword in context.lower() for keyword in ["import", "module", "getattr"]):
+            keyword in context.lower() for keyword in ["import", "module", "getattr"]
+        ):
             specific_exceptions.extend(
-                ["ImportError", "AttributeError", "ModuleNotFoundError"])
+                ["ImportError", "AttributeError", "ModuleNotFoundError"]
+            )
 
         if any(
-            keyword in context.lower(
-                ) for keyword in ["connection", "network", "http", "ldap"]):
+            keyword in context.lower()
+            for keyword in ["connection", "network", "http", "ldap"]
+        ):
             specific_exceptions.extend(["ConnectionError", "OSError", "RuntimeError"])
 
         if any(keyword in context.lower() for keyword in ["config", "settings", "env"]):
@@ -98,8 +104,8 @@ class BlindExceptFixer:
                 var_name = var_match.group(1)
 
                 # Get context for this except block
-                context_start = max(0, i-5)
-                context_end = min(len(lines), i+10)
+                context_start = max(0, i - 5)
+                context_end = min(len(lines), i + 10)
                 context = "\n".join(lines[context_start:context_end])
 
                 # Determine specific exceptions
@@ -125,7 +131,9 @@ class BlindExceptFixer:
 
                 # Add comment explaining the choice
                 indent = len(line) - len(line.lstrip())
-                comment = " " * indent + "# Specific exceptions based on context analysis"
+                comment = (
+                    " " * indent + "# Specific exceptions based on context analysis"
+                )
 
                 # Insert comment before the except line
                 lines.insert(i, comment)
@@ -137,7 +145,8 @@ class BlindExceptFixer:
         return fixes_in_file
 
     def add_necessary_imports(
-        self, file_path: Path, exceptions_used: list[str]) -> None:
+        self, file_path: Path, exceptions_used: list[str]
+    ) -> None:
         """Add necessary imports for specific exceptions."""
         content = file_path.read_text()
 
@@ -159,8 +168,12 @@ class BlindExceptFixer:
     def verify_fixes(self) -> tuple[bool, str]:
         """Verify that blind except fixes were successful."""
         cmd = [
-            self.python_bin, "-m", "ruff", "check",
-            str(self.src_dir), "--select=BLE001",
+            self.python_bin,
+            "-m",
+            "ruff",
+            "check",
+            str(self.src_dir),
+            "--select=BLE001",
         ]
 
         try:

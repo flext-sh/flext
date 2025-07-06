@@ -70,18 +70,24 @@ class CriticalPEPViolationsFixer:
                     ast.parse(content)
                     continue  # Sem erros de sintaxe
                 except SyntaxError as e:
-                    print(f"⚠️  Syntax error in {py_file.relative_to(self.project_root)}: {e}")
+                    print(
+                        f"⚠️  Syntax error in {py_file.relative_to(self.project_root)}: {e}"
+                    )
                     content = self.apply_syntax_fixes(content, py_file)
 
                 if content != original_content:
                     py_file.write_text(content, encoding="utf-8")
                     self.fixes_applied += 1
-                    print(f"✅ Fixed syntax in {py_file.relative_to(self.project_root)}")
+                    print(
+                        f"✅ Fixed syntax in {py_file.relative_to(self.project_root)}"
+                    )
 
                 self.files_processed += 1
 
             except Exception as e:
-                print(f"❌ Error processing {py_file.relative_to(self.project_root)}: {e}")
+                print(
+                    f"❌ Error processing {py_file.relative_to(self.project_root)}: {e}"
+                )
 
     def apply_syntax_fixes(self, content: str, file_path: Path) -> str:
         """Aplicar correções comuns de sintaxe."""
@@ -104,7 +110,7 @@ class CriticalPEPViolationsFixer:
                 result = ""
                 j = 0
                 while j < len(line):
-                    if line[j:j + 2] == 'f"':
+                    if line[j : j + 2] == 'f"':
                         in_fstring = True
                         result += 'f"'
                         j += 2
@@ -178,7 +184,10 @@ class CriticalPEPViolationsFixer:
                     for i, line in enumerate(lines):
                         if (line.startswith(("from ", "import "))) and not import_added:
                             continue
-                        if not line.startswith(("from ", "import ", "#", '"""', "'''")) and not import_added:
+                        if (
+                            not line.startswith(("from ", "import ", "#", '"""', "'''"))
+                            and not import_added
+                        ):
                             lines.insert(i, import_stmt)
                             import_added = True
                             break
@@ -190,7 +199,9 @@ class CriticalPEPViolationsFixer:
             if content != original_content:
                 py_file.write_text(content, encoding="utf-8")
                 self.fixes_applied += 1
-                print(f"✅ Fixed undefined names in {py_file.relative_to(self.project_root)}")
+                print(
+                    f"✅ Fixed undefined names in {py_file.relative_to(self.project_root)}"
+                )
 
     def fix_complex_structure(self) -> None:
         """Corrigir C901 complex structure violations."""
@@ -216,7 +227,9 @@ class CriticalPEPViolationsFixer:
                 if content != original_content:
                     file_path.write_text(content, encoding="utf-8")
                     self.fixes_applied += 1
-                    print(f"✅ Reduced complexity in {file_path.relative_to(self.project_root)}")
+                    print(
+                        f"✅ Reduced complexity in {file_path.relative_to(self.project_root)}"
+                    )
 
     def reduce_method_complexity(self, content: str) -> str:
         """Reduzir complexidade de métodos extraindo guard clauses."""
@@ -296,7 +309,9 @@ class CriticalPEPViolationsFixer:
             if new_content != content:
                 py_file.write_text(new_content, encoding="utf-8")
                 self.fixes_applied += 1
-                print(f"✅ Final E501 cleanup in {py_file.relative_to(self.project_root)}")
+                print(
+                    f"✅ Final E501 cleanup in {py_file.relative_to(self.project_root)}"
+                )
 
     def intelligent_line_break(self, line: str) -> str | list[str]:
         """Quebrar linha de forma inteligente preservando funcionalidade."""
@@ -313,7 +328,7 @@ class CriticalPEPViolationsFixer:
                 if len(parts) == 2:
                     return [
                         parts[0] + op.rstrip(),
-                        base_indent + "    " + parts[1].lstrip()
+                        base_indent + "    " + parts[1].lstrip(),
                     ]
 
         # Estratégia 2: Quebrar imports longos
@@ -336,8 +351,8 @@ class CriticalPEPViolationsFixer:
             paren_start = line.find("(")
             paren_end = line.rfind(")")
             if paren_start > 0 and paren_end > paren_start:
-                func_part = line[:paren_start + 1]
-                args_part = line[paren_start + 1:paren_end]
+                func_part = line[: paren_start + 1]
+                args_part = line[paren_start + 1 : paren_end]
                 end_part = line[paren_end:]
 
                 if "," in args_part and len(args_part) > 40:
@@ -359,10 +374,11 @@ class CriticalPEPViolationsFixer:
             cmd = [self.python_bin, "-m", "ruff", "check", "src/", *options.split()]
             result = subprocess.run(
                 cmd,
-                check=False, cwd=self.project_root,
+                check=False,
+                cwd=self.project_root,
                 capture_output=True,
                 text=True,
-                timeout=60
+                timeout=60,
             )
             return result.stdout
         except Exception as e:
@@ -407,7 +423,9 @@ def main() -> None:
     # Procurar pelo projeto client-a-oud-mig
     if "client-a-oud-mig" in str(current_dir):
         project_root = current_dir
-        while project_root.name != "client-a-oud-mig" and project_root.parent != project_root:
+        while (
+            project_root.name != "client-a-oud-mig" and project_root.parent != project_root
+        ):
             project_root = project_root.parent
     else:
         # Assumir que estamos executando do workspace flext

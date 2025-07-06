@@ -125,7 +125,9 @@ class IncrementalStandardsEnforcer:
 
         return issues
 
-    def _detect_naming_issues(self, file_path: Path, content: str, lines: list[str]) -> list[dict[str, Any]]:
+    def _detect_naming_issues(
+        self, file_path: Path, content: str, lines: list[str]
+    ) -> list[dict[str, Any]]:
         """Detect PEP 8 naming convention violations."""
         issues = []
 
@@ -138,78 +140,94 @@ class IncrementalStandardsEnforcer:
             # Function definitions with camelCase
             func_match = re.search(r"def\s+([a-z]+[A-Z][a-zA-Z]*)\s*\(", line)
             if func_match:
-                issues.append({
-                    "type": "naming_function_camelcase",
-                    "file": file_path,
-                    "line": i,
-                    "current": func_match.group(1),
-                    "suggested": self._camel_to_snake(func_match.group(1)),
-                    "severity": "medium",
-                })
+                issues.append(
+                    {
+                        "type": "naming_function_camelcase",
+                        "file": file_path,
+                        "line": i,
+                        "current": func_match.group(1),
+                        "suggested": self._camel_to_snake(func_match.group(1)),
+                        "severity": "medium",
+                    }
+                )
 
             # Variable names with camelCase (basic detection)
             var_match = re.search(r"^\s*([a-z]+[A-Z][a-zA-Z]*)\s*=", line)
             if var_match and not line.strip().startswith("class"):
-                issues.append({
-                    "type": "naming_variable_camelcase",
-                    "file": file_path,
-                    "line": i,
-                    "current": var_match.group(1),
-                    "suggested": self._camel_to_snake(var_match.group(1)),
-                    "severity": "low",
-                })
+                issues.append(
+                    {
+                        "type": "naming_variable_camelcase",
+                        "file": file_path,
+                        "line": i,
+                        "current": var_match.group(1),
+                        "suggested": self._camel_to_snake(var_match.group(1)),
+                        "severity": "low",
+                    }
+                )
 
         return issues
 
-    def _detect_quality_issues(self, file_path: Path, content: str, lines: list[str]) -> list[dict[str, Any]]:
+    def _detect_quality_issues(
+        self, file_path: Path, content: str, lines: list[str]
+    ) -> list[dict[str, Any]]:
         """Detect code quality issues."""
         issues = []
 
         # NotImplementedError fallbacks
         for i, line in enumerate(lines, 1):
             if "NotImplementedError" in line:
-                issues.append({
-                    "type": "fallback_notimplemented",
-                    "file": file_path,
-                    "line": i,
-                    "severity": "high",
-                    "description": "Fallback implementation using NotImplementedError",
-                })
+                issues.append(
+                    {
+                        "type": "fallback_notimplemented",
+                        "file": file_path,
+                        "line": i,
+                        "severity": "high",
+                        "description": "Fallback implementation using NotImplementedError",
+                    }
+                )
 
         # TODO comments (should be tracked)
         for i, line in enumerate(lines, 1):
             if "TODO" in line and "TODO:" not in line:
-                issues.append({
-                    "type": "todo_malformed",
-                    "file": file_path,
-                    "line": i,
-                    "severity": "low",
-                    "description": "TODO comment should use 'TODO:' format",
-                })
+                issues.append(
+                    {
+                        "type": "todo_malformed",
+                        "file": file_path,
+                        "line": i,
+                        "severity": "low",
+                        "description": "TODO comment should use 'TODO:' format",
+                    }
+                )
 
         return issues
 
-    def _detect_legacy_patterns(self, file_path: Path, content: str, lines: list[str]) -> list[dict[str, Any]]:
+    def _detect_legacy_patterns(
+        self, file_path: Path, content: str, lines: list[str]
+    ) -> list[dict[str, Any]]:
         """Detect legacy patterns and code duplication."""
         issues = []
 
         # Legacy import patterns
         legacy_imports = [
             "from typing import Optional",  # Use T | None instead
-            "from typing import Union",     # Use T | U instead
-            "from typing import List",      # Use list[T] instead
-            "from typing import Dict",      # Use dict[K, V] instead
+            "from typing import Union",  # Use T | U instead
+            "from typing import List",  # Use list[T] instead
+            "from typing import Dict",  # Use dict[K, V] instead
         ]
 
         for i, line in enumerate(lines, 1):
-            issues.extend({
-                        "type": "legacy_typing_import",
-                        "file": file_path,
-                        "line": i,
-                        "current": legacy_import,
-                        "severity": "medium",
-                        "description": f"Legacy typing import: {legacy_import}",
-                    } for legacy_import in legacy_imports if legacy_import in line)
+            issues.extend(
+                {
+                    "type": "legacy_typing_import",
+                    "file": file_path,
+                    "line": i,
+                    "current": legacy_import,
+                    "severity": "medium",
+                    "description": f"Legacy typing import: {legacy_import}",
+                }
+                for legacy_import in legacy_imports
+                if legacy_import in line
+            )
 
         return issues
 
@@ -331,7 +349,10 @@ class IncrementalStandardsEnforcer:
                 if "NotImplementedError" in line:
                     # Add TODO comment above the line
                     indent = len(line) - len(line.lstrip())
-                    todo_line = " " * indent + "# TODO: Implement proper functionality instead of fallback"
+                    todo_line = (
+                        " " * indent
+                        + "# TODO: Implement proper functionality instead of fallback"
+                    )
                     lines.insert(line_num - 1, todo_line)
                     file_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
                     return True
@@ -357,7 +378,9 @@ class IncrementalStandardsEnforcer:
             }
 
             if current_import in replacements:
-                new_content = content.replace(current_import, replacements[current_import])
+                new_content = content.replace(
+                    current_import, replacements[current_import]
+                )
                 file_path.write_text(new_content, encoding="utf-8")
                 return True
 
@@ -428,7 +451,8 @@ class IncrementalStandardsEnforcer:
         try:
             result = subprocess.run(
                 [str(PYTHON_PATH), "-m", "ruff", "check", str(self.src_path)],
-                check=False, cwd=self.project_path,
+                check=False,
+                cwd=self.project_path,
                 capture_output=True,
                 text=True,
                 timeout=60,
@@ -449,7 +473,8 @@ class IncrementalStandardsEnforcer:
         try:
             result = subprocess.run(
                 [str(PYTHON_PATH), "-m", "mypy", str(self.src_path)],
-                check=False, cwd=self.project_path,
+                check=False,
+                cwd=self.project_path,
                 capture_output=True,
                 text=True,
                 timeout=120,
@@ -477,8 +502,13 @@ class IncrementalStandardsEnforcer:
             for import_stmt in imports_to_test:
                 try:
                     result = subprocess.run(
-                        [str(PYTHON_PATH), "-c", f"{import_stmt}; print('✅ {import_stmt}')"],
-                        check=False, cwd=self.project_path,
+                        [
+                            str(PYTHON_PATH),
+                            "-c",
+                            f"{import_stmt}; print('✅ {import_stmt}')",
+                        ],
+                        check=False,
+                        cwd=self.project_path,
                         capture_output=True,
                         text=True,
                         timeout=30,
@@ -524,7 +554,9 @@ def main() -> None:
     print(f"Issues Found: {results['issues_found']}")
     print(f"Issues Fixed: {results['issues_fixed']}")
     print(f"Validation Failures: {results['validation_failures']}")
-    print(f"Success Rate: {(results['issues_fixed'] / max(results['issues_found'], 1)) * 100:.1f}%")
+    print(
+        f"Success Rate: {(results['issues_fixed'] / max(results['issues_found'], 1)) * 100:.1f}%"
+    )
 
     print("\n📋 Issue Categories:")
     for category, count in results["categories"].items():
