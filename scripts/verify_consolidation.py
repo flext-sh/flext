@@ -16,6 +16,7 @@ from pathlib import Path
 try:
     from rich.console import Console
     from rich.table import Table
+
     RICH_AVAILABLE = True
     console = Console()
 except ImportError:
@@ -37,10 +38,18 @@ class ConsolidationVerifier:
         for pattern in patterns:
             for script in self.workspace_root.rglob(pattern):
                 # Excluir locais organizados e legítimos
-                if any(exclude in str(script) for exclude in [
-                    ".venv", "__pycache__", "/legacy/", "/tests/",
-                    "/examples/", "/archive", ".git"
-                ]):
+                if any(
+                    exclude in str(script)
+                    for exclude in [
+                        ".venv",
+                        "__pycache__",
+                        "/legacy/",
+                        "/tests/",
+                        "/examples/",
+                        "/archive",
+                        ".git",
+                    ]
+                ):
                     continue
 
                 # Se chegou aqui, não está organizado
@@ -58,10 +67,11 @@ class ConsolidationVerifier:
             # Testar help
             result = subprocess.run(
                 ["python", str(qg_path), "--help"],
-                check=False, capture_output=True,
+                check=False,
+                capture_output=True,
                 text=True,
                 timeout=10,
-                cwd=self.workspace_root
+                cwd=self.workspace_root,
             )
 
             if result.returncode != 0:
@@ -81,14 +91,18 @@ class ConsolidationVerifier:
             "tests": 0,
             "examples": 0,
             "archive": 0,
-            "unorganized": 0
+            "unorganized": 0,
         }
 
         for pattern in patterns:
             for script in self.workspace_root.rglob(pattern):
                 script_str = str(script)
 
-                if ".venv" in script_str or "__pycache__" in script_str or ".git" in script_str:
+                if (
+                    ".venv" in script_str
+                    or "__pycache__" in script_str
+                    or ".git" in script_str
+                ):
                     continue
                 if "scripts/legacy" in script_str:
                     counts["scripts/legacy"] += 1
@@ -113,7 +127,9 @@ class ConsolidationVerifier:
         # 1. Verificar scripts não organizados
         unorganized = self.find_unorganized_scripts()
         if unorganized:
-            self._print(f"\n🚨 FALHA: {len(unorganized)} scripts não organizados encontrados!")
+            self._print(
+                f"\n🚨 FALHA: {len(unorganized)} scripts não organizados encontrados!"
+            )
             for script in unorganized:
                 self._print(f"  ❌ {script.relative_to(self.workspace_root)}")
             return False
@@ -147,7 +163,9 @@ class ConsolidationVerifier:
             console.print(table)
         else:
             for location, count in counts.items():
-                status = "🚨 PROBLEMA" if location == "unorganized" and count > 0 else "✅"
+                status = (
+                    "🚨 PROBLEMA" if location == "unorganized" and count > 0 else "✅"
+                )
                 self._print(f"  {status} {location}: {count} scripts")
 
         # 4. Verificação final
@@ -155,7 +173,9 @@ class ConsolidationVerifier:
             self._print("\n🎉 VERIFICAÇÃO COMPLETA: 100% CONSOLIDADO E ORGANIZADO!")
             self._print("📊 Total de scripts organizados:", sum(counts.values()))
             return True
-        self._print(f"\n🚨 FALHA: {counts['unorganized']} scripts ainda não organizados")
+        self._print(
+            f"\n🚨 FALHA: {counts['unorganized']} scripts ainda não organizados"
+        )
         return False
 
     def _print(self, message: str, extra: str = "") -> None:

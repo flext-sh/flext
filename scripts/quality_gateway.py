@@ -28,6 +28,7 @@ from typing import Any
 try:
     from rich.console import Console
     from rich.progress import BarColumn, Progress, SpinnerColumn, TextColumn
+
     RICH_AVAILABLE = True
     console = Console()
 except ImportError:
@@ -50,10 +51,18 @@ class QualityGatewayFinal:
         """Conta issues rapidamente usando apenas Ruff."""
         try:
             result = subprocess.run(
-                [str(self.python_executable), "-m", "ruff", "check", "--output-format=json", str(file_path)],
-                check=False, capture_output=True,
+                [
+                    str(self.python_executable),
+                    "-m",
+                    "ruff",
+                    "check",
+                    "--output-format=json",
+                    str(file_path),
+                ],
+                check=False,
+                capture_output=True,
                 text=True,
-                timeout=10  # timeout mais baixo
+                timeout=10,  # timeout mais baixo
             )
 
             if result.returncode == 0:
@@ -69,7 +78,9 @@ class QualityGatewayFinal:
         except Exception:
             return 0
 
-    def apply_tool_safely(self, file_path: Path, tool_name: str, command: list[str]) -> tuple[bool, int, int, float]:
+    def apply_tool_safely(
+        self, file_path: Path, tool_name: str, command: list[str]
+    ) -> tuple[bool, int, int, float]:
         """Aplica uma ferramenta com segurança.
 
         Returns: (success, before_issues, after_issues, execution_time)
@@ -86,9 +97,10 @@ class QualityGatewayFinal:
             # Aplicar ferramenta
             subprocess.run(
                 command,
-                check=False, capture_output=True,
+                check=False,
+                capture_output=True,
                 text=True,
-                timeout=15  # timeout reduzido
+                timeout=15,  # timeout reduzido
             )
 
             # Medir depois
@@ -99,13 +111,17 @@ class QualityGatewayFinal:
             if after_issues > before_issues:
                 # REVERTER
                 file_path.write_text(backup_content, encoding="utf-8")
-                self._print(f"❌ {tool_name}: REVERTIDO ({before_issues} → {after_issues})")
+                self._print(
+                    f"❌ {tool_name}: REVERTIDO ({before_issues} → {after_issues})"
+                )
                 return False, before_issues, before_issues, execution_time
 
             # SUCESSO
             improvement = before_issues - after_issues
             if improvement > 0:
-                self._print(f"✅ {tool_name}: -{improvement} issues em {execution_time:.1f}s")
+                self._print(
+                    f"✅ {tool_name}: -{improvement} issues em {execution_time:.1f}s"
+                )
             else:
                 self._print(f"✅ {tool_name}: OK em {execution_time:.1f}s")
 
@@ -131,7 +147,9 @@ class QualityGatewayFinal:
         # Backup inicial completo
         backup_path = file_path.with_suffix(file_path.suffix + ".qg_backup")
         try:
-            backup_path.write_text(file_path.read_text(encoding="utf-8"), encoding="utf-8")
+            backup_path.write_text(
+                file_path.read_text(encoding="utf-8"), encoding="utf-8"
+            )
         except Exception as e:
             return {"success": False, "error": f"Erro criando backup: {e}"}
 
@@ -141,8 +159,21 @@ class QualityGatewayFinal:
         tools = [
             ("isort", [str(self.python_executable), "-m", "isort", str(file_path)]),
             ("black", [str(self.python_executable), "-m", "black", str(file_path)]),
-            ("ruff_fix", [str(self.python_executable), "-m", "ruff", "check", "--fix", str(file_path)]),
-            ("ruff_format", [str(self.python_executable), "-m", "ruff", "format", str(file_path)])
+            (
+                "ruff_fix",
+                [
+                    str(self.python_executable),
+                    "-m",
+                    "ruff",
+                    "check",
+                    "--fix",
+                    str(file_path),
+                ],
+            ),
+            (
+                "ruff_format",
+                [str(self.python_executable), "-m", "ruff", "format", str(file_path)],
+            ),
         ]
 
         total_improvement = 0
@@ -150,7 +181,9 @@ class QualityGatewayFinal:
         tools_applied = 0
 
         for tool_name, command in tools:
-            success, before, after, exec_time = self.apply_tool_safely(file_path, tool_name, command)
+            success, before, after, exec_time = self.apply_tool_safely(
+                file_path, tool_name, command
+            )
             total_time += exec_time
 
             if success:
@@ -165,7 +198,9 @@ class QualityGatewayFinal:
         if final_issues > initial_issues:
             # Regressão geral - reverter tudo
             try:
-                file_path.write_text(backup_path.read_text(encoding="utf-8"), encoding="utf-8")
+                file_path.write_text(
+                    backup_path.read_text(encoding="utf-8"), encoding="utf-8"
+                )
                 self._print(f"🚨 REGRESSÃO GERAL - Revertendo {file_path.name}")
                 final_issues = initial_issues
                 total_improvement = 0
@@ -182,25 +217,35 @@ class QualityGatewayFinal:
             "final_issues": final_issues,
             "improvement": total_improvement,
             "tools_applied": tools_applied,
-            "processing_time": total_time
+            "processing_time": total_time,
         }
 
     def process_project_efficiently(self, project_path: Path) -> dict[str, Any]:
         """Processa um projeto de forma eficiente."""
         if not project_path.exists():
-            return {"success": False, "error": f"Projeto não encontrado: {project_path}"}
+            return {
+                "success": False,
+                "error": f"Projeto não encontrado: {project_path}",
+            }
 
         # Encontrar arquivos Python
-        python_files = [py_file for py_file in project_path.rglob("*.py") if py_file.is_file() and not any(part.startswith(".") for part in py_file.parts)]
+        python_files = [
+            py_file
+            for py_file in project_path.rglob("*.py")
+            if py_file.is_file()
+            and not any(part.startswith(".") for part in py_file.parts)
+        ]
 
         if not python_files:
             return {
                 "success": True,
                 "message": "Nenhum arquivo Python encontrado",
-                "files_processed": 0
+                "files_processed": 0,
             }
 
-        self._print(f"🎯 Processando {len(python_files)} arquivos em {project_path.name}")
+        self._print(
+            f"🎯 Processando {len(python_files)} arquivos em {project_path.name}"
+        )
 
         # Estatísticas
         files_processed = 0
@@ -217,7 +262,7 @@ class QualityGatewayFinal:
                 TextColumn("[progress.description]{task.description}"),
                 BarColumn(),
                 TextColumn("[progress.percentage]{task.percentage:>3.0f}%"),
-                console=console
+                console=console,
             ) as progress:
                 task = progress.add_task("Processando...", total=len(python_files))
 
@@ -261,7 +306,9 @@ class QualityGatewayFinal:
             "total_final_issues": total_final_issues,
             "total_improvement": total_improvement,
             "total_time": total_time,
-            "improvement_rate": (files_improved / files_processed * 100) if files_processed > 0 else 0
+            "improvement_rate": (
+                (files_improved / files_processed * 100) if files_processed > 0 else 0
+            ),
         }
 
     def _print(self, message: str) -> None:
@@ -283,18 +330,10 @@ def main() -> None:
         "--workspace",
         type=Path,
         default=Path("/home/marlonsc/flext"),
-        help="Diretório raiz do workspace FLEXT"
+        help="Diretório raiz do workspace FLEXT",
     )
-    parser.add_argument(
-        "--project",
-        type=str,
-        help="Processar projeto específico"
-    )
-    parser.add_argument(
-        "--file",
-        type=Path,
-        help="Processar arquivo específico"
-    )
+    parser.add_argument("--project", type=str, help="Processar projeto específico")
+    parser.add_argument("--file", type=Path, help="Processar arquivo específico")
 
     args = parser.parse_args()
 
@@ -333,12 +372,18 @@ def main() -> None:
         if result["success"]:
             print(f"\n🎯 Resultado Final - {args.project}:")
             print(f"  📁 Arquivos: {result['files_processed']}")
-            print(f"  🔧 Melhorados: {result['files_improved']} ({result['improvement_rate']:.1f}%)")
-            print(f"  📊 Issues: {result['total_initial_issues']} → {result['total_final_issues']}")
+            print(
+                f"  🔧 Melhorados: {result['files_improved']} ({result['improvement_rate']:.1f}%)"
+            )
+            print(
+                f"  📊 Issues: {result['total_initial_issues']} → {result['total_final_issues']}"
+            )
             print(f"  📈 Melhoria: {result['total_improvement']:+d}")
             print(f"  ⏱️  Tempo: {result['total_time']:.1f}s")
         else:
-            print(f"❌ Projeto {args.project} falhou: {result.get('error', 'Erro desconhecido')}")
+            print(
+                f"❌ Projeto {args.project} falhou: {result.get('error', 'Erro desconhecido')}"
+            )
 
         return
 

@@ -82,11 +82,15 @@ class RealPytestFixer:
             if old_security_test in content:
                 content = content.replace(old_security_test, new_security_test)
                 test_file.write_text(content, encoding="utf-8")
-                self.fixed_issues.append(f"Fixed security test false positives in {project_path.name}")
+                self.fixed_issues.append(
+                    f"Fixed security test false positives in {project_path.name}"
+                )
                 return True
 
         except Exception as e:
-            self.remaining_issues.append(f"Failed to fix security test in {project_path.name}: {e}")
+            self.remaining_issues.append(
+                f"Failed to fix security test in {project_path.name}: {e}"
+            )
             return False
 
         return False
@@ -115,15 +119,20 @@ class RealPytestFixer:
 
         try:
             test_file.write_text(test_content, encoding="utf-8")
-            self.fixed_issues.append(f"Created realistic integration tests for {project_name}")
+            self.fixed_issues.append(
+                f"Created realistic integration tests for {project_name}"
+            )
             return True
         except Exception as e:
-            self.remaining_issues.append(f"Failed to create integration tests for {project_name}: {e}")
+            self.remaining_issues.append(
+                f"Failed to create integration tests for {project_name}: {e}"
+            )
             return False
 
     def _get_core_integration_test(self, has_env: bool) -> str:
         """Get core module integration test that tests real functionality."""
-        env_conditional = """
+        env_conditional = (
+            """
 @pytest.mark.integration
 @pytest.mark.requires_env
 def test_configuration_with_env(self) -> None:
@@ -143,7 +152,10 @@ def test_configuration_with_env(self) -> None:
         pytest.skip('Configuration module not available')
     except Exception as e:
         pytest.fail(f'Configuration loading failed: {e}')
-""" if has_env else ""
+"""
+            if has_env
+            else ""
+        )
 
         return f'''"""Real integration tests for flext-core.
 
@@ -253,7 +265,8 @@ class TestCoreIntegration:
 
     def _get_api_integration_test(self, has_env: bool) -> str:
         """Get API integration test."""
-        env_test = '''
+        env_test = (
+            '''
     @pytest.mark.integration
     @pytest.mark.requires_env
     def test_api_with_real_config(self) -> None:
@@ -264,7 +277,10 @@ class TestCoreIntegration:
         # Test environment variables are loaded
         import os
         assert os.getenv('DEBUG_MODE') is not None
-''' if has_env else ""
+'''
+            if has_env
+            else ""
+        )
 
         return f'''"""Real integration tests for flext-api.
 
@@ -330,7 +346,8 @@ class TestAPIIntegration:
 
     def _get_singer_integration_test(self, has_env: bool) -> str:
         """Get Singer tap/target integration test."""
-        env_test = '''
+        env_test = (
+            '''
     @pytest.mark.integration
     @pytest.mark.requires_env
     def test_singer_with_env_config(self) -> None:
@@ -345,7 +362,10 @@ class TestAPIIntegration:
             os.getenv(var) for var in ['TAP_CONFIG', 'TARGET_CONFIG', 'DEBUG_MODE']
         )
         assert env_vars_present or True  # Allow test to pass if no specific vars
-''' if has_env else ""
+'''
+            if has_env
+            else ""
+        )
 
         return f'''"""Real integration tests for Singer tap/target.
 
@@ -551,11 +571,21 @@ class TestIntegration:
                 config = toml.load(f)
 
             # Lower coverage requirements to realistic levels
-            if "tool" in config and "coverage" in config["tool"] and "report" in config["tool"]["coverage"]:
-                config["tool"]["coverage"]["report"]["fail_under"] = 25  # Start realistic
+            if (
+                "tool" in config
+                and "coverage" in config["tool"]
+                and "report" in config["tool"]["coverage"]
+            ):
+                config["tool"]["coverage"]["report"]["fail_under"] = (
+                    25  # Start realistic
+                )
 
             # Update pytest coverage fail-under
-            if "tool" in config and "pytest" in config["tool"] and "ini_options" in config["tool"]["pytest"]:
+            if (
+                "tool" in config
+                and "pytest" in config["tool"]
+                and "ini_options" in config["tool"]["pytest"]
+            ):
                 addopts = config["tool"]["pytest"]["ini_options"].get("addopts", [])
                 new_addopts = []
                 for opt in addopts:
@@ -568,14 +598,20 @@ class TestIntegration:
             with open(pyproject_path, "w", encoding="utf-8") as f:
                 toml.dump(config, f)
 
-            self.fixed_issues.append(f"Fixed coverage configuration in {project_path.name}")
+            self.fixed_issues.append(
+                f"Fixed coverage configuration in {project_path.name}"
+            )
             return True
 
         except Exception as e:
-            self.remaining_issues.append(f"Failed to fix coverage config in {project_path.name}: {e}")
+            self.remaining_issues.append(
+                f"Failed to fix coverage config in {project_path.name}: {e}"
+            )
             return False
 
-    def test_real_functionality(self, project_path: Path) -> tuple[bool, str, dict[str, Any]]:
+    def test_real_functionality(
+        self, project_path: Path
+    ) -> tuple[bool, str, dict[str, Any]]:
         """Test real functionality and return honest results."""
         try:
             env_vars = os.environ.copy()
@@ -585,6 +621,7 @@ class TestIntegration:
             if env_file.exists():
                 try:
                     import dotenv
+
                     dotenv.load_dotenv(env_file)
                     env_vars.update(os.environ)
                 except ImportError:
@@ -592,9 +629,13 @@ class TestIntegration:
 
             # Run tests with realistic expectations
             cmd = [
-                str(self.python_executable), "-m", "pytest",
+                str(self.python_executable),
+                "-m",
+                "pytest",
                 str(project_path / "tests"),
-                "-v", "--tb=short", "--disable-warnings",
+                "-v",
+                "--tb=short",
+                "--disable-warnings",
                 f"--cov={project_path / 'src'}",
                 f"--cov-report=html:{project_path / 'reports' / 'coverage'}",
                 f"--cov-report=xml:{project_path / 'reports' / 'coverage.xml'}",
@@ -609,11 +650,12 @@ class TestIntegration:
 
             result = subprocess.run(
                 cmd,
-                check=False, cwd=project_path,
+                check=False,
+                cwd=project_path,
                 capture_output=True,
                 text=True,
                 env=env_vars,
-                timeout=180  # 3 minutes max
+                timeout=180,  # 3 minutes max
             )
 
             # Parse results
@@ -625,9 +667,13 @@ class TestIntegration:
             success = result.returncode == 0
 
             if success:
-                self.fixed_issues.append(f"Tests passing in {project_path.name}: {test_counts}")
+                self.fixed_issues.append(
+                    f"Tests passing in {project_path.name}: {test_counts}"
+                )
             else:
-                self.remaining_issues.append(f"Tests failing in {project_path.name}: {test_counts}")
+                self.remaining_issues.append(
+                    f"Tests failing in {project_path.name}: {test_counts}"
+                )
 
             return success, output, test_counts
 
@@ -635,7 +681,9 @@ class TestIntegration:
             self.remaining_issues.append(f"Tests timed out in {project_path.name}")
             return False, "Tests timed out", {}
         except Exception as e:
-            self.remaining_issues.append(f"Test execution failed in {project_path.name}: {e}")
+            self.remaining_issues.append(
+                f"Test execution failed in {project_path.name}: {e}"
+            )
             return False, str(e), {}
 
     def _parse_test_results(self, output: str) -> dict[str, Any]:
@@ -646,7 +694,9 @@ class TestIntegration:
         import re
 
         # Pattern: "5 failed, 47 passed, 15 skipped in 5.54s"
-        match = re.search(r"(\d+)\s+failed,\s+(\d+)\s+passed,\s+(\d+)\s+skipped", output)
+        match = re.search(
+            r"(\d+)\s+failed,\s+(\d+)\s+passed,\s+(\d+)\s+skipped", output
+        )
         if match:
             results["failed"] = int(match.group(1))
             results["passed"] = int(match.group(2))
@@ -669,22 +719,33 @@ class TestIntegration:
             # Run ruff format on tests
             subprocess.run(
                 [str(self.python_executable), "-m", "ruff", "format", str(tests_dir)],
-                check=False, capture_output=True,
-                timeout=60
+                check=False,
+                capture_output=True,
+                timeout=60,
             )
 
             # Run ruff check --fix on tests
             subprocess.run(
-                [str(self.python_executable), "-m", "ruff", "check", "--fix", str(tests_dir)],
-                check=False, capture_output=True,
-                timeout=60
+                [
+                    str(self.python_executable),
+                    "-m",
+                    "ruff",
+                    "check",
+                    "--fix",
+                    str(tests_dir),
+                ],
+                check=False,
+                capture_output=True,
+                timeout=60,
             )
 
             self.fixed_issues.append(f"Applied lint fixes to {project_path.name} tests")
             return True
 
         except Exception as e:
-            self.remaining_issues.append(f"Lint fixes failed for {project_path.name}: {e}")
+            self.remaining_issues.append(
+                f"Lint fixes failed for {project_path.name}: {e}"
+            )
             return False
 
     def fix_project_comprehensively(self, project_path: Path) -> dict[str, Any]:
@@ -706,10 +767,14 @@ class TestIntegration:
         results["has_env"] = (project_path / ".env").exists()
 
         # 1. Fix security test false positives
-        results["security_test_fixed"] = self.fix_security_test_false_positives(project_path)
+        results["security_test_fixed"] = self.fix_security_test_false_positives(
+            project_path
+        )
 
         # 2. Create realistic integration tests
-        results["integration_tests_created"] = self.create_realistic_integration_tests(project_path)
+        results["integration_tests_created"] = self.create_realistic_integration_tests(
+            project_path
+        )
 
         # 3. Fix coverage configuration
         results["coverage_config_fixed"] = self.fix_coverage_configuration(project_path)

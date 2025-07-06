@@ -96,7 +96,9 @@ class NextPhasePEPFixer:
             pattern = r'("""[^"]*?\.)\n(\s*[A-Z])'
             replacement = r"\1\n\n\2"
 
-            content = re.sub(pattern, replacement, content, flags=re.MULTILINE | re.DOTALL)
+            content = re.sub(
+                pattern, replacement, content, flags=re.MULTILINE | re.DOTALL
+            )
 
             if content != original_content:
                 py_file.write_text(content, encoding="utf-8")
@@ -116,7 +118,9 @@ class NextPhasePEPFixer:
                 if len(line) > 88:  # Threshold for optimization
                     new_line = self._optimize_long_line(line)
                     if new_line != line:
-                        self.fixes_applied.append(f"E501 line length: {py_file.name}:{line_num + 1}")
+                        self.fixes_applied.append(
+                            f"E501 line length: {py_file.name}:{line_num + 1}"
+                        )
                     modified_lines.append(new_line)
                 else:
                     modified_lines.append(line)
@@ -222,7 +226,7 @@ class NextPhasePEPFixer:
 
                 return line.replace(
                     match.group(0),
-                    f"{{\n{item_indent}{formatted_items},\n{base_indent}}}"
+                    f"{{\n{item_indent}{formatted_items},\n{base_indent}}}",
                 )
 
         return line
@@ -242,7 +246,7 @@ class NextPhasePEPFixer:
 
                 return line.replace(
                     match.group(0),
-                    f"[\n{item_indent}{formatted_items},\n{base_indent}]"
+                    f"[\n{item_indent}{formatted_items},\n{base_indent}]",
                 )
 
         return line
@@ -274,7 +278,9 @@ class NextPhasePEPFixer:
                 if in_docstring and len(line) > 72:
                     new_line = self._wrap_docstring_line(line)
                     if new_line != line:
-                        self.fixes_applied.append(f"W505 doc line length: {py_file.name}")
+                        self.fixes_applied.append(
+                            f"W505 doc line length: {py_file.name}"
+                        )
                         modified_lines.extend(new_line.split("\n"))
                     else:
                         modified_lines.append(line)
@@ -314,11 +320,19 @@ class NextPhasePEPFixer:
         print("\n🔧 PHASE 5: GUIDED COMPLEXITY REDUCTION")
 
         # Run ruff to find specific complexity violations
-        result = subprocess.run([
-            "ruff", "check", str(self.src_dir),
-            "--select=PLR0912,PLR0915",
-            "--output-format=text"
-        ], check=False, capture_output=True, text=True, cwd=self.project_dir)
+        result = subprocess.run(
+            [
+                "ruff",
+                "check",
+                str(self.src_dir),
+                "--select=PLR0912,PLR0915",
+                "--output-format=text",
+            ],
+            check=False,
+            capture_output=True,
+            text=True,
+            cwd=self.project_dir,
+        )
 
         violations = result.stdout.strip().split("\n") if result.stdout.strip() else []
 
@@ -331,7 +345,9 @@ class NextPhasePEPFixer:
                     file_path = parts[0]
                     line_num = parts[1]
                     print(f"   📁 File: {file_path}, Line: {line_num}")
-                    print("   💡 SUGGESTION: Consider extracting methods or using early returns")
+                    print(
+                        "   💡 SUGGESTION: Consider extracting methods or using early returns"
+                    )
 
     def _report_final_status(self) -> None:
         """Relatório final dos resultados."""
@@ -352,10 +368,13 @@ class NextPhasePEPFixer:
 
         # Run final ruff check
         print("\n🔍 VERIFICAÇÃO FINAL...")
-        result = subprocess.run([
-            "ruff", "check", str(self.src_dir),
-            "--statistics"
-        ], check=False, capture_output=True, text=True, cwd=self.project_dir)
+        result = subprocess.run(
+            ["ruff", "check", str(self.src_dir), "--statistics"],
+            check=False,
+            capture_output=True,
+            text=True,
+            cwd=self.project_dir,
+        )
 
         if result.stdout:
             print("\n📊 VIOLAÇÕES RESTANTES:")
@@ -364,7 +383,9 @@ class NextPhasePEPFixer:
                     print(f"   {line}")
 
         print("\n🚀 PROGRESSO CONTÍNUO REALIZADO!")
-        print("📝 Próxima iteração: Continue com script similar para próximas violações")
+        print(
+            "📝 Próxima iteração: Continue com script similar para próximas violações"
+        )
         print("🎯 Meta: <100 violações PEP total")
 
 

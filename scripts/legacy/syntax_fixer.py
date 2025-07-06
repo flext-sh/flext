@@ -31,7 +31,14 @@ console = Console()
 class SyntaxPattern:
     """Representa um padrão de sintaxe que pode ser corrigido automaticamente."""
 
-    def __init__(self, name: str, description: str, pattern: str, replacement: str, safe: bool = True) -> None:
+    def __init__(
+        self,
+        name: str,
+        description: str,
+        pattern: str,
+        replacement: str,
+        safe: bool = True,
+    ) -> None:
         self.name = name
         self.description = description
         self.pattern = pattern
@@ -49,41 +56,45 @@ class SyntaxFixer:
             "Remove linhas com apenas dois pontos isolados",
             r"^:\s*$",
             "",
-            safe=True
+            safe=True,
         ),
         SyntaxPattern(
             "classmethod_colon",
             "Remove dois pontos após @classmethod",
             r"@classmethod:\s*$",
             "@classmethod",
-            safe=True
+            safe=True,
         ),
         SyntaxPattern(
             "abstractmethod_colon",
             "Remove dois pontos após @abstractmethod",
             r"@abstractmethod:\s*$",
             "@abstractmethod",
-            safe=True
+            safe=True,
         ),
         SyntaxPattern(
             "docstring_colon",
             "Remove dois pontos ao final de docstrings",
             r'"""([^"]*?)""":(\s*)$',
             r'"""\1"""\2',
-            safe=True
+            safe=True,
         ),
         SyntaxPattern(
             "self_parameter_colon",
             "Corrige self: para self, em parâmetros de função",
             r"\bself:\s*$",
             "self,",
-            safe=True
+            safe=True,
         ),
     ]
 
     def __init__(self, workspace_root: Path) -> None:
         self.workspace_root = workspace_root
-        self.backup_dir = workspace_root / ".syntax_fixes_backup" / datetime.now().strftime("%Y%m%d_%H%M%S")
+        self.backup_dir = (
+            workspace_root
+            / ".syntax_fixes_backup"
+            / datetime.now().strftime("%Y%m%d_%H%M%S")
+        )
         self.stats = {
             "files_processed": 0,
             "files_modified": 0,
@@ -104,9 +115,10 @@ class SyntaxFixer:
         try:
             result = subprocess.run(
                 [sys.executable, "-m", "py_compile", str(file_path)],
-                check=False, capture_output=True,
+                check=False,
+                capture_output=True,
                 text=True,
-                cwd=self.workspace_root
+                cwd=self.workspace_root,
             )
             return result.returncode == 0, result.stderr
         except Exception as e:
@@ -119,6 +131,7 @@ class SyntaxFixer:
                 content = f.read()
 
             import re
+
             original_content = content
 
             # Aplica a correção baseada no tipo de padrão
@@ -129,7 +142,9 @@ class SyntaxFixer:
                 content = "\n".join(new_lines)
             else:
                 # Usa regex para outros padrões
-                content = re.sub(pattern.pattern, pattern.replacement, content, flags=re.MULTILINE)
+                content = re.sub(
+                    pattern.pattern, pattern.replacement, content, flags=re.MULTILINE
+                )
 
             # Se houve mudança, salva o arquivo
             if content != original_content:
@@ -140,7 +155,9 @@ class SyntaxFixer:
             return False
 
         except Exception as e:
-            console.print(f"[red]Erro ao aplicar padrão {pattern.name} em {file_path}: {e}[/red]")
+            console.print(
+                f"[red]Erro ao aplicar padrão {pattern.name} em {file_path}: {e}[/red]"
+            )
             return False
 
     def fix_file(self, file_path: Path) -> dict[str, any]:
@@ -151,7 +168,7 @@ class SyntaxFixer:
             "syntax_valid_after": False,
             "patterns_applied": [],
             "backup_created": False,
-            "error": None
+            "error": None,
         }
 
         try:
@@ -187,7 +204,9 @@ class SyntaxFixer:
             if not syntax_ok_after and file_modified:
                 shutil.copy2(backup_path, file_path)
                 result["patterns_applied"] = []
-                console.print(f"[yellow]Restaurado backup para {file_path} - correções não melhoraram sintaxe[/yellow]")
+                console.print(
+                    f"[yellow]Restaurado backup para {file_path} - correções não melhoraram sintaxe[/yellow]"
+                )
 
             if file_modified and syntax_ok_after:
                 self.stats["files_modified"] += 1
@@ -203,9 +222,15 @@ class SyntaxFixer:
         python_files = []
         for root, dirs, files in os.walk(directory):
             # Ignora diretórios de cache e virtuais
-            dirs[:] = [d for d in dirs if not d.startswith(".") and d not in {"__pycache__", "venv", ".venv"}]
+            dirs[:] = [
+                d
+                for d in dirs
+                if not d.startswith(".") and d not in {"__pycache__", "venv", ".venv"}
+            ]
 
-            python_files.extend(Path(root) / file for file in files if file.endswith(".py"))
+            python_files.extend(
+                Path(root) / file for file in files if file.endswith(".py")
+            )
 
         return python_files
 
@@ -229,9 +254,11 @@ class SyntaxFixer:
         with Progress(
             SpinnerColumn(),
             TextColumn("[progress.description]{task.description}"),
-            console=console
+            console=console,
         ) as progress:
-            task = progress.add_task(f"Corrigindo {len(python_files)} arquivos...", total=len(python_files))
+            task = progress.add_task(
+                f"Corrigindo {len(python_files)} arquivos...", total=len(python_files)
+            )
 
             for file_path in python_files:
                 result = self.fix_file(file_path)
@@ -252,23 +279,34 @@ class SyntaxFixer:
             "syntax_errors_before": syntax_errors_before,
             "syntax_errors_after": syntax_errors_after,
             "files_fixed": len([r for r in results if r["patterns_applied"]]),
-            "results": results
+            "results": results,
         }
 
     def fix_workspace(self, project_names: list[str] | None = None) -> None:
         """Corrige todos os projetos no workspace ou uma lista específica."""
-        console.print(Panel.fit(
-            "[bold blue]FLEXT Syntax Fixer[/bold blue]\n"
-            "Correção automatizada e segura de erros de sintaxe Python",
-            border_style="blue"
-        ))
+        console.print(
+            Panel.fit(
+                "[bold blue]FLEXT Syntax Fixer[/bold blue]\n"
+                "Correção automatizada e segura de erros de sintaxe Python",
+                border_style="blue",
+            )
+        )
 
         # Se não especificado, processa todos os projetos
         if not project_names:
             project_names = [
-                "flext-core", "flext-auth", "flext-api", "flext-grpc", "flext-web",
-                "flext-cli", "flext-plugin", "flext-observability", "flext-meltano",
-                "flext-ldap", "flext-quality", "flext-db-oracle"
+                "flext-core",
+                "flext-auth",
+                "flext-api",
+                "flext-grpc",
+                "flext-web",
+                "flext-cli",
+                "flext-plugin",
+                "flext-observability",
+                "flext-meltano",
+                "flext-ldap",
+                "flext-quality",
+                "flext-db-oracle",
             ]
 
         all_results = []
@@ -303,8 +341,11 @@ class SyntaxFixer:
             if "error" in result:
                 table.add_row(
                     result.get("project", "?"),
-                    "N/A", "N/A", "N/A", "N/A",
-                    f"[red]Erro: {result['error']}[/red]"
+                    "N/A",
+                    "N/A",
+                    "N/A",
+                    "N/A",
+                    f"[red]Erro: {result['error']}[/red]",
                 )
             else:
                 project_name = Path(result["project"]).name
@@ -320,7 +361,14 @@ class SyntaxFixer:
                 else:
                     status = "[red]✗ Problemas[/red]"
 
-                table.add_row(project_name, files_count, errors_before, errors_after, files_fixed, status)
+                table.add_row(
+                    project_name,
+                    files_count,
+                    errors_before,
+                    errors_after,
+                    files_fixed,
+                    status,
+                )
 
         console.print(table)
 
@@ -332,8 +380,10 @@ class SyntaxFixer:
         console.print(f"Erros de sintaxe depois: {self.stats['syntax_errors_after']}")
 
         if self.stats["syntax_errors_before"] > 0:
-            improvement = ((self.stats["syntax_errors_before"] - self.stats["syntax_errors_after"]) /
-                          self.stats["syntax_errors_before"]) * 100
+            improvement = (
+                (self.stats["syntax_errors_before"] - self.stats["syntax_errors_after"])
+                / self.stats["syntax_errors_before"]
+            ) * 100
             console.print(f"Melhoria: {improvement:.1f}%")
 
         # Padrões aplicados
@@ -351,7 +401,8 @@ def main() -> None:
 
     # Parse argumentos simples
     if len(sys.argv) > 1 and sys.argv[1] in {"-h", "--help"}:
-        console.print("""
+        console.print(
+            """
 [bold]FLEXT Syntax Fixer[/bold]
 
 Uso:
@@ -363,7 +414,8 @@ Exemplos:
   python syntax_fixer.py flext-core flext-auth  # Corrige projetos específicos
 
 O script cria backups automáticos antes de qualquer modificação.
-""")
+"""
+        )
         return
 
     # Lista de projetos específicos ou None para todos

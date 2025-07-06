@@ -41,39 +41,44 @@ class PytestIssuesFixer:
 
             # Fix the problematic PytestUnraisableExceptionWarning references
             content = re.sub(
-                r'"ignore::pytest\.PytestUnraisableExceptionWarning"[,\s]*',
-                "",
-                content
+                r'"ignore::pytest\.PytestUnraisableExceptionWarning"[,\s]*', "", content
             )
             content = re.sub(
                 r'"ignore::_pytest\.warnings\.PytestUnraisableExceptionWarning"[,\s]*',
                 "",
-                content
+                content,
             )
 
             # Fix trailing commas and empty entries in filterwarnings
             content = re.sub(
                 r'filterwarnings = \[ "error", "ignore::UserWarning", "ignore::DeprecationWarning", "ignore::PendingDeprecationWarning",\s*\]',
                 'filterwarnings = [ "error", "ignore::UserWarning", "ignore::DeprecationWarning", "ignore::PendingDeprecationWarning" ]',
-                content
+                content,
             )
 
             # Add proper pytest-compatible warnings
-            if "filterwarnings" in content and "ignore::pytest.PytestCollectionWarning" not in content:
+            if (
+                "filterwarnings" in content
+                and "ignore::pytest.PytestCollectionWarning" not in content
+            ):
                 content = re.sub(
                     r'(filterwarnings = \[.*?)"ignore::PendingDeprecationWarning"',
                     r'\1"ignore::PendingDeprecationWarning", "ignore::pytest.PytestCollectionWarning"',
-                    content
+                    content,
                 )
 
             if content != original_content:
                 with open(pyproject_path, "w", encoding="utf-8") as f:
                     f.write(content)
-                self.fixes_applied.append(f"Fixed warnings config in {pyproject_path.parent.name}")
+                self.fixes_applied.append(
+                    f"Fixed warnings config in {pyproject_path.parent.name}"
+                )
                 return True
 
         except Exception as e:
-            self.issues_found.append(f"Warning config fix failed for {pyproject_path}: {e}")
+            self.issues_found.append(
+                f"Warning config fix failed for {pyproject_path}: {e}"
+            )
             return False
 
         return False
@@ -96,7 +101,9 @@ class PytestIssuesFixer:
             self.fixes_applied.append(f"Created modern conftest.py for {project_name}")
             return True
         except Exception as e:
-            self.issues_found.append(f"Conftest creation failed for {project_name}: {e}")
+            self.issues_found.append(
+                f"Conftest creation failed for {project_name}: {e}"
+            )
             return False
 
     def _get_conftest_template(self, project_name: str) -> str:
@@ -279,7 +286,11 @@ def django_settings() -> dict[str, Any]:
 
 '''
 
-        elif "tap-" in project_name or "target-" in project_name or "meltano" in project_name:
+        elif (
+            "tap-" in project_name
+            or "target-" in project_name
+            or "meltano" in project_name
+        ):
             base_template += '''
 
 @pytest.fixture
@@ -381,11 +392,15 @@ def pytest_collection_modifyitems(
             with open(integration_test_path, "w", encoding="utf-8") as f:
                 f.write(integration_test_content)
 
-            self.fixes_applied.append(f"Created modern test examples for {project_name}")
+            self.fixes_applied.append(
+                f"Created modern test examples for {project_name}"
+            )
             return True
 
         except Exception as e:
-            self.issues_found.append(f"Test examples creation failed for {project_name}: {e}")
+            self.issues_found.append(
+                f"Test examples creation failed for {project_name}: {e}"
+            )
             return False
 
     def _get_unit_test_template(self, project_name: str) -> str:
@@ -783,27 +798,39 @@ class TestSecurityIntegration:
             # Run ruff check
             ruff_result = subprocess.run(
                 [str(self.python_executable), "-m", "ruff", "check", str(tests_dir)],
-                check=False, capture_output=True,
+                check=False,
+                capture_output=True,
                 text=True,
-                timeout=60
+                timeout=60,
             )
 
             if ruff_result.returncode != 0:
-                self.issues_found.append(f"Ruff check failed for {project_path.name}: {ruff_result.stdout}")
+                self.issues_found.append(
+                    f"Ruff check failed for {project_path.name}: {ruff_result.stdout}"
+                )
                 return False
 
             # Run mypy check (if mypy is available)
             try:
                 mypy_result = subprocess.run(
-                    [str(self.python_executable), "-m", "mypy", str(tests_dir), "--strict"],
-                    check=False, capture_output=True,
+                    [
+                        str(self.python_executable),
+                        "-m",
+                        "mypy",
+                        str(tests_dir),
+                        "--strict",
+                    ],
+                    check=False,
+                    capture_output=True,
                     text=True,
-                    timeout=60
+                    timeout=60,
                 )
 
                 if mypy_result.returncode != 0:
                     # MyPy errors are common and acceptable for some cases
-                    self.issues_found.append(f"MyPy warnings for {project_path.name} (acceptable)")
+                    self.issues_found.append(
+                        f"MyPy warnings for {project_path.name} (acceptable)"
+                    )
 
             except (subprocess.TimeoutExpired, FileNotFoundError):
                 # MyPy not available or timeout - acceptable
@@ -813,7 +840,9 @@ class TestSecurityIntegration:
             return True
 
         except Exception as e:
-            self.issues_found.append(f"Quality check failed for {project_path.name}: {e}")
+            self.issues_found.append(
+                f"Quality check failed for {project_path.name}: {e}"
+            )
             return False
 
     def run_tests_with_coverage(self, project_path: Path) -> tuple[bool, str]:
@@ -826,6 +855,7 @@ class TestSecurityIntegration:
             if env_file.exists():
                 try:
                     import dotenv
+
                     dotenv.load_dotenv(env_file)
                     self.fixes_applied.append(f"Loaded .env for {project_path.name}")
                 except ImportError:
@@ -833,7 +863,9 @@ class TestSecurityIntegration:
 
             # Run pytest with comprehensive options
             cmd = [
-                str(self.python_executable), "-m", "pytest",
+                str(self.python_executable),
+                "-m",
+                "pytest",
                 str(project_path / "tests"),
                 "--tb=short",
                 "--verbose",
@@ -852,17 +884,20 @@ class TestSecurityIntegration:
 
             result = subprocess.run(
                 cmd,
-                check=False, cwd=project_path,
+                check=False,
+                cwd=project_path,
                 capture_output=True,
                 text=True,
                 env=env_vars,
-                timeout=300  # 5 minutes timeout
+                timeout=300,  # 5 minutes timeout
             )
 
             output = f"STDOUT:\\n{result.stdout}\\n\\nSTDERR:\\n{result.stderr}"
 
             if result.returncode == 0:
-                self.fixes_applied.append(f"Tests passed with coverage for {project_path.name}")
+                self.fixes_applied.append(
+                    f"Tests passed with coverage for {project_path.name}"
+                )
                 return True, output
             self.issues_found.append(f"Tests failed for {project_path.name}")
             return False, output
@@ -871,7 +906,9 @@ class TestSecurityIntegration:
             self.issues_found.append(f"Tests timed out for {project_path.name}")
             return False, "Tests timed out"
         except Exception as e:
-            self.issues_found.append(f"Test execution failed for {project_path.name}: {e}")
+            self.issues_found.append(
+                f"Test execution failed for {project_path.name}: {e}"
+            )
             return False, str(e)
 
     def fix_project(self, project_path: Path) -> bool:
@@ -935,6 +972,7 @@ class TestSecurityIntegration:
         # Get current date
         try:
             import datetime
+
             current_date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         except Exception:
             current_date = "2024-01-05"
@@ -1026,7 +1064,9 @@ def main() -> None:
         sys.exit(1)
 
     if not (workspace_root / ".venv" / "bin" / "python").exists():
-        print(f"❌ Python executable not found: {workspace_root / '.venv' / 'bin' / 'python'}")
+        print(
+            f"❌ Python executable not found: {workspace_root / '.venv' / 'bin' / 'python'}"
+        )
         sys.exit(1)
 
     fixer = PytestIssuesFixer(workspace_root)

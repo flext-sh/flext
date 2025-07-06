@@ -21,6 +21,7 @@ try:
     from rich.console import Console
     from rich.panel import Panel
     from rich.progress import Progress, SpinnerColumn, TextColumn
+
     RICH_AVAILABLE = True
     console = Console()
 except ImportError:
@@ -44,10 +45,18 @@ class QualityChecker:
         """Conta issues reais do Ruff."""
         try:
             result = subprocess.run(
-                [str(self.python_executable), "-m", "ruff", "check", "--output-format=json", str(file_path)],
-                check=False, capture_output=True,
+                [
+                    str(self.python_executable),
+                    "-m",
+                    "ruff",
+                    "check",
+                    "--output-format=json",
+                    str(file_path),
+                ],
+                check=False,
+                capture_output=True,
                 text=True,
-                timeout=30
+                timeout=30,
             )
 
             if result.returncode == 0:
@@ -58,7 +67,9 @@ class QualityChecker:
                 return len(issues)
             except json.JSONDecodeError:
                 # Fallback: conta linhas de output
-                lines = [line.strip() for line in result.stdout.split("\n") if line.strip()]
+                lines = [
+                    line.strip() for line in result.stdout.split("\n") if line.strip()
+                ]
                 return len(lines)
 
         except subprocess.TimeoutExpired:
@@ -73,17 +84,21 @@ class QualityChecker:
         try:
             result = subprocess.run(
                 [str(self.python_executable), "-m", "mypy", str(file_path)],
-                check=False, capture_output=True,
+                check=False,
+                capture_output=True,
                 text=True,
-                timeout=30
+                timeout=30,
             )
 
             if result.returncode == 0:
                 return 0
 
             # Conta linhas com "error:"
-            error_lines = [line for line in result.stdout.split("\n")
-                          if line.strip() and ": error:" in line]
+            error_lines = [
+                line
+                for line in result.stdout.split("\n")
+                if line.strip() and ": error:" in line
+            ]
             return len(error_lines)
 
         except subprocess.TimeoutExpired:
@@ -97,10 +112,18 @@ class QualityChecker:
         """Conta issues reais do Bandit."""
         try:
             result = subprocess.run(
-                [str(self.python_executable), "-m", "bandit", "-f", "json", str(file_path)],
-                check=False, capture_output=True,
+                [
+                    str(self.python_executable),
+                    "-m",
+                    "bandit",
+                    "-f",
+                    "json",
+                    str(file_path),
+                ],
+                check=False,
+                capture_output=True,
                 text=True,
-                timeout=30
+                timeout=30,
             )
 
             if result.returncode == 0:
@@ -133,18 +156,27 @@ class QualityChecker:
         try:
             # Ruff check --fix
             subprocess.run(
-                [str(self.python_executable), "-m", "ruff", "check", "--fix", str(file_path)],
-                check=False, capture_output=True,
+                [
+                    str(self.python_executable),
+                    "-m",
+                    "ruff",
+                    "check",
+                    "--fix",
+                    str(file_path),
+                ],
+                check=False,
+                capture_output=True,
                 text=True,
-                timeout=30
+                timeout=30,
             )
 
             # Ruff format
             subprocess.run(
                 [str(self.python_executable), "-m", "ruff", "format", str(file_path)],
-                check=False, capture_output=True,
+                check=False,
+                capture_output=True,
                 text=True,
-                timeout=30
+                timeout=30,
             )
 
             return True  # Sempre retorna True se não der erro
@@ -160,7 +192,7 @@ class QualityChecker:
                 "success": False,
                 "error": "Arquivo não existe",
                 "before_issues": 0,
-                "after_issues": 0
+                "after_issues": 0,
             }
 
         self._print(f"🔍 Analisando {file_path.name}...")
@@ -168,19 +200,25 @@ class QualityChecker:
         # Backup
         backup_path = file_path.with_suffix(file_path.suffix + ".qg_backup")
         try:
-            backup_path.write_text(file_path.read_text(encoding="utf-8"), encoding="utf-8")
+            backup_path.write_text(
+                file_path.read_text(encoding="utf-8"), encoding="utf-8"
+            )
         except Exception as e:
             return {
                 "success": False,
                 "error": f"Erro criando backup: {e}",
                 "before_issues": 0,
-                "after_issues": 0
+                "after_issues": 0,
             }
 
         # Conta issues antes
-        ruff_before, mypy_before, bandit_before, total_before = self.count_total_issues(file_path)
+        ruff_before, mypy_before, bandit_before, total_before = self.count_total_issues(
+            file_path
+        )
 
-        self._print(f"📊 Issues antes: Ruff={ruff_before}, MyPy={mypy_before}, Bandit={bandit_before}, Total={total_before}")
+        self._print(
+            f"📊 Issues antes: Ruff={ruff_before}, MyPy={mypy_before}, Bandit={bandit_before}, Total={total_before}"
+        )
 
         if total_before == 0:
             # Arquivo já perfeito
@@ -190,7 +228,7 @@ class QualityChecker:
                 "changes_applied": False,
                 "before_issues": total_before,
                 "after_issues": total_before,
-                "message": "Arquivo já sem issues"
+                "message": "Arquivo já sem issues",
             }
 
         # Aplica correções
@@ -204,20 +242,28 @@ class QualityChecker:
                     "changes_applied": False,
                     "before_issues": total_before,
                     "after_issues": total_before,
-                    "message": "Nenhuma correção aplicada"
+                    "message": "Nenhuma correção aplicada",
                 }
 
             # Conta issues depois
-            ruff_after, mypy_after, bandit_after, total_after = self.count_total_issues(file_path)
+            ruff_after, mypy_after, bandit_after, total_after = self.count_total_issues(
+                file_path
+            )
 
-            self._print(f"📊 Issues depois: Ruff={ruff_after}, MyPy={mypy_after}, Bandit={bandit_after}, Total={total_after}")
+            self._print(
+                f"📊 Issues depois: Ruff={ruff_after}, MyPy={mypy_after}, Bandit={bandit_after}, Total={total_after}"
+            )
 
             # Verifica se melhorou
             if total_after > total_before:
                 # REVERTE - piorou
-                self._print(f"❌ REVERTENDO: Issues aumentaram de {total_before} para {total_after}")
+                self._print(
+                    f"❌ REVERTENDO: Issues aumentaram de {total_before} para {total_after}"
+                )
                 with contextlib.suppress(Exception):
-                    file_path.write_text(backup_path.read_text(encoding="utf-8"), encoding="utf-8")
+                    file_path.write_text(
+                        backup_path.read_text(encoding="utf-8"), encoding="utf-8"
+                    )
                 backup_path.unlink(missing_ok=True)
 
                 return {
@@ -225,7 +271,7 @@ class QualityChecker:
                     "changes_applied": True,
                     "before_issues": total_before,
                     "after_issues": total_after,
-                    "error": f"Changes rejected: issues increased from {total_before} to {total_after}"
+                    "error": f"Changes rejected: issues increased from {total_before} to {total_after}",
                 }
 
             # SUCESSO - melhorou ou manteve
@@ -242,20 +288,22 @@ class QualityChecker:
                 "changes_applied": True,
                 "before_issues": total_before,
                 "after_issues": total_after,
-                "improvement": improvement
+                "improvement": improvement,
             }
 
         except Exception as e:
             # Erro - reverte
             with contextlib.suppress(Exception):
-                file_path.write_text(backup_path.read_text(encoding="utf-8"), encoding="utf-8")
+                file_path.write_text(
+                    backup_path.read_text(encoding="utf-8"), encoding="utf-8"
+                )
             backup_path.unlink(missing_ok=True)
 
             return {
                 "success": False,
                 "error": f"Erro durante validação: {e}",
                 "before_issues": total_before,
-                "after_issues": total_before
+                "after_issues": total_before,
             }
 
     def validate_project(self, project_path: Path) -> dict:
@@ -263,11 +311,16 @@ class QualityChecker:
         if not project_path.exists():
             return {
                 "success": False,
-                "error": f"Projeto não encontrado: {project_path}"
+                "error": f"Projeto não encontrado: {project_path}",
             }
 
         # Encontra arquivos Python
-        python_files = [py_file for py_file in project_path.rglob("*.py") if py_file.is_file() and not any(part.startswith(".") for part in py_file.parts)]
+        python_files = [
+            py_file
+            for py_file in project_path.rglob("*.py")
+            if py_file.is_file()
+            and not any(part.startswith(".") for part in py_file.parts)
+        ]
 
         if not python_files:
             return {
@@ -275,7 +328,7 @@ class QualityChecker:
                 "message": "Nenhum arquivo Python encontrado",
                 "files_processed": 0,
                 "successes": 0,
-                "improvements": 0
+                "improvements": 0,
             }
 
         self._print(f"🎯 Validando {len(python_files)} arquivos em {project_path.name}")
@@ -309,7 +362,7 @@ class QualityChecker:
             "total_issues_before": total_before,
             "total_issues_after": total_after,
             "total_improvement": total_before - total_after,
-            "results": results
+            "results": results,
         }
 
     def _print(self, message: str) -> None:
@@ -331,17 +384,13 @@ def main() -> None:
         "--workspace",
         type=Path,
         default=Path("/home/marlonsc/flext"),
-        help="Diretório raiz do workspace FLEXT"
+        help="Diretório raiz do workspace FLEXT",
     )
     parser.add_argument(
-        "--project",
-        type=str,
-        help="Validar apenas um projeto específico"
+        "--project", type=str, help="Validar apenas um projeto específico"
     )
     parser.add_argument(
-        "--file",
-        type=Path,
-        help="Validar apenas um arquivo específico"
+        "--file", type=Path, help="Validar apenas um arquivo específico"
     )
 
     args = parser.parse_args()
@@ -372,7 +421,9 @@ def main() -> None:
                 after = result["after_issues"]
                 print(f"📊 Issues: {before} → {after} (melhoria: {improvement})")
         else:
-            print(f"❌ {args.file.name} falhou: {result.get('error', 'Erro desconhecido')}")
+            print(
+                f"❌ {args.file.name} falhou: {result.get('error', 'Erro desconhecido')}"
+            )
 
         return
 
@@ -386,10 +437,14 @@ def main() -> None:
             print(f"  📁 Arquivos: {result['files_processed']}")
             print(f"  ✅ Sucessos: {result['successes']}")
             print(f"  🔧 Melhorias: {result['improvements']}")
-            print(f"  📊 Issues: {result['total_issues_before']} → {result['total_issues_after']}")
+            print(
+                f"  📊 Issues: {result['total_issues_before']} → {result['total_issues_after']}"
+            )
             print(f"  📈 Melhoria total: {result['total_improvement']}")
         else:
-            print(f"❌ Projeto {args.project} falhou: {result.get('error', 'Erro desconhecido')}")
+            print(
+                f"❌ Projeto {args.project} falhou: {result.get('error', 'Erro desconhecido')}"
+            )
 
         return
 

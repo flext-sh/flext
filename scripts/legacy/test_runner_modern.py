@@ -66,7 +66,11 @@ class ModernTestRunner:
 
         # Test files must pass same linting as source code
         cmd = [
-            self.python_bin, "-m", "ruff", "check", "tests/",
+            self.python_bin,
+            "-m",
+            "ruff",
+            "check",
+            "tests/",
             "--select=E,W,F,UP,SIM,PYI,PT,RUF",
         ]
 
@@ -86,8 +90,12 @@ class ModernTestRunner:
         logger.info("=" * 40)
 
         cmd = [
-            self.python_bin, "-m", "mypy", "tests/",
-            "--strict", "--show-error-codes",
+            self.python_bin,
+            "-m",
+            "mypy",
+            "tests/",
+            "--strict",
+            "--show-error-codes",
         ]
 
         success, _output = self.run_command(cmd, "MyPy type checking on tests")
@@ -101,7 +109,9 @@ class ModernTestRunner:
         logger.info("=" * 40)
 
         cmd = [
-            self.python_bin, "-m", "pytest",
+            self.python_bin,
+            "-m",
+            "pytest",
             "tests/unit/",
             "--cov=src/client-a_oud_mig",
             "--cov-report=term-missing",
@@ -141,11 +151,14 @@ class ModernTestRunner:
         logger.info("🔍 .env found - running integration tests")
 
         cmd = [
-            self.python_bin, "-m", "pytest",
+            self.python_bin,
+            "-m",
+            "pytest",
             "tests/integration/",
             "-v",
             "--tb=short",
-            "-m", "not slow",  # Skip slow tests by default
+            "-m",
+            "not slow",  # Skip slow tests by default
         ]
 
         success, _output = self.run_command(cmd, "Integration tests")
@@ -173,7 +186,9 @@ class ModernTestRunner:
         logger.info("🔍 E2E tests found - running with .env configuration")
 
         cmd = [
-            self.python_bin, "-m", "pytest",
+            self.python_bin,
+            "-m",
+            "pytest",
             "tests/e2e/",
             "-v",
             "--tb=short",
@@ -198,7 +213,9 @@ class ModernTestRunner:
             return True
 
         cmd = [
-            self.python_bin, "-m", "pytest",
+            self.python_bin,
+            "-m",
+            "pytest",
             "tests/performance/",
             "--benchmark-only",
             "--benchmark-sort=mean",
@@ -216,10 +233,16 @@ class ModernTestRunner:
         logger.info("=" * 40)
 
         cmd = [
-            self.python_bin, "-m", "bandit",
-            "-r", "src/", "tests/",
-            "-f", "json",
-            "-o", "security-report.json",
+            self.python_bin,
+            "-m",
+            "bandit",
+            "-r",
+            "src/",
+            "tests/",
+            "-f",
+            "json",
+            "-o",
+            "security-report.json",
         ]
 
         success, _output = self.run_command(cmd, "Security scan with bandit")
@@ -283,7 +306,9 @@ class ModernTestRunner:
         """Run complete test suite."""
         logger.info("🚀 MODERN TEST RUNNER - client-a OUD MIGRATION")
         logger.info("=" * 60)
-        logger.info(f"Environment: {'.env FOUND' if self.has_env else '.env NOT FOUND'}")
+        logger.info(
+            f"Environment: {'.env FOUND' if self.has_env else '.env NOT FOUND'}"
+        )
         logger.info("=" * 60)
 
         # Run all test phases

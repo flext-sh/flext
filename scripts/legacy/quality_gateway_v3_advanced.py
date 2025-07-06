@@ -42,6 +42,7 @@ try:
     )
     from rich.table import Table
     from rich.tree import Tree
+
     RICH_AVAILABLE = True
     console = Console()
 except ImportError:
@@ -63,8 +64,14 @@ class QualityMetrics:
     @property
     def total_issues(self) -> int:
         """Total de issues."""
-        return (self.ruff_issues + self.mypy_issues + self.bandit_issues +
-                self.import_issues + self.format_issues + self.syntax_errors)
+        return (
+            self.ruff_issues
+            + self.mypy_issues
+            + self.bandit_issues
+            + self.import_issues
+            + self.format_issues
+            + self.syntax_errors
+        )
 
     @property
     def quality_score(self) -> float:
@@ -121,8 +128,9 @@ class AdvancedQualityChecker:
             try:
                 result = subprocess.run(
                     [str(self.python_executable), "-m", tool, "--version"],
-                    check=False, capture_output=True,
-                    timeout=10
+                    check=False,
+                    capture_output=True,
+                    timeout=10,
                 )
                 tools[tool] = result.returncode == 0
             except Exception:
@@ -137,10 +145,18 @@ class AdvancedQualityChecker:
         # Ruff issues
         try:
             result = subprocess.run(
-                [str(self.python_executable), "-m", "ruff", "check", "--output-format=json", str(file_path)],
-                check=False, capture_output=True,
+                [
+                    str(self.python_executable),
+                    "-m",
+                    "ruff",
+                    "check",
+                    "--output-format=json",
+                    str(file_path),
+                ],
+                check=False,
+                capture_output=True,
                 text=True,
-                timeout=30
+                timeout=30,
             )
 
             if result.returncode != 0:
@@ -148,7 +164,9 @@ class AdvancedQualityChecker:
                     issues = json.loads(result.stdout)
                     metrics.ruff_issues = len(issues)
                 except json.JSONDecodeError:
-                    metrics.ruff_issues = len([line for line in result.stdout.split("\n") if line.strip()])
+                    metrics.ruff_issues = len(
+                        [line for line in result.stdout.split("\n") if line.strip()]
+                    )
         except Exception:
             pass
 
@@ -156,14 +174,18 @@ class AdvancedQualityChecker:
         try:
             result = subprocess.run(
                 [str(self.python_executable), "-m", "mypy", str(file_path)],
-                check=False, capture_output=True,
+                check=False,
+                capture_output=True,
                 text=True,
-                timeout=30
+                timeout=30,
             )
 
             if result.returncode != 0:
-                error_lines = [line for line in result.stdout.split("\n")
-                              if line.strip() and ": error:" in line]
+                error_lines = [
+                    line
+                    for line in result.stdout.split("\n")
+                    if line.strip() and ": error:" in line
+                ]
                 metrics.mypy_issues = len(error_lines)
         except Exception:
             pass
@@ -171,10 +193,18 @@ class AdvancedQualityChecker:
         # Bandit issues
         try:
             result = subprocess.run(
-                [str(self.python_executable), "-m", "bandit", "-f", "json", str(file_path)],
-                check=False, capture_output=True,
+                [
+                    str(self.python_executable),
+                    "-m",
+                    "bandit",
+                    "-f",
+                    "json",
+                    str(file_path),
+                ],
+                check=False,
+                capture_output=True,
                 text=True,
-                timeout=30
+                timeout=30,
             )
 
             if result.returncode != 0:
@@ -189,15 +219,27 @@ class AdvancedQualityChecker:
         # Import issues (usando isort check)
         try:
             result = subprocess.run(
-                [str(self.python_executable), "-m", "isort", "--check-only", "--diff", str(file_path)],
-                check=False, capture_output=True,
+                [
+                    str(self.python_executable),
+                    "-m",
+                    "isort",
+                    "--check-only",
+                    "--diff",
+                    str(file_path),
+                ],
+                check=False,
+                capture_output=True,
                 text=True,
-                timeout=30
+                timeout=30,
             )
 
             if result.returncode != 0:
                 # Conta número de linhas de diff
-                diff_lines = [line for line in result.stdout.split("\n") if line.startswith(("+", "-"))]
+                diff_lines = [
+                    line
+                    for line in result.stdout.split("\n")
+                    if line.startswith(("+", "-"))
+                ]
                 metrics.import_issues = len(diff_lines)
         except Exception:
             pass
@@ -205,15 +247,25 @@ class AdvancedQualityChecker:
         # Format issues (usando black check)
         try:
             result = subprocess.run(
-                [str(self.python_executable), "-m", "black", "--check", "--diff", str(file_path)],
-                check=False, capture_output=True,
+                [
+                    str(self.python_executable),
+                    "-m",
+                    "black",
+                    "--check",
+                    "--diff",
+                    str(file_path),
+                ],
+                check=False,
+                capture_output=True,
                 text=True,
-                timeout=30
+                timeout=30,
             )
 
             if result.returncode != 0:
                 # Conta linhas de diff
-                diff_lines = [line for line in result.stdout.split("\n") if line.startswith("@@")]
+                diff_lines = [
+                    line for line in result.stdout.split("\n") if line.startswith("@@")
+                ]
                 metrics.format_issues = len(diff_lines)
         except Exception:
             pass
@@ -237,7 +289,7 @@ class AdvancedQualityChecker:
                 success=False,
                 before_metrics=QualityMetrics(),
                 after_metrics=QualityMetrics(),
-                error_message="isort não disponível"
+                error_message="isort não disponível",
             )
 
         start_time = time.time()
@@ -246,9 +298,10 @@ class AdvancedQualityChecker:
         try:
             result = subprocess.run(
                 [str(self.python_executable), "-m", "isort", str(file_path)],
-                check=False, capture_output=True,
+                check=False,
+                capture_output=True,
                 text=True,
-                timeout=30
+                timeout=30,
             )
 
             after_metrics = self.count_detailed_metrics(file_path)
@@ -260,7 +313,7 @@ class AdvancedQualityChecker:
                 before_metrics=before_metrics,
                 after_metrics=after_metrics,
                 changes_applied=result.returncode == 0,
-                execution_time=execution_time
+                execution_time=execution_time,
             )
 
         except Exception as e:
@@ -270,7 +323,7 @@ class AdvancedQualityChecker:
                 before_metrics=before_metrics,
                 after_metrics=before_metrics,
                 execution_time=time.time() - start_time,
-                error_message=str(e)
+                error_message=str(e),
             )
 
     def apply_autopep8(self, file_path: Path) -> ToolResult:
@@ -281,7 +334,7 @@ class AdvancedQualityChecker:
                 success=False,
                 before_metrics=QualityMetrics(),
                 after_metrics=QualityMetrics(),
-                error_message="autopep8 não disponível"
+                error_message="autopep8 não disponível",
             )
 
         start_time = time.time()
@@ -289,10 +342,19 @@ class AdvancedQualityChecker:
 
         try:
             subprocess.run(
-                [str(self.python_executable), "-m", "autopep8", "--in-place", "--aggressive", "--aggressive", str(file_path)],
-                check=False, capture_output=True,
+                [
+                    str(self.python_executable),
+                    "-m",
+                    "autopep8",
+                    "--in-place",
+                    "--aggressive",
+                    "--aggressive",
+                    str(file_path),
+                ],
+                check=False,
+                capture_output=True,
                 text=True,
-                timeout=30
+                timeout=30,
             )
 
             after_metrics = self.count_detailed_metrics(file_path)
@@ -304,7 +366,7 @@ class AdvancedQualityChecker:
                 before_metrics=before_metrics,
                 after_metrics=after_metrics,
                 changes_applied=True,
-                execution_time=execution_time
+                execution_time=execution_time,
             )
 
         except Exception as e:
@@ -314,7 +376,7 @@ class AdvancedQualityChecker:
                 before_metrics=before_metrics,
                 after_metrics=before_metrics,
                 execution_time=time.time() - start_time,
-                error_message=str(e)
+                error_message=str(e),
             )
 
     def apply_black(self, file_path: Path) -> ToolResult:
@@ -325,7 +387,7 @@ class AdvancedQualityChecker:
                 success=False,
                 before_metrics=QualityMetrics(),
                 after_metrics=QualityMetrics(),
-                error_message="black não disponível"
+                error_message="black não disponível",
             )
 
         start_time = time.time()
@@ -334,9 +396,10 @@ class AdvancedQualityChecker:
         try:
             result = subprocess.run(
                 [str(self.python_executable), "-m", "black", str(file_path)],
-                check=False, capture_output=True,
+                check=False,
+                capture_output=True,
                 text=True,
-                timeout=30
+                timeout=30,
             )
 
             after_metrics = self.count_detailed_metrics(file_path)
@@ -348,7 +411,7 @@ class AdvancedQualityChecker:
                 before_metrics=before_metrics,
                 after_metrics=after_metrics,
                 changes_applied=result.returncode == 0,
-                execution_time=execution_time
+                execution_time=execution_time,
             )
 
         except Exception as e:
@@ -358,7 +421,7 @@ class AdvancedQualityChecker:
                 before_metrics=before_metrics,
                 after_metrics=before_metrics,
                 execution_time=time.time() - start_time,
-                error_message=str(e)
+                error_message=str(e),
             )
 
     def apply_ruff_fix(self, file_path: Path) -> ToolResult:
@@ -369,7 +432,7 @@ class AdvancedQualityChecker:
                 success=False,
                 before_metrics=QualityMetrics(),
                 after_metrics=QualityMetrics(),
-                error_message="ruff não disponível"
+                error_message="ruff não disponível",
             )
 
         start_time = time.time()
@@ -377,10 +440,18 @@ class AdvancedQualityChecker:
 
         try:
             subprocess.run(
-                [str(self.python_executable), "-m", "ruff", "check", "--fix", str(file_path)],
-                check=False, capture_output=True,
+                [
+                    str(self.python_executable),
+                    "-m",
+                    "ruff",
+                    "check",
+                    "--fix",
+                    str(file_path),
+                ],
+                check=False,
+                capture_output=True,
                 text=True,
-                timeout=30
+                timeout=30,
             )
 
             after_metrics = self.count_detailed_metrics(file_path)
@@ -392,7 +463,7 @@ class AdvancedQualityChecker:
                 before_metrics=before_metrics,
                 after_metrics=after_metrics,
                 changes_applied=True,
-                execution_time=execution_time
+                execution_time=execution_time,
             )
 
         except Exception as e:
@@ -402,7 +473,7 @@ class AdvancedQualityChecker:
                 before_metrics=before_metrics,
                 after_metrics=before_metrics,
                 execution_time=time.time() - start_time,
-                error_message=str(e)
+                error_message=str(e),
             )
 
     def apply_ruff_format(self, file_path: Path) -> ToolResult:
@@ -413,7 +484,7 @@ class AdvancedQualityChecker:
                 success=False,
                 before_metrics=QualityMetrics(),
                 after_metrics=QualityMetrics(),
-                error_message="ruff não disponível"
+                error_message="ruff não disponível",
             )
 
         start_time = time.time()
@@ -422,9 +493,10 @@ class AdvancedQualityChecker:
         try:
             result = subprocess.run(
                 [str(self.python_executable), "-m", "ruff", "format", str(file_path)],
-                check=False, capture_output=True,
+                check=False,
+                capture_output=True,
                 text=True,
-                timeout=30
+                timeout=30,
             )
 
             after_metrics = self.count_detailed_metrics(file_path)
@@ -436,7 +508,7 @@ class AdvancedQualityChecker:
                 before_metrics=before_metrics,
                 after_metrics=after_metrics,
                 changes_applied=result.returncode == 0,
-                execution_time=execution_time
+                execution_time=execution_time,
             )
 
         except Exception as e:
@@ -446,34 +518,34 @@ class AdvancedQualityChecker:
                 before_metrics=before_metrics,
                 after_metrics=before_metrics,
                 execution_time=time.time() - start_time,
-                error_message=str(e)
+                error_message=str(e),
             )
 
     def process_file_comprehensively(self, file_path: Path) -> dict[str, Any]:
         """Processa um arquivo aplicando todas as ferramentas sequencialmente."""
         if not file_path.exists():
-            return {
-                "success": False,
-                "error": "Arquivo não existe",
-                "tool_results": []
-            }
+            return {"success": False, "error": "Arquivo não existe", "tool_results": []}
 
         self._print(f"🔧 Processamento avançado: {file_path.name}")
 
         # Backup completo inicial
         backup_path = file_path.with_suffix(file_path.suffix + ".advanced_backup")
         try:
-            backup_path.write_text(file_path.read_text(encoding="utf-8"), encoding="utf-8")
+            backup_path.write_text(
+                file_path.read_text(encoding="utf-8"), encoding="utf-8"
+            )
         except Exception as e:
             return {
                 "success": False,
                 "error": f"Erro criando backup: {e}",
-                "tool_results": []
+                "tool_results": [],
             }
 
         # Métricas iniciais
         initial_metrics = self.count_detailed_metrics(file_path)
-        self._print(f"📊 Métricas iniciais: {initial_metrics.total_issues} issues totais")
+        self._print(
+            f"📊 Métricas iniciais: {initial_metrics.total_issues} issues totais"
+        )
 
         # Lista de ferramentas para aplicar em ordem
         tools_to_apply = [
@@ -481,7 +553,7 @@ class AdvancedQualityChecker:
             self.apply_autopep8,
             self.apply_black,
             self.apply_ruff_fix,
-            self.apply_ruff_format
+            self.apply_ruff_format,
         ]
 
         tool_results = []
@@ -489,7 +561,9 @@ class AdvancedQualityChecker:
 
         for tool_func in tools_to_apply:
             # Backup antes desta ferramenta
-            tool_backup = tempfile.NamedTemporaryFile(encoding="utf-8", mode="w", suffix=".py", delete=False)
+            tool_backup = tempfile.NamedTemporaryFile(
+                encoding="utf-8", mode="w", suffix=".py", delete=False
+            )
             tool_backup.write(current_content)
             tool_backup.close()
             tool_backup_path = Path(tool_backup.name)
@@ -502,16 +576,22 @@ class AdvancedQualityChecker:
                 if result.success:
                     if result.regression:
                         # REGRESSÃO - reverter esta ferramenta
-                        self._print(f"❌ {result.tool_name}: REVERTIDO (issues: {result.before_metrics.total_issues} → {result.after_metrics.total_issues})")
+                        self._print(
+                            f"❌ {result.tool_name}: REVERTIDO (issues: {result.before_metrics.total_issues} → {result.after_metrics.total_issues})"
+                        )
                         file_path.write_text(current_content, encoding="utf-8")
                         result.changes_applied = False
                     else:
                         # SUCESSO - manter mudanças
                         improvement = result.improvement
                         if improvement > 0:
-                            self._print(f"✅ {result.tool_name}: {improvement} issues corrigidas em {result.execution_time:.2f}s")
+                            self._print(
+                                f"✅ {result.tool_name}: {improvement} issues corrigidas em {result.execution_time:.2f}s"
+                            )
                         else:
-                            self._print(f"✅ {result.tool_name}: Sem regressão em {result.execution_time:.2f}s")
+                            self._print(
+                                f"✅ {result.tool_name}: Sem regressão em {result.execution_time:.2f}s"
+                            )
                         current_content = file_path.read_text(encoding="utf-8")
                 else:
                     self._print(f"⚠️ {result.tool_name}: {result.error_message}")
@@ -534,7 +614,9 @@ class AdvancedQualityChecker:
             # REGRESSÃO GERAL - reverter tudo
             self._print("❌ REGRESSÃO GERAL DETECTADA - Revertendo todas as mudanças")
             try:
-                file_path.write_text(backup_path.read_text(encoding="utf-8"), encoding="utf-8")
+                file_path.write_text(
+                    backup_path.read_text(encoding="utf-8"), encoding="utf-8"
+                )
                 final_metrics = initial_metrics
                 total_improvement = 0
             except Exception:
@@ -543,7 +625,9 @@ class AdvancedQualityChecker:
         # Limpar backup principal
         backup_path.unlink(missing_ok=True)
 
-        self._print(f"📈 Resultado final: {initial_metrics.total_issues} → {final_metrics.total_issues} issues ({total_improvement:+d})")
+        self._print(
+            f"📈 Resultado final: {initial_metrics.total_issues} → {final_metrics.total_issues} issues ({total_improvement:+d})"
+        )
 
         return {
             "success": True,
@@ -552,7 +636,7 @@ class AdvancedQualityChecker:
             "final_metrics": final_metrics,
             "total_improvement": total_improvement,
             "tool_results": tool_results,
-            "processing_time": sum(r.execution_time for r in tool_results if r.success)
+            "processing_time": sum(r.execution_time for r in tool_results if r.success),
         }
 
     def process_project_comprehensively(self, project_path: Path) -> dict[str, Any]:
@@ -560,20 +644,27 @@ class AdvancedQualityChecker:
         if not project_path.exists():
             return {
                 "success": False,
-                "error": f"Projeto não encontrado: {project_path}"
+                "error": f"Projeto não encontrado: {project_path}",
             }
 
         # Encontrar arquivos Python
-        python_files = [py_file for py_file in project_path.rglob("*.py") if py_file.is_file() and not any(part.startswith(".") for part in py_file.parts)]
+        python_files = [
+            py_file
+            for py_file in project_path.rglob("*.py")
+            if py_file.is_file()
+            and not any(part.startswith(".") for part in py_file.parts)
+        ]
 
         if not python_files:
             return {
                 "success": True,
                 "message": "Nenhum arquivo Python encontrado",
-                "files_processed": 0
+                "files_processed": 0,
             }
 
-        self._print(f"🚀 Processamento avançado de {len(python_files)} arquivos em {project_path.name}")
+        self._print(
+            f"🚀 Processamento avançado de {len(python_files)} arquivos em {project_path.name}"
+        )
 
         results = []
         total_initial_issues = 0
@@ -588,9 +679,11 @@ class AdvancedQualityChecker:
                 TextColumn("[progress.description]{task.description}"),
                 BarColumn(),
                 TaskProgressColumn(),
-                console=console
+                console=console,
             ) as progress:
-                task = progress.add_task("Processando arquivos...", total=len(python_files))
+                task = progress.add_task(
+                    "Processando arquivos...", total=len(python_files)
+                )
 
                 for py_file in python_files:
                     progress.update(task, description=f"Processando {py_file.name}...")
@@ -629,7 +722,7 @@ class AdvancedQualityChecker:
             "total_final_issues": total_final_issues,
             "total_improvement": total_initial_issues - total_final_issues,
             "total_processing_time": total_processing_time,
-            "results": results
+            "results": results,
         }
 
     def _print(self, message: str) -> None:
@@ -647,7 +740,20 @@ def generate_detailed_report(result: dict[str, Any]) -> str:
 
     if "results" in result:  # Resultado de projeto
         report = []
-        report.extend((f"# Relatório de Processamento Avançado - {result['project_name']}", "", "## 📊 Resumo Executivo", f"- **Arquivos processados**: {result['files_processed']}", f"- **Arquivos melhorados**: {result['files_improved']}", f"- **Issues iniciais**: {result['total_initial_issues']}", f"- **Issues finais**: {result['total_final_issues']}", f"- **Melhoria total**: {result['total_improvement']}", f"- **Tempo de processamento**: {result['total_processing_time']:.2f}s", ""))
+        report.extend(
+            (
+                f"# Relatório de Processamento Avançado - {result['project_name']}",
+                "",
+                "## 📊 Resumo Executivo",
+                f"- **Arquivos processados**: {result['files_processed']}",
+                f"- **Arquivos melhorados**: {result['files_improved']}",
+                f"- **Issues iniciais**: {result['total_initial_issues']}",
+                f"- **Issues finais**: {result['total_final_issues']}",
+                f"- **Melhoria total**: {result['total_improvement']}",
+                f"- **Tempo de processamento**: {result['total_processing_time']:.2f}s",
+                "",
+            )
+        )
 
         # Estatísticas por ferramenta
         tool_stats = {}
@@ -656,7 +762,11 @@ def generate_detailed_report(result: dict[str, Any]) -> str:
                 for tool_result in file_result["tool_results"]:
                     tool_name = tool_result.tool_name
                     if tool_name not in tool_stats:
-                        tool_stats[tool_name] = {"uses": 0, "improvements": 0, "regressions": 0}
+                        tool_stats[tool_name] = {
+                            "uses": 0,
+                            "improvements": 0,
+                            "regressions": 0,
+                        }
 
                     tool_stats[tool_name]["uses"] += 1
                     if tool_result.improvement > 0:
@@ -667,7 +777,15 @@ def generate_detailed_report(result: dict[str, Any]) -> str:
         if tool_stats:
             report.append("## 🔧 Estatísticas por Ferramenta")
             for tool_name, stats in tool_stats.items():
-                report.extend((f"### {tool_name}", f"- Usos: {stats['uses']}", f"- Melhorias: {stats['improvements']}", f"- Regressões: {stats['regressions']}", ""))
+                report.extend(
+                    (
+                        f"### {tool_name}",
+                        f"- Usos: {stats['uses']}",
+                        f"- Melhorias: {stats['improvements']}",
+                        f"- Regressões: {stats['regressions']}",
+                        "",
+                    )
+                )
 
         return "\n".join(report)
 
@@ -708,27 +826,19 @@ def main() -> None:
         "--workspace",
         type=Path,
         default=Path("/home/marlonsc/flext"),
-        help="Diretório raiz do workspace FLEXT"
+        help="Diretório raiz do workspace FLEXT",
     )
     parser.add_argument(
-        "--project",
-        type=str,
-        help="Processar apenas um projeto específico"
+        "--project", type=str, help="Processar apenas um projeto específico"
     )
     parser.add_argument(
-        "--file",
-        type=Path,
-        help="Processar apenas um arquivo específico"
+        "--file", type=Path, help="Processar apenas um arquivo específico"
     )
     parser.add_argument(
-        "--report",
-        type=Path,
-        help="Salvar relatório detalhado em arquivo"
+        "--report", type=Path, help="Salvar relatório detalhado em arquivo"
     )
     parser.add_argument(
-        "--show-tools",
-        action="store_true",
-        help="Mostrar ferramentas disponíveis"
+        "--show-tools", action="store_true", help="Mostrar ferramentas disponíveis"
     )
 
     args = parser.parse_args()
@@ -752,12 +862,24 @@ def main() -> None:
             table.add_column("Função")
 
             tools_info = {
-                "isort": ("Organização de imports", checker.available_tools.get("isort", False)),
-                "autopep8": ("Correções PEP 8", checker.available_tools.get("autopep8", False)),
-                "black": ("Formatação de código", checker.available_tools.get("black", False)),
-                "ruff": ("Linting avançado", checker.available_tools.get("ruff", False)),
+                "isort": (
+                    "Organização de imports",
+                    checker.available_tools.get("isort", False),
+                ),
+                "autopep8": (
+                    "Correções PEP 8",
+                    checker.available_tools.get("autopep8", False),
+                ),
+                "black": (
+                    "Formatação de código",
+                    checker.available_tools.get("black", False),
+                ),
+                "ruff": (
+                    "Linting avançado",
+                    checker.available_tools.get("ruff", False),
+                ),
                 "mypy": ("Type checking", checker.available_tools.get("mypy", False)),
-                "bandit": ("Segurança", checker.available_tools.get("bandit", False))
+                "bandit": ("Segurança", checker.available_tools.get("bandit", False)),
             }
 
             for tool, (description, available) in tools_info.items():
@@ -787,7 +909,9 @@ def main() -> None:
             print(f"✅ {args.file.name} processado em {time_taken:.2f}s")
             print(f"📊 Melhoria: {improvement:+d} issues")
         else:
-            print(f"❌ {args.file.name} falhou: {result.get('error', 'Erro desconhecido')}")
+            print(
+                f"❌ {args.file.name} falhou: {result.get('error', 'Erro desconhecido')}"
+            )
 
         # Salvar relatório se solicitado
         if args.report:
@@ -806,11 +930,15 @@ def main() -> None:
             print(f"✅ Projeto {args.project} processado:")
             print(f"  📁 Arquivos: {result['files_processed']}")
             print(f"  🔧 Melhorados: {result['files_improved']}")
-            print(f"  📊 Issues: {result['total_initial_issues']} → {result['total_final_issues']}")
+            print(
+                f"  📊 Issues: {result['total_initial_issues']} → {result['total_final_issues']}"
+            )
             print(f"  📈 Melhoria total: {result['total_improvement']}")
             print(f"  ⏱️ Tempo: {result['total_processing_time']:.2f}s")
         else:
-            print(f"❌ Projeto {args.project} falhou: {result.get('error', 'Erro desconhecido')}")
+            print(
+                f"❌ Projeto {args.project} falhou: {result.get('error', 'Erro desconhecido')}"
+            )
 
         # Salvar relatório se solicitado
         if args.report:

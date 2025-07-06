@@ -6,8 +6,14 @@ import re
 def fix_python_version(content):
     """Fix Python version constraints to be compatible"""
     # Fix requires-python
-    content = re.sub(r'requires-python = ">=3\.13"', r'requires-python = ">=3.13,<4.0"', content)
-    content = re.sub(r'requires-python = ">=3\.13,<3\.15"', r'requires-python = ">=3.13,<4.0"', content)
+    content = re.sub(
+        r'requires-python = ">=3\.13"', r'requires-python = ">=3.13,<4.0"', content
+    )
+    content = re.sub(
+        r'requires-python = ">=3\.13,<3\.15"',
+        r'requires-python = ">=3.13,<4.0"',
+        content,
+    )
     # Fix poetry python constraint
     content = re.sub(r'python = ">=3\.13"', r'python = ">=3.13,<4.0"', content)
     return re.sub(r'python = ">=3\.13,<3\.15"', r'python = ">=3.13,<4.0"', content)
@@ -35,13 +41,30 @@ def fix_pyproject_toml(filepath) -> bool | None:
 def main() -> None:
     # Fix all submodule pyproject.toml files
     submodules = [
-        "flext-api", "flext-auth", "flext-cli", "flext-core", "flext-db-oracle",
-        "flext-dbt-ldap", "flext-grpc", "flext-ldap", "flext-meltano",
-        "flext-observability", "flext-oracle-oic-ext", "flext-plugin",
-        "flext-quality", "flext-tap-ldap", "flext-tap-oracle-oic",
-        "flext-tap-oracle-wms", "flext-target-ldap", "flext-target-oracle",
-        "flext-target-oracle-oic", "flext-web", "flext-meltano-bridge",
-        "client-a-oud-mig", "client-b-poc-oic-wms", "client-b-meltano-native"
+        "flext-api",
+        "flext-auth",
+        "flext-cli",
+        "flext-core",
+        "flext-db-oracle",
+        "flext-dbt-ldap",
+        "flext-grpc",
+        "flext-ldap",
+        "flext-meltano",
+        "flext-observability",
+        "flext-oracle-oic-ext",
+        "flext-plugin",
+        "flext-quality",
+        "flext-tap-ldap",
+        "flext-tap-oracle-oic",
+        "flext-tap-oracle-wms",
+        "flext-target-ldap",
+        "flext-target-oracle",
+        "flext-target-oracle-oic",
+        "flext-web",
+        "flext-meltano-bridge",
+        "client-a-oud-mig",
+        "client-b-poc-oic-wms",
+        "client-b-meltano-native",
     ]
 
     fixed_count = 0
