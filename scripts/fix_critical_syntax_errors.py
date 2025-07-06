@@ -81,7 +81,9 @@ class EmergencySyntaxFixer:
                 new_content = re.sub(pattern, replacement, content, flags=re.MULTILINE)
                 if new_content != content:
                     content = new_content
-                    self.fixes_applied.append(f"Fixed function signature: {py_file.name}")
+                    self.fixes_applied.append(
+                        f"Fixed function signature: {py_file.name}"
+                    )
 
             if content != original_content:
                 py_file.write_text(content, encoding="utf-8")
@@ -182,7 +184,11 @@ class EmergencySyntaxFixer:
 
             for i, line in enumerate(lines):
                 # Fix obvious indentation issues
-                if line.strip() and not line.startswith(" ") and not line.startswith("\t"):
+                if (
+                    line.strip()
+                    and not line.startswith(" ")
+                    and not line.startswith("\t")
+                ):
                     # Check if this should be indented (follows colon)
                     if i > 0 and lines[i - 1].rstrip().endswith(":"):
                         if line.strip():  # Not empty line
@@ -255,11 +261,19 @@ class EmergencySyntaxFixer:
 
         # Run ruff check to see current status
         print("\n📊 FINAL RUFF STATUS:")
-        result = subprocess.run([
-            "ruff", "check", str(self.src_dir),
-            "--select=E9,F9",  # Only syntax errors
-            "--statistics"
-        ], check=False, capture_output=True, text=True, cwd=self.project_dir)
+        result = subprocess.run(
+            [
+                "ruff",
+                "check",
+                str(self.src_dir),
+                "--select=E9,F9",  # Only syntax errors
+                "--statistics",
+            ],
+            check=False,
+            capture_output=True,
+            text=True,
+            cwd=self.project_dir,
+        )
 
         if result.stdout:
             print(result.stdout)

@@ -156,7 +156,7 @@ endef
 define install_with_coordination
 	$(if $(FLEXT_COORDINATED), \
 		$(call log_info,Installing via workspace coordination) && \
-		cd $(FLEXT_ROOT) && $(MAKE) project-install PROJECT=$(PROJECT_NAME), \
+		cd $(FLEXT_ROOT) && $(MAKE) submodule-install-single PROJECT=$(PROJECT_NAME), \
 		$(call log_info,Installing in standalone mode) && \
 		$(call standalone_install) \
 	)

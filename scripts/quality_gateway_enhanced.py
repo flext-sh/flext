@@ -26,6 +26,7 @@ try:
     from rich.console import Console
     from rich.progress import BarColumn, Progress, SpinnerColumn, TextColumn
     from rich.table import Table
+
     RICH_AVAILABLE = True
     console = Console()
 except ImportError:
@@ -53,20 +54,23 @@ class EnhancedQualityGateway:
 
     def count_issues_comprehensive(self, file_path: Path) -> dict[str, int]:
         """Conta issues de forma abrangente usando múltiplas ferramentas."""
-        issues = {
-            "ruff": 0,
-            "syntax_errors": 0,
-            "flext_specific": 0,
-            "critical": 0
-        }
+        issues = {"ruff": 0, "syntax_errors": 0, "flext_specific": 0, "critical": 0}
 
         try:
             # 1. Ruff issues
             result = subprocess.run(
-                [str(self.python_executable), "-m", "ruff", "check", "--output-format=json", str(file_path)],
-                check=False, capture_output=True,
+                [
+                    str(self.python_executable),
+                    "-m",
+                    "ruff",
+                    "check",
+                    "--output-format=json",
+                    str(file_path),
+                ],
+                check=False,
+                capture_output=True,
                 text=True,
-                timeout=10
+                timeout=10,
             )
 
             if result.returncode != 0:
@@ -76,7 +80,9 @@ class EnhancedQualityGateway:
 
                     # Classificar criticidade
                     for issue in ruff_issues:
-                        if issue.get("code", "").startswith(("E9", "F821", "F822", "F823")):
+                        if issue.get("code", "").startswith(
+                            ("E9", "F821", "F822", "F823")
+                        ):
                             issues["critical"] += 1
                 except json.JSONDecodeError:
                     issues["ruff"] = result.stdout.count("\n")
@@ -96,18 +102,27 @@ class EnhancedQualityGateway:
         count = 0
 
         # Docstrings duplas
-        if '"""Initialize instance."""' in content and '"""' in content[content.find('"""Initialize instance."""') + 25:]:
+        if (
+            '"""Initialize instance."""' in content
+            and '"""' in content[content.find('"""Initialize instance."""') + 25 :]
+        ):
             count += 1
 
         # Union types incorretos
-        if "|" in content and "Union[" not in content and "from __future__ import annotations" not in content:
+        if (
+            "|" in content
+            and "Union[" not in content
+            and "from __future__ import annotations" not in content
+        ):
             count += content.count("|")
 
         # Strings quebradas
         count += content.count('"""\n"""')
 
         # F-strings mal formadas
-        count += len(re.findall(r'f"[^"]*{[^}]*}[^"]*"', content)) - len(re.findall(r'f"[^"]*{[^}]*}[^"]*"', content))
+        count += len(re.findall(r'f"[^"]*{[^}]*}[^"]*"', content)) - len(
+            re.findall(r'f"[^"]*{[^}]*}[^"]*"', content)
+        )
 
         return count
 
@@ -147,7 +162,7 @@ class EnhancedQualityGateway:
             "fixes_applied": [],
             "tools_run": [],
             "final_issues": {},
-            "processing_time": 0.0
+            "processing_time": 0.0,
         }
 
         start_time = time.time()
@@ -168,12 +183,33 @@ class EnhancedQualityGateway:
             standard_tools = [
                 ("isort", [str(self.python_executable), "-m", "isort", str(file_path)]),
                 ("black", [str(self.python_executable), "-m", "black", str(file_path)]),
-                ("ruff_fix", [str(self.python_executable), "-m", "ruff", "check", "--fix", str(file_path)]),
-                ("ruff_format", [str(self.python_executable), "-m", "ruff", "format", str(file_path)])
+                (
+                    "ruff_fix",
+                    [
+                        str(self.python_executable),
+                        "-m",
+                        "ruff",
+                        "check",
+                        "--fix",
+                        str(file_path),
+                    ],
+                ),
+                (
+                    "ruff_format",
+                    [
+                        str(self.python_executable),
+                        "-m",
+                        "ruff",
+                        "format",
+                        str(file_path),
+                    ],
+                ),
             ]
 
             for tool_name, command in standard_tools:
-                tool_result = self._apply_tool_with_regression_check(file_path, tool_name, command)
+                tool_result = self._apply_tool_with_regression_check(
+                    file_path, tool_name, command
+                )
                 results["tools_run"].append(tool_result)
                 if tool_result["success"]:
                     self.total_format_fixes += tool_result.get("improvements", 0)
@@ -185,8 +221,12 @@ class EnhancedQualityGateway:
 
             # Se piorou no total, reverter TUDO
             if final_total > initial_total:
-                file_path.write_text(backup_path.read_text(encoding="utf-8"), encoding="utf-8")
-                self._print(f"🚨 REGRESSÃO TOTAL DETECTADA - {file_path.name} revertido")
+                file_path.write_text(
+                    backup_path.read_text(encoding="utf-8"), encoding="utf-8"
+                )
+                self._print(
+                    f"🚨 REGRESSÃO TOTAL DETECTADA - {file_path.name} revertido"
+                )
                 results["success"] = False
                 results["error"] = f"Regressão: {initial_total} → {final_total} issues"
             else:
@@ -199,7 +239,9 @@ class EnhancedQualityGateway:
 
         except Exception as e:
             # Reverter em caso de erro
-            file_path.write_text(backup_path.read_text(encoding="utf-8"), encoding="utf-8")
+            file_path.write_text(
+                backup_path.read_text(encoding="utf-8"), encoding="utf-8"
+            )
             results["success"] = False
             results["error"] = str(e)
 
@@ -219,7 +261,9 @@ class EnhancedQualityGateway:
             fixes_count = 0
 
             # 1. Fix docstrings duplas (padrão mais amplo)
-            pattern1 = r'(def [^:]+:)\n(\s*)"""Initialize instance\."""\n(\s*)"""([^"]+)"""'
+            pattern1 = (
+                r'(def [^:]+:)\n(\s*)"""Initialize instance\."""\n(\s*)"""([^"]+)"""'
+            )
             new_content = re.sub(pattern1, r'\1\n\2"""\4"""', content)
             if new_content != content:
                 content = new_content
@@ -281,13 +325,15 @@ class EnhancedQualityGateway:
         except Exception:
             return 0
 
-    def _apply_tool_with_regression_check(self, file_path: Path, tool_name: str, command: list[str]) -> dict[str, Any]:
+    def _apply_tool_with_regression_check(
+        self, file_path: Path, tool_name: str, command: list[str]
+    ) -> dict[str, Any]:
         """Aplica ferramenta com verificação de regressão."""
         result = {
             "tool": tool_name,
             "success": False,
             "improvements": 0,
-            "execution_time": 0.0
+            "execution_time": 0.0,
         }
 
         start_time = time.time()
@@ -299,10 +345,7 @@ class EnhancedQualityGateway:
 
             # Executar ferramenta
             subprocess.run(
-                command,
-                check=False, capture_output=True,
-                text=True,
-                timeout=15
+                command, check=False, capture_output=True, text=True, timeout=15
             )
 
             after_issues = self.count_issues_comprehensive(file_path)
@@ -311,7 +354,9 @@ class EnhancedQualityGateway:
             if after_total > before_total:
                 # Regressão - reverter
                 file_path.write_text(backup_content, encoding="utf-8")
-                self._print(f"❌ {tool_name}: REVERTIDO ({before_total} → {after_total})")
+                self._print(
+                    f"❌ {tool_name}: REVERTIDO ({before_total} → {after_total})"
+                )
             else:
                 # Sucesso
                 improvement = before_total - after_total
@@ -335,21 +380,35 @@ class EnhancedQualityGateway:
     def process_project_enhanced(self, project_path: Path) -> dict[str, Any]:
         """Processa projeto com funcionalidades aprimoradas."""
         if not project_path.exists():
-            return {"success": False, "error": f"Projeto não encontrado: {project_path}"}
+            return {
+                "success": False,
+                "error": f"Projeto não encontrado: {project_path}",
+            }
 
         # Encontrar arquivos Python
         python_files = []
         for py_file in project_path.rglob("*.py"):
-            if py_file.is_file() and not any(part.startswith(".") for part in py_file.parts):
+            if py_file.is_file() and not any(
+                part.startswith(".") for part in py_file.parts
+            ):
                 # Excluir alguns padrões
-                if any(exclude in str(py_file) for exclude in ["__pycache__", ".venv", "build/", "dist/"]):
+                if any(
+                    exclude in str(py_file)
+                    for exclude in ["__pycache__", ".venv", "build/", "dist/"]
+                ):
                     continue
                 python_files.append(py_file)
 
         if not python_files:
-            return {"success": True, "message": "Nenhum arquivo Python encontrado", "files_processed": 0}
+            return {
+                "success": True,
+                "message": "Nenhum arquivo Python encontrado",
+                "files_processed": 0,
+            }
 
-        self._print(f"🎯 ENHANCED PROCESSING: {len(python_files)} arquivos em {project_path.name}")
+        self._print(
+            f"🎯 ENHANCED PROCESSING: {len(python_files)} arquivos em {project_path.name}"
+        )
 
         # Reset stats
         self.total_files_processed = 0
@@ -368,7 +427,7 @@ class EnhancedQualityGateway:
                 TextColumn("[progress.description]{task.description}"),
                 BarColumn(),
                 TextColumn("[progress.percentage]{task.percentage:>3.0f}%"),
-                console=console
+                console=console,
             ) as progress:
                 task = progress.add_task("Processando...", total=len(python_files))
 
@@ -405,10 +464,12 @@ class EnhancedQualityGateway:
             "total_issues_fixed": self.total_issues_fixed,
             "syntax_fixes": self.total_syntax_fixes,
             "format_fixes": self.total_format_fixes,
-            "critical_errors": len(self.critical_errors_found)
+            "critical_errors": len(self.critical_errors_found),
         }
 
-    def _generate_enhanced_report(self, project_path: Path, processed_files: list, failed_files: list) -> None:
+    def _generate_enhanced_report(
+        self, project_path: Path, processed_files: list, failed_files: list
+    ) -> None:
         """Gera relatório aprimorado com métricas detalhadas."""
         if not RICH_AVAILABLE:
             self._print(f"\n🎯 RELATÓRIO FINAL - {project_path.name}")
@@ -422,11 +483,25 @@ class EnhancedQualityGateway:
         table.add_column("Valor", style="green")
         table.add_column("Detalhes", style="yellow")
 
-        table.add_row("📁 Arquivos Processados", str(len(processed_files)), f"{len(failed_files)} falharam")
-        table.add_row("🔧 Issues Corrigidos", str(self.total_issues_fixed), "Total de melhorias")
-        table.add_row("🛠️ Syntax Fixes", str(self.total_syntax_fixes), "Correções específicas")
-        table.add_row("✨ Format Fixes", str(self.total_format_fixes), "Formatação aplicada")
-        table.add_row("🚨 Erros Críticos", str(len(self.critical_errors_found)), "Necessitam atenção")
+        table.add_row(
+            "📁 Arquivos Processados",
+            str(len(processed_files)),
+            f"{len(failed_files)} falharam",
+        )
+        table.add_row(
+            "🔧 Issues Corrigidos", str(self.total_issues_fixed), "Total de melhorias"
+        )
+        table.add_row(
+            "🛠️ Syntax Fixes", str(self.total_syntax_fixes), "Correções específicas"
+        )
+        table.add_row(
+            "✨ Format Fixes", str(self.total_format_fixes), "Formatação aplicada"
+        )
+        table.add_row(
+            "🚨 Erros Críticos",
+            str(len(self.critical_errors_found)),
+            "Necessitam atenção",
+        )
 
         console.print(table)
 
@@ -454,18 +529,10 @@ def main() -> None:
         "--workspace",
         type=Path,
         default=Path("/home/marlonsc/flext"),
-        help="Diretório raiz do workspace FLEXT"
+        help="Diretório raiz do workspace FLEXT",
     )
-    parser.add_argument(
-        "--project",
-        type=str,
-        help="Processar projeto específico"
-    )
-    parser.add_argument(
-        "--file",
-        type=Path,
-        help="Processar arquivo específico"
-    )
+    parser.add_argument("--project", type=str, help="Processar projeto específico")
+    parser.add_argument("--file", type=Path, help="Processar arquivo específico")
 
     args = parser.parse_args()
 
@@ -502,9 +569,13 @@ def main() -> None:
 
         if result["success"]:
             print(f"\n🎉 PROCESSAMENTO CONCLUÍDO - {args.project}")
-            print(f"   📊 Resumo: {result['files_processed']} arquivos, {result['total_issues_fixed']} issues corrigidos")
+            print(
+                f"   📊 Resumo: {result['files_processed']} arquivos, {result['total_issues_fixed']} issues corrigidos"
+            )
         else:
-            print(f"❌ Projeto {args.project} falhou: {result.get('error', 'Erro desconhecido')}")
+            print(
+                f"❌ Projeto {args.project} falhou: {result.get('error', 'Erro desconhecido')}"
+            )
 
         return
 

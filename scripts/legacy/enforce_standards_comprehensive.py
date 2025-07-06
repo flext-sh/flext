@@ -193,9 +193,7 @@ class StandardsEnforcer:
 
                 # Remove fallback patterns
                 content = re.sub(
-                    r"#.*[Ff]allback.*",
-                    "# Production implementation",
-                    content
+                    r"#.*[Ff]allback.*", "# Production implementation", content
                 )
 
                 # Fix datetime.UTC fallback
@@ -210,12 +208,14 @@ class StandardsEnforcer:
                 content = re.sub(
                     r"# Legacy aliases.*\n.*",
                     "# Modern unified implementation",
-                    content
+                    content,
                 )
 
                 if content != original_content:
                     py_file.write_text(content, encoding="utf-8")
-                    self.fixes_applied.append(f"Eliminated fallback patterns in {py_file}")
+                    self.fixes_applied.append(
+                        f"Eliminated fallback patterns in {py_file}"
+                    )
                     fixed = True
 
             except Exception as e:
@@ -239,15 +239,20 @@ class StandardsEnforcer:
                     str(project_path / "src"),
                     str(project_path / "tests"),
                 ],
-                check=False, capture_output=True,
+                check=False,
+                capture_output=True,
                 text=True,
                 timeout=300,
             )
 
             if result.returncode == 0:
-                self.fixes_applied.append(f"Applied PEP 8 strict compliance to {project_path.name}")
+                self.fixes_applied.append(
+                    f"Applied PEP 8 strict compliance to {project_path.name}"
+                )
                 return True
-            self.errors.append(f"PEP 8 compliance failed for {project_path.name}: {result.stderr}")
+            self.errors.append(
+                f"PEP 8 compliance failed for {project_path.name}: {result.stderr}"
+            )
             return False
 
         except Exception as e:
@@ -272,14 +277,14 @@ class StandardsEnforcer:
                 content = re.sub(
                     r"class\s+([a-z][a-zA-Z0-9_]*)",
                     lambda m: f"class {self._to_camel_case(m.group(1))}",
-                    content
+                    content,
                 )
 
                 # snake_case for functions and variables
                 content = re.sub(
                     r"def\s+([A-Z][a-zA-Z0-9_]*)",
                     lambda m: f"def {self._to_snake_case(m.group(1))}",
-                    content
+                    content,
                 )
 
                 # UPPER_CASE for constants
@@ -287,7 +292,7 @@ class StandardsEnforcer:
                     r"^([a-z][a-zA-Z0-9_]*)\s*=\s*[A-Z\"']",
                     lambda m: f"{m.group(1).upper()} =",
                     content,
-                    flags=re.MULTILINE
+                    flags=re.MULTILINE,
                 )
 
                 if content != original_content:
@@ -358,7 +363,9 @@ class StandardsEnforcer:
                 for node in ast.walk(tree):
                     if isinstance(node, ast.ClassDef):
                         # Single Responsibility: Check class size
-                        methods = [n for n in node.body if isinstance(n, ast.FunctionDef)]
+                        methods = [
+                            n for n in node.body if isinstance(n, ast.FunctionDef)
+                        ]
                         if len(methods) > 15:
                             violations.append(
                                 f"SRP violation: {py_file}:{node.lineno} "
@@ -366,8 +373,12 @@ class StandardsEnforcer:
                             )
 
                         # Open/Closed: Check for direct modification patterns
-                        violations.extend(f"OCP violation: {py_file}:{method.lineno} "
-                                    f"Constructor has {len(method.args.args)} parameters (>8)" for method in methods if method.name == "__init__" and len(method.args.args) > 8)
+                        violations.extend(
+                            f"OCP violation: {py_file}:{method.lineno} "
+                            f"Constructor has {len(method.args.args)} parameters (>8)"
+                            for method in methods
+                            if method.name == "__init__" and len(method.args.args) > 8
+                        )
 
                     elif isinstance(node, ast.FunctionDef):
                         # Single Responsibility: Check function complexity
@@ -405,13 +416,15 @@ class StandardsEnforcer:
             if "ruff" not in config["tool"]:
                 config["tool"]["ruff"] = {}
 
-            config["tool"]["ruff"].update({
-                "target-version": "py313",
-                "line-length": 88,
-                "fix": True,
-                "unsafe-fixes": False,
-                "respect-gitignore": True,
-            })
+            config["tool"]["ruff"].update(
+                {
+                    "target-version": "py313",
+                    "line-length": 88,
+                    "fix": True,
+                    "unsafe-fixes": False,
+                    "respect-gitignore": True,
+                }
+            )
 
             # Strict lint settings
             if "lint" not in config["tool"]["ruff"]:
@@ -421,36 +434,38 @@ class StandardsEnforcer:
             config["tool"]["ruff"]["lint"]["ignore"] = [
                 "COM812",  # Trailing comma conflicts with formatter
                 "ISC001",  # Single line implicit string concatenation
-                "D203",    # One blank line before class docstring
-                "D213",    # Multi-line docstring summary should start at the second line
+                "D203",  # One blank line before class docstring
+                "D213",  # Multi-line docstring summary should start at the second line
             ]
 
             # Strict mypy configuration
             if "mypy" not in config["tool"]:
                 config["tool"]["mypy"] = {}
 
-            config["tool"]["mypy"].update({
-                "python_version": "3.13",
-                "strict": True,
-                "warn_return_any": True,
-                "warn_unused_configs": True,
-                "disallow_untyped_defs": True,
-                "disallow_incomplete_defs": True,
-                "check_untyped_defs": True,
-                "no_implicit_optional": True,
-                "warn_redundant_casts": True,
-                "warn_unused_ignores": True,
-                "warn_no_return": True,
-                "warn_unreachable": True,
-                "strict_equality": True,
-                "disallow_any_generics": True,
-                "disallow_subclassing_any": True,
-                "disallow_untyped_calls": True,
-                "disallow_any_unimported": True,
-                "disallow_any_decorated": True,
-                "strict_optional": True,
-                "strict_concatenate": True,
-            })
+            config["tool"]["mypy"].update(
+                {
+                    "python_version": "3.13",
+                    "strict": True,
+                    "warn_return_any": True,
+                    "warn_unused_configs": True,
+                    "disallow_untyped_defs": True,
+                    "disallow_incomplete_defs": True,
+                    "check_untyped_defs": True,
+                    "no_implicit_optional": True,
+                    "warn_redundant_casts": True,
+                    "warn_unused_ignores": True,
+                    "warn_no_return": True,
+                    "warn_unreachable": True,
+                    "strict_equality": True,
+                    "disallow_any_generics": True,
+                    "disallow_subclassing_any": True,
+                    "disallow_untyped_calls": True,
+                    "disallow_any_unimported": True,
+                    "disallow_any_decorated": True,
+                    "strict_optional": True,
+                    "strict_concatenate": True,
+                }
+            )
 
             # Strict pytest configuration
             if "pytest" not in config["tool"]:
@@ -476,11 +491,15 @@ class StandardsEnforcer:
             with open(pyproject_path, "w", encoding="utf-8") as f:
                 toml.dump(config, f)
 
-            self.fixes_applied.append(f"Updated {project_path.name} with strict quality config")
+            self.fixes_applied.append(
+                f"Updated {project_path.name} with strict quality config"
+            )
             return True
 
         except Exception as e:
-            self.errors.append(f"Error updating pyproject.toml in {project_path.name}: {e}")
+            self.errors.append(
+                f"Error updating pyproject.toml in {project_path.name}: {e}"
+            )
             return False
 
     def create_makefile_if_missing(self, project_path: Path) -> bool:
@@ -560,7 +579,7 @@ clean: ## Clean build artifacts
 # Development
 dev: ## Run in development mode
 \t@echo "🚀 Starting {project_name} in development mode..."
-\t@python -m {project_name.replace('-', '_')} --debug
+\t@python -m {project_name.replace("-", "_")} --debug
 
 # Quality gates (all must pass)
 quality-gate: lint type-check security test ## Run all quality checks
@@ -693,7 +712,9 @@ def main() -> None:
                     print(f"    ... and {len(violations) - 3} more")
 
         # Fixes applied
-        print(f"  ✅ NotImplementedError fixed: {project_result['not_implemented_fixed']}")
+        print(
+            f"  ✅ NotImplementedError fixed: {project_result['not_implemented_fixed']}"
+        )
         print(f"  ✅ Fallbacks eliminated: {project_result['fallbacks_eliminated']}")
         print(f"  ✅ PEP 8 enforced: {project_result['pep8_enforced']}")
         print(f"  ✅ Naming fixed: {project_result['naming_fixed']}")

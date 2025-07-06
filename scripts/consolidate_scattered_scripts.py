@@ -25,6 +25,7 @@ try:
     from rich.console import Console
     from rich.progress import Progress, SpinnerColumn, TextColumn
     from rich.table import Table
+
     RICH_AVAILABLE = True
     console = Console()
 except ImportError:
@@ -42,20 +43,34 @@ class ScriptConsolidator:
 
     def find_all_scattered_scripts(self) -> list[Path]:
         """Encontra todos os scripts espalhados."""
-        patterns = ["*fix*.py", "*enforce*.py", "*audit*.py", "*modernize*.py", "*test*.py"]
+        patterns = [
+            "*fix*.py",
+            "*enforce*.py",
+            "*audit*.py",
+            "*modernize*.py",
+            "*test*.py",
+        ]
         scripts = []
 
         for pattern in patterns:
             for script in self.workspace_root.rglob(pattern):
                 # Excluir venv, __pycache__, legacy já organizados
-                if any(exclude in str(script) for exclude in [
-                    ".venv", "__pycache__", "scripts/legacy",
-                    "legacy/", ".git"
-                ]):
+                if any(
+                    exclude in str(script)
+                    for exclude in [
+                        ".venv",
+                        "__pycache__",
+                        "scripts/legacy",
+                        "legacy/",
+                        ".git",
+                    ]
+                ):
                     continue
 
                 # Incluir apenas arquivos em diretórios scripts/ ou arquivos isolados
-                if "scripts/" in str(script) or script.name.startswith(("fix_", "enforce_", "audit_")):
+                if "scripts/" in str(script) or script.name.startswith(
+                    ("fix_", "enforce_", "audit_")
+                ):
                     scripts.append(script)
 
         return sorted(set(scripts))
@@ -77,17 +92,25 @@ class ScriptConsolidator:
             "category": "unknown",
             "is_generic": False,
             "project_specific": False,
-            "functionality": set()
+            "functionality": set(),
         }
 
         # Categorizar por funcionalidade
-        if any(keyword in content.lower() for keyword in ["pep", "ruff", "black", "isort"]):
+        if any(
+            keyword in content.lower() for keyword in ["pep", "ruff", "black", "isort"]
+        ):
             analysis["functionality"].add("formatting")
-        if any(keyword in content.lower() for keyword in ["syntax", "error", "exception"]):
+        if any(
+            keyword in content.lower() for keyword in ["syntax", "error", "exception"]
+        ):
             analysis["functionality"].add("syntax_fix")
-        if any(keyword in content.lower() for keyword in ["test", "pytest", "unittest"]):
+        if any(
+            keyword in content.lower() for keyword in ["test", "pytest", "unittest"]
+        ):
             analysis["functionality"].add("testing")
-        if any(keyword in content.lower() for keyword in ["type", "mypy", "annotation"]):
+        if any(
+            keyword in content.lower() for keyword in ["type", "mypy", "annotation"]
+        ):
             analysis["functionality"].add("typing")
         if any(keyword in content.lower() for keyword in ["import", "dependency"]):
             analysis["functionality"].add("imports")
@@ -103,9 +126,13 @@ class ScriptConsolidator:
         # Categorização final
         if analysis["functionality"]:
             if analysis["project_specific"]:
-                analysis["category"] = f"project_specific_{next(iter(analysis['functionality']))}"
+                analysis["category"] = (
+                    f"project_specific_{next(iter(analysis['functionality']))}"
+                )
             else:
-                analysis["category"] = f"generic_{next(iter(analysis['functionality']))}"
+                analysis["category"] = (
+                    f"generic_{next(iter(analysis['functionality']))}"
+                )
         else:
             analysis["category"] = "unknown"
 
@@ -123,7 +150,9 @@ class ScriptConsolidator:
                     imports.append(node.module)
         except Exception:
             # Fallback com regex
-            import_lines = re.findall(r"^(?:from\s+(\S+)\s+)?import\s+", content, re.MULTILINE)
+            import_lines = re.findall(
+                r"^(?:from\s+(\S+)\s+)?import\s+", content, re.MULTILINE
+            )
             imports.extend([imp for imp in import_lines if imp])
 
         return imports
@@ -133,7 +162,11 @@ class ScriptConsolidator:
         functions = []
         try:
             tree = ast.parse(content)
-            functions.extend(node.name for node in ast.walk(tree) if isinstance(node, ast.FunctionDef))
+            functions.extend(
+                node.name
+                for node in ast.walk(tree)
+                if isinstance(node, ast.FunctionDef)
+            )
         except Exception:
             # Fallback com regex
             func_matches = re.findall(r"^def\s+(\w+)", content, re.MULTILINE)
@@ -141,13 +174,15 @@ class ScriptConsolidator:
 
         return functions
 
-    def create_consolidation_plan(self, analyses: dict[Path, dict]) -> dict[str, list[Path]]:
+    def create_consolidation_plan(
+        self, analyses: dict[Path, dict]
+    ) -> dict[str, list[Path]]:
         """Cria plano de consolidação baseado nas análises."""
         plan = {
-            "keep_generic": [],      # Scripts genéricos úteis para manter
+            "keep_generic": [],  # Scripts genéricos úteis para manter
             "integrate_quality": [],  # Scripts para integrar no quality_gateway
-            "move_to_project": [],   # Scripts específicos para mover para projeto
-            "move_to_legacy": [],    # Scripts obsoletos para legacy
+            "move_to_project": [],  # Scripts específicos para mover para projeto
+            "move_to_legacy": [],  # Scripts obsoletos para legacy
             "delete_duplicates": [],  # Scripts duplicados para deletar
         }
 
@@ -190,7 +225,9 @@ class ScriptConsolidator:
 
         return plan
 
-    def _detect_duplicates(self, analyses: dict[Path, dict], plan: dict[str, list[Path]]) -> None:
+    def _detect_duplicates(
+        self, analyses: dict[Path, dict], plan: dict[str, list[Path]]
+    ) -> None:
         """Detecta scripts duplicados por similaridade de funcionalidade."""
         # Agrupar por funções similares
         function_groups = {}
@@ -213,7 +250,9 @@ class ScriptConsolidator:
         for functions, group_scripts in function_groups.items():
             if len(group_scripts) > 1:
                 # Manter o maior/mais recente, marcar outros como duplicatas
-                sorted_scripts = sorted(group_scripts, key=lambda p: analyses[p]["size_bytes"], reverse=True)
+                sorted_scripts = sorted(
+                    group_scripts, key=lambda p: analyses[p]["size_bytes"], reverse=True
+                )
                 for duplicate in sorted_scripts[1:]:
                     plan["delete_duplicates"].append(duplicate)
 
@@ -223,37 +262,49 @@ class ScriptConsolidator:
 
         # 1. Mover scripts específicos de projeto
         if plan["move_to_project"]:
-            self._print(f"\n📁 Movendo {len(plan['move_to_project'])} scripts específicos de projeto...")
+            self._print(
+                f"\n📁 Movendo {len(plan['move_to_project'])} scripts específicos de projeto..."
+            )
             for script in plan["move_to_project"]:
                 self._move_to_project_legacy(script)
 
         # 2. Mover scripts obsoletos para legacy
         if plan["move_to_legacy"]:
-            self._print(f"\n🗄️ Movendo {len(plan['move_to_legacy'])} scripts obsoletos para legacy...")
+            self._print(
+                f"\n🗄️ Movendo {len(plan['move_to_legacy'])} scripts obsoletos para legacy..."
+            )
             for script in plan["move_to_legacy"]:
                 self._move_to_workspace_legacy(script)
 
         # 3. Deletar duplicatas
         if plan["delete_duplicates"]:
-            self._print(f"\n🗑️ Removendo {len(plan['delete_duplicates'])} scripts duplicados...")
+            self._print(
+                f"\n🗑️ Removendo {len(plan['delete_duplicates'])} scripts duplicados..."
+            )
             for script in plan["delete_duplicates"]:
                 self._delete_duplicate(script)
 
         # 4. Integrar funcionalidades úteis no quality_gateway
         if plan["integrate_quality"]:
-            self._print(f"\n🔧 Integrando {len(plan['integrate_quality'])} funcionalidades no quality gateway...")
+            self._print(
+                f"\n🔧 Integrando {len(plan['integrate_quality'])} funcionalidades no quality gateway..."
+            )
             self._integrate_quality_features(plan["integrate_quality"])
 
         # 5. Organizar scripts genéricos úteis
         if plan["keep_generic"]:
-            self._print(f"\n✅ Organizando {len(plan['keep_generic'])} scripts genéricos úteis...")
+            self._print(
+                f"\n✅ Organizando {len(plan['keep_generic'])} scripts genéricos úteis..."
+            )
             for script in plan["keep_generic"]:
                 self._organize_generic_script(script)
 
     def _move_to_project_legacy(self, script_path: Path) -> None:
         """Move script para diretório legacy do projeto."""
         # Determinar projeto
-        project_parts = script_path.parts[1] if len(script_path.parts) > 1 else "unknown"
+        project_parts = (
+            script_path.parts[1] if len(script_path.parts) > 1 else "unknown"
+        )
         project_root = self.workspace_root / project_parts
 
         if project_root.exists():
@@ -296,7 +347,9 @@ class ScriptConsolidator:
             shutil.move(str(script), str(dest))
             self._print(f"  🔧 {script.name} → scripts/integration_candidates/")
 
-        self._print("\n📝 NOTA: Scripts marcados para integração manual no quality_gateway.py")
+        self._print(
+            "\n📝 NOTA: Scripts marcados para integração manual no quality_gateway.py"
+        )
 
     def _organize_generic_script(self, script_path: Path) -> None:
         """Organiza script genérico útil."""
@@ -311,12 +364,26 @@ class ScriptConsolidator:
 
         if script_path != dest:
             shutil.move(str(script_path), str(dest))
-            self._print(f"  ✅ {script_path.name} → {dest.relative_to(self.workspace_root)}")
+            self._print(
+                f"  ✅ {script_path.name} → {dest.relative_to(self.workspace_root)}"
+            )
 
-    def generate_report(self, scripts: list[Path], analyses: dict[Path, dict], plan: dict[str, list[Path]]) -> str:
+    def generate_report(
+        self,
+        scripts: list[Path],
+        analyses: dict[Path, dict],
+        plan: dict[str, list[Path]],
+    ) -> str:
         """Gera relatório completo da consolidação."""
         report = []
-        report.extend(("# SCRIPTS CONSOLIDATION REPORT", f"**Data**: {__import__('datetime').datetime.now().strftime('%Y-%m-%d %H:%M:%S')}", f"**Scripts Analisados**: {len(scripts)}", ""))
+        report.extend(
+            (
+                "# SCRIPTS CONSOLIDATION REPORT",
+                f"**Data**: {__import__('datetime').datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+                f"**Scripts Analisados**: {len(scripts)}",
+                "",
+            )
+        )
 
         # Estatísticas por categoria
         categories = {}
@@ -333,8 +400,13 @@ class ScriptConsolidator:
         report.append("## 🎯 PLANO DE CONSOLIDAÇÃO")
         for action, script_list in plan.items():
             if script_list:
-                report.append(f"\n### {action.replace('_', ' ').title()} ({len(script_list)} scripts)")
-                report.extend(f"- {script.relative_to(self.workspace_root)}" for script in script_list)
+                report.append(
+                    f"\n### {action.replace('_', ' ').title()} ({len(script_list)} scripts)"
+                )
+                report.extend(
+                    f"- {script.relative_to(self.workspace_root)}"
+                    for script in script_list
+                )
 
         return "\n".join(report)
 
@@ -360,7 +432,7 @@ class ScriptConsolidator:
             with Progress(
                 SpinnerColumn(),
                 TextColumn("[progress.description]{task.description}"),
-                console=console
+                console=console,
             ) as progress:
                 task = progress.add_task("Analisando...", total=len(scripts))
 
@@ -381,14 +453,23 @@ class ScriptConsolidator:
         self._print("\n📊 PLANO DE CONSOLIDAÇÃO:")
         for action, script_list in plan.items():
             if script_list:
-                self._print(f"  {action.replace('_', ' ').title()}: {len(script_list)} scripts")
+                self._print(
+                    f"  {action.replace('_', ' ').title()}: {len(script_list)} scripts"
+                )
 
         # 5. Gerar relatório
         report = self.generate_report(scripts, analyses, plan)
-        report_path = self.workspace_root / "scripts" / "consolidation_analysis" / "consolidation_report.md"
+        report_path = (
+            self.workspace_root
+            / "scripts"
+            / "consolidation_analysis"
+            / "consolidation_report.md"
+        )
         report_path.parent.mkdir(parents=True, exist_ok=True)
         report_path.write_text(report, encoding="utf-8")
-        self._print(f"\n📄 Relatório salvo: {report_path.relative_to(self.workspace_root)}")
+        self._print(
+            f"\n📄 Relatório salvo: {report_path.relative_to(self.workspace_root)}"
+        )
 
         # 6. Executar consolidação
         response = input("\n❓ Executar plano de consolidação? [y/N]: ")
@@ -396,7 +477,9 @@ class ScriptConsolidator:
             self.execute_consolidation_plan(plan)
             self._print("\n🎉 CONSOLIDAÇÃO CONCLUÍDA!")
         else:
-            self._print("\n📝 Plano criado mas não executado. Use o relatório para revisão.")
+            self._print(
+                "\n📝 Plano criado mas não executado. Use o relatório para revisão."
+            )
 
     def _print(self, message: str) -> None:
         """Print otimizado."""
