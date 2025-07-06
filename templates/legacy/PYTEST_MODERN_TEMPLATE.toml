@@ -1,0 +1,217 @@
+# PYTEST MODERN TEMPLATE - FLEXT WORKSPACE
+# Template moderno para configuração pytest com alta cobertura e ferramentas avançadas
+# Versão: 2025-07-05
+
+[tool.pytest.ini_options]
+# Versão mínima do pytest
+minversion = "8.0"
+
+# Configurações base modernas
+addopts = [
+    # Strict mode para qualidade
+    "--strict-markers",
+    "--strict-config",
+
+    # Output e debugging
+    "--verbose",
+    "--tb=short",
+
+    # Coverage com relatórios modernos
+    "--cov=src",
+    "--cov-report=term-missing:skip-covered",
+    "--cov-report=html:reports/coverage",
+    "--cov-report=xml:reports/coverage.xml",
+    "--cov-fail-under=85",    # Meta inicial 85%, depois aumentar para 95%
+
+    # Reports e logs
+    "--junitxml=reports/pytest.xml",
+    "--maxfail=5",
+    "--timeout=60",
+
+    # Performance e debugging
+    "--disable-warnings",
+    "--randomly-seed=1234",
+    "--randomly-dont-reorganize",
+
+    # Parallel execution para CI
+    # "--numprocesses=auto",  # Uncomment for CI
+]
+
+# Paths dos testes
+testpaths = ["tests"]
+
+# Padrões de arquivos
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+
+# Markers modernos organizados por categoria
+markers = [
+    # Velocidade e tipo
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "fast: marks tests as fast",
+    "integration: marks tests as integration tests",
+    "unit: marks tests as unit tests",
+    "e2e: marks tests as end-to-end tests",
+
+    # Domínio e componentes
+    "domain: marks tests as domain tests",
+    "application: marks tests as application layer tests",
+    "infrastructure: marks tests as infrastructure tests",
+    "api: marks tests as API tests",
+    "cli: marks tests as CLI tests",
+
+    # Performance e segurança
+    "performance: marks tests as performance tests",
+    "benchmark: marks tests as benchmark tests",
+    "security: marks tests as security tests",
+    "load: marks tests as load tests",
+
+    # Dependências externas
+    "requires_database: tests that need database",
+    "requires_redis: tests that need Redis",
+    "requires_ldap: tests that need LDAP server",
+    "requires_oracle: tests that need Oracle database",
+    "requires_network: tests that need network access",
+
+    # Ambientes específicos
+    "local_only: tests that only run locally",
+    "ci_only: tests that only run in CI",
+    "docker: tests that require Docker",
+]
+
+# Filtros de warnings modernos
+filterwarnings = [
+    "error",
+    "ignore::UserWarning",
+    "ignore::DeprecationWarning",
+    "ignore::PendingDeprecationWarning",
+    "ignore::pytest.PytestUnraisableExceptionWarning",
+    "ignore::_pytest.warnings.PytestUnraisableExceptionWarning",
+]
+
+# Configuração async moderna
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+
+# Logging estruturado
+log_cli = true
+log_cli_level = "INFO"
+log_cli_format = "%(asctime)s [%(levelname)8s] %(name)s: %(message)s"
+log_cli_date_format = "%Y-%m-%d %H:%M:%S"
+log_auto_indent = true
+
+# Timeout configuração
+timeout = 60
+timeout_method = "thread"
+
+[tool.coverage.run]
+# Configuração moderna de coverage
+branch = true
+source = ["src"]
+
+# Omitir arquivos padrão
+omit = [
+    "*/tests/*",
+    "*/test_*",
+    "*/*_test.py",
+    "*/conftest.py",
+    "*/__pycache__/*",
+    "*/site-packages/*",
+    "*/.venv/*",
+    "*/venv/*",
+    "*/build/*",
+    "*/dist/*",
+    "*/.eggs/*",
+    "*/migrations/*",
+    "*/static/*",
+    "*/media/*",
+    "manage.py",
+    "*/settings/*",
+    "*/__init__.py",
+]
+
+# Armazenamento e paralelismo
+data_file = "reports/.coverage"
+parallel = true
+concurrency = ["thread", "multiprocessing"]
+
+# Medição dinâmica para melhor precisão
+dynamic_context = "test_function"
+
+[tool.coverage.report]
+# Relatórios modernos e precisos
+skip_empty = true
+skip_covered = false
+show_missing = true
+sort = "Cover"
+precision = 2
+fail_under = 85
+
+# Exclusões inteligentes
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+    "TYPE_CHECKING",
+    "\\.\\.\\.",
+    "pass",
+    "def __str__",
+    "def __unicode__",
+]
+
+[tool.coverage.html]
+directory = "reports/coverage"
+title = "FLEXT Coverage Report"
+show_contexts = true
+
+[tool.coverage.xml]
+output = "reports/coverage.xml"
+
+[tool.coverage.json]
+output = "reports/coverage.json"
+show_contexts = true
+
+# Configurações específicas para diferentes tipos de projeto
+[tool.pytest.ini_options.markers_by_type]
+
+# Para projetos Singer/Meltano
+singer = [
+    "tap: marks tests for Singer taps",
+    "target: marks tests for Singer targets",
+    "stream: marks tests for data streams",
+    "catalog: marks tests for catalog discovery",
+    "state: marks tests for state management",
+]
+
+# Para projetos Django
+django = [
+    "django_db: marks tests as requiring database access",
+    "selenium: marks tests as requiring selenium",
+    "client: marks tests using Django test client",
+    "admin: marks tests for Django admin",
+]
+
+# Para projetos gRPC
+grpc = [
+    "grpc_server: marks tests requiring gRPC server",
+    "proto: marks tests for protobuf validation",
+    "streaming: marks tests for streaming RPCs",
+    "interceptor: marks tests for gRPC interceptors",
+]
+
+# Para projetos de observabilidade
+observability = [
+    "metrics: marks tests as metrics tests",
+    "tracing: marks tests as tracing tests",
+    "health: marks tests as health check tests",
+    "prometheus: tests that need Prometheus",
+    "grafana: tests that need Grafana",
+]

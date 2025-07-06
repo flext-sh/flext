@@ -2,7 +2,7 @@
 
 **Hierarchy**: WORKSPACE-TEMPORARY
 **Reference**: `/home/marlonsc/CLAUDE.md` → Universal methodology
-**Reference**: `/home/marlonsc/CLAUDE.local.md` → Cross-workspace issues  
+**Reference**: `/home/marlonsc/CLAUDE.local.md` → Cross-workspace issues
 **Reference**: `./CLAUDE.md` → FLEXT workspace standards
 **Last Updated**: 2025-06-29
 
@@ -105,7 +105,7 @@
 ### Environment Variable Conflicts
 
 **Problem**: 23+ projects with potential variable name conflicts
-**Fix**: Project-specific prefixes (GRUPONOS*\*, ALGAR*_, FLEXT\__)
+**Fix**: Project-specific prefixes (GRUPONOS*\*, ALGAR*\_, FLEXT\_\_)
 **Permanent Solution Needed**: Workspace-wide namespacing standard
 
 ### Multi-Agent Coordination

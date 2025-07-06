@@ -3,7 +3,7 @@
 import json
 import subprocess
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 from rich.console import Console
 
@@ -13,7 +13,7 @@ console = Console()
 class WorkspaceManager:
     """Unified workspace management."""
 
-    def __init__(self, debug: bool = False):
+    def __init__(self, debug: bool = False) -> None:
         self.debug = debug
         self.workspace_root = Path(__file__).parent.parent
 
@@ -32,10 +32,18 @@ class WorkspaceManager:
 
         # Core modules
         core_modules = [
-            "flext-core", "flext-auth", "flext-api", "flext-grpc",
-            "flext-web", "flext-cli", "flext-meltano", "flext-plugin",
-            "flext-observability", "flext-ldap", "flext-db-oracle",
-            "flext-quality"
+            "flext-core",
+            "flext-auth",
+            "flext-api",
+            "flext-grpc",
+            "flext-web",
+            "flext-cli",
+            "flext-meltano",
+            "flext-plugin",
+            "flext-observability",
+            "flext-ldap",
+            "flext-db-oracle",
+            "flext-quality",
         ]
 
         for module in core_modules:
@@ -46,7 +54,7 @@ class WorkspaceManager:
                 modules[module] = {
                     "status": "❌ Missing",
                     "version": "N/A",
-                    "tests": "N/A"
+                    "tests": "N/A",
                 }
 
         # Migration projects
@@ -67,9 +75,12 @@ class WorkspaceManager:
         if pyproject.exists():
             try:
                 import tomllib
+
                 with open(pyproject, "rb") as f:
                     data = tomllib.load(f)
-                    info["version"] = data.get("tool", {}).get("poetry", {}).get("version", "N/A")
+                    info["version"] = (
+                        data.get("tool", {}).get("poetry", {}).get("version", "N/A")
+                    )
             except:
                 pass
 
@@ -87,9 +98,10 @@ class WorkspaceManager:
             # Get ruff violations
             result = subprocess.run(
                 ["ruff", "check", "--output-format=json"],
-                check=False, cwd=self.workspace_root,
+                check=False,
+                cwd=self.workspace_root,
                 capture_output=True,
-                text=True
+                text=True,
             )
 
             violations_count = 0
@@ -99,12 +111,14 @@ class WorkspaceManager:
 
             # Calculate compliance (rough estimate)
             estimated_baseline = 80000
-            compliance = max(0, (estimated_baseline - violations_count) / estimated_baseline * 100)
+            compliance = max(
+                0, (estimated_baseline - violations_count) / estimated_baseline * 100
+            )
 
             return {
                 "compliance": compliance,
                 "coverage": 85.0,  # Placeholder - would need actual coverage data
-                "violations": violations_count
+                "violations": violations_count,
             }
 
         except Exception as e:
@@ -148,11 +162,14 @@ class WorkspaceManager:
                 cwd=self.workspace_root,
                 capture_output=True,
                 text=True,
-                check=True
+                check=True,
             )
 
             if result.stdout.strip():
-                return {"status": "🔄 Changes pending", "files": len(result.stdout.strip().split("\n"))}
+                return {
+                    "status": "🔄 Changes pending",
+                    "files": len(result.stdout.strip().split("\n")),
+                }
             return {"status": "✅ Clean", "files": 0}
 
         except subprocess.CalledProcessError:

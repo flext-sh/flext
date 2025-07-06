@@ -180,7 +180,7 @@
 .log-viewer {
   background-color: #1e1e1e;
   color: #d4d4d4;
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
   font-size: 0.875rem;
   padding: 1rem;
   border-radius: 0.375rem;
@@ -218,16 +218,16 @@
   .navbar-brand {
     font-size: 1.25rem;
   }
-  
+
   .card {
     margin-bottom: 1rem;
   }
-  
+
   .btn-block {
     width: 100%;
     margin-bottom: 0.5rem;
   }
-  
+
   .table-responsive {
     font-size: 0.875rem;
   }
@@ -245,8 +245,12 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Custom scrollbar */
