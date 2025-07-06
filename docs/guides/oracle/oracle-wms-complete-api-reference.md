@@ -91,15 +91,15 @@ The system supports multiple communication methods:
 #### Production Environment
 
 ```
-Base URL: https://a29.wms.ocs.oraclecloud.com:443/raizen/wms/lgfapi/v10/
-Entity API: https://a29.wms.ocs.oraclecloud.com:443/raizen/wms/lgfapi/v10/entity/
+Base URL: https://ta29.wms.ocs.oraclecloud.com:443/raizen_test/wms/lgfapi/v10/
+Entity API: https://ta29.wms.ocs.oraclecloud.com:443/raizen_test/wms/lgfapi/v10/entity/
 ```
 
 #### Test Environment
 
 ```
-Base URL: https://a29.wms.ocs.oraclecloud.com:443/raizen/wms/lgfapi/v10/
-Entity API: https://a29.wms.ocs.oraclecloud.com:443/raizen/wms/lgfapi/v10/entity/
+Base URL: https://ta29.wms.ocs.oraclecloud.com:443/raizen_test/wms/lgfapi/v10/
+Entity API: https://ta29.wms.ocs.oraclecloud.com:443/raizen_test/wms/lgfapi/v10/entity/
 ```
 
 ---
@@ -180,7 +180,7 @@ RESOURCE_AUD=https://XXXX.integration.ocp.oraclecloud.com:443urn:opc:resource:co
 API_AUD=https://XXXX.integration.ocp.oraclecloud.com:443/ic/api/
 
 # WMS Instance URL
-WMS_URL=https://a29.wms.ocs.oraclecloud.com
+WMS_URL=https://ta29.wms.ocs.oraclecloud.com
 ```
 
 ### Authentication Implementation
@@ -272,13 +272,13 @@ https://{host}/{tenant}/wms/lgfapi/v{version}/{module}/{resource}
 
 ```
 # Entity operations
-GET    /raizen/wms/lgfapi/v10/entity/order_hdr
-POST   /raizen/wms/lgfapi/v10/entity/order_hdr
-PATCH  /raizen/wms/lgfapi/v10/entity/order_hdr/{id}
+GET    /raizen_test/wms/lgfapi/v10/entity/order_hdr
+POST   /raizen_test/wms/lgfapi/v10/entity/order_hdr
+PATCH  /raizen_test/wms/lgfapi/v10/entity/order_hdr/{id}
 
 # Data extraction
-GET    /raizen/wms/lgfapi/v10/data_extract/inventory
-POST   /raizen/wms/lgfapi/v10/data_extract/inventory/export
+GET    /raizen_test/wms/lgfapi/v10/data_extract/inventory
+POST   /raizen_test/wms/lgfapi/v10/data_extract/inventory/export
 ```
 
 ### Pagination and Filtering
@@ -584,7 +584,7 @@ auth_headers = authenticator.get_auth_headers()
 import requests
 
 # Get all orders
-url = \"https://a29.wms.ocs.oraclecloud.com:443/raizen/wms/lgfapi/v10/entity/order_hdr\"
+url = \"https://ta29.wms.ocs.oraclecloud.com:443/raizen_test/wms/lgfapi/v10/entity/order_hdr\"
 response = requests.get(url, headers=auth_headers)
 orders = response.json()
 

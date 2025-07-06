@@ -65,7 +65,7 @@
 ### Variáveis de Ambiente (.env)
 
 ```env
-WMS_BASE_URL=https://a29.wms.ocs.oraclecloud.com/raizen
+WMS_BASE_URL=https://ta29.wms.ocs.oraclecloud.com/raizen_test
 WMS_USERNAME=USER_WMS_INTEGRA
 WMS_PASSWORD=jmCyS7BK94YvhS@
 WMS_API_VERSION=v2
