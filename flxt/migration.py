@@ -1,9 +1,8 @@
 """Migration management module - replaces migration scripts."""
 
-import json
 import subprocess
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Never
 
 from rich.console import Console
 
@@ -13,15 +12,15 @@ console = Console()
 class BaseMigration:
     """Base class for migration operations."""
 
-    def __init__(self, debug: bool = False):
+    def __init__(self, debug: bool = False) -> None:
         self.debug = debug
         self.workspace_root = Path(__file__).parent.parent
 
-    def preview(self):
+    def preview(self) -> Never:
         """Show what migration would do."""
         raise NotImplementedError
 
-    def execute(self):
+    def execute(self) -> Never:
         """Execute the migration."""
         raise NotImplementedError
 
@@ -33,11 +32,11 @@ class BaseMigration:
 class client-aMigration(BaseMigration):
     """client-a OUD migration - replaces all client-a scripts."""
 
-    def __init__(self, debug: bool = False):
+    def __init__(self, debug: bool = False) -> None:
         super().__init__(debug)
         self.project_path = self.workspace_root / "client-a-oud-mig"
 
-    def preview(self):
+    def preview(self) -> None:
         """Preview client-a migration actions."""
         console.print("🔍 client-a OUD Migration Preview:")
         console.print("  1. Hierarchy analysis and creation")
@@ -46,7 +45,7 @@ class client-aMigration(BaseMigration):
         console.print("  4. ACL permissions import")
         console.print("  5. Final validation and reporting")
 
-    def execute(self):
+    def execute(self) -> None:
         """Execute complete client-a migration."""
         console.print("🚀 Starting client-a OUD Migration...")
 
@@ -76,39 +75,47 @@ class client-aMigration(BaseMigration):
             "acl": {"status": "⏳ Pending", "progress": "0%"},
         }
 
-    def _analyze_hierarchy(self):
+    def _analyze_hierarchy(self) -> None:
         """Analyze hierarchy import errors."""
         script_path = self.project_path / "analyze_hierarchy_errors.py"
         if script_path.exists():
-            subprocess.run(["python", str(script_path)], check=False, cwd=self.project_path)
+            subprocess.run(
+                ["python", str(script_path)], check=False, cwd=self.project_path
+            )
 
-    def _create_parents(self):
+    def _create_parents(self) -> None:
         """Create missing parent DNs."""
         script_path = self.project_path / "create_missing_parents.py"
         if script_path.exists():
-            subprocess.run(["python", str(script_path)], check=False, cwd=self.project_path)
+            subprocess.run(
+                ["python", str(script_path)], check=False, cwd=self.project_path
+            )
 
-    def _migrate_groups(self):
+    def _migrate_groups(self) -> None:
         """Migrate groups with fixes."""
         script_path = self.project_path / "complete_groups_migration.py"
         if script_path.exists():
-            subprocess.run(["python", str(script_path)], check=False, cwd=self.project_path)
+            subprocess.run(
+                ["python", str(script_path)], check=False, cwd=self.project_path
+            )
 
-    def _final_validation(self):
+    def _final_validation(self) -> None:
         """Final migration validation."""
         script_path = self.project_path / "complete_production_validation.py"
         if script_path.exists():
-            subprocess.run(["python", str(script_path)], check=False, cwd=self.project_path)
+            subprocess.run(
+                ["python", str(script_path)], check=False, cwd=self.project_path
+            )
 
 
 class client-bMigration(BaseMigration):
     """client-b migration - replaces client-b scripts."""
 
-    def __init__(self, debug: bool = False):
+    def __init__(self, debug: bool = False) -> None:
         super().__init__(debug)
         self.project_path = self.workspace_root / "client-b-meltano-native"
 
-    def preview(self):
+    def preview(self) -> None:
         """Preview client-b migration actions."""
         console.print("🔍 client-b Migration Preview:")
         console.print("  1. Oracle WMS data extraction")
@@ -116,7 +123,7 @@ class client-bMigration(BaseMigration):
         console.print("  3. Meltano pipeline execution")
         console.print("  4. Data verification and validation")
 
-    def execute(self):
+    def execute(self) -> None:
         """Execute client-b migration."""
         console.print("🚀 Starting client-b Migration...")
 
@@ -145,20 +152,26 @@ class client-bMigration(BaseMigration):
             "validation": {"status": "✅ Complete", "progress": "100%"},
         }
 
-    def _validate_oracle(self):
+    def _validate_oracle(self) -> None:
         """Validate Oracle WMS data."""
         script_path = self.project_path / "verify_oracle_data.py"
         if script_path.exists():
-            subprocess.run(["python", str(script_path)], check=False, cwd=self.project_path)
+            subprocess.run(
+                ["python", str(script_path)], check=False, cwd=self.project_path
+            )
 
-    def _run_extraction(self):
+    def _run_extraction(self) -> None:
         """Run data extraction."""
         script_path = self.project_path / "production_meltano_test.py"
         if script_path.exists():
-            subprocess.run(["python", str(script_path)], check=False, cwd=self.project_path)
+            subprocess.run(
+                ["python", str(script_path)], check=False, cwd=self.project_path
+            )
 
-    def _verify_results(self):
+    def _verify_results(self) -> None:
         """Verify migration results."""
         script_path = self.project_path / "validate_100_percent_real.py"
         if script_path.exists():
-            subprocess.run(["python", str(script_path)], check=False, cwd=self.project_path)
+            subprocess.run(
+                ["python", str(script_path)], check=False, cwd=self.project_path
+            )

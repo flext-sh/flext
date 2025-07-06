@@ -13,13 +13,13 @@ This document provides a complete reference of Oracle WMS LogFire API entities. 
 ### Production Environment
 
 ```
-https://a29.wms.ocs.oraclecloud.com:443/raizen/wms/lgfapi/v10/entity/
+https://ta29.wms.ocs.oraclecloud.com:443/raizen_test/wms/lgfapi/v10/entity/
 ```
 
 ### Test Environment
 
 ```
-https://a29.wms.ocs.oraclecloud.com:443/raizen/wms/lgfapi/v10/entity/
+https://ta29.wms.ocs.oraclecloud.com:443/raizen_test/wms/lgfapi/v10/entity/
 ```
 
 ## Available Entities
@@ -79,15 +79,15 @@ Below is the complete list of all available entities:
 
 ```json
 {
-  "action_code": "https://a29.wms.ocs.oraclecloud.com:443/raizen/wms/lgfapi/v10/entity/action_code",
-  "active_location": "https://a29.wms.ocs.oraclecloud.com:443/raizen/wms/lgfapi/v10/entity/active_location",
-  "aiml_model_training_hdr": "https://a29.wms.ocs.oraclecloud.com:443/raizen/wms/lgfapi/v10/entity/aiml_model_training_hdr",
-  "aiml_order_cycle_time": "https://a29.wms.ocs.oraclecloud.com:443/raizen/wms/lgfapi/v10/entity/aiml_order_cycle_time",
-  "aiml_prediction_order_cycle_time": "https://a29.wms.ocs.oraclecloud.com:443/raizen/wms/lgfapi/v10/entity/aiml_prediction_order_cycle_time",
-  "aiml_prediction_run": "https://a29.wms.ocs.oraclecloud.com:443/raizen/wms/lgfapi/v10/entity/aiml_prediction_run",
-  "allocation": "https://a29.wms.ocs.oraclecloud.com:443/raizen/wms/lgfapi/v10/entity/allocation",
-  "allocation_distribution_mode": "https://a29.wms.ocs.oraclecloud.com:443/raizen/wms/lgfapi/v10/entity/allocation_distribution_mode",
-  "allocation_status": "https://a29.wms.ocs.oraclecloud.com:443/raizen/wms/lgfapi/v10/entity/allocation_status"
+  "action_code": "https://ta29.wms.ocs.oraclecloud.com:443/raizen_test/wms/lgfapi/v10/entity/action_code",
+  "active_location": "https://ta29.wms.ocs.oraclecloud.com:443/raizen_test/wms/lgfapi/v10/entity/active_location",
+  "aiml_model_training_hdr": "https://ta29.wms.ocs.oraclecloud.com:443/raizen_test/wms/lgfapi/v10/entity/aiml_model_training_hdr",
+  "aiml_order_cycle_time": "https://ta29.wms.ocs.oraclecloud.com:443/raizen_test/wms/lgfapi/v10/entity/aiml_order_cycle_time",
+  "aiml_prediction_order_cycle_time": "https://ta29.wms.ocs.oraclecloud.com:443/raizen_test/wms/lgfapi/v10/entity/aiml_prediction_order_cycle_time",
+  "aiml_prediction_run": "https://ta29.wms.ocs.oraclecloud.com:443/raizen_test/wms/lgfapi/v10/entity/aiml_prediction_run",
+  "allocation": "https://ta29.wms.ocs.oraclecloud.com:443/raizen_test/wms/lgfapi/v10/entity/allocation",
+  "allocation_distribution_mode": "https://ta29.wms.ocs.oraclecloud.com:443/raizen_test/wms/lgfapi/v10/entity/allocation_distribution_mode",
+  "allocation_status": "https://ta29.wms.ocs.oraclecloud.com:443/raizen_test/wms/lgfapi/v10/entity/allocation_status"
 }
 ```
 
@@ -98,13 +98,13 @@ _Note: The complete entity list contains over 200 entities. For the full list, p
 ### Get Entity Information
 
 ```bash
-GET https://a29.wms.ocs.oraclecloud.com:443/raizen/wms/lgfapi/v10/entity/inventory
+GET https://ta29.wms.ocs.oraclecloud.com:443/raizen_test/wms/lgfapi/v10/entity/inventory
 ```
 
 ### Filter Entity Data
 
 ```bash
-GET https://a29.wms.ocs.oraclecloud.com:443/raizen/wms/lgfapi/v10/entity/inventory?facility=DC1
+GET https://ta29.wms.ocs.oraclecloud.com:443/raizen_test/wms/lgfapi/v10/entity/inventory?facility=DC1
 ```
 
 ## Authentication

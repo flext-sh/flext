@@ -16,13 +16,13 @@ class MeltanoGopyError(Exception):
 class MeltanoGopy:
     """Python interface to Go-based Meltano functionality."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the Meltano Gopy interface."""
         self._lib = None
         self._load_library()
         self._setup_functions()
 
-    def _load_library(self):
+    def _load_library(self) -> None:
         """Load the Go shared library."""
         lib_path = Path(__file__).parent / "gopy_go.so"
 
@@ -38,7 +38,7 @@ class MeltanoGopy:
             msg = f"Failed to load Go library: {e}"
             raise MeltanoGopyError(msg)
 
-    def _setup_functions(self):
+    def _setup_functions(self) -> None:
         """Setup function signatures for ctypes."""
         # CheckMeltanoAvailable() bool
         self._lib.gopy_CheckMeltanoAvailable.restype = ctypes.c_bool

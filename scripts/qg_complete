@@ -1,0 +1,36 @@
+#!/bin/bash
+# FLEXT Quality Gateway COMPLETE - Sistema Final Unificado
+set -e
+
+cd "$(dirname "$0")/.."
+
+# Verificar argumentos
+if [ "$1" = "--enhanced" ] || [ "$1" = "-e" ]; then
+    shift
+    echo "🚀 Executando Quality Gateway ENHANCED (funcionalidades consolidadas)"
+    python scripts/quality_gateway_enhanced.py "$@"
+elif [ "$1" = "--standard" ] || [ "$1" = "-s" ]; then
+    shift
+    echo "⚡ Executando Quality Gateway STANDARD (testado e estável)"
+    python scripts/quality_gateway.py "$@"
+elif [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
+    echo "FLEXT Quality Gateway COMPLETE - Sistema Final Unificado"
+    echo ""
+    echo "Uso:"
+    echo "  scripts/qg_complete --enhanced [opções]    # Sistema com funcionalidades consolidadas"
+    echo "  scripts/qg_complete --standard [opções]    # Sistema testado e estável"
+    echo "  scripts/qg_complete [opções]               # Padrão: enhanced"
+    echo ""
+    echo "Opções:"
+    echo "  --project PROJECT_NAME                     # Processar projeto específico"
+    echo "  --file FILE_PATH                           # Processar arquivo específico"
+    echo "  --help                                     # Esta mensagem"
+    echo ""
+    echo "Exemplos:"
+    echo "  scripts/qg_complete --enhanced --project flext-auth"
+    echo "  scripts/qg_complete --standard --file src/module.py"
+    echo ""
+else
+    echo "🚀 Executando Quality Gateway ENHANCED (padrão)"
+    python scripts/quality_gateway_enhanced.py "$@"
+fi

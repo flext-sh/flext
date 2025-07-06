@@ -1,0 +1,8 @@
+#!/bin/bash
+# FLEXT Quality Gateway - Atalho conveniente
+set -e
+
+cd "$(dirname "$0")/.."
+
+# Comando padrão - quality gateway avançado
+python scripts/quality_gateway.py "$@"

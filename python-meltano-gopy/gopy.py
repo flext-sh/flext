@@ -35,7 +35,7 @@ os.chdir(cwd)
 class Map_string_interface_(go.GoClass):
     """"""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         """handle=A Go-side object is always initialized with an explicit handle=arg
         otherwise parameter is a python list that we copy from.
         """
@@ -52,16 +52,14 @@ class Map_string_interface_(go.GoClass):
             if len(args) > 0:
                 if not isinstance(args[0], _collections_abc.Mapping):
                     msg = "Map_string_interface_.__init__ takes a mapping as argument"
-                    raise TypeError(
-                        msg
-                    )
+                    raise TypeError(msg)
                 for k, v in args[0].items():
                     _gopy.Map_string_interface__set(self.handle, k, v)
 
-    def __del__(self):
+    def __del__(self) -> None:
         _gopy.DecRef(self.handle)
 
-    def __str__(self):
+    def __str__(self) -> str:
         s = (
             "gopy.Map_string_interface_ len: "
             + str(len(self))
@@ -74,22 +72,22 @@ class Map_string_interface_(go.GoClass):
                 s += str(k) + "=" + str(v) + ", "
         return s + "}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         s = "gopy.Map_string_interface_({"
         for k, v in self.items():
             s += str(k) + "=" + str(v) + ", "
         return s + "})"
 
-    def __len__(self):
+    def __len__(self) -> int:
         return _gopy.Map_string_interface__len(self.handle)
 
     def __getitem__(self, key):
         return _gopy.Map_string_interface__elem(self.handle, key)
 
-    def __setitem__(self, key, value):
+    def __setitem__(self, key, value) -> None:
         _gopy.Map_string_interface__set(self.handle, key, value)
 
-    def __delitem__(self, key):
+    def __delitem__(self, key) -> None:
         return _gopy.Map_string_interface__delete(self.handle, key)
 
     def keys(self):
@@ -106,7 +104,7 @@ class Map_string_interface_(go.GoClass):
     def __iter__(self):
         return iter(self.items())
 
-    def __contains__(self, key):
+    def __contains__(self, key) -> bool:
         return _gopy.Map_string_interface__contains(self.handle, key)
 
 
@@ -129,7 +127,7 @@ class Map_string_interface_(go.GoClass):
 class MeltanoAdapter(go.GoClass):
     r"""MeltanoAdapter provides a gopy-compatible interface to Meltano functionality\n."""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         """handle=A Go-side object is always initialized with an explicit handle=arg
         otherwise parameters can be unnamed in order of field names or named fields
         in which case a new Go object is constructed first.
@@ -144,10 +142,10 @@ class MeltanoAdapter(go.GoClass):
             self.handle = _gopy.gopy_MeltanoAdapter_CTor()
             _gopy.IncRef(self.handle)
 
-    def __del__(self):
+    def __del__(self) -> None:
         _gopy.DecRef(self.handle)
 
-    def __str__(self):
+    def __str__(self) -> str:
         pr = [(p, getattr(self, p)) for p in dir(self) if not p.startswith("__")]
         sv = "gopy.MeltanoAdapter{"
         first = True
@@ -161,7 +159,7 @@ class MeltanoAdapter(go.GoClass):
             sv += v[0] + "=" + str(v[1])
         return sv + "}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         pr = [(p, getattr(self, p)) for p in dir(self) if not p.startswith("__")]
         sv = "gopy.MeltanoAdapter ( "
         for v in pr:
@@ -303,7 +301,7 @@ class MeltanoAdapter(go.GoClass):
 class ProjectInfo(go.GoClass):
     r"""ProjectInfo contains basic project information\n."""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         """handle=A Go-side object is always initialized with an explicit handle=arg
         otherwise parameters can be unnamed in order of field names or named fields
         in which case a new Go object is constructed first.
@@ -330,10 +328,10 @@ class ProjectInfo(go.GoClass):
             if "Environment" in kwargs:
                 self.Environment = kwargs["Environment"]
 
-    def __del__(self):
+    def __del__(self) -> None:
         _gopy.DecRef(self.handle)
 
-    def __str__(self):
+    def __str__(self) -> str:
         pr = [(p, getattr(self, p)) for p in dir(self) if not p.startswith("__")]
         sv = "gopy.ProjectInfo{"
         first = True
@@ -347,7 +345,7 @@ class ProjectInfo(go.GoClass):
             sv += v[0] + "=" + str(v[1])
         return sv + "}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         pr = [(p, getattr(self, p)) for p in dir(self) if not p.startswith("__")]
         sv = "gopy.ProjectInfo ( "
         for v in pr:
@@ -360,7 +358,7 @@ class ProjectInfo(go.GoClass):
         return _gopy.gopy_ProjectInfo_Name_Get(self.handle)
 
     @Name.setter
-    def Name(self, value):
+    def Name(self, value) -> None:
         if isinstance(value, go.GoClass):
             _gopy.gopy_ProjectInfo_Name_Set(self.handle, value.handle)
         else:
@@ -371,7 +369,7 @@ class ProjectInfo(go.GoClass):
         return _gopy.gopy_ProjectInfo_Path_Get(self.handle)
 
     @Path.setter
-    def Path(self, value):
+    def Path(self, value) -> None:
         if isinstance(value, go.GoClass):
             _gopy.gopy_ProjectInfo_Path_Set(self.handle, value.handle)
         else:
@@ -382,7 +380,7 @@ class ProjectInfo(go.GoClass):
         return _gopy.gopy_ProjectInfo_Environment_Get(self.handle)
 
     @Environment.setter
-    def Environment(self, value):
+    def Environment(self, value) -> None:
         if isinstance(value, go.GoClass):
             _gopy.gopy_ProjectInfo_Environment_Set(self.handle, value.handle)
         else:
@@ -393,7 +391,7 @@ class ProjectInfo(go.GoClass):
 class Result(go.GoClass):
     r"""Result represents a standard result format for gopy compatibility\n."""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         """handle=A Go-side object is always initialized with an explicit handle=arg
         otherwise parameters can be unnamed in order of field names or named fields
         in which case a new Go object is constructed first.
@@ -416,10 +414,10 @@ class Result(go.GoClass):
             if "Error" in kwargs:
                 self.Error = kwargs["Error"]
 
-    def __del__(self):
+    def __del__(self) -> None:
         _gopy.DecRef(self.handle)
 
-    def __str__(self):
+    def __str__(self) -> str:
         pr = [(p, getattr(self, p)) for p in dir(self) if not p.startswith("__")]
         sv = "gopy.Result{"
         first = True
@@ -433,7 +431,7 @@ class Result(go.GoClass):
             sv += v[0] + "=" + str(v[1])
         return sv + "}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         pr = [(p, getattr(self, p)) for p in dir(self) if not p.startswith("__")]
         sv = "gopy.Result ( "
         for v in pr:
@@ -446,7 +444,7 @@ class Result(go.GoClass):
         return _gopy.gopy_Result_Success_Get(self.handle)
 
     @Success.setter
-    def Success(self, value):
+    def Success(self, value) -> None:
         if isinstance(value, go.GoClass):
             _gopy.gopy_Result_Success_Set(self.handle, value.handle)
         else:
@@ -457,7 +455,7 @@ class Result(go.GoClass):
         return _gopy.gopy_Result_Error_Get(self.handle)
 
     @Error.setter
-    def Error(self, value):
+    def Error(self, value) -> None:
         if isinstance(value, go.GoClass):
             _gopy.gopy_Result_Error_Set(self.handle, value.handle)
         else:

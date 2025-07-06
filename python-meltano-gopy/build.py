@@ -12,18 +12,18 @@ This module provides build functionality.
 
 
 class CheckedFunction(Function):
-    def __init__(self, *a, **kw):
+    def __init__(self, *a, **kw) -> None:
         super().__init__(*a, **kw)
         self._failure_expression = kw.get("failure_expression", "")
         self._failure_cleanup = kw.get("failure_cleanup", "")
 
-    def set_failure_expression(self, expr):
+    def set_failure_expression(self, expr) -> None:
         self._failure_expression = expr
 
-    def set_failure_cleanup(self, expr):
+    def set_failure_cleanup(self, expr) -> None:
         self._failure_cleanup = expr
 
-    def generate_call(self):
+    def generate_call(self) -> None:
         super().generate_call()
         check = "PyErr_Occurred()"
         if self._failure_expression:
