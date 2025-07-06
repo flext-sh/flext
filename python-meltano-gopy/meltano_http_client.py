@@ -15,7 +15,9 @@ class MeltanoHTTPClientError(Exception):
 class MeltanoHTTPClient:
     """HTTP client for Go-based Meltano functionality."""
 
-    def __init__(self, base_url: str = "http://localhost:8080", timeout: int = 30):
+    def __init__(
+        self, base_url: str = "http://localhost:8080", timeout: int = 30
+    ) -> None:
         """Initialize the Meltano HTTP client.
 
         Args:
@@ -200,7 +202,9 @@ class MeltanoHTTPClient:
         result = self._make_request("POST", "pipelines/run", data)
         return result.get("data", {})
 
-    def execute_command(self, command: str, args: list[str] | None = None) -> dict[str, Any]:
+    def execute_command(
+        self, command: str, args: list[str] | None = None
+    ) -> dict[str, Any]:
         """Execute a raw Meltano CLI command.
 
         Args:
@@ -286,7 +290,7 @@ class MeltanoHTTPClient:
         except MeltanoHTTPClientError:
             return False
 
-    def close(self):
+    def close(self) -> None:
         """Close the HTTP session."""
         if self.session:
             self.session.close()
@@ -338,7 +342,9 @@ def GetProjectPlugins() -> dict[str, Any]:
     return get_client_instance().get_plugins()
 
 
-def ExecuteMeltanoCommand(command: str, args: list[str] | None = None) -> dict[str, Any]:
+def ExecuteMeltanoCommand(
+    command: str, args: list[str] | None = None
+) -> dict[str, Any]:
     """Execute command (compatibility function)."""
     return get_client_instance().execute_command(command, args or [])
 

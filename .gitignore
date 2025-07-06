@@ -1,42 +1,10 @@
-schemas/
-reports/
-.scaffold-tracking/
-.env.*
-!.env.example
-.doc-reorg
-.token*
-archive/
-pyproject_backups/
-meltano-plugins-extracted/
-docs-refactored/
-analysis_temp/
-.standardization_backup/
-.token
-.lock*
-reports/
-reference/
-outputs/
-ldif_output/
-.cursorignore
-.meltano/
-deprecated*/
+# =============================================================================
+# FLEXT ENTERPRISE .gitignore - Comprehensive Coverage
+# =============================================================================
 
-# Heavy documentation that shouldn't be in repository
-oracle-documentation/
-
-# Python cache and build files that might be nested in submodules
-**/__pycache__/
-**/*.pyc
-**/*.pyo
-**/htmlcov/
-**/.coverage
-**/coverage.xml
-**/build/
-**/dist/
-**/.eggs/
-**/*.log
-
-# Python
+# =============================================================================
+# PYTHON BUILD AND RUNTIME ARTIFACTS
+# =============================================================================
 __pycache__/
 *.py[cod]
 *$py.class
@@ -48,106 +16,192 @@ dist/
 downloads/
 eggs/
 .eggs/
+lib/
 lib64/
 parts/
 sdist/
 var/
 wheels/
+share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
 MANIFEST
 
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.nox/
+# =============================================================================
+# VIRTUAL ENVIRONMENTS (ALL LOCATIONS)
+# =============================================================================
+.venv/
+.env/
+venv/
+env/
+ENV/
+*/venv/
+*/.venv/
+*/ENV/
+*/env/
+**/.venv/
+**/venv/
+**/ENV/
+**/env/
+
+# =============================================================================
+# TESTING AND QUALITY COVERAGE
+# =============================================================================
+.pytest_cache/
 .coverage
 .coverage.*
-.cache
-nosetests.xml
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
 coverage.xml
 *.cover
 *.py,cover
 .hypothesis/
-.pytest_cache/
-cover/
+nosetests.xml
+.cache
 
-# Environment
+# =============================================================================
+# BACKUP AND TEMPORARY FILES
+# =============================================================================
+*.backup
+*.syntax_backup
+*.bak
+*.bkp
+*.tmp
+*.swp
+*.swo
+*~
+*.orig
+*.rej
+*.diff
+*.patch
+
+# =============================================================================
+# ENVIRONMENT AND CONFIGURATION
+# =============================================================================
 .env
-.venv
-env/
-venv/
-ENV/
-env*/
+.env.*
+!.env.example
+.internal.invalid
+.env.*.local
 
-# Poetry
-poetry.lock
-.poetry-cache/
-
-# mypy
-.mypy_cache/
-.dmypy.json
-dmypy.json
-
-# ruff
-.ruff_cache/
-
-# Jupyter
-.ipynb_checkpoints
-*.ipynb
-
-# IDE specific files
-.idea/
+# =============================================================================
+# IDE AND EDITOR FILES
+# =============================================================================
 .vscode/
+.idea/
 .cursor/
 *.swp
 *.swo
 .DS_Store
+Thumbs.db
+*.sublime-*
+.fleet/
 
-# Project specific
+# =============================================================================
+# LOGS AND OUTPUT
+# =============================================================================
 logs/
 *.log
+log/
 output/
+outputs/
 temp/
 tmp/
 
-# Security and credentials - NEVER COMMIT
+# =============================================================================
+# SECURITY SENSITIVE FILES
+# =============================================================================
 *.pem
 *.key
 *.crt
+*.p12
+*.pfx
 secret*
 *.secret
 credentials.json
-.internal.invalid
-.env.*.local
+auth.json
+service-account*.json
+.env.production
+.env.prod
 
-# Cache
-__pycache__/
-.pytest_cache/
-.ruff_cache/
-.mypy_cache/
+# =============================================================================
+# PROJECT SPECIFIC FLEXT
+# =============================================================================
+schemas/
+reports/
+.scaffold-tracking/
+.doc-reorg
+.token*
+archive/
+pyproject_backups/
+meltano-plugins-extracted/
+docs-refactored/
+analysis_temp/
+.standardization_backup/
+.lock*
+reference/
+ldif_output/
+.cursorignore
+.meltano/
+deprecated*/
+oracle-documentation/
 
-# Temporary files
-*.tmp
-*.bak
-*.swp
-*~
-*.bkp
-
-# Let's maintain locks only for root
+# =============================================================================
+# PACKAGE MANAGERS AND DEPENDENCIES
+# =============================================================================
+# Poetry - keep only root lock file
 **/poetry.lock
-!/poetry.lock # Only keep root poetry.lock
+!/poetry.lock
 
-# Backup files that shouldn't be tracked
-*.backup
-*.bak
-pyproject.toml.backup*
-*.py.backup
-conftest.py.backup
-backups/
+# pip
+pip-wheel-metadata/
 
-# Additional test artifacts
-src/reports/
-**/reports/pytest.xml
-**/reports/junit.xml
+# pipenv
+Pipfile.lock
+
+# =============================================================================
+# JUPYTER AND NOTEBOOKS
+# =============================================================================
+.ipynb_checkpoints
+*.ipynb
+**/.ipynb_checkpoints
+
+# =============================================================================
+# DOCUMENTATION BUILD
+# =============================================================================
+docs/_build/
+docs/build/
+_build/
+.sphinx/
+
+# =============================================================================
+# COMPILED AND BINARY FILES
+# =============================================================================
+*.com
+*.exe
+*.dll
+*.so
+*.dylib
+
+# =============================================================================
+# OS SPECIFIC
+# =============================================================================
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Linux
+*~
+.nfs*
