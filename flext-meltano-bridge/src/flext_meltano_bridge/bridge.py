@@ -36,14 +36,14 @@ try:
         PluginType = None
 
 except ImportError as e:
-    logging.warning(f"Meltano not available: {e}")
+    logging.warning("Meltano not available: %s", e)
     MELTANO_AVAILABLE = False
 
 
 class MeltanoResult:
     """Result wrapper for Meltano operations."""
 
-    def __init__(self, success: bool, data: Any = None, error: str = ""):
+    def __init__(self, success: bool, data: Any = None, error: str = "") -> None:
         self.success = success
         self.data = data
         self.error = error
@@ -60,7 +60,7 @@ class MeltanoBridge:
     that can be easily called from Go code.
     """
 
-    def __init__(self, project_root: str = "."):
+    def __init__(self: "MeltanoBridge", project_root: str = ".") -> None:
         """Initialize the Meltano bridge with a project root."""
         self.project_root = Path(project_root)
         self.project = None
@@ -75,15 +75,15 @@ class MeltanoBridge:
                 else:
                     # Create a basic project instance
                     self.project = Project(self.project_root)
-            except Exception as e:
-                logging.warning(f"Could not load Meltano project: {e}")
+            except (OSError, ValueError, RuntimeError) as e:
+                logging.warning("Could not load Meltano project: %s", e)
 
-    def is_available(self) -> bool:
+    def is_available(self: "MeltanoBridge") -> bool:
         """Check if Meltano is available and working."""
         # Meltano is available if we can import it, even without a project
         return MELTANO_AVAILABLE
 
-    def init_project(self, project_name: str, project_dir: str = "") -> str:
+    def init_project(self: "MeltanoBridge", project_name: str, project_dir: str = "") -> str:
         """Initialize a new Meltano project.
 
         Args:
