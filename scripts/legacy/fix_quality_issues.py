@@ -170,7 +170,8 @@ class QualityFixer:
         try:
             result = subprocess.run(
                 ["ruff", "format", str(project_path)],
-                check=False, capture_output=True,
+                check=False,
+                capture_output=True,
                 text=True,
                 cwd=self.workspace_root,
             )

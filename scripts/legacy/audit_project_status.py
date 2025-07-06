@@ -33,11 +33,19 @@ class ProjectAuditor:
     def _find_flext_projects(self) -> list[str]:
         """Encontra todos os projetos FLEXT."""
 
-        projects = [item.name for item in self.workspace_root.iterdir() if item.is_dir() and item.name.startswith(("flext-", "flexcore"))]
+        projects = [
+            item.name
+            for item in self.workspace_root.iterdir()
+            if item.is_dir() and item.name.startswith(("flext-", "flexcore"))
+        ]
 
         # Adiciona projetos cliente
         client_projects = ["algar-oud-mig", "gruponos-poc-oic-wms"]
-        projects.extend(project for project in client_projects if (self.workspace_root / project).exists())
+        projects.extend(
+            project
+            for project in client_projects
+            if (self.workspace_root / project).exists()
+        )
 
         return sorted(projects)
 
@@ -192,7 +200,15 @@ class ProjectAuditor:
     def generate_report(self) -> str:
         """Gera relatório completo da auditoria."""
         report = []
-        report.extend(("# 📊 RELATÓRIO DE AUDITORIA REAL DOS PROJETOS FLEXT", "", "**Data da Auditoria**: " + subprocess.check_output(["date"]).decode().strip(), ""))
+        report.extend(
+            (
+                "# 📊 RELATÓRIO DE AUDITORIA REAL DOS PROJETOS FLEXT",
+                "",
+                "**Data da Auditoria**: "
+                + subprocess.check_output(["date"]).decode().strip(),
+                "",
+            )
+        )
 
         # Agrupa por tipo
         by_type = defaultdict(list)
@@ -204,7 +220,16 @@ class ProjectAuditor:
 
             for project_name, data in projects:
                 status_emoji = self._get_status_emoji(data["status"])
-                report.extend((f"### {status_emoji} {project_name}", f"**Status Real**: {data['status']}", f"**Arquivos Python**: {data['implementation']['python_files']}", f"**Total de Linhas**: {data['implementation']['total_lines']}", f"**NotImplementedError**: {data['implementation']['not_implemented_count']}", f"**TODOs**: {data['implementation']['todo_count']}"))
+                report.extend(
+                    (
+                        f"### {status_emoji} {project_name}",
+                        f"**Status Real**: {data['status']}",
+                        f"**Arquivos Python**: {data['implementation']['python_files']}",
+                        f"**Total de Linhas**: {data['implementation']['total_lines']}",
+                        f"**NotImplementedError**: {data['implementation']['not_implemented_count']}",
+                        f"**TODOs**: {data['implementation']['todo_count']}",
+                    )
+                )
 
                 if data["documentation"]["inflated_claims"]:
                     report.append("⚠️  **DOCUMENTAÇÃO INFLADA DETECTADA**")

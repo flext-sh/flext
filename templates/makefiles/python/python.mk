@@ -57,6 +57,28 @@ install-minimal: ## Install only production dependencies
 	)
 	$(call log_success,Minimal installation complete)
 
+update-deps: ## Update project dependencies to latest versions
+	$(call log_section,Updating Dependencies)
+	@if [ -f "poetry.lock" ]; then \
+		echo "$(CYAN)ℹ Using Poetry for dependency management$(RESET)"; \
+		$(POETRY) update && $(call log_success,Poetry dependencies updated); \
+	elif [ -f "pyproject.toml" ] && grep -q "poetry" pyproject.toml; then \
+		echo "$(CYAN)ℹ Poetry project detected$(RESET)"; \
+		$(POETRY) install && $(call log_success,Poetry dependencies installed); \
+	elif [ -f "pyproject.toml" ]; then \
+		echo "$(CYAN)ℹ Using pip with pyproject.toml$(RESET)"; \
+		$(PIP) install --upgrade pip && \
+		$(PIP) install -e . --upgrade && \
+		$(call log_success,pip dependencies updated); \
+	elif [ -f "requirements.txt" ]; then \
+		echo "$(CYAN)ℹ Using pip with requirements.txt$(RESET)"; \
+		$(PIP) install --upgrade pip && \
+		$(PIP) install -r requirements.txt --upgrade && \
+		$(call log_success,requirements.txt updated); \
+	else \
+		$(call log_warning,No dependency management found); \
+	fi
+
 # ═══════════════════════════════════════════════════════════════════════════
 #  TESTING TARGETS
 # ═══════════════════════════════════════════════════════════════════════════
@@ -272,7 +294,7 @@ ci-all: ci-install ci-quality ci-test ci-build ## CI: Run complete pipeline
 #  PHONY TARGETS
 # ═══════════════════════════════════════════════════════════════════════════
 
-.PHONY: install install-dev install-minimal
+.PHONY: install install-dev install-minimal update-deps
 .PHONY: test test-unit test-integration test-fast test-watch
 .PHONY: lint lint-fix format format-check type-check security quality quality-fix
 .PHONY: build build-check

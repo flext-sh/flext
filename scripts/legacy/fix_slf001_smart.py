@@ -35,7 +35,8 @@ class SmartSLF001Fixer:
                 "tests/",
                 "src/algar_oud_mig/",
             ],
-            check=False, capture_output=True,
+            check=False,
+            capture_output=True,
             text=True,
             cwd=self.project_root,
         )

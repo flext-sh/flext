@@ -51,7 +51,11 @@ class TestResult:
     """Test result container."""
 
     def __init__(
-        self, name: str, success: bool, duration: float, details: str = "",
+        self,
+        name: str,
+        success: bool,
+        duration: float,
+        details: str = "",
     ) -> None:
         self.name = name
         self.success = success
@@ -102,7 +106,8 @@ class ModernTestRunner:
 
             result = subprocess.run(
                 cmd,
-                check=False, cwd=PROJECT_ROOT,
+                check=False,
+                cwd=PROJECT_ROOT,
                 env=run_env,
                 capture_output=capture_output,
                 text=True,
@@ -324,7 +329,7 @@ class ModernTestRunner:
             try:
                 with open(coverage_file, encoding="utf-8") as f:
                     coverage_data = json.load(f)
-            except Exception as e:
+            except Exception:
                 pass
 
         report = {
@@ -332,16 +337,19 @@ class ModernTestRunner:
             "project": "algar-oud-mig",
             "python_version": subprocess.run(
                 [str(VENV_PYTHON), "--version"],
-                check=False, capture_output=True,
+                check=False,
+                capture_output=True,
                 text=True,
             ).stdout.strip(),
             "summary": {
                 "total_tests": total_tests,
                 "passed": passed_tests,
                 "failed": failed_tests,
-                "success_rate": f"{(passed_tests / total_tests) * 100:.1f}%"
-                if total_tests > 0
-                else "0%",
+                "success_rate": (
+                    f"{(passed_tests / total_tests) * 100:.1f}%"
+                    if total_tests > 0
+                    else "0%"
+                ),
                 "total_duration": f"{total_duration:.2f}s",
                 "env_file_available": self.env_available,
                 "strict_mode": self.strict,
@@ -454,11 +462,15 @@ def main() -> int:
     parser.add_argument("--quiet", action="store_true", help="Reduce output verbosity")
     parser.add_argument("--skip-e2e", action="store_true", help="Skip E2E tests")
     parser.add_argument(
-        "--skip-performance", action="store_true", help="Skip performance tests",
+        "--skip-performance",
+        action="store_true",
+        help="Skip performance tests",
     )
     parser.add_argument("--unit-only", action="store_true", help="Run only unit tests")
     parser.add_argument(
-        "--lint-only", action="store_true", help="Run only linting checks",
+        "--lint-only",
+        action="store_true",
+        help="Run only linting checks",
     )
 
     args = parser.parse_args()

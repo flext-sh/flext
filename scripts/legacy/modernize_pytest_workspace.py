@@ -176,11 +176,15 @@ def update_pytest_config(project_path: Path, project_types: list[str]) -> bool:
 
         # Configurações específicas para Django
         if "django" in project_types:
-            pytest_config["DJANGO_SETTINGS_MODULE"] = f'"{project_path.name.replace("-", "_")}.settings.test"'
+            pytest_config["DJANGO_SETTINGS_MODULE"] = (
+                f'"{project_path.name.replace("-", "_")}.settings.test"'
+            )
 
         # Atualizar coverage para o projeto específico
         coverage_config = template["tool"]["coverage"].copy()
-        coverage_config["html"]["title"] = f"{project_path.name.title()} Coverage Report"
+        coverage_config["html"]["title"] = (
+            f"{project_path.name.title()} Coverage Report"
+        )
 
         # Aplicar configurações
         if "tool" not in config:
@@ -226,13 +230,13 @@ def create_modern_conftest(project_path: Path, project_types: list[str]) -> bool
         if "singer" in project_types:
             content = content.replace(
                 "# SINGER SPECIFIC IMPORTS",
-                "from singer_sdk import Tap, Target\nfrom singer_sdk.testing import get_test_class"
+                "from singer_sdk import Tap, Target\nfrom singer_sdk.testing import get_test_class",
             )
 
         if "django" in project_types:
             content = content.replace(
                 "# DJANGO SPECIFIC IMPORTS",
-                "import django\nfrom django.test import TestCase, Client\nfrom django.conf import settings"
+                "import django\nfrom django.test import TestCase, Client\nfrom django.conf import settings",
             )
 
         conftest_path.write_text(content)
@@ -268,7 +272,8 @@ def ensure_test_structure(project_path: Path) -> bool:
     existing_tests = list(tests_dir.glob("test_*.py"))
     if not existing_tests:
         basic_test = tests_dir / "test_basic.py"
-        basic_test.write_text(f'''"""Basic tests for {project_path.name}."""
+        basic_test.write_text(
+            f'''"""Basic tests for {project_path.name}."""
 
 import pytest
 
@@ -279,7 +284,7 @@ def test_project_import():
         import {project_path.name.replace("-", "_")}  # noqa: F401
         assert True
     except ImportError:
-        pytest.skip(f"Module {project_path.name.replace('-', '_')} not available")
+        pytest.skip(f"Module {project_path.name.replace("-", "_")} not available")
 
 
 def test_version_available():
@@ -307,7 +312,8 @@ def test_integration_placeholder():
 def test_e2e_placeholder():
     """Placeholder end-to-end test."""
     pytest.skip("E2E tests not implemented yet")
-''')
+'''
+        )
         logger.info(f"📝 Teste básico criado: {project_path.name}")
 
     logger.info(f"📁 Estrutura de testes garantida: {project_path.name}")
@@ -452,7 +458,9 @@ def main() -> None:
     if failed_projects:
         logger.warning(f"Projetos que falharam: {', '.join(failed_projects)}")
 
-    success_rate = (successful_projects / total_projects * 100) if total_projects > 0 else 0
+    success_rate = (
+        (successful_projects / total_projects * 100) if total_projects > 0 else 0
+    )
     logger.info(f"Taxa de sucesso: {success_rate:.1f}%")
 
     if success_rate >= 90:
@@ -460,7 +468,9 @@ def main() -> None:
     elif success_rate >= 70:
         logger.info("✅ Modernização do workspace concluída com sucesso!")
     else:
-        logger.warning("⚠️ Modernização concluída com problemas. Revisar projetos falhados.")
+        logger.warning(
+            "⚠️ Modernização concluída com problemas. Revisar projetos falhados."
+        )
 
 
 if __name__ == "__main__":

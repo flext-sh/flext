@@ -21,10 +21,19 @@ class SyntaxErrorFixer:
 
         for py_file in self.project_root.rglob("*.py"):
             # Skip common directories that should be ignored
-            if any(part in str(py_file) for part in [
-                "node_modules", "__pycache__", ".venv", ".git",
-                "venv", "env", ".tox", ".pytest_cache"
-            ]):
+            if any(
+                part in str(py_file)
+                for part in [
+                    "node_modules",
+                    "__pycache__",
+                    ".venv",
+                    ".git",
+                    "venv",
+                    "env",
+                    ".tox",
+                    ".pytest_cache",
+                ]
+            ):
                 continue
             python_files.append(py_file)
 
@@ -97,7 +106,9 @@ class SyntaxErrorFixer:
 
         for line in lines:
             # Fix unexpected indentation at start of import blocks
-            if line.strip().startswith(("import ", "from ")) and line.startswith("    "):
+            if line.strip().startswith(("import ", "from ")) and line.startswith(
+                "    "
+            ):
                 # Remove extra indentation from imports at module level
                 fixed_lines.append(line.lstrip())
             else:

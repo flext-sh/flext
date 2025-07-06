@@ -34,7 +34,8 @@ class F821UndefinedNameFixer:
                 "tests/",
                 "src/algar_oud_mig/",
             ],
-            check=False, capture_output=True,
+            check=False,
+            capture_output=True,
             text=True,
             cwd=self.project_root,
         )
@@ -81,7 +82,9 @@ class F821UndefinedNameFixer:
             for line_num, var_name in errors:
                 if 1 <= line_num <= len(lines):
                     line = lines[line_num - 1]
-                    new_line = self._fix_undefined_name(line, var_name, content, file_path)
+                    new_line = self._fix_undefined_name(
+                        line, var_name, content, file_path
+                    )
                     if new_line != line:
                         lines[line_num - 1] = new_line
                         modified = True
@@ -94,7 +97,9 @@ class F821UndefinedNameFixer:
         except Exception as e:
             print(f"  ❌ Error fixing {file_path}: {e}")
 
-    def _fix_undefined_name(self, line: str, var_name: str, content: str, file_path: Path) -> str:
+    def _fix_undefined_name(
+        self, line: str, var_name: str, content: str, file_path: Path
+    ) -> str:
         """Fix undefined name in a specific line."""
 
         # Common test fixes
@@ -103,7 +108,9 @@ class F821UndefinedNameFixer:
             if var_name in {"config", "normalized", "result", "writer"}:
                 if "REMOVED private" in content:
                     # Comment out the line since the variable definition was removed
-                    return f"        # REMOVED due to private access fix: {line.strip()}"
+                    return (
+                        f"        # REMOVED due to private access fix: {line.strip()}"
+                    )
 
             # Common missing imports in tests
             if var_name == "pytest":

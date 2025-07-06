@@ -57,7 +57,7 @@ def get_version_from_version_file(project_path: Path, module_name: str) -> str |
                 # Extract version string
                 version_part = line.split("=", 1)[1].strip()
                 # Remove quotes
-                return version_part.strip('"\'')
+                return version_part.strip("\"'")
 
         return None
     except Exception as e:
@@ -72,7 +72,7 @@ def get_project_module_name(project_name: str) -> str:
         "algar-oud-mig": "algar_oud_mig",
         "gruponos-poc-oic-wms": "gruponos_poc_oic_wms",
         "gruponos-meltano-native": "gruponos_meltano_native",
-        "flext-meltano-bridge": "flext_meltano_bridge"
+        "flext-meltano-bridge": "flext_meltano_bridge",
     }
 
     if project_name in mapping:
@@ -104,7 +104,7 @@ def check_project_versions(project_name: str) -> tuple[bool, dict[str, str]]:
     status = {
         "pyproject_version": pyproject_version,
         "version_file_version": version_file_version,
-        "module_name": module_name
+        "module_name": module_name,
     }
 
     # Check consistency
@@ -116,13 +116,17 @@ def check_project_versions(project_name: str) -> tuple[bool, dict[str, str]]:
 
         # Version file should match expected version
         if version_file_version != EXPECTED_VERSION:
-            status["error"] = f"Version file has {version_file_version}, expected {EXPECTED_VERSION}"
+            status["error"] = (
+                f"Version file has {version_file_version}, expected {EXPECTED_VERSION}"
+            )
             return False, status
 
     elif pyproject_version is not None:
         # Static version should match expected
         if pyproject_version != EXPECTED_VERSION:
-            status["error"] = f"pyproject.toml has {pyproject_version}, expected {EXPECTED_VERSION}"
+            status["error"] = (
+                f"pyproject.toml has {pyproject_version}, expected {EXPECTED_VERSION}"
+            )
             return False, status
 
     else:
@@ -141,20 +145,33 @@ def main() -> int:
     # All projects to check
     projects = [
         # Core FLEXT projects
-        "flext-core", "flext-auth", "flext-api", "flext-grpc", "flext-web",
-        "flext-cli", "flext-plugin", "flext-observability", "flext-meltano",
-        "flext-ldap", "flext-db-oracle", "flext-quality",
-
+        "flext-core",
+        "flext-auth",
+        "flext-api",
+        "flext-grpc",
+        "flext-web",
+        "flext-cli",
+        "flext-plugin",
+        "flext-observability",
+        "flext-meltano",
+        "flext-ldap",
+        "flext-db-oracle",
+        "flext-quality",
         # Singer/Meltano projects
-        "flext-tap-ldap", "flext-tap-oracle-oic", "flext-tap-oracle-wms",
-        "flext-target-ldap", "flext-target-oracle", "flext-target-oracle-oic",
-        "flext-dbt-ldap", "flext-oracle-oic-ext",
-
+        "flext-tap-ldap",
+        "flext-tap-oracle-oic",
+        "flext-tap-oracle-wms",
+        "flext-target-ldap",
+        "flext-target-oracle",
+        "flext-target-oracle-oic",
+        "flext-dbt-ldap",
+        "flext-oracle-oic-ext",
         # Enterprise projects
-        "algar-oud-mig", "gruponos-poc-oic-wms", "gruponos-meltano-native",
-
+        "algar-oud-mig",
+        "gruponos-poc-oic-wms",
+        "gruponos-meltano-native",
         # Additional projects
-        "flext-meltano-bridge"
+        "flext-meltano-bridge",
     ]
 
     # Also check main workspace
@@ -175,19 +192,30 @@ def main() -> int:
             pyproject_version = get_version_from_pyproject(project_path)
             version_file_version = get_version_from_version_file(project_path, "flext")
 
-            if pyproject_version == "dynamic" and version_file_version == EXPECTED_VERSION:
+            if (
+                pyproject_version == "dynamic"
+                and version_file_version == EXPECTED_VERSION
+            ):
                 print(f"✅ {project_name}: {version_file_version} (dynamic)")
                 successful += 1
             else:
                 print(f"❌ {project_name}: Issue with versioning")
-                issues.append(f"{project_name}: pyproject={pyproject_version}, version_file={version_file_version}")
+                issues.append(
+                    f"{project_name}: pyproject={pyproject_version}, version_file={version_file_version}"
+                )
                 failed += 1
         else:
             success, status = check_project_versions(project)
 
             if success:
-                version = status.get("version_file_version", status.get("pyproject_version", "unknown"))
-                versioning_type = "dynamic" if status.get("pyproject_version") == "dynamic" else "static"
+                version = status.get(
+                    "version_file_version", status.get("pyproject_version", "unknown")
+                )
+                versioning_type = (
+                    "dynamic"
+                    if status.get("pyproject_version") == "dynamic"
+                    else "static"
+                )
                 print(f"✅ {project}: {version} ({versioning_type})")
                 successful += 1
             else:

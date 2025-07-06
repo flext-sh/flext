@@ -69,30 +69,17 @@ def convert_todo_to_issue_format(content: str) -> str:
     # Convert generic TODOs to specific issue categories
     todo_conversions = {
         # SOLID refactoring patterns
-        r"TODO.*SOLID refactoring.*Extract methods.*reduce complexity":
-            "REFACTOR(@algar-team): Extract methods to reduce complexity #complexity-reduction",
-
-        r"TODO.*SOLID refactoring.*Extract.*complexity":
-            "REFACTOR(@algar-team): Apply SOLID principles for complexity reduction #solid-compliance",
-
+        r"TODO.*SOLID refactoring.*Extract methods.*reduce complexity": "REFACTOR(@algar-team): Extract methods to reduce complexity #complexity-reduction",
+        r"TODO.*SOLID refactoring.*Extract.*complexity": "REFACTOR(@algar-team): Apply SOLID principles for complexity reduction #solid-compliance",
         # Architecture improvements
-        r"TODO.*refactor.*complexity":
-            "REFACTOR(@algar-team): Reduce method complexity #complexity-reduction",
-
-        r"TODO.*extract.*method":
-            "REFACTOR(@algar-team): Extract method for better separation of concerns #method-extraction",
-
+        r"TODO.*refactor.*complexity": "REFACTOR(@algar-team): Reduce method complexity #complexity-reduction",
+        r"TODO.*extract.*method": "REFACTOR(@algar-team): Extract method for better separation of concerns #method-extraction",
         # Performance improvements
-        r"TODO.*performance":
-            "OPTIMIZE(@algar-team): Performance optimization needed #performance",
-
+        r"TODO.*performance": "OPTIMIZE(@algar-team): Performance optimization needed #performance",
         # Type safety improvements
-        r"TODO.*typing.*Any":
-            "TYPING(@algar-team): Replace Any with specific types #type-safety",
-
+        r"TODO.*typing.*Any": "TYPING(@algar-team): Replace Any with specific types #type-safety",
         # Error handling improvements
-        r"TODO.*error.*handling":
-            "ENHANCE(@algar-team): Improve error handling #error-handling",
+        r"TODO.*error.*handling": "ENHANCE(@algar-team): Improve error handling #error-handling",
     }
 
     for pattern, replacement in todo_conversions.items():
@@ -110,21 +97,17 @@ def get_author_for_file(filename: str) -> str:
         "migration.py": "migration-team",
         "sync_engine.py": "sync-team",
         "rules_manager.py": "rules-team",
-
         # Processing modules
         "ldif_processor.py": "processing-team",
         "hierarchy_processor.py": "processing-team",
         "acl_processor.py": "acl-team",
         "schema_processor.py": "schema-team",
-
         # Migration specific
         "migration_acl_schema.py": "migration-team",
         "migration_processor.py": "migration-team",
-
         # CLI and interfaces
         "cli.py": "cli-team",
         "interfaces.py": "interface-team",
-
         # Testing
         "test_": "test-team",
         "conftest.py": "test-team",

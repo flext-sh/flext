@@ -36,12 +36,17 @@ class SLF001PrivateAccessFixer:
                 "tests/",
                 "src/algar_oud_mig/",
             ],
-            check=False, capture_output=True,
+            check=False,
+            capture_output=True,
             text=True,
             cwd=self.project_root,
         )
 
-        slf001_errors = [line for line in result.stdout.split("\n") if "SLF001" in line and ":" in line]
+        slf001_errors = [
+            line
+            for line in result.stdout.split("\n")
+            if "SLF001" in line and ":" in line
+        ]
 
         self.errors_found = len(slf001_errors)
         print(f"📊 Found {self.errors_found} SLF001 errors to fix")
@@ -49,15 +54,19 @@ class SLF001PrivateAccessFixer:
         # Common patterns to fix
         patterns = [
             # Debug logging access
-            (r"cli\._setup_debug_logging\(", r"# REMOVED private access: cli._setup_debug_logging("),
-
+            (
+                r"cli\._setup_debug_logging\(",
+                r"# REMOVED private access: cli._setup_debug_logging(",
+            ),
             # Test private access that should be removed
             (r"monitor\._operations", r"# REMOVED private access: monitor._operations"),
             (r"monitor\._metrics", r"# REMOVED private access: monitor._metrics"),
-
             # Private method calls that should be public
             (r"\._parse_ldif_content\(", r".parse_ldif_content("),
-            (r"\._filter_acl_entries_by_existing_targets\(", r".filter_acl_entries_by_existing_targets("),
+            (
+                r"\._filter_acl_entries_by_existing_targets\(",
+                r".filter_acl_entries_by_existing_targets(",
+            ),
             (r"\._normalize_entry\(", r".normalize_entry("),
             (r"\._validate_config\(", r".validate_config("),
             (r"\._setup_logging\(", r".setup_logging("),
