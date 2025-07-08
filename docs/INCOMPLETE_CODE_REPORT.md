@@ -2,7 +2,9 @@
 
 ## Summary
 
-After searching through all Python files in the three projects (tap-oracle-wms, target-oracle-wms, flext-oracle-wms), I found the following incomplete implementations:
+After searching through all Python files in the three projects (tap-oracle-wms,
+target-oracle-wms, flext-oracle-wms), I found the following incomplete
+implementations:
 
 ## 1. Mock/Dummy Implementations
 
