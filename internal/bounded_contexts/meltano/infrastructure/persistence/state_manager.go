@@ -40,14 +40,14 @@ type ExecutionRecord struct {
 
 // StateManager manages persistent state for Meltano operations
 type StateManager struct {
-	stateDir         string
-	executionsDir    string
-	mu               sync.RWMutex
-	logger           logging.Logger
-	maxExecutions    int
-	cleanupInterval  time.Duration
-	stopCleanup      chan struct{}
-	cleanupStopped   chan struct{}
+	stateDir        string
+	executionsDir   string
+	mu              sync.RWMutex
+	logger          logging.Logger
+	maxExecutions   int
+	cleanupInterval time.Duration
+	stopCleanup     chan struct{}
+	cleanupStopped  chan struct{}
 }
 
 // NewStateManager creates a new state manager
@@ -66,7 +66,7 @@ func NewStateManager(stateDir string, logger logging.Logger) (*StateManager, err
 	if err := os.MkdirAll(sm.stateDir, 0755); err != nil {
 		return nil, errors.Wrap(err, "failed to create state directory")
 	}
-	
+
 	if err := os.MkdirAll(sm.executionsDir, 0755); err != nil {
 		return nil, errors.Wrap(err, "failed to create executions directory")
 	}
@@ -172,7 +172,7 @@ func (sm *StateManager) StartExecution(ctx context.Context, projectName, pipelin
 	defer sm.mu.Unlock()
 
 	executionID := fmt.Sprintf("%s_%s_%d", projectName, pipeline, time.Now().UnixNano())
-	
+
 	record := &ExecutionRecord{
 		ID:          executionID,
 		ProjectName: projectName,
@@ -207,12 +207,12 @@ func (sm *StateManager) CompleteExecution(ctx context.Context, executionID strin
 
 	now := time.Now()
 	duration := now.Sub(record.StartedAt)
-	
+
 	record.Status = status
 	record.CompletedAt = &now
 	record.Duration = &duration
 	record.Error = errorMsg
-	
+
 	if metrics != nil {
 		for k, v := range metrics {
 			record.Metrics[k] = v
@@ -242,7 +242,7 @@ func (sm *StateManager) AddExecutionLog(ctx context.Context, executionID string,
 	}
 
 	record.Logs = append(record.Logs, fmt.Sprintf("[%s] %s", time.Now().Format("15:04:05"), logEntry))
-	
+
 	// Keep only last 1000 log entries
 	if len(record.Logs) > 1000 {
 		record.Logs = record.Logs[len(record.Logs)-1000:]
@@ -271,25 +271,25 @@ func (sm *StateManager) ListExecutions(ctx context.Context, projectName string, 
 
 	executions := sm.loadMatchingExecutions(files, projectName)
 	sm.sortExecutionsByStartTime(executions)
-	
+
 	return sm.applyLimitToExecutions(executions, limit), nil
 }
 
 // loadMatchingExecutions loads execution records that match the project filter
 func (sm *StateManager) loadMatchingExecutions(files []os.DirEntry, projectName string) []*ExecutionRecord {
 	var executions []*ExecutionRecord
-	
+
 	for _, file := range files {
 		if !sm.isExecutionFile(file) {
 			continue
 		}
-		
+
 		record := sm.loadExecutionRecordSafely(file.Name())
 		if record != nil && sm.matchesProjectFilter(record, projectName) {
 			executions = append(executions, record)
 		}
 	}
-	
+
 	return executions
 }
 
@@ -390,31 +390,31 @@ func (sm *StateManager) getExecutionDirectoryStats() (*DirectoryStats, error) {
 // countExecutionsByStatus counts executions by their status
 func (sm *StateManager) countExecutionsByStatus(files []os.DirEntry) map[string]int {
 	statusCounts := make(map[string]int)
-	
+
 	for _, file := range files {
 		if !sm.isExecutionFile(file) {
 			continue
 		}
-		
+
 		record := sm.loadExecutionRecordSafely(file.Name())
 		if record != nil {
 			statusCounts[record.Status]++
 		}
 	}
-	
+
 	return statusCounts
 }
 
 // buildStatsResponse creates the final statistics response
 func (sm *StateManager) buildStatsResponse(stateStats, executionStats *DirectoryStats) map[string]interface{} {
 	return map[string]interface{}{
-		"state_records":      stateStats.FileCount,
-		"execution_records":  executionStats.FileCount,
+		"state_records":       stateStats.FileCount,
+		"execution_records":   executionStats.FileCount,
 		"execution_by_status": executionStats.StatusCounts,
-		"state_dir":          sm.stateDir,
-		"executions_dir":     sm.executionsDir,
-		"cleanup_interval":   sm.cleanupInterval.String(),
-		"max_executions":     sm.maxExecutions,
+		"state_dir":           sm.stateDir,
+		"executions_dir":      sm.executionsDir,
+		"cleanup_interval":    sm.cleanupInterval.String(),
+		"max_executions":      sm.maxExecutions,
 	}
 }
 
@@ -536,12 +536,12 @@ type fileInfo struct {
 // loadFileInfoWithTimestamps loads execution records with their timestamps
 func (sm *StateManager) loadFileInfoWithTimestamps(files []os.DirEntry) []fileInfo {
 	var fileInfos []fileInfo
-	
+
 	for _, file := range files {
 		if !sm.isExecutionFile(file) {
 			continue
 		}
-		
+
 		record, err := sm.loadExecutionRecord(file.Name()[:len(file.Name())-5])
 		if err == nil {
 			fileInfos = append(fileInfos, fileInfo{
@@ -550,7 +550,7 @@ func (sm *StateManager) loadFileInfoWithTimestamps(files []os.DirEntry) []fileIn
 			})
 		}
 	}
-	
+
 	return fileInfos
 }
 
@@ -568,7 +568,7 @@ func (sm *StateManager) sortFileInfosByStartTime(fileInfos []fileInfo) {
 // removeOldestFiles removes the oldest execution files to maintain the limit
 func (sm *StateManager) removeOldestFiles(fileInfos []fileInfo) {
 	toRemove := len(fileInfos) - sm.maxExecutions
-	
+
 	for i := 0; i < toRemove; i++ {
 		filePath := filepath.Join(sm.executionsDir, fileInfos[i].name)
 		if err := os.Remove(filePath); err != nil {
@@ -586,9 +586,9 @@ func (sm *StateManager) removeOldestFiles(fileInfos []fileInfo) {
 // Close shuts down the state manager
 func (sm *StateManager) Close() error {
 	sm.logger.Info("Shutting down state manager")
-	
+
 	close(sm.stopCleanup)
-	
+
 	// Wait for cleanup routine to stop
 	select {
 	case <-sm.cleanupStopped:
@@ -596,6 +596,6 @@ func (sm *StateManager) Close() error {
 	case <-time.After(5 * time.Second):
 		sm.logger.Warn("State manager shutdown timeout")
 	}
-	
+
 	return nil
 }

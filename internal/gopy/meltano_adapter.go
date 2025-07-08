@@ -241,13 +241,13 @@ func (m *MeltanoAdapter) formatResult(success bool, data interface{}, error stri
 		Data:    data,
 		Error:   error,
 	}
-	
+
 	jsonBytes, err := json.Marshal(result)
 	if err != nil {
 		m.logger.Error("Failed to marshal result", logging.F("error", err.Error()))
 		return `{"success": false, "error": "Failed to format result"}`
 	}
-	
+
 	return string(jsonBytes)
 }
 

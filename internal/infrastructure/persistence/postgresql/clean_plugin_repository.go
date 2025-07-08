@@ -37,7 +37,7 @@ func (r *CleanPluginRepository) Save(ctx context.Context, plugin *entities.Plugi
 	if exists {
 		// Update existing plugin
 		_, err = r.db.ExecContext(ctx, `
-			UPDATE clean_plugins 
+			UPDATE clean_plugins
 			SET name = $2, type = $3, version = $4, status = $5, capabilities = $6,
 			    configuration = $7, metadata = $8, is_active = $9, updated_at = $10
 			WHERE id = $1`,
@@ -182,7 +182,7 @@ func (r *CleanPluginRepository) List(ctx context.Context, criteria pluginUC.List
 	query := `
 		SELECT id, name, type, version, status, capabilities, configuration, metadata, is_active, created_at, updated_at
 		FROM clean_plugins ` + whereClause
-	
+
 	rows, err := r.db.QueryContext(ctx, query, args...)
 	if err != nil {
 		return nil, 0, fmt.Errorf("failed to query plugins: %w", err)

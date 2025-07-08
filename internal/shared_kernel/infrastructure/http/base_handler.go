@@ -7,9 +7,9 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/google/uuid"
 
 	"github.com/flext-sh/flext/internal/infrastructure/logging"
 	"github.com/flext-sh/flext/internal/shared_kernel/application"
@@ -240,12 +240,12 @@ func (h *BaseHandler) parseUUID(c echo.Context, param string) (uuid.UUID, error)
 	if idStr == "" {
 		return uuid.Nil, fmt.Errorf("missing %s parameter", param)
 	}
-	
+
 	id, err := uuid.Parse(idStr)
 	if err != nil {
 		return uuid.Nil, fmt.Errorf("invalid %s: %w", param, err)
 	}
-	
+
 	return id, nil
 }
 

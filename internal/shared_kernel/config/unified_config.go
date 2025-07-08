@@ -14,42 +14,42 @@ import (
 type UnifiedConfig struct {
 	Environment string
 	Debug       bool
-	
+
 	// Application metadata
 	AppName    string
 	AppVersion string
 	BuildTime  string
 	CommitHash string
-	
+
 	// Server configuration
 	Host         string
 	Port         int
 	ReadTimeout  time.Duration
 	WriteTimeout time.Duration
 	IdleTimeout  time.Duration
-	
+
 	// Database configuration
 	Database DatabaseConfig
-	
+
 	// Cache configuration
 	Cache CacheConfig
-	
+
 	// Authentication configuration
 	Auth AuthConfig
-	
+
 	// Observability configuration
 	Observability ObservabilityConfig
-	
+
 	// Feature flags
 	Features FeatureFlags
-	
+
 	// Bounded context configurations
 	Pipeline PipelineConfig
 	Plugin   PluginConfig
 	Singer   SingerConfig
 	Meltano  MeltanoConfig
 	DBT      DBTConfig
-	
+
 	// External services
 	External ExternalServicesConfig
 }
@@ -104,49 +104,49 @@ type OAuth2Config struct {
 
 // ObservabilityConfig contains monitoring and logging settings
 type ObservabilityConfig struct {
-	LogLevel       string
-	LogFormat      string // json, text
-	EnableMetrics  bool
-	EnableTracing  bool
-	MetricsPort    int
-	TracingURL     string
-	SentryDSN      string
+	LogLevel        string
+	LogFormat       string // json, text
+	EnableMetrics   bool
+	EnableTracing   bool
+	MetricsPort     int
+	TracingURL      string
+	SentryDSN       string
 	EnableProfiling bool
 }
 
 // FeatureFlags contains feature toggle settings
 type FeatureFlags struct {
-	DatabaseEnabled         bool
-	WebSocketEnabled        bool
-	AuthenticationEnabled   bool
-	MetricsEnabled         bool
-	TracingEnabled         bool
-	CacheEnabled           bool
+	DatabaseEnabled          bool
+	WebSocketEnabled         bool
+	AuthenticationEnabled    bool
+	MetricsEnabled           bool
+	TracingEnabled           bool
+	CacheEnabled             bool
 	CleanArchitectureEnabled bool
-	AdvancedLoggingEnabled  bool
+	AdvancedLoggingEnabled   bool
 }
 
 // PipelineConfig contains pipeline-specific settings
 type PipelineConfig struct {
-	DefaultTimeout    time.Duration
-	MaxConcurrency    int
-	RetryAttempts     int
-	RetryDelay        time.Duration
-	EnableValidation  bool
-	EnableAudit       bool
-	WorkingDirectory  string
-	ArtifactsPath     string
+	DefaultTimeout   time.Duration
+	MaxConcurrency   int
+	RetryAttempts    int
+	RetryDelay       time.Duration
+	EnableValidation bool
+	EnableAudit      bool
+	WorkingDirectory string
+	ArtifactsPath    string
 }
 
 // PluginConfig contains plugin-specific settings
 type PluginConfig struct {
-	PluginsDirectory  string
-	AllowedTypes      []string
-	EnableSandbox     bool
-	PluginTimeout     time.Duration
-	MaxMemoryUsage    int64
-	EnableAutoUpdate  bool
-	RegistryURL       string
+	PluginsDirectory string
+	AllowedTypes     []string
+	EnableSandbox    bool
+	PluginTimeout    time.Duration
+	MaxMemoryUsage   int64
+	EnableAutoUpdate bool
+	RegistryURL      string
 }
 
 // SingerConfig contains Singer protocol settings
@@ -161,13 +161,13 @@ type SingerConfig struct {
 
 // MeltanoConfig contains Meltano-specific settings
 type MeltanoConfig struct {
-	ProjectPath      string
-	PythonPath       string
-	VenvPath         string
-	ConfigPath       string
-	StateBackend     string
-	EnableLogging    bool
-	LogLevel         string
+	ProjectPath   string
+	PythonPath    string
+	VenvPath      string
+	ConfigPath    string
+	StateBackend  string
+	EnableLogging bool
+	LogLevel      string
 }
 
 // DBTConfig contains dbt-specific settings
@@ -203,12 +203,12 @@ type LDAPConfig struct {
 
 // OracleConfig contains Oracle database settings
 type OracleConfig struct {
-	Host         string
-	Port         int
-	ServiceName  string
-	Username     string
-	Password     string
-	Charset      string
+	Host          string
+	Port          int
+	ServiceName   string
+	Username      string
+	Password      string
+	Charset       string
 	EnableLogging bool
 }
 
@@ -226,47 +226,47 @@ func NewUnifiedConfig() (*UnifiedConfig, error) {
 	config := &UnifiedConfig{
 		Environment: getEnvOrDefault("ENVIRONMENT", "development"),
 		Debug:       getBoolEnvOrDefault("DEBUG", false),
-		
+
 		AppName:    getEnvOrDefault("APP_NAME", "flext"),
 		AppVersion: getEnvOrDefault("APP_VERSION", "2.0.0"),
 		BuildTime:  getEnvOrDefault("BUILD_TIME", time.Now().Format(time.RFC3339)),
 		CommitHash: getEnvOrDefault("COMMIT_HASH", "unknown"),
-		
+
 		Host:         getEnvOrDefault("HOST", "0.0.0.0"),
 		Port:         getIntEnvOrDefault("PORT", 8080),
 		ReadTimeout:  getDurationEnvOrDefault("READ_TIMEOUT", 30*time.Second),
 		WriteTimeout: getDurationEnvOrDefault("WRITE_TIMEOUT", 30*time.Second),
 		IdleTimeout:  getDurationEnvOrDefault("IDLE_TIMEOUT", 120*time.Second),
 	}
-	
+
 	if err := config.loadDatabaseConfig(); err != nil {
 		return nil, fmt.Errorf("failed to load database config: %w", err)
 	}
-	
+
 	if err := config.loadCacheConfig(); err != nil {
 		return nil, fmt.Errorf("failed to load cache config: %w", err)
 	}
-	
+
 	if err := config.loadAuthConfig(); err != nil {
 		return nil, fmt.Errorf("failed to load auth config: %w", err)
 	}
-	
+
 	if err := config.loadObservabilityConfig(); err != nil {
 		return nil, fmt.Errorf("failed to load observability config: %w", err)
 	}
-	
+
 	if err := config.loadFeatureFlags(); err != nil {
 		return nil, fmt.Errorf("failed to load feature flags: %w", err)
 	}
-	
+
 	if err := config.loadBoundedContextConfigs(); err != nil {
 		return nil, fmt.Errorf("failed to load bounded context configs: %w", err)
 	}
-	
+
 	if err := config.loadExternalServicesConfig(); err != nil {
 		return nil, fmt.Errorf("failed to load external services config: %w", err)
 	}
-	
+
 	return config, nil
 }
 
@@ -340,9 +340,9 @@ func (c *UnifiedConfig) loadFeatureFlags() error {
 		DatabaseEnabled:          getBoolEnvOrDefault("FEATURE_DATABASE", true),
 		WebSocketEnabled:         getBoolEnvOrDefault("FEATURE_WEBSOCKET", false),
 		AuthenticationEnabled:    getBoolEnvOrDefault("FEATURE_AUTH", true),
-		MetricsEnabled:          getBoolEnvOrDefault("FEATURE_METRICS", true),
-		TracingEnabled:          getBoolEnvOrDefault("FEATURE_TRACING", false),
-		CacheEnabled:            getBoolEnvOrDefault("FEATURE_CACHE", true),
+		MetricsEnabled:           getBoolEnvOrDefault("FEATURE_METRICS", true),
+		TracingEnabled:           getBoolEnvOrDefault("FEATURE_TRACING", false),
+		CacheEnabled:             getBoolEnvOrDefault("FEATURE_CACHE", true),
 		CleanArchitectureEnabled: getBoolEnvOrDefault("FEATURE_CLEAN_ARCH", true),
 		AdvancedLoggingEnabled:   getBoolEnvOrDefault("FEATURE_ADVANCED_LOGGING", true),
 	}
@@ -360,7 +360,7 @@ func (c *UnifiedConfig) loadBoundedContextConfigs() error {
 		WorkingDirectory: getEnvOrDefault("PIPELINE_WORKING_DIR", "/tmp/flext-pipelines"),
 		ArtifactsPath:    getEnvOrDefault("PIPELINE_ARTIFACTS_PATH", "/var/lib/flext/artifacts"),
 	}
-	
+
 	c.Plugin = PluginConfig{
 		PluginsDirectory: getEnvOrDefault("PLUGINS_DIRECTORY", "/var/lib/flext/plugins"),
 		AllowedTypes:     getStringSliceEnv("PLUGIN_ALLOWED_TYPES", []string{"tap", "target", "transformer"}),
@@ -370,7 +370,7 @@ func (c *UnifiedConfig) loadBoundedContextConfigs() error {
 		EnableAutoUpdate: getBoolEnvOrDefault("PLUGIN_ENABLE_AUTO_UPDATE", false),
 		RegistryURL:      getEnvOrDefault("PLUGIN_REGISTRY_URL", "https://hub.meltano.com"),
 	}
-	
+
 	c.Singer = SingerConfig{
 		WorkingDirectory: getEnvOrDefault("SINGER_WORKING_DIR", "/tmp/flext-singer"),
 		DefaultTimeout:   getDurationEnvOrDefault("SINGER_DEFAULT_TIMEOUT", 30*time.Minute),
@@ -379,7 +379,7 @@ func (c *UnifiedConfig) loadBoundedContextConfigs() error {
 		CatalogPath:      getEnvOrDefault("SINGER_CATALOG_PATH", "/var/lib/flext/singer/catalog.json"),
 		EnableValidation: getBoolEnvOrDefault("SINGER_ENABLE_VALIDATION", true),
 	}
-	
+
 	c.Meltano = MeltanoConfig{
 		ProjectPath:   getEnvOrDefault("MELTANO_PROJECT_PATH", "."),
 		PythonPath:    getEnvOrDefault("MELTANO_PYTHON_PATH", "/home/marlonsc/flext/.venv/bin/python3"),
@@ -389,7 +389,7 @@ func (c *UnifiedConfig) loadBoundedContextConfigs() error {
 		EnableLogging: getBoolEnvOrDefault("MELTANO_ENABLE_LOGGING", true),
 		LogLevel:      getEnvOrDefault("MELTANO_LOG_LEVEL", "info"),
 	}
-	
+
 	c.DBT = DBTConfig{
 		ProjectPath:   getEnvOrDefault("DBT_PROJECT_PATH", "./dbt_project"),
 		ProfilesDir:   getEnvOrDefault("DBT_PROFILES_DIR", "~/.dbt"),
@@ -400,7 +400,7 @@ func (c *UnifiedConfig) loadBoundedContextConfigs() error {
 		EnableDocs:    getBoolEnvOrDefault("DBT_ENABLE_DOCS", true),
 		DocsPort:      getIntEnvOrDefault("DBT_DOCS_PORT", 8081),
 	}
-	
+
 	return nil
 }
 
@@ -427,7 +427,7 @@ func (c *UnifiedConfig) loadExternalServicesConfig() error {
 		},
 		APIs: make(map[string]APIConfig),
 	}
-	
+
 	// Load API configurations dynamically based on environment variables
 	for _, env := range os.Environ() {
 		if strings.HasPrefix(env, "API_") && strings.Contains(env, "_BASE_URL=") {
@@ -450,7 +450,7 @@ func (c *UnifiedConfig) loadExternalServicesConfig() error {
 			}
 		}
 	}
-	
+
 	return nil
 }
 
@@ -504,19 +504,19 @@ func (c *UnifiedConfig) Validate() error {
 	if c.AppName == "" {
 		return fmt.Errorf("app name cannot be empty")
 	}
-	
+
 	if c.Port <= 0 || c.Port > 65535 {
 		return fmt.Errorf("invalid port: %d", c.Port)
 	}
-	
+
 	if c.Features.DatabaseEnabled && c.Database.Driver == "" {
 		return fmt.Errorf("database driver cannot be empty when database is enabled")
 	}
-	
+
 	if c.Features.AuthenticationEnabled && c.Auth.JWTSecret == "" {
 		return fmt.Errorf("JWT secret cannot be empty when authentication is enabled")
 	}
-	
+
 	return nil
 }
 

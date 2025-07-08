@@ -23,25 +23,25 @@ type WMSPaginator struct {
 
 // PaginationConfig configures pagination behavior
 type PaginationConfig struct {
-	Mode                string            `json:"mode"` // "cursor", "offset"
-	PageSize            int               `json:"page_size"`
-	MaxPages            *int              `json:"max_pages,omitempty"`
-	OrderBy             []OrderByClause   `json:"order_by"`
-	
+	Mode     string          `json:"mode"` // "cursor", "offset"
+	PageSize int             `json:"page_size"`
+	MaxPages *int            `json:"max_pages,omitempty"`
+	OrderBy  []OrderByClause `json:"order_by"`
+
 	// Cursor-based pagination
-	CursorField         string            `json:"cursor_field,omitempty"`
-	CursorDirection     string            `json:"cursor_direction"` // "asc", "desc"
-	
+	CursorField     string `json:"cursor_field,omitempty"`
+	CursorDirection string `json:"cursor_direction"` // "asc", "desc"
+
 	// Offset-based pagination
-	OffsetField         string            `json:"offset_field,omitempty"`
-	
+	OffsetField string `json:"offset_field,omitempty"`
+
 	// Performance optimizations
-	PreloadNextPage     bool              `json:"preload_next_page"`
-	ConcurrentPages     int               `json:"concurrent_pages"`
-	RequestTimeout      time.Duration     `json:"request_timeout"`
-	
+	PreloadNextPage bool          `json:"preload_next_page"`
+	ConcurrentPages int           `json:"concurrent_pages"`
+	RequestTimeout  time.Duration `json:"request_timeout"`
+
 	// Custom parameters
-	CustomParams        map[string]string `json:"custom_params"`
+	CustomParams map[string]string `json:"custom_params"`
 }
 
 // OrderByClause defines ordering for pagination
@@ -52,73 +52,73 @@ type OrderByClause struct {
 
 // PaginationState tracks the current pagination state
 type PaginationState struct {
-	CurrentPage       int               `json:"current_page"`
-	TotalPages        *int              `json:"total_pages,omitempty"`
-	TotalRecords      *int64            `json:"total_records,omitempty"`
-	PageSize          int               `json:"page_size"`
-	HasNextPage       bool              `json:"has_next_page"`
-	HasPreviousPage   bool              `json:"has_previous_page"`
-	
+	CurrentPage     int    `json:"current_page"`
+	TotalPages      *int   `json:"total_pages,omitempty"`
+	TotalRecords    *int64 `json:"total_records,omitempty"`
+	PageSize        int    `json:"page_size"`
+	HasNextPage     bool   `json:"has_next_page"`
+	HasPreviousPage bool   `json:"has_previous_page"`
+
 	// Cursor-based state
-	NextCursor        string            `json:"next_cursor,omitempty"`
-	PreviousCursor    string            `json:"previous_cursor,omitempty"`
-	CurrentCursor     string            `json:"current_cursor,omitempty"`
-	
+	NextCursor     string `json:"next_cursor,omitempty"`
+	PreviousCursor string `json:"previous_cursor,omitempty"`
+	CurrentCursor  string `json:"current_cursor,omitempty"`
+
 	// Offset-based state
-	CurrentOffset     int64             `json:"current_offset"`
-	
+	CurrentOffset int64 `json:"current_offset"`
+
 	// Navigation URLs
-	NextPageURL       string            `json:"next_page_url,omitempty"`
-	PreviousPageURL   string            `json:"previous_page_url,omitempty"`
-	FirstPageURL      string            `json:"first_page_url,omitempty"`
-	LastPageURL       string            `json:"last_page_url,omitempty"`
-	
+	NextPageURL     string `json:"next_page_url,omitempty"`
+	PreviousPageURL string `json:"previous_page_url,omitempty"`
+	FirstPageURL    string `json:"first_page_url,omitempty"`
+	LastPageURL     string `json:"last_page_url,omitempty"`
+
 	// Metadata
-	StartTime         time.Time         `json:"start_time"`
-	LastRequestTime   time.Time         `json:"last_request_time"`
-	TotalRequests     int               `json:"total_requests"`
-	TotalRecordsRead  int64             `json:"total_records_read"`
-	
+	StartTime        time.Time `json:"start_time"`
+	LastRequestTime  time.Time `json:"last_request_time"`
+	TotalRequests    int       `json:"total_requests"`
+	TotalRecordsRead int64     `json:"total_records_read"`
+
 	// Performance metrics
 	AverageResponseTime time.Duration   `json:"average_response_time"`
-	ResponseTimes     []time.Duration   `json:"response_times"`
+	ResponseTimes       []time.Duration `json:"response_times"`
 }
 
 // PageResponse represents a response from a paginated API call
 type PageResponse struct {
 	// Data
-	Records           []map[string]interface{} `json:"records"`
-	RecordCount       int                      `json:"record_count"`
-	
+	Records     []map[string]interface{} `json:"records"`
+	RecordCount int                      `json:"record_count"`
+
 	// Pagination info
-	PaginationInfo    PaginationInfo           `json:"pagination_info"`
-	
+	PaginationInfo PaginationInfo `json:"pagination_info"`
+
 	// Metadata
-	RequestTime       time.Duration            `json:"request_time"`
-	ResponseSize      int64                    `json:"response_size"`
-	HTTPStatus        int                      `json:"http_status"`
-	
+	RequestTime  time.Duration `json:"request_time"`
+	ResponseSize int64         `json:"response_size"`
+	HTTPStatus   int           `json:"http_status"`
+
 	// Raw response for debugging
-	RawResponse       map[string]interface{}   `json:"raw_response,omitempty"`
+	RawResponse map[string]interface{} `json:"raw_response,omitempty"`
 }
 
 // PaginationInfo contains pagination metadata from the API response
 type PaginationInfo struct {
-	CurrentPage       int    `json:"current_page"`
-	TotalPages        *int   `json:"total_pages,omitempty"`
-	TotalRecords      *int64 `json:"total_records,omitempty"`
-	PageSize          int    `json:"page_size"`
-	HasNextPage       bool   `json:"has_next_page"`
-	HasPreviousPage   bool   `json:"has_previous_page"`
-	
-	NextPageURL       string `json:"next_page_url,omitempty"`
-	PreviousPageURL   string `json:"previous_page_url,omitempty"`
-	FirstPageURL      string `json:"first_page_url,omitempty"`
-	LastPageURL       string `json:"last_page_url,omitempty"`
-	
-	NextCursor        string `json:"next_cursor,omitempty"`
-	PreviousCursor    string `json:"previous_cursor,omitempty"`
-	CurrentCursor     string `json:"current_cursor,omitempty"`
+	CurrentPage     int    `json:"current_page"`
+	TotalPages      *int   `json:"total_pages,omitempty"`
+	TotalRecords    *int64 `json:"total_records,omitempty"`
+	PageSize        int    `json:"page_size"`
+	HasNextPage     bool   `json:"has_next_page"`
+	HasPreviousPage bool   `json:"has_previous_page"`
+
+	NextPageURL     string `json:"next_page_url,omitempty"`
+	PreviousPageURL string `json:"previous_page_url,omitempty"`
+	FirstPageURL    string `json:"first_page_url,omitempty"`
+	LastPageURL     string `json:"last_page_url,omitempty"`
+
+	NextCursor     string `json:"next_cursor,omitempty"`
+	PreviousCursor string `json:"previous_cursor,omitempty"`
+	CurrentCursor  string `json:"current_cursor,omitempty"`
 }
 
 // NewWMSPaginator creates a new WMS paginator
@@ -144,10 +144,10 @@ func NewWMSPaginator(authenticator *auth.WMSAuthenticator, config PaginationConf
 		authenticator: authenticator,
 		config:        config,
 		state: PaginationState{
-			CurrentPage:     1,
-			PageSize:        config.PageSize,
-			StartTime:       time.Now(),
-			ResponseTimes:   make([]time.Duration, 0),
+			CurrentPage:   1,
+			PageSize:      config.PageSize,
+			StartTime:     time.Now(),
+			ResponseTimes: make([]time.Duration, 0),
 		},
 	}
 }
@@ -156,10 +156,10 @@ func NewWMSPaginator(authenticator *auth.WMSAuthenticator, config PaginationConf
 func (p *WMSPaginator) GetFirstPage(ctx context.Context, baseURL string, filters map[string]interface{}) (*PageResponse, error) {
 	// Reset state for new pagination
 	p.state = PaginationState{
-		CurrentPage:     1,
-		PageSize:        p.config.PageSize,
-		StartTime:       time.Now(),
-		ResponseTimes:   make([]time.Duration, 0),
+		CurrentPage:   1,
+		PageSize:      p.config.PageSize,
+		StartTime:     time.Now(),
+		ResponseTimes: make([]time.Duration, 0),
 	}
 
 	return p.getCurrentPage(ctx, baseURL, filters)
@@ -281,7 +281,7 @@ func (p *WMSPaginator) getNextPageCursor(ctx context.Context) (*PageResponse, er
 func (p *WMSPaginator) getNextPageOffset(ctx context.Context) (*PageResponse, error) {
 	// Calculate next offset
 	nextOffset := p.state.CurrentOffset + int64(p.state.PageSize)
-	
+
 	// Build URL with new offset
 	baseURL := p.extractBaseURL(p.state.NextPageURL)
 	if baseURL == "" {
@@ -316,7 +316,7 @@ func (p *WMSPaginator) getPreviousPageOffset(ctx context.Context) (*PageResponse
 	if prevOffset < 0 {
 		prevOffset = 0
 	}
-	
+
 	// Build URL with new offset
 	baseURL := p.extractBaseURL(p.state.PreviousPageURL)
 	if baseURL == "" {
@@ -389,16 +389,16 @@ func (p *WMSPaginator) buildRequestURL(baseURL string, filters map[string]interf
 	case "cursor":
 		q.Set("page_mode", "sequenced") // Oracle WMS cursor mode
 		q.Set("page_size", strconv.Itoa(p.config.PageSize))
-		
+
 		if p.state.CurrentCursor != "" {
 			q.Set("cursor", p.state.CurrentCursor)
 		}
-		
+
 	case "offset":
 		q.Set("page_mode", "paged") // Oracle WMS offset mode
 		q.Set("page_size", strconv.Itoa(p.config.PageSize))
 		q.Set("page", strconv.Itoa(p.state.CurrentPage))
-		
+
 		if p.state.CurrentOffset > 0 {
 			q.Set("offset", strconv.FormatInt(p.state.CurrentOffset, 10))
 		}
@@ -519,16 +519,16 @@ func (p *WMSPaginator) parsePaginationInfo(source map[string]interface{}, info *
 		info.NextPageURL = nextPage
 		info.HasNextPage = nextPage != ""
 	}
-	
+
 	if prevPage, ok := source["previous_page"].(string); ok {
 		info.PreviousPageURL = prevPage
 		info.HasPreviousPage = prevPage != ""
 	}
-	
+
 	if firstPage, ok := source["first_page"].(string); ok {
 		info.FirstPageURL = firstPage
 	}
-	
+
 	if lastPage, ok := source["last_page"].(string); ok {
 		info.LastPageURL = lastPage
 	}
@@ -537,11 +537,11 @@ func (p *WMSPaginator) parsePaginationInfo(source map[string]interface{}, info *
 	if nextCursor, ok := source["next_cursor"].(string); ok {
 		info.NextCursor = nextCursor
 	}
-	
+
 	if prevCursor, ok := source["previous_cursor"].(string); ok {
 		info.PreviousCursor = prevCursor
 	}
-	
+
 	if currentCursor, ok := source["current_cursor"].(string); ok {
 		info.CurrentCursor = currentCursor
 	}
@@ -553,30 +553,30 @@ func (p *WMSPaginator) updatePaginationState(info PaginationInfo) {
 	p.state.TotalRecords = info.TotalRecords
 	p.state.HasNextPage = info.HasNextPage
 	p.state.HasPreviousPage = info.HasPreviousPage
-	
+
 	p.state.NextPageURL = info.NextPageURL
 	p.state.PreviousPageURL = info.PreviousPageURL
 	p.state.FirstPageURL = info.FirstPageURL
 	p.state.LastPageURL = info.LastPageURL
-	
+
 	p.state.NextCursor = info.NextCursor
 	p.state.PreviousCursor = info.PreviousCursor
 	p.state.CurrentCursor = info.CurrentCursor
-	
+
 	p.state.LastRequestTime = time.Now()
 	p.state.TotalRequests++
 }
 
 func (p *WMSPaginator) updateResponseMetrics(responseTime time.Duration) {
 	p.state.ResponseTimes = append(p.state.ResponseTimes, responseTime)
-	
+
 	// Calculate average response time
 	var total time.Duration
 	for _, rt := range p.state.ResponseTimes {
 		total += rt
 	}
 	p.state.AverageResponseTime = total / time.Duration(len(p.state.ResponseTimes))
-	
+
 	// Keep only last 100 response times to avoid memory growth
 	if len(p.state.ResponseTimes) > 100 {
 		p.state.ResponseTimes = p.state.ResponseTimes[len(p.state.ResponseTimes)-100:]
@@ -588,10 +588,10 @@ func (p *WMSPaginator) extractBaseURL(fullURL string) string {
 	if err != nil {
 		return ""
 	}
-	
+
 	// Remove query parameters to get base URL
 	u.RawQuery = ""
 	u.Fragment = ""
-	
+
 	return u.String()
 }

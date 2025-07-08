@@ -23,7 +23,7 @@ func NewInMemoryAdvancedDatabase(logger logging.Logger) (*AdvancedDatabase, erro
 		sqlxDB: nil, // Will be nil for in-memory fallback
 		logger: logger,
 	}
-	
+
 	logger.Info("In-memory database fallback created successfully")
 	return advancedDB, nil
 }
@@ -32,7 +32,7 @@ func NewInMemoryAdvancedDatabase(logger logging.Logger) (*AdvancedDatabase, erro
 func (db *InMemoryAdvancedDatabase) Store(key string, value interface{}) error {
 	db.mu.Lock()
 	defer db.mu.Unlock()
-	
+
 	db.data[key] = value
 	return nil
 }
@@ -41,12 +41,12 @@ func (db *InMemoryAdvancedDatabase) Store(key string, value interface{}) error {
 func (db *InMemoryAdvancedDatabase) Retrieve(key string) (interface{}, error) {
 	db.mu.RLock()
 	defer db.mu.RUnlock()
-	
+
 	value, exists := db.data[key]
 	if !exists {
 		return nil, fmt.Errorf("key not found: %s", key)
 	}
-	
+
 	return value, nil
 }
 
@@ -54,7 +54,7 @@ func (db *InMemoryAdvancedDatabase) Retrieve(key string) (interface{}, error) {
 func (db *InMemoryAdvancedDatabase) Delete(key string) error {
 	db.mu.Lock()
 	defer db.mu.Unlock()
-	
+
 	delete(db.data, key)
 	return nil
 }
@@ -69,7 +69,7 @@ func (db *InMemoryAdvancedDatabase) HealthCheck(ctx context.Context) error {
 func (db *InMemoryAdvancedDatabase) GetStatistics(ctx context.Context) (map[string]interface{}, error) {
 	db.mu.RLock()
 	defer db.mu.RUnlock()
-	
+
 	return map[string]interface{}{
 		"type":        "in_memory",
 		"total_items": len(db.data),
@@ -81,7 +81,7 @@ func (db *InMemoryAdvancedDatabase) GetStatistics(ctx context.Context) (map[stri
 func (db *InMemoryAdvancedDatabase) Close() error {
 	db.mu.Lock()
 	defer db.mu.Unlock()
-	
+
 	db.data = make(map[string]interface{})
 	db.logger.Info("In-memory database closed")
 	return nil

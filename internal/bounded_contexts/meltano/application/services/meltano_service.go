@@ -58,22 +58,22 @@ type MeltanoService struct {
 func NewMeltanoService(pythonPath, projectRoot string) *MeltanoService {
 	// Create logger
 	logger := logging.GetLogger().With(logging.F("service", "meltano"))
-	
+
 	// Create default configuration
 	cfg := config.DefaultMeltanoConfig()
 	cfg.PythonPath = pythonPath
 	cfg.ProjectRoot = projectRoot
-	
+
 	// Create process pool
 	processPool := NewProcessPool(cfg, logger)
-	
+
 	// Create state manager
 	stateManager, err := persistence.NewStateManager(cfg.StateDir, logger)
 	if err != nil {
 		logger.Warn("Failed to create state manager", logging.F("error", err.Error()))
 		stateManager = nil
 	}
-	
+
 	service := &MeltanoService{
 		config:         cfg,
 		logger:         logger,
@@ -81,11 +81,11 @@ func NewMeltanoService(pythonPath, projectRoot string) *MeltanoService {
 		stateManager:   stateManager,
 		loadedProjects: make(map[string]string),
 	}
-	
-	logger.Info("Meltano service created", 
+
+	logger.Info("Meltano service created",
 		logging.F("python_path", pythonPath),
 		logging.F("project_root", projectRoot))
-	
+
 	return service
 }
 
@@ -96,17 +96,17 @@ func NewMeltanoServiceWithConfig(logger logging.Logger) (*MeltanoService, error)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to auto-detect Meltano configuration")
 	}
-	
+
 	// Create process pool
 	processPool := NewProcessPool(cfg, logger)
-	
+
 	// Create state manager
 	stateManager, stateErr := persistence.NewStateManager(cfg.StateDir, logger)
 	if stateErr != nil {
 		logger.Warn("Failed to create state manager", logging.F("error", stateErr.Error()))
 		stateManager = nil
 	}
-	
+
 	service := &MeltanoService{
 		config:         cfg,
 		logger:         logger.With(logging.F("service", "meltano")),
@@ -114,12 +114,12 @@ func NewMeltanoServiceWithConfig(logger logging.Logger) (*MeltanoService, error)
 		stateManager:   stateManager,
 		loadedProjects: make(map[string]string),
 	}
-	
+
 	logger.Info("Meltano service created with auto-detected configuration",
 		logging.F("python_path", cfg.PythonPath),
 		logging.F("meltano_path", cfg.MeltanoPath),
 		logging.F("project_root", cfg.ProjectRoot))
-	
+
 	return service, nil
 }
 
@@ -127,28 +127,28 @@ func NewMeltanoServiceWithConfig(logger logging.Logger) (*MeltanoService, error)
 func (s *MeltanoService) IsAvailable(ctx context.Context) (bool, error) {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
-	
+
 	// Create timeout context
 	timeoutCtx, cancel := context.WithTimeout(ctx, s.config.BridgeTimeout)
 	defer cancel()
-	
-	script := fmt.Sprintf("import %s; print(%s.is_available())", 
+
+	script := fmt.Sprintf("import %s; print(%s.is_available())",
 		s.config.BridgeModule, s.config.BridgeModule)
-	
+
 	result, err := s.executePythonScript(timeoutCtx, script)
 	if err != nil {
-		s.logger.Error("Failed to check Meltano availability", 
+		s.logger.Error("Failed to check Meltano availability",
 			logging.F("error", err.Error()))
 		return false, errors.Wrap(err, "failed to check Meltano availability")
 	}
-	
+
 	// Check if output contains "True" (handles both "True\n" and "True")
 	output := strings.TrimSpace(result.Output)
 	available := output == "True"
-	s.logger.Debug("Meltano availability check completed", 
+	s.logger.Debug("Meltano availability check completed",
 		logging.F("available", available),
 		logging.F("output", result.Output))
-	
+
 	return available, nil
 }
 
@@ -167,19 +167,19 @@ print(result)
 `, projectName, projectDir)
 
 	result, err := s.executePythonScript(ctx, script)
-	
+
 	// If project creation was successful, register it
 	if err == nil && result != nil && result.Success {
 		s.mu.Lock()
 		fullPath := filepath.Join(s.config.ProjectRoot, projectDir)
 		s.loadedProjects[projectName] = fullPath
 		s.mu.Unlock()
-		
-		s.logger.Info("Project registered in service", 
+
+		s.logger.Info("Project registered in service",
 			logging.F("project", projectName),
 			logging.F("path", fullPath))
 	}
-	
+
 	return result, err
 }
 
@@ -218,12 +218,12 @@ func (s *MeltanoService) RunPipeline(ctx context.Context, extractor, loader, tra
 
 	pipelineName := s.buildPipelineName(extractor, loader, transformer)
 	executionID := s.startExecutionTracking(ctx, defaultProject, pipelineName)
-	
+
 	script := s.buildPipelineScript(extractor, loader, transformer)
 	result, err := s.executeWithRetry(ctx, script, "RunPipeline")
-	
+
 	s.completeExecutionTracking(ctx, executionID, result, err)
-	
+
 	return result, err
 }
 
@@ -239,7 +239,7 @@ func (s *MeltanoService) ensureProjectAvailable(ctx context.Context) (string, er
 		}
 	}
 	s.mu.RUnlock()
-	
+
 	if projectCount == 0 {
 		s.logger.Warn("No Meltano projects loaded, attempting to create default project")
 		_, err := s.InitProject(ctx, "default", ".")
@@ -248,7 +248,7 @@ func (s *MeltanoService) ensureProjectAvailable(ctx context.Context) (string, er
 		}
 		defaultProject = "default"
 	}
-	
+
 	return defaultProject, nil
 }
 
@@ -275,13 +275,13 @@ func (s *MeltanoService) startExecutionTracking(ctx context.Context, project, pi
 	if s.stateManager == nil {
 		return ""
 	}
-	
+
 	executionID, err := s.stateManager.StartExecution(ctx, project, pipelineName)
 	if err != nil {
 		s.logger.Warn("Failed to start execution tracking", logging.F("error", err.Error()))
 		return ""
 	}
-	
+
 	return executionID
 }
 
@@ -290,10 +290,10 @@ func (s *MeltanoService) completeExecutionTracking(ctx context.Context, executio
 	if s.stateManager == nil || executionID == "" {
 		return
 	}
-	
+
 	status, errorMsg := s.determineExecutionStatus(result, err)
 	metrics := s.buildExecutionMetrics(result)
-	
+
 	if completeErr := s.stateManager.CompleteExecution(ctx, executionID, status, errorMsg, metrics); completeErr != nil {
 		s.logger.Warn("Failed to complete execution tracking", logging.F("error", completeErr.Error()))
 	}
@@ -365,7 +365,7 @@ print(result)
 func (s *MeltanoService) ExecuteMeltanoDirect(ctx context.Context, args ...string) (*MeltanoResult, error) {
 	cmd := exec.CommandContext(ctx, s.config.MeltanoPath, args...)
 	cmd.Dir = s.config.ProjectRoot
-	
+
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		return &MeltanoResult{
@@ -374,7 +374,7 @@ func (s *MeltanoService) ExecuteMeltanoDirect(ctx context.Context, args ...strin
 			Output:  string(output),
 		}, nil
 	}
-	
+
 	return &MeltanoResult{
 		Success: true,
 		Output:  string(output),
@@ -410,20 +410,20 @@ print(result)
 // ListProjects lists available Meltano projects
 func (s *MeltanoService) ListProjects(ctx context.Context, rootDir string) ([]string, error) {
 	projects := []string{}
-	
+
 	// Look for meltano.yml files in subdirectories
 	pattern := filepath.Join(rootDir, "*/meltano.yml")
 	matches, err := filepath.Glob(pattern)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to search for Meltano projects")
 	}
-	
+
 	for _, match := range matches {
 		projectDir := filepath.Dir(match)
 		projectName := filepath.Base(projectDir)
 		projects = append(projects, projectName)
 	}
-	
+
 	return projects, nil
 }
 
@@ -431,7 +431,7 @@ func (s *MeltanoService) ListProjects(ctx context.Context, rootDir string) ([]st
 func (s *MeltanoService) executePythonScript(ctx context.Context, script string) (*MeltanoResult, error) {
 	cmd := exec.CommandContext(ctx, s.config.PythonPath, "-c", script)
 	cmd.Dir = s.config.ProjectRoot
-	
+
 	output, err := cmd.Output()
 	if err != nil {
 		return &MeltanoResult{
@@ -439,7 +439,7 @@ func (s *MeltanoService) executePythonScript(ctx context.Context, script string)
 			Error:   err.Error(),
 		}, nil
 	}
-	
+
 	var result MeltanoResult
 	if err := json.Unmarshal(output, &result); err != nil {
 		// If JSON parsing fails, treat as raw output
@@ -448,7 +448,7 @@ func (s *MeltanoService) executePythonScript(ctx context.Context, script string)
 			Output:  string(output),
 		}, nil
 	}
-	
+
 	return &result, nil
 }
 
@@ -457,11 +457,11 @@ func (s *MeltanoService) Validate() error {
 	if s.config.PythonPath == "" {
 		return errors.New("Python path is required")
 	}
-	
+
 	if s.config.ProjectRoot == "" {
 		return errors.New("project root is required")
 	}
-	
+
 	return nil
 }
 
@@ -526,7 +526,7 @@ func (s *MeltanoService) prepareExecution(ctx context.Context, script string) (*
 	processID := fmt.Sprintf("meltano_%d", time.Now().UnixNano())
 	s.trackActiveProcess(processID, cmd)
 
-	s.logger.Debug("Executing Python script", 
+	s.logger.Debug("Executing Python script",
 		logging.F("process_id", processID),
 		logging.F("timeout", s.config.BridgeTimeout))
 
@@ -575,7 +575,7 @@ func (s *MeltanoService) runExecution(ctx context.Context, exec *ExecutionContex
 // handleExecutionError processes command execution errors
 func (s *MeltanoService) handleExecutionError(ctx context.Context, processID string, err error) (*MeltanoResult, error) {
 	if ctx.Err() == context.DeadlineExceeded {
-		s.logger.Error("Python script execution timed out", 
+		s.logger.Error("Python script execution timed out",
 			logging.F("process_id", processID),
 			logging.F("timeout", s.config.BridgeTimeout))
 		return &MeltanoResult{
@@ -583,11 +583,11 @@ func (s *MeltanoService) handleExecutionError(ctx context.Context, processID str
 			Error:   fmt.Sprintf("execution timed out after %v", s.config.BridgeTimeout),
 		}, nil
 	}
-	
-	s.logger.Error("Python script execution failed", 
+
+	s.logger.Error("Python script execution failed",
 		logging.F("process_id", processID),
 		logging.F("error", err.Error()))
-	
+
 	return &MeltanoResult{
 		Success: false,
 		Error:   err.Error(),
@@ -598,17 +598,17 @@ func (s *MeltanoService) handleExecutionError(ctx context.Context, processID str
 func (s *MeltanoService) parseExecutionResult(processID string, output []byte) (*MeltanoResult, error) {
 	var result MeltanoResult
 	if err := json.Unmarshal(output, &result); err != nil {
-		s.logger.Debug("Failed to parse JSON output, treating as raw output", 
+		s.logger.Debug("Failed to parse JSON output, treating as raw output",
 			logging.F("process_id", processID),
 			logging.F("output", string(output)))
-		
+
 		return &MeltanoResult{
 			Success: true,
 			Output:  string(output),
 		}, nil
 	}
 
-	s.logger.Debug("Python script execution completed", 
+	s.logger.Debug("Python script execution completed",
 		logging.F("process_id", processID),
 		logging.F("success", result.Success))
 
@@ -618,8 +618,8 @@ func (s *MeltanoService) parseExecutionResult(processID string, output []byte) (
 // executeWithRetry executes a Python script with retry logic for transient failures
 func (s *MeltanoService) executeWithRetry(ctx context.Context, script string, operation string) (*MeltanoResult, error) {
 	retryContext := &RetryContext{
-		Script:    script,
-		Operation: operation,
+		Script:     script,
+		Operation:  operation,
 		MaxRetries: s.config.MaxRetries,
 	}
 
@@ -628,7 +628,7 @@ func (s *MeltanoService) executeWithRetry(ctx context.Context, script string, op
 		if result != nil {
 			return result, err
 		}
-		
+
 		// Continue to next attempt if not final
 		if attempt < s.config.MaxRetries {
 			if waitErr := s.waitBeforeRetry(ctx, operation, attempt); waitErr != nil {
@@ -636,7 +636,7 @@ func (s *MeltanoService) executeWithRetry(ctx context.Context, script string, op
 			}
 		}
 	}
-	
+
 	return nil, errors.Errorf("operation %s failed after %d attempts", operation, s.config.MaxRetries)
 }
 
@@ -651,18 +651,18 @@ type RetryContext struct {
 // processRetryAttempt processes a single retry attempt
 func (s *MeltanoService) processRetryAttempt(ctx context.Context, retryCtx *RetryContext, attempt int) (*MeltanoResult, error) {
 	result, err := s.executeAttempt(ctx, retryCtx.Script, retryCtx.Operation, attempt)
-	
+
 	if err == nil && result != nil && result.Success {
 		s.logSuccessfulOperation(retryCtx.Operation, attempt)
 		return result, nil
 	}
-	
+
 	retryCtx.LastErr = s.handleAttemptFailure(result, err, retryCtx.Operation, attempt)
-	
+
 	if attempt == retryCtx.MaxRetries {
 		return s.handleFinalFailure(result, err, retryCtx.Operation, attempt, retryCtx.LastErr)
 	}
-	
+
 	return nil, nil // Continue retry
 }
 
@@ -670,18 +670,18 @@ func (s *MeltanoService) processRetryAttempt(ctx context.Context, retryCtx *Retr
 func (s *MeltanoService) executeAttempt(ctx context.Context, script string, operation string, attempt int) (*MeltanoResult, error) {
 	attemptCtx, cancel := context.WithTimeout(ctx, s.config.BridgeTimeout)
 	defer cancel()
-	
-	s.logger.Debug("Attempting operation", 
+
+	s.logger.Debug("Attempting operation",
 		logging.F("operation", operation),
 		logging.F("attempt", attempt),
 		logging.F("max_retries", s.config.MaxRetries))
-	
+
 	return s.executeWithTimeout(attemptCtx, script)
 }
 
 // logSuccessfulOperation logs when an operation completes successfully
 func (s *MeltanoService) logSuccessfulOperation(operation string, attempt int) {
-	s.logger.Debug("Operation completed successfully", 
+	s.logger.Debug("Operation completed successfully",
 		logging.F("operation", operation),
 		logging.F("attempt", attempt))
 }
@@ -700,31 +700,31 @@ func (s *MeltanoService) handleAttemptFailure(result *MeltanoResult, err error, 
 // handleFinalFailure processes the final failure after all retries are exhausted
 func (s *MeltanoService) handleFinalFailure(result *MeltanoResult, err error, operation string, attempt int, lastErr error) (*MeltanoResult, error) {
 	if err != nil {
-		s.logger.Error("Operation failed after all retries", 
+		s.logger.Error("Operation failed after all retries",
 			logging.F("operation", operation),
 			logging.F("attempts", attempt),
 			logging.F("error", err.Error()))
 		return nil, errors.Wrapf(err, "operation %s failed after %d attempts", operation, attempt)
 	}
-	
+
 	if result != nil && !result.Success {
-		s.logger.Error("Operation failed after all retries", 
+		s.logger.Error("Operation failed after all retries",
 			logging.F("operation", operation),
 			logging.F("attempts", attempt),
 			logging.F("error", result.Error))
 		return result, nil
 	}
-	
+
 	return nil, lastErr
 }
 
 // waitBeforeRetry handles the delay between retry attempts
 func (s *MeltanoService) waitBeforeRetry(ctx context.Context, operation string, attempt int) error {
-	s.logger.Debug("Retrying operation after delay", 
+	s.logger.Debug("Retrying operation after delay",
 		logging.F("operation", operation),
 		logging.F("attempt", attempt),
 		logging.F("delay", s.config.RetryDelay))
-	
+
 	select {
 	case <-time.After(s.config.RetryDelay):
 		return nil
@@ -737,30 +737,30 @@ func (s *MeltanoService) waitBeforeRetry(ctx context.Context, operation string, 
 func (s *MeltanoService) GetProcessPoolStats() map[string]interface{} {
 	s.processPool.mu.RLock()
 	defer s.processPool.mu.RUnlock()
-	
+
 	return map[string]interface{}{
-		"active_processes":    len(s.processPool.active),
-		"max_concurrent":      s.config.MaxConcurrent,
-		"available_slots":     s.config.MaxConcurrent - len(s.processPool.active),
-		"bridge_timeout":      s.config.BridgeTimeout.String(),
-		"max_retries":         s.config.MaxRetries,
-		"retry_delay":         s.config.RetryDelay.String(),
+		"active_processes": len(s.processPool.active),
+		"max_concurrent":   s.config.MaxConcurrent,
+		"available_slots":  s.config.MaxConcurrent - len(s.processPool.active),
+		"bridge_timeout":   s.config.BridgeTimeout.String(),
+		"max_retries":      s.config.MaxRetries,
+		"retry_delay":      s.config.RetryDelay.String(),
 	}
 }
 
 // Shutdown gracefully shuts down the service and terminates active processes
 func (s *MeltanoService) Shutdown(ctx context.Context) error {
 	s.logger.Info("Shutting down Meltano service")
-	
+
 	activeProcesses := s.getActiveProcesses()
 	if len(activeProcesses) == 0 {
 		s.logger.Info("Meltano service shutdown completed")
 		return nil
 	}
-	
+
 	s.terminateActiveProcesses(activeProcesses)
 	s.waitForProcessTermination(ctx, activeProcesses)
-	
+
 	s.logger.Info("Meltano service shutdown completed")
 	return nil
 }
@@ -769,7 +769,7 @@ func (s *MeltanoService) Shutdown(ctx context.Context) error {
 func (s *MeltanoService) getActiveProcesses() []*exec.Cmd {
 	s.processPool.mu.Lock()
 	defer s.processPool.mu.Unlock()
-	
+
 	activeProcesses := make([]*exec.Cmd, 0, len(s.processPool.active))
 	for _, cmd := range s.processPool.active {
 		activeProcesses = append(activeProcesses, cmd)
@@ -779,13 +779,13 @@ func (s *MeltanoService) getActiveProcesses() []*exec.Cmd {
 
 // terminateActiveProcesses sends kill signals to all active processes
 func (s *MeltanoService) terminateActiveProcesses(activeProcesses []*exec.Cmd) {
-	s.logger.Info("Terminating active processes", 
+	s.logger.Info("Terminating active processes",
 		logging.F("count", len(activeProcesses)))
-	
+
 	for _, cmd := range activeProcesses {
 		if cmd.Process != nil {
 			if err := cmd.Process.Kill(); err != nil {
-				s.logger.Warn("Failed to kill process", 
+				s.logger.Warn("Failed to kill process",
 					logging.F("error", err.Error()))
 			}
 		}
@@ -801,7 +801,7 @@ func (s *MeltanoService) waitForProcessTermination(ctx context.Context, activePr
 		}
 		close(done)
 	}()
-	
+
 	select {
 	case <-done:
 		s.logger.Info("All processes terminated successfully")
@@ -860,12 +860,12 @@ func (s *MeltanoService) GetStateStats(ctx context.Context) (map[string]interfac
 			"message": "State manager not available",
 		}, nil
 	}
-	
+
 	stats, err := s.stateManager.GetStats(ctx)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	stats["enabled"] = true
 	return stats, nil
 }

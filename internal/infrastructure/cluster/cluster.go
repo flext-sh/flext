@@ -29,10 +29,10 @@ type NodeInfo struct {
 type NodeStatus string
 
 const (
-	NodeStatusOnline  NodeStatus = "online"
-	NodeStatusOffline NodeStatus = "offline"
+	NodeStatusOnline   NodeStatus = "online"
+	NodeStatusOffline  NodeStatus = "offline"
 	NodeStatusDraining NodeStatus = "draining"
-	NodeStatusBusy    NodeStatus = "busy"
+	NodeStatusBusy     NodeStatus = "busy"
 )
 
 // ClusterManager manages cluster operations
@@ -51,7 +51,7 @@ type ClusterManager struct {
 // NewClusterManager creates a new cluster manager
 func NewClusterManager(nodeID string, redisClient *redis.Client, logger logging.Logger) *ClusterManager {
 	ctx, cancel := context.WithCancel(context.Background())
-	
+
 	return &ClusterManager{
 		nodeID:      nodeID,
 		redisClient: redisClient,
@@ -95,7 +95,7 @@ func (cm *ClusterManager) Stop() error {
 	if cm.healthTicker != nil {
 		cm.healthTicker.Stop()
 	}
-	
+
 	cm.cancel()
 
 	// Unregister this node
@@ -149,7 +149,7 @@ func (cm *ClusterManager) healthCheckLoop() {
 // updateNodeHealth updates this node's health status
 func (cm *ClusterManager) updateNodeHealth() {
 	cm.nodeInfo.LastSeen = time.Now()
-	
+
 	// Update load factor based on active jobs
 	if cm.nodeInfo.MaxJobs > 0 {
 		cm.nodeInfo.LoadFactor = float64(cm.nodeInfo.ActiveJobs) / float64(cm.nodeInfo.MaxJobs)
@@ -276,7 +276,7 @@ func (cm *ClusterManager) GetAvailableNodes() []*NodeInfo {
 // FindBestNode finds the best node for a given job based on capabilities and load
 func (cm *ClusterManager) FindBestNode(requiredCapabilities []string) *NodeInfo {
 	available := cm.GetAvailableNodes()
-	
+
 	var bestNode *NodeInfo
 	bestScore := -1.0
 
@@ -335,7 +335,7 @@ func (cm *ClusterManager) GetNodeInfo() *NodeInfo {
 func (cm *ClusterManager) IsLeader() bool {
 	nodes := cm.GetNodes()
 	var sortedNodes []*NodeInfo
-	
+
 	for _, node := range nodes {
 		if node.Status == NodeStatusOnline {
 			sortedNodes = append(sortedNodes, node)

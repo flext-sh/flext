@@ -12,9 +12,9 @@ import (
 
 // PluginController handles HTTP requests for plugin operations
 type PluginController struct {
-	registerUseCase  *plugin.RegisterPluginUseCase
-	activateUseCase  *plugin.ActivatePluginUseCase
-	presenter        PluginPresenter
+	registerUseCase *plugin.RegisterPluginUseCase
+	activateUseCase *plugin.ActivatePluginUseCase
+	presenter       PluginPresenter
 }
 
 // NewPluginController creates a new plugin controller

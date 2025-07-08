@@ -362,13 +362,13 @@ func (dc *DBTCommands) createDBTProfileCommand() *cobra.Command {
 			fmt.Printf("Creating dbt profile: %s\n", profileName)
 
 			config := map[string]interface{}{
-				"type": "postgres",
-				"host": "localhost",
-				"port": 5432,
-				"user": "postgres",
+				"type":     "postgres",
+				"host":     "localhost",
+				"port":     5432,
+				"user":     "postgres",
 				"password": "password",
-				"dbname": "postgres",
-				"schema": "public",
+				"dbname":   "postgres",
+				"schema":   "public",
 			}
 
 			err := dc.dbtManager.CreateProfile(profileName, config)

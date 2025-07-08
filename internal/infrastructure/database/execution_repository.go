@@ -54,8 +54,8 @@ func (r *ExecutionRepository) Save(ctx context.Context, execution *Execution) er
 	if exists {
 		// Update existing execution
 		query := `
-			UPDATE executions 
-			SET status = ?, started_at = ?, completed_at = ?, duration_ms = ?, 
+			UPDATE executions
+			SET status = ?, started_at = ?, completed_at = ?, duration_ms = ?,
 			    success = ?, error_message = ?, logs = ?, metrics = ?
 			WHERE id = ?
 		`
@@ -66,7 +66,7 @@ func (r *ExecutionRepository) Save(ctx context.Context, execution *Execution) er
 	} else {
 		// Insert new execution
 		query := `
-			INSERT INTO executions (id, pipeline_id, status, started_at, completed_at, 
+			INSERT INTO executions (id, pipeline_id, status, started_at, completed_at,
 			                       duration_ms, success, error_message, logs, metrics)
 			VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 		`
@@ -93,7 +93,7 @@ func (r *ExecutionRepository) Save(ctx context.Context, execution *Execution) er
 // FindByID retrieves an execution by ID
 func (r *ExecutionRepository) FindByID(ctx context.Context, id uuid.UUID) (*Execution, error) {
 	query := `
-		SELECT id, pipeline_id, status, started_at, completed_at, duration_ms, 
+		SELECT id, pipeline_id, status, started_at, completed_at, duration_ms,
 		       success, error_message, logs, metrics, created_at
 		FROM executions WHERE id = ?
 	`
@@ -139,9 +139,9 @@ func (r *ExecutionRepository) FindByID(ctx context.Context, id uuid.UUID) (*Exec
 // FindByPipelineID retrieves executions by pipeline ID
 func (r *ExecutionRepository) FindByPipelineID(ctx context.Context, pipelineID uuid.UUID, limit, offset int) ([]*Execution, error) {
 	query := `
-		SELECT id, pipeline_id, status, started_at, completed_at, duration_ms, 
+		SELECT id, pipeline_id, status, started_at, completed_at, duration_ms,
 		       success, error_message, logs, metrics, created_at
-		FROM executions 
+		FROM executions
 		WHERE pipeline_id = ?
 		ORDER BY created_at DESC
 		LIMIT ? OFFSET ?
@@ -189,9 +189,9 @@ func (r *ExecutionRepository) FindByPipelineID(ctx context.Context, pipelineID u
 // FindAll retrieves all executions with pagination
 func (r *ExecutionRepository) FindAll(ctx context.Context, limit, offset int) ([]*Execution, error) {
 	query := `
-		SELECT id, pipeline_id, status, started_at, completed_at, duration_ms, 
+		SELECT id, pipeline_id, status, started_at, completed_at, duration_ms,
 		       success, error_message, logs, metrics, created_at
-		FROM executions 
+		FROM executions
 		ORDER BY created_at DESC
 		LIMIT ? OFFSET ?
 	`
@@ -238,9 +238,9 @@ func (r *ExecutionRepository) FindAll(ctx context.Context, limit, offset int) ([
 // FindByStatus retrieves executions by status
 func (r *ExecutionRepository) FindByStatus(ctx context.Context, status string, limit, offset int) ([]*Execution, error) {
 	query := `
-		SELECT id, pipeline_id, status, started_at, completed_at, duration_ms, 
+		SELECT id, pipeline_id, status, started_at, completed_at, duration_ms,
 		       success, error_message, logs, metrics, created_at
-		FROM executions 
+		FROM executions
 		WHERE status = ?
 		ORDER BY created_at DESC
 		LIMIT ? OFFSET ?
@@ -315,8 +315,8 @@ func (r *ExecutionRepository) Count(ctx context.Context) (int, error) {
 // CountByPipelineID returns the number of executions for a pipeline
 func (r *ExecutionRepository) CountByPipelineID(ctx context.Context, pipelineID uuid.UUID) (int, error) {
 	var count int
-	err := r.db.QueryRowContext(ctx, 
-		"SELECT COUNT(*) FROM executions WHERE pipeline_id = ?", 
+	err := r.db.QueryRowContext(ctx,
+		"SELECT COUNT(*) FROM executions WHERE pipeline_id = ?",
 		pipelineID.String()).Scan(&count)
 	return count, err
 }
@@ -349,8 +349,8 @@ func (r *ExecutionRepository) GetExecutionStats(ctx context.Context) (map[string
 
 	// Status distribution
 	statusQuery := `
-		SELECT status, COUNT(*) 
-		FROM executions 
+		SELECT status, COUNT(*)
+		FROM executions
 		GROUP BY status
 	`
 	rows, err := r.db.QueryContext(ctx, statusQuery)
@@ -372,7 +372,7 @@ func (r *ExecutionRepository) GetExecutionStats(ctx context.Context) (map[string
 
 	// Average duration
 	var avgDuration *float64
-	err = r.db.QueryRowContext(ctx, 
+	err = r.db.QueryRowContext(ctx,
 		"SELECT AVG(duration_ms) FROM executions WHERE duration_ms IS NOT NULL").Scan(&avgDuration)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get average duration: %w", err)

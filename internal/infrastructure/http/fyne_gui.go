@@ -21,7 +21,7 @@ func StartFyneGUI() {
 		func() int { return 3 },
 		func() fyne.CanvasObject {
 			return container.NewBorder(nil, nil,
-				widget.NewLabel("Pipeline"), 
+				widget.NewLabel("Pipeline"),
 				widget.NewButton("▶️", nil),
 				widget.NewLabel("Status"),
 			)
@@ -35,7 +35,7 @@ func StartFyneGUI() {
 	logsText := widget.NewRichTextFromMarkdown(`
 ## 📋 Recent Logs
 - ✅ Server started
-- ✅ Database connected  
+- ✅ Database connected
 - ⚠️ High memory usage
 - ✅ Pipeline executed
 `)

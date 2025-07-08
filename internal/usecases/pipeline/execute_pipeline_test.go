@@ -52,7 +52,7 @@ func TestExecutePipelineUseCase_Execute_Success(t *testing.T) {
 	// Mock events that will be published in the async goroutine - make them optional
 	mockEvents.On("Publish", mock.Anything, mock.AnythingOfType("pipeline.PipelineExecutionCompletedEvent")).Return(nil).Maybe()
 	mockEvents.On("Publish", mock.Anything, mock.AnythingOfType("pipeline.StepExecutionCompletedEvent")).Return(nil).Maybe()
-	
+
 	// Mock the async executor call (it will be called in a goroutine)
 	// Removed mockExecutor.On calls since executor is not used
 

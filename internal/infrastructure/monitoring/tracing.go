@@ -35,20 +35,20 @@ type Trace struct {
 
 // Span represents a span within a trace
 type Span struct {
-	ID          string                 `json:"id"`
-	TraceID     string                 `json:"trace_id"`
-	ParentID    *string                `json:"parent_id,omitempty"`
-	Name        string                 `json:"name"`
-	Operation   string                 `json:"operation"`
-	StartTime   time.Time              `json:"start_time"`
-	EndTime     *time.Time             `json:"end_time,omitempty"`
-	Duration    *time.Duration         `json:"duration,omitempty"`
-	Status      SpanStatus             `json:"status"`
-	Tags        map[string]string      `json:"tags"`
-	Logs        []SpanLog              `json:"logs"`
-	Component   string                 `json:"component"`
-	Service     string                 `json:"service"`
-	Metadata    map[string]interface{} `json:"metadata"`
+	ID        string                 `json:"id"`
+	TraceID   string                 `json:"trace_id"`
+	ParentID  *string                `json:"parent_id,omitempty"`
+	Name      string                 `json:"name"`
+	Operation string                 `json:"operation"`
+	StartTime time.Time              `json:"start_time"`
+	EndTime   *time.Time             `json:"end_time,omitempty"`
+	Duration  *time.Duration         `json:"duration,omitempty"`
+	Status    SpanStatus             `json:"status"`
+	Tags      map[string]string      `json:"tags"`
+	Logs      []SpanLog              `json:"logs"`
+	Component string                 `json:"component"`
+	Service   string                 `json:"service"`
+	Metadata  map[string]interface{} `json:"metadata"`
 }
 
 // TraceAnnotation represents a trace annotation
@@ -99,7 +99,7 @@ func NewTraceManager(logger logging.Logger) *TraceManager {
 // StartTrace starts a new trace
 func (tm *TraceManager) StartTrace(ctx context.Context, name string) (*Trace, context.Context) {
 	traceID := uuid.New().String()
-	
+
 	trace := &Trace{
 		ID:          traceID,
 		Name:        name,
@@ -198,7 +198,7 @@ func (tm *TraceManager) StartSpan(ctx context.Context, name, operation, componen
 
 	tm.mu.Lock()
 	tm.spans[spanID] = span
-	
+
 	// Add span to trace
 	if trace, exists := tm.traces[traceCtx.TraceID]; exists {
 		trace.Spans = append(trace.Spans, span)
@@ -446,10 +446,10 @@ func (tm *TraceManager) TraceMiddleware(component string) func(next func(ctx con
 		return func(ctx context.Context) error {
 			// Start span
 			span, ctx := tm.StartSpan(ctx, "middleware", "execute", component)
-			
+
 			// Execute next function
 			err := next(ctx)
-			
+
 			// Finish span
 			status := SpanStatusCompleted
 			if err != nil {
@@ -459,7 +459,7 @@ func (tm *TraceManager) TraceMiddleware(component string) func(next func(ctx con
 				})
 			}
 			tm.FinishSpan(span.ID, status)
-			
+
 			return err
 		}
 	}

@@ -12,59 +12,59 @@ import (
 
 // QualityCheck represents a quality check result
 type QualityCheck struct {
-	ID          uuid.UUID              `json:"id"`
-	Name        string                 `json:"name"`
-	Type        string                 `json:"type"`
-	Status      string                 `json:"status"`
-	Score       float64                `json:"score"`
-	MaxScore    float64                `json:"max_score"`
-	Details     map[string]interface{} `json:"details"`
-	Issues      []QualityIssue         `json:"issues"`
-	Timestamp   time.Time              `json:"timestamp"`
-	Duration    time.Duration          `json:"duration"`
-	ResourceID  string                 `json:"resource_id"`
-	ResourceType string                `json:"resource_type"`
+	ID           uuid.UUID              `json:"id"`
+	Name         string                 `json:"name"`
+	Type         string                 `json:"type"`
+	Status       string                 `json:"status"`
+	Score        float64                `json:"score"`
+	MaxScore     float64                `json:"max_score"`
+	Details      map[string]interface{} `json:"details"`
+	Issues       []QualityIssue         `json:"issues"`
+	Timestamp    time.Time              `json:"timestamp"`
+	Duration     time.Duration          `json:"duration"`
+	ResourceID   string                 `json:"resource_id"`
+	ResourceType string                 `json:"resource_type"`
 }
 
 // QualityIssue represents a specific quality issue
 type QualityIssue struct {
-	ID          string    `json:"id"`
-	Severity    string    `json:"severity"`
-	Category    string    `json:"category"`
-	Message     string    `json:"message"`
-	Line        int       `json:"line,omitempty"`
-	Column      int       `json:"column,omitempty"`
-	File        string    `json:"file,omitempty"`
-	Rule        string    `json:"rule"`
-	Suggestion  string    `json:"suggestion,omitempty"`
-	Timestamp   time.Time `json:"timestamp"`
+	ID         string    `json:"id"`
+	Severity   string    `json:"severity"`
+	Category   string    `json:"category"`
+	Message    string    `json:"message"`
+	Line       int       `json:"line,omitempty"`
+	Column     int       `json:"column,omitempty"`
+	File       string    `json:"file,omitempty"`
+	Rule       string    `json:"rule"`
+	Suggestion string    `json:"suggestion,omitempty"`
+	Timestamp  time.Time `json:"timestamp"`
 }
 
 // QualityReport represents a comprehensive quality report
 type QualityReport struct {
-	ID              uuid.UUID       `json:"id"`
-	ResourceID      string          `json:"resource_id"`
-	ResourceType    string          `json:"resource_type"`
-	OverallScore    float64         `json:"overall_score"`
-	MaxScore        float64         `json:"max_score"`
-	Status          string          `json:"status"`
-	Checks          []QualityCheck  `json:"checks"`
-	Summary         QualitySummary  `json:"summary"`
-	Recommendations []string        `json:"recommendations"`
-	Timestamp       time.Time       `json:"timestamp"`
-	Duration        time.Duration   `json:"duration"`
+	ID              uuid.UUID      `json:"id"`
+	ResourceID      string         `json:"resource_id"`
+	ResourceType    string         `json:"resource_type"`
+	OverallScore    float64        `json:"overall_score"`
+	MaxScore        float64        `json:"max_score"`
+	Status          string         `json:"status"`
+	Checks          []QualityCheck `json:"checks"`
+	Summary         QualitySummary `json:"summary"`
+	Recommendations []string       `json:"recommendations"`
+	Timestamp       time.Time      `json:"timestamp"`
+	Duration        time.Duration  `json:"duration"`
 }
 
 // QualitySummary provides aggregated quality metrics
 type QualitySummary struct {
-	TotalChecks     int `json:"total_checks"`
-	PassedChecks    int `json:"passed_checks"`
-	WarningChecks   int `json:"warning_checks"`
-	FailedChecks    int `json:"failed_checks"`
-	CriticalIssues  int `json:"critical_issues"`
-	MajorIssues     int `json:"major_issues"`
-	MinorIssues     int `json:"minor_issues"`
-	InfoIssues      int `json:"info_issues"`
+	TotalChecks    int `json:"total_checks"`
+	PassedChecks   int `json:"passed_checks"`
+	WarningChecks  int `json:"warning_checks"`
+	FailedChecks   int `json:"failed_checks"`
+	CriticalIssues int `json:"critical_issues"`
+	MajorIssues    int `json:"major_issues"`
+	MinorIssues    int `json:"minor_issues"`
+	InfoIssues     int `json:"info_issues"`
 }
 
 // QualityChecker interface defines quality checking functionality
@@ -286,7 +286,7 @@ func (qm *QualityManager) generateRecommendations(report *QualityReport) {
 
 	// Analyze patterns and suggest improvements
 	if report.Summary.CriticalIssues > 0 {
-		recommendations = append(recommendations, 
+		recommendations = append(recommendations,
 			"Address critical issues immediately to ensure system stability")
 	}
 
@@ -327,7 +327,7 @@ func (qm *QualityManager) CleanupOldReports(maxAge time.Duration) {
 	defer qm.mu.Unlock()
 
 	cutoff := time.Now().Add(-maxAge)
-	
+
 	for id, report := range qm.reports {
 		if report.Timestamp.Before(cutoff) {
 			delete(qm.reports, id)
@@ -348,8 +348,8 @@ func (qm *QualityManager) GetQualityMetrics() map[string]interface{} {
 	totalReports := len(qm.reports)
 	if totalReports == 0 {
 		return map[string]interface{}{
-			"total_reports": 0,
-			"avg_score": 0,
+			"total_reports":  0,
+			"avg_score":      0,
 			"checkers_count": len(qm.checkers),
 		}
 	}
@@ -370,9 +370,9 @@ func (qm *QualityManager) GetQualityMetrics() map[string]interface{} {
 	}
 
 	return map[string]interface{}{
-		"total_reports":   totalReports,
-		"avg_score":       avgScore,
-		"checkers_count":  len(qm.checkers),
+		"total_reports":    totalReports,
+		"avg_score":        avgScore,
+		"checkers_count":   len(qm.checkers),
 		"status_breakdown": statusCounts,
 	}
 }

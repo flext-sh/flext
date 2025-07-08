@@ -240,7 +240,7 @@ func (d *DataQualityChecker) checkArrayCompleteness(check *QualityCheck, data []
 
 func (d *DataQualityChecker) checkStringAccuracy(check *QualityCheck, value string) float64 {
 	score := 100.0
-	
+
 	if d.hasCommonTypos(value) {
 		score -= 10
 		check.Issues = append(check.Issues, QualityIssue{
@@ -253,7 +253,7 @@ func (d *DataQualityChecker) checkStringAccuracy(check *QualityCheck, value stri
 			Timestamp:  time.Now(),
 		})
 	}
-	
+
 	if d.hasInvalidFormats(value) {
 		score -= 20
 		check.Issues = append(check.Issues, QualityIssue{
@@ -266,7 +266,7 @@ func (d *DataQualityChecker) checkStringAccuracy(check *QualityCheck, value stri
 			Timestamp:  time.Now(),
 		})
 	}
-	
+
 	return score
 }
 
@@ -290,7 +290,7 @@ func (d *DataQualityChecker) checkMapAccuracy(check *QualityCheck, data map[stri
 
 func (d *DataQualityChecker) checkMapConsistency(check *QualityCheck, data map[string]interface{}) float64 {
 	score := 100.0
-	
+
 	if d.hasInconsistentTypes(data) {
 		score -= 20
 		check.Issues = append(check.Issues, QualityIssue{
@@ -303,7 +303,7 @@ func (d *DataQualityChecker) checkMapConsistency(check *QualityCheck, data map[s
 			Timestamp:  time.Now(),
 		})
 	}
-	
+
 	if d.hasInconsistentNaming(data) {
 		score -= 10
 		check.Issues = append(check.Issues, QualityIssue{
@@ -316,7 +316,7 @@ func (d *DataQualityChecker) checkMapConsistency(check *QualityCheck, data map[s
 			Timestamp:  time.Now(),
 		})
 	}
-	
+
 	return score
 }
 
@@ -340,7 +340,7 @@ func (d *DataQualityChecker) checkArrayConsistency(check *QualityCheck, data []i
 
 func (d *DataQualityChecker) checkStringValidity(check *QualityCheck, value string) float64 {
 	score := 100.0
-	
+
 	if !d.isValidUTF8(value) {
 		score -= 30
 		check.Issues = append(check.Issues, QualityIssue{
@@ -353,7 +353,7 @@ func (d *DataQualityChecker) checkStringValidity(check *QualityCheck, value stri
 			Timestamp:  time.Now(),
 		})
 	}
-	
+
 	if d.hasDangerousCharacters(value) {
 		score -= 40
 		check.Issues = append(check.Issues, QualityIssue{
@@ -366,13 +366,13 @@ func (d *DataQualityChecker) checkStringValidity(check *QualityCheck, value stri
 			Timestamp:  time.Now(),
 		})
 	}
-	
+
 	return score
 }
 
 func (d *DataQualityChecker) checkMapValidity(check *QualityCheck, data map[string]interface{}) float64 {
 	score := 100.0
-	
+
 	if d.hasInvalidFieldNames(data) {
 		score -= 15
 		check.Issues = append(check.Issues, QualityIssue{
@@ -385,7 +385,7 @@ func (d *DataQualityChecker) checkMapValidity(check *QualityCheck, data map[stri
 			Timestamp:  time.Now(),
 		})
 	}
-	
+
 	if d.hasInvalidValueRanges(data) {
 		score -= 20
 		check.Issues = append(check.Issues, QualityIssue{
@@ -398,7 +398,7 @@ func (d *DataQualityChecker) checkMapValidity(check *QualityCheck, data map[stri
 			Timestamp:  time.Now(),
 		})
 	}
-	
+
 	return score
 }
 
@@ -485,7 +485,7 @@ func (d *DataQualityChecker) hasCommonTypos(text string) bool {
 
 func (d *DataQualityChecker) hasInvalidFormats(text string) bool {
 	// Check for patterns that might indicate format issues
-	
+
 	// Check for email-like patterns that are invalid
 	emailPattern := regexp.MustCompile(`[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}`)
 	if emailPattern.MatchString(text) {
@@ -520,10 +520,10 @@ func (d *DataQualityChecker) hasInvalidFormats(text string) bool {
 
 func (d *DataQualityChecker) hasLogicalInconsistencies(data map[string]interface{}) bool {
 	// Check for logical inconsistencies like negative ages, future dates in the past, etc.
-	
+
 	for key, value := range data {
 		lowerKey := strings.ToLower(key)
-		
+
 		// Check age-related fields
 		if strings.Contains(lowerKey, "age") {
 			if age, ok := value.(float64); ok {
@@ -532,7 +532,7 @@ func (d *DataQualityChecker) hasLogicalInconsistencies(data map[string]interface
 				}
 			}
 		}
-		
+
 		// Check date-related fields
 		if strings.Contains(lowerKey, "birth") || strings.Contains(lowerKey, "created") {
 			if dateStr, ok := value.(string); ok {
@@ -560,7 +560,7 @@ func (d *DataQualityChecker) hasLogicalInconsistencies(data map[string]interface
 func (d *DataQualityChecker) hasInconsistentTypes(data map[string]interface{}) bool {
 	// Group fields by similar names and check for type consistency
 	typeGroups := make(map[string][]reflect.Type)
-	
+
 	for key, value := range data {
 		// Normalize key name (remove numbers, underscores)
 		normalizedKey := regexp.MustCompile(`[0-9_]`).ReplaceAllString(strings.ToLower(key), "")
@@ -668,7 +668,7 @@ func (d *DataQualityChecker) hasDangerousCharacters(text string) bool {
 func (d *DataQualityChecker) hasInvalidFieldNames(data map[string]interface{}) bool {
 	// Check for invalid field names
 	validFieldPattern := regexp.MustCompile(`^[a-zA-Z][a-zA-Z0-9_]*$`)
-	
+
 	for key := range data {
 		if !validFieldPattern.MatchString(key) {
 			return true
@@ -682,13 +682,13 @@ func (d *DataQualityChecker) hasInvalidValueRanges(data map[string]interface{}) 
 	// Check for values outside reasonable ranges
 	for key, value := range data {
 		lowerKey := strings.ToLower(key)
-		
+
 		// Check numeric ranges
 		if numValue, ok := value.(float64); ok {
 			if math.IsInf(numValue, 0) || math.IsNaN(numValue) {
 				return true
 			}
-			
+
 			// Check specific field ranges
 			if strings.Contains(lowerKey, "score") && (numValue < 0 || numValue > 100) {
 				return true
@@ -729,7 +729,7 @@ func (d *DataQualityChecker) findDuplicates(data []interface{}) []interface{} {
 func (d *DataQualityChecker) hasDuplicateValues(data map[string]interface{}) bool {
 	// Check if any fields that should typically be unique have duplicate values
 	uniqueFields := []string{"id", "email", "username", "phone", "ssn"}
-	
+
 	for key, value := range data {
 		lowerKey := strings.ToLower(key)
 		for _, uniqueField := range uniqueFields {
@@ -750,7 +750,7 @@ func (d *DataQualityChecker) hasDuplicateValues(data map[string]interface{}) boo
 
 func (d *DataQualityChecker) determineStatus(check *QualityCheck) {
 	percentage := (check.Score / check.MaxScore) * 100
-	
+
 	if percentage >= 85 {
 		check.Status = "passed"
 	} else if percentage >= 70 {

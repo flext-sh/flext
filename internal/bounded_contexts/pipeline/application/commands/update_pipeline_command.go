@@ -12,13 +12,13 @@ import (
 
 // UpdatePipelineCommand represents the command to update a pipeline
 type UpdatePipelineCommand struct {
-	PipelineID    uuid.UUID               `json:"pipeline_id" validate:"required"`
-	Name          *string                 `json:"name,omitempty" validate:"omitempty,min=3,max=100"`
-	Description   *string                 `json:"description,omitempty" validate:"omitempty,max=500"`
-	IsActive      *bool                   `json:"is_active,omitempty"`
-	Tags          []string                `json:"tags,omitempty"`
-	Configuration map[string]interface{}  `json:"configuration,omitempty"`
-	Schedule      *string                 `json:"schedule,omitempty"`
+	PipelineID    uuid.UUID              `json:"pipeline_id" validate:"required"`
+	Name          *string                `json:"name,omitempty" validate:"omitempty,min=3,max=100"`
+	Description   *string                `json:"description,omitempty" validate:"omitempty,max=500"`
+	IsActive      *bool                  `json:"is_active,omitempty"`
+	Tags          []string               `json:"tags,omitempty"`
+	Configuration map[string]interface{} `json:"configuration,omitempty"`
+	Schedule      *string                `json:"schedule,omitempty"`
 }
 
 // Validate validates the command
@@ -29,14 +29,14 @@ func (c *UpdatePipelineCommand) Validate() error {
 			Message: "Pipeline ID is required",
 		}
 	}
-	
+
 	if c.Name != nil && (len(*c.Name) < 3 || len(*c.Name) > 100) {
 		return &value_objects.DomainError{
 			Code:    "INVALID_COMMAND",
 			Message: "Name must be between 3 and 100 characters",
 		}
 	}
-	
+
 	return nil
 }
 
@@ -102,23 +102,23 @@ func (h *UpdatePipelineCommandHandler) applyUpdates(pipeline *entities.Pipeline,
 	if cmd.Name != nil {
 		pipeline.Name = *cmd.Name
 	}
-	
+
 	if cmd.Description != nil {
 		pipeline.Description = *cmd.Description
 	}
-	
+
 	if cmd.Tags != nil {
 		pipeline.Tags = cmd.Tags
 	}
-	
+
 	if cmd.Configuration != nil {
 		pipeline.UpdateConfiguration(cmd.Configuration)
 	}
-	
+
 	if cmd.Schedule != nil {
 		pipeline.SetSchedule(*cmd.Schedule)
 	}
-	
+
 	// Update activation status
 	if cmd.IsActive != nil {
 		if *cmd.IsActive {
@@ -133,14 +133,14 @@ func (h *UpdatePipelineCommandHandler) applyUpdates(pipeline *entities.Pipeline,
 			pipeline.Deactivate()
 		}
 	}
-	
+
 	return nil
 }
 
 // saveAndBuildResult saves the pipeline and builds the result
 func (h *UpdatePipelineCommandHandler) saveAndBuildResult(ctx context.Context, pipeline *entities.Pipeline) (*UpdatePipelineResult, error) {
 	// Version is already incremented by domain methods
-	
+
 	updatedPipeline, err := h.pipelineRepo.Update(ctx, pipeline)
 	if err != nil {
 		return nil, &value_objects.DomainError{

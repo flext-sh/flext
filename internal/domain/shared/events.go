@@ -9,10 +9,10 @@ import (
 type DomainEvent interface {
 	// AggregateID returns the ID of the aggregate that produced this event
 	AggregateID() uuid.UUID
-	
+
 	// EventType returns a string identifier for the event type
 	EventType() string
-	
+
 	// EventVersion returns the version of this event schema
 	EventVersion() int
 }

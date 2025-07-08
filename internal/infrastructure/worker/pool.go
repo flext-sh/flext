@@ -53,34 +53,34 @@ type Worker struct {
 
 // WorkerPool manages a pool of workers for parallel job processing
 type WorkerPool struct {
-	maxWorkers     int
-	minWorkers     int
-	workers        []*Worker
-	jobQueue       chan *Job
-	resultQueue    chan *JobResult
-	handlers       map[string]JobHandler
-	handlersMutex  sync.RWMutex
-	ctx            context.Context
-	cancel         context.CancelFunc
-	wg             sync.WaitGroup
-	logger         logging.Logger
-	metrics        *PoolMetrics
-	activeJobs     int64
-	totalJobs      int64
-	completedJobs  int64
-	failedJobs     int64
+	maxWorkers    int
+	minWorkers    int
+	workers       []*Worker
+	jobQueue      chan *Job
+	resultQueue   chan *JobResult
+	handlers      map[string]JobHandler
+	handlersMutex sync.RWMutex
+	ctx           context.Context
+	cancel        context.CancelFunc
+	wg            sync.WaitGroup
+	logger        logging.Logger
+	metrics       *PoolMetrics
+	activeJobs    int64
+	totalJobs     int64
+	completedJobs int64
+	failedJobs    int64
 }
 
 // PoolMetrics contains metrics about the worker pool
 type PoolMetrics struct {
-	ActiveWorkers   int           `json:"active_workers"`
-	ActiveJobs      int64         `json:"active_jobs"`
-	TotalJobs       int64         `json:"total_jobs"`
-	CompletedJobs   int64         `json:"completed_jobs"`
-	FailedJobs      int64         `json:"failed_jobs"`
-	AverageJobTime  time.Duration `json:"average_job_time"`
-	QueueLength     int           `json:"queue_length"`
-	ThroughputPerSec float64      `json:"throughput_per_sec"`
+	ActiveWorkers    int           `json:"active_workers"`
+	ActiveJobs       int64         `json:"active_jobs"`
+	TotalJobs        int64         `json:"total_jobs"`
+	CompletedJobs    int64         `json:"completed_jobs"`
+	FailedJobs       int64         `json:"failed_jobs"`
+	AverageJobTime   time.Duration `json:"average_job_time"`
+	QueueLength      int           `json:"queue_length"`
+	ThroughputPerSec float64       `json:"throughput_per_sec"`
 }
 
 // NewWorkerPool creates a new worker pool
@@ -162,7 +162,7 @@ func (wp *WorkerPool) Stop() error {
 func (wp *WorkerPool) RegisterHandler(jobType string, handler JobHandler) {
 	wp.handlersMutex.Lock()
 	defer wp.handlersMutex.Unlock()
-	
+
 	wp.handlers[jobType] = handler
 	wp.logger.Info("Job handler registered", logging.F("job_type", jobType))
 }
@@ -182,7 +182,7 @@ func (wp *WorkerPool) Submit(job *Job) error {
 	select {
 	case wp.jobQueue <- job:
 		atomic.AddInt64(&wp.totalJobs, 1)
-		wp.logger.Debug("Job submitted", 
+		wp.logger.Debug("Job submitted",
 			logging.F("job_id", job.ID),
 			logging.F("job_type", job.Type),
 			logging.F("priority", job.Priority),
@@ -219,14 +219,14 @@ func (wp *WorkerPool) GetMetrics() *PoolMetrics {
 	metrics.FailedJobs = atomic.LoadInt64(&wp.failedJobs)
 	metrics.QueueLength = len(wp.jobQueue)
 	metrics.ActiveWorkers = len(wp.workers)
-	
+
 	return &metrics
 }
 
 // startWorker creates and starts a new worker
 func (wp *WorkerPool) startWorker() {
 	workerID := fmt.Sprintf("worker-%d", len(wp.workers)+1)
-	
+
 	worker := &Worker{
 		ID:       workerID,
 		pool:     wp,
@@ -280,7 +280,7 @@ func (w *Worker) processJob(job *Job) {
 	defer atomic.AddInt64(&w.pool.activeJobs, -1)
 
 	startTime := time.Now()
-	
+
 	w.logger.Debug("Processing job",
 		logging.F("job_id", job.ID),
 		logging.F("job_type", job.Type),
@@ -302,7 +302,7 @@ func (w *Worker) processJob(job *Job) {
 		result.Error = fmt.Sprintf("no handler found for job type: %s", job.Type)
 		result.EndedAt = time.Now()
 		result.Duration = result.EndedAt.Sub(result.StartedAt)
-		
+
 		atomic.AddInt64(&w.pool.failedJobs, 1)
 		w.sendResult(result)
 		return
@@ -346,7 +346,7 @@ func (w *Worker) sendResult(result *JobResult) {
 	case w.pool.resultQueue <- result:
 	case <-w.pool.ctx.Done():
 	default:
-		w.logger.Error("Result queue full, dropping result", 
+		w.logger.Error("Result queue full, dropping result",
 			logging.F("job_id", result.JobID))
 	}
 }
@@ -366,13 +366,13 @@ func (wp *WorkerPool) metricsCollector() {
 		case <-ticker.C:
 			now := time.Now()
 			currentCompleted := atomic.LoadInt64(&wp.completedJobs)
-			
+
 			if lastCompleted > 0 {
 				jobsProcessed := currentCompleted - lastCompleted
 				duration := now.Sub(lastTime)
 				wp.metrics.ThroughputPerSec = float64(jobsProcessed) / duration.Seconds()
 			}
-			
+
 			lastCompleted = currentCompleted
 			lastTime = now
 		}
@@ -398,7 +398,7 @@ func (wp *WorkerPool) autoScaler() {
 func (wp *WorkerPool) scaleWorkers() {
 	queueLength := len(wp.jobQueue)
 	currentWorkers := len(wp.workers)
-	
+
 	// Scale up if queue is getting full
 	if queueLength > currentWorkers*2 && currentWorkers < wp.maxWorkers {
 		wp.startWorker()
@@ -407,7 +407,7 @@ func (wp *WorkerPool) scaleWorkers() {
 			logging.F("queue_length", queueLength),
 		)
 	}
-	
+
 	// Scale down if queue is nearly empty
 	if queueLength < currentWorkers/4 && currentWorkers > wp.minWorkers {
 		wp.stopWorker()

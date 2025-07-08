@@ -314,25 +314,35 @@ func (f *mockQueryBuilderFactory) CreateQueryBuilder(entity *WMSEntity) QueryBui
 
 type mockQueryBuilder struct{}
 
-func (qb *mockQueryBuilder) Where(field string, operator value_objects.FilterOperator, value interface{}) QueryBuilder { return qb }
-func (qb *mockQueryBuilder) WhereDate(field string, operator value_objects.FilterOperator, date time.Time) QueryBuilder { return qb }
-func (qb *mockQueryBuilder) WhereDateRange(field string, start, end time.Time) QueryBuilder { return qb }
-func (qb *mockQueryBuilder) WhereIncremental(replicationKey string, bookmark interface{}, safetyOverlap time.Duration) QueryBuilder { return qb }
+func (qb *mockQueryBuilder) Where(field string, operator value_objects.FilterOperator, value interface{}) QueryBuilder {
+	return qb
+}
+func (qb *mockQueryBuilder) WhereDate(field string, operator value_objects.FilterOperator, date time.Time) QueryBuilder {
+	return qb
+}
+func (qb *mockQueryBuilder) WhereDateRange(field string, start, end time.Time) QueryBuilder {
+	return qb
+}
+func (qb *mockQueryBuilder) WhereIncremental(replicationKey string, bookmark interface{}, safetyOverlap time.Duration) QueryBuilder {
+	return qb
+}
 func (qb *mockQueryBuilder) OrderBy(field string, direction string) QueryBuilder { return qb }
-func (qb *mockQueryBuilder) OrderByAsc(field string) QueryBuilder { return qb }
-func (qb *mockQueryBuilder) OrderByDesc(field string) QueryBuilder { return qb }
-func (qb *mockQueryBuilder) Select(fields ...string) QueryBuilder { return qb }
-func (qb *mockQueryBuilder) Limit(limit int) QueryBuilder { return qb }
-func (qb *mockQueryBuilder) Offset(offset int64) QueryBuilder { return qb }
-func (qb *mockQueryBuilder) Page(page, pageSize int) QueryBuilder { return qb }
-func (qb *mockQueryBuilder) Cursor(cursor string) QueryBuilder { return qb }
-func (qb *mockQueryBuilder) Build() (string, error) { return "SELECT * FROM test_entity", nil }
-func (qb *mockQueryBuilder) BuildURL(baseURL string) (string, error) { return baseURL + "/test_entity", nil }
+func (qb *mockQueryBuilder) OrderByAsc(field string) QueryBuilder                { return qb }
+func (qb *mockQueryBuilder) OrderByDesc(field string) QueryBuilder               { return qb }
+func (qb *mockQueryBuilder) Select(fields ...string) QueryBuilder                { return qb }
+func (qb *mockQueryBuilder) Limit(limit int) QueryBuilder                        { return qb }
+func (qb *mockQueryBuilder) Offset(offset int64) QueryBuilder                    { return qb }
+func (qb *mockQueryBuilder) Page(page, pageSize int) QueryBuilder                { return qb }
+func (qb *mockQueryBuilder) Cursor(cursor string) QueryBuilder                   { return qb }
+func (qb *mockQueryBuilder) Build() (string, error)                              { return "SELECT * FROM test_entity", nil }
+func (qb *mockQueryBuilder) BuildURL(baseURL string) (string, error) {
+	return baseURL + "/test_entity", nil
+}
 func (qb *mockQueryBuilder) GetFilters() map[string]interface{} { return map[string]interface{}{} }
-func (qb *mockQueryBuilder) GetOrdering() []interface{} { return []interface{}{} }
-func (qb *mockQueryBuilder) Clone() QueryBuilder { return &mockQueryBuilder{} }
-func (qb *mockQueryBuilder) Reset() QueryBuilder { return qb }
-func (qb *mockQueryBuilder) Validate() error { return nil }
+func (qb *mockQueryBuilder) GetOrdering() []interface{}         { return []interface{}{} }
+func (qb *mockQueryBuilder) Clone() QueryBuilder                { return &mockQueryBuilder{} }
+func (qb *mockQueryBuilder) Reset() QueryBuilder                { return qb }
+func (qb *mockQueryBuilder) Validate() error                    { return nil }
 
 // Mock error handler factory for testing
 type mockErrorHandlerFactory struct{}

@@ -37,7 +37,6 @@ func (m *MockPluginRepository) GetActivePlugins(ctx context.Context) ([]*pluginE
 	return args.Get(0).([]*pluginEntities.Plugin), args.Error(1)
 }
 
-
 // MockRealPluginExecutor is a mock implementation of RealPluginExecutor
 type MockRealPluginExecutor struct {
 	mock.Mock
@@ -78,10 +77,10 @@ func (m *MockRealPluginExecutor) ExecuteUtility(ctx context.Context, plugin *plu
 // PipelineServiceTestSuite defines the test suite for pipeline service
 type PipelineServiceTestSuite struct {
 	suite.Suite
-	service              *services.PipelineExecutor
-	mockPluginRepo       *MockPluginRepository
-	mockExecutor         *MockRealPluginExecutor
-	ctx                  context.Context
+	service        *services.PipelineExecutor
+	mockPluginRepo *MockPluginRepository
+	mockExecutor   *MockRealPluginExecutor
+	ctx            context.Context
 }
 
 // SetupTest sets up each test with fresh mocks

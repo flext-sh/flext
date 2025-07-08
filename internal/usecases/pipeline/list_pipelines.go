@@ -18,7 +18,6 @@ func NewListPipelinesUseCase(repo PipelineRepository, validator InputValidator) 
 	}
 }
 
-
 // ListPipelinesOutput represents the output of listing pipelines
 type ListPipelinesOutput struct {
 	Pipelines []PipelineListItem

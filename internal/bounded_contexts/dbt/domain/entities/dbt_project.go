@@ -14,77 +14,77 @@ type DbtProject struct {
 	domain.AggregateRoot
 
 	// Metadados do projeto
-	Name           string            `json:"name" validate:"required,min=1,max=100"`
-	Version        string            `json:"version" validate:"required"`
-	Description    string            `json:"description" validate:"max=500"`
-	ProfileName    string            `json:"profile_name" validate:"required"`
-	RequireDbtVersion string         `json:"require_dbt_version,omitempty"`
+	Name              string `json:"name" validate:"required,min=1,max=100"`
+	Version           string `json:"version" validate:"required"`
+	Description       string `json:"description" validate:"max=500"`
+	ProfileName       string `json:"profile_name" validate:"required"`
+	RequireDbtVersion string `json:"require_dbt_version,omitempty"`
 
 	// Caminhos
-	ProjectDir     string            `json:"project_dir" validate:"required"`
-	ModelPaths     []string          `json:"model_paths"`
-	AnalysisPaths  []string          `json:"analysis_paths"`
-	TestPaths      []string          `json:"test_paths"`
-	SeedPaths      []string          `json:"seed_paths"`
-	MacroPaths     []string          `json:"macro_paths"`
-	SnapshotPaths  []string          `json:"snapshot_paths"`
-	TargetPath     string            `json:"target_path"`
-	LogPath        string            `json:"log_path"`
-	PackagesPath   string            `json:"packages_path"`
+	ProjectDir    string   `json:"project_dir" validate:"required"`
+	ModelPaths    []string `json:"model_paths"`
+	AnalysisPaths []string `json:"analysis_paths"`
+	TestPaths     []string `json:"test_paths"`
+	SeedPaths     []string `json:"seed_paths"`
+	MacroPaths    []string `json:"macro_paths"`
+	SnapshotPaths []string `json:"snapshot_paths"`
+	TargetPath    string   `json:"target_path"`
+	LogPath       string   `json:"log_path"`
+	PackagesPath  string   `json:"packages_path"`
 
 	// Variáveis
-	Vars           map[string]interface{} `json:"vars"`
+	Vars map[string]interface{} `json:"vars"`
 
 	// Estado
-	IsActive       bool              `json:"is_active"`
-	LastRun        *time.Time        `json:"last_run,omitempty"`
-	LastRunStatus  RunStatus         `json:"last_run_status"`
+	IsActive      bool       `json:"is_active"`
+	LastRun       *time.Time `json:"last_run,omitempty"`
+	LastRunStatus RunStatus  `json:"last_run_status"`
 
 	// Configurações
-	Models         ModelConfig       `json:"models"`
-	Seeds          SeedConfig        `json:"seeds"`
-	Tests          TestConfig        `json:"tests"`
-	Snapshots      SnapshotConfig    `json:"snapshots"`
+	Models    ModelConfig    `json:"models"`
+	Seeds     SeedConfig     `json:"seeds"`
+	Tests     TestConfig     `json:"tests"`
+	Snapshots SnapshotConfig `json:"snapshots"`
 
 	// Packages e dependências
-	Packages       []DbtPackage      `json:"packages"`
-	Sources        []DbtSource       `json:"sources"`
+	Packages []DbtPackage `json:"packages"`
+	Sources  []DbtSource  `json:"sources"`
 }
 
 // RunStatus define os status possíveis de execução
 type RunStatus string
 
 const (
-	RunStatusSuccess  RunStatus = "success"
-	RunStatusError    RunStatus = "error"
-	RunStatusSkipped  RunStatus = "skipped"
-	RunStatusRunning  RunStatus = "running"
-	RunStatusPending  RunStatus = "pending"
+	RunStatusSuccess RunStatus = "success"
+	RunStatusError   RunStatus = "error"
+	RunStatusSkipped RunStatus = "skipped"
+	RunStatusRunning RunStatus = "running"
+	RunStatusPending RunStatus = "pending"
 )
 
 // ModelConfig configuração para models
 type ModelConfig struct {
 	Materialization string                 `json:"materialization,omitempty"`
-	Tags           []string               `json:"tags,omitempty"`
-	PreHook        []string               `json:"pre_hook,omitempty"`
-	PostHook       []string               `json:"post_hook,omitempty"`
-	Vars           map[string]interface{} `json:"vars,omitempty"`
-	CustomConfigs  map[string]interface{} `json:"custom_configs,omitempty"`
+	Tags            []string               `json:"tags,omitempty"`
+	PreHook         []string               `json:"pre_hook,omitempty"`
+	PostHook        []string               `json:"post_hook,omitempty"`
+	Vars            map[string]interface{} `json:"vars,omitempty"`
+	CustomConfigs   map[string]interface{} `json:"custom_configs,omitempty"`
 }
 
 // SeedConfig configuração para seeds
 type SeedConfig struct {
-	QuoteColumns    *bool                  `json:"quote_columns,omitempty"`
-	ColumnTypes     map[string]string      `json:"column_types,omitempty"`
-	Tags           []string               `json:"tags,omitempty"`
-	CustomConfigs  map[string]interface{} `json:"custom_configs,omitempty"`
+	QuoteColumns  *bool                  `json:"quote_columns,omitempty"`
+	ColumnTypes   map[string]string      `json:"column_types,omitempty"`
+	Tags          []string               `json:"tags,omitempty"`
+	CustomConfigs map[string]interface{} `json:"custom_configs,omitempty"`
 }
 
 // TestConfig configuração para tests
 type TestConfig struct {
-	Severity       string                 `json:"severity,omitempty"`
-	Tags           []string               `json:"tags,omitempty"`
-	CustomConfigs  map[string]interface{} `json:"custom_configs,omitempty"`
+	Severity      string                 `json:"severity,omitempty"`
+	Tags          []string               `json:"tags,omitempty"`
+	CustomConfigs map[string]interface{} `json:"custom_configs,omitempty"`
 }
 
 // SnapshotConfig configuração para snapshots
@@ -109,33 +109,33 @@ type DbtPackage struct {
 
 // DbtSource representa uma source dbt
 type DbtSource struct {
-	Name        string      `json:"name"`
-	Description string      `json:"description,omitempty"`
-	Database    string      `json:"database,omitempty"`
-	Schema      string      `json:"schema"`
-	Tables      []DbtTable  `json:"tables"`
+	Name        string                 `json:"name"`
+	Description string                 `json:"description,omitempty"`
+	Database    string                 `json:"database,omitempty"`
+	Schema      string                 `json:"schema"`
+	Tables      []DbtTable             `json:"tables"`
 	Meta        map[string]interface{} `json:"meta,omitempty"`
-	Tags        []string    `json:"tags,omitempty"`
+	Tags        []string               `json:"tags,omitempty"`
 }
 
 // DbtTable representa uma table em uma source
 type DbtTable struct {
-	Name        string       `json:"name"`
-	Description string       `json:"description,omitempty"`
-	Columns     []DbtColumn  `json:"columns,omitempty"`
-	Tests       []DbtTest    `json:"tests,omitempty"`
+	Name        string                 `json:"name"`
+	Description string                 `json:"description,omitempty"`
+	Columns     []DbtColumn            `json:"columns,omitempty"`
+	Tests       []DbtTest              `json:"tests,omitempty"`
 	Meta        map[string]interface{} `json:"meta,omitempty"`
-	Tags        []string     `json:"tags,omitempty"`
+	Tags        []string               `json:"tags,omitempty"`
 }
 
 // DbtColumn representa uma coluna
 type DbtColumn struct {
-	Name        string    `json:"name"`
-	Description string    `json:"description,omitempty"`
-	DataType    string    `json:"data_type,omitempty"`
-	Tests       []DbtTest `json:"tests,omitempty"`
+	Name        string                 `json:"name"`
+	Description string                 `json:"description,omitempty"`
+	DataType    string                 `json:"data_type,omitempty"`
+	Tests       []DbtTest              `json:"tests,omitempty"`
 	Meta        map[string]interface{} `json:"meta,omitempty"`
-	Tags        []string  `json:"tags,omitempty"`
+	Tags        []string               `json:"tags,omitempty"`
 }
 
 // DbtTest representa um teste dbt
@@ -160,16 +160,16 @@ func NewDbtProject(name, version, profileName, projectDir string) (*DbtProject, 
 	}
 
 	project := &DbtProject{
-		AggregateRoot:      domain.NewAggregateRoot(),
-		Name:               name,
-		Version:            version,
-		ProfileName:        profileName,
-		ProjectDir:         projectDir,
-		IsActive:           true,
-		LastRunStatus:      RunStatusPending,
-		Vars:               make(map[string]interface{}),
-		Packages:           []DbtPackage{},
-		Sources:            []DbtSource{},
+		AggregateRoot: domain.NewAggregateRoot(),
+		Name:          name,
+		Version:       version,
+		ProfileName:   profileName,
+		ProjectDir:    projectDir,
+		IsActive:      true,
+		LastRunStatus: RunStatusPending,
+		Vars:          make(map[string]interface{}),
+		Packages:      []DbtPackage{},
+		Sources:       []DbtSource{},
 
 		// Valores padrão
 		ModelPaths:    []string{"models"},
@@ -185,9 +185,9 @@ func NewDbtProject(name, version, profileName, projectDir string) (*DbtProject, 
 		// Configurações padrão
 		Models: ModelConfig{
 			Materialization: "table",
-			Tags:           []string{},
-			Vars:           make(map[string]interface{}),
-			CustomConfigs:  make(map[string]interface{}),
+			Tags:            []string{},
+			Vars:            make(map[string]interface{}),
+			CustomConfigs:   make(map[string]interface{}),
 		},
 		Seeds: SeedConfig{
 			Tags:          []string{},
@@ -413,13 +413,13 @@ func (p *DbtProject) GetLogPath() string {
 // ValidateConfiguration valida a configuração do projeto
 func (p *DbtProject) ValidateConfiguration() error {
 	validator := newDbtProjectValidator()
-	
+
 	validator.
 		validateModelPaths(p.ModelPaths).
 		validateProfile(p.ProfileName).
 		validatePackages(p.Packages).
 		validateSources(p.Sources)
-	
+
 	return validator.getFirstError()
 }
 
@@ -454,7 +454,7 @@ func (v *dbtProjectValidator) validatePackages(packages []DbtPackage) *dbtProjec
 	if v.firstError != nil {
 		return v
 	}
-	
+
 	for _, pkg := range packages {
 		if pkg.Name == "" && pkg.Git == "" {
 			v.firstError = fmt.Errorf("package must have either name or git URL")
@@ -469,7 +469,7 @@ func (v *dbtProjectValidator) validateSources(sources []DbtSource) *dbtProjectVa
 	if v.firstError != nil {
 		return v
 	}
-	
+
 	for _, source := range sources {
 		if source.Name == "" {
 			v.firstError = fmt.Errorf("source name cannot be empty")

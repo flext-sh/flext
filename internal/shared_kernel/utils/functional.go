@@ -158,7 +158,7 @@ func Chunk[T any](slice []T, size int) [][]T {
 	if size <= 0 {
 		return nil
 	}
-	
+
 	var result [][]T
 	for i := 0; i < len(slice); i += size {
 		end := i + size
@@ -171,15 +171,24 @@ func Chunk[T any](slice []T, size int) [][]T {
 }
 
 // Zip combines multiple slices into slice of tuples
-func Zip[T, U any](slice1 []T, slice2 []U) []struct{ First T; Second U } {
+func Zip[T, U any](slice1 []T, slice2 []U) []struct {
+	First  T
+	Second U
+} {
 	minLen := len(slice1)
 	if len(slice2) < minLen {
 		minLen = len(slice2)
 	}
-	
-	result := make([]struct{ First T; Second U }, minLen)
+
+	result := make([]struct {
+		First  T
+		Second U
+	}, minLen)
 	for i := 0; i < minLen; i++ {
-		result[i] = struct{ First T; Second U }{slice1[i], slice2[i]}
+		result[i] = struct {
+			First  T
+			Second U
+		}{slice1[i], slice2[i]}
 	}
 	return result
 }
@@ -262,8 +271,8 @@ func Contains(slice []string, target string) bool {
 // ContainsIgnoreCase checks if slice contains string (case-insensitive)
 func ContainsIgnoreCase(slice []string, target string) bool {
 	lowerTarget := strings.ToLower(target)
-	return Any(slice, func(s string) bool { 
-		return strings.ToLower(s) == lowerTarget 
+	return Any(slice, func(s string) bool {
+		return strings.ToLower(s) == lowerTarget
 	})
 }
 
@@ -296,7 +305,9 @@ func Average[T interface{ ~int | ~int64 | ~float64 }](slice []T) float64 {
 }
 
 // Min returns minimum value in slice
-func Min[T interface{ ~int | ~int64 | ~float64 | ~string }](slice []T) T {
+func Min[T interface {
+	~int | ~int64 | ~float64 | ~string
+}](slice []T) T {
 	if len(slice) == 0 {
 		var zero T
 		return zero
@@ -310,7 +321,9 @@ func Min[T interface{ ~int | ~int64 | ~float64 | ~string }](slice []T) T {
 }
 
 // Max returns maximum value in slice
-func Max[T interface{ ~int | ~int64 | ~float64 | ~string }](slice []T) T {
+func Max[T interface {
+	~int | ~int64 | ~float64 | ~string
+}](slice []T) T {
 	if len(slice) == 0 {
 		var zero T
 		return zero
@@ -349,7 +362,7 @@ func ToString(v interface{}) string {
 	if v == nil {
 		return ""
 	}
-	
+
 	switch val := v.(type) {
 	case string:
 		return val
@@ -490,16 +503,16 @@ func GetFieldValue(obj interface{}, fieldName string) (interface{}, error) {
 	if val.Kind() == reflect.Ptr {
 		val = val.Elem()
 	}
-	
+
 	if val.Kind() != reflect.Struct {
 		return nil, fmt.Errorf("object is not a struct")
 	}
-	
+
 	field := val.FieldByName(fieldName)
 	if !field.IsValid() {
 		return nil, fmt.Errorf("field %s not found", fieldName)
 	}
-	
+
 	return field.Interface(), nil
 }
 
@@ -509,27 +522,27 @@ func SetFieldValue(obj interface{}, fieldName string, value interface{}) error {
 	if val.Kind() != reflect.Ptr {
 		return fmt.Errorf("object must be a pointer")
 	}
-	
+
 	val = val.Elem()
 	if val.Kind() != reflect.Struct {
 		return fmt.Errorf("object is not a struct")
 	}
-	
+
 	field := val.FieldByName(fieldName)
 	if !field.IsValid() {
 		return fmt.Errorf("field %s not found", fieldName)
 	}
-	
+
 	if !field.CanSet() {
 		return fmt.Errorf("field %s cannot be set", fieldName)
 	}
-	
+
 	fieldValue := reflect.ValueOf(value)
 	if !fieldValue.Type().AssignableTo(field.Type()) {
-		return fmt.Errorf("value type %s not assignable to field type %s", 
+		return fmt.Errorf("value type %s not assignable to field type %s",
 			fieldValue.Type(), field.Type())
 	}
-	
+
 	field.Set(fieldValue)
 	return nil
 }
@@ -540,11 +553,11 @@ func GetStructFields(obj interface{}) []string {
 	if val.Kind() == reflect.Ptr {
 		val = val.Elem()
 	}
-	
+
 	if val.Kind() != reflect.Struct {
 		return nil
 	}
-	
+
 	typ := val.Type()
 	fields := make([]string, typ.NumField())
 	for i := 0; i < typ.NumField(); i++ {

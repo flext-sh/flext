@@ -13,15 +13,15 @@ import (
 
 // DatabaseConfig holds database configuration
 type DatabaseConfig struct {
-	Driver          string `json:"driver"`          // postgres, sqlite3, mysql
-	Host            string `json:"host"`
-	Port            int    `json:"port"`
-	Database        string `json:"database"`
-	Username        string `json:"username"`
-	Password        string `json:"password"`
-	SSLMode         string `json:"ssl_mode"`
-	MaxOpenConns    int    `json:"max_open_conns"`
-	MaxIdleConns    int    `json:"max_idle_conns"`
+	Driver          string        `json:"driver"` // postgres, sqlite3, mysql
+	Host            string        `json:"host"`
+	Port            int           `json:"port"`
+	Database        string        `json:"database"`
+	Username        string        `json:"username"`
+	Password        string        `json:"password"`
+	SSLMode         string        `json:"ssl_mode"`
+	MaxOpenConns    int           `json:"max_open_conns"`
+	MaxIdleConns    int           `json:"max_idle_conns"`
 	ConnMaxLifetime time.Duration `json:"conn_max_lifetime"`
 }
 
@@ -68,7 +68,7 @@ func DefaultDatabaseConfig() *DatabaseConfig {
 // connect establishes database connection
 func (d *Database) connect() error {
 	dsn := d.buildDSN()
-	
+
 	db, err := sql.Open(d.config.Driver, dsn)
 	if err != nil {
 		return fmt.Errorf("failed to open database: %w", err)
@@ -101,13 +101,13 @@ func (d *Database) buildDSN() string {
 	switch d.config.Driver {
 	case "postgres":
 		return fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=%s",
-			d.config.Host, d.config.Port, d.config.Username, 
+			d.config.Host, d.config.Port, d.config.Username,
 			d.config.Password, d.config.Database, d.config.SSLMode)
 	case "sqlite3":
 		return d.config.Database
 	case "mysql":
 		return fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?parseTime=true",
-			d.config.Username, d.config.Password, d.config.Host, 
+			d.config.Username, d.config.Password, d.config.Host,
 			d.config.Port, d.config.Database)
 	default:
 		return d.config.Database

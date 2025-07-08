@@ -19,72 +19,72 @@ import (
 
 // DbtExecutor executa comandos dbt
 type DbtExecutor struct {
-	logger       logging.Logger
-	dbtPath      string
-	pythonPath   string
-	workingDir   string
-	defaultVenv  string
+	logger      logging.Logger
+	dbtPath     string
+	pythonPath  string
+	workingDir  string
+	defaultVenv string
 }
 
 // DbtRunOptions opções para execução dbt
 type DbtRunOptions struct {
-	Models       []string          `json:"models,omitempty"`
-	Exclude      []string          `json:"exclude,omitempty"`
-	Select       []string          `json:"select,omitempty"`
-	FullRefresh  bool              `json:"full_refresh,omitempty"`
-	Vars         map[string]string `json:"vars,omitempty"`
-	Threads      int               `json:"threads,omitempty"`
-	Profiles     string            `json:"profiles,omitempty"`
-	Target       string            `json:"target,omitempty"`
-	FailFast     bool              `json:"fail_fast,omitempty"`
-	StoreFailures bool             `json:"store_failures,omitempty"`
-	WarnError    bool              `json:"warn_error,omitempty"`
+	Models        []string          `json:"models,omitempty"`
+	Exclude       []string          `json:"exclude,omitempty"`
+	Select        []string          `json:"select,omitempty"`
+	FullRefresh   bool              `json:"full_refresh,omitempty"`
+	Vars          map[string]string `json:"vars,omitempty"`
+	Threads       int               `json:"threads,omitempty"`
+	Profiles      string            `json:"profiles,omitempty"`
+	Target        string            `json:"target,omitempty"`
+	FailFast      bool              `json:"fail_fast,omitempty"`
+	StoreFailures bool              `json:"store_failures,omitempty"`
+	WarnError     bool              `json:"warn_error,omitempty"`
 }
 
 // DbtTestOptions opções para testes dbt
 type DbtTestOptions struct {
-	Models       []string          `json:"models,omitempty"`
-	Select       []string          `json:"select,omitempty"`
-	Exclude      []string          `json:"exclude,omitempty"`
-	Vars         map[string]string `json:"vars,omitempty"`
-	Threads      int               `json:"threads,omitempty"`
-	Profiles     string            `json:"profiles,omitempty"`
-	Target       string            `json:"target,omitempty"`
-	FailFast     bool              `json:"fail_fast,omitempty"`
-	StoreFailures bool             `json:"store_failures,omitempty"`
-	WarnError    bool              `json:"warn_error,omitempty"`
+	Models        []string          `json:"models,omitempty"`
+	Select        []string          `json:"select,omitempty"`
+	Exclude       []string          `json:"exclude,omitempty"`
+	Vars          map[string]string `json:"vars,omitempty"`
+	Threads       int               `json:"threads,omitempty"`
+	Profiles      string            `json:"profiles,omitempty"`
+	Target        string            `json:"target,omitempty"`
+	FailFast      bool              `json:"fail_fast,omitempty"`
+	StoreFailures bool              `json:"store_failures,omitempty"`
+	WarnError     bool              `json:"warn_error,omitempty"`
 }
 
 // DbtRunResult resultado da execução dbt
 type DbtRunResult struct {
-	RunID       uuid.UUID             `json:"run_id"`
-	ProjectID   uuid.UUID             `json:"project_id"`
-	Command     string                `json:"command"`
-	Args        []string              `json:"args"`
-	ExitCode    int                   `json:"exit_code"`
-	Success     bool                  `json:"success"`
-	StartTime   time.Time             `json:"start_time"`
-	EndTime     time.Time             `json:"end_time"`
-	Duration    time.Duration         `json:"duration"`
-	Stdout      string                `json:"stdout"`
-	Stderr      string                `json:"stderr"`
-	Results     []DbtNodeResult       `json:"results"`
-	Metrics     DbtExecutionMetrics   `json:"metrics"`
-	Manifest    *DbtManifest          `json:"manifest,omitempty"`
-	RunResults  *DbtRunResultsJson    `json:"run_results,omitempty"`
+	RunID      uuid.UUID           `json:"run_id"`
+	ProjectID  uuid.UUID           `json:"project_id"`
+	Command    string              `json:"command"`
+	Args       []string            `json:"args"`
+	ExitCode   int                 `json:"exit_code"`
+	Success    bool                `json:"success"`
+	StartTime  time.Time           `json:"start_time"`
+	EndTime    time.Time           `json:"end_time"`
+	Duration   time.Duration       `json:"duration"`
+	Stdout     string              `json:"stdout"`
+	Stderr     string              `json:"stderr"`
+	Results    []DbtNodeResult     `json:"results"`
+	Metrics    DbtExecutionMetrics `json:"metrics"`
+	Manifest   *DbtManifest        `json:"manifest,omitempty"`
+	RunResults *DbtRunResultsJson  `json:"run_results,omitempty"`
 }
 
 // DbtNodeResult resultado de um nó (model, test, etc.)
 type DbtNodeResult struct {
-	UniqueID     string        `json:"unique_id"`
-	Name         string        `json:"name"`
-	Status       string        `json:"status"`
-	ExecutionTime float64      `json:"execution_time"`
-	RowsAffected *int64        `json:"rows_affected,omitempty"`
-	Message      string        `json:"message,omitempty"`
-	Failures     int           `json:"failures,omitempty"`
-	Thread       string        `json:"thread,omitempty"`
-	Timing       []DbtTiming   `json:"timing"`
+	UniqueID      string      `json:"unique_id"`
+	Name          string      `json:"name"`
+	Status        string      `json:"status"`
+	ExecutionTime float64     `json:"execution_time"`
+	RowsAffected  *int64      `json:"rows_affected,omitempty"`
+	Message       string      `json:"message,omitempty"`
+	Failures      int         `json:"failures,omitempty"`
+	Thread        string      `json:"thread,omitempty"`
+	Timing        []DbtTiming `json:"timing"`
 }
 
 // DbtTiming informações de timing
@@ -96,86 +96,86 @@ type DbtTiming struct {
 
 // DbtExecutionMetrics métricas de execução
 type DbtExecutionMetrics struct {
-	ModelsRun     int     `json:"models_run"`
-	TestsRun      int     `json:"tests_run"`
-	SeedsRun      int     `json:"seeds_run"`
-	SnapshotsRun  int     `json:"snapshots_run"`
-	Errors        int     `json:"errors"`
-	Warnings      int     `json:"warnings"`
-	Skipped       int     `json:"skipped"`
-	TotalNodes    int     `json:"total_nodes"`
-	SuccessRate   float64 `json:"success_rate"`
+	ModelsRun    int     `json:"models_run"`
+	TestsRun     int     `json:"tests_run"`
+	SeedsRun     int     `json:"seeds_run"`
+	SnapshotsRun int     `json:"snapshots_run"`
+	Errors       int     `json:"errors"`
+	Warnings     int     `json:"warnings"`
+	Skipped      int     `json:"skipped"`
+	TotalNodes   int     `json:"total_nodes"`
+	SuccessRate  float64 `json:"success_rate"`
 }
 
 // DbtManifest representa o manifest.json do dbt
 type DbtManifest struct {
-	Metadata    DbtMetadata              `json:"metadata"`
-	Nodes       map[string]DbtNode       `json:"nodes"`
-	Sources     map[string]DbtSource     `json:"sources"`
-	Macros      map[string]DbtMacro      `json:"macros"`
-	ParentMap   map[string][]string      `json:"parent_map"`
-	ChildMap    map[string][]string      `json:"child_map"`
+	Metadata  DbtMetadata          `json:"metadata"`
+	Nodes     map[string]DbtNode   `json:"nodes"`
+	Sources   map[string]DbtSource `json:"sources"`
+	Macros    map[string]DbtMacro  `json:"macros"`
+	ParentMap map[string][]string  `json:"parent_map"`
+	ChildMap  map[string][]string  `json:"child_map"`
 }
 
 // DbtMetadata metadados do manifest
 type DbtMetadata struct {
-	DbtVersion    string    `json:"dbt_version"`
-	GeneratedAt   time.Time `json:"generated_at"`
-	InvocationID  string    `json:"invocation_id"`
-	EnvVars       map[string]string `json:"env_vars"`
+	DbtVersion   string            `json:"dbt_version"`
+	GeneratedAt  time.Time         `json:"generated_at"`
+	InvocationID string            `json:"invocation_id"`
+	EnvVars      map[string]string `json:"env_vars"`
 }
 
 // DbtNode representa um nó no manifest
 type DbtNode struct {
-	UniqueID      string            `json:"unique_id"`
-	Name          string            `json:"name"`
-	ResourceType  string            `json:"resource_type"`
-	PackageName   string            `json:"package_name"`
-	Path          string            `json:"path"`
-	OriginalPath  string            `json:"original_file_path"`
-	Database      string            `json:"database"`
-	Schema        string            `json:"schema"`
-	Alias         string            `json:"alias"`
-	Description   string            `json:"description"`
-	Config        map[string]interface{} `json:"config"`
-	Tags          []string          `json:"tags"`
-	Refs          [][]string        `json:"refs"`
-	Sources       [][]string        `json:"sources"`
-	DependsOn     DbtDependsOn      `json:"depends_on"`
+	UniqueID     string                 `json:"unique_id"`
+	Name         string                 `json:"name"`
+	ResourceType string                 `json:"resource_type"`
+	PackageName  string                 `json:"package_name"`
+	Path         string                 `json:"path"`
+	OriginalPath string                 `json:"original_file_path"`
+	Database     string                 `json:"database"`
+	Schema       string                 `json:"schema"`
+	Alias        string                 `json:"alias"`
+	Description  string                 `json:"description"`
+	Config       map[string]interface{} `json:"config"`
+	Tags         []string               `json:"tags"`
+	Refs         [][]string             `json:"refs"`
+	Sources      [][]string             `json:"sources"`
+	DependsOn    DbtDependsOn           `json:"depends_on"`
 }
 
 // DbtSource representa uma source no manifest
 type DbtSource struct {
-	UniqueID     string            `json:"unique_id"`
-	Name         string            `json:"name"`
-	SourceName   string            `json:"source_name"`
-	Database     string            `json:"database"`
-	Schema       string            `json:"schema"`
-	Identifier   string            `json:"identifier"`
-	Description  string            `json:"description"`
-	Columns      map[string]interface{} `json:"columns"`
-	Meta         map[string]interface{} `json:"meta"`
-	Tags         []string          `json:"tags"`
+	UniqueID    string                 `json:"unique_id"`
+	Name        string                 `json:"name"`
+	SourceName  string                 `json:"source_name"`
+	Database    string                 `json:"database"`
+	Schema      string                 `json:"schema"`
+	Identifier  string                 `json:"identifier"`
+	Description string                 `json:"description"`
+	Columns     map[string]interface{} `json:"columns"`
+	Meta        map[string]interface{} `json:"meta"`
+	Tags        []string               `json:"tags"`
 }
 
 // DbtMacro representa um macro no manifest
 type DbtMacro struct {
-	UniqueID     string            `json:"unique_id"`
-	Name         string            `json:"name"`
-	PackageName  string            `json:"package_name"`
-	Path         string            `json:"path"`
-	Description  string            `json:"description"`
-	Arguments    []DbtMacroArg     `json:"arguments"`
-	Meta         map[string]interface{} `json:"meta"`
-	Tags         []string          `json:"tags"`
+	UniqueID    string                 `json:"unique_id"`
+	Name        string                 `json:"name"`
+	PackageName string                 `json:"package_name"`
+	Path        string                 `json:"path"`
+	Description string                 `json:"description"`
+	Arguments   []DbtMacroArg          `json:"arguments"`
+	Meta        map[string]interface{} `json:"meta"`
+	Tags        []string               `json:"tags"`
 }
 
 // DbtMacroArg argumento de macro
 type DbtMacroArg struct {
-	Name         string      `json:"name"`
-	Type         string      `json:"type"`
-	Description  string      `json:"description"`
-	Default      interface{} `json:"default"`
+	Name        string      `json:"name"`
+	Type        string      `json:"type"`
+	Description string      `json:"description"`
+	Default     interface{} `json:"default"`
 }
 
 // DbtDependsOn dependências de um nó
@@ -186,9 +186,9 @@ type DbtDependsOn struct {
 
 // DbtRunResultsJson resultado completo da execução
 type DbtRunResultsJson struct {
-	Metadata    DbtMetadata     `json:"metadata"`
-	Results     []DbtNodeResult `json:"results"`
-	ElapsedTime float64         `json:"elapsed_time"`
+	Metadata    DbtMetadata            `json:"metadata"`
+	Results     []DbtNodeResult        `json:"results"`
+	ElapsedTime float64                `json:"elapsed_time"`
 	Args        map[string]interface{} `json:"args"`
 }
 

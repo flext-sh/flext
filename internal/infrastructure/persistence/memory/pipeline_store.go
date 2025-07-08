@@ -190,12 +190,12 @@ func (s *PipelineStore) BeginTx(ctx context.Context) (persistence.Transaction, e
 func (s *PipelineStore) cloneModel(model *persistence.PipelineModel) *persistence.PipelineModel {
 	// Deep clone to prevent external modifications
 	clone := *model
-	
+
 	// Clone slices
 	clone.Tags = append([]string{}, model.Tags...)
 	clone.Steps = make([]persistence.StepModel, len(model.Steps))
 	copy(clone.Steps, model.Steps)
-	
+
 	// Clone maps
 	if model.Configuration != nil {
 		clone.Configuration = make(map[string]interface{})
@@ -203,7 +203,7 @@ func (s *PipelineStore) cloneModel(model *persistence.PipelineModel) *persistenc
 			clone.Configuration[k] = v
 		}
 	}
-	
+
 	return &clone
 }
 

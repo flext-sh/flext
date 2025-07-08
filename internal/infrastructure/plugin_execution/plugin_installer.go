@@ -196,20 +196,20 @@ func (pi *PluginInstaller) installEssentialPlugins() error {
 	}
 
 	for _, plugin := range plugins {
-		pi.logger.Info("Installing plugin", 
-			logging.F("name", plugin.name), 
+		pi.logger.Info("Installing plugin",
+			logging.F("name", plugin.name),
 			logging.F("variant", plugin.variant))
 
 		// Adicionar plugin ao Meltano
 		if err := pi.runCommandInVenvAtPath(projectPath, "meltano", "add", "extractor", plugin.name, "--variant", plugin.variant); err != nil {
-			pi.logger.Warn("Failed to add plugin via Meltano, trying pip install", 
-				logging.F("plugin", plugin.name), 
+			pi.logger.Warn("Failed to add plugin via Meltano, trying pip install",
+				logging.F("plugin", plugin.name),
 				logging.F("error", err.Error()))
 
 			// Fallback: instalar via pip
 			if err := pi.runCommandInVenv("pip", "install", plugin.pip); err != nil {
-				pi.logger.Warn("Failed to install plugin via pip", 
-					logging.F("plugin", plugin.pip), 
+				pi.logger.Warn("Failed to install plugin via pip",
+					logging.F("plugin", plugin.pip),
 					logging.F("error", err.Error()))
 				continue
 			}
@@ -249,15 +249,15 @@ func (pi *PluginInstaller) CreateTestData() error {
 func (pi *PluginInstaller) runCommand(name string, args ...string) error {
 	cmd := exec.Command(name, args...)
 	cmd.Env = os.Environ()
-	
-	pi.logger.Debug("Running command", 
-		logging.F("cmd", name), 
+
+	pi.logger.Debug("Running command",
+		logging.F("cmd", name),
 		logging.F("args", strings.Join(args, " ")))
 
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		pi.logger.Error("Command failed", 
-			logging.F("cmd", name), 
+		pi.logger.Error("Command failed",
+			logging.F("cmd", name),
 			logging.F("error", err.Error()),
 			logging.F("output", string(output)))
 		return err
@@ -270,7 +270,7 @@ func (pi *PluginInstaller) runCommand(name string, args ...string) error {
 func (pi *PluginInstaller) runCommandInVenv(name string, args ...string) error {
 	// Ativar venv usando source
 	activateScript := filepath.Join(pi.venvPath, "bin", "activate")
-	
+
 	var cmdStr string
 	if name == "pip" || name == "python" || name == "meltano" {
 		// Usar executável do venv diretamente
@@ -279,9 +279,9 @@ func (pi *PluginInstaller) runCommandInVenv(name string, args ...string) error {
 			name = venvBin
 		}
 	}
-	
+
 	cmdStr = fmt.Sprintf("source %s && %s %s", activateScript, name, strings.Join(args, " "))
-	
+
 	cmd := exec.Command("bash", "-c", cmdStr)
 	cmd.Env = os.Environ()
 
@@ -289,8 +289,8 @@ func (pi *PluginInstaller) runCommandInVenv(name string, args ...string) error {
 
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		pi.logger.Error("Venv command failed", 
-			logging.F("cmd", cmdStr), 
+		pi.logger.Error("Venv command failed",
+			logging.F("cmd", cmdStr),
 			logging.F("error", err.Error()),
 			logging.F("output", string(output)))
 		return err
@@ -302,28 +302,28 @@ func (pi *PluginInstaller) runCommandInVenv(name string, args ...string) error {
 // runCommandInVenvAtPath executa comando no venv em um diretório específico
 func (pi *PluginInstaller) runCommandInVenvAtPath(workDir, name string, args ...string) error {
 	activateScript := filepath.Join(pi.venvPath, "bin", "activate")
-	
+
 	if name == "meltano" {
 		venvBin := filepath.Join(pi.venvPath, "bin", name)
 		if _, err := os.Stat(venvBin); err == nil {
 			name = venvBin
 		}
 	}
-	
+
 	cmdStr := fmt.Sprintf("cd %s && source %s && %s %s", workDir, activateScript, name, strings.Join(args, " "))
-	
+
 	cmd := exec.Command("bash", "-c", cmdStr)
 	cmd.Env = os.Environ()
 
-	pi.logger.Debug("Running venv command at path", 
+	pi.logger.Debug("Running venv command at path",
 		logging.F("path", workDir),
 		logging.F("cmd", cmdStr))
 
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		pi.logger.Error("Venv command at path failed", 
+		pi.logger.Error("Venv command at path failed",
 			logging.F("path", workDir),
-			logging.F("cmd", cmdStr), 
+			logging.F("cmd", cmdStr),
 			logging.F("error", err.Error()),
 			logging.F("output", string(output)))
 		return err

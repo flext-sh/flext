@@ -514,9 +514,9 @@ func NewDbtDebugCommand() *DbtDebugCommand {
 	return cmd
 }
 
-func (c *DbtDebugCommand) Name() string        { return "dbt-debug" }
-func (c *DbtDebugCommand) Description() string { return "Debug dbt project configuration" }
-func (c *DbtDebugCommand) Usage() string       { return "dbt-debug --project-id <project-id>" }
+func (c *DbtDebugCommand) Name() string         { return "dbt-debug" }
+func (c *DbtDebugCommand) Description() string  { return "Debug dbt project configuration" }
+func (c *DbtDebugCommand) Usage() string        { return "dbt-debug --project-id <project-id>" }
 func (c *DbtDebugCommand) Flags() *flag.FlagSet { return c.flags }
 
 func (c *DbtDebugCommand) Run(ctx context.Context, args []string) error {
@@ -599,9 +599,9 @@ func NewDbtDepsCommand() *DbtDepsCommand {
 	return cmd
 }
 
-func (c *DbtDepsCommand) Name() string        { return "dbt-deps" }
-func (c *DbtDepsCommand) Description() string { return "Install dbt dependencies" }
-func (c *DbtDepsCommand) Usage() string       { return "dbt-deps --project-id <project-id>" }
+func (c *DbtDepsCommand) Name() string         { return "dbt-deps" }
+func (c *DbtDepsCommand) Description() string  { return "Install dbt dependencies" }
+func (c *DbtDepsCommand) Usage() string        { return "dbt-deps --project-id <project-id>" }
 func (c *DbtDepsCommand) Flags() *flag.FlagSet { return c.flags }
 
 func (c *DbtDepsCommand) Run(ctx context.Context, args []string) error {
@@ -675,9 +675,9 @@ func NewDbtCleanCommand() *DbtCleanCommand {
 	return cmd
 }
 
-func (c *DbtCleanCommand) Name() string        { return "dbt-clean" }
-func (c *DbtCleanCommand) Description() string { return "Clean dbt artifacts" }
-func (c *DbtCleanCommand) Usage() string       { return "dbt-clean --project-id <project-id>" }
+func (c *DbtCleanCommand) Name() string         { return "dbt-clean" }
+func (c *DbtCleanCommand) Description() string  { return "Clean dbt artifacts" }
+func (c *DbtCleanCommand) Usage() string        { return "dbt-clean --project-id <project-id>" }
 func (c *DbtCleanCommand) Flags() *flag.FlagSet { return c.flags }
 
 func (c *DbtCleanCommand) Run(ctx context.Context, args []string) error {
@@ -800,4 +800,3 @@ func (c *DbtRunCommand) parseAndDisplayResult(resp *http.Response) error {
 
 	return nil
 }
-

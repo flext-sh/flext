@@ -113,16 +113,16 @@ func StatCard(title, icon, color, value, link string) Component {
 	return func(ctx context.Context, w io.Writer) error {
 		_, err := fmt.Fprintf(w, `
         <div class="bg-gradient-to-r %s text-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
-             x-data="{ animated: false }" 
-             x-init="setTimeout(() => animated = true, 100)" 
+             x-data="{ animated: false }"
+             x-init="setTimeout(() => animated = true, 100)"
              :class="animated ? 'scale-100 opacity-100' : 'scale-95 opacity-0'">
             <div class="p-6">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm opacity-90">%s</p>
-                        <p class="text-3xl font-bold" 
-                           hx-get="/api/stats/%s" 
-                           hx-trigger="load, every 15s" 
+                        <p class="text-3xl font-bold"
+                           hx-get="/api/stats/%s"
+                           hx-trigger="load, every 15s"
                            hx-swap="innerHTML">%s</p>
                     </div>
                     <div class="text-4xl opacity-80">
@@ -191,8 +191,8 @@ func Table(headers []string, endpoint string) Component {
 		_, err = fmt.Fprintf(w, `
                     </tr>
                 </thead>
-                <tbody hx-get="%s" 
-                       hx-trigger="load, every 30s" 
+                <tbody hx-get="%s"
+                       hx-trigger="load, every 30s"
                        hx-indicator="#table-loading"
                        class="bg-white divide-y divide-gray-200">
                     <tr id="table-loading">
@@ -213,7 +213,7 @@ func Chart(chartId, chartType string) Component {
 	return func(ctx context.Context, w io.Writer) error {
 		_, err := fmt.Fprintf(w, `
         <div class="relative">
-            <canvas id="%s" 
+            <canvas id="%s"
                     class="w-full h-64"
                     x-data="chart('%s', '%s')"
                     x-init="initChart()"
@@ -231,7 +231,7 @@ func Chart(chartId, chartType string) Component {
 func Form(action, method string, children ...Component) Component {
 	return func(ctx context.Context, w io.Writer) error {
 		_, err := fmt.Fprintf(w, `
-        <form hx-%s="%s" 
+        <form hx-%s="%s"
               hx-swap="outerHTML"
               hx-indicator="#form-loading"
               class="space-y-4"
@@ -265,8 +265,8 @@ func Input(name, placeholder, inputType string) Component {
 	return func(ctx context.Context, w io.Writer) error {
 		_, err := fmt.Fprintf(w, `
             <div>
-                <input type="%s" 
-                       name="%s" 
+                <input type="%s"
+                       name="%s"
                        placeholder="%s"
                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                        required>
@@ -281,7 +281,7 @@ type TemplRenderer struct{}
 
 func (t *TemplRenderer) Render(w io.Writer, name string, data interface{}, c echo.Context) error {
 	ctx := c.Request().Context()
-	
+
 	switch name {
 	case "dashboard":
 		return DashboardPage(ctx, w)

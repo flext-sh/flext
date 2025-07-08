@@ -175,10 +175,10 @@ func (v *DefaultValidator) ValidateUpdatePlugin(input plugin.UpdatePluginInput) 
 func isValidName(name string) bool {
 	// Allow alphanumeric, spaces, hyphens, underscores
 	for _, r := range name {
-		if !((r >= 'a' && r <= 'z') || 
-			 (r >= 'A' && r <= 'Z') || 
-			 (r >= '0' && r <= '9') || 
-			 r == ' ' || r == '-' || r == '_') {
+		if !((r >= 'a' && r <= 'z') ||
+			(r >= 'A' && r <= 'Z') ||
+			(r >= '0' && r <= '9') ||
+			r == ' ' || r == '-' || r == '_') {
 			return false
 		}
 	}
@@ -188,10 +188,10 @@ func isValidName(name string) bool {
 func isValidTag(tag string) bool {
 	// Allow alphanumeric, hyphens, underscores (no spaces in tags)
 	for _, r := range tag {
-		if !((r >= 'a' && r <= 'z') || 
-			 (r >= 'A' && r <= 'Z') || 
-			 (r >= '0' && r <= '9') || 
-			 r == '-' || r == '_') {
+		if !((r >= 'a' && r <= 'z') ||
+			(r >= 'A' && r <= 'Z') ||
+			(r >= '0' && r <= '9') ||
+			r == '-' || r == '_') {
 			return false
 		}
 	}
@@ -203,16 +203,16 @@ func isValidVersion(version string) bool {
 	if version == "" {
 		return false
 	}
-	
+
 	// Basic check: must contain only alphanumeric, dots, hyphens
 	for _, r := range version {
-		if !((r >= 'a' && r <= 'z') || 
-			 (r >= 'A' && r <= 'Z') || 
-			 (r >= '0' && r <= '9') || 
-			 r == '.' || r == '-' || r == '+') {
+		if !((r >= 'a' && r <= 'z') ||
+			(r >= 'A' && r <= 'Z') ||
+			(r >= '0' && r <= '9') ||
+			r == '.' || r == '-' || r == '+') {
 			return false
 		}
 	}
-	
+
 	return true
 }

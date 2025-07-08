@@ -12,11 +12,11 @@ import (
 // CreatePipeline - Ação para criar pipeline
 func (h *BootstrapWebHandler) CreatePipeline(c echo.Context) error {
 	h.logger.Info("Creating new pipeline via HTMX")
-	
+
 	// Simular criação de pipeline
 	newPipelineID := time.Now().Unix()
 	newPipelineName := fmt.Sprintf("Pipeline-%d", newPipelineID)
-	
+
 	// Retornar tabela atualizada com novo pipeline
 	pipelines := []map[string]interface{}{
 		{"id": newPipelineID, "name": newPipelineName, "status": "created", "steps": 1, "created": time.Now().Format("2006-01-02")},
@@ -82,7 +82,7 @@ func (h *BootstrapWebHandler) CreatePipeline(c echo.Context) error {
                 </div>
             </td>
         </tr>`,
-			rowClass, pipeline["id"], pipeline["name"], statusBadge, pipeline["steps"], 
+			rowClass, pipeline["id"], pipeline["name"], statusBadge, pipeline["steps"],
 			pipeline["created"], pipeline["id"], pipeline["id"])
 	}
 
@@ -98,7 +98,7 @@ func (h *BootstrapWebHandler) CreatePipeline(c echo.Context) error {
 func (h *BootstrapWebHandler) ExecutePipeline(c echo.Context) error {
 	pipelineID := c.Param("id")
 	h.logger.Info(fmt.Sprintf("Executing pipeline %s via HTMX", pipelineID))
-	
+
 	// Simular execução
 	pipelines := []map[string]interface{}{
 		{"id": 1, "name": "ETL Data Pipeline", "status": "running", "steps": 4, "created": "2025-06-30"},
@@ -172,7 +172,7 @@ func (h *BootstrapWebHandler) ExecutePipeline(c echo.Context) error {
                 </div>
             </td>
         </tr>`,
-			rowClass, pipeline["id"], pipeline["name"], statusBadge, pipeline["steps"], 
+			rowClass, pipeline["id"], pipeline["name"], statusBadge, pipeline["steps"],
 			pipeline["created"], pipeline["id"], pipeline["id"])
 	}
 
@@ -188,7 +188,7 @@ func (h *BootstrapWebHandler) ExecutePipeline(c echo.Context) error {
 func (h *BootstrapWebHandler) DeletePipeline(c echo.Context) error {
 	pipelineID := c.Param("id")
 	h.logger.Info(fmt.Sprintf("Deleting pipeline %s via HTMX", pipelineID))
-	
+
 	// Simular exclusão
 	pipelines := []map[string]interface{}{
 		{"id": 1, "name": "ETL Data Pipeline", "status": "running", "steps": 4, "created": "2025-06-30"},
@@ -258,7 +258,7 @@ func (h *BootstrapWebHandler) DeletePipeline(c echo.Context) error {
                 </div>
             </td>
         </tr>`,
-			pipeline["id"], pipeline["name"], statusBadge, pipeline["steps"], 
+			pipeline["id"], pipeline["name"], statusBadge, pipeline["steps"],
 			pipeline["created"], pipeline["id"], pipeline["id"])
 	}
 
@@ -283,10 +283,10 @@ func (h *BootstrapWebHandler) DeletePipeline(c echo.Context) error {
 // RegisterPlugin - Ação para registrar plugin
 func (h *BootstrapWebHandler) RegisterPlugin(c echo.Context) error {
 	h.logger.Info("Registering new plugin via HTMX")
-	
+
 	// Simular registro de plugin - retorna nova atividade
 	newActivity := fmt.Sprintf("Plugin 'New-Plugin-%d' registered", time.Now().Unix())
-	
+
 	activities := []map[string]interface{}{
 		{"time": "Just now", "action": newActivity, "type": "success", "icon": "bi-plugin"},
 		{"time": "2 min ago", "action": "Pipeline 'ETL Data' completed", "type": "success", "icon": "bi-check-circle-fill"},
@@ -327,10 +327,10 @@ func (h *BootstrapWebHandler) RegisterPlugin(c echo.Context) error {
 // RunDiagnostics - Ação para executar diagnósticos
 func (h *BootstrapWebHandler) RunDiagnostics(c echo.Context) error {
 	h.logger.Info("Running system diagnostics via HTMX")
-	
+
 	// Simular diagnósticos - retorna nova atividade
 	diagnosticsResult := "System diagnostics completed - All systems operational"
-	
+
 	activities := []map[string]interface{}{
 		{"time": "Just now", "action": diagnosticsResult, "type": "success", "icon": "bi-shield-check"},
 		{"time": "2 min ago", "action": "Pipeline 'ETL Data' completed", "type": "success", "icon": "bi-check-circle-fill"},
@@ -385,7 +385,7 @@ func (h *BootstrapWebHandler) PipelinesPage(c echo.Context) error {
     <div class="container mt-4">
         <h1><i class="bi bi-diagram-3"></i> Pipelines Management</h1>
         <p class="text-muted">Manage and monitor your data pipelines</p>
-        
+
         <div class="card" hx-get="/components/pipelines" hx-trigger="load">
             <div class="card-body text-center">
                 <div class="spinner-border" role="status"></div>
@@ -415,7 +415,7 @@ func (h *BootstrapWebHandler) PluginsPage(c echo.Context) error {
     <div class="container mt-4">
         <h1><i class="bi bi-plugin"></i> Plugins Registry</h1>
         <p class="text-muted">Manage your framework plugins and extensions</p>
-        
+
         <div class="alert alert-info">
             <i class="bi bi-info-circle"></i> Plugins page coming soon!
         </div>
@@ -443,7 +443,7 @@ func (h *BootstrapWebHandler) MonitoringPage(c echo.Context) error {
     <div class="container mt-4">
         <h1><i class="bi bi-graph-up"></i> System Monitoring</h1>
         <p class="text-muted">Real-time system performance and health monitoring</p>
-        
+
         <div class="row">
             <div class="col-md-6">
                 <div class="card">

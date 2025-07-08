@@ -34,7 +34,7 @@ func NewWebHandler(
 func (h *WebHandler) RegisterRoutes(e *echo.Echo) {
 	// Setup template renderer
 	e.Renderer = &TemplRenderer{}
-	
+
 	// Web interface routes
 	e.GET("/web", h.Dashboard)
 	e.GET("/web/pipelines", h.PipelinesList)
@@ -44,7 +44,7 @@ func (h *WebHandler) RegisterRoutes(e *echo.Echo) {
 
 	// Static files
 	e.Static("/static", "web/static")
-	
+
 	// Register API endpoints for reactive components
 	apiHandler := NewTemplAPIHandler()
 	apiHandler.RegisterRoutes(e)

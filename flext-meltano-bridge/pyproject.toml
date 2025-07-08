@@ -11,6 +11,7 @@ requires-python = ">=3.13,<3.14"
 keywords = [ "flext", "meltano", "bridge", "go", "gopy", "integration", "enterprise",]
 classifiers = [ "Development Status :: 4 - Beta", "Intended Audience :: Developers", "License :: OSI Approved :: MIT License", "Operating System :: OS Independent", "Programming Language :: Python :: 3.13", "Programming Language :: Python :: 3 :: Only", "Topic :: Software Development :: Libraries :: Python Modules", "Topic :: System :: Systems Administration", "Typing :: Typed",]
 dependencies = [ "meltano>=3.7.9", "pydantic>=2.11.0", "click>=8.1.7", "structlog>=21.0.0",]
+
 [[project.authors]]
 name = "FLEXT Team"
 email = "team@flext.sh"
@@ -39,7 +40,6 @@ fix = true
 [tool.black]
 line-length = 88
 target-version = [ "py312",]
-
 [tool.isort]
 profile = "black"
 line_length = 88
@@ -65,7 +65,6 @@ python = ">=3.13,<3.14"
 [tool.ruff.lint]
 ignore = [ "COM812", "ISC001", "D203", "D213", "T201", "S101", "INP001", "D100", "D101", "D102", "D103", "D105", "D107", "D401", "D417", "ANN001", "ANN201", "ANN202", "ANN204", "ANN401", "ANN003", "ANN002", "PLR0911", "PLR0912", "PLR0913", "PLR0915", "C901",]
 select = [ "ALL",]
-
 [tool.pytest.ini_options]
 minversion = "8.0"
 addopts = [ "--strict-markers", "--strict-config", "--verbose", "--tb=short", "--cov=src", "--cov-report=term-missing:skip-covered", "--cov-report=html:reports/coverage", "--cov-report=xml:reports/coverage.xml", "--cov-fail-under=85", "--junitxml=reports/pytest.xml", "--maxfail=5", "--timeout=60", "--disable-warnings", "--randomly-seed=1234", "--randomly-dont-reorganize",]
@@ -102,7 +101,6 @@ sort = "Cover"
 precision = 2
 fail_under = 85
 exclude_lines = [ "pragma: no cover", "def __repr__", "if self.debug:", "if settings.DEBUG", "raise AssertionError", "raise NotImplementedError", "if 0:", "if __name__ == .__main__.:", "class .*\\bProtocol\\):", "@(abc\\.)?abstractmethod", "TYPE_CHECKING", "\\.\\.\\.", "pass", "def __str__", "def __unicode__",]
-
 [tool.coverage.html]
 directory = "reports/coverage"
 title = "Flext-Meltano-Bridge Coverage Report"
@@ -117,13 +115,11 @@ show_contexts = true
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = [ "S101", "PLR2004", "D", "ANN",]
-
 [tool.pytest.ini_options.markers_by_type]
 singer = [ "tap: marks tests for Singer taps", "target: marks tests for Singer targets", "stream: marks tests for data streams", "catalog: marks tests for catalog discovery", "state: marks tests for state management",]
 django = [ "django_db: marks tests as requiring database access", "selenium: marks tests as requiring selenium", "client: marks tests using Django test client", "REDACTED_LDAP_BIND_PASSWORD: marks tests for Django REDACTED_LDAP_BIND_PASSWORD",]
 grpc = [ "grpc_server: marks tests requiring gRPC server", "proto: marks tests for protobuf validation", "streaming: marks tests for streaming RPCs", "interceptor: marks tests for gRPC interceptors",]
 observability = [ "metrics: marks tests as metrics tests", "tracing: marks tests as tracing tests", "health: marks tests as health check tests", "prometheus: tests that need Prometheus", "grafana: tests that need Grafana",]
-
 [tool.setuptools.dynamic.version]
 attr = "flext_meltano_bridge.__version__.__version__"
 

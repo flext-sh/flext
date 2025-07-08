@@ -4,28 +4,28 @@ import (
 	"context"
 	"fmt"
 
+	meltanoServices "github.com/flext-sh/flext/internal/bounded_contexts/meltano/application/services"
 	"github.com/flext-sh/flext/internal/infrastructure/config"
 	"github.com/flext-sh/flext/internal/infrastructure/http"
 	"github.com/flext-sh/flext/internal/infrastructure/logging"
-	meltanoServices "github.com/flext-sh/flext/internal/bounded_contexts/meltano/application/services"
 )
 
 // SimpleContainer provides basic functionality for testing
 type SimpleContainer struct {
-	config         *config.Config
-	logger         logging.Logger
-	meltanoService *meltanoServices.MeltanoService
-	meltanoHandler *http.MeltanoHandler
+	config             *config.Config
+	logger             logging.Logger
+	meltanoService     *meltanoServices.MeltanoService
+	meltanoHandler     *http.MeltanoHandler
 	meltanoGopyHandler *http.MeltanoGopyHandler
 }
 
 // NewSimpleContainer creates a minimal container for testing
 func NewSimpleContainer(cfg *config.Config) (*SimpleContainer, error) {
 	logger := logging.GetLogger()
-	
+
 	// Get Python path
 	pythonPath := cfg.GetEnvWithDefault("PYTHON_PATH", "/home/marlonsc/flext/.venv/bin/python3")
-	
+
 	// Meltano Service with auto-detection
 	meltanoSvc, err := meltanoServices.NewMeltanoServiceWithConfig(logger)
 	if err != nil {
@@ -38,10 +38,10 @@ func NewSimpleContainer(cfg *config.Config) (*SimpleContainer, error) {
 	}
 
 	container := &SimpleContainer{
-		config:         cfg,
-		logger:         logger,
-		meltanoService: meltanoSvc,
-		meltanoHandler: http.NewMeltanoHandler(meltanoSvc),
+		config:             cfg,
+		logger:             logger,
+		meltanoService:     meltanoSvc,
+		meltanoHandler:     http.NewMeltanoHandler(meltanoSvc),
 		meltanoGopyHandler: http.NewMeltanoGopyHandler(meltanoSvc, logger),
 	}
 

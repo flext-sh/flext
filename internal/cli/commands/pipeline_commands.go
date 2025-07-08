@@ -165,9 +165,9 @@ func (c *PipelineListCommand) Run(ctx context.Context, args []string) error {
 	// Parse response
 	var result struct {
 		Pipelines []map[string]interface{} `json:"pipelines"`
-		Total     int64                     `json:"total"`
-		Limit     int                       `json:"limit"`
-		Offset    int                       `json:"offset"`
+		Total     int64                    `json:"total"`
+		Limit     int                      `json:"limit"`
+		Offset    int                      `json:"offset"`
 	}
 
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
@@ -251,9 +251,9 @@ func NewPipelineShowCommand() *PipelineShowCommand {
 	return cmd
 }
 
-func (c *PipelineShowCommand) Name() string        { return "pipeline-show" }
-func (c *PipelineShowCommand) Description() string { return "Show pipeline details" }
-func (c *PipelineShowCommand) Usage() string       { return "pipeline-show --id <pipeline-id>" }
+func (c *PipelineShowCommand) Name() string         { return "pipeline-show" }
+func (c *PipelineShowCommand) Description() string  { return "Show pipeline details" }
+func (c *PipelineShowCommand) Usage() string        { return "pipeline-show --id <pipeline-id>" }
 func (c *PipelineShowCommand) Flags() *flag.FlagSet { return c.flags }
 
 func (c *PipelineShowCommand) Run(ctx context.Context, args []string) error {
@@ -369,9 +369,9 @@ func NewPipelineRunCommand() *PipelineRunCommand {
 	return cmd
 }
 
-func (c *PipelineRunCommand) Name() string        { return "pipeline-run" }
-func (c *PipelineRunCommand) Description() string { return "Execute a pipeline" }
-func (c *PipelineRunCommand) Usage() string       { return "pipeline-run --id <pipeline-id> [--wait]" }
+func (c *PipelineRunCommand) Name() string         { return "pipeline-run" }
+func (c *PipelineRunCommand) Description() string  { return "Execute a pipeline" }
+func (c *PipelineRunCommand) Usage() string        { return "pipeline-run --id <pipeline-id> [--wait]" }
 func (c *PipelineRunCommand) Flags() *flag.FlagSet { return c.flags }
 
 func (c *PipelineRunCommand) Run(ctx context.Context, args []string) error {
@@ -452,9 +452,9 @@ func NewPipelineDeleteCommand() *PipelineDeleteCommand {
 	return cmd
 }
 
-func (c *PipelineDeleteCommand) Name() string        { return "pipeline-delete" }
-func (c *PipelineDeleteCommand) Description() string { return "Delete a pipeline" }
-func (c *PipelineDeleteCommand) Usage() string       { return "pipeline-delete --id <pipeline-id> [--force]" }
+func (c *PipelineDeleteCommand) Name() string         { return "pipeline-delete" }
+func (c *PipelineDeleteCommand) Description() string  { return "Delete a pipeline" }
+func (c *PipelineDeleteCommand) Usage() string        { return "pipeline-delete --id <pipeline-id> [--force]" }
 func (c *PipelineDeleteCommand) Flags() *flag.FlagSet { return c.flags }
 
 func (c *PipelineDeleteCommand) Run(ctx context.Context, args []string) error {

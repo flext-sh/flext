@@ -13,18 +13,18 @@ import (
 
 // ServiceInfo represents information about a service instance
 type ServiceInfo struct {
-	ID          string            `json:"id"`
-	Name        string            `json:"name"`
-	Version     string            `json:"version"`
-	Address     string            `json:"address"`
-	Port        int               `json:"port"`
-	Protocol    string            `json:"protocol"`
-	Health      HealthStatus      `json:"health"`
-	Metadata    map[string]string `json:"metadata"`
-	Tags        []string          `json:"tags"`
-	NodeID      string            `json:"node_id"`
-	LastSeen    time.Time         `json:"last_seen"`
-	RegisteredAt time.Time        `json:"registered_at"`
+	ID           string            `json:"id"`
+	Name         string            `json:"name"`
+	Version      string            `json:"version"`
+	Address      string            `json:"address"`
+	Port         int               `json:"port"`
+	Protocol     string            `json:"protocol"`
+	Health       HealthStatus      `json:"health"`
+	Metadata     map[string]string `json:"metadata"`
+	Tags         []string          `json:"tags"`
+	NodeID       string            `json:"node_id"`
+	LastSeen     time.Time         `json:"last_seen"`
+	RegisteredAt time.Time         `json:"registered_at"`
 }
 
 // HealthStatus represents the health status of a service
@@ -38,15 +38,15 @@ const (
 
 // ServiceRegistry manages service registration and discovery
 type ServiceRegistry struct {
-	nodeID       string
-	redisClient  *redis.Client
-	logger       logging.Logger
-	services     map[string]*ServiceInfo
+	nodeID        string
+	redisClient   *redis.Client
+	logger        logging.Logger
+	services      map[string]*ServiceInfo
 	servicesMutex sync.RWMutex
-	ctx          context.Context
-	cancel       context.CancelFunc
-	healthChecks map[string]HealthChecker
-	healthMutex  sync.RWMutex
+	ctx           context.Context
+	cancel        context.CancelFunc
+	healthChecks  map[string]HealthChecker
+	healthMutex   sync.RWMutex
 }
 
 // HealthChecker defines the interface for service health checking
@@ -65,11 +65,11 @@ type LoadBalancer struct {
 type LoadBalancingStrategy string
 
 const (
-	StrategyRoundRobin    LoadBalancingStrategy = "round_robin"
-	StrategyLeastLoad     LoadBalancingStrategy = "least_load"
-	StrategyRandom        LoadBalancingStrategy = "random"
-	StrategyWeighted      LoadBalancingStrategy = "weighted"
-	StrategyGeoProximity  LoadBalancingStrategy = "geo_proximity"
+	StrategyRoundRobin   LoadBalancingStrategy = "round_robin"
+	StrategyLeastLoad    LoadBalancingStrategy = "least_load"
+	StrategyRandom       LoadBalancingStrategy = "random"
+	StrategyWeighted     LoadBalancingStrategy = "weighted"
+	StrategyGeoProximity LoadBalancingStrategy = "geo_proximity"
 )
 
 // NewServiceRegistry creates a new service registry
@@ -402,7 +402,7 @@ func (sr *ServiceRegistry) cleanupStaleServices() {
 	for serviceID, service := range sr.services {
 		if now.Sub(service.LastSeen) > staleThreshold {
 			delete(sr.services, serviceID)
-			
+
 			// Remove from Redis if it's our service
 			if service.NodeID == sr.nodeID {
 				key := fmt.Sprintf("discovery:services:%s", serviceID)

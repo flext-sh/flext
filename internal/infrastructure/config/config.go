@@ -23,7 +23,7 @@ type Config struct {
 	Monitoring MonitoringConfig `mapstructure:"monitoring" envconfig:"MONITORING"`
 	Logging    LoggingConfig    `mapstructure:"logging" envconfig:"LOGGING"`
 	Features   FeatureFlags     `mapstructure:"features" envconfig:"FEATURES"`
-	
+
 	// Clean Architecture configuration
 	CleanArchitecture CleanArchitectureConfig `mapstructure:"clean_architecture" envconfig:"CLEAN_ARCHITECTURE"`
 }
@@ -211,13 +211,13 @@ func DefaultConfig() *Config {
 			WebSocketEnabled:    true,
 			MetricsEnabled:      true,
 			SwaggerEnabled:      true,
-			DatabaseEnabled:     true, // Enable database for production readiness
+			DatabaseEnabled:     true,  // Enable database for production readiness
 			AuthRequired:        false, // Default to no auth for development
 			PluginSystemEnabled: true,
 			PipelineExecution:   true,
 			RedisEnabled:        false, // Disable Redis by default for easier setup
-			GormEnabled:         true, // Enable GORM for production readiness
-			SqlxEnabled:         true, // Enable SQLX for production readiness
+			GormEnabled:         true,  // Enable GORM for production readiness
+			SqlxEnabled:         true,  // Enable SQLX for production readiness
 			GinServerEnabled:    false, // Keep Gin disabled to avoid conflicts
 		},
 	}
@@ -233,7 +233,7 @@ func LoadConfig(configPath string) (*Config, error) {
 	viper.AddConfigPath(".")
 	viper.AddConfigPath("./config")
 	viper.AddConfigPath("/etc/flext")
-	
+
 	if configPath != "" {
 		viper.SetConfigFile(configPath)
 	}
@@ -273,7 +273,7 @@ func LoadConfig(configPath string) (*Config, error) {
 	if err := config.Validate(); err != nil {
 		return nil, fmt.Errorf("configuration validation failed: %w", err)
 	}
-	
+
 	// Validate Clean Architecture configuration
 	if err := config.CleanArchitecture.Validate(); err != nil {
 		return nil, fmt.Errorf("clean architecture configuration validation failed: %w", err)
@@ -427,14 +427,14 @@ func (c *Config) GetAvailablePort() int {
 	if c.isPortAvailable(c.Server.Port) {
 		return c.Server.Port
 	}
-	
+
 	// Find alternative port
 	port := c.findAvailablePort(c.Server.Port)
 	if port != c.Server.Port {
 		log.Printf("Port conflict resolved: requested_port=%d, assigned_port=%d", c.Server.Port, port)
 		c.Server.Port = port // Update config with available port
 	}
-	
+
 	return port
 }
 
@@ -456,7 +456,7 @@ func (c *Config) findAvailablePort(startPort int) int {
 			return port
 		}
 	}
-	
+
 	// If no port found in range, try system-assigned port
 	listener, err := net.Listen("tcp", ":0")
 	if err != nil {
@@ -464,7 +464,7 @@ func (c *Config) findAvailablePort(startPort int) int {
 		return 8080
 	}
 	defer listener.Close()
-	
+
 	addr := listener.Addr().(*net.TCPAddr)
 	return addr.Port
 }
@@ -511,7 +511,7 @@ func parsePostgresURL(url string, dbConfig *DatabaseConfig) {
 	}
 
 	url = strings.TrimPrefix(url, "postgres://")
-	
+
 	// Split credentials and connection parts
 	parts := strings.SplitN(url, "@", 2)
 	if len(parts) != 2 {
@@ -530,11 +530,11 @@ func parsePostgresURL(url string, dbConfig *DatabaseConfig) {
 
 	// Parse connection details
 	connection := parts[1]
-	
+
 	// Split database and query parameters
 	connParts := strings.SplitN(connection, "?", 2)
 	hostDatabase := connParts[0]
-	
+
 	// Parse query parameters
 	if len(connParts) == 2 {
 		queryParams := connParts[1]

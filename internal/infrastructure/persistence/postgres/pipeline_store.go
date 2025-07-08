@@ -26,7 +26,7 @@ func NewPipelineStore(db *sql.DB) *PipelineStore {
 func (s *PipelineStore) Create(ctx context.Context, model *persistence.PipelineModel) error {
 	query := `
 		INSERT INTO pipelines (
-			id, name, description, is_active, configuration, tags, 
+			id, name, description, is_active, configuration, tags,
 			version, created_at, updated_at
 		) VALUES (
 			$1, $2, $3, $4, $5, $6, $7, $8, $9
@@ -78,7 +78,7 @@ func (s *PipelineStore) Create(ctx context.Context, model *persistence.PipelineM
 // GetByID retrieves a pipeline by ID
 func (s *PipelineStore) GetByID(ctx context.Context, id string) (*persistence.PipelineModel, error) {
 	query := `
-		SELECT 
+		SELECT
 			id, name, description, is_active, configuration, tags,
 			version, created_at, updated_at
 		FROM pipelines
@@ -128,7 +128,7 @@ func (s *PipelineStore) GetByID(ctx context.Context, id string) (*persistence.Pi
 // GetByName retrieves a pipeline by name
 func (s *PipelineStore) GetByName(ctx context.Context, name string) (*persistence.PipelineModel, error) {
 	query := `
-		SELECT 
+		SELECT
 			id, name, description, is_active, configuration, tags,
 			version, created_at, updated_at
 		FROM pipelines
@@ -309,7 +309,7 @@ func (s *PipelineStore) List(ctx context.Context, filter persistence.PipelineFil
 
 	// Query with pagination
 	query := fmt.Sprintf(`
-		SELECT 
+		SELECT
 			id, name, description, is_active, configuration, tags,
 			version, created_at, updated_at
 		FROM pipelines
@@ -377,13 +377,13 @@ func (s *PipelineStore) List(ctx context.Context, filter persistence.PipelineFil
 // ExistsByName checks if a pipeline exists with the given name
 func (s *PipelineStore) ExistsByName(ctx context.Context, name string) (bool, error) {
 	query := `SELECT EXISTS(SELECT 1 FROM pipelines WHERE name = $1)`
-	
+
 	var exists bool
 	err := s.db.QueryRowContext(ctx, query, name).Scan(&exists)
 	if err != nil {
 		return false, fmt.Errorf("failed to check existence: %w", err)
 	}
-	
+
 	return exists, nil
 }
 
@@ -393,7 +393,7 @@ func (s *PipelineStore) BeginTx(ctx context.Context) (persistence.Transaction, e
 	if err != nil {
 		return nil, fmt.Errorf("failed to begin transaction: %w", err)
 	}
-	
+
 	return &postgresTx{tx: tx}, nil
 }
 
@@ -401,7 +401,7 @@ func (s *PipelineStore) BeginTx(ctx context.Context) (persistence.Transaction, e
 
 func (s *PipelineStore) getStepsByPipelineID(ctx context.Context, pipelineID string) ([]persistence.StepModel, error) {
 	query := `
-		SELECT 
+		SELECT
 			id, pipeline_id, name, plugin_id, configuration, depends_on,
 			step_order, created_at, updated_at
 		FROM pipeline_steps

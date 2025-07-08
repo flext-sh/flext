@@ -12,30 +12,30 @@ type Entity interface {
 	// Identity management
 	GetID() uuid.UUID
 	SetID(id uuid.UUID)
-	
+
 	// Timestamps
 	GetCreatedAt() time.Time
 	GetUpdatedAt() time.Time
 	SetUpdatedAt(t time.Time)
-	
+
 	// Soft delete
 	IsDeleted() bool
 	Delete() error
 	Restore() error
 	GetDeletedAt() *time.Time
-	
+
 	// Validation
 	Validate() error
 	IsValid() bool
-	
+
 	// Version control
 	GetVersion() int64
 	IncrementVersion()
-	
+
 	// Metadata
 	GetMetadata() map[string]interface{}
 	SetMetadata(key string, value interface{})
-	
+
 	// String representation
 	String() string
 }
@@ -43,17 +43,17 @@ type Entity interface {
 // AggregateRoot interface unificada para raízes de agregados
 type AggregateRoot interface {
 	Entity
-	
+
 	// Domain events
 	GetDomainEvents() []DomainEvent
 	ClearDomainEvents()
 	AddDomainEvent(event DomainEvent)
-	
+
 	// Aggregate-specific behaviors
 	GetAggregateID() uuid.UUID
 	GetAggregateType() string
 	CheckInvariants() error
-	
+
 	// Snapshot support
 	CreateSnapshot() (*AggregateSnapshot, error)
 	LoadFromSnapshot(snapshot *AggregateSnapshot) error
@@ -141,11 +141,11 @@ func (e *BaseEntity) Delete() error {
 			Description: "Cannot delete an entity that is already marked as deleted",
 		}
 	}
-	
+
 	now := time.Now().UTC()
 	e.DeletedAt = &now
 	e.SetUpdatedAt(now)
-	
+
 	return nil
 }
 
@@ -158,10 +158,10 @@ func (e *BaseEntity) Restore() error {
 			Description: "Cannot restore an entity that is not marked as deleted",
 		}
 	}
-	
+
 	e.DeletedAt = nil
 	e.SetUpdatedAt(time.Now().UTC())
-	
+
 	return nil
 }
 
@@ -179,7 +179,7 @@ func (e *BaseEntity) Validate() error {
 			Description: "All entities must have a valid UUID",
 		}
 	}
-	
+
 	if e.CreatedAt.IsZero() {
 		return &value_objects.DomainError{
 			Code:        "INVALID_CREATED_AT",
@@ -187,7 +187,7 @@ func (e *BaseEntity) Validate() error {
 			Description: "All entities must have a valid creation timestamp",
 		}
 	}
-	
+
 	if e.UpdatedAt.IsZero() {
 		return &value_objects.DomainError{
 			Code:        "INVALID_UPDATED_AT",
@@ -195,7 +195,7 @@ func (e *BaseEntity) Validate() error {
 			Description: "All entities must have a valid update timestamp",
 		}
 	}
-	
+
 	if e.Version <= 0 {
 		return &value_objects.DomainError{
 			Code:        "INVALID_VERSION",
@@ -203,7 +203,7 @@ func (e *BaseEntity) Validate() error {
 			Description: "Entity version must be a positive number",
 		}
 	}
-	
+
 	return nil
 }
 
@@ -313,26 +313,26 @@ func (a *BaseAggregateRoot) LoadFromSnapshot(snapshot *AggregateSnapshot) error 
 			Description: "Cannot load snapshot from different aggregate",
 		}
 	}
-	
+
 	a.Version = snapshot.Version
-	
+
 	// Load basic fields from snapshot data
 	if createdAt, ok := snapshot.Data["created_at"].(time.Time); ok {
 		a.CreatedAt = createdAt
 	}
-	
+
 	if updatedAt, ok := snapshot.Data["updated_at"].(time.Time); ok {
 		a.UpdatedAt = updatedAt
 	}
-	
+
 	if deletedAt, ok := snapshot.Data["deleted_at"].(*time.Time); ok {
 		a.DeletedAt = deletedAt
 	}
-	
+
 	if metadata, ok := snapshot.Data["metadata"].(map[string]interface{}); ok {
 		a.Metadata = metadata
 	}
-	
+
 	return nil
 }
 

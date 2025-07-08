@@ -86,7 +86,7 @@ func (p *Pipeline) RemoveStep(stepID uuid.UUID) error {
 			if p.hasStepDependencies(stepID) {
 				return errors.New("cannot remove step with dependencies")
 			}
-			
+
 			// Remove the step
 			p.steps = append(p.steps[:i], p.steps[i+1:]...)
 			return nil
@@ -175,12 +175,12 @@ func (p *Pipeline) GetStepExecutionOrder() ([]Step, error) {
 
 // Getters (encapsulation)
 
-func (p *Pipeline) ID() uuid.UUID          { return p.id }
-func (p *Pipeline) Name() string           { return p.name }
-func (p *Pipeline) Description() string    { return p.description }
-func (p *Pipeline) IsActive() bool         { return p.isActive }
-func (p *Pipeline) Steps() []Step          { return append([]Step{}, p.steps...) } // Return copy
-func (p *Pipeline) Tags() []string         { return append([]string{}, p.tags...) }
+func (p *Pipeline) ID() uuid.UUID                { return p.id }
+func (p *Pipeline) Name() string                 { return p.name }
+func (p *Pipeline) Description() string          { return p.description }
+func (p *Pipeline) IsActive() bool               { return p.isActive }
+func (p *Pipeline) Steps() []Step                { return append([]Step{}, p.steps...) } // Return copy
+func (p *Pipeline) Tags() []string               { return append([]string{}, p.tags...) }
 func (p *Pipeline) Configuration() Configuration { return p.config.Clone() }
 
 // HasTag checks if pipeline has a specific tag

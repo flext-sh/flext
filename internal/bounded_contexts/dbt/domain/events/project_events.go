@@ -8,10 +8,10 @@ import (
 )
 
 const (
-	ProjectCreatedEventType    = "dbt.project.created"
-	ProjectUpdatedEventType    = "dbt.project.updated"
-	ProjectDeletedEventType    = "dbt.project.deleted"
-	ProjectActivatedEventType  = "dbt.project.activated"
+	ProjectCreatedEventType     = "dbt.project.created"
+	ProjectUpdatedEventType     = "dbt.project.updated"
+	ProjectDeletedEventType     = "dbt.project.deleted"
+	ProjectActivatedEventType   = "dbt.project.activated"
 	ProjectDeactivatedEventType = "dbt.project.deactivated"
 )
 
@@ -129,13 +129,13 @@ type DbtRunCompleted struct {
 // DbtModelExecuted evento emitido quando um model é executado
 type DbtModelExecuted struct {
 	domain.BaseDomainEvent
-	RunID       uuid.UUID `json:"run_id"`
-	ProjectID   uuid.UUID `json:"project_id"`
-	ModelName   string    `json:"model_name"`
-	Status      string    `json:"status"`
-	DurationMs  int64     `json:"duration_ms"`
-	RowsAffected int64    `json:"rows_affected"`
-	ExecutedAt  time.Time `json:"executed_at"`
+	RunID        uuid.UUID `json:"run_id"`
+	ProjectID    uuid.UUID `json:"project_id"`
+	ModelName    string    `json:"model_name"`
+	Status       string    `json:"status"`
+	DurationMs   int64     `json:"duration_ms"`
+	RowsAffected int64     `json:"rows_affected"`
+	ExecutedAt   time.Time `json:"executed_at"`
 }
 
 // DbtTestExecuted evento emitido quando um teste é executado

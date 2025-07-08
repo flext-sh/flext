@@ -167,7 +167,7 @@ func (h *DBTHandler) CreateProfile(c echo.Context) error {
 // TestConnection tests dbt database connection
 func (h *DBTHandler) TestConnection(c echo.Context) error {
 	target := c.QueryParam("target")
-	
+
 	result, err := h.dbtManager.CheckConnection(c.Request().Context(), target)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{

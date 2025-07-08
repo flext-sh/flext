@@ -89,7 +89,7 @@ func (l *StructuredLogger) With(fields ...Field) Logger {
 	newFields := make([]Field, len(l.fields)+len(fields))
 	copy(newFields, l.fields)
 	copy(newFields[len(l.fields):], fields)
-	
+
 	return &StructuredLogger{
 		config:   l.config,
 		fields:   newFields,
@@ -131,7 +131,7 @@ func (l *StructuredLogger) shouldLog(level LogLevel) bool {
 		WARN:  2,
 		ERROR: 3,
 	}
-	
+
 	return levels[level] >= levels[l.minLevel]
 }
 
@@ -150,10 +150,10 @@ func (l *StructuredLogger) output(entry LogEntry) {
 				fieldsStr = fmt.Sprintf(" %s", data)
 			}
 		}
-		log.Printf("[%s] %s: %s%s", 
-			entry.Level, 
-			entry.Timestamp.Format(time.RFC3339), 
-			entry.Message, 
+		log.Printf("[%s] %s: %s%s",
+			entry.Level,
+			entry.Timestamp.Format(time.RFC3339),
+			entry.Message,
 			fieldsStr,
 		)
 	}
@@ -186,15 +186,15 @@ func GetLogger() Logger {
 // ContextLogger adiciona contexto ao logger
 func ContextLogger(ctx context.Context, fields ...Field) Logger {
 	logger := GetLogger()
-	
+
 	// Adicionar campos do contexto se existirem
 	if requestID := ctx.Value("request_id"); requestID != nil {
 		fields = append(fields, F("request_id", requestID))
 	}
-	
+
 	if userID := ctx.Value("user_id"); userID != nil {
 		fields = append(fields, F("user_id", userID))
 	}
-	
+
 	return logger.With(fields...)
 }

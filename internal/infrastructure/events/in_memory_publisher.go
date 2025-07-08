@@ -16,7 +16,7 @@ type EventPublisher interface {
 	Unsubscribe(eventType string, handler DomainEventHandler) error
 }
 
-// DomainEventHandler função que processa eventos de domínio  
+// DomainEventHandler função que processa eventos de domínio
 type DomainEventHandler func(event domain.DomainEvent) error
 
 // InMemoryEventPublisher implementação em memória do event publisher
