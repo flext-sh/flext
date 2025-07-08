@@ -1,6 +1,39 @@
-# FLEXT - Unified Hexagonal Architecture + DDD Implementation
+# FLEXT Framework - Unified Hexagonal Architecture + DDD Implementation
+
+> **Regras do Projeto**: Para padrões obrigatórios, consulte `.github/instructions/regras.instructions.md`
 
 FLEXT é uma implementação moderna de um sistema de pipelines usando **Arquitetura Hexagonal** (Ports & Adapters) combinada com **Domain-Driven Design (DDD)**.
+
+## 📋 Projetos do Workspace
+
+### Projetos Core (Arquitetura Hexagonal)
+- **flext-core**: Núcleo do framework com entidades base e ports
+- **flext-api**: APIs REST e GraphQL para exposição de funcionalidades  
+- **flext-cli**: Interface de linha de comando para operações do framework
+- **flext-web**: Interface web para gerenciamento visual
+
+### Projetos de Integração
+- **flext-meltano**: Integração com Meltano para pipelines de dados
+- **flext-grpc**: Serviços gRPC para comunicação entre componentes
+- **flext-auth**: Sistema de autenticação e autorização
+- **flext-observability**: Métricas, logs e monitoramento
+
+### Conectores e Adaptadores
+- **flext-tap-ldap**: Conector LDAP para extração de dados
+- **flext-tap-oracle-oic**: Conector Oracle OIC
+- **flext-tap-oracle-wms**: Conector Oracle WMS
+- **flext-target-ldap**: Adaptador LDAP para escrita de dados
+- **flext-target-oracle**: Adaptador Oracle para persistência
+- **flext-target-oracle-oic**: Adaptador Oracle OIC
+
+### Projetos Específicos
+- **algar-oud-mig**: Migração ALGAR Oracle Unified Directory
+- **gruponos-meltano-native**: Implementação nativa Meltano para Grupo Nos
+- **gruponos-poc-oic-wms**: PoC integração OIC-WMS
+
+## Documentação
+
+Para padrões de documentação, consulte [docs/HOW_TO_DOCUMENT.md](./docs/HOW_TO_DOCUMENT.md)
 
 ## 🏗️ Arquitetura
 
