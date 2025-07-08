@@ -1,7 +1,5 @@
 # 📝 FLEXT Framework - Documentation Standards Guide
 
-> **Regras do Projeto FLEXT**: Para padrões obrigatórios, consulte `.github/instructions/regras.instructions.md`
-
 > **Complete guide for writing, maintaining, and organizing documentation in the FLEXT Framework ecosystem**
 
 [![Documentation](https://img.shields.io/badge/docs-standardized-green.svg)](./index.md)
