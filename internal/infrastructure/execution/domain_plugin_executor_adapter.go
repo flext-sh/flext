@@ -4,8 +4,8 @@ import (
 	"context"
 	"time"
 
-	"github.com/flext-sh/flext/internal/bounded_contexts/plugin/domain/entities"
 	pipelineServices "github.com/flext-sh/flext/internal/bounded_contexts/pipeline/domain/services"
+	"github.com/flext-sh/flext/internal/bounded_contexts/plugin/domain/entities"
 	"github.com/flext-sh/flext/internal/infrastructure/logging"
 )
 
@@ -27,7 +27,7 @@ func (a *DomainPluginExecutorAdapter) ExecuteSource(
 	plugin *entities.Plugin,
 	execCtx *pipelineServices.RealPluginExecutionContext,
 ) (*pipelineServices.RealPluginExecutionResult, error) {
-	
+
 	// Converter contexto do domínio para infraestrutura
 	infraCtx := &PluginExecutionContext{
 		ExecutionID: execCtx.ExecutionID,
@@ -37,13 +37,13 @@ func (a *DomainPluginExecutorAdapter) ExecuteSource(
 		Config:      execCtx.Config,
 		Environment: execCtx.Environment,
 	}
-	
+
 	// Executar via infraestrutura
 	result, err := a.pluginExecutor.Execute(ctx, plugin, infraCtx)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	// Converter resultado para domínio
 	return &pipelineServices.RealPluginExecutionResult{
 		Success:      result.Success,
@@ -61,7 +61,7 @@ func (a *DomainPluginExecutorAdapter) ExecuteTarget(
 	plugin *entities.Plugin,
 	execCtx *pipelineServices.RealPluginExecutionContext,
 ) (*pipelineServices.RealPluginExecutionResult, error) {
-	
+
 	// Converter contexto do domínio para infraestrutura
 	infraCtx := &PluginExecutionContext{
 		ExecutionID: execCtx.ExecutionID,
@@ -71,13 +71,13 @@ func (a *DomainPluginExecutorAdapter) ExecuteTarget(
 		Config:      execCtx.Config,
 		Environment: execCtx.Environment,
 	}
-	
+
 	// Executar via infraestrutura
 	result, err := a.pluginExecutor.Execute(ctx, plugin, infraCtx)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	// Converter resultado para domínio
 	return &pipelineServices.RealPluginExecutionResult{
 		Success:      result.Success,
@@ -95,7 +95,7 @@ func (a *DomainPluginExecutorAdapter) ExecuteTransformer(
 	plugin *entities.Plugin,
 	execCtx *pipelineServices.RealPluginExecutionContext,
 ) (*pipelineServices.RealPluginExecutionResult, error) {
-	
+
 	// Converter contexto do domínio para infraestrutura
 	infraCtx := &PluginExecutionContext{
 		ExecutionID: execCtx.ExecutionID,
@@ -105,13 +105,13 @@ func (a *DomainPluginExecutorAdapter) ExecuteTransformer(
 		Config:      execCtx.Config,
 		Environment: execCtx.Environment,
 	}
-	
+
 	// Executar via infraestrutura
 	result, err := a.pluginExecutor.Execute(ctx, plugin, infraCtx)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	// Converter resultado para domínio
 	return &pipelineServices.RealPluginExecutionResult{
 		Success:      result.Success,
@@ -129,7 +129,7 @@ func (a *DomainPluginExecutorAdapter) ExecuteUtility(
 	plugin *entities.Plugin,
 	execCtx *pipelineServices.RealPluginExecutionContext,
 ) (*pipelineServices.RealPluginExecutionResult, error) {
-	
+
 	// Converter contexto do domínio para infraestrutura
 	infraCtx := &PluginExecutionContext{
 		ExecutionID: execCtx.ExecutionID,
@@ -139,13 +139,13 @@ func (a *DomainPluginExecutorAdapter) ExecuteUtility(
 		Config:      execCtx.Config,
 		Environment: execCtx.Environment,
 	}
-	
+
 	// Executar via infraestrutura
 	result, err := a.pluginExecutor.Execute(ctx, plugin, infraCtx)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	// Converter resultado para domínio
 	return &pipelineServices.RealPluginExecutionResult{
 		Success:      result.Success,

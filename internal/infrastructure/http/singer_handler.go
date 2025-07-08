@@ -579,12 +579,12 @@ func (h *SingerHandler) InstallFromHub(c echo.Context) error {
 // ExecuteSync executa uma sincronização Singer (tap + target)
 func (h *SingerHandler) ExecuteSync(c echo.Context) error {
 	var request struct {
-		Tap          string                     `json:"tap" validate:"required"`
-		Target       string                     `json:"target" validate:"required"`
-		TapConfig    map[string]interface{}     `json:"tap_config" validate:"required"`
-		TargetConfig map[string]interface{}     `json:"target_config" validate:"required"`
-		Catalog      *entities.Catalog          `json:"catalog,omitempty"`
-		State        *entities.State            `json:"state,omitempty"`
+		Tap          string                 `json:"tap" validate:"required"`
+		Target       string                 `json:"target" validate:"required"`
+		TapConfig    map[string]interface{} `json:"tap_config" validate:"required"`
+		TargetConfig map[string]interface{} `json:"target_config" validate:"required"`
+		Catalog      *entities.Catalog      `json:"catalog,omitempty"`
+		State        *entities.State        `json:"state,omitempty"`
 	}
 
 	if err := c.Bind(&request); err != nil {
@@ -648,7 +648,7 @@ func (h *SingerHandler) ListSyncExecutions(c echo.Context) error {
 // GetSyncExecution retorna detalhes de uma execução de sincronização
 func (h *SingerHandler) GetSyncExecution(c echo.Context) error {
 	executionIDStr := c.Param("id")
-	
+
 	executionID, err := uuid.Parse(executionIDStr)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
@@ -681,7 +681,7 @@ func (h *SingerHandler) GetSyncExecution(c echo.Context) error {
 // CancelSyncExecution cancela uma execução de sincronização
 func (h *SingerHandler) CancelSyncExecution(c echo.Context) error {
 	executionIDStr := c.Param("id")
-	
+
 	executionID, err := uuid.Parse(executionIDStr)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{

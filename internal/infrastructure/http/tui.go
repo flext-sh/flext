@@ -47,15 +47,15 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m Model) View() string {
 	style := lipgloss.NewStyle().Foreground(lipgloss.Color("#04B575"))
 	header := style.Render("🚀 FLEXT Dashboard")
-	
+
 	// Stats
 	stats := fmt.Sprintf(`
 📈 Stats:
   Pipelines: %d
-  Plugins: %d 
+  Plugins: %d
   Jobs: %d
 `, m.stats["pipelines"], m.stats["plugins"], m.stats["jobs"])
-	
+
 	// Pipelines
 	pipelineList := "📋 Pipelines:\n"
 	for i, p := range m.pipelines {
@@ -65,14 +65,14 @@ func (m Model) View() string {
 		}
 		pipelineList += fmt.Sprintf("%s%s\n", cursor, p)
 	}
-	
+
 	// Logs
 	logsList := "📋 Logs:\n"
 	for _, log := range m.logs {
 		logsList += "  " + log + "\n"
 	}
-	
-	return fmt.Sprintf("%s\n\n%s\n%s\n%s\n\nPress q to quit, enter to execute", 
+
+	return fmt.Sprintf("%s\n\n%s\n%s\n%s\n\nPress q to quit, enter to execute",
 		header, stats, pipelineList, logsList)
 }
 
@@ -82,7 +82,7 @@ func StartTUI() {
 		pipelines: []string{"⚙️ ETL Pipeline", "🔄 Data Sync", "📈 Analytics"},
 		logs: []string{"✅ Server started", "✅ Database connected"},
 	}
-	
+
 	p := tea.NewProgram(m)
 	if _, err := p.Run(); err != nil {
 		fmt.Printf("Error: %v", err)

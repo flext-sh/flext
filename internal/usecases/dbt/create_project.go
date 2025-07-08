@@ -28,36 +28,36 @@ func NewCreateProjectUseCase(
 
 // CreateProjectInput represents the input for creating a dbt project
 type CreateProjectInput struct {
-	Name               string                 `json:"name" validate:"required,min=1,max=100"`
-	Version            string                 `json:"version" validate:"required"`
-	Description        string                 `json:"description" validate:"max=500"`
-	ProfileName        string                 `json:"profile_name" validate:"required"`
-	ProjectDir         string                 `json:"project_dir" validate:"required"`
-	RequireDbtVersion  string                 `json:"require_dbt_version,omitempty"`
-	Vars               map[string]interface{} `json:"vars,omitempty"`
-	ModelPaths         []string               `json:"model_paths,omitempty"`
-	AnalysisPaths      []string               `json:"analysis_paths,omitempty"`
-	TestPaths          []string               `json:"test_paths,omitempty"`
-	SeedPaths          []string               `json:"seed_paths,omitempty"`
-	MacroPaths         []string               `json:"macro_paths,omitempty"`
-	SnapshotPaths      []string               `json:"snapshot_paths,omitempty"`
-	TargetPath         string                 `json:"target_path,omitempty"`
-	LogPath            string                 `json:"log_path,omitempty"`
-	PackagesPath       string                 `json:"packages_path,omitempty"`
+	Name              string                 `json:"name" validate:"required,min=1,max=100"`
+	Version           string                 `json:"version" validate:"required"`
+	Description       string                 `json:"description" validate:"max=500"`
+	ProfileName       string                 `json:"profile_name" validate:"required"`
+	ProjectDir        string                 `json:"project_dir" validate:"required"`
+	RequireDbtVersion string                 `json:"require_dbt_version,omitempty"`
+	Vars              map[string]interface{} `json:"vars,omitempty"`
+	ModelPaths        []string               `json:"model_paths,omitempty"`
+	AnalysisPaths     []string               `json:"analysis_paths,omitempty"`
+	TestPaths         []string               `json:"test_paths,omitempty"`
+	SeedPaths         []string               `json:"seed_paths,omitempty"`
+	MacroPaths        []string               `json:"macro_paths,omitempty"`
+	SnapshotPaths     []string               `json:"snapshot_paths,omitempty"`
+	TargetPath        string                 `json:"target_path,omitempty"`
+	LogPath           string                 `json:"log_path,omitempty"`
+	PackagesPath      string                 `json:"packages_path,omitempty"`
 }
 
 // CreateProjectOutput represents the output after creating a dbt project
 type CreateProjectOutput struct {
-	ID                 string    `json:"id"`
-	Name               string    `json:"name"`
-	Version            string    `json:"version"`
-	Description        string    `json:"description"`
-	ProfileName        string    `json:"profile_name"`
-	ProjectDir         string    `json:"project_dir"`
-	RequireDbtVersion  string    `json:"require_dbt_version,omitempty"`
-	IsActive           bool      `json:"is_active"`
-	LastRunStatus      string    `json:"last_run_status"`
-	CreatedAt          string    `json:"created_at"`
+	ID                string `json:"id"`
+	Name              string `json:"name"`
+	Version           string `json:"version"`
+	Description       string `json:"description"`
+	ProfileName       string `json:"profile_name"`
+	ProjectDir        string `json:"project_dir"`
+	RequireDbtVersion string `json:"require_dbt_version,omitempty"`
+	IsActive          bool   `json:"is_active"`
+	LastRunStatus     string `json:"last_run_status"`
+	CreatedAt         string `json:"created_at"`
 }
 
 // Execute performs the dbt project creation
@@ -162,4 +162,3 @@ func (uc *CreateProjectUseCase) Execute(ctx context.Context, input CreateProject
 		CreatedAt:         project.CreatedAt.Format("2006-01-02T15:04:05Z07:00"),
 	}, nil
 }
-

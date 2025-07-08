@@ -176,10 +176,10 @@ func (s *PluginStore) ListActive(ctx context.Context) ([]*persistence.PluginMode
 func (s *PluginStore) cloneModel(model *persistence.PluginModel) *persistence.PluginModel {
 	// Deep clone to prevent external modifications
 	clone := *model
-	
+
 	// Clone slices
 	clone.Capabilities = append([]string{}, model.Capabilities...)
-	
+
 	// Clone maps
 	if model.Configuration != nil {
 		clone.Configuration = make(map[string]interface{})
@@ -187,6 +187,6 @@ func (s *PluginStore) cloneModel(model *persistence.PluginModel) *persistence.Pl
 			clone.Configuration[k] = v
 		}
 	}
-	
+
 	return &clone
 }

@@ -16,12 +16,12 @@ type ErrorHandler interface {
 
 // ErrorAnalysis represents the result of error analysis
 type ErrorAnalysis struct {
-	ErrorType    ErrorType `json:"error_type"`
-	IsRetryable  bool      `json:"is_retryable"`
-	Category     string    `json:"category"`
-	Severity     string    `json:"severity"`
-	Delay        time.Duration `json:"delay"`
-	Description  string    `json:"description"`
+	ErrorType   ErrorType     `json:"error_type"`
+	IsRetryable bool          `json:"is_retryable"`
+	Category    string        `json:"category"`
+	Severity    string        `json:"severity"`
+	Delay       time.Duration `json:"delay"`
+	Description string        `json:"description"`
 }
 
 // ErrorType categorizes different types of errors

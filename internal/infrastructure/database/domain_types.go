@@ -54,24 +54,24 @@ type Plugin struct {
 
 // Execution represents a pipeline execution
 type Execution struct {
-	ID          uuid.UUID              `json:"id"`
-	PipelineID  uuid.UUID              `json:"pipeline_id"`
-	Status      string                 `json:"status"`
-	StartedAt   *time.Time             `json:"started_at"`
-	CompletedAt *time.Time             `json:"completed_at"`
-	Duration    time.Duration          `json:"duration"`
-	Success     bool                   `json:"success"`
-	ErrorMessage string                `json:"error_message"`
-	Logs        []ExecutionLog         `json:"logs"`
-	Metrics     map[string]interface{} `json:"metrics"`
-	CreatedAt   time.Time              `json:"created_at"`
+	ID           uuid.UUID              `json:"id"`
+	PipelineID   uuid.UUID              `json:"pipeline_id"`
+	Status       string                 `json:"status"`
+	StartedAt    *time.Time             `json:"started_at"`
+	CompletedAt  *time.Time             `json:"completed_at"`
+	Duration     time.Duration          `json:"duration"`
+	Success      bool                   `json:"success"`
+	ErrorMessage string                 `json:"error_message"`
+	Logs         []ExecutionLog         `json:"logs"`
+	Metrics      map[string]interface{} `json:"metrics"`
+	CreatedAt    time.Time              `json:"created_at"`
 }
 
 // ExecutionLog represents a log entry for an execution
 type ExecutionLog struct {
-	Timestamp time.Time `json:"timestamp"`
-	Level     string    `json:"level"`
-	Message   string    `json:"message"`
+	Timestamp time.Time  `json:"timestamp"`
+	Level     string     `json:"level"`
+	Message   string     `json:"message"`
 	StepID    *uuid.UUID `json:"step_id,omitempty"`
 }
 
@@ -166,10 +166,10 @@ func (t *StepType) FromString(str string) error {
 
 // Error types
 var (
-	ErrPipelineNotFound = fmt.Errorf("pipeline not found")
-	ErrPluginNotFound   = fmt.Errorf("plugin not found")
+	ErrPipelineNotFound  = fmt.Errorf("pipeline not found")
+	ErrPluginNotFound    = fmt.Errorf("plugin not found")
 	ErrExecutionNotFound = fmt.Errorf("execution not found")
-	ErrDuplicateName    = fmt.Errorf("name already exists")
+	ErrDuplicateName     = fmt.Errorf("name already exists")
 )
 
 // NewPipeline creates a new pipeline

@@ -356,17 +356,17 @@ func (s *SingerService) findActiveSpecsByType(ctx context.Context, specType enti
 // applyPagination applies offset and limit to the specifications list
 func (s *SingerService) applyPagination(specs []*entities.SingerSpec, offset, limit int) ([]*entities.SingerSpec, int64) {
 	total := int64(len(specs))
-	
+
 	// Apply offset
 	if offset > 0 && offset < len(specs) {
 		specs = specs[offset:]
 	}
-	
+
 	// Apply limit
 	if limit > 0 && limit < len(specs) {
 		specs = specs[:limit]
 	}
-	
+
 	return specs, total
 }
 
@@ -420,7 +420,7 @@ func (s *SingerService) validateAndPrepareSpec(ctx context.Context, req ExecuteS
 func (s *SingerService) createAndSaveExecution(ctx context.Context, req ExecuteSpecRequest, spec *entities.SingerSpec) (*entities.SingerExecution, error) {
 	// Prepare state
 	singerState := s.prepareExecutionState(ctx, req, spec)
-	
+
 	execution, err := entities.NewSingerExecution(req.SpecID, req.PipelineID, "tap", "run", []string{}, req.Config, singerState)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create execution: %w", err)

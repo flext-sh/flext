@@ -7,8 +7,8 @@ import (
 	"github.com/flext-sh/flext/internal/bounded_contexts/plugin/application"
 	"github.com/flext-sh/flext/internal/bounded_contexts/plugin/application/commands"
 	"github.com/flext-sh/flext/internal/infrastructure/logging"
-	"github.com/flext-sh/flext/internal/shared_kernel/validation"
 	shared_kernel_http "github.com/flext-sh/flext/internal/shared_kernel/infrastructure/http"
+	"github.com/flext-sh/flext/internal/shared_kernel/validation"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
@@ -76,7 +76,7 @@ func (h *PluginHandler) GetPlugin(c echo.Context) error {
 // ListPlugins manipula GET /api/v1/plugins
 func (h *PluginHandler) ListPlugins(c echo.Context) error {
 	pagination := h.ParsePagination(c)
-	
+
 	// Parse filters
 	pluginType := strings.TrimSpace(c.QueryParam("type"))
 	status := strings.TrimSpace(c.QueryParam("status"))

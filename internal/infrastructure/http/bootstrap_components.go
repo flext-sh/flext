@@ -15,7 +15,7 @@ func (h *BootstrapWebHandler) StatsCards(c echo.Context) error {
 	pluginCount := rand.Intn(20) + 5
 	activeJobs := rand.Intn(5)
 	systemHealth := "Healthy"
-	
+
 	if rand.Float32() < 0.1 {
 		systemHealth = "Warning"
 	}
@@ -103,9 +103,9 @@ func (h *BootstrapWebHandler) StatsCards(c echo.Context) error {
         </div>
     </div>
 </div>
-`, 
-		pipelineCount, 
-		pluginCount, 
+`,
+		pipelineCount,
+		pluginCount,
 		activeJobs,
 		map[bool]string{true: "rotate-animation", false: ""}[activeJobs > 0],
 		map[string]string{"Healthy": "bg-info", "Warning": "bg-danger"}[systemHealth],
@@ -158,14 +158,14 @@ func (h *BootstrapWebHandler) PipelinesTable(c echo.Context) error {
                     <button class="btn btn-outline-primary"
                             hx-get="/pipeline/%d"
                             hx-target="#main-content"
-                            data-bs-toggle="tooltip" 
+                            data-bs-toggle="tooltip"
                             title="View Details">
                         <i class="bi bi-eye"></i>
                     </button>
                     <button class="btn btn-outline-success"
                             hx-post="/api/pipeline/%d/execute"
                             hx-target="#pipelines-container"
-                            data-bs-toggle="tooltip" 
+                            data-bs-toggle="tooltip"
                             title="Execute">
                         <i class="bi bi-play"></i>
                     </button>
@@ -173,14 +173,14 @@ func (h *BootstrapWebHandler) PipelinesTable(c echo.Context) error {
                             hx-delete="/api/pipeline/%d"
                             hx-target="#pipelines-container"
                             hx-confirm="Are you sure you want to delete this pipeline?"
-                            data-bs-toggle="tooltip" 
+                            data-bs-toggle="tooltip"
                             title="Delete">
                         <i class="bi bi-trash"></i>
                     </button>
                 </div>
             </td>
         </tr>`,
-			pipeline["id"], pipeline["name"], statusBadge, pipeline["steps"], 
+			pipeline["id"], pipeline["name"], statusBadge, pipeline["steps"],
 			pipeline["created"], pipeline["id"], pipeline["id"], pipeline["id"])
 	}
 
@@ -315,7 +315,7 @@ func (h *BootstrapWebHandler) SystemMetrics(c echo.Context) error {
     </div>
 </div>
 `,
-		cpuUsage, 
+		cpuUsage,
 		map[bool]string{true: "bg-danger", false: "bg-primary"}[cpuUsage > 80],
 		cpuUsage,
 		memoryUsage,

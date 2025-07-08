@@ -20,29 +20,29 @@ type ExecutePipelineCommand struct {
 
 // ExecutePipelineResult resultado do comando
 type ExecutePipelineResult struct {
-	ExecutionID   uuid.UUID                     `json:"execution_id"`
-	PipelineID    uuid.UUID                     `json:"pipeline_id"`
-	Status        string                        `json:"status"`
-	StartedAt     time.Time                     `json:"started_at"`
-	CompletedAt   *time.Time                    `json:"completed_at,omitempty"`
-	Duration      *string                       `json:"duration,omitempty"`
-	StepsExecuted int                           `json:"steps_executed"`
-	StepsTotal    int                           `json:"steps_total"`
-	StepResults   []map[string]interface{}      `json:"step_results,omitempty"`
-	Error         *string                       `json:"error,omitempty"`
-	Message       string                        `json:"message,omitempty"`
+	ExecutionID   uuid.UUID                `json:"execution_id"`
+	PipelineID    uuid.UUID                `json:"pipeline_id"`
+	Status        string                   `json:"status"`
+	StartedAt     time.Time                `json:"started_at"`
+	CompletedAt   *time.Time               `json:"completed_at,omitempty"`
+	Duration      *string                  `json:"duration,omitempty"`
+	StepsExecuted int                      `json:"steps_executed"`
+	StepsTotal    int                      `json:"steps_total"`
+	StepResults   []map[string]interface{} `json:"step_results,omitempty"`
+	Error         *string                  `json:"error,omitempty"`
+	Message       string                   `json:"message,omitempty"`
 }
 
 // ExecutePipelineHandler manipula o comando de execução de pipeline
 type ExecutePipelineHandler struct {
-	pipelineRepo       ports.PipelineRepository
-	pipelineExecutor   *pipelineServices.PipelineExecutor
+	pipelineRepo          ports.PipelineRepository
+	pipelineExecutor      *pipelineServices.PipelineExecutor
 	executionStatsService *services.PipelineExecutionStatsService
 }
 
 // NewExecutePipelineHandler cria um novo handler
 func NewExecutePipelineHandler(
-	pipelineRepo ports.PipelineRepository, 
+	pipelineRepo ports.PipelineRepository,
 	pipelineExecutor *pipelineServices.PipelineExecutor,
 	executionStatsService *services.PipelineExecutionStatsService,
 ) *ExecutePipelineHandler {
@@ -122,8 +122,8 @@ func (h *ExecutePipelineHandler) Handle(ctx context.Context, cmd ExecutePipeline
 		Status:        string(execution.Status),
 		StartedAt:     execution.StartedAt,
 		CompletedAt:   execution.CompletedAt,
-		StepsExecuted: 0, // TODO: Implement when StepExecution is properly defined
-		StepsTotal:    0, // TODO: Implement when StepExecution is properly defined 
+		StepsExecuted: 0,                          // TODO: Implement when StepExecution is properly defined
+		StepsTotal:    0,                          // TODO: Implement when StepExecution is properly defined
 		StepResults:   []map[string]interface{}{}, // TODO: Implement when StepExecution is properly defined
 	}
 
@@ -148,17 +148,17 @@ func (h *ExecutePipelineHandler) Handle(ctx context.Context, cmd ExecutePipeline
 	// Record execution in stats service if available
 	if h.executionStatsService != nil {
 		executionRecord := &ports.ExecutionRecord{
-			ID:          execution.ID,
-			PipelineID:  execution.PipelineID,
-			Status:      string(execution.Status),
-			StartedAt:   &execution.StartedAt,
-			CompletedAt: execution.CompletedAt,
-			Duration:    0, // Will be calculated by the service
-			Success:     execution.Status == pipelineServices.StatusCompleted,
+			ID:           execution.ID,
+			PipelineID:   execution.PipelineID,
+			Status:       string(execution.Status),
+			StartedAt:    &execution.StartedAt,
+			CompletedAt:  execution.CompletedAt,
+			Duration:     0, // Will be calculated by the service
+			Success:      execution.Status == pipelineServices.StatusCompleted,
 			ErrorMessage: "",
-			Logs:        []ports.ExecutionLog{},
-			Metrics:     make(map[string]interface{}),
-			CreatedAt:   time.Now(),
+			Logs:         []ports.ExecutionLog{},
+			Metrics:      make(map[string]interface{}),
+			CreatedAt:    time.Now(),
 		}
 
 		// Add error if execution failed

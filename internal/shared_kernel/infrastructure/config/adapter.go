@@ -42,16 +42,16 @@ func NewConfigAdapter() (*ConfigAdapter, error) {
 			MaxIdleConns:    unified.Database.MaxIdleConns,
 			ConnMaxLifetime: unified.Database.ConnMaxLifetime,
 		},
-		
+
 		Features: config.FeatureFlags{
 			DatabaseEnabled:  unified.Features.DatabaseEnabled,
 			WebSocketEnabled: unified.Features.WebSocketEnabled,
 		},
-		
+
 		CleanArchitecture: config.CleanArchitectureConfig{
 			Enabled: unified.Features.CleanArchitectureEnabled,
 		},
-		
+
 		Server: config.ServerConfig{
 			Host:            unified.Host,
 			Port:            unified.Port,
@@ -94,13 +94,13 @@ func (a *ConfigAdapter) UpdateFromEnvironment() error {
 
 	// Update adapter state
 	a.unified = unified
-	
+
 	// Update legacy config to match
 	a.legacy.Server.Environment = unified.Environment
 	a.legacy.Server.Debug = unified.Debug
 	a.legacy.Server.Host = unified.Host
 	a.legacy.Server.Port = unified.Port
-	
+
 	// Update database config
 	a.legacy.Database.Driver = unified.Database.Driver
 	a.legacy.Database.Host = unified.Database.Host
@@ -112,14 +112,14 @@ func (a *ConfigAdapter) UpdateFromEnvironment() error {
 	a.legacy.Database.MaxOpenConns = unified.Database.MaxOpenConns
 	a.legacy.Database.MaxIdleConns = unified.Database.MaxIdleConns
 	a.legacy.Database.ConnMaxLifetime = unified.Database.ConnMaxLifetime
-	
+
 	// Update feature flags
 	a.legacy.Features.DatabaseEnabled = unified.Features.DatabaseEnabled
 	a.legacy.Features.WebSocketEnabled = unified.Features.WebSocketEnabled
-	
+
 	// Update Clean Architecture config
 	a.legacy.CleanArchitecture.Enabled = unified.Features.CleanArchitectureEnabled
-	
+
 	// Update server config
 	a.legacy.Server.Environment = unified.Environment
 	a.legacy.Server.Debug = unified.Debug
@@ -208,6 +208,6 @@ func (a *ConfigAdapter) GetFeatureFlags() sharedConfig.FeatureFlags {
 
 // String returns a string representation of the configuration
 func (a *ConfigAdapter) String() string {
-	return fmt.Sprintf("ConfigAdapter{Environment: %s, Debug: %t, Address: %s}", 
+	return fmt.Sprintf("ConfigAdapter{Environment: %s, Debug: %t, Address: %s}",
 		a.unified.Environment, a.unified.Debug, a.unified.GetAddress())
 }

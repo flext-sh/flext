@@ -7,8 +7,8 @@ import (
 
 // PipelineService provides high-level pipeline operations
 type PipelineService struct {
-	pipelineRepo    PipelineRepository
-	eventPublisher  EventPublisher
+	pipelineRepo   PipelineRepository
+	eventPublisher EventPublisher
 }
 
 // NewPipelineService creates a new pipeline service
@@ -65,20 +65,26 @@ func (s *PipelineService) DeletePipeline(ctx context.Context, input DeletePipeli
 type NoOpInputValidator struct{}
 
 func (v *NoOpInputValidator) ValidateCreatePipelineInput(input CreatePipelineInput) error { return nil }
-func (v *NoOpInputValidator) ValidateCreatePipeline(input CreatePipelineInput) error { return nil }
+func (v *NoOpInputValidator) ValidateCreatePipeline(input CreatePipelineInput) error      { return nil }
 func (v *NoOpInputValidator) ValidateUpdatePipelineInput(input UpdatePipelineInput) error { return nil }
 func (v *NoOpInputValidator) ValidateDeletePipelineInput(input DeletePipelineInput) error { return nil }
-func (v *NoOpInputValidator) ValidateGetPipelineInput(input GetPipelineInput) error { return nil }
-func (v *NoOpInputValidator) ValidateGetPipeline(input GetPipelineInput) error { return nil }
-func (v *NoOpInputValidator) ValidateListPipelinesInput(input ListPipelinesInput) error { return nil }
-func (v *NoOpInputValidator) ValidateListPipelines(input ListPipelinesInput) error { return nil }
-func (v *NoOpInputValidator) ValidateGetPipelineByNameInput(input GetPipelineByNameInput) error { return nil }
-func (v *NoOpInputValidator) ValidateGetPipelineByName(input GetPipelineByNameInput) error { return nil }
+func (v *NoOpInputValidator) ValidateGetPipelineInput(input GetPipelineInput) error       { return nil }
+func (v *NoOpInputValidator) ValidateGetPipeline(input GetPipelineInput) error            { return nil }
+func (v *NoOpInputValidator) ValidateListPipelinesInput(input ListPipelinesInput) error   { return nil }
+func (v *NoOpInputValidator) ValidateListPipelines(input ListPipelinesInput) error        { return nil }
+func (v *NoOpInputValidator) ValidateGetPipelineByNameInput(input GetPipelineByNameInput) error {
+	return nil
+}
+func (v *NoOpInputValidator) ValidateGetPipelineByName(input GetPipelineByNameInput) error {
+	return nil
+}
 func (v *NoOpInputValidator) ValidateAddStepInput(input AddStepInput) error { return nil }
-func (v *NoOpInputValidator) ValidateAddStep(input AddStepInput) error { return nil }
-func (v *NoOpInputValidator) ValidateExecutePipelineInput(input ExecutePipelineInput) error { return nil }
+func (v *NoOpInputValidator) ValidateAddStep(input AddStepInput) error      { return nil }
+func (v *NoOpInputValidator) ValidateExecutePipelineInput(input ExecutePipelineInput) error {
+	return nil
+}
 func (v *NoOpInputValidator) ValidateExecutePipeline(input ExecutePipelineInput) error { return nil }
-func (v *NoOpInputValidator) ValidateDeletePipeline(input DeletePipelineInput) error { return nil }
+func (v *NoOpInputValidator) ValidateDeletePipeline(input DeletePipelineInput) error   { return nil }
 
 // HealthCheck performs health checks on the pipeline service
 func (s *PipelineService) HealthCheck(ctx context.Context) error {

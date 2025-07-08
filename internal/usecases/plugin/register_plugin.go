@@ -30,10 +30,10 @@ func NewRegisterPluginUseCase(
 
 // RegisterPluginInput represents the input for registering a plugin
 type RegisterPluginInput struct {
-	Name         string
-	Type         string
-	Version      string
-	Capabilities []string
+	Name          string
+	Type          string
+	Version       string
+	Capabilities  []string
 	Configuration map[string]interface{}
 }
 
@@ -72,15 +72,15 @@ func (uc *RegisterPluginUseCase) Execute(ctx context.Context, input RegisterPlug
 
 	// Create domain entity using entities structure
 	// Use a default entry point for now since it's not in the input
-	entryPoint := "main.py"  // or whatever makes sense for your domain
+	entryPoint := "main.py" // or whatever makes sense for your domain
 	pluginEntity, err := entities.NewPlugin(input.Name, input.Version, entryPoint, pluginType)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	// Set capabilities
 	pluginEntity.Capabilities = input.Capabilities
-	
+
 	// Set configuration
 	pluginEntity.Configuration = input.Configuration
 
@@ -112,7 +112,6 @@ func (uc *RegisterPluginUseCase) Execute(ctx context.Context, input RegisterPlug
 		RegisteredAt: time.Now().Format(time.RFC3339),
 	}, nil
 }
-
 
 // ExecuteUpdate updates an existing plugin
 func (uc *RegisterPluginUseCase) ExecuteUpdate(ctx context.Context, input UpdatePluginInput) (*RegisterPluginOutput, error) {

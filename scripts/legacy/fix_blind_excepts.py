@@ -159,7 +159,7 @@ class BlindExceptFixer:
                 # Find where to insert import
                 import_line_idx = 0
                 for i, line in enumerate(lines):
-                    if line.startswith("import ") or line.startswith("from "):
+                    if line.startswith(("import ", "from ")):
                         import_line_idx = i + 1
 
                 lines.insert(import_line_idx, "import json")
@@ -217,8 +217,7 @@ class BlindExceptFixer:
         print("\n🔧 APPLYING FIXES...")
 
         files_processed = set()
-        for file_path, _, _ in blind_excepts:
-            files_processed.add(file_path)
+        files_processed.update(file_path for file_path, _, _ in blind_excepts)
 
         for file_path in files_processed:
             fixes = self.fix_blind_except_in_file(file_path)

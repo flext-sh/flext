@@ -18,24 +18,24 @@ import (
 
 // DistributedManager manages all distributed system components
 type DistributedManager struct {
-	nodeID            string
-	config            *DistributedConfig
-	logger            logging.Logger
+	nodeID string
+	config *DistributedConfig
+	logger logging.Logger
 
 	// Core components
-	redisClient       *redis.Client
-	clusterManager    *cluster.ClusterManager
-	workerPool        *worker.WorkerPool
-	remoteAgent       *agent.RemoteAgent
-	coordinator       *coordination.Coordinator
-	serviceRegistry   *discovery.ServiceRegistry
-	loadBalancer      *discovery.LoadBalancer
+	redisClient        *redis.Client
+	clusterManager     *cluster.ClusterManager
+	workerPool         *worker.WorkerPool
+	remoteAgent        *agent.RemoteAgent
+	coordinator        *coordination.Coordinator
+	serviceRegistry    *discovery.ServiceRegistry
+	loadBalancer       *discovery.LoadBalancer
 	distributedMetrics *observability.DistributedMetrics
 
 	// State
-	started           bool
-	ctx               context.Context
-	cancel            context.CancelFunc
+	started bool
+	ctx     context.Context
+	cancel  context.CancelFunc
 }
 
 // DistributedConfig contains configuration for the distributed system
@@ -51,27 +51,27 @@ type DistributedConfig struct {
 	RedisDB       int    `json:"redis_db"`
 
 	// Worker pool configuration
-	MaxWorkers   int `json:"max_workers"`
-	MinWorkers   int `json:"min_workers"`
-	QueueSize    int `json:"queue_size"`
+	MaxWorkers int `json:"max_workers"`
+	MinWorkers int `json:"min_workers"`
+	QueueSize  int `json:"queue_size"`
 
 	// Cluster configuration
-	EnableClustering   bool `json:"enable_clustering"`
+	EnableClustering    bool `json:"enable_clustering"`
 	EnableLoadBalancing bool `json:"enable_load_balancing"`
-	EnableMetrics      bool `json:"enable_metrics"`
+	EnableMetrics       bool `json:"enable_metrics"`
 
 	// Service configuration
-	ServiceName    string            `json:"service_name"`
-	ServiceVersion string            `json:"service_version"`
-	ServiceTags    []string          `json:"service_tags"`
-	ServiceAddress string            `json:"service_address"`
-	ServicePort    int               `json:"service_port"`
+	ServiceName    string   `json:"service_name"`
+	ServiceVersion string   `json:"service_version"`
+	ServiceTags    []string `json:"service_tags"`
+	ServiceAddress string   `json:"service_address"`
+	ServicePort    int      `json:"service_port"`
 }
 
 // NewDistributedManager creates a new distributed manager
 func NewDistributedManager(config *DistributedConfig, logger logging.Logger) *DistributedManager {
 	ctx, cancel := context.WithCancel(context.Background())
-	
+
 	nodeID := uuid.New().String()
 
 	return &DistributedManager{
@@ -492,7 +492,7 @@ type WorkerPoolMetricsCollector struct {
 
 func (c *WorkerPoolMetricsCollector) CollectMetrics(ctx context.Context) ([]*observability.MetricValue, error) {
 	metrics := c.workerPool.GetMetrics()
-	
+
 	return []*observability.MetricValue{
 		{
 			Name:      "worker_pool_active_workers",
@@ -559,7 +559,7 @@ type ClusterMetricsCollector struct {
 func (c *ClusterMetricsCollector) CollectMetrics(ctx context.Context) ([]*observability.MetricValue, error) {
 	nodes := c.clusterManager.GetNodes()
 	onlineNodes := 0
-	
+
 	for _, node := range nodes {
 		if node.Status == cluster.NodeStatusOnline {
 			onlineNodes++
@@ -582,8 +582,14 @@ func (c *ClusterMetricsCollector) CollectMetrics(ctx context.Context) ([]*observ
 			Timestamp: time.Now(),
 		},
 		{
-			Name:      "node_is_leader",
-			Value:     func() float64 { if c.clusterManager.IsLeader() { return 1 } else { return 0 } }(),
+			Name: "node_is_leader",
+			Value: func() float64 {
+				if c.clusterManager.IsLeader() {
+					return 1
+				} else {
+					return 0
+				}
+			}(),
 			Type:      observability.MetricTypeGauge,
 			NodeID:    c.nodeID,
 			Timestamp: time.Now(),

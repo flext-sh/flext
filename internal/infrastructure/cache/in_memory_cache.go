@@ -29,10 +29,10 @@ func NewInMemoryCache(logger logging.Logger) (CacheManager, error) {
 		data:   make(map[string]cacheItem),
 		logger: logger,
 	}
-	
+
 	// Start cleanup goroutine
 	go cache.cleanup()
-	
+
 	return cache, nil
 }
 
@@ -40,13 +40,13 @@ func NewInMemoryCache(logger logging.Logger) (CacheManager, error) {
 func (c *InMemoryCache) Set(ctx context.Context, key string, value interface{}, ttl time.Duration) error {
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	
+
 	expiresAt := time.Now().Add(ttl)
 	c.data[key] = cacheItem{
 		value:     value,
 		expiresAt: expiresAt,
 	}
-	
+
 	return nil
 }
 
@@ -54,24 +54,24 @@ func (c *InMemoryCache) Set(ctx context.Context, key string, value interface{}, 
 func (c *InMemoryCache) Get(ctx context.Context, key string, dest interface{}) error {
 	c.mu.RLock()
 	defer c.mu.RUnlock()
-	
+
 	item, exists := c.data[key]
 	if !exists {
 		return fmt.Errorf("key not found: %s", key)
 	}
-	
+
 	if time.Now().After(item.expiresAt) {
 		// Item has expired, remove it
 		delete(c.data, key)
 		return fmt.Errorf("key expired: %s", key)
 	}
-	
+
 	// Simple type assignment for in-memory cache
 	if jsonStr, ok := item.value.(string); ok {
 		// Try to unmarshal JSON
 		return json.Unmarshal([]byte(jsonStr), dest)
 	}
-	
+
 	// Direct assignment if not JSON
 	switch d := dest.(type) {
 	case *string:
@@ -85,7 +85,7 @@ func (c *InMemoryCache) Get(ctx context.Context, key string, dest interface{}) e
 	default:
 		return fmt.Errorf("unsupported destination type")
 	}
-	
+
 	return nil
 }
 
@@ -93,7 +93,7 @@ func (c *InMemoryCache) Get(ctx context.Context, key string, dest interface{}) e
 func (c *InMemoryCache) Delete(ctx context.Context, keys ...string) error {
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	
+
 	for _, key := range keys {
 		delete(c.data, key)
 	}
@@ -104,7 +104,7 @@ func (c *InMemoryCache) Delete(ctx context.Context, keys ...string) error {
 func (c *InMemoryCache) DeletePattern(ctx context.Context, pattern string) error {
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	
+
 	for key := range c.data {
 		// Simple pattern matching (just prefix for now)
 		if pattern == "*" || key == pattern {
@@ -118,23 +118,23 @@ func (c *InMemoryCache) DeletePattern(ctx context.Context, pattern string) error
 func (c *InMemoryCache) Exists(ctx context.Context, keys ...string) (int64, error) {
 	c.mu.RLock()
 	defer c.mu.RUnlock()
-	
+
 	var count int64 = 0
 	for _, key := range keys {
 		item, exists := c.data[key]
 		if !exists {
 			continue
 		}
-		
+
 		if time.Now().After(item.expiresAt) {
 			// Item has expired
 			delete(c.data, key)
 			continue
 		}
-		
+
 		count++
 	}
-	
+
 	return count, nil
 }
 
@@ -144,7 +144,7 @@ func (c *InMemoryCache) SetJSON(ctx context.Context, key string, value interface
 	if err != nil {
 		return fmt.Errorf("failed to marshal JSON: %w", err)
 	}
-	
+
 	return c.Set(ctx, key, string(jsonData), ttl)
 }
 
@@ -154,7 +154,7 @@ func (c *InMemoryCache) GetJSON(ctx context.Context, key string, dest interface{
 	if err != nil {
 		return err
 	}
-	
+
 	return nil
 }
 
@@ -162,7 +162,7 @@ func (c *InMemoryCache) GetJSON(ctx context.Context, key string, dest interface{
 func (c *InMemoryCache) Clear(ctx context.Context) error {
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	
+
 	c.data = make(map[string]cacheItem)
 	return nil
 }
@@ -171,7 +171,7 @@ func (c *InMemoryCache) Clear(ctx context.Context) error {
 func (c *InMemoryCache) Size(ctx context.Context) (int, error) {
 	c.mu.RLock()
 	defer c.mu.RUnlock()
-	
+
 	return len(c.data), nil
 }
 
@@ -179,7 +179,7 @@ func (c *InMemoryCache) Size(ctx context.Context) (int, error) {
 func (c *InMemoryCache) Keys(ctx context.Context, pattern string) ([]string, error) {
 	c.mu.RLock()
 	defer c.mu.RUnlock()
-	
+
 	var keys []string
 	for key := range c.data {
 		// Simple pattern matching (just prefix for now)
@@ -187,7 +187,7 @@ func (c *InMemoryCache) Keys(ctx context.Context, pattern string) ([]string, err
 			keys = append(keys, key)
 		}
 	}
-	
+
 	return keys, nil
 }
 
@@ -195,16 +195,16 @@ func (c *InMemoryCache) Keys(ctx context.Context, pattern string) ([]string, err
 func (c *InMemoryCache) TTL(ctx context.Context, key string) (time.Duration, error) {
 	c.mu.RLock()
 	defer c.mu.RUnlock()
-	
+
 	item, exists := c.data[key]
 	if !exists {
 		return 0, fmt.Errorf("key not found: %s", key)
 	}
-	
+
 	if time.Now().After(item.expiresAt) {
 		return 0, fmt.Errorf("key expired: %s", key)
 	}
-	
+
 	return time.Until(item.expiresAt), nil
 }
 
@@ -218,7 +218,7 @@ func (c *InMemoryCache) HealthCheck(ctx context.Context) error {
 func (c *InMemoryCache) GetStatistics(ctx context.Context) (*CacheStatistics, error) {
 	c.mu.RLock()
 	defer c.mu.RUnlock()
-	
+
 	return &CacheStatistics{
 		RedisInfo:   "in_memory_cache",
 		Connections: 1,
@@ -234,12 +234,12 @@ func (c *InMemoryCache) GetStatistics(ctx context.Context) (*CacheStatistics, er
 func (c *InMemoryCache) Expire(ctx context.Context, key string, expiration time.Duration) error {
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	
+
 	item, exists := c.data[key]
 	if !exists {
 		return fmt.Errorf("key not found: %s", key)
 	}
-	
+
 	item.expiresAt = time.Now().Add(expiration)
 	c.data[key] = item
 	return nil
@@ -249,17 +249,17 @@ func (c *InMemoryCache) Expire(ctx context.Context, key string, expiration time.
 func (c *InMemoryCache) SetNX(ctx context.Context, key string, value interface{}, expiration time.Duration) (bool, error) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	
+
 	if _, exists := c.data[key]; exists {
 		return false, nil
 	}
-	
+
 	expiresAt := time.Now().Add(expiration)
 	c.data[key] = cacheItem{
 		value:     value,
 		expiresAt: expiresAt,
 	}
-	
+
 	return true, nil
 }
 
@@ -267,7 +267,7 @@ func (c *InMemoryCache) SetNX(ctx context.Context, key string, value interface{}
 func (c *InMemoryCache) GetSet(ctx context.Context, key string, value interface{}) (string, error) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	
+
 	item, exists := c.data[key]
 	oldValue := ""
 	if exists {
@@ -277,13 +277,13 @@ func (c *InMemoryCache) GetSet(ctx context.Context, key string, value interface{
 			oldValue = fmt.Sprintf("%v", item.value)
 		}
 	}
-	
+
 	expiresAt := time.Now().Add(24 * time.Hour) // Default TTL
 	c.data[key] = cacheItem{
 		value:     value,
 		expiresAt: expiresAt,
 	}
-	
+
 	return oldValue, nil
 }
 
@@ -296,10 +296,10 @@ func (c *InMemoryCache) Increment(ctx context.Context, key string) (int64, error
 func (c *InMemoryCache) IncrementBy(ctx context.Context, key string, value int64) (int64, error) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	
+
 	item, exists := c.data[key]
 	currentValue := int64(0)
-	
+
 	if exists {
 		if i, ok := item.value.(int64); ok {
 			currentValue = i
@@ -307,18 +307,18 @@ func (c *InMemoryCache) IncrementBy(ctx context.Context, key string, value int64
 			currentValue = int64(i)
 		}
 	}
-	
+
 	newValue := currentValue + value
 	expiresAt := time.Now().Add(24 * time.Hour) // Default TTL
 	if exists {
 		expiresAt = item.expiresAt
 	}
-	
+
 	c.data[key] = cacheItem{
 		value:     newValue,
 		expiresAt: expiresAt,
 	}
-	
+
 	return newValue, nil
 }
 
@@ -329,76 +329,76 @@ func (c *InMemoryCache) HSet(ctx context.Context, key string, values ...interfac
 	// Simplified: store as a map
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	
+
 	hashMap := make(map[string]interface{})
 	for i := 0; i < len(values)-1; i += 2 {
 		field := fmt.Sprintf("%v", values[i])
 		value := values[i+1]
 		hashMap[field] = value
 	}
-	
+
 	expiresAt := time.Now().Add(24 * time.Hour) // Default TTL
 	c.data[key] = cacheItem{
 		value:     hashMap,
 		expiresAt: expiresAt,
 	}
-	
+
 	return nil
 }
 
 func (c *InMemoryCache) HGet(ctx context.Context, key, field string) (string, error) {
 	c.mu.RLock()
 	defer c.mu.RUnlock()
-	
+
 	item, exists := c.data[key]
 	if !exists {
 		return "", fmt.Errorf("key not found: %s", key)
 	}
-	
+
 	if hashMap, ok := item.value.(map[string]interface{}); ok {
 		if value, exists := hashMap[field]; exists {
 			return fmt.Sprintf("%v", value), nil
 		}
 	}
-	
+
 	return "", fmt.Errorf("field not found: %s", field)
 }
 
 func (c *InMemoryCache) HGetAll(ctx context.Context, key string) (map[string]string, error) {
 	c.mu.RLock()
 	defer c.mu.RUnlock()
-	
+
 	item, exists := c.data[key]
 	if !exists {
 		return nil, fmt.Errorf("key not found: %s", key)
 	}
-	
+
 	result := make(map[string]string)
 	if hashMap, ok := item.value.(map[string]interface{}); ok {
 		for k, v := range hashMap {
 			result[k] = fmt.Sprintf("%v", v)
 		}
 	}
-	
+
 	return result, nil
 }
 
 func (c *InMemoryCache) HDel(ctx context.Context, key string, fields ...string) error {
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	
+
 	item, exists := c.data[key]
 	if !exists {
 		return nil
 	}
-	
+
 	if hashMap, ok := item.value.(map[string]interface{}); ok {
 		for _, field := range fields {
 			delete(hashMap, field)
 		}
 		c.data[key] = item
 	}
-	
+
 	return nil
 }
 
@@ -461,7 +461,7 @@ func (c *InMemoryCache) Transaction(ctx context.Context, keys []string, fn func(
 func (c *InMemoryCache) Close() error {
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	
+
 	c.data = make(map[string]cacheItem)
 	c.logger.Info("In-memory cache closed")
 	return nil
@@ -471,7 +471,7 @@ func (c *InMemoryCache) Close() error {
 func (c *InMemoryCache) cleanup() {
 	ticker := time.NewTicker(1 * time.Minute)
 	defer ticker.Stop()
-	
+
 	for range ticker.C {
 		c.mu.Lock()
 		now := time.Now()

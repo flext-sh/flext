@@ -19,14 +19,14 @@ type ZerologLogger struct {
 func NewZerologLogger(cfg config.LoggingConfig) Logger {
 	// Configure zerolog based on config
 	zerolog.TimeFieldFormat = time.RFC3339
-	
+
 	// Set log level
 	level := parseLogLevel(cfg.Level)
 	zerolog.SetGlobalLevel(level)
-	
+
 	// Create base logger
 	var logger zerolog.Logger
-	
+
 	if cfg.Format == "json" || cfg.Structured {
 		// JSON structured output
 		logger = zerolog.New(os.Stdout).With().Timestamp().Logger()
@@ -38,10 +38,10 @@ func NewZerologLogger(cfg config.LoggingConfig) Logger {
 			NoColor:    cfg.Output != "stdout",
 		}).With().Timestamp().Logger()
 	}
-	
+
 	// Add service identifier
 	logger = logger.With().Str("service", "flext").Logger()
-	
+
 	return &ZerologLogger{
 		logger: logger,
 	}
@@ -81,7 +81,7 @@ func (l *ZerologLogger) With(fields ...Field) Logger {
 	for _, field := range fields {
 		ctx = ctx.Interface(field.Key, field.Value)
 	}
-	
+
 	return &ZerologLogger{
 		logger: ctx.Logger(),
 	}
@@ -113,7 +113,6 @@ func parseLogLevel(level string) zerolog.Level {
 		return zerolog.InfoLevel
 	}
 }
-
 
 // Convenience functions for global logger
 func Debug(msg string, fields ...Field) {

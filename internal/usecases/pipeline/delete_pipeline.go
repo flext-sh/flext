@@ -49,7 +49,7 @@ func (uc *DeletePipelineUseCase) Execute(ctx context.Context, input DeletePipeli
 
 	// Publish domain event
 	event := events.NewPipelineDeletedEvent(input.ID, pipeline.Name)
-	
+
 	if err := uc.events.Publish(ctx, event); err != nil {
 		// Log error but don't fail the operation
 		// In a real implementation, you might want to use an outbox pattern

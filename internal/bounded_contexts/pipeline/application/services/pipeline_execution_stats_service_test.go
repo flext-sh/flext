@@ -14,11 +14,11 @@ import (
 
 func TestPipelineExecutionStatsService_GetPipelineExecutionCounts(t *testing.T) {
 	tests := []struct {
-		name               string
-		setupExecutions    func() []*ports.ExecutionRecord
-		expectedTotal      int
-		expectedSuccess    int
-		expectedFailure    int
+		name            string
+		setupExecutions func() []*ports.ExecutionRecord
+		expectedTotal   int
+		expectedSuccess int
+		expectedFailure int
 	}{
 		{
 			name: "empty executions",
@@ -149,15 +149,15 @@ func TestPipelineExecutionStatsService_GetPipelineExecutionMetrics(t *testing.T)
 			CreatedAt:   now.Add(-1 * time.Hour),
 		},
 		{
-			ID:          uuid.New(),
-			PipelineID:  pipelineID,
-			Status:      "failed",
-			StartedAt:   &now,
-			CompletedAt: func() *time.Time { t := now.Add(5 * time.Second); return &t }(),
-			Duration:    5 * time.Second,
-			Success:     false,
+			ID:           uuid.New(),
+			PipelineID:   pipelineID,
+			Status:       "failed",
+			StartedAt:    &now,
+			CompletedAt:  func() *time.Time { t := now.Add(5 * time.Second); return &t }(),
+			Duration:     5 * time.Second,
+			Success:      false,
 			ErrorMessage: "Connection timeout",
-			CreatedAt:   now.Add(-2 * time.Hour),
+			CreatedAt:    now.Add(-2 * time.Hour),
 		},
 		{
 			ID:          uuid.New(),
@@ -226,10 +226,10 @@ func TestPipelineExecutionStatsService_RecordExecution(t *testing.T) {
 		{
 			name: "successful execution record",
 			execution: &ports.ExecutionRecord{
-				PipelineID:  pipelineID,
-				Status:      "completed",
-				StartedAt:   func() *time.Time { t := time.Now(); return &t }(),
-				CompletedAt: func() *time.Time { t := time.Now().Add(time.Second); return &t }(),
+				PipelineID:   pipelineID,
+				Status:       "completed",
+				StartedAt:    func() *time.Time { t := time.Now(); return &t }(),
+				CompletedAt:  func() *time.Time { t := time.Now().Add(time.Second); return &t }(),
 				ErrorMessage: "",
 			},
 			expectError:     false,
@@ -238,10 +238,10 @@ func TestPipelineExecutionStatsService_RecordExecution(t *testing.T) {
 		{
 			name: "failed execution record",
 			execution: &ports.ExecutionRecord{
-				PipelineID:  pipelineID,
-				Status:      "failed",
-				StartedAt:   func() *time.Time { t := time.Now(); return &t }(),
-				CompletedAt: func() *time.Time { t := time.Now().Add(time.Second); return &t }(),
+				PipelineID:   pipelineID,
+				Status:       "failed",
+				StartedAt:    func() *time.Time { t := time.Now(); return &t }(),
+				CompletedAt:  func() *time.Time { t := time.Now().Add(time.Second); return &t }(),
 				ErrorMessage: "Database connection failed",
 			},
 			expectError:     false,
@@ -325,7 +325,7 @@ func TestPipelineExecutionStatsService_GetPipelineLastExecution(t *testing.T) {
 	// Assert
 	require.NoError(t, err)
 	require.NotNil(t, lastExecution)
-	
+
 	// Should be the most recent execution (failed one)
 	assert.Equal(t, executions[1].ID, lastExecution.ID)
 	assert.Equal(t, "failed", lastExecution.Status)
@@ -385,7 +385,7 @@ func TestPipelineExecutionStatsService_CalculateExecutionTrend(t *testing.T) {
 
 	// Assert
 	assert.True(t, len(trend) >= 1) // Should have at least one trend point
-	
+
 	// Find today's trend point
 	var todayTrend *ExecutionTrendPoint
 	for _, point := range trend {
@@ -394,12 +394,12 @@ func TestPipelineExecutionStatsService_CalculateExecutionTrend(t *testing.T) {
 			break
 		}
 	}
-	
+
 	require.NotNil(t, todayTrend, "Should have trend data for today")
 	assert.Equal(t, 3, todayTrend.Executions) // 3 executions today
 	assert.Equal(t, 2, todayTrend.Successful) // 2 successful
 	assert.Equal(t, 1, todayTrend.Failed)     // 1 failed
-	
+
 	expectedSuccessRate := float64(2) / float64(3) * 100 // 66.67%
 	assert.InDelta(t, expectedSuccessRate, todayTrend.SuccessRate, 0.01)
 }

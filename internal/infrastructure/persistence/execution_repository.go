@@ -54,7 +54,7 @@ func (r *PostgreSQLExecutionRepository) Save(ctx context.Context, execution *por
 
 	// Use upsert (INSERT ... ON CONFLICT DO UPDATE) for PostgreSQL
 	query := `
-		INSERT INTO executions (id, pipeline_id, status, started_at, completed_at, 
+		INSERT INTO executions (id, pipeline_id, status, started_at, completed_at,
 		                       duration_ms, success, error_message, logs, metrics, created_at)
 		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
 		ON CONFLICT (id) DO UPDATE SET
@@ -98,7 +98,7 @@ func (r *PostgreSQLExecutionRepository) Save(ctx context.Context, execution *por
 // FindByID retrieves an execution by ID
 func (r *PostgreSQLExecutionRepository) FindByID(ctx context.Context, id uuid.UUID) (*ports.ExecutionRecord, error) {
 	query := `
-		SELECT id, pipeline_id, status, started_at, completed_at, duration_ms, 
+		SELECT id, pipeline_id, status, started_at, completed_at, duration_ms,
 		       success, error_message, logs, metrics, created_at
 		FROM executions WHERE id = $1
 	`
@@ -139,9 +139,9 @@ func (r *PostgreSQLExecutionRepository) Delete(ctx context.Context, id uuid.UUID
 // FindByPipelineID retrieves executions by pipeline ID with pagination
 func (r *PostgreSQLExecutionRepository) FindByPipelineID(ctx context.Context, pipelineID uuid.UUID, limit, offset int) ([]*ports.ExecutionRecord, error) {
 	query := `
-		SELECT id, pipeline_id, status, started_at, completed_at, duration_ms, 
+		SELECT id, pipeline_id, status, started_at, completed_at, duration_ms,
 		       success, error_message, logs, metrics, created_at
-		FROM executions 
+		FROM executions
 		WHERE pipeline_id = $1
 		ORDER BY created_at DESC
 		LIMIT $2 OFFSET $3
@@ -159,9 +159,9 @@ func (r *PostgreSQLExecutionRepository) FindByPipelineID(ctx context.Context, pi
 // FindByStatus retrieves executions by status with pagination
 func (r *PostgreSQLExecutionRepository) FindByStatus(ctx context.Context, status string, limit, offset int) ([]*ports.ExecutionRecord, error) {
 	query := `
-		SELECT id, pipeline_id, status, started_at, completed_at, duration_ms, 
+		SELECT id, pipeline_id, status, started_at, completed_at, duration_ms,
 		       success, error_message, logs, metrics, created_at
-		FROM executions 
+		FROM executions
 		WHERE status = $1
 		ORDER BY created_at DESC
 		LIMIT $2 OFFSET $3
@@ -179,9 +179,9 @@ func (r *PostgreSQLExecutionRepository) FindByStatus(ctx context.Context, status
 // FindAll retrieves all executions with pagination
 func (r *PostgreSQLExecutionRepository) FindAll(ctx context.Context, limit, offset int) ([]*ports.ExecutionRecord, error) {
 	query := `
-		SELECT id, pipeline_id, status, started_at, completed_at, duration_ms, 
+		SELECT id, pipeline_id, status, started_at, completed_at, duration_ms,
 		       success, error_message, logs, metrics, created_at
-		FROM executions 
+		FROM executions
 		ORDER BY created_at DESC
 		LIMIT $1 OFFSET $2
 	`
@@ -208,8 +208,8 @@ func (r *PostgreSQLExecutionRepository) Count(ctx context.Context) (int, error) 
 // CountByPipelineID returns the number of executions for a specific pipeline
 func (r *PostgreSQLExecutionRepository) CountByPipelineID(ctx context.Context, pipelineID uuid.UUID) (int, error) {
 	var count int
-	err := r.db.GetDB().QueryRowContext(ctx, 
-		"SELECT COUNT(*) FROM executions WHERE pipeline_id = $1", 
+	err := r.db.GetDB().QueryRowContext(ctx,
+		"SELECT COUNT(*) FROM executions WHERE pipeline_id = $1",
 		pipelineID.String()).Scan(&count)
 	if err != nil {
 		return 0, fmt.Errorf("failed to count executions by pipeline ID: %w", err)
@@ -246,8 +246,8 @@ func (r *PostgreSQLExecutionRepository) GetExecutionStats(ctx context.Context) (
 
 	// Status distribution
 	statusQuery := `
-		SELECT status, COUNT(*) 
-		FROM executions 
+		SELECT status, COUNT(*)
+		FROM executions
 		GROUP BY status
 	`
 	rows, err := r.db.GetDB().QueryContext(ctx, statusQuery)
@@ -269,12 +269,12 @@ func (r *PostgreSQLExecutionRepository) GetExecutionStats(ctx context.Context) (
 
 	// Average duration
 	var avgDurationMs *float64
-	err = r.db.GetDB().QueryRowContext(ctx, 
+	err = r.db.GetDB().QueryRowContext(ctx,
 		"SELECT AVG(duration_ms) FROM executions WHERE duration_ms IS NOT NULL").Scan(&avgDurationMs)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get average duration: %w", err)
 	}
-	
+
 	if avgDurationMs != nil {
 		stats["average_duration_ms"] = *avgDurationMs
 		avgDuration := time.Duration(*avgDurationMs) * time.Millisecond
@@ -286,8 +286,8 @@ func (r *PostgreSQLExecutionRepository) GetExecutionStats(ctx context.Context) (
 
 	// Recent activity (last 24 hours)
 	var recent24h int
-	err = r.db.GetDB().QueryRowContext(ctx, 
-		"SELECT COUNT(*) FROM executions WHERE created_at > $1", 
+	err = r.db.GetDB().QueryRowContext(ctx,
+		"SELECT COUNT(*) FROM executions WHERE created_at > $1",
 		time.Now().Add(-24*time.Hour)).Scan(&recent24h)
 	if err == nil {
 		stats["executions_last_24h"] = recent24h
@@ -313,8 +313,8 @@ func (r *PostgreSQLExecutionRepository) GetPipelineStats(ctx context.Context, pi
 
 	// Successful executions for this pipeline
 	var successful int
-	err = r.db.GetDB().QueryRowContext(ctx, 
-		"SELECT COUNT(*) FROM executions WHERE pipeline_id = $1 AND success = true", 
+	err = r.db.GetDB().QueryRowContext(ctx,
+		"SELECT COUNT(*) FROM executions WHERE pipeline_id = $1 AND success = true",
 		pipelineID.String()).Scan(&successful)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get successful executions for pipeline: %w", err)
@@ -329,8 +329,8 @@ func (r *PostgreSQLExecutionRepository) GetPipelineStats(ctx context.Context, pi
 
 	// Last execution time
 	var lastExecution *time.Time
-	err = r.db.GetDB().QueryRowContext(ctx, 
-		"SELECT MAX(started_at) FROM executions WHERE pipeline_id = $1 AND started_at IS NOT NULL", 
+	err = r.db.GetDB().QueryRowContext(ctx,
+		"SELECT MAX(started_at) FROM executions WHERE pipeline_id = $1 AND started_at IS NOT NULL",
 		pipelineID.String()).Scan(&lastExecution)
 	if err != nil && err != sql.ErrNoRows {
 		return nil, fmt.Errorf("failed to get last execution time: %w", err)
@@ -339,13 +339,13 @@ func (r *PostgreSQLExecutionRepository) GetPipelineStats(ctx context.Context, pi
 
 	// Average execution time for this pipeline
 	var avgDurationMs *float64
-	err = r.db.GetDB().QueryRowContext(ctx, 
-		"SELECT AVG(duration_ms) FROM executions WHERE pipeline_id = $1 AND duration_ms IS NOT NULL", 
+	err = r.db.GetDB().QueryRowContext(ctx,
+		"SELECT AVG(duration_ms) FROM executions WHERE pipeline_id = $1 AND duration_ms IS NOT NULL",
 		pipelineID.String()).Scan(&avgDurationMs)
 	if err != nil && err != sql.ErrNoRows {
 		return nil, fmt.Errorf("failed to get average execution time: %w", err)
 	}
-	
+
 	if avgDurationMs != nil {
 		avgDuration := time.Duration(*avgDurationMs) * time.Millisecond
 		stats.AverageExecutionTime = &avgDuration
@@ -671,7 +671,7 @@ func (r *InMemoryExecutionRepository) GetPipelineStats(ctx context.Context, pipe
 			totalDuration += execution.Duration
 			durationCount++
 		}
-		if stats.LastExecution == nil || (execution.StartedAt != nil && 
+		if stats.LastExecution == nil || (execution.StartedAt != nil &&
 			(stats.LastExecution == nil || execution.StartedAt.After(*stats.LastExecution))) {
 			stats.LastExecution = execution.StartedAt
 		}

@@ -58,7 +58,7 @@ func (uc *AddScheduleUseCase) Execute(ctx context.Context, input AddScheduleInpu
 		return nil, ErrProjectNotFound
 	}
 
-	// Create schedule  
+	// Create schedule
 	schedule := entities.MeltanoSchedule{
 		ID:       uuid.New(),
 		Name:     input.Name,

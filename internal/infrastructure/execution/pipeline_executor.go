@@ -24,16 +24,16 @@ type RealPipelineExecutor struct {
 
 // PipelineExecution represents a complete pipeline execution
 type PipelineExecution struct {
-	ID          uuid.UUID           `json:"id"`
-	PipelineID  uuid.UUID           `json:"pipeline_id"`
-	Status      ExecutionStatus     `json:"status"`
-	StartedAt   time.Time           `json:"started_at"`
-	CompletedAt *time.Time          `json:"completed_at,omitempty"`
-	Steps       []*StepExecution    `json:"steps"`
-	Error       *string             `json:"error,omitempty"`
-	Context     map[string]interface{} `json:"context,omitempty"`
-	TotalRecords int                `json:"total_records"`
-	DataFlow    map[string]interface{} `json:"data_flow,omitempty"`
+	ID           uuid.UUID              `json:"id"`
+	PipelineID   uuid.UUID              `json:"pipeline_id"`
+	Status       ExecutionStatus        `json:"status"`
+	StartedAt    time.Time              `json:"started_at"`
+	CompletedAt  *time.Time             `json:"completed_at,omitempty"`
+	Steps        []*StepExecution       `json:"steps"`
+	Error        *string                `json:"error,omitempty"`
+	Context      map[string]interface{} `json:"context,omitempty"`
+	TotalRecords int                    `json:"total_records"`
+	DataFlow     map[string]interface{} `json:"data_flow,omitempty"`
 }
 
 // StepExecution represents a single step execution
@@ -56,11 +56,11 @@ type StepExecution struct {
 type ExecutionStatus string
 
 const (
-	StatusPending    ExecutionStatus = "pending"
-	StatusRunning    ExecutionStatus = "running"
-	StatusCompleted  ExecutionStatus = "completed"
-	StatusFailed     ExecutionStatus = "failed"
-	StatusCancelled  ExecutionStatus = "cancelled"
+	StatusPending   ExecutionStatus = "pending"
+	StatusRunning   ExecutionStatus = "running"
+	StatusCompleted ExecutionStatus = "completed"
+	StatusFailed    ExecutionStatus = "failed"
+	StatusCancelled ExecutionStatus = "cancelled"
 )
 
 // NewRealPipelineExecutor creates a new real pipeline executor
@@ -124,7 +124,7 @@ func (e *RealPipelineExecutor) Execute(ctx context.Context, pipeline *pipelineEn
 
 	// Execute steps according to plan
 	dataFlow := make(map[string]interface{})
-	
+
 	for i, stepGroup := range executionPlan {
 		e.logger.Info("Executing step group",
 			logging.F("execution_id", executionID.String()),
@@ -149,7 +149,7 @@ func (e *RealPipelineExecutor) Execute(ctx context.Context, pipeline *pipelineEn
 		// Check if any step in the group failed
 		for _, result := range groupResults {
 			if result.Status == StatusFailed {
-				return e.failExecution(execution, fmt.Sprintf("Step %s failed: %s", 
+				return e.failExecution(execution, fmt.Sprintf("Step %s failed: %s",
 					result.Name, *result.Error)), nil
 			}
 		}
@@ -185,11 +185,11 @@ func (e *RealPipelineExecutor) validatePipeline(pipeline *pipelineEntities.Pipel
 	for _, step := range pipeline.Steps {
 		plugin, err := e.pluginRepo.GetByID(context.Background(), step.PluginID)
 		if err != nil {
-			return fmt.Errorf("failed to load plugin %s for step %s: %w", 
+			return fmt.Errorf("failed to load plugin %s for step %s: %w",
 				step.PluginID.String(), step.Name, err)
 		}
 		if plugin == nil {
-			return fmt.Errorf("plugin %s not found for step %s", 
+			return fmt.Errorf("plugin %s not found for step %s",
 				step.PluginID.String(), step.Name)
 		}
 	}
@@ -213,7 +213,7 @@ func (e *RealPipelineExecutor) createExecutionPlan(steps []pipelineEntities.Pipe
 	for len(completed) < len(steps) {
 		// Find steps that can be executed (all dependencies completed)
 		var readySteps []*pipelineEntities.PipelineStep
-		
+
 		for i := range steps {
 			step := &steps[i]
 			if completed[step.ID] {
@@ -270,13 +270,13 @@ func (e *RealPipelineExecutor) executeStepGroup(
 		wg.Add(1)
 		go func(s *pipelineEntities.PipelineStep) {
 			defer wg.Done()
-			
+
 			// Acquire semaphore
 			semaphore <- struct{}{}
 			defer func() { <-semaphore }()
 
 			stepExecution, err := e.executeStep(ctx, s, dataFlow, execution)
-			
+
 			mu.Lock()
 			results[s.ID.String()] = stepExecution
 			execution.Steps = append(execution.Steps, stepExecution)
@@ -311,7 +311,7 @@ func (e *RealPipelineExecutor) executeStep(
 ) (*StepExecution, error) {
 
 	startTime := time.Now()
-	
+
 	stepExecution := &StepExecution{
 		StepID:    step.ID,
 		Name:      step.Name,
@@ -369,14 +369,14 @@ func (e *RealPipelineExecutor) executeStep(
 	if result.Success {
 		stepExecution.Status = StatusCompleted
 		stepExecution.OutputData = result.Data
-		
+
 		// Add execution logs
 		if result.Stdout != "" {
-			stepExecution.Logs = append(stepExecution.Logs, 
+			stepExecution.Logs = append(stepExecution.Logs,
 				fmt.Sprintf("STDOUT: %s", result.Stdout))
 		}
 		if result.Stderr != "" {
-			stepExecution.Logs = append(stepExecution.Logs, 
+			stepExecution.Logs = append(stepExecution.Logs,
 				fmt.Sprintf("STDERR: %s", result.Stderr))
 		}
 

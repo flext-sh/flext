@@ -20,13 +20,13 @@ func NewSimpleWebHandler(logger logging.Logger) *SimpleWebHandler {
 func (h *SimpleWebHandler) RegisterRoutes(e *echo.Echo) {
 	// Página principal
 	e.GET("/", h.Home)
-	
+
 	// Componentes reativos
 	e.GET("/stats", h.GetStats)
 	e.GET("/pipelines", h.GetPipelines)
 	e.POST("/pipeline/create", h.CreatePipeline)
 	e.GET("/logs", h.GetLogs)
-	
+
 	// Assets estáticos
 	e.Static("/static", "web/static")
 }
@@ -44,14 +44,14 @@ func (h *SimpleWebHandler) Home(c echo.Context) error {
 <body class="bg-gray-100">
     <div class="container mx-auto p-6">
         <h1 class="text-3xl font-bold mb-6">🚀 FLEXT Dashboard</h1>
-        
+
         <!-- Stats que atualizam sozinhas -->
-        <div class="grid grid-cols-3 gap-4 mb-6" 
-             hx-get="/stats" 
+        <div class="grid grid-cols-3 gap-4 mb-6"
+             hx-get="/stats"
              hx-trigger="load, every 10s">
             <div class="bg-white p-4 rounded shadow">Loading...</div>
         </div>
-        
+
         <!-- Lista de pipelines reativa -->
         <div class="bg-white rounded shadow">
             <div class="p-4 border-b">
@@ -62,16 +62,16 @@ func (h *SimpleWebHandler) Home(c echo.Context) error {
                     ➕ Create
                 </button>
             </div>
-            <div id="pipelines" 
-                 hx-get="/pipelines" 
+            <div id="pipelines"
+                 hx-get="/pipelines"
                  hx-trigger="load, every 30s">
                 Loading pipelines...
             </div>
         </div>
-        
+
         <!-- Logs em tempo real -->
         <div class="mt-6 bg-black text-green-400 p-4 rounded font-mono"
-             hx-get="/logs" 
+             hx-get="/logs"
              hx-trigger="load, every 5s"
              hx-swap="innerHTML">
             Loading logs...
@@ -129,7 +129,7 @@ func (h *SimpleWebHandler) CreatePipeline(c echo.Context) error {
 <div class="divide-y">
     <div class="p-4 flex justify-between items-center bg-green-50">
         <div>
-            <h3 class="font-bold">New Pipeline ` + fmt.Sprintf("%d", len("123")) + `</h3>
+            <h3 class="font-bold">New Pipeline `+fmt.Sprintf("%d", len("123"))+`</h3>
             <span class="text-green-600">✅ Created</span>
         </div>
         <button class="bg-red-500 text-white px-3 py-1 rounded text-sm">Delete</button>

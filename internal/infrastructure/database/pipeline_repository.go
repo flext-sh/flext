@@ -46,12 +46,12 @@ func (r *PipelineRepository) Save(ctx context.Context, pipeline *Pipeline) error
 	if exists {
 		// Update existing pipeline
 		query := `
-			UPDATE pipelines 
-			SET name = ?, description = ?, status = ?, tags = ?, metadata = ?, 
+			UPDATE pipelines
+			SET name = ?, description = ?, status = ?, tags = ?, metadata = ?,
 			    updated_at = CURRENT_TIMESTAMP, version = version + 1
 			WHERE id = ?
 		`
-		_, err = r.db.ExecContext(ctx, query, 
+		_, err = r.db.ExecContext(ctx, query,
 			pipeline.Name, pipeline.Description, pipeline.Status.String(),
 			string(tagsJSON), string(metadataJSON), pipeline.ID.String())
 	} else {
@@ -61,8 +61,8 @@ func (r *PipelineRepository) Save(ctx context.Context, pipeline *Pipeline) error
 			VALUES (?, ?, ?, ?, ?, ?, ?)
 		`
 		_, err = r.db.ExecContext(ctx, query,
-			pipeline.ID.String(), pipeline.Name, pipeline.Description, 
-			pipeline.Status.String(), string(tagsJSON), string(metadataJSON), 
+			pipeline.ID.String(), pipeline.Name, pipeline.Description,
+			pipeline.Status.String(), string(tagsJSON), string(metadataJSON),
 			pipeline.CreatedBy)
 	}
 
@@ -89,19 +89,19 @@ func (r *PipelineRepository) FindByID(ctx context.Context, id uuid.UUID) (*Pipel
 		SELECT id, name, description, status, tags, metadata, created_at, updated_at, created_by, version
 		FROM pipelines WHERE id = ?
 	`
-	
+
 	row := r.db.QueryRowContext(ctx, query, id.String())
-	
+
 	var pipeline Pipeline
 	var tagsJSON, metadataJSON string
 	var statusStr string
-	
+
 	err := row.Scan(
 		&pipeline.ID, &pipeline.Name, &pipeline.Description, &statusStr,
 		&tagsJSON, &metadataJSON, &pipeline.CreatedAt, &pipeline.UpdatedAt,
 		&pipeline.CreatedBy, &pipeline.Version,
 	)
-	
+
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, ErrPipelineNotFound
@@ -140,19 +140,19 @@ func (r *PipelineRepository) FindByName(ctx context.Context, name string) (*Pipe
 		SELECT id, name, description, status, tags, metadata, created_at, updated_at, created_by, version
 		FROM pipelines WHERE name = ?
 	`
-	
+
 	row := r.db.QueryRowContext(ctx, query, name)
-	
+
 	var pipeline Pipeline
 	var tagsJSON, metadataJSON string
 	var statusStr string
-	
+
 	err := row.Scan(
 		&pipeline.ID, &pipeline.Name, &pipeline.Description, &statusStr,
 		&tagsJSON, &metadataJSON, &pipeline.CreatedAt, &pipeline.UpdatedAt,
 		&pipeline.CreatedBy, &pipeline.Version,
 	)
-	
+
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, ErrPipelineNotFound
@@ -183,11 +183,11 @@ func (r *PipelineRepository) FindByName(ctx context.Context, name string) (*Pipe
 func (r *PipelineRepository) FindAll(ctx context.Context, limit, offset int) ([]*Pipeline, error) {
 	query := `
 		SELECT id, name, description, status, tags, metadata, created_at, updated_at, created_by, version
-		FROM pipelines 
+		FROM pipelines
 		ORDER BY created_at DESC
 		LIMIT ? OFFSET ?
 	`
-	
+
 	rows, err := r.db.QueryContext(ctx, query, limit, offset)
 	if err != nil {
 		return nil, fmt.Errorf("failed to query pipelines: %w", err)
@@ -195,25 +195,25 @@ func (r *PipelineRepository) FindAll(ctx context.Context, limit, offset int) ([]
 	defer rows.Close()
 
 	var pipelines []*Pipeline
-	
+
 	for rows.Next() {
 		var pipeline Pipeline
 		var tagsJSON, metadataJSON string
 		var statusStr string
-		
+
 		err := rows.Scan(
 			&pipeline.ID, &pipeline.Name, &pipeline.Description, &statusStr,
 			&tagsJSON, &metadataJSON, &pipeline.CreatedAt, &pipeline.UpdatedAt,
 			&pipeline.CreatedBy, &pipeline.Version,
 		)
-		
+
 		if err != nil {
 			return nil, fmt.Errorf("failed to scan pipeline: %w", err)
 		}
 
 		// Parse status
 		pipeline.Status.FromString(statusStr)
-		
+
 		// Parse tags and metadata
 		json.Unmarshal([]byte(tagsJSON), &pipeline.Tags)
 		json.Unmarshal([]byte(metadataJSON), &pipeline.Metadata)
@@ -300,11 +300,11 @@ func (r *PipelineRepository) saveSteps(ctx context.Context, pipeline *Pipeline) 
 			INSERT INTO pipeline_steps (id, pipeline_id, name, type, order_index, config, dependencies)
 			VALUES (?, ?, ?, ?, ?, ?, ?)
 		`
-		
+
 		_, err = r.db.ExecContext(ctx, query,
 			step.ID.String(), pipeline.ID.String(), step.Name, step.Type.String(),
 			i, string(configJSON), string(dependenciesJSON))
-		
+
 		if err != nil {
 			return fmt.Errorf("failed to insert step: %w", err)
 		}
@@ -316,11 +316,11 @@ func (r *PipelineRepository) saveSteps(ctx context.Context, pipeline *Pipeline) 
 func (r *PipelineRepository) loadSteps(ctx context.Context, pipelineID uuid.UUID) ([]*Step, error) {
 	query := `
 		SELECT id, name, type, config, dependencies
-		FROM pipeline_steps 
-		WHERE pipeline_id = ? 
+		FROM pipeline_steps
+		WHERE pipeline_id = ?
 		ORDER BY order_index
 	`
-	
+
 	rows, err := r.db.QueryContext(ctx, query, pipelineID.String())
 	if err != nil {
 		return nil, fmt.Errorf("failed to query steps: %w", err)
@@ -328,12 +328,12 @@ func (r *PipelineRepository) loadSteps(ctx context.Context, pipelineID uuid.UUID
 	defer rows.Close()
 
 	var steps []*Step
-	
+
 	for rows.Next() {
 		var step Step
 		var configJSON, dependenciesJSON string
 		var typeStr string
-		
+
 		err := rows.Scan(&step.ID, &step.Name, &typeStr, &configJSON, &dependenciesJSON)
 		if err != nil {
 			return nil, fmt.Errorf("failed to scan step: %w", err)

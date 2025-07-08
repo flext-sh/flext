@@ -52,7 +52,7 @@ func (uc *DeleteProjectUseCase) Execute(ctx context.Context, input DeleteProject
 		ProjectID: input.ID,
 		Name:      project.Name,
 	}
-	
+
 	if err := uc.events.Publish(ctx, event); err != nil {
 		// Log error but don't fail the operation
 		// In a real implementation, you might want to use an outbox pattern

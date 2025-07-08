@@ -99,7 +99,7 @@ func (c *PipelineController) GetPipeline(w http.ResponseWriter, r *http.Request)
 func (c *PipelineController) ListPipelines(w http.ResponseWriter, r *http.Request) {
 	// Parse query parameters
 	query := r.URL.Query()
-	
+
 	// Build use case input
 	input := pipeline.ListPipelinesInput{
 		Limit:  c.parseIntParam(query.Get("limit"), 20),
@@ -196,7 +196,7 @@ func (c *PipelineController) ExecutePipeline(w http.ResponseWriter, r *http.Requ
 	// Map to use case input
 	input := pipeline.ExecutePipelineInput{
 		PipelineID: pipelineID,
-		Context: req.Parameters,
+		Context:    req.Parameters,
 	}
 
 	// Execute use case
@@ -230,12 +230,12 @@ func (c *PipelineController) parseIntParam(value string, defaultValue int) int {
 	if value == "" {
 		return defaultValue
 	}
-	
+
 	parsed, err := strconv.Atoi(value)
 	if err != nil {
 		return defaultValue
 	}
-	
+
 	return parsed
 }
 
@@ -243,7 +243,7 @@ func (c *PipelineController) parseTagsParam(value string) []string {
 	if value == "" {
 		return nil
 	}
-	
+
 	// Simple comma-separated parsing
 	// Could be enhanced with proper CSV parsing
 	tags := []string{}
@@ -252,7 +252,7 @@ func (c *PipelineController) parseTagsParam(value string) []string {
 			tags = append(tags, tag)
 		}
 	}
-	
+
 	return tags
 }
 

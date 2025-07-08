@@ -26,7 +26,7 @@ func NewPipelineRepositoryGateway(store persistence.PipelineStore) *PipelineRepo
 func (g *PipelineRepositoryGateway) Save(ctx context.Context, p *domainPipeline.Pipeline) error {
 	// Convert domain entity to persistence model
 	model := g.domainToPersistence(p)
-	
+
 	// Save using the store
 	return g.store.Create(ctx, model)
 }

@@ -11,10 +11,10 @@ import (
 
 // MonitoringHandler handles monitoring-related HTTP requests
 type MonitoringHandler struct {
-	realtimeMonitor *monitoring.RealtimeMonitor
+	realtimeMonitor  *monitoring.RealtimeMonitor
 	metricsCollector *monitoring.MetricsCollector
-	traceManager    *monitoring.TraceManager
-	healthChecker   *monitoring.HealthChecker
+	traceManager     *monitoring.TraceManager
+	healthChecker    *monitoring.HealthChecker
 }
 
 // NewMonitoringHandler creates a new monitoring handler
@@ -48,7 +48,7 @@ func (h *MonitoringHandler) GetPerformanceStats(c echo.Context) error {
 // GetPipelineStats returns statistics for a specific pipeline
 func (h *MonitoringHandler) GetPipelineStats(c echo.Context) error {
 	pipelineIDStr := c.Param("id")
-	
+
 	pipelineID, err := uuid.Parse(pipelineIDStr)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
@@ -56,7 +56,7 @@ func (h *MonitoringHandler) GetPipelineStats(c echo.Context) error {
 			"error":   "Invalid pipeline ID format",
 		})
 	}
-	
+
 	stats, exists := h.realtimeMonitor.GetPipelineStats(pipelineID)
 	if !exists {
 		return c.JSON(http.StatusNotFound, map[string]interface{}{
@@ -64,7 +64,7 @@ func (h *MonitoringHandler) GetPipelineStats(c echo.Context) error {
 			"error":   "Pipeline statistics not found",
 		})
 	}
-	
+
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"success": true,
 		"data":    stats,
@@ -75,10 +75,10 @@ func (h *MonitoringHandler) GetPipelineStats(c echo.Context) error {
 func (h *MonitoringHandler) GetAllPipelineStats(c echo.Context) error {
 	params := h.extractPaginationParams(c)
 	allStats := h.realtimeMonitor.GetAllPipelineStats()
-	
+
 	filteredStats := h.filterStatsByStatus(allStats, params.Status)
 	paginatedStats := h.applyPagination(filteredStats, params)
-	
+
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"success": true,
 		"data": map[string]interface{}{
@@ -112,19 +112,19 @@ func (h *MonitoringHandler) extractPaginationParams(c echo.Context) PaginationPa
 		Limit:  50, // default
 		Offset: 0,  // default
 	}
-	
+
 	if limitStr := c.QueryParam("limit"); limitStr != "" {
 		if l, err := strconv.Atoi(limitStr); err == nil && l > 0 {
 			params.Limit = l
 		}
 	}
-	
+
 	if offsetStr := c.QueryParam("offset"); offsetStr != "" {
 		if o, err := strconv.Atoi(offsetStr); err == nil && o >= 0 {
 			params.Offset = o
 		}
 	}
-	
+
 	return params
 }
 
@@ -146,14 +146,14 @@ func (h *MonitoringHandler) applyPagination(data []interface{}, params Paginatio
 	if end > total {
 		end = total
 	}
-	
+
 	var paginatedData []interface{}
 	if params.Offset < total {
 		paginatedData = data[params.Offset:end]
 	} else {
 		paginatedData = []interface{}{}
 	}
-	
+
 	return PaginatedResult{
 		Data:   paginatedData,
 		Total:  total,
@@ -167,7 +167,7 @@ func (h *MonitoringHandler) GetRealtimeDashboard(c echo.Context) error {
 	systemStats := h.realtimeMonitor.GetSystemStats()
 	performanceStats := h.realtimeMonitor.GetPerformanceStats()
 	allPipelineStats := h.realtimeMonitor.GetAllPipelineStats()
-	
+
 	// Calculate dashboard metrics
 	dashboardData := map[string]interface{}{
 		"system":      systemStats,
@@ -181,7 +181,7 @@ func (h *MonitoringHandler) GetRealtimeDashboard(c echo.Context) error {
 		},
 		"alerts": h.generateSystemAlerts(systemStats, performanceStats),
 	}
-	
+
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"success": true,
 		"data":    dashboardData,
@@ -204,7 +204,7 @@ func (h *MonitoringHandler) GetWebSocketInfo(c echo.Context) error {
 		},
 		"uptime": "2h 15m 30s",
 	}
-	
+
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"success": true,
 		"data":    wsInfo,
@@ -215,17 +215,17 @@ func (h *MonitoringHandler) GetWebSocketInfo(c echo.Context) error {
 func (h *MonitoringHandler) GetMetricsHistory(c echo.Context) error {
 	metricType := c.QueryParam("type")
 	hoursStr := c.QueryParam("hours")
-	
+
 	hours := 24 // default
 	if hoursStr != "" {
 		if h, err := strconv.Atoi(hoursStr); err == nil && h > 0 {
 			hours = h
 		}
 	}
-	
+
 	// Generate mock historical data
 	historyData := h.generateMetricsHistory(metricType, hours)
-	
+
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"success": true,
 		"data": map[string]interface{}{
@@ -250,7 +250,7 @@ func (h *MonitoringHandler) countPipelinesByStatus(stats map[string]*monitoring.
 // getRecentPipelines returns the most recent pipelines
 func (h *MonitoringHandler) getRecentPipelines(stats map[string]*monitoring.PipelineStats, limit int) []interface{} {
 	var recent []interface{}
-	
+
 	// Convert to slice and sort by start time (simplified)
 	for _, s := range stats {
 		recent = append(recent, s)
@@ -258,26 +258,26 @@ func (h *MonitoringHandler) getRecentPipelines(stats map[string]*monitoring.Pipe
 			break
 		}
 	}
-	
+
 	return recent
 }
 
 // generateSystemAlerts generates alerts based on current system state
 func (h *MonitoringHandler) generateSystemAlerts(systemStats *monitoring.SystemStats, perfStats *monitoring.PerformanceStats) []interface{} {
 	var alerts []interface{}
-	
+
 	if memAlert := h.checkMemoryAlert(systemStats); memAlert != nil {
 		alerts = append(alerts, memAlert)
 	}
-	
+
 	if errAlert := h.checkErrorRateAlert(perfStats); errAlert != nil {
 		alerts = append(alerts, errAlert)
 	}
-	
+
 	if pipeAlert := h.checkPipelineAlert(systemStats); pipeAlert != nil {
 		alerts = append(alerts, pipeAlert)
 	}
-	
+
 	return alerts
 }
 
@@ -323,17 +323,17 @@ func (h *MonitoringHandler) checkPipelineAlert(systemStats *monitoring.SystemSta
 // generateMetricsHistory generates mock historical metrics data
 func (h *MonitoringHandler) generateMetricsHistory(metricType string, hours int) []map[string]interface{} {
 	var dataPoints []map[string]interface{}
-	
+
 	for i := hours; i > 0; i-- {
 		timestamp := h.generateTimestamp(i)
 		value := h.generateMetricValue(metricType, i)
-		
+
 		dataPoints = append(dataPoints, map[string]interface{}{
 			"timestamp": timestamp,
 			"value":     value,
 		})
 	}
-	
+
 	return dataPoints
 }
 
@@ -442,7 +442,7 @@ func (h *MonitoringHandler) GetTrace(c echo.Context) error {
 
 	traceID := c.Param("id")
 	trace, exists := h.traceManager.GetTrace(traceID)
-	
+
 	if !exists {
 		return c.JSON(http.StatusNotFound, map[string]interface{}{
 			"success": false,
@@ -493,9 +493,9 @@ func (h *MonitoringHandler) GetComponentHealth(c echo.Context) error {
 
 	component := c.Param("component")
 	ctx := c.Request().Context()
-	
+
 	result := h.healthChecker.RunCheck(ctx, component)
-	
+
 	if result.Status == "unknown" && result.Error == "check not registered" {
 		return c.JSON(http.StatusNotFound, map[string]interface{}{
 			"success": false,

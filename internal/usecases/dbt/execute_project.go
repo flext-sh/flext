@@ -72,11 +72,11 @@ func (uc *ExecuteProjectUseCase) Execute(ctx context.Context, input ExecuteProje
 		err = uc.executor.Clean(ctx, project)
 		if err == nil {
 			result = &ExecutionResult{
-				ID:        uuid.New(),
-				ProjectID: project.ID,
-				Command:   input.Command,
-				Status:    "success",
-				StartedAt: time.Now().Format(time.RFC3339),
+				ID:          uuid.New(),
+				ProjectID:   project.ID,
+				Command:     input.Command,
+				Status:      "success",
+				StartedAt:   time.Now().Format(time.RFC3339),
 				CompletedAt: time.Now().Format(time.RFC3339),
 				Stats: ExecutionStats{
 					ExecutionTime: 0.1,
@@ -87,11 +87,11 @@ func (uc *ExecuteProjectUseCase) Execute(ctx context.Context, input ExecuteProje
 		err = uc.executor.Deps(ctx, project)
 		if err == nil {
 			result = &ExecutionResult{
-				ID:        uuid.New(),
-				ProjectID: project.ID,
-				Command:   input.Command,
-				Status:    "success",
-				StartedAt: time.Now().Format(time.RFC3339),
+				ID:          uuid.New(),
+				ProjectID:   project.ID,
+				Command:     input.Command,
+				Status:      "success",
+				StartedAt:   time.Now().Format(time.RFC3339),
 				CompletedAt: time.Now().Format(time.RFC3339),
 				Stats: ExecutionStats{
 					ExecutionTime: 0.5,
@@ -151,30 +151,30 @@ type GetProjectInput struct {
 
 // GetProjectOutput represents output for getting a project
 type GetProjectOutput struct {
-	ID                string                    `json:"id"`
-	Name              string                    `json:"name"`
-	Version           string                    `json:"version"`
-	Description       string                    `json:"description"`
-	ProfileName       string                    `json:"profile_name"`
-	ProjectDir        string                    `json:"project_dir"`
-	RequireDbtVersion string                    `json:"require_dbt_version,omitempty"`
-	IsActive          bool                      `json:"is_active"`
-	LastRun           string                    `json:"last_run,omitempty"`
-	LastRunStatus     string                    `json:"last_run_status"`
-	ModelPaths        []string                  `json:"model_paths"`
-	AnalysisPaths     []string                  `json:"analysis_paths"`
-	TestPaths         []string                  `json:"test_paths"`
-	SeedPaths         []string                  `json:"seed_paths"`
-	MacroPaths        []string                  `json:"macro_paths"`
-	SnapshotPaths     []string                  `json:"snapshot_paths"`
-	TargetPath        string                    `json:"target_path"`
-	LogPath           string                    `json:"log_path"`
-	PackagesPath      string                    `json:"packages_path"`
-	Vars              map[string]interface{}    `json:"vars"`
-	Packages          []interface{}             `json:"packages"`
-	Sources           []interface{}             `json:"sources"`
-	CreatedAt         string                    `json:"created_at"`
-	UpdatedAt         string                    `json:"updated_at"`
+	ID                string                 `json:"id"`
+	Name              string                 `json:"name"`
+	Version           string                 `json:"version"`
+	Description       string                 `json:"description"`
+	ProfileName       string                 `json:"profile_name"`
+	ProjectDir        string                 `json:"project_dir"`
+	RequireDbtVersion string                 `json:"require_dbt_version,omitempty"`
+	IsActive          bool                   `json:"is_active"`
+	LastRun           string                 `json:"last_run,omitempty"`
+	LastRunStatus     string                 `json:"last_run_status"`
+	ModelPaths        []string               `json:"model_paths"`
+	AnalysisPaths     []string               `json:"analysis_paths"`
+	TestPaths         []string               `json:"test_paths"`
+	SeedPaths         []string               `json:"seed_paths"`
+	MacroPaths        []string               `json:"macro_paths"`
+	SnapshotPaths     []string               `json:"snapshot_paths"`
+	TargetPath        string                 `json:"target_path"`
+	LogPath           string                 `json:"log_path"`
+	PackagesPath      string                 `json:"packages_path"`
+	Vars              map[string]interface{} `json:"vars"`
+	Packages          []interface{}          `json:"packages"`
+	Sources           []interface{}          `json:"sources"`
+	CreatedAt         string                 `json:"created_at"`
+	UpdatedAt         string                 `json:"updated_at"`
 }
 
 // Execute retrieves a dbt project
@@ -248,13 +248,13 @@ func NewListProjectsUseCase(repo ProjectRepository) *ListProjectsUseCase {
 
 // ListProjectsInput represents input for listing projects
 type ListProjectsInput struct {
-	Limit       int     `json:"limit"`
-	Offset      int     `json:"offset"`
-	Active      *bool   `json:"active,omitempty"`
-	ProfileName string  `json:"profile_name,omitempty"`
-	NameFilter  string  `json:"name_filter,omitempty"`
-	OrderBy     string  `json:"order_by,omitempty"`
-	OrderDir    string  `json:"order_dir,omitempty"`
+	Limit       int    `json:"limit"`
+	Offset      int    `json:"offset"`
+	Active      *bool  `json:"active,omitempty"`
+	ProfileName string `json:"profile_name,omitempty"`
+	NameFilter  string `json:"name_filter,omitempty"`
+	OrderBy     string `json:"order_by,omitempty"`
+	OrderDir    string `json:"order_dir,omitempty"`
 }
 
 // ListProjectsOutput represents output for listing projects

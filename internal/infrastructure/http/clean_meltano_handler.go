@@ -55,7 +55,7 @@ func (h *CleanMeltanoHandler) CreateProject(c echo.Context) error {
 	result, err := h.createProjectUC.Execute(c.Request().Context(), input)
 	if err != nil {
 		// Check if error contains "already exists" message
-	if strings.Contains(strings.ToLower(err.Error()), "already exists") {
+		if strings.Contains(strings.ToLower(err.Error()), "already exists") {
 			return c.JSON(http.StatusConflict, map[string]string{
 				"error": err.Error(),
 			})

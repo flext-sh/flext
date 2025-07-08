@@ -3,7 +3,7 @@ package validation
 import (
 	"errors"
 	"github.com/google/uuid"
-	
+
 	pipelineUC "github.com/flext-sh/flext/internal/usecases/pipeline"
 	pluginUC "github.com/flext-sh/flext/internal/usecases/plugin"
 )

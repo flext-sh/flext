@@ -167,7 +167,7 @@ func (e *SingerExecutor) handleTimeout(cmd *exec.Cmd, execution *entities.Singer
 		time.Sleep(5 * time.Second)
 		cmd.Process.Kill()
 	}
-	
+
 	err := fmt.Errorf("execution timeout after %v", e.timeout)
 	execution.Fail(err, "Execution timed out")
 	result.Error = err
@@ -200,7 +200,7 @@ func (e *SingerExecutor) handleCompletion(cmd *exec.Cmd, execution *entities.Sin
 func (e *SingerExecutor) handleSuccessfulExecution(execution *entities.SingerExecution, result *ExecutionResult) {
 	outputState := e.extractFinalState(result.Messages)
 	singerState := e.convertToSingerState(outputState)
-	
+
 	execution.Complete(singerState)
 	result.OutputState = outputState
 	result.Success = true
@@ -220,7 +220,7 @@ func (e *SingerExecutor) convertToSingerState(outputState *entities.State) *enti
 			"last_sync_time":        streamState.LastSyncTime,
 		}
 	}
-	
+
 	return &entities.SingerState{
 		Bookmarks: bookmarks,
 	}
@@ -539,11 +539,11 @@ func (e *SingerExecutor) parseStreamState(stateData interface{}) *entities.Strea
 	}
 
 	streamState := entities.StreamState{}
-	
+
 	if val, exists := stateMap["replication_key_value"]; exists {
 		streamState.ReplicationKeyValue = val
 	}
-	
+
 	if val, exists := stateMap["version"]; exists {
 		if version, ok := val.(float64); ok {
 			streamState.Version = int64(version)

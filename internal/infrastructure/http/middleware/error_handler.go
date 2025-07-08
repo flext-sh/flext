@@ -53,7 +53,7 @@ func handleError(c echo.Context, err error) error {
 func handleHTTPError(c echo.Context, err *echo.HTTPError) error {
 	code := err.Code
 	message := err.Message
-	
+
 	if message == nil {
 		message = http.StatusText(code)
 	}
@@ -70,7 +70,7 @@ func handleHTTPError(c echo.Context, err *echo.HTTPError) error {
 // handleValidationErrors trata erros de validação do validator
 func handleValidationErrors(c echo.Context, errs validator.ValidationErrors) error {
 	validationErrors := make([]ValidationError, 0, len(errs))
-	
+
 	for _, err := range errs {
 		validationErrors = append(validationErrors, ValidationError{
 			Field:   err.Field(),

@@ -8,9 +8,9 @@ import (
 
 	"github.com/flext-sh/flext/internal/infrastructure/config"
 	"github.com/flext-sh/flext/internal/infrastructure/logging"
-	"github.com/pkg/errors"
-	_ "github.com/lib/pq" // PostgreSQL driver
 	"github.com/jmoiron/sqlx"
+	_ "github.com/lib/pq" // PostgreSQL driver
+	"github.com/pkg/errors"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	gormlogger "gorm.io/gorm/logger"
@@ -78,7 +78,7 @@ func NewConnection(cfg *config.DatabaseConfig, logger logging.Logger) (*Connecti
 	// Initialize GORM with the same database connection
 	var gormDB *gorm.DB
 	var sqlxDB *sqlx.DB
-	
+
 	if cfg.Driver == "postgres" {
 		// Initialize GORM
 		gormLogger := gormlogger.New(
@@ -90,11 +90,11 @@ func NewConnection(cfg *config.DatabaseConfig, logger logging.Logger) (*Connecti
 				Colorful:                  false,
 			},
 		)
-		
+
 		gormDialector := postgres.New(postgres.Config{
 			Conn: db,
 		})
-		
+
 		var err error
 		gormDB, err = gorm.Open(gormDialector, &gorm.Config{
 			Logger: gormLogger,
@@ -103,10 +103,10 @@ func NewConnection(cfg *config.DatabaseConfig, logger logging.Logger) (*Connecti
 			db.Close()
 			return nil, errors.Wrap(err, "initializing GORM")
 		}
-		
+
 		// Initialize SQLX with the same database connection
 		sqlxDB = sqlx.NewDb(db, "postgres")
-		
+
 		// Auto-migrate GORM models from persistence package
 		// Models will be migrated by the repository when first used
 		logger.Info("GORM and SQLX initialized successfully")

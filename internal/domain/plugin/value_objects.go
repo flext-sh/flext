@@ -121,6 +121,6 @@ type PropertyDefinition struct {
 	Type        string
 	Description string
 	Format      string
-	Items       *PropertyDefinition // For arrays
+	Items       *PropertyDefinition           // For arrays
 	Properties  map[string]PropertyDefinition // For objects
 }

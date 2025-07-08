@@ -25,23 +25,23 @@ func NewExecutorFactory() *ExecutorFactory {
 	if pluginsDir == "" {
 		pluginsDir = "/opt/flext/plugins"
 	}
-	
-	workspaceDir := os.Getenv("FLEXT_WORKSPACE_DIR") 
+
+	workspaceDir := os.Getenv("FLEXT_WORKSPACE_DIR")
 	if workspaceDir == "" {
 		workspaceDir = "/tmp/flext"
 	}
-	
+
 	timeout := 5 * time.Minute // Timeout padrão
 	if timeoutEnv := os.Getenv("FLEXT_PLUGIN_TIMEOUT"); timeoutEnv != "" {
 		if parsedTimeout, err := time.ParseDuration(timeoutEnv); err == nil {
 			timeout = parsedTimeout
 		}
 	}
-	
+
 	// Criar logger e plugin installer
 	logger := logging.GetLogger()
 	pluginInstaller := NewPluginInstaller(logger)
-	
+
 	return &ExecutorFactory{
 		pluginsDir:      pluginsDir,
 		workspaceDir:    workspaceDir,
@@ -56,7 +56,7 @@ func (f *ExecutorFactory) CreateRealExecutor() services.RealPluginExecutor {
 	// Garantir que diretórios existam
 	os.MkdirAll(f.pluginsDir, 0755)
 	os.MkdirAll(f.workspaceDir, 0755)
-	
+
 	return NewRealPluginExecutor(f.pluginsDir, f.workspaceDir, f.timeout)
 }
 
@@ -74,7 +74,7 @@ func (f *ExecutorFactory) CreateSimulationExecutor(pluginRepo services.PluginRep
 // SetupPluginDirectory cria estrutura de diretórios para plugins
 func (f *ExecutorFactory) SetupPluginDirectory() error {
 	f.logger.Info("🔧 Setting up plugin directory structure")
-	
+
 	dirs := []string{
 		f.pluginsDir,
 		filepath.Join(f.pluginsDir, "bin"),
@@ -85,13 +85,13 @@ func (f *ExecutorFactory) SetupPluginDirectory() error {
 		filepath.Join(f.workspaceDir, "executions"),
 		filepath.Join(f.workspaceDir, "temp"),
 	}
-	
+
 	for _, dir := range dirs {
 		if err := os.MkdirAll(dir, 0755); err != nil {
 			return err
 		}
 	}
-	
+
 	f.logger.Info("✅ Plugin directory structure created")
 	return nil
 }
@@ -101,7 +101,7 @@ func (f *ExecutorFactory) InstallSamplePlugins() error {
 	if err := f.SetupPluginDirectory(); err != nil {
 		return err
 	}
-	
+
 	// Criar plugin CSV extractor em Python
 	csvPlugin := `#!/usr/bin/env python3
 import json
@@ -114,13 +114,13 @@ def main():
     if len(sys.argv) < 2:
         print("Usage: csv-extractor <input.json>")
         sys.exit(1)
-    
+
     # Ler configuração
     with open(sys.argv[1], 'r') as f:
         config = json.load(f)
-    
+
     file_path = config.get('config', {}).get('file_path', '/tmp/sample.csv')
-    
+
     # Simular dados CSV se arquivo não existir
     if not os.path.exists(file_path):
         sample_data = [
@@ -128,7 +128,7 @@ def main():
             {"id": 2, "name": "User 2", "email": "user2@example.com", "status": "inactive"},
             {"id": 3, "name": "User 3", "email": "user3@example.com", "status": "active"}
         ]
-        
+
         result = {
             "records": sample_data,
             "records_processed": len(sample_data),
@@ -142,14 +142,14 @@ def main():
             reader = csv.DictReader(csvfile)
             for row in reader:
                 records.append(dict(row))
-        
+
         result = {
             "records": records,
             "records_processed": len(records),
             "source_file": file_path,
             "timestamp": datetime.now().isoformat()
         }
-    
+
     # Retornar resultado como JSON
     print(json.dumps(result, indent=2))
 
@@ -161,7 +161,7 @@ if __name__ == "__main__":
 	if err := os.WriteFile(csvPluginPath, []byte(csvPlugin), 0755); err != nil {
 		return err
 	}
-	
+
 	// Criar symlink para execução direta
 	csvLinkPath := filepath.Join(f.pluginsDir, "csv-extractor")
 	os.Remove(csvLinkPath) // Remove se já existir
@@ -169,7 +169,7 @@ if __name__ == "__main__":
 		// Se symlink falhar, copiar o arquivo
 		return os.WriteFile(csvLinkPath, []byte(csvPlugin), 0755)
 	}
-	
+
 	// Criar plugin de filtro em shell script
 	filterPlugin := `#!/bin/bash
 if [ "$#" -ne 1 ]; then
@@ -200,46 +200,46 @@ EOF
 	if err := os.WriteFile(filterPluginPath, []byte(filterPlugin), 0755); err != nil {
 		return err
 	}
-	
+
 	filterLinkPath := filepath.Join(f.pluginsDir, "data-filter")
 	os.Remove(filterLinkPath)
 	if err := os.Symlink(filterPluginPath, filterLinkPath); err != nil {
 		return os.WriteFile(filterLinkPath, []byte(filterPlugin), 0755)
 	}
-	
+
 	return nil
 }
 
 // SetupCompleteEnvironment configura ambiente completo com plugins reais
 func (f *ExecutorFactory) SetupCompleteEnvironment() error {
 	f.logger.Info("🚀 Setting up complete FLEXT execution environment")
-	
+
 	// 1. Configurar estrutura básica de diretórios
 	if err := f.SetupPluginDirectory(); err != nil {
 		return err
 	}
-	
+
 	// 2. Configurar ambiente Python e Meltano
 	if err := f.pluginInstaller.SetupEnvironment(); err != nil {
-		f.logger.Warn("Failed to setup real plugin environment, using sample plugins", 
+		f.logger.Warn("Failed to setup real plugin environment, using sample plugins",
 			logging.F("error", err.Error()))
-		
+
 		// Fallback para plugins de exemplo se ambiente real falhar
 		return f.InstallSamplePlugins()
 	}
-	
+
 	// 3. Criar dados de teste
 	if err := f.pluginInstaller.CreateTestData(); err != nil {
 		f.logger.Warn("Failed to create test data", logging.F("error", err.Error()))
 	}
-	
+
 	// 4. Validar instalação
 	if err := f.pluginInstaller.ValidateInstallation(); err != nil {
-		f.logger.Warn("Real plugin validation failed, using sample plugins", 
+		f.logger.Warn("Real plugin validation failed, using sample plugins",
 			logging.F("error", err.Error()))
 		return f.InstallSamplePlugins()
 	}
-	
+
 	f.logger.Info("✅ Complete FLEXT execution environment ready")
 	return nil
 }
@@ -250,13 +250,13 @@ func (f *ExecutorFactory) CreateProductionExecutor(pluginRepo services.PluginRep
 	if err := f.SetupCompleteEnvironment(); err != nil {
 		return nil, err
 	}
-	
+
 	// Criar executor real
 	realExecutor := f.CreateRealExecutor()
-	
+
 	// Criar executor de pipeline com executor real
 	executor := services.NewPipelineExecutor(pluginRepo, realExecutor)
-	
+
 	f.logger.Info("✅ Production pipeline executor created")
 	return executor, nil
 }
@@ -274,12 +274,12 @@ func (f *ExecutorFactory) GetTestDataPath() string {
 // ValidateEnvironment valida se o ambiente está funcionando
 func (f *ExecutorFactory) ValidateEnvironment() error {
 	f.logger.Info("🔍 Validating execution environment")
-	
+
 	// Validar instalação dos plugins
 	if err := f.pluginInstaller.ValidateInstallation(); err != nil {
 		return err
 	}
-	
+
 	f.logger.Info("✅ Execution environment validated")
 	return nil
 }

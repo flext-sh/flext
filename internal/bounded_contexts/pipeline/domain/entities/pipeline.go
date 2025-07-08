@@ -121,7 +121,7 @@ func (p *Pipeline) AddStep(step PipelineStep) error {
 	p.Steps = append(p.Steps, step)
 	p.IncrementVersion()
 	p.AddDomainEvent(entities.NewBaseDomainEvent("step.added", p.GetID(), map[string]interface{}{
-		"step_id": step.ID,
+		"step_id":   step.ID,
 		"step_name": step.Name,
 	}, p.GetVersion()))
 

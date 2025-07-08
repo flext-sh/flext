@@ -73,7 +73,7 @@ type Tap struct {
 // NewTap cria um novo tap
 func NewTap(name, displayName, description string, tapType TapType) *Tap {
 	return &Tap{
-		BaseEntity: *entities.NewBaseEntity(),
+		BaseEntity:        *entities.NewBaseEntity(),
 		Name:              name,
 		DisplayName:       displayName,
 		Description:       description,

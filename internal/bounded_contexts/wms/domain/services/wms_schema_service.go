@@ -15,13 +15,13 @@ import (
 // WMSSchemaService provides dynamic schema discovery and generation for WMS entities
 type WMSSchemaService struct {
 	httpClient *http.Client
-	
+
 	// Schema generation configuration
 	config SchemaGenerationConfig
-	
+
 	// Cache for generated schemas
 	schemaCache map[string]*CachedSchema
-	
+
 	// Supported data type mappings
 	typeMapping map[string][]string
 }
@@ -29,36 +29,36 @@ type WMSSchemaService struct {
 // SchemaGenerationConfig configures schema generation behavior
 type SchemaGenerationConfig struct {
 	// Discovery methods
-	PreferMetadataDiscovery bool          `json:"prefer_metadata_discovery"`
-	SampleSizeForInference  int           `json:"sample_size_for_inference"`
-	MaxSamplePages          int           `json:"max_sample_pages"`
-	
+	PreferMetadataDiscovery bool `json:"prefer_metadata_discovery"`
+	SampleSizeForInference  int  `json:"sample_size_for_inference"`
+	MaxSamplePages          int  `json:"max_sample_pages"`
+
 	// Schema generation options
-	IncludeExamples         bool          `json:"include_examples"`
-	IncludeDescriptions     bool          `json:"include_descriptions"`
-	InferFieldConstraints   bool          `json:"infer_field_constraints"`
-	GenerateValidationRules bool          `json:"generate_validation_rules"`
-	
+	IncludeExamples         bool `json:"include_examples"`
+	IncludeDescriptions     bool `json:"include_descriptions"`
+	InferFieldConstraints   bool `json:"infer_field_constraints"`
+	GenerateValidationRules bool `json:"generate_validation_rules"`
+
 	// Type inference settings
-	TypeConfidenceThreshold float64       `json:"type_confidence_threshold"`
-	NumericPrecisionCheck   bool          `json:"numeric_precision_check"`
-	DateFormatDetection     bool          `json:"date_format_detection"`
-	
+	TypeConfidenceThreshold float64 `json:"type_confidence_threshold"`
+	NumericPrecisionCheck   bool    `json:"numeric_precision_check"`
+	DateFormatDetection     bool    `json:"date_format_detection"`
+
 	// Advanced features
-	DetectEnumValues        bool          `json:"detect_enum_values"`
-	MaxEnumValues           int           `json:"max_enum_values"`
-	DetectForeignKeys       bool          `json:"detect_foreign_keys"`
-	DetectPrimaryKeys       bool          `json:"detect_primary_keys"`
-	
+	DetectEnumValues  bool `json:"detect_enum_values"`
+	MaxEnumValues     int  `json:"max_enum_values"`
+	DetectForeignKeys bool `json:"detect_foreign_keys"`
+	DetectPrimaryKeys bool `json:"detect_primary_keys"`
+
 	// Performance settings
-	ParallelFieldAnalysis   bool          `json:"parallel_field_analysis"`
-	CacheSchemas           bool          `json:"cache_schemas"`
-	SchemaCacheTTL         time.Duration `json:"schema_cache_ttl"`
-	
+	ParallelFieldAnalysis bool          `json:"parallel_field_analysis"`
+	CacheSchemas          bool          `json:"cache_schemas"`
+	SchemaCacheTTL        time.Duration `json:"schema_cache_ttl"`
+
 	// Output format options
-	JSONSchemaVersion      string        `json:"json_schema_version"` // "draft-07", "draft-2019-09"
-	IncludeTitle           bool          `json:"include_title"`
-	IncludeMetadata        bool          `json:"include_metadata"`
+	JSONSchemaVersion string `json:"json_schema_version"` // "draft-07", "draft-2019-09"
+	IncludeTitle      bool   `json:"include_title"`
+	IncludeMetadata   bool   `json:"include_metadata"`
 }
 
 // CachedSchema represents a cached schema with metadata
@@ -73,43 +73,43 @@ type CachedSchema struct {
 
 // FieldAnalysis contains detailed analysis of a field
 type FieldAnalysis struct {
-	Name            string                 `json:"name"`
-	Type            string                 `json:"type"`
-	TypeConfidence  float64                `json:"type_confidence"`
-	Format          string                 `json:"format,omitempty"`
-	
+	Name           string  `json:"name"`
+	Type           string  `json:"type"`
+	TypeConfidence float64 `json:"type_confidence"`
+	Format         string  `json:"format,omitempty"`
+
 	// Statistical analysis
-	NonNullCount    int64                  `json:"non_null_count"`
-	NullCount       int64                  `json:"null_count"`
-	UniqueCount     int64                  `json:"unique_count"`
-	
+	NonNullCount int64 `json:"non_null_count"`
+	NullCount    int64 `json:"null_count"`
+	UniqueCount  int64 `json:"unique_count"`
+
 	// Type-specific analysis
-	MinLength       *int                   `json:"min_length,omitempty"`
-	MaxLength       *int                   `json:"max_length,omitempty"`
-	AvgLength       *float64               `json:"avg_length,omitempty"`
-	MinValue        *float64               `json:"min_value,omitempty"`
-	MaxValue        *float64               `json:"max_value,omitempty"`
-	
+	MinLength *int     `json:"min_length,omitempty"`
+	MaxLength *int     `json:"max_length,omitempty"`
+	AvgLength *float64 `json:"avg_length,omitempty"`
+	MinValue  *float64 `json:"min_value,omitempty"`
+	MaxValue  *float64 `json:"max_value,omitempty"`
+
 	// Pattern analysis
-	CommonPatterns  []PatternInfo          `json:"common_patterns,omitempty"`
-	DateFormats     []string               `json:"date_formats,omitempty"`
-	
+	CommonPatterns []PatternInfo `json:"common_patterns,omitempty"`
+	DateFormats    []string      `json:"date_formats,omitempty"`
+
 	// Enum detection
-	PossibleEnum    bool                   `json:"possible_enum"`
-	EnumValues      []interface{}          `json:"enum_values,omitempty"`
-	
+	PossibleEnum bool          `json:"possible_enum"`
+	EnumValues   []interface{} `json:"enum_values,omitempty"`
+
 	// Key detection
-	IsPrimaryKey    bool                   `json:"is_primary_key"`
-	IsForeignKey    bool                   `json:"is_foreign_key"`
-	ReferencedTable string                 `json:"referenced_table,omitempty"`
-	
+	IsPrimaryKey    bool   `json:"is_primary_key"`
+	IsForeignKey    bool   `json:"is_foreign_key"`
+	ReferencedTable string `json:"referenced_table,omitempty"`
+
 	// Sample values
-	SampleValues    []interface{}          `json:"sample_values,omitempty"`
-	
+	SampleValues []interface{} `json:"sample_values,omitempty"`
+
 	// Business metadata
-	Description     string                 `json:"description,omitempty"`
-	BusinessName    string                 `json:"business_name,omitempty"`
-	Category        string                 `json:"category,omitempty"`
+	Description  string `json:"description,omitempty"`
+	BusinessName string `json:"business_name,omitempty"`
+	Category     string `json:"category,omitempty"`
 }
 
 // PatternInfo represents a detected pattern in field values
@@ -122,48 +122,48 @@ type PatternInfo struct {
 
 // MetadataSource represents metadata obtained from API describe endpoints
 type MetadataSource struct {
-	Fields          []FieldMetadata        `json:"fields"`
-	EntityName      string                 `json:"entity_name"`
-	TableName       string                 `json:"table_name,omitempty"`
-	Description     string                 `json:"description,omitempty"`
-	PrimaryKeys     []string               `json:"primary_keys,omitempty"`
-	ForeignKeys     []ForeignKeyInfo       `json:"foreign_keys,omitempty"`
-	Indexes         []IndexInfo            `json:"indexes,omitempty"`
-	Constraints     []ConstraintInfo       `json:"constraints,omitempty"`
-	LastModified    *time.Time             `json:"last_modified,omitempty"`
-	Version         string                 `json:"version,omitempty"`
+	Fields       []FieldMetadata  `json:"fields"`
+	EntityName   string           `json:"entity_name"`
+	TableName    string           `json:"table_name,omitempty"`
+	Description  string           `json:"description,omitempty"`
+	PrimaryKeys  []string         `json:"primary_keys,omitempty"`
+	ForeignKeys  []ForeignKeyInfo `json:"foreign_keys,omitempty"`
+	Indexes      []IndexInfo      `json:"indexes,omitempty"`
+	Constraints  []ConstraintInfo `json:"constraints,omitempty"`
+	LastModified *time.Time       `json:"last_modified,omitempty"`
+	Version      string           `json:"version,omitempty"`
 }
 
 // FieldMetadata represents field metadata from API
 type FieldMetadata struct {
-	Name         string                 `json:"name"`
-	Type         string                 `json:"type"`
-	Length       *int                   `json:"length,omitempty"`
-	Precision    *int                   `json:"precision,omitempty"`
-	Scale        *int                   `json:"scale,omitempty"`
-	Nullable     bool                   `json:"nullable"`
-	DefaultValue interface{}            `json:"default_value,omitempty"`
-	Description  string                 `json:"description,omitempty"`
-	Format       string                 `json:"format,omitempty"`
-	
+	Name         string      `json:"name"`
+	Type         string      `json:"type"`
+	Length       *int        `json:"length,omitempty"`
+	Precision    *int        `json:"precision,omitempty"`
+	Scale        *int        `json:"scale,omitempty"`
+	Nullable     bool        `json:"nullable"`
+	DefaultValue interface{} `json:"default_value,omitempty"`
+	Description  string      `json:"description,omitempty"`
+	Format       string      `json:"format,omitempty"`
+
 	// Constraints
-	Required     bool                   `json:"required"`
-	Unique       bool                   `json:"unique"`
-	Indexed      bool                   `json:"indexed"`
-	
+	Required bool `json:"required"`
+	Unique   bool `json:"unique"`
+	Indexed  bool `json:"indexed"`
+
 	// Business metadata
-	DisplayName  string                 `json:"display_name,omitempty"`
-	Category     string                 `json:"category,omitempty"`
-	BusinessRule string                 `json:"business_rule,omitempty"`
+	DisplayName  string `json:"display_name,omitempty"`
+	Category     string `json:"category,omitempty"`
+	BusinessRule string `json:"business_rule,omitempty"`
 }
 
 // ForeignKeyInfo represents foreign key relationships
 type ForeignKeyInfo struct {
-	ColumnName        string `json:"column_name"`
-	ReferencedTable   string `json:"referenced_table"`
-	ReferencedColumn  string `json:"referenced_column"`
-	OnDelete          string `json:"on_delete,omitempty"`
-	OnUpdate          string `json:"on_update,omitempty"`
+	ColumnName       string `json:"column_name"`
+	ReferencedTable  string `json:"referenced_table"`
+	ReferencedColumn string `json:"referenced_column"`
+	OnDelete         string `json:"on_delete,omitempty"`
+	OnUpdate         string `json:"on_update,omitempty"`
 }
 
 // IndexInfo represents database indexes
@@ -177,11 +177,11 @@ type IndexInfo struct {
 
 // ConstraintInfo represents database constraints
 type ConstraintInfo struct {
-	Name        string      `json:"name"`
-	Type        string      `json:"type"` // "CHECK", "NOT NULL", "UNIQUE", etc.
-	Columns     []string    `json:"columns"`
-	Expression  string      `json:"expression,omitempty"`
-	Description string      `json:"description,omitempty"`
+	Name        string   `json:"name"`
+	Type        string   `json:"type"` // "CHECK", "NOT NULL", "UNIQUE", etc.
+	Columns     []string `json:"columns"`
+	Expression  string   `json:"expression,omitempty"`
+	Description string   `json:"description,omitempty"`
 }
 
 // NewWMSSchemaService creates a new schema service with default configuration
@@ -191,21 +191,21 @@ func NewWMSSchemaService() *WMSSchemaService {
 			Timeout: 30 * time.Second,
 		},
 		config: SchemaGenerationConfig{
-			PreferMetadataDiscovery:  true,
-			SampleSizeForInference:   100,
-			MaxSamplePages:           5,
-			IncludeExamples:          true,
-			IncludeDescriptions:      true,
-			InferFieldConstraints:    true,
-			GenerateValidationRules:  true,
-			TypeConfidenceThreshold:  0.8,
-			NumericPrecisionCheck:    true,
-			DateFormatDetection:      true,
-			DetectEnumValues:         true,
-			MaxEnumValues:            50,
-			DetectForeignKeys:        true,
-			DetectPrimaryKeys:        true,
-			ParallelFieldAnalysis:    true,
+			PreferMetadataDiscovery: true,
+			SampleSizeForInference:  100,
+			MaxSamplePages:          5,
+			IncludeExamples:         true,
+			IncludeDescriptions:     true,
+			InferFieldConstraints:   true,
+			GenerateValidationRules: true,
+			TypeConfidenceThreshold: 0.8,
+			NumericPrecisionCheck:   true,
+			DateFormatDetection:     true,
+			DetectEnumValues:        true,
+			MaxEnumValues:           50,
+			DetectForeignKeys:       true,
+			DetectPrimaryKeys:       true,
+			ParallelFieldAnalysis:   true,
 			CacheSchemas:            true,
 			SchemaCacheTTL:          1 * time.Hour,
 			JSONSchemaVersion:       "draft-07",
@@ -237,7 +237,7 @@ func (s *WMSSchemaService) GenerateSchema(ctx context.Context, client *entities.
 // GenerateFromMetadata generates schema from API metadata endpoints
 func (s *WMSSchemaService) generateFromMetadata(ctx context.Context, client *entities.WMSClient, entityName string) (*entities.WMSEntitySchema, error) {
 	// Construct metadata endpoint URL
-	metadataURL := fmt.Sprintf("%s/wms/lgfapi/%s/entity/%s/describe", 
+	metadataURL := fmt.Sprintf("%s/wms/lgfapi/%s/entity/%s/describe",
 		client.BaseURL, client.APIVersion, entityName)
 
 	// Make request to metadata endpoint
@@ -318,7 +318,7 @@ func (s *WMSSchemaService) fetchSampleData(ctx context.Context, client *entities
 
 	for page := 1; page <= maxPages; page++ {
 		// Construct sample data URL
-		sampleURL := fmt.Sprintf("%s/wms/lgfapi/%s/entity/%s?page=%d&page_size=%d", 
+		sampleURL := fmt.Sprintf("%s/wms/lgfapi/%s/entity/%s?page=%d&page_size=%d",
 			client.BaseURL, client.APIVersion, entityName, page, pageSize)
 
 		// Make request
@@ -394,7 +394,7 @@ func (s *WMSSchemaService) analyzeSampleData(samples []map[string]interface{}) m
 func (s *WMSSchemaService) analyzeField(fieldName string, samples []map[string]interface{}) *FieldAnalysis {
 	analysis := s.initializeFieldAnalysis(fieldName)
 	values, nonNullValues := s.collectFieldValues(fieldName, samples)
-	
+
 	analysis.NonNullCount = int64(len(nonNullValues))
 	analysis.NullCount = int64(len(values)) - analysis.NonNullCount
 
@@ -474,7 +474,7 @@ func (s *WMSSchemaService) analyzeStringField(analysis *FieldAnalysis, values []
 			}
 			totalLen += length
 		}
-		
+
 		analysis.MinLength = &minLen
 		analysis.MaxLength = &maxLen
 		avgLen := float64(totalLen) / float64(len(lengths))
@@ -512,7 +512,7 @@ func (s *WMSSchemaService) analyzeNumericField(analysis *FieldAnalysis, values [
 				max = num
 			}
 		}
-		
+
 		analysis.MinValue = &min
 		analysis.MaxValue = &max
 	}
@@ -672,9 +672,9 @@ func (s *WMSSchemaService) convertAnalysisToSchema(entityName string, analyses m
 
 	for fieldName, analysis := range analyses {
 		prop := &entities.SchemaProperty{
-			Type:        analysis.Type,
-			Nullable:    analysis.NullCount > 0,
-			PrimaryKey:  analysis.IsPrimaryKey,
+			Type:       analysis.Type,
+			Nullable:   analysis.NullCount > 0,
+			PrimaryKey: analysis.IsPrimaryKey,
 		}
 
 		// Add constraints based on analysis
@@ -707,7 +707,7 @@ func (s *WMSSchemaService) convertAnalysisToSchema(entityName string, analyses m
 		}
 
 		// Determine if field should be required
-		nullRatio := float64(analysis.NullCount) / float64(analysis.NullCount + analysis.NonNullCount)
+		nullRatio := float64(analysis.NullCount) / float64(analysis.NullCount+analysis.NonNullCount)
 		if nullRatio < 0.1 { // Less than 10% null values
 			required = append(required, fieldName)
 		}
@@ -729,14 +729,14 @@ func (s *WMSSchemaService) convertAnalysisToSchema(entityName string, analyses m
 
 func (s *WMSSchemaService) mapDatabaseTypeToJSONType(dbType string) interface{} {
 	dbType = strings.ToUpper(dbType)
-	
+
 	if types, exists := s.typeMapping[dbType]; exists {
 		if len(types) == 1 {
 			return types[0]
 		}
 		return types // Multiple types
 	}
-	
+
 	// Default fallback based on common patterns
 	if strings.Contains(dbType, "INT") {
 		return "integer"
@@ -747,7 +747,7 @@ func (s *WMSSchemaService) mapDatabaseTypeToJSONType(dbType string) interface{} 
 	if strings.Contains(dbType, "BOOL") {
 		return "boolean"
 	}
-	
+
 	return "string" // Default fallback
 }
 
@@ -948,4 +948,3 @@ func (s *WMSSchemaService) storeSampleValues(analysis *FieldAnalysis, nonNullVal
 	}
 	analysis.SampleValues = nonNullValues[:sampleCount]
 }
-

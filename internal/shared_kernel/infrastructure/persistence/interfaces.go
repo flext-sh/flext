@@ -56,12 +56,12 @@ type ListCriteria struct {
 	SortOrder string `json:"sort_order"`
 
 	// Filtering
-	Filters    []Filter               `json:"filters"`
-	Search     string                 `json:"search"`
-	Tags       []string               `json:"tags"`
-	Status     string                 `json:"status"`
-	Active     *bool                  `json:"active,omitempty"`
-	Metadata   map[string]interface{} `json:"metadata"`
+	Filters  []Filter               `json:"filters"`
+	Search   string                 `json:"search"`
+	Tags     []string               `json:"tags"`
+	Status   string                 `json:"status"`
+	Active   *bool                  `json:"active,omitempty"`
+	Metadata map[string]interface{} `json:"metadata"`
 
 	// Time-based filtering
 	CreatedAfter  *time.Time `json:"created_after,omitempty"`
@@ -133,13 +133,13 @@ type CacheableRepository interface {
 
 // CacheStats represents cache performance statistics
 type CacheStats struct {
-	HitCount      int64   `json:"hit_count"`
-	MissCount     int64   `json:"miss_count"`
-	HitRatio      float64 `json:"hit_ratio"`
-	Size          int     `json:"size"`
-	MaxSize       int     `json:"max_size"`
-	Evictions     int64   `json:"evictions"`
-	LastEviction  time.Time `json:"last_eviction"`
+	HitCount     int64     `json:"hit_count"`
+	MissCount    int64     `json:"miss_count"`
+	HitRatio     float64   `json:"hit_ratio"`
+	Size         int       `json:"size"`
+	MaxSize      int       `json:"max_size"`
+	Evictions    int64     `json:"evictions"`
+	LastEviction time.Time `json:"last_eviction"`
 }
 
 // ValidatedRepository adds validation capabilities
@@ -157,16 +157,16 @@ type AuditableRepository interface {
 
 // AuditEntry represents an audit trail entry
 type AuditEntry struct {
-	ID        uuid.UUID              `json:"id"`
-	EntityID  uuid.UUID              `json:"entity_id"`
-	EntityType string                `json:"entity_type"`
-	Operation string                 `json:"operation"` // create, update, delete
-	UserID    uuid.UUID              `json:"user_id"`
-	Username  string                 `json:"username"`
-	Changes   map[string]interface{} `json:"changes"`
-	Timestamp time.Time              `json:"timestamp"`
-	IPAddress string                 `json:"ip_address"`
-	UserAgent string                 `json:"user_agent"`
+	ID         uuid.UUID              `json:"id"`
+	EntityID   uuid.UUID              `json:"entity_id"`
+	EntityType string                 `json:"entity_type"`
+	Operation  string                 `json:"operation"` // create, update, delete
+	UserID     uuid.UUID              `json:"user_id"`
+	Username   string                 `json:"username"`
+	Changes    map[string]interface{} `json:"changes"`
+	Timestamp  time.Time              `json:"timestamp"`
+	IPAddress  string                 `json:"ip_address"`
+	UserAgent  string                 `json:"user_agent"`
 }
 
 // VersionedRepository adds versioning capabilities
@@ -187,44 +187,44 @@ type SearchableRepository[T Entity] interface {
 
 // SearchQuery represents a search query
 type SearchQuery struct {
-	Query       string            `json:"query"`
-	Fields      []string          `json:"fields"`
-	Filters     []Filter          `json:"filters"`
-	Facets      []string          `json:"facets"`
-	Highlight   bool              `json:"highlight"`
-	Limit       int               `json:"limit"`
-	Offset      int               `json:"offset"`
-	SortBy      string            `json:"sort_by"`
-	SortOrder   string            `json:"sort_order"`
-	Suggestions bool              `json:"suggestions"`
+	Query       string                 `json:"query"`
+	Fields      []string               `json:"fields"`
+	Filters     []Filter               `json:"filters"`
+	Facets      []string               `json:"facets"`
+	Highlight   bool                   `json:"highlight"`
+	Limit       int                    `json:"limit"`
+	Offset      int                    `json:"offset"`
+	SortBy      string                 `json:"sort_by"`
+	SortOrder   string                 `json:"sort_order"`
+	Suggestions bool                   `json:"suggestions"`
 	Metadata    map[string]interface{} `json:"metadata"`
 }
 
 // RepositoryConfig provides common configuration for repositories
 type RepositoryConfig struct {
 	// Database configuration
-	ConnectionString   string        `json:"connection_string"`
-	MaxOpenConns      int           `json:"max_open_connections"`
-	MaxIdleConns      int           `json:"max_idle_connections"`
-	ConnMaxLifetime   time.Duration `json:"connection_max_lifetime"`
-	ConnMaxIdleTime   time.Duration `json:"connection_max_idle_time"`
+	ConnectionString string        `json:"connection_string"`
+	MaxOpenConns     int           `json:"max_open_connections"`
+	MaxIdleConns     int           `json:"max_idle_connections"`
+	ConnMaxLifetime  time.Duration `json:"connection_max_lifetime"`
+	ConnMaxIdleTime  time.Duration `json:"connection_max_idle_time"`
 
 	// Performance configuration
-	EnableCache       bool          `json:"enable_cache"`
-	CacheSize         int           `json:"cache_size"`
-	CacheTTL          time.Duration `json:"cache_ttl"`
-	EnableMetrics     bool          `json:"enable_metrics"`
-	EnableAudit       bool          `json:"enable_audit"`
-	EnableVersioning  bool          `json:"enable_versioning"`
+	EnableCache      bool          `json:"enable_cache"`
+	CacheSize        int           `json:"cache_size"`
+	CacheTTL         time.Duration `json:"cache_ttl"`
+	EnableMetrics    bool          `json:"enable_metrics"`
+	EnableAudit      bool          `json:"enable_audit"`
+	EnableVersioning bool          `json:"enable_versioning"`
 
 	// Query configuration
-	DefaultLimit      int    `json:"default_limit"`
-	MaxLimit          int    `json:"max_limit"`
-	DefaultOrderBy    string `json:"default_order_by"`
-	DefaultOrderDir   string `json:"default_order_direction"`
+	DefaultLimit    int    `json:"default_limit"`
+	MaxLimit        int    `json:"max_limit"`
+	DefaultOrderBy  string `json:"default_order_by"`
+	DefaultOrderDir string `json:"default_order_direction"`
 
 	// Timeout configuration
-	QueryTimeout      time.Duration `json:"query_timeout"`
+	QueryTimeout       time.Duration `json:"query_timeout"`
 	TransactionTimeout time.Duration `json:"transaction_timeout"`
 }
 
@@ -313,7 +313,7 @@ type PipelineEntity interface {
 	IsActive() bool
 }
 
-// PluginEntity represents plugin entities  
+// PluginEntity represents plugin entities
 type PluginEntity interface {
 	Entity
 	GetName() string
