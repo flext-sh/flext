@@ -1,6 +1,12 @@
 # FLEXT - Unified Hexagonal Architecture + DDD Implementation
 
-FLEXT é uma implementação moderna de um sistema de pipelines usando **Arquitetura Hexagonal** (Ports & Adapters) combinada com **Domain-Driven Design (DDD)**.
+> **Regras do Projeto**: Consulte `.github/instructions/regras.instructions.md` para padrões obrigatórios
+>
+> **Padrão de documentação**: Veja [docs/HOW_TO_DOCUMENT.md](./docs/HOW_TO_DOCUMENT.md)
+
+## 🧭 Navegação
+
+**🏠 Root**: [Documentação Principal](./docs/index.md) → **📄 Projeto**: FLEXT
 
 ## 🏗️ Arquitetura
 
@@ -257,3 +263,24 @@ Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para detalhes.
 ---
 
 **FLEXT** - Framework for Lightweight EXtractable Transformations
+
+## 🔗 Cross-References
+
+### Prerequisites
+
+- [docs/HOW_TO_DOCUMENT.md](./docs/HOW_TO_DOCUMENT.md) — Guia de padronização de documentação
+- [.github/instructions/regras.instructions.md](.github/instructions/regras.instructions.md) — Regras obrigatórias do projeto
+
+### Next Steps
+
+- [docs/architecture/index.md](./docs/architecture/index.md) — Detalhes da arquitetura
+- [docs/development/index.md](./docs/development/index.md) — Padrões de desenvolvimento
+
+### Related Topics
+
+- [docs/STANDARDIZATION_MASTER_PLAN.md](./docs/STANDARDIZATION_MASTER_PLAN.md) — Estratégia de padronização
+- [docs/INCOMPLETE_CODE_REPORT.md](./docs/INCOMPLETE_CODE_REPORT.md) — Relatório de código incompleto
+
+---
+
+**📂 Projeto**: FLEXT | **🏠 Root**: [Documentação Principal](./docs/index.md) | **Framework**: FLEXT 0.6.0+ | **Updated**: 2025-07-08
