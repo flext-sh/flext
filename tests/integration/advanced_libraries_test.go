@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/flext-sh/flext/internal/infrastructure/config"
-	"github.com/flext-sh/flext/internal/shared_kernel/infrastructure/container"
 	"github.com/flext-sh/flext/internal/infrastructure/logging"
+	"github.com/flext-sh/flext/internal/shared_kernel/infrastructure/container"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
 	"github.com/stretchr/testify/assert"

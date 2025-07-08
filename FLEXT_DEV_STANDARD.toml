@@ -1,0 +1,234 @@
+# FLEXT WORKSPACE - STANDARD DEV/TEST TOOLCHAIN
+# Last Updated: 2025-07-06
+# Based on: flext-core (most complete), system versions, latest releases
+
+[tool.poetry.group.dev.dependencies]
+# === TESTING FRAMEWORK - MAXIMUM STRICTNESS ===
+pytest = "^8.4.0"                    # Test framework
+pytest-cov = "^6.2.0"               # Coverage reporting
+pytest-asyncio = "^0.24.0"          # Async test support
+pytest-benchmark = "^4.0.0"         # Performance testing
+pytest-mock = "^3.14.0"             # Mock objects
+pytest-xdist = "^3.8.0"             # Parallel testing
+pytest-timeout = "^2.4.0"           # Test timeouts
+pytest-randomly = "^3.16.0"         # Random test order
+pytest-sugar = "^1.0.0"             # Better test output
+pytest-clarity = "^1.0.1"           # Clear test failures
+
+# === CODE QUALITY - LATEST VERSIONS ===
+ruff = "^0.12.2"                    # Linter + formatter (latest)
+mypy = "^1.16.1"                    # Type checker
+black = "^25.1.0"                   # Code formatter (backup)
+isort = "^6.0.1"                    # Import sorting (backup)
+
+# === SECURITY & SAFETY ===
+bandit = {extras = ["toml"], version = "^1.8.0"}  # Security linter
+safety = "^3.2.0"                   # Dependency vulnerability scanner
+
+# === BUILD & PACKAGING ===
+build = "^1.2.2"                    # Build system
+twine = "^6.1.0"                    # PyPI upload
+
+# === DEVELOPMENT TOOLS ===
+pre-commit = "^4.2.0"               # Git hooks
+ipython = "^8.37.0"                 # Interactive Python
+
+# === DOCUMENTATION ===
+mkdocs = "^1.6.1"                   # Documentation generator
+mkdocs-material = "^9.6.15"         # Material theme
+myst-parser = "^4.0.1"              # Markdown parser
+sphinx = "^8.2.3"                   # Alternative docs
+sphinx-rtd-theme = "^3.0.2"         # RTD theme
+
+# === SPECIALIZED TESTING (PROJECT-SPECIFIC) ===
+# Add these based on project type:
+# pytest-django = "^4.11.1"         # For Django projects
+# factory-boy = "^3.3.3"            # For data factories
+# model-bakery = "^1.20.5"          # For Django model testing
+# testcontainers = "^4.10.0"        # For integration testing
+# httpx = "^0.28.1"                 # For API testing
+# playwright = "^1.53.0"            # For web testing
+
+# === TYPE STUBS ===
+types-requests = "^2.32.4"          # Type stubs for requests
+types-setuptools = "^75.8.2"        # Type stubs for setuptools
+types-python-dateutil = "^2.9.0"    # Type stubs for dateutil
+types-pyyaml = "^6.0.12"           # Type stubs for PyYAML
+
+# === QUALITY ANALYSIS ===
+vulture = "^2.14"                   # Dead code finder
+radon = "^6.0.1"                    # Complexity analysis
+
+[tool.ruff]
+# === BASIC CONFIGURATION ===
+line-length = 88
+target-version = "py313"
+fix = true
+
+[tool.ruff.lint]
+# === RULE SELECTION - MAXIMUM STRICTNESS ===
+select = ["ALL"]
+ignore = [
+    # MANDATORY: Only formatter conflicts that cannot be auto-fixed
+    "COM812",  # trailing-comma-missing (handled by formatter)
+    "ISC001",  # implicit-str-concat (conflicts with formatter)
+    "D203",    # one-blank-line-before-class (conflicts with D211)
+    "D213",    # multi-line-docstring-summary-second-line (conflicts with D212)
+
+    # STRICT MODE: Only allow critical exceptions
+    "E501",    # line-too-long (handled by formatter)
+    "PLR0913", # too-many-arguments (context-dependent)
+    "PLR0915", # too-many-statements (context-dependent)
+    "C901",    # too-complex (context-dependent)
+
+    # TEMPORARY: Project-specific exceptions (remove progressively)
+    "T201",    # print statements (remove in production)
+    "S101",    # assert statements (allowed in tests)
+    "INP001",  # implicit-namespace-package (project structure)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = [
+    "S101",    # assert statements
+    "PLR2004", # magic values
+    "D",       # docstrings
+    "ANN",     # type annotations
+    "ARG",     # unused arguments
+    "FBT",     # boolean trap
+    "SLF001",  # private access
+]
+"*/tests/*" = [
+    "S101",    # assert statements
+    "PLR2004", # magic values
+    "D",       # docstrings
+    "ANN",     # type annotations
+    "ARG",     # unused arguments
+    "FBT",     # boolean trap
+    "SLF001",  # private access
+]
+"__init__.py" = ["D104"]
+"conftest.py" = ["D"]
+"scripts/*" = ["T201", "D", "ERA001"]
+"examples/*" = ["T201", "D", "ERA001"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "lf"
+
+[tool.black]
+line-length = 88
+target-version = ["py313"]
+
+[tool.isort]
+profile = "black"
+line_length = 88
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+strict_equality = true
+
+[tool.pytest.ini_options]
+addopts = [
+    "--strict-markers",
+    "--strict-config",
+    "--verbose",
+    "--tb=short",
+    "--cov=src",
+    "--cov-report=term-missing:skip-covered",
+    "--cov-report=html:reports/coverage",
+    "--cov-report=xml:reports/coverage.xml",
+    "--cov-fail-under=90",
+    "--junitxml=reports/pytest.xml",
+    "--maxfail=10",
+    "--timeout=60",
+]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+    "unit: marks tests as unit tests",
+    "e2e: marks tests as end-to-end tests",
+]
+filterwarnings = [
+    "error",
+    "ignore::UserWarning",
+    "ignore::DeprecationWarning",
+    "ignore::PendingDeprecationWarning",
+]
+asyncio_mode = "auto"
+
+[tool.coverage.run]
+branch = true
+source = ["src"]
+omit = [
+    "*/tests/*",
+    "*/test_*",
+    "*/*_test.py",
+    "*/conftest.py",
+    "*/__pycache__/*",
+    "*/site-packages/*",
+    "*/.venv/*",
+    "*/venv/*",
+    "*/build/*",
+    "*/dist/*",
+    "*/.eggs/*",
+]
+
+[tool.coverage.report]
+skip_empty = true
+skip_covered = false
+show_missing = true
+sort = "Cover"
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+    "TYPE_CHECKING",
+]
+
+[tool.bandit]
+targets = ["src"]
+exclude_dirs = ["tests", "build", "dist"]
+skips = ["B101", "B601"]
+
+[tool.bandit.assert_used]
+skips = ["*/tests/*", "*/test_*.py"]
+
+[tool.vulture]
+ignore_decorators = ["@app.route", "@router.get", "@router.post"]
+ignore_names = ["_*"]
+make_whitelist = true
+sort_by_size = true
+
+[tool.radon]
+exclude = ["tests/*", "*/tests/*"]
+ignore = ["F401"]
+total_average = true
+show_complexity = true
+average = true
+order = "SCORE"
+min_confidence = 100
+paths = ["src"]

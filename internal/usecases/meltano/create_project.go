@@ -154,16 +154,16 @@ func NewAddPluginUseCase(
 
 // AddPluginInput represents the input for adding a plugin to a Meltano project
 type AddPluginInput struct {
-	ProjectID   uuid.UUID              `json:"project_id" validate:"required"`
-	Name        string                 `json:"name" validate:"required"`
-	Type        string                 `json:"type" validate:"required,oneof=extractors loaders transformers orchestrators files utilities"`
-	Namespace   string                 `json:"namespace,omitempty"`
-	Variant     string                 `json:"variant,omitempty"`
-	PipURL      string                 `json:"pip_url,omitempty"`
-	Settings    map[string]interface{} `json:"settings,omitempty"`
-	Config      map[string]interface{} `json:"config,omitempty"`
-	Extras      []string               `json:"extras,omitempty"`
-	Commands    map[string]interface{} `json:"commands,omitempty"`
+	ProjectID uuid.UUID              `json:"project_id" validate:"required"`
+	Name      string                 `json:"name" validate:"required"`
+	Type      string                 `json:"type" validate:"required,oneof=extractors loaders transformers orchestrators files utilities"`
+	Namespace string                 `json:"namespace,omitempty"`
+	Variant   string                 `json:"variant,omitempty"`
+	PipURL    string                 `json:"pip_url,omitempty"`
+	Settings  map[string]interface{} `json:"settings,omitempty"`
+	Config    map[string]interface{} `json:"config,omitempty"`
+	Extras    []string               `json:"extras,omitempty"`
+	Commands  map[string]interface{} `json:"commands,omitempty"`
 }
 
 // AddPluginOutput represents the output after adding a plugin

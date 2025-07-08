@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/golang-jwt/jwt/v5"
 	"github.com/flext-sh/flext/internal/infrastructure/logging"
 	"github.com/flext-sh/flext/internal/shared_kernel/domain/value_objects"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 )
 
@@ -29,7 +29,7 @@ type AuthProvider interface {
 
 // Credentials represents authentication credentials
 type Credentials struct {
-	Type     string                 `json:"type"`     // jwt, oauth2, basic, api_key
+	Type     string                 `json:"type"` // jwt, oauth2, basic, api_key
 	Username string                 `json:"username,omitempty"`
 	Password string                 `json:"password,omitempty"`
 	Token    string                 `json:"token,omitempty"`
@@ -61,22 +61,22 @@ type UserContext struct {
 
 // UnifiedAuthConfig configuration for the unified auth service
 type UnifiedAuthConfig struct {
-	JWTSecret           string        `json:"jwt_secret"`
-	TokenExpiry         time.Duration `json:"token_expiry"`
-	RefreshTokenExpiry  time.Duration `json:"refresh_token_expiry"`
-	EnableOAuth2        bool          `json:"enable_oauth2"`
-	EnableBasicAuth     bool          `json:"enable_basic_auth"`
-	EnableAPIKeyAuth    bool          `json:"enable_api_key_auth"`
-	OAuth2Config        OAuth2Config  `json:"oauth2_config,omitempty"`
+	JWTSecret          string        `json:"jwt_secret"`
+	TokenExpiry        time.Duration `json:"token_expiry"`
+	RefreshTokenExpiry time.Duration `json:"refresh_token_expiry"`
+	EnableOAuth2       bool          `json:"enable_oauth2"`
+	EnableBasicAuth    bool          `json:"enable_basic_auth"`
+	EnableAPIKeyAuth   bool          `json:"enable_api_key_auth"`
+	OAuth2Config       OAuth2Config  `json:"oauth2_config,omitempty"`
 }
 
 // OAuth2Config OAuth2 provider configuration
 type OAuth2Config struct {
-	ClientID     string `json:"client_id"`
-	ClientSecret string `json:"client_secret"`
-	RedirectURL  string `json:"redirect_url"`
-	AuthURL      string `json:"auth_url"`
-	TokenURL     string `json:"token_url"`
+	ClientID     string   `json:"client_id"`
+	ClientSecret string   `json:"client_secret"`
+	RedirectURL  string   `json:"redirect_url"`
+	AuthURL      string   `json:"auth_url"`
+	TokenURL     string   `json:"token_url"`
 	Scopes       []string `json:"scopes"`
 }
 

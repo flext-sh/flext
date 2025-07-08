@@ -20,10 +20,10 @@ type LDAPConnector struct {
 
 // LDAPConfig holds LDAP connection configuration
 type LDAPConfig struct {
-	Host               string        `json:"host"`
-	Port               int           `json:"port"`
-	UseSSL             bool          `json:"use_ssl"`
-	UseTLS             bool          `json:"use_tls"`
+	Host              string        `json:"host"`
+	Port              int           `json:"port"`
+	UseSSL            bool          `json:"use_ssl"`
+	UseTLS            bool          `json:"use_tls"`
 	SkipTLSVerify     bool          `json:"skip_tls_verify"`
 	BindDN            string        `json:"bind_dn"`
 	BindPassword      string        `json:"bind_password"`
@@ -318,9 +318,9 @@ func (lc *LDAPConnector) Add(ctx context.Context, dn string, attributes map[stri
 		Success: true,
 		Message: "Entry added successfully",
 		Metadata: map[string]interface{}{
-			"dn":           dn,
-			"added_at":     time.Now(),
-			"attr_count":   len(attributes),
+			"dn":         dn,
+			"added_at":   time.Now(),
+			"attr_count": len(attributes),
 		},
 	}, nil
 }
@@ -421,7 +421,7 @@ type PagedSearchParameters struct {
 // preparePagedSearchParameters normalizes parameters for paged search
 func (lc *LDAPConnector) preparePagedSearchParameters(baseDN, filter string, attributes []string, pageSize int) *PagedSearchParameters {
 	baseParams := lc.prepareSearchParameters(baseDN, filter, attributes)
-	
+
 	if pageSize <= 0 {
 		pageSize = 100
 	}

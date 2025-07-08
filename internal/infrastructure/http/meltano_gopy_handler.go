@@ -26,25 +26,25 @@ func NewMeltanoGopyHandler(service *services.MeltanoService, logger logging.Logg
 // RegisterRoutes registers all Meltano Gopy routes
 func (h *MeltanoGopyHandler) RegisterRoutes(e *echo.Echo) {
 	gopy := e.Group("/api/v1/gopy")
-	
+
 	// Basic availability and version endpoints
 	gopy.GET("/available", h.CheckAvailable)
 	gopy.GET("/version", h.GetVersion)
-	
+
 	// Project management
 	gopy.POST("/projects", h.CreateProject)
 	gopy.GET("/projects/info", h.GetProjectInfo)
 	gopy.GET("/projects/list", h.ListProjects)
-	
+
 	// Plugin management
 	gopy.POST("/plugins", h.AddPlugin)
 	gopy.GET("/plugins", h.GetPlugins)
 	gopy.POST("/plugins/install", h.InstallPlugins)
-	
+
 	// Pipeline execution
 	gopy.POST("/pipelines/run", h.RunPipeline)
 	gopy.POST("/commands/execute", h.ExecuteCommand)
-	
+
 	// State management
 	gopy.GET("/state/stats", h.GetStateStats)
 	gopy.POST("/state/save", h.SaveState)
@@ -105,12 +105,12 @@ type LoadStateRequest struct {
 func (h *MeltanoGopyHandler) CheckAvailable(c echo.Context) error {
 	start := time.Now()
 	ctx := c.Request().Context()
-	
+
 	available, err := h.service.IsAvailable(ctx)
 	if err != nil {
 		h.logger.Error("Failed to check Meltano availability", logging.F("error", err.Error()))
 	}
-	
+
 	response := APIResponse{
 		Success: available,
 		Data: map[string]interface{}{
@@ -128,25 +128,25 @@ func (h *MeltanoGopyHandler) CheckAvailable(c echo.Context) error {
 			Duration:  time.Since(start).String(),
 		},
 	}
-	
+
 	if err != nil {
 		response.Error = err.Error()
 	}
-	
+
 	return c.JSON(http.StatusOK, response)
 }
 
 func (h *MeltanoGopyHandler) GetVersion(c echo.Context) error {
 	start := time.Now()
-	
+
 	response := APIResponse{
 		Success: true,
 		Data: map[string]interface{}{
-			"gopy_version":    "2.0.0",
-			"flext_version":   "2.0.0",
-			"meltano_bridge":  "http",
-			"integration":     "fully_functional",
-			"api_version":     "v1",
+			"gopy_version":   "2.0.0",
+			"flext_version":  "2.0.0",
+			"meltano_bridge": "http",
+			"integration":    "fully_functional",
+			"api_version":    "v1",
 		},
 		Meta: &MetaInfo{
 			Timestamp: time.Now(),
@@ -154,14 +154,14 @@ func (h *MeltanoGopyHandler) GetVersion(c echo.Context) error {
 			Duration:  time.Since(start).String(),
 		},
 	}
-	
+
 	return c.JSON(http.StatusOK, response)
 }
 
 func (h *MeltanoGopyHandler) CreateProject(c echo.Context) error {
 	start := time.Now()
 	ctx := c.Request().Context()
-	
+
 	var req CreateProjectRequest
 	if err := c.Bind(&req); err != nil {
 		return c.JSON(http.StatusBadRequest, APIResponse{
@@ -174,9 +174,9 @@ func (h *MeltanoGopyHandler) CreateProject(c echo.Context) error {
 			},
 		})
 	}
-	
+
 	result, err := h.service.InitProject(ctx, req.Name, req.Directory)
-	
+
 	response := APIResponse{
 		Success: err == nil && result.Success,
 		Data: map[string]interface{}{
@@ -190,26 +190,26 @@ func (h *MeltanoGopyHandler) CreateProject(c echo.Context) error {
 			Duration:  time.Since(start).String(),
 		},
 	}
-	
+
 	if err != nil {
 		response.Error = err.Error()
 		return c.JSON(http.StatusInternalServerError, response)
 	}
-	
+
 	if result.Error != "" {
 		response.Error = result.Error
 		return c.JSON(http.StatusBadRequest, response)
 	}
-	
+
 	return c.JSON(http.StatusCreated, response)
 }
 
 func (h *MeltanoGopyHandler) GetProjectInfo(c echo.Context) error {
 	start := time.Now()
 	ctx := c.Request().Context()
-	
+
 	result, err := h.service.GetProjectInfo(ctx)
-	
+
 	response := APIResponse{
 		Success: err == nil && result.Success,
 		Data:    result.Data,
@@ -219,37 +219,37 @@ func (h *MeltanoGopyHandler) GetProjectInfo(c echo.Context) error {
 			Duration:  time.Since(start).String(),
 		},
 	}
-	
+
 	if err != nil {
 		response.Error = err.Error()
 		return c.JSON(http.StatusInternalServerError, response)
 	}
-	
+
 	if result.Error != "" {
 		response.Error = result.Error
 		return c.JSON(http.StatusBadRequest, response)
 	}
-	
+
 	return c.JSON(http.StatusOK, response)
 }
 
 func (h *MeltanoGopyHandler) ListProjects(c echo.Context) error {
 	start := time.Now()
 	ctx := c.Request().Context()
-	
+
 	rootDir := c.QueryParam("root_dir")
 	if rootDir == "" {
 		rootDir = "."
 	}
-	
+
 	projects, err := h.service.ListProjects(ctx, rootDir)
-	
+
 	response := APIResponse{
 		Success: err == nil,
 		Data: map[string]interface{}{
-			"projects":  projects,
-			"count":     len(projects),
-			"root_dir":  rootDir,
+			"projects": projects,
+			"count":    len(projects),
+			"root_dir": rootDir,
 		},
 		Meta: &MetaInfo{
 			Timestamp: time.Now(),
@@ -257,19 +257,19 @@ func (h *MeltanoGopyHandler) ListProjects(c echo.Context) error {
 			Duration:  time.Since(start).String(),
 		},
 	}
-	
+
 	if err != nil {
 		response.Error = err.Error()
 		return c.JSON(http.StatusInternalServerError, response)
 	}
-	
+
 	return c.JSON(http.StatusOK, response)
 }
 
 func (h *MeltanoGopyHandler) AddPlugin(c echo.Context) error {
 	start := time.Now()
 	ctx := c.Request().Context()
-	
+
 	var req AddPluginRequest
 	if err := c.Bind(&req); err != nil {
 		return c.JSON(http.StatusBadRequest, APIResponse{
@@ -282,9 +282,9 @@ func (h *MeltanoGopyHandler) AddPlugin(c echo.Context) error {
 			},
 		})
 	}
-	
+
 	result, err := h.service.AddPlugin(ctx, req.PluginType, req.Name, req.Variant)
-	
+
 	response := APIResponse{
 		Success: err == nil && result.Success,
 		Data: map[string]interface{}{
@@ -299,26 +299,26 @@ func (h *MeltanoGopyHandler) AddPlugin(c echo.Context) error {
 			Duration:  time.Since(start).String(),
 		},
 	}
-	
+
 	if err != nil {
 		response.Error = err.Error()
 		return c.JSON(http.StatusInternalServerError, response)
 	}
-	
+
 	if result.Error != "" {
 		response.Error = result.Error
 		return c.JSON(http.StatusBadRequest, response)
 	}
-	
+
 	return c.JSON(http.StatusCreated, response)
 }
 
 func (h *MeltanoGopyHandler) GetPlugins(c echo.Context) error {
 	start := time.Now()
 	ctx := c.Request().Context()
-	
+
 	result, err := h.service.GetPlugins(ctx)
-	
+
 	response := APIResponse{
 		Success: err == nil && result.Success,
 		Data:    result.Data,
@@ -328,26 +328,26 @@ func (h *MeltanoGopyHandler) GetPlugins(c echo.Context) error {
 			Duration:  time.Since(start).String(),
 		},
 	}
-	
+
 	if err != nil {
 		response.Error = err.Error()
 		return c.JSON(http.StatusInternalServerError, response)
 	}
-	
+
 	if result.Error != "" {
 		response.Error = result.Error
 		return c.JSON(http.StatusBadRequest, response)
 	}
-	
+
 	return c.JSON(http.StatusOK, response)
 }
 
 func (h *MeltanoGopyHandler) InstallPlugins(c echo.Context) error {
 	start := time.Now()
 	ctx := c.Request().Context()
-	
+
 	result, err := h.service.InstallPlugins(ctx)
-	
+
 	response := APIResponse{
 		Success: err == nil && result.Success,
 		Data:    result.Data,
@@ -357,24 +357,24 @@ func (h *MeltanoGopyHandler) InstallPlugins(c echo.Context) error {
 			Duration:  time.Since(start).String(),
 		},
 	}
-	
+
 	if err != nil {
 		response.Error = err.Error()
 		return c.JSON(http.StatusInternalServerError, response)
 	}
-	
+
 	if result.Error != "" {
 		response.Error = result.Error
 		return c.JSON(http.StatusBadRequest, response)
 	}
-	
+
 	return c.JSON(http.StatusOK, response)
 }
 
 func (h *MeltanoGopyHandler) RunPipeline(c echo.Context) error {
 	start := time.Now()
 	ctx := c.Request().Context()
-	
+
 	var req RunPipelineRequest
 	if err := c.Bind(&req); err != nil {
 		return c.JSON(http.StatusBadRequest, APIResponse{
@@ -387,9 +387,9 @@ func (h *MeltanoGopyHandler) RunPipeline(c echo.Context) error {
 			},
 		})
 	}
-	
+
 	result, err := h.service.RunPipeline(ctx, req.Extractor, req.Loader, req.Transformer)
-	
+
 	response := APIResponse{
 		Success: err == nil && result.Success,
 		Data: map[string]interface{}{
@@ -404,24 +404,24 @@ func (h *MeltanoGopyHandler) RunPipeline(c echo.Context) error {
 			Duration:  time.Since(start).String(),
 		},
 	}
-	
+
 	if err != nil {
 		response.Error = err.Error()
 		return c.JSON(http.StatusInternalServerError, response)
 	}
-	
+
 	if result.Error != "" {
 		response.Error = result.Error
 		return c.JSON(http.StatusBadRequest, response)
 	}
-	
+
 	return c.JSON(http.StatusOK, response)
 }
 
 func (h *MeltanoGopyHandler) ExecuteCommand(c echo.Context) error {
 	start := time.Now()
 	ctx := c.Request().Context()
-	
+
 	var req ExecuteCommandRequest
 	if err := c.Bind(&req); err != nil {
 		return c.JSON(http.StatusBadRequest, APIResponse{
@@ -434,9 +434,9 @@ func (h *MeltanoGopyHandler) ExecuteCommand(c echo.Context) error {
 			},
 		})
 	}
-	
+
 	result, err := h.service.ExecuteCommand(ctx, req.Command, req.Args)
-	
+
 	response := APIResponse{
 		Success: err == nil && result.Success,
 		Data: map[string]interface{}{
@@ -450,26 +450,26 @@ func (h *MeltanoGopyHandler) ExecuteCommand(c echo.Context) error {
 			Duration:  time.Since(start).String(),
 		},
 	}
-	
+
 	if err != nil {
 		response.Error = err.Error()
 		return c.JSON(http.StatusInternalServerError, response)
 	}
-	
+
 	if result.Error != "" {
 		response.Error = result.Error
 		return c.JSON(http.StatusBadRequest, response)
 	}
-	
+
 	return c.JSON(http.StatusOK, response)
 }
 
 func (h *MeltanoGopyHandler) GetStateStats(c echo.Context) error {
 	start := time.Now()
 	ctx := c.Request().Context()
-	
+
 	stats, err := h.service.GetStateStats(ctx)
-	
+
 	response := APIResponse{
 		Success: err == nil,
 		Data:    stats,
@@ -479,19 +479,19 @@ func (h *MeltanoGopyHandler) GetStateStats(c echo.Context) error {
 			Duration:  time.Since(start).String(),
 		},
 	}
-	
+
 	if err != nil {
 		response.Error = err.Error()
 		return c.JSON(http.StatusInternalServerError, response)
 	}
-	
+
 	return c.JSON(http.StatusOK, response)
 }
 
 func (h *MeltanoGopyHandler) SaveState(c echo.Context) error {
 	start := time.Now()
 	ctx := c.Request().Context()
-	
+
 	var req SaveStateRequest
 	if err := c.Bind(&req); err != nil {
 		return c.JSON(http.StatusBadRequest, APIResponse{
@@ -504,9 +504,9 @@ func (h *MeltanoGopyHandler) SaveState(c echo.Context) error {
 			},
 		})
 	}
-	
+
 	err := h.service.SavePluginState(ctx, req.Project, req.Plugin, req.State)
-	
+
 	response := APIResponse{
 		Success: err == nil,
 		Data: map[string]interface{}{
@@ -520,22 +520,22 @@ func (h *MeltanoGopyHandler) SaveState(c echo.Context) error {
 			Duration:  time.Since(start).String(),
 		},
 	}
-	
+
 	if err != nil {
 		response.Error = err.Error()
 		return c.JSON(http.StatusInternalServerError, response)
 	}
-	
+
 	return c.JSON(http.StatusOK, response)
 }
 
 func (h *MeltanoGopyHandler) LoadState(c echo.Context) error {
 	start := time.Now()
 	ctx := c.Request().Context()
-	
+
 	project := c.QueryParam("project")
 	plugin := c.QueryParam("plugin")
-	
+
 	if project == "" || plugin == "" {
 		return c.JSON(http.StatusBadRequest, APIResponse{
 			Success: false,
@@ -547,9 +547,9 @@ func (h *MeltanoGopyHandler) LoadState(c echo.Context) error {
 			},
 		})
 	}
-	
+
 	state, err := h.service.LoadPluginState(ctx, project, plugin)
-	
+
 	response := APIResponse{
 		Success: err == nil,
 		Data: map[string]interface{}{
@@ -563,22 +563,22 @@ func (h *MeltanoGopyHandler) LoadState(c echo.Context) error {
 			Duration:  time.Since(start).String(),
 		},
 	}
-	
+
 	if err != nil {
 		response.Error = err.Error()
 		return c.JSON(http.StatusInternalServerError, response)
 	}
-	
+
 	return c.JSON(http.StatusOK, response)
 }
 
 func (h *MeltanoGopyHandler) DeleteState(c echo.Context) error {
 	start := time.Now()
 	ctx := c.Request().Context()
-	
+
 	project := c.QueryParam("project")
 	plugin := c.QueryParam("plugin")
-	
+
 	if project == "" || plugin == "" {
 		return c.JSON(http.StatusBadRequest, APIResponse{
 			Success: false,
@@ -590,9 +590,9 @@ func (h *MeltanoGopyHandler) DeleteState(c echo.Context) error {
 			},
 		})
 	}
-	
+
 	err := h.service.DeletePluginState(ctx, project, plugin)
-	
+
 	response := APIResponse{
 		Success: err == nil,
 		Data: map[string]interface{}{
@@ -606,11 +606,11 @@ func (h *MeltanoGopyHandler) DeleteState(c echo.Context) error {
 			Duration:  time.Since(start).String(),
 		},
 	}
-	
+
 	if err != nil {
 		response.Error = err.Error()
 		return c.JSON(http.StatusInternalServerError, response)
 	}
-	
+
 	return c.JSON(http.StatusOK, response)
 }

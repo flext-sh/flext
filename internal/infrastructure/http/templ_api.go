@@ -19,17 +19,17 @@ func NewTemplAPIHandler() *TemplAPIHandler {
 // RegisterRoutes registra as rotas da API reativa
 func (h *TemplAPIHandler) RegisterRoutes(e *echo.Echo) {
 	api := e.Group("/api")
-	
+
 	// Dashboard endpoints
 	api.GET("/dashboard/stats", h.GetDashboardStats)
 	api.GET("/activity/recent", h.GetRecentActivity)
 	api.GET("/stats/:type", h.GetStatValue)
-	
+
 	// Data endpoints
 	api.GET("/pipelines/table", h.GetPipelinesTable)
 	api.GET("/plugins/table", h.GetPluginsTable)
 	api.GET("/logs/recent", h.GetRecentLogs)
-	
+
 	// Chart endpoints
 	api.GET("/charts/:id/data", h.GetChartData)
 }
@@ -76,7 +76,7 @@ func (h *TemplAPIHandler) GetRecentActivity(c echo.Context) error {
 // GetStatValue retorna um valor de estatística específico
 func (h *TemplAPIHandler) GetStatValue(c echo.Context) error {
 	statType := c.Param("type")
-	
+
 	switch statType {
 	case "Pipelines":
 		return c.String(http.StatusOK, "3")
@@ -191,7 +191,7 @@ func (h *TemplAPIHandler) GetRecentLogs(c echo.Context) error {
 // GetChartData retorna dados para gráficos
 func (h *TemplAPIHandler) GetChartData(c echo.Context) error {
 	chartId := c.Param("id")
-	
+
 	switch chartId {
 	case "overviewChart":
 		data := map[string]interface{}{

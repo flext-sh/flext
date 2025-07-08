@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"reflect"
 	"sync"
-	
+
 	"github.com/flext-sh/flext/internal/infrastructure/logging"
 )
 
@@ -13,10 +13,10 @@ import (
 type EventBus interface {
 	// Publish publishes an event to all subscribers
 	Publish(ctx context.Context, event interface{}) error
-	
+
 	// Subscribe registers a handler for a specific event type
 	Subscribe(eventType reflect.Type, handler func(ctx context.Context, event interface{}) error) error
-	
+
 	// Unsubscribe removes a handler for a specific event type
 	Unsubscribe(eventType reflect.Type, handler func(ctx context.Context, event interface{}) error) error
 }
@@ -43,7 +43,7 @@ func (eb *InMemoryEventBus) Publish(ctx context.Context, event interface{}) erro
 	}
 
 	eventType := reflect.TypeOf(event)
-	
+
 	eb.mu.RLock()
 	handlers := eb.handlers[eventType]
 	eb.mu.RUnlock()
@@ -68,7 +68,7 @@ func (eb *InMemoryEventBus) Publish(ctx context.Context, event interface{}) erro
 		wg.Add(1)
 		go func(h func(ctx context.Context, event interface{}) error) {
 			defer wg.Done()
-			
+
 			// Recover from panics in handlers
 			defer func() {
 				if r := recover(); r != nil {
@@ -163,7 +163,7 @@ func (eb *InMemoryEventBus) Unsubscribe(eventType reflect.Type, handler func(ctx
 	// handler IDs or tokens for more reliable removal
 	newHandlers := make([]func(ctx context.Context, event interface{}) error, 0, len(handlers))
 	removed := false
-	
+
 	for _, h := range handlers {
 		// Compare function pointers
 		if reflect.ValueOf(h).Pointer() == reflect.ValueOf(handler).Pointer() {
@@ -188,7 +188,7 @@ func (eb *InMemoryEventBus) Unsubscribe(eventType reflect.Type, handler func(ctx
 func (eb *InMemoryEventBus) Clear() {
 	eb.mu.Lock()
 	defer eb.mu.Unlock()
-	
+
 	eb.handlers = make(map[reflect.Type][]func(ctx context.Context, event interface{}) error)
 	eb.logger.Debug("All event handlers cleared")
 }
@@ -197,7 +197,7 @@ func (eb *InMemoryEventBus) Clear() {
 func (eb *InMemoryEventBus) GetHandlerCount(eventType reflect.Type) int {
 	eb.mu.RLock()
 	defer eb.mu.RUnlock()
-	
+
 	return len(eb.handlers[eventType])
 }
 
@@ -218,18 +218,18 @@ type eventWrapper struct {
 // NewAsyncEventBus creates a new async event bus
 func NewAsyncEventBus(bus EventBus, bufferSize int) *AsyncEventBus {
 	ctx, cancel := context.WithCancel(context.Background())
-	
+
 	aeb := &AsyncEventBus{
 		bus:    bus,
 		buffer: make(chan eventWrapper, bufferSize),
 		ctx:    ctx,
 		cancel: cancel,
 	}
-	
+
 	// Start worker
 	aeb.wg.Add(1)
 	go aeb.worker()
-	
+
 	return aeb
 }
 
@@ -265,7 +265,7 @@ func (aeb *AsyncEventBus) Close() error {
 
 func (aeb *AsyncEventBus) worker() {
 	defer aeb.wg.Done()
-	
+
 	for {
 		select {
 		case wrapper := <-aeb.buffer:

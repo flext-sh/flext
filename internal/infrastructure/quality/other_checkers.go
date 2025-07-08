@@ -105,14 +105,14 @@ func (p *PipelineQualityChecker) checkErrorHandling(data interface{}) bool {
 	if dataStr, ok := data.(string); ok {
 		lowerData := strings.ToLower(dataStr)
 		errorHandlingKeywords := []string{"try", "catch", "error", "exception", "retry", "fallback"}
-		
+
 		foundKeywords := 0
 		for _, keyword := range errorHandlingKeywords {
 			if strings.Contains(lowerData, keyword) {
 				foundKeywords++
 			}
 		}
-		
+
 		return foundKeywords < 2 // Insufficient error handling
 	}
 	return true
@@ -122,7 +122,7 @@ func (p *PipelineQualityChecker) checkMonitoring(data interface{}) bool {
 	if dataStr, ok := data.(string); ok {
 		lowerData := strings.ToLower(dataStr)
 		monitoringKeywords := []string{"log", "metric", "monitor", "alert", "trace"}
-		
+
 		for _, keyword := range monitoringKeywords {
 			if strings.Contains(lowerData, keyword) {
 				return false // Found monitoring
@@ -134,7 +134,7 @@ func (p *PipelineQualityChecker) checkMonitoring(data interface{}) bool {
 
 func (p *PipelineQualityChecker) determineStatus(check *QualityCheck) {
 	percentage := (check.Score / check.MaxScore) * 100
-	
+
 	if percentage >= 80 {
 		check.Status = "passed"
 	} else if percentage >= 60 {
@@ -238,7 +238,7 @@ func (s *SecurityQualityChecker) checkHardcodedSecrets(data interface{}) bool {
 			"password=", "secret=", "token=", "key=", "api_key=",
 			"auth=", "credential=", "private_key=",
 		}
-		
+
 		for _, pattern := range secretPatterns {
 			if strings.Contains(lowerData, pattern) {
 				return true
@@ -255,7 +255,7 @@ func (s *SecurityQualityChecker) checkSQLInjection(data interface{}) bool {
 			"select * from", "drop table", "union select",
 			"' or '1'='1", "'; delete", "exec(",
 		}
-		
+
 		for _, pattern := range injectionPatterns {
 			if strings.Contains(lowerData, pattern) {
 				return true
@@ -275,7 +275,7 @@ func (s *SecurityQualityChecker) checkInsecureCommunications(data interface{}) b
 
 func (s *SecurityQualityChecker) determineStatus(check *QualityCheck) {
 	percentage := (check.Score / check.MaxScore) * 100
-	
+
 	if percentage >= 90 {
 		check.Status = "passed"
 	} else if percentage >= 70 {
@@ -379,14 +379,14 @@ func (p *PerformanceQualityChecker) checkPerformanceAntiPatterns(data interface{
 			"select *", "n+1 query", "nested loop", "synchronous",
 			"blocking", "sequential", "single threaded",
 		}
-		
+
 		foundAntiPatterns := 0
 		for _, pattern := range antiPatterns {
 			if strings.Contains(lowerData, pattern) {
 				foundAntiPatterns++
 			}
 		}
-		
+
 		return foundAntiPatterns >= 2
 	}
 	return false
@@ -399,7 +399,7 @@ func (p *PerformanceQualityChecker) checkResourceOptimization(data interface{}) 
 			"cache", "batch", "async", "parallel", "optimize",
 			"pool", "lazy", "efficient",
 		}
-		
+
 		for _, keyword := range optimizationKeywords {
 			if strings.Contains(lowerData, keyword) {
 				return false // Found optimization
@@ -416,7 +416,7 @@ func (p *PerformanceQualityChecker) checkScalability(data interface{}) bool {
 			"scale", "cluster", "distributed", "horizontal",
 			"load balance", "partition", "shard",
 		}
-		
+
 		for _, keyword := range scalabilityKeywords {
 			if strings.Contains(lowerData, keyword) {
 				return false // Found scalability considerations
@@ -428,7 +428,7 @@ func (p *PerformanceQualityChecker) checkScalability(data interface{}) bool {
 
 func (p *PerformanceQualityChecker) determineStatus(check *QualityCheck) {
 	percentage := (check.Score / check.MaxScore) * 100
-	
+
 	if percentage >= 75 {
 		check.Status = "passed"
 	} else if percentage >= 60 {

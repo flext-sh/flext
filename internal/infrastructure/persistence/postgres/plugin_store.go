@@ -70,7 +70,7 @@ func (s *PluginStore) Create(ctx context.Context, model *persistence.PluginModel
 // GetByID retrieves a plugin by ID
 func (s *PluginStore) GetByID(ctx context.Context, id string) (*persistence.PluginModel, error) {
 	query := `
-		SELECT 
+		SELECT
 			id, name, type, version, status, configuration, capabilities,
 			created_at, updated_at
 		FROM plugins
@@ -108,7 +108,7 @@ func (s *PluginStore) GetByID(ctx context.Context, id string) (*persistence.Plug
 // GetByName retrieves a plugin by name
 func (s *PluginStore) GetByName(ctx context.Context, name string) (*persistence.PluginModel, error) {
 	query := `
-		SELECT 
+		SELECT
 			id, name, type, version, status, configuration, capabilities,
 			created_at, updated_at
 		FROM plugins
@@ -193,7 +193,7 @@ func (s *PluginStore) Update(ctx context.Context, model *persistence.PluginModel
 // Delete removes a plugin
 func (s *PluginStore) Delete(ctx context.Context, id string) error {
 	query := `DELETE FROM plugins WHERE id = $1`
-	
+
 	result, err := s.db.ExecContext(ctx, query, id)
 	if err != nil {
 		return fmt.Errorf("failed to delete plugin: %w", err)
@@ -222,7 +222,7 @@ func (s *PluginStore) List(ctx context.Context, limit, offset int) ([]*persisten
 
 	// Query with pagination
 	query := `
-		SELECT 
+		SELECT
 			id, name, type, version, status, configuration, capabilities,
 			created_at, updated_at
 		FROM plugins
@@ -279,7 +279,7 @@ func (s *PluginStore) List(ctx context.Context, limit, offset int) ([]*persisten
 // ListByType retrieves plugins by type
 func (s *PluginStore) ListByType(ctx context.Context, pluginType string) ([]*persistence.PluginModel, error) {
 	query := `
-		SELECT 
+		SELECT
 			id, name, type, version, status, configuration, capabilities,
 			created_at, updated_at
 		FROM plugins
@@ -329,7 +329,7 @@ func (s *PluginStore) ListByType(ctx context.Context, pluginType string) ([]*per
 // ListActive retrieves active plugins
 func (s *PluginStore) ListActive(ctx context.Context) ([]*persistence.PluginModel, error) {
 	query := `
-		SELECT 
+		SELECT
 			id, name, type, version, status, configuration, capabilities,
 			created_at, updated_at
 		FROM plugins
@@ -375,4 +375,3 @@ func (s *PluginStore) ListActive(ctx context.Context) ([]*persistence.PluginMode
 
 	return plugins, nil
 }
-

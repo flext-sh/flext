@@ -92,8 +92,8 @@ func dashboardContent(ctx context.Context, w io.Writer) error {
 
 		if err := Card("Recent Activity", "fas fa-list", func(ctx context.Context, w io.Writer) error {
 			_, err := w.Write([]byte(`
-                    <div hx-get="/api/activity/recent" 
-                         hx-trigger="load, every 15s" 
+                    <div hx-get="/api/activity/recent"
+                         hx-trigger="load, every 15s"
                          hx-indicator="#activity-loading"
                          class="space-y-3">
                         <div id="activity-loading" class="text-center py-8">
@@ -109,7 +109,7 @@ func dashboardContent(ctx context.Context, w io.Writer) error {
 
 		_, err = w.Write([]byte(`
             </div>
-            
+
             <!-- System Overview Chart -->
             <div>
 `))
@@ -117,7 +117,7 @@ func dashboardContent(ctx context.Context, w io.Writer) error {
 			return err
 		}
 
-		if err := Card("System Overview", "fas fa-chart-pie", 
+		if err := Card("System Overview", "fas fa-chart-pie",
 			Chart("overviewChart", "doughnut"),
 		)(ctx, w); err != nil {
 			return err
@@ -240,7 +240,7 @@ func MonitoringPage(ctx context.Context, w io.Writer) error {
             <i class="fas fa-chart-line text-purple-500 mr-3"></i>
             Monitoring Dashboard
         </h1>
-        
+
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 `))
 		if err != nil {
@@ -257,8 +257,8 @@ func MonitoringPage(ctx context.Context, w io.Writer) error {
 		// System logs
 		if err := Card("System Logs", "fas fa-file-alt", func(ctx context.Context, w io.Writer) error {
 			_, err := w.Write([]byte(`
-                    <div hx-get="/api/logs/recent" 
-                         hx-trigger="load, every 10s" 
+                    <div hx-get="/api/logs/recent"
+                         hx-trigger="load, every 10s"
                          hx-indicator="#logs-loading"
                          class="bg-gray-900 text-green-400 p-4 rounded font-mono text-sm h-64 overflow-y-auto">
                         <div id="logs-loading" class="text-center py-8">

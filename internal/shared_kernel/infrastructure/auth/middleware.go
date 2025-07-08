@@ -4,17 +4,17 @@ import (
 	"context"
 	"strings"
 
-	"github.com/labstack/echo/v4"
 	"github.com/flext-sh/flext/internal/infrastructure/logging"
 	"github.com/flext-sh/flext/internal/shared_kernel/domain/value_objects"
+	"github.com/labstack/echo/v4"
 )
 
 // UnifiedAuthMiddleware provides authentication middleware for Echo
 type UnifiedAuthMiddleware struct {
-	authService   *UnifiedAuthService
-	logger        logging.Logger
-	publicPaths   map[string]bool
-	skipPrefixes  []string
+	authService  *UnifiedAuthService
+	logger       logging.Logger
+	publicPaths  map[string]bool
+	skipPrefixes []string
 }
 
 // MiddlewareConfig configuration for the auth middleware

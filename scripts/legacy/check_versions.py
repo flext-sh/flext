@@ -23,16 +23,22 @@ def get_version_from_pyproject(project_path: Path) -> str | None:
         return None
 
     try:
-        with open(pyproject_path, "rb") as f:
+        with Path.open(pyproject_path, "rb") as f:
             data = tomllib.load(f)
 
         # Check if using dynamic versioning
-        if "project" in data and "dynamic" in data["project"]:
-            if "version" in data["project"]["dynamic"]:
-                return "dynamic"
+        if (
+            "project" in data
+            and "dynamic" in data["project"]
+            and "version" in data["project"]["dynamic"]
+        ):
+            return "dynamic"
 
         # Check for static version
-        if "project" in data and "version" in data["project"]:
+        if (
+            "project" in data
+            and "version" in data["project"]
+        ):
             return data["project"]["version"]
 
         return None
@@ -48,7 +54,7 @@ def get_version_from_version_file(project_path: Path, module_name: str) -> str |
         return None
 
     try:
-        with open(version_file_path, encoding="utf-8") as f:
+        with Path.open(version_file_path, encoding="utf-8") as f:
             content = f.read()
 
         # Extract version using simple string parsing
@@ -89,7 +95,7 @@ def get_project_module_name(project_name: str) -> str:
     return project_name.replace("-", "_")
 
 
-def check_project_versions(project_name: str) -> tuple[bool, dict[str, str]]:
+def check_project_versions(project_name: str) -> tuple[bool, dict[str, str | None]]:
     """Check version consistency for a single project."""
     project_path = WORKSPACE_ROOT / project_name
     if not project_path.exists():

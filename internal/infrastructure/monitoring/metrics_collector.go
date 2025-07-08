@@ -18,21 +18,21 @@ type MetricsCollector struct {
 	mu     sync.RWMutex
 
 	// Prometheus metrics
-	httpRequestsTotal       *prometheus.CounterVec
-	httpRequestDuration     *prometheus.HistogramVec
-	httpActiveConnections   prometheus.Gauge
-	systemMemoryUsage       prometheus.Gauge
-	systemCPUUsage          prometheus.Gauge
-	goRoutines              prometheus.Gauge
-	gcDuration              prometheus.Histogram
-	pipelineExecutions      *prometheus.CounterVec
-	pipelineExecutionTime   *prometheus.HistogramVec
-	databaseConnections     prometheus.Gauge
-	databaseQueryDuration   *prometheus.HistogramVec
-	connectorOperations     *prometheus.CounterVec
-	connectorResponseTime   *prometheus.HistogramVec
-	errorRate               *prometheus.CounterVec
-	businessMetrics         *prometheus.GaugeVec
+	httpRequestsTotal     *prometheus.CounterVec
+	httpRequestDuration   *prometheus.HistogramVec
+	httpActiveConnections prometheus.Gauge
+	systemMemoryUsage     prometheus.Gauge
+	systemCPUUsage        prometheus.Gauge
+	goRoutines            prometheus.Gauge
+	gcDuration            prometheus.Histogram
+	pipelineExecutions    *prometheus.CounterVec
+	pipelineExecutionTime *prometheus.HistogramVec
+	databaseConnections   prometheus.Gauge
+	databaseQueryDuration *prometheus.HistogramVec
+	connectorOperations   *prometheus.CounterVec
+	connectorResponseTime *prometheus.HistogramVec
+	errorRate             *prometheus.CounterVec
+	businessMetrics       *prometheus.GaugeVec
 
 	// Custom metrics tracking
 	customMetrics map[string]float64
@@ -310,7 +310,7 @@ func (mc *MetricsCollector) evaluateAlerts() {
 	// Memory usage alert
 	memoryUsageMB := float64(memStats.Alloc) / 1024 / 1024
 	if memoryUsageMB > 1000 { // 1GB threshold
-		mc.triggerAlert("high_memory_usage", AlertSeverityWarning, 
+		mc.triggerAlert("high_memory_usage", AlertSeverityWarning,
 			"High memory usage detected", memoryUsageMB, 1000)
 	}
 
@@ -333,12 +333,12 @@ func (mc *MetricsCollector) triggerAlert(name string, severity AlertSeverity, de
 	}); found {
 		// Update existing alert
 		var existingIndex int
-	for i, alert := range mc.alerts {
-		if alert.Name == existingAlert.Name && alert.Status == existingAlert.Status {
-			existingIndex = i
-			break
+		for i, alert := range mc.alerts {
+			if alert.Name == existingAlert.Name && alert.Status == existingAlert.Status {
+				existingIndex = i
+				break
+			}
 		}
-	}
 		mc.alerts[existingIndex].Value = value
 		return
 	}
@@ -400,21 +400,21 @@ func (mc *MetricsCollector) GetMetrics() map[string]interface{} {
 	return map[string]interface{}{
 		"system": map[string]interface{}{
 			"memory": map[string]interface{}{
-				"alloc_bytes":        memStats.Alloc,
-				"total_alloc_bytes":  memStats.TotalAlloc,
-				"sys_bytes":          memStats.Sys,
-				"heap_alloc_bytes":   memStats.HeapAlloc,
-				"heap_sys_bytes":     memStats.HeapSys,
-				"heap_idle_bytes":    memStats.HeapIdle,
-				"heap_inuse_bytes":   memStats.HeapInuse,
-				"stack_inuse_bytes":  memStats.StackInuse,
-				"stack_sys_bytes":    memStats.StackSys,
+				"alloc_bytes":       memStats.Alloc,
+				"total_alloc_bytes": memStats.TotalAlloc,
+				"sys_bytes":         memStats.Sys,
+				"heap_alloc_bytes":  memStats.HeapAlloc,
+				"heap_sys_bytes":    memStats.HeapSys,
+				"heap_idle_bytes":   memStats.HeapIdle,
+				"heap_inuse_bytes":  memStats.HeapInuse,
+				"stack_inuse_bytes": memStats.StackInuse,
+				"stack_sys_bytes":   memStats.StackSys,
 			},
 			"gc": map[string]interface{}{
-				"num_gc":        memStats.NumGC,
+				"num_gc":         memStats.NumGC,
 				"pause_total_ns": memStats.PauseTotalNs,
-				"next_gc":       memStats.NextGC,
-				"last_gc":       time.Unix(0, int64(memStats.LastGC)),
+				"next_gc":        memStats.NextGC,
+				"last_gc":        time.Unix(0, int64(memStats.LastGC)),
 			},
 			"goroutines": runtime.NumGoroutine(),
 			"cpu_count":  runtime.NumCPU(),
@@ -479,18 +479,18 @@ func (mc *MetricsCollector) getComponentHealth() map[string]interface{} {
 
 	components := map[string]interface{}{
 		"memory": map[string]interface{}{
-			"status":       mc.getMemoryHealth(memStats),
-			"usage_bytes":  memStats.Alloc,
-			"usage_mb":     float64(memStats.Alloc) / 1024 / 1024,
+			"status":      mc.getMemoryHealth(memStats),
+			"usage_bytes": memStats.Alloc,
+			"usage_mb":    float64(memStats.Alloc) / 1024 / 1024,
 		},
 		"goroutines": map[string]interface{}{
 			"status": mc.getGoroutineHealth(),
 			"count":  runtime.NumGoroutine(),
 		},
 		"gc": map[string]interface{}{
-			"status":   "healthy",
-			"num_gc":   memStats.NumGC,
-			"last_gc":  time.Unix(0, int64(memStats.LastGC)),
+			"status":  "healthy",
+			"num_gc":  memStats.NumGC,
+			"last_gc": time.Unix(0, int64(memStats.LastGC)),
 		},
 	}
 
@@ -523,7 +523,7 @@ func (mc *MetricsCollector) getGoroutineHealth() string {
 func (mc *MetricsCollector) GetAlerts() []Alert {
 	mc.mu.RLock()
 	defer mc.mu.RUnlock()
-	
+
 	// Create a copy to avoid race conditions
 	alerts := make([]Alert, len(mc.alerts))
 	copy(alerts, mc.alerts)

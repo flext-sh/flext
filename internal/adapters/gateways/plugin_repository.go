@@ -200,7 +200,7 @@ func (g *PluginRepositoryGateway) persistenceToDomain(model *persistence.PluginM
 		Configuration: model.Configuration,
 		Capabilities:  model.Capabilities,
 	}
-	
+
 	// Set the ID (which is part of AggregateRoot)
 	plugin.ID = id
 

@@ -16,70 +16,70 @@ import (
 
 // DistributedTask represents a task that can be distributed across the cluster
 type DistributedTask struct {
-	ID          string                 `json:"id"`
-	Type        string                 `json:"type"`
-	Payload     map[string]interface{} `json:"payload"`
-	Priority    int                    `json:"priority"`
-	Sharding    ShardingStrategy       `json:"sharding"`
-	Dependencies []string              `json:"dependencies"`
-	MaxNodes    int                    `json:"max_nodes"`
-	CreatedAt   time.Time              `json:"created_at"`
-	Deadline    time.Time              `json:"deadline,omitempty"`
-	Status      TaskStatus             `json:"status"`
-	AssignedTo  string                 `json:"assigned_to,omitempty"`
-	Result      map[string]interface{} `json:"result,omitempty"`
-	Error       string                 `json:"error,omitempty"`
+	ID           string                 `json:"id"`
+	Type         string                 `json:"type"`
+	Payload      map[string]interface{} `json:"payload"`
+	Priority     int                    `json:"priority"`
+	Sharding     ShardingStrategy       `json:"sharding"`
+	Dependencies []string               `json:"dependencies"`
+	MaxNodes     int                    `json:"max_nodes"`
+	CreatedAt    time.Time              `json:"created_at"`
+	Deadline     time.Time              `json:"deadline,omitempty"`
+	Status       TaskStatus             `json:"status"`
+	AssignedTo   string                 `json:"assigned_to,omitempty"`
+	Result       map[string]interface{} `json:"result,omitempty"`
+	Error        string                 `json:"error,omitempty"`
 }
 
 // TaskStatus represents the status of a distributed task
 type TaskStatus string
 
 const (
-	TaskStatusPending    TaskStatus = "pending"
-	TaskStatusAssigned   TaskStatus = "assigned"
-	TaskStatusRunning    TaskStatus = "running"
-	TaskStatusCompleted  TaskStatus = "completed"
-	TaskStatusFailed     TaskStatus = "failed"
-	TaskStatusCancelled  TaskStatus = "cancelled"
+	TaskStatusPending   TaskStatus = "pending"
+	TaskStatusAssigned  TaskStatus = "assigned"
+	TaskStatusRunning   TaskStatus = "running"
+	TaskStatusCompleted TaskStatus = "completed"
+	TaskStatusFailed    TaskStatus = "failed"
+	TaskStatusCancelled TaskStatus = "cancelled"
 )
 
 // ShardingStrategy defines how tasks should be distributed
 type ShardingStrategy string
 
 const (
-	ShardingNone     ShardingStrategy = "none"      // No sharding, run on single node
+	ShardingNone       ShardingStrategy = "none"        // No sharding, run on single node
 	ShardingRoundRobin ShardingStrategy = "round_robin" // Distribute evenly
-	ShardingCapability ShardingStrategy = "capability" // Based on node capabilities
-	ShardingLoad       ShardingStrategy = "load"       // Based on current load
+	ShardingCapability ShardingStrategy = "capability"  // Based on node capabilities
+	ShardingLoad       ShardingStrategy = "load"        // Based on current load
 )
 
 // LeaderElection manages leader election for the cluster
 type LeaderElection struct {
-	nodeID       string
-	redisClient  *redis.Client
-	logger       logging.Logger
-	isLeader     bool
-	leaderTerm   int64
-	mutex        sync.RWMutex
-	ctx          context.Context
-	cancel       context.CancelFunc
+	nodeID      string
+	redisClient *redis.Client
+	logger      logging.Logger
+	isLeader    bool
+	leaderTerm  int64
+	mutex       sync.RWMutex
+	ctx         context.Context
+	cancel      context.CancelFunc
 }
 
 // Coordinator manages distributed task coordination
 type Coordinator struct {
-	nodeID          string
-	clusterManager  *cluster.ClusterManager
-	remoteAgent     *agent.RemoteAgent
-	workerPool      *worker.WorkerPool
-	redisClient     *redis.Client
-	logger          logging.Logger
-	leaderElection  *LeaderElection
-	pendingTasks    map[string]*DistributedTask
-	runningTasks    map[string]*DistributedTask
-	taskHandlers    map[string]TaskHandler
-	mutex           sync.RWMutex
-	ctx             context.Context
-	cancel          context.CancelFunc
+	nodeID         string
+	clusterManager *cluster.ClusterManager
+	remoteAgent    *agent.RemoteAgent
+	workerPool     *worker.WorkerPool
+	redisClient    *redis.Client
+	logger         logging.Logger
+	leaderElection *LeaderElection
+	pendingTasks   map[string]*DistributedTask
+	runningTasks   map[string]*DistributedTask
+	taskHandlers   map[string]TaskHandler
+	mutex          sync.RWMutex
+	ctx            context.Context
+	cancel         context.CancelFunc
 }
 
 // TaskHandler defines the interface for handling distributed tasks
@@ -101,18 +101,18 @@ func NewCoordinator(
 	ctx, cancel := context.WithCancel(context.Background())
 
 	return &Coordinator{
-		nodeID:          nodeID,
-		clusterManager:  clusterManager,
-		remoteAgent:     remoteAgent,
-		workerPool:      workerPool,
-		redisClient:     redisClient,
-		logger:          logger,
-		leaderElection:  NewLeaderElection(nodeID, redisClient, logger),
-		pendingTasks:    make(map[string]*DistributedTask),
-		runningTasks:    make(map[string]*DistributedTask),
-		taskHandlers:    make(map[string]TaskHandler),
-		ctx:             ctx,
-		cancel:          cancel,
+		nodeID:         nodeID,
+		clusterManager: clusterManager,
+		remoteAgent:    remoteAgent,
+		workerPool:     workerPool,
+		redisClient:    redisClient,
+		logger:         logger,
+		leaderElection: NewLeaderElection(nodeID, redisClient, logger),
+		pendingTasks:   make(map[string]*DistributedTask),
+		runningTasks:   make(map[string]*DistributedTask),
+		taskHandlers:   make(map[string]TaskHandler),
+		ctx:            ctx,
+		cancel:         cancel,
 	}
 }
 
@@ -390,7 +390,7 @@ func (c *Coordinator) updateTaskInRedis(task *DistributedTask) error {
 func (c *Coordinator) selectRoundRobinNode(nodes []*cluster.NodeInfo, requiredCapabilities []string) *cluster.NodeInfo {
 	// Simple round-robin based on current time
 	index := int(time.Now().Unix()) % len(nodes)
-	
+
 	for i := 0; i < len(nodes); i++ {
 		node := nodes[(index+i)%len(nodes)]
 		if c.clusterManager.FindBestNode(requiredCapabilities) != nil {
@@ -555,10 +555,10 @@ func (le *LeaderElection) leaderElectionLoop() {
 // attemptLeadership attempts to become the leader
 func (le *LeaderElection) attemptLeadership() {
 	key := "coordination:leader"
-	
+
 	// Try to set leader key with expiration
 	result := le.redisClient.SetNX(le.ctx, key, le.nodeID, 15*time.Second)
-	
+
 	if result.Err() != nil {
 		le.logger.Error("Failed to attempt leadership", logging.F("error", result.Err().Error()))
 		return

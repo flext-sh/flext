@@ -30,7 +30,7 @@ func TestListPipelinesUseCase_Execute_Success(t *testing.T) {
 	// Create test pipelines
 	pipeline1, _ := entities.NewPipeline("Pipeline 1", "Description 1")
 	pipeline2, _ := entities.NewPipeline("Pipeline 2", "Description 2")
-	
+
 	// Add steps to pipeline1
 	step1, _ := entities.NewPipelineStep("Step 1", uuid.New())
 	pipeline1.AddStep(*step1)

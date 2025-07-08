@@ -17,76 +17,76 @@ import (
 
 // WMSAuthenticator handles authentication with Oracle WMS API
 type WMSAuthenticator struct {
-	baseURL      string
-	username     string
-	password     string
-	apiVersion   string
-	httpClient   *http.Client
-	
+	baseURL    string
+	username   string
+	password   string
+	apiVersion string
+	httpClient *http.Client
+
 	// Token management
-	accessToken    string
-	refreshToken   string
-	tokenExpiry    time.Time
-	tokenMutex     sync.RWMutex
-	
+	accessToken  string
+	refreshToken string
+	tokenExpiry  time.Time
+	tokenMutex   sync.RWMutex
+
 	// Authentication type
-	authType       AuthType
-	
+	authType AuthType
+
 	// Session management
-	sessionID      string
-	sessionExpiry  time.Time
-	
+	sessionID     string
+	sessionExpiry time.Time
+
 	// Configuration
-	config         AuthConfig
+	config AuthConfig
 }
 
 // AuthType defines the authentication method
 type AuthType string
 
 const (
-	AuthTypeBasic        AuthType = "basic"
-	AuthTypeBearer       AuthType = "bearer"
-	AuthTypeOAuth2       AuthType = "oauth2"
-	AuthTypeSession      AuthType = "session"
-	AuthTypeAPIKey       AuthType = "apikey"
-	AuthTypeCustom       AuthType = "custom"
+	AuthTypeBasic   AuthType = "basic"
+	AuthTypeBearer  AuthType = "bearer"
+	AuthTypeOAuth2  AuthType = "oauth2"
+	AuthTypeSession AuthType = "session"
+	AuthTypeAPIKey  AuthType = "apikey"
+	AuthTypeCustom  AuthType = "custom"
 )
 
 // AuthConfig configures authentication behavior
 type AuthConfig struct {
 	// Auth method configuration
-	AuthType           AuthType      `json:"auth_type"`
-	TokenEndpoint      string        `json:"token_endpoint"`
-	RefreshEndpoint    string        `json:"refresh_endpoint"`
-	SessionEndpoint    string        `json:"session_endpoint"`
-	
+	AuthType        AuthType `json:"auth_type"`
+	TokenEndpoint   string   `json:"token_endpoint"`
+	RefreshEndpoint string   `json:"refresh_endpoint"`
+	SessionEndpoint string   `json:"session_endpoint"`
+
 	// OAuth2 specific
-	ClientID           string        `json:"client_id"`
-	ClientSecret       string        `json:"client_secret"`
-	Scope              string        `json:"scope"`
-	
+	ClientID     string `json:"client_id"`
+	ClientSecret string `json:"client_secret"`
+	Scope        string `json:"scope"`
+
 	// API Key specific
-	APIKey             string        `json:"api_key"`
-	APIKeyHeader       string        `json:"api_key_header"`
-	APIKeyParam        string        `json:"api_key_param"`
-	
+	APIKey       string `json:"api_key"`
+	APIKeyHeader string `json:"api_key_header"`
+	APIKeyParam  string `json:"api_key_param"`
+
 	// Token management
 	TokenRefreshBuffer time.Duration `json:"token_refresh_buffer"`
 	MaxRetries         int           `json:"max_retries"`
 	RetryDelay         time.Duration `json:"retry_delay"`
-	
+
 	// TLS configuration
-	SkipTLSVerify      bool          `json:"skip_tls_verify"`
-	CertFile           string        `json:"cert_file"`
-	KeyFile            string        `json:"key_file"`
-	CAFile             string        `json:"ca_file"`
-	
+	SkipTLSVerify bool   `json:"skip_tls_verify"`
+	CertFile      string `json:"cert_file"`
+	KeyFile       string `json:"key_file"`
+	CAFile        string `json:"ca_file"`
+
 	// Custom headers
-	CustomHeaders      map[string]string `json:"custom_headers"`
-	
+	CustomHeaders map[string]string `json:"custom_headers"`
+
 	// Timeout settings
-	ConnectTimeout     time.Duration `json:"connect_timeout"`
-	RequestTimeout     time.Duration `json:"request_timeout"`
+	ConnectTimeout time.Duration `json:"connect_timeout"`
+	RequestTimeout time.Duration `json:"request_timeout"`
 }
 
 // AuthResponse represents authentication response from Oracle WMS
@@ -96,13 +96,13 @@ type AuthResponse struct {
 	TokenType    string `json:"token_type"`
 	ExpiresIn    int    `json:"expires_in"`
 	Scope        string `json:"scope"`
-	
+
 	// Session-based auth
 	SessionID    string `json:"session_id"`
 	SessionToken string `json:"session_token"`
-	
+
 	// Custom fields
-	Custom       map[string]interface{} `json:"custom,omitempty"`
+	Custom map[string]interface{} `json:"custom,omitempty"`
 }
 
 // NewWMSAuthenticator creates a new authenticator
@@ -284,7 +284,7 @@ func (a *WMSAuthenticator) authenticateOAuth2(ctx context.Context) error {
 	data.Set("grant_type", "client_credentials")
 	data.Set("username", a.username)
 	data.Set("password", a.password)
-	
+
 	if a.config.ClientID != "" {
 		data.Set("client_id", a.config.ClientID)
 	}
@@ -380,7 +380,7 @@ func (a *WMSAuthenticator) authenticateSession(ctx context.Context) error {
 	if a.sessionID == "" {
 		a.sessionID = authResp.SessionToken
 	}
-	
+
 	// Oracle WMS sessions typically expire after 24 hours
 	a.sessionExpiry = time.Now().Add(24 * time.Hour)
 
@@ -416,7 +416,7 @@ func (a *WMSAuthenticator) refreshOAuth2Token(ctx context.Context) error {
 	data := url.Values{}
 	data.Set("grant_type", "refresh_token")
 	data.Set("refresh_token", a.refreshToken)
-	
+
 	if a.config.ClientID != "" {
 		data.Set("client_id", a.config.ClientID)
 	}
@@ -548,36 +548,36 @@ func (a *WMSAuthenticator) MakeAuthenticatedRequest(ctx context.Context, method,
 
 	for attempt := 0; attempt <= a.config.MaxRetries; attempt++ {
 		resp, lastErr = a.httpClient.Do(req)
-		
+
 		if lastErr == nil {
 			// Check for authentication errors
 			if resp.StatusCode == http.StatusUnauthorized || resp.StatusCode == http.StatusForbidden {
 				resp.Body.Close()
-				
+
 				// Try to re-authenticate on first auth error
 				if attempt == 0 {
 					if authErr := a.Authenticate(ctx); authErr != nil {
 						lastErr = fmt.Errorf("re-authentication failed: %w", authErr)
 						continue
 					}
-					
+
 					// Update headers with new auth
 					newHeaders, headerErr := a.GetAuthHeaders()
 					if headerErr != nil {
 						lastErr = fmt.Errorf("failed to get updated auth headers: %w", headerErr)
 						continue
 					}
-					
+
 					for key, value := range newHeaders {
 						req.Header.Set(key, value)
 					}
 					continue
 				}
-				
+
 				lastErr = fmt.Errorf("authentication failed with status %d", resp.StatusCode)
 				continue
 			}
-			
+
 			// Success or non-auth error
 			return resp, nil
 		}
@@ -605,14 +605,14 @@ func (a *WMSAuthenticator) Logout(ctx context.Context) error {
 	case AuthTypeSession:
 		if a.sessionID != "" {
 			logoutURL := a.baseURL + "/wms/lgfapi/" + a.apiVersion + "/session/" + a.sessionID
-			
+
 			req, err := http.NewRequestWithContext(ctx, "DELETE", logoutURL, nil)
 			if err != nil {
 				return fmt.Errorf("failed to create logout request: %w", err)
 			}
-			
+
 			req.Header.Set("X-Session-ID", a.sessionID)
-			
+
 			resp, err := a.httpClient.Do(req)
 			if err != nil {
 				return fmt.Errorf("logout request failed: %w", err)

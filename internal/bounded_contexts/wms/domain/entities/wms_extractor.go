@@ -868,7 +868,7 @@ func (e *WMSExtractor) processExtractionPages(paginator *pagination.WMSPaginator
 		}
 
 		e.updateExtractionProgress(pageResponse, currentPage)
-		
+
 		if e.shouldSaveCheckpoint(&checkpointCounter, checkpointInterval) {
 			e.performCheckpoint()
 		}

@@ -13,12 +13,12 @@ import (
 
 // WMSQueryBuilder provides advanced query building for Oracle WMS APIs
 type WMSQueryBuilder struct {
-	entity    *entities.WMSEntity
-	filters   map[string]interface{}
-	ordering  []OrderClause
+	entity     *entities.WMSEntity
+	filters    map[string]interface{}
+	ordering   []OrderClause
 	pagination PaginationClause
-	fields    []string
-	joins     []JoinClause
+	fields     []string
+	joins      []JoinClause
 }
 
 // OrderClause represents an ordering specification
@@ -30,37 +30,36 @@ type OrderClause struct {
 
 // PaginationClause represents pagination parameters
 type PaginationClause struct {
-	Mode       string      `json:"mode"`        // "cursor", "offset", "page"
-	Limit      int         `json:"limit"`
-	Offset     int64       `json:"offset"`
-	Cursor     string      `json:"cursor"`
-	Page       int         `json:"page"`
-	PageSize   int         `json:"page_size"`
+	Mode     string `json:"mode"` // "cursor", "offset", "page"
+	Limit    int    `json:"limit"`
+	Offset   int64  `json:"offset"`
+	Cursor   string `json:"cursor"`
+	Page     int    `json:"page"`
+	PageSize int    `json:"page_size"`
 }
 
 // JoinClause represents a join with another entity
 type JoinClause struct {
 	Entity    string `json:"entity"`
-	Type      string `json:"type"`      // "inner", "left", "right"
+	Type      string `json:"type"` // "inner", "left", "right"
 	Condition string `json:"condition"`
 	Alias     string `json:"alias"`
 }
 
-
 // FilterCondition represents a single filter condition
 type FilterCondition struct {
-	Field    string          `json:"field"`
-	Operator value_objects.FilterOperator  `json:"operator"`
-	Value    interface{}     `json:"value"`
-	Values   []interface{}   `json:"values,omitempty"`  // For IN, NOT_IN operators
-	
+	Field    string                       `json:"field"`
+	Operator value_objects.FilterOperator `json:"operator"`
+	Value    interface{}                  `json:"value"`
+	Values   []interface{}                `json:"values,omitempty"` // For IN, NOT_IN operators
+
 	// Date range specific
-	StartDate *time.Time     `json:"start_date,omitempty"`
-	EndDate   *time.Time     `json:"end_date,omitempty"`
-	
+	StartDate *time.Time `json:"start_date,omitempty"`
+	EndDate   *time.Time `json:"end_date,omitempty"`
+
 	// Advanced options
-	CaseSensitive bool       `json:"case_sensitive"`
-	Negate        bool       `json:"negate"`
+	CaseSensitive bool `json:"case_sensitive"`
+	Negate        bool `json:"negate"`
 }
 
 // LogicalOperator defines how conditions are combined
@@ -82,11 +81,11 @@ type FilterGroup struct {
 // NewWMSQueryBuilder creates a new query builder for an entity
 func NewWMSQueryBuilder(entity *entities.WMSEntity) entities.QueryBuilder {
 	return &WMSQueryBuilder{
-		entity:  entity,
-		filters: make(map[string]interface{}),
+		entity:   entity,
+		filters:  make(map[string]interface{}),
 		ordering: []OrderClause{},
-		fields:  []string{},
-		joins:   []JoinClause{},
+		fields:   []string{},
+		joins:    []JoinClause{},
 	}
 }
 
@@ -130,7 +129,7 @@ func (qb *WMSQueryBuilder) Where(field string, operator value_objects.FilterOper
 			qb.filters[field+"__lte"] = values[1]
 		}
 	}
-	
+
 	return qb
 }
 
@@ -146,14 +145,14 @@ func (qb *WMSQueryBuilder) WhereGroup(group FilterGroup) entities.QueryBuilder {
 	for _, condition := range group.Conditions {
 		qb.WhereAdvanced(condition)
 	}
-	
+
 	return qb
 }
 
 // WhereDate adds date-based filtering
 func (qb *WMSQueryBuilder) WhereDate(field string, operator value_objects.FilterOperator, date time.Time) entities.QueryBuilder {
 	dateStr := date.Format("2006-01-02T15:04:05Z")
-	
+
 	switch operator {
 	case value_objects.OpDateBefore:
 		return qb.Where(field, value_objects.OpLessThan, dateStr)
@@ -181,7 +180,7 @@ func (qb *WMSQueryBuilder) WhereIncremental(replicationKey string, bookmark inte
 	if bookmark == nil {
 		return qb
 	}
-	
+
 	// Handle different bookmark types
 	switch v := bookmark.(type) {
 	case time.Time:
@@ -201,7 +200,7 @@ func (qb *WMSQueryBuilder) WhereIncremental(replicationKey string, bookmark inte
 		// Numeric or other types
 		qb.filters[replicationKey+"__gt"] = v
 	}
-	
+
 	return qb
 }
 
@@ -272,17 +271,17 @@ func (qb *WMSQueryBuilder) Join(entity, joinType, condition string) entities.Que
 // Build converts the query to URL parameters for Oracle WMS API
 func (qb *WMSQueryBuilder) Build() (string, error) {
 	params := url.Values{}
-	
+
 	// Add filters
 	for key, value := range qb.filters {
 		params.Set(key, fmt.Sprintf("%v", value))
 	}
-	
+
 	// Add field selection
 	if len(qb.fields) > 0 {
 		params.Set("fields", strings.Join(qb.fields, ","))
 	}
-	
+
 	// Add ordering
 	if len(qb.ordering) > 0 {
 		var orderFields []string
@@ -295,7 +294,7 @@ func (qb *WMSQueryBuilder) Build() (string, error) {
 		}
 		params.Set("ordering", strings.Join(orderFields, ","))
 	}
-	
+
 	// Add pagination
 	switch qb.pagination.Mode {
 	case "offset":
@@ -320,7 +319,7 @@ func (qb *WMSQueryBuilder) Build() (string, error) {
 			params.Set("page_size", strconv.Itoa(qb.pagination.Limit))
 		}
 	}
-	
+
 	return params.Encode(), nil
 }
 
@@ -330,16 +329,16 @@ func (qb *WMSQueryBuilder) BuildURL(baseURL string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	
+
 	if queryString == "" {
 		return baseURL, nil
 	}
-	
+
 	separator := "?"
 	if strings.Contains(baseURL, "?") {
 		separator = "&"
 	}
-	
+
 	return baseURL + separator + queryString, nil
 }
 
@@ -354,8 +353,8 @@ func (qb *WMSQueryBuilder) GetOrdering() []interface{} {
 	result := make([]interface{}, len(qb.ordering))
 	for i, order := range qb.ordering {
 		result[i] = map[string]interface{}{
-			"field":     order.Field,
-			"direction": order.Direction,
+			"field":      order.Field,
+			"direction":  order.Direction,
 			"nulls_last": order.NullsLast,
 		}
 	}
@@ -372,17 +371,17 @@ func (qb *WMSQueryBuilder) Clone() entities.QueryBuilder {
 		fields:     make([]string, len(qb.fields)),
 		joins:      make([]JoinClause, len(qb.joins)),
 	}
-	
+
 	// Deep copy filters
 	for k, v := range qb.filters {
 		clone.filters[k] = v
 	}
-	
+
 	// Copy slices
 	copy(clone.ordering, qb.ordering)
 	copy(clone.fields, qb.fields)
 	copy(clone.joins, qb.joins)
-	
+
 	return clone
 }
 
@@ -405,31 +404,31 @@ func (qb *WMSQueryBuilder) Validate() error {
 		if !qb.fieldExists(fieldName) {
 			return fmt.Errorf("field %s does not exist in entity %s", fieldName, qb.entity.Name)
 		}
-		
+
 		// Check if field supports filtering
 		if !qb.fieldSupportsFiltering(fieldName) {
 			return fmt.Errorf("field %s does not support filtering", fieldName)
 		}
 	}
-	
+
 	// Check ordering fields
 	for _, order := range qb.ordering {
 		if !qb.fieldExists(order.Field) {
 			return fmt.Errorf("ordering field %s does not exist in entity %s", order.Field, qb.entity.Name)
 		}
-		
+
 		if !qb.fieldSupportsSorting(order.Field) {
 			return fmt.Errorf("field %s does not support sorting", order.Field)
 		}
 	}
-	
+
 	// Check selected fields
 	for _, field := range qb.fields {
 		if !qb.fieldExists(field) {
 			return fmt.Errorf("selected field %s does not exist in entity %s", field, qb.entity.Name)
 		}
 	}
-	
+
 	return nil
 }
 
@@ -437,15 +436,15 @@ func (qb *WMSQueryBuilder) Validate() error {
 
 func (qb *WMSQueryBuilder) extractFieldName(filterKey string) string {
 	// Remove common filter operators
-	suffixes := []string{"__ne", "__gt", "__gte", "__lt", "__lte", "__like", "__ilike", 
+	suffixes := []string{"__ne", "__gt", "__gte", "__lt", "__lte", "__like", "__ilike",
 		"__startswith", "__endswith", "__contains", "__in", "__not_in", "__isnull"}
-	
+
 	for _, suffix := range suffixes {
 		if strings.HasSuffix(filterKey, suffix) {
 			return strings.TrimSuffix(filterKey, suffix)
 		}
 	}
-	
+
 	return filterKey
 }
 
@@ -454,13 +453,13 @@ func (qb *WMSQueryBuilder) fieldExists(fieldName string) bool {
 		// If no field metadata available, assume field exists
 		return true
 	}
-	
+
 	for _, field := range qb.entity.Fields {
 		if field.Name == fieldName {
 			return true
 		}
 	}
-	
+
 	return false
 }
 
@@ -469,13 +468,13 @@ func (qb *WMSQueryBuilder) fieldSupportsFiltering(fieldName string) bool {
 		// If no field metadata available, assume filtering is supported
 		return true
 	}
-	
+
 	for _, field := range qb.entity.Fields {
 		if field.Name == fieldName {
 			return field.IsFilterable
 		}
 	}
-	
+
 	return false
 }
 
@@ -484,13 +483,13 @@ func (qb *WMSQueryBuilder) fieldSupportsSorting(fieldName string) bool {
 		// If no field metadata available, assume sorting is supported
 		return true
 	}
-	
+
 	for _, field := range qb.entity.Fields {
 		if field.Name == fieldName {
 			return field.IsSortable
 		}
 	}
-	
+
 	return false
 }
 
@@ -499,21 +498,21 @@ func (qb *WMSQueryBuilder) fieldSupportsSorting(fieldName string) bool {
 // NewIncrementalQuery creates a query builder configured for incremental extraction
 func NewIncrementalQuery(entity *entities.WMSEntity, replicationKey string, bookmark interface{}) entities.QueryBuilder {
 	qb := NewWMSQueryBuilder(entity)
-	
+
 	if bookmark != nil {
 		qb.WhereIncremental(replicationKey, bookmark, 5*time.Minute) // 5 minute safety overlap
 	}
-	
+
 	// Order by replication key for consistent ordering
 	qb.OrderByAsc(replicationKey)
-	
+
 	return qb
 }
 
 // NewFullSyncQuery creates a query builder configured for full synchronization
 func NewFullSyncQuery(entity *entities.WMSEntity, resumeContext map[string]interface{}) entities.QueryBuilder {
 	qb := NewWMSQueryBuilder(entity)
-	
+
 	// Apply resume context if provided
 	if minID, exists := resumeContext["min_id_in_target"]; exists {
 		qb.Where("id", value_objects.OpLessThan, minID)
@@ -521,7 +520,7 @@ func NewFullSyncQuery(entity *entities.WMSEntity, resumeContext map[string]inter
 	} else {
 		qb.OrderByAsc("id") // Default ascending order
 	}
-	
+
 	return qb
 }
 
@@ -545,4 +544,3 @@ func NewWMSQueryBuilderFactory() *WMSQueryBuilderFactory {
 func (f *WMSQueryBuilderFactory) CreateQueryBuilder(entity *entities.WMSEntity) entities.QueryBuilder {
 	return NewWMSQueryBuilder(entity)
 }
-

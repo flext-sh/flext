@@ -9,9 +9,9 @@ import (
 type PluginType string
 
 const (
-	PluginTypeSource      PluginType = "source"
-	PluginTypeDestination PluginType = "destination"
-	PluginTypeTransform   PluginType = "transform"
+	PluginTypeSource       PluginType = "source"
+	PluginTypeDestination  PluginType = "destination"
+	PluginTypeTransform    PluginType = "transform"
 	PluginTypeOrchestrator PluginType = "orchestrator"
 )
 
@@ -27,12 +27,12 @@ const (
 
 // Business errors
 var (
-	ErrEmptyName         = errors.New("plugin name cannot be empty")
-	ErrInvalidType       = errors.New("invalid plugin type")
-	ErrInvalidVersion    = errors.New("invalid plugin version")
-	ErrAlreadyActive     = errors.New("plugin is already active")
-	ErrAlreadyInactive   = errors.New("plugin is already inactive")
-	ErrCannotActivate    = errors.New("plugin cannot be activated in current state")
+	ErrEmptyName       = errors.New("plugin name cannot be empty")
+	ErrInvalidType     = errors.New("invalid plugin type")
+	ErrInvalidVersion  = errors.New("invalid plugin version")
+	ErrAlreadyActive   = errors.New("plugin is already active")
+	ErrAlreadyInactive = errors.New("plugin is already inactive")
+	ErrCannotActivate  = errors.New("plugin cannot be activated in current state")
 )
 
 // Plugin represents a plugin entity
@@ -174,12 +174,12 @@ func (p *Plugin) CanExecute() error {
 
 // Getters
 
-func (p *Plugin) ID() uuid.UUID             { return p.id }
-func (p *Plugin) Name() string              { return p.name }
-func (p *Plugin) Type() PluginType          { return p.pluginType }
-func (p *Plugin) Version() string           { return p.version }
-func (p *Plugin) Status() PluginStatus      { return p.status }
-func (p *Plugin) Capabilities() []string    { return append([]string{}, p.capabilities...) }
+func (p *Plugin) ID() uuid.UUID                { return p.id }
+func (p *Plugin) Name() string                 { return p.name }
+func (p *Plugin) Type() PluginType             { return p.pluginType }
+func (p *Plugin) Version() string              { return p.version }
+func (p *Plugin) Status() PluginStatus         { return p.status }
+func (p *Plugin) Capabilities() []string       { return append([]string{}, p.capabilities...) }
 func (p *Plugin) Configuration() Configuration { return p.config.Clone() }
 
 // Validation functions

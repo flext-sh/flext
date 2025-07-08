@@ -9,21 +9,21 @@ import (
 
 // GormPipeline GORM model for pipelines with advanced features
 type GormPipeline struct {
-	ID          uuid.UUID  `gorm:"type:uuid;primary_key;default:gen_random_uuid()" json:"id"`
-	Name        string     `gorm:"uniqueIndex;not null" json:"name"`
-	Description string     `gorm:"type:text" json:"description"`
-	Status      string     `gorm:"not null;default:'draft'" json:"status"`
-	Tags        []string   `gorm:"type:text[]" json:"tags"`
-	Metadata    string     `gorm:"type:jsonb" json:"metadata"`
-	CreatedAt   time.Time  `gorm:"autoCreateTime" json:"created_at"`
-	UpdatedAt   time.Time  `gorm:"autoUpdateTime" json:"updated_at"`
+	ID          uuid.UUID      `gorm:"type:uuid;primary_key;default:gen_random_uuid()" json:"id"`
+	Name        string         `gorm:"uniqueIndex;not null" json:"name"`
+	Description string         `gorm:"type:text" json:"description"`
+	Status      string         `gorm:"not null;default:'draft'" json:"status"`
+	Tags        []string       `gorm:"type:text[]" json:"tags"`
+	Metadata    string         `gorm:"type:jsonb" json:"metadata"`
+	CreatedAt   time.Time      `gorm:"autoCreateTime" json:"created_at"`
+	UpdatedAt   time.Time      `gorm:"autoUpdateTime" json:"updated_at"`
 	DeletedAt   gorm.DeletedAt `gorm:"index" json:"deleted_at,omitempty"`
-	CreatedBy   string     `gorm:"not null" json:"created_by"`
-	Version     int        `gorm:"default:1" json:"version"`
-	
+	CreatedBy   string         `gorm:"not null" json:"created_by"`
+	Version     int            `gorm:"default:1" json:"version"`
+
 	// Relationships
-	Steps       []GormPipelineStep `gorm:"foreignKey:PipelineID;constraint:OnDelete:CASCADE" json:"steps,omitempty"`
-	Executions  []GormExecution    `gorm:"foreignKey:PipelineID;constraint:OnDelete:CASCADE" json:"executions,omitempty"`
+	Steps      []GormPipelineStep `gorm:"foreignKey:PipelineID;constraint:OnDelete:CASCADE" json:"steps,omitempty"`
+	Executions []GormExecution    `gorm:"foreignKey:PipelineID;constraint:OnDelete:CASCADE" json:"executions,omitempty"`
 }
 
 // GormPipelineStep GORM model for pipeline steps
@@ -37,9 +37,9 @@ type GormPipelineStep struct {
 	Dependencies []string  `gorm:"type:text[]" json:"dependencies"`
 	CreatedAt    time.Time `gorm:"autoCreateTime" json:"created_at"`
 	UpdatedAt    time.Time `gorm:"autoUpdateTime" json:"updated_at"`
-	
+
 	// Relationship
-	Pipeline     GormPipeline `gorm:"constraint:OnDelete:CASCADE" json:"-"`
+	Pipeline GormPipeline `gorm:"constraint:OnDelete:CASCADE" json:"-"`
 }
 
 // GormExecution GORM model for pipeline executions
@@ -53,22 +53,22 @@ type GormExecution struct {
 	Metadata   string     `gorm:"type:jsonb" json:"metadata"`
 	CreatedAt  time.Time  `gorm:"autoCreateTime" json:"created_at"`
 	UpdatedAt  time.Time  `gorm:"autoUpdateTime" json:"updated_at"`
-	
+
 	// Relationship
-	Pipeline   GormPipeline `gorm:"constraint:OnDelete:CASCADE" json:"-"`
+	Pipeline GormPipeline `gorm:"constraint:OnDelete:CASCADE" json:"-"`
 }
 
 // GormPlugin GORM model for plugins
 type GormPlugin struct {
-	ID          uuid.UUID `gorm:"type:uuid;primary_key;default:gen_random_uuid()" json:"id"`
-	Name        string    `gorm:"uniqueIndex;not null" json:"name"`
-	Version     string    `gorm:"not null" json:"version"`
-	Type        string    `gorm:"not null" json:"type"`
-	Description string    `gorm:"type:text" json:"description"`
-	Config      string    `gorm:"type:jsonb" json:"config"`
-	Enabled     bool      `gorm:"default:true" json:"enabled"`
-	CreatedAt   time.Time `gorm:"autoCreateTime" json:"created_at"`
-	UpdatedAt   time.Time `gorm:"autoUpdateTime" json:"updated_at"`
+	ID          uuid.UUID      `gorm:"type:uuid;primary_key;default:gen_random_uuid()" json:"id"`
+	Name        string         `gorm:"uniqueIndex;not null" json:"name"`
+	Version     string         `gorm:"not null" json:"version"`
+	Type        string         `gorm:"not null" json:"type"`
+	Description string         `gorm:"type:text" json:"description"`
+	Config      string         `gorm:"type:jsonb" json:"config"`
+	Enabled     bool           `gorm:"default:true" json:"enabled"`
+	CreatedAt   time.Time      `gorm:"autoCreateTime" json:"created_at"`
+	UpdatedAt   time.Time      `gorm:"autoUpdateTime" json:"updated_at"`
 	DeletedAt   gorm.DeletedAt `gorm:"index" json:"deleted_at,omitempty"`
 }
 

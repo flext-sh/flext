@@ -15,16 +15,16 @@ import (
 // UnifiedRepository provides a unified repository implementation
 type UnifiedRepository[T Entity] struct {
 	*BaseRepository[T]
-	store       map[uuid.UUID]T
-	mu          sync.RWMutex
-	cache       map[uuid.UUID]CacheEntry[T]
-	cacheMu     sync.RWMutex
-	cacheTTL    time.Duration
-	auditTrail  []AuditEntry
-	auditMu     sync.RWMutex
-	entityName  string
-	config      RepositoryConfig
-	logger      logging.Logger
+	store      map[uuid.UUID]T
+	mu         sync.RWMutex
+	cache      map[uuid.UUID]CacheEntry[T]
+	cacheMu    sync.RWMutex
+	cacheTTL   time.Duration
+	auditTrail []AuditEntry
+	auditMu    sync.RWMutex
+	entityName string
+	config     RepositoryConfig
+	logger     logging.Logger
 }
 
 // CacheEntry represents a cached entity with expiration
@@ -36,21 +36,21 @@ type CacheEntry[T Entity] struct {
 // NewUnifiedRepository creates a new unified repository
 func NewUnifiedRepository[T Entity](db *gorm.DB, entityName string, config RepositoryConfig, logger logging.Logger) *UnifiedRepository[T] {
 	return &UnifiedRepository[T]{
-		BaseRepository:    NewBaseRepository[T](db),
-		store:             make(map[uuid.UUID]T),
-		cache:             make(map[uuid.UUID]CacheEntry[T]),
-		cacheTTL:          config.CacheTTL,
-		auditTrail:        make([]AuditEntry, 0),
-		entityName:        entityName,
-		config:            config,
-		logger:            logger,
+		BaseRepository: NewBaseRepository[T](db),
+		store:          make(map[uuid.UUID]T),
+		cache:          make(map[uuid.UUID]CacheEntry[T]),
+		cacheTTL:       config.CacheTTL,
+		auditTrail:     make([]AuditEntry, 0),
+		entityName:     entityName,
+		config:         config,
+		logger:         logger,
 	}
 }
 
 // Create creates a new entity
 func (r *UnifiedRepository[T]) Create(ctx context.Context, entity T) (T, error) {
 	startTime := time.Now()
-	
+
 	if err := r.validateEntity(ctx, entity); err != nil {
 		r.recordOperation("create", startTime, err)
 		return entity, err
@@ -84,7 +84,7 @@ func (r *UnifiedRepository[T]) Create(ctx context.Context, entity T) (T, error) 
 
 	r.logOperation(ctx, "create", id)
 	r.recordOperation("create", startTime, nil)
-	
+
 	return entity, nil
 }
 
@@ -92,7 +92,7 @@ func (r *UnifiedRepository[T]) Create(ctx context.Context, entity T) (T, error) 
 func (r *UnifiedRepository[T]) CreateBatch(ctx context.Context, entities []T) ([]T, error) {
 	startTime := time.Now()
 	created := make([]T, 0, len(entities))
-	
+
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
@@ -152,7 +152,7 @@ func (r *UnifiedRepository[T]) GetByID(ctx context.Context, id uuid.UUID) (T, er
 
 	r.logOperation(ctx, "get_by_id", id)
 	r.recordOperation("get_by_id", startTime, nil)
-	
+
 	return entity, nil
 }
 
@@ -186,7 +186,7 @@ func (r *UnifiedRepository[T]) List(ctx context.Context, criteria ListCriteria) 
 
 	r.logListOperation(ctx, total, len(paginatedEntities), criteria)
 	r.recordOperation("list", startTime, nil)
-	
+
 	return paginatedEntities, total, nil
 }
 
@@ -230,7 +230,7 @@ func (r *UnifiedRepository[T]) Update(ctx context.Context, entity T) (T, error) 
 
 	r.logOperation(ctx, "update", id)
 	r.recordOperation("update", startTime, nil)
-	
+
 	return entity, nil
 }
 
@@ -281,7 +281,7 @@ func (r *UnifiedRepository[T]) UpdatePartial(ctx context.Context, id uuid.UUID, 
 
 	r.logOperation(ctx, "update_partial", id, logging.F("updates", updates))
 	r.recordOperation("update_partial", startTime, nil)
-	
+
 	return updatedEntity, nil
 }
 
@@ -327,7 +327,7 @@ func (r *UnifiedRepository[T]) Delete(ctx context.Context, id uuid.UUID) error {
 
 	r.logOperation(ctx, "delete", id)
 	r.recordOperation("delete", startTime, nil)
-	
+
 	return nil
 }
 
@@ -350,7 +350,7 @@ func (r *UnifiedRepository[T]) Exists(ctx context.Context, id uuid.UUID) (bool, 
 	r.mu.RUnlock()
 
 	r.recordOperation("exists", startTime, nil)
-	
+
 	return exists, nil
 }
 
@@ -364,7 +364,7 @@ func (r *UnifiedRepository[T]) Count(ctx context.Context, criteria CountCriteria
 	count := len(filteredEntities)
 
 	r.recordOperation("count", startTime, nil)
-	
+
 	return count, nil
 }
 
@@ -372,7 +372,7 @@ func (r *UnifiedRepository[T]) Count(ctx context.Context, criteria CountCriteria
 
 func (r *UnifiedRepository[T]) getCachedEntity(id uuid.UUID) (T, bool) {
 	var zero T
-	
+
 	r.cacheMu.RLock()
 	defer r.cacheMu.RUnlock()
 
@@ -411,7 +411,7 @@ func (r *UnifiedRepository[T]) ClearCache(ctx context.Context) error {
 
 	r.cache = make(map[uuid.UUID]CacheEntry[T])
 	r.logger.Info("Cache cleared", logging.F("entity", r.entityName))
-	
+
 	return nil
 }
 
@@ -449,7 +449,7 @@ func (r *UnifiedRepository[T]) validateBatchEntities(ctx context.Context, entiti
 		if err := r.validateEntity(ctx, entity); err != nil {
 			return err
 		}
-		
+
 		id := entity.GetID()
 		if _, exists := r.store[id]; exists {
 			return &value_objects.DomainError{
@@ -464,7 +464,7 @@ func (r *UnifiedRepository[T]) validateBatchEntities(ctx context.Context, entiti
 
 func (r *UnifiedRepository[T]) createValidatedEntities(ctx context.Context, entities []T) []T {
 	created := make([]T, 0, len(entities))
-	
+
 	for _, entity := range entities {
 		id := entity.GetID()
 		r.store[id] = entity
@@ -480,7 +480,7 @@ func (r *UnifiedRepository[T]) createValidatedEntities(ctx context.Context, enti
 			r.recordAuditEntry(ctx, id, "create", map[string]interface{}{"created": true})
 		}
 	}
-	
+
 	return created
 }
 
@@ -497,7 +497,7 @@ func (r *UnifiedRepository[T]) logBatchOperation(operation string, count int) {
 func (r *UnifiedRepository[T]) getAllEntities() []T {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
-	
+
 	allEntities := make([]T, 0, len(r.store))
 	for _, entity := range r.store {
 		allEntities = append(allEntities, entity)
@@ -575,7 +575,6 @@ func (r *UnifiedRepository[T]) applyFilter(entity T, filter Filter) bool {
 	// In production, this would use reflection to access entity fields
 	return true
 }
-
 
 func (r *UnifiedRepository[T]) applyPagination(entities []T, criteria ListCriteria) []T {
 	if criteria.Limit <= 0 {
@@ -712,4 +711,3 @@ func (r *UnifiedRepository[T]) logOperation(ctx context.Context, operation strin
 		r.logger.Info("Repository operation", fields...)
 	}
 }
-

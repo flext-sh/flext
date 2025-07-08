@@ -41,8 +41,8 @@ func (r *PluginRepository) Save(ctx context.Context, plugin *Plugin) error {
 	if exists {
 		// Update existing plugin
 		query := `
-			UPDATE plugins 
-			SET name = ?, type = ?, version = ?, description = ?, author = ?, 
+			UPDATE plugins
+			SET name = ?, type = ?, version = ?, description = ?, author = ?,
 			    entry_point = ?, dependencies = ?, config_schema = ?, status = ?,
 			    updated_at = CURRENT_TIMESTAMP
 			WHERE id = ?
@@ -54,7 +54,7 @@ func (r *PluginRepository) Save(ctx context.Context, plugin *Plugin) error {
 	} else {
 		// Insert new plugin
 		query := `
-			INSERT INTO plugins (id, name, type, version, description, author, 
+			INSERT INTO plugins (id, name, type, version, description, author,
 			                   entry_point, dependencies, config_schema, status)
 			VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 		`
@@ -79,7 +79,7 @@ func (r *PluginRepository) Save(ctx context.Context, plugin *Plugin) error {
 // FindByID retrieves a plugin by ID
 func (r *PluginRepository) FindByID(ctx context.Context, id uuid.UUID) (*Plugin, error) {
 	query := `
-		SELECT id, name, type, version, description, author, entry_point, 
+		SELECT id, name, type, version, description, author, entry_point,
 		       dependencies, config_schema, status, created_at, updated_at
 		FROM plugins WHERE id = ?
 	`
@@ -114,7 +114,7 @@ func (r *PluginRepository) FindByID(ctx context.Context, id uuid.UUID) (*Plugin,
 // FindByName retrieves a plugin by name
 func (r *PluginRepository) FindByName(ctx context.Context, name string) (*Plugin, error) {
 	query := `
-		SELECT id, name, type, version, description, author, entry_point, 
+		SELECT id, name, type, version, description, author, entry_point,
 		       dependencies, config_schema, status, created_at, updated_at
 		FROM plugins WHERE name = ?
 	`
@@ -147,9 +147,9 @@ func (r *PluginRepository) FindByName(ctx context.Context, name string) (*Plugin
 // FindAll retrieves all plugins with pagination
 func (r *PluginRepository) FindAll(ctx context.Context, limit, offset int) ([]*Plugin, error) {
 	query := `
-		SELECT id, name, type, version, description, author, entry_point, 
+		SELECT id, name, type, version, description, author, entry_point,
 		       dependencies, config_schema, status, created_at, updated_at
-		FROM plugins 
+		FROM plugins
 		ORDER BY created_at DESC
 		LIMIT ? OFFSET ?
 	`
@@ -189,7 +189,7 @@ func (r *PluginRepository) FindAll(ctx context.Context, limit, offset int) ([]*P
 // FindByType retrieves plugins by type
 func (r *PluginRepository) FindByType(ctx context.Context, pluginType string) ([]*Plugin, error) {
 	query := `
-		SELECT id, name, type, version, description, author, entry_point, 
+		SELECT id, name, type, version, description, author, entry_point,
 		       dependencies, config_schema, status, created_at, updated_at
 		FROM plugins WHERE type = ?
 		ORDER BY name

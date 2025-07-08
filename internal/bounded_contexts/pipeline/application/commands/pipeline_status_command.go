@@ -34,11 +34,11 @@ type GetPipelineStatusResult struct {
 
 // HealthCheckResult representa o resultado de um health check
 type HealthCheckResult struct {
-	Name        string    `json:"name"`
-	Status      string    `json:"status"`
-	Message     string    `json:"message,omitempty"`
-	CheckedAt   time.Time `json:"checked_at"`
-	ResponseTime int64    `json:"response_time_ms"`
+	Name         string    `json:"name"`
+	Status       string    `json:"status"`
+	Message      string    `json:"message,omitempty"`
+	CheckedAt    time.Time `json:"checked_at"`
+	ResponseTime int64     `json:"response_time_ms"`
 }
 
 // PausePipelineCommand representa o comando para pausar um pipeline
@@ -75,14 +75,14 @@ type ResumePipelineResult struct {
 
 // GetPipelineStatusHandler manipula comandos de status
 type GetPipelineStatusHandler struct {
-	pipelineRepo ports.PipelineRepository
+	pipelineRepo          ports.PipelineRepository
 	executionStatsService *services.PipelineExecutionStatsService
 }
 
 // NewGetPipelineStatusHandler cria um novo handler
 func NewGetPipelineStatusHandler(pipelineRepo ports.PipelineRepository, executionStatsService *services.PipelineExecutionStatsService) *GetPipelineStatusHandler {
 	return &GetPipelineStatusHandler{
-		pipelineRepo: pipelineRepo,
+		pipelineRepo:          pipelineRepo,
 		executionStatsService: executionStatsService,
 	}
 }
@@ -314,7 +314,7 @@ func (h *GetPipelineStatusHandler) performHealthChecks(ctx context.Context, pipe
 		stepsCheckStatus = "unhealthy"
 		stepsCheckMessage = "Pipeline has no configured steps"
 	}
-	
+
 	healthChecks = append(healthChecks, HealthCheckResult{
 		Name:         "steps_configured",
 		Status:       stepsCheckStatus,

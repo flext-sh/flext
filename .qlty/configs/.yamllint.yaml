@@ -1,8 +1,79 @@
+extends: default
+
 rules:
-  document-start: disable
+  line-length:
+    max: 120
+    level: warning
+    allow-non-breakable-words: true
+    allow-non-breakable-inline-mappings: true
+
+  indentation:
+    spaces: 2
+    indent-sequences: true
+    check-multi-line-strings: false
+
+  truthy:
+    allowed-values: ["true", "false", "on", "off", "yes", "no"]
+    check-keys: false
+    level: warning
+
+  comments:
+    min-spaces-from-content: 1
+    require-starting-space: true
+    ignore-shebangs: true
+
+  comments-indentation: enable
+
+  empty-lines:
+    max: 2
+    max-start: 0
+    max-end: 1
+
+  key-duplicates: enable
+
   quoted-strings:
+    quote-type: double
     required: only-when-needed
     extra-allowed: ["{|}"]
-  key-duplicates: {}
+
+  brackets:
+    min-spaces-inside: 0
+    max-spaces-inside: 1
+
+  braces:
+    min-spaces-inside: 0
+    max-spaces-inside: 1
+
+  colons:
+    max-spaces-before: 0
+    max-spaces-after: 1
+
+  commas:
+    max-spaces-before: 0
+    max-spaces-after: 1
+
+  hyphens:
+    max-spaces-after: 1
+
+  document-start: disable
+  document-end: disable
+
   octal-values:
     forbid-implicit-octal: true
+    forbid-explicit-octal: true
+
+ignore: |
+  .github/
+  .vscode/
+  .cursor/
+  node_modules/
+  .venv/
+  venv/
+  htmlcov/
+  .pytest_cache/
+  .mypy_cache/
+  .ruff_cache/
+  dist/
+  build/
+  *.egg-info/
+  __pycache__/

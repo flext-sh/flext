@@ -87,7 +87,7 @@ func NewPlugin(name, version, entryPoint string, pluginType PluginType) (*Plugin
 
 	// Adicionar evento de domínio
 	p.AddEvent(events.NewPluginRegisteredEvent(p.ID, p.Name, string(p.Type), p.Version))
-	
+
 	return p, nil
 }
 
@@ -110,7 +110,7 @@ func (p *Plugin) AddPort(port Port) error {
 	p.Ports = append(p.Ports, port)
 	p.UpdateTimestamp()
 	p.AddEvent(events.NewPortAddedEvent(p.ID, port.Name, port.Type))
-	
+
 	return nil
 }
 
@@ -126,7 +126,7 @@ func (p *Plugin) Activate() error {
 	p.Status = PluginStatusActive
 	p.UpdateTimestamp()
 	p.AddEvent(events.NewPluginActivatedEvent(p.ID))
-	
+
 	return nil
 }
 

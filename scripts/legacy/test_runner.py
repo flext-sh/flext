@@ -437,20 +437,18 @@ class ModernTestRunner:
         self.generate_final_report()
 
         # Return overall success
-        all_critical_passed = all(
+        return all(
             r.success
             for r in self.results
             if r.name
-            in [
+            in {
                 "Ruff Linting (Strict)",
                 "MyPy Type Checking (Strict)",
                 "Unit Tests + Coverage",
                 "Test Files Linting",
                 "Test Files Type Checking",
-            ]
+            }
         )
-
-        return all_critical_passed
 
 
 def main() -> int:

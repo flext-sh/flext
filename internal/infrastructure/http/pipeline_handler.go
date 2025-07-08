@@ -397,7 +397,7 @@ func (h *PipelineHandler) RegisterRoutes(e *echo.Echo) {
 	api.PUT("/pipelines/:id", h.UpdatePipeline)
 	api.POST("/pipelines/:id/steps", h.AddStep)
 	api.POST("/pipelines/:id/execute", h.ExecutePipeline)
-	
+
 	// Pipeline status management routes
 	api.GET("/pipelines/:id/status", h.GetPipelineStatus)
 	api.POST("/pipelines/:id/pause", h.PausePipeline)

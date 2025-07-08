@@ -8,9 +8,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/golang-jwt/jwt/v5"
 	"github.com/flext-sh/flext/internal/infrastructure/logging"
 	"github.com/flext-sh/flext/internal/shared_kernel/domain/value_objects"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 )
 
@@ -22,13 +22,13 @@ type BasicAuthProvider struct {
 
 // UserCredentials represents stored user credentials
 type UserCredentials struct {
-	UserID      uuid.UUID `json:"user_id"`
-	Username    string    `json:"username"`
-	Email       string    `json:"email"`
-	PasswordHash string   `json:"password_hash"`
-	Roles       []string  `json:"roles"`
-	Permissions []string  `json:"permissions"`
-	IsActive    bool      `json:"is_active"`
+	UserID       uuid.UUID `json:"user_id"`
+	Username     string    `json:"username"`
+	Email        string    `json:"email"`
+	PasswordHash string    `json:"password_hash"`
+	Roles        []string  `json:"roles"`
+	Permissions  []string  `json:"permissions"`
+	IsActive     bool      `json:"is_active"`
 }
 
 // NewBasicAuthProvider creates a new basic auth provider
@@ -471,7 +471,7 @@ func (p *OAuth2Provider) Authenticate(ctx context.Context, credentials Credentia
 func (p *OAuth2Provider) Validate(ctx context.Context, token string) (*UserContext, error) {
 	// TODO: Implement actual OAuth2 token validation
 	// This would involve calling the OAuth2 provider's userinfo endpoint
-	
+
 	return &UserContext{
 		UserID:   uuid.New(),
 		Username: "oauth2_user",

@@ -16,28 +16,28 @@ import (
 
 // MeltanoExecutor executes Singer taps and targets via Meltano
 type MeltanoExecutor struct {
-	logger         logging.Logger
-	meltanoPath    string
-	projectPath    string
-	workDir        string
-	timeout        time.Duration
-	env            []string
+	logger      logging.Logger
+	meltanoPath string
+	projectPath string
+	workDir     string
+	timeout     time.Duration
+	env         []string
 }
 
 // MeltanoRunResult represents the result of a Meltano run
 type MeltanoRunResult struct {
-	Success       bool                   `json:"success"`
-	ExitCode      int                    `json:"exit_code"`
-	Duration      time.Duration          `json:"duration"`
-	RecordsCount  int                    `json:"records_count"`
-	TapName       string                 `json:"tap_name,omitempty"`
-	TargetName    string                 `json:"target_name,omitempty"`
-	StateFile     string                 `json:"state_file,omitempty"`
-	LogFile       string                 `json:"log_file,omitempty"`
-	OutputFile    string                 `json:"output_file,omitempty"`
-	Logs          []string               `json:"logs"`
-	Error         string                 `json:"error,omitempty"`
-	Metadata      map[string]interface{} `json:"metadata,omitempty"`
+	Success      bool                   `json:"success"`
+	ExitCode     int                    `json:"exit_code"`
+	Duration     time.Duration          `json:"duration"`
+	RecordsCount int                    `json:"records_count"`
+	TapName      string                 `json:"tap_name,omitempty"`
+	TargetName   string                 `json:"target_name,omitempty"`
+	StateFile    string                 `json:"state_file,omitempty"`
+	LogFile      string                 `json:"log_file,omitempty"`
+	OutputFile   string                 `json:"output_file,omitempty"`
+	Logs         []string               `json:"logs"`
+	Error        string                 `json:"error,omitempty"`
+	Metadata     map[string]interface{} `json:"metadata,omitempty"`
 }
 
 // MeltanoConfig represents Meltano pipeline configuration

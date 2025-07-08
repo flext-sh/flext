@@ -7,11 +7,11 @@ import (
 
 // Step represents a pipeline execution step
 type Step struct {
-	id         uuid.UUID
-	name       string
-	pluginID   uuid.UUID
-	config     map[string]interface{}
-	dependsOn  []uuid.UUID
+	id        uuid.UUID
+	name      string
+	pluginID  uuid.UUID
+	config    map[string]interface{}
+	dependsOn []uuid.UUID
 }
 
 // NewStep creates a new step with validation
@@ -94,10 +94,10 @@ func (s Step) Validate() error {
 }
 
 // Getters
-func (s Step) ID() uuid.UUID                     { return s.id }
-func (s Step) Name() string                      { return s.name }
-func (s Step) PluginID() uuid.UUID               { return s.pluginID }
-func (s Step) DependsOn() []uuid.UUID            { return append([]uuid.UUID{}, s.dependsOn...) }
+func (s Step) ID() uuid.UUID          { return s.id }
+func (s Step) Name() string           { return s.name }
+func (s Step) PluginID() uuid.UUID    { return s.pluginID }
+func (s Step) DependsOn() []uuid.UUID { return append([]uuid.UUID{}, s.dependsOn...) }
 func (s Step) Configuration() map[string]interface{} {
 	// Return a copy to prevent external modification
 	config := make(map[string]interface{})
@@ -154,7 +154,7 @@ func (c Configuration) GetInt(key string) (int, bool) {
 	if !exists {
 		return 0, false
 	}
-	
+
 	switch v := val.(type) {
 	case int:
 		return v, true

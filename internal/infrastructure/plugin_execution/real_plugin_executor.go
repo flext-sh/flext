@@ -38,7 +38,7 @@ func (e *RealPluginExecutor) ExecuteSource(ctx context.Context, plugin *pluginEn
 	return e.executePlugin(ctx, plugin, execCtx, "source")
 }
 
-// ExecuteTarget executa um plugin de destino (carregamento)  
+// ExecuteTarget executa um plugin de destino (carregamento)
 func (e *RealPluginExecutor) ExecuteTarget(ctx context.Context, plugin *pluginEntities.Plugin, execCtx *services.RealPluginExecutionContext) (*services.RealPluginExecutionResult, error) {
 	return e.executePlugin(ctx, plugin, execCtx, "target")
 }
@@ -56,7 +56,7 @@ func (e *RealPluginExecutor) ExecuteUtility(ctx context.Context, plugin *pluginE
 // executePlugin executa um plugin real via subprocess ou container
 func (e *RealPluginExecutor) executePlugin(ctx context.Context, plugin *pluginEntities.Plugin, execCtx *services.RealPluginExecutionContext, pluginType string) (*services.RealPluginExecutionResult, error) {
 	startTime := time.Now()
-	
+
 	// Preparar diretório de trabalho
 	workDir := filepath.Join(e.workspaceDir, "executions", execCtx.ExecutionID.String())
 	if err := os.MkdirAll(workDir, 0755); err != nil {
@@ -152,7 +152,7 @@ func (e *RealPluginExecutor) runPluginProcess(ctx context.Context, pluginPath, i
 	// Preparar comando
 	var cmd *exec.Cmd
 	ext := filepath.Ext(pluginPath)
-	
+
 	switch ext {
 	case ".py":
 		cmd = exec.CommandContext(timeoutCtx, "python3", pluginPath, inputFile)
@@ -166,7 +166,7 @@ func (e *RealPluginExecutor) runPluginProcess(ctx context.Context, pluginPath, i
 	}
 
 	cmd.Dir = workDir
-	
+
 	// Preparar buffers para output
 	var stdout, stderr bytes.Buffer
 	cmd.Stdout = &stdout
@@ -175,7 +175,7 @@ func (e *RealPluginExecutor) runPluginProcess(ctx context.Context, pluginPath, i
 	// Executar
 	err := cmd.Run()
 	duration := time.Since(startTime)
-	
+
 	// Processar resultado
 	exitCode := 0
 	if err != nil {
@@ -192,7 +192,7 @@ func (e *RealPluginExecutor) runPluginProcess(ctx context.Context, pluginPath, i
 		if err := json.Unmarshal(stdout.Bytes(), &outputData); err != nil {
 			// Se não for JSON válido, criar estrutura simples
 			outputData = map[string]interface{}{
-				"raw_output": stdout.String(),
+				"raw_output":  stdout.String(),
 				"plugin_logs": strings.Split(stdout.String(), "\n"),
 			}
 		}
@@ -231,7 +231,7 @@ func (e *RealPluginExecutor) runPluginProcess(ctx context.Context, pluginPath, i
 // executeNativePlugin executa plugin com implementação nativa (fallback)
 func (e *RealPluginExecutor) executeNativePlugin(ctx context.Context, plugin *pluginEntities.Plugin, execCtx *services.RealPluginExecutionContext, pluginType string) (*services.RealPluginExecutionResult, error) {
 	startTime := time.Now()
-	
+
 	// Implementações nativas para plugins comuns
 	switch plugin.Name {
 	case "csv-extractor", "test-csv-source":
@@ -258,22 +258,22 @@ func (e *RealPluginExecutor) executeNativePlugin(ctx context.Context, plugin *pl
 // executeCsvExtractor implementação nativa do extrator CSV
 func (e *RealPluginExecutor) executeCsvExtractor(execCtx *services.RealPluginExecutionContext) (*services.RealPluginExecutionResult, error) {
 	startTime := time.Now()
-	
+
 	// Simular leitura de CSV (poderia ser real com encoding/csv)
 	filePath := ""
 	if path, ok := execCtx.Config["file_path"].(string); ok {
 		filePath = path
 	}
-	
+
 	// Dados simulados (em produção real, leria o arquivo CSV)
 	records := []map[string]interface{}{
 		{"id": 1, "name": "User 1", "email": "user1@example.com", "status": "active"},
 		{"id": 2, "name": "User 2", "email": "user2@example.com", "status": "inactive"},
 		{"id": 3, "name": "User 3", "email": "user3@example.com", "status": "active"},
 	}
-	
+
 	time.Sleep(100 * time.Millisecond) // Simular I/O
-	
+
 	return &services.RealPluginExecutionResult{
 		Success:      true,
 		ExitCode:     0,
@@ -286,7 +286,7 @@ func (e *RealPluginExecutor) executeCsvExtractor(execCtx *services.RealPluginExe
 // executePostgresLoader implementação nativa do loader PostgreSQL
 func (e *RealPluginExecutor) executePostgresLoader(execCtx *services.RealPluginExecutionContext) (*services.RealPluginExecutionResult, error) {
 	startTime := time.Now()
-	
+
 	// Obter dados de entrada
 	recordsToLoad := 0
 	for key, value := range execCtx.InputData {
@@ -296,10 +296,10 @@ func (e *RealPluginExecutor) executePostgresLoader(execCtx *services.RealPluginE
 			}
 		}
 	}
-	
+
 	// Simular carregamento no PostgreSQL
 	time.Sleep(200 * time.Millisecond)
-	
+
 	return &services.RealPluginExecutionResult{
 		Success:      true,
 		ExitCode:     0,
@@ -312,7 +312,7 @@ func (e *RealPluginExecutor) executePostgresLoader(execCtx *services.RealPluginE
 // executeDataFilter implementação nativa do filtro de dados
 func (e *RealPluginExecutor) executeDataFilter(execCtx *services.RealPluginExecutionContext) (*services.RealPluginExecutionResult, error) {
 	startTime := time.Now()
-	
+
 	// Obter registros de entrada
 	var inputRecords []interface{}
 	for key, value := range execCtx.InputData {
@@ -322,7 +322,7 @@ func (e *RealPluginExecutor) executeDataFilter(execCtx *services.RealPluginExecu
 			}
 		}
 	}
-	
+
 	// Aplicar filtro (simples: só registros "active")
 	var filteredRecords []interface{}
 	for _, record := range inputRecords {
@@ -332,9 +332,9 @@ func (e *RealPluginExecutor) executeDataFilter(execCtx *services.RealPluginExecu
 			}
 		}
 	}
-	
+
 	time.Sleep(50 * time.Millisecond) // Simular processamento
-	
+
 	return &services.RealPluginExecutionResult{
 		Success:      true,
 		ExitCode:     0,
@@ -347,7 +347,7 @@ func (e *RealPluginExecutor) executeDataFilter(execCtx *services.RealPluginExecu
 // executeJsonTransformer implementação nativa do transformador JSON
 func (e *RealPluginExecutor) executeJsonTransformer(execCtx *services.RealPluginExecutionContext) (*services.RealPluginExecutionResult, error) {
 	startTime := time.Now()
-	
+
 	// Transformação simples: adicionar timestamp
 	var inputRecords []interface{}
 	for key, value := range execCtx.InputData {
@@ -357,7 +357,7 @@ func (e *RealPluginExecutor) executeJsonTransformer(execCtx *services.RealPlugin
 			}
 		}
 	}
-	
+
 	// Transformar registros
 	var transformedRecords []interface{}
 	for _, record := range inputRecords {
@@ -372,9 +372,9 @@ func (e *RealPluginExecutor) executeJsonTransformer(execCtx *services.RealPlugin
 			transformedRecords = append(transformedRecords, transformed)
 		}
 	}
-	
+
 	time.Sleep(30 * time.Millisecond) // Simular transformação
-	
+
 	return &services.RealPluginExecutionResult{
 		Success:      true,
 		ExitCode:     0,

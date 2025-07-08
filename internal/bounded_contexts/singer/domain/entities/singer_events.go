@@ -54,13 +54,13 @@ type SingerExecutionStarted struct {
 // SingerExecutionCompleted evento emitido quando uma execução Singer completa
 type SingerExecutionCompleted struct {
 	domain.BaseDomainEvent
-	ExecutionID   uuid.UUID `json:"execution_id"`
-	SpecID        uuid.UUID `json:"spec_id"`
-	SpecName      string    `json:"spec_name"`
-	RecordsCount  int64     `json:"records_count"`
-	DurationMs    int64     `json:"duration_ms"`
-	Success       bool      `json:"success"`
-	ErrorMessage  string    `json:"error_message,omitempty"`
+	ExecutionID  uuid.UUID `json:"execution_id"`
+	SpecID       uuid.UUID `json:"spec_id"`
+	SpecName     string    `json:"spec_name"`
+	RecordsCount int64     `json:"records_count"`
+	DurationMs   int64     `json:"duration_ms"`
+	Success      bool      `json:"success"`
+	ErrorMessage string    `json:"error_message,omitempty"`
 }
 
 // SingerRecordProcessed evento emitido quando um registro Singer é processado

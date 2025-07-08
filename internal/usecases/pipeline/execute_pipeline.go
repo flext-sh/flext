@@ -120,4 +120,4 @@ func (uc *ExecutePipelineUseCase) Execute(ctx context.Context, input ExecutePipe
 	}
 
 	return output, nil
-} 
+}

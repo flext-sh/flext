@@ -10,9 +10,9 @@ import (
 
 // Common business errors
 var (
-	ErrPipelineNotFound           = errors.New("pipeline not found")
-	ErrPipelineNameAlreadyExists  = errors.New("pipeline name already exists")
-	ErrPipelineStepNotFound       = errors.New("pipeline step not found")
+	ErrPipelineNotFound          = errors.New("pipeline not found")
+	ErrPipelineNameAlreadyExists = errors.New("pipeline name already exists")
+	ErrPipelineStepNotFound      = errors.New("pipeline step not found")
 	ErrInvalidInput              = errors.New("invalid input")
 )
 
@@ -126,16 +126,16 @@ type ListCriteria struct {
 // Output types
 
 type GetPipelineOutput struct {
-	ID          string                 `json:"id"`
-	Name        string                 `json:"name"`
-	Description string                 `json:"description"`
-	IsActive    bool                   `json:"is_active"`
-	Status      string                 `json:"status"`
-	Tags        []string               `json:"tags"`
-	Steps       []StepOutput           `json:"steps"`
-	Schedule    string                 `json:"schedule,omitempty"`
-	CreatedAt   string                 `json:"created_at"`
-	UpdatedAt   string                 `json:"updated_at"`
+	ID          string       `json:"id"`
+	Name        string       `json:"name"`
+	Description string       `json:"description"`
+	IsActive    bool         `json:"is_active"`
+	Status      string       `json:"status"`
+	Tags        []string     `json:"tags"`
+	Steps       []StepOutput `json:"steps"`
+	Schedule    string       `json:"schedule,omitempty"`
+	CreatedAt   string       `json:"created_at"`
+	UpdatedAt   string       `json:"updated_at"`
 }
 
 type StepOutput struct {
@@ -158,10 +158,10 @@ type CreatePipelineOutput struct {
 
 // PluginInfo representa informações de um plugin
 type PluginInfo struct {
-	ID          uuid.UUID `json:"id"`
-	Name        string    `json:"name"`
-	Type        string    `json:"type"`
-	Version     string    `json:"version"`
-	IsActive    bool      `json:"is_active"`
-	Capabilities []string `json:"capabilities"`
+	ID           uuid.UUID `json:"id"`
+	Name         string    `json:"name"`
+	Type         string    `json:"type"`
+	Version      string    `json:"version"`
+	IsActive     bool      `json:"is_active"`
+	Capabilities []string  `json:"capabilities"`
 }

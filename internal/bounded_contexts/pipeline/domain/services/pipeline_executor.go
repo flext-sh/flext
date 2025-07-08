@@ -106,7 +106,7 @@ func (e *PipelineExecutor) createRealPluginExecutor() RealPluginExecutor {
 	if e.realExecutor != nil {
 		return e.realExecutor
 	}
-	
+
 	// Se não há executor configurado, retornar nil para usar fallback
 	return nil
 }
@@ -144,7 +144,7 @@ func (e *PipelineExecutor) Execute(ctx context.Context, pipeline *entities.Pipel
 
 	// Executar steps do pipeline
 	dataFlow := make(map[string]interface{})
-	
+
 	for _, step := range pipeline.Steps {
 		stepExecution := &StepExecution{
 			StepID:    step.ID,
@@ -296,13 +296,13 @@ func (e *PipelineExecutor) executeSourcePlugin(
 	step *entities.PipelineStep,
 	inputData map[string]interface{},
 ) (map[string]interface{}, int, error) {
-	
+
 	// IMPLEMENTAÇÃO REAL: execução via infrastructure layer
 	// Delegar para o executor real de plugins
-	
+
 	// Criar executor de plugin real (infrastructure layer)
 	realExecutor := e.createRealPluginExecutor()
-	
+
 	// Se não há executor real configurado, usar implementação simulada temporariamente
 	if realExecutor == nil {
 		// Fallback para simulação se não há executor real
@@ -321,7 +321,7 @@ func (e *PipelineExecutor) executeSourcePlugin(
 		}
 		return output, 100, nil
 	}
-	
+
 	// Preparar contexto de execução
 	execCtx := &RealPluginExecutionContext{
 		ExecutionID: uuid.New(),
@@ -334,23 +334,23 @@ func (e *PipelineExecutor) executeSourcePlugin(
 			"FLEXT_STEP_NAME":   step.Name,
 		},
 	}
-	
+
 	// Executar plugin real
 	result, err := realExecutor.ExecuteSource(ctx, plugin, execCtx)
 	if err != nil {
 		return nil, 0, fmt.Errorf("real source plugin execution failed: %w", err)
 	}
-	
+
 	// Retornar dados reais extraídos
 	output := map[string]interface{}{
-		"plugin_name":       plugin.Name,
-		"plugin_type":       string(plugin.Type),
-		"extraction_time":   time.Now(),
-		"records_extracted": result.RecordsCount,
-		"execution_success": result.Success,
+		"plugin_name":        plugin.Name,
+		"plugin_type":        string(plugin.Type),
+		"extraction_time":    time.Now(),
+		"records_extracted":  result.RecordsCount,
+		"execution_success":  result.Success,
 		"execution_duration": result.Duration,
-		"real_data":         result.Data,
-		"records":           result.Data["records"], // Dados reais para próximos steps
+		"real_data":          result.Data,
+		"records":            result.Data["records"], // Dados reais para próximos steps
 	}
 
 	return output, result.RecordsCount, nil
@@ -363,13 +363,13 @@ func (e *PipelineExecutor) executeTargetPlugin(
 	step *entities.PipelineStep,
 	inputData map[string]interface{},
 ) (map[string]interface{}, int, error) {
-	
+
 	// IMPLEMENTAÇÃO REAL: execução via infrastructure layer
 	// Delegar para o executor real de plugins
-	
+
 	// Criar executor de plugin real (infrastructure layer)
 	realExecutor := e.createRealPluginExecutor()
-	
+
 	// Se não há executor real configurado, usar implementação simulada temporariamente
 	if realExecutor == nil {
 		// Fallback para simulação se não há executor real
@@ -381,7 +381,7 @@ func (e *PipelineExecutor) executeTargetPlugin(
 				}
 			}
 		}
-		
+
 		time.Sleep(80 * time.Millisecond)
 		output := map[string]interface{}{
 			"plugin_name":       plugin.Name,
@@ -394,7 +394,7 @@ func (e *PipelineExecutor) executeTargetPlugin(
 		}
 		return output, recordsToLoad, nil
 	}
-	
+
 	// Preparar contexto de execução com dados de entrada
 	execCtx := &RealPluginExecutionContext{
 		ExecutionID: uuid.New(),
@@ -407,23 +407,23 @@ func (e *PipelineExecutor) executeTargetPlugin(
 			"FLEXT_STEP_NAME":   step.Name,
 		},
 	}
-	
+
 	// Executar plugin real
 	result, err := realExecutor.ExecuteTarget(ctx, plugin, execCtx)
 	if err != nil {
 		return nil, 0, fmt.Errorf("real target plugin execution failed: %w", err)
 	}
-	
+
 	// Retornar resultado real do carregamento
 	output := map[string]interface{}{
-		"plugin_name":       plugin.Name,
-		"plugin_type":       string(plugin.Type),
-		"load_time":         time.Now(),
-		"records_loaded":    result.RecordsCount,
-		"execution_success": result.Success,
+		"plugin_name":        plugin.Name,
+		"plugin_type":        string(plugin.Type),
+		"load_time":          time.Now(),
+		"records_loaded":     result.RecordsCount,
+		"execution_success":  result.Success,
 		"execution_duration": result.Duration,
-		"target_result":     result.Data,
-		"load_status":       "completed",
+		"target_result":      result.Data,
+		"load_status":        "completed",
 	}
 
 	return output, result.RecordsCount, nil
@@ -436,22 +436,22 @@ func (e *PipelineExecutor) executeTransformerPlugin(
 	step *entities.PipelineStep,
 	inputData map[string]interface{},
 ) (map[string]interface{}, int, error) {
-	
+
 	// IMPLEMENTAÇÃO REAL: execução via infrastructure layer
 	realExecutor := e.createRealPluginExecutor()
-	
+
 	// Se não há executor real configurado, usar implementação simulada temporariamente
 	if realExecutor == nil {
 		// Fallback para simulação se não há executor real
 		time.Sleep(60 * time.Millisecond)
 		output := map[string]interface{}{
-			"plugin_name":           plugin.Name,
-			"plugin_type":           string(plugin.Type),
-			"transformation_time":   time.Now(),
-			"records_transformed":   50, // Simulado
-			"execution_success":     true,
-			"execution_mode":        "simulation", // Indica que é simulação
-			"transformation_rules":  inputData["rules"],
+			"plugin_name":          plugin.Name,
+			"plugin_type":          string(plugin.Type),
+			"transformation_time":  time.Now(),
+			"records_transformed":  50, // Simulado
+			"execution_success":    true,
+			"execution_mode":       "simulation", // Indica que é simulação
+			"transformation_rules": inputData["rules"],
 			"records": []map[string]interface{}{
 				{"id": 1, "name": "transformed_user_1", "email": "t_user1@example.com", "status": "active"},
 				{"id": 2, "name": "transformed_user_2", "email": "t_user2@example.com", "status": "active"},
@@ -459,7 +459,7 @@ func (e *PipelineExecutor) executeTransformerPlugin(
 		}
 		return output, 50, nil
 	}
-	
+
 	// Preparar contexto de execução
 	execCtx := &RealPluginExecutionContext{
 		ExecutionID: uuid.New(),
@@ -472,23 +472,23 @@ func (e *PipelineExecutor) executeTransformerPlugin(
 			"FLEXT_STEP_NAME":   step.Name,
 		},
 	}
-	
+
 	// Executar plugin real
 	result, err := realExecutor.ExecuteTransformer(ctx, plugin, execCtx)
 	if err != nil {
 		return nil, 0, fmt.Errorf("real transformer plugin execution failed: %w", err)
 	}
-	
+
 	// Retornar resultado real da transformação
 	output := map[string]interface{}{
-		"plugin_name":           plugin.Name,
-		"plugin_type":           string(plugin.Type),
-		"transformation_time":   time.Now(),
-		"records_transformed":   result.RecordsCount,
-		"execution_success":     result.Success,
-		"execution_duration":    result.Duration,
-		"transformed_data":      result.Data,
-		"records":               result.Data["records"], // Dados transformados
+		"plugin_name":         plugin.Name,
+		"plugin_type":         string(plugin.Type),
+		"transformation_time": time.Now(),
+		"records_transformed": result.RecordsCount,
+		"execution_success":   result.Success,
+		"execution_duration":  result.Duration,
+		"transformed_data":    result.Data,
+		"records":             result.Data["records"], // Dados transformados
 	}
 
 	return output, result.RecordsCount, nil
@@ -501,26 +501,26 @@ func (e *PipelineExecutor) executeUtilityPlugin(
 	step *entities.PipelineStep,
 	inputData map[string]interface{},
 ) (map[string]interface{}, int, error) {
-	
+
 	// IMPLEMENTAÇÃO REAL: execução via infrastructure layer
 	realExecutor := e.createRealPluginExecutor()
-	
+
 	// Se não há executor real configurado, usar implementação simulada temporariamente
 	if realExecutor == nil {
 		// Fallback para simulação se não há executor real
 		time.Sleep(30 * time.Millisecond)
 		output := map[string]interface{}{
-			"plugin_name":      plugin.Name,
-			"plugin_type":      string(plugin.Type),
-			"execution_time":   time.Now(),
-			"utility_result":   "simulated_success",
-			"operations":       []string{"validate", "clean", "notify"},
+			"plugin_name":       plugin.Name,
+			"plugin_type":       string(plugin.Type),
+			"execution_time":    time.Now(),
+			"utility_result":    "simulated_success",
+			"operations":        []string{"validate", "clean", "notify"},
 			"execution_success": true,
-			"execution_mode":   "simulation", // Indica que é simulação
+			"execution_mode":    "simulation", // Indica que é simulação
 		}
 		return output, 1, nil
 	}
-	
+
 	// Preparar contexto de execução
 	execCtx := &RealPluginExecutionContext{
 		ExecutionID: uuid.New(),
@@ -533,23 +533,23 @@ func (e *PipelineExecutor) executeUtilityPlugin(
 			"FLEXT_STEP_NAME":   step.Name,
 		},
 	}
-	
+
 	// Executar plugin real
 	result, err := realExecutor.ExecuteUtility(ctx, plugin, execCtx)
 	if err != nil {
 		return nil, 0, fmt.Errorf("real utility plugin execution failed: %w", err)
 	}
-	
+
 	// Retornar resultado real da operação utilitária
 	output := map[string]interface{}{
-		"plugin_name":       plugin.Name,
-		"plugin_type":       string(plugin.Type),
-		"execution_time":    time.Now(),
-		"execution_success": result.Success,
+		"plugin_name":        plugin.Name,
+		"plugin_type":        string(plugin.Type),
+		"execution_time":     time.Now(),
+		"execution_success":  result.Success,
 		"execution_duration": result.Duration,
-		"utility_result":    result.Data,
-		"operations_count":  result.RecordsCount,
-		"execution_mode":    "real", // Indica que é execução real
+		"utility_result":     result.Data,
+		"operations_count":   result.RecordsCount,
+		"execution_mode":     "real", // Indica que é execução real
 	}
 
 	return output, result.RecordsCount, nil

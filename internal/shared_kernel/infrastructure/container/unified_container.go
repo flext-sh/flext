@@ -31,7 +31,7 @@ type UnifiedContainer struct {
 
 	// Configuration
 	configAdapter *config.ConfigAdapter
-	
+
 	// Shared Infrastructure
 	authService    *auth.UnifiedAuthService
 	eventPublisher events.EventPublisher
@@ -120,7 +120,7 @@ func (c *UnifiedContainer) initializeInfrastructure() error {
 			Scopes:       authConfig.OAuth2Config.Scopes,
 		},
 	}
-	
+
 	authSvc, err := auth.NewUnifiedAuthService(unifiedAuthConfig, c.logger)
 	if err != nil {
 		return fmt.Errorf("failed to create auth service: %w", err)
@@ -184,14 +184,14 @@ func (c *UnifiedContainer) initializeServices() error {
 	// Infrastructure Services for Real Execution
 	workDir := c.configAdapter.GetUnifiedConfig().GetEnvWithDefault("WORK_DIR", "/tmp/flext")
 	pythonPath := c.configAdapter.GetUnifiedConfig().GetEnvWithDefault("PYTHON_PATH", "python3")
-	
+
 	// Create real plugin executor adapter
 	realPluginExecutor := execution.NewDomainPluginExecutorAdapter(
 		c.logger,
 		workDir,
 		pythonPath,
 	)
-	
+
 	// Domain Services with Real Execution
 	c.pipelineExecutor = pipelineServices.NewPipelineExecutor(
 		c.pluginRepo.(pipelineServices.PluginRepository),
