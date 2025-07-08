@@ -53,29 +53,29 @@ type DbtExecutor interface {
 
 // ListCriteria represents criteria for listing dbt projects
 type ListCriteria struct {
-	Limit        int
-	Offset       int
-	Active       *bool
-	ProfileName  string
-	OrderBy      string
-	OrderDir     string
-	NameFilter   string
+	Limit       int
+	Offset      int
+	Active      *bool
+	ProfileName string
+	OrderBy     string
+	OrderDir    string
+	NameFilter  string
 }
 
 // ExecutionContext represents the context for dbt execution
 type ExecutionContext struct {
-	Target      string                 `json:"target,omitempty"`
-	Profile     string                 `json:"profile,omitempty"`
-	Vars        map[string]interface{} `json:"vars,omitempty"`
-	Models      []string               `json:"models,omitempty"`
-	Select      []string               `json:"select,omitempty"`
-	Exclude     []string               `json:"exclude,omitempty"`
-	Threads     int                    `json:"threads,omitempty"`
-	FullRefresh bool                   `json:"full_refresh,omitempty"`
-	Debug       bool                   `json:"debug,omitempty"`
-	Warn        bool                   `json:"warn,omitempty"`
-	StoreFailures bool                `json:"store_failures,omitempty"`
-	ShowSkipped bool                   `json:"show_skipped,omitempty"`
+	Target        string                 `json:"target,omitempty"`
+	Profile       string                 `json:"profile,omitempty"`
+	Vars          map[string]interface{} `json:"vars,omitempty"`
+	Models        []string               `json:"models,omitempty"`
+	Select        []string               `json:"select,omitempty"`
+	Exclude       []string               `json:"exclude,omitempty"`
+	Threads       int                    `json:"threads,omitempty"`
+	FullRefresh   bool                   `json:"full_refresh,omitempty"`
+	Debug         bool                   `json:"debug,omitempty"`
+	Warn          bool                   `json:"warn,omitempty"`
+	StoreFailures bool                   `json:"store_failures,omitempty"`
+	ShowSkipped   bool                   `json:"show_skipped,omitempty"`
 }
 
 // ExecutionResult represents the result of dbt execution
@@ -96,31 +96,31 @@ type ExecutionResult struct {
 
 // ModelResult represents the result of a single model execution
 type ModelResult struct {
-	NodeID          string                 `json:"node_id"`
-	Name            string                 `json:"name"`
-	ResourceType    string                 `json:"resource_type"`
-	Status          string                 `json:"status"`
-	ExecutionTime   float64                `json:"execution_time"`
-	RowsAffected    int64                  `json:"rows_affected,omitempty"`
-	BytesProcessed  int64                  `json:"bytes_processed,omitempty"`
-	Error           string                 `json:"error,omitempty"`
-	Metadata        map[string]interface{} `json:"metadata,omitempty"`
+	NodeID         string                 `json:"node_id"`
+	Name           string                 `json:"name"`
+	ResourceType   string                 `json:"resource_type"`
+	Status         string                 `json:"status"`
+	ExecutionTime  float64                `json:"execution_time"`
+	RowsAffected   int64                  `json:"rows_affected,omitempty"`
+	BytesProcessed int64                  `json:"bytes_processed,omitempty"`
+	Error          string                 `json:"error,omitempty"`
+	Metadata       map[string]interface{} `json:"metadata,omitempty"`
 }
 
 // ExecutionStats contains statistics about the execution
 type ExecutionStats struct {
-	TotalModels     int     `json:"total_models"`
-	SuccessfulModels int    `json:"successful_models"`
-	FailedModels    int     `json:"failed_models"`
-	SkippedModels   int     `json:"skipped_models"`
-	TotalTests      int     `json:"total_tests"`
-	PassedTests     int     `json:"passed_tests"`
-	FailedTests     int     `json:"failed_tests"`
-	ErrorTests      int     `json:"error_tests"`
-	WarnTests       int     `json:"warn_tests"`
-	TotalSeeds      int     `json:"total_seeds"`
-	TotalSnapshots  int     `json:"total_snapshots"`
-	ExecutionTime   float64 `json:"execution_time"`
+	TotalModels      int     `json:"total_models"`
+	SuccessfulModels int     `json:"successful_models"`
+	FailedModels     int     `json:"failed_models"`
+	SkippedModels    int     `json:"skipped_models"`
+	TotalTests       int     `json:"total_tests"`
+	PassedTests      int     `json:"passed_tests"`
+	FailedTests      int     `json:"failed_tests"`
+	ErrorTests       int     `json:"error_tests"`
+	WarnTests        int     `json:"warn_tests"`
+	TotalSeeds       int     `json:"total_seeds"`
+	TotalSnapshots   int     `json:"total_snapshots"`
+	ExecutionTime    float64 `json:"execution_time"`
 }
 
 // LogEntry represents a log entry from dbt execution
@@ -134,13 +134,13 @@ type LogEntry struct {
 
 // Common errors
 var (
-	ErrProjectNotFound           = errors.New("dbt project not found")
-	ErrProjectNameAlreadyExists  = errors.New("dbt project with this name already exists")
-	ErrInvalidInput              = errors.New("invalid input")
-	ErrExecutionFailed           = errors.New("dbt execution failed")
-	ErrProjectNotActive          = errors.New("dbt project is not active")
-	ErrInvalidProjectStructure   = errors.New("invalid dbt project structure")
-	ErrDependenciesNotInstalled  = errors.New("dbt dependencies not installed")
+	ErrProjectNotFound          = errors.New("dbt project not found")
+	ErrProjectNameAlreadyExists = errors.New("dbt project with this name already exists")
+	ErrInvalidInput             = errors.New("invalid input")
+	ErrExecutionFailed          = errors.New("dbt execution failed")
+	ErrProjectNotActive         = errors.New("dbt project is not active")
+	ErrInvalidProjectStructure  = errors.New("invalid dbt project structure")
+	ErrDependenciesNotInstalled = errors.New("dbt dependencies not installed")
 )
 
 // UpdateProjectInput represents input for updating a dbt project

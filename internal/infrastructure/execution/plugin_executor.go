@@ -17,11 +17,11 @@ import (
 
 // PluginExecutor executes plugins with real implementations
 type PluginExecutor struct {
-	logger      logging.Logger
-	workDir     string
-	pythonPath  string
-	timeout     time.Duration
-	env         []string
+	logger     logging.Logger
+	workDir    string
+	pythonPath string
+	timeout    time.Duration
+	env        []string
 }
 
 // ExecutionResult represents the result of plugin execution

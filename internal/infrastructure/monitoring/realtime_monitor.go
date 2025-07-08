@@ -17,111 +17,111 @@ type RealtimeMonitor struct {
 	logger           logging.Logger
 	metrics          *MetricsCollector
 	mu               sync.RWMutex
-	
+
 	// Current system state
 	systemStats      *SystemStats
 	pipelineStats    map[string]*PipelineStats
 	performanceStats *PerformanceStats
-	
+
 	// Monitoring configuration
-	updateInterval   time.Duration
-	retentionPeriod  time.Duration
-	
+	updateInterval  time.Duration
+	retentionPeriod time.Duration
+
 	// Control channels
-	ctx              context.Context
-	cancel           context.CancelFunc
+	ctx    context.Context
+	cancel context.CancelFunc
 }
 
 // SystemStats represents current system statistics
 type SystemStats struct {
-	Timestamp        time.Time            `json:"timestamp"`
-	TotalPipelines   int                  `json:"total_pipelines"`
-	RunningPipelines int                  `json:"running_pipelines"`
-	FailedPipelines  int                  `json:"failed_pipelines"`
-	TotalPlugins     int                  `json:"total_plugins"`
-	ActivePlugins    int                  `json:"active_plugins"`
-	SystemHealth     string               `json:"system_health"`
-	MemoryUsage      MemoryStats          `json:"memory_usage"`
-	CPUUsage         float64              `json:"cpu_usage"`
-	Uptime          time.Duration         `json:"uptime"`
-	Version         string                `json:"version"`
+	Timestamp        time.Time     `json:"timestamp"`
+	TotalPipelines   int           `json:"total_pipelines"`
+	RunningPipelines int           `json:"running_pipelines"`
+	FailedPipelines  int           `json:"failed_pipelines"`
+	TotalPlugins     int           `json:"total_plugins"`
+	ActivePlugins    int           `json:"active_plugins"`
+	SystemHealth     string        `json:"system_health"`
+	MemoryUsage      MemoryStats   `json:"memory_usage"`
+	CPUUsage         float64       `json:"cpu_usage"`
+	Uptime           time.Duration `json:"uptime"`
+	Version          string        `json:"version"`
 }
 
 // PipelineStats represents pipeline execution statistics
 type PipelineStats struct {
-	PipelineID       uuid.UUID            `json:"pipeline_id"`
-	Name             string               `json:"name"`
-	Status           string               `json:"status"`
-	StartTime        time.Time            `json:"start_time"`
-	EndTime          *time.Time           `json:"end_time,omitempty"`
-	Duration         time.Duration        `json:"duration"`
-	StepsCompleted   int                  `json:"steps_completed"`
-	TotalSteps       int                  `json:"total_steps"`
-	Progress         float64              `json:"progress"`
-	CurrentStep      string               `json:"current_step"`
-	ErrorMessage     string               `json:"error_message,omitempty"`
-	Logs             []LogEntry           `json:"logs"`
-	Metrics          map[string]float64   `json:"metrics"`
+	PipelineID     uuid.UUID          `json:"pipeline_id"`
+	Name           string             `json:"name"`
+	Status         string             `json:"status"`
+	StartTime      time.Time          `json:"start_time"`
+	EndTime        *time.Time         `json:"end_time,omitempty"`
+	Duration       time.Duration      `json:"duration"`
+	StepsCompleted int                `json:"steps_completed"`
+	TotalSteps     int                `json:"total_steps"`
+	Progress       float64            `json:"progress"`
+	CurrentStep    string             `json:"current_step"`
+	ErrorMessage   string             `json:"error_message,omitempty"`
+	Logs           []LogEntry         `json:"logs"`
+	Metrics        map[string]float64 `json:"metrics"`
 }
 
 // PerformanceStats represents system performance metrics
 type PerformanceStats struct {
-	Timestamp        time.Time            `json:"timestamp"`
-	RequestsPerSecond float64             `json:"requests_per_second"`
-	ResponseTime     PerformanceMetrics   `json:"response_time"`
-	ErrorRate        float64              `json:"error_rate"`
-	ThroughputMBps   float64              `json:"throughput_mbps"`
-	ActiveConnections int                 `json:"active_connections"`
-	QueueDepth       int                  `json:"queue_depth"`
-	CacheHitRate     float64              `json:"cache_hit_rate"`
+	Timestamp         time.Time          `json:"timestamp"`
+	RequestsPerSecond float64            `json:"requests_per_second"`
+	ResponseTime      PerformanceMetrics `json:"response_time"`
+	ErrorRate         float64            `json:"error_rate"`
+	ThroughputMBps    float64            `json:"throughput_mbps"`
+	ActiveConnections int                `json:"active_connections"`
+	QueueDepth        int                `json:"queue_depth"`
+	CacheHitRate      float64            `json:"cache_hit_rate"`
 }
 
 // PerformanceMetrics represents timing metrics
 type PerformanceMetrics struct {
-	Average    time.Duration `json:"average"`
-	Median     time.Duration `json:"median"`
-	P95        time.Duration `json:"p95"`
-	P99        time.Duration `json:"p99"`
-	Min        time.Duration `json:"min"`
-	Max        time.Duration `json:"max"`
+	Average time.Duration `json:"average"`
+	Median  time.Duration `json:"median"`
+	P95     time.Duration `json:"p95"`
+	P99     time.Duration `json:"p99"`
+	Min     time.Duration `json:"min"`
+	Max     time.Duration `json:"max"`
 }
 
 // MemoryStats represents memory usage statistics
 type MemoryStats struct {
-	Allocated     uint64  `json:"allocated_mb"`
-	TotalAlloc    uint64  `json:"total_alloc_mb"`
-	System        uint64  `json:"system_mb"`
-	UsagePercent  float64 `json:"usage_percent"`
-	GCPauseTotal  uint64  `json:"gc_pause_total_ns"`
-	GCPauseAvg    uint64  `json:"gc_pause_avg_ns"`
-	NumGC         uint32  `json:"num_gc"`
+	Allocated    uint64  `json:"allocated_mb"`
+	TotalAlloc   uint64  `json:"total_alloc_mb"`
+	System       uint64  `json:"system_mb"`
+	UsagePercent float64 `json:"usage_percent"`
+	GCPauseTotal uint64  `json:"gc_pause_total_ns"`
+	GCPauseAvg   uint64  `json:"gc_pause_avg_ns"`
+	NumGC        uint32  `json:"num_gc"`
 }
 
 // LogEntry represents a log entry for real-time display
 type LogEntry struct {
-	Timestamp time.Time `json:"timestamp"`
-	Level     string    `json:"level"`
-	Message   string    `json:"message"`
-	Source    string    `json:"source"`
+	Timestamp time.Time              `json:"timestamp"`
+	Level     string                 `json:"level"`
+	Message   string                 `json:"message"`
+	Source    string                 `json:"source"`
 	Context   map[string]interface{} `json:"context,omitempty"`
 }
 
 // AlertInfo represents an active alert
 type AlertInfo struct {
-	ID          string    `json:"id"`
-	Type        string    `json:"type"`
-	Severity    string    `json:"severity"`
-	Message     string    `json:"message"`
-	Timestamp   time.Time `json:"timestamp"`
-	Source      string    `json:"source"`
-	Resolved    bool      `json:"resolved"`
-	ResolvedAt  *time.Time `json:"resolved_at,omitempty"`
+	ID         string     `json:"id"`
+	Type       string     `json:"type"`
+	Severity   string     `json:"severity"`
+	Message    string     `json:"message"`
+	Timestamp  time.Time  `json:"timestamp"`
+	Source     string     `json:"source"`
+	Resolved   bool       `json:"resolved"`
+	ResolvedAt *time.Time `json:"resolved_at,omitempty"`
 }
 
 // NewRealtimeMonitor creates a new real-time monitor
 func NewRealtimeMonitor(websocketManager WebSocketBroadcaster, logger logging.Logger) *RealtimeMonitor {
 	ctx, cancel := context.WithCancel(context.Background())
-	
+
 	return &RealtimeMonitor{
 		websocketManager: websocketManager,
 		logger:           logger,
@@ -132,7 +132,7 @@ func NewRealtimeMonitor(websocketManager WebSocketBroadcaster, logger logging.Lo
 		ctx:              ctx,
 		cancel:           cancel,
 		systemStats: &SystemStats{
-			Version:     "2.0.0",
+			Version:      "2.0.0",
 			SystemHealth: "healthy",
 		},
 		performanceStats: &PerformanceStats{},
@@ -142,12 +142,12 @@ func NewRealtimeMonitor(websocketManager WebSocketBroadcaster, logger logging.Lo
 // Start begins real-time monitoring
 func (rm *RealtimeMonitor) Start() error {
 	rm.logger.Info("Starting real-time monitor")
-	
+
 	// Start monitoring goroutines
 	go rm.systemStatsUpdater()
 	go rm.performanceStatsUpdater()
 	go rm.alertMonitor()
-	
+
 	rm.logger.Info("Real-time monitor started")
 	return nil
 }
@@ -163,7 +163,7 @@ func (rm *RealtimeMonitor) Stop() error {
 func (rm *RealtimeMonitor) systemStatsUpdater() {
 	ticker := time.NewTicker(rm.updateInterval)
 	defer ticker.Stop()
-	
+
 	for {
 		select {
 		case <-rm.ctx.Done():
@@ -179,7 +179,7 @@ func (rm *RealtimeMonitor) systemStatsUpdater() {
 func (rm *RealtimeMonitor) performanceStatsUpdater() {
 	ticker := time.NewTicker(5 * time.Second)
 	defer ticker.Stop()
-	
+
 	for {
 		select {
 		case <-rm.ctx.Done():
@@ -195,7 +195,7 @@ func (rm *RealtimeMonitor) performanceStatsUpdater() {
 func (rm *RealtimeMonitor) alertMonitor() {
 	ticker := time.NewTicker(10 * time.Second)
 	defer ticker.Stop()
-	
+
 	for {
 		select {
 		case <-rm.ctx.Done():
@@ -210,15 +210,15 @@ func (rm *RealtimeMonitor) alertMonitor() {
 func (rm *RealtimeMonitor) updateSystemStats() {
 	rm.mu.Lock()
 	defer rm.mu.Unlock()
-	
+
 	// Update timestamp
 	rm.systemStats.Timestamp = time.Now()
-	
+
 	// Update pipeline counts
 	runningCount := 0
 	failedCount := 0
 	totalCount := len(rm.pipelineStats)
-	
+
 	for _, stats := range rm.pipelineStats {
 		switch stats.Status {
 		case "running":
@@ -227,11 +227,11 @@ func (rm *RealtimeMonitor) updateSystemStats() {
 			failedCount++
 		}
 	}
-	
+
 	rm.systemStats.TotalPipelines = totalCount
 	rm.systemStats.RunningPipelines = runningCount
 	rm.systemStats.FailedPipelines = failedCount
-	
+
 	// Update memory stats (simplified - in production would use runtime.MemStats)
 	rm.systemStats.MemoryUsage = MemoryStats{
 		Allocated:    64,  // MB
@@ -239,10 +239,10 @@ func (rm *RealtimeMonitor) updateSystemStats() {
 		System:       256, // MB
 		UsagePercent: 25.0,
 	}
-	
+
 	// Update CPU usage (simplified)
 	rm.systemStats.CPUUsage = 15.5
-	
+
 	// Determine system health
 	healthStatus := "healthy"
 	if failedCount > totalCount/2 {
@@ -258,9 +258,9 @@ func (rm *RealtimeMonitor) updateSystemStats() {
 func (rm *RealtimeMonitor) updatePerformanceStats() {
 	rm.mu.Lock()
 	defer rm.mu.Unlock()
-	
+
 	rm.performanceStats.Timestamp = time.Now()
-	
+
 	// Simulate performance metrics (in production, these would come from actual metrics)
 	rm.performanceStats.RequestsPerSecond = 150.5
 	rm.performanceStats.ErrorRate = 0.02
@@ -268,7 +268,7 @@ func (rm *RealtimeMonitor) updatePerformanceStats() {
 	rm.performanceStats.ActiveConnections = 25
 	rm.performanceStats.QueueDepth = 5
 	rm.performanceStats.CacheHitRate = 0.85
-	
+
 	rm.performanceStats.ResponseTime = PerformanceMetrics{
 		Average: 45 * time.Millisecond,
 		Median:  35 * time.Millisecond,
@@ -293,7 +293,7 @@ func (rm *RealtimeMonitor) checkAlerts() {
 		}
 		rm.broadcastAlert(alert)
 	}
-	
+
 	// Check for high memory usage
 	if rm.systemStats.MemoryUsage.UsagePercent > 80.0 {
 		alert := AlertInfo{
@@ -306,7 +306,7 @@ func (rm *RealtimeMonitor) checkAlerts() {
 		}
 		rm.broadcastAlert(alert)
 	}
-	
+
 	// Check for failed pipelines
 	if rm.systemStats.FailedPipelines > 0 {
 		alert := AlertInfo{
@@ -345,7 +345,7 @@ func (rm *RealtimeMonitor) broadcastAlert(alert AlertInfo) {
 func (rm *RealtimeMonitor) OnPipelineStarted(pipelineID uuid.UUID, name string, totalSteps int) {
 	rm.mu.Lock()
 	defer rm.mu.Unlock()
-	
+
 	stats := &PipelineStats{
 		PipelineID:     pipelineID,
 		Name:           name,
@@ -358,12 +358,12 @@ func (rm *RealtimeMonitor) OnPipelineStarted(pipelineID uuid.UUID, name string, 
 		Logs:           make([]LogEntry, 0),
 		Metrics:        make(map[string]float64),
 	}
-	
+
 	rm.pipelineStats[pipelineID.String()] = stats
-	
+
 	// Broadcast pipeline start
 	rm.websocketManager.BroadcastToTopic("pipelines", "pipeline_started", stats)
-	
+
 	rm.logger.Info("Pipeline started",
 		logging.F("pipeline_id", pipelineID.String()),
 		logging.F("name", name),
@@ -374,12 +374,12 @@ func (rm *RealtimeMonitor) OnPipelineStarted(pipelineID uuid.UUID, name string, 
 func (rm *RealtimeMonitor) OnPipelineProgress(pipelineID uuid.UUID, currentStep string, stepsCompleted int, progress float64) {
 	rm.mu.Lock()
 	defer rm.mu.Unlock()
-	
+
 	if stats, exists := rm.pipelineStats[pipelineID.String()]; exists {
 		stats.CurrentStep = currentStep
 		stats.StepsCompleted = stepsCompleted
 		stats.Progress = progress
-		
+
 		// Broadcast progress update
 		rm.websocketManager.BroadcastToTopic("pipelines", "pipeline_progress", stats)
 	}
@@ -389,12 +389,12 @@ func (rm *RealtimeMonitor) OnPipelineProgress(pipelineID uuid.UUID, currentStep 
 func (rm *RealtimeMonitor) OnPipelineCompleted(pipelineID uuid.UUID, success bool, errorMessage string) {
 	rm.mu.Lock()
 	defer rm.mu.Unlock()
-	
+
 	if stats, exists := rm.pipelineStats[pipelineID.String()]; exists {
 		endTime := time.Now()
 		stats.EndTime = &endTime
 		stats.Duration = endTime.Sub(stats.StartTime)
-		
+
 		if success {
 			stats.Status = "completed"
 			stats.Progress = 100.0
@@ -402,10 +402,10 @@ func (rm *RealtimeMonitor) OnPipelineCompleted(pipelineID uuid.UUID, success boo
 			stats.Status = "failed"
 			stats.ErrorMessage = errorMessage
 		}
-		
+
 		// Broadcast completion
 		rm.websocketManager.BroadcastToTopic("pipelines", "pipeline_completed", stats)
-		
+
 		rm.logger.Info("Pipeline completed",
 			logging.F("pipeline_id", pipelineID.String()),
 			logging.F("success", success),
@@ -418,7 +418,7 @@ func (rm *RealtimeMonitor) OnPipelineCompleted(pipelineID uuid.UUID, success boo
 func (rm *RealtimeMonitor) OnPipelineLog(pipelineID uuid.UUID, level, message, source string, context map[string]interface{}) {
 	rm.mu.Lock()
 	defer rm.mu.Unlock()
-	
+
 	if stats, exists := rm.pipelineStats[pipelineID.String()]; exists {
 		logEntry := LogEntry{
 			Timestamp: time.Now(),
@@ -427,13 +427,13 @@ func (rm *RealtimeMonitor) OnPipelineLog(pipelineID uuid.UUID, level, message, s
 			Source:    source,
 			Context:   context,
 		}
-		
+
 		// Keep only recent logs (last 100 entries)
 		stats.Logs = append(stats.Logs, logEntry)
 		if len(stats.Logs) > 100 {
 			stats.Logs = stats.Logs[1:]
 		}
-		
+
 		// Broadcast log entry
 		logData := map[string]interface{}{
 			"pipeline_id": pipelineID.String(),
@@ -447,7 +447,7 @@ func (rm *RealtimeMonitor) OnPipelineLog(pipelineID uuid.UUID, level, message, s
 func (rm *RealtimeMonitor) GetSystemStats() *SystemStats {
 	rm.mu.RLock()
 	defer rm.mu.RUnlock()
-	
+
 	// Return a copy to avoid race conditions
 	statsCopy := *rm.systemStats
 	return &statsCopy
@@ -457,12 +457,12 @@ func (rm *RealtimeMonitor) GetSystemStats() *SystemStats {
 func (rm *RealtimeMonitor) GetPipelineStats(pipelineID uuid.UUID) (*PipelineStats, bool) {
 	rm.mu.RLock()
 	defer rm.mu.RUnlock()
-	
+
 	stats, exists := rm.pipelineStats[pipelineID.String()]
 	if !exists {
 		return nil, false
 	}
-	
+
 	// Return a copy
 	statsCopy := *stats
 	return &statsCopy, true
@@ -472,13 +472,13 @@ func (rm *RealtimeMonitor) GetPipelineStats(pipelineID uuid.UUID) (*PipelineStat
 func (rm *RealtimeMonitor) GetAllPipelineStats() map[string]*PipelineStats {
 	rm.mu.RLock()
 	defer rm.mu.RUnlock()
-	
+
 	result := make(map[string]*PipelineStats)
 	for id, stats := range rm.pipelineStats {
 		statsCopy := *stats
 		result[id] = &statsCopy
 	}
-	
+
 	return result
 }
 
@@ -486,7 +486,7 @@ func (rm *RealtimeMonitor) GetAllPipelineStats() map[string]*PipelineStats {
 func (rm *RealtimeMonitor) GetPerformanceStats() *PerformanceStats {
 	rm.mu.RLock()
 	defer rm.mu.RUnlock()
-	
+
 	statsCopy := *rm.performanceStats
 	return &statsCopy
 }
@@ -495,9 +495,9 @@ func (rm *RealtimeMonitor) GetPerformanceStats() *PerformanceStats {
 func (rm *RealtimeMonitor) CleanupOldStats() {
 	rm.mu.Lock()
 	defer rm.mu.Unlock()
-	
+
 	cutoff := time.Now().Add(-rm.retentionPeriod)
-	
+
 	for id, stats := range rm.pipelineStats {
 		if stats.EndTime != nil && stats.EndTime.Before(cutoff) {
 			delete(rm.pipelineStats, id)

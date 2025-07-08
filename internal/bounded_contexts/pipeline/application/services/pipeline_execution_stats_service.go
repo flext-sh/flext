@@ -28,16 +28,16 @@ func NewPipelineExecutionStatsService(
 
 // PipelineExecutionMetrics represents pipeline execution metrics
 type PipelineExecutionMetrics struct {
-	ExecutionCount       int                    `json:"execution_count"`
-	SuccessCount         int                    `json:"success_count"`
-	FailureCount         int                    `json:"failure_count"`
-	LastExecution        *time.Time             `json:"last_execution,omitempty"`
-	NextExecution        *time.Time             `json:"next_execution,omitempty"`
-	LastExecutionDuration *time.Duration        `json:"last_execution_duration,omitempty"`
-	AverageExecutionTime  *time.Duration        `json:"average_execution_time,omitempty"`
-	ExecutionSuccessRate  float64               `json:"execution_success_rate"`
-	RecentExecutions     []*ExecutionSummary    `json:"recent_executions"`
-	ExecutionTrend       []*ExecutionTrendPoint `json:"execution_trend"`
+	ExecutionCount        int                    `json:"execution_count"`
+	SuccessCount          int                    `json:"success_count"`
+	FailureCount          int                    `json:"failure_count"`
+	LastExecution         *time.Time             `json:"last_execution,omitempty"`
+	NextExecution         *time.Time             `json:"next_execution,omitempty"`
+	LastExecutionDuration *time.Duration         `json:"last_execution_duration,omitempty"`
+	AverageExecutionTime  *time.Duration         `json:"average_execution_time,omitempty"`
+	ExecutionSuccessRate  float64                `json:"execution_success_rate"`
+	RecentExecutions      []*ExecutionSummary    `json:"recent_executions"`
+	ExecutionTrend        []*ExecutionTrendPoint `json:"execution_trend"`
 }
 
 // ExecutionSummary represents a summary of an execution
@@ -53,12 +53,12 @@ type ExecutionSummary struct {
 
 // ExecutionTrendPoint represents a point in execution trend data
 type ExecutionTrendPoint struct {
-	Date         time.Time `json:"date"`
-	Executions   int       `json:"executions"`
-	Successful   int       `json:"successful"`
-	Failed       int       `json:"failed"`
-	SuccessRate  float64   `json:"success_rate"`
-	AvgDuration  *time.Duration `json:"avg_duration,omitempty"`
+	Date        time.Time      `json:"date"`
+	Executions  int            `json:"executions"`
+	Successful  int            `json:"successful"`
+	Failed      int            `json:"failed"`
+	SuccessRate float64        `json:"success_rate"`
+	AvgDuration *time.Duration `json:"avg_duration,omitempty"`
 }
 
 // GetPipelineExecutionMetrics retrieves comprehensive execution metrics for a pipeline
@@ -84,59 +84,59 @@ func (s *PipelineExecutionStatsService) GetPipelineExecutionMetrics(ctx context.
 
 	if len(recentExecutions) > 0 {
 		metrics.LastExecution = recentExecutions[0].StartedAt
-		
+
 		// Calculate success/failure counts and other metrics
 		successCount := 0
 		var totalDuration time.Duration
 		durationCount := 0
-		
+
 		// Process executions for metrics
 		for _, exec := range recentExecutions {
 			if exec.Success {
 				successCount++
 			}
-			
+
 			// Calculate duration if both timestamps are available
 			if exec.StartedAt != nil && exec.CompletedAt != nil {
 				duration := exec.CompletedAt.Sub(*exec.StartedAt)
 				totalDuration += duration
 				durationCount++
-				
+
 				// Set last execution duration (from most recent execution)
 				if metrics.LastExecutionDuration == nil {
 					metrics.LastExecutionDuration = &duration
 				}
 			}
-			
+
 			// Add to recent executions summary (limit to 10 most recent)
 			if len(metrics.RecentExecutions) < 10 {
 				summary := &ExecutionSummary{
-					ID:      exec.ID,
-					Status:  exec.Status,
-					Success: exec.Success,
-					StartedAt: exec.StartedAt,
+					ID:          exec.ID,
+					Status:      exec.Status,
+					Success:     exec.Success,
+					StartedAt:   exec.StartedAt,
 					CompletedAt: exec.CompletedAt,
-					Duration: exec.Duration,
-					Error:   exec.ErrorMessage,
+					Duration:    exec.Duration,
+					Error:       exec.ErrorMessage,
 				}
 				metrics.RecentExecutions = append(metrics.RecentExecutions, summary)
 			}
 		}
-		
+
 		metrics.SuccessCount = successCount
 		metrics.FailureCount = len(recentExecutions) - successCount
-		
+
 		// Calculate success rate
 		if len(recentExecutions) > 0 {
 			metrics.ExecutionSuccessRate = float64(successCount) / float64(len(recentExecutions)) * 100
 		}
-		
+
 		// Calculate average execution time
 		if durationCount > 0 {
 			avgDuration := totalDuration / time.Duration(durationCount)
 			metrics.AverageExecutionTime = &avgDuration
 		}
-		
+
 		// Generate execution trend (last 30 days)
 		metrics.ExecutionTrend = s.calculateExecutionTrend(recentExecutions)
 	}
@@ -144,7 +144,7 @@ func (s *PipelineExecutionStatsService) GetPipelineExecutionMetrics(ctx context.
 	// TODO: Calculate next execution based on pipeline schedule
 	// This would require accessing the pipeline's schedule configuration
 	// For now, we'll leave it nil
-	
+
 	return metrics, nil
 }
 
@@ -153,18 +153,18 @@ func (s *PipelineExecutionStatsService) calculateExecutionTrend(executions []*po
 	if len(executions) == 0 {
 		return []*ExecutionTrendPoint{}
 	}
-	
+
 	// Group executions by date
 	dailyStats := make(map[string]*ExecutionTrendPoint)
-	
+
 	for _, exec := range executions {
 		if exec.StartedAt == nil {
 			continue
 		}
-		
+
 		// Use date as key (YYYY-MM-DD format)
 		dateKey := exec.StartedAt.Format("2006-01-02")
-		
+
 		if point, exists := dailyStats[dateKey]; exists {
 			point.Executions++
 			if exec.Success {
@@ -172,7 +172,7 @@ func (s *PipelineExecutionStatsService) calculateExecutionTrend(executions []*po
 			} else {
 				point.Failed++
 			}
-			
+
 			// Update average duration if available
 			if exec.Duration > 0 {
 				if point.AvgDuration == nil {
@@ -188,7 +188,7 @@ func (s *PipelineExecutionStatsService) calculateExecutionTrend(executions []*po
 				Date:       *exec.StartedAt,
 				Executions: 1,
 			}
-			
+
 			if exec.Success {
 				point.Successful = 1
 				point.Failed = 0
@@ -196,15 +196,15 @@ func (s *PipelineExecutionStatsService) calculateExecutionTrend(executions []*po
 				point.Successful = 0
 				point.Failed = 1
 			}
-			
+
 			if exec.Duration > 0 {
 				point.AvgDuration = &exec.Duration
 			}
-			
+
 			dailyStats[dateKey] = point
 		}
 	}
-	
+
 	// Convert map to slice and calculate success rates
 	trend := make([]*ExecutionTrendPoint, 0, len(dailyStats))
 	for _, point := range dailyStats {
@@ -213,10 +213,10 @@ func (s *PipelineExecutionStatsService) calculateExecutionTrend(executions []*po
 		}
 		trend = append(trend, point)
 	}
-	
+
 	// Sort by date (most recent first)
 	// TODO: Add proper sorting if needed
-	
+
 	return trend
 }
 
@@ -232,23 +232,23 @@ func (s *PipelineExecutionStatsService) RecordExecution(ctx context.Context, exe
 	if execution.PipelineID == uuid.Nil {
 		return fmt.Errorf("pipeline ID is required")
 	}
-	
+
 	if execution.ID == uuid.Nil {
 		execution.ID = uuid.New()
 	}
-	
+
 	if execution.CreatedAt.IsZero() {
 		execution.CreatedAt = time.Now()
 	}
-	
+
 	// Set success flag based on status and error
 	execution.Success = (execution.Status == "completed" || execution.Status == "success") && execution.ErrorMessage == ""
-	
+
 	// Calculate duration if not set
 	if execution.Duration == 0 && execution.StartedAt != nil && execution.CompletedAt != nil {
 		execution.Duration = execution.CompletedAt.Sub(*execution.StartedAt)
 	}
-	
+
 	// Save to repository
 	return s.executionRepo.Save(ctx, execution)
 }
@@ -260,11 +260,11 @@ func (s *PipelineExecutionStatsService) GetPipelineLastExecution(ctx context.Con
 	if err != nil {
 		return nil, fmt.Errorf("failed to get last execution: %w", err)
 	}
-	
+
 	if len(executions) == 0 {
 		return nil, nil // No executions found
 	}
-	
+
 	return executions[0], nil
 }
 
@@ -275,11 +275,11 @@ func (s *PipelineExecutionStatsService) GetPipelineExecutionCounts(ctx context.C
 	if err != nil {
 		return 0, 0, 0, fmt.Errorf("failed to get executions: %w", err)
 	}
-	
+
 	totalCount := len(executions)
 	successCount := 0
 	failureCount := 0
-	
+
 	for _, exec := range executions {
 		if exec.Success {
 			successCount++
@@ -287,6 +287,6 @@ func (s *PipelineExecutionStatsService) GetPipelineExecutionCounts(ctx context.C
 			failureCount++
 		}
 	}
-	
+
 	return totalCount, successCount, failureCount, nil
 }

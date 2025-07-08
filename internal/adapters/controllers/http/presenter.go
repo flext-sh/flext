@@ -32,7 +32,7 @@ func NewJSONPresenter() *JSONPresenter {
 func (p *JSONPresenter) PresentPipelineCreated(w http.ResponseWriter, output *pipeline.CreatePipelineOutput) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	
+
 	response := map[string]interface{}{
 		"id":          output.ID,
 		"name":        output.Name,
@@ -41,7 +41,7 @@ func (p *JSONPresenter) PresentPipelineCreated(w http.ResponseWriter, output *pi
 		"is_active":   output.IsActive,
 		"created_at":  output.CreatedAt,
 	}
-	
+
 	json.NewEncoder(w).Encode(response)
 }
 
@@ -49,7 +49,7 @@ func (p *JSONPresenter) PresentPipelineCreated(w http.ResponseWriter, output *pi
 func (p *JSONPresenter) PresentPipeline(w http.ResponseWriter, output *pipeline.GetPipelineOutput) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	
+
 	response := map[string]interface{}{
 		"id":          output.ID,
 		"name":        output.Name,
@@ -60,7 +60,7 @@ func (p *JSONPresenter) PresentPipeline(w http.ResponseWriter, output *pipeline.
 		"created_at":  output.CreatedAt,
 		"updated_at":  output.UpdatedAt,
 	}
-	
+
 	json.NewEncoder(w).Encode(response)
 }
 
@@ -68,7 +68,7 @@ func (p *JSONPresenter) PresentPipeline(w http.ResponseWriter, output *pipeline.
 func (p *JSONPresenter) PresentPipelineList(w http.ResponseWriter, output *pipeline.ListPipelinesOutput) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	
+
 	pipelines := make([]map[string]interface{}, len(output.Pipelines))
 	for i, p := range output.Pipelines {
 		pipelines[i] = map[string]interface{}{
@@ -82,14 +82,14 @@ func (p *JSONPresenter) PresentPipelineList(w http.ResponseWriter, output *pipel
 			"updated_at":  p.UpdatedAt,
 		}
 	}
-	
+
 	response := map[string]interface{}{
 		"pipelines": pipelines,
 		"total":     output.Total,
 		"limit":     output.Limit,
 		"offset":    output.Offset,
 	}
-	
+
 	json.NewEncoder(w).Encode(response)
 }
 
@@ -97,14 +97,14 @@ func (p *JSONPresenter) PresentPipelineList(w http.ResponseWriter, output *pipel
 func (p *JSONPresenter) PresentStepAdded(w http.ResponseWriter, output *pipeline.AddStepOutput) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	
+
 	response := map[string]interface{}{
 		"step_id":     output.StepID,
 		"pipeline_id": output.PipelineID,
 		"name":        output.StepName,
 		"order":       output.Order,
 	}
-	
+
 	json.NewEncoder(w).Encode(response)
 }
 
@@ -112,14 +112,14 @@ func (p *JSONPresenter) PresentStepAdded(w http.ResponseWriter, output *pipeline
 func (p *JSONPresenter) PresentExecutionStarted(w http.ResponseWriter, output *pipeline.ExecutePipelineOutput) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusAccepted)
-	
+
 	response := map[string]interface{}{
 		"execution_id": output.ExecutionID,
 		"pipeline_id":  output.PipelineID,
 		"status":       output.Status,
 		"started_at":   output.StartedAt,
 	}
-	
+
 	json.NewEncoder(w).Encode(response)
 }
 
@@ -148,13 +148,13 @@ func (p *JSONPresenter) PresentInternalError(w http.ResponseWriter) {
 func (p *JSONPresenter) presentError(w http.ResponseWriter, statusCode int, error string, message string) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(statusCode)
-	
+
 	response := map[string]interface{}{
 		"error":   error,
 		"message": message,
 		"code":    statusCode,
 	}
-	
+
 	json.NewEncoder(w).Encode(response)
 }
 

@@ -62,7 +62,7 @@ func (uc *DeletePluginUseCase) Execute(ctx context.Context, input DeletePluginIn
 
 	// Publish domain event
 	event := events.NewPluginDeletedEvent(input.ID, plugin.Name)
-	
+
 	if err := uc.events.Publish(ctx, event); err != nil {
 		// Log error but don't fail the operation
 		// In a real implementation, you might want to use an outbox pattern

@@ -44,14 +44,14 @@ func TestBasicE2EIntegration(t *testing.T) {
 
 	// Create HTTP server
 	e := echo.New()
-	
+
 	// Register routes
 	pipelineHandler := c.GetPipelineHandler()
 	pluginHandler := c.GetPluginHandler()
-	
+
 	require.NotNil(t, pipelineHandler, "Pipeline handler should not be nil")
 	require.NotNil(t, pluginHandler, "Plugin handler should not be nil")
-	
+
 	// Register API routes
 	pipelineHandler.RegisterRoutes(e)
 	pluginHandler.RegisterRoutes(e)
@@ -66,7 +66,7 @@ func TestBasicE2EIntegration(t *testing.T) {
 		resp, err := http.Get(baseURL + "/api/v1/health")
 		require.NoError(t, err)
 		defer resp.Body.Close()
-		
+
 		assert.Equal(t, http.StatusOK, resp.StatusCode)
 	})
 
@@ -97,7 +97,7 @@ func TestBasicE2EIntegration(t *testing.T) {
 		require.NoError(t, err)
 		t.Logf("Pipeline creation response status: %d", resp.StatusCode)
 		t.Logf("Pipeline creation response body: %s", string(responseBody))
-		
+
 		assert.Equal(t, http.StatusCreated, resp.StatusCode)
 
 		var createResp map[string]interface{}
@@ -107,10 +107,10 @@ func TestBasicE2EIntegration(t *testing.T) {
 		// Check if data field exists and extract pipeline_id from it
 		data, exists := createResp["data"]
 		require.True(t, exists, "Response should contain 'data' field")
-		
+
 		dataMap, ok := data.(map[string]interface{})
 		require.True(t, ok, "Data field should be a map")
-		
+
 		pipelineID := dataMap["pipeline_id"].(string)
 		assert.NotEmpty(t, pipelineID)
 
@@ -118,7 +118,7 @@ func TestBasicE2EIntegration(t *testing.T) {
 		resp, err = http.Get(baseURL + "/api/v1/pipelines/" + pipelineID)
 		require.NoError(t, err)
 		defer resp.Body.Close()
-		
+
 		// Debug GET response
 		responseBody, err = io.ReadAll(resp.Body)
 		require.NoError(t, err)
@@ -134,7 +134,7 @@ func TestBasicE2EIntegration(t *testing.T) {
 		// Check if data field exists and extract pipeline info from it
 		getData, exists := getResp["data"]
 		require.True(t, exists, "GET response should contain 'data' field")
-		
+
 		getDataMap, ok := getData.(map[string]interface{})
 		require.True(t, ok, "GET data field should be a map")
 
@@ -145,7 +145,7 @@ func TestBasicE2EIntegration(t *testing.T) {
 		resp, err = http.Get(baseURL + "/api/v1/pipelines")
 		require.NoError(t, err)
 		defer resp.Body.Close()
-		
+
 		// Debug LIST response
 		responseBody, err = io.ReadAll(resp.Body)
 		require.NoError(t, err)
@@ -161,17 +161,17 @@ func TestBasicE2EIntegration(t *testing.T) {
 		// Check if data field exists and extract pipelines from it
 		listData, exists := listResp["data"]
 		require.True(t, exists, "LIST response should contain 'data' field")
-		
+
 		listDataMap, ok := listData.(map[string]interface{})
 		require.True(t, ok, "LIST data field should be a map")
-		
+
 		pipelines := listDataMap["pipelines"].([]interface{})
 		assert.GreaterOrEqual(t, len(pipelines), 1)
 	})
 
 	t.Run("Plugin Management Workflow", func(t *testing.T) {
 		var responseBody []byte
-		
+
 		// 1. Register a plugin
 		registerPluginReq := map[string]interface{}{
 			"name":        "test-e2e-plugin",
@@ -191,7 +191,7 @@ func TestBasicE2EIntegration(t *testing.T) {
 		)
 		require.NoError(t, err)
 		defer resp.Body.Close()
-		
+
 		// Debug plugin registration response
 		responseBody, err = io.ReadAll(resp.Body)
 		require.NoError(t, err)
@@ -207,7 +207,7 @@ func TestBasicE2EIntegration(t *testing.T) {
 		// Check if data field exists and extract plugin id from it
 		registerData, exists := registerResp["data"]
 		require.True(t, exists, "Plugin registration response should contain 'data' field")
-		
+
 		registerDataMap, ok := registerData.(map[string]interface{})
 		require.True(t, ok, "Plugin registration data field should be a map")
 
@@ -219,7 +219,7 @@ func TestBasicE2EIntegration(t *testing.T) {
 		resp, err = http.Get(baseURL + "/api/v1/plugins/" + pluginID)
 		require.NoError(t, err)
 		defer resp.Body.Close()
-		
+
 		// Debug plugin GET response
 		responseBody, err = io.ReadAll(resp.Body)
 		require.NoError(t, err)
@@ -235,7 +235,7 @@ func TestBasicE2EIntegration(t *testing.T) {
 		// Check if data field exists and extract plugin info from it
 		getPluginData, exists := getResp["data"]
 		require.True(t, exists, "Plugin GET response should contain 'data' field")
-		
+
 		getPluginDataMap, ok := getPluginData.(map[string]interface{})
 		require.True(t, ok, "Plugin GET data field should be a map")
 
@@ -246,7 +246,7 @@ func TestBasicE2EIntegration(t *testing.T) {
 		resp, err = http.Get(baseURL + "/api/v1/plugins")
 		require.NoError(t, err)
 		defer resp.Body.Close()
-		
+
 		// Debug plugin LIST response
 		responseBody, err = io.ReadAll(resp.Body)
 		require.NoError(t, err)
@@ -262,10 +262,10 @@ func TestBasicE2EIntegration(t *testing.T) {
 		// Check if data field exists and extract plugins from it
 		listPluginData, exists := listResp["data"]
 		require.True(t, exists, "Plugin LIST response should contain 'data' field")
-		
+
 		listPluginDataMap, ok := listPluginData.(map[string]interface{})
 		require.True(t, ok, "Plugin LIST data field should be a map")
-		
+
 		plugins := listPluginDataMap["plugins"].([]interface{})
 		assert.GreaterOrEqual(t, len(plugins), 1)
 	})

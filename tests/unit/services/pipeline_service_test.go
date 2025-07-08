@@ -12,8 +12,8 @@ import (
 	"github.com/flext-sh/flext/internal/bounded_contexts/pipeline/application/queries"
 	"github.com/flext-sh/flext/internal/bounded_contexts/pipeline/application/services"
 	"github.com/flext-sh/flext/internal/bounded_contexts/pipeline/domain/entities"
-	pluginEntities "github.com/flext-sh/flext/internal/bounded_contexts/plugin/domain/entities"
 	domainServices "github.com/flext-sh/flext/internal/bounded_contexts/pipeline/domain/services"
+	pluginEntities "github.com/flext-sh/flext/internal/bounded_contexts/plugin/domain/entities"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -190,7 +190,7 @@ func (m *MockPluginRepository) GetActivePlugins(ctx context.Context) ([]*pluginE
 func createValidPipeline(name string) *entities.Pipeline {
 	pipeline, _ := entities.NewPipeline(name, "Test pipeline description")
 	pipeline.Tags = []string{"test"}
-	
+
 	// Add at least one step first so it can be activated
 	step := entities.PipelineStep{
 		ID:            uuid.New(),
@@ -201,7 +201,7 @@ func createValidPipeline(name string) *entities.Pipeline {
 		DependsOn:     []uuid.UUID{},
 	}
 	pipeline.Steps = []entities.PipelineStep{step}
-	
+
 	// Now activate the pipeline to ensure it can be executed
 	err := pipeline.Activate()
 	if err != nil {
@@ -663,7 +663,7 @@ func TestPipelineService_UpdatePipeline(t *testing.T) {
 			setupMocks: func(repo *MockPipelineRepository) {
 				existing := createValidPipeline("original-pipeline")
 				existing.ID = pipelineID
-				
+
 				// Create updated pipeline with expected changes
 				updated := createValidPipeline("updated-pipeline")
 				updated.ID = pipelineID

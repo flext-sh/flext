@@ -29,20 +29,20 @@ type AgentMessageType string
 
 const (
 	// Job-related messages
-	MessageTypeJobSubmit   AgentMessageType = "job_submit"
-	MessageTypeJobResult   AgentMessageType = "job_result"
-	MessageTypeJobCancel   AgentMessageType = "job_cancel"
-	MessageTypeJobStatus   AgentMessageType = "job_status"
-	
+	MessageTypeJobSubmit AgentMessageType = "job_submit"
+	MessageTypeJobResult AgentMessageType = "job_result"
+	MessageTypeJobCancel AgentMessageType = "job_cancel"
+	MessageTypeJobStatus AgentMessageType = "job_status"
+
 	// Coordination messages
-	MessageTypeHeartbeat   AgentMessageType = "heartbeat"
-	MessageTypeElection    AgentMessageType = "election"
-	MessageTypeCoordinate  AgentMessageType = "coordinate"
-	
+	MessageTypeHeartbeat  AgentMessageType = "heartbeat"
+	MessageTypeElection   AgentMessageType = "election"
+	MessageTypeCoordinate AgentMessageType = "coordinate"
+
 	// Data synchronization
 	MessageTypeDataSync    AgentMessageType = "data_sync"
 	MessageTypeDataRequest AgentMessageType = "data_request"
-	
+
 	// System messages
 	MessageTypeShutdown    AgentMessageType = "shutdown"
 	MessageTypeHealthCheck AgentMessageType = "health_check"
@@ -50,17 +50,17 @@ const (
 
 // RemoteAgent manages communication with remote agents
 type RemoteAgent struct {
-	nodeID          string
-	clusterManager  *cluster.ClusterManager
-	workerPool      *worker.WorkerPool
-	connections     map[string]*AgentConnection
+	nodeID           string
+	clusterManager   *cluster.ClusterManager
+	workerPool       *worker.WorkerPool
+	connections      map[string]*AgentConnection
 	connectionsMutex sync.RWMutex
-	messageHandlers map[AgentMessageType]MessageHandler
-	handlersMutex   sync.RWMutex
-	logger          logging.Logger
-	ctx             context.Context
-	cancel          context.CancelFunc
-	upgrader        websocket.Upgrader
+	messageHandlers  map[AgentMessageType]MessageHandler
+	handlersMutex    sync.RWMutex
+	logger           logging.Logger
+	ctx              context.Context
+	cancel           context.CancelFunc
+	upgrader         websocket.Upgrader
 }
 
 // AgentConnection represents a connection to a remote agent
@@ -88,7 +88,7 @@ func (f MessageHandlerFunc) Handle(ctx context.Context, message *AgentMessage, s
 // NewRemoteAgent creates a new remote agent
 func NewRemoteAgent(nodeID string, clusterManager *cluster.ClusterManager, workerPool *worker.WorkerPool, logger logging.Logger) *RemoteAgent {
 	ctx, cancel := context.WithCancel(context.Background())
-	
+
 	agent := &RemoteAgent{
 		nodeID:          nodeID,
 		clusterManager:  clusterManager,
@@ -157,7 +157,7 @@ func (ra *RemoteAgent) HandleWebSocket(w http.ResponseWriter, r *http.Request) {
 	if nodeID == "" {
 		nodeID = r.Header.Get("X-Node-ID")
 	}
-	
+
 	if nodeID == "" {
 		conn.Close()
 		ra.logger.Error("No node ID provided in WebSocket connection")
@@ -177,7 +177,7 @@ func (ra *RemoteAgent) ConnectTo(nodeInfo *cluster.NodeInfo) error {
 	ra.connectionsMutex.RLock()
 	_, exists := ra.connections[nodeInfo.ID]
 	ra.connectionsMutex.RUnlock()
-	
+
 	if exists {
 		return nil // Already connected
 	}
@@ -340,7 +340,7 @@ func (ra *RemoteAgent) handleMessage(message *AgentMessage, sender *AgentConnect
 func (ra *RemoteAgent) RegisterHandler(messageType AgentMessageType, handler MessageHandler) {
 	ra.handlersMutex.Lock()
 	defer ra.handlersMutex.Unlock()
-	
+
 	ra.messageHandlers[messageType] = handler
 }
 
@@ -493,7 +493,7 @@ func (ra *RemoteAgent) handleJobSubmission(message *AgentMessage) error {
 // handleHealthCheck processes health check messages
 func (ra *RemoteAgent) handleHealthCheck(message *AgentMessage) error {
 	metrics := ra.workerPool.GetMetrics()
-	
+
 	response := &AgentMessage{
 		ID:       fmt.Sprintf("health-response-%d", time.Now().UnixNano()),
 		Type:     MessageTypeHealthCheck,

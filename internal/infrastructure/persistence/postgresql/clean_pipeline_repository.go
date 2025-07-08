@@ -42,8 +42,8 @@ func (r *CleanPipelineRepository) Save(ctx context.Context, pipeline *entities.P
 	if exists {
 		// Update existing pipeline
 		_, err = tx.ExecContext(ctx, `
-			UPDATE clean_pipelines 
-			SET name = $2, description = $3, is_active = $4, tags = $5, 
+			UPDATE clean_pipelines
+			SET name = $2, description = $3, is_active = $4, tags = $5,
 			    configuration = $6, schedule = $7, updated_at = $8
 			WHERE id = $1`,
 			pipeline.ID, pipeline.Name, pipeline.Description, pipeline.IsActive,
@@ -217,7 +217,7 @@ func (r *CleanPipelineRepository) List(ctx context.Context, criteria pipelineUC.
 	query := `
 		SELECT id, name, description, is_active, tags, configuration, schedule, created_at, updated_at
 		FROM clean_pipelines ` + whereClause
-	
+
 	rows, err := r.db.QueryContext(ctx, query, args...)
 	if err != nil {
 		return nil, 0, fmt.Errorf("failed to query pipelines: %w", err)
@@ -420,7 +420,7 @@ func (r *CleanPipelineRepository) GetByID(ctx context.Context, id uuid.UUID) (*e
 	return r.FindByID(ctx, id)
 }
 
-// GetByName alias para FindByName para compatibilidade  
+// GetByName alias para FindByName para compatibilidade
 func (r *CleanPipelineRepository) GetByName(ctx context.Context, name string) (*entities.Pipeline, error) {
 	return r.FindByName(ctx, name)
 }

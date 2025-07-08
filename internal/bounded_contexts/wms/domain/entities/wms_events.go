@@ -122,23 +122,23 @@ type WMSExtractorCreated struct {
 // WMSDataExtractionStarted is emitted when data extraction begins
 type WMSDataExtractionStarted struct {
 	domain.BaseDomainEvent
-	ClientID        uuid.UUID              `json:"client_id"`
-	EntityName      string                 `json:"entity_name"`
-	ExtractionType  string                 `json:"extraction_type"` // "incremental", "full", "sample"
-	Filters         map[string]interface{} `json:"filters"`
-	PageSize        int                    `json:"page_size"`
-	EstimatedRecords int64                 `json:"estimated_records,omitempty"`
+	ClientID         uuid.UUID              `json:"client_id"`
+	EntityName       string                 `json:"entity_name"`
+	ExtractionType   string                 `json:"extraction_type"` // "incremental", "full", "sample"
+	Filters          map[string]interface{} `json:"filters"`
+	PageSize         int                    `json:"page_size"`
+	EstimatedRecords int64                  `json:"estimated_records,omitempty"`
 }
 
 // WMSDataExtractionProgress is emitted during data extraction for progress tracking
 type WMSDataExtractionProgress struct {
 	domain.BaseDomainEvent
-	ClientID        uuid.UUID `json:"client_id"`
-	EntityName      string    `json:"entity_name"`
-	RecordsExtracted int64     `json:"records_extracted"`
-	BytesExtracted   int64     `json:"bytes_extracted"`
-	ProgressPercent  float64   `json:"progress_percent"`
-	CurrentPage      int       `json:"current_page"`
+	ClientID         uuid.UUID      `json:"client_id"`
+	EntityName       string         `json:"entity_name"`
+	RecordsExtracted int64          `json:"records_extracted"`
+	BytesExtracted   int64          `json:"bytes_extracted"`
+	ProgressPercent  float64        `json:"progress_percent"`
+	CurrentPage      int            `json:"current_page"`
 	EstimatedETA     *time.Duration `json:"estimated_eta,omitempty"`
 }
 
@@ -158,12 +158,12 @@ type WMSDataExtractionCompleted struct {
 // WMSDataExtractionFailed is emitted when data extraction fails
 type WMSDataExtractionFailed struct {
 	domain.BaseDomainEvent
-	ClientID       uuid.UUID `json:"client_id"`
-	EntityName     string    `json:"entity_name"`
-	ExtractionType string    `json:"extraction_type"`
-	Error          string    `json:"error"`
-	RecordsExtractedBeforeFailure int64 `json:"records_extracted_before_failure"`
-	FailedAtPage   int       `json:"failed_at_page"`
+	ClientID                      uuid.UUID `json:"client_id"`
+	EntityName                    string    `json:"entity_name"`
+	ExtractionType                string    `json:"extraction_type"`
+	Error                         string    `json:"error"`
+	RecordsExtractedBeforeFailure int64     `json:"records_extracted_before_failure"`
+	FailedAtPage                  int       `json:"failed_at_page"`
 }
 
 // WMS Filtering Events
@@ -171,11 +171,11 @@ type WMSDataExtractionFailed struct {
 // WMSFilterApplied is emitted when filters are applied to an entity query
 type WMSFilterApplied struct {
 	domain.BaseDomainEvent
-	ClientID     uuid.UUID              `json:"client_id"`
-	EntityName   string                 `json:"entity_name"`
-	FilterType   string                 `json:"filter_type"` // "simple", "advanced", "incremental", "full_sync"
-	Filters      map[string]interface{} `json:"filters"`
-	ResultCount  int64                  `json:"result_count,omitempty"`
+	ClientID    uuid.UUID              `json:"client_id"`
+	EntityName  string                 `json:"entity_name"`
+	FilterType  string                 `json:"filter_type"` // "simple", "advanced", "incremental", "full_sync"
+	Filters     map[string]interface{} `json:"filters"`
+	ResultCount int64                  `json:"result_count,omitempty"`
 }
 
 // WMSPaginationEvent is emitted during pagination operations
@@ -207,11 +207,11 @@ type WMSPerformanceMetricsUpdated struct {
 // WMSCircuitBreakerStateChanged is emitted when circuit breaker state changes
 type WMSCircuitBreakerStateChanged struct {
 	domain.BaseDomainEvent
-	ClientID     uuid.UUID `json:"client_id"`
-	PreviousState string   `json:"previous_state"`
-	NewState      string   `json:"new_state"`
-	FailureCount  int      `json:"failure_count"`
-	Reason        string   `json:"reason"`
+	ClientID      uuid.UUID `json:"client_id"`
+	PreviousState string    `json:"previous_state"`
+	NewState      string    `json:"new_state"`
+	FailureCount  int       `json:"failure_count"`
+	Reason        string    `json:"reason"`
 }
 
 // WMS Cache Events
@@ -219,30 +219,30 @@ type WMSCircuitBreakerStateChanged struct {
 // WMSCacheHit is emitted when a cache hit occurs
 type WMSCacheHit struct {
 	domain.BaseDomainEvent
-	ClientID    uuid.UUID `json:"client_id"`
-	CacheType   string    `json:"cache_type"` // "entity", "schema", "access"
-	CacheKey    string    `json:"cache_key"`
-	EntityName  string    `json:"entity_name,omitempty"`
+	ClientID   uuid.UUID `json:"client_id"`
+	CacheType  string    `json:"cache_type"` // "entity", "schema", "access"
+	CacheKey   string    `json:"cache_key"`
+	EntityName string    `json:"entity_name,omitempty"`
 }
 
 // WMSCacheMiss is emitted when a cache miss occurs
 type WMSCacheMiss struct {
 	domain.BaseDomainEvent
-	ClientID    uuid.UUID `json:"client_id"`
-	CacheType   string    `json:"cache_type"` // "entity", "schema", "access"
-	CacheKey    string    `json:"cache_key"`
-	EntityName  string    `json:"entity_name,omitempty"`
+	ClientID   uuid.UUID `json:"client_id"`
+	CacheType  string    `json:"cache_type"` // "entity", "schema", "access"
+	CacheKey   string    `json:"cache_key"`
+	EntityName string    `json:"entity_name,omitempty"`
 }
 
 // WMSCacheExpired is emitted when cached data expires
 type WMSCacheExpired struct {
 	domain.BaseDomainEvent
-	ClientID    uuid.UUID `json:"client_id"`
-	CacheType   string    `json:"cache_type"`
-	CacheKey    string    `json:"cache_key"`
-	EntityName  string    `json:"entity_name,omitempty"`
-	ExpiredAt   time.Time `json:"expired_at"`
-	CachedAt    time.Time `json:"cached_at"`
+	ClientID   uuid.UUID `json:"client_id"`
+	CacheType  string    `json:"cache_type"`
+	CacheKey   string    `json:"cache_key"`
+	EntityName string    `json:"entity_name,omitempty"`
+	ExpiredAt  time.Time `json:"expired_at"`
+	CachedAt   time.Time `json:"cached_at"`
 }
 
 // WMS Error Events
@@ -262,23 +262,23 @@ type WMSAPIError struct {
 // WMSRateLimitExceeded is emitted when rate limit is exceeded
 type WMSRateLimitExceeded struct {
 	domain.BaseDomainEvent
-	ClientID      uuid.UUID `json:"client_id"`
-	EntityName    string    `json:"entity_name,omitempty"`
-	LimitType     string    `json:"limit_type"` // "requests_per_minute", "requests_per_hour"
-	CurrentCount  int       `json:"current_count"`
-	LimitValue    int       `json:"limit_value"`
-	ResetTime     time.Time `json:"reset_time"`
+	ClientID     uuid.UUID `json:"client_id"`
+	EntityName   string    `json:"entity_name,omitempty"`
+	LimitType    string    `json:"limit_type"` // "requests_per_minute", "requests_per_hour"
+	CurrentCount int       `json:"current_count"`
+	LimitValue   int       `json:"limit_value"`
+	ResetTime    time.Time `json:"reset_time"`
 }
 
 // WMSTimeoutError is emitted when a timeout occurs
 type WMSTimeoutError struct {
 	domain.BaseDomainEvent
-	ClientID      uuid.UUID     `json:"client_id"`
-	EntityName    string        `json:"entity_name,omitempty"`
-	Operation     string        `json:"operation"` // "connect", "read", "write"
-	TimeoutValue  time.Duration `json:"timeout_value"`
-	ElapsedTime   time.Duration `json:"elapsed_time"`
-	RequestURL    string        `json:"request_url"`
+	ClientID     uuid.UUID     `json:"client_id"`
+	EntityName   string        `json:"entity_name,omitempty"`
+	Operation    string        `json:"operation"` // "connect", "read", "write"
+	TimeoutValue time.Duration `json:"timeout_value"`
+	ElapsedTime  time.Duration `json:"elapsed_time"`
+	RequestURL   string        `json:"request_url"`
 }
 
 // WMS State Management Events
@@ -286,32 +286,32 @@ type WMSTimeoutError struct {
 // WMSStateBookmarkUpdated is emitted when a replication bookmark is updated
 type WMSStateBookmarkUpdated struct {
 	domain.BaseDomainEvent
-	ClientID        uuid.UUID   `json:"client_id"`
-	EntityName      string      `json:"entity_name"`
-	ReplicationKey  string      `json:"replication_key"`
-	PreviousValue   interface{} `json:"previous_value,omitempty"`
-	NewValue        interface{} `json:"new_value"`
-	RecordsProcessed int64      `json:"records_processed"`
+	ClientID         uuid.UUID   `json:"client_id"`
+	EntityName       string      `json:"entity_name"`
+	ReplicationKey   string      `json:"replication_key"`
+	PreviousValue    interface{} `json:"previous_value,omitempty"`
+	NewValue         interface{} `json:"new_value"`
+	RecordsProcessed int64       `json:"records_processed"`
 }
 
 // WMSStateSaved is emitted when state is persisted
 type WMSStateSaved struct {
 	domain.BaseDomainEvent
-	ClientID      uuid.UUID              `json:"client_id"`
-	StateType     string                 `json:"state_type"` // "incremental", "full_sync", "discovery"
-	EntityStates  map[string]interface{} `json:"entity_states"`
-	SavedAt       time.Time              `json:"saved_at"`
-	StateSize     int64                  `json:"state_size_bytes"`
+	ClientID     uuid.UUID              `json:"client_id"`
+	StateType    string                 `json:"state_type"` // "incremental", "full_sync", "discovery"
+	EntityStates map[string]interface{} `json:"entity_states"`
+	SavedAt      time.Time              `json:"saved_at"`
+	StateSize    int64                  `json:"state_size_bytes"`
 }
 
 // WMSStateRestored is emitted when state is restored
 type WMSStateRestored struct {
 	domain.BaseDomainEvent
-	ClientID      uuid.UUID              `json:"client_id"`
-	StateType     string                 `json:"state_type"`
-	EntityStates  map[string]interface{} `json:"entity_states"`
-	RestoredAt    time.Time              `json:"restored_at"`
-	StateAge      time.Duration          `json:"state_age"`
+	ClientID     uuid.UUID              `json:"client_id"`
+	StateType    string                 `json:"state_type"`
+	EntityStates map[string]interface{} `json:"entity_states"`
+	RestoredAt   time.Time              `json:"restored_at"`
+	StateAge     time.Duration          `json:"state_age"`
 }
 
 // Helper methods for event creation

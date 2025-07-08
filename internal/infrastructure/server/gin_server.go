@@ -30,18 +30,18 @@ func NewGinServer(cfg *config.Config, logger logging.Logger) *GinServer {
 	} else {
 		gin.SetMode(gin.ReleaseMode)
 	}
-	
+
 	engine := gin.New()
-	
+
 	s := &GinServer{
 		engine: engine,
 		config: cfg,
 		logger: logger,
 	}
-	
+
 	s.setupMiddleware()
 	s.setupRoutes()
-	
+
 	return s
 }
 
@@ -49,10 +49,10 @@ func NewGinServer(cfg *config.Config, logger logging.Logger) *GinServer {
 func (s *GinServer) setupMiddleware() {
 	// Custom logging middleware with zerolog
 	s.engine.Use(s.loggingMiddleware())
-	
+
 	// Recovery middleware with custom handler
 	s.engine.Use(s.recoveryMiddleware())
-	
+
 	// CORS middleware with advanced configuration
 	if s.config.Server.EnableCORS {
 		corsConfig := cors.Config{
@@ -64,7 +64,7 @@ func (s *GinServer) setupMiddleware() {
 		}
 		s.engine.Use(cors.New(corsConfig))
 	}
-	
+
 	// Global timeout middleware
 	s.engine.Use(timeout.New(
 		timeout.WithTimeout(s.config.Server.ReadTimeout),
@@ -72,10 +72,10 @@ func (s *GinServer) setupMiddleware() {
 			c.Next()
 		}),
 	))
-	
+
 	// Request ID middleware
 	s.engine.Use(s.requestIDMiddleware())
-	
+
 	// Performance metrics middleware
 	s.engine.Use(s.metricsMiddleware())
 }
@@ -85,11 +85,11 @@ func (s *GinServer) setupRoutes() {
 	// Health and info routes
 	s.engine.GET("/health", s.healthCheck)
 	s.engine.GET("/", s.apiInfo)
-	
+
 	// API v1 group with advanced middleware
 	v1 := s.engine.Group("/api/v1")
 	v1.Use(s.authMiddleware()) // Authentication for API routes
-	
+
 	// Pipeline routes with functional programming
 	pipelines := v1.Group("/pipelines")
 	{
@@ -101,7 +101,7 @@ func (s *GinServer) setupRoutes() {
 		pipelines.POST("/:id/execute", s.executePipeline)
 		pipelines.GET("/:id/status", s.getPipelineStatus)
 	}
-	
+
 	// Plugin routes
 	plugins := v1.Group("/plugins")
 	{
@@ -110,7 +110,7 @@ func (s *GinServer) setupRoutes() {
 		plugins.GET("/:id", s.getPlugin)
 		plugins.PUT("/:id/toggle", s.togglePlugin)
 	}
-	
+
 	// Advanced bulk operations
 	bulk := v1.Group("/bulk")
 	{
@@ -118,7 +118,7 @@ func (s *GinServer) setupRoutes() {
 		bulk.PATCH("/pipelines/status", s.bulkUpdatePipelineStatus)
 		bulk.DELETE("/pipelines", s.bulkDeletePipelines)
 	}
-	
+
 	// Statistics and analytics
 	stats := v1.Group("/stats")
 	{
@@ -136,15 +136,15 @@ func (s *GinServer) loggingMiddleware() gin.HandlerFunc {
 		start := time.Now()
 		path := c.Request.URL.Path
 		raw := c.Request.URL.RawQuery
-		
+
 		c.Next()
-		
+
 		latency := time.Since(start)
-		
+
 		if raw != "" {
 			path = path + "?" + raw
 		}
-		
+
 		s.logger.Info("Request completed",
 			logging.F("method", c.Request.Method),
 			logging.F("path", path),
@@ -191,7 +191,7 @@ func (s *GinServer) metricsMiddleware() gin.HandlerFunc {
 		start := time.Now()
 		c.Next()
 		duration := time.Since(start)
-		
+
 		// Collect metrics (implementation would integrate with Prometheus)
 		s.collectMetrics(c.Request.Method, c.FullPath(), c.Writer.Status(), duration)
 	}
@@ -205,7 +205,7 @@ func (s *GinServer) authMiddleware() gin.HandlerFunc {
 			c.Next()
 			return
 		}
-		
+
 		// Extract and validate JWT token
 		token := c.GetHeader("Authorization")
 		if token == "" {
@@ -215,7 +215,7 @@ func (s *GinServer) authMiddleware() gin.HandlerFunc {
 			})
 			return
 		}
-		
+
 		// Validate token (implementation would validate JWT)
 		if !s.validateToken(token) {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
@@ -224,7 +224,7 @@ func (s *GinServer) authMiddleware() gin.HandlerFunc {
 			})
 			return
 		}
-		
+
 		c.Next()
 	}
 }
@@ -238,17 +238,17 @@ func (s *GinServer) listPipelines(c *gin.Context) {
 	tags := c.QueryArray("tags")
 	limit := c.DefaultQuery("limit", "20")
 	offset := c.DefaultQuery("offset", "0")
-	
+
 	// Mock data for demonstration
 	pipelines := s.getMockPipelines()
-	
+
 	// Filter using functional programming
 	if status != "" {
 		pipelines = lo.Filter(pipelines, func(p map[string]interface{}, _ int) bool {
 			return p["status"] == status
 		})
 	}
-	
+
 	if len(tags) > 0 {
 		pipelines = lo.Filter(pipelines, func(p map[string]interface{}, _ int) bool {
 			pipelineTags := p["tags"].([]string)
@@ -257,18 +257,18 @@ func (s *GinServer) listPipelines(c *gin.Context) {
 			})
 		})
 	}
-	
+
 	// Transform response using lo.Map
 	response := lo.Map(pipelines, func(p map[string]interface{}, _ int) map[string]interface{} {
 		return map[string]interface{}{
-			"id":          p["id"],
-			"name":        p["name"],
-			"status":      p["status"],
-			"created_at":  p["created_at"],
-			"step_count":  len(p["steps"].([]interface{})),
+			"id":         p["id"],
+			"name":       p["name"],
+			"status":     p["status"],
+			"created_at": p["created_at"],
+			"step_count": len(p["steps"].([]interface{})),
 		}
 	})
-	
+
 	c.JSON(http.StatusOK, gin.H{
 		"data":   response,
 		"total":  len(response),
@@ -287,7 +287,7 @@ func (s *GinServer) bulkCreatePipelines(c *gin.Context) {
 		})
 		return
 	}
-	
+
 	// Process bulk creation using functional programming
 	results := lo.Map(requests, func(req map[string]interface{}, index int) map[string]interface{} {
 		// Validate and create pipeline
@@ -306,12 +306,12 @@ func (s *GinServer) bulkCreatePipelines(c *gin.Context) {
 			"error":   "Invalid pipeline name",
 		}
 	})
-	
+
 	// Count successes and failures
 	successes := lo.CountBy(results, func(r map[string]interface{}) bool {
 		return r["success"].(bool)
 	})
-	
+
 	c.JSON(http.StatusOK, gin.H{
 		"results":   results,
 		"total":     len(requests),
@@ -329,16 +329,16 @@ func (s *GinServer) Start() error {
 		WriteTimeout:   s.config.Server.WriteTimeout,
 		MaxHeaderBytes: 1 << 20, // 1MB
 	}
-	
+
 	s.logger.Info("Starting Gin server",
 		logging.F("address", s.config.Address()),
 		logging.F("mode", gin.Mode()),
 	)
-	
+
 	if err := s.server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 		return errors.Wrap(err, "failed to start Gin server")
 	}
-	
+
 	return nil
 }
 
@@ -368,25 +368,53 @@ func (s *GinServer) apiInfo(c *gin.Context) {
 	})
 }
 
-func (s *GinServer) createPipeline(c *gin.Context)        { c.JSON(http.StatusOK, gin.H{"message": "create pipeline"}) }
-func (s *GinServer) getPipeline(c *gin.Context)          { c.JSON(http.StatusOK, gin.H{"message": "get pipeline"}) }
-func (s *GinServer) updatePipeline(c *gin.Context)       { c.JSON(http.StatusOK, gin.H{"message": "update pipeline"}) }
-func (s *GinServer) deletePipeline(c *gin.Context)       { c.JSON(http.StatusOK, gin.H{"message": "delete pipeline"}) }
-func (s *GinServer) executePipeline(c *gin.Context)      { c.JSON(http.StatusOK, gin.H{"message": "execute pipeline"}) }
-func (s *GinServer) getPipelineStatus(c *gin.Context)    { c.JSON(http.StatusOK, gin.H{"message": "pipeline status"}) }
-func (s *GinServer) listPlugins(c *gin.Context)          { c.JSON(http.StatusOK, gin.H{"message": "list plugins"}) }
-func (s *GinServer) registerPlugin(c *gin.Context)       { c.JSON(http.StatusOK, gin.H{"message": "register plugin"}) }
-func (s *GinServer) getPlugin(c *gin.Context)            { c.JSON(http.StatusOK, gin.H{"message": "get plugin"}) }
-func (s *GinServer) togglePlugin(c *gin.Context)         { c.JSON(http.StatusOK, gin.H{"message": "toggle plugin"}) }
-func (s *GinServer) bulkUpdatePipelineStatus(c *gin.Context) { c.JSON(http.StatusOK, gin.H{"message": "bulk update"}) }
-func (s *GinServer) bulkDeletePipelines(c *gin.Context)  { c.JSON(http.StatusOK, gin.H{"message": "bulk delete"}) }
-func (s *GinServer) getOverviewStats(c *gin.Context)     { c.JSON(http.StatusOK, gin.H{"message": "overview stats"}) }
-func (s *GinServer) getPipelineStats(c *gin.Context)     { c.JSON(http.StatusOK, gin.H{"message": "pipeline stats"}) }
-func (s *GinServer) getPerformanceStats(c *gin.Context)  { c.JSON(http.StatusOK, gin.H{"message": "performance stats"}) }
+func (s *GinServer) createPipeline(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{"message": "create pipeline"})
+}
+func (s *GinServer) getPipeline(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{"message": "get pipeline"})
+}
+func (s *GinServer) updatePipeline(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{"message": "update pipeline"})
+}
+func (s *GinServer) deletePipeline(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{"message": "delete pipeline"})
+}
+func (s *GinServer) executePipeline(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{"message": "execute pipeline"})
+}
+func (s *GinServer) getPipelineStatus(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{"message": "pipeline status"})
+}
+func (s *GinServer) listPlugins(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{"message": "list plugins"})
+}
+func (s *GinServer) registerPlugin(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{"message": "register plugin"})
+}
+func (s *GinServer) getPlugin(c *gin.Context) { c.JSON(http.StatusOK, gin.H{"message": "get plugin"}) }
+func (s *GinServer) togglePlugin(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{"message": "toggle plugin"})
+}
+func (s *GinServer) bulkUpdatePipelineStatus(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{"message": "bulk update"})
+}
+func (s *GinServer) bulkDeletePipelines(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{"message": "bulk delete"})
+}
+func (s *GinServer) getOverviewStats(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{"message": "overview stats"})
+}
+func (s *GinServer) getPipelineStats(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{"message": "pipeline stats"})
+}
+func (s *GinServer) getPerformanceStats(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{"message": "performance stats"})
+}
 
-func (s *GinServer) validateToken(token string) bool     { return true } // Simplified
-func (s *GinServer) collectMetrics(method, path string, status int, duration time.Duration) {} // Simplified
-func generateRequestID() string                          { return "req-" + time.Now().Format("20060102150405") }
+func (s *GinServer) validateToken(token string) bool                                        { return true } // Simplified
+func (s *GinServer) collectMetrics(method, path string, status int, duration time.Duration) {}              // Simplified
+func generateRequestID() string                                                             { return "req-" + time.Now().Format("20060102150405") }
 
 func (s *GinServer) getMockPipelines() []map[string]interface{} {
 	return []map[string]interface{}{
@@ -399,7 +427,7 @@ func (s *GinServer) getMockPipelines() []map[string]interface{} {
 			"steps":      []interface{}{},
 		},
 		{
-			"id":         "2", 
+			"id":         "2",
 			"name":       "Data Pipeline 2",
 			"status":     "draft",
 			"tags":       []string{"analytics"},

@@ -25,17 +25,17 @@ func NewExecutionRepositoryAdapter(dbRepo *database.ExecutionRepository) *Execut
 func (a *ExecutionRepositoryAdapter) Save(ctx context.Context, execution *ports.ExecutionRecord) error {
 	// Convert from port type to database type
 	dbExecution := &database.Execution{
-		ID:          execution.ID,
-		PipelineID:  execution.PipelineID,
-		Status:      execution.Status,
-		StartedAt:   execution.StartedAt,
-		CompletedAt: execution.CompletedAt,
-		Duration:    execution.Duration,
-		Success:     execution.Success,
+		ID:           execution.ID,
+		PipelineID:   execution.PipelineID,
+		Status:       execution.Status,
+		StartedAt:    execution.StartedAt,
+		CompletedAt:  execution.CompletedAt,
+		Duration:     execution.Duration,
+		Success:      execution.Success,
 		ErrorMessage: execution.ErrorMessage,
-		Logs:        convertLogsToDatabase(execution.Logs),
-		Metrics:     execution.Metrics,
-		CreatedAt:   execution.CreatedAt,
+		Logs:         convertLogsToDatabase(execution.Logs),
+		Metrics:      execution.Metrics,
+		CreatedAt:    execution.CreatedAt,
 	}
 
 	return a.dbRepo.Save(ctx, dbExecution)
@@ -54,17 +54,17 @@ func (a *ExecutionRepositoryAdapter) FindByID(ctx context.Context, id uuid.UUID)
 
 	// Convert from database type to port type
 	return &ports.ExecutionRecord{
-		ID:          dbExecution.ID,
-		PipelineID:  dbExecution.PipelineID,
-		Status:      dbExecution.Status,
-		StartedAt:   dbExecution.StartedAt,
-		CompletedAt: dbExecution.CompletedAt,
-		Duration:    dbExecution.Duration,
-		Success:     dbExecution.Success,
+		ID:           dbExecution.ID,
+		PipelineID:   dbExecution.PipelineID,
+		Status:       dbExecution.Status,
+		StartedAt:    dbExecution.StartedAt,
+		CompletedAt:  dbExecution.CompletedAt,
+		Duration:     dbExecution.Duration,
+		Success:      dbExecution.Success,
 		ErrorMessage: dbExecution.ErrorMessage,
-		Logs:        convertLogsFromDatabase(dbExecution.Logs),
-		Metrics:     dbExecution.Metrics,
-		CreatedAt:   dbExecution.CreatedAt,
+		Logs:         convertLogsFromDatabase(dbExecution.Logs),
+		Metrics:      dbExecution.Metrics,
+		CreatedAt:    dbExecution.CreatedAt,
 	}, nil
 }
 
@@ -84,17 +84,17 @@ func (a *ExecutionRepositoryAdapter) FindByPipelineID(ctx context.Context, pipel
 	executions := make([]*ports.ExecutionRecord, len(dbExecutions))
 	for i, dbExecution := range dbExecutions {
 		executions[i] = &ports.ExecutionRecord{
-			ID:          dbExecution.ID,
-			PipelineID:  dbExecution.PipelineID,
-			Status:      dbExecution.Status,
-			StartedAt:   dbExecution.StartedAt,
-			CompletedAt: dbExecution.CompletedAt,
-			Duration:    dbExecution.Duration,
-			Success:     dbExecution.Success,
+			ID:           dbExecution.ID,
+			PipelineID:   dbExecution.PipelineID,
+			Status:       dbExecution.Status,
+			StartedAt:    dbExecution.StartedAt,
+			CompletedAt:  dbExecution.CompletedAt,
+			Duration:     dbExecution.Duration,
+			Success:      dbExecution.Success,
 			ErrorMessage: dbExecution.ErrorMessage,
-			Logs:        convertLogsFromDatabase(dbExecution.Logs),
-			Metrics:     dbExecution.Metrics,
-			CreatedAt:   dbExecution.CreatedAt,
+			Logs:         convertLogsFromDatabase(dbExecution.Logs),
+			Metrics:      dbExecution.Metrics,
+			CreatedAt:    dbExecution.CreatedAt,
 		}
 	}
 
@@ -112,17 +112,17 @@ func (a *ExecutionRepositoryAdapter) FindByStatus(ctx context.Context, status st
 	executions := make([]*ports.ExecutionRecord, len(dbExecutions))
 	for i, dbExecution := range dbExecutions {
 		executions[i] = &ports.ExecutionRecord{
-			ID:          dbExecution.ID,
-			PipelineID:  dbExecution.PipelineID,
-			Status:      dbExecution.Status,
-			StartedAt:   dbExecution.StartedAt,
-			CompletedAt: dbExecution.CompletedAt,
-			Duration:    dbExecution.Duration,
-			Success:     dbExecution.Success,
+			ID:           dbExecution.ID,
+			PipelineID:   dbExecution.PipelineID,
+			Status:       dbExecution.Status,
+			StartedAt:    dbExecution.StartedAt,
+			CompletedAt:  dbExecution.CompletedAt,
+			Duration:     dbExecution.Duration,
+			Success:      dbExecution.Success,
 			ErrorMessage: dbExecution.ErrorMessage,
-			Logs:        convertLogsFromDatabase(dbExecution.Logs),
-			Metrics:     dbExecution.Metrics,
-			CreatedAt:   dbExecution.CreatedAt,
+			Logs:         convertLogsFromDatabase(dbExecution.Logs),
+			Metrics:      dbExecution.Metrics,
+			CreatedAt:    dbExecution.CreatedAt,
 		}
 	}
 
@@ -140,17 +140,17 @@ func (a *ExecutionRepositoryAdapter) FindAll(ctx context.Context, limit, offset 
 	executions := make([]*ports.ExecutionRecord, len(dbExecutions))
 	for i, dbExecution := range dbExecutions {
 		executions[i] = &ports.ExecutionRecord{
-			ID:          dbExecution.ID,
-			PipelineID:  dbExecution.PipelineID,
-			Status:      dbExecution.Status,
-			StartedAt:   dbExecution.StartedAt,
-			CompletedAt: dbExecution.CompletedAt,
-			Duration:    dbExecution.Duration,
-			Success:     dbExecution.Success,
+			ID:           dbExecution.ID,
+			PipelineID:   dbExecution.PipelineID,
+			Status:       dbExecution.Status,
+			StartedAt:    dbExecution.StartedAt,
+			CompletedAt:  dbExecution.CompletedAt,
+			Duration:     dbExecution.Duration,
+			Success:      dbExecution.Success,
 			ErrorMessage: dbExecution.ErrorMessage,
-			Logs:        convertLogsFromDatabase(dbExecution.Logs),
-			Metrics:     dbExecution.Metrics,
-			CreatedAt:   dbExecution.CreatedAt,
+			Logs:         convertLogsFromDatabase(dbExecution.Logs),
+			Metrics:      dbExecution.Metrics,
+			CreatedAt:    dbExecution.CreatedAt,
 		}
 	}
 

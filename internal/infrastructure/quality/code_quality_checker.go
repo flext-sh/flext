@@ -262,14 +262,14 @@ func (c *CodeQualityChecker) checkErrorHandling(data interface{}) bool {
 		// Check for error handling patterns
 		errorPatterns := []string{"try", "catch", "error", "exception", "panic", "recover"}
 		lowerData := strings.ToLower(dataStr)
-		
+
 		foundPatterns := 0
 		for _, pattern := range errorPatterns {
 			if strings.Contains(lowerData, pattern) {
 				foundPatterns++
 			}
 		}
-		
+
 		// If we find fewer than 2 error handling patterns, flag as issue
 		return foundPatterns < 2
 	}
@@ -281,7 +281,7 @@ func (c *CodeQualityChecker) checkDocumentation(data interface{}) bool {
 	if dataStr, ok := data.(string); ok {
 		docPatterns := []string{"//", "/*", "/**", "description", "comment"}
 		lowerData := strings.ToLower(dataStr)
-		
+
 		for _, pattern := range docPatterns {
 			if strings.Contains(lowerData, pattern) {
 				return false // Found documentation
@@ -301,7 +301,7 @@ func (c *CodeQualityChecker) checkPluginValidation(data interface{}) bool {
 	if dataStr, ok := data.(string); ok {
 		validationPatterns := []string{"validate", "check", "verify", "sanitize"}
 		lowerData := strings.ToLower(dataStr)
-		
+
 		for _, pattern := range validationPatterns {
 			if strings.Contains(lowerData, pattern) {
 				return false // Found validation
@@ -316,7 +316,7 @@ func (c *CodeQualityChecker) checkPluginTesting(data interface{}) bool {
 	if dataStr, ok := data.(string); ok {
 		testPatterns := []string{"test", "spec", "assert", "expect", "mock"}
 		lowerData := strings.ToLower(dataStr)
-		
+
 		for _, pattern := range testPatterns {
 			if strings.Contains(lowerData, pattern) {
 				return false // Found tests
@@ -336,7 +336,7 @@ func (c *CodeQualityChecker) checkSecurityConfig(data interface{}) bool {
 	if dataStr, ok := data.(string); ok {
 		insecurePatterns := []string{"password=", "secret=", "token=", "key=", "http://"}
 		lowerData := strings.ToLower(dataStr)
-		
+
 		for _, pattern := range insecurePatterns {
 			if strings.Contains(lowerData, pattern) {
 				return true // Found security issue
@@ -351,17 +351,17 @@ func (c *CodeQualityChecker) checkCodeComplexity(data interface{}) bool {
 	if dataStr, ok := data.(string); ok {
 		// Count nested structures and complexity indicators
 		complexityPatterns := []string{
-			`if\s+.*\s+{.*if\s+.*\s+{`, // Nested if statements
-			`for\s+.*\s+{.*for\s+.*\s+{`, // Nested loops
+			`if\s+.*\s+{.*if\s+.*\s+{`,                      // Nested if statements
+			`for\s+.*\s+{.*for\s+.*\s+{`,                    // Nested loops
 			`switch\s+.*\s+{.*case.*case.*case.*case.*case`, // Long switch statements
 		}
-		
+
 		for _, pattern := range complexityPatterns {
 			if matched, _ := regexp.MatchString(pattern, dataStr); matched {
 				return true // High complexity found
 			}
 		}
-		
+
 		// Check for excessive line length (indication of complexity)
 		lines := strings.Split(dataStr, "\n")
 		for _, line := range lines {
@@ -379,10 +379,10 @@ func (c *CodeQualityChecker) checkNamingConventions(data interface{}) bool {
 		// Look for inconsistent naming patterns
 		camelCasePattern := regexp.MustCompile(`[a-z]+[A-Z][a-zA-Z]*`)
 		snake_casePattern := regexp.MustCompile(`[a-z]+_[a-z_]*`)
-		
+
 		camelCaseMatches := camelCasePattern.FindAllString(dataStr, -1)
 		snakeCaseMatches := snake_casePattern.FindAllString(dataStr, -1)
-		
+
 		// If both patterns exist significantly, flag as inconsistent
 		if len(camelCaseMatches) > 3 && len(snakeCaseMatches) > 3 {
 			return true // Inconsistent naming
@@ -399,7 +399,7 @@ func (c *CodeQualityChecker) countPipelineSteps(data interface{}) int {
 		stepPatterns := []string{"step", "stage", "phase", "task"}
 		count := 0
 		lowerData := strings.ToLower(dataStr)
-		
+
 		for _, pattern := range stepPatterns {
 			count += strings.Count(lowerData, pattern)
 		}
@@ -413,13 +413,13 @@ func (c *CodeQualityChecker) calculateComplexity(data interface{}) float64 {
 	if dataStr, ok := data.(string); ok {
 		lines := strings.Split(dataStr, "\n")
 		complexity := float64(len(lines)) / 100.0 // Base complexity on lines
-		
+
 		// Add complexity for control structures
 		controlStructures := []string{"if", "for", "while", "switch", "case"}
 		for _, structure := range controlStructures {
 			complexity += float64(strings.Count(strings.ToLower(dataStr), structure)) * 0.1
 		}
-		
+
 		if complexity > 10 {
 			complexity = 10
 		}
@@ -450,16 +450,16 @@ func (c *CodeQualityChecker) calculateTestCoverage(data interface{}) float64 {
 	if dataStr, ok := data.(string); ok {
 		lines := strings.Split(dataStr, "\n")
 		testLines := 0
-		
+
 		for _, line := range lines {
 			lowerLine := strings.ToLower(strings.TrimSpace(line))
-			if strings.Contains(lowerLine, "test") || 
-			   strings.Contains(lowerLine, "assert") ||
-			   strings.Contains(lowerLine, "expect") {
+			if strings.Contains(lowerLine, "test") ||
+				strings.Contains(lowerLine, "assert") ||
+				strings.Contains(lowerLine, "expect") {
 				testLines++
 			}
 		}
-		
+
 		if len(lines) > 0 {
 			return (float64(testLines) / float64(len(lines))) * 100
 		}
@@ -478,24 +478,24 @@ func (c *CodeQualityChecker) getConfigSize(data interface{}) int {
 func (c *CodeQualityChecker) calculateSecurityScore(data interface{}) float64 {
 	// Calculate security score (0-100, where 100 is most secure)
 	score := 100.0
-	
+
 	if dataStr, ok := data.(string); ok {
 		securityIssues := []string{
 			"password=", "secret=", "token=", "key=",
 			"http://", "admin/admin", "root/root",
 		}
-		
+
 		for _, issue := range securityIssues {
 			if strings.Contains(strings.ToLower(dataStr), issue) {
 				score -= 20 // Deduct points for each security issue
 			}
 		}
-		
+
 		if score < 0 {
 			score = 0
 		}
 	}
-	
+
 	return score
 }
 
@@ -504,7 +504,7 @@ func (c *CodeQualityChecker) countLinesOfCode(data interface{}) int {
 	if dataStr, ok := data.(string); ok {
 		lines := strings.Split(dataStr, "\n")
 		nonEmptyLines := 0
-		
+
 		for _, line := range lines {
 			if strings.TrimSpace(line) != "" {
 				nonEmptyLines++
@@ -520,7 +520,7 @@ func (c *CodeQualityChecker) countFunctions(data interface{}) int {
 	if dataStr, ok := data.(string); ok {
 		functionPatterns := []string{"func ", "function ", "def ", "method "}
 		count := 0
-		
+
 		for _, pattern := range functionPatterns {
 			count += strings.Count(strings.ToLower(dataStr), pattern)
 		}
@@ -531,7 +531,7 @@ func (c *CodeQualityChecker) countFunctions(data interface{}) int {
 
 func (c *CodeQualityChecker) determineStatus(check *QualityCheck) {
 	percentage := (check.Score / check.MaxScore) * 100
-	
+
 	if percentage >= 80 {
 		check.Status = "passed"
 	} else if percentage >= 60 {

@@ -20,37 +20,37 @@ type OracleConnector struct {
 
 // OracleConfig holds Oracle connection configuration
 type OracleConfig struct {
-	Host               string        `json:"host"`
-	Port               int           `json:"port"`
-	ServiceName        string        `json:"service_name"`
-	SID                string        `json:"sid"`
-	Username           string        `json:"username"`
-	Password           string        `json:"password"`
-	ConnectString      string        `json:"connect_string"`
-	Wallet             string        `json:"wallet"`
-	WalletPassword     string        `json:"wallet_password"`
-	MaxOpenConns       int           `json:"max_open_conns"`
-	MaxIdleConns       int           `json:"max_idle_conns"`
-	ConnMaxLifetime    time.Duration `json:"conn_max_lifetime"`
-	ConnectionTimeout  time.Duration `json:"connection_timeout"`
-	CommandTimeout     time.Duration `json:"command_timeout"`
-	FetchArraySize     int           `json:"fetch_array_size"`
-	PrefetchRows       int           `json:"prefetch_rows"`
-	PrefetchMemory     int           `json:"prefetch_memory"`
-	StmtCacheSize      int           `json:"stmt_cache_size"`
-	EnableEvents       bool          `json:"enable_events"`
-	Timezone           string        `json:"timezone"`
-	Charset            string        `json:"charset"`
-	NCharset           string        `json:"ncharset"`
+	Host              string        `json:"host"`
+	Port              int           `json:"port"`
+	ServiceName       string        `json:"service_name"`
+	SID               string        `json:"sid"`
+	Username          string        `json:"username"`
+	Password          string        `json:"password"`
+	ConnectString     string        `json:"connect_string"`
+	Wallet            string        `json:"wallet"`
+	WalletPassword    string        `json:"wallet_password"`
+	MaxOpenConns      int           `json:"max_open_conns"`
+	MaxIdleConns      int           `json:"max_idle_conns"`
+	ConnMaxLifetime   time.Duration `json:"conn_max_lifetime"`
+	ConnectionTimeout time.Duration `json:"connection_timeout"`
+	CommandTimeout    time.Duration `json:"command_timeout"`
+	FetchArraySize    int           `json:"fetch_array_size"`
+	PrefetchRows      int           `json:"prefetch_rows"`
+	PrefetchMemory    int           `json:"prefetch_memory"`
+	StmtCacheSize     int           `json:"stmt_cache_size"`
+	EnableEvents      bool          `json:"enable_events"`
+	Timezone          string        `json:"timezone"`
+	Charset           string        `json:"charset"`
+	NCharset          string        `json:"ncharset"`
 }
 
 // OracleQueryResult represents the result of an Oracle query
 type OracleQueryResult struct {
-	Columns    []string                 `json:"columns"`
-	Rows       []map[string]interface{} `json:"rows"`
-	RowCount   int                      `json:"row_count"`
-	QueryTime  time.Duration            `json:"query_time"`
-	Metadata   map[string]interface{}   `json:"metadata"`
+	Columns   []string                 `json:"columns"`
+	Rows      []map[string]interface{} `json:"rows"`
+	RowCount  int                      `json:"row_count"`
+	QueryTime time.Duration            `json:"query_time"`
+	Metadata  map[string]interface{}   `json:"metadata"`
 }
 
 // OracleExecutionResult represents the result of an Oracle command execution
@@ -77,14 +77,14 @@ type OracleTableInfo struct {
 
 // OracleColumnInfo represents Oracle column information
 type OracleColumnInfo struct {
-	ColumnName   string `json:"column_name"`
-	DataType     string `json:"data_type"`
-	DataLength   int    `json:"data_length"`
-	DataPrecision *int  `json:"data_precision,omitempty"`
-	DataScale    *int   `json:"data_scale,omitempty"`
-	Nullable     string `json:"nullable"`
-	DefaultValue *string `json:"default_value,omitempty"`
-	ColumnID     int    `json:"column_id"`
+	ColumnName    string  `json:"column_name"`
+	DataType      string  `json:"data_type"`
+	DataLength    int     `json:"data_length"`
+	DataPrecision *int    `json:"data_precision,omitempty"`
+	DataScale     *int    `json:"data_scale,omitempty"`
+	Nullable      string  `json:"nullable"`
+	DefaultValue  *string `json:"default_value,omitempty"`
+	ColumnID      int     `json:"column_id"`
 }
 
 // OracleIndexInfo represents Oracle index information
@@ -248,7 +248,7 @@ func (oc *OracleConnector) Query(ctx context.Context, query string, args ...inte
 		row := make(map[string]interface{})
 		for i, col := range columns {
 			val := values[i]
-			
+
 			// Handle Oracle-specific types
 			if val != nil {
 				switch v := val.(type) {
@@ -396,10 +396,10 @@ func (oc *OracleConnector) GetTableInfo(ctx context.Context, owner, tableName st
 // getTableColumns retrieves column information for a table
 func (oc *OracleConnector) getTableColumns(ctx context.Context, owner, tableName string) ([]OracleColumnInfo, error) {
 	query := `
-		SELECT column_name, data_type, data_length, data_precision, data_scale, 
+		SELECT column_name, data_type, data_length, data_precision, data_scale,
 		       nullable, data_default, column_id
-		FROM all_tab_columns 
-		WHERE owner = :1 AND table_name = :2 
+		FROM all_tab_columns
+		WHERE owner = :1 AND table_name = :2
 		ORDER BY column_id
 	`
 
@@ -463,9 +463,9 @@ func (oc *OracleConnector) getTableIndexes(ctx context.Context, owner, tableName
 
 		// Get index columns
 		colQuery := `
-			SELECT column_name 
-			FROM all_ind_columns 
-			WHERE index_owner = :1 AND index_name = :2 
+			SELECT column_name
+			FROM all_ind_columns
+			WHERE index_owner = :1 AND index_name = :2
 			ORDER BY column_position
 		`
 		colRows, err := oc.db.QueryContext(ctx, colQuery, owner, idx.IndexName)
@@ -493,7 +493,7 @@ func (oc *OracleConnector) getTableIndexes(ctx context.Context, owner, tableName
 func (oc *OracleConnector) getTableConstraints(ctx context.Context, owner, tableName string) ([]OracleConstraintInfo, error) {
 	query := `
 		SELECT constraint_name, constraint_type, r_owner, r_constraint_name
-		FROM all_constraints 
+		FROM all_constraints
 		WHERE owner = :1 AND table_name = :2
 	`
 
@@ -516,9 +516,9 @@ func (oc *OracleConnector) getTableConstraints(ctx context.Context, owner, table
 
 		// Get constraint columns
 		colQuery := `
-			SELECT column_name 
-			FROM all_cons_columns 
-			WHERE owner = :1 AND constraint_name = :2 
+			SELECT column_name
+			FROM all_cons_columns
+			WHERE owner = :1 AND constraint_name = :2
 			ORDER BY position
 		`
 		colRows, err := oc.db.QueryContext(ctx, colQuery, owner, constraint.ConstraintName)
@@ -545,7 +545,7 @@ func (oc *OracleConnector) getTableConstraints(ctx context.Context, owner, table
 // getTableRowCount gets approximate row count for a table
 func (oc *OracleConnector) getTableRowCount(ctx context.Context, owner, tableName string) (int64, error) {
 	query := `SELECT num_rows FROM all_tables WHERE owner = :1 AND table_name = :2`
-	
+
 	var count sql.NullInt64
 	err := oc.db.QueryRowContext(ctx, query, owner, tableName).Scan(&count)
 	if err != nil {
@@ -555,14 +555,14 @@ func (oc *OracleConnector) getTableRowCount(ctx context.Context, owner, tableNam
 	if count.Valid {
 		return count.Int64, nil
 	}
-	
+
 	return 0, fmt.Errorf("table statistics not available")
 }
 
 // buildColumnTypeInfo builds column type information
 func (oc *OracleConnector) buildColumnTypeInfo(columnTypes []*sql.ColumnType) []map[string]interface{} {
 	var typeInfo []map[string]interface{}
-	
+
 	for _, ct := range columnTypes {
 		info := map[string]interface{}{
 			"name":     ct.Name(),
@@ -628,16 +628,16 @@ func (oc *OracleConnector) Close() error {
 // GetConnectionInfo returns connection information
 func (oc *OracleConnector) GetConnectionInfo() map[string]interface{} {
 	return map[string]interface{}{
-		"host":            oc.config.Host,
-		"port":            oc.config.Port,
-		"service_name":    oc.config.ServiceName,
-		"sid":             oc.config.SID,
-		"username":        oc.config.Username,
-		"connected":       oc.db != nil,
-		"max_open_conns":  oc.config.MaxOpenConns,
-		"max_idle_conns":  oc.config.MaxIdleConns,
+		"host":             oc.config.Host,
+		"port":             oc.config.Port,
+		"service_name":     oc.config.ServiceName,
+		"sid":              oc.config.SID,
+		"username":         oc.config.Username,
+		"connected":        oc.db != nil,
+		"max_open_conns":   oc.config.MaxOpenConns,
+		"max_idle_conns":   oc.config.MaxIdleConns,
 		"fetch_array_size": oc.config.FetchArraySize,
-		"charset":         oc.config.Charset,
-		"timezone":        oc.config.Timezone,
+		"charset":          oc.config.Charset,
+		"timezone":         oc.config.Timezone,
 	}
 }

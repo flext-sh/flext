@@ -78,7 +78,7 @@ func (c *ServerStartCommand) Run(ctx context.Context, args []string) error {
 		// Start server in background
 		cmd := exec.Command(serverPath)
 		cmd.Env = os.Environ()
-		
+
 		if err := cmd.Start(); err != nil {
 			return fmt.Errorf("failed to start server: %w", err)
 		}
@@ -91,13 +91,13 @@ func (c *ServerStartCommand) Run(ctx context.Context, args []string) error {
 
 		fmt.Printf("Server started in background (PID: %d)\n", cmd.Process.Pid)
 		fmt.Printf("PID file: %s\n", pidFile)
-		
+
 		// Wait a moment to check if server starts successfully
 		time.Sleep(2 * time.Second)
 		if !c.isServerRunning() {
 			return fmt.Errorf("server failed to start")
 		}
-		
+
 		fmt.Printf("Server is now running at http://%s:%d\n", *c.host, *c.port)
 	} else {
 		// Start server in foreground
@@ -118,13 +118,13 @@ func (c *ServerStartCommand) Run(ctx context.Context, args []string) error {
 func (c *ServerStartCommand) isServerRunning() bool {
 	url := fmt.Sprintf("http://%s:%d/health", *c.host, *c.port)
 	client := &http.Client{Timeout: 2 * time.Second}
-	
+
 	resp, err := client.Get(url)
 	if err != nil {
 		return false
 	}
 	defer resp.Body.Close()
-	
+
 	return resp.StatusCode == http.StatusOK
 }
 
@@ -199,7 +199,7 @@ func (c *ServerStatusCommand) Run(ctx context.Context, args []string) error {
 	// Check health endpoint
 	healthURL := baseURL + "/health"
 	client := &http.Client{Timeout: 5 * time.Second}
-	
+
 	resp, err := client.Get(healthURL)
 	if err != nil {
 		fmt.Printf("❌ Server is not reachable: %v\n", err)
@@ -219,11 +219,11 @@ func (c *ServerStatusCommand) Run(ctx context.Context, args []string) error {
 	resp, err = client.Get(infoURL)
 	if err == nil && resp.StatusCode == http.StatusOK {
 		defer resp.Body.Close()
-		
+
 		fmt.Printf("\nServer Information:\n")
 		fmt.Printf("  URL: %s\n", baseURL)
 		fmt.Printf("  Health: OK\n")
-		
+
 		// Check PID file if exists
 		pidFile := "/tmp/flext-server.pid"
 		if pidData, err := os.ReadFile(pidFile); err == nil {
@@ -247,7 +247,7 @@ func (c *ServerStatusCommand) Run(ctx context.Context, args []string) error {
 			continue
 		}
 		resp.Body.Close()
-		
+
 		if resp.StatusCode == http.StatusOK {
 			fmt.Printf("  %s: ✅ OK\n", endpoint)
 		} else {
@@ -303,13 +303,13 @@ func (c *ServerStopCommand) Run(ctx context.Context, args []string) error {
 	if !*c.force {
 		shutdownURL := fmt.Sprintf("http://%s:%d/admin/shutdown", *c.host, *c.port)
 		client := &http.Client{Timeout: 5 * time.Second}
-		
+
 		resp, err := client.Post(shutdownURL, "application/json", nil)
 		if err == nil {
 			resp.Body.Close()
 			if resp.StatusCode == http.StatusOK {
 				fmt.Printf("Server shutdown initiated gracefully\n")
-				
+
 				// Wait for server to stop
 				for i := 0; i < 10; i++ {
 					if !c.isServerRunning() {
@@ -328,7 +328,7 @@ func (c *ServerStopCommand) Run(ctx context.Context, args []string) error {
 		pidStr := string(pidData)
 		if pid, err := strconv.Atoi(pidStr); err == nil {
 			fmt.Printf("Found server PID: %d\n", pid)
-			
+
 			process, err := os.FindProcess(pid)
 			if err != nil {
 				return fmt.Errorf("failed to find process %d: %w", pid, err)
@@ -368,19 +368,19 @@ func (c *ServerStopCommand) Run(ctx context.Context, args []string) error {
 
 	fmt.Printf("❌ Could not stop server: PID file not found\n")
 	fmt.Printf("You may need to stop the server manually or use --force\n")
-	
+
 	return fmt.Errorf("failed to stop server")
 }
 
 func (c *ServerStopCommand) isServerRunning() bool {
 	url := fmt.Sprintf("http://%s:%d/health", *c.host, *c.port)
 	client := &http.Client{Timeout: 2 * time.Second}
-	
+
 	resp, err := client.Get(url)
 	if err != nil {
 		return false
 	}
 	defer resp.Body.Close()
-	
+
 	return resp.StatusCode == http.StatusOK
 }

@@ -1,6 +1,16 @@
-# FLEXT Development Environment
-# =============================
+# FLEXT Development Environment - Python 3.13
+# =============================================
 version: "3.8"
+
+# ===== GLOBAL CONFIGURATION =====
+x-common-variables: &common-variables
+  PYTHON_VERSION: "3.13"
+  PYTHONPATH: "/app/src"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONUNBUFFERED: "1"
+  FLEXT_ENV: "development"
+  FLEXT_DEBUG: "true"
+  FLEXT_STRICT_MODE: "true"
 
 services:
   # PostgreSQL Database

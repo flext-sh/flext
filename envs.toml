@@ -9,3 +9,7 @@ patch = "3.13.3"
 [gruponos-meltano-native-aU1PHgta]
 minor = "3.12"
 patch = "3.12.10"
+
+[flext-OX9jaBUq]
+minor = "3.13"
+patch = "3.13.5"

@@ -16,13 +16,13 @@ import (
 
 // DBTManager manages dbt project operations
 type DBTManager struct {
-	projectPath    string
-	profilesDir    string
-	logger         logging.Logger
-	pythonPath     string
-	dbtPath        string
-	venvPath       string
-	defaultTarget  string
+	projectPath   string
+	profilesDir   string
+	logger        logging.Logger
+	pythonPath    string
+	dbtPath       string
+	venvPath      string
+	defaultTarget string
 }
 
 // DBTConfig represents dbt configuration
@@ -54,12 +54,12 @@ type DBTRunResult struct {
 
 // DBTModelResult represents the result of a dbt model execution
 type DBTModelResult struct {
-	Name         string                 `json:"name"`
-	Status       string                 `json:"status"`
+	Name          string                 `json:"name"`
+	Status        string                 `json:"status"`
 	ExecutionTime float64                `json:"execution_time"`
-	RowsAffected int64                  `json:"rows_affected"`
-	ErrorMessage string                 `json:"error_message,omitempty"`
-	Metadata     map[string]interface{} `json:"metadata"`
+	RowsAffected  int64                  `json:"rows_affected"`
+	ErrorMessage  string                 `json:"error_message,omitempty"`
+	Metadata      map[string]interface{} `json:"metadata"`
 }
 
 // DBTTestResult represents the result of a dbt test execution
@@ -179,12 +179,12 @@ func (dm *DBTManager) InitProject(ctx context.Context, projectName string) (*DBT
 // Run executes dbt run command
 func (dm *DBTManager) Run(ctx context.Context, models []string, target string) (*DBTRunResult, error) {
 	args := []string{"run"}
-	
+
 	if target == "" {
 		target = dm.defaultTarget
 	}
 	args = append(args, "--target", target)
-	
+
 	if len(models) > 0 {
 		args = append(args, "--models", strings.Join(models, ","))
 	}
@@ -195,12 +195,12 @@ func (dm *DBTManager) Run(ctx context.Context, models []string, target string) (
 // Test executes dbt test command
 func (dm *DBTManager) Test(ctx context.Context, models []string, target string) (*DBTRunResult, error) {
 	args := []string{"test"}
-	
+
 	if target == "" {
 		target = dm.defaultTarget
 	}
 	args = append(args, "--target", target)
-	
+
 	if len(models) > 0 {
 		args = append(args, "--models", strings.Join(models, ","))
 	}
@@ -211,12 +211,12 @@ func (dm *DBTManager) Test(ctx context.Context, models []string, target string) 
 // Compile executes dbt compile command
 func (dm *DBTManager) Compile(ctx context.Context, models []string, target string) (*DBTRunResult, error) {
 	args := []string{"compile"}
-	
+
 	if target == "" {
 		target = dm.defaultTarget
 	}
 	args = append(args, "--target", target)
-	
+
 	if len(models) > 0 {
 		args = append(args, "--models", strings.Join(models, ","))
 	}
@@ -227,7 +227,7 @@ func (dm *DBTManager) Compile(ctx context.Context, models []string, target strin
 // Docs generates dbt documentation
 func (dm *DBTManager) Docs(ctx context.Context, serve bool, port int) (*DBTRunResult, error) {
 	args := []string{"docs", "generate"}
-	
+
 	result, err := dm.executeCommand(ctx, args)
 	if err != nil {
 		return result, err
@@ -238,7 +238,7 @@ func (dm *DBTManager) Docs(ctx context.Context, serve bool, port int) (*DBTRunRe
 		if port > 0 {
 			serveArgs = append(serveArgs, "--port", fmt.Sprintf("%d", port))
 		}
-		
+
 		// Start docs server in background
 		go func() {
 			serveResult, err := dm.executeCommand(context.Background(), serveArgs)
@@ -261,12 +261,12 @@ func (dm *DBTManager) Docs(ctx context.Context, serve bool, port int) (*DBTRunRe
 // Seed executes dbt seed command
 func (dm *DBTManager) Seed(ctx context.Context, seeds []string, target string) (*DBTRunResult, error) {
 	args := []string{"seed"}
-	
+
 	if target == "" {
 		target = dm.defaultTarget
 	}
 	args = append(args, "--target", target)
-	
+
 	if len(seeds) > 0 {
 		args = append(args, "--select", strings.Join(seeds, ","))
 	}
@@ -277,12 +277,12 @@ func (dm *DBTManager) Seed(ctx context.Context, seeds []string, target string) (
 // Snapshot executes dbt snapshot command
 func (dm *DBTManager) Snapshot(ctx context.Context, snapshots []string, target string) (*DBTRunResult, error) {
 	args := []string{"snapshot"}
-	
+
 	if target == "" {
 		target = dm.defaultTarget
 	}
 	args = append(args, "--target", target)
-	
+
 	if len(snapshots) > 0 {
 		args = append(args, "--select", strings.Join(snapshots, ","))
 	}
@@ -293,7 +293,7 @@ func (dm *DBTManager) Snapshot(ctx context.Context, snapshots []string, target s
 // GetProjectInfo retrieves dbt project information
 func (dm *DBTManager) GetProjectInfo(ctx context.Context) (*DBTProjectInfo, error) {
 	projectFilePath := filepath.Join(dm.projectPath, "dbt_project.yml")
-	
+
 	// Check if project file exists
 	if _, err := os.Stat(projectFilePath); os.IsNotExist(err) {
 		return nil, fmt.Errorf("dbt_project.yml not found at %s", projectFilePath)
@@ -370,7 +370,7 @@ func (dm *DBTManager) executeCommand(ctx context.Context, args []string) (*DBTRu
 
 	cmd := exec.CommandContext(ctx, dm.dbtPath, args...)
 	cmd.Dir = dm.projectPath
-	
+
 	// Set environment variables
 	env := os.Environ()
 	if dm.profilesDir != "" {
@@ -422,7 +422,7 @@ func (dm *DBTManager) executeCommand(ctx context.Context, args []string) (*DBTRu
 func (dm *DBTManager) parseResults(result *DBTRunResult) {
 	// Parse JSON output if available (dbt --output json)
 	lines := strings.Split(result.Output, "\n")
-	
+
 	for _, line := range lines {
 		line = strings.TrimSpace(line)
 		if strings.HasPrefix(line, "{") && strings.HasSuffix(line, "}") {
@@ -496,7 +496,7 @@ func (dm *DBTManager) CreateProfile(profileName string, config map[string]interf
 	}
 
 	profilesFile := filepath.Join(profilesDir, "profiles.yml")
-	
+
 	// Create a basic profile (in real implementation would use YAML library)
 	profileContent := fmt.Sprintf(`
 %s:
@@ -529,7 +529,7 @@ func (dm *DBTManager) CreateProfile(profileName string, config map[string]interf
 // CheckConnection tests dbt database connection
 func (dm *DBTManager) CheckConnection(ctx context.Context, target string) (*DBTRunResult, error) {
 	args := []string{"debug"}
-	
+
 	if target != "" {
 		args = append(args, "--target", target)
 	}

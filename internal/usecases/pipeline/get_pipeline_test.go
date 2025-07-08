@@ -145,15 +145,15 @@ func TestGetPipelineUseCase_Execute_WithMultipleSteps(t *testing.T) {
 
 	// Create a test pipeline with multiple steps
 	testPipeline, _ := entities.NewPipeline("Test Pipeline", "Test Description")
-	
+
 	// Add multiple steps
 	step1, _ := entities.NewPipelineStep("Step 1", uuid.New())
 	step2, _ := entities.NewPipelineStep("Step 2", uuid.New())
 	step3, _ := entities.NewPipelineStep("Step 3", uuid.New())
-	
+
 	// Add dependency (step3 depends on step1)
 	step3.DependsOn = []uuid.UUID{step1.ID}
-	
+
 	testPipeline.AddStep(*step1)
 	testPipeline.AddStep(*step2)
 	testPipeline.AddStep(*step3)
@@ -168,7 +168,7 @@ func TestGetPipelineUseCase_Execute_WithMultipleSteps(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotNil(t, result)
 	assert.Len(t, result.Steps, 3)
-	
+
 	// Check that step dependencies are properly mapped
 	var step3Output *pipelineUC.StepOutput
 	for i := range result.Steps {

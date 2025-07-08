@@ -10,20 +10,20 @@ import (
 // PipelineEntity interface especializada para entidades de pipeline
 type PipelineEntity interface {
 	Entity
-	
+
 	// Pipeline-specific behaviors
 	GetName() string
 	SetName(name string) error
 	GetDescription() string
 	SetDescription(description string)
-	
+
 	// Status management
 	GetStatus() string
 	SetStatus(status string) error
 	IsActive() bool
 	Activate() error
 	Deactivate() error
-	
+
 	// Pipeline execution
 	CanExecute() bool
 	GetLastExecutionAt() *time.Time
@@ -35,7 +35,7 @@ type PipelineEntity interface {
 // PluginEntity interface especializada para entidades de plugin
 type PluginEntity interface {
 	Entity
-	
+
 	// Plugin-specific behaviors
 	GetName() string
 	SetName(name string) error
@@ -43,12 +43,12 @@ type PluginEntity interface {
 	SetType(pluginType string) error
 	GetPluginVersion() string
 	SetPluginVersion(version string) error
-	
+
 	// Configuration management
 	GetConfiguration() map[string]interface{}
 	SetConfiguration(config map[string]interface{}) error
 	GetConfigurationSchema() map[string]interface{}
-	
+
 	// Plugin state
 	IsEnabled() bool
 	Enable() error
@@ -60,7 +60,7 @@ type PluginEntity interface {
 // AuthEntity interface especializada para entidades de autenticação
 type AuthEntity interface {
 	Entity
-	
+
 	// Authentication-specific behaviors
 	GetUserID() uuid.UUID
 	SetUserID(userID uuid.UUID) error
@@ -68,14 +68,14 @@ type AuthEntity interface {
 	SetRole(role string) error
 	GetPermissions() []string
 	SetPermissions(permissions []string) error
-	
+
 	// Session management
 	GetLastLoginAt() *time.Time
 	SetLastLoginAt(t time.Time)
 	IsSessionValid() bool
 	GetSessionExpiresAt() *time.Time
 	SetSessionExpiresAt(t time.Time)
-	
+
 	// Security
 	GetPasswordHash() string
 	SetPasswordHash(hash string) error
@@ -88,7 +88,7 @@ type AuthEntity interface {
 // ExecutionEntity interface especializada para entidades de execução
 type ExecutionEntity interface {
 	Entity
-	
+
 	// Execution-specific behaviors
 	GetStatus() string
 	SetStatus(status string) error
@@ -96,21 +96,21 @@ type ExecutionEntity interface {
 	SetStartedAt(t time.Time)
 	GetCompletedAt() *time.Time
 	SetCompletedAt(t time.Time)
-	
+
 	// Progress tracking
 	GetProgress() float64
 	SetProgress(progress float64) error
 	GetStepsTotal() int
 	GetStepsCompleted() int
 	SetStepsCompleted(completed int) error
-	
+
 	// Results and errors
 	GetResult() map[string]interface{}
 	SetResult(result map[string]interface{})
 	GetError() string
 	SetError(errorMsg string)
 	HasError() bool
-	
+
 	// Duration calculation
 	GetDuration() time.Duration
 	IsCompleted() bool
@@ -121,7 +121,7 @@ type ExecutionEntity interface {
 // SingerEntity interface especializada para entidades Singer/Meltano
 type SingerEntity interface {
 	Entity
-	
+
 	// Singer-specific behaviors
 	GetTapName() string
 	SetTapName(name string) error
@@ -129,19 +129,19 @@ type SingerEntity interface {
 	SetTargetName(name string) error
 	GetStream() string
 	SetStream(stream string) error
-	
+
 	// Schema management
 	GetSchema() map[string]interface{}
 	SetSchema(schema map[string]interface{}) error
 	GetCatalog() map[string]interface{}
 	SetCatalog(catalog map[string]interface{}) error
-	
+
 	// State management
 	GetState() map[string]interface{}
 	SetState(state map[string]interface{}) error
 	GetBookmark() string
 	SetBookmark(bookmark string) error
-	
+
 	// Metrics
 	GetRecordsExtracted() int64
 	IncrementRecordsExtracted(count int64)
@@ -154,20 +154,20 @@ type SingerEntity interface {
 // BasePipelineEntity implementação base para entidades de pipeline
 type BasePipelineEntity struct {
 	*BaseEntity
-	Name               string    `json:"name" gorm:"index" db:"name"`
-	Description        string    `json:"description" db:"description"`
-	Status             string    `json:"status" gorm:"default:inactive" db:"status"`
-	LastExecutionAt    *time.Time `json:"last_execution_at" db:"last_execution_at"`
-	ExecutionCount     int64     `json:"execution_count" gorm:"default:0" db:"execution_count"`
+	Name            string     `json:"name" gorm:"index" db:"name"`
+	Description     string     `json:"description" db:"description"`
+	Status          string     `json:"status" gorm:"default:inactive" db:"status"`
+	LastExecutionAt *time.Time `json:"last_execution_at" db:"last_execution_at"`
+	ExecutionCount  int64      `json:"execution_count" gorm:"default:0" db:"execution_count"`
 }
 
 // NewBasePipelineEntity cria uma nova entidade de pipeline
 func NewBasePipelineEntity(name, description string) *BasePipelineEntity {
 	return &BasePipelineEntity{
-		BaseEntity:  NewBaseEntity(),
-		Name:        name,
-		Description: description,
-		Status:      "inactive",
+		BaseEntity:     NewBaseEntity(),
+		Name:           name,
+		Description:    description,
+		Status:         "inactive",
 		ExecutionCount: 0,
 	}
 }
@@ -217,7 +217,7 @@ func (p *BasePipelineEntity) SetStatus(status string) error {
 			return nil
 		}
 	}
-	
+
 	return &value_objects.DomainError{
 		Code:        "INVALID_PIPELINE_STATUS",
 		Message:     "Invalid pipeline status",
@@ -270,13 +270,13 @@ func (p *BasePipelineEntity) IncrementExecutionCount() {
 // BasePluginEntity implementação base para entidades de plugin
 type BasePluginEntity struct {
 	*BaseEntity
-	Name             string                 `json:"name" gorm:"index" db:"name"`
-	Type             string                 `json:"type" gorm:"index" db:"type"`
-	Version          string                 `json:"version" db:"version"`
-	Configuration    map[string]interface{} `json:"configuration" gorm:"type:jsonb" db:"configuration"`
+	Name                string                 `json:"name" gorm:"index" db:"name"`
+	Type                string                 `json:"type" gorm:"index" db:"type"`
+	Version             string                 `json:"version" db:"version"`
+	Configuration       map[string]interface{} `json:"configuration" gorm:"type:jsonb" db:"configuration"`
 	ConfigurationSchema map[string]interface{} `json:"configuration_schema" gorm:"type:jsonb" db:"configuration_schema"`
-	Enabled          bool                   `json:"enabled" gorm:"default:false" db:"enabled"`
-	InstallationPath string                 `json:"installation_path" db:"installation_path"`
+	Enabled             bool                   `json:"enabled" gorm:"default:false" db:"enabled"`
+	InstallationPath    string                 `json:"installation_path" db:"installation_path"`
 }
 
 // NewBasePluginEntity cria uma nova entidade de plugin
@@ -326,7 +326,7 @@ func (p *BasePluginEntity) SetType(pluginType string) error {
 			return nil
 		}
 	}
-	
+
 	return &value_objects.DomainError{
 		Code:        "INVALID_PLUGIN_TYPE",
 		Message:     "Invalid plugin type",
@@ -450,7 +450,7 @@ func (e *BaseExecutionEntity) SetStatus(status string) error {
 			return nil
 		}
 	}
-	
+
 	return &value_objects.DomainError{
 		Code:        "INVALID_EXECUTION_STATUS",
 		Message:     "Invalid execution status",
@@ -519,12 +519,12 @@ func (e *BaseExecutionEntity) SetStepsCompleted(completed int) error {
 		}
 	}
 	e.StepsCompleted = completed
-	
+
 	// Update progress automatically
 	if e.StepsTotal > 0 {
 		e.Progress = (float64(completed) / float64(e.StepsTotal)) * 100.0
 	}
-	
+
 	e.SetUpdatedAt(time.Now().UTC())
 	return nil
 }
@@ -567,12 +567,12 @@ func (e *BaseExecutionEntity) GetDuration() time.Duration {
 	if e.StartedAt == nil {
 		return 0
 	}
-	
+
 	endTime := time.Now().UTC()
 	if e.CompletedAt != nil {
 		endTime = *e.CompletedAt
 	}
-	
+
 	return endTime.Sub(*e.StartedAt)
 }
 

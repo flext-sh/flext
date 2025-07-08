@@ -22,27 +22,27 @@ type HealthChecker struct {
 
 // HealthCheck represents a health check definition
 type HealthCheck struct {
-	Name        string                                       `json:"name"`
-	Component   string                                       `json:"component"`
-	Description string                                       `json:"description"`
-	Timeout     time.Duration                                `json:"timeout"`
-	Interval    time.Duration                                `json:"interval"`
-	Critical    bool                                         `json:"critical"`
+	Name        string                                      `json:"name"`
+	Component   string                                      `json:"component"`
+	Description string                                      `json:"description"`
+	Timeout     time.Duration                               `json:"timeout"`
+	Interval    time.Duration                               `json:"interval"`
+	Critical    bool                                        `json:"critical"`
 	CheckFunc   func(ctx context.Context) HealthCheckResult `json:"-"`
-	Metadata    map[string]interface{}                       `json:"metadata"`
+	Metadata    map[string]interface{}                      `json:"metadata"`
 }
 
 // HealthCheckResult represents the result of a health check
 type HealthCheckResult struct {
-	Name        string                 `json:"name"`
-	Component   string                 `json:"component"`
-	Status      HealthStatus           `json:"status"`
-	Message     string                 `json:"message"`
-	Timestamp   time.Time              `json:"timestamp"`
-	Duration    time.Duration          `json:"duration"`
-	Details     map[string]interface{} `json:"details,omitempty"`
-	Error       string                 `json:"error,omitempty"`
-	Metadata    map[string]interface{} `json:"metadata,omitempty"`
+	Name      string                 `json:"name"`
+	Component string                 `json:"component"`
+	Status    HealthStatus           `json:"status"`
+	Message   string                 `json:"message"`
+	Timestamp time.Time              `json:"timestamp"`
+	Duration  time.Duration          `json:"duration"`
+	Details   map[string]interface{} `json:"details,omitempty"`
+	Error     string                 `json:"error,omitempty"`
+	Metadata  map[string]interface{} `json:"metadata,omitempty"`
 }
 
 // HealthCheckCallback is called when health status changes
@@ -59,13 +59,13 @@ const (
 
 // OverallHealth represents overall system health
 type OverallHealth struct {
-	Status        HealthStatus                     `json:"status"`
-	Message       string                           `json:"message"`
-	Timestamp     time.Time                        `json:"timestamp"`
-	Components    map[string]HealthCheckResult     `json:"components"`
-	Summary       map[string]int                   `json:"summary"`
-	CriticalIssues []string                        `json:"critical_issues,omitempty"`
-	Metadata      map[string]interface{}           `json:"metadata"`
+	Status         HealthStatus                 `json:"status"`
+	Message        string                       `json:"message"`
+	Timestamp      time.Time                    `json:"timestamp"`
+	Components     map[string]HealthCheckResult `json:"components"`
+	Summary        map[string]int               `json:"summary"`
+	CriticalIssues []string                     `json:"critical_issues,omitempty"`
+	Metadata       map[string]interface{}       `json:"metadata"`
 }
 
 // NewHealthChecker creates a new health checker
@@ -137,7 +137,7 @@ func (hc *HealthChecker) RegisterCheck(check HealthCheck) {
 	defer hc.mu.Unlock()
 
 	hc.checks[check.Name] = check
-	
+
 	// Initialize result as unknown
 	hc.results[check.Name] = HealthCheckResult{
 		Name:      check.Name,
@@ -224,7 +224,7 @@ func (hc *HealthChecker) RunCheck(ctx context.Context, name string) HealthCheckR
 	defer cancel()
 
 	startTime := time.Now()
-	
+
 	// Run the check
 	result := check.CheckFunc(checkCtx)
 	result.Duration = time.Since(startTime)
@@ -279,7 +279,7 @@ func (hc *HealthChecker) RunAllChecks(ctx context.Context) map[string]HealthChec
 // GetOverallHealth returns overall system health
 func (hc *HealthChecker) GetOverallHealth(ctx context.Context) OverallHealth {
 	results := hc.RunAllChecks(ctx)
-	
+
 	summary := map[string]int{
 		"healthy":   0,
 		"degraded":  0,
@@ -300,7 +300,7 @@ func (hc *HealthChecker) GetOverallHealth(ctx context.Context) OverallHealth {
 
 		if check.Critical && result.Status != HealthStatusHealthy {
 			criticalIssues = append(criticalIssues, fmt.Sprintf("%s: %s", result.Name, result.Message))
-			
+
 			// Set overall status based on worst critical issue
 			if result.Status == HealthStatusUnhealthy {
 				overallStatus = HealthStatusUnhealthy
@@ -328,9 +328,9 @@ func (hc *HealthChecker) GetOverallHealth(ctx context.Context) OverallHealth {
 		Summary:        summary,
 		CriticalIssues: criticalIssues,
 		Metadata: map[string]interface{}{
-			"total_checks":    len(results),
-			"critical_count":  len(criticalIssues),
-			"check_duration":  time.Since(time.Now()).String(),
+			"total_checks":   len(results),
+			"critical_count": len(criticalIssues),
+			"check_duration": time.Since(time.Now()).String(),
 		},
 	}
 }
@@ -403,62 +403,62 @@ func (hc *HealthChecker) checkMemoryHealth(ctx context.Context) HealthCheckResul
 
 	if memoryUsageMB > 2000 {
 		return HealthCheckResult{
-			Name:    "memory",
+			Name:      "memory",
 			Component: "system",
-			Status:  HealthStatusUnhealthy,
-			Message: fmt.Sprintf("High memory usage: %.2f MB", memoryUsageMB),
-			Details: details,
+			Status:    HealthStatusUnhealthy,
+			Message:   fmt.Sprintf("High memory usage: %.2f MB", memoryUsageMB),
+			Details:   details,
 		}
 	} else if memoryUsageMB > 1000 {
 		return HealthCheckResult{
-			Name:    "memory",
+			Name:      "memory",
 			Component: "system",
-			Status:  HealthStatusDegraded,
-			Message: fmt.Sprintf("Elevated memory usage: %.2f MB", memoryUsageMB),
-			Details: details,
+			Status:    HealthStatusDegraded,
+			Message:   fmt.Sprintf("Elevated memory usage: %.2f MB", memoryUsageMB),
+			Details:   details,
 		}
 	}
 
 	return HealthCheckResult{
-		Name:    "memory",
+		Name:      "memory",
 		Component: "system",
-		Status:  HealthStatusHealthy,
-		Message: fmt.Sprintf("Memory usage normal: %.2f MB", memoryUsageMB),
-		Details: details,
+		Status:    HealthStatusHealthy,
+		Message:   fmt.Sprintf("Memory usage normal: %.2f MB", memoryUsageMB),
+		Details:   details,
 	}
 }
 
 func (hc *HealthChecker) checkGoroutineHealth(ctx context.Context) HealthCheckResult {
 	count := runtime.NumGoroutine()
 	details := map[string]interface{}{
-		"count":    count,
+		"count":     count,
 		"cpu_count": runtime.NumCPU(),
 	}
 
 	if count > 2000 {
 		return HealthCheckResult{
-			Name:    "goroutines",
+			Name:      "goroutines",
 			Component: "runtime",
-			Status:  HealthStatusUnhealthy,
-			Message: fmt.Sprintf("Very high goroutine count: %d", count),
-			Details: details,
+			Status:    HealthStatusUnhealthy,
+			Message:   fmt.Sprintf("Very high goroutine count: %d", count),
+			Details:   details,
 		}
 	} else if count > 1000 {
 		return HealthCheckResult{
-			Name:    "goroutines",
+			Name:      "goroutines",
 			Component: "runtime",
-			Status:  HealthStatusDegraded,
-			Message: fmt.Sprintf("High goroutine count: %d", count),
-			Details: details,
+			Status:    HealthStatusDegraded,
+			Message:   fmt.Sprintf("High goroutine count: %d", count),
+			Details:   details,
 		}
 	}
 
 	return HealthCheckResult{
-		Name:    "goroutines",
+		Name:      "goroutines",
 		Component: "runtime",
-		Status:  HealthStatusHealthy,
-		Message: fmt.Sprintf("Goroutine count normal: %d", count),
-		Details: details,
+		Status:    HealthStatusHealthy,
+		Message:   fmt.Sprintf("Goroutine count normal: %d", count),
+		Details:   details,
 	}
 }
 
@@ -470,33 +470,33 @@ func (hc *HealthChecker) checkDiskSpaceHealth(ctx context.Context) HealthCheckRe
 	}
 
 	return HealthCheckResult{
-		Name:    "disk_space",
+		Name:      "disk_space",
 		Component: "system",
-		Status:  HealthStatusHealthy,
-		Message: "Disk space check passed (simplified)",
-		Details: details,
+		Status:    HealthStatusHealthy,
+		Message:   "Disk space check passed (simplified)",
+		Details:   details,
 	}
 }
 
 func (hc *HealthChecker) checkDatabaseHealth(ctx context.Context, name string, db *sql.DB) HealthCheckResult {
 	if db == nil {
 		return HealthCheckResult{
-			Name:    name,
+			Name:      name,
 			Component: "database",
-			Status:  HealthStatusUnhealthy,
-			Message: "Database connection is nil",
-			Error:   "nil database connection",
+			Status:    HealthStatusUnhealthy,
+			Message:   "Database connection is nil",
+			Error:     "nil database connection",
 		}
 	}
 
 	// Test connection
 	if err := db.PingContext(ctx); err != nil {
 		return HealthCheckResult{
-			Name:    name,
+			Name:      name,
 			Component: "database",
-			Status:  HealthStatusUnhealthy,
-			Message: "Database ping failed",
-			Error:   err.Error(),
+			Status:    HealthStatusUnhealthy,
+			Message:   "Database ping failed",
+			Error:     err.Error(),
 		}
 	}
 
@@ -514,11 +514,11 @@ func (hc *HealthChecker) checkDatabaseHealth(ctx context.Context, name string, d
 	}
 
 	return HealthCheckResult{
-		Name:    name,
+		Name:      name,
 		Component: "database",
-		Status:  HealthStatusHealthy,
-		Message: "Database connection healthy",
-		Details: details,
+		Status:    HealthStatusHealthy,
+		Message:   "Database connection healthy",
+		Details:   details,
 	}
 }
 
@@ -531,10 +531,10 @@ func (hc *HealthChecker) checkExternalServiceHealth(ctx context.Context, name, u
 	}
 
 	return HealthCheckResult{
-		Name:    name,
+		Name:      name,
 		Component: "external",
-		Status:  HealthStatusHealthy,
-		Message: "External service check passed (simplified)",
-		Details: details,
+		Status:    HealthStatusHealthy,
+		Message:   "External service check passed (simplified)",
+		Details:   details,
 	}
 }

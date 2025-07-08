@@ -164,11 +164,11 @@ func (s *PluginService) UpdatePlugin(ctx context.Context, id uuid.UUID, updateDa
 // applyPluginUpdates applies the update data to the plugin
 func (s *PluginService) applyPluginUpdates(plugin *entities.Plugin, updateData map[string]interface{}) error {
 	s.updateBasicFields(plugin, updateData)
-	
+
 	if err := s.updatePluginStatus(plugin, updateData); err != nil {
 		return err
 	}
-	
+
 	s.updatePluginConfiguration(plugin, updateData)
 	return nil
 }
@@ -232,11 +232,11 @@ func (s *PluginService) publishPluginEvents(ctx context.Context, plugin *entitie
 	for i, event := range events {
 		eventInterfaces[i] = event
 	}
-	
+
 	if err := s.publisher.PublishEvents(ctx, eventInterfaces...); err != nil {
 		return err
 	}
-	
+
 	plugin.ClearEvents()
 	return nil
 }

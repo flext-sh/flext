@@ -16,14 +16,14 @@ import (
 
 func TestGetPipelineStatusHandler_Handle(t *testing.T) {
 	tests := []struct {
-		name                string
-		setupPipeline       func() *entities.Pipeline
-		setupExecutions     func(pipelineID uuid.UUID) []*ports.ExecutionRecord
-		command             GetPipelineStatusCommand
-		expectError         bool
-		expectedStatus      string
-		expectedHealthy     bool
-		validateResult      func(t *testing.T, result *GetPipelineStatusResult)
+		name            string
+		setupPipeline   func() *entities.Pipeline
+		setupExecutions func(pipelineID uuid.UUID) []*ports.ExecutionRecord
+		command         GetPipelineStatusCommand
+		expectError     bool
+		expectedStatus  string
+		expectedHealthy bool
+		validateResult  func(t *testing.T, result *GetPipelineStatusResult)
 	}{
 		{
 			name: "pipeline with no executions",
@@ -88,11 +88,11 @@ func TestGetPipelineStatusHandler_Handle(t *testing.T) {
 				assert.Equal(t, 2, result.SuccessCount)
 				assert.Equal(t, 0, result.FailureCount)
 				assert.NotNil(t, result.LastExecution)
-				
+
 				// Check advanced metrics
 				assert.Contains(t, result.Metrics, "execution_success_rate")
 				assert.Equal(t, float64(100), result.Metrics["execution_success_rate"])
-				
+
 				assert.Contains(t, result.Metrics, "last_execution_duration")
 				assert.Contains(t, result.Metrics, "average_execution_time")
 			},
@@ -109,12 +109,12 @@ func TestGetPipelineStatusHandler_Handle(t *testing.T) {
 				now := time.Now()
 				return []*ports.ExecutionRecord{
 					{
-						ID:           uuid.New(),
-						PipelineID:   pipelineID,
-						Status:       "completed",
-						Success:      true,
-						Duration:     2 * time.Second,
-						CreatedAt:    now.Add(-1 * time.Hour),
+						ID:         uuid.New(),
+						PipelineID: pipelineID,
+						Status:     "completed",
+						Success:    true,
+						Duration:   2 * time.Second,
+						CreatedAt:  now.Add(-1 * time.Hour),
 					},
 					{
 						ID:           uuid.New(),
@@ -126,12 +126,12 @@ func TestGetPipelineStatusHandler_Handle(t *testing.T) {
 						CreatedAt:    now.Add(-2 * time.Hour),
 					},
 					{
-						ID:           uuid.New(),
-						PipelineID:   pipelineID,
-						Status:       "completed",
-						Success:      true,
-						Duration:     3 * time.Second,
-						CreatedAt:    now.Add(-3 * time.Hour),
+						ID:         uuid.New(),
+						PipelineID: pipelineID,
+						Status:     "completed",
+						Success:    true,
+						Duration:   3 * time.Second,
+						CreatedAt:  now.Add(-3 * time.Hour),
 					},
 				}
 			},
@@ -142,7 +142,7 @@ func TestGetPipelineStatusHandler_Handle(t *testing.T) {
 				assert.Equal(t, 3, result.ExecutionCount)
 				assert.Equal(t, 2, result.SuccessCount)
 				assert.Equal(t, 1, result.FailureCount)
-				
+
 				// Success rate should be 2/3 = 66.67%
 				expectedSuccessRate := float64(2) / float64(3) * 100
 				actualSuccessRate, exists := result.Metrics["execution_success_rate"]
@@ -165,10 +165,10 @@ func TestGetPipelineStatusHandler_Handle(t *testing.T) {
 			expectedHealthy: false, // Should be unhealthy without steps
 			validateResult: func(t *testing.T, result *GetPipelineStatusResult) {
 				assert.Equal(t, "unhealthy", result.HealthStatus)
-				
+
 				// Check health checks
 				assert.True(t, len(result.HealthChecks) > 0)
-				
+
 				// Find the steps_configured health check
 				var stepsCheck *HealthCheckResult
 				for _, check := range result.HealthChecks {
@@ -177,7 +177,7 @@ func TestGetPipelineStatusHandler_Handle(t *testing.T) {
 						break
 					}
 				}
-				
+
 				require.NotNil(t, stepsCheck, "Should have steps_configured health check")
 				assert.Equal(t, "unhealthy", stepsCheck.Status)
 				assert.Contains(t, stepsCheck.Message, "no configured steps")
@@ -216,13 +216,13 @@ func TestGetPipelineStatusHandler_Handle(t *testing.T) {
 			// Setup repositories
 			pipelineRepo := persistence.NewInMemoryPipelineRepository()
 			executionRepo := persistence.NewInMemoryExecutionRepository()
-			
+
 			// Create execution stats service
 			statsService := services.NewPipelineExecutionStatsService(executionRepo, pipelineRepo)
-			
+
 			// Create handler
 			handler := NewGetPipelineStatusHandler(pipelineRepo, statsService)
-			
+
 			ctx := context.Background()
 			var pipelineID uuid.UUID
 
@@ -267,7 +267,7 @@ func TestGetPipelineStatusHandler_Handle(t *testing.T) {
 			// Basic assertions
 			assert.Equal(t, command.PipelineID, result.PipelineID)
 			assert.Equal(t, tt.expectedStatus, result.Status)
-			
+
 			// Health status validation
 			if tt.expectedHealthy {
 				assert.Contains(t, []string{"healthy", "warning"}, result.HealthStatus)
@@ -277,7 +277,7 @@ func TestGetPipelineStatusHandler_Handle(t *testing.T) {
 
 			// Health checks should always be present
 			assert.True(t, len(result.HealthChecks) > 0)
-			
+
 			// Metrics should always be present
 			assert.NotNil(t, result.Metrics)
 			assert.True(t, len(result.Metrics) > 0)
@@ -292,11 +292,11 @@ func TestGetPipelineStatusHandler_Handle(t *testing.T) {
 
 func TestPausePipelineHandler_Handle(t *testing.T) {
 	tests := []struct {
-		name         string
+		name          string
 		setupPipeline func() *entities.Pipeline
-		command      PausePipelineCommand
-		expectError  bool
-		errorCode    string
+		command       PausePipelineCommand
+		expectError   bool
+		errorCode     string
 	}{
 		{
 			name: "pause active pipeline",
@@ -362,7 +362,7 @@ func TestPausePipelineHandler_Handle(t *testing.T) {
 			// Setup
 			pipelineRepo := persistence.NewInMemoryPipelineRepository()
 			handler := NewPausePipelineHandler(pipelineRepo)
-			
+
 			ctx := context.Background()
 			var pipelineID uuid.UUID
 
@@ -389,7 +389,7 @@ func TestPausePipelineHandler_Handle(t *testing.T) {
 			if tt.expectError {
 				assert.Error(t, err)
 				assert.Nil(t, result)
-				
+
 				// Check error code if specified
 				if tt.errorCode != "" {
 					// Note: This would require the error to implement a specific interface
@@ -474,7 +474,7 @@ func TestResumePipelineHandler_Handle(t *testing.T) {
 			// Setup
 			pipelineRepo := persistence.NewInMemoryPipelineRepository()
 			handler := NewResumePipelineHandler(pipelineRepo)
-			
+
 			ctx := context.Background()
 			var pipelineID uuid.UUID
 
@@ -501,7 +501,7 @@ func TestResumePipelineHandler_Handle(t *testing.T) {
 			if tt.expectError {
 				assert.Error(t, err)
 				assert.Nil(t, result)
-				
+
 				// Check error code if specified
 				if tt.errorCode != "" {
 					// The actual error message format may vary
@@ -532,11 +532,11 @@ func TestPipelineStatusFlow_Integration(t *testing.T) {
 	pipelineRepo := persistence.NewInMemoryPipelineRepository()
 	executionRepo := persistence.NewInMemoryExecutionRepository()
 	statsService := services.NewPipelineExecutionStatsService(executionRepo, pipelineRepo)
-	
+
 	statusHandler := NewGetPipelineStatusHandler(pipelineRepo, statsService)
 	pauseHandler := NewPausePipelineHandler(pipelineRepo)
 	resumeHandler := NewResumePipelineHandler(pipelineRepo)
-	
+
 	ctx := context.Background()
 
 	// Create and save pipeline
@@ -544,7 +544,7 @@ func TestPipelineStatusFlow_Integration(t *testing.T) {
 	step, _ := entities.NewPipelineStep("test-step", uuid.New())
 	pipeline.AddStep(*step)
 	pipeline.Activate()
-	
+
 	err := pipelineRepo.Save(ctx, pipeline)
 	require.NoError(t, err)
 
@@ -559,13 +559,13 @@ func TestPipelineStatusFlow_Integration(t *testing.T) {
 			CreatedAt:  time.Now().Add(-1 * time.Hour),
 		},
 		{
-			ID:         uuid.New(),
-			PipelineID: pipeline.GetID(),
-			Status:     "failed",
-			Success:    false,
-			Duration:   1 * time.Second,
+			ID:           uuid.New(),
+			PipelineID:   pipeline.GetID(),
+			Status:       "failed",
+			Success:      false,
+			Duration:     1 * time.Second,
 			ErrorMessage: "Test error",
-			CreatedAt:  time.Now().Add(-30 * time.Minute),
+			CreatedAt:    time.Now().Add(-30 * time.Minute),
 		},
 	}
 

@@ -80,22 +80,22 @@ func (dm *DatabaseManager) GetDatabaseStats(ctx context.Context) (map[string]int
 	// Basic database info
 	dbStats := dm.db.Stats()
 	stats["connection_pool"] = map[string]interface{}{
-		"max_open_connections":     dbStats.MaxOpenConnections,
-		"open_connections":         dbStats.OpenConnections,
-		"in_use":                   dbStats.InUse,
-		"idle":                     dbStats.Idle,
-		"wait_count":               dbStats.WaitCount,
-		"wait_duration":            dbStats.WaitDuration.String(),
-		"max_idle_closed":          dbStats.MaxIdleClosed,
-		"max_idle_time_closed":     dbStats.MaxIdleTimeClosed,
-		"max_lifetime_closed":      dbStats.MaxLifetimeClosed,
+		"max_open_connections": dbStats.MaxOpenConnections,
+		"open_connections":     dbStats.OpenConnections,
+		"in_use":               dbStats.InUse,
+		"idle":                 dbStats.Idle,
+		"wait_count":           dbStats.WaitCount,
+		"wait_duration":        dbStats.WaitDuration.String(),
+		"max_idle_closed":      dbStats.MaxIdleClosed,
+		"max_idle_time_closed": dbStats.MaxIdleTimeClosed,
+		"max_lifetime_closed":  dbStats.MaxLifetimeClosed,
 	}
 
 	// Table counts
 	tableCounts := make(map[string]int)
-	tables := []string{"pipelines", "pipeline_steps", "plugins", "executions", 
-	                  "quality_reports", "metrics", "alerts", "health_checks"}
-	
+	tables := []string{"pipelines", "pipeline_steps", "plugins", "executions",
+		"quality_reports", "metrics", "alerts", "health_checks"}
+
 	for _, table := range tables {
 		var count int
 		query := fmt.Sprintf("SELECT COUNT(*) FROM %s", table)
@@ -120,10 +120,10 @@ func (dm *DatabaseManager) GetDatabaseStats(ctx context.Context) (map[string]int
 
 	// Recent activity (last 24 hours)
 	recentActivity := make(map[string]int)
-	
+
 	// Recent pipelines
 	var recentPipelines int
-	err := dm.db.QueryRowContext(ctx, 
+	err := dm.db.QueryRowContext(ctx,
 		"SELECT COUNT(*) FROM pipelines WHERE created_at > datetime('now', '-1 day')").Scan(&recentPipelines)
 	if err != nil {
 		dm.logger.Error("Failed to get recent pipelines", logging.F("error", err.Error()))
@@ -132,7 +132,7 @@ func (dm *DatabaseManager) GetDatabaseStats(ctx context.Context) (map[string]int
 
 	// Recent executions
 	var recentExecutions int
-	err = dm.db.QueryRowContext(ctx, 
+	err = dm.db.QueryRowContext(ctx,
 		"SELECT COUNT(*) FROM executions WHERE created_at > datetime('now', '-1 day')").Scan(&recentExecutions)
 	if err != nil {
 		dm.logger.Error("Failed to get recent executions", logging.F("error", err.Error()))
@@ -149,12 +149,12 @@ func (dm *DatabaseManager) RunMaintenance(ctx context.Context) error {
 	dm.logger.Info("Starting database maintenance")
 
 	// Clean up old executions (older than 30 days)
-	result, err := dm.db.ExecContext(ctx, 
+	result, err := dm.db.ExecContext(ctx,
 		"DELETE FROM executions WHERE created_at < datetime('now', '-30 days')")
 	if err != nil {
 		return fmt.Errorf("failed to clean up old executions: %w", err)
 	}
-	
+
 	if deletedRows, err := result.RowsAffected(); err == nil {
 		dm.logger.Info("Cleaned up old executions",
 			logging.F("deleted_rows", deletedRows),
@@ -162,12 +162,12 @@ func (dm *DatabaseManager) RunMaintenance(ctx context.Context) error {
 	}
 
 	// Clean up old metrics (older than 7 days)
-	result, err = dm.db.ExecContext(ctx, 
+	result, err = dm.db.ExecContext(ctx,
 		"DELETE FROM metrics WHERE timestamp < datetime('now', '-7 days')")
 	if err != nil {
 		return fmt.Errorf("failed to clean up old metrics: %w", err)
 	}
-	
+
 	if deletedRows, err := result.RowsAffected(); err == nil {
 		dm.logger.Info("Cleaned up old metrics",
 			logging.F("deleted_rows", deletedRows),
@@ -175,12 +175,12 @@ func (dm *DatabaseManager) RunMaintenance(ctx context.Context) error {
 	}
 
 	// Clean up resolved alerts (older than 14 days)
-	result, err = dm.db.ExecContext(ctx, 
+	result, err = dm.db.ExecContext(ctx,
 		"DELETE FROM alerts WHERE status = 'resolved' AND resolved_at < datetime('now', '-14 days')")
 	if err != nil {
 		return fmt.Errorf("failed to clean up old alerts: %w", err)
 	}
-	
+
 	if deletedRows, err := result.RowsAffected(); err == nil {
 		dm.logger.Info("Cleaned up old alerts",
 			logging.F("deleted_rows", deletedRows),
@@ -188,12 +188,12 @@ func (dm *DatabaseManager) RunMaintenance(ctx context.Context) error {
 	}
 
 	// Clean up old health checks (older than 3 days)
-	result, err = dm.db.ExecContext(ctx, 
+	result, err = dm.db.ExecContext(ctx,
 		"DELETE FROM health_checks WHERE timestamp < datetime('now', '-3 days')")
 	if err != nil {
 		return fmt.Errorf("failed to clean up old health checks: %w", err)
 	}
-	
+
 	if deletedRows, err := result.RowsAffected(); err == nil {
 		dm.logger.Info("Cleaned up old health checks",
 			logging.F("deleted_rows", deletedRows),

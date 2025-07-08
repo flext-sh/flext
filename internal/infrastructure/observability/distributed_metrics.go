@@ -16,20 +16,20 @@ import (
 
 // DistributedMetrics manages metrics collection across the cluster
 type DistributedMetrics struct {
-	nodeID              string
-	redisClient         *redis.Client
-	logger              logging.Logger
-	clusterManager      *cluster.ClusterManager
-	ctx                 context.Context
-	cancel              context.CancelFunc
-	localMetrics        map[string]*MetricValue
-	clusterMetrics      map[string]*ClusterMetric
-	metricsMutex        sync.RWMutex
-	prometheusMetrics   *PrometheusMetrics
-	alertManager        *AlertManager
-	traceCollector      *DistributedTraceCollector
-	metricsCollectors   map[string]MetricsCollector
-	collectorsMutex     sync.RWMutex
+	nodeID            string
+	redisClient       *redis.Client
+	logger            logging.Logger
+	clusterManager    *cluster.ClusterManager
+	ctx               context.Context
+	cancel            context.CancelFunc
+	localMetrics      map[string]*MetricValue
+	clusterMetrics    map[string]*ClusterMetric
+	metricsMutex      sync.RWMutex
+	prometheusMetrics *PrometheusMetrics
+	alertManager      *AlertManager
+	traceCollector    *DistributedTraceCollector
+	metricsCollectors map[string]MetricsCollector
+	collectorsMutex   sync.RWMutex
 }
 
 // MetricValue represents a single metric value
@@ -45,10 +45,10 @@ type MetricValue struct {
 
 // ClusterMetric represents aggregated metrics across the cluster
 type ClusterMetric struct {
-	Name      string                   `json:"name"`
-	Values    map[string]*MetricValue  `json:"values"` // NodeID -> MetricValue
-	Aggregate *AggregatedValue         `json:"aggregate"`
-	LastUpdated time.Time              `json:"last_updated"`
+	Name        string                  `json:"name"`
+	Values      map[string]*MetricValue `json:"values"` // NodeID -> MetricValue
+	Aggregate   *AggregatedValue        `json:"aggregate"`
+	LastUpdated time.Time               `json:"last_updated"`
 }
 
 // AggregatedValue contains aggregated metric calculations
@@ -73,27 +73,27 @@ const (
 // PrometheusMetrics contains Prometheus metric definitions
 type PrometheusMetrics struct {
 	// Cluster metrics
-	ClusterNodes          prometheus.Gauge
-	ClusterNodesOnline    prometheus.Gauge
-	ClusterTotalJobs      prometheus.Counter
-	ClusterCompletedJobs  prometheus.Counter
-	ClusterFailedJobs     prometheus.Counter
-	
+	ClusterNodes         prometheus.Gauge
+	ClusterNodesOnline   prometheus.Gauge
+	ClusterTotalJobs     prometheus.Counter
+	ClusterCompletedJobs prometheus.Counter
+	ClusterFailedJobs    prometheus.Counter
+
 	// Node metrics
-	NodeActiveJobs        prometheus.Gauge
-	NodeMemoryUsage       prometheus.Gauge
-	NodeCPUUsage          prometheus.Gauge
-	NodeNetworkBytes      prometheus.Counter
-	
+	NodeActiveJobs   prometheus.Gauge
+	NodeMemoryUsage  prometheus.Gauge
+	NodeCPUUsage     prometheus.Gauge
+	NodeNetworkBytes prometheus.Counter
+
 	// Service metrics
-	ServiceRequests       prometheus.Counter
-	ServiceResponseTime   prometheus.Histogram
-	ServiceErrors         prometheus.Counter
-	
+	ServiceRequests     prometheus.Counter
+	ServiceResponseTime prometheus.Histogram
+	ServiceErrors       prometheus.Counter
+
 	// Agent metrics
-	AgentConnections      prometheus.Gauge
-	AgentMessages         prometheus.Counter
-	AgentMessageErrors    prometheus.Counter
+	AgentConnections   prometheus.Gauge
+	AgentMessages      prometheus.Counter
+	AgentMessageErrors prometheus.Counter
 }
 
 // AlertRule defines conditions for triggering alerts
@@ -162,26 +162,26 @@ type DistributedTraceCollector struct {
 
 // DistributedTrace represents a trace across multiple nodes
 type DistributedTrace struct {
-	TraceID   string                   `json:"trace_id"`
-	Spans     map[string]*TraceSpan    `json:"spans"`
-	StartTime time.Time                `json:"start_time"`
-	EndTime   *time.Time               `json:"end_time,omitempty"`
-	Duration  *time.Duration           `json:"duration,omitempty"`
-	Tags      map[string]string        `json:"tags"`
+	TraceID   string                `json:"trace_id"`
+	Spans     map[string]*TraceSpan `json:"spans"`
+	StartTime time.Time             `json:"start_time"`
+	EndTime   *time.Time            `json:"end_time,omitempty"`
+	Duration  *time.Duration        `json:"duration,omitempty"`
+	Tags      map[string]string     `json:"tags"`
 }
 
 // TraceSpan represents a single span in a distributed trace
 type TraceSpan struct {
-	SpanID    string                 `json:"span_id"`
-	ParentID  string                 `json:"parent_id,omitempty"`
-	NodeID    string                 `json:"node_id"`
-	Operation string                 `json:"operation"`
-	StartTime time.Time              `json:"start_time"`
-	EndTime   *time.Time             `json:"end_time,omitempty"`
-	Duration  *time.Duration         `json:"duration,omitempty"`
-	Tags      map[string]string      `json:"tags"`
+	SpanID    string                   `json:"span_id"`
+	ParentID  string                   `json:"parent_id,omitempty"`
+	NodeID    string                   `json:"node_id"`
+	Operation string                   `json:"operation"`
+	StartTime time.Time                `json:"start_time"`
+	EndTime   *time.Time               `json:"end_time,omitempty"`
+	Duration  *time.Duration           `json:"duration,omitempty"`
+	Tags      map[string]string        `json:"tags"`
 	Logs      []map[string]interface{} `json:"logs"`
-	Error     bool                   `json:"error"`
+	Error     bool                     `json:"error"`
 }
 
 // NewDistributedMetrics creates a new distributed metrics collector
@@ -194,18 +194,18 @@ func NewDistributedMetrics(
 	ctx, cancel := context.WithCancel(context.Background())
 
 	dm := &DistributedMetrics{
-		nodeID:              nodeID,
-		redisClient:         redisClient,
-		logger:              logger,
-		clusterManager:      clusterManager,
-		ctx:                 ctx,
-		cancel:              cancel,
-		localMetrics:        make(map[string]*MetricValue),
-		clusterMetrics:      make(map[string]*ClusterMetric),
-		prometheusMetrics:   initPrometheusMetrics(),
-		alertManager:        NewAlertManager(redisClient, logger),
-		traceCollector:      NewDistributedTraceCollector(nodeID, redisClient, logger),
-		metricsCollectors:   make(map[string]MetricsCollector),
+		nodeID:            nodeID,
+		redisClient:       redisClient,
+		logger:            logger,
+		clusterManager:    clusterManager,
+		ctx:               ctx,
+		cancel:            cancel,
+		localMetrics:      make(map[string]*MetricValue),
+		clusterMetrics:    make(map[string]*ClusterMetric),
+		prometheusMetrics: initPrometheusMetrics(),
+		alertManager:      NewAlertManager(redisClient, logger),
+		traceCollector:    NewDistributedTraceCollector(nodeID, redisClient, logger),
+		metricsCollectors: make(map[string]MetricsCollector),
 	}
 
 	return dm
@@ -789,7 +789,7 @@ func (am *AlertManager) Stop() {
 func (dm *DistributedMetrics) getActiveCollectors() []MetricsCollector {
 	dm.collectorsMutex.RLock()
 	defer dm.collectorsMutex.RUnlock()
-	
+
 	collectors := make([]MetricsCollector, 0, len(dm.metricsCollectors))
 	for _, collector := range dm.metricsCollectors {
 		collectors = append(collectors, collector)
@@ -800,7 +800,7 @@ func (dm *DistributedMetrics) getActiveCollectors() []MetricsCollector {
 func (dm *DistributedMetrics) collectFromSingleCollector(collector MetricsCollector) []*MetricValue {
 	ctx, cancel := context.WithTimeout(dm.ctx, 10*time.Second)
 	defer cancel()
-	
+
 	metrics, err := collector.CollectMetrics(ctx)
 	if err != nil {
 		dm.logger.Error("Failed to collect metrics",
@@ -809,7 +809,7 @@ func (dm *DistributedMetrics) collectFromSingleCollector(collector MetricsCollec
 		)
 		return nil
 	}
-	
+
 	return metrics
 }
 
@@ -826,4 +826,3 @@ func (dm *DistributedMetrics) storeMetricLocally(metric *MetricValue) {
 	dm.localMetrics[metric.Name] = metric
 	dm.metricsMutex.Unlock()
 }
-

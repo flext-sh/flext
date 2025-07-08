@@ -50,7 +50,7 @@ func (uc *DeleteProjectUseCase) Execute(ctx context.Context, input DeleteProject
 
 	// Publish domain event
 	event := events.NewProjectDeletedEvent(input.ID, project.Name)
-	
+
 	if err := uc.events.Publish(ctx, event); err != nil {
 		// Log error but don't fail the operation
 		// In a real implementation, you might want to use an outbox pattern

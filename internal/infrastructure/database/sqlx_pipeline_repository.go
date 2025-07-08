@@ -93,7 +93,7 @@ func (r *SqlxPipelineRepository) Save(ctx context.Context, pipeline *entities.Pi
 func (r *SqlxPipelineRepository) GetByID(ctx context.Context, id uuid.UUID) (*entities.Pipeline, error) {
 	query := `
 		SELECT id, name, description, is_active, tags, configuration, schedule, created_at, updated_at
-		FROM pipelines 
+		FROM pipelines
 		WHERE id = $1
 	`
 
@@ -122,7 +122,7 @@ func (r *SqlxPipelineRepository) FindByID(ctx context.Context, id string) (*enti
 func (r *SqlxPipelineRepository) GetByName(ctx context.Context, name string) (*entities.Pipeline, error) {
 	query := `
 		SELECT id, name, description, is_active, tags, configuration, schedule, created_at, updated_at
-		FROM pipelines 
+		FROM pipelines
 		WHERE name = $1
 	`
 
@@ -142,7 +142,7 @@ func (r *SqlxPipelineRepository) GetByName(ctx context.Context, name string) (*e
 func (r *SqlxPipelineRepository) List(ctx context.Context, filter interface{}) ([]*entities.Pipeline, error) {
 	query := `
 		SELECT id, name, description, is_active, tags, configuration, schedule, created_at, updated_at
-		FROM pipelines 
+		FROM pipelines
 		ORDER BY created_at DESC
 	`
 
@@ -168,20 +168,20 @@ func (r *SqlxPipelineRepository) List(ctx context.Context, filter interface{}) (
 // Count returns total number of pipelines
 func (r *SqlxPipelineRepository) Count(ctx context.Context) (int, error) {
 	query := `SELECT COUNT(*) FROM pipelines`
-	
+
 	var count int
 	err := r.db.GetContext(ctx, &count, query)
 	if err != nil {
 		return 0, fmt.Errorf("failed to count pipelines: %w", err)
 	}
-	
+
 	return count, nil
 }
 
 // GetPipelineMetrics gets metrics using functional programming
 func (r *SqlxPipelineRepository) GetPipelineMetrics(ctx context.Context) (map[string]interface{}, error) {
 	query := `
-		SELECT 
+		SELECT
 			COUNT(*) as total_pipelines,
 			COUNT(CASE WHEN is_active = true THEN 1 END) as active_pipelines,
 			COUNT(CASE WHEN is_active = false THEN 1 END) as inactive_pipelines
@@ -256,7 +256,7 @@ func (r *SqlxPipelineRepository) HealthCheck(ctx context.Context) error {
 		return fmt.Errorf("failed to query pipelines table: %w", err)
 	}
 
-	r.logger.Info("SQLX Repository health check passed", 
+	r.logger.Info("SQLX Repository health check passed",
 		logging.F("pipeline_count", count))
 
 	return nil

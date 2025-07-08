@@ -35,9 +35,9 @@ type ActivatePluginInput struct {
 
 // ActivatePluginOutput represents the output after activating a plugin
 type ActivatePluginOutput struct {
-	ID         string
-	Name       string
-	Status     string
+	ID          string
+	Name        string
+	Status      string
 	ActivatedAt string
 }
 

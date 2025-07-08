@@ -20,21 +20,21 @@ func (h *BootstrapWebHandler) RegisterRoutes(e *echo.Echo) {
 	// Página principal
 	e.GET("/", h.Dashboard)
 	e.GET("/web", h.Dashboard)
-	
+
 	// Componentes HTMX
 	e.GET("/components/stats", h.StatsCards)
 	e.GET("/components/pipelines", h.PipelinesTable)
 	e.GET("/components/activity", h.RecentActivity)
 	e.GET("/components/logs", h.SystemLogs)
 	e.GET("/components/metrics", h.SystemMetrics)
-	
+
 	// Ações
 	e.POST("/api/pipeline/create", h.CreatePipeline)
 	e.POST("/api/pipeline/:id/execute", h.ExecutePipeline)
 	e.DELETE("/api/pipeline/:id", h.DeletePipeline)
 	e.POST("/api/plugin/register", h.RegisterPlugin)
 	e.GET("/api/diagnostics", h.RunDiagnostics)
-	
+
 	// Páginas específicas
 	e.GET("/pipelines", h.PipelinesPage)
 	e.GET("/plugins", h.PluginsPage)
@@ -50,14 +50,14 @@ func (h *BootstrapWebHandler) Dashboard(c echo.Context) error {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FLEXT - Framework Dashboard</title>
-    
+
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
-    
+
     <!-- HTMX -->
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
-    
+
     <!-- Custom HTMX + Bootstrap styles -->
     <style>
         .htmx-indicator { display: none; }
@@ -112,8 +112,8 @@ func (h *BootstrapWebHandler) Dashboard(c echo.Context) error {
                     </li>
                 </ul>
                 <span class="navbar-text">
-                    <span class="badge bg-success pulse" 
-                          hx-get="/health" 
+                    <span class="badge bg-success pulse"
+                          hx-get="/health"
                           hx-trigger="every 30s"
                           hx-swap="innerHTML">Healthy</span>
                 </span>
@@ -134,8 +134,8 @@ func (h *BootstrapWebHandler) Dashboard(c echo.Context) error {
         </div>
 
         <!-- Stats Cards -->
-        <div id="stats-container" 
-             hx-get="/components/stats" 
+        <div id="stats-container"
+             hx-get="/components/stats"
              hx-trigger="load, every 15s"
              hx-swap="innerHTML"
              hx-indicator="#stats-loading">
@@ -302,30 +302,30 @@ func (h *BootstrapWebHandler) Dashboard(c echo.Context) error {
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
+
     <!-- HTMX Extensions and Config -->
     <script>
         // HTMX configuration
         htmx.config.globalViewTransitions = true;
-        
+
         // Add fade transitions
         document.body.addEventListener('htmx:beforeSwap', function(evt) {
-            if (evt.target.id === 'stats-container' || 
+            if (evt.target.id === 'stats-container' ||
                 evt.target.id === 'pipelines-container' ||
                 evt.target.id === 'activity-container') {
                 evt.target.classList.add('fade-me-out');
             }
         });
-        
+
         document.body.addEventListener('htmx:afterSwap', function(evt) {
-            if (evt.target.id === 'stats-container' || 
+            if (evt.target.id === 'stats-container' ||
                 evt.target.id === 'pipelines-container' ||
                 evt.target.id === 'activity-container') {
                 evt.target.classList.remove('fade-me-out');
                 evt.target.classList.add('fade-me-in');
             }
         });
-        
+
         // Toast notifications for actions
         document.body.addEventListener('htmx:afterRequest', function(evt) {
             if (evt.detail.xhr.status >= 200 && evt.detail.xhr.status < 300) {
@@ -336,14 +336,14 @@ func (h *BootstrapWebHandler) Dashboard(c echo.Context) error {
                 showToast('Action failed. Please try again.', 'danger');
             }
         });
-        
+
         function showToast(message, type) {
             const toastHtml = '<div class="toast align-items-center text-bg-' + type + ' border-0" role="alert">' +
                 '<div class="d-flex">' +
                 '<div class="toast-body">' + message + '</div>' +
                 '<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>' +
                 '</div></div>';
-            
+
             let toastContainer = document.getElementById('toast-container');
             if (!toastContainer) {
                 toastContainer = document.createElement('div');
@@ -352,12 +352,12 @@ func (h *BootstrapWebHandler) Dashboard(c echo.Context) error {
                 toastContainer.style.zIndex = '1055';
                 document.body.appendChild(toastContainer);
             }
-            
+
             toastContainer.insertAdjacentHTML('beforeend', toastHtml);
             const newToast = toastContainer.lastElementChild;
             const toast = new bootstrap.Toast(newToast);
             toast.show();
-            
+
             newToast.addEventListener('hidden.bs.toast', function() {
                 newToast.remove();
             });

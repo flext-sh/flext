@@ -14,18 +14,18 @@ import (
 type MockOracleWMSServer struct {
 	server  *httptest.Server
 	baseURL string
-	
+
 	// Simulated data
 	entities map[string]*MockEntity
 	records  map[string][]map[string]interface{}
-	
+
 	// Authentication
 	validCredentials map[string]string
-	
+
 	// Response configurations
-	simulateDelay    time.Duration
-	simulateErrors   bool
-	errorRate        float64
+	simulateDelay  time.Duration
+	simulateErrors bool
+	errorRate      float64
 }
 
 // MockEntity represents a WMS entity in the mock server
@@ -54,21 +54,21 @@ func NewMockOracleWMSServer() *MockOracleWMSServer {
 			"testuser": "testpass",
 			"admin":    "admin123",
 		},
-		simulateDelay: 100 * time.Millisecond,
+		simulateDelay:  100 * time.Millisecond,
 		simulateErrors: false,
-		errorRate:     0.0,
+		errorRate:      0.0,
 	}
-	
+
 	// Setup default entities
 	mock.setupDefaultEntities()
-	
+
 	// Setup HTTP server
 	mux := http.NewServeMux()
 	mock.setupRoutes(mux)
-	
+
 	mock.server = httptest.NewServer(mux)
 	mock.baseURL = mock.server.URL
-	
+
 	return mock
 }
 
@@ -117,7 +117,7 @@ func (m *MockOracleWMSServer) setupDefaultEntities() {
 			"schema":     "WMS",
 		},
 	}
-	
+
 	// Inventory entity
 	inventory := &MockEntity{
 		Name:        "inventory",
@@ -137,7 +137,7 @@ func (m *MockOracleWMSServer) setupDefaultEntities() {
 			"schema":     "WMS",
 		},
 	}
-	
+
 	// Shipment entity
 	shipment := &MockEntity{
 		Name:        "shipment",
@@ -158,11 +158,11 @@ func (m *MockOracleWMSServer) setupDefaultEntities() {
 			"schema":     "WMS",
 		},
 	}
-	
+
 	m.entities["item_master"] = itemMaster
 	m.entities["inventory"] = inventory
 	m.entities["shipment"] = shipment
-	
+
 	// Generate sample data
 	m.generateSampleData()
 }
@@ -170,7 +170,7 @@ func (m *MockOracleWMSServer) setupDefaultEntities() {
 // generateSampleData creates sample records for testing
 func (m *MockOracleWMSServer) generateSampleData() {
 	now := time.Now()
-	
+
 	// Sample Item Master data
 	m.records["item_master"] = []map[string]interface{}{
 		{
@@ -207,31 +207,31 @@ func (m *MockOracleWMSServer) generateSampleData() {
 			"modified_by":      "user1",
 		},
 	}
-	
+
 	// Sample Inventory data
 	m.records["inventory"] = []map[string]interface{}{
 		{
 			"inventory_id":       "INV001",
-			"item_id":           "ITEM001",
-			"location_id":       "LOC001",
-			"quantity_on_hand":  100.0,
+			"item_id":            "ITEM001",
+			"location_id":        "LOC001",
+			"quantity_on_hand":   100.0,
 			"quantity_available": 85.0,
 			"quantity_reserved":  15.0,
-			"last_count_date":   now.Add(-7 * 24 * time.Hour).Format(time.RFC3339),
-			"modified_date":     now.Add(-1 * time.Hour).Format(time.RFC3339),
+			"last_count_date":    now.Add(-7 * 24 * time.Hour).Format(time.RFC3339),
+			"modified_date":      now.Add(-1 * time.Hour).Format(time.RFC3339),
 		},
 		{
 			"inventory_id":       "INV002",
-			"item_id":           "ITEM002",
-			"location_id":       "LOC001",
-			"quantity_on_hand":  250.0,
+			"item_id":            "ITEM002",
+			"location_id":        "LOC001",
+			"quantity_on_hand":   250.0,
 			"quantity_available": 200.0,
 			"quantity_reserved":  50.0,
-			"last_count_date":   now.Add(-5 * 24 * time.Hour).Format(time.RFC3339),
-			"modified_date":     now.Add(-2 * time.Hour).Format(time.RFC3339),
+			"last_count_date":    now.Add(-5 * 24 * time.Hour).Format(time.RFC3339),
+			"modified_date":      now.Add(-2 * time.Hour).Format(time.RFC3339),
 		},
 	}
-	
+
 	// Sample Shipment data
 	m.records["shipment"] = []map[string]interface{}{
 		{
@@ -252,23 +252,23 @@ func (m *MockOracleWMSServer) generateSampleData() {
 func (m *MockOracleWMSServer) setupRoutes(mux *http.ServeMux) {
 	// Authentication endpoint
 	mux.HandleFunc("/auth/login", m.handleLogin)
-	
+
 	// Entity discovery endpoints
 	mux.HandleFunc("/api/v1/entities", m.handleListEntities)
 	mux.HandleFunc("/api/v1/entities/", m.handleGetEntity)
-	
+
 	// Data extraction endpoints
 	mux.HandleFunc("/api/v1/data/", m.handleExtractData)
-	
+
 	// Schema endpoints
 	mux.HandleFunc("/api/v1/schema/", m.handleGetSchema)
-	
+
 	// WMS API Info endpoint (Oracle WMS specific)
 	mux.HandleFunc("/wms/lgfapi/", m.handleWMSRequests)
-	
+
 	// Add specific handlers for entity operations after the general handler
 	// These will be checked by the general handler
-	
+
 	// Health check
 	mux.HandleFunc("/health", m.handleHealth)
 }
@@ -280,13 +280,13 @@ func (m *MockOracleWMSServer) middleware(next http.HandlerFunc) http.HandlerFunc
 		if m.simulateDelay > 0 {
 			time.Sleep(m.simulateDelay)
 		}
-		
+
 		// Simulate random errors
 		if m.simulateErrors && m.shouldSimulateError() {
 			http.Error(w, "Simulated server error", http.StatusInternalServerError)
 			return
 		}
-		
+
 		// Check authentication for protected endpoints
 		if r.URL.Path != "/health" && r.URL.Path != "/auth/login" {
 			if !m.isAuthenticated(r) {
@@ -294,7 +294,7 @@ func (m *MockOracleWMSServer) middleware(next http.HandlerFunc) http.HandlerFunc
 				return
 			}
 		}
-		
+
 		w.Header().Set("Content-Type", "application/json")
 		next(w, r)
 	}
@@ -306,17 +306,17 @@ func (m *MockOracleWMSServer) handleLogin(w http.ResponseWriter, r *http.Request
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	
+
 	var loginReq struct {
 		Username string `json:"username"`
 		Password string `json:"password"`
 	}
-	
+
 	if err := json.NewDecoder(r.Body).Decode(&loginReq); err != nil {
 		http.Error(w, "Invalid JSON", http.StatusBadRequest)
 		return
 	}
-	
+
 	if expectedPass, ok := m.validCredentials[loginReq.Username]; ok && expectedPass == loginReq.Password {
 		response := map[string]interface{}{
 			"access_token": fmt.Sprintf("mock_token_%s_%d", loginReq.Username, time.Now().Unix()),
@@ -342,7 +342,7 @@ func (m *MockOracleWMSServer) handleListEntities(w http.ResponseWriter, r *http.
 				"metadata":     entity.Metadata,
 			})
 		}
-		
+
 		response := map[string]interface{}{
 			"entities": entities,
 			"total":    len(entities),
@@ -354,13 +354,13 @@ func (m *MockOracleWMSServer) handleListEntities(w http.ResponseWriter, r *http.
 func (m *MockOracleWMSServer) handleGetEntity(w http.ResponseWriter, r *http.Request) {
 	m.middleware(func(w http.ResponseWriter, r *http.Request) {
 		entityName := strings.TrimPrefix(r.URL.Path, "/api/v1/entities/")
-		
+
 		entity, ok := m.entities[entityName]
 		if !ok {
 			http.Error(w, "Entity not found", http.StatusNotFound)
 			return
 		}
-		
+
 		json.NewEncoder(w).Encode(entity)
 	})(w, r)
 }
@@ -369,13 +369,13 @@ func (m *MockOracleWMSServer) handleGetEntity(w http.ResponseWriter, r *http.Req
 func (m *MockOracleWMSServer) handleExtractData(w http.ResponseWriter, r *http.Request) {
 	m.middleware(func(w http.ResponseWriter, r *http.Request) {
 		entityName := strings.TrimPrefix(r.URL.Path, "/api/v1/data/")
-		
+
 		records, ok := m.records[entityName]
 		if !ok {
 			http.Error(w, "Entity not found", http.StatusNotFound)
 			return
 		}
-		
+
 		// Handle pagination
 		limit := 100 // default
 		offset := 0
@@ -385,7 +385,7 @@ func (m *MockOracleWMSServer) handleExtractData(w http.ResponseWriter, r *http.R
 		if offsetStr := r.URL.Query().Get("offset"); offsetStr != "" {
 			fmt.Sscanf(offsetStr, "%d", &offset)
 		}
-		
+
 		// Apply pagination
 		total := len(records)
 		end := offset + limit
@@ -395,14 +395,14 @@ func (m *MockOracleWMSServer) handleExtractData(w http.ResponseWriter, r *http.R
 		if offset > total {
 			offset = total
 		}
-		
+
 		pageRecords := records[offset:end]
-		
+
 		response := map[string]interface{}{
-			"data":   pageRecords,
-			"total":  total,
-			"limit":  limit,
-			"offset": offset,
+			"data":     pageRecords,
+			"total":    total,
+			"limit":    limit,
+			"offset":   offset,
 			"has_more": end < total,
 		}
 		json.NewEncoder(w).Encode(response)
@@ -413,13 +413,13 @@ func (m *MockOracleWMSServer) handleExtractData(w http.ResponseWriter, r *http.R
 func (m *MockOracleWMSServer) handleGetSchema(w http.ResponseWriter, r *http.Request) {
 	m.middleware(func(w http.ResponseWriter, r *http.Request) {
 		entityName := strings.TrimPrefix(r.URL.Path, "/api/v1/schema/")
-		
+
 		entity, ok := m.entities[entityName]
 		if !ok {
 			http.Error(w, "Entity not found", http.StatusNotFound)
 			return
 		}
-		
+
 		// Generate JSON schema
 		schema := map[string]interface{}{
 			"$schema":    "http://json-schema.org/draft-07/schema#",
@@ -428,27 +428,27 @@ func (m *MockOracleWMSServer) handleGetSchema(w http.ResponseWriter, r *http.Req
 			"properties": make(map[string]interface{}),
 			"required":   []string{},
 		}
-		
+
 		properties := schema["properties"].(map[string]interface{})
 		required := []string{}
-		
+
 		for _, field := range entity.Fields {
 			fieldSchema := map[string]interface{}{
 				"type":        mapFieldTypeToJSONSchema(field.Type),
 				"description": fmt.Sprintf("%s field", field.Name),
 			}
-			
+
 			if field.MaxLength != nil {
 				fieldSchema["maxLength"] = *field.MaxLength
 			}
-			
+
 			properties[field.Name] = fieldSchema
-			
+
 			if field.Required {
 				required = append(required, field.Name)
 			}
 		}
-		
+
 		schema["required"] = required
 		json.NewEncoder(w).Encode(schema)
 	})(w, r)
@@ -481,12 +481,12 @@ func (m *MockOracleWMSServer) handleWMSInfo(w http.ResponseWriter, r *http.Reque
 	if strings.Contains(r.URL.Path, "/v2/") {
 		version = "v2"
 	}
-	
+
 	response := map[string]interface{}{
-		"api_name":    "Oracle WMS API",
-		"version":     version,
-		"status":      "active",
-		"timestamp":   time.Now().Format(time.RFC3339),
+		"api_name":  "Oracle WMS API",
+		"version":   version,
+		"status":    "active",
+		"timestamp": time.Now().Format(time.RFC3339),
 		"server_info": map[string]interface{}{
 			"name":        "Mock Oracle WMS Server",
 			"version":     "1.0.0",
@@ -516,13 +516,13 @@ func (m *MockOracleWMSServer) handleWMSEntity(w http.ResponseWriter, r *http.Req
 	for _, entity := range m.entities {
 		entityNames = append(entityNames, entity.Name)
 	}
-	
+
 	// Return response format expected by WMS client
 	response := map[string]interface{}{
-		"entities":     entityNames,
-		"total_count":  len(entityNames),
-		"api_version":  "v1",
-		"timestamp":    time.Now().Format(time.RFC3339),
+		"entities":    entityNames,
+		"total_count": len(entityNames),
+		"api_version": "v1",
+		"timestamp":   time.Now().Format(time.RFC3339),
 	}
 	json.NewEncoder(w).Encode(response)
 }
@@ -533,19 +533,19 @@ func (m *MockOracleWMSServer) handleWMSEntitySpecific(w http.ResponseWriter, r *
 	// Extract entity name from path like /wms/lgfapi/v10/entity/item_master or /wms/lgfapi/v10/entity/item_master/describe
 	pathAfterEntity := strings.TrimPrefix(r.URL.Path, "/wms/lgfapi/v10/entity/")
 	pathParts := strings.Split(pathAfterEntity, "/")
-	
+
 	if len(pathParts) == 0 || pathParts[0] == "" {
 		http.Error(w, "Entity name required", http.StatusBadRequest)
 		return
 	}
-	
+
 	entityName := pathParts[0]
 	entity, exists := m.entities[entityName]
 	if !exists {
 		http.Error(w, fmt.Sprintf("Entity %s not found", entityName), http.StatusNotFound)
 		return
 	}
-	
+
 	// Check if this is a describe request
 	if len(pathParts) > 1 && pathParts[1] == "describe" {
 		m.handleEntityDescribe(w, r, entity)
@@ -559,11 +559,11 @@ func (m *MockOracleWMSServer) handleWMSEntitySpecific(w http.ResponseWriter, r *
 func (m *MockOracleWMSServer) handleEntityDescribe(w http.ResponseWriter, r *http.Request, entity *MockEntity) {
 	// Return entity metadata in expected format
 	metadata := map[string]interface{}{
-		"entity_name":    entity.Name,
-		"display_name":   entity.DisplayName,
-		"table_name":     entity.Metadata["table_name"],
-		"schema_name":    entity.Metadata["schema"],
-		"fields":         m.convertFieldsToMetadata(entity.Fields),
+		"entity_name":  entity.Name,
+		"display_name": entity.DisplayName,
+		"table_name":   entity.Metadata["table_name"],
+		"schema_name":  entity.Metadata["schema"],
+		"fields":       m.convertFieldsToMetadata(entity.Fields),
 		"table_info": map[string]interface{}{
 			"primary_keys": m.getPrimaryKeyFields(entity.Fields),
 			"record_count": len(m.records[entity.Name]),
@@ -577,7 +577,7 @@ func (m *MockOracleWMSServer) handleEntityDescribe(w http.ResponseWriter, r *htt
 			"incremental_sync",
 		},
 	}
-	
+
 	json.NewEncoder(w).Encode(metadata)
 }
 
@@ -587,11 +587,11 @@ func (m *MockOracleWMSServer) handleEntityData(w http.ResponseWriter, r *http.Re
 	if !exists {
 		records = []map[string]interface{}{}
 	}
-	
+
 	// Handle pagination parameters
 	pageSize := 1000 // default
 	offset := 0
-	
+
 	if pageSizeStr := r.URL.Query().Get("page_size"); pageSizeStr != "" {
 		fmt.Sscanf(pageSizeStr, "%d", &pageSize)
 	}
@@ -601,7 +601,7 @@ func (m *MockOracleWMSServer) handleEntityData(w http.ResponseWriter, r *http.Re
 	if offsetStr := r.URL.Query().Get("offset"); offsetStr != "" {
 		fmt.Sscanf(offsetStr, "%d", &offset)
 	}
-	
+
 	// Apply pagination
 	total := len(records)
 	end := offset + pageSize
@@ -611,20 +611,20 @@ func (m *MockOracleWMSServer) handleEntityData(w http.ResponseWriter, r *http.Re
 	if offset > total {
 		offset = total
 	}
-	
+
 	pageRecords := records[offset:end]
-	
+
 	// Return in expected Oracle WMS format
 	response := map[string]interface{}{
-		"results":    pageRecords,
-		"total":      total,
-		"page_size":  pageSize,
-		"offset":     offset,
-		"has_more":   end < total,
-		"entity":     entityName,
-		"timestamp":  time.Now().Format(time.RFC3339),
+		"results":   pageRecords,
+		"total":     total,
+		"page_size": pageSize,
+		"offset":    offset,
+		"has_more":  end < total,
+		"entity":    entityName,
+		"timestamp": time.Now().Format(time.RFC3339),
 	}
-	
+
 	json.NewEncoder(w).Encode(response)
 }
 
@@ -633,18 +633,18 @@ func (m *MockOracleWMSServer) convertFieldsToMetadata(fields []MockField) []map[
 	metadata := make([]map[string]interface{}, len(fields))
 	for i, field := range fields {
 		fieldMeta := map[string]interface{}{
-			"name":         field.Name,
-			"type":         field.Type,
-			"required":     field.Required,
-			"primary_key":  field.IsPrimaryKey,
-			"nullable":     !field.Required,
-			"description":  fmt.Sprintf("%s field for entity", field.Name),
+			"name":        field.Name,
+			"type":        field.Type,
+			"required":    field.Required,
+			"primary_key": field.IsPrimaryKey,
+			"nullable":    !field.Required,
+			"description": fmt.Sprintf("%s field for entity", field.Name),
 		}
-		
+
 		if field.MaxLength != nil {
 			fieldMeta["max_length"] = *field.MaxLength
 		}
-		
+
 		metadata[i] = fieldMeta
 	}
 	return metadata
@@ -674,12 +674,12 @@ func (m *MockOracleWMSServer) handleHealth(w http.ResponseWriter, r *http.Reques
 // Helper functions
 func (m *MockOracleWMSServer) isAuthenticated(r *http.Request) bool {
 	authHeader := r.Header.Get("Authorization")
-	
+
 	// Check Bearer token authentication
 	if strings.HasPrefix(authHeader, "Bearer mock_token_") {
 		return true
 	}
-	
+
 	// Check Basic authentication
 	if strings.HasPrefix(authHeader, "Basic ") {
 		// Decode basic auth
@@ -688,18 +688,18 @@ func (m *MockOracleWMSServer) isAuthenticated(r *http.Request) bool {
 		if err != nil {
 			return false
 		}
-		
+
 		credentials := string(decoded)
 		parts := strings.SplitN(credentials, ":", 2)
 		if len(parts) != 2 {
 			return false
 		}
-		
+
 		username, password := parts[0], parts[1]
 		expectedPassword, ok := m.validCredentials[username]
 		return ok && expectedPassword == password
 	}
-	
+
 	return false
 }
 

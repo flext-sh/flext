@@ -33,27 +33,27 @@ func NewRedisCache(cfg config.RedisConfig, logger logging.Logger) (*RedisCache, 
 		WriteTimeout: cfg.WriteTimeout,
 		IdleTimeout:  cfg.IdleTimeout,
 	})
-	
+
 	// Test connection
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	
+
 	if err := client.Ping(ctx).Err(); err != nil {
 		return nil, errors.Wrap(err, "failed to connect to Redis")
 	}
-	
+
 	cache := &RedisCache{
 		client: client,
 		logger: logger,
 		config: cfg,
 	}
-	
+
 	logger.Info("Redis cache initialized successfully",
 		logging.F("host", cfg.Host),
 		logging.F("port", cfg.Port),
 		logging.F("database", cfg.Database),
 	)
-	
+
 	return cache, nil
 }
 
@@ -66,19 +66,19 @@ type CacheManager interface {
 	Exists(ctx context.Context, keys ...string) (int64, error)
 	TTL(ctx context.Context, key string) (time.Duration, error)
 	Expire(ctx context.Context, key string, expiration time.Duration) error
-	
+
 	// Advanced operations
 	SetNX(ctx context.Context, key string, value interface{}, expiration time.Duration) (bool, error)
 	GetSet(ctx context.Context, key string, value interface{}) (string, error)
 	Increment(ctx context.Context, key string) (int64, error)
 	IncrementBy(ctx context.Context, key string, value int64) (int64, error)
-	
+
 	// Hash operations
 	HSet(ctx context.Context, key string, values ...interface{}) error
 	HGet(ctx context.Context, key, field string) (string, error)
 	HGetAll(ctx context.Context, key string) (map[string]string, error)
 	HDel(ctx context.Context, key string, fields ...string) error
-	
+
 	// List operations
 	LPush(ctx context.Context, key string, values ...interface{}) error
 	RPush(ctx context.Context, key string, values ...interface{}) error
@@ -86,17 +86,17 @@ type CacheManager interface {
 	RPop(ctx context.Context, key string) (string, error)
 	LLen(ctx context.Context, key string) (int64, error)
 	LRange(ctx context.Context, key string, start, stop int64) ([]string, error)
-	
+
 	// Set operations
 	SAdd(ctx context.Context, key string, members ...interface{}) error
 	SMembers(ctx context.Context, key string) ([]string, error)
 	SRem(ctx context.Context, key string, members ...interface{}) error
 	SCard(ctx context.Context, key string) (int64, error)
-	
+
 	// Advanced pipeline operations
 	Pipeline(ctx context.Context, fn func(pipe redis.Pipeliner) error) error
 	Transaction(ctx context.Context, keys []string, fn func(tx *redis.Tx) error) error
-	
+
 	// Cache statistics and monitoring
 	GetStatistics(ctx context.Context) (*CacheStatistics, error)
 	HealthCheck(ctx context.Context) error
@@ -111,16 +111,16 @@ func (c *RedisCache) Set(ctx context.Context, key string, value interface{}, exp
 	if err != nil {
 		return errors.Wrap(err, "failed to marshal value for cache")
 	}
-	
+
 	if err := c.client.Set(ctx, key, data, expiration).Err(); err != nil {
 		return errors.Wrap(err, "failed to set cache value")
 	}
-	
+
 	c.logger.Debug("Cache value set",
 		logging.F("key", key),
 		logging.F("expiration", expiration.String()),
 	)
-	
+
 	return nil
 }
 
@@ -133,11 +133,11 @@ func (c *RedisCache) Get(ctx context.Context, key string, dest interface{}) erro
 		}
 		return errors.Wrap(err, "failed to get cache value")
 	}
-	
+
 	if err := json.Unmarshal([]byte(data), dest); err != nil {
 		return errors.Wrap(err, "failed to unmarshal cache value")
 	}
-	
+
 	c.logger.Debug("Cache value retrieved", logging.F("key", key))
 	return nil
 }
@@ -147,17 +147,17 @@ func (c *RedisCache) Delete(ctx context.Context, keys ...string) error {
 	if len(keys) == 0 {
 		return nil
 	}
-	
+
 	deleted, err := c.client.Del(ctx, keys...).Result()
 	if err != nil {
 		return errors.Wrap(err, "failed to delete cache keys")
 	}
-	
+
 	c.logger.Debug("Cache keys deleted",
 		logging.F("keys", keys),
 		logging.F("deleted_count", deleted),
 	)
-	
+
 	return nil
 }
 
@@ -167,14 +167,14 @@ func (c *RedisCache) DeletePattern(ctx context.Context, pattern string) error {
 	if err != nil {
 		return errors.Wrap(err, "failed to find keys by pattern")
 	}
-	
+
 	if len(keys) == 0 {
 		return nil
 	}
-	
+
 	// Use functional programming to batch delete
 	batches := lo.Chunk(keys, 100) // Process in batches of 100
-	
+
 	deletedTotal := 0
 	for _, batch := range batches {
 		deleted, err := c.client.Del(ctx, batch...).Result()
@@ -187,12 +187,12 @@ func (c *RedisCache) DeletePattern(ctx context.Context, pattern string) error {
 		}
 		deletedTotal += int(deleted)
 	}
-	
+
 	c.logger.Info("Pattern-based cache deletion completed",
 		logging.F("pattern", pattern),
 		logging.F("total_deleted", deletedTotal),
 	)
-	
+
 	return nil
 }
 
@@ -204,32 +204,32 @@ func (c *RedisCache) SetNX(ctx context.Context, key string, value interface{}, e
 	if err != nil {
 		return false, errors.Wrap(err, "failed to marshal value for SetNX")
 	}
-	
+
 	result, err := c.client.SetNX(ctx, key, data, expiration).Result()
 	if err != nil {
 		return false, errors.Wrap(err, "failed to execute SetNX")
 	}
-	
+
 	return result, nil
 }
 
 // Pipeline executes multiple operations in a single round-trip
 func (c *RedisCache) Pipeline(ctx context.Context, fn func(pipe redis.Pipeliner) error) error {
 	pipe := c.client.Pipeline()
-	
+
 	if err := fn(pipe); err != nil {
 		return errors.Wrap(err, "failed to execute pipeline function")
 	}
-	
+
 	results, err := pipe.Exec(ctx)
 	if err != nil {
 		return errors.Wrap(err, "failed to execute pipeline")
 	}
-	
+
 	c.logger.Debug("Pipeline executed",
 		logging.F("commands_count", len(results)),
 	)
-	
+
 	return nil
 }
 
@@ -334,9 +334,9 @@ func (c *RedisCache) GetStatistics(ctx context.Context) (*CacheStatistics, error
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to get Redis info")
 	}
-	
+
 	poolStats := c.client.PoolStats()
-	
+
 	stats := &CacheStatistics{
 		RedisInfo:   info,
 		PoolStats:   poolStats,
@@ -347,7 +347,7 @@ func (c *RedisCache) GetStatistics(ctx context.Context) (*CacheStatistics, error
 		Misses:      poolStats.Misses,
 		Timeouts:    poolStats.Timeouts,
 	}
-	
+
 	return stats, nil
 }
 
@@ -373,14 +373,14 @@ var ErrCacheKeyNotFound = errors.New("cache key not found")
 
 // CacheStatistics holds cache performance statistics
 type CacheStatistics struct {
-	RedisInfo   string              `json:"redis_info"`
-	PoolStats   *redis.PoolStats    `json:"pool_stats"`
-	Connections uint32              `json:"connections"`
-	IdleConns   uint32              `json:"idle_connections"`
-	StaleConns  uint32              `json:"stale_connections"`
-	Hits        uint32              `json:"hits"`
-	Misses      uint32              `json:"misses"`
-	Timeouts    uint32              `json:"timeouts"`
+	RedisInfo   string           `json:"redis_info"`
+	PoolStats   *redis.PoolStats `json:"pool_stats"`
+	Connections uint32           `json:"connections"`
+	IdleConns   uint32           `json:"idle_connections"`
+	StaleConns  uint32           `json:"stale_connections"`
+	Hits        uint32           `json:"hits"`
+	Misses      uint32           `json:"misses"`
+	Timeouts    uint32           `json:"timeouts"`
 }
 
 // CacheKey helper for generating consistent cache keys
@@ -394,19 +394,19 @@ type CacheKey struct {
 // String generates the final cache key
 func (ck CacheKey) String() string {
 	parts := []string{ck.Prefix}
-	
+
 	if ck.Namespace != "" {
 		parts = append(parts, ck.Namespace)
 	}
-	
+
 	if ck.ID != "" {
 		parts = append(parts, ck.ID)
 	}
-	
+
 	if ck.Version != "" {
 		parts = append(parts, "v"+ck.Version)
 	}
-	
+
 	return lo.Reduce(parts, func(acc, part string, _ int) string {
 		if acc == "" {
 			return part

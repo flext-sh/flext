@@ -12,21 +12,21 @@ import (
 
 // PipelineService coordinates pipeline operations
 type PipelineService struct {
-	createPipelineHandler     *commands.CreatePipelineCommandHandler
-	updatePipelineHandler     *commands.UpdatePipelineCommandHandler
-	addStepHandler            *commands.AddStepHandler
-	executeHandler            *commands.ExecutePipelineHandler
-	getPipelineHandler        *queries.GetPipelineHandler
-	listPipelinesHandler      *queries.ListPipelinesHandler
-	getStatusHandler          *commands.GetPipelineStatusHandler
-	pausePipelineHandler      *commands.PausePipelineHandler
-	resumePipelineHandler     *commands.ResumePipelineHandler
-	executionStatsService     *services.PipelineExecutionStatsService
+	createPipelineHandler *commands.CreatePipelineCommandHandler
+	updatePipelineHandler *commands.UpdatePipelineCommandHandler
+	addStepHandler        *commands.AddStepHandler
+	executeHandler        *commands.ExecutePipelineHandler
+	getPipelineHandler    *queries.GetPipelineHandler
+	listPipelinesHandler  *queries.ListPipelinesHandler
+	getStatusHandler      *commands.GetPipelineStatusHandler
+	pausePipelineHandler  *commands.PausePipelineHandler
+	resumePipelineHandler *commands.ResumePipelineHandler
+	executionStatsService *services.PipelineExecutionStatsService
 }
 
 // NewPipelineService creates a new pipeline service
 func NewPipelineService(
-	repo ports.PipelineRepository, 
+	repo ports.PipelineRepository,
 	executor *domainServices.PipelineExecutor,
 	executionStatsService *services.PipelineExecutionStatsService,
 ) *PipelineService {
@@ -40,18 +40,18 @@ func NewPipelineService(
 	if executionStatsService == nil {
 		executionStatsService = &services.PipelineExecutionStatsService{}
 	}
-	
+
 	return &PipelineService{
-		createPipelineHandler:     commands.NewCreatePipelineCommandHandler(repo),
-		updatePipelineHandler:     commands.NewUpdatePipelineCommandHandler(repo),
-		addStepHandler:            commands.NewAddStepHandler(repo),
-		executeHandler:            commands.NewExecutePipelineHandler(repo, executor, executionStatsService),
-		getPipelineHandler:        queries.NewGetPipelineHandler(repo),
-		listPipelinesHandler:      queries.NewListPipelinesHandler(repo),
-		getStatusHandler:          commands.NewGetPipelineStatusHandler(repo, executionStatsService),
-		pausePipelineHandler:      commands.NewPausePipelineHandler(repo),
-		resumePipelineHandler:     commands.NewResumePipelineHandler(repo),
-		executionStatsService:     executionStatsService,
+		createPipelineHandler: commands.NewCreatePipelineCommandHandler(repo),
+		updatePipelineHandler: commands.NewUpdatePipelineCommandHandler(repo),
+		addStepHandler:        commands.NewAddStepHandler(repo),
+		executeHandler:        commands.NewExecutePipelineHandler(repo, executor, executionStatsService),
+		getPipelineHandler:    queries.NewGetPipelineHandler(repo),
+		listPipelinesHandler:  queries.NewListPipelinesHandler(repo),
+		getStatusHandler:      commands.NewGetPipelineStatusHandler(repo, executionStatsService),
+		pausePipelineHandler:  commands.NewPausePipelineHandler(repo),
+		resumePipelineHandler: commands.NewResumePipelineHandler(repo),
+		executionStatsService: executionStatsService,
 	}
 }
 

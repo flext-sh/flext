@@ -837,7 +837,6 @@ func (s *WMSService) calculateClientHealthScore(client *entities.WMSClient) floa
 	return healthScore
 }
 
-
 // Helper methods for CreateExtraction
 
 func (s *WMSService) logExtractionCreationStart(req CreateExtractionRequest) {
@@ -903,4 +902,3 @@ func (s *WMSService) logExtractionCreationSuccess(extractor *entities.WMSExtract
 		"client_id", req.ClientID,
 		"entity_name", req.EntityName)
 }
-

@@ -102,29 +102,29 @@ var (
 
 // UpdateProjectInput represents input for updating a Meltano project
 type UpdateProjectInput struct {
-	ID          uuid.UUID              `json:"id" validate:"required"`
-	DisplayName string                 `json:"display_name,omitempty"`
-	Description string                 `json:"description,omitempty"`
-	Version     string                 `json:"version,omitempty"`
-	Environment string                 `json:"environment,omitempty"`
+	ID          uuid.UUID               `json:"id" validate:"required"`
+	DisplayName string                  `json:"display_name,omitempty"`
+	Description string                  `json:"description,omitempty"`
+	Version     string                  `json:"version,omitempty"`
+	Environment string                  `json:"environment,omitempty"`
 	Status      *entities.ProjectStatus `json:"status,omitempty"`
-	Settings    map[string]interface{} `json:"settings,omitempty"`
+	Settings    map[string]interface{}  `json:"settings,omitempty"`
 }
 
 // AddScheduleInput is defined in add_schedule.go
 
 // ExecutionContext represents the context for Meltano execution
 type ExecutionContext struct {
-	Environment     string                 `json:"environment,omitempty"`
-	Config          map[string]interface{} `json:"config,omitempty"`
-	StateBackend    string                 `json:"state_backend,omitempty"`
-	LogLevel        string                 `json:"log_level,omitempty"`
-	DryRun          bool                   `json:"dry_run,omitempty"`
-	FullRefresh     bool                   `json:"full_refresh,omitempty"`
-	ForceRefresh    bool                   `json:"force_refresh,omitempty"`
-	SelectFilter    []string               `json:"select_filter,omitempty"`
-	ExcludeFilter   []string               `json:"exclude_filter,omitempty"`
-	Vars            map[string]interface{} `json:"vars,omitempty"`
+	Environment   string                 `json:"environment,omitempty"`
+	Config        map[string]interface{} `json:"config,omitempty"`
+	StateBackend  string                 `json:"state_backend,omitempty"`
+	LogLevel      string                 `json:"log_level,omitempty"`
+	DryRun        bool                   `json:"dry_run,omitempty"`
+	FullRefresh   bool                   `json:"full_refresh,omitempty"`
+	ForceRefresh  bool                   `json:"force_refresh,omitempty"`
+	SelectFilter  []string               `json:"select_filter,omitempty"`
+	ExcludeFilter []string               `json:"exclude_filter,omitempty"`
+	Vars          map[string]interface{} `json:"vars,omitempty"`
 }
 
 // ExecutionResult represents the result of Meltano execution
@@ -181,21 +181,21 @@ type ScheduleInfo struct {
 
 // ProjectStats represents statistics about a Meltano project
 type ProjectStats struct {
-	TotalPlugins     int                            `json:"total_plugins"`
-	PluginsByType    map[string]int                 `json:"plugins_by_type"`
-	TotalSchedules   int                            `json:"total_schedules"`
-	ActiveSchedules  int                            `json:"active_schedules"`
-	TotalRuns        int                            `json:"total_runs"`
-	SuccessfulRuns   int                            `json:"successful_runs"`
-	FailedRuns       int                            `json:"failed_runs"`
-	LastRunAt        string                         `json:"last_run_at,omitempty"`
-	AverageRunTime   float64                        `json:"average_run_time_ms"`
-	TotalRunTime     int64                          `json:"total_run_time_ms"`
-	RecordsProcessed int64                          `json:"total_records_processed"`
-	BytesProcessed   int64                          `json:"total_bytes_processed"`
-	Environments     []string                       `json:"environments"`
-	ConfiguredPaths  map[string]string              `json:"configured_paths"`
-	SystemInfo       map[string]interface{}         `json:"system_info"`
+	TotalPlugins     int                    `json:"total_plugins"`
+	PluginsByType    map[string]int         `json:"plugins_by_type"`
+	TotalSchedules   int                    `json:"total_schedules"`
+	ActiveSchedules  int                    `json:"active_schedules"`
+	TotalRuns        int                    `json:"total_runs"`
+	SuccessfulRuns   int                    `json:"successful_runs"`
+	FailedRuns       int                    `json:"failed_runs"`
+	LastRunAt        string                 `json:"last_run_at,omitempty"`
+	AverageRunTime   float64                `json:"average_run_time_ms"`
+	TotalRunTime     int64                  `json:"total_run_time_ms"`
+	RecordsProcessed int64                  `json:"total_records_processed"`
+	BytesProcessed   int64                  `json:"total_bytes_processed"`
+	Environments     []string               `json:"environments"`
+	ConfiguredPaths  map[string]string      `json:"configured_paths"`
+	SystemInfo       map[string]interface{} `json:"system_info"`
 }
 
 // Event types for Meltano domain
@@ -213,6 +213,6 @@ type ScheduleAddedEvent struct {
 
 // Additional errors for schedules and environments
 var (
-	ErrScheduleNotFound          = errors.New("meltano schedule not found")
-	ErrEnvironmentNotFound       = errors.New("meltano environment not found")
+	ErrScheduleNotFound    = errors.New("meltano schedule not found")
+	ErrEnvironmentNotFound = errors.New("meltano environment not found")
 )

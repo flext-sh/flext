@@ -1,8 +1,8 @@
 package pipeline
 
 import (
-	"time"
 	"github.com/google/uuid"
+	"time"
 )
 
 // Domain Events - These are part of the use case layer

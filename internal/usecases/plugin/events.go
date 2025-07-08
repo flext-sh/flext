@@ -1,8 +1,8 @@
 package plugin
 
 import (
-	"time"
 	"github.com/google/uuid"
+	"time"
 )
 
 // PluginRegisteredEvent is published when a new plugin is registered

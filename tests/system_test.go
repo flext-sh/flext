@@ -65,7 +65,7 @@ func (suite *SystemTestSuite) TearDownSuite() {
 func (suite *SystemTestSuite) TestSystemInitialization() {
 	// Test that container is properly initialized
 	assert.NotNil(suite.T(), suite.container)
-	
+
 	// Test that services are available
 	pipelineService := suite.container.GetPipelineService()
 	assert.NotNil(suite.T(), pipelineService)
@@ -91,7 +91,7 @@ func (suite *SystemTestSuite) TestBasicPipelineOperations() {
 	// Verify pipeline properties
 	assert.Equal(suite.T(), "system-test-pipeline", pipeline.Name)
 	assert.Equal(suite.T(), "System test pipeline", pipeline.Description)
-	assert.False(suite.T(), pipeline.IsActive) // New pipelines start inactive
+	assert.False(suite.T(), pipeline.IsActive)                             // New pipelines start inactive
 	assert.Equal(suite.T(), entities.PipelineStatusDraft, pipeline.Status) // Should be draft
 	assert.Empty(suite.T(), pipeline.Steps)
 
@@ -259,7 +259,7 @@ func (suite *SystemTestSuite) TestSystemIntegrity() {
 			err := pipeline.AddStep(step)
 			require.NoError(suite.T(), err)
 		}
-		
+
 		// Activate pipeline after adding steps
 		err := pipeline.Activate()
 		require.NoError(suite.T(), err)

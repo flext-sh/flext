@@ -24,9 +24,9 @@ func NewVersionCommand(version string) *VersionCommand {
 	return cmd
 }
 
-func (c *VersionCommand) Name() string        { return "version" }
-func (c *VersionCommand) Description() string { return "Show version information" }
-func (c *VersionCommand) Usage() string       { return "version" }
+func (c *VersionCommand) Name() string         { return "version" }
+func (c *VersionCommand) Description() string  { return "Show version information" }
+func (c *VersionCommand) Usage() string        { return "version" }
 func (c *VersionCommand) Flags() *flag.FlagSet { return c.flags }
 
 func (c *VersionCommand) Run(ctx context.Context, args []string) error {
@@ -74,9 +74,9 @@ func NewHelpCommand(cli CLIInterface) *HelpCommand {
 	return cmd
 }
 
-func (c *HelpCommand) Name() string        { return "help" }
-func (c *HelpCommand) Description() string { return "Show help information" }
-func (c *HelpCommand) Usage() string       { return "help [command]" }
+func (c *HelpCommand) Name() string         { return "help" }
+func (c *HelpCommand) Description() string  { return "Show help information" }
+func (c *HelpCommand) Usage() string        { return "help [command]" }
 func (c *HelpCommand) Flags() *flag.FlagSet { return c.flags }
 
 func (c *HelpCommand) Run(ctx context.Context, args []string) error {
@@ -125,9 +125,9 @@ func (c *HelpCommand) showCommandHelp(cmd Command) {
 
 func (c *HelpCommand) showCommandExamples(cmd Command) {
 	commandName := cmd.Name()
-	
+
 	fmt.Printf("Examples:\n")
-	
+
 	switch {
 	case strings.HasPrefix(commandName, "pipeline-"):
 		switch commandName {
@@ -157,7 +157,7 @@ func (c *HelpCommand) showCommandExamples(cmd Command) {
 			fmt.Printf("  # Force delete without confirmation\n")
 			fmt.Printf("  flext-cli pipeline-delete --id 123e4567-e89b-12d3-a456-426614174000 --force\n\n")
 		}
-		
+
 	case strings.HasPrefix(commandName, "singer-"):
 		switch commandName {
 		case "singer-create":
@@ -186,7 +186,7 @@ func (c *HelpCommand) showCommandExamples(cmd Command) {
 			fmt.Printf("  # Discover schema to stdout\n")
 			fmt.Printf("  flext-cli singer-discover --id abc123 --config config.json\n\n")
 		}
-		
+
 	case strings.HasPrefix(commandName, "dbt-"):
 		switch commandName {
 		case "dbt-init":
@@ -208,7 +208,7 @@ func (c *HelpCommand) showCommandExamples(cmd Command) {
 			fmt.Printf("  # Debug project configuration\n")
 			fmt.Printf("  flext-cli dbt-debug --project-id abc123\n\n")
 		}
-		
+
 	case strings.HasPrefix(commandName, "server-"):
 		switch commandName {
 		case "server-start":
@@ -229,7 +229,7 @@ func (c *HelpCommand) showCommandExamples(cmd Command) {
 			fmt.Printf("  # Force stop server\n")
 			fmt.Printf("  flext-cli server-stop --force\n\n")
 		}
-		
+
 	default:
 		switch commandName {
 		case "version":
@@ -288,24 +288,24 @@ func (c *HelpCommand) showGeneralHelp() {
 	}
 
 	fmt.Printf("Use 'flext-cli help <command>' for more information about a specific command.\n\n")
-	
+
 	fmt.Printf("EXAMPLES:\n")
 	fmt.Printf("  # Create and run a simple pipeline\n")
 	fmt.Printf("  flext-cli pipeline-create --name \"my-pipeline\"\n")
 	fmt.Printf("  flext-cli pipeline-run --id <pipeline-id>\n\n")
-	
+
 	fmt.Printf("  # Work with Singer specifications\n")
 	fmt.Printf("  flext-cli singer-create --name \"tap-postgres\" --type tap --executable \"/usr/bin/tap-postgres\"\n")
 	fmt.Printf("  flext-cli singer-discover --id <spec-id> --config config.json\n\n")
-	
+
 	fmt.Printf("  # Manage dbt projects\n")
 	fmt.Printf("  flext-cli dbt-init --name \"analytics\" --dir \"/path/to/project\"\n")
 	fmt.Printf("  flext-cli dbt-run --project-id <project-id>\n\n")
-	
+
 	fmt.Printf("  # Server management\n")
 	fmt.Printf("  flext-cli server-start --port 8080\n")
 	fmt.Printf("  flext-cli server-status\n")
 	fmt.Printf("  flext-cli server-stop\n\n")
-	
+
 	fmt.Printf("For more information, visit: https://github.com/flext-sh/flext\n")
 }

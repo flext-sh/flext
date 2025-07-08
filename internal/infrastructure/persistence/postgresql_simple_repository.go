@@ -40,12 +40,12 @@ func (r *SimplePipelineRepository) Save(ctx context.Context, pipeline *pipelineE
 	if r.db == nil {
 		return fmt.Errorf("database connection is nil")
 	}
-	
+
 	db := r.db.GetDB()
 	if db == nil {
 		return fmt.Errorf("database instance is nil")
 	}
-	
+
 	configJSON, _ := json.Marshal(pipeline.Configuration)
 
 	query := `
@@ -86,7 +86,7 @@ func (r *SimplePipelineRepository) Save(ctx context.Context, pipeline *pipelineE
 func (r *SimplePipelineRepository) GetByID(ctx context.Context, id uuid.UUID) (*pipelineEntities.Pipeline, error) {
 	query := `
 		SELECT id, name, description, is_active, configuration, tags, version, created_at, updated_at
-		FROM pipelines 
+		FROM pipelines
 		WHERE id = $1
 	`
 
@@ -128,7 +128,7 @@ func (r *SimplePipelineRepository) GetByID(ctx context.Context, id uuid.UUID) (*
 	if err != nil {
 		return nil, fmt.Errorf("failed to create pipeline: %w", err)
 	}
-	
+
 	// Set database fields
 	pipeline.SetID(pipelineID)
 	pipeline.IsActive = isActive
@@ -143,7 +143,7 @@ func (r *SimplePipelineRepository) GetByID(ctx context.Context, id uuid.UUID) (*
 			pipeline.Configuration = make(map[string]interface{})
 		}
 	}
-	
+
 	// Set tags from array
 	pipeline.Tags = []string(tags)
 
@@ -177,15 +177,15 @@ func (r *SimplePipelineRepository) GetByName(ctx context.Context, name string) (
 	if r.db == nil {
 		return nil, fmt.Errorf("database connection is nil")
 	}
-	
+
 	db := r.db.GetDB()
 	if db == nil {
 		return nil, fmt.Errorf("database instance is nil")
 	}
-	
+
 	query := `
 		SELECT id, name, description, is_active, configuration, tags, version, created_at, updated_at
-		FROM pipelines 
+		FROM pipelines
 		WHERE name = $1
 	`
 
@@ -227,7 +227,7 @@ func (r *SimplePipelineRepository) GetByName(ctx context.Context, name string) (
 	if err != nil {
 		return nil, fmt.Errorf("failed to create pipeline: %w", err)
 	}
-	
+
 	// Set database fields
 	pipeline.SetID(id)
 	pipeline.IsActive = isActive
@@ -242,7 +242,7 @@ func (r *SimplePipelineRepository) GetByName(ctx context.Context, name string) (
 			pipeline.Configuration = make(map[string]interface{})
 		}
 	}
-	
+
 	// Set tags from array
 	pipeline.Tags = []string(tags)
 
@@ -280,7 +280,7 @@ func (r *SimplePipelineRepository) ExistsByName(ctx context.Context, name string
 func (r *SimplePipelineRepository) List(ctx context.Context, filter pipelinePorts.ListPipelinesFilter) ([]*pipelineEntities.Pipeline, int, error) {
 	query := `
 		SELECT id, name, description, is_active, configuration, tags, version, created_at, updated_at
-		FROM pipelines 
+		FROM pipelines
 		ORDER BY created_at DESC
 		LIMIT $1 OFFSET $2
 	`
@@ -330,7 +330,7 @@ func (r *SimplePipelineRepository) List(ctx context.Context, filter pipelinePort
 			r.logger.Error("Failed to create pipeline", logging.F("error", err))
 			continue
 		}
-		
+
 		// Set database fields
 		pipeline.SetID(pipelineID)
 		pipeline.IsActive = isActive
@@ -345,7 +345,7 @@ func (r *SimplePipelineRepository) List(ctx context.Context, filter pipelinePort
 				pipeline.Configuration = make(map[string]interface{})
 			}
 		}
-		
+
 		// Convert pq.StringArray to []string
 		pipeline.Tags = make([]string, len(tags))
 		copy(pipeline.Tags, tags)
@@ -452,7 +452,7 @@ func (r *SimplePluginRepository) Save(ctx context.Context, plugin *pluginEntitie
 func (r *SimplePluginRepository) GetByID(ctx context.Context, id uuid.UUID) (*pluginEntities.Plugin, error) {
 	query := `
 		SELECT id, name, type, version, description, author, status, entry_point, dependencies, configuration, metadata, created_at, updated_at
-		FROM plugins 
+		FROM plugins
 		WHERE id = $1
 	`
 
@@ -515,7 +515,7 @@ func (r *SimplePluginRepository) ExistsByName(ctx context.Context, name string) 
 func (r *SimplePluginRepository) GetActivePlugins(ctx context.Context) ([]*pluginEntities.Plugin, error) {
 	query := `
 		SELECT id, name, type, version, description, author, status, entry_point, dependencies, configuration, metadata, created_at, updated_at
-		FROM plugins 
+		FROM plugins
 		WHERE status = 'active' OR is_active = true
 		ORDER BY created_at DESC
 	`
@@ -574,7 +574,7 @@ func (r *SimplePluginRepository) GetActivePlugins(ctx context.Context) ([]*plugi
 func (r *SimplePluginRepository) GetByType(ctx context.Context, pluginType pluginEntities.PluginType) ([]*pluginEntities.Plugin, error) {
 	query := `
 		SELECT id, name, type, version, description, author, status, entry_point, dependencies, configuration, metadata, created_at, updated_at
-		FROM plugins 
+		FROM plugins
 		WHERE type = $1
 		ORDER BY created_at DESC
 	`
@@ -625,7 +625,7 @@ func (r *SimplePluginRepository) GetByType(ctx context.Context, pluginType plugi
 func (r *SimplePluginRepository) List(ctx context.Context, filter pluginPorts.ListPluginsFilter) ([]*pluginEntities.Plugin, int, error) {
 	query := `
 		SELECT id, name, type, version, description, author, status, entry_point, dependencies, configuration, metadata, created_at, updated_at
-		FROM plugins 
+		FROM plugins
 		ORDER BY created_at DESC
 		LIMIT $1 OFFSET $2
 	`
@@ -715,7 +715,7 @@ func (r *SimplePluginRepository) Delete(ctx context.Context, id uuid.UUID) error
 func (r *SimplePluginRepository) GetByName(ctx context.Context, name string) (*pluginEntities.Plugin, error) {
 	query := `
 		SELECT id, name, type, version, description, author, status, entry_point, dependencies, configuration, metadata, created_at, updated_at
-		FROM plugins 
+		FROM plugins
 		WHERE name = $1
 	`
 

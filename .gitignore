@@ -5,10 +5,16 @@
 # =============================================================================
 # PYTHON BUILD AND RUNTIME ARTIFACTS
 # =============================================================================
+# ===== PYTHON 3.13 SPECIFIC =====
 __pycache__/
 *.py[cod]
 *$py.class
+*.pyc
+*.pyo
+*.pyd
 *.so
+
+# Distribution / packaging
 .Python
 build/
 develop-eggs/
@@ -27,6 +33,11 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+pip-wheel-metadata/
+
+# Python 3.13 specific
+__pypackages__/
+*.py.class
 
 # =============================================================================
 # VIRTUAL ENVIRONMENTS (ALL LOCATIONS)
@@ -78,6 +89,15 @@ nosetests.xml
 *.rej
 *.diff
 *.patch
+*_backup*
+*_bak*
+*_temp*
+backup_*
+backup/
+backups/
+bak/
+temp_*/
+tmp_*/
 
 # =============================================================================
 # ENVIRONMENT AND CONFIGURATION
@@ -149,6 +169,16 @@ ldif_output/
 .meltano/
 deprecated*/
 oracle-documentation/
+
+# Additional backup patterns
+*_source_*/
+*_current_*/
+*_backup_*/
+*_original_*/
+flx*_backup_*/
+flext*_backup_*/
+*_extracted_*/
+*_migrated_*/
 
 # =============================================================================
 # PACKAGE MANAGERS AND DEPENDENCIES

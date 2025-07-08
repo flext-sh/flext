@@ -29,14 +29,14 @@ type WMSClient struct {
 	Headers    map[string]string `json:"headers"`
 
 	// Authentication
-	AuthToken     string    `json:"auth_token,omitempty"`
-	TokenExpiry   time.Time `json:"token_expiry,omitempty"`
-	RefreshToken  string    `json:"refresh_token,omitempty"`
+	AuthToken    string    `json:"auth_token,omitempty"`
+	TokenExpiry  time.Time `json:"token_expiry,omitempty"`
+	RefreshToken string    `json:"refresh_token,omitempty"`
 
 	// Client state
-	Status        ClientStatus      `json:"status"`
-	LastConnected *time.Time        `json:"last_connected,omitempty"`
-	ConnectionID  string            `json:"connection_id"`
+	Status        ClientStatus `json:"status"`
+	LastConnected *time.Time   `json:"last_connected,omitempty"`
+	ConnectionID  string       `json:"connection_id"`
 
 	// Circuit breaker pattern
 	CircuitBreaker *CircuitBreaker `json:"circuit_breaker"`
@@ -79,145 +79,145 @@ type CircuitBreaker struct {
 
 // CacheConfig configures caching behavior
 type CacheConfig struct {
-	EntityCacheTTL   time.Duration `json:"entity_cache_ttl"`
-	SchemaCacheTTL   time.Duration `json:"schema_cache_ttl"`
-	AccessCacheTTL   time.Duration `json:"access_cache_ttl"`
-	EnableCaching    bool          `json:"enable_caching"`
-	MaxCacheSize     int           `json:"max_cache_size"`
+	EntityCacheTTL time.Duration `json:"entity_cache_ttl"`
+	SchemaCacheTTL time.Duration `json:"schema_cache_ttl"`
+	AccessCacheTTL time.Duration `json:"access_cache_ttl"`
+	EnableCaching  bool          `json:"enable_caching"`
+	MaxCacheSize   int           `json:"max_cache_size"`
 }
 
 // ClientMetrics contains performance and usage metrics
 type ClientMetrics struct {
 	// Connection metrics
-	TotalRequests      int64         `json:"total_requests"`
-	SuccessfulRequests int64         `json:"successful_requests"`
-	FailedRequests     int64         `json:"failed_requests"`
+	TotalRequests       int64         `json:"total_requests"`
+	SuccessfulRequests  int64         `json:"successful_requests"`
+	FailedRequests      int64         `json:"failed_requests"`
 	AverageResponseTime time.Duration `json:"average_response_time"`
 
 	// Discovery metrics
-	EntitiesDiscovered int               `json:"entities_discovered"`
-	SchemasGenerated   int               `json:"schemas_generated"`
-	LastDiscoveryTime  time.Duration     `json:"last_discovery_time"`
+	EntitiesDiscovered int           `json:"entities_discovered"`
+	SchemasGenerated   int           `json:"schemas_generated"`
+	LastDiscoveryTime  time.Duration `json:"last_discovery_time"`
 
 	// Performance metrics
-	RecordsExtracted   int64             `json:"records_extracted"`
-	TotalBytesTransferred int64          `json:"total_bytes_transferred"`
-	
+	RecordsExtracted      int64 `json:"records_extracted"`
+	TotalBytesTransferred int64 `json:"total_bytes_transferred"`
+
 	// Error tracking
-	ErrorsByType       map[string]int    `json:"errors_by_type"`
-	LastError          *time.Time        `json:"last_error,omitempty"`
-	
+	ErrorsByType map[string]int `json:"errors_by_type"`
+	LastError    *time.Time     `json:"last_error,omitempty"`
+
 	// Cache metrics
-	CacheHits          int64             `json:"cache_hits"`
-	CacheMisses        int64             `json:"cache_misses"`
+	CacheHits   int64 `json:"cache_hits"`
+	CacheMisses int64 `json:"cache_misses"`
 }
 
 // WMSEntity represents a dynamically discovered WMS entity
 type WMSEntity struct {
-	Name               string                 `json:"name" validate:"required"`
-	URL                string                 `json:"url" validate:"required,url"`
-	Schema             *WMSEntitySchema       `json:"schema,omitempty"`
-	Metadata           map[string]interface{} `json:"metadata"`
-	LastAccessed       *time.Time             `json:"last_accessed,omitempty"`
-	AccessCount        int64                  `json:"access_count"`
-	
+	Name         string                 `json:"name" validate:"required"`
+	URL          string                 `json:"url" validate:"required,url"`
+	Schema       *WMSEntitySchema       `json:"schema,omitempty"`
+	Metadata     map[string]interface{} `json:"metadata"`
+	LastAccessed *time.Time             `json:"last_accessed,omitempty"`
+	AccessCount  int64                  `json:"access_count"`
+
 	// Entity configuration
-	ReplicationMethod  string                 `json:"replication_method"` // "INCREMENTAL", "FULL_TABLE"
-	ReplicationKey     string                 `json:"replication_key"`
-	SafetyOverlapMin   int                    `json:"safety_overlap_minutes"`
-	
+	ReplicationMethod string `json:"replication_method"` // "INCREMENTAL", "FULL_TABLE"
+	ReplicationKey    string `json:"replication_key"`
+	SafetyOverlapMin  int    `json:"safety_overlap_minutes"`
+
 	// Filtering capabilities
-	SupportedFilters   []string               `json:"supported_filters"`
-	FilterOperators    map[string][]string    `json:"filter_operators"`
-	
+	SupportedFilters []string            `json:"supported_filters"`
+	FilterOperators  map[string][]string `json:"filter_operators"`
+
 	// Pagination configuration
-	PaginationMode     string                 `json:"pagination_mode"` // "cursor", "offset"
-	MaxPageSize        int                    `json:"max_page_size"`
-	OptimalPageSize    int                    `json:"optimal_page_size"`
-	
+	PaginationMode  string `json:"pagination_mode"` // "cursor", "offset"
+	MaxPageSize     int    `json:"max_page_size"`
+	OptimalPageSize int    `json:"optimal_page_size"`
+
 	// Performance characteristics
-	AvgRecordsPerPage  int                    `json:"avg_records_per_page"`
-	AvgResponseTime    time.Duration          `json:"avg_response_time"`
-	
+	AvgRecordsPerPage int           `json:"avg_records_per_page"`
+	AvgResponseTime   time.Duration `json:"avg_response_time"`
+
 	// Data patterns
-	HasTimestamps      bool                   `json:"has_timestamps"`
-	HasIDField         bool                   `json:"has_id_field"`
-	HasStatusField     bool                   `json:"has_status_field"`
-	
+	HasTimestamps  bool `json:"has_timestamps"`
+	HasIDField     bool `json:"has_id_field"`
+	HasStatusField bool `json:"has_status_field"`
+
 	// Field information
-	Fields             []*EntityField         `json:"fields"`
+	Fields []*EntityField `json:"fields"`
 }
 
 // WMSEntitySchema represents a JSON schema for a WMS entity
 type WMSEntitySchema struct {
-	Type                 string                            `json:"type"`
-	Properties           map[string]*SchemaProperty        `json:"properties"`
-	Required             []string                          `json:"required"`
-	AdditionalProperties bool                              `json:"additionalProperties"`
-	
+	Type                 string                     `json:"type"`
+	Properties           map[string]*SchemaProperty `json:"properties"`
+	Required             []string                   `json:"required"`
+	AdditionalProperties bool                       `json:"additionalProperties"`
+
 	// Schema metadata
-	Title                string                            `json:"title,omitempty"`
-	Description          string                            `json:"description,omitempty"`
-	Version              string                            `json:"version,omitempty"`
-	GeneratedAt          time.Time                         `json:"generated_at"`
-	GenerationMethod     string                            `json:"generation_method"` // "metadata", "sample", "hybrid"
-	
+	Title            string    `json:"title,omitempty"`
+	Description      string    `json:"description,omitempty"`
+	Version          string    `json:"version,omitempty"`
+	GeneratedAt      time.Time `json:"generated_at"`
+	GenerationMethod string    `json:"generation_method"` // "metadata", "sample", "hybrid"
+
 	// Validation rules
-	ValidationRules      map[string]interface{}            `json:"validation_rules,omitempty"`
+	ValidationRules map[string]interface{} `json:"validation_rules,omitempty"`
 }
 
 // SchemaProperty represents a property in a JSON schema
 type SchemaProperty struct {
-	Type        interface{}            `json:"type"` // string or []string for multiple types
-	Format      string                 `json:"format,omitempty"`
-	Description string                 `json:"description,omitempty"`
-	Pattern     string                 `json:"pattern,omitempty"`
-	Minimum     *float64               `json:"minimum,omitempty"`
-	Maximum     *float64               `json:"maximum,omitempty"`
-	MinLength   *int                   `json:"minLength,omitempty"`
-	MaxLength   *int                   `json:"maxLength,omitempty"`
-	Enum        []interface{}          `json:"enum,omitempty"`
-	Default     interface{}            `json:"default,omitempty"`
-	Examples    []interface{}          `json:"examples,omitempty"`
-	
+	Type        interface{}   `json:"type"` // string or []string for multiple types
+	Format      string        `json:"format,omitempty"`
+	Description string        `json:"description,omitempty"`
+	Pattern     string        `json:"pattern,omitempty"`
+	Minimum     *float64      `json:"minimum,omitempty"`
+	Maximum     *float64      `json:"maximum,omitempty"`
+	MinLength   *int          `json:"minLength,omitempty"`
+	MaxLength   *int          `json:"maxLength,omitempty"`
+	Enum        []interface{} `json:"enum,omitempty"`
+	Default     interface{}   `json:"default,omitempty"`
+	Examples    []interface{} `json:"examples,omitempty"`
+
 	// Additional metadata
-	FieldType   string                 `json:"fieldType,omitempty"` // WMS field type
-	Nullable    bool                   `json:"nullable,omitempty"`
-	PrimaryKey  bool                   `json:"primaryKey,omitempty"`
-	ForeignKey  string                 `json:"foreignKey,omitempty"`
+	FieldType  string `json:"fieldType,omitempty"` // WMS field type
+	Nullable   bool   `json:"nullable,omitempty"`
+	PrimaryKey bool   `json:"primaryKey,omitempty"`
+	ForeignKey string `json:"foreignKey,omitempty"`
 }
 
 // EntityField represents field metadata for a WMS entity
 type EntityField struct {
-	Name         string      `json:"name" validate:"required"`
-	Type         string      `json:"type"` // "string", "integer", "number", "boolean", "datetime"
-	Format       string      `json:"format,omitempty"`
-	Required     bool        `json:"required"`
-	Nullable     bool        `json:"nullable"`
-	PrimaryKey   bool        `json:"primary_key"`
-	ForeignKey   string      `json:"foreign_key,omitempty"`
-	
+	Name       string `json:"name" validate:"required"`
+	Type       string `json:"type"` // "string", "integer", "number", "boolean", "datetime"
+	Format     string `json:"format,omitempty"`
+	Required   bool   `json:"required"`
+	Nullable   bool   `json:"nullable"`
+	PrimaryKey bool   `json:"primary_key"`
+	ForeignKey string `json:"foreign_key,omitempty"`
+
 	// Field constraints
-	MinLength    *int        `json:"min_length,omitempty"`
-	MaxLength    *int        `json:"max_length,omitempty"`
-	Pattern      string      `json:"pattern,omitempty"`
-	Minimum      *float64    `json:"minimum,omitempty"`
-	Maximum      *float64    `json:"maximum,omitempty"`
-	
+	MinLength *int     `json:"min_length,omitempty"`
+	MaxLength *int     `json:"max_length,omitempty"`
+	Pattern   string   `json:"pattern,omitempty"`
+	Minimum   *float64 `json:"minimum,omitempty"`
+	Maximum   *float64 `json:"maximum,omitempty"`
+
 	// Business metadata
-	Description  string      `json:"description,omitempty"`
-	BusinessName string      `json:"business_name,omitempty"`
-	Category     string      `json:"category,omitempty"`
-	
+	Description  string `json:"description,omitempty"`
+	BusinessName string `json:"business_name,omitempty"`
+	Category     string `json:"category,omitempty"`
+
 	// Usage patterns
-	IsFilterable bool        `json:"is_filterable"`
-	IsSortable   bool        `json:"is_sortable"`
-	IsSearchable bool        `json:"is_searchable"`
-	
+	IsFilterable bool `json:"is_filterable"`
+	IsSortable   bool `json:"is_sortable"`
+	IsSearchable bool `json:"is_searchable"`
+
 	// Statistical information
-	UniqueValues int64       `json:"unique_values,omitempty"`
-	NullCount    int64       `json:"null_count,omitempty"`
-	SampleValues []string    `json:"sample_values,omitempty"`
+	UniqueValues int64    `json:"unique_values,omitempty"`
+	NullCount    int64    `json:"null_count,omitempty"`
+	SampleValues []string `json:"sample_values,omitempty"`
 }
 
 // NewWMSClient creates a new WMS client with advanced capabilities
@@ -275,28 +275,28 @@ func createWMSClientInstance(baseURL, username, password string) (*WMSClient, er
 		Status:             ClientStatusDisconnected,
 		ConnectionID:       uuid.New().String(),
 		DiscoveredEntities: make(map[string]*WMSEntity),
-		
+
 		// Default circuit breaker configuration
 		CircuitBreaker: &CircuitBreaker{
 			FailureThreshold: 5,
 			RecoveryTimeout:  60 * time.Second,
-			State:           "closed",
+			State:            "closed",
 		},
-		
+
 		// Default cache configuration
 		CacheConfig: CacheConfig{
-			EntityCacheTTL:  2 * time.Hour,
-			SchemaCacheTTL:  1 * time.Hour,
-			AccessCacheTTL:  30 * time.Minute,
-			EnableCaching:   true,
-			MaxCacheSize:    1000,
+			EntityCacheTTL: 2 * time.Hour,
+			SchemaCacheTTL: 1 * time.Hour,
+			AccessCacheTTL: 30 * time.Minute,
+			EnableCaching:  true,
+			MaxCacheSize:   1000,
 		},
-		
+
 		// Initialize metrics
 		Metrics: ClientMetrics{
 			ErrorsByType: make(map[string]int),
 		},
-		
+
 		// HTTP client configuration
 		httpClient: &http.Client{
 			Timeout: 30 * time.Second,
@@ -328,7 +328,7 @@ func initializeClientAuthentication(client *WMSClient, baseURL, username, passwo
 		ConnectTimeout:     30 * time.Second,
 		RequestTimeout:     30 * time.Second,
 	}
-	
+
 	client.authenticator = auth.NewWMSAuthenticator(baseURL, username, password, authConfig)
 }
 
@@ -372,14 +372,14 @@ func (c *WMSClient) Connect(ctx context.Context) error {
 		c.CircuitBreaker.CallFailed()
 		c.Status = ClientStatusError
 		c.MarkAsUpdated()
-		
+
 		c.AddEvent(&WMSClientConnectionFailed{
 			BaseDomainEvent: domain.NewBaseDomainEvent("wms.client.connection.failed", c.GetID()),
 			ClientID:        c.GetID(),
 			ConnectionID:    c.ConnectionID,
 			Error:           err.Error(),
 		})
-		
+
 		return fmt.Errorf("authentication failed: %w", err)
 	}
 
@@ -388,14 +388,14 @@ func (c *WMSClient) Connect(ctx context.Context) error {
 		c.CircuitBreaker.CallFailed()
 		c.Status = ClientStatusError
 		c.MarkAsUpdated()
-		
+
 		c.AddEvent(&WMSClientConnectionFailed{
 			BaseDomainEvent: domain.NewBaseDomainEvent("wms.client.connection.failed", c.GetID()),
 			ClientID:        c.GetID(),
 			ConnectionID:    c.ConnectionID,
 			Error:           err.Error(),
 		})
-		
+
 		return fmt.Errorf("connectivity test failed: %w", err)
 	}
 
@@ -591,14 +591,14 @@ func (c *WMSClient) authenticate(ctx context.Context) error {
 
 	// Update metrics
 	c.Metrics.SuccessfulRequests++
-	
+
 	return nil
 }
 
 func (c *WMSClient) testConnectivity(ctx context.Context) error {
 	// Test connectivity by calling the API info endpoint
 	infoURL := fmt.Sprintf("%s/wms/lgfapi/%s/info", c.BaseURL, c.APIVersion)
-	
+
 	resp, err := c.authenticator.MakeAuthenticatedRequest(ctx, "GET", infoURL, nil)
 	if err != nil {
 		c.Metrics.FailedRequests++
@@ -617,13 +617,13 @@ func (c *WMSClient) testConnectivity(ctx context.Context) error {
 	// Update metrics
 	c.Metrics.SuccessfulRequests++
 	c.Metrics.TotalRequests++
-	
+
 	return nil
 }
 
 func (c *WMSClient) fetchEntityList(ctx context.Context) ([]string, error) {
 	entityURL := fmt.Sprintf("%s/wms/lgfapi/%s/entity", c.BaseURL, c.APIVersion)
-	
+
 	resp, err := c.authenticator.MakeAuthenticatedRequest(ctx, "GET", entityURL, nil)
 	if err != nil {
 		c.Metrics.FailedRequests++
@@ -654,11 +654,11 @@ func (c *WMSClient) fetchEntityList(ctx context.Context) ([]string, error) {
 			Data     []string `json:"data"`
 			Results  []string `json:"results"`
 		}
-		
+
 		if err := json.Unmarshal(body, &response); err != nil {
 			return nil, fmt.Errorf("failed to parse entity list response: %w", err)
 		}
-		
+
 		// Use the first non-empty array found
 		if len(response.Entities) > 0 {
 			entities = response.Entities
@@ -672,7 +672,7 @@ func (c *WMSClient) fetchEntityList(ctx context.Context) ([]string, error) {
 	// Update metrics
 	c.Metrics.SuccessfulRequests++
 	c.Metrics.TotalRequests++
-	
+
 	return entities, nil
 }
 
@@ -697,15 +697,15 @@ func (c *WMSClient) analyzeEntity(ctx context.Context, entityName string) (*WMSE
 
 	// Try to get entity metadata
 	metadataURL := fmt.Sprintf("%s/describe", entity.URL)
-	
+
 	resp, err := c.authenticator.MakeAuthenticatedRequest(ctx, "GET", metadataURL, nil)
 	if err == nil && resp.StatusCode == http.StatusOK {
 		defer resp.Body.Close()
-		
+
 		var metadata map[string]interface{}
 		if err := json.NewDecoder(resp.Body).Decode(&metadata); err == nil {
 			entity.Metadata = metadata
-			
+
 			// Extract field information if available
 			if fields, ok := metadata["fields"].([]interface{}); ok {
 				for _, fieldData := range fields {
@@ -724,13 +724,13 @@ func (c *WMSClient) analyzeEntity(ctx context.Context, entityName string) (*WMSE
 					}
 				}
 			}
-			
+
 			// Analyze metadata to determine capabilities
 			if tableInfo, ok := metadata["table_info"].(map[string]interface{}); ok {
 				if primaryKeys, ok := tableInfo["primary_keys"].([]interface{}); ok && len(primaryKeys) > 0 {
 					entity.HasIDField = true
 				}
-				
+
 				// Check for timestamp fields
 				entity.HasTimestamps = c.hasTimestampFields(entity.Fields)
 			}
@@ -739,7 +739,7 @@ func (c *WMSClient) analyzeEntity(ctx context.Context, entityName string) (*WMSE
 
 	// Test entity access with a small sample
 	sampleURL := fmt.Sprintf("%s?page_size=1", entity.URL)
-	
+
 	resp, err = c.authenticator.MakeAuthenticatedRequest(ctx, "GET", sampleURL, nil)
 	if err != nil {
 		c.Metrics.ErrorsByType["entity_analysis"]++
@@ -763,30 +763,30 @@ func (c *WMSClient) analyzeEntity(ctx context.Context, entityName string) (*WMSE
 								IsFilterable: true,
 								IsSortable:   true,
 							}
-							
+
 							// Check for common primary key patterns
-							if strings.ToLower(fieldName) == "id" || 
-							   strings.HasSuffix(strings.ToLower(fieldName), "_id") {
+							if strings.ToLower(fieldName) == "id" ||
+								strings.HasSuffix(strings.ToLower(fieldName), "_id") {
 								field.PrimaryKey = true
 								entity.HasIDField = true
 							}
-							
+
 							// Check for timestamp patterns
 							if strings.Contains(strings.ToLower(fieldName), "ts") ||
-							   strings.Contains(strings.ToLower(fieldName), "time") ||
-							   strings.Contains(strings.ToLower(fieldName), "date") {
+								strings.Contains(strings.ToLower(fieldName), "time") ||
+								strings.Contains(strings.ToLower(fieldName), "date") {
 								entity.HasTimestamps = true
 							}
-							
+
 							entity.Fields = append(entity.Fields, field)
 						}
 					}
-					
+
 					// Update average records per page estimate
 					entity.AvgRecordsPerPage = 1 // At least 1 record exists
 				}
 			}
-			
+
 			// Check pagination info
 			if pageInfo, ok := sampleResponse["page_info"].(map[string]interface{}); ok {
 				if nextPage, exists := pageInfo["next_page"]; exists && nextPage != nil {
@@ -801,7 +801,7 @@ func (c *WMSClient) analyzeEntity(ctx context.Context, entityName string) (*WMSE
 	// Update metrics
 	c.Metrics.SuccessfulRequests++
 	c.Metrics.TotalRequests++
-	
+
 	return entity, nil
 }
 
@@ -833,11 +833,11 @@ func (c *WMSClient) hasTimestampFields(fields []*EntityField) bool {
 	for _, field := range fields {
 		fieldName := strings.ToLower(field.Name)
 		if strings.Contains(fieldName, "ts") ||
-		   strings.Contains(fieldName, "time") ||
-		   strings.Contains(fieldName, "date") ||
-		   strings.Contains(fieldName, "created") ||
-		   strings.Contains(fieldName, "modified") ||
-		   strings.Contains(fieldName, "updated") {
+			strings.Contains(fieldName, "time") ||
+			strings.Contains(fieldName, "date") ||
+			strings.Contains(fieldName, "created") ||
+			strings.Contains(fieldName, "modified") ||
+			strings.Contains(fieldName, "updated") {
 			return true
 		}
 	}
@@ -848,7 +848,7 @@ func inferFieldType(value interface{}) string {
 	if value == nil {
 		return "string" // Default for null values
 	}
-	
+
 	switch value.(type) {
 	case bool:
 		return "boolean"
@@ -873,7 +873,7 @@ func (cb *CircuitBreaker) CanAttemptCall() bool {
 	case "closed":
 		return true
 	case "open":
-		if cb.LastFailureTime != nil && 
+		if cb.LastFailureTime != nil &&
 			time.Since(*cb.LastFailureTime) > cb.RecoveryTimeout {
 			cb.State = "half-open"
 			return true
@@ -913,7 +913,7 @@ func (c *WMSClient) validateConnectionForDiscovery() error {
 }
 
 func (c *WMSClient) shouldSkipDiscovery(forceRefresh bool) bool {
-	return !forceRefresh && c.LastDiscovery != nil && 
+	return !forceRefresh && c.LastDiscovery != nil &&
 		time.Since(*c.LastDiscovery) < c.CacheConfig.EntityCacheTTL
 }
 
@@ -952,7 +952,7 @@ func (c *WMSClient) processEntityList(ctx context.Context, entityList []string) 
 			c.Metrics.ErrorsByType["entity_analysis"]++
 			continue
 		}
-		
+
 		c.DiscoveredEntities[entityName] = entity
 		discoveredCount++
 	}
@@ -973,4 +973,3 @@ func (c *WMSClient) finalizeDiscovery(discoveredCount int, startTime time.Time) 
 		DurationMs:         time.Since(startTime).Milliseconds(),
 	})
 }
-

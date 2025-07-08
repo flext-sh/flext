@@ -45,7 +45,7 @@ func TestRedisCache_FunctionalProgramming(t *testing.T) {
 	cache, err := NewRedisCache(cfg, logger)
 	if err != nil {
 		t.Logf("Redis not available, testing cache logic only: %v", err)
-		
+
 		// Test functional programming components without Redis
 		testCacheKeyGeneration(t)
 		testPipelineHelpers(t)

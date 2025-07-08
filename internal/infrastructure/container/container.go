@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"sync"
 
-	pipelinePorts "github.com/flext-sh/flext/internal/bounded_contexts/pipeline/application/ports"
-	pipelineServices "github.com/flext-sh/flext/internal/bounded_contexts/pipeline/domain/services"
 	pipelineApp "github.com/flext-sh/flext/internal/bounded_contexts/pipeline/application"
+	pipelinePorts "github.com/flext-sh/flext/internal/bounded_contexts/pipeline/application/ports"
 	pipelineAppServices "github.com/flext-sh/flext/internal/bounded_contexts/pipeline/application/services"
+	pipelineServices "github.com/flext-sh/flext/internal/bounded_contexts/pipeline/domain/services"
 
 	pluginApp "github.com/flext-sh/flext/internal/bounded_contexts/plugin/application"
 	pluginPorts "github.com/flext-sh/flext/internal/bounded_contexts/plugin/application/ports"
@@ -96,16 +96,16 @@ func (c *Container) initializeServices() error {
 
 	// Domain Services - Use Real Plugin Executor with Complete Environment
 	executorFactory := plugin_execution.NewExecutorFactory()
-	
+
 	// Try to create production executor with complete environment
 	productionExecutor, err := executorFactory.CreateProductionExecutor(
 		c.pluginRepo.(pipelineServices.PluginRepository),
 	)
-	
+
 	if err != nil {
-		c.logger.Warn("Failed to create production executor, falling back to development mode", 
+		c.logger.Warn("Failed to create production executor, falling back to development mode",
 			logging.F("error", err.Error()))
-		
+
 		// Fallback: Setup basic plugin directory and install samples for development
 		if err := executorFactory.SetupPluginDirectory(); err != nil {
 			c.logger.Warn("Failed to setup plugin directory", logging.F("error", err))
@@ -113,7 +113,7 @@ func (c *Container) initializeServices() error {
 		if err := executorFactory.InstallSamplePlugins(); err != nil {
 			c.logger.Warn("Failed to install sample plugins", logging.F("error", err))
 		}
-		
+
 		// Create basic real pipeline executor
 		c.pipelineExecutor = executorFactory.CreatePipelineExecutor(
 			c.pluginRepo.(pipelineServices.PluginRepository),
@@ -133,7 +133,7 @@ func (c *Container) initializeServices() error {
 	// Create event publisher adapter
 	eventAdapter := NewEventPublisherAdapter(c.eventPublisher)
 
-	// Application Services  
+	// Application Services
 	c.pipelineService = pipelineApp.NewPipelineService(c.pipelineRepo, c.pipelineExecutor, c.executionStatsService)
 
 	c.pluginService = pluginApp.NewPluginService(
@@ -247,16 +247,16 @@ func (c *Container) initializeRepositories() error {
 			logging.F("driver", c.config.Database.Driver),
 			logging.F("database_enabled", true),
 		)
-		
+
 		// Create PostgreSQL repositories
 		pgPipelineRepo := persistence.NewPostgreSQLPipelineRepository(c.dbConnection, c.logger)
 		pgPluginRepo := persistence.NewPostgreSQLPluginRepository(c.dbConnection, c.logger)
 		pgExecutionRepo := persistence.NewPostgreSQLExecutionRepository(c.dbConnection, c.logger)
-		
+
 		c.pipelineRepo = pgPipelineRepo
 		c.pluginRepo = pgPluginRepo
 		c.executionRepo = pgExecutionRepo
-		
+
 		c.logger.Info("PostgreSQL repositories initialized successfully",
 			logging.F("repositories", []string{"pipeline", "plugin"}),
 			logging.F("type", "postgresql"),
@@ -266,7 +266,7 @@ func (c *Container) initializeRepositories() error {
 		)
 		return nil
 	}
-	
+
 	// Fallback to in-memory repositories for guaranteed compatibility
 	c.logger.Info("Using in-memory repositories (database not enabled)")
 
