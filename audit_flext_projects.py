@@ -114,7 +114,7 @@ def audit_single_project(project_path: Path) -> dict[str, Any]:
     }
 
 
-def main():
+def main() -> None:
     """Executa audit completo de todos os projetos FLEXT."""
     workspace_path = Path("/home/marlonsc/flext")
 
@@ -123,11 +123,6 @@ def main():
         p for p in workspace_path.iterdir()
         if p.is_dir() and p.name.startswith("flext-")
     ])
-
-    print("🔍 AUDIT COMPLETO E HONESTO - PROJETOS FLEXT")
-    print("=" * 60)
-    print(f"Total de projetos encontrados: {len(flext_projects)}")
-    print()
 
     results = []
     total_src_lines = 0
@@ -160,72 +155,39 @@ def main():
             large_projects.append(result)
 
     # Relatório detalhado
-    print("📊 RELATÓRIO POR PROJETO")
-    print("-" * 60)
     for result in results:
-        deps_info = "✅ flext-core" if result["pyproject_info"]["flext_core_dependency"] else "❌ no flext-core"
-        code_info = "✅ código real" if result["has_actual_code"] else "❌ vazio/minimal"
+        "✅ flext-core" if result["pyproject_info"]["flext_core_dependency"] else "❌ no flext-core"
+        "✅ código real" if result["has_actual_code"] else "❌ vazio/minimal"
 
-        print(f"{result['name']:<25} | {result['status']:<12} | "
-              f"Src: {result['src_lines']:>5} | Test: {result['test_lines']:>5} | "
-              f"{deps_info} | {code_info}")
+    for _p in empty_projects:
+        pass
 
-    print()
-    print("📈 RESUMO ESTATÍSTICO")
-    print("-" * 60)
-    print(f"Total de linhas de código fonte: {total_src_lines:,}")
-    print(f"Total de linhas de teste: {total_test_lines:,}")
-    print(f"Total de linhas: {total_src_lines + total_test_lines:,}")
-    print()
+    for _p in minimal_projects:
+        pass
 
-    print("🏷️ PROJETOS POR CATEGORIA")
-    print("-" * 60)
-    print(f"EMPTY (0 linhas): {len(empty_projects)} projetos")
-    for p in empty_projects:
-        print(f"  - {p['name']}")
+    for _p in basic_projects:
+        pass
 
-    print(f"MINIMAL (1-99 linhas): {len(minimal_projects)} projetos")
-    for p in minimal_projects:
-        print(f"  - {p['name']} ({p['src_lines']} linhas)")
+    for _p in substantial_projects:
+        pass
 
-    print(f"BASIC (100-999 linhas): {len(basic_projects)} projetos")
-    for p in basic_projects:
-        print(f"  - {p['name']} ({p['src_lines']} linhas)")
+    for _p in large_projects:
+        pass
 
-    print(f"SUBSTANTIAL (1000-4999 linhas): {len(substantial_projects)} projetos")
-    for p in substantial_projects:
-        print(f"  - {p['name']} ({p['src_lines']} linhas)")
-
-    print(f"LARGE (5000+ linhas): {len(large_projects)} projetos")
-    for p in large_projects:
-        print(f"  - {p['name']} ({p['src_lines']} linhas)")
-
-    print()
-    print("🔗 DEPENDÊNCIAS DO FLEXT-CORE")
-    print("-" * 60)
     with_core = [p for p in results if p["pyproject_info"]["flext_core_dependency"]]
-    without_core = [p for p in results if not p["pyproject_info"]["flext_core_dependency"]]
-
-    print(f"Projetos que dependem do flext-core: {len(with_core)}")
-    print(f"Projetos independentes: {len(without_core)}")
-
-    print()
-    print("⚠️ PROBLEMAS CRÍTICOS IDENTIFICADOS")
-    print("-" * 60)
+    [p for p in results if not p["pyproject_info"]["flext_core_dependency"]]
 
     projects_without_tests = [p for p in results if p["test_lines"] == 0]
     projects_without_code = [p for p in results if not p["has_actual_code"]]
 
-    print(f"Projetos sem testes: {len(projects_without_tests)}")
-    for p in projects_without_tests:
-        print(f"  - {p['name']}")
+    for _p in projects_without_tests:
+        pass
 
-    print(f"Projetos sem código real: {len(projects_without_code)}")
-    for p in projects_without_code:
-        print(f"  - {p['name']}")
+    for _p in projects_without_code:
+        pass
 
     # Salva resultados em JSON para análise posterior
-    with open("/home/marlonsc/flext/audit_results.json", "w") as f:
+    with open("/home/marlonsc/flext/audit_results.json", "w", encoding="utf-8") as f:
         json.dump({
             "summary": {
                 "total_projects": len(flext_projects),
@@ -243,20 +205,8 @@ def main():
             "projects": results
         }, f, indent=2)
 
-    print()
-    print("💾 Resultados salvos em: audit_results.json")
-    print()
-    print("🎯 ESTIMATIVA REALISTA DE TRABALHO")
-    print("-" * 60)
-
     functional_projects = len([p for p in results if p["src_lines"] > 100 and p["has_actual_code"]])
-    coverage_percentage = (functional_projects / len(flext_projects)) * 100
-
-    print(f"Projetos funcionais: {functional_projects}/{len(flext_projects)} ({coverage_percentage:.1f}%)")
-    print("Trabalho restante para 100% coverage:")
-    print(f"  - Implementar {len(projects_without_code)} projetos vazios")
-    print(f"  - Adicionar testes para {len(projects_without_tests)} projetos")
-    print(f"  - Integrar {len(without_core)} projetos ao flext-core")
+    (functional_projects / len(flext_projects)) * 100
 
 
 if __name__ == "__main__":
