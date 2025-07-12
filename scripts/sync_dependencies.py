@@ -692,6 +692,175 @@ def is_valid_pypi_package(package_name: str) -> bool:
         "pydantic-settings",
         "prometheus_client",
         "aiogrpc",
+        # Adiciona mais packages comuns que podem ser descobertos
+        "meltano",
+        "singer-python",
+        "pipelinewise-singer-python",
+        "target-jsonl",
+        "target-csv",
+        "target-postgres",
+        "tap-csv",
+        "tap-spreadsheets-anywhere",
+        "smart-open",
+        "backoff",
+        "pytz",
+        "pendulum",
+        "arrow",
+        "colorama",
+        "termcolor",
+        "poetry",
+        "setuptools-scm",
+        "build",
+        "twine",
+        "invoke",
+        "nox",
+        "hatch",
+        "flit",
+        "pdm",
+        "pipenv",
+        "virtualenv",
+        "tox",
+        "pytest-runner",
+        "pytest-django",
+        "pytest-flask",
+        "pytest-aiohttp",
+        "pytest-tornasync",
+        "pytest-twisted",
+        "twisted",
+        "tornado",
+        "gevent",
+        "eventlet",
+        "greenlet",
+        "msgpack",
+        "ujson",
+        "simplejson",
+        "rapidjson",
+        "cython",
+        "numba",
+        "joblib",
+        "cloudpickle",
+        "dill",
+        "pathos",
+        "multiprocess",
+        "billiard",
+        "kombu",
+        "amqp",
+        "vine",
+        "flower",
+        "django-celery-beat",
+        "django-celery-results",
+        "redis-py-cluster",
+        "hiredis",
+        "aioredis",
+        "aiocache",
+        "diskcache",
+        "cachetools",
+        "dogpile.cache",
+        "beaker",
+        "pylibmc",
+        "python-memcached",
+        "pymemcache",
+        "kazoo",
+        "pyzk",
+        "consul",
+        "etcd3",
+        "hvac",
+        "kubernetes",
+        "docker-compose",
+        "podman-py",
+        "ansible",
+        "fabric",
+        "pyinfra",
+        "supervisor",
+        "circus",
+        "honcho",
+        "huey",
+        "rq",
+        "mrq",
+        "dramatiq",
+        "apscheduler",
+        "schedule",
+        "croniter",
+        "python-crontab",
+        "django-cron",
+        "django-extensions",
+        "django-debug-toolbar",
+        "django-silk",
+        "django-cors-headers",
+        "django-filter",
+        "django-guardian",
+        "django-mptt",
+        "django-treebeard",
+        "django-taggit",
+        "django-haystack",
+        "whoosh",
+        "xapian",
+        "pysolr",
+        "elasticsearch-dsl",
+        "django-elasticsearch-dsl",
+        "scout",
+        "meilisearch",
+        "typesense",
+        "qdrant-client",
+        "weaviate-client",
+        "pinecone-client",
+        "chromadb",
+        "langchain",
+        "llama-index",
+        "sentence-transformers",
+        "transformers",
+        "datasets",
+        "tokenizers",
+        "accelerate",
+        "bitsandbytes",
+        "peft",
+        "trl",
+        "einops",
+        "timm",
+        "albumentations",
+        "imgaug",
+        "scikit-image",
+        "imageio",
+        "opencv-contrib-python",
+        "pytesseract",
+        "pdf2image",
+        "pypdf",
+        "pypdf2",
+        "pdfplumber",
+        "camelot-py",
+        "tabula-py",
+        "xlrd",
+        "xlwt",
+        "xlsxwriter",
+        "openpyxl",
+        "pyexcel",
+        "pandas-profiling",
+        "ydata-profiling",
+        "sweetviz",
+        "dtale",
+        "bamboolib",
+        "pandasql",
+        "duckdb",
+        "polars",
+        "pyarrow",
+        "fastparquet",
+        "h5py",
+        "tables",
+        "netcdf4",
+        "xarray",
+        "zarr",
+        "numexpr",
+        "bottleneck",
+        "datashader",
+        "holoviews",
+        "hvplot",
+        "panel",
+        "voila",
+        "solara",
+        "nicegui",
+        "reflex",
+        "anvil",
+        "pynecone",
     }
 
     if package_clean in known_valid_packages:
@@ -2049,6 +2218,127 @@ def sync_project(
     return stats
 
 
+def analyze_and_fix_missing_imports(project: Path) -> Dict[str, Set[str]]:
+    """Analisa erros de import e sugere packages para instalar."""
+    print_colored(f"    🔍 Analisando erros de import no projeto...", Colors.BLUE)
+    
+    missing_deps = {"runtime": set(), "test": set()}
+    
+    # Tenta executar os testes para identificar imports faltantes
+    test_dirs = ["tests", "test"]
+    for test_dir in test_dirs:
+        test_path = project / test_dir
+        if test_path.exists():
+            # Executa pytest com dry-run para capturar erros de import
+            cmd = ["python", "-m", "pytest", "--collect-only", "-q", str(test_path)]
+            success, output = run_command(cmd, project, timeout=30)
+            
+            if not success and "ModuleNotFoundError" in output:
+                # Analisa erros de ModuleNotFoundError
+                import_error_pattern = re.compile(r"ModuleNotFoundError: No module named ['\"]([^'\"]+)['\"]")
+                matches = import_error_pattern.findall(output)
+                
+                for module in matches:
+                    # Converte nome do módulo para package name
+                    package_name = module.split(".")[0].replace("_", "-")
+                    
+                    # Mapeia módulos conhecidos para seus packages
+                    module_to_package = {
+                        "yaml": "pyyaml",
+                        "cv2": "opencv-python",
+                        "sklearn": "scikit-learn",
+                        "skimage": "scikit-image",
+                        "PIL": "pillow",
+                        "psycopg2": "psycopg2-binary",
+                        "MySQLdb": "mysqlclient",
+                        "ldap": "python-ldap",
+                        "magic": "python-magic",
+                        "dotenv": "python-dotenv",
+                        "jose": "python-jose",
+                        "multipart": "python-multipart",
+                        "slowapi": "slowapi",
+                        "bs4": "beautifulsoup4",
+                        "lxml": "lxml",
+                        "dateutil": "python-dateutil",
+                        "tz": "pytz",
+                        "crypto": "pycryptodome",
+                        "Crypto": "pycryptodome",
+                        "git": "gitpython",
+                        "github": "pygithub",
+                        "gitlab": "python-gitlab",
+                        "jira": "jira",
+                        "slack": "slack-sdk",
+                        "telegram": "python-telegram-bot",
+                        "discord": "discord.py",
+                        "tweepy": "tweepy",
+                        "stripe": "stripe",
+                        "paypal": "paypalrestsdk",
+                        "braintree": "braintree",
+                        "twilio": "twilio",
+                        "sendgrid": "sendgrid",
+                        "mailgun": "mailgun",
+                        "mandrill": "mandrill",
+                        "boto": "boto3",
+                        "azure": "azure-storage-blob",
+                        "google": "google-cloud-storage",
+                        "kubernetes": "kubernetes",
+                        "docker": "docker",
+                        "vagrant": "python-vagrant",
+                        "ansible": "ansible",
+                        "fabric": "fabric",
+                        "paramiko": "paramiko",
+                        "pysftp": "pysftp",
+                        "ftplib": "ftplib",
+                        "smbprotocol": "smbprotocol",
+                        "win32com": "pywin32",
+                        "pywintypes": "pywin32",
+                        "pythoncom": "pywin32",
+                        "wmi": "wmi",
+                        "ldap3": "ldap3",
+                        "saml2": "python-saml",
+                        "oauth2": "python-oauth2",
+                        "oidc": "python-openid",
+                        "jwt": "pyjwt",
+                        "passlib": "passlib",
+                        "argon2": "argon2-cffi",
+                        "bcrypt": "bcrypt",
+                        "scrypt": "scrypt",
+                    }
+                    
+                    if module in module_to_package:
+                        package_name = module_to_package[module]
+                    
+                    if is_valid_pypi_package(package_name):
+                        missing_deps["test"].add(package_name)
+                        print_colored(
+                            f"      📦 Detectado import faltante: {module} → {package_name}",
+                            Colors.YELLOW
+                        )
+    
+    # Analisa código runtime para imports faltantes
+    src_dirs = ["src", "app", "."]
+    for src_dir in src_dirs[:1]:  # Analisa apenas o primeiro diretório encontrado
+        src_path = project / src_dir
+        if src_path.exists() and src_path.is_dir():
+            # Tenta executar um import check básico
+            py_files = list(src_path.rglob("*.py"))[:10]  # Limita a 10 arquivos para não demorar muito
+            
+            for py_file in py_files:
+                cmd = ["python", "-c", f"import ast; ast.parse(open('{py_file}').read())"]
+                success, output = run_command(cmd, project, timeout=5)
+                
+                if not success and "ModuleNotFoundError" in output:
+                    import_error_pattern = re.compile(r"ModuleNotFoundError: No module named ['\"]([^'\"]+)['\"]")
+                    matches = import_error_pattern.findall(output)
+                    
+                    for module in matches:
+                        package_name = module.split(".")[0].replace("_", "-")
+                        if is_valid_pypi_package(package_name):
+                            missing_deps["runtime"].add(package_name)
+    
+    return missing_deps
+
+
 def install_discovered_dependencies(
     project: Path, discovered_deps: Dict[str, Set[str]]
 ) -> Dict[str, int]:
@@ -2067,6 +2357,14 @@ def install_discovered_dependencies(
     print_colored(
         f"    📋 Pacotes já instalados: {len(installed_packages)}", Colors.BLUE
     )
+    
+    # Analisa e adiciona dependências de imports faltantes
+    missing_import_deps = analyze_and_fix_missing_imports(project)
+    for category, deps in missing_import_deps.items():
+        if category in discovered_deps:
+            discovered_deps[category].update(deps)
+        else:
+            discovered_deps[category] = deps
 
     for category, packages in discovered_deps.items():
         if not packages:
@@ -2209,6 +2507,79 @@ def install_discovered_dependencies(
     return stats
 
 
+def check_version_compatibility_across_projects(projects: List[Path]) -> Dict[str, List[str]]:
+    """Verifica conflitos de versão entre projetos do workspace."""
+    print_colored("\n🔍 Verificando compatibilidade de versões entre projetos...", Colors.BLUE)
+    
+    # Coleta todas as versões de cada package em cada projeto
+    package_versions = {}  # {package: {project: version}}
+    
+    for project in projects:
+        pyproject_file = project / "pyproject.toml"
+        if not pyproject_file.exists():
+            continue
+            
+        try:
+            with open(pyproject_file, "rb") as f:
+                data = tomllib.load(f)
+            
+            # Analisa todas as dependências
+            all_deps = {}
+            
+            # Dependências principais
+            poetry_deps = data.get("tool", {}).get("poetry", {}).get("dependencies", {})
+            all_deps.update(poetry_deps)
+            
+            # Dependências de grupos
+            groups = data.get("tool", {}).get("poetry", {}).get("group", {})
+            for group_data in groups.values():
+                group_deps = group_data.get("dependencies", {})
+                all_deps.update(group_deps)
+            
+            # Registra versões
+            for package, version_spec in all_deps.items():
+                if package == "python":
+                    continue
+                    
+                if package not in package_versions:
+                    package_versions[package] = {}
+                
+                # Normaliza versão
+                if isinstance(version_spec, dict):
+                    version = version_spec.get("version", "*")
+                else:
+                    version = str(version_spec)
+                
+                package_versions[package][project.name] = version
+                
+        except Exception:
+            continue
+    
+    # Identifica conflitos
+    conflicts = {}
+    
+    for package, project_versions in package_versions.items():
+        unique_versions = set(project_versions.values())
+        
+        # Se há mais de uma versão diferente, é um conflito potencial
+        if len(unique_versions) > 1:
+            conflicts[package] = []
+            for project, version in project_versions.items():
+                conflicts[package].append(f"{project}: {version}")
+    
+    # Mostra conflitos encontrados
+    if conflicts:
+        print_colored(f"\n⚠️  Conflitos de versão detectados:", Colors.YELLOW)
+        for package, versions in sorted(conflicts.items()):
+            print_colored(f"  📦 {package}:", Colors.RED)
+            for version_info in versions:
+                print_colored(f"    - {version_info}", Colors.YELLOW)
+    else:
+        print_colored("✅ Nenhum conflito de versão detectado!", Colors.GREEN)
+    
+    return conflicts
+
+
 def main() -> None:
     """Função principal com descoberta automática SUPER ROBUSTA."""
     print_colored("=" * 60, Colors.CYAN)
@@ -2250,6 +2621,9 @@ def main() -> None:
         f"🔍 Base de conhecimento automática: {len(all_known_deps)} dependências",
         Colors.CYAN,
     )
+    
+    # Verifica compatibilidade de versões entre projetos
+    version_conflicts = check_version_compatibility_across_projects(projects)
 
     # Estatísticas
     global_stats = {
@@ -2259,6 +2633,7 @@ def main() -> None:
         "total_discovered": 0,
         "total_conflicts": 0,
         "total_failures": 0,
+        "version_conflicts": len(version_conflicts),
     }
 
     # Processa projetos com descoberta automática SUPER ROBUSTA
@@ -2310,6 +2685,12 @@ def main() -> None:
     if global_stats["total_conflicts"] > 0:
         print_colored(
             f"⚡ Conflitos resolvidos automaticamente: {global_stats['total_conflicts']}",
+            Colors.YELLOW,
+        )
+    
+    if global_stats["version_conflicts"] > 0:
+        print_colored(
+            f"⚠️  Conflitos de versão entre projetos: {global_stats['version_conflicts']}",
             Colors.YELLOW,
         )
 
