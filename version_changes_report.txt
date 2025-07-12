@@ -3,14 +3,7 @@
 ================================================================================
 
 📈 ESTATÍSTICAS GERAIS:
-  Total de mudanças: 4
-  Instalações: 4
+  Total de mudanças: 0
+  Instalações: 0
   Upgrades: 0
   Downgrades: 0
-
-📁 PROJETO: flext-core
-   Mudanças: 4
-   🆕 mirakuru: NEW → 2.6.1
-   🆕 port-for: NEW → 0.7.4
-   🆕 psycopg: NEW → 3.2.9
-   🆕 pytest-postgresql: NEW → 7.0.2

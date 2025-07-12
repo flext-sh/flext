@@ -2779,8 +2779,144 @@ def check_version_compatibility_across_projects(projects: List[Path]) -> Tuple[D
     return conflicts, analyzer
 
 
+def apply_version_standardization(projects: List[Path], suggestions: Dict[str, str], analyzer: PackageVersionAnalyzer) -> int:
+    """Aplica as sugestões de padronização nos pyproject.toml."""
+    print_colored("\n🔧 APLICANDO PADRONIZAÇÃO DE VERSÕES", Colors.BOLD)
+    
+    changes_applied = 0
+    
+    for project in projects:
+        pyproject_file = project / "pyproject.toml"
+        if not pyproject_file.exists():
+            continue
+        
+        project_changes = 0
+        
+        try:
+            # Lê o arquivo
+            with open(pyproject_file, "rb") as f:
+                data = tomllib.load(f)
+            
+            # Backup do arquivo original
+            import shutil
+            backup_file = pyproject_file.with_suffix(".toml.bak")
+            shutil.copy2(pyproject_file, backup_file)
+            
+            # Atualiza versões
+            changed = False
+            
+            # Dependências principais
+            if "tool" in data and "poetry" in data["tool"] and "dependencies" in data["tool"]["poetry"]:
+                for package, version_spec in data["tool"]["poetry"]["dependencies"].items():
+                    if package in suggestions and package != "python":
+                        current_version = version_spec
+                        if isinstance(version_spec, dict):
+                            current_version = version_spec.get("version", "*")
+                        
+                        suggested = suggestions[package]
+                        if str(current_version) != suggested:
+                            if isinstance(version_spec, dict):
+                                data["tool"]["poetry"]["dependencies"][package]["version"] = suggested
+                            else:
+                                data["tool"]["poetry"]["dependencies"][package] = suggested
+                            changed = True
+                            project_changes += 1
+                            print_colored(
+                                f"  {project.name}: {package} {current_version} → {suggested}",
+                                Colors.GREEN
+                            )
+            
+            # Dependências de grupos
+            if "tool" in data and "poetry" in data["tool"] and "group" in data["tool"]["poetry"]:
+                for group_name, group_data in data["tool"]["poetry"]["group"].items():
+                    if "dependencies" in group_data:
+                        for package, version_spec in group_data["dependencies"].items():
+                            if package in suggestions:
+                                current_version = version_spec
+                                if isinstance(version_spec, dict):
+                                    current_version = version_spec.get("version", "*")
+                                
+                                suggested = suggestions[package]
+                                if str(current_version) != suggested:
+                                    if isinstance(version_spec, dict):
+                                        data["tool"]["poetry"]["group"][group_name]["dependencies"][package]["version"] = suggested
+                                    else:
+                                        data["tool"]["poetry"]["group"][group_name]["dependencies"][package] = suggested
+                                    changed = True
+                                    project_changes += 1
+                                    print_colored(
+                                        f"  {project.name} ({group_name}): {package} {current_version} → {suggested}",
+                                        Colors.GREEN
+                                    )
+            
+            # Salva o arquivo se houve mudanças
+            if changed:
+                import tomlkit
+                
+                # Recarrega com tomlkit para preservar formatação
+                with open(pyproject_file, "r") as f:
+                    doc = tomlkit.load(f)
+                
+                # Aplica mudanças no documento tomlkit
+                if "dependencies" in doc.get("tool", {}).get("poetry", {}):
+                    for package in doc["tool"]["poetry"]["dependencies"]:
+                        if package in suggestions and package != "python":
+                            doc["tool"]["poetry"]["dependencies"][package] = suggestions[package]
+                
+                if "group" in doc.get("tool", {}).get("poetry", {}):
+                    for group_name in doc["tool"]["poetry"]["group"]:
+                        if "dependencies" in doc["tool"]["poetry"]["group"][group_name]:
+                            for package in doc["tool"]["poetry"]["group"][group_name]["dependencies"]:
+                                if package in suggestions:
+                                    doc["tool"]["poetry"]["group"][group_name]["dependencies"][package] = suggestions[package]
+                
+                # Salva com formatação preservada
+                with open(pyproject_file, "w") as f:
+                    f.write(tomlkit.dumps(doc))
+                
+                changes_applied += project_changes
+                print_colored(
+                    f"  ✅ {project.name}: {project_changes} mudanças aplicadas",
+                    Colors.GREEN
+                )
+            
+        except Exception as e:
+            print_colored(
+                f"  ❌ {project.name}: Erro ao aplicar mudanças - {str(e)}",
+                Colors.RED
+            )
+            # Restaura backup em caso de erro
+            if backup_file.exists():
+                shutil.copy2(backup_file, pyproject_file)
+    
+    return changes_applied
+
+
 def main() -> None:
     """Função principal com descoberta automática SUPER ROBUSTA."""
+    import argparse
+    
+    parser = argparse.ArgumentParser(
+        description="FLEXT Dependencies Sync - Descoberta e padronização automática de dependências"
+    )
+    parser.add_argument(
+        "--apply",
+        action="store_true",
+        help="Aplica as sugestões de padronização automaticamente"
+    )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Mostra o que seria feito sem aplicar mudanças"
+    )
+    parser.add_argument(
+        "--projects",
+        nargs="+",
+        help="Lista específica de projetos para processar"
+    )
+    
+    args = parser.parse_args()
+    
     print_colored("=" * 60, Colors.CYAN)
     print_colored("🚀 FLEXT Dependencies Sync - DESCOBERTA SUPER ROBUSTA", Colors.BOLD)
     print_colored("=" * 60, Colors.CYAN)
@@ -2910,6 +3046,95 @@ def main() -> None:
         f.write(detailed_report)
 
     print_colored(f"\n💾 Relatório salvo em: {report_file}", Colors.CYAN)
+    
+    # NOVO: Relatório de sugestões de padronização
+    print_colored("\n" + "=" * 60, Colors.CYAN)
+    print_colored("🎯 SUGESTÕES DE PADRONIZAÇÃO DE VERSÕES", Colors.BOLD)
+    print_colored("=" * 60, Colors.CYAN)
+    
+    version_suggestions = version_analyzer.suggest_version_standardization()
+    
+    # Agrupa por tipo de mudança sugerida
+    suggestions_by_type = {
+        'conflicts': [],
+        'updates': [],
+        'standardize': []
+    }
+    
+    for package, suggested_version in version_suggestions.items():
+        current_versions = version_analyzer.package_versions.get(package, {})
+        unique_versions = set(current_versions.values())
+        
+        if len(unique_versions) > 1:
+            # Conflito de versão
+            suggestions_by_type['conflicts'].append({
+                'package': package,
+                'suggested': suggested_version,
+                'current': current_versions,
+                'latest': version_analyzer.latest_versions.get(package)
+            })
+        elif package in version_analyzer.latest_versions:
+            latest = version_analyzer.latest_versions[package]
+            current = list(unique_versions)[0] if unique_versions else None
+            
+            if current and current != latest and suggested_version != current:
+                # Atualização disponível
+                suggestions_by_type['updates'].append({
+                    'package': package,
+                    'current': current,
+                    'latest': latest,
+                    'suggested': suggested_version
+                })
+    
+    # Mostra sugestões de conflitos
+    if suggestions_by_type['conflicts']:
+        print_colored("\n📦 CONFLITOS A RESOLVER:", Colors.RED)
+        for item in suggestions_by_type['conflicts']:
+            print_colored(f"\n  {item['package']}:", Colors.YELLOW)
+            print_colored(f"    Sugestão: {item['suggested']}", Colors.GREEN)
+            if item['latest']:
+                print_colored(f"    Última versão disponível: {item['latest']}", Colors.CYAN)
+            print_colored("    Versões atuais:", Colors.YELLOW)
+            for proj, ver in sorted(item['current'].items()):
+                print_colored(f"      - {proj}: {ver}", Colors.WHITE)
+    
+    # Mostra packages desatualizados
+    if suggestions_by_type['updates']:
+        print_colored("\n📈 ATUALIZAÇÕES DISPONÍVEIS:", Colors.CYAN)
+        for item in sorted(suggestions_by_type['updates'], key=lambda x: x['package']):
+            print_colored(
+                f"  {item['package']}: {item['current']} → {item['latest']}", 
+                Colors.YELLOW
+            )
+    
+    # NOVO: Identifica projetos que mais seguram atualizações
+    print_colored("\n" + "=" * 60, Colors.CYAN)
+    print_colored("🚧 PROJETOS QUE MAIS SEGURAM ATUALIZAÇÕES", Colors.BOLD)
+    print_colored("=" * 60, Colors.CYAN)
+    
+    project_restrictions = {}
+    for package, constraints in version_analyzer.version_constraints.items():
+        for project, constraint in constraints.items():
+            if constraint['type'] in ['exact', 'caret']:
+                if project not in project_restrictions:
+                    project_restrictions[project] = 0
+                project_restrictions[project] += 1
+    
+    # Ordena projetos por número de restrições
+    sorted_restrictions = sorted(
+        project_restrictions.items(), 
+        key=lambda x: x[1], 
+        reverse=True
+    )
+    
+    if sorted_restrictions:
+        for project, count in sorted_restrictions[:10]:  # Top 10
+            print_colored(
+                f"  {project}: {count} packages com versões restritivas", 
+                Colors.YELLOW
+            )
+    else:
+        print_colored("  ✅ Nenhum projeto com versões excessivamente restritivas!", Colors.GREEN)
 
     # Status final
     downgrades = version_tracker.get_downgrades()
