@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, Any
 
 import sqlalchemy as sa
 from singer_sdk import Target
-from singer_sdk import typing as th
+from singer_sdk import singer_typing as th
 
 from target_oracle_wms.sinks import OracleWMSSink
 
