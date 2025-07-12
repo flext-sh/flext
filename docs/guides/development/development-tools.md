@@ -202,7 +202,7 @@ npm install -g newman
 npm install -g quicktype ajv-cli
 
 # Install Oracle client libraries
-pip install cx_Oracle oracledb
+pip install oracledb
 ```
 
 #### Configuration Files
