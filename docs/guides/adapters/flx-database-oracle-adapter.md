@@ -406,9 +406,9 @@ flext-oracle-db pool-stats --output-format table
 The CLI supports multiple output formats:
 
 - **table**: Rich table formatting with colors (default)
-- **json**: JSON format for programmatic processing
+- **JSON**: JSON format for programmatic processing
 - **csv**: CSV format for data analysis
-- **yaml**: YAML format for configuration
+- **YAML**: YAML format for configuration
 
 ```bash
 # Rich table output

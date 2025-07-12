@@ -7,7 +7,7 @@ Modern Python client for Oracle Warehouse Management System (WMS) operations, bu
 - ✅ Pure Python implementation (no shell scripts)
 - ✅ PEP8 compliant code style
 - ✅ Automatic `.env` file loading
-- ✅ Multiple output formats (table, json, yaml, csv)
+- ✅ Multiple output formats (table, JSON, YAML, csv)
 - ✅ Async/await support
 - ✅ Type hints throughout
 - ✅ Comprehensive error handling

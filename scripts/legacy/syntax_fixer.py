@@ -1,3 +1,4 @@
+from typing import List
 #!/usr/bin/env python3
 """
 FLEXT Syntax Fixer - Automated Python Syntax Error Correction
@@ -11,7 +12,7 @@ Sistema automatizado e seguro para correção de erros de sintaxe em Python:
 
 Autor: FLEXT Quality Team
 Versão: 1.0.0
-"""
+
 
 import os
 import shutil
@@ -29,7 +30,7 @@ console = Console()
 
 
 class SyntaxPattern:
-    """Representa um padrão de sintaxe que pode ser corrigido automaticamente."""
+    Representa um padrão de sintaxe que pode ser corrigido automaticamente."""
 
     def __init__(
         self,
@@ -47,7 +48,7 @@ class SyntaxPattern:
 
 
 class SyntaxFixer:
-    """Corrige erros de sintaxe Python de forma automatizada e segura."""
+    Corrige erros de sintaxe Python de forma automatizada e segura."""
 
     # Padrões de correção segura
     SAFE_PATTERNS = [
@@ -76,7 +77,7 @@ class SyntaxFixer:
             "docstring_colon",
             "Remove dois pontos ao final de docstrings",
             r'"""([^"]*?)""":(\s*)$',
-            r'"""\1"""\2',
+            r'\1"""\2',
             safe=True,
         ),
         SyntaxPattern(
@@ -104,14 +105,14 @@ class SyntaxFixer:
         }
 
     def create_backup(self, file_path: Path) -> Path:
-        """Cria backup de um arquivo antes de modificá-lo."""
+        """Cria backup de um arquivo antes de modificá-lo.
         backup_path = self.backup_dir / file_path.relative_to(self.workspace_root)
         backup_path.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(file_path, backup_path)
         return backup_path
 
     def test_python_syntax(self, file_path: Path) -> tuple[bool, str]:
-        """Testa se um arquivo Python tem sintaxe válida."""
+        Testa se um arquivo Python tem sintaxe válida."""
         try:
             result = subprocess.run(
                 [sys.executable, "-m", "py_compile", str(file_path)],
@@ -224,8 +225,8 @@ class SyntaxFixer:
             # Ignora diretórios de cache e virtuais
             dirs[:] = [
                 d
-                for d in dirs
-                if not d.startswith(".") and d not in {"__pycache__", "venv", ".venv"}
+                for d in dirs:
+                if not d.startswith(".") and d not in {"__pycache__", "venv", ".venv"}:
             ]
 
             python_files.extend(
@@ -251,7 +252,7 @@ class SyntaxFixer:
             if not syntax_ok:
                 syntax_errors_before += 1
 
-        with Progress(
+        with Progress(:
             SpinnerColumn(),
             TextColumn("[progress.description]{task.description}"),
             console=console,

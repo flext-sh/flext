@@ -2,7 +2,7 @@
 """Smart fixer for SLF001 private-member-access violations.
 
 Analyzes each error specifically and applies appropriate fixes.
-"""
+
 
 from __future__ import annotations
 
@@ -13,15 +13,15 @@ from pathlib import Path
 
 
 class SmartSLF001Fixer:
-    """Smart fixer for SLF001 errors."""
+    Smart fixer for SLF001 errors."""
 
     def __init__(self, project_root: Path) -> None:
-        """Initialize fixer."""
+        Initialize fixer."""
         self.project_root = project_root
         self.fixes_applied = 0
 
     def run_fixes(self) -> None:
-        """Run smart SLF001 fixes."""
+        Run smart SLF001 fixes."""
         print("🔧 Smart fixing SLF001 private-member-access violations...")
 
         # Get specific SLF001 errors with file and line info

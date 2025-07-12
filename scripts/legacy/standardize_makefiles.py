@@ -7,7 +7,7 @@ Applies the standardized Makefile template to all submodules while preserving
 project-specific customizations and ensuring proper dependency reuse.
 
 Author: FLEXT Automation
-"""
+
 
 import re
 import shutil
@@ -24,7 +24,7 @@ console = Console()
 
 
 class MakefileStandardizer:
-    """Standardizes Makefiles across FLEXT submodules."""
+    Standardizes Makefiles across FLEXT submodules."""
 
     def __init__(self, workspace_root: Path) -> None:
         self.workspace_root = workspace_root
@@ -240,49 +240,59 @@ class MakefileStandardizer:
             section += """
 .PHONY: tap-discover
 tap-discover: ## Discover schema using Singer tap
-	@echo -e "$(CYAN)Discovering schema...$(NC)"
-	@if [ -f "config.json" ]; then \
-		$(PYTHON) -m tap_$(shell echo $(PROJECT_NAME) | sed 's/flext-tap-//') --config config.json --discover > catalog.json; \
-	else \
-		echo -e "$(YELLOW)⚠ config.json not found$(NC)"; \
-	fi
+    @echo -e "$(CYAN)Discovering schema...$(NC)"
+    @if [ -f "config.json" ]
+ then \
+        $(PYTHON) -m tap_$(shell echo $(PROJECT_NAME) | sed 's/flext-tap-//') --config config.json --discover > catalog.json
+  \
+    else \:
+        echo -e "$(YELLOW)⚠ config.json not found$(NC)"
+  \
+    fi
 
 .PHONY: tap-test
 tap-test: ## Test tap connection
-	@echo -e "$(CYAN)Testing tap connection...$(NC)"
-	@if [ -f "config.json" ]; then \
-		$(PYTHON) -m tap_$(shell echo $(PROJECT_NAME) | sed 's/flext-tap-//') --config config.json --test; \
-	else \
-		echo -e "$(YELLOW)⚠ config.json not found$(NC)"; \
-	fi
+    @echo -e "$(CYAN)Testing tap connection...$(NC)"
+    @if [ -f "config.json" ]
+ then \
+        $(PYTHON) -m tap_$(shell echo $(PROJECT_NAME) | sed 's/flext-tap-//') --config config.json --test
+  \
+    else \:
+        echo -e "$(YELLOW)⚠ config.json not found$(NC)"
+  \
+    fi
 
 .PHONY: tap-run
 tap-run: ## Run tap extraction
-	@echo -e "$(CYAN)Running tap extraction...$(NC)"
-	@if [ -f "config.json" ] && [ -f "catalog.json" ]; then \
-		$(PYTHON) -m tap_$(shell echo $(PROJECT_NAME) | sed 's/flext-tap-//') --config config.json --catalog catalog.json; \
-	else \
-		echo -e "$(YELLOW)⚠ config.json or catalog.json not found$(NC)"; \
-	fi
+    @echo -e "$(CYAN)Running tap extraction...$(NC)"
+    @if [ -f "config.json" ] && [ -f "catalog.json" ]
+ then \
+        $(PYTHON) -m tap_$(shell echo $(PROJECT_NAME) | sed 's/flext-tap-//') --config config.json --catalog catalog.json
+  \
+    else \:
+        echo -e "$(YELLOW)⚠ config.json or catalog.json not found$(NC)"
+  \
+    fi
 """
 
         if "api-start" in predefined_targets:
             section += """
 .PHONY: api-start
 api-start: ## Start API server
-	@echo -e "$(CYAN)Starting API server...$(NC)"
-	@$(PYTHON) -m uvicorn src.flext_api.main:app --reload --host 0.0.0.0 --port 8000
+    @echo -e "$(CYAN)Starting API server...$(NC)"
+    @$(PYTHON) -m uvicorn src.flext_api.main:app --reload --host 0.0.0.0 --port 8000
 
 .PHONY: api-docs
 api-docs: ## Generate API documentation
-	@echo -e "$(CYAN)Generating API docs...$(NC)"
-	@$(PYTHON) -c "import webbrowser; webbrowser.open('http://localhost:8000/docs')"
+    @echo -e "$(CYAN)Generating API docs...$(NC)"
+    @$(PYTHON) -c "import webbrowser
+ webbrowser.open('http://localhost:8000/docs')"
 """
 
         return section
 
     def apply_template_to_project(self, project_name: str) -> bool:
-        """Apply standardized template to a specific project."""
+        Apply standardized template to a specific project."""
         project_path = self.workspace_root / project_name
         makefile_path = project_path / "Makefile"
 
@@ -349,8 +359,8 @@ api-docs: ## Generate API documentation
 
         return [
             f"Missing dependency: {dep}"
-            for dep in expected_deps
-            if dep not in pyproject_content
+            for dep in expected_deps:
+            if dep not in pyproject_content:
         ]
 
     def standardize_all_projects(self) -> tuple[list[str], list[str]]:
@@ -359,7 +369,7 @@ api-docs: ## Generate API documentation
         successful = []
         failed = []
 
-        with Progress(
+        with Progress(:
             SpinnerColumn(),
             TextColumn("[progress.description]{task.description}"),
             console=console,

@@ -4,7 +4,7 @@
 Script para corrigir os 1515 syntax errors imediatamente
 
 PRIORIDADE MÁXIMA: Syntax errors impedem funcionamento
-"""
+
 
 import re
 import subprocess
@@ -12,7 +12,7 @@ from pathlib import Path
 
 
 class EmergencySyntaxFixer:
-    """Corretor de syntax errors críticos."""
+    Corretor de syntax errors críticos."""
 
     def __init__(self, project_dir: str = "/home/marlonsc/flext/client-a-oud-mig") -> None:
         self.project_dir = Path(project_dir)
@@ -184,7 +184,7 @@ class EmergencySyntaxFixer:
 
             for i, line in enumerate(lines):
                 # Fix obvious indentation issues
-                if (
+                if (:
                     line.strip()
                     and not line.startswith(" ")
                     and not line.startswith("\t")

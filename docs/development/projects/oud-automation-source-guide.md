@@ -8,9 +8,9 @@ This library has been optimized for maximum performance when working with large 
 
 ### Key Performance Features
 
-1. **Direct python-ldap Usage**
+1. **Direct Python-ldap Usage**
 
-   - Uses python-ldap API directly for all operations instead of subprocess calls
+   - Uses Python-ldap API directly for all operations instead of subprocess calls
    - Eliminates overhead of spawning external processes for ldapsearch/ldapmodify
    - Provides better error handling and type safety
 

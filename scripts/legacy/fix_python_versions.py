@@ -7,7 +7,7 @@ def fix_python_version(content):
     """Fix Python version constraints to be compatible"""
     # Fix requires-python
     content = re.sub(
-        r'requires-python = ">=3\.13"', r'requires-python = ">=3.13,<4.0"', content
+        r'requires-python = ">=3\.13"', r'requires-python = ">=3.13,<4.0"', content,
     )
     content = re.sub(
         r'requires-python = ">=3\.13,<3\.15"',
