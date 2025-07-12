@@ -13,7 +13,7 @@ import time
 import re
 import json
 from pathlib import Path
-from typing import Dict, List, Tuple, Optional, Set, NamedTuple
+from typing import Any, Dict, List, Tuple, Optional, Set, NamedTuple
 from dataclasses import dataclass
 
 
