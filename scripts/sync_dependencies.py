@@ -1220,7 +1220,7 @@ class DependencyAnalyzer:
         return dependencies
 
     def _analyze_python_files(self, project: Path) -> Dict[str, Set[str]]:
-        """Análise avançada de arquivos Python."""
+        """Análise avançada de arquivos Python com detecção melhorada."""
         dependencies = {"runtime": set(), "test": set()}
 
         for py_file in project.rglob("*.py"):
@@ -1248,7 +1248,42 @@ class DependencyAnalyzer:
                     ),
                 ]
 
-                for pattern in import_patterns:
+                # Análise de imports dinâmicos e condicionais
+                dynamic_patterns = [
+                    # importlib imports
+                    re.compile(r"importlib\.import_module\s*\(\s*['\"]([^'\"]+)['\"]"),
+                    # __import__ calls
+                    re.compile(r"__import__\s*\(\s*['\"]([^'\"]+)['\"]"),
+                    # try/except imports
+                    re.compile(r"try:\s*import\s+([a-zA-Z_][a-zA-Z0-9_]*)"),
+                    re.compile(r"try:\s*from\s+([a-zA-Z_][a-zA-Z0-9_]*)\s+import"),
+                    # Optional imports in comments
+                    re.compile(r"#\s*requires?\s*:\s*([a-zA-Z_][a-zA-Z0-9_-]*)"),
+                    re.compile(r"#\s*pip\s+install\s+([a-zA-Z_][a-zA-Z0-9_-]+)"),
+                ]
+
+                all_patterns = import_patterns + dynamic_patterns
+
+                for pattern in all_patterns:
+                    matches = pattern.findall(content)
+                    for match in matches:
+                        module_name = match.strip().split(".")[0]
+                        if self._is_valid_external_package(module_name):
+                            dependencies[category].add(module_name)
+
+                # Análise de strings que podem indicar dependências
+                string_dependency_patterns = [
+                    # Django apps
+                    re.compile(r"INSTALLED_APPS\s*=.*?['\"]([a-zA-Z_][a-zA-Z0-9_\.]*)['\"]", re.DOTALL),
+                    # FastAPI/Flask extensions
+                    re.compile(r"app\.include_router.*?['\"]([a-zA-Z_][a-zA-Z0-9_]*)['\"]"),
+                    # Plugin systems
+                    re.compile(r"load_plugin.*?['\"]([a-zA-Z_][a-zA-Z0-9_]*)['\"]"),
+                    # Entry points
+                    re.compile(r"entry_points.*?['\"]([a-zA-Z_][a-zA-Z0-9_]*)['\"]"),
+                ]
+
+                for pattern in string_dependency_patterns:
                     matches = pattern.findall(content)
                     for match in matches:
                         module_name = match.strip().split(".")[0]
@@ -1264,7 +1299,7 @@ class DependencyAnalyzer:
         return dependencies
 
     def _analyze_config_files(self, project: Path) -> Dict[str, Set[str]]:
-        """Analisa arquivos de configuração."""
+        """Analisa arquivos de configuração de forma abrangente."""
         dependencies = {"runtime": set(), "test": set(), "dev": set()}
 
         # Analisa pyproject.toml
@@ -1290,6 +1325,112 @@ class DependencyAnalyzer:
                     for dep_name in group_deps.keys():
                         dependencies[category].add(dep_name)
 
+                # Analisa configurações de outras ferramentas
+                # pytest
+                pytest_config = data.get("tool", {}).get("pytest", {})
+                if "ini_options" in pytest_config:
+                    plugins = pytest_config["ini_options"].get("plugins", [])
+                    for plugin in plugins:
+                        if isinstance(plugin, str):
+                            dependencies["test"].add(plugin)
+
+                # mypy
+                mypy_config = data.get("tool", {}).get("mypy", {})
+                if "plugins" in mypy_config:
+                    for plugin in mypy_config["plugins"]:
+                        if isinstance(plugin, str):
+                            dependencies["dev"].add(plugin)
+
+                # black, isort, ruff
+                for tool in ["black", "isort", "ruff", "flake8", "bandit"]:
+                    if tool in data.get("tool", {}):
+                        dependencies["dev"].add(tool)
+
+            except Exception:
+                pass
+
+        # Analisa tox.ini
+        tox_file = project / "tox.ini"
+        if tox_file.exists():
+            try:
+                with open(tox_file, "r", encoding="utf-8") as f:
+                    content = f.read()
+                    # Procura por deps em tox
+                    deps_pattern = re.compile(r"deps\s*=\s*([^\n]+(?:\n\s+[^\n]+)*)")
+                    matches = deps_pattern.findall(content)
+                    for match in matches:
+                        for line in match.split("\n"):
+                            line = line.strip()
+                            if line and not line.startswith("#"):
+                                pkg = re.split(r"[>=<!=]", line)[0].strip()
+                                if pkg:
+                                    dependencies["test"].add(pkg)
+            except Exception:
+                pass
+
+        # Analisa .pre-commit-config.yaml
+        precommit_file = project / ".pre-commit-config.yaml"
+        if precommit_file.exists():
+            try:
+                import yaml
+                with open(precommit_file, "r", encoding="utf-8") as f:
+                    data = yaml.safe_load(f)
+                    if data and "repos" in data:
+                        for repo in data["repos"]:
+                            if "hooks" in repo:
+                                for hook in repo["hooks"]:
+                                    if "id" in hook:
+                                        hook_id = hook["id"]
+                                        # Mapeia hooks conhecidos para packages
+                                        hook_to_package = {
+                                            "black": "black",
+                                            "isort": "isort",
+                                            "flake8": "flake8",
+                                            "mypy": "mypy",
+                                            "ruff": "ruff",
+                                            "bandit": "bandit",
+                                            "pytest": "pytest",
+                                        }
+                                        if hook_id in hook_to_package:
+                                            dependencies["dev"].add(hook_to_package[hook_id])
+            except Exception:
+                pass
+
+        # Analisa Dockerfile
+        dockerfile = project / "Dockerfile"
+        if dockerfile.exists():
+            try:
+                with open(dockerfile, "r", encoding="utf-8") as f:
+                    content = f.read()
+                    # Procura por pip install em Dockerfile
+                    pip_pattern = re.compile(r"pip\s+install\s+([^\s&|;]+)")
+                    matches = pip_pattern.findall(content)
+                    for match in matches:
+                        pkg = match.strip()
+                        if pkg and not pkg.startswith("-"):
+                            dependencies["runtime"].add(pkg)
+            except Exception:
+                pass
+
+        # Analisa docker-compose.yml
+        compose_files = list(project.glob("docker-compose*.yml")) + list(project.glob("docker-compose*.yaml"))
+        for compose_file in compose_files:
+            try:
+                import yaml
+                with open(compose_file, "r", encoding="utf-8") as f:
+                    data = yaml.safe_load(f)
+                    if data and "services" in data:
+                        for service_name, service_config in data["services"].items():
+                            if isinstance(service_config, dict):
+                                # Procura por imagens que indicam dependências
+                                image = service_config.get("image", "")
+                                if "python" in image:
+                                    # Analisa environment vars que podem indicar packages
+                                    env_vars = service_config.get("environment", {})
+                                    for var, value in env_vars.items():
+                                        if "PACKAGE" in var or "MODULE" in var:
+                                            if isinstance(value, str) and value:
+                                                dependencies["runtime"].add(value)
             except Exception:
                 pass
 
