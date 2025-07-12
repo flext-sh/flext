@@ -5,13 +5,14 @@
 
 .PHONY: help install test clean lint format build docs dev security type-check pre-commit
 .PHONY: workspace-* project-* all-* setup-* check-*
+.PHONY: build-go test-go clean-go go-*
 
 # Default target
 help: ## Show this help message
 	@echo "🚀 FLEXT WORKSPACE - Master Coordinator"
 	@echo "======================================="
-	@echo "🏗️  Multi-project enterprise workspace with 20+ Python projects"
-	@echo "🎯 Clean Architecture + DDD + Python 3.13 + Poetry"
+	@echo "🏗️  Multi-project enterprise workspace with 20+ Python projects + Go services"
+	@echo "🎯 Clean Architecture + DDD + Python 3.13 + Go 1.24 + Poetry"
 	@echo ""
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-25s\033[0m %s\n", $$1, $$2}'
 
@@ -22,11 +23,18 @@ CLI_PROJECTS := flext-cli
 DATA_PROJECTS := flext-tap-ldap flext-tap-oracle-oic flext-tap-oracle-wms \
 	flext-target-ldap flext-target-oracle flext-target-oracle-oic flext-dbt-ldap
 INFRA_PROJECTS := flext-observability flext-quality flext-plugin flext-meltano \
-	flext-ldap flext-db-oracle flext-meltano-bridge
+	flext-ldap flext-db-oracle
 EXTENSION_PROJECTS := flext-oracle-oic-ext
 PROJECT_APPS := client-a-oud-mig client-b-poc-oic-wms client-b-meltano-native
 
 ALL_PROJECTS := $(CORE_PROJECTS) $(API_PROJECTS) $(CLI_PROJECTS) $(DATA_PROJECTS) $(INFRA_PROJECTS) $(EXTENSION_PROJECTS) $(PROJECT_APPS)
+
+# Go Projects
+GO_COMMANDS := cmd/flext cmd/flext-cli cmd/flext-demo cmd/flext-server
+GO_BUILD_DIR := build
+GO := go
+GO_FLAGS := -v
+GO_TEST_FLAGS := -race -cover
 
 # ============================================================================
 # 🚀 WORKSPACE MANAGEMENT
@@ -61,6 +69,11 @@ workspace-update: ## Update all project dependencies
 		fi; \
 	done
 	@echo "✅ All dependencies updated!"
+
+sync-deps: ## Synchronize dependencies across all projects with root pyproject.toml
+	@echo "🔄 Synchronizing dependencies across all projects..."
+	@python scripts/sync_dependencies.py
+	@echo "✅ Dependencies synchronized!"
 
 workspace-clean: ## Clean all projects
 	@echo "🧹 Cleaning all projects..."
@@ -247,6 +260,46 @@ dev-all: ## Run all development services
 	@echo "🔧 Starting all development services..."
 	@echo "🚀 Use docker-compose for full stack development"
 	@docker-compose -f docker-compose.yml up -d
+
+# ============================================================================
+# 🔧 GO BUILD SYSTEM
+# ============================================================================
+
+build-go: ## Build all Go binaries
+	@echo "🔨 Building Go binaries..."
+	@mkdir -p $(GO_BUILD_DIR)
+	@for cmd in $(GO_COMMANDS); do \
+		echo "  Building $$cmd..."; \
+		$(GO) build $(GO_FLAGS) -o $(GO_BUILD_DIR)/$$(basename $$cmd) ./$$cmd || exit 1; \
+	done
+	@echo "✅ Go binaries built successfully!"
+	@ls -la $(GO_BUILD_DIR)/
+
+test-go: ## Run Go tests
+	@echo "🧪 Running Go tests..."
+	@$(GO) test $(GO_TEST_FLAGS) ./...
+	@echo "✅ Go tests completed!"
+
+clean-go: ## Clean Go build artifacts
+	@echo "🧹 Cleaning Go build artifacts..."
+	@rm -rf $(GO_BUILD_DIR)
+	@$(GO) clean -cache
+	@echo "✅ Go artifacts cleaned!"
+
+go-mod-tidy: ## Tidy Go modules
+	@echo "📦 Tidying Go modules..."
+	@$(GO) mod tidy
+	@echo "✅ Go modules tidied!"
+
+go-mod-verify: ## Verify Go modules
+	@echo "🔍 Verifying Go modules..."
+	@$(GO) mod verify
+	@echo "✅ Go modules verified!"
+
+go-deps: ## Download Go dependencies
+	@echo "📥 Downloading Go dependencies..."
+	@$(GO) mod download
+	@echo "✅ Go dependencies downloaded!"
 
 # ============================================================================
 # 🐳 DOCKER COMMANDS
