@@ -129,7 +129,7 @@ STORED IN BACKUPS (8+ items):
 ### Environment Variables
 
 **Namespacing**: Project-specific prefixes to avoid conflicts
-**Standard variables**: WORKSPACE_ROOT, PYTHON_VENV, DEBUG_MODE
+**Standard variables**: WORKSPACE_ROOT, Python_VENV, DEBUG_MODE
 
 ---
 

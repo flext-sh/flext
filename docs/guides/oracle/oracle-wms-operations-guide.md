@@ -32,7 +32,7 @@ flext-http-oracle-wms entity-query [entity] [key] [company_code] [facility_code]
 - `company_code`: Company code
 - `facility_code`: Facility code
 - `--minimize`: Minimize response data
-- `--format-output`: Output format (table, json, yaml, csv)
+- `--format-output`: Output format (table, JSON, YAML, csv)
 
 **Example:**
 
@@ -249,7 +249,7 @@ flext-http-oracle-wms extract [entity_name] [output_file] [company_code] [facili
 - `output_file`: Output file path (required)
 - `company_code`: Company code (required)
 - `facility_code`: Facility code (required)
-- `--format-export`: Export format (json, csv, parquet, xlsx)
+- `--format-export`: Export format (JSON, csv, parquet, xlsx)
 - `--high-speed`: Enable high-speed paged extraction
 - `--page-size`: Records per page (default: 1000)
 - `--max-records`: Maximum records to extract

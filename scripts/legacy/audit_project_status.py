@@ -4,7 +4,7 @@ Script para auditoria completa do status real dos projetos FLEXT.
 
 Este script verifica a implementação real de cada módulo e gera relatório
 honesto sobre o status atual, substituindo documentação inflada.
-"""
+
 
 import os
 import subprocess
@@ -14,14 +14,14 @@ from typing import Any
 
 
 class ProjectAuditor:
-    """Auditor para verificar status real dos projetos FLEXT."""
+    Auditor para verificar status real dos projetos FLEXT."""
 
     def __init__(self, workspace_root: str) -> None:
         self.workspace_root = Path(workspace_root)
         self.results: dict[str, dict[str, Any]] = {}
 
     def audit_all_projects(self) -> dict[str, dict[str, Any]]:
-        """Audita todos os projetos FLEXT."""
+        Audita todos os projetos FLEXT."""
         projects = self._find_flext_projects()
 
         for project in projects:
@@ -35,16 +35,16 @@ class ProjectAuditor:
 
         projects = [
             item.name
-            for item in self.workspace_root.iterdir()
-            if item.is_dir() and item.name.startswith(("flext-", "flexcore"))
+            for item in self.workspace_root.iterdir():
+            if item.is_dir() and item.name.startswith(("flext-", "flexcore")):
         ]
 
         # Adiciona projetos cliente
         client_projects = ["algar-oud-mig", "gruponos-poc-oic-wms"]
         projects.extend(
             project
-            for project in client_projects
-            if (self.workspace_root / project).exists()
+            for project in client_projects:
+            if (self.workspace_root / project).exists():
         )
 
         return sorted(projects)
@@ -101,9 +101,9 @@ class ProjectAuditor:
             doc_path = project_path / doc_file
             if doc_path.exists():
                 content = doc_path.read_text()
-                if any(
+                if any(:
                     claim in content
-                    for claim in ["100% operacional", "100% Complete", "OPERATIONAL"]
+                    for claim in ["100% operacional", "100% Complete", "OPERATIONAL"]:
                 ):
                     docs["inflated_claims"] = True
                     docs["status_claims"].append(doc_file)  # type: ignore[attr-defined]

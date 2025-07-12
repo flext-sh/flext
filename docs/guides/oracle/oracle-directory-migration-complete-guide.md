@@ -113,7 +113,7 @@ TARGET_LDAP_BASE_DN="dc=company,dc=com"
 TARGET_LDAP_USE_SSL=true
 ```
 
-#### 3. Migration Configuration (migration_config.json)
+#### 3. Migration Configuration (migration_config.JSON)
 
 ```json
 {

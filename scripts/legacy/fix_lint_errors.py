@@ -1,4 +1,4 @@
-"""Fix lint errors in gruponos-meltano-native."""
+"""Fix lint errors in gruponos-meltano-native.
 
 from __future__ import annotations
 
@@ -11,7 +11,7 @@ log = logging.getLogger(__name__)
 
 
 def fix_env_defaults(file_path: str) -> bool:
-    """Fix PLW1508 errors - environment variable defaults should be strings."""
+    Fix PLW1508 errors - environment variable defaults should be strings."""
     with Path(file_path).open(encoding="utf-8") as f:
         content = f.read()
 

@@ -2,7 +2,7 @@
 
 **Date**: 2025-07-05 07:00:19
 **Workspace**: /home/marlonsc/flext/
-**Python**: /home/marlonsc/flext/.venv/bin/python
+**Python**: /home/marlonsc/flext/.venv/bin/Python
 
 ## 🎯 EXECUTIVE SUMMARY
 
@@ -117,7 +117,7 @@ flext-api/tests/conftest.py:129:9: SIM102 Use a single `if` statement instead of
 128 | # Skip integration tests if .env not available
 129 | / if "requires_env" in [mark.name for mark in item.iter_markers()]:
 130 | | if not env_file.exists():
-| |********\*\*********\_********\*\*********^ SIM102
+| |**\*\*\*\***\*\***\*\*\*\***\_**\*\*\*\***\*\***\*\*\*\***^ SIM102
 131 | item.add_marker(
 132 | pytest.mark.skip(reason=".env file not found for integration tests")
 |
@@ -301,7 +301,7 @@ flext-auth/tests/conftest.py:127:9: SIM102 Use a single `if` statement instead o
 126 | # Skip integration tests if .env not available
 127 | / if "requires_env" in [mark.name for mark in item.iter_markers()]:
 128 | | if not env_file.exists():
-| |********\*\*********\_********\*\*********^ SIM102
+| |**\*\*\*\***\*\***\*\*\*\***\_**\*\*\*\***\*\***\*\*\*\***^ SIM102
 129 | item.add_marker(
 130 | pytest.mark.skip(reason=".env file not found for integration tests")
 |
@@ -418,7 +418,7 @@ flext-cli/tests/conftest.py:106:9: SIM102 Use a single `if` statement instead of
 105 | # Skip integration tests if .env not available
 106 | / if "requires_env" in [mark.name for mark in item.iter_markers()]:
 107 | | if not env_file.exists():
-| |********\*\*********\_********\*\*********^ SIM102
+| |**\*\*\*\***\*\***\*\*\*\***\_**\*\*\*\***\*\***\*\*\*\***^ SIM102
 108 | item.add_marker(
 109 | pytest.mark.skip(reason=".env file not found for integration tests")
 |
@@ -515,7 +515,7 @@ flext-core/tests/conftest.py:106:9: SIM102 Use a single `if` statement instead o
 105 | # Skip integration tests if .env not available
 106 | / if "requires_env" in [mark.name for mark in item.iter_markers()]:
 107 | | if not env_file.exists():
-| |********\*\*********\_********\*\*********^ SIM102
+| |**\*\*\*\***\*\***\*\*\*\***\_**\*\*\*\***\*\***\*\*\*\***^ SIM102
 108 | item.add_marker(
 109 | pytest.mark.skip(reason=".env file not found for integration tests")
 |
@@ -630,7 +630,7 @@ flext-core/tests/test_comprehensive_coverage.py:452:21: PERF401 Use `list.extend
 flext-core/tests/test_integration_conditional.py:34:14: PTH123 `open()` should be replaced by `Path.open()`
 |
 32 | except ImportError:
-33 | # If python-dotenv is not available, try manual parsing
+33 | # If Python-dotenv is not available, try manual parsing
 34 | with open(env_file) as f:
 | ^^^^ PTH123
 35 | for line in f:
@@ -711,7 +711,7 @@ flext-core/tests/test_isolated_units.py:254:17: SIM102 Use a single `if` stateme
 253 | obj_type = type(obj)
 254 | / if obj_type in cls.\_validators:
 255 | | if not cls.\_validators[obj_type](obj):
-| |************\*\*\*\*************\_\_************\*\*\*\*************^ SIM102
+| |****\*\*\*\*****\*\*\*\*****\*\*\*\*****\_\_****\*\*\*\*****\*\*\*\*****\*\*\*\*****^ SIM102
 256 | msg = f"Validation failed for {obj}"
 257 | raise ValueError(msg)
 |
@@ -1041,7 +1041,7 @@ flext-grpc/tests/conftest.py:122:9: SIM102 Use a single `if` statement instead o
 121 | # Skip integration tests if .env not available
 122 | / if "requires_env" in [mark.name for mark in item.iter_markers()]:
 123 | | if not env_file.exists():
-| |********\*\*********\_********\*\*********^ SIM102
+| |**\*\*\*\***\*\***\*\*\*\***\_**\*\*\*\***\*\***\*\*\*\***^ SIM102
 124 | item.add_marker(
 125 | pytest.mark.skip(reason=".env file not found for integration tests")
 |
@@ -1578,7 +1578,7 @@ flext-meltano-bridge/tests/conftest.py:144:9: SIM102 Use a single `if` statement
 143 | # Skip integration tests if .env not available
 144 | / if "requires_env" in [mark.name for mark in item.iter_markers()]:
 145 | | if not env_file.exists():
-| |********\*\*********\_********\*\*********^ SIM102
+| |**\*\*\*\***\*\***\*\*\*\***\_**\*\*\*\***\*\***\*\*\*\***^ SIM102
 146 | item.add_marker(
 147 | pytest.mark.skip(reason=".env file not found for integration tests")
 |
@@ -1928,7 +1928,7 @@ flext-oracle-oic-ext/tests/test_e2e_complete.py:37:13: S605 Starting a process w
 |
 35 | if not config_file.exists():
 36 | # Generate config if it doesn't exist
-37 | os.system("cd .. && python generate_config.py")
+37 | os.system("cd .. && Python generate_config.py")
 | ^^^^^^^^^ S605
 38 | return str(config_file)
 |
@@ -1937,7 +1937,7 @@ flext-oracle-oic-ext/tests/test_e2e_complete.py:37:23: S607 Starting a process w
 |
 35 | if not config_file.exists():
 36 | # Generate config if it doesn't exist
-37 | os.system("cd .. && python generate_config.py")
+37 | os.system("cd .. && Python generate_config.py")
 | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ S607
 38 | return str(config_file)
 |
@@ -1945,10 +1945,10 @@ flext-oracle-oic-ext/tests/test_e2e_complete.py:37:23: S607 Starting a process w
 flext-oracle-oic-ext/tests/test_e2e_complete.py:43:14: PTH123 `open()` should be replaced by `Path.open()`
 |
 41 | def config(self, config_path) -> Any:
-42 | """Load configuration from config.json."""
+42 | """Load configuration from config.JSON."""
 43 | with open(config_path, encoding="utf-8") as f:
 | ^^^^ PTH123
-44 | return json.load(f)
+44 | return JSON.load(f)
 |
 
 flext-oracle-oic-ext/tests/test_e2e_complete.py:187:14: B017 Do not assert blind exception: `Exception`
@@ -1976,7 +1976,7 @@ flext-oracle-oic-ext/tests/test_e2e_complete.py:295:9: SIM117 Use a single `with
 295 | / with patch.object(extension, "\_load_config", return_value=config):
 296 | | # Mock log extraction
 297 | | with patch("builtins.open", create=True) as mock_open:
-| |**************\*\*\*\***************\_\_**************\*\*\*\***************^ SIM117
+| |******\*\*******\*\*\*\*******\*\*******\_\_******\*\*******\*\*\*\*******\*\*******^ SIM117
 298 | mock_file = Mock()
 299 | mock_open.return_value.**enter**.return_value = mock_file
 |
@@ -1992,7 +1992,7 @@ flext-oracle-oic-ext/tests/test_e2e_complete.py:310:9: SIM117 Use a single `with
 313 | | LifecycleManager,
 314 | | "get_integration_status",
 315 | | ) as mock_status:
-| |******\*\*******\_******\*\*******^ SIM117
+| |**\*\***\*\***\*\***\_**\*\***\*\***\*\***^ SIM117
 316 | mock_status.return_value = {"status": "CONFIGURED"}
 |
 = help: Combine `with` statements
@@ -2009,7 +2009,7 @@ flext-oracle-oic-ext/tests/test_e2e_complete.py:338:29: S108 Probable insecure u
 flext-oracle-oic-ext/tests/test_e2e_complete.py:355:17: S607 Starting a process with a partial executable path
 |
 354 | result = subprocess.run(
-355 | ["python", "generate_config.py"],
+355 | ["Python", "generate_config.py"],
 | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ S607
 356 | capture_output=True,
 357 | text=True,
@@ -2020,7 +2020,7 @@ flext-oracle-oic-ext/tests/test_e2e_complete.py:366:14: PTH123 `open()` should b
 365 | # Load and validate config
 366 | with open(config_path, encoding="utf-8") as f:
 | ^^^^ PTH123
-367 | config = json.load(f)
+367 | config = JSON.load(f)
 |
 
 flext-oracle-oic-ext/tests/test_generate_config.py:9:16: F401 `flext_ldap` imported but unused; consider using `importlib.util.find_spec` to test for availability
@@ -2422,30 +2422,30 @@ flext-tap-ldap/tests/test_client.py:155:9: ARG002 Unused method argument: `mock_
 flext-tap-ldap/tests/test_integration.py:30:14: PTH123 `open()` should be replaced by `Path.open()`
 |
 28 | """Create config file."""
-29 | config_path = tmp_path / "config.json"
+29 | config_path = tmp_path / "config.JSON"
 30 | with open(config_path, "w", encoding="utf-8") as f:
 | ^^^^ PTH123
-31 | json.dump(mock_ldap_config, f)
+31 | JSON.dump(mock_ldap_config, f)
 32 | return config_path
 |
 
 flext-tap-ldap/tests/test_integration.py:38:14: PTH123 `open()` should be replaced by `Path.open()`
 |
 36 | """Create catalog file."""
-37 | catalog_path = tmp_path / "catalog.json"
+37 | catalog_path = tmp_path / "catalog.JSON"
 38 | with open(catalog_path, "w", encoding="utf-8") as f:
 | ^^^^ PTH123
-39 | json.dump(sample_catalog, f)
+39 | JSON.dump(sample_catalog, f)
 40 | return catalog_path
 |
 
 flext-tap-ldap/tests/test_integration.py:46:14: PTH123 `open()` should be replaced by `Path.open()`
 |
 44 | """Create state file."""
-45 | state_path = tmp_path / "state.json"
+45 | state_path = tmp_path / "state.JSON"
 46 | with open(state_path, "w", encoding="utf-8") as f:
 | ^^^^ PTH123
-47 | json.dump(sample_state, f)
+47 | JSON.dump(sample_state, f)
 48 | return state_path
 |
 
@@ -2491,19 +2491,19 @@ flext-tap-ldap/tests/test_integration.py:134:9: ARG002 Unused method argument: `
 
 flext-tap-ldap/tests/test_integration.py:195:14: PTH123 `open()` should be replaced by `Path.open()`
 |
-194 | config_file = tmp_path / "config.json"
+194 | config_file = tmp_path / "config.JSON"
 195 | with open(config_file, "w", encoding="utf-8") as f:
 | ^^^^ PTH123
-196 | json.dump(config, f)
+196 | JSON.dump(config, f)
 |
 
 flext-tap-ldap/tests/test_integration.py:216:14: PTH123 `open()` should be replaced by `Path.open()`
 |
 214 | # Test with invalid config
-215 | config_file = tmp_path / "bad_config.json"
+215 | config_file = tmp_path / "bad_config.JSON"
 216 | with open(config_file, "w", encoding="utf-8") as f:
 | ^^^^ PTH123
-217 | json.dump({"invalid": "config"}, f) # Missing required fields
+217 | JSON.dump({"invalid": "config"}, f) # Missing required fields
 |
 
 flext-tap-ldap/tests/test_integration.py:230:9: ARG002 Unused method argument: `mock_server`
@@ -2916,10 +2916,10 @@ flext-target-ldap/tests/test_client.py:263:9: ARG002 Unused method argument: `mo
 flext-target-ldap/tests/test_integration.py:31:14: PTH123 `open()` should be replaced by `Path.open()`
 |
 29 | """Create config file."""
-30 | config_path = tmp_path / "config.json"
+30 | config_path = tmp_path / "config.JSON"
 31 | with open(config_path, "w", encoding="utf-8") as f:
 | ^^^^ PTH123
-32 | json.dump(mock_ldap_config, f)
+32 | JSON.dump(mock_ldap_config, f)
 33 | return config_path
 |
 
@@ -2968,8 +2968,8 @@ flext-target-ldap/tests/test_integration.py:122:14: PTH123 `open()` should be re
 121 |
 122 | with open(input_path, "w", encoding="utf-8") as f:
 | ^^^^ PTH123
-123 | f.write(json.dumps(schema_msg) + "\n")
-124 | f.write(json.dumps(record1) + "\n")
+123 | f.write(JSON.dumps(schema_msg) + "\n")
+124 | f.write(JSON.dumps(record1) + "\n")
 |
 
 flext-target-ldap/tests/test_integration.py:150:14: PTH123 `open()` should be replaced by `Path.open()`
@@ -2997,8 +2997,8 @@ flext-target-ldap/tests/test_integration.py:194:14: PTH123 `open()` should be re
 193 |
 194 | with open(input_path, "w", encoding="utf-8") as f:
 | ^^^^ PTH123
-195 | f.write(json.dumps(schema_msg) + "\n")
-196 | f.write(json.dumps(delete_record) + "\n")
+195 | f.write(JSON.dumps(schema_msg) + "\n")
+196 | f.write(JSON.dumps(delete_record) + "\n")
 |
 
 flext-target-ldap/tests/test_integration.py:207:14: PTH123 `open()` should be replaced by `Path.open()`
@@ -3032,10 +3032,10 @@ flext-target-ldap/tests/test_integration.py:227:9: ARG002 Unused method argument
 
 flext-target-ldap/tests/test_integration.py:238:14: PTH123 `open()` should be replaced by `Path.open()`
 |
-237 | config_path = tmp_path / "template_config.json"
+237 | config_path = tmp_path / "template_config.JSON"
 238 | with open(config_path, "w", encoding="utf-8") as f:
 | ^^^^ PTH123
-239 | json.dump(mock_ldap_config, f)
+239 | JSON.dump(mock_ldap_config, f)
 |
 
 flext-target-ldap/tests/test_integration.py:259:14: PTH123 `open()` should be replaced by `Path.open()`
@@ -3044,8 +3044,8 @@ flext-target-ldap/tests/test_integration.py:259:14: PTH123 `open()` should be re
 258 |
 259 | with open(input_path, "w", encoding="utf-8") as f:
 | ^^^^ PTH123
-260 | f.write(json.dumps(schema_msg) + "\n")
-261 | f.write(json.dumps(record) + "\n")
+260 | f.write(JSON.dumps(schema_msg) + "\n")
+261 | f.write(JSON.dumps(record) + "\n")
 |
 
 flext-target-ldap/tests/test_integration.py:272:14: PTH123 `open()` should be replaced by `Path.open()`
@@ -3060,10 +3060,10 @@ flext-target-ldap/tests/test_integration.py:272:14: PTH123 `open()` should be re
 flext-target-ldap/tests/test_integration.py:292:14: PTH123 `open()` should be replaced by `Path.open()`
 |
 290 | bad_config = {"invalid": "config"}
-291 | config_path = tmp_path / "bad_config.json"
+291 | config_path = tmp_path / "bad_config.JSON"
 292 | with open(config_path, "w", encoding="utf-8") as f:
 | ^^^^ PTH123
-293 | json.dump(bad_config, f)
+293 | JSON.dump(bad_config, f)
 |
 
 flext-target-ldap/tests/test_integration.py:307:9: ARG002 Unused method argument: `mock_server`
@@ -3082,7 +3082,7 @@ flext-target-ldap/tests/test_integration.py:342:14: PTH123 `open()` should be re
 341 |
 342 | with open(input_path, "w", encoding="utf-8") as f:
 | ^^^^ PTH123
-343 | f.writelines(json.dumps(msg) + "\n" for msg in messages)
+343 | f.writelines(JSON.dumps(msg) + "\n" for msg in messages)
 |
 
 flext-target-ldap/tests/test_integration.py:354:14: PTH123 `open()` should be replaced by `Path.open()`
@@ -3846,7 +3846,7 @@ flext-target-oracle-oic/tests/integration/test_modern_integration.py:104:17: TRY
 flext-target-oracle-oic/tests/test_e2e_complete.py:44:17: S607 Starting a process with a partial executable path
 |
 43 | subprocess.run(
-44 | ["python", "generate_config.py"],
+44 | ["Python", "generate_config.py"],
 | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ S607
 45 | cwd=Path(**file**).parent.parent,
 46 | check=True,
@@ -3855,10 +3855,10 @@ flext-target-oracle-oic/tests/test_e2e_complete.py:44:17: S607 Starting a proces
 flext-target-oracle-oic/tests/test_e2e_complete.py:53:14: PTH123 `open()` should be replaced by `Path.open()`
 |
 51 | def config(self, config_path: str) -> dict[str, object]:
-52 | """Load configuration from config.json."""
+52 | """Load configuration from config.JSON."""
 53 | with open(config_path, encoding="utf-8") as f:
 | ^^^^ PTH123
-54 | return json.load(f)
+54 | return JSON.load(f)
 |
 
 flext-target-oracle-oic/tests/test_e2e_complete.py:135:14: PTH123 `open()` should be replaced by `Path.open()`
@@ -3867,7 +3867,7 @@ flext-target-oracle-oic/tests/test_e2e_complete.py:135:14: PTH123 `open()` shoul
 134 | input_file = tmp_path / "input.jsonl"
 135 | with open(input_file, "w", encoding="utf-8") as f:
 | ^^^^ PTH123
-136 | f.writelines(json.dumps(msg) + "\n" for msg in messages)
+136 | f.writelines(JSON.dumps(msg) + "\n" for msg in messages)
 |
 
 flext-target-oracle-oic/tests/test_e2e_complete.py:140:13: PTH123 `open()` should be replaced by `Path.open()`
@@ -3885,7 +3885,7 @@ flext-target-oracle-oic/tests/test_e2e_complete.py:345:14: PTH123 `open()` shoul
 344 | input_file = tmp_path / "singer_input.jsonl"
 345 | with open(input_file, "w", encoding="utf-8") as f:
 | ^^^^ PTH123
-346 | f.writelines(json.dumps(msg) + "\n" for msg in singer_input)
+346 | f.writelines(JSON.dumps(msg) + "\n" for msg in singer_input)
 |
 
 flext-target-oracle-oic/tests/test_e2e_complete.py:349:14: PTH123 `open()` should be replaced by `Path.open()`
@@ -3894,7 +3894,7 @@ flext-target-oracle-oic/tests/test_e2e_complete.py:349:14: PTH123 `open()` shoul
 349 | with open(input_file, encoding="utf-8") as f:
 | ^^^^ PTH123
 350 | result = subprocess.run(
-351 | ["python", "-m", "target_oracle_oic", "--config", config_path],
+351 | ["Python", "-m", "target_oracle_oic", "--config", config_path],
 |
 
 flext-target-oracle-oic/tests/test_e2e_complete.py:350:22: S603 `subprocess` call: check for execution of untrusted input
@@ -3903,7 +3903,7 @@ flext-target-oracle-oic/tests/test_e2e_complete.py:350:22: S603 `subprocess` cal
 349 | with open(input_file, encoding="utf-8") as f:
 350 | result = subprocess.run(
 | ^^^^^^^^^^^^^^ S603
-351 | ["python", "-m", "target_oracle_oic", "--config", config_path],
+351 | ["Python", "-m", "target_oracle_oic", "--config", config_path],
 352 | stdin=f,
 |
 
@@ -3911,7 +3911,7 @@ flext-target-oracle-oic/tests/test_e2e_complete.py:351:17: S607 Starting a proce
 |
 349 | with open(input_file, encoding="utf-8") as f:
 350 | result = subprocess.run(
-351 | ["python", "-m", "target_oracle_oic", "--config", config_path],
+351 | ["Python", "-m", "target_oracle_oic", "--config", config_path],
 | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ S607
 352 | stdin=f,
 353 | capture_output=True,
@@ -3920,7 +3920,7 @@ flext-target-oracle-oic/tests/test_e2e_complete.py:351:17: S607 Starting a proce
 flext-target-oracle-oic/tests/test_e2e_complete.py:372:17: S607 Starting a process with a partial executable path
 |
 371 | result = subprocess.run(
-372 | ["python", "generate_config.py"],
+372 | ["Python", "generate_config.py"],
 | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ S607
 373 | capture_output=True,
 374 | text=True,
@@ -3931,7 +3931,7 @@ flext-target-oracle-oic/tests/test_e2e_complete.py:383:14: PTH123 `open()` shoul
 382 | # Load and validate config
 383 | with open(config_path, encoding="utf-8") as f:
 | ^^^^ PTH123
-384 | config = json.load(f)
+384 | config = JSON.load(f)
 |
 
 flext-target-oracle-oic/tests/test_generate_config.py:9:16: F401 `flext_ldap` imported but unused; consider using `importlib.util.find_spec` to test for availability
@@ -4015,7 +4015,7 @@ flext-web/tests/conftest.py:123:9: SIM102 Use a single `if` statement instead of
 122 | # Skip integration tests if .env not available
 123 | / if "requires_env" in [mark.name for mark in item.iter_markers()]:
 124 | | if not env_file.exists():
-| |********\*\*********\_********\*\*********^ SIM102
+| |**\*\*\*\***\*\***\*\*\*\***\_**\*\*\*\***\*\***\*\*\*\***^ SIM102
 125 | item.add_marker(
 126 | pytest.mark.skip(reason=".env file not found for integration tests")
 |

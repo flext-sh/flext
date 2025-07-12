@@ -1,3 +1,5 @@
+from typing import Dict
+from typing import List
 #!/usr/bin/env python3
 """
 🎯 CONTINUAÇÃO SISTEMÁTICA PEP COMPLIANCE - NEXT PHASE
@@ -15,7 +17,7 @@ ESTRATÉGIA INTELIGENTE:
 1. Correções automatizáveis (COM818, D205, E501, W505)
 2. Refatoração assistida (PLR0912, PLR0915)
 3. Verificação contínua
-"""
+
 
 import re
 import subprocess
@@ -23,7 +25,7 @@ from pathlib import Path
 
 
 class NextPhasePEPFixer:
-    """Automatizador para próxima fase de compliance PEP."""
+    Automatizador para próxima fase de compliance PEP."""
 
     def __init__(self, project_dir: str = "/home/marlonsc/flext/algar-oud-mig") -> None:
         self.project_dir = Path(project_dir)

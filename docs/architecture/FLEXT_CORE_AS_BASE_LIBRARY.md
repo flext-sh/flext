@@ -14,13 +14,13 @@ O **flext-core** foi estabelecido como a **biblioteca base central** para todo o
 
 ## 📊 **PROJETOS INTEGRADOS**
 
-| Projeto | Status de Integração | Dependência | Uso Principal |
-|---------|---------------------|-------------|---------------|
-| **flext-api** | ✅ Integrado | `flext-core>=1.0.0` | ValueObject, ServiceResult |
-| **flext-auth** | ✅ Integrado | `flext-core>=1.0.0` | Entity, DomainBaseModel |
-| **flext-grpc** | ✅ Integrado | `flext-core>=1.0.0` | Entity, ServiceResult |
-| **flext-web** | 🔄 Pendente | - | Planejado |
-| **flext-cli** | 🔄 Pendente | - | Planejado |
+| Projeto        | Status de Integração | Dependência         | Uso Principal              |
+| -------------- | -------------------- | ------------------- | -------------------------- |
+| **flext-api**  | ✅ Integrado         | `flext-core>=1.0.0` | ValueObject, ServiceResult |
+| **flext-auth** | ✅ Integrado         | `flext-core>=1.0.0` | Entity, DomainBaseModel    |
+| **flext-grpc** | ✅ Integrado         | `flext-core>=1.0.0` | Entity, ServiceResult      |
+| **flext-web**  | 🔄 Pendente          | -                   | Planejado                  |
+| **flext-cli**  | 🔄 Pendente          | -                   | Planejado                  |
 
 ## 🏗️ **COMPONENTES EXPORTADOS DO FLEXT-CORE**
 
@@ -217,6 +217,7 @@ jwt_secret = config.security.jwt_secret
 ### **Para Novos Projetos**
 
 1. **Adicionar dependência**:
+
    ```toml
    dependencies = [
        "flext-core>=1.0.0",
@@ -225,6 +226,7 @@ jwt_secret = config.security.jwt_secret
    ```
 
 2. **Importar componentes**:
+
    ```python
    from flext_core import Entity, ValueObject, ServiceResult
    ```

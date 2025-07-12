@@ -93,7 +93,7 @@ The `flext-http-oracle-wms` package provides a modern Python client for Oracle W
 - ✅ Pure Python implementation (no shell scripts)
 - ✅ PEP8 compliant code style
 - ✅ Automatic `.env` file loading
-- ✅ Multiple output formats (table, json, yaml, csv)
+- ✅ Multiple output formats (table, JSON, YAML, csv)
 - ✅ Async/await support
 - ✅ Type hints throughout
 - ✅ Comprehensive error handling

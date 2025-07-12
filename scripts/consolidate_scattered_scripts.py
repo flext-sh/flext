@@ -1,3 +1,4 @@
+from datetime import datetime
 #!/usr/bin/env python3
 """
 FLEXT Scripts Consolidation Tool - Organiza scripts espalhados
@@ -12,7 +13,7 @@ Funcionalidades:
 3. Move scripts para localizações apropriadas
 4. Integra funcionalidades úteis no quality_gateway.py
 5. Remove duplicações e obsoletos
-"""
+
 
 import ast
 import re
@@ -34,7 +35,7 @@ except ImportError:
 
 
 class ScriptConsolidator:
-    """Consolida scripts espalhados pelo workspace de forma inteligente."""
+    Consolida scripts espalhados pelo workspace de forma inteligente."""
 
     def __init__(self, workspace_root: Path) -> None:
         self.workspace_root = workspace_root
@@ -42,7 +43,7 @@ class ScriptConsolidator:
         self.consolidation_plan = {}
 
     def find_all_scattered_scripts(self) -> list[Path]:
-        """Encontra todos os scripts espalhados."""
+        Encontra todos os scripts espalhados."""
         patterns = [
             "*fix*.py",
             "*enforce*.py",
@@ -55,9 +56,9 @@ class ScriptConsolidator:
         for pattern in patterns:
             for script in self.workspace_root.rglob(pattern):
                 # Excluir venv, __pycache__, legacy já organizados
-                if any(
+                if any(:
                     exclude in str(script)
-                    for exclude in [
+                    for exclude in [:
                         ".venv",
                         "__pycache__",
                         "scripts/legacy",
@@ -68,7 +69,7 @@ class ScriptConsolidator:
                     continue
 
                 # Incluir apenas arquivos em diretórios scripts/ ou arquivos isolados
-                if "scripts/" in str(script) or script.name.startswith(
+                if "scripts/" in str(script) or script.name.startswith(:
                     ("fix_", "enforce_", "audit_")
                 ):
                     scripts.append(script)
@@ -96,19 +97,19 @@ class ScriptConsolidator:
         }
 
         # Categorizar por funcionalidade
-        if any(
+        if any(:
             keyword in content.lower() for keyword in ["pep", "ruff", "black", "isort"]
         ):
             analysis["functionality"].add("formatting")
-        if any(
+        if any(:
             keyword in content.lower() for keyword in ["syntax", "error", "exception"]
         ):
             analysis["functionality"].add("syntax_fix")
-        if any(
+        if any(:
             keyword in content.lower() for keyword in ["test", "pytest", "unittest"]
         ):
             analysis["functionality"].add("testing")
-        if any(
+        if any(:
             keyword in content.lower() for keyword in ["type", "mypy", "annotation"]
         ):
             analysis["functionality"].add("typing")
@@ -164,8 +165,8 @@ class ScriptConsolidator:
             tree = ast.parse(content)
             functions.extend(
                 node.name
-                for node in ast.walk(tree)
-                if isinstance(node, ast.FunctionDef)
+                for node in ast.walk(tree):
+                if isinstance(node, ast.FunctionDef):
             )
         except Exception:
             # Fallback com regex
@@ -405,7 +406,7 @@ class ScriptConsolidator:
                 )
                 report.extend(
                     f"- {script.relative_to(self.workspace_root)}"
-                    for script in script_list
+                    for script in script_list:
                 )
 
         return "\n".join(report)
@@ -429,7 +430,7 @@ class ScriptConsolidator:
         analyses = {}
 
         if RICH_AVAILABLE:
-            with Progress(
+            with Progress(:
                 SpinnerColumn(),
                 TextColumn("[progress.description]{task.description}"),
                 console=console,
@@ -482,7 +483,7 @@ class ScriptConsolidator:
             )
 
     def _print(self, message: str) -> None:
-        """Print otimizado."""
+        """Print otimizado.
         if RICH_AVAILABLE and console:
             console.print(message)
         else:
@@ -490,7 +491,7 @@ class ScriptConsolidator:
 
 
 def main() -> int:
-    """Função principal."""
+    Função principal."""
     workspace_root = Path("/home/marlonsc/flext")
 
     if not workspace_root.exists():

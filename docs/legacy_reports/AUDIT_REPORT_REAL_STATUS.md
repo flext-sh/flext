@@ -31,7 +31,7 @@
 **NotImplementedError**: 0
 **TODOs**: 0
 
-## 🏗️ PYTHON_CORE
+## 🏗️ Python_CORE
 
 ### ✅ flext-api
 
@@ -60,7 +60,7 @@
 **TODOs**: 2
 ⚠️ **DOCUMENTAÇÃO INFLADA DETECTADA**
 
-## 🏗️ PYTHON_EXTENSION
+## 🏗️ Python_EXTENSION
 
 ### ✅ flext-cli
 

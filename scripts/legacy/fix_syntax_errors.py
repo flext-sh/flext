@@ -4,7 +4,7 @@ FLEXT Syntax Error Fixer
 ========================
 
 Fixes specific syntax errors identified in quality pipeline.
-"""
+
 
 import re
 from pathlib import Path
@@ -15,7 +15,7 @@ console = Console()
 
 
 def fix_double_docstrings(file_path: Path) -> bool:
-    """Fix files with double docstrings causing syntax errors."""
+    Fix files with double docstrings causing syntax errors."""
     if not file_path.exists():
         return False
 
@@ -23,20 +23,20 @@ def fix_double_docstrings(file_path: Path) -> bool:
         content = file_path.read_text(encoding="utf-8")
         original_content = content
 
-        # Pattern: def __init__(...): \n    """Initialize instance.""" \n    """Real docstring...
+        # Pattern: def __init__(...): \n    """Initialize instance. \n    Real docstring...
         # Fix: Remove the auto-added generic docstring
-        pattern = r'(def __init__\([^)]*\) -> None:)\n(\s*)"""Initialize instance\."""\n(\s*)"""([^"]+)"""'
-        content = re.sub(pattern, r'\1\n\2"""\4"""', content)
+        pattern = r'(def __init__\([^)]*\) -> None:)\n(\s*)"""Initialize instance\.\n(\s*)"""([^"]+)"""'
+        content = re.sub(pattern, r'\1\n\2\4', content)
 
-        # Pattern: class ClassName: \n    """Initialize instance.""" \n    """Real docstring...
+        # Pattern: class ClassName: \n    """Initialize instance. \n    """Real docstring...
         pattern = (
-            r'(class \w+[^:]*:)\n(\s*)"""Initialize instance\."""\n(\s*)"""([^"]+)"""'
+            r'(class \w+[^:]*:)\n(\s*)Initialize instance\.\n(\s*)"""([^"]+)"""'
         )
-        content = re.sub(pattern, r'\1\n\2"""\4"""', content)
+        content = re.sub(pattern, r'\1\n\2\4', content)
 
-        # Fix indentation issues where """Initialize instance.""" is wrongly indented
-        pattern = r'(\s+)"""Initialize instance\."""\n(\s+)"""([^"]+)"""'
-        content = re.sub(pattern, r'\2"""\3"""', content)
+        # Fix indentation issues where """Initialize instance. is wrongly indented
+        pattern = r'(\s+)"""Initialize instance\.\n(\s+)"""([^"]+)"""'
+        content = re.sub(pattern, r'\2\3"""', content)
 
         # Remove orphaned "Initialize instance." docstrings
         content = re.sub(

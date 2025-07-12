@@ -2,7 +2,7 @@
 """Fix F821 undefined-name violations.
 
 Fix undefined variables, imports, and other name resolution issues.
-"""
+
 
 from __future__ import annotations
 
@@ -12,15 +12,15 @@ from pathlib import Path
 
 
 class F821UndefinedNameFixer:
-    """Fix F821 undefined name errors."""
+    Fix F821 undefined name errors."""
 
     def __init__(self, project_root: Path) -> None:
-        """Initialize fixer."""
+        Initialize fixer."""
         self.project_root = project_root
         self.fixes_applied = 0
 
     def run_fixes(self) -> None:
-        """Run F821 fixes."""
+        Run F821 fixes."""
         print("🔧 Fixing F821 undefined-name violations...")
 
         # Get specific F821 errors
@@ -146,13 +146,13 @@ class F821UndefinedNameFixer:
         return line
 
     def _add_missing_imports(self) -> None:
-        """Add missing imports to files."""
+        """Add missing imports to files.
         # This would be a separate method to inject imports at the top of files
         # For now, we'll comment out the undefined references
 
 
 def main() -> None:
-    """Main entry point."""
+    Main entry point."""
     project_root = Path("/home/marlonsc/flext/algar-oud-mig")
     fixer = F821UndefinedNameFixer(project_root)
     fixer.run_fixes()

@@ -9,7 +9,7 @@ Este script implementa as melhores práticas para testing:
 - Integração/E2E condicionais baseados em .env
 - Relatórios detalhados
 - Zero tolerance para test smells
-"""
+
 
 from __future__ import annotations
 
@@ -19,10 +19,10 @@ from pathlib import Path
 
 
 class ModernTestRunner:
-    """Test runner moderno seguindo SOLID, DRY, KISS principles."""
+    Test runner moderno seguindo SOLID, DRY, KISS principles."""
 
     def __init__(self) -> None:
-        """Initialize test runner."""
+        Initialize test runner."""
         self.python_bin = "/home/marlonsc/flext/.venv/bin/python"
         self.project_root = Path.cwd()
         self.has_env = (self.project_root / ".env").exists()

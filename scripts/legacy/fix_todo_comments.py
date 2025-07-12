@@ -1,12 +1,13 @@
+from typing import Any
 #!/usr/bin/env python3
-"""Fix TODO comment violations (TD002, TD003, FIX002)."""
+"""Fix TODO comment violations (TD002, TD003, FIX002).
 
 import re
 from pathlib import Path
 
 
 def fix_todo_violations_in_file(file_path: Path) -> bool:
-    """Fix TODO comment violations in a single file."""
+    Fix TODO comment violations in a single file."""
     try:
         content = file_path.read_text(encoding="utf-8")
         original_content = content

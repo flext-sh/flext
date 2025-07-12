@@ -1,6 +1,7 @@
 # FLEXT Distributed Architecture
 
-FLEXT agora suporta uma arquitetura distribuída completa com clusterização, paralelismo e agentes remotos. Esta implementação permite escalar horizontalmente e executar workloads em múltiplos nós.
+FLEXT agora suporta uma arquitetura distribuída completa com clusterização, paralelismo e agentes remotos.
+Esta implementação permite escalar horizontalmente e executar workloads em múltiplos nós.
 
 ## 🏗️ Arquitetura Distribuída
 
@@ -85,7 +86,7 @@ Veja `config/distributed.yaml` para configuração completa.
 
 ### Cluster Management
 
-```
+```asciidoc
 GET /api/v1/cluster/nodes      # Lista todos os nós
 GET /api/v1/cluster/status     # Status do cluster
 GET /api/v1/cluster/leader     # Informações do líder
@@ -93,7 +94,7 @@ GET /api/v1/cluster/leader     # Informações do líder
 
 ### Service Discovery
 
-```
+```asciidoc
 GET /api/v1/services           # Lista todos os serviços
 GET /api/v1/services/{name}    # Instâncias de um serviço
 GET /api/v1/services/{name}/url # URL com load balancing
@@ -101,7 +102,7 @@ GET /api/v1/services/{name}/url # URL com load balancing
 
 ### Distributed Tasks
 
-```
+```asciidoc
 POST /api/v1/tasks             # Submete tarefa distribuída
 GET  /api/v1/tasks/{id}        # Status da tarefa
 GET  /api/v1/tasks             # Lista todas as tarefas
@@ -109,7 +110,7 @@ GET  /api/v1/tasks             # Lista todas as tarefas
 
 ### Métricas e Monitoramento
 
-```
+```asciidoc
 GET /api/v1/metrics/cluster    # Métricas do cluster
 GET /api/v1/metrics/node/{id}  # Métricas de um nó
 GET /api/v1/metrics/alerts     # Alertas ativos
@@ -117,7 +118,7 @@ GET /api/v1/metrics/alerts     # Alertas ativos
 
 ### Comunicação entre Agentes
 
-```
+```asciidoc
 WS /agent/ws                   # WebSocket para comunicação inter-nós
 ```
 
@@ -211,7 +212,7 @@ spec:
 
 ### Estrutura do Código
 
-```
+```asciidoc
 internal/infrastructure/
 ├── cluster/          # Gerenciamento de cluster
 ├── worker/           # Pool de workers

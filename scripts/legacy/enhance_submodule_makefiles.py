@@ -13,7 +13,7 @@ This script DOES NOT replace existing Makefiles - it enhances them by:
 4. Ensuring backward compatibility
 
 Author: FLEXT Automation
-"""
+
 
 import argparse
 import shutil
@@ -28,7 +28,7 @@ console = Console()
 
 
 class MakefileEnhancer:
-    """Enhances existing Makefiles without replacing them."""
+    Enhances existing Makefiles without replacing them."""
 
     def __init__(self, workspace_root: Path) -> None:
         self.workspace_root = workspace_root
@@ -105,7 +105,7 @@ class MakefileEnhancer:
         return "generic_python"
 
     def create_enhancement(self, project_path: Path, project_type: str) -> str:
-        """Create enhancement content based on project type."""
+        """Create enhancement content based on project type.
         project_name = project_path.name
 
         # Common header for all enhancements
@@ -122,58 +122,59 @@ class MakefileEnhancer:
 # Enhanced help that shows both project-specific and workspace targets
 enhanced-help: ## Show enhanced help with workspace coordination
 ifeq ($(WORKSPACE_AVAILABLE),true)
-	$(call workspace-help-header)
+    $(call workspace-help-header)
 else
-	$(call standalone-help-header)
+    $(call standalone-help-header):
 endif
-	@echo "$(BOLD)🏗️  """
+    @echo "$(BOLD)🏗️  """
             + project_name
             + """ - Project Commands$(NC)"
-	@echo "$(CYAN)=====================================$(NC)"
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | grep -v 'workspace-\\|enhanced-' | awk 'BEGIN {FS = ":.*?## "}; {printf "  $(GREEN)%-20s$(NC) %s\\n", $$1, $$2}'
+    @echo "$(CYAN)=====================================$(NC)"
+    @grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | grep -v 'workspace-\\|enhanced-' | awk 'BEGIN {FS = ":.*?## "}
+ {printf "  $(GREEN)%-20s$(NC) %s\\n", $$1, $$2}'
 ifeq ($(WORKSPACE_AVAILABLE),true)
-	@echo ""
-	@echo "$(BOLD)$(CYAN)🔗 Workspace Coordination Targets$(NC)"
-	@echo "$(CYAN)  workspace-status          Show workspace coordination status$(NC)"
-	@echo "$(CYAN)  workspace-install         Install with workspace coordination$(NC)"
-	@echo "$(CYAN)  workspace-install-dev     Install dev dependencies with coordination$(NC)"
-	@echo "$(CYAN)  workspace-test            Run tests with workspace coordination$(NC)"
-	@echo "$(CYAN)  workspace-lint            Run linting with workspace coordination$(NC)"
-	@echo "$(CYAN)  workspace-format          Format code with workspace coordination$(NC)"
-	@echo "$(CYAN)  workspace-clean           Clean with workspace coordination$(NC)"
-	@echo "$(CYAN)  workspace-quality         Run quality checks with coordination$(NC)"
-	@echo "$(CYAN)  workspace-commit          Run commit pipeline with coordination$(NC)"
+    @echo ""
+    @echo "$(BOLD)$(CYAN)🔗 Workspace Coordination Targets$(NC)"
+    @echo "$(CYAN)  workspace-status          Show workspace coordination status$(NC)"
+    @echo "$(CYAN)  workspace-install         Install with workspace coordination$(NC)"
+    @echo "$(CYAN)  workspace-install-dev     Install dev dependencies with coordination$(NC)"
+    @echo "$(CYAN)  workspace-test            Run tests with workspace coordination$(NC)"
+    @echo "$(CYAN)  workspace-lint            Run linting with workspace coordination$(NC)"
+    @echo "$(CYAN)  workspace-format          Format code with workspace coordination$(NC)"
+    @echo "$(CYAN)  workspace-clean           Clean with workspace coordination$(NC)"
+    @echo "$(CYAN)  workspace-quality         Run quality checks with coordination$(NC)"
+    @echo "$(CYAN)  workspace-commit          Run commit pipeline with coordination$(NC)"
 endif
 
 # Enhanced install that uses workspace coordination when available
 enhanced-install: ## Install with workspace coordination (fallback to local)
-	$(call install-with-workspace,$$(MAKE) install-local)
+    $(call install-with-workspace,$$(MAKE) install-local)
 
 enhanced-install-dev: ## Install dev dependencies with workspace coordination
-	$(call install-dev-with-workspace,$$(MAKE) install-dev-local)
+    $(call install-dev-with-workspace,$$(MAKE) install-dev-local)
 
 enhanced-test: ## Run tests with workspace coordination (fallback to local)
-	$(call test-with-workspace,$$(MAKE) test-local)
+    $(call test-with-workspace,$$(MAKE) test-local)
 
 enhanced-lint: ## Run linting with workspace coordination (fallback to local)
-	$(call lint-with-workspace,$$(MAKE) lint-local)
+    $(call lint-with-workspace,$$(MAKE) lint-local)
 
 enhanced-format: ## Format code with workspace coordination (fallback to local)
-	$(call format-with-workspace,$$(MAKE) format-local)
+    $(call format-with-workspace,$$(MAKE) format-local)
 
 enhanced-clean: ## Clean with workspace coordination (fallback to local)
-	$(call clean-with-workspace,$$(MAKE) clean-local)
+    $(call clean-with-workspace,$$(MAKE) clean-local)
 
 enhanced-quality: ## Run quality checks with workspace coordination
-	$(call quality-check,ruff check .)
+    $(call quality-check,ruff check .)
 
 enhanced-commit: ## Run commit pipeline with workspace coordination
-	$(call commit-pipeline,ruff check .,python -m pytest tests/ -v)
+    $(call commit-pipeline,ruff check .,python -m pytest tests/ -v)
 
 # Project validation
 validate-project-deps: ## Validate project dependencies for reuse
-	$(call validate-dependencies)
-	$(call ensure-core-deps)
+    $(call validate-dependencies)
+    $(call ensure-core-deps)
 
 """
         )
@@ -183,101 +184,132 @@ validate-project-deps: ## Validate project dependencies for reuse
             enhancement += """
 # Singer-specific enhancements
 singer-validate: ## Validate Singer tap/target configuration
-	@echo "$(BLUE)🎵 [$(CURRENT_PROJECT)] Validating Singer configuration...$(NC)"
-	@if [ -f "config.json.example" ]; then \\
-		echo "$(GREEN)✓ Example config found$(NC)"; \\
-	else \\
-		echo "$(YELLOW)💡 Consider adding config.json.example$(NC)"; \\
-	fi
-	@if [ -f "catalog.json" ] || [ -f "src/$(CURRENT_PROJECT)/catalog.py" ]; then \\
-		echo "$(GREEN)✓ Catalog management found$(NC)"; \\
-	else \\
-		echo "$(YELLOW)💡 Consider adding catalog management$(NC)"; \\
-	fi
+    @echo "$(BLUE)🎵 [$(CURRENT_PROJECT)] Validating Singer configuration...$(NC)"
+    @if [ -f "config.json.example" ]
+ then \\
+        echo "$(GREEN)✓ Example config found$(NC)"
+  \\
+    else \\:
+        echo "$(YELLOW)💡 Consider adding config.json.example$(NC)"
+  \\
+    fi
+    @if [ -f "catalog.json" ] || [ -f "src/$(CURRENT_PROJECT)/catalog.py" ]
+ then \\
+        echo "$(GREEN)✓ Catalog management found$(NC)"
+  \\
+    else \\:
+        echo "$(YELLOW)💡 Consider adding catalog management$(NC)"
+  \\
+    fi
 
 singer-test-connection: ## Test Singer connection (requires config.json)
-	@if [ -f "config.json" ]; then \\
-		echo "$(CYAN)🔗 Testing Singer connection...$(NC)"; \\
-		poetry run tap-$(CURRENT_PROJECT) --config config.json --discover || \\
-		poetry run target-$(CURRENT_PROJECT) --config config.json --test || \\
-		echo "$(YELLOW)⚠ Connection test not available$(NC)"; \\
-	else \\
-		echo "$(YELLOW)⚠ config.json not found for connection test$(NC)"; \\
-	fi
+    @if [ -f "config.json" ]
+ then \\
+        echo "$(CYAN)🔗 Testing Singer connection...$(NC)"
+  \\
+        poetry run tap-$(CURRENT_PROJECT) --config config.json --discover || \\
+        poetry run target-$(CURRENT_PROJECT) --config config.json --test || \\
+        echo "$(YELLOW)⚠ Connection test not available$(NC)"
+  \\
+    else \\:
+        echo "$(YELLOW)⚠ config.json not found for connection test$(NC)"
+  \\
+    fi
 """
 
         elif project_type == "flext_core":
             enhancement += """
 # FLEXT Core project enhancements
 core-validate-architecture: ## Validate clean architecture compliance
-	@echo "$(BLUE)🏛️  [$(CURRENT_PROJECT)] Validating clean architecture...$(NC)"
-	@if [ -d "src/$(CURRENT_PROJECT)/domain" ]; then \\
-		echo "$(GREEN)✓ Domain layer found$(NC)"; \\
-	fi
-	@if [ -d "src/$(CURRENT_PROJECT)/application" ]; then \\
-		echo "$(GREEN)✓ Application layer found$(NC)"; \\
-	fi
-	@if [ -d "src/$(CURRENT_PROJECT)/infrastructure" ]; then \\
-		echo "$(GREEN)✓ Infrastructure layer found$(NC)"; \\
-	fi
+    @echo "$(BLUE)🏛️  [$(CURRENT_PROJECT)] Validating clean architecture...$(NC)"
+    @if [ -d "src/$(CURRENT_PROJECT)/domain" ]
+ then \\
+        echo "$(GREEN)✓ Domain layer found$(NC)"
+  \\
+    fi
+    @if [ -d "src/$(CURRENT_PROJECT)/application" ]
+ then \\
+        echo "$(GREEN)✓ Application layer found$(NC)"
+  \\
+    fi
+    @if [ -d "src/$(CURRENT_PROJECT)/infrastructure" ]
+ then \\
+        echo "$(GREEN)✓ Infrastructure layer found$(NC)"
+  \\
+    fi
 
 core-check-dependencies: ## Check if other projects should depend on this one
-	@echo "$(BLUE)📋 [$(CURRENT_PROJECT)] Checking potential dependents...$(NC)"
-	@case "$(CURRENT_PROJECT)" in \\
-		flext-core) \\
-			echo "$(CYAN)💡 Core project - should be used by Singer taps/targets$(NC)" ;; \\
-		flext-db-oracle) \\
-			echo "$(CYAN)💡 Oracle DB project - should be used by Oracle-related projects$(NC)" ;; \\
-		flext-auth) \\
-			echo "$(CYAN)💡 Auth project - should be used by API and web projects$(NC)" ;; \\
-	esac
+    @echo "$(BLUE)📋 [$(CURRENT_PROJECT)] Checking potential dependents...$(NC)"
+    @case "$(CURRENT_PROJECT)" in \\
+        flext-core) \\
+            echo "$(CYAN)💡 Core project - should be used by Singer taps/targets$(NC)"
+   \\
+        flext-db-oracle) \\
+            echo "$(CYAN)💡 Oracle DB project - should be used by Oracle-related projects$(NC)"
+   \\
+        flext-auth) \\
+            echo "$(CYAN)💡 Auth project - should be used by API and web projects$(NC)"
+   \\
+    esac
 """
 
         elif project_type == "client_project":
             enhancement += """
 # Client project enhancements
 client-status: ## Show client project status
-	@echo "$(BLUE)🏢 [$(CURRENT_PROJECT)] Client Project Status$(NC)"
-	@if [ -f "README.md" ]; then \\
-		echo "$(GREEN)✓ Documentation found$(NC)"; \\
-	fi
-	@if [ -d "config" ] || [ -f "config.json" ]; then \\
-		echo "$(GREEN)✓ Configuration found$(NC)"; \\
-	fi
-	@if [ -d "data" ] || [ -d "logs" ]; then \\
-		echo "$(GREEN)✓ Data/logs directories found$(NC)"; \\
-	fi
+    @echo "$(BLUE)🏢 [$(CURRENT_PROJECT)] Client Project Status$(NC)"
+    @if [ -f "README.md" ]
+ then \\
+        echo "$(GREEN)✓ Documentation found$(NC)"
+  \\
+    fi
+    @if [ -d "config" ] || [ -f "config.json" ]
+ then \\
+        echo "$(GREEN)✓ Configuration found$(NC)"
+  \\
+    fi
+    @if [ -d "data" ] || [ -d "logs" ]
+ then \\
+        echo "$(GREEN)✓ Data/logs directories found$(NC)"
+  \\
+    fi
 
 client-backup-config: ## Backup client configuration
-	@echo "$(CYAN)💾 Backing up configuration...$(NC)"
-	@mkdir -p backups
-	@if [ -f "config.json" ]; then \\
-		cp config.json backups/config_$(shell date +%Y%m%d_%H%M%S).json; \\
-		echo "$(GREEN)✓ config.json backed up$(NC)"; \\
-	fi
-	@if [ -d "config" ]; then \\
-		cp -r config backups/config_$(shell date +%Y%m%d_%H%M%S)/; \\
-		echo "$(GREEN)✓ config directory backed up$(NC)"; \\
-	fi
+    @echo "$(CYAN)💾 Backing up configuration...$(NC)"
+    @mkdir -p backups
+    @if [ -f "config.json" ]
+ then \\
+        cp config.json backups/config_$(shell date +%Y%m%d_%H%M%S).json
+  \\
+        echo "$(GREEN)✓ config.json backed up$(NC)"
+  \\
+    fi
+    @if [ -d "config" ]
+ then \\
+        cp -r config backups/config_$(shell date +%Y%m%d_%H%M%S)/
+  \\
+        echo "$(GREEN)✓ config directory backed up$(NC)"
+  \\
+    fi
 """
 
         elif project_type == "go_project":
             enhancement += """
 # Go project enhancements
 go-workspace-build: ## Build Go project with workspace coordination
-	@echo "$(BLUE)🐹 [$(CURRENT_PROJECT)] Building Go project...$(NC)"
-	@go mod tidy
-	@go build ./...
+    @echo "$(BLUE)🐹 [$(CURRENT_PROJECT)] Building Go project...$(NC)"
+    @go mod tidy
+    @go build ./...
 
 go-workspace-test: ## Test Go project with workspace coordination
-	@echo "$(BLUE)🧪 [$(CURRENT_PROJECT)] Testing Go project...$(NC)"
-	@go test ./... -v
+    @echo "$(BLUE)🧪 [$(CURRENT_PROJECT)] Testing Go project...$(NC)"
+    @go test ./... -v
 """
 
         return enhancement
 
     def enhance_makefile(self, project_path: Path) -> bool:
-        """Enhance a single Makefile."""
+        Enhance a single Makefile."""
         makefile_path = project_path / "Makefile"
 
         try:
@@ -309,14 +341,14 @@ go-workspace-test: ## Test Go project with workspace coordination
 
             # Look for help target or default goal
             for i, line in enumerate(lines):
-                if (
+                if (:
                     line.strip().startswith(".DEFAULT_GOAL")
                     or line.strip().startswith("help:")
                     or (line.strip().startswith(".PHONY:") and "help" in line)
                 ):
                     # Find the end of the help target
                     j = i + 1
-                    while j < len(lines) and (
+                    while j < len(lines) and (:
                         lines[j].startswith("\t") or lines[j].strip() == ""
                     ):
                         j += 1
@@ -366,7 +398,7 @@ go-workspace-test: ## Test Go project with workspace coordination
             )
             return
 
-        with Progress(
+        with Progress(:
             SpinnerColumn(),
             TextColumn("[progress.description]{task.description}"),
             console=console,
@@ -443,8 +475,8 @@ def main() -> None:
         for project in projects:
             status = (
                 "already enhanced"
-                if enhancer.check_if_already_enhanced(project / "Makefile")
-                else "would enhance"
+                if enhancer.check_if_already_enhanced(project / "Makefile"):
+                else "would enhance":
             )
             console.print(f"  - {project.name}: {status}")
     else:

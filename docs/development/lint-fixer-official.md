@@ -44,7 +44,7 @@ The script requires:
 
 - Python 3.13+
 - ruff (for linting)
-- yaml (for configuration)
+- YAML (for configuration)
 - Standard library modules only
 
 ## Usage
@@ -90,7 +90,7 @@ python scripts/maintenance/official_pyauto_lint_fixer.py --help
 
 ## Configuration
 
-### Default Configuration (config/lint_fixer.yaml)
+### Default Configuration (config/lint_fixer.YAML)
 
 ```yaml
 # Target projects (empty = all projects)

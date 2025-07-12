@@ -478,15 +478,15 @@ Content-Type HTTP Header
 This HTTP header is required when using a method like POST, PATCH, and DELETE that allow transmitting data in the
 body of the request. It describes the data format so it can be correctly parsed server-side. Lgfapi supports JSON and
 XML input and therefore requires one of the two content-type values:
-• application/json
-• application/xml
+• application/JSON
+• application/XML
 The Content-Type “application/x-www-form-urlencoded” is not supported in lgfapi, but is still required for legacy
 OCWMS APIs.
 Content Encoding
 By default, lgfapi will use UTF-8 to decode the request body as this handles the majority of characters for languages
 supported in OCWMS. However, for situations where customers choose to use a different encoding, it can be specified
 in the Content-Type header’s optional “charset” parameter:
-Content-Type: application/json; charset=latin-1
+Content-Type: application/JSON; charset=latin-1
 Lgfapi will use the provided charset to decode the request body data. It is up to the customer to ensure that their data
 is properly encoded using the desired charset before transmission to lgfapi. Failure to do so may result in incorrect
 characters or an inability to process the request.
@@ -601,19 +601,19 @@ The requester is able to specify the response format in several ways:
 
 1. Making a request without specifying the response format will result in the default JSON format.
 2. Using the reserved “format” query string parameter in the URI when making a request.
-   You can set the format to XML by adding “format=xml” to the query string portion of the request (the key-value pair
+   You can set the format to XML by adding “format=XML” to the query string portion of the request (the key-value pair
    data after the “?”). This is in addition to any other query string parameters also in the URI:
-   … /resource/?format=json
-   … /resource/?format=xml
+   … /resource/?format=JSON
+   … /resource/?format=XML
    Note – “format” is one of the few query string parameters you can use with HTTP methods like POST, which typically
    require all data to be in the body of the request.
    • Using the file-extension dot-notation in the URI when making a request.
    Very similar to the example above, you can also request the format using dot notation like you would when giving a file
-   the extension “.xml” or “.json”:
-   … /resource/.json
-   … /resource.xml (optional trailing slash)
+   the extension “.XML” or “.JSON”:
+   … /resource/.JSON
+   … /resource.XML (optional trailing slash)
    This can also be combined with a query string:
-   … /resource/.xml?key1=value1&key2=value2
+   … /resource/.XML?key1=value1&key2=value2
    12
 
 Oracle Warehouse Management Cloud
@@ -658,7 +658,7 @@ WMS REST API Guide
 Chapter 2
 HTTP Response
 
-<?xml version="1.0" encoding="utf-8"?>
+<?XML version="1.0" encoding="utf-8"?>
 <error>
 <reference>25b414f0-7a1d-4f35-ac3c-0ec9886cf37a</reference>
 <code>VALIDATION_ERROR</code>
@@ -722,7 +722,7 @@ An example of a paginated JSON response:
 }
 An example of a paginated XML response:
 
-<?xml version="1.0" encoding="utf-8"?>
+<?XML version="1.0" encoding="utf-8"?>
 
 <entity_name>
 <result_count>1</result_count>
@@ -1132,7 +1132,7 @@ This can be cached client-side and used in conjunction with HEAD requests as an 
 modification.
 Resource Representation Data Conventions
 For both list and retrieve GET requests, the “format” query string parameter can be passed in order to convey the
-desired response format as “json” (default) or “xml”.
+desired response format as “JSON” (default) or “XML”.
 Hyperlink-Related Resource Representations
 All resources use hyperlinked representations for related resource fields. These are the fields whose name ends
 with “\_id”. They represent another entity resource that can generate its own representation using the hyperlink
@@ -1313,7 +1313,7 @@ GET https://.../wms/lgfapi/v10/entity/company?fields=id,code
 The “fields” parameter can be combined with filter parameters and other parameters with special meaning, like
 “format”. Here is a more complex example if one wanted to search for all eligible companies of type regular and return
 only the “id” and “company” for each company entity found, in XML format:
-GET https://.../wms/lgfapi/v10/entity/company?fields=id,code&format=xml&company_type_id=1
+GET https://.../wms/lgfapi/v10/entity/company?fields=id,code&format=XML&company_type_id=1
 This can also be applied to retrieve style request for a specific resource:
 GET https://.../wms/lgfapi/v10/entity/company/1?fields=id,code
 This is an important tool when performance is of concern. If it is known ahead of time that only specific field values are
@@ -8507,7 +8507,7 @@ the result set as a file attached to the response.
 If output format is pipe-delimited, use the following:
 GET.../report/custom_inventory_summary/?facility_id**code=FAC1&company_id_code=COM1&item_code=ITEM1
 If the output format is XML use the following:
-GET.../report/custom_inventory_summary.xml?
+GET.../report/custom_inventory_summary.XML?
 item_code=<item_code>&company_id=<company_id>&facility_id=<facility_id>
 The following “parameters” are required:
 Parameter Type Required Default Description
