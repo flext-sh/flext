@@ -5,8 +5,8 @@ from unittest.mock import Mock
 import pytest
 import sqlalchemy as sa
 
-from target_oracle_wms.sinks import OracleWMSSink
-from target_oracle_wms.target import TargetOracleWMS
+from flext_target_oracle_wms.sinks import OracleWMSSink
+from flext_target_oracle_wms.target import TargetOracleWMS
 
 
 class TestOracleWMSSink:

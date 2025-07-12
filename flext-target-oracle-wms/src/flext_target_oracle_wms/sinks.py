@@ -11,7 +11,7 @@ from singer_sdk.sinks import SQLSink
 from sqlalchemy.dialects import oracle
 
 if TYPE_CHECKING:
-    from target_oracle_wms.target import TargetOracleWMS
+    from flext_target_oracle_wms.target import TargetOracleWMS
 
 
 class OracleWMSSink(SQLSink):

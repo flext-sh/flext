@@ -24,9 +24,9 @@
     "maximum": 2
   },
   "MD013": {
-    "line_length": 120,
-    "heading_line_length": 120,
-    "code_block_line_length": 120,
+    "line_length": 400,
+    "heading_line_length": 400,
+    "code_block_line_length": 400,
     "tables": false,
     "strict": false,
     "stern": false
@@ -41,6 +41,7 @@
     "lines_below": 1
   },
   "MD023": true,
+  "MD024": false,
   "MD025": {
     "level": 1,
     "front_matter_title": ""
@@ -50,9 +51,7 @@
   },
   "MD027": true,
   "MD028": true,
-  "MD029": {
-    "style": "ordered"
-  },
+  "MD029": false,
   "MD030": {
     "ul_single": 1,
     "ol_single": 1,
@@ -73,6 +72,7 @@
       "span",
       "img",
       "a",
+      "b",
       "sup",
       "sub",
       "kbd",
@@ -83,13 +83,11 @@
   "MD035": {
     "style": "---"
   },
-  "MD036": {
-    "punctuation": ".,;:!?。，；：！？"
-  },
+  "MD036": false,
   "MD037": true,
   "MD038": true,
   "MD039": true,
-  "MD040": true,
+  "MD040": false,
   "MD041": {
     "level": 1,
     "front_matter_title": ""

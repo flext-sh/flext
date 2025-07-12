@@ -8,7 +8,7 @@ import sqlalchemy as sa
 from singer_sdk import Target
 from singer_sdk import singer_typing as th
 
-from target_oracle_wms.sinks import OracleWMSSink
+from flext_target_oracle_wms.sinks import OracleWMSSink
 
 if TYPE_CHECKING:
     import oracledb
