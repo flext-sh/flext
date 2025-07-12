@@ -608,7 +608,6 @@ def is_valid_pypi_package(package_name: str) -> bool:
         "pyjwt",
         "python-jose",
         "python-ldap",
-        "cx-oracle",
         "oracledb",
         "pymongo",
         "motor",
@@ -681,7 +680,6 @@ def is_valid_pypi_package(package_name: str) -> bool:
         "opentelemetry-instrumentation-grpc",
         "aiopg",
         "sqlparse",
-        "cx-Oracle",
         "docker",
         "typing-extensions",
         "python-dateutil",
@@ -1331,7 +1329,6 @@ class DependencyAnalyzer:
             r"from\s+redis": "redis",
             r"import\s+redis": "redis",
             r"psycopg2": "psycopg2-binary",
-            r"cx_Oracle": "cx-oracle",
             r"oracledb": "oracledb",
             r"from\s+ldap": "python-ldap",
             r"import\s+ldap": "python-ldap",
@@ -2416,7 +2413,6 @@ def install_discovered_dependencies(
             # Packages que frequentemente causam conflitos
             "lato": "1.0.0",  # Versão específica que funciona
             "tenacity": "8.2.0",
-            "cx-oracle": "8.3.0",
             "grpcio": "1.56.0",
             "protobuf": "4.21.0",
             "uvicorn": "0.23.0",
