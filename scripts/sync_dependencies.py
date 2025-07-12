@@ -2503,7 +2503,193 @@ def install_discovered_dependencies(
     return stats
 
 
-def check_version_compatibility_across_projects(projects: List[Path]) -> Dict[str, List[str]]:
+class PackageVersionAnalyzer:
+    """Analisa versões de packages e identifica problemas."""
+    
+    def __init__(self):
+        self.package_versions = {}  # {package: {project: version}}
+        self.latest_versions = {}   # {package: latest_version}
+        self.version_constraints = {}  # {package: {project: parsed_constraint}}
+        
+    def parse_version_constraint(self, constraint: str) -> Dict[str, str]:
+        """Parse version constraints como ^1.2.3, >=1.0.0, etc."""
+        import re
+        
+        constraint = constraint.strip()
+        
+        # Patterns para diferentes tipos de constraints
+        patterns = {
+            'caret': r'^\^(.+)$',         # ^1.2.3
+            'tilde': r'^~(.+)$',          # ~1.2.3
+            'gte': r'^>=(.+)$',           # >=1.2.3
+            'gt': r'^>(.+)$',             # >1.2.3
+            'lte': r'^<=(.+)$',           # <=1.2.3
+            'lt': r'^<(.+)$',             # <1.2.3
+            'exact': r'^==(.+)$',         # ==1.2.3
+            'compatible': r'^~=(.+)$',    # ~=1.2.3
+            'wildcard': r'^\*$',          # *
+            'range': r'^(.+),(.+)$',      # >=1.0,<2.0
+        }
+        
+        for constraint_type, pattern in patterns.items():
+            match = re.match(pattern, constraint)
+            if match:
+                if constraint_type == 'range':
+                    return {
+                        'type': 'range',
+                        'min': match.group(1),
+                        'max': match.group(2)
+                    }
+                elif constraint_type == 'wildcard':
+                    return {'type': 'wildcard', 'version': '*'}
+                else:
+                    return {
+                        'type': constraint_type,
+                        'version': match.group(1)
+                    }
+        
+        # Se não matchou nenhum pattern, assume versão exata
+        return {'type': 'exact', 'version': constraint}
+    
+    def get_latest_available_version(self, package: str) -> Optional[str]:
+        """Obtém a versão mais recente disponível no PyPI."""
+        try:
+            import urllib.request
+            import json
+            
+            url = f"https://pypi.org/pypi/{package}/json"
+            with urllib.request.urlopen(url, timeout=5) as response:
+                data = json.loads(response.read())
+                return data.get("info", {}).get("version")
+        except:
+            return None
+    
+    def analyze_version_pinning(self, projects: List[Path]) -> Dict[str, Any]:
+        """Analisa quem está segurando atualizações."""
+        print_colored("\n🔍 Analisando version pinning e atualizações bloqueadas...", Colors.BLUE)
+        
+        # Coleta todas as versões
+        for project in projects:
+            pyproject_file = project / "pyproject.toml"
+            if not pyproject_file.exists():
+                continue
+                
+            try:
+                with open(pyproject_file, "rb") as f:
+                    data = tomllib.load(f)
+                
+                # Analisa todas as dependências
+                all_deps = {}
+                
+                # Dependências principais
+                poetry_deps = data.get("tool", {}).get("poetry", {}).get("dependencies", {})
+                all_deps.update(poetry_deps)
+                
+                # Dependências de grupos
+                groups = data.get("tool", {}).get("poetry", {}).get("group", {})
+                for group_data in groups.values():
+                    group_deps = group_data.get("dependencies", {})
+                    all_deps.update(group_deps)
+                
+                # Registra versões e constraints
+                for package, version_spec in all_deps.items():
+                    if package == "python":
+                        continue
+                        
+                    if package not in self.package_versions:
+                        self.package_versions[package] = {}
+                        self.version_constraints[package] = {}
+                    
+                    # Normaliza versão
+                    if isinstance(version_spec, dict):
+                        version = version_spec.get("version", "*")
+                    else:
+                        version = str(version_spec)
+                    
+                    self.package_versions[package][project.name] = version
+                    self.version_constraints[package][project.name] = self.parse_version_constraint(version)
+                    
+            except Exception:
+                continue
+        
+        # Analisa pinning problems
+        pinning_issues = {}
+        
+        for package, project_versions in self.package_versions.items():
+            # Pega versão mais recente do PyPI
+            if package not in self.latest_versions:
+                latest = self.get_latest_available_version(package)
+                if latest:
+                    self.latest_versions[package] = latest
+            
+            # Identifica projetos com versões muito restritivas
+            restrictive_projects = []
+            
+            for project, version in project_versions.items():
+                constraint = self.version_constraints[package][project]
+                
+                # Considera restritivo se usa exact version (==) ou caret muito específico
+                if constraint['type'] in ['exact', 'caret']:
+                    restrictive_projects.append({
+                        'project': project,
+                        'version': version,
+                        'constraint_type': constraint['type']
+                    })
+            
+            if restrictive_projects and len(set(v['version'] for v in restrictive_projects)) > 1:
+                pinning_issues[package] = {
+                    'projects': restrictive_projects,
+                    'latest_available': self.latest_versions.get(package, 'Unknown')
+                }
+        
+        return pinning_issues
+    
+    def suggest_version_standardization(self) -> Dict[str, str]:
+        """Sugere versões padronizadas para cada package."""
+        suggestions = {}
+        
+        for package, project_versions in self.package_versions.items():
+            versions = list(project_versions.values())
+            
+            # Se todos usam a mesma versão, mantém
+            if len(set(versions)) == 1:
+                suggestions[package] = versions[0]
+                continue
+            
+            # Analisa constraints para sugerir a melhor versão
+            constraints = self.version_constraints.get(package, {})
+            
+            # Prioriza versões com >= sobre ^
+            gte_versions = []
+            caret_versions = []
+            exact_versions = []
+            
+            for project, constraint in constraints.items():
+                version = project_versions[project]
+                if constraint['type'] == 'gte':
+                    gte_versions.append(version)
+                elif constraint['type'] == 'caret':
+                    caret_versions.append(version)
+                elif constraint['type'] == 'exact':
+                    exact_versions.append(version)
+            
+            # Sugere a versão mais flexível possível
+            if gte_versions:
+                # Pega a versão mínima dos >=
+                suggestions[package] = min(gte_versions)
+            elif caret_versions:
+                # Pega a versão mais recente dos ^
+                suggestions[package] = max(caret_versions)
+            else:
+                # Pega a versão mais comum
+                from collections import Counter
+                version_counts = Counter(versions)
+                suggestions[package] = version_counts.most_common(1)[0][0]
+        
+        return suggestions
+
+
+def check_version_compatibility_across_projects(projects: List[Path]) -> Tuple[Dict[str, List[str]], PackageVersionAnalyzer]:
     """Verifica conflitos de versão entre projetos do workspace."""
     print_colored("\n🔍 Verificando compatibilidade de versões entre projetos...", Colors.BLUE)
     
