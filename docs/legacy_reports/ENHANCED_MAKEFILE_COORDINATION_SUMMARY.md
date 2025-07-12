@@ -117,7 +117,7 @@ make build                    # Build específico
 - **Oracle OIC** operations (`oic-check`, `oic-list-integrations`)
 - **Configuration validation**
 
-### python-meltano-gopy
+### Python-meltano-gopy
 
 - **Go/Python** hybrid build system
 - **CGO compilation** specifics

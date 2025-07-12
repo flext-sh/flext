@@ -12,7 +12,7 @@ def fix_python_313_only(content):
         content,
     )
     content = re.sub(
-        r'requires-python = ">=3\.13"', r'requires-python = ">=3.13,<3.14"', content
+        r'requires-python = ">=3\.13"', r'requires-python = ">=3.13,<3.14"', content,
     )
     # Fix poetry python constraint
     content = re.sub(r'python = ">=3\.13,<4\.0"', r'python = ">=3.13,<3.14"', content)

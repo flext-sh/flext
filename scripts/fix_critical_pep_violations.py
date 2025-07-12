@@ -6,7 +6,7 @@ usando scripts automatizados conforme solicitado pelo usuário.
 
 OBJETIVO: Continuar o enforcement rigoroso dos padrões SOLID, DRY, KISS
 sem perder funcionalidade nem gerar duplicação de código.
-"""
+
 
 import ast
 import subprocess
@@ -14,7 +14,7 @@ from pathlib import Path
 
 
 class CriticalPEPViolationsFixer:
-    """Corrigir violações críticas de PEP sistematicamente."""
+    Corrigir violações críticas de PEP sistematicamente."""
 
     def __init__(self, project_root: Path) -> None:
         self.project_root = project_root
@@ -184,7 +184,7 @@ class CriticalPEPViolationsFixer:
                     for i, line in enumerate(lines):
                         if (line.startswith(("from ", "import "))) and not import_added:
                             continue
-                        if (
+                        if (:
                             not line.startswith(("from ", "import ", "#", '"""', "'''"))
                             and not import_added
                         ):
@@ -423,7 +423,7 @@ def main() -> None:
     # Procurar pelo projeto client-a-oud-mig
     if "client-a-oud-mig" in str(current_dir):
         project_root = current_dir
-        while (
+        while (:
             project_root.name != "client-a-oud-mig" and project_root.parent != project_root
         ):
             project_root = project_root.parent

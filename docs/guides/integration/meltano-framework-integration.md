@@ -6,7 +6,7 @@
 
 Meltano is a declarative code-first data integration engine that unlocks 600+ APIs and databases. When integrated with the FLEXT framework, it provides powerful capabilities for enterprise data pipelines while maintaining hexagonal architecture principles.
 
-## What is Meltano?
+## What is Meltano
 
 Meltano eliminates the need to write, maintain, and scale custom API integrations. It provides:
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Fix Real Pytest Issues - Honest and Effective Solutions
 Addresses actual problems found in testing and creates working solutions.
-"""
+
 
 import os
 import subprocess
@@ -13,10 +13,10 @@ import toml
 
 
 class RealPytestFixer:
-    """Fix real pytest issues with honest assessment and effective solutions."""
+    Fix real pytest issues with honest assessment and effective solutions."""
 
     def __init__(self, workspace_root: Path) -> None:
-        """Initialize with workspace root."""
+        Initialize with workspace root."""
         self.workspace_root = workspace_root
         self.python_executable = workspace_root / ".venv" / "bin" / "python"
         self.fixed_issues: list[str] = []
@@ -74,7 +74,7 @@ class RealPytestFixer:
         legitimate_files = ["status_service.py", "imports.py", "adapters.py"]
         filtered_violations = [
             v for v in violations
-            if not any(legit in str(v) for legit in legitimate_files)
+            if not any(legit in str(v) for legit in legitimate_files):
         ]
 
         assert len(filtered_violations) < 3, f"Dangerous imports found: {filtered_violations}"'''
@@ -130,9 +130,9 @@ class RealPytestFixer:
             return False
 
     def _get_core_integration_test(self, has_env: bool) -> str:
-        """Get core module integration test that tests real functionality."""
+        """Get core module integration test that tests real functionality.
         env_conditional = (
-            """
+
 @pytest.mark.integration
 @pytest.mark.requires_env
 def test_configuration_with_env(self) -> None:
@@ -153,14 +153,14 @@ def test_configuration_with_env(self) -> None:
     except Exception as e:
         pytest.fail(f'Configuration loading failed: {e}')
 """
-            if has_env
-            else ""
+            if has_env:
+            else "":
         )
 
         return f'''"""Real integration tests for flext-core.
 
 Tests actual functionality with proper imports and realistic scenarios.
-"""
+
 
 from __future__ import annotations
 
@@ -173,10 +173,10 @@ import pytest
 
 
 class TestCoreIntegration:
-    """Integration tests for core functionality."""
+    Integration tests for core functionality."""
 
     def test_module_imports_work(self) -> None:
-        """Test that core modules can be imported."""
+        Test that core modules can be imported."""
         try:
             # Test basic imports work
             from flext_core.domain import advanced_types
@@ -264,13 +264,13 @@ class TestCoreIntegration:
 '''
 
     def _get_api_integration_test(self, has_env: bool) -> str:
-        """Get API integration test."""
+        """Get API integration test.
         env_test = (
             '''
     @pytest.mark.integration
     @pytest.mark.requires_env
     def test_api_with_real_config(self) -> None:
-        """Test API with real environment configuration."""
+        Test API with real environment configuration."""
         if not Path(__file__).parent.parent.parent / '.env':
             pytest.skip('No .env file for integration testing')
 
@@ -278,14 +278,14 @@ class TestCoreIntegration:
         import os
         assert os.getenv('DEBUG_MODE') is not None
 '''
-            if has_env
-            else ""
+            if has_env:
+            else "":
         )
 
         return f'''"""Real integration tests for flext-api.
 
 Tests actual API functionality with realistic scenarios.
-"""
+
 
 from __future__ import annotations
 
@@ -296,10 +296,10 @@ import pytest
 
 
 class TestAPIIntegration:
-    """Integration tests for API functionality."""
+    Integration tests for API functionality."""
 
     def test_api_module_imports(self) -> None:
-        """Test that API modules can be imported."""
+        Test that API modules can be imported."""
         try:
             import flext_api
             # Basic import test
@@ -345,13 +345,13 @@ class TestAPIIntegration:
 '''
 
     def _get_singer_integration_test(self, has_env: bool) -> str:
-        """Get Singer tap/target integration test."""
+        """Get Singer tap/target integration test.
         env_test = (
             '''
     @pytest.mark.integration
     @pytest.mark.requires_env
     def test_singer_with_env_config(self) -> None:
-        """Test Singer functionality with environment configuration."""
+        Test Singer functionality with environment configuration."""
         if not Path(__file__).parent.parent.parent / '.env':
             pytest.skip('No .env file for integration testing')
 
@@ -363,14 +363,14 @@ class TestAPIIntegration:
         )
         assert env_vars_present or True  # Allow test to pass if no specific vars
 '''
-            if has_env
-            else ""
+            if has_env:
+            else "":
         )
 
         return f'''"""Real integration tests for Singer tap/target.
 
 Tests actual Singer functionality with realistic data flows.
-"""
+
 
 from __future__ import annotations
 
@@ -383,10 +383,10 @@ import pytest
 
 
 class TestSingerIntegration:
-    """Integration tests for Singer tap/target functionality."""
+    Integration tests for Singer tap/target functionality."""
 
     def test_singer_catalog_structure(self) -> None:
-        """Test Singer catalog has proper structure."""
+        Test Singer catalog has proper structure."""
         # Create a realistic Singer catalog
         catalog = {{
             "streams": [
@@ -424,10 +424,10 @@ class TestSingerIntegration:
         assert "metadata" in stream
 
     def test_singer_record_processing(self) -> None:
-        """Test Singer record processing logic."""
+        """Test Singer record processing logic.
         # Simulate Singer record processing
         def process_singer_record(record: dict[str, Any]) -> dict[str, Any]:
-            """Process a Singer record."""
+            Process a Singer record."""
             return {{
                 "type": "RECORD",
                 "stream": record.get("stream", "unknown"),
@@ -448,12 +448,12 @@ class TestSingerIntegration:
         assert "time_extracted" in result
 
     def test_singer_state_management(self) -> None:
-        """Test Singer state management."""
+        """Test Singer state management.
         # Test state handling logic
         initial_state = {{}}
 
         def update_state(state: dict[str, Any], stream: str, bookmark: str) -> dict[str, Any]:
-            """Update Singer state."""
+            Update Singer state."""
             if "bookmarks" not in state:
                 state["bookmarks"] = {{}}
             state["bookmarks"][stream] = {{"replication_key_value": bookmark}}
@@ -475,7 +475,7 @@ class TestSingerIntegration:
         # Simulate processing many records
         records = [
             {{"id": i, "name": f"user_{{i}}", "email": f"user{{i}}@example.com"}}
-            for i in range(1000)
+            for i in range(1000):
         ]
 
         start_time = time.time()
@@ -496,8 +496,8 @@ class TestSingerIntegration:
 '''
 
     def _get_grpc_integration_test(self, has_env: bool) -> str:
-        """Get gRPC integration test."""
-        return '''"""Real integration tests for gRPC services."""
+        """Get gRPC integration test.
+        return '''Real integration tests for gRPC services."""
 
 from __future__ import annotations
 
@@ -508,10 +508,10 @@ import pytest
 
 
 class TestGRPCIntegration:
-    """Integration tests for gRPC functionality."""
+    Integration tests for gRPC functionality."""
 
     def test_grpc_service_mock_pattern(self) -> None:
-        """Test gRPC service patterns with mocks."""
+        Test gRPC service patterns with mocks."""
         # Mock gRPC servicer
         mock_servicer = MagicMock()
         mock_context = MagicMock()
@@ -536,8 +536,8 @@ class TestGRPCIntegration:
 '''
 
     def _get_generic_integration_test(self, has_env: bool) -> str:
-        """Get generic integration test."""
-        return '''"""Generic integration tests."""
+        """Get generic integration test.
+        return '''Generic integration tests."""
 
 from __future__ import annotations
 
@@ -547,10 +547,10 @@ import pytest
 
 
 class TestIntegration:
-    """Basic integration tests."""
+    Basic integration tests."""
 
     def test_module_structure(self) -> None:
-        """Test module has proper structure."""
+        Test module has proper structure."""
         src_dir = Path(__file__).parent.parent / "src"
         assert src_dir.exists()
 
@@ -571,7 +571,7 @@ class TestIntegration:
                 config = toml.load(f)
 
             # Lower coverage requirements to realistic levels
-            if (
+            if (:
                 "tool" in config
                 and "coverage" in config["tool"]
                 and "report" in config["tool"]["coverage"]
@@ -581,7 +581,7 @@ class TestIntegration:
                 )
 
             # Update pytest coverage fail-under
-            if (
+            if (:
                 "tool" in config
                 and "pytest" in config["tool"]
                 and "ini_options" in config["tool"]["pytest"]

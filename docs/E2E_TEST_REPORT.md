@@ -6,8 +6,8 @@
 
 #### 1. **Scripts de Geração de Configuração**
 
-- ✅ `tap-oracle-wms/generate_config.py` - Gera config.json do .env
-- ✅ `target-oracle-wms/generate_config.py` - Gera config.json do .env
+- ✅ `tap-oracle-wms/generate_config.py` - Gera config.JSON do .env
+- ✅ `target-oracle-wms/generate_config.py` - Gera config.JSON do .env
 - ✅ `flext-oracle-wms/generate_config.py` - Gera todas as configs necessárias
 
 #### 2. **Testes E2E Abrangentes**
@@ -80,7 +80,7 @@ WMS_TEST_MODE=false
 #### tap-oracle-wms
 
 - [x] Comandos CLI (help, version)
-- [x] Geração de config.json
+- [x] Geração de config.JSON
 - [x] Discovery de entidades
 - [x] Parsing de catalog
 - [x] Gerenciamento de estado
@@ -137,7 +137,7 @@ python run_all_e2e_tests.py
 
 ## ✅ VALIDAÇÕES IMPLEMENTADAS
 
-### 1. **Geração Condicional de config.json**
+### 1. **Geração Condicional de config.JSON**
 
 - Se não existe, gera do .env
 - Se existe, faz backup antes de sobrescrever

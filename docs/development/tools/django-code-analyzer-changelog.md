@@ -36,7 +36,7 @@
 
 - ✅ Enabled Django auto-reload for development
 - ✅ Created convenient startup script (`start_server.sh`)
-- ✅ Added missing dependencies (sarif-om, jschema-to-python)
+- ✅ Added missing dependencies (sarif-om, jschema-to-Python)
 - ✅ Fixed chart URL routing issues
 
 #### 📱 **Web Interface Improvements**

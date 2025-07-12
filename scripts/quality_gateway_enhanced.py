@@ -1,3 +1,4 @@
+from typing import Union
 #!/usr/bin/env python3
 """
 FLEXT Quality Gateway ENHANCED - Sistema Completo e Final
@@ -12,7 +13,7 @@ Funcionalidades VERIFICADAS e INTEGRADAS:
 3. Detecção e correção de problemas específicos do FLEXT
 4. Relatórios detalhados com métricas reais
 5. Proteção zero-regression ABSOLUTA
-"""
+
 
 import json
 import re
@@ -35,7 +36,7 @@ except ImportError:
 
 
 class EnhancedQualityGateway:
-    """Sistema aprimorado de quality gateway com funcionalidades consolidadas."""
+    Sistema aprimorado de quality gateway com funcionalidades consolidadas."""
 
     def __init__(self, workspace_root: Path) -> None:
         self.workspace_root = workspace_root
@@ -80,7 +81,7 @@ class EnhancedQualityGateway:
 
                     # Classificar criticidade
                     for issue in ruff_issues:
-                        if issue.get("code", "").startswith(
+                        if issue.get("code", "").startswith(:
                             ("E9", "F821", "F822", "F823")
                         ):
                             issues["critical"] += 1
@@ -98,18 +99,18 @@ class EnhancedQualityGateway:
         return issues
 
     def _count_syntax_issues(self, content: str) -> int:
-        """Conta syntax errors específicos que vimos nos scripts consolidados."""
+        """Conta syntax errors específicos que vimos nos scripts consolidados.
         count = 0
 
         # Docstrings duplas
-        if (
-            '"""Initialize instance."""' in content
-            and '"""' in content[content.find('"""Initialize instance."""') + 25 :]
+        if (:
+            'Initialize instance."""' in content
+            and '' in content[content.find('"""Initialize instance."""') + 25 :]
         ):
             count += 1
 
         # Union types incorretos
-        if (
+        if (:
             "|" in content
             and "Union[" not in content
             and "from __future__ import annotations" not in content
@@ -262,16 +263,16 @@ class EnhancedQualityGateway:
 
             # 1. Fix docstrings duplas (padrão mais amplo)
             pattern1 = (
-                r'(def [^:]+:)\n(\s*)"""Initialize instance\."""\n(\s*)"""([^"]+)"""'
+                r'(def [^:]+:)\n(\s*)"""Initialize instance\.\n(\s*)"""([^"]+)"""'
             )
-            new_content = re.sub(pattern1, r'\1\n\2"""\4"""', content)
+            new_content = re.sub(pattern1, r'\1\n\2\4', content)
             if new_content != content:
                 content = new_content
                 fixes_count += 1
 
             # Fix docstrings duplas sem quebra de linha
             pattern2 = r'"""Initialize instance\."""([^"]+)"""'
-            new_content = re.sub(pattern2, r'"""\1"""', content)
+            new_content = re.sub(pattern2, r'\1"""', content)
             if new_content != content:
                 content = new_content
                 fixes_count += 1
@@ -284,7 +285,7 @@ class EnhancedQualityGateway:
                     fixes_count += 1
 
             # 3. Fix strings quebradas
-            content = re.sub(r'"""\n\s*"""', '"""', content)
+            content = re.sub(r'"""\n\s*', '', content)
             if content != original_content:
                 fixes_count += content.count('"""') - original_content.count('"""')
 
@@ -388,13 +389,13 @@ class EnhancedQualityGateway:
         # Encontrar arquivos Python
         python_files = []
         for py_file in project_path.rglob("*.py"):
-            if py_file.is_file() and not any(
+            if py_file.is_file() and not any(:
                 part.startswith(".") for part in py_file.parts
             ):
                 # Excluir alguns padrões
-                if any(
+                if any(:
                     exclude in str(py_file)
-                    for exclude in ["__pycache__", ".venv", "build/", "dist/"]
+                    for exclude in ["__pycache__", ".venv", "build/", "dist/"]:
                 ):
                     continue
                 python_files.append(py_file)
@@ -422,7 +423,7 @@ class EnhancedQualityGateway:
         failed_files = []
 
         if RICH_AVAILABLE:
-            with Progress(
+            with Progress(:
                 SpinnerColumn(),
                 TextColumn("[progress.description]{task.description}"),
                 BarColumn(),
@@ -511,7 +512,7 @@ class EnhancedQualityGateway:
                 self._print(f"  ⚠️ {critical_file.relative_to(self.workspace_root)}")
 
     def _print(self, message: str) -> None:
-        """Print otimizado."""
+        """Print otimizado.
         if RICH_AVAILABLE and console:
             console.print(message)
         else:
@@ -519,7 +520,7 @@ class EnhancedQualityGateway:
 
 
 def main() -> None:
-    """Função principal aprimorada."""
+    Função principal aprimorada."""
     import argparse
 
     parser = argparse.ArgumentParser(

@@ -10,7 +10,7 @@ Automatically fixes common quality issues across all submodules:
 - Basic formatting issues
 
 Author: FLEXT Automation
-"""
+
 
 import re
 import subprocess
@@ -25,7 +25,7 @@ console = Console()
 
 
 class QualityFixer:
-    """Fixes common quality issues automatically."""
+    Fixes common quality issues automatically."""
 
     def __init__(self, workspace_root: Path) -> None:
         self.workspace_root = workspace_root
@@ -33,7 +33,7 @@ class QualityFixer:
         self.errors_fixed = 0
 
     def fix_syntax_errors(self, file_path: Path) -> bool:
-        """Fix common syntax errors in Python files."""
+        Fix common syntax errors in Python files."""
         if file_path.suffix != ".py":
             return False
 
@@ -94,7 +94,7 @@ class QualityFixer:
             # Fix missing docstrings for __init__ methods
             content = re.sub(
                 r'(def __init__\([^)]*\) -> None:)\n(\s*)((?!"""|\'\'\')[^\n])',
-                r'\1\n\2"""Initialize instance."""\n\2\3',
+                r'\1\n\2Initialize instance."""\n\2\3',
                 content,
             )
 
@@ -226,7 +226,7 @@ class QualityFixer:
             "projects_formatted": 0,
         }
 
-        with Progress(
+        with Progress(:
             SpinnerColumn(),
             TextColumn("[progress.description]{task.description}"),
             console=console,

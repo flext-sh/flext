@@ -3,7 +3,7 @@
 
 Este script implementa correções específicas para Exception handling anti-patterns,
 garantindo que todos os excepts sejam específicos e sigam SOLID principles.
-"""
+
 
 from __future__ import annotations
 
@@ -13,10 +13,10 @@ from pathlib import Path
 
 
 class BlindExceptFixer:
-    """Fix blind except anti-patterns systematically."""
+    Fix blind except anti-patterns systematically."""
 
     def __init__(self) -> None:
-        """Initialize blind except fixer."""
+        Initialize blind except fixer."""
         self.python_bin = "/home/marlonsc/flext/.venv/bin/python"
         self.project_root = Path.cwd()
         self.src_dir = self.project_root / "src"
@@ -45,17 +45,17 @@ class BlindExceptFixer:
         specific_exceptions = []
 
         # Analysis patterns for different contexts
-        if any(
+        if any(:
             keyword in context.lower()
-            for keyword in ["file", "path", "open", "read", "write"]
+            for keyword in ["file", "path", "open", "read", "write"]:
         ):
             specific_exceptions.extend(
                 ["OSError", "FileNotFoundError", "PermissionError"]
             )
 
-        if any(
+        if any(:
             keyword in context.lower()
-            for keyword in ["json", "parse", "loads", "dumps"]
+            for keyword in ["json", "parse", "loads", "dumps"]:
         ):
             specific_exceptions.extend(["json.JSONDecodeError", "ValueError"])
 
@@ -65,16 +65,16 @@ class BlindExceptFixer:
         if any(keyword in context.lower() for keyword in ["dict", "key", "get", "[]"]):
             specific_exceptions.extend(["KeyError", "AttributeError"])
 
-        if any(
+        if any(:
             keyword in context.lower() for keyword in ["import", "module", "getattr"]
         ):
             specific_exceptions.extend(
                 ["ImportError", "AttributeError", "ModuleNotFoundError"]
             )
 
-        if any(
+        if any(:
             keyword in context.lower()
-            for keyword in ["connection", "network", "http", "ldap"]
+            for keyword in ["connection", "network", "http", "ldap"]:
         ):
             specific_exceptions.extend(["ConnectionError", "OSError", "RuntimeError"])
 
