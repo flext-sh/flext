@@ -25,7 +25,7 @@ Add project-specific dependencies in the `[tool.poetry.dependencies]` section:
 
 ```toml
 # Example for Oracle OIC project
-cx-oracle = "^8.3.0"
+oracledb = "^2.4.1"
 singer-sdk = "^0.40.0"
 requests = "^2.32.3"
 ```
@@ -215,7 +215,7 @@ structlog = "^24.4.0"
 [tool.poetry.dependencies]
 sqlalchemy = "^2.0.36"
 alembic = "^1.14.0"
-cx-oracle = "^8.3.0"  # For Oracle projects
+oracledb = "^2.4.1"  # For Oracle projects
 ```
 
 ## Validation Commands
