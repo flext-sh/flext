@@ -2,7 +2,7 @@
 
 from unittest.mock import Mock, patch
 
-from target_oracle_wms.target import TargetOracleWMS
+from flext_target_oracle_wms.target import TargetOracleWMS
 
 
 class TestTargetOracleWMS:
@@ -41,7 +41,7 @@ class TestTargetOracleWMS:
         expected = "oracle+oracledb://wms_user:secret_password@oracle.example.com:1521/?service_name=WMSPROD"
         assert connection_string == expected
 
-    @patch("target_oracle_wms.target.sa.create_engine")
+    @patch("flext_target_oracle_wms.target.sa.create_engine")
     def test_engine_creation(self, mock_create_engine) -> None:
         """Test SQLAlchemy engine is created with correct parameters."""
         config = {
