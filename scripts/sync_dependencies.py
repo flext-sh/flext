@@ -2691,7 +2691,12 @@ class PackageVersionAnalyzer:
 
 def check_version_compatibility_across_projects(projects: List[Path]) -> Tuple[Dict[str, List[str]], PackageVersionAnalyzer]:
     """Verifica conflitos de versão entre projetos do workspace."""
+    analyzer = PackageVersionAnalyzer()
+    
     print_colored("\n🔍 Verificando compatibilidade de versões entre projetos...", Colors.BLUE)
+    
+    # Analisa version pinning
+    pinning_issues = analyzer.analyze_version_pinning(projects)
     
     # Coleta todas as versões de cada package em cada projeto
     package_versions = {}  # {package: {project: version}}
@@ -2737,10 +2742,10 @@ def check_version_compatibility_across_projects(projects: List[Path]) -> Tuple[D
         except Exception:
             continue
     
-    # Identifica conflitos
+    # Identifica conflitos usando o analyzer
     conflicts = {}
     
-    for package, project_versions in package_versions.items():
+    for package, project_versions in analyzer.package_versions.items():
         unique_versions = set(project_versions.values())
         
         # Se há mais de uma versão diferente, é um conflito potencial
@@ -2759,7 +2764,19 @@ def check_version_compatibility_across_projects(projects: List[Path]) -> Tuple[D
     else:
         print_colored("✅ Nenhum conflito de versão detectado!", Colors.GREEN)
     
-    return conflicts
+    # Mostra quem está segurando atualizações
+    if pinning_issues:
+        print_colored(f"\n🔒 Projetos segurando atualizações:", Colors.YELLOW)
+        for package, info in sorted(pinning_issues.items()):
+            print_colored(f"  📦 {package} (última versão: {info['latest_available']})", Colors.CYAN)
+            for proj_info in info['projects']:
+                print_colored(
+                    f"    - {proj_info['project']}: {proj_info['version']} "
+                    f"({proj_info['constraint_type']})",
+                    Colors.YELLOW
+                )
+    
+    return conflicts, analyzer
 
 
 def main() -> None:
@@ -2805,7 +2822,7 @@ def main() -> None:
     )
     
     # Verifica compatibilidade de versões entre projetos
-    version_conflicts = check_version_compatibility_across_projects(projects)
+    version_conflicts, version_analyzer = check_version_compatibility_across_projects(projects)
 
     # Estatísticas
     global_stats = {
