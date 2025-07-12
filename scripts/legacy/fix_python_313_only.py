@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import os
+import pathlib
 import re
 
 
@@ -41,7 +41,7 @@ def fix_pyproject_toml(filepath) -> bool | None:
 def main() -> None:
     # Fix main pyproject.toml
     main_file = "./pyproject.toml"
-    if os.path.exists(main_file):
+    if pathlib.Path(main_file).exists():
         fix_pyproject_toml(main_file)
         print("Fixed main pyproject.toml")
 
@@ -76,7 +76,7 @@ def main() -> None:
     fixed_count = 0
     for submodule in submodules:
         pyproject_path = f"{submodule}/pyproject.toml"
-        if os.path.exists(pyproject_path):
+        if pathlib.Path(pyproject_path).exists():
             if fix_pyproject_toml(pyproject_path):
                 fixed_count += 1
 
