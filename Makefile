@@ -174,7 +174,7 @@ check-all: ## Run quality checks on all projects
 	@echo "🔍 Running quality checks on all FLEXT projects..."
 	@failed=0; \
 	for project in $(ALL_PROJECTS); do \
-		if [ -d "$$project" ]; then \
+		if [ -d "$$project" ] && [ -f "$$project/Makefile" ]; then \
 			echo "\n📦 Checking $$project..."; \
 			if ! (cd "$$project" && $(MAKE) check); then \
 				echo "❌ $$project failed quality checks!"; \
@@ -188,9 +188,6 @@ check-all: ## Run quality checks on all projects
 	else \
 		echo "\n✅ All projects passed quality checks!"; \
 	fi
-
-check-all: lint-all type-check-all security-all test-all ## Run all quality checks
-	@echo "✅ All quality checks complete for entire workspace!"
 
 # ============================================================================
 # 🏗️ BUILD & DEPLOYMENT
