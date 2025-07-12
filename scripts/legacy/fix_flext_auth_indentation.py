@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Fix indentation issues in flext-auth specifically."""
+"""Fix indentation issues in flext-auth specifically.
 
 import re
 from pathlib import Path
 
 
 def fix_docstring_indentation(file_path: Path) -> bool:
-    """Fix docstring indentation issues."""
+    Fix docstring indentation issues."""
     try:
         content = file_path.read_text(encoding="utf-8")
         original_content = content
@@ -14,9 +14,9 @@ def fix_docstring_indentation(file_path: Path) -> bool:
         # Fix common indentation patterns
         patterns = [
             # Fix docstrings that start with wrong indentation
-            (r'(\n    def [^:\n]+:\n)       """([^"]+)"""', r'\1        """\2"""'),
+            (r'(\n    def [^:\n]+:\n)       """([^"]+)"""', r'\1        \2'),
             # Fix other indentation issues
-            (r'(\n       )"""([^"]+)"""', r'\1        """\2"""'),
+            (r'(\n       )"""([^"]+)"""', r'\1        \2"""'),
         ]
 
         for pattern, replacement in patterns:

@@ -1,7 +1,8 @@
+from datetime import datetime
 #!/usr/bin/env python3
 """Comprehensive Standards Enforcement Script - ZERO TOLERANCE
 Enforces SOLID, DRY, KISS principles with PEP 8 strict compliance.
-"""
+
 
 import ast
 import re
@@ -14,10 +15,10 @@ import toml
 
 
 class StandardsEnforcer:
-    """Enforces strict coding standards across the FLEXT workspace."""
+    Enforces strict coding standards across the FLEXT workspace."""
 
     def __init__(self, workspace_root: Path) -> None:
-        """Initialize with workspace root."""
+        Initialize with workspace root."""
         self.workspace_root = workspace_root
         self.python_executable = workspace_root / ".venv" / "bin" / "python"
         self.violations: list[str] = []
@@ -162,9 +163,9 @@ class StandardsEnforcer:
         script = '''
         local keys = redis.call("KEYS", ARGV[1])
         local count = 0
-        for i=1,#keys do
+        for i=1,#keys do:
             local ttl = redis.call("TTL", keys[i])
-            if ttl == -1 or ttl == 0 then
+            if ttl == -1 or ttl == 0 then:
                 redis.call("DEL", keys[i])
                 count = count + 1
             end
@@ -180,7 +181,7 @@ class StandardsEnforcer:
         raise ServiceError("NOT_IMPLEMENTED", "Method {method_name} requires implementation")"""
 
     def eliminate_fallback_patterns(self, project_path: Path) -> bool:
-        """Eliminate fallback patterns and implement proper solutions."""
+        Eliminate fallback patterns and implement proper solutions."""
         src_dir = project_path / "src"
         if not src_dir.exists():
             return False
@@ -376,8 +377,8 @@ class StandardsEnforcer:
                         violations.extend(
                             f"OCP violation: {py_file}:{method.lineno} "
                             f"Constructor has {len(method.args.args)} parameters (>8)"
-                            for method in methods
-                            if method.name == "__init__" and len(method.args.args) > 8
+                            for method in methods:
+                            if method.name == "__init__" and len(method.args.args) > 8:
                         )
 
                     elif isinstance(node, ast.FunctionDef):
@@ -518,7 +519,8 @@ class StandardsEnforcer:
 help: ## Show this help message
 \t@echo "🚀 {project_name.upper()} Development Commands"
 \t@echo ""
-\t@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {{FS = ":.*?## "}}; {{printf "\\033[36m%-20s\\033[0m %s\\n", $$1, $$2}}'
+\t@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {{FS = ":.*?## "}}
+{{printf "\\033[36m%-20s\\033[0m %s\\n", $$1, $$2}}'
 
 # Installation
 install: ## Install package in development mode

@@ -16,7 +16,7 @@ Ferramentas aplicadas (apenas as que funcionam bem):
 4. ruff format - Formatação final
 
 Versão: FINAL - Production Ready
-"""
+
 
 import json
 import subprocess
@@ -37,7 +37,7 @@ except ImportError:
 
 
 class QualityGatewayFinal:
-    """Sistema final de quality gateway - otimizado e confiável."""
+    Sistema final de quality gateway - otimizado e confiável."""
 
     def __init__(self, workspace_root: Path) -> None:
         self.workspace_root = workspace_root
@@ -231,8 +231,8 @@ class QualityGatewayFinal:
         # Encontrar arquivos Python
         python_files = [
             py_file
-            for py_file in project_path.rglob("*.py")
-            if py_file.is_file()
+            for py_file in project_path.rglob("*.py"):
+            if py_file.is_file():
             and not any(part.startswith(".") for part in py_file.parts)
         ]
 
@@ -257,7 +257,7 @@ class QualityGatewayFinal:
 
         # Progress bar otimizada
         if RICH_AVAILABLE:
-            with Progress(
+            with Progress(:
                 SpinnerColumn(),
                 TextColumn("[progress.description]{task.description}"),
                 BarColumn(),
@@ -312,7 +312,7 @@ class QualityGatewayFinal:
         }
 
     def _print(self, message: str) -> None:
-        """Print otimizado."""
+        """Print otimizado.
         if RICH_AVAILABLE and console:
             console.print(message)
         else:
@@ -320,7 +320,7 @@ class QualityGatewayFinal:
 
 
 def main() -> None:
-    """Função principal otimizada."""
+    Função principal otimizada."""
     import argparse
 
     parser = argparse.ArgumentParser(

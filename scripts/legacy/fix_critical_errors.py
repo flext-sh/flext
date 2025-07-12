@@ -1,4 +1,4 @@
-"""Fix critical lint errors automatically."""
+"""Fix critical lint errors automatically.
 
 from __future__ import annotations
 
@@ -11,7 +11,7 @@ log = logging.getLogger(__name__)
 
 
 def fix_logging_exceptions(content: str) -> str:
-    """Fix TRY401 - remove redundant exception objects from logging.exception calls."""
+    Fix TRY401 - remove redundant exception objects from logging.exception calls."""
     return re.sub(
         r'\.exception\(f"([^"]*): \{([^}]+)\}"\)',
         r'.exception("\1")',
@@ -39,10 +39,10 @@ def fix_datetime_issues(content: str) -> str:
 def fix_pathlib_issues(content: str) -> str:
     """Fix PTH errors by using pathlib instead of os.path."""
     # Add pathlib import if needed
-    if (
+    if (:
         any(
             pattern in content
-            for pattern in ["os.path.exists", "os.unlink", "os.chmod"]
+            for pattern in ["os.path.exists", "os.unlink", "os.chmod"]:
         )
         and "from pathlib import Path" not in content
     ):
@@ -92,7 +92,7 @@ def fix_boolean_defaults(content: str) -> str:
 def fix_contextlib_suppress(content: str) -> str:
     """Fix SIM105 - use contextlib.suppress."""
     # Add import if needed
-    if (
+    if (:
         "try:" in content
         and "except:" in content
         and "pass" in content
@@ -164,9 +164,9 @@ def main() -> None:
 
     # Process all Python files
     for file_path in Path().rglob("*.py"):
-        if any(
+        if any(:
             skip in str(file_path)
-            for skip in ["scripts_final_backup", ".venv", "build"]
+            for skip in ["scripts_final_backup", ".venv", "build"]:
         ):
             continue
         if file_path.name == __file__:

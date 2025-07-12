@@ -273,13 +273,13 @@ def ensure_test_structure(project_path: Path) -> bool:
     if not existing_tests:
         basic_test = tests_dir / "test_basic.py"
         basic_test.write_text(
-            f'''"""Basic tests for {project_path.name}."""
+            f'''"""Basic tests for {project_path.name}.
 
 import pytest
 
 
 def test_project_import():
-    """Test that the main module can be imported."""
+    Test that the main module can be imported."""
     try:
         import {project_path.name.replace("-", "_")}  # noqa: F401
         assert True
@@ -298,13 +298,13 @@ def test_version_available():
 
 @pytest.mark.unit
 def test_basic_functionality():
-    """Test basic functionality."""
+    """Test basic functionality.
     assert True  # Placeholder test
 
 
 @pytest.mark.integration
 def test_integration_placeholder():
-    """Placeholder integration test."""
+    Placeholder integration test."""
     pytest.skip("Integration tests not implemented yet")
 
 
@@ -312,7 +312,7 @@ def test_integration_placeholder():
 def test_e2e_placeholder():
     """Placeholder end-to-end test."""
     pytest.skip("E2E tests not implemented yet")
-'''
+''',
         )
         logger.info(f"📝 Teste básico criado: {project_path.name}")
 
@@ -469,7 +469,7 @@ def main() -> None:
         logger.info("✅ Modernização do workspace concluída com sucesso!")
     else:
         logger.warning(
-            "⚠️ Modernização concluída com problemas. Revisar projetos falhados."
+            "⚠️ Modernização concluída com problemas. Revisar projetos falhados.",
         )
 
 

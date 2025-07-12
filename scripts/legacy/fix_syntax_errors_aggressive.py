@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Super-aggressive syntax error fixer for FLEXT projects."""
+"""Super-aggressive syntax error fixer for FLEXT projects.
 
 import re
 from pathlib import Path
 
 
 def fix_aggressive_syntax_errors(content: str) -> str:
-    """Apply aggressive syntax error fixes."""
+    Apply aggressive syntax error fixes."""
 
     # Fix 1: Remove duplicate type ignore comments
     content = re.sub(

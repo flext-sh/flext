@@ -9,7 +9,7 @@ Sistema 100% validado de controle de qualidade que:
 3. Funciona com validação real de todas as ferramentas
 
 Testado: ✅ Todas as dependências validadas
-"""
+
 
 import contextlib
 import json
@@ -30,7 +30,7 @@ except ImportError:
 
 
 class QualityChecker:
-    """Verificador de qualidade real e validado."""
+    Verificador de qualidade real e validado."""
 
     def __init__(self, workspace_root: Path) -> None:
         self.workspace_root = workspace_root
@@ -96,7 +96,7 @@ class QualityChecker:
             # Conta linhas com "error:"
             error_lines = [
                 line
-                for line in result.stdout.split("\n")
+                for line in result.stdout.split("\n"):
                 if line.strip() and ": error:" in line
             ]
             return len(error_lines)
@@ -143,7 +143,7 @@ class QualityChecker:
             return 0
 
     def count_total_issues(self, file_path: Path) -> tuple[int, int, int, int]:
-        """Conta todas as issues: (ruff, mypy, bandit, total)."""
+        """Conta todas as issues: (ruff, mypy, bandit, total).
         ruff_count = self.count_ruff_issues(file_path)
         mypy_count = self.count_mypy_issues(file_path)
         bandit_count = self.count_bandit_issues(file_path)
@@ -152,7 +152,7 @@ class QualityChecker:
         return ruff_count, mypy_count, bandit_count, total
 
     def apply_ruff_fixes(self, file_path: Path) -> bool:
-        """Aplica correções do Ruff."""
+        Aplica correções do Ruff."""
         try:
             # Ruff check --fix
             subprocess.run(
@@ -317,8 +317,8 @@ class QualityChecker:
         # Encontra arquivos Python
         python_files = [
             py_file
-            for py_file in project_path.rglob("*.py")
-            if py_file.is_file()
+            for py_file in project_path.rglob("*.py"):
+            if py_file.is_file():
             and not any(part.startswith(".") for part in py_file.parts)
         ]
 
@@ -366,7 +366,7 @@ class QualityChecker:
         }
 
     def _print(self, message: str) -> None:
-        """Print com ou sem Rich."""
+        """Print com ou sem Rich.
         if RICH_AVAILABLE and console:
             console.print(message)
         else:
@@ -374,7 +374,7 @@ class QualityChecker:
 
 
 def main() -> None:
-    """Função principal."""
+    Função principal."""
     import argparse
 
     parser = argparse.ArgumentParser(

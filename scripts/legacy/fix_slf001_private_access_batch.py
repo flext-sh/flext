@@ -3,7 +3,7 @@
 
 Converts private method calls to public interfaces or removes test dependencies.
 ZERO TOLERANCE approach - fix all 197 cases.
-"""
+
 
 from __future__ import annotations
 
@@ -13,16 +13,16 @@ from pathlib import Path
 
 
 class SLF001PrivateAccessFixer:
-    """Fix private member access violations automatically."""
+    Fix private member access violations automatically."""
 
     def __init__(self, project_root: Path) -> None:
-        """Initialize fixer."""
+        Initialize fixer."""
         self.project_root = project_root
         self.fixes_applied = 0
         self.errors_found = 0
 
     def run_fixes(self) -> None:
-        """Run all SLF001 fixes."""
+        Run all SLF001 fixes."""
         print("🔧 Fixing SLF001 private-member-access violations...")
 
         # Get all SLF001 errors
@@ -44,7 +44,7 @@ class SLF001PrivateAccessFixer:
 
         slf001_errors = [
             line
-            for line in result.stdout.split("\n")
+            for line in result.stdout.split("\n"):
             if "SLF001" in line and ":" in line
         ]
 

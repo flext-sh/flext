@@ -15,7 +15,7 @@ Resolves # (issue number)
 - [ ] Refactoring (no functional changes)
 - [ ] Performance improvements
 
-## How Has This Been Tested?
+## How Has This Been Tested
 
 Describe the tests that you ran to verify your changes:
 

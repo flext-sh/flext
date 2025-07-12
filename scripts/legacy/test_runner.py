@@ -347,8 +347,8 @@ class ModernTestRunner:
                 "failed": failed_tests,
                 "success_rate": (
                     f"{(passed_tests / total_tests) * 100:.1f}%"
-                    if total_tests > 0
-                    else "0%"
+                    if total_tests > 0:
+                    else "0%":
                 ),
                 "total_duration": f"{total_duration:.2f}s",
                 "env_file_available": self.env_available,
@@ -362,7 +362,7 @@ class ModernTestRunner:
                     "duration": f"{r.duration:.2f}s",
                     "timestamp": r.timestamp.isoformat(),
                 }
-                for r in self.results
+                for r in self.results:
             ],
             "failed_tests": [
                 {
@@ -370,8 +370,8 @@ class ModernTestRunner:
                     "details": r.details,
                     "duration": f"{r.duration:.2f}s",
                 }
-                for r in self.results
-                if not r.success
+                for r in self.results:
+                if not r.success:
             ],
         }
 
@@ -439,8 +439,8 @@ class ModernTestRunner:
         # Return overall success
         return all(
             r.success
-            for r in self.results
-            if r.name
+            for r in self.results:
+            if r.name:
             in {
                 "Ruff Linting (Strict)",
                 "MyPy Type Checking (Strict)",

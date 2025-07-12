@@ -202,9 +202,9 @@ For detailed workflow steps, see [Migration Workflow Guide](README_MIGRATION_WOR
 ## Requirements
 
 - Python 3.6+
-- python-ldap
+- Python-ldap
 - Click
-- python-dotenv
+- Python-dotenv
 - Required LDAP client libraries for your platform
 
 ## License
