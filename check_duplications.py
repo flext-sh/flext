@@ -29,9 +29,8 @@ def extract_imports(file_path: Path) -> set[str]:
         for node in ast.walk(tree):
             if isinstance(node, ast.Import):
                 imports.update(alias.name for alias in node.names)
-            elif isinstance(node, ast.ImportFrom):
-                if node.module:
-                    imports.update(f"{node.module}.{alias.name}" for alias in node.names)
+            elif isinstance(node, ast.ImportFrom) and node.module:
+                imports.update(f"{node.module}.{alias.name}" for alias in node.names)
 
         return imports
     except Exception:
@@ -84,7 +83,7 @@ def get_file_hash(file_path: Path) -> str:
         return ""
 
 
-def analyze_duplications():
+def analyze_duplications() -> None:
     """Analisa duplicações entre projetos FLEXT."""
     workspace_path = Path("/home/marlonsc/flext")
 
@@ -93,9 +92,6 @@ def analyze_duplications():
         p for p in workspace_path.iterdir()
         if p.is_dir() and p.name.startswith("flext-")
     ]
-
-    print("🔍 ANÁLISE DE DUPLICAÇÕES - PROJETOS FLEXT")
-    print("=" * 60)
 
     # Estruturas para armazenar dados
     project_imports = {}
@@ -148,51 +144,30 @@ def analyze_duplications():
             common_functions[func] += 1
 
     # Relatório de duplicações
-    print("📦 IMPORTS MAIS COMUNS (usados em múltiplos projetos)")
-    print("-" * 60)
     for import_name, count in common_imports.most_common(20):
         if count > 1:
-            projects = [name for name, imports in project_imports.items() if import_name in imports]
-            print(f"{import_name:<40} | {count:>2} projetos | {', '.join(projects[:3])}{'...' if len(projects) > 3 else ''}")
+            [name for name, imports in project_imports.items() if import_name in imports]
 
-    print("\n🏗️ CLASSES DUPLICADAS (mesmo nome em múltiplos projetos)")
-    print("-" * 60)
     duplicated_classes = [(name, count) for name, count in common_classes.most_common() if count > 1]
 
     if duplicated_classes:
         for class_name, count in duplicated_classes[:15]:
-            projects = [name for name, classes in project_classes.items() if class_name in classes]
-            print(f"{class_name:<30} | {count:>2} projetos | {', '.join(projects)}")
-    else:
-        print("✅ Nenhuma classe duplicada encontrada")
+            [name for name, classes in project_classes.items() if class_name in classes]
 
-    print("\n⚙️ FUNÇÕES DUPLICADAS (mesmo nome em múltiplos projetos)")
-    print("-" * 60)
     duplicated_functions = [(name, count) for name, count in common_functions.most_common() if count > 1 and not name.startswith("_")]
 
     if duplicated_functions:
         for func_name, count in duplicated_functions[:15]:
-            projects = [name for name, funcs in project_functions.items() if func_name in funcs]
-            print(f"{func_name:<30} | {count:>2} projetos | {', '.join(projects)}")
-    else:
-        print("✅ Nenhuma função duplicada encontrada")
+            [name for name, funcs in project_functions.items() if func_name in funcs]
 
-    print("\n📄 ARQUIVOS IDÊNTICOS (mesmo conteúdo)")
-    print("-" * 60)
     identical_files = [(hash_val, files) for hash_val, files in file_hashes.items() if len(files) > 1]
 
     if identical_files:
         for file_hash, files in identical_files[:10]:
-            print(f"Hash: {file_hash[:8]}... | {len(files)} arquivos idênticos:")
-            for project, file_path in files:
-                print(f"  - {project}: {file_path}")
-            print()
-    else:
-        print("✅ Nenhum arquivo idêntico encontrado")
+            for _project, _file_path in files:
+                pass
 
     # Analisa dependências entre projetos
-    print("🔗 DEPENDÊNCIAS ENTRE PROJETOS")
-    print("-" * 60)
 
     project_dependencies = defaultdict(list)
 
@@ -204,33 +179,23 @@ def analyze_duplications():
                 if other_name != project_name and other_name.replace("-", "_") in import_name:
                     project_dependencies[project_name].append(other_name)
 
-    for project, deps in project_dependencies.items():
+    for deps in project_dependencies.values():
         if deps:
-            print(f"{project} depende de: {', '.join(set(deps))}")
+            pass
 
     if not project_dependencies:
-        print("✅ Nenhuma dependência circular identificada")
+        pass
 
     # Estatísticas finais
-    print("\n📊 ESTATÍSTICAS DE DUPLICAÇÃO")
-    print("-" * 60)
 
-    total_imports = sum(len(imports) for imports in project_imports.values())
-    unique_imports = len(set().union(*project_imports.values()))
+    sum(len(imports) for imports in project_imports.values())
+    len(set().union(*project_imports.values()))
 
-    total_classes = sum(len(classes) for classes in project_classes.values())
-    unique_classes = len(set().union(*project_classes.values()))
+    sum(len(classes) for classes in project_classes.values())
+    len(set().union(*project_classes.values()))
 
-    total_functions = sum(len(functions) for functions in project_functions.values())
-    unique_functions = len(set().union(*project_functions.values()))
-
-    print(f"Imports: {total_imports} total, {unique_imports} únicos ({((total_imports - unique_imports) / total_imports * 100):.1f}% duplicação)")
-    print(f"Classes: {total_classes} total, {unique_classes} únicos ({((total_classes - unique_classes) / total_classes * 100):.1f}% duplicação)")
-    print(f"Funções: {total_functions} total, {unique_functions} únicos ({((total_functions - unique_functions) / total_functions * 100):.1f}% duplicação)")
-
-    print(f"\nArquivos idênticos: {len(identical_files)} grupos de duplicação")
-    print(f"Classes duplicadas: {len(duplicated_classes)} nomes repetidos")
-    print(f"Funções duplicadas: {len(duplicated_functions)} nomes repetidos")
+    sum(len(functions) for functions in project_functions.values())
+    len(set().union(*project_functions.values()))
 
 
 if __name__ == "__main__":

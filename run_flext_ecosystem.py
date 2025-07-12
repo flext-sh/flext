@@ -186,8 +186,6 @@ def generate_execution_report(results: dict[str, bool]) -> None:
 
     if all(results.values()):
         pass
-    else:
-        pass
 
 
 def main() -> None:
