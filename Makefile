@@ -170,6 +170,25 @@ security-all: ## Security check all projects
 	done
 	@echo "✅ All security checks complete!"
 
+check-all: ## Run quality checks on all projects
+	@echo "🔍 Running quality checks on all FLEXT projects..."
+	@failed=0; \
+	for project in $(ALL_PROJECTS); do \
+		if [ -d "$$project" ]; then \
+			echo "\n📦 Checking $$project..."; \
+			if ! (cd "$$project" && $(MAKE) check); then \
+				echo "❌ $$project failed quality checks!"; \
+				failed=$$((failed + 1)); \
+			fi; \
+		fi; \
+	done; \
+	if [ $$failed -gt 0 ]; then \
+		echo "\n❌ $$failed projects failed quality checks!"; \
+		exit 1; \
+	else \
+		echo "\n✅ All projects passed quality checks!"; \
+	fi
+
 check-all: lint-all type-check-all security-all test-all ## Run all quality checks
 	@echo "✅ All quality checks complete for entire workspace!"
 
