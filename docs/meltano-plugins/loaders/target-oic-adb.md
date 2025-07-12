@@ -25,7 +25,7 @@ This loader is a specialization of `target-oracle` that uses Oracle Integration 
 ## Requirements
 
 - Python 3.8 or higher
-- Oracle Client driver (cx_Oracle) or python-oracledb
+- Oracle Client driver (python-oracledb)
 - Access to Oracle Autonomous Database
 - Access to Oracle Integration Cloud (OIC v3)
 - Wallet for Oracle Autonomous Database connection (optional if using OIC for direct connection)
@@ -51,13 +51,7 @@ Oracle drivers are required for database connection:
 pip install oracledb
 ```
 
-#### Using cx_Oracle (legacy mode)
-
-```bash
-pip install cx_Oracle
-```
-
-For Thick Client mode (cx_Oracle), you also need to install Oracle Instant Client.
+For Thick Client mode, you also need to install Oracle Instant Client.
 
 ## Configuration
 
