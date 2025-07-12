@@ -149,15 +149,46 @@ flext-target-oracle = { path = "./flext-target-oracle", develop = true, optional
 flext-target-oracle-oic = { path = "./flext-target-oracle-oic", develop = true, optional = true }
 flext-dbt-ldap = { path = "./flext-dbt-ldap", develop = true, optional = true }
 flext-oracle-oic-ext = { path = "./flext-oracle-oic-ext", develop = true, optional = true }
-flext-meltano-bridge = { path = "./flext-meltano-bridge", develop = true, optional = true }
+
 algar-oud-mig = { path = "./algar-oud-mig", develop = true, optional = true }
 gruponos-meltano-native = { path = "./gruponos-meltano-native", develop = true, optional = true }
 
 
 [tool.poetry.group.dev.dependencies]
-# Testing framework - Bleeding-edge versions
+# === CODE QUALITY & FORMATTERS ===
+ruff = "^0.12.3"
+black = "^25.1.0"
+isort = "^6.0.1"
+mypy = "^1.13.0"
+pylint = "^3.3.0"
+
+# === CODE ANALYSIS & METRICS ===
+vulture = "^2.13"
+radon = "^6.0.1"
+pre-commit = "^4.0.1"
+codespell = "^2.3.0"
+pyupgrade = "^3.19.0"
+autoflake = "^2.3.1"
+
+# === DOCUMENTATION TOOLS ===
+sphinx = "^8.2.3"
+sphinx-rtd-theme = "^3.0.2"
+myst-parser = "^4.0.1"
+mkdocs = "^1.6.1"
+mkdocs-material = "^9.6.15"
+mkdocstrings = { extras = ["python"], version = "^0.27.0" }
+mkdocs-gen-files = "^0.5.0"
+mkdocs-literate-nav = "^0.6.0"
+
+# === DEVELOPMENT EXPERIENCE ===
+ipython = "^9.4.0"
+jupyter = "^1.1.1"
+rich-traceback = "^1.0.3"
+
+[tool.poetry.group.test.dependencies]
+# === TESTING FRAMEWORK ===
 pytest = "^8.4.0"
-pytest-asyncio = "^0.26.0"
+pytest-asyncio = "^1.0.0"
 pytest-cov = "^6.2.0"
 pytest-xdist = "^3.8.0"
 pytest-mock = "^3.14.0"
@@ -170,67 +201,34 @@ pytest-deadfixtures = "^2.2.1"
 pytest-env = "^1.1.5"
 pytest-httpx = "^0.35.0"
 hypothesis = "^6.125.0"
-faker = "^33.1.0"
 factory-boy = "^3.3.1"
+faker = "^37.4.0"
 
-# Code quality tools - Bleeding-edge versions
-ruff = "^0.8.6"
-black = "^24.10.0"
-isort = "^5.13.2"
-mypy = "^1.13.0"
-pylint = "^3.3.0"
-
-# Code analysis & metrics
-vulture = "^2.13"
-radon = "^6.0.1"
-pre-commit = "^4.0.1"
-codespell = "^2.3.0"
-pyupgrade = "^3.19.0"
-autoflake = "^2.3.1"
-
-# Type stubs
-types-requests = "^2.32.4"
-types-setuptools = "^75.8.2"
+[tool.poetry.group.typings.dependencies]
+# === TYPE STUBS ===
+# Standard library stubs
 types-python-dateutil = "^2.9.0"
 types-pyyaml = "^6.0.12"
+types-setuptools = "^80.9.0"
+types-toml = "^0.10.8.20240310"
+
+# Third-party library stubs
+types-requests = "^2.32.4"
 types-redis = "^4.6.0"
-types-psutil = "^6.1.0"
-
-# Documentation tools
-sphinx = "^8.2.3"
-sphinx-rtd-theme = "^3.0.2"
-myst-parser = "^4.0.1"
-mkdocs = "^1.6.1"
-mkdocs-material = "^9.6.15"
-mkdocstrings = { extras = ["python"], version = "^0.27.0" }
-mkdocs-gen-files = "^0.5.0"
-mkdocs-literate-nav = "^0.6.0"
-
-# Development experience
-ipython = "^8.37.0"
-jupyter = "^1.1.1"
-rich-traceback = "^1.0.3"
-
-[tool.poetry.group.test.dependencies]
-# Test data & factories
-faker = "^33.1.0"
-factory-boy = "^3.3.1"
-hypothesis = "^6.125.0"
-testcontainers = "^4.9.0"
-memory-profiler = "^0.61.0"
+types-psutil = "^7.0.0"
 
 [tool.poetry.group.security.dependencies]
-# Security tools (bleeding-edge)
+# === SECURITY SCANNING ===
 bandit = { extras = ["toml"], version = "^1.8.0" }
 pip-audit = "^2.7.3"
 
 [tool.poetry.group.build.dependencies]
-# Build tools
+# === BUILD & PACKAGING ===
 build = "^1.2.2"
 twine = "^6.1.0"
 
 [tool.poetry.group.load.dependencies]
-# Load testing
+# === LOAD TESTING ===
 locust = "^2.31.0"
 
 [tool.poetry.extras]
@@ -241,7 +239,7 @@ cli = ["flext-cli"]
 data = ["flext-tap-ldap", "flext-tap-oracle-oic", "flext-tap-oracle-wms", "flext-target-ldap", "flext-target-oracle", "flext-target-oracle-oic", "flext-dbt-ldap"]
 ldap = ["flext-ldap", "flext-tap-ldap", "flext-target-ldap", "flext-dbt-ldap"]
 oracle = ["flext-db-oracle", "flext-tap-oracle-oic", "flext-tap-oracle-wms", "flext-target-oracle", "flext-target-oracle-oic", "flext-oracle-oic-ext"]
-meltano = ["flext-meltano", "flext-meltano-bridge", "gruponos-meltano-native"]
+meltano = ["flext-meltano", "gruponos-meltano-native"]
 monitoring = ["flext-observability", "flext-quality"]
 plugins = ["flext-plugin"]
 projects = ["algar-oud-mig", "gruponos-meltano-native"]
@@ -251,7 +249,7 @@ all = [
     "flext-db-oracle", "flext-quality", "flext-tap-ldap", "flext-tap-oracle-oic",
     "flext-tap-oracle-wms", "flext-target-ldap", "flext-target-oracle",
     "flext-target-oracle-oic", "flext-dbt-ldap", "flext-oracle-oic-ext",
-    "flext-meltano-bridge", "algar-oud-mig", "gruponos-meltano-native"
+    "algar-oud-mig", "gruponos-meltano-native"
 ]
 
 [tool.poetry.scripts]
@@ -349,7 +347,6 @@ target-version = "py313"
 line-length = 88
 fix = true
 show-fixes = true
-output-format = "github"
 respect-gitignore = true
 src = ["src", "tests", "scripts", "*/src"]
 extend-exclude = [

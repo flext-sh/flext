@@ -328,3 +328,236 @@ docker-compose --profile api --profile web up
 5. **Reference tool results** in all claims
 
 **ENFORCEMENT**: Any agent violating these rules undermines workspace coordination
+
+---
+
+## 🛑 ANTI-CHAOS PROTOCOL - MANDATORY RULES
+
+### **ABSOLUTELY FORBIDDEN ACTIONS**
+
+#### **1. FILE MODIFICATIONS - NEVER MODIFY WITHOUT PERMISSION**
+
+- ❌ **NEVER modify pyproject.toml** - These define project dependencies and structure
+- ❌ **NEVER modify .gitignore** - Repository-wide file tracking rules
+- ❌ **NEVER modify Makefile** - Build and deployment automation
+- ❌ **NEVER modify docker-compose.yml** - Infrastructure definitions
+- ❌ **NEVER modify .env files** - Contains secrets and configurations
+- ❌ **NEVER modify CI/CD files** (.github/workflows, .gitlab-ci.yml, etc)
+
+**EXCEPTION**: Only with EXPLICIT user permission: "Please update the pyproject.toml"
+
+#### **2. SCRIPT CREATION - FORBIDDEN PATTERNS**
+
+- ❌ **NEVER create loose scripts** outside project structure
+- ❌ **NEVER create "fix_*.py" scripts** - Use proper project tools
+- ❌ **NEVER create "migrate_*.py" scripts** - Use project migration system
+- ❌ **NEVER create "temp_*.py" scripts** - Temporary code belongs in tests
+- ❌ **NEVER create scripts in parent directories** - Stay within project boundaries
+- ❌ **NEVER create duplicate functionality** - Check existing code first
+
+**CORRECT APPROACH**: Use existing project structure and tools
+
+#### **3. DIAGNOSIS - MANDATORY DEBUG PRACTICES**
+
+- ✅ **ALWAYS use --debug flag** when available
+- ✅ **ALWAYS use --trace flag** for detailed execution paths  
+- ✅ **ALWAYS check logs** before claiming errors
+- ✅ **ALWAYS verify with actual commands** not assumptions
+- ✅ **ALWAYS read error messages completely** before acting
+
+**FORBIDDEN**: Making changes without understanding root cause
+
+#### **4. CODE PATTERNS - ANTI-DUPLICATION RULES**
+
+- ❌ **NEVER copy-paste code** without understanding purpose
+- ❌ **NEVER duplicate existing functionality**
+- ❌ **NEVER create parallel implementations**
+- ❌ **NEVER add fallback code** without explicit need
+- ❌ **NEVER add "just in case" code**
+
+**MANDATORY**: Search for existing implementations first
+
+#### **5. DOCUMENTATION - TRUTH-BASED ONLY**
+
+- ❌ **NEVER create reports with unverified claims**
+- ❌ **NEVER use percentages without measurement**
+- ❌ **NEVER claim "VALIDATED" without running validation**
+- ❌ **NEVER document future plans as completed**
+- ❌ **NEVER create inflated success reports**
+
+**REQUIRED**: All documentation must reference tool output
+
+### **MANDATORY WORKFLOW**
+
+#### **Before ANY Modification:**
+
+1. **INVESTIGATE** - Use Read/Grep/LS to understand current state
+2. **VERIFY** - Check if functionality already exists
+3. **TEST** - Use debug/trace to understand behavior
+4. **ASK** - Request permission for infrastructure changes
+5. **IMPLEMENT** - Make minimal required changes only
+
+#### **Quality Gateway Checklist (MANDATORY AT END OF EACH CYCLE):**
+
+```bash
+# 1. Check for syntax errors
+make lint || echo "Fix linting errors"
+
+# 2. Run type checking  
+make typecheck || echo "Fix type errors"
+
+# 3. Run tests
+make test || echo "Fix failing tests"
+
+# 4. Verify no loose scripts created
+find . -name "fix_*.py" -o -name "temp_*.py" -o -name "migrate_*.py" | grep -v tests
+
+# 5. Check for code duplication
+# Use appropriate duplication detection tool
+
+# 6. Verify documentation accuracy
+# All claims must have supporting evidence
+```
+
+### **STANDARD COMMANDS TO USE**
+
+#### **For Python Projects:**
+
+```bash
+# Debug execution
+python -m <module> --debug --trace
+
+# Check dependencies  
+pip list | grep <package>
+
+# Run with full logging
+PYTHONPATH=. LOG_LEVEL=DEBUG python <script>
+```
+
+#### **For Go Projects:**
+
+```bash
+# Debug build
+go build -v -x
+
+# Run with debug
+GODEBUG=gctrace=1 ./binary
+
+# Check dependencies
+go mod graph | grep <package>
+```
+
+### **CONSEQUENCES OF VIOLATIONS**
+
+1. **Project instability** from modified configurations
+2. **Dependency conflicts** from changed pyproject.toml
+3. **Build failures** from altered Makefiles
+4. **Security breaches** from exposed .env files
+5. **Code chaos** from duplicate implementations
+6. **Trust erosion** from false documentation
+
+### **EMERGENCY RECOVERY**
+
+If chaos has already occurred:
+
+1. **STOP all modifications immediately**
+2. **Run git status** to see all changes
+3. **Revert infrastructure files** to last known good state
+4. **Remove all loose scripts** created outside project structure
+5. **Run quality gateway** to verify system health
+6. **Document what went wrong** in CLAUDE.local.md
+
+**REMEMBER**: The goal is STABILITY, not activity. Better to do nothing than create chaos.
+
+---
+
+## 📊 VERIFIED PROJECT CONFIGURATIONS - FLEXT WORKSPACE
+
+### 🔴 DESCOBERTAS CRÍTICAS DA ANÁLISE
+
+#### PROBLEMAS ENCONTRADOS
+
+1. **19 scripts fix_*.py** em scripts/ e scripts/legacy/
+2. **flext-plugin** tem fix_syntax_errors.py
+3. **flext-web** e **flext-grpc** têm erro no Makefile linha 121
+4. **3 projetos Go** no workspace (root, flexcore, pkg/meltano)
+
+#### PROJETOS Python (Poetry-based)
+
+- **TODOS** usam pyproject.toml + Poetry (PEP 517/518)
+- **TODOS** têm Makefile padronizado
+- **TODOS** usam Ruff para linting
+- **PADRÃO MODERNO**: Sem requirements.txt, setup.py ou setup.cfg
+
+#### COMANDOS PADRÕES VERIFICADOS
+
+```bash
+# SEMPRE USAR:
+make check      # Roda tudo: lint, type, test
+make test       # Roda pytest
+make lint       # Roda ruff
+make format     # Formata código
+
+# PARA SERVIDORES:
+make api-serve      # flext-api
+make dev            # flext-web, flext-grpc
+make cli-test       # flext-auth, flext-cli
+
+# DEBUG CORRETO:
+PYTHONPATH=. python -m module --debug --trace
+LOG_LEVEL=DEBUG python script.py
+```
+
+### 🛑 REGRAS ESPECÍFICAS DO WORKSPACE FLEXT
+
+1. **VIRTUAL ENV ÚNICO**: `/home/marlonsc/flext/.venv`
+   - NUNCA criar venv em subprojetos
+   - SEMPRE ativar o venv do workspace
+
+2. **POETRY COMMANDS**:
+
+   ```bash
+   # SEMPRE no diretório do subprojeto:
+   poetry install      # Instala dependências
+   poetry add package  # NUNCA! Use usuário aprovar
+   poetry update      # NUNCA! Pode quebrar versões
+   ```
+
+3. **ESTRUTURA OBRIGATÓRIA**:
+
+   ```
+   projeto/
+   ├── src/           # Código fonte
+   ├── tests/         # ÚNICO lugar para testes
+   ├── Makefile       # NUNCA modificar
+   ├── pyproject.toml # NUNCA modificar
+   └── .gitignore     # NUNCA modificar
+   ```
+
+4. **IMPORTS CORRETOS**:
+
+   ```python
+   # SEMPRE absolute imports:
+   from flext.core import Domain
+   # NUNCA relative imports em src:
+   from ..core import Domain  # ERRADO!
+   ```
+
+5. **QUALITY GATES FLEXT**:
+
+   ```bash
+   # EXECUTAR EM CADA PROJETO APÓS MUDANÇAS:
+   cd projeto && make check
+   # Se falhar QUALQUER etapa = CORRIGIR
+   ```
+
+### 📁 ARQUIVOS PARA REMOVER (URGENTE)
+
+```bash
+# ESTES ARQUIVOS VIOLAM AS REGRAS:
+./flext-plugin/fix_syntax_errors.py
+./scripts/fix_*.py (todos os 3)
+./scripts/legacy/fix_*.py (todos os 16)
+```
+
+**AÇÃO NECESSÁRIA**: Solicitar ao usuário permissão para remover estes arquivos.

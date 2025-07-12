@@ -5,7 +5,7 @@ import json
 import pytest
 from testcontainers.oracle import OracleDbContainer
 
-from target_oracle_wms.target import TargetOracleWMS
+from flext_target_oracle_wms.target import TargetOracleWMS
 
 
 @pytest.mark.integration

@@ -182,9 +182,9 @@ def update_pytest_config(project_path: Path, project_types: list[str]) -> bool:
 
         # Atualizar coverage para o projeto específico
         coverage_config = template["tool"]["coverage"].copy()
-        coverage_config["html"]["title"] = (
-            f"{project_path.name.title()} Coverage Report"
-        )
+        coverage_config["html"][
+            "title"
+        ] = f"{project_path.name.title()} Coverage Report"
 
         # Aplicar configurações
         if "tool" not in config:
