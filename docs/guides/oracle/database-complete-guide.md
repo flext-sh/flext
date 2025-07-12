@@ -39,7 +39,7 @@
 
 - Python 3.13+
 - Oracle Database (11g or higher)
-- Oracle Client libraries (cx_Oracle or oracledb)
+- Oracle Client libraries (oracledb)
 - FLEXT Framework installed
 
 ### Installation

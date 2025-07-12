@@ -37,8 +37,7 @@ The FLEXT Database Oracle Adapter provides enterprise-grade Oracle database conn
 ```toml
 # pyproject.toml
 [tool.poetry.dependencies]
-cx-oracle = "^8.3.0"
-oracledb = "^1.4.2"  # Modern Oracle DB driver
+oracledb = "^2.4.1"  # Modern Oracle DB driver
 asyncpg = "^0.29.0"  # For async connection pooling patterns
 pydantic = "^2.5.0"
 anyio = "^4.2.0"
