@@ -230,7 +230,7 @@ structlog = "^24.4.0"
 [tool.poetry.dependencies]
 sqlalchemy = "^2.0.36"
 alembic = "^1.14.0"
-cx-oracle = "^8.3.0"
+oracledb = "^2.4.1"
 ```
 
 ## Validation Process
