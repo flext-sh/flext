@@ -18,7 +18,7 @@ This plugin is responsible for configuration, management and monitoring of flows
 - oracle-cloud-sdk
 - requests
 - sqlalchemy
-- cx_Oracle
+- oracledb
 - schedule
 - pydantic
 
