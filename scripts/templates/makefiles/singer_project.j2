@@ -1,0 +1,67 @@
+# Singer-specific enhancements for {{ project_name }}
+singer-validate: ## Validate Singer tap/target configuration
+	@echo "$(BLUE)🎵 [{{ project_name }}] Validating Singer configuration...$(NC)"
+	@if [ -f "config.json.example" ]; then \
+		echo "$(GREEN)✓ Example config found$(NC)"; \
+	else \
+		echo "$(YELLOW)💡 Consider adding config.json.example$(NC)"; \
+	fi
+	@if [ -f "catalog.json" ] || [ -f "src/{{ project_name | replace('-', '_') }}/catalog.py" ]; then \
+		echo "$(GREEN)✓ Catalog management found$(NC)"; \
+	else \
+		echo "$(YELLOW)💡 Consider adding catalog management$(NC)"; \
+	fi
+
+singer-test-connection: ## Test Singer connection (requires config.json)
+	@if [ -f "config.json" ]; then \
+		echo "$(CYAN)🔗 Testing Singer connection...$(NC)"; \
+		poetry run tap-{{ project_name | replace('flext-tap-', '') }} --config config.json --discover || \
+		poetry run target-{{ project_name | replace('flext-target-', '') }} --config config.json --test || \
+		echo "$(YELLOW)⚠ Connection test not available$(NC)"; \
+	else \
+		echo "$(YELLOW)⚠ config.json not found for connection test$(NC)"; \
+	fi
+
+{% if 'tap' in project_name %}
+tap-discover: ## Discover schema using Singer tap
+	@echo "$(CYAN)Discovering schema...$(NC)"
+	@if [ -f "config.json" ]; then \
+		$(PYTHON) -m {{ project_name | replace('-', '_') }} --config config.json --discover > catalog.json; \
+	else \
+		echo "$(YELLOW)⚠ config.json not found$(NC)"; \
+	fi
+
+tap-test: ## Test tap connection
+	@echo "$(CYAN)Testing tap connection...$(NC)"
+	@if [ -f "config.json" ]; then \
+		$(PYTHON) -m {{ project_name | replace('-', '_') }} --config config.json --test; \
+	else \
+		echo "$(YELLOW)⚠ config.json not found$(NC)"; \
+	fi
+
+tap-run: ## Run tap extraction
+	@echo "$(CYAN)Running tap extraction...$(NC)"
+	@if [ -f "config.json" ] && [ -f "catalog.json" ]; then \
+		$(PYTHON) -m {{ project_name | replace('-', '_') }} --config config.json --catalog catalog.json; \
+	else \
+		echo "$(YELLOW)⚠ config.json or catalog.json not found$(NC)"; \
+	fi
+{% endif %}
+
+{% if 'target' in project_name %}
+target-test: ## Test target connection
+	@echo "$(CYAN)Testing target connection...$(NC)"
+	@if [ -f "config.json" ]; then \
+		$(PYTHON) -m {{ project_name | replace('-', '_') }} --config config.json --test; \
+	else \
+		echo "$(YELLOW)⚠ config.json not found$(NC)"; \
+	fi
+
+target-load: ## Load data to target (requires input)
+	@echo "$(CYAN)Loading data to target...$(NC)"
+	@if [ -f "config.json" ]; then \
+		echo "Pipe your data to: $(PYTHON) -m {{ project_name | replace('-', '_') }} --config config.json"; \
+	else \
+		echo "$(YELLOW)⚠ config.json not found$(NC)"; \
+	fi
+{% endif %} 

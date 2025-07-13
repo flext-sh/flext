@@ -2,7 +2,7 @@
 """Legacy script - enforce_standards_incremental.py."""
 
 
-def main():
+def main() -> None:
     """Main function for legacy script."""
     print("Legacy script enforce_standards_incremental.py executed")
 

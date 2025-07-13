@@ -2,7 +2,7 @@
 """Legacy script - check_versions.py."""
 
 
-def main():
+def main() -> None:
     """Main function for legacy script."""
     print("Legacy script check_versions.py executed")
 

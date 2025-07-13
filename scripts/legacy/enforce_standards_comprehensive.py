@@ -1,13 +1,13 @@
-from datetime import datetime
 #!/usr/bin/env python3
 """Comprehensive Standards Enforcement Script - ZERO TOLERANCE
 Enforces SOLID, DRY, KISS principles with PEP 8 strict compliance.
-
+"""
 
 import ast
 import re
 import subprocess
 import sys
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -15,10 +15,10 @@ import toml
 
 
 class StandardsEnforcer:
-    Enforces strict coding standards across the FLEXT workspace."""
+    """Enforces strict coding standards across the FLEXT workspace."""
 
     def __init__(self, workspace_root: Path) -> None:
-        Initialize with workspace root."""
+        """Initialize with workspace root."""
         self.workspace_root = workspace_root
         self.python_executable = workspace_root / ".venv" / "bin" / "python"
         self.violations: list[str] = []
@@ -133,55 +133,50 @@ class StandardsEnforcer:
         return "unknown_method"
 
     def _get_proper_implementation(self, method_name: str, file_path: Path) -> str:
-        """Get proper implementation based on method name and context."""
-        if "store" in method_name.lower():
-            return """        # Real Redis implementation
-        await self._redis_client.set(key, self._serialize(value), ex=ttl.total_seconds() if ttl else None)"""
+        """Get proper implementation based on method name and context using templates."""
+        try:
+            # Import template engine (lazy import to avoid circular dependencies)
+            import sys
 
-        if "get" in method_name.lower():
-            return """        # Real Redis implementation
+            sys.path.append(str(self.workspace_root / "scripts"))
+            from template_engine import get_template_engine
+
+            template_engine = get_template_engine(self.workspace_root)
+
+            # Determine method type automatically
+            return template_engine.render_python_implementation(
+                method_name=method_name,
+                method_type="auto",  # Auto-detect based on method name
+            )
+
+        except Exception as e:
+            # Fallback to basic implementation if template engine fails
+            self.errors.append(f"Template engine error for {method_name}: {e}")
+
+            # Simple fallback based on method name patterns
+            method_lower = method_name.lower()
+
+            if "store" in method_lower or "save" in method_lower:
+                return f"""        # Basic Redis store implementation for {method_name}
+        await self._redis_client.set(key, self._serialize(value))"""
+
+            if "get" in method_lower or "fetch" in method_lower:
+                return f"""        # Basic Redis get implementation for {method_name}
         result = await self._redis_client.get(key)
         return self._deserialize(result) if result else None"""
 
-        if "delete" in method_name.lower():
-            return """        # Real Redis implementation
+            if "delete" in method_lower or "remove" in method_lower:
+                return f"""        # Basic Redis delete implementation for {method_name}
         result = await self._redis_client.delete(key)
         return bool(result)"""
 
-        if "exists" in method_name.lower():
-            return """        # Real Redis implementation
-        result = await self._redis_client.exists(key)
-        return bool(result)"""
-
-        if "keys" in method_name.lower():
-            return """        # Real Redis implementation
-        keys = await self._redis_client.keys(pattern)
-        return [key.decode() if isinstance(key, bytes) else key for key in keys]"""
-
-        if "cleanup" in method_name.lower():
-            return """        # Real Redis implementation with proper cleanup
-        script = '''
-        local keys = redis.call("KEYS", ARGV[1])
-        local count = 0
-        for i=1,#keys do:
-            local ttl = redis.call("TTL", keys[i])
-            if ttl == -1 or ttl == 0 then:
-                redis.call("DEL", keys[i])
-                count = count + 1
-            end
-        end
-        return count
-        '''
-        return await self._redis_client.eval(script, 0, "*")"""
-
-        # Default implementation for unknown methods
-        return f"""        # TODO: Implement {method_name} with proper business logic
+            return f"""        # TODO: Implement {method_name} with proper business logic
         logger = structlog.get_logger(__name__)
         logger.warning("Method {method_name} needs implementation")
         raise ServiceError("NOT_IMPLEMENTED", "Method {method_name} requires implementation")"""
 
     def eliminate_fallback_patterns(self, project_path: Path) -> bool:
-        Eliminate fallback patterns and implement proper solutions."""
+        """Eliminate fallback patterns and implement proper solutions."""
         src_dir = project_path / "src"
         if not src_dir.exists():
             return False
@@ -374,12 +369,12 @@ class StandardsEnforcer:
                             )
 
                         # Open/Closed: Check for direct modification patterns
-                        violations.extend(
-                            f"OCP violation: {py_file}:{method.lineno} "
-                            f"Constructor has {len(method.args.args)} parameters (>8)"
-                            for method in methods:
+                        for method in methods:
                             if method.name == "__init__" and len(method.args.args) > 8:
-                        )
+                                yield (
+                                    f"OCP violation: {py_file}:{method.lineno} "
+                                    f"Constructor has {len(method.args.args)} parameters (>8)"
+                                )
 
                     elif isinstance(node, ast.FunctionDef):
                         # Single Responsibility: Check function complexity
@@ -642,37 +637,213 @@ quality-gate: lint type-check security test ## Run all quality checks
 
         return results
 
+    def generate_quality_report(self, results: dict[str, Any]) -> str:
+        """Generate quality report using templates."""
+        try:
+            # Import template engine
+            import sys
+
+            sys.path.append(str(self.workspace_root / "scripts"))
+            from template_engine import get_template_engine
+
+            template_engine = get_template_engine(self.workspace_root)
+
+            # Prepare projects data for template
+            projects = []
+            for project_result in results.get("projects_processed", []):
+                project_data = {
+                    "name": project_result.get("project", "Unknown"),
+                    "status": (
+                        "success" if not project_result.get("errors") else "error"
+                    ),
+                    "category": self._determine_project_category(
+                        project_result.get("project", "")
+                    ),
+                    "issues": project_result.get("legacy_patterns_detected", {}).get(
+                        "not_implemented", []
+                    ),
+                    "fixes_applied": (
+                        [
+                            f"NotImplemented fixed: {project_result.get('not_implemented_fixed', False)}",
+                            f"PEP8 enforced: {project_result.get('pep8_enforced', False)}",
+                            f"Naming fixed: {project_result.get('naming_fixed', False)}",
+                        ]
+                        if project_result.get("not_implemented_fixed")
+                        else []
+                    ),
+                }
+                projects.append(project_data)
+
+            # Statistics
+            statistics = {
+                "enforcement": {
+                    "total_violations": results.get("total_violations_found", 0),
+                    "fixes_applied": len(self.fixes_applied),
+                    "errors_encountered": len(self.errors),
+                },
+                "patterns": {
+                    "not_implemented_fixed": sum(
+                        1
+                        for p in results.get("projects_processed", [])
+                        if p.get("not_implemented_fixed")
+                    ),
+                    "pep8_enforced": sum(
+                        1
+                        for p in results.get("projects_processed", [])
+                        if p.get("pep8_enforced")
+                    ),
+                    "naming_fixed": sum(
+                        1
+                        for p in results.get("projects_processed", [])
+                        if p.get("naming_fixed")
+                    ),
+                },
+            }
+
+            # Recommendations based on results
+            recommendations = []
+            if results.get("total_violations_found", 0) > 0:
+                recommendations.append(
+                    "Consider running quality checks more frequently"
+                )
+            if len(self.errors) > 0:
+                recommendations.append(
+                    "Review error log for any issues that need manual intervention"
+                )
+            if statistics["patterns"]["not_implemented_fixed"] > 0:
+                recommendations.append(
+                    "Test all fixed NotImplementedError methods thoroughly"
+                )
+
+            return template_engine.render_quality_report(
+                report_title="FLEXT Standards Enforcement Report",
+                projects=projects,
+                statistics=statistics,
+                recommendations=recommendations,
+            )
+
+        except Exception as e:
+            # Fallback to simple text report
+            return f"""# FLEXT Standards Enforcement Report
+Generated: {datetime.now().isoformat()}
+
+## Summary
+- Projects processed: {len(results.get('projects_processed', []))}
+- Total violations: {results.get('total_violations_found', 0)}
+- Fixes applied: {len(self.fixes_applied)}
+- Errors: {len(self.errors)}
+
+## Fixes Applied
+{chr(10).join(f"- {fix}" for fix in self.fixes_applied)}
+
+## Errors
+{chr(10).join(f"- {error}" for error in self.errors)}
+
+Template engine error: {e}
+"""
+
+    def _determine_project_category(self, project_name: str) -> str:
+        """Determine project category for reporting."""
+        if project_name.startswith(("flext-tap-", "flext-target-")):
+            return "singer"
+        if project_name.startswith("flext-"):
+            return "core"
+        if project_name.startswith(("client-b-", "client-a-")):
+            return "client"
+        return "generic"
+
     def run_comprehensive_enforcement(self) -> dict[str, Any]:
-        """Run comprehensive standards enforcement on key projects."""
-        print("🔥 ZERO TOLERANCE STANDARDS ENFORCEMENT STARTING...")
+        """Run comprehensive enforcement across all projects with template-based reporting."""
+        print("🔥 Starting ZERO TOLERANCE standards enforcement...")
+        print("=" * 60)
 
-        # Focus on core projects first
-        key_projects = [
-            self.workspace_root / "flext-core",
-            self.workspace_root / "flext-auth",
-            self.workspace_root / "flext-api",
-            self.workspace_root / "flext-grpc",
-            self.workspace_root / "flext-tap-ldap",
-        ]
-
-        results = {
+        # Initialize results structure
+        results: dict[str, Any] = {
+            "start_time": datetime.now().isoformat(),
             "projects_processed": [],
             "total_violations_found": 0,
-            "total_fixes_applied": len(self.fixes_applied),
-            "total_errors": len(self.errors),
+            "workspace_root": str(self.workspace_root),
+            "enforcement_summary": {
+                "projects_with_violations": 0,
+                "projects_fixed": 0,
+                "total_fixes_applied": 0,
+            },
         }
 
-        for project_path in key_projects:
-            if project_path.exists():
+        # Get eligible projects
+        projects = [
+            p
+            for p in self.workspace_root.iterdir()
+            if p.is_dir()
+            and (p / "pyproject.toml").exists()
+            and p.name.startswith("flext-")
+        ]
+
+        print(f"📊 Found {len(projects)} eligible projects for enforcement")
+
+        for project_path in projects:
+            try:
+                print(f"\n🎯 Processing {project_path.name}...")
                 project_results = self.process_project_comprehensively(project_path)
+
+                # Count violations in this project
+                violations = sum(
+                    len(violations_list)
+                    for violations_list in project_results.get(
+                        "legacy_patterns_detected", {}
+                    ).values()
+                )
+
+                if violations > 0:
+                    results["enforcement_summary"]["projects_with_violations"] += 1
+                    results["total_violations_found"] += violations
+
+                if (
+                    project_results.get("not_implemented_fixed")
+                    or project_results.get("pep8_enforced")
+                    or project_results.get("naming_fixed")
+                ):
+                    results["enforcement_summary"]["projects_fixed"] += 1
+
                 results["projects_processed"].append(project_results)
 
-                # Count violations
-                for violations in project_results["legacy_patterns_detected"].values():
-                    results["total_violations_found"] += len(violations)
+            except Exception as e:
+                error_msg = f"Failed to process {project_path.name}: {e}"
+                print(f"❌ {error_msg}")
+                self.errors.append(error_msg)
 
-        results["total_fixes_applied"] = len(self.fixes_applied)
+                results["projects_processed"].append(
+                    {"project": project_path.name, "error": str(e), "status": "failed"}
+                )
+
+        # Finalize results
+        results["end_time"] = datetime.now().isoformat()
+        results["enforcement_summary"]["total_fixes_applied"] = len(self.fixes_applied)
         results["total_errors"] = len(self.errors)
+
+        # Generate report using templates
+        report_content = self.generate_quality_report(results)
+
+        # Save report
+        report_path = (
+            self.workspace_root / "reports" / "standards_enforcement_report.md"
+        )
+        report_path.parent.mkdir(exist_ok=True)
+        report_path.write_text(report_content, encoding="utf-8")
+
+        # Summary
+        print("\n" + "=" * 60)
+        print("📊 ENFORCEMENT COMPLETE")
+        print(f"   Projects processed: {len(results['projects_processed'])}")
+        print(
+            f"   Projects with violations: {results['enforcement_summary']['projects_with_violations']}"
+        )
+        print(f"   Projects fixed: {results['enforcement_summary']['projects_fixed']}")
+        print(
+            f"   Total fixes applied: {results['enforcement_summary']['total_fixes_applied']}"
+        )
+        print(f"   Total errors: {results['total_errors']}")
+        print(f"📄 Report saved: {report_path}")
 
         return results
 
