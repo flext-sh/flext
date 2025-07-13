@@ -728,8 +728,8 @@ quality-gate: lint type-check security test ## Run all quality checks
 Generated: {datetime.now().isoformat()}
 
 ## Summary
-- Projects processed: {len(results.get('projects_processed', []))}
-- Total violations: {results.get('total_violations_found', 0)}
+- Projects processed: {len(results.get("projects_processed", []))}
+- Total violations: {results.get("total_violations_found", 0)}
 - Fixes applied: {len(self.fixes_applied)}
 - Errors: {len(self.errors)}
 
