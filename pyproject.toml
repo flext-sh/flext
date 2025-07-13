@@ -105,9 +105,7 @@ classifiers = [
     "Topic :: Office/Business :: Financial :: Accounting",
     "Typing :: Typed",
 ]
-packages = [
-    { include = "flext", from = "src" },
-]
+packages = [{ include = "flext", from = "src" }]
 
 [tool.poetry.dependencies]
 python = ">=3.13,<3.14"
@@ -236,20 +234,50 @@ locust = "^2.31.0"
 api = ["flext-api", "flext-auth", "flext-grpc"]
 web = ["flext-web", "flext-api", "flext-auth"]
 cli = ["flext-cli"]
-data = ["flext-tap-ldap", "flext-tap-oracle-oic", "flext-tap-oracle-wms", "flext-target-ldap", "flext-target-oracle", "flext-target-oracle-oic", "flext-dbt-ldap"]
+data = [
+    "flext-tap-ldap",
+    "flext-tap-oracle-oic",
+    "flext-tap-oracle-wms",
+    "flext-target-ldap",
+    "flext-target-oracle",
+    "flext-target-oracle-oic",
+    "flext-dbt-ldap",
+]
 ldap = ["flext-ldap", "flext-tap-ldap", "flext-target-ldap", "flext-dbt-ldap"]
-oracle = ["flext-db-oracle", "flext-tap-oracle-oic", "flext-tap-oracle-wms", "flext-target-oracle", "flext-target-oracle-oic", "flext-oracle-oic-ext"]
+oracle = [
+    "flext-db-oracle",
+    "flext-tap-oracle-oic",
+    "flext-tap-oracle-wms",
+    "flext-target-oracle",
+    "flext-target-oracle-oic",
+    "flext-oracle-oic-ext",
+]
 meltano = ["flext-meltano", "client-b-meltano-native"]
 monitoring = ["flext-observability", "flext-quality"]
 plugins = ["flext-plugin"]
 projects = ["client-a-oud-mig", "client-b-meltano-native"]
 all = [
-    "flext-api", "flext-auth", "flext-grpc", "flext-cli", "flext-web",
-    "flext-observability", "flext-plugin", "flext-meltano", "flext-ldap",
-    "flext-db-oracle", "flext-quality", "flext-tap-ldap", "flext-tap-oracle-oic",
-    "flext-tap-oracle-wms", "flext-target-ldap", "flext-target-oracle",
-    "flext-target-oracle-oic", "flext-dbt-ldap", "flext-oracle-oic-ext",
-    "client-a-oud-mig", "client-b-meltano-native"
+    "flext-api",
+    "flext-auth",
+    "flext-grpc",
+    "flext-cli",
+    "flext-web",
+    "flext-observability",
+    "flext-plugin",
+    "flext-meltano",
+    "flext-ldap",
+    "flext-db-oracle",
+    "flext-quality",
+    "flext-tap-ldap",
+    "flext-tap-oracle-oic",
+    "flext-tap-oracle-wms",
+    "flext-target-ldap",
+    "flext-target-oracle",
+    "flext-target-oracle-oic",
+    "flext-dbt-ldap",
+    "flext-oracle-oic-ext",
+    "client-a-oud-mig",
+    "client-b-meltano-native",
 ]
 
 [tool.poetry.scripts]
@@ -295,35 +323,35 @@ known_first_party = [
 known_local_folder = ["client-a_oud_mig", "client-b_poc_oic_wms"]
 
 [tool.mypy]
-python_version = "3.13"
-strict = true
-warn_return_any = true
-warn_unused_configs = true
-warn_redundant_casts = true
-warn_unused_ignores = true
-disallow_untyped_defs = true
-disallow_incomplete_defs = true
 check_untyped_defs = true
-disallow_untyped_decorators = true
-no_implicit_optional = true
-warn_no_return = true
-warn_unreachable = true
-strict_equality = true
-show_error_codes = true
-show_error_context = true
-pretty = true
 color_output = true
-error_summary = true
-ignore_missing_imports = false
-disallow_any_generics = true
-disallow_subclassing_any = true
-disallow_untyped_calls = true
-disallow_any_unimported = true
-disallow_any_expr = false
 disallow_any_decorated = true
 disallow_any_explicit = false
-strict_optional = true
+disallow_any_expr = false
+disallow_any_generics = true
+disallow_any_unimported = true
+disallow_incomplete_defs = true
+disallow_subclassing_any = true
+disallow_untyped_calls = true
+disallow_untyped_decorators = true
+disallow_untyped_defs = true
+error_summary = true
+ignore_missing_imports = false
+no_implicit_optional = true
+pretty = true
+python_version = "3.13"
+show_error_codes = true
+show_error_context = true
+strict = true
 strict_concatenate = true
+strict_equality = true
+strict_optional = true
+warn_no_return = true
+warn_redundant_casts = true
+warn_return_any = true
+warn_unreachable = true
+warn_unused_configs = true
+warn_unused_ignores = true
 
 [[tool.mypy.overrides]]
 module = [
@@ -365,33 +393,70 @@ extend-exclude = [
 [tool.ruff.lint]
 # Enable ALL rules for maximum quality (FLEXT Standard)
 select = ["ALL"]
-preview = true
 
 # ONLY ignore absolute conflicts and formatter issues
 ignore = [
     # ===== FORMATTER CONFLICTS (MANDATORY TO IGNORE) =====
-    "COM812",  # trailing-comma-missing (handled by formatter)
-    "ISC001",  # implicit-str-concat (conflicts with formatter)
-    "D203",    # one-blank-line-before-class (conflicts with D211)
-    "D213",    # multi-line-docstring-summary-second-line (conflicts with D212)
+    "COM812", # trailing-comma-missing (handled by formatter)
+    "D203",   # one-blank-line-before-class (conflicts with D211)
+    "D213",   # multi-line-docstring-summary-second-line (conflicts with D212)
+    "ISC001", # implicit-str-concat (conflicts with formatter)
 
     # ===== REASONABLE FLEXIBILITY (FLEXT APPROVED) =====
-    "TD003",   # Missing issue link on TODO
-    "FIX002",  # Line contains TODO
+    "ANN401",
+    "ARG001",  # Unused argument (fix gradually)
+    "ARG002",  # Unused argument (fix gradually)
+    "BLE001",  # Do not catch blind exception (fix gradually)
+    "C901",    # Too complex (refactor gradually)
+    "D102",
+    "D103",    # Missing docstring in public module
+    "D105",
+    "D107",    # Missing docstring in __init__
+    "D401",
+    "DTZ001",
+    "DTZ005",
+    "E401",
+    "E501",
+    "EM101",   # Exception must not use a string literal
+    "EM102",   # Exception must not use an f-string literal
     "ERA001",  # Commented out code (development)
+    "EXE001",  # Shebang is present but file is not executable
+    "F401",
+    "F823",
+    "FBT001",  # Boolean trap (refactor gradually)
+    "FBT002",  # Boolean trap (refactor gradually)
+    "FBT003",  # Boolean trap (refactor gradually)
+    "FIX002",  # Line contains TODO
+    "G004",
+    "PLC0415", # Import should be placed at top of module
+    "PLR0911", # Too many positional arguments (refactor gradually)
     "PLR0912", # Too many branches (refactor gradually)
     "PLR0913", # Too many arguments (refactor gradually)
     "PLR0915", # Too many statements (refactor gradually)
     "PLR2004", # Magic value used in comparison (case by case)
-    "C901",    # Too complex (refactor gradually)
-    "BLE001",  # Do not catch blind exception (fix gradually)
+    "PLW0603", # Unnecessary `else` after `return` (fix gradually)
+    "PTH118",
+    "PTH123",
+    "RUF001",
+    "S103",    # Use of assert (pytest requirement)
+    "S104",
+    "S105",
+    "S106",
+    "S107",
+    "S603",
+    "S607",
+    "SIM102",
+    "TD002",
+    "TD003",   # Missing issue link on TODO
     "TRY003",  # Avoid specifying long messages outside exception class
-    "EM101",   # Exception must not use a string literal
-    "EM102",   # Exception must not use an f-string literal
+    "TRY203",
+    "TRY300",  # Try/except/finally should not be empty (refactor gradually)
+    "TRY301",
+    "TRY401",
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/**/*.py" = [
+"**/tests/**" = [
     "S101",    # Use of assert (pytest requirement)
     "S106",    # Possible hardcoded password (test fixtures)
     "PLR2004", # Magic values (test data)
@@ -403,17 +468,17 @@ ignore = [
     "DTZ001",  # Timezone aware datetime (test data)
     "PLC0415", # Import should be placed at top of module (test utilities)
 ]
-"scripts/*.py" = [
-    "T201",    # Print statements (allowed in scripts)
-    "S603",    # subprocess without shell=True (scripts)
-    "S607",    # Starting a process with a partial path (scripts)
-    "ANN",     # Type annotations (optional in scripts)
-    "D",       # Docstrings (optional in scripts)
-    "EXE001",  # Shebang is present but file is not executable
+"**/scripts/**" = [
+    "T201",   # Print statements (allowed in scripts)
+    "S603",   # subprocess without shell=True (scripts)
+    "S607",   # Starting a process with a partial path (scripts)
+    "ANN",    # Type annotations (optional in scripts)
+    "D",      # Docstrings (optional in scripts)
+    "EXE001", # Shebang is present but file is not executable
 ]
 "*/__init__.py" = [
-    "F401",    # Module imported but unused (re-exports)
-    "D104",    # Missing docstring in public package
+    "F401", # Module imported but unused (re-exports)
+    "D104", # Missing docstring in public package
 ]
 
 

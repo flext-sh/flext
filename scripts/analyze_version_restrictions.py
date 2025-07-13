@@ -9,6 +9,7 @@ import tomllib
 from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
+from typing import Any
 
 
 def parse_version_constraint(constraint: str) -> dict[str, str]:
@@ -16,15 +17,15 @@ def parse_version_constraint(constraint: str) -> dict[str, str]:
     constraint = constraint.strip()
 
     patterns = [
-        (r"^==(.+)$", "exact"),           # ==1.2.3
-        (r"^~=(.+)$", "compatible"),      # ~=1.2.3
-        (r"^>=(.+),<(.+)$", "range"),     # >=1.0,<2.0
-        (r"^>=(.+)$", "minimum"),         # >=1.0
-        (r"^\^(.+)$", "caret"),           # ^1.2.3
-        (r"^~(.+)$", "tilde"),            # ~1.2.3
-        (r"^>(.+),<(.+)$", "range"),      # >1.0,<2.0
-        (r"^<(.+)$", "maximum"),          # <2.0
-        (r"^<=(.+)$", "maximum"),         # <=2.0
+        (r"^==(.+)$", "exact"),  # ==1.2.3
+        (r"^~=(.+)$", "compatible"),  # ~=1.2.3
+        (r"^>=(.+),<(.+)$", "range"),  # >=1.0,<2.0
+        (r"^>=(.+)$", "minimum"),  # >=1.0
+        (r"^\^(.+)$", "caret"),  # ^1.2.3
+        (r"^~(.+)$", "tilde"),  # ~1.2.3
+        (r"^>(.+),<(.+)$", "range"),  # >1.0,<2.0
+        (r"^<(.+)$", "maximum"),  # <2.0
+        (r"^<=(.+)$", "maximum"),  # <=2.0
     ]
 
     for pattern, constraint_type in patterns:
@@ -33,7 +34,7 @@ def parse_version_constraint(constraint: str) -> dict[str, str]:
             return {
                 "type": constraint_type,
                 "version": match.group(1) if match.groups() else constraint,
-                "raw": constraint
+                "raw": constraint,
             }
 
     # Se tem vírgula, provavelmente é um range complexo
@@ -45,11 +46,14 @@ def parse_version_constraint(constraint: str) -> dict[str, str]:
 
 def collect_all_dependencies(workspace: Path) -> dict[str, dict[str, str]]:
     """Coleta TODAS as dependências de TODOS os projetos."""
-    all_deps = defaultdict(dict)
+    all_deps: defaultdict[str, dict[str, str]] = defaultdict(dict)
 
     for pyproject in workspace.rglob("pyproject.toml"):
         # Pula diretórios não relevantes
-        if any(part in pyproject.parts for part in [".venv", "backup", "tmp", "__pycache__", "node_modules"]):
+        if any(
+            part in pyproject.parts
+            for part in [".venv", "backup", "tmp", "__pycache__", "node_modules"]
+        ):
             continue
 
         try:
@@ -81,7 +85,7 @@ def collect_all_dependencies(workspace: Path) -> dict[str, dict[str, str]]:
     return dict(all_deps)
 
 
-def analyze_package_restrictions(versions: dict[str, str]) -> dict[str, any]:
+def analyze_package_restrictions(versions: dict[str, str]) -> dict[str, Any]:
     """Analisa um pacote e identifica restrições."""
     analysis = {
         "total_projects": len(versions),
@@ -91,10 +95,10 @@ def analyze_package_restrictions(versions: dict[str, str]) -> dict[str, any]:
             "exact": [],
             "maximum": [],
             "range_limited": [],
-            "flexible": []
+            "flexible": [],
         },
         "most_restrictive": None,
-        "different_versions": set()
+        "different_versions": set(),
     }
 
     for project, version in versions.items():
@@ -127,7 +131,7 @@ def analyze_package_restrictions(versions: dict[str, str]) -> dict[str, any]:
     return analysis
 
 
-def main():
+def main() -> int:
     """Função principal."""
     import argparse
 
@@ -137,20 +141,14 @@ def main():
     parser.add_argument(
         "--workspace",
         default=".",
-        help="Diretório raiz do workspace (padrão: diretório atual)"
+        help="Diretório raiz do workspace (padrão: diretório atual)",
     )
-    parser.add_argument(
-        "--package",
-        help="Analisa apenas um pacote específico"
-    )
-    parser.add_argument(
-        "--save-report",
-        help="Salva relatório completo em arquivo"
-    )
+    parser.add_argument("--package", help="Analisa apenas um pacote específico")
+    parser.add_argument("--save-report", help="Salva relatório completo em arquivo")
     parser.add_argument(
         "--show-all",
         action="store_true",
-        help="Mostra todos os pacotes, não apenas os problemáticos"
+        help="Mostra todos os pacotes, não apenas os problemáticos",
     )
 
     args = parser.parse_args()
@@ -183,9 +181,9 @@ def main():
 
         # Identifica pacotes problemáticos
         has_restrictions = (
-            analysis["restrictions"]["exact"] or
-            analysis["restrictions"]["maximum"] or
-            analysis["restrictions"]["range_limited"]
+            analysis["restrictions"]["exact"]
+            or analysis["restrictions"]["maximum"]
+            or analysis["restrictions"]["range_limited"]
         )
 
         has_conflicts = len(analysis["different_versions"]) > 1
@@ -198,16 +196,20 @@ def main():
         print("🚨 PACOTES COM RESTRIÇÕES OU CONFLITOS:")
         print("=" * 60)
 
-        packages_to_show = problematic_packages if not args.show_all else [
-            (pkg, all_analyses[pkg]) for pkg in sorted(all_analyses.keys())
-        ]
+        packages_to_show = (
+            problematic_packages
+            if not args.show_all
+            else [(pkg, all_analyses[pkg]) for pkg in sorted(all_analyses.keys())]
+        )
 
         for package, analysis in packages_to_show:
             print(f"\n📦 {package}")
             print(f"   Usado em {analysis['total_projects']} projetos")
 
             if len(analysis["different_versions"]) > 1:
-                print(f"   ⚠️  CONFLITO: {len(analysis['different_versions'])} versões diferentes!")
+                print(
+                    f"   ⚠️  CONFLITO: {len(analysis['different_versions'])} versões diferentes!"
+                )
 
             if analysis["restrictions"]["exact"]:
                 print("   🔒 Versões EXATAS (mais restritivas):")
@@ -251,7 +253,10 @@ def main():
                 if analysis["most_restrictive"]:
                     f.write(f"  RESTRITIVO: {analysis['most_restrictive']}\n")
 
-                f.writelines(f"    {project}: {version}\n" for project, version in sorted(analysis["versions"].items()))
+                f.writelines(
+                    f"    {project}: {version}\n"
+                    for project, version in sorted(analysis["versions"].items())
+                )
 
         print(f"\n💾 Relatório salvo em: {report_path}")
 
@@ -262,8 +267,8 @@ def main():
     print(f"   Pacotes com restrições: {len(problematic_packages)}")
 
     # Top 5 projetos mais restritivos
-    restrictive_count = defaultdict(int)
-    for pkg, analysis in all_analyses.items():
+    restrictive_count: defaultdict[str, int] = defaultdict(int)
+    for analysis in all_analyses.values():
         if analysis["most_restrictive"]:
             # Remove sufixo [group] se existir
             proj = analysis["most_restrictive"].split("[")[0]

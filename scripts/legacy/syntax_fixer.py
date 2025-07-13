@@ -1,4 +1,3 @@
-from typing import List
 #!/usr/bin/env python3
 """
 FLEXT Syntax Fixer - Automated Python Syntax Error Correction
@@ -12,7 +11,7 @@ Sistema automatizado e seguro para correção de erros de sintaxe em Python:
 
 Autor: FLEXT Quality Team
 Versão: 1.0.0
-
+"""
 
 import os
 import shutil
@@ -20,6 +19,7 @@ import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
+from typing import List
 
 from rich.console import Console
 from rich.panel import Panel

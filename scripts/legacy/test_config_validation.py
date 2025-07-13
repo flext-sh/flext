@@ -2,7 +2,7 @@
 """Legacy script - test_config_validation.py."""
 
 
-def main():
+def main() -> None:
     """Main function for legacy script."""
     print("Legacy script test_config_validation.py executed")
 
