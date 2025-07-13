@@ -6,15 +6,15 @@ de todos os subprojetos com base no pyproject.toml da raiz do workspace FLEXT.
 Usa descoberta automática dinâmica com análise de projetos existentes.
 """
 
+import re
+import string
 import subprocess
 import sys
-import tomllib
 import time
-import re
-import json
-from pathlib import Path
-from typing import Any, Dict, List, Tuple, Optional, Set, NamedTuple
+import tomllib
 from dataclasses import dataclass
+from pathlib import Path
+from typing import Any
 
 
 # Cores para output
@@ -35,12 +35,12 @@ def print_colored(text: str, color: str) -> None:
     print(f"{color}{text}{Colors.END}")
 
 
-def run_command(cmd: List[str], cwd: Path, timeout: int = 300) -> Tuple[bool, str]:
+def run_command(cmd: list[str], cwd: Path, timeout: int = 300) -> tuple[bool, str]:
     """Executa um comando e retorna sucesso e output."""
     try:
         result = subprocess.run(
             cmd,
-            cwd=cwd,
+            check=False, cwd=cwd,
             capture_output=True,
             text=True,
             timeout=timeout,
@@ -49,10 +49,10 @@ def run_command(cmd: List[str], cwd: Path, timeout: int = 300) -> Tuple[bool, st
     except subprocess.TimeoutExpired:
         return False, f"Timeout após {timeout}s"
     except Exception as e:
-        return False, f"Erro: {str(e)}"
+        return False, f"Erro: {e!s}"
 
 
-def get_stdlib_modules() -> Set[str]:
+def get_stdlib_modules() -> set[str]:
     """Descobre módulos da stdlib dinamicamente."""
     try:
         # Tenta descobrir módulos da stdlib usando o próprio Python
@@ -62,7 +62,7 @@ def get_stdlib_modules() -> Set[str]:
                 "-c",
                 "import sys; print('\\n'.join(sys.builtin_module_names))",
             ],
-            capture_output=True,
+            check=False, capture_output=True,
             text=True,
         )
 
@@ -162,7 +162,7 @@ def get_stdlib_modules() -> Set[str]:
         }
 
 
-def discover_existing_dependencies(projects: List[Path]) -> Dict[str, Set[str]]:
+def discover_existing_dependencies(projects: list[Path]) -> dict[str, set[str]]:
     """Descobre todas as dependências já em uso nos projetos existentes."""
     print_colored("🔍 Descobrindo dependências existentes nos projetos...", Colors.BLUE)
 
@@ -235,15 +235,23 @@ def discover_existing_dependencies(projects: List[Path]) -> Dict[str, Set[str]]:
 
 
 def analyze_imports_intelligently(
-    project: Path, stdlib_modules: Set[str], known_deps: Set[str]
-) -> Dict[str, Set[str]]:
+    project: Path, stdlib_modules: set[str], known_deps: set[str]
+) -> dict[str, set[str]]:
     """Analisa imports de forma inteligente usando contexto conhecido."""
-    print_colored(f"    🔍 Analisando imports inteligentemente...", Colors.BLUE)
+    print_colored("    🔍 Analisando imports inteligentemente...", Colors.BLUE)
 
     discovered = {"runtime": set(), "test": set()}
 
     # Mapeia diretórios para categorias
     dir_mapping = {"src": "runtime", "tests": "test", "test": "test"}
+    
+    # Mapeia nomes de imports para pacotes PyPI corretos
+    package_name_mapping = {
+        "pydantic_settings": "pydantic-settings",
+        "psycopg2": "psycopg2-binary",
+        "yaml": "pyyaml",
+        "ldap": "python-ldap",
+    }
 
     # Regex mais preciso para capturar imports
     import_patterns = [
@@ -264,7 +272,7 @@ def analyze_imports_intelligently(
 
         for py_file in py_files:
             try:
-                with open(py_file, "r", encoding="utf-8", errors="ignore") as f:
+                with open(py_file, encoding="utf-8", errors="ignore") as f:
                     content = f.read()
 
                 for pattern in import_patterns:
@@ -282,19 +290,19 @@ def analyze_imports_intelligently(
                             and len(module_name) > 1
                         ):
 
+                            # Aplica mapeamento de nomes se necessário
+                            mapped_name = package_name_mapping.get(module_name, module_name)
+                            
                             # Se já conhecemos essa dependência, adiciona
-                            if module_name in known_deps:
-                                imports_found.add(module_name)
-                            # Se parece com dependência válida (heurística)
-                            elif (
-                                module_name.islower()
+                            if mapped_name in known_deps or (
+                                mapped_name.islower()
                                 and not module_name.isdigit()
                                 and any(
                                     char in module_name
-                                    for char in "abcdefghijklmnopqrstuvwxyz"
+                                    for char in string.ascii_lowercase
                                 )
                             ):
-                                imports_found.add(module_name)
+                                imports_found.add(mapped_name)
 
             except Exception:
                 continue
@@ -308,13 +316,13 @@ def analyze_imports_intelligently(
     return discovered
 
 
-def get_installed_packages(project: Path) -> Set[str]:
+def get_installed_packages(project: Path) -> set[str]:
     """Retorna set de pacotes já instalados no projeto via Poetry."""
     try:
         # Usa poetry show para listar pacotes instalados
         result = subprocess.run(
             ["poetry", "show", "--only-root"],
-            cwd=project,
+            check=False, cwd=project,
             capture_output=True,
             text=True,
             timeout=30,
@@ -336,7 +344,7 @@ def get_installed_packages(project: Path) -> Set[str]:
         if not installed_packages:
             result = subprocess.run(
                 ["poetry", "show"],
-                cwd=project,
+                check=False, cwd=project,
                 capture_output=True,
                 text=True,
                 timeout=30,
@@ -361,7 +369,7 @@ def check_package_exists(package: str) -> bool:
     try:
         result = subprocess.run(
             [sys.executable, "-m", "pip", "show", package],
-            capture_output=True,
+            check=False, capture_output=True,
             text=True,
             timeout=10,
         )
@@ -372,7 +380,7 @@ def check_package_exists(package: str) -> bool:
         # Se não está instalado, tenta buscar no PyPI
         result = subprocess.run(
             [sys.executable, "-m", "pip", "search", package],
-            capture_output=True,
+            check=False, capture_output=True,
             text=True,
             timeout=10,
         )
@@ -691,7 +699,6 @@ def is_valid_pypi_package(package_name: str) -> bool:
         "prometheus_client",
         "aiogrpc",
         # Adiciona mais packages comuns que podem ser descobertos
-        "meltano",
         "singer-python",
         "pipelinewise-singer-python",
         "target-jsonl",
@@ -717,7 +724,6 @@ def is_valid_pypi_package(package_name: str) -> bool:
         "pdm",
         "pipenv",
         "virtualenv",
-        "tox",
         "pytest-runner",
         "pytest-django",
         "pytest-flask",
@@ -883,8 +889,8 @@ def is_valid_pypi_package(package_name: str) -> bool:
         not package_clean
         or len(package_clean) < 2
         or len(package_clean) > 50
-        or package_clean.startswith("test")
-        and not package_clean.startswith("testcontainers")
+        or (package_clean.startswith("test")
+        and not package_clean.startswith("testcontainers"))
         or package_clean.startswith("src")
         or package_clean
         in {
@@ -916,19 +922,19 @@ def is_valid_pypi_package(package_name: str) -> bool:
     return False
 
 
-def discover_typings_automatically(project: Path, runtime_libs: Set[str]) -> Set[str]:
+def discover_typings_automatically(project: Path, runtime_libs: set[str]) -> set[str]:
     """Descobre packages de typings usando APENAS análise do mypy."""
     print_colored(
-        f"      🔍 Descobrindo typings com mypy (única fonte confiável)...", Colors.BLUE
+        "      🔍 Descobrindo typings com mypy (única fonte confiável)...", Colors.BLUE
     )
 
-    typings_discovered: Set[str] = set()
+    typings_discovered: set[str] = set()
 
     # Verifica se mypy está disponível
     success, _ = run_command(["python", "-c", "import mypy"], project, timeout=5)
     if not success:
         print_colored(
-            f"      ⚠️  MyPy não disponível - pulando descoberta de typings",
+            "      ⚠️  MyPy não disponível - pulando descoberta de typings",
             Colors.YELLOW,
         )
         return typings_discovered
@@ -942,7 +948,7 @@ def discover_typings_automatically(project: Path, runtime_libs: Set[str]) -> Set
 
     if not directories_to_check:
         print_colored(
-            f"      ➖ Nenhum diretório Python encontrado para análise", Colors.YELLOW
+            "      ➖ Nenhum diretório Python encontrado para análise", Colors.YELLOW
         )
         return typings_discovered
 
@@ -1061,12 +1067,12 @@ def discover_typings_automatically(project: Path, runtime_libs: Set[str]) -> Set
             f"         📋 {', '.join(sorted(typings_discovered))}", Colors.CYAN
         )
     else:
-        print_colored(f"      ✅ MyPy não identificou typings faltantes", Colors.GREEN)
+        print_colored("      ✅ MyPy não identificou typings faltantes", Colors.GREEN)
 
     return typings_discovered
 
 
-def extract_essential_dependencies() -> Dict[str, List[str]]:
+def extract_essential_dependencies() -> dict[str, list[str]]:
     """Extrai dependências essenciais do pyproject.toml da raiz."""
     root_pyproject = Path("pyproject.toml")
 
@@ -1123,7 +1129,7 @@ def extract_essential_dependencies() -> Dict[str, List[str]]:
             print_colored(f"  ❌ {group:<8} → não encontrado", Colors.RED)
 
     print_colored(
-        f"  🔍 typings    → descobertos dinamicamente por projeto", Colors.CYAN
+        "  🔍 typings    → descobertos dinamicamente por projeto", Colors.CYAN
     )
 
     print_colored(
@@ -1132,12 +1138,12 @@ def extract_essential_dependencies() -> Dict[str, List[str]]:
     return dependencies
 
 
-def find_flext_projects() -> List[Path]:
+def find_flext_projects() -> list[Path]:
     """Encontra projetos FLEXT com pyproject.toml."""
     projects = []
 
     # Descobre projetos dinamicamente
-    for item in Path(".").iterdir():
+    for item in Path().iterdir():
         if item.is_dir() and not item.name.startswith("."):
             pyproject_file = item / "pyproject.toml"
 
@@ -1158,7 +1164,7 @@ def find_flext_projects() -> List[Path]:
     return sorted(projects)
 
 
-def check_poetry_lock_status(project: Path) -> Tuple[bool, str]:
+def check_poetry_lock_status(project: Path) -> tuple[bool, str]:
     """Verifica se o poetry.lock está atualizado com o pyproject.toml."""
     poetry_lock = project / "poetry.lock"
     pyproject_file = project / "pyproject.toml"
@@ -1186,7 +1192,7 @@ def ensure_poetry_lock(project: Path) -> bool:
     is_valid, reason = check_poetry_lock_status(project)
 
     if is_valid:
-        print_colored(f"    ✅ poetry.lock válido", Colors.GREEN)
+        print_colored("    ✅ poetry.lock válido", Colors.GREEN)
         return True
 
     print_colored(f"    ⚠️  {reason} - RECRIANDO...", Colors.YELLOW)
@@ -1200,24 +1206,23 @@ def ensure_poetry_lock(project: Path) -> bool:
     success, output = run_command(["poetry", "lock"], project, timeout=300)
 
     if success:
-        print_colored(f"    ✅ poetry.lock recriado", Colors.GREEN)
+        print_colored("    ✅ poetry.lock recriado", Colors.GREEN)
         return True
+    print_colored("    ❌ Falha ao recriar poetry.lock", Colors.RED)
+    if "not found" in output.lower():
+        print_colored("        💡 Poetry não encontrado", Colors.YELLOW)
+    elif "pyproject.toml" in output.lower():
+        print_colored("        💡 Problema no pyproject.toml", Colors.YELLOW)
+    elif "dependency" in output.lower():
+        print_colored("        💡 Problema com dependências", Colors.YELLOW)
     else:
-        print_colored(f"    ❌ Falha ao recriar poetry.lock", Colors.RED)
-        if "not found" in output.lower():
-            print_colored(f"        💡 Poetry não encontrado", Colors.YELLOW)
-        elif "pyproject.toml" in output.lower():
-            print_colored(f"        💡 Problema no pyproject.toml", Colors.YELLOW)
-        elif "dependency" in output.lower():
-            print_colored(f"        💡 Problema com dependências", Colors.YELLOW)
-        else:
-            print_colored(f"        🔍 {output[:80]}...", Colors.RED)
-        return False
+        print_colored(f"        🔍 {output[:80]}...", Colors.RED)
+    return False
 
 
 def sync_project_group(
-    project: Path, group: str, dependencies: List[str]
-) -> Tuple[bool, str]:
+    project: Path, group: str, dependencies: list[str]
+) -> tuple[bool, str]:
     """Sincroniza um grupo de dependências de uma vez só."""
     if not dependencies:
         return True, "Nenhuma dependência"
@@ -1276,20 +1281,19 @@ def sync_project_group(
         else:
             print(f" ➖ já sincronizado ({elapsed:.1f}s)")
         return True, f"{updated_count} atualizados"
-    else:
-        print(f" ❌ FALHA ({elapsed:.1f}s)")
-        # Mostra apenas erros relevantes
-        if "not found" in output.lower():
-            print_colored(f"        💡 Alguns packages não encontrados", Colors.YELLOW)
-        elif "timeout" in output.lower():
-            print_colored(f"        ⏱️  Timeout - tente novamente", Colors.YELLOW)
-        elif len(output.strip()) > 0:
-            # Mostra apenas as primeiras linhas do erro
-            error_lines = output.split("\n")[:3]
-            for line in error_lines:
-                if line.strip():
-                    print_colored(f"        🔍 {line[:70]}...", Colors.RED)
-        return False, "Falha na instalação"
+    print(f" ❌ FALHA ({elapsed:.1f}s)")
+    # Mostra apenas erros relevantes
+    if "not found" in output.lower():
+        print_colored("        💡 Alguns packages não encontrados", Colors.YELLOW)
+    elif "timeout" in output.lower():
+        print_colored("        ⏱️  Timeout - tente novamente", Colors.YELLOW)
+    elif len(output.strip()) > 0:
+        # Mostra apenas as primeiras linhas do erro
+        error_lines = output.split("\n")[:3]
+        for line in error_lines:
+            if line.strip():
+                print_colored(f"        🔍 {line[:70]}...", Colors.RED)
+    return False, "Falha na instalação"
 
 
 # Estruturas para tracking de versões
@@ -1306,8 +1310,17 @@ class VersionChange:
 class DependencyAnalyzer:
     """Classe para análise avançada de dependências."""
 
-    def __init__(self, stdlib_modules: Set[str]):
+    def __init__(self, stdlib_modules: set[str]):
         self.stdlib_modules = stdlib_modules
+        
+        # Mapeamento de nomes de import para pacotes PyPI
+        self.package_name_mapping = {
+            "pydantic_settings": "pydantic-settings",
+            "psycopg2": "psycopg2-binary",
+            "yaml": "pyyaml",
+            "ldap": "python-ldap",
+        }
+        
         self.known_package_patterns = {
             # Padrões de imports que indicam packages específicos
             r"from\s+django": "django",
@@ -1320,6 +1333,8 @@ class DependencyAnalyzer:
             r"import\s+sqlalchemy": "sqlalchemy",
             r"from\s+pydantic": "pydantic",
             r"import\s+pydantic": "pydantic",
+            r"from\s+pydantic_settings": "pydantic-settings",
+            r"import\s+pydantic_settings": "pydantic-settings",
             r"from\s+requests": "requests",
             r"import\s+requests": "requests",
             r"from\s+click": "click",
@@ -1355,9 +1370,9 @@ class DependencyAnalyzer:
             r"pyproject\.toml": "pyproject_file",
         }
 
-    def analyze_deep_dependencies(self, project: Path) -> Dict[str, Set[str]]:
+    def analyze_deep_dependencies(self, project: Path) -> dict[str, set[str]]:
         """Análise profunda e robusta de dependências."""
-        print_colored(f"    🔍 Análise PROFUNDA de dependências...", Colors.BLUE)
+        print_colored("    🔍 Análise PROFUNDA de dependências...", Colors.BLUE)
 
         dependencies = {"runtime": set(), "test": set(), "dev": set()}
 
@@ -1385,13 +1400,13 @@ class DependencyAnalyzer:
 
         return dependencies
 
-    def _analyze_python_files(self, project: Path) -> Dict[str, Set[str]]:
+    def _analyze_python_files(self, project: Path) -> dict[str, set[str]]:
         """Análise avançada de arquivos Python com detecção melhorada."""
         dependencies = {"runtime": set(), "test": set()}
 
         for py_file in project.rglob("*.py"):
             try:
-                with open(py_file, "r", encoding="utf-8", errors="ignore") as f:
+                with open(py_file, encoding="utf-8", errors="ignore") as f:
                     content = f.read()
 
                 # Determina categoria baseado no caminho
@@ -1435,7 +1450,9 @@ class DependencyAnalyzer:
                     for match in matches:
                         module_name = match.strip().split(".")[0]
                         if self._is_valid_external_package(module_name):
-                            dependencies[category].add(module_name)
+                            # Aplica mapeamento de nomes se necessário
+                            mapped_name = self.package_name_mapping.get(module_name, module_name)
+                            dependencies[category].add(mapped_name)
 
                 # Análise de strings que podem indicar dependências
                 string_dependency_patterns = [
@@ -1454,7 +1471,9 @@ class DependencyAnalyzer:
                     for match in matches:
                         module_name = match.strip().split(".")[0]
                         if self._is_valid_external_package(module_name):
-                            dependencies[category].add(module_name)
+                            # Aplica mapeamento de nomes se necessário
+                            mapped_name = self.package_name_mapping.get(module_name, module_name)
+                            dependencies[category].add(mapped_name)
 
             except Exception as e:
                 print_colored(
@@ -1464,7 +1483,7 @@ class DependencyAnalyzer:
 
         return dependencies
 
-    def _analyze_config_files(self, project: Path) -> Dict[str, Set[str]]:
+    def _analyze_config_files(self, project: Path) -> dict[str, set[str]]:
         """Analisa arquivos de configuração de forma abrangente."""
         dependencies = {"runtime": set(), "test": set(), "dev": set()}
 
@@ -1519,7 +1538,7 @@ class DependencyAnalyzer:
         tox_file = project / "tox.ini"
         if tox_file.exists():
             try:
-                with open(tox_file, "r", encoding="utf-8") as f:
+                with open(tox_file, encoding="utf-8") as f:
                     content = f.read()
                     # Procura por deps em tox
                     deps_pattern = re.compile(r"deps\s*=\s*([^\n]+(?:\n\s+[^\n]+)*)")
@@ -1539,7 +1558,7 @@ class DependencyAnalyzer:
         if precommit_file.exists():
             try:
                 import yaml
-                with open(precommit_file, "r", encoding="utf-8") as f:
+                with open(precommit_file, encoding="utf-8") as f:
                     data = yaml.safe_load(f)
                     if data and "repos" in data:
                         for repo in data["repos"]:
@@ -1566,7 +1585,7 @@ class DependencyAnalyzer:
         dockerfile = project / "Dockerfile"
         if dockerfile.exists():
             try:
-                with open(dockerfile, "r", encoding="utf-8") as f:
+                with open(dockerfile, encoding="utf-8") as f:
                     content = f.read()
                     # Procura por pip install em Dockerfile
                     pip_pattern = re.compile(r"pip\s+install\s+([^\s&|;]+)")
@@ -1583,7 +1602,7 @@ class DependencyAnalyzer:
         for compose_file in compose_files:
             try:
                 import yaml
-                with open(compose_file, "r", encoding="utf-8") as f:
+                with open(compose_file, encoding="utf-8") as f:
                     data = yaml.safe_load(f)
                     if data and "services" in data:
                         for service_name, service_config in data["services"].items():
@@ -1602,13 +1621,13 @@ class DependencyAnalyzer:
 
         return dependencies
 
-    def _analyze_requirements_files(self, project: Path) -> Set[str]:
+    def _analyze_requirements_files(self, project: Path) -> set[str]:
         """Analisa arquivos requirements.txt."""
         dependencies = set()
 
         for req_file in project.rglob("requirements*.txt"):
             try:
-                with open(req_file, "r", encoding="utf-8") as f:
+                with open(req_file, encoding="utf-8") as f:
                     for line in f:
                         line = line.strip()
                         if line and not line.startswith("#"):
@@ -1621,14 +1640,14 @@ class DependencyAnalyzer:
 
         return dependencies
 
-    def _analyze_setup_py(self, project: Path) -> Set[str]:
+    def _analyze_setup_py(self, project: Path) -> set[str]:
         """Analisa setup.py."""
         dependencies = set()
 
         setup_file = project / "setup.py"
         if setup_file.exists():
             try:
-                with open(setup_file, "r", encoding="utf-8") as f:
+                with open(setup_file, encoding="utf-8") as f:
                     content = f.read()
 
                 # Procura por install_requires
@@ -1649,13 +1668,13 @@ class DependencyAnalyzer:
 
         return dependencies
 
-    def _analyze_strings_and_comments(self, project: Path) -> Set[str]:
+    def _analyze_strings_and_comments(self, project: Path) -> set[str]:
         """Analisa strings e comentários em busca de dependências."""
         dependencies = set()
 
         for py_file in project.rglob("*.py"):
             try:
-                with open(py_file, "r", encoding="utf-8", errors="ignore") as f:
+                with open(py_file, encoding="utf-8", errors="ignore") as f:
                     content = f.read()
 
                 # Procura por padrões em strings
@@ -1749,8 +1768,6 @@ class DependencyAnalyzer:
             "flexcore",
             # Pacotes internos comuns
             "src",
-            "tests",
-            "test",
             "docs",
             "examples",
             "scripts",
@@ -1802,11 +1819,7 @@ class DependencyAnalyzer:
             "md",
             "yml",
             "yaml",
-            "json",
-            "xml",
-            "csv",
             "sql",
-            "html",
             "css",
             "js",
             "ts",
@@ -1821,7 +1834,6 @@ class DependencyAnalyzer:
             "directory",
             "dir",
             "folder",
-            "path",
             "string",
             "str",
             "int",
@@ -1867,10 +1879,10 @@ class VersionTracker:
     """Classe para rastrear mudanças de versão."""
 
     def __init__(self):
-        self.version_changes: List[VersionChange] = []
-        self.project_versions: Dict[str, Dict[str, str]] = {}
+        self.version_changes: list[VersionChange] = []
+        self.project_versions: dict[str, dict[str, str]] = {}
 
-    def capture_initial_versions(self, project: Path) -> Dict[str, str]:
+    def capture_initial_versions(self, project: Path) -> dict[str, str]:
         """Captura versões iniciais das dependências."""
         versions = {}
 
@@ -1889,7 +1901,7 @@ class VersionTracker:
         self.project_versions[project.name] = versions
         return versions
 
-    def capture_final_versions(self, project: Path) -> Dict[str, str]:
+    def capture_final_versions(self, project: Path) -> dict[str, str]:
         """Captura versões finais e detecta mudanças."""
         initial_versions = self.project_versions.get(project.name, {})
 
@@ -1912,7 +1924,7 @@ class VersionTracker:
         return final_versions
 
     def _detect_changes(
-        self, project_name: str, initial: Dict[str, str], final: Dict[str, str]
+        self, project_name: str, initial: dict[str, str], final: dict[str, str]
     ):
         """Detecta e registra mudanças de versão."""
 
@@ -1979,23 +1991,21 @@ class VersionTracker:
 
             if new_parts > old_parts:
                 return "upgrade"
-            elif new_parts < old_parts:
+            if new_parts < old_parts:
                 return "downgrade"
-            else:
-                return "change"
+            return "change"
         except:
             return "change"
 
     def _determine_change_reason(self, change_type: str, package: str) -> str:
         """Determina o motivo da mudança."""
         if change_type == "downgrade":
-            return f"Downgrade devido a conflito de dependências ou restrições de compatibilidade"
-        elif change_type == "upgrade":
-            return f"Upgrade para versão mais recente disponível"
-        else:
-            return f"Mudança de versão para resolver compatibilidade"
+            return "Downgrade devido a conflito de dependências ou restrições de compatibilidade"
+        if change_type == "upgrade":
+            return "Upgrade para versão mais recente disponível"
+        return "Mudança de versão para resolver compatibilidade"
 
-    def get_downgrades(self) -> List[VersionChange]:
+    def get_downgrades(self) -> list[VersionChange]:
         """Retorna apenas os downgrades."""
         return [
             change
@@ -2003,7 +2013,7 @@ class VersionTracker:
             if change.change_type == "downgrade"
         ]
 
-    def get_changes_by_project(self, project_name: str) -> List[VersionChange]:
+    def get_changes_by_project(self, project_name: str) -> list[VersionChange]:
         """Retorna mudanças para um projeto específico."""
         return [
             change for change in self.version_changes if change.project == project_name
@@ -2022,7 +2032,7 @@ class VersionTracker:
         upgrades = [c for c in self.version_changes if c.change_type == "upgrade"]
         installs = [c for c in self.version_changes if c.change_type == "install"]
 
-        report.append(f"\n📈 ESTATÍSTICAS GERAIS:")
+        report.append("\n📈 ESTATÍSTICAS GERAIS:")
         report.append(f"  Total de mudanças: {total_changes}")
         report.append(f"  Instalações: {len(installs)}")
         report.append(f"  Upgrades: {len(upgrades)}")
@@ -2068,15 +2078,15 @@ dependency_analyzer = None
 
 
 def discover_project_dependencies(
-    project: Path, stdlib_modules: Set[str], known_deps: Set[str]
-) -> Dict[str, Set[str]]:
+    project: Path, stdlib_modules: set[str], known_deps: set[str]
+) -> dict[str, set[str]]:
     """PILAR CENTRAL: Descobre dependências com análise SUPER ROBUSTA."""
     global dependency_analyzer
 
     if dependency_analyzer is None:
         dependency_analyzer = DependencyAnalyzer(stdlib_modules)
 
-    print_colored(f"    🔍 DESCOBERTA AUTOMÁTICA SUPER ROBUSTA", Colors.BOLD)
+    print_colored("    🔍 DESCOBERTA AUTOMÁTICA SUPER ROBUSTA", Colors.BOLD)
 
     # Captura versões iniciais
     initial_versions = version_tracker.capture_initial_versions(project)
@@ -2120,10 +2130,10 @@ def discover_project_dependencies(
 
 def sync_project(
     project: Path,
-    base_dependencies: Dict[str, List[str]],
-    stdlib_modules: Set[str],
-    known_deps: Set[str],
-) -> Dict[str, int]:
+    base_dependencies: dict[str, list[str]],
+    stdlib_modules: set[str],
+    known_deps: set[str],
+) -> dict[str, int]:
     """Sincroniza dependências com descoberta automática SUPER ROBUSTA."""
     print_colored(f"\n🔄 {project.name}", Colors.BOLD)
 
@@ -2134,7 +2144,7 @@ def sync_project(
         return stats
 
     # PILAR CENTRAL: Descoberta automática SUPER ROBUSTA
-    print_colored(f"    🔍 DESCOBERTA AUTOMÁTICA SUPER ROBUSTA", Colors.BOLD)
+    print_colored("    🔍 DESCOBERTA AUTOMÁTICA SUPER ROBUSTA", Colors.BOLD)
     discovered_deps = discover_project_dependencies(project, stdlib_modules, known_deps)
 
     # Instala dependências descobertas automaticamente
@@ -2147,31 +2157,36 @@ def sync_project(
             stats["failures"] += discovery_stats["failures"]
     else:
         print_colored(
-            f"    ➖ Nenhuma dependência descoberta para instalar", Colors.YELLOW
+            "    ➖ Nenhuma dependência descoberta para instalar", Colors.YELLOW
         )
 
-    # Sincroniza dependências base do workspace (complementar)
-    print_colored(
-        f"    🔗 Sincronizando dependências base do workspace...", Colors.CYAN
-    )
-    for group, dependencies in base_dependencies.items():
-        success, result = sync_project_group(project, group, dependencies)
+    # Sincroniza dependências base do workspace (complementar) - apenas se houver
+    if base_dependencies:
+        print_colored(
+            "    🔗 Sincronizando dependências base do workspace...", Colors.CYAN
+        )
+        for group, dependencies in base_dependencies.items():
+            success, result = sync_project_group(project, group, dependencies)
 
-        if success:
-            stats["success"] += 1
-            if "atualizados" in result:
-                try:
-                    count = int(result.split()[0])
-                    stats["updated"] += count
-                except (ValueError, IndexError):
-                    pass
-        else:
-            stats["failures"] += 1
+            if success:
+                stats["success"] += 1
+                if "atualizados" in result:
+                    try:
+                        count = int(result.split()[0])
+                        stats["updated"] += count
+                    except (ValueError, IndexError):
+                        pass
+            else:
+                stats["failures"] += 1
+    else:
+        print_colored(
+            "    ℹ️  Modo descoberta: pulando sincronização base", Colors.BLUE
+        )
 
     # Atualiza poetry.lock final se houve mudanças
     total_changes = stats["updated"] + stats["discovered"]
     if total_changes > 0:
-        print(f"    🔐 lock      → ", end="", flush=True)
+        print("    🔐 lock      → ", end="", flush=True)
         success, _ = run_command(["poetry", "lock"], project, timeout=120)
 
         if success:
@@ -2215,12 +2230,12 @@ def sync_project(
     return stats
 
 
-def analyze_and_fix_missing_imports(project: Path) -> Dict[str, Set[str]]:
+def analyze_and_fix_missing_imports(project: Path) -> dict[str, set[str]]:
     """Analisa erros de import e sugere packages para instalar."""
-    print_colored(f"    🔍 Analisando erros de import no projeto...", Colors.BLUE)
-    
+    print_colored("    🔍 Analisando erros de import no projeto...", Colors.BLUE)
+
     missing_deps = {"runtime": set(), "test": set()}
-    
+
     # Tenta executar os testes para identificar imports faltantes
     test_dirs = ["tests", "test"]
     for test_dir in test_dirs:
@@ -2229,16 +2244,16 @@ def analyze_and_fix_missing_imports(project: Path) -> Dict[str, Set[str]]:
             # Executa pytest com dry-run para capturar erros de import
             cmd = ["python", "-m", "pytest", "--collect-only", "-q", str(test_path)]
             success, output = run_command(cmd, project, timeout=30)
-            
+
             if not success and "ModuleNotFoundError" in output:
                 # Analisa erros de ModuleNotFoundError
                 import_error_pattern = re.compile(r"ModuleNotFoundError: No module named ['\"]([^'\"]+)['\"]")
                 matches = import_error_pattern.findall(output)
-                
+
                 for module in matches:
                     # Converte nome do módulo para package name
                     package_name = module.split(".")[0].replace("_", "-")
-                    
+
                     # Mapeia módulos conhecidos para seus packages
                     module_to_package = {
                         "yaml": "pyyaml",
@@ -2301,17 +2316,17 @@ def analyze_and_fix_missing_imports(project: Path) -> Dict[str, Set[str]]:
                         "bcrypt": "bcrypt",
                         "scrypt": "scrypt",
                     }
-                    
+
                     if module in module_to_package:
                         package_name = module_to_package[module]
-                    
+
                     if is_valid_pypi_package(package_name):
                         missing_deps["test"].add(package_name)
                         print_colored(
                             f"      📦 Detectado import faltante: {module} → {package_name}",
                             Colors.YELLOW
                         )
-    
+
     # Analisa código runtime para imports faltantes
     src_dirs = ["src", "app", "."]
     for src_dir in src_dirs[:1]:  # Analisa apenas o primeiro diretório encontrado
@@ -2319,20 +2334,20 @@ def analyze_and_fix_missing_imports(project: Path) -> Dict[str, Set[str]]:
         if src_path.exists() and src_path.is_dir():
             # Tenta executar um import check básico
             py_files = list(src_path.rglob("*.py"))[:10]  # Limita a 10 arquivos para não demorar muito
-            
+
             for py_file in py_files:
                 cmd = ["python", "-c", f"import ast; ast.parse(open('{py_file}').read())"]
                 success, output = run_command(cmd, project, timeout=5)
-                
+
                 if not success and "ModuleNotFoundError" in output:
                     import_error_pattern = re.compile(r"ModuleNotFoundError: No module named ['\"]([^'\"]+)['\"]")
                     matches = import_error_pattern.findall(output)
-                    
+
                     for module in matches:
                         package_name = module.split(".")[0].replace("_", "-")
                         if is_valid_pypi_package(package_name):
                             missing_deps["runtime"].add(package_name)
-    
+
     return missing_deps
 
 
@@ -2343,13 +2358,13 @@ def validate_poetry_environment(project: Path) -> bool:
     if not success:
         print_colored("    ❌ Poetry não está instalado ou não está no PATH", Colors.RED)
         return False
-    
+
     # Verifica se o projeto tem pyproject.toml válido
     pyproject_file = project / "pyproject.toml"
     if not pyproject_file.exists():
         print_colored("    ❌ pyproject.toml não encontrado", Colors.RED)
         return False
-    
+
     # Verifica se o ambiente virtual existe
     success, output = run_command(["poetry", "env", "info"], project, timeout=10)
     if not success or "does not exist" in output:
@@ -2358,13 +2373,13 @@ def validate_poetry_environment(project: Path) -> bool:
         if not success:
             print_colored("    ❌ Falha ao criar ambiente virtual", Colors.RED)
             return False
-    
+
     return True
 
 
 def install_discovered_dependencies(
-    project: Path, discovered_deps: Dict[str, Set[str]]
-) -> Dict[str, int]:
+    project: Path, discovered_deps: dict[str, set[str]]
+) -> dict[str, int]:
     """Instala dependências descobertas automaticamente."""
     stats = {"installed": 0, "skipped": 0, "conflicts": 0, "failures": 0}
 
@@ -2385,7 +2400,7 @@ def install_discovered_dependencies(
     print_colored(
         f"    📋 Pacotes já instalados: {len(installed_packages)}", Colors.BLUE
     )
-    
+
     # Analisa e adiciona dependências de imports faltantes
     missing_import_deps = analyze_and_fix_missing_imports(project)
     for category, deps in missing_import_deps.items():
@@ -2492,17 +2507,17 @@ def install_discovered_dependencies(
                 if "downgrading" in output.lower() or "upgrading" in output.lower():
                     stats["conflicts"] += 1
                     print_colored(
-                        f"        ⚡ Conflitos de versão resolvidos automaticamente",
+                        "        ⚡ Conflitos de versão resolvidos automaticamente",
                         Colors.YELLOW,
                     )
 
             else:
                 stats["failures"] += 1
-                print_colored(f"        ❌ Falha na instalação em lote", Colors.RED)
+                print_colored("        ❌ Falha na instalação em lote", Colors.RED)
 
                 # Tenta instalar packages individualmente (estratégia de fallback)
                 print_colored(
-                    f"        🔄 Tentando instalação individual dos packages descobertos...",
+                    "        🔄 Tentando instalação individual dos packages descobertos...",
                     Colors.YELLOW,
                 )
 
@@ -2528,7 +2543,7 @@ def install_discovered_dependencies(
 
         else:
             print_colored(
-                f"      ➖ Nenhum package descoberto para instalar", Colors.YELLOW
+                "      ➖ Nenhum package descoberto para instalar", Colors.YELLOW
             )
 
     return stats
@@ -2536,174 +2551,173 @@ def install_discovered_dependencies(
 
 class PackageVersionAnalyzer:
     """Analisa versões de packages e identifica problemas."""
-    
+
     def __init__(self):
         self.package_versions = {}  # {package: {project: version}}
         self.latest_versions = {}   # {package: latest_version}
         self.version_constraints = {}  # {package: {project: parsed_constraint}}
-        
-    def parse_version_constraint(self, constraint: str) -> Dict[str, str]:
+
+    def parse_version_constraint(self, constraint: str) -> dict[str, str]:
         """Parse version constraints como ^1.2.3, >=1.0.0, etc."""
         import re
-        
+
         constraint = constraint.strip()
-        
+
         # Patterns para diferentes tipos de constraints
         patterns = {
-            'caret': r'^\^(.+)$',         # ^1.2.3
-            'tilde': r'^~(.+)$',          # ~1.2.3
-            'gte': r'^>=(.+)$',           # >=1.2.3
-            'gt': r'^>(.+)$',             # >1.2.3
-            'lte': r'^<=(.+)$',           # <=1.2.3
-            'lt': r'^<(.+)$',             # <1.2.3
-            'exact': r'^==(.+)$',         # ==1.2.3
-            'compatible': r'^~=(.+)$',    # ~=1.2.3
-            'wildcard': r'^\*$',          # *
-            'range': r'^(.+),(.+)$',      # >=1.0,<2.0
+            "caret": r"^\^(.+)$",         # ^1.2.3
+            "tilde": r"^~(.+)$",          # ~1.2.3
+            "gte": r"^>=(.+)$",           # >=1.2.3
+            "gt": r"^>(.+)$",             # >1.2.3
+            "lte": r"^<=(.+)$",           # <=1.2.3
+            "lt": r"^<(.+)$",             # <1.2.3
+            "exact": r"^==(.+)$",         # ==1.2.3
+            "compatible": r"^~=(.+)$",    # ~=1.2.3
+            "wildcard": r"^\*$",          # *
+            "range": r"^(.+),(.+)$",      # >=1.0,<2.0
         }
-        
+
         for constraint_type, pattern in patterns.items():
             match = re.match(pattern, constraint)
             if match:
-                if constraint_type == 'range':
+                if constraint_type == "range":
                     return {
-                        'type': 'range',
-                        'min': match.group(1),
-                        'max': match.group(2)
+                        "type": "range",
+                        "min": match.group(1),
+                        "max": match.group(2)
                     }
-                elif constraint_type == 'wildcard':
-                    return {'type': 'wildcard', 'version': '*'}
-                else:
-                    return {
-                        'type': constraint_type,
-                        'version': match.group(1)
-                    }
-        
+                if constraint_type == "wildcard":
+                    return {"type": "wildcard", "version": "*"}
+                return {
+                    "type": constraint_type,
+                    "version": match.group(1)
+                }
+
         # Se não matchou nenhum pattern, assume versão exata
-        return {'type': 'exact', 'version': constraint}
-    
-    def get_latest_available_version(self, package: str) -> Optional[str]:
+        return {"type": "exact", "version": constraint}
+
+    def get_latest_available_version(self, package: str) -> str | None:
         """Obtém a versão mais recente disponível no PyPI."""
         try:
-            import urllib.request
             import json
-            
+            import urllib.request
+
             url = f"https://pypi.org/pypi/{package}/json"
             with urllib.request.urlopen(url, timeout=5) as response:
                 data = json.loads(response.read())
                 return data.get("info", {}).get("version")
         except:
             return None
-    
-    def analyze_version_pinning(self, projects: List[Path]) -> Dict[str, Any]:
+
+    def analyze_version_pinning(self, projects: list[Path]) -> dict[str, Any]:
         """Analisa quem está segurando atualizações."""
         print_colored("\n🔍 Analisando version pinning e atualizações bloqueadas...", Colors.BLUE)
-        
+
         # Coleta todas as versões
         for project in projects:
             pyproject_file = project / "pyproject.toml"
             if not pyproject_file.exists():
                 continue
-                
+
             try:
                 with open(pyproject_file, "rb") as f:
                     data = tomllib.load(f)
-                
+
                 # Analisa todas as dependências
                 all_deps = {}
-                
+
                 # Dependências principais
                 poetry_deps = data.get("tool", {}).get("poetry", {}).get("dependencies", {})
                 all_deps.update(poetry_deps)
-                
+
                 # Dependências de grupos
                 groups = data.get("tool", {}).get("poetry", {}).get("group", {})
                 for group_data in groups.values():
                     group_deps = group_data.get("dependencies", {})
                     all_deps.update(group_deps)
-                
+
                 # Registra versões e constraints
                 for package, version_spec in all_deps.items():
                     if package == "python":
                         continue
-                        
+
                     if package not in self.package_versions:
                         self.package_versions[package] = {}
                         self.version_constraints[package] = {}
-                    
+
                     # Normaliza versão
                     if isinstance(version_spec, dict):
                         version = version_spec.get("version", "*")
                     else:
                         version = str(version_spec)
-                    
+
                     self.package_versions[package][project.name] = version
                     self.version_constraints[package][project.name] = self.parse_version_constraint(version)
-                    
+
             except Exception:
                 continue
-        
+
         # Analisa pinning problems
         pinning_issues = {}
-        
+
         for package, project_versions in self.package_versions.items():
             # Pega versão mais recente do PyPI
             if package not in self.latest_versions:
                 latest = self.get_latest_available_version(package)
                 if latest:
                     self.latest_versions[package] = latest
-            
+
             # Identifica projetos com versões muito restritivas
             restrictive_projects = []
-            
+
             for project, version in project_versions.items():
                 constraint = self.version_constraints[package][project]
-                
+
                 # Considera restritivo se usa exact version (==) ou caret muito específico
-                if constraint['type'] in ['exact', 'caret']:
+                if constraint["type"] in ["exact", "caret"]:
                     restrictive_projects.append({
-                        'project': project,
-                        'version': version,
-                        'constraint_type': constraint['type']
+                        "project": project,
+                        "version": version,
+                        "constraint_type": constraint["type"]
                     })
-            
-            if restrictive_projects and len(set(v['version'] for v in restrictive_projects)) > 1:
+
+            if restrictive_projects and len(set(v["version"] for v in restrictive_projects)) > 1:
                 pinning_issues[package] = {
-                    'projects': restrictive_projects,
-                    'latest_available': self.latest_versions.get(package, 'Unknown')
+                    "projects": restrictive_projects,
+                    "latest_available": self.latest_versions.get(package, "Unknown")
                 }
-        
+
         return pinning_issues
-    
-    def suggest_version_standardization(self) -> Dict[str, str]:
+
+    def suggest_version_standardization(self) -> dict[str, str]:
         """Sugere versões padronizadas para cada package."""
         suggestions = {}
-        
+
         for package, project_versions in self.package_versions.items():
             versions = list(project_versions.values())
-            
+
             # Se todos usam a mesma versão, mantém
             if len(set(versions)) == 1:
                 suggestions[package] = versions[0]
                 continue
-            
+
             # Analisa constraints para sugerir a melhor versão
             constraints = self.version_constraints.get(package, {})
-            
+
             # Prioriza versões com >= sobre ^
             gte_versions = []
             caret_versions = []
             exact_versions = []
-            
+
             for project, constraint in constraints.items():
                 version = project_versions[project]
-                if constraint['type'] == 'gte':
+                if constraint["type"] == "gte":
                     gte_versions.append(version)
-                elif constraint['type'] == 'caret':
+                elif constraint["type"] == "caret":
                     caret_versions.append(version)
-                elif constraint['type'] == 'exact':
+                elif constraint["type"] == "exact":
                     exact_versions.append(version)
-            
+
             # Sugere a versão mais flexível possível
             if gte_versions:
                 # Pega a versão mínima dos >=
@@ -2716,126 +2730,126 @@ class PackageVersionAnalyzer:
                 from collections import Counter
                 version_counts = Counter(versions)
                 suggestions[package] = version_counts.most_common(1)[0][0]
-        
+
         return suggestions
 
 
-def check_version_compatibility_across_projects(projects: List[Path]) -> Tuple[Dict[str, List[str]], PackageVersionAnalyzer]:
+def check_version_compatibility_across_projects(projects: list[Path]) -> tuple[dict[str, list[str]], PackageVersionAnalyzer]:
     """Verifica conflitos de versão entre projetos do workspace."""
     analyzer = PackageVersionAnalyzer()
-    
+
     print_colored("\n🔍 Verificando compatibilidade de versões entre projetos...", Colors.BLUE)
-    
+
     # Analisa version pinning
     pinning_issues = analyzer.analyze_version_pinning(projects)
-    
+
     # Coleta todas as versões de cada package em cada projeto
     package_versions = {}  # {package: {project: version}}
-    
+
     for project in projects:
         pyproject_file = project / "pyproject.toml"
         if not pyproject_file.exists():
             continue
-            
+
         try:
             with open(pyproject_file, "rb") as f:
                 data = tomllib.load(f)
-            
+
             # Analisa todas as dependências
             all_deps = {}
-            
+
             # Dependências principais
             poetry_deps = data.get("tool", {}).get("poetry", {}).get("dependencies", {})
             all_deps.update(poetry_deps)
-            
+
             # Dependências de grupos
             groups = data.get("tool", {}).get("poetry", {}).get("group", {})
             for group_data in groups.values():
                 group_deps = group_data.get("dependencies", {})
                 all_deps.update(group_deps)
-            
+
             # Registra versões
             for package, version_spec in all_deps.items():
                 if package == "python":
                     continue
-                    
+
                 if package not in package_versions:
                     package_versions[package] = {}
-                
+
                 # Normaliza versão
                 if isinstance(version_spec, dict):
                     version = version_spec.get("version", "*")
                 else:
                     version = str(version_spec)
-                
+
                 package_versions[package][project.name] = version
-                
+
         except Exception:
             continue
-    
+
     # Identifica conflitos usando o analyzer
     conflicts = {}
-    
+
     for package, project_versions in analyzer.package_versions.items():
         unique_versions = set(project_versions.values())
-        
+
         # Se há mais de uma versão diferente, é um conflito potencial
         if len(unique_versions) > 1:
             conflicts[package] = []
             for project, version in project_versions.items():
                 conflicts[package].append(f"{project}: {version}")
-    
+
     # Mostra conflitos encontrados
     if conflicts:
-        print_colored(f"\n⚠️  Conflitos de versão detectados:", Colors.YELLOW)
+        print_colored("\n⚠️  Conflitos de versão detectados:", Colors.YELLOW)
         for package, versions in sorted(conflicts.items()):
             print_colored(f"  📦 {package}:", Colors.RED)
             for version_info in versions:
                 print_colored(f"    - {version_info}", Colors.YELLOW)
     else:
         print_colored("✅ Nenhum conflito de versão detectado!", Colors.GREEN)
-    
+
     # Mostra quem está segurando atualizações
     if pinning_issues:
-        print_colored(f"\n🔒 Projetos segurando atualizações:", Colors.YELLOW)
+        print_colored("\n🔒 Projetos segurando atualizações:", Colors.YELLOW)
         for package, info in sorted(pinning_issues.items()):
             print_colored(f"  📦 {package} (última versão: {info['latest_available']})", Colors.CYAN)
-            for proj_info in info['projects']:
+            for proj_info in info["projects"]:
                 print_colored(
                     f"    - {proj_info['project']}: {proj_info['version']} "
                     f"({proj_info['constraint_type']})",
                     Colors.YELLOW
                 )
-    
+
     return conflicts, analyzer
 
 
-def apply_version_standardization(projects: List[Path], suggestions: Dict[str, str], analyzer: PackageVersionAnalyzer) -> int:
+def apply_version_standardization(projects: list[Path], suggestions: dict[str, str], analyzer: PackageVersionAnalyzer) -> int:
     """Aplica as sugestões de padronização nos pyproject.toml."""
     print_colored("\n🔧 APLICANDO PADRONIZAÇÃO DE VERSÕES", Colors.BOLD)
-    
+
     changes_applied = 0
-    
+
     for project in projects:
         pyproject_file = project / "pyproject.toml"
         if not pyproject_file.exists():
             continue
-        
+
         project_changes = 0
-        
+
         try:
             # Lê o arquivo
             with open(pyproject_file, "rb") as f:
                 data = tomllib.load(f)
-            
+
             # Backup do arquivo original
             import shutil
             backup_file = pyproject_file.with_suffix(".toml.bak")
             shutil.copy2(pyproject_file, backup_file)
-            
+
             # Atualiza versões
             changed = False
-            
+
             # Dependências principais
             if "tool" in data and "poetry" in data["tool"] and "dependencies" in data["tool"]["poetry"]:
                 for package, version_spec in data["tool"]["poetry"]["dependencies"].items():
@@ -2843,7 +2857,7 @@ def apply_version_standardization(projects: List[Path], suggestions: Dict[str, s
                         current_version = version_spec
                         if isinstance(version_spec, dict):
                             current_version = version_spec.get("version", "*")
-                        
+
                         suggested = suggestions[package]
                         if str(current_version) != suggested:
                             if isinstance(version_spec, dict):
@@ -2856,7 +2870,7 @@ def apply_version_standardization(projects: List[Path], suggestions: Dict[str, s
                                 f"  {project.name}: {package} {current_version} → {suggested}",
                                 Colors.GREEN
                             )
-            
+
             # Dependências de grupos
             if "tool" in data and "poetry" in data["tool"] and "group" in data["tool"]["poetry"]:
                 for group_name, group_data in data["tool"]["poetry"]["group"].items():
@@ -2866,7 +2880,7 @@ def apply_version_standardization(projects: List[Path], suggestions: Dict[str, s
                                 current_version = version_spec
                                 if isinstance(version_spec, dict):
                                     current_version = version_spec.get("version", "*")
-                                
+
                                 suggested = suggestions[package]
                                 if str(current_version) != suggested:
                                     if isinstance(version_spec, dict):
@@ -2879,54 +2893,54 @@ def apply_version_standardization(projects: List[Path], suggestions: Dict[str, s
                                         f"  {project.name} ({group_name}): {package} {current_version} → {suggested}",
                                         Colors.GREEN
                                     )
-            
+
             # Salva o arquivo se houve mudanças
             if changed:
                 import tomlkit
-                
+
                 # Recarrega com tomlkit para preservar formatação
-                with open(pyproject_file, "r") as f:
+                with open(pyproject_file) as f:
                     doc = tomlkit.load(f)
-                
+
                 # Aplica mudanças no documento tomlkit
                 if "dependencies" in doc.get("tool", {}).get("poetry", {}):
                     for package in doc["tool"]["poetry"]["dependencies"]:
                         if package in suggestions and package != "python":
                             doc["tool"]["poetry"]["dependencies"][package] = suggestions[package]
-                
+
                 if "group" in doc.get("tool", {}).get("poetry", {}):
                     for group_name in doc["tool"]["poetry"]["group"]:
                         if "dependencies" in doc["tool"]["poetry"]["group"][group_name]:
                             for package in doc["tool"]["poetry"]["group"][group_name]["dependencies"]:
                                 if package in suggestions:
                                     doc["tool"]["poetry"]["group"][group_name]["dependencies"][package] = suggestions[package]
-                
+
                 # Salva com formatação preservada
                 with open(pyproject_file, "w") as f:
                     f.write(tomlkit.dumps(doc))
-                
+
                 changes_applied += project_changes
                 print_colored(
                     f"  ✅ {project.name}: {project_changes} mudanças aplicadas",
                     Colors.GREEN
                 )
-            
+
         except Exception as e:
             print_colored(
-                f"  ❌ {project.name}: Erro ao aplicar mudanças - {str(e)}",
+                f"  ❌ {project.name}: Erro ao aplicar mudanças - {e!s}",
                 Colors.RED
             )
             # Restaura backup em caso de erro
             if backup_file.exists():
                 shutil.copy2(backup_file, pyproject_file)
-    
+
     return changes_applied
 
 
 def main() -> None:
     """Função principal com descoberta automática SUPER ROBUSTA."""
     import argparse
-    
+
     parser = argparse.ArgumentParser(
         description="FLEXT Dependencies Sync - Descoberta e padronização automática de dependências"
     )
@@ -2945,9 +2959,14 @@ def main() -> None:
         nargs="+",
         help="Lista específica de projetos para processar"
     )
-    
+    parser.add_argument(
+        "--discover-missing",
+        action="store_true",
+        help="Descobre e adiciona dependências faltantes (não usa pyproject.toml raiz)"
+    )
+
     args = parser.parse_args()
-    
+
     print_colored("=" * 60, Colors.CYAN)
     print_colored("🚀 FLEXT Dependencies Sync - DESCOBERTA SUPER ROBUSTA", Colors.BOLD)
     print_colored("=" * 60, Colors.CYAN)
@@ -2958,13 +2977,17 @@ def main() -> None:
         f"📚 Descobertos {len(stdlib_modules)} módulos da stdlib", Colors.BLUE
     )
 
-    # Extrai dependências essenciais base
-    print_colored("\n📖 Lendo pyproject.toml da raiz...", Colors.BLUE)
-    base_dependencies = extract_essential_dependencies()
+    # Extrai dependências essenciais base (apenas se não estiver em modo discover)
+    base_dependencies = {}
+    if not args.discover_missing:
+        print_colored("\n📖 Lendo pyproject.toml da raiz...", Colors.BLUE)
+        base_dependencies = extract_essential_dependencies()
 
-    if not base_dependencies:
-        print_colored("❌ Nenhuma dependência encontrada!", Colors.RED)
-        sys.exit(1)
+        if not base_dependencies:
+            print_colored("❌ Nenhuma dependência encontrada!", Colors.RED)
+            sys.exit(1)
+    else:
+        print_colored("\n🔍 Modo descoberta: analisando imports faltantes...", Colors.BLUE)
 
     # Encontra projetos
     print_colored("\n🔍 Encontrando projetos Python...", Colors.BLUE)
@@ -2983,7 +3006,7 @@ def main() -> None:
                 projects.extend(matching)
             else:
                 print_colored(f"⚠️  Projeto '{proj_name}' não encontrado", Colors.YELLOW)
-        
+
         if not projects:
             print_colored("❌ Nenhum dos projetos especificados foi encontrado!", Colors.RED)
             sys.exit(1)
@@ -3003,7 +3026,7 @@ def main() -> None:
         f"🔍 Base de conhecimento automática: {len(all_known_deps)} dependências",
         Colors.CYAN,
     )
-    
+
     # Verifica compatibilidade de versões entre projetos
     version_conflicts, version_analyzer = check_version_compatibility_across_projects(projects)
 
@@ -3019,7 +3042,7 @@ def main() -> None:
     }
 
     # Processa projetos com descoberta automática SUPER ROBUSTA
-    print_colored(f"\n🔄 PROCESSANDO COM DESCOBERTA SUPER ROBUSTA", Colors.BOLD)
+    print_colored("\n🔄 PROCESSANDO COM DESCOBERTA SUPER ROBUSTA", Colors.BOLD)
     print_colored(f"Projetos: {len(projects)} | Descoberta: SUPER ATIVA", Colors.CYAN)
     start_time = time.time()
 
@@ -3043,7 +3066,7 @@ def main() -> None:
             print_colored("\n❌ Interrompido pelo usuário", Colors.RED)
             break
         except Exception as e:
-            print_colored(f"❌ Erro em {project.name}: {str(e)}", Colors.RED)
+            print_colored(f"❌ Erro em {project.name}: {e!s}", Colors.RED)
             global_stats["total_failures"] += 1
 
     # Relatório final
@@ -3069,7 +3092,7 @@ def main() -> None:
             f"⚡ Conflitos resolvidos automaticamente: {global_stats['total_conflicts']}",
             Colors.YELLOW,
         )
-    
+
     if global_stats["version_conflicts"] > 0:
         print_colored(
             f"⚠️  Conflitos de versão entre projetos: {global_stats['version_conflicts']}",
@@ -3093,91 +3116,91 @@ def main() -> None:
         f.write(detailed_report)
 
     print_colored(f"\n💾 Relatório salvo em: {report_file}", Colors.CYAN)
-    
+
     # NOVO: Relatório de sugestões de padronização
     print_colored("\n" + "=" * 60, Colors.CYAN)
     print_colored("🎯 SUGESTÕES DE PADRONIZAÇÃO DE VERSÕES", Colors.BOLD)
     print_colored("=" * 60, Colors.CYAN)
-    
+
     version_suggestions = version_analyzer.suggest_version_standardization()
-    
+
     # Agrupa por tipo de mudança sugerida
     suggestions_by_type = {
-        'conflicts': [],
-        'updates': [],
-        'standardize': []
+        "conflicts": [],
+        "updates": [],
+        "standardize": []
     }
-    
+
     for package, suggested_version in version_suggestions.items():
         current_versions = version_analyzer.package_versions.get(package, {})
         unique_versions = set(current_versions.values())
-        
+
         if len(unique_versions) > 1:
             # Conflito de versão
-            suggestions_by_type['conflicts'].append({
-                'package': package,
-                'suggested': suggested_version,
-                'current': current_versions,
-                'latest': version_analyzer.latest_versions.get(package)
+            suggestions_by_type["conflicts"].append({
+                "package": package,
+                "suggested": suggested_version,
+                "current": current_versions,
+                "latest": version_analyzer.latest_versions.get(package)
             })
         elif package in version_analyzer.latest_versions:
             latest = version_analyzer.latest_versions[package]
             current = list(unique_versions)[0] if unique_versions else None
-            
+
             if current and current != latest and suggested_version != current:
                 # Atualização disponível
-                suggestions_by_type['updates'].append({
-                    'package': package,
-                    'current': current,
-                    'latest': latest,
-                    'suggested': suggested_version
+                suggestions_by_type["updates"].append({
+                    "package": package,
+                    "current": current,
+                    "latest": latest,
+                    "suggested": suggested_version
                 })
-    
+
     # Mostra sugestões de conflitos
-    if suggestions_by_type['conflicts']:
+    if suggestions_by_type["conflicts"]:
         print_colored("\n📦 CONFLITOS A RESOLVER:", Colors.RED)
-        for item in suggestions_by_type['conflicts']:
+        for item in suggestions_by_type["conflicts"]:
             print_colored(f"\n  {item['package']}:", Colors.YELLOW)
             print_colored(f"    Sugestão: {item['suggested']}", Colors.GREEN)
-            if item['latest']:
+            if item["latest"]:
                 print_colored(f"    Última versão disponível: {item['latest']}", Colors.CYAN)
             print_colored("    Versões atuais:", Colors.YELLOW)
-            for proj, ver in sorted(item['current'].items()):
+            for proj, ver in sorted(item["current"].items()):
                 print_colored(f"      - {proj}: {ver}", Colors.WHITE)
-    
+
     # Mostra packages desatualizados
-    if suggestions_by_type['updates']:
+    if suggestions_by_type["updates"]:
         print_colored("\n📈 ATUALIZAÇÕES DISPONÍVEIS:", Colors.CYAN)
-        for item in sorted(suggestions_by_type['updates'], key=lambda x: x['package']):
+        for item in sorted(suggestions_by_type["updates"], key=lambda x: x["package"]):
             print_colored(
-                f"  {item['package']}: {item['current']} → {item['latest']}", 
+                f"  {item['package']}: {item['current']} → {item['latest']}",
                 Colors.YELLOW
             )
-    
+
     # NOVO: Identifica projetos que mais seguram atualizações
     print_colored("\n" + "=" * 60, Colors.CYAN)
     print_colored("🚧 PROJETOS QUE MAIS SEGURAM ATUALIZAÇÕES", Colors.BOLD)
     print_colored("=" * 60, Colors.CYAN)
-    
+
     project_restrictions = {}
     for package, constraints in version_analyzer.version_constraints.items():
         for project, constraint in constraints.items():
-            if constraint['type'] in ['exact', 'caret']:
+            if constraint["type"] in ["exact", "caret"]:
                 if project not in project_restrictions:
                     project_restrictions[project] = 0
                 project_restrictions[project] += 1
-    
+
     # Ordena projetos por número de restrições
     sorted_restrictions = sorted(
-        project_restrictions.items(), 
-        key=lambda x: x[1], 
+        project_restrictions.items(),
+        key=lambda x: x[1],
         reverse=True
     )
-    
+
     if sorted_restrictions:
         for project, count in sorted_restrictions[:10]:  # Top 10
             print_colored(
-                f"  {project}: {count} packages com versões restritivas", 
+                f"  {project}: {count} packages com versões restritivas",
                 Colors.YELLOW
             )
     else:
@@ -3211,7 +3234,7 @@ def main() -> None:
         )
 
     print_colored("=" * 60, Colors.CYAN)
-    
+
     # APLICAÇÃO DAS MUDANÇAS SE SOLICITADO
     if args.apply or args.dry_run:
         print_colored("\n" + "=" * 60, Colors.CYAN)
@@ -3220,12 +3243,12 @@ def main() -> None:
         else:
             print_colored("🚀 APLICANDO PADRONIZAÇÃO DE VERSÕES", Colors.BOLD)
         print_colored("=" * 60, Colors.CYAN)
-        
+
         # Usa as sugestões de padronização
         if version_suggestions:
             if args.dry_run:
                 print_colored("\n📋 MUDANÇAS QUE SERIAM APLICADAS:", Colors.CYAN)
-                
+
                 changes_by_project = {}
                 for package, suggested in version_suggestions.items():
                     for project, current in version_analyzer.package_versions.get(package, {}).items():
@@ -3233,11 +3256,11 @@ def main() -> None:
                             if project not in changes_by_project:
                                 changes_by_project[project] = []
                             changes_by_project[project].append({
-                                'package': package,
-                                'current': current,
-                                'suggested': suggested
+                                "package": package,
+                                "current": current,
+                                "suggested": suggested
                             })
-                
+
                 for project, changes in sorted(changes_by_project.items()):
                     print_colored(f"\n  📁 {project}:", Colors.YELLOW)
                     for change in changes:
@@ -3245,7 +3268,7 @@ def main() -> None:
                             f"    {change['package']}: {change['current']} → {change['suggested']}",
                             Colors.GREEN
                         )
-                
+
                 print_colored(
                     f"\n💡 Use --apply para aplicar estas {sum(len(c) for c in changes_by_project.values())} mudanças",
                     Colors.CYAN
@@ -3254,20 +3277,20 @@ def main() -> None:
                 # Aplica as mudanças de verdade
                 print_colored("\n⚠️  AVISO: Esta operação vai modificar os arquivos pyproject.toml!", Colors.YELLOW)
                 print_colored("   Backups serão criados como pyproject.toml.bak", Colors.YELLOW)
-                
+
                 # Pergunta confirmação
                 try:
                     response = input("\n❓ Deseja continuar? (s/N): ").strip().lower()
-                    if response != 's':
+                    if response != "s":
                         print_colored("\n❌ Operação cancelada pelo usuário", Colors.RED)
                         sys.exit(0)
                 except KeyboardInterrupt:
                     print_colored("\n❌ Operação cancelada pelo usuário", Colors.RED)
                     sys.exit(0)
-                
+
                 # Aplica as mudanças
                 changes_applied = apply_version_standardization(projects, version_suggestions, version_analyzer)
-                
+
                 if changes_applied > 0:
                     print_colored(
                         f"\n✅ {changes_applied} mudanças aplicadas com sucesso!",
@@ -3291,7 +3314,7 @@ def main() -> None:
                 "\n✅ Não há sugestões de padronização - workspace já está consistente!",
                 Colors.GREEN
             )
-    
+
     # Salva relatório completo
     full_report_file = Path("flext_dependencies_analysis.txt")
     with open(full_report_file, "w", encoding="utf-8") as f:
@@ -3299,7 +3322,7 @@ def main() -> None:
         f.write("FLEXT DEPENDENCIES ANALYSIS REPORT\n")
         f.write(f"Generated: {time.strftime('%Y-%m-%d %H:%M:%S')}\n")
         f.write("=" * 80 + "\n\n")
-        
+
         # Resumo
         f.write("SUMMARY\n")
         f.write("-" * 40 + "\n")
@@ -3310,17 +3333,16 @@ def main() -> None:
         f.write(f"Version conflicts found: {global_stats['version_conflicts']}\n")
         f.write(f"Total failures: {global_stats['total_failures']}\n")
         f.write(f"Analysis time: {total_time:.1f}s\n\n")
-        
+
         # Conflitos de versão
         if version_conflicts:
             f.write("VERSION CONFLICTS\n")
             f.write("-" * 40 + "\n")
             for package, versions in sorted(version_conflicts.items()):
                 f.write(f"\n{package}:\n")
-                for version_info in versions:
-                    f.write(f"  - {version_info}\n")
+                f.writelines(f"  - {version_info}\n" for version_info in versions)
             f.write("\n")
-        
+
         # Projetos que seguram atualizações
         if sorted_restrictions:
             f.write("PROJECTS HOLDING BACK UPDATES\n")
@@ -3328,10 +3350,10 @@ def main() -> None:
             for project, count in sorted_restrictions[:10]:
                 f.write(f"{project}: {count} restrictive packages\n")
             f.write("\n")
-        
+
         # Mudanças de versão
         f.write("\n" + detailed_report + "\n")
-        
+
         # Sugestões
         if version_suggestions:
             f.write("\nVERSION STANDARDIZATION SUGGESTIONS\n")
@@ -3342,7 +3364,7 @@ def main() -> None:
                     f.write(f"\n{package} → {suggested}\n")
                     for proj, ver in sorted(current_versions.items()):
                         f.write(f"  {proj}: {ver}\n")
-    
+
     print_colored(f"\n💾 Análise completa salva em: {full_report_file}", Colors.CYAN)
 
 

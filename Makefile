@@ -50,6 +50,11 @@ workspace-setup: ## Complete workspace setup
 	done
 	@echo "✅ Workspace setup complete!"
 
+setup-dependencies: ## Install dependencies correctly (fixes known issues)
+	@echo "🔧 Installing FLEXT dependencies with known fixes..."
+	@bash scripts/setup_dependencies.sh
+	@echo "✅ Dependencies setup complete!"
+
 workspace-install: ## Install all project dependencies
 	@echo "📦 Installing dependencies for all projects..."
 	@for project in $(ALL_PROJECTS); do \
