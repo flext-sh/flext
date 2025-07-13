@@ -16,6 +16,14 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+# Importa sistema de cache
+try:
+    from dependency_cache import get_cache
+    CACHE_ENABLED = True
+except ImportError:
+    CACHE_ENABLED = False
+    print("⚠️ Cache desabilitado (dependency_cache.py não encontrado)")
+
 
 # Cores para output
 class Colors:
@@ -1385,6 +1393,18 @@ class DependencyAnalyzer:
     def analyze_deep_dependencies(self, project: Path) -> dict[str, set[str]]:
         """Análise profunda e robusta de dependências."""
         print_colored("    🔍 Análise PROFUNDA de dependências...", Colors.BLUE)
+        
+        # Tenta obter do cache primeiro
+        if CACHE_ENABLED:
+            cache = get_cache()
+            cached_deps = cache.get_analysis(project, "deep_dependencies")
+            if cached_deps:
+                print_colored("    📦 Usando análise do cache", Colors.GREEN)
+                # Converte listas de volta para sets
+                return {
+                    category: set(deps) 
+                    for category, deps in cached_deps.items()
+                }
 
         dependencies = {"runtime": set(), "test": set(), "dev": set()}
         
@@ -1412,6 +1432,16 @@ class DependencyAnalyzer:
         # 5. Analisa strings e comentários
         string_deps = self._analyze_strings_and_comments(project)
         dependencies["runtime"].update(string_deps)
+        
+        # Salva no cache (converte sets para listas para JSON)
+        if CACHE_ENABLED:
+            cache = get_cache()
+            cacheable_deps = {
+                category: list(deps) 
+                for category, deps in dependencies.items()
+            }
+            cache.set_analysis(project, "deep_dependencies", cacheable_deps)
+            print_colored("    💾 Análise salva no cache", Colors.BLUE)
 
         return dependencies
 
