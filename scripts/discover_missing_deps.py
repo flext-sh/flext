@@ -156,7 +156,14 @@ def discover_missing_imports(project: Path) -> set[str]:
     missing = missing - flext_projects
 
     # Remove falsos positivos comuns
-    false_positives = {"src", "tests", "test", "setup", "__main__"}
+    false_positives = {
+        "src", "tests", "test", "setup", "__main__",
+        "models", "views", "urls", "admin", "apps", "forms",  # Django apps comuns
+        "config", "settings", "utils", "helpers", "constants",  # Módulos internos comuns
+        "serializers", "migrations", "management", "commands",  # Django específico
+        "core", "domain", "infrastructure", "application",  # DDD/Clean Architecture
+        "services", "repositories", "entities", "schemas",  # Padrões arquiteturais
+    }
     missing = missing - false_positives
 
     if missing:
