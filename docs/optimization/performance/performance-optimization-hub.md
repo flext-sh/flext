@@ -193,7 +193,8 @@ From **[Gruponos Performance Optimization](./gruponos-performance-optimization.m
 class OptimizedOracleWMSAdapter(BaseAdapter):
     def __init__(self):
         # Connection pooling for Oracle
-        self.pool = cx_Oracle.create_pool(
+        import oracledb
+        self.pool = oracledb.create_pool(
             min=10, max=50, increment=5,
             dsn="oracle://wms-cluster/XE"
         )

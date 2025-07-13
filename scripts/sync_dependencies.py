@@ -2336,11 +2336,42 @@ def analyze_and_fix_missing_imports(project: Path) -> Dict[str, Set[str]]:
     return missing_deps
 
 
+def validate_poetry_environment(project: Path) -> bool:
+    """Valida se o ambiente Poetry está configurado corretamente."""
+    # Verifica se poetry está disponível
+    success, output = run_command(["poetry", "--version"], project, timeout=10)
+    if not success:
+        print_colored("    ❌ Poetry não está instalado ou não está no PATH", Colors.RED)
+        return False
+    
+    # Verifica se o projeto tem pyproject.toml válido
+    pyproject_file = project / "pyproject.toml"
+    if not pyproject_file.exists():
+        print_colored("    ❌ pyproject.toml não encontrado", Colors.RED)
+        return False
+    
+    # Verifica se o ambiente virtual existe
+    success, output = run_command(["poetry", "env", "info"], project, timeout=10)
+    if not success or "does not exist" in output:
+        print_colored("    ⚠️  Ambiente virtual não existe, criando...", Colors.YELLOW)
+        success, _ = run_command(["poetry", "install", "--no-root"], project, timeout=120)
+        if not success:
+            print_colored("    ❌ Falha ao criar ambiente virtual", Colors.RED)
+            return False
+    
+    return True
+
+
 def install_discovered_dependencies(
     project: Path, discovered_deps: Dict[str, Set[str]]
 ) -> Dict[str, int]:
     """Instala dependências descobertas automaticamente."""
     stats = {"installed": 0, "skipped": 0, "conflicts": 0, "failures": 0}
+
+    # Valida ambiente Poetry primeiro
+    if not validate_poetry_environment(project):
+        stats["failures"] = 1
+        return stats
 
     # Mapeia categorias para grupos Poetry
     category_groups = {
@@ -2937,13 +2968,29 @@ def main() -> None:
 
     # Encontra projetos
     print_colored("\n🔍 Encontrando projetos Python...", Colors.BLUE)
-    projects = find_flext_projects()
+    all_projects = find_flext_projects()
 
-    if not projects:
+    if not all_projects:
         print_colored("❌ Nenhum projeto encontrado!", Colors.RED)
         sys.exit(1)
 
-    print_colored(f"📁 Encontrados {len(projects)} projetos", Colors.GREEN)
+    # Filtra projetos se especificado
+    if args.projects:
+        projects = []
+        for proj_name in args.projects:
+            matching = [p for p in all_projects if p.name == proj_name]
+            if matching:
+                projects.extend(matching)
+            else:
+                print_colored(f"⚠️  Projeto '{proj_name}' não encontrado", Colors.YELLOW)
+        
+        if not projects:
+            print_colored("❌ Nenhum dos projetos especificados foi encontrado!", Colors.RED)
+            sys.exit(1)
+    else:
+        projects = all_projects
+
+    print_colored(f"📁 Processando {len(projects)} projetos", Colors.GREEN)
 
     # PILAR CENTRAL: Descobre dependências existentes para base de conhecimento
     print_colored("\n🧠 CONSTRUINDO BASE DE CONHECIMENTO AUTOMÁTICA", Colors.BOLD)
@@ -3164,6 +3211,139 @@ def main() -> None:
         )
 
     print_colored("=" * 60, Colors.CYAN)
+    
+    # APLICAÇÃO DAS MUDANÇAS SE SOLICITADO
+    if args.apply or args.dry_run:
+        print_colored("\n" + "=" * 60, Colors.CYAN)
+        if args.dry_run:
+            print_colored("🔍 MODO DRY-RUN - Mostrando o que seria feito", Colors.BOLD)
+        else:
+            print_colored("🚀 APLICANDO PADRONIZAÇÃO DE VERSÕES", Colors.BOLD)
+        print_colored("=" * 60, Colors.CYAN)
+        
+        # Usa as sugestões de padronização
+        if version_suggestions:
+            if args.dry_run:
+                print_colored("\n📋 MUDANÇAS QUE SERIAM APLICADAS:", Colors.CYAN)
+                
+                changes_by_project = {}
+                for package, suggested in version_suggestions.items():
+                    for project, current in version_analyzer.package_versions.get(package, {}).items():
+                        if current != suggested:
+                            if project not in changes_by_project:
+                                changes_by_project[project] = []
+                            changes_by_project[project].append({
+                                'package': package,
+                                'current': current,
+                                'suggested': suggested
+                            })
+                
+                for project, changes in sorted(changes_by_project.items()):
+                    print_colored(f"\n  📁 {project}:", Colors.YELLOW)
+                    for change in changes:
+                        print_colored(
+                            f"    {change['package']}: {change['current']} → {change['suggested']}",
+                            Colors.GREEN
+                        )
+                
+                print_colored(
+                    f"\n💡 Use --apply para aplicar estas {sum(len(c) for c in changes_by_project.values())} mudanças",
+                    Colors.CYAN
+                )
+            else:
+                # Aplica as mudanças de verdade
+                print_colored("\n⚠️  AVISO: Esta operação vai modificar os arquivos pyproject.toml!", Colors.YELLOW)
+                print_colored("   Backups serão criados como pyproject.toml.bak", Colors.YELLOW)
+                
+                # Pergunta confirmação
+                try:
+                    response = input("\n❓ Deseja continuar? (s/N): ").strip().lower()
+                    if response != 's':
+                        print_colored("\n❌ Operação cancelada pelo usuário", Colors.RED)
+                        sys.exit(0)
+                except KeyboardInterrupt:
+                    print_colored("\n❌ Operação cancelada pelo usuário", Colors.RED)
+                    sys.exit(0)
+                
+                # Aplica as mudanças
+                changes_applied = apply_version_standardization(projects, version_suggestions, version_analyzer)
+                
+                if changes_applied > 0:
+                    print_colored(
+                        f"\n✅ {changes_applied} mudanças aplicadas com sucesso!",
+                        Colors.GREEN
+                    )
+                    print_colored(
+                        "\n💡 Execute 'poetry lock --no-update' em cada projeto modificado",
+                        Colors.CYAN
+                    )
+                    print_colored(
+                        "   ou use 'make lock' se disponível no Makefile",
+                        Colors.CYAN
+                    )
+                else:
+                    print_colored(
+                        "\n✅ Nenhuma mudança necessária - todos os projetos já estão padronizados!",
+                        Colors.GREEN
+                    )
+        else:
+            print_colored(
+                "\n✅ Não há sugestões de padronização - workspace já está consistente!",
+                Colors.GREEN
+            )
+    
+    # Salva relatório completo
+    full_report_file = Path("flext_dependencies_analysis.txt")
+    with open(full_report_file, "w", encoding="utf-8") as f:
+        f.write("=" * 80 + "\n")
+        f.write("FLEXT DEPENDENCIES ANALYSIS REPORT\n")
+        f.write(f"Generated: {time.strftime('%Y-%m-%d %H:%M:%S')}\n")
+        f.write("=" * 80 + "\n\n")
+        
+        # Resumo
+        f.write("SUMMARY\n")
+        f.write("-" * 40 + "\n")
+        f.write(f"Total projects analyzed: {global_stats['total_projects']}\n")
+        f.write(f"Successful projects: {global_stats['success_projects']}\n")
+        f.write(f"Dependencies discovered: {global_stats['total_discovered']}\n")
+        f.write(f"Dependencies synchronized: {global_stats['total_updated']}\n")
+        f.write(f"Version conflicts found: {global_stats['version_conflicts']}\n")
+        f.write(f"Total failures: {global_stats['total_failures']}\n")
+        f.write(f"Analysis time: {total_time:.1f}s\n\n")
+        
+        # Conflitos de versão
+        if version_conflicts:
+            f.write("VERSION CONFLICTS\n")
+            f.write("-" * 40 + "\n")
+            for package, versions in sorted(version_conflicts.items()):
+                f.write(f"\n{package}:\n")
+                for version_info in versions:
+                    f.write(f"  - {version_info}\n")
+            f.write("\n")
+        
+        # Projetos que seguram atualizações
+        if sorted_restrictions:
+            f.write("PROJECTS HOLDING BACK UPDATES\n")
+            f.write("-" * 40 + "\n")
+            for project, count in sorted_restrictions[:10]:
+                f.write(f"{project}: {count} restrictive packages\n")
+            f.write("\n")
+        
+        # Mudanças de versão
+        f.write("\n" + detailed_report + "\n")
+        
+        # Sugestões
+        if version_suggestions:
+            f.write("\nVERSION STANDARDIZATION SUGGESTIONS\n")
+            f.write("-" * 40 + "\n")
+            for package, suggested in sorted(version_suggestions.items()):
+                current_versions = version_analyzer.package_versions.get(package, {})
+                if len(set(current_versions.values())) > 1:
+                    f.write(f"\n{package} → {suggested}\n")
+                    for proj, ver in sorted(current_versions.items()):
+                        f.write(f"  {proj}: {ver}\n")
+    
+    print_colored(f"\n💾 Análise completa salva em: {full_report_file}", Colors.CYAN)
 
 
 if __name__ == "__main__":
