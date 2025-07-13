@@ -96,8 +96,8 @@ class QualityChecker:
             # Conta linhas com "error:"
             error_lines = [
                 line
-                for line in result.stdout.split("\n"):
-                    if line.strip() and ": error:" in line
+                for line in result.stdout.split("\n")
+                if line.strip() and ": error:" in line
             ]
             return len(error_lines)
 
@@ -317,8 +317,8 @@ class QualityChecker:
         # Encontra arquivos Python
         python_files = [
             py_file
-            for py_file in project_path.rglob("*.py"):
-            if py_file.is_file():
+            for py_file in project_path.rglob("*.py")
+            if py_file.is_file()
             and not any(part.startswith(".") for part in py_file.parts)
         ]
 
@@ -425,8 +425,6 @@ def main() -> None:
                 f"❌ {args.file.name} falhou: {result.get('error', 'Erro desconhecido')}"
             )
 
-        return
-
     # Validação de projeto
     if args.project:
         project_path = args.workspace / args.project
@@ -445,8 +443,6 @@ def main() -> None:
             print(
                 f"❌ Projeto {args.project} falhou: {result.get('error', 'Erro desconhecido')}"
             )
-
-        return
 
     print("ℹ️  Use --file ou --project para validar. Use --help para mais opções.")
 
