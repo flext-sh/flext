@@ -231,8 +231,8 @@ class QualityGatewayFinal:
         # Encontrar arquivos Python
         python_files = [
             py_file
-            for py_file in project_path.rglob("*.py"):
-            if py_file.is_file():
+            for py_file in project_path.rglob("*.py")
+            if py_file.is_file()
             and not any(part.startswith(".") for part in py_file.parts)
         ]
 
@@ -257,7 +257,7 @@ class QualityGatewayFinal:
 
         # Progress bar otimizada
         if RICH_AVAILABLE:
-            with Progress(:
+            with Progress(
                 SpinnerColumn(),
                 TextColumn("[progress.description]{task.description}"),
                 BarColumn(),
@@ -362,8 +362,6 @@ def main() -> None:
         else:
             print(f"❌ {args.file.name}: {result.get('error', 'Erro desconhecido')}")
 
-        return
-
     # Processamento de projeto
     if args.project:
         project_path = args.workspace / args.project
@@ -384,8 +382,6 @@ def main() -> None:
             print(
                 f"❌ Projeto {args.project} falhou: {result.get('error', 'Erro desconhecido')}"
             )
-
-        return
 
     print("ℹ️  Use --file ou --project. Use --help para ajuda.")
 
