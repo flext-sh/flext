@@ -11,9 +11,18 @@ Este script implementa as melhores práticas para testing:
 
 from __future__ import annotations
 
+import logging
 import subprocess
 import sys
 from pathlib import Path
+
+# Configure logger
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(message)s",
+    handlers=[logging.StreamHandler(sys.stdout)],
+)
+logger = logging.getLogger(__name__)
 
 
 class ModernTestRunner:

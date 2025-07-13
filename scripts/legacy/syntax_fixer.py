@@ -19,7 +19,7 @@ import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import List
+from typing import Any
 
 from rich.console import Console
 from rich.panel import Panel
@@ -30,7 +30,7 @@ console = Console()
 
 
 class SyntaxPattern:
-    Representa um padrão de sintaxe que pode ser corrigido automaticamente."""
+    """Representa um padrão de sintaxe que pode ser corrigido automaticamente."""
 
     def __init__(
         self,
@@ -48,7 +48,7 @@ class SyntaxPattern:
 
 
 class SyntaxFixer:
-    Corrige erros de sintaxe Python de forma automatizada e segura."""
+    """Corrige erros de sintaxe Python de forma automatizada e segura."""
 
     # Padrões de correção segura
     SAFE_PATTERNS = [
@@ -161,7 +161,7 @@ class SyntaxFixer:
             )
             return False
 
-    def fix_file(self, file_path: Path) -> dict[str, any]:
+    def fix_file(self, file_path: Path) -> dict[str, Any]:
         """Corrige um arquivo Python aplicando padrões seguros."""
         result = {
             "file": str(file_path),
@@ -225,8 +225,8 @@ class SyntaxFixer:
             # Ignora diretórios de cache e virtuais
             dirs[:] = [
                 d
-                for d in dirs:
-                if not d.startswith(".") and d not in {"__pycache__", "venv", ".venv"}:
+                for d in dirs
+                if not d.startswith(".") and d not in {"__pycache__", "venv", ".venv"}
             ]
 
             python_files.extend(
@@ -235,7 +235,7 @@ class SyntaxFixer:
 
         return python_files
 
-    def fix_project(self, project_path: Path) -> dict[str, any]:
+    def fix_project(self, project_path: Path) -> dict[str, Any]:
         """Corrige todos os arquivos Python em um projeto."""
         if not project_path.exists():
             return {"error": f"Projeto não encontrado: {project_path}"}
@@ -252,7 +252,7 @@ class SyntaxFixer:
             if not syntax_ok:
                 syntax_errors_before += 1
 
-        with Progress(:
+        with Progress(
             SpinnerColumn(),
             TextColumn("[progress.description]{task.description}"),
             console=console,
