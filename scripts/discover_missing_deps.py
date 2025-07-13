@@ -11,6 +11,7 @@ import sys
 import tomllib
 from datetime import datetime
 from pathlib import Path
+from typing import Any
 
 
 def find_python_files(project: Path) -> list[Path]:
@@ -20,7 +21,7 @@ def find_python_files(project: Path) -> list[Path]:
 
 def extract_imports(file_path: Path) -> set[str]:
     """Extrai todos os imports de um arquivo Python."""
-    imports = set()
+    imports: set[str] = set()
 
     try:
         with open(file_path, encoding="utf-8") as f:
@@ -29,9 +30,8 @@ def extract_imports(file_path: Path) -> set[str]:
         for node in ast.walk(tree):
             if isinstance(node, ast.Import):
                 imports.update(alias.name.split(".")[0] for alias in node.names)
-            elif isinstance(node, ast.ImportFrom):
-                if node.module:
-                    imports.add(node.module.split(".")[0])
+            elif isinstance(node, ast.ImportFrom) and node.module:
+                imports.add(node.module.split(".")[0])
 
     except Exception as e:
         print(f"⚠️  Erro ao analisar {file_path}: {e}")
@@ -43,21 +43,85 @@ def get_stdlib_modules() -> set[str]:
     """Lista básica de módulos da stdlib Python."""
     # Lista conservadora dos mais comuns
     return {
-        "abc", "argparse", "ast", "asyncio", "base64", "collections",
-        "contextlib", "copy", "csv", "dataclasses", "datetime", "decimal",
-        "email", "enum", "functools", "glob", "hashlib", "html", "http",
-        "importlib", "inspect", "io", "itertools", "json", "logging",
-        "math", "os", "pathlib", "pickle", "platform", "pprint", "queue",
-        "re", "shutil", "socket", "sqlite3", "string", "subprocess", "sys",
-        "tempfile", "threading", "time", "typing", "unittest", "urllib",
-        "uuid", "warnings", "xml", "zipfile",
+        "abc",
+        "argparse",
+        "ast",
+        "asyncio",
+        "base64",
+        "collections",
+        "contextlib",
+        "copy",
+        "csv",
+        "dataclasses",
+        "datetime",
+        "decimal",
+        "email",
+        "enum",
+        "functools",
+        "glob",
+        "hashlib",
+        "html",
+        "http",
+        "importlib",
+        "inspect",
+        "io",
+        "itertools",
+        "json",
+        "logging",
+        "math",
+        "os",
+        "pathlib",
+        "pickle",
+        "platform",
+        "pprint",
+        "queue",
+        "re",
+        "shutil",
+        "socket",
+        "sqlite3",
+        "string",
+        "subprocess",
+        "sys",
+        "tempfile",
+        "threading",
+        "time",
+        "typing",
+        "unittest",
+        "urllib",
+        "uuid",
+        "warnings",
+        "xml",
+        "zipfile",
         # Builtins e especiais
-        "builtins", "gc", "signal", "traceback", "weakref", "__future__",
-        "types", "operator", "random", "secrets", "statistics",
+        "builtins",
+        "gc",
+        "signal",
+        "traceback",
+        "weakref",
+        "__future__",
+        "types",
+        "operator",
+        "random",
+        "secrets",
+        "statistics",
         # Mais stdlib
-        "fnmatch", "getpass", "ipaddress", "struct", "array", "bisect",
-        "calendar", "cmath", "codecs", "configparser", "difflib",
-        "filecmp", "fileinput", "fractions", "gzip", "heapq", "hmac",
+        "fnmatch",
+        "getpass",
+        "ipaddress",
+        "struct",
+        "array",
+        "bisect",
+        "calendar",
+        "cmath",
+        "codecs",
+        "configparser",
+        "difflib",
+        "filecmp",
+        "fileinput",
+        "fractions",
+        "gzip",
+        "heapq",
+        "hmac",
     }
 
 
@@ -106,8 +170,9 @@ def check_import_exists(module: str) -> bool:
     try:
         result = subprocess.run(
             [sys.executable, "-c", f"import {module}"],
-            check=False, capture_output=True,
-            timeout=5
+            check=False,
+            capture_output=True,
+            timeout=5,
         )
         return result.returncode == 0
     except:
@@ -126,7 +191,10 @@ def discover_missing_imports(project: Path) -> set[str]:
 
     for py_file in py_files:
         # Pula arquivos de teste e setup
-        if any(part in py_file.parts for part in ["tests", "test", "setup.py", "__pycache__"]):
+        if any(
+            part in py_file.parts
+            for part in ["tests", "test", "setup.py", "__pycache__"]
+        ):
             continue
 
         imports = extract_imports(py_file)
@@ -146,25 +214,63 @@ def discover_missing_imports(project: Path) -> set[str]:
 
     # Remove outros projetos FLEXT
     flext_projects = {
-        "flext", "flext_core", "flext_auth", "flext_cli", "flext_api",
-        "flext_grpc", "flext_web", "flext_plugin", "flext_meltano",
-        "flext_observability", "flext_ldap", "flext_quality", "flext_db_oracle",
-        "flext_tap_ldap", "flext_tap_oracle_oic", "flext_tap_oracle_wms",
-        "flext_target_ldap", "flext_target_oracle", "flext_target_oracle_oic",
-        "flext_target_oracle_wms", "flext_dbt_ldap", "flext_oracle_oic_ext",
+        "flext",
+        "flext_core",
+        "flext_auth",
+        "flext_cli",
+        "flext_api",
+        "flext_grpc",
+        "flext_web",
+        "flext_plugin",
+        "flext_meltano",
+        "flext_observability",
+        "flext_ldap",
+        "flext_quality",
+        "flext_db_oracle",
+        "flext_tap_ldap",
+        "flext_tap_oracle_oic",
+        "flext_tap_oracle_wms",
+        "flext_target_ldap",
+        "flext_target_oracle",
+        "flext_target_oracle_oic",
+        "flext_target_oracle_wms",
+        "flext_dbt_ldap",
+        "flext_oracle_oic_ext",
     }
-    missing = missing - flext_projects
+    missing -= flext_projects
 
     # Remove falsos positivos comuns
     false_positives = {
-        "src", "tests", "test", "setup", "__main__",
-        "models", "views", "urls", "admin", "apps", "forms",  # Django apps comuns
-        "config", "settings", "utils", "helpers", "constants",  # Módulos internos comuns
-        "serializers", "migrations", "management", "commands",  # Django específico
-        "core", "domain", "infrastructure", "application",  # DDD/Clean Architecture
-        "services", "repositories", "entities", "schemas",  # Padrões arquiteturais
+        "src",
+        "tests",
+        "test",
+        "setup",
+        "__main__",
+        "models",
+        "views",
+        "urls",
+        "admin",
+        "apps",
+        "forms",  # Django apps comuns
+        "config",
+        "settings",
+        "utils",
+        "helpers",
+        "constants",  # Módulos internos comuns
+        "serializers",
+        "migrations",
+        "management",
+        "commands",  # Django específico
+        "core",
+        "domain",
+        "infrastructure",
+        "application",  # DDD/Clean Architecture
+        "services",
+        "repositories",
+        "entities",
+        "schemas",  # Padrões arquiteturais
     }
-    missing = missing - false_positives
+    missing -= false_positives
 
     if missing:
         print(f"   ❌ Encontrados {len(missing)} imports não declarados:")
@@ -182,12 +288,12 @@ def parse_version_constraint(constraint: str) -> dict[str, str]:
 
     # Padrões comuns
     patterns = [
-        (r"^==(.+)$", "exact"),           # ==1.2.3
-        (r"^~=(.+)$", "compatible"),      # ~=1.2.3
-        (r"^>=(.+),<(.+)$", "range"),     # >=1.0,<2.0
-        (r"^>=(.+)$", "minimum"),         # >=1.0
-        (r"^\^(.+)$", "caret"),           # ^1.2.3 (Poetry)
-        (r"^~(.+)$", "tilde"),            # ~1.2.3 (Poetry)
+        (r"^==(.+)$", "exact"),  # ==1.2.3
+        (r"^~=(.+)$", "compatible"),  # ~=1.2.3
+        (r"^>=(.+),<(.+)$", "range"),  # >=1.0,<2.0
+        (r"^>=(.+)$", "minimum"),  # >=1.0
+        (r"^\^(.+)$", "caret"),  # ^1.2.3 (Poetry)
+        (r"^~(.+)$", "tilde"),  # ~1.2.3 (Poetry)
     ]
 
     for pattern, constraint_type in patterns:
@@ -196,19 +302,24 @@ def parse_version_constraint(constraint: str) -> dict[str, str]:
             return {
                 "type": constraint_type,
                 "version": match.group(1),
-                "raw": constraint
+                "raw": constraint,
             }
 
     return {"type": "unknown", "version": constraint, "raw": constraint}
 
 
-def get_package_versions_in_workspace(workspace_root: Path, package: str) -> dict[str, str]:
+def get_package_versions_in_workspace(
+    workspace_root: Path, package: str
+) -> dict[str, str]:
     """Coleta todas as versões de um pacote no workspace."""
     versions = {}
 
     for pyproject in workspace_root.rglob("pyproject.toml"):
         # Pula backups e diretórios temporários
-        if any(part in pyproject.parts for part in [".venv", "backup", "tmp", "__pycache__"]):
+        if any(
+            part in pyproject.parts
+            for part in [".venv", "backup", "tmp", "__pycache__"]
+        ):
             continue
 
         try:
@@ -237,11 +348,11 @@ def get_package_versions_in_workspace(workspace_root: Path, package: str) -> dic
 
 def analyze_version_restrictions(versions: dict[str, str]) -> dict[str, list[str]]:
     """Analisa restrições de versão e identifica projetos restritivos."""
-    analysis = {
-        "exact_pins": [],      # Projetos com versão exata (==)
-        "upper_bounds": [],    # Projetos com limite superior
-        "restrictive": [],     # Projetos mais restritivos
-        "flexible": [],        # Projetos mais flexíveis
+    analysis: dict[str, list[str]] = {
+        "exact_pins": [],  # Projetos com versão exata (==)
+        "upper_bounds": [],  # Projetos com limite superior
+        "restrictive": [],  # Projetos mais restritivos
+        "flexible": [],  # Projetos mais flexíveis
     }
 
     for project, version in versions.items():
@@ -250,10 +361,10 @@ def analyze_version_restrictions(versions: dict[str, str]) -> dict[str, list[str
         if parsed["type"] == "exact":
             analysis["exact_pins"].append(f"{project}: {version}")
             analysis["restrictive"].append(project)
-        elif parsed["type"] in ["range", "compatible"]:
+        elif parsed["type"] in {"range", "compatible"}:
             analysis["upper_bounds"].append(f"{project}: {version}")
             analysis["restrictive"].append(project)
-        elif parsed["type"] in ["minimum", "caret", "tilde"]:
+        elif parsed["type"] in {"minimum", "caret", "tilde"}:
             analysis["flexible"].append(f"{project}: {version}")
 
     return analysis
@@ -268,12 +379,12 @@ def add_dependency(project: Path, package: str, dry_run: bool = True) -> bool:
         "yaml": "pyyaml",
         "ldap": "python-ldap",
         "google": "protobuf",  # google.protobuf vem do pacote protobuf
-        "grpc": "grpcio",      # import grpc vem do pacote grpcio
+        "grpc": "grpcio",  # import grpc vem do pacote grpcio
     }
-    
+
     # Aplica mapeamento se necessário
     pypi_package = package_name_mapping.get(package, package)
-    
+
     # Faz backup do pyproject.toml antes de modificar
     if not dry_run:
         pyproject = project / "pyproject.toml"
@@ -281,6 +392,7 @@ def add_dependency(project: Path, package: str, dry_run: bool = True) -> bool:
 
         try:
             import shutil
+
             shutil.copy2(pyproject, backup)
             print(f"   📋 Backup criado: {backup.name}")
         except Exception as e:
@@ -294,15 +406,13 @@ def add_dependency(project: Path, package: str, dry_run: bool = True) -> bool:
         print(f"   🔧 {'Simulando' if dry_run else 'Executando'}: {' '.join(cmd)}")
 
         result = subprocess.run(
-            cmd,
-            check=False, cwd=project,
-            capture_output=True,
-            text=True,
-            timeout=60
+            cmd, check=False, cwd=project, capture_output=True, text=True, timeout=60
         )
 
         if result.returncode == 0:
-            print(f"   ✅ {'Seria adicionado' if dry_run else 'Adicionado'}: {pypi_package} (import: {package})")
+            print(
+                f"   ✅ {'Seria adicionado' if dry_run else 'Adicionado'}: {pypi_package} (import: {package})"
+            )
             return True
         print(f"   ❌ Erro ao adicionar {pypi_package} (import: {package}):")
         print(f"      {result.stderr}")
@@ -316,7 +426,7 @@ def add_dependency(project: Path, package: str, dry_run: bool = True) -> bool:
         return False
 
 
-def main():
+def main() -> int:
     """Função principal."""
     import argparse
 
@@ -324,29 +434,24 @@ def main():
         description="Descobre e adiciona dependências Python faltantes"
     )
     parser.add_argument(
-        "projects",
-        nargs="+",
-        help="Diretórios dos projetos para analisar"
+        "projects", nargs="+", help="Diretórios dos projetos para analisar"
     )
     parser.add_argument(
         "--apply",
         action="store_true",
-        help="Aplica as mudanças (sem esta flag, apenas simula)"
+        help="Aplica as mudanças (sem esta flag, apenas simula)",
     )
     parser.add_argument(
         "--check-import",
         action="store_true",
-        help="Verifica se o import realmente não existe antes de adicionar"
+        help="Verifica se o import realmente não existe antes de adicionar",
     )
     parser.add_argument(
         "--analyze-versions",
         action="store_true",
-        help="Analisa versões e mostra quem segura atualizações"
+        help="Analisa versões e mostra quem segura atualizações",
     )
-    parser.add_argument(
-        "--save-report",
-        help="Salva relatório completo em arquivo"
-    )
+    parser.add_argument("--save-report", help="Salva relatório completo em arquivo")
 
     args = parser.parse_args()
 
@@ -356,7 +461,7 @@ def main():
     total_missing = 0
     total_added = 0
     all_missing_deps = set()  # Para análise de versões
-    project_reports = []  # Para relatório
+    project_reports: list[Any] = []  # Para relatório
 
     for project_path in args.projects:
         project = Path(project_path)
@@ -375,21 +480,18 @@ def main():
         all_missing_deps.update(missing)
 
         # Guarda para relatório
-        project_reports.append({
-            "project": project.name,
-            "missing": list(missing),
-            "added": []
-        })
+        project_reports.append(
+            {"project": project.name, "missing": list(missing), "added": []}
+        )
 
         if missing and args.apply:
             print("\n   🚀 Adicionando dependências faltantes...")
 
             for package in sorted(missing):
                 # Opcionalmente verifica se realmente não importa
-                if args.check_import:
-                    if check_import_exists(package):
-                        print(f"   ⏭️  {package} já pode ser importado, pulando...")
-                        continue
+                if args.check_import and check_import_exists(package):
+                    print(f"   ⏭️  {package} já pode ser importado, pulando...")
+                    continue
 
                 if add_dependency(project, package, dry_run=False):
                     total_added += 1
@@ -430,7 +532,9 @@ def main():
 
                 # Identifica o mais restritivo
                 if analysis["restrictive"]:
-                    print(f"   🚫 Projetos segurando atualizações: {', '.join(set(analysis['restrictive']))}")
+                    print(
+                        f"   🚫 Projetos segurando atualizações: {', '.join(set(analysis['restrictive']))}"
+                    )
 
     # Salva relatório se solicitado
     if args.save_report:
@@ -444,9 +548,13 @@ def main():
             for report in project_reports:
                 f.write(f"Projeto: {report['project']}\n")
                 if report["missing"]:
-                    f.write(f"  Dependências faltantes: {', '.join(report['missing'])}\n")
+                    f.write(
+                        f"  Dependências faltantes: {', '.join(report['missing'])}\n"
+                    )
                 if report["added"]:
-                    f.write(f"  Dependências adicionadas: {', '.join(report['added'])}\n")
+                    f.write(
+                        f"  Dependências adicionadas: {', '.join(report['added'])}\n"
+                    )
                 f.write("\n")
 
             f.write("-" * 60 + "\n")
@@ -459,10 +567,15 @@ def main():
                 f.write("=" * 60 + "\n")
 
                 for package in sorted(all_missing_deps):
-                    versions = get_package_versions_in_workspace(workspace_root, package)
+                    versions = get_package_versions_in_workspace(
+                        workspace_root, package
+                    )
                     if versions:
                         f.write(f"\n{package}:\n")
-                        f.writelines(f"  {proj}: {ver}\n" for proj, ver in sorted(versions.items()))
+                        f.writelines(
+                            f"  {proj}: {ver}\n"
+                            for proj, ver in sorted(versions.items())
+                        )
 
         print(f"\n💾 Relatório salvo em: {report_path}")
 

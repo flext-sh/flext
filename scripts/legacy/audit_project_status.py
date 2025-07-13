@@ -2,9 +2,12 @@
 """
 Script para auditoria completa do status real dos projetos FLEXT.
 
+Copyright (c) 2025 Flext. All rights reserved.
+SPDX-License-Identifier: MIT
+
 Este script verifica a implementação real de cada módulo e gera relatório
 honesto sobre o status atual, substituindo documentação inflada.
-
+"""
 
 import os
 import subprocess
@@ -14,14 +17,14 @@ from typing import Any
 
 
 class ProjectAuditor:
-    Auditor para verificar status real dos projetos FLEXT."""
+    """Auditor para verificar status real dos projetos FLEXT."""
 
     def __init__(self, workspace_root: str) -> None:
         self.workspace_root = Path(workspace_root)
         self.results: dict[str, dict[str, Any]] = {}
 
     def audit_all_projects(self) -> dict[str, dict[str, Any]]:
-        Audita todos os projetos FLEXT."""
+        """Audita todos os projetos FLEXT."""
         projects = self._find_flext_projects()
 
         for project in projects:
@@ -31,26 +34,26 @@ class ProjectAuditor:
         return self.results
 
     def _find_flext_projects(self) -> list[str]:
-        """Encontra todos os projetos FLEXT."""
+        """Finds all FLEXT projects."""
 
         projects = [
             item.name
-            for item in self.workspace_root.iterdir():
-            if item.is_dir() and item.name.startswith(("flext-", "flexcore")):
+            for item in self.workspace_root.iterdir()
+            if item.is_dir() and item.name.startswith(("flext-", "flexcore"))
         ]
 
         # Adiciona projetos cliente
         client_projects = ["algar-oud-mig", "gruponos-poc-oic-wms"]
         projects.extend(
             project
-            for project in client_projects:
-            if (self.workspace_root / project).exists():
+            for project in client_projects
+            if (self.workspace_root / project).exists()
         )
 
         return sorted(projects)
 
     def _audit_project(self, project_name: str) -> dict[str, Any]:
-        """Audita um projeto específico."""
+        """Audits a specific project."""
         project_path = self.workspace_root / project_name
 
         audit_result = {
@@ -72,7 +75,7 @@ class ProjectAuditor:
         return audit_result
 
     def _classify_project(self, project_name: str) -> str:
-        """Classifica o tipo de projeto."""
+        """Classifies the type of project."""
         if project_name == "flexcore":
             return "go_core"
         if project_name.startswith("flext-"):
@@ -86,7 +89,7 @@ class ProjectAuditor:
         return "unknown"
 
     def _audit_documentation(self, project_path: Path) -> dict[str, Any]:
-        """Audita documentação do projeto."""
+        """Audits the project documentation."""
         docs = {
             "has_claude_md": (project_path / "CLAUDE.md").exists(),
             "has_claude_local": (project_path / "CLAUDE.local.md").exists(),
@@ -101,9 +104,9 @@ class ProjectAuditor:
             doc_path = project_path / doc_file
             if doc_path.exists():
                 content = doc_path.read_text()
-                if any(:
+                if any(
                     claim in content
-                    for claim in ["100% operacional", "100% Complete", "OPERATIONAL"]:
+                    for claim in ["100% operacional", "100% Complete", "OPERATIONAL"]
                 ):
                     docs["inflated_claims"] = True
                     docs["status_claims"].append(doc_file)  # type: ignore[attr-defined]
@@ -111,7 +114,7 @@ class ProjectAuditor:
         return docs
 
     def _audit_implementation(self, project_path: Path) -> dict[str, Any]:
-        """Audita implementação real do projeto."""
+        """Audits the real implementation of the project."""
         impl: dict[str, Any] = {
             "python_files": 0,
             "go_files": 0,
@@ -161,7 +164,7 @@ class ProjectAuditor:
         return impl
 
     def _audit_tests(self, project_path: Path) -> dict[str, Any]:
-        """Audita testes do projeto."""
+        """Audits the project tests."""
         tests = {
             "has_test_folder": (project_path / "tests").exists(),
             "test_files": 0,
@@ -183,7 +186,7 @@ class ProjectAuditor:
         return tests
 
     def _determine_status(self, audit_result: dict[str, Any]) -> str:
-        """Determina status real baseado em evidências."""
+        """Determines the real status based on evidence."""
         impl = audit_result["implementation"]
         audit_result["documentation"]
 
@@ -198,8 +201,8 @@ class ProjectAuditor:
         return "development"
 
     def generate_report(self) -> str:
-        """Gera relatório completo da auditoria."""
-        report = []
+        """Generates a complete audit report."""
+        report: list[str] = []
         report.extend(
             (
                 "# 📊 RELATÓRIO DE AUDITORIA REAL DOS PROJETOS FLEXT",
@@ -239,7 +242,7 @@ class ProjectAuditor:
         return "\n".join(report)
 
     def _get_status_emoji(self, status: str) -> str:
-        """Retorna emoji baseado no status."""
+        """Returns an emoji based on the status."""
         status_emojis = {
             "functional": "✅",
             "partial": "🔄",
@@ -252,7 +255,7 @@ class ProjectAuditor:
 
 
 def main() -> None:
-    """Função principal."""
+    """Main function."""
     workspace_root = os.getcwd()
     auditor = ProjectAuditor(workspace_root)
 

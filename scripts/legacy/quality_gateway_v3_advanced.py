@@ -2,7 +2,7 @@
 """Legacy script - quality_gateway_v3_advanced.py."""
 
 
-def main():
+def main() -> None:
     """Main function for legacy script."""
     print("Legacy script quality_gateway_v3_advanced.py executed")
 

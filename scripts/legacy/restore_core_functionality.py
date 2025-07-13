@@ -2,7 +2,7 @@
 """Legacy script - restore_core_functionality.py."""
 
 
-def main():
+def main() -> None:
     """Main function for legacy script."""
     print("Legacy script restore_core_functionality.py executed")
 

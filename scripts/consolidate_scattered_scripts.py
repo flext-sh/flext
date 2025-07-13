@@ -1,4 +1,3 @@
-from datetime import datetime
 #!/usr/bin/env python3
 """
 FLEXT Scripts Consolidation Tool - Organiza scripts espalhados
@@ -13,7 +12,7 @@ Funcionalidades:
 3. Move scripts para localizações apropriadas
 4. Integra funcionalidades úteis no quality_gateway.py
 5. Remove duplicações e obsoletos
-
+"""
 
 import ast
 import re
@@ -21,6 +20,7 @@ import shutil
 import sys
 from pathlib import Path
 from typing import Any
+from datetime import datetime
 
 try:
     from rich.console import Console
@@ -35,7 +35,7 @@ except ImportError:
 
 
 class ScriptConsolidator:
-    Consolida scripts espalhados pelo workspace de forma inteligente."""
+    """Consolida scripts espalhados pelo workspace de forma inteligente."""
 
     def __init__(self, workspace_root: Path) -> None:
         self.workspace_root = workspace_root
@@ -43,7 +43,7 @@ class ScriptConsolidator:
         self.consolidation_plan = {}
 
     def find_all_scattered_scripts(self) -> list[Path]:
-        Encontra todos os scripts espalhados."""
+        """Encontra todos os scripts espalhados."""
         patterns = [
             "*fix*.py",
             "*enforce*.py",
@@ -483,7 +483,7 @@ class ScriptConsolidator:
             )
 
     def _print(self, message: str) -> None:
-        """Print otimizado.
+        """Print otimizado."""
         if RICH_AVAILABLE and console:
             console.print(message)
         else:
@@ -491,7 +491,7 @@ class ScriptConsolidator:
 
 
 def main() -> int:
-    Função principal."""
+    """Função principal."""
     workspace_root = Path("/home/marlonsc/flext")
 
     if not workspace_root.exists():
