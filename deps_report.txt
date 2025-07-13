@@ -1,0 +1,45 @@
+RELATÓRIO DE DEPENDÊNCIAS FALTANTES
+Gerado em: 2025-07-13 08:53:49
+============================================================
+
+Projeto: flext-core
+  Dependências faltantes: pydantic_settings
+
+Projeto: flext-auth
+  Dependências faltantes: argon2, pydantic_settings, structlog, sqlalchemy
+
+Projeto: flext-cli
+  Dependências faltantes: yaml, pydantic_settings, lato, pydantic
+
+------------------------------------------------------------
+Total de imports faltantes: 9
+Total de dependências adicionadas: 0
+
+============================================================
+ANÁLISE DE VERSÕES
+============================================================
+
+pydantic:
+  client-a-oud-mig: ^2.11.7
+  client-a-oud-mig[test]: ^2.0.0
+  flext: >=2.6.0,<3.0.0
+  flext-api[test]: ^2.11.7
+  flext-auth[test]: ^2.11.7
+  flext-core[test]: ^2.11.7
+  flext-db-oracle[test]: ^2.11.7
+  client-b-meltano-native: >=2.11.0
+
+sqlalchemy:
+  client-a-oud-mig: ^2.0.41
+  flext-db-oracle: >=2.0.0
+  flext-meltano: >=2.0.0
+  flext-oracle-oic-ext: >=2.0.0
+  flext-tap-oracle-wms: >=2.0.0
+  flext-target-oracle: >=2.0.0
+  flext-target-oracle-oic: >=2.0.0
+  flext-target-oracle-wms: >=2.0.0
+  client-b-meltano-native: >=2.0.0
+
+structlog:
+  flext: >=24.0.0,<26.0.0
+  client-b-meltano-native: >=25.0.0

@@ -1,0 +1,79 @@
+RELATÓRIO DE DEPENDÊNCIAS FALTANTES
+Gerado em: 2025-07-13 08:54:45
+============================================================
+
+Projeto: flext-api
+  Dependências faltantes: lato, psutil, sqlalchemy, websockets, click, pydantic_settings, uvicorn
+
+Projeto: flext-grpc
+  Dependências faltantes: concurrent, sqlalchemy, grpc, google, prometheus_client, contextvars, pydantic, pydantic_settings
+
+Projeto: flext-web
+  Dependências faltantes: models, grpc, google, pydantic, pydantic_settings
+
+Projeto: flext-plugin
+  Dependências faltantes: jsonschema, psutil, watchdog, pydantic, aiofiles, pydantic_settings
+
+Projeto: flext-observability
+  Dependências faltantes: rich, contextvars, pydantic, pydantic_settings, typer
+
+------------------------------------------------------------
+Total de imports faltantes: 31
+Total de dependências adicionadas: 0
+
+============================================================
+ANÁLISE DE VERSÕES
+============================================================
+
+aiofiles:
+  flext: >=24.1.0,<25.0.0
+  flext-ldap: >=24.1.0
+
+click:
+  client-a-oud-mig: ^8.2.1
+  client-a-oud-mig[test]: ^8.2.1
+  flext: >=8.1.7,<9.0.0
+  flext-auth[test]: ^8.2.1
+  flext-cli[test]: ^8.2.1
+  client-b-meltano-native: >=8.1.7
+
+jsonschema:
+  flext-target-oracle: >=4.23.0
+  flext-target-oracle-oic: >=4.23.0
+
+psutil:
+  flext-observability: >=6.0.0
+
+pydantic:
+  client-a-oud-mig: ^2.11.7
+  client-a-oud-mig[test]: ^2.0.0
+  flext: >=2.6.0,<3.0.0
+  flext-api[test]: ^2.11.7
+  flext-auth[test]: ^2.11.7
+  flext-core[test]: ^2.11.7
+  flext-db-oracle[test]: ^2.11.7
+  client-b-meltano-native: >=2.11.0
+
+rich:
+  flext: >=13.5.2,<15.0.0
+  flext-cli: >=13.9.0
+  flext-dbt-ldap[dev]: ^13.9.0
+
+sqlalchemy:
+  client-a-oud-mig: ^2.0.41
+  flext-db-oracle: >=2.0.0
+  flext-meltano: >=2.0.0
+  flext-oracle-oic-ext: >=2.0.0
+  flext-tap-oracle-wms: >=2.0.0
+  flext-target-oracle: >=2.0.0
+  flext-target-oracle-oic: >=2.0.0
+  flext-target-oracle-wms: >=2.0.0
+  client-b-meltano-native: >=2.0.0
+
+typer:
+  flext: >=0.15.0,<1.0.0
+  flext-cli: >=0.15.0
+
+uvicorn:
+  flext: >=0.32.0,<1.0.0
+  flext-web: {'extras': ['standard'], 'version': '>=0.32.0'}
