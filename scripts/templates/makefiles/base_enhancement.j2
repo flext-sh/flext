@@ -1,0 +1,61 @@
+# =============================================================================
+# FLEXT WORKSPACE COORDINATION - AUTO-ENHANCED
+# Added by enhance_submodule_makefiles.py
+# =============================================================================
+
+# Include workspace coordination functions (if available)
+-include $(shell git rev-parse --show-toplevel 2>/dev/null || echo "..")/templates/common_flext.mk
+
+# Enhanced help that shows both project-specific and workspace targets
+enhanced-help: ## Show enhanced help with workspace coordination
+ifeq ($(WORKSPACE_AVAILABLE),true)
+	$(call workspace-help-header)
+else
+	$(call standalone-help-header)
+endif
+	@echo "$(BOLD)🏗️  {{ project_name }} - Project Commands$(NC)"
+	@echo "$(CYAN)=====================================$(NC)"
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | grep -v 'workspace-\\|enhanced-' | awk 'BEGIN {FS = ":.*?## "} {printf "  $(GREEN)%-20s$(NC) %s\\n", $$1, $$2}'
+ifeq ($(WORKSPACE_AVAILABLE),true)
+	@echo ""
+	@echo "$(BOLD)$(CYAN)🔗 Workspace Coordination Targets$(NC)"
+	@echo "$(CYAN)  workspace-status          Show workspace coordination status$(NC)"
+	@echo "$(CYAN)  workspace-install         Install with workspace coordination$(NC)"
+	@echo "$(CYAN)  workspace-install-dev     Install dev dependencies with coordination$(NC)"
+	@echo "$(CYAN)  workspace-test            Run tests with workspace coordination$(NC)"
+	@echo "$(CYAN)  workspace-lint            Run linting with workspace coordination$(NC)"
+	@echo "$(CYAN)  workspace-format          Format code with workspace coordination$(NC)"
+	@echo "$(CYAN)  workspace-clean           Clean with workspace coordination$(NC)"
+	@echo "$(CYAN)  workspace-quality         Run quality checks with coordination$(NC)"
+	@echo "$(CYAN)  workspace-commit          Run commit pipeline with coordination$(NC)"
+endif
+
+# Enhanced install that uses workspace coordination when available
+enhanced-install: ## Install with workspace coordination (fallback to local)
+	$(call install-with-workspace,$$(MAKE) install-local)
+
+enhanced-install-dev: ## Install dev dependencies with workspace coordination
+	$(call install-dev-with-workspace,$$(MAKE) install-dev-local)
+
+enhanced-test: ## Run tests with workspace coordination (fallback to local)
+	$(call test-with-workspace,$$(MAKE) test-local)
+
+enhanced-lint: ## Run linting with workspace coordination (fallback to local)
+	$(call lint-with-workspace,$$(MAKE) lint-local)
+
+enhanced-format: ## Format code with workspace coordination (fallback to local)
+	$(call format-with-workspace,$$(MAKE) format-local)
+
+enhanced-clean: ## Clean with workspace coordination (fallback to local)
+	$(call clean-with-workspace,$$(MAKE) clean-local)
+
+enhanced-quality: ## Run quality checks with workspace coordination
+	$(call quality-check,ruff check .)
+
+enhanced-commit: ## Run commit pipeline with workspace coordination
+	$(call commit-pipeline,ruff check .,python -m pytest tests/ -v)
+
+# Project validation
+validate-project-deps: ## Validate project dependencies for reuse
+	$(call validate-dependencies)
+	$(call ensure-core-deps) 

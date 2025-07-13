@@ -9,7 +9,7 @@ Sistema 100% validado de controle de qualidade que:
 3. Funciona com validação real de todas as ferramentas
 
 Testado: ✅ Todas as dependências validadas
-
+"""
 
 import contextlib
 import json
@@ -30,7 +30,7 @@ except ImportError:
 
 
 class QualityChecker:
-    Verificador de qualidade real e validado."""
+    """Verificador de qualidade real e validado."""
 
     def __init__(self, workspace_root: Path) -> None:
         self.workspace_root = workspace_root
@@ -97,7 +97,7 @@ class QualityChecker:
             error_lines = [
                 line
                 for line in result.stdout.split("\n"):
-                if line.strip() and ": error:" in line
+                    if line.strip() and ": error:" in line
             ]
             return len(error_lines)
 

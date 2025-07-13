@@ -2,12 +2,14 @@
 """Generate linting report for FLEXT workspace."""
 
 import json
+import operator
 import subprocess
 from collections import defaultdict
 from pathlib import Path
+from typing import Any
 
 
-def analyze_project_linting(project_path: Path) -> dict:
+def analyze_project_linting(project_path: Path) -> dict[str, Any]:
     """Analyze linting issues for a single project."""
     try:
         # Run ruff check with JSON output
@@ -15,36 +17,35 @@ def analyze_project_linting(project_path: Path) -> dict:
             ["ruff", "check", "--output-format", "json", str(project_path)],
             capture_output=True,
             text=True,
-            check=False
+            check=False,
         )
 
         if result.returncode == 0:
             return {"total": 0, "by_code": {}, "status": "clean"}
 
         issues = json.loads(result.stdout)
-        by_code = defaultdict(int)
+        by_code: defaultdict[str, int] = defaultdict(int)
 
         for issue in issues:
             by_code[issue["code"]] += 1
 
-        return {
-            "total": len(issues),
-            "by_code": dict(by_code),
-            "status": "has_issues"
-        }
+        return {"total": len(issues), "by_code": dict(by_code), "status": "has_issues"}
     except Exception as e:
         return {"total": 0, "by_code": {}, "status": f"error: {e}"}
 
 
-def main():
+def main() -> None:
     """Generate linting report for all projects."""
     workspace_root = Path(__file__).parent.parent
-    projects = []
 
     # Collect all FLEXT projects
-    for path in sorted(workspace_root.iterdir()):
-        if path.is_dir() and path.name.startswith("flext-") and not path.name.startswith("."):
-            projects.append(path)
+    projects = [
+        path
+        for path in sorted(workspace_root.iterdir())
+        if path.is_dir()
+        and path.name.startswith("flext-")
+        and not path.name.startswith(".")
+    ]
 
     # Also add other projects
     for name in ["client-a-oud-mig", "client-b-meltano-native", "client-b-poc-oic-wms"]:
@@ -53,7 +54,7 @@ def main():
             projects.append(path)
 
     total_issues = 0
-    all_codes = defaultdict(int)
+    all_codes: defaultdict[str, int] = defaultdict(int)
 
     print("# FLEXT WORKSPACE LINTING REPORT")
     print("=" * 80)
@@ -76,9 +77,7 @@ def main():
 
             # Sort by count
             sorted_codes = sorted(
-                analysis["by_code"].items(),
-                key=lambda x: x[1],
-                reverse=True
+                analysis["by_code"].items(), key=operator.itemgetter(1), reverse=True
             )[:5]
 
             for code, count in sorted_codes:
@@ -91,7 +90,9 @@ def main():
     print(f"Total linting issues: {total_issues}")
     print("\nMost common issues across workspace:")
 
-    sorted_all_codes = sorted(all_codes.items(), key=lambda x: x[1], reverse=True)[:10]
+    sorted_all_codes = sorted(
+        all_codes.items(), key=operator.itemgetter(1), reverse=True
+    )[:10]
     for code, count in sorted_all_codes:
         print(f"  - {code}: {count}")
 

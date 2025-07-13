@@ -16,7 +16,7 @@ Ferramentas aplicadas (apenas as que funcionam bem):
 4. ruff format - Formatação final
 
 Versão: FINAL - Production Ready
-
+"""
 
 import json
 import subprocess
@@ -37,7 +37,7 @@ except ImportError:
 
 
 class QualityGatewayFinal:
-    Sistema final de quality gateway - otimizado e confiável."""
+    """Sistema final de quality gateway - otimizado e confiável."""
 
     def __init__(self, workspace_root: Path) -> None:
         self.workspace_root = workspace_root
