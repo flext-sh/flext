@@ -1323,6 +1323,16 @@ class DependencyAnalyzer:
             "grpc": "grpcio",      # import grpc vem do pacote grpcio
         }
         
+        # Mapeamento reverso: pacote PyPI -> imports que ele fornece
+        self.package_provides_imports = {
+            "protobuf": {"google", "google.protobuf"},
+            "grpcio": {"grpc", "grpc.aio"},
+            "pydantic-settings": {"pydantic_settings"},
+            "psycopg2-binary": {"psycopg2"},
+            "pyyaml": {"yaml"},
+            "python-ldap": {"ldap", "ldap3"},
+        }
+        
         self.known_package_patterns = {
             # Padrões de imports que indicam packages específicos
             r"from\s+django": "django",
@@ -1377,9 +1387,12 @@ class DependencyAnalyzer:
         print_colored("    🔍 Análise PROFUNDA de dependências...", Colors.BLUE)
 
         dependencies = {"runtime": set(), "test": set(), "dev": set()}
+        
+        # Obtém pacotes já instalados no projeto
+        installed_packages = self._get_project_installed_packages(project)
 
         # 1. Analisa arquivos Python
-        python_deps = self._analyze_python_files(project)
+        python_deps = self._analyze_python_files(project, installed_packages)
         dependencies["runtime"].update(python_deps.get("runtime", set()))
         dependencies["test"].update(python_deps.get("test", set()))
 
@@ -1402,7 +1415,7 @@ class DependencyAnalyzer:
 
         return dependencies
 
-    def _analyze_python_files(self, project: Path) -> dict[str, set[str]]:
+    def _analyze_python_files(self, project: Path, installed_packages: set[str] | None = None) -> dict[str, set[str]]:
         """Análise avançada de arquivos Python com detecção melhorada."""
         dependencies = {"runtime": set(), "test": set()}
 
@@ -1452,6 +1465,10 @@ class DependencyAnalyzer:
                     for match in matches:
                         module_name = match.strip().split(".")[0]
                         if self._is_valid_external_package(module_name):
+                            # Verifica se o import já está coberto
+                            if installed_packages and self._is_import_already_covered(module_name, installed_packages):
+                                continue
+                                
                             # Aplica mapeamento de nomes se necessário
                             mapped_name = self.package_name_mapping.get(module_name, module_name)
                             dependencies[category].add(mapped_name)
@@ -1473,6 +1490,10 @@ class DependencyAnalyzer:
                     for match in matches:
                         module_name = match.strip().split(".")[0]
                         if self._is_valid_external_package(module_name):
+                            # Verifica se o import já está coberto
+                            if installed_packages and self._is_import_already_covered(module_name, installed_packages):
+                                continue
+                                
                             # Aplica mapeamento de nomes se necessário
                             mapped_name = self.package_name_mapping.get(module_name, module_name)
                             dependencies[category].add(mapped_name)
@@ -1905,6 +1926,49 @@ class DependencyAnalyzer:
             not in package_name  # Não deve ter pontos (são módulos, não packages)
             and not any(char.isspace() for char in package_name)  # Sem espaços
         )
+    
+    def _is_import_already_covered(self, import_name: str, installed_packages: set[str]) -> bool:
+        """Verifica se um import já está coberto por um pacote instalado."""
+        # Verifica se o próprio import é um pacote instalado
+        if import_name in installed_packages:
+            return True
+            
+        # Verifica se algum pacote instalado fornece esse import
+        for package, provided_imports in self.package_provides_imports.items():
+            if package in installed_packages and import_name in provided_imports:
+                return True
+                
+        return False
+    
+    def _get_project_installed_packages(self, project: Path) -> set[str]:
+        """Obtém lista de pacotes instalados no projeto."""
+        installed = set()
+        
+        # Lê do pyproject.toml
+        pyproject_path = project / "pyproject.toml"
+        if pyproject_path.exists():
+            try:
+                import tomllib
+                with open(pyproject_path, "rb") as f:
+                    data = tomllib.load(f)
+                
+                # Dependências principais
+                deps = data.get("tool", {}).get("poetry", {}).get("dependencies", {})
+                installed.update(deps.keys())
+                
+                # Dependências de grupos
+                groups = data.get("tool", {}).get("poetry", {}).get("group", {})
+                for group_data in groups.values():
+                    group_deps = group_data.get("dependencies", {})
+                    installed.update(group_deps.keys())
+                    
+                # Remove 'python' que não é um pacote
+                installed.discard("python")
+                
+            except Exception as e:
+                print_colored(f"      ⚠️  Erro ao ler pyproject.toml: {e}", Colors.YELLOW)
+        
+        return installed
 
 
 class VersionTracker:
@@ -2165,6 +2229,7 @@ def sync_project(
     base_dependencies: dict[str, list[str]],
     stdlib_modules: set[str],
     known_deps: set[str],
+    args=None,  # Novo parâmetro para verificar flags
 ) -> dict[str, int]:
     """Sincroniza dependências com descoberta automática SUPER ROBUSTA."""
     print_colored(f"\n🔄 {project.name}", Colors.BOLD)
@@ -2179,11 +2244,26 @@ def sync_project(
     print_colored("    🔍 DESCOBERTA AUTOMÁTICA SUPER ROBUSTA", Colors.BOLD)
     discovered_deps = discover_project_dependencies(project, stdlib_modules, known_deps)
 
-    # Instala dependências descobertas automaticamente
+    # Instala ou mostra dependências descobertas
     if any(deps for deps in discovered_deps.values()):
-        discovery_stats = install_discovered_dependencies(project, discovered_deps)
-        stats["discovered"] = discovery_stats["installed"]
-        stats["conflicts"] = discovery_stats["conflicts"]
+        # Decide se instala ou apenas mostra baseado nas flags
+        should_install = True
+        
+        if args:
+            # Se está em modo descoberta, só instala com --apply
+            if args.discover_missing:
+                should_install = args.apply and not args.dry_run
+            # Se está em modo normal com dry-run, não instala
+            elif args.dry_run:
+                should_install = False
+        
+        if should_install:
+            discovery_stats = install_discovered_dependencies(project, discovered_deps)
+            stats["discovered"] = discovery_stats["installed"]
+            stats["conflicts"] = discovery_stats["conflicts"]
+        else:
+            discovery_stats = show_discovered_dependencies(project, discovered_deps)
+            stats["discovered"] = discovery_stats["discovered"]
 
         if discovery_stats["failures"] > 0:
             stats["failures"] += discovery_stats["failures"]
@@ -2407,6 +2487,29 @@ def validate_poetry_environment(project: Path) -> bool:
             return False
 
     return True
+
+
+def show_discovered_dependencies(
+    project: Path, discovered_deps: dict[str, set[str]]
+) -> dict[str, int]:
+    """Mostra dependências descobertas sem instalar (dry-run)."""
+    stats = {"installed": 0, "skipped": 0, "conflicts": 0, "failures": 0, "discovered": 0}
+    
+    total_discovered = sum(len(deps) for deps in discovered_deps.values())
+    if total_discovered == 0:
+        print_colored("    ➖ Nenhuma dependência descoberta", Colors.YELLOW)
+        return stats
+    
+    print_colored(f"    📋 {total_discovered} dependências descobertas (não instaladas):", Colors.CYAN)
+    
+    for category, packages in discovered_deps.items():
+        if packages:
+            print_colored(f"      [{category}]: {', '.join(sorted(packages))}", Colors.BLUE)
+            stats["discovered"] += len(packages)
+    
+    print_colored("    💡 Use --apply para instalar estas dependências", Colors.YELLOW)
+    
+    return stats
 
 
 def install_discovered_dependencies(
@@ -3083,7 +3186,7 @@ def main() -> None:
 
         try:
             stats = sync_project(
-                project, base_dependencies, stdlib_modules, all_known_deps
+                project, base_dependencies, stdlib_modules, all_known_deps, args
             )
 
             if stats["failures"] == 0:
