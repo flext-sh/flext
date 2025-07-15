@@ -1,9 +1,9 @@
 #!/bin/bash
-# FLEXT Workspace Dependency Setup Script  
+# FLEXT Workspace Dependency Setup Script
 # This script installs all required dependencies for ALL FLEXT projects
 # Updated with complete project list and protobuf conflict resolution
 
-set -e  # Exit on error
+set -e # Exit on error
 
 echo "=== FLEXT Workspace Dependency Setup ==="
 echo "This script will install all required dependencies for FLEXT projects"
@@ -12,9 +12,9 @@ echo ""
 
 # Check if we're in the correct directory
 if [ ! -f ".venv/bin/activate" ]; then
-    echo "ERROR: Virtual environment not found at .venv/"
-    echo "Please run this script from the FLEXT workspace root"
-    exit 1
+	echo "ERROR: Virtual environment not found at .venv/"
+	echo "Please run this script from the FLEXT workspace root"
+	exit 1
 fi
 
 # Activate virtual environment
@@ -36,24 +36,24 @@ pip install "grpcio-status>=1.60.0,<1.67.0"
 echo ""
 echo "=== Installing flext-core (base dependency) ==="
 if [ -d "flext-core" ]; then
-    cd flext-core
-    pip install -e .
-    cd ..
-    echo "✅ flext-core installed successfully"
+	cd flext-core
+	pip install -e .
+	cd ..
+	echo "✅ flext-core installed successfully"
 else
-    echo "⚠️ flext-core directory not found"
+	echo "⚠️ flext-core directory not found"
 fi
 
 # Install flext-observability second (dependency for many projects)
 echo ""
 echo "=== Installing flext-observability (shared dependency) ==="
 if [ -d "flext-observability" ]; then
-    cd flext-observability
-    pip install -e .
-    cd ..
-    echo "✅ flext-observability installed successfully"
+	cd flext-observability
+	pip install -e .
+	cd ..
+	echo "✅ flext-observability installed successfully"
 else
-    echo "⚠️ flext-observability directory not found"
+	echo "⚠️ flext-observability directory not found"
 fi
 
 # Install main framework modules
@@ -61,25 +61,25 @@ echo ""
 echo "=== Installing FLEXT Framework Modules ==="
 
 projects=(
-    "flext-api"
-    "flext-auth"
-    "flext-grpc"
-    "flext-web"
-    "flext-cli"
-    "flext-plugin"
-    "flext-meltano"
+	"flext-api"
+	"flext-auth"
+	"flext-grpc"
+	"flext-web"
+	"flext-cli"
+	"flext-plugin"
+	"flext-meltano"
 )
 
 for project in "${projects[@]}"; do
-    if [ -d "$project" ]; then
-        echo "Installing $project..."
-        cd "$project"
-        pip install -e . || echo "⚠️ Warning: $project installation had issues"
-        cd ..
-        echo "✅ $project installation attempted"
-    else
-        echo "⚠️ $project directory not found"
-    fi
+	if [ -d "$project" ]; then
+		echo "Installing $project..."
+		cd "$project"
+		pip install -e . || echo "⚠️ Warning: $project installation had issues"
+		cd ..
+		echo "✅ $project installation attempted"
+	else
+		echo "⚠️ $project directory not found"
+	fi
 done
 
 # Install additional FLEXT extensions
@@ -87,21 +87,21 @@ echo ""
 echo "=== Installing FLEXT Extensions ==="
 
 extensions=(
-    "flext-ldap"
-    "flext-quality"
-    "flext-db-oracle"
+	"flext-ldap"
+	"flext-quality"
+	"flext-db-oracle"
 )
 
 for ext in "${extensions[@]}"; do
-    if [ -d "$ext" ]; then
-        echo "Installing $ext..."
-        cd "$ext"
-        pip install -e . || echo "⚠️ Warning: $ext installation had issues"
-        cd ..
-        echo "✅ $ext installation attempted"
-    else
-        echo "⚠️ $ext directory not found"
-    fi
+	if [ -d "$ext" ]; then
+		echo "Installing $ext..."
+		cd "$ext"
+		pip install -e . || echo "⚠️ Warning: $ext installation had issues"
+		cd ..
+		echo "✅ $ext installation attempted"
+	else
+		echo "⚠️ $ext directory not found"
+	fi
 done
 
 # Install Singer/Meltano protocol projects
@@ -109,27 +109,27 @@ echo ""
 echo "=== Installing Singer/Meltano Protocol Projects ==="
 
 singer_projects=(
-    "flext-tap-ldap"
-    "flext-tap-oracle-oic"
-    "flext-tap-oracle-wms"
-    "flext-target-ldap"
-    "flext-target-oracle"
-    "flext-target-oracle-oic"
-    "flext-target-oracle-wms"
-    "flext-dbt-ldap"
-    "flext-oracle-oic-ext"
+	"flext-tap-ldap"
+	"flext-tap-oracle-oic"
+	"flext-tap-oracle-wms"
+	"flext-target-ldap"
+	"flext-target-oracle"
+	"flext-target-oracle-oic"
+	"flext-target-oracle-wms"
+	"flext-dbt-ldap"
+	"flext-oracle-oic-ext"
 )
 
 for singer in "${singer_projects[@]}"; do
-    if [ -d "$singer" ]; then
-        echo "Installing $singer..."
-        cd "$singer"
-        pip install -e . || echo "⚠️ Warning: $singer installation had issues"
-        cd ..
-        echo "✅ $singer installation attempted"
-    else
-        echo "⚠️ $singer directory not found"
-    fi
+	if [ -d "$singer" ]; then
+		echo "Installing $singer..."
+		cd "$singer"
+		pip install -e . || echo "⚠️ Warning: $singer installation had issues"
+		cd ..
+		echo "✅ $singer installation attempted"
+	else
+		echo "⚠️ $singer directory not found"
+	fi
 done
 
 # Install enterprise integrations
@@ -137,21 +137,21 @@ echo ""
 echo "=== Installing Enterprise Integrations ==="
 
 enterprise_projects=(
-    "client-a-oud-mig"
-    "client-b-meltano-native"
-    "flexcore"
+	"client-a-oud-mig"
+	"client-b-meltano-native"
+	"flexcore"
 )
 
 for enterprise in "${enterprise_projects[@]}"; do
-    if [ -d "$enterprise" ]; then
-        echo "Installing $enterprise..."
-        cd "$enterprise"
-        pip install -e . || echo "⚠️ Warning: $enterprise installation had issues"
-        cd ..
-        echo "✅ $enterprise installation attempted"
-    else
-        echo "⚠️ $enterprise directory not found"
-    fi
+	if [ -d "$enterprise" ]; then
+		echo "Installing $enterprise..."
+		cd "$enterprise"
+		pip install -e . || echo "⚠️ Warning: $enterprise installation had issues"
+		cd ..
+		echo "✅ $enterprise installation attempted"
+	else
+		echo "⚠️ $enterprise directory not found"
+	fi
 done
 
 # Fix known dependency conflicts
@@ -178,11 +178,11 @@ echo ""
 echo "=== Dependency Conflict Check ==="
 conflicts=$(pip check 2>&1 | grep -v safety | wc -l)
 if [ "$conflicts" -eq 0 ]; then
-    echo "✅ No critical dependency conflicts found!"
+	echo "✅ No critical dependency conflicts found!"
 else
-    echo "⚠️ $conflicts dependency conflicts remain (excluding safety packages)"
-    echo "Running pip check for details:"
-    pip check 2>&1 | grep -v safety || true
+	echo "⚠️ $conflicts dependency conflicts remain (excluding safety packages)"
+	echo "Running pip check for details:"
+	pip check 2>&1 | grep -v safety || true
 fi
 
 echo ""
@@ -192,7 +192,7 @@ echo "All FLEXT dependencies have been installed successfully."
 echo ""
 echo "Installed project count:"
 echo "- Framework modules: $(ls -d flext-{api,auth,grpc,web,cli,plugin,meltano,observability} 2>/dev/null | wc -l)/8"
-echo "- Extensions: $(ls -d flext-{ldap,quality,db-oracle} 2>/dev/null | wc -l)/3"  
+echo "- Extensions: $(ls -d flext-{ldap,quality,db-oracle} 2>/dev/null | wc -l)/3"
 echo "- Singer/Meltano: $(ls -d flext-{tap,target,dbt}* flext-oracle-oic-ext 2>/dev/null | wc -l)/9"
 echo "- Enterprise: $(ls -d {client-a,client-b}* flexcore 2>/dev/null | wc -l)/3"
 echo ""

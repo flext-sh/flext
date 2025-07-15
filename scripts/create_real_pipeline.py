@@ -35,7 +35,7 @@ class RealPipelineService:
                 pipeline_id=PipelineId(),
                 pipeline_name=PipelineName(value="ldap-to-postgres-real"),
                 pipeline_description="Pipeline REAL LDAP para PostgreSQL usando flext-core",
-                pipeline_is_active=True
+                pipeline_is_active=True,
             )
 
             self.pipelines[str(pipeline.pipeline_id)] = pipeline
@@ -45,7 +45,9 @@ class RealPipelineService:
         except Exception as e:
             return ServiceResult.failure(f"Erro criando pipeline: {e}")
 
-    async def execute_real_pipeline(self, pipeline_id: str) -> ServiceResult[PipelineExecution]:
+    async def execute_real_pipeline(
+        self, pipeline_id: str
+    ) -> ServiceResult[PipelineExecution]:
         """Executar pipeline com dados REAIS."""
         try:
             if pipeline_id not in self.pipelines:
@@ -57,7 +59,7 @@ class RealPipelineService:
             execution = PipelineExecution(
                 pipeline_id=PipelineId(value=pipeline_id),
                 execution_status=ExecutionStatus.RUNNING,
-                started_at=datetime.now()
+                started_at=datetime.now(),
             )
 
             # Simular processamento de dados REAIS

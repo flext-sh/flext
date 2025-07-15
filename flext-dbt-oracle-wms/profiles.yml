@@ -1,0 +1,45 @@
+# Oracle WMS DBT Profile - for processing Oracle WMS API data via Singer
+# Data comes FROM Oracle WMS API via flext-tap-oracle-wms
+# Data is PROCESSED in standard database (not Oracle Database)
+# Data can be sent TO Oracle WMS API via flext-target-oracle-wms
+
+flext_oracle_wms:
+  target: dev
+  outputs:
+    # Development environment - DuckDB for fast local development
+    dev:
+      type: duckdb
+      path: "{{ env_var('DBT_DUCKDB_PATH', './flext_oracle_wms_dev.duckdb') }}"
+      schema: "{{ env_var('DBT_SCHEMA', 'wms_raw') }}"
+      threads: 4
+
+    # Staging environment - PostgreSQL for shared staging
+    staging:
+      type: postgres
+      host: "{{ env_var('DBT_POSTGRES_HOST', 'localhost') }}"
+      user: "{{ env_var('DBT_POSTGRES_USER', 'postgres') }}"
+      password: "{{ env_var('DBT_POSTGRES_PASSWORD', 'postgres') }}"
+      port: "{{ env_var('DBT_POSTGRES_PORT', '5432') | as_number }}"
+      dbname: "{{ env_var('DBT_POSTGRES_DBNAME', 'oracle_wms_staging') }}"
+      schema: "{{ env_var('DBT_POSTGRES_SCHEMA', 'wms_raw') }}"
+      threads: 8
+      connect_timeout: 30
+
+    # Production environment - PostgreSQL/Snowflake for production
+    prod:
+      type: postgres
+      host: "{{ env_var('DBT_POSTGRES_HOST_PROD') }}"
+      user: "{{ env_var('DBT_POSTGRES_USER_PROD') }}"
+      password: "{{ env_var('DBT_POSTGRES_PASSWORD_PROD') }}"
+      port: "{{ env_var('DBT_POSTGRES_PORT_PROD', '5432') | as_number }}"
+      dbname: "{{ env_var('DBT_POSTGRES_DBNAME_PROD') }}"
+      schema: "{{ env_var('DBT_POSTGRES_SCHEMA_PROD', 'wms_raw') }}"
+      threads: 16
+      connect_timeout: 10
+
+    # CI/CD environment - DuckDB for fast CI tests
+    ci:
+      type: duckdb
+      path: "{{ env_var('DBT_DUCKDB_PATH_CI', ':memory:') }}"
+      schema: "{{ env_var('DBT_SCHEMA_CI', 'wms_raw') }}"
+      threads: 2

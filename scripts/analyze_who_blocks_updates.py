@@ -1,305 +1,137 @@
 #!/usr/bin/env python3
 """
-Script REAL para analisar quem está segurando atualizações de bibliotecas.
-Compara versões no workspace com as últimas versões disponíveis no PyPI.
+Script refatorado para analisar conflitos e bloqueadores de atualização.
+
+Usa flext_tools para análise modular e cache.
 """
 
-import json
-import operator
-import re
 import sys
-import tomllib
-import urllib.error
-import urllib.request
-from collections import defaultdict
-from datetime import datetime
 from pathlib import Path
-from typing import Any
+
+# Adiciona scripts ao path para importar flext_tools
+sys.path.insert(0, str(Path(__file__).parent))
+
+from flext_tools import Colors, ConflictAnalyzer, cached, print_colored
 
 
-def get_latest_pypi_version(package: str) -> str | None:
-    """Obtém a versão mais recente do PyPI."""
-    try:
-        url = f"https://pypi.org/pypi/{package}/json"
-        with urllib.request.urlopen(url, timeout=5) as response:
-            data = json.loads(response.read())
-            version: str | None = data.get("info", {}).get("version")
-            return version
-    except (urllib.error.URLError, json.JSONDecodeError, KeyError):
-        return None
+def main():
+    """Analisa quem bloqueia atualizações de dependências."""
+    print_colored("🔍 Analisando bloqueadores de atualização...\n", Colors.BLUE)
 
+    # Workspace path
+    workspace_path = Path.cwd()
 
-def parse_version(version_str: str) -> tuple[int, ...]:
-    """Converte string de versão em tupla de inteiros para comparação."""
-    # Remove operadores de versão
-    clean_version = re.sub(r"^[~^>=<]+", "", version_str)
-    # Remove parte após vírgula (range)
-    clean_version = clean_version.split(",")[0]
-    # Pega apenas números
-    parts = re.findall(r"\d+", clean_version)
-    # Garante que sempre tem 3 partes (major, minor, patch)
-    parts = ([*parts, "0", "0", "0"])[:3]
-    return tuple(int(p) for p in parts)
+    # Inicializa analisador
+    analyzer = ConflictAnalyzer()
 
+    # Usa cache para análise pesada
+    @cached(namespace="conflicts", ttl=600)
+    def get_workspace_analysis():
+        return analyzer.analyze_workspace_conflicts(workspace_path)
 
-def parse_constraint(constraint: str) -> dict[str, Any]:
-    """Analisa constraint e retorna tipo e versão mínima."""
-    constraint = constraint.strip()
+    # Executa análise
+    print_colored("📊 Analisando workspace...", Colors.CYAN)
+    analysis = get_workspace_analysis()
 
-    # Padrões comuns
-    patterns = [
-        (r"^==([\d.]+)$", "exact"),  # ==1.2.3
-        (r"^~=([\d.]+)$", "compatible"),  # ~=1.2.3
-        (r"^>=([\d.]+),<([\d.]+)$", "range"),  # >=1.0,<2.0
-        (r"^>=([\d.]+)$", "minimum"),  # >=1.0
-        (r"^\^([\d.]+)$", "caret"),  # ^1.2.3
-        (r"^~([\d.]+)$", "tilde"),  # ~1.2.3
-        (r"^([\d.]+)$", "implicit"),  # 1.2.3
-    ]
+    # Mostra estatísticas
+    stats = analysis["stats"]
+    print_colored("\n📈 Estatísticas Gerais:", Colors.BLUE)
+    print(f"  • Total de projetos: {analysis['total_projects']}")
+    print(f"  • Total de dependências: {stats['total_dependencies']}")
+    print(f"  • Pacotes únicos: {stats['unique_packages']}")
+    print(f"  • Pacotes com conflitos: {stats['packages_with_conflicts']}")
+    print(f"  • Pacotes bloqueadores: {stats['blocking_packages']}")
+    print(f"  • Projetos afetados: {stats['affected_projects']}")
 
-    for pattern, constraint_type in patterns:
-        match = re.match(pattern, constraint)
-        if match:
-            version = match.group(1)
-            has_upper_bound = constraint_type in {
-                "exact",
-                "compatible",
-                "range",
-                "caret",
-                "tilde",
-            }
+    # Mostra conflitos de versão
+    if analysis["version_conflicts"]:
+        print_colored(
+            f"\n⚠️ Conflitos de Versão ({len(analysis['version_conflicts'])} pacotes):",
+            Colors.YELLOW,
+        )
 
-            # Para caret (^), calcula o limite superior
-            if constraint_type == "caret":
-                version_parts = parse_version(version)
-                major = version_parts[0] if len(version_parts) > 0 else 0
-                minor = version_parts[1] if len(version_parts) > 1 else 0
-                patch = version_parts[2] if len(version_parts) > 2 else 0
+        # Ordena por severidade
+        conflicts_sorted = sorted(
+            analysis["version_conflicts"].items(),
+            key=lambda x: (x[1].get("severity", "low"), len(x[1]["projects"])),
+            reverse=True,
+        )
 
-                if major > 0:
-                    upper_bound = f"{major + 1}.0.0"
-                elif minor > 0:
-                    upper_bound = f"{major}.{minor + 1}.0"
+        # Mostra top 10 ou todos se --all
+        show_all = "--all" in sys.argv
+        limit = len(conflicts_sorted) if show_all else min(10, len(conflicts_sorted))
+
+        for i, (package, conflict_data) in enumerate(conflicts_sorted[:limit]):
+            severity = conflict_data.get("severity", "medium")
+            icon = "🔴" if severity == "high" else "🟡"
+
+            print(f"\n  {icon} {i + 1}. {package}")
+            print(f"     Projetos afetados: {len(conflict_data['projects'])}")
+
+            # Mostra versões
+            for project, version in sorted(conflict_data["projects"].items()):
+                print(f"     • {project}: {version}")
+
+    # Mostra bloqueadores
+    if analysis["update_blockers"]:
+        print_colored("\n🚫 Principais Bloqueadores de Atualização:", Colors.RED)
+
+        # Ordena por número de projetos bloqueados
+        blockers_sorted = sorted(
+            analysis["update_blockers"].items(),
+            key=lambda x: len(x[1]["blocking_projects"]),
+            reverse=True,
+        )
+
+        # Top 10 bloqueadores
+        for i, (package, blocker_data) in enumerate(blockers_sorted[:10]):
+            print(f"\n  {i + 1}. {package}")
+
+            # Agrupa por constraint
+            for constraint, projects in blocker_data["constraints"].items():
+                print(
+                    f"     Constraint '{constraint}': {', '.join(projects[:3])}", end=""
+                )
+                if len(projects) > 3:
+                    print(f" e mais {len(projects) - 3}")
                 else:
-                    upper_bound = f"{major}.{minor}.{patch + 1}"
-            else:
-                upper_bound = None
+                    print()
 
-            return {
-                "type": constraint_type,
-                "version": version,
-                "has_upper_bound": has_upper_bound,
-                "upper_bound": upper_bound,
-                "raw": constraint,
-            }
+    # Mostra resoluções sugeridas
+    if analysis["suggested_resolutions"] and "--suggest" in sys.argv:
+        print_colored("\n💡 Resoluções Sugeridas:", Colors.GREEN)
 
-    return {
-        "type": "unknown",
-        "version": constraint,
-        "has_upper_bound": False,
-        "upper_bound": None,
-        "raw": constraint,
-    }
+        for package, suggestion in sorted(analysis["suggested_resolutions"].items())[
+            :10
+        ]:
+            print(f"  • {package}: {suggestion}")
 
+    # Gera relatório completo se solicitado
+    if "--report" in sys.argv:
+        report_path = Path("conflict_report.md")
+        report = analyzer.generate_conflict_report(analysis)
 
-def collect_all_dependencies(workspace: Path) -> dict[str, dict[str, str]]:
-    """Coleta todas as dependências de todos os projetos."""
-    dependencies: defaultdict[str, dict[str, str]] = defaultdict(dict)
+        with open(report_path, "w", encoding="utf-8") as f:
+            f.write(report)
 
-    for pyproject in workspace.rglob("pyproject.toml"):
-        # Pula diretórios que não são projetos
-        if any(
-            part in pyproject.parts
-            for part in [".venv", "backup", "archive", "__pycache__"]
-        ):
-            continue
+        print_colored(f"\n📄 Relatório completo salvo em: {report_path}", Colors.GREEN)
 
-        project_name = pyproject.parent.name
-
-        try:
-            with open(pyproject, "rb") as f:
-                data = tomllib.load(f)
-
-            # Poetry dependencies
-            poetry_deps = data.get("tool", {}).get("poetry", {}).get("dependencies", {})
-            for dep, version in poetry_deps.items():
-                if dep != "python" and isinstance(version, str):
-                    dependencies[dep][project_name] = version
-
-            # Poetry dev dependencies (groups)
-            groups = data.get("tool", {}).get("poetry", {}).get("group", {})
-            for group_name, group_data in groups.items():
-                group_deps = group_data.get("dependencies", {})
-                for dep, version in group_deps.items():
-                    if isinstance(version, str):
-                        dependencies[dep][f"{project_name}[{group_name}]"] = version
-
-        except Exception as e:
-            print(f"⚠️  Erro ao ler {pyproject}: {e}")
-
-    return dict(dependencies)
-
-
-def analyze_blocking_projects(
-    dependencies: dict[str, dict[str, str]],
-) -> dict[str, Any]:
-    """Analisa quais projetos estão bloqueando atualizações."""
-    analysis = {}
-
-    for package, project_versions in dependencies.items():
-        if len(project_versions) < 2:
-            continue  # Não há conflito se só um projeto usa
-
-        # Obtém versão mais recente do PyPI
-        latest_version = get_latest_pypi_version(package)
-
-        # Analisa cada projeto
-        project_constraints = {}
-        blocking_projects = []
-        most_restrictive = None
-        least_restrictive = None
-
-        for project, version_str in project_versions.items():
-            constraint = parse_constraint(version_str)
-            project_constraints[project] = constraint
-
-            # Identifica projetos com upper bounds
-            if constraint["has_upper_bound"]:
-                blocking_projects.append(
-                    {
-                        "project": project,
-                        "constraint": constraint["raw"],
-                        "type": constraint["type"],
-                    }
-                )
-
-        # Encontra o mais e menos restritivo
-        if project_constraints:
-            sorted_by_version = sorted(
-                project_constraints.items(),
-                key=lambda x: parse_version(x[1]["version"]),
-            )
-            most_restrictive = sorted_by_version[0]
-            least_restrictive = sorted_by_version[-1]
-
-        # Só adiciona à análise se há projetos bloqueando
-        if blocking_projects:
-            analysis[package] = {
-                "latest_pypi": latest_version,
-                "total_projects": len(project_versions),
-                "blocking_projects": blocking_projects,
-                "most_restrictive": most_restrictive[0] if most_restrictive else None,
-                "least_restrictive": (
-                    least_restrictive[0] if least_restrictive else None
-                ),
-                "all_versions": project_versions,
-            }
-
-    return analysis
-
-
-def format_report(analysis: dict[str, Any]) -> str:
-    """Formata relatório legível."""
-    lines: list[str] = []
-    lines.extend(
-        (
-            "🔒 RELATÓRIO: QUEM ESTÁ SEGURANDO ATUALIZAÇÕES",
-            "=" * 60,
-            f"Gerado em: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
-            "",
-        )
-    )
-
-    if not analysis:
-        lines.append("✅ Nenhum conflito de versão detectado!")
-        return "\n".join(lines)
-
-    # Ordena por número de projetos bloqueando
-    sorted_packages = sorted(
-        analysis.items(), key=lambda x: len(x[1]["blocking_projects"]), reverse=True
-    )
-
-    for package, info in sorted_packages:
-        lines.extend(
-            (
-                f"\n📦 {package}",
-                f"   PyPI mais recente: {info['latest_pypi'] or 'N/A'}",
-                f"   Projetos usando: {info['total_projects']}",
-                f"   Projetos bloqueando: {len(info['blocking_projects'])}",
-            )
+    # Mostra cache stats se verboso
+    if "-v" in sys.argv or "--verbose" in sys.argv:
+        stats = get_workspace_analysis.cache_stats()
+        print_colored(
+            f"\n📊 Cache: {stats['hits']} hits, {stats['misses']} misses ({stats['hit_rate']}%)",
+            Colors.CYAN,
         )
 
-        if info["blocking_projects"]:
-            lines.append("   🚫 Bloqueadores:")
-            lines.extend(
-                f"      - {blocker['project']}: {blocker['constraint']} ({blocker['type']})"
-                for blocker in info["blocking_projects"]
-            )
+    # Dicas finais
+    print_colored("\n💡 Dicas:", Colors.CYAN)
+    print("  • Use --all para ver todos os conflitos")
+    print("  • Use --suggest para ver resoluções sugeridas")
+    print("  • Use --report para gerar relatório completo")
+    print("  • Use -v para ver estatísticas de cache")
 
-        if info["most_restrictive"] and info["least_restrictive"]:
-            lines.extend(
-                (
-                    f"   📊 Mais restritivo: {info['most_restrictive']}",
-                    f"   📊 Menos restritivo: {info['least_restrictive']}",
-                )
-            )
-
-    lines.extend(
-        ("\n" + "=" * 60, "RESUMO:", f"Total de pacotes com conflitos: {len(analysis)}")
-    )
-
-    # Top 5 maiores bloqueadores
-    top_blockers: defaultdict[str, int] = defaultdict(int)
-    for pkg_info in analysis.values():
-        for blocker in pkg_info["blocking_projects"]:
-            top_blockers[blocker["project"]] += 1
-
-    if top_blockers:
-        lines.append("\n🏆 TOP PROJETOS BLOQUEADORES:")
-        for project, count in sorted(
-            top_blockers.items(), key=operator.itemgetter(1), reverse=True
-        )[:5]:
-            lines.append(f"   {project}: bloqueando {count} pacotes")
-
-    return "\n".join(lines)
-
-
-def main() -> int:
-    """Função principal."""
-    import argparse
-
-    parser = argparse.ArgumentParser(
-        description="Analisa quem está segurando atualizações de bibliotecas"
-    )
-    parser.add_argument(
-        "--workspace",
-        type=Path,
-        default=Path.cwd(),
-        help="Diretório do workspace (padrão: diretório atual)",
-    )
-    parser.add_argument("--save", help="Salva relatório em arquivo")
-    parser.add_argument("--json", action="store_true", help="Saída em formato JSON")
-
-    args = parser.parse_args()
-
-    print("🔍 Coletando dependências de todos os projetos...")
-    dependencies = collect_all_dependencies(args.workspace)
-
-    print(f"📊 Analisando {len(dependencies)} pacotes únicos...")
-    analysis = analyze_blocking_projects(dependencies)
-
-    if args.json:
-        print(json.dumps(analysis, indent=2))
-    else:
-        report = format_report(analysis)
-        print(report)
-
-        if args.save:
-            save_path = Path(args.save)
-            save_path.write_text(report, encoding="utf-8")
-            print(f"\n💾 Relatório salvo em: {save_path}")
-
-    return 0 if not analysis else 1
+    return 0
 
 
 if __name__ == "__main__":

@@ -1,0 +1,465 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "id": "flext-dbt-oracle-rules",
+  "title": "FLEXT DBT Oracle Adapter Rules",
+  "description": "Comprehensive rules and validation schema for DBT Oracle adapter operations using flext-core standards",
+  "version": "1.0.0",
+  "metadata": {
+    "project": "flext-dbt-oracle",
+    "version": "0.7.0",
+    "framework": "FLEXT",
+    "domain": "DBT Oracle Adapter",
+    "dbt_version": "1.8.0",
+    "adapter_type": "oracle",
+    "last_updated": "2025-07-15",
+    "flext_core_version": "0.7.0",
+    "python_version": "3.13"
+  },
+  "flext_core_integration": {
+    "typedefs": {
+      "use_flext_core_typedefs": "flext_core.domain.typedefs",
+      "core_types": [
+        "NonEmptyStr",
+        "Port",
+        "PositiveInt",
+        "TimeoutSeconds",
+        "TableName",
+        "SchemaName"
+      ],
+      "local_typedefs": "dbt.adapters.oracle.typedefs",
+      "oracle_specific_types": [
+        "OracleHost",
+        "OraclePort",
+        "OracleServiceName",
+        "OracleSID",
+        "OracleSchema",
+        "OracleFetchSize",
+        "OracleArraySize",
+        "OracleConnectionTimeout"
+      ]
+    },
+    "constants": {
+      "use_flext_core_constants": "flext_core.domain.constants",
+      "core_constants": [
+        "ConfigDefaults",
+        "FlextFramework",
+        "Environments",
+        "LogLevels"
+      ],
+      "local_constants": "dbt.adapters.oracle.constants",
+      "oracle_constants": "DBTOracleAdapterConstants"
+    },
+    "configuration": {
+      "base_class": "flext_core.config.base.BaseConfig",
+      "settings_class": "flext_core.config.base.BaseSettings",
+      "validation": "pydantic_v2",
+      "environment_prefix": "FLEXT_DBT_ORACLE_",
+      "config_manager": "flext_core.config.ConfigManager",
+      "inherit_base_config": true,
+      "inherit_base_settings": true,
+      "use_dependency_injection": true,
+      "use_service_result": true
+    }
+  },
+  "configuration_rules": {
+    "connection": {
+      "required_fields": ["host", "user", "password"],
+      "conditional_required": {
+        "service_name_or_sid": {
+          "description": "Either service_name or sid must be provided",
+          "validation": "at_least_one_of",
+          "fields": ["service_name", "sid"]
+        }
+      },
+      "default_values": {
+        "type": "oracle",
+        "port": 1521,
+        "protocol": "tcp",
+        "schema": "dbt_user",
+        "threads": 4,
+        "keepalives_idle": 0,
+        "search_path": null,
+        "sslmode": "prefer",
+        "connection_timeout": 30,
+        "query_timeout": 300,
+        "retry_on_database_errors": true,
+        "retry_all": false
+      },
+      "validation_constraints": {
+        "type": {
+          "type": "string",
+          "enum": ["oracle"],
+          "description": "Must be oracle for this adapter"
+        },
+        "port": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 65535
+        },
+        "protocol": {
+          "type": "string",
+          "enum": ["tcp", "tcps"]
+        },
+        "threads": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 16,
+          "recommended": 4
+        },
+        "connection_timeout": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 300
+        },
+        "query_timeout": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 7200
+        },
+        "sslmode": {
+          "type": "string",
+          "enum": ["disable", "allow", "prefer", "require"]
+        },
+        "user": {
+          "type": "string",
+          "pattern": "^[a-zA-Z][a-zA-Z0-9_$#]*$",
+          "min_length": 1,
+          "max_length": 128
+        },
+        "schema": {
+          "type": "string",
+          "pattern": "^[a-zA-Z][a-zA-Z0-9_$#]*$",
+          "min_length": 1,
+          "max_length": 128
+        }
+      }
+    }
+  },
+  "dbt_adapter_rules": {
+    "adapter_type": "oracle",
+    "dbt_version_compatibility": {
+      "minimum": "1.6.0",
+      "maximum": "1.8.x",
+      "recommended": "1.8.0"
+    },
+    "supported_features": {
+      "materialization": {
+        "table": true,
+        "view": true,
+        "incremental": true,
+        "ephemeral": true,
+        "snapshot": true
+      },
+      "incremental_strategies": ["append", "merge", "delete+insert"],
+      "snapshot_strategies": ["timestamp", "check"]
+    },
+    "connection_management": {
+      "connection_pooling": true,
+      "connection_reuse": true,
+      "auto_retry": true,
+      "graceful_degradation": true
+    }
+  },
+  "sql_generation_rules": {
+    "identifier_quoting": {
+      "quote_policy": "when_needed",
+      "quote_character": "\"",
+      "case_sensitivity": "preserve"
+    },
+    "sql_dialect": {
+      "oracle_version": "19c",
+      "plsql_support": true,
+      "advanced_analytics": true,
+      "json_support": true
+    },
+    "ddl_generation": {
+      "create_table_as": "CREATE TABLE {table} AS ({sql})",
+      "create_view_as": "CREATE VIEW {view} AS ({sql})",
+      "drop_table": "DROP TABLE {table}",
+      "drop_view": "DROP VIEW {view}",
+      "truncate_table": "TRUNCATE TABLE {table}"
+    }
+  },
+  "materialization_rules": {
+    "table": {
+      "strategy": "create_table_as",
+      "supports_clustering": false,
+      "supports_partitioning": true,
+      "supports_compression": true,
+      "default_tablespace": "USERS"
+    },
+    "view": {
+      "strategy": "create_view_as",
+      "supports_materialized_views": true,
+      "refresh_strategy": "on_demand"
+    },
+    "incremental": {
+      "default_strategy": "merge",
+      "unique_key_required": true,
+      "supports_upsert": true,
+      "merge_update_columns": "all_columns"
+    },
+    "snapshot": {
+      "default_strategy": "timestamp",
+      "supports_hard_deletes": true,
+      "timestamp_column": "dbt_updated_at"
+    }
+  },
+  "data_type_mapping": {
+    "dbt_to_oracle": {
+      "string": "VARCHAR2(4000)",
+      "varchar": "VARCHAR2({size})",
+      "text": "CLOB",
+      "integer": "NUMBER(38,0)",
+      "bigint": "NUMBER(38,0)",
+      "float": "BINARY_DOUBLE",
+      "double": "BINARY_DOUBLE",
+      "numeric": "NUMBER({precision},{scale})",
+      "boolean": "NUMBER(1,0)",
+      "date": "DATE",
+      "datetime": "TIMESTAMP(6)",
+      "timestamp": "TIMESTAMP(6)",
+      "time": "TIMESTAMP(6)",
+      "json": "CLOB"
+    },
+    "oracle_to_dbt": {
+      "VARCHAR2": "string",
+      "NVARCHAR2": "string",
+      "CHAR": "string",
+      "NCHAR": "string",
+      "CLOB": "string",
+      "NCLOB": "string",
+      "NUMBER": "numeric",
+      "BINARY_FLOAT": "float",
+      "BINARY_DOUBLE": "float",
+      "DATE": "date",
+      "TIMESTAMP": "timestamp",
+      "TIMESTAMP WITH TIME ZONE": "timestamp",
+      "TIMESTAMP WITH LOCAL TIME ZONE": "timestamp",
+      "RAW": "string",
+      "BLOB": "string",
+      "XMLType": "string"
+    },
+    "type_conversion_rules": {
+      "precision_handling": "preserve_when_possible",
+      "scale_handling": "preserve_when_possible",
+      "overflow_handling": "error",
+      "null_handling": "oracle_null"
+    }
+  },
+  "performance_rules": {
+    "connection_optimization": {
+      "connection_pool_size": 4,
+      "connection_timeout": 30,
+      "statement_timeout": 300,
+      "fetch_size": 1000
+    },
+    "query_optimization": {
+      "use_hints": false,
+      "parallel_query": false,
+      "cost_based_optimizer": true,
+      "statistics_gathering": "auto"
+    },
+    "materialization_optimization": {
+      "bulk_operations": true,
+      "parallel_ddl": false,
+      "compression": "basic",
+      "nologging": false
+    }
+  },
+  "macro_rules": {
+    "adapter_macros": {
+      "get_catalog": "custom_oracle_implementation",
+      "list_relations_without_caching": "custom_oracle_implementation",
+      "get_columns_in_relation": "custom_oracle_implementation",
+      "create_schema": "custom_oracle_implementation",
+      "drop_schema": "custom_oracle_implementation"
+    },
+    "materialization_macros": {
+      "incremental": "oracle_incremental",
+      "snapshot": "oracle_snapshot",
+      "table": "oracle_table",
+      "view": "oracle_view"
+    },
+    "utility_macros": {
+      "current_timestamp": "SYSTIMESTAMP",
+      "dateadd": "custom_dateadd",
+      "datediff": "custom_datediff",
+      "split_part": "REGEXP_SUBSTR",
+      "hash": "ORA_HASH"
+    }
+  },
+  "testing_rules": {
+    "supported_tests": {
+      "unique": true,
+      "not_null": true,
+      "accepted_values": true,
+      "relationships": true,
+      "custom_tests": true
+    },
+    "test_optimization": {
+      "sample_testing": true,
+      "parallel_testing": false,
+      "test_caching": true
+    }
+  },
+  "security_rules": {
+    "connection_security": {
+      "ssl_recommended": true,
+      "credential_handling": {
+        "mask_in_logs": true,
+        "environment_variables_preferred": true,
+        "profiles_yml_encryption": "recommended"
+      }
+    },
+    "access_control": {
+      "principle_of_least_privilege": true,
+      "required_privileges": [
+        "CREATE TABLE",
+        "CREATE VIEW",
+        "SELECT",
+        "INSERT",
+        "UPDATE",
+        "DELETE",
+        "CREATE SEQUENCE"
+      ],
+      "schema_isolation": "recommended"
+    }
+  },
+  "error_handling_rules": {
+    "retry_strategy": {
+      "connection_errors": {
+        "max_attempts": 3,
+        "backoff_strategy": "exponential",
+        "base_delay": 1.0
+      },
+      "compilation_errors": {
+        "max_attempts": 1,
+        "fail_fast": true
+      },
+      "runtime_errors": {
+        "max_attempts": 1,
+        "categorize_by_error_code": true
+      }
+    },
+    "error_categories": {
+      "retryable": [
+        "ORA-00028",
+        "ORA-00060",
+        "ORA-01012",
+        "ORA-03113",
+        "ORA-03114",
+        "ORA-12170"
+      ],
+      "non_retryable": [
+        "ORA-00904",
+        "ORA-00942",
+        "ORA-01017",
+        "ORA-01031",
+        "ORA-00955"
+      ]
+    }
+  },
+  "logging_rules": {
+    "adapter_logging": {
+      "log_level": "INFO",
+      "include_sql": false,
+      "include_timing": true,
+      "include_row_counts": true
+    },
+    "connection_logging": {
+      "log_connections": true,
+      "mask_credentials": true,
+      "include_connection_info": true
+    },
+    "performance_logging": {
+      "log_slow_queries": true,
+      "slow_query_threshold": 10.0,
+      "include_explain_plans": false
+    }
+  },
+  "environment_specific_rules": {
+    "development": {
+      "detailed_logging": true,
+      "include_sql_in_logs": true,
+      "smaller_timeouts": false,
+      "connection_validation": "relaxed"
+    },
+    "staging": {
+      "detailed_logging": false,
+      "include_sql_in_logs": false,
+      "production_like_settings": true,
+      "connection_validation": "strict"
+    },
+    "production": {
+      "detailed_logging": false,
+      "include_sql_in_logs": false,
+      "optimized_settings": true,
+      "connection_validation": "strict",
+      "require_ssl": true,
+      "max_threads": 4
+    }
+  },
+  "schema_evolution_rules": {
+    "column_addition": {
+      "supported": true,
+      "strategy": "alter_table_add_column"
+    },
+    "column_modification": {
+      "supported": "limited",
+      "restrictions": "widening_only"
+    },
+    "column_removal": {
+      "supported": false,
+      "strategy": "recreate_table"
+    },
+    "table_recreation": {
+      "supported": true,
+      "preserve_data": true,
+      "backup_strategy": "rename_original"
+    }
+  },
+  "hooks_and_operations": {
+    "pre_hook": {
+      "supported": true,
+      "execution_context": "transaction"
+    },
+    "post_hook": {
+      "supported": true,
+      "execution_context": "transaction"
+    },
+    "operations": {
+      "supported": true,
+      "transaction_support": true
+    }
+  },
+  "documentation_rules": {
+    "metadata_collection": {
+      "table_comments": true,
+      "column_comments": true,
+      "data_lineage": true
+    },
+    "catalog_integration": {
+      "oracle_data_dictionary": true,
+      "custom_metadata": true
+    }
+  },
+  "compliance_rules": {
+    "data_governance": {
+      "metadata_collection": true,
+      "lineage_tracking": true,
+      "transformation_tracking": true
+    },
+    "regulatory": {
+      "gdpr_compliance": false,
+      "data_residency": "not_enforced",
+      "audit_requirements": "basic"
+    }
+  },
+  "validation_functions": {
+    "at_least_one_of": {
+      "description": "Validates that at least one of the specified fields has a value",
+      "implementation": "custom_validator"
+    }
+  }
+}
