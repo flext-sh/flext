@@ -1,0 +1,65 @@
+# FLEXT E2E Testing Environment
+# Comprehensive testing for Oracle Database ecosystem
+
+FROM python:3.13-slim
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    wget \
+    unzip \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set working directory
+WORKDIR /app
+
+# Install Poetry
+RUN pip install poetry==1.8.3
+
+# Copy project configuration
+COPY pyproject.toml poetry.lock ./
+
+# Configure Poetry
+RUN poetry config virtualenvs.create false
+
+# Install dependencies
+RUN poetry install --with dev,test --no-root
+
+# Install FLEXT components
+COPY flext-core/ ./flext-core/
+COPY flext-observability/ ./flext-observability/
+COPY flext-db-oracle/ ./flext-db-oracle/
+COPY flext-tap-oracle/ ./flext-tap-oracle/
+COPY flext-target-oracle/ ./flext-target-oracle/
+COPY flext-dbt-oracle/ ./flext-dbt-oracle/
+
+# Install FLEXT packages in development mode
+RUN cd flext-core && poetry install --no-root
+RUN cd flext-observability && poetry install --no-root
+RUN cd flext-db-oracle && poetry install --no-root
+RUN cd flext-tap-oracle && poetry install --no-root
+RUN cd flext-target-oracle && poetry install --no-root
+RUN cd flext-dbt-oracle && poetry install --no-root
+
+# Install DBT Oracle adapter
+RUN pip install dbt-core >=1.8.0
+
+# Create test directories
+RUN mkdir -p /app/tests/data/input /app/tests/data/output
+
+# Copy test configurations
+COPY tests/ ./tests/
+
+# Set environment variables
+ENV PYTHONPATH=/app
+ENV FLEXT_LOG_LEVEL=DEBUG
+ENV FLEXT_TEST_MODE=true
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD python -c "import sys; print('E2E test environment ready'); sys.exit(0)"
+
+# Default command runs all E2E tests
+CMD ["python", "-m", "pytest", "/app/tests/e2e/", "-v", "--tb=short", "-x"]

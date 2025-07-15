@@ -1,390 +1,288 @@
 #!/usr/bin/env python3
 """
-FLEXT Quality Gateway FINAL - Versão Real e Otimizada
-====================================================
+Script refatorado para quality gateway usando flext_tools.
 
-Sistema REAL que:
-1. É RÁPIDO - otimizado para projetos grandes
-2. É CONFIÁVEL - só aplica ferramentas que realmente melhoram
-3. É PRÁTICO - feedback em tempo real
-4. É SEGURO - backup e reversão garantidos
-
-Ferramentas aplicadas (apenas as que funcionam bem):
-1. isort - Organização de imports
-2. black - Formatação profissional
-3. ruff check --fix - Correções automáticas
-4. ruff format - Formatação final
-
-Versão: FINAL - Production Ready
+Combina validação Poetry, análise de conflitos e descoberta de dependências.
 """
 
-import json
-import subprocess
 import sys
-import time
 from pathlib import Path
-from typing import Any
 
-try:
-    from rich.console import Console
-    from rich.progress import BarColumn, Progress, SpinnerColumn, TextColumn
+# Adiciona scripts ao path para importar flext_tools
+sys.path.insert(0, str(Path(__file__).parent))
 
-    RICH_AVAILABLE = True
-    console = Console()
-except ImportError:
-    RICH_AVAILABLE = False
-    console = None
+from flext_tools import (
+    Colors,
+    ConflictAnalyzer,
+    DependencyDiscovery,
+    PoetryValidator,
+    cached,
+    print_colored,
+)
 
 
-class QualityGatewayFinal:
-    """Sistema final de quality gateway - otimizado e confiável."""
+def main():
+    """Quality gateway completo para o workspace."""
+    print_colored("🛡️ FLEXT Quality Gateway", Colors.BLUE)
+    print_colored("=" * 50, Colors.BLUE)
 
-    def __init__(self, workspace_root: Path) -> None:
-        self.workspace_root = workspace_root
-        self.python_executable = workspace_root / ".venv" / "bin" / "python"
+    # Configurações
+    strict_mode = "--strict" in sys.argv
+    fix_mode = "--fix" in sys.argv
 
-        if not self.python_executable.exists():
-            msg = f"Python não encontrado: {self.python_executable}"
-            raise RuntimeError(msg)
+    workspace_path = Path.cwd()
 
-    def count_issues_fast(self, file_path: Path) -> int:
-        """Conta issues rapidamente usando apenas Ruff."""
-        try:
-            result = subprocess.run(
-                [
-                    str(self.python_executable),
-                    "-m",
-                    "ruff",
-                    "check",
-                    "--output-format=json",
-                    str(file_path),
-                ],
-                check=False,
-                capture_output=True,
-                text=True,
-                timeout=10,  # timeout mais baixo
+    # Detecta projetos
+    projects = sorted(
+        [
+            p.parent
+            for p in workspace_path.rglob("pyproject.toml")
+            if not any(
+                skip in str(p) for skip in ["archive", "backup", "node_modules", ".git"]
             )
-
-            if result.returncode == 0:
-                return 0
-
-            try:
-                issues = json.loads(result.stdout)
-                return len(issues)
-            except json.JSONDecodeError:
-                # Fallback simples
-                return result.stdout.count("\n")
-
-        except Exception:
-            return 0
-
-    def apply_tool_safely(
-        self, file_path: Path, tool_name: str, command: list[str]
-    ) -> tuple[bool, int, int, float]:
-        """Aplica uma ferramenta com segurança.
-
-        Returns: (success, before_issues, after_issues, execution_time)
-        """
-        start_time = time.time()
-
-        # Backup
-        backup_content = file_path.read_text(encoding="utf-8")
-
-        # Medir antes
-        before_issues = self.count_issues_fast(file_path)
-
-        try:
-            # Aplicar ferramenta
-            subprocess.run(
-                command,
-                check=False,
-                capture_output=True,
-                text=True,
-                timeout=15,  # timeout reduzido
-            )
-
-            # Medir depois
-            after_issues = self.count_issues_fast(file_path)
-            execution_time = time.time() - start_time
-
-            # Verificar se piorou
-            if after_issues > before_issues:
-                # REVERTER
-                file_path.write_text(backup_content, encoding="utf-8")
-                self._print(
-                    f"❌ {tool_name}: REVERTIDO ({before_issues} → {after_issues})"
-                )
-                return False, before_issues, before_issues, execution_time
-
-            # SUCESSO
-            improvement = before_issues - after_issues
-            if improvement > 0:
-                self._print(
-                    f"✅ {tool_name}: -{improvement} issues em {execution_time:.1f}s"
-                )
-            else:
-                self._print(f"✅ {tool_name}: OK em {execution_time:.1f}s")
-
-            return True, before_issues, after_issues, execution_time
-
-        except subprocess.TimeoutExpired:
-            # Timeout - reverter
-            file_path.write_text(backup_content, encoding="utf-8")
-            self._print(f"⏰ {tool_name}: TIMEOUT - revertido")
-            return False, before_issues, before_issues, time.time() - start_time
-
-        except Exception as e:
-            # Erro - reverter
-            file_path.write_text(backup_content, encoding="utf-8")
-            self._print(f"❌ {tool_name}: ERRO - {e}")
-            return False, before_issues, before_issues, time.time() - start_time
-
-    def process_file_optimized(self, file_path: Path) -> dict[str, Any]:
-        """Processa um arquivo de forma otimizada."""
-        if not file_path.exists():
-            return {"success": False, "error": "Arquivo não existe"}
-
-        # Backup inicial completo
-        backup_path = file_path.with_suffix(file_path.suffix + ".qg_backup")
-        try:
-            backup_path.write_text(
-                file_path.read_text(encoding="utf-8"), encoding="utf-8"
-            )
-        except Exception as e:
-            return {"success": False, "error": f"Erro criando backup: {e}"}
-
-        initial_issues = self.count_issues_fast(file_path)
-
-        # Ferramentas em ordem otimizada (removido autopep8 que causa problemas)
-        tools = [
-            ("isort", [str(self.python_executable), "-m", "isort", str(file_path)]),
-            ("black", [str(self.python_executable), "-m", "black", str(file_path)]),
-            (
-                "ruff_fix",
-                [
-                    str(self.python_executable),
-                    "-m",
-                    "ruff",
-                    "check",
-                    "--fix",
-                    str(file_path),
-                ],
-            ),
-            (
-                "ruff_format",
-                [str(self.python_executable), "-m", "ruff", "format", str(file_path)],
-            ),
         ]
+    )
 
-        total_improvement = 0
-        total_time = 0.0
-        tools_applied = 0
+    if not projects:
+        print_colored("❌ Nenhum projeto Python encontrado!", Colors.RED)
+        return 1
 
-        for tool_name, command in tools:
-            success, before, after, exec_time = self.apply_tool_safely(
-                file_path, tool_name, command
-            )
-            total_time += exec_time
+    print_colored(f"📁 Analisando {len(projects)} projetos\n", Colors.CYAN)
 
-            if success:
-                tools_applied += 1
-                improvement = before - after
-                if improvement > 0:
-                    total_improvement += improvement
+    # Contadores de qualidade
+    quality_score = 0
+    max_score = 0
+    issues_found = []
 
-        final_issues = self.count_issues_fast(file_path)
+    # 1. VALIDAÇÃO POETRY
+    print_colored("1️⃣ Validação Poetry", Colors.BLUE)
+    validator = PoetryValidator()
 
-        # Verificação final de segurança
-        if final_issues > initial_issues:
-            # Regressão geral - reverter tudo
-            try:
-                file_path.write_text(
-                    backup_path.read_text(encoding="utf-8"), encoding="utf-8"
-                )
-                self._print(f"🚨 REGRESSÃO GERAL - Revertendo {file_path.name}")
-                final_issues = initial_issues
-                total_improvement = 0
-            except Exception:
-                pass
+    @cached(namespace="validation", ttl=300)
+    def validate_workspace():
+        return validator.validate_workspace(workspace_path)
 
-        # Limpar backup
-        backup_path.unlink(missing_ok=True)
+    validations = validate_workspace()
 
-        return {
-            "success": True,
-            "file_path": str(file_path),
-            "initial_issues": initial_issues,
-            "final_issues": final_issues,
-            "improvement": total_improvement,
-            "tools_applied": tools_applied,
-            "processing_time": total_time,
-        }
+    valid_count = sum(1 for v in validations.values() if v["valid"])
+    invalid_count = len(validations) - valid_count
 
-    def process_project_efficiently(self, project_path: Path) -> dict[str, Any]:
-        """Processa um projeto de forma eficiente."""
-        if not project_path.exists():
-            return {
-                "success": False,
-                "error": f"Projeto não encontrado: {project_path}",
-            }
-
-        # Encontrar arquivos Python
-        python_files = [
-            py_file
-            for py_file in project_path.rglob("*.py")
-            if py_file.is_file()
-            and not any(part.startswith(".") for part in py_file.parts)
-        ]
-
-        if not python_files:
-            return {
-                "success": True,
-                "message": "Nenhum arquivo Python encontrado",
-                "files_processed": 0,
-            }
-
-        self._print(
-            f"🎯 Processando {len(python_files)} arquivos em {project_path.name}"
+    max_score += 30  # 30 pontos para validação
+    if invalid_count == 0:
+        quality_score += 30
+        print_colored(
+            f"  ✅ Todos os {len(validations)} projetos são válidos (+30 pontos)",
+            Colors.GREEN,
+        )
+    else:
+        partial_score = int(30 * (valid_count / len(validations)))
+        quality_score += partial_score
+        print_colored(
+            f"  ⚠️ {valid_count}/{len(validations)} projetos válidos (+{partial_score} pontos)",
+            Colors.YELLOW,
         )
 
-        # Estatísticas
-        files_processed = 0
-        files_improved = 0
-        total_initial_issues = 0
-        total_final_issues = 0
-        total_improvement = 0
-        total_time = 0.0
+        issues_found.append(f"Poetry: {invalid_count} projetos inválidos")
 
-        # Progress bar otimizada
-        if RICH_AVAILABLE:
-            with Progress(
-                SpinnerColumn(),
-                TextColumn("[progress.description]{task.description}"),
-                BarColumn(),
-                TextColumn("[progress.percentage]{task.percentage:>3.0f}%"),
-                console=console,
-            ) as progress:
-                task = progress.add_task("Processando...", total=len(python_files))
+        # Mostra erros críticos
+        for project, validation in validations.items():
+            if not validation["valid"]:
+                print_colored(
+                    f"    ❌ {project}: {len(validation['errors'])} erros", Colors.RED
+                )
 
-                for py_file in python_files:
-                    progress.update(task, description=f"📝 {py_file.name}")
-                    result = self.process_file_optimized(py_file)
+    # 2. ANÁLISE DE CONFLITOS
+    print_colored("\n2️⃣ Análise de Conflitos", Colors.BLUE)
+    analyzer = ConflictAnalyzer()
 
-                    if result["success"]:
-                        files_processed += 1
-                        total_initial_issues += result["initial_issues"]
-                        total_final_issues += result["final_issues"]
-                        total_improvement += result["improvement"]
-                        total_time += result["processing_time"]
+    @cached(namespace="conflicts", ttl=600)
+    def get_conflicts():
+        return analyzer.analyze_workspace_conflicts(workspace_path)
 
-                        if result["improvement"] > 0:
-                            files_improved += 1
+    conflicts = get_conflicts()
+    stats = conflicts["stats"]
 
-                    progress.advance(task)
-        else:
-            # Fallback sem Rich
-            for i, py_file in enumerate(python_files):
-                print(f"[{i + 1}/{len(python_files)}] Processando {py_file.name}...")
-                result = self.process_file_optimized(py_file)
+    max_score += 25  # 25 pontos para conflitos
+    conflict_count = stats["packages_with_conflicts"]
 
-                if result["success"]:
-                    files_processed += 1
-                    total_initial_issues += result["initial_issues"]
-                    total_final_issues += result["final_issues"]
-                    total_improvement += result["improvement"]
-                    total_time += result["processing_time"]
+    if conflict_count == 0:
+        quality_score += 25
+        print_colored(
+            "  ✅ Nenhum conflito de versão encontrado (+25 pontos)", Colors.GREEN
+        )
+    else:
+        # Desconta pontos baseado no número de conflitos
+        deduction = min(25, conflict_count * 2)
+        partial_score = 25 - deduction
+        quality_score += partial_score
+        print_colored(
+            f"  ⚠️ {conflict_count} pacotes com conflitos (+{partial_score} pontos)",
+            Colors.YELLOW,
+        )
 
-                    if result["improvement"] > 0:
-                        files_improved += 1
+        issues_found.append(f"Conflitos: {conflict_count} pacotes")
 
-        return {
-            "success": True,
-            "project_name": project_path.name,
-            "files_processed": files_processed,
-            "files_improved": files_improved,
-            "total_initial_issues": total_initial_issues,
-            "total_final_issues": total_final_issues,
-            "total_improvement": total_improvement,
-            "total_time": total_time,
-            "improvement_rate": (
-                (files_improved / files_processed * 100) if files_processed > 0 else 0
-            ),
-        }
-
-    def _print(self, message: str) -> None:
-        """Print otimizado.
-        if RICH_AVAILABLE and console:
-            console.print(message)
-        else:
-            print(message)
-
-
-def main() -> None:
-    Função principal otimizada."""
-    import argparse
-
-    parser = argparse.ArgumentParser(
-        description="FLEXT Quality Gateway FINAL - Sistema Real e Otimizado"
-    )
-    parser.add_argument(
-        "--workspace",
-        type=Path,
-        default=Path("/home/marlonsc/flext"),
-        help="Diretório raiz do workspace FLEXT",
-    )
-    parser.add_argument("--project", type=str, help="Processar projeto específico")
-    parser.add_argument("--file", type=Path, help="Processar arquivo específico")
-
-    args = parser.parse_args()
-
-    if not args.workspace.exists():
-        print(f"❌ Workspace não encontrado: {args.workspace}")
-        sys.exit(1)
-
-    try:
-        gateway = QualityGatewayFinal(args.workspace)
-    except RuntimeError as e:
-        print(f"❌ {e}")
-        sys.exit(1)
-
-    # Processamento de arquivo único
-    if args.file:
-        if not args.file.exists():
-            print(f"❌ Arquivo não encontrado: {args.file}")
-            sys.exit(1)
-
-        result = gateway.process_file_optimized(args.file)
-
-        if result["success"]:
-            improvement = result["improvement"]
-            time_taken = result["processing_time"]
-            print(f"✅ {args.file.name}: {improvement:+d} issues em {time_taken:.1f}s")
-        else:
-            print(f"❌ {args.file.name}: {result.get('error', 'Erro desconhecido')}")
-
-    # Processamento de projeto
-    if args.project:
-        project_path = args.workspace / args.project
-        result = gateway.process_project_efficiently(project_path)
-
-        if result["success"]:
-            print(f"\n🎯 Resultado Final - {args.project}:")
-            print(f"  📁 Arquivos: {result['files_processed']}")
-            print(
-                f"  🔧 Melhorados: {result['files_improved']} ({result['improvement_rate']:.1f}%)"
-            )
-            print(
-                f"  📊 Issues: {result['total_initial_issues']} → {result['total_final_issues']}"
-            )
-            print(f"  📈 Melhoria: {result['total_improvement']:+d}")
-            print(f"  ⏱️  Tempo: {result['total_time']:.1f}s")
-        else:
-            print(
-                f"❌ Projeto {args.project} falhou: {result.get('error', 'Erro desconhecido')}"
+        # Mostra top 3 conflitos
+        top_conflicts = list(conflicts["version_conflicts"].items())[:3]
+        for package, data in top_conflicts:
+            print_colored(
+                f"    ⚠️ {package}: {len(data['projects'])} projetos", Colors.YELLOW
             )
 
-    print("ℹ️  Use --file ou --project. Use --help para ajuda.")
+    # 3. DEPENDÊNCIAS FALTANTES
+    print_colored("\n3️⃣ Dependências Faltantes", Colors.BLUE)
+    discovery = DependencyDiscovery()
+
+    @cached(namespace="discovery", ttl=300)
+    def discover_project_deps(project_path: Path):
+        return discovery.discover_project_dependencies(
+            project_path, include_dev=True, include_test=True
+        )
+
+    total_missing = 0
+    projects_with_missing = 0
+
+    for project in projects:
+        missing = discover_project_deps(project)
+        project_total = sum(len(deps) for deps in missing.values())
+
+        if project_total > 0:
+            total_missing += project_total
+            projects_with_missing += 1
+
+    max_score += 25  # 25 pontos para dependências
+    if total_missing == 0:
+        quality_score += 25
+        print_colored(
+            "  ✅ Todas as dependências estão declaradas (+25 pontos)", Colors.GREEN
+        )
+    else:
+        # Desconta pontos baseado no número de dependências faltantes
+        deduction = min(25, total_missing)
+        partial_score = 25 - deduction
+        quality_score += partial_score
+        print_colored(
+            f"  ⚠️ {total_missing} dependências faltantes em {projects_with_missing} projetos (+{partial_score} pontos)",
+            Colors.YELLOW,
+        )
+
+        issues_found.append(f"Dependências: {total_missing} faltantes")
+
+    # 4. ESTRUTURA DE ARQUIVOS
+    print_colored("\n4️⃣ Estrutura de Arquivos", Colors.BLUE)
+
+    structure_score = 0
+    max_structure = 20
+
+    # Verifica estruturas básicas
+    checks = [
+        ("Makefile na raiz", workspace_path / "Makefile"),
+        ("pyproject.toml na raiz", workspace_path / "pyproject.toml"),
+        ("README.md na raiz", workspace_path / "README.md"),
+        (".gitignore na raiz", workspace_path / ".gitignore"),
+    ]
+
+    for check_name, path in checks:
+        if path.exists():
+            structure_score += 5
+            print_colored(f"  ✅ {check_name}", Colors.GREEN)
+        else:
+            print_colored(f"  ❌ {check_name}", Colors.RED)
+            issues_found.append(f"Estrutura: {check_name} ausente")
+
+    quality_score += structure_score
+    max_score += max_structure
+
+    # RESULTADO FINAL
+    print_colored("\n📊 RESULTADO DO QUALITY GATEWAY", Colors.BLUE)
+    print_colored("=" * 50, Colors.BLUE)
+
+    percentage = (quality_score / max_score) * 100
+
+    print(f"Pontuação: {quality_score}/{max_score} ({percentage:.1f}%)")
+
+    # Determina status baseado na pontuação
+    if percentage >= 90:
+        status = "EXCELLENT"
+        color = Colors.GREEN
+        icon = "🏆"
+    elif percentage >= 75:
+        status = "GOOD"
+        color = Colors.GREEN
+        icon = "✅"
+    elif percentage >= 60:
+        status = "FAIR"
+        color = Colors.YELLOW
+        icon = "⚠️"
+    else:
+        status = "POOR"
+        color = Colors.RED
+        icon = "❌"
+
+    print_colored(f"\nStatus: {icon} {status}", color)
+
+    # Lista problemas encontrados
+    if issues_found:
+        print_colored("\n🔍 Problemas Encontrados:", Colors.YELLOW)
+        for issue in issues_found:
+            print(f"  • {issue}")
+
+    # Recomendações
+    print_colored("\n💡 Recomendações:", Colors.CYAN)
+
+    if invalid_count > 0:
+        print(
+            "  • Execute 'python validate_poetry_projects.py' para ver detalhes dos erros Poetry"
+        )
+
+    if conflict_count > 0:
+        print(
+            "  • Execute 'python analyze_who_blocks_updates.py --suggest' para ver resoluções"
+        )
+
+    if total_missing > 0:
+        print(
+            "  • Execute 'python discover_missing_deps.py --dry-run' para ver dependências faltantes"
+        )
+
+    if fix_mode:
+        print_colored(
+            "\n🔧 Modo de correção automática não implementado ainda", Colors.YELLOW
+        )
+        print("  • Use os scripts individuais para correções específicas")
+
+    # Mostra cache stats se verboso
+    if "-v" in sys.argv:
+        print_colored("\n📊 Estatísticas de Cache:", Colors.CYAN)
+        for func_name, func in [
+            ("validation", validate_workspace),
+            ("conflicts", get_conflicts),
+            ("discovery", discover_project_deps),
+        ]:
+            if hasattr(func, "cache_stats"):
+                stats = func.cache_stats()
+                print(f"  • {func_name}: {stats['hit_rate']}% hit rate")
+
+    # Opções disponíveis
+    print_colored("\n💡 Opções:", Colors.CYAN)
+    print("  • --strict: Modo rigoroso (falha com qualquer problema)")
+    print("  • --fix: Modo de correção automática (futuro)")
+    print("  • -v: Estatísticas detalhadas")
+
+    # Status de saída
+    if strict_mode and percentage < 100:
+        print_colored(
+            f"\n❌ FALHOU no modo rigoroso ({percentage:.1f}% < 100%)", Colors.RED
+        )
+        return 1
+    if percentage < 60:
+        print_colored(
+            f"\n❌ Qualidade insuficiente ({percentage:.1f}% < 60%)", Colors.RED
+        )
+        return 1
+    print_colored("\n✅ Quality gateway aprovado!", Colors.GREEN)
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

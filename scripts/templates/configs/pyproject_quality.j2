@@ -9,7 +9,7 @@ extend-include = ["*.pyi"]
 # Enable comprehensive rule set
 select = [
     "E",      # pycodestyle errors
-    "W",      # pycodestyle warnings  
+    "W",      # pycodestyle warnings
     "F",      # Pyflakes
     "I",      # isort
     "N",      # pep8-naming
@@ -106,7 +106,7 @@ plugins = [{{ mypy_plugins | map('quote') | join(', ') }}]
 minversion = "6.0"
 addopts = [
     "--strict-markers",
-    "--strict-config", 
+    "--strict-config",
     "--disable-warnings",
     {% if coverage_enabled | default(true) %}
     "--cov={{ package_name }}",
@@ -129,4 +129,4 @@ markers = [
 exclude_dirs = ["tests"]
 {% if bandit_skips %}
 skips = [{{ bandit_skips | map('quote') | join(', ') }}]
-{% endif %} 
+{% endif %}

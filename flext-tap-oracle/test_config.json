@@ -1,0 +1,9 @@
+{
+  "connection_type": "database",
+  "host": "localhost",
+  "port": 1521,
+  "service_name": "ORCL",
+  "username": "test",
+  "password": "test",
+  "schema": "TEST"
+}

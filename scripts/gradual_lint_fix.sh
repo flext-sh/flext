@@ -7,14 +7,14 @@ set -e
 PROJECT=$1
 
 if [ -z "$PROJECT" ]; then
-    echo "Usage: $0 <project-name>"
-    echo "Example: $0 flext-cli"
-    exit 1
+	echo "Usage: $0 <project-name>"
+	echo "Example: $0 flext-cli"
+	exit 1
 fi
 
 if [ ! -d "$PROJECT" ]; then
-    echo "Error: Project $PROJECT not found"
-    exit 1
+	echo "Error: Project $PROJECT not found"
+	exit 1
 fi
 
 echo "===================================="
@@ -25,7 +25,7 @@ cd "$PROJECT"
 
 # Step 1: Create baseline
 echo "Step 1: Creating linting baseline..."
-ruff check . > linting_baseline.txt 2>&1 || true
+ruff check . >linting_baseline.txt 2>&1 || true
 BASELINE_COUNT=$(grep -c "^" linting_baseline.txt || echo "0")
 echo "Baseline issues: $BASELINE_COUNT"
 
@@ -48,9 +48,13 @@ ruff check --fix --select I,W291,W292,W293,W391 . 2>/dev/null || true
 # Step 4: Test
 echo -e "\nStep 4: Running tests..."
 if [ -f "Makefile" ] && grep -q "^test:" Makefile; then
-    make test || { echo "Tests failed! Reverting..."; git checkout -; exit 1; }
+	make test || {
+		echo "Tests failed! Reverting..."
+		git checkout -
+		exit 1
+	}
 else
-    echo "No test target found in Makefile, skipping tests"
+	echo "No test target found in Makefile, skipping tests"
 fi
 
 # Step 5: Show what changed
@@ -59,7 +63,7 @@ git diff --stat
 
 # Step 6: New count
 echo -e "\nStep 6: Checking new issue count..."
-ruff check . > linting_after.txt 2>&1 || true
+ruff check . >linting_after.txt 2>&1 || true
 AFTER_COUNT=$(grep -c "^" linting_after.txt || echo "0")
 echo "Issues after fixes: $AFTER_COUNT"
 echo "Reduction: $((BASELINE_COUNT - AFTER_COUNT)) issues fixed"
@@ -67,7 +71,7 @@ echo "Reduction: $((BASELINE_COUNT - AFTER_COUNT)) issues fixed"
 # Step 7: Commit message template
 echo -e "\nStep 7: Suggested commit message:"
 echo "----------------------------------------"
-cat << EOF
+cat <<EOF
 chore($PROJECT): Apply safe linting fixes
 
 - Import sorting (ruff I rules)
@@ -83,7 +87,7 @@ echo "----------------------------------------"
 
 echo -e "\nTo commit these changes:"
 echo "  git add -A"
-echo "  git commit -m \"<paste message above>\""
+echo '  git commit -m "<paste message above>"'
 echo ""
 echo "To revert if needed:"
 echo "  git checkout -"

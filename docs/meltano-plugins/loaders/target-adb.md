@@ -14,7 +14,7 @@ This Meltano loader for Oracle Database (including Oracle Autonomous Database) a
 ## Requirements
 
 - Python 3.8 or higher
-- Oracle Client driver (python-oracledb)
+- Oracle Client driver (Python-oracledb)
 - Access to Oracle Database (19c, 21c) or Oracle Autonomous Database
 - Wallet for Oracle Autonomous Database connection (if applicable)
 - CREATE TABLE, INSERT, UPDATE, DELETE privileges on the database
@@ -33,7 +33,7 @@ meltano add loader target-oracle
 
 Oracle drivers are required for database connection:
 
-#### Using python-oracledb (recommended)
+#### Using Python-oracledb (recommended)
 
 ```bash
 pip install oracledb
