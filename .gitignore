@@ -326,6 +326,7 @@ output/
 outputs/
 temp/
 tmp/
+.flext_logs/
 
 # Runtime data
 runtime/
@@ -335,6 +336,7 @@ pids/
 *.pid
 *.seed
 *.pid.lock
+.meltano/
 
 # ============================================================================
 # BACKUP AND TEMPORARY FILES
@@ -508,6 +510,17 @@ oracle_trace_*.log
 test_output/
 test_data/
 e2e_results/
+test_*.py
+*_test.py
+validate_*.py
+investigate_*.py
+
+# Analysis and output files
+*_analysis.txt
+*_report.txt
+*_output.txt
+*.jsonl
+sync_*.txt
 
 # Monitoring
 metrics/
@@ -535,6 +548,14 @@ status_*.json
 *.xz
 
 # ============================================================================
+# AI
+# ============================================================================
+.cursor/
+.cursorignore
+CLAUDE.md
+internal.invalid.md
+
+# ============================================================================
 # ALWAYS INCLUDE EXCEPTIONS
 # ============================================================================
 
@@ -544,8 +565,6 @@ status_*.json
 !pyproject.toml
 !Makefile
 !README.md
-!CLAUDE.md
-!internal.invalid.md
 !docker-compose.yml
 !Dockerfile
 !.gitignore

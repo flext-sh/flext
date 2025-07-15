@@ -6,10 +6,15 @@ import click
 
 from flext.dev import DevToolsManager
 from flext.workspace import WorkspaceManager
+from flext.workspace.cli import cli as workspace_cli
 
 
 @click.group()
-@click.option("--workspace", type=click.Path(exists=True, path_type=Path), help="Workspace root path")
+@click.option(
+    "--workspace",
+    type=click.Path(exists=True, path_type=Path),
+    help="Workspace root path",
+)
 @click.pass_context
 def main(ctx: click.Context, workspace: Path | None) -> None:
     """FLEXT - Multi-Project Workspace Coordinator for Enterprise Data Integration."""
@@ -81,6 +86,10 @@ def info(ctx: click.Context) -> None:
 
     for project in workspace_manager.list_projects():
         click.echo(f"  - {project}")
+
+
+# Add workspace management commands as a group
+main.add_command(workspace_cli, name="workspace")
 
 
 if __name__ == "__main__":

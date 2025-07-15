@@ -1,0 +1,52 @@
+name: "flext_oracle_analytics"
+version: "1.0.0"
+config-version: 2
+
+profile: "flext_oracle_analytics"
+
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+models:
+  flext_oracle_analytics:
+    +materialized: table
+    +post-hook: "SELECT 'Model {{ this }} completed' as status FROM dual"
+    staging:
+      +materialized: view
+      +post-hook: "SELECT 'Staging model {{ this }} completed' as status FROM dual"
+    marts:
+      +materialized: table
+      +post-hook: "INSERT INTO FLEXT_DBT.model_audit (model_name, completed_at) VALUES ('{{ this }}', SYSDATE)"
+
+tests:
+  +store_failures: true
+  +schema: flext_dbt_test_failures
+
+seeds:
+  +column_types:
+    id: NUMBER
+    created_at: TIMESTAMP
+
+vars:
+  # DBT Oracle specific variables
+  oracle_batch_size: 1000
+  enable_oracle_hints: true
+  oracle_parallel_degree: 4
+
+  # FLEXT specific variables
+  flext_target_schema: "FLEXT_TARGET"
+  flext_source_schema: "FLEXT_SOURCE"
+  enable_flext_monitoring: true
+
+quoting:
+  database: false
+  schema: false
+  identifier: false

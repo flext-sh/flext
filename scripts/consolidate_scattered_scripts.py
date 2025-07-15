@@ -18,9 +18,9 @@ import ast
 import re
 import shutil
 import sys
+from datetime import datetime
 from pathlib import Path
 from typing import Any
-from datetime import datetime
 
 try:
     from rich.console import Console
@@ -56,9 +56,9 @@ class ScriptConsolidator:
         for pattern in patterns:
             for script in self.workspace_root.rglob(pattern):
                 # Excluir venv, __pycache__, legacy já organizados
-                if any(:
+                if any(
                     exclude in str(script)
-                    for exclude in [:
+                    for exclude in [
                         ".venv",
                         "__pycache__",
                         "scripts/legacy",
@@ -69,7 +69,7 @@ class ScriptConsolidator:
                     continue
 
                 # Incluir apenas arquivos em diretórios scripts/ ou arquivos isolados
-                if "scripts/" in str(script) or script.name.startswith(:
+                if "scripts/" in str(script) or script.name.startswith(
                     ("fix_", "enforce_", "audit_")
                 ):
                     scripts.append(script)
@@ -97,19 +97,19 @@ class ScriptConsolidator:
         }
 
         # Categorizar por funcionalidade
-        if any(:
+        if any(
             keyword in content.lower() for keyword in ["pep", "ruff", "black", "isort"]
         ):
             analysis["functionality"].add("formatting")
-        if any(:
+        if any(
             keyword in content.lower() for keyword in ["syntax", "error", "exception"]
         ):
             analysis["functionality"].add("syntax_fix")
-        if any(:
+        if any(
             keyword in content.lower() for keyword in ["test", "pytest", "unittest"]
         ):
             analysis["functionality"].add("testing")
-        if any(:
+        if any(
             keyword in content.lower() for keyword in ["type", "mypy", "annotation"]
         ):
             analysis["functionality"].add("typing")
@@ -165,8 +165,8 @@ class ScriptConsolidator:
             tree = ast.parse(content)
             functions.extend(
                 node.name
-                for node in ast.walk(tree):
-                if isinstance(node, ast.FunctionDef):
+                for node in ast.walk(tree)
+                if isinstance(node, ast.FunctionDef)
             )
         except Exception:
             # Fallback com regex
@@ -406,7 +406,7 @@ class ScriptConsolidator:
                 )
                 report.extend(
                     f"- {script.relative_to(self.workspace_root)}"
-                    for script in script_list:
+                    for script in script_list
                 )
 
         return "\n".join(report)
@@ -430,7 +430,7 @@ class ScriptConsolidator:
         analyses = {}
 
         if RICH_AVAILABLE:
-            with Progress(:
+            with Progress(
                 SpinnerColumn(),
                 TextColumn("[progress.description]{task.description}"),
                 console=console,

@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "flext-oracle-wms"
+version = "1.0.0"
+description = "Enterprise Oracle WMS client library for FLEXT data integration platform"
+authors = ["FLEXT Team <contact@flext.com>"]
+readme = "README.md"
+packages = [{include = "flext_oracle_wms", from = "src"}]
+
+[tool.poetry.dependencies]
+python = ">=3.13,<3.14"
+httpx = "^0.28.1"
+pydantic = "^2.0.0"
+pydantic-settings = "^2.0.0"
+flext-core = {path = "../flext-core", develop = true}
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

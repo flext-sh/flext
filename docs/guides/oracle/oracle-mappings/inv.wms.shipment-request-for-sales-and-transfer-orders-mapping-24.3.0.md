@@ -171,9 +171,9 @@ WMS Column: dest_facility_attr_b, Format: string, Max: 20.0, Required?: , INV Co
 WMS Column: dest_facility_attr_c, Format: string, Max: 20.0, Required?: , INV Column - SO & TO: , Format.1: , Max.1: , Notes:
 WMS Column: ref_nbr_1, Format: string, Max: 30.0, Required?: , INV Column - SO & TO: , Format.1: , Max.1: , Notes:
 WMS Column: host_ob_lpn_nbr, Format: string, Max: 30.0, Required?: , INV Column - SO & TO: , Format.1: , Max.1: , Notes:
-WMS Column: spl_instr, Format: string, Max: 255.0, Required?: , INV Column - SO & TO: NoteTxt, Format.1: attachment?, Max.1: , Notes: <xsl:for-each xml:id="id_267" select="ns27:notes">
-<xsl:if xml:id="id_268" test="ns27:NoteTypeCode = &quot;LINE_SHIPPING_INSTRUCTIONS&quot;">
-<xsl:value-of xml:id="id_269" select="oraext:decodeBase64 (ns27:NoteTxt )"/>
+WMS Column: spl_instr, Format: string, Max: 255.0, Required?: , INV Column - SO & TO: NoteTxt, Format.1: attachment?, Max.1: , Notes: <xsl:for-each XML:id="id_267" select="ns27:notes">
+<xsl:if XML:id="id_268" test="ns27:NoteTypeCode = &quot;LINE_SHIPPING_INSTRUCTIONS&quot;">
+<xsl:value-of XML:id="id_269" select="oraext:decodeBase64 (ns27:NoteTxt )"/>
 </xsl:if>
 </xsl:for-each>
 
@@ -402,9 +402,9 @@ WMS Column: dest_facility_attr_b, Format: string, Max: 20.0, Required?: , INV Co
 WMS Column: dest_facility_attr_c, Format: string, Max: 20.0, Required?: , INV Column (REST API - SO): , INV Column (REST API - TO): , Format.1: , Max.1: , Notes:
 WMS Column: ref_nbr_1, Format: string, Max: 30.0, Required?: , INV Column (REST API - SO): , INV Column (REST API - TO): , Format.1: , Max.1: , Notes:
 WMS Column: host_ob_lpn_nbr, Format: string, Max: 30.0, Required?: , INV Column (REST API - SO): , INV Column (REST API - TO): , Format.1: , Max.1: , Notes:
-WMS Column: spl_instr, Format: string, Max: 255.0, Required?: , INV Column (REST API - SO): NoteTxt, INV Column (REST API - TO): NoteTxt, Format.1: attachment?, Max.1: , Notes: <xsl:for-each xml:id="id_267" select="ns27:notes">
-<xsl:if xml:id="id_268" test="ns27:NoteTypeCode = &quot;LINE_SHIPPING_INSTRUCTIONS&quot;">
-<xsl:value-of xml:id="id_269" select="oraext:decodeBase64 (ns27:NoteTxt )"/>
+WMS Column: spl_instr, Format: string, Max: 255.0, Required?: , INV Column (REST API - SO): NoteTxt, INV Column (REST API - TO): NoteTxt, Format.1: attachment?, Max.1: , Notes: <xsl:for-each XML:id="id_267" select="ns27:notes">
+<xsl:if XML:id="id_268" test="ns27:NoteTypeCode = &quot;LINE_SHIPPING_INSTRUCTIONS&quot;">
+<xsl:value-of XML:id="id_269" select="oraext:decodeBase64 (ns27:NoteTxt )"/>
 </xsl:if>
 </xsl:for-each>
 

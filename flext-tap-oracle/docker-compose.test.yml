@@ -1,0 +1,50 @@
+version: "3.8"
+
+services:
+  oracle-db:
+    image: gvenzl/oracle-xe:21.3.0-slim
+    environment:
+      ORACLE_PASSWORD: oracle123
+      ORACLE_DATABASE: TESTDB
+      APP_USER: flext_test
+      APP_USER_PASSWORD: flext_test
+    ports:
+      - "1521:1521"
+    volumes:
+      - oracle-data:/opt/oracle/oradata
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "sqlplus",
+          "-L",
+          "sys/oracle123@//localhost:1521/TESTDB",
+          "as",
+          "sysdba",
+          "@/dev/stdin",
+          "<<< 'SELECT 1 FROM DUAL;'",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  flext-tap-test:
+    build: .
+    depends_on:
+      oracle-db:
+        condition: service_healthy
+    environment:
+      ORACLE_HOST: oracle-db
+      ORACLE_PORT: 1521
+      ORACLE_SERVICE_NAME: TESTDB
+      ORACLE_USERNAME: flext_test
+      ORACLE_PASSWORD: flext_test
+      ORACLE_SCHEMA: FLEXT_TEST
+    volumes:
+      - ./tests/e2e:/tests/e2e
+      - ./test-data:/test-data
+    command: pytest tests/e2e/ -v --tb=short
+
+volumes:
+  oracle-data:

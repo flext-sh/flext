@@ -1,0 +1,177 @@
+# FLEXT Oracle E2E Testing Dockerfile
+# Multi-stage build for efficient Oracle testing environment
+
+ARG PYTHON_VERSION=3.13
+ARG FLEXT_VERSION=0.7.0
+
+# ============================================================================
+# Stage 1: Base Python Environment with Oracle Client
+# ============================================================================
+FROM python:${PYTHON_VERSION}-slim as oracle-base
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    DEBIAN_FRONTEND=noninteractive
+
+# Install system dependencies for Oracle client
+RUN apt-get update && apt-get install -y \
+    # Oracle client dependencies
+    libaio1 \
+    libaio-dev \
+    unzip \
+    wget \
+    curl \
+    # Build dependencies
+    gcc \
+    g++ \
+    make \
+    # Git for potential development needs
+    git \
+    # Useful utilities for debugging
+    netcat-traditional \
+    telnet \
+    iputils-ping \
+    # Cleanup
+    && rm -rf /var/lib/apt/lists/*
+
+# Create Oracle client directory
+RUN mkdir -p /opt/oracle
+
+# Download and install Oracle Instant Client
+WORKDIR /opt/oracle
+RUN wget -q https://download.oracle.com/otn_software/linux/instantclient/2340000/instantclient-basic-linux.x64-23.4.0.24.05.zip \
+    && wget -q https://download.oracle.com/otn_software/linux/instantclient/2340000/instantclient-tools-linux.x64-23.4.0.24.05.zip \
+    && unzip -o instantclient-basic-linux.x64-23.4.0.24.05.zip \
+    && unzip -o instantclient-tools-linux.x64-23.4.0.24.05.zip \
+    && rm *.zip
+
+# Set Oracle environment variables
+ENV ORACLE_HOME=/opt/oracle/instantclient_23_4 \
+    LD_LIBRARY_PATH=/opt/oracle/instantclient_23_4:$LD_LIBRARY_PATH \
+    PATH=/opt/oracle/instantclient_23_4:$PATH
+
+# Create symlinks for Oracle client
+RUN cd /opt/oracle/instantclient_23_4 \
+    && ln -sf libclntsh.so.23.1 libclntsh.so \
+    && ln -sf libocci.so.23.1 libocci.so
+
+# ============================================================================
+# Stage 2: Python Dependencies and FLEXT Installation
+# ============================================================================
+FROM oracle-base as flext-deps
+
+# Install Poetry for dependency management
+RUN pip install poetry >=1.9.0
+
+# Configure Poetry
+ENV POETRY_NO_INTERACTION=1 \
+    POETRY_VENV_IN_PROJECT=1 \
+    POETRY_CACHE_DIR=/tmp/poetry_cache \
+    POETRY_HOME="/opt/poetry" \
+    POETRY_VENV_PATH="/workspace/.venv"
+
+# Create workspace
+WORKDIR /workspace
+
+# Copy dependency files first for better caching
+COPY pyproject.toml poetry.lock* ./
+
+# Copy all FLEXT project dependencies
+COPY flext-core/pyproject.toml flext-core/poetry.lock* ./flext-core/
+COPY flext-observability/pyproject.toml flext-observability/poetry.lock* ./flext-observability/
+COPY flext-db-oracle/pyproject.toml flext-db-oracle/poetry.lock* ./flext-db-oracle/
+COPY flext-tap-oracle/pyproject.toml flext-tap-oracle/poetry.lock* ./flext-tap-oracle/
+COPY flext-target-oracle/pyproject.toml flext-target-oracle/poetry.lock* ./flext-target-oracle/
+COPY flext-dbt-oracle/pyproject.toml flext-dbt-oracle/poetry.lock* ./flext-dbt-oracle/
+
+# Install Python dependencies with Poetry
+RUN poetry config virtualenvs.create true \
+    && poetry config virtualenvs.in-project true \
+    && poetry install --no-dev --no-root \
+    && rm -rf $POETRY_CACHE_DIR
+
+# ============================================================================
+# Stage 3: Oracle E2E Testing Environment
+# ============================================================================
+FROM flext-deps as oracle-e2e
+
+# Copy FLEXT source code
+COPY src/ ./src/
+COPY flext-core/src/ ./flext-core/src/
+COPY flext-observability/src/ ./flext-observability/src/
+COPY flext-db-oracle/src/ ./flext-db-oracle/src/
+COPY flext-tap-oracle/src/ ./flext-tap-oracle/src/
+COPY flext-target-oracle/src/ ./flext-target-oracle/src/
+COPY flext-dbt-oracle/src/ ./flext-dbt-oracle/src/
+
+# Copy test suites
+COPY tests/ ./tests/
+COPY flext-core/tests/ ./flext-core/tests/
+COPY flext-observability/tests/ ./flext-observability/tests/
+COPY flext-db-oracle/tests/ ./flext-db-oracle/tests/
+COPY flext-tap-oracle/tests/ ./flext-tap-oracle/tests/
+COPY flext-target-oracle/tests/ ./flext-target-oracle/tests/
+COPY flext-dbt-oracle/tests/ ./flext-dbt-oracle/tests/
+
+# Copy configuration files
+COPY Makefile ./
+COPY scripts/ ./scripts/
+COPY docker/ ./docker/
+
+# Install FLEXT packages in development mode
+RUN poetry install --no-dev
+
+# Create test directories
+RUN mkdir -p /workspace/test-results \
+    && mkdir -p /workspace/test-reports \
+    && mkdir -p /workspace/coverage-reports
+
+# ============================================================================
+# Stage 4: E2E Test Execution Environment
+# ============================================================================
+FROM oracle-e2e as test-runner
+
+# Install additional testing tools
+RUN poetry add pytest-xdist pytest-benchmark pytest-timeout pytest-sugar pytest-clarity
+
+# Create Oracle E2E test script
+COPY docker/scripts/run-oracle-e2e.sh /usr/local/bin/run-oracle-e2e
+RUN chmod +x /usr/local/bin/run-oracle-e2e
+
+# Create Oracle health check script
+COPY docker/scripts/wait-for-oracle.sh /usr/local/bin/wait-for-oracle
+RUN chmod +x /usr/local/bin/wait-for-oracle
+
+# Create test data generator script
+COPY docker/scripts/generate-oracle-test-data.sh /usr/local/bin/generate-test-data
+RUN chmod +x /usr/local/bin/generate-test-data
+
+# Set up Oracle testing environment
+ENV ORACLE_CLIENT_TYPE=thick \
+    TNS_ADMIN=/workspace/tests/oracle/tnsnames \
+    NLS_LANG=AMERICAN_AMERICA.UTF8 \
+    ORA_PYTHON_DRIVER_TYPE=thick
+
+# Health check for Oracle connectivity
+HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
+    CMD /usr/local/bin/wait-for-oracle
+
+# Default command for development
+CMD ["tail", "-f", "/dev/null"]
+
+# Labels for image metadata
+LABEL maintainer="FLEXT Team <team@flext.sh>" \
+    version="${FLEXT_VERSION}" \
+    description="FLEXT Oracle E2E Testing Environment" \
+    python.version="${PYTHON_VERSION}" \
+    oracle.client="23.4" \
+    purpose="e2e-testing"
+
+# Set working directory
+WORKDIR /workspace
+
+# Expose potential debugging ports
+EXPOSE 8000 8080 5432

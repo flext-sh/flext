@@ -4,14 +4,10 @@ package entities
 
 import (
 	"context"
-	"errors"
 	"fmt"
-	"os"
 	"testing"
 	"time"
 
-	"github.com/flext-sh/flext/internal/shared_kernel/domain"
-	"github.com/flext-sh/flext/internal/shared_kernel/domain/value_objects"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"

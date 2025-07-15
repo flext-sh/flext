@@ -1,0 +1,173 @@
+{
+  "name": "flext-dbt-oracle",
+  "description": "FLEXT DBT Oracle - Modern DBT Adapter for Oracle Database Rules",
+  "version": "0.7.0",
+  "framework": "flext-core",
+  "type": "dbt_adapter",
+  "extends": "../flext-db-oracle/rules.json",
+  "rules": {
+    "dbt_integration": {
+      "dbt_core_version": ">=1.8.0",
+      "adapter_api_version": "v12",
+      "modern_dbt_only": true,
+      "no_postgresql_deps": true,
+      "connection_management": "flext_db_oracle"
+    },
+    "database_integration": {
+      "base_library": "flext-db-oracle",
+      "no_direct_database": true,
+      "use_connection_service": "mandatory",
+      "connection_manager": "custom",
+      "query_execution": "async_aware"
+    },
+    "configuration": {
+      "profile_template": "oracle",
+      "required_fields": ["host", "username", "password", "schema"],
+      "connection_fields": ["port", "service_name", "sid", "protocol"],
+      "performance_fields": ["pool_min_size", "pool_max_size", "query_timeout"]
+    },
+    "sql_dialect": {
+      "dialect": "oracle",
+      "quote_policy": {
+        "identifier": false,
+        "schema": false,
+        "database": false
+      },
+      "case_sensitivity": "uppercase_default",
+      "identifier_max_length": 128,
+      "supports_schemas": true
+    },
+    "materializations": {
+      "supported": ["table", "view", "incremental", "snapshot"],
+      "default": "table",
+      "incremental_strategies": ["merge", "delete+insert"],
+      "merge_support": true,
+      "view_support": true,
+      "snapshot_support": true
+    },
+    "data_types": {
+      "dbt_to_oracle_mapping": {
+        "string": "VARCHAR2(4000)",
+        "varchar": "VARCHAR2",
+        "text": "CLOB",
+        "integer": "NUMBER(38,0)",
+        "bigint": "NUMBER(19,0)",
+        "smallint": "NUMBER(5,0)",
+        "float": "BINARY_DOUBLE",
+        "double": "BINARY_DOUBLE",
+        "numeric": "NUMBER",
+        "decimal": "NUMBER",
+        "boolean": "NUMBER(1,0)",
+        "timestamp": "TIMESTAMP",
+        "timestamptz": "TIMESTAMP WITH TIME ZONE",
+        "date": "DATE",
+        "time": "TIMESTAMP",
+        "binary": "RAW",
+        "varbinary": "RAW"
+      },
+      "oracle_specific_types": {
+        "clob": "CLOB",
+        "blob": "BLOB",
+        "nclob": "NCLOB",
+        "xmltype": "XMLTYPE",
+        "json": "JSON"
+      }
+    },
+    "sql_features": {
+      "window_functions": true,
+      "cte_support": true,
+      "recursive_cte": true,
+      "merge_statements": true,
+      "analytic_functions": true,
+      "pivot_unpivot": true,
+      "lateral_joins": true,
+      "sequences": true,
+      "rownum_pagination": true
+    },
+    "connection_management": {
+      "connection_class": "OracleConnectionManager",
+      "credentials_class": "OracleCredentials",
+      "connection_pooling": true,
+      "transaction_support": true,
+      "auto_commit": false
+    },
+    "performance": {
+      "query_timeout": 300,
+      "connection_timeout": 30,
+      "fetch_size": 1000,
+      "parallel_execution": true,
+      "bulk_operations": true
+    }
+  },
+  "dependencies": {
+    "core": {
+      "flext-core": ">=0.7.0",
+      "flext-observability": ">=0.7.0",
+      "flext-db-oracle": ">=0.7.0"
+    },
+    "dbt": {
+      "dbt-core": ">=1.8.0,<2.0.0"
+    },
+    "database": {
+      "oracledb": ">=3.2.0",
+      "sqlalchemy": ">=2.0.0"
+    },
+    "forbidden": {
+      "dbt-postgres": "not_allowed",
+      "psycopg2": "not_allowed",
+      "postgresql": "not_allowed"
+    }
+  },
+  "dbt_profile": {
+    "type": "oracle",
+    "threads": 4,
+    "connection_info": {
+      "host": "{{ env_var('ORACLE_HOST') }}",
+      "port": "{{ env_var('ORACLE_PORT', 1521) }}",
+      "username": "{{ env_var('ORACLE_USERNAME') }}",
+      "password": "{{ env_var('ORACLE_PASSWORD') }}",
+      "service_name": "{{ env_var('ORACLE_SERVICE_NAME', 'XEPDB1') }}",
+      "schema": "{{ env_var('ORACLE_SCHEMA', 'HR') }}"
+    }
+  },
+  "constraints": {
+    "oracle_db_only": true,
+    "no_postgresql_code": true,
+    "no_legacy_dbt": true,
+    "modern_dbt_only": true,
+    "use_flext_db_oracle": true,
+    "async_compatible": true
+  },
+  "sql_macros": {
+    "required_macros": [
+      "get_columns_in_relation",
+      "list_relations_without_caching",
+      "get_relation_last_modified",
+      "make_temp_relation",
+      "current_timestamp",
+      "snapshot_strategy_timestamp",
+      "snapshot_strategy_check_cols"
+    ],
+    "oracle_specific_macros": [
+      "oracle_get_table_comment",
+      "oracle_get_column_comment",
+      "oracle_create_sequence",
+      "oracle_create_index",
+      "oracle_analyze_table"
+    ]
+  },
+  "testing": {
+    "dbt_test_suite": true,
+    "oracle_docker": "recommended",
+    "schema_tests": true,
+    "data_tests": true,
+    "macro_tests": true
+  },
+  "modernization": {
+    "remove_postgresql_legacy": true,
+    "use_modern_dbt_patterns": true,
+    "async_query_execution": true,
+    "structured_logging": true,
+    "metrics_collection": true
+  }
+}

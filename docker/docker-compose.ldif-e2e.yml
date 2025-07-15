@@ -1,0 +1,317 @@
+# FLEXT LDIF Pipeline E2E Testing Infrastructure
+# Provides complete testing environment for flext-ldif ecosystem
+
+services:
+  # OpenLDAP Test Server - Source of truth for LDIF data
+  openldap:
+    image: osixia/openldap:1.5.0
+    environment:
+      LDAP_ORGANISATION: "FLEXT Test Organization"
+      LDAP_DOMAIN: "internal.invalid"
+      LDAP_ADMIN_PASSWORD: "testpassword"
+      LDAP_CONFIG_PASSWORD: "configpassword"
+      LDAP_READONLY_USER: "true"
+      LDAP_READONLY_USER_USERNAME: "readonly"
+      LDAP_READONLY_USER_PASSWORD: "readonly"
+      LDAP_TLS: "false"
+      LDAP_RFC2307BIS_SCHEMA: "true"
+      LDAP_BACKEND: "mdb"
+      LDAP_REMOVE_CONFIG_AFTER_SETUP: "false"
+    ports:
+      - "1389:389"
+      - "1636:636"
+    volumes:
+      - ldap_data:/var/lib/ldap
+      - ldap_config:/etc/ldap/slapd.d
+      - ./test-data/ldif:/container/service/slapd/assets/config/bootstrap/ldif/custom:ro
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "ldapsearch",
+          "-x",
+          "-H",
+          "ldap://localhost:389",
+          "-b",
+          "dc=flext,dc=local",
+          "-s",
+          "base",
+          "(objectclass=*)",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  # PostgreSQL for dbt-core and target storage
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: flext_test
+      POSTGRES_USER: flext
+      POSTGRES_PASSWORD: testpassword
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - "15432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./test-data/sql:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U flext -d flext_test"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # Redis for caching and state management
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "16379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # Minio S3 Compatible Storage for Singer state and data
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: flext
+      MINIO_ROOT_PASSWORD: testpassword
+    ports:
+      - "19000:9000"
+      - "19001:9001"
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # FLEXT TAP LDIF - Data Extraction Service
+  flext-tap-ldif:
+    build:
+      context: ./flext-tap-ldif
+      dockerfile: Dockerfile.e2e
+    environment:
+      LDAP_HOST: "openldap"
+      LDAP_PORT: "389"
+      LDAP_BASE_DN: "dc=flext,dc=local"
+      LDAP_BIND_DN: "cn=REDACTED_LDAP_BIND_PASSWORD,dc=flext,dc=local"
+      LDAP_BIND_PASSWORD: "testpassword"
+      LDAP_USE_SSL: "false"
+      OUTPUT_PATH: "/app/data/tap-output"
+      STATE_PATH: "/app/data/state"
+    volumes:
+      - pipeline_data:/app/data
+      - ./test-configs/tap-ldif-config.json:/app/config.json:ro
+    depends_on:
+      openldap:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-m",
+          "flext_tap_ldif",
+          "--config",
+          "/app/config.json",
+          "--test",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # FLEXT TARGET LDIF - Data Loading Service
+  flext-target-ldif:
+    build:
+      context: ./flext-target-ldif
+      dockerfile: Dockerfile.e2e
+    environment:
+      TARGET_PATH: "/app/data/target-output"
+      STATE_PATH: "/app/data/state"
+      OUTPUT_FORMAT: "ldif"
+      VALIDATION_ENABLED: "true"
+    volumes:
+      - pipeline_data:/app/data
+      - ./test-configs/target-ldif-config.json:/app/config.json:ro
+    depends_on:
+      - flext-tap-ldif
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-m",
+          "flext_target_ldif",
+          "--config",
+          "/app/config.json",
+          "--test",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # FLEXT DBT LDIF - Data Transformation Service
+  flext-dbt-ldif:
+    build:
+      context: ./flext-dbt-ldif
+      dockerfile: Dockerfile.e2e
+    environment:
+      DBT_PROJECT_DIR: "/app/dbt_project"
+      DBT_PROFILES_DIR: "/app/profiles"
+      DBT_TARGET: "test"
+      INPUT_PATH: "/app/data/target-output"
+      OUTPUT_PATH: "/app/data/dbt-output"
+    volumes:
+      - pipeline_data:/app/data
+      - ./test-configs/dbt-profiles:/app/profiles:ro
+      - ./test-configs/dbt-project:/app/dbt_project:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+      flext-target-ldif:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "dbt",
+          "debug",
+          "--project-dir",
+          "/app/dbt_project",
+          "--profiles-dir",
+          "/app/profiles",
+        ]
+      interval: 30s
+      timeout: 15s
+      retries: 3
+
+  # Meltano Integration Orchestrator
+  meltano:
+    image: meltano/meltano:latest
+    environment:
+      MELTANO_PROJECT_ROOT: "/app/meltano_project"
+      MELTANO_DATABASE_URI: "postgresql://flext:testpassword@postgres:5432/flext_test"
+      LDAP_HOST: "openldap"
+      LDAP_PORT: "389"
+      TARGET_PATH: "/app/data/meltano-output"
+    volumes:
+      - pipeline_data:/app/data
+      - ./test-configs/meltano:/app/meltano_project:ro
+      - ./test-data/meltano:/app/meltano_data:rw
+    depends_on:
+      postgres:
+        condition: service_healthy
+      openldap:
+        condition: service_healthy
+      flext-dbt-ldif:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "meltano", "discover", "all"]
+      interval: 60s
+      timeout: 30s
+      retries: 3
+
+  # E2E Test Runner - Validates Complete Pipeline
+  e2e-test-runner:
+    build:
+      context: .
+      dockerfile: Dockerfile.e2e-test
+    environment:
+      LDAP_URL: "ldap://openldap:389"
+      POSTGRES_URL: "postgresql://flext:testpassword@postgres:5432/flext_test"
+      REDIS_URL: "redis://redis:6379"
+      MINIO_URL: "http://minio:9000"
+      MELTANO_URL: "http://meltano:5000"
+      TEST_DATA_PATH: "/app/data"
+      TEST_TIMEOUT: "600"
+      COVERAGE_THRESHOLD: "95"
+    volumes:
+      - pipeline_data:/app/data
+      - ./test-results:/app/results:rw
+      - ./test-configs:/app/configs:ro
+    depends_on:
+      openldap:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+      flext-tap-ldif:
+        condition: service_healthy
+      flext-target-ldif:
+        condition: service_healthy
+      flext-dbt-ldif:
+        condition: service_healthy
+      meltano:
+        condition: service_healthy
+    command:
+      [
+        "pytest",
+        "/app/tests/e2e",
+        "-v",
+        "--cov",
+        "--cov-report=html:/app/results/coverage",
+        "--cov-fail-under=95",
+      ]
+    profiles:
+      - test
+
+  # LDAP Admin Interface (optional for debugging)
+  ldap-REDACTED_LDAP_BIND_PASSWORD:
+    image: osixia/phpldapREDACTED_LDAP_BIND_PASSWORD:0.9.0
+    environment:
+      PHPLDAPADMIN_LDAP_HOSTS: "openldap"
+      PHPLDAPADMIN_HTTPS: "false"
+    ports:
+      - "18080:80"
+    depends_on:
+      - openldap
+    profiles:
+      - debug
+
+  # PostgreSQL Admin Interface (optional for debugging)
+  pgREDACTED_LDAP_BIND_PASSWORD:
+    image: dpage/pgREDACTED_LDAP_BIND_PASSWORD4:latest
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "REDACTED_LDAP_BIND_PASSWORD@internal.invalid"
+      PGADMIN_DEFAULT_PASSWORD: "testpassword"
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    ports:
+      - "18081:80"
+    depends_on:
+      - postgres
+    profiles:
+      - debug
+
+volumes:
+  ldap_data:
+    driver: local
+  ldap_config:
+    driver: local
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  minio_data:
+    driver: local
+  pipeline_data:
+    driver: local
+
+networks:
+  default:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

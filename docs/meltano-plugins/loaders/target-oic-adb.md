@@ -25,7 +25,7 @@ This loader is a specialization of `target-oracle` that uses Oracle Integration 
 ## Requirements
 
 - Python 3.8 or higher
-- Oracle Client driver (python-oracledb)
+- Oracle Client driver (Python-oracledb)
 - Access to Oracle Autonomous Database
 - Access to Oracle Integration Cloud (OIC v3)
 - Wallet for Oracle Autonomous Database connection (optional if using OIC for direct connection)
@@ -45,7 +45,7 @@ meltano add loader target-oic-adb
 
 Oracle drivers are required for database connection:
 
-#### Using python-oracledb (recommended)
+#### Using Python-oracledb (recommended)
 
 ```bash
 pip install oracledb
