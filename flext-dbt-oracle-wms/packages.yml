@@ -1,0 +1,17 @@
+# Enterprise DBT packages for Oracle WMS data transformations
+packages:
+  # Core DBT utilities for data transformations
+  - package: dbt-labs/dbt_utils
+    version: [">=1.1.0", "<2.0.0"]
+
+  # Date and time utilities for Oracle WMS temporal data
+  - package: godatadriven/dbt_date
+    version: [">=0.10.0", "<1.0.0"]
+
+  # Data expectations for Oracle WMS quality testing (updated package)
+  - package: metaplane/dbt_expectations
+    version: [">=0.10.0", "<1.0.0"]
+
+  # Audit helper for schema changes
+  - package: dbt-labs/audit_helper
+    version: [">=0.9.0", "<1.0.0"]

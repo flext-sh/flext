@@ -11,22 +11,7 @@ maintainers = [{ name = "FLEXT Team", email = "team@flext.sh" }]
 license = { text = "MIT" }
 readme = "README.md"
 requires-python = ">=3.13,<3.14"
-dependencies = [
-    # Core dependencies (bleeding-edge)
-    "pydantic>=2.6.0,<3.0.0",
-    "pydantic-settings>=2.7.0,<3.0.0",
-    "fastapi>=0.115.0,<1.0.0",
-    "uvicorn>=0.32.0,<1.0.0",
-    "click>=8.1.7,<9.0.0",
-    "rich>=13.5.2,<15.0.0",
-    "typer>=0.15.0,<1.0.0",
-    "structlog>=24.0.0,<26.0.0",
-    "httpx>=0.28.0,<1.0.0",
-    "aiofiles>=24.1.0,<25.0.0",
-    "python-dateutil>=2.9.0,<3.0.0",
-    "python-dotenv>=1.0.0,<2.0.0",
-    "typing-extensions>=4.12.0,<5.0.0",
-]
+# dependencies moved to [tool.poetry.dependencies] to avoid duplication warnings
 keywords = [
     "flext",
     "workspace",
@@ -68,43 +53,9 @@ flext-workspace = "flext.workspace:main"
 flext-dev = "flext.dev:main"
 
 [tool.poetry]
-name = "flext"
-version = "0.7.0"
-description = "FLEXT - Multi-Project Workspace Coordinator for Enterprise Data Integration"
-authors = ["FLEXT Team <team@flext.sh>"]
-license = "MIT"
-readme = "README.md"
-homepage = "https://github.com/flext-sh/flext"
-repository = "https://github.com/flext-sh/flext"
-documentation = "https://github.com/flext-sh/flext/blob/main/README.md"
-keywords = [
-    "flext",
-    "workspace",
-    "data-integration",
-    "etl",
-    "meltano",
-    "enterprise",
-    "async",
-    "ldap",
-    "oracle",
-    "grpc",
-    "api",
-    "authentication",
-    "monitoring",
-]
-classifiers = [
-    "Development Status :: 5 - Production/Stable",
-    "Intended Audience :: Developers",
-    "Intended Audience :: System Administrators",
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3.13",
-    "Topic :: Software Development :: Libraries :: Python Modules",
-    "Topic :: System :: Systems Administration",
-    "Topic :: Database",
-    "Topic :: Office/Business :: Financial :: Accounting",
-    "Typing :: Typed",
-]
+# NOTE: Metadados movidos para [project] (PEP 621)
+# Mantendo apenas configurações específicas do Poetry
+# keywords e classifiers movidos para [project] seção
 packages = [{ include = "flext", from = "src" }]
 
 [tool.poetry.dependencies]
@@ -124,32 +75,36 @@ python-dateutil = ">=2.9.0,<3.0.0"
 python-dotenv = ">=1.0.0,<2.0.0"
 typing-extensions = ">=4.12.0,<5.0.0"
 
-# FLEXT Framework Modules (always installed as core)
-flext-core = { path = "./flext-core", develop = true }
-
-# Optional FLEXT modules (installed via extras)
-flext-api = { path = "./flext-api", develop = true, optional = true }
-flext-auth = { path = "./flext-auth", develop = true, optional = true }
-flext-grpc = { path = "./flext-grpc", develop = true, optional = true }
-flext-cli = { path = "./flext-cli", develop = true, optional = true }
-flext-web = { path = "./flext-web", develop = true, optional = true }
-flext-observability = { path = "./flext-observability", develop = true, optional = true }
-flext-plugin = { path = "./flext-plugin", develop = true, optional = true }
-flext-meltano = { path = "./flext-meltano", develop = true, optional = true }
-flext-ldap = { path = "./flext-ldap", develop = true, optional = true }
-flext-db-oracle = { path = "./flext-db-oracle", develop = true, optional = true }
-flext-quality = { path = "./flext-quality", develop = true, optional = true }
-flext-tap-ldap = { path = "./flext-tap-ldap", develop = true, optional = true }
-flext-tap-oracle-oic = { path = "./flext-tap-oracle-oic", develop = true, optional = true }
-flext-tap-oracle-wms = { path = "./flext-tap-oracle-wms", develop = true, optional = true }
-flext-target-ldap = { path = "./flext-target-ldap", develop = true, optional = true }
-flext-target-oracle = { path = "./flext-target-oracle", develop = true, optional = true }
-flext-target-oracle-oic = { path = "./flext-target-oracle-oic", develop = true, optional = true }
-flext-dbt-ldap = { path = "./flext-dbt-ldap", develop = true, optional = true }
-flext-oracle-oic-ext = { path = "./flext-oracle-oic-ext", develop = true, optional = true }
-
-algar-oud-mig = { path = "./algar-oud-mig", develop = true, optional = true }
-gruponos-meltano-native = { path = "./gruponos-meltano-native", develop = true, optional = true }
+# FLEXT Framework Modules - TO BE ADDED VIA POETRY ADD COMMANDS
+flext-core = { develop = true }
+flext-api = { develop = true }
+flext-auth = { develop = true }
+flext-grpc = { develop = true }
+flext-cli = { develop = true }
+flext-web = { develop = true }
+flext-observability = { develop = true }
+flext-plugin = { develop = true }
+flext-meltano = { develop = true }
+flext-ldap = { develop = true }
+flext-db-oracle = { develop = true }
+flext-quality = { develop = true }
+flext-tap-ldap = { develop = true }
+flext-tap-oracle-oic = { develop = true }
+flext-tap-oracle-wms = { develop = true }
+flext-target-ldap = { develop = true }
+flext-target-oracle = { develop = true }
+flext-target-oracle-oic = { develop = true }
+flext-target-oracle-wms = { develop = true }
+flext-dbt-ldap = { develop = true }
+flext-dbt-ldif = { develop = true }
+flext-dbt-oracle = { develop = true }
+flext-ldif = { develop = true }
+flext-oracle-oic-ext = { develop = true }
+flext-oracle-wms = { develop = true }
+flext-tap-ldif = { develop = true }
+flext-tap-oracle = { develop = true }
+flext-target-ldif = { develop = true }
+gruponos-meltano-native = { develop = true }
 
 
 [tool.poetry.group.dev.dependencies]
@@ -182,6 +137,12 @@ mkdocs-literate-nav = "^0.6.0"
 ipython = "^9.4.0"
 jupyter = "^1.1.1"
 rich-traceback = "^1.0.3"
+ply = "^3.11"
+django-crispy-forms = "^2.4"
+crispy-bootstrap5 = "^2025.6"
+django-celery-beat = "^2.8.1"
+django-celery-results = "^2.6.0"
+dbt-duckdb = "^1.9.4"
 
 [tool.poetry.group.test.dependencies]
 # === TESTING FRAMEWORK ===
@@ -214,6 +175,24 @@ types-toml = "^0.10.8.20240310"
 types-requests = "^2.32.4"
 types-redis = "^4.6.0"
 types-psutil = "^7.0.0"
+types-jsonschema = "^4.24.0.20250708"
+types-greenlet = "^3.2.0.20250417"
+types-pygments = "^2.19.0.20250516"
+types-cffi = "^1.17.0.20250523"
+types-colorama = "^0.4.15.20240311"
+types-decorator = "^5.2.0.20250324"
+types-pexpect = "^4.9.0.20250516"
+types-deprecated = "^1.2.15.20250304"
+types-passlib = "^1.7.7.20250602"
+types-ujson = "^5.10.0.20250326"
+types-pymysql = "^1.1.0.20250711"
+types-click-default-group = "^1.2.0.20250513"
+types-croniter = "^6.0.0.20250626"
+types-dateparser = "^1.2.2.20250627"
+types-aiofiles = "^24.1.0.20250708"
+types-six = "^1.17.0.20250515"
+types-psycopg2 = "^2.9.21.20250516"
+django-stubs = "^5.2.1"
 
 [tool.poetry.group.security.dependencies]
 # === SECURITY SCANNING ===
@@ -230,32 +209,43 @@ twine = "^6.1.0"
 locust = "^2.31.0"
 
 [tool.poetry.extras]
-# Feature groups
+# Feature groups (core dependencies only)
 api = ["flext-api", "flext-auth", "flext-grpc"]
 web = ["flext-web", "flext-api", "flext-auth"]
 cli = ["flext-cli"]
 data = [
     "flext-tap-ldap",
+    "flext-tap-ldif",
+    "flext-tap-oracle",
     "flext-tap-oracle-oic",
     "flext-tap-oracle-wms",
     "flext-target-ldap",
+    "flext-target-ldif",
     "flext-target-oracle",
     "flext-target-oracle-oic",
+    "flext-target-oracle-wms",
     "flext-dbt-ldap",
+    "flext-dbt-ldif",
+    "flext-dbt-oracle",
 ]
 ldap = ["flext-ldap", "flext-tap-ldap", "flext-target-ldap", "flext-dbt-ldap"]
+ldif = ["flext-ldif", "flext-tap-ldif", "flext-target-ldif", "flext-dbt-ldif"]
 oracle = [
     "flext-db-oracle",
+    "flext-tap-oracle",
     "flext-tap-oracle-oic",
     "flext-tap-oracle-wms",
     "flext-target-oracle",
     "flext-target-oracle-oic",
+    "flext-target-oracle-wms",
     "flext-oracle-oic-ext",
+    "flext-oracle-wms",
+    "flext-dbt-oracle",
 ]
 meltano = ["flext-meltano", "gruponos-meltano-native"]
 monitoring = ["flext-observability", "flext-quality"]
 plugins = ["flext-plugin"]
-projects = ["algar-oud-mig", "gruponos-meltano-native"]
+# projects group removed - algar-oud-mig not in main dependencies
 all = [
     "flext-api",
     "flext-auth",
@@ -266,24 +256,28 @@ all = [
     "flext-plugin",
     "flext-meltano",
     "flext-ldap",
+    "flext-ldif",
     "flext-db-oracle",
     "flext-quality",
     "flext-tap-ldap",
+    "flext-tap-ldif",
+    "flext-tap-oracle",
     "flext-tap-oracle-oic",
     "flext-tap-oracle-wms",
     "flext-target-ldap",
+    "flext-target-ldif",
     "flext-target-oracle",
     "flext-target-oracle-oic",
+    "flext-target-oracle-wms",
     "flext-dbt-ldap",
+    "flext-dbt-ldif",
+    "flext-dbt-oracle",
     "flext-oracle-oic-ext",
-    "algar-oud-mig",
+    "flext-oracle-wms",
     "gruponos-meltano-native",
 ]
 
-[tool.poetry.scripts]
-flext = "flext.cli:main"
-flext-workspace = "flext.workspace:main"
-flext-dev = "flext.dev:main"
+# [tool.poetry.scripts] - REMOVED: Duplicated, using [project.scripts] instead (PEP 621)
 
 [tool.black]
 line-length = 88
@@ -310,15 +304,28 @@ known_first_party = [
     "flext_plugin",
     "flext_observability",
     "flext_meltano",
+    "flext_ldap",
+    "flext_ldif",
+    "flext_db_oracle",
+    "flext_quality",
     "flext_tap_ldap",
+    "flext_tap_ldif",
+    "flext_tap_oracle",
     "flext_tap_oracle_oic",
     "flext_tap_oracle_wms",
     "flext_target_ldap",
+    "flext_target_ldif",
+    "flext_target_oracle",
     "flext_target_oracle_oic",
+    "flext_target_oracle_wms",
     "flext_dbt_ldap",
+    "flext_dbt_ldif",
+    "flext_dbt_oracle",
     "flext_oracle_oic_ext",
+    "flext_oracle_wms",
     "algar_oud_mig",
     "gruponos_poc_oic_wms",
+    "gruponos_meltano_native",
 ]
 known_local_folder = ["algar_oud_mig", "gruponos_poc_oic_wms"]
 
@@ -352,6 +359,118 @@ warn_return_any = true
 warn_unreachable = true
 warn_unused_configs = true
 warn_unused_ignores = true
+
+# Resolve namespace conflicts
+explicit_package_bases = true
+
+# Exclude conflicting directories and tests
+exclude = [
+    "archive/.*",
+    ".*/generate_config\\.py",
+    ".*\\.bak",
+    ".*\\.old",
+    ".*\\.backup",
+    ".*\\.orig",
+    ".*\\.tmp",
+    ".*\\.temp",
+    ".*\\.log",
+    ".*\\.cache",
+    ".*\\.build",
+    ".*\\.dist",
+    ".*\\.egg-info",
+    ".*/__pycache__",
+    ".*/\\.git",
+    ".*/\\.venv",
+    ".*/\\.mypy_cache",
+    ".*/\\.pytest_cache",
+    ".*/\\.coverage",
+    ".*/htmlcov",
+    ".*/node_modules",
+    ".*/.venv",
+    ".*/env",
+    ".*/build",
+    ".*/dist",
+    ".*/reports",
+    ".*/logs",
+    ".*/temp",
+    ".*/tmp",
+    ".*/cache",
+    ".*/migrations",
+    ".*/alembic",
+    ".*/staticfiles",
+    ".*/static",
+    ".*/media",
+    ".*/locale",
+    ".*/fonts",
+    ".*/fixtures",
+    ".*/vendor",
+    ".*/third_party",
+    ".*/external",
+    ".*/lib",
+    ".*/libs",
+    ".*/wheels",
+    ".*/docs/_build",
+    ".*/docs/.build",
+    ".*/site-packages",
+    ".*/site",
+    ".*/notebooks",
+    ".*/jupyter",
+    ".*/scripts/templates",
+    ".*/templates/.*\\.py",
+    ".*/proto/.*\\.py",
+    ".*/generated/.*\\.py",
+    ".*/auto_generated/.*\\.py",
+    ".*_pb2\\.py",
+    ".*_pb2_grpc\\.py",
+    ".*/gradlew",
+    ".*/gradlew.bat",
+    ".*/manage.py",
+    ".*/asgi.py",
+    ".*/wsgi.py",
+    ".*/conftest.py",
+    ".*/test_.*\\.py",
+    ".*/.*_test\\.py",
+    ".*/setup.py",
+    ".*/setup.cfg",
+    ".*/requirements.*\\.txt",
+    ".*/Pipfile",
+    ".*/Pipfile.lock",
+    ".*/poetry.lock",
+    ".*/package-lock.json",
+    ".*/yarn.lock",
+    ".*/pnpm-lock.yaml",
+    ".*/bun.lockb",
+    ".*/docker-compose.*\\.yml",
+    ".*/docker-compose.*\\.yaml",
+    ".*/Dockerfile.*",
+    ".*/makefile",
+    ".*/Makefile.*",
+    ".*/CMakeLists.txt",
+    ".*/conanfile.*",
+    ".*/vcpkg.json",
+    ".*/pubspec.yaml",
+    ".*/pubspec.lock",
+    ".*/go.mod",
+    ".*/go.sum",
+    ".*/Cargo.toml",
+    ".*/Cargo.lock",
+    ".*/project.clj",
+    ".*/deps.edn",
+    ".*/shadow-cljs.edn",
+    ".*/bb.edn",
+    ".*/pom.xml",
+    ".*/build.gradle",
+    ".*/build.gradle.kts",
+    ".*/settings.gradle",
+    ".*/settings.gradle.kts",
+]
+
+# Django configuration
+# plugins = ["mypy_django_plugin.main", "pydantic.mypy"]
+plugins = ["pydantic.mypy"]
+
+[tool.django-stubs]
+django_settings_module = "flext_web.settings_simple"
 
 [[tool.mypy.overrides]]
 module = [

@@ -1,2 +1,0 @@
-{"type": "SCHEMA", "stream": "allocation", "schema": {"type": "object", "properties": {"id": {"type": ["integer", "string"]}, "status_id": {"type": ["integer", "null"]}, "alloc_qty": {"type": ["string", "null"]}, "_sdc_extracted_at": {"type": "string", "format": "date-time"}}}, "key_properties": ["id"]}
-{"type": "RECORD", "stream": "allocation", "record": {"id": "1001", "status_id": 1, "alloc_qty": "10.0", "_sdc_extracted_at": "2025-07-12T01:59:30.582793Z"}, "time_extracted": "2025-07-12T01:59:30.582813Z"}

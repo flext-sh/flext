@@ -1,0 +1,59 @@
+version: "3.8"
+
+services:
+  # Source LDAP server with test data
+  ldap-source:
+    image: osixia/openldap:1.5.0
+    container_name: flext-ldap-source-test
+    environment:
+      LDAP_ORGANISATION: "Flext Test"
+      LDAP_DOMAIN: "flext-test.local"
+      LDAP_ADMIN_PASSWORD: "admin123"
+      LDAP_CONFIG_PASSWORD: "config123"
+      LDAP_READONLY_USER: "true"
+      LDAP_READONLY_USER_USERNAME: "reader"
+      LDAP_READONLY_USER_PASSWORD: "reader123"
+      LDAP_BACKEND: "mdb"
+    ports:
+      - "4389:389"
+      - "4636:636"
+    volumes:
+      - ./ldap-data:/container/service/slapd/assets/config/bootstrap/ldif/custom
+    command: --copy-service --loglevel debug
+    networks:
+      - ldap-test
+
+  # Target LDAP server for testing
+  ldap-target:
+    image: osixia/openldap:1.5.0
+    container_name: flext-ldap-target-test
+    environment:
+      LDAP_ORGANISATION: "Flext Target"
+      LDAP_DOMAIN: "flext-target.local"
+      LDAP_ADMIN_PASSWORD: "admin123"
+      LDAP_CONFIG_PASSWORD: "config123"
+      LDAP_BACKEND: "mdb"
+    ports:
+      - "4390:389"
+      - "4637:636"
+    networks:
+      - ldap-test
+
+  # phpLDAPadmin for testing and verification
+  phpldapadmin:
+    image: osixia/phpldapadmin:0.9.0
+    container_name: flext-phpldapadmin
+    environment:
+      PHPLDAPADMIN_LDAP_HOSTS: "ldap-source,ldap-target"
+      PHPLDAPADMIN_HTTPS: "false"
+    ports:
+      - "8081:80"
+    depends_on:
+      - ldap-source
+      - ldap-target
+    networks:
+      - ldap-test
+
+networks:
+  ldap-test:
+    driver: bridge

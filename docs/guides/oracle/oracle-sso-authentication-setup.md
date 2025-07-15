@@ -177,7 +177,7 @@ When submitting an SR to My Oracle Support to setup OAuth2 authentication, you n
 table below. The technical details are explained in the reference links below.
 Oracle IDCS Reference
 <https://docs.oracle.com/en/cloud/get-started/subscriptions-cloud/csimg/obtaining-access-token-using-user->
-credentials-client-assertion.html
+credentials-client-assertion.HTML
 Azure AD Reference
 <https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth-ropc>
 Item Description
@@ -243,7 +243,7 @@ Customer Provides Oracle provides
 Customer provided information:
 The customer configures their IDP for Cloud WMS authentication, generates the SAML2 Metadata file, and sends it to
 Oracle. IDPs that support SAML2 SSO will have a mechanism to generate this file, including Oracle IDCS and Azure AD.
-SAML2.0 MetaData - Customer must provide IDP metadata for SAML2.0, it can be provided in a metadata.xml file or a
+SAML2.0 MetaData - Customer must provide IDP metadata for SAML2.0, it can be provided in a metadata.XML file or a
 URL allowing Oracle to download the IDP metadata from customer site.
 The specific fields that are used by Oracle are explained below. In addition, for IDCS, the MyApp URL is also needed
 (details below) and has to be sent separately as its not part of the metadata file.

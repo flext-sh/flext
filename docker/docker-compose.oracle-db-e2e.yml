@@ -1,0 +1,213 @@
+version: "3.8"
+
+services:
+  # Oracle Database XE for testing
+  oracle-db:
+    image: gvenzl/oracle-xe:21-slim-faststart
+    container_name: flext-oracle-db-test
+    environment:
+      # Oracle DB Configuration
+      ORACLE_PASSWORD: flext_test_password
+      ORACLE_DATABASE: FLEXTDB
+      APP_USER: flext_user
+      APP_USER_PASSWORD: flext_user_password
+      ORACLE_CHARACTERSET: AL32UTF8
+    ports:
+      - "1522:1521"
+      - "5501:5500" # Oracle Enterprise Manager
+    volumes:
+      - oracle_data:/opt/oracle/oradata
+      - ./tests/fixtures/oracle:/docker-entrypoint-initdb.d/startup
+    healthcheck:
+      test: ["CMD", "healthcheck.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+    networks:
+      - flext-oracle-network
+
+  # FLEXT Tap Oracle (Extract from Oracle DB)
+  flext-tap-oracle:
+    build:
+      context: ./flext-tap-oracle
+      dockerfile: Dockerfile
+    container_name: flext-tap-oracle-test
+    environment:
+      # Oracle DB Connection (using flext-db-oracle parameterization)
+      ORACLE_HOST: oracle-db
+      ORACLE_PORT: 1521
+      ORACLE_SERVICE_NAME: XEPDB1
+      ORACLE_USERNAME: flext_user
+      ORACLE_PASSWORD: flext_user_password
+      ORACLE_PROTOCOL: tcp
+      ORACLE_SSL_SERVER_DN_MATCH: "false"
+
+      # Singer SDK Configuration
+      SINGER_CONFIG_PATH: /app/config/tap_config.json
+      SINGER_CATALOG_PATH: /app/config/catalog.json
+      SINGER_STATE_PATH: /app/config/state.json
+
+      # FLEXT Configuration
+      FLEXT_LOG_LEVEL: DEBUG
+      FLEXT_ENABLE_METRICS: "true"
+      FLEXT_SCHEMA_FLATTENING_ENABLED: "true"
+      FLEXT_SCHEMA_FLATTENING_MAX_DEPTH: 3
+    volumes:
+      - ./tests/configs/tap-oracle:/app/config
+      - ./tests/data/output:/app/output
+    depends_on:
+      oracle-db:
+        condition: service_healthy
+    networks:
+      - flext-oracle-network
+    command:
+      [
+        "tap-oracle",
+        "--config",
+        "/app/config/tap_config.json",
+        "--catalog",
+        "/app/config/catalog.json",
+      ]
+
+  # FLEXT Target Oracle (Load to Oracle DB)
+  flext-target-oracle:
+    build:
+      context: ./flext-target-oracle
+      dockerfile: Dockerfile
+    container_name: flext-target-oracle-test
+    environment:
+      # Oracle DB Connection (using flext-db-oracle parameterization)
+      ORACLE_HOST: oracle-db
+      ORACLE_PORT: 1521
+      ORACLE_SERVICE_NAME: XEPDB1
+      ORACLE_USERNAME: flext_user
+      ORACLE_PASSWORD: flext_user_password
+      ORACLE_PROTOCOL: tcp
+      ORACLE_SSL_SERVER_DN_MATCH: "false"
+
+      # Target Configuration
+      TARGET_DEFAULT_TARGET_SCHEMA: FLEXT_TARGET
+      TARGET_BATCH_SIZE: 1000
+      TARGET_LOAD_METHOD: append-only
+      TARGET_AUTO_CREATE_TABLES: "true"
+      TARGET_AUTO_EVOLVE_SCHEMA: "true"
+
+      # FLEXT Configuration
+      FLEXT_LOG_LEVEL: DEBUG
+      FLEXT_ENABLE_METRICS: "true"
+      FLEXT_ENABLE_CIRCUIT_BREAKER: "true"
+    volumes:
+      - ./tests/configs/target-oracle:/app/config
+      - ./tests/data/input:/app/input
+    depends_on:
+      oracle-db:
+        condition: service_healthy
+    networks:
+      - flext-oracle-network
+    stdin_open: true # For Singer protocol input
+    command: ["target-oracle", "--config", "/app/config/target_config.json"]
+
+  # DBT Oracle (Transform in Oracle DB)
+  flext-dbt-oracle:
+    build:
+      context: ./flext-dbt-oracle
+      dockerfile: Dockerfile
+    container_name: flext-dbt-oracle-test
+    environment:
+      # Oracle DB Connection
+      DBT_ORACLE_HOST: oracle-db
+      DBT_ORACLE_PORT: 1521
+      DBT_ORACLE_SERVICE_NAME: XEPDB1
+      DBT_ORACLE_USERNAME: flext_user
+      DBT_ORACLE_PASSWORD: flext_user_password
+      DBT_ORACLE_SCHEMA: FLEXT_DBT
+      DBT_ORACLE_DATABASE: FLEXTDB
+
+      # DBT Configuration
+      DBT_PROFILES_DIR: /app/profiles
+      DBT_PROJECT_DIR: /app/dbt_project
+
+      # FLEXT Configuration
+      FLEXT_LOG_LEVEL: DEBUG
+    volumes:
+      - ./tests/configs/dbt-oracle:/app/profiles
+      - ./tests/dbt-projects/oracle-analytics:/app/dbt_project
+    depends_on:
+      oracle-db:
+        condition: service_healthy
+    networks:
+      - flext-oracle-network
+    command:
+      [
+        "dbt",
+        "run",
+        "--profiles-dir",
+        "/app/profiles",
+        "--project-dir",
+        "/app/dbt_project",
+      ]
+
+  # E2E Test Runner
+  flext-e2e-tests:
+    build:
+      context: .
+      dockerfile: tests/Dockerfile.e2e
+    container_name: flext-e2e-test-runner
+    environment:
+      # Test Configuration
+      ORACLE_HOST: oracle-db
+      ORACLE_PORT: 1521
+      ORACLE_SERVICE_NAME: XEPDB1
+      ORACLE_USERNAME: flext_user
+      ORACLE_PASSWORD: flext_user_password
+
+      # Test Environment
+      TEST_ENVIRONMENT: docker-compose
+      PYTEST_ARGS: "-v --tb=short"
+
+      # FLEXT Configuration
+      FLEXT_LOG_LEVEL: DEBUG
+      FLEXT_TEST_MODE: "true"
+    volumes:
+      - ./tests:/app/tests
+      - ./:/app/flext
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      oracle-db:
+        condition: service_healthy
+      flext-tap-oracle:
+        condition: service_started
+      flext-target-oracle:
+        condition: service_started
+      flext-dbt-oracle:
+        condition: service_started
+    networks:
+      - flext-oracle-network
+    command: ["python", "-m", "pytest", "/app/tests/e2e", "-v", "--tb=short"]
+
+  # Oracle Database Admin (Optional)
+  oracle-admin:
+    image: adminer:4.8.1-standalone
+    container_name: flext-oracle-admin
+    environment:
+      ADMINER_DEFAULT_SERVER: oracle-db:1521
+      ADMINER_DESIGN: pepa-linha-dark
+    ports:
+      - "8080:8080"
+    depends_on:
+      oracle-db:
+        condition: service_healthy
+    networks:
+      - flext-oracle-network
+
+volumes:
+  oracle_data:
+    driver: local
+
+networks:
+  flext-oracle-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

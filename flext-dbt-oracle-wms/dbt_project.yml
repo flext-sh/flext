@@ -1,0 +1,149 @@
+name: "flext_dbt_oracle_wms"
+version: "1.0.0"
+config-version: 2
+
+# This setting configures which "profile" dbt uses for this project.
+profile: "flext_oracle_wms"
+
+# These configurations specify where dbt should look for different types of files.
+# The `model-paths` config, for example, states that models in this project can be
+# found in the "models/" directory. You probably won't need to change these!
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+clean-targets: # directories to be removed by `dbt clean`
+  - "target"
+  - "dbt_packages"
+
+# Enterprise Oracle WMS DBT package configuration
+models:
+  flext_dbt_oracle_wms:
+    # Base models - foundational WMS entity models
+    +materialized: table
+    +schema: wms
+    +tags: ["oracle_wms", "enterprise"]
+
+    # Staging models - raw WMS data transformation
+    staging:
+      +materialized: view
+      +schema: wms_staging
+      +tags: ["staging", "oracle_wms"]
+
+    # Marts models - business-ready data models
+    marts:
+      +materialized: table
+      +schema: wms_marts
+      +tags: ["marts", "oracle_wms", "business"]
+
+      # Operational marts
+      operational:
+        +materialized: table
+        +tags: ["operational", "real_time"]
+
+      # Analytical marts
+      analytical:
+        +materialized: table
+        +tags: ["analytical", "reporting"]
+
+    # Metrics models - enterprise KPIs and metrics
+    metrics:
+      +materialized: view
+      +schema: wms_metrics
+      +tags: ["metrics", "kpi", "dashboard"]
+
+# Test configurations
+tests:
+  +store_failures: true
+  +schema: wms_test_failures
+
+# Snapshot configurations
+snapshots:
+  flext_dbt_oracle_wms:
+    +target_schema: wms_snapshots
+    +strategy: timestamp
+    +updated_at: mod_ts
+    +tags: ["snapshots", "change_tracking"]
+
+# Note: macros don't have configuration in dbt_project.yml in DBT 1.6+
+
+# DBT variable defaults for Oracle WMS API data processing
+vars:
+  # Data schema configuration (from Singer tap/target)
+  oracle_wms_schema: "{{ env_var('DBT_ORACLE_WMS_SCHEMA', 'wms_raw') }}"
+
+  # Data freshness and quality
+  freshness_warn_after: { count: 12, period: hour }
+  freshness_error_after: { count: 24, period: hour }
+
+  # Oracle WMS specific configurations
+  wms_entities:
+    - allocation
+    - order_hdr
+    - order_dtl
+    - inventory
+    - location
+    - item
+    - shipment
+    - receipt
+    - task
+    - wave
+
+  # Business date configuration
+  business_start_date: "2024-01-01"
+
+  # Performance optimization
+  enable_incremental_models: true
+  incremental_lookback_days: 7
+
+  # Data quality thresholds
+  data_quality_thresholds:
+    completeness: 0.95
+    accuracy: 0.98
+    consistency: 0.90
+
+  # Enterprise features
+  enable_audit_logging: true
+  enable_lineage_tracking: true
+  enable_cost_optimization: true
+
+# Documentation
+docs-paths: ["docs"]
+
+# Seeds configuration for reference data
+seeds:
+  flext_dbt_oracle_wms:
+    +schema: wms_reference
+    +column_types:
+      created_date: date
+      modified_date: date
+    +tags: ["reference_data", "seeds"]
+
+# Enterprise hooks for Oracle WMS operations
+on-run-start:
+  - "{{ log('Starting Oracle WMS DBT run at ' ~ run_started_at, info=true) }}"
+  - "{{ create_audit_log_entry('run_start') if var('enable_audit_logging', true) }}"
+
+on-run-end:
+  - "{{ log('Completed Oracle WMS DBT run at ' ~ run_started_at, info=true) }}"
+  - "{{ create_audit_log_entry('run_end') if var('enable_audit_logging', true) }}"
+  - "{{ update_data_quality_metrics() if var('enable_audit_logging', true) }}"
+
+# Require specific dbt version for enterprise features
+require-dbt-version: ">=1.6.0"
+
+# Dispatch configuration for Oracle-specific macros
+dispatch:
+  - macro_namespace: dbt_utils
+    search_order: ["flext_dbt_oracle_wms", "dbt_utils"]
+  - macro_namespace: dbt_date
+    search_order: ["flext_dbt_oracle_wms", "dbt_date"]
+
+# Query comments for Oracle WMS operations
+query-comment:
+  comment: "/* Oracle WMS DBT | {{ node.unique_id }} | {{ run_started_at }} */"
+  append: true
+  job-label: false

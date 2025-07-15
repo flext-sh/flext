@@ -21,11 +21,11 @@ CORE_PROJECTS := flext-core
 API_PROJECTS := flext-api flext-auth flext-grpc flext-web
 CLI_PROJECTS := flext-cli
 DATA_PROJECTS := flext-tap-ldap flext-tap-oracle-oic flext-tap-oracle-wms \
-	flext-target-ldap flext-target-oracle flext-target-oracle-oic flext-dbt-ldap
+	flext-target-ldap flext-target-oracle flext-target-oracle-oic flext-target-oracle-wms flext-dbt-ldap
 INFRA_PROJECTS := flext-observability flext-quality flext-plugin flext-meltano \
 	flext-ldap flext-db-oracle
 EXTENSION_PROJECTS := flext-oracle-oic-ext
-PROJECT_APPS := algar-oud-mig gruponos-poc-oic-wms gruponos-meltano-native
+PROJECT_APPS := algar-oud-mig gruponos-meltano-native
 
 ALL_PROJECTS := $(CORE_PROJECTS) $(API_PROJECTS) $(CLI_PROJECTS) $(DATA_PROJECTS) $(INFRA_PROJECTS) $(EXTENSION_PROJECTS) $(PROJECT_APPS)
 

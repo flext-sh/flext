@@ -1,0 +1,213 @@
+[build-system]
+requires = ["poetry-core>=1.9.0"]
+build-backend = "poetry.core.masonry.api"
+
+[project]
+name = "flext-dbt-oracle-wms"
+version = "2.0.0"
+description = "FLEXT DBT Oracle WMS - Oracle WMS data transformation with DBT"
+authors = [{ name = "FLEXT Team", email = "team@flext.sh" }]
+maintainers = [{ name = "FLEXT Team", email = "team@flext.sh" }]
+license = { text = "MIT" }
+readme = "README.md"
+requires-python = ">=3.13,<3.14"
+keywords = [
+    "flext",
+    "dbt",
+    "oracle",
+    "wms",
+    "data-transformation",
+    "warehouse",
+    "analytics",
+    "etl",
+    "enterprise",
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Database",
+    "Topic :: Office/Business :: Financial :: Accounting",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
+]
+
+[project.urls]
+Homepage = "https://github.com/flext-sh/flext"
+Repository = "https://github.com/flext-sh/flext"
+Documentation = "https://github.com/flext-sh/flext/blob/main/README.md"
+
+[tool.poetry]
+packages = [{ include = "flext_dbt_oracle_wms", from = "src" }]
+
+[tool.poetry.dependencies]
+python = ">=3.13,<3.14"
+# Core dependencies
+flext-core = { path = "../flext-core", develop = true }
+dbt-core = ">=1.6.0,<2.0.0"
+dbt-oracle = ">=1.6.0,<2.0.0"
+pydantic = ">=2.6.0,<3.0.0"
+pydantic-settings = ">=2.7.0,<3.0.0"
+click = ">=8.1.7,<9.0.0"
+rich = ">=13.5.2,<15.0.0"
+structlog = ">=24.0.0,<26.0.0"
+python-dateutil = ">=2.9.0,<3.0.0"
+typing-extensions = ">=4.12.0,<5.0.0"
+
+[tool.poetry.group.dev.dependencies]
+# === CODE QUALITY & FORMATTERS ===
+ruff = "^0.12.3"
+black = "^25.1.0"
+isort = "^6.0.1"
+mypy = "^1.13.0"
+pylint = "^3.3.0"
+
+# === TESTING ===
+pytest = "^8.4.0"
+pytest-asyncio = "^1.0.0"
+pytest-cov = "^6.2.0"
+pytest-mock = "^3.14.0"
+pytest-xdist = "^3.8.0"
+hypothesis = "^6.125.0"
+factory-boy = "^3.3.1"
+faker = "^37.4.0"
+
+# === TYPE STUBS ===
+types-python-dateutil = "^2.9.0"
+types-pyyaml = "^6.0.12"
+
+# === SECURITY ===
+bandit = { extras = ["toml"], version = "^1.8.0" }
+pip-audit = "^2.7.3"
+
+[tool.poetry.scripts]
+flext-dbt-oracle-wms = "flext_dbt_oracle_wms.cli:main"
+
+[tool.black]
+line-length = 88
+target-version = ["py313"]
+include = "\\.pyi?$"
+
+[tool.isort]
+profile = "black"
+line_length = 88
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+ensure_newline_before_comments = true
+known_first_party = ["flext_dbt_oracle_wms"]
+
+[tool.mypy]
+python_version = "3.13"
+check_untyped_defs = true
+disallow_any_generics = true
+disallow_incomplete_defs = true
+disallow_untyped_defs = true
+no_implicit_optional = true
+show_error_codes = true
+strict = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+
+[[tool.mypy.overrides]]
+module = [
+    "dbt.*",
+    "faker.*",
+    "factory_boy.*",
+]
+ignore_missing_imports = true
+
+[tool.ruff]
+target-version = "py313"
+line-length = 88
+fix = true
+show-fixes = true
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+    # Formatter conflicts
+    "COM812",
+    "D203",
+    "D213",
+    "ISC001",
+    # Reasonable flexibility
+    "ANN401",
+    "ARG001",
+    "ARG002",
+    "BLE001",
+    "C901",
+    "D102",
+    "D103",
+    "D105",
+    "D107",
+    "D401",
+    "DTZ001",
+    "DTZ005",
+    "E501",
+    "EM101",
+    "EM102",
+    "ERA001",
+    "F401",
+    "FBT001",
+    "FBT002",
+    "FBT003",
+    "FIX002",
+    "PLR0911",
+    "PLR0912",
+    "PLR0913",
+    "PLR0915",
+    "PLR2004",
+    "S103",
+    "S104",
+    "S105",
+    "S106",
+    "S107",
+    "TD002",
+    "TD003",
+    "TRY003",
+    "TRY300",
+    "TRY301",
+    "TRY401",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = [
+    "S101",
+    "PLR2004",
+    "ANN",
+    "D",
+    "ARG",
+    "FBT",
+    "SLF001",
+    "DTZ001",
+]
+
+[tool.bandit]
+targets = ["src"]
+exclude_dirs = ["tests"]
+skips = ["B101", "B601"]
+
+[tool.coverage.run]
+source = ["src"]
+omit = ["*/tests/*"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]

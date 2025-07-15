@@ -1,0 +1,113 @@
+{
+  "name": "flext-tap-oracle",
+  "description": "FLEXT Tap Oracle - Singer Tap for Oracle Database Data Extraction Rules",
+  "version": "0.7.0",
+  "framework": "flext-core",
+  "type": "singer_tap",
+  "extends": "../flext-db-oracle/rules.json",
+  "rules": {
+    "singer_protocol": {
+      "sdk_version": ">=0.47.0",
+      "protocol_version": "singer-v1",
+      "schema_discovery": "automatic",
+      "incremental_support": true,
+      "state_management": "automatic"
+    },
+    "data_extraction": {
+      "base_library": "flext-db-oracle",
+      "types_source": "flext-core",
+      "no_direct_database": true,
+      "use_connection_service": "mandatory",
+      "batch_processing": true,
+      "parallel_streams": true,
+      "consolidated_types": true
+    },
+    "configuration": {
+      "base_class": "flext_core.BaseConfig",
+      "singer_config_schema": "jsonschema",
+      "required_fields": ["connection_type", "host", "username", "password"],
+      "connection_types": ["database"],
+      "forbidden_types": ["wms", "oic", "cloud"]
+    },
+    "streams": {
+      "discovery_method": "automatic",
+      "table_filtering": "pattern_support",
+      "column_selection": "automatic",
+      "data_types": "oracle_native",
+      "null_handling": "singer_standard"
+    },
+    "performance": {
+      "async_processing": true,
+      "connection_pooling": "inherited",
+      "circuit_breaker": "recommended",
+      "batch_size": {
+        "type": "OracleBatchSize",
+        "source": "flext_core.domain.typedefs",
+        "min": "SingerOracleConstants.MIN_BATCH_SIZE",
+        "max": "SingerOracleConstants.MAX_BATCH_SIZE",
+        "default": "SingerOracleConstants.DEFAULT_BATCH_SIZE"
+      },
+      "parallel_streams": {
+        "type": "SingerParallelStreams",
+        "source": "flext_core.domain.typedefs",
+        "min": 1,
+        "max": 10,
+        "default": 4
+      }
+    },
+    "schema_handling": {
+      "automatic_discovery": true,
+      "type_mapping": "oracle_to_singer",
+      "nullable_support": true,
+      "primary_key_detection": true,
+      "foreign_key_support": false
+    },
+    "state_management": {
+      "incremental_columns": ["timestamp", "date", "number"],
+      "bookmark_properties": "automatic",
+      "full_table_replication": true,
+      "log_based_replication": false
+    }
+  },
+  "dependencies": {
+    "core": {
+      "flext-core": ">=0.7.0",
+      "flext-observability": ">=0.7.0",
+      "flext-db-oracle": ">=0.7.0"
+    },
+    "singer": {
+      "singer-sdk": ">=0.47.0"
+    },
+    "database": {
+      "oracledb": ">=3.2.0",
+      "sqlalchemy": ">=2.0.0"
+    }
+  },
+  "cli_commands": {
+    "discover": "flext_tap_oracle.tap:cli --discover",
+    "test": "flext_tap_oracle.tap:cli --test",
+    "catalog": "flext_tap_oracle.tap:cli --catalog"
+  },
+  "constraints": {
+    "oracle_db_only": true,
+    "no_wms_integration": true,
+    "no_oic_integration": true,
+    "no_direct_sql": true,
+    "use_flext_db_oracle": true,
+    "singer_compliant": true
+  },
+  "data_types": {
+    "oracle_to_singer_mapping": "SingerOracleConstants.ORACLE_TO_SINGER_TYPES",
+    "format_handlers": {
+      "DATE": "iso8601",
+      "TIMESTAMP": "iso8601",
+      "NUMBER": "decimal_string"
+    }
+  },
+  "testing": {
+    "docker_oracle": "recommended",
+    "mock_connections": true,
+    "schema_validation": true,
+    "data_accuracy": true
+  }
+}
