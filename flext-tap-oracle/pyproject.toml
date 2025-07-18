@@ -266,6 +266,7 @@ line-ending = "auto"
 
 # MyPy configuration - focused on src/ and tests/
 [tool.mypy]
+plugins = ["pydantic.mypy"]
 python_version = "3.13"
 strict = true
 warn_return_any = true
@@ -291,6 +292,12 @@ show_error_context = true
 pretty = true
 
 # Disable specific checks for tests
+
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true
+
 [[tool.mypy.overrides]]
 module = "tests.*"
 disallow_untyped_defs = false

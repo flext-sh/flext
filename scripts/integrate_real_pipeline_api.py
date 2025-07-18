@@ -10,6 +10,8 @@ import sys
 from datetime import datetime
 
 sys.path.append("/home/marlonsc/flext")
+from pathlib import Path
+
 from scripts.create_real_pipeline import RealPipelineService
 
 # PADRÃO: Usar APENAS flext-core
@@ -44,8 +46,8 @@ async def integrate_pipeline_to_api() -> None:
     }
 
     # Salvar dados REAIS para API
-    with open(
-        "/home/marlonsc/flext/scripts/real_api_data.json", "w", encoding="utf-8"
+    with Path(
+        "/home/marlonsc/flext/scripts/real_api_data.json").open("w", encoding="utf-8",
     ) as f:
         json.dump(
             {

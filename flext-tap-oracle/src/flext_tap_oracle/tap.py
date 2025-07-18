@@ -277,7 +277,7 @@ class TapOracle(Tap):
             self._schema_service = OracleSchemaService(self._query_service)
 
             logger.info(
-                "Initialized Oracle DB services with flext-db-oracle parameterization"
+                "Initialized Oracle DB services with flext-db-oracle parameterization",
             )
         return self._connection_service
 
@@ -286,7 +286,7 @@ class TapOracle(Tap):
         try:
             # Use the modern async/sync bridge
             result = run_async_in_sync_context(
-                self.connection_service.test_connection()
+                self.connection_service.test_connection(),
             )
             return result.is_success
         except Exception:
@@ -370,7 +370,7 @@ class TapOracle(Tap):
                 logger.error("Schema service not initialized")
                 return []
             result = await self._schema_service.get_schema_tables(
-                self.tap_config.get_effective_schema()
+                self.tap_config.get_effective_schema(),
             )
             if not result.is_success:
                 logger.error("Failed to get table names: %s", result.error)
@@ -430,7 +430,7 @@ class TapOracle(Tap):
         try:
             # Use modern async/sync bridge
             result = run_async_in_sync_context(
-                self.connection_service.test_connection()
+                self.connection_service.test_connection(),
             )
             return result.is_success
         except Exception:

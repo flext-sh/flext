@@ -1,7 +1,6 @@
 """Utilitários para manipulação de caminhos"""
 
 from pathlib import Path
-from typing import Set
 
 # Diretórios que devem ser ignorados na análise
 IGNORE_DIRS: set[str] = {

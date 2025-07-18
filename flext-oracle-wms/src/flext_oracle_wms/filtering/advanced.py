@@ -11,16 +11,15 @@ from __future__ import annotations
 
 import re
 from datetime import datetime
-from operator import eq, ge, gt, le, lt, ne
 from typing import TYPE_CHECKING, Any, Literal, TypedDict
 
 from flext_core.domain.types import ServiceResult
+
 from flext_oracle_wms.constants import (
     OracleWMSErrorMessages,
     OracleWMSFilterOperators,
     OracleWMSPageModes,
 )
-from flext_oracle_wms.exceptions import OracleWMSFilterError
 
 if TYPE_CHECKING:
     from flext_oracle_wms.constants import (
@@ -30,8 +29,6 @@ if TYPE_CHECKING:
     )
     from flext_oracle_wms.typedefs import (
         WMSFieldName,
-        WMSFilterCondition,
-        WMSFilters,
         WMSFilterValue,
         WMSOffset,
         WMSPageSize,
@@ -140,7 +137,7 @@ class OracleWMSAdvancedFilter:
             # Apply ordering
             if filter_query.ordering:
                 filtered_records = self._apply_ordering(
-                    filtered_records, filter_query.ordering
+                    filtered_records, filter_query.ordering,
                 )
 
             # Apply pagination
@@ -217,7 +214,7 @@ class OracleWMSAdvancedFilter:
                         conditions=conditions,
                         logical_operator="AND",
                         nested_groups=[],
-                    )
+                    ),
                 )
 
         return FilterQuery(
@@ -295,13 +292,7 @@ class OracleWMSAdvancedFilter:
         if not filter_groups:
             return records
 
-        filtered_records = []
-
-        for record in records:
-            if self._record_matches_groups(record, filter_groups):
-                filtered_records.append(record)
-
-        return filtered_records
+        return [record for record in records if self._record_matches_groups(record, filter_groups)]
 
     def _record_matches_groups(
         self,
@@ -318,14 +309,10 @@ class OracleWMSAdvancedFilter:
     ) -> bool:
         """Check if record matches a filter group."""
         # Check conditions within the group
-        condition_results = []
-        for condition in filter_group.conditions:
-            condition_results.append(self._record_matches_condition(record, condition))
+        condition_results = [self._record_matches_condition(record, condition) for condition in filter_group.conditions]
 
         # Check nested groups
-        nested_results = []
-        for nested_group in filter_group.nested_groups:
-            nested_results.append(self._record_matches_group(record, nested_group))
+        nested_results = [self._record_matches_group(record, nested_group) for nested_group in filter_group.nested_groups]
 
         # Combine all results
         all_results = condition_results + nested_results
@@ -353,7 +340,7 @@ class OracleWMSAdvancedFilter:
         # Convert values for comparison
         converted_field_value = self._convert_value(field_value, condition.data_type)
         converted_filter_value = self._convert_value(
-            condition.value, condition.data_type
+            condition.value, condition.data_type,
         )
 
         # Apply case sensitivity for string comparisons
@@ -496,7 +483,7 @@ class OracleWMSAdvancedFilter:
             if data_type == "boolean":
                 if isinstance(value, bool):
                     return value
-                return str(value).lower() in ("true", "1", "yes", "on")
+                return str(value).lower() in {"true", "1", "yes", "on"}
             if data_type == "date":
                 if isinstance(value, datetime):
                     return value.date()

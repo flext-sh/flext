@@ -1,8 +1,6 @@
 """Utilitários para identificar módulos da standard library"""
 
-import subprocess
 import sys
-from typing import Set
 
 
 def get_stdlib_modules() -> set[str]:

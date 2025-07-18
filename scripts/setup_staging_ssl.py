@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
 """Setup SSL/TLS certificates for staging environment."""
 
-import os
 import subprocess
-import tempfile
-from datetime import datetime, timedelta
+from datetime import datetime
 from pathlib import Path
 
 
@@ -53,7 +51,7 @@ IP.2 = ::1
 """
 
     config_file = ssl_dir / "config" / "staging.conf"
-    with open(config_file, "w", encoding="utf-8") as f:
+    with Path(config_file).open("w", encoding="utf-8") as f:
         f.write(config_content)
 
     print(f"✅ OpenSSL config created: {config_file}")
@@ -61,7 +59,7 @@ IP.2 = ::1
 
 
 def generate_staging_certificates(
-    ssl_dir: Path, config_file: Path
+    ssl_dir: Path, config_file: Path,
 ) -> tuple[Path, Path]:
     """Generate self-signed SSL certificates for staging."""
 
@@ -188,7 +186,7 @@ server {{
 """
 
     nginx_file = ssl_dir / "config" / "nginx-staging-ssl.conf"
-    with open(nginx_file, "w", encoding="utf-8") as f:
+    with Path(nginx_file).open("w", encoding="utf-8") as f:
         f.write(nginx_config)
 
     print(f"✅ Nginx SSL config: {nginx_file}")
@@ -205,7 +203,7 @@ def create_hosts_entries(ssl_dir: Path) -> None:
 """
 
     hosts_file = ssl_dir / "config" / "hosts-staging.txt"
-    with open(hosts_file, "w", encoding="utf-8") as f:
+    with Path(hosts_file).open("w", encoding="utf-8") as f:
         f.write(hosts_content)
 
     print(f"✅ Hosts entries: {hosts_file}")
@@ -215,7 +213,7 @@ def create_hosts_entries(ssl_dir: Path) -> None:
 
 
 def update_staging_ssl_config(
-    project_root: Path, private_key: Path, cert_file: Path
+    project_root: Path, private_key: Path, cert_file: Path,
 ) -> None:
     """Update staging environment configuration with SSL settings."""
 
@@ -223,7 +221,7 @@ def update_staging_ssl_config(
     api_env_file = project_root / "flext-api" / ".env.staging"
 
     # Read current config
-    with open(api_env_file, encoding="utf-8") as f:
+    with Path(api_env_file).open(encoding="utf-8") as f:
         config_content = f.read()
 
     # Add SSL configuration
@@ -238,7 +236,7 @@ FLEXT_API_FORCE_HTTPS=true
 
     # Append SSL config if not already present
     if "SSL/TLS Configuration" not in config_content:
-        with open(api_env_file, "a", encoding="utf-8") as f:
+        with Path(api_env_file).open("a", encoding="utf-8") as f:
             f.write(ssl_config)
         print(f"✅ Updated API SSL config: {api_env_file}")
 
@@ -246,21 +244,21 @@ FLEXT_API_FORCE_HTTPS=true
     web_env_file = project_root / "flext-web" / ".env.staging"
 
     # Update web config to use HTTPS
-    with open(web_env_file, encoding="utf-8") as f:
+    with Path(web_env_file).open(encoding="utf-8") as f:
         web_content = f.read()
 
     # Enable SSL security settings
     web_content = web_content.replace(
-        "SECURE_SSL_REDIRECT=false", "SECURE_SSL_REDIRECT=true"
+        "SECURE_SSL_REDIRECT=false", "SECURE_SSL_REDIRECT=true",
     )
     web_content = web_content.replace(
-        "SESSION_COOKIE_SECURE=false", "SESSION_COOKIE_SECURE=true"
+        "SESSION_COOKIE_SECURE=false", "SESSION_COOKIE_SECURE=true",
     )
     web_content = web_content.replace(
-        "CSRF_COOKIE_SECURE=false", "CSRF_COOKIE_SECURE=true"
+        "CSRF_COOKIE_SECURE=false", "CSRF_COOKIE_SECURE=true",
     )
 
-    with open(web_env_file, "w", encoding="utf-8") as f:
+    with Path(web_env_file).open("w", encoding="utf-8") as f:
         f.write(web_content)
 
     print(f"✅ Updated Web SSL config: {web_env_file}")
@@ -306,7 +304,7 @@ echo "4. Test with: curl -k https://internal.invalid/REDACTED"
 """
 
     test_file = ssl_dir / "test-ssl.sh"
-    with open(test_file, "w", encoding="utf-8") as f:
+    with Path(test_file).open("w", encoding="utf-8") as f:
         f.write(test_script)
 
     # Make executable
@@ -368,7 +366,7 @@ def main():
 
     print("\n📝 NEXT STEPS:")
     print(
-        "  1. Add hosts entries: sudo bash -c 'cat ssl/staging/config/hosts-staging.txt >> /etc/hosts'"
+        "  1. Add hosts entries: sudo bash -c 'cat ssl/staging/config/hosts-staging.txt >> /etc/hosts'",
     )
     print("  2. Install Nginx and use ssl/staging/config/nginx-staging-ssl.conf")
     print("  3. Start FLEXT services with staging environment")

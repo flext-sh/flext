@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """Debug script para entender seleção de projetos no sync_dependencies.py"""
 
-import sys
 import tomllib
 from pathlib import Path
 
@@ -14,7 +13,7 @@ def find_flext_projects():
             pyproject_file = item / "pyproject.toml"
             if pyproject_file.exists():
                 try:
-                    with open(pyproject_file, "rb") as f:
+                    with Path(pyproject_file).open("rb") as f:
                         data = tomllib.load(f)
                     if "tool" in data and "poetry" in data["tool"]:
                         projects.append(item)

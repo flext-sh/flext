@@ -104,6 +104,7 @@ known_first_party = ["flext_dbt_oracle_wms"]
 
 [tool.mypy]
 python_version = "3.13"
+plugins = ["pydantic.mypy"]
 check_untyped_defs = true
 disallow_any_generics = true
 disallow_incomplete_defs = true
@@ -193,6 +194,12 @@ ignore = [
 targets = ["src"]
 exclude_dirs = ["tests"]
 skips = ["B101", "B601"]
+
+
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true
 
 [tool.coverage.run]
 source = ["src"]

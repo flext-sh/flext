@@ -9,11 +9,10 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-import json
-from copy import deepcopy
 from typing import TYPE_CHECKING, Any, TypedDict
 
 from flext_core.domain.types import ServiceResult
+
 from flext_oracle_wms.constants import OracleWMSDefaults, OracleWMSErrorMessages
 from flext_oracle_wms.exceptions import OracleWMSFlatteningError
 
@@ -79,7 +78,7 @@ class OracleWMSFlattener:
                     original_schema=schema or {},
                     flattened_schema=schema or {},
                     metadata={"flattening_enabled": False},
-                )
+                ),
             )
 
         try:
@@ -130,7 +129,7 @@ class OracleWMSFlattener:
                         metadata={"flattening_enabled": False},
                     )
                     for record in records
-                ]
+                ],
             )
 
         try:
@@ -177,7 +176,7 @@ class OracleWMSFlattener:
                 if not value and not self.preserve_empty_objects:
                     continue
                 flattened.update(
-                    self._flatten_object(value, new_key + self.separator, depth + 1)
+                    self._flatten_object(value, new_key + self.separator, depth + 1),
                 )
             elif isinstance(value, list):
                 if not value and not self.preserve_empty_arrays:
@@ -204,7 +203,7 @@ class OracleWMSFlattener:
 
             if isinstance(item, dict):
                 flattened.update(
-                    self._flatten_object(item, indexed_key + self.separator, depth)
+                    self._flatten_object(item, indexed_key + self.separator, depth),
                 )
             elif isinstance(item, list):
                 flattened.update(self._flatten_array(item, indexed_key, depth))
@@ -270,7 +269,7 @@ class OracleWMSDeflattener:
             # Validate structure if enabled
             if self.validate_structure and original_schema:
                 validation_result = self._validate_restored_structure(
-                    original_record, restored_schema
+                    original_record, restored_schema,
                 )
                 if not validation_result:
                     return ServiceResult.error(
@@ -317,7 +316,7 @@ class OracleWMSDeflattener:
             results = []
             for flattened_record in flattened_records:
                 deflattened_result = self.deflattened_record(
-                    flattened_record, original_schema
+                    flattened_record, original_schema,
                 )
                 if deflattened_result.success:
                     results.append(deflattened_result.data)
@@ -374,8 +373,9 @@ class OracleWMSDeflattener:
                 else:
                     # This shouldn't happen in well-formed flattened data
                     if self.strict_mode:
+                        msg = f"Invalid array index structure: {key}"
                         raise OracleWMSFlatteningError(
-                            f"Invalid array index structure: {key}"
+                            msg,
                         )
                     continue
             else:
@@ -414,7 +414,7 @@ class OracleWMSDeflattener:
         return restored_schema
 
     def _set_nested_schema_value(
-        self, schema: dict[str, Any], field_path: str, field_props: Any
+        self, schema: dict[str, Any], field_path: str, field_props: Any,
     ) -> None:
         """Set nested schema value using field path."""
         keys = field_path.split(self.separator)
@@ -434,7 +434,7 @@ class OracleWMSDeflattener:
         current[final_key] = field_props
 
     def _validate_restored_structure(
-        self, restored_record: WMSRecord, original_schema: WMSSchema
+        self, restored_record: WMSRecord, original_schema: WMSSchema,
     ) -> bool:
         """Validate that restored record matches original schema."""
         try:
@@ -453,15 +453,15 @@ class OracleWMSDeflattener:
 
                         # Type validation
                         if (field_type == "object" and not isinstance(field_value, dict)) or (field_type == "array" and not isinstance(
-                            field_value, list
+                            field_value, list,
                         )):
                             return False
                         if (field_type == "string" and not isinstance(
-                            field_value, str
+                            field_value, str,
                         )) or (field_type == "number" and not isinstance(
-                            field_value, (int, float)
+                            field_value, (int, float),
                         )) or (field_type == "boolean" and not isinstance(
-                            field_value, bool
+                            field_value, bool,
                         )):
                             return False
 
@@ -480,7 +480,7 @@ def create_flattener(
 ) -> OracleWMSFlattener:
     """Create a configured Oracle WMS flattener."""
     return OracleWMSFlattener(
-        enabled=enabled, max_depth=max_depth, separator=separator, **kwargs
+        enabled=enabled, max_depth=max_depth, separator=separator, **kwargs,
     )
 
 

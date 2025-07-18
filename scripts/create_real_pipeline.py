@@ -46,7 +46,7 @@ class RealPipelineService:
             return ServiceResult.failure(f"Erro criando pipeline: {e}")
 
     async def execute_real_pipeline(
-        self, pipeline_id: str
+        self, pipeline_id: str,
     ) -> ServiceResult[PipelineExecution]:
         """Executar pipeline com dados REAIS."""
         try:

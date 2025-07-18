@@ -5,7 +5,6 @@ import sys
 from collections import defaultdict
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List, Optional, Set, Tuple
 
 from flext_tools.utils import Colors, print_colored
 
@@ -50,7 +49,7 @@ class VenvConsistencyValidator:
             Dict com categorias de conflitos
         """
         print_colored(
-            "🔍 Validando consistência do virtual environment...", Colors.BLUE
+            "🔍 Validando consistência do virtual environment...", Colors.BLUE,
         )
 
         # Verifica se venv existe
@@ -64,8 +63,8 @@ class VenvConsistencyValidator:
                         details="Virtual environment não existe",
                         severity="critical",
                         affected_projects=[],
-                    )
-                ]
+                    ),
+                ],
             }
 
         # Coleta informações do venv
@@ -130,7 +129,7 @@ class VenvConsistencyValidator:
                 try:
                     import tomllib
 
-                    with open(pyproject_path, "rb") as f:
+                    with Path(pyproject_path).open("rb") as f:
                         data = tomllib.load(f)
 
                     # PEP 621 dependencies
@@ -149,7 +148,7 @@ class VenvConsistencyValidator:
                     for dep_name, dep_spec in poetry_deps.items():
                         if dep_name != "python" and not isinstance(dep_spec, dict):
                             self.project_requirements[project_name][dep_name] = str(
-                                dep_spec
+                                dep_spec,
                             )
                         elif isinstance(dep_spec, dict) and "version" in dep_spec:
                             self.project_requirements[project_name][dep_name] = (
@@ -163,7 +162,7 @@ class VenvConsistencyValidator:
                         for dep_name, dep_spec in group_deps.items():
                             if not isinstance(dep_spec, dict):
                                 self.project_requirements[project_name][dep_name] = str(
-                                    dep_spec
+                                    dep_spec,
                                 )
                             elif "version" in dep_spec:
                                 self.project_requirements[project_name][dep_name] = (
@@ -172,12 +171,12 @@ class VenvConsistencyValidator:
 
                 except Exception as e:
                     print_colored(
-                        f"    ⚠️ Erro ao ler {project_name}: {e}", Colors.YELLOW
+                        f"    ⚠️ Erro ao ler {project_name}: {e}", Colors.YELLOW,
                     )
 
         total_reqs = sum(len(reqs) for reqs in self.project_requirements.values())
         print_colored(
-            f"    ✅ {total_reqs} requisitos em {len(projects)} projetos", Colors.GREEN
+            f"    ✅ {total_reqs} requisitos em {len(projects)} projetos", Colors.GREEN,
         )
 
     def _parse_dependency_spec(self, dep_spec: str) -> tuple[str, str]:
@@ -230,7 +229,7 @@ class VenvConsistencyValidator:
                         if len(project_versions) > len(self.project_requirements) / 2
                         else "warning",
                         affected_projects=list(project_versions.keys()),
-                    )
+                    ),
                 )
                 conflicts_found += 1
 
@@ -245,7 +244,7 @@ class VenvConsistencyValidator:
                         details=f"Requerido por {len(project_versions)} projetos mas não instalado",
                         severity="critical",
                         affected_projects=list(project_versions.keys()),
-                    )
+                    ),
                 )
                 conflicts_found += 1
 
@@ -270,7 +269,7 @@ class VenvConsistencyValidator:
                     details=f"{len(orphan_packages)} packages órfãos: {orphan_packages[:10]}{'...' if len(orphan_packages) > 10 else ''}",
                     severity="info",
                     affected_projects=[],
-                )
+                ),
             )
 
         print_colored(

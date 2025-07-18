@@ -7,6 +7,7 @@ Copyright (c) 2025 FLEXT Contributors
 SPDX-License-Identifier: MIT
 """
 
+# Import the actual OracleWMSConfig class from the parent module
 from flext_oracle_wms.config.types import (
     # Environment configurations
     DevOracleWMSConfig,
@@ -26,14 +27,12 @@ from flext_oracle_wms.config.types import (
     ProdOracleWMSConfig,
     TestOracleWMSConfig,
 )
-
-# Create alias for backward compatibility
-OracleWMSConfig = OracleWMSConfiguration
+from flext_oracle_wms.config_module import OracleWMSConfig
 
 __all__ = [
     "DevOracleWMSConfig",
     "FlextOracleWMSConfig",
-    "OracleWMSConfig",  # Alias for backward compatibility
+    "OracleWMSConfig",  # Actual class from config_module.py
     "OracleWMSConfiguration",
     "OracleWMSConnectionConfiguration",
     "OracleWMSEntityConfiguration",

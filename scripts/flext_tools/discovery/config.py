@@ -3,9 +3,8 @@
 import re
 import tomllib
 from pathlib import Path
-from typing import Dict, Optional, Set
 
-from flext_tools.utils import Colors, print_colored, should_ignore_path
+from flext_tools.utils import should_ignore_path
 
 
 class ConfigFileDiscovery:
@@ -25,7 +24,7 @@ class ConfigFileDiscovery:
         return dependencies
 
     def _analyze_pytest_config(
-        self, project_path: Path, deps: dict[str, set[str]], installed: set[str]
+        self, project_path: Path, deps: dict[str, set[str]], installed: set[str],
     ) -> None:
         """Analisa configuração do pytest em pyproject.toml."""
         pyproject_path = project_path / "pyproject.toml"
@@ -33,7 +32,7 @@ class ConfigFileDiscovery:
             return
 
         try:
-            with open(pyproject_path, "rb") as f:
+            with Path(pyproject_path).open("rb") as f:
                 data = tomllib.load(f)
 
             pytest_config = (
@@ -46,7 +45,7 @@ class ConfigFileDiscovery:
                 if isinstance(plugins, list):
                     for plugin in plugins:
                         if isinstance(plugin, str) and not self._is_installed(
-                            plugin, installed
+                            plugin, installed,
                         ):
                             deps["test"].add(plugin)
 
@@ -54,7 +53,7 @@ class ConfigFileDiscovery:
             pass
 
     def _analyze_precommit_config(
-        self, project_path: Path, deps: dict[str, set[str]], installed: set[str]
+        self, project_path: Path, deps: dict[str, set[str]], installed: set[str],
     ) -> None:
         """Analisa .pre-commit-config.yaml."""
         precommit_file = project_path / ".pre-commit-config.yaml"
@@ -64,7 +63,7 @@ class ConfigFileDiscovery:
         try:
             import yaml
 
-            with open(precommit_file, encoding="utf-8") as f:
+            with Path(precommit_file).open(encoding="utf-8") as f:
                 data = yaml.safe_load(f)
 
             if data and "repos" in data:
@@ -95,7 +94,7 @@ class ConfigFileDiscovery:
             pass
 
     def _analyze_tox_config(
-        self, project_path: Path, deps: dict[str, set[str]], installed: set[str]
+        self, project_path: Path, deps: dict[str, set[str]], installed: set[str],
     ) -> None:
         """Analisa tox.ini."""
         tox_file = project_path / "tox.ini"
@@ -103,7 +102,7 @@ class ConfigFileDiscovery:
             return
 
         try:
-            with open(tox_file, encoding="utf-8") as f:
+            with Path(tox_file).open(encoding="utf-8") as f:
                 content = f.read()
 
             # Procura por deps em tox
@@ -123,7 +122,7 @@ class ConfigFileDiscovery:
             pass
 
     def _analyze_dockerfile(
-        self, project_path: Path, deps: dict[str, set[str]], installed: set[str]
+        self, project_path: Path, deps: dict[str, set[str]], installed: set[str],
     ) -> None:
         """Analisa Dockerfile."""
         dockerfile = project_path / "Dockerfile"
@@ -131,7 +130,7 @@ class ConfigFileDiscovery:
             return
 
         try:
-            with open(dockerfile, encoding="utf-8") as f:
+            with Path(dockerfile).open(encoding="utf-8") as f:
                 content = f.read()
 
             # Procura por pip install em Dockerfile
@@ -151,7 +150,7 @@ class ConfigFileDiscovery:
             pass
 
     def _analyze_requirements_files(
-        self, project_path: Path, deps: dict[str, set[str]], installed: set[str]
+        self, project_path: Path, deps: dict[str, set[str]], installed: set[str],
     ) -> None:
         """Analisa arquivos requirements.txt."""
         for req_file in project_path.rglob("requirements*.txt"):
@@ -159,14 +158,14 @@ class ConfigFileDiscovery:
                 continue
 
             try:
-                with open(req_file, encoding="utf-8") as f:
+                with Path(req_file).open(encoding="utf-8") as f:
                     for line in f:
                         line = line.strip()
                         if line and not line.startswith("#"):
                             # Extrai nome do pacote (remove versão)
                             package_name = re.split(r"[>=<!=]", line)[0].strip()
                             if package_name and not self._is_installed(
-                                package_name, installed
+                                package_name, installed,
                             ):
                                 deps["runtime"].add(package_name)
 

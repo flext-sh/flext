@@ -15,7 +15,7 @@ def decrypt_secrets_vault(vault_file: Path, password: str) -> dict:
     """Decrypt the production secrets vault."""
 
     # Load vault data
-    with open(vault_file, encoding="utf-8") as f:
+    with Path(vault_file).open(encoding="utf-8") as f:
         vault_data = json.load(f)
 
     # Recreate encryption key from password
@@ -63,7 +63,7 @@ def export_secrets_to_env(secrets_data: dict, output_file: Path) -> None:
             env_var_name = f"FLEXT_SECRET_{key.upper()}"
             env_content += f'export {env_var_name}="{value}"\n'
 
-    with open(output_file, "w", encoding="utf-8") as f:
+    with Path(output_file).open("w", encoding="utf-8") as f:
         f.write(env_content)
 
     # Make executable
@@ -110,7 +110,7 @@ def main():
                 display_secrets(secrets_data, mask_secrets=True)
             elif choice == "2":
                 confirm = input(
-                    "Show full secrets? This will display sensitive data (y/N): "
+                    "Show full secrets? This will display sensitive data (y/N): ",
                 )
                 if confirm.lower() == "y":
                     display_secrets(secrets_data, mask_secrets=False)
