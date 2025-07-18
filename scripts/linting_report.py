@@ -77,7 +77,7 @@ def main() -> None:
 
             # Sort by count
             sorted_codes = sorted(
-                analysis["by_code"].items(), key=operator.itemgetter(1), reverse=True
+                analysis["by_code"].items(), key=operator.itemgetter(1), reverse=True,
             )[:5]
 
             for code, count in sorted_codes:
@@ -91,7 +91,7 @@ def main() -> None:
     print("\nMost common issues across workspace:")
 
     sorted_all_codes = sorted(
-        all_codes.items(), key=operator.itemgetter(1), reverse=True
+        all_codes.items(), key=operator.itemgetter(1), reverse=True,
     )[:10]
     for code, count in sorted_all_codes:
         print(f"  - {code}: {count}")

@@ -1,13 +1,9 @@
 """Análise de versões de pacotes"""
 
 import re
-from pathlib import Path
-from typing import Dict, List, Optional, Set, Tuple
 
 from packaging import version
 from packaging.specifiers import SpecifierSet
-
-from flext_tools.utils import Colors, print_colored
 
 
 class VersionAnalyzer:
@@ -94,7 +90,7 @@ class VersionAnalyzer:
         return constraint
 
     def check_version_compatibility(
-        self, constraints: list[str], package_name: str
+        self, constraints: list[str], package_name: str,
     ) -> dict[str, any]:
         """
         Verifica compatibilidade entre múltiplas constraints de versão.
@@ -148,7 +144,7 @@ class VersionAnalyzer:
             }
 
     def find_common_version_range(
-        self, project_constraints: dict[str, str]
+        self, project_constraints: dict[str, str],
     ) -> str | None:
         """
         Encontra range de versão comum entre múltiplos projetos.
@@ -176,7 +172,7 @@ class VersionAnalyzer:
         return result.get("recommended")
 
     def analyze_version_conflicts(
-        self, workspace_dependencies: dict[str, dict[str, str]]
+        self, workspace_dependencies: dict[str, dict[str, str]],
     ) -> dict[str, list[dict]]:
         """
         Analisa conflitos de versão em todo o workspace.
@@ -204,7 +200,7 @@ class VersionAnalyzer:
                 unique_specs = set(project_specs.values())
                 if len(unique_specs) > 1:
                     analysis = self.check_version_compatibility(
-                        list(unique_specs), package
+                        list(unique_specs), package,
                     )
 
                     if analysis["conflict"]:

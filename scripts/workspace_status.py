@@ -36,7 +36,7 @@ def main():
             if not any(
                 skip in str(p) for skip in ["archive", "backup", "node_modules", ".git"]
             )
-        ]
+        ],
     )
 
     if not projects:
@@ -83,7 +83,7 @@ def main():
         print_colored("  ✅ Poetry: Todos os projetos válidos", Colors.GREEN)
     else:
         print_colored(
-            f"  ⚠️ Poetry: {invalid_count} projetos com problemas", Colors.YELLOW
+            f"  ⚠️ Poetry: {invalid_count} projetos com problemas", Colors.YELLOW,
         )
 
     # Status de conflitos
@@ -98,7 +98,7 @@ def main():
         print_colored("  ✅ Dependências: Sample OK", Colors.GREEN)
     else:
         print_colored(
-            f"  ⚠️ Dependências: ~{missing_sample} podem estar faltantes", Colors.YELLOW
+            f"  ⚠️ Dependências: ~{missing_sample} podem estar faltantes", Colors.YELLOW,
         )
 
     # Lista de projetos
@@ -118,7 +118,7 @@ def main():
     if conflicts["version_conflicts"]:
         print_colored("\n⚠️ Top 3 Conflitos:", Colors.YELLOW)
         for i, (package, data) in enumerate(
-            list(conflicts["version_conflicts"].items())[:3]
+            list(conflicts["version_conflicts"].items())[:3],
         ):
             print(f"  {i + 1}. {package}: {len(data['projects'])} projetos")
 

@@ -53,7 +53,7 @@ def main():
                         "cookiecutter",
                     ]
                 )
-            ]
+            ],
         )
 
     if not projects:
@@ -66,7 +66,7 @@ def main():
     @cached(namespace="discovery", ttl=300)
     def discover_project(project_path: Path):
         return discovery.discover_project_dependencies(
-            project_path, include_dev=True, include_test=True
+            project_path, include_dev=True, include_test=True,
         )
 
     # Analisa cada projeto
@@ -98,7 +98,7 @@ def main():
 
     if not projects_with_missing:
         print_colored(
-            "\n✨ Todos os projetos estão com dependências completas!", Colors.GREEN
+            "\n✨ Todos os projetos estão com dependências completas!", Colors.GREEN,
         )
         return 0
 
@@ -122,7 +122,7 @@ def main():
         print_colored(f"\n📦 Processando {project.name}...", Colors.BLUE)
 
         added = poetry_ops.add_dependencies(
-            project, missing_deps, auto_confirm=auto or dry_run
+            project, missing_deps, auto_confirm=auto or dry_run,
         )
 
         # Mostra resultado

@@ -1,10 +1,8 @@
 """Detecção de inconsistências no poetry.lock entre projetos do workspace"""
 
-import hashlib
 import tomllib
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List, Optional, Set, Tuple
 
 from flext_tools.utils import Colors, print_colored
 
@@ -49,7 +47,7 @@ class LockConsistencyAnalyzer:
         self.inconsistencies: list[LockInconsistency] = []
 
     def analyze_workspace(
-        self, workspace_path: Path
+        self, workspace_path: Path,
     ) -> dict[str, list[LockInconsistency]]:
         """
         Analisa todos os poetry.lock no workspace.
@@ -58,7 +56,7 @@ class LockConsistencyAnalyzer:
             Dict com categorias de inconsistências
         """
         print_colored(
-            "🔍 Analisando consistência de poetry.lock no workspace...", Colors.BLUE
+            "🔍 Analisando consistência de poetry.lock no workspace...", Colors.BLUE,
         )
 
         # Descobre todos os projetos
@@ -103,7 +101,7 @@ class LockConsistencyAnalyzer:
 
         try:
             packages = {}
-            with open(lock_path, encoding="utf-8") as f:
+            with Path(lock_path).open(encoding="utf-8") as f:
                 data = tomllib.loads(f.read())
 
             # Extrai informações dos packages
@@ -142,12 +140,12 @@ class LockConsistencyAnalyzer:
             )
 
             print_colored(
-                f"    ✅ {project_name}: {len(packages)} packages", Colors.GREEN
+                f"    ✅ {project_name}: {len(packages)} packages", Colors.GREEN,
             )
 
         except Exception as e:
             print_colored(
-                f"    ❌ {project_name}: Erro ao ler poetry.lock - {e}", Colors.RED
+                f"    ❌ {project_name}: Erro ao ler poetry.lock - {e}", Colors.RED,
             )
             self.project_locks[project_name] = ProjectLockInfo(
                 project_name=project_name,
@@ -169,7 +167,7 @@ class LockConsistencyAnalyzer:
 
         if len(valid_projects) < 2:
             print_colored(
-                "  ⚠️ Menos de 2 projetos com poetry.lock válidos", Colors.YELLOW
+                "  ⚠️ Menos de 2 projetos com poetry.lock válidos", Colors.YELLOW,
             )
             return
 
@@ -179,7 +177,7 @@ class LockConsistencyAnalyzer:
             all_packages.update(project_info.packages.keys())
 
         print_colored(
-            f"  📦 Analisando {len(all_packages)} packages únicos", Colors.CYAN
+            f"  📦 Analisando {len(all_packages)} packages únicos", Colors.CYAN,
         )
 
         # Analisa cada package
@@ -187,7 +185,7 @@ class LockConsistencyAnalyzer:
             self._analyze_package_consistency(package, valid_projects)
 
     def _analyze_package_consistency(
-        self, package: str, projects: dict[str, ProjectLockInfo]
+        self, package: str, projects: dict[str, ProjectLockInfo],
     ):
         """Analisa consistência de um package específico."""
 
@@ -214,7 +212,7 @@ class LockConsistencyAnalyzer:
                     severity="critical"
                     if len(projects_with_package) > len(projects) / 2
                     else "warning",
-                )
+                ),
             )
 
         # Verifica se package está em poucos projetos mas deveria estar em mais
@@ -235,7 +233,7 @@ class LockConsistencyAnalyzer:
                         type="missing",
                         details=details,
                         severity="info",
-                    )
+                    ),
                 )
 
     def _categorize_inconsistencies(self) -> dict[str, list[LockInconsistency]]:
@@ -308,7 +306,7 @@ class LockConsistencyAnalyzer:
 
             for inconsistency in inconsistencies[:10]:  # Limite de 10 por categoria
                 print_colored(
-                    f"  📦 {inconsistency.package} ({inconsistency.type}):", color
+                    f"  📦 {inconsistency.package} ({inconsistency.type}):", color,
                 )
 
                 for project, value in sorted(inconsistency.details.items()):
@@ -317,5 +315,5 @@ class LockConsistencyAnalyzer:
 
             if len(inconsistencies) > 10:
                 print_colored(
-                    f"    ... e mais {len(inconsistencies) - 10} itens", color
+                    f"    ... e mais {len(inconsistencies) - 10} itens", color,
                 )

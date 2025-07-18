@@ -23,6 +23,7 @@ from flext_oracle_wms.config import (
     OracleWMSEntityConfiguration,
     OracleWMSSchemaConfiguration,
 )
+from flext_oracle_wms.config_module import OracleWMSConfig as OracleWMSConfig_Class
 from flext_oracle_wms.constants import (
     OracleWMSDefaults,
     OracleWMSEntityTypes,
@@ -91,6 +92,7 @@ __all__ = [
     "OracleWMSAdvancedFilter",
     # Core client and configuration
     "OracleWMSClient",
+    "OracleWMSConfig_Class",
     "OracleWMSConfiguration",
     "OracleWMSConnectionConfiguration",
     "OracleWMSDefaults",

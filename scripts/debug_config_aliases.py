@@ -46,21 +46,21 @@ def debug_aliases():
             print("  ✅ secret_key alias working")
         else:
             print(
-                f"  ❌ secret_key alias failed: got '{config.secret_key}', expected '{test_vars['FLEXT_API_SECURITY__SECRET_KEY']}'"
+                f"  ❌ secret_key alias failed: got '{config.secret_key}', expected '{test_vars['FLEXT_API_SECURITY__SECRET_KEY']}'",
             )
 
         if config.host == test_vars["FLEXT_API_SERVER__HOST"]:
             print("  ✅ host alias working")
         else:
             print(
-                f"  ❌ host alias failed: got '{config.host}', expected '{test_vars['FLEXT_API_SERVER__HOST']}'"
+                f"  ❌ host alias failed: got '{config.host}', expected '{test_vars['FLEXT_API_SERVER__HOST']}'",
             )
 
         if config.workers == int(test_vars["FLEXT_API_SERVER__WORKERS"]):
             print("  ✅ workers alias working")
         else:
             print(
-                f"  ❌ workers alias failed: got {config.workers}, expected {test_vars['FLEXT_API_SERVER__WORKERS']}"
+                f"  ❌ workers alias failed: got {config.workers}, expected {test_vars['FLEXT_API_SERVER__WORKERS']}",
             )
 
         # Test pydantic-settings debug

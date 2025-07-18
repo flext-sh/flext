@@ -90,7 +90,7 @@ def main():
             # Agrupa por constraint
             for constraint, projects in blocker_data["constraints"].items():
                 print(
-                    f"     Constraint '{constraint}': {', '.join(projects[:3])}", end=""
+                    f"     Constraint '{constraint}': {', '.join(projects[:3])}", end="",
                 )
                 if len(projects) > 3:
                     print(f" e mais {len(projects) - 3}")
@@ -111,7 +111,7 @@ def main():
         report_path = Path("conflict_report.md")
         report = analyzer.generate_conflict_report(analysis)
 
-        with open(report_path, "w", encoding="utf-8") as f:
+        with Path(report_path).open("w", encoding="utf-8") as f:
             f.write(report)
 
         print_colored(f"\n📄 Relatório completo salvo em: {report_path}", Colors.GREEN)

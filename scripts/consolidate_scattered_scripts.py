@@ -18,7 +18,6 @@ import ast
 import re
 import shutil
 import sys
-from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -70,7 +69,7 @@ class ScriptConsolidator:
 
                 # Incluir apenas arquivos em diretórios scripts/ ou arquivos isolados
                 if "scripts/" in str(script) or script.name.startswith(
-                    ("fix_", "enforce_", "audit_")
+                    ("fix_", "enforce_", "audit_"),
                 ):
                     scripts.append(script)
 
@@ -152,7 +151,7 @@ class ScriptConsolidator:
         except Exception:
             # Fallback com regex
             import_lines = re.findall(
-                r"^(?:from\s+(\S+)\s+)?import\s+", content, re.MULTILINE
+                r"^(?:from\s+(\S+)\s+)?import\s+", content, re.MULTILINE,
             )
             imports.extend([imp for imp in import_lines if imp])
 
@@ -176,7 +175,7 @@ class ScriptConsolidator:
         return functions
 
     def create_consolidation_plan(
-        self, analyses: dict[Path, dict]
+        self, analyses: dict[Path, dict],
     ) -> dict[str, list[Path]]:
         """Cria plano de consolidação baseado nas análises."""
         plan = {
@@ -227,7 +226,7 @@ class ScriptConsolidator:
         return plan
 
     def _detect_duplicates(
-        self, analyses: dict[Path, dict], plan: dict[str, list[Path]]
+        self, analyses: dict[Path, dict], plan: dict[str, list[Path]],
     ) -> None:
         """Detecta scripts duplicados por similaridade de funcionalidade."""
         # Agrupar por funções similares
@@ -252,7 +251,7 @@ class ScriptConsolidator:
             if len(group_scripts) > 1:
                 # Manter o maior/mais recente, marcar outros como duplicatas
                 sorted_scripts = sorted(
-                    group_scripts, key=lambda p: analyses[p]["size_bytes"], reverse=True
+                    group_scripts, key=lambda p: analyses[p]["size_bytes"], reverse=True,
                 )
                 for duplicate in sorted_scripts[1:]:
                     plan["delete_duplicates"].append(duplicate)
@@ -264,7 +263,7 @@ class ScriptConsolidator:
         # 1. Mover scripts específicos de projeto
         if plan["move_to_project"]:
             self._print(
-                f"\n📁 Movendo {len(plan['move_to_project'])} scripts específicos de projeto..."
+                f"\n📁 Movendo {len(plan['move_to_project'])} scripts específicos de projeto...",
             )
             for script in plan["move_to_project"]:
                 self._move_to_project_legacy(script)
@@ -272,7 +271,7 @@ class ScriptConsolidator:
         # 2. Mover scripts obsoletos para legacy
         if plan["move_to_legacy"]:
             self._print(
-                f"\n🗄️ Movendo {len(plan['move_to_legacy'])} scripts obsoletos para legacy..."
+                f"\n🗄️ Movendo {len(plan['move_to_legacy'])} scripts obsoletos para legacy...",
             )
             for script in plan["move_to_legacy"]:
                 self._move_to_workspace_legacy(script)
@@ -280,7 +279,7 @@ class ScriptConsolidator:
         # 3. Deletar duplicatas
         if plan["delete_duplicates"]:
             self._print(
-                f"\n🗑️ Removendo {len(plan['delete_duplicates'])} scripts duplicados..."
+                f"\n🗑️ Removendo {len(plan['delete_duplicates'])} scripts duplicados...",
             )
             for script in plan["delete_duplicates"]:
                 self._delete_duplicate(script)
@@ -288,14 +287,14 @@ class ScriptConsolidator:
         # 4. Integrar funcionalidades úteis no quality_gateway
         if plan["integrate_quality"]:
             self._print(
-                f"\n🔧 Integrando {len(plan['integrate_quality'])} funcionalidades no quality gateway..."
+                f"\n🔧 Integrando {len(plan['integrate_quality'])} funcionalidades no quality gateway...",
             )
             self._integrate_quality_features(plan["integrate_quality"])
 
         # 5. Organizar scripts genéricos úteis
         if plan["keep_generic"]:
             self._print(
-                f"\n✅ Organizando {len(plan['keep_generic'])} scripts genéricos úteis..."
+                f"\n✅ Organizando {len(plan['keep_generic'])} scripts genéricos úteis...",
             )
             for script in plan["keep_generic"]:
                 self._organize_generic_script(script)
@@ -349,7 +348,7 @@ class ScriptConsolidator:
             self._print(f"  🔧 {script.name} → scripts/integration_candidates/")
 
         self._print(
-            "\n📝 NOTA: Scripts marcados para integração manual no quality_gateway.py"
+            "\n📝 NOTA: Scripts marcados para integração manual no quality_gateway.py",
         )
 
     def _organize_generic_script(self, script_path: Path) -> None:
@@ -366,7 +365,7 @@ class ScriptConsolidator:
         if script_path != dest:
             shutil.move(str(script_path), str(dest))
             self._print(
-                f"  ✅ {script_path.name} → {dest.relative_to(self.workspace_root)}"
+                f"  ✅ {script_path.name} → {dest.relative_to(self.workspace_root)}",
             )
 
     def generate_report(
@@ -383,7 +382,7 @@ class ScriptConsolidator:
                 f"**Data**: {__import__('datetime').datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
                 f"**Scripts Analisados**: {len(scripts)}",
                 "",
-            )
+            ),
         )
 
         # Estatísticas por categoria
@@ -402,7 +401,7 @@ class ScriptConsolidator:
         for action, script_list in plan.items():
             if script_list:
                 report.append(
-                    f"\n### {action.replace('_', ' ').title()} ({len(script_list)} scripts)"
+                    f"\n### {action.replace('_', ' ').title()} ({len(script_list)} scripts)",
                 )
                 report.extend(
                     f"- {script.relative_to(self.workspace_root)}"
@@ -455,7 +454,7 @@ class ScriptConsolidator:
         for action, script_list in plan.items():
             if script_list:
                 self._print(
-                    f"  {action.replace('_', ' ').title()}: {len(script_list)} scripts"
+                    f"  {action.replace('_', ' ').title()}: {len(script_list)} scripts",
                 )
 
         # 5. Gerar relatório
@@ -469,7 +468,7 @@ class ScriptConsolidator:
         report_path.parent.mkdir(parents=True, exist_ok=True)
         report_path.write_text(report, encoding="utf-8")
         self._print(
-            f"\n📄 Relatório salvo: {report_path.relative_to(self.workspace_root)}"
+            f"\n📄 Relatório salvo: {report_path.relative_to(self.workspace_root)}",
         )
 
         # 6. Executar consolidação
@@ -479,7 +478,7 @@ class ScriptConsolidator:
             self._print("\n🎉 CONSOLIDAÇÃO CONCLUÍDA!")
         else:
             self._print(
-                "\n📝 Plano criado mas não executado. Use o relatório para revisão."
+                "\n📝 Plano criado mas não executado. Use o relatório para revisão.",
             )
 
     def _print(self, message: str) -> None:

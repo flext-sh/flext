@@ -17,7 +17,7 @@ from flext_tools import Colors, print_colored
 def count_lines(file_path: Path) -> int:
     """Conta linhas de um arquivo."""
     try:
-        with open(file_path, encoding="utf-8") as f:
+        with Path(file_path).open(encoding="utf-8") as f:
             return len(f.readlines())
     except:
         return 0

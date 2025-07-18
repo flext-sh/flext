@@ -3,7 +3,6 @@
 import tomllib
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List, Optional, Set
 
 from flext_tools.utils import Colors, print_colored
 
@@ -34,7 +33,7 @@ class TransitiveDependencyResolver:
         self._resolving: set[str] = set()  # Prevent circular dependencies
 
     def resolve_transitive_dependencies(
-        self, project_path: Path, max_depth: int = 3
+        self, project_path: Path, max_depth: int = 3,
     ) -> TransitiveDependencies:
         """
         Resolve dependências transitivas de um projeto.
@@ -71,7 +70,7 @@ class TransitiveDependencyResolver:
             self._resolving.discard(project_key)
 
     def _resolve_recursive(
-        self, project_path: Path, depth: int
+        self, project_path: Path, depth: int,
     ) -> TransitiveDependencies:
         """Resolve dependências recursivamente."""
         if depth <= 0:
@@ -82,7 +81,7 @@ class TransitiveDependencyResolver:
             return TransitiveDependencies(set(), set(), [])
 
         try:
-            with open(pyproject_path, "rb") as f:
+            with Path(pyproject_path).open("rb") as f:
                 data = tomllib.load(f)
         except Exception as e:
             print_colored(f"  ⚠️ Erro ao ler {pyproject_path}: {e}", Colors.YELLOW)
@@ -106,7 +105,7 @@ class TransitiveDependencyResolver:
                 transitive_deps.update(child_result.transitive)
 
         return TransitiveDependencies(
-            direct=direct_deps, transitive=transitive_deps, path_dependencies=path_deps
+            direct=direct_deps, transitive=transitive_deps, path_dependencies=path_deps,
         )
 
     def _extract_direct_dependencies(self, data: dict) -> set[str]:
@@ -140,7 +139,7 @@ class TransitiveDependencyResolver:
         return dependencies
 
     def _extract_path_dependencies(
-        self, data: dict, project_path: Path
+        self, data: dict, project_path: Path,
     ) -> list[PathDependency]:
         """Extrai path dependencies do pyproject.toml."""
         path_deps = []
@@ -184,7 +183,7 @@ class TransitiveDependencyResolver:
         return result.direct | result.transitive
 
     def is_dependency_available_transitively(
-        self, project_path: Path, package_name: str
+        self, project_path: Path, package_name: str,
     ) -> bool:
         """
         Verifica se uma dependência está disponível transitivamente.

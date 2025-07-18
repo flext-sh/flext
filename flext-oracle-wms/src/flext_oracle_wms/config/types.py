@@ -11,8 +11,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Annotated, Literal, TypedDict
 
-from pydantic import Field
-
 # Maximum flext-core type reuse for Oracle WMS configuration
 from flext_core.domain.typedefs import (
     # Core configuration types
@@ -73,6 +71,7 @@ from flext_core.domain.types import (
     Timestamp,
     Version,
 )
+from pydantic import Field
 
 if TYPE_CHECKING:
     from flext_oracle_wms.constants import (
@@ -87,19 +86,7 @@ if TYPE_CHECKING:
         WMSFacilityCode,
         WMSFieldMapping,
         WMSFieldName,
-        WMSFilterCondition,
         WMSFilters,
-        WMSFilterValue,
-        WMSFlattenedRecord,
-        WMSFlattenedSchema,
-        WMSItemID,
-        WMSLocationID,
-        WMSOffset,
-        WMSOrderNumber,
-        WMSPageSize,
-        WMSRecord,
-        WMSRecordBatch,
-        WMSSchema,
     )
 
 # ==============================================================================
@@ -110,7 +97,7 @@ if TYPE_CHECKING:
 OracleWMSApiUrl = URL  # Alias for clarity
 OracleWMSApiPort = Port  # Alias for clarity
 OracleWMSApiVersion = Annotated[
-    str, Field(min_length=1, max_length=10, description="Oracle WMS API version")
+    str, Field(min_length=1, max_length=10, description="Oracle WMS API version"),
 ]
 OracleWMSApiTimeout = TimeoutSeconds  # Alias for clarity
 
@@ -132,7 +119,7 @@ OracleWMSBatchRetries = RetryCount  # Alias for clarity
 
 # Oracle WMS pagination configuration types
 OracleWMSPageSize = Annotated[
-    int, Field(ge=1, le=10000, description="Oracle WMS page size")
+    int, Field(ge=1, le=10000, description="Oracle WMS page size"),
 ]
 OracleWMSPageOffset = Annotated[int, Field(ge=0, description="Oracle WMS page offset")]
 
@@ -140,51 +127,51 @@ OracleWMSPageOffset = Annotated[int, Field(ge=0, description="Oracle WMS page of
 OracleWMSSchemaTimeout = TimeoutSeconds  # Alias for clarity
 OracleWMSSchemaRetries = RetryCount  # Alias for clarity
 OracleWMSSchemaDiscovery = Annotated[
-    bool, Field(description="Enable Oracle WMS schema discovery")
+    bool, Field(description="Enable Oracle WMS schema discovery"),
 ]
 
 # Oracle WMS flattening configuration types
 OracleWMSFlattenEnabled = Annotated[
-    bool, Field(description="Enable Oracle WMS data flattening")
+    bool, Field(description="Enable Oracle WMS data flattening"),
 ]
 OracleWMSFlattenMaxDepth = Annotated[
-    int, Field(ge=1, le=10, description="Maximum flattening depth")
+    int, Field(ge=1, le=10, description="Maximum flattening depth"),
 ]
 OracleWMSFlattenSeparator = Annotated[
-    str, Field(min_length=1, max_length=10, description="Flattening separator")
+    str, Field(min_length=1, max_length=10, description="Flattening separator"),
 ]
 
 # Oracle WMS filtering configuration types
 OracleWMSFilterEnabled = Annotated[
-    bool, Field(description="Enable Oracle WMS filtering")
+    bool, Field(description="Enable Oracle WMS filtering"),
 ]
 OracleWMSFilterMaxConditions = Annotated[
-    int, Field(ge=1, le=100, description="Maximum filter conditions")
+    int, Field(ge=1, le=100, description="Maximum filter conditions"),
 ]
 
 # Oracle WMS rate limiting configuration types
 OracleWMSRateLimitEnabled = Annotated[
-    bool, Field(description="Enable Oracle WMS rate limiting")
+    bool, Field(description="Enable Oracle WMS rate limiting"),
 ]
 OracleWMSRateLimitRPM = Annotated[
-    int, Field(ge=1, le=10000, description="Requests per minute limit")
+    int, Field(ge=1, le=10000, description="Requests per minute limit"),
 ]
 OracleWMSRateLimitDelay = Annotated[
-    float, Field(ge=0.0, le=60.0, description="Minimum delay between requests")
+    float, Field(ge=0.0, le=60.0, description="Minimum delay between requests"),
 ]
 
 # Oracle WMS monitoring configuration types
 OracleWMSMonitoringEnabled = Annotated[
-    bool, Field(description="Enable Oracle WMS monitoring")
+    bool, Field(description="Enable Oracle WMS monitoring"),
 ]
 OracleWMSMonitoringInterval = Annotated[
-    int, Field(ge=1, le=3600, description="Monitoring interval in seconds")
+    int, Field(ge=1, le=3600, description="Monitoring interval in seconds"),
 ]
 OracleWMSHealthCheckEnabled = Annotated[
-    bool, Field(description="Enable Oracle WMS health checks")
+    bool, Field(description="Enable Oracle WMS health checks"),
 ]
 OracleWMSHealthCheckInterval = Annotated[
-    int, Field(ge=1, le=3600, description="Health check interval in seconds")
+    int, Field(ge=1, le=3600, description="Health check interval in seconds"),
 ]
 
 # ==============================================================================

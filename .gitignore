@@ -551,10 +551,21 @@ status_*.json
 # ============================================================================
 # AI
 # ============================================================================
-.cursor/
-.cursorignore
+
+# AI generated files
+*.ai
+*.ai.md
+*.ai.txt
 CLAUDE.md
 internal.invalid.md
+cursor/
+.cursor/
+.cursorrules
+.aider*
+.github/copilot*
+*_REPORT.md
+*_ANALYSIS.md
+*_VALIDATION.md
 
 # ============================================================================
 # ALWAYS INCLUDE EXCEPTIONS

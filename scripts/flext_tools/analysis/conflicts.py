@@ -2,7 +2,6 @@
 
 import tomllib
 from pathlib import Path
-from typing import Dict, List, Optional, Set, Tuple
 
 from flext_tools.analysis.version import VersionAnalyzer
 from flext_tools.utils import Colors, print_colored
@@ -31,7 +30,7 @@ class ConflictAnalyzer:
 
         # Analisa conflitos de versão
         version_conflicts = self.version_analyzer.analyze_version_conflicts(
-            workspace_deps
+            workspace_deps,
         )
 
         # Identifica bloqueadores
@@ -39,7 +38,7 @@ class ConflictAnalyzer:
 
         # Sugere resoluções
         resolutions = self.version_analyzer.suggest_version_resolution(
-            version_conflicts
+            version_conflicts,
         )
 
         return {
@@ -51,7 +50,7 @@ class ConflictAnalyzer:
         }
 
     def _collect_workspace_dependencies(
-        self, workspace_path: Path
+        self, workspace_path: Path,
     ) -> dict[str, dict[str, str]]:
         """Coleta todas as dependências do workspace."""
         dependencies = {}
@@ -76,7 +75,7 @@ class ConflictAnalyzer:
     def _extract_project_dependencies(self, pyproject_path: Path) -> dict[str, str]:
         """Extrai dependências de um pyproject.toml."""
         try:
-            with open(pyproject_path, "rb") as f:
+            with Path(pyproject_path).open("rb") as f:
                 data = tomllib.load(f)
 
             deps = {}
@@ -111,7 +110,7 @@ class ConflictAnalyzer:
         return "*"
 
     def _identify_update_blockers(
-        self, workspace_deps: dict[str, dict[str, str]]
+        self, workspace_deps: dict[str, dict[str, str]],
     ) -> dict[str, dict]:
         """Identifica projetos que bloqueiam atualizações."""
         blockers = {}
@@ -189,7 +188,7 @@ class ConflictAnalyzer:
                     project
                     for blocker_data in blockers.values()
                     for project in blocker_data["blocking_projects"]
-                }
+                },
             ),
         }
 
@@ -209,7 +208,7 @@ class ConflictAnalyzer:
                 f"- **Pacotes com conflitos**: {stats['packages_with_conflicts']}",
                 f"- **Pacotes bloqueadores**: {stats['blocking_packages']}",
                 f"- **Projetos afetados**: {stats['affected_projects']}\n",
-            )
+            ),
         )
 
         # Conflitos de versão
@@ -250,7 +249,7 @@ class ConflictAnalyzer:
             lines.append("## 💡 Resoluções Sugeridas\n")
 
             for package, suggestion in sorted(
-                analysis["suggested_resolutions"].items()
+                analysis["suggested_resolutions"].items(),
             ):
                 lines.append(f"- **{package}**: `{suggestion}`")
 

@@ -86,20 +86,20 @@ class OracleTapSettings(BaseSettings):
 
     # Oracle Database connection (environment variables)
     oracle_host: OracleHost | None = Field(
-        default=None, description="Oracle database host"
+        default=None, description="Oracle database host",
     )
     oracle_port: OraclePort = Field(default=1521, description="Oracle database port")
     oracle_service_name: OracleServiceName | None = Field(
-        default=None, description="Oracle service name"
+        default=None, description="Oracle service name",
     )
     oracle_username: OracleUsername | None = Field(
-        default=None, description="Oracle username"
+        default=None, description="Oracle username",
     )
     oracle_password: OraclePassword | None = Field(
-        default=None, description="Oracle password"
+        default=None, description="Oracle password",
     )
     oracle_schema: OracleSchema | None = Field(
-        default=None, description="Oracle schema name"
+        default=None, description="Oracle schema name",
     )
 
     # Performance settings
@@ -108,7 +108,7 @@ class OracleTapSettings(BaseSettings):
         description="Default batch size for extraction",
     )
     default_timeout: OracleQueryTimeout = Field(
-        default=ConfigDefaults.DEFAULT_TIMEOUT, description="Default query timeout"
+        default=ConfigDefaults.DEFAULT_TIMEOUT, description="Default query timeout",
     )
 
     # Logging
@@ -160,10 +160,10 @@ class TapOracleConfig(BaseConfig):
     # Project identification using flext-core patterns
     project_name: str = Field(default="flext-tap-oracle", description="Project name")
     project_version: str = Field(
-        default=FlextFramework.VERSION, description="Project version"
+        default=FlextFramework.VERSION, description="Project version",
     )
     environment: str = Field(
-        default=Environments.DEVELOPMENT, description="Environment name"
+        default=Environments.DEVELOPMENT, description="Environment name",
     )
 
     # Oracle Database connection using standardized Oracle types
@@ -312,57 +312,62 @@ class TapOracleConfig(BaseConfig):
     def validate_connection_type(cls, v: str) -> str:
         """Validate connection type using constants."""
         if v not in OracleTapConstants.VALID_CONNECTION_TYPES:
+            msg = f"Invalid connection_type: {v}. Must be one of {OracleTapConstants.VALID_CONNECTION_TYPES}"
             raise ValueError(
-                f"Invalid connection_type: {v}. Must be one of {OracleTapConstants.VALID_CONNECTION_TYPES}"
+                msg,
             )
         return v
 
     @field_validator("host")
     @classmethod
     def validate_host_for_database(
-        cls, v: str | None, info: ValidationInfo
+        cls, v: str | None, info: ValidationInfo,
     ) -> str | None:
         """Validate host is provided for database connections."""
         if info.data:
             connection_type = info.data.get("connection_type")
             if connection_type in {"database", "hybrid"} and not v:
-                raise ValueError("host is required for database connections")
+                msg = "host is required for database connections"
+                raise ValueError(msg)
         return v
 
     @field_validator("service_name")
     @classmethod
     def validate_service_name_for_database(
-        cls, v: str | None, info: ValidationInfo
+        cls, v: str | None, info: ValidationInfo,
     ) -> str | None:
         """Validate service_name is provided for database connections."""
         if info.data:
             connection_type = info.data.get("connection_type")
             if connection_type in {"database", "hybrid"} and not v:
-                raise ValueError("service_name is required for database connections")
+                msg = "service_name is required for database connections"
+                raise ValueError(msg)
         return v
 
     @field_validator("username")
     @classmethod
     def validate_username_for_database(
-        cls, v: str | None, info: ValidationInfo
+        cls, v: str | None, info: ValidationInfo,
     ) -> str | None:
         """Validate username is provided for database connections."""
         if info.data:
             connection_type = info.data.get("connection_type")
             if connection_type in {"database", "hybrid"} and not v:
-                raise ValueError("username is required for database connections")
+                msg = "username is required for database connections"
+                raise ValueError(msg)
         return v
 
     @field_validator("password")
     @classmethod
     def validate_password_for_database(
-        cls, v: str | None, info: ValidationInfo
+        cls, v: str | None, info: ValidationInfo,
     ) -> str | None:
         """Validate password is provided for database connections."""
         if info.data:
             connection_type = info.data.get("connection_type")
             if connection_type in {"database", "hybrid"} and not v:
-                raise ValueError("password is required for database connections")
+                msg = "password is required for database connections"
+                raise ValueError(msg)
         return v
 
     @field_validator("batch_size")
@@ -392,7 +397,7 @@ class TapOracleConfig(BaseConfig):
     @field_validator("tables")
     @classmethod
     def validate_tables(
-        cls, v: list[str] | None, info: ValidationInfo
+        cls, v: list[str] | None, info: ValidationInfo,
     ) -> list[str] | None:
         """Validate tables configuration."""
         if info.data:

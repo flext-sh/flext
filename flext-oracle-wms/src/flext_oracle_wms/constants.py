@@ -131,7 +131,7 @@ OracleWMSEntityType = Literal[
 
 # Filter operator literal
 OracleWMSFilterOperator = Literal[
-    "eq", "neq", "gt", "gte", "lt", "lte", "in", "nin", "like"
+    "eq", "neq", "gt", "gte", "lt", "lte", "in", "nin", "like",
 ]
 
 # Page mode literal
