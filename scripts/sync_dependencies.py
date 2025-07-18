@@ -85,7 +85,7 @@ def get_workspace_projects(workspace_path: Path) -> list[Path]:
 
 
 def validate_projects(
-    projects: list[Path], validator: PoetryValidator, verbose: bool
+    projects: list[Path], validator: PoetryValidator, verbose: bool,
 ) -> bool:
     """Valida todos os projetos Poetry."""
     print_colored("\n1️⃣ Validando projetos Poetry...", Colors.BLUE)
@@ -119,7 +119,7 @@ def validate_projects(
 
 
 def discover_missing_dependencies(
-    projects: list[Path], discovery: DependencyDiscovery, verbose: bool
+    projects: list[Path], discovery: DependencyDiscovery, verbose: bool,
 ) -> dict:
     """Descobre dependências faltantes em todos os projetos."""
     print_colored("\n2️⃣ Descobrindo dependências faltantes...", Colors.BLUE)
@@ -127,7 +127,7 @@ def discover_missing_dependencies(
     @cached(namespace="discovery", ttl=300)
     def get_project_deps(project_path: Path):
         return discovery.discover_project_dependencies(
-            project_path, include_dev=True, include_test=True
+            project_path, include_dev=True, include_test=True,
         )
 
     missing_by_project = {}
@@ -152,14 +152,14 @@ def discover_missing_dependencies(
 
     print_colored(f"\n📊 Total de dependências faltantes: {total_missing}", Colors.CYAN)
     print_colored(
-        f"📊 Projetos afetados: {len(missing_by_project)}/{len(projects)}", Colors.CYAN
+        f"📊 Projetos afetados: {len(missing_by_project)}/{len(projects)}", Colors.CYAN,
     )
 
     return missing_by_project
 
 
 def analyze_conflicts(
-    workspace_path: Path, analyzer: ConflictAnalyzer, verbose: bool
+    workspace_path: Path, analyzer: ConflictAnalyzer, verbose: bool,
 ) -> dict:
     """Analisa conflitos de versão no workspace."""
     print_colored("\n3️⃣ Analisando conflitos de versão...", Colors.BLUE)
@@ -192,7 +192,7 @@ def analyze_conflicts(
 
 
 def add_missing_dependencies(
-    missing_by_project: dict, poetry_ops: PoetryOperations, auto: bool
+    missing_by_project: dict, poetry_ops: PoetryOperations, auto: bool,
 ) -> bool:
     """Adiciona dependências faltantes aos projetos."""
     if not missing_by_project:
@@ -207,7 +207,7 @@ def add_missing_dependencies(
             for missing_deps in missing_by_project.values()
         )
         print_colored(
-            f"\n💡 {total_deps} dependências serão adicionadas", Colors.YELLOW
+            f"\n💡 {total_deps} dependências serão adicionadas", Colors.YELLOW,
         )
         response = input("Continuar? (s/N): ")
         if response.lower() not in {"s", "sim", "y", "yes"}:
@@ -258,7 +258,7 @@ def main():
             print_colored("❌ EXECUÇÃO SEM DRY-RUN BLOQUEADA", Colors.RED)
             print_colored("", Colors.RED)
             print_colored(
-                "MOTIVO: Sistema ainda não foi validado completamente", Colors.YELLOW
+                "MOTIVO: Sistema ainda não foi validado completamente", Colors.YELLOW,
             )
             print_colored("", Colors.RED)
             print_colored("AÇÕES REQUERIDAS ANTES DE DESBLOQUEAR:", Colors.YELLOW)
@@ -267,17 +267,17 @@ def main():
                 Colors.YELLOW,
             )
             print_colored(
-                "2. ✅ Validação de detecção de módulos internos", Colors.YELLOW
+                "2. ✅ Validação de detecção de módulos internos", Colors.YELLOW,
             )
             print_colored(
-                "3. ✅ Teste completo do sistema de backup/rollback", Colors.YELLOW
+                "3. ✅ Teste completo do sistema de backup/rollback", Colors.YELLOW,
             )
             print_colored("4. ✅ Teste em projeto isolado", Colors.YELLOW)
             print_colored("", Colors.RED)
             print_colored("OPÇÕES SEGURAS:", Colors.GREEN)
             print_colored("• Use --dry-run para simulação segura", Colors.GREEN)
             print_colored(
-                "• Use --discover para análise sem modificações", Colors.GREEN
+                "• Use --discover para análise sem modificações", Colors.GREEN,
             )
             print_colored("• Use --validate para verificação de projetos", Colors.GREEN)
             print_colored("", Colors.RED)
@@ -302,11 +302,11 @@ def main():
 
         if args["dry_run"]:
             print_colored(
-                "⚠️ Modo DRY-RUN: Nenhuma modificação será feita", Colors.YELLOW
+                "⚠️ Modo DRY-RUN: Nenhuma modificação será feita", Colors.YELLOW,
             )
         elif check_validation_lock() and args["force_unlock"]:
             print_colored(
-                "⚠️ ATENÇÃO: Force unlock ativo - ALTA RESPONSABILIDADE", Colors.RED
+                "⚠️ ATENÇÃO: Force unlock ativo - ALTA RESPONSABILIDADE", Colors.RED,
             )
 
         # Detecta workspace
@@ -315,7 +315,7 @@ def main():
             p.name.startswith("flext-") for p in workspace_path.iterdir() if p.is_dir()
         ):
             print_colored(
-                "❌ Execute o script do diretório raiz do workspace FLEXT", Colors.RED
+                "❌ Execute o script do diretório raiz do workspace FLEXT", Colors.RED,
             )
             return 1
 
@@ -344,7 +344,7 @@ def main():
 
         if args["discover_only"]:
             missing_by_project = discover_missing_dependencies(
-                projects, discovery, args["verbose"]
+                projects, discovery, args["verbose"],
             )
             return 0
 
@@ -354,12 +354,12 @@ def main():
         # 1. Validação
         if not validate_projects(projects, validator, args["verbose"]):
             print_colored(
-                "\n⚠️ Alguns projetos têm problemas, mas continuando...", Colors.YELLOW
+                "\n⚠️ Alguns projetos têm problemas, mas continuando...", Colors.YELLOW,
             )
 
         # 2. Descoberta
         missing_by_project = discover_missing_dependencies(
-            projects, discovery, args["verbose"]
+            projects, discovery, args["verbose"],
         )
 
         # 3. Conflitos
@@ -374,7 +374,7 @@ def main():
         print(f"  ✅ Projetos validados: {len(projects)}")
         print(f"  📦 Dependências faltantes descobertas: {len(missing_by_project)}")
         print(
-            f"  ⚠️ Conflitos encontrados: {len(conflicts.get('version_conflicts', {}))}"
+            f"  ⚠️ Conflitos encontrados: {len(conflicts.get('version_conflicts', {}))}",
         )
 
         # Estatísticas de cache se verboso

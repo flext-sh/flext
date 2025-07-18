@@ -12,7 +12,7 @@ def get_project_installed_packages(project: Path) -> set[str]:
     pyproject_path = project / "pyproject.toml"
     if pyproject_path.exists():
         try:
-            with open(pyproject_path, "rb") as f:
+            with Path(pyproject_path).open("rb") as f:
                 data = tomllib.load(f)
 
             # Dependências principais

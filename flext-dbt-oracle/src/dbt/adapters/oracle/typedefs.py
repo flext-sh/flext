@@ -77,7 +77,7 @@ class DBTModelConfig(TypedDict):
     unique_key: str | list[str] | None
     incremental_strategy: DBTIncrementalStrategy | None
     on_schema_change: Literal[
-        "ignore", "fail", "append_new_columns", "sync_all_columns"
+        "ignore", "fail", "append_new_columns", "sync_all_columns",
     ]
     full_refresh: bool
     persist_docs: dict[str, bool]

@@ -4,7 +4,6 @@ import json
 import shutil
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional
 
 from flext_tools.utils import Colors, print_colored
 
@@ -38,7 +37,8 @@ class BackupManager:
             ID do backup para rollback
         """
         if not file_path.exists():
-            raise FileNotFoundError(f"Arquivo não existe: {file_path}")
+            msg = f"Arquivo não existe: {file_path}"
+            raise FileNotFoundError(msg)
 
         # Cria estrutura de diretórios do backup
         # Resolve path absoluto para lidar com paths relativos
@@ -122,7 +122,7 @@ class BackupManager:
 
         # Salva metadata do ponto de restauração
         restore_file = self.session_dir / f"{restore_point_id}.json"
-        with open(restore_file, "w", encoding="utf-8") as f:
+        with Path(restore_file).open("w", encoding="utf-8") as f:
             json.dump(restore_point, f, indent=2)
 
         print_colored(f"  🔄 Ponto de restauração: {restore_point_id}", Colors.BLUE)
@@ -159,7 +159,7 @@ class BackupManager:
         import hashlib
 
         hash_md5 = hashlib.md5()
-        with open(file_path, "rb") as f:
+        with Path(file_path).open("rb") as f:
             for chunk in iter(lambda: f.read(4096), b""):
                 hash_md5.update(chunk)
         return hash_md5.hexdigest()
@@ -167,7 +167,7 @@ class BackupManager:
     def _save_operations_log(self):
         """Salva log de operações no disco."""
         log_file = self.session_dir / "operations_log.json"
-        with open(log_file, "w", encoding="utf-8") as f:
+        with Path(log_file).open("w", encoding="utf-8") as f:
             json.dump(
                 {"session_id": self.session_id, "operations": self.operations_log},
                 f,
@@ -190,7 +190,7 @@ class BackupManager:
 
         if removed_count > 0:
             print_colored(
-                f"  🧹 Removidos {removed_count} backups antigos", Colors.YELLOW
+                f"  🧹 Removidos {removed_count} backups antigos", Colors.YELLOW,
             )
 
     def backup_poetry_lock(self, project_path: Path) -> str | None:
@@ -207,14 +207,14 @@ class BackupManager:
 
         if not poetry_lock.exists():
             print_colored(
-                f"  ⚠️ poetry.lock não encontrado em {project_path.name}", Colors.YELLOW
+                f"  ⚠️ poetry.lock não encontrado em {project_path.name}", Colors.YELLOW,
             )
             return None
 
         # Valida integridade do poetry.lock antes do backup
         if not self._validate_poetry_lock(poetry_lock):
             print_colored(
-                f"  ❌ poetry.lock corrompido em {project_path.name}", Colors.RED
+                f"  ❌ poetry.lock corrompido em {project_path.name}", Colors.RED,
             )
             return None
 
@@ -223,7 +223,7 @@ class BackupManager:
         return backup_id
 
     def backup_workspace_poetry_locks(
-        self, workspace_path: Path
+        self, workspace_path: Path,
     ) -> dict[str, str | None]:
         """
         Cria backup de todos os poetry.lock no workspace.
@@ -306,7 +306,7 @@ class BackupManager:
         try:
             import tomllib
 
-            with open(poetry_lock_path, encoding="utf-8") as f:
+            with Path(poetry_lock_path).open(encoding="utf-8") as f:
                 content = f.read()
 
             # Tenta parsear como TOML

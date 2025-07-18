@@ -190,6 +190,7 @@ line-ending = "auto"
 # MyPy configuration
 [tool.mypy]
 python_version = "3.13"
+plugins = ["pydantic.mypy"]
 strict = true
 warn_return_any = true
 warn_unused_configs = true
@@ -235,6 +236,12 @@ module = ["dbt.adapters.oracle.*"]
 ignore_errors = true
 
 # Coverage configuration
+
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true
+
 [tool.coverage.run]
 source = ["src"]
 branch = true

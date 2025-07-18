@@ -8,22 +8,15 @@ Centralized type definitions for Oracle WMS operations using flext-core standard
 
 from __future__ import annotations
 
-from pathlib import Path
-from typing import TYPE_CHECKING, Annotated, Any, TypeAlias, TypedDict
-
-from pydantic import Field, StringConstraints
+from typing import TYPE_CHECKING, Annotated, Any, TypedDict
 
 # Import flext-core types
 from flext_core.domain.typedefs import (
-    URL,
-    Json,
-    Metadata,
-    NonEmptyStr,
     NonNegativeInt,
     PositiveInt,
-    TimeoutSeconds,
     WMSEntityName,  # Use centralized WMSEntityName from flext-core
 )
+from pydantic import Field, StringConstraints
 
 # Import Oracle WMS constants
 from flext_oracle_wms.constants import (

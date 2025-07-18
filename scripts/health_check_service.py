@@ -5,8 +5,7 @@ import asyncio
 import json
 import logging
 import time
-from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 import aiohttp
 
@@ -30,7 +29,7 @@ class FlextHealthChecker:
             async with aiohttp.ClientSession() as session:
                 start_time = time.time()
                 async with session.get(
-                    url, timeout=aiohttp.ClientTimeout(total=5)
+                    url, timeout=aiohttp.ClientTimeout(total=5),
                 ) as response:
                     duration = time.time() - start_time
 
@@ -107,7 +106,7 @@ async def main():
 
             # Log critical issues
             if health_data["overall_status"] != "healthy":
-                logging.error(f"Health check failed: {health_data}")
+                logging.error("Health check failed: %s", health_data)
 
             # Wait before next check
             await asyncio.sleep(10)
@@ -116,7 +115,7 @@ async def main():
             print("\nHealth check service stopped")
             break
         except Exception as e:
-            logging.exception(f"Health check error: {e}")
+            logging.exception("Health check error: %s", e)
             await asyncio.sleep(5)
 
 

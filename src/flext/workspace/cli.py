@@ -9,7 +9,6 @@ running tests, managing containers, and coordinating tasks.
 
 from __future__ import annotations
 
-import asyncio
 import subprocess
 import sys
 from pathlib import Path
@@ -22,9 +21,6 @@ from rich.progress import Progress
 from rich.table import Table
 
 from flext_core import (
-    FlextContainer,
-    FlextModuleName,
-    ServiceLifetime,
     get_flext_container,
 )
 
@@ -316,7 +312,7 @@ def integration_test(env: str) -> None:
     # Start required containers
     console.print("[dim]Starting test containers...[/dim]")
     workspace_service.run_command(
-        ["docker-compose", "-f", "docker-compose.yml", "up", "-d"]
+        ["docker-compose", "-f", "docker-compose.yml", "up", "-d"],
     )
 
     try:
@@ -329,7 +325,7 @@ def integration_test(env: str) -> None:
                 "tests/integration",
                 "-v",
                 "--tb=short",
-            ]
+            ],
         )
         console.print("[green]Integration tests passed![/green]")
     finally:

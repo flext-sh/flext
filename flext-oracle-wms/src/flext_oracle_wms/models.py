@@ -10,13 +10,11 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from pydantic import Field
-
 # Import flext-core base and types for maximum standardization
 from flext_core.domain.pydantic_base import DomainBaseModel
-from flext_core.domain.typedefs import (
-    NonEmptyStr,
-)
+
+# Import runtime types for Pydantic model validation
+from pydantic import Field
 
 if TYPE_CHECKING:
     from datetime import datetime
@@ -28,7 +26,6 @@ if TYPE_CHECKING:
         WMSFieldName,
         WMSPageSize,
         WMSRecord,
-        WMSRecordBatch,
         WMSSchema,
     )
 
@@ -37,10 +34,10 @@ class WMSEntity(DomainBaseModel):
     """Oracle WMS entity model using flext-core standards."""
 
     name: WMSEntityName = Field(
-        ..., description="WMS entity name using flext-core validation"
+        ..., description="WMS entity name using flext-core validation",
     )
     description: str | None = Field(
-        None, description="Human-readable entity description"
+        None, description="Human-readable entity description",
     )
     fields: WMSSchema = Field(
         default_factory=dict,
@@ -51,10 +48,10 @@ class WMSEntity(DomainBaseModel):
     # Additional Oracle WMS entity metadata
     primary_key: str | None = Field(None, description="Primary key field for entity")
     replication_key: str | None = Field(
-        None, description="Replication key for incremental sync"
+        None, description="Replication key for incremental sync",
     )
     supports_incremental: bool = Field(
-        default=False, description="Whether entity supports incremental extraction"
+        default=False, description="Whether entity supports incremental extraction",
     )
 
 
@@ -62,89 +59,96 @@ class WMSDiscoveryResult(DomainBaseModel):
     """Oracle WMS discovery result using flext-core standards."""
 
     entities: list[WMSEntity] = Field(
-        default_factory=list, description="List of discovered Oracle WMS entities"
+        default_factory=list, description="List of discovered Oracle WMS entities",
     )
     total_count: int = Field(
-        default=0, description="Total number of discovered entities"
+        default=0, description="Total number of discovered entities",
     )
     timestamp: str = Field(..., description="Discovery timestamp in ISO format")
 
     # Additional discovery metadata
     api_version: str | None = Field(
-        None, description="Oracle WMS API version used for discovery"
+        None, description="Oracle WMS API version used for discovery",
     )
     discovery_duration_ms: float | None = Field(
-        None, description="Time taken for discovery in milliseconds"
+        None, description="Time taken for discovery in milliseconds",
     )
     has_errors: bool = Field(
-        default=False, description="Whether discovery encountered any errors"
+        default=False, description="Whether discovery encountered any errors",
     )
     errors: list[str] = Field(
-        default_factory=list, description="List of discovery errors if any"
+        default_factory=list, description="List of discovery errors if any",
     )
 
 
 class WMSError(DomainBaseModel):
     """Oracle WMS error model using flext-core standards."""
 
-    code: WMSErrorCode = Field(
-        ..., description="Oracle WMS error code using flext-core validation"
+    code: WMSErrorCode | None = Field(
+        None, description="Oracle WMS error code using flext-core validation",
     )
-    message: WMSErrorMessage = Field(
-        ..., description="Oracle WMS error message using flext-core validation"
+    message: WMSErrorMessage | None = Field(
+        None, description="Oracle WMS error message using flext-core validation",
     )
     details: dict[str, Any] | None = Field(
-        None, description="Additional error context and details"
+        None, description="Additional error context and details",
     )
 
     # Enhanced error metadata
     timestamp: datetime | None = Field(None, description="When the error occurred")
     entity_name: WMSEntityName | None = Field(
-        None, description="Oracle WMS entity associated with error"
+        None, description="Oracle WMS entity associated with error",
     )
     field_name: WMSFieldName | None = Field(
-        None, description="Specific field that caused the error"
+        None, description="Specific field that caused the error",
     )
     recoverable: bool = Field(
-        default=True, description="Whether this error can be recovered from"
+        default=True, description="Whether this error can be recovered from",
     )
     retry_count: int = Field(default=0, description="Number of retry attempts made")
+
+    # Additional fields for test compatibility
+    error_type: str | None = Field(None, description="Error type classification")
+    endpoint: str | None = Field(None, description="API endpoint where error occurred")
+    status_code: int | None = Field(None, description="HTTP status code")
+    retryable: bool | None = Field(None, description="Whether error is retryable")
+    request_id: str | None = Field(None, description="Request ID for tracking")
 
 
 class WMSResponse(DomainBaseModel):
     """Oracle WMS API response using flext-core standards."""
 
-    data: WMSRecordBatch = Field(
+    data: list[dict[str, Any]] = Field(
         default_factory=list,
-        description="Oracle WMS response data using flext-core types",
+        description="Oracle WMS response data - flexible structure for any entity",
     )
-    records: WMSRecordBatch = Field(
+    records: list[dict[str, Any]] = Field(
         default_factory=list,
-        description="Oracle WMS records (alias for data compatibility)",
+        description="Oracle WMS records - flexible structure for any entity",
     )
     total_count: int = Field(
-        default=0, description="Total number of records in response"
+        default=0, description="Total number of records in response",
     )
     page_size: WMSPageSize = Field(
-        default=100, description="Page size using flext-core WMS validation"
+        default=100, description="Page size using flext-core WMS validation",
     )
     has_more: bool = Field(
-        default=False, description="Whether more pages are available"
+        default=False, description="Whether more pages are available",
     )
 
     # Enhanced Oracle WMS response metadata
     entity_name: WMSEntityName | None = Field(
-        None, description="Oracle WMS entity name for this response"
+        None, description="Oracle WMS entity name for this response",
     )
     api_version: str | None = Field(None, description="Oracle WMS API version used")
     response_time_ms: float | None = Field(
-        None, description="API response time in milliseconds"
+        None, description="API response time in milliseconds",
     )
     extracted_at: datetime | None = Field(
-        None, description="When the data was extracted from Oracle WMS"
+        None, description="When the data was extracted from Oracle WMS",
     )
     cursor_bookmark: str | None = Field(
-        None, description="Pagination cursor for next page"
+        None, description="Pagination cursor for next page",
     )
 
     def __init__(self, **data: Any) -> None:
@@ -160,36 +164,36 @@ class WMSEntityField(DomainBaseModel):
     """Oracle WMS entity field definition using flext-core standards."""
 
     name: WMSFieldName = Field(
-        ..., description="Field name using flext-core WMS validation"
+        ..., description="Field name using flext-core WMS validation",
     )
     type: str = Field(
-        ..., description="Oracle WMS field data type (string, integer, number, etc.)"
+        ..., description="Oracle WMS field data type (string, integer, number, etc.)",
     )
     required: bool = Field(
-        default=False, description="Whether this field is required by Oracle WMS"
+        default=False, description="Whether this field is required by Oracle WMS",
     )
     description: str | None = Field(
-        None, description="Human-readable field description"
+        None, description="Human-readable field description",
     )
 
     # Enhanced Oracle WMS field metadata
     max_length: int | None = Field(
-        None, description="Maximum field length for string types"
+        None, description="Maximum field length for string types",
     )
     nullable: bool = Field(
-        default=True, description="Whether field can be null in Oracle WMS"
+        default=True, description="Whether field can be null in Oracle WMS",
     )
     primary_key: bool = Field(
-        default=False, description="Whether this field is part of primary key"
+        default=False, description="Whether this field is part of primary key",
     )
     indexed: bool = Field(
-        default=False, description="Whether this field is indexed in Oracle WMS"
+        default=False, description="Whether this field is indexed in Oracle WMS",
     )
     format: str | None = Field(
-        None, description="Field format (e.g., 'date-time', 'email', etc.)"
+        None, description="Field format (e.g., 'date-time', 'email', etc.)",
     )
     enum_values: list[str] | None = Field(
-        None, description="Allowed enum values for this field"
+        None, description="Allowed enum values for this field",
     )
 
 
@@ -201,26 +205,35 @@ class WMSRecordModel(DomainBaseModel):
         description="Oracle WMS record data using flext-core validation",
     )
     entity: WMSEntityName = Field(
-        ..., description="Oracle WMS entity name using flext-core types"
+        ..., description="Oracle WMS entity name using flext-core types",
     )
     id: str | None = Field(None, description="Unique record identifier from Oracle WMS")
 
     # Enhanced Oracle WMS record metadata
     extracted_at: datetime | None = Field(
-        None, description="When this record was extracted from Oracle WMS"
+        None, description="When this record was extracted from Oracle WMS",
     )
     mod_ts: datetime | None = Field(
-        None, description="Last modification timestamp from Oracle WMS"
+        None, description="Last modification timestamp from Oracle WMS",
     )
     version: int | None = Field(
-        None, description="Record version for optimistic locking"
+        None, description="Record version for optimistic locking",
     )
     checksum: str | None = Field(
-        None, description="Data checksum for integrity validation"
+        None, description="Data checksum for integrity validation",
     )
     flattened: bool = Field(
-        default=False, description="Whether record data has been flattened"
+        default=False, description="Whether record data has been flattened",
     )
     original_structure: dict[str, Any] | None = Field(
-        None, description="Original nested structure before flattening"
+        None, description="Original nested structure before flattening",
     )
+
+
+# Rebuild models to resolve forward references from TYPE_CHECKING imports
+WMSEntity.model_rebuild()
+WMSDiscoveryResult.model_rebuild()
+WMSError.model_rebuild()
+WMSResponse.model_rebuild()
+WMSEntityField.model_rebuild()
+WMSRecordModel.model_rebuild()

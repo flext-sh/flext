@@ -27,7 +27,7 @@ def test_minimal_config():
         # Test fields
         debug: bool = Field(False, description="Debug mode")
         secret_key: str = Field(
-            "default-secret", description="Secret key", alias="security__secret_key"
+            "default-secret", description="Secret key", alias="security__secret_key",
         )
         host: str = Field("default-host", description="Host", alias="server__host")
 
@@ -85,7 +85,7 @@ def test_inheritance_issue():
 
             debug: bool = Field(False, description="Debug mode")
             secret_key: str = Field(
-                "default-secret", description="Secret key", alias="security__secret_key"
+                "default-secret", description="Secret key", alias="security__secret_key",
             )
 
         config = InheritedConfig()

@@ -5,7 +5,7 @@ import hashlib
 import json
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any
 
 CACHE_DIR = Path.home() / ".cache" / "flext_deps"
 CACHE_FILE = CACHE_DIR / "dependency_cache.json"
@@ -42,7 +42,7 @@ def load_cache() -> dict[str, Any]:
         return {}
 
     try:
-        with open(CACHE_FILE, encoding="utf-8") as f:
+        with Path(CACHE_FILE).open(encoding="utf-8") as f:
             return json.load(f)
     except Exception:
         return {}
@@ -52,7 +52,7 @@ def save_cache(cache: dict[str, Any]) -> None:
     """Salva cache no disco."""
     ensure_cache_dir()
 
-    with open(CACHE_FILE, "w", encoding="utf-8") as f:
+    with Path(CACHE_FILE).open("w", encoding="utf-8") as f:
         json.dump(cache, f, indent=2, default=str)
 
 

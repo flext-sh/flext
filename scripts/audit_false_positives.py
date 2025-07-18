@@ -8,11 +8,9 @@ identificar falsos positivos antes de permitir modificações reais.
 OBJETIVO: Zero falsos positivos antes de remover o lock de segurança.
 """
 
-import ast
 import importlib.util
 import sys
 from pathlib import Path
-from typing import Dict, List, Set, Tuple
 
 # Adiciona scripts ao path para importar flext_tools
 sys.path.insert(0, str(Path(__file__).parent))
@@ -75,7 +73,7 @@ class FalsePositiveAuditor:
 
         # Descobre dependências usando o sistema atual
         dependencies = self.discovery.discover_project_dependencies(
-            project_path, include_dev=True, include_test=True
+            project_path, include_dev=True, include_test=True,
         )
 
         # Analisa cada dependência encontrada
@@ -94,7 +92,7 @@ class FalsePositiveAuditor:
             all_imports.update(deps)
 
         print_colored(
-            f"📦 Total de imports únicos detectados: {len(all_imports)}", Colors.CYAN
+            f"📦 Total de imports únicos detectados: {len(all_imports)}", Colors.CYAN,
         )
 
         for import_name in sorted(all_imports):
@@ -103,9 +101,9 @@ class FalsePositiveAuditor:
                 {
                     "import": import_name,
                     "reason": self._get_categorization_reason(
-                        import_name, category, project_path
+                        import_name, category, project_path,
                     ),
-                }
+                },
             )
 
         # Mostra resultados da auditoria
@@ -265,7 +263,7 @@ class FalsePositiveAuditor:
         return any(suspicious_patterns)
 
     def _get_categorization_reason(
-        self, import_name: str, category: str, project_path: Path
+        self, import_name: str, category: str, project_path: Path,
     ) -> str:
         """Retorna razão detalhada da categorização."""
 
@@ -332,10 +330,10 @@ class FalsePositiveAuditor:
 
         print_colored("\n🎯 RESUMO CRÍTICO:", Colors.BLUE)
         print_colored(
-            f"✅ Falsos positivos identificados: {false_positives}", Colors.GREEN
+            f"✅ Falsos positivos identificados: {false_positives}", Colors.GREEN,
         )
         print_colored(
-            f"⚠️ Dependências realmente faltantes: {legitimate_missing}", Colors.YELLOW
+            f"⚠️ Dependências realmente faltantes: {legitimate_missing}", Colors.YELLOW,
         )
         print_colored(f"🔍 Requer investigação: {needs_investigation}", Colors.MAGENTA)
 
@@ -367,7 +365,7 @@ def audit_workspace():
         return None
 
     print_colored(
-        f"📁 Encontrados {len(projects)} projetos para auditoria", Colors.CYAN
+        f"📁 Encontrados {len(projects)} projetos para auditoria", Colors.CYAN,
     )
 
     # Auditoria consolidada
@@ -410,7 +408,7 @@ def audit_workspace():
         percentage = (count / total_imports * 100) if total_imports > 0 else 0
 
         print_colored(
-            f"{category.upper()}: {count} únicos ({percentage:.1f}%)", Colors.CYAN
+            f"{category.upper()}: {count} únicos ({percentage:.1f}%)", Colors.CYAN,
         )
 
     # Estatísticas críticas
@@ -444,7 +442,7 @@ def audit_workspace():
 
     if false_positives > legitimate:
         print_colored(
-            "⚠️ ALTA taxa de falsos positivos - filtros precisam melhorar", Colors.YELLOW
+            "⚠️ ALTA taxa de falsos positivos - filtros precisam melhorar", Colors.YELLOW,
         )
 
     if investigation > 0:
@@ -460,11 +458,11 @@ def audit_workspace():
         )
     elif legitimate < 10:
         print_colored(
-            f"✅ Apenas {legitimate} dependências realmente faltantes", Colors.GREEN
+            f"✅ Apenas {legitimate} dependências realmente faltantes", Colors.GREEN,
         )
     else:
         print_colored(
-            f"⚠️ {legitimate} dependências podem estar realmente faltando", Colors.YELLOW
+            f"⚠️ {legitimate} dependências podem estar realmente faltando", Colors.YELLOW,
         )
 
     return project_details, global_analysis
@@ -483,7 +481,7 @@ def main():
 
     print_colored("\n✅ Auditoria manual concluída!", Colors.GREEN)
     print_colored(
-        "📋 Revise os resultados antes de proceder com modificações", Colors.CYAN
+        "📋 Revise os resultados antes de proceder com modificações", Colors.CYAN,
     )
 
     return 0

@@ -46,13 +46,13 @@ TapDiscoveryMode = Literal["automatic", "manual", "catalog_only"]
 TapTablePattern = Annotated[
     str,
     StringConstraints(
-        min_length=1, max_length=128, description="SQL LIKE pattern for table discovery"
+        min_length=1, max_length=128, description="SQL LIKE pattern for table discovery",
     ),
 ]
 TapSchemaPattern = Annotated[
     str,
     StringConstraints(
-        min_length=1, max_length=64, description="SQL LIKE pattern for schema discovery"
+        min_length=1, max_length=64, description="SQL LIKE pattern for schema discovery",
     ),
 ]
 
@@ -116,7 +116,7 @@ class TapFlatteningConfig(TypedDict):
 TapQueryHint = Annotated[
     str,
     StringConstraints(
-        pattern=r"^/\*\+.*\*/$", description="Oracle SQL hint in /*+ hint */ format"
+        pattern=r"^/\*\+.*\*/$", description="Oracle SQL hint in /*+ hint */ format",
     ),
 ]
 
