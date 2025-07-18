@@ -1,15 +1,12 @@
 """Operações com Poetry"""
 
-import json
 import subprocess
-import tomllib
 from pathlib import Path
-from typing import Dict, List, Optional, Set, Tuple
 
 import tomlkit
 
 from flext_tools.safety import BackupManager, SafetyValidator
-from flext_tools.utils import Colors, LogLevel, get_logger, print_colored
+from flext_tools.utils import Colors, get_logger, print_colored
 
 
 class PoetryOperations:
@@ -24,7 +21,7 @@ class PoetryOperations:
             self.backup_manager = BackupManager()
             self.safety_validator = SafetyValidator()
             self.logger.info(
-                "INIT", "Sistema de segurança ativado", {"dry_run": dry_run}
+                "INIT", "Sistema de segurança ativado", {"dry_run": dry_run},
             )
             print_colored("🛡️ Sistema de segurança ativado", Colors.CYAN)
 
@@ -64,7 +61,7 @@ class PoetryOperations:
         )
 
         print_colored(
-            f"\n📦 Adicionando dependências em {project_path.name}", Colors.BLUE
+            f"\n📦 Adicionando dependências em {project_path.name}", Colors.BLUE,
         )
 
         # VALIDAÇÃO DE SEGURANÇA CRÍTICA
@@ -73,7 +70,7 @@ class PoetryOperations:
 
             # Validação pré-operação
             validation_result = self.safety_validator.pre_operation_check(
-                project_path, "add_dependencies", {"dependencies": dependencies}
+                project_path, "add_dependencies", {"dependencies": dependencies},
             )
 
             if not validation_result["safe"]:
@@ -114,7 +111,7 @@ class PoetryOperations:
                     response = input("Continuar mesmo com warnings? (s/N): ")
                     if response.lower() not in {"s", "sim", "y", "yes"}:
                         print_colored(
-                            "❌ Operação cancelada pelo usuário", Colors.YELLOW
+                            "❌ Operação cancelada pelo usuário", Colors.YELLOW,
                         )
                         return added
 
@@ -142,7 +139,7 @@ class PoetryOperations:
                     if self._add_dependency(project_path, dep, group=None):
                         added["runtime"].append(dep)
                         self.logger.log_dependency_change(
-                            project_path.name, dep, "ADD", category="runtime"
+                            project_path.name, dep, "ADD", category="runtime",
                         )
 
         # Test dependencies
@@ -156,7 +153,7 @@ class PoetryOperations:
                     if self._add_dependency(project_path, dep, group="test"):
                         added["test"].append(dep)
                         self.logger.log_dependency_change(
-                            project_path.name, dep, "ADD", category="test"
+                            project_path.name, dep, "ADD", category="test",
                         )
 
         # Dev dependencies
@@ -170,7 +167,7 @@ class PoetryOperations:
                     if self._add_dependency(project_path, dep, group="dev"):
                         added["dev"].append(dep)
                         self.logger.log_dependency_change(
-                            project_path.name, dep, "ADD", category="dev"
+                            project_path.name, dep, "ADD", category="dev",
                         )
 
         # Finaliza operação com sucesso
@@ -183,7 +180,7 @@ class PoetryOperations:
         return added
 
     def _add_dependency(
-        self, project_path: Path, dependency: str, group: str | None = None
+        self, project_path: Path, dependency: str, group: str | None = None,
     ) -> bool:
         """Adiciona uma dependência individual."""
         cmd = ["poetry", "add", dependency]
@@ -198,21 +195,21 @@ class PoetryOperations:
             print_colored(f"    ➕ Adicionando {dependency}...", Colors.GREEN)
 
             result = subprocess.run(
-                cmd, check=False, cwd=project_path, capture_output=True, text=True
+                cmd, check=False, cwd=project_path, capture_output=True, text=True,
             )
 
             if result.returncode == 0:
                 if not self.dry_run:
                     print_colored(
-                        f"    ✅ {dependency} adicionado com sucesso", Colors.GREEN
+                        f"    ✅ {dependency} adicionado com sucesso", Colors.GREEN,
                     )
                 else:
                     print_colored(
-                        f"    ✅ {dependency} seria adicionado (dry-run)", Colors.YELLOW
+                        f"    ✅ {dependency} seria adicionado (dry-run)", Colors.YELLOW,
                     )
                 return True
             print_colored(
-                f"    ❌ Erro ao adicionar {dependency}: {result.stderr}", Colors.RED
+                f"    ❌ Erro ao adicionar {dependency}: {result.stderr}", Colors.RED,
             )
             return False
 
@@ -229,7 +226,7 @@ class PoetryOperations:
         return response.lower() in {"s", "sim", "y", "yes"}
 
     def update_dependency_versions(
-        self, project_path: Path, version_updates: dict[str, str]
+        self, project_path: Path, version_updates: dict[str, str],
     ) -> bool:
         """
         Atualiza versões de dependências no pyproject.toml.
@@ -245,13 +242,13 @@ class PoetryOperations:
 
         if not pyproject_path.exists():
             print_colored(
-                f"❌ pyproject.toml não encontrado em {project_path}", Colors.RED
+                f"❌ pyproject.toml não encontrado em {project_path}", Colors.RED,
             )
             return False
 
         try:
             # Lê o arquivo preservando formatação
-            with open(pyproject_path, encoding="utf-8") as f:
+            with Path(pyproject_path).open(encoding="utf-8") as f:
                 doc = tomlkit.parse(f.read())
 
             updated = False
@@ -267,7 +264,7 @@ class PoetryOperations:
                         deps[package] = new_version
                     updated = True
                     print_colored(
-                        f"  📝 {package}: {old_version} → {new_version}", Colors.CYAN
+                        f"  📝 {package}: {old_version} → {new_version}", Colors.CYAN,
                     )
 
             # Atualiza grupos
@@ -285,11 +282,11 @@ class PoetryOperations:
 
             if updated and not self.dry_run:
                 # Salva as mudanças
-                with open(pyproject_path, "w", encoding="utf-8") as f:
+                with Path(pyproject_path).open("w", encoding="utf-8") as f:
                     f.write(tomlkit.dumps(doc))
 
                 print_colored(
-                    f"  ✅ Versões atualizadas em {project_path.name}", Colors.GREEN
+                    f"  ✅ Versões atualizadas em {project_path.name}", Colors.GREEN,
                 )
                 return True
             if updated:
@@ -334,7 +331,7 @@ class PoetryOperations:
 
         except Exception as e:
             print_colored(
-                f"  ⚠️ Erro ao verificar pacotes desatualizados: {e}", Colors.YELLOW
+                f"  ⚠️ Erro ao verificar pacotes desatualizados: {e}", Colors.YELLOW,
             )
             return {}
 
@@ -389,7 +386,7 @@ class PoetryOperations:
         """
         try:
             print_colored(
-                f"  🔒 Atualizando lock file em {project_path.name}...", Colors.CYAN
+                f"  🔒 Atualizando lock file em {project_path.name}...", Colors.CYAN,
             )
 
             result = subprocess.run(
@@ -404,7 +401,7 @@ class PoetryOperations:
                 print_colored("  ✅ Lock file atualizado", Colors.GREEN)
                 return True
             print_colored(
-                f"  ❌ Erro ao atualizar lock file: {result.stderr}", Colors.RED
+                f"  ❌ Erro ao atualizar lock file: {result.stderr}", Colors.RED,
             )
             return False
 

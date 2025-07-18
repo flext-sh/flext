@@ -117,7 +117,7 @@ class OracleTableStream(BaseOracleStream):
         self._query_builder = SimpleOracleQueryBuilder()
 
         logger.info(
-            "Initialized Oracle table stream: %s.%s", schema or "default", table_name
+            "Initialized Oracle table stream: %s.%s", schema or "default", table_name,
         )
 
     @property
@@ -128,14 +128,14 @@ class OracleTableStream(BaseOracleStream):
             if hasattr(self.tap, "connection_service"):
                 oracle_connection_service = self.tap.connection_service
                 self._oracle_query_service = OracleQueryService(
-                    oracle_connection_service
+                    oracle_connection_service,
                 )
             else:
                 # Fallback: create from tap config
                 oracle_config = self.tap.tap_config.to_oracle_config()
                 oracle_connection_service = OracleConnectionService(oracle_config)
                 self._oracle_query_service = OracleQueryService(
-                    oracle_connection_service
+                    oracle_connection_service,
                 )
 
         return self._oracle_query_service
@@ -213,7 +213,7 @@ class OracleTableStream(BaseOracleStream):
                 properties[col_name] = property_type
 
             schema = th.PropertiesList(
-                *list(starmap(th.Property, properties.items()))
+                *list(starmap(th.Property, properties.items())),
             ).to_dict()
 
             # Apply schema flattening if enabled
@@ -269,7 +269,7 @@ class OracleTableStream(BaseOracleStream):
             start_time = time.time()
 
             logger.info(
-                "Starting extraction from %s.%s", self.schema_name, self.table_name
+                "Starting extraction from %s.%s", self.schema_name, self.table_name,
             )
 
             # Execute parameterized query using flext-db-oracle methods
@@ -277,7 +277,8 @@ class OracleTableStream(BaseOracleStream):
 
             # Validate query safety before execution
             def _raise_query_safety_error() -> None:
-                raise OracleQueryError("Query failed safety validation", sql=query)
+                msg = "Query failed safety validation"
+                raise OracleQueryError(msg, sql=query)
 
             if not self._query_builder.validate_query_safety(query, params):
                 _raise_query_safety_error()
@@ -288,7 +289,7 @@ class OracleTableStream(BaseOracleStream):
 
             # Use REAL flext-db-oracle execute_query method via asyncio
             result = asyncio.run(
-                self.oracle_query_service.execute_query(query, parameters=params)
+                self.oracle_query_service.execute_query(query, parameters=params),
             )
             if not result.is_success:
                 error_msg = f"Query execution failed: {result.error}"
@@ -322,16 +323,17 @@ class OracleTableStream(BaseOracleStream):
 
         except Exception as e:
             logger.exception(
-                "Failed to extract from %s.%s", self.schema_name, self.table_name
+                "Failed to extract from %s.%s", self.schema_name, self.table_name,
             )
+            msg = f"Table extraction failed: {e}"
             raise OracleQueryError(
-                f"Table extraction failed: {e}",
+                msg,
                 sql=self._last_query,
                 query_type="SELECT",
             ) from e
 
     def _build_extraction_query(
-        self, context: dict[str, Any] | None
+        self, context: dict[str, Any] | None,
     ) -> tuple[str, dict[str, Any]]:
         """Build parameterized SQL query for data extraction.
 
@@ -503,8 +505,9 @@ class OracleTableStream(BaseOracleStream):
 
                 # Validate query safety
                 def _raise_schema_safety_error() -> None:
+                    msg = "Schema query failed safety validation"
                     raise OracleQueryError(  # noqa: TRY301
-                        "Schema query failed safety validation", sql=sql
+                        msg, sql=sql,
                     )
 
                 if not self._query_builder.validate_query_safety(sql, params):
@@ -512,7 +515,7 @@ class OracleTableStream(BaseOracleStream):
 
                 # Use REAL flext-db-oracle execute_query method for schema discovery via asyncio
                 schema_result = asyncio.run(
-                    self.oracle_query_service.execute_query(sql, parameters=params)
+                    self.oracle_query_service.execute_query(sql, parameters=params),
                 )
                 if not schema_result.is_success:
                     error_msg = f"Schema query failed: {schema_result.error}"
@@ -535,7 +538,7 @@ class OracleTableStream(BaseOracleStream):
                             "nullable": row[5],
                             "column_id": row[6],
                             "data_default": row[7],
-                        }
+                        },
                     )
 
                 logger.debug(
@@ -562,13 +565,13 @@ class OracleTableStream(BaseOracleStream):
                         "nullable": "Y",
                         "column_id": 1,
                         "data_default": None,
-                    }
+                    },
                 ]
 
         return self._column_cache
 
     def _get_records_impl(
-        self, context: dict[str, Any] | None = None
+        self, context: dict[str, Any] | None = None,
     ) -> Iterable[dict[str, Any]]:
         """Implementation-specific record retrieval for BaseOracleStream.
 
@@ -627,7 +630,7 @@ class OracleViewStream(OracleTableStream):
         )
 
     def _build_extraction_query(
-        self, context: dict[str, Any] | None
+        self, context: dict[str, Any] | None,
     ) -> tuple[str, dict[str, Any]]:
         """Build SQL query for view extraction.
 

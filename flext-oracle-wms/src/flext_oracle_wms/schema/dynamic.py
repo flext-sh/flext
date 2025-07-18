@@ -9,31 +9,27 @@ SPDX-License-Identifier: MIT
 
 from __future__ import annotations
 
-import json
 from datetime import datetime
 from typing import TYPE_CHECKING, Any, TypedDict
 
 from flext_core.domain.types import ServiceResult
+
 from flext_oracle_wms.constants import (
     OracleWMSEntityTypes,
     OracleWMSErrorMessages,
-    OracleWMSSuccessMessages,
 )
-from flext_oracle_wms.exceptions import OracleWMSSchemaError
 from flext_oracle_wms.typedefs import (
-        WMSDiscoveryResult,
-        WMSEntityInfo,
-    )
+    WMSDiscoveryResult,
+    WMSEntityInfo,
+)
 
 if TYPE_CHECKING:
     from flext_oracle_wms.constants import OracleWMSEntityType
     from flext_oracle_wms.typedefs import (
         WMSConnectionInfo,
-        WMSEntityData,
         WMSRecord,
         WMSRecordBatch,
         WMSSchema,
-        WMSSchemaProperty,
     )
 
 
@@ -125,13 +121,13 @@ class DynamicSchemaProcessor:
 
             # Calculate schema confidence
             schema_confidence = self._calculate_schema_confidence(
-                limited_sample, discovered_schema, field_analysis
+                limited_sample, discovered_schema, field_analysis,
             )
 
             # Merge with existing schema if provided
             if existing_schema:
                 discovered_schema = self._merge_schemas(
-                    existing_schema, discovered_schema
+                    existing_schema, discovered_schema,
                 )
 
             result = SchemaDiscoveryResult(
@@ -185,7 +181,7 @@ class DynamicSchemaProcessor:
                     # Validate record against schema
                     if validate_schema:
                         validation_result = self._validate_record_against_schema(
-                            record, target_schema
+                            record, target_schema,
                         )
                         validation_results.append(
                             {
@@ -193,7 +189,7 @@ class DynamicSchemaProcessor:
                                 "valid": validation_result["valid"],
                                 "errors": validation_result["errors"],
                                 "warnings": validation_result["warnings"],
-                            }
+                            },
                         )
 
                         if not validation_result["valid"]:
@@ -203,19 +199,19 @@ class DynamicSchemaProcessor:
                     processed_record = record.copy()
                     if convert_types:
                         processed_record, conversions = self._convert_record_types(
-                            processed_record, target_schema
+                            processed_record, target_schema,
                         )
                         type_conversions.update(conversions)
                         processing_stats["type_conversions"] += len(conversions)
 
                     # Add missing fields with defaults
                     processed_record = self._add_missing_fields(
-                        processed_record, target_schema
+                        processed_record, target_schema,
                     )
 
                     # Remove extra fields not in schema
                     processed_record = self._remove_extra_fields(
-                        processed_record, target_schema
+                        processed_record, target_schema,
                     )
 
                     processed_records.append(processed_record)
@@ -228,7 +224,7 @@ class DynamicSchemaProcessor:
                             "valid": False,
                             "errors": [str(record_error)],
                             "warnings": [],
-                        }
+                        },
                     )
                     processing_stats["validation_errors"] += 1
 
@@ -277,7 +273,7 @@ class DynamicSchemaProcessor:
                             description=f"Dynamically discovered {entity_name} entity",
                             primary_key=self._infer_primary_key(schema_data.schema),
                             replication_key=self._infer_replication_key(
-                                schema_data.schema
+                                schema_data.schema,
                             ),
                             schema=schema_data.schema,
                         )
@@ -296,7 +292,7 @@ class DynamicSchemaProcessor:
 
         except Exception as e:
             return ServiceResult.error(
-                OracleWMSErrorMessages.ENTITY_DISCOVERY_FAILED, {"error": str(e)}
+                OracleWMSErrorMessages.ENTITY_DISCOVERY_FAILED, {"error": str(e)},
             )
 
     def _discover_schema_from_records(self, records: WMSRecordBatch) -> WMSSchema:
@@ -347,7 +343,7 @@ class DynamicSchemaProcessor:
                         field_schema["properties"] = {}
 
                     self._analyze_record_structure(
-                        field_value, field_schema["properties"], depth + 1
+                        field_value, field_schema["properties"], depth + 1,
                     )
 
                 # Handle arrays
@@ -359,11 +355,11 @@ class DynamicSchemaProcessor:
                     for item in field_value[:5]:  # Limit to first 5 items
                         if isinstance(item, dict):
                             self._analyze_record_structure(
-                                item, field_schema["items"]["properties"], depth + 1
+                                item, field_schema["items"]["properties"], depth + 1,
                             )
 
     def _finalize_schema_types(
-        self, schema: WMSSchema, records: WMSRecordBatch
+        self, schema: WMSSchema, records: WMSRecordBatch,
     ) -> WMSSchema:
         """Finalize schema types based on analysis."""
         finalized_schema = {}
@@ -379,28 +375,28 @@ class DynamicSchemaProcessor:
                 # Add format information
                 if field_info.get("type") == "string":
                     format_info = self._infer_string_format(
-                        field_info.get("sample_values", [])
+                        field_info.get("sample_values", []),
                     )
                     if format_info:
                         finalized_field["format"] = format_info
 
                 # Add constraints
-                if field_info.get("type") in ["integer", "number"]:
+                if field_info.get("type") in {"integer", "number"}:
                     numeric_info = self._infer_numeric_constraints(
-                        field_info.get("sample_values", [])
+                        field_info.get("sample_values", []),
                     )
                     finalized_field.update(numeric_info)
 
                 # Handle nested properties
                 if "properties" in field_info:
                     finalized_field["properties"] = self._finalize_schema_types(
-                        field_info["properties"], records
+                        field_info["properties"], records,
                     )
 
                 # Handle array items
                 if "items" in field_info:
                     finalized_field["items"] = self._finalize_schema_types(
-                        {"items": field_info["items"]}, records
+                        {"items": field_info["items"]}, records,
                     )["items"]
 
                 finalized_schema[field_name] = finalized_field
@@ -483,7 +479,7 @@ class DynamicSchemaProcessor:
         return constraints
 
     def _analyze_fields(
-        self, records: WMSRecordBatch, schema: WMSSchema
+        self, records: WMSRecordBatch, schema: WMSSchema,
     ) -> dict[str, dict[str, Any]]:
         """Analyze field patterns and statistics."""
         field_analysis = {}
@@ -525,7 +521,7 @@ class DynamicSchemaProcessor:
                 analysis["missing_count"] / analysis["total_count"]
             )
             analysis["cardinality"] = analysis["unique_count"] / max(
-                analysis["total_count"], 1
+                analysis["total_count"], 1,
             )
 
             # Convert set to list for JSON serialization
@@ -563,7 +559,7 @@ class DynamicSchemaProcessor:
                 # Reward appropriate cardinality
                 cardinality = analysis.get("cardinality", 0.0)
                 cardinality_score = 1.0 - abs(
-                    cardinality - 0.5
+                    cardinality - 0.5,
                 )  # Ideal is moderate cardinality
 
                 field_confidence *= missing_penalty * cardinality_score
@@ -591,7 +587,7 @@ class DynamicSchemaProcessor:
         return max_depth
 
     def _merge_schemas(
-        self, existing_schema: WMSSchema, new_schema: WMSSchema
+        self, existing_schema: WMSSchema, new_schema: WMSSchema,
     ) -> WMSSchema:
         """Merge existing schema with newly discovered schema."""
         merged_schema = existing_schema.copy()
@@ -614,7 +610,7 @@ class DynamicSchemaProcessor:
                     # Merge nested properties
                     if "properties" in existing_field and "properties" in field_info:
                         merged_schema[field_name]["properties"] = self._merge_schemas(
-                            existing_field["properties"], field_info["properties"]
+                            existing_field["properties"], field_info["properties"],
                         )
 
         return merged_schema
@@ -640,7 +636,7 @@ class DynamicSchemaProcessor:
                 if is_required and field_name not in record:
                     validation_result["valid"] = False
                     validation_result["errors"].append(
-                        f"Required field '{field_name}' is missing"
+                        f"Required field '{field_name}' is missing",
                     )
 
                 if field_name in record:
@@ -650,7 +646,7 @@ class DynamicSchemaProcessor:
                     if field_value is None and not is_nullable:
                         validation_result["valid"] = False
                         validation_result["errors"].append(
-                            f"Field '{field_name}' cannot be null"
+                            f"Field '{field_name}' cannot be null",
                         )
 
                     # Check type
@@ -660,14 +656,14 @@ class DynamicSchemaProcessor:
 
                         if actual_type != expected_type:
                             validation_result["warnings"].append(
-                                f"Field '{field_name}' expected type '{expected_type}' but got '{actual_type}'"
+                                f"Field '{field_name}' expected type '{expected_type}' but got '{actual_type}'",
                             )
 
         # Check for extra fields
         for field_name in record:
             if field_name not in schema:
                 validation_result["warnings"].append(
-                    f"Extra field '{field_name}' not in schema"
+                    f"Extra field '{field_name}' not in schema",
                 )
 
         return validation_result
@@ -689,7 +685,7 @@ class DynamicSchemaProcessor:
                 if current_value is not None:
                     try:
                         converted_value = self._convert_value_to_type(
-                            current_value, target_type
+                            current_value, target_type,
                         )
                         if converted_value != current_value:
                             converted_record[field_name] = converted_value
@@ -713,7 +709,7 @@ class DynamicSchemaProcessor:
         if target_type == "boolean":
             if isinstance(value, bool):
                 return value
-            return str(value).lower() in ("true", "1", "yes", "on")
+            return str(value).lower() in {"true", "1", "yes", "on"}
         if target_type == "array":
             if isinstance(value, list):
                 return value

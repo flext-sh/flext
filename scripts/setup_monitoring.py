@@ -2,7 +2,6 @@
 """Setup real monitoring infrastructure for FLEXT."""
 
 import json
-from datetime import datetime
 from pathlib import Path
 
 import yaml
@@ -14,7 +13,7 @@ def create_prometheus_config(project_root: Path) -> Path:
     prometheus_config = {
         "global": {"scrape_interval": "15s", "evaluation_interval": "15s"},
         "alerting": {
-            "alertmanagers": [{"static_configs": [{"targets": ["localhost:9093"]}]}]
+            "alertmanagers": [{"static_configs": [{"targets": ["localhost:9093"]}]}],
         },
         "rule_files": ["alerts/*.yml"],
         "scrape_configs": [
@@ -61,7 +60,7 @@ def create_prometheus_config(project_root: Path) -> Path:
     monitoring_dir.mkdir(exist_ok=True)
 
     config_file = monitoring_dir / "prometheus.yml"
-    with open(config_file, "w", encoding="utf-8") as f:
+    with Path(config_file).open("w", encoding="utf-8") as f:
         yaml.dump(prometheus_config, f, default_flow_style=False, indent=2)
 
     print(f"✅ Prometheus config: {config_file}")
@@ -87,7 +86,7 @@ def create_grafana_dashboards(monitoring_dir: Path) -> None:
                         {
                             "expr": 'rate(http_requests_total{job="flext-api"}[5m])',
                             "legendFormat": "{{method}} {{endpoint}}",
-                        }
+                        },
                     ],
                     "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
                 },
@@ -131,14 +130,14 @@ def create_grafana_dashboards(monitoring_dir: Path) -> None:
                         {
                             "expr": "flext_api_active_connections",
                             "legendFormat": "Connections",
-                        }
+                        },
                     ],
                     "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8},
                 },
             ],
             "refresh": "5s",
             "time": {"from": "now-1h", "to": "now"},
-        }
+        },
     }
 
     # Pipeline Monitoring Dashboard
@@ -157,7 +156,7 @@ def create_grafana_dashboards(monitoring_dir: Path) -> None:
                         {
                             "expr": "rate(flext_pipeline_executions_total[5m])",
                             "legendFormat": "{{status}} - {{pipeline}}",
-                        }
+                        },
                     ],
                     "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
                 },
@@ -169,7 +168,7 @@ def create_grafana_dashboards(monitoring_dir: Path) -> None:
                         {
                             "expr": "histogram_quantile(0.95, rate(flext_pipeline_duration_seconds_bucket[5m]))",
                             "legendFormat": "95th percentile",
-                        }
+                        },
                     ],
                     "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
                 },
@@ -181,24 +180,24 @@ def create_grafana_dashboards(monitoring_dir: Path) -> None:
                         {
                             "expr": "rate(flext_pipeline_records_processed_total[5m])",
                             "legendFormat": "{{pipeline}}",
-                        }
+                        },
                     ],
                     "gridPos": {"h": 8, "w": 24, "x": 0, "y": 8},
                 },
             ],
             "refresh": "10s",
             "time": {"from": "now-2h", "to": "now"},
-        }
+        },
     }
 
     # Save dashboards
     dashboards_dir = monitoring_dir / "grafana" / "dashboards"
     dashboards_dir.mkdir(parents=True, exist_ok=True)
 
-    with open(dashboards_dir / "flext-api.json", "w", encoding="utf-8") as f:
+    with Path(dashboards_dir / "flext-api.json").open("w", encoding="utf-8") as f:
         json.dump(api_dashboard, f, indent=2)
 
-    with open(dashboards_dir / "flext-pipeline.json", "w", encoding="utf-8") as f:
+    with Path(dashboards_dir / "flext-pipeline.json").open("w", encoding="utf-8") as f:
         json.dump(pipeline_dashboard, f, indent=2)
 
     print(f"✅ Grafana dashboards: {dashboards_dir}")
@@ -269,14 +268,14 @@ def create_alerting_rules(monitoring_dir: Path) -> None:
                     },
                 ],
             },
-        ]
+        ],
     }
 
     alerts_dir = monitoring_dir / "alerts"
     alerts_dir.mkdir(exist_ok=True)
 
     alert_file = alerts_dir / "flext.yml"
-    with open(alert_file, "w", encoding="utf-8") as f:
+    with Path(alert_file).open("w", encoding="utf-8") as f:
         yaml.dump(alerts, f, default_flow_style=False, indent=2)
 
     print(f"✅ Alert rules: {alert_file}")
@@ -347,7 +346,7 @@ def create_docker_monitoring_stack(monitoring_dir: Path) -> None:
     }
 
     compose_file = monitoring_dir / "docker-compose.monitoring.yml"
-    with open(compose_file, "w", encoding="utf-8") as f:
+    with Path(compose_file).open("w", encoding="utf-8") as f:
         yaml.dump(docker_compose, f, default_flow_style=False, indent=2)
 
     print(f"✅ Docker monitoring stack: {compose_file}")
@@ -462,7 +461,7 @@ async def main():
 
             # Log critical issues
             if health_data['overall_status'] != 'healthy':
-                logging.error(f"Health check failed: {health_data}")
+                logging.error("Health check failed: %s", health_data)
 
             # Wait before next check
             await asyncio.sleep(10)
@@ -471,7 +470,7 @@ async def main():
             print("\\nHealth check service stopped")
             break
         except Exception as e:
-            logging.error(f"Health check error: {e}")
+            logging.error("Health check error: %s", e)
             await asyncio.sleep(5)
 
 if __name__ == "__main__":
@@ -480,7 +479,7 @@ if __name__ == "__main__":
 '''
 
     health_check_file = project_root / "scripts" / "health_check_service.py"
-    with open(health_check_file, "w", encoding="utf-8") as f:
+    with Path(health_check_file).open("w", encoding="utf-8") as f:
         f.write(health_check_code)
 
     # Make executable
@@ -557,7 +556,7 @@ echo "🛑 To stop: docker-compose -f docker-compose.monitoring.yml down"
 """
 
     startup_file = monitoring_dir / "start-monitoring.sh"
-    with open(startup_file, "w", encoding="utf-8") as f:
+    with Path(startup_file).open("w", encoding="utf-8") as f:
         f.write(startup_script)
 
     # Make executable

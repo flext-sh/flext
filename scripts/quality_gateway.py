@@ -40,7 +40,7 @@ def main():
             if not any(
                 skip in str(p) for skip in ["archive", "backup", "node_modules", ".git"]
             )
-        ]
+        ],
     )
 
     if not projects:
@@ -88,7 +88,7 @@ def main():
         for project, validation in validations.items():
             if not validation["valid"]:
                 print_colored(
-                    f"    ❌ {project}: {len(validation['errors'])} erros", Colors.RED
+                    f"    ❌ {project}: {len(validation['errors'])} erros", Colors.RED,
                 )
 
     # 2. ANÁLISE DE CONFLITOS
@@ -108,7 +108,7 @@ def main():
     if conflict_count == 0:
         quality_score += 25
         print_colored(
-            "  ✅ Nenhum conflito de versão encontrado (+25 pontos)", Colors.GREEN
+            "  ✅ Nenhum conflito de versão encontrado (+25 pontos)", Colors.GREEN,
         )
     else:
         # Desconta pontos baseado no número de conflitos
@@ -126,7 +126,7 @@ def main():
         top_conflicts = list(conflicts["version_conflicts"].items())[:3]
         for package, data in top_conflicts:
             print_colored(
-                f"    ⚠️ {package}: {len(data['projects'])} projetos", Colors.YELLOW
+                f"    ⚠️ {package}: {len(data['projects'])} projetos", Colors.YELLOW,
             )
 
     # 3. DEPENDÊNCIAS FALTANTES
@@ -136,7 +136,7 @@ def main():
     @cached(namespace="discovery", ttl=300)
     def discover_project_deps(project_path: Path):
         return discovery.discover_project_dependencies(
-            project_path, include_dev=True, include_test=True
+            project_path, include_dev=True, include_test=True,
         )
 
     total_missing = 0
@@ -154,7 +154,7 @@ def main():
     if total_missing == 0:
         quality_score += 25
         print_colored(
-            "  ✅ Todas as dependências estão declaradas (+25 pontos)", Colors.GREEN
+            "  ✅ Todas as dependências estão declaradas (+25 pontos)", Colors.GREEN,
         )
     else:
         # Desconta pontos baseado no número de dependências faltantes
@@ -232,22 +232,22 @@ def main():
 
     if invalid_count > 0:
         print(
-            "  • Execute 'python validate_poetry_projects.py' para ver detalhes dos erros Poetry"
+            "  • Execute 'python validate_poetry_projects.py' para ver detalhes dos erros Poetry",
         )
 
     if conflict_count > 0:
         print(
-            "  • Execute 'python analyze_who_blocks_updates.py --suggest' para ver resoluções"
+            "  • Execute 'python analyze_who_blocks_updates.py --suggest' para ver resoluções",
         )
 
     if total_missing > 0:
         print(
-            "  • Execute 'python discover_missing_deps.py --dry-run' para ver dependências faltantes"
+            "  • Execute 'python discover_missing_deps.py --dry-run' para ver dependências faltantes",
         )
 
     if fix_mode:
         print_colored(
-            "\n🔧 Modo de correção automática não implementado ainda", Colors.YELLOW
+            "\n🔧 Modo de correção automática não implementado ainda", Colors.YELLOW,
         )
         print("  • Use os scripts individuais para correções específicas")
 
@@ -272,12 +272,12 @@ def main():
     # Status de saída
     if strict_mode and percentage < 100:
         print_colored(
-            f"\n❌ FALHOU no modo rigoroso ({percentage:.1f}% < 100%)", Colors.RED
+            f"\n❌ FALHOU no modo rigoroso ({percentage:.1f}% < 100%)", Colors.RED,
         )
         return 1
     if percentage < 60:
         print_colored(
-            f"\n❌ Qualidade insuficiente ({percentage:.1f}% < 60%)", Colors.RED
+            f"\n❌ Qualidade insuficiente ({percentage:.1f}% < 60%)", Colors.RED,
         )
         return 1
     print_colored("\n✅ Quality gateway aprovado!", Colors.GREEN)

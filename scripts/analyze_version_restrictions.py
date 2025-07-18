@@ -57,7 +57,7 @@ def collect_all_dependencies(workspace: Path) -> dict[str, dict[str, str]]:
             continue
 
         try:
-            with open(pyproject, "rb") as f:
+            with Path(pyproject).open("rb") as f:
                 data = tomllib.load(f)
 
             project_name = pyproject.parent.name
@@ -136,7 +136,7 @@ def main() -> int:
     import argparse
 
     parser = argparse.ArgumentParser(
-        description="Analisa versões de dependências e identifica projetos restritivos"
+        description="Analisa versões de dependências e identifica projetos restritivos",
     )
     parser.add_argument(
         "--workspace",
@@ -208,7 +208,7 @@ def main() -> int:
 
             if len(analysis["different_versions"]) > 1:
                 print(
-                    f"   ⚠️  CONFLITO: {len(analysis['different_versions'])} versões diferentes!"
+                    f"   ⚠️  CONFLITO: {len(analysis['different_versions'])} versões diferentes!",
                 )
 
             if analysis["restrictions"]["exact"]:
@@ -233,7 +233,7 @@ def main() -> int:
     if args.save_report:
         report_path = Path(args.save_report)
 
-        with open(report_path, "w", encoding="utf-8") as f:
+        with Path(report_path).open("w", encoding="utf-8") as f:
             f.write("ANÁLISE DE RESTRIÇÕES DE VERSÃO\n")
             f.write(f"Gerado em: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
             f.write(f"Workspace: {workspace.absolute()}\n")

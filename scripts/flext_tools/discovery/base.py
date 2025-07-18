@@ -2,7 +2,6 @@
 
 import tomllib
 from pathlib import Path
-from typing import Dict, Optional, Set
 
 from flext_tools.discovery.config import ConfigFileDiscovery
 from flext_tools.discovery.python import PythonImportDiscovery
@@ -11,7 +10,6 @@ from flext_tools.utils import (
     Colors,
     get_stdlib_modules,
     print_colored,
-    should_ignore_path,
 )
 
 
@@ -27,7 +25,7 @@ class DependencyDiscovery:
             self.transitive_resolver = TransitiveDependencyResolver()
 
     def discover_project_dependencies(
-        self, project_path: Path, include_dev: bool = True, include_test: bool = True
+        self, project_path: Path, include_dev: bool = True, include_test: bool = True,
     ) -> dict[str, set[str]]:
         """
         Descobre todas as dependências de um projeto.
@@ -62,7 +60,7 @@ class DependencyDiscovery:
 
         if include_test:
             result["test"] = python_deps.get("test", set()) | config_deps.get(
-                "test", set()
+                "test", set(),
             )
 
         if include_dev:
@@ -85,7 +83,7 @@ class DependencyDiscovery:
                     dep
                     for dep in result[category]
                     if not self._is_dependency_available_transitively(
-                        dep, available_transitive
+                        dep, available_transitive,
                     )
                 }
                 removed_count = original_count - len(result[category])
@@ -114,7 +112,7 @@ class DependencyDiscovery:
             return installed
 
         try:
-            with open(pyproject_path, "rb") as f:
+            with Path(pyproject_path).open("rb") as f:
                 data = tomllib.load(f)
 
             # CORREÇÃO CRÍTICA: Suporte para PEP 621 (project.dependencies)
@@ -190,7 +188,7 @@ class DependencyDiscovery:
         installed.add(dep_name.replace("_", "-"))
 
     def _is_dependency_available_transitively(
-        self, package: str, available_transitive: set[str]
+        self, package: str, available_transitive: set[str],
     ) -> bool:
         """Verifica se uma dependência está disponível transitivamente."""
         variations = {

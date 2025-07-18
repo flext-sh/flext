@@ -23,7 +23,7 @@ def load_staging_environment():
 
     # Parse .env file manually
     env_vars = {}
-    with open(staging_env_file, encoding="utf-8") as f:
+    with Path(staging_env_file).open(encoding="utf-8") as f:
         for line in f:
             line = line.strip()
             if line and not line.startswith("#") and "=" in line:

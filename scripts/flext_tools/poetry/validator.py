@@ -3,7 +3,6 @@
 import subprocess
 import tomllib
 from pathlib import Path
-from typing import Dict, List, Optional, Set, Tuple
 
 from flext_tools.utils import Colors, print_colored
 
@@ -39,7 +38,7 @@ class PoetryValidator:
 
         # Carrega e valida conteúdo
         try:
-            with open(pyproject_path, "rb") as f:
+            with Path(pyproject_path).open("rb") as f:
                 data = tomllib.load(f)
 
             # Valida estrutura Poetry
@@ -75,7 +74,7 @@ class PoetryValidator:
     def _validate_toml_syntax(self, file_path: Path) -> tuple[bool, str | None]:
         """Valida sintaxe TOML."""
         try:
-            with open(file_path, "rb") as f:
+            with Path(file_path).open("rb") as f:
                 tomllib.load(f)
             return True, None
         except tomllib.TOMLDecodeError as e:
@@ -135,7 +134,7 @@ class PoetryValidator:
             version = poetry["version"]
             if not self._is_valid_version(version):
                 issues.append(
-                    f"Versão '{version}' não segue o padrão semântico (x.y.z)"
+                    f"Versão '{version}' não segue o padrão semântico (x.y.z)",
                 )
 
         return len(issues) == 0, issues
@@ -171,7 +170,7 @@ class PoetryValidator:
                     and "path" not in spec
                 ):
                     issues.append(
-                        f"Dependência '{name}' no grupo '{group_name}' sem especificação de versão"
+                        f"Dependência '{name}' no grupo '{group_name}' sem especificação de versão",
                     )
 
         return len(issues) == 0, issues

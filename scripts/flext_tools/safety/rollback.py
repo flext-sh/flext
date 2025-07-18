@@ -1,10 +1,10 @@
 """Sistema de rollback para operações críticas"""
 
+import hashlib
 import json
 import operator
 import shutil
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
 
 from flext_tools.utils import Colors, print_colored
 
@@ -19,7 +19,8 @@ class RollbackManager:
             self.backup_dir = Path.cwd() / ".flext_backups"
 
         if not self.backup_dir.exists():
-            raise FileNotFoundError("Diretório de backup não encontrado")
+            msg = "Diretório de backup não encontrado"
+            raise FileNotFoundError(msg)
 
     def list_sessions(self) -> list[dict]:
         """Lista todas as sessões de backup disponíveis."""
@@ -29,7 +30,7 @@ class RollbackManager:
             log_file = session_dir / "operations_log.json"
             if log_file.exists():
                 try:
-                    with open(log_file, encoding="utf-8") as f:
+                    with Path(log_file).open(encoding="utf-8") as f:
                         log_data = json.load(f)
 
                     session_info = {
@@ -44,7 +45,7 @@ class RollbackManager:
 
                 except Exception as e:
                     print_colored(
-                        f"  ⚠️ Erro ao ler sessão {session_dir.name}: {e}", Colors.YELLOW
+                        f"  ⚠️ Erro ao ler sessão {session_dir.name}: {e}", Colors.YELLOW,
                     )
 
         return sorted(sessions, key=operator.itemgetter("session_id"), reverse=True)
@@ -75,7 +76,7 @@ class RollbackManager:
             # Verifica integridade do backup
             if not self._verify_backup_integrity(backup_path, operation):
                 print_colored(
-                    f"⚠️ Integridade do backup comprometida: {backup_id}", Colors.YELLOW
+                    f"⚠️ Integridade do backup comprometida: {backup_id}", Colors.YELLOW,
                 )
                 response = input("Continuar mesmo assim? (s/N): ")
                 if response.lower() not in {"s", "sim", "y", "yes"}:
@@ -84,11 +85,11 @@ class RollbackManager:
             # Cria backup do estado atual antes de restaurar
             if original_path.exists():
                 current_backup = original_path.with_suffix(
-                    f"{original_path.suffix}.pre_rollback"
+                    f"{original_path.suffix}.pre_rollback",
                 )
                 shutil.copy2(original_path, current_backup)
                 print_colored(
-                    f"  📁 Estado atual salvo em: {current_backup}", Colors.CYAN
+                    f"  📁 Estado atual salvo em: {current_backup}", Colors.CYAN,
                 )
 
             # Restaura arquivo
@@ -102,7 +103,7 @@ class RollbackManager:
             return False
 
     def rollback_session(
-        self, session_id: str, confirm: bool = False
+        self, session_id: str, confirm: bool = False,
     ) -> tuple[int, int]:
         """
         Restaura todos os arquivos de uma sessão.
@@ -121,7 +122,7 @@ class RollbackManager:
             print_colored(f"❌ Sessão {session_id} não encontrada", Colors.RED)
             return 0, 0
 
-        with open(log_file, encoding="utf-8") as f:
+        with Path(log_file).open(encoding="utf-8") as f:
             log_data = json.load(f)
 
         operations = log_data["operations"]
@@ -175,23 +176,23 @@ class RollbackManager:
 
         if not restore_file.exists():
             print_colored(
-                f"❌ Ponto de restauração {restore_point_id} não encontrado", Colors.RED
+                f"❌ Ponto de restauração {restore_point_id} não encontrado", Colors.RED,
             )
             return 0, 0
 
-        with open(restore_file, encoding="utf-8") as f:
+        with Path(restore_file).open(encoding="utf-8") as f:
             restore_data = json.load(f)
 
         operations_count = restore_data["operations_count"]
 
         print_colored(
-            f"🔄 Restaurando até ponto: {restore_data['description']}", Colors.BLUE
+            f"🔄 Restaurando até ponto: {restore_data['description']}", Colors.BLUE,
         )
         print_colored(f"   Operações até o ponto: {operations_count}", Colors.CYAN)
 
         # Carrega log de operações
         log_file = session_dir / "operations_log.json"
-        with open(log_file, encoding="utf-8") as f:
+        with Path(log_file).open(encoding="utf-8") as f:
             log_data = json.load(f)
 
         # Restaura apenas operações até o ponto
@@ -234,7 +235,7 @@ class RollbackManager:
             result["issues"].append("Log de operações não encontrado")
             return result
 
-        with open(log_file, encoding="utf-8") as f:
+        with Path(log_file).open(encoding="utf-8") as f:
             log_data = json.load(f)
 
         for operation in log_data["operations"]:
@@ -267,7 +268,7 @@ class RollbackManager:
         if not log_file.exists():
             return None
 
-        with open(log_file, encoding="utf-8") as f:
+        with Path(log_file).open(encoding="utf-8") as f:
             log_data = json.load(f)
 
         for operation in log_data["operations"]:
@@ -290,10 +291,9 @@ class RollbackManager:
 
     def _calculate_hash(self, file_path: Path) -> str:
         """Calcula hash do arquivo."""
-        import hashlib
 
         hash_md5 = hashlib.md5()
-        with open(file_path, "rb") as f:
+        with Path(file_path).open("rb") as f:
             for chunk in iter(lambda: f.read(4096), b""):
                 hash_md5.update(chunk)
         return hash_md5.hexdigest()

@@ -14,42 +14,28 @@ import os
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
-from pydantic import Field, field_validator
-from pydantic_settings import SettingsConfigDict
-
 # Import flext-core components
 from flext_core.config.base import BaseSettings
 from flext_core.domain.constants import ConfigDefaults
-from flext_core.domain.pydantic_base import DomainBaseModel
-
-# Import Oracle WMS specific types from flext-core
-from flext_core.domain.typedefs import (
-    URL,
-    WMSAuthMethod,
-    WMSBatchSize,
-    WMSConcurrency,
-    WMSHost,
-    WMSPoolMinSize,
-)
+from pydantic import Field, field_validator
+from pydantic_settings import SettingsConfigDict
 
 if TYPE_CHECKING:
-    from pydantic import HttpUrl
-
     from flext_core.domain.typedefs import (
-        NonNegativeInt,
         PositiveInt,
         TimeoutSeconds,
         WMSAPIVersion,
         WMSPageSize,
         WMSPassword,
-        WMSPoolMaxSize,
-        WMSPoolTimeout,
         WMSRateLimit,
         WMSRetryAttempts,
         WMSRetryDelay,
         WMSTimeout,
         WMSUsername,
     )
+    from pydantic import HttpUrl
+
+# Import Oracle WMS specific types from flext-core
 
 
 class OracleWMSConfig(BaseSettings):
@@ -77,17 +63,17 @@ class OracleWMSConfig(BaseSettings):
         description="Oracle WMS base URL (e.g., https://ta29.wms.ocs.oraclecloud.com/raizen_test)",
     )
     api_version: WMSAPIVersion = Field(
-        default="v10", description="Oracle WMS API version"
+        default="v10", description="Oracle WMS API version",
     )
     username: WMSUsername = Field(..., description="Oracle WMS API username")
     password: WMSPassword = Field(..., description="Oracle WMS API password")
 
     # === WMS Organization Configuration ===
     company_code: str = Field(
-        default="*", description="WMS company code (* for all companies)"
+        default="*", description="WMS company code (* for all companies)",
     )
     facility_code: str = Field(
-        default="*", description="WMS facility code (* for all facilities)"
+        default="*", description="WMS facility code (* for all facilities)",
     )
 
     # === Performance Configuration using flext-core WMS types ===
@@ -110,42 +96,42 @@ class OracleWMSConfig(BaseSettings):
 
     # === WMS Rate Limiting ===
     enable_rate_limiting: bool = Field(
-        default=True, description="Enable WMS API rate limiting"
+        default=True, description="Enable WMS API rate limiting",
     )
     max_requests_per_minute: WMSRateLimit = Field(
-        default=60, description="Max WMS requests per minute"
+        default=60, description="Max WMS requests per minute",
     )
     min_request_delay: WMSRetryDelay = Field(
-        default=0.1, description="Minimum delay between WMS requests"
+        default=0.1, description="Minimum delay between WMS requests",
     )
 
     # === Security Configuration ===
     verify_ssl: bool = Field(default=True, description="Verify SSL certificates")
     ssl_cert_path: Path | None = Field(
-        default=None, description="Path to SSL certificate file"
+        default=None, description="Path to SSL certificate file",
     )
 
     # === Logging and Observability ===
     log_level: str = Field(default="INFO", description="Logging level")
     enable_request_logging: bool = Field(
-        default=False, description="Log detailed API request/response information"
+        default=False, description="Log detailed API request/response information",
     )
     enable_metrics: bool = Field(default=True, description="Enable metrics collection")
 
     # === Discovery Configuration ===
     auto_discover: bool = Field(
-        default=True, description="Enable automatic schema discovery"
+        default=True, description="Enable automatic schema discovery",
     )
     include_metadata: bool = Field(
-        default=True, description="Include metadata in responses"
+        default=True, description="Include metadata in responses",
     )
 
     # === Connection Pool Configuration ===
-    pool_size: WMSPoolMaxSize = Field(
-        default=5, description="HTTP connection pool size"
+    pool_size: PositiveInt = Field(
+        default=5, description="HTTP connection pool size",
     )
-    pool_timeout: WMSPoolTimeout = Field(
-        default=30.0, description="Connection pool timeout"
+    pool_timeout: TimeoutSeconds = Field(
+        default=30.0, description="Connection pool timeout",
     )
 
     # === Version Information ===
@@ -157,7 +143,8 @@ class OracleWMSConfig(BaseSettings):
         """Validate Oracle WMS base URL format."""
         url_str = str(v)
         if not url_str.startswith(("http://", "https://")):
-            raise ValueError("Base URL must start with http:// or https://")
+            msg = "Base URL must start with http:// or https://"
+            raise ValueError(msg)
 
         # Validate Oracle WMS URL pattern
         if ".wms.ocs.oraclecloud.com" not in url_str:
@@ -165,8 +152,9 @@ class OracleWMSConfig(BaseSettings):
             if not any(
                 env in url_str for env in ["localhost", "test", "dev", "staging"]
             ):
+                msg = "URL does not appear to be a valid Oracle WMS endpoint"
                 raise ValueError(
-                    "URL does not appear to be a valid Oracle WMS endpoint"
+                    msg,
                 )
 
         return v
@@ -177,7 +165,8 @@ class OracleWMSConfig(BaseSettings):
         """Validate log level."""
         valid_levels = {"DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"}
         if v.upper() not in valid_levels:
-            raise ValueError(f"Log level must be one of: {', '.join(valid_levels)}")
+            msg = f"Log level must be one of: {', '.join(valid_levels)}"
+            raise ValueError(msg)
         return v.upper()
 
     @property
@@ -247,7 +236,7 @@ def load_config() -> OracleWMSConfig:
     current_dir = os.getcwd()
 
     for _ in range(5):  # Search up to 5 levels up
-        potential_env = os.path.join(current_dir, ".env")
+        potential_env = Path(current_dir) / ".env"
         if Path(potential_env).exists():
             env_file = potential_env
             break
@@ -258,5 +247,5 @@ def load_config() -> OracleWMSConfig:
     return OracleWMSConfig()
 
 
-# Rebuild the model to resolve forward references
+# Rebuild the model to ensure all types are properly resolved
 OracleWMSConfig.model_rebuild()

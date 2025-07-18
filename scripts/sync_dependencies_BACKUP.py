@@ -17,7 +17,6 @@ from flext_tools import (
     DependencyDiscovery,
     PoetryOperations,
     PoetryValidator,
-    VersionAnalyzer,
     cached,
     print_colored,
 )
@@ -56,7 +55,7 @@ def main():
                     "cookiecutter",
                 ]
             )
-        ]
+        ],
     )
 
     if not projects:
@@ -105,17 +104,17 @@ def main():
     stats = conflicts["stats"]
 
     print_colored(
-        f"  📊 {stats['packages_with_conflicts']} pacotes com conflitos", Colors.CYAN
+        f"  📊 {stats['packages_with_conflicts']} pacotes com conflitos", Colors.CYAN,
     )
     print_colored(
-        f"  🚫 {stats['blocking_packages']} pacotes bloqueadores", Colors.CYAN
+        f"  🚫 {stats['blocking_packages']} pacotes bloqueadores", Colors.CYAN,
     )
 
     # Mostra top 5 conflitos
     if conflicts["version_conflicts"]:
         print_colored("\n  ⚠️ Top 5 conflitos:", Colors.YELLOW)
         for i, (package, data) in enumerate(
-            list(conflicts["version_conflicts"].items())[:5]
+            list(conflicts["version_conflicts"].items())[:5],
         ):
             print(f"    {i + 1}. {package}: {len(data['projects'])} projetos")
 
@@ -124,7 +123,7 @@ def main():
         if "--report" in sys.argv:
             report_path = Path("conflict_report.md")
             report = analyzer.generate_conflict_report(conflicts)
-            with open(report_path, "w", encoding="utf-8") as f:
+            with Path(report_path).open("w", encoding="utf-8") as f:
                 f.write(report)
             print_colored(f"\n📄 Relatório salvo em: {report_path}", Colors.GREEN)
         return 0
@@ -136,7 +135,7 @@ def main():
     @cached(namespace="discovery", ttl=300)
     def discover_project_deps(project_path: Path):
         return discovery.discover_project_dependencies(
-            project_path, include_dev=True, include_test=True
+            project_path, include_dev=True, include_test=True,
         )
 
     all_missing = {}
@@ -150,7 +149,7 @@ def main():
             all_missing[project] = missing
             total_missing += project_total
             print_colored(
-                f"  • {project.name}: {project_total} faltantes", Colors.YELLOW
+                f"  • {project.name}: {project_total} faltantes", Colors.YELLOW,
             )
         else:
             print_colored(f"  • {project.name}: ✅ completo", Colors.GREEN)
@@ -178,7 +177,7 @@ def main():
             print_colored(f"\n  📦 Processando {project.name}...", Colors.CYAN)
 
             added = poetry_ops.add_dependencies(
-                project, missing_deps, auto_confirm=auto
+                project, missing_deps, auto_confirm=auto,
             )
 
             # Atualiza contadores
@@ -194,7 +193,7 @@ def main():
 
     elif all_missing and dry_run:
         print_colored(
-            "\n4️⃣ Simulação: dependências que seriam adicionadas", Colors.YELLOW
+            "\n4️⃣ Simulação: dependências que seriam adicionadas", Colors.YELLOW,
         )
         for project, missing_deps in all_missing.items():
             project_total = sum(len(deps) for deps in missing_deps.values())
@@ -206,7 +205,7 @@ def main():
 
         if not auto and not dry_run:
             print_colored(
-                "⚠️ Isto pode alterar versões de dependências existentes!", Colors.YELLOW
+                "⚠️ Isto pode alterar versões de dependências existentes!", Colors.YELLOW,
             )
             response = input("Deseja continuar? (s/N): ")
             if response.lower() not in {"s", "sim", "y", "yes"}:
@@ -229,7 +228,7 @@ def main():
 
             if project_resolutions:
                 success = poetry_ops.update_dependency_versions(
-                    project, project_resolutions
+                    project, project_resolutions,
                 )
                 if success:
                     resolved_count += len(project_resolutions)
@@ -240,7 +239,7 @@ def main():
 
         action = "seriam aplicadas" if dry_run else "aplicadas"
         print_colored(
-            f"\n  📊 Total: {resolved_count} resoluções {action}", Colors.CYAN
+            f"\n  📊 Total: {resolved_count} resoluções {action}", Colors.CYAN,
         )
 
     # Estatísticas finais

@@ -103,7 +103,7 @@ def perform_rollback(session_id: str, confirm: bool = False):
         print_colored(f"\n🔄 Iniciando rollback da sessão {session_id}...", Colors.BLUE)
 
         success_count, failure_count = rollback.rollback_session(
-            session_id, confirm=True
+            session_id, confirm=True,
         )
 
         if failure_count == 0:
@@ -112,7 +112,7 @@ def perform_rollback(session_id: str, confirm: bool = False):
         else:
             print_colored("\n⚠️ Rollback parcialmente concluído", Colors.YELLOW)
             print_colored(
-                f"📊 Sucessos: {success_count}, Falhas: {failure_count}", Colors.CYAN
+                f"📊 Sucessos: {success_count}, Falhas: {failure_count}", Colors.CYAN,
             )
 
         return failure_count == 0
@@ -196,7 +196,7 @@ def main():
             perform_rollback(session_id)
         else:
             print_colored(
-                "❌ Rollback bloqueado por problemas de segurança", Colors.RED
+                "❌ Rollback bloqueado por problemas de segurança", Colors.RED,
             )
             return 1
 

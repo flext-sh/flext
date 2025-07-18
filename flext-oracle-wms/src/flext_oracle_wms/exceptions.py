@@ -172,7 +172,7 @@ class EntityNotFoundError(OracleWMSError):
         """
         message = message or f"Oracle WMS entity '{entity_name}' not found"
         super().__init__(
-            message, error_code="ENTITY_NOT_FOUND", entity_name=entity_name, **kwargs
+            message, error_code="ENTITY_NOT_FOUND", entity_name=entity_name, **kwargs,
         )
 
 

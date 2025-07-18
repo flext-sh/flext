@@ -7,7 +7,7 @@ from dataclasses import asdict, dataclass
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 
 from flext_tools.utils.colors import Colors, print_colored
 
@@ -84,7 +84,7 @@ class DetailedLogger:
         if self.enable_file:
             # Handler para arquivo geral
             file_handler = logging.FileHandler(
-                self.log_dir / f"general_{self.session_id}.log", encoding="utf-8"
+                self.log_dir / f"general_{self.session_id}.log", encoding="utf-8",
             )
             file_handler.setLevel(logging.DEBUG)
 
@@ -205,7 +205,7 @@ class DetailedLogger:
 
         # Salva operação completa no log de operações
         self._save_operation_log(
-            self.current_operation, success, duration_ms, result_details, error_message
+            self.current_operation, success, duration_ms, result_details, error_message,
         )
 
         self.current_operation = None
@@ -247,7 +247,7 @@ class DetailedLogger:
 
         # Log específico de segurança
         self._save_security_log(
-            event_type, description, risk_level, details, action_taken
+            event_type, description, risk_level, details, action_taken,
         )
 
     def log_backup_operation(
@@ -457,7 +457,7 @@ class DetailedLogger:
         if entry.level in {"ERROR", "CRITICAL", "SECURITY"}:
             if "error_message" in entry.details:
                 print_colored(
-                    f"         ERROR   | {entry.details['error_message']}", Colors.RED
+                    f"         ERROR   | {entry.details['error_message']}", Colors.RED,
                 )
 
     def _flush_buffer(self):
@@ -472,7 +472,7 @@ class DetailedLogger:
         existing_entries = []
         if self.session_log_file.exists():
             try:
-                with open(self.session_log_file, encoding="utf-8") as f:
+                with Path(self.session_log_file).open(encoding="utf-8") as f:
                     existing_entries = json.load(f)
             except (json.JSONDecodeError, Exception):
                 existing_entries = []
@@ -481,7 +481,7 @@ class DetailedLogger:
         existing_entries.extend(entries_dict)
 
         # Salva arquivo atualizado
-        with open(self.session_log_file, "w", encoding="utf-8") as f:
+        with Path(self.session_log_file).open("w", encoding="utf-8") as f:
             json.dump(existing_entries, f, indent=2, ensure_ascii=False)
 
         self.log_buffer.clear()
@@ -515,7 +515,7 @@ class DetailedLogger:
         existing_operations = []
         if self.operations_log_file.exists():
             try:
-                with open(self.operations_log_file, encoding="utf-8") as f:
+                with Path(self.operations_log_file).open(encoding="utf-8") as f:
                     existing_operations = json.load(f)
             except:
                 existing_operations = []
@@ -523,7 +523,7 @@ class DetailedLogger:
         existing_operations.append(operation_entry)
 
         # Salva arquivo atualizado
-        with open(self.operations_log_file, "w", encoding="utf-8") as f:
+        with Path(self.operations_log_file).open("w", encoding="utf-8") as f:
             json.dump(existing_operations, f, indent=2, ensure_ascii=False)
 
     def _save_security_log(
@@ -552,7 +552,7 @@ class DetailedLogger:
         existing_events = []
         if self.security_log_file.exists():
             try:
-                with open(self.security_log_file, encoding="utf-8") as f:
+                with Path(self.security_log_file).open(encoding="utf-8") as f:
                     existing_events = json.load(f)
             except:
                 existing_events = []
@@ -560,7 +560,7 @@ class DetailedLogger:
         existing_events.append(security_entry)
 
         # Salva arquivo atualizado
-        with open(self.security_log_file, "w", encoding="utf-8") as f:
+        with Path(self.security_log_file).open("w", encoding="utf-8") as f:
             json.dump(existing_events, f, indent=2, ensure_ascii=False)
 
     def close(self):
@@ -606,7 +606,7 @@ _global_logger: DetailedLogger | None = None
 
 
 def get_logger(
-    session_id: str | None = None, log_dir: Path | None = None
+    session_id: str | None = None, log_dir: Path | None = None,
 ) -> DetailedLogger:
     """Obtém logger global ou cria novo."""
     global _global_logger
@@ -639,7 +639,7 @@ def log_operation(
             try:
                 result = func(*args, **kwargs)
                 logger.end_operation(
-                    success=True, result_details={"result": str(result)}
+                    success=True, result_details={"result": str(result)},
                 )
                 return result
             except Exception as e:

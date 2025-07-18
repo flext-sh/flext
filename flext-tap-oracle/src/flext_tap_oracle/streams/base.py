@@ -73,7 +73,7 @@ class BaseOracleStream(Stream):
             self._batch_size = getattr(self.tap.config, "batch_size", 10000)
             self._query_timeout = getattr(self.tap.config, "query_timeout", 300)
             self._enable_circuit_breaker = getattr(
-                self.tap.config, "enable_circuit_breaker", True
+                self.tap.config, "enable_circuit_breaker", True,
             )
             self._enable_metrics = getattr(self.tap.config, "enable_metrics", True)
         else:
@@ -134,15 +134,18 @@ class BaseOracleStream(Stream):
             OracleConnectionError: If circuit breaker is open
         """
         if self.is_circuit_breaker_open:
-            raise OracleConnectionError(
+            msg = (
                 f"Circuit breaker is open for stream {self.name}. "
                 f"Too many failures ({self._circuit_breaker_failures}). "
                 f"Will retry after {self._circuit_breaker_timeout} seconds."
             )
+            raise OracleConnectionError(
+                msg,
+            )
 
     @track_performance("oracle_stream.get_records")
     def get_records(
-        self, context: dict[str, Any] | None = None
+        self, context: dict[str, Any] | None = None,
     ) -> Iterable[dict[str, Any]]:
         """Get records with enterprise error handling and monitoring.
 
@@ -185,8 +188,9 @@ class BaseOracleStream(Stream):
                 raise
             else:
                 # Wrap other exceptions
+                msg = f"Error reading from stream {self.name}: {e}"
                 raise OracleQueryError(
-                    f"Error reading from stream {self.name}: {e}",
+                    msg,
                     context={
                         "stream_name": self.name,
                         "records_processed": self._records_processed,
@@ -199,7 +203,7 @@ class BaseOracleStream(Stream):
                 self._log_final_metrics()
 
     def _get_records_impl(
-        self, context: dict[str, Any] | None = None
+        self, context: dict[str, Any] | None = None,
     ) -> Iterable[dict[str, Any]]:
         """Implementation-specific record retrieval.
 
@@ -212,7 +216,8 @@ class BaseOracleStream(Stream):
         Yields:
             Record dictionaries
         """
-        raise NotImplementedError("Subclasses must implement _get_records_impl")
+        msg = "Subclasses must implement _get_records_impl"
+        raise NotImplementedError(msg)
 
     def _log_performance_metrics(self) -> None:
         """Log current performance metrics."""
@@ -312,8 +317,9 @@ class BaseOracleStream(Stream):
             and self._records_processed > min_records_for_check
             and elapsed > min_elapsed_time
         ):
+            msg = f"Stream {self.name} performance below threshold"
             raise OraclePerformanceError(
-                f"Stream {self.name} performance below threshold",
+                msg,
                 query_time=elapsed,
                 threshold=threshold_records_per_second,
                 rows_affected=self._records_processed,

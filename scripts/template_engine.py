@@ -31,7 +31,8 @@ class TemplateEngine:
         self.templates_dir = workspace_root / "scripts" / "templates"
 
         if not JINJA2_AVAILABLE:
-            raise ImportError("Jinja2 is required. Install with: pip install jinja2")
+            msg = "Jinja2 is required. Install with: pip install jinja2"
+            raise ImportError(msg)
 
         # Initialize Jinja2 environment
         self.env = Environment(
@@ -110,7 +111,7 @@ class TemplateEngine:
             "projects": projects,
             "total_projects": len(projects),
             "projects_processed": len(
-                [p for p in projects if p.get("status") != "skipped"]
+                [p for p in projects if p.get("status") != "skipped"],
             ),
             "success_rate": (
                 round(
@@ -145,7 +146,7 @@ class TemplateEngine:
             "package_name": package_name.replace("-", "_"),
             "python_version": python_version,
             "python_version_for_mypy": python_version.replace("py", "").replace(
-                "3", "3."
+                "3", "3.",
             ),
             "strict_typing": strict_typing,
             "coverage_threshold": coverage_threshold,
@@ -245,14 +246,14 @@ if __name__ == "__main__":
 
     # Test Makefile enhancement
     makefile_content = engine.render_makefile_enhancement(
-        project_name="flext-tap-ldap", project_type="singer_project"
+        project_name="flext-tap-ldap", project_type="singer_project",
     )
     print("=== MAKEFILE ENHANCEMENT ===")
     print(makefile_content[:200] + "...")
 
     # Test Python implementation
     python_code = engine.render_python_implementation(
-        method_name="store_user_data", method_type="auto"
+        method_name="store_user_data", method_type="auto",
     )
     print("\n=== PYTHON IMPLEMENTATION ===")
     print(python_code)
@@ -263,7 +264,7 @@ if __name__ == "__main__":
         {"name": "flext-api", "status": "success", "category": "core"},
     ]
     report = engine.render_quality_report(
-        report_title="FLEXT Quality Report", projects=projects
+        report_title="FLEXT Quality Report", projects=projects,
     )
     print("\n=== QUALITY REPORT ===")
     print(report[:300] + "...")

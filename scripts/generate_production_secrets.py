@@ -3,7 +3,6 @@
 
 import base64
 import json
-import os
 import secrets
 import string
 from pathlib import Path
@@ -62,7 +61,7 @@ def create_production_secrets() -> dict:
 
 
 def create_secrets_vault(
-    secrets_data: dict, vault_password: str, output_file: Path
+    secrets_data: dict, vault_password: str, output_file: Path,
 ) -> None:
     """Create an encrypted secrets vault."""
     # Create encryption key from password
@@ -89,7 +88,7 @@ def create_secrets_vault(
         "version": "1.0",
     }
 
-    with open(output_file, "w", encoding="utf-8") as f:
+    with Path(output_file).open("w", encoding="utf-8") as f:
         json.dump(vault_data, f, indent=2)
 
     print(f"✅ Encrypted secrets vault created: {output_file}")
@@ -233,10 +232,10 @@ CSRF_TRUSTED_ORIGINS=["https://app.flext.com","https://admin.flext.com"]
     api_env_file = project_root / "flext-api" / ".env.production"
     web_env_file = project_root / "flext-web" / ".env.production"
 
-    with open(api_env_file, "w", encoding="utf-8") as f:
+    with Path(api_env_file).open("w", encoding="utf-8") as f:
         f.write(api_env_content)
 
-    with open(web_env_file, "w", encoding="utf-8") as f:
+    with Path(web_env_file).open("w", encoding="utf-8") as f:
         f.write(web_env_content)
 
     print(f"✅ Production API config: {api_env_file}")
@@ -286,7 +285,7 @@ def main():
     }
 
     summary_file = project_root / "secrets" / "production_secrets_summary.json"
-    with open(summary_file, "w", encoding="utf-8") as f:
+    with Path(summary_file).open("w", encoding="utf-8") as f:
         json.dump(summary, f, indent=2)
 
     print(f"\n📋 Secrets summary: {summary_file}")

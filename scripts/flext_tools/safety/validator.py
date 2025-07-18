@@ -2,9 +2,6 @@
 
 import subprocess
 from pathlib import Path
-from typing import Dict, List, Optional, Set, Tuple
-
-from flext_tools.utils import Colors, print_colored
 
 
 class SafetyValidator:
@@ -130,7 +127,7 @@ class SafetyValidator:
         return is_safe, warnings
 
     def validate_dependency_addition(
-        self, project_path: Path, dependencies: dict[str, set[str]]
+        self, project_path: Path, dependencies: dict[str, set[str]],
     ) -> tuple[bool, dict[str, list[str]]]:
         """
         Valida adição de dependências a um projeto.
@@ -166,7 +163,7 @@ class SafetyValidator:
         return all_safe, warnings_by_category
 
     def validate_poetry_operation(
-        self, project_path: Path, operation: str
+        self, project_path: Path, operation: str,
     ) -> tuple[bool, list[str]]:
         """
         Valida se uma operação Poetry pode ser executada com segurança.
@@ -213,7 +210,7 @@ class SafetyValidator:
         return is_safe, warnings
 
     def pre_operation_check(
-        self, project_path: Path, operation_type: str, details: dict
+        self, project_path: Path, operation_type: str, details: dict,
     ) -> dict[str, any]:
         """
         Verificação completa antes de operação crítica.
@@ -366,7 +363,7 @@ class SafetyValidator:
             if not pyproject_path.exists():
                 return False
 
-            with open(pyproject_path, "rb") as f:
+            with Path(pyproject_path).open("rb") as f:
                 data = tomllib.load(f)
 
             # Verifica estrutura básica
@@ -410,7 +407,7 @@ class SafetyValidator:
         return conflicts
 
     def _validate_project_specific(
-        self, project_path: Path, dependencies: dict[str, set[str]]
+        self, project_path: Path, dependencies: dict[str, set[str]],
     ) -> list[str]:
         """Validações específicas do projeto."""
         warnings = []
@@ -420,7 +417,7 @@ class SafetyValidator:
             import tomllib
 
             pyproject_path = project_path / "pyproject.toml"
-            with open(pyproject_path, "rb") as f:
+            with Path(pyproject_path).open("rb") as f:
                 data = tomllib.load(f)
 
             existing_deps = set()

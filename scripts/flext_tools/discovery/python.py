@@ -3,7 +3,6 @@
 import ast
 import re
 from pathlib import Path
-from typing import Dict, Optional, Set
 
 from flext_tools.utils import Colors, print_colored, should_ignore_path
 
@@ -124,7 +123,7 @@ class PythonImportDiscovery:
         imports = set()
 
         try:
-            with open(py_file, encoding="utf-8", errors="ignore") as f:
+            with Path(py_file).open(encoding="utf-8", errors="ignore") as f:
                 content = f.read()
 
             # Tenta usar AST primeiro
@@ -141,7 +140,7 @@ class PythonImportDiscovery:
                 import_patterns = [
                     re.compile(r"^import\s+([a-zA-Z_][a-zA-Z0-9_]*)", re.MULTILINE),
                     re.compile(
-                        r"^from\s+([a-zA-Z_][a-zA-Z0-9_]*)\s+import", re.MULTILINE
+                        r"^from\s+([a-zA-Z_][a-zA-Z0-9_]*)\s+import", re.MULTILINE,
                     ),
                 ]
                 for pattern in import_patterns:
@@ -150,7 +149,7 @@ class PythonImportDiscovery:
 
         except Exception as e:
             print_colored(
-                f"    ⚠️ Erro ao analisar {py_file.name}: {str(e)[:50]}", Colors.YELLOW
+                f"    ⚠️ Erro ao analisar {py_file.name}: {str(e)[:50]}", Colors.YELLOW,
             )
 
         return imports
@@ -202,7 +201,7 @@ class PythonImportDiscovery:
         workspace_path = project_path.parent
         for workspace_project in workspace_path.iterdir():
             if workspace_project.is_dir() and workspace_project.name.startswith(
-                "flext-"
+                "flext-",
             ):
                 project_module = workspace_project.name.replace("-", "_")
                 if module_name.startswith(project_module):

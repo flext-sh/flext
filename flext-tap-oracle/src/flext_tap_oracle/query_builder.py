@@ -102,7 +102,7 @@ class SimpleOracleQueryBuilder:
         """
         # Build base query
         sql, params = self.build_table_query(
-            table_name=table_name, schema_name=schema_name, columns=columns, limit=limit
+            table_name=table_name, schema_name=schema_name, columns=columns, limit=limit,
         )
 
         # Add incremental condition
@@ -131,7 +131,7 @@ class SimpleOracleQueryBuilder:
         return sql, params
 
     def build_discovery_query(
-        self, schema_name: str | None = None
+        self, schema_name: str | None = None,
     ) -> tuple[str, dict[str, Any]]:
         """Build query to discover tables in schema.
 
@@ -161,7 +161,7 @@ class SimpleOracleQueryBuilder:
         return sql, params
 
     def build_schema_query(
-        self, table_name: str, schema_name: str | None = None
+        self, table_name: str, schema_name: str | None = None,
     ) -> tuple[str, dict[str, Any]]:
         """Build query to get table schema information.
 
@@ -294,7 +294,7 @@ class SimpleOracleQueryBuilder:
         return True
 
     def get_query_stats(
-        self, query: str, params: dict[str, Any] | None = None
+        self, query: str, params: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         """Get query statistics for monitoring.
 

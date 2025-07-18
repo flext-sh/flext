@@ -79,7 +79,7 @@ class QualityGatewayFinal:
             return 0
 
     def apply_tool_safely(
-        self, file_path: Path, tool_name: str, command: list[str]
+        self, file_path: Path, tool_name: str, command: list[str],
     ) -> tuple[bool, int, int, float]:
         """Aplica uma ferramenta com segurança.
 
@@ -112,7 +112,7 @@ class QualityGatewayFinal:
                 # REVERTER
                 file_path.write_text(backup_content, encoding="utf-8")
                 self._print(
-                    f"❌ {tool_name}: REVERTIDO ({before_issues} → {after_issues})"
+                    f"❌ {tool_name}: REVERTIDO ({before_issues} → {after_issues})",
                 )
                 return False, before_issues, before_issues, execution_time
 
@@ -120,7 +120,7 @@ class QualityGatewayFinal:
             improvement = before_issues - after_issues
             if improvement > 0:
                 self._print(
-                    f"✅ {tool_name}: -{improvement} issues em {execution_time:.1f}s"
+                    f"✅ {tool_name}: -{improvement} issues em {execution_time:.1f}s",
                 )
             else:
                 self._print(f"✅ {tool_name}: OK em {execution_time:.1f}s")
@@ -148,7 +148,7 @@ class QualityGatewayFinal:
         backup_path = file_path.with_suffix(file_path.suffix + ".qg_backup")
         try:
             backup_path.write_text(
-                file_path.read_text(encoding="utf-8"), encoding="utf-8"
+                file_path.read_text(encoding="utf-8"), encoding="utf-8",
             )
         except Exception as e:
             return {"success": False, "error": f"Erro criando backup: {e}"}
@@ -182,7 +182,7 @@ class QualityGatewayFinal:
 
         for tool_name, command in tools:
             success, before, after, exec_time = self.apply_tool_safely(
-                file_path, tool_name, command
+                file_path, tool_name, command,
             )
             total_time += exec_time
 
@@ -199,7 +199,7 @@ class QualityGatewayFinal:
             # Regressão geral - reverter tudo
             try:
                 file_path.write_text(
-                    backup_path.read_text(encoding="utf-8"), encoding="utf-8"
+                    backup_path.read_text(encoding="utf-8"), encoding="utf-8",
                 )
                 self._print(f"🚨 REGRESSÃO GERAL - Revertendo {file_path.name}")
                 final_issues = initial_issues
@@ -244,7 +244,7 @@ class QualityGatewayFinal:
             }
 
         self._print(
-            f"🎯 Processando {len(python_files)} arquivos em {project_path.name}"
+            f"🎯 Processando {len(python_files)} arquivos em {project_path.name}",
         )
 
         # Estatísticas
@@ -325,7 +325,7 @@ class QualityGatewayFinal:
     import argparse
 
     parser = argparse.ArgumentParser(
-        description="FLEXT Quality Gateway FINAL - Sistema Real e Otimizado"
+        description="FLEXT Quality Gateway FINAL - Sistema Real e Otimizado",
     )
     parser.add_argument(
         "--workspace",
@@ -372,16 +372,16 @@ class QualityGatewayFinal:
             print(f"\n🎯 Resultado Final - {args.project}:")
             print(f"  📁 Arquivos: {result['files_processed']}")
             print(
-                f"  🔧 Melhorados: {result['files_improved']} ({result['improvement_rate']:.1f}%)"
+                f"  🔧 Melhorados: {result['files_improved']} ({result['improvement_rate']:.1f}%)",
             )
             print(
-                f"  📊 Issues: {result['total_initial_issues']} → {result['total_final_issues']}"
+                f"  📊 Issues: {result['total_initial_issues']} → {result['total_final_issues']}",
             )
             print(f"  📈 Melhoria: {result['total_improvement']:+d}")
             print(f"  ⏱️  Tempo: {result['total_time']:.1f}s")
         else:
             print(
-                f"❌ Projeto {args.project} falhou: {result.get('error', 'Erro desconhecido')}"
+                f"❌ Projeto {args.project} falhou: {result.get('error', 'Erro desconhecido')}",
             )
 
     print("ℹ️  Use --file ou --project. Use --help para ajuda.")
