@@ -55,7 +55,8 @@ class VenvConsistencyValidator:
     def validate_venv_consistency(self) -> dict[str, list[VenvConflict]]:
         """Valida consistência do venv compartilhado."""
         print_colored(
-            "🔍 Validando consistência do virtual environment...", Colors.BLUE,
+            "🔍 Validando consistência do virtual environment...",
+            Colors.BLUE,
         )
 
         # 1. Verifica se venv existe
@@ -97,7 +98,8 @@ class VenvConsistencyValidator:
             return False
 
         print_colored(
-            f"✅ Virtual environment encontrado: {self.venv_path}", Colors.GREEN,
+            f"✅ Virtual environment encontrado: {self.venv_path}",
+            Colors.GREEN,
         )
         return True
 
@@ -283,7 +285,8 @@ class VenvConsistencyValidator:
             )
 
         print_colored(
-            f"    ✅ {len(self.conflicts)} conflitos identificados", Colors.GREEN,
+            f"    ✅ {len(self.conflicts)} conflitos identificados",
+            Colors.GREEN,
         )
 
     def _organize_conflicts_by_severity(self) -> dict[str, list[VenvConflict]]:
@@ -329,7 +332,8 @@ class VenvConsistencyValidator:
                 icon, color = "ℹ️", Colors.CYAN
 
             print_colored(
-                f"\n{icon} {severity.upper()}: {len(conflicts)} conflitos", color,
+                f"\n{icon} {severity.upper()}: {len(conflicts)} conflitos",
+                color,
             )
 
             for conflict in conflicts[:MAX_CONFLICTS_DISPLAY]:

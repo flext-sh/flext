@@ -28,6 +28,7 @@ from flext_core.config.unified_config import (
 from flext_core.domain.constants import ConfigDefaults
 from flext_core.domain.shared_types import (
     BatchSize,
+    Environment,
     Password,
     PositiveInt,
     RetryCount,
@@ -204,7 +205,7 @@ class OracleWMSConfig(
         """Create configuration optimized for testing."""
         return cls(
             project_name="flext-oracle-wms-test",
-            environment="testing",
+            environment=Environment.TEST,
             base_url="https://test.example.com",  # type: ignore[arg-type]
             username="test_user",
             password="test_password",

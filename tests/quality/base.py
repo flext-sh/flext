@@ -14,7 +14,9 @@ class BaseQualityAnalyzer:
     """Base class for quality analyzers."""
 
     def __init__(
-        self, workspace_root: str = "/home/marlonsc/flext", test_type: str = "generic",
+        self,
+        workspace_root: str = "/home/marlonsc/flext",
+        test_type: str = "generic",
     ) -> None:
         self.workspace_root = Path(workspace_root)
         self.test_type = test_type

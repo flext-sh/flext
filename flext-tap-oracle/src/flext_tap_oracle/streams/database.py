@@ -341,7 +341,9 @@ class OracleTableStream(BaseOracleStream):
             )
 
             if not result.is_success:
-                self._raise_query_execution_error(result.error, query)
+                self._raise_query_execution_error(
+                    result.error or "Unknown query error", query,
+                )
 
             results = result.data.rows if result.data and result.data.rows else []
 
@@ -571,7 +573,9 @@ class OracleTableStream(BaseOracleStream):
             )
 
             if not schema_result.is_success:
-                self._raise_schema_execution_error(schema_result.error, sql)
+                self._raise_schema_execution_error(
+                    schema_result.error or "Unknown schema error", sql,
+                )
 
             if schema_result.data and schema_result.data.rows:
                 results = schema_result.data.rows
