@@ -776,19 +776,16 @@ def main() -> None:
     )
 
     # Executar análise
-    if args.modules:
-        result = detector.analyze_modules(args.modules)
-    else:
-        result = detector.analyze_workspace()
+    result = detector.analyze_modules(args.modules) if args.modules else detector.analyze_workspace()
 
     # Gerar relatório
     detector.generate_report(result, args.output)
 
     # Verificar modo CI/CD
     if args.ci_mode:
-        critical_duplicates = len([
-            d for d in result.duplicates if d.similarity >= 0.95
-        ])
+        critical_duplicates = len(
+            [d for d in result.duplicates if d.similarity >= 0.95],
+        )
         if critical_duplicates > 0:
             print(
                 f"\n❌ CI/CD: {critical_duplicates} duplicações críticas encontradas!",

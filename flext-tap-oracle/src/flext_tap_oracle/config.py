@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from pydantic import ValidationInfo, field_validator
+from pydantic import ValidationInfo, field_validator, model_validator
 
 # Use flext-core configuration patterns
 from flext_core import (
@@ -355,6 +355,20 @@ class Config(BaseComponentConfig):
             )
             raise ValueError(msg)
         return v
+
+    @model_validator(mode="after")
+    def validate_database_connection_fields(self) -> Any:
+        """Validate required fields for database connections."""
+        if self.connection_type in {"database", "hybrid"}:
+            if not self.host:
+                raise ValueError("Host is required for database connections")
+            if not self.service_name:
+                raise ValueError("Service name is required for database connections")
+            if not self.username:
+                raise ValueError("Username is required for database connections")
+            if not self.password:
+                raise ValueError("Password is required for database connections")
+        return self
 
     @field_validator("host")
     @classmethod

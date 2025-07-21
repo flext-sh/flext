@@ -11,6 +11,7 @@ sys.path.insert(0, "/home/marlonsc/flext/flext-oracle-wms/src")
 sys.path.insert(0, "/home/marlonsc/flext/flext-tap-oracle-wms/src")
 
 from flext_observability.logging import get_logger
+from pydantic import HttpUrl
 
 from flext_oracle_wms.client import OracleWMSClient
 from flext_oracle_wms.config_module import OracleWMSConfig
@@ -49,7 +50,7 @@ def analyze_data_types(data: Any, path: str = "") -> dict[str, set[str]]:
 
 def analyze_complex_structures(record: dict[str, Any]) -> dict[str, Any]:
     """Analisa estruturas complexas em um registro."""
-    analysis = {
+    analysis: dict[str, Any] = {
         "complex_fields": {},
         "array_fields": {},
         "object_fields": {},
@@ -58,7 +59,8 @@ def analyze_complex_structures(record: dict[str, Any]) -> dict[str, Any]:
     }
 
     def analyze_field(key: str, value: Any, depth: int = 0) -> None:
-        analysis["nested_depth"] = max(analysis["nested_depth"], depth)
+        current_depth: int = analysis["nested_depth"]
+        analysis["nested_depth"] = max(current_depth, depth)
         analysis["field_types"][key] = type(value).__name__
 
         if isinstance(value, dict):
@@ -100,22 +102,22 @@ def main() -> None:
     """Executa análise completa dos dados Oracle WMS."""
     # Configuração
     config = OracleWMSConfig(
-        base_url="https://a29.wms.ocs.oraclecloud.com/raizen",
+        base_url=HttpUrl("https://a29.wms.ocs.oraclecloud.com/raizen"),
         username="USER_WMS_INTEGRA",
         password="jmCyS7BK94YvhS@",
-        entities=["allocation", "order_hdr", "order_dtl"],
-        page_size=50,  # Menos registros para análise mais focada
-        timeout=30,
+        batch_size=50,  # Menos registros para análise mais focada
+        timeout_seconds=30.0,
     )
 
     client = OracleWMSClient(config)
 
-    entities_to_analyze = ["allocation", "order_hdr", "order_dtl"]
+    entities_to_analyze: list[str] = ["allocation", "order_hdr", "order_dtl"]
 
     for entity in entities_to_analyze:
         try:
-            # Buscar dados da entidade
-            response = client.get_entity_data(entity)
+            # Validar e buscar dados da entidade
+            validated_entity = client.validate_entity_name(entity)
+            response = client.get_entity_data(validated_entity)
             records = response.records
 
             if not records:
@@ -164,8 +166,10 @@ def main() -> None:
 
         finally:
             # Clean up client connection
-            if hasattr(client, "_client") and getattr(client, "_client", None):
-                client._client.close()  # noqa: SLF001
+            if hasattr(client, "_client"):
+                client_instance = getattr(client, "_client", None)
+                if client_instance is not None and hasattr(client_instance, "close"):
+                    client_instance.close()
 
 
 if __name__ == "__main__":

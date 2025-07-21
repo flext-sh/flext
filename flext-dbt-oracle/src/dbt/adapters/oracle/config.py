@@ -20,7 +20,8 @@ from flext_db_oracle import OracleConfig
 from flext_observability.logging import get_logger
 
 # Use flext-core configuration patterns
-from pydantic import BaseSettings, Field, ValidationInfo, field_validator
+from pydantic import ConfigDict, Field, ValidationInfo, field_validator
+from pydantic_settings import BaseSettings
 
 # Import DBT Oracle adapter-specific constants with flext-core integration
 from .constants import DBTOracleAdapterConstants
@@ -126,12 +127,11 @@ class DBTOracleSettings(BaseSettings):
     )
 
     # Model configuration for environment variables
-    class Config:
-        """Pydantic configuration for environment variable integration."""
-
-        env_prefix = "DBT_ORACLE_"
-        env_file = ".env"
-        case_sensitive = False
+    model_config = ConfigDict(
+        env_prefix="DBT_ORACLE_",
+        env_file=".env",
+        case_sensitive=False,
+    )
 
     def to_dbt_config(self) -> DBTOracleConfig:
         """Convert settings to DBTOracleConfig.
@@ -303,12 +303,11 @@ class DBTOracleConfig(BaseConfig):
     )
 
     # Configuration inherits from BaseConfig but customizes prefix
-    class Config:
-        """Pydantic configuration for DBT Oracle Adapter with strict validation."""
-
-        env_prefix = "DBT_ORACLE_"
-        case_sensitive = False
-        extra = "forbid"  # Prevent unknown configuration keys
+    model_config = ConfigDict(
+        env_prefix="DBT_ORACLE_",
+        case_sensitive=False,
+        extra="forbid",  # Prevent unknown configuration keys
+    )
 
     @field_validator("materialization")
     @classmethod
