@@ -1,1 +1,0 @@
-"""DBT Adapters package initialization."""
