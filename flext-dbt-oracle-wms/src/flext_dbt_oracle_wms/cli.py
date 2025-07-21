@@ -1,5 +1,7 @@
 """CLI for FLEXT DBT Oracle WMS package."""
 
+from __future__ import annotations
+
 import click
 
 

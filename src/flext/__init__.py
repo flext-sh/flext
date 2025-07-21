@@ -1,23 +1,14 @@
 """FLEXT - Multi-Project Workspace Coordinator for Enterprise Data Integration."""
 
-from flext_core.domain.constants import FlextFramework
-
-__version__ = FlextFramework.VERSION
+__version__ = "0.7.0"
 __author__ = "FLEXT Team"
 __email__ = "team@flext.sh"
 __license__ = "MIT"
 __homepage__ = "https://github.com/flext-sh/flext"
 
-# Re-export commonly used components
-from flext.cli import main as cli_main
-from flext.dev import DevToolsManager
-
-# Workspace management
-from flext.workspace import WorkspaceManager
-from flext_core import *
+# Note: Import optimization to avoid circular dependencies during migration
+# Full imports will be restored after service migration is complete
 
 __all__ = [
-    "DevToolsManager",
-    "WorkspaceManager",
-    "cli_main",
+    "services",
 ]

@@ -5,149 +5,905 @@ build-backend = "poetry.core.masonry.api"
 [project]
 name = "flext"
 version = "0.7.0"
-description = "FLEXT - Multi-Project Workspace Coordinator for Enterprise Data Integration"
-authors = [{ name = "FLEXT Team", email = "team@flext.sh" }]
-maintainers = [{ name = "FLEXT Team", email = "team@flext.sh" }]
-license = { text = "MIT" }
+description = "FLEXT - Enterprise Data Integration Platform - Workspace Manager"
 readme = "README.md"
 requires-python = ">=3.13,<3.14"
-# dependencies moved to [tool.poetry.dependencies] to avoid duplication warnings
+authors = [{ name = "FLEXT Team", email = "team@flext.sh" }]
+maintainers = [{ name = "FLEXT Team", email = "team@flext.sh" }]
 keywords = [
     "flext",
-    "workspace",
-    "data-integration",
-    "etl",
-    "meltano",
     "enterprise",
     "async",
-    "ldap",
-    "oracle",
-    "grpc",
-    "api",
-    "authentication",
-    "monitoring",
+    "typed",
+    "workspace",
+    "coordination",
 ]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
-    "Intended Audience :: System Administrators",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3 :: Only",
     "Topic :: Software Development :: Libraries :: Python Modules",
-    "Topic :: System :: Systems Administration",
-    "Topic :: Database",
-    "Topic :: Office/Business :: Financial :: Accounting",
     "Typing :: Typed",
 ]
+dependencies = [
+    "click (>=8.2.1)",
+    "cryptography (>=45.0.5)",
+    "gensim @ git+https://github.com/flext-sh/gensim.git@fix-python313-compatibility",  # Fork com PR 3615 + correções Python 3.13
+    "grpcio (>=1.50.0)",
+    "grpcio-health-checking (>=1.50.0)",
+    "grpcio-tools (>=1.0.0)",
+    "packaging (>=25.0)",
+    "protobuf (>=4)",
+    "pydantic (>=2.11.7)",
+    "pydantic-settings (>=2.10.1)",
+    "pyyaml (>=6.0)",
+    "rich (>=14.0.0)",
+    "structlog (>=25.4.0)",
+    "tomlkit (>=0.13.3)",
+    "client-a-oud-mig @ file:///home/marlonsc/flext/client-a-oud-mig",
+    "flexcore @ file:///home/marlonsc/flext/flexcore",
+    "flext-api @ file:///home/marlonsc/flext/flext-api",
+    "flext-auth @ file:///home/marlonsc/flext/flext-auth",
+    "flext-cli @ file:///home/marlonsc/flext/flext-cli",
+    "flext-core @ file:///home/marlonsc/flext/flext-core",
+    "flext-db-oracle @ file:///home/marlonsc/flext/flext-db-oracle",
+    "flext-dbt-ldap @ file:///home/marlonsc/flext/flext-dbt-ldap",
+    "flext-dbt-ldif @ file:///home/marlonsc/flext/flext-dbt-ldif",
+    "flext-dbt-oracle @ file:///home/marlonsc/flext/flext-dbt-oracle",
+    "flext-dbt-oracle-wms @ file:///home/marlonsc/flext/flext-dbt-oracle-wms",
+    "flext-grpc @ file:///home/marlonsc/flext/flext-grpc",
+    "flext-ldap @ file:///home/marlonsc/flext/flext-ldap",
+    "flext-ldif @ file:///home/marlonsc/flext/flext-ldif",
+    "flext-meltano @ file:///home/marlonsc/flext/flext-meltano",
+    "flext-observability @ file:///home/marlonsc/flext/flext-observability",
+    "flext-oracle-oic-ext @ file:///home/marlonsc/flext/flext-oracle-oic-ext",
+    "flext-oracle-wms @ file:///home/marlonsc/flext/flext-oracle-wms",
+    "flext-plugin @ file:///home/marlonsc/flext/flext-plugin",
+    "flext-quality @ file:///home/marlonsc/flext/flext-quality",
+    "flext-tap-ldap @ file:///home/marlonsc/flext/flext-tap-ldap",
+    "flext-tap-ldif @ file:///home/marlonsc/flext/flext-tap-ldif",
+    "flext-tap-oracle @ file:///home/marlonsc/flext/flext-tap-oracle",
+    "flext-tap-oracle-oic @ file:///home/marlonsc/flext/flext-tap-oracle-oic",
+    "flext-tap-oracle-wms @ file:///home/marlonsc/flext/flext-tap-oracle-wms",
+    "flext-target-ldap @ file:///home/marlonsc/flext/flext-target-ldap",
+    "flext-target-ldif @ file:///home/marlonsc/flext/flext-target-ldif",
+    "flext-target-oracle @ file:///home/marlonsc/flext/flext-target-oracle",
+    "flext-target-oracle-oic @ file:///home/marlonsc/flext/flext-target-oracle-oic",
+    "flext-target-oracle-wms @ file:///home/marlonsc/flext/flext-target-oracle-wms",
+    "flext-web @ file:///home/marlonsc/flext/flext-web",
+    "client-b-meltano-native @ file:///home/marlonsc/flext/client-b-meltano-native",
+    "duplicate-code-detection-tool @ git+https://github.com/flext-sh/duplicate-code-detection-tool.git",
+]
+
+[project.license]
+text = "MIT"
 
 [project.urls]
 Homepage = "https://github.com/flext-sh/flext"
 Repository = "https://github.com/flext-sh/flext"
 Documentation = "https://github.com/flext-sh/flext/blob/main/README.md"
 
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.12.3",
+    "black>=25.1.0",
+    "isort>=6.0.1",
+    "mypy>=1.13.0",
+    "pylint>=3.3.0",
+    "pre-commit>=4.0.1",
+    "vulture>=2.13",
+    "radon>=6.0.1",
+    "codespell>=2.3.0",
+    "pyupgrade>=3.19.0",
+    "autoflake>=2.3.1",
+    "types-ldap3>=2.9.13.20250622",
+    "deptry>=0.23.0",
+]
+test = [
+    "pytest>=8.4.0",
+    "pytest-cov>=6.2.0",
+    "pytest-xdist>=3.8.0",
+    "pytest-mock>=3.14.0",
+    "pytest-timeout>=2.4.0",
+    "pytest-benchmark>=5.1.0",
+    "pytest-randomly>=3.16.0",
+    "pytest-sugar>=1.0.0",
+    "pytest-clarity>=1.0.1",
+    "pytest-deadfixtures>=2.2.1",
+    "pytest-env>=1.1.5",
+    "pytest-httpx>=0.35.0",
+    "hypothesis>=6.125.0",
+    "factory-boy>=3.3.1",
+    "faker>=37.4.0",
+]
+typings = [
+    "types-python-dateutil>=2.9.0",
+    "types-pyyaml>=6.0.12",
+    "types-setuptools>=80.9.0",
+    "types-toml>=0.10.8.20240310",
+    "types-requests>=2.32.4",
+    "types-redis>=4.6.0",
+    "types-psutil>=7.0.0",
+    "django-stubs>=5.2.2",
+]
+security = [
+    "bandit>=1.8.0",
+    "pip-audit>=2.7.3",
+]
+
 [project.scripts]
-flext = "flext.cli:main"
 flext-workspace = "flext.workspace:main"
 flext-dev = "flext.dev:main"
 
+[tool.pytest.ini_options]
+minversion = "8.0"
+asyncio_mode = "auto"
+addopts = [
+    "-ra",
+    "--strict-markers",
+    "--strict-config",
+    "--cov=flext",
+    "--cov-branch",
+    "--cov-report=term-missing:skip-covered",
+    "--cov-report=html:reports/coverage",
+    "--cov-report=xml:reports/coverage.xml",
+    "--cov-fail-under=90",
+    "--maxfail=1",
+    "--tb=short",
+]
+testpaths = ["tests"]
+markers = [
+    "unit: Unit tests",
+    "integration: Integration tests",
+    "slow: Slow tests",
+    "smoke: Smoke tests",
+    "e2e: End-to-end tests",
+    "oracle: Oracle database tests",
+]
+filterwarnings = ["error", "ignore::UserWarning", "ignore::DeprecationWarning"]
+
+[tool.ruff]
+target-version = "py313"
+line-length = 88
+fix = true
+show-fixes = true
+respect-gitignore = true
+src = ["src", "tests"]
+extend-exclude = [
+    "__pycache__",
+    ".git",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".ruff_cache",
+    ".venv",
+    "venv",
+    "build",
+    "dist",
+    "htmlcov",
+]
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+    "COM812",
+    "D203",
+    "D213",
+    "ISC001",
+    "ANN401",
+    "ARG001",
+    "ARG002",
+    "BLE001",
+    "C901",
+    "D102",
+    "D103",
+    "D105",
+    "D107",
+    "D401",
+    "DTZ001",
+    "DTZ005",
+    "E401",
+    "E501",
+    "EM101",
+    "EM102",
+    "ERA001",
+    "EXE001",
+    "F401",
+    "F823",
+    "FBT001",
+    "FBT002",
+    "FBT003",
+    "FIX002",
+    "G004",
+    "PLC0415",
+    "PLR0911",
+    "PLR0912",
+    "PLR0913",
+    "PLR0915",
+    "PLR2004",
+    "PLW0603",
+    "PTH118",
+    "PTH123",
+    "RUF001",
+    "S103",
+    "S104",
+    "S105",
+    "S106",
+    "S107",
+    "S603",
+    "S607",
+    "SIM102",
+    "TD002",
+    "TD003",
+    "TRY003",
+    "TRY203",
+    "TRY300",
+    "TRY301",
+    "TRY401",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"**/tests/**" = [
+    "S101",
+    "S103",
+    "S104",
+    "S105",
+    "S106",
+    "S107",
+    "PLR2004",
+    "ARG",
+    "SLF001",
+    "PLC0415",
+]
+"**/scripts/**" = ["T201", "S603", "S607", "ANN"]
+"**/__init__.py" = ["F401"]
+"**/proto/*_pb2.py" = ["ALL"]
+"**/proto/*_pb2_grpc.py" = ["ALL"]
+"**/*_pb2.py" = ["ALL"]
+"**/*_pb2_grpc.py" = ["ALL"]
+"**/generated/**/*.py" = ["ALL"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["flext"]
+force-single-line = false
+split-on-trailing-comma = true
+combine-as-imports = true
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
+docstring-code-format = true
+
+[tool.mypy]
+# Configuração MyPy seguindo PEP 518 (pyproject.toml) - Análise Máxima
+python_version = "3.13"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+strict_equality = true
+show_error_codes = true
+show_error_context = true
+pretty = true
+disallow_any_generics = true
+disallow_subclassing_any = true
+disallow_untyped_calls = true
+ignore_missing_imports = false
+no_implicit_reexport = true
+
+# PEP 420 Namespace packages support
+explicit_package_bases = true
+namespace_packages = true
+
+# Configuração para análise máxima seguindo PEP 420
+mypy_path = "src:scripts:examples:tests"
+
+# Analisar máximo de arquivos possível
+files = ["src", "tests", "scripts", "examples"]
+
+# Plugins
+plugins = ["pydantic.mypy"]
+
+# Exclusões mínimas (apenas diretórios técnicos)
+exclude = [
+    "build/",
+    "dist/",
+    ".venv/",
+    ".mypy_cache/",
+    "__pycache__/",
+    "node_modules/",
+    ".git/",
+    ".*/tests/",
+    # "tests/",
+    ".*/generate_config.py",
+    ".*/manage.py",
+    "vendor/",
+]
+
+# === CONFIGURAÇÕES ESPECÍFICAS POR MÓDULO ===
+# Configurações para testes com regras mais relaxadas
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+# Configurações relaxadas para todos os testes
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+check_untyped_defs = false
+disallow_untyped_decorators = false
+no_implicit_optional = false
+warn_return_any = false
+warn_unreachable = false
+strict_equality = false
+
+# Configurações para módulos de teste específicos com regras relaxadas
+[[tool.mypy.overrides]]
+module = "flext-api.tests.*"
+follow_imports = "skip"
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+check_untyped_defs = false
+disallow_untyped_decorators = false
+no_implicit_optional = false
+warn_return_any = false
+warn_unreachable = false
+strict_equality = false
+
+[[tool.mypy.overrides]]
+module = "client-a-oud-mig.tests.*"
+follow_imports = "skip"
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+check_untyped_defs = false
+disallow_untyped_decorators = false
+no_implicit_optional = false
+warn_return_any = false
+warn_unreachable = false
+strict_equality = false
+
+[[tool.mypy.overrides]]
+module = "flext-auth.tests.*"
+follow_imports = "skip"
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+check_untyped_defs = false
+disallow_untyped_decorators = false
+no_implicit_optional = false
+warn_return_any = false
+warn_unreachable = false
+strict_equality = false
+
+[[tool.mypy.overrides]]
+module = "flext-cli.tests.*"
+follow_imports = "skip"
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+check_untyped_defs = false
+disallow_untyped_decorators = false
+no_implicit_optional = false
+warn_return_any = false
+warn_unreachable = false
+strict_equality = false
+
+[[tool.mypy.overrides]]
+module = "flext-core.tests.*"
+follow_imports = "skip"
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+check_untyped_defs = false
+disallow_untyped_decorators = false
+no_implicit_optional = false
+warn_return_any = false
+warn_unreachable = false
+strict_equality = false
+
+[[tool.mypy.overrides]]
+module = "flext-db-oracle.tests.*"
+follow_imports = "skip"
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+check_untyped_defs = false
+disallow_untyped_decorators = false
+no_implicit_optional = false
+warn_return_any = false
+warn_unreachable = false
+strict_equality = false
+
+[[tool.mypy.overrides]]
+module = "flext-dbt-ldap.tests.*"
+follow_imports = "skip"
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+check_untyped_defs = false
+disallow_untyped_decorators = false
+no_implicit_optional = false
+warn_return_any = false
+warn_unreachable = false
+strict_equality = false
+
+[[tool.mypy.overrides]]
+module = "flext-dbt-ldif.tests.*"
+follow_imports = "skip"
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+check_untyped_defs = false
+disallow_untyped_decorators = false
+no_implicit_optional = false
+warn_return_any = false
+warn_unreachable = false
+strict_equality = false
+
+[[tool.mypy.overrides]]
+module = "flext-dbt-oracle.tests.*"
+follow_imports = "skip"
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+check_untyped_defs = false
+disallow_untyped_decorators = false
+no_implicit_optional = false
+warn_return_any = false
+warn_unreachable = false
+strict_equality = false
+
+[[tool.mypy.overrides]]
+module = "flext-dbt-oracle-wms.tests.*"
+follow_imports = "skip"
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+check_untyped_defs = false
+disallow_untyped_decorators = false
+no_implicit_optional = false
+warn_return_any = false
+warn_unreachable = false
+strict_equality = false
+
+[[tool.mypy.overrides]]
+module = "flext-grpc.tests.*"
+follow_imports = "skip"
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+check_untyped_defs = false
+disallow_untyped_decorators = false
+no_implicit_optional = false
+warn_return_any = false
+warn_unreachable = false
+strict_equality = false
+
+[[tool.mypy.overrides]]
+module = "flext-ldap.tests.*"
+follow_imports = "skip"
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+check_untyped_defs = false
+disallow_untyped_decorators = false
+no_implicit_optional = false
+warn_return_any = false
+warn_unreachable = false
+strict_equality = false
+
+[[tool.mypy.overrides]]
+module = "flext-ldif.tests.*"
+follow_imports = "skip"
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+check_untyped_defs = false
+disallow_untyped_decorators = false
+no_implicit_optional = false
+warn_return_any = false
+warn_unreachable = false
+strict_equality = false
+
+[[tool.mypy.overrides]]
+module = "flext-meltano.tests.*"
+follow_imports = "skip"
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+check_untyped_defs = false
+disallow_untyped_decorators = false
+no_implicit_optional = false
+warn_return_any = false
+warn_unreachable = false
+strict_equality = false
+
+[[tool.mypy.overrides]]
+module = "flext-observability.tests.*"
+follow_imports = "skip"
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+check_untyped_defs = false
+disallow_untyped_decorators = false
+no_implicit_optional = false
+warn_return_any = false
+warn_unreachable = false
+strict_equality = false
+
+[[tool.mypy.overrides]]
+module = "flext-oracle-oic-ext.tests"
+follow_imports = "skip"
+
+[[tool.mypy.overrides]]
+module = "flext-oracle-wms.tests"
+follow_imports = "skip"
+
+[[tool.mypy.overrides]]
+module = "flext-plugin.tests"
+follow_imports = "skip"
+
+[[tool.mypy.overrides]]
+module = "flext-quality.tests"
+follow_imports = "skip"
+
+[[tool.mypy.overrides]]
+module = "flext-tap-ldap.tests"
+follow_imports = "skip"
+
+[[tool.mypy.overrides]]
+module = "flext-tap-ldif.tests"
+follow_imports = "skip"
+
+[[tool.mypy.overrides]]
+module = "flext-tap-oracle.tests"
+follow_imports = "skip"
+
+[[tool.mypy.overrides]]
+module = "flext-tap-oracle-oic.tests"
+follow_imports = "skip"
+
+[[tool.mypy.overrides]]
+module = "flext-tap-oracle-wms.tests"
+follow_imports = "skip"
+
+[[tool.mypy.overrides]]
+module = "flext-target-ldap.tests"
+follow_imports = "skip"
+
+[[tool.mypy.overrides]]
+module = "flext-target-ldif.tests"
+follow_imports = "skip"
+
+[[tool.mypy.overrides]]
+module = "flext-target-oracle.tests"
+follow_imports = "skip"
+
+[[tool.mypy.overrides]]
+module = "flext-target-oracle-oic.tests"
+follow_imports = "skip"
+
+[[tool.mypy.overrides]]
+module = "flext-target-oracle-wms.tests"
+follow_imports = "skip"
+
+[[tool.mypy.overrides]]
+module = "flext-web.tests"
+follow_imports = "skip"
+
+# Configurações relaxadas para scripts
+[[tool.mypy.overrides]]
+module = "scripts.*"
+ignore_missing_imports = true
+disallow_untyped_defs = false
+
+# Configurações relaxadas para examples
+[[tool.mypy.overrides]]
+module = "examples.*"
+ignore_missing_imports = true
+disallow_untyped_defs = false
+
+# Configurações para módulos sem stubs de tipagem
+[[tool.mypy.overrides]]
+module = "grpc"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "grpc.aio"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "cx_Oracle"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "agate"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "meltano.edk"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "grpc_health.v1"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "dbt.adapters.sql"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "dbt.adapters.base"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "celery"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "rest_framework"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "flexcore.core"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "astor"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "nltk"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "grpc._utilities"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "dynaconf"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "grpc_health"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "grpc_health.v1"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "grpc_health.v1.health"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "grpc_health.v1.health_pb2"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "grpc_health.v1.health_pb2_grpc"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "nltk.tokenize"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "celery.app.task"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "rest_framework.decorators"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "rest_framework.permissions"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "rest_framework.response"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "rest_framework.request"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "rest_framework.serializers"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "rest_framework.views"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "rest_framework.status"
+ignore_missing_imports = true
+
+# Configurações para arquivos gerados pelo protobuf
+[[tool.mypy.overrides]]
+module = "flext_grpc.proto.flext_pb2"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "flext_grpc.proto.flext_pb2_grpc"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "flext_grpc.proto.flx_pb2"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "flext_grpc.proto.flx_pb2_grpc"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "flext_grpc.proto.*"
+ignore_missing_imports = true
+
+# Configurações específicas para arquivos .pyi gerados
+[[tool.mypy.overrides]]
+module = "flext_grpc.proto.flx_pb2"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "flext_grpc.proto.flext_pb2"
+ignore_missing_imports = true
+
+# Configurações para arquivos celery
+[[tool.mypy.overrides]]
+module = "flext_quality.code_analyzer_web.celery"
+ignore_missing_imports = true
+
+# Configurações para arquivos protobuf gerados
+[[tool.mypy.overrides]]
+module = "flext_grpc.proto.flext_pb2_grpc"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "flext_grpc.proto.flx_pb2_grpc"
+ignore_missing_imports = true
+
+# Configurações para módulos externos sem stubs
+[[tool.mypy.overrides]]
+module = "gensim"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "xhtml2pdf"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "duplicate_code_detection"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "analyzer.backends.quality_backend"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "meltano.edk.process"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "django_filters.rest_framework"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "flext_core.domain.typedefs"
+ignore_missing_imports = true
+
+[tool.coverage.run]
+source = ["src"]
+branch = true
+omit = ["*/tests/*", "*/test_*", "*/__pycache__/*", "*/venv/*", "*/.venv/*"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]
+
+[tool.coverage.html]
+directory = "reports/coverage"
+
+[tool.coverage.xml]
+output = "reports/coverage.xml"
+
+[tool.bandit]
+exclude_dirs = ["tests", "build", "dist"]
+skips = ["B101", "B601"]
+
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true
+
 [tool.poetry]
-# NOTE: Metadados movidos para [project] (PEP 621)
-# Mantendo apenas configurações específicas do Poetry
-# keywords e classifiers movidos para [project] seção
-packages = [{ include = "flext", from = "src" }]
+packages = [
+    { include = "flext", from = "src" },
+    { include = "flext_tools", from = "src" },
+]
 
 [tool.poetry.dependencies]
 python = ">=3.13,<3.14"
-# Core dependencies (bleeding-edge)
-pydantic = ">=2.6.0,<3.0.0"
-pydantic-settings = ">=2.7.0,<3.0.0"
-fastapi = ">=0.115.0,<1.0.0"
-uvicorn = ">=0.32.0,<1.0.0"
-click = ">=8.1.7,<9.0.0"
-rich = ">=13.5.2,<15.0.0"
-typer = ">=0.15.0,<1.0.0"
-structlog = ">=24.0.0,<26.0.0"
-httpx = ">=0.28.0,<1.0.0"
-aiofiles = ">=24.1.0,<25.0.0"
-python-dateutil = ">=2.9.0,<3.0.0"
-python-dotenv = ">=1.0.0,<2.0.0"
-typing-extensions = ">=4.12.0,<5.0.0"
+# Core external dependencies
+click = ">=8.2.1"
+cryptography = ">=45.0.5"
+gensim = { git = "https://github.com/flext-sh/gensim.git", rev = "fix-python313-compatibility" }
+grpcio = ">=1.50.0"
+grpcio-health-checking = ">=1.50.0"
+grpcio-tools = ">=1.0.0"
+packaging = ">=25.0"
+protobuf = ">=4"
+pydantic = ">=2.11.7"
+pydantic-settings = ">=2.10.1"
+pyyaml = ">=6.0"
+rich = ">=14.0.0"
+structlog = ">=25.4.0"
+tomlkit = ">=0.13.3"
+duplicate-code-detection-tool = { git = "https://github.com/flext-sh/duplicate-code-detection-tool.git" }
 
-# FLEXT Framework Modules - TO BE ADDED VIA POETRY ADD COMMANDS
-flext-core = { develop = true }
-flext-api = { develop = true }
-flext-auth = { develop = true }
-flext-grpc = { develop = true }
-flext-cli = { develop = true }
-flext-web = { develop = true }
-flext-observability = { develop = true }
-flext-plugin = { develop = true }
-flext-meltano = { develop = true }
-flext-ldap = { develop = true }
-flext-db-oracle = { develop = true }
-flext-quality = { develop = true }
-flext-tap-ldap = { develop = true }
-flext-tap-oracle-oic = { develop = true }
-flext-tap-oracle-wms = { develop = true }
-flext-target-ldap = { develop = true }
-flext-target-oracle = { develop = true }
-flext-target-oracle-oic = { develop = true }
-flext-target-oracle-wms = { develop = true }
-flext-dbt-ldap = { develop = true }
-flext-dbt-ldif = { develop = true }
-flext-dbt-oracle = { develop = true }
-flext-ldif = { develop = true }
-flext-oracle-oic-ext = { develop = true }
-flext-oracle-wms = { develop = true }
-flext-tap-ldif = { develop = true }
-flext-tap-oracle = { develop = true }
-flext-target-ldif = { develop = true }
-client-b-meltano-native = { develop = true }
+# All FLEXT projects in development mode (32 projects)
+client-a-oud-mig = { path = "./client-a-oud-mig", develop = true }
+flexcore = { path = "./flexcore", develop = true }
+flext-api = { path = "./flext-api", develop = true }
+flext-auth = { path = "./flext-auth", develop = true }
+flext-cli = { path = "./flext-cli", develop = true }
+flext-core = { path = "./flext-core", develop = true }
+flext-db-oracle = { path = "./flext-db-oracle", develop = true }
+flext-dbt-ldap = { path = "./flext-dbt-ldap", develop = true }
+flext-dbt-ldif = { path = "./flext-dbt-ldif", develop = true }
+flext-dbt-oracle = { path = "./flext-dbt-oracle", develop = true }
+flext-dbt-oracle-wms = { path = "./flext-dbt-oracle-wms", develop = true }
+flext-grpc = { path = "./flext-grpc", develop = true }
+flext-ldap = { path = "./flext-ldap", develop = true }
+flext-ldif = { path = "./flext-ldif", develop = true }
+flext-meltano = { path = "./flext-meltano", develop = true }
+flext-observability = { path = "./flext-observability", develop = true }
+flext-oracle-oic-ext = { path = "./flext-oracle-oic-ext", develop = true }
+flext-oracle-wms = { path = "./flext-oracle-wms", develop = true }
+flext-plugin = { path = "./flext-plugin", develop = true }
+flext-quality = { path = "./flext-quality", develop = true }
+flext-tap-ldap = { path = "./flext-tap-ldap", develop = true }
+flext-tap-ldif = { path = "./flext-tap-ldif", develop = true }
+flext-tap-oracle = { path = "./flext-tap-oracle", develop = true }
+flext-tap-oracle-oic = { path = "./flext-tap-oracle-oic", develop = true }
+flext-tap-oracle-wms = { path = "./flext-tap-oracle-wms", develop = true }
+flext-target-ldap = { path = "./flext-target-ldap", develop = true }
+flext-target-ldif = { path = "./flext-target-ldif", develop = true }
+flext-target-oracle = { path = "./flext-target-oracle", develop = true }
+flext-target-oracle-oic = { path = "./flext-target-oracle-oic", develop = true }
+flext-target-oracle-wms = { path = "./flext-target-oracle-wms", develop = true }
+flext-web = { path = "./flext-web", develop = true }
+client-b-meltano-native = { path = "./client-b-meltano-native", develop = true }
 
+[tool.deptry]
+ignore = ["client-a_oud_mig", "client-b_*", "flext_*"]
+known_first_party = ["flext", "flext_tools"]
 
 [tool.poetry.group.dev.dependencies]
-# === CODE QUALITY & FORMATTERS ===
 ruff = "^0.12.3"
 black = "^25.1.0"
 isort = "^6.0.1"
 mypy = "^1.13.0"
 pylint = "^3.3.0"
-
-# === CODE ANALYSIS & METRICS ===
+pre-commit = "^4.0.1"
 vulture = "^2.13"
 radon = "^6.0.1"
-pre-commit = "^4.0.1"
 codespell = "^2.3.0"
 pyupgrade = "^3.19.0"
 autoflake = "^2.3.1"
-
-# === DOCUMENTATION TOOLS ===
-sphinx = "^8.2.3"
-sphinx-rtd-theme = "^3.0.2"
-myst-parser = "^4.0.1"
-mkdocs = "^1.6.1"
-mkdocs-material = "^9.6.15"
-mkdocstrings = { extras = ["python"], version = "^0.27.0" }
-mkdocs-gen-files = "^0.5.0"
-mkdocs-literate-nav = "^0.6.0"
-
-# === DEVELOPMENT EXPERIENCE ===
-ipython = "^9.4.0"
-jupyter = "^1.1.1"
-rich-traceback = "^1.0.3"
-ply = "^3.11"
-django-crispy-forms = "^2.4"
-crispy-bootstrap5 = "^2025.6"
-django-celery-beat = "^2.8.1"
-django-celery-results = "^2.6.0"
-dbt-duckdb = "^1.9.4"
+types-ldap3 = "^2.9.13.20250622"
+deptry = "^0.23.0"
+pytest = "^8.4.1"
 
 [tool.poetry.group.test.dependencies]
-# === TESTING FRAMEWORK ===
 pytest = "^8.4.0"
-pytest-asyncio = "^1.0.0"
 pytest-cov = "^6.2.0"
 pytest-xdist = "^3.8.0"
 pytest-mock = "^3.14.0"
@@ -164,493 +920,15 @@ factory-boy = "^3.3.1"
 faker = "^37.4.0"
 
 [tool.poetry.group.typings.dependencies]
-# === TYPE STUBS ===
-# Standard library stubs
 types-python-dateutil = "^2.9.0"
 types-pyyaml = "^6.0.12"
 types-setuptools = "^80.9.0"
 types-toml = "^0.10.8.20240310"
-
-# Third-party library stubs
 types-requests = "^2.32.4"
 types-redis = "^4.6.0"
 types-psutil = "^7.0.0"
-types-jsonschema = "^4.24.0.20250708"
-types-greenlet = "^3.2.0.20250417"
-types-pygments = "^2.19.0.20250516"
-types-cffi = "^1.17.0.20250523"
-types-colorama = "^0.4.15.20240311"
-types-decorator = "^5.2.0.20250324"
-types-pexpect = "^4.9.0.20250516"
-types-deprecated = "^1.2.15.20250304"
-types-passlib = "^1.7.7.20250602"
-types-ujson = "^5.10.0.20250326"
-types-pymysql = "^1.1.0.20250711"
-types-click-default-group = "^1.2.0.20250513"
-types-croniter = "^6.0.0.20250626"
-types-dateparser = "^1.2.2.20250627"
-types-aiofiles = "^24.1.0.20250708"
-types-six = "^1.17.0.20250515"
-types-psycopg2 = "^2.9.21.20250516"
-django-stubs = "^5.2.1"
+django-stubs = "^5.2.2"
 
 [tool.poetry.group.security.dependencies]
-# === SECURITY SCANNING ===
-bandit = { extras = ["toml"], version = "^1.8.0" }
+bandit = "^1.8.0"
 pip-audit = "^2.7.3"
-
-[tool.poetry.group.build.dependencies]
-# === BUILD & PACKAGING ===
-build = "^1.2.2"
-twine = "^6.1.0"
-
-[tool.poetry.group.load.dependencies]
-# === LOAD TESTING ===
-locust = "^2.31.0"
-
-[tool.poetry.extras]
-# Feature groups (core dependencies only)
-api = ["flext-api", "flext-auth", "flext-grpc"]
-web = ["flext-web", "flext-api", "flext-auth"]
-cli = ["flext-cli"]
-data = [
-    "flext-tap-ldap",
-    "flext-tap-ldif",
-    "flext-tap-oracle",
-    "flext-tap-oracle-oic",
-    "flext-tap-oracle-wms",
-    "flext-target-ldap",
-    "flext-target-ldif",
-    "flext-target-oracle",
-    "flext-target-oracle-oic",
-    "flext-target-oracle-wms",
-    "flext-dbt-ldap",
-    "flext-dbt-ldif",
-    "flext-dbt-oracle",
-]
-ldap = ["flext-ldap", "flext-tap-ldap", "flext-target-ldap", "flext-dbt-ldap"]
-ldif = ["flext-ldif", "flext-tap-ldif", "flext-target-ldif", "flext-dbt-ldif"]
-oracle = [
-    "flext-db-oracle",
-    "flext-tap-oracle",
-    "flext-tap-oracle-oic",
-    "flext-tap-oracle-wms",
-    "flext-target-oracle",
-    "flext-target-oracle-oic",
-    "flext-target-oracle-wms",
-    "flext-oracle-oic-ext",
-    "flext-oracle-wms",
-    "flext-dbt-oracle",
-]
-meltano = ["flext-meltano", "client-b-meltano-native"]
-monitoring = ["flext-observability", "flext-quality"]
-plugins = ["flext-plugin"]
-# projects group removed - client-a-oud-mig not in main dependencies
-all = [
-    "flext-api",
-    "flext-auth",
-    "flext-grpc",
-    "flext-cli",
-    "flext-web",
-    "flext-observability",
-    "flext-plugin",
-    "flext-meltano",
-    "flext-ldap",
-    "flext-ldif",
-    "flext-db-oracle",
-    "flext-quality",
-    "flext-tap-ldap",
-    "flext-tap-ldif",
-    "flext-tap-oracle",
-    "flext-tap-oracle-oic",
-    "flext-tap-oracle-wms",
-    "flext-target-ldap",
-    "flext-target-ldif",
-    "flext-target-oracle",
-    "flext-target-oracle-oic",
-    "flext-target-oracle-wms",
-    "flext-dbt-ldap",
-    "flext-dbt-ldif",
-    "flext-dbt-oracle",
-    "flext-oracle-oic-ext",
-    "flext-oracle-wms",
-    "client-b-meltano-native",
-]
-
-# [tool.poetry.scripts] - REMOVED: Duplicated, using [project.scripts] instead (PEP 621)
-
-[tool.black]
-line-length = 88
-target-version = ["py313"]
-include = "\\.pyi?$"
-extend-exclude = "/(\n    __pycache__\n  | .git\n  | .mypy_cache\n  | .pytest_cache\n  | .ruff_cache\n  | .venv\n  | venv\n  | build\n  | dist\n  | htmlcov\n  | node_modules\n)/\n"
-
-[tool.isort]
-profile = "black"
-line_length = 88
-multi_line_output = 3
-include_trailing_comma = true
-force_grid_wrap = 0
-use_parentheses = true
-ensure_newline_before_comments = true
-known_first_party = [
-    "flext",
-    "flext_core",
-    "flext_auth",
-    "flext_api",
-    "flext_grpc",
-    "flext_web",
-    "flext_cli",
-    "flext_plugin",
-    "flext_observability",
-    "flext_meltano",
-    "flext_ldap",
-    "flext_ldif",
-    "flext_db_oracle",
-    "flext_quality",
-    "flext_tap_ldap",
-    "flext_tap_ldif",
-    "flext_tap_oracle",
-    "flext_tap_oracle_oic",
-    "flext_tap_oracle_wms",
-    "flext_target_ldap",
-    "flext_target_ldif",
-    "flext_target_oracle",
-    "flext_target_oracle_oic",
-    "flext_target_oracle_wms",
-    "flext_dbt_ldap",
-    "flext_dbt_ldif",
-    "flext_dbt_oracle",
-    "flext_oracle_oic_ext",
-    "flext_oracle_wms",
-    "client-a_oud_mig",
-    "client-b_poc_oic_wms",
-    "client-b_meltano_native",
-]
-known_local_folder = ["client-a_oud_mig", "client-b_poc_oic_wms"]
-
-[tool.mypy]
-check_untyped_defs = true
-color_output = true
-disallow_any_decorated = true
-disallow_any_explicit = false
-disallow_any_expr = false
-disallow_any_generics = true
-disallow_any_unimported = true
-disallow_incomplete_defs = true
-disallow_subclassing_any = true
-disallow_untyped_calls = true
-disallow_untyped_decorators = true
-disallow_untyped_defs = true
-error_summary = true
-ignore_missing_imports = false
-no_implicit_optional = true
-pretty = true
-python_version = "3.13"
-show_error_codes = true
-show_error_context = true
-strict = true
-strict_concatenate = true
-strict_equality = true
-strict_optional = true
-warn_no_return = true
-warn_redundant_casts = true
-warn_return_any = true
-warn_unreachable = true
-warn_unused_configs = true
-warn_unused_ignores = true
-
-# Resolve namespace conflicts
-explicit_package_bases = true
-
-# Exclude conflicting directories and tests
-exclude = [
-    "archive/.*",
-    ".*/generate_config\\.py",
-    ".*\\.bak",
-    ".*\\.old",
-    ".*\\.backup",
-    ".*\\.orig",
-    ".*\\.tmp",
-    ".*\\.temp",
-    ".*\\.log",
-    ".*\\.cache",
-    ".*\\.build",
-    ".*\\.dist",
-    ".*\\.egg-info",
-    ".*/__pycache__",
-    ".*/\\.git",
-    ".*/\\.venv",
-    ".*/\\.mypy_cache",
-    ".*/\\.pytest_cache",
-    ".*/\\.coverage",
-    ".*/htmlcov",
-    ".*/node_modules",
-    ".*/.venv",
-    ".*/env",
-    ".*/build",
-    ".*/dist",
-    ".*/reports",
-    ".*/logs",
-    ".*/temp",
-    ".*/tmp",
-    ".*/cache",
-    ".*/migrations",
-    ".*/alembic",
-    ".*/staticfiles",
-    ".*/static",
-    ".*/media",
-    ".*/locale",
-    ".*/fonts",
-    ".*/fixtures",
-    ".*/vendor",
-    ".*/third_party",
-    ".*/external",
-    ".*/lib",
-    ".*/libs",
-    ".*/wheels",
-    ".*/docs/_build",
-    ".*/docs/.build",
-    ".*/site-packages",
-    ".*/site",
-    ".*/notebooks",
-    ".*/jupyter",
-    ".*/scripts/templates",
-    ".*/templates/.*\\.py",
-    ".*/proto/.*\\.py",
-    ".*/generated/.*\\.py",
-    ".*/auto_generated/.*\\.py",
-    ".*_pb2\\.py",
-    ".*_pb2_grpc\\.py",
-    ".*/gradlew",
-    ".*/gradlew.bat",
-    ".*/manage.py",
-    ".*/asgi.py",
-    ".*/wsgi.py",
-    ".*/conftest.py",
-    ".*/test_.*\\.py",
-    ".*/.*_test\\.py",
-    ".*/setup.py",
-    ".*/setup.cfg",
-    ".*/requirements.*\\.txt",
-    ".*/Pipfile",
-    ".*/Pipfile.lock",
-    ".*/poetry.lock",
-    ".*/package-lock.json",
-    ".*/yarn.lock",
-    ".*/pnpm-lock.yaml",
-    ".*/bun.lockb",
-    ".*/docker-compose.*\\.yml",
-    ".*/docker-compose.*\\.yaml",
-    ".*/Dockerfile.*",
-    ".*/makefile",
-    ".*/Makefile.*",
-    ".*/CMakeLists.txt",
-    ".*/conanfile.*",
-    ".*/vcpkg.json",
-    ".*/pubspec.yaml",
-    ".*/pubspec.lock",
-    ".*/go.mod",
-    ".*/go.sum",
-    ".*/Cargo.toml",
-    ".*/Cargo.lock",
-    ".*/project.clj",
-    ".*/deps.edn",
-    ".*/shadow-cljs.edn",
-    ".*/bb.edn",
-    ".*/pom.xml",
-    ".*/build.gradle",
-    ".*/build.gradle.kts",
-    ".*/settings.gradle",
-    ".*/settings.gradle.kts",
-]
-
-# Django configuration
-# plugins = ["mypy_django_plugin.main", "pydantic.mypy"]
-plugins = ["pydantic.mypy"]
-
-[tool.django-stubs]
-django_settings_module = "flext_web.settings_simple"
-
-[[tool.mypy.overrides]]
-module = [
-    "ldif.*",
-    "singer.*",
-    "meltano.*",
-    "oracledb.*",
-    "fire.*",
-    "ldap3.*",
-    "prefect.*",
-]
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = ["tests.*", "conftest", "*/tests/*"]
-ignore_errors = false
-disallow_untyped_defs = false
-
-[tool.ruff]
-target-version = "py313"
-line-length = 88
-fix = true
-show-fixes = true
-respect-gitignore = true
-src = ["src", "tests", "scripts", "*/src"]
-extend-exclude = [
-    "__pycache__",
-    ".git",
-    ".mypy_cache",
-    ".pytest_cache",
-    ".ruff_cache",
-    ".venv",
-    "venv",
-    "build",
-    "dist",
-    "htmlcov",
-]
-
-[tool.ruff.lint]
-# Enable ALL rules for maximum quality (FLEXT Standard)
-select = ["ALL"]
-
-# ONLY ignore absolute conflicts and formatter issues
-ignore = [
-    # ===== FORMATTER CONFLICTS (MANDATORY TO IGNORE) =====
-    "COM812", # trailing-comma-missing (handled by formatter)
-    "D203",   # one-blank-line-before-class (conflicts with D211)
-    "D213",   # multi-line-docstring-summary-second-line (conflicts with D212)
-    "ISC001", # implicit-str-concat (conflicts with formatter)
-
-    # ===== REASONABLE FLEXIBILITY (FLEXT APPROVED) =====
-    "ANN401",
-    "ARG001",  # Unused argument (fix gradually)
-    "ARG002",  # Unused argument (fix gradually)
-    "BLE001",  # Do not catch blind exception (fix gradually)
-    "C901",    # Too complex (refactor gradually)
-    "D102",
-    "D103",    # Missing docstring in public module
-    "D105",
-    "D107",    # Missing docstring in __init__
-    "D401",
-    "DTZ001",
-    "DTZ005",
-    "E401",
-    "E501",
-    "EM101",   # Exception must not use a string literal
-    "EM102",   # Exception must not use an f-string literal
-    "ERA001",  # Commented out code (development)
-    "EXE001",  # Shebang is present but file is not executable
-    "F401",
-    "F823",
-    "FBT001",  # Boolean trap (refactor gradually)
-    "FBT002",  # Boolean trap (refactor gradually)
-    "FBT003",  # Boolean trap (refactor gradually)
-    "FIX002",  # Line contains TODO
-    "G004",
-    "PLC0415", # Import should be placed at top of module
-    "PLR0911", # Too many positional arguments (refactor gradually)
-    "PLR0912", # Too many branches (refactor gradually)
-    "PLR0913", # Too many arguments (refactor gradually)
-    "PLR0915", # Too many statements (refactor gradually)
-    "PLR2004", # Magic value used in comparison (case by case)
-    "PLW0603", # Unnecessary `else` after `return` (fix gradually)
-    "PTH118",
-    "PTH123",
-    "RUF001",
-    "S103",    # Use of assert (pytest requirement)
-    "S104",
-    "S105",
-    "S106",
-    "S107",
-    "S603",
-    "S607",
-    "SIM102",
-    "TD002",
-    "TD003",   # Missing issue link on TODO
-    "TRY003",  # Avoid specifying long messages outside exception class
-    "TRY203",
-    "TRY300",  # Try/except/finally should not be empty (refactor gradually)
-    "TRY301",
-    "TRY401",
-]
-
-[tool.ruff.lint.per-file-ignores]
-"**/tests/**" = [
-    "S101",    # Use of assert (pytest requirement)
-    "S106",    # Possible hardcoded password (test fixtures)
-    "PLR2004", # Magic values (test data)
-    "ANN",     # Type annotations (optional in tests)
-    "D",       # Docstrings (optional in tests)
-    "ARG",     # Unused arguments (fixtures)
-    "FBT",     # Boolean trap (test parameters)
-    "SLF001",  # Private member access (testing)
-    "DTZ001",  # Timezone aware datetime (test data)
-    "PLC0415", # Import should be placed at top of module (test utilities)
-]
-"**/scripts/**" = [
-    "T201",   # Print statements (allowed in scripts)
-    "S603",   # subprocess without shell=True (scripts)
-    "S607",   # Starting a process with a partial path (scripts)
-    "ANN",    # Type annotations (optional in scripts)
-    "D",      # Docstrings (optional in scripts)
-    "EXE001", # Shebang is present but file is not executable
-]
-"*/__init__.py" = [
-    "F401", # Module imported but unused (re-exports)
-    "D104", # Missing docstring in public package
-]
-
-
-# Auto-generated files - exclude from ALL linting
-"**/proto/*_pb2.py" = ["ALL"]
-"**/proto/*_pb2_grpc.py" = ["ALL"]
-"**/*_pb2.py" = ["ALL"]
-"**/*_pb2_grpc.py" = ["ALL"]
-"**/generated/**/*.py" = ["ALL"]
-[tool.ruff.format]
-quote-style = "double"
-indent-style = "space"
-line-ending = "lf"
-docstring-code-format = true
-
-[tool.ruff.lint.flake8-tidy-imports]
-ban-relative-imports = "all"
-
-[tool.ruff.lint.flake8-type-checking]
-strict = true
-
-[tool.ruff.lint.pylint]
-max-args = 8
-max-branches = 12
-max-returns = 6
-max-statements = 50
-
-[tool.ruff.lint.mccabe]
-max-complexity = 10
-
-[tool.bandit]
-targets = ["src"]
-exclude_dirs = ["tests", "build", "dist"]
-skips = ["B101", "B601"]
-
-[tool.pydantic-mypy]
-init_forbid_extra = true
-init_typed = true
-warn_required_dynamic_aliases = true
-
-[tool.vulture]
-min_confidence = 100
-paths = ["src"]
-exclude = ["tests/"]
-ignore_decorators = ["@app.route", "@router.get", "@router.post"]
-ignore_names = ["_*"]
-make_whitelist = true
-sort_by_size = true
-
-[tool.radon]
-exclude = ["tests/*", "*/tests/*"]
-ignore = ["F401"]
-total_average = true
-show_complexity = true
-average = true
-order = "SCORE"

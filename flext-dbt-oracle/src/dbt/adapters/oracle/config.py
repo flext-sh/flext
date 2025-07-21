@@ -2,34 +2,32 @@
 
 This module provides comprehensive configuration handling with validation,
 type safety, and enterprise features using standardized flext-core patterns.
-Enhanced to fully utilize flext-db-oracle parameterization and modern typing.
+Enhanced to fully utilize flext-infrastructure.databases.flext-db-oracle
+parameterization and modern typing.
 """
 
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, ClassVar
 
-from pydantic import ValidationInfo, field_validator
-
-# Use flext-core configuration patterns
-from flext_core import (
-    BaseConfig,
-    BaseSettings,
-    Field,
-    FlextFramework,
-)
+from flext_core.config.base import BaseConfig
 from flext_core.domain.constants import (
     Environments,
+    FlextFramework,
     LogLevels,
 )
 from flext_db_oracle import OracleConfig
 from flext_observability.logging import get_logger
 
+# Use flext-core configuration patterns
+from pydantic import BaseSettings, Field, ValidationInfo, field_validator
+
 # Import DBT Oracle adapter-specific constants with flext-core integration
 from .constants import DBTOracleAdapterConstants
 
 if TYPE_CHECKING:
-    from flext_core.domain.typedefs import (
+    # Import types from the types module where they're defined
+    from .types import (
         NonEmptyStr,
         Port,
         PositiveInt,
@@ -59,7 +57,7 @@ class DBTOracleSettings(BaseSettings):
     """
 
     # Project identification
-    project_name: str = Field(default="flext-dbt-oracle")
+    project_name: str = Field(default="flext-data.dbt.flext-dbt-oracle")
     project_version: str = Field(default=FlextFramework.VERSION)
     environment: str = Field(default=Environments.DEVELOPMENT)
 
@@ -173,7 +171,7 @@ class DBTOracleConfig(BaseConfig):
 
     # Project identification using flext-core patterns
     project_name: str = Field(
-        default="flext-dbt-oracle",
+        default="flext-data.dbt.flext-dbt-oracle",
         description="Project name",
     )
     project_version: str = Field(
@@ -317,7 +315,10 @@ class DBTOracleConfig(BaseConfig):
     def validate_materialization(cls, v: str) -> str:
         """Validate materialization strategy using constants."""
         if v not in DBTOracleAdapterConstants.VALID_MATERIALIZATIONS:
-            msg = f"Invalid materialization: {v}. Must be one of {DBTOracleAdapterConstants.VALID_MATERIALIZATIONS}"
+            msg = (
+                f"Invalid materialization: {v}. Must be one of "
+                f"{DBTOracleAdapterConstants.VALID_MATERIALIZATIONS}"
+            )
             raise ValueError(msg)
         return v
 
@@ -326,7 +327,10 @@ class DBTOracleConfig(BaseConfig):
     def validate_protocol(cls, v: str) -> str:
         """Validate protocol using constants."""
         if v not in DBTOracleAdapterConstants.VALID_PROTOCOLS:
-            msg = f"Invalid protocol: {v}. Must be one of {DBTOracleAdapterConstants.VALID_PROTOCOLS}"
+            msg = (
+                f"Invalid protocol: {v}. Must be one of "
+                f"{DBTOracleAdapterConstants.VALID_PROTOCOLS}"
+            )
             raise ValueError(msg)
         return v
 
@@ -335,7 +339,7 @@ class DBTOracleConfig(BaseConfig):
     def validate_host_required(cls, v: str | None) -> str | None:
         """Validate host is provided."""
         if not v:
-            msg = "host is required for DBT Oracle Adapter connections"
+            msg = "Host is required"
             raise ValueError(msg)
         return v
 
@@ -359,7 +363,7 @@ class DBTOracleConfig(BaseConfig):
     def validate_username_required(cls, v: str | None) -> str | None:
         """Validate username is provided."""
         if not v:
-            msg = "username is required for DBT Oracle Adapter connections"
+            msg = "Username is required"
             raise ValueError(msg)
         return v
 
@@ -368,7 +372,7 @@ class DBTOracleConfig(BaseConfig):
     def validate_password_required(cls, v: str | None) -> str | None:
         """Validate password is provided."""
         if not v:
-            msg = "password is required for DBT Oracle Adapter connections"
+            msg = "Password is required"
             raise ValueError(msg)
         return v
 
@@ -379,7 +383,7 @@ class DBTOracleConfig(BaseConfig):
         if info.data:
             min_size = info.data.get("pool_min_size", 1)
             if v < min_size:
-                msg = "pool_max_size must be greater than or equal to pool_min_size"
+                msg = f"Pool max size ({v}) must be greater than min size ({min_size})"
                 raise ValueError(
                     msg,
                 )
@@ -406,7 +410,7 @@ class DBTOracleConfig(BaseConfig):
         return self.schema
 
     def get_database_identifier(self) -> str:
-        """Get database identifier for flext-db-oracle.
+        """Get database identifier for flext-infrastructure.databases.flext-db-oracle.
 
         Returns:
             Database identifier (service_name, sid, or default)
@@ -415,7 +419,10 @@ class DBTOracleConfig(BaseConfig):
         return self.service_name or self.sid or "ORCL"
 
     def to_connection_config(self) -> dict[str, Any]:
-        """Convert to connection configuration for flext-db-oracle.
+        """Convert to connection configuration for flext-infrastructure.databases.flext-db-oracle.
+
+        Convert to connection configuration for
+        flext-infrastructure.databases.flext-db-oracle.
 
         Returns:
             Dictionary suitable for OracleConnection configuration
@@ -432,7 +439,10 @@ class DBTOracleConfig(BaseConfig):
         }
 
     def to_oracle_config(self) -> OracleConfig:
-        """Convert to modern flext-db-oracle OracleConfig.
+        """Convert to modern flext-infrastructure.databases.flext-db-oracle OracleConfig.
+
+        Convert to modern flext-infrastructure.databases.flext-db-oracle
+        OracleConfig.
 
         Returns:
             OracleConfig instance with proper parameterization for DBT operations
@@ -523,7 +533,10 @@ class DBTOracleConfig(BaseConfig):
 
     def _raise_config_incomplete_error(self) -> None:
         """Raise error for incomplete DBT Oracle Adapter configuration."""
-        msg = "DBT Oracle Adapter configuration incomplete: host, username, and password are required"
+        msg = (
+            "DBT Oracle Adapter configuration incomplete: host, username, and "
+            "password are required"
+        )
         raise ValueError(msg)
 
 

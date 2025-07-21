@@ -1,0 +1,210 @@
+"""Utilitários para identificar módulos da standard library."""
+
+from __future__ import annotations
+
+import sys
+
+
+def get_stdlib_modules() -> set[str]:
+    """Retorna conjunto de módulos da standard library do Python.
+
+    Returns:
+        Set com nomes dos módulos da stdlib
+
+    """
+    try:
+        # Usa builtin_module_names do sistema atual (mais seguro que subprocess)
+        builtin_modules = set(sys.builtin_module_names)
+
+        # Adiciona módulos conhecidos da stdlib que não estão em builtin_module_names
+        stdlib_extras = {
+            # Coleções e estruturas
+            "collections",
+            "functools",
+            "itertools",
+            "operator",
+            # Tipos e abstrações
+            "typing",
+            "dataclasses",
+            "enum",
+            "abc",
+            "types",
+            # IO e arquivos
+            "pathlib",
+            "io",
+            "os",
+            "sys",
+            "shutil",
+            "tempfile",
+            # Data e tempo
+            "datetime",
+            "time",
+            "calendar",
+            "zoneinfo",
+            # Formatos de dados
+            "json",
+            "csv",
+            "configparser",
+            "tomllib",
+            "xml",
+            "html",
+            # Matemática e números
+            "math",
+            "decimal",
+            "fractions",
+            "statistics",
+            "random",
+            # Texto e strings
+            "string",
+            "re",
+            "textwrap",
+            "difflib",
+            "unicodedata",
+            # Sistema e processos
+            "subprocess",
+            "threading",
+            "multiprocessing",
+            "asyncio",
+            "concurrent",
+            # Rede
+            "socket",
+            "http",
+            "urllib",
+            "email",
+            "ipaddress",
+            # Segurança
+            "hashlib",
+            "secrets",
+            "uuid",
+            "hmac",
+            # Utilitários
+            "logging",
+            "warnings",
+            "traceback",
+            "inspect",
+            "copy",
+            "copyreg",
+            "contextlib",
+            "atexit",
+            "weakref",
+            "gc",
+            "getpass",
+            "fnmatch",
+            # Desenvolvimento
+            "unittest",
+            "doctest",
+            "pdb",
+            "profile",
+            "timeit",
+            # Outros
+            "pickle",
+            "shelve",
+            "sqlite3",
+            "zlib",
+            "gzip",
+            "bz2",
+            "lzma",
+            "base64",
+            "binascii",
+            "struct",
+            "codecs",
+            "locale",
+            "gettext",
+            "argparse",
+            "getopt",
+            "readline",
+            "rlcompleter",
+            "platform",
+            "errno",
+            "ctypes",
+            "array",
+            "queue",
+            "heapq",
+            "bisect",
+            "pprint",
+            "reprlib",
+            "dis",
+            "ast",
+            "tokenize",
+            "keyword",
+            "builtins",
+            "__future__",
+            "imp",
+            "importlib",
+            "pkgutil",
+            "modulefinder",
+            "runpy",
+            "site",
+            "sysconfig",
+            "venv",
+            "numbers",
+            "cmath",
+            "audioop",
+            "chunk",
+            "colorsys",
+            "imghdr",
+            "ossaudiodev",
+            "sndhdr",
+            "wave",
+            "cgi",
+            "cgitb",
+            "wsgiref",
+            "ftplib",
+            "poplib",
+            "imaplib",
+            "smtplib",
+            "telnetlib",
+            "socketserver",
+            "xmlrpc",
+            "ssl",
+            "select",
+            "selectors",
+            "signal",
+            "mmap",
+            "msvcrt",
+            "winreg",
+            "winsound",
+            "posix",
+            "pwd",
+            "grp",
+            "termios",
+            "tty",
+            "pty",
+            "fcntl",
+            "resource",
+            "syslog",
+            "pipes",
+            "pathlib2",
+            "contextvars",
+        }
+
+        return builtin_modules | stdlib_extras
+
+    except Exception:
+        # Fallback para lista mínima se algo falhar
+        return {
+            "os",
+            "sys",
+            "re",
+            "json",
+            "math",
+            "random",
+            "datetime",
+            "time",
+            "pathlib",
+            "typing",
+            "collections",
+            "itertools",
+            "functools",
+            "subprocess",
+            "threading",
+            "asyncio",
+            "unittest",
+            "logging",
+            "copy",
+            "operator",
+            "contextlib",
+            "io",
+            "string",
+            "types",
+        }

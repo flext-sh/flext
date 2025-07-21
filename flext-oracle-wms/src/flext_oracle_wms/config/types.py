@@ -1,177 +1,183 @@
-"""Oracle WMS Configuration Types - Python 3.13 Enhanced with flext-core integration.
-
-This module provides comprehensive configuration type definitions for Oracle WMS
-integration using flext-core patterns and modern Python 3.13 type system features.
+"""Oracle WMS Configuration Types - Unified typing system using flext-core.
 
 Copyright (c) 2025 FLEXT Contributors
 SPDX-License-Identifier: MIT
+
+This module imports from the unified typing system in flext-core and defines
+Oracle WMS-specific configuration types using modern Python 3.13 patterns.
 """
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Annotated, Literal, TypedDict
+from typing import Annotated, Literal, TypedDict
 
-# Maximum flext-core type reuse for Oracle WMS configuration
-from flext_core.domain.typedefs import (
-    # Core configuration types
+# Import ALL types from unified core typing system - eliminate duplication
+from flext_core.domain.shared_types import (
     URL,
     ApiKey,
-    # Batch types
     BatchSize,
-    BatchTimeout,
-    # Configuration types
     ConfigurationKey,
     ConfigurationValue,
-    ConnectionTimeout,
     CpuPercent,
     DatabaseName,
-    # Database types
     DatabaseURL,
     DirPath,
     DiskMB,
+    DurationSeconds,
+    EntityId,
+    Environment,
     FileName,
-    # File and path types
     FilePath,
     FileSize,
-    # JSON types
     Json,
+    JsonDict,
     JsonList,
     JsonSchema,
-    # Resource types
+    LogLevel,
     MemoryMB,
     NonEmptyStr,
     NonNegativeInt,
+    OracleWMSAuthMethod,
+    OracleWMSEntityType,
+    OracleWMSFilterOperator,
+    OracleWMSPageMode,
+    OracleWMSWriteMode,
     Password,
     Port,
     PositiveInt,
-    # Retry types
+    ProjectName,
     RetryCount,
     RetryDelay,
+    ServiceResult,
     SingerBookmark,
     SingerCatalog,
     SingerRecordCount,
     SingerSchemaName,
     SingerState,
-    # Singer types
     SingerStreamName,
     TimeoutSeconds,
+    TimestampISO,
     Token,
-    # Authentication types
     Username,
-)
-from flext_core.domain.types import (
-    EntityId,
-    Environment,
-    LogLevel,
-    # Environment and project types
-    ProjectName,
-    # Core types
-    ServiceResult,
-    StrEnum,
-    Timestamp,
     Version,
+    WMSCompanyCode,
+    WMSFacilityCode,
+    WMSFieldMapping,
+    WMSFieldName,
+    WMSItemID,
+    WMSLocationID,
+    WMSOrderNumber,
 )
 from pydantic import Field
 
-if TYPE_CHECKING:
-    from flext_oracle_wms.constants import (
-        OracleWMSAuthMethod,
-        OracleWMSEntityType,
-        OracleWMSFilterOperator,
-        OracleWMSPageMode,
-        OracleWMSWriteMode,
-    )
-    from flext_oracle_wms.typedefs import (
-        WMSCompanyCode,
-        WMSFacilityCode,
-        WMSFieldMapping,
-        WMSFieldName,
-        WMSFilters,
-    )
-
 # ==============================================================================
-# ORACLE WMS CONFIGURATION TYPES - Using flext-core as foundation
+# ORACLE WMS SPECIFIC TYPE ALIASES - Building on unified types
 # ==============================================================================
 
-# Oracle WMS API configuration types
-OracleWMSApiUrl = URL  # Alias for clarity
-OracleWMSApiPort = Port  # Alias for clarity
-OracleWMSApiVersion = Annotated[
-    str, Field(min_length=1, max_length=10, description="Oracle WMS API version"),
+# Oracle WMS filters (complex type not in core)
+type WMSFilters = dict[WMSFieldName, dict[OracleWMSFilterOperator, str | list[str]]]
+
+# ==============================================================================
+# ORACLE WMS CONFIGURATION-SPECIFIC TYPES - Using unified types as foundation
+# ==============================================================================
+
+# Oracle WMS API configuration types (aliases from unified types for clarity)
+type OracleWMSApiUrl = URL
+type OracleWMSApiPort = Port
+type OracleWMSApiTimeout = TimeoutSeconds
+type OracleWMSApiVersion = Annotated[
+    str,
+    Field(min_length=1, max_length=10, description="Oracle WMS API version"),
 ]
-OracleWMSApiTimeout = TimeoutSeconds  # Alias for clarity
 
-# Oracle WMS authentication configuration types
-OracleWMSUsername = Username  # Alias for clarity
-OracleWMSPassword = Password  # Alias for clarity
-OracleWMSToken = Token  # Alias for clarity
-OracleWMSApiKey = ApiKey  # Alias for clarity
+# Oracle WMS authentication configuration types (aliases)
+type OracleWMSUsername = Username
+type OracleWMSPassword = Password
+type OracleWMSToken = Token
+type OracleWMSApiKey = ApiKey
 
-# Oracle WMS connection configuration types
-OracleWMSConnectionTimeout = ConnectionTimeout  # Alias for clarity
-OracleWMSConnectionRetries = RetryCount  # Alias for clarity
-OracleWMSConnectionRetryDelay = RetryDelay  # Alias for clarity
+# Oracle WMS connection configuration types (aliases)
+type OracleWMSConnectionTimeout = TimeoutSeconds
+type OracleWMSConnectionRetries = RetryCount
+type OracleWMSConnectionRetryDelay = RetryDelay
 
-# Oracle WMS batch configuration types
-OracleWMSBatchSize = BatchSize  # Alias for clarity
-OracleWMSBatchTimeout = BatchTimeout  # Alias for clarity
-OracleWMSBatchRetries = RetryCount  # Alias for clarity
+# Oracle WMS batch configuration types (aliases)
+type OracleWMSBatchSize = BatchSize
+type OracleWMSBatchTimeout = TimeoutSeconds
+type OracleWMSBatchRetries = RetryCount
 
 # Oracle WMS pagination configuration types
-OracleWMSPageSize = Annotated[
-    int, Field(ge=1, le=10000, description="Oracle WMS page size"),
+type OracleWMSPageSize = Annotated[
+    int,
+    Field(ge=1, le=10000, description="Oracle WMS page size"),
 ]
-OracleWMSPageOffset = Annotated[int, Field(ge=0, description="Oracle WMS page offset")]
+type OracleWMSPageOffset = Annotated[
+    int,
+    Field(ge=0, description="Oracle WMS page offset"),
+]
 
 # Oracle WMS schema configuration types
-OracleWMSSchemaTimeout = TimeoutSeconds  # Alias for clarity
-OracleWMSSchemaRetries = RetryCount  # Alias for clarity
-OracleWMSSchemaDiscovery = Annotated[
-    bool, Field(description="Enable Oracle WMS schema discovery"),
+type OracleWMSSchemaTimeout = TimeoutSeconds
+type OracleWMSSchemaRetries = RetryCount
+type OracleWMSSchemaDiscovery = Annotated[
+    bool,
+    Field(description="Enable Oracle WMS schema discovery"),
 ]
 
 # Oracle WMS flattening configuration types
-OracleWMSFlattenEnabled = Annotated[
-    bool, Field(description="Enable Oracle WMS data flattening"),
+type OracleWMSFlattenEnabled = Annotated[
+    bool,
+    Field(description="Enable Oracle WMS data flattening"),
 ]
-OracleWMSFlattenMaxDepth = Annotated[
-    int, Field(ge=1, le=10, description="Maximum flattening depth"),
+type OracleWMSFlattenMaxDepth = Annotated[
+    int,
+    Field(ge=1, le=10, description="Maximum flattening depth"),
 ]
-OracleWMSFlattenSeparator = Annotated[
-    str, Field(min_length=1, max_length=10, description="Flattening separator"),
+type OracleWMSFlattenSeparator = Annotated[
+    str,
+    Field(min_length=1, max_length=10, description="Flattening separator"),
 ]
 
 # Oracle WMS filtering configuration types
-OracleWMSFilterEnabled = Annotated[
-    bool, Field(description="Enable Oracle WMS filtering"),
+type OracleWMSFilterEnabled = Annotated[
+    bool,
+    Field(description="Enable Oracle WMS filtering"),
 ]
-OracleWMSFilterMaxConditions = Annotated[
-    int, Field(ge=1, le=100, description="Maximum filter conditions"),
+type OracleWMSFilterMaxConditions = Annotated[
+    int,
+    Field(ge=1, le=100, description="Maximum filter conditions"),
 ]
 
 # Oracle WMS rate limiting configuration types
-OracleWMSRateLimitEnabled = Annotated[
-    bool, Field(description="Enable Oracle WMS rate limiting"),
+type OracleWMSRateLimitEnabled = Annotated[
+    bool,
+    Field(description="Enable Oracle WMS rate limiting"),
 ]
-OracleWMSRateLimitRPM = Annotated[
-    int, Field(ge=1, le=10000, description="Requests per minute limit"),
+type OracleWMSRateLimitRPM = Annotated[
+    int,
+    Field(ge=1, le=10000, description="Requests per minute limit"),
 ]
-OracleWMSRateLimitDelay = Annotated[
-    float, Field(ge=0.0, le=60.0, description="Minimum delay between requests"),
+type OracleWMSRateLimitDelay = Annotated[
+    float,
+    Field(ge=0.0, le=60.0, description="Minimum delay between requests"),
 ]
 
 # Oracle WMS monitoring configuration types
-OracleWMSMonitoringEnabled = Annotated[
-    bool, Field(description="Enable Oracle WMS monitoring"),
+type OracleWMSMonitoringEnabled = Annotated[
+    bool,
+    Field(description="Enable Oracle WMS monitoring"),
 ]
-OracleWMSMonitoringInterval = Annotated[
-    int, Field(ge=1, le=3600, description="Monitoring interval in seconds"),
+type OracleWMSMonitoringInterval = Annotated[
+    int,
+    Field(ge=1, le=3600, description="Monitoring interval in seconds"),
 ]
-OracleWMSHealthCheckEnabled = Annotated[
-    bool, Field(description="Enable Oracle WMS health checks"),
+type OracleWMSHealthCheckEnabled = Annotated[
+    bool,
+    Field(description="Enable Oracle WMS health checks"),
 ]
-OracleWMSHealthCheckInterval = Annotated[
-    int, Field(ge=1, le=3600, description="Health check interval in seconds"),
+type OracleWMSHealthCheckInterval = Annotated[
+    int,
+    Field(ge=1, le=3600, description="Health check interval in seconds"),
 ]
 
 # ==============================================================================
@@ -699,15 +705,17 @@ type TestOracleWMSConfig = TestingOracleWMSConfig
 # EXPORT PUBLIC API
 # ==============================================================================
 
+# ==============================================================================
+# EXPORTS - ALL ORACLE WMS TYPES
+# ==============================================================================
+
 __all__ = [
-    # Core flext-core types (re-exported)
+    # Core types re-exported from unified system
     "URL",
     "ApiKey",
     "BatchSize",
-    "BatchTimeout",
     "ConfigurationKey",
     "ConfigurationValue",
-    "ConnectionTimeout",
     "CpuPercent",
     "DatabaseName",
     "DatabaseURL",
@@ -716,14 +724,15 @@ __all__ = [
     "DevelopmentOracleWMSConfig",
     "DirPath",
     "DiskMB",
+    "DurationSeconds",
     "EntityId",
     "Environment",
     "FileName",
     "FilePath",
     "FileSize",
-    # Complete configuration
     "FlextOracleWMSConfig",
     "Json",
+    "JsonDict",
     "JsonList",
     "JsonSchema",
     "LogLevel",
@@ -733,9 +742,9 @@ __all__ = [
     "OracleWMSApiKey",
     "OracleWMSApiPort",
     "OracleWMSApiTimeout",
-    # Oracle WMS configuration-specific types
     "OracleWMSApiUrl",
     "OracleWMSApiVersion",
+    "OracleWMSAuthMethod",
     "OracleWMSBatchRetries",
     "OracleWMSBatchSize",
     "OracleWMSBatchTimeout",
@@ -749,10 +758,12 @@ __all__ = [
     "OracleWMSConnectionTimeout",
     "OracleWMSEntityConfig",
     "OracleWMSEntityConfiguration",
+    "OracleWMSEntityType",
     "OracleWMSFilterConfig",
     "OracleWMSFilterConfiguration",
     "OracleWMSFilterEnabled",
     "OracleWMSFilterMaxConditions",
+    "OracleWMSFilterOperator",
     "OracleWMSFlattenEnabled",
     "OracleWMSFlattenMaxDepth",
     "OracleWMSFlattenSeparator",
@@ -762,6 +773,7 @@ __all__ = [
     "OracleWMSMonitoringConfiguration",
     "OracleWMSMonitoringEnabled",
     "OracleWMSMonitoringInterval",
+    "OracleWMSPageMode",
     "OracleWMSPageOffset",
     "OracleWMSPageSize",
     "OracleWMSPassword",
@@ -783,6 +795,7 @@ __all__ = [
     "OracleWMSTargetFullConfiguration",
     "OracleWMSToken",
     "OracleWMSUsername",
+    "OracleWMSWriteMode",
     "Password",
     "Port",
     "PositiveInt",
@@ -798,12 +811,20 @@ __all__ = [
     "SingerSchemaName",
     "SingerState",
     "SingerStreamName",
-    "StrEnum",
     "TestOracleWMSConfig",
     "TestingOracleWMSConfig",
     "TimeoutSeconds",
-    "Timestamp",
+    "TimestampISO",
     "Token",
     "Username",
     "Version",
+    "WMSCompanyCode",
+    "WMSFacilityCode",
+    "WMSFieldMapping",
+    "WMSFieldName",
+    # Oracle WMS specific types
+    "WMSFilters",
+    "WMSItemID",
+    "WMSLocationID",
+    "WMSOrderNumber",
 ]

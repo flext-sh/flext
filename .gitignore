@@ -347,6 +347,7 @@ pids/
 *.backup
 *.syntax_backup
 *.bak
+.bak/
 *.bkp
 *.tmp
 *.orig

@@ -1,8 +1,8 @@
-"""Configuration management for the Oracle Tap using flext-core patterns.
+"""This module provides comprehensive configuration handling with validation.
 
-This module provides comprehensive configuration handling with validation,
-type safety, and enterprise features using standardized flext-core patterns.
-Enhanced to fully utilize flext-db-oracle parameterization and modern typing.
+Type safety, and enterprise features using standardized flext-core patterns.
+Enhanced to fully utilize flext-infrastructure.databases.flext-db-oracle
+parameterization and modern typing.
 """
 
 from __future__ import annotations
@@ -13,47 +13,68 @@ from pydantic import ValidationInfo, field_validator
 
 # Use flext-core configuration patterns
 from flext_core import (
-    BaseConfig,
     BaseSettings,
     Field,
     FlextFramework,
 )
+from flext_core.base import BaseComponentConfig
 from flext_core.domain.constants import (
     ConfigDefaults,
-    Environments,
     LogLevels,
 )
 
 # Import tap-specific constants with flext-core integration
 from .constants import OracleTapConstants
 
+# Define Oracle-specific type aliases for tap-oracle
+# Oracle-specific types for this tap implementation
 if TYPE_CHECKING:
-    from flext_core.domain.typedefs import (
-        # Individual Oracle Types
-        NonEmptyStr,
-        OracleBatchSize,
-        OracleConnectionDict,
-        OracleHost,
-        OraclePassword,
-        OraclePort,
-        OracleQueryTimeout,
-        OracleSchema,
-        OracleServiceName,
-        OracleSID,
-        OracleStreamConfig,
-        # Composite Types for Maximum Code Reduction
-        OracleTapCompleteConfig,
-        OracleUsername,
-        PositiveInt,
-        # Singer Oracle Types (consolidated from flext-core)
-        SingerParallelStreams,
-        SingerPrimaryKey,
-        SingerReplicationKey,
-        SingerReplicationMethod,
-        SingerStreamName,
-        TableName,
-        TimeoutSeconds,
-    )
+    from flext_core.domain.types import EnvironmentLiteral
+
+    # Use proper types for type checking
+    NonEmptyStr = str
+    OracleBatchSize = int
+    OracleConnectionDict = dict[str, Any]
+    OracleHost = str
+    OraclePassword = str
+    OraclePort = int
+    OracleQueryTimeout = int
+    OracleSchema = str
+    OracleServiceName = str
+    OracleSID = str
+    OracleTapCompleteConfig = dict[str, Any]
+    OracleUsername = str
+    PositiveInt = int
+    SingerParallelStreams = int
+    SingerPrimaryKey = list[str]
+    SingerReplicationKey = str
+    SingerReplicationMethod = str
+    SingerStreamName = str
+    TableName = str
+    TimeoutSeconds = int
+else:
+    # Use simple types at runtime to avoid import errors
+    NonEmptyStr = str
+    OracleBatchSize = int
+    OracleConnectionDict = dict
+    OracleHost = str
+    OraclePassword = str
+    OraclePort = int
+    OracleQueryTimeout = int
+    OracleSchema = str
+    OracleServiceName = str
+    OracleSID = str
+    OracleTapCompleteConfig = dict
+    OracleUsername = str
+    PositiveInt = int
+    SingerParallelStreams = int
+    SingerPrimaryKey = list
+    SingerReplicationKey = str
+    SingerReplicationMethod = str
+    SingerStreamName = str
+    TableName = str
+    TimeoutSeconds = int
+
 from flext_db_oracle import OracleConfig
 from flext_observability.logging import get_logger
 
@@ -80,26 +101,31 @@ class OracleTapSettings(BaseSettings):
     """
 
     # Project identification
-    project_name: str = Field(default="flext-tap-oracle")
+    project_name: str = Field(default="flext-data.taps.flext-tap-oracle")
     project_version: str = Field(default=FlextFramework.VERSION)
-    environment: str = Field(default=Environments.DEVELOPMENT)
+    environment: EnvironmentLiteral = Field(default="development")
 
     # Oracle Database connection (environment variables)
     oracle_host: OracleHost | None = Field(
-        default=None, description="Oracle database host",
+        default=None,
+        description="Oracle database host",
     )
     oracle_port: OraclePort = Field(default=1521, description="Oracle database port")
     oracle_service_name: OracleServiceName | None = Field(
-        default=None, description="Oracle service name",
+        default=None,
+        description="Oracle service name",
     )
     oracle_username: OracleUsername | None = Field(
-        default=None, description="Oracle username",
+        default=None,
+        description="Oracle username",
     )
     oracle_password: OraclePassword | None = Field(
-        default=None, description="Oracle password",
+        default=None,
+        description="Oracle password",
     )
     oracle_schema: OracleSchema | None = Field(
-        default=None, description="Oracle schema name",
+        default=None,
+        description="Oracle schema name",
     )
 
     # Performance settings
@@ -108,7 +134,8 @@ class OracleTapSettings(BaseSettings):
         description="Default batch size for extraction",
     )
     default_timeout: OracleQueryTimeout = Field(
-        default=ConfigDefaults.DEFAULT_TIMEOUT, description="Default query timeout",
+        default=ConfigDefaults.DEFAULT_TIMEOUT,
+        description="Default query timeout",
     )
 
     # Logging
@@ -116,6 +143,8 @@ class OracleTapSettings(BaseSettings):
 
     # Model configuration for environment variables
     class Config:
+        """Model configuration for environment variables."""
+
         env_prefix = "TAP_ORACLE_"
         env_file = ".env"
         case_sensitive = False
@@ -125,6 +154,7 @@ class OracleTapSettings(BaseSettings):
 
         Returns:
             TapOracleConfig instance with environment values
+
         """
         return TapOracleConfig(
             host=self.oracle_host,
@@ -132,7 +162,7 @@ class OracleTapSettings(BaseSettings):
             service_name=self.oracle_service_name,
             username=self.oracle_username,
             password=self.oracle_password,
-            schema=self.oracle_schema,
+            schema_name=self.oracle_schema,
             batch_size=self.default_batch_size,
             query_timeout=self.default_timeout,
             log_level=self.log_level,
@@ -142,7 +172,7 @@ class OracleTapSettings(BaseSettings):
         )
 
 
-class TapOracleConfig(BaseConfig):
+class Config(BaseComponentConfig):
     """Configuration for the Oracle Tap with comprehensive validation.
 
     Supports multiple Oracle connection types and provides enterprise-grade
@@ -158,12 +188,17 @@ class TapOracleConfig(BaseConfig):
     )
 
     # Project identification using flext-core patterns
-    project_name: str = Field(default="flext-tap-oracle", description="Project name")
+    project_name: str = Field(
+        default="flext-data.taps.flext-tap-oracle",
+        description="Project name",
+    )
     project_version: str = Field(
-        default=FlextFramework.VERSION, description="Project version",
+        default=FlextFramework.VERSION,
+        description="Project version",
     )
     environment: str = Field(
-        default=Environments.DEVELOPMENT, description="Environment name",
+        default="development",
+        description="Environment name",
     )
 
     # Oracle Database connection using standardized Oracle types
@@ -191,7 +226,7 @@ class TapOracleConfig(BaseConfig):
         default=None,
         description="Oracle password",
     )
-    schema: OracleSchema | None = Field(
+    schema_name: OracleSchema | None = Field(
         default=None,
         description="Oracle schema name",
     )
@@ -303,6 +338,8 @@ class TapOracleConfig(BaseConfig):
 
     # Configuration inherits from BaseConfig but customizes prefix
     class Config:
+        """Model configuration for environment variables."""
+
         env_prefix = "TAP_ORACLE_"
         case_sensitive = False
         extra = "forbid"  # Prevent unknown configuration keys
@@ -312,61 +349,70 @@ class TapOracleConfig(BaseConfig):
     def validate_connection_type(cls, v: str) -> str:
         """Validate connection type using constants."""
         if v not in OracleTapConstants.VALID_CONNECTION_TYPES:
-            msg = f"Invalid connection_type: {v}. Must be one of {OracleTapConstants.VALID_CONNECTION_TYPES}"
-            raise ValueError(
-                msg,
+            msg = (
+                f"Invalid connection type: {v}. "
+                f"Valid types: {OracleTapConstants.VALID_CONNECTION_TYPES}"
             )
+            raise ValueError(msg)
         return v
 
     @field_validator("host")
     @classmethod
     def validate_host_for_database(
-        cls, v: str | None, info: ValidationInfo,
+        cls,
+        v: str | None,
+        info: ValidationInfo,
     ) -> str | None:
         """Validate host is provided for database connections."""
         if info.data:
             connection_type = info.data.get("connection_type")
             if connection_type in {"database", "hybrid"} and not v:
-                msg = "host is required for database connections"
+                msg = "Host is required for database connections"
                 raise ValueError(msg)
         return v
 
     @field_validator("service_name")
     @classmethod
     def validate_service_name_for_database(
-        cls, v: str | None, info: ValidationInfo,
+        cls,
+        v: str | None,
+        info: ValidationInfo,
     ) -> str | None:
         """Validate service_name is provided for database connections."""
         if info.data:
             connection_type = info.data.get("connection_type")
             if connection_type in {"database", "hybrid"} and not v:
-                msg = "service_name is required for database connections"
+                msg = "Service name is required for database connections"
                 raise ValueError(msg)
         return v
 
     @field_validator("username")
     @classmethod
     def validate_username_for_database(
-        cls, v: str | None, info: ValidationInfo,
+        cls,
+        v: str | None,
+        info: ValidationInfo,
     ) -> str | None:
         """Validate username is provided for database connections."""
         if info.data:
             connection_type = info.data.get("connection_type")
             if connection_type in {"database", "hybrid"} and not v:
-                msg = "username is required for database connections"
+                msg = "Username is required for database connections"
                 raise ValueError(msg)
         return v
 
     @field_validator("password")
     @classmethod
     def validate_password_for_database(
-        cls, v: str | None, info: ValidationInfo,
+        cls,
+        v: str | None,
+        info: ValidationInfo,
     ) -> str | None:
         """Validate password is provided for database connections."""
         if info.data:
             connection_type = info.data.get("connection_type")
             if connection_type in {"database", "hybrid"} and not v:
-                msg = "password is required for database connections"
+                msg = "Password is required for database connections"
                 raise ValueError(msg)
         return v
 
@@ -397,7 +443,9 @@ class TapOracleConfig(BaseConfig):
     @field_validator("tables")
     @classmethod
     def validate_tables(
-        cls, v: list[str] | None, info: ValidationInfo,
+        cls,
+        v: list[str] | None,
+        info: ValidationInfo,
     ) -> list[str] | None:
         """Validate tables configuration."""
         if info.data:
@@ -411,6 +459,7 @@ class TapOracleConfig(BaseConfig):
 
         Returns:
             Connection string with masked password
+
         """
         return (
             f"oracle://{self.username}:***@{self.host}:{self.port}/{self.service_name}"
@@ -421,14 +470,16 @@ class TapOracleConfig(BaseConfig):
 
         Returns:
             Schema name, defaulting to username if not specified
+
         """
-        return self.schema or self.username or "UNKNOWN"
+        return self.schema_name or self.username or "UNKNOWN"
 
     def to_connection_config(self) -> OracleConnectionDict:
         """Convert to connection configuration using flext-core composite types.
 
         Returns:
             Oracle connection dictionary with type safety
+
         """
         return {
             "host": self.host,
@@ -457,7 +508,7 @@ class TapOracleConfig(BaseConfig):
             "sid": self.sid,
             "username": self.username,
             "password": self.password,
-            "schema": self.schema,
+            "schema": self.schema_name,
             "tables": self.tables,
             "exclude_tables": self.exclude_tables,
             "table_pattern": self.table_pattern,
@@ -479,10 +530,11 @@ class TapOracleConfig(BaseConfig):
         }
 
     def to_oracle_config(self) -> OracleConfig:
-        """Convert to modern flext-db-oracle OracleConfig.
+        """Convert to modern flext-infrastructure.databases.flext-db-oracle OracleConfig.
 
         Returns:
             OracleConfig instance with proper parameterization
+
         """
         return OracleConfig(
             host=self.host or "localhost",
@@ -508,6 +560,7 @@ class TapOracleConfig(BaseConfig):
 
         Returns:
             Dictionary of performance configuration
+
         """
         return {
             "batch_size": self.batch_size,
@@ -522,6 +575,7 @@ class TapOracleConfig(BaseConfig):
 
         Returns:
             Dictionary of circuit breaker settings
+
         """
         return {
             "enabled": self.enable_circuit_breaker,
@@ -555,41 +609,17 @@ class TapOracleConfig(BaseConfig):
 
     def _raise_config_incomplete_error(self) -> None:
         """Raise error for incomplete Oracle Database configuration."""
-        msg = "Oracle Database configuration incomplete: host, service_name, username, and password are required"
+        msg = (
+            "Incomplete Oracle Database configuration: host, service_name, "
+            "username, and password are required"
+        )
         raise ValueError(msg)
 
 
-class OracleStreamConfig(BaseConfig):
-    """Configuration for individual Oracle streams."""
+# TapOracleConfig alias for backward compatibility
+TapOracleConfig = Config
 
-    stream_name: SingerStreamName = Field(
-        description="Name of the stream",
-    )
-    source_table: TableName | None = Field(
-        default=None,
-        description="Source table name (for database streams)",
-    )
-    source_endpoint: NonEmptyStr | None = Field(
-        default=None,
-        description="Source API endpoint (for API streams)",
-    )
-    replication_method: SingerReplicationMethod = Field(
-        default=OracleTapConstants.REPLICATION_METHOD_FULL_TABLE,
-        description="Replication method",
-    )
-    replication_key: SingerReplicationKey | None = Field(
-        default=None,
-        description="Replication key for incremental streams",
-    )
-    primary_keys: SingerPrimaryKey | None = Field(
-        default_factory=list,
-        description="Primary key columns",
-    )
-    selected: bool = Field(
-        default=True,
-        description="Whether the stream is selected for extraction",
-    )
-
-    # Stream config uses base configuration
-    class Config:
-        extra = "forbid"
+# CRITICAL: Rebuild models after all forward references are resolved
+# This fixes Pydantic "not fully defined" errors at runtime
+TapOracleConfig.model_rebuild()
+# TapOracleStreamConfig.model_rebuild()  # Stream config handled by base Singer classes

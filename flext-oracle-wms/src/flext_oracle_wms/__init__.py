@@ -3,7 +3,8 @@
 This library provides comprehensive Oracle WMS integration capabilities with:
 - Python 3.13 type safety and flext-core integration
 - Mandatory flattening/deflattening capabilities for Singer SDK compliance
-- Advanced filtering with all required operators (eq, neq, gt, gte, lt, lte, in, nin, like)
+- Advanced filtering with all required operators
+  (eq, neq, gt, gte, lt, lte, in, nin, like)
 - Dynamic schema discovery and entity processing
 - Pagination modes: "api" (offset-based) and "sequenced" (cursor-based)
 - Complete Oracle WMS API integration (NOT Oracle Database)
@@ -11,6 +12,8 @@ This library provides comprehensive Oracle WMS integration capabilities with:
 Copyright (c) 2025 FLEXT Contributors
 SPDX-License-Identifier: MIT
 """
+
+from __future__ import annotations
 
 __version__ = "2.0.0"
 

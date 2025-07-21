@@ -1,7 +1,8 @@
 """FLEXT DBT Oracle Adapter - Modern Oracle Database Integration for DBT.
 
 This adapter provides enterprise-grade Oracle database integration for DBT using
-flext-db-oracle as the foundation, ensuring zero code duplication and maximum
+flext-infrastructure.databases.flext-db-oracle as the foundation, ensuring zero code
+duplication and maximum
 reliability for data transformation workflows.
 
 Copyright (c) 2025 FLEXT Team. All rights reserved.
@@ -10,12 +11,12 @@ Copyright (c) 2025 FLEXT Team. All rights reserved.
 from __future__ import annotations
 
 from dbt.adapters.oracle.config import (
-    DBTOracleAdapterConstants,
     DBTOracleConfig,
     DBTOracleSettings,
     OracleCredentialsConfig,
 )
 from dbt.adapters.oracle.connections import OracleConnectionManager
+from dbt.adapters.oracle.constants import DBTOracleAdapterConstants
 from dbt.adapters.oracle.impl import OracleAdapter
 from dbt.adapters.oracle.types import (
     DBTOracleColumnInfo,

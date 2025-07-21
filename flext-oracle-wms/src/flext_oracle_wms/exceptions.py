@@ -11,10 +11,10 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 # Import flext-core exception base
-from flext_core.exceptions.base import FlextError
+from flext_core.domain.core import DomainError as FlextError
 
 if TYPE_CHECKING:
-    from flext_core.domain.typedefs import WMSEntityName, WMSErrorCode
+    from flext_core.domain.types import WMSEntityName
 
 
 class OracleWMSError(FlextError):
@@ -23,7 +23,7 @@ class OracleWMSError(FlextError):
     def __init__(
         self,
         message: str,
-        error_code: WMSErrorCode | None = None,
+        error_code: str | None = None,
         entity_name: WMSEntityName | None = None,
         details: dict[str, Any] | None = None,
     ) -> None:
@@ -87,7 +87,7 @@ class APIError(OracleWMSError):
         self.response_body = response_body
 
 
-class ConnectionError(OracleWMSError):
+class OracleWMSConnectionError(OracleWMSError):
     """Oracle WMS connection and network errors."""
 
     def __init__(
@@ -172,7 +172,10 @@ class EntityNotFoundError(OracleWMSError):
         """
         message = message or f"Oracle WMS entity '{entity_name}' not found"
         super().__init__(
-            message, error_code="ENTITY_NOT_FOUND", entity_name=entity_name, **kwargs,
+            message,
+            error_code="ENTITY_NOT_FOUND",
+            entity_name=entity_name,
+            **kwargs,
         )
 
 

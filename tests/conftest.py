@@ -10,19 +10,11 @@ import os
 from pathlib import Path
 
 import pytest
+from flext_core import DIContainer, configure_container
 
 # Set test environment
 os.environ["FLEXT_ENV"] = "testing"
 os.environ["FLEXT_DEBUG"] = "true"
-
-# Add src to Python path
-import sys
-
-workspace_root = Path(__file__).parent.parent
-sys.path.insert(0, str(workspace_root / "src"))
-
-# Import after path setup
-from flext_core import FlextContainer, configure_container
 
 
 @pytest.fixture(scope="session")
@@ -32,9 +24,9 @@ def workspace_root() -> Path:
 
 
 @pytest.fixture
-def di_container() -> FlextContainer:
+def di_container() -> DIContainer:
     """Get a fresh DI container for each test."""
-    container = FlextContainer()
+    container = DIContainer()
     configure_container(container)
     return container
 

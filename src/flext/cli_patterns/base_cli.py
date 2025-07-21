@@ -8,11 +8,10 @@ from pathlib import Path
 from typing import Any
 
 import click
+from flext_core.domain.pydantic_base import DomainBaseModel
 from pydantic import Field
 from rich.console import Console
 from rich.logging import RichHandler
-
-from flext_core.domain.pydantic_base import DomainBaseModel
 
 
 class CLIConfig(DomainBaseModel):
