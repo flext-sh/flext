@@ -7,6 +7,8 @@ Copyright (c) 2025 FLEXT Contributors
 SPDX-License-Identifier: MIT
 """
 
+from __future__ import annotations
+
 # Import the actual OracleWMSConfig class from the parent module
 from flext_oracle_wms.config.types import (
     # Environment configurations

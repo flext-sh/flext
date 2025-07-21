@@ -20,10 +20,6 @@ from rich.panel import Panel
 from rich.progress import Progress
 from rich.table import Table
 
-from flext_core import (
-    get_flext_container,
-)
-
 # Initialize console
 console = Console()
 
@@ -52,7 +48,6 @@ class WorkspaceService:
 
     def __init__(self) -> None:
         """Initialize workspace service."""
-        self.container = get_flext_container()
         self.modules = MODULE_DIRS
 
     def run_command(
@@ -314,7 +309,6 @@ def integration_test(env: str) -> None:
     workspace_service.run_command(
         ["docker-compose", "-f", "docker-compose.yml", "up", "-d"],
     )
-
     try:
         # Run integration tests
         workspace_service.run_command(

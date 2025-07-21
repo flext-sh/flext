@@ -14,7 +14,6 @@ from typing import TYPE_CHECKING, Any, TypedDict
 from flext_core.domain.types import ServiceResult
 
 from flext_oracle_wms.constants import OracleWMSDefaults, OracleWMSErrorMessages
-from flext_oracle_wms.exceptions import OracleWMSFlatteningError
 
 if TYPE_CHECKING:
     from flext_oracle_wms.typedefs import (
@@ -72,7 +71,7 @@ class OracleWMSFlattener:
     ) -> ServiceResult[FlatteningResult]:
         """Flatten a WMS record with mandatory capabilities."""
         if not self.enabled:
-            return ServiceResult.success(
+            return ServiceResult.ok(
                 FlatteningResult(
                     flattened_record=record,
                     original_schema=schema or {},
@@ -105,12 +104,11 @@ class OracleWMSFlattener:
                 },
             )
 
-            return ServiceResult.success(result)
+            return ServiceResult.ok(result)
 
         except Exception as e:
-            return ServiceResult.error(
-                OracleWMSErrorMessages.FLATTENING_FAILED,
-                {"error": str(e), "record_keys": list(record.keys()) if record else []},
+            return ServiceResult.fail(
+                f"{OracleWMSErrorMessages.FLATTENING_FAILED}: {e}",
             )
 
     def flatten_batch(
@@ -120,7 +118,7 @@ class OracleWMSFlattener:
     ) -> ServiceResult[list[FlatteningResult]]:
         """Flatten a batch of WMS records."""
         if not self.enabled:
-            return ServiceResult.success(
+            return ServiceResult.ok(
                 [
                     FlatteningResult(
                         flattened_record=record,
@@ -133,23 +131,27 @@ class OracleWMSFlattener:
             )
 
         try:
-            results = []
+            results: list[FlatteningResult] = []
             for record in records:
                 flatten_result = self.flatten_record(record, schema)
-                if flatten_result.success:
-                    results.append(flatten_result.data)
-                else:
-                    return ServiceResult.error(
-                        OracleWMSErrorMessages.FLATTENING_FAILED,
-                        {"batch_error": flatten_result.error, "record": record},
+                if not flatten_result.is_successful:
+                    return ServiceResult.fail(
+                        f"{OracleWMSErrorMessages.FLATTENING_FAILED}: "
+                        f"{flatten_result.error}",
                     )
+                # Since we know it's successful, data is guaranteed to be not None
+                if flatten_result.data is None:
+                    return ServiceResult.fail(
+                        f"{OracleWMSErrorMessages.FLATTENING_FAILED}: "
+                        "Result data is None despite success status",
+                    )
+                results.append(flatten_result.data)
 
-            return ServiceResult.success(results)
+            return ServiceResult.ok(results)
 
         except Exception as e:
-            return ServiceResult.error(
-                OracleWMSErrorMessages.FLATTENING_FAILED,
-                {"error": str(e), "batch_size": len(records)},
+            return ServiceResult.fail(
+                f"{OracleWMSErrorMessages.FLATTENING_FAILED}: {e}",
             )
 
     def _flatten_object(
@@ -269,12 +271,13 @@ class OracleWMSDeflattener:
             # Validate structure if enabled
             if self.validate_structure and original_schema:
                 validation_result = self._validate_restored_structure(
-                    original_record, restored_schema,
+                    original_record,
+                    restored_schema,
                 )
                 if not validation_result:
-                    return ServiceResult.error(
-                        OracleWMSErrorMessages.DEFLATTENING_FAILED,
-                        {"validation_error": "Restored structure doesn't match schema"},
+                    return ServiceResult.fail(
+                        f"{OracleWMSErrorMessages.DEFLATTENING_FAILED}: "
+                        "Restored structure doesn't match schema",
                     )
 
             result = DeflatteningResult(
@@ -293,17 +296,11 @@ class OracleWMSDeflattener:
                 },
             )
 
-            return ServiceResult.success(result)
+            return ServiceResult.ok(result)
 
         except Exception as e:
-            return ServiceResult.error(
-                OracleWMSErrorMessages.DEFLATTENING_FAILED,
-                {
-                    "error": str(e),
-                    "flattened_keys": (
-                        list(flattened_record.keys()) if flattened_record else []
-                    ),
-                },
+            return ServiceResult.fail(
+                f"{OracleWMSErrorMessages.DEFLATTENING_FAILED}: {e}",
             )
 
     def deflattened_batch(
@@ -313,33 +310,35 @@ class OracleWMSDeflattener:
     ) -> ServiceResult[list[DeflatteningResult]]:
         """Deflattened a batch of flattened WMS records."""
         try:
-            results = []
+            results: list[DeflatteningResult] = []
             for flattened_record in flattened_records:
                 deflattened_result = self.deflattened_record(
-                    flattened_record, original_schema,
+                    flattened_record,
+                    original_schema,
                 )
-                if deflattened_result.success:
-                    results.append(deflattened_result.data)
-                else:
-                    return ServiceResult.error(
-                        OracleWMSErrorMessages.DEFLATTENING_FAILED,
-                        {
-                            "batch_error": deflattened_result.error,
-                            "record": flattened_record,
-                        },
+                if not deflattened_result.is_successful:
+                    return ServiceResult.fail(
+                        f"{OracleWMSErrorMessages.DEFLATTENING_FAILED}: "
+                        f"{deflattened_result.error}",
                     )
+                # Since we know it's successful, data is guaranteed to be not None
+                if deflattened_result.data is None:
+                    return ServiceResult.fail(
+                        f"{OracleWMSErrorMessages.DEFLATTENING_FAILED}: "
+                        "Result data is None despite success status",
+                    )
+                results.append(deflattened_result.data)
 
-            return ServiceResult.success(results)
+            return ServiceResult.ok(results)
 
         except Exception as e:
-            return ServiceResult.error(
-                OracleWMSErrorMessages.DEFLATTENING_FAILED,
-                {"error": str(e), "batch_size": len(flattened_records)},
+            return ServiceResult.fail(
+                f"{OracleWMSErrorMessages.DEFLATTENING_FAILED}: {e}",
             )
 
     def _deflattened_object(self, flattened_obj: dict[str, Any]) -> dict[str, Any]:
         """Recursively deflattened a flattened object."""
-        result = {}
+        result: dict[str, Any] = {}
 
         for key, value in flattened_obj.items():
             self._set_nested_value(result, key, value)
@@ -374,9 +373,7 @@ class OracleWMSDeflattener:
                     # This shouldn't happen in well-formed flattened data
                     if self.strict_mode:
                         msg = f"Invalid array index structure: {key}"
-                        raise OracleWMSFlatteningError(
-                            msg,
-                        )
+                        raise ValueError(msg)
                     continue
             else:
                 if k not in current:
@@ -390,19 +387,32 @@ class OracleWMSDeflattener:
         # Set the final value
         final_key = keys[-1]
         if final_key.isdigit():
-            # This is an array index
+            # This is an array index - but current should be a dict here
+            # The parent should have been set as an array in the loop above
             index = int(final_key)
-            if not isinstance(current, list):
-                current = []
-            while len(current) <= index:
-                current.append(None)
-            current[index] = value
+            parent_key = keys[-2] if len(keys) > 1 else None
+            if parent_key and parent_key in obj:
+                parent_obj = obj
+                for k in keys[:-2]:
+                    parent_obj = parent_obj[k]
+                if parent_key in parent_obj and isinstance(
+                    parent_obj[parent_key],
+                    list,
+                ):
+                    while len(parent_obj[parent_key]) <= index:
+                        parent_obj[parent_key].append(None)
+                    parent_obj[parent_key][index] = value
+                else:
+                    # Fallback: treat as regular field
+                    current[final_key] = value
+            else:
+                current[final_key] = value
         else:
             current[final_key] = value
 
     def _restore_schema(self, flattened_schema: WMSFlattenedSchema) -> WMSSchema:
         """Restore original schema from flattened schema."""
-        restored_schema = {}
+        restored_schema: dict[str, Any] = {}
 
         for field_name, field_props in flattened_schema.items():
             if self.separator in field_name:
@@ -414,7 +424,10 @@ class OracleWMSDeflattener:
         return restored_schema
 
     def _set_nested_schema_value(
-        self, schema: dict[str, Any], field_path: str, field_props: Any,
+        self,
+        schema: dict[str, Any],
+        field_path: str,
+        field_props: Any,
     ) -> None:
         """Set nested schema value using field path."""
         keys = field_path.split(self.separator)
@@ -434,7 +447,9 @@ class OracleWMSDeflattener:
         current[final_key] = field_props
 
     def _validate_restored_structure(
-        self, restored_record: WMSRecord, original_schema: WMSSchema,
+        self,
+        restored_record: WMSRecord,
+        original_schema: WMSSchema,
     ) -> bool:
         """Validate that restored record matches original schema."""
         try:
@@ -452,17 +467,39 @@ class OracleWMSDeflattener:
                         field_value = restored_record[field_name]
 
                         # Type validation
-                        if (field_type == "object" and not isinstance(field_value, dict)) or (field_type == "array" and not isinstance(
-                            field_value, list,
-                        )):
+                        if (
+                            field_type == "object" and not isinstance(field_value, dict)
+                        ) or (
+                            field_type == "array"
+                            and not isinstance(
+                                field_value,
+                                list,
+                            )
+                        ):
                             return False
-                        if (field_type == "string" and not isinstance(
-                            field_value, str,
-                        )) or (field_type == "number" and not isinstance(
-                            field_value, (int, float),
-                        )) or (field_type == "boolean" and not isinstance(
-                            field_value, bool,
-                        )):
+                        if (
+                            (
+                                field_type == "string"
+                                and not isinstance(
+                                    field_value,
+                                    str,
+                                )
+                            )
+                            or (
+                                field_type == "number"
+                                and not isinstance(
+                                    field_value,
+                                    (int, float),
+                                )
+                            )
+                            or (
+                                field_type == "boolean"
+                                and not isinstance(
+                                    field_value,
+                                    bool,
+                                )
+                            )
+                        ):
                             return False
 
             return True
@@ -480,7 +517,10 @@ def create_flattener(
 ) -> OracleWMSFlattener:
     """Create a configured Oracle WMS flattener."""
     return OracleWMSFlattener(
-        enabled=enabled, max_depth=max_depth, separator=separator, **kwargs,
+        enabled=enabled,
+        max_depth=max_depth,
+        separator=separator,
+        **kwargs,
     )
 
 

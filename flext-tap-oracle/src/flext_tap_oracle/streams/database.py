@@ -1,7 +1,6 @@
-"""Oracle Database Stream Implementation with Enterprise Features.
+"""This module provides Oracle Database table and view streaming capabilities using the flext-infrastructure.databases.flext-db-oracle foundation.
 
-This module provides Oracle Database table and view streaming capabilities
-using the flext-db-oracle foundation for zero code duplication.
+This implementation uses the actual foundation for zero code duplication.
 """
 
 from __future__ import annotations
@@ -18,7 +17,7 @@ from itertools import starmap
 
 from singer_sdk import typing as th
 
-from flext_db_oracle import OracleConnectionService, OracleQueryService
+from flext_db_oracle import OracleConfig, OracleConnectionService, OracleQueryService
 from flext_db_oracle.utils.exceptions import OracleQueryError
 from flext_observability.logging import get_logger
 from flext_tap_oracle.query_builder import SimpleOracleQueryBuilder
@@ -51,7 +50,8 @@ logger = get_logger(__name__)
 class OracleTableStream(BaseOracleStream):
     """Oracle Database Table Stream with enterprise features.
 
-    Streams data from Oracle database tables using flext-db-oracle
+    Streams data from Oracle database tables using
+    flext-infrastructure.databases.flext-db-oracle
     as the connection foundation. Supports incremental extraction,
     performance monitoring, and enterprise error handling.
     """
@@ -76,6 +76,7 @@ class OracleTableStream(BaseOracleStream):
             oracle_config: Pre-configured Oracle config dictionary
             primary_keys: Primary key columns
             **kwargs: Additional stream arguments
+
         """
         super().__init__(tap=tap, name=name, **kwargs)
         self.table_name = table_name
@@ -83,7 +84,8 @@ class OracleTableStream(BaseOracleStream):
         self.primary_keys = primary_keys or []
         self._oracle_config = oracle_config
 
-        # Modern flext-db-oracle services for real database operations
+        # Modern flext-infrastructure.databases.flext-db-oracle services for
+        # real database operations
         self._oracle_connection_service: OracleConnectionService | None = None
         self._oracle_query_service: OracleQueryService | None = None
 
@@ -113,26 +115,44 @@ class OracleTableStream(BaseOracleStream):
             preserve_types=True,
         )
 
-        # Modern query builder using flext-db-oracle parameterization
+        # Modern query builder using flext-infrastructure.databases.flext-db-oracle
+        # parameterization
         self._query_builder = SimpleOracleQueryBuilder()
 
         logger.info(
-            "Initialized Oracle table stream: %s.%s", schema or "default", table_name,
+            "Initialized Oracle table stream: %s.%s",
+            schema or "default",
+            table_name,
         )
 
     @property
     def oracle_query_service(self) -> OracleQueryService:
-        """Get modern Oracle query service using flext-db-oracle."""
+        """Get modern Oracle query service using flext-infrastructure.databases.flext-db-oracle.
+
+        Returns:
+            OracleQueryService instance for query execution
+
+        """
         if self._oracle_query_service is None:
             # Initialize from tap's connection service
-            if hasattr(self.tap, "connection_service"):
+            if hasattr(self, "tap") and hasattr(self.tap, "connection_service"):
                 oracle_connection_service = self.tap.connection_service
                 self._oracle_query_service = OracleQueryService(
                     oracle_connection_service,
                 )
             else:
                 # Fallback: create from tap config
-                oracle_config = self.tap.tap_config.to_oracle_config()
+                if hasattr(self, "tap") and hasattr(self.tap, "tap_config"):
+                    oracle_config = self.tap.tap_config.to_oracle_config()
+                else:
+                    # Create minimal config if tap not available
+                    oracle_config = OracleConfig(
+                        host="localhost",
+                        port=1521,
+                        service_name="XE",
+                        username="oracle",
+                        password="oracle",
+                    )
                 oracle_connection_service = OracleConnectionService(oracle_config)
                 self._oracle_query_service = OracleQueryService(
                     oracle_connection_service,
@@ -142,14 +162,20 @@ class OracleTableStream(BaseOracleStream):
 
     @property
     def query_service(self) -> OracleQueryService:
-        """Get Oracle query service using flext-db-oracle (NO DIRECT CONNECTION)."""
+        """Get Oracle query service using flext-infrastructure.databases.flext-db-oracle (NO DIRECT CONNECTION).
+
+        Returns:
+            OracleQueryService instance from the tap's connection service
+
+        """
         # Always use the tap's connection service
         if hasattr(self, "tap") and hasattr(self.tap, "connection_service"):
             if self._oracle_query_service is None:
                 connection_service = self.tap.connection_service
                 self._oracle_query_service = OracleQueryService(connection_service)
             return self._oracle_query_service
-        msg = "Tap connection service not available"
+
+        msg = "No connection service available from tap"
         raise OracleQueryError(msg)
 
     @property
@@ -164,9 +190,11 @@ class OracleTableStream(BaseOracleStream):
 
         Returns:
             JSON Schema for the table
+
         """
         try:
-            # Get table metadata using flext-db-oracle methods
+            # Get table metadata using flext-infrastructure.databases.flext-db-oracle
+            # methods
             columns = self._get_table_columns()
 
             properties = {}
@@ -255,6 +283,26 @@ class OracleTableStream(BaseOracleStream):
         else:
             return schema
 
+    def _raise_query_safety_error(self, table_name: str, query: str) -> None:
+        """Raise query safety error."""
+        msg = f"Unsafe query detected for {table_name}"
+        raise OracleQueryError(msg, sql=query)
+
+    def _raise_query_execution_error(self, error: str, query: str) -> None:
+        """Raise query execution error."""
+        error_msg = f"Query execution failed: {error}"
+        raise OracleQueryError(error_msg, sql=query)
+
+    def _raise_schema_safety_error(self, table_name: str, sql: str) -> None:
+        """Raise schema safety error."""
+        msg = f"Unsafe schema query detected for {table_name}"
+        raise OracleQueryError(msg, sql=sql)
+
+    def _raise_schema_execution_error(self, error: str, sql: str) -> None:
+        """Raise schema execution error."""
+        error_msg = f"Schema query execution failed: {error}"
+        raise OracleQueryError(error_msg, sql=sql)
+
     @track_performance("oracle_table_stream.get_records")
     def get_records(self, context: dict[str, Any] | None) -> Iterable[dict[str, Any]]:
         """Extract records from Oracle table.
@@ -269,33 +317,33 @@ class OracleTableStream(BaseOracleStream):
             start_time = time.time()
 
             logger.info(
-                "Starting extraction from %s.%s", self.schema_name, self.table_name,
+                "Starting extraction from %s.%s",
+                self.schema_name,
+                self.table_name,
             )
 
-            # Execute parameterized query using flext-db-oracle methods
+            # Execute parameterized query using
+            # flext-infrastructure.databases.flext-db-oracle methods
             query, params = self._build_extraction_query(context)
 
             # Validate query safety before execution
-            def _raise_query_safety_error() -> None:
-                msg = "Query failed safety validation"
-                raise OracleQueryError(msg, sql=query)
-
             if not self._query_builder.validate_query_safety(query, params):
-                _raise_query_safety_error()
+                self._raise_query_safety_error(self.table_name, query)
 
             # Log query statistics for monitoring
             query_stats = self._query_builder.get_query_stats(query, params)
             logger.debug("Executing Oracle query with stats: %s", query_stats)
 
-            # Use REAL flext-db-oracle execute_query method via asyncio
+            # Use REAL flext-infrastructure.databases.flext-db-oracle execute_query
+            # method via asyncio
             result = asyncio.run(
                 self.oracle_query_service.execute_query(query, parameters=params),
             )
-            if not result.is_success:
-                error_msg = f"Query execution failed: {result.error}"
-                raise OracleQueryError(error_msg, sql=query)  # noqa: TRY301
 
-            results = result.value.rows if result.value and result.value.rows else []
+            if not result.is_success:
+                self._raise_query_execution_error(result.error, query)
+
+            results = result.data.rows if result.data and result.data.rows else []
 
             for row in results:
                 record = self._row_to_record(row)
@@ -320,20 +368,24 @@ class OracleTableStream(BaseOracleStream):
                 self._total_rows_extracted,
                 elapsed,
             )
-
         except Exception as e:
             logger.exception(
-                "Failed to extract from %s.%s", self.schema_name, self.table_name,
+                "Failed to extract from %s.%s",
+                self.schema_name,
+                self.table_name,
             )
-            msg = f"Table extraction failed: {e}"
+            error_msg = (
+                f"Failed to extract from {self.schema_name}.{self.table_name}: {e}"
+            )
             raise OracleQueryError(
-                msg,
-                sql=self._last_query,
-                query_type="SELECT",
+                error_msg,
+                sql=query if "query" in locals() else self._last_query,
+                oracle_code=None,
             ) from e
 
     def _build_extraction_query(
-        self, context: dict[str, Any] | None,
+        self,
+        context: dict[str, Any] | None,
     ) -> tuple[str, dict[str, Any]]:
         """Build parameterized SQL query for data extraction.
 
@@ -342,6 +394,7 @@ class OracleTableStream(BaseOracleStream):
 
         Returns:
             Tuple of (query_string, parameters_dict)
+
         """
         # Get column list using cached metadata
         columns = self._get_table_columns()
@@ -396,6 +449,7 @@ class OracleTableStream(BaseOracleStream):
 
         Returns:
             Record dictionary
+
         """
         columns = self._get_table_columns()
         record = {}
@@ -423,6 +477,7 @@ class OracleTableStream(BaseOracleStream):
 
         Args:
             start_time: Extraction start timestamp
+
         """
         elapsed = time.time() - start_time
         rate = self._total_rows_extracted / elapsed if elapsed > 0 else 0
@@ -448,6 +503,7 @@ class OracleTableStream(BaseOracleStream):
 
         Returns:
             Child context
+
         """
         child_context: dict[str, Any] = {}
         if context:
@@ -473,6 +529,7 @@ class OracleTableStream(BaseOracleStream):
 
         Returns:
             Processed row
+
         """
         # Apply any configured transformations
         processed_row = row.copy()
@@ -494,84 +551,80 @@ class OracleTableStream(BaseOracleStream):
 
         Returns:
             List of column metadata dictionaries
+
         """
-        if self._column_cache is None:
-            try:
-                # Use modern query builder for schema metadata
-                sql, params = self._query_builder.build_schema_query(
-                    table_name=self.table_name,
-                    schema_name=self.schema_name,
-                )
+        try:
+            # Use modern query builder for schema metadata
+            sql, params = self._query_builder.build_schema_query(
+                table_name=self.table_name,
+                schema_name=self.schema_name,
+            )
 
-                # Validate query safety
-                def _raise_schema_safety_error() -> None:
-                    msg = "Schema query failed safety validation"
-                    raise OracleQueryError(  # noqa: TRY301
-                        msg, sql=sql,
-                    )
+            # Validate query safety
+            if not self._query_builder.validate_query_safety(sql, params):
+                self._raise_schema_safety_error(self.table_name, sql)
 
-                if not self._query_builder.validate_query_safety(sql, params):
-                    _raise_schema_safety_error()
+            # Use REAL flext-infrastructure.databases.flext-db-oracle execute_query
+            # method via asyncio
+            schema_result = asyncio.run(
+                self.oracle_query_service.execute_query(sql, parameters=params),
+            )
 
-                # Use REAL flext-db-oracle execute_query method for schema discovery via asyncio
-                schema_result = asyncio.run(
-                    self.oracle_query_service.execute_query(sql, parameters=params),
-                )
-                if not schema_result.is_success:
-                    error_msg = f"Schema query failed: {schema_result.error}"
-                    raise OracleQueryError(error_msg, sql=sql)  # noqa: TRY301
+            if not schema_result.is_success:
+                self._raise_schema_execution_error(schema_result.error, sql)
 
-                if schema_result.value and schema_result.value.rows:
-                    results = schema_result.value.rows
-                else:
-                    results = []
+            if schema_result.data and schema_result.data.rows:
+                results = schema_result.data.rows
+            else:
+                results = []
 
-                self._column_cache = []
-                for row in results:
-                    self._column_cache.append(
-                        {
-                            "column_name": row[0],
-                            "data_type": row[1],
-                            "data_length": row[2],
-                            "data_precision": row[3],
-                            "data_scale": row[4],
-                            "nullable": row[5],
-                            "column_id": row[6],
-                            "data_default": row[7],
-                        },
-                    )
-
-                logger.debug(
-                    "Cached %d columns for %s.%s",
-                    len(self._column_cache),
-                    self.schema_name,
-                    self.table_name,
-                )
-
-            except Exception:
-                logger.exception(
-                    "Failed to get column metadata for %s.%s",
-                    self.schema_name,
-                    self.table_name,
-                )
-                # Fallback to minimal column info
-                self._column_cache = [
+            self._column_cache = []
+            for row in results:
+                self._column_cache.append(
                     {
-                        "column_name": "ID",
-                        "data_type": "VARCHAR2",
-                        "data_length": 4000,
-                        "data_precision": None,
-                        "data_scale": None,
-                        "nullable": "Y",
-                        "column_id": 1,
-                        "data_default": None,
+                        "column_name": row[0],
+                        "data_type": row[1],
+                        "data_length": row[2],
+                        "data_precision": row[3],
+                        "data_scale": row[4],
+                        "nullable": row[5],
+                        "column_id": row[6],
+                        "data_default": row[7],
                     },
-                ]
+                )
+
+            logger.debug(
+                "Cached %d columns for %s.%s",
+                len(self._column_cache),
+                self.schema_name,
+                self.table_name,
+            )
+
+        except Exception:
+            logger.exception(
+                "Failed to get column metadata for %s.%s",
+                self.schema_name,
+                self.table_name,
+            )
+            # Fallback to minimal column info
+            self._column_cache = [
+                {
+                    "column_name": "ID",
+                    "data_type": "VARCHAR2",
+                    "data_length": 4000,
+                    "data_precision": None,
+                    "data_scale": None,
+                    "nullable": "Y",
+                    "column_id": 1,
+                    "data_default": None,
+                },
+            ]
 
         return self._column_cache
 
     def _get_records_impl(
-        self, context: dict[str, Any] | None = None,
+        self,
+        context: dict[str, Any] | None = None,
     ) -> Iterable[dict[str, Any]]:
         """Implementation-specific record retrieval for BaseOracleStream.
 
@@ -580,6 +633,7 @@ class OracleTableStream(BaseOracleStream):
 
         Yields:
             Record dictionaries
+
         """
         # Delegate to the main get_records method
         yield from self.get_records(context)
@@ -613,6 +667,7 @@ class OracleViewStream(OracleTableStream):
             view_name: Oracle view name
             schema: Oracle schema name
             **kwargs: Additional stream arguments
+
         """
         super().__init__(
             tap=tap,
@@ -630,7 +685,8 @@ class OracleViewStream(OracleTableStream):
         )
 
     def _build_extraction_query(
-        self, context: dict[str, Any] | None,
+        self,
+        context: dict[str, Any] | None,
     ) -> tuple[str, dict[str, Any]]:
         """Build SQL query for view extraction.
 
@@ -641,6 +697,7 @@ class OracleViewStream(OracleTableStream):
 
         Returns:
             Tuple of (SQL query string, parameters dict)
+
         """
         # Get base query from parent
         query, params = super()._build_extraction_query(context)

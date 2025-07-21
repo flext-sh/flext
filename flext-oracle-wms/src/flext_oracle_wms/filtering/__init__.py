@@ -7,6 +7,8 @@ Copyright (c) 2025 FLEXT Contributors
 SPDX-License-Identifier: MIT
 """
 
+from __future__ import annotations
+
 from flext_oracle_wms.filtering.advanced import (
     # Filter structures
     FilterCondition,

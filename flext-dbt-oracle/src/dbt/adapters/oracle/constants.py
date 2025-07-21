@@ -10,12 +10,48 @@ from __future__ import annotations
 from typing import ClassVar, Final
 
 # Import all shared Oracle constants from flext-core
-from flext_core.domain.constants import (
-    DBTOracleConstants,
-    OracleDBConstants,
-    OracleDefaults,
-    OracleLimits,
-)
+
+
+# Define Oracle-specific constants locally
+class OracleDBConstants:
+    """Oracle database constants."""
+
+    DEFAULT_PORT: Final = 1521
+    DEFAULT_SERVICE_NAME: Final = "XE"
+    DEFAULT_SCHEMA: Final = "SYSTEM"
+    DEFAULT_ENCODING: Final = "utf-8"
+    DEFAULT_PROTOCOL: Final = "tcp"
+    DEFAULT_TIMEOUT: Final = 30
+
+
+class OracleDefaults:
+    """Oracle default values."""
+
+    CONNECTION_TIMEOUT: Final = 30
+    DEFAULT_CONNECT_TIMEOUT: Final = 30
+    QUERY_TIMEOUT: Final = 300
+    POOL_SIZE: Final = 5
+    POOL_MAX_OVERFLOW: Final = 10
+    BATCH_SIZE: Final = 1000
+
+
+class OracleLimits:
+    """Oracle limits and constraints."""
+
+    MAX_IDENTIFIER_LENGTH: Final = 128
+    MAX_VARCHAR_LENGTH: Final = 4000
+    MAX_BATCH_SIZE: Final = 10000
+    MIN_BATCH_SIZE: Final = 1
+
+
+class DBTOracleConstants:
+    """DBT Oracle adapter constants."""
+
+    DEFAULT_BATCH_SIZE: Final = 1000
+    MAX_BATCH_SIZE: Final = 10000
+    DEFAULT_SCHEMA: Final = "DBT"
+    DEFAULT_THREADS: Final = 4
+    DEFAULT_DBT_TIMEOUT: Final = 300
 
 
 class DBTOracleAdapterConstants:
@@ -36,6 +72,7 @@ class DBTOracleAdapterConstants:
 
     # Port and Protocol
     DEFAULT_PORT: Final = OracleDBConstants.DEFAULT_PORT
+    DEFAULT_SERVICE_NAME: Final = OracleDBConstants.DEFAULT_SERVICE_NAME
     DEFAULT_PROTOCOL: Final = OracleDBConstants.DEFAULT_PROTOCOL
     PROTOCOL_TCP: Final = "tcp"
     PROTOCOL_TCPS: Final = "tcps"
@@ -43,8 +80,9 @@ class DBTOracleAdapterConstants:
 
     # Timeouts
     DEFAULT_TIMEOUT: Final = OracleDBConstants.DEFAULT_TIMEOUT
-    DEFAULT_CONNECT_TIMEOUT: Final = OracleDefaults.DEFAULT_CONNECT_TIMEOUT
+    DEFAULT_CONNECT_TIMEOUT: Final = OracleDefaults.CONNECTION_TIMEOUT
     DEFAULT_QUERY_TIMEOUT: Final = DBTOracleConstants.DEFAULT_DBT_TIMEOUT
+    MAX_TIMEOUT: Final = 600
 
     # ==============================================================================
     # DBT MATERIALIZATIONS - Standard DBT materializations
@@ -55,6 +93,7 @@ class DBTOracleAdapterConstants:
     MATERIALIZATION_INCREMENTAL: Final = "incremental"
     MATERIALIZATION_SNAPSHOT: Final = "snapshot"
     MATERIALIZATION_EPHEMERAL: Final = "ephemeral"
+    DEFAULT_MATERIALIZATION: Final = "table"
     VALID_MATERIALIZATIONS: ClassVar[set[str]] = {
         MATERIALIZATION_TABLE,
         MATERIALIZATION_VIEW,
@@ -68,19 +107,22 @@ class DBTOracleAdapterConstants:
     # ==============================================================================
 
     # Thread management
-    DEFAULT_THREADS: Final = DBTOracleConstants.DEFAULT_DBT_THREADS
-    MAX_THREADS: Final = DBTOracleConstants.MAX_DBT_THREADS
-    MIN_THREADS: Final = DBTOracleConstants.MIN_DBT_THREADS
+    DEFAULT_THREADS: Final = DBTOracleConstants.DEFAULT_THREADS
+    MAX_THREADS: Final = 16
+    MIN_THREADS: Final = 1
 
     # Connection pooling for DBT
-    DEFAULT_POOL_MIN_SIZE: Final = DBTOracleConstants.DEFAULT_DBT_THREADS
-    DEFAULT_POOL_MAX_SIZE: Final = DBTOracleConstants.DEFAULT_DBT_THREADS * 2
-    DEFAULT_POOL_INCREMENT: Final = OracleDefaults.DEFAULT_POOL_INCREMENT
+    DEFAULT_POOL_MIN_SIZE: Final = DBTOracleConstants.DEFAULT_THREADS
+    DEFAULT_POOL_MAX_SIZE: Final = DBTOracleConstants.DEFAULT_THREADS * 2
+    MAX_POOL_SIZE: Final = 50
+    MIN_POOL_SIZE: Final = 1
+    DEFAULT_POOL_INCREMENT: Final = 1
+    MAX_POOL_INCREMENT: Final = 10
 
     # Fetch settings
-    DEFAULT_FETCH_SIZE: Final = OracleDBConstants.DEFAULT_FETCH_SIZE
-    DEFAULT_ARRAY_SIZE: Final = OracleDBConstants.DEFAULT_ARRAY_SIZE
-    MAX_FETCH_SIZE: Final = OracleLimits.MAX_FETCH_SIZE
+    DEFAULT_FETCH_SIZE: Final = 1000
+    DEFAULT_ARRAY_SIZE: Final = 100
+    MAX_FETCH_SIZE: Final = 10000
 
     # ==============================================================================
     # DBT INCREMENTAL STRATEGIES - Oracle specific incremental patterns
@@ -136,7 +178,7 @@ class DBTOracleAdapterConstants:
     # String types
     DEFAULT_STRING_TYPE: Final = "VARCHAR2(4000)"
     LONG_STRING_TYPE: Final = "CLOB"
-    MAX_VARCHAR2_LENGTH: Final = OracleLimits.MAX_VARCHAR2_LENGTH
+    MAX_VARCHAR2_LENGTH: Final = OracleLimits.MAX_VARCHAR_LENGTH
 
     # Numeric types
     DEFAULT_INTEGER_TYPE: Final = "NUMBER(38,0)"
@@ -150,6 +192,8 @@ class DBTOracleAdapterConstants:
     DEFAULT_DATE_TYPE: Final = "DATE"
     DEFAULT_DATETIME_TYPE: Final = "TIMESTAMP(6)"
     DEFAULT_TIMESTAMP_TYPE: Final = "TIMESTAMP(6)"
+    DEFAULT_NLS_DATE_FORMAT: Final = "YYYY-MM-DD HH24:MI:SS"
+    DEFAULT_NLS_TIMESTAMP_FORMAT: Final = "YYYY-MM-DD HH24:MI:SS.FF6"
 
     # JSON and complex types
     JSON_TYPE: Final = "CLOB"
@@ -169,8 +213,8 @@ class DBTOracleAdapterConstants:
     # ==============================================================================
 
     # Connection retry for DBT
-    DEFAULT_RETRY_ATTEMPTS: Final = OracleDefaults.DEFAULT_POOL_RETRY_ATTEMPTS
-    DEFAULT_RETRY_DELAY: Final = OracleDefaults.DEFAULT_POOL_RETRY_DELAY
+    DEFAULT_RETRY_ATTEMPTS: Final = 3
+    DEFAULT_RETRY_DELAY: Final = 1
 
     # DBT specific retryable errors
     RETRYABLE_ERRORS: ClassVar[set[str]] = {
@@ -191,6 +235,8 @@ class DBTOracleAdapterConstants:
     SSL_MODE_PREFER: Final = "prefer"
     SSL_MODE_REQUIRE: Final = "require"
     DEFAULT_SSL_MODE: Final = SSL_MODE_PREFER
+    DEFAULT_SSL_SERVER_DN_MATCH: Final = True
+    DEFAULT_SSL_CLIENT_AUTH: Final = False
     VALID_SSL_MODES: ClassVar[set[str]] = {
         SSL_MODE_DISABLE,
         SSL_MODE_ALLOW,

@@ -7,14 +7,15 @@ consistency and eliminate code duplication across Oracle projects.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Annotated, Literal, TypedDict
+from typing import TYPE_CHECKING, Annotated, Any, Literal, TypedDict
 
-from pydantic import StringConstraints
+from pydantic import Field, StringConstraints
 
 # Import ALL Oracle types from flext-core (our single source of truth)
+# Runtime imports for proper type availability
 
 if TYPE_CHECKING:
-    from flext_core.domain.typedefs import (
+    from flext_core.domain.shared_types import (
         NonEmptyStr,
         OracleArraySize,
         OracleFetchSize,
@@ -45,20 +46,20 @@ if TYPE_CHECKING:
 TapDiscoveryMode = Literal["automatic", "manual", "catalog_only"]
 TapTablePattern = Annotated[
     str,
-    StringConstraints(
-        min_length=1, max_length=128, description="SQL LIKE pattern for table discovery",
-    ),
+    StringConstraints(min_length=1, max_length=128),
+    Field(description="SQL LIKE pattern for table discovery"),
 ]
 TapSchemaPattern = Annotated[
     str,
-    StringConstraints(
-        min_length=1, max_length=64, description="SQL LIKE pattern for schema discovery",
-    ),
+    StringConstraints(min_length=1, max_length=64),
+    Field(description="SQL LIKE pattern for schema discovery"),
 ]
 
 
 # Stream Selection Types
 class TapStreamSelection(TypedDict):
+    """Stream selection configuration for tap."""
+
     selected: bool
     replication_method: SingerReplicationMethod
     replication_key: str | None
@@ -67,11 +68,13 @@ class TapStreamSelection(TypedDict):
 
 
 class TapCatalogEntry(TypedDict):
+    """Catalog entry for Oracle tap stream."""
+
     tap_stream_id: str
     stream: str
     table_name: str
-    schema: dict[str, any]
-    metadata: list[dict[str, any]]
+    schema: dict[str, Any]
+    metadata: list[dict[str, Any]]
 
 
 # Incremental Replication Types
@@ -80,12 +83,16 @@ TapBookmarkValue = str | int | float  # Can be various types depending on column
 
 
 class TapStateMessage(TypedDict):
+    """State message for incremental syncing."""
+
     bookmarks: dict[str, dict[str, TapBookmarkValue]]
     currently_syncing: str | None
 
 
 # Connection Pool Types (Tap-specific configuration)
 class TapConnectionPoolConfig(TypedDict):
+    """Connection pool configuration for Oracle tap."""
+
     size: PositiveInt
     max_overflow: PositiveInt
     timeout: TimeoutSeconds
@@ -98,6 +105,8 @@ TapPerformanceProfile = Literal["development", "staging", "production", "high_vo
 
 
 class TapCircuitBreakerConfig(TypedDict):
+    """Circuit breaker configuration for Oracle connection resilience."""
+
     failure_threshold: PositiveInt
     timeout: TimeoutSeconds
     expected_exception: type[Exception] | None
@@ -105,6 +114,8 @@ class TapCircuitBreakerConfig(TypedDict):
 
 # Schema Flattening Types (Tap-specific feature)
 class TapFlatteningConfig(TypedDict):
+    """Schema flattening configuration for complex Oracle types."""
+
     enabled: bool
     max_depth: PositiveInt
     separator: NonEmptyStr
@@ -115,13 +126,14 @@ class TapFlatteningConfig(TypedDict):
 # Oracle Query Optimization Types
 TapQueryHint = Annotated[
     str,
-    StringConstraints(
-        pattern=r"^/\*\+.*\*/$", description="Oracle SQL hint in /*+ hint */ format",
-    ),
+    StringConstraints(pattern=r"^/\*\+.*\*/$"),
+    Field(description="Oracle SQL hint in /*+ hint */ format"),
 ]
 
 
 class TapQueryOptimization(TypedDict):
+    """Query optimization configuration for Oracle performance."""
+
     use_hints: bool
     hints: list[TapQueryHint]
     parallel_degree: PositiveInt | None
@@ -130,6 +142,8 @@ class TapQueryOptimization(TypedDict):
 
 # Column Metadata for Discovery
 class TapColumnMetadata(TypedDict):
+    """Oracle column metadata for schema discovery."""
+
     column_name: str
     data_type: str
     is_nullable: bool
@@ -142,6 +156,8 @@ class TapColumnMetadata(TypedDict):
 
 
 class TapTableMetadata(TypedDict):
+    """Oracle table metadata for schema discovery."""
+
     table_name: str
     schema_name: str
     table_type: Literal["TABLE", "VIEW", "MATERIALIZED VIEW"]
@@ -158,6 +174,8 @@ class TapTableMetadata(TypedDict):
 
 # Complete Tap Configuration (combines all settings)
 class TapOracleCompleteConfig(TypedDict):
+    """Complete Oracle tap configuration with all options."""
+
     host: OracleHost
     port: OraclePort
     service_name: OracleServiceName | None
@@ -188,6 +206,8 @@ class TapOracleCompleteConfig(TypedDict):
 
 # Environment-specific Configuration
 class TapEnvironmentConfig(TypedDict):
+    """Environment-specific Oracle tap configurations."""
+
     development: TapOracleCompleteConfig
     staging: TapOracleCompleteConfig
     production: TapOracleCompleteConfig

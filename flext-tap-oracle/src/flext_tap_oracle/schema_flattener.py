@@ -7,6 +7,7 @@ and dynamic schema generation with Singer SDK compliance.
 
 from __future__ import annotations
 
+import json
 from typing import Any
 
 from flext_observability.logging import get_logger
@@ -40,6 +41,7 @@ class OracleSchemaFlattener:
             max_depth: Maximum flattening depth
             separator: Field separator for flattened names
             preserve_types: Whether to preserve original types
+
         """
         self.enabled = enabled
         self.max_depth = max_depth
@@ -47,7 +49,8 @@ class OracleSchemaFlattener:
         self.preserve_types = preserve_types
 
         logger.debug(
-            "Oracle schema flattener initialized: enabled=%s, max_depth=%d, separator='%s'",
+            "Oracle schema flattener initialized: enabled=%s, max_depth=%d, "
+            "separator='%s'",
             enabled,
             max_depth,
             separator,
@@ -62,6 +65,7 @@ class OracleSchemaFlattener:
 
         Returns:
             Flattened schema dict
+
         """
         if not self.enabled:
             return schema
@@ -99,13 +103,15 @@ class OracleSchemaFlattener:
 
         Returns:
             Flattened record dict
+
         """
         if not self.enabled:
             return record
 
         if depth >= self.max_depth:
             logger.warning(
-                "Maximum flattening depth %d reached for record", self.max_depth,
+                "Maximum flattening depth %d reached for record",
+                self.max_depth,
             )
             return record
 
@@ -129,12 +135,14 @@ class OracleSchemaFlattener:
 
         Returns:
             Reconstructed nested record
+
         """
         if not self.enabled:
             return flattened_record
 
         logger.debug(
-            "Deflattening record with %d flattened fields", len(flattened_record),
+            "Deflattening record with %d flattened fields",
+            len(flattened_record),
         )
 
         nested: dict[str, Any] = {}
@@ -156,6 +164,7 @@ class OracleSchemaFlattener:
 
         Returns:
             True if field should be flattened
+
         """
         field_type = field_schema.get("type")
 
@@ -179,6 +188,7 @@ class OracleSchemaFlattener:
 
         Returns:
             True if value should be flattened
+
         """
         # Flatten dictionaries
         if isinstance(value, dict):
@@ -188,7 +198,10 @@ class OracleSchemaFlattener:
         return bool(isinstance(value, list) and value and isinstance(value[0], dict))
 
     def _flatten_field(
-        self, field_name: str, field_schema: dict[str, Any], depth: int,
+        self,
+        field_name: str,
+        field_schema: dict[str, Any],
+        depth: int,
     ) -> dict[str, Any]:
         """Flatten a single schema field.
 
@@ -199,6 +212,7 @@ class OracleSchemaFlattener:
 
         Returns:
             Flattened field definitions
+
         """
         flattened = {}
         field_type = field_schema.get("type")
@@ -211,7 +225,9 @@ class OracleSchemaFlattener:
                 if self._should_flatten_field(prop_schema):
                     # Recursive flattening
                     sub_flattened = self._flatten_field(
-                        flattened_name, prop_schema, depth + 1,
+                        flattened_name,
+                        prop_schema,
+                        depth + 1,
                     )
                     flattened.update(sub_flattened)
                 else:
@@ -241,6 +257,7 @@ class OracleSchemaFlattener:
 
         Returns:
             Flattened key-value pairs
+
         """
         flattened = {}
 
@@ -251,7 +268,9 @@ class OracleSchemaFlattener:
                 if self._should_flatten_value(sub_value):
                     # Recursive flattening
                     sub_flattened = self._flatten_value(
-                        flattened_key, sub_value, depth + 1,
+                        flattened_key,
+                        sub_value,
+                        depth + 1,
                     )
                     flattened.update(sub_flattened)
                 else:
@@ -260,8 +279,6 @@ class OracleSchemaFlattener:
         elif isinstance(value, list):
             if value and isinstance(value[0], dict):
                 # Array of objects - convert to JSON string for Oracle
-                import json  # noqa: PLC0415
-
                 flattened[key] = json.dumps(value)
             else:
                 # Array of primitives - keep as is
@@ -270,7 +287,10 @@ class OracleSchemaFlattener:
         return flattened
 
     def _set_nested_value(
-        self, nested: dict[str, Any], flattened_key: str, value: Any,
+        self,
+        nested: dict[str, Any],
+        flattened_key: str,
+        value: Any,
     ) -> None:
         """Set a nested value in the reconstructed structure.
 
@@ -278,6 +298,7 @@ class OracleSchemaFlattener:
             nested: Target nested dictionary
             flattened_key: Flattened key with separators
             value: Value to set
+
         """
         parts = flattened_key.split(self.separator)
         current = nested
@@ -297,6 +318,7 @@ class OracleSchemaFlattener:
 
         Returns:
             Configuration dictionary
+
         """
         return {
             "enabled": self.enabled,
@@ -313,6 +335,7 @@ class OracleSchemaFlattener:
 
         Returns:
             True if schema is compatible
+
         """
         if not self.enabled:
             return True
@@ -328,8 +351,8 @@ class OracleSchemaFlattener:
                         field_name,
                     )
                     return False
-
-            return True  # noqa: TRY300
         except Exception:
             logger.exception("Schema compatibility validation failed")
             return False
+        else:
+            return True

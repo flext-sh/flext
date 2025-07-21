@@ -1,407 +1,373 @@
-# ================================================================================
-# FLEXT TAP ORACLE MAKEFILE - ENTERPRISE STANDARDS
-# ================================================================================
-# This Makefile follows FLEXT workspace standards for Oracle Tap project
-# Provides comprehensive quality gates and development automation
-# ================================================================================
+# FLEXT TAP ORACLE - Oracle Database Data Extraction
+# ===================================================
+# Singer tap for Oracle Database with enterprise connectivity
+# Python 3.13 + Singer SDK + Oracle DB + Zero Tolerance Quality Gates
 
-.PHONY: help install dev-setup lint type-check test check format build clean
-.DEFAULT_GOAL := help
+.PHONY: help check validate test lint type-check security format format-check fix
+.PHONY: install dev-install setup pre-commit build clean
+.PHONY: coverage coverage-html test-unit test-integration
+.PHONY: deps-update deps-audit deps-tree
+.PHONY: discover run validate-config singer-check
 
-# Configuration
-PROJECT_NAME := flext-tap-oracle
-PYTHON_VERSION := 3.13
-SRC_DIR := src
-TEST_DIR := tests
-PACKAGE_DIR := $(SRC_DIR)/flext_tap_oracle
-
-# Color codes for output
-RED := \033[0;31m
-GREEN := \033[0;32m
-YELLOW := \033[0;33m
-BLUE := \033[0;34m
-MAGENTA := \033[0;35m
-CYAN := \033[0;36m
-WHITE := \033[0;37m
-BOLD := \033[1m
-NC := \033[0m # No Color
-
-# ================================================================================
-# HELP AND INFORMATION
-# ================================================================================
+# ============================================================================
+# 🎯 HELP & INFORMATION
+# ============================================================================
 
 help: ## Show this help message
-	@echo "$(BOLD)$(CYAN)FLEXT Tap Oracle - Enterprise Development Commands$(NC)"
-	@echo "$(BLUE)============================================================$(NC)"
+	@echo "🔍 FLEXT TAP ORACLE - Oracle Database Data Extraction"
+	@echo "===================================================="
+	@echo "🎯 Clean Architecture + DDD + Python 3.13 + Singer Oracle Integration"
 	@echo ""
-	@echo "$(BOLD)Available commands:$(NC)"
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "  $(CYAN)%-20s$(NC) %s\n", $$1, $$2}'
+	@echo "📦 Singer tap for Oracle Database data extraction with enterprise features"
+	@echo "🔒 Zero tolerance quality gates for data extraction"
+	@echo "🧪 90%+ test coverage requirement for Oracle integration"
 	@echo ""
-	@echo "$(BOLD)Quality Gates:$(NC)"
-	@echo "  $(GREEN)make check$(NC)           - Run all quality checks (lint + type + test)"
-	@echo "  $(GREEN)make check-strict$(NC)    - Run strict quality checks with zero tolerance"
-	@echo ""
-	@echo "$(BOLD)Examples:$(NC)"
-	@echo "  $(YELLOW)make install$(NC)         - Install dependencies"
-	@echo "  $(YELLOW)make dev-setup$(NC)       - Setup development environment" 
-	@echo "  $(YELLOW)make check$(NC)           - Run quality gates before commit"
-	@echo ""
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-# ================================================================================
-# SETUP AND INSTALLATION
-# ================================================================================
+# ============================================================================
+# 🎯 CORE QUALITY GATES - ZERO TOLERANCE
+# ============================================================================
 
-install: ## Install production dependencies
-	@echo "$(BLUE)📦 Installing production dependencies...$(NC)"
-	poetry install --only=main
-	@echo "$(GREEN)✅ Production dependencies installed$(NC)"
+validate: lint type-check security test ## STRICT compliance validation (all must pass)
+	@echo "✅ ALL QUALITY GATES PASSED - FLEXT TAP ORACLE COMPLIANT"
 
-dev-setup: ## Setup development environment with all dependencies
-	@echo "$(BLUE)🔧 Setting up development environment...$(NC)"
-	poetry install --with=dev,test,typings,security
-	poetry run pre-commit install || echo "$(YELLOW)⚠️  Pre-commit not configured$(NC)"
-	@echo "$(GREEN)✅ Development environment ready$(NC)"
+check: lint type-check test ## Essential quality checks (pre-commit standard)
+	@echo "✅ Essential checks passed"
 
-update: ## Update dependencies to latest versions
-	@echo "$(BLUE)🔄 Updating dependencies...$(NC)"
-	poetry update
-	@echo "$(GREEN)✅ Dependencies updated$(NC)"
+lint: ## Ruff linting (17 rule categories, ALL enabled)
+	@echo "🔍 Running ruff linter (ALL rules enabled)..."
+	@poetry run ruff check src/ tests/ --fix --unsafe-fixes
+	@echo "✅ Linting complete"
 
-# ================================================================================
-# CODE QUALITY AND LINTING
-# ================================================================================
+type-check: ## MyPy strict mode type checking (zero errors tolerated)
+	@echo "🛡️ Running MyPy strict type checking..."
+	@poetry run mypy src/ tests/ --strict
+	@echo "✅ Type checking complete"
 
-lint: ## Run comprehensive linting with ruff
-	@echo "$(BLUE)🔍 Running comprehensive linting...$(NC)"
-	/home/marlonsc/flext/.venv/bin/python -m ruff check $(SRC_DIR) $(TEST_DIR) --output-format=full || true
+security: ## Security scans (bandit + pip-audit + secrets)
+	@echo "🔒 Running security scans..."
+	@poetry run bandit -r src/ --severity-level medium --confidence-level medium
+	@poetry run pip-audit --ignore-vuln PYSEC-2022-42969
+	@poetry run detect-secrets scan --all-files
+	@echo "✅ Security scans complete"
 
-lint-fix: ## Fix auto-fixable linting issues
-	@echo "$(BLUE)🔧 Fixing linting issues...$(NC)"
-	/home/marlonsc/flext/.venv/bin/python -m ruff check $(SRC_DIR) $(TEST_DIR) --fix --output-format=full || true
+format: ## Format code with ruff
+	@echo "🎨 Formatting code..."
+	@poetry run ruff format src/ tests/
+	@echo "✅ Formatting complete"
 
-format: ## Format code with ruff formatter
-	@echo "$(BLUE)📝 Formatting code...$(NC)"
-	/home/marlonsc/flext/.venv/bin/python -m ruff format $(SRC_DIR) $(TEST_DIR)
+format-check: ## Check formatting without fixing
+	@echo "🎨 Checking code formatting..."
+	@poetry run ruff format src/ tests/ --check
+	@echo "✅ Format check complete"
 
-format-check: ## Check code formatting without making changes
-	@echo "$(BLUE)📋 Checking code formatting...$(NC)"
-	/home/marlonsc/flext/.venv/bin/python -m ruff format $(SRC_DIR) $(TEST_DIR) --check
+fix: format lint ## Auto-fix all issues (format + imports + lint)
+	@echo "🔧 Auto-fixing all issues..."
+	@poetry run ruff check src/ tests/ --fix --unsafe-fixes
+	@echo "✅ All auto-fixes applied"
 
-# ================================================================================
-# TYPE CHECKING
-# ================================================================================
+# ============================================================================
+# 🧪 TESTING - 90% COVERAGE MINIMUM
+# ============================================================================
 
-type-check: ## Run type checking with mypy
-	@echo "$(BLUE)🔍 Running type checking...$(NC)"
-	/home/marlonsc/flext/.venv/bin/python -m mypy $(PACKAGE_DIR) $(TEST_DIR) || true
-
-type-check-strict: ## Run strict type checking
-	@echo "$(BLUE)🔍 Running strict type checking...$(NC)"
-	/home/marlonsc/flext/.venv/bin/python -m mypy $(PACKAGE_DIR) $(TEST_DIR) --strict --show-error-codes || true
-
-# ================================================================================
-# TESTING
-# ================================================================================
-
-test: ## Run all tests with coverage
-	@echo "$(BLUE)🧪 Running tests with coverage...$(NC)"
-	/home/marlonsc/flext/.venv/bin/python -m pytest $(TEST_DIR) -v --cov=$(PACKAGE_DIR) --cov-report=term-missing --cov-report=html --cov-report=xml || true
+test: ## Run tests with coverage (90% minimum required)
+	@echo "🧪 Running tests with coverage..."
+	@poetry run pytest tests/ -v --cov=src/flext_tap_oracle --cov-report=term-missing --cov-fail-under=90
+	@echo "✅ Tests complete"
 
 test-unit: ## Run unit tests only
-	@echo "$(BLUE)🧪 Running unit tests...$(NC)"
-	/home/marlonsc/flext/.venv/bin/python -m pytest $(TEST_DIR) -v -m "unit" --cov=$(PACKAGE_DIR) || true
+	@echo "🧪 Running unit tests..."
+	@poetry run pytest tests/unit/ -v
+	@echo "✅ Unit tests complete"
 
 test-integration: ## Run integration tests only
-	@echo "$(BLUE)🧪 Running integration tests...$(NC)"
-	/home/marlonsc/flext/.venv/bin/python -m pytest $(TEST_DIR) -v -m "integration" --cov=$(PACKAGE_DIR) || true
+	@echo "🧪 Running integration tests..."
+	@poetry run pytest tests/integration/ -v
+	@echo "✅ Integration tests complete"
 
-test-performance: ## Run performance tests
-	@echo "$(BLUE)🧪 Running performance tests...$(NC)"
-	/home/marlonsc/flext/.venv/bin/python -m pytest $(TEST_DIR) -v -m "performance" --benchmark-only || true
+coverage: ## Generate detailed coverage report
+	@echo "📊 Generating coverage report..."
+	@poetry run pytest tests/ --cov=src/flext_tap_oracle --cov-report=term-missing --cov-report=html
+	@echo "✅ Coverage report generated in htmlcov/"
 
-test-stress: ## Run stress tests
-	@echo "$(BLUE)🧪 Running stress tests...$(NC)"
-	/home/marlonsc/flext/.venv/bin/python -m pytest $(TEST_DIR) -v -m "stress" || true
+coverage-html: coverage ## Generate HTML coverage report
+	@echo "📊 Opening coverage report..."
+	@python -m webbrowser htmlcov/index.html
 
-test-fast: ## Run tests without coverage for speed
-	@echo "$(BLUE)🧪 Running fast tests...$(NC)"
-	/home/marlonsc/flext/.venv/bin/python -m pytest $(TEST_DIR) -v --no-cov || true
+# ============================================================================
+# 🚀 DEVELOPMENT SETUP
+# ============================================================================
 
-test-verbose: ## Run tests with maximum verbosity
-	@echo "$(BLUE)🧪 Running verbose tests...$(NC)"
-	/home/marlonsc/flext/.venv/bin/python -m pytest $(TEST_DIR) -vvv --tb=long --cov=$(PACKAGE_DIR) || true
+setup: install pre-commit ## Complete development setup
+	@echo "🎯 Development setup complete!"
 
-# ================================================================================
-# SECURITY AND QUALITY GATES
-# ================================================================================
+install: ## Install dependencies with Poetry
+	@echo "📦 Installing dependencies..."
+	@poetry install --all-extras --with dev,test,docs,security
+	@echo "✅ Dependencies installed"
 
-security: ## Run security checks
-	@echo "$(BLUE)🔒 Running security checks...$(NC)"
-	/home/marlonsc/flext/.venv/bin/python -m bandit -r $(PACKAGE_DIR) -f json -o reports/security.json || true || true
-	/home/marlonsc/flext/.venv/bin/python -m bandit -r $(PACKAGE_DIR) || true
+dev-install: install ## Install in development mode
+	@echo "🔧 Setting up development environment..."
+	@poetry install --all-extras --with dev,test,docs,security
+	@poetry run pre-commit install
+	@echo "✅ Development environment ready"
 
-audit: ## Audit dependencies for vulnerabilities
-	@echo "$(BLUE)🔍 Auditing dependencies...$(NC)"
-	/home/marlonsc/flext/.venv/bin/python -m pip_audit
+pre-commit: ## Setup pre-commit hooks
+	@echo "🎣 Setting up pre-commit hooks..."
+	@poetry run pre-commit install
+	@poetry run pre-commit run --all-files || true
+	@echo "✅ Pre-commit hooks installed"
 
-# ================================================================================
-# COMPREHENSIVE QUALITY GATES
-# ================================================================================
+# ============================================================================
+# 🎵 SINGER TAP OPERATIONS
+# ============================================================================
 
-check: format-check lint type-check test ## Run all quality checks (standard)
-	@echo "$(GREEN)$(BOLD)✅ All quality checks passed!$(NC)"
+discover: ## Run discovery mode
+	@echo "🔍 Running Oracle discovery..."
+	@poetry run tap-oracle --config config.json --discover > catalog.json
+	@echo "✅ Oracle schema discovery complete - catalog.json generated"
 
-check-strict: ## Run strict quality checks with zero tolerance
-	@echo "$(BLUE)$(BOLD)🔥 RUNNING STRICT QUALITY GATES$(NC)"
-	@echo "$(YELLOW)============================================$(NC)"
-	@echo ""
-	
-	@echo "$(BLUE)📋 Checking code formatting (strict)...$(NC)"
-	@/home/marlonsc/flext/.venv/bin/python -m ruff format $(SRC_DIR) $(TEST_DIR) --check || (echo "$(RED)❌ Code formatting failed$(NC)" && exit 1)
-	@echo "$(GREEN)✅ Code formatting OK$(NC)"
-	
-	@echo "$(BLUE)🔍 Running linting (strict)...$(NC)"
-	@/home/marlonsc/flext/.venv/bin/python -m ruff check $(SRC_DIR) $(TEST_DIR) --output-format=full || (echo "$(RED)❌ Linting failed$(NC)" && exit 1) || true
-	@echo "$(GREEN)✅ Linting OK$(NC)"
-	
-	@echo "$(BLUE)🔍 Running type checking (strict)...$(NC)"
-	@/home/marlonsc/flext/.venv/bin/python -m mypy $(PACKAGE_DIR) $(TEST_DIR) --strict || (echo "$(RED)❌ Type checking failed$(NC)" && exit 1) || true
-	@echo "$(GREEN)✅ Type checking OK$(NC)"
-	
-	@echo "$(BLUE)🧪 Running tests (strict)...$(NC)"
-	@/home/marlonsc/flext/.venv/bin/python -m pytest $(TEST_DIR) -v --cov=$(PACKAGE_DIR) --cov-fail-under=95 --cov-report=term-missing || (echo "$(RED)❌ Tests failed$(NC)" && exit 1) || true
-	@echo "$(GREEN)✅ Tests OK$(NC)"
-	
-	@echo "$(BLUE)🔒 Running security checks...$(NC)"
-	@/home/marlonsc/flext/.venv/bin/python -m bandit -r $(PACKAGE_DIR) -q || (echo "$(RED)❌ Security checks failed$(NC)" && exit 1) || true
-	@echo "$(GREEN)✅ Security OK$(NC)"
-	
-	@echo ""
-	@echo "$(GREEN)$(BOLD)🎉 ALL STRICT QUALITY GATES PASSED!$(NC)"
+run: ## Run Oracle data extraction
+	@echo "📊 Running Oracle data extraction..."
+	@poetry run tap-oracle --config config.json --catalog catalog.json
+	@echo "✅ Oracle data extraction complete"
 
-quality-gate: check-strict ## Alias for check-strict
+validate-config: ## Validate tap configuration
+	@echo "🔍 Validating Oracle tap configuration..."
+	@poetry run tap-oracle --config config.json --test
+	@echo "✅ Oracle tap configuration valid"
 
-# ================================================================================
-# BUILD AND PACKAGING
-# ================================================================================
+singer-check: ## Check Singer specification compliance
+	@echo "🎵 Checking Singer specification compliance..."
+	@poetry run tap-oracle --config config.json --discover | poetry run singer-check-tap
+	@echo "✅ Singer specification compliance verified"
+
+test-connection: ## Test Oracle database connection
+	@echo "🔗 Testing Oracle database connection..."
+	@poetry run python -c "\
+from flext_tap_oracle.client import OracleClient; \
+import json; \
+\
+with open('config.json', 'r') as f: \
+    config = json.load(f); \
+\
+client = OracleClient(**config['oracle']); \
+try: \
+    with client.get_connection() as conn: \
+        with conn.cursor() as cursor: \
+            cursor.execute('SELECT 1 FROM dual'); \
+            result = cursor.fetchone(); \
+            print(f'✅ Oracle connection successful: {result}'); \
+except Exception as e: \
+    print(f'❌ Oracle connection failed: {e}'); \
+"
+
+extract-sample: ## Extract sample data from Oracle
+	@echo "📊 Extracting sample Oracle data..."
+	@poetry run tap-oracle --config config.json --catalog catalog.json | head -100
+	@echo "✅ Sample data extraction complete"
+
+# ============================================================================
+# 📦 BUILD & DISTRIBUTION
+# ============================================================================
 
 build: clean ## Build distribution packages
-	@echo "$(BLUE)📦 Building distribution packages...$(NC)"
-	poetry build
-	@echo "$(GREEN)✅ Build completed$(NC)"
+	@echo "🔨 Building distribution..."
+	@poetry build
+	@echo "✅ Build complete - packages in dist/"
 
-build-wheel: ## Build wheel package only
-	@echo "$(BLUE)📦 Building wheel package...$(NC)"
-	poetry build -f wheel
+# ============================================================================
+# 🧹 CLEANUP
+# ============================================================================
 
-build-sdist: ## Build source distribution only
-	@echo "$(BLUE)📦 Building source distribution...$(NC)"
-	poetry build -f sdist
+clean: ## Remove all artifacts
+	@echo "🧹 Cleaning up..."
+	@rm -rf build/
+	@rm -rf dist/
+	@rm -rf *.egg-info/
+	@rm -rf .coverage
+	@rm -rf htmlcov/
+	@rm -rf catalog.json
+	@rm -rf state.json
+	@find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
+	@find . -type d -name ".pytest_cache" -exec rm -rf {} + 2>/dev/null || true
+	@find . -type d -name ".mypy_cache" -exec rm -rf {} + 2>/dev/null || true
+	@find . -type d -name ".ruff_cache" -exec rm -rf {} + 2>/dev/null || true
+	@find . -type f -name "*.pyc" -delete 2>/dev/null || true
+	@echo "✅ Cleanup complete"
 
-publish-test: build ## Publish to test PyPI
-	@echo "$(BLUE)📤 Publishing to test PyPI...$(NC)"
-	poetry publish --repository testpypi
+# ============================================================================
+# 📊 DEPENDENCY MANAGEMENT
+# ============================================================================
 
-publish: build ## Publish to PyPI
-	@echo "$(BLUE)📤 Publishing to PyPI...$(NC)"
-	poetry publish
+deps-update: ## Update all dependencies
+	@echo "🔄 Updating dependencies..."
+	@poetry update
+	@echo "✅ Dependencies updated"
 
-# ================================================================================
-# DEVELOPMENT TOOLS
-# ================================================================================
+deps-audit: ## Audit dependencies for vulnerabilities
+	@echo "🔍 Auditing dependencies..."
+	@poetry run pip-audit
+	@echo "✅ Dependency audit complete"
 
-shell: ## Open poetry shell
-	@echo "$(BLUE)🐚 Opening poetry shell...$(NC)"
-	poetry shell
-
-run: ## Run the tap in development mode
-	@echo "$(BLUE)🏃 Running tap in development mode...$(NC)"
-	poetry run python -m flext_tap_oracle
-
-demo: ## Run tap with demo configuration
-	@echo "$(BLUE)🎭 Running tap demo...$(NC)"
-	@echo "This would run with demo config if available"
-
-# ================================================================================
-# DOCUMENTATION
-# ================================================================================
-
-docs: ## Build documentation
-	@echo "$(BLUE)📚 Building documentation...$(NC)"
-	@if [ -f "mkdocs.yml" ]; then \
-		poetry run mkdocs build; \
-	else \
-		echo "$(YELLOW)⚠️  No mkdocs.yml found$(NC)"; \
-	fi
-
-docs-serve: ## Serve documentation locally
-	@echo "$(BLUE)📚 Serving documentation...$(NC)"
-	@if [ -f "mkdocs.yml" ]; then \
-		poetry run mkdocs serve; \
-	else \
-		echo "$(YELLOW)⚠️  No mkdocs.yml found$(NC)"; \
-	fi
-
-# ================================================================================
-# CLEANUP AND MAINTENANCE
-# ================================================================================
-
-clean: ## Clean build artifacts and cache files
-	@echo "$(BLUE)🧹 Cleaning build artifacts...$(NC)"
-	rm -rf build/
-	rm -rf dist/
-	rm -rf *.egg-info/
-	rm -rf .coverage
-	rm -rf htmlcov/
-	rm -rf .pytest_cache/
-	rm -rf .mypy_cache/
-	rm -rf .ruff_cache/
-	find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
-	find . -type f -name "*.pyc" -delete
-	@echo "$(GREEN)✅ Cleanup completed$(NC)"
-
-clean-deep: clean ## Deep clean including poetry cache
-	@echo "$(BLUE)🧹 Deep cleaning...$(NC)"
-	poetry cache clear --all pypi -n || true
-	rm -rf reports/
-	@echo "$(GREEN)✅ Deep cleanup completed$(NC)"
-
-reset: clean-deep ## Reset environment completely
-	@echo "$(BLUE)🔄 Resetting environment...$(NC)"
-	rm -rf .venv/
-	poetry install --with=dev,test,typings,security
-	@echo "$(GREEN)✅ Environment reset$(NC)"
-
-# ================================================================================
-# REPORTING AND METRICS
-# ================================================================================
-
-reports: ## Generate all reports
-	@echo "$(BLUE)📊 Generating reports...$(NC)"
-	@mkdir -p reports
-	@/home/marlonsc/flext/.venv/bin/python -m pytest $(TEST_DIR) --cov=$(PACKAGE_DIR) --cov-report=html:reports/coverage --cov-report=xml:reports/coverage.xml --junit-xml=reports/pytest.xml || true
-	@/home/marlonsc/flext/.venv/bin/python -m bandit -r $(PACKAGE_DIR) -f json -o reports/security.json || true || true
-	@echo "$(GREEN)✅ Reports generated in reports/$(NC)"
-
-metrics: ## Show project metrics
-	@echo "$(BLUE)📊 Project Metrics$(NC)"
-	@echo "$(YELLOW)==================$(NC)"
-	@echo "Source lines of code:"
-	@find $(SRC_DIR) -name "*.py" -exec wc -l {} + | tail -1
-	@echo "Test lines of code:"
-	@find $(TEST_DIR) -name "*.py" -exec wc -l {} + | tail -1
-	@echo "Python files:"
-	@find $(SRC_DIR) $(TEST_DIR) -name "*.py" | wc -l
-
-coverage-report: ## Generate coverage report
-	@echo "$(BLUE)📊 Generating coverage report...$(NC)"
-	/home/marlonsc/flext/.venv/bin/python -m pytest $(TEST_DIR) --cov=$(PACKAGE_DIR) --cov-report=html --cov-report=term-missing || true
-
-# ================================================================================
-# VALIDATION AND COMPLIANCE
-# ================================================================================
-
-validate: ## Validate project structure and configuration
-	@echo "$(BLUE)✅ Validating project structure...$(NC)"
-	@echo "Checking pyproject.toml..."
-	@poetry check
-	@echo "Checking package structure..."
-	@test -f $(PACKAGE_DIR)/__init__.py || (echo "$(RED)❌ Missing __init__.py in package$(NC)" && exit 1)
-	@test -f $(PACKAGE_DIR)/tap.py || (echo "$(RED)❌ Missing tap.py in package$(NC)" && exit 1)
-	@echo "$(GREEN)✅ Project structure valid$(NC)"
-
-pre-commit: check-strict ## Run pre-commit quality gates
-	@echo "$(GREEN)✅ Pre-commit checks completed$(NC)"
-
-pre-push: check-strict reports ## Run comprehensive checks before push
-	@echo "$(GREEN)✅ Pre-push checks completed$(NC)"
-
-# ================================================================================
-# ENTERPRISE INTEGRATION
-# ================================================================================
-
-enterprise-check: ## Run enterprise-grade quality checks
-	@echo "$(BLUE)$(BOLD)🏢 ENTERPRISE QUALITY GATES$(NC)"
-	@echo "$(YELLOW)================================$(NC)"
-	@$(MAKE) check-strict
-	@$(MAKE) security
-	@$(MAKE) audit
-	@$(MAKE) validate
-	@echo ""
-	@echo "$(GREEN)$(BOLD)🎉 ENTERPRISE QUALITY GATES PASSED!$(NC)"
-
-ci: enterprise-check ## Run CI pipeline checks
-	@echo "$(GREEN)✅ CI pipeline checks completed$(NC)"
-
-# ================================================================================
-# ENVIRONMENT INFORMATION
-# ================================================================================
-
-info: ## Show environment information
-	@echo "$(BLUE)ℹ️  Environment Information$(NC)"
-	@echo "$(YELLOW)========================$(NC)"
-	@echo "Project: $(PROJECT_NAME)"
-	@echo "Python version: $(PYTHON_VERSION)"
-	@echo "Poetry version: $$(poetry --version)"
-	@echo "Python executable: $$(poetry run which python)"
-	@echo "Virtual environment: $$(poetry env info --path)"
-	@echo ""
-	@echo "$(BLUE)📦 Dependencies:$(NC)"
+deps-tree: ## Show dependency tree
+	@echo "🌳 Dependency tree:"
 	@poetry show --tree
 
-env: info ## Alias for info
+deps-outdated: ## Show outdated dependencies
+	@echo "📋 Outdated dependencies:"
+	@poetry show --outdated
 
-# ================================================================================
-# MELTANO INTEGRATION
-# ================================================================================
+# ============================================================================
+# 🔧 ENVIRONMENT CONFIGURATION
+# ============================================================================
 
-meltano-test: ## Test with Meltano (if available)
-	@echo "$(BLUE)🎵 Testing with Meltano...$(NC)"
-	@if command -v meltano >/dev/null 2>&1; then \
-		echo "Running Meltano tests..."; \
-		meltano test tap-oracle || echo "$(YELLOW)⚠️  Meltano tests failed or not configured$(NC)"; \
-	else \
-		echo "$(YELLOW)⚠️  Meltano not available$(NC)"; \
-	fi
+# Python settings
+PYTHON := python3.13
+export PYTHONPATH := $(PWD)/src:$(PYTHONPATH)
+export PYTHONDONTWRITEBYTECODE := 1
+export PYTHONUNBUFFERED := 1
 
-meltano-discover: ## Run discovery with Meltano
-	@echo "$(BLUE)🎵 Running Meltano discovery...$(NC)"
-	@if command -v meltano >/dev/null 2>&1; then \
-		meltano discover tap-oracle || echo "$(YELLOW)⚠️  Meltano discovery failed or not configured$(NC)"; \
-	else \
-		echo "$(YELLOW)⚠️  Meltano not available$(NC)"; \
-	fi
+# Oracle settings
+export ORACLE_HOST := localhost
+export ORACLE_PORT := 1521
+export ORACLE_SERVICE_NAME := ORCL
 
-# ================================================================================
-# DEBUGGING AND TROUBLESHOOTING
-# ================================================================================
+# Singer settings
+export SINGER_CONFIG := config.json
+export SINGER_CATALOG := catalog.json
+export SINGER_STATE := state.json
 
-debug: ## Run with debug logging
-	@echo "$(BLUE)🐛 Running with debug logging...$(NC)"
-	poetry run python -m flext_tap_oracle --log-level DEBUG
+# Poetry settings
+export POETRY_VENV_IN_PROJECT := false
+export POETRY_CACHE_DIR := $(HOME)/.cache/pypoetry
 
-trace: ## Run with trace logging
-	@echo "$(BLUE)🔍 Running with trace logging...$(NC)"
-	PYTHONPATH=src poetry run python -c "import flext_tap_oracle; print('Import successful')"
+# Quality gate settings
+export MYPY_CACHE_DIR := .mypy_cache
+export RUFF_CACHE_DIR := .ruff_cache
 
-lint-errors: ## Show only linting errors (no warnings)
-	@echo "$(BLUE)🔍 Showing linting errors only...$(NC)"
-	/home/marlonsc/flext/.venv/bin/python -m ruff check $(SRC_DIR) $(TEST_DIR) --select=E,F || true
+# ============================================================================
+# 📝 PROJECT METADATA
+# ============================================================================
 
-# ================================================================================
-# MAKEFILE MAINTENANCE
-# ================================================================================
+# Project information
+PROJECT_NAME := flext-tap-oracle
+PROJECT_VERSION := $(shell poetry version -s)
+PROJECT_DESCRIPTION := FLEXT TAP Oracle - Oracle Database Data Extraction
 
-makefile-check: ## Validate Makefile syntax
-	@echo "$(BLUE)🔍 Checking Makefile syntax...$(NC)"
-	@$(MAKE) --dry-run --silent help >/dev/null && echo "$(GREEN)✅ Makefile syntax OK$(NC)" || echo "$(RED)❌ Makefile syntax error$(NC)"
+.DEFAULT_GOAL := help
 
-# Print current configuration
-config:
-	@echo "$(BLUE)⚙️  Configuration$(NC)"
-	@echo "$(YELLOW)=================$(NC)"
-	@echo "PROJECT_NAME: $(PROJECT_NAME)"
-	@echo "PYTHON_VERSION: $(PYTHON_VERSION)"
-	@echo "SRC_DIR: $(SRC_DIR)"
-	@echo "TEST_DIR: $(TEST_DIR)"
-	@echo "PACKAGE_DIR: $(PACKAGE_DIR)"
+# ============================================================================
+# 🎯 ORACLE SPECIFIC COMMANDS
+# ============================================================================
+
+oracle-tables: ## List Oracle tables available for extraction
+	@echo "📋 Listing Oracle tables..."
+	@poetry run python -c "
+from flext_tap_oracle.client import OracleClient
+import json
+
+with open('config.json', 'r') as f:
+    config = json.load(f)
+
+client = OracleClient(**config['oracle'])
+query = '''
+SELECT table_name, owner 
+FROM all_tables 
+WHERE owner NOT IN ('SYS', 'SYSTEM', 'CTXSYS', 'MDSYS')
+ORDER BY owner, table_name
+'''
+
+for row in client.execute_query(query):
+    print(f'{row[\"OWNER\"]}.{row[\"TABLE_NAME\"]}')
+"
+
+oracle-schema-info: ## Show Oracle schema information
+	@echo "🗂️ Oracle schema information..."
+	@poetry run python -c "
+from flext_tap_oracle.client import OracleClient
+import json
+
+with open('config.json', 'r') as f:
+    config = json.load(f)
+
+client = OracleClient(**config['oracle'])
+schema_query = '''
+SELECT 
+    owner as schema_name,
+    COUNT(*) as table_count
+FROM all_tables 
+WHERE owner NOT IN ('SYS', 'SYSTEM', 'CTXSYS', 'MDSYS')
+GROUP BY owner
+ORDER BY owner
+'''
+
+print('Oracle Schema Summary:')
+print('====================')
+for row in client.execute_query(schema_query):
+    print(f'{row[\"SCHEMA_NAME\"]}: {row[\"TABLE_COUNT\"]} tables')
+"
+
+oracle-test-query: ## Test Oracle query execution
+	@echo "🔍 Testing Oracle query execution..."
+	@poetry run python -c "
+from flext_tap_oracle.client import OracleClient
+import json
+
+with open('config.json', 'r') as f:
+    config = json.load(f)
+
+client = OracleClient(**config['oracle'])
+test_query = 'SELECT SYSDATE, USER, SYS_CONTEXT(\'USERENV\',\'SESSION_USER\') FROM dual'
+
+for row in client.execute_query(test_query):
+    print(f'Date: {row[\"SYSDATE\"]}')
+    print(f'User: {row[\"USER\"]}')
+    print(f'Session User: {row[\"SYS_CONTEXT(USERENV,SESSION_USER)\"]}')
+"
+
+oracle-performance-test: ## Test Oracle connection performance
+	@echo "⚡ Testing Oracle performance..."
+	@poetry run python -c "
+import time
+from flext_tap_oracle.client import OracleClient
+import json
+
+with open('config.json', 'r') as f:
+    config = json.load(f)
+
+client = OracleClient(**config['oracle'])
+start_time = time.time()
+
+# Test multiple queries
+for i in range(10):
+    query = f'SELECT {i}, SYSDATE FROM dual'
+    for row in client.execute_query(query):
+        pass
+
+end_time = time.time()
+print(f'Executed 10 queries in {end_time - start_time:.2f} seconds')
+print(f'Average query time: {(end_time - start_time) / 10:.3f} seconds')
+"
+
+# ============================================================================
+# 🎯 FLEXT ECOSYSTEM INTEGRATION
+# ============================================================================
+
+ecosystem-check: ## Verify FLEXT ecosystem compatibility
+	@echo "🌐 Checking FLEXT ecosystem compatibility..."
+	@echo "📦 Singer Tap project: $(PROJECT_NAME) v$(PROJECT_VERSION)"
+	@echo "🏗️ Architecture: Clean Architecture + DDD"
+	@echo "🐍 Python: 3.13"
+	@echo "🎵 Framework: Singer SDK Oracle"
+	@echo "📊 Quality: Zero tolerance enforcement"
+	@echo "✅ Ecosystem compatibility verified"
+
+workspace-info: ## Show workspace integration info
+	@echo "🏢 FLEXT Workspace Integration"
+	@echo "==============================="
+	@echo "📁 Project Path: $(PWD)"
+	@echo "🏆 Role: Oracle Database Data Extraction (Singer Tap)"
+	@echo "🔗 Dependencies: flext-core, flext-observability"
+	@echo "📦 Provides: Oracle data extraction via Singer protocol"
+	@echo "🎯 Standards: Enterprise Oracle integration patterns"

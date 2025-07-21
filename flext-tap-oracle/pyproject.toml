@@ -20,19 +20,11 @@ dependencies = [
     "flext-observability>=0.7.0", 
     "flext-db-oracle>=0.7.0",
     
-    # Oracle Database connectivity
-    "oracledb>=3.2.0",
-    "sqlalchemy>=2.0.0",
+    # Explicit dependencies for DEP003 violations
+    "pydantic>=2.11.0",
     
-    # Data processing and utilities
-    "python-dateutil>=2.9.0",
-    "tenacity>=9.0.0",
-    "httpx>=0.28.0",
-    "jsonschema>=4.23.0",
-    
-    # Performance and async support
-    "uvloop>=0.21.0",
-    "orjson>=3.10.0",
+    # Oracle functionality is provided via flext-db-oracle
+    # Other dependencies removed as unused (DEP002 violations)
 ]
 keywords = [
     "flext", 
@@ -67,37 +59,21 @@ Documentation = "https://github.com/flext-sh/flext/blob/main/README.md"
 tap-oracle = "flext_tap_oracle.tap:TapOracle.cli"
 flext-tap-oracle = "flext_tap_oracle.tap:TapOracle.cli"
 
-[tool.poetry]
-name = "flext-tap-oracle"
-version = "0.7.0"
-description = "FLEXT Tap Oracle - Modern Singer Tap for Oracle Database"
-authors = ["FLEXT Team <team@flext.sh>"]
-readme = "README.md"
-packages = [{ include = "flext_tap_oracle", from = "src" }]
+# Poetry configuration - using PEP 621 [project] section above
 
 [tool.poetry.dependencies]
 python = ">=3.13,<3.14"
 
-# Core FLEXT dependencies - primary source of truth
+# Core FLEXT dependencies
 flext-core = { path = "../flext-core", develop = true }
 flext-observability = { path = "../flext-observability", develop = true }
 flext-db-oracle = { path = "../flext-db-oracle", develop = true }
 
-# Singer SDK and Oracle dependencies
+# Singer SDK dependency
 singer-sdk = ">=0.47.0"
-oracledb = ">=3.2.0"
-sqlalchemy = ">=2.0.0"
-python-dateutil = ">=2.9.0"
-tenacity = ">=9.0.0"
-httpx = ">=0.28.0"
-jsonschema = ">=4.23.0"
 
-# Performance dependencies
-uvloop = ">=0.21.0"
-orjson = ">=3.10.0"
-
-# Core dependencies are managed by flext-core - no duplication
-# pydantic, pydantic-settings, click, structlog, etc.
+# Explicit dependencies for DEP003 violations
+pydantic = ">=2.11.0"
 
 [tool.poetry.group.dev.dependencies]
 # Development dependencies
@@ -122,9 +98,6 @@ mkdocs = ">=1.6.0"
 mkdocs-material = ">=9.5.0"
 mkdocs-mermaid2-plugin = ">=1.1.0"
 
-[tool.poetry.scripts]
-tap-oracle = "flext_tap_oracle.tap:TapOracle.cli"
-
 [tool.pytest.ini_options]
 minversion = "8.0"
 addopts = [
@@ -147,6 +120,11 @@ markers = [
     "slow: Slow tests",
     "smoke: Smoke tests",
     "e2e: End-to-end tests",
+    "performance: Performance tests",
+    "stress: Stress tests", 
+    "error_handling: Error handling tests",
+    "cli: CLI tests",
+    "memory: Memory efficiency tests",
     "oracle: marks tests as Oracle database tests",
     "singer: marks tests as Singer protocol tests",
     "tap: marks tests as tap tests",

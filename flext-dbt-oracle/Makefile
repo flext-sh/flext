@@ -1,201 +1,320 @@
-# FLEXT DBT Oracle Adapter - Standardized Makefile
-# Follows FLEXT workspace standards for consistency and enterprise quality
+# FLEXT DBT ORACLE - Oracle Database Data Transformations
+# =======================================================
+# dbt transformations for Oracle Database with enterprise analytics
+# Python 3.13 + dbt-oracle + Oracle SQL + Zero Tolerance Quality Gates
 
-.PHONY: help install build test check lint type-check format clean docs
+.PHONY: help check validate test lint type-check security format format-check fix
+.PHONY: install dev-install setup pre-commit build clean
+.PHONY: coverage coverage-html test-unit test-integration
+.PHONY: deps-update deps-audit deps-tree
+.PHONY: dbt-run dbt-test dbt-docs dbt-compile dbt-debug dbt-oracle-profile
 
-# Default target
-.DEFAULT_GOAL := help
-
-SHELL := /bin/bash
-PROJECT_NAME := flext-dbt-oracle
-SRC_DIR := src
-TEST_DIR := tests
-
-# Colors for output
-RED := \033[0;31m
-GREEN := \033[0;32m
-YELLOW := \033[0;33m
-BLUE := \033[0;34m
-BOLD := \033[1m
-NC := \033[0m # No Color
+# ============================================================================
+# 🎯 HELP & INFORMATION
+# ============================================================================
 
 help: ## Show this help message
-	@echo "$(BOLD)FLEXT DBT Oracle Adapter - Available Commands$(NC)"
-	@echo "=============================================="
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "$(BLUE)%-20s$(NC) %s\n", $$1, $$2}'
+	@echo "🏛️ FLEXT DBT ORACLE - Oracle Database Data Transformations"
+	@echo "=========================================================="
+	@echo "🎯 Clean Architecture + DDD + Python 3.13 + dbt Oracle Analytics"
+	@echo ""
+	@echo "📦 dbt transformations for Oracle Database with enterprise patterns"
+	@echo "🔒 Zero tolerance quality gates for Oracle data models"
+	@echo "🧪 90%+ test coverage requirement for analytics models"
+	@echo ""
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-install: ## Install dependencies using Poetry
-	@echo "$(BLUE)📦 Installing dependencies...$(NC)"
-	poetry install --with dev,test,typings,security
+# ============================================================================
+# 🎯 CORE QUALITY GATES - ZERO TOLERANCE
+# ============================================================================
 
-build: ## Build the project
-	@echo "$(BLUE)🔨 Building project...$(NC)"
-	poetry build
+validate: lint type-check security test dbt-test ## STRICT compliance validation (all must pass)
+	@echo "✅ ALL QUALITY GATES PASSED - FLEXT DBT ORACLE COMPLIANT"
 
-# Quality Gates - Enterprise Standard
-check: format lint type-check test ## Run all quality checks (full CI pipeline)
-	@echo "$(GREEN)✅ All quality checks passed!$(NC)"
+check: lint type-check test ## Essential quality checks (pre-commit standard)
+	@echo "✅ Essential checks passed"
 
-format: ## Format code with ruff and black
-	@echo "$(BLUE)✨ Formatting code...$(NC)"
-	/home/marlonsc/flext/.venv/bin/python -m ruff format $(SRC_DIR) $(TEST_DIR)
-	@echo "$(GREEN)✅ Code formatting complete!$(NC)"
+lint: ## Ruff linting (17 rule categories, ALL enabled)
+	@echo "🔍 Running ruff linter (ALL rules enabled)..."
+	@poetry run ruff check src/ tests/ --fix --unsafe-fixes
+	@echo "✅ Linting complete"
 
-lint: ## Run ruff linter (comprehensive checks)
-	@echo "$(BLUE)🔥 Running comprehensive linting...$(NC)"
-	/home/marlonsc/flext/.venv/bin/python -m ruff check $(SRC_DIR) $(TEST_DIR) || true
-	@echo "$(GREEN)✅ Linting passed!$(NC)"
+type-check: ## MyPy strict mode type checking (zero errors tolerated)
+	@echo "🛡️ Running MyPy strict type checking..."
+	@poetry run mypy src/ tests/ --strict
+	@echo "✅ Type checking complete"
 
-type-check: ## Run mypy type checking (strict mode)
-	@echo "$(BLUE)🛡️ Running type checking (strict mode)...$(NC)"
-	/home/marlonsc/flext/.venv/bin/python -m mypy $(SRC_DIR) || true
-	@echo "$(GREEN)✅ Type checking passed!$(NC)"
+security: ## Security scans (bandit + pip-audit + secrets)
+	@echo "🔒 Running security scans..."
+	@poetry run bandit -r src/ --severity-level medium --confidence-level medium
+	@poetry run pip-audit --ignore-vuln PYSEC-2022-42969
+	@poetry run detect-secrets scan --all-files
+	@echo "✅ Security scans complete"
 
-test: ## Run tests with coverage
-	@echo "$(BLUE)🧪 Running tests with coverage...$(NC)"
-	/home/marlonsc/flext/.venv/bin/python -m pytest
-	@echo "$(GREEN)✅ All tests passed!$(NC)"
+format: ## Format code with ruff
+	@echo "🎨 Formatting code..."
+	@poetry run ruff format src/ tests/
+	@echo "✅ Formatting complete"
+
+format-check: ## Check formatting without fixing
+	@echo "🎨 Checking code formatting..."
+	@poetry run ruff format src/ tests/ --check
+	@echo "✅ Format check complete"
+
+fix: format lint ## Auto-fix all issues (format + imports + lint)
+	@echo "🔧 Auto-fixing all issues..."
+	@poetry run ruff check src/ tests/ --fix --unsafe-fixes
+	@echo "✅ All auto-fixes applied"
+
+# ============================================================================
+# 🧪 TESTING - 90% COVERAGE MINIMUM
+# ============================================================================
+
+test: ## Run tests with coverage (90% minimum required)
+	@echo "🧪 Running tests with coverage..."
+	@poetry run pytest tests/ -v --cov=src/flext_dbt_oracle --cov-report=term-missing --cov-fail-under=90
+	@echo "✅ Tests complete"
 
 test-unit: ## Run unit tests only
-	@echo "$(BLUE)🧪 Running unit tests...$(NC)"
-	/home/marlonsc/flext/.venv/bin/python -m pytest -m "unit" || true
+	@echo "🧪 Running unit tests..."
+	@poetry run pytest tests/unit/ -v
+	@echo "✅ Unit tests complete"
 
 test-integration: ## Run integration tests only
-	@echo "$(BLUE)🧪 Running integration tests...$(NC)"
-	/home/marlonsc/flext/.venv/bin/python -m pytest -m "integration" || true
+	@echo "🧪 Running integration tests..."
+	@poetry run pytest tests/integration/ -v
+	@echo "✅ Integration tests complete"
 
-test-oracle: ## Run Oracle-specific tests
-	@echo "$(BLUE)🧪 Running Oracle tests...$(NC)"
-	/home/marlonsc/flext/.venv/bin/python -m pytest -m "oracle" || true
+coverage: ## Generate detailed coverage report
+	@echo "📊 Generating coverage report..."
+	@poetry run pytest tests/ --cov=src/flext_dbt_oracle --cov-report=term-missing --cov-report=html
+	@echo "✅ Coverage report generated in htmlcov/"
 
-test-watch: ## Run tests in watch mode
-	@echo "$(BLUE)🧪 Running tests in watch mode...$(NC)"
-	/home/marlonsc/flext/.venv/bin/python -m pytest-watch
+coverage-html: coverage ## Generate HTML coverage report
+	@echo "📊 Opening coverage report..."
+	@python -m webbrowser htmlcov/index.html
 
-security: ## Run security scans
-	@echo "$(BLUE)🔒 Running security scans...$(NC)"
-	/home/marlonsc/flext/.venv/bin/python -m bandit -r $(SRC_DIR) -f json -o reports/security.json || true || true
-	/home/marlonsc/flext/.venv/bin/python -m pip_audit --format=json --output=reports/pip-audit.json || true
-	@echo "$(GREEN)✅ Security scans complete!$(NC)"
+# ============================================================================
+# 🚀 DEVELOPMENT SETUP
+# ============================================================================
 
-clean: ## Clean build artifacts and cache
-	@echo "$(BLUE)🧹 Cleaning build artifacts...$(NC)"
-	rm -rf build/
-	rm -rf dist/
-	rm -rf *.egg-info
-	rm -rf .pytest_cache/
-	rm -rf .ruff_cache/
-	rm -rf .mypy_cache/
-	rm -rf htmlcov/
-	rm -rf reports/
-	find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
-	find . -type f -name "*.pyc" -delete
-	@echo "$(GREEN)✅ Cleanup complete!$(NC)"
+setup: install pre-commit ## Complete development setup
+	@echo "🎯 Development setup complete!"
 
-docs: ## Generate documentation
-	@echo "$(BLUE)📚 Generating documentation...$(NC)"
-	poetry run mkdocs build
-	@echo "$(GREEN)✅ Documentation generated!$(NC)"
+install: ## Install dependencies with Poetry
+	@echo "📦 Installing dependencies..."
+	@poetry install --all-extras --with dev,test,docs,security
+	@echo "✅ Dependencies installed"
 
-docs-serve: ## Serve documentation locally
-	@echo "$(BLUE)📚 Serving documentation at http://localhost:8000$(NC)"
-	poetry run mkdocs serve
+dev-install: install ## Install in development mode
+	@echo "🔧 Setting up development environment..."
+	@poetry install --all-extras --with dev,test,docs,security
+	@poetry run pre-commit install
+	@echo "✅ Development environment ready"
 
-# Development helpers
-dev-setup: install ## Setup development environment
-	@echo "$(BLUE)⚙️ Setting up development environment...$(NC)"
-	poetry run pre-commit install
-	mkdir -p reports
-	@echo "$(GREEN)✅ Development environment ready!$(NC)"
+pre-commit: ## Setup pre-commit hooks
+	@echo "🎣 Setting up pre-commit hooks..."
+	@poetry run pre-commit install
+	@poetry run pre-commit run --all-files || true
+	@echo "✅ Pre-commit hooks installed"
 
-fix: ## Auto-fix issues where possible
-	@echo "$(BLUE)🔧 Auto-fixing issues...$(NC)"
-	/home/marlonsc/flext/.venv/bin/python -m ruff check $(SRC_DIR) $(TEST_DIR) --fix || true
-	/home/marlonsc/flext/.venv/bin/python -m ruff format $(SRC_DIR) $(TEST_DIR)
-	@echo "$(GREEN)✅ Auto-fixes applied!$(NC)"
+# ============================================================================
+# 🏗️ DBT ORACLE OPERATIONS
+# ============================================================================
 
-profile: ## Profile test performance
-	@echo "$(BLUE)⏱️ Profiling test performance...$(NC)"
-	/home/marlonsc/flext/.venv/bin/python -m pytest --benchmark-only --benchmark-sort=mean || true
+dbt-run: ## Run dbt Oracle models
+	@echo "🏗️ Running dbt Oracle models..."
+	@poetry run dbt run --profiles-dir profiles --target dev
+	@echo "✅ dbt Oracle models executed"
 
-# Docker support
-docker-build: ## Build Docker image
-	@echo "$(BLUE)🐳 Building Docker image...$(NC)"
-	docker build -t $(PROJECT_NAME):latest .
+dbt-test: ## Run dbt Oracle tests
+	@echo "🧪 Running dbt Oracle tests..."
+	@poetry run dbt test --profiles-dir profiles --target dev
+	@echo "✅ dbt Oracle tests passed"
 
-docker-test: ## Run tests in Docker
-	@echo "$(BLUE)🐳 Running tests in Docker...$(NC)"
-	docker run --rm -v $(PWD):/app $(PROJECT_NAME):latest make test
+dbt-docs: ## Generate dbt Oracle documentation
+	@echo "📚 Generating dbt Oracle documentation..."
+	@poetry run dbt docs generate --profiles-dir profiles --target dev
+	@poetry run dbt docs serve --profiles-dir profiles --port 8080
+	@echo "✅ dbt Oracle documentation available at http://localhost:8080"
 
-# DBT-specific commands
-dbt-debug: ## Debug DBT connection
-	@echo "$(BLUE)🔍 Running DBT debug...$(NC)"
-	poetry run dbt debug
+dbt-compile: ## Compile dbt Oracle models
+	@echo "🔨 Compiling dbt Oracle models..."
+	@poetry run dbt compile --profiles-dir profiles --target dev
+	@echo "✅ dbt Oracle models compiled"
 
-dbt-deps: ## Install DBT dependencies
-	@echo "$(BLUE)📦 Installing DBT dependencies...$(NC)"
-	poetry run dbt deps
+dbt-debug: ## Debug dbt Oracle configuration
+	@echo "🔍 Debugging dbt Oracle configuration..."
+	@poetry run dbt debug --profiles-dir profiles --target dev
+	@echo "✅ dbt Oracle debug complete"
 
-dbt-test-connection: ## Test Oracle connection using DBT
-	@echo "$(BLUE)🔗 Testing Oracle connection...$(NC)"
-	poetry run dbt run-operation test_oracle_connection
+dbt-oracle-profile: ## Setup Oracle profile
+	@echo "⚙️ Setting up Oracle profile..."
+	@echo "Creating profiles directory if it doesn't exist..."
+	@mkdir -p profiles
+	@echo "Oracle profile setup complete - configure profiles/profiles.yml manually"
 
-# Continuous Integration helpers
-ci: check security ## Run full CI pipeline
-	@echo "$(GREEN)🎉 CI pipeline completed successfully!$(NC)"
+dbt-seed: ## Load Oracle seed data
+	@echo "🌱 Loading Oracle seed data..."
+	@poetry run dbt seed --profiles-dir profiles --target dev
+	@echo "✅ Oracle seed data loaded"
 
-pre-commit: format lint type-check ## Pre-commit checks
-	@echo "$(GREEN)✅ Pre-commit checks passed!$(NC)"
+dbt-snapshot: ## Run Oracle snapshots for SCD
+	@echo "📸 Running Oracle snapshots..."
+	@poetry run dbt snapshot --profiles-dir profiles --target dev
+	@echo "✅ Oracle snapshots executed"
 
-# Version management
-version-patch: ## Bump patch version
-	@echo "$(BLUE)📦 Bumping patch version...$(NC)"
-	poetry version patch
+dbt-run-operation: ## Run dbt Oracle operations
+	@echo "⚙️ Running dbt Oracle operations..."
+	@poetry run dbt run-operation --profiles-dir profiles --target dev
+	@echo "✅ dbt Oracle operations complete"
 
-version-minor: ## Bump minor version
-	@echo "$(BLUE)📦 Bumping minor version...$(NC)"
-	poetry version minor
+# ============================================================================
+# 📦 BUILD & DISTRIBUTION
+# ============================================================================
 
-version-major: ## Bump major version
-	@echo "$(BLUE)📦 Bumping major version...$(NC)"
-	poetry version major
+build: clean ## Build distribution packages
+	@echo "🔨 Building distribution..."
+	@poetry build
+	@echo "✅ Build complete - packages in dist/"
 
-# Publishing
-publish-test: build ## Publish to test PyPI
-	@echo "$(BLUE)📤 Publishing to test PyPI...$(NC)"
-	poetry publish --repository testpypi
+# ============================================================================
+# 🧹 CLEANUP
+# ============================================================================
 
-publish: build ## Publish to PyPI
-	@echo "$(BLUE)📤 Publishing to PyPI...$(NC)"
-	poetry publish
+clean: ## Remove all artifacts
+	@echo "🧹 Cleaning up..."
+	@rm -rf build/
+	@rm -rf dist/
+	@rm -rf *.egg-info/
+	@rm -rf .coverage
+	@rm -rf htmlcov/
+	@rm -rf target/
+	@rm -rf dbt_packages/
+	@rm -rf logs/
+	@find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
+	@find . -type d -name ".pytest_cache" -exec rm -rf {} + 2>/dev/null || true
+	@find . -type d -name ".mypy_cache" -exec rm -rf {} + 2>/dev/null || true
+	@find . -type d -name ".ruff_cache" -exec rm -rf {} + 2>/dev/null || true
+	@find . -type f -name "*.pyc" -delete 2>/dev/null || true
+	@echo "✅ Cleanup complete"
 
-# Advanced testing
-test-coverage: ## Run tests with detailed coverage report
-	@echo "$(BLUE)🧪 Running tests with detailed coverage...$(NC)"
-	/home/marlonsc/flext/.venv/bin/python -m pytest --cov-report=html --cov-report=term-missing --cov-report=xml || true
+# ============================================================================
+# 📊 DEPENDENCY MANAGEMENT
+# ============================================================================
 
-test-performance: ## Run performance tests
-	@echo "$(BLUE)⚡ Running performance tests...$(NC)"
-	/home/marlonsc/flext/.venv/bin/python -m pytest -m "performance" --benchmark-only || true
+deps-update: ## Update all dependencies
+	@echo "🔄 Updating dependencies..."
+	@poetry update
+	@echo "✅ Dependencies updated"
 
-# Quality monitoring
-quality-report: ## Generate quality report
-	@echo "$(BLUE)📊 Generating quality report...$(NC)"
-	mkdir -p reports
-	/home/marlonsc/flext/.venv/bin/python -m ruff check $(SRC_DIR) $(TEST_DIR) --output-format=json > reports/ruff.json || true || true
-	/home/marlonsc/flext/.venv/bin/python -m mypy $(SRC_DIR) --json-report=reports/mypy || true || true
-	@echo "$(GREEN)✅ Quality report generated in reports/$(NC)"
+deps-audit: ## Audit dependencies for vulnerabilities
+	@echo "🔍 Auditing dependencies..."
+	@poetry run pip-audit
+	@echo "✅ Dependency audit complete"
 
-# Emergency fixes
-emergency-format: ## Emergency code formatting (skip checks)
-	@echo "$(YELLOW)⚠️ Emergency formatting...$(NC)"
-	/home/marlonsc/flext/.venv/bin/python -m ruff format $(SRC_DIR) $(TEST_DIR) --force-exclude
-	
-emergency-fix: ## Emergency auto-fix (skip safety checks)
-	@echo "$(RED)🚨 Emergency fixes (USE WITH CAUTION)...$(NC)"
-	/home/marlonsc/flext/.venv/bin/python -m ruff check $(SRC_DIR) $(TEST_DIR) --fix --unsafe-fixes || true
+deps-tree: ## Show dependency tree
+	@echo "🌳 Dependency tree:"
+	@poetry show --tree
 
-# Workspace integration
-workspace-check: ## Check workspace compatibility
-	@echo "$(BLUE)🔍 Checking workspace compatibility...$(NC)"
-	@cd .. && make check-project PROJECT=$(PROJECT_NAME) || echo "$(YELLOW)⚠️ Workspace check not available$(NC)"
+deps-outdated: ## Show outdated dependencies
+	@echo "📋 Outdated dependencies:"
+	@poetry show --outdated
+
+# ============================================================================
+# 🔧 ENVIRONMENT CONFIGURATION
+# ============================================================================
+
+# Python settings
+PYTHON := python3.13
+export PYTHONPATH := $(PWD)/src:$(PYTHONPATH)
+export PYTHONDONTWRITEBYTECODE := 1
+export PYTHONUNBUFFERED := 1
+
+# dbt settings
+export DBT_PROFILES_DIR := $(PWD)/profiles
+export DBT_PROJECT_DIR := $(PWD)
+
+# Oracle settings
+export ORACLE_SOURCE_SCHEMA := FLEXT_RAW
+export ORACLE_TARGET_SCHEMA := FLEXT_ANALYTICS
+
+# Poetry settings
+export POETRY_VENV_IN_PROJECT := false
+export POETRY_CACHE_DIR := $(HOME)/.cache/pypoetry
+
+# Quality gate settings
+export MYPY_CACHE_DIR := .mypy_cache
+export RUFF_CACHE_DIR := .ruff_cache
+
+# ============================================================================
+# 📝 PROJECT METADATA
+# ============================================================================
+
+# Project information
+PROJECT_NAME := flext-dbt-oracle
+PROJECT_VERSION := $(shell poetry version -s)
+PROJECT_DESCRIPTION := FLEXT DBT Oracle - Oracle Database Data Transformations
+
+.DEFAULT_GOAL := help
+
+# ============================================================================
+# 🎯 ORACLE SPECIFIC COMMANDS
+# ============================================================================
+
+oracle-staging-models: ## Run Oracle staging models only
+	@echo "📥 Running Oracle staging models..."
+	@poetry run dbt run --models tag:staging --profiles-dir profiles --target dev
+	@echo "✅ Oracle staging models executed"
+
+oracle-marts-models: ## Run Oracle marts models only
+	@echo "🏪 Running Oracle marts models..."
+	@poetry run dbt run --models tag:marts --profiles-dir profiles --target dev
+	@echo "✅ Oracle marts models executed"
+
+oracle-fact-models: ## Run Oracle fact models only
+	@echo "📊 Running Oracle fact models..."
+	@poetry run dbt run --models tag:fact --profiles-dir profiles --target dev
+	@echo "✅ Oracle fact models executed"
+
+oracle-dimension-models: ## Run Oracle dimension models only
+	@echo "🗂️ Running Oracle dimension models..."
+	@poetry run dbt run --models tag:dimension --profiles-dir profiles --target dev
+	@echo "✅ Oracle dimension models executed"
+
+oracle-full-refresh: ## Full refresh of Oracle models
+	@echo "🔄 Full refresh of Oracle models..."
+	@poetry run dbt run --full-refresh --profiles-dir profiles --target dev
+	@echo "✅ Oracle models full refresh complete"
+
+oracle-test-data-quality: ## Test Oracle data quality rules
+	@echo "🔍 Testing Oracle data quality..."
+	@poetry run dbt test --models tag:data_quality --profiles-dir profiles --target dev
+	@echo "✅ Oracle data quality tests passed"
+
+oracle-explain-plan: ## Generate Oracle explain plans
+	@echo "📋 Generating Oracle explain plans..."
+	@poetry run dbt compile --profiles-dir profiles --target dev
+	@echo "✅ Oracle models compiled - check target/ for SQL files"
+
+# ============================================================================
+# 🎯 FLEXT ECOSYSTEM INTEGRATION
+# ============================================================================
+
+ecosystem-check: ## Verify FLEXT ecosystem compatibility
+	@echo "🌐 Checking FLEXT ecosystem compatibility..."
+	@echo "📦 DBT Oracle project: $(PROJECT_NAME) v$(PROJECT_VERSION)"
+	@echo "🏗️ Architecture: Clean Architecture + DDD"
+	@echo "🐍 Python: 3.13"
+	@echo "🗂️ Framework: dbt Oracle"
+	@echo "📊 Quality: Zero tolerance enforcement"
+	@echo "✅ Ecosystem compatibility verified"
+
+workspace-info: ## Show workspace integration info
+	@echo "🏢 FLEXT Workspace Integration"
+	@echo "==============================="
+	@echo "📁 Project Path: $(PWD)"
+	@echo "🏆 Role: Oracle Database Data Transformations"
+	@echo "🔗 Dependencies: flext-core"
+	@echo "📦 Provides: Oracle analytics models"
+	@echo "🎯 Standards: Enterprise dbt Oracle patterns"

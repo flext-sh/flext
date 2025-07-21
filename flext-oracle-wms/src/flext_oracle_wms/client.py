@@ -11,32 +11,47 @@ from __future__ import annotations
 import logging
 import time
 from datetime import datetime
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Self
+
+if TYPE_CHECKING:
+    from collections.abc import Generator
 
 import httpx
+from flext_core.domain.types import ServiceResult
 
-# Import flext-core types for maximum standardization
-from flext_observability.logging import get_logger
-
-# Import SchemaFlattener for dynamic record flattening
-from flext_tap_oracle_wms.schema_flattener import SchemaFlattener
+# Import local flattener for dynamic record flattening
 from httpx import Auth
 
 from flext_oracle_wms.exceptions import APIError, AuthenticationError, OracleWMSError
 from flext_oracle_wms.models import WMSDiscoveryResult, WMSEntity, WMSResponse
+from flext_oracle_wms.singer.flattening import OracleWMSFlattener
+
+
+def get_logger(name: str) -> logging.Logger:
+    """Get logger instance with consistent formatting."""
+    logger = logging.getLogger(name)
+    if not logger.handlers:
+        handler = logging.StreamHandler()
+        formatter = logging.Formatter(
+            "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+        )
+        handler.setFormatter(formatter)
+        logger.addHandler(handler)
+        logger.setLevel(logging.INFO)
+    return logger
+
 
 if TYPE_CHECKING:
-    from flext_core.domain.typedefs import (
+    from flext_oracle_wms.config_module import (
+        OracleWMSConfig,
         WMSAPIVersion,
-        WMSEntityName,
-        WMSPageSize,
         WMSPassword,
         WMSRetryAttempts,
         WMSUsername,
     )
-
-    from flext_oracle_wms.config_module import OracleWMSConfig
+    from flext_oracle_wms.constants import OracleWMSEntityType
     from flext_oracle_wms.typedefs import (
+        WMSPageSize,
         WMSRecordBatch,
     )
 
@@ -57,7 +72,10 @@ class OracleWMSAuth(Auth):
         self.username = username
         self.password = password
 
-    def auth_flow(self, request):
+    def auth_flow(
+        self,
+        request: httpx.Request,
+    ) -> Generator[httpx.Request, httpx.Response]:
         """Apply Oracle WMS authentication to request."""
         request.headers["Authorization"] = f"Basic {self._get_basic_auth()}"
         yield request
@@ -127,7 +145,8 @@ class OracleWMSClient:
             if self._request_count >= self.config.max_requests_per_minute:
                 sleep_time = 60 - (current_time - self._session_start)
                 logger.warning(
-                    "Rate limit reached, sleeping for %.2f seconds", sleep_time,
+                    "Rate limit reached, sleeping for %.2f seconds",
+                    sleep_time,
                 )
                 time.sleep(sleep_time)
                 self._session_start = time.time()
@@ -190,13 +209,13 @@ class OracleWMSClient:
 
                 # Handle Oracle WMS specific errors
                 if response.status_code == 401:
-                    msg = f"Authentication failed: {response.text}"
+                    msg = "Authentication failed"
                     raise AuthenticationError(msg)
                 if response.status_code == 403:
-                    msg = f"Access forbidden: {response.text}"
-                    raise AuthenticationError(msg)
+                    msg = "Access forbidden"
+                    raise PermissionError(msg)
                 if response.status_code >= 400:
-                    msg = f"API error {response.status_code}: {response.text}"
+                    msg = f"HTTP {response.status_code}: {response.text}"
                     raise APIError(msg)
 
                 response.raise_for_status()
@@ -204,46 +223,47 @@ class OracleWMSClient:
 
             except httpx.TimeoutException as e:
                 logger.warning(
-                    "Request timeout (attempt %d/%d): %s", attempt + 1, retries + 1, e,
+                    "Request timeout (attempt %d/%d): %s",
+                    attempt + 1,
+                    retries + 1,
+                    e,
                 )
                 if attempt == retries:
-                    msg = f"Request timeout after {retries + 1} attempts"
-                    raise OracleWMSError(
-                        msg,
-                    ) from e
+                    msg = f"Request failed after {retries + 1} attempts"
+                    raise OracleWMSError(msg) from e
                 time.sleep(self.config.retry_delay * (attempt + 1))
 
             except httpx.ConnectError as e:
                 logger.warning(
-                    "Connection error (attempt %d/%d): %s", attempt + 1, retries + 1, e,
+                    "Connection error (attempt %d/%d): %s",
+                    attempt + 1,
+                    retries + 1,
+                    e,
                 )
                 if attempt == retries:
                     msg = f"Connection failed after {retries + 1} attempts"
-                    raise OracleWMSError(
-                        msg,
-                    ) from e
+                    raise OracleWMSError(msg) from e
                 time.sleep(self.config.retry_delay * (attempt + 1))
 
             except (AuthenticationError, APIError):
                 # Don't retry authentication or API errors
                 raise
-
             except Exception as e:
                 logger.warning(
-                    "Unexpected error (attempt %d/%d): %s", attempt + 1, retries + 1, e,
+                    "Unexpected error (attempt %d/%d): %s",
+                    attempt + 1,
+                    retries + 1,
+                    e,
                 )
                 if attempt == retries:
-                    msg = f"Request failed after {retries + 1} attempts: {e}"
-                    raise OracleWMSError(
-                        msg,
-                    ) from e
+                    msg = f"Request failed after {retries + 1} attempts"
+                    raise OracleWMSError(msg) from e
                 time.sleep(self.config.retry_delay * (attempt + 1))
 
-        msg = "All retry attempts exhausted"
+        msg = f"Request failed after {retries + 1} attempts"
         raise OracleWMSError(msg)
 
     def test_connection(self) -> bool:
-        """Test connection to Oracle WMS API."""
         try:
             # Test with a lightweight discovery call
             self._make_request("GET", self.config.wms_endpoint_base, retries=1)
@@ -254,7 +274,6 @@ class OracleWMSClient:
             return False
 
     def discover_entities(self) -> WMSDiscoveryResult:
-        """Discover Oracle WMS entities via REAL API call using flext-core types."""
         try:
             logger.info("Starting entity discovery from Oracle WMS API")
             response = self._make_request("GET", self.config.wms_endpoint_base)
@@ -283,7 +302,8 @@ class OracleWMSClient:
                     entity = WMSEntity(
                         name=entity_name,
                         description=entity_info.get(
-                            "description", f"Oracle WMS {entity_name} entity",
+                            "description",
+                            f"Oracle WMS {entity_name} entity",
                         ),
                         fields=entity_info.get("fields", {}),
                         endpoint=self.config.get_entity_endpoint(entity_name),
@@ -294,23 +314,18 @@ class OracleWMSClient:
                 # Fallback to known entities
                 entities = self._get_fallback_entities()
 
-            result = WMSDiscoveryResult(
-                entities=entities,
-                total_count=len(entities),
-                timestamp=datetime.now().isoformat(),
-            )
-
-            logger.info("Discovered %d Oracle WMS entities", len(entities))
-            return result
-
-        except Exception as e:
-            logger.exception("Entity discovery failed: %s", e)
-            # Return fallback entities for offline operation
-            entities = self._get_fallback_entities()
             return WMSDiscoveryResult(
                 entities=entities,
                 total_count=len(entities),
                 timestamp=datetime.now().isoformat(),
+            )
+        except Exception as e:
+            logger.exception("Entity discovery failed: %s", e)
+            return WMSDiscoveryResult(
+                entities=[],
+                total_count=0,
+                timestamp=datetime.now().isoformat(),
+                error=str(e),
             )
 
     def _get_fallback_entities(self) -> list[WMSEntity]:
@@ -344,7 +359,7 @@ class OracleWMSClient:
 
     def get_entity_data(
         self,
-        entity_name: WMSEntityName,
+        entity_name: OracleWMSEntityType,
         params: dict[str, Any] | None = None,
         page_size: WMSPageSize | None = None,
     ) -> WMSResponse:
@@ -367,7 +382,6 @@ class OracleWMSClient:
 
         if page_size:
             request_params["page_size"] = min(page_size, self.config.page_size)
-
         try:
             logger.info("Fetching data for entity: %s", entity_name)
             response = self._make_request("GET", endpoint, params=request_params)
@@ -375,40 +389,63 @@ class OracleWMSClient:
             data = response.json()
 
             # Handle different response formats
+            records: list[Any] = []
             if isinstance(data, list):
                 records = data
             elif isinstance(data, dict):
-                records = data.get("data", data.get("results", data.get("records", [])))
+                records_data = data.get(
+                    "data",
+                    data.get("results", data.get("records", [])),
+                )
+                records = records_data if isinstance(records_data, list) else []
             else:
                 logger.warning(
-                    "Unexpected response format for %s: %s", entity_name, type(data),
+                    "Unexpected response format for %s: %s",
+                    entity_name,
+                    type(data),
                 )
                 records = []
 
             logger.info(
-                "Retrieved %d records for entity: %s", len(records), entity_name,
+                "Retrieved %d records for entity: %s",
+                len(records),
+                entity_name,
             )
 
             # Apply dynamic flattening if enabled (MANDATORY for Oracle WMS)
             flattening_enabled = getattr(self.config, "flattening_enabled", True)
             if flattening_enabled and records:
-                logger.info("Applying dynamic flattening to %d records for entity: %s",
-                           len(records), entity_name)
+                logger.info(
+                    "Applying dynamic flattening to %d records for entity: %s",
+                    len(records),
+                    entity_name,
+                )
 
                 # Initialize flattener with Oracle WMS standards
-                flattener = SchemaFlattener(
+                flattener = OracleWMSFlattener(
                     enabled=True,
                     max_depth=5,  # Oracle WMS standard depth
                     separator="__",  # Oracle WMS standard separator
-                    flatten_arrays=False,
+                    preserve_empty_arrays=False,
                 )
 
                 # Flatten each record dynamically
                 flattened_records = []
                 for i, record in enumerate(records):
                     if isinstance(record, dict):
-                        try:
-                            flattened_record = flattener.flatten_record(record)
+                        flatten_result = flattener.flatten_record(record)
+
+                        if flatten_result.is_successful:
+                            # Extract the flattened record from the result data
+                            flattening_data = flatten_result.data
+                            if flattening_data is None:
+                                logger.warning(
+                                    "Flattening result data is None for record %d",
+                                    i,
+                                )
+                                flattened_records.append(record)
+                                continue
+                            flattened_record = flattening_data["flattened_record"]
                             flattened_records.append(flattened_record)
 
                             # Log first record transformation for debugging
@@ -416,13 +453,16 @@ class OracleWMSClient:
                                 original_fields = len(record)
                                 flattened_fields = len(flattened_record)
                                 logger.info(
-                                    "🔄 Flattened sample record: %d fields -> %d fields",
-                                    original_fields, flattened_fields,
+                                    "🔄 Flattened sample record: %d -> %d fields",
+                                    original_fields,
+                                    flattened_fields,
                                 )
-                        except Exception as e:
+                        else:
                             logger.warning(
                                 "Failed to flatten record %d for entity %s: %s",
-                                i, entity_name, e,
+                                i,
+                                entity_name,
+                                flatten_result.error,
                             )
                             # Use original record if flattening fails
                             flattened_records.append(record)
@@ -431,8 +471,11 @@ class OracleWMSClient:
                         flattened_records.append(record)
 
                 records = flattened_records
-                logger.info("✅ Successfully flattened %d records for entity: %s",
-                           len(records), entity_name)
+                logger.info(
+                    "✅ Successfully flattened %d records for entity: %s",
+                    len(records),
+                    entity_name,
+                )
 
             # Return WMSResponse object with processed records
             return WMSResponse(
@@ -442,17 +485,14 @@ class OracleWMSClient:
                 page_size=self.config.page_size,
                 has_more=len(records) == self.config.page_size,
             )
-
         except Exception as e:
             logger.exception("Failed to get data for entity %s: %s", entity_name, e)
             msg = f"Failed to get data for entity {entity_name}: {e}"
-            raise OracleWMSError(
-                msg,
-            ) from e
+            return ServiceResult.fail(msg)
 
     def write_entity_data(
         self,
-        entity_name: WMSEntityName,
+        entity_name: OracleWMSEntityType,
         records: WMSRecordBatch,
         write_mode: str = "insert",
     ) -> dict[str, Any]:
@@ -469,13 +509,12 @@ class OracleWMSClient:
         """
         endpoint = self.config.get_entity_endpoint(entity_name)
 
-        results = {
+        results: dict[str, Any] = {
             "total_records": len(records),
             "successful": 0,
             "failed": 0,
             "errors": [],
         }
-
         try:
             logger.info(
                 "Writing %d records to entity: %s (mode: %s)",
@@ -483,7 +522,6 @@ class OracleWMSClient:
                 entity_name,
                 write_mode,
             )
-
             for i, record in enumerate(records):
                 try:
                     method = "POST" if write_mode == "insert" else "PUT"
@@ -496,10 +534,11 @@ class OracleWMSClient:
                         results["errors"].append(
                             {
                                 "record_index": i,
-                                "error": f"HTTP {response.status_code}: {response.text}",
+                                "error": (
+                                    f"HTTP {response.status_code}: {response.text}"
+                                ),
                             },
                         )
-
                 except Exception as e:
                     results["failed"] += 1
                     results["errors"].append({"record_index": i, "error": str(e)})
@@ -510,13 +549,10 @@ class OracleWMSClient:
                 results["failed"],
             )
             return results
-
         except Exception as e:
             logger.exception("Write operation failed for entity %s: %s", entity_name, e)
             msg = f"Write operation failed for entity {entity_name}: {e}"
-            raise OracleWMSError(
-                msg,
-            ) from e
+            return ServiceResult.fail(msg)
 
     def close(self) -> None:
         """Close the HTTP client connection."""
@@ -525,11 +561,16 @@ class OracleWMSClient:
             self._client = None
             logger.info("Oracle WMS client connection closed")
 
-    def __enter__(self):
+    def __enter__(self) -> Self:
         """Context manager entry."""
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: object,
+    ) -> None:
         """Context manager exit."""
         self.close()
 
@@ -537,7 +578,7 @@ class OracleWMSClient:
     # ULTRA-MODERN FLEXT-CORE INTEGRATION METHODS - Python 3.13 Enhanced
     # ==============================================================================
 
-    def get_entity_metadata(self, entity_name: WMSEntityName) -> dict[str, Any]:
+    def get_entity_metadata(self, entity_name: OracleWMSEntityType) -> dict[str, Any]:
         """Get Oracle WMS entity metadata using flext-core types.
 
         Args:
@@ -548,15 +589,22 @@ class OracleWMSClient:
 
         """
         endpoint = f"{self.config.wms_endpoint_base}/{entity_name}/metadata"
-
         try:
             logger.info("Fetching metadata for entity: %s", entity_name)
             response = self._make_request("GET", endpoint)
-            metadata = response.json()
+            metadata_raw = response.json()
+
+            # Ensure we return a dict[str, Any]
+            if isinstance(metadata_raw, dict):
+                metadata: dict[str, Any] = metadata_raw
+            else:
+                metadata = {
+                    "error": "Invalid metadata format",
+                    "raw_data": metadata_raw,
+                }
 
             logger.info("Retrieved metadata for entity: %s", entity_name)
             return metadata
-
         except Exception as e:
             logger.exception("Failed to get metadata for entity %s: %s", entity_name, e)
             # Return fallback metadata
@@ -570,7 +618,7 @@ class OracleWMSClient:
                 "replication_key": "mod_ts",
             }
 
-    def validate_entity_name(self, entity_name: str) -> WMSEntityName:
+    def validate_entity_name(self, entity_name: str) -> OracleWMSEntityType:
         """Validate entity name using flext-core types.
 
         Args:
@@ -583,13 +631,15 @@ class OracleWMSClient:
             ValueError: If entity name is invalid
 
         """
-        # This uses the flext-core WMSEntityName type validation
-        validated_name: WMSEntityName = entity_name
+        # This uses the Oracle WMS entity type validation
+        validated_name: OracleWMSEntityType = entity_name  # type: ignore[assignment]
         logger.debug("Validated entity name: %s", validated_name)
         return validated_name
 
     def build_api_url(
-        self, entity_name: WMSEntityName, api_version: WMSAPIVersion | None = None,
+        self,
+        entity_name: OracleWMSEntityType,
+        api_version: WMSAPIVersion | None = None,
     ) -> str:
         """Build complete API URL using flext-core types.
 
@@ -617,7 +667,7 @@ class OracleWMSClient:
         return {
             "base_url": self.config.base_url,
             "api_version": self.config.api_version,
-            "auth_method": self.config.auth_method,
+            "auth_method": "basic",  # Oracle WMS uses basic authentication
             "username": self.config.username,
             "timeout": self.config.timeout,
             "max_retries": self.config.max_retries,

@@ -8,12 +8,11 @@ Centralized type definitions for Oracle WMS operations using flext-core standard
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from typing import TYPE_CHECKING, Annotated, Any, TypedDict
 
 # Import flext-core types
-from flext_core.domain.typedefs import (
-    NonNegativeInt,
-    PositiveInt,
+from flext_core.domain.types import (
     WMSEntityName,  # Use centralized WMSEntityName from flext-core
 )
 from pydantic import Field, StringConstraints
@@ -22,6 +21,10 @@ from pydantic import Field, StringConstraints
 from flext_oracle_wms.constants import (
     OracleWMSFilterOperator,
 )
+
+# Define positive/non-negative integer types for WMS
+PositiveInt = Annotated[int, Field(gt=0)]
+NonNegativeInt = Annotated[int, Field(ge=0)]
 
 if TYPE_CHECKING:
     from datetime import datetime
@@ -236,8 +239,6 @@ class WMSErrorInfo(TypedDict):
 # ==============================================================================
 # CALLBACK TYPES
 # ==============================================================================
-
-from collections.abc import Callable
 
 type WMSProgressCallback = Callable[[int, int], None]  # (processed, total)
 type WMSErrorCallback = Callable[[WMSErrorInfo], None]

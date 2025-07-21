@@ -1,7 +1,12 @@
 """Development tools for FLEXT workspace."""
 
+from __future__ import annotations
+
 import subprocess
-from pathlib import Path
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 class DevToolsManager:
@@ -9,6 +14,8 @@ class DevToolsManager:
 
     def __init__(self, workspace_root: Path | None = None) -> None:
         """Initialize DevToolsManager with workspace root."""
+        from pathlib import Path
+
         self.workspace_root = workspace_root or Path.cwd()
 
     def run_tests(self, project: str | None = None) -> int:
@@ -28,6 +35,8 @@ class DevToolsManager:
                 ["python", "-m", "pytest", str(project_path / "tests")],
                 cwd=project_path,
                 check=False,
+                shell=False,  # Security: explicit shell=False
+                timeout=300,  # Prevent hanging
             )
             return result.returncode
         except Exception:
@@ -46,24 +55,28 @@ class DevToolsManager:
         return exit_code
 
     def lint_all(self) -> int:
-        """Run linting on all projects."""
+        """Run linting for all projects."""
         try:
             result = subprocess.run(
                 ["python", "-m", "ruff", "check", "."],
                 cwd=self.workspace_root,
                 check=False,
+                shell=False,  # Security: explicit shell=False
+                timeout=180,  # Prevent hanging
             )
             return result.returncode
         except Exception:
             return 1
 
     def format_all(self) -> int:
-        """Format all projects."""
+        """Format all code in workspace."""
         try:
             result = subprocess.run(
                 ["python", "-m", "ruff", "format", "."],
                 cwd=self.workspace_root,
                 check=False,
+                shell=False,  # Security: explicit shell=False
+                timeout=180,  # Prevent hanging
             )
             return result.returncode
         except Exception:
