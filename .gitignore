@@ -590,7 +590,7 @@ DUPLICATE_CODE_*.md
 LINT_CORRECTIONS_*.md
 
 # Strinct exclude all md, but keep important documentation
-*.md
+^*.md
 !README.md
 !CHANGELOG.md
 !CONTRIBUTING.md
@@ -636,3 +636,16 @@ flext
 **/*_temp/
 reports_*/
 temp_test_*/
+
+# ============================================================================
+# ROOT DIRECTORY SPECIFIC RULES
+# ============================================================================
+
+# Ignore all .md files in root except essential ones
+*.md
+
+# Ignore all .json files in root except essential ones
+*.json
+
+# Ignore all .txt files in root
+*.txt
