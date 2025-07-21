@@ -611,6 +611,8 @@ LINT_CORRECTIONS_*.md
 .benchmarks/
 .qlty/
 .logfire/
+.meltano/
+flext
 
 # Development and analysis artifacts  
 **/.claude/
