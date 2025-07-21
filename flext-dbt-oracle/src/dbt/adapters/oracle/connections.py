@@ -1,7 +1,8 @@
 """Oracle Connection Manager for DBT using FLEXT DB Oracle Services.
 
 This module provides the connection management layer for the DBT Oracle adapter,
-leveraging flext-db-oracle's modern DDD services for enterprise-grade reliability.
+leveraging flext-infrastructure.databases.flext-db-oracle's modern DDD services
+for enterprise-grade reliability.
 """
 
 from __future__ import annotations
@@ -12,9 +13,6 @@ from typing import TYPE_CHECKING, Any, ClassVar
 
 import agate
 from dbt_common.exceptions import DbtDatabaseError, DbtRuntimeError
-
-from dbt.adapters.base.connections import BaseConnectionManager
-from dbt.adapters.contracts.connection import AdapterResponse, Connection, Credentials
 from flext_db_oracle import (
     OracleConfig,
     OracleConnectionService,
@@ -23,12 +21,22 @@ from flext_db_oracle import (
 )
 from flext_observability.logging import get_logger
 
+from dbt.adapters.base.connections import BaseConnectionManager
+from dbt.adapters.contracts.connection import AdapterResponse, Connection, Credentials
+
 logger = get_logger(__name__)
 
 if TYPE_CHECKING:
-    from collections.abc import Iterator
 
-    # Mock Connection type for now
+    from cx_Oracle import Connection
+
+try:
+    from cx_Oracle import Connection
+
+    CX_ORACLE_AVAILABLE = True
+except ImportError:
+    # Fallback when cx_Oracle is not available
+    CX_ORACLE_AVAILABLE = False
     Connection = Any
 
 logger = get_logger(__name__)
@@ -39,7 +47,8 @@ class OracleCredentials(Credentials):
     """Oracle database credentials for DBT.
 
     Extends DBT's base Credentials class with Oracle-specific configuration
-    using flext-db-oracle standards for consistency across the FLEXT ecosystem.
+    using flext-infrastructure.databases.flext-db-oracle standards for consistency
+    across the FLEXT ecosystem.
     """
 
     # Oracle connection parameters - required first
@@ -102,11 +111,20 @@ class OracleCredentials(Credentials):
 
     @property
     def database_identifier(self) -> str:
-        """Get database identifier for flext-db-oracle."""
+        """Get database identifier for flext-infrastructure.databases.flext-db-oracle.
+
+        Get database identifier for
+        flext-infrastructure.databases.flext-db-oracle.
+        """
         return self.service_name or self.sid or "ORCL"
 
     def to_oracle_config(self) -> OracleConfig:
-        """Convert DBT credentials to flext-db-oracle configuration with full parameterization."""
+        """Convert DBT credentials to flext-infrastructure.databases.flext-db-oracle configuration.
+
+        Convert DBT credentials to
+        flext-infrastructure.databases.flext-db-oracle configuration with full
+        parameterization.
+        """
         return OracleConfig(
             host=self.host,
             port=self.port,
@@ -128,10 +146,14 @@ class OracleCredentials(Credentials):
 
 
 class OracleConnectionManager(BaseConnectionManager):
-    """Oracle connection manager using flext-db-oracle services.
+    """Oracle connection manager using flext-infrastructure.databases.flext-db-oracle services.
+
+    Oracle connection manager using
+    flext-infrastructure.databases.flext-db-oracle services.
 
     Provides DBT connection management while leveraging the enterprise-grade
-    Oracle connectivity from flext-db-oracle, ensuring zero code duplication
+    Oracle connectivity from flext-infrastructure.databases.flext-db-oracle,
+    ensuring zero code duplication
     and consistent error handling across the FLEXT ecosystem.
     """
 
@@ -147,21 +169,25 @@ class OracleConnectionManager(BaseConnectionManager):
 
     @classmethod
     def open(cls, connection: Connection) -> Connection:
-        """Open Oracle connection using flext-db-oracle services."""
+        """Open Oracle connection using flext-infrastructure.databases.flext-db-oracle services.
+
+        Open Oracle connection using
+        flext-infrastructure.databases.flext-db-oracle services.
+        """
         if connection.state == "open":
             logger.debug("Connection already open: %s", connection.name)
             return connection
 
         credentials = connection.credentials
         if not isinstance(credentials, OracleCredentials):
-            msg = f"Invalid credentials type: {type(credentials)}"
+            msg = "Invalid credentials type"
             raise DbtRuntimeError(msg)
-
         try:
             # Create Oracle configuration using enhanced parameterization
             oracle_config = credentials.to_oracle_config()
             logger.info(
-                "Created Oracle DB config for DBT with parameterization: pool_size=%d, query_timeout=%d",
+                "Created Oracle DB config for DBT with parameterization: "
+                "pool_size=%d, query_timeout=%d",
                 oracle_config.pool_max_size,
                 oracle_config.query_timeout,
             )
@@ -173,8 +199,7 @@ class OracleConnectionManager(BaseConnectionManager):
             # Test connection using modern async/sync bridge
             result = run_async_in_sync_context(connection_service.test_connection())
             if not result.is_success:
-                error_message = f"Connection test failed: {result.error}"
-                raise DbtDatabaseError(error_message)
+                cls._handle_connection_error(result.error)
 
             # Store services for later use
             connection.handle = {
@@ -185,18 +210,17 @@ class OracleConnectionManager(BaseConnectionManager):
 
             connection.state = "open"
             logger.info("Oracle connection opened: %s", connection.name)
-
         except Exception as e:
             logger.exception("Failed to open Oracle connection: %s", connection.name)
             connection.state = "fail"
             connection.handle = None
-            error_message = f"Failed to connect to Oracle: {e}"
-            raise DbtDatabaseError(error_message) from e
+            msg = f"Failed to open Oracle connection: {e}"
+            raise DbtDatabaseError(msg) from e
 
         return connection
 
     @classmethod
-    def get_response(cls, cursor: Any) -> AdapterResponse:  # noqa: ANN401
+    def get_response(cls, cursor: Any) -> AdapterResponse:
         """Get response from Oracle query execution."""
         # For FLEXT services, we get results directly
         rows_affected = cursor.row_count if hasattr(cursor, "row_count") else -1
@@ -207,51 +231,57 @@ class OracleConnectionManager(BaseConnectionManager):
             code="SELECT",
         )
 
-    def cancel_open(self) -> list[str]:  # type: ignore[override]
+    def cancel_open(self) -> list[str]:
         """Cancel open connections."""
         for connection in self.thread_connections.values():
-            if connection.state == "open" and connection.handle:
-                try:
-                    handle = connection.handle
-                    if isinstance(handle, dict) and "connection_service" in handle:
-                        # Close FLEXT connection service using modern async/sync bridge
-                        run_async_in_sync_context(
-                            handle["connection_service"].close_pool(),
-                        )
-                except Exception as e:  # noqa: BLE001
-                    logger.warning("Error closing connection: %s", e)
+            try:
+                handle = connection.handle
+                if isinstance(handle, dict) and "connection_service" in handle:
+                    # Close FLEXT connection service using modern async/sync bridge
+                    run_async_in_sync_context(
+                        handle["connection_service"].close_pool(),
+                    )
+            except Exception as e:
+                logger.warning("Error closing connection: %s", e)
+            connection.state = "closed"
+            connection.handle = None
+        return []
 
-                connection.state = "closed"  # type: ignore[assignment]
-                connection.handle = None
-
-        return []  # Return empty list to match signature
+    @classmethod
+    def _handle_connection_error(cls, error: str | None) -> None:
+        """Handle connection errors by raising appropriate exception."""
+        error_message = (
+            f"Connection test failed: {error}" if error else "Connection test failed"
+        )
+        raise DbtDatabaseError(error_message)
 
     @contextmanager
-    def exception_handler(self, sql: str) -> Iterator[None]:
-        """Handle Oracle-specific exceptions."""
+    def exception_handler(self, sql: str) -> Any:
         try:
             yield
         except Exception as e:
             logger.exception("Oracle query failed: %s", sql)
-            error_message = f"Oracle query failed: {e}"
-            raise DbtDatabaseError(error_message) from e
+            msg = f"Oracle query failed: {e}"
+            raise DbtDatabaseError(msg) from e
 
-    def execute(  # type: ignore[override]
+    def execute(
         self,
         sql: str,
-        auto_begin: bool = False,  # noqa: FBT001, FBT002, ARG002
-        fetch: bool = False,  # noqa: FBT001, FBT002
-        limit: int | None = None,  # noqa: ARG002
+        fetch: bool = False,
     ) -> tuple[AdapterResponse, Any]:
-        """Execute SQL using flext-db-oracle query service."""
+        """Execute SQL using flext-infrastructure.databases.flext-db-oracle query service.
+
+        Execute SQL using flext-infrastructure.databases.flext-db-oracle
+        query service.
+        """
         connection = self.get_thread_connection()
 
         if connection.state != "open":
             connection = self.open(connection)
 
         if not connection.handle:
-            error_message = "Connection not properly initialized"
-            raise DbtRuntimeError(error_message)
+            msg = "No connection handle available"
+            raise DbtRuntimeError(msg)
 
         with self.exception_handler(sql):
             handle = connection.handle
@@ -261,8 +291,8 @@ class OracleConnectionManager(BaseConnectionManager):
             result = run_async_in_sync_context(query_service.execute_query(sql))
 
             if not result.is_success:
-                error_message = f"Query execution failed: {result.error}"
-                raise DbtDatabaseError(error_message)
+                msg = f"Query execution failed: {result.error}"
+                raise DbtDatabaseError(msg)
 
             query_result = result.value
 
@@ -288,19 +318,15 @@ class OracleConnectionManager(BaseConnectionManager):
 
             return response, table
 
-    def add_query(  # noqa: PLR0913  # type: ignore[override]
+    def add_query(
         self,
         sql: str,
-        auto_begin: bool = True,  # noqa: FBT001, FBT002, ARG002
         bindings: dict[str, Any] | None = None,
-        abridge_sql_log: bool = False,  # noqa: FBT001, FBT002, ARG002
-        retryable_exceptions: tuple[type[Exception], ...] = (),  # noqa: ARG002
-        retry_limit: int = 0,  # noqa: ARG002
     ) -> tuple[Any, Any]:
         """Add query to connection with enhanced logging."""
         logger.debug(
             "Executing Oracle query: %s",
-            sql[:100] + "..." if len(sql) > 100 else sql,  # noqa: PLR2004
+            sql[:100] + "..." if len(sql) > 100 else sql,
         )
 
         connection = self.get_thread_connection()
@@ -309,17 +335,41 @@ class OracleConnectionManager(BaseConnectionManager):
             if connection.state != "open":
                 connection = self.open(connection)
 
-            # For FLEXT services, we return a mock cursor with the SQL
-            # The actual execution happens in execute()
-            cursor = type(
-                "MockCursor",
-                (),
-                {
-                    "sql": sql,
-                    "bindings": bindings or {},
-                    "row_count": 0,
-                },
-            )()
+            # Get actual cursor from Oracle connection
+            if CX_ORACLE_AVAILABLE and hasattr(connection.handle, "cursor"):
+                cursor = connection.handle.cursor()
+                # Store execution context for debugging - intentional dynamic attributes
+                cursor._flext_sql = sql  # noqa: SLF001
+                cursor._flext_bindings = bindings or {}  # noqa: SLF001
+            else:
+                # Development/testing fallback cursor
+                class FallbackCursor:
+                    """Fallback cursor for development/testing."""
+
+                    def __init__(self) -> None:
+                        self.sql = sql
+                        self.bindings = bindings or {}
+                        self.row_count = 0
+                        self.arraysize = 1
+
+                    def execute(self, sql: str, bindings: Any = None) -> None:
+                        """Execute SQL (no-op in fallback mode)."""
+                        logger.warning(
+                            "Using fallback cursor - SQL not executed: %s", sql[:100],
+                        )
+
+                    def fetchone(self) -> None:
+                        """Fetch one row (no-op in fallback mode)."""
+                        return
+
+                    def fetchall(self) -> list[Any]:
+                        """Fetch all rows (empty in fallback mode)."""
+                        return []
+
+                    def close(self) -> None:
+                        """Close cursor (no-op in fallback mode)."""
+
+                cursor = FallbackCursor()
 
             return connection, cursor
 

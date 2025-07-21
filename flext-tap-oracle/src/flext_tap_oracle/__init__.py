@@ -4,12 +4,12 @@ This package provides an enterprise-grade Singer Tap for Oracle Database,
 supporting:
 
 - Oracle Database direct access
-- High-performance data extraction using flext-db-oracle
+- High-performance data extraction using flext-infrastructure.databases.flext-db-oracle
 - Modern Singer SDK patterns
 - FLEXT ecosystem integration
 
 Features:
-- Zero-code duplication with flext-db-oracle foundation
+- Zero-code duplication with flext-infrastructure.databases.flext-db-oracle foundation
 - Enterprise error handling and monitoring
 - Async/await support for performance
 - Circuit breaker patterns for resilience

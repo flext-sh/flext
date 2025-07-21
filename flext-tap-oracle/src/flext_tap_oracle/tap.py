@@ -14,7 +14,6 @@ from singer_sdk import Tap
 from singer_sdk import typing as th
 
 from flext_db_oracle import (
-    OracleConfig,
     OracleConnectionService,
     OracleQueryService,
     OracleSchemaService,
@@ -28,6 +27,10 @@ from flext_tap_oracle.streams import (
 
 if TYPE_CHECKING:
     from collections.abc import Callable
+
+    from flext_db_oracle import (
+        OracleConfig,
+    )
 
 
 # Simple performance tracking decorator
@@ -203,7 +206,8 @@ class TapOracle(Tap):
         """Initialize the Oracle tap."""
         super().__init__(*args, **kwargs)
         self._tap_config: TapOracleConfig | None = None
-        # Modern Oracle DB Services (using flext-db-oracle with parameterization)
+        # Modern Oracle DB Services (using flext-infrastructure.databases.flext-db-oracle
+        # with parameterization)
         self._oracle_config: OracleConfig | None = None
         self._connection_service: OracleConnectionService | None = None
         self._query_service: OracleQueryService | None = None
@@ -267,7 +271,8 @@ class TapOracle(Tap):
                 # Use the enhanced configuration conversion
                 self._oracle_config = self.tap_config.to_oracle_config()
                 logger.info(
-                    "Created Oracle DB config with parameterization: pool_size=%d, timeout=%d",
+                    "Created Oracle DB config with parameterization: "
+                    "pool_size=%d, timeout=%d",
                     self._oracle_config.pool_max_size,
                     self._oracle_config.query_timeout,
                 )
@@ -277,7 +282,8 @@ class TapOracle(Tap):
             self._schema_service = OracleSchemaService(self._query_service)
 
             logger.info(
-                "Initialized Oracle DB services with flext-db-oracle parameterization",
+                "Initialized Oracle DB services with "
+                "flext-infrastructure.databases.flext-db-oracle parameterization",
             )
         return self._connection_service
 
@@ -288,10 +294,11 @@ class TapOracle(Tap):
             result = run_async_in_sync_context(
                 self.connection_service.test_connection(),
             )
-            return result.is_success
         except Exception:
             logger.exception("Modern Oracle DB connection test failed")
             return False
+        else:
+            return result.is_success
 
     @track_performance("tap_oracle.discover_streams")
     def discover_streams(self) -> list[Any]:
@@ -299,6 +306,7 @@ class TapOracle(Tap):
 
         Returns:
             List of stream classes for the configured Oracle sources.
+
         """
         streams = []
 
@@ -325,7 +333,12 @@ class TapOracle(Tap):
         return streams
 
     def _discover_database_streams(self) -> list[Any]:
-        """Discover Oracle database table streams using flext-db-oracle."""
+        """Discover Oracle database table streams using flext-infrastructure.databases.flext-db-oracle.
+
+        Returns:
+            List of discovered OracleTableStream instances
+
+        """
         streams = []
 
         try:
@@ -359,6 +372,7 @@ class TapOracle(Tap):
 
         Returns:
             List of table names to create streams for
+
         """
         # If specific tables are configured, use those
         if self.tap_config.tables:
@@ -378,7 +392,7 @@ class TapOracle(Tap):
 
             # Extract table names from OracleTableMetadata objects
             all_tables: list[str] = (
-                [table.table_name for table in result.value] if result.value else []
+                [table.table_name for table in result.data] if result.data else []
             )
 
             # Apply exclusions
@@ -406,6 +420,7 @@ class TapOracle(Tap):
 
         Returns:
             True if all configured connections are successful
+
         """
         connection_type = self.tap_config.connection_type
 
@@ -432,10 +447,11 @@ class TapOracle(Tap):
             result = run_async_in_sync_context(
                 self.connection_service.test_connection(),
             )
-            return result.is_success
         except Exception:
             logger.exception("Database connection test failed")
             return False
+        else:
+            return result.is_success
 
     async def run_async(self) -> None:
         """Run the tap with async support for high performance."""
@@ -464,6 +480,7 @@ class TapOracle(Tap):
 
         Returns:
             Dictionary containing performance and operational metrics
+
         """
         if not self.tap_config.enable_metrics:
             return {}

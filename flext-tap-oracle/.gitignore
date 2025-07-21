@@ -1,6 +1,6 @@
 # ============================================================================
-# FLEXT PROJECT STANDARD - .gitignore
-# Python 3.13+ | Poetry | Testing | Development Tools
+# FLEXT PYTHON PROJECT STANDARD .gitignore TEMPLATE
+# Python 3.13 | Poetry | Testing | Development Tools
 # ============================================================================
 
 # ============================================================================
@@ -106,8 +106,8 @@ ENV/
 env.bak/
 venv.bak/
 
-# Poetry
-poetry.lock.bak
+# Poetry - keep lock file for reproducible builds
+# poetry.lock  # KEEP THIS FILE COMMENTED OUT
 
 # Pipenv
 Pipfile.lock.bak
@@ -233,7 +233,7 @@ data/
 *.data
 
 # ============================================================================
-# MELTANO / SINGER SPECIFIC
+# SINGER/MELTANO SPECIFIC
 # ============================================================================
 
 # Meltano
@@ -285,6 +285,37 @@ secrets/
 *.toml.bak
 
 # ============================================================================
+# PROJECT SPECIFIC - FORBID ANTI-PATTERNS
+# ============================================================================
+
+# Archive directory (for moved junk files)
+archive/
+
+# Reports directory (for metrics, coverage, etc.)
+reports/
+
+# Old requirements.txt (use pyproject.toml)
+requirements.txt
+
+# Manual fix scripts - FORBIDDEN
+fix_*.py
+*_fix.py
+*_validation.py
+validate_*.py
+
+# AI-generated reports and migration files - FORBIDDEN
+*_REPORT.md
+*_REPORT_*.md
+CONFIG_MIGRATION*.md
+FLEXT_*_MIGRATION*.md
+DEVELOPMENT_STANDARDS.md
+FLEXT_*_PATTERNS.md
+LOGGING_MIGRATION.md
+STRICT_COMPLIANCE.md
+LEVEL1_*.md
+DUPLICATION_REPORT.md
+
+# ============================================================================
 # MISCELLANEOUS
 # ============================================================================
 
@@ -324,3 +355,22 @@ celerybeat.pid
 # Custom additions
 *.local
 *.user 
+
+# ============================================================================
+# AI ASSISTANT FILES
+# ============================================================================
+CLAUDE.md
+CLAUDE.local.md
+.claude/
+.cursor/
+
+# ============================================================================
+# ALWAYS INCLUDE EXCEPTIONS
+# ============================================================================
+
+# Important: Force include critical files
+!pyproject.toml
+!Makefile
+!README.md
+!.pre-commit-config.yaml
+!.env.example

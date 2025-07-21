@@ -1,28 +1,43 @@
-"""FLEXT DBT Oracle WMS Configuration Types - Simplified version.
-
-This module provides configuration type definitions for the FLEXT DBT Oracle WMS
-integration using basic types.
-
-IMPORTANT: This module is for Oracle WMS API integration, NOT Oracle Database.
+"""FLEXT DBT Oracle WMS Configuration Types - Unified typing system using flext-core.
 
 Copyright (c) 2025 FLEXT Contributors
 SPDX-License-Identifier: MIT
+
+This module imports from the unified typing system in flext-core and defines
+DBT Oracle WMS configuration types using modern Python 3.13 patterns and Pydantic v2.
+
+IMPORTANT: This module is for Oracle WMS API integration, NOT Oracle Database.
 """
 
 from __future__ import annotations
 
-from typing import Any, Literal, TypedDict
+from typing import TYPE_CHECKING, Any, Literal, TypedDict
 
+# Import from unified core typing system - eliminate duplication
 from pydantic import BaseModel, Field
 
+if TYPE_CHECKING:
+    from flext_core.domain.shared_types import (
+        NonEmptyStr,
+        PositiveInt,
+        ProjectName,
+        Version,
+    )
 
-# Simple DBT Oracle WMS Configuration
+
+# DBT Oracle WMS Configuration using unified core types
 class FlextDBTOracleWMSConfig(BaseModel):
-    """FLEXT DBT Oracle WMS configuration."""
+    """FLEXT DBT Oracle WMS configuration using core types."""
 
-    project_name: str = Field(default="flext-dbt-oracle-wms")
-    version: str = Field(default="2.0.0")
-    profile: str = Field(default="flext_oracle_wms")
+    project_name: ProjectName = Field(
+        default="flext-dbt-oracle-wms",
+        description="DBT Oracle WMS project name",
+    )
+    version: Version = Field(default="2.0.0", description="Project version")
+    profile: NonEmptyStr = Field(
+        default="flext_oracle_wms",
+        description="DBT profile name",
+    )
 
     # DBT configurations
     model_paths: list[str] = Field(default_factory=lambda: ["models"])
@@ -33,61 +48,86 @@ class FlextDBTOracleWMSConfig(BaseModel):
 
     # Oracle WMS specific
     oracle_wms_schema: str = Field(default="wms_raw")
-    wms_entities: list[str] = Field(default_factory=lambda: [
-        "allocation", "order_hdr", "order_dtl", "inventory",
-    ])
+    wms_entities: list[str] = Field(
+        default_factory=lambda: [
+            "allocation",
+            "order_hdr",
+            "order_dtl",
+            "inventory",
+        ],
+    )
 
-    # Performance settings
+    # Performance settings using core types
     enable_incremental_models: bool = Field(default=True)
-    incremental_lookback_days: int = Field(default=7)
+    incremental_lookback_days: PositiveInt = Field(
+        default=7,
+        description="Days to look back for incremental models",
+    )
 
     # Data quality
     enable_audit_logging: bool = Field(default=True)
     enable_lineage_tracking: bool = Field(default=True)
 
 
-# Basic configuration TypedDicts
+# DBT Oracle WMS TypedDicts using unified core types
 class DBTOracleWMSConfiguration(TypedDict):
-    """Basic DBT Oracle WMS configuration."""
+    """DBT Oracle WMS configuration using core types."""
 
-    project_name: str
-    version: str
-    profile: str
+    project_name: ProjectName
+    version: Version
+    profile: NonEmptyStr
 
 
 class DBTOracleWMSModelConfiguration(TypedDict):
-    """DBT model configuration."""
+    """DBT model configuration using core types."""
 
     materialized: Literal["table", "view", "incremental"]
-    schema: str
-    tags: list[str]
+    schema: NonEmptyStr
+    tags: list[NonEmptyStr]
 
 
 class DBTOracleWMSSourceConfiguration(TypedDict):
-    """DBT source configuration."""
+    """DBT source configuration using core types."""
 
-    name: str
-    schema: str
+    name: NonEmptyStr
+    schema: NonEmptyStr
     tables: list[dict[str, Any]]
 
 
 class DBTOracleWMSTestConfiguration(TypedDict):
-    """DBT test configuration."""
+    """DBT test configuration using core types."""
 
     store_failures: bool
-    schema: str
+    schema: NonEmptyStr
 
 
 class DBTOracleWMSMacroConfiguration(TypedDict):
-    """DBT macro configuration."""
+    """DBT macro configuration using core types."""
 
-    name: str
-    description: str
-    arguments: list[str]
+    name: NonEmptyStr
+    description: NonEmptyStr
+    arguments: list[NonEmptyStr]
 
 
 class DBTOracleWMSProfileConfiguration(TypedDict):
-    """DBT profile configuration."""
+    """DBT profile configuration using core types."""
 
-    target: str
+    target: NonEmptyStr
     outputs: dict[str, Any]
+
+
+# ==============================================================================
+# EXPORTS - ALL DBT ORACLE WMS CONFIG TYPES
+# ==============================================================================
+
+__all__ = [
+    # TypedDict configurations
+    "DBTOracleWMSConfiguration",
+    "DBTOracleWMSMacroConfiguration",
+    "DBTOracleWMSModelConfiguration",
+    "DBTOracleWMSProfileConfiguration",
+    "DBTOracleWMSSourceConfiguration",
+    "DBTOracleWMSTestConfiguration",
+    # Main configuration classes
+    "FlextDBTOracleWMSConfig",
+]

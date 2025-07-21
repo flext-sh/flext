@@ -12,14 +12,14 @@ from flext.workspace.cli import cli as workspace_cli
 @click.group()
 @click.option(
     "--workspace",
-    type=click.Path(exists=True, path_type=Path),
+    type=click.Path(exists=True),
     help="Workspace root path",
 )
 @click.pass_context
-def main(ctx: click.Context, workspace: Path | None) -> None:
+def main(ctx: click.Context, workspace: str | None) -> None:
     """FLEXT - Multi-Project Workspace Coordinator for Enterprise Data Integration."""
     ctx.ensure_object(dict)
-    ctx.obj["workspace"] = workspace
+    ctx.obj["workspace"] = Path(workspace) if workspace else None
 
 
 @main.command()
@@ -60,9 +60,9 @@ def lint(ctx: click.Context) -> None:
         ctx.exit(exit_code)
 
 
-@main.command()
+@main.command("format")
 @click.pass_context
-def format(ctx: click.Context) -> None:
+def format_code(ctx: click.Context) -> None:
     """Format all projects."""
     workspace = ctx.obj.get("workspace")
     dev_tools = DevToolsManager(workspace)

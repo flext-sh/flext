@@ -9,16 +9,78 @@ from __future__ import annotations
 
 from typing import ClassVar, Final
 
-# Import all shared Oracle constants from flext-core
-from flext_core.domain.constants import (
-    ConnectionProtocols,
-    OracleDBConstants,
-    OracleDefaults,
-    OracleLimits,
-    SingerOracleConstants,
-    SSLModes,
-    StandardLogLevels,
-)
+# Import available constants from flext-core
+from flext_core.domain.constants import LogLevels
+
+
+# Define Oracle-specific constants locally
+class ConnectionProtocols:
+    """Database connection protocol constants."""
+
+    TCP: Final = "tcp"
+    TCPS: Final = "tcps"
+    IPC: Final = "ipc"
+    ALL: Final = [TCP, TCPS, IPC]
+    DEFAULT: Final = TCP
+
+
+class OracleDBConstants:
+    """Oracle database constants."""
+
+    DEFAULT_PORT: Final = 1521
+    DEFAULT_SERVICE_NAME: Final = "XE"
+    DEFAULT_SCHEMA: Final = "SYSTEM"
+    DEFAULT_ENCODING: Final = "utf-8"
+
+
+class OracleDefaults:
+    """Oracle default values."""
+
+    CONNECTION_TIMEOUT: Final = 30
+    QUERY_TIMEOUT: Final = 300
+    POOL_SIZE: Final = 5
+    POOL_MAX_OVERFLOW: Final = 10
+    BATCH_SIZE: Final = 1000
+
+
+class OracleLimits:
+    """Oracle limits and constraints."""
+
+    MAX_IDENTIFIER_LENGTH: Final = 128
+    MAX_VARCHAR_LENGTH: Final = 4000
+    MAX_BATCH_SIZE: Final = 10000
+    MIN_BATCH_SIZE: Final = 1
+
+
+class SingerOracleConstants:
+    """Singer Oracle tap constants."""
+
+    DEFAULT_STREAM_PREFIX: Final = "oracle"
+    DEFAULT_BOOKMARK_KEY: Final = "replication_key_value"
+    SUPPORTED_REPLICATION_METHODS: Final = ["FULL_TABLE", "INCREMENTAL"]
+
+
+class SSLModes:
+    """SSL mode constants."""
+
+    DISABLE: Final = "disable"
+    ALLOW: Final = "allow"
+    PREFER: Final = "prefer"
+    REQUIRE: Final = "require"
+    VERIFY_CA: Final = "verify_ca"
+    VERIFY_FULL: Final = "verify_full"
+    ALL: Final = [DISABLE, ALLOW, PREFER, REQUIRE, VERIFY_CA, VERIFY_FULL]
+    DEFAULT: Final = PREFER
+
+
+class StandardLogLevels:
+    """Standard logging levels."""
+
+    DEBUG: Final = LogLevels.DEBUG
+    INFO: Final = LogLevels.INFO
+    WARNING: Final = LogLevels.WARNING
+    ERROR: Final = LogLevels.ERROR
+    CRITICAL: Final = LogLevels.CRITICAL
 
 
 class OracleTapConstants:
@@ -58,61 +120,62 @@ class OracleTapConstants:
 
     # Port and Protocol
     DEFAULT_PORT: Final = OracleDBConstants.DEFAULT_PORT
-    DEFAULT_PROTOCOL: Final = OracleDBConstants.DEFAULT_PROTOCOL
+    DEFAULT_PROTOCOL: Final = ConnectionProtocols.DEFAULT
     VALID_PROTOCOLS: ClassVar[set[str]] = set(ConnectionProtocols.ALL)
 
     # Timeouts
-    DEFAULT_TIMEOUT: Final = OracleDBConstants.DEFAULT_TIMEOUT
-    DEFAULT_CONNECT_TIMEOUT: Final = OracleDefaults.DEFAULT_CONNECT_TIMEOUT
-    DEFAULT_QUERY_TIMEOUT: Final = OracleDefaults.DEFAULT_QUERY_TIMEOUT
+    DEFAULT_TIMEOUT: Final = OracleDefaults.CONNECTION_TIMEOUT
+    DEFAULT_CONNECT_TIMEOUT: Final = OracleDefaults.CONNECTION_TIMEOUT
+    DEFAULT_QUERY_TIMEOUT: Final = OracleDefaults.QUERY_TIMEOUT
+    MAX_TIMEOUT: Final = 600
 
     # ==============================================================================
-    # PERFORMANCE - Use Singer Oracle constants from flext-core
+    # PERFORMANCE - Use Oracle defaults from flext-core
     # ==============================================================================
 
     # Batch sizes
-    DEFAULT_BATCH_SIZE: Final = SingerOracleConstants.DEFAULT_BATCH_SIZE
-    MAX_BATCH_SIZE: Final = SingerOracleConstants.MAX_BATCH_SIZE
-    MIN_BATCH_SIZE: Final = SingerOracleConstants.MIN_BATCH_SIZE
-    OPTIMAL_BATCH_SIZE: Final = SingerOracleConstants.OPTIMAL_BATCH_SIZE
+    DEFAULT_BATCH_SIZE: Final = OracleDefaults.BATCH_SIZE
+    MAX_BATCH_SIZE: Final = OracleLimits.MAX_BATCH_SIZE
+    MIN_BATCH_SIZE: Final = OracleLimits.MIN_BATCH_SIZE
+    OPTIMAL_BATCH_SIZE: Final = OracleDefaults.BATCH_SIZE
 
     # Parallel processing
-    DEFAULT_PARALLEL_STREAMS: Final = SingerOracleConstants.MIN_PARALLEL_STREAMS
-    MAX_PARALLEL_STREAMS: Final = SingerOracleConstants.MAX_PARALLEL_STREAMS
-    OPTIMAL_PARALLEL_STREAMS: Final = SingerOracleConstants.OPTIMAL_PARALLEL_STREAMS
+    DEFAULT_PARALLEL_STREAMS: Final = 1
+    MAX_PARALLEL_STREAMS: Final = 8
+    OPTIMAL_PARALLEL_STREAMS: Final = 4
 
     # Connection pooling
-    DEFAULT_POOL_SIZE: Final = SingerOracleConstants.DEFAULT_CONNECTION_POOL_SIZE
-    MAX_POOL_SIZE: Final = SingerOracleConstants.MAX_CONNECTION_POOL_SIZE
-    MIN_POOL_SIZE: Final = SingerOracleConstants.MIN_CONNECTION_POOL_SIZE
+    DEFAULT_POOL_SIZE: Final = OracleDefaults.POOL_SIZE
+    DEFAULT_CONNECTION_POOL_SIZE: Final = OracleDefaults.POOL_SIZE
+    MAX_POOL_SIZE: Final = OracleDefaults.POOL_MAX_OVERFLOW
+    MAX_CONNECTION_POOL_SIZE: Final = OracleDefaults.POOL_MAX_OVERFLOW
+    MIN_POOL_SIZE: Final = 1
 
     # Discovery
-    DEFAULT_DISCOVERY_BATCH_SIZE: Final = (
-        SingerOracleConstants.DEFAULT_DISCOVERY_BATCH_SIZE
-    )
-    MAX_DISCOVERY_TIMEOUT: Final = SingerOracleConstants.MAX_DISCOVERY_TIMEOUT
+    DEFAULT_DISCOVERY_BATCH_SIZE: Final = OracleDefaults.BATCH_SIZE
+    MAX_DISCOVERY_TIMEOUT: Final = 300
 
     # State management
-    DEFAULT_STATE_INTERVAL: Final = SingerOracleConstants.DEFAULT_STATE_INTERVAL
-    STATE_MESSAGE_VERSION: Final = SingerOracleConstants.STATE_MESSAGE_VERSION
+    DEFAULT_STATE_INTERVAL: Final = 1000
+    STATE_MESSAGE_VERSION: Final = "1.0"
 
     # ==============================================================================
     # ORACLE FETCH SETTINGS - Use Oracle DB constants from flext-core
     # ==============================================================================
 
-    DEFAULT_FETCH_SIZE: Final = OracleDBConstants.DEFAULT_FETCH_SIZE
-    DEFAULT_ARRAY_SIZE: Final = OracleDBConstants.DEFAULT_ARRAY_SIZE
-    MAX_FETCH_SIZE: Final = OracleLimits.MAX_FETCH_SIZE
+    DEFAULT_FETCH_SIZE: Final = 1000
+    DEFAULT_ARRAY_SIZE: Final = 100
+    MAX_FETCH_SIZE: Final = OracleLimits.MAX_BATCH_SIZE
     MAX_ARRAY_SIZE: Final = 10000  # Standard Oracle array processing limit
 
     # ==============================================================================
     # CIRCUIT BREAKER - Use flext-core patterns
     # ==============================================================================
 
-    CIRCUIT_BREAKER_FAILURE_THRESHOLD: Final = (
-        OracleDefaults.DEFAULT_CIRCUIT_BREAKER_FAILURES
-    )
-    CIRCUIT_BREAKER_TIMEOUT: Final = OracleDefaults.DEFAULT_CIRCUIT_BREAKER_TIMEOUT
+    CIRCUIT_BREAKER_FAILURE_THRESHOLD: Final = 3
+    CIRCUIT_BREAKER_TIMEOUT: Final = 60
+    DEFAULT_CIRCUIT_BREAKER_FAILURES: Final = 3
+    DEFAULT_CIRCUIT_BREAKER_TIMEOUT: Final = 60
 
     # ==============================================================================
     # SCHEMA FLATTENING - Tap specific settings
@@ -128,5 +191,11 @@ class OracleTapConstants:
     # LOG LEVELS - Use flext-core consolidated log levels
     # ==============================================================================
 
-    DEFAULT_LOG_LEVEL: Final = StandardLogLevels.DEFAULT
-    VALID_LOG_LEVELS: ClassVar[set[str]] = set(StandardLogLevels.ALL)
+    DEFAULT_LOG_LEVEL: Final = StandardLogLevels.INFO
+    VALID_LOG_LEVELS: ClassVar[set[str]] = {
+        StandardLogLevels.DEBUG,
+        StandardLogLevels.INFO,
+        StandardLogLevels.WARNING,
+        StandardLogLevels.ERROR,
+        StandardLogLevels.CRITICAL,
+    }
