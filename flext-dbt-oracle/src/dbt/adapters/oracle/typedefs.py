@@ -1,7 +1,7 @@
 """DBT Oracle Adapter specific type definitions - Maximum flext-core integration.
 
-This module provides DBT Oracle Adapter specific type definitions using flext-core as the
-foundation. All common Oracle types are inherited from flext-core to ensure
+This module provides DBT Oracle Adapter specific type definitions using flext-core as
+the foundation. All common Oracle types are inherited from flext-core to ensure
 consistency and eliminate code duplication across Oracle projects.
 """
 
@@ -14,6 +14,8 @@ from pydantic import Field, StringConstraints
 # Import ALL Oracle types from flext-core (our single source of truth)
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     from flext_core.domain.typedefs import (
         OracleArraySize,
         OracleColumnName,
@@ -66,6 +68,8 @@ DBTCaseSensitivity = Literal["preserve", "upper", "lower"]
 
 
 class DBTIdentifierQuoting(TypedDict):
+    """DBT identifier quoting configuration."""
+
     database: bool
     schema: bool
     identifier: bool
@@ -73,11 +77,16 @@ class DBTIdentifierQuoting(TypedDict):
 
 # DBT Model Configuration
 class DBTModelConfig(TypedDict):
+    """DBT model configuration."""
+
     materialized: DBTMaterialization
     unique_key: str | list[str] | None
     incremental_strategy: DBTIncrementalStrategy | None
     on_schema_change: Literal[
-        "ignore", "fail", "append_new_columns", "sync_all_columns",
+        "ignore",
+        "fail",
+        "append_new_columns",
+        "sync_all_columns",
     ]
     full_refresh: bool
     persist_docs: dict[str, bool]
@@ -87,6 +96,8 @@ class DBTModelConfig(TypedDict):
 
 # DBT Snapshot Configuration
 class DBTSnapshotConfig(TypedDict):
+    """DBT snapshot configuration."""
+
     strategy: DBTSnapshotStrategy
     unique_key: str | list[str]
     updated_at: str | None
@@ -118,6 +129,8 @@ DBTOracleTablespace = Annotated[
 
 # DBT Connection Profile Types
 class DBTOracleProfile(TypedDict):
+    """DBT Oracle connection profile."""
+
     type: DBTConnectionType
     host: OracleHost
     port: OraclePort
@@ -139,6 +152,8 @@ class DBTOracleProfile(TypedDict):
 
 # DBT Catalog and Metadata Types
 class DBTCatalogTable(TypedDict):
+    """DBT catalog table metadata."""
+
     type: Literal["table", "view", "materialized_view"]
     schema: OracleSchema
     name: OracleTableName
@@ -148,6 +163,8 @@ class DBTCatalogTable(TypedDict):
 
 
 class DBTCatalogColumn(TypedDict):
+    """DBT catalog column metadata."""
+
     type: str
     index: int
     name: OracleColumnName
@@ -155,6 +172,8 @@ class DBTCatalogColumn(TypedDict):
 
 
 class DBTRelation(TypedDict):
+    """DBT relation configuration."""
+
     database: str | None
     schema: OracleSchema
     identifier: OracleIdentifier
@@ -163,6 +182,8 @@ class DBTRelation(TypedDict):
 
 # DBT Compilation and Execution Types
 class DBTCompilerConfig(TypedDict):
+    """DBT compiler configuration."""
+
     quote_policy: DBTIdentifierQuoting
     case_sensitivity: DBTCaseSensitivity
     dispatch_list: list[str]
@@ -171,6 +192,8 @@ class DBTCompilerConfig(TypedDict):
 
 
 class DBTMacroContext(TypedDict):
+    """DBT macro execution context."""
+
     adapter: Any
     model: dict[str, Any]
     config: dict[str, Any]
@@ -195,6 +218,8 @@ DBTLogLevel = Literal["DEBUG", "INFO", "WARN", "ERROR"]
 
 
 class DBTLogMessage(TypedDict):
+    """DBT log message structure."""
+
     timestamp: str
     level: DBTLogLevel
     logger_name: str
@@ -204,6 +229,8 @@ class DBTLogMessage(TypedDict):
 
 # DBT Performance and Monitoring Types
 class DBTExecutionStats(TypedDict):
+    """DBT execution statistics."""
+
     node_id: str
     node_name: str
     resource_type: str
@@ -215,6 +242,8 @@ class DBTExecutionStats(TypedDict):
 
 
 class DBTRunResult(TypedDict):
+    """DBT run result information."""
+
     unique_id: str
     error: str | None
     status: Literal["success", "error", "skipped", "fail"]
@@ -233,6 +262,8 @@ class DBTRunResult(TypedDict):
 
 # Complete DBT Oracle Configuration (combines all settings)
 class DBTOracleCompleteConfig(TypedDict):
+    """Complete DBT Oracle configuration."""
+
     type: DBTConnectionType
     host: OracleHost
     port: OraclePort
@@ -267,6 +298,8 @@ class DBTOracleCompleteConfig(TypedDict):
 
 # Environment-specific DBT Configuration
 class DBTEnvironmentConfig(TypedDict):
+    """Environment-specific DBT configuration."""
+
     development: DBTOracleCompleteConfig
     staging: DBTOracleCompleteConfig
     production: DBTOracleCompleteConfig
@@ -274,6 +307,8 @@ class DBTEnvironmentConfig(TypedDict):
 
 # DBT Project Configuration
 class DBTProjectConfig(TypedDict):
+    """DBT project configuration."""
+
     name: str
     version: str
     profile: str

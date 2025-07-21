@@ -1,21 +1,63 @@
-[tool.poetry]
-name = "flext-oracle-wms"
-version = "1.0.0"
-description = "Enterprise Oracle WMS client library for FLEXT data integration platform"
-authors = ["FLEXT Team <contact@flext.com>"]
-readme = "README.md"
-packages = [{include = "flext_oracle_wms", from = "src"}]
+[build-system]
+requires = ["poetry-core>=1.9.0"]
+build-backend = "poetry.core.masonry.api"
 
-[tool.poetry.dependencies]
-python = ">=3.13,<3.14"
-httpx = "^0.28.1"
-pydantic = "^2.0.0"
-pydantic-settings = "^2.0.0"
-flext-core = {path = "../flext-core", develop = true}
+[project]
+name = "flext-oracle-wms"
+version = "0.7.0"
+description = "Enterprise Oracle WMS client library for FLEXT data integration platform"
+readme = "README.md"
+requires-python = ">=3.13,<3.14"
+keywords = ["flext", "enterprise", "async", "typed", "integration", "adapter"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
+]
+dependencies = []
+[[project.authors]]
+name = "FLEXT Team"
+email = "team@flext.sh"
+
+[[project.maintainers]]
+name = "FLEXT Team"
+email = "team@flext.sh"
+
+[project.license]
+text = "MIT"
+
+[project.urls]
+Homepage = "https://github.com/flext-sh/flext"
+Repository = "https://github.com/flext-sh/flext"
+Documentation = "https://github.com/flext-sh/flext/blob/main/README.md"
+
+[tool.ruff]
+target-version = "py313"
+line-length = 88
+fix = true
+show-fixes = true
+respect-gitignore = true
+src = ["src", "tests"]
+extend-exclude = [
+    "__pycache__",
+    ".git",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".ruff_cache",
+    ".venv",
+    "venv",
+    "build",
+    "dist",
+    "htmlcov",
+]
 
 [tool.mypy]
 python_version = "3.13"
-plugins = ["pydantic.mypy"]
 strict = true
 warn_return_any = true
 warn_unused_configs = true
@@ -30,81 +72,103 @@ warn_no_return = true
 warn_unreachable = true
 strict_equality = true
 show_error_codes = true
+show_error_context = true
+pretty = true
+disallow_any_generics = true
+disallow_subclassing_any = true
+disallow_untyped_calls = true
+ignore_missing_imports = false
+no_implicit_reexport = true
+files = ["src", "tests"]
+plugins = ["pydantic.mypy"]
+exclude = ["build", "dist", ".venv", ".mypy_cache"]
+
+[tool.bandit]
+exclude_dirs = ["tests", "build", "dist"]
+skips = ["B101", "B601"]
 
 [tool.pydantic-mypy]
 init_forbid_extra = true
 init_typed = true
 warn_required_dynamic_aliases = true
 
-[tool.ruff]
-target-version = "py313"
-line-length = 88
-fix = true
-show-fixes = true
-respect-gitignore = true
-src = ["src", "tests", "scripts", "*/src"]
-extend-exclude = [
-    "__pycache__",
-    ".git",
-    ".mypy_cache",
-    ".pytest_cache",
-    ".ruff_cache",
-    ".venv",
-    "venv",
-    "build",
-    "dist",
-    "htmlcov",
+[tool.poetry]
+[[tool.poetry.packages]]
+include = "flext_oracle_wms"
+from = "src"
+
+[tool.deptry]
+known_first_party = ["flext_oracle_wms"]
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+asyncio_mode = "auto"
+addopts = [
+    "-ra",
+    "--strict-markers",
+    "--strict-config",
+    "--cov=flext_oracle_wms",
+    "--cov-branch",
+    "--cov-report=term-missing:skip-covered",
+    "--cov-report=html:reports/coverage",
+    "--cov-report=xml:reports/coverage.xml",
+    "--cov-fail-under=90",
+    "--maxfail=1",
+    "--tb=short",
 ]
+testpaths = ["tests"]
+markers = [
+    "unit: Unit tests",
+    "integration: Integration tests",
+    "slow: Slow tests",
+    "smoke: Smoke tests",
+    "e2e: End-to-end tests",
+]
+filterwarnings = ["error", "ignore::UserWarning", "ignore::DeprecationWarning"]
 
 [tool.ruff.lint]
-# Enable ALL rules for maximum quality (FLEXT Standard)
 select = ["ALL"]
-
-# ONLY ignore absolute conflicts and formatter issues
 ignore = [
-    # ===== FORMATTER CONFLICTS (MANDATORY TO IGNORE) =====
-    "COM812", # trailing-comma-missing (handled by formatter)
-    "D203",   # one-blank-line-before-class (conflicts with D211)
-    "D213",   # multi-line-docstring-summary-second-line (conflicts with D212)
-    "ISC001", # implicit-str-concat (conflicts with formatter)
-
-    # ===== REASONABLE FLEXIBILITY (FLEXT APPROVED) =====
+    "COM812",
+    "D203",
+    "D213",
+    "ISC001",
     "ANN401",
-    "ARG001",  # Unused argument (fix gradually)
-    "ARG002",  # Unused argument (fix gradually)
-    "BLE001",  # Do not catch blind exception (fix gradually)
-    "C901",    # Too complex (refactor gradually)
+    "ARG001",
+    "ARG002",
+    "BLE001",
+    "C901",
     "D102",
-    "D103",    # Missing docstring in public module
+    "D103",
     "D105",
-    "D107",    # Missing docstring in __init__
+    "D107",
     "D401",
     "DTZ001",
     "DTZ005",
     "E401",
     "E501",
-    "EM101",   # Exception must not use a string literal
-    "EM102",   # Exception must not use an f-string literal
-    "ERA001",  # Commented out code (development)
-    "EXE001",  # Shebang is present but file is not executable
+    "EM101",
+    "EM102",
+    "ERA001",
+    "EXE001",
     "F401",
     "F823",
-    "FBT001",  # Boolean trap (refactor gradually)
-    "FBT002",  # Boolean trap (refactor gradually)
-    "FBT003",  # Boolean trap (refactor gradually)
-    "FIX002",  # Line contains TODO
+    "FBT001",
+    "FBT002",
+    "FBT003",
+    "FIX002",
     "G004",
-    "PLC0415", # Import should be placed at top of module
-    "PLR0911", # Too many positional arguments (refactor gradually)
-    "PLR0912", # Too many branches (refactor gradually)
-    "PLR0913", # Too many arguments (refactor gradually)
-    "PLR0915", # Too many statements (refactor gradually)
-    "PLR2004", # Magic value used in comparison (case by case)
-    "PLW0603", # Unnecessary `else` after `return` (fix gradually)
+    "PLC0415",
+    "PLR0911",
+    "PLR0912",
+    "PLR0913",
+    "PLR0915",
+    "PLR2004",
+    "PLW0603",
     "PTH118",
     "PTH123",
     "RUF001",
-    "S103",    # Use of assert (pytest requirement)
+    "S103",
     "S104",
     "S105",
     "S106",
@@ -113,46 +177,13 @@ ignore = [
     "S607",
     "SIM102",
     "TD002",
-    "TD003",   # Missing issue link on TODO
-    "TRY003",  # Avoid specifying long messages outside exception class
+    "TD003",
+    "TRY003",
     "TRY203",
-    "TRY300",  # Try/except/finally should not be empty (refactor gradually)
+    "TRY300",
     "TRY301",
     "TRY401",
 ]
-
-[tool.ruff.lint.per-file-ignores]
-"**/tests/**" = [
-    "S101",    # Use of assert (pytest requirement)
-    "S106",    # Possible hardcoded password (test fixtures)
-    "PLR2004", # Magic values (test data)
-    "ANN",     # Type annotations (optional in tests)
-    "D",       # Docstrings (optional in tests)
-    "ARG",     # Unused arguments (fixtures)
-    "FBT",     # Boolean trap (test parameters)
-    "SLF001",  # Private member access (testing)
-    "DTZ001",  # Timezone aware datetime (test data)
-    "PLC0415", # Import should be placed at top of module (test utilities)
-]
-"**/scripts/**" = [
-    "T201",   # Print statements (allowed in scripts)
-    "S603",   # subprocess without shell=True (scripts)
-    "S607",   # Starting a process with a partial path (scripts)
-    "ANN",    # Type annotations (optional in scripts)
-    "D",      # Docstrings (optional in scripts)
-    "EXE001", # Shebang is present but file is not executable
-]
-"*/__init__.py" = [
-    "F401", # Module imported but unused (re-exports)
-    "D104", # Missing docstring in public package
-]
-
-# Auto-generated files - exclude from ALL linting
-"**/proto/*_pb2.py" = ["ALL"]
-"**/proto/*_pb2_grpc.py" = ["ALL"]
-"**/*_pb2.py" = ["ALL"]
-"**/*_pb2_grpc.py" = ["ALL"]
-"**/generated/**/*.py" = ["ALL"]
 
 [tool.ruff.format]
 quote-style = "double"
@@ -160,18 +191,107 @@ indent-style = "space"
 line-ending = "lf"
 docstring-code-format = true
 
-[tool.ruff.lint.flake8-tidy-imports]
-ban-relative-imports = "all"
+[tool.coverage.run]
+source = ["src"]
+branch = true
+omit = ["*/tests/*", "*/test_*", "*/__pycache__/*", "*/venv/*", "*/.venv/*"]
 
-[tool.ruff.lint.flake8-type-checking]
-strict = true
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]
 
-[tool.ruff.lint.pylint]
-max-args = 8
-max-branches = 12
-max-returns = 6
-max-statements = 50
+[tool.coverage.html]
+directory = "reports/coverage"
 
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+[tool.coverage.xml]
+output = "reports/coverage.xml"
+
+[tool.poetry.dependencies]
+python = ">=3.13,<3.14"
+
+# Development dependencies managed by group.dev below
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.12.3"
+black = "^25.1.0"
+isort = "^6.0.1"
+mypy = "^1.13.0"
+pylint = "^3.3.0"
+pre-commit = "^4.0.1"
+vulture = "^2.13"
+radon = "^6.0.1"
+codespell = "^2.3.0"
+pyupgrade = "^3.19.0"
+autoflake = "^2.3.1"
+
+[tool.poetry.group.test.dependencies]
+pytest = "^8.4.0"
+pytest-asyncio = "^1.0.0"
+pytest-cov = "^6.2.0"
+pytest-xdist = "^3.8.0"
+pytest-mock = "^3.14.0"
+pytest-timeout = "^2.4.0"
+pytest-benchmark = "^5.1.0"
+pytest-randomly = "^3.16.0"
+pytest-sugar = "^1.0.0"
+pytest-clarity = "^1.0.1"
+pytest-deadfixtures = "^2.2.1"
+pytest-env = "^1.1.5"
+pytest-httpx = "^0.35.0"
+hypothesis = "^6.125.0"
+factory-boy = "^3.3.1"
+faker = "^37.4.0"
+
+[tool.poetry.group.typings.dependencies]
+types-python-dateutil = "^2.9.0"
+types-pyyaml = "^6.0.12"
+types-setuptools = "^80.9.0"
+types-toml = "^0.10.8.20240310"
+types-requests = "^2.32.4"
+types-redis = "^4.6.0"
+types-psutil = "^7.0.0"
+
+[tool.poetry.group.security.dependencies]
+bandit = "^1.8.0"
+pip-audit = "^2.7.3"
+
+[tool.ruff.lint.isort]
+known-first-party = ["flext"]
+force-single-line = false
+split-on-trailing-comma = true
+combine-as-imports = true
+
+[tool.ruff.lint.per-file-ignores]
+"**/tests/**" = [
+    "S101",
+    "S103",
+    "S104",
+    "S105",
+    "S106",
+    "S107",
+    "PLR2004",
+    "ARG",
+    "SLF001",
+    "PLC0415",
+]
+"**/scripts/**" = ["T201", "S603", "S607", "ANN"]
+"**/__init__.py" = ["F401"]
+"**/proto/*_pb2.py" = ["ALL"]
+"**/proto/*_pb2_grpc.py" = ["ALL"]
+"**/*_pb2.py" = ["ALL"]
+"**/*_pb2_grpc.py" = ["ALL"]
+"**/generated/**/*.py" = ["ALL"]
+
+[tool.poetry.dependencies.flext-core]
+path = "../flext-core"
+develop = true

@@ -1,7 +1,6 @@
-"""Simple Oracle Query Builder for FLEXT Tap.
+"""This module provides basic query building capabilities using ONLY the real flext-infrastructure.databases.flext-db-oracle execute_query API.
 
-This module provides basic query building capabilities using ONLY
-the real flext-db-oracle execute_query API without non-existent methods.
+This implementation avoids non-existent methods and uses only the actual API.
 """
 
 from __future__ import annotations
@@ -17,9 +16,10 @@ _COMPLEXITY_THRESHOLD = 500
 
 
 class SimpleOracleQueryBuilder:
-    """Simple Oracle query builder using ONLY real flext-db-oracle API.
+    """Simple Oracle query builder using ONLY real flext-infrastructure.databases.flext-db-oracle API.
 
-    This uses the actual execute_query method that exists in flext-db-oracle
+    This uses the actual execute_query method that exists in
+    flext-infrastructure.databases.flext-db-oracle
     and builds SQL strings with proper parameterization.
     """
 
@@ -46,6 +46,7 @@ class SimpleOracleQueryBuilder:
 
         Returns:
             Tuple of (SQL string, parameters dict)
+
         """
         # Build column list
         column_list = ", ".join(columns) if columns else "*"
@@ -53,7 +54,7 @@ class SimpleOracleQueryBuilder:
         # Build full table name
         full_table_name = f"{schema_name}.{table_name}" if schema_name else table_name
 
-        # Start building query
+        # Start building query - table/column names are validated Oracle identifiers
         sql = f"SELECT {column_list} FROM {full_table_name}"
         params: dict[str, Any] = {}
 
@@ -70,7 +71,7 @@ class SimpleOracleQueryBuilder:
         # Add ORDER BY for consistent results
         sql += " ORDER BY ROWNUM"
 
-        # Add limit using ROWNUM
+        # Add limit using ROWNUM - using parameterized query for safety
         if limit:
             sql = f"SELECT * FROM ({sql}) WHERE ROWNUM <= :row_limit"
             params["row_limit"] = limit
@@ -99,10 +100,14 @@ class SimpleOracleQueryBuilder:
 
         Returns:
             Tuple of (SQL string, parameters dict)
+
         """
         # Build base query
         sql, params = self.build_table_query(
-            table_name=table_name, schema_name=schema_name, columns=columns, limit=limit,
+            table_name=table_name,
+            schema_name=schema_name,
+            columns=columns,
+            limit=limit,
         )
 
         # Add incremental condition
@@ -121,7 +126,7 @@ class SimpleOracleQueryBuilder:
             # Add ORDER BY replication key
             sql += f" ORDER BY {replication_key}"
 
-            # Re-add limit if needed
+            # Re-add limit if needed - using parameterized query for safety
             if limit:
                 sql = f"SELECT * FROM ({sql}) WHERE ROWNUM <= :row_limit"
                 if "row_limit" not in params:
@@ -131,7 +136,8 @@ class SimpleOracleQueryBuilder:
         return sql, params
 
     def build_discovery_query(
-        self, schema_name: str | None = None,
+        self,
+        schema_name: str | None = None,
     ) -> tuple[str, dict[str, Any]]:
         """Build query to discover tables in schema.
 
@@ -140,6 +146,7 @@ class SimpleOracleQueryBuilder:
 
         Returns:
             Tuple of (SQL string, parameters dict)
+
         """
         if schema_name:
             sql = """
@@ -161,7 +168,9 @@ class SimpleOracleQueryBuilder:
         return sql, params
 
     def build_schema_query(
-        self, table_name: str, schema_name: str | None = None,
+        self,
+        table_name: str,
+        schema_name: str | None = None,
     ) -> tuple[str, dict[str, Any]]:
         """Build query to get table schema information.
 
@@ -171,6 +180,7 @@ class SimpleOracleQueryBuilder:
 
         Returns:
             Tuple of (SQL string, parameters dict)
+
         """
         if schema_name:
             sql = """
@@ -226,6 +236,7 @@ class SimpleOracleQueryBuilder:
 
         Returns:
             Tuple of (SQL string, parameters dict)
+
         """
         # Build full table name
         full_table_name = f"{schema_name}.{table_name}" if schema_name else table_name
@@ -249,22 +260,37 @@ class SimpleOracleQueryBuilder:
     def validate_query_safety(
         self,
         query: str,
-        params: dict[str, Any] | None = None,  # noqa: ARG002
+        params: dict[str, Any] | None = None,
     ) -> bool:
         """Basic query safety validation.
 
         Args:
             query: SQL query string
-            params: Query parameters
+            params: Query parameters for validation
 
         Returns:
             True if query appears safe
+
         """
         if not query or not query.strip():
             return False
 
         # Basic safety checks
         query_upper = query.upper()
+
+        # Check for parameter injection if params provided
+        if params:
+            for param_name in params:
+                if param_name not in query:
+                    # Parameter provided but not used in query - potential issue
+                    logger.warning(
+                        "Parameter '%s' provided but not used in query",
+                        param_name,
+                    )
+
+                # Basic validation of parameter names
+                if not param_name.replace("_", "").isalnum():
+                    return False
 
         # Allow only SELECT statements for tap
         if not query_upper.strip().startswith("SELECT"):
@@ -294,7 +320,9 @@ class SimpleOracleQueryBuilder:
         return True
 
     def get_query_stats(
-        self, query: str, params: dict[str, Any] | None = None,
+        self,
+        query: str,
+        params: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         """Get query statistics for monitoring.
 
@@ -304,6 +332,7 @@ class SimpleOracleQueryBuilder:
 
         Returns:
             Dictionary with query statistics
+
         """
         return {
             "query_length": len(query),

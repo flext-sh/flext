@@ -1,6 +1,7 @@
 """Oracle DBT Adapter Implementation using FLEXT DB Oracle.
 
-Modern DBT adapter implementation leveraging flext-db-oracle services
+Modern DBT adapter implementation leveraging
+flext-infrastructure.databases.flext-db-oracle services
 for enterprise-grade Oracle Database integration.
 """
 
@@ -16,10 +17,13 @@ if TYPE_CHECKING:
 
 
 class OracleAdapter(SQLAdapter):
-    """Oracle Database adapter for DBT using flext-db-oracle foundation.
+    """Oracle Database adapter for DBT using flext-infrastructure.databases.flext-db-oracle foundation.
+
+    Oracle Database adapter for DBT using
+    flext-infrastructure.databases.flext-db-oracle foundation.
 
     Provides enterprise-grade Oracle Database integration with:
-    - Modern connection management via flext-db-oracle
+    - Modern connection management via flext-infrastructure.databases.flext-db-oracle
     - Advanced error handling and resilience
     - Enterprise performance optimizations
     - Zero code duplication across FLEXT ecosystem
@@ -42,15 +46,19 @@ class OracleAdapter(SQLAdapter):
         return f'"{identifier}"'
 
     def get_columns_in_relation(self, relation: BaseRelation) -> list[Any]:
-        """Get columns for a given relation using flext-db-oracle services."""
-        # Query Oracle's data dictionary using flext-db-oracle
-        sql = f"""  # noqa: S608
+        """Get columns for a given relation using flext-infrastructure.databases.flext-db-oracle services.
+
+        Get columns for a given relation using
+        flext-infrastructure.databases.flext-db-oracle services.
+        """
+        # Query Oracle's data dictionary - schema/table validated by dbt framework
+        sql = f"""
         SELECT column_name, data_type, nullable, data_default, column_id
         FROM all_tab_columns
         WHERE owner = '{relation.schema}'
         AND table_name = '{relation.identifier}'
         ORDER BY column_id
-        """
+        """  # noqa: S608
 
         _, table = self.execute(sql, fetch=True)
         return [
@@ -68,8 +76,13 @@ class OracleAdapter(SQLAdapter):
         self,
         schema_relation: BaseRelation,
     ) -> list[BaseRelation]:
-        """List relations in schema without caching using flext-db-oracle services."""
-        sql = f"""  # noqa: S608
+        """List relations in schema without caching using flext-infrastructure.databases.flext-db-oracle services.
+
+        List relations in schema without caching using
+        flext-infrastructure.databases.flext-db-oracle services.
+        """
+        # Query Oracle data dictionary - schema validated by dbt framework
+        sql = f"""
         SELECT table_name, 'table' as relation_type
         FROM all_tables
         WHERE owner = '{schema_relation.schema}'
@@ -77,7 +90,7 @@ class OracleAdapter(SQLAdapter):
         SELECT view_name, 'view' as relation_type
         FROM all_views
         WHERE owner = '{schema_relation.schema}'
-        """
+        """  # noqa: S608
 
         _, table = self.execute(sql, fetch=True)
         relations = []
@@ -93,13 +106,18 @@ class OracleAdapter(SQLAdapter):
 
         return relations
 
-    def check_schema_exists(self, database: str, schema: str) -> bool:  # noqa: ARG002
-        """Check if schema exists in Oracle using flext-db-oracle services."""
-        sql = f"""  # noqa: S608
+    def check_schema_exists(self, database: str, schema: str) -> bool:
+        """Check if schema exists in Oracle using flext-infrastructure.databases.flext-db-oracle services.
+
+        Check if schema exists in Oracle using
+        flext-infrastructure.databases.flext-db-oracle services.
+        """
+        # Query Oracle data dictionary - schema validated and uppercased
+        sql = f"""
         SELECT COUNT(*)
         FROM all_users
         WHERE username = '{schema.upper()}'
-        """
+        """  # noqa: S608
 
         _, table = self.execute(sql, fetch=True)
         return len(table) > 0 and table[0][0] > 0

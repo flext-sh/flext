@@ -6,6 +6,8 @@ SPDX-License-Identifier: MIT
 Centralized constants for Oracle WMS integrations using flext-core standards.
 """
 
+from __future__ import annotations
+
 from typing import Final, Literal
 
 # Import flext-core constants
@@ -131,7 +133,15 @@ OracleWMSEntityType = Literal[
 
 # Filter operator literal
 OracleWMSFilterOperator = Literal[
-    "eq", "neq", "gt", "gte", "lt", "lte", "in", "nin", "like",
+    "eq",
+    "neq",
+    "gt",
+    "gte",
+    "lt",
+    "lte",
+    "in",
+    "nin",
+    "like",
 ]
 
 # Page mode literal

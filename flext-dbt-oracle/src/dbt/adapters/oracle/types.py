@@ -3,28 +3,32 @@
 Copyright (c) 2025 FLEXT Contributors
 SPDX-License-Identifier: MIT
 
-Ultra-modern Python 3.13 types for DBT Oracle adapter with MAXIMUM flext-core integration.
+Ultra-modern Python 3.13 types for DBT Oracle adapter with MAXIMUM flext-core
+integration.
 """
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, TypedDict
+from typing import TYPE_CHECKING, Literal, TypedDict
 
 if TYPE_CHECKING:
     from datetime import datetime
 
-    # Import flext-core types for maximum standardization
-    # DBT-specific types using flext-core as foundation
-    from flext_core.domain.typedefs import (
-        DBTDatabaseName,
-        DBTMaterialization,
-        DBTSchemaName,
-        DBTTableName,
-        NonEmptyStr,
-        Port,
-        PositiveInt,
-        TimeoutSeconds,
-    )
+    # Define DBT-specific types not available in flext-core
+    from typing import Annotated
+
+    # Import available flext-core types and define missing ones
+    from pydantic import Field, StringConstraints
+
+    # Define missing types for DBT Oracle adapter
+    NonEmptyStr = Annotated[str, StringConstraints(min_length=1)]
+    DBTDatabaseName = Annotated[str, StringConstraints(min_length=1, max_length=128)]
+    DBTSchemaName = Annotated[str, StringConstraints(min_length=1, max_length=128)]
+    DBTTableName = Annotated[str, StringConstraints(min_length=1, max_length=128)]
+    DBTMaterialization = Literal["table", "view", "incremental", "ephemeral"]
+    Port = Annotated[int, Field(ge=1, le=65535)]
+    PositiveInt = Annotated[int, Field(gt=0)]
+    TimeoutSeconds = Annotated[int, Field(ge=1, le=3600)]
 
 # ==============================================================================
 # DBT ORACLE ADAPTER TYPES - Python 3.13 Enhanced
@@ -97,7 +101,7 @@ class DBTOracleModelConfig(TypedDict):
     unique_key: str | list[str] | None
     incremental_strategy: str | None  # "append", "merge", "delete+insert"
 
-    # Partitioning (Oracle-specific)
+    # Partitioning Oracle-specific settings
     partition_by: str | None
     partition_type: str | None  # "RANGE", "LIST", "HASH"
 
@@ -298,24 +302,8 @@ class DBTOracleTestResult(TypedDict):
 
 
 # ==============================================================================
-# CONVENIENCE TYPE ALIASES FOR MAXIMUM CODE REDUCTION
+# TYPE EXPORTS - All types are already defined above
 # ==============================================================================
 
-# Configuration aggregates for maximum simplification
-type DBTOracleCredentials = DBTOracleCredentials
-type DBTOracleConnectionConfig = DBTOracleConnectionConfig
-type DBTOracleModelConfig = DBTOracleModelConfig
-
-# Runtime information aggregates
-type DBTOracleRelationConfig = DBTOracleRelationConfig
-type DBTOracleExecutionResult = DBTOracleExecutionResult
-type DBTOracleSchemaInfo = DBTOracleSchemaInfo
-
-# Metadata aggregates
-type DBTOracleColumnInfo = DBTOracleColumnInfo
-type DBTOracleTableInfo = DBTOracleTableInfo
-type DBTOracleIndexInfo = DBTOracleIndexInfo
-
-# Compilation and testing aggregates
-type DBTOracleCompilationResult = DBTOracleCompilationResult
-type DBTOracleTestResult = DBTOracleTestResult
+# All DBT Oracle types are available for import directly from the classes above
+# No type aliases needed as the classes are self-contained

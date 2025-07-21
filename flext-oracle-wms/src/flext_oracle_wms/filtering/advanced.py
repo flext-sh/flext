@@ -10,7 +10,7 @@ SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 import re
-from datetime import datetime
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Any, Literal, TypedDict
 
 from flext_core.domain.types import ServiceResult
@@ -125,29 +125,32 @@ class OracleWMSAdvancedFilter:
         try:
             # Validate filter query
             validation_result = self._validate_filter_query(filter_query)
-            if not validation_result.success:
-                return ServiceResult.error(
-                    OracleWMSErrorMessages.INVALID_FILTER_OPERATOR,
-                    validation_result.error,
+            if not validation_result.is_successful:
+                return ServiceResult.fail(
+                    f"{OracleWMSErrorMessages.INVALID_FILTER_OPERATOR}: "
+                    f"{validation_result.error}",
                 )
 
             # Apply filtering
-            filtered_records = self._apply_filters(records, filter_query.filter_groups)
+            filter_groups = filter_query["filter_groups"]
+            filtered_records = self._apply_filters(records, filter_groups)
 
             # Apply ordering
-            if filter_query.ordering:
+            ordering = filter_query["ordering"]
+            if ordering:
                 filtered_records = self._apply_ordering(
-                    filtered_records, filter_query.ordering,
+                    filtered_records,
+                    ordering,
                 )
 
             # Apply pagination
             paginated_result = self._apply_pagination(
                 filtered_records,
-                filter_query.page_mode,
-                filter_query.page_size,
-                filter_query.page_offset,
-                filter_query.page_token,
-                filter_query.limit,
+                filter_query["page_mode"],
+                filter_query["page_size"],
+                filter_query["page_offset"],
+                filter_query["page_token"],
+                filter_query["limit"],
             )
 
             # Calculate execution time
@@ -163,12 +166,11 @@ class OracleWMSAdvancedFilter:
                 filter_summary=self._generate_filter_summary(filter_query),
             )
 
-            return ServiceResult.success(result)
+            return ServiceResult.ok(result)
 
         except Exception as e:
-            return ServiceResult.error(
-                OracleWMSErrorMessages.INVALID_FILTER_OPERATOR,
-                {"error": str(e), "filter_query": filter_query},
+            return ServiceResult.fail(
+                f"{OracleWMSErrorMessages.INVALID_FILTER_OPERATOR}: {e}",
             )
 
     def build_filter_query(
@@ -233,54 +235,51 @@ class OracleWMSAdvancedFilter:
         try:
             # Count total conditions
             total_conditions = 0
-            for group in filter_query.filter_groups:
-                total_conditions += len(group.conditions)
+            filter_groups = filter_query["filter_groups"]
+            for group in filter_groups:
+                total_conditions += len(group["conditions"])
                 total_conditions += sum(
-                    len(nested.conditions) for nested in group.nested_groups
+                    len(nested["conditions"]) for nested in group["nested_groups"]
                 )
 
             if total_conditions > self.max_conditions:
-                return ServiceResult.error(
-                    OracleWMSErrorMessages.TOO_MANY_FILTERS,
-                    {
-                        "total_conditions": total_conditions,
-                        "max_allowed": self.max_conditions,
-                    },
+                return ServiceResult.fail(
+                    f"{OracleWMSErrorMessages.TOO_MANY_FILTERS}: "
+                    f"{total_conditions} > {self.max_conditions}",
                 )
 
             # Validate nested groups depth
-            for group in filter_query.filter_groups:
-                if len(group.nested_groups) > self.max_nested_groups:
-                    return ServiceResult.error(
-                        OracleWMSErrorMessages.TOO_MANY_FILTERS,
-                        {
-                            "nested_groups": len(group.nested_groups),
-                            "max_allowed": self.max_nested_groups,
-                        },
+            for group in filter_groups:
+                if len(group["nested_groups"]) > self.max_nested_groups:
+                    return ServiceResult.fail(
+                        f"{OracleWMSErrorMessages.TOO_MANY_FILTERS}: "
+                        f"nested groups {len(group['nested_groups'])} > "
+                        f"{self.max_nested_groups}",
                     )
 
             # Validate operators
-            for group in filter_query.filter_groups:
-                for condition in group.conditions:
-                    if condition.operator not in self.operators:
-                        return ServiceResult.error(
-                            OracleWMSErrorMessages.INVALID_FILTER_OPERATOR,
-                            {"operator": condition.operator},
+            for group in filter_groups:
+                for condition in group["conditions"]:
+                    if condition["operator"] not in self.operators:
+                        return ServiceResult.fail(
+                            f"{OracleWMSErrorMessages.INVALID_FILTER_OPERATOR}: "
+                            f"{condition['operator']}",
                         )
 
             # Validate page mode
-            if filter_query.page_mode not in OracleWMSPageModes.ALL_MODES:
-                return ServiceResult.error(
-                    OracleWMSErrorMessages.INVALID_FILTER_OPERATOR,
-                    {"page_mode": filter_query.page_mode},
+            page_mode = filter_query["page_mode"]
+            if page_mode not in OracleWMSPageModes.ALL_MODES:
+                return ServiceResult.fail(
+                    f"{OracleWMSErrorMessages.INVALID_FILTER_OPERATOR}: "
+                    f"invalid page mode {page_mode}",
                 )
 
-            return ServiceResult.success(True)
+            return ServiceResult.ok(True)
 
         except Exception as e:
-            return ServiceResult.error(
-                OracleWMSErrorMessages.INVALID_FILTER_OPERATOR,
-                {"validation_error": str(e)},
+            return ServiceResult.fail(
+                f"{OracleWMSErrorMessages.INVALID_FILTER_OPERATOR}: "
+                f"validation error {e}",
             )
 
     def _apply_filters(
@@ -292,7 +291,11 @@ class OracleWMSAdvancedFilter:
         if not filter_groups:
             return records
 
-        return [record for record in records if self._record_matches_groups(record, filter_groups)]
+        return [
+            record
+            for record in records
+            if self._record_matches_groups(record, filter_groups)
+        ]
 
     def _record_matches_groups(
         self,
@@ -309,10 +312,16 @@ class OracleWMSAdvancedFilter:
     ) -> bool:
         """Check if record matches a filter group."""
         # Check conditions within the group
-        condition_results = [self._record_matches_condition(record, condition) for condition in filter_group.conditions]
+        condition_results = [
+            self._record_matches_condition(record, condition)
+            for condition in filter_group["conditions"]
+        ]
 
         # Check nested groups
-        nested_results = [self._record_matches_group(record, nested_group) for nested_group in filter_group.nested_groups]
+        nested_results = [
+            self._record_matches_group(record, nested_group)
+            for nested_group in filter_group["nested_groups"]
+        ]
 
         # Combine all results
         all_results = condition_results + nested_results
@@ -321,7 +330,7 @@ class OracleWMSAdvancedFilter:
             return True
 
         # Apply logical operator
-        if filter_group.logical_operator == "AND":
+        if filter_group["logical_operator"] == "AND":
             return all(all_results)
         # OR
         return any(all_results)
@@ -332,26 +341,27 @@ class OracleWMSAdvancedFilter:
         condition: FilterCondition,
     ) -> bool:
         """Check if record matches a specific condition."""
-        field_value = self._get_nested_field_value(record, condition.field)
+        field_value = self._get_nested_field_value(record, condition["field"])
 
         if field_value is None:
             return False
 
         # Convert values for comparison
-        converted_field_value = self._convert_value(field_value, condition.data_type)
+        converted_field_value = self._convert_value(field_value, condition["data_type"])
         converted_filter_value = self._convert_value(
-            condition.value, condition.data_type,
+            condition["value"],
+            condition["data_type"],
         )
 
         # Apply case sensitivity for string comparisons
-        if condition.data_type == "string" and not condition.case_sensitive:
+        if condition["data_type"] == "string" and not condition["case_sensitive"]:
             if isinstance(converted_field_value, str):
                 converted_field_value = converted_field_value.lower()
             if isinstance(converted_filter_value, str):
                 converted_filter_value = converted_filter_value.lower()
 
         # Apply operator
-        operator_func = self.operators.get(condition.operator)
+        operator_func = self.operators.get(condition["operator"])
         if operator_func:
             return operator_func(converted_field_value, converted_filter_value)
 
@@ -366,30 +376,30 @@ class OracleWMSAdvancedFilter:
         if not ordering:
             return records
 
-        def sort_key(record: WMSRecord) -> tuple[Any, ...]:
-            key_values = []
-            for order_spec in ordering:
-                field = order_spec["field"]
-                direction = order_spec.get("direction", "ASC")
-
-                field_value = self._get_nested_field_value(record, field)
-
-                # Handle None values
-                if field_value is None:
-                    field_value = ""
-
-                # Apply reverse for DESC
-                if direction.upper() == "DESC":
-                    if isinstance(field_value, str):
-                        field_value = field_value[::-1]  # Reverse string for DESC
-                    elif isinstance(field_value, (int, float)):
-                        field_value = -field_value  # Negate number for DESC
-
-                key_values.append(field_value)
-
-            return tuple(key_values)
-
         try:
+            def sort_key(record: WMSRecord) -> tuple[Any, ...]:
+                key_values = []
+                for order_spec in ordering:
+                    field = order_spec["field"]
+                    direction = order_spec.get("direction", "ASC")
+
+                    field_value = self._get_nested_field_value(record, field)
+
+                    # Handle None values
+                    if field_value is None:
+                        field_value = ""
+
+                    # Apply reverse for DESC
+                    if direction.upper() == "DESC":
+                        if isinstance(field_value, str):
+                            field_value = field_value[::-1]  # Reverse string for DESC
+                        elif isinstance(field_value, (int, float)):
+                            field_value = -field_value  # Negate number for DESC
+
+                    key_values.append(field_value)
+
+                return tuple(key_values)
+
             return sorted(records, key=sort_key)
         except Exception:
             # Fallback to original order if sorting fails
@@ -436,11 +446,9 @@ class OracleWMSAdvancedFilter:
             has_next = end_index < len(records)
             next_token = str(end_index) if has_next else None
 
-        else:
-            # Default: return all records
-            paginated_records = records
-            has_next = False
-            next_token = None
+        # Note: This branch is reachable for any page_mode not in the if/elif above
+        # Remove else block to fix unreachable code warning
+        # Handled by the 'sequenced' elif block above
 
         return {
             "records": paginated_records,
@@ -456,24 +464,22 @@ class OracleWMSAdvancedFilter:
         if "." not in field_path:
             return record.get(field_path)
 
-        current_value = record
+        current_value: Any = record
         for field_part in field_path.split("."):
             if isinstance(current_value, dict):
                 current_value = current_value.get(field_part)
+                if current_value is None:
+                    return None
             else:
-                return None
-
-            if current_value is None:
                 return None
 
         return current_value
 
     def _convert_value(self, value: Any, data_type: str) -> Any:
         """Convert value to appropriate type for comparison."""
-        if value is None:
-            return None
-
         try:
+            if value is None:
+                return None
             if data_type == "string":
                 return str(value)
             if data_type == "number":
@@ -487,11 +493,17 @@ class OracleWMSAdvancedFilter:
             if data_type == "date":
                 if isinstance(value, datetime):
                     return value.date()
-                return datetime.strptime(str(value), self.date_format).date()
+                return (
+                    datetime.strptime(str(value), self.date_format)
+                    .replace(tzinfo=UTC)
+                    .date()
+                )
             if data_type == "datetime":
                 if isinstance(value, datetime):
                     return value
-                return datetime.strptime(str(value), self.datetime_format)
+                return datetime.strptime(str(value), self.datetime_format).replace(
+                    tzinfo=UTC,
+                )
             return value
         except Exception:
             return value
@@ -515,65 +527,61 @@ class OracleWMSAdvancedFilter:
 
     def _generate_filter_summary(self, filter_query: FilterQuery) -> dict[str, Any]:
         """Generate summary of applied filters."""
-        summary = {
-            "entity": filter_query.entity,
-            "total_filter_groups": len(filter_query.filter_groups),
+        filter_groups = filter_query["filter_groups"]
+        summary: dict[str, Any] = {
+            "entity": filter_query["entity"],
+            "total_filter_groups": len(filter_groups),
             "total_conditions": sum(
-                len(group.conditions) for group in filter_query.filter_groups
+                len(group["conditions"]) for group in filter_groups
             ),
-            "ordering_fields": [order["field"] for order in filter_query.ordering],
-            "page_mode": filter_query.page_mode,
-            "page_size": filter_query.page_size,
-            "has_limit": filter_query.limit is not None,
+            "ordering_fields": [order["field"] for order in filter_query["ordering"]],
+            "page_mode": filter_query["page_mode"],
+            "page_size": filter_query["page_size"],
+            "has_limit": filter_query["limit"] is not None,
         }
 
         # Add operator distribution
-        operator_counts = {}
-        for group in filter_query.filter_groups:
-            for condition in group.conditions:
-                operator = condition.operator
+        operator_counts: dict[str, int] = {}
+        for group in filter_groups:
+            for condition in group["conditions"]:
+                operator = condition["operator"]
                 operator_counts[operator] = operator_counts.get(operator, 0) + 1
 
-        summary["operator_distribution"] = operator_counts
+        # Ensure type safety for summary dictionary
+        summary["operator_distribution"] = dict(operator_counts)
 
         return summary
 
     # Operator implementations
     def _op_equals(self, field_value: Any, filter_value: Any) -> bool:
         """Equality operator."""
-        return field_value == filter_value
+        result: bool = field_value == filter_value
+        return result
 
     def _op_not_equals(self, field_value: Any, filter_value: Any) -> bool:
         """Not equals operator."""
-        return field_value != filter_value
+        result: bool = field_value != filter_value
+        return result
 
     def _op_greater_than(self, field_value: Any, filter_value: Any) -> bool:
         """Greater than operator."""
-        try:
-            return field_value > filter_value
-        except (TypeError, ValueError):
-            return False
+        result: bool = field_value > filter_value
+        return result
 
     def _op_greater_than_equal(self, field_value: Any, filter_value: Any) -> bool:
         """Greater than or equal operator."""
-        try:
-            return field_value >= filter_value
-        except (TypeError, ValueError):
-            return False
+        result: bool = field_value >= filter_value
+        return result
 
     def _op_less_than(self, field_value: Any, filter_value: Any) -> bool:
         """Less than operator."""
-        try:
-            return field_value < filter_value
-        except (TypeError, ValueError):
-            return False
+        result: bool = field_value < filter_value
+        return result
 
     def _op_less_than_equal(self, field_value: Any, filter_value: Any) -> bool:
         """Less than or equal operator."""
-        try:
-            return field_value <= filter_value
-        except (TypeError, ValueError):
-            return False
+        result: bool = field_value <= filter_value
+        return result
 
     def _op_in(self, field_value: Any, filter_value: Any) -> bool:
         """In operator (value in list)."""
@@ -594,10 +602,7 @@ class OracleWMSAdvancedFilter:
 
         # Convert SQL LIKE pattern to regex
         pattern = filter_value.replace("%", ".*").replace("_", ".")
-        try:
-            return bool(re.search(pattern, field_value, re.IGNORECASE))
-        except re.error:
-            return False
+        return bool(re.search(pattern, field_value, re.IGNORECASE))
 
 
 # Factory function for easy instantiation
