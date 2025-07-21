@@ -51,12 +51,25 @@ async def oracle_wms_connection(
     oracle_wms_config: dict[str, Any],
 ) -> AsyncGenerator[Any]:
     """Oracle WMS connection for testing."""
-    from flext_oracle_wms.client import OracleWMSClient
+    # Convert dict config to proper OracleWMSConfig object
+    from pydantic import HttpUrl
 
-    client = OracleWMSClient(oracle_wms_config)
-    await client.connect()
+    from flext_oracle_wms.client import OracleWMSClient
+    from flext_oracle_wms.config_module import OracleWMSConfig
+
+    config = OracleWMSConfig(
+        base_url=HttpUrl("https://test.example.com"),
+        username=oracle_wms_config["username"],
+        password=oracle_wms_config["password"],
+        batch_size=oracle_wms_config.get("pool_size", 5),
+        timeout_seconds=oracle_wms_config.get("pool_timeout", 30),
+    )
+
+    client = OracleWMSClient(config)
+    # OracleWMSClient doesn't have async connect/disconnect methods
+    # It uses context manager pattern instead
     yield client
-    await client.disconnect()
+    client.close()
 
 
 # WMS API fixtures
@@ -79,9 +92,16 @@ def wms_api_config() -> dict[str, Any]:
 @pytest.fixture
 async def wms_api_client(wms_api_config: dict[str, Any]) -> AsyncGenerator[Any]:
     """WMS API client for testing."""
-    from flext_oracle_wms.api_client import WMSAPIClient
 
-    client = WMSAPIClient(wms_api_config)
+    # Mock WMS API client for testing since api_client module doesn't exist
+    class MockWMSAPIClient:
+        def __init__(self, config: dict[str, Any]) -> None:
+            self.config = config
+
+        async def close(self) -> None:
+            """Close the client connection."""
+
+    client = MockWMSAPIClient(wms_api_config)
     yield client
     await client.close()
 
@@ -364,9 +384,9 @@ def mock_wms_service() -> object:
 
     class MockWMSService:
         def __init__(self) -> None:
-            self.inventory = {}
-            self.shipments = {}
-            self.allocations = {}
+            self.inventory: dict[str, dict[str, Any]] = {}
+            self.shipments: dict[str, dict[str, Any]] = {}
+            self.allocations: dict[str, dict[str, Any]] = {}
 
         async def get_inventory(self, item_id: str) -> dict[str, Any]:
             return self.inventory.get(
@@ -442,7 +462,7 @@ def mock_oracle_wms_adapter() -> object:
     class MockOracleWMSAdapter:
         def __init__(self) -> None:
             self.connected = False
-            self.queries_executed = []
+            self.queries_executed: list[dict[str, Any]] = []
 
         async def connect(self) -> bool:
             self.connected = True

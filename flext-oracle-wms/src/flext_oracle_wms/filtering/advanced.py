@@ -125,7 +125,7 @@ class OracleWMSAdvancedFilter:
         try:
             # Validate filter query
             validation_result = self._validate_filter_query(filter_query)
-            if not validation_result.is_successful:
+            if not validation_result.is_success:
                 return ServiceResult.fail(
                     f"{OracleWMSErrorMessages.INVALID_FILTER_OPERATOR}: "
                     f"{validation_result.error}",
@@ -377,6 +377,7 @@ class OracleWMSAdvancedFilter:
             return records
 
         try:
+
             def sort_key(record: WMSRecord) -> tuple[Any, ...]:
                 key_values = []
                 for order_spec in ordering:

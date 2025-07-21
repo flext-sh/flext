@@ -162,6 +162,11 @@ markers = [
     "smoke: Smoke tests",
     "e2e: End-to-end tests",
     "oracle: Oracle database tests",
+    "tap: Singer tap tests",
+    "target: Singer target tests",
+    "dbt: dbt transformation tests",
+    "performance: Performance tests",
+    "cleanup: Cleanup tests",
 ]
 filterwarnings = ["error", "ignore::UserWarning", "ignore::DeprecationWarning"]
 
@@ -186,6 +191,7 @@ extend-exclude = [
     ".archive",
     "archive",
     ".meltano",
+    ".plugin_backups",
     "node_modules",
     "site-packages",
     "*.egg-info",

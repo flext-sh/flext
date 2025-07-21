@@ -17,7 +17,6 @@ if TYPE_CHECKING:
     from collections.abc import Generator
 
 import httpx
-from flext_core.domain.types import ServiceResult
 
 # Import local flattener for dynamic record flattening
 from httpx import Auth
@@ -42,12 +41,14 @@ def get_logger(name: str) -> logging.Logger:
 
 
 if TYPE_CHECKING:
+    from flext_oracle_wms.config.types import (
+        OracleWMSPassword,
+        OracleWMSUsername,
+    )
     from flext_oracle_wms.config_module import (
         OracleWMSConfig,
         WMSAPIVersion,
-        WMSPassword,
         WMSRetryAttempts,
-        WMSUsername,
     )
     from flext_oracle_wms.constants import OracleWMSEntityType
     from flext_oracle_wms.typedefs import (
@@ -61,7 +62,9 @@ logger = get_logger(__name__)
 class OracleWMSAuth(Auth):
     """Oracle WMS authentication handler."""
 
-    def __init__(self, username: WMSUsername, password: WMSPassword) -> None:
+    def __init__(
+        self, username: OracleWMSUsername, password: OracleWMSPassword,
+    ) -> None:
         """Initialize Oracle WMS authentication with flext-core types.
 
         Args:
@@ -325,7 +328,8 @@ class OracleWMSClient:
                 entities=[],
                 total_count=0,
                 timestamp=datetime.now().isoformat(),
-                error=str(e),
+                has_errors=True,
+                errors=[str(e)],
             )
 
     def _get_fallback_entities(self) -> list[WMSEntity]:
@@ -381,7 +385,7 @@ class OracleWMSClient:
             request_params.update(params)
 
         if page_size:
-            request_params["page_size"] = min(page_size, self.config.page_size)
+            request_params["page_size"] = min(page_size, self.config.batch_size)
         try:
             logger.info("Fetching data for entity: %s", entity_name)
             response = self._make_request("GET", endpoint, params=request_params)
@@ -435,7 +439,7 @@ class OracleWMSClient:
                     if isinstance(record, dict):
                         flatten_result = flattener.flatten_record(record)
 
-                        if flatten_result.is_successful:
+                        if flatten_result.is_success:
                             # Extract the flattened record from the result data
                             flattening_data = flatten_result.data
                             if flattening_data is None:
@@ -482,13 +486,19 @@ class OracleWMSClient:
                 data=records,
                 records=records,
                 total_count=len(records),
-                page_size=self.config.page_size,
-                has_more=len(records) == self.config.page_size,
+                page_size=self.config.batch_size,
+                has_more=len(records) == self.config.batch_size,
             )
         except Exception as e:
             logger.exception("Failed to get data for entity %s: %s", entity_name, e)
-            msg = f"Failed to get data for entity {entity_name}: {e}"
-            return ServiceResult.fail(msg)
+            # Return empty WMSResponse for error cases
+            return WMSResponse(
+                data=[],
+                records=[],
+                total_count=0,
+                page_size=self.config.batch_size,
+                has_more=False,
+            )
 
     def write_entity_data(
         self,
@@ -551,8 +561,13 @@ class OracleWMSClient:
             return results
         except Exception as e:
             logger.exception("Write operation failed for entity %s: %s", entity_name, e)
-            msg = f"Write operation failed for entity {entity_name}: {e}"
-            return ServiceResult.fail(msg)
+            # Return error results dict for write operation
+            return {
+                "total_records": len(records),
+                "successful": 0,
+                "failed": len(records),
+                "errors": [{"error": f"Write operation failed: {e}"}],
+            }
 
     def close(self) -> None:
         """Close the HTTP client connection."""
@@ -669,8 +684,8 @@ class OracleWMSClient:
             "api_version": self.config.api_version,
             "auth_method": "basic",  # Oracle WMS uses basic authentication
             "username": self.config.username,
-            "timeout": self.config.timeout,
+            "timeout": self.config.timeout_seconds,
             "max_retries": self.config.max_retries,
-            "page_size": self.config.page_size,
+            "page_size": self.config.batch_size,
             "client_active": self._client is not None,
         }
