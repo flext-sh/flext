@@ -27,7 +27,6 @@ from dbt.adapters.contracts.connection import AdapterResponse, Connection, Crede
 logger = get_logger(__name__)
 
 if TYPE_CHECKING:
-
     from cx_Oracle import Connection
 
 try:
@@ -355,7 +354,8 @@ class OracleConnectionManager(BaseConnectionManager):
                     def execute(self, sql: str, bindings: Any = None) -> None:
                         """Execute SQL (no-op in fallback mode)."""
                         logger.warning(
-                            "Using fallback cursor - SQL not executed: %s", sql[:100],
+                            "Using fallback cursor - SQL not executed: %s",
+                            sql[:100],
                         )
 
                     def fetchone(self) -> None:

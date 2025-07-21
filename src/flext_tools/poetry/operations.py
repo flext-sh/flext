@@ -268,7 +268,8 @@ class PoetryOperations:
                     print_colored("✅ Projeto atualizado com sucesso", Colors.GREEN)
                 else:
                     print_colored(
-                        "✅ Projeto seria atualizado (dry-run)", Colors.YELLOW,
+                        "✅ Projeto seria atualizado (dry-run)",
+                        Colors.YELLOW,
                     )
                 return True
 

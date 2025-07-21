@@ -134,7 +134,7 @@ class OracleWMSFlattener:
             results: list[FlatteningResult] = []
             for record in records:
                 flatten_result = self.flatten_record(record, schema)
-                if not flatten_result.is_successful:
+                if not flatten_result.is_success:
                     return ServiceResult.fail(
                         f"{OracleWMSErrorMessages.FLATTENING_FAILED}: "
                         f"{flatten_result.error}",
@@ -316,7 +316,7 @@ class OracleWMSDeflattener:
                     flattened_record,
                     original_schema,
                 )
-                if not deflattened_result.is_successful:
+                if not deflattened_result.is_success:
                     return ServiceResult.fail(
                         f"{OracleWMSErrorMessages.DEFLATTENING_FAILED}: "
                         f"{deflattened_result.error}",

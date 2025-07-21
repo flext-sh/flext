@@ -454,6 +454,10 @@ archive/
 archives/
 pyproject_backups/
 
+# Plugin system backups
+.plugin_backups/
+**/.plugin_backups/
+
 # Generated content
 schemas/
 reference/

@@ -263,91 +263,33 @@ PROJECT_DESCRIPTION := FLEXT TAP Oracle - Oracle Database Data Extraction
 
 oracle-tables: ## List Oracle tables available for extraction
 	@echo "📋 Listing Oracle tables..."
-	@poetry run python -c "
-from flext_tap_oracle.client import OracleClient
-import json
-
-with open('config.json', 'r') as f:
-    config = json.load(f)
-
-client = OracleClient(**config['oracle'])
-query = '''
-SELECT table_name, owner 
-FROM all_tables 
-WHERE owner NOT IN ('SYS', 'SYSTEM', 'CTXSYS', 'MDSYS')
-ORDER BY owner, table_name
-'''
-
-for row in client.execute_query(query):
-    print(f'{row[\"OWNER\"]}.{row[\"TABLE_NAME\"]}')
-"
+	@poetry run python scripts/list_oracle_tables.py
 
 oracle-schema-info: ## Show Oracle schema information
 	@echo "🗂️ Oracle schema information..."
-	@poetry run python -c "
-from flext_tap_oracle.client import OracleClient
-import json
-
-with open('config.json', 'r') as f:
-    config = json.load(f)
-
-client = OracleClient(**config['oracle'])
-schema_query = '''
-SELECT 
-    owner as schema_name,
-    COUNT(*) as table_count
-FROM all_tables 
-WHERE owner NOT IN ('SYS', 'SYSTEM', 'CTXSYS', 'MDSYS')
-GROUP BY owner
-ORDER BY owner
-'''
-
-print('Oracle Schema Summary:')
-print('====================')
-for row in client.execute_query(schema_query):
-    print(f'{row[\"SCHEMA_NAME\"]}: {row[\"TABLE_COUNT\"]} tables')
-"
+	@poetry run python scripts/oracle_schema_info.py
 
 oracle-test-query: ## Test Oracle query execution
 	@echo "🔍 Testing Oracle query execution..."
-	@poetry run python -c "
-from flext_tap_oracle.client import OracleClient
-import json
-
-with open('config.json', 'r') as f:
-    config = json.load(f)
-
-client = OracleClient(**config['oracle'])
-test_query = 'SELECT SYSDATE, USER, SYS_CONTEXT(\'USERENV\',\'SESSION_USER\') FROM dual'
-
-for row in client.execute_query(test_query):
-    print(f'Date: {row[\"SYSDATE\"]}')
-    print(f'User: {row[\"USER\"]}')
-    print(f'Session User: {row[\"SYS_CONTEXT(USERENV,SESSION_USER)\"]}')
-"
+	@poetry run python scripts/oracle_test_query.py
 
 oracle-performance-test: ## Test Oracle connection performance
 	@echo "⚡ Testing Oracle performance..."
-	@poetry run python -c "
-import time
-from flext_tap_oracle.client import OracleClient
-import json
-
-with open('config.json', 'r') as f:
-    config = json.load(f)
-
-client = OracleClient(**config['oracle'])
-start_time = time.time()
-
-# Test multiple queries
-for i in range(10):
-    query = f'SELECT {i}, SYSDATE FROM dual'
-    for row in client.execute_query(query):
-        pass
-
-end_time = time.time()
-print(f'Executed 10 queries in {end_time - start_time:.2f} seconds')
-print(f'Average query time: {(end_time - start_time) / 10:.3f} seconds')
+	@poetry run python -c "\
+import time; \
+from flext_tap_oracle.client import OracleClient; \
+import json; \
+with open('config.json', 'r') as f: \
+    config = json.load(f); \
+client = OracleClient(**config['oracle']); \
+start_time = time.time(); \
+for i in range(10): \
+    query = f'SELECT {i}, SYSDATE FROM dual'; \
+    for row in client.execute_query(query): \
+        pass; \
+end_time = time.time(); \
+print(f'Executed 10 queries in {end_time - start_time:.2f} seconds'); \
+print(f'Average query time: {(end_time - start_time) / 10:.3f} seconds'); \
 "
 
 # ============================================================================

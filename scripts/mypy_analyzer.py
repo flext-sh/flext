@@ -311,7 +311,9 @@ def stats_by_project() -> int:
 
     # Ordenar projetos por número de erros (decrescente)
     sorted_projects = sorted(
-        project_stats.items(), key=operator.itemgetter(1), reverse=True,
+        project_stats.items(),
+        key=operator.itemgetter(1),
+        reverse=True,
     )
 
     for project_name, error_count in sorted_projects:

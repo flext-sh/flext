@@ -72,16 +72,8 @@ class VersionAnalyzer:
             base_version = constraint[1:]
             try:
                 v = version.parse(base_version)
-                if v.major == 0:
-                    if v.minor == 0:
-                        # ^0.0.x -> >=0.0.x,<0.0.(x+1)
-                        upper = f"0.0.{v.micro + 1}"
-                    else:
-                        # ^0.x.y -> >=0.x.y,<0.(x+1).0
-                        upper = f"0.{v.minor + 1}.0"
-                else:
-                    # ^x.y.z -> >=x.y.z,<(x+1).0.0
-                    upper = f"{v.major + 1}.0.0"
+                # ^0.0.x -> >=0.0.x,<0.0.(x+1) OR ^0.x.y -> >=0.x.y,<0.(x+1).0 OR ^x.y.z -> >=x.y.z,<(x+1).0.0
+                upper = (f"0.0.{v.micro + 1}" if v.minor == 0 else f"0.{v.minor + 1}.0") if v.major == 0 else f"{v.major + 1}.0.0"
                 return f">={base_version},<{upper}"
             except (ValueError, AttributeError, TypeError):
                 return constraint

@@ -1,6 +1,7 @@
 # 🏆 MELHORES PRÁTICAS - CORREÇÕES DE LINT WORKSPACE FLEXT
 
 ## 📋 RESUMO EXECUTIVO
+
 **Baseado em**: Correções manuais bem-sucedidas em 6 projetos principais  
 **Período**: Julho 2024  
 **Resultado**: 100% de sucesso com abordagem manual incremental  
@@ -9,6 +10,7 @@
 ## ✅ ABORDAGEM RECOMENDADA
 
 ### **1. Correções Manuais vs Automáticas**
+
 ```bash
 # ✅ RECOMENDADO: Correções manuais incrementais
 # - Mais seguras
@@ -24,6 +26,7 @@
 ```
 
 ### **2. Priorização de Correções**
+
 ```python
 # 1. SINTAXE PYTHON (Crítico - Bloqueia lint)
 # - Estruturas try/except malformadas
@@ -57,6 +60,7 @@
 ## 🔧 PADRÕES DE CORREÇÃO
 
 ### **1. Estruturas Try/Except**
+
 ```python
 # ❌ PROBLEMÁTICO
 try: except Exception as e: raise Exception() from e
@@ -69,6 +73,7 @@ except Exception as e:
 ```
 
 ### **2. Imports e Docstrings**
+
 ```python
 # ❌ PROBLEMÁTICO
 from __future__ import annotations
@@ -82,6 +87,7 @@ from __future__ import annotations
 ```
 
 ### **3. Exceções com Chaining**
+
 ```python
 # ❌ PROBLEMÁTICO
 except Exception as e:
@@ -93,6 +99,7 @@ except Exception as e:
 ```
 
 ### **4. Docstrings de Módulos**
+
 ```python
 # ❌ PROBLEMÁTICO
 from __future__ import annotations
@@ -108,6 +115,7 @@ from __future__ import annotations
 ## 🛠️ FERRAMENTAS E COMANDOS
 
 ### **1. Verificação de Sintaxe**
+
 ```bash
 # Verificar sintaxe Python
 python -c "import ast; ast.parse(open('arquivo.py').read())"
@@ -120,6 +128,7 @@ python -m ruff check . --quiet | wc -l
 ```
 
 ### **2. Verificação por Projeto**
+
 ```bash
 # Verificar projeto específico
 cd flext-web && python -m ruff check . --quiet
@@ -133,6 +142,7 @@ done
 ```
 
 ### **3. Correção de Permissões**
+
 ```bash
 # Remover permissão de execução
 chmod 644 arquivo.py
@@ -144,6 +154,7 @@ echo '#!/usr/bin/env python' > arquivo.py
 ## 📊 ESTRATÉGIA DE CORREÇÃO
 
 ### **1. Abordagem Incremental**
+
 ```bash
 # 1. Identificar projetos com mais erros
 # 2. Focar em arquivos principais primeiro
@@ -156,6 +167,7 @@ echo '#!/usr/bin/env python' > arquivo.py
 ```
 
 ### **2. Validação Contínua**
+
 ```bash
 # Após cada correção:
 # 1. Verificar sintaxe Python
@@ -165,6 +177,7 @@ echo '#!/usr/bin/env python' > arquivo.py
 ```
 
 ### **3. Documentação**
+
 ```bash
 # Para cada correção:
 # 1. Arquivo corrigido
@@ -176,6 +189,7 @@ echo '#!/usr/bin/env python' > arquivo.py
 ## 🎯 PADRÕES ESPECÍFICOS DO WORKSPACE
 
 ### **1. Estrutura de Projetos FLEXT**
+
 ```
 flext-*/                    # Projetos principais
 ├── src/                    # Código fonte
@@ -186,6 +200,7 @@ flext-*/                    # Projetos principais
 ```
 
 ### **2. Imports Padrão**
+
 ```python
 # Ordem recomendada:
 """Docstring do módulo."""
@@ -207,6 +222,7 @@ from ..utils import helper
 ```
 
 ### **3. Configuração Poetry Moderna**
+
 ```toml
 [project]
 name = "flext-project"
@@ -233,6 +249,7 @@ build-backend = "hatchling.build"
 ## ⚠️ ANTI-PATTERNS EVITADOS
 
 ### **1. Scripts Automáticos para Sintaxe**
+
 ```bash
 # ❌ EVITAR
 sed -i 's/try:/try:\n    /g' *.py
@@ -243,6 +260,7 @@ sed -i 's/try:/try:\n    /g' *.py
 ```
 
 ### **2. Correções em Lote**
+
 ```bash
 # ❌ EVITAR
 find . -name "*.py" -exec sed -i 's/pattern/replacement/g' {} \;
@@ -253,6 +271,7 @@ find . -name "*.py" -exec sed -i 's/pattern/replacement/g' {} \;
 ```
 
 ### **3. Ignorar Validação Sintática**
+
 ```bash
 # ❌ EVITAR
 # Corrigir sem verificar se Python ainda funciona
@@ -264,18 +283,21 @@ python -c "import ast; ast.parse(open('arquivo.py').read())"
 ## 📈 MÉTRICAS DE SUCESSO
 
 ### **1. Indicadores de Qualidade**
+
 - **0 erros críticos de sintaxe**
 - **0 imports fora do topo**
 - **0 exceções duplicadas**
 - **100% de projetos principais limpos**
 
 ### **2. Métricas de Processo**
+
 - **0 regressões** em correções
 - **100% de validação sintática**
 - **Progresso incremental** bem-sucedido
 - **Documentação completa** das correções
 
 ### **3. Métricas de Produtividade**
+
 - **Tempo de correção** por projeto
 - **Número de arquivos** corrigidos
 - **Tipos de problemas** resolvidos
@@ -284,6 +306,7 @@ python -c "import ast; ast.parse(open('arquivo.py').read())"
 ## 🚀 PRÓXIMOS PASSOS
 
 ### **1. Automação de Qualidade**
+
 ```bash
 # CI/CD com lint automático
 # Pre-commit hooks
@@ -292,6 +315,7 @@ python -c "import ast; ast.parse(open('arquivo.py').read())"
 ```
 
 ### **2. Padronização de Equipe**
+
 ```bash
 # Documentar padrões
 # Treinar equipe
@@ -300,6 +324,7 @@ python -c "import ast; ast.parse(open('arquivo.py').read())"
 ```
 
 ### **3. Manutenção Contínua**
+
 ```bash
 # Revisões regulares
 # Atualizações de ferramentas
@@ -312,4 +337,4 @@ python -c "import ast; ast.parse(open('arquivo.py').read())"
 **Documento criado**: 21 de Julho de 2024  
 **Baseado em**: Correções bem-sucedidas no workspace FLEXT  
 **Objetivo**: Padronizar futuras correções de lint  
-**Status**: **Aprovado e implementado** ✅ 
+**Status**: **Aprovado e implementado** ✅
