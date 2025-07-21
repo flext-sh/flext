@@ -233,11 +233,9 @@ _build/
 *.so
 *.dylib
 
-# Go executables (no extension)
-flext
-flext-*
+# Go executables (no extension in root only)
+/flext
 */flext
-*/flext-*
 
 # Go test binary, built with `go test -c`
 *.test
@@ -641,7 +639,6 @@ LINT_CORRECTIONS_*.md
 .qlty/
 .logfire/
 .meltano/
-flext
 
 # Development and analysis artifacts  
 **/.claude/

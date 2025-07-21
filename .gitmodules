@@ -158,3 +158,15 @@
 [submodule "flext-ldif"]
 	path = flext-ldif
 	url = https://github.com/marlon-costa-dc/flext-ldif.git
+[submodule "flext-tap-oracle"]
+	path = flext-tap-oracle
+	url = git@github.com:flext-sh/flext-tap-oracle.git
+[submodule "flext-oracle-wms"]
+	path = flext-oracle-wms
+	url = git@github.com:flext-sh/flext-oracle-wms.git
+[submodule "flext-dbt-oracle"]
+	path = flext-dbt-oracle
+	url = git@github.com:flext-sh/flext-dbt-oracle.git
+[submodule "flext-dbt-oracle-wms"]
+	path = flext-dbt-oracle-wms
+	url = git@github.com:flext-sh/flext-dbt-oracle-wms.git
