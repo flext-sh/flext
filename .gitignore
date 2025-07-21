@@ -618,8 +618,23 @@ LINT_CORRECTIONS_*.md
 !requirements.txt
 
 # ============================================================================
-# FLEXT WORKSPACE DIRECTORIES
+# ROOT DIRECTORY SPECIFIC RULES
 # ============================================================================
+
+# Ignore all .md files in root except essential ones
+/*.md
+!/README.md
+!/CHANGELOG.md
+!/CONTRIBUTING.md
+
+# Ignore all .json files in root except essential ones  
+/*.json
+!/.markdownlint.json
+
+# Ignore all .txt files in root
+/*.txt
+
+# FLEXT workspace directories
 .flext_backups/
 .flext_logs/
 .benchmarks/
@@ -636,16 +651,3 @@ flext
 **/*_temp/
 reports_*/
 temp_test_*/
-
-# ============================================================================
-# ROOT DIRECTORY SPECIFIC RULES
-# ============================================================================
-
-# Ignore all .md files in root except essential ones
-*.md
-
-# Ignore all .json files in root except essential ones
-*.json
-
-# Ignore all .txt files in root
-*.txt
