@@ -233,6 +233,12 @@ _build/
 *.so
 *.dylib
 
+# Go executables (no extension)
+flext
+flext-*
+*/flext
+*/flext-*
+
 # Go test binary, built with `go test -c`
 *.test
 
@@ -244,6 +250,13 @@ go.sum
 
 # Go workspace file
 go.work
+
+# Command binaries
+cmd/*/flext*
+cmd/*/*
+!cmd/*/Makefile
+!cmd/*/*.go
+!cmd/*/*.md
 
 # ============================================================================
 # NODE.JS SPECIFIC
@@ -576,7 +589,8 @@ CLAUDE*.md
 DUPLICATE_CODE_*.md
 LINT_CORRECTIONS_*.md
 
-# But keep important documentation
+# Strinct exclude all md, but keep important documentation
+*.md
 !README.md
 !CHANGELOG.md
 !CONTRIBUTING.md
