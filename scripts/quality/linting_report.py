@@ -27,8 +27,7 @@ class LintingReport(FlextScript):
     def metadata(self) -> ScriptMetadata:
         return ScriptMetadata(
             name="linting_report",
-            description="Relatório completo de qualidade de código com Ruff, "
-            "MyPy e métricas",
+            description="Relatório completo de qualidade de código com Ruff, MyPy e métricas",
             category="quality",
             version="2.0.0",
         )
@@ -99,8 +98,7 @@ class LintingReport(FlextScript):
                     "python_files": len(list(project_path.rglob("*.py"))),
                     "ruff_issues": ruff_result["total_issues"],
                     "mypy_errors": mypy_result["total_errors"],
-                    "has_issues": ruff_result["total_issues"] > 0
-                    or mypy_result["total_errors"] > 0,
+                    "has_issues": ruff_result["total_issues"] > 0 or mypy_result["total_errors"] > 0,
                 }
 
                 project_results[project_name] = {
@@ -144,19 +142,9 @@ class LintingReport(FlextScript):
         projects_filter: str | None = None,
     ) -> list[Path]:
         """Descobrir projetos para analisar."""
-        all_projects = [
-            item
-            for item in workspace_root.iterdir()
-            if item.is_dir()
-            and (item / "pyproject.toml").exists()
-            and not any(skip in item.name for skip in [".git", ".venv", "__pycache__"])
-        ]
+        from scripts.common import discover_projects
 
-        if projects_filter:
-            filter_list = [p.strip() for p in projects_filter.split(",")]
-            return [p for p in all_projects if any(f in p.name for f in filter_list)]
-
-        return all_projects
+        return discover_projects(workspace_root, projects_filter)
 
     def _run_ruff_analysis(self, project_path: Path) -> dict[str, Any]:
         """Executar análise Ruff."""
@@ -223,9 +211,7 @@ class LintingReport(FlextScript):
                         parts = line.split(":")
                         if len(parts) >= 4:
                             filename = parts[0]
-                            error_type = (
-                                parts[3].strip() if len(parts) > 3 else "Unknown"
-                            )
+                            error_type = parts[3].strip() if len(parts) > 3 else "Unknown"
 
                             errors_by_file[filename] += 1
                             errors_by_type[error_type] += 1
@@ -300,17 +286,14 @@ class LintingReport(FlextScript):
         print(f"  📁 Projetos analisados: {total_stats['projects_analyzed']}")
         print(f"  📄 Arquivos Python: {total_stats['total_files']}")
         print(
-            f"  ⚠️ Total de issues: "
-            f"{total_stats['ruff_issues'] + total_stats['mypy_errors']}",
+            f"  ⚠️ Total de issues: {total_stats['ruff_issues'] + total_stats['mypy_errors']}",
         )
         print(f"    • Ruff: {total_stats['ruff_issues']} issues")
         print(f"    • MyPy: {total_stats['mypy_errors']} errors")
 
         # Score de qualidade
         if total_stats["total_files"] > 0:
-            issues_per_file = (
-                total_stats["ruff_issues"] + total_stats["mypy_errors"]
-            ) / total_stats["total_files"]
+            issues_per_file = (total_stats["ruff_issues"] + total_stats["mypy_errors"]) / total_stats["total_files"]
             if issues_per_file == 0:
                 score_color = Colors.GREEN
                 status = "PERFEITO"
