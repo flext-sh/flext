@@ -728,6 +728,16 @@ ignore_missing_imports = true
 module = "rest_framework.status"
 ignore_missing_imports = true
 
+# Configurações para módulos LDAP com problemas de tipos não implementados
+[[tool.mypy.overrides]]
+module = "ldap3"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "ldap3.*"
+ignore_missing_imports = true
+
+
 # Configurações para arquivos gerados pelo protobuf
 [[tool.mypy.overrides]]
 module = "flext_grpc.proto.flext_pb2"
@@ -799,6 +809,10 @@ ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
 module = "flext_core.domain.typedefs"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "gensim.*"
 ignore_missing_imports = true
 
 [tool.coverage.run]
@@ -913,6 +927,7 @@ autoflake = "^2.3.1"
 types-ldap3 = "^2.9.13.20250622"
 deptry = "^0.23.0"
 pytest = "^8.4.1"
+types-psycopg2 = "^2.9.21.20250718"
 
 [tool.poetry.group.test.dependencies]
 pytest = "^8.4.0"
@@ -940,7 +955,18 @@ types-requests = "^2.32.4"
 types-redis = "^4.6.0"
 types-psutil = "^7.0.0"
 django-stubs = "^5.2.2"
+types-protobuf = "^6.30.2.20250703"
 
 [tool.poetry.group.security.dependencies]
 bandit = "^1.8.0"
 pip-audit = "^2.7.3"
+
+[tool.vulture]
+exclude = ["*/tests/*", "*/__pycache__/*", "*/venv/*", "*/.venv/*", "*/build/*", "*/dist/*", "*/reports/*"]
+ignore_decorators = ["@app.route", "@require_*"]
+ignore_names = ["visit_*", "do_*"]
+min_confidence = 70
+paths = ["src"]
+sort_by_size = true
+verbose = false
+

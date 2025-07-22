@@ -107,19 +107,8 @@ class PyprojectStandardizer(FlextScript):
         projects_filter: str | None = None,
     ) -> list[Path]:
         """Discover projects to standardize."""
-        all_projects = [
-            item
-            for item in workspace_root.iterdir()
-            if item.is_dir()
-            and (item / "pyproject.toml").exists()
-            and not any(skip in item.name for skip in [".git", ".venv", "__pycache__"])
-        ]
-
-        if projects_filter:
-            filter_list = [p.strip() for p in projects_filter.split(",")]
-            return [p for p in all_projects if any(f in p.name for f in filter_list)]
-
-        return all_projects
+        from scripts.common import discover_projects
+        return discover_projects(workspace_root, projects_filter)
 
     def _print_summary(
         self,

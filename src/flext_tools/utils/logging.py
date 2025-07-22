@@ -492,12 +492,11 @@ class DetailedLogger:
         print_colored(f"[{timestamp}] {entry.level:8s} | {entry.message}", color)
 
         # Detalhes importantes em linha extra
-        if entry.level in {"ERROR", "CRITICAL", "SECURITY"}:
-            if "error_message" in entry.details:
-                print_colored(
-                    f"         ERROR   | {entry.details['error_message']}",
-                    Colors.RED,
-                )
+        if entry.level in {"ERROR", "CRITICAL", "SECURITY"} and "error_message" in entry.details:
+            print_colored(
+                f"         ERROR   | {entry.details['error_message']}",
+                Colors.RED,
+            )
 
     def _flush_buffer(self) -> None:
         """Salva buffer no arquivo."""

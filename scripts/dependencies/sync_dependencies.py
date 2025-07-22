@@ -72,10 +72,7 @@ def get_workspace_projects(workspace_path: Path) -> list[Path]:
         for item in workspace_path.iterdir()
         if item.is_dir()
         and (item / "pyproject.toml").exists()
-        and not any(
-            skip in item.name
-            for skip in ["archive", "backup", "node_modules", ".git", ".venv"]
-        )
+        and not any(skip in item.name for skip in ["archive", "backup", "node_modules", ".git", ".venv"])
     ]
 
     return sorted(projects)
@@ -212,10 +209,7 @@ def add_missing_dependencies(
     print_colored("\n4️⃣ Adicionando dependências faltantes...", Colors.BLUE)
 
     if not auto:
-        total_deps = sum(
-            sum(len(deps) for deps in missing_deps.values())
-            for missing_deps in missing_by_project.values()
-        )
+        total_deps = sum(sum(len(deps) for deps in missing_deps.values()) for missing_deps in missing_by_project.values())
         print_colored(
             f"\n💡 {total_deps} dependências serão adicionadas",
             Colors.YELLOW,
@@ -297,8 +291,7 @@ def main() -> int:
             print_colored("• Use --validate para verificação de projetos", Colors.GREEN)
             print_colored("", Colors.RED)
             print_colored(
-                "⚠️ REMOVER scripts/VALIDATION_REQUIRED.lock apenas após "
-                "validação completa",
+                "⚠️ REMOVER scripts/VALIDATION_REQUIRED.lock apenas após validação completa",
                 Colors.YELLOW,
             )
 
@@ -329,9 +322,7 @@ def main() -> int:
 
         # Detecta workspace
         workspace_path = Path.cwd()
-        if not any(
-            p.name.startswith("flext-") for p in workspace_path.iterdir() if p.is_dir()
-        ):
+        if not any(p.name.startswith("flext-") for p in workspace_path.iterdir() if p.is_dir()):
             print_colored(
                 "❌ Execute o script do diretório raiz do workspace FLEXT",
                 Colors.RED,

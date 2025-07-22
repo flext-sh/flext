@@ -140,9 +140,8 @@ class PythonImportDiscovery:
                 for node in ast.walk(tree):
                     if isinstance(node, ast.Import):
                         imports.update(alias.name.split(".")[0] for alias in node.names)
-                    elif isinstance(node, ast.ImportFrom):
-                        if node.module:
-                            imports.add(node.module.split(".")[0])
+                    elif isinstance(node, ast.ImportFrom) and node.module:
+                        imports.add(node.module.split(".")[0])
             except (SyntaxError, UnicodeDecodeError, OSError):
                 # Se AST falhar, usa regex
                 import_patterns = [
