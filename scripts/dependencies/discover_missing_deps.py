@@ -33,11 +33,7 @@ class MissingDependenciesDiscoverer(FlextScript):
 
         # Verificar se estamos no workspace FLEXT
         flext_projects = [
-            p
-            for p in workspace_root.iterdir()
-            if p.is_dir()
-            and p.name.startswith("flext-")
-            and (p / "pyproject.toml").exists()
+            p for p in workspace_root.iterdir() if p.is_dir() and p.name.startswith("flext-") and (p / "pyproject.toml").exists()
         ]
 
         if not flext_projects:
@@ -117,20 +113,9 @@ class MissingDependenciesDiscoverer(FlextScript):
         projects_filter: str | None = None,
     ) -> list[Path]:
         """Descobrir projetos para analisar."""
-        all_projects = [
-            item
-            for item in workspace_root.iterdir()
-            if item.is_dir()
-            and (item / "pyproject.toml").exists()
-            and not any(skip in item.name for skip in [".git", ".venv", "__pycache__"])
-        ]
+        from scripts.common import discover_projects
 
-        if projects_filter:
-            # Filtrar projetos específicos
-            filter_list = [p.strip() for p in projects_filter.split(",")]
-            return [p for p in all_projects if any(f in p.name for f in filter_list)]
-
-        return all_projects
+        return discover_projects(workspace_root, projects_filter)
 
     def _print_detailed_missing(self, missing_deps: dict[str, set[str]]) -> None:
         """Imprimir detalhes das dependências faltantes."""

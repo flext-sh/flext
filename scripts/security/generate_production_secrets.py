@@ -12,11 +12,13 @@ from pathlib import Path
 from typing import Any
 
 from flext_tools import Colors, print_colored
-from flext_tools.core.script_base import FlextScript, ScriptMetadata
+from flext_tools.core.script_base import ScriptMetadata
 from flext_tools.security import SecretGenerator
 
+from ._base_security_script import BaseSecurityScript
 
-class ProductionSecretsGenerator(FlextScript):
+
+class ProductionSecretsGenerator(BaseSecurityScript):
     """Generate cryptographically secure secrets for production."""
 
     @property
@@ -28,27 +30,7 @@ class ProductionSecretsGenerator(FlextScript):
             version="2.0.0",
         )
 
-    def validate_preconditions(self) -> bool:
-        """Validate preconditions."""
-        workspace_root = Path.cwd()
-
-        # Check if we're in FLEXT workspace
-        if not (workspace_root / "flext-core").exists():
-            print_colored("❌ Execute from FLEXT workspace root", Colors.RED)
-            return False
-
-        print_colored("✅ FLEXT workspace detected", Colors.GREEN)
-
-        # Check cryptography availability
-        try:
-            print_colored("✅ Cryptography library available", Colors.GREEN)
-            return True
-        except ImportError:
-            print_colored(
-                "❌ Cryptography library not found - install with: pip install cryptography",
-                Colors.RED,
-            )
-            return False
+# validate_preconditions is inherited from BaseSecurityScript
 
     def execute_main_logic(self, **kwargs: Any) -> bool:
         """Execute secrets generation."""
