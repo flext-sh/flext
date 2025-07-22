@@ -1,12 +1,12 @@
 {
-  "timestamp": "2025-07-22T13:47:10.239704",
+  "timestamp": "2025-07-22T14:27:14.946653",
   "workspace_root": "/home/marlonsc/flext",
   "projects": {
     "flext-core": {
       "level": 1,
       "has_makefile": true,
       "has_pyproject": true,
-      "lint_status": "\u2705 PASS",
+      "lint_status": "\u26a0\ufe0f  NO_TARGET",
       "mypy_status": "\u26a0\ufe0f  NO_TARGET",
       "test_status": "\u26a0\ufe0f  NO_TARGET",
       "poetry_install": "\u2705 PASS",
@@ -57,23 +57,16 @@
       "has_makefile": true,
       "has_pyproject": true,
       "lint_status": "\u2705 PASS",
-      "mypy_status": "\ud83d\udea8 CRITICAL FIXED: 244→121 errors (50.4% improvement)",
+      "mypy_status": "\u26a0\ufe0f  NO_TARGET",
       "test_status": "\u26a0\ufe0f  NO_TARGET",
       "poetry_install": "\u2705 PASS",
-      "errors": [
-        "\ud83d\udd27 FIXED: InternalPluginType undefined - aliased PluginType",
-        "\ud83d\udd27 FIXED: ServiceResult.data type narrowing - added null checks",
-        "\ud83d\udd27 FIXED: Domain entity imports - Pipeline/APIPipeline aliases",
-        "\ud83d\udd27 FIXED: UUID type conversions - str() casts added",
-        "\ud83d\udd27 FIXED: PluginType enum conflicts - unified to shared_types",
-        "\u26a0\ufe0f  REMAINING: 121 MyPy errors need continued attention"
-      ]
+      "errors": []
     },
     "flext-auth": {
       "level": 2,
       "has_makefile": true,
       "has_pyproject": true,
-      "lint_status": "\u2705 PASS",
+      "lint_status": "\u26a0\ufe0f  NO_TARGET",
       "mypy_status": "\u26a0\ufe0f  NO_TARGET",
       "test_status": "\u26a0\ufe0f  NO_TARGET",
       "poetry_install": "\u2705 PASS",
@@ -93,7 +86,7 @@
       "level": 3,
       "has_makefile": true,
       "has_pyproject": true,
-      "lint_status": "\u26a0\ufe0f  NO_TARGET",
+      "lint_status": "\u2705 PASS",
       "mypy_status": "\u26a0\ufe0f  NO_TARGET",
       "test_status": "\u26a0\ufe0f  NO_TARGET",
       "poetry_install": "\u2705 PASS",
@@ -133,7 +126,7 @@
       "level": 3,
       "has_makefile": true,
       "has_pyproject": true,
-      "lint_status": "\u26a0\ufe0f  NO_TARGET",
+      "lint_status": "\u2705 PASS",
       "mypy_status": "\u26a0\ufe0f  NO_TARGET",
       "test_status": "\u26a0\ufe0f  NO_TARGET",
       "poetry_install": "\u2705 PASS",
@@ -143,13 +136,11 @@
       "level": 4,
       "has_makefile": true,
       "has_pyproject": true,
-      "lint_status": "\u26a0\ufe0f  NO_TARGET",
+      "lint_status": "\u2705 PASS",
       "mypy_status": "\u26a0\ufe0f  NO_TARGET",
       "test_status": "\u26a0\ufe0f  NO_TARGET",
       "poetry_install": "\u2705 PASS",
-      "errors": [
-        "\ud83d\udd27 FIXED: Incomplete import syntax - fixed (from flext_core import (, -> proper imports)"
-      ]
+      "errors": []
     },
     "flext-tap-ldap": {
       "level": 4,
@@ -165,7 +156,7 @@
       "level": 4,
       "has_makefile": true,
       "has_pyproject": true,
-      "lint_status": "\u2705 PASS",
+      "lint_status": "\u26a0\ufe0f  NO_TARGET",
       "mypy_status": "\u26a0\ufe0f  NO_TARGET",
       "test_status": "\u26a0\ufe0f  NO_TARGET",
       "poetry_install": "\u2705 PASS",
@@ -235,7 +226,7 @@
       "level": 4,
       "has_makefile": true,
       "has_pyproject": true,
-      "lint_status": "\u26a0\ufe0f  NO_TARGET",
+      "lint_status": "\u2705 PASS",
       "mypy_status": "\u26a0\ufe0f  NO_TARGET",
       "test_status": "\u26a0\ufe0f  NO_TARGET",
       "poetry_install": "\u2705 PASS",
@@ -245,7 +236,7 @@
       "level": 4,
       "has_makefile": true,
       "has_pyproject": true,
-      "lint_status": "\u26a0\ufe0f  NO_TARGET",
+      "lint_status": "\u2705 PASS",
       "mypy_status": "\u26a0\ufe0f  NO_TARGET",
       "test_status": "\u26a0\ufe0f  NO_TARGET",
       "poetry_install": "\u2705 PASS",
@@ -299,10 +290,7 @@
       "mypy_status": "\u26a0\ufe0f  NO_TARGET",
       "test_status": "\u26a0\ufe0f  NO_TARGET",
       "poetry_install": "\u2705 PASS",
-      "errors": [
-        "\ud83d\udd27 FIXED: Level 6 architectural violation - temporary ServiceResult class implemented",
-        "\u2705 COMPLIANT: Level 6 isolation maintained until DI container implemented"
-      ]
+      "errors": []
     },
     "gruponos-meltano-native": {
       "level": 6,
@@ -317,8 +305,6 @@
   },
   "architecture_violations": {
     "flext-core": [
-      "Import meltano: ./flext_core/application/interfaces/__init__.py:# - Singer interfaces \u2192 flext-meltano project\n./flext_core/config/adapters/__init__.py:- Concrete projects (flext-meltano, flext-cli, flext-web) implement adapters\n./flext_core/config/adapters/__init__.py:- Singer adapters: Moved to flext-meltano project\n./flext_core/config/adapters/__init__.py:    # Singer adapters -> flext-meltano\n./flext_core/config/adapters/__init__.py:            f\"\u274c ARCHITECTURAL VIOLATION: '{name}' moved from flext-core to flext-meltano.\\n\"\n./flext_core/config/adapters/__init__.py:            f\"\ud83c\udfaf CLEAN ARCHITECTURE: from flext_meltano.config import {name}\\n\"\n./flext_core/config/adapters/__init__.py:        msg = f\"{name} moved to flext-meltano project for Clean Architecture compliance\"",
-      "Import oracle: ./flext_core/application/interfaces/__init__.py:# - Oracle interfaces \u2192 flext-tap-oracle, flext-target-oracle projects\n./flext_core/config/validators.py:    db_pattern = r\"^(postgresql|mysql|sqlite|oracle|mongodb)://\"",
       "Import singer: ./flext_core/config/adapters/__init__.py:    singer_items = {\n./flext_core/config/adapters/__init__.py:        \"singer_config_adapter\",\n./flext_core/config/adapters/__init__.py:    if name in singer_items:"
     ]
   },
@@ -326,7 +312,7 @@
     "total_projects": 30,
     "projects_with_makefile": 30,
     "projects_with_pyproject": 30,
-    "lint_passed": 14,
+    "lint_passed": 16,
     "mypy_passed": 0,
     "tests_passed": 1,
     "poetry_passed": 30,
