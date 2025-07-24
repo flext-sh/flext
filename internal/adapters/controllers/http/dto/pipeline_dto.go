@@ -17,9 +17,21 @@ type AddStepRequest struct {
 	DependsOn     []string               `json:"depends_on" validate:"dive,uuid"`
 }
 
-// ExecutePipelineRequest represents a request to execute a pipeline
+// ExecutePipelineRequest represents a request to execute a pipeline (FLEXT_SERVICE_ARCHITECTURE.md spec)
 type ExecutePipelineRequest struct {
-	Parameters map[string]interface{} `json:"parameters"`
+	Name      string                 `json:"name" validate:"required"`
+	Extractor string                 `json:"extractor" validate:"required"`
+	Loader    string                 `json:"loader" validate:"required"`
+	Config    map[string]interface{} `json:"config"`
+}
+
+// ExecutionResult represents the result of a pipeline execution (FLEXT_SERVICE_ARCHITECTURE.md spec)
+type ExecutionResult struct {
+	ExecutionID   string `json:"execution_id"`
+	Status        string `json:"status"`
+	ExtractedRows int    `json:"extracted_rows"`
+	LoadedRows    int    `json:"loaded_rows"`
+	Duration      string `json:"duration"`
 }
 
 // PipelineResponse represents a pipeline in responses

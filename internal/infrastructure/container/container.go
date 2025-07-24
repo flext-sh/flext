@@ -19,6 +19,7 @@ import (
 	"github.com/flext-sh/flext/internal/infrastructure/database"
 	"github.com/flext-sh/flext/internal/infrastructure/dbt"
 	"github.com/flext-sh/flext/internal/infrastructure/events"
+	"github.com/flext-sh/flext/internal/infrastructure/flexcore_plugin"
 	"github.com/flext-sh/flext/internal/infrastructure/http"
 	"github.com/flext-sh/flext/internal/infrastructure/logging"
 	"github.com/flext-sh/flext/internal/infrastructure/persistence"
@@ -55,8 +56,11 @@ type Container struct {
 	dbtManager            *dbt.DBTManager
 	singerManager         *singer.SingerManager
 
+	// FLEXCORE Plugin Registry
+	flexcorePluginRegistry *flexcore_plugin.PluginRegistry
+
 	// HTTP Handlers
-	pipelineHandler    *http.PipelineHandler
+	pipelineHandler    *http.CleanPipelineHandler
 	pluginHandler      *http.PluginHandler
 	meltanoHandler     *http.MeltanoHandler
 	meltanoGopyHandler *http.MeltanoGopyHandler
@@ -64,6 +68,7 @@ type Container struct {
 	connectorsHandler  *http.ConnectorsHandler
 	singerHandler      *http.SingerHandler
 	webHandler         *http.SimpleBootstrapHandler
+	flexcoreHandler    *http.FlexcoreHandler
 }
 
 // NewContainer cria um novo container de dependências
@@ -179,8 +184,15 @@ func (c *Container) initializeServices() error {
 	meltanoProjectDir := c.config.GetEnvWithDefault("MELTANO_PROJECT_PATH", "")
 	c.singerManager = singer.NewSingerManager(c.logger, singerWorkDir, meltanoProjectDir)
 
+	// FLEXCORE Plugin Registry - Register FLEXT plugins for FLEXCORE execution
+	fmt.Println("🏗️ CONTAINER: About to create FLEXCORE PluginRegistry...")
+	c.flexcorePluginRegistry = flexcore_plugin.NewPluginRegistry(c.config, c.logger)
+	fmt.Printf("🏗️ CONTAINER: FLEXCORE PluginRegistry created: %v\n", c.flexcorePluginRegistry != nil)
+
 	// HTTP Handlers
-	c.pipelineHandler = http.NewPipelineHandler(c.pipelineService, c.logger)
+	// TODO: Implement CleanPipelineHandler properly
+	// c.pipelineHandler = http.NewCleanPipelineHandler(...)
+	c.logger.Info("Pipeline handler temporarily disabled during container setup")
 	c.pluginHandler = http.NewPluginHandler(c.pluginService, c.logger)
 	c.meltanoHandler = http.NewMeltanoHandler(c.meltanoService)
 	c.connectorsHandler = http.NewConnectorsHandler(c.logger)
@@ -197,6 +209,9 @@ func (c *Container) initializeServices() error {
 
 	// Web interface handler - Simple Bootstrap + HTMX version
 	c.webHandler = http.NewSimpleBootstrapHandler(c.logger)
+
+	// FLEXCORE handler - Integration with FLEXCORE container
+	c.flexcoreHandler = http.NewFlexcoreHandler(c.flexcorePluginRegistry, c.logger)
 
 	return nil
 }
@@ -310,7 +325,7 @@ func (c *Container) GetPluginService() *pluginApp.PluginService {
 }
 
 // GetPipelineHandler retorna o handler HTTP de pipeline
-func (c *Container) GetPipelineHandler() *http.PipelineHandler {
+func (c *Container) GetPipelineHandler() *http.CleanPipelineHandler {
 	c.mu.RLock()
 	defer c.mu.RUnlock()
 	return c.pipelineHandler
@@ -394,6 +409,20 @@ func (c *Container) GetWebHandler() *http.SimpleBootstrapHandler {
 	c.mu.RLock()
 	defer c.mu.RUnlock()
 	return c.webHandler
+}
+
+// GetFlexcorePluginRegistry retorna o registry de plugins FLEXCORE
+func (c *Container) GetFlexcorePluginRegistry() *flexcore_plugin.PluginRegistry {
+	c.mu.RLock()
+	defer c.mu.RUnlock()
+	return c.flexcorePluginRegistry
+}
+
+// GetFlexcoreHandler retorna o handler HTTP FLEXCORE
+func (c *Container) GetFlexcoreHandler() *http.FlexcoreHandler {
+	c.mu.RLock()
+	defer c.mu.RUnlock()
+	return c.flexcoreHandler
 }
 
 // HealthCheck executa verificações de saúde do sistema

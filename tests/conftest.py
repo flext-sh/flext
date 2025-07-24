@@ -10,7 +10,6 @@ import os
 from pathlib import Path
 
 import pytest
-from flext_core import DIContainer, configure_container
 
 # Set test environment
 os.environ["FLEXT_ENV"] = "testing"
@@ -24,10 +23,10 @@ def workspace_root() -> Path:
 
 
 @pytest.fixture
-def di_container() -> DIContainer:
+def di_container() -> FlextContainer:
     """Get a fresh DI container for each test."""
-    container = DIContainer()
-    configure_container(container)
+    container = FlextContainer()
+    configure_flext_container(container)
     return container
 
 

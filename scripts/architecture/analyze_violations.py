@@ -68,7 +68,12 @@ class ArchitectureAnalyzer:
         self.violations: list[Violation] = []
 
         # Definir hierarquia de camadas
-        self.layer_hierarchy = {LayerType.BASE: 0, LayerType.INTERMEDIATE: 1, LayerType.SPECIFIC: 2, LayerType.APPLICATION: 3}
+        self.layer_hierarchy = {
+            LayerType.BASE: 0,
+            LayerType.INTERMEDIATE: 1,
+            LayerType.SPECIFIC: 2,
+            LayerType.APPLICATION: 3,
+        }
 
     def _discover_projects(self) -> dict[str, Project]:
         """Descobre todos os projetos no workspace."""
@@ -81,7 +86,9 @@ class ArchitectureAnalyzer:
             project_name = item.name
             layer = self._classify_project_layer(project_name)
 
-            projects[project_name] = Project(name=project_name, path=item, layer=layer, dependencies=set())
+            projects[project_name] = Project(
+                name=project_name, path=item, layer=layer, dependencies=set()
+            )
 
         return projects
 
@@ -96,7 +103,14 @@ class ArchitectureAnalyzer:
             return LayerType.APPLICATION
 
         # Camada INTERMEDIATE
-        intermediate_projects = ["flext-cli", "flext-observability", "flext-grpc", "flext-web", "flext-api", "flext-auth"]
+        intermediate_projects = [
+            "flext-cli",
+            "flext-observability",
+            "flext-grpc",
+            "flext-web",
+            "flext-api",
+            "flext-auth",
+        ]
         if project_name in intermediate_projects:
             return LayerType.INTERMEDIATE
 
@@ -109,7 +123,9 @@ class ArchitectureAnalyzer:
 
     def analyze_import_violations(self) -> None:
         """Analisa violações de imports entre camadas."""
-        print_colored("🔍 Analisando violações de imports entre camadas...", Colors.BLUE)
+        print_colored(
+            "🔍 Analisando violações de imports entre camadas...", Colors.BLUE
+        )
 
         for project in self.projects.values():
             src_path = project.path / "src"
@@ -134,7 +150,9 @@ class ArchitectureAnalyzer:
                 imports = self._extract_imports(tree)
 
                 for import_name in imports:
-                    violation = self._check_import_violation(project, py_file, import_name)
+                    violation = self._check_import_violation(
+                        project, py_file, import_name
+                    )
                     if violation:
                         self.violations.append(violation)
 
@@ -153,7 +171,9 @@ class ArchitectureAnalyzer:
 
         return imports
 
-    def _check_import_violation(self, project: Project, file_path: Path, import_name: str) -> Violation | None:
+    def _check_import_violation(
+        self, project: Project, file_path: Path, import_name: str
+    ) -> Violation | None:
         """Verifica se um import viola a arquitetura."""
         # Ignorar imports padrão do Python e bibliotecas externas
         if not self._is_flext_import(import_name):
@@ -194,7 +214,9 @@ class ArchitectureAnalyzer:
         project_name = import_mappings.get(import_name)
         return self.projects.get(project_name)
 
-    def _is_layer_violation(self, importing_project: Project, imported_project: Project) -> bool:
+    def _is_layer_violation(
+        self, importing_project: Project, imported_project: Project
+    ) -> bool:
         """Verifica se há violação entre camadas."""
         importing_level = self.layer_hierarchy[importing_project.layer]
         imported_level = self.layer_hierarchy[imported_project.layer]
@@ -226,14 +248,23 @@ class ArchitectureAnalyzer:
             if violation:
                 self.violations.append(violation)
 
-    def _check_module_placement(self, project: Project, file_path: Path) -> Violation | None:
+    def _check_module_placement(
+        self, project: Project, file_path: Path
+    ) -> Violation | None:
         """Verifica se um módulo está na camada correta."""
         try:
             with open(file_path, encoding="utf-8") as f:
                 content = f.read()
 
             # Verificar padrões que indicam camada incorreta
-            concrete_patterns = [r"meltano", r"oracle", r"ldap", r"singer", r"client-a", r"client-b"]
+            concrete_patterns = [
+                r"meltano",
+                r"oracle",
+                r"ldap",
+                r"singer",
+                r"client-a",
+                r"client-b",
+            ]
 
             # Se está no flext-core mas tem código específico/concreto
             if project.name == "flext-core":
@@ -270,10 +301,14 @@ class ArchitectureAnalyzer:
             violations_by_type[violation.violation_type].append(violation)
 
         for violation_type, violations in violations_by_type.items():
-            print_colored(f"\n🚨 {violation_type} ({len(violations)} violações):", Colors.RED)
+            print_colored(
+                f"\n🚨 {violation_type} ({len(violations)} violações):", Colors.RED
+            )
 
             for violation in violations:
-                severity_color = Colors.RED if violation.severity == "HIGH" else Colors.YELLOW
+                severity_color = (
+                    Colors.RED if violation.severity == "HIGH" else Colors.YELLOW
+                )
                 print_colored(f"  📁 {violation.file_path}", severity_color)
                 print_colored(f"     {violation.description}", Colors.WHITE)
                 print_colored(f"     💡 {violation.suggested_action}", Colors.BLUE)
@@ -286,12 +321,16 @@ class ArchitectureAnalyzer:
 
     def generate_fix_script(self) -> None:
         """Gera script para correção automática."""
-        script_path = self.workspace_root / "scripts" / "architecture" / "fix_violations.sh"
+        script_path = (
+            self.workspace_root / "scripts" / "architecture" / "fix_violations.sh"
+        )
         script_path.parent.mkdir(parents=True, exist_ok=True)
 
         with open(script_path, "w", encoding="utf-8") as f:
             f.write("#!/bin/bash\n")
-            f.write("# Script gerado automaticamente para correção de violações arquiteturais\n\n")
+            f.write(
+                "# Script gerado automaticamente para correção de violações arquiteturais\n\n"
+            )
 
             for violation in self.violations:
                 if "Renomear" in violation.suggested_action:

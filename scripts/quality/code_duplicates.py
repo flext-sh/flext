@@ -33,7 +33,9 @@ class CodeDuplicatesAnalyzer(FlextScript):
         workspace_root = Path.cwd()
 
         # Check if we're in FLEXT workspace
-        python_projects = [p for p in workspace_root.iterdir() if p.is_dir() and (p / "src").exists()]
+        python_projects = [
+            p for p in workspace_root.iterdir() if p.is_dir() and (p / "src").exists()
+        ]
 
         if not python_projects:
             print_colored(
