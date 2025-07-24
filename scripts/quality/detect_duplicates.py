@@ -158,7 +158,20 @@ class FlextDuplicateDetector:
                 "mod",
             ]
         else:
-            self.file_extensions = file_extensions or ["py", "js", "ts", "java", "go", "md", "rst", "txt", "sh", "bash", "zsh", "fish"]
+            self.file_extensions = file_extensions or [
+                "py",
+                "js",
+                "ts",
+                "java",
+                "go",
+                "md",
+                "rst",
+                "txt",
+                "sh",
+                "bash",
+                "zsh",
+                "fish",
+            ]
 
         # Diretórios do Flext
         self.flext_modules = [
@@ -338,13 +351,21 @@ class FlextDuplicateDetector:
         """Normaliza código removendo comentários, strings e espaços."""
         try:
             # Para Python, usar AST
-            if content.strip().endswith(".py") or "import " in content or "def " in content:
+            if (
+                content.strip().endswith(".py")
+                or "import " in content
+                or "def " in content
+            ):
                 return self._normalize_python_code(content)
             # Para Markdown, usar normalização específica
             if "# " in content or "## " in content or "```" in content:
                 return self._normalize_markdown_code(content)
             # Para shell scripts, usar normalização específica
-            if content.startswith(("#!/bin/bash", "#!/bin/sh")) or "function " in content or "if [" in content:
+            if (
+                content.startswith(("#!/bin/bash", "#!/bin/sh"))
+                or "function " in content
+                or "if [" in content
+            ):
                 return self._normalize_shell_code(content)
             return self._normalize_generic_code(content)
         except Exception:
@@ -432,7 +453,9 @@ class FlextDuplicateDetector:
                     in_quotes = False
                     quote_char = None
                     for i, char in enumerate(line_content):
-                        if char in {'"', "'"} and (i == 0 or line_content[i - 1] != "\\"):
+                        if char in {'"', "'"} and (
+                            i == 0 or line_content[i - 1] != "\\"
+                        ):
                             if not in_quotes:
                                 in_quotes = True
                                 quote_char = char
@@ -448,7 +471,9 @@ class FlextDuplicateDetector:
 
                 # Normalizar comandos comuns
                 line_content = re.sub(r"\s+", " ", line_content)  # Múltiplos espaços
-                line_content = re.sub(r"\$\{([^}]+)\}", r"$\1", line_content)  # ${var} -> $var
+                line_content = re.sub(
+                    r"\$\{([^}]+)\}", r"$\1", line_content
+                )  # ${var} -> $var
 
                 # Normalizar strings (manter conteúdo mas simplificar quotes)
                 line_content = re.sub(r'"([^"]*)"', r'"\1"', line_content)
@@ -473,7 +498,11 @@ class FlextDuplicateDetector:
                     line_content = line_content[: line_content.index("#")]
                 # Manter apenas linhas com conteúdo
                 line_content = line_content.strip()
-                if line_content and not line_content.startswith('"""') and not line_content.startswith("'''"):
+                if (
+                    line_content
+                    and not line_content.startswith('"""')
+                    and not line_content.startswith("'''")
+                ):
                     lines.append(line_content)
 
             normalized = "\n".join(lines)
@@ -607,7 +636,9 @@ class FlextDuplicateDetector:
         matches = sum(1 for h1, h2 in zip(minhash1, minhash2, strict=False) if h1 == h2)
         return matches / len(minhash1)
 
-    def _create_file_signatures(self, files_content: dict[str, str]) -> dict[str, tuple[str, set[str], list[int]]]:
+    def _create_file_signatures(
+        self, files_content: dict[str, str]
+    ) -> dict[str, tuple[str, set[str], list[int]]]:
         """Cria assinaturas avançadas para detecção ultra-rápida."""
         signatures = {}
 
@@ -616,7 +647,10 @@ class FlextDuplicateDetector:
         # Use multiprocessing para acelerar a criação de assinaturas
         with ProcessPoolExecutor(max_workers=mp.cpu_count()) as executor:
             future_to_file = {
-                executor.submit(self._process_file_signature, file_path, content): file_path for file_path, content in files_content.items()
+                executor.submit(
+                    self._process_file_signature, file_path, content
+                ): file_path
+                for file_path, content in files_content.items()
             }
 
             for future in as_completed(future_to_file):
@@ -630,7 +664,9 @@ class FlextDuplicateDetector:
 
         return signatures
 
-    def _process_file_signature(self, file_path: str, content: str) -> tuple[str, set[str], list[int]] | None:
+    def _process_file_signature(
+        self, file_path: str, content: str
+    ) -> tuple[str, set[str], list[int]] | None:
         """Processa assinatura de um arquivo individual."""
         normalized = self._normalize_code(content)
         if len(normalized) < 50:
@@ -698,7 +734,9 @@ class FlextDuplicateDetector:
         # Pre-filter: só comparar arquivos com overlap mínimo de n-grams
         candidate_pairs = self._find_candidate_pairs(signatures)
 
-        print(f"🔍 Comparando {len(candidate_pairs)} pares candidatos (filtrados de {len(files_content)}²)")
+        print(
+            f"🔍 Comparando {len(candidate_pairs)} pares candidatos (filtrados de {len(files_content)}²)"
+        )
 
         # Comparar apenas pares candidatos
         for file1, file2 in candidate_pairs:
@@ -708,7 +746,10 @@ class FlextDuplicateDetector:
             for block1, start1, end1 in file_blocks[file1]:
                 for block2, start2, end2 in file_blocks[file2]:
                     # Skip blocks with very different sizes
-                    if abs(len(block1) - len(block2)) > max(len(block1), len(block2)) * 0.5:
+                    if (
+                        abs(len(block1) - len(block2))
+                        > max(len(block1), len(block2)) * 0.5
+                    ):
                         continue
 
                     similarity = self._calculate_similarity(block1, block2)
@@ -727,7 +768,9 @@ class FlextDuplicateDetector:
 
         return duplicates
 
-    def _find_candidate_pairs(self, signatures: dict[str, tuple[str, set[str], list[int]]]) -> list[tuple[str, str]]:
+    def _find_candidate_pairs(
+        self, signatures: dict[str, tuple[str, set[str], list[int]]]
+    ) -> list[tuple[str, str]]:
         """Encontra pares candidatos usando MinHash ultra-rápido."""
         candidates = []
         file_paths = list(signatures.keys())
@@ -754,7 +797,9 @@ class FlextDuplicateDetector:
 
         return candidates
 
-    def _detect_flext_anti_patterns(self, files_content: dict[str, str]) -> list[AntiPatternMatch]:
+    def _detect_flext_anti_patterns(
+        self, files_content: dict[str, str]
+    ) -> list[AntiPatternMatch]:
         """Detecta anti-patterns que deveriam usar bibliotecas base do FLEXT."""
         anti_patterns = []
 
@@ -766,30 +811,61 @@ class FlextDuplicateDetector:
                 continue
 
             # Detectar vários tipos de anti-patterns
-            anti_patterns.extend(self._detect_manual_result_handling(file_path, content))
+            anti_patterns.extend(
+                self._detect_manual_result_handling(file_path, content)
+            )
             anti_patterns.extend(self._detect_manual_logging_setup(file_path, content))
-            anti_patterns.extend(self._detect_manual_config_handling(file_path, content))
+            anti_patterns.extend(
+                self._detect_manual_config_handling(file_path, content)
+            )
             anti_patterns.extend(self._detect_manual_domain_models(file_path, content))
-            anti_patterns.extend(self._detect_manual_service_patterns(file_path, content))
-            anti_patterns.extend(self._detect_manual_connection_handling(file_path, content))
+            anti_patterns.extend(
+                self._detect_manual_service_patterns(file_path, content)
+            )
+            anti_patterns.extend(
+                self._detect_manual_connection_handling(file_path, content)
+            )
             anti_patterns.extend(self._detect_manual_error_handling(file_path, content))
 
         return anti_patterns
 
-    def _detect_manual_result_handling(self, file_path: str, content: str) -> list[AntiPatternMatch]:
+    def _detect_manual_result_handling(
+        self, file_path: str, content: str
+    ) -> list[AntiPatternMatch]:
         """Detecta manipulação manual de resultados que deveria usar ServiceResult."""
         patterns = []
         lines = content.split("\n")
 
         # Padrões que indicam resultado manual ao invés de ServiceResult
         anti_pattern_indicators = [
-            (r"return\s+\(\s*True\s*,\s*[^)]+\s*\)", "Manual tuple result instead of ServiceResult.ok()"),
-            (r"return\s+\(\s*False\s*,\s*[^)]+\s*\)", "Manual tuple result instead of ServiceResult(success=False, )"),
-            (r'return\s+\{\s*["\']success["\']\s*:\s*True', "Manual dict result instead of ServiceResult.ok()"),
-            (r'return\s+\{\s*["\']success["\']\s*:\s*False', "Manual dict result instead of ServiceResult(success=False, )"),
-            (r'return\s+\{\s*["\']error["\']\s*:', "Manual error dict instead of ServiceResult(success=False, )"),
-            (r"if\s+result\[0\]\s*:", "Manual tuple unpacking instead of ServiceResult.is_success"),
-            (r'if\s+result\[["\']success["\']\]\s*:', "Manual dict access instead of ServiceResult.is_success"),
+            (
+                r"return\s+\(\s*True\s*,\s*[^)]+\s*\)",
+                "Manual tuple result instead of ServiceResult.ok()",
+            ),
+            (
+                r"return\s+\(\s*False\s*,\s*[^)]+\s*\)",
+                "Manual tuple result instead of ServiceResult(success=False, )",
+            ),
+            (
+                r'return\s+\{\s*["\']success["\']\s*:\s*True',
+                "Manual dict result instead of ServiceResult.ok()",
+            ),
+            (
+                r'return\s+\{\s*["\']success["\']\s*:\s*False',
+                "Manual dict result instead of ServiceResult(success=False, )",
+            ),
+            (
+                r'return\s+\{\s*["\']error["\']\s*:',
+                "Manual error dict instead of ServiceResult(success=False, )",
+            ),
+            (
+                r"if\s+result\[0\]\s*:",
+                "Manual tuple unpacking instead of ServiceResult.is_success",
+            ),
+            (
+                r'if\s+result\[["\']success["\']\]\s*:',
+                "Manual dict access instead of ServiceResult.is_success",
+            ),
         ]
 
         for i, line in enumerate(lines):
@@ -812,17 +888,31 @@ class FlextDuplicateDetector:
 
         return patterns
 
-    def _detect_manual_logging_setup(self, file_path: str, content: str) -> list[AntiPatternMatch]:
+    def _detect_manual_logging_setup(
+        self, file_path: str, content: str
+    ) -> list[AntiPatternMatch]:
         """Detecta configuração manual de logging que deveria usar flext-observability."""
         patterns = []
         lines = content.split("\n")
 
         # Padrões que indicam logging manual
         anti_pattern_indicators = [
-            (r"import\s+logging", "Direct logging import instead of flext-observability"),
-            (r"logging\.getLogger\s*\(", "Manual logger creation instead of get_logger from flext-observability"),
-            (r"logging\.basicConfig\s*\(", "Manual logging config instead of flext-observability"),
-            (r"logger\s*=\s*logging\.getLogger", "Manual logger creation instead of get_logger"),
+            (
+                r"import\s+logging",
+                "Direct logging import instead of flext-observability",
+            ),
+            (
+                r"logging\.getLogger\s*\(",
+                "Manual logger creation instead of get_logger from flext-observability",
+            ),
+            (
+                r"logging\.basicConfig\s*\(",
+                "Manual logging config instead of flext-observability",
+            ),
+            (
+                r"logger\s*=\s*logging\.getLogger",
+                "Manual logger creation instead of get_logger",
+            ),
         ]
 
         for i, line in enumerate(lines):
@@ -833,7 +923,10 @@ class FlextDuplicateDetector:
             for pattern, description in anti_pattern_indicators:
                 if re.search(pattern, line_content):
                     # Verificar se já está usando flext-observability
-                    if "from flext_observability" in content or "flext_observability.logging" in content:
+                    if (
+                        "from flext_observability" in content
+                        or "flext_observability.logging" in content
+                    ):
                         continue
 
                     patterns.append(
@@ -849,16 +942,27 @@ class FlextDuplicateDetector:
 
         return patterns
 
-    def _detect_manual_config_handling(self, file_path: str, content: str) -> list[AntiPatternMatch]:
+    def _detect_manual_config_handling(
+        self, file_path: str, content: str
+    ) -> list[AntiPatternMatch]:
         """Detecta manipulação manual de configuração que deveria usar BaseConfig."""
         patterns = []
         lines = content.split("\n")
 
         # Padrões que indicam config manual
         anti_pattern_indicators = [
-            (r"os\.environ\.get\s*\(", "Manual environment variable access instead of BaseConfig"),
-            (r"os\.getenv\s*\(", "Manual environment variable access instead of BaseConfig"),
-            (r"class\s+\w+Config.*:", "Manual config class instead of inheriting from BaseConfig"),
+            (
+                r"os\.environ\.get\s*\(",
+                "Manual environment variable access instead of BaseConfig",
+            ),
+            (
+                r"os\.getenv\s*\(",
+                "Manual environment variable access instead of BaseConfig",
+            ),
+            (
+                r"class\s+\w+Config.*:",
+                "Manual config class instead of inheriting from BaseConfig",
+            ),
             (r"def\s+load_config\s*\(", "Manual config loading instead of BaseConfig"),
         ]
 
@@ -886,17 +990,31 @@ class FlextDuplicateDetector:
 
         return patterns
 
-    def _detect_manual_domain_models(self, file_path: str, content: str) -> list[AntiPatternMatch]:
+    def _detect_manual_domain_models(
+        self, file_path: str, content: str
+    ) -> list[AntiPatternMatch]:
         """Detecta modelos de domínio manuais que deveriam usar DomainBaseModel."""
         patterns = []
         lines = content.split("\n")
 
         # Padrões que indicam domain models manuais
         anti_pattern_indicators = [
-            (r"from\s+pydantic\s+import\s+BaseModel", "Direct BaseModel import instead of DomainBaseModel"),
-            (r"class\s+\w+\(BaseModel\)", "Manual BaseModel inheritance instead of DomainBaseModel"),
-            (r"from\s+dataclasses\s+import\s+dataclass", "Dataclass instead of DomainBaseModel for domain objects"),
-            (r"@dataclass", "Dataclass decorator instead of DomainBaseModel for domain objects"),
+            (
+                r"from\s+pydantic\s+import\s+BaseModel",
+                "Direct BaseModel import instead of DomainBaseModel",
+            ),
+            (
+                r"class\s+\w+\(BaseModel\)",
+                "Manual BaseModel inheritance instead of DomainBaseModel",
+            ),
+            (
+                r"from\s+dataclasses\s+import\s+dataclass",
+                "Dataclass instead of DomainBaseModel for domain objects",
+            ),
+            (
+                r"@dataclass",
+                "Dataclass decorator instead of DomainBaseModel for domain objects",
+            ),
         ]
 
         for i, line in enumerate(lines):
@@ -907,7 +1025,9 @@ class FlextDuplicateDetector:
             for pattern, description in anti_pattern_indicators:
                 if re.search(pattern, line_content):
                     # Verificar se já está usando flext-core
-                    if "from flext_core" in content and ("DomainBaseModel" in content or "DomainValueObject" in content):
+                    if "from flext_core" in content and (
+                        "DomainBaseModel" in content or "DomainValueObject" in content
+                    ):
                         continue
 
                     # Pular se estiver em arquivo de teste ou config
@@ -927,17 +1047,31 @@ class FlextDuplicateDetector:
 
         return patterns
 
-    def _detect_manual_service_patterns(self, file_path: str, content: str) -> list[AntiPatternMatch]:
+    def _detect_manual_service_patterns(
+        self, file_path: str, content: str
+    ) -> list[AntiPatternMatch]:
         """Detecta padrões de serviço manuais que deveriam seguir arquitetura FLEXT."""
         patterns = []
         lines = content.split("\n")
 
         # Padrões que indicam serviços não seguindo padrão FLEXT
         indicators = [
-            (r"def\s+\w+\s*\([^)]*\)\s*:\s*\n.*try:", "Manual try/catch instead of ServiceResult pattern"),
-            (r"raise\s+Exception\s*\(", "Generic Exception instead of domain-specific exceptions"),
-            (r"raise\s+ValueError\s*\(", "ValueError instead of ServiceResult(success=False, )"),
-            (r"raise\s+RuntimeError\s*\(", "RuntimeError instead of ServiceResult(success=False, )"),
+            (
+                r"def\s+\w+\s*\([^)]*\)\s*:\s*\n.*try:",
+                "Manual try/catch instead of ServiceResult pattern",
+            ),
+            (
+                r"raise\s+Exception\s*\(",
+                "Generic Exception instead of domain-specific exceptions",
+            ),
+            (
+                r"raise\s+ValueError\s*\(",
+                "ValueError instead of ServiceResult(success=False, )",
+            ),
+            (
+                r"raise\s+RuntimeError\s*\(",
+                "RuntimeError instead of ServiceResult(success=False, )",
+            ),
         ]
 
         for i, line in enumerate(lines):
@@ -948,7 +1082,9 @@ class FlextDuplicateDetector:
             for pattern, description in indicators:
                 if re.search(pattern, line_content):
                     # Verificar contexto - se está em uma função de serviço
-                    if i > 0 and ("service" in lines[i - 1].lower() or "async def" in lines[i - 1]):
+                    if i > 0 and (
+                        "service" in lines[i - 1].lower() or "async def" in lines[i - 1]
+                    ):
                         patterns.append(
                             AntiPatternMatch(
                                 file_path=file_path,
@@ -962,20 +1098,34 @@ class FlextDuplicateDetector:
 
         return patterns
 
-    def _detect_manual_connection_handling(self, file_path: str, content: str) -> list[AntiPatternMatch]:
+    def _detect_manual_connection_handling(
+        self, file_path: str, content: str
+    ) -> list[AntiPatternMatch]:
         """Detecta manipulação manual de conexões que deveria usar serviços FLEXT."""
         patterns = []
         lines = content.split("\n")
 
         # Padrões para diferentes tipos de conexão
         connection_patterns = [
-            (r"import\s+cx_Oracle", "cx_Oracle instead of modern oracledb and FLEXT services"),
-            (r"import\s+psycopg2", "Direct psycopg2 instead of FLEXT database services"),
+            (
+                r"import\s+cx_Oracle",
+                "cx_Oracle instead of modern oracledb and FLEXT services",
+            ),
+            (
+                r"import\s+psycopg2",
+                "Direct psycopg2 instead of FLEXT database services",
+            ),
             (r"import\s+pymongo", "Direct pymongo instead of FLEXT database services"),
             (r"import\s+redis", "Direct redis instead of FLEXT caching services"),
             (r"import\s+ldap", "Direct python-ldap instead of FLEXT LDAP services"),
-            (r"\.connect\s*\(", "Manual connection management instead of FLEXT connection services"),
-            (r"\.close\s*\(\s*\)", "Manual connection closing instead of FLEXT context managers"),
+            (
+                r"\.connect\s*\(",
+                "Manual connection management instead of FLEXT connection services",
+            ),
+            (
+                r"\.close\s*\(\s*\)",
+                "Manual connection closing instead of FLEXT context managers",
+            ),
         ]
 
         for i, line in enumerate(lines):
@@ -998,17 +1148,31 @@ class FlextDuplicateDetector:
 
         return patterns
 
-    def _detect_manual_error_handling(self, file_path: str, content: str) -> list[AntiPatternMatch]:
+    def _detect_manual_error_handling(
+        self, file_path: str, content: str
+    ) -> list[AntiPatternMatch]:
         """Detecta tratamento manual de erros que deveria usar padrões FLEXT."""
         patterns = []
         lines = content.split("\n")
 
         # Padrões de error handling que não seguem FLEXT
         error_patterns = [
-            (r"except\s+Exception\s+as\s+e:\s*\n.*print\s*\(", "Print for error instead of structured logging"),
-            (r"except.*:\s*\n.*pass", "Silent exception swallowing instead of proper error handling"),
-            (r"try:\s*\n.*\n.*except.*:\s*\n.*return\s+None", "Return None on error instead of ServiceResult(success=False, )"),
-            (r"try:\s*\n.*\n.*except.*:\s*\n.*return\s+False", "Return False on error instead of ServiceResult(success=False, )"),
+            (
+                r"except\s+Exception\s+as\s+e:\s*\n.*print\s*\(",
+                "Print for error instead of structured logging",
+            ),
+            (
+                r"except.*:\s*\n.*pass",
+                "Silent exception swallowing instead of proper error handling",
+            ),
+            (
+                r"try:\s*\n.*\n.*except.*:\s*\n.*return\s+None",
+                "Return None on error instead of ServiceResult(success=False, )",
+            ),
+            (
+                r"try:\s*\n.*\n.*except.*:\s*\n.*return\s+False",
+                "Return False on error instead of ServiceResult(success=False, )",
+            ),
         ]
 
         for i, line in enumerate(lines):
@@ -1058,10 +1222,16 @@ class FlextDuplicateDetector:
                 batch_files.add(file1)
                 batch_files.add(file2)
 
-            batch_content = {f: files_content[f] for f in batch_files if f in files_content}
-            batch_signatures = {f: signatures[f] for f in batch_files if f in signatures}
+            batch_content = {
+                f: files_content[f] for f in batch_files if f in files_content
+            }
+            batch_signatures = {
+                f: signatures[f] for f in batch_files if f in signatures
+            }
 
-            batch_duplicates = self._find_similar_blocks(batch_signatures, batch_content)
+            batch_duplicates = self._find_similar_blocks(
+                batch_signatures, batch_content
+            )
             duplicates.extend(batch_duplicates)
 
         return duplicates
@@ -1085,19 +1255,32 @@ class FlextDuplicateDetector:
                     if Path(file).is_file() and not self._should_skip_file(file):
                         # Incluir arquivos de documentação, configuração e scripts
                         if (
-                            file.endswith((".md", ".rst", ".txt", ".sh", ".bash", ".zsh", ".fish"))
-                            or file in {"Makefile", "Dockerfile", "LICENSE", "CHANGELOG", "CONTRIBUTING"}
+                            file.endswith(
+                                (".md", ".rst", ".txt", ".sh", ".bash", ".zsh", ".fish")
+                            )
+                            or file
+                            in {
+                                "Makefile",
+                                "Dockerfile",
+                                "LICENSE",
+                                "CHANGELOG",
+                                "CONTRIBUTING",
+                            }
                             or self._is_text_file(file)
                         ):
                             try:
                                 file_size = Path(file).stat().st_size
 
                                 if file_size > max_file_size:
-                                    print(f"⚠️ Pulando arquivo muito grande: {file} ({file_size // 1024}KB)")
+                                    print(
+                                        f"⚠️ Pulando arquivo muito grande: {file} ({file_size // 1024}KB)"
+                                    )
                                     continue
 
                                 if total_size + file_size > max_total_size:
-                                    print("⚠️ Limite de memória atingido, processando em lotes...")
+                                    print(
+                                        "⚠️ Limite de memória atingido, processando em lotes..."
+                                    )
                                     break
 
                                 with open(file, encoding="utf-8", errors="ignore") as f:
@@ -1113,7 +1296,13 @@ class FlextDuplicateDetector:
 
             for root, dirs, files in os.walk(module):
                 # Filtrar diretórios
-                dirs[:] = [d for d in dirs if not any(pattern in d.lower() for pattern in self.exclude_patterns)]
+                dirs[:] = [
+                    d
+                    for d in dirs
+                    if not any(
+                        pattern in d.lower() for pattern in self.exclude_patterns
+                    )
+                ]
 
                 for file in files:
                     file_path = os.path.join(root, file)
@@ -1127,19 +1316,25 @@ class FlextDuplicateDetector:
 
                         # Skip files that are too large
                         if file_size > max_file_size:
-                            print(f"⚠️ Pulando arquivo muito grande: {file_path} ({file_size // 1024}KB)")
+                            print(
+                                f"⚠️ Pulando arquivo muito grande: {file_path} ({file_size // 1024}KB)"
+                            )
                             continue
 
                         # Check total memory usage
                         if total_size + file_size > max_total_size:
-                            print("⚠️ Limite de memória atingido, processando em lotes...")
+                            print(
+                                "⚠️ Limite de memória atingido, processando em lotes..."
+                            )
                             break
 
                         # Read file efficiently
                         if file_size > 256 * 1024:  # 256KB
                             content = self._read_file_chunked(file_path)
                         else:
-                            with open(file_path, encoding="utf-8", errors="ignore") as f:
+                            with open(
+                                file_path, encoding="utf-8", errors="ignore"
+                            ) as f:
                                 content = f.read()
 
                         # Filtrar arquivos muito pequenos ou vazios
@@ -1152,7 +1347,9 @@ class FlextDuplicateDetector:
                     except Exception as e:
                         errors.append(f"Erro ao ler {file_path}: {e}")
 
-        print(f"📁 Coletados {len(files_content)} arquivos ({total_size // 1024 // 1024}MB)")
+        print(
+            f"📁 Coletados {len(files_content)} arquivos ({total_size // 1024 // 1024}MB)"
+        )
         return files_content
 
     def _read_file_chunked(self, file_path: str) -> str:
@@ -1204,7 +1401,9 @@ class FlextDuplicateDetector:
         # 2. Blocos similares (sempre usar versão otimizada)
         if len(files_content) > 20:
             print("⚡ Processando similaridade em lotes ultra-otimizados...")
-            similar_blocks = self._find_similar_blocks_batched(signatures, files_content)
+            similar_blocks = self._find_similar_blocks_batched(
+                signatures, files_content
+            )
         else:
             similar_blocks = self._find_similar_blocks(signatures, files_content)
         duplicates.extend(similar_blocks)
@@ -1278,7 +1477,9 @@ class FlextDuplicateDetector:
         print(f"   ℹ️  Média similaridade (80-90%): {len(medium_similarity)}")
 
         # Agrupar anti-patterns por severidade e tipo
-        critical_patterns = [p for p in result.anti_patterns if p.severity == "critical"]
+        critical_patterns = [
+            p for p in result.anti_patterns if p.severity == "critical"
+        ]
         high_patterns = [p for p in result.anti_patterns if p.severity == "high"]
         medium_patterns = [p for p in result.anti_patterns if p.severity == "medium"]
         low_patterns = [p for p in result.anti_patterns if p.severity == "low"]
@@ -1308,7 +1509,9 @@ class FlextDuplicateDetector:
         # Mostrar anti-patterns críticos
         if critical_patterns or high_patterns:
             print("\n🚨 ANTI-PATTERNS CRÍTICOS/ALTOS:")
-            for pattern in (critical_patterns + high_patterns)[:10]:  # Mostrar apenas os primeiros 10
+            for pattern in (critical_patterns + high_patterns)[
+                :10
+            ]:  # Mostrar apenas os primeiros 10
                 print(f"   📄 {pattern.file_path} (linha {pattern.lines[0]})")
                 print(f"   🏷️  Tipo: {pattern.pattern_type}")
                 print(f"   💡 Sugestão: {pattern.suggested_replacement}")
@@ -1442,7 +1645,11 @@ def main() -> None:
     )
 
     # Executar análise
-    result = detector.analyze_modules(args.modules) if args.modules else detector.analyze_workspace()
+    result = (
+        detector.analyze_modules(args.modules)
+        if args.modules
+        else detector.analyze_workspace()
+    )
 
     # Gerar relatório
     detector.generate_report(result, args.output)

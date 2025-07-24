@@ -1,0 +1,30 @@
+# FLEXT Service Configuration
+server:
+  host: "0.0.0.0"
+  port: 8080
+  mode: "server"
+  environment: "development"
+
+database:
+  url: "postgresql://flext:flext_secure_password_change_in_production@postgres:5432/flext?sslmode=disable"
+  max_open_conns: 20
+  max_idle_conns: 10
+
+redis:
+  url: "redis://redis:6379/0"
+  pool_size: 10
+
+logging:
+  level: "info"
+  format: "json"
+
+plugins:
+  directory: "/var/lib/flext/plugins"
+  
+pipelines:
+  workspace: "/var/lib/flext/pipelines"
+  max_concurrent: 10
+
+security:
+  enable_auth: false
+  jwt_secret: "dev-secret-change-in-production"

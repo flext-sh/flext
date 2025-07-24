@@ -98,7 +98,8 @@ class LintingReport(FlextScript):
                     "python_files": len(list(project_path.rglob("*.py"))),
                     "ruff_issues": ruff_result["total_issues"],
                     "mypy_errors": mypy_result["total_errors"],
-                    "has_issues": ruff_result["total_issues"] > 0 or mypy_result["total_errors"] > 0,
+                    "has_issues": ruff_result["total_issues"] > 0
+                    or mypy_result["total_errors"] > 0,
                 }
 
                 project_results[project_name] = {
@@ -211,7 +212,9 @@ class LintingReport(FlextScript):
                         parts = line.split(":")
                         if len(parts) >= 4:
                             filename = parts[0]
-                            error_type = parts[3].strip() if len(parts) > 3 else "Unknown"
+                            error_type = (
+                                parts[3].strip() if len(parts) > 3 else "Unknown"
+                            )
 
                             errors_by_file[filename] += 1
                             errors_by_type[error_type] += 1
@@ -293,7 +296,9 @@ class LintingReport(FlextScript):
 
         # Score de qualidade
         if total_stats["total_files"] > 0:
-            issues_per_file = (total_stats["ruff_issues"] + total_stats["mypy_errors"]) / total_stats["total_files"]
+            issues_per_file = (
+                total_stats["ruff_issues"] + total_stats["mypy_errors"]
+            ) / total_stats["total_files"]
             if issues_per_file == 0:
                 score_color = Colors.GREEN
                 status = "PERFEITO"

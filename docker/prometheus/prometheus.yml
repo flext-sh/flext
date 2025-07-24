@@ -1,46 +1,45 @@
+# FLEXT Prometheus Configuration
+# Monitoring and metrics collection for FLEXT platform
+
 global:
   scrape_interval: 15s
   evaluation_interval: 15s
-
-rule_files:
-  # - "first_rules.yml"
-  # - "second_rules.yml"
+  external_labels:
+    platform: 'flext'
+    environment: 'production'
 
 scrape_configs:
-  - job_name: "prometheus"
+  # FLEXT Service metrics
+  - job_name: 'flext-service'
     static_configs:
-      - targets: ["localhost:9090"]
-
-  - job_name: "flext-cluster"
-    metrics_path: "/metrics"
-    static_configs:
-      - targets:
-          - "flext-node-1:9090"
-          - "flext-node-2:9091"
-          - "flext-node-3:9092"
+      - targets: ['flext-service:8080']
+    metrics_path: '/metrics'
     scrape_interval: 10s
+    scrape_timeout: 5s
+    honor_labels: true
 
-  - job_name: "flext-api"
-    metrics_path: "/metrics"
+  # FLEXT Web Interface metrics
+  - job_name: 'flext-web'
     static_configs:
-      - targets:
-          - "flext-node-1:8080"
-          - "flext-node-2:8080"
-          - "flext-node-3:8080"
-    scrape_interval: 15s
+      - targets: ['flext-web:5000']
+    metrics_path: '/health'
+    scrape_interval: 30s
+    scrape_timeout: 10s
 
-  - job_name: "haproxy"
+  # PostgreSQL database
+  - job_name: 'postgres'
     static_configs:
-      - targets: ["load-balancer:8404"]
-    metrics_path: "/stats"
+      - targets: ['postgres:5432']
     scrape_interval: 30s
 
-  - job_name: "postgres"
+  # Redis cache
+  - job_name: 'redis'
     static_configs:
-      - targets: ["postgres:5432"]
+      - targets: ['redis:6379']
     scrape_interval: 30s
 
-  - job_name: "redis"
+  # Prometheus self-monitoring
+  - job_name: 'prometheus'
     static_configs:
-      - targets: ["redis:6379"]
-    scrape_interval: 30s
+      - targets: ['localhost:9090']
+    scrape_interval: 60s

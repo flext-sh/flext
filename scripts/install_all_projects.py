@@ -12,7 +12,6 @@ import os
 import subprocess
 import sys
 from pathlib import Path
-from typing import List, Tuple
 
 
 def get_project_directories() -> list[str]:
@@ -22,7 +21,10 @@ def get_project_directories() -> list[str]:
 
     # Projetos principais (excluindo backups e arquivos temporários)
     for pyproject in workspace_root.rglob("pyproject.toml"):
-        if any(exclude in str(pyproject) for exclude in [".venv", ".flext_backups", "test_failures"]):
+        if any(
+            exclude in str(pyproject)
+            for exclude in [".venv", ".flext_backups", "test_failures"]
+        ):
             continue
 
         project_dir = pyproject.parent
@@ -99,7 +101,9 @@ def main():
             if not success:
                 print(f"  - {os.path.basename(project)}: {message}")
 
-    print(f"\n🎉 Instalação concluída! {successful}/{len(results)} projetos instalados com sucesso.")
+    print(
+        f"\n🎉 Instalação concluída! {successful}/{len(results)} projetos instalados com sucesso."
+    )
 
     return 0 if failed == 0 else 1
 

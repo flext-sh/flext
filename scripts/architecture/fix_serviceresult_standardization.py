@@ -12,11 +12,6 @@ This script fixes the ServiceResult duplicate/inconsistent usage across all proj
 ZERO TOLERANCE: Every ServiceResult usage must be correct and consistent.
 """
 
-import os
-import re
-import sys
-from pathlib import Path
-from typing import Any
 
 
 # ServiceResult moved to flext_core.domain.shared_types
