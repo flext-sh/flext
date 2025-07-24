@@ -99,7 +99,9 @@ def main() -> int:
     if analysis["suggested_resolutions"] and "--suggest" in sys.argv:
         print_colored("\n💡 Resoluções Sugeridas:", Colors.GREEN)
 
-        for package, suggestion in sorted(analysis["suggested_resolutions"].items())[:10]:
+        for package, suggestion in sorted(analysis["suggested_resolutions"].items())[
+            :10
+        ]:
             print(f"  • {package}: {suggestion}")
 
     # Gera relatório completo se solicitado

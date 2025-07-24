@@ -353,7 +353,9 @@ class ComprehensiveWorkspaceManager(FlextScript):
                 print_colored("🔗 Access Grafana at http://localhost:3000", Colors.BLUE)
                 print_colored("📈 Prometheus at http://localhost:9090", Colors.BLUE)
             else:
-                print_colored("❌ Failed to setup monitoring infrastructure", Colors.RED)
+                print_colored(
+                    "❌ Failed to setup monitoring infrastructure", Colors.RED
+                )
 
             return success
         except Exception as e:

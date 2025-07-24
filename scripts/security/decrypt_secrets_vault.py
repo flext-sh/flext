@@ -30,7 +30,7 @@ class SecretsVaultDecryptor(BaseSecurityScript):
             version="2.0.0",
         )
 
-# validate_preconditions is inherited from BaseSecurityScript
+    # validate_preconditions is inherited from BaseSecurityScript
 
     def execute_main_logic(self, **kwargs: Any) -> bool:
         """Execute vault decryption."""

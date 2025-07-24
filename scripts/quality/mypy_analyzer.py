@@ -179,7 +179,11 @@ def get_python_projects() -> list[Path]:
         projects.extend(
             project_dir
             for project_dir in workspace_root.glob(pattern)
-            if (project_dir.is_dir() and (project_dir / "pyproject.toml").exists() and (project_dir / "src").exists())
+            if (
+                project_dir.is_dir()
+                and (project_dir / "pyproject.toml").exists()
+                and (project_dir / "src").exists()
+            )
         )
 
     return sorted(projects)

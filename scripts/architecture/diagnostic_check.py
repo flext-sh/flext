@@ -78,10 +78,19 @@ class FlextDiagnostic:
             "gruponos-meltano-native": 6,
         }
 
-    def run_command(self, cmd: list[str], cwd: Path | None = None) -> tuple[int, str, str]:
+    def run_command(
+        self, cmd: list[str], cwd: Path | None = None
+    ) -> tuple[int, str, str]:
         """Execute command and return (return_code, stdout, stderr)."""
         try:
-            result = subprocess.run(cmd, check=False, cwd=cwd or self.workspace_root, capture_output=True, text=True, timeout=300)
+            result = subprocess.run(
+                cmd,
+                check=False,
+                cwd=cwd or self.workspace_root,
+                capture_output=True,
+                text=True,
+                timeout=300,
+            )
             return result.returncode, result.stdout, result.stderr
         except subprocess.TimeoutExpired:
             return -1, "", "Timeout expired"
@@ -165,10 +174,14 @@ class FlextDiagnostic:
             # Search problematic imports
             keywords = ["meltano", "oracle", "ldap", "singer", "algar", "gruponos"]
             for keyword in keywords:
-                rc, stdout, stderr = self.run_command(["grep", "-r", keyword, "--include=*.py", "."], core_path)
+                rc, stdout, stderr = self.run_command(
+                    ["grep", "-r", keyword, "--include=*.py", "."], core_path
+                )
 
                 if rc == 0 and stdout.strip():
-                    violations["flext-core"].append(f"Import {keyword}: {stdout.strip()}")
+                    violations["flext-core"].append(
+                        f"Import {keyword}: {stdout.strip()}"
+                    )
 
         return violations
 
@@ -210,12 +223,22 @@ class FlextDiagnostic:
         """Generate summary."""
         total_projects = len(self.results)
         projects_with_makefile = sum(1 for s in self.results.values() if s.has_makefile)
-        projects_with_pyproject = sum(1 for s in self.results.values() if s.has_pyproject)
+        projects_with_pyproject = sum(
+            1 for s in self.results.values() if s.has_pyproject
+        )
 
-        lint_passed = sum(1 for s in self.results.values() if s.lint_status == "✅ PASS")
-        mypy_passed = sum(1 for s in self.results.values() if s.mypy_status == "✅ PASS")
-        tests_passed = sum(1 for s in self.results.values() if s.test_status == "✅ PASS")
-        poetry_passed = sum(1 for s in self.results.values() if s.poetry_install == "✅ PASS")
+        lint_passed = sum(
+            1 for s in self.results.values() if s.lint_status == "✅ PASS"
+        )
+        mypy_passed = sum(
+            1 for s in self.results.values() if s.mypy_status == "✅ PASS"
+        )
+        tests_passed = sum(
+            1 for s in self.results.values() if s.test_status == "✅ PASS"
+        )
+        poetry_passed = sum(
+            1 for s in self.results.values() if s.poetry_install == "✅ PASS"
+        )
 
         projects_with_errors = sum(1 for s in self.results.values() if s.errors)
 
@@ -253,7 +276,11 @@ class FlextDiagnostic:
         print("-" * 60)
 
         for level in range(1, 7):
-            level_projects = [(name, data) for name, data in report["projects"].items() if data["level"] == level]
+            level_projects = [
+                (name, data)
+                for name, data in report["projects"].items()
+                if data["level"] == level
+            ]
 
             if level_projects:
                 level_name = {
@@ -267,7 +294,12 @@ class FlextDiagnostic:
 
                 print(f"\n{level_name}:")
                 for name, data in level_projects:
-                    status_icons = [data["lint_status"], data["mypy_status"], data["test_status"], data["poetry_install"]]
+                    status_icons = [
+                        data["lint_status"],
+                        data["mypy_status"],
+                        data["test_status"],
+                        data["poetry_install"],
+                    ]
                     status_str = " | ".join(status_icons)
                     print(f"  {name:<25} {status_str}")
 
