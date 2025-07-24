@@ -100,7 +100,7 @@
 	url = https://github.com/flext-sh/flext-auth.git
 [submodule "flext-cli"]
 	path = flext-cli
-	url = git@github.com:flext-sh/flext-cli.git
+	url = https://github.com/flext-sh/flext-cli.git
 [submodule "flext-core"]
 	path = flext-core
 	url = https://github.com/flext-sh/flext-core.git
