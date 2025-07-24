@@ -130,7 +130,10 @@ class FalsePositiveAuditor:
             return "flext_internal"
 
         # 3. Padrões FLEXT (flext_*, flext-*)
-        if import_name.startswith(("flext_", "flext-")) or "flext" in import_name.lower():
+        if (
+            import_name.startswith(("flext_", "flext-"))
+            or "flext" in import_name.lower()
+        ):
             return "flext_internal"
 
         # 4. Aliases conhecidos
@@ -321,7 +324,10 @@ class FalsePositiveAuditor:
 
         # Resumo crítico
         false_positives = (
-            len(analysis["stdlib"]) + len(analysis["flext_internal"]) + len(analysis["relative_imports"]) + len(analysis["suspicious"])
+            len(analysis["stdlib"])
+            + len(analysis["flext_internal"])
+            + len(analysis["relative_imports"])
+            + len(analysis["suspicious"])
         )
 
         legitimate_missing = len(analysis["legitimate"])
@@ -357,7 +363,9 @@ def audit_workspace() -> tuple[
     projects: list[Path] = [
         project_dir
         for project_dir in workspace_path.iterdir()
-        if project_dir.is_dir() and project_dir.name.startswith("flext-") and (project_dir / "pyproject.toml").exists()
+        if project_dir.is_dir()
+        and project_dir.name.startswith("flext-")
+        and (project_dir / "pyproject.toml").exists()
     ]
 
     if not projects:

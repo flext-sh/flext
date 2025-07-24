@@ -108,6 +108,7 @@ class PyprojectStandardizer(FlextScript):
     ) -> list[Path]:
         """Discover projects to standardize."""
         from scripts.common import discover_projects
+
         return discover_projects(workspace_root, projects_filter)
 
     def _print_summary(

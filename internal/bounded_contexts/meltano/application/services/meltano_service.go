@@ -869,3 +869,50 @@ func (s *MeltanoService) GetStateStats(ctx context.Context) (map[string]interfac
 	stats["enabled"] = true
 	return stats, nil
 }
+
+// ExecutePipelineRequest represents the pipeline execution request exactly as specified in FLEXT_SERVICE_ARCHITECTURE.md
+type ExecutePipelineRequest struct {
+	ExtractorName string
+	LoaderName    string
+}
+
+// ExecutionResult represents the pipeline execution result exactly as specified in FLEXT_SERVICE_ARCHITECTURE.md  
+type ExecutionResult struct {
+	Status   string
+	Output   string
+	Duration time.Duration
+}
+
+// ExecutePipeline executes a Meltano pipeline exactly as specified in FLEXT_SERVICE_ARCHITECTURE.md
+func (s *MeltanoService) ExecutePipeline(ctx context.Context, request ExecutePipelineRequest) (*ExecutionResult, error) {
+	startTime := time.Now()
+	
+	// 1. Prepare Meltano command - Executes Python library as subprocess
+	cmd := exec.CommandContext(ctx, s.config.PythonPath, "-m", "meltano", 
+		"run", request.ExtractorName, request.LoaderName)
+	cmd.Dir = s.config.ProjectRoot
+	
+	// 2. Set environment variables for Python libraries
+	cmd.Env = append(os.Environ(),
+		fmt.Sprintf("MELTANO_PROJECT_ROOT=%s", s.config.ProjectRoot),
+		"PYTHONPATH=/home/marlonsc/flext/flext-core/src:/home/marlonsc/flext/flext-meltano/src",
+	)
+	
+	// 3. Execute Python subprocess
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		s.logger.Error("Meltano execution failed", 
+			logging.F("error", err.Error()),
+			logging.F("output", string(output)))
+		return nil, fmt.Errorf("meltano execution failed: %w", err)
+	}
+	
+	// 4. Parse Python library output and return to Go service
+	result := &ExecutionResult{
+		Status:   "completed",
+		Output:   string(output),
+		Duration: time.Since(startTime),
+	}
+	
+	return result, nil
+}

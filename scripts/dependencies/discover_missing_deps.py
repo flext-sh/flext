@@ -33,7 +33,11 @@ class MissingDependenciesDiscoverer(FlextScript):
 
         # Verificar se estamos no workspace FLEXT
         flext_projects = [
-            p for p in workspace_root.iterdir() if p.is_dir() and p.name.startswith("flext-") and (p / "pyproject.toml").exists()
+            p
+            for p in workspace_root.iterdir()
+            if p.is_dir()
+            and p.name.startswith("flext-")
+            and (p / "pyproject.toml").exists()
         ]
 
         if not flext_projects:
