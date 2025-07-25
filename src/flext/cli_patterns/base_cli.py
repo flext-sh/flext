@@ -8,13 +8,13 @@ from pathlib import Path
 from typing import Any
 
 import click
-from flext_core.domain.pydantic_base import DomainBaseModel
-from pydantic import Field
+from flext_core import get_logger
+from pydantic import BaseModel, Field
 from rich.console import Console
 from rich.logging import RichHandler
 
 
-class CLIConfig(DomainBaseModel):
+class CLIConfig(BaseModel):
     """Unified configuration for CLI applications using flext-core patterns."""
 
     # Output settings

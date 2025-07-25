@@ -100,11 +100,7 @@ class PoetryValidator:
 
         # Campos obrigatórios
         required_fields = ["name", "version", "description"]
-        issues.extend(
-            f"Campo obrigatório '{field}' não encontrado em [tool.poetry]"
-            for field in required_fields
-            if field not in poetry
-        )
+        issues.extend(f"Campo obrigatório '{field}' não encontrado em [tool.poetry]" for field in required_fields if field not in poetry)
 
         # Verifica dependências
         if "dependencies" not in poetry:
@@ -123,11 +119,7 @@ class PoetryValidator:
 
         # Campos recomendados
         recommended_fields = ["authors", "readme", "homepage", "repository", "keywords"]
-        issues = [
-            f"Campo recomendado '{field}' não encontrado"
-            for field in recommended_fields
-            if field not in poetry
-        ]
+        issues = [f"Campo recomendado '{field}' não encontrado" for field in recommended_fields if field not in poetry]
 
         # Valida formato de autores
         if "authors" in poetry:
@@ -158,12 +150,7 @@ class PoetryValidator:
             if name == "python":
                 continue
 
-            if (
-                isinstance(spec, dict)
-                and "version" not in spec
-                and "git" not in spec
-                and "path" not in spec
-            ):
+            if isinstance(spec, dict) and "version" not in spec and "git" not in spec and "path" not in spec:
                 issues.append(f"Dependência '{name}' sem especificação de versão")
 
         # Verifica grupos de dependências
@@ -171,15 +158,9 @@ class PoetryValidator:
         for group_name, group_data in groups.items():
             group_deps = group_data.get("dependencies", {})
             for name, spec in group_deps.items():
-                if (
-                    isinstance(spec, dict)
-                    and "version" not in spec
-                    and "git" not in spec
-                    and "path" not in spec
-                ):
+                if isinstance(spec, dict) and "version" not in spec and "git" not in spec and "path" not in spec:
                     issues.append(
-                        f"Dependência '{name}' no grupo '{group_name}' sem "
-                        f"especificação de versão",
+                        f"Dependência '{name}' no grupo '{group_name}' sem especificação de versão",
                     )
 
         return len(issues) == 0, issues
@@ -222,8 +203,7 @@ class PoetryValidator:
             "version": poetry.get("version", "unknown"),
             "description": poetry.get("description", ""),
             "python_version": poetry.get("dependencies", {}).get("python", "unknown"),
-            "dependency_count": len(poetry.get("dependencies", {}))
-            - 1,  # -1 para excluir python
+            "dependency_count": len(poetry.get("dependencies", {})) - 1,  # -1 para excluir python
             "group_count": len(poetry.get("group", {})),
             "has_scripts": bool(poetry.get("scripts", {})),
             "has_plugins": bool(poetry.get("plugins", {})),
@@ -259,10 +239,7 @@ class PoetryValidator:
 
         for pyproject in workspace_path.rglob("pyproject.toml"):
             # Ignora diretórios especiais
-            if any(
-                p in pyproject.parts
-                for p in ["archive", "backup", "node_modules", ".git"]
-            ):
+            if any(p in pyproject.parts for p in ["archive", "backup", "node_modules", ".git"]):
                 continue
 
             project_path = pyproject.parent

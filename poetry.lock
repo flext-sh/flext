@@ -213,7 +213,7 @@ tz = ["tzdata"]
 
 [[package]]
 name = "client-a-oud-mig"
-version = "0.7.0"
+version = "0.8.0"
 description = "client-a OUD Migration - Enterprise Oracle Unified Directory Migration Tool"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -224,15 +224,16 @@ develop = true
 [package.dependencies]
 aiofiles = ">=24.1.0"
 click = ">=8.1.7"
+docker = ">=7.1.0"
 dotenv = ">=0.9.9"
-email-validator = ">=2.2.0,<3.0.0"
 flext-core = {path = "/home/marlonsc/flext/flext-core"}
 flext-ldap = {path = "/home/marlonsc/flext/flext-ldap"}
 flext-ldif = {path = "/home/marlonsc/flext/flext-ldif"}
-flext-observability = {path = "/home/marlonsc/flext/flext-observability"}
 ldap3 = ">=2.9.1"
 pydantic = ">=2.11.7"
 pydantic-settings = ">=2.10.1"
+pytest = ">=8.4.0"
+pytest-asyncio = ">=1.0.0"
 
 [package.source]
 type = "directory"
@@ -1357,6 +1358,39 @@ files = [
 ]
 
 [[package]]
+name = "dependency-injector"
+version = "4.48.1"
+description = "Dependency injection framework for Python"
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "dependency_injector-4.48.1-cp38-abi3-macosx_11_0_arm64.whl", hash = "sha256:a6f73011d532f3ea59689aad85c7999be6da3f30393041a745d5861cdcdc02e4"},
+    {file = "dependency_injector-4.48.1-cp38-abi3-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl", hash = "sha256:ac09f508fa9aee06a036ebf3e3d3b2a210276aba1993e9993cec7f1fdc5fd89e"},
+    {file = "dependency_injector-4.48.1-cp38-abi3-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:1b05a4a980096b53ad90a87965c5450183bfbb8bbe36615d7cea97537086d622"},
+    {file = "dependency_injector-4.48.1-cp38-abi3-musllinux_1_2_aarch64.whl", hash = "sha256:0506e98440ee6c48fe660016d602961b1b3ecc0a8227838a2221048ed11e2fca"},
+    {file = "dependency_injector-4.48.1-cp38-abi3-musllinux_1_2_x86_64.whl", hash = "sha256:1994622eae8917138626303b176cba4c74e625ba1e588cb09d673ca175d299a2"},
+    {file = "dependency_injector-4.48.1-cp38-abi3-win32.whl", hash = "sha256:58d4d81f92e3267c331f160cbbb517fd7644b95ee57a0d6e4b01f53a7e437a4a"},
+    {file = "dependency_injector-4.48.1-cp38-abi3-win_amd64.whl", hash = "sha256:572b22b7db9b103718ea52634b5ca1ef763278338310254334f4633a57c9f0e7"},
+    {file = "dependency_injector-4.48.1-pp310-pypy310_pp73-macosx_11_0_arm64.whl", hash = "sha256:9a7862987b3dcab5ac4fd82f6bbda55d3b15af1ca7492757c428deccc3720140"},
+    {file = "dependency_injector-4.48.1-pp310-pypy310_pp73-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl", hash = "sha256:bb33c6d6b6100564dfaee20f3f76a2756158cceff6499e9d0bca8290f8e5f124"},
+    {file = "dependency_injector-4.48.1-pp310-pypy310_pp73-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:a659380386bd236579b7f82f51e97f6074d0c878a10db5b50086000de6ce3c28"},
+    {file = "dependency_injector-4.48.1-pp310-pypy310_pp73-win_amd64.whl", hash = "sha256:76774369c7268d5dd211af75abfcb4433d972760be90db342c2de325ee4c24a0"},
+    {file = "dependency_injector-4.48.1-pp311-pypy311_pp73-macosx_11_0_arm64.whl", hash = "sha256:51f8d9d78a1a147908ed7929df628d859251a814e6a001973bd96ae2b5648760"},
+    {file = "dependency_injector-4.48.1-pp311-pypy311_pp73-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl", hash = "sha256:2c23ab17cd3e160de1fc5d78719bf86fbfc81c21c8ea02b43832a6a1e2c8a8d8"},
+    {file = "dependency_injector-4.48.1-pp311-pypy311_pp73-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:79be912a0dedb1341b1400018defca6a9966fcb8d4a84b325623fa57d3c08171"},
+    {file = "dependency_injector-4.48.1-pp311-pypy311_pp73-win_amd64.whl", hash = "sha256:65d9cf9f4eb31f837ed387210158e0003a4509478de1cbdc56c8439232f22ecd"},
+    {file = "dependency_injector-4.48.1.tar.gz", hash = "sha256:1805185e4522effad6d5e348c255d27e80d3f8adc89701daf13d743367392978"},
+]
+
+[package.extras]
+aiohttp = ["aiohttp"]
+flask = ["flask"]
+pydantic = ["pydantic"]
+pydantic2 = ["pydantic-settings"]
+yaml = ["pyyaml"]
+
+[[package]]
 name = "deprecated"
 version = "1.2.18"
 description = "Python @deprecated decorator to deprecate old python classes, functions or methods."
@@ -1514,6 +1548,29 @@ doq = ["aioquic (>=1.0.0)"]
 idna = ["idna (>=3.7)"]
 trio = ["trio (>=0.23)"]
 wmi = ["wmi (>=1.5.1)"]
+
+[[package]]
+name = "docker"
+version = "7.1.0"
+description = "A Python library for the Docker Engine API."
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "docker-7.1.0-py3-none-any.whl", hash = "sha256:c96b93b7f0a746f9e77d325bcfb87422a3d8bd4f03136ae8a85b37f1898d5fc0"},
+    {file = "docker-7.1.0.tar.gz", hash = "sha256:ad8c70e6e3f8926cb8a92619b832b4ea5299e2831c14284663184e200546fa6c"},
+]
+
+[package.dependencies]
+pywin32 = {version = ">=304", markers = "sys_platform == \"win32\""}
+requests = ">=2.26.0"
+urllib3 = ">=1.26.0"
+
+[package.extras]
+dev = ["coverage (==7.2.7)", "pytest (==7.4.2)", "pytest-cov (==4.1.0)", "pytest-timeout (==2.1.0)", "ruff (==0.1.8)"]
+docs = ["myst-parser (==0.18.0)", "sphinx (==5.1.1)"]
+ssh = ["paramiko (>=2.4.3)"]
+websockets = ["websocket-client (>=1.3.0)"]
 
 [[package]]
 name = "dotenv"
@@ -1712,7 +1769,7 @@ six = ">=1.12,<2.0"
 
 [[package]]
 name = "flexcore"
-version = "0.7.0"
+version = "0.8.0"
 description = "FlexCore - High-Performance Go-Python Hybrid Enterprise Framework"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -1729,7 +1786,7 @@ url = "flexcore"
 
 [[package]]
 name = "flext-api"
-version = "0.7.0"
+version = "0.8.0"
 description = "FLEXT API - High-Performance REST API with FastAPI"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -1746,12 +1803,14 @@ flext-observability = {path = "/home/marlonsc/flext/flext-observability"}
 flext-plugin = {path = "/home/marlonsc/flext/flext-plugin"}
 grpcio = ">=1.50.0"
 grpcio-health-checking = ">=0"
+packaging = ">=23.0"
 psutil = ">=6.1.0"
 pydantic = ">=2.10.0"
 pydantic-settings = ">=2.10.1"
-pyjwt = ">=2.9.0"
+pyjwt = ">=2.10.1"
 slowapi = ">=0.1.9"
 sqlalchemy = {version = ">=2.0.0", extras = ["asyncio"]}
+structlog = ">=25.4.0"
 uvicorn = {version = ">=0.34.0", extras = ["standard"]}
 
 [package.source]
@@ -1760,7 +1819,7 @@ url = "flext-api"
 
 [[package]]
 name = "flext-auth"
-version = "0.7.0"
+version = "0.8.0"
 description = "FLEXT Auth - Enterprise Authentication & Authorization Service"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -1791,7 +1850,7 @@ url = "flext-auth"
 
 [[package]]
 name = "flext-cli"
-version = "0.7.0"
+version = "0.8.0"
 description = "FLEXT CLI - Developer Command Line Interface"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -1800,9 +1859,12 @@ files = []
 develop = true
 
 [package.dependencies]
+client-a-oud-mig = {path = "/home/marlonsc/flext/client-a-oud-mig"}
 click = ">=8.2.1"
 flext-core = {path = "/home/marlonsc/flext/flext-core"}
+flext-meltano = {path = "/home/marlonsc/flext/flext-meltano"}
 flext-observability = {path = "/home/marlonsc/flext/flext-observability"}
+client-b-meltano-native = {path = "/home/marlonsc/flext/client-b-meltano-native"}
 httpx = ">=0.28.1"
 pydantic = ">=2.11.7"
 pydantic-settings = ">=2.10.1"
@@ -1810,13 +1872,16 @@ pyyaml = ">=6.0.2"
 rich = ">=14.0.0"
 structlog = ">=25.4.0"
 
+[package.extras]
+test = ["pytest (>=8.4.0)", "pytest-mock (>=3.14.0)"]
+
 [package.source]
 type = "directory"
 url = "flext-cli"
 
 [[package]]
 name = "flext-core"
-version = "0.7.0"
+version = "0.8.0"
 description = "Enterprise Foundation Framework - Modern Python 3.13 + Clean Architecture"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -1825,6 +1890,7 @@ files = []
 develop = true
 
 [package.dependencies]
+dependency-injector = ">=4.45.0"
 pydantic = ">=2.11.7"
 pydantic-settings = ">=2.10.1"
 
@@ -1834,7 +1900,7 @@ url = "flext-core"
 
 [[package]]
 name = "flext-db-oracle"
-version = "0.7.0"
+version = "0.8.0"
 description = "FLEXT DB Oracle - Advanced Oracle Database Integration"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -1855,7 +1921,7 @@ url = "flext-db-oracle"
 
 [[package]]
 name = "flext-dbt-ldap"
-version = "0.7.0"
+version = "0.8.0"
 description = "FLEXT dbt LDAP - dbt Models for LDAP Data Transformation"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -1872,7 +1938,7 @@ url = "flext-dbt-ldap"
 
 [[package]]
 name = "flext-dbt-ldif"
-version = "0.7.0"
+version = "0.8.0"
 description = "FLEXT dbt LDIF Analytics - Advanced LDAP Data Analytics and Transformations"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -1891,7 +1957,7 @@ url = "flext-dbt-ldif"
 
 [[package]]
 name = "flext-dbt-oracle"
-version = "0.7.0"
+version = "0.8.0"
 description = "FLEXT DBT Oracle - Modern Oracle Database Adapter for DBT"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -1914,7 +1980,7 @@ url = "flext-dbt-oracle"
 
 [[package]]
 name = "flext-dbt-oracle-wms"
-version = "0.7.0"
+version = "0.8.0"
 description = "FLEXT DBT Oracle WMS - Oracle WMS data transformation with DBT"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -1933,7 +1999,7 @@ url = "flext-dbt-oracle-wms"
 
 [[package]]
 name = "flext-grpc"
-version = "0.7.0"
+version = "0.8.0"
 description = "FLEXT gRPC - High-Performance gRPC Services"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -1964,7 +2030,7 @@ url = "flext-grpc"
 
 [[package]]
 name = "flext-ldap"
-version = "0.7.0"
+version = "0.8.0"
 description = "Enterprise LDAP Operations Library for FLEXT Framework"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -1986,7 +2052,7 @@ url = "flext-ldap"
 
 [[package]]
 name = "flext-ldif"
-version = "0.7.0"
+version = "0.8.0"
 description = "FLEXT LDIF - Enterprise LDIF Processing Library"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -1995,7 +2061,8 @@ files = []
 develop = true
 
 [package.dependencies]
-flext-core = {path = "../flext-core", develop = true}
+pydantic = ">=2.11.7,<3.0.0"
+pydantic-settings = ">=2.10.1,<3.0.0"
 
 [package.source]
 type = "directory"
@@ -2003,7 +2070,7 @@ url = "flext-ldif"
 
 [[package]]
 name = "flext-meltano"
-version = "0.7.0"
+version = "0.8.0"
 description = "FLEXT Meltano - Enterprise Data Integration Platform"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -2012,7 +2079,14 @@ files = []
 develop = true
 
 [package.dependencies]
+click = ">=8.2.1,<9.0.0"
 dbt-core = "1.10.5"
+flext-core = {path = "/home/marlonsc/flext/flext-core"}
+meltano = ">=3.0.0,<4.0.0"
+pydantic = ">=2.11.7,<3.0.0"
+pydantic-settings = ">=2.10.1,<3.0.0"
+pyyaml = ">=6.0.2,<7.0.0"
+requests = ">=2.31.0,<3.0.0"
 
 [package.source]
 type = "directory"
@@ -2020,7 +2094,7 @@ url = "flext-meltano"
 
 [[package]]
 name = "flext-observability"
-version = "0.7.0"
+version = "0.8.0"
 description = "FLEXT Observability - Enterprise Monitoring, Metrics & Telemetry"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -2047,7 +2121,7 @@ url = "flext-observability"
 
 [[package]]
 name = "flext-oracle-oic-ext"
-version = "0.7.0"
+version = "0.8.0"
 description = "FLEXT Oracle OIC Extension - Advanced Oracle Integration Cloud Extensions"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -2067,7 +2141,7 @@ url = "flext-oracle-oic-ext"
 
 [[package]]
 name = "flext-oracle-wms"
-version = "0.7.0"
+version = "0.8.0"
 description = "Enterprise Oracle WMS client library for FLEXT data integration platform"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -2087,7 +2161,7 @@ url = "flext-oracle-wms"
 
 [[package]]
 name = "flext-plugin"
-version = "0.7.0"
+version = "0.8.0"
 description = "FLEXT Plugin - Plugin System for FLEXT Platform"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -2111,7 +2185,7 @@ url = "flext-plugin"
 
 [[package]]
 name = "flext-quality"
-version = "0.7.0"
+version = "0.8.0"
 description = "FLEXT Quality - Code Quality Analysis and Metrics"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -2128,7 +2202,7 @@ url = "flext-quality"
 
 [[package]]
 name = "flext-tap-ldap"
-version = "0.7.0"
+version = "0.8.0"
 description = "FLEXT Tap LDAP - Singer Tap for LDAP Directory Services"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -2150,7 +2224,7 @@ url = "flext-tap-ldap"
 
 [[package]]
 name = "flext-tap-ldif"
-version = "0.7.0"
+version = "0.8.0"
 description = "FLEXT Tap LDIF - Singer Tap for LDIF file format data extraction"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -2169,7 +2243,7 @@ url = "flext-tap-ldif"
 
 [[package]]
 name = "flext-tap-oracle"
-version = "0.7.0"
+version = "0.8.0"
 description = "FLEXT Tap Oracle - Modern Singer Tap for Oracle Database"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -2190,7 +2264,7 @@ url = "flext-tap-oracle"
 
 [[package]]
 name = "flext-tap-oracle-oic"
-version = "0.7.0"
+version = "0.8.0"
 description = "FLEXT Tap Oracle OIC - Singer Tap for Oracle Integration Cloud"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -2212,7 +2286,7 @@ url = "flext-tap-oracle-oic"
 
 [[package]]
 name = "flext-tap-oracle-wms"
-version = "0.7.0"
+version = "0.8.0"
 description = "FLEXT Tap Oracle WMS - Singer Tap for Oracle Warehouse Management System"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -2234,7 +2308,7 @@ url = "flext-tap-oracle-wms"
 
 [[package]]
 name = "flext-target-ldap"
-version = "0.7.0"
+version = "0.8.0"
 description = "FLEXT Target LDAP - Singer Target for LDAP Directory Services"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -2251,7 +2325,7 @@ url = "flext-target-ldap"
 
 [[package]]
 name = "flext-target-ldif"
-version = "0.7.0"
+version = "0.8.0"
 description = "FLEXT Target LDIF - Singer Target for LDAP Data Interchange Format (LDIF) output"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -2268,7 +2342,7 @@ url = "flext-target-ldif"
 
 [[package]]
 name = "flext-target-oracle"
-version = "0.7.0"
+version = "0.8.0"
 description = "FLEXT Target Oracle - Singer Target for Oracle Database Data Loading"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -2289,7 +2363,7 @@ url = "flext-target-oracle"
 
 [[package]]
 name = "flext-target-oracle-oic"
-version = "0.7.0"
+version = "0.8.0"
 description = "FLEXT Target Oracle OIC - Singer Target for Oracle Integration Cloud"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -2308,7 +2382,7 @@ url = "flext-target-oracle-oic"
 
 [[package]]
 name = "flext-target-oracle-wms"
-version = "0.7.0"
+version = "0.8.0"
 description = "FLEXT Target Oracle WMS - Singer Target for Oracle WMS Data"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -2331,7 +2405,7 @@ url = "flext-target-oracle-wms"
 
 [[package]]
 name = "flext-web"
-version = "0.7.0"
+version = "0.8.0"
 description = "FLEXT Web - Modern Web Interface for FLEXT Platform"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -2340,6 +2414,8 @@ files = []
 develop = true
 
 [package.dependencies]
+django = ">=5.0.0,<6.0.0"
+fastapi = ">=0.116.0,<1.0.0"
 flask = ">=3.0.0"
 flext-core = {path = "/home/marlonsc/flext/flext-core"}
 flext-observability = {path = "/home/marlonsc/flext/flext-observability"}
@@ -2754,7 +2830,7 @@ setuptools = "*"
 
 [[package]]
 name = "client-b-meltano-native"
-version = "0.7.0"
+version = "0.8.0"
 description = "client-b Meltano Native - Enterprise ETL Pipeline for client-b"
 optional = false
 python-versions = ">=3.13,<3.14"
@@ -2897,14 +2973,14 @@ zstd = ["zstandard (>=0.18.0)"]
 
 [[package]]
 name = "hypothesis"
-version = "6.136.2"
+version = "6.136.3"
 description = "A library for property-based testing"
 optional = false
 python-versions = ">=3.9"
 groups = ["main", "test"]
 files = [
-    {file = "hypothesis-6.136.2-py3-none-any.whl", hash = "sha256:4b6113ca65cb1d200ed1299e610bee1da49ec127f63b13b4c6ac0c36c1d8ded7"},
-    {file = "hypothesis-6.136.2.tar.gz", hash = "sha256:57a04f750e79d6587ccf4cd2ff01d494bade0440bb1e245975ced8590c1c49bf"},
+    {file = "hypothesis-6.136.3-py3-none-any.whl", hash = "sha256:88163307c625688317bc5f3c7bd88f18b4d5c7cd773c784e3c4182eed2ae1b3d"},
+    {file = "hypothesis-6.136.3.tar.gz", hash = "sha256:89baa2bfc5af38f939e83b62f9f0e7e6407e81cade29cfcb3eafbc661177c2bd"},
 ]
 
 [package.dependencies]
@@ -4371,6 +4447,24 @@ files = [
 defusedxml = ">=0.7.1,<0.8.0"
 
 [[package]]
+name = "pyaml"
+version = "25.7.0"
+description = "PyYAML-based module to produce a bit more pretty and readable YAML-serialized data"
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "pyaml-25.7.0-py3-none-any.whl", hash = "sha256:ce5d7867cc2b455efdb9b0448324ff7b9f74d99f64650f12ca570102db6b985f"},
+    {file = "pyaml-25.7.0.tar.gz", hash = "sha256:e113a64ec16881bf2b092e2beb84b7dcf1bd98096ad17f5f14e8fb782a75d99b"},
+]
+
+[package.dependencies]
+PyYAML = "*"
+
+[package.extras]
+anchors = ["unidecode"]
+
+[[package]]
 name = "pyasn1"
 version = "0.6.1"
 description = "Pure-Python implementation of ASN.1 types and DER/BER/CER codecs (X.208)"
@@ -4661,6 +4755,25 @@ pygments = ">=2.7.2"
 dev = ["argcomplete", "attrs (>=19.2)", "hypothesis (>=3.56)", "mock", "requests", "setuptools", "xmlschema"]
 
 [[package]]
+name = "pytest-asyncio"
+version = "1.1.0"
+description = "Pytest support for asyncio"
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "pytest_asyncio-1.1.0-py3-none-any.whl", hash = "sha256:5fe2d69607b0bd75c656d1211f969cadba035030156745ee09e7d71740e58ecf"},
+    {file = "pytest_asyncio-1.1.0.tar.gz", hash = "sha256:796aa822981e01b68c12e4827b8697108f7205020f24b5793b3c41555dab68ea"},
+]
+
+[package.dependencies]
+pytest = ">=8.2,<9"
+
+[package.extras]
+docs = ["sphinx (>=5.3)", "sphinx-rtd-theme (>=1)"]
+testing = ["coverage (>=6.2)", "hypothesis (>=5.7.1)"]
+
+[[package]]
 name = "pytest-benchmark"
 version = "5.1.0"
 description = "A ``pytest`` fixture for benchmarking code. It will group the tests into rounds that are calibrated to the chosen timer."
@@ -4944,6 +5057,37 @@ files = [
 
 [package.dependencies]
 tokenize-rt = ">=6.1.0"
+
+[[package]]
+name = "pywin32"
+version = "311"
+description = "Python for Window Extensions"
+optional = false
+python-versions = "*"
+groups = ["main"]
+markers = "sys_platform == \"win32\""
+files = [
+    {file = "pywin32-311-cp310-cp310-win32.whl", hash = "sha256:d03ff496d2a0cd4a5893504789d4a15399133fe82517455e78bad62efbb7f0a3"},
+    {file = "pywin32-311-cp310-cp310-win_amd64.whl", hash = "sha256:797c2772017851984b97180b0bebe4b620bb86328e8a884bb626156295a63b3b"},
+    {file = "pywin32-311-cp310-cp310-win_arm64.whl", hash = "sha256:0502d1facf1fed4839a9a51ccbcc63d952cf318f78ffc00a7e78528ac27d7a2b"},
+    {file = "pywin32-311-cp311-cp311-win32.whl", hash = "sha256:184eb5e436dea364dcd3d2316d577d625c0351bf237c4e9a5fabbcfa5a58b151"},
+    {file = "pywin32-311-cp311-cp311-win_amd64.whl", hash = "sha256:3ce80b34b22b17ccbd937a6e78e7225d80c52f5ab9940fe0506a1a16f3dab503"},
+    {file = "pywin32-311-cp311-cp311-win_arm64.whl", hash = "sha256:a733f1388e1a842abb67ffa8e7aad0e70ac519e09b0f6a784e65a136ec7cefd2"},
+    {file = "pywin32-311-cp312-cp312-win32.whl", hash = "sha256:750ec6e621af2b948540032557b10a2d43b0cee2ae9758c54154d711cc852d31"},
+    {file = "pywin32-311-cp312-cp312-win_amd64.whl", hash = "sha256:b8c095edad5c211ff31c05223658e71bf7116daa0ecf3ad85f3201ea3190d067"},
+    {file = "pywin32-311-cp312-cp312-win_arm64.whl", hash = "sha256:e286f46a9a39c4a18b319c28f59b61de793654af2f395c102b4f819e584b5852"},
+    {file = "pywin32-311-cp313-cp313-win32.whl", hash = "sha256:f95ba5a847cba10dd8c4d8fefa9f2a6cf283b8b88ed6178fa8a6c1ab16054d0d"},
+    {file = "pywin32-311-cp313-cp313-win_amd64.whl", hash = "sha256:718a38f7e5b058e76aee1c56ddd06908116d35147e133427e59a3983f703a20d"},
+    {file = "pywin32-311-cp313-cp313-win_arm64.whl", hash = "sha256:7b4075d959648406202d92a2310cb990fea19b535c7f4a78d3f5e10b926eeb8a"},
+    {file = "pywin32-311-cp314-cp314-win32.whl", hash = "sha256:b7a2c10b93f8986666d0c803ee19b5990885872a7de910fc460f9b0c2fbf92ee"},
+    {file = "pywin32-311-cp314-cp314-win_amd64.whl", hash = "sha256:3aca44c046bd2ed8c90de9cb8427f581c479e594e99b5c0bb19b29c10fd6cb87"},
+    {file = "pywin32-311-cp314-cp314-win_arm64.whl", hash = "sha256:a508e2d9025764a8270f93111a970e1d0fbfc33f4153b388bb649b7eec4f9b42"},
+    {file = "pywin32-311-cp38-cp38-win32.whl", hash = "sha256:6c6f2969607b5023b0d9ce2541f8d2cbb01c4f46bc87456017cf63b73f1e2d8c"},
+    {file = "pywin32-311-cp38-cp38-win_amd64.whl", hash = "sha256:c8015b09fb9a5e188f83b7b04de91ddca4658cee2ae6f3bc483f0b21a77ef6cd"},
+    {file = "pywin32-311-cp39-cp39-win32.whl", hash = "sha256:aba8f82d551a942cb20d4a83413ccbac30790b50efb89a75e4f586ac0bb8056b"},
+    {file = "pywin32-311-cp39-cp39-win_amd64.whl", hash = "sha256:e0c4cfb0621281fe40387df582097fd796e80430597cb9944f0ae70447bacd91"},
+    {file = "pywin32-311-cp39-cp39-win_arm64.whl", hash = "sha256:62ea666235135fee79bb154e695f3ff67370afefd71bd7fea7512fc70ef31e3d"},
+]
 
 [[package]]
 name = "pyyaml"
@@ -5552,30 +5696,30 @@ files = [
 
 [[package]]
 name = "ruff"
-version = "0.12.4"
+version = "0.12.5"
 description = "An extremely fast Python linter and code formatter, written in Rust."
 optional = false
 python-versions = ">=3.7"
 groups = ["main", "dev"]
 files = [
-    {file = "ruff-0.12.4-py3-none-linux_armv6l.whl", hash = "sha256:cb0d261dac457ab939aeb247e804125a5d521b21adf27e721895b0d3f83a0d0a"},
-    {file = "ruff-0.12.4-py3-none-macosx_10_12_x86_64.whl", hash = "sha256:55c0f4ca9769408d9b9bac530c30d3e66490bd2beb2d3dae3e4128a1f05c7442"},
-    {file = "ruff-0.12.4-py3-none-macosx_11_0_arm64.whl", hash = "sha256:a8224cc3722c9ad9044da7f89c4c1ec452aef2cfe3904365025dd2f51daeae0e"},
-    {file = "ruff-0.12.4-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:e9949d01d64fa3672449a51ddb5d7548b33e130240ad418884ee6efa7a229586"},
-    {file = "ruff-0.12.4-py3-none-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:be0593c69df9ad1465e8a2d10e3defd111fdb62dcd5be23ae2c06da77e8fcffb"},
-    {file = "ruff-0.12.4-py3-none-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:a7dea966bcb55d4ecc4cc3270bccb6f87a337326c9dcd3c07d5b97000dbff41c"},
-    {file = "ruff-0.12.4-py3-none-manylinux_2_17_ppc64.manylinux2014_ppc64.whl", hash = "sha256:afcfa3ab5ab5dd0e1c39bf286d829e042a15e966b3726eea79528e2e24d8371a"},
-    {file = "ruff-0.12.4-py3-none-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:c057ce464b1413c926cdb203a0f858cd52f3e73dcb3270a3318d1630f6395bb3"},
-    {file = "ruff-0.12.4-py3-none-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:e64b90d1122dc2713330350626b10d60818930819623abbb56535c6466cce045"},
-    {file = "ruff-0.12.4-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:2abc48f3d9667fdc74022380b5c745873499ff827393a636f7a59da1515e7c57"},
-    {file = "ruff-0.12.4-py3-none-musllinux_1_2_aarch64.whl", hash = "sha256:2b2449dc0c138d877d629bea151bee8c0ae3b8e9c43f5fcaafcd0c0d0726b184"},
-    {file = "ruff-0.12.4-py3-none-musllinux_1_2_armv7l.whl", hash = "sha256:56e45bb11f625db55f9b70477062e6a1a04d53628eda7784dce6e0f55fd549eb"},
-    {file = "ruff-0.12.4-py3-none-musllinux_1_2_i686.whl", hash = "sha256:478fccdb82ca148a98a9ff43658944f7ab5ec41c3c49d77cd99d44da019371a1"},
-    {file = "ruff-0.12.4-py3-none-musllinux_1_2_x86_64.whl", hash = "sha256:0fc426bec2e4e5f4c4f182b9d2ce6a75c85ba9bcdbe5c6f2a74fcb8df437df4b"},
-    {file = "ruff-0.12.4-py3-none-win32.whl", hash = "sha256:4de27977827893cdfb1211d42d84bc180fceb7b72471104671c59be37041cf93"},
-    {file = "ruff-0.12.4-py3-none-win_amd64.whl", hash = "sha256:fe0b9e9eb23736b453143d72d2ceca5db323963330d5b7859d60d101147d461a"},
-    {file = "ruff-0.12.4-py3-none-win_arm64.whl", hash = "sha256:0618ec4442a83ab545e5b71202a5c0ed7791e8471435b94e655b570a5031a98e"},
-    {file = "ruff-0.12.4.tar.gz", hash = "sha256:13efa16df6c6eeb7d0f091abae50f58e9522f3843edb40d56ad52a5a4a4b6873"},
+    {file = "ruff-0.12.5-py3-none-linux_armv6l.whl", hash = "sha256:1de2c887e9dec6cb31fcb9948299de5b2db38144e66403b9660c9548a67abd92"},
+    {file = "ruff-0.12.5-py3-none-macosx_10_12_x86_64.whl", hash = "sha256:d1ab65e7d8152f519e7dea4de892317c9da7a108da1c56b6a3c1d5e7cf4c5e9a"},
+    {file = "ruff-0.12.5-py3-none-macosx_11_0_arm64.whl", hash = "sha256:962775ed5b27c7aa3fdc0d8f4d4433deae7659ef99ea20f783d666e77338b8cf"},
+    {file = "ruff-0.12.5-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:73b4cae449597e7195a49eb1cdca89fd9fbb16140c7579899e87f4c85bf82f73"},
+    {file = "ruff-0.12.5-py3-none-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:8b13489c3dc50de5e2d40110c0cce371e00186b880842e245186ca862bf9a1ac"},
+    {file = "ruff-0.12.5-py3-none-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:f1504fea81461cf4841778b3ef0a078757602a3b3ea4b008feb1308cb3f23e08"},
+    {file = "ruff-0.12.5-py3-none-manylinux_2_17_ppc64.manylinux2014_ppc64.whl", hash = "sha256:c7da4129016ae26c32dfcbd5b671fe652b5ab7fc40095d80dcff78175e7eddd4"},
+    {file = "ruff-0.12.5-py3-none-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:ca972c80f7ebcfd8af75a0f18b17c42d9f1ef203d163669150453f50ca98ab7b"},
+    {file = "ruff-0.12.5-py3-none-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:8dbbf9f25dfb501f4237ae7501d6364b76a01341c6f1b2cd6764fe449124bb2a"},
+    {file = "ruff-0.12.5-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:2c47dea6ae39421851685141ba9734767f960113d51e83fd7bb9958d5be8763a"},
+    {file = "ruff-0.12.5-py3-none-musllinux_1_2_aarch64.whl", hash = "sha256:c5076aa0e61e30f848846f0265c873c249d4b558105b221be1828f9f79903dc5"},
+    {file = "ruff-0.12.5-py3-none-musllinux_1_2_armv7l.whl", hash = "sha256:a5a4c7830dadd3d8c39b1cc85386e2c1e62344f20766be6f173c22fb5f72f293"},
+    {file = "ruff-0.12.5-py3-none-musllinux_1_2_i686.whl", hash = "sha256:46699f73c2b5b137b9dc0fc1a190b43e35b008b398c6066ea1350cce6326adcb"},
+    {file = "ruff-0.12.5-py3-none-musllinux_1_2_x86_64.whl", hash = "sha256:5a655a0a0d396f0f072faafc18ebd59adde8ca85fb848dc1b0d9f024b9c4d3bb"},
+    {file = "ruff-0.12.5-py3-none-win32.whl", hash = "sha256:dfeb2627c459b0b78ca2bbdc38dd11cc9a0a88bf91db982058b26ce41714ffa9"},
+    {file = "ruff-0.12.5-py3-none-win_amd64.whl", hash = "sha256:ae0d90cf5f49466c954991b9d8b953bd093c32c27608e409ae3564c63c5306a5"},
+    {file = "ruff-0.12.5-py3-none-win_arm64.whl", hash = "sha256:48cdbfc633de2c5c37d9f090ba3b352d1576b0015bfc3bc98eaf230275b7e805"},
+    {file = "ruff-0.12.5.tar.gz", hash = "sha256:b209db6102b66f13625940b7f8c7d0f18e20039bb7f6101fbdac935c9612057e"},
 ]
 
 [[package]]
@@ -7105,4 +7249,4 @@ typings = ["django-stubs", "types-psutil", "types-python-dateutil", "types-pyyam
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13,<3.14"
-content-hash = "634ee2e6919979f17bbe423284c7d699d942a144ae3f8c32b725b898ef49ace3"
+content-hash = "6486e30eadbf82b03a671eb0f41b93f3c8415fae6f2adf8827d160f6f3c34e80"

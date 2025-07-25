@@ -196,7 +196,6 @@ func (c *PipelineController) ExecutePipeline(w http.ResponseWriter, r *http.Requ
 	// Map to use case input
 	input := pipeline.ExecutePipelineInput{
 		PipelineID: pipelineID,
-		Context:    req.Context,
 	}
 
 	// Execute use case

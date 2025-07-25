@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Script para correção automática de violações arquiteturais
+"""Script para correção automática de violações arquiteturais.
+
 Aplica REFATORACAO_ARQUITETURA_FLEXT.md rigorosamente.
 
 Copyright (c) 2025 FLEXT Team
@@ -21,7 +22,7 @@ def fix_imports_in_file(file_path: Path) -> bool:
         # 1. Fix submódulo → módulo raiz imports
         # flext_core.domain.shared_types → flext_core
         content = re.sub(
-            r"from flext_core\.domain\.shared_types import (.+)",
+            r"from flext_core import (.+)",
             r"from flext_core import \1",
             content,
         )
@@ -125,7 +126,7 @@ def main() -> None:
         print(f"\n🔍 Processing {project}...")
 
         # Find all Python files
-        python_files = []
+        python_files: list[Path] = []
         for pattern in ["src/**/*.py", "tests/**/*.py", "*.py"]:
             python_files.extend(project_path.glob(pattern))
 

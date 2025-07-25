@@ -7,12 +7,13 @@ scripts do workspace FLEXT de forma padronizada e automatizada.
 
 from __future__ import annotations
 
-import logging
 import re
 import sys
 from dataclasses import dataclass, field
 from enum import StrEnum
 from pathlib import Path
+
+from flext_core import FlextLoggerFactory
 
 # Usar flext_tools completo para máxima enterprise
 from flext_tools.core.script_base import ScriptMetadata
@@ -79,15 +80,12 @@ class ScriptRegistry:
         """Descobre automaticamente todos os scripts."""
         for script_file in self.scripts_root.rglob("*.py"):
             # Skip arquivos especiais
-            if (
-                script_file.name.startswith(("__", "test_"))
-                or script_file.name == "flext_tools.py"
-            ):
-                logging.getLogger(__name__).debug("Failed to parse script metadata")
+            if script_file.name.startswith(("__", "test_")) or script_file.name == "flext_tools.py":
+                FlextLoggerFactory.get_logger(__name__).debug("Failed to parse script metadata")
 
             # Skip core system files
             if script_file.parent.name == "core":
-                logging.getLogger(__name__).debug("Failed to parse script metadata")
+                FlextLoggerFactory.get_logger(__name__).debug("Failed to parse script metadata")
 
             metadata = self._extract_metadata(script_file)
             if metadata:
@@ -150,9 +148,7 @@ class ScriptRegistry:
 
             # Procura por docstring no início do arquivo
             docstring_match = re.search(r'"""(.*?)"""', content, re.DOTALL)
-            description = (
-                docstring_match.group(1).strip() if docstring_match else "Script legado"
-            )
+            description = docstring_match.group(1).strip() if docstring_match else "Script legado"
 
             # Procura por função main
             main_match = re.search(r"def\s+main\s*\(", content)
@@ -260,7 +256,7 @@ class ScriptRegistry:
                         # Docstring de linha única
                         return line.replace("'''", "").replace('"""', "").strip()
                     in_docstring = True
-                    logging.getLogger(__name__).debug("Failed to parse script metadata")
+                    FlextLoggerFactory.get_logger(__name__).debug("Failed to parse script metadata")
                 if in_docstring and (line.endswith(('"""', "'''"))):
                     return line.replace("'''", "").replace('"""', "").strip()
                 if in_docstring and line and not line.startswith("#"):
@@ -314,10 +310,7 @@ class ScriptRegistry:
                 ),
             )
             lines.extend(
-                [
-                    f"\t@python scripts/core/script_runner.py {script.name}"
-                    for script in category_scripts
-                ],
+                [f"\t@python scripts/core/script_runner.py {script.name}" for script in category_scripts],
             )
             lines.append("")
 
