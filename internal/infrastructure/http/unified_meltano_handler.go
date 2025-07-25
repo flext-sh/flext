@@ -51,9 +51,11 @@ func (h *UnifiedMeltanoHandler) RegisterRoutes(e *echo.Echo) {
 // Meltano Operations
 
 func (h *UnifiedMeltanoHandler) GetMeltanoVersion(c echo.Context) error {
+	h.logger.Info("DEBUG: GetMeltanoVersion handler called")
 	h.logger.Info("Getting Meltano version via flext-meltano")
 
 	result, err := h.meltanoService.ExecuteMeltanoDirect(c.Request().Context(), "--version")
+	h.logger.Info("DEBUG: ExecuteMeltanoDirect returned", logging.F("result", result), logging.F("error", err))
 	if err != nil {
 		h.logger.Error("Failed to get Meltano version", logging.F("error", err))
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
@@ -119,7 +121,8 @@ func (h *UnifiedMeltanoHandler) TestMeltano(c echo.Context) error {
 func (h *UnifiedMeltanoHandler) ListMeltanoPlugins(c echo.Context) error {
 	h.logger.Info("Listing Meltano plugins via flext-meltano")
 
-	result, err := h.meltanoService.ExecuteCommand(c.Request().Context(), "list", []string{"plugins"})
+	// Use config command to show current project configuration including plugins
+	result, err := h.meltanoService.ExecuteMeltanoDirect(c.Request().Context(), "config", "meltano")
 	if err != nil {
 		h.logger.Error("Failed to list Meltano plugins", logging.F("error", err))
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
@@ -130,6 +133,7 @@ func (h *UnifiedMeltanoHandler) ListMeltanoPlugins(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"success": true,
 		"data":    result,
+		"note":    "Currently shows project config. Use 'add' command to install plugins.",
 	})
 }
 
@@ -149,7 +153,8 @@ func (h *UnifiedMeltanoHandler) InstallMeltanoPlugin(c echo.Context) error {
 		logging.F("type", request.Type),
 		logging.F("name", request.Name))
 
-	result, err := h.meltanoService.ExecuteCommand(c.Request().Context(), "add", []string{request.Type, request.Name})
+	// Use direct Meltano add command
+	result, err := h.meltanoService.ExecuteMeltanoDirect(c.Request().Context(), "add", request.Type, request.Name, "--install")
 	if err != nil {
 		h.logger.Error("Failed to install Meltano plugin", logging.F("error", err))
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
@@ -160,6 +165,7 @@ func (h *UnifiedMeltanoHandler) InstallMeltanoPlugin(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"success": true,
 		"data":    result,
+		"installed": map[string]string{"type": request.Type, "name": request.Name},
 	})
 }
 
@@ -168,10 +174,10 @@ func (h *UnifiedMeltanoHandler) InstallMeltanoPlugin(c echo.Context) error {
 func (h *UnifiedMeltanoHandler) ListSingerTaps(c echo.Context) error {
 	h.logger.Info("Listing Singer taps via flext-meltano")
 
-	// Use flext-meltano to list available taps
-	result, err := h.meltanoService.ExecuteCommand(c.Request().Context(), "list", []string{"extractors"})
+	// Check installed extractors first, then show message about adding from hub
+	result, err := h.meltanoService.ExecuteMeltanoDirect(c.Request().Context(), "config", "meltano")
 	if err != nil {
-		h.logger.Error("Failed to list Singer taps", logging.F("error", err))
+		h.logger.Error("Failed to check Meltano config", logging.F("error", err))
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"error": err.Error(),
 		})
@@ -181,16 +187,18 @@ func (h *UnifiedMeltanoHandler) ListSingerTaps(c echo.Context) error {
 		"success": true,
 		"data":    result,
 		"type":    "singer_taps",
+		"note":    "No extractors installed. Use 'add extractor <name>' to install Singer taps.",
+		"examples": []string{"tap-csv", "tap-postgres", "tap-github"},
 	})
 }
 
 func (h *UnifiedMeltanoHandler) ListSingerTargets(c echo.Context) error {
 	h.logger.Info("Listing Singer targets via flext-meltano")
 
-	// Use flext-meltano to list available targets
-	result, err := h.meltanoService.ExecuteCommand(c.Request().Context(), "list", []string{"loaders"})
+	// Check installed loaders first, then show message about adding from hub
+	result, err := h.meltanoService.ExecuteMeltanoDirect(c.Request().Context(), "config", "meltano")
 	if err != nil {
-		h.logger.Error("Failed to list Singer targets", logging.F("error", err))
+		h.logger.Error("Failed to check Meltano config", logging.F("error", err))
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"error": err.Error(),
 		})
@@ -200,6 +208,8 @@ func (h *UnifiedMeltanoHandler) ListSingerTargets(c echo.Context) error {
 		"success": true,
 		"data":    result,
 		"type":    "singer_targets",
+		"note":    "No loaders installed. Use 'add loader <name>' to install Singer targets.",
+		"examples": []string{"target-csv", "target-postgres", "target-snowflake"},
 	})
 }
 
