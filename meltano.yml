@@ -3,3 +3,15 @@ default_environment: dev
 project_id: flext-workspace
 environments:
 - name: dev
+plugins:
+  extractors:
+  - name: tap-csv
+    variant: meltanolabs
+    pip_url: git+https://github.com/MeltanoLabs/tap-csv.git
+  - name: tap-oracle
+    variant: s7clarke10
+    pip_url: git+https://github.com/s7clarke10/pipelinewise-tap-oracle.git
+  loaders:
+  - name: target-csv
+    variant: meltanolabs
+    pip_url: meltanolabs-target-csv
