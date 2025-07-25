@@ -7,7 +7,6 @@ Copyright (c) 2025 FLEXT Contributors
 SPDX-License-Identifier: MIT
 """
 
-import asyncio
 import json
 import subprocess
 import time
@@ -15,7 +14,6 @@ from pathlib import Path
 from typing import Any
 
 import pytest
-import requests
 from ldap3 import ALL, SUBTREE, Connection, Server
 
 # Test configuration
@@ -93,7 +91,7 @@ class TestLDIFPipelineE2E:
         assert r.ping(), "Redis connection failed"
 
     def test_ldap_data_extraction(
-        self, ldap_connection: Connection, test_config: dict[str, Any]
+        self, ldap_connection: Connection, test_config: dict[str, Any],
     ) -> None:
         """Test LDAP data extraction using flext-tap-ldif."""
         # Verify test data exists in LDAP

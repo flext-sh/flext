@@ -1,0 +1,15 @@
+{
+  "host": "localhost",
+  "port": 1521,
+  "service_name": "XEPDB1",
+  "username": "flext_test",
+  "password": "flext_test123",
+  "schema": "FLEXT_TEST",
+  "pool_min_size": 1,
+  "pool_max_size": 5,
+  "pool_increment": 1,
+  "query_timeout": 300,
+  "connection_timeout": 30,
+  "retry_attempts": 3,
+  "ssl_mode": false
+}

@@ -21,10 +21,6 @@ class TestGensimCompatibility:
     def test_imports(self) -> None:
         """Teste de imports básicos."""
         import gensim
-        from gensim.corpora import Dictionary
-        from gensim.models import Doc2Vec, LdaModel, TfidfModel, Word2Vec
-        from gensim.similarities import SparseMatrixSimilarity
-        from gensim.test.utils import common_texts
 
         assert gensim.__version__ is not None
         assert np.__version__ >= "2.0.0"
@@ -162,7 +158,6 @@ class TestGensimCompatibility:
 
     def test_flext_integration(self) -> None:
         """Teste de integração com o projeto flext."""
-        import gensim
         from gensim.models import Word2Vec
         from gensim.test.utils import common_texts
 

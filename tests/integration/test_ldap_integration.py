@@ -15,19 +15,15 @@ from __future__ import annotations
 
 # Integration tests use testcontainers for Docker management
 # Tests are designed to gracefully handle missing dependencies
-import asyncio
-import json
 import subprocess
 import tempfile
 import time
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 import pytest
-import pytest_asyncio
-from flext_ldap import LDAPGroup, LDAPService, LDAPUser
+from flext_ldap.application import LDAPService
 from ldap3 import ALL, Connection, Server
-from singer_sdk.testing import get_target_test_class
 
 # from flext_ldif import LDIFProcessor, LDIFEntry  # NOTE: flext-ldif module incomplete - skipped
 # from flext_target_ldap.target import TargetLDAP  # NOTE: not installed - requires setup
@@ -54,7 +50,8 @@ def ldap_container():
             break
         except Exception as e:
             if i == max_retries - 1:
-                raise FlextServiceError(f"LDAP container failed to start: {e}")
+                msg = f"LDAP container failed to start: {e}"
+                raise FlextServiceError(msg)
             time.sleep(2)
 
     # Load test data
@@ -368,7 +365,7 @@ class TestFlextTapLDAPIntegration:
             # tap = TapLDAP(config=tap_config, validate_config=False)  # NOTE: TapLDAP not installed
 
             # Test extracting user records
-            with tempfile.NamedTemporaryFile(mode="w+", suffix=".jsonl"):
+            with tempfile.NamedTemporaryFile(encoding="utf-8", mode="w+", suffix=".jsonl"):
                 # Simulate tap execution
                 # streams = tap.discover_streams()  # NOTE: TapLDAP not installed
                 # user_stream = next(s for s in streams if s.name == "users")  # NOTE: TapLDAP not installed
@@ -468,7 +465,7 @@ class TestEndToEndIntegration:
     async def test_tap_to_target_data_flow(self, ldap_container: dict[str, Any]) -> None:
         """Test complete data flow from tap to target - REAL E2E TEST."""
         # STEP 1: Configure and create TAP to extract from real LDAP
-        tap_config = {
+        {
             "host": ldap_container["host"],
             "port": ldap_container["port"],
             "bind_dn": ldap_container["bind_dn"],
@@ -481,7 +478,7 @@ class TestEndToEndIntegration:
                     "search_base": "ou=users,dc=flext-test,dc=local",
                     "search_filter": "(objectClass=inetOrgPerson)",
                     "attributes": ["uid", "cn", "sn", "mail", "telephoneNumber"],
-                }
+                },
             },
         }
 
@@ -517,8 +514,8 @@ class TestEndToEndIntegration:
         # )
 
         # STEP 3: Configure TARGET to write to temporary LDIF
-        with tempfile.NamedTemporaryFile(mode="w+", suffix=".ldif", delete=False) as temp_ldif:
-            target_config = {
+        with tempfile.NamedTemporaryFile(encoding="utf-8", mode="w+", suffix=".ldif", delete=False) as temp_ldif:
+            {
                 "host": ldap_container["host"],
                 "port": ldap_container["port"],
                 "bind_dn": ldap_container["bind_dn"],

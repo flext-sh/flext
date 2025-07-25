@@ -103,7 +103,7 @@ def main() -> int:
     ]
 
     time_alt, _ = measure_execution_time(
-        alt_cmd, "discover_missing_deps.py (referência)"
+        alt_cmd, "discover_missing_deps.py (referência)",
     )
 
     if time_alt > 0 and time2 > 0:

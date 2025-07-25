@@ -3,7 +3,7 @@
 import ast
 from collections import defaultdict
 from pathlib import Path
-from typing import Any, Dict, List, Set, Tuple
+from typing import Any
 
 import pytest
 
@@ -53,7 +53,7 @@ class SOLIDAnalyzer(BaseQualityAnalyzer):
                     content = f.read()
 
                 file_classes, file_functions = self._analyze_file(
-                    file_path, content, results
+                    file_path, content, results,
                 )
                 total_classes += file_classes
                 total_functions += file_functions
@@ -75,7 +75,7 @@ class SOLIDAnalyzer(BaseQualityAnalyzer):
         return results
 
     def _analyze_file(
-        self, file_path: Path, content: str, results: dict[str, Any]
+        self, file_path: Path, content: str, results: dict[str, Any],
     ) -> tuple[int, int]:
         """Analyze a single file for SOLID violations."""
         try:
@@ -91,8 +91,7 @@ class SOLIDAnalyzer(BaseQualityAnalyzer):
         for node in ast.walk(tree):
             if isinstance(node, (ast.Import, ast.ImportFrom)):
                 if isinstance(node, ast.Import):
-                    for alias in node.names:
-                        imports.add(alias.name)
+                    imports.update(alias.name for alias in node.names)
                 elif isinstance(node, ast.ImportFrom) and node.module:
                     imports.add(node.module)
 
@@ -134,7 +133,7 @@ class SOLIDAnalyzer(BaseQualityAnalyzer):
         self._check_dependency_inversion(class_node, file_path, imports, results)
 
     def _analyze_function(
-        self, func_node: ast.FunctionDef, file_path: Path, results: dict[str, Any]
+        self, func_node: ast.FunctionDef, file_path: Path, results: dict[str, Any],
     ) -> None:
         """Analyze a function for SOLID violations."""
         # Single Responsibility Principle for functions
@@ -159,7 +158,7 @@ class SOLIDAnalyzer(BaseQualityAnalyzer):
                     "issue": f"Class has {len(methods)} methods, likely violates SRP",
                     "severity": "high" if len(methods) > 25 else "medium",
                     "suggestion": "Consider splitting into smaller, focused classes",
-                }
+                },
             )
 
         # Check for mixed concerns by analyzing method names
@@ -174,11 +173,11 @@ class SOLIDAnalyzer(BaseQualityAnalyzer):
                     "issue": f"Class handles {len(method_concerns)} different concerns: {', '.join(method_concerns)}",
                     "severity": "medium",
                     "suggestion": "Split class by concern areas",
-                }
+                },
             )
 
     def _check_single_responsibility_function(
-        self, func_node: ast.FunctionDef, file_path: Path, results: dict[str, Any]
+        self, func_node: ast.FunctionDef, file_path: Path, results: dict[str, Any],
     ) -> None:
         """Check Single Responsibility Principle for functions."""
         # Calculate cyclomatic complexity
@@ -194,12 +193,12 @@ class SOLIDAnalyzer(BaseQualityAnalyzer):
                     "issue": f"Function has cyclomatic complexity of {complexity}, likely violates SRP",
                     "severity": "high" if complexity > 25 else "medium",
                     "suggestion": "Break function into smaller, focused functions",
-                }
+                },
             )
 
         # Check function length
         function_lines = len(
-            [n for n in ast.walk(func_node) if isinstance(n, ast.stmt)]
+            [n for n in ast.walk(func_node) if isinstance(n, ast.stmt)],
         )
         if function_lines > 50:
             results["single_responsibility"]["violations"].append(
@@ -211,11 +210,11 @@ class SOLIDAnalyzer(BaseQualityAnalyzer):
                     "issue": f"Function has {function_lines} statements, likely too complex",
                     "severity": "medium",
                     "suggestion": "Split into smaller functions",
-                }
+                },
             )
 
     def _check_open_closed_class(
-        self, class_node: ast.ClassDef, file_path: Path, results: dict[str, Any]
+        self, class_node: ast.ClassDef, file_path: Path, results: dict[str, Any],
     ) -> None:
         """Check Open/Closed Principle for classes."""
         # Look for classes that might benefit from extension mechanisms
@@ -242,11 +241,11 @@ class SOLIDAnalyzer(BaseQualityAnalyzer):
                             "issue": "Type-based conditional found, consider polymorphism",
                             "severity": "medium",
                             "suggestion": "Use inheritance or strategy pattern",
-                        }
+                        },
                     )
 
     def _check_liskov_substitution(
-        self, class_node: ast.ClassDef, file_path: Path, results: dict[str, Any]
+        self, class_node: ast.ClassDef, file_path: Path, results: dict[str, Any],
     ) -> None:
         """Check Liskov Substitution Principle."""
         # Check if class has base classes
@@ -271,7 +270,7 @@ class SOLIDAnalyzer(BaseQualityAnalyzer):
                                     "issue": f"Method {method.name} raises NotImplementedError",
                                     "severity": "high",
                                     "suggestion": "Consider using abstract base classes or different inheritance structure",
-                                }
+                                },
                             )
 
     def _check_interface_segregation(
@@ -302,7 +301,7 @@ class SOLIDAnalyzer(BaseQualityAnalyzer):
                     "issue": f"Interface has {len(abstract_methods)} abstract methods, consider splitting",
                     "severity": "medium",
                     "suggestion": "Split into smaller, focused interfaces",
-                }
+                },
             )
 
         # Check for methods with very different parameter patterns
@@ -322,7 +321,7 @@ class SOLIDAnalyzer(BaseQualityAnalyzer):
                         "issue": "Methods have very different parameter patterns",
                         "severity": "low",
                         "suggestion": "Consider if all methods belong to the same interface",
-                    }
+                    },
                 )
 
     def _check_dependency_inversion(
@@ -344,7 +343,7 @@ class SOLIDAnalyzer(BaseQualityAnalyzer):
                     and not func_name.startswith("Abstract")
                 ):  # Not abstract
                     # Skip common exceptions
-                    if func_name not in [
+                    if func_name not in {
                         "Exception",
                         "ValueError",
                         "TypeError",
@@ -352,7 +351,7 @@ class SOLIDAnalyzer(BaseQualityAnalyzer):
                         "List",
                         "Set",
                         "Tuple",
-                    ]:
+                    }:
                         results["dependency_inversion"]["violations"].append(
                             {
                                 "file": str(file_path),
@@ -362,7 +361,7 @@ class SOLIDAnalyzer(BaseQualityAnalyzer):
                                 "issue": f"Direct instantiation of concrete class {func_name}",
                                 "severity": "low",
                                 "suggestion": "Consider dependency injection or factory pattern",
-                            }
+                            },
                         )
 
     def _categorize_method_concerns(self, methods: list[ast.FunctionDef]) -> set[str]:
@@ -448,16 +447,15 @@ class SOLIDAnalyzer(BaseQualityAnalyzer):
         """Check if an if statement is type-based."""
         # Look for isinstance() calls or type() comparisons
         for node in ast.walk(if_node.test):
-            if isinstance(node, ast.Call):
-                if isinstance(node.func, ast.Name) and node.func.id in [
-                    "isinstance",
-                    "type",
-                ]:
-                    return True
+            if isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and node.func.id in {
+                "isinstance",
+                "type",
+            }:
+                return True
         return False
 
     def _calculate_scores(
-        self, results: dict[str, Any], total_classes: int, total_functions: int
+        self, results: dict[str, Any], total_classes: int, total_functions: int,
     ) -> None:
         """Calculate SOLID principle scores."""
         total_items = total_classes + total_functions
@@ -537,14 +535,14 @@ class SOLIDAnalyzer(BaseQualityAnalyzer):
                     v["name"]
                     for v in all_violations
                     if isinstance(v, dict) and v.get("type") == "class"
-                }
+                },
             )
             problematic_functions = len(
                 {
                     v["name"]
                     for v in all_violations
                     if isinstance(v, dict) and v.get("type") == "function"
-                }
+                },
             )
 
             summary["problematic_classes"] = problematic_classes
@@ -571,42 +569,42 @@ class SOLIDAnalyzer(BaseQualityAnalyzer):
         if results["single_responsibility"]["score"] < 70:
             srp_violations = len(results["single_responsibility"]["violations"])
             recommendations.append(
-                f"🎯 Single Responsibility: {srp_violations} violations - break down large classes/functions"
+                f"🎯 Single Responsibility: {srp_violations} violations - break down large classes/functions",
             )
 
         if results["open_closed"]["score"] < 70:
             ocp_violations = len(results["open_closed"]["violations"])
             recommendations.append(
-                f"🔓 Open/Closed: {ocp_violations} violations - use polymorphism over conditionals"
+                f"🔓 Open/Closed: {ocp_violations} violations - use polymorphism over conditionals",
             )
 
         if results["liskov_substitution"]["score"] < 70:
             lsp_violations = len(results["liskov_substitution"]["violations"])
             recommendations.append(
-                f"🔄 Liskov Substitution: {lsp_violations} violations - fix inheritance hierarchies"
+                f"🔄 Liskov Substitution: {lsp_violations} violations - fix inheritance hierarchies",
             )
 
         if results["interface_segregation"]["score"] < 70:
             isp_violations = len(results["interface_segregation"]["violations"])
             recommendations.append(
-                f"🎛️ Interface Segregation: {isp_violations} violations - split large interfaces"
+                f"🎛️ Interface Segregation: {isp_violations} violations - split large interfaces",
             )
 
         if results["dependency_inversion"]["score"] < 70:
             dip_violations = len(results["dependency_inversion"]["violations"])
             recommendations.append(
-                f"🔌 Dependency Inversion: {dip_violations} violations - use dependency injection"
+                f"🔌 Dependency Inversion: {dip_violations} violations - use dependency injection",
             )
 
         # Specific improvement areas
         if results["summary"]["problematic_classes"] > 0:
             recommendations.append(
-                f"🏗️ Review {results['summary']['problematic_classes']} classes for architectural improvements"
+                f"🏗️ Review {results['summary']['problematic_classes']} classes for architectural improvements",
             )
 
         if results["summary"]["problematic_functions"] > 0:
             recommendations.append(
-                f"⚡ Refactor {results['summary']['problematic_functions']} functions for better separation of concerns"
+                f"⚡ Refactor {results['summary']['problematic_functions']} functions for better separation of concerns",
             )
 
         return recommendations
@@ -696,7 +694,7 @@ class TestSOLIDPrinciples:
         )
 
     def test_solid_individual_principles(
-        self, analysis_results: dict[str, Any]
+        self, analysis_results: dict[str, Any],
     ) -> None:
         """Test that individual SOLID principles have reasonable scores."""
         principles = [
@@ -725,7 +723,7 @@ class TestSOLIDPrinciples:
             )
 
     def test_generate_solid_reports(
-        self, analyzer: SOLIDAnalyzer, analysis_results: dict[str, Any]
+        self, analyzer: SOLIDAnalyzer, analysis_results: dict[str, Any],
     ) -> None:
         """Test SOLID report generation."""
         # Generate reports
@@ -739,7 +737,7 @@ class TestSOLIDPrinciples:
         # Verify report content
         import json
 
-        with open(json_report) as f:
+        with open(json_report, encoding="utf-8") as f:
             report_data = json.load(f)
 
         assert "single_responsibility" in report_data

@@ -1,10 +1,6 @@
 #!/usr/bin/env python3
 """Final comprehensive test of Oracle WMS tap."""
 
-import json
-import os
-import sys
-from datetime import datetime
 
 from flext_tap_oracle_wms.tap import TapOracleWMS
 

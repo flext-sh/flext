@@ -20,9 +20,7 @@ import subprocess
 import tempfile
 import time
 from pathlib import Path
-from typing import Dict, List, Optional
 
-import pytest
 import yaml
 from docker import from_env as docker_from_env
 
@@ -85,7 +83,7 @@ class FlextMeltanoMeltanoLDAPIntegrationTest:
             ]
 
             result = subprocess.run(
-                cmd, check=False, capture_output=True, text=True, timeout=10
+                cmd, check=False, capture_output=True, text=True, timeout=10,
             )
             return result.returncode == 0
 
@@ -110,13 +108,11 @@ class FlextMeltanoMeltanoLDAPIntegrationTest:
                 if package_path.exists():
                     cmd = ["pip", "install", "-e", str(package_path)]
                     result = subprocess.run(
-                        cmd, check=False, capture_output=True, text=True, timeout=120
+                        cmd, check=False, capture_output=True, text=True, timeout=120,
                     )
 
                     if result.returncode != 0:
                         return False
-                else:
-                    pass
 
             # Verify installations
             for package in packages:
@@ -127,7 +123,7 @@ class FlextMeltanoMeltanoLDAPIntegrationTest:
                         f"import {package.replace('-', '_')}; print('{package} imported successfully')",
                     ]
                     result = subprocess.run(
-                        cmd, check=False, capture_output=True, text=True, timeout=10
+                        cmd, check=False, capture_output=True, text=True, timeout=10,
                     )
                     if result.returncode == 0:
                         pass
@@ -149,7 +145,7 @@ class FlextMeltanoMeltanoLDAPIntegrationTest:
 
             # Check if meltano is available
             result = subprocess.run(
-                ["meltano", "--version"], check=False, capture_output=True, text=True
+                ["meltano", "--version"], check=False, capture_output=True, text=True,
             )
             if result.returncode != 0:
                 install_result = subprocess.run(
@@ -253,7 +249,7 @@ class FlextMeltanoMeltanoLDAPIntegrationTest:
                 # Verify LDIF output file
                 ldif_output = Path("/tmp/target-ldif-test-output.ldif")
                 if ldif_output.exists():
-                    with open(ldif_output) as f:
+                    with open(ldif_output, encoding="utf-8") as f:
                         content = f.read()
 
                     if "dn:" in content and "objectClass:" in content:
@@ -276,7 +272,7 @@ class FlextMeltanoMeltanoLDAPIntegrationTest:
         try:
             # Test with invalid configuration to trigger error handling
             with tempfile.NamedTemporaryFile(
-                mode="w", suffix=".yml", delete=False
+                encoding="utf-8", mode="w", suffix=".yml", delete=False,
             ) as f:
                 invalid_config = {
                     "version": 1,
@@ -294,8 +290,8 @@ class FlextMeltanoMeltanoLDAPIntegrationTest:
                                     "bind_password": "invalid",
                                     "base_dn": "invalid",
                                 },
-                            }
-                        ]
+                            },
+                        ],
                     },
                 }
                 yaml.dump(invalid_config, f)
@@ -311,7 +307,7 @@ class FlextMeltanoMeltanoLDAPIntegrationTest:
                 "--discover",
             ]
             result = subprocess.run(
-                cmd, check=False, capture_output=True, text=True, timeout=30
+                cmd, check=False, capture_output=True, text=True, timeout=30,
             )
 
             # We expect this to fail, but with proper error handling
@@ -356,7 +352,7 @@ class FlextMeltanoMeltanoLDAPIntegrationTest:
                 "ldif_output": self.test_results.get("ldif_output_valid", False),
                 "tap_discovery": self.test_results.get("tap_discovery", False),
                 "target_installation": self.test_results.get(
-                    "target_installation", False
+                    "target_installation", False,
                 ),
             },
         }
@@ -367,7 +363,7 @@ class FlextMeltanoMeltanoLDAPIntegrationTest:
             # Stop Docker containers
             cmd = ["docker-compose", "down", "-v"]
             subprocess.run(
-                cmd, check=False, cwd=self.test_dir, capture_output=True, timeout=60
+                cmd, check=False, cwd=self.test_dir, capture_output=True, timeout=60,
             )
 
             # Clean up temp files
