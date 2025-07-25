@@ -177,28 +177,13 @@ func registerContainerHandlers(srv *server.Server, container *container.Containe
 		logger.Warn("⚠️ Plugin handler is nil")
 	}
 
-	// Register Meltano Handler (active) 
-	if meltanoHandler := container.GetMeltanoHandler(); meltanoHandler != nil {
-		srv.RegisterHandler(meltanoHandler)
-		logger.Info("✅ Meltano handler loaded and routes registered")
+	// Register Unified Meltano Handler (Meltano + Singer + DBT via flext-meltano library)
+	if unifiedHandler := container.GetUnifiedMeltanoHandler(); unifiedHandler != nil {
+		srv.RegisterHandler(unifiedHandler)
+		logger.Info("✅ Unified Meltano handler loaded (Meltano + Singer + DBT via flext-meltano)")
+		logger.Info("📋 Available APIs: /api/v1/meltano, /api/v1/singer, /api/v1/dbt")
 	} else {
-		logger.Warn("⚠️ Meltano handler is nil")
-	}
-
-	// Register DBT Handler (active)
-	if dbtHandler := container.GetDBTHandler(); dbtHandler != nil {
-		srv.RegisterHandler(dbtHandler)
-		logger.Info("✅ DBT handler loaded and routes registered")
-	} else {
-		logger.Warn("⚠️ DBT handler is nil")
-	}
-
-	// Register Singer Handler (active)
-	if singerHandler := container.GetSingerHandler(); singerHandler != nil {
-		srv.RegisterHandler(singerHandler)
-		logger.Info("✅ Singer handler loaded and routes registered")
-	} else {
-		logger.Warn("⚠️ Singer handler is nil")
+		logger.Warn("⚠️ Unified Meltano handler is nil")
 	}
 
 	// Register FLEXCORE Handler (NEW - FLEXCORE integration)
@@ -221,9 +206,9 @@ func registerContainerHandlers(srv *server.Server, container *container.Containe
 	logger.Info("✅ All available FLEXT service handlers registered from DI container")
 	logger.Info("🎯 API endpoints configured:",
 		logging.F("plugins_api", "/api/v1/plugins"),
-		logging.F("meltano_api", "/api/v1/meltano"),
-		logging.F("singer_api", "/api/v1/singer"),
-		logging.F("dbt_api", "/api/v1/dbt"),
+		logging.F("unified_meltano", "/api/v1/meltano (via flext-meltano)"),
+		logging.F("unified_singer", "/api/v1/singer (via flext-meltano)"),
+		logging.F("unified_dbt", "/api/v1/dbt (via flext-meltano)"),
 		logging.F("flexcore_api", "/api/v1/flexcore"),
 		logging.F("health_api", "/health"))
 }

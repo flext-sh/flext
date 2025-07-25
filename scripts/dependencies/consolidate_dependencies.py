@@ -29,11 +29,7 @@ def main() -> None:
 
     # Find all FLEXT project pyproject.toml files
     pyproject_files = list(workspace_root.glob("*/pyproject.toml"))
-    pyproject_files = [
-        f
-        for f in pyproject_files
-        if not str(f).startswith(str(workspace_root / ".venv"))
-    ]
+    pyproject_files = [f for f in pyproject_files if not str(f).startswith(str(workspace_root / ".venv"))]
 
     print(f"🔍 Found {len(pyproject_files)} projects to update")
 
@@ -61,9 +57,7 @@ def main() -> None:
             project_config["tool"]["poetry"] = {}
 
         # Replace with centralized dependencies
-        for group_name, group_deps in (
-            central_deps.get("tool", {}).get("poetry", {}).items()
-        ):
+        for group_name, group_deps in central_deps.get("tool", {}).get("poetry", {}).items():
             if group_name.startswith("group."):
                 project_config["tool"]["poetry"][group_name] = group_deps
                 print(f"  ✅ Updated {group_name}")
@@ -76,16 +70,10 @@ def main() -> None:
 
         # Add project-specific type dependencies if needed
         if project_name == "flext-ldap":
-            project_config["tool"]["poetry"]["group.typings.dependencies"][
-                "types-ldap3"
-            ] = "^2.9.13.20250622"
+            project_config["tool"]["poetry"]["group.typings.dependencies"]["types-ldap3"] = "^2.9.13.20250622"
         elif project_name == "flext-api":
-            project_config["tool"]["poetry"]["group.dev.dependencies"][
-                "types-setuptools"
-            ] = "^80.9.0.20250529"
-            project_config["tool"]["poetry"]["group.dev.dependencies"][
-                "types-decorator"
-            ] = "^5.2.0.20250324"
+            project_config["tool"]["poetry"]["group.dev.dependencies"]["types-setuptools"] = "^80.9.0.20250529"
+            project_config["tool"]["poetry"]["group.dev.dependencies"]["types-decorator"] = "^5.2.0.20250324"
         elif project_name == "algar-oud-mig":
             # Add specific dependencies for ALGAR project
             algar_types = project_config["tool"]["poetry"]["group.typings.dependencies"]

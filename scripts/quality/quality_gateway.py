@@ -40,11 +40,7 @@ class QualityGateway(FlextScript):
 
         # Verificar se estamos no workspace FLEXT
         flext_projects = [
-            p
-            for p in workspace_root.iterdir()
-            if p.is_dir()
-            and p.name.startswith("flext-")
-            and (p / "pyproject.toml").exists()
+            p for p in workspace_root.iterdir() if p.is_dir() and p.name.startswith("flext-") and (p / "pyproject.toml").exists()
         ]
 
         if not flext_projects:
@@ -247,11 +243,7 @@ class QualityGateway(FlextScript):
             mypy_errors = 0
             if mypy_result.stdout:
                 mypy_errors = len(
-                    [
-                        line
-                        for line in mypy_result.stdout.split("\n")
-                        if line and ":" in line
-                    ],
+                    [line for line in mypy_result.stdout.split("\n") if line and ":" in line],
                 )
 
             total_issues = ruff_issues + mypy_errors
@@ -402,9 +394,7 @@ class QualityGateway(FlextScript):
 
         # Score de qualidade
         if total_stats["projects_analyzed"] > 0:
-            success_rate = (
-                total_stats["passed"] / total_stats["projects_analyzed"]
-            ) * 100
+            success_rate = (total_stats["passed"] / total_stats["projects_analyzed"]) * 100
 
             if success_rate == 100:
                 score_color = Colors.GREEN

@@ -326,10 +326,7 @@ class SafetyValidator:
                 if not package_validation["safe"]:
                     result["safe"] = False
                     result["issues"].extend(
-                        [
-                            f"Pacote '{package}': {issue}"
-                            for issue in package_validation["issues"]
-                        ],
+                        [f"Pacote '{package}': {issue}" for issue in package_validation["issues"]],
                     )
 
         # Recomendações específicas por operação
@@ -349,11 +346,7 @@ class SafetyValidator:
                 return file_path.is_file() and bool(file_path.stat().st_mode & 0o200)
             # Verifica se pode criar arquivo no diretório pai
             parent = file_path.parent
-            return (
-                parent.exists()
-                and parent.is_dir()
-                and bool(parent.stat().st_mode & 0o200)
-            )
+            return parent.exists() and parent.is_dir() and bool(parent.stat().st_mode & 0o200)
         except Exception:
             return False
 

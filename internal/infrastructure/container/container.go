@@ -60,15 +60,13 @@ type Container struct {
 	flexcorePluginRegistry *flexcore_plugin.PluginRegistry
 
 	// HTTP Handlers
-	pipelineHandler    *http.CleanPipelineHandler
-	pluginHandler      *http.PluginHandler
-	meltanoHandler     *http.MeltanoHandler
-	meltanoGopyHandler *http.MeltanoGopyHandler
-	dbtHandler         *http.DBTHandler
-	connectorsHandler  *http.ConnectorsHandler
-	singerHandler      *http.SingerHandler
-	webHandler         *http.SimpleBootstrapHandler
-	flexcoreHandler    *http.FlexcoreHandler
+	pipelineHandler       *http.CleanPipelineHandler
+	pluginHandler         *http.PluginHandler
+	unifiedMeltanoHandler *http.UnifiedMeltanoHandler
+	meltanoGopyHandler    *http.MeltanoGopyHandler
+	connectorsHandler     *http.ConnectorsHandler
+	webHandler            *http.SimpleBootstrapHandler
+	flexcoreHandler       *http.FlexcoreHandler
 }
 
 // NewContainer cria um novo container de dependências
@@ -194,18 +192,14 @@ func (c *Container) initializeServices() error {
 	// c.pipelineHandler = http.NewCleanPipelineHandler(...)
 	c.logger.Info("Pipeline handler temporarily disabled during container setup")
 	c.pluginHandler = http.NewPluginHandler(c.pluginService, c.logger)
-	c.meltanoHandler = http.NewMeltanoHandler(c.meltanoService)
 	c.connectorsHandler = http.NewConnectorsHandler(c.logger)
-	if c.dbtManager != nil {
-		c.dbtHandler = http.NewDBTHandler(c.dbtManager, c.logger)
-	}
+
+	// UNIFIED HANDLER: All Meltano, Singer, DBT operations via flext-meltano library
+	c.unifiedMeltanoHandler = http.NewUnifiedMeltanoHandler(c.meltanoService, c.logger)
+	c.logger.Info("✅ Unified Meltano handler created (Meltano + Singer + DBT via flext-meltano)")
 
 	// Gopy integration handler for Python-Go bridge via HTTP
 	c.meltanoGopyHandler = http.NewMeltanoGopyHandler(c.meltanoService, c.logger)
-
-	// Para criar o SingerHandler, precisamos criar um SingerService temporário
-	// TODO: Implementar SingerService completo no futuro
-	c.singerHandler = http.NewSingerHandler(nil, c.singerManager)
 
 	// Web interface handler - Simple Bootstrap + HTMX version
 	c.webHandler = http.NewSimpleBootstrapHandler(c.logger)
@@ -345,11 +339,16 @@ func (c *Container) GetMeltanoService() *meltanoServices.MeltanoService {
 	return c.meltanoService
 }
 
-// GetMeltanoHandler retorna o handler HTTP de Meltano
-func (c *Container) GetMeltanoHandler() *http.MeltanoHandler {
+// GetUnifiedMeltanoHandler retorna o handler HTTP unificado (Meltano + Singer + DBT)
+func (c *Container) GetUnifiedMeltanoHandler() *http.UnifiedMeltanoHandler {
 	c.mu.RLock()
 	defer c.mu.RUnlock()
-	return c.meltanoHandler
+	return c.unifiedMeltanoHandler
+}
+
+// Deprecated: Use GetUnifiedMeltanoHandler instead
+func (c *Container) GetMeltanoHandler() *http.UnifiedMeltanoHandler {
+	return c.GetUnifiedMeltanoHandler()
 }
 
 // NewCleanContainer creates a new container for Clean Architecture
@@ -369,11 +368,9 @@ func (c *Container) GetDBTManager() *dbt.DBTManager {
 	return c.dbtManager
 }
 
-// GetDBTHandler retorna o handler HTTP de DBT
-func (c *Container) GetDBTHandler() *http.DBTHandler {
-	c.mu.RLock()
-	defer c.mu.RUnlock()
-	return c.dbtHandler
+// Deprecated: Use GetUnifiedMeltanoHandler instead
+func (c *Container) GetDBTHandler() *http.UnifiedMeltanoHandler {
+	return c.GetUnifiedMeltanoHandler()
 }
 
 // GetConnectorsHandler retorna o handler HTTP de conectores
@@ -397,11 +394,9 @@ func (c *Container) GetSingerManager() *singer.SingerManager {
 	return c.singerManager
 }
 
-// GetSingerHandler retorna o handler HTTP do Singer
-func (c *Container) GetSingerHandler() *http.SingerHandler {
-	c.mu.RLock()
-	defer c.mu.RUnlock()
-	return c.singerHandler
+// Deprecated: Use GetUnifiedMeltanoHandler instead
+func (c *Container) GetSingerHandler() *http.UnifiedMeltanoHandler {
+	return c.GetUnifiedMeltanoHandler()
 }
 
 // GetWebHandler retorna o handler HTTP da interface web

@@ -5,7 +5,6 @@ Verifica lint, mypy, testes e violações arquiteturais em todos os submódulos
 """
 
 import json
-import os
 import subprocess
 import sys
 from dataclasses import dataclass, field
@@ -79,7 +78,9 @@ class FlextDiagnostic:
         }
 
     def run_command(
-        self, cmd: list[str], cwd: Path | None = None
+        self,
+        cmd: list[str],
+        cwd: Path | None = None,
     ) -> tuple[int, str, str]:
         """Execute command and return (return_code, stdout, stderr)."""
         try:
@@ -153,7 +154,7 @@ class FlextDiagnostic:
 
         # Check Poetry install
         if status.has_pyproject:
-            rc, stdout, stderr = self.run_command(["poetry", "install"], project_path)
+            rc, _stdout, stderr = self.run_command(["poetry", "install"], project_path)
             if rc == 0:
                 status.poetry_install = "✅ PASS"
             else:
@@ -174,13 +175,14 @@ class FlextDiagnostic:
             # Search problematic imports
             keywords = ["meltano", "oracle", "ldap", "singer", "algar", "gruponos"]
             for keyword in keywords:
-                rc, stdout, stderr = self.run_command(
-                    ["grep", "-r", keyword, "--include=*.py", "."], core_path
+                rc, stdout, _stderr = self.run_command(
+                    ["grep", "-r", keyword, "--include=*.py", "."],
+                    core_path,
                 )
 
                 if rc == 0 and stdout.strip():
                     violations["flext-core"].append(
-                        f"Import {keyword}: {stdout.strip()}"
+                        f"Import {keyword}: {stdout.strip()}",
                     )
 
         return violations
@@ -223,22 +225,12 @@ class FlextDiagnostic:
         """Generate summary."""
         total_projects = len(self.results)
         projects_with_makefile = sum(1 for s in self.results.values() if s.has_makefile)
-        projects_with_pyproject = sum(
-            1 for s in self.results.values() if s.has_pyproject
-        )
+        projects_with_pyproject = sum(1 for s in self.results.values() if s.has_pyproject)
 
-        lint_passed = sum(
-            1 for s in self.results.values() if s.lint_status == "✅ PASS"
-        )
-        mypy_passed = sum(
-            1 for s in self.results.values() if s.mypy_status == "✅ PASS"
-        )
-        tests_passed = sum(
-            1 for s in self.results.values() if s.test_status == "✅ PASS"
-        )
-        poetry_passed = sum(
-            1 for s in self.results.values() if s.poetry_install == "✅ PASS"
-        )
+        lint_passed = sum(1 for s in self.results.values() if s.lint_status == "✅ PASS")
+        mypy_passed = sum(1 for s in self.results.values() if s.mypy_status == "✅ PASS")
+        tests_passed = sum(1 for s in self.results.values() if s.test_status == "✅ PASS")
+        poetry_passed = sum(1 for s in self.results.values() if s.poetry_install == "✅ PASS")
 
         projects_with_errors = sum(1 for s in self.results.values() if s.errors)
 
@@ -253,7 +245,7 @@ class FlextDiagnostic:
             "projects_with_errors": projects_with_errors,
         }
 
-    def print_report(self, report: dict) -> None:
+    def print_report(self, report: dict[str, Any]) -> None:
         """Print formatted report."""
         print("\n" + "=" * 60)
         print("📊 RELATÓRIO DE DIAGNÓSTICO FLEXT")
@@ -276,11 +268,7 @@ class FlextDiagnostic:
         print("-" * 60)
 
         for level in range(1, 7):
-            level_projects = [
-                (name, data)
-                for name, data in report["projects"].items()
-                if data["level"] == level
-            ]
+            level_projects = [(name, data) for name, data in report["projects"].items() if data["level"] == level]
 
             if level_projects:
                 level_name = {
@@ -328,9 +316,9 @@ def main() -> None:
 
     # Save report in JSON
     report_file = "scripts/architecture/diagnostic_report.json"
-    os.makedirs(os.path.dirname(report_file), exist_ok=True)
+    Path(report_file).parent.mkdir(parents=True, exist_ok=True)
 
-    with open(report_file, "w") as f:
+    with open(report_file, "w", encoding="utf-8") as f:
         json.dump(report, f, indent=2)
 
     print(f"\n💾 Relatório salvo em: {report_file}")

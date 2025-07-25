@@ -90,10 +90,7 @@ class ConflictAnalyzer:
         # Procura por projetos Python
         for pyproject in workspace_path.rglob("pyproject.toml"):
             # Ignora diretórios especiais
-            if any(
-                p in pyproject.parts
-                for p in ["archive", "backup", "node_modules", ".git"]
-            ):
+            if any(p in pyproject.parts for p in ["archive", "backup", "node_modules", ".git"]):
                 continue
 
             project_name = pyproject.parent.name
@@ -217,11 +214,7 @@ class ConflictAnalyzer:
             "packages_with_conflicts": len(conflicts),
             "blocking_packages": len(blockers),
             "affected_projects": len(
-                {
-                    project
-                    for blocker_data in blockers.values()
-                    for project in blocker_data["blocking_projects"]
-                },
+                {project for blocker_data in blockers.values() for project in blocker_data["blocking_projects"]},
             ),
         }
 
@@ -259,9 +252,7 @@ class ConflictAnalyzer:
 
                 if conflict_data["analysis"]["issues"]:
                     lines.append("\n**Problemas:**")
-                    lines.extend(
-                        f"- {issue}" for issue in conflict_data["analysis"]["issues"]
-                    )
+                    lines.extend(f"- {issue}" for issue in conflict_data["analysis"]["issues"])
 
                 lines.append("")
 

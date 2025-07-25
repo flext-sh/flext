@@ -21,10 +21,7 @@ def get_project_directories() -> list[str]:
 
     # Projetos principais (excluindo backups e arquivos temporários)
     for pyproject in workspace_root.rglob("pyproject.toml"):
-        if any(
-            exclude in str(pyproject)
-            for exclude in [".venv", ".flext_backups", "test_failures"]
-        ):
+        if any(exclude in str(pyproject) for exclude in [".venv", ".flext_backups", "test_failures"]):
             continue
 
         project_dir = pyproject.parent
@@ -37,11 +34,11 @@ def get_project_directories() -> list[str]:
 def run_poetry_install(project_dir: str) -> tuple[bool, str]:
     """Executar poetry install em um projeto."""
     try:
-        print(f"📦 Instalando {os.path.basename(project_dir)}...")
+        print(f"📦 Instalando {Path(project_dir).name}...")
 
         # Verificar se existe pyproject.toml
         pyproject_path = os.path.join(project_dir, "pyproject.toml")
-        if not os.path.exists(pyproject_path):
+        if not Path(pyproject_path).exists():
             return False, f"pyproject.toml não encontrado em {project_dir}"
 
         # Executar poetry install
@@ -74,7 +71,7 @@ def main():
     print(f"📋 Encontrados {len(projects)} projetos para instalar:")
 
     for project in projects:
-        print(f"  - {os.path.basename(project)}")
+        print(f"  - {Path(project).name}")
 
     print("\n" + "=" * 50)
 
@@ -83,7 +80,7 @@ def main():
     for project in projects:
         success, message = run_poetry_install(project)
         results.append((project, success, message))
-        print(f"  {os.path.basename(project)}: {message}")
+        print(f"  {Path(project).name}: {message}")
 
     # Resumo
     print("\n" + "=" * 50)
@@ -99,10 +96,10 @@ def main():
         print("\n❌ PROJETOS COM FALHA:")
         for project, success, message in results:
             if not success:
-                print(f"  - {os.path.basename(project)}: {message}")
+                print(f"  - {Path(project).name}: {message}")
 
     print(
-        f"\n🎉 Instalação concluída! {successful}/{len(results)} projetos instalados com sucesso."
+        f"\n🎉 Instalação concluída! {successful}/{len(results)} projetos instalados com sucesso.",
     )
 
     return 0 if failed == 0 else 1

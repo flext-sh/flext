@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [project]
 name = "flext"
-version = "0.7.0"
+version = "0.8.0"
 description = "FLEXT - Enterprise Data Integration Platform - Workspace Manager"
 readme = "README.md"
 requires-python = ">=3.13,<3.14"
@@ -31,7 +31,7 @@ classifiers = [
 dependencies = [
     "click (>=8.2.1)",
     "cryptography (>=45.0.5)",
-    "gensim @ git+https://github.com/flext-sh/gensim.git@flext-gensim-4.3.3-numpy2-python313",  # Fork flext-sh v4.3.3 + Python 3.13 + NumPy >=2.0.0
+    "gensim @ git+https://github.com/flext-sh/gensim.git@flext-gensim-4.3.3-numpy2-python313",           # Fork flext-sh v4.3.3 + Python 3.13 + NumPy >=2.0.0
     "grpcio (>=1.50.0)",
     "grpcio-health-checking (>=1.50.0)",
     "grpcio-tools (>=1.0.0)",
@@ -76,6 +76,7 @@ dependencies = [
     "flext-web @ file:///home/marlonsc/flext/flext-web",
     "gruponos-meltano-native @ file:///home/marlonsc/flext/gruponos-meltano-native",
     "duplicate-code-detection-tool @ git+https://github.com/flext-sh/duplicate-code-detection-tool.git",
+    "pyaml (>=25.7.0,<26.0.0)",
 ]
 
 [project.license]
@@ -129,10 +130,7 @@ typings = [
     "types-psutil>=7.0.0",
     "django-stubs>=5.2.2",
 ]
-security = [
-    "bandit>=1.8.0",
-    "pip-audit>=2.7.3",
-]
+security = ["bandit>=1.8.0", "pip-audit>=2.7.3"]
 
 [project.scripts]
 flext-workspace = "flext.workspace:main"
@@ -318,11 +316,8 @@ no_implicit_reexport = true
 explicit_package_bases = true
 namespace_packages = true
 
-# Configuração para análise máxima seguindo PEP 420
-mypy_path = "src:scripts:examples:tests"
-
-# Analisar máximo de arquivos possível
-files = ["src", "tests", "scripts", "examples"]
+# Configuração de paths para evitar conflitos de módulos
+mypy_path = ["src"]
 
 # Plugins
 plugins = ["pydantic.mypy"]
@@ -337,483 +332,12 @@ exclude = [
     "node_modules/",
     ".git/",
     ".*/tests/",
-    # "tests/",
+    ".*/examples/",
+    ".*/scripts/",
     ".*/generate_config.py",
     ".*/manage.py",
     "vendor/",
 ]
-
-# === CONFIGURAÇÕES ESPECÍFICAS POR MÓDULO ===
-# Configurações para testes com regras mais relaxadas
-
-[[tool.mypy.overrides]]
-module = "tests.*"
-# Configurações relaxadas para todos os testes
-disallow_untyped_defs = false
-disallow_incomplete_defs = false
-check_untyped_defs = false
-disallow_untyped_decorators = false
-no_implicit_optional = false
-warn_return_any = false
-warn_unreachable = false
-strict_equality = false
-
-# Configurações para módulos de teste específicos com regras relaxadas
-[[tool.mypy.overrides]]
-module = "flext-api.tests.*"
-follow_imports = "skip"
-disallow_untyped_defs = false
-disallow_incomplete_defs = false
-check_untyped_defs = false
-disallow_untyped_decorators = false
-no_implicit_optional = false
-warn_return_any = false
-warn_unreachable = false
-strict_equality = false
-
-[[tool.mypy.overrides]]
-module = "algar-oud-mig.tests.*"
-follow_imports = "skip"
-disallow_untyped_defs = false
-disallow_incomplete_defs = false
-check_untyped_defs = false
-disallow_untyped_decorators = false
-no_implicit_optional = false
-warn_return_any = false
-warn_unreachable = false
-strict_equality = false
-
-[[tool.mypy.overrides]]
-module = "flext-auth.tests.*"
-follow_imports = "skip"
-disallow_untyped_defs = false
-disallow_incomplete_defs = false
-check_untyped_defs = false
-disallow_untyped_decorators = false
-no_implicit_optional = false
-warn_return_any = false
-warn_unreachable = false
-strict_equality = false
-
-[[tool.mypy.overrides]]
-module = "flext-cli.tests.*"
-follow_imports = "skip"
-disallow_untyped_defs = false
-disallow_incomplete_defs = false
-check_untyped_defs = false
-disallow_untyped_decorators = false
-no_implicit_optional = false
-warn_return_any = false
-warn_unreachable = false
-strict_equality = false
-
-[[tool.mypy.overrides]]
-module = "flext-core.tests.*"
-follow_imports = "skip"
-disallow_untyped_defs = false
-disallow_incomplete_defs = false
-check_untyped_defs = false
-disallow_untyped_decorators = false
-no_implicit_optional = false
-warn_return_any = false
-warn_unreachable = false
-strict_equality = false
-
-[[tool.mypy.overrides]]
-module = "flext-db-oracle.tests.*"
-follow_imports = "skip"
-disallow_untyped_defs = false
-disallow_incomplete_defs = false
-check_untyped_defs = false
-disallow_untyped_decorators = false
-no_implicit_optional = false
-warn_return_any = false
-warn_unreachable = false
-strict_equality = false
-
-[[tool.mypy.overrides]]
-module = "flext-dbt-ldap.tests.*"
-follow_imports = "skip"
-disallow_untyped_defs = false
-disallow_incomplete_defs = false
-check_untyped_defs = false
-disallow_untyped_decorators = false
-no_implicit_optional = false
-warn_return_any = false
-warn_unreachable = false
-strict_equality = false
-
-[[tool.mypy.overrides]]
-module = "flext-dbt-ldif.tests.*"
-follow_imports = "skip"
-disallow_untyped_defs = false
-disallow_incomplete_defs = false
-check_untyped_defs = false
-disallow_untyped_decorators = false
-no_implicit_optional = false
-warn_return_any = false
-warn_unreachable = false
-strict_equality = false
-
-[[tool.mypy.overrides]]
-module = "flext-dbt-oracle.tests.*"
-follow_imports = "skip"
-disallow_untyped_defs = false
-disallow_incomplete_defs = false
-check_untyped_defs = false
-disallow_untyped_decorators = false
-no_implicit_optional = false
-warn_return_any = false
-warn_unreachable = false
-strict_equality = false
-
-[[tool.mypy.overrides]]
-module = "flext-dbt-oracle-wms.tests.*"
-follow_imports = "skip"
-disallow_untyped_defs = false
-disallow_incomplete_defs = false
-check_untyped_defs = false
-disallow_untyped_decorators = false
-no_implicit_optional = false
-warn_return_any = false
-warn_unreachable = false
-strict_equality = false
-
-[[tool.mypy.overrides]]
-module = "flext-grpc.tests.*"
-follow_imports = "skip"
-disallow_untyped_defs = false
-disallow_incomplete_defs = false
-check_untyped_defs = false
-disallow_untyped_decorators = false
-no_implicit_optional = false
-warn_return_any = false
-warn_unreachable = false
-strict_equality = false
-
-[[tool.mypy.overrides]]
-module = "flext-ldap.tests.*"
-follow_imports = "skip"
-disallow_untyped_defs = false
-disallow_incomplete_defs = false
-check_untyped_defs = false
-disallow_untyped_decorators = false
-no_implicit_optional = false
-warn_return_any = false
-warn_unreachable = false
-strict_equality = false
-
-[[tool.mypy.overrides]]
-module = "flext-ldif.tests.*"
-follow_imports = "skip"
-disallow_untyped_defs = false
-disallow_incomplete_defs = false
-check_untyped_defs = false
-disallow_untyped_decorators = false
-no_implicit_optional = false
-warn_return_any = false
-warn_unreachable = false
-strict_equality = false
-
-[[tool.mypy.overrides]]
-module = "flext-meltano.tests.*"
-follow_imports = "skip"
-disallow_untyped_defs = false
-disallow_incomplete_defs = false
-check_untyped_defs = false
-disallow_untyped_decorators = false
-no_implicit_optional = false
-warn_return_any = false
-warn_unreachable = false
-strict_equality = false
-
-[[tool.mypy.overrides]]
-module = "flext-observability.tests.*"
-follow_imports = "skip"
-disallow_untyped_defs = false
-disallow_incomplete_defs = false
-check_untyped_defs = false
-disallow_untyped_decorators = false
-no_implicit_optional = false
-warn_return_any = false
-warn_unreachable = false
-strict_equality = false
-
-[[tool.mypy.overrides]]
-module = "flext-oracle-oic-ext.tests"
-follow_imports = "skip"
-
-[[tool.mypy.overrides]]
-module = "flext-oracle-wms.tests"
-follow_imports = "skip"
-
-[[tool.mypy.overrides]]
-module = "flext-plugin.tests"
-follow_imports = "skip"
-
-[[tool.mypy.overrides]]
-module = "flext-quality.tests"
-follow_imports = "skip"
-
-[[tool.mypy.overrides]]
-module = "flext-tap-ldap.tests"
-follow_imports = "skip"
-
-[[tool.mypy.overrides]]
-module = "flext-tap-ldif.tests"
-follow_imports = "skip"
-
-[[tool.mypy.overrides]]
-module = "flext-tap-oracle.tests"
-follow_imports = "skip"
-
-[[tool.mypy.overrides]]
-module = "flext-tap-oracle-oic.tests"
-follow_imports = "skip"
-
-[[tool.mypy.overrides]]
-module = "flext-tap-oracle-wms.tests"
-follow_imports = "skip"
-
-[[tool.mypy.overrides]]
-module = "flext-target-ldap.tests"
-follow_imports = "skip"
-
-[[tool.mypy.overrides]]
-module = "flext-target-ldif.tests"
-follow_imports = "skip"
-
-[[tool.mypy.overrides]]
-module = "flext-target-oracle.tests"
-follow_imports = "skip"
-
-[[tool.mypy.overrides]]
-module = "flext-target-oracle-oic.tests"
-follow_imports = "skip"
-
-[[tool.mypy.overrides]]
-module = "flext-target-oracle-wms.tests"
-follow_imports = "skip"
-
-[[tool.mypy.overrides]]
-module = "flext-web.tests"
-follow_imports = "skip"
-
-# Configurações relaxadas para scripts
-[[tool.mypy.overrides]]
-module = "scripts.*"
-ignore_missing_imports = true
-disallow_untyped_defs = false
-
-# Configurações relaxadas para examples
-[[tool.mypy.overrides]]
-module = "examples.*"
-ignore_missing_imports = true
-disallow_untyped_defs = false
-
-# Configurações para módulos sem stubs de tipagem
-[[tool.mypy.overrides]]
-module = "grpc"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "grpc.aio"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "cx_Oracle"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "agate"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "meltano.edk"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "grpc_health.v1"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "dbt.adapters.sql"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "dbt.adapters.base"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "celery"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "rest_framework"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "flexcore.core"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "astor"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "nltk"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "grpc._utilities"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "dynaconf"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "grpc_health"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "grpc_health.v1"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "grpc_health.v1.health"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "grpc_health.v1.health_pb2"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "grpc_health.v1.health_pb2_grpc"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "nltk.tokenize"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "celery.app.task"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "rest_framework.decorators"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "rest_framework.permissions"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "rest_framework.response"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "rest_framework.request"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "rest_framework.serializers"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "rest_framework.views"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "rest_framework.status"
-ignore_missing_imports = true
-
-# Configurações para módulos LDAP com problemas de tipos não implementados
-[[tool.mypy.overrides]]
-module = "ldap3"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "ldap3.*"
-ignore_missing_imports = true
-
-
-# Configurações para arquivos gerados pelo protobuf
-[[tool.mypy.overrides]]
-module = "flext_grpc.proto.flext_pb2"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "flext_grpc.proto.flext_pb2_grpc"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "flext_grpc.proto.flx_pb2"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "flext_grpc.proto.flx_pb2_grpc"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "flext_grpc.proto.*"
-ignore_missing_imports = true
-
-# Configurações específicas para arquivos .pyi gerados
-[[tool.mypy.overrides]]
-module = "flext_grpc.proto.flx_pb2"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "flext_grpc.proto.flext_pb2"
-ignore_missing_imports = true
-
-# Configurações para arquivos celery
-[[tool.mypy.overrides]]
-module = "flext_quality.code_analyzer_web.celery"
-ignore_missing_imports = true
-
-# Configurações para arquivos protobuf gerados
-[[tool.mypy.overrides]]
-module = "flext_grpc.proto.flext_pb2_grpc"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "flext_grpc.proto.flx_pb2_grpc"
-ignore_missing_imports = true
-
-# Configurações para módulos externos sem stubs
-[[tool.mypy.overrides]]
-module = "gensim"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "xhtml2pdf"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "duplicate_code_detection"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "analyzer.backends.quality_backend"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "meltano.edk.process"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "django_filters.rest_framework"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "flext_core.domain.typedefs"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "gensim.*"
-ignore_missing_imports = true
 
 [tool.coverage.run]
 source = ["src"]
@@ -962,11 +486,18 @@ bandit = "^1.8.0"
 pip-audit = "^2.7.3"
 
 [tool.vulture]
-exclude = ["*/tests/*", "*/__pycache__/*", "*/venv/*", "*/.venv/*", "*/build/*", "*/dist/*", "*/reports/*"]
+exclude = [
+    "*/tests/*",
+    "*/__pycache__/*",
+    "*/venv/*",
+    "*/.venv/*",
+    "*/build/*",
+    "*/dist/*",
+    "*/reports/*",
+]
 ignore_decorators = ["@app.route", "@require_*"]
 ignore_names = ["visit_*", "do_*"]
 min_confidence = 70
 paths = ["src"]
 sort_by_size = true
 verbose = false
-

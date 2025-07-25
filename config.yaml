@@ -1,14 +1,20 @@
 # FLEXT Service Configuration
 server:
   host: "0.0.0.0"
-  port: 8080
+  port: 8081
   mode: "server"
   environment: "development"
 
 database:
-  url: "postgresql://flext:flext_secure_password_change_in_production@postgres:5432/flext?sslmode=disable"
-  max_open_conns: 20
-  max_idle_conns: 10
+  driver: "memory" 
+  host: "localhost"
+  port: 5432
+  database: "flext_dev"
+  user: "flext"
+  password: ""
+
+features:
+  database_enabled: false
 
 redis:
   url: "redis://redis:6379/0"

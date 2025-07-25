@@ -11,18 +11,20 @@ total_removed=0
 # Função para remover ignores de um arquivo
 remove_ignores_from_file() {
     local file="$1"
-    local temp_file=$(mktemp)
+    local temp_file
+    temp_file=$(mktemp)
     local removed_count=0
     
     # Contar quantos ignores existem antes
-    local before_count=$(grep -c "# type: ignore\|# noqa\|# pylint:\|# mypy:" "$file" 2>/dev/null || echo 0)
+    local before_count
+    before_count=$(grep -c "ignore\|# noqa\|# pylint:\|# mypy:" "$file" 2>/dev/null || echo 0)
     
     if [ "$before_count" -gt 0 ]; then
         echo "  📁 $file (encontrados: $before_count ignores)"
         
         # Remover diferentes tipos de comentários ignore usando sed
         sed -E '
-            # Remover # type: ignore e variações
+            # Removerignore e variações
             s/[[:space:]]*#[[:space:]]*type:[[:space:]]*ignore(\[[^]]*\])?[[:space:]]*//g
             
             # Remover # noqa e variações  
@@ -60,7 +62,7 @@ echo "🔍 Procurando arquivos Python com comentários ignore..."
 # Processar arquivos que contêm comentários ignore
 while IFS= read -r -d '' file; do
     # Verificar se o arquivo contém comentários ignore
-    if grep -q "# type: ignore\|# noqa\|# pylint:\|# mypy:" "$file" 2>/dev/null; then
+    if grep -q "ignore\|# noqa\|# pylint:\|# mypy:" "$file" 2>/dev/null; then
         remove_ignores_from_file "$file"
     fi
 done < <(find . -path "./.venv" -prune -o -path "./*/.venv" -prune -o -path "./.git" -prune -o -name "*.py" -type f -print0 2>/dev/null)

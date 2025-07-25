@@ -25,11 +25,7 @@ def main() -> None:
 
     # Find all FLEXT project Makefiles
     makefile_files = list(workspace_root.glob("*/Makefile"))
-    makefile_files = [
-        f
-        for f in makefile_files
-        if not str(f).startswith(str(workspace_root / ".venv"))
-    ]
+    makefile_files = [f for f in makefile_files if not str(f).startswith(str(workspace_root / ".venv"))]
 
     print(f"🔍 Found {len(makefile_files)} Makefiles to simplify")
 
