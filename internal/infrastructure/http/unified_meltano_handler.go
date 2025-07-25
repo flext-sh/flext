@@ -53,7 +53,7 @@ func (h *UnifiedMeltanoHandler) RegisterRoutes(e *echo.Echo) {
 func (h *UnifiedMeltanoHandler) GetMeltanoVersion(c echo.Context) error {
 	h.logger.Info("Getting Meltano version via flext-meltano")
 
-	result, err := h.meltanoService.ExecuteCommand(c.Request().Context(), "version", []string{})
+	result, err := h.meltanoService.ExecuteMeltanoDirect(c.Request().Context(), "--version")
 	if err != nil {
 		h.logger.Error("Failed to get Meltano version", logging.F("error", err))
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
@@ -83,7 +83,9 @@ func (h *UnifiedMeltanoHandler) RunMeltano(c echo.Context) error {
 		logging.F("command", request.Command),
 		logging.F("args", request.Args))
 
-	result, err := h.meltanoService.ExecuteCommand(c.Request().Context(), request.Command, request.Args)
+	// Build args array with command + args
+	allArgs := append([]string{request.Command}, request.Args...)
+	result, err := h.meltanoService.ExecuteMeltanoDirect(c.Request().Context(), allArgs...)
 	if err != nil {
 		h.logger.Error("Meltano execution failed", logging.F("error", err))
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
