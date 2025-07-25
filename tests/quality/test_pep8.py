@@ -1,14 +1,20 @@
 """PEP8 compliance tests for FLEXT workspace."""
 import json
+import operator
 import subprocess
-from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
+
 import pytest
+
 from .base import BaseQualityAnalyzer
+
+
 class PEP8Analyzer(BaseQualityAnalyzer):
     """Analyzer for PEP8 compliance using ruff."""
+
     def __init__(self, workspace_root: str = "/home/marlonsc/flext") -> None:
         super().__init__(workspace_root, "pep8")
+
     def run_analysis(self) -> dict[str, Any]:
         """Run PEP8 analysis using ruff."""
         python_files = self.find_python_files()
@@ -29,7 +35,7 @@ class PEP8Analyzer(BaseQualityAnalyzer):
             try:
                 cmd = ["ruff", "check", str(file_path), "--output-format=json"]
                 result = subprocess.run(
-                    cmd, check=False, capture_output=True, text=True
+                    cmd, check=False, capture_output=True, text=True,
                 )
                 if result.returncode == 0:
                     compliant_files = results["compliant_files"]
@@ -47,12 +53,12 @@ class PEP8Analyzer(BaseQualityAnalyzer):
                                 "file": str(file_path),
                                 "line": violation.get("location", {}).get("row", 0),
                                 "column": violation.get("location", {}).get(
-                                    "column", 0
+                                    "column", 0,
                                 ),
                                 "rule": violation.get("code", ""),
                                 "message": violation.get("message", ""),
                                 "severity": self._get_severity(
-                                    violation.get("code", "")
+                                    violation.get("code", ""),
                                 ),
                             }
                             violations = results["violations"]
@@ -76,11 +82,12 @@ class PEP8Analyzer(BaseQualityAnalyzer):
                             "file": str(file_path),
                             "error": f"Analysis failed: {e!s}",
                             "severity": "error",
-                        }
+                        },
                     )
         # Generate recommendations
         results["recommendations"] = self._generate_recommendations(results)
         return results
+
     def _get_severity(self, code: str) -> str:
         """Determine severity based on ruff code."""
         if not code:
@@ -93,6 +100,7 @@ class PEP8Analyzer(BaseQualityAnalyzer):
             return "warnings"
         # All others are info
         return "info"
+
     def _generate_recommendations(self, results: dict[str, Any]) -> list[str]:
         """Generate PEP8 recommendations."""
         recommendations = []
@@ -104,11 +112,11 @@ class PEP8Analyzer(BaseQualityAnalyzer):
             compliance_rate = (compliant_files / total_files) * 100
             if compliance_rate < 70:
                 recommendations.append(
-                    "🚨 Critical: PEP8 compliance is below 70%. Run 'ruff check --fix' to auto-fix issues."
+                    "🚨 Critical: PEP8 compliance is below 70%. Run 'ruff check --fix' to auto-fix issues.",
                 )
             elif compliance_rate < 90:
                 recommendations.append(
-                    "⚠️ Warning: PEP8 compliance could be improved. Consider running 'ruff check --fix'."
+                    "⚠️ Warning: PEP8 compliance could be improved. Consider running 'ruff check --fix'.",
                 )
             else:
                 recommendations.append("✅ Good: PEP8 compliance is satisfactory.")
@@ -116,7 +124,7 @@ class PEP8Analyzer(BaseQualityAnalyzer):
             recommendations.append(f"🔴 Fix {total_errors} PEP8 errors immediately.")
         if total_warnings > 0:
             recommendations.append(
-                f"🟡 Address {total_warnings} PEP8 warnings when possible."
+                f"🟡 Address {total_warnings} PEP8 warnings when possible.",
             )
         # Top violation types
         violation_types: dict[str, int] = {}
@@ -125,12 +133,13 @@ class PEP8Analyzer(BaseQualityAnalyzer):
             violation_types[rule] = violation_types.get(rule, 0) + 1
         if violation_types:
             top_violations = sorted(
-                violation_types.items(), key=lambda x: x[1], reverse=True
+                violation_types.items(), key=operator.itemgetter(1), reverse=True,
             )[:3]
             recommendations.append(
-                f"📊 Most common violations: {', '.join([f'{rule}({count})' for rule, count in top_violations])}"
+                f"📊 Most common violations: {', '.join([f'{rule}({count})' for rule, count in top_violations])}",
             )
         return recommendations
+
     def generate_markdown_report(self, report_data: dict[str, Any]) -> str:
         """Generate PEP8 markdown report."""
         total_files = report_data.get("total_files", 0)
@@ -161,7 +170,7 @@ class PEP8Analyzer(BaseQualityAnalyzer):
         if violation_types:
             report += "\n## Top Violation Types\n\n"
             top_violations = sorted(
-                violation_types.items(), key=lambda x: x[1], reverse=True
+                violation_types.items(), key=operator.itemgetter(1), reverse=True,
             )[:10]
             for rule, count in top_violations:
                 report += f"- **{rule}:** {count} occurrences\n"
@@ -176,21 +185,27 @@ class PEP8Analyzer(BaseQualityAnalyzer):
                 ]
                 report += f"- **{file_path}:** {len(file_violations)} violations\n"
         return report
+
+
 class TestPEP8Compliance:
     """Test suite for PEP8 compliance."""
+
     @pytest.fixture(scope="class")
     def analyzer(self) -> object:
         """Create PEP8 analyzer instance."""
         return PEP8Analyzer()
+
     @pytest.fixture(scope="class")
     def analysis_results(self, analyzer: Any) -> dict[str, Any]:
         """Run PEP8 analysis once for all tests."""
         return analyzer.run_analysis()
+
     def test_pep8_files_found(self, analysis_results: dict[str, Any]) -> None:
         """Test that Python files are found for analysis."""
         assert analysis_results["total_files"] > 0, (
             "No Python files found for PEP8 analysis"
         )
+
     def test_pep8_compliance_rate(self, analysis_results: dict[str, Any]) -> None:
         """Test PEP8 compliance rate is acceptable."""
         total_files = analysis_results["total_files"]
@@ -200,11 +215,13 @@ class TestPEP8Compliance:
             assert compliance_rate >= 60, (
                 f"PEP8 compliance rate {compliance_rate:.1f}% is below 60%"
             )
+
     def test_pep8_has_compliant_files(self, analysis_results: dict[str, Any]) -> None:
         """Test that there are some PEP8 compliant files."""
         assert len(analysis_results["compliant_files"]) > 0, (
             "No PEP8 compliant files found"
         )
+
     def test_pep8_error_threshold(self, analysis_results: dict[str, Any]) -> None:
         """Test that PEP8 errors are within acceptable limits."""
         total_errors = analysis_results["summary"].get("errors", 0)
@@ -214,6 +231,7 @@ class TestPEP8Compliance:
             assert error_rate < 5.0, (
                 f"PEP8 error rate {error_rate:.1f} per file is too high"
             )
+
     def test_generate_pep8_reports(self, analyzer: Any, analysis_results: dict[str, Any]) -> None:
         """Test PEP8 report generation."""
         # Generate reports
@@ -223,7 +241,7 @@ class TestPEP8Compliance:
         assert json_report.exists(), "PEP8 JSON report was not created"
         assert md_report.exists(), "PEP8 Markdown report was not created"
         # Verify report content
-        with open(json_report) as f:
+        with open(json_report, encoding="utf-8") as f:
             report_data = json.load(f)
         assert "violations" in report_data
         assert "summary" in report_data
@@ -231,8 +249,9 @@ class TestPEP8Compliance:
         # Print summary
         total_files = analysis_results["total_files"]
         compliant_files = len(analysis_results["compliant_files"])
-        compliance_rate = (compliant_files / total_files * 100) if total_files > 0 else 0
-        print(f"Compliance rate: {compliance_rate:.1f}%")
+        (compliant_files / total_files * 100) if total_files > 0 else 0
+
+
 if __name__ == "__main__":
     # Run PEP8 analysis directly
     analyzer = PEP8Analyzer()

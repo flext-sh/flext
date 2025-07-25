@@ -1,9 +1,8 @@
 """KISS (Keep It Simple, Stupid) principle tests for FLEXT workspace."""
 
 import ast
-from collections import defaultdict
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any
 
 import pytest
 
@@ -107,7 +106,7 @@ class KISSAnalyzer(BaseQualityAnalyzer):
         return results
 
     def _analyze_file(
-        self, file_path: Path, content: str, results: dict[str, Any]
+        self, file_path: Path, content: str, results: dict[str, Any],
     ) -> dict[str, int]:
         """Analyze a single file for KISS violations."""
         try:
@@ -172,7 +171,7 @@ class KISSAnalyzer(BaseQualityAnalyzer):
                     "complexity": complexity,
                     "severity": "high" if complexity > 20 else "medium",
                     "suggestion": "Break into smaller functions with single responsibilities",
-                }
+                },
             )
 
         # Long functions
@@ -185,7 +184,7 @@ class KISSAnalyzer(BaseQualityAnalyzer):
                     "length": function_length,
                     "severity": "high" if function_length > 50 else "medium",
                     "suggestion": "Split into smaller, focused functions",
-                }
+                },
             )
 
         # Deep nesting
@@ -198,7 +197,7 @@ class KISSAnalyzer(BaseQualityAnalyzer):
                     "depth": nesting_depth,
                     "severity": "high" if nesting_depth > 6 else "medium",
                     "suggestion": "Reduce nesting using early returns or guard clauses",
-                }
+                },
             )
 
         # Long parameter lists
@@ -211,11 +210,11 @@ class KISSAnalyzer(BaseQualityAnalyzer):
                     "parameters": parameter_count,
                     "severity": "medium" if parameter_count > 8 else "low",
                     "suggestion": "Use parameter objects or reduce dependencies",
-                }
+                },
             )
 
     def _analyze_class(
-        self, class_node: ast.ClassDef, file_path: Path, results: dict[str, Any]
+        self, class_node: ast.ClassDef, file_path: Path, results: dict[str, Any],
     ) -> None:
         """Analyze a class for KISS violations."""
         class_name = class_node.name
@@ -240,17 +239,17 @@ class KISSAnalyzer(BaseQualityAnalyzer):
                     "complexity": total_method_complexity,
                     "severity": "high" if len(methods) > 25 else "medium",
                     "suggestion": "Split into smaller classes with focused responsibilities",
-                }
+                },
             )
 
     def _analyze_complex_expressions(
-        self, tree: ast.AST, file_path: Path, results: dict[str, Any]
+        self, tree: ast.AST, file_path: Path, results: dict[str, Any],
     ) -> None:
         """Analyze complex expressions that violate KISS."""
         for node in ast.walk(tree):
             # Complex comprehensions
             if isinstance(
-                node, (ast.ListComp, ast.DictComp, ast.SetComp, ast.GeneratorExp)
+                node, (ast.ListComp, ast.DictComp, ast.SetComp, ast.GeneratorExp),
             ):
                 if self._is_complex_comprehension(node):
                     results["complex_expressions"].append(
@@ -261,7 +260,7 @@ class KISSAnalyzer(BaseQualityAnalyzer):
                             "issue": "Complex comprehension with multiple conditions or nested loops",
                             "severity": "medium",
                             "suggestion": "Break into multiple steps or use regular loops",
-                        }
+                        },
                     )
 
             # Complex lambda expressions
@@ -275,22 +274,21 @@ class KISSAnalyzer(BaseQualityAnalyzer):
                             "issue": "Complex lambda expression",
                             "severity": "low",
                             "suggestion": "Use regular function instead of lambda",
-                        }
+                        },
                     )
 
             # Complex boolean expressions
-            elif isinstance(node, ast.BoolOp):
-                if self._is_complex_boolean(node):
-                    results["complex_expressions"].append(
-                        {
-                            "file": str(file_path),
-                            "line": node.lineno,
-                            "type": "boolean",
-                            "issue": "Complex boolean expression with many conditions",
-                            "severity": "medium",
-                            "suggestion": "Break into smaller logical parts with descriptive variable names",
-                        }
-                    )
+            elif isinstance(node, ast.BoolOp) and self._is_complex_boolean(node):
+                results["complex_expressions"].append(
+                    {
+                        "file": str(file_path),
+                        "line": node.lineno,
+                        "type": "boolean",
+                        "issue": "Complex boolean expression with many conditions",
+                        "severity": "medium",
+                        "suggestion": "Break into smaller logical parts with descriptive variable names",
+                    },
+                )
 
     def _calculate_cyclomatic_complexity(self, node: ast.AST) -> int:
         """Calculate cyclomatic complexity."""
@@ -313,17 +311,17 @@ class KISSAnalyzer(BaseQualityAnalyzer):
         return len([n for n in ast.walk(func_node) if isinstance(n, ast.stmt)])
 
     def _calculate_max_nesting_depth(
-        self, node: ast.AST, current_depth: int = 0
+        self, node: ast.AST, current_depth: int = 0,
     ) -> int:
         """Calculate maximum nesting depth."""
         max_depth = current_depth
 
         for child in ast.iter_child_nodes(node):
             if isinstance(
-                child, (ast.If, ast.While, ast.For, ast.AsyncFor, ast.With, ast.Try)
+                child, (ast.If, ast.While, ast.For, ast.AsyncFor, ast.With, ast.Try),
             ):
                 child_depth = self._calculate_max_nesting_depth(
-                    child, current_depth + 1
+                    child, current_depth + 1,
                 )
                 max_depth = max(max_depth, child_depth)
             else:
@@ -377,7 +375,7 @@ class KISSAnalyzer(BaseQualityAnalyzer):
         # Complexity penalty
         avg_complexity = float(results["summary"]["average_complexity"])
         complexity_penalty = min(
-            max(0, avg_complexity - 5) * 2, 15
+            max(0, avg_complexity - 5) * 2, 15,
         )  # Max 15 point penalty
 
         # Length penalty
@@ -408,7 +406,7 @@ class KISSAnalyzer(BaseQualityAnalyzer):
         # Overall assessment
         if simplicity_score >= 85:
             recommendations.append(
-                "✅ Excellent: Code follows KISS principles very well!"
+                "✅ Excellent: Code follows KISS principles very well!",
             )
         elif simplicity_score >= 70:
             recommendations.append("👍 Good: Code is generally simple and readable.")
@@ -416,63 +414,63 @@ class KISSAnalyzer(BaseQualityAnalyzer):
             recommendations.append("⚠️ Warning: Code complexity needs attention.")
         else:
             recommendations.append(
-                "🚨 Critical: Code is too complex, needs significant simplification."
+                "🚨 Critical: Code is too complex, needs significant simplification.",
             )
 
         # Issue-specific recommendations
         if results["complex_functions"]:
             count = len(results["complex_functions"])
             recommendations.append(
-                f"🔍 {count} complex functions found - break them into smaller pieces"
+                f"🔍 {count} complex functions found - break them into smaller pieces",
             )
 
         if results["long_functions"]:
             count = len(results["long_functions"])
             recommendations.append(
-                f"📏 {count} long functions found - split them for better readability"
+                f"📏 {count} long functions found - split them for better readability",
             )
 
         if results["deep_nesting"]:
             count = len(results["deep_nesting"])
             recommendations.append(
-                f"🏗️ {count} deeply nested functions - use early returns and guard clauses"
+                f"🏗️ {count} deeply nested functions - use early returns and guard clauses",
             )
 
         if results["complex_expressions"]:
             count = len(results["complex_expressions"])
             recommendations.append(
-                f"🧮 {count} complex expressions found - simplify with intermediate variables"
+                f"🧮 {count} complex expressions found - simplify with intermediate variables",
             )
 
         if results["complex_classes"]:
             count = len(results["complex_classes"])
             recommendations.append(
-                f"🏛️ {count} complex classes found - consider class decomposition"
+                f"🏛️ {count} complex classes found - consider class decomposition",
             )
 
         if results["long_parameter_lists"]:
             count = len(results["long_parameter_lists"])
             recommendations.append(
-                f"📝 {count} functions with long parameter lists - use parameter objects"
+                f"📝 {count} functions with long parameter lists - use parameter objects",
             )
 
         # Metric-specific recommendations
         avg_complexity = results["summary"]["average_complexity"]
         if avg_complexity > 8:
             recommendations.append(
-                f"📊 Average complexity ({avg_complexity:.1f}) is high - target < 8"
+                f"📊 Average complexity ({avg_complexity:.1f}) is high - target < 8",
             )
 
         avg_length = results["summary"]["average_function_length"]
         if avg_length > 25:
             recommendations.append(
-                f"📏 Average function length ({avg_length:.1f}) is high - target < 25"
+                f"📏 Average function length ({avg_length:.1f}) is high - target < 25",
             )
 
         avg_nesting = results["summary"]["average_nesting_depth"]
         if avg_nesting > 3:
             recommendations.append(
-                f"🏗️ Average nesting depth ({avg_nesting:.1f}) is high - target < 3"
+                f"🏗️ Average nesting depth ({avg_nesting:.1f}) is high - target < 3",
             )
 
         return recommendations
@@ -606,7 +604,7 @@ class TestKISSPrinciples:
         # Verify report content
         import json
 
-        with open(json_report) as f:
+        with open(json_report, encoding="utf-8") as f:
             report_data = json.load(f)
 
         assert "complex_functions" in report_data

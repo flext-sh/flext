@@ -1,9 +1,10 @@
 """DRY (Don't Repeat Yourself) principle tests for FLEXT workspace."""
 
 import ast
+import operator
 from collections import defaultdict
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any
 
 import pytest
 
@@ -127,7 +128,7 @@ class DRYAnalyzer(BaseQualityAnalyzer):
                             f"{current_class}.{node.name}({', '.join(args)})"
                         )
                         class_methods[method_signature].append(
-                            (str(file_path), node.lineno)
+                            (str(file_path), node.lineno),
                         )
 
                 elif isinstance(node, ast.Assign):
@@ -137,7 +138,7 @@ class DRYAnalyzer(BaseQualityAnalyzer):
                             if isinstance(node.value, ast.Constant):
                                 value = str(node.value.value)
                                 constants[value].append(
-                                    (str(file_path), node.lineno, target.id)
+                                    (str(file_path), node.lineno, target.id),
                                 )
 
                 elif isinstance(node, (ast.Import, ast.ImportFrom)):
@@ -157,7 +158,7 @@ class DRYAnalyzer(BaseQualityAnalyzer):
             pass
 
     def _process_code_blocks(
-        self, code_blocks: dict[str, list[tuple[str, int]]]
+        self, code_blocks: dict[str, list[tuple[str, int]]],
     ) -> list[dict[str, Any]]:
         """Process duplicate code blocks."""
         duplicates = []
@@ -169,14 +170,14 @@ class DRYAnalyzer(BaseQualityAnalyzer):
                         "occurrences": locations,
                         "count": len(locations),
                         "severity": "high" if len(locations) > 3 else "medium",
-                    }
+                    },
                 )
 
         # Sort by count (most duplicated first)
-        return sorted(duplicates, key=lambda x: x["count"], reverse=True)
+        return sorted(duplicates, key=operator.itemgetter("count"), reverse=True)
 
     def _process_functions(
-        self, function_signatures: dict[str, list[tuple[str, int]]]
+        self, function_signatures: dict[str, list[tuple[str, int]]],
     ) -> list[dict[str, Any]]:
         """Process similar function signatures."""
         similar = []
@@ -188,13 +189,13 @@ class DRYAnalyzer(BaseQualityAnalyzer):
                         "occurrences": locations,
                         "count": len(locations),
                         "severity": "medium" if len(locations) > 2 else "low",
-                    }
+                    },
                 )
 
-        return sorted(similar, key=lambda x: x["count"], reverse=True)
+        return sorted(similar, key=operator.itemgetter("count"), reverse=True)
 
     def _process_constants(
-        self, constants: dict[str, list[tuple[str, int, str]]]
+        self, constants: dict[str, list[tuple[str, int, str]]],
     ) -> list[dict[str, Any]]:
         """Process repeated constants."""
         repeated = []
@@ -206,13 +207,13 @@ class DRYAnalyzer(BaseQualityAnalyzer):
                         "occurrences": locations,
                         "count": len(locations),
                         "severity": "medium" if len(locations) > 2 else "low",
-                    }
+                    },
                 )
 
-        return sorted(repeated, key=lambda x: x["count"], reverse=True)
+        return sorted(repeated, key=operator.itemgetter("count"), reverse=True)
 
     def _process_imports(
-        self, imports: dict[str, list[tuple[str, int]]]
+        self, imports: dict[str, list[tuple[str, int]]],
     ) -> list[dict[str, Any]]:
         """Process repeated imports across files."""
         repeated = []
@@ -224,13 +225,13 @@ class DRYAnalyzer(BaseQualityAnalyzer):
                         "occurrences": locations,
                         "count": len(locations),
                         "severity": "low",  # Repeated imports are usually OK
-                    }
+                    },
                 )
 
-        return sorted(repeated, key=lambda x: x["count"], reverse=True)
+        return sorted(repeated, key=operator.itemgetter("count"), reverse=True)
 
     def _process_class_methods(
-        self, class_methods: dict[str, list[tuple[str, int]]]
+        self, class_methods: dict[str, list[tuple[str, int]]],
     ) -> list[dict[str, Any]]:
         """Process similar class methods."""
         similar = []
@@ -242,13 +243,13 @@ class DRYAnalyzer(BaseQualityAnalyzer):
                         "occurrences": locations,
                         "count": len(locations),
                         "severity": "medium" if len(locations) > 2 else "low",
-                    }
+                    },
                 )
 
-        return sorted(similar, key=lambda x: x["count"], reverse=True)
+        return sorted(similar, key=operator.itemgetter("count"), reverse=True)
 
     def _calculate_summary(
-        self, results: dict[str, Any], python_files: list[Path]
+        self, results: dict[str, Any], python_files: list[Path],
     ) -> dict[str, Any]:
         """Calculate summary statistics."""
         total_duplicates = (
@@ -281,10 +282,7 @@ class DRYAnalyzer(BaseQualityAnalyzer):
 
         # Calculate similarity score (0-100, lower is better)
         total_files = len(python_files)
-        if total_files > 0:
-            similarity_score = min(100, (total_duplicates / total_files) * 10)
-        else:
-            similarity_score = 0
+        similarity_score = min(100, total_duplicates / total_files * 10) if total_files > 0 else 0
 
         return {
             "total_duplicates": total_duplicates,
@@ -303,45 +301,45 @@ class DRYAnalyzer(BaseQualityAnalyzer):
 
         if total_duplicates == 0:
             recommendations.append(
-                "✅ Excellent: No significant DRY violations detected!"
+                "✅ Excellent: No significant DRY violations detected!",
             )
             return recommendations
 
         if duplicate_blocks > 10:
             recommendations.append(
-                "🚨 Critical: Many duplicate code blocks found. Consider extracting common functionality into reusable functions."
+                "🚨 Critical: Many duplicate code blocks found. Consider extracting common functionality into reusable functions.",
             )
         elif duplicate_blocks > 5:
             recommendations.append(
-                "⚠️ Warning: Several duplicate code blocks detected. Review and refactor when possible."
+                "⚠️ Warning: Several duplicate code blocks detected. Review and refactor when possible.",
             )
 
         if similar_functions > 5:
             recommendations.append(
-                "🔄 Consider creating base classes or utility functions for similar function signatures."
+                "🔄 Consider creating base classes or utility functions for similar function signatures.",
             )
 
         if len(results["repeated_constants"]) > 5:
             recommendations.append(
-                "📊 Move repeated constants to a shared constants module."
+                "📊 Move repeated constants to a shared constants module.",
             )
 
         if len(results["similar_class_methods"]) > 3:
             recommendations.append(
-                "🏗️ Consider using inheritance or composition for similar class methods."
+                "🏗️ Consider using inheritance or composition for similar class methods.",
             )
 
         # Top duplication patterns
         if duplicate_blocks > 0:
             top_block = results["duplicate_code_blocks"][0]
             recommendations.append(
-                f"🎯 Most duplicated code: '{top_block['code'][:50]}...' ({top_block['count']} occurrences)"
+                f"🎯 Most duplicated code: '{top_block['code'][:50]}...' ({top_block['count']} occurrences)",
             )
 
         similarity_score = results["summary"]["similarity_score"]
         if similarity_score > 30:
             recommendations.append(
-                f"📈 Similarity score: {similarity_score:.1f}/100 - Focus on reducing code duplication"
+                f"📈 Similarity score: {similarity_score:.1f}/100 - Focus on reducing code duplication",
             )
 
         return recommendations
@@ -351,7 +349,7 @@ class DRYAnalyzer(BaseQualityAnalyzer):
         total_files = report_data.get("total_files", 0)
         total_duplicates = report_data.get("summary", {}).get("total_duplicates", 0)
         files_with_duplicates = report_data.get("summary", {}).get(
-            "files_with_duplicates", 0
+            "files_with_duplicates", 0,
         )
         similarity_score = report_data.get("summary", {}).get("similarity_score", 0)
 
@@ -473,7 +471,7 @@ class TestDRYPrinciples:
         # Verify report content
         import json
 
-        with open(json_report) as f:
+        with open(json_report, encoding="utf-8") as f:
             report_data = json.load(f)
 
         assert "duplicate_code_blocks" in report_data

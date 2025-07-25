@@ -3,12 +3,11 @@
 
 import json
 import subprocess
-import sys
 import time
 from pathlib import Path
 
 # Ler todas as entidades
-with open("all_entities.txt") as f:
+with open("all_entities.txt", encoding="utf-8") as f:
     all_entities = [line.strip() for line in f if line.strip()]
 
 print(f"🔍 Testando {len(all_entities)} entidades Oracle WMS...")
@@ -41,7 +40,7 @@ for i, entity in enumerate(test_entities, 1):
     config["entities"] = [entity]
 
     config_file = f"test_entity_{entity}.json"
-    with open(config_file, "w") as f:
+    with open(config_file, "w", encoding="utf-8") as f:
         json.dump(config, f)
 
     try:
@@ -63,7 +62,7 @@ for i, entity in enumerate(test_entities, 1):
         if result.returncode != 0:
             print(f"  ❌ FALHA na descoberta: {result.stderr}")
             results["failed"].append(
-                {"entity": entity, "stage": "discovery", "error": result.stderr}
+                {"entity": entity, "stage": "discovery", "error": result.stderr},
             )
             continue
 
@@ -73,7 +72,7 @@ for i, entity in enumerate(test_entities, 1):
             if not schema_data.get("streams"):
                 print("  ⚠️  Schema vazio")
                 results["schema_only"].append(
-                    {"entity": entity, "stage": "no_streams", "error": "Schema empty"}
+                    {"entity": entity, "stage": "no_streams", "error": "Schema empty"},
                 )
                 continue
 
@@ -84,7 +83,7 @@ for i, entity in enumerate(test_entities, 1):
         except json.JSONDecodeError:
             print("  ❌ FALHA: JSON inválido")
             results["failed"].append(
-                {"entity": entity, "stage": "schema_parse", "error": "Invalid JSON"}
+                {"entity": entity, "stage": "schema_parse", "error": "Invalid JSON"},
             )
             continue
 
@@ -105,7 +104,7 @@ for i, entity in enumerate(test_entities, 1):
         if result.returncode != 0:
             print(f"  ⚠️  Dados falharam: {result.stderr}")
             results["schema_only"].append(
-                {"entity": entity, "stage": "extraction_failed", "error": result.stderr}
+                {"entity": entity, "stage": "extraction_failed", "error": result.stderr},
             )
             continue
 
@@ -120,7 +119,7 @@ for i, entity in enumerate(test_entities, 1):
                     "entity": entity,
                     "stage": "extraction_success",
                     "error": "No record data",
-                }
+                },
             )
         else:
             print(f"  ✅ Extraiu {len(record_lines)} registros")
@@ -137,7 +136,7 @@ for i, entity in enumerate(test_entities, 1):
                 )  # -2 para _sdc_*
 
                 print(
-                    f"    📈 Campos: {regular_fields} originais, {flattened_fields} flattened"
+                    f"    📈 Campos: {regular_fields} originais, {flattened_fields} flattened",
                 )
 
                 results["success"].append(
@@ -147,7 +146,7 @@ for i, entity in enumerate(test_entities, 1):
                         "records": len(record_lines),
                         "regular_fields": regular_fields,
                         "flattened_fields": flattened_fields,
-                    }
+                    },
                 )
 
             except Exception as e:
@@ -158,18 +157,18 @@ for i, entity in enumerate(test_entities, 1):
                         "properties": properties_count,
                         "records": len(record_lines),
                         "analysis_error": str(e),
-                    }
+                    },
                 )
 
     except subprocess.TimeoutExpired:
         print("  ⏰ TIMEOUT")
         results["failed"].append(
-            {"entity": entity, "stage": "timeout", "error": "Process timeout"}
+            {"entity": entity, "stage": "timeout", "error": "Process timeout"},
         )
     except Exception as e:
         print(f"  ❌ ERRO: {e}")
         results["failed"].append(
-            {"entity": entity, "stage": "exception", "error": str(e)}
+            {"entity": entity, "stage": "exception", "error": str(e)},
         )
     finally:
         # Limpeza
@@ -184,7 +183,7 @@ print(f"📊 Sem dados: {len(results['no_data'])}")
 print(f"❌ Falharam: {len(results['failed'])}")
 
 # Salvar resultados detalhados
-with open("test_results.json", "w") as f:
+with open("test_results.json", "w", encoding="utf-8") as f:
     json.dump(results, f, indent=2)
 
 print("\n💾 Resultados salvos em: test_results.json")

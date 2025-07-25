@@ -14,8 +14,6 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from flext_core import FlextLoggerFactory, FlextLoggerName
-
 from flext_tools import (
     Colors,
     ConflictAnalyzer,
