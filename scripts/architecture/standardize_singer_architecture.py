@@ -18,14 +18,15 @@ from flext_meltano.architecture import FlextSingerArchitectureStandardizer
 
 def main() -> None:
     """Main execution function."""
-    flext_root = Path('/home/marlonsc/flext')
-    
+    flext_root = Path("/home/marlonsc/flext")
+
     if not flext_root.exists():
-        raise RuntimeError(f"FLEXT root directory not found: {flext_root}")
-    
+        msg = f"FLEXT root directory not found: {flext_root}"
+        raise RuntimeError(msg)
+
     standardizer = FlextSingerArchitectureStandardizer(flext_root)
     standardizer.standardize_architecture()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

@@ -1,0 +1,16 @@
+{
+  "host": "localhost",
+  "port": 389,
+  "base_dn": "dc=example,dc=org",
+  "bind_dn": "cn=REDACTED_LDAP_BIND_PASSWORD,dc=example,dc=org",
+  "bind_password": "REDACTED_LDAP_BIND_PASSWORD",
+  "use_tls": false,
+  "use_ssl": false,
+  "auto_bind": true,
+  "authentication": "SIMPLE",
+  "timeout": 30,
+  "pool_size": 5,
+  "pool_name": "flext_ldap_test_pool",
+  "pool_lifetime": 600,
+  "pool_keepalive": 10
+}
