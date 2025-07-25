@@ -93,7 +93,7 @@ class TransitiveDependencyResolver:
         try:
             with pyproject_path.open("rb") as f:
                 data = tomllib.load(f)
-        except Exception as e:
+        except (OSError, tomllib.TOMLDecodeError) as e:
             print_colored(f"  ⚠️ Erro ao ler {pyproject_path}: {e}", Colors.YELLOW)
             return TransitiveDependencies(set(), set(), [])
 

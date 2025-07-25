@@ -46,7 +46,7 @@ class StagingConfigLoader(FlextScript):
         print_colored("✅ Staging configuration files found", Colors.GREEN)
         return True
 
-    def execute_main_logic(self, **kwargs: Any) -> bool:
+    def execute_main_logic(self, **kwargs: object) -> bool:
         """Execute staging config loading logic."""
         try:
             project_root = Path.cwd()

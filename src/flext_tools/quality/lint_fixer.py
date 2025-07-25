@@ -13,7 +13,7 @@ class GradualLintFixer:
         """Initialize the lint fixer."""
         self.workspace_path = workspace_path
 
-    def fix_gradually(self, **kwargs: Any) -> dict[str, Any]:
+    def fix_gradually(self, **_kwargs: object) -> dict[str, Any]:
         """Fix lint issues gradually."""
         print_colored("🔧 Corrigindo problemas de lint gradualmente...", Colors.BLUE)
 

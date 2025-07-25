@@ -4,7 +4,7 @@
 import re
 
 
-def consolidate_algar_config():
+def consolidate_algar_config() -> bool | None:
     """Consolidate AlgarOudMig config to use FLEXT patterns."""
     config_file = "./algar-oud-mig/src/algar_oud_mig/config.py"
 
@@ -51,7 +51,7 @@ def consolidate_algar_config():
         return False
 
 
-def consolidate_flext_auth_config():
+def consolidate_flext_auth_config() -> bool | None:
     """Consolidate FlextAuth config to use FLEXT patterns."""
     config_file = "./flext-auth/src/flext_auth/config.py"
 
@@ -98,7 +98,7 @@ def consolidate_flext_auth_config():
         return False
 
 
-def consolidate_flext_api_config():
+def consolidate_flext_api_config() -> bool | None:
     """Consolidate FlextAPI infrastructure config."""
     config_file = "./flext-api/src/flext_api/infrastructure/config.py"
 
@@ -140,7 +140,7 @@ def consolidate_flext_api_config():
         return False
 
 
-def create_consolidation_template():
+def create_consolidation_template() -> bool | None:
     """Create a template showing FLEXT config consolidation."""
     template_path = "./flext_config_consolidation_template.py"
 
@@ -278,7 +278,7 @@ def get_project_settings() -> ConsolidatedProjectSettings:
         return False
 
 
-def main():
+def main() -> None:
     """Main consolidation function."""
     print("🚀 Starting priority configuration consolidation...")
 

@@ -41,11 +41,13 @@ class RollbackManager:
                     "session_id": log_data["session_id"],
                     "session_dir": str(session_dir),
                     "operations_count": len(log_data["operations"]),
-                    "files_backed_up": [op["original_path"] for op in log_data["operations"]],
+                    "files_backed_up": [
+                        op["original_path"] for op in log_data["operations"]
+                    ],
                 }
                 sessions.append(session_info)
 
-            except Exception as e:
+            except (OSError, json.JSONDecodeError, KeyError, UnicodeDecodeError) as e:
                 print_colored(
                     f"  ⚠️ Erro ao ler sessão {session_dir.name}: {e}",
                     Colors.YELLOW,
@@ -103,7 +105,7 @@ class RollbackManager:
 
             return True
 
-        except Exception as e:
+        except (OSError, PermissionError, shutil.Error) as e:
             print_colored(f"❌ Erro ao restaurar arquivo: {e}", Colors.RED)
             return False
 
@@ -159,7 +161,7 @@ class RollbackManager:
                 failure_count += 1
 
         print_colored(
-            f"\n📊 Rollback concluído: {success_count} sucessos, {failure_count} falhas",
+            f"\n📊 Rollback: {success_count} sucessos, {failure_count} falhas",
             Colors.CYAN,
         )
         return success_count, failure_count
@@ -297,7 +299,7 @@ class RollbackManager:
             current_hash = self._calculate_hash(backup_path)
             return bool(current_hash == operation["file_hash"])
 
-        except Exception:
+        except (OSError, ValueError, KeyError):
             return False
 
     def _calculate_hash(self, file_path: Path) -> str:

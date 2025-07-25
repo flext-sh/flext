@@ -25,13 +25,9 @@ import pytest
 from flext_ldap.application import LDAPService
 from ldap3 import ALL, Connection, Server
 
-# from flext_ldif import LDIFProcessor, LDIFEntry  # NOTE: flext-ldif module incomplete - skipped
-# from flext_target_ldap.target import TargetLDAP  # NOTE: not installed - requires setup
-# from flext_tap_ldap.tap import TapLDAP  # NOTE: not installed - requires setup
-
 
 @pytest.fixture(scope="session")
-def ldap_container():
+def ldap_container() -> Generator[dict[str, Any], None, None]:
     """Start LDAP container for testing."""
     # Start docker-compose
     subprocess.run(
@@ -45,7 +41,12 @@ def ldap_container():
     for i in range(max_retries):
         try:
             server = Server("localhost", port=11389, get_info=ALL)
-            conn = Connection(server, "cn=admin,dc=flext-test,dc=local", "admin123", auto_bind=True)
+            conn = Connection(
+                server,
+                "cn=admin,dc=flext-test,dc=local",
+                "admin123",
+                auto_bind=True,
+            )
             conn.unbind()
             break
         except Exception as e:
@@ -93,7 +94,11 @@ class TestLDAPContainerSetup:
 
     def test_ldap_container_connectivity(self, ldap_container: dict[str, Any]) -> None:
         """Test basic LDAP container connectivity."""
-        server = Server(ldap_container["host"], port=ldap_container["port"], get_info=ALL)
+        server = Server(
+            ldap_container["host"],
+            port=ldap_container["port"],
+            get_info=ALL,
+        )
         conn = Connection(
             server,
             ldap_container["bind_dn"],
@@ -102,7 +107,11 @@ class TestLDAPContainerSetup:
         )
 
         # Test search
-        success = conn.search(ldap_container["base_dn"], "(objectClass=*)", search_scope="BASE")
+        success = conn.search(
+            ldap_container["base_dn"],
+            "(objectClass=*)",
+            search_scope="BASE",
+        )
 
         assert success
         assert len(conn.entries) >= 1
@@ -110,7 +119,11 @@ class TestLDAPContainerSetup:
 
     def test_ldap_test_data_loaded(self, ldap_container: dict[str, Any]) -> None:
         """Test that test data was loaded correctly."""
-        server = Server(ldap_container["host"], port=ldap_container["port"], get_info=ALL)
+        server = Server(
+            ldap_container["host"],
+            port=ldap_container["port"],
+            get_info=ALL,
+        )
         conn = Connection(
             server,
             ldap_container["bind_dn"],
@@ -126,7 +139,9 @@ class TestLDAPContainerSetup:
         )
 
         assert success
-        assert len(conn.entries) >= 3  # Should have at least john.doe, jane.smith, bob.wilson
+        assert (
+            len(conn.entries) >= 3
+        )  # Should have at least john.doe, jane.smith, bob.wilson
 
         # Verify specific test user
         user_found = False
@@ -150,7 +165,10 @@ class TestFlextLDAPIntegration:
         return LDAPService()
 
     @pytest.mark.asyncio
-    async def test_ldap_service_connection(self, ldap_container: dict[str, Any]) -> None:
+    async def test_ldap_service_connection(
+        self,
+        ldap_container: dict[str, Any],
+    ) -> None:
         """Test LDAP service can connect to real LDAP."""
         service = LDAPService()
 
@@ -288,7 +306,11 @@ class TestFlextTargetLDAPIntegration:
                 auto_bind=True,
             )
 
-            success = conn.search(user_record["dn"], "(objectClass=*)", search_scope="BASE")
+            success = conn.search(
+                user_record["dn"],
+                "(objectClass=*)",
+                search_scope="BASE",
+            )
 
             assert success, "Created user not found in LDAP"
             assert len(conn.entries) == 1
@@ -301,7 +323,11 @@ class TestFlextTargetLDAPIntegration:
 
         except Exception as e:
             # Target integration test - verify error is handled properly
-            assert "not available" in str(e) or "connection" in str(e) or "import" in str(e)
+            assert (
+                "not available" in str(e)
+                or "connection" in str(e)
+                or "import" in str(e)
+            )
             # This confirms the error handling works correctly
 
 
@@ -337,15 +363,15 @@ class TestFlextTapLDAPIntegration:
     def test_tap_ldap_discovery(self, tap_config: dict[str, Any]) -> None:
         """Test tap discovery against real LDAP."""
         try:
-            # tap = TapLDAP(config=tap_config, validate_config=False)  # NOTE: TapLDAP not installed
+            # tap = FlextTapLDAP(config=tap_config, validate_config=False)  # NOTE: FlextTapLDAP not installed
 
             # Test stream discovery
-            # streams = tap.discover_streams()  # NOTE: TapLDAP not installed
+            # streams = tap.discover_streams()  # NOTE: FlextTapLDAP not installed
             assert len(streams) >= 2
 
-            # stream_names = {stream.name for stream in streams}  # NOTE: TapLDAP not installed
-            # assert "users" in stream_names  # NOTE: TapLDAP not installed
-            # assert "groups" in stream_names  # NOTE: TapLDAP not installed
+            # stream_names = {stream.name for stream in streams}  # NOTE: FlextTapLDAP not installed
+            # assert "users" in stream_names  # NOTE: FlextTapLDAP not installed
+            # assert "groups" in stream_names  # NOTE: FlextTapLDAP not installed
 
             # Test user stream schema
             user_stream = next(s for s in streams if s.name == "users")
@@ -356,31 +382,39 @@ class TestFlextTapLDAPIntegration:
 
         except Exception as e:
             # Tap integration test - verify error is handled properly
-            assert "not available" in str(e) or "connection" in str(e) or "import" in str(e)
+            assert (
+                "not available" in str(e)
+                or "connection" in str(e)
+                or "import" in str(e)
+            )
             # This confirms the error handling works correctly
 
     def test_tap_ldap_data_extraction(self, tap_config: dict[str, Any]) -> None:
         """Test data extraction via flext-tap-ldap."""
         try:
-            # tap = TapLDAP(config=tap_config, validate_config=False)  # NOTE: TapLDAP not installed
+            # tap = FlextTapLDAP(config=tap_config, validate_config=False)  # NOTE: FlextTapLDAP not installed
 
             # Test extracting user records
-            with tempfile.NamedTemporaryFile(encoding="utf-8", mode="w+", suffix=".jsonl"):
+            with tempfile.NamedTemporaryFile(
+                encoding="utf-8",
+                mode="w+",
+                suffix=".jsonl",
+            ):
                 # Simulate tap execution
-                # streams = tap.discover_streams()  # NOTE: TapLDAP not installed
-                # user_stream = next(s for s in streams if s.name == "users")  # NOTE: TapLDAP not installed
+                # streams = tap.discover_streams()  # NOTE: FlextTapLDAP not installed
+                # user_stream = next(s for s in streams if s.name == "users")  # NOTE: FlextTapLDAP not installed
 
                 # Extract records (simplified simulation)
                 # records = []
-                # for record in user_stream.get_records({}):  # NOTE: TapLDAP not installed
+                # for record in user_stream.get_records({}):  # NOTE: FlextTapLDAP not installed
                 #     records.append(record)
                 #     if len(records) >= 10:  # Limit for test
                 #         break
 
-                # assert len(records) >= 3  # At least our test users  # NOTE: TapLDAP not installed
+                # assert len(records) >= 3  # At least our test users  # NOTE: FlextTapLDAP not installed
 
                 # Verify test users are extracted
-                # extracted_uids = {  # NOTE: TapLDAP not installed
+                # extracted_uids = {  # NOTE: FlextTapLDAP not installed
                 #     record.get("uid") for record in records if record.get("uid")
                 # }
                 # expected_uids = {"john.doe", "jane.smith", "bob.wilson"}
@@ -392,7 +426,11 @@ class TestFlextTapLDAPIntegration:
 
         except Exception as e:
             # Tap extraction test - verify error is handled properly
-            assert "not available" in str(e) or "connection" in str(e) or "import" in str(e)
+            assert (
+                "not available" in str(e)
+                or "connection" in str(e)
+                or "import" in str(e)
+            )
             # This confirms the error handling works correctly
 
 
@@ -462,7 +500,10 @@ class TestEndToEndIntegration:
     """End-to-end integration tests."""
 
     @pytest.mark.asyncio
-    async def test_tap_to_target_data_flow(self, ldap_container: dict[str, Any]) -> None:
+    async def test_tap_to_target_data_flow(
+        self,
+        ldap_container: dict[str, Any],
+    ) -> None:
         """Test complete data flow from tap to target - REAL E2E TEST."""
         # STEP 1: Configure and create TAP to extract from real LDAP
         {
@@ -482,29 +523,34 @@ class TestEndToEndIntegration:
             },
         }
 
-        # tap = TapLDAP(config=tap_config, validate_config=False)  # NOTE: TapLDAP not installed
+        tap = FlextTapLDAP(config=tap_config, validate_config=False)
 
         # STEP 2: Extract REAL data from TAP
-        # streams = tap.discover_streams()  # NOTE: TapLDAP not installed
-        # user_stream = next((s for s in streams if s.name == "users"), None)  # NOTE: TapLDAP not installed
-        # assert user_stream is not None, "Users stream not found"  # NOTE: TapLDAP not installed
+        streams = tap.discover_streams()  # NOTE: FlextTapLDAP not installed
+        user_stream = next(
+            (s for s in streams if s.name == "users"),
+            None,
+        )  # NOTE: FlextTapLDAP not installed
+        assert user_stream is not None, "Users stream not found"
 
         # Extract records - this should get REAL data from LDAP
-        # extracted_records = []  # NOTE: TapLDAP not installed
-        # try:
-        #     for record in user_stream.get_records({}):  # NOTE: TapLDAP not installed
-        #         extracted_records.append(record)
-        #         if len(extracted_records) >= 5:  # Limit for test
-        #             break
-        # except Exception:
-        #     raise
+        extracted_records = []  # NOTE: FlextTapLDAP not installed
+        try:
+            for record in user_stream.get_records(
+                {},
+            ):  # NOTE: FlextTapLDAP not installed
+                extracted_records.append(record)
+                if len(extracted_records) >= 5:  # Limit for test
+                    break
+        except Exception:
+            raise
 
-        # assert len(extracted_records) >= 3, (  # NOTE: TapLDAP not installed
+        # assert len(extracted_records) >= 3, (  # NOTE: FlextTapLDAP not installed
         #     f"Expected at least 3 records, got {len(extracted_records)}"
         # )
 
         # Verify extracted data contains our test users
-        # extracted_uids = {  # NOTE: TapLDAP not installed
+        # extracted_uids = {  # NOTE: FlextTapLDAP not installed
         #     record.get("uid") for record in extracted_records if record.get("uid")
         # }
         # expected_uids = {"john.doe", "jane.smith", "bob.wilson"}
@@ -514,7 +560,12 @@ class TestEndToEndIntegration:
         # )
 
         # STEP 3: Configure TARGET to write to temporary LDIF
-        with tempfile.NamedTemporaryFile(encoding="utf-8", mode="w+", suffix=".ldif", delete=False) as temp_ldif:
+        with tempfile.NamedTemporaryFile(
+            encoding="utf-8",
+            mode="w+",
+            suffix=".ldif",
+            delete=False,
+        ) as temp_ldif:
             {
                 "host": ldap_container["host"],
                 "port": ldap_container["port"],
@@ -564,8 +615,14 @@ class TestEndToEndIntegration:
             assert "objectClass: " in ldif_content, "No objectClass found in LDIF"
 
             # Verify specific test users were processed
-            users_in_ldif = [uid for uid in ["john.doe", "jane.smith", "bob.wilson"] if uid in ldif_content]
-            assert len(users_in_ldif) >= 2, f"Expected test users not found in LDIF. Found: {users_in_ldif}"
+            users_in_ldif = [
+                uid
+                for uid in ["john.doe", "jane.smith", "bob.wilson"]
+                if uid in ldif_content
+            ]
+            assert len(users_in_ldif) >= 2, (
+                f"Expected test users not found in LDIF. Found: {users_in_ldif}"
+            )
 
             # Cleanup
             Path(temp_ldif.name).unlink(missing_ok=True)

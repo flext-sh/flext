@@ -11,11 +11,10 @@ import argparse
 import time
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any
-
-from flext_core.patterns.logging import get_logger
+from typing import TYPE_CHECKING
 
 from flext_tools.utils.colors import Colors, print_colored
+from flext_tools.utils.logging import get_logger
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -79,7 +78,7 @@ class FlextScript(ABC):
         """
         return True
 
-    def run(self, **kwargs: Any) -> int:
+    def run(self, **_kwargs: object) -> int:
         """Run the complete script with error handling.
 
         Args:
@@ -176,8 +175,10 @@ class FlextScript(ABC):
 
         # Configure logging level
         if args.verbose:
-            # Use FLEXT logger for debug level
-            logger.set_level("DEBUG")
+            # Set verbose mode - our logger doesn't have set_level method
+            import logging
+
+            logging.getLogger().setLevel(logging.DEBUG)
 
         return self.run(**vars(args))
 
@@ -216,7 +217,7 @@ def create_simple_script(
         def setup(self) -> bool:
             return setup_func() if setup_func else True
 
-        def execute_main_logic(self, **kwargs: Any) -> bool:
+        def execute_main_logic(self, **kwargs: object) -> bool:
             result = main_func(**kwargs)
             return bool(result)
 

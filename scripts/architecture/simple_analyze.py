@@ -9,9 +9,9 @@ import os
 import re
 from pathlib import Path
 
-from flext_core import FlextLoggerFactory
+from flext_core import get_logger
 
-logger = FlextLoggerFactory.get_logger(__name__)
+logger = get_logger(__name__)
 
 
 def analyze_flext_core_violations() -> list[dict[str, str]]:
@@ -122,13 +122,13 @@ def generate_fix_commands(
     if violations:
         print(f"\n🚨 VIOLAÇÕES EM FLEXT-CORE ({len(violations)} encontradas):")
 
-        files_to_backup: set[Path] = set()
+        files_to_backup: set[str] = set()
         for violation in violations:
             print(f"  📁 {violation['file']}")
             print(f"     Padrão: {violation['pattern']}")
             print(f"     Ação: {violation['action']}")
             if "Renomear" in violation["action"]:
-                files_to_backup.add(Path(violation["file"]))
+                files_to_backup.add(violation["file"])
 
         print("\n💾 COMANDOS PARA BACKUP DE ARQUIVOS PROBLEMÁTICOS:")
         for file_path in files_to_backup:
@@ -136,8 +136,8 @@ def generate_fix_commands(
 
     if ignore_files:
         print(f"\n📝 ARQUIVOS COM # IGNORE ({len(ignore_files)} encontrados):")
-        for file_path in ignore_files:
-            print(f"  {file_path}")
+        for ignore_file in ignore_files:
+            print(f"  {ignore_file}")
 
     # Gerar script de correção
     script_path = Path("scripts/architecture/fix_violations.sh")
@@ -150,7 +150,6 @@ def generate_fix_commands(
 
         if violations:
             f.write("# Backup de arquivos com violações em flext-core\n")
-            files_to_backup: set[str] = set()
             for violation in violations:
                 if "Renomear" in violation["action"]:
                     files_to_backup.add(violation["file"])

@@ -13,7 +13,7 @@ from dataclasses import dataclass, field
 from enum import StrEnum
 from pathlib import Path
 
-from flext_core import FlextLoggerFactory
+from flext_core.patterns.logging import get_logger
 
 # Usar flext_tools completo para máxima enterprise
 from flext_tools.core.script_base import ScriptMetadata
@@ -81,11 +81,11 @@ class ScriptRegistry:
         for script_file in self.scripts_root.rglob("*.py"):
             # Skip arquivos especiais
             if script_file.name.startswith(("__", "test_")) or script_file.name == "flext_tools.py":
-                FlextLoggerFactory.get_logger(__name__).debug("Failed to parse script metadata")
+                get_logger(__name__).debug("Failed to parse script metadata")
 
             # Skip core system files
             if script_file.parent.name == "core":
-                FlextLoggerFactory.get_logger(__name__).debug("Failed to parse script metadata")
+                get_logger(__name__).debug("Failed to parse script metadata")
 
             metadata = self._extract_metadata(script_file)
             if metadata:
@@ -256,7 +256,7 @@ class ScriptRegistry:
                         # Docstring de linha única
                         return line.replace("'''", "").replace('"""', "").strip()
                     in_docstring = True
-                    FlextLoggerFactory.get_logger(__name__).debug("Failed to parse script metadata")
+                    get_logger(__name__).debug("Failed to parse script metadata")
                 if in_docstring and (line.endswith(('"""', "'''"))):
                     return line.replace("'''", "").replace('"""', "").strip()
                 if in_docstring and line and not line.startswith("#"):
