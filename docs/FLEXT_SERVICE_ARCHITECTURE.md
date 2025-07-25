@@ -451,7 +451,7 @@ func main() {
 
 ```python
 # plugins/extractors/tap-oracle.py
-from flext_core import ServiceResult, JsonDict
+from flext_core import FlextResult, JsonDict
 from flext_plugin.interfaces import ExtractorInterface
 import cx_Oracle
 
@@ -467,7 +467,7 @@ class OracleExtractorPlugin(ExtractorInterface):
     def version(self) -> str:
         return "1.0.0"
     
-    def extract(self, config: JsonDict) -> ServiceResult[JsonDict]:
+    def extract(self, config: JsonDict) -> FlextResult[JsonDict]:
         """Extrair dados do Oracle Database."""
         try:
             # Conectar ao Oracle
@@ -491,14 +491,14 @@ class OracleExtractorPlugin(ExtractorInterface):
             cursor.close()
             connection.close()
             
-            return ServiceResult.ok({
+            return FlextResult.ok({
                 "records": data,
                 "count": len(data),
                 "source": "oracle"
             })
             
         except Exception as e:
-            return ServiceResult.fail(f"Oracle extraction failed: {e}")
+            return FlextResult.fail(f"Oracle extraction failed: {e}")
 
 # Export plugin factory
 def create_plugin():
@@ -1020,7 +1020,7 @@ output, err := pythonCmd.CombinedOutput()
 
 ```python
 # 5. Python Library Execution (flext-meltano)
-from flext_core.domain.entities import Pipeline, PipelineExecution
+from flext_core import Pipeline, PipelineExecution
 from flext_meltano.application.services import MeltanoOrchestrator
 
 async def execute_pipeline(config: dict) -> PipelineExecution:

@@ -221,10 +221,7 @@ class PythonImportDiscovery:
             project_path / "src" / module_name / "__init__.py",
             project_path / f"{module_name}.py",
             project_path / module_name / "__init__.py",
-            project_path
-            / "src"
-            / project_path.name.replace("-", "_")
-            / f"{module_name}.py",
+            project_path / "src" / project_path.name.replace("-", "_") / f"{module_name}.py",
         ]
 
         for path in possible_paths:
@@ -240,18 +237,11 @@ class PythonImportDiscovery:
             # Muito curtos (geralmente aliases)
             len(package_name) <= MIN_PACKAGE_LENGTH,
             # Contém múltiplos separadores
-            package_name.count("-") > MAX_SEPARATORS
-            or package_name.count("_") > MAX_SEPARATORS,
+            package_name.count("-") > MAX_SEPARATORS or package_name.count("_") > MAX_SEPARATORS,
             # Pacotes com cloud providers (geralmente extras)
-            any(
-                cloud in package_name.lower()
-                for cloud in ["azure", "aws", "google-cloud", "boto3"]
-            ),
+            any(cloud in package_name.lower() for cloud in ["azure", "aws", "google-cloud", "boto3"]),
             # Extensões de frameworks específicos (airflow, etc)
-            any(
-                fw in package_name.lower()
-                for fw in ["apache-airflow", "meltano[", "airflow-"]
-            ),
+            any(fw in package_name.lower() for fw in ["apache-airflow", "meltano[", "airflow-"]),
             # Conversões PDF/HTML suspeitas
             any(conv in package_name.lower() for conv in ["xhtml2pdf", "weasyprint"]),
             # Pacotes que começam com números

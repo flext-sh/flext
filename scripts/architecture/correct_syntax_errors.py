@@ -122,7 +122,7 @@ def main() -> None:
         print(f"\n🔍 Processing {project}...")
 
         # Find all Python files
-        python_files = []
+        python_files: list[Path] = []
         for pattern in ["src/**/*.py", "tests/**/*.py"]:
             python_files.extend(project_path.glob(pattern))
 

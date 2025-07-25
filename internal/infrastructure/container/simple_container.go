@@ -12,11 +12,11 @@ import (
 
 // SimpleContainer provides basic functionality for testing
 type SimpleContainer struct {
-	config             *config.Config
-	logger             logging.Logger
-	meltanoService     *meltanoServices.MeltanoService
-	meltanoHandler     *http.MeltanoHandler
-	meltanoGopyHandler *http.MeltanoGopyHandler
+	config                *config.Config
+	logger                logging.Logger
+	meltanoService        *meltanoServices.MeltanoService
+	unifiedMeltanoHandler *http.UnifiedMeltanoHandler
+	meltanoGopyHandler    *http.MeltanoGopyHandler
 }
 
 // NewSimpleContainer creates a minimal container for testing
@@ -38,19 +38,24 @@ func NewSimpleContainer(cfg *config.Config) (*SimpleContainer, error) {
 	}
 
 	container := &SimpleContainer{
-		config:             cfg,
-		logger:             logger,
-		meltanoService:     meltanoSvc,
-		meltanoHandler:     http.NewMeltanoHandler(meltanoSvc),
-		meltanoGopyHandler: http.NewMeltanoGopyHandler(meltanoSvc, logger),
+		config:                cfg,
+		logger:                logger,
+		meltanoService:        meltanoSvc,
+		unifiedMeltanoHandler: http.NewUnifiedMeltanoHandler(meltanoSvc, logger),
+		meltanoGopyHandler:    http.NewMeltanoGopyHandler(meltanoSvc, logger),
 	}
 
 	return container, nil
 }
 
-// GetMeltanoHandler returns the Meltano handler
-func (c *SimpleContainer) GetMeltanoHandler() *http.MeltanoHandler {
-	return c.meltanoHandler
+// GetUnifiedMeltanoHandler returns the unified Meltano handler (Meltano + Singer + DBT)
+func (c *SimpleContainer) GetUnifiedMeltanoHandler() *http.UnifiedMeltanoHandler {
+	return c.unifiedMeltanoHandler
+}
+
+// GetMeltanoHandler returns the unified handler for backward compatibility
+func (c *SimpleContainer) GetMeltanoHandler() *http.UnifiedMeltanoHandler {
+	return c.unifiedMeltanoHandler
 }
 
 // GetMeltanoGopyHandler returns the Meltano Gopy handler

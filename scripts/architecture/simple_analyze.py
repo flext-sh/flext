@@ -9,6 +9,10 @@ import os
 import re
 from pathlib import Path
 
+from flext_core import FlextLoggerFactory
+
+logger = FlextLoggerFactory.get_logger(__name__)
+
 
 def analyze_flext_core_violations() -> list[dict[str, str]]:
     """Analisa violações específicas em flext-core."""
@@ -38,15 +42,15 @@ def analyze_flext_core_violations() -> list[dict[str, str]]:
                 content = f.read()
 
             # Verificar padrões específicos no código
-            for pattern in specific_patterns:
-                if re.search(pattern, content, re.IGNORECASE):
-                    violations.append(
-                        {
-                            "file": str(py_file),
-                            "pattern": pattern,
-                            "action": f"Renomear {py_file.name} para {py_file.name}.bak",
-                        }
-                    )
+            violations.extend(
+                {
+                    "file": str(py_file),
+                    "pattern": pattern,
+                    "action": f"Renomear {py_file.name} para {py_file.name}.bak",
+                }
+                for pattern in specific_patterns
+                if re.search(pattern, content, re.IGNORECASE)
+            )
 
             # Analisar imports AST
             try:
@@ -55,29 +59,23 @@ def analyze_flext_core_violations() -> list[dict[str, str]]:
                     if isinstance(node, ast.Import):
                         for alias in node.names:
                             import_name = alias.name.split(".")[0]
-                            if any(
-                                p in import_name.lower()
-                                for p in ["meltano", "oracle", "client-a", "client-b"]
-                            ):
+                            if any(p in import_name.lower() for p in ["meltano", "oracle", "client-a", "client-b"]):
                                 violations.append(
                                     {
                                         "file": str(py_file),
                                         "pattern": f"import {import_name}",
                                         "action": f"Remover import violador em {py_file.name}",
-                                    }
+                                    },
                                 )
                     elif isinstance(node, ast.ImportFrom) and node.module:
                         import_name = node.module.split(".")[0]
-                        if any(
-                            p in import_name.lower()
-                            for p in ["meltano", "oracle", "client-a", "client-b"]
-                        ):
+                        if any(p in import_name.lower() for p in ["meltano", "oracle", "client-a", "client-b"]):
                             violations.append(
                                 {
                                     "file": str(py_file),
                                     "pattern": f"from {node.module}",
                                     "action": f"Remover import violador em {py_file.name}",
-                                }
+                                },
                             )
             except SyntaxError:
                 print(f"⚠️  Erro de sintaxe em {py_file}")
@@ -95,11 +93,7 @@ def analyze_ignore_comments() -> list[Path]:
     ignore_files: list[Path] = []
     for root, dirs, files in os.walk("."):
         # Pular diretórios desnecessários
-        dirs[:] = [
-            d
-            for d in dirs
-            if not d.startswith(".") and d not in {"__pycache__", "node_modules"}
-        ]
+        dirs[:] = [d for d in dirs if not d.startswith(".") and d not in {"__pycache__", "node_modules"}]
 
         for file in files:
             if file.endswith(".py"):
@@ -109,14 +103,16 @@ def analyze_ignore_comments() -> list[Path]:
                         content = f.read()
                         if "# ignore" in content.lower():
                             ignore_files.append(file_path)
-                except Exception:
+                except Exception as e:
+                    logger.exception(f"Error processing file {file_path}: {e}")
                     continue
 
     return ignore_files
 
 
 def generate_fix_commands(
-    violations: list[dict[str, str]], ignore_files: list[Path]
+    violations: list[dict[str, str]],
+    ignore_files: list[Path],
 ) -> None:
     """Gera comandos para correção das violações."""
     print("\n" + "=" * 60)
@@ -154,7 +150,7 @@ def generate_fix_commands(
 
         if violations:
             f.write("# Backup de arquivos com violações em flext-core\n")
-            files_to_backup = set()
+            files_to_backup: set[str] = set()
             for violation in violations:
                 if "Renomear" in violation["action"]:
                     files_to_backup.add(violation["file"])

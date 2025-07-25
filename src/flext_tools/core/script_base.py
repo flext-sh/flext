@@ -8,22 +8,19 @@ error handling, logging, and command-line interface.
 from __future__ import annotations
 
 import argparse
-import logging
 import time
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any
+
+from flext_core.patterns.logging import get_logger
 
 from flext_tools.utils.colors import Colors, print_colored
 
 if TYPE_CHECKING:
     from collections.abc import Callable
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(message)s",
-)
+logger = get_logger(__name__)
 
 
 @dataclass
@@ -43,7 +40,7 @@ class FlextScript(ABC):
 
     def __init__(self) -> None:
         """Initialize the script."""
-        self.logger = logging.getLogger(self.__class__.__name__)
+        self.logger = get_logger(self.__class__.__name__)
         self.start_time = time.time()
 
     @property
@@ -179,7 +176,8 @@ class FlextScript(ABC):
 
         # Configure logging level
         if args.verbose:
-            logging.getLogger().setLevel(logging.DEBUG)
+            # Use FLEXT logger for debug level
+            logger.set_level("DEBUG")
 
         return self.run(**vars(args))
 

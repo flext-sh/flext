@@ -1,0 +1,213 @@
+# FLEXT Workspace Shared Ruff Configuration
+# Professional Python Development Standards
+# Used by all subprojects - DO NOT MODIFY without workspace coordination
+
+target-version = "py313"
+line-length = 88         # Standard Python community practice (Black default)
+fix = true
+show-fixes = true
+respect-gitignore = true
+src = ["src", "tests"]
+
+extend-exclude = [
+    "__pycache__",
+    ".git",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".ruff_cache",
+    ".venv",
+    "venv",
+    "build",
+    "dist",
+    "htmlcov",
+    ".archive",
+    "archive",
+    ".meltano",
+    ".plugin_backups",
+    "node_modules",
+    "site-packages",
+    "*.egg-info",
+    "*/generated/*",
+    "*/proto/*_pb2.py",
+    "*/proto/*_pb2_grpc.py",
+]
+
+[lint]
+select = ["ALL"]
+ignore = [
+    # Formatting conflicts with Black
+    "COM812", # trailing-comma-missing (handled by Black)
+    "ISC001", # single-line-implicit-string-concatenation (conflicts with Black)
+
+    # Docstring style conflicts
+    "D203", # one-blank-line-before-class (conflicts with D211)
+    "D213", # multi-line-summary-second-line (conflicts with D212)
+
+    # Type annotation flexibility
+    "ANN401", # dynamically-typed-expressions (legitimate for **kwargs)
+
+    # Argument flexibility for enterprise patterns
+    "ARG001", # unused-function-argument (legitimate for interface compliance)
+    "ARG002", # unused-method-argument (legitimate for abstract methods)
+
+    # Exception handling for enterprise error patterns
+    "BLE001", # blind-except (legitimate for generic error boundaries)
+
+    # Complexity limits (handled by project-specific needs)
+    "C901",    # complex-structure (project-specific complexity needs)
+    "PLR0911", # too-many-return-statements
+    "PLR0912", # too-many-branches
+    "PLR0913", # too-many-arguments
+    "PLR0915", # too-many-statements
+    "PLR2004", # magic-value-used-in-comparison
+
+    # Docstring requirements (project-specific)
+    "D102", # missing-docstring-in-public-method
+    "D103", # missing-docstring-in-public-function
+    "D105", # missing-docstring-in-magic-method
+    "D107", # missing-docstring-in-__init__
+    "D401", # non-imperative-mood-in-docstring
+
+    # Datetime handling (enterprise applications need timezone flexibility)
+    "DTZ001", # call-datetime-without-tzinfo
+    "DTZ005", # call-datetime-now-without-tzinfo
+
+    # Import and line length (handled by other tools)
+    "E401", # multiple-imports-on-one-line
+    "E501", # line-too-long (handled by line-length setting)
+
+    # Error message patterns
+    "EM101", # raw-string-in-exception
+    "EM102", # f-string-in-exception
+
+    # Code elimination (handled manually)
+    "ERA001", # commented-out-code
+
+    # Executable permissions
+    "EXE001", # shebang-not-executable
+
+    # Import handling
+    "F401", # unused-import (legitimate in __init__.py)
+    "F823", # undefined-name-in-__all__
+
+    # Boolean arguments (legitimate for configuration)
+    "FBT001", # boolean-positional-arg-in-function-def
+    "FBT002", # boolean-default-value-in-function-def
+    "FBT003", # boolean-positional-value-in-function-call
+
+    # Fixme comments (handled by project management)
+    "FIX002", # line-contains-fixme
+
+    # Logging (enterprise logging patterns)
+    "G004", # logging-f-string
+
+    # Path handling (platform-specific needs)
+    "PTH118", # os-path-join
+    "PTH123", # builtin-open
+
+    # Pylint specific
+    "PLC0415", # import-outside-toplevel
+    "PLW0603", # global-statement
+
+    # Ruff specific
+    "RUF001", # ambiguous-unicode-character-string
+
+    # Security (handled by bandit)
+    "S103", # hardcoded-bind-all-interfaces
+    "S104", # hardcoded-bind-all-interfaces
+    "S105", # hardcoded-password-string
+    "S106", # hardcoded-password-func-arg
+    "S107", # hardcoded-password-default
+    "S603", # subprocess-without-shell-equals-true
+    "S607", # start-process-with-partial-path
+
+    # Simplification (handled case-by-case)
+    "SIM102", # collapsible-if
+
+    # TODO comments (handled by project management)
+    "TD002", # missing-todo-author
+    "TD003", # missing-todo-link
+
+    # Try-except patterns
+    "TRY003", # raise-vanilla-args
+    "TRY203", # raise-within-try
+    "TRY300", # try-consider-else
+    "TRY301", # raise-within-try
+    "TRY401", # verbose-log-message
+]
+
+[lint.per-file-ignores]
+# Test files - more permissive rules
+"**/tests/**" = [
+    "S101",    # assert-used (normal in tests)
+    "S103",    # hardcoded-bind-all-interfaces (test fixtures)
+    "S104",    # hardcoded-bind-all-interfaces (test fixtures)
+    "S105",    # hardcoded-password-string (test data)
+    "S106",    # hardcoded-password-func-arg (test data)
+    "S107",    # hardcoded-password-default (test data)
+    "PLR2004", # magic-value-used-in-comparison (test assertions)
+    "ARG",     # Argument rules (fixtures may not use all args)
+    "SLF001",  # private-member-access (testing private methods)
+    "PLC0415", # import-outside-toplevel (dynamic test imports)
+    "ANN",     # Type annotations (tests can be less strict)
+    "D",       # Docstring requirements (not required in tests)
+    "FBT001",  # Boolean positional args (normal in pytest parametrize)
+]
+
+# Script files - more permissive rules
+"**/scripts/**" = [
+    "T201", # print-found (normal in scripts)
+    "S603", # subprocess-without-shell-equals-true (scripts may need shell)
+    "S607", # start-process-with-partial-path (scripts may use PATH)
+    "ANN",  # Type annotations (scripts can be less strict)
+]
+
+# __init__.py files - allow unused imports
+"**/__init__.py" = ["F401"]
+
+# Generated files - ignore all rules
+"**/proto/*_pb2.py" = ["ALL"]
+"**/proto/*_pb2_grpc.py" = ["ALL"]
+"**/*_pb2.py" = ["ALL"]
+"**/*_pb2_grpc.py" = ["ALL"]
+"**/generated/**/*.py" = ["ALL"]
+
+[lint.isort]
+known-first-party = [
+    "flext",
+    "flext_core",
+    "flext_api",
+    "flext_auth",
+    "flext_grpc",
+    "flext_observability",
+]
+force-single-line = false
+split-on-trailing-comma = true
+combine-as-imports = true
+
+[lint.pydocstyle]
+convention = "google" # Google docstring style (PEP257 compliant)
+
+[lint.pycodestyle]
+max-line-length = 88
+max-doc-length = 88
+
+[lint.mccabe]
+max-complexity = 10 # Reasonable complexity limit
+
+[lint.pylint]
+max-args = 7        # Allow reasonable argument count for enterprise patterns
+max-branches = 15   # Allow reasonable branching for business logic
+max-returns = 6     # Allow reasonable return count
+max-statements = 60 # Allow reasonable statement count for service methods
+
+[lint.flake8-quotes]
+docstring-quotes = "double" # PEP257 compliance
+inline-quotes = "double"    # Consistent quoting style
+
+[format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
+docstring-code-format = true
+skip-magic-trailing-comma = false

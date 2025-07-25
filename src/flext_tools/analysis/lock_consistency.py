@@ -261,9 +261,7 @@ class LockConsistencyAnalyzer:
     def get_workspace_summary(self) -> dict[str, Any]:
         """Retorna resumo do workspace."""
         total_projects = len(self.project_locks)
-        projects_with_lock = sum(
-            1 for info in self.project_locks.values() if info.exists
-        )
+        projects_with_lock = sum(1 for info in self.project_locks.values() if info.exists)
         total_packages = sum(len(info.packages) for info in self.project_locks.values())
 
         return {
@@ -291,11 +289,7 @@ class LockConsistencyAnalyzer:
             if not inconsistencies:
                 continue
 
-            color = (
-                Colors.RED
-                if severity == "critical"
-                else (Colors.YELLOW if severity == "warning" else Colors.CYAN)
-            )
+            color = Colors.RED if severity == "critical" else (Colors.YELLOW if severity == "warning" else Colors.CYAN)
 
             severity_label = {
                 "critical": "🔴 CRÍTICAS",

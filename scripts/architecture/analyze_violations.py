@@ -87,7 +87,10 @@ class ArchitectureAnalyzer:
             layer = self._classify_project_layer(project_name)
 
             projects[project_name] = Project(
-                name=project_name, path=item, layer=layer, dependencies=set()
+                name=project_name,
+                path=item,
+                layer=layer,
+                dependencies=set(),
             )
 
         return projects
@@ -124,7 +127,8 @@ class ArchitectureAnalyzer:
     def analyze_import_violations(self) -> None:
         """Analisa violações de imports entre camadas."""
         print_colored(
-            "🔍 Analisando violações de imports entre camadas...", Colors.BLUE
+            "🔍 Analisando violações de imports entre camadas...",
+            Colors.BLUE,
         )
 
         for project in self.projects.values():
@@ -151,7 +155,9 @@ class ArchitectureAnalyzer:
 
                 for import_name in imports:
                     violation = self._check_import_violation(
-                        project, py_file, import_name
+                        project,
+                        py_file,
+                        import_name,
                     )
                     if violation:
                         self.violations.append(violation)
@@ -172,7 +178,10 @@ class ArchitectureAnalyzer:
         return imports
 
     def _check_import_violation(
-        self, project: Project, file_path: Path, import_name: str
+        self,
+        project: Project,
+        file_path: Path,
+        import_name: str,
     ) -> Violation | None:
         """Verifica se um import viola a arquitetura."""
         # Ignorar imports padrão do Python e bibliotecas externas
@@ -212,10 +221,12 @@ class ArchitectureAnalyzer:
             # ... adicionar outros mapeamentos conforme necessário
         }
         project_name = import_mappings.get(import_name)
-        return self.projects.get(project_name)
+        return self.projects.get(project_name) if project_name else None
 
     def _is_layer_violation(
-        self, importing_project: Project, imported_project: Project
+        self,
+        importing_project: Project,
+        imported_project: Project,
     ) -> bool:
         """Verifica se há violação entre camadas."""
         importing_level = self.layer_hierarchy[importing_project.layer]
@@ -249,7 +260,9 @@ class ArchitectureAnalyzer:
                 self.violations.append(violation)
 
     def _check_module_placement(
-        self, project: Project, file_path: Path
+        self,
+        project: Project,
+        file_path: Path,
     ) -> Violation | None:
         """Verifica se um módulo está na camada correta."""
         try:
@@ -302,13 +315,12 @@ class ArchitectureAnalyzer:
 
         for violation_type, violations in violations_by_type.items():
             print_colored(
-                f"\n🚨 {violation_type} ({len(violations)} violações):", Colors.RED
+                f"\n🚨 {violation_type} ({len(violations)} violações):",
+                Colors.RED,
             )
 
             for violation in violations:
-                severity_color = (
-                    Colors.RED if violation.severity == "HIGH" else Colors.YELLOW
-                )
+                severity_color = Colors.RED if violation.severity == "HIGH" else Colors.YELLOW
                 print_colored(f"  📁 {violation.file_path}", severity_color)
                 print_colored(f"     {violation.description}", Colors.WHITE)
                 print_colored(f"     💡 {violation.suggested_action}", Colors.BLUE)
@@ -321,15 +333,13 @@ class ArchitectureAnalyzer:
 
     def generate_fix_script(self) -> None:
         """Gera script para correção automática."""
-        script_path = (
-            self.workspace_root / "scripts" / "architecture" / "fix_violations.sh"
-        )
+        script_path = self.workspace_root / "scripts" / "architecture" / "fix_violations.sh"
         script_path.parent.mkdir(parents=True, exist_ok=True)
 
         with open(script_path, "w", encoding="utf-8") as f:
             f.write("#!/bin/bash\n")
             f.write(
-                "# Script gerado automaticamente para correção de violações arquiteturais\n\n"
+                "# Script gerado automaticamente para correção de violações arquiteturais\n\n",
             )
 
             for violation in self.violations:
