@@ -1,0 +1,5 @@
+version: 1
+default_environment: dev
+project_id: flext-workspace
+environments:
+- name: dev
