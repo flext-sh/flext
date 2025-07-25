@@ -79,7 +79,7 @@ class OracleE2ETestRunner(FlextScript):
             print_colored("❌ Docker Compose not found", Colors.RED)
             return False
 
-    def execute_main_logic(self, **kwargs: Any) -> bool:
+    def execute_main_logic(self, **kwargs: object) -> bool:
         """Execute Oracle E2E testing logic."""
         try:
             project_root = Path.cwd()

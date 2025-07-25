@@ -6,8 +6,11 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+from flext_core import get_logger
 
 from .base import BaseQualityAnalyzer
+
+logger = get_logger(__name__)
 
 
 class SOLIDAnalyzer(BaseQualityAnalyzer):
@@ -53,12 +56,15 @@ class SOLIDAnalyzer(BaseQualityAnalyzer):
                     content = f.read()
 
                 file_classes, file_functions = self._analyze_file(
-                    file_path, content, results,
+                    file_path,
+                    content,
+                    results,
                 )
                 total_classes += file_classes
                 total_functions += file_functions
 
             except Exception:
+                logger.exception("Failed to analyze file")
                 continue
 
         # Calculate scores and summary
@@ -75,7 +81,10 @@ class SOLIDAnalyzer(BaseQualityAnalyzer):
         return results
 
     def _analyze_file(
-        self, file_path: Path, content: str, results: dict[str, Any],
+        self,
+        file_path: Path,
+        content: str,
+        results: dict[str, Any],
     ) -> tuple[int, int]:
         """Analyze a single file for SOLID violations."""
         try:
@@ -133,7 +142,10 @@ class SOLIDAnalyzer(BaseQualityAnalyzer):
         self._check_dependency_inversion(class_node, file_path, imports, results)
 
     def _analyze_function(
-        self, func_node: ast.FunctionDef, file_path: Path, results: dict[str, Any],
+        self,
+        func_node: ast.FunctionDef,
+        file_path: Path,
+        results: dict[str, Any],
     ) -> None:
         """Analyze a function for SOLID violations."""
         # Single Responsibility Principle for functions
@@ -177,7 +189,10 @@ class SOLIDAnalyzer(BaseQualityAnalyzer):
             )
 
     def _check_single_responsibility_function(
-        self, func_node: ast.FunctionDef, file_path: Path, results: dict[str, Any],
+        self,
+        func_node: ast.FunctionDef,
+        file_path: Path,
+        results: dict[str, Any],
     ) -> None:
         """Check Single Responsibility Principle for functions."""
         # Calculate cyclomatic complexity
@@ -214,15 +229,15 @@ class SOLIDAnalyzer(BaseQualityAnalyzer):
             )
 
     def _check_open_closed_class(
-        self, class_node: ast.ClassDef, file_path: Path, results: dict[str, Any],
+        self,
+        class_node: ast.ClassDef,
+        file_path: Path,
+        results: dict[str, Any],
     ) -> None:
         """Check Open/Closed Principle for classes."""
         # Look for classes that might benefit from extension mechanisms
         any(
-            any(
-                isinstance(d, ast.Name) and d.id == "abstractmethod"
-                for d in method.decorator_list
-            )
+            any(isinstance(d, ast.Name) and d.id == "abstractmethod" for d in method.decorator_list)
             for method in class_node.body
             if isinstance(method, ast.FunctionDef)
         )
@@ -245,7 +260,10 @@ class SOLIDAnalyzer(BaseQualityAnalyzer):
                     )
 
     def _check_liskov_substitution(
-        self, class_node: ast.ClassDef, file_path: Path, results: dict[str, Any],
+        self,
+        class_node: ast.ClassDef,
+        file_path: Path,
+        results: dict[str, Any],
     ) -> None:
         """Check Liskov Substitution Principle."""
         # Check if class has base classes
@@ -283,12 +301,7 @@ class SOLIDAnalyzer(BaseQualityAnalyzer):
         """Check Interface Segregation Principle."""
         # Check for large interfaces (abstract classes with many abstract methods)
         abstract_methods = [
-            method
-            for method in methods
-            if any(
-                isinstance(d, ast.Name) and d.id == "abstractmethod"
-                for d in method.decorator_list
-            )
+            method for method in methods if any(isinstance(d, ast.Name) and d.id == "abstractmethod" for d in method.decorator_list)
         ]
 
         if len(abstract_methods) > 8:
@@ -388,38 +401,23 @@ class SOLIDAnalyzer(BaseQualityAnalyzer):
                 concerns.add("persistence")
 
             # Validation concerns
-            elif any(
-                keyword in method_name
-                for keyword in ["validate", "check", "verify", "ensure"]
-            ):
+            elif any(keyword in method_name for keyword in ["validate", "check", "verify", "ensure"]):
                 concerns.add("validation")
 
             # Business logic concerns
-            elif any(
-                keyword in method_name
-                for keyword in ["calculate", "compute", "process", "execute", "run"]
-            ):
+            elif any(keyword in method_name for keyword in ["calculate", "compute", "process", "execute", "run"]):
                 concerns.add("business_logic")
 
             # UI/presentation concerns
-            elif any(
-                keyword in method_name
-                for keyword in ["render", "display", "show", "print", "format"]
-            ):
+            elif any(keyword in method_name for keyword in ["render", "display", "show", "print", "format"]):
                 concerns.add("presentation")
 
             # Network/communication concerns
-            elif any(
-                keyword in method_name
-                for keyword in ["send", "receive", "request", "response", "api", "http"]
-            ):
+            elif any(keyword in method_name for keyword in ["send", "receive", "request", "response", "api", "http"]):
                 concerns.add("communication")
 
             # Utility concerns
-            elif any(
-                keyword in method_name
-                for keyword in ["get", "set", "init", "setup", "config"]
-            ):
+            elif any(keyword in method_name for keyword in ["get", "set", "init", "setup", "config"]):
                 concerns.add("utility")
 
             else:
@@ -447,15 +445,23 @@ class SOLIDAnalyzer(BaseQualityAnalyzer):
         """Check if an if statement is type-based."""
         # Look for isinstance() calls or type() comparisons
         for node in ast.walk(if_node.test):
-            if isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and node.func.id in {
-                "isinstance",
-                "type",
-            }:
+            if (
+                isinstance(node, ast.Call)
+                and isinstance(node.func, ast.Name)
+                and node.func.id
+                in {
+                    "isinstance",
+                    "type",
+                }
+            ):
                 return True
         return False
 
     def _calculate_scores(
-        self, results: dict[str, Any], total_classes: int, total_functions: int,
+        self,
+        results: dict[str, Any],
+        total_classes: int,
+        total_functions: int,
     ) -> None:
         """Calculate SOLID principle scores."""
         total_items = total_classes + total_functions
@@ -521,28 +527,17 @@ class SOLIDAnalyzer(BaseQualityAnalyzer):
             ]:
                 if principle in results and "violations" in results[principle]:
                     principle_data = results[principle]
-                    if (
-                        isinstance(principle_data, dict)
-                        and "violations" in principle_data
-                    ):
+                    if isinstance(principle_data, dict) and "violations" in principle_data:
                         violations = principle_data["violations"]
                         if isinstance(violations, list):
                             all_violations.extend(violations)
 
             # Count unique problematic classes and functions
             problematic_classes = len(
-                {
-                    v["name"]
-                    for v in all_violations
-                    if isinstance(v, dict) and v.get("type") == "class"
-                },
+                {v["name"] for v in all_violations if isinstance(v, dict) and v.get("type") == "class"},
             )
             problematic_functions = len(
-                {
-                    v["name"]
-                    for v in all_violations
-                    if isinstance(v, dict) and v.get("type") == "function"
-                },
+                {v["name"] for v in all_violations if isinstance(v, dict) and v.get("type") == "function"},
             )
 
             summary["problematic_classes"] = problematic_classes
@@ -657,9 +652,7 @@ class SOLIDAnalyzer(BaseQualityAnalyzer):
             if violations:
                 report += f"\n## {name} Violations\n\n"
                 for violation in violations[:5]:  # Top 5
-                    report += (
-                        f"### {violation['severity'].upper()}: {violation['name']}\n\n"
-                    )
+                    report += f"### {violation['severity'].upper()}: {violation['name']}\n\n"
                     report += f"**File:** {violation['file']}:{violation['line']}\n"
                     report += f"**Issue:** {violation['issue']}\n"
                     report += f"**Suggestion:** {violation['suggestion']}\n\n"
@@ -682,19 +675,16 @@ class TestSOLIDPrinciples:
 
     def test_solid_files_found(self, analysis_results: dict[str, Any]) -> None:
         """Test that Python files are found for analysis."""
-        assert analysis_results["total_files"] > 0, (
-            "No Python files found for SOLID analysis"
-        )
+        assert analysis_results["total_files"] > 0, "No Python files found for SOLID analysis"
 
     def test_solid_average_score(self, analysis_results: dict[str, Any]) -> None:
         """Test that SOLID average score is acceptable."""
         average_score = analysis_results["summary"]["average_score"]
-        assert average_score >= 30, (
-            f"SOLID average score {average_score:.1f} is below 30"
-        )
+        assert average_score >= 30, f"SOLID average score {average_score:.1f} is below 30"
 
     def test_solid_individual_principles(
-        self, analysis_results: dict[str, Any],
+        self,
+        analysis_results: dict[str, Any],
     ) -> None:
         """Test that individual SOLID principles have reasonable scores."""
         principles = [
@@ -707,9 +697,7 @@ class TestSOLIDPrinciples:
 
         for principle in principles:
             score = analysis_results[principle]["score"]
-            assert score >= 20, (
-                f"SOLID principle {principle} score {score:.1f} is below 20"
-            )
+            assert score >= 20, f"SOLID principle {principle} score {score:.1f} is below 20"
 
     def test_solid_violation_threshold(self, analysis_results: dict[str, Any]) -> None:
         """Test that SOLID violations are within reasonable limits."""
@@ -718,12 +706,12 @@ class TestSOLIDPrinciples:
 
         if total_files > 0:
             violation_rate = total_violations / total_files
-            assert violation_rate < 5.0, (
-                f"SOLID violation rate {violation_rate:.1f} per file is too high"
-            )
+            assert violation_rate < 5.0, f"SOLID violation rate {violation_rate:.1f} per file is too high"
 
     def test_generate_solid_reports(
-        self, analyzer: SOLIDAnalyzer, analysis_results: dict[str, Any],
+        self,
+        analyzer: SOLIDAnalyzer,
+        analysis_results: dict[str, Any],
     ) -> None:
         """Test SOLID report generation."""
         # Generate reports

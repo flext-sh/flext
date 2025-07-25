@@ -3,12 +3,12 @@
 
 This script finds and replaces ALL instances of:
 - import logging
-- logger = FlextLoggerFactory.get_logger(__name__)
+- logger = get_logger(__name__)
 - logging.getLogger() calls
 
 With the standardized FLEXT pattern:
-- from flext_core import FlextLoggerFactory
-- logger = FlextLoggerFactory.get_logger(__name__)
+- from flext_core import get_logger
+- logger = get_logger(__name__)
 
 ZERO TOLERANCE - No partial fixes, all manual logging must be eliminated.
 """
@@ -89,7 +89,7 @@ def refactor_file(file_path: Path) -> tuple[bool, list[str]]:
         content = re.sub(r"^import\s+logging\s*$\n?", "", content, flags=re.MULTILINE)
 
         # Add FlextLoggerFactory import if not present
-        if "from flext_core import FlextLoggerFactory" not in content and "FlextLoggerFactory" not in content:
+        if "from flext_core import get_logger" not in content and "FlextLoggerFactory" not in content:
             # Find import section and add the import
             lines = content.split("\n")
             import_insert_index = 0
@@ -107,10 +107,10 @@ def refactor_file(file_path: Path) -> tuple[bool, list[str]]:
             # Insert the import
             if import_insert_index < len(lines):
                 lines.insert(import_insert_index, "")
-                lines.insert(import_insert_index + 1, "from flext_core import FlextLoggerFactory")
+                lines.insert(import_insert_index + 1, "from flext_core import get_logger")
             else:
                 lines.append("")
-                lines.append("from flext_core import FlextLoggerFactory")
+                lines.append("from flext_core import get_logger")
 
             content = "\n".join(lines)
 
@@ -149,7 +149,7 @@ def refactor_file(file_path: Path) -> tuple[bool, list[str]]:
     return False, []
 
 
-def main():
+def main() -> None:
     """Main refactoring process."""
     print("🚀 Starting REAL manual logging refactoring across FLEXT ecosystem...")
 

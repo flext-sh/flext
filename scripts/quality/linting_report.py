@@ -18,6 +18,7 @@ from typing import Any
 
 from flext_tools import Colors, print_colored
 from flext_tools.core.script_base import FlextScript, ScriptMetadata
+from scripts.common import discover_projects
 
 
 class LintingReport(FlextScript):
@@ -25,6 +26,12 @@ class LintingReport(FlextScript):
 
     @property
     def metadata(self) -> ScriptMetadata:
+        """Metadados do script.
+
+        Returns:
+            ScriptMetadata: Metadados do script.
+
+        """
         return ScriptMetadata(
             name="linting_report",
             description="Relatório completo de qualidade de código com Ruff, MyPy e métricas",
@@ -56,7 +63,7 @@ class LintingReport(FlextScript):
 
         return True
 
-    def execute_main_logic(self, **kwargs: Any) -> bool:
+    def execute_main_logic(self, **kwargs: object) -> bool:
         """Executar análise completa de qualidade."""
         try:
             workspace_root = Path.cwd()
@@ -98,7 +105,8 @@ class LintingReport(FlextScript):
                     "python_files": len(list(project_path.rglob("*.py"))),
                     "ruff_issues": ruff_result["total_issues"],
                     "mypy_errors": mypy_result["total_errors"],
-                    "has_issues": ruff_result["total_issues"] > 0 or mypy_result["total_errors"] > 0,
+                    "has_issues": ruff_result["total_issues"] > 0
+                    or mypy_result["total_errors"] > 0,
                 }
 
                 project_results[project_name] = {
@@ -142,8 +150,6 @@ class LintingReport(FlextScript):
         projects_filter: str | None = None,
     ) -> list[Path]:
         """Descobrir projetos para analisar."""
-        from scripts.common import discover_projects
-
         return discover_projects(workspace_root, projects_filter)
 
     def _run_ruff_analysis(self, project_path: Path) -> dict[str, Any]:
@@ -211,7 +217,9 @@ class LintingReport(FlextScript):
                         parts = line.split(":")
                         if len(parts) >= 4:
                             filename = parts[0]
-                            error_type = parts[3].strip() if len(parts) > 3 else "Unknown"
+                            error_type = (
+                                parts[3].strip() if len(parts) > 3 else "Unknown"
+                            )
 
                             errors_by_file[filename] += 1
                             errors_by_type[error_type] += 1
@@ -286,14 +294,17 @@ class LintingReport(FlextScript):
         print(f"  📁 Projetos analisados: {total_stats['projects_analyzed']}")
         print(f"  📄 Arquivos Python: {total_stats['total_files']}")
         print(
-            f"  ⚠️ Total de issues: {total_stats['ruff_issues'] + total_stats['mypy_errors']}",
+            "  ⚠️ Total de issues:"
+            f" {total_stats['ruff_issues'] + total_stats['mypy_errors']}",
         )
         print(f"    • Ruff: {total_stats['ruff_issues']} issues")
         print(f"    • MyPy: {total_stats['mypy_errors']} errors")
 
         # Score de qualidade
         if total_stats["total_files"] > 0:
-            issues_per_file = (total_stats["ruff_issues"] + total_stats["mypy_errors"]) / total_stats["total_files"]
+            issues_per_file = (
+                total_stats["ruff_issues"] + total_stats["mypy_errors"]
+            ) / total_stats["total_files"]
             if issues_per_file == 0:
                 score_color = Colors.GREEN
                 status = "PERFEITO"
@@ -370,7 +381,13 @@ class LintingReport(FlextScript):
     </div>
 
     <h2>📦 Project Details</h2>
-    {"".join(f'<div class="project"><h3>{name}</h3><p>Issues: {data["stats"]["ruff_issues"] + data["stats"]["mypy_errors"]}</p></div>' for name, data in project_results.items())}
+    {
+            "".join(
+                f'<div class="project"><h3>{name}</h3>'
+                f"<p>Issues: {data['stats']['ruff_issues'] + data['stats']['mypy_errors']}</p></div>"
+                for name, data in project_results.items()
+            )
+        }
 </body>
 </html>
         """

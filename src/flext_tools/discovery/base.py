@@ -59,7 +59,9 @@ class DependencyDiscovery:
 
         # Combina resultados
         result = {
-            "runtime": python_deps.get("runtime", set()) | config_deps.get("runtime", set()),
+            "runtime": (
+                python_deps.get("runtime", set()) | config_deps.get("runtime", set())
+            ),
             "test": set(),
             "dev": set(),
         }
@@ -75,9 +77,11 @@ class DependencyDiscovery:
 
         # NOVA FUNCIONALIDADE: Remove dependências transitivas (opcional)
         if self.resolve_transitive and hasattr(self, "transitive_resolver"):
-            available_transitive = self.transitive_resolver.get_all_available_dependencies(project_path)
+            available_transitive = (
+                self.transitive_resolver.get_all_available_dependencies(project_path)
+            )
             print_colored(
-                f"  🔗 Dependências transitivas detectadas: {len(available_transitive)}",
+                f"  🔗 Dependências transitivas: {len(available_transitive)}",
                 Colors.CYAN,
             )
 
@@ -95,13 +99,15 @@ class DependencyDiscovery:
                 removed_count = original_count - len(result[category])
                 if removed_count > 0:
                     print_colored(
-                        f"    ✓ {removed_count} dependências transitivas removidas de {category}",
+                        f"    ✓ {removed_count} transitivas removidas de {category}",
                         Colors.GREEN,
                     )
 
         # Remove dependências já instaladas do resultado
         for category, deps in result.items():
-            result[category] = {dep for dep in deps if not self._is_installed(dep, installed)}
+            result[category] = {
+                dep for dep in deps if not self._is_installed(dep, installed)
+            }
 
         return result
 
@@ -143,7 +149,7 @@ class DependencyDiscovery:
                 group_deps = group_data.get("dependencies", {})
                 for dep_name in group_deps:
                     self._add_package_variations(installed, dep_name)
-        except Exception as e:
+        except (OSError, tomllib.TOMLDecodeError, KeyError) as e:
             print_colored(f"  ⚠️ Erro ao ler pyproject.toml: {e}", Colors.YELLOW)
 
         return installed
@@ -202,6 +208,10 @@ class DependencyDiscovery:
         }
 
         # Normaliza dependências transitivas para comparação
-        normalized_transitive = {self._normalize_name(dep) for dep in available_transitive}
+        normalized_transitive = {
+            self._normalize_name(dep) for dep in available_transitive
+        }
 
-        return any(self._normalize_name(var) in normalized_transitive for var in variations)
+        return any(
+            self._normalize_name(var) in normalized_transitive for var in variations
+        )

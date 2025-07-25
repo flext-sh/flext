@@ -139,7 +139,8 @@ class TestModuleIntegration:
 
     def test_config_integration(self) -> None:
         """Test configuration system integration."""
-        from flext_core import BaseSettings, Field
+        from pydantic import Field
+        from pydantic_settings import BaseSettings
 
         class TestSettings(BaseSettings):
             app_name: str = Field(default="test_app")

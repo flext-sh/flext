@@ -61,7 +61,7 @@ def run_poetry_install(project_dir: str) -> tuple[bool, str]:
         return False, f"❌ Exceção: {e!s}"
 
 
-def main():
+def main() -> int:
     """Função principal."""
     print("🚀 INSTALADOR DE TODOS OS PROJETOS FLEXT")
     print("=" * 50)

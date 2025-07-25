@@ -1,23 +1,19 @@
 [build-system]
-requires = ["poetry-core>=1.9.0"]
 build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core>=1.9.0"]
 
 [project]
-name = "flext"
-version = "0.8.0"
+authors = [{ name = "FLEXT Team", email = "team@flext.sh" }]
 description = "FLEXT - Enterprise Data Integration Platform - Workspace Manager"
+license.text = "MIT"
+maintainers = [{ name = "FLEXT Team", email = "team@flext.sh" }]
+name = "flext"
 readme = "README.md"
 requires-python = ">=3.13,<3.14"
-authors = [{ name = "FLEXT Team", email = "team@flext.sh" }]
-maintainers = [{ name = "FLEXT Team", email = "team@flext.sh" }]
-keywords = [
-    "flext",
-    "enterprise",
-    "async",
-    "typed",
-    "workspace",
-    "coordination",
-]
+version = "0.8.0"
+urls.Homepage = "https://github.com/flext-sh/flext"
+urls.Documentation = "https://github.com/flext-sh/flext/blob/main/README.md"
+urls.Repository = "https://github.com/flext-sh/flext"
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
@@ -30,11 +26,6 @@ classifiers = [
 ]
 dependencies = [
     "click (>=8.2.1)",
-    "cryptography (>=45.0.5)",
-    "gensim @ git+https://github.com/flext-sh/gensim.git@flext-gensim-4.3.3-numpy2-python313",           # Fork flext-sh v4.3.3 + Python 3.13 + NumPy >=2.0.0
-    "grpcio (>=1.50.0)",
-    "grpcio-health-checking (>=1.50.0)",
-    "grpcio-tools (>=1.0.0)",
     "packaging (>=25.0)",
     "protobuf (>=4)",
     "pydantic (>=2.11.7)",
@@ -43,335 +34,98 @@ dependencies = [
     "rich (>=14.0.0)",
     "structlog (>=25.4.0)",
     "tomlkit (>=0.13.3)",
-    "client-a-oud-mig @ file:///home/marlonsc/flext/client-a-oud-mig",
-    "flexcore @ file:///home/marlonsc/flext/flexcore",
-    "flext-api @ file:///home/marlonsc/flext/flext-api",
-    "flext-auth @ file:///home/marlonsc/flext/flext-auth",
-    "flext-cli @ file:///home/marlonsc/flext/flext-cli",
-    "flext-core @ file:///home/marlonsc/flext/flext-core",
-    "flext-db-oracle @ file:///home/marlonsc/flext/flext-db-oracle",
-    "flext-dbt-ldap @ file:///home/marlonsc/flext/flext-dbt-ldap",
-    "flext-dbt-ldif @ file:///home/marlonsc/flext/flext-dbt-ldif",
-    "flext-dbt-oracle @ file:///home/marlonsc/flext/flext-dbt-oracle",
-    "flext-dbt-oracle-wms @ file:///home/marlonsc/flext/flext-dbt-oracle-wms",
-    "flext-grpc @ file:///home/marlonsc/flext/flext-grpc",
-    "flext-ldap @ file:///home/marlonsc/flext/flext-ldap",
-    "flext-ldif @ file:///home/marlonsc/flext/flext-ldif",
-    "flext-meltano @ file:///home/marlonsc/flext/flext-meltano",
-    "flext-observability @ file:///home/marlonsc/flext/flext-observability",
-    "flext-oracle-oic-ext @ file:///home/marlonsc/flext/flext-oracle-oic-ext",
-    "flext-oracle-wms @ file:///home/marlonsc/flext/flext-oracle-wms",
-    "flext-plugin @ file:///home/marlonsc/flext/flext-plugin",
-    "flext-quality @ file:///home/marlonsc/flext/flext-quality",
-    "flext-tap-ldap @ file:///home/marlonsc/flext/flext-tap-ldap",
-    "flext-tap-ldif @ file:///home/marlonsc/flext/flext-tap-ldif",
-    "flext-tap-oracle @ file:///home/marlonsc/flext/flext-tap-oracle",
-    "flext-tap-oracle-oic @ file:///home/marlonsc/flext/flext-tap-oracle-oic",
-    "flext-tap-oracle-wms @ file:///home/marlonsc/flext/flext-tap-oracle-wms",
-    "flext-target-ldap @ file:///home/marlonsc/flext/flext-target-ldap",
-    "flext-target-ldif @ file:///home/marlonsc/flext/flext-target-ldif",
-    "flext-target-oracle @ file:///home/marlonsc/flext/flext-target-oracle",
-    "flext-target-oracle-oic @ file:///home/marlonsc/flext/flext-target-oracle-oic",
-    "flext-target-oracle-wms @ file:///home/marlonsc/flext/flext-target-oracle-wms",
-    "flext-web @ file:///home/marlonsc/flext/flext-web",
-    "client-b-meltano-native @ file:///home/marlonsc/flext/client-b-meltano-native",
-    "duplicate-code-detection-tool @ git+https://github.com/flext-sh/duplicate-code-detection-tool.git",
-    "pyaml (>=25.7.0,<26.0.0)",
+    "client-a-oud-mig @ ./client-a-oud-mig",
+    "flexcore @ ./flexcore",
+    "flext-api @ ./flext-api",
+    "flext-auth @ ./flext-auth",
+    "flext-cli @ ./flext-cli",
+    "flext-core @ ./flext-core",
+    "flext-db-oracle @ ./flext-db-oracle",
+    "flext-dbt-ldap @ ./flext-dbt-ldap",
+    "flext-dbt-ldif @ ./flext-dbt-ldif",
+    "flext-dbt-oracle @ ./flext-dbt-oracle",
+    "flext-dbt-oracle-wms @ ./flext-dbt-oracle-wms",
+    "flext-grpc @ ./flext-grpc",
+    "flext-ldap @ ./flext-ldap",
+    "flext-ldif @ ./flext-ldif",
+    "flext-meltano @ ./flext-meltano",
+    "flext-observability @ ./flext-observability",
+    "flext-oracle-oic-ext @ ./flext-oracle-oic-ext",
+    "flext-oracle-wms @ ./flext-oracle-wms",
+    "flext-plugin @ ./flext-plugin",
+    "flext-quality @ ./flext-quality",
+    "flext-tap-ldap @ ./flext-tap-ldap",
+    "flext-tap-ldif @ ./flext-tap-ldif",
+    "flext-tap-oracle @ ./flext-tap-oracle",
+    "flext-tap-oracle-oic @ ./flext-tap-oracle-oic",
+    "flext-tap-oracle-wms @ ./flext-tap-oracle-wms",
+    "flext-target-ldap @ ./flext-target-ldap",
+    "flext-target-ldif @ ./flext-target-ldif",
+    "flext-target-oracle @ ./flext-target-oracle",
+    "flext-target-oracle-oic @ ./flext-target-oracle-oic",
+    "flext-target-oracle-wms @ ./flext-target-oracle-wms",
+    "flext-web @ ./flext-web",
+    "client-b-meltano-native @ ./client-b-meltano-native",
 ]
-
-[project.license]
-text = "MIT"
-
-[project.urls]
-Homepage = "https://github.com/flext-sh/flext"
-Repository = "https://github.com/flext-sh/flext"
-Documentation = "https://github.com/flext-sh/flext/blob/main/README.md"
+keywords = [
+    "async",
+    "coordination",
+    "enterprise",
+    "flext",
+    "typed",
+    "workspace",
+]
 
 [project.optional-dependencies]
 dev = [
-    "ruff>=0.12.3",
+    "autoflake>=2.3.1",
     "black>=25.1.0",
+    "codespell>=2.3.0",
+    "deptry>=0.23.0",
     "isort>=6.0.1",
     "mypy>=1.13.0",
-    "pylint>=3.3.0",
     "pre-commit>=4.0.1",
-    "vulture>=2.13",
-    "radon>=6.0.1",
-    "codespell>=2.3.0",
+    "pylint>=3.3.0",
     "pyupgrade>=3.19.0",
-    "autoflake>=2.3.1",
-    "types-ldap3>=2.9.13.20250622",
-    "deptry>=0.23.0",
+    "radon>=6.0.1",
+    "ruff>=0.12.3",
+    "vulture>=2.13",
 ]
 test = [
+    "factory-boy>=3.3.1",
+    "faker>=37.4.0",
+    "hypothesis>=6.125.0",
     "pytest>=8.4.0",
-    "pytest-cov>=6.2.0",
-    "pytest-xdist>=3.8.0",
-    "pytest-mock>=3.14.0",
-    "pytest-timeout>=2.4.0",
     "pytest-benchmark>=5.1.0",
-    "pytest-randomly>=3.16.0",
-    "pytest-sugar>=1.0.0",
     "pytest-clarity>=1.0.1",
+    "pytest-cov>=6.2.0",
     "pytest-deadfixtures>=2.2.1",
     "pytest-env>=1.1.5",
     "pytest-httpx>=0.35.0",
-    "hypothesis>=6.125.0",
-    "factory-boy>=3.3.1",
-    "faker>=37.4.0",
+    "pytest-mock>=3.14.0",
+    "pytest-randomly>=3.16.0",
+    "pytest-sugar>=1.0.0",
+    "pytest-timeout>=2.4.0",
+    "pytest-xdist>=3.8.0",
 ]
 typings = [
+    "django-stubs>=5.2.2",
+    "types-ldap3>=2.9.13.20250622",
+    "types-protobuf>=6.30.2.20250703",
+    "types-psutil>=7.0.0",
+    "types-psycopg2>=2.9.21.20250718",
     "types-python-dateutil>=2.9.0",
     "types-pyyaml>=6.0.12",
+    "types-redis>=4.6.0",
+    "types-requests>=2.32.4",
     "types-setuptools>=80.9.0",
     "types-toml>=0.10.8.20240310",
-    "types-requests>=2.32.4",
-    "types-redis>=4.6.0",
-    "types-psutil>=7.0.0",
-    "django-stubs>=5.2.2",
 ]
 security = ["bandit>=1.8.0", "pip-audit>=2.7.3"]
 
 [project.scripts]
-flext-workspace = "flext.workspace:main"
 flext-dev = "flext.dev:main"
-
-[tool.pytest.ini_options]
-minversion = "8.0"
-asyncio_mode = "auto"
-addopts = [
-    "-ra",
-    "--strict-markers",
-    "--strict-config",
-    "--cov=flext",
-    "--cov-branch",
-    "--cov-report=term-missing:skip-covered",
-    "--cov-report=html:reports/coverage",
-    "--cov-report=xml:reports/coverage.xml",
-    "--cov-fail-under=90",
-    "--maxfail=1",
-    "--tb=short",
-]
-testpaths = ["tests"]
-markers = [
-    "unit: Unit tests",
-    "integration: Integration tests",
-    "slow: Slow tests",
-    "smoke: Smoke tests",
-    "e2e: End-to-end tests",
-    "oracle: Oracle database tests",
-    "tap: Singer tap tests",
-    "target: Singer target tests",
-    "dbt: dbt transformation tests",
-    "performance: Performance tests",
-    "cleanup: Cleanup tests",
-]
-filterwarnings = ["error", "ignore::UserWarning", "ignore::DeprecationWarning"]
-
-[tool.ruff]
-target-version = "py313"
-line-length = 140
-fix = true
-show-fixes = true
-respect-gitignore = true
-src = ["src", "tests"]
-extend-exclude = [
-    "__pycache__",
-    ".git",
-    ".mypy_cache",
-    ".pytest_cache",
-    ".ruff_cache",
-    ".venv",
-    "venv",
-    "build",
-    "dist",
-    "htmlcov",
-    ".archive",
-    "archive",
-    ".meltano",
-    ".plugin_backups",
-    "node_modules",
-    "site-packages",
-    "*.egg-info",
-]
-
-[tool.ruff.lint]
-select = ["ALL"]
-ignore = [
-    "COM812",
-    "D203",
-    "D213",
-    "ISC001",
-    "ANN401",
-    "ARG001",
-    "ARG002",
-    "BLE001",
-    "C901",
-    "D102",
-    "D103",
-    "D105",
-    "D107",
-    "D401",
-    "DTZ001",
-    "DTZ005",
-    "E401",
-    "E501",
-    "EM101",
-    "EM102",
-    "ERA001",
-    "EXE001",
-    "F401",
-    "F823",
-    "FBT001",
-    "FBT002",
-    "FBT003",
-    "FIX002",
-    "G004",
-    "PLC0415",
-    "PLR0911",
-    "PLR0912",
-    "PLR0913",
-    "PLR0915",
-    "PLR2004",
-    "PLW0603",
-    "PTH118",
-    "PTH123",
-    "RUF001",
-    "S103",
-    "S104",
-    "S105",
-    "S106",
-    "S107",
-    "S603",
-    "S607",
-    "SIM102",
-    "TD002",
-    "TD003",
-    "TRY003",
-    "TRY203",
-    "TRY300",
-    "TRY301",
-    "TRY401",
-]
-
-[tool.ruff.lint.per-file-ignores]
-"**/tests/**" = [
-    "S101",
-    "S103",
-    "S104",
-    "S105",
-    "S106",
-    "S107",
-    "PLR2004",
-    "ARG",
-    "SLF001",
-    "PLC0415",
-]
-"**/scripts/**" = ["T201", "S603", "S607", "ANN"]
-"**/__init__.py" = ["F401"]
-"**/proto/*_pb2.py" = ["ALL"]
-"**/proto/*_pb2_grpc.py" = ["ALL"]
-"**/*_pb2.py" = ["ALL"]
-"**/*_pb2_grpc.py" = ["ALL"]
-"**/generated/**/*.py" = ["ALL"]
-
-[tool.ruff.lint.isort]
-known-first-party = ["flext"]
-force-single-line = false
-split-on-trailing-comma = true
-combine-as-imports = true
-
-[tool.ruff.format]
-quote-style = "double"
-indent-style = "space"
-line-ending = "lf"
-docstring-code-format = true
-
-[tool.mypy]
-# Configuração MyPy seguindo PEP 518 (pyproject.toml) - Análise Máxima
-python_version = "3.13"
-strict = true
-warn_return_any = true
-warn_unused_configs = true
-disallow_untyped_defs = true
-disallow_incomplete_defs = true
-check_untyped_defs = true
-disallow_untyped_decorators = true
-no_implicit_optional = true
-warn_redundant_casts = true
-warn_unused_ignores = true
-warn_no_return = true
-warn_unreachable = true
-strict_equality = true
-show_error_codes = true
-show_error_context = true
-pretty = true
-disallow_any_generics = true
-disallow_subclassing_any = true
-disallow_untyped_calls = true
-ignore_missing_imports = false
-no_implicit_reexport = true
-
-# PEP 420 Namespace packages support
-explicit_package_bases = true
-namespace_packages = true
-
-# Configuração de paths para evitar conflitos de módulos
-mypy_path = ["src"]
-
-# Plugins
-plugins = ["pydantic.mypy"]
-
-# Exclusões mínimas (apenas diretórios técnicos)
-exclude = [
-    "build/",
-    "dist/",
-    ".venv/",
-    ".mypy_cache/",
-    "__pycache__/",
-    "node_modules/",
-    ".git/",
-    ".*/tests/",
-    ".*/examples/",
-    ".*/scripts/",
-    ".*/generate_config.py",
-    ".*/manage.py",
-    "vendor/",
-]
-
-[tool.coverage.run]
-source = ["src"]
-branch = true
-omit = ["*/tests/*", "*/test_*", "*/__pycache__/*", "*/venv/*", "*/.venv/*"]
-
-[tool.coverage.report]
-exclude_lines = [
-    "pragma: no cover",
-    "def __repr__",
-    "if self.debug:",
-    "if settings.DEBUG",
-    "raise AssertionError",
-    "raise NotImplementedError",
-    "if 0:",
-    "if __name__ == .__main__.:",
-    "class .*\\bProtocol\\):",
-    "@(abc\\.)?abstractmethod",
-]
-
-[tool.coverage.html]
-directory = "reports/coverage"
-
-[tool.coverage.xml]
-output = "reports/coverage.xml"
-
-[tool.bandit]
-exclude_dirs = ["tests", "build", "dist"]
-skips = ["B101", "B601"]
-
-[tool.pydantic-mypy]
-init_forbid_extra = true
-init_typed = true
-warn_required_dynamic_aliases = true
+flext-workspace = "flext.workspace:main"
 
 [tool.poetry]
 packages = [
@@ -379,126 +133,126 @@ packages = [
     { include = "flext_tools", from = "src" },
 ]
 
-[tool.poetry.dependencies]
-python = ">=3.13,<3.14"
-# Core external dependencies
-click = ">=8.2.1"
-cryptography = ">=45.0.5"
-gensim = { git = "https://github.com/flext-sh/gensim.git", rev = "flext-gensim-4.3.3-numpy2-python313" }
-grpcio = ">=1.50.0"
-grpcio-health-checking = ">=1.50.0"
-grpcio-tools = ">=1.0.0"
-packaging = ">=25.0"
-protobuf = ">=4"
-pydantic = ">=2.11.7"
-pydantic-settings = ">=2.10.1"
-pyyaml = ">=6.0"
-rich = ">=14.0.0"
-structlog = ">=25.4.0"
-tomlkit = ">=0.13.3"
-duplicate-code-detection-tool = { git = "https://github.com/flext-sh/duplicate-code-detection-tool.git" }
+[tool.poetry.group.dev.dependencies]
+aiohttp = "^3.12.14"
+numpy = "^2.3.2"
+ldap3 = "^2.9.1"
+docker = "^7.1.0"
+redis = ">=5.0.0,<6.0.0"
+psycopg2 = "^2.9.10"
 
-# All FLEXT projects in development mode (32 projects)
-client-a-oud-mig = { path = "./client-a-oud-mig", develop = true }
-flexcore = { path = "./flexcore", develop = true }
-flext-api = { path = "./flext-api", develop = true }
-flext-auth = { path = "./flext-auth", develop = true }
-flext-cli = { path = "./flext-cli", develop = true }
-flext-core = { path = "./flext-core", develop = true }
-flext-db-oracle = { path = "./flext-db-oracle", develop = true }
-flext-dbt-ldap = { path = "./flext-dbt-ldap", develop = true }
-flext-dbt-ldif = { path = "./flext-dbt-ldif", develop = true }
-flext-dbt-oracle = { path = "./flext-dbt-oracle", develop = true }
-flext-dbt-oracle-wms = { path = "./flext-dbt-oracle-wms", develop = true }
-flext-grpc = { path = "./flext-grpc", develop = true }
-flext-ldap = { path = "./flext-ldap", develop = true }
-flext-ldif = { path = "./flext-ldif", develop = true }
-flext-meltano = { path = "./flext-meltano", develop = true }
-flext-observability = { path = "./flext-observability", develop = true }
-flext-oracle-oic-ext = { path = "./flext-oracle-oic-ext", develop = true }
-flext-oracle-wms = { path = "./flext-oracle-wms", develop = true }
-flext-plugin = { path = "./flext-plugin", develop = true }
-flext-quality = { path = "./flext-quality", develop = true }
-flext-tap-ldap = { path = "./flext-tap-ldap", develop = true }
-flext-tap-ldif = { path = "./flext-tap-ldif", develop = true }
-flext-tap-oracle = { path = "./flext-tap-oracle", develop = true }
-flext-tap-oracle-oic = { path = "./flext-tap-oracle-oic", develop = true }
-flext-tap-oracle-wms = { path = "./flext-tap-oracle-wms", develop = true }
-flext-target-ldap = { path = "./flext-target-ldap", develop = true }
-flext-target-ldif = { path = "./flext-target-ldif", develop = true }
-flext-target-oracle = { path = "./flext-target-oracle", develop = true }
-flext-target-oracle-oic = { path = "./flext-target-oracle-oic", develop = true }
-flext-target-oracle-wms = { path = "./flext-target-oracle-wms", develop = true }
-flext-web = { path = "./flext-web", develop = true }
-client-b-meltano-native = { path = "./client-b-meltano-native", develop = true }
+[tool.bandit]
+extend = "./.bandit-shared.toml"
+
+[tool.coverage]
+extend = "./.coverage-shared.toml"
 
 [tool.deptry]
-ignore = ["client-a_oud_mig", "client-b_*", "flext_*"]
+exclude = [
+    "__pycache__",
+    ".archive",
+    ".git",
+    ".meltano",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".ruff_cache",
+    ".venv",
+    "build",
+    "dist",
+    "htmlcov",
+    "vendor",
+    "node_modules",
+    "reports",
+    "venv",
+]
+extend_exclude = ["client-a-.*/", "flexcore/", "flext-.*/", "client-b-.*/"]
 known_first_party = ["flext", "flext_tools"]
+# package_module_name_map.flext_tools = "flext_tools"
+pep621_dev_dependency_groups = ["dev", "security", "test", "typings"]
 
-[tool.poetry.group.dev.dependencies]
-ruff = "^0.12.3"
-black = "^25.1.0"
-isort = "^6.0.1"
-mypy = "^1.13.0"
-pylint = "^3.3.0"
-pre-commit = "^4.0.1"
-vulture = "^2.13"
-radon = "^6.0.1"
-codespell = "^2.3.0"
-pyupgrade = "^3.19.0"
-autoflake = "^2.3.1"
-types-ldap3 = "^2.9.13.20250622"
-deptry = "^0.23.0"
-pytest = "^8.4.1"
-types-psycopg2 = "^2.9.21.20250718"
+[tool.mypy]
+check_untyped_defs = true
+disallow_any_generics = true
+disallow_incomplete_defs = true
+disallow_subclassing_any = true
+disallow_untyped_calls = true
+disallow_untyped_decorators = true
+disallow_untyped_defs = true
+exclude = [
+    "__pycache__/",
+    ".*/examples/",
+    ".*/generate_config.py",
+    ".*/manage.py",
+    ".*/scripts/",
+    ".*/tests/",
+    ".coverage.*",
+    ".git/",
+    ".mypy_cache/",
+    ".ruff_cache/",
+    ".pytest_cache/",
+    ".venv/",
+    "build/",
+    "dist/",
+    "node_modules/",
+    "vendor/",
+]
+explicit_package_bases = true
+files = ["src", "tests"]
+ignore_missing_imports = false
+mypy_path = ["src"]
+namespace_packages = true
+no_implicit_optional = true
+no_implicit_reexport = true
+plugins = ["pydantic.mypy"]
+pretty = true
+python_version = "3.13"
+show_error_codes = true
+show_error_context = true
+strict = true
+strict_equality = true
+strict_optional = true
+warn_no_return = true
+warn_redundant_casts = true
+warn_return_any = true
+warn_unreachable = true
+warn_unused_configs = true
+warn_unused_ignores = true
 
-[tool.poetry.group.test.dependencies]
-pytest = "^8.4.0"
-pytest-cov = "^6.2.0"
-pytest-xdist = "^3.8.0"
-pytest-mock = "^3.14.0"
-pytest-timeout = "^2.4.0"
-pytest-benchmark = "^5.1.0"
-pytest-randomly = "^3.16.0"
-pytest-sugar = "^1.0.0"
-pytest-clarity = "^1.0.1"
-pytest-deadfixtures = "^2.2.1"
-pytest-env = "^1.1.5"
-pytest-httpx = "^0.35.0"
-hypothesis = "^6.125.0"
-factory-boy = "^3.3.1"
-faker = "^37.4.0"
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true
 
-[tool.poetry.group.typings.dependencies]
-types-python-dateutil = "^2.9.0"
-types-pyyaml = "^6.0.12"
-types-setuptools = "^80.9.0"
-types-toml = "^0.10.8.20240310"
-types-requests = "^2.32.4"
-types-redis = "^4.6.0"
-types-psutil = "^7.0.0"
-django-stubs = "^5.2.2"
-types-protobuf = "^6.30.2.20250703"
-types-psycopg2 = "^2.9.21.20250718"
+[tool.pytest]
+extend = "./.pytest-shared.toml"
 
-[tool.poetry.group.security.dependencies]
-bandit = "^1.8.0"
-pip-audit = "^2.7.3"
+[tool.ruff]
+extend = "./.ruff-shared.toml"
+lint.isort.known-first-party = ["flext", "flext_tools"]
 
 [tool.vulture]
 exclude = [
-    "*/tests/*",
-    "*/__pycache__/*",
-    "*/venv/*",
-    "*/.venv/*",
-    "*/build/*",
-    "*/dist/*",
-    "*/reports/*",
+    "__pycache__/",
+    ".*/examples/",
+    ".*/generate_config.py",
+    ".*/manage.py",
+    ".*/scripts/",
+    ".*/tests/",
+    ".coverage.*",
+    ".git/",
+    ".mypy_cache/",
+    ".ruff_cache/",
+    ".pytest_cache/",
+    ".venv/",
+    "build/",
+    "dist/",
+    "node_modules/",
+    "tests/",
+    "vendor/",
 ]
-ignore_decorators = ["@app.route", "@require_*"]
-ignore_names = ["visit_*", "do_*"]
-min_confidence = 70
+# ignore_decorators = ["@app.route", "@require_*"]
+# ignore_names = ["visit_*", "do_*"]
+min_confidence = 80
 paths = ["src"]
 sort_by_size = true
 verbose = false

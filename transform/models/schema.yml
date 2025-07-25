@@ -1,0 +1,41 @@
+version: 2
+
+models:
+  - name: stg_test_data
+    description: "Staged test data with basic cleaning"
+    columns:
+      - name: user_id
+        description: "Unique user identifier"
+        tests:
+          - unique
+          - not_null
+      - name: user_name
+        description: "Cleaned user name"
+        tests:
+          - not_null
+      - name: user_email
+        description: "Cleaned user email"
+        tests:
+          - not_null
+      - name: department_code
+        description: "Standardized department code"
+        tests:
+          - not_null
+
+  - name: dim_users
+    description: "User dimension with business logic"
+    columns:
+      - name: user_id
+        description: "Primary key"
+        tests:
+          - unique
+          - not_null
+      - name: department_name
+        description: "Human-readable department name"
+        tests:
+          - not_null
+      - name: user_type
+        description: "Internal vs External user classification"
+        tests:
+          - accepted_values:
+              values: ['Internal', 'External']

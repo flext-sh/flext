@@ -40,7 +40,7 @@ class QualityGatewayRunner(FlextScript):
         print_colored("✅ FLEXT workspace detected", Colors.GREEN)
         return True
 
-    def execute_main_logic(self, **kwargs: Any) -> bool:
+    def execute_main_logic(self, **kwargs: object) -> bool:
         """Execute quality gateway."""
         try:
             workspace_root = Path.cwd()

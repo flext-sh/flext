@@ -26,7 +26,7 @@ from flext_tools import (
 )
 
 
-def test_imports():
+def test_imports() -> bool:
     """Testa se todos os imports funcionam."""
     print_colored("1️⃣ Testando imports...", Colors.BLUE)
 
@@ -51,7 +51,7 @@ def test_imports():
     return True
 
 
-def test_utils():
+def test_utils() -> bool:
     """Testa utilitários básicos."""
     print_colored("\n2️⃣ Testando utilitários...", Colors.BLUE)
 
@@ -99,7 +99,7 @@ def test_utils():
     return True
 
 
-def test_cache():
+def test_cache() -> bool:
     """Testa sistema de cache."""
     print_colored("\n3️⃣ Testando sistema de cache...", Colors.BLUE)
 
@@ -152,7 +152,7 @@ def test_cache():
     return True
 
 
-def test_discovery():
+def test_discovery() -> bool:
     """Testa descoberta de dependências."""
     print_colored("\n4️⃣ Testando descoberta de dependências...", Colors.BLUE)
 
@@ -195,7 +195,7 @@ def test_discovery():
     return True
 
 
-def test_version_analysis():
+def test_version_analysis() -> bool:
     """Testa análise de versões."""
     print_colored("\n5️⃣ Testando análise de versões...", Colors.BLUE)
 
@@ -232,7 +232,7 @@ def test_version_analysis():
     return True
 
 
-def test_poetry_operations():
+def test_poetry_operations() -> bool:
     """Testa operações Poetry."""
     print_colored("\n6️⃣ Testando operações Poetry...", Colors.BLUE)
 
@@ -285,14 +285,14 @@ def test_poetry_operations():
     return True
 
 
-def run_performance_test():
+def run_performance_test() -> bool:
     """Testa performance com cache."""
     print_colored("\n🚀 Teste de Performance:", Colors.BLUE)
 
     try:
 
         @cached(namespace="perf", ttl=60)
-        def slow_operation():
+        def slow_operation() -> str:
             time.sleep(0.1)  # Simula operação lenta
             return "resultado"
 

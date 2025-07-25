@@ -63,9 +63,9 @@ SPDX-License-Identifier: MIT
 from typing import Any
 
 # 🚨 ARCHITECTURAL COMPLIANCE: Use ONLY official flext-core FlextContainer
-from flext_core import FlextContainer, FlextLoggerFactory, FlextLoggerFactory, FlextLoggerName, FlextLoggerFactory, FlextLoggerName
+from flext_core import FlextContainer, get_logger, get_logger, FlextLoggerName, get_logger, FlextLoggerName
 
-logger = FlextLoggerFactory.get_logger(__name__)
+logger = get_logger(__name__)
 
 
 # ==================== {module_name}-SPECIFIC DI UTILITIES ====================

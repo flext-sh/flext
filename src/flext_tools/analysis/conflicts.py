@@ -5,10 +5,16 @@ from __future__ import annotations
 import tomllib
 from typing import TYPE_CHECKING, Any
 
+from flext_tools.analysis.lock_consistency import LockConsistencyAnalyzer
+from flext_tools.analysis.version import VersionAnalyzer
 from flext_tools.utils import Colors, print_colored
 
 if TYPE_CHECKING:
     from pathlib import Path
+
+
+# Constants
+MIN_PROJECTS_FOR_ANALYSIS = 2
 
 
 class ConflictAnalyzer:
@@ -16,9 +22,6 @@ class ConflictAnalyzer:
 
     def __init__(self) -> None:
         """Initialize conflict analyzer."""
-        # Lazy imports to avoid circular dependencies
-        from flext_tools.analysis.version import VersionAnalyzer
-
         self.version_analyzer = VersionAnalyzer()
 
     def analyze_workspace_conflicts(self, workspace_path: Path) -> dict[str, Any]:
@@ -35,14 +38,14 @@ class ConflictAnalyzer:
                         with pyproject_path.open("rb") as f:
                             data = tomllib.load(f)
                         projects_data[project_path.name] = data
-                    except Exception as e:
+                    except (OSError, tomllib.TOMLDecodeError) as e:
                         print_colored(
                             f"  ⚠️ Erro ao ler {project_path.name}: {e}",
                             Colors.YELLOW,
                         )
 
-        if len(projects_data) < 2:
-            print_colored("  ℹ️ Menos de 2 projetos encontrados", Colors.CYAN)
+        if len(projects_data) < MIN_PROJECTS_FOR_ANALYSIS:
+            print_colored("  [INFO] Menos de 2 projetos encontrados", Colors.CYAN)
             return {"conflicts": [], "summary": {"total": 0}}
 
         # Coleta dependências do workspace
@@ -54,9 +57,7 @@ class ConflictAnalyzer:
         )
 
         # Analisa conflitos de lock
-        from flext_tools.analysis.lock_consistency import LockConsistencyAnalyzer
-
-        lock_analyzer = LockConsistencyAnalyzer()
+        lock_analyzer = self._get_lock_analyzer()
         lock_analyzer.analyze_workspace(workspace_path)
 
         # Identifica bloqueadores
@@ -90,7 +91,10 @@ class ConflictAnalyzer:
         # Procura por projetos Python
         for pyproject in workspace_path.rglob("pyproject.toml"):
             # Ignora diretórios especiais
-            if any(p in pyproject.parts for p in ["archive", "backup", "node_modules", ".git"]):
+            if any(
+                p in pyproject.parts
+                for p in ["archive", "backup", "node_modules", ".git"]
+            ):
                 continue
 
             project_name = pyproject.parent.name
@@ -106,7 +110,10 @@ class ConflictAnalyzer:
         try:
             with pyproject_path.open("rb") as f:
                 data = tomllib.load(f)
-
+        except (OSError, tomllib.TOMLDecodeError) as e:
+            print_colored(f"  ⚠️ Erro ao ler {pyproject_path}: {e}", Colors.YELLOW)
+            return {}
+        else:
             deps = {}
 
             # Dependências principais
@@ -125,11 +132,8 @@ class ConflictAnalyzer:
                     deps[f"{name}[{group_name}]"] = version_str
 
             return deps
-        except Exception as e:
-            print_colored(f"  ⚠️ Erro ao ler {pyproject_path}: {e}", Colors.YELLOW)
-            return {}
 
-    def _extract_version_string(self, spec: Any) -> str:
+    def _extract_version_string(self, spec: str | dict[str, Any]) -> str:
         """Extrai string de versão de uma especificação."""
         if isinstance(spec, str):
             return spec
@@ -213,9 +217,11 @@ class ConflictAnalyzer:
             "unique_packages": len(unique_packages),
             "packages_with_conflicts": len(conflicts),
             "blocking_packages": len(blockers),
-            "affected_projects": len(
-                {project for blocker_data in blockers.values() for project in blocker_data["blocking_projects"]},
-            ),
+            "affected_projects": len({
+                project
+                for blocker_data in blockers.values()
+                for project in blocker_data["blocking_projects"]
+            }),
         }
 
     def generate_conflict_report(self, analysis: dict[str, Any]) -> str:
@@ -252,7 +258,10 @@ class ConflictAnalyzer:
 
                 if conflict_data["analysis"]["issues"]:
                     lines.append("\n**Problemas:**")
-                    lines.extend(f"- {issue}" for issue in conflict_data["analysis"]["issues"])
+                    lines.extend(
+                        f"- {issue}"
+                        for issue in conflict_data["analysis"]["issues"]
+                    )
 
                 lines.append("")
 
@@ -278,3 +287,7 @@ class ConflictAnalyzer:
                 lines.append(f"- **{package}**: `{suggestion}`")
 
         return "\n".join(lines)
+
+    def _get_lock_analyzer(self) -> LockConsistencyAnalyzer:
+        """Get lock analyzer instance."""
+        return LockConsistencyAnalyzer()

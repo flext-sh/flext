@@ -14,6 +14,7 @@ Usage:
 import argparse
 import sys
 from pathlib import Path
+from typing import Any
 
 import tomlkit
 
@@ -21,7 +22,7 @@ import tomlkit
 class FlextConfigStandardizer:
     """Standardizes FLEXT workspace configurations professionally."""
 
-    def __init__(self, workspace_root: Path, dry_run: bool = False):
+    def __init__(self, workspace_root: Path, dry_run: bool = False) -> None:
         self.workspace_root = workspace_root
         self.dry_run = dry_run
         self.changes_made = 0
@@ -42,40 +43,48 @@ class FlextConfigStandardizer:
 
     def find_subprojects(self) -> list[Path]:
         """Find all FLEXT subprojects with pyproject.toml files."""
-        projects = [path for path in self.workspace_root.iterdir() if path.is_dir() and
-                path.name.startswith(("flext-", "flexcore", "client-a-", "client-b-")) and
-                (path / "pyproject.toml").exists()]
+        projects = [
+            path
+            for path in self.workspace_root.iterdir()
+            if path.is_dir()
+            and path.name.startswith(("flext-", "flexcore", "client-a-", "client-b-"))
+            and (path / "pyproject.toml").exists()
+        ]
 
         return sorted(projects)
 
-    def load_pyproject(self, project_path: Path) -> dict | None:
+    def load_pyproject(self, project_path: Path) -> dict[str, Any] | None:
         """Load pyproject.toml file safely."""
         pyproject_file = project_path / "pyproject.toml"
         if not pyproject_file.exists():
             return None
 
         try:
-            with open(pyproject_file, encoding="utf-8") as f:
+            with Path(pyproject_file).open(encoding="utf-8") as f:
                 return tomlkit.load(f)
         except Exception as e:
             print(f"❌ Error loading {pyproject_file}: {e}")
             return None
 
-    def save_pyproject(self, project_path: Path, content: dict) -> bool:
+    def save_pyproject(self, project_path: Path, content: dict[str, Any]) -> bool:
         """Save pyproject.toml file safely."""
         if self.dry_run:
             return True
 
         pyproject_file = project_path / "pyproject.toml"
         try:
-            with open(pyproject_file, "w", encoding="utf-8") as f:
+            with Path(pyproject_file).open("w", encoding="utf-8") as f:
                 tomlkit.dump(content, f)
             return True
         except Exception as e:
             print(f"❌ Error saving {pyproject_file}: {e}")
             return False
 
-    def standardize_ruff_config(self, project_name: str, config: dict) -> bool:
+    def standardize_ruff_config(
+        self,
+        project_name: str,
+        config: dict[str, Any],
+    ) -> bool:
         """Standardize Ruff configuration."""
         changed = False
 
@@ -87,7 +96,10 @@ class FlextConfigStandardizer:
         ruff_config = config["tool"]["ruff"]
 
         # Get target line length for this project
-        target_length = self.special_configs.get(project_name, {}).get("line_length", 88)
+        target_length = self.special_configs.get(project_name, {}).get(
+            "line_length",
+            88,
+        )
 
         # Update line-length
         if ruff_config.get("line-length") != target_length:
@@ -97,7 +109,10 @@ class FlextConfigStandardizer:
             changed = True
 
         # Ensure extend reference to shared config
-        if "extend" not in ruff_config or ruff_config["extend"] != "../.ruff-shared.toml":
+        if (
+            "extend" not in ruff_config
+            or ruff_config["extend"] != "../.ruff-shared.toml"
+        ):
             ruff_config["extend"] = "../.ruff-shared.toml"
             print("  🔗 Added reference to shared Ruff config")
             changed = True
@@ -105,7 +120,7 @@ class FlextConfigStandardizer:
         # Keep project-specific overrides
         project_specific_ignores = {
             "flext-quality": ["DJ001", "DJ008"],  # Django-specific rules
-            "flext-auth": ["S105", "S106"],       # Security rules for auth
+            "flext-auth": ["S105", "S106"],  # Security rules for auth
         }
 
         if project_name in project_specific_ignores:
@@ -122,7 +137,11 @@ class FlextConfigStandardizer:
 
         return changed
 
-    def standardize_pytest_config(self, project_name: str, config: dict) -> bool:
+    def standardize_pytest_config(
+        self,
+        project_name: str,
+        config: dict[str, Any],
+    ) -> bool:
         """Standardize pytest configuration."""
         changed = False
 
@@ -136,7 +155,10 @@ class FlextConfigStandardizer:
         pytest_config = config["tool"]["pytest"]["ini_options"]
 
         # Get target coverage threshold
-        target_coverage = self.special_configs.get(project_name, {}).get("coverage_threshold", 90)
+        target_coverage = self.special_configs.get(project_name, {}).get(
+            "coverage_threshold",
+            90,
+        )
 
         # Update coverage threshold in addopts
         if "addopts" in pytest_config:
@@ -148,25 +170,31 @@ class FlextConfigStandardizer:
                         old_threshold = opt.split("=")[1]
                         if int(old_threshold) != target_coverage:
                             addopts[i] = f"--cov-fail-under={target_coverage}"
-                            print(f"  📊 Updated coverage threshold: {old_threshold}% → {target_coverage}%")
+                            print(
+                                f"  📊 Updated coverage threshold: {old_threshold}% → {target_coverage}%",
+                            )
                             changed = True
                         break
                 else:
                     # Add coverage threshold if not present
                     addopts.append(f"--cov-fail-under={target_coverage}")
-                    print(f"  ➕ Added coverage threshold: {target_coverage}%")
+                    print("  ➕ Added coverage threshold: %s", target_coverage)
                     changed = True
 
         # Add reference to shared pytest config
         # Note: pytest doesn't support extend like ruff, so we document the shared standards
         if "minversion" not in pytest_config or pytest_config["minversion"] != "8.0":
             pytest_config["minversion"] = "8.0"
-            print("  🔧 Standardized pytest minversion to 8.0")
+            print("  🔧 Standardized pytest minversion],to 8.0")
             changed = True
 
         return changed
 
-    def standardize_mypy_config(self, project_name: str, config: dict) -> bool:
+    def standardize_mypy_config(
+        self,
+        project_name: str,
+        config: dict[str, Any],
+    ) -> bool:
         """Standardize MyPy configuration."""
         changed = False
 
@@ -261,10 +289,16 @@ class FlextConfigStandardizer:
         return success_count == len(projects)
 
 
-def main():
+def main() -> None:
     """Main entry point."""
-    parser = argparse.ArgumentParser(description="Standardize FLEXT workspace configurations")
-    parser.add_argument("--dry-run", action="store_true", help="Show what would be changed without making changes")
+    parser = argparse.ArgumentParser(
+        description="Standardize FLEXT workspace configurations",
+    )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Show what would be changed without making changes",
+    )
     parser.add_argument("--project", help="Standardize specific project only")
 
     args = parser.parse_args()

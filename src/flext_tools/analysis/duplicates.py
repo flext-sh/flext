@@ -13,7 +13,7 @@ class CodeDuplicateAnalyzer:
         """Initialize the duplicate analyzer."""
         self.workspace_path = workspace_path or Path.cwd()
 
-    def analyze_duplicates(self, **kwargs: Any) -> dict[str, Any]:
+    def analyze_duplicates(self) -> dict[str, Any]:
         """Analyze code duplicates in the workspace."""
         print_colored("🔍 Analisando duplicações de código...", Colors.BLUE)
 
@@ -28,10 +28,10 @@ class CodeDuplicateAnalyzer:
         print_colored("✅ Análise de duplicações concluída", Colors.GREEN)
         return results
 
-    def find_duplicate_functions(self, project_path: Path) -> list[dict[str, Any]]:
+    def find_duplicate_functions(self) -> list[dict[str, Any]]:
         """Find duplicate functions in a project."""
         return []
 
-    def find_duplicate_classes(self, project_path: Path) -> list[dict[str, Any]]:
+    def find_duplicate_classes(self) -> list[dict[str, Any]]:
         """Find duplicate classes in a project."""
         return []
