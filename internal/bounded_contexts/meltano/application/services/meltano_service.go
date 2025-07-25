@@ -365,8 +365,22 @@ print(result)
 func (s *MeltanoService) ExecuteMeltanoDirect(ctx context.Context, args ...string) (*MeltanoResult, error) {
 	cmd := exec.CommandContext(ctx, s.config.MeltanoPath, args...)
 	cmd.Dir = s.config.ProjectRoot
+	
+	// DEBUG: Log exact command being executed
+	s.logger.Info("DEBUG: Executing Meltano command",
+		logging.F("command", s.config.MeltanoPath),
+		logging.F("args", args),
+		logging.F("working_dir", s.config.ProjectRoot),
+		logging.F("env_vars", len(cmd.Env)))
 
 	output, err := cmd.CombinedOutput()
+	
+	// DEBUG: Log execution result
+	s.logger.Info("DEBUG: Command execution result",
+		logging.F("output", string(output)),
+		logging.F("error", err),
+		logging.F("output_length", len(output)))
+	
 	if err != nil {
 		return &MeltanoResult{
 			Success: false,
