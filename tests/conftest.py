@@ -10,6 +10,7 @@ import os
 from pathlib import Path
 
 import pytest
+from flext_core import FlextContainer, configure_flext_container
 
 # Set test environment
 os.environ["FLEXT_ENV"] = "testing"

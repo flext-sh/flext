@@ -144,11 +144,7 @@ class VenvConsistencyValidator:
         print_colored("  📋 Coletando requisitos dos projetos...", Colors.CYAN)
 
         projects = [
-            d
-            for d in self.workspace_path.iterdir()
-            if d.is_dir()
-            and not d.name.startswith(".")
-            and (d / "pyproject.toml").exists()
+            d for d in self.workspace_path.iterdir() if d.is_dir() and not d.name.startswith(".") and (d / "pyproject.toml").exists()
         ]
 
         for project_path in projects:
@@ -171,13 +167,7 @@ class VenvConsistencyValidator:
                         self.project_requirements[project_name][name] = version
 
                 # Dependências de desenvolvimento
-                dev_deps = (
-                    data.get("tool", {})
-                    .get("poetry", {})
-                    .get("group", {})
-                    .get("dev", {})
-                    .get("dependencies", {})
-                )
+                dev_deps = data.get("tool", {}).get("poetry", {}).get("group", {}).get("dev", {}).get("dependencies", {})
                 for dep_spec in dev_deps.values():
                     name, version = self._parse_dependency_spec(str(dep_spec))
                     self.project_requirements[project_name][f"{name}[dev]"] = version

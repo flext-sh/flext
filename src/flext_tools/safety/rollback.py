@@ -41,9 +41,7 @@ class RollbackManager:
                     "session_id": log_data["session_id"],
                     "session_dir": str(session_dir),
                     "operations_count": len(log_data["operations"]),
-                    "files_backed_up": [
-                        op["original_path"] for op in log_data["operations"]
-                    ],
+                    "files_backed_up": [op["original_path"] for op in log_data["operations"]],
                 }
                 sessions.append(session_info)
 
@@ -161,8 +159,7 @@ class RollbackManager:
                 failure_count += 1
 
         print_colored(
-            f"\n📊 Rollback concluído: {success_count} sucessos, "
-            f"{failure_count} falhas",
+            f"\n📊 Rollback concluído: {success_count} sucessos, {failure_count} falhas",
             Colors.CYAN,
         )
         return success_count, failure_count
@@ -178,9 +175,7 @@ class RollbackManager:
 
         """
         # Extrai session_id do restore_point_id
-        session_id = (
-            restore_point_id.split("_")[1] + "_" + restore_point_id.split("_")[2]
-        )
+        session_id = restore_point_id.split("_")[1] + "_" + restore_point_id.split("_")[2]
 
         session_dir = self.backup_dir / f"session_{session_id}"
         restore_file = session_dir / f"{restore_point_id}.json"

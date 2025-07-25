@@ -50,9 +50,9 @@ def fix_import_order(file_path: Path) -> bool:
         else:
             # Find last import line
             lines = content.split("\n")
-            for _i, line in enumerate(lines):
+            for line in lines:
                 if line.strip().startswith(
-                    ("from ", "import ")
+                    ("from ", "import "),
                 ) and not line.strip().startswith("#"):
                     insert_pos = content.find("\n", content.find(line)) + 1
 
@@ -61,13 +61,7 @@ def fix_import_order(file_path: Path) -> bool:
             return False
 
         # Insert DI block at the correct position
-        content = (
-            content[:insert_pos]
-            + "\n"
-            + di_block.rstrip()
-            + "\n"
-            + content[insert_pos:]
-        )
+        content = content[:insert_pos] + "\n" + di_block.rstrip() + "\n" + content[insert_pos:]
 
         # Clean up extra blank lines
         content = re.sub(r"\n{3,}", "\n\n", content)

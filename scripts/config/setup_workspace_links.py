@@ -42,11 +42,7 @@ class ComprehensiveWorkspaceManager(FlextScript):
 
         # Check if we're in FLEXT workspace
         flext_projects = [
-            p
-            for p in workspace_root.iterdir()
-            if p.is_dir()
-            and p.name.startswith("flext-")
-            and (p / "pyproject.toml").exists()
+            p for p in workspace_root.iterdir() if p.is_dir() and p.name.startswith("flext-") and (p / "pyproject.toml").exists()
         ]
 
         if not flext_projects:
@@ -354,7 +350,8 @@ class ComprehensiveWorkspaceManager(FlextScript):
                 print_colored("📈 Prometheus at http://localhost:9090", Colors.BLUE)
             else:
                 print_colored(
-                    "❌ Failed to setup monitoring infrastructure", Colors.RED
+                    "❌ Failed to setup monitoring infrastructure",
+                    Colors.RED,
                 )
 
             return success
