@@ -77,7 +77,7 @@ class GradualLintFixerScript(FlextScript):
             print_colored("❌ Git not found - required for safe branching", Colors.RED)
             return False
 
-    def execute_main_logic(self, **kwargs: Any) -> bool:
+    def execute_main_logic(self, **kwargs: object) -> bool:
         """Execute gradual lint fixing."""
         try:
             workspace_root = Path.cwd()

@@ -72,7 +72,10 @@ def get_workspace_projects(workspace_path: Path) -> list[Path]:
         for item in workspace_path.iterdir()
         if item.is_dir()
         and (item / "pyproject.toml").exists()
-        and not any(skip in item.name for skip in ["archive", "backup", "node_modules", ".git", ".venv"])
+        and not any(
+            skip in item.name
+            for skip in ["archive", "backup", "node_modules", ".git", ".venv"]
+        )
     ]
 
     return sorted(projects)
@@ -209,7 +212,10 @@ def add_missing_dependencies(
     print_colored("\n4️⃣ Adicionando dependências faltantes...", Colors.BLUE)
 
     if not auto:
-        total_deps = sum(sum(len(deps) for deps in missing_deps.values()) for missing_deps in missing_by_project.values())
+        total_deps = sum(
+            sum(len(deps) for deps in missing_deps.values())
+            for missing_deps in missing_by_project.values()
+        )
         print_colored(
             f"\n💡 {total_deps} dependências serão adicionadas",
             Colors.YELLOW,
@@ -244,14 +250,10 @@ def main() -> int:
         return 0
 
     # Inicializa sistema de logging detalhado
-    logger = DetailedLogger(session_id=None, enable_console=args["verbose"])
+    logger = DetailedLogger("sync_dependencies")
 
     try:
-        logger.start_operation(
-            "SYNC_DEPENDENCIES",
-            "Sincronização completa de dependências FLEXT",
-            details={"args": args, "workspace": str(Path.cwd())},
-        )
+        logger.info("Starting SYNC_DEPENDENCIES: Sincronização completa de dependências FLEXT")
 
         print_colored("🔄 Sincronização de dependências FLEXT", Colors.BLUE)
         print_colored("=" * 50, Colors.BLUE)
@@ -291,22 +293,14 @@ def main() -> int:
             print_colored("• Use --validate para verificação de projetos", Colors.GREEN)
             print_colored("", Colors.RED)
             print_colored(
-                "⚠️ REMOVER scripts/VALIDATION_REQUIRED.lock apenas após validação completa",
+                "⚠️ REMOVER scripts/VALIDATION_REQUIRED.lock"
+                " apenas após validação completa",
                 Colors.YELLOW,
             )
 
-            logger.log_security_event(
-                "EXECUTION_BLOCKED",
-                "Tentativa de execução sem dry-run bloqueada por lock de validação",
-                "CRITICAL",
-                {"args": args, "lock_file_exists": True, "workspace": str(Path.cwd())},
-                "EXECUTION_DENIED",
-            )
+            logger.warning("EXECUTION_BLOCKED: Tentativa de execução sem dry-run bloqueada por lock de validação")
 
-            logger.end_operation(
-                success=False,
-                error_message="Execução bloqueada por lock de validação de segurança",
-            )
+            logger.error("Operation failed: Execução bloqueada por lock de validação de segurança")
             return 1
 
         if args["dry_run"]:
@@ -322,7 +316,9 @@ def main() -> int:
 
         # Detecta workspace
         workspace_path = Path.cwd()
-        if not any(p.name.startswith("flext-") for p in workspace_path.iterdir() if p.is_dir()):
+        if not any(
+            p.name.startswith("flext-") for p in workspace_path.iterdir() if p.is_dir()
+        ):
             print_colored(
                 "❌ Execute o script do diretório raiz do workspace FLEXT",
                 Colors.RED,
@@ -398,35 +394,25 @@ def main() -> int:
             print_colored("\n📊 Cache utilizado para melhor performance", Colors.CYAN)
 
         # Finaliza operação com sucesso
-        logger.end_operation(
-            success=True,
-            result_details={
-                "projects_validated": len(projects),
-                "missing_discovered": len(missing_by_project),
-                "conflicts_found": len(conflicts.get("version_conflicts", {})),
-            },
-        )
+        logger.info(f"Operation completed successfully: {len(projects)} projects validated")
 
         print_colored("\n✨ Sincronização concluída!", Colors.GREEN)
-        return 0
-
     except Exception as e:
         # Log erro crítico
-        logger.critical(
-            "SYNC_ERROR: Erro crítico durante sincronização: %s (tipo: %s)",
-            str(e),
-            {"error_type": type(e).__name__},
-        )
+        logger.exception(f"SYNC_ERROR: Erro crítico durante sincronização: {e!s} (tipo: {type(e).__name__})")
 
         # Finaliza operação com falha
-        logger.end_operation(success=False, error_message=f"Erro crítico: {e!s}")
+        logger.exception(f"Operation failed: Erro crítico: {e!s}")
 
         print_colored(f"\n❌ Erro crítico: {e!s}", Colors.RED)
         print_colored("📋 Logs detalhados salvos em .flext_logs/", Colors.CYAN)
         return 1
+    else:
+        return 0
 
     finally:
-        logger.close()
+        # Logger cleanup (no close method needed)
+        pass
 
 
 if __name__ == "__main__":

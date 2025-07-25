@@ -13,7 +13,7 @@ class MyPyChecker:
         """Initialize the MyPy checker."""
         self.workspace_path = workspace_path
 
-    def check_workspace(self, **kwargs: Any) -> dict[str, Any]:
+    def check_workspace(self, **_kwargs: object) -> dict[str, Any]:
         """Check types across the workspace."""
         print_colored("🔍 Verificando tipos com MyPy...", Colors.BLUE)
 

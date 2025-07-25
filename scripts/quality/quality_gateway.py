@@ -7,11 +7,13 @@ Usa flext_tools para validação consistente em todo o workspace.
 
 from __future__ import annotations
 
+import json
+import subprocess
 import sys
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-# Usar flext_tools diretamente - já está no .venv
 from flext_tools import (
     Colors,
     ConflictAnalyzer,
@@ -20,6 +22,32 @@ from flext_tools import (
     print_colored,
 )
 from flext_tools.core.script_base import FlextScript, ScriptMetadata
+from scripts.common import discover_projects
+
+# Constantes para análise de qualidade
+CRITICAL_DEPENDENCY_THRESHOLD = 5
+CRITICAL_RUFF_ISSUES_THRESHOLD = 10
+CRITICAL_MYPY_ERRORS_THRESHOLD = 5
+PERFECT_SCORE = 100
+GOOD_SCORE_THRESHOLD = 80
+NEEDS_IMPROVEMENT_THRESHOLD = 60
+
+
+@dataclass
+class AnalysisResults:
+    """Resultados de análise de qualidade."""
+
+    deps_result: dict[str, Any]
+    quality_result: dict[str, Any]
+    conflicts_result: dict[str, Any]
+    poetry_result: dict[str, Any]
+
+
+@dataclass
+class QualitySettings:
+    """Configurações de qualidade."""
+
+    strict_mode: bool = False
 
 
 class QualityGateway(FlextScript):
@@ -27,9 +55,12 @@ class QualityGateway(FlextScript):
 
     @property
     def metadata(self) -> ScriptMetadata:
+        """Return script metadata."""
         return ScriptMetadata(
             name="quality_gateway",
-            description="Gateway completo de qualidade com zero tolerância a regressões",
+            description=(
+                "Gateway completo de qualidade com zero tolerância a regressões"
+            ),
             category="quality",
             version="2.0.0",
         )
@@ -40,7 +71,11 @@ class QualityGateway(FlextScript):
 
         # Verificar se estamos no workspace FLEXT
         flext_projects = [
-            p for p in workspace_root.iterdir() if p.is_dir() and p.name.startswith("flext-") and (p / "pyproject.toml").exists()
+            p
+            for p in workspace_root.iterdir()
+            if p.is_dir()
+            and p.name.startswith("flext-")
+            and (p / "pyproject.toml").exists()
         ]
 
         if not flext_projects:
@@ -58,8 +93,6 @@ class QualityGateway(FlextScript):
 
         for tool in required_tools:
             try:
-                import subprocess
-
                 subprocess.run(
                     [tool, "--version"],
                     capture_output=True,
@@ -84,7 +117,7 @@ class QualityGateway(FlextScript):
 
         return True
 
-    def execute_main_logic(self, **kwargs: Any) -> bool:
+    def execute_main_logic(self, **kwargs: object) -> bool:
         """Executar gateway de qualidade completo."""
         try:
             workspace_root = Path.cwd()
@@ -127,16 +160,17 @@ class QualityGateway(FlextScript):
                 poetry_result = self._validate_poetry_config(project_path)
 
                 # Calcular resultado do projeto
-                project_result = self._calculate_project_result(
-                    project_name,
-                    deps_result,
-                    quality_result,
-                    conflicts_result,
-                    poetry_result,
-                    strict_mode,
+                analysis_results = AnalysisResults(
+                    deps_result=deps_result,
+                    quality_result=quality_result,
+                    conflicts_result=conflicts_result,
+                    poetry_result=poetry_result,
                 )
 
-                # Atualizar estatísticas
+                project_result = self._calculate_project_result(
+                    project_name,
+                    analysis_results,
+                )  # Atualizar estatísticas
                 total_stats["projects_analyzed"] += 1
                 if project_result["passed"]:
                     total_stats["passed"] += 1
@@ -164,11 +198,11 @@ class QualityGateway(FlextScript):
             else:
                 print_colored("\n🚫 QUALITY GATEWAY: REPROVADO", Colors.RED)
 
-            return gateway_passed
-
         except Exception as e:
             print_colored(f"❌ Erro durante análise: {e}", Colors.RED)
             return False
+        else:
+            return gateway_passed
 
     def _discover_projects(
         self,
@@ -176,8 +210,6 @@ class QualityGateway(FlextScript):
         projects_filter: str | None = None,
     ) -> list[Path]:
         """Descobrir projetos para analisar."""
-        from scripts.common import discover_projects
-
         return discover_projects(workspace_root, projects_filter)
 
     def _analyze_dependencies(self, project_path: Path) -> dict[str, Any]:
@@ -209,9 +241,6 @@ class QualityGateway(FlextScript):
     def _analyze_code_quality(self, project_path: Path) -> dict[str, Any]:
         """Analisar qualidade do código."""
         try:
-            import json
-            import subprocess
-
             # Ruff check
             ruff_result = subprocess.run(
                 ["ruff", "check", ".", "--output-format=json"],
@@ -243,7 +272,11 @@ class QualityGateway(FlextScript):
             mypy_errors = 0
             if mypy_result.stdout:
                 mypy_errors = len(
-                    [line for line in mypy_result.stdout.split("\n") if line and ":" in line],
+                    [
+                        line
+                        for line in mypy_result.stdout.split("\n")
+                        if line and ":" in line
+                    ],
                 )
 
             total_issues = ruff_issues + mypy_errors
@@ -298,11 +331,7 @@ class QualityGateway(FlextScript):
     def _calculate_project_result(
         self,
         project_name: str,
-        deps_result: dict[str, Any],
-        quality_result: dict[str, Any],
-        conflicts_result: dict[str, Any],
-        poetry_result: dict[str, Any],
-        strict_mode: bool,
+        results: AnalysisResults,
     ) -> dict[str, Any]:
         """Calcular resultado final do projeto."""
         issues = []
@@ -310,39 +339,39 @@ class QualityGateway(FlextScript):
         total_issues = 0
 
         # Dependências faltantes
-        if deps_result["status"] == "failed":
-            missing_count = deps_result["missing_count"]
+        if results.deps_result["status"] == "failed":
+            missing_count = results.deps_result["missing_count"]
             issues.append(f"Dependências faltantes: {missing_count}")
             total_issues += missing_count
-            if missing_count > 5:  # Muitas dependências faltantes = crítico
+            if missing_count > CRITICAL_DEPENDENCY_THRESHOLD:
                 critical_issues += 1
 
         # Qualidade do código
-        if quality_result["status"] == "failed":
-            ruff_issues = quality_result["ruff_issues"]
-            mypy_errors = quality_result["mypy_errors"]
+        if results.quality_result["status"] == "failed":
+            ruff_issues = results.quality_result["ruff_issues"]
+            mypy_errors = results.quality_result["mypy_errors"]
 
             if ruff_issues > 0:
                 issues.append(f"Ruff issues: {ruff_issues}")
                 total_issues += ruff_issues
-                if ruff_issues > 10:  # Muitos issues = crítico
+                if ruff_issues > CRITICAL_RUFF_ISSUES_THRESHOLD:
                     critical_issues += 1
 
             if mypy_errors > 0:
                 issues.append(f"MyPy errors: {mypy_errors}")
                 total_issues += mypy_errors
-                if mypy_errors > 5:  # Muitos erros = crítico
+                if mypy_errors > CRITICAL_MYPY_ERRORS_THRESHOLD:
                     critical_issues += 1
 
         # Conflitos
-        if conflicts_result["status"] == "failed":
-            conflicts_count = conflicts_result["conflicts_count"]
+        if results.conflicts_result["status"] == "failed":
+            conflicts_count = results.conflicts_result["conflicts_count"]
             issues.append(f"Conflitos: {conflicts_count}")
             total_issues += conflicts_count
             critical_issues += 1  # Conflitos são sempre críticos
 
         # Poetry inválido
-        if poetry_result["status"] == "failed":
+        if results.poetry_result["status"] == "failed":
             issues.append("Configuração Poetry inválida")
             total_issues += 1
             critical_issues += 1  # Poetry inválido é crítico
@@ -356,10 +385,10 @@ class QualityGateway(FlextScript):
             "issues": issues,
             "total_issues": total_issues,
             "critical_issues": critical_issues,
-            "deps_result": deps_result,
-            "quality_result": quality_result,
-            "conflicts_result": conflicts_result,
-            "poetry_result": poetry_result,
+            "deps_result": results.deps_result,
+            "quality_result": results.quality_result,
+            "conflicts_result": results.conflicts_result,
+            "poetry_result": results.poetry_result,
         }
 
     def _print_project_issues(self, project_result: dict[str, Any]) -> None:
@@ -394,15 +423,17 @@ class QualityGateway(FlextScript):
 
         # Score de qualidade
         if total_stats["projects_analyzed"] > 0:
-            success_rate = (total_stats["passed"] / total_stats["projects_analyzed"]) * 100
+            success_rate = (
+                total_stats["passed"] / total_stats["projects_analyzed"]
+            ) * 100
 
-            if success_rate == 100:
+            if success_rate == PERFECT_SCORE:
                 score_color = Colors.GREEN
                 status = "PERFEITO"
-            elif success_rate >= 80:
+            elif success_rate >= GOOD_SCORE_THRESHOLD:
                 score_color = Colors.CYAN
                 status = "BOM"
-            elif success_rate >= 60:
+            elif success_rate >= NEEDS_IMPROVEMENT_THRESHOLD:
                 score_color = Colors.YELLOW
                 status = "PRECISA MELHORAR"
             else:

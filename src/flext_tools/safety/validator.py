@@ -314,7 +314,7 @@ class SafetyValidator:
                 )
                 return result
 
-        except Exception as e:
+        except (OSError, tomllib.TOMLDecodeError, UnicodeDecodeError) as e:
             result["safe"] = False
             result["issues"].append(f"Erro ao ler pyproject.toml: {e}")
             return result
@@ -347,7 +347,7 @@ class SafetyValidator:
             # Verifica se pode criar arquivo no diretório pai
             parent = file_path.parent
             return parent.exists() and parent.is_dir() and bool(parent.stat().st_mode & 0o200)
-        except Exception:
+        except (OSError, PermissionError):
             return False
 
     def _can_delete_file(self, file_path: Path) -> bool:
@@ -358,7 +358,7 @@ class SafetyValidator:
             # Verifica permissão de escrita no diretório pai (necessária para deletar)
             parent = file_path.parent
             return bool(parent.stat().st_mode & 0o200)
-        except Exception:
+        except (OSError, PermissionError):
             return False
 
     def _is_stdlib_module(self, module_name: str) -> bool:
@@ -423,14 +423,14 @@ class SafetyValidator:
 
             return response.status_code == 200
 
-        except Exception:
+        except (requests.RequestException, OSError):
             # Em caso de erro de rede, assumir que existe (falso positivo é melhor)
             return True
 
     def get_safety_recommendations(
         self,
         operation_type: str,
-        context: dict[str, Any],
+        _context: dict[str, Any],
     ) -> list[str]:
         """Obtém recomendações de segurança para uma operação.
 

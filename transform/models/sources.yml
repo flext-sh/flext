@@ -1,0 +1,26 @@
+version: 2
+
+sources:
+  - name: tap_csv
+    description: "CSV data from Singer tap-csv extractor"
+    tables:
+      - name: test_data
+        description: "Test employee data"
+        columns:
+          - name: id
+            description: "Employee ID"
+            tests:
+              - unique
+              - not_null
+          - name: name
+            description: "Employee name"
+            tests:
+              - not_null
+          - name: email
+            description: "Employee email"
+            tests:
+              - not_null
+          - name: department
+            description: "Department code"
+            tests:
+              - not_null

@@ -210,7 +210,7 @@ class BackupManager:
                         f"🗑️ Sessão removida: {session_dir.name}",
                         Colors.YELLOW,
                     )
-            except Exception as e:
+            except (OSError, PermissionError) as e:
                 print_colored(
                     f"⚠️ Erro ao remover {session_dir.name}: {e}",
                     Colors.YELLOW,
@@ -244,7 +244,7 @@ class BackupManager:
             backup_hash = self._calculate_hash(backup_path)
             return bool(backup_hash == operation["file_hash"])
 
-        except Exception:
+        except (OSError, ValueError, KeyError):
             return False
 
     def validate_poetry_environment(self, project_path: Path) -> bool:
@@ -299,7 +299,7 @@ class BackupManager:
             # poetry.lock mínimo tem muito mais que 100 chars
             return len(content.strip()) >= MIN_CONTENT_LENGTH
 
-        except Exception as e:
+        except (OSError, UnicodeDecodeError) as e:
             print_colored(f"    ❌ Erro validando poetry.lock: {e}", Colors.RED)
             return False
 

@@ -13,7 +13,7 @@ class QualityGateway:
         """Initialize the quality gateway."""
         self.workspace_path = workspace_path
 
-    def run_quality_checks(self, **kwargs: Any) -> dict[str, Any]:
+    def run_quality_checks(self, **_kwargs: object) -> dict[str, Any]:
         """Run comprehensive quality checks."""
         print_colored("🔍 Executando verificações de qualidade...", Colors.BLUE)
 

@@ -12,9 +12,9 @@ import operator
 import re
 import subprocess
 
-from flext_core import FlextLoggerFactory, FlextResult
+from flext_core import FlextResult, get_logger
 
-logger = FlextLoggerFactory.get_logger(__name__)
+logger = get_logger(__name__)
 
 
 def find_manual_config_patterns() -> FlextResult[dict[str, list[str]]]:
@@ -25,7 +25,7 @@ def find_manual_config_patterns() -> FlextResult[dict[str, list[str]]]:
 
     """
     try:
-        patterns = {
+        patterns: dict[str, list[str]] = {
             "manual_env_vars": [],
             "manual_pydantic": [],
             "manual_file_loading": [],
@@ -120,7 +120,7 @@ def refactor_manual_env_vars(file_path: str) -> FlextResult[bool]:
         # Pattern 2: Replace simple os.getenv() with commented alternatives
         simple_env_pattern = r'(\s+)([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*os\.getenv\(["\']([^"\']+)["\'](?:,\s*["\']?([^"\']*)["\']?)?\)'
 
-        def replace_env_var(match):
+        def replace_env_var(match: re.Match[str]) -> str:
             indent = match.group(1)
             var_name = match.group(2)
             env_name = match.group(3)
@@ -168,7 +168,7 @@ def refactor_manual_pydantic(file_path: str) -> FlextResult[bool]:
         # Pattern: direct Settings/Config instantiation
         config_instantiation = r"(\s+)([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*([A-Z][a-zA-Z0-9_]*(?:Settings|Config))\(\)"
 
-        def replace_config_instantiation(match):
+        def replace_config_instantiation(match: re.Match[str]) -> str:
             indent = match.group(1)
             var_name = match.group(2)
             class_name = match.group(3)
@@ -215,7 +215,7 @@ def refactor_manual_file_loading(file_path: str) -> FlextResult[bool]:
         # Pattern: json.load() or yaml.load()
         file_load_pattern = r"(\s+)(.*?)\s*=\s*(json\.load|yaml\.load|yaml\.safe_load)\((.*?)\)"
 
-        def replace_file_loading(match):
+        def replace_file_loading(match: re.Match[str]) -> str:
             indent = match.group(1)
             var_assignment = match.group(2)
             load_func = match.group(3)

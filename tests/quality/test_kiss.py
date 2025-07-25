@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+from flext_api.utils.logging import logger
 
 from .base import BaseQualityAnalyzer
 
@@ -59,7 +60,8 @@ class KISSAnalyzer(BaseQualityAnalyzer):
                 total_function_length += file_stats["function_length"]
                 total_nesting_depth += file_stats["nesting_depth"]
 
-            except Exception:
+            except Exception as e:
+                logger.error(f"KISS analysis failed for file {file_path}: {e}")
                 continue
 
         # Calculate summary statistics
@@ -67,9 +69,7 @@ class KISSAnalyzer(BaseQualityAnalyzer):
         if isinstance(summary, dict):
             if total_functions > 0:
                 summary["average_complexity"] = total_complexity / total_functions
-                summary["average_function_length"] = (
-                    total_function_length / total_functions
-                )
+                summary["average_function_length"] = total_function_length / total_functions
                 summary["average_nesting_depth"] = total_nesting_depth / total_functions
 
             # Calculate total issues
@@ -106,7 +106,10 @@ class KISSAnalyzer(BaseQualityAnalyzer):
         return results
 
     def _analyze_file(
-        self, file_path: Path, content: str, results: dict[str, Any],
+        self,
+        file_path: Path,
+        content: str,
+        results: dict[str, Any],
     ) -> dict[str, int]:
         """Analyze a single file for KISS violations."""
         try:
@@ -214,7 +217,10 @@ class KISSAnalyzer(BaseQualityAnalyzer):
             )
 
     def _analyze_class(
-        self, class_node: ast.ClassDef, file_path: Path, results: dict[str, Any],
+        self,
+        class_node: ast.ClassDef,
+        file_path: Path,
+        results: dict[str, Any],
     ) -> None:
         """Analyze a class for KISS violations."""
         class_name = class_node.name
@@ -224,9 +230,7 @@ class KISSAnalyzer(BaseQualityAnalyzer):
         [n for n in class_node.body if isinstance(n, ast.Assign)]
 
         # Calculate class complexity
-        total_method_complexity = sum(
-            self._calculate_cyclomatic_complexity(method) for method in methods
-        )
+        total_method_complexity = sum(self._calculate_cyclomatic_complexity(method) for method in methods)
 
         # Check for complex classes
         if len(methods) > 15 or total_method_complexity > 50:
@@ -243,13 +247,17 @@ class KISSAnalyzer(BaseQualityAnalyzer):
             )
 
     def _analyze_complex_expressions(
-        self, tree: ast.AST, file_path: Path, results: dict[str, Any],
+        self,
+        tree: ast.AST,
+        file_path: Path,
+        results: dict[str, Any],
     ) -> None:
         """Analyze complex expressions that violate KISS."""
         for node in ast.walk(tree):
             # Complex comprehensions
             if isinstance(
-                node, (ast.ListComp, ast.DictComp, ast.SetComp, ast.GeneratorExp),
+                node,
+                (ast.ListComp, ast.DictComp, ast.SetComp, ast.GeneratorExp),
             ):
                 if self._is_complex_comprehension(node):
                     results["complex_expressions"].append(
@@ -311,17 +319,21 @@ class KISSAnalyzer(BaseQualityAnalyzer):
         return len([n for n in ast.walk(func_node) if isinstance(n, ast.stmt)])
 
     def _calculate_max_nesting_depth(
-        self, node: ast.AST, current_depth: int = 0,
+        self,
+        node: ast.AST,
+        current_depth: int = 0,
     ) -> int:
         """Calculate maximum nesting depth."""
         max_depth = current_depth
 
         for child in ast.iter_child_nodes(node):
             if isinstance(
-                child, (ast.If, ast.While, ast.For, ast.AsyncFor, ast.With, ast.Try),
+                child,
+                (ast.If, ast.While, ast.For, ast.AsyncFor, ast.With, ast.Try),
             ):
                 child_depth = self._calculate_max_nesting_depth(
-                    child, current_depth + 1,
+                    child,
+                    current_depth + 1,
                 )
                 max_depth = max(max_depth, child_depth)
             else:
@@ -352,9 +364,7 @@ class KISSAnalyzer(BaseQualityAnalyzer):
         total_conditions = len(node.values)
 
         # Count nested boolean operations
-        nested_boolops = sum(
-            1 for value in node.values if isinstance(value, ast.BoolOp)
-        )
+        nested_boolops = sum(1 for value in node.values if isinstance(value, ast.BoolOp))
 
         return total_conditions > 4 or nested_boolops > 0
 
@@ -375,7 +385,8 @@ class KISSAnalyzer(BaseQualityAnalyzer):
         # Complexity penalty
         avg_complexity = float(results["summary"]["average_complexity"])
         complexity_penalty = min(
-            max(0, avg_complexity - 5) * 2, 15,
+            max(0, avg_complexity - 5) * 2,
+            15,
         )  # Max 15 point penalty
 
         # Length penalty
@@ -386,13 +397,7 @@ class KISSAnalyzer(BaseQualityAnalyzer):
         avg_nesting = float(results["summary"]["average_nesting_depth"])
         nesting_penalty = min(max(0, avg_nesting - 2) * 5, 15)  # Max 15 point penalty
 
-        final_score = (
-            base_score
-            - issue_penalty
-            - complexity_penalty
-            - length_penalty
-            - nesting_penalty
-        )
+        final_score = base_score - issue_penalty - complexity_penalty - length_penalty - nesting_penalty
 
         return max(0.0, final_score)
 
@@ -552,23 +557,17 @@ class TestKISSPrinciples:
 
     def test_kiss_files_found(self, analysis_results: dict[str, Any]) -> None:
         """Test that Python files are found for analysis."""
-        assert analysis_results["total_files"] > 0, (
-            "No Python files found for KISS analysis"
-        )
+        assert analysis_results["total_files"] > 0, "No Python files found for KISS analysis"
 
     def test_kiss_simplicity_score(self, analysis_results: dict[str, Any]) -> None:
         """Test that simplicity score is acceptable."""
         simplicity_score = analysis_results["summary"]["simplicity_score"]
-        assert simplicity_score >= 15, (
-            f"KISS simplicity score {simplicity_score:.1f} is below 15"
-        )
+        assert simplicity_score >= 15, f"KISS simplicity score {simplicity_score:.1f} is below 15"
 
     def test_kiss_complexity_reasonable(self, analysis_results: dict[str, Any]) -> None:
         """Test that average complexity is reasonable."""
         avg_complexity = analysis_results["summary"]["average_complexity"]
-        assert avg_complexity < 15, (
-            f"Average complexity {avg_complexity:.1f} is too high"
-        )
+        assert avg_complexity < 15, f"Average complexity {avg_complexity:.1f} is too high"
 
     def test_kiss_function_length_reasonable(self, analysis_results: dict[str, Any]) -> None:
         """Test that average function length is reasonable."""
@@ -587,9 +586,7 @@ class TestKISSPrinciples:
 
         if total_files > 0:
             issue_rate = total_issues / total_files
-            assert issue_rate < 3.0, (
-                f"KISS issue rate {issue_rate:.1f} per file is too high"
-            )
+            assert issue_rate < 3.0, f"KISS issue rate {issue_rate:.1f} per file is too high"
 
     def test_generate_kiss_reports(self, analyzer: KISSAnalyzer, analysis_results: dict[str, Any]) -> None:
         """Test KISS report generation."""

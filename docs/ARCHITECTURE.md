@@ -11,6 +11,7 @@
 ### **ECOSYSTEM CLASSIFICATION**
 
 #### **📚 LIBRARIES (flext-*)**
+
 All `flext-*` projects are **LIBRARIES**, not services:
 
 ```
@@ -33,6 +34,7 @@ APPLICATION LAYER:
 ```
 
 #### **🔌 PLUGINS (tap/target/dbt/ext)**
+
 All tap/target/dbt/ext projects are **MELTANO PLUGINS**:
 
 ```
@@ -58,6 +60,7 @@ DBT PROJECTS:
 ```
 
 #### **⚙️ SERVICES**
+
 Only these projects are **SERVICES**:
 
 ```
@@ -78,7 +81,8 @@ CORE SERVICES:
 
 All Singer/Meltano/DBT functionality is properly consolidated in **flext-meltano**:
 
-#### **flext-meltano CONTAINS**:
+#### **flext-meltano CONTAINS**
+
 - ✅ **Singer Integration**: `FlextMeltanoTap`, `FlextMeltanoTarget`, `FlextMeltanoStream`, `FlextMeltanoCatalog`
 - ✅ **Meltano Integration**: `FlextMeltanoPlatform`, `FlextMeltanoOrchestrator`, `FlextMeltanoProjectManager`
 - ✅ **DBT Integration**: `FlextMeltanoDbtProject`, `FlextMeltanoDbtRunner`, `FlextMeltanoDbtModel`
@@ -86,7 +90,8 @@ All Singer/Meltano/DBT functionality is properly consolidated in **flext-meltano
 - ✅ **Job Management**: `FlextMeltanoJobManager`, `FlextMeltanoJobExecutor`
 - ✅ **Plugin Management**: `FlextMeltanoPluginManager`, `FlextMeltanoExtensionManager`
 
-#### **HYBRID ARCHITECTURE**:
+#### **HYBRID ARCHITECTURE**
+
 - **Orchestration** → `flext-meltano` (Tap/Target configuration, project management)
 - **Implementation** → `singer-sdk` (Stream/Sink base classes, type utilities)
 - **Dependencies** → `flext-meltano` includes `singer-sdk` as transitive dependency
@@ -95,7 +100,7 @@ All Singer/Meltano/DBT functionality is properly consolidated in **flext-meltano
 
 ## 🔄 **DEPENDENCY FLOW**
 
-### **CORRECT LAYER DEPENDENCIES**:
+### **CORRECT LAYER DEPENDENCIES**
 
 ```
 APPLICATION LAYER
@@ -107,13 +112,16 @@ INFRASTRUCTURE LAYER (parallel - no cross-imports)
 FOUNDATION LAYER
 ```
 
-### **PROHIBITED CROSS-IMPORTS**:
+### **PROHIBITED CROSS-IMPORTS**
+
 ❌ Infrastructure libraries CANNOT import from each other:
-- `flext-db-oracle` ↔ `flext-ldap` 
+
+- `flext-db-oracle` ↔ `flext-ldap`
 - `flext-ldap` ↔ `flext-ldif`
 - `flext-oracle-wms` ↔ `flext-ldap`
 
 ✅ Higher layers CAN import from lower layers:
+
 - `flext-meltano` → `flext-db-oracle`, `flext-ldap`, `flext-core`
 - `flext-api` → `flext-meltano`, `flext-auth`, `flext-core`
 
@@ -121,13 +129,15 @@ FOUNDATION LAYER
 
 ## 📋 **PROJECT SPECIALIZATIONS**
 
-### **Oracle Projects (NOT duplications)**:
+### **Oracle Projects (NOT duplications)**
+
 - **flext-tap-oracle**: Direct Oracle database access (SQL streams)
 - **flext-tap-oracle-oic**: Oracle Integration Cloud REST APIs  
 - **flext-tap-oracle-wms**: Oracle WMS specialized APIs
 - **flext-db-oracle**: Shared Oracle connectivity library
 
-### **LDAP Projects (NOT duplications)**:
+### **LDAP Projects (NOT duplications)**
+
 - **flext-tap-ldap**: Live LDAP server extraction
 - **flext-tap-ldif**: Static LDIF file processing
 - **flext-ldap**: Shared LDAP connectivity library
@@ -138,17 +148,20 @@ FOUNDATION LAYER
 ## ✅ **ARCHITECTURAL VALIDATION**
 
 ### **CONSOLIDATION STATUS**: ✅ COMPLETE
+
 - ✅ Singer/Meltano/DBT centralized in `flext-meltano`
 - ✅ No problematic code duplication found
 - ✅ Proper separation of concerns maintained
 - ✅ Hybrid architecture working correctly
 
 ### **DEPENDENCY STATUS**: ✅ CORRECT
+
 - ✅ All projects have proper `flext-meltano` dependencies
 - ✅ No inappropriate cross-library imports
 - ✅ Layer hierarchy respected
 
 ### **IMPORT STATUS**: ✅ FIXED
+
 - ✅ Corrected `typing` imports in tap projects
 - ✅ Proper use of `singer-sdk` for base classes
 - ✅ Proper use of `flext-meltano` for orchestration

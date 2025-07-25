@@ -13,7 +13,7 @@ class SSLManager:
         """Initialize the SSL manager."""
         self.config_path = config_path or Path.cwd() / "ssl"
 
-    def setup_ssl(self, **kwargs: Any) -> dict[str, Any]:
+    def setup_ssl(self, **_kwargs: object) -> dict[str, Any]:
         """Setup SSL configuration."""
         print_colored("🔒 Configurando SSL...", Colors.BLUE)
 

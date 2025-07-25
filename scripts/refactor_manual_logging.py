@@ -2,7 +2,7 @@
 """Script to refactor manual logging setups to use FLEXT patterns.
 
 This script finds all Python files that use manual logging setup
-(logger = FlextLoggerFactory.get_logger(__name__)) and refactors them to use
+(logger = get_logger(__name__)) and refactors them to use
 FlextLoggerFactory from flext-core.
 """
 
@@ -10,7 +10,7 @@ import re
 import subprocess
 
 
-def find_files_with_manual_logging():
+def find_files_with_manual_logging() -> list[str]:
     """Find all Python files with manual logging setup."""
     cmd = [
         "find", ".",
@@ -57,13 +57,13 @@ def refactor_file(file_path: str) -> bool:
                 if match:
                     content = content.replace(
                         match.group(0),
-                        f"{match.group(1)}{match.group(2)}from flext_core import FlextLoggerFactory\n{match.group(3)}",
+                        f"{match.group(1)}{match.group(2)}from flext_core import get_logger\n{match.group(3)}",
                     )
 
-        # Replace logger = FlextLoggerFactory.get_logger(__name__)
+        # Replace logger = get_logger(__name__)
         content = re.sub(
             r"logger = logging\.getLogger\(__name__\)",
-            "logger = FlextLoggerFactory.get_logger(__name__)",
+            "logger = get_logger(__name__)",
             content,
         )
 
@@ -84,7 +84,7 @@ def refactor_file(file_path: str) -> bool:
         return False
 
 
-def main():
+def main() -> None:
     """Main refactoring function."""
     print("🔍 Finding files with manual logging setup...")
     files = find_files_with_manual_logging()
