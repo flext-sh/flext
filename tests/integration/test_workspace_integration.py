@@ -10,7 +10,7 @@ the centralized DI container and Clean Architecture.
 from __future__ import annotations
 
 import pytest
-from flext_core import DIContainer, configure_container, get_container, FlextLoggerFactory, FlextLoggerName, FlextLoggerFactory, FlextLoggerName
+from flext_core import DIContainer, get_container
 
 
 class TestWorkspaceIntegration:

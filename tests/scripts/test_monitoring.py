@@ -26,7 +26,7 @@ async def test_health_check() -> dict[str, object]:
             async with aiohttp.ClientSession() as session:
                 start_time = time.time()
                 async with session.get(
-                    url, timeout=aiohttp.ClientTimeout(total=5)
+                    url, timeout=aiohttp.ClientTimeout(total=5),
                 ) as response:
                     duration = time.time() - start_time
 

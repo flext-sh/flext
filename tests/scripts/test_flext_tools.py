@@ -19,7 +19,6 @@ from flext_tools import (
     PoetryOperations,
     PoetryValidator,
     VersionAnalyzer,
-    cache_result,
     cached,
     get_stdlib_modules,
     print_colored,
@@ -69,7 +68,7 @@ def test_utils():
         stdlib = get_stdlib_modules()
         if len(stdlib) > 100:  # Deve ter muitos módulos
             print_colored(
-                f"  ✅ Stdlib: {len(stdlib)} módulos detectados", Colors.GREEN
+                f"  ✅ Stdlib: {len(stdlib)} módulos detectados", Colors.GREEN,
             )
         else:
             print_colored(f"  ⚠️ Stdlib: apenas {len(stdlib)} módulos", Colors.YELLOW)
@@ -91,7 +90,7 @@ def test_utils():
             print_colored("  ✅ Filtros de path funcionando", Colors.GREEN)
         else:
             print_colored(
-                f"  ⚠️ Filtros: esperado 3, obtido {len(filtered)}", Colors.YELLOW
+                f"  ⚠️ Filtros: esperado 3, obtido {len(filtered)}", Colors.YELLOW,
             )
     except Exception as e:
         print_colored(f"  ❌ Erro nos filtros: {e}", Colors.RED)
@@ -177,7 +176,7 @@ def test_discovery():
 
             if isinstance(result, dict) and "runtime" in result:
                 print_colored(
-                    f"  ✅ Descoberta OK em {test_project.name}", Colors.GREEN
+                    f"  ✅ Descoberta OK em {test_project.name}", Colors.GREEN,
                 )
 
                 # Mostra sample dos resultados
@@ -260,7 +259,7 @@ def test_poetry_operations():
             if isinstance(validation, dict) and "valid" in validation:
                 status = "válido" if validation["valid"] else "inválido"
                 print_colored(
-                    f"  ✅ Validação OK: {test_project.name} é {status}", Colors.GREEN
+                    f"  ✅ Validação OK: {test_project.name} é {status}", Colors.GREEN,
                 )
             else:
                 print_colored(f"  ❌ Validação falhou: {validation}", Colors.RED)
@@ -320,7 +319,7 @@ def run_performance_test():
         # Mostra stats
         stats = slow_operation.cache_stats()
         print_colored(
-            f"  📊 Stats: {stats['hits']} hits, {stats['misses']} misses", Colors.CYAN
+            f"  📊 Stats: {stats['hits']} hits, {stats['misses']} misses", Colors.CYAN,
         )
 
     except Exception as e:
@@ -370,7 +369,7 @@ def main():
         status = 0
     else:
         print_colored(
-            f"⚠️ {passed}/{total} testes passaram ({success_rate:.1f}%)", Colors.YELLOW
+            f"⚠️ {passed}/{total} testes passaram ({success_rate:.1f}%)", Colors.YELLOW,
         )
         status = 1
 

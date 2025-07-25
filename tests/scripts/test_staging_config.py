@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """Test staging configuration functionality."""
 
-import os
 import sys
 from pathlib import Path
 

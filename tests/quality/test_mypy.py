@@ -1,9 +1,10 @@
 """MyPy type checking compliance tests for FLEXT workspace."""
 
+import operator
 import subprocess
 from collections import defaultdict
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 import pytest
 
@@ -74,7 +75,7 @@ class MyPyAnalyzer(BaseQualityAnalyzer):
         # Find most common error type
         error_types = results["error_types"]
         if isinstance(error_types, dict) and error_types:
-            most_common_error = max(error_types.items(), key=lambda x: x[1])
+            most_common_error = max(error_types.items(), key=operator.itemgetter(1))
             summary = results["summary"]
             if isinstance(summary, dict):
                 summary["most_common_error"] = (
@@ -107,14 +108,14 @@ class MyPyAnalyzer(BaseQualityAnalyzer):
         return str(file_path.parent)
 
     def _analyze_project_mypy(
-        self, project_path: str, project_files: list[Path], results: dict[str, Any]
+        self, project_path: str, project_files: list[Path], results: dict[str, Any],
     ) -> None:
         """Analyze a single project with MyPy."""
         import os
         import tempfile
 
         # Create temporary config file for mypy
-        with tempfile.NamedTemporaryFile(mode="w", suffix=".ini", delete=False) as f:
+        with tempfile.NamedTemporaryFile(encoding="utf-8", mode="w", suffix=".ini", delete=False) as f:
             f.write("""[mypy]
 python_version = 3.13
 warn_return_any = true
@@ -142,7 +143,7 @@ ignore_missing_imports = true
             os.unlink(config_file)
 
     def _analyze_individual_file_mypy(
-        self, file_path: Path, config_file: str, results: dict[str, Any]
+        self, file_path: Path, config_file: str, results: dict[str, Any],
     ) -> None:
         """Analyze individual file with MyPy."""
         try:
@@ -227,7 +228,7 @@ ignore_missing_imports = true
         # Add file error information
         for file_path, errors in file_errors.items():
             results["files_with_errors"].append(
-                {"file": file_path, "errors": errors, "count": len(errors)}
+                {"file": file_path, "errors": errors, "count": len(errors)},
             )
 
     def _categorize_error(self, code: str, message: str) -> str:
@@ -293,39 +294,39 @@ ignore_missing_imports = true
         # Typing coverage
         if typing_coverage < 30:
             recommendations.append(
-                "📝 Low typing coverage - add type annotations to functions."
+                "📝 Low typing coverage - add type annotations to functions.",
             )
         elif typing_coverage < 60:
             recommendations.append(
-                "📝 Moderate typing coverage - continue adding type annotations."
+                "📝 Moderate typing coverage - continue adding type annotations.",
             )
         else:
             recommendations.append(
-                "📝 Good typing coverage - maintain type annotation standards."
+                "📝 Good typing coverage - maintain type annotation standards.",
             )
 
         # Error-specific recommendations
         if total_errors > 0:
             recommendations.append(
-                "🔧 Configure mypy.ini or pyproject.toml for consistent type checking."
+                "🔧 Configure mypy.ini or pyproject.toml for consistent type checking.",
             )
 
         # Category-specific recommendations
         if results["error_categories"]:
             top_categories = sorted(
-                results["error_categories"].items(), key=lambda x: x[1], reverse=True
+                results["error_categories"].items(), key=operator.itemgetter(1), reverse=True,
             )[:2]
             for category, count in top_categories:
                 if count > 5:
                     category_advice = self._get_category_advice(category)
                     recommendations.append(
-                        f"📊 {category.title()} errors ({count}): {category_advice}"
+                        f"📊 {category.title()} errors ({count}): {category_advice}",
                     )
 
         # Most common error
         if results["summary"]["most_common_error"]:
             recommendations.append(
-                f"🎯 Most common error: {results['summary']['most_common_error']}"
+                f"🎯 Most common error: {results['summary']['most_common_error']}",
             )
 
         return recommendations
@@ -382,7 +383,7 @@ ignore_missing_imports = true
             report += "\n## Error Categories\n\n"
             for category, count in sorted(
                 report_data["error_categories"].items(),
-                key=lambda x: x[1],
+                key=operator.itemgetter(1),
                 reverse=True,
             ):
                 report += f"- **{category.title()}:** {count} errors\n"
@@ -391,7 +392,7 @@ ignore_missing_imports = true
         if report_data.get("error_types"):
             report += "\n## Top Error Types\n\n"
             top_errors = sorted(
-                report_data["error_types"].items(), key=lambda x: x[1], reverse=True
+                report_data["error_types"].items(), key=operator.itemgetter(1), reverse=True,
             )[:10]
             for error_type, count in top_errors:
                 report += f"- **{error_type}:** {count} occurrences\n"
@@ -400,7 +401,7 @@ ignore_missing_imports = true
         if report_data.get("files_with_errors"):
             report += "\n## Most Problematic Files\n\n"
             problematic_files = sorted(
-                report_data["files_with_errors"], key=lambda x: x["count"], reverse=True
+                report_data["files_with_errors"], key=operator.itemgetter("count"), reverse=True,
             )[:5]
             for file_info in problematic_files:
                 report += f"- **{file_info['file']}:** {file_info['count']} errors\n"
@@ -468,7 +469,7 @@ class TestMyPyCompliance:
         # Verify report content
         import json
 
-        with open(json_report) as f:
+        with open(json_report, encoding="utf-8") as f:
             report_data = json.load(f)
 
         assert "clean_files" in report_data
@@ -491,4 +492,3 @@ if __name__ == "__main__":
     total_files = results["total_files"]
     clean_files = len(results["clean_files"])
     clean_rate = results["summary"]["clean_rate"]
-    print(f"MyPy analysis complete: {clean_files}/{total_files} files clean ({clean_rate:.1f}%)")

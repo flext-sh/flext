@@ -19,18 +19,18 @@ from flext_meltano.architecture import FlextMeltanoConsolidationVerifier
 
 def main() -> None:
     """Main execution function."""
-    flext_root = Path('/home/marlonsc/flext')
-    
+    flext_root = Path("/home/marlonsc/flext")
+
     verifier = FlextMeltanoConsolidationVerifier(flext_root)
     results = verifier.verify_consolidation()
     verifier.report_verification(results)
-    
+
     # Exit with appropriate code
-    if results['consolidation_successful']:
+    if results["consolidation_successful"]:
         print("🎉 CONSOLIDATION VERIFICATION PASSED!")
     else:
         print("⚠️ Consolidation needs additional work")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

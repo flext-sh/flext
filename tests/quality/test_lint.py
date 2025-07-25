@@ -1,10 +1,10 @@
 """Lint compliance tests using ruff for FLEXT workspace."""
 
 import json
+import operator
 import subprocess
 from collections import defaultdict
-from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 import pytest
 
@@ -25,7 +25,7 @@ class LintAnalyzer(BaseQualityAnalyzer):
         issue_categories: defaultdict[str, int] = defaultdict(int)
         rule_violations: defaultdict[str, int] = defaultdict(int)
         severity_counts: defaultdict[str, int] = defaultdict(int)
-        
+
         results = {
             "timestamp": self.timestamp,
             "workspace_root": str(self.workspace_root),
@@ -55,7 +55,7 @@ class LintAnalyzer(BaseQualityAnalyzer):
             try:
                 cmd = ["ruff", "check", str(file_path), "--output-format=json"]
                 result = subprocess.run(
-                    cmd, check=False, capture_output=True, text=True
+                    cmd, check=False, capture_output=True, text=True,
                 )
 
                 if result.returncode == 0:
@@ -104,7 +104,7 @@ class LintAnalyzer(BaseQualityAnalyzer):
                                             "message": line.strip(),
                                             "severity": "error",
                                             "category": "parsing",
-                                        }
+                                        },
                                     )
                                     summary = results["summary"]
                                     if isinstance(summary, dict):
@@ -118,7 +118,7 @@ class LintAnalyzer(BaseQualityAnalyzer):
                                     "file": str(file_path),
                                     "issues": file_issues,
                                     "count": len(file_issues),
-                                }
+                                },
                             )
 
                         # Track most problematic file
@@ -142,10 +142,10 @@ class LintAnalyzer(BaseQualityAnalyzer):
                                     "message": f"Analysis failed: {e!s}",
                                     "severity": "error",
                                     "category": "system",
-                                }
+                                },
                             ],
                             "count": 1,
-                        }
+                        },
                     )
                 summary_dict = results["summary"]
                 if isinstance(summary_dict, dict):
@@ -161,7 +161,7 @@ class LintAnalyzer(BaseQualityAnalyzer):
         # Find most common rule violation
         if rule_violations and isinstance(summary_dict, dict):
             most_common_rule = max(
-                rule_violations.items(), key=lambda x: x[1]
+                rule_violations.items(), key=operator.itemgetter(1),
             )
             summary_dict["most_common_rule"] = (
                 f"{most_common_rule[0]} ({most_common_rule[1]} times)"
@@ -258,25 +258,25 @@ class LintAnalyzer(BaseQualityAnalyzer):
             recommendations.append("✅ Excellent: High lint compliance rate!")
         elif clean_rate >= 70:
             recommendations.append(
-                "👍 Good: Decent lint compliance, but room for improvement."
+                "👍 Good: Decent lint compliance, but room for improvement.",
             )
         elif clean_rate >= 50:
             recommendations.append("⚠️ Warning: Lint compliance needs attention.")
         else:
             recommendations.append(
-                "🚨 Critical: Poor lint compliance requires immediate action."
+                "🚨 Critical: Poor lint compliance requires immediate action.",
             )
 
         # Auto-fix suggestion
         if total_issues > 0:
             recommendations.append(
-                "🔧 Run 'ruff check --fix' to automatically fix many issues."
+                "🔧 Run 'ruff check --fix' to automatically fix many issues.",
             )
 
         # Rule-specific recommendations
         if results["rule_violations"]:
             top_rules = sorted(
-                results["rule_violations"].items(), key=lambda x: x[1], reverse=True
+                results["rule_violations"].items(), key=operator.itemgetter(1), reverse=True,
             )[:3]
             rule_list = ", ".join([f"{rule}({count})" for rule, count in top_rules])
             recommendations.append(f"📊 Most common violations: {rule_list}")
@@ -287,29 +287,29 @@ class LintAnalyzer(BaseQualityAnalyzer):
 
         if error_count > 0:
             recommendations.append(
-                f"🔴 Fix {error_count} error-level issues immediately."
+                f"🔴 Fix {error_count} error-level issues immediately.",
             )
 
         if warning_count > 0:
             recommendations.append(
-                f"🟡 Address {warning_count} warning-level issues when possible."
+                f"🟡 Address {warning_count} warning-level issues when possible.",
             )
 
         # File-specific recommendations
         if results["summary"]["most_problematic_file"]:
             recommendations.append(
-                f"🎯 Focus on: {results['summary']['most_problematic_file']} (most issues)"
+                f"🎯 Focus on: {results['summary']['most_problematic_file']} (most issues)",
             )
 
         # Category-specific recommendations
         if results["issue_categories"]:
             top_categories = sorted(
-                results["issue_categories"].items(), key=lambda x: x[1], reverse=True
+                results["issue_categories"].items(), key=operator.itemgetter(1), reverse=True,
             )[:2]
             for category, count in top_categories:
                 if count > 10:
                     recommendations.append(
-                        f"📈 High {category} violations ({count}) - review coding standards."
+                        f"📈 High {category} violations ({count}) - review coding standards.",
                     )
 
         return recommendations
@@ -341,7 +341,7 @@ class LintAnalyzer(BaseQualityAnalyzer):
 
         severity_counts = report_data.get("severity_counts", {})
         for severity, count in sorted(
-            severity_counts.items(), key=lambda x: x[1], reverse=True
+            severity_counts.items(), key=operator.itemgetter(1), reverse=True,
         ):
             report += f"- **{severity.title()}:** {count}\n"
 
@@ -354,7 +354,7 @@ class LintAnalyzer(BaseQualityAnalyzer):
         if report_data.get("rule_violations"):
             report += "\n## Top Rule Violations\n\n"
             top_rules = sorted(
-                report_data["rule_violations"].items(), key=lambda x: x[1], reverse=True
+                report_data["rule_violations"].items(), key=operator.itemgetter(1), reverse=True,
             )[:10]
             for rule, count in top_rules:
                 report += f"- **{rule}:** {count} occurrences\n"
@@ -364,7 +364,7 @@ class LintAnalyzer(BaseQualityAnalyzer):
             report += "\n## Issue Categories\n\n"
             for category, count in sorted(
                 report_data["issue_categories"].items(),
-                key=lambda x: x[1],
+                key=operator.itemgetter(1),
                 reverse=True,
             ):
                 report += f"- **{category.title()}:** {count} issues\n"
@@ -373,7 +373,7 @@ class LintAnalyzer(BaseQualityAnalyzer):
         if report_data.get("files_with_issues"):
             report += "\n## Most Problematic Files\n\n"
             problematic_files = sorted(
-                report_data["files_with_issues"], key=lambda x: x["count"], reverse=True
+                report_data["files_with_issues"], key=operator.itemgetter("count"), reverse=True,
             )[:5]
             for file_info in problematic_files:
                 report += f"- **{file_info['file']}:** {file_info['count']} issues\n"
@@ -448,7 +448,7 @@ class TestLintCompliance:
         assert md_report.exists(), "Lint Markdown report was not created"
 
         # Verify report content
-        with open(json_report) as f:
+        with open(json_report, encoding="utf-8") as f:
             report_data = json.load(f)
 
         assert "clean_files" in report_data

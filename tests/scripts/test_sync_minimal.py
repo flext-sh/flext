@@ -16,7 +16,7 @@ def run_with_timeout(cmd: list[str], timeout_sec: int = 10) -> None:
 
     try:
         proc = subprocess.Popen(
-            cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1
+            cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1,
         )
 
         output_lines = []

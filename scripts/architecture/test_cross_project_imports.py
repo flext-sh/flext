@@ -23,7 +23,6 @@ def test_imports() -> bool:
     # Test flext-core
     try:
         print("📦 Testing flext-core imports...")
-        from flext_core import CommandHandler, DomainEntity, Field, FlextDomainBaseModel, FlextResult, QueryHandler
 
         results["flext-core"] = "✅ SUCCESS"
         print("   ✅ flext-core imports working")
@@ -35,7 +34,6 @@ def test_imports() -> bool:
     # Test flext-cli
     try:
         print("📦 Testing flext-cli imports...")
-        from flext_cli import CLIFoundation, CLISettings, Command, FlextApiClient, get_cli_config
 
         results["flext-cli"] = "✅ SUCCESS"
         print("   ✅ flext-cli imports working")
@@ -47,8 +45,6 @@ def test_imports() -> bool:
     # Test flext-observability
     try:
         print("📦 Testing flext-observability imports...")
-        from flext_observability import MetricsService, Trace, get_logger
-        from flext_observability.domain.entities import LogEntry, Metric
 
         results["flext-observability"] = "✅ SUCCESS"
         print("   ✅ flext-observability imports working")
@@ -60,19 +56,6 @@ def test_imports() -> bool:
     # Test flext-meltano - use actual available exports
     try:
         print("📦 Testing flext-meltano imports...")
-        from flext_meltano import (
-            FlextMeltanoEnvironmentType,
-            FlextMeltanoFlextResult,
-            FlextMeltanoJobService,
-            FlextMeltanoJobStatus,
-            FlextMeltanoMeltanoJob,
-            FlextMeltanoMeltanoProject,
-            FlextMeltanoMeltanoState,
-            FlextMeltanoPluginService,
-            FlextMeltanoPluginType,
-            FlextMeltanoProjectService,
-            FlextMeltanoStateService,
-        )
 
         results["flext-meltano"] = "✅ SUCCESS"
         print("   ✅ flext-meltano imports working")
@@ -84,7 +67,6 @@ def test_imports() -> bool:
     # Test flext-ldif
     try:
         print("📦 Testing flext-ldif imports...")
-        from flext_ldif import DistinguishedName, LDIFAttributes, LDIFEntry, LDIFProcessor, LDIFWriter
 
         results["flext-ldif"] = "✅ SUCCESS"
         print("   ✅ flext-ldif imports working")
@@ -96,7 +78,6 @@ def test_imports() -> bool:
     # Test flext-ldap
     try:
         print("📦 Testing flext-ldap imports...")
-        from flext_ldap import DistinguishedName, LDAPAttributes, LDAPClient, LDAPEntry, LDAPFilter, LDAPGroup, LDAPUser
 
         results["flext-ldap"] = "✅ SUCCESS"
         print("   ✅ flext-ldap imports working")

@@ -12,40 +12,43 @@ from __future__ import annotations
 
 import asyncio
 import json
+import logging
 import subprocess
 import time
 from pathlib import Path
-from typing import Any
 
 import pytest
-from flext_db_oracle import OracleConfig, OracleConnectionService
-from flext_observability.structured_logging import get_logger
-from flext_core import FlextLoggerFactory, FlextLoggerName
+from flext_db_oracle import FlextDbOracleConfig
+from flext_db_oracle.application.services import FlextDbOracleConnectionService
 
-logger = get_logger(__name__)
+logger = logging.getLogger(__name__)
 
 
 class TestOracleCompletePipeline:
     """Complete E2E pipeline testing for Oracle Database ecosystem."""
 
     @pytest.fixture(scope="class")
-    def oracle_config(self) -> OracleConfig:
+    def oracle_config(self) -> FlextDbOracleConfig:
         """Oracle configuration for testing."""
-        return OracleConfig(
-            host="oracle-db",
+        return FlextDbOracleConfig(
+            host="localhost",
             port=1521,
             service_name="XEPDB1",
-            username="flext_user",
-            password="flext_user_password",
+            username="flext_test",
+            password="REDACTED_ORACLE_PASSWORD",
             protocol="tcp",
+            pool_min_size=1,
             pool_max_size=5,
+            pool_increment=1,
             query_timeout=300,
+            connect_timeout=30,
+            retry_attempts=3,
         )
 
     @pytest.fixture(scope="class")
-    async def oracle_connection(self, oracle_config: OracleConfig) -> OracleConnectionService:
+    async def oracle_connection(self, oracle_config: FlextDbOracleConfig) -> FlextDbOracleConnectionService:
         """Oracle connection service for validation."""
-        service = OracleConnectionService(oracle_config)
+        service = FlextDbOracleConnectionService(oracle_config)
 
         # Test connection
         result = await service.test_connection()
@@ -55,7 +58,7 @@ class TestOracleCompletePipeline:
 
     @pytest.mark.oracle
     @pytest.mark.e2e
-    async def test_database_connectivity(self, oracle_connection: OracleConnectionService) -> None:
+    async def test_database_connectivity(self, oracle_connection: FlextDbOracleConnectionService) -> None:
         """Test basic Oracle database connectivity."""
         result = await oracle_connection.test_connection()
         assert result.success
@@ -63,20 +66,20 @@ class TestOracleCompletePipeline:
 
     @pytest.mark.oracle
     @pytest.mark.e2e
-    async def test_source_data_exists(self, oracle_connection: OracleConnectionService) -> None:
+    async def test_source_data_exists(self, oracle_connection: FlextDbOracleConnectionService) -> None:
         """Verify test data exists in source schema."""
-        query_service = oracle_connection.get_query_service()
+        # Use connection service directly for queries
 
         # Check customers table
-        result = await query_service.execute_query("SELECT COUNT(*) as customer_count FROM flext_source.customers")
+        result = await oracle_connection.execute_query("SELECT COUNT(*) as customer_count FROM flext_source.customers")
         assert result.success
-        customer_count = result.value.rows[0][0]
+        customer_count = result.data.rows[0][0]
         assert customer_count > 0, "No customers found in source"
 
         # Check orders table
-        result = await query_service.execute_query("SELECT COUNT(*) as order_count FROM flext_source.orders")
+        result = await oracle_connection.execute_query("SELECT COUNT(*) as order_count FROM flext_source.orders")
         assert result.success
-        order_count = result.value.rows[0][0]
+        order_count = result.data.rows[0][0]
         assert order_count > 0, "No orders found in source"
 
         logger.info(f"Source data verified: {customer_count} customers, {order_count} orders")
@@ -173,12 +176,10 @@ class TestOracleCompletePipeline:
     @pytest.mark.oracle
     @pytest.mark.target
     @pytest.mark.e2e
-    async def test_target_data_validation(self, oracle_connection: OracleConnectionService) -> None:
+    async def test_target_data_validation(self, oracle_connection: FlextDbOracleConnectionService) -> None:
         """Validate data was loaded correctly into target schema."""
-        query_service = oracle_connection.get_query_service()
-
         # Check target tables exist
-        result = await query_service.execute_query("""
+        result = await oracle_connection.execute_query("""
             SELECT table_name
             FROM all_tables
             WHERE owner = 'FLEXT_TARGET'
@@ -186,7 +187,7 @@ class TestOracleCompletePipeline:
         """)
 
         assert result.success
-        tables = [row[0] for row in result.value.rows]
+        tables = [row[0] for row in result.data.rows]
 
         expected_tables = ["CUSTOMERS", "ORDERS", "PRODUCTS", "ORDER_ITEMS"]
         for table in expected_tables:
@@ -194,9 +195,9 @@ class TestOracleCompletePipeline:
 
         # Validate data counts
         for table in expected_tables:
-            result = await query_service.execute_query(f"SELECT COUNT(*) FROM flext_target.{table}")
+            result = await oracle_connection.execute_query(f"SELECT COUNT(*) FROM flext_target.{table}")
             assert result.success
-            count = result.value.rows[0][0]
+            count = result.data.rows[0][0]
             assert count > 0, f"No data in target table {table}"
 
         logger.info(f"Target validation successful: {len(tables)} tables with data")
@@ -232,32 +233,30 @@ class TestOracleCompletePipeline:
     @pytest.mark.oracle
     @pytest.mark.dbt
     @pytest.mark.e2e
-    async def test_dbt_output_validation(self, oracle_connection: OracleConnectionService) -> None:
+    async def test_dbt_output_validation(self, oracle_connection: FlextDbOracleConnectionService) -> None:
         """Validate DBT transformations created correct outputs."""
-        query_service = oracle_connection.get_query_service()
-
         # Check DBT models exist
-        result = await query_service.execute_query("""
+        result = await oracle_connection.execute_query("""
             SELECT view_name
             FROM all_views
             WHERE owner = 'FLEXT_DBT'
             AND view_name = 'STG_CUSTOMERS'
         """)
         assert result.success
-        assert len(result.value.rows) > 0, "DBT staging view not found"
+        assert len(result.data.rows) > 0, "DBT staging view not found"
 
         # Check analytics mart
-        result = await query_service.execute_query("""
+        result = await oracle_connection.execute_query("""
             SELECT table_name
             FROM all_tables
             WHERE owner = 'FLEXT_DBT'
             AND table_name = 'MART_CUSTOMER_ANALYTICS'
         """)
         assert result.success
-        assert len(result.value.rows) > 0, "DBT analytics mart not found"
+        assert len(result.data.rows) > 0, "DBT analytics mart not found"
 
         # Validate analytics data structure
-        result = await query_service.execute_query("""
+        result = await oracle_connection.execute_query("""
             SELECT
                 customer_id,
                 customer_name,
@@ -274,7 +273,7 @@ class TestOracleCompletePipeline:
         """)
 
         assert result.success
-        analytics_data = result.value.rows
+        analytics_data = result.data.rows
         assert len(analytics_data) > 0, "No analytics data found"
 
         # Validate data quality
@@ -282,7 +281,7 @@ class TestOracleCompletePipeline:
             customer_id, name, segment, orders, spent, r_score, f_score, m_score = row
             assert customer_id is not None
             assert name is not None
-            assert segment in ["VIP", "High Value", "Regular", "Occasional", "Prospect"]
+            assert segment in {"VIP", "High Value", "Regular", "Occasional", "Prospect"}
             assert orders >= 0
             assert spent >= 0
             assert 1 <= r_score <= 5
@@ -294,7 +293,7 @@ class TestOracleCompletePipeline:
     @pytest.mark.oracle
     @pytest.mark.e2e
     @pytest.mark.performance
-    async def test_full_pipeline_performance(self, oracle_connection: OracleConnectionService) -> None:
+    async def test_full_pipeline_performance(self, oracle_connection: FlextDbOracleConnectionService) -> None:
         """Test full pipeline performance and monitoring."""
         start_time = time.time()
 
@@ -313,10 +312,9 @@ class TestOracleCompletePipeline:
 
         # 3. Transform - measure actual DBT performance
         transform_start = time.time()
-        query_service = oracle_connection.get_query_service()
 
         # Run a sample analytics query
-        result = await query_service.execute_query("""
+        result = await oracle_connection.execute_query("""
             SELECT
                 COUNT(*) as total_customers,
                 AVG(total_spent) as avg_customer_value,
@@ -336,17 +334,15 @@ class TestOracleCompletePipeline:
         assert total_time < 120, f"Total pipeline too slow: {total_time}s"
 
         # Log performance metrics
-        metrics = result.value.rows[0]
+        metrics = result.data.rows[0]
         logger.info(f"Pipeline performance: {total_time:.2f}s total")
         logger.info(f"Analytics results: {metrics[0]} customers, ${metrics[1]:.2f} avg value, {metrics[2]} VIP")
 
     @pytest.mark.oracle
     @pytest.mark.e2e
     @pytest.mark.cleanup
-    async def test_cleanup_test_data(self, oracle_connection: OracleConnectionService) -> None:
+    async def test_cleanup_test_data(self, oracle_connection: FlextDbOracleConnectionService) -> None:
         """Clean up test data (optional - for repeated testing)."""
-        query_service = oracle_connection.get_query_service()
-
         cleanup_queries = [
             "DELETE FROM flext_target.order_items",
             "DELETE FROM flext_target.orders",
@@ -358,7 +354,7 @@ class TestOracleCompletePipeline:
 
         for query in cleanup_queries:
             try:
-                result = await query_service.execute_query(query)
+                result = await oracle_connection.execute_query(query)
                 if result.success:
                     logger.debug(f"Cleanup successful: {query}")
             except Exception as e:

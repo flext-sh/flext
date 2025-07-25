@@ -6405,7 +6405,7 @@ version = "2.9.21.20250718"
 description = "Typing stubs for psycopg2"
 optional = false
 python-versions = ">=3.9"
-groups = ["dev"]
+groups = ["dev", "typings"]
 files = [
     {file = "types_psycopg2-2.9.21.20250718-py3-none-any.whl", hash = "sha256:bcf085d4293bda48f5943a46dadf0389b2f98f7e8007722f7e1c12ee0f541858"},
     {file = "types_psycopg2-2.9.21.20250718.tar.gz", hash = "sha256:dc09a97272ef67e739e57b9f4740b761208f4514257e311c0b05c8c7a37d04b4"},
@@ -7249,4 +7249,4 @@ typings = ["django-stubs", "types-psutil", "types-python-dateutil", "types-pyyam
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13,<3.14"
-content-hash = "6486e30eadbf82b03a671eb0f41b93f3c8415fae6f2adf8827d160f6f3c34e80"
+content-hash = "f885f2b421d1e6699a8fd563c851f3c5bcbd349670bc3b275b7eb6409977115d"
