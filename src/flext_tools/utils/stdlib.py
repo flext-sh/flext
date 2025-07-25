@@ -180,7 +180,7 @@ def get_stdlib_modules() -> set[str]:
 
         return builtin_modules | stdlib_extras
 
-    except Exception:
+    except (AttributeError, ImportError):
         # Fallback para lista mínima se algo falhar
         return {
             "os",

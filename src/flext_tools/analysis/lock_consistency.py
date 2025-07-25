@@ -13,6 +13,7 @@ if TYPE_CHECKING:
 
 MIN_VALID_PROJECTS = 2
 MAX_INCONSISTENCIES_DISPLAY = 10
+CRITICAL_VERSION_CONFLICT_THRESHOLD = 2
 
 
 @dataclass
@@ -157,7 +158,7 @@ class LockConsistencyAnalyzer:
                 f"    ✅ {project_name}: {len(packages)} packages",
                 Colors.GREEN,
             )
-        except Exception as e:
+        except (OSError, tomllib.TOMLDecodeError, KeyError) as e:
             print_colored(
                 f"    ❌ {project_name}: Erro ao ler poetry.lock - {e}",
                 Colors.RED,
@@ -220,7 +221,11 @@ class LockConsistencyAnalyzer:
                     package=package,
                     type="version",
                     details=versions,
-                    severity="critical" if len(unique_versions) > 2 else "warning",
+                    severity=(
+                        "critical"
+                        if len(unique_versions) > CRITICAL_VERSION_CONFLICT_THRESHOLD
+                        else "warning"
+                    ),
                 ),
             )
 
@@ -252,7 +257,7 @@ class LockConsistencyAnalyzer:
             print_colored(f"\n📊 Inconsistências encontradas: {total}", Colors.YELLOW)
             print_colored(f"  🔴 Críticas: {len(categories['critical'])}", Colors.RED)
             print_colored(f"  🟡 Avisos: {len(categories['warning'])}", Colors.YELLOW)
-            print_colored(f"  ℹ️ Info: {len(categories['info'])}", Colors.CYAN)
+            print_colored(f"  [INFO] Info: {len(categories['info'])}", Colors.CYAN)
         else:
             print_colored("\n✅ Nenhuma inconsistência detectada", Colors.GREEN)
 
@@ -261,7 +266,9 @@ class LockConsistencyAnalyzer:
     def get_workspace_summary(self) -> dict[str, Any]:
         """Retorna resumo do workspace."""
         total_projects = len(self.project_locks)
-        projects_with_lock = sum(1 for info in self.project_locks.values() if info.exists)
+        projects_with_lock = sum(
+            1 for info in self.project_locks.values() if info.exists
+        )
         total_packages = sum(len(info.packages) for info in self.project_locks.values())
 
         return {
@@ -289,12 +296,16 @@ class LockConsistencyAnalyzer:
             if not inconsistencies:
                 continue
 
-            color = Colors.RED if severity == "critical" else (Colors.YELLOW if severity == "warning" else Colors.CYAN)
+            color = (
+                Colors.RED if severity == "critical"
+                else Colors.YELLOW if severity == "warning"
+                else Colors.CYAN
+            )
 
             severity_label = {
                 "critical": "🔴 CRÍTICAS",
                 "warning": "🟡 AVISOS",
-                "info": "ℹ️ INFORMAÇÕES",
+                "info": "[INFO] INFORMAÇÕES",
             }.get(severity, severity.upper())
 
             print_colored(f"\n{severity_label} ({len(inconsistencies)}):", color)

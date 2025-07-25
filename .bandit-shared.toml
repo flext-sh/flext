@@ -1,0 +1,17 @@
+exclude_dirs = [
+    "__pycache__",
+    ".archive",
+    ".git",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".ruff_cache",
+    ".venv",
+    "archive",
+    "build",
+    "dist",
+    "htmlcov",
+    "reports",
+    "tests",
+    "venv",
+]
+skips = ["B101", "B601"]

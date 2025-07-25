@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+from flext_api.utils.logging import logger
 
 from .base import BaseQualityAnalyzer
 
@@ -57,9 +58,7 @@ class MyPyAnalyzer(BaseQualityAnalyzer):
                 break
 
             if len(files) <= 5:  # Only analyze very small projects
-                files_to_analyze = files[
-                    : min(5, max_files_to_analyze - analyzed_files)
-                ]
+                files_to_analyze = files[: min(5, max_files_to_analyze - analyzed_files)]
                 self._analyze_project_mypy(project_path, files_to_analyze, results)
                 analyzed_files += len(files_to_analyze)
 
@@ -78,9 +77,7 @@ class MyPyAnalyzer(BaseQualityAnalyzer):
             most_common_error = max(error_types.items(), key=operator.itemgetter(1))
             summary = results["summary"]
             if isinstance(summary, dict):
-                summary["most_common_error"] = (
-                    f"{most_common_error[0]} ({most_common_error[1]} times)"
-                )
+                summary["most_common_error"] = f"{most_common_error[0]} ({most_common_error[1]} times)"
 
         # Estimate typing coverage
         summary = results["summary"]
@@ -108,10 +105,12 @@ class MyPyAnalyzer(BaseQualityAnalyzer):
         return str(file_path.parent)
 
     def _analyze_project_mypy(
-        self, project_path: str, project_files: list[Path], results: dict[str, Any],
+        self,
+        project_path: str,
+        project_files: list[Path],
+        results: dict[str, Any],
     ) -> None:
         """Analyze a single project with MyPy."""
-        import os
         import tempfile
 
         # Create temporary config file for mypy
@@ -140,10 +139,13 @@ ignore_missing_imports = true
                 self._analyze_individual_file_mypy(file_path, config_file, results)
         finally:
             # Clean up config file
-            os.unlink(config_file)
+            Path(config_file).unlink()
 
     def _analyze_individual_file_mypy(
-        self, file_path: Path, config_file: str, results: dict[str, Any],
+        self,
+        file_path: Path,
+        config_file: str,
+        results: dict[str, Any],
     ) -> None:
         """Analyze individual file with MyPy."""
         try:
@@ -173,10 +175,9 @@ ignore_missing_imports = true
                 self._parse_mypy_output(result.stdout, results)
 
         except subprocess.TimeoutExpired:
-            # Skip files that timeout
-            pass
-        except Exception:
-            pass
+            logger.warning(f"MyPy analysis timed out for file {file_path}")
+        except Exception as e:
+            logger.error(f"MyPy analysis failed for file {file_path}: {e}")
 
     def _parse_mypy_output(self, output: str, results: dict[str, Any]) -> None:
         """Parse MyPy output and extract errors."""
@@ -254,10 +255,7 @@ ignore_missing_imports = true
         code_lower = code.lower()
 
         for category, keywords in category_map.items():
-            if any(
-                keyword in code_lower or keyword in message_lower
-                for keyword in keywords
-            ):
+            if any(keyword in code_lower or keyword in message_lower for keyword in keywords):
                 return category
 
         return "other"
@@ -314,7 +312,9 @@ ignore_missing_imports = true
         # Category-specific recommendations
         if results["error_categories"]:
             top_categories = sorted(
-                results["error_categories"].items(), key=operator.itemgetter(1), reverse=True,
+                results["error_categories"].items(),
+                key=operator.itemgetter(1),
+                reverse=True,
             )[:2]
             for category, count in top_categories:
                 if count > 5:
@@ -392,7 +392,9 @@ ignore_missing_imports = true
         if report_data.get("error_types"):
             report += "\n## Top Error Types\n\n"
             top_errors = sorted(
-                report_data["error_types"].items(), key=operator.itemgetter(1), reverse=True,
+                report_data["error_types"].items(),
+                key=operator.itemgetter(1),
+                reverse=True,
             )[:10]
             for error_type, count in top_errors:
                 report += f"- **{error_type}:** {count} occurrences\n"
@@ -401,7 +403,9 @@ ignore_missing_imports = true
         if report_data.get("files_with_errors"):
             report += "\n## Most Problematic Files\n\n"
             problematic_files = sorted(
-                report_data["files_with_errors"], key=operator.itemgetter("count"), reverse=True,
+                report_data["files_with_errors"],
+                key=operator.itemgetter("count"),
+                reverse=True,
             )[:5]
             for file_info in problematic_files:
                 report += f"- **{file_info['file']}:** {file_info['count']} errors\n"
@@ -424,9 +428,7 @@ class TestMyPyCompliance:
 
     def test_mypy_files_found(self, analysis_results: Any) -> None:
         """Test that Python files are found for analysis."""
-        assert analysis_results["total_files"] > 0, (
-            "No Python files found for MyPy analysis"
-        )
+        assert analysis_results["total_files"] > 0, "No Python files found for MyPy analysis"
 
     def test_mypy_clean_rate(self, analysis_results: Any) -> None:
         """Test that MyPy clean rate is acceptable."""
@@ -436,9 +438,7 @@ class TestMyPyCompliance:
     def test_mypy_typing_coverage(self, analysis_results: Any) -> None:
         """Test that typing coverage is reasonable."""
         typing_coverage = analysis_results["summary"]["typing_coverage"]
-        assert typing_coverage >= 10, (
-            f"Typing coverage {typing_coverage:.1f}% is below 10%"
-        )
+        assert typing_coverage >= 10, f"Typing coverage {typing_coverage:.1f}% is below 10%"
 
     def test_mypy_error_distribution(self, analysis_results: Any) -> None:
         """Test that type errors are not concentrated in a few files."""
@@ -446,15 +446,11 @@ class TestMyPyCompliance:
 
         if files_with_errors:
             total_errors = analysis_results["summary"]["total_errors"]
-            max_errors_in_file = max(
-                file_info["count"] for file_info in files_with_errors
-            )
+            max_errors_in_file = max(file_info["count"] for file_info in files_with_errors)
 
             if total_errors > 0:
                 concentration = (max_errors_in_file / total_errors) * 100
-                assert concentration < 60, (
-                    f"Too many type errors concentrated in one file ({concentration:.1f}%)"
-                )
+                assert concentration < 60, f"Too many type errors concentrated in one file ({concentration:.1f}%)"
 
     def test_generate_mypy_reports(self, analyzer: Any, analysis_results: Any) -> None:
         """Test MyPy report generation."""

@@ -3,11 +3,12 @@
 
 import re
 import subprocess
+from typing import Any
 
 print("🔍 Starting manual configuration consolidation...")
 
 
-def find_manual_env_vars():
+def find_manual_env_vars() -> list[str]:
     """Find files with manual os.getenv() usage."""
     cmd = [
         "find", ".", "-name", "*.py", "-type", "f",
@@ -49,7 +50,7 @@ def add_config_todos_to_file(file_path: str) -> bool:
         # Add inline TODOs for specific patterns
         env_pattern = r'(\s+)([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*os\.getenv\(["\']([^"\']+)["\'](?:,\s*["\']?([^"\']*)["\']?)?\)'
 
-        def replace_env_var(match):
+        def replace_env_var(match: Any) -> str:
             indent = match.group(1)
             var_name = match.group(2)
             env_name = match.group(3)
@@ -78,7 +79,7 @@ def add_config_todos_to_file(file_path: str) -> bool:
         return False
 
 
-def main():
+def main() -> None:
     """Main consolidation function."""
     # Find files with manual env vars
     print("🔍 Finding files with manual environment variables...")

@@ -33,7 +33,11 @@ class PyprojectStandardizer(FlextScript):
 
         # Check if we're in FLEXT workspace
         flext_projects = [
-            p for p in workspace_root.iterdir() if p.is_dir() and p.name.startswith("flext-") and (p / "pyproject.toml").exists()
+            p
+            for p in workspace_root.iterdir()
+            if p.is_dir()
+            and p.name.startswith("flext-")
+            and (p / "pyproject.toml").exists()
         ]
 
         if not flext_projects:
@@ -43,7 +47,7 @@ class PyprojectStandardizer(FlextScript):
         print_colored(f"✅ Found {len(flext_projects)} FLEXT projects", Colors.GREEN)
         return True
 
-    def execute_main_logic(self, **kwargs: Any) -> bool:
+    def execute_main_logic(self, **kwargs: object) -> bool:
         """Execute pyproject.toml standardization."""
         try:
             workspace_root = Path.cwd()

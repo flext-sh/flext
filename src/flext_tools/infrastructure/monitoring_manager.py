@@ -13,7 +13,7 @@ class MonitoringManager:
         """Initialize the monitoring manager."""
         self.config_path = config_path or Path.cwd() / "monitoring"
 
-    def setup_monitoring(self, **kwargs: Any) -> dict[str, Any]:
+    def setup_monitoring(self, **_kwargs: object) -> dict[str, Any]:
         """Setup monitoring configuration."""
         print_colored("📊 Configurando monitoramento...", Colors.BLUE)
 

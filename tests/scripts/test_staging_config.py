@@ -104,7 +104,7 @@ def test_staging_configuration():
         return False
 
 
-def test_environment_variables():
+def test_environment_variables() -> bool:
     """Test that environment variables are properly loaded."""
     print("\n🔍 TESTING ENVIRONMENT VARIABLE LOADING...")
 

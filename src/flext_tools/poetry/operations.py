@@ -30,14 +30,13 @@ class PoetryOperations:
         """Initialize Poetry operations with safety system."""
         self.dry_run = dry_run
         self.enable_safety = enable_safety
-        self.logger = logger or get_logger()
+        self.logger = logger or get_logger(__name__)
 
         if self.enable_safety:
             self.backup_manager = BackupManager()
             self.safety_validator = SafetyValidator()
             self.logger.info(
-                "INIT: Sistema de segurança ativado (dry_run=%s)",
-                str(dry_run),
+                f"INIT: Sistema de segurança ativado (dry_run={dry_run})",
             )
             print_colored("🛡️ Sistema de segurança ativado", Colors.CYAN)
 
@@ -45,7 +44,7 @@ class PoetryOperations:
         self,
         project_path: Path,
         dependencies: dict[str, list[str]],
-        auto_confirm: bool = False,
+        _auto_confirm: bool = False,
     ) -> dict[str, list[str]]:
         """Adiciona dependências a um projeto Poetry."""
         print_colored(
@@ -77,7 +76,7 @@ class PoetryOperations:
                 try:
                     if self._add_dependency(project_path, dep, group):
                         added[category].append(dep)
-                except Exception as e:
+                except (subprocess.SubprocessError, OSError, FileNotFoundError) as e:
                     print_colored(
                         f"    ❌ Erro ao adicionar {dep}: {e}",
                         Colors.RED,
@@ -114,7 +113,7 @@ class PoetryOperations:
             cmd.append("--dry-run")
 
         try:
-            print_colored(f"    ➕ Adicionando {dependency}...", Colors.GREEN)
+            print_colored(f"    [+] Adicionando {dependency}...", Colors.GREEN)
 
             result = subprocess.run(
                 cmd,
@@ -138,14 +137,13 @@ class PoetryOperations:
                         Colors.YELLOW,
                     )
                 return True
-
             print_colored(
                 f"    ❌ Erro ao adicionar {dependency}: {result.stderr}",
                 Colors.RED,
             )
             return False
 
-        except Exception as e:
+        except (subprocess.SubprocessError, OSError, FileNotFoundError) as e:
             print_colored(f"    ❌ Erro ao executar poetry: {e}", Colors.RED)
             return False
 
@@ -153,7 +151,7 @@ class PoetryOperations:
         self,
         project_path: Path,
         dependencies: list[str],
-        auto_confirm: bool = False,
+        _auto_confirm: bool = False,
     ) -> list[str]:
         """Remove dependências de um projeto Poetry."""
         print_colored(
@@ -171,7 +169,10 @@ class PoetryOperations:
             )
             print_colored(f"💾 Backup criado: {backup_id}", Colors.CYAN)
 
-        removed = [dep for dep in dependencies if self._remove_dependency(project_path, dep)]
+        removed = [
+            dep for dep in dependencies
+            if self._remove_dependency(project_path, dep)
+        ]
 
         # Resumo das remoções
         if removed:
@@ -195,7 +196,7 @@ class PoetryOperations:
             cmd.append("--dry-run")
 
         try:
-            print_colored(f"    ➖ Removendo {dependency}...", Colors.YELLOW)
+            print_colored(f"    [-] Removendo {dependency}...", Colors.YELLOW)
 
             result = subprocess.run(
                 cmd,
@@ -226,7 +227,7 @@ class PoetryOperations:
             )
             return False
 
-        except Exception as e:
+        except (subprocess.SubprocessError, OSError, FileNotFoundError) as e:
             print_colored(f"    ❌ Erro ao executar poetry: {e}", Colors.RED)
             return False
 
@@ -277,7 +278,7 @@ class PoetryOperations:
             )
             return False
 
-        except Exception as e:
+        except (subprocess.SubprocessError, OSError, FileNotFoundError) as e:
             print_colored(f"❌ Erro ao executar poetry update: {e}", Colors.RED)
             return False
 
@@ -311,7 +312,7 @@ class PoetryOperations:
             )
             return False
 
-        except Exception as e:
+        except (subprocess.SubprocessError, OSError, FileNotFoundError) as e:
             print_colored(f"❌ Erro ao executar poetry lock: {e}", Colors.RED)
             return False
 
@@ -345,6 +346,6 @@ class PoetryOperations:
             )
             return False
 
-        except Exception as e:
+        except (subprocess.SubprocessError, OSError, FileNotFoundError) as e:
             print_colored(f"❌ Erro ao validar projeto: {e}", Colors.RED)
             return False

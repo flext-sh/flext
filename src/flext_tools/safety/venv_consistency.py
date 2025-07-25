@@ -136,7 +136,7 @@ class VenvConsistencyValidator:
 
         except subprocess.CalledProcessError as e:
             print_colored(f"    ⚠️ Erro ao escanear packages: {e}", Colors.YELLOW)
-        except Exception as e:
+        except (json.JSONDecodeError, OSError, ValueError) as e:
             print_colored(f"    ⚠️ Erro inesperado: {e}", Colors.YELLOW)
 
     def _collect_project_requirements(self) -> None:
@@ -172,7 +172,7 @@ class VenvConsistencyValidator:
                     name, version = self._parse_dependency_spec(str(dep_spec))
                     self.project_requirements[project_name][f"{name}[dev]"] = version
 
-            except Exception as e:
+            except (OSError, tomllib.TOMLDecodeError, KeyError, UnicodeDecodeError) as e:
                 print_colored(
                     f"    ⚠️ Erro ao ler {project_name}: {e}",
                     Colors.YELLOW,
@@ -319,7 +319,7 @@ class VenvConsistencyValidator:
             elif severity == "warning":
                 icon, color = "🟡", Colors.YELLOW
             else:
-                icon, color = "ℹ️", Colors.CYAN
+                icon, color = "[INFO]", Colors.CYAN
 
             print_colored(
                 f"\n{icon} {severity.upper()}: {len(conflicts)} conflitos",

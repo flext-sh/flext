@@ -19,7 +19,7 @@ def find_domain_model_files() -> dict[str, list[str]]:
         Dict of model types to file lists.
 
     """
-    patterns = {
+    patterns: dict[str, list[str]] = {
         "entities": [],
         "value_objects": [],
         "aggregates": [],

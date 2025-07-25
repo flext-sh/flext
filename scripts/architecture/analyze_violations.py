@@ -62,7 +62,7 @@ class Violation:
 class ArchitectureAnalyzer:
     """Analisador principal de violações arquiteturais."""
 
-    def __init__(self, workspace_root: Path):
+    def __init__(self, workspace_root: Path) -> None:
         self.workspace_root = workspace_root
         self.projects = self._discover_projects()
         self.violations: list[Violation] = []
@@ -147,7 +147,7 @@ class ArchitectureAnalyzer:
                 continue
 
             try:
-                with open(py_file, encoding="utf-8") as f:
+                with py_file.open(encoding="utf-8") as f:
                     content = f.read()
 
                 tree = ast.parse(content)
@@ -162,7 +162,7 @@ class ArchitectureAnalyzer:
                     if violation:
                         self.violations.append(violation)
 
-            except Exception as e:
+            except (OSError, SyntaxError, UnicodeDecodeError) as e:
                 print_colored(f"⚠️  Erro ao analisar {py_file}: {e}", Colors.YELLOW)
 
     def _extract_imports(self, tree: ast.AST) -> set[str]:
@@ -197,9 +197,14 @@ class ArchitectureAnalyzer:
             return Violation(
                 file_path=file_path,
                 violation_type="LAYER_VIOLATION",
-                description=f"Projeto {project.name} (camada {project.layer.value}) importa {imported_project.name} (camada {imported_project.layer.value})",
+                description=(
+                    f"Projeto {project.name} (camada {project.layer.value}) "
+                    f"importa {imported_project.name} (camada {imported_project.layer.value})"
+                ),
                 severity="HIGH",
-                suggested_action=f"Mover {file_path.name} para .bak e reimplementar usando DI",
+                suggested_action=(
+                    f"Mover {file_path.name} para .bak e reimplementar usando DI"
+                ),
             )
 
         return None
@@ -266,7 +271,7 @@ class ArchitectureAnalyzer:
     ) -> Violation | None:
         """Verifica se um módulo está na camada correta."""
         try:
-            with open(file_path, encoding="utf-8") as f:
+            with file_path.open(encoding="utf-8") as f:
                 content = f.read()
 
             # Verificar padrões que indicam camada incorreta
@@ -336,7 +341,7 @@ class ArchitectureAnalyzer:
         script_path = self.workspace_root / "scripts" / "architecture" / "fix_violations.sh"
         script_path.parent.mkdir(parents=True, exist_ok=True)
 
-        with open(script_path, "w", encoding="utf-8") as f:
+        with script_path.open("w", encoding="utf-8") as f:
             f.write("#!/bin/bash\n")
             f.write(
                 "# Script gerado automaticamente para correção de violações arquiteturais\n\n",

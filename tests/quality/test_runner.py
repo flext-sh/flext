@@ -1,9 +1,10 @@
 """Test runner for all quality tests - generates consolidated report."""
 
 import json
+import tempfile
 from datetime import datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 import pytest
 
@@ -15,7 +16,7 @@ from .test_pep8 import PEP8Analyzer
 from .test_solid import SOLIDAnalyzer
 
 # Report will be saved to a non-tracked location
-REPORT_DIR = Path("/tmp/flext_quality_reports")
+REPORT_DIR = Path(tempfile.gettempdir()) / "flext_quality_reports"
 REPORT_DIR.mkdir(exist_ok=True)
 
 
@@ -73,9 +74,7 @@ class QualityTestRunner:
             )
 
             # Generate consolidated recommendations
-            consolidated_results["consolidated_recommendations"] = (
-                self._generate_consolidated_recommendations(test_results)
-            )
+            consolidated_results["consolidated_recommendations"] = self._generate_consolidated_recommendations(test_results)
 
             # Calculate overall quality score
             consolidated_results["quality_score"] = self._calculate_quality_score(
@@ -134,107 +133,125 @@ class QualityTestRunner:
                 compliance_rates = summary["compliance_rates"]
                 if isinstance(compliance_rates, dict):
                     compliance_rates["dry"] = 100 - results.get("summary", {}).get(
-                        "similarity_score", 0,
+                        "similarity_score",
+                        0,
                     )
 
                 total_issues = summary["total_issues"]
                 if isinstance(total_issues, int):
                     summary["total_issues"] = total_issues + results.get(
-                        "summary", {},
+                        "summary",
+                        {},
                     ).get("total_duplicates", 0)
 
                 quality_metrics = summary["quality_metrics"]
                 if isinstance(quality_metrics, dict):
                     quality_metrics["dry_duplicates"] = results.get("summary", {}).get(
-                        "total_duplicates", 0,
+                        "total_duplicates",
+                        0,
                     )
 
             elif test_name == "lint":
                 compliance_rates = summary["compliance_rates"]
                 if isinstance(compliance_rates, dict):
                     compliance_rates["lint"] = results.get("summary", {}).get(
-                        "clean_rate", 0,
+                        "clean_rate",
+                        0,
                     )
 
                 total_issues = summary["total_issues"]
                 if isinstance(total_issues, int):
                     summary["total_issues"] = total_issues + results.get(
-                        "summary", {},
+                        "summary",
+                        {},
                     ).get("total_issues", 0)
 
                 quality_metrics = summary["quality_metrics"]
                 if isinstance(quality_metrics, dict):
                     quality_metrics["lint_issues"] = results.get("summary", {}).get(
-                        "total_issues", 0,
+                        "total_issues",
+                        0,
                     )
 
             elif test_name == "mypy":
                 compliance_rates = summary["compliance_rates"]
                 if isinstance(compliance_rates, dict):
                     compliance_rates["mypy"] = results.get("summary", {}).get(
-                        "clean_rate", 0,
+                        "clean_rate",
+                        0,
                     )
 
                 total_issues = summary["total_issues"]
                 if isinstance(total_issues, int):
                     summary["total_issues"] = total_issues + results.get(
-                        "summary", {},
+                        "summary",
+                        {},
                     ).get("total_errors", 0)
 
                 quality_metrics = summary["quality_metrics"]
                 if isinstance(quality_metrics, dict):
                     quality_metrics["mypy_errors"] = results.get("summary", {}).get(
-                        "total_errors", 0,
+                        "total_errors",
+                        0,
                     )
                     quality_metrics["typing_coverage"] = results.get("summary", {}).get(
-                        "typing_coverage", 0,
+                        "typing_coverage",
+                        0,
                     )
 
             elif test_name == "solid":
                 compliance_rates = summary["compliance_rates"]
                 if isinstance(compliance_rates, dict):
                     compliance_rates["solid"] = results.get("summary", {}).get(
-                        "average_score", 0,
+                        "average_score",
+                        0,
                     )
 
                 total_issues = summary["total_issues"]
                 if isinstance(total_issues, int):
                     summary["total_issues"] = total_issues + results.get(
-                        "summary", {},
+                        "summary",
+                        {},
                     ).get("total_violations", 0)
 
                 quality_metrics = summary["quality_metrics"]
                 if isinstance(quality_metrics, dict):
                     quality_metrics["solid_violations"] = results.get(
-                        "summary", {},
+                        "summary",
+                        {},
                     ).get("total_violations", 0)
 
             elif test_name == "kiss":
                 compliance_rates = summary["compliance_rates"]
                 if isinstance(compliance_rates, dict):
                     compliance_rates["kiss"] = results.get("summary", {}).get(
-                        "simplicity_score", 0,
+                        "simplicity_score",
+                        0,
                     )
 
                 total_issues = summary["total_issues"]
                 if isinstance(total_issues, int):
                     summary["total_issues"] = total_issues + results.get(
-                        "summary", {},
+                        "summary",
+                        {},
                     ).get("total_issues", 0)
 
                 quality_metrics = summary["quality_metrics"]
                 if isinstance(quality_metrics, dict):
                     quality_metrics["kiss_issues"] = results.get("summary", {}).get(
-                        "total_issues", 0,
+                        "total_issues",
+                        0,
                     )
                     quality_metrics["average_complexity"] = results.get(
-                        "summary", {},
+                        "summary",
+                        {},
                     ).get("average_complexity", 0)
 
         return summary
 
     def _generate_consolidated_recommendations(
-        self, test_results: dict[str, Any],
+        self,
+        test_results: dict[str, Any],
     ) -> list[str]:
         """Generate consolidated recommendations from all tests."""
         recommendations = []
@@ -270,11 +287,13 @@ class QualityTestRunner:
         total_issues = overall_summary["total_issues"]
         if total_issues > 100:
             final_recommendations.insert(
-                0, f"🚨 Critical: {total_issues} total issues found across all tests",
+                0,
+                f"🚨 Critical: {total_issues} total issues found across all tests",
             )
         elif total_issues > 50:
             final_recommendations.insert(
-                0, f"⚠️ Warning: {total_issues} issues found - prioritize fixes",
+                0,
+                f"⚠️ Warning: {total_issues} issues found - prioritize fixes",
             )
 
         # Compliance-based recommendations
@@ -341,17 +360,19 @@ class QualityTestRunner:
         return 0
 
     def save_consolidated_report(
-        self, consolidated_results: dict[str, Any], format: str = "json",
+        self,
+        consolidated_results: dict[str, Any],
+        report_format: Literal["json", "markdown"] = "json",
     ) -> Path:
         """Save consolidated report."""
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
-        if format == "json":
+        if report_format == "json":
             report_file = REPORT_DIR / f"flext_quality_consolidated_{timestamp}.json"
             with open(report_file, "w", encoding="utf-8") as f:
                 json.dump(consolidated_results, f, indent=2, default=str)
 
-        elif format == "markdown":
+        elif report_format == "markdown":
             report_file = REPORT_DIR / f"flext_quality_consolidated_{timestamp}.md"
             with open(report_file, "w", encoding="utf-8") as f:
                 f.write(self._generate_consolidated_markdown(consolidated_results))
@@ -406,7 +427,8 @@ class QualityTestRunner:
         report += "\n## Priority Recommendations\n\n"
 
         for i, recommendation in enumerate(
-            results.get("consolidated_recommendations", [])[:10], 1,
+            results.get("consolidated_recommendations", [])[:10],
+            1,
         ):
             report += f"{i}. {recommendation}\n"
 
@@ -446,7 +468,8 @@ class QualityTestRunner:
                     clean_rate = test_data.get("summary", {}).get("clean_rate", 0)
                     total_errors = test_data.get("summary", {}).get("total_errors", 0)
                     typing_coverage = test_data.get("summary", {}).get(
-                        "typing_coverage", 0,
+                        "typing_coverage",
+                        0,
                     )
                     report += f"- **Clean Rate:** {clean_rate:.1f}%\n"
                     report += f"- **Type Errors:** {total_errors}\n"
@@ -460,11 +483,13 @@ class QualityTestRunner:
 
                 elif test_name == "kiss":
                     simplicity_score = test_data.get("summary", {}).get(
-                        "simplicity_score", 0,
+                        "simplicity_score",
+                        0,
                     )
                     total_issues = test_data.get("summary", {}).get("total_issues", 0)
                     avg_complexity = test_data.get("summary", {}).get(
-                        "average_complexity", 0,
+                        "average_complexity",
+                        0,
                     )
                     report += f"- **Simplicity Score:** {simplicity_score:.1f}/100\n"
                     report += f"- **Issues:** {total_issues}\n"
@@ -479,16 +504,16 @@ class TestQualityRunner:
     """Test suite for quality test runner."""
 
     @pytest.fixture(scope="class")
-    def runner(self):
+    def runner(self) -> QualityTestRunner:
         """Create quality test runner instance."""
         return QualityTestRunner()
 
     @pytest.fixture(scope="class")
-    def consolidated_results(self, runner):
+    def consolidated_results(self, runner: QualityTestRunner) -> dict[str, Any]:
         """Run all quality tests once."""
         return runner.run_all_tests()
 
-    def test_quality_tests_execution(self, consolidated_results) -> None:
+    def test_quality_tests_execution(self, consolidated_results: dict[str, Any]) -> None:
         """Test that quality tests executed successfully."""
         assert "test_results" in consolidated_results
         assert "overall_summary" in consolidated_results
@@ -498,17 +523,15 @@ class TestQualityRunner:
         completed_tests = consolidated_results["overall_summary"]["tests_completed"]
         assert completed_tests > 0, "No quality tests completed successfully"
 
-    def test_quality_score_reasonable(self, consolidated_results) -> None:
+    def test_quality_score_reasonable(self, consolidated_results: dict[str, Any]) -> None:
         """Test that overall quality score is reasonable."""
         quality_score = consolidated_results["quality_score"]
-        assert 0 <= quality_score <= 100, (
-            f"Quality score {quality_score} is out of range"
-        )
+        assert 0 <= quality_score <= 100, f"Quality score {quality_score} is out of range"
 
         # Should have some baseline quality
         assert quality_score >= 20, f"Quality score {quality_score} is critically low"
 
-    def test_generate_consolidated_reports(self, runner, consolidated_results) -> None:
+    def test_generate_consolidated_reports(self, runner: QualityTestRunner, consolidated_results: dict[str, Any]) -> None:
         """Test consolidated report generation."""
         # Generate reports
         json_report = runner.save_consolidated_report(consolidated_results, "json")
@@ -550,15 +573,7 @@ if __name__ == "__main__":
     quality_score = results["quality_score"]
 
     grade = (
-        "A"
-        if quality_score >= 90
-        else "B"
-        if quality_score >= 80
-        else "C"
-        if quality_score >= 70
-        else "D"
-        if quality_score >= 60
-        else "F"
+        "A" if quality_score >= 90 else "B" if quality_score >= 80 else "C" if quality_score >= 70 else "D" if quality_score >= 60 else "F"
     )
 
     for rate in overall_summary.get("compliance_rates", {}).values():

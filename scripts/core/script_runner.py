@@ -38,7 +38,7 @@ class ScriptRunner(FlextScript):
         print_colored("✅ Scripts directory found", Colors.GREEN)
         return True
 
-    def execute_main_logic(self, **kwargs: Any) -> bool:
+    def execute_main_logic(self, **kwargs: object) -> bool:
         """Execute script runner logic."""
         try:
             list_scripts = kwargs.get("list", False)
@@ -49,7 +49,7 @@ class ScriptRunner(FlextScript):
 
             # Import script registry (lazy import)
             try:
-                from core.script_registry import ScriptRegistry
+                from scripts.core.script_registry import ScriptRegistry
 
                 registry = ScriptRegistry()
 
@@ -87,7 +87,11 @@ class ScriptRunner(FlextScript):
         # Group by category
         by_category: dict[str, list[Any]] = {}
         for script in scripts:
-            category = script.category.value if hasattr(script.category, "value") else str(script.category)
+            category = (
+                script.category.value
+                if hasattr(script.category, "value")
+                else str(script.category)
+            )
             if category not in by_category:
                 by_category[category] = []
             by_category[category].append(script)
@@ -96,7 +100,11 @@ class ScriptRunner(FlextScript):
         for category, category_scripts in sorted(by_category.items()):
             print_colored(f"\n📁 {category.title()}:", Colors.CYAN)
             for script in sorted(category_scripts, key=lambda s: s.name):
-                priority = script.priority.value if hasattr(script.priority, "value") else str(script.priority)
+                priority = (
+                    script.priority.value
+                    if hasattr(script.priority, "value")
+                    else str(script.priority)
+                )
                 print(f"  • {script.name} ({priority}) - {script.description}")
 
         print_colored(f"\n📊 Total: {len(scripts)} scripts", Colors.GREEN)

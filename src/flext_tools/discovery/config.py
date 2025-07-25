@@ -7,19 +7,19 @@ para descobrir dependências implícitas e explícitas.
 
 from __future__ import annotations
 
+import logging
 import re
 import tomllib
 from typing import TYPE_CHECKING
 
 import yaml
-from flext_core import FlextLoggerFactory
 
 from flext_tools.utils import should_ignore_path
 
 if TYPE_CHECKING:
     from pathlib import Path
 
-logger = FlextLoggerFactory.get_logger(__name__)
+logger = logging.getLogger(__name__)
 
 
 class ConfigFileDiscovery:
@@ -61,7 +61,9 @@ class ConfigFileDiscovery:
             with pyproject_path.open("rb") as f:
                 data = tomllib.load(f)
 
-            pytest_config = data.get("tool", {}).get("pytest", {}).get("ini_options", {})
+            pytest_config = (
+                data.get("tool", {}).get("pytest", {}).get("ini_options", {})
+            )
 
             # Procura por plugins do pytest
             if "plugins" in pytest_config:
@@ -171,7 +173,11 @@ class ConfigFileDiscovery:
 
             for match in matches:
                 pkg = match.strip()
-                if pkg and not pkg.startswith("-") and not self._is_installed(pkg, installed):
+                if (
+                    pkg
+                    and not pkg.startswith("-")
+                    and not self._is_installed(pkg, installed)
+                ):
                     deps["runtime"].add(pkg)
 
         except Exception:

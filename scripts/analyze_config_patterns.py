@@ -1,22 +1,60 @@
 #!/usr/bin/env python3
 """Analyze configuration patterns that need FLEXT consolidation."""
 
-import os
 import re
+from pathlib import Path
+
+
+def _find_config_files() -> list[Path]:
+    """Find config.py files in the workspace."""
+    config_files: list[Path] = []
+    workspace = Path()
+
+    for config_file in workspace.rglob("config.py"):
+        if ("/src/" in str(config_file) and
+            ".venv" not in str(config_file)):
+            config_files.append(config_file)
+
+    return config_files
+
+
+def _analyze_single_config(config_file: Path, patterns: dict[str, list[str]]) -> None:
+    """Analyze a single config file for patterns."""
+    try:
+        with config_file.open(encoding="utf-8") as f:
+            content = f.read()
+
+        # Check for manual Pydantic patterns
+        if "BaseSettings" in content or "Settings(" in content:
+            patterns["manual_pydantic"].append(str(config_file))
+
+        # Check for manual env vars
+        if "os.getenv(" in content or "os.environ" in content:
+            patterns["manual_env_vars"].append(str(config_file))
+
+        # Check for manual validation
+        if "if not" in content and ("config" in content or "settings" in content):
+            patterns["manual_validation"].append(str(config_file))
+
+        # Check for custom config classes
+        class_matches = re.findall(
+            r"class\s+([A-Z][a-zA-Z0-9_]*(?:Config|Settings))",
+            content,
+        )
+        if class_matches:
+            patterns["custom_classes"].extend(
+                [f"{config_file}:{cls}" for cls in class_matches],
+            )
+
+    except (OSError, UnicodeDecodeError) as e:
+        print(f"❌ Error analyzing {config_file}: {e}")
 
 
 def analyze_config_files() -> None:
     """Analyze configuration patterns in FLEXT ecosystem."""
     print("🔍 Analyzing configuration patterns for FLEXT consolidation...")
 
-    # Find actual config.py files
-    config_files: list[str] = []
-    for root, dirs, files in os.walk("."):
-        # Skip .venv directories
-        dirs[:] = [d for d in dirs if not d.startswith(".venv")]
-
-        config_files.extend(os.path.join(root, file) for file in files if file == "config.py" and "/src/" in root)
-
+    config_files = _find_config_files()
     print(f"📄 Found {len(config_files)} config.py files")
 
     # Analyze each config file
@@ -28,29 +66,7 @@ def analyze_config_files() -> None:
     }
 
     for config_file in config_files:
-        try:
-            with open(config_file, encoding="utf-8") as f:
-                content = f.read()
-
-            # Check for manual Pydantic patterns
-            if "BaseSettings" in content or "Settings(" in content:
-                manual_patterns["manual_pydantic"].append(config_file)
-
-            # Check for manual env vars
-            if "os.getenv(" in content or "os.environ" in content:
-                manual_patterns["manual_env_vars"].append(config_file)
-
-            # Check for manual validation
-            if "if not" in content and ("config" in content or "settings" in content):
-                manual_patterns["manual_validation"].append(config_file)
-
-            # Check for custom config classes
-            class_matches = re.findall(r"class\s+([A-Z][a-zA-Z0-9_]*(?:Config|Settings))", content)
-            if class_matches:
-                manual_patterns["custom_classes"].extend([f"{config_file}:{cls}" for cls in class_matches])
-
-        except Exception as e:
-            print(f"❌ Error analyzing {config_file}: {e}")
+        _analyze_single_config(config_file, manual_patterns)
 
     # Report findings
     print("\n📊 Configuration Analysis Results:")
@@ -59,50 +75,66 @@ def analyze_config_files() -> None:
     print(f"  Manual validation: {len(manual_patterns['manual_validation'])} files")
     print(f"  Custom config classes: {len(manual_patterns['custom_classes'])} classes")
 
+    _report_detailed_analysis(manual_patterns)
+
+
+def _report_detailed_analysis(manual_patterns: dict[str, list[str]]) -> None:
+    """Report detailed analysis of priority files."""
     # Show priority files
     print("\n🎯 Priority Files for Consolidation:")
 
     priority_files = set()
     for file_list in manual_patterns.values():
-        if isinstance(file_list[0], str) and ":" not in file_list[0]:
+        if file_list and isinstance(file_list[0], str) and ":" not in file_list[0]:
             priority_files.update(file_list)
-        else:
+        elif file_list:
             priority_files.update([f.split(":")[0] for f in file_list])
 
-    for i, file_path in enumerate(sorted(priority_files)[:10], 1):
+    max_display = 10
+    for i, file_path in enumerate(sorted(priority_files)[:max_display], 1):
         print(f"  {i}. {file_path}")
 
     # Analyze specific patterns in priority files
     print("\n🔍 Detailed Analysis of Top Priority Files:")
 
-    for file_path in sorted(priority_files)[:5]:
-        print(f"\n📁 {file_path}:")
-        try:
-            with open(file_path, encoding="utf-8") as f:
-                content = f.read()
+    max_analysis = 5
+    for file_path in sorted(priority_files)[:max_analysis]:
+        _analyze_priority_file(file_path)
 
-            # Count env var usages
-            env_vars = re.findall(r'os\.getenv\(["\']([^"\']+)["\']', content)
-            if env_vars:
-                print(f"   🌍 Environment variables: {len(env_vars)} ({', '.join(env_vars[:3])}{'...' if len(env_vars) > 3 else ''})")
 
-            # Count config classes
-            classes = re.findall(r"class\s+([A-Z][a-zA-Z0-9_]*(?:Config|Settings))", content)
-            if classes:
-                print(f"   📝 Config classes: {len(classes)} ({', '.join(classes)})")
+def _analyze_priority_file(file_path: str) -> None:
+    """Analyze a single priority file for detailed patterns."""
+    print(f"\n📁 {file_path}:")
+    try:
+        with Path(file_path).open(encoding="utf-8") as f:
+            content = f.read()
 
-            # Count BaseSettings usage
-            if "BaseSettings" in content:
-                print("   ⚙️ Uses Pydantic BaseSettings: Yes")
+        # Count env var usages
+        env_vars = re.findall(r'os\.getenv\(["\']([^"\']+)["\']', content)
+        if env_vars:
+            preview_limit = 3
+            preview = ", ".join(env_vars[:preview_limit])
+            suffix = "..." if len(env_vars) > preview_limit else ""
+            print(f"   🌍 Environment variables: {len(env_vars)} ({preview}{suffix})")
 
-            # Check for FLEXT imports
-            if "flext_core" in content:
-                print("   ✅ Already uses flext-core: Yes")
-            else:
-                print("   ❌ Needs flext-core integration: Yes")
+        # Count config classes
+        pattern = r"class\s+([A-Z][a-zA-Z0-9_]*(?:Config|Settings))"
+        classes = re.findall(pattern, content)
+        if classes:
+            print(f"   📝 Config classes: {len(classes)} ({', '.join(classes)})")
 
-        except Exception as e:
-            print(f"   ❌ Analysis error: {e}")
+        # Count BaseSettings usage
+        if "BaseSettings" in content:
+            print("   ⚙️ Uses Pydantic BaseSettings: Yes")
+
+        # Check for FLEXT imports
+        if "flext_core" in content:
+            print("   ✅ Already uses flext-core: Yes")
+        else:
+            print("   ❌ Needs flext-core integration: Yes")
+
+    except (OSError, UnicodeDecodeError) as e:
+        print(f"   ❌ Analysis error: {e}")
 
 
 def main() -> None:

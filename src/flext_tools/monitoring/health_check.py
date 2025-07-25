@@ -13,7 +13,7 @@ class HealthCheckService:
         """Initialize the health check service."""
         self.workspace_path = workspace_path
 
-    def run_health_checks(self, **kwargs: Any) -> dict[str, Any]:
+    def run_health_checks(self, **_kwargs: object) -> dict[str, Any]:
         """Run health checks across the workspace."""
         print_colored("🏥 Executando verificações de saúde...", Colors.BLUE)
 

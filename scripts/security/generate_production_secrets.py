@@ -32,7 +32,7 @@ class ProductionSecretsGenerator(BaseSecurityScript):
 
     # validate_preconditions is inherited from BaseSecurityScript
 
-    def execute_main_logic(self, **kwargs: Any) -> bool:
+    def execute_main_logic(self, **kwargs: object) -> bool:
         """Execute secrets generation."""
         try:
             workspace_root = Path.cwd()
