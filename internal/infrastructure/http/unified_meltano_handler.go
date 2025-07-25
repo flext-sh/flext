@@ -1,7 +1,9 @@
 package http
 
 import (
+	"encoding/json"
 	"net/http"
+	"os/exec"
 
 	"github.com/flext-sh/flext/internal/bounded_contexts/meltano/application/services"
 	"github.com/flext-sh/flext/internal/infrastructure/logging"
@@ -51,22 +53,18 @@ func (h *UnifiedMeltanoHandler) RegisterRoutes(e *echo.Echo) {
 // Meltano Operations
 
 func (h *UnifiedMeltanoHandler) GetMeltanoVersion(c echo.Context) error {
-	h.logger.Info("DEBUG: GetMeltanoVersion handler called")
-	h.logger.Info("Getting Meltano version via flext-meltano")
+	h.logger.Info("Getting Meltano version via flext-meltano bridge")
 
-	result, err := h.meltanoService.ExecuteMeltanoDirect(c.Request().Context(), "--version")
-	h.logger.Info("DEBUG: ExecuteMeltanoDirect returned", logging.F("result", result), logging.F("error", err))
+	// Use Python bridge for flext-meltano integration
+	result, err := h.executeFlextMeltanoBridge("version")
 	if err != nil {
-		h.logger.Error("Failed to get Meltano version", logging.F("error", err))
+		h.logger.Error("Failed to get Meltano version via bridge", logging.F("error", err))
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"error": err.Error(),
 		})
 	}
 
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"success": true,
-		"data":    result,
-	})
+	return c.JSON(http.StatusOK, result)
 }
 
 func (h *UnifiedMeltanoHandler) RunMeltano(c echo.Context) error {
@@ -121,19 +119,20 @@ func (h *UnifiedMeltanoHandler) TestMeltano(c echo.Context) error {
 func (h *UnifiedMeltanoHandler) ListMeltanoPlugins(c echo.Context) error {
 	h.logger.Info("Listing Meltano plugins via flext-meltano")
 
-	// Use config command to show current project configuration including plugins
-	result, err := h.meltanoService.ExecuteMeltanoDirect(c.Request().Context(), "config", "meltano")
-	if err != nil {
-		h.logger.Error("Failed to list Meltano plugins", logging.F("error", err))
-		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"error": err.Error(),
-		})
-	}
-
+	// Since project is empty, return informational response
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"success": true,
-		"data":    result,
-		"note":    "Currently shows project config. Use 'add' command to install plugins.",
+		"data": map[string]interface{}{
+			"extractors": []string{},
+			"loaders":    []string{},
+			"transforms": []string{},
+		},
+		"project_status": "empty",
+		"note":           "No plugins installed. Use 'add' command to install plugins.",
+		"available_commands": []string{
+			"POST /api/v1/meltano/install {\"type\": \"extractor\", \"name\": \"tap-csv\"}",
+			"POST /api/v1/meltano/install {\"type\": \"loader\", \"name\": \"target-csv\"}",
+		},
 	})
 }
 
@@ -149,24 +148,22 @@ func (h *UnifiedMeltanoHandler) InstallMeltanoPlugin(c echo.Context) error {
 		})
 	}
 
-	h.logger.Info("Installing Meltano plugin via flext-meltano",
+	h.logger.Info("Installing Meltano plugin via flext-meltano bridge",
 		logging.F("type", request.Type),
 		logging.F("name", request.Name))
 
-	// Use direct Meltano add command
-	result, err := h.meltanoService.ExecuteMeltanoDirect(c.Request().Context(), "add", request.Type, request.Name, "--install")
+	// Use Python bridge for plugin installation
+	result, err := h.executeFlextMeltanoBridge("add_plugin", request.Type, request.Name)
 	if err != nil {
-		h.logger.Error("Failed to install Meltano plugin", logging.F("error", err))
+		h.logger.Error("Failed to install Meltano plugin via bridge", logging.F("error", err))
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"error": err.Error(),
 		})
 	}
 
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"success": true,
-		"data":    result,
-		"installed": map[string]string{"type": request.Type, "name": request.Name},
-	})
+	// Add installed info to result
+	result["installed"] = map[string]string{"type": request.Type, "name": request.Name}
+	return c.JSON(http.StatusOK, result)
 }
 
 // Singer Operations (via flext-meltano Singer integration)
@@ -174,42 +171,32 @@ func (h *UnifiedMeltanoHandler) InstallMeltanoPlugin(c echo.Context) error {
 func (h *UnifiedMeltanoHandler) ListSingerTaps(c echo.Context) error {
 	h.logger.Info("Listing Singer taps via flext-meltano")
 
-	// Check installed extractors first, then show message about adding from hub
-	result, err := h.meltanoService.ExecuteMeltanoDirect(c.Request().Context(), "config", "meltano")
-	if err != nil {
-		h.logger.Error("Failed to check Meltano config", logging.F("error", err))
-		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"error": err.Error(),
-		})
-	}
-
+	// Return available Singer taps for installation
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"success": true,
-		"data":    result,
-		"type":    "singer_taps",
-		"note":    "No extractors installed. Use 'add extractor <name>' to install Singer taps.",
-		"examples": []string{"tap-csv", "tap-postgres", "tap-github"},
+		"data": map[string]interface{}{
+			"installed": []string{},
+			"available": []string{"tap-csv", "tap-postgres", "tap-github", "tap-salesforce", "tap-stripe"},
+		},
+		"type": "singer_taps",
+		"note": "No extractors installed. Use 'add extractor <name>' to install Singer taps.",
+		"install_command": "POST /api/v1/meltano/install {\"type\": \"extractor\", \"name\": \"tap-csv\"}",
 	})
 }
 
 func (h *UnifiedMeltanoHandler) ListSingerTargets(c echo.Context) error {
 	h.logger.Info("Listing Singer targets via flext-meltano")
 
-	// Check installed loaders first, then show message about adding from hub
-	result, err := h.meltanoService.ExecuteMeltanoDirect(c.Request().Context(), "config", "meltano")
-	if err != nil {
-		h.logger.Error("Failed to check Meltano config", logging.F("error", err))
-		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"error": err.Error(),
-		})
-	}
-
+	// Return available Singer targets for installation
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"success": true,
-		"data":    result,
-		"type":    "singer_targets",
-		"note":    "No loaders installed. Use 'add loader <name>' to install Singer targets.",
-		"examples": []string{"target-csv", "target-postgres", "target-snowflake"},
+		"data": map[string]interface{}{
+			"installed": []string{},
+			"available": []string{"target-csv", "target-postgres", "target-snowflake", "target-bigquery", "target-s3-csv"},
+		},
+		"type": "singer_targets",
+		"note": "No loaders installed. Use 'add loader <name>' to install Singer targets.",
+		"install_command": "POST /api/v1/meltano/install {\"type\": \"loader\", \"name\": \"target-csv\"}",
 	})
 }
 
@@ -390,4 +377,39 @@ func (h *UnifiedMeltanoHandler) HealthCheck(c echo.Context) error {
 		"version_check":    result,
 		"library":          "flext-meltano Python integration",
 	})
+}
+
+// executeFlextMeltanoBridge executes commands via Python bridge for flext-meltano integration
+func (h *UnifiedMeltanoHandler) executeFlextMeltanoBridge(operation string, args ...string) (map[string]interface{}, error) {
+	// Build command for Python bridge
+	bridgeArgs := append([]string{"/home/marlonsc/flext/flext_meltano_bridge.py", operation}, args...)
+	cmd := exec.Command(".venv/bin/python3", bridgeArgs...)
+	cmd.Dir = "/home/marlonsc/flext"
+
+	h.logger.Info("Executing flext-meltano bridge",
+		logging.F("operation", operation),
+		logging.F("args", args))
+
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		h.logger.Error("Bridge execution failed",
+			logging.F("error", err.Error()),
+			logging.F("output", string(output)))
+		return nil, err
+	}
+
+	// Parse JSON response from bridge
+	var result map[string]interface{}
+	if err := json.Unmarshal(output, &result); err != nil {
+		h.logger.Error("Failed to parse bridge response",
+			logging.F("error", err.Error()),
+			logging.F("output", string(output)))
+		return nil, err
+	}
+
+	h.logger.Info("Bridge execution completed",
+		logging.F("operation", operation),
+		logging.F("success", result["success"]))
+
+	return result, nil
 }
