@@ -24,5 +24,3 @@ def print_colored(message: str, color: str = "") -> None:
     """Imprime mensagem colorida no terminal."""
     if color:
         pass
-    else:
-        pass

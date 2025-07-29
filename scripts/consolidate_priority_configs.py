@@ -17,14 +17,14 @@ def consolidate_client-a_config() -> bool | None:
         original_content = content
 
         # Add flext-core import if not present
-        if "from flext_core.config import FlextCoreSettings" not in content:
+        if "FlextCoreSettings" not in content:
             # Find the import section
             import_pattern = r"(from pydantic import BaseSettings.*?\n)"
             match = re.search(import_pattern, content, re.DOTALL)
             if match:
                 content = content.replace(
                     match.group(1),
-                    f"{match.group(1)}from flext_core.config import FlextCoreSettings\n",
+                    f"{match.group(1)}FlextCoreSettings\n",
                 )
 
         # Replace BaseSettings with FlextCoreSettings
@@ -46,7 +46,7 @@ def consolidate_client-a_config() -> bool | None:
         print(f"⏭️ No changes needed for {config_file}")
         return False
 
-    except Exception as e:
+    except (OSError, ValueError, TypeError) as e:
         print(f"❌ Error consolidating {config_file}: {e}")
         return False
 
@@ -64,16 +64,19 @@ def consolidate_flext_auth_config() -> bool | None:
         original_content = content
 
         # Add flext-core import if not present
-        if "from flext_core.config import FlextCoreSettings" not in content:
+        if "FlextCoreSettings" not in content:
             # Find BaseSettings import
             if "from pydantic import BaseSettings" in content:
                 content = content.replace(
                     "from pydantic import BaseSettings",
-                    "from pydantic import BaseSettings\nfrom flext_core.config import FlextCoreSettings",
+                    "from pydantic import BaseSettings\nFlextCoreSettings",
                 )
 
         # Replace BaseSettings with FlextCoreSettings for config classes
-        config_classes = re.findall(r"class\s+([A-Z][a-zA-Z0-9_]*Config)\(BaseSettings\)", content)
+        config_classes = re.findall(
+            r"class\s+([A-Z][a-zA-Z0-9_]*Config)\(BaseSettings\)",
+            content,
+        )
         for class_name in config_classes:
             content = re.sub(
                 f"class\\s+{class_name}\\(BaseSettings\\)",
@@ -93,7 +96,7 @@ def consolidate_flext_auth_config() -> bool | None:
         print(f"⏭️ No changes needed for {config_file}")
         return False
 
-    except Exception as e:
+    except (OSError, ValueError, TypeError) as e:
         print(f"❌ Error consolidating {config_file}: {e}")
         return False
 
@@ -115,11 +118,14 @@ def consolidate_flext_api_config() -> bool | None:
         if env_vars:
             # Add comment about manual env vars
             if "# TODO: Replace manual os.getenv() with Pydantic Fields" not in content:
-                content = "# TODO: Replace manual os.getenv() with Pydantic Fields\n" + content
+                content = (
+                    "# TODO: Replace manual os.getenv() with Pydantic Fields\n"
+                    + content
+                )
 
             # Add inline TODOs for each env var
             for env_var in env_vars:
-                pattern = f'os\\.getenv\\(["\']{re.escape(env_var)}["\'](.*?)\\)'
+                pattern = f"os\\.getenv\\([\"']{re.escape(env_var)}[\"'](.*?)\\)"
                 replacement = f'# TODO: Move {env_var} to FLEXT settings class\nos.getenv("{env_var}"\\1)'
                 content = re.sub(pattern, replacement, content, count=1)
 
@@ -135,7 +141,7 @@ def consolidate_flext_api_config() -> bool | None:
         print(f"⏭️ No changes needed for {config_file}")
         return False
 
-    except Exception as e:
+    except (OSError, ValueError, TypeError) as e:
         print(f"❌ Error consolidating {config_file}: {e}")
         return False
 
@@ -155,7 +161,7 @@ from __future__ import annotations
 from pydantic import Field
 from pydantic_settings import SettingsConfigDict
 
-from flext_core.config import FlextCoreSettings
+FlextCoreSettings
 
 
 # BEFORE: Manual configuration with BaseSettings
@@ -273,7 +279,7 @@ def get_project_settings() -> ConsolidatedProjectSettings:
             f.write(template_content)
         print(f"✅ Created consolidation template: {template_path}")
         return True
-    except Exception as e:
+    except (OSError, ValueError, TypeError) as e:
         print(f"❌ Error creating template: {e}")
         return False
 

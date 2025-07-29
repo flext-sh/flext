@@ -9,7 +9,6 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
-from typing import Any
 
 from flext_tools import Colors, print_colored
 from flext_tools.core.script_base import FlextScript, ScriptMetadata
@@ -111,11 +110,11 @@ class OracleE2ETestRunner(FlextScript):
             print_colored("📋 Check logs in .flext_logs/ for details", Colors.YELLOW)
             return False
 
-        except Exception as e:
+        except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Error during E2E testing: {e}", Colors.RED)
             return False
 
-    def create_parser(self) -> Any:
+    def create_parser(self) -> object:
         """Create parser with specific arguments."""
         parser = super().create_parser()
 

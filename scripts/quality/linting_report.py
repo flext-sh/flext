@@ -16,9 +16,10 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+from scripts.common import discover_projects
+
 from flext_tools import Colors, print_colored
 from flext_tools.core.script_base import FlextScript, ScriptMetadata
-from scripts.common import discover_projects
 
 
 class LintingReport(FlextScript):
@@ -140,7 +141,7 @@ class LintingReport(FlextScript):
 
             return True
 
-        except Exception as e:
+        except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Erro durante análise: {e}", Colors.RED)
             return False
 
@@ -397,7 +398,7 @@ class LintingReport(FlextScript):
 
         print_colored(f"\n💾 Relatório HTML salvo: {report_path}", Colors.GREEN)
 
-    def create_parser(self) -> Any:
+    def create_parser(self) -> object:
         """Criar parser com argumentos específicos."""
         parser = super().create_parser()
 

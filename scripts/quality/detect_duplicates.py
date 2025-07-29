@@ -667,7 +667,7 @@ class FlextDuplicateDetector:
                     result = future.result()
                     if result:
                         signatures[file_path] = result
-                except Exception as e:
+                except (OSError, ValueError, TypeError) as e:
                     print(f"⚠️ Erro processando {file_path}: {e}")
 
         return signatures
@@ -1335,7 +1335,7 @@ class FlextDuplicateDetector:
                                 files_content[file_str] = content
                                 total_size += len(content)
 
-                        except Exception as e:
+                        except (OSError, ValueError, TypeError) as e:
                             errors.append(f"Erro ao ler {file_str}: {e}")
                 continue
 
@@ -1390,7 +1390,7 @@ class FlextDuplicateDetector:
                         files_content[file_path] = content
                         total_size += len(content)
 
-                    except Exception as e:
+                    except (OSError, ValueError, TypeError) as e:
                         errors.append(f"Erro ao ler {file_path}: {e}")
 
         print(
@@ -1521,7 +1521,7 @@ class FlextDuplicateDetector:
 
         print(f"   🚨 Duplicações exatas (≥99%): {len(exact_matches)}")
         print(f"   ⚠️  Alta similaridade (90-99%): {len(high_similarity)}")
-        print(f"   ℹ️  Média similaridade (80-90%): {len(medium_similarity)}")  # noqa: RUF001
+        print(f"   ℹ️  Média similaridade (80-90%): {len(medium_similarity)}")
 
         # Agrupar anti-patterns por severidade e tipo
         critical_patterns = [
@@ -1622,7 +1622,7 @@ class FlextDuplicateDetector:
                 with open(output_file, "w", encoding="utf-8") as f:
                     json.dump(report_data, f, indent=2)
                 print(f"\n💾 Relatório salvo em: {output_file}")
-            except Exception as e:
+            except (OSError, ValueError, TypeError) as e:
                 print(f"\n⚠️  Erro ao salvar relatório: {e}")
 
         # Recomendações

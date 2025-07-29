@@ -48,7 +48,7 @@ def fix_di_ordering(file_path: Path) -> bool:
             print(f"Fixed DI ordering in {file_path}")
             return True
 
-    except Exception as e:
+    except (OSError, ValueError, TypeError) as e:
         print(f"Error processing {file_path}: {e}")
         return False
 

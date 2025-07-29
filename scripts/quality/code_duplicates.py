@@ -95,11 +95,11 @@ class CodeDuplicatesAnalyzer(FlextScript):
             print_colored("❌ Code duplicate analysis failed", Colors.RED)
             return False
 
-        except Exception as e:
+        except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Error during duplicate analysis: {e}", Colors.RED)
             return False
 
-    def create_parser(self) -> Any:
+    def create_parser(self) -> object:
         """Create parser with specific arguments."""
         parser = super().create_parser()
 

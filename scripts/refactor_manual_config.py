@@ -34,8 +34,18 @@ def find_manual_config_patterns() -> FlextResult[dict[str, list[str]]]:
 
         # Find manual os.getenv() usage
         cmd = [
-            "find", ".", "-name", "*.py", "-type", "f",
-            "-exec", "grep", "-l", "os\\.getenv\\|os\\.environ\\.get", "{}", ";",
+            "find",
+            ".",
+            "-name",
+            "*.py",
+            "-type",
+            "f",
+            "-exec",
+            "grep",
+            "-l",
+            "os\\.getenv\\|os\\.environ\\.get",
+            "{}",
+            ";",
         ]
         result = subprocess.run(cmd, capture_output=True, text=True, check=False)
         if result.returncode == 0:
@@ -45,8 +55,18 @@ def find_manual_config_patterns() -> FlextResult[dict[str, list[str]]]:
 
         # Find manual Pydantic instantiation (Config(), Settings(), etc.)
         cmd = [
-            "find", ".", "-name", "*.py", "-type", "f",
-            "-exec", "grep", "-l", "Settings()\\|Config()\\|.*Config()", "{}", ";",
+            "find",
+            ".",
+            "-name",
+            "*.py",
+            "-type",
+            "f",
+            "-exec",
+            "grep",
+            "-l",
+            "Settings()\\|Config()\\|.*Config()",
+            "{}",
+            ";",
         ]
         result = subprocess.run(cmd, capture_output=True, text=True, check=False)
         if result.returncode == 0:
@@ -56,8 +76,18 @@ def find_manual_config_patterns() -> FlextResult[dict[str, list[str]]]:
 
         # Find manual file loading (json.load, yaml.load)
         cmd = [
-            "find", ".", "-name", "*.py", "-type", "f",
-            "-exec", "grep", "-l", "json\\.load\\|yaml\\.load\\|yaml\\.safe_load", "{}", ";",
+            "find",
+            ".",
+            "-name",
+            "*.py",
+            "-type",
+            "f",
+            "-exec",
+            "grep",
+            "-l",
+            "json\\.load\\|yaml\\.load\\|yaml\\.safe_load",
+            "{}",
+            ";",
         ]
         result = subprocess.run(cmd, capture_output=True, text=True, check=False)
         if result.returncode == 0:
@@ -67,8 +97,18 @@ def find_manual_config_patterns() -> FlextResult[dict[str, list[str]]]:
 
         # Find manual validation patterns
         cmd = [
-            "find", ".", "-name", "*.py", "-type", "f",
-            "-exec", "grep", "-l", "if not.*config\\|assert.*config", "{}", ";",
+            "find",
+            ".",
+            "-name",
+            "*.py",
+            "-type",
+            "f",
+            "-exec",
+            "grep",
+            "-l",
+            "if not.*config\\|assert.*config",
+            "{}",
+            ";",
         ]
         result = subprocess.run(cmd, capture_output=True, text=True, check=False)
         if result.returncode == 0:
@@ -81,7 +121,7 @@ def find_manual_config_patterns() -> FlextResult[dict[str, list[str]]]:
 
         return FlextResult.ok(patterns)
 
-    except Exception as e:
+    except (OSError, ValueError, TypeError) as e:
         return FlextResult.fail(f"Failed to find manual config patterns: {e}")
 
 
@@ -109,7 +149,10 @@ def refactor_manual_env_vars(file_path: str) -> FlextResult[bool]:
             # Add comment about manual env var usage
             if "# TODO: Consolidate to FLEXT config patterns" not in content:
                 # Find import section and add comment
-                import_section = re.search(r"(from __future__ import annotations\n\n)", content)
+                import_section = re.search(
+                    r"(from __future__ import annotations\n\n)",
+                    content,
+                )
                 if import_section:
                     content = content.replace(
                         import_section.group(1),
@@ -144,7 +187,7 @@ def refactor_manual_env_vars(file_path: str) -> FlextResult[bool]:
         logger.info(f"⏭️ No env var changes needed: {file_path}")
         return FlextResult.ok(False)
 
-    except Exception as e:
+    except (OSError, ValueError, TypeError) as e:
         logger.exception(f"❌ Error refactoring env vars in {file_path}: {e}")
         return FlextResult.fail(f"Failed to refactor env vars: {e}")
 
@@ -178,7 +221,11 @@ def refactor_manual_pydantic(file_path: str) -> FlextResult[bool]:
                 f"{indent}{var_name} = {class_name}()"
             )
 
-        new_content = re.sub(config_instantiation, replace_config_instantiation, content)
+        new_content = re.sub(
+            config_instantiation,
+            replace_config_instantiation,
+            content,
+        )
         if new_content != content:
             content = new_content
             changes_made = True
@@ -191,7 +238,7 @@ def refactor_manual_pydantic(file_path: str) -> FlextResult[bool]:
         logger.info(f"⏭️ No Pydantic changes needed: {file_path}")
         return FlextResult.ok(False)
 
-    except Exception as e:
+    except (OSError, ValueError, TypeError) as e:
         logger.exception(f"❌ Error refactoring Pydantic in {file_path}: {e}")
         return FlextResult.fail(f"Failed to refactor Pydantic: {e}")
 
@@ -213,7 +260,9 @@ def refactor_manual_file_loading(file_path: str) -> FlextResult[bool]:
         changes_made = False
 
         # Pattern: json.load() or yaml.load()
-        file_load_pattern = r"(\s+)(.*?)\s*=\s*(json\.load|yaml\.load|yaml\.safe_load)\((.*?)\)"
+        file_load_pattern = (
+            r"(\s+)(.*?)\s*=\s*(json\.load|yaml\.load|yaml\.safe_load)\((.*?)\)"
+        )
 
         def replace_file_loading(match: re.Match[str]) -> str:
             indent = match.group(1)
@@ -239,7 +288,7 @@ def refactor_manual_file_loading(file_path: str) -> FlextResult[bool]:
         logger.info(f"⏭️ No file loading changes needed: {file_path}")
         return FlextResult.ok(False)
 
-    except Exception as e:
+    except (OSError, ValueError, TypeError) as e:
         logger.exception(f"❌ Error refactoring file loading in {file_path}: {e}")
         return FlextResult.fail(f"Failed to refactor file loading: {e}")
 
@@ -265,7 +314,7 @@ to use standardized FLEXT configuration management patterns.
 from pydantic import BaseSettings, Field
 from pydantic_settings import SettingsConfigDict
 
-from flext_core.config import FlextCoreSettings
+FlextCoreSettings
 
 
 class ProjectSpecificSettings(FlextCoreSettings):
@@ -334,7 +383,7 @@ def get_project_settings() -> ProjectSpecificSettings:
         logger.info(f"✅ Created FLEXT config template: {output_path}")
         return FlextResult.ok(None)
 
-    except Exception as e:
+    except (OSError, ValueError, TypeError) as e:
         return FlextResult.fail(f"Failed to create template: {e}")
 
 

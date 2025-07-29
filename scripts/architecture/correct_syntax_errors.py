@@ -2,7 +2,8 @@
 """Script de correção de erros de sintaxe introduzidos pelo fix_imports.py.
 
 Aplica correções RIGOROSAS seguindo REFATORACAO_ARQUITETURA_FLEXT.md
-REGRA ABSOLUTA: Camadas 2,3,5 APENAS lógica de negócio - generalizações APENAS em camada 1
+REGRA ABSOLUTA: Camadas 2,3,5 APENAS lógica de negócio -
+generalizações APENAS em camada 1
 
 Copyright (c) 2025 FLEXT Team
 SPDX-License-Identifier: MIT
@@ -25,7 +26,8 @@ def fix_indentation_errors(content: str) -> str:
 
     # Fix dangling imports after if blocks
     return re.sub(
-        r"(if TYPE_CHECKING:[^\n]*\n(?:\s*#[^\n]*\n)*)\nfrom (\w+) import([^\n]+)\n\n(\s+from \w+)",
+        r"(if TYPE_CHECKING:[^\n]*\n(?:\s*#[^\n]*\n)*)\n"
+        r"from (\w+) import([^\n]+)\n\n(\s+from \w+)",
         r"\1    from \2 import\3\n\n\4",
         content,
     )
@@ -45,11 +47,13 @@ def fix_syntax_errors_in_file(file_path: Path) -> bool:
             # Pattern 1: TYPE_CHECKING block with misplaced imports
             (
                 r"(if TYPE_CHECKING:)\s*\n\s*# [^\n]+\nfrom (\w+) import",
-                r"\1\n    # 🚨 ARCHITECTURAL COMPLIANCE: Using módulo raiz imports\n    from \2 import",
+                r"\1\n    # 🚨 ARCHITECTURAL COMPLIANCE: "
+                r"Using módulo raiz imports\n    from \2 import",
             ),
             # Pattern 2: Dangling imports after TYPE_CHECKING
             (
-                r"(# 🚨 ARCHITECTURAL COMPLIANCE[^\n]*)\nfrom (\w+) import([^\n]+)\n\n(\s+from)",
+                r"(# 🚨 ARCHITECTURAL COMPLIANCE[^\n]*)\n"
+                r"from (\w+) import([^\n]+)\n\n(\s+from)",
                 r"\1\n    from \2 import\3\n\n\4",
             ),
             # Pattern 3: Missing indentation in TYPE_CHECKING blocks
@@ -87,7 +91,7 @@ def fix_syntax_errors_in_file(file_path: Path) -> bool:
             file_path.write_text(content, encoding="utf-8")
             return True
 
-    except Exception as e:
+    except (OSError, UnicodeDecodeError) as e:
         print(f"ERROR processing {file_path}: {e}")
 
     return False

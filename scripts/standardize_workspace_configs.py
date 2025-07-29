@@ -62,7 +62,7 @@ class FlextConfigStandardizer:
         try:
             with Path(pyproject_file).open(encoding="utf-8") as f:
                 return tomlkit.load(f)
-        except Exception as e:
+        except (OSError, ValueError, TypeError) as e:
             print(f"❌ Error loading {pyproject_file}: {e}")
             return None
 
@@ -76,7 +76,7 @@ class FlextConfigStandardizer:
             with Path(pyproject_file).open("w", encoding="utf-8") as f:
                 tomlkit.dump(content, f)
             return True
-        except Exception as e:
+        except (OSError, ValueError, TypeError) as e:
             print(f"❌ Error saving {pyproject_file}: {e}")
             return False
 
@@ -316,7 +316,7 @@ def main() -> None:
     except KeyboardInterrupt:
         print("\n⏹️  Standardization cancelled by user")
         sys.exit(1)
-    except Exception as e:
+    except (OSError, ValueError, TypeError) as e:
         print(f"❌ Unexpected error: {e}")
         sys.exit(1)
 
