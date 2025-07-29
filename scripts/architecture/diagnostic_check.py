@@ -12,6 +12,17 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+# Constants for return codes
+SUCCESS_CODE = 0
+MAKEFILE_TARGET_NOT_FOUND = 2
+COMMAND_FAILED = 1
+
+# Status constants
+STATUS_PASS = "✅ PASS"
+STATUS_FAIL = "❌ FAIL"
+STATUS_NO_TARGET = "⚠️  NO_TARGET"
+STATUS_SKIP = "SKIP"
+
 
 @dataclass
 class ProjectStatus:
@@ -21,10 +32,10 @@ class ProjectStatus:
     level: int
     has_makefile: bool
     has_pyproject: bool
-    lint_status: str = "SKIP"
-    mypy_status: str = "SKIP"
-    test_status: str = "SKIP"
-    poetry_install: str = "SKIP"
+    lint_status: str = STATUS_SKIP
+    mypy_status: str = STATUS_SKIP
+    test_status: str = STATUS_SKIP
+    poetry_install: str = STATUS_SKIP
     errors: list[str] = field(default_factory=list)
 
     def __post_init__(self) -> None:
@@ -95,7 +106,7 @@ class FlextDiagnostic:
             return result.returncode, result.stdout, result.stderr
         except subprocess.TimeoutExpired:
             return -1, "", "Timeout expired"
-        except Exception as e:
+        except (OSError, subprocess.SubprocessError) as e:
             return -1, "", str(e)
 
     def check_project(self, project_name: str) -> ProjectStatus:
@@ -124,32 +135,32 @@ class FlextDiagnostic:
         if status.has_makefile:
             # Check lint
             rc, stdout, stderr = self.run_command(["make", "lint"], project_path)
-            if rc == 0:
-                status.lint_status = "✅ PASS"
-            elif rc == 2:  # Makefile without lint target
-                status.lint_status = "⚠️  NO_TARGET"
+            if rc == SUCCESS_CODE:
+                status.lint_status = STATUS_PASS
+            elif rc == MAKEFILE_TARGET_NOT_FOUND:
+                status.lint_status = STATUS_NO_TARGET
             else:
-                status.lint_status = "❌ FAIL"
+                status.lint_status = STATUS_FAIL
                 status.errors.append(f"Lint: {stderr.strip()}")
 
             # Check mypy
             rc, stdout, stderr = self.run_command(["make", "mypy-check"], project_path)
-            if rc == 0:
-                status.mypy_status = "✅ PASS"
-            elif rc == 2:  # Makefile without mypy-check target
-                status.mypy_status = "⚠️  NO_TARGET"
+            if rc == SUCCESS_CODE:
+                status.mypy_status = STATUS_PASS
+            elif rc == MAKEFILE_TARGET_NOT_FOUND:
+                status.mypy_status = STATUS_NO_TARGET
             else:
-                status.mypy_status = "❌ FAIL"
+                status.mypy_status = STATUS_FAIL
                 status.errors.append(f"MyPy: {stderr.strip()}")
 
             # Check tests
             rc, stdout, stderr = self.run_command(["make", "test"], project_path)
-            if rc == 0:
-                status.test_status = "✅ PASS"
-            elif rc == 2:  # Makefile without test target
-                status.test_status = "⚠️  NO_TARGET"
+            if rc == SUCCESS_CODE:
+                status.test_status = STATUS_PASS
+            elif rc == MAKEFILE_TARGET_NOT_FOUND:
+                status.test_status = STATUS_NO_TARGET
             else:
-                status.test_status = "❌ FAIL"
+                status.test_status = STATUS_FAIL
                 status.errors.append(f"Tests: {stderr.strip()}")
 
         # Check Poetry install
@@ -225,12 +236,22 @@ class FlextDiagnostic:
         """Generate summary."""
         total_projects = len(self.results)
         projects_with_makefile = sum(1 for s in self.results.values() if s.has_makefile)
-        projects_with_pyproject = sum(1 for s in self.results.values() if s.has_pyproject)
+        projects_with_pyproject = sum(
+            1 for s in self.results.values() if s.has_pyproject
+        )
 
-        lint_passed = sum(1 for s in self.results.values() if s.lint_status == "✅ PASS")
-        mypy_passed = sum(1 for s in self.results.values() if s.mypy_status == "✅ PASS")
-        tests_passed = sum(1 for s in self.results.values() if s.test_status == "✅ PASS")
-        poetry_passed = sum(1 for s in self.results.values() if s.poetry_install == "✅ PASS")
+        lint_passed = sum(
+            1 for s in self.results.values() if s.lint_status == "✅ PASS"
+        )
+        mypy_passed = sum(
+            1 for s in self.results.values() if s.mypy_status == "✅ PASS"
+        )
+        tests_passed = sum(
+            1 for s in self.results.values() if s.test_status == "✅ PASS"
+        )
+        poetry_passed = sum(
+            1 for s in self.results.values() if s.poetry_install == "✅ PASS"
+        )
 
         projects_with_errors = sum(1 for s in self.results.values() if s.errors)
 
@@ -268,7 +289,11 @@ class FlextDiagnostic:
         print("-" * 60)
 
         for level in range(1, 7):
-            level_projects = [(name, data) for name, data in report["projects"].items() if data["level"] == level]
+            level_projects = [
+                (name, data)
+                for name, data in report["projects"].items()
+                if data["level"] == level
+            ]
 
             if level_projects:
                 level_name = {

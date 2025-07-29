@@ -34,23 +34,19 @@ def analyze_flext_core_violations() -> list[dict[str, str]]:
     ]
 
     for py_file in flext_core_path.rglob("*.py"):
-        if py_file.name == "__init__.py":
+        if py_file.name == "__init__.py" or py_file.name.endswith(".bak"):
             continue
 
         try:
             with open(py_file, encoding="utf-8") as f:
                 content = f.read()
 
-            # Verificar padrões específicos no código
-            violations.extend(
-                {
-                    "file": str(py_file),
-                    "pattern": pattern,
-                    "action": f"Renomear {py_file.name} para {py_file.name}.bak",
-                }
-                for pattern in specific_patterns
-                if re.search(pattern, content, re.IGNORECASE)
-            )
+            # Usar word boundaries para evitar matches dentro de outras palavras
+            violations.extend({
+                            "file": str(py_file),
+                            "pattern": pattern,
+                            "action": f"Renomear {py_file.name} para {py_file.name}.bak",
+                        } for pattern in specific_patterns if re.search(r"\b" + pattern + r"\b", content, re.IGNORECASE))
 
             # Analisar imports AST
             try:
@@ -59,7 +55,10 @@ def analyze_flext_core_violations() -> list[dict[str, str]]:
                     if isinstance(node, ast.Import):
                         for alias in node.names:
                             import_name = alias.name.split(".")[0]
-                            if any(p in import_name.lower() for p in ["meltano", "oracle", "algar", "gruponos"]):
+                            if any(
+                                p in import_name.lower()
+                                for p in ["meltano", "oracle", "algar", "gruponos"]
+                            ):
                                 violations.append(
                                     {
                                         "file": str(py_file),
@@ -69,7 +68,10 @@ def analyze_flext_core_violations() -> list[dict[str, str]]:
                                 )
                     elif isinstance(node, ast.ImportFrom) and node.module:
                         import_name = node.module.split(".")[0]
-                        if any(p in import_name.lower() for p in ["meltano", "oracle", "algar", "gruponos"]):
+                        if any(
+                            p in import_name.lower()
+                            for p in ["meltano", "oracle", "algar", "gruponos"]
+                        ):
                             violations.append(
                                 {
                                     "file": str(py_file),
@@ -80,7 +82,7 @@ def analyze_flext_core_violations() -> list[dict[str, str]]:
             except SyntaxError:
                 print(f"⚠️  Erro de sintaxe em {py_file}")
 
-        except Exception as e:
+        except (OSError, ValueError, TypeError) as e:
             print(f"⚠️  Erro ao analisar {py_file}: {e}")
 
     return violations
@@ -93,7 +95,11 @@ def analyze_ignore_comments() -> list[Path]:
     ignore_files: list[Path] = []
     for root, dirs, files in os.walk("."):
         # Pular diretórios desnecessários
-        dirs[:] = [d for d in dirs if not d.startswith(".") and d not in {"__pycache__", "node_modules"}]
+        dirs[:] = [
+            d
+            for d in dirs
+            if not d.startswith(".") and d not in {"__pycache__", "node_modules"}
+        ]
 
         for file in files:
             if file.endswith(".py"):
@@ -103,7 +109,7 @@ def analyze_ignore_comments() -> list[Path]:
                         content = f.read()
                         if "# ignore" in content.lower():
                             ignore_files.append(file_path)
-                except Exception as e:
+                except (OSError, ValueError, TypeError) as e:
                     logger.exception(f"Error processing file {file_path}: {e}")
                     continue
 

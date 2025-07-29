@@ -59,7 +59,8 @@ def fix_imports_in_file(file_path: Path) -> bool:
             # Add comment at top of changed imports
             content = content.replace(
                 "from flext_core import",
-                "# 🚨 ARCHITECTURAL COMPLIANCE: Using módulo raiz imports\nfrom flext_core import",
+                "# 🚨 ARCHITECTURAL COMPLIANCE: "
+                "Using módulo raiz imports\nfrom flext_core import",
                 1,  # Only first occurrence
             )
 
@@ -67,7 +68,7 @@ def fix_imports_in_file(file_path: Path) -> bool:
             file_path.write_text(content, encoding="utf-8")
             return True
 
-    except Exception as e:
+    except (OSError, UnicodeDecodeError) as e:
         print(f"ERROR processing {file_path}: {e}")
 
     return False

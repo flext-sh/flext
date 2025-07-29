@@ -16,19 +16,40 @@ format.indent-style = "space"
 format.line-ending = "lf"
 format.quote-style = "double"
 line-length = 88
-lint.ignore = ["D203", "D213"]
+lint.ignore = ["D203", "D213", "D107", "SLF001", "G004", "TRY300"]
 lint.isort.force-single-line = false
 lint.isort.split-on-trailing-comma = true
 lint.isort.combine-as-imports = true
-lint.per-file-ignores."**/__init__.py" = ["F401"]
+# lint.per-file-ignores."**/__init__.py" = ["F401"]
 lint.per-file-ignores."**/*_pb2_grpc.py" = ["ALL"]
 lint.per-file-ignores."**/*_pb2.py" = ["ALL"]
 lint.per-file-ignores."**/generated/**/*.py" = ["ALL"]
 lint.per-file-ignores."**/proto/*_pb2_grpc.py" = ["ALL"]
 lint.per-file-ignores."**/proto/*_pb2.py" = ["ALL"]
-lint.per-file-ignores."**/scripts/**" = ["EXE001", "S603", "S607", "T201"]
+lint.per-file-ignores."**/examples/**" = [
+    "C901",
+    "D107",
+    "EXE001",
+    "G004",
+    "N999",
+    "SLF001",
+    "T201",
+    "TRY300",
+]
+lint.per-file-ignores."**/scripts/**" = [
+    "C901",
+    "D107",
+    "EXE001",
+    "G004",
+    "N999",
+    "SLF001",
+    "T201",
+    "TRY300",
+]
 lint.per-file-ignores."**/tests/**" = [
     "ARG",
+    "D107",
+    "G004",
     "PLC0415",
     "PLR2004",
     "S101",
@@ -39,6 +60,7 @@ lint.per-file-ignores."**/tests/**" = [
     "S107",
     "S112",
     "SLF001",
+    "TRY300",
 ]
 lint.select = ["ALL"]
 respect-gitignore = true

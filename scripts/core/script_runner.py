@@ -69,7 +69,7 @@ class ScriptRunner(FlextScript):
                 print_colored(f"❌ Failed to import script registry: {e}", Colors.RED)
                 return False
 
-        except Exception as e:
+        except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Error in script runner: {e}", Colors.RED)
             return False
 
@@ -111,7 +111,7 @@ class ScriptRunner(FlextScript):
 
     def _run_script(
         self,
-        registry: Any,
+        registry: object,
         script_name: str,
         kwargs: dict[str, Any],
     ) -> bool:
@@ -149,11 +149,11 @@ class ScriptRunner(FlextScript):
             print_colored(f"❌ Script {script_name} has no main() function", Colors.RED)
             return False
 
-        except Exception as e:
+        except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Error running script {script_name}: {e}", Colors.RED)
             return False
 
-    def create_parser(self) -> Any:
+    def create_parser(self) -> object:
         """Create parser with specific arguments."""
         parser = super().create_parser()
 

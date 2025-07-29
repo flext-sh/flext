@@ -28,39 +28,89 @@ def find_domain_model_files() -> dict[str, list[str]]:
 
     # Find entity files
     cmd = [
-        "find", ".", "-name", "*.py", "-type", "f",
-        "-path", "*/domain/*",
-        "-exec", "grep", "-l", "class.*Entity\\|entities\\.py", "{}", ";",
+        "find",
+        ".",
+        "-name",
+        "*.py",
+        "-type",
+        "f",
+        "-path",
+        "*/domain/*",
+        "-exec",
+        "grep",
+        "-l",
+        "class.*Entity\\|entities\\.py",
+        "{}",
+        ";",
     ]
     result = subprocess.run(cmd, capture_output=True, text=True, check=False)
     if result.returncode == 0:
-        patterns["entities"] = [f.strip() for f in result.stdout.split("\n") if f.strip()]
+        patterns["entities"] = [
+            f.strip() for f in result.stdout.split("\n") if f.strip()
+        ]
 
     # Find value object files
     cmd = [
-        "find", ".", "-name", "*.py", "-type", "f",
-        "-path", "*/domain/*",
-        "-exec", "grep", "-l", "value_objects\\.py\\|ValueObject", "{}", ";",
+        "find",
+        ".",
+        "-name",
+        "*.py",
+        "-type",
+        "f",
+        "-path",
+        "*/domain/*",
+        "-exec",
+        "grep",
+        "-l",
+        "value_objects\\.py\\|ValueObject",
+        "{}",
+        ";",
     ]
     result = subprocess.run(cmd, capture_output=True, text=True, check=False)
     if result.returncode == 0:
-        patterns["value_objects"] = [f.strip() for f in result.stdout.split("\n") if f.strip()]
+        patterns["value_objects"] = [
+            f.strip() for f in result.stdout.split("\n") if f.strip()
+        ]
 
     # Find aggregate files
     cmd = [
-        "find", ".", "-name", "*.py", "-type", "f",
-        "-path", "*/domain/*",
-        "-exec", "grep", "-l", "aggregates\\.py\\|AggregateRoot", "{}", ";",
+        "find",
+        ".",
+        "-name",
+        "*.py",
+        "-type",
+        "f",
+        "-path",
+        "*/domain/*",
+        "-exec",
+        "grep",
+        "-l",
+        "aggregates\\.py\\|AggregateRoot",
+        "{}",
+        ";",
     ]
     result = subprocess.run(cmd, capture_output=True, text=True, check=False)
     if result.returncode == 0:
-        patterns["aggregates"] = [f.strip() for f in result.stdout.split("\n") if f.strip()]
+        patterns["aggregates"] = [
+            f.strip() for f in result.stdout.split("\n") if f.strip()
+        ]
 
     # Find event files
     cmd = [
-        "find", ".", "-name", "*.py", "-type", "f",
-        "-path", "*/domain/*",
-        "-exec", "grep", "-l", "events\\.py\\|DomainEvent", "{}", ";",
+        "find",
+        ".",
+        "-name",
+        "*.py",
+        "-type",
+        "f",
+        "-path",
+        "*/domain/*",
+        "-exec",
+        "grep",
+        "-l",
+        "events\\.py\\|DomainEvent",
+        "{}",
+        ";",
     ]
     result = subprocess.run(cmd, capture_output=True, text=True, check=False)
     if result.returncode == 0:
@@ -86,7 +136,7 @@ def refactor_entities_file(file_path: str) -> bool:
         changes_made = False
 
         # Add flext-core entity import if not present
-        if "from flext_core.entities import FlextEntity" not in content:
+        if "FlextEntity" not in content:
             # Find good insertion point after other flext_core imports
             if "from flext_core import" in content:
                 pattern = r"(from flext_core import[^\n]*)"
@@ -94,7 +144,7 @@ def refactor_entities_file(file_path: str) -> bool:
                 if match:
                     content = content.replace(
                         match.group(1),
-                        f"{match.group(1)}\nfrom flext_core.entities import FlextEntity",
+                        f"{match.group(1)}\nFlextEntity",
                     )
                     changes_made = True
             else:
@@ -104,7 +154,7 @@ def refactor_entities_file(file_path: str) -> bool:
                 if match:
                     content = content.replace(
                         match.group(1),
-                        f"{match.group(1)}from flext_core.entities import FlextEntity\n",
+                        f"{match.group(1)}FlextEntity\n",
                     )
                     changes_made = True
 
@@ -143,7 +193,9 @@ def refactor_entities_file(file_path: str) -> bool:
                         else:
                             break
 
-                    todo_comment = f"{indent}# TODO: Refactored to use FlextEntity pattern\n"
+                    todo_comment = (
+                        f"{indent}# TODO: Refactored to use FlextEntity pattern\n"
+                    )
                     content = content[:line_start] + todo_comment + content[line_start:]
                     changes_made = True
 
@@ -168,7 +220,7 @@ def refactor_entities_file(file_path: str) -> bool:
         print(f"⏭️ No entity changes needed: {file_path}")
         return False
 
-    except Exception as e:
+    except (OSError, ValueError, TypeError) as e:
         print(f"❌ Error refactoring entities in {file_path}: {e}")
         return False
 
@@ -190,7 +242,7 @@ def refactor_value_objects_file(file_path: str) -> bool:
         changes_made = False
 
         # Add flext-core value object import if not present
-        if "from flext_core.entities import FlextValueObject" not in content:
+        if "FlextValueObject" not in content:
             # Find good insertion point
             if "from flext_core import" in content:
                 pattern = r"(from flext_core import[^\n]*)"
@@ -198,7 +250,7 @@ def refactor_value_objects_file(file_path: str) -> bool:
                 if match:
                     content = content.replace(
                         match.group(1),
-                        f"{match.group(1)}\nfrom flext_core.entities import FlextValueObject",
+                        f"{match.group(1)}\nFlextValueObject",
                     )
                     changes_made = True
             else:
@@ -208,7 +260,7 @@ def refactor_value_objects_file(file_path: str) -> bool:
                 if match:
                     content = content.replace(
                         match.group(1),
-                        f"{match.group(1)}from flext_core.entities import FlextValueObject\n",
+                        f"{match.group(1)}FlextValueObject\n",
                     )
                     changes_made = True
 
@@ -246,7 +298,9 @@ def refactor_value_objects_file(file_path: str) -> bool:
                         else:
                             break
 
-                    todo_comment = f"{indent}# TODO: Refactored to use FlextValueObject pattern\n"
+                    todo_comment = (
+                        f"{indent}# TODO: Refactored to use FlextValueObject pattern\n"
+                    )
                     content = content[:line_start] + todo_comment + content[line_start:]
                     changes_made = True
 
@@ -270,7 +324,7 @@ def refactor_value_objects_file(file_path: str) -> bool:
         print(f"⏭️ No value object changes needed: {file_path}")
         return False
 
-    except Exception as e:
+    except (OSError, ValueError, TypeError) as e:
         print(f"❌ Error refactoring value objects in {file_path}: {e}")
         return False
 
@@ -298,7 +352,10 @@ def analyze_domain_patterns(file_path: str) -> dict[str, int]:
         }
 
         # Count manual entities (classes inheriting from BaseModel but not FlextEntity)
-        entity_matches = re.findall(r"class\s+[A-Z][a-zA-Z0-9_]*\s*\(.*BaseModel.*\):", content)
+        entity_matches = re.findall(
+            r"class\s+[A-Z][a-zA-Z0-9_]*\s*\(.*BaseModel.*\):",
+            content,
+        )
         if entity_matches and "FlextEntity" not in content:
             patterns["manual_entities"] = len(entity_matches)
 
@@ -306,17 +363,27 @@ def analyze_domain_patterns(file_path: str) -> dict[str, int]:
         patterns["manual_id_generation"] = len(re.findall(r"uuid4\(\)", content))
 
         # Count custom validation methods
-        patterns["custom_validation"] = len(re.findall(r"def\s+validate_[a-zA-Z_]", content))
+        patterns["custom_validation"] = len(
+            re.findall(r"def\s+validate_[a-zA-Z_]", content),
+        )
 
         # Count non-FlextResult return types in domain methods
-        method_matches = re.findall(r"def\s+[a-zA-Z_][a-zA-Z0-9_]*\s*\([^)]*\)\s*->\s*([^:]+):", content)
+        method_matches = re.findall(
+            r"def\s+[a-zA-Z_][a-zA-Z0-9_]*\s*\([^)]*\)\s*->\s*([^:]+):",
+            content,
+        )
         for return_type in method_matches:
-            if "FlextResult" not in return_type and return_type.strip() not in {"None", "bool", "str", "int"}:
+            if "FlextResult" not in return_type and return_type.strip() not in {
+                "None",
+                "bool",
+                "str",
+                "int",
+            }:
                 patterns["non_flext_result"] += 1
 
         return patterns
 
-    except Exception as e:
+    except (OSError, ValueError, TypeError) as e:
         print(f"❌ Error analyzing patterns in {file_path}: {e}")
         return {}
 
@@ -350,13 +417,21 @@ def main() -> None:
     # Refactor entity files
     print("\n🔧 Refactoring entity files...")
     for file_path in priority_files:
-        if "entities.py" in file_path and Path(file_path).exists() and refactor_entities_file(file_path):
+        if (
+            "entities.py" in file_path
+            and Path(file_path).exists()
+            and refactor_entities_file(file_path)
+        ):
             refactored_count += 1
 
     # Refactor value object files
     print("\n🔧 Refactoring value object files...")
     for file_path in priority_files:
-        if "value_objects.py" in file_path and Path(file_path).exists() and refactor_value_objects_file(file_path):
+        if (
+            "value_objects.py" in file_path
+            and Path(file_path).exists()
+            and refactor_value_objects_file(file_path)
+        ):
             refactored_count += 1
 
     # Analyze remaining files
@@ -379,8 +454,12 @@ def main() -> None:
                     total_patterns[key] += count
 
     print(f"\n📈 Domain Pattern Analysis ({analyzed_files} files):")
-    print(f"  - Manual entities needing refactoring: {total_patterns['manual_entities']}")
-    print(f"  - Manual ID generation instances: {total_patterns['manual_id_generation']}")
+    print(
+        f"  - Manual entities needing refactoring: {total_patterns['manual_entities']}",
+    )
+    print(
+        f"  - Manual ID generation instances: {total_patterns['manual_id_generation']}",
+    )
     print(f"  - Custom validation methods: {total_patterns['custom_validation']}")
     print(f"  - Non-FlextResult return types: {total_patterns['non_flext_result']}")
 

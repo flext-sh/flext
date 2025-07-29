@@ -253,7 +253,9 @@ def main() -> int:
     logger = DetailedLogger("sync_dependencies")
 
     try:
-        logger.info("Starting SYNC_DEPENDENCIES: Sincronização completa de dependências FLEXT")
+        logger.info(
+            "Starting SYNC_DEPENDENCIES: Sincronização completa de dependências FLEXT",
+        )
 
         print_colored("🔄 Sincronização de dependências FLEXT", Colors.BLUE)
         print_colored("=" * 50, Colors.BLUE)
@@ -298,9 +300,13 @@ def main() -> int:
                 Colors.YELLOW,
             )
 
-            logger.warning("EXECUTION_BLOCKED: Tentativa de execução sem dry-run bloqueada por lock de validação")
+            logger.warning(
+                "EXECUTION_BLOCKED: Tentativa de execução sem dry-run bloqueada por lock de validação",
+            )
 
-            logger.error("Operation failed: Execução bloqueada por lock de validação de segurança")
+            logger.error(
+                "Operation failed: Execução bloqueada por lock de validação de segurança",
+            )
             return 1
 
         if args["dry_run"]:
@@ -394,12 +400,16 @@ def main() -> int:
             print_colored("\n📊 Cache utilizado para melhor performance", Colors.CYAN)
 
         # Finaliza operação com sucesso
-        logger.info(f"Operation completed successfully: {len(projects)} projects validated")
+        logger.info(
+            f"Operation completed successfully: {len(projects)} projects validated",
+        )
 
         print_colored("\n✨ Sincronização concluída!", Colors.GREEN)
-    except Exception as e:
+    except (OSError, ValueError, TypeError) as e:
         # Log erro crítico
-        logger.exception(f"SYNC_ERROR: Erro crítico durante sincronização: {e!s} (tipo: {type(e).__name__})")
+        logger.exception(
+            f"SYNC_ERROR: Erro crítico durante sincronização: {e!s} (tipo: {type(e).__name__})",
+        )
 
         # Finaliza operação com falha
         logger.exception(f"Operation failed: Erro crítico: {e!s}")

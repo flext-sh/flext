@@ -14,6 +14,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from scripts.common import discover_projects
+
 from flext_tools import (
     Colors,
     ConflictAnalyzer,
@@ -22,7 +24,6 @@ from flext_tools import (
     print_colored,
 )
 from flext_tools.core.script_base import FlextScript, ScriptMetadata
-from scripts.common import discover_projects
 
 # Constantes para análise de qualidade
 CRITICAL_DEPENDENCY_THRESHOLD = 5
@@ -198,7 +199,7 @@ class QualityGateway(FlextScript):
             else:
                 print_colored("\n🚫 QUALITY GATEWAY: REPROVADO", Colors.RED)
 
-        except Exception as e:
+        except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Erro durante análise: {e}", Colors.RED)
             return False
         else:
@@ -230,7 +231,7 @@ class QualityGateway(FlextScript):
                 "status": "passed" if total_missing == 0 else "failed",
             }
 
-        except Exception as e:
+        except (OSError, ValueError, TypeError) as e:
             return {
                 "missing_count": -1,
                 "missing_deps": {},
@@ -288,7 +289,7 @@ class QualityGateway(FlextScript):
                 "status": "passed" if total_issues == 0 else "failed",
             }
 
-        except Exception as e:
+        except (OSError, ValueError, TypeError) as e:
             return {
                 "ruff_issues": -1,
                 "mypy_errors": -1,
@@ -309,7 +310,7 @@ class QualityGateway(FlextScript):
                 "status": "passed" if len(conflicts) == 0 else "failed",
             }
 
-        except Exception as e:
+        except (OSError, ValueError, TypeError) as e:
             return {
                 "conflicts_count": -1,
                 "conflicts": [],
@@ -325,7 +326,7 @@ class QualityGateway(FlextScript):
 
             return {"is_valid": is_valid, "status": "passed" if is_valid else "failed"}
 
-        except Exception as e:
+        except (OSError, ValueError, TypeError) as e:
             return {"is_valid": False, "status": "error", "error": str(e)}
 
     def _calculate_project_result(
@@ -445,7 +446,7 @@ class QualityGateway(FlextScript):
                 score_color,
             )
 
-    def create_parser(self) -> Any:
+    def create_parser(self) -> object:
         """Criar parser com argumentos específicos."""
         parser = super().create_parser()
 

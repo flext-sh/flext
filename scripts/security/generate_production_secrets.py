@@ -84,11 +84,11 @@ class ProductionSecretsGenerator(BaseSecurityScript):
             print_colored("❌ Failed to generate production secrets", Colors.RED)
             return False
 
-        except Exception as e:
+        except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Error during secrets generation: {e}", Colors.RED)
             return False
 
-    def create_parser(self) -> Any:
+    def create_parser(self) -> object:
         """Create parser with specific arguments."""
         parser = super().create_parser()
 

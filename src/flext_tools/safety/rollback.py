@@ -177,7 +177,9 @@ class RollbackManager:
 
         """
         # Extrai session_id do restore_point_id
-        session_id = restore_point_id.split("_")[1] + "_" + restore_point_id.split("_")[2]
+        session_id = (
+            restore_point_id.split("_")[1] + "_" + restore_point_id.split("_")[2]
+        )
 
         session_dir = self.backup_dir / f"session_{session_id}"
         restore_file = session_dir / f"{restore_point_id}.json"

@@ -297,8 +297,10 @@ class LockConsistencyAnalyzer:
                 continue
 
             color = (
-                Colors.RED if severity == "critical"
-                else Colors.YELLOW if severity == "warning"
+                Colors.RED
+                if severity == "critical"
+                else Colors.YELLOW
+                if severity == "warning"
                 else Colors.CYAN
             )
 

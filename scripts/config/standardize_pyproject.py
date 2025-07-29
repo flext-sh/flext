@@ -9,7 +9,6 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
-from typing import Any
 
 from flext_tools import Colors, PoetryValidator, print_colored
 from flext_tools.core.script_base import FlextScript, ScriptMetadata
@@ -88,7 +87,7 @@ class PyprojectStandardizer(FlextScript):
                         )
                         failed_projects.append(project_name)
 
-                except Exception as e:
+                except (OSError, ValueError, TypeError) as e:
                     print_colored(f"  ❌ {project_name}: Error - {e}", Colors.RED)
                     failed_projects.append(project_name)
 
@@ -97,7 +96,7 @@ class PyprojectStandardizer(FlextScript):
 
             return len(failed_projects) == 0
 
-        except Exception as e:
+        except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Error during standardization: {e}", Colors.RED)
             return False
 
@@ -152,7 +151,7 @@ class PyprojectStandardizer(FlextScript):
                 status_color,
             )
 
-    def create_parser(self) -> Any:
+    def create_parser(self) -> object:
         """Create parser with specific arguments."""
         parser = super().create_parser()
 

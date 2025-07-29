@@ -30,7 +30,11 @@ class WorkspaceStatus(FlextScript):
     def validate_preconditions(self) -> bool:
         """Validar se estamos no workspace FLEXT."""
         workspace_root = Path.cwd()
-        flext_projects = [p for p in workspace_root.iterdir() if p.is_dir() and p.name.startswith("flext-")]
+        flext_projects = [
+            p
+            for p in workspace_root.iterdir()
+            if p.is_dir() and p.name.startswith("flext-")
+        ]
 
         if not flext_projects:
             print_colored("❌ Execute do diretório raiz do workspace FLEXT", Colors.RED)
@@ -68,7 +72,7 @@ class WorkspaceStatus(FlextScript):
 
             return True
 
-        except Exception as e:
+        except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Erro durante análise: {e}", Colors.RED)
             return False
 
@@ -78,7 +82,10 @@ class WorkspaceStatus(FlextScript):
 
         for item in workspace_root.iterdir():
             if item.is_dir() and (item / "pyproject.toml").exists():
-                if any(skip in item.name for skip in [".git", ".venv", "node_modules", "__pycache__"]):
+                if any(
+                    skip in item.name
+                    for skip in [".git", ".venv", "node_modules", "__pycache__"]
+                ):
                     continue
 
                 projects[item.name] = {

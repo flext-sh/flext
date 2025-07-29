@@ -18,11 +18,8 @@ MIN_PROJECTS_HIGH_SEVERITY = 2
 class VersionAnalyzer:
     """Analisa versões de pacotes e suas constraints."""
 
-    def __init__(self) -> None:
-        """Inicializa o analisador de versões."""
-        self.version_cache: dict[str, Any] = {}
-
-    def parse_version_spec(self, spec: str) -> tuple[str, str | None]:
+    @staticmethod
+    def parse_version_spec(spec: str) -> tuple[str, str | None]:
         """Extrai nome do pacote e versão de uma especificação.
 
         Args:
@@ -51,7 +48,8 @@ class VersionAnalyzer:
 
         return spec, None
 
-    def normalize_constraint(self, constraint: str) -> str:
+    @staticmethod
+    def normalize_constraint(constraint: str) -> str:
         """Normaliza constraint de versão para formato padrão.
 
         Args:
@@ -79,8 +77,7 @@ class VersionAnalyzer:
                 # OR ^x.y.z -> >=x.y.z,<(x+1).0.0
                 if v.major == 0:
                     upper = (
-                        f"0.0.{v.micro + 1}" if v.minor == 0
-                        else f"0.{v.minor + 1}.0"
+                        f"0.0.{v.micro + 1}" if v.minor == 0 else f"0.{v.minor + 1}.0"
                     )
                 else:
                     upper = f"{v.major + 1}.0.0"
@@ -100,8 +97,8 @@ class VersionAnalyzer:
 
         return constraint
 
+    @staticmethod
     def check_version_compatibility(
-        self,
         spec1: str,
         spec2: str,
     ) -> dict[str, Any]:
@@ -124,8 +121,8 @@ class VersionAnalyzer:
             }
 
         # Normaliza todas as constraints
-        normalized1 = self.normalize_constraint(spec1)
-        normalized2 = self.normalize_constraint(spec2)
+        normalized1 = VersionAnalyzer.normalize_constraint(spec1)
+        normalized2 = VersionAnalyzer.normalize_constraint(spec2)
 
         try:
             combined = SpecifierSet()
@@ -156,8 +153,8 @@ class VersionAnalyzer:
                 "issues": [f"Constraints incompatíveis: {spec1}, {spec2}"],
             }
 
+    @staticmethod
     def find_common_version_range(
-        self,
         project_constraints: dict[str, str],
     ) -> str | None:
         """Encontra range de versão comum entre múltiplos projetos.
@@ -182,14 +179,15 @@ class VersionAnalyzer:
             return unique_constraints[0]
 
         # Tenta encontrar interseção
-        result = self.check_version_compatibility(
+        result = VersionAnalyzer.check_version_compatibility(
             unique_constraints[0],
             unique_constraints[1],
         )
         return result.get("recommended")
 
+    @staticmethod
     def _collect_package_versions(
-        self, projects_data: dict[str, dict[str, Any]],
+        projects_data: dict[str, dict[str, Any]],
     ) -> dict[str, dict[str, str]]:
         """Coleta versões de cada package por projeto."""
         package_versions: dict[str, dict[str, str]] = {}
@@ -198,7 +196,7 @@ class VersionAnalyzer:
             # PEP 621 dependencies
             pep621_deps = data.get("project", {}).get("dependencies", [])
             for dep_spec in pep621_deps:
-                package_name, version_spec = self.parse_version_spec(dep_spec)
+                package_name, version_spec = VersionAnalyzer.parse_version_spec(dep_spec)
                 if package_name and version_spec:
                     if package_name not in package_versions:
                         package_versions[package_name] = {}
@@ -220,8 +218,9 @@ class VersionAnalyzer:
 
         return package_versions
 
+    @staticmethod
     def _detect_version_conflicts(
-        self, package_versions: dict[str, dict[str, str]],
+        package_versions: dict[str, dict[str, str]],
     ) -> dict[str, list[dict[str, Any]]]:
         """Detecta conflitos de versão entre packages."""
         conflicts: dict[str, list[dict[str, Any]]] = {}
@@ -230,7 +229,7 @@ class VersionAnalyzer:
             if len(versions) > 1:
                 unique_specs = set(versions.values())
                 if len(unique_specs) > 1:
-                    analysis = self.check_version_compatibility(
+                    analysis = VersionAnalyzer.check_version_compatibility(
                         next(iter(unique_specs)),
                         list(unique_specs)[1],
                     )
@@ -242,7 +241,8 @@ class VersionAnalyzer:
                                 "projects": versions,
                                 "analysis": analysis,
                                 "severity": (
-                                    "high" if len(versions) > MIN_PROJECTS_HIGH_SEVERITY
+                                    "high"
+                                    if len(versions) > MIN_PROJECTS_HIGH_SEVERITY
                                     else "medium"
                                 ),
                             },
@@ -250,19 +250,18 @@ class VersionAnalyzer:
 
         return conflicts
 
+    @staticmethod
     def analyze_version_conflicts(
-        self,
         projects_data: dict[str, dict[str, Any]],
     ) -> dict[str, list[dict[str, Any]]]:
         """Analisa conflitos de versão entre projetos."""
         print_colored("🔍 Analisando conflitos de versão...", Colors.BLUE)
 
-        package_versions = self._collect_package_versions(projects_data)
-        return self._detect_version_conflicts(package_versions)
+        package_versions = VersionAnalyzer._collect_package_versions(projects_data)
+        return VersionAnalyzer._detect_version_conflicts(package_versions)
 
-
+    @staticmethod
     def suggest_version_resolution(
-        self,
         conflicts: dict[str, dict[str, Any]],
     ) -> dict[str, str]:
         """Sugere resoluções para conflitos de versão.
@@ -295,16 +294,17 @@ class VersionAnalyzer:
                 continue
 
             # Tenta encontrar interseção
-            common_range = self.find_common_version_range(project_specs)
+            common_range = VersionAnalyzer.find_common_version_range(project_specs)
             if common_range:
                 suggestions[package] = common_range
             else:
                 # Sugere a constraint mais restritiva
-                suggestions[package] = self._get_most_restrictive_spec(valid_specs)
+                suggestions[package] = VersionAnalyzer._get_most_restrictive_spec(valid_specs)
 
         return suggestions
 
-    def _get_most_restrictive_spec(self, specs: list[str]) -> str:
+    @staticmethod
+    def _get_most_restrictive_spec(specs: list[str]) -> str:
         """Retorna a especificação mais restritiva."""
 
         # Ordena por número de constraints
@@ -313,3 +313,70 @@ class VersionAnalyzer:
 
         sorted_specs = sorted(specs, key=count_constraints, reverse=True)
         return sorted_specs[0] if sorted_specs else "*"
+
+
+# Helper functions following flext-core pattern
+def parse_version_spec(spec: str) -> tuple[str, str | None]:
+    """Parse version specification into package name and version constraint.
+
+    Args:
+        spec: Package specification (e.g., "django>=3.2")
+
+    Returns:
+        Tuple (package_name, version_specification)
+
+    """
+    return VersionAnalyzer.parse_version_spec(spec)
+
+
+def normalize_constraint(constraint: str) -> str:
+    """Normalize version constraint to standard format.
+
+    Args:
+        constraint: Original constraint (e.g., "^1.2.3")
+
+    Returns:
+        Normalized constraint (e.g., ">=1.2.3,<2.0.0")
+
+    """
+    return VersionAnalyzer.normalize_constraint(constraint)
+
+
+def check_version_compatibility(spec1: str, spec2: str) -> dict[str, Any]:
+    """Check compatibility between two version specifications.
+
+    Args:
+        spec1: First version specification
+        spec2: Second version specification
+
+    Returns:
+        Compatibility analysis dict
+
+    """
+    return VersionAnalyzer.check_version_compatibility(spec1, spec2)
+
+
+def analyze_version_conflicts(projects_data: dict[str, dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
+    """Analyze version conflicts between projects.
+
+    Args:
+        projects_data: Dictionary of project data from pyproject.toml files
+
+    Returns:
+        Dictionary of conflicts by package name
+
+    """
+    return VersionAnalyzer.analyze_version_conflicts(projects_data)
+
+
+def suggest_version_resolution(conflicts: dict[str, dict[str, Any]]) -> dict[str, str]:
+    """Suggest resolutions for version conflicts.
+
+    Args:
+        conflicts: Dictionary of conflicts from analyze_version_conflicts
+
+    Returns:
+        Suggested versions by package name
+
+    """
+    return VersionAnalyzer.suggest_version_resolution(conflicts)

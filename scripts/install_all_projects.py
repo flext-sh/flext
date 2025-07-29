@@ -21,7 +21,10 @@ def get_project_directories() -> list[str]:
 
     # Projetos principais (excluindo backups e arquivos temporários)
     for pyproject in workspace_root.rglob("pyproject.toml"):
-        if any(exclude in str(pyproject) for exclude in [".venv", ".flext_backups", "test_failures"]):
+        if any(
+            exclude in str(pyproject)
+            for exclude in [".venv", ".flext_backups", "test_failures"]
+        ):
             continue
 
         project_dir = pyproject.parent
@@ -57,7 +60,7 @@ def run_poetry_install(project_dir: str) -> tuple[bool, str]:
 
     except subprocess.TimeoutExpired:
         return False, "❌ Timeout (5 minutos)"
-    except Exception as e:
+    except (OSError, ValueError, TypeError) as e:
         return False, f"❌ Exceção: {e!s}"
 
 
