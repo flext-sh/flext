@@ -40,8 +40,7 @@ def discover_projects(
     # Apply filter if provided
     if projects_filter:
         filtered_projects = [
-            project for project in all_projects
-            if project.name in projects_filter
+            project for project in all_projects if project.name in projects_filter
         ]
         return sorted(filtered_projects, key=lambda p: p.name)
 

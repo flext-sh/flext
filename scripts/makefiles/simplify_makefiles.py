@@ -25,7 +25,11 @@ def main() -> None:
 
     # Find all FLEXT project Makefiles
     makefile_files = list(workspace_root.glob("*/Makefile"))
-    makefile_files = [f for f in makefile_files if not str(f).startswith(str(workspace_root / ".venv"))]
+    makefile_files = [
+        f
+        for f in makefile_files
+        if not str(f).startswith(str(workspace_root / ".venv"))
+    ]
 
     print(f"🔍 Found {len(makefile_files)} Makefiles to simplify")
 
@@ -59,7 +63,7 @@ def main() -> None:
                 f.write(simplified_makefile)
             print(f"  ✅ Simplified Makefile for {project_name}")
             simplified_count += 1
-        except Exception as e:
+        except (OSError, ValueError, TypeError) as e:
             print(f"  ❌ Failed to write {makefile_path}: {e}")
 
     print("\n🎉 Makefile simplification completed following KISS principle!")

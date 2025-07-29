@@ -26,6 +26,7 @@ class Colors:
 
 
 def print_colored(text: str, color: str) -> None:
+    """Print text with color formatting."""
     print(f"{color}{text}{Colors.END}")
 
 
@@ -63,6 +64,7 @@ class ArchitectureAnalyzer:
     """Analisador principal de violações arquiteturais."""
 
     def __init__(self, workspace_root: Path) -> None:
+        """Initialize the architecture analyzer."""
         self.workspace_root = workspace_root
         self.projects = self._discover_projects()
         self.violations: list[Violation] = []
@@ -199,7 +201,8 @@ class ArchitectureAnalyzer:
                 violation_type="LAYER_VIOLATION",
                 description=(
                     f"Projeto {project.name} (camada {project.layer.value}) "
-                    f"importa {imported_project.name} (camada {imported_project.layer.value})"
+                    f"importa {imported_project.name} "
+                    f"(camada {imported_project.layer.value})"
                 ),
                 severity="HIGH",
                 suggested_action=(
@@ -291,12 +294,18 @@ class ArchitectureAnalyzer:
                         return Violation(
                             file_path=file_path,
                             violation_type="MISPLACED_MODULE",
-                            description=f"Módulo com código específico ({pattern}) em camada base",
+                            description=(
+                                f"Módulo com código específico ({pattern}) "
+                                f"em camada base"
+                            ),
                             severity="HIGH",
-                            suggested_action=f"Renomear {file_path.name} para .bak e mover funcionalidade para camada apropriada",
+                            suggested_action=(
+                                f"Renomear {file_path.name} para .bak e mover "
+                                f"funcionalidade para camada apropriada"
+                            ),
                         )
 
-        except Exception as e:
+        except (OSError, UnicodeDecodeError) as e:
             print_colored(f"⚠️  Erro ao analisar {file_path}: {e}", Colors.YELLOW)
 
         return None
@@ -325,7 +334,9 @@ class ArchitectureAnalyzer:
             )
 
             for violation in violations:
-                severity_color = Colors.RED if violation.severity == "HIGH" else Colors.YELLOW
+                severity_color = (
+                    Colors.RED if violation.severity == "HIGH" else Colors.YELLOW
+                )
                 print_colored(f"  📁 {violation.file_path}", severity_color)
                 print_colored(f"     {violation.description}", Colors.WHITE)
                 print_colored(f"     💡 {violation.suggested_action}", Colors.BLUE)
@@ -338,13 +349,16 @@ class ArchitectureAnalyzer:
 
     def generate_fix_script(self) -> None:
         """Gera script para correção automática."""
-        script_path = self.workspace_root / "scripts" / "architecture" / "fix_violations.sh"
+        script_path = (
+            self.workspace_root / "scripts" / "architecture" / "fix_violations.sh"
+        )
         script_path.parent.mkdir(parents=True, exist_ok=True)
 
         with script_path.open("w", encoding="utf-8") as f:
             f.write("#!/bin/bash\n")
             f.write(
-                "# Script gerado automaticamente para correção de violações arquiteturais\n\n",
+                "# Script gerado automaticamente para correção de "
+                "violações arquiteturais\n\n",
             )
 
             for violation in self.violations:

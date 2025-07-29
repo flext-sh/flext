@@ -61,7 +61,13 @@ def fix_import_order(file_path: Path) -> bool:
             return False
 
         # Insert DI block at the correct position
-        content = content[:insert_pos] + "\n" + di_block.rstrip() + "\n" + content[insert_pos:]
+        content = (
+            content[:insert_pos]
+            + "\n"
+            + di_block.rstrip()
+            + "\n"
+            + content[insert_pos:]
+        )
 
         # Clean up extra blank lines
         content = re.sub(r"\n{3,}", "\n\n", content)
@@ -71,7 +77,7 @@ def fix_import_order(file_path: Path) -> bool:
             print(f"Fixed import order in {file_path}")
             return True
 
-    except Exception as e:
+    except (OSError, ValueError, TypeError) as e:
         print(f"Error processing {file_path}: {e}")
         return False
 

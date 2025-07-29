@@ -170,8 +170,7 @@ class PoetryOperations:
             print_colored(f"💾 Backup criado: {backup_id}", Colors.CYAN)
 
         removed = [
-            dep for dep in dependencies
-            if self._remove_dependency(project_path, dep)
+            dep for dep in dependencies if self._remove_dependency(project_path, dep)
         ]
 
         # Resumo das remoções

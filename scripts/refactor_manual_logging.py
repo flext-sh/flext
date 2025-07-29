@@ -13,9 +13,16 @@ import subprocess
 def find_files_with_manual_logging() -> list[str]:
     """Find all Python files with manual logging setup."""
     cmd = [
-        "find", ".",
-        "-name", "*.py",
-        "-exec", "grep", "-l", "logger = logging\\.getLogger", "{}", ";",
+        "find",
+        ".",
+        "-name",
+        "*.py",
+        "-exec",
+        "grep",
+        "-l",
+        "logger = logging\\.getLogger",
+        "{}",
+        ";",
     ]
 
     try:
@@ -52,7 +59,9 @@ def refactor_file(file_path: str) -> bool:
                 )
             else:
                 # Add new import line after other imports
-                import_pattern = r"(from __future__ import annotations\n\n)(.*?)(from [^f].*?\n)"
+                import_pattern = (
+                    r"(from __future__ import annotations\n\n)(.*?)(from [^f].*?\n)"
+                )
                 match = re.search(import_pattern, content, re.DOTALL)
                 if match:
                     content = content.replace(
@@ -79,7 +88,7 @@ def refactor_file(file_path: str) -> bool:
         print(f"⏭️ No changes needed: {file_path}")
         return False
 
-    except Exception as e:
+    except (OSError, ValueError, TypeError) as e:
         print(f"❌ Error refactoring {file_path}: {e}")
         return False
 

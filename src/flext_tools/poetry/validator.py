@@ -226,7 +226,8 @@ class PoetryValidator:
             "version": poetry.get("version", "unknown"),
             "description": poetry.get("description", ""),
             "python_version": poetry.get("dependencies", {}).get("python", "unknown"),
-            "dependency_count": len(poetry.get("dependencies", {})) - 1,  # exclude python
+            "dependency_count": len(poetry.get("dependencies", {}))
+            - 1,  # exclude python
             "group_count": len(poetry.get("group", {})),
             "has_scripts": bool(poetry.get("scripts", {})),
             "has_plugins": bool(poetry.get("plugins", {})),

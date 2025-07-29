@@ -23,8 +23,13 @@ def find_python_files(root_dir: Path) -> list[Path]:
 
     # Skip these directories completely
     skip_dirs = {
-        "__pycache__", ".pytest_cache", ".mypy_cache",
-        ".git", ".venv", "venv", "node_modules",
+        "__pycache__",
+        ".pytest_cache",
+        ".mypy_cache",
+        ".git",
+        ".venv",
+        "venv",
+        "node_modules",
         ".flext_backups",
     }
 
@@ -89,7 +94,10 @@ def refactor_file(file_path: Path) -> tuple[bool, list[str]]:
         content = re.sub(r"^import\s+logging\s*$\n?", "", content, flags=re.MULTILINE)
 
         # Add FlextLoggerFactory import if not present
-        if "from flext_core import get_logger" not in content and "FlextLoggerFactory" not in content:
+        if (
+            "from flext_core import get_logger" not in content
+            and "FlextLoggerFactory" not in content
+        ):
             # Find import section and add the import
             lines = content.split("\n")
             import_insert_index = 0
@@ -101,13 +109,17 @@ def refactor_file(file_path: Path) -> tuple[bool, list[str]]:
                 elif line.strip().startswith('"""') or line.strip().startswith("'''"):
                     # Skip docstrings
                     continue
-                elif line.strip().startswith("import ") or line.strip().startswith("from "):
+                elif line.strip().startswith("import ") or line.strip().startswith(
+                    "from ",
+                ):
                     import_insert_index = max(import_insert_index, i + 1)
 
             # Insert the import
             if import_insert_index < len(lines):
                 lines.insert(import_insert_index, "")
-                lines.insert(import_insert_index + 1, "from flext_core import get_logger")
+                lines.insert(
+                    import_insert_index + 1, "from flext_core import get_logger",
+                )
             else:
                 lines.append("")
                 lines.append("from flext_core import get_logger")
@@ -125,10 +137,14 @@ def refactor_file(file_path: Path) -> tuple[bool, list[str]]:
         )
         content = re.sub(
             r"logging\.getLogger\([^)]+\)",
-            lambda m: m.group(0).replace("logging.getLogger", "FlextLoggerFactory.get_logger"),
+            lambda m: m.group(0).replace(
+                "logging.getLogger", "FlextLoggerFactory.get_logger",
+            ),
             content,
         )
-        changes.append("Replaced logging.getLogger() calls with FlextLoggerFactory.get_logger()")
+        changes.append(
+            "Replaced logging.getLogger() calls with FlextLoggerFactory.get_logger()",
+        )
 
     # Pattern 3: Handle logger = FlextLoggerFactory.get_logger() patterns
     content = re.sub(

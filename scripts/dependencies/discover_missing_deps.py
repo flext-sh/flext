@@ -9,7 +9,6 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
-from typing import Any
 
 from flext_tools import Colors, DependencyDiscovery, print_colored
 from flext_tools.core.script_base import FlextScript, ScriptMetadata
@@ -107,7 +106,7 @@ class MissingDependenciesDiscoverer(FlextScript):
 
             return True
 
-        except Exception as e:
+        except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Erro durante análise: {e}", Colors.RED)
             return False
 
@@ -157,7 +156,7 @@ class MissingDependenciesDiscoverer(FlextScript):
             print("  • Use: python scripts/dependencies/sync_dependencies.py --auto")
             print("  • Para projetos específicos: poetry add <dependência>")
 
-    def create_parser(self) -> Any:
+    def create_parser(self) -> object:
         """Criar parser com argumentos específicos."""
         parser = super().create_parser()
 

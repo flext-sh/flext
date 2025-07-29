@@ -16,7 +16,6 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
-from typing import Any
 
 from flext_tools import Colors, PoetryValidator, print_colored
 from flext_tools.core.script_base import FlextScript, ScriptMetadata
@@ -106,7 +105,7 @@ class ComprehensiveWorkspaceManager(FlextScript):
 
             return bool(success)
 
-        except Exception as e:
+        except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Error during workspace management: {e}", Colors.RED)
             return False
 
@@ -217,7 +216,7 @@ class ComprehensiveWorkspaceManager(FlextScript):
                     )
                     failed_projects.append(project_name)
 
-            except Exception as e:
+            except (OSError, ValueError, TypeError) as e:
                 print_colored(f"  ❌ {project_name}: Error - {e}", Colors.RED)
                 failed_projects.append(project_name)
 
@@ -299,7 +298,7 @@ class ComprehensiveWorkspaceManager(FlextScript):
 
             print_colored("❌ MyPy workspace check failed", Colors.RED)
             return False
-        except Exception as e:
+        except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Error during MyPy check: {e}", Colors.RED)
             return False
 
@@ -325,7 +324,7 @@ class ComprehensiveWorkspaceManager(FlextScript):
                 print_colored("❌ Failed to setup SSL certificates", Colors.RED)
 
             return bool(success)
-        except Exception as e:
+        except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Error during SSL setup: {e}", Colors.RED)
             return False
 
@@ -359,11 +358,11 @@ class ComprehensiveWorkspaceManager(FlextScript):
                 )
 
             return bool(success)
-        except Exception as e:
+        except (OSError, ValueError, TypeError) as e:
             print_colored(f"❌ Error during monitoring setup: {e}", Colors.RED)
             return False
 
-    def create_parser(self) -> Any:
+    def create_parser(self) -> object:
         """Create parser with comprehensive arguments."""
         parser = super().create_parser()
 

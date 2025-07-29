@@ -217,11 +217,13 @@ class ConflictAnalyzer:
             "unique_packages": len(unique_packages),
             "packages_with_conflicts": len(conflicts),
             "blocking_packages": len(blockers),
-            "affected_projects": len({
-                project
-                for blocker_data in blockers.values()
-                for project in blocker_data["blocking_projects"]
-            }),
+            "affected_projects": len(
+                {
+                    project
+                    for blocker_data in blockers.values()
+                    for project in blocker_data["blocking_projects"]
+                },
+            ),
         }
 
     def generate_conflict_report(self, analysis: dict[str, Any]) -> str:
@@ -259,8 +261,7 @@ class ConflictAnalyzer:
                 if conflict_data["analysis"]["issues"]:
                     lines.append("\n**Problemas:**")
                     lines.extend(
-                        f"- {issue}"
-                        for issue in conflict_data["analysis"]["issues"]
+                        f"- {issue}" for issue in conflict_data["analysis"]["issues"]
                     )
 
                 lines.append("")

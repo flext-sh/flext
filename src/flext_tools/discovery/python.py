@@ -221,8 +221,10 @@ class PythonImportDiscovery:
             project_path / "src" / module_name / "__init__.py",
             project_path / f"{module_name}.py",
             project_path / module_name / "__init__.py",
-            project_path / "src" / project_path.name.replace("-", "_") /
-            f"{module_name}.py",
+            project_path
+            / "src"
+            / project_path.name.replace("-", "_")
+            / f"{module_name}.py",
         ]
 
         for path in possible_paths:
