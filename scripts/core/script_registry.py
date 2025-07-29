@@ -13,7 +13,7 @@ from dataclasses import dataclass, field
 from enum import StrEnum
 from pathlib import Path
 
-from flext_core.patterns.logging import get_logger
+get_logger
 
 # Usar flext_tools completo para máxima enterprise
 from flext_tools.core.script_base import ScriptMetadata
@@ -80,7 +80,10 @@ class ScriptRegistry:
         """Descobre automaticamente todos os scripts."""
         for script_file in self.scripts_root.rglob("*.py"):
             # Skip arquivos especiais
-            if script_file.name.startswith(("__", "test_")) or script_file.name == "flext_tools.py":
+            if (
+                script_file.name.startswith(("__", "test_"))
+                or script_file.name == "flext_tools.py"
+            ):
                 get_logger(__name__).debug("Failed to parse script metadata")
 
             # Skip core system files
@@ -129,7 +132,7 @@ class ScriptRegistry:
                 category="unknown",
             )
 
-        except Exception as e:
+        except (OSError, ValueError, TypeError) as e:
             print_colored(
                 f"❌ Erro ao extrair metadados de {script_path}: {e}",
                 Colors.RED,
@@ -148,7 +151,9 @@ class ScriptRegistry:
 
             # Procura por docstring no início do arquivo
             docstring_match = re.search(r'"""(.*?)"""', content, re.DOTALL)
-            description = docstring_match.group(1).strip() if docstring_match else "Script legado"
+            description = (
+                docstring_match.group(1).strip() if docstring_match else "Script legado"
+            )
 
             # Procura por função main
             main_match = re.search(r"def\s+main\s*\(", content)
@@ -310,7 +315,10 @@ class ScriptRegistry:
                 ),
             )
             lines.extend(
-                [f"\t@python scripts/core/script_runner.py {script.name}" for script in category_scripts],
+                [
+                    f"\t@python scripts/core/script_runner.py {script.name}"
+                    for script in category_scripts
+                ],
             )
             lines.append("")
 

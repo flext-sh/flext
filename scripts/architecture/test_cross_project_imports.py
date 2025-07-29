@@ -26,7 +26,7 @@ def test_imports() -> bool:
 
         results["flext-core"] = "✅ SUCCESS"
         print("   ✅ flext-core imports working")
-    except Exception as e:
+    except (OSError, ValueError, TypeError) as e:
         results["flext-core"] = f"❌ FAILED: {e}"
         print(f"   ❌ flext-core failed: {e}")
         traceback.print_exc()
@@ -37,7 +37,7 @@ def test_imports() -> bool:
 
         results["flext-cli"] = "✅ SUCCESS"
         print("   ✅ flext-cli imports working")
-    except Exception as e:
+    except (OSError, ValueError, TypeError) as e:
         results["flext-cli"] = f"❌ FAILED: {e}"
         print(f"   ❌ flext-cli failed: {e}")
         traceback.print_exc()
@@ -48,7 +48,7 @@ def test_imports() -> bool:
 
         results["flext-observability"] = "✅ SUCCESS"
         print("   ✅ flext-observability imports working")
-    except Exception as e:
+    except (OSError, ValueError, TypeError) as e:
         results["flext-observability"] = f"❌ FAILED: {e}"
         print(f"   ❌ flext-observability failed: {e}")
         traceback.print_exc()
@@ -59,7 +59,7 @@ def test_imports() -> bool:
 
         results["flext-meltano"] = "✅ SUCCESS"
         print("   ✅ flext-meltano imports working")
-    except Exception as e:
+    except (OSError, ValueError, TypeError) as e:
         results["flext-meltano"] = f"❌ FAILED: {e}"
         print(f"   ❌ flext-meltano failed: {e}")
         traceback.print_exc()
@@ -70,7 +70,7 @@ def test_imports() -> bool:
 
         results["flext-ldif"] = "✅ SUCCESS"
         print("   ✅ flext-ldif imports working")
-    except Exception as e:
+    except (OSError, ValueError, TypeError) as e:
         results["flext-ldif"] = f"❌ FAILED: {e}"
         print(f"   ❌ flext-ldif failed: {e}")
         traceback.print_exc()
@@ -81,7 +81,7 @@ def test_imports() -> bool:
 
         results["flext-ldap"] = "✅ SUCCESS"
         print("   ✅ flext-ldap imports working")
-    except Exception as e:
+    except (OSError, ValueError, TypeError) as e:
         results["flext-ldap"] = f"❌ FAILED: {e}"
         print(f"   ❌ flext-ldap failed: {e}")
         traceback.print_exc()

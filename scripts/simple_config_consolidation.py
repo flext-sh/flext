@@ -11,8 +11,18 @@ print("🔍 Starting manual configuration consolidation...")
 def find_manual_env_vars() -> list[str]:
     """Find files with manual os.getenv() usage."""
     cmd = [
-        "find", ".", "-name", "*.py", "-type", "f",
-        "-exec", "grep", "-l", "os\\.getenv\\|os\\.environ\\.get", "{}", ";",
+        "find",
+        ".",
+        "-name",
+        "*.py",
+        "-type",
+        "f",
+        "-exec",
+        "grep",
+        "-l",
+        "os\\.getenv\\|os\\.environ\\.get",
+        "{}",
+        ";",
     ]
     result = subprocess.run(cmd, capture_output=True, text=True, check=False)
     if result.returncode == 0:
@@ -43,7 +53,10 @@ def add_config_todos_to_file(file_path: str) -> bool:
                         insert_line = i + 1
 
                 if insert_line > 0:
-                    lines.insert(insert_line, "\n# TODO: Consolidate manual config to FLEXT patterns")
+                    lines.insert(
+                        insert_line,
+                        "\n# TODO: Consolidate manual config to FLEXT patterns",
+                    )
                     content = "\n".join(lines)
                     changes_made = True
 
@@ -74,7 +87,7 @@ def add_config_todos_to_file(file_path: str) -> bool:
         print(f"⏭️ No changes needed: {file_path}")
         return False
 
-    except Exception as e:
+    except (OSError, ValueError, TypeError) as e:
         print(f"❌ Error processing {file_path}: {e}")
         return False
 

@@ -7,15 +7,12 @@ from pathlib import Path
 
 def _find_config_files() -> list[Path]:
     """Find config.py files in the workspace."""
-    config_files: list[Path] = []
     workspace = Path()
-
-    for config_file in workspace.rglob("config.py"):
-        if ("/src/" in str(config_file) and
-            ".venv" not in str(config_file)):
-            config_files.append(config_file)
-
-    return config_files
+    return [
+        config_file
+        for config_file in workspace.rglob("config.py")
+        if "/src/" in str(config_file) and ".venv" not in str(config_file)
+    ]
 
 
 def _analyze_single_config(config_file: Path, patterns: dict[str, list[str]]) -> None:
@@ -138,7 +135,7 @@ def _analyze_priority_file(file_path: str) -> None:
 
 
 def main() -> None:
-    """Main analysis function."""
+    """Analyze configuration files and provide recommendations."""
     analyze_config_files()
 
     print("\n📋 Recommended Actions:")

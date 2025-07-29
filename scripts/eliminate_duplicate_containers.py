@@ -99,7 +99,7 @@ def configure_{module_lower}_dependencies() -> None:
         logger.error(f"Failed to configure {module_name} dependencies: {{e}}")
 
 
-def get_{module_lower}_service(service_name: str) -> Any:
+def get_{module_lower}_service(service_name: str) -> object:
     """Get {module_lower} service from container.
 
     Args:
@@ -139,7 +139,7 @@ def refactor_container_file(file_path: str) -> bool:
         print(f"✅ Eliminated duplicate container: {file_path}")
         return True
 
-    except Exception as e:
+    except (OSError, ValueError, TypeError) as e:
         print(f"❌ Error refactoring {file_path}: {e}")
         return False
 
@@ -162,24 +162,43 @@ def eliminate_duplicate_containers() -> None:
 
     # Find files with FlextBaseDIContainer or other duplicated patterns
     try:
-        result = subprocess.run([
-            "find", ".", "-name", "*.py", "-type", "f",
-            "-exec", "grep", "-l", "FlextBaseDIContainer\\|DIContainer\\|class.*Container", "{}", ";",
-        ], capture_output=True, text=True, check=False)
+        result = subprocess.run(
+            [
+                "find",
+                ".",
+                "-name",
+                "*.py",
+                "-type",
+                "f",
+                "-exec",
+                "grep",
+                "-l",
+                "FlextBaseDIContainer\\|DIContainer\\|class.*Container",
+                "{}",
+                ";",
+            ],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
 
         if result.returncode == 0:
-            files_with_patterns = [f.strip() for f in result.stdout.split("\n") if f.strip()]
+            files_with_patterns = [
+                f.strip() for f in result.stdout.split("\n") if f.strip()
+            ]
 
             # Filter out flext-core files (these are the official ones)
             duplicate_files = [f for f in files_with_patterns if "flext-core" not in f]
 
             if duplicate_files:
-                print(f"⚠️ Found {len(duplicate_files)} files with potential duplicate patterns:")
+                print(
+                    f"⚠️ Found {len(duplicate_files)} files with potential duplicate patterns:",
+                )
                 for file_path in duplicate_files[:10]:  # Show first 10
                     print(f"   - {file_path}")
                 print("📋 These files may need manual review for elimination")
 
-    except Exception as e:
+    except (OSError, ValueError, TypeError) as e:
         print(f"❌ Error searching for duplicate patterns: {e}")
 
 

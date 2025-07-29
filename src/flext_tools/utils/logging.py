@@ -40,7 +40,7 @@ class DetailedLogger:
 
     def exception(self, message: str) -> None:
         """Log exception message."""
-        self.logger.exception(message)
+        self.logger.error(message)
 
 
 def get_logger(name: str) -> DetailedLogger:
@@ -51,7 +51,7 @@ def get_logger(name: str) -> DetailedLogger:
 def log_operation(func: Callable[..., Any]) -> Callable[..., Any]:
     """Decorator to log operations."""
 
-    def wrapper(*args: Any, **kwargs: object) -> Any:
+    def wrapper(*args: object, **kwargs: object) -> object:
         logger = get_logger(func.__name__)
         logger.info(f"Starting operation: {func.__name__}")
         try:
