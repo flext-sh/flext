@@ -107,7 +107,6 @@ class PythonImportDiscovery:
             if self._is_internal_module(package_name, Path()):
                 continue
 
-            # CORREÇÃO: Detecta pacotes com extras [asyncio], [s3,gcs]
             if "[" in package_name and "]" in package_name:
                 # Extrai nome base do pacote (antes do [)
                 base_package = package_name.split("[")[0]

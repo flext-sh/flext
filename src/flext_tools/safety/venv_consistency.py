@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import subprocess
 import sys
 import tomllib
@@ -109,14 +110,14 @@ class VenvConsistencyValidator:
 
         try:
             # Usa pip list para obter packages instalados
-            result = subprocess.run(
+            # Safe: using sys.executable with hardcoded arguments
+            result = subprocess.run(  # noqa: S603
                 [sys.executable, "-m", "pip", "list", "--format=json"],
                 capture_output=True,
                 text=True,
                 check=True,
+                cwd=self.workspace_path,
             )
-
-            import json
 
             packages_data = json.loads(result.stdout)
 

@@ -7,6 +7,7 @@ usando flext_tools.quality para máxima confiabilidade enterprise.
 
 from __future__ import annotations
 
+import subprocess
 import sys
 from pathlib import Path
 from typing import Any
@@ -39,8 +40,6 @@ class GradualLintFixerScript(FlextScript):
 
         # Check Ruff availability
         try:
-            import subprocess
-
             subprocess.run(
                 ["ruff", "--version"],
                 capture_output=True,

@@ -91,7 +91,17 @@ def configure_{module_lower}_dependencies() -> None:
 
     try:
         # Register module-specific dependencies
-        # TODO: Add module-specific service registrations here
+        # Register core services for this module
+        container.register("config", get_flext_config())
+        container.register("logger", get_flext_logger())
+
+        # Register module-specific services based on module type
+        if "api" in module_lower:
+            container.register("api_client", get_api_client())
+        elif "cli" in module_lower:
+            container.register("cli_handler", get_cli_handler())
+        elif "meltano" in module_lower:
+            container.register("meltano_runner", get_meltano_runner())
 
         logger.info("{module_name} dependencies configured successfully")
 

@@ -5,7 +5,8 @@ from __future__ import annotations
 import hashlib
 import json
 import shutil
-from datetime import datetime
+import tomllib
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -83,7 +84,7 @@ class BackupManager:
                 "project_path": str(project_path),
                 "backup_path": str(backup_path),
                 "description": description,
-                "timestamp": datetime.now().isoformat(),
+                "timestamp": datetime.now(UTC).isoformat(),
                 "files": backed_up_files,
                 "file_count": len(backed_up_files),
             }
@@ -136,7 +137,7 @@ class BackupManager:
                 "original_path": str(file_path),
                 "backup_path": str(backup_path),
                 "operation_type": operation_type,
-                "timestamp": datetime.now().isoformat(),
+                "timestamp": datetime.now(UTC).isoformat(),
                 "file_hash": file_hash,
                 "file_size": file_size,
             }
@@ -168,7 +169,7 @@ class BackupManager:
         restore_data = {
             "restore_point_id": restore_point_id,
             "description": description,
-            "timestamp": datetime.now().isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "operations_count": len(self.operations_log),
             "session_id": self.session_id,
         }
@@ -197,7 +198,7 @@ class BackupManager:
             Número de sessões removidas
 
         """
-        cutoff_date = datetime.now().timestamp() - (days * 24 * 3600)
+        cutoff_date = datetime.now(UTC).timestamp() - (days * 24 * 3600)
         removed_count = 0
 
         for session_dir in self.backup_dir.glob("session_*"):
@@ -283,8 +284,6 @@ class BackupManager:
 
         """
         try:
-            import tomllib
-
             with poetry_lock_path.open(encoding="utf-8") as f:
                 content = f.read()
 
@@ -309,7 +308,7 @@ class BackupManager:
         log_data = {
             "session_id": self.session_id,
             "operations": self.operations_log,
-            "created_at": datetime.now().isoformat(),
+            "created_at": datetime.now(UTC).isoformat(),
         }
 
         with log_file.open("w", encoding="utf-8") as f:

@@ -1,4 +1,8 @@
-"""Utilitários para manipulação de caminhos."""
+"""Utilitários para manipulação de caminhos.
+
+Copyright (c) 2025 Flext. All rights reserved.
+SPDX-License-Identifier: MIT
+"""
 
 from pathlib import Path
 
