@@ -3,7 +3,6 @@
 
 import re
 import subprocess
-from typing import Any
 
 print("🔍 Starting manual configuration consolidation...")
 
@@ -63,7 +62,7 @@ def add_config_todos_to_file(file_path: str) -> bool:
         # Add inline TODOs for specific patterns
         env_pattern = r'(\s+)([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*os\.getenv\(["\']([^"\']+)["\'](?:,\s*["\']?([^"\']*)["\']?)?\)'
 
-        def replace_env_var(match: Any) -> str:
+        def replace_env_var(match: re.Match[str]) -> str:
             indent = match.group(1)
             var_name = match.group(2)
             env_name = match.group(3)

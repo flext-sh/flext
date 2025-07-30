@@ -385,7 +385,8 @@ def stats_by_error_type() -> int:
         for project_name, project_count in sorted_projects[:5]:  # Top 5 projetos
             project_percentage = project_count / count * 100
             print(
-                f"    {project_name:20} {project_count:3d} ({project_percentage:4.1f}%)",
+                f"    {project_name:20} {project_count:3d}"
+                f" ({project_percentage:4.1f}%)",
             )
 
         if len(sorted_projects) > 5:

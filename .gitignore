@@ -17,6 +17,7 @@ backups/
 .backup/
 *_backup/
 *_backup_*/
+temp_backup/
 
 # AI-generated files and reports
 *_REPORT*.md
