@@ -8,7 +8,6 @@ from pathlib import Path
 from typing import Any
 
 import click
-from flext_core import get_logger
 from pydantic import BaseModel, Field
 from rich.console import Console
 from rich.logging import RichHandler

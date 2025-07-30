@@ -53,13 +53,13 @@ def log_operation(func: Callable[..., Any]) -> Callable[..., Any]:
 
     def wrapper(*args: object, **kwargs: object) -> object:
         logger = get_logger(func.__name__)
-        logger.info(f"Starting operation: {func.__name__}")
+        logger.info("Starting operation: %s", func.__name__)
         try:
             result = func(*args, **kwargs)
-            logger.info(f"Completed operation: {func.__name__}")
+            logger.info("Completed operation: %s", func.__name__)
             return result
-        except Exception as e:
-            logger.exception(f"Failed operation: {func.__name__} - {e}")
+        except Exception:
+            logger.exception("Failed operation: %s", func.__name__)
             raise
 
     return wrapper

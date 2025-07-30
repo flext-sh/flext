@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import shutil
 import tomllib
+from enum import Enum
 from typing import TYPE_CHECKING, Any
 from urllib.parse import urlparse
 
@@ -17,8 +18,16 @@ if TYPE_CHECKING:
 
 MIN_NAME_LENGTH = 2
 MAX_NAME_LENGTH = 50
+HTTP_OK_STATUS = 200
 
 logger = structlog.get_logger(__name__)
+
+
+class BackupRequirement(Enum):
+    """Backup requirement options."""
+
+    REQUIRED = "required"
+    OPTIONAL = "optional"
 
 
 class SafetyValidator:
@@ -143,14 +152,15 @@ class SafetyValidator:
         self,
         file_path: Path,
         operation: str,
-        backup_required: bool = True,
+        *,
+        backup_requirement: BackupRequirement = BackupRequirement.REQUIRED,
     ) -> dict[str, Any]:
         """Valida operação em arquivo crítico.
 
         Args:
             file_path: Caminho do arquivo
             operation: Tipo de operação (read, write, delete)
-            backup_required: Se backup é obrigatório
+            backup_requirement: Requisito de backup (REQUIRED ou OPTIONAL)
 
         Returns:
             Dict com resultado da validação
@@ -184,7 +194,7 @@ class SafetyValidator:
         if file_path.name in critical_files:
             result["recommendations"].append("Arquivo crítico - backup recomendado")
 
-            if backup_required and operation in {"write", "delete"}:
+            if backup_requirement == BackupRequirement.REQUIRED and operation in {"write", "delete"}:
                 result["recommendations"].append(
                     "Backup obrigatório para esta operação",
                 )
@@ -428,7 +438,7 @@ class SafetyValidator:
                 headers={"User-Agent": "flext-tools/1.0"},
             )
 
-            return response.status_code == 200
+            return response.status_code == HTTP_OK_STATUS
 
         except (requests.RequestException, OSError):
             # Em caso de erro de rede, assumir que existe (falso positivo é melhor)

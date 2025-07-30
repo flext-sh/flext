@@ -1,19 +1,16 @@
-# FLEXT
+# FLEXT Service - Data Integration Engine
 
-Main application entry point for the FLEXT data integration platform.
+The FLEXT Service is the core data processing engine of the FLEXT platform, providing unified access to Singer taps/targets, Meltano orchestration, and DBT transformations through a high-performance Go service with Python integration.
 
 ## Overview
 
-This is the primary executable for the FLEXT platform, providing a unified interface to all FLEXT capabilities. It serves as the main entry point for production deployments and development environments.
+FLEXT Service bridges the gap between high-performance Go runtime and Python's rich data ecosystem:
 
-## Features
-
-- **Unified Interface**: Single binary for all FLEXT operations
-- **Mode Selection**: CLI, Server, or Interactive modes
-- **Auto-detection**: Intelligent mode detection based on environment
-- **Configuration Management**: Centralized configuration handling
-- **Production Ready**: Optimized for production deployments
-- **Development Support**: Enhanced debugging and development features
+- **Multi-Modal Operation**: Server, CLI, and interactive modes with automatic detection
+- **Python Bridge**: Native integration with Meltano, Singer, and DBT ecosystems
+- **Plugin Architecture**: Extensible plugin system for data processing capabilities
+- **Production Ready**: Enterprise-grade service with comprehensive monitoring
+- **FlexCore Integration**: Seamless communication with FlexCore runtime container
 
 ## Installation
 

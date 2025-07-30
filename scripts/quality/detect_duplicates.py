@@ -62,6 +62,7 @@ class FlextDuplicateDetector:
         similarity_threshold: float = 0.65,  # Reduzido para capturar mais padrões
         min_lines: int = 5,  # Reduzido para detectar pequenos padrões anti-pattern
         file_extensions: list[str] | None = None,
+        *,
         analyze_all_files: bool = False,
     ) -> None:
         """Inicializa o detector.
@@ -1521,7 +1522,7 @@ class FlextDuplicateDetector:
 
         print(f"   🚨 Duplicações exatas (≥99%): {len(exact_matches)}")
         print(f"   ⚠️  Alta similaridade (90-99%): {len(high_similarity)}")
-        print(f"   ℹ️  Média similaridade (80-90%): {len(medium_similarity)}")
+        print(f"   ℹ️  Média similaridade (80-90%): {len(medium_similarity)}")  # noqa: RUF001
 
         # Agrupar anti-patterns por severidade e tipo
         critical_patterns = [
@@ -1619,7 +1620,7 @@ class FlextDuplicateDetector:
                     ],
                 }
                 Path(output_file).parent.mkdir(parents=True, exist_ok=True)
-                with open(output_file, "w", encoding="utf-8") as f:
+                with Path(output_file).open("w", encoding="utf-8") as f:
                     json.dump(report_data, f, indent=2)
                 print(f"\n💾 Relatório salvo em: {output_file}")
             except (OSError, ValueError, TypeError) as e:

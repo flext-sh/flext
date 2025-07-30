@@ -9,7 +9,6 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
-from typing import Any
 
 from flext_tools import Colors, print_colored
 from flext_tools.analysis import CodeDuplicateAnalyzer
@@ -130,7 +129,7 @@ class CodeDuplicatesAnalyzer(FlextScript):
 
         return parser
 
-    def _process_kwargs(self, args: Any) -> dict[str, Any]:
+    def _process_kwargs(self, args: object) -> dict[str, object]:
         """Process arguments into kwargs."""
         kwargs: dict[str, Any] = {}
         kwargs["generate_report"] = not getattr(args, "no_report", False)

@@ -12,7 +12,7 @@ import operator
 import subprocess
 import sys
 from collections import defaultdict
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -35,7 +35,7 @@ class LintingReport(FlextScript):
         """
         return ScriptMetadata(
             name="linting_report",
-            description="Relatório completo de qualidade de código com Ruff, MyPy e métricas",
+            description="Relatório de qualidade de código com Ruff, MyPy e métricas",
             category="quality",
             version="2.0.0",
         )
@@ -331,7 +331,7 @@ class LintingReport(FlextScript):
     ) -> None:
         """Salvar relatório em JSON."""
         report_data = {
-            "timestamp": datetime.now().isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "summary": total_stats,
             "projects": project_results,
         }
@@ -384,8 +384,9 @@ class LintingReport(FlextScript):
     <h2>📦 Project Details</h2>
     {
             "".join(
-                f'<div class="project"><h3>{name}</h3>'
-                f"<p>Issues: {data['stats']['ruff_issues'] + data['stats']['mypy_errors']}</p></div>"
+                f'<div class="project"><h3>{name}</h3> <p>Issues: '
+                f"{data['stats']['ruff_issues'] + data['stats']['mypy_errors']}"
+                f"</p></div>"
                 for name, data in project_results.items()
             )
         }
