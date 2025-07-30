@@ -171,7 +171,9 @@ class FlextConfigStandardizer:
                         if int(old_threshold) != target_coverage:
                             addopts[i] = f"--cov-fail-under={target_coverage}"
                             print(
-                                f"  📊 Updated coverage threshold: {old_threshold}% → {target_coverage}%",
+                                "  📊 Updated coverage threshold: %s%% → %s%%",
+                                old_threshold,
+                                target_coverage,
                             )
                             changed = True
                         break
@@ -182,7 +184,8 @@ class FlextConfigStandardizer:
                     changed = True
 
         # Add reference to shared pytest config
-        # Note: pytest doesn't support extend like ruff, so we document the shared standards
+        # Note: pytest doesn't support extend like ruff, so we document the shared
+        # standards
         if "minversion" not in pytest_config or pytest_config["minversion"] != "8.0":
             pytest_config["minversion"] = "8.0"
             print("  🔧 Standardized pytest minversion],to 8.0")

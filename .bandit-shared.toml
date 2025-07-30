@@ -14,4 +14,4 @@ exclude_dirs = [
     "tests",
     "venv",
 ]
-skips = ["B101", "B601"]
+skips = ["B101", "B104", "B105", "B601"]

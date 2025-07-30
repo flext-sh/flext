@@ -23,4 +23,6 @@ class Colors:
 def print_colored(message: str, color: str = "") -> None:
     """Imprime mensagem colorida no terminal."""
     if color:
-        pass
+        print(f"{color}{message}{Colors.ENDC}")  # noqa: T201
+    else:
+        print(message)  # noqa: T201

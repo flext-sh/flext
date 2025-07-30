@@ -6,10 +6,18 @@ import hashlib
 import json
 import operator
 import shutil
+from enum import Enum
 from pathlib import Path
 from typing import Any
 
 from flext_tools.utils import Colors, print_colored
+
+
+class ConfirmationMode(Enum):
+    """Modes for confirmation behavior."""
+
+    REQUIRE_CONFIRMATION = "require_confirmation"
+    AUTO_CONFIRM = "auto_confirm"
 
 
 class RollbackManager:
@@ -112,13 +120,14 @@ class RollbackManager:
     def rollback_session(
         self,
         session_id: str,
-        confirm: bool = False,
+        *,
+        confirmation_mode: ConfirmationMode = ConfirmationMode.REQUIRE_CONFIRMATION,
     ) -> tuple[int, int]:
         """Restaura todos os arquivos de uma sessão.
 
         Args:
             session_id: ID da sessão a ser restaurada
-            confirm: Se True, não pede confirmação
+            confirmation_mode: Modo de confirmação (REQUIRE_CONFIRMATION ou AUTO_CONFIRM)
 
         Returns:
             Tupla (sucessos, falhas)
@@ -136,7 +145,7 @@ class RollbackManager:
 
         operations = log_data["operations"]
 
-        if not confirm:
+        if confirmation_mode == ConfirmationMode.REQUIRE_CONFIRMATION:
             print_colored(
                 f"⚠️ Restaurar {len(operations)} arquivos da sessão {session_id}?",
                 Colors.YELLOW,
