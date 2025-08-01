@@ -73,7 +73,7 @@ echo "  Projetos testados: $total_count"
 echo "  Sucessos: $success_count"
 echo "  Taxa de sucesso: $((success_count * 100 / total_count))%"
 
-if [ $success_count -eq $total_count ]; then
+if [ $success_count -eq "$total_count" ]; then
 	echo "🎉 TODOS OS PROJETOS PASSARAM!"
 else
 	echo "⚠️  Alguns projetos precisam de atenção"

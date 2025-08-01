@@ -21,7 +21,7 @@ echo "✅ Dependencies OK"
 
 # Start monitoring services
 echo "🐳 Starting monitoring containers..."
-cd /home/marlonsc/flext/monitoring
+cd /home/marlonsc/flext/monitoring || exit
 
 docker-compose -f docker-compose.monitoring.yml up -d
 

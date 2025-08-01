@@ -18,7 +18,7 @@ INTERVAL="${INTERVAL:-5}"
 echo "Waiting for Oracle Database at ${ORACLE_HOST}:${ORACLE_PORT}/${ORACLE_SERVICE_NAME}..."
 
 waited=0
-while [ $waited -lt $MAX_WAIT ]; do
+while [ $waited -lt "$MAX_WAIT" ]; do
 	# Test TCP connection first
 	if timeout 5 bash -c "</dev/tcp/${ORACLE_HOST}/${ORACLE_PORT}" >/dev/null 2>&1; then
 		echo "Oracle port is accessible, testing SQL connection..."
@@ -56,7 +56,7 @@ except Exception as e:
 	fi
 
 	echo "Oracle not ready, waiting ${INTERVAL} seconds... (${waited}/${MAX_WAIT})"
-	sleep $INTERVAL
+	sleep "$INTERVAL"
 	waited=$((waited + INTERVAL))
 done
 
