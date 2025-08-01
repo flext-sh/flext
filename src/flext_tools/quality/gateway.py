@@ -1,7 +1,6 @@
 """Quality gateway for comprehensive code quality checks."""
 
 from pathlib import Path
-from typing import Any
 
 from flext_tools.utils import Colors, print_colored
 
@@ -13,7 +12,7 @@ class QualityGateway:
         """Initialize the quality gateway."""
         self.workspace_path = workspace_path
 
-    def run_quality_checks(self, **_kwargs: object) -> dict[str, Any]:
+    def run_quality_checks(self, **_kwargs: object) -> dict[str, object]:
         """Run comprehensive quality checks."""
         print_colored("🔍 Executando verificações de qualidade...", Colors.BLUE)
 

@@ -6,7 +6,7 @@ from __future__ import annotations
 import shutil
 import tomllib
 from enum import Enum
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 from urllib.parse import urlparse
 
 import requests
@@ -87,7 +87,7 @@ class SafetyValidator:
             "yaml",  # Nome correto é pyyaml
         }
 
-    def validate_package_safety(self, package_name: str) -> dict[str, Any]:
+    def validate_package_safety(self, package_name: str) -> dict[str, object]:
         """Valida se um pacote é seguro para instalação.
 
         Args:
@@ -97,7 +97,7 @@ class SafetyValidator:
             Dict com resultado da validação
 
         """
-        result: dict[str, Any] = {
+        result: dict[str, object] = {
             "safe": True,
             "package": package_name,
             "issues": [],
@@ -154,7 +154,7 @@ class SafetyValidator:
         operation: str,
         *,
         backup_requirement: BackupRequirement = BackupRequirement.REQUIRED,
-    ) -> dict[str, Any]:
+    ) -> dict[str, object]:
         """Valida operação em arquivo crítico.
 
         Args:
@@ -166,7 +166,7 @@ class SafetyValidator:
             Dict com resultado da validação
 
         """
-        result: dict[str, Any] = {
+        result: dict[str, object] = {
             "safe": True,
             "file": str(file_path),
             "operation": operation,
@@ -217,7 +217,7 @@ class SafetyValidator:
         self,
         command: list[str],
         working_dir: Path | None = None,
-    ) -> dict[str, Any]:
+    ) -> dict[str, object]:
         """Valida execução de comando do sistema.
 
         Args:
@@ -228,7 +228,7 @@ class SafetyValidator:
             Dict com resultado da validação
 
         """
-        result: dict[str, Any] = {
+        result: dict[str, object] = {
             "safe": True,
             "command": " ".join(command),
             "issues": [],
@@ -289,7 +289,7 @@ class SafetyValidator:
         project_path: Path,
         operation: str,
         packages: list[str] | None = None,
-    ) -> dict[str, Any]:
+    ) -> dict[str, object]:
         """Valida operação Poetry específica.
 
         Args:
@@ -301,7 +301,7 @@ class SafetyValidator:
             Dict com resultado da validação
 
         """
-        result: dict[str, Any] = {
+        result: dict[str, object] = {
             "safe": True,
             "project": str(project_path),
             "operation": operation,
@@ -450,7 +450,7 @@ class SafetyValidator:
     def get_safety_recommendations(
         self,
         operation_type: str,
-        _context: dict[str, Any],
+        _context: dict[str, object],
     ) -> list[str]:
         """Obtém recomendações de segurança para uma operação.
 

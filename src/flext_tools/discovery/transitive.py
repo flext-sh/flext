@@ -5,7 +5,7 @@ from __future__ import annotations
 import re
 import tomllib
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from flext_tools.utils import Colors, print_colored
 
@@ -120,7 +120,7 @@ class TransitiveDependencyResolver:
             path_dependencies=path_deps,
         )
 
-    def _extract_direct_dependencies(self, data: dict[str, Any]) -> set[str]:
+    def _extract_direct_dependencies(self, data: dict[str, object]) -> set[str]:
         """Extrai dependências diretas do poetry.lock."""
         dependencies: set[str] = set()
 
@@ -135,7 +135,7 @@ class TransitiveDependencyResolver:
 
     def _extract_path_dependencies(
         self,
-        data: dict[str, Any],
+        data: dict[str, object],
         project_path: Path,
     ) -> list[PathDependency]:
         """Extrai path dependencies do pyproject.toml."""

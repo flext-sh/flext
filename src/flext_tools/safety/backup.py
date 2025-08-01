@@ -8,7 +8,6 @@ import shutil
 import tomllib
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
 
 import structlog
 
@@ -35,7 +34,7 @@ class BackupManager:
         self.session_dir.mkdir(exist_ok=True)
 
         # Registro de operações
-        self.operations_log: list[dict[str, Any]] = []
+        self.operations_log: list[dict[str, object]] = []
 
     def create_backup(
         self,
@@ -184,7 +183,7 @@ class BackupManager:
 
         return restore_point_id
 
-    def list_backups(self) -> list[dict[str, Any]]:
+    def list_backups(self) -> list[dict[str, object]]:
         """Lista todos os backups da sessão atual."""
         return self.operations_log.copy()
 
@@ -219,7 +218,7 @@ class BackupManager:
 
         return removed_count
 
-    def get_backup_info(self, backup_id: str) -> dict[str, Any] | None:
+    def get_backup_info(self, backup_id: str) -> dict[str, object] | None:
         """Obtém informações de um backup específico."""
         for operation in self.operations_log:
             if operation["backup_id"] == backup_id:

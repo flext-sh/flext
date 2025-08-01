@@ -10,7 +10,6 @@ from __future__ import annotations
 import shutil
 import sys
 from pathlib import Path
-from typing import Any
 
 from flext_tools import Colors, print_colored
 from flext_tools.core.script_base import FlextScript, ScriptMetadata
@@ -130,7 +129,7 @@ class GradualLintFixerScript(FlextScript):
 
     def _process_kwargs(self, args: object) -> dict[str, object]:
         """Process arguments into kwargs."""
-        kwargs: dict[str, Any] = {}
+        kwargs: dict[str, object] = {}
         kwargs["safe_only"] = not getattr(args, "unsafe", False)
         kwargs["run_tests"] = not getattr(args, "skip_tests", False)
         return kwargs

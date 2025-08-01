@@ -14,7 +14,6 @@ Usage:
 import argparse
 import sys
 from pathlib import Path
-from typing import Any
 
 import tomlkit
 
@@ -53,7 +52,7 @@ class FlextConfigStandardizer:
 
         return sorted(projects)
 
-    def load_pyproject(self, project_path: Path) -> dict[str, Any] | None:
+    def load_pyproject(self, project_path: Path) -> dict[str, object] | None:
         """Load pyproject.toml file safely."""
         pyproject_file = project_path / "pyproject.toml"
         if not pyproject_file.exists():
@@ -66,7 +65,7 @@ class FlextConfigStandardizer:
             print(f"❌ Error loading {pyproject_file}: {e}")
             return None
 
-    def save_pyproject(self, project_path: Path, content: dict[str, Any]) -> bool:
+    def save_pyproject(self, project_path: Path, content: dict[str, object]) -> bool:
         """Save pyproject.toml file safely."""
         if self.dry_run:
             return True
@@ -83,7 +82,7 @@ class FlextConfigStandardizer:
     def standardize_ruff_config(
         self,
         project_name: str,
-        config: dict[str, Any],
+        config: dict[str, object],
     ) -> bool:
         """Standardize Ruff configuration."""
         changed = False
@@ -140,7 +139,7 @@ class FlextConfigStandardizer:
     def standardize_pytest_config(
         self,
         project_name: str,
-        config: dict[str, Any],
+        config: dict[str, object],
     ) -> bool:
         """Standardize pytest configuration."""
         changed = False
@@ -196,7 +195,7 @@ class FlextConfigStandardizer:
     def standardize_mypy_config(
         self,
         project_name: str,
-        config: dict[str, Any],
+        config: dict[str, object],
     ) -> bool:
         """Standardize MyPy configuration."""
         changed = False
