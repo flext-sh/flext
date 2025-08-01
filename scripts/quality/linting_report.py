@@ -15,7 +15,6 @@ import sys
 from collections import defaultdict
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
 
 from scripts.common import discover_projects
 
@@ -145,7 +144,7 @@ class LintingReport(FlextScript):
         """Descobrir projetos para analisar."""
         return discover_projects(workspace_root, projects_filter)
 
-    def _run_ruff_analysis(self, project_path: Path) -> dict[str, Any]:
+    def _run_ruff_analysis(self, project_path: Path) -> dict[str, object]:
         """Executar análise Ruff."""
         try:
             # Ruff check com formato JSON
@@ -187,7 +186,7 @@ class LintingReport(FlextScript):
             print_colored(f"    ⚠️ Erro no Ruff: {e}", Colors.YELLOW)
             return {"total_issues": 0, "by_category": {}, "by_file": {}, "issues": []}
 
-    def _run_mypy_analysis(self, project_path: Path) -> dict[str, Any]:
+    def _run_mypy_analysis(self, project_path: Path) -> dict[str, object]:
         """Executar análise MyPy."""
         try:
             # MyPy check com formato JSON
@@ -232,7 +231,7 @@ class LintingReport(FlextScript):
     def _print_project_summary(
         self,
         project_name: str,  # noqa: ARG002
-        stats: dict[str, Any],
+        stats: dict[str, object],
         *,
         detailed: bool,  # noqa: ARG002
     ) -> None:
@@ -254,8 +253,8 @@ class LintingReport(FlextScript):
 
     def _print_detailed_issues(
         self,
-        ruff_result: dict[str, Any],
-        mypy_result: dict[str, Any],
+        ruff_result: dict[str, object],
+        mypy_result: dict[str, object],
     ) -> None:
         """Imprimir issues detalhadas."""
         if ruff_result["by_category"]:
@@ -278,8 +277,8 @@ class LintingReport(FlextScript):
 
     def _print_final_summary(
         self,
-        total_stats: dict[str, Any],
-        project_results: dict[str, Any],  # noqa: ARG002
+        total_stats: dict[str, object],
+        project_results: dict[str, object],  # noqa: ARG002
     ) -> None:
         """Imprimir resumo final."""
         print_colored("\n📊 RESUMO FINAL DO LINTING", Colors.BLUE)
@@ -319,8 +318,8 @@ class LintingReport(FlextScript):
 
     def _save_json_report(
         self,
-        total_stats: dict[str, Any],
-        project_results: dict[str, Any],
+        total_stats: dict[str, object],
+        project_results: dict[str, object],
     ) -> None:
         """Salvar relatório em JSON."""
         report_data = {
@@ -339,8 +338,8 @@ class LintingReport(FlextScript):
 
     def _save_html_report(
         self,
-        total_stats: dict[str, Any],
-        project_results: dict[str, Any],
+        total_stats: dict[str, object],
+        project_results: dict[str, object],
     ) -> None:
         """Salvar relatório em formato HTML."""
         report_path = Path("linting_report.html")

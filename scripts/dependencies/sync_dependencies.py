@@ -12,7 +12,6 @@ Funcionalidades:
 
 import sys
 from pathlib import Path
-from typing import Any
 
 from flext_tools import (
     Colors,
@@ -171,15 +170,15 @@ def analyze_conflicts(
     analyzer: ConflictAnalyzer,
     *,
     verbose: bool,
-) -> dict[str, Any]:
+) -> dict[str, object]:
     """Analisa conflitos de versão no workspace."""
     print_colored("\n3️⃣ Analisando conflitos de versão...", Colors.BLUE)
 
     @cached(namespace="conflicts", ttl=600)
-    def get_conflicts() -> dict[str, Any]:
+    def get_conflicts() -> dict[str, object]:
         return analyzer.analyze_workspace_conflicts(workspace_path)
 
-    analysis: dict[str, Any] = get_conflicts()
+    analysis: dict[str, object] = get_conflicts()
     stats = analysis["stats"]
 
     print_colored("\n📊 Estatísticas:", Colors.CYAN)

@@ -8,7 +8,6 @@ import operator
 import shutil
 from enum import Enum
 from pathlib import Path
-from typing import Any
 
 from flext_tools.utils import Colors, print_colored
 
@@ -231,7 +230,7 @@ class RollbackManager:
 
         return success_count, failure_count
 
-    def verify_rollback_feasibility(self, session_id: str) -> dict[str, Any]:
+    def verify_rollback_feasibility(self, session_id: str) -> dict[str, object]:
         """Verifica se é possível fazer rollback de uma sessão.
 
         Args:
@@ -244,7 +243,7 @@ class RollbackManager:
         session_dir = self.backup_dir / f"session_{session_id}"
         log_file = session_dir / "operations_log.json"
 
-        result: dict[str, Any] = {
+        result: dict[str, object] = {
             "feasible": True,
             "issues": [],
             "missing_backups": [],
@@ -281,7 +280,7 @@ class RollbackManager:
 
         return result
 
-    def _find_operation(self, backup_id: str) -> dict[str, Any] | None:
+    def _find_operation(self, backup_id: str) -> dict[str, object] | None:
         """Encontra operação pelo ID de backup."""
         session_id = "_".join(backup_id.split("_")[:2])
         session_dir = self.backup_dir / f"session_{session_id}"
@@ -302,7 +301,7 @@ class RollbackManager:
     def _verify_backup_integrity(
         self,
         backup_path: Path,
-        operation: dict[str, Any],
+        operation: dict[str, object],
     ) -> bool:
         """Verifica integridade do backup."""
         try:

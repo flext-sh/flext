@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import tomllib
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from flext_tools.analysis.lock_consistency import LockConsistencyAnalyzer
 from flext_tools.analysis.version import VersionAnalyzer
@@ -24,7 +24,7 @@ class ConflictAnalyzer:
         """Initialize conflict analyzer."""
         self.version_analyzer = VersionAnalyzer()
 
-    def analyze_workspace_conflicts(self, workspace_path: Path) -> dict[str, Any]:
+    def analyze_workspace_conflicts(self, workspace_path: Path) -> dict[str, object]:
         """Analisa conflitos de dependências no workspace."""
         print_colored("🔍 Analisando conflitos de dependências...", Colors.BLUE)
 
@@ -133,7 +133,7 @@ class ConflictAnalyzer:
 
             return deps
 
-    def _extract_version_string(self, spec: str | dict[str, Any]) -> str:
+    def _extract_version_string(self, spec: str | dict[str, object]) -> str:
         """Extrai string de versão de uma especificação."""
         if isinstance(spec, str):
             return spec
@@ -145,9 +145,9 @@ class ConflictAnalyzer:
     def _identify_update_blockers(
         self,
         workspace_deps: dict[str, dict[str, str]],
-    ) -> dict[str, dict[str, Any]]:
+    ) -> dict[str, dict[str, object]]:
         """Identifica projetos que bloqueiam atualizações."""
-        blockers: dict[str, dict[str, Any]] = {}
+        blockers: dict[str, dict[str, object]] = {}
 
         # Conta quantas vezes cada constraint aparece
         constraint_usage: dict[str, dict[str, list[str]]] = {}
@@ -200,8 +200,8 @@ class ConflictAnalyzer:
     def _calculate_stats(
         self,
         workspace_deps: dict[str, dict[str, str]],
-        conflicts: dict[str, Any],
-        blockers: dict[str, dict[str, Any]],
+        conflicts: dict[str, object],
+        blockers: dict[str, dict[str, object]],
     ) -> dict[str, int]:
         """Calcula estatísticas da análise."""
         total_deps = sum(len(deps) for deps in workspace_deps.values())
@@ -226,7 +226,7 @@ class ConflictAnalyzer:
             ),
         }
 
-    def generate_conflict_report(self, analysis: dict[str, Any]) -> str:
+    def generate_conflict_report(self, analysis: dict[str, object]) -> str:
         """Gera relatório formatado de conflitos."""
         lines = []
         lines.append("# 📊 Relatório de Conflitos de Dependências\n")

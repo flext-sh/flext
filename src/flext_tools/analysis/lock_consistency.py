@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import tomllib
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from flext_tools.utils import Colors, print_colored
 
@@ -263,7 +263,7 @@ class LockConsistencyAnalyzer:
 
         return categories
 
-    def get_workspace_summary(self) -> dict[str, Any]:
+    def get_workspace_summary(self) -> dict[str, object]:
         """Retorna resumo do workspace."""
         total_projects = len(self.project_locks)
         projects_with_lock = sum(
