@@ -7,9 +7,9 @@ import (
 	"os/exec"
 	"time"
 
-	"github.com/flext-sh/flext/internal/infrastructure/flexcore_plugin"
-	"github.com/flext-sh/flext/internal/infrastructure/logging"
-	shared_kernel_http "github.com/flext-sh/flext/internal/shared_kernel/infrastructure/http"
+	"github.com/flext/flexcore/internal/infrastructure/flexcore_plugin"
+	"github.com/flext/flexcore/internal/infrastructure/logging"
+	shared_kernel_http "github.com/flext/flexcore/internal/shared_kernel/infrastructure/http"
 	"github.com/labstack/echo/v4"
 )
 

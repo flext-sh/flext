@@ -4,8 +4,8 @@ import (
 	"context"
 	"time"
 
-	"github.com/flext-sh/flext/internal/bounded_contexts/pipeline/application/ports"
-	"github.com/flext-sh/flext/internal/infrastructure/database"
+	"github.com/flext/flexcore/internal/bounded_contexts/pipeline/application/ports"
+	"github.com/flext/flexcore/internal/infrastructure/database"
 	"github.com/google/uuid"
 )
 

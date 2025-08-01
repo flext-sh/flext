@@ -2,7 +2,7 @@ package dbt
 
 import (
 	"context"
-	"github.com/flext-sh/flext/internal/bounded_contexts/dbt/domain/events"
+	"github.com/flext/flexcore/internal/bounded_contexts/dbt/domain/events"
 	"github.com/google/uuid"
 )
 

@@ -8,8 +8,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/flext-sh/flext/internal/infrastructure/logging"
-	"github.com/flext-sh/flext/internal/shared_kernel/domain"
+	"github.com/flext/flexcore/internal/infrastructure/logging"
+	"github.com/flext/flexcore/internal/shared_kernel/domain"
 	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
 	"github.com/labstack/echo/v4"

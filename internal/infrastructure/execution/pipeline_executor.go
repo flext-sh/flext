@@ -7,9 +7,9 @@ import (
 	"sync"
 	"time"
 
-	pipelineEntities "github.com/flext-sh/flext/internal/bounded_contexts/pipeline/domain/entities"
-	"github.com/flext-sh/flext/internal/bounded_contexts/plugin/application/ports"
-	"github.com/flext-sh/flext/internal/infrastructure/logging"
+	pipelineEntities "github.com/flext/flexcore/internal/bounded_contexts/pipeline/domain/entities"
+	"github.com/flext/flexcore/internal/bounded_contexts/plugin/application/ports"
+	"github.com/flext/flexcore/internal/infrastructure/logging"
 	"github.com/google/uuid"
 )
 

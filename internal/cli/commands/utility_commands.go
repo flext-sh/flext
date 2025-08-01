@@ -307,5 +307,5 @@ func (c *HelpCommand) showGeneralHelp() {
 	fmt.Printf("  flext-cli server-status\n")
 	fmt.Printf("  flext-cli server-stop\n\n")
 
-	fmt.Printf("For more information, visit: https://github.com/flext-sh/flext\n")
+	fmt.Printf("For more information, visit: https://github.com/flext/flexcore\n")
 }

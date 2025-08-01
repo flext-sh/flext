@@ -8,12 +8,12 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/flext-sh/flext/internal/bounded_contexts/singer/application/commands"
-	"github.com/flext-sh/flext/internal/bounded_contexts/singer/application/ports"
-	"github.com/flext-sh/flext/internal/bounded_contexts/singer/application/queries"
-	"github.com/flext-sh/flext/internal/bounded_contexts/singer/application/services"
-	"github.com/flext-sh/flext/internal/bounded_contexts/singer/domain/entities"
-	"github.com/flext-sh/flext/internal/bounded_contexts/singer/infrastructure/persistence"
+	"github.com/flext/flexcore/internal/bounded_contexts/singer/application/commands"
+	"github.com/flext/flexcore/internal/bounded_contexts/singer/application/ports"
+	"github.com/flext/flexcore/internal/bounded_contexts/singer/application/queries"
+	"github.com/flext/flexcore/internal/bounded_contexts/singer/application/services"
+	"github.com/flext/flexcore/internal/bounded_contexts/singer/domain/entities"
+	"github.com/flext/flexcore/internal/bounded_contexts/singer/infrastructure/persistence"
 )
 
 // TestSingerBoundedContextIntegration tests the complete Singer bounded context flow

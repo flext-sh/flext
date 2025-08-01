@@ -5,8 +5,8 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/flext-sh/flext/internal/bounded_contexts/dbt/domain/events"
-	"github.com/flext-sh/flext/internal/shared_kernel/domain"
+	"github.com/flext/flexcore/internal/bounded_contexts/dbt/domain/events"
+	"github.com/flext/flexcore/internal/shared_kernel/domain"
 )
 
 // DbtProject representa um projeto dbt

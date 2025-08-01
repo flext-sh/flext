@@ -6,8 +6,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/flext-sh/flext/internal/bounded_contexts/pipeline/domain/entities"
-	pluginEntities "github.com/flext-sh/flext/internal/bounded_contexts/plugin/domain/entities"
+	"github.com/flext/flexcore/internal/bounded_contexts/pipeline/domain/entities"
+	pluginEntities "github.com/flext/flexcore/internal/bounded_contexts/plugin/domain/entities"
 	"github.com/google/uuid"
 )
 

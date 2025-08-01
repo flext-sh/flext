@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/flext-sh/flext/internal/infrastructure/monitoring"
+	"github.com/flext/flexcore/internal/infrastructure/monitoring"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )

@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/flext-sh/flext/internal/bounded_contexts/plugin/domain/entities"
-	"github.com/flext-sh/flext/internal/shared_kernel/domain"
-	pluginUC "github.com/flext-sh/flext/internal/usecases/plugin"
+	"github.com/flext/flexcore/internal/bounded_contexts/plugin/domain/entities"
+	"github.com/flext/flexcore/internal/shared_kernel/domain"
+	pluginUC "github.com/flext/flexcore/internal/usecases/plugin"
 	"github.com/google/uuid"
 	"github.com/lib/pq"
 )

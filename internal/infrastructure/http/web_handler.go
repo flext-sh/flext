@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/flext-sh/flext/internal/bounded_contexts/pipeline/application/queries"
-	pluginApplication "github.com/flext-sh/flext/internal/bounded_contexts/plugin/application"
-	"github.com/flext-sh/flext/internal/infrastructure/logging"
+	"github.com/flext/flexcore/internal/bounded_contexts/pipeline/application/queries"
+	pluginApplication "github.com/flext/flexcore/internal/bounded_contexts/plugin/application"
+	"github.com/flext/flexcore/internal/infrastructure/logging"
 	"github.com/labstack/echo/v4"
 )
 

@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
-	pluginUC "github.com/flext-sh/flext/internal/usecases/plugin"
+	pluginUC "github.com/flext/flexcore/internal/usecases/plugin"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"github.com/pkg/errors"

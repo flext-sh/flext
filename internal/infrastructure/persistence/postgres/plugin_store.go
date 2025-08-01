@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/flext-sh/flext/internal/infrastructure/persistence"
+	"github.com/flext/flexcore/internal/infrastructure/persistence"
 	"github.com/lib/pq"
 	_ "github.com/lib/pq" // PostgreSQL driver
 )

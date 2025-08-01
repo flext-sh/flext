@@ -5,7 +5,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/flext-sh/flext/internal/bounded_contexts/plugin/domain/entities"
+	"github.com/flext/flexcore/internal/bounded_contexts/plugin/domain/entities"
 )
 
 // RegisterPluginUseCase handles plugin registration

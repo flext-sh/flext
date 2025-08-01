@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/flext-sh/flext/internal/bounded_contexts/pipeline/domain/entities"
+	"github.com/flext/flexcore/internal/bounded_contexts/pipeline/domain/entities"
 )
 
 // CreatePipelineUseCase handles pipeline creation business logic

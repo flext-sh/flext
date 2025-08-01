@@ -5,7 +5,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/flext-sh/flext/internal/infrastructure/persistence"
+	"github.com/flext/flexcore/internal/infrastructure/persistence"
 )
 
 // PipelineStore implements persistence.PipelineStore in memory

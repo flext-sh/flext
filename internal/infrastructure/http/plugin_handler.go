@@ -4,11 +4,11 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/flext-sh/flext/internal/bounded_contexts/plugin/application"
-	"github.com/flext-sh/flext/internal/bounded_contexts/plugin/application/commands"
-	"github.com/flext-sh/flext/internal/infrastructure/logging"
-	shared_kernel_http "github.com/flext-sh/flext/internal/shared_kernel/infrastructure/http"
-	"github.com/flext-sh/flext/internal/shared_kernel/validation"
+	"github.com/flext/flexcore/internal/bounded_contexts/plugin/application"
+	"github.com/flext/flexcore/internal/bounded_contexts/plugin/application/commands"
+	"github.com/flext/flexcore/internal/infrastructure/logging"
+	shared_kernel_http "github.com/flext/flexcore/internal/shared_kernel/infrastructure/http"
+	"github.com/flext/flexcore/internal/shared_kernel/validation"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
