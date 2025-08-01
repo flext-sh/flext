@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/flext-sh/flext/internal/shared_kernel/domain"
+	"github.com/flext/flexcore/internal/shared_kernel/domain"
 	"github.com/google/uuid"
 )
 

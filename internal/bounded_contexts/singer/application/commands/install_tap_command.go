@@ -4,9 +4,9 @@ import (
 	"context"
 	"time"
 
-	"github.com/flext-sh/flext/internal/bounded_contexts/singer/application/ports"
-	"github.com/flext-sh/flext/internal/bounded_contexts/singer/domain/entities"
-	"github.com/flext-sh/flext/internal/shared_kernel/domain/value_objects"
+	"github.com/flext/flexcore/internal/bounded_contexts/singer/application/ports"
+	"github.com/flext/flexcore/internal/bounded_contexts/singer/domain/entities"
+	"github.com/flext/flexcore/internal/shared_kernel/domain/value_objects"
 )
 
 // InstallTapCommand representa o comando para instalar um tap

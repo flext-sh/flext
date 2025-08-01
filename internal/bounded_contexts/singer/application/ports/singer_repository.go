@@ -3,7 +3,7 @@ package ports
 import (
 	"context"
 
-	"github.com/flext-sh/flext/internal/bounded_contexts/singer/domain/entities"
+	"github.com/flext/flexcore/internal/bounded_contexts/singer/domain/entities"
 	"github.com/google/uuid"
 )
 

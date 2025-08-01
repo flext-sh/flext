@@ -5,8 +5,8 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/flext-sh/flext/internal/bounded_contexts/plugin/domain/entities"
-	pluginUC "github.com/flext-sh/flext/internal/usecases/plugin"
+	"github.com/flext/flexcore/internal/bounded_contexts/plugin/domain/entities"
+	pluginUC "github.com/flext/flexcore/internal/usecases/plugin"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"

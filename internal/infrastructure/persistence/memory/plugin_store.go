@@ -4,7 +4,7 @@ import (
 	"context"
 	"sync"
 
-	"github.com/flext-sh/flext/internal/infrastructure/persistence"
+	"github.com/flext/flexcore/internal/infrastructure/persistence"
 )
 
 // PluginStore implements persistence.PluginStore in memory

@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/flext-sh/flext/internal/infrastructure/config"
-	"github.com/flext-sh/flext/internal/infrastructure/logging"
+	"github.com/flext/flexcore/internal/infrastructure/config"
+	"github.com/flext/flexcore/internal/infrastructure/logging"
 )
 
 // FlexcorePlugin represents a plugin that can be executed by FLEXCORE

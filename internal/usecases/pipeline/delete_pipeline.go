@@ -3,7 +3,7 @@ package pipeline
 import (
 	"context"
 
-	"github.com/flext-sh/flext/internal/bounded_contexts/pipeline/domain/events"
+	"github.com/flext/flexcore/internal/bounded_contexts/pipeline/domain/events"
 )
 
 // DeletePipelineUseCase handles pipeline deletion

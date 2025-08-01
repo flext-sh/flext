@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/flext-sh/flext/internal/bounded_contexts/meltano/domain/entities"
+	"github.com/flext/flexcore/internal/bounded_contexts/meltano/domain/entities"
 	"github.com/google/uuid"
 )
 

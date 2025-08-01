@@ -5,8 +5,8 @@ import (
 	"errors"
 	"sync"
 
-	"github.com/flext-sh/flext/internal/bounded_contexts/plugin/application/ports"
-	"github.com/flext-sh/flext/internal/bounded_contexts/plugin/domain/entities"
+	"github.com/flext/flexcore/internal/bounded_contexts/plugin/application/ports"
+	"github.com/flext/flexcore/internal/bounded_contexts/plugin/domain/entities"
 	"github.com/google/uuid"
 )
 

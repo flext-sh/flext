@@ -3,7 +3,7 @@ package dbt
 import (
 	"context"
 
-	"github.com/flext-sh/flext/internal/bounded_contexts/dbt/domain/entities"
+	"github.com/flext/flexcore/internal/bounded_contexts/dbt/domain/entities"
 )
 
 // CreateProjectUseCase handles dbt project creation following Clean Architecture

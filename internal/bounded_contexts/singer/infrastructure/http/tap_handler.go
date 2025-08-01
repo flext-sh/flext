@@ -5,12 +5,12 @@ import (
 
 	"github.com/labstack/echo/v4"
 
-	"github.com/flext-sh/flext/internal/bounded_contexts/singer/application/commands"
-	"github.com/flext-sh/flext/internal/bounded_contexts/singer/application/queries"
-	"github.com/flext-sh/flext/internal/bounded_contexts/singer/application/services"
-	"github.com/flext-sh/flext/internal/bounded_contexts/singer/domain/entities"
-	"github.com/flext-sh/flext/internal/infrastructure/logging"
-	base_http "github.com/flext-sh/flext/internal/shared_kernel/infrastructure/http"
+	"github.com/flext/flexcore/internal/bounded_contexts/singer/application/commands"
+	"github.com/flext/flexcore/internal/bounded_contexts/singer/application/queries"
+	"github.com/flext/flexcore/internal/bounded_contexts/singer/application/services"
+	"github.com/flext/flexcore/internal/bounded_contexts/singer/domain/entities"
+	"github.com/flext/flexcore/internal/infrastructure/logging"
+	base_http "github.com/flext/flexcore/internal/shared_kernel/infrastructure/http"
 )
 
 // TapHandler handles HTTP requests for tap operations

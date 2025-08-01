@@ -3,7 +3,7 @@ package container
 import (
 	"context"
 
-	"github.com/flext-sh/flext/internal/infrastructure/events"
+	"github.com/flext/flexcore/internal/infrastructure/events"
 )
 
 // EventPublisherAdapter adapta o EventPublisher para as interfaces esperadas pelos bounded contexts

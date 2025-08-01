@@ -3,7 +3,7 @@ package entities
 import (
 	"errors"
 
-	"github.com/flext-sh/flext/internal/shared_kernel/domain/entities"
+	"github.com/flext/flexcore/internal/shared_kernel/domain/entities"
 	"github.com/google/uuid"
 )
 

@@ -3,7 +3,7 @@ package http
 import (
 	"net/http"
 
-	"github.com/flext-sh/flext/internal/infrastructure/logging"
+	"github.com/flext/flexcore/internal/infrastructure/logging"
 	"github.com/labstack/echo/v4"
 )
 

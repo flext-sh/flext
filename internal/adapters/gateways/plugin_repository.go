@@ -4,11 +4,11 @@ import (
 	"context"
 	"errors"
 
-	"github.com/flext-sh/flext/internal/bounded_contexts/plugin/domain/entities"
-	"github.com/flext-sh/flext/internal/infrastructure/persistence"
-	"github.com/flext-sh/flext/internal/shared_kernel/domain"
-	pipelineUseCases "github.com/flext-sh/flext/internal/usecases/pipeline"
-	pluginUseCases "github.com/flext-sh/flext/internal/usecases/plugin"
+	"github.com/flext/flexcore/internal/bounded_contexts/plugin/domain/entities"
+	"github.com/flext/flexcore/internal/infrastructure/persistence"
+	"github.com/flext/flexcore/internal/shared_kernel/domain"
+	pipelineUseCases "github.com/flext/flexcore/internal/usecases/pipeline"
+	pluginUseCases "github.com/flext/flexcore/internal/usecases/plugin"
 	"github.com/google/uuid"
 )
 

@@ -4,9 +4,9 @@ import (
 	"context"
 	"errors"
 
-	domainPipeline "github.com/flext-sh/flext/internal/domain/pipeline"
-	"github.com/flext-sh/flext/internal/infrastructure/persistence"
-	"github.com/flext-sh/flext/internal/usecases/pipeline"
+	domainPipeline "github.com/flext/flexcore/internal/domain/pipeline"
+	"github.com/flext/flexcore/internal/infrastructure/persistence"
+	"github.com/flext/flexcore/internal/usecases/pipeline"
 	"github.com/google/uuid"
 )
 

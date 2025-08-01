@@ -5,8 +5,8 @@ import (
 	"errors"
 	"reflect"
 
-	"github.com/flext-sh/flext/internal/shared_kernel/application"
-	"github.com/flext-sh/flext/internal/shared_kernel/domain/value_objects"
+	"github.com/flext/flexcore/internal/shared_kernel/application"
+	"github.com/flext/flexcore/internal/shared_kernel/domain/value_objects"
 	"gorm.io/gorm"
 )
 

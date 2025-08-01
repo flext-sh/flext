@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/flext-sh/flext/internal/bounded_contexts/pipeline/domain/entities"
-	"github.com/flext-sh/flext/internal/infrastructure/logging"
+	"github.com/flext/flexcore/internal/bounded_contexts/pipeline/domain/entities"
+	"github.com/flext/flexcore/internal/infrastructure/logging"
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	"github.com/lib/pq"

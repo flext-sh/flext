@@ -11,9 +11,9 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 
-	"github.com/flext-sh/flext/internal/infrastructure/logging"
-	"github.com/flext-sh/flext/internal/shared_kernel/application"
-	"github.com/flext-sh/flext/internal/shared_kernel/domain/value_objects"
+	"github.com/flext/flexcore/internal/infrastructure/logging"
+	"github.com/flext/flexcore/internal/shared_kernel/application"
+	"github.com/flext/flexcore/internal/shared_kernel/domain/value_objects"
 )
 
 // BaseHandler fornece funcionalidades comuns para todos os handlers

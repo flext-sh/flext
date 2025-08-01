@@ -4,7 +4,7 @@ import (
 	"errors"
 	"strings"
 
-	pipelineUC "github.com/flext-sh/flext/internal/usecases/pipeline"
+	pipelineUC "github.com/flext/flexcore/internal/usecases/pipeline"
 	"github.com/google/uuid"
 )
 

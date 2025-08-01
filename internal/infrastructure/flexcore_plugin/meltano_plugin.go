@@ -7,8 +7,8 @@ import (
 	"os/exec"
 	"time"
 
-	"github.com/flext-sh/flext/internal/infrastructure/config"
-	"github.com/flext-sh/flext/internal/infrastructure/logging"
+	"github.com/flext/flexcore/internal/infrastructure/config"
+	"github.com/flext/flexcore/internal/infrastructure/logging"
 )
 
 // MeltanoPlugin implements FLEXCORE plugin interface for Meltano execution

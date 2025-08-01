@@ -11,9 +11,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/flext-sh/flext/internal/bounded_contexts/meltano/infrastructure/config"
-	"github.com/flext-sh/flext/internal/bounded_contexts/meltano/infrastructure/persistence"
-	"github.com/flext-sh/flext/internal/infrastructure/logging"
+	"github.com/flext/flexcore/internal/bounded_contexts/meltano/infrastructure/config"
+	"github.com/flext/flexcore/internal/bounded_contexts/meltano/infrastructure/persistence"
+	"github.com/flext/flexcore/internal/infrastructure/logging"
 	"github.com/pkg/errors"
 )
 

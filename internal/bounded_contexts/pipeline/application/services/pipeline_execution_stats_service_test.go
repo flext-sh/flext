@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/flext-sh/flext/internal/bounded_contexts/pipeline/application/ports"
-	"github.com/flext-sh/flext/internal/infrastructure/persistence"
+	"github.com/flext/flexcore/internal/bounded_contexts/pipeline/application/ports"
+	"github.com/flext/flexcore/internal/infrastructure/persistence"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

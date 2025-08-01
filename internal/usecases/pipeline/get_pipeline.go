@@ -3,7 +3,7 @@ package pipeline
 import (
 	"context"
 
-	"github.com/flext-sh/flext/internal/shared_kernel/domain/value_objects"
+	"github.com/flext/flexcore/internal/shared_kernel/domain/value_objects"
 )
 
 // GetPipelineUseCase handles retrieving a pipeline by ID

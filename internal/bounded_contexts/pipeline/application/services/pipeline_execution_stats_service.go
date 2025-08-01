@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/flext-sh/flext/internal/bounded_contexts/pipeline/application/ports"
+	"github.com/flext/flexcore/internal/bounded_contexts/pipeline/application/ports"
 	"github.com/google/uuid"
 )
 

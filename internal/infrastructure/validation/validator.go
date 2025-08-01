@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/flext-sh/flext/internal/usecases/pipeline"
-	"github.com/flext-sh/flext/internal/usecases/plugin"
+	"github.com/flext/flexcore/internal/usecases/pipeline"
+	"github.com/flext/flexcore/internal/usecases/plugin"
 	"github.com/google/uuid"
 )
 

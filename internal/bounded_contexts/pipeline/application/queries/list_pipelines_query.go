@@ -3,8 +3,8 @@ package queries
 import (
 	"context"
 
-	"github.com/flext-sh/flext/internal/bounded_contexts/pipeline/application/ports"
-	"github.com/flext-sh/flext/internal/bounded_contexts/pipeline/domain/entities"
+	"github.com/flext/flexcore/internal/bounded_contexts/pipeline/application/ports"
+	"github.com/flext/flexcore/internal/bounded_contexts/pipeline/domain/entities"
 	"github.com/samber/lo"
 )
 

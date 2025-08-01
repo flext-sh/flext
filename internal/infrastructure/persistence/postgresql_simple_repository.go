@@ -9,12 +9,12 @@ import (
 	"github.com/google/uuid"
 	"github.com/lib/pq"
 
-	pipelinePorts "github.com/flext-sh/flext/internal/bounded_contexts/pipeline/application/ports"
-	pipelineEntities "github.com/flext-sh/flext/internal/bounded_contexts/pipeline/domain/entities"
-	pluginPorts "github.com/flext-sh/flext/internal/bounded_contexts/plugin/application/ports"
-	pluginEntities "github.com/flext-sh/flext/internal/bounded_contexts/plugin/domain/entities"
-	"github.com/flext-sh/flext/internal/infrastructure/database"
-	"github.com/flext-sh/flext/internal/infrastructure/logging"
+	pipelinePorts "github.com/flext/flexcore/internal/bounded_contexts/pipeline/application/ports"
+	pipelineEntities "github.com/flext/flexcore/internal/bounded_contexts/pipeline/domain/entities"
+	pluginPorts "github.com/flext/flexcore/internal/bounded_contexts/plugin/application/ports"
+	pluginEntities "github.com/flext/flexcore/internal/bounded_contexts/plugin/domain/entities"
+	"github.com/flext/flexcore/internal/infrastructure/database"
+	"github.com/flext/flexcore/internal/infrastructure/logging"
 )
 
 // SimplePipelineRepository implementa PipelineRepository usando PostgreSQL de forma simplificada
