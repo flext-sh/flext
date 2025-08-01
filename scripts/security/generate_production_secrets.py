@@ -9,7 +9,6 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
-from typing import Any
 
 from flext_tools import Colors, print_colored
 from flext_tools.core.script_base import ScriptMetadata
@@ -112,9 +111,9 @@ class ProductionSecretsGenerator(BaseSecurityScript):
 
         return parser
 
-    def _process_kwargs(self, args: object) -> dict[str, Any]:
+    def _process_kwargs(self, args: object) -> dict[str, object]:
         """Process arguments into kwargs."""
-        kwargs: dict[str, Any] = {}
+        kwargs: dict[str, object] = {}
         kwargs["encrypt"] = not getattr(args, "no_encrypt", False)
         return kwargs
 

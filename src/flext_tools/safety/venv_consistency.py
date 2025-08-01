@@ -8,7 +8,7 @@ import sys
 import tomllib
 from collections import defaultdict
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from flext_tools.utils import Colors, print_colored
 
@@ -200,7 +200,9 @@ class VenvConsistencyValidator:
             Colors.GREEN,
         )
 
-    def _parse_dependency_spec(self, dep_spec: str | dict[str, Any]) -> tuple[str, str]:
+    def _parse_dependency_spec(
+        self, dep_spec: str | dict[str, object]
+    ) -> tuple[str, str]:
         """Parse uma especificação de dependência PEP 621."""
         if isinstance(dep_spec, dict):
             name = dep_spec.get("name", "unknown")

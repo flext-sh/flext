@@ -5,7 +5,7 @@ from __future__ import annotations
 import re
 import subprocess
 import tomllib
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from flext_tools.utils import Colors, print_colored
 
@@ -16,9 +16,9 @@ if TYPE_CHECKING:
 class PoetryValidator:
     """Valida configurações e projetos Poetry."""
 
-    def validate_project(self, project_path: Path) -> dict[str, Any]:
+    def validate_project(self, project_path: Path) -> dict[str, object]:
         """Valida um projeto Poetry."""
-        results: dict[str, Any] = {
+        results: dict[str, object] = {
             "valid": True,
             "errors": [],
             "warnings": [],
@@ -86,7 +86,7 @@ class PoetryValidator:
 
     def _validate_poetry_structure(
         self,
-        data: dict[str, Any],
+        data: dict[str, object],
     ) -> tuple[bool, list[str]]:
         """Valida estrutura Poetry no pyproject.toml."""
         issues = []
@@ -116,7 +116,7 @@ class PoetryValidator:
 
     def _validate_project_metadata(
         self,
-        data: dict[str, Any],
+        data: dict[str, object],
     ) -> tuple[bool, list[str]]:
         """Valida metadados do projeto."""
         poetry = data.get("tool", {}).get("poetry", {})
@@ -147,7 +147,7 @@ class PoetryValidator:
 
         return len(issues) == 0, issues
 
-    def _validate_dependencies(self, data: dict[str, Any]) -> tuple[bool, list[str]]:
+    def _validate_dependencies(self, data: dict[str, object]) -> tuple[bool, list[str]]:
         """Valida dependências do projeto."""
         issues = []
         poetry = data.get("tool", {}).get("poetry", {})
@@ -217,7 +217,7 @@ class PoetryValidator:
 
         return len(issues) == 0, issues
 
-    def _collect_project_info(self, data: dict[str, Any]) -> dict[str, Any]:
+    def _collect_project_info(self, data: dict[str, object]) -> dict[str, object]:
         """Coleta informações do projeto."""
         poetry = data.get("tool", {}).get("poetry", {})
 
@@ -247,7 +247,7 @@ class PoetryValidator:
         pattern = r"^\d+\.\d+\.\d+([.-].*)?$"
         return bool(re.match(pattern, version))
 
-    def validate_workspace(self, workspace_path: Path) -> dict[str, dict[str, Any]]:
+    def validate_workspace(self, workspace_path: Path) -> dict[str, dict[str, object]]:
         """Valida todos os projetos Poetry no workspace.
 
         Args:
@@ -257,7 +257,7 @@ class PoetryValidator:
             Dict com validação por projeto
 
         """
-        validations: dict[str, dict[str, Any]] = {}
+        validations: dict[str, dict[str, object]] = {}
 
         print_colored("🔍 Validando projetos Poetry no workspace...", Colors.BLUE)
 

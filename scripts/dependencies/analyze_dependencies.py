@@ -6,7 +6,6 @@ Usa flext_tools para análise modular e cache.
 
 import sys
 from pathlib import Path
-from typing import Any
 
 from flext_tools import Colors, ConflictAnalyzer, cached, print_colored
 
@@ -23,7 +22,7 @@ def main() -> int:
 
     # Usa cache para análise pesada
     @cached(namespace="conflicts", ttl=600)
-    def get_workspace_analysis() -> dict[str, Any]:
+    def get_workspace_analysis() -> dict[str, object]:
         return analyzer.analyze_workspace_conflicts(workspace_path)
 
     # Executa análise

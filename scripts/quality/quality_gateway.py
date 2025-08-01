@@ -13,7 +13,6 @@ import subprocess
 import sys
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
 
 from scripts.common import discover_projects
 
@@ -39,10 +38,10 @@ NEEDS_IMPROVEMENT_THRESHOLD = 60
 class AnalysisResults:
     """Resultados de análise de qualidade."""
 
-    deps_result: dict[str, Any]
-    quality_result: dict[str, Any]
-    conflicts_result: dict[str, Any]
-    poetry_result: dict[str, Any]
+    deps_result: dict[str, object]
+    quality_result: dict[str, object]
+    conflicts_result: dict[str, object]
+    poetry_result: dict[str, object]
 
 
 @dataclass
@@ -204,7 +203,7 @@ class QualityGateway(FlextScript):
         """Descobrir projetos para analisar."""
         return discover_projects(workspace_root, projects_filter)
 
-    def _analyze_dependencies(self, project_path: Path) -> dict[str, Any]:
+    def _analyze_dependencies(self, project_path: Path) -> dict[str, object]:
         """Analisar dependências usando flext_tools."""
         try:
             discovery = DependencyDiscovery(resolve_transitive=True)
@@ -230,7 +229,7 @@ class QualityGateway(FlextScript):
                 "error": str(e),
             }
 
-    def _analyze_code_quality(self, project_path: Path) -> dict[str, Any]:
+    def _analyze_code_quality(self, project_path: Path) -> dict[str, object]:
         """Analisar qualidade do código."""
         try:
             # Ruff check
@@ -309,7 +308,7 @@ class QualityGateway(FlextScript):
                 "error": str(e),
             }
 
-    def _analyze_conflicts(self, project_path: Path) -> dict[str, Any]:
+    def _analyze_conflicts(self, project_path: Path) -> dict[str, object]:
         """Analisar conflitos usando flext_tools."""
         try:
             analyzer = ConflictAnalyzer()
@@ -329,7 +328,7 @@ class QualityGateway(FlextScript):
                 "error": str(e),
             }
 
-    def _validate_poetry_config(self, project_path: Path) -> dict[str, Any]:
+    def _validate_poetry_config(self, project_path: Path) -> dict[str, object]:
         """Validar configuração Poetry usando flext_tools."""
         try:
             validator = PoetryValidator()
@@ -344,7 +343,7 @@ class QualityGateway(FlextScript):
         self,
         project_name: str,
         results: AnalysisResults,
-    ) -> dict[str, Any]:
+    ) -> dict[str, object]:
         """Calcular resultado final do projeto."""
         issues = []
         critical_issues = 0
@@ -403,7 +402,7 @@ class QualityGateway(FlextScript):
             "poetry_result": results.poetry_result,
         }
 
-    def _print_project_issues(self, project_result: dict[str, Any]) -> None:
+    def _print_project_issues(self, project_result: dict[str, object]) -> None:
         """Imprimir issues do projeto."""
         for issue in project_result["issues"]:
             if "Conflitos:" in issue or "Poetry" in issue:
@@ -413,7 +412,7 @@ class QualityGateway(FlextScript):
 
     def _print_final_summary(
         self,
-        total_stats: dict[str, Any],
+        total_stats: dict[str, object],
         failed_projects: list[str],
         strict_mode: bool,  # noqa: FBT001
     ) -> None:

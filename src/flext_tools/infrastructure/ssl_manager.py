@@ -1,7 +1,6 @@
 """SSL management utilities."""
 
 from pathlib import Path
-from typing import Any
 
 from flext_tools.utils import Colors, print_colored
 
@@ -13,7 +12,7 @@ class SSLManager:
         """Initialize the SSL manager."""
         self.config_path = config_path or Path.cwd() / "ssl"
 
-    def setup_ssl(self, **_kwargs: object) -> dict[str, Any]:
+    def setup_ssl(self, **_kwargs: object) -> dict[str, object]:
         """Setup SSL configuration."""
         print_colored("🔒 Configurando SSL...", Colors.BLUE)
 
