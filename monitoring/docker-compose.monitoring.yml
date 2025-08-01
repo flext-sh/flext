@@ -6,55 +6,55 @@ services:
     container_name: flext-alertmanager
     image: prom/alertmanager:latest
     ports:
-    - 9093:9093
+      - 9093:9093
     restart: unless-stopped
     volumes:
-    - ./alertmanager.yml:/etc/alertmanager/alertmanager.yml
+      - ./alertmanager.yml:/etc/alertmanager/alertmanager.yml
   grafana:
     container_name: flext-grafana
     environment:
       GF_SECURITY_ADMIN_PASSWORD: flext-admin-staging
-      GF_USERS_ALLOW_SIGN_UP: 'false'
+      GF_USERS_ALLOW_SIGN_UP: "false"
     image: grafana/grafana:latest
     ports:
-    - 3000:3000
+      - 3000:3000
     restart: unless-stopped
     volumes:
-    - grafana_data:/var/lib/grafana
-    - ./grafana/dashboards:/etc/grafana/provisioning/dashboards
-    - ./grafana/datasources:/etc/grafana/provisioning/datasources
+      - grafana_data:/var/lib/grafana
+      - ./grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - ./grafana/datasources:/etc/grafana/provisioning/datasources
   node-exporter:
     command:
-    - --path.procfs=/host/proc
-    - --path.sysfs=/host/sys
-    - --collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)
+      - --path.procfs=/host/proc
+      - --path.sysfs=/host/sys
+      - --collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)
     container_name: flext-node-exporter
     image: prom/node-exporter:latest
     ports:
-    - 9100:9100
+      - 9100:9100
     restart: unless-stopped
     volumes:
-    - /proc:/host/proc:ro
-    - /sys:/host/sys:ro
-    - /:/rootfs:ro
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
   prometheus:
     command:
-    - --config.file=/etc/prometheus/prometheus.yml
-    - --storage.tsdb.path=/prometheus
-    - --web.console.libraries=/etc/prometheus/console_libraries
-    - --web.console.templates=/etc/prometheus/consoles
-    - --storage.tsdb.retention.time=30d
-    - --web.enable-lifecycle
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --web.console.libraries=/etc/prometheus/console_libraries
+      - --web.console.templates=/etc/prometheus/consoles
+      - --storage.tsdb.retention.time=30d
+      - --web.enable-lifecycle
     container_name: flext-prometheus
     image: prom/prometheus:latest
     ports:
-    - 9090:9090
+      - 9090:9090
     restart: unless-stopped
     volumes:
-    - ./prometheus.yml:/etc/prometheus/prometheus.yml
-    - ./alerts:/etc/prometheus/alerts
-    - prometheus_data:/prometheus
-version: '3.8'
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./alerts:/etc/prometheus/alerts
+      - prometheus_data:/prometheus
+version: "3.8"
 volumes:
   grafana_data: {}
   prometheus_data: {}

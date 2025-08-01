@@ -14,6 +14,7 @@ Usando flext_tools para máxima confiabilidade enterprise.
 
 from __future__ import annotations
 
+import subprocess  # moved to top for PLC0415
 import sys
 from pathlib import Path
 
@@ -30,7 +31,10 @@ class ComprehensiveWorkspaceManager(FlextScript):
     def metadata(self) -> ScriptMetadata:
         return ScriptMetadata(
             name="comprehensive_workspace_manager",
-            description="Complete workspace setup, links, dependencies, type checking, SSL and monitoring",
+            description=(
+                "Complete workspace setup, links, dependencies, type checking, "
+                "SSL and monitoring"
+            ),
             category="config",
             version="3.0.0",
         )
@@ -56,8 +60,7 @@ class ComprehensiveWorkspaceManager(FlextScript):
 
         # Check Poetry availability
         try:
-            import subprocess
-
+            # Security: poetry is a trusted executable in PATH
             subprocess.run(
                 ["poetry", "--version"],
                 capture_output=True,

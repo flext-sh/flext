@@ -100,7 +100,7 @@ def main() -> None:
 
         # Save updated pyproject.toml
         try:
-            with open(pyproject_file, "w", encoding="utf-8") as f:
+            with Path(pyproject_file).open("w", encoding="utf-8") as f:
                 toml.dump(project_config, f)
             print(f"  💾 Saved {pyproject_file}")
         except (OSError, ValueError, TypeError) as e:

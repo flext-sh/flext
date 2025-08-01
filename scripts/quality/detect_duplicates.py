@@ -297,7 +297,7 @@ class FlextDuplicateDetector:
 
             # Extrair extensão
             if "." in file_path:
-                ext = file_path.split(".")[-1].lower()
+                ext = file_path.rsplit(".", maxsplit=1)[-1].lower()
                 if ext in binary_extensions:
                     return True
 
@@ -316,7 +316,7 @@ class FlextDuplicateDetector:
 
             # Se tem extensão, verificar se está na lista permitida
             if "." in file_path:
-                ext = file_path.split(".")[-1].lower()
+                ext = file_path.rsplit(".", maxsplit=1)[-1].lower()
                 return ext not in self.file_extensions
             # Arquivos sem extensão - verificar se são de texto
             return not self._is_text_file(file_path)
@@ -1316,13 +1316,15 @@ class FlextDuplicateDetector:
 
                             if file_size > max_file_size:
                                 print(
-                                    f"⚠️ Pulando arquivo muito grande: {file_str} ({file_size // 1024}KB)",
+                                    f"⚠️ Pulando arquivo muito grande: {file_str} "
+                                    f"({file_size // 1024}KB)",
                                 )
                                 continue
 
                             if total_size + file_size > max_total_size:
                                 print(
-                                    "⚠️ Limite de memória atingido, processando em lotes...",
+                                    "⚠️ Limite de memória atingido, "
+                                    "processando em lotes...",
                                 )
                                 break
 
@@ -1363,7 +1365,8 @@ class FlextDuplicateDetector:
                         # Skip files that are too large
                         if file_size > max_file_size:
                             print(
-                                f"⚠️ Pulando arquivo muito grande: {file_path} ({file_size // 1024}KB)",
+                                f"⚠️ Pulando arquivo muito grande: {file_path} "
+                                f"({file_size // 1024}KB)",
                             )
                             continue
 
@@ -1395,7 +1398,8 @@ class FlextDuplicateDetector:
                         errors.append(f"Erro ao ler {file_path}: {e}")
 
         print(
-            f"📁 Coletados {len(files_content)} arquivos ({total_size // 1024 // 1024}MB)",
+            f"📁 Coletados {len(files_content)} arquivos "
+            f"({total_size // 1024 // 1024}MB)",
         )
         return files_content
 

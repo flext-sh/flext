@@ -124,7 +124,7 @@ class WorkspaceStatus(FlextScript):
 
     def _analyze_quality(
         self,
-        workspace_root: Path,
+        _workspace_root: Path,
         projects_info: dict[str, Any],
     ) -> dict[str, Any]:
         """Analisar qualidade do código."""
@@ -147,7 +147,7 @@ class WorkspaceStatus(FlextScript):
 
     def _analyze_dependencies(
         self,
-        workspace_root: Path,
+        _workspace_root: Path,
         projects_info: dict[str, Any],
     ) -> dict[str, Any]:
         """Analisar dependências."""
@@ -288,7 +288,8 @@ class WorkspaceStatus(FlextScript):
             score_color = Colors.RED
 
         print_colored(
-            f"  Score: {health['score']}/{health['max_score']} (Grade: {health['grade']})",
+            f"  Score: {health['score']}/{health['max_score']} "
+            f"(Grade: {health['grade']})",
             score_color,
         )
 
@@ -298,7 +299,9 @@ class WorkspaceStatus(FlextScript):
                 print(f"  • {issue}")
 
         print_colored(
-            f"\n{'🎉' if health['score'] >= 80 else '⚠️'} Workspace Status: {'EXCELLENT' if health['score'] >= 90 else 'GOOD' if health['score'] >= 80 else 'NEEDS IMPROVEMENT' if health['score'] >= 60 else 'CRITICAL'}",
+            f"\n{'🎉' if health['score'] >= 80 else '⚠️'} "
+            "Workspace Status: "
+            f"{'EXCELLENT' if health['score'] >= 90 else 'GOOD' if health['score'] >= 80 else 'NEEDS IMPROVEMENT' if health['score'] >= 60 else 'CRITICAL'}",  # noqa: E501
             score_color,
         )
 

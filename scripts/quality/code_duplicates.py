@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
+from typing import Any
 
 from flext_tools import Colors, print_colored
 from flext_tools.analysis import CodeDuplicateAnalyzer

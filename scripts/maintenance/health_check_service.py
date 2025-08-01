@@ -9,11 +9,14 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from flext_tools import Colors, print_colored
 from flext_tools.core.script_base import FlextScript, ScriptMetadata
 from flext_tools.monitoring import HealthCheckService
+
+if TYPE_CHECKING:
+    import argparse
 
 
 class HealthCheckServiceRunner(FlextScript):
@@ -117,7 +120,7 @@ class HealthCheckServiceRunner(FlextScript):
 
         return parser
 
-    def _process_kwargs(self, args: Any) -> dict[str, Any]:
+    def _process_kwargs(self, args: argparse.Namespace) -> dict[str, Any]:
         """Process arguments into kwargs."""
         kwargs: dict[str, Any] = {}
         kwargs["generate_report"] = not getattr(args, "no_report", False)

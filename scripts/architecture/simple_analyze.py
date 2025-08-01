@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
-"""Analisador Simples de Violações Arquiteturais - FLEXT Workspace.
-
-Identifica imports problemáticos e módulos em camadas incorretas.
-"""
+"""Análise simples de violações arquiteturais no flext-core."""
 
 import ast
 import os
@@ -15,38 +12,44 @@ logger = get_logger(__name__)
 
 
 def analyze_flext_core_violations() -> list[dict[str, str]]:
-    """Analisa violações específicas em flext-core."""
-    print("🔍 Analisando violações em flext-core...")
+    """Analisa violações arquiteturais no flext-core."""
+    print("🔍 Analisando violações arquiteturais no flext-core...")
 
-    flext_core_path = Path("flext-core/src")
+    flext_core_path = Path("flext-core/src/flext_core")
     if not flext_core_path.exists():
-        print("❌ Diretório flext-core/src não encontrado")
+        print("❌ Diretório flext-core/src/flext_core não encontrado")
         return []
 
-    violations: list[dict[str, str]] = []
+    # Padrões específicos que violam a arquitetura
     specific_patterns = [
-        r"meltano",
-        r"oracle",
-        r"ldap",
-        r"singer",
-        r"algar",
-        r"gruponos",
+        "meltano",
+        "oracle",
+        "ldap",
+        "singer",
+        "algar",
+        "gruponos",
     ]
+
+    violations: list[dict[str, str]] = []
 
     for py_file in flext_core_path.rglob("*.py"):
         if py_file.name == "__init__.py" or py_file.name.endswith(".bak"):
             continue
 
         try:
-            with open(py_file, encoding="utf-8") as f:
+            with Path(py_file).open(encoding="utf-8") as f:
                 content = f.read()
 
             # Usar word boundaries para evitar matches dentro de outras palavras
-            violations.extend({
-                            "file": str(py_file),
-                            "pattern": pattern,
-                            "action": f"Renomear {py_file.name} para {py_file.name}.bak",
-                        } for pattern in specific_patterns if re.search(r"\b" + pattern + r"\b", content, re.IGNORECASE))
+            violations.extend(
+                {
+                    "file": str(py_file),
+                    "pattern": pattern,
+                    "action": f"Renomear {py_file.name} para {py_file.name}.bak",
+                }
+                for pattern in specific_patterns
+                if re.search(r"\b" + pattern + r"\b", content, re.IGNORECASE)
+            )
 
             # Analisar imports AST
             try:
@@ -63,7 +66,8 @@ def analyze_flext_core_violations() -> list[dict[str, str]]:
                                     {
                                         "file": str(py_file),
                                         "pattern": f"import {import_name}",
-                                        "action": f"Remover import violador em {py_file.name}",
+                                        "action": f"Remover import violador em "
+                                        f"{py_file.name}",
                                     },
                                 )
                     elif isinstance(node, ast.ImportFrom) and node.module:
@@ -76,7 +80,8 @@ def analyze_flext_core_violations() -> list[dict[str, str]]:
                                 {
                                     "file": str(py_file),
                                     "pattern": f"from {node.module}",
-                                    "action": f"Remover import violador em {py_file.name}",
+                                    "action": f"Remover import violador em "
+                                    f"{py_file.name}",
                                 },
                             )
             except SyntaxError:
@@ -105,12 +110,12 @@ def analyze_ignore_comments() -> list[Path]:
             if file.endswith(".py"):
                 file_path = Path(root) / file
                 try:
-                    with open(file_path, encoding="utf-8") as f:
+                    with Path(file_path).open(encoding="utf-8") as f:
                         content = f.read()
                         if "# ignore" in content.lower():
                             ignore_files.append(file_path)
-                except (OSError, ValueError, TypeError) as e:
-                    logger.exception(f"Error processing file {file_path}: {e}")
+                except (OSError, ValueError, TypeError):
+                    logger.exception(f"Error processing file {file_path}")
                     continue
 
     return ignore_files
@@ -149,7 +154,7 @@ def generate_fix_commands(
     script_path = Path("scripts/architecture/fix_violations.sh")
     script_path.parent.mkdir(parents=True, exist_ok=True)
 
-    with open(script_path, "w", encoding="utf-8") as f:
+    with Path(script_path).open("w", encoding="utf-8") as f:
         f.write("#!/bin/bash\n")
         f.write("# Script gerado automaticamente para correção de violações\n\n")
         f.write("echo '🚀 Iniciando correção de violações arquiteturais...'\n\n")

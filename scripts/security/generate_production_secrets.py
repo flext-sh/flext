@@ -61,7 +61,7 @@ class ProductionSecretsGenerator(BaseSecurityScript):
                 # Display summary
                 print_colored("🔑 Generated secrets:", Colors.BLUE)
                 for secret_type, secret_value in secrets_result.items():
-                    if secret_type != "details":
+                    if secret_type != "details":  # noqa: S105
                         print(f"  • {secret_type}: {'*' * len(secret_value)}")
 
                 # Save to file if requested
@@ -112,7 +112,7 @@ class ProductionSecretsGenerator(BaseSecurityScript):
 
         return parser
 
-    def _process_kwargs(self, args: Any) -> dict[str, Any]:
+    def _process_kwargs(self, args: object) -> dict[str, Any]:
         """Process arguments into kwargs."""
         kwargs: dict[str, Any] = {}
         kwargs["encrypt"] = not getattr(args, "no_encrypt", False)

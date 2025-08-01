@@ -78,27 +78,27 @@ services:
       FLEXT_HOST: 0.0.0.0
       FLEXT_PORT: 8080
       FLEXT_LOG_LEVEL: info
-      
+
       # Database configuration
       FLEXT_DATABASE_URL: postgresql://flext:flext_secure_password_change_in_production@postgres:5432/flext?sslmode=disable
       FLEXT_DB_POOL_SIZE: 20
       FLEXT_DB_MAX_IDLE: 10
       FLEXT_DB_MAX_OPEN: 20
-      
+
       # Redis configuration
       FLEXT_REDIS_URL: redis://redis:6379/0
       FLEXT_REDIS_POOL_SIZE: 10
-      
+
       # Plugin and pipeline paths
       FLEXT_PLUGINS_DIR: /var/lib/flext/plugins
       FLEXT_WORKSPACE: /var/lib/flext/pipelines
       FLEXT_MAX_CONCURRENT_PIPELINES: 10
-      
+
       # Security settings
       FLEXT_ENABLE_AUTH: false
       FLEXT_CORS_ENABLED: true
       FLEXT_CORS_ORIGINS: "*"
-      
+
       # Monitoring
       FLEXT_METRICS_ENABLED: true
       FLEXT_TRACING_ENABLED: false
@@ -133,14 +133,14 @@ services:
       # Web interface configuration
       FLEXT_WEB_PORT: 5000
       FLEXT_SERVICE_URL: http://flext-service:8080
-      
+
       # FLEXT service integration
       FLEXT_BINARY_PATH: /usr/local/bin/flext
       FLEXT_CONFIG_PATH: /etc/flext/config.yaml
-      
+
       # Database for web interface (if needed)
       FLEXT_WEB_DATABASE_URL: postgresql://flext:flext_secure_password_change_in_production@postgres:5432/flext?sslmode=disable
-      
+
       # Flask settings
       FLASK_ENV: production
       FLASK_DEBUG: false
@@ -180,7 +180,15 @@ services:
       - flext-service
       - flext-web
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      test:
+        [
+          "CMD",
+          "wget",
+          "--quiet",
+          "--tries=1",
+          "--spider",
+          "http://localhost/health",
+        ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -191,11 +199,11 @@ services:
     container_name: flext-prometheus
     restart: unless-stopped
     command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-      - '--web.console.libraries=/etc/prometheus/console_libraries'
-      - '--web.console.templates=/etc/prometheus/consoles'
-      - '--web.enable-lifecycle'
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.console.libraries=/etc/prometheus/console_libraries"
+      - "--web.console.templates=/etc/prometheus/consoles"
+      - "--web.enable-lifecycle"
     volumes:
       - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
     ports:

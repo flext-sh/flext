@@ -16,6 +16,7 @@ from __future__ import annotations
 import argparse
 import operator
 import re
+import shutil
 import subprocess
 import sys
 from collections import Counter, defaultdict
@@ -28,6 +29,10 @@ if TYPE_CHECKING:
 
 def run_command(cmd: list[str], cwd: Path | None = None) -> tuple[int, str, str]:
     """Execute command and return exit code, stdout, stderr."""
+    # Validate command exists
+    if not cmd or not shutil.which(cmd[0]):
+        return 1, "", f"Command not found: {cmd[0] if cmd else 'None'}"
+
     try:
         result = subprocess.run(
             cmd,

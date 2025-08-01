@@ -44,7 +44,7 @@ flext_entity_id = int  # snake_case
 FlextEntityId = int    # Sem prefixo T
 ```
 
-### 3. **flext_** - Módulos, Pacotes e Funções
+### 3. **flext\_** - Módulos, Pacotes e Funções
 
 **Uso**: Nomes de módulos, packages, funções, variáveis
 **Padrão**: `flext_xxx_yyy` (snake_case)
@@ -52,7 +52,7 @@ FlextEntityId = int    # Sem prefixo T
 ```python
 # ✅ Correto - Packages
 flext_core
-flext_api  
+flext_api
 flext_auth
 flext_db_oracle
 
@@ -72,7 +72,7 @@ FLEXT_API  # SCREAMING_SNAKE_CASE
 FlextModule  # PascalCase para módulo
 ```
 
-### 4. **FLEXT_** - Constantes e Configurações
+### 4. **FLEXT\_** - Constantes e Configurações
 
 **Uso**: Constantes, environment variables, configurações globais
 **Padrão**: `FLEXT_XXX_YYY` (SCREAMING_SNAKE_CASE)

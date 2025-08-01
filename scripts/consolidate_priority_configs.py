@@ -2,6 +2,7 @@
 """Consolidate priority configuration files to use FLEXT patterns."""
 
 import re
+from pathlib import Path
 
 
 def consolidate_algar_config() -> bool | None:
@@ -11,7 +12,7 @@ def consolidate_algar_config() -> bool | None:
     print(f"🔧 Consolidating {config_file}...")
 
     try:
-        with open(config_file, encoding="utf-8") as f:
+        with Path(config_file).open(encoding="utf-8") as f:
             content = f.read()
 
         original_content = content
@@ -39,7 +40,7 @@ def consolidate_algar_config() -> bool | None:
             content = "# TODO: Consolidated to use FLEXT config patterns\n" + content
 
         if content != original_content:
-            with open(config_file, "w", encoding="utf-8") as f:
+            with Path(config_file).open("w", encoding="utf-8") as f:
                 f.write(content)
             print(f"✅ Consolidated {config_file}")
             return True
@@ -58,19 +59,20 @@ def consolidate_flext_auth_config() -> bool | None:
     print(f"🔧 Consolidating {config_file}...")
 
     try:
-        with open(config_file, encoding="utf-8") as f:
+        with Path(config_file).open(encoding="utf-8") as f:
             content = f.read()
 
         original_content = content
 
         # Add flext-core import if not present
-        if "FlextCoreSettings" not in content:
-            # Find BaseSettings import
-            if "from pydantic import BaseSettings" in content:
-                content = content.replace(
-                    "from pydantic import BaseSettings",
-                    "from pydantic import BaseSettings\nFlextCoreSettings",
-                )
+        if (
+            "FlextCoreSettings" not in content
+            and "from pydantic import BaseSettings" in content
+        ):
+            content = content.replace(
+                "from pydantic import BaseSettings",
+                "from pydantic import BaseSettings\nFlextCoreSettings",
+            )
 
         # Replace BaseSettings with FlextCoreSettings for config classes
         config_classes = re.findall(
@@ -89,7 +91,7 @@ def consolidate_flext_auth_config() -> bool | None:
             content = "# TODO: Consolidated to use FLEXT config patterns\n" + content
 
         if content != original_content:
-            with open(config_file, "w", encoding="utf-8") as f:
+            with Path(config_file).open("w", encoding="utf-8") as f:
                 f.write(content)
             print(f"✅ Consolidated {config_file}")
             return True
@@ -108,25 +110,29 @@ def consolidate_flext_api_config() -> bool | None:
     print(f"🔧 Consolidating {config_file}...")
 
     try:
-        with open(config_file, encoding="utf-8") as f:
+        with Path(config_file).open(encoding="utf-8") as f:
             content = f.read()
 
         original_content = content
 
         # Replace manual os.getenv() with TODO comments
         env_vars = re.findall(r'os\.getenv\(["\']([^"\']+)["\']', content)
-        if env_vars:
-            # Add comment about manual env vars
-            if "# TODO: Replace manual os.getenv() with Pydantic Fields" not in content:
-                content = (
-                    "# TODO: Replace manual os.getenv() with Pydantic Fields\n"
-                    + content
-                )
+        # Combine nested if statements
+        if (
+            env_vars
+            and "# TODO: Replace manual os.getenv() with Pydantic Fields" not in content
+        ):
+            content = (
+                "# TODO: Replace manual os.getenv() with Pydantic Fields\n" + content
+            )
 
             # Add inline TODOs for each env var
             for env_var in env_vars:
                 pattern = f"os\\.getenv\\([\"']{re.escape(env_var)}[\"'](.*?)\\)"
-                replacement = f'# TODO: Move {env_var} to FLEXT settings class\nos.getenv("{env_var}"\\1)'
+                replacement = (
+                    f"# TODO: Move {env_var} to FLEXT settings class\n"
+                    f'os.getenv("{env_var}"\\1)'
+                )
                 content = re.sub(pattern, replacement, content, count=1)
 
         # Add TODO comment for standardization
@@ -134,7 +140,7 @@ def consolidate_flext_api_config() -> bool | None:
             content = "# TODO: Consolidated to use FLEXT config patterns\n" + content
 
         if content != original_content:
-            with open(config_file, "w", encoding="utf-8") as f:
+            with Path(config_file).open("w", encoding="utf-8") as f:
                 f.write(content)
             print(f"✅ Consolidated {config_file}")
             return True
@@ -275,7 +281,7 @@ def get_project_settings() -> ConsolidatedProjectSettings:
 '''
 
     try:
-        with open(template_path, "w", encoding="utf-8") as f:
+        with Path(template_path).open("w", encoding="utf-8") as f:
             f.write(template_content)
         print(f"✅ Created consolidation template: {template_path}")
         return True

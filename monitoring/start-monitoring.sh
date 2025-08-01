@@ -7,14 +7,14 @@ echo "=================================="
 # Check dependencies
 echo "📋 Checking dependencies..."
 
-if ! command -v docker &> /dev/null; then
-    echo "❌ Docker not found. Please install Docker first."
-    exit 1
+if ! command -v docker &>/dev/null; then
+	echo "❌ Docker not found. Please install Docker first."
+	exit 1
 fi
 
-if ! command -v docker-compose &> /dev/null; then
-    echo "❌ Docker Compose not found. Please install Docker Compose first."
-    exit 1
+if ! command -v docker-compose &>/dev/null; then
+	echo "❌ Docker Compose not found. Please install Docker Compose first."
+	exit 1
 fi
 
 echo "✅ Dependencies OK"
@@ -34,14 +34,14 @@ echo "🔍 Checking service health..."
 services=("prometheus:9090" "grafana:3000" "node-exporter:9100" "alertmanager:9093")
 
 for service in "${services[@]}"; do
-    name="${service%%:*}"
-    port="${service##*:}"
-    
-    if curl -s -o /dev/null -w "%{http_code}" "http://localhost:$port" | grep -q "200\|302"; then
-        echo "  ✅ $name (port $port) - OK"
-    else
-        echo "  ❌ $name (port $port) - Failed"
-    fi
+	name="${service%%:*}"
+	port="${service##*:}"
+
+	if curl -s -o /dev/null -w "%{http_code}" "http://localhost:$port" | grep -q "200\|302"; then
+		echo "  ✅ $name (port $port) - OK"
+	else
+		echo "  ❌ $name (port $port) - Failed"
+	fi
 done
 
 echo ""

@@ -59,7 +59,7 @@ def main() -> None:
 
         # Write simplified Makefile
         try:
-            with open(makefile_path, "w", encoding="utf-8") as f:
+            with Path(makefile_path).open("w", encoding="utf-8") as f:
                 f.write(simplified_makefile)
             print(f"  ✅ Simplified Makefile for {project_name}")
             simplified_count += 1

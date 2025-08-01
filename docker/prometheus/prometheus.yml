@@ -5,41 +5,41 @@ global:
   scrape_interval: 15s
   evaluation_interval: 15s
   external_labels:
-    platform: 'flext'
-    environment: 'production'
+    platform: "flext"
+    environment: "production"
 
 scrape_configs:
   # FLEXT Service metrics
-  - job_name: 'flext-service'
+  - job_name: "flext-service"
     static_configs:
-      - targets: ['flext-service:8080']
-    metrics_path: '/metrics'
+      - targets: ["flext-service:8080"]
+    metrics_path: "/metrics"
     scrape_interval: 10s
     scrape_timeout: 5s
     honor_labels: true
 
   # FLEXT Web Interface metrics
-  - job_name: 'flext-web'
+  - job_name: "flext-web"
     static_configs:
-      - targets: ['flext-web:5000']
-    metrics_path: '/health'
+      - targets: ["flext-web:5000"]
+    metrics_path: "/health"
     scrape_interval: 30s
     scrape_timeout: 10s
 
   # PostgreSQL database
-  - job_name: 'postgres'
+  - job_name: "postgres"
     static_configs:
-      - targets: ['postgres:5432']
+      - targets: ["postgres:5432"]
     scrape_interval: 30s
 
   # Redis cache
-  - job_name: 'redis'
+  - job_name: "redis"
     static_configs:
-      - targets: ['redis:6379']
+      - targets: ["redis:6379"]
     scrape_interval: 30s
 
   # Prometheus self-monitoring
-  - job_name: 'prometheus'
+  - job_name: "prometheus"
     static_configs:
-      - targets: ['localhost:9090']
+      - targets: ["localhost:9090"]
     scrape_interval: 60s

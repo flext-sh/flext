@@ -14,7 +14,7 @@ All previous documentation has been moved to `.bak/` to prevent conflicts while 
 
 **FLEXT is a SINGLE SERVICE** that orchestrates enterprise data integration through:
 
-1. **Plugin System** - Dynamic extensibility 
+1. **Plugin System** - Dynamic extensibility
 2. **Library Architecture** - `flext-core`, `flext-api`, `flext-auth`, `flext-cli`, `flext-grpc`, `flext-plugin`, `flext-web` are LIBRARIES, not services
 3. **Dependency Injection** - Clean boundaries with maximum flexibility
 4. **Clean Architecture** - Domain-driven design with clear separation of concerns

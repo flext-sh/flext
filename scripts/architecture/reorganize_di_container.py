@@ -26,7 +26,8 @@ def fix_di_ordering(file_path: Path) -> bool:
 
         # Fix calls to DI functions before import
         content = re.sub(
-            r"(from typing import.*?\n)\n([^#\n]*?get_\w+\(\).*?\n)+\n(# Use centralized|from flext_)",
+            r"(from typing import.*?\n)\n([^#\n]*?get_\w+\(\).*?\n)+\n"
+            r"(# Use centralized|from flext_)",
             r"\1\n\3",
             content,
             flags=re.MULTILINE,
@@ -34,7 +35,8 @@ def fix_di_ordering(file_path: Path) -> bool:
 
         # Remove duplicate "Initialize types via DI container" comments
         content = re.sub(
-            r"(# Initialize types via DI container\n.*?\n)\n# Initialize types via DI container\n",
+            r"(# Initialize types via DI container\n.*?\n)\n"
+            r"# Initialize types via DI container\n",
             r"\1",
             content,
             flags=re.MULTILINE,
