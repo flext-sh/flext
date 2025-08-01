@@ -117,13 +117,13 @@ database:
 
 ## Environment Variables
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `FLEXT_CONFIG_PATH` | Path to configuration file | - |
-| `FLEXT_SERVER_HOST` | FLEXT server hostname | localhost |
-| `FLEXT_SERVER_PORT` | FLEXT server port | 8080 |
-| `FLEXT_LOG_LEVEL` | Logging level (debug, info, warn, error) | info |
-| `FLEXT_DATABASE_URL` | Database connection URL | - |
+| Variable             | Description                              | Default   |
+| -------------------- | ---------------------------------------- | --------- |
+| `FLEXT_CONFIG_PATH`  | Path to configuration file               | -         |
+| `FLEXT_SERVER_HOST`  | FLEXT server hostname                    | localhost |
+| `FLEXT_SERVER_PORT`  | FLEXT server port                        | 8080      |
+| `FLEXT_LOG_LEVEL`    | Logging level (debug, info, warn, error) | info      |
+| `FLEXT_DATABASE_URL` | Database connection URL                  | -         |
 
 ## Architecture
 

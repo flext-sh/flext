@@ -22,7 +22,7 @@ import tomlkit
 class FlextConfigStandardizer:
     """Standardizes FLEXT workspace configurations professionally."""
 
-    def __init__(self, workspace_root: Path, dry_run: bool = False) -> None:
+    def __init__(self, workspace_root: Path, *, dry_run: bool = False) -> None:
         self.workspace_root = workspace_root
         self.dry_run = dry_run
         self.changes_made = 0
@@ -180,7 +180,7 @@ class FlextConfigStandardizer:
                 else:
                     # Add coverage threshold if not present
                     addopts.append(f"--cov-fail-under={target_coverage}")
-                    print("  ➕ Added coverage threshold: %s", target_coverage)
+                    print("  ➕ Added coverage threshold: %s", target_coverage)  # noqa: RUF001
                     changed = True
 
         # Add reference to shared pytest config

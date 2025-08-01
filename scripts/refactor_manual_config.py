@@ -10,7 +10,9 @@ from __future__ import annotations
 import functools
 import operator
 import re
+import shutil
 import subprocess
+from pathlib import Path
 
 from flext_core import FlextResult, get_logger
 
@@ -47,7 +49,11 @@ def find_manual_config_patterns() -> FlextResult[dict[str, list[str]]]:
             "{}",
             ";",
         ]
-        result = subprocess.run(cmd, capture_output=True, text=True, check=False)
+        if not shutil.which("find") or not shutil.which("grep"):
+            return FlextResult.fail("find or grep not found")
+
+        # Security: cmd is hardcoded, not user input
+        result = subprocess.run(cmd, capture_output=True, text=True, check=False)  # noqa: S603
         if result.returncode == 0:
             patterns["manual_env_vars"] = [
                 f.strip() for f in result.stdout.split("\n") if f.strip()
@@ -68,7 +74,8 @@ def find_manual_config_patterns() -> FlextResult[dict[str, list[str]]]:
             "{}",
             ";",
         ]
-        result = subprocess.run(cmd, capture_output=True, text=True, check=False)
+        # Security: cmd is hardcoded, not user input
+        result = subprocess.run(cmd, capture_output=True, text=True, check=False)  # noqa: S603
         if result.returncode == 0:
             patterns["manual_pydantic"] = [
                 f.strip() for f in result.stdout.split("\n") if f.strip()
@@ -89,7 +96,8 @@ def find_manual_config_patterns() -> FlextResult[dict[str, list[str]]]:
             "{}",
             ";",
         ]
-        result = subprocess.run(cmd, capture_output=True, text=True, check=False)
+        # Security: cmd is hardcoded, not user input
+        result = subprocess.run(cmd, capture_output=True, text=True, check=False)  # noqa: S603
         if result.returncode == 0:
             patterns["manual_file_loading"] = [
                 f.strip() for f in result.stdout.split("\n") if f.strip()
@@ -110,7 +118,8 @@ def find_manual_config_patterns() -> FlextResult[dict[str, list[str]]]:
             "{}",
             ";",
         ]
-        result = subprocess.run(cmd, capture_output=True, text=True, check=False)
+        # Security: cmd is hardcoded, not user input
+        result = subprocess.run(cmd, capture_output=True, text=True, check=False)  # noqa: S603
         if result.returncode == 0:
             patterns["manual_validation"] = [
                 f.strip() for f in result.stdout.split("\n") if f.strip()
@@ -136,7 +145,7 @@ def refactor_manual_env_vars(file_path: str) -> FlextResult[bool]:
 
     """
     try:
-        with open(file_path, encoding="utf-8") as f:
+        with Path(file_path).open(encoding="utf-8") as f:
             content = f.read()
 
         changes_made = False
@@ -145,23 +154,26 @@ def refactor_manual_env_vars(file_path: str) -> FlextResult[bool]:
         env_pattern = r'os\.getenv\(["\']([^"\']+)["\'],\s*["\']?([^"\']*)["\']?\)'
         matches = re.findall(env_pattern, content)
 
-        if matches:
-            # Add comment about manual env var usage
-            if "# TODO: Consolidate to FLEXT config patterns" not in content:
-                # Find import section and add comment
-                import_section = re.search(
-                    r"(from __future__ import annotations\n\n)",
-                    content,
+        # Combine nested if statements
+        if matches and "# TODO: Consolidate to FLEXT config patterns" not in content:
+            # Find import section and add comment
+            import_section = re.search(
+                r"(from __future__ import annotations\n\n)",
+                content,
+            )
+            if import_section:
+                content = content.replace(
+                    import_section.group(1),
+                    f"{import_section.group(1)}"
+                    f"# TODO: Consolidate manual env vars to FLEXT config patterns\n",
                 )
-                if import_section:
-                    content = content.replace(
-                        import_section.group(1),
-                        f"{import_section.group(1)}# TODO: Consolidate manual env vars to FLEXT config patterns\n",
-                    )
-                    changes_made = True
+                changes_made = True
 
         # Pattern 2: Replace simple os.getenv() with commented alternatives
-        simple_env_pattern = r'(\s+)([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*os\.getenv\(["\']([^"\']+)["\'](?:,\s*["\']?([^"\']*)["\']?)?\)'
+        simple_env_pattern = (
+            r'(\s+)([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*os\.getenv\(["\']([^"\']+)["\']'
+            r'(?:,\s*["\']?([^"\']*)["\']?)?\)'
+        )
 
         def replace_env_var(match: re.Match[str]) -> str:
             indent = match.group(1)
@@ -180,15 +192,15 @@ def refactor_manual_env_vars(file_path: str) -> FlextResult[bool]:
             changes_made = True
 
         if changes_made:
-            with open(file_path, "w", encoding="utf-8") as f:
+            with Path(file_path).open("w", encoding="utf-8") as f:
                 f.write(content)
             logger.info(f"✅ Added FLEXT config TODOs to: {file_path}")
-            return FlextResult.ok(True)
+            return FlextResult.ok(data=True)
         logger.info(f"⏭️ No env var changes needed: {file_path}")
-        return FlextResult.ok(False)
+        return FlextResult.ok(data=False)
 
     except (OSError, ValueError, TypeError) as e:
-        logger.exception(f"❌ Error refactoring env vars in {file_path}: {e}")
+        logger.exception(f"❌ Error refactoring env vars in {file_path}")
         return FlextResult.fail(f"Failed to refactor env vars: {e}")
 
 
@@ -203,13 +215,16 @@ def refactor_manual_pydantic(file_path: str) -> FlextResult[bool]:
 
     """
     try:
-        with open(file_path, encoding="utf-8") as f:
+        with Path(file_path).open(encoding="utf-8") as f:
             content = f.read()
 
         changes_made = False
 
         # Pattern: direct Settings/Config instantiation
-        config_instantiation = r"(\s+)([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*([A-Z][a-zA-Z0-9_]*(?:Settings|Config))\(\)"
+        config_instantiation = (
+            r"(\s+)([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*"
+            r"([A-Z][a-zA-Z0-9_]*(?:Settings|Config))\(\)"
+        )
 
         def replace_config_instantiation(match: re.Match[str]) -> str:
             indent = match.group(1)
@@ -231,15 +246,15 @@ def refactor_manual_pydantic(file_path: str) -> FlextResult[bool]:
             changes_made = True
 
         if changes_made:
-            with open(file_path, "w", encoding="utf-8") as f:
+            with Path(file_path).open("w", encoding="utf-8") as f:
                 f.write(content)
             logger.info(f"✅ Added FLEXT config TODOs to: {file_path}")
-            return FlextResult.ok(True)
+            return FlextResult.ok(data=True)
         logger.info(f"⏭️ No Pydantic changes needed: {file_path}")
-        return FlextResult.ok(False)
+        return FlextResult.ok(data=False)
 
     except (OSError, ValueError, TypeError) as e:
-        logger.exception(f"❌ Error refactoring Pydantic in {file_path}: {e}")
+        logger.exception(f"❌ Error refactoring Pydantic in {file_path}")
         return FlextResult.fail(f"Failed to refactor Pydantic: {e}")
 
 
@@ -254,7 +269,7 @@ def refactor_manual_file_loading(file_path: str) -> FlextResult[bool]:
 
     """
     try:
-        with open(file_path, encoding="utf-8") as f:
+        with Path(file_path).open(encoding="utf-8") as f:
             content = f.read()
 
         changes_made = False
@@ -281,15 +296,15 @@ def refactor_manual_file_loading(file_path: str) -> FlextResult[bool]:
             changes_made = True
 
         if changes_made:
-            with open(file_path, "w", encoding="utf-8") as f:
+            with Path(file_path).open("w", encoding="utf-8") as f:
                 f.write(content)
             logger.info(f"✅ Added FLEXT config TODOs to: {file_path}")
-            return FlextResult.ok(True)
+            return FlextResult.ok(data=True)
         logger.info(f"⏭️ No file loading changes needed: {file_path}")
-        return FlextResult.ok(False)
+        return FlextResult.ok(data=False)
 
     except (OSError, ValueError, TypeError) as e:
-        logger.exception(f"❌ Error refactoring file loading in {file_path}: {e}")
+        logger.exception(f"❌ Error refactoring file loading in {file_path}")
         return FlextResult.fail(f"Failed to refactor file loading: {e}")
 
 
@@ -377,7 +392,7 @@ def get_project_settings() -> ProjectSpecificSettings:
 # Use: class Settings with env_file="config.json" or json_file="config.json"
 '''
 
-        with open(output_path, "w", encoding="utf-8") as f:
+        with Path(output_path).open("w", encoding="utf-8") as f:
             f.write(template_content)
 
         logger.info(f"✅ Created FLEXT config template: {output_path}")

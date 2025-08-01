@@ -2,10 +2,7 @@
   "dashboard": {
     "id": null,
     "title": "FLEXT API Monitoring",
-    "tags": [
-      "flext",
-      "api"
-    ],
+    "tags": ["flext", "api"],
     "timezone": "browser",
     "panels": [
       {

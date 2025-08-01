@@ -1,36 +1,23 @@
 # =============================================================================
-# CMD-FLEXT-SERVER - PROJECT MAKEFILE
+# FLEXT-SERVER - Go HTTP Server Application
 # =============================================================================
-# Enterprise Go Server Application with Clean Architecture + DDD + Zero Tolerance Quality
-# Go 1.21+ + Modern Build Tools + Professional Standards
+# Go server application with Clean Architecture + DDD + Zero Tolerance Quality
 # =============================================================================
 
 # Project Configuration
-PROJECT_NAME := cmd-flext-server
-PROJECT_TYPE := go-server
-GO_VERSION := 1.21
+PROJECT_NAME := flext-server
 BINARY_NAME := flext-server
-SRC_DIR := .
-TESTS_DIR := .
-DOCS_DIR := docs
-
-# Quality Gates Configuration
-MIN_COVERAGE := 80
-GO_LINT_CONFIG := .golangci.yml
 BUILD_DIR := bin
+GO_VERSION := 1.24
+MIN_COVERAGE := 80
 
 # Server Configuration
 SERVER_PORT := 8080
 SERVER_HOST := localhost
 SERVER_ENV := development
 
-# Export environment variables
-export GO_VERSION
-export MIN_COVERAGE
-export BINARY_NAME
-export SERVER_PORT
-export SERVER_HOST
-export SERVER_ENV
+# Export variables
+export GO_VERSION MIN_COVERAGE BINARY_NAME SERVER_PORT SERVER_HOST SERVER_ENV
 
 # =============================================================================
 # HELP & INFORMATION
@@ -38,114 +25,74 @@ export SERVER_ENV
 
 .PHONY: help
 help: ## Show available commands
-	@echo "$(PROJECT_NAME) - Go Server Application"
-	@echo "======================================"
+	@echo "FLEXT-SERVER - Go HTTP Server Application"
+	@echo "========================================="
 	@echo ""
-	@echo "📋 AVAILABLE COMMANDS:"
-	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "  %-18s %s\\n", $$1, $$2}' $(MAKEFILE_LIST)
-	@echo ""
-	@echo "🔧 PROJECT INFO:"
-	@echo "  Type: $(PROJECT_TYPE)"
-	@echo "  Go Version: $(GO_VERSION)"
-	@echo "  Coverage: $(MIN_COVERAGE)%"
-	@echo "  Binary: $(BINARY_NAME)"
-	@echo "  Server: $(SERVER_HOST):$(SERVER_PORT)"
+	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "  %-16s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
 .PHONY: info
 info: ## Show project information
-	@echo "Project Information"
-	@echo "=================="
-	@echo "Name: $(PROJECT_NAME)"
-	@echo "Type: $(PROJECT_TYPE)"
-	@echo "Go Version: $(GO_VERSION)"
-	@echo "Binary Name: $(BINARY_NAME)"
-	@echo "Source Directory: $(SRC_DIR)"
-	@echo "Tests Directory: $(TESTS_DIR)"
-	@echo "Quality Standards: Zero Tolerance"
-	@echo "Architecture: Clean Architecture + DDD + Go"
-	@echo "Server Configuration:"
-	@echo "  Host: $(SERVER_HOST)"
-	@echo "  Port: $(SERVER_PORT)"
-	@echo "  Environment: $(SERVER_ENV)"
+	@echo "Project: $(PROJECT_NAME)"
+	@echo "Binary: $(BINARY_NAME)"
+	@echo "Go Version: $(GO_VERSION)+"
+	@echo "Coverage: $(MIN_COVERAGE)%"
+	@echo "Architecture: Clean Architecture + DDD"
+	@echo "Server: $(SERVER_HOST):$(SERVER_PORT)"
 
 # =============================================================================
-# INSTALLATION & SETUP
+# DEPENDENCIES & SETUP
 # =============================================================================
 
 .PHONY: setup
 setup: ## Complete project setup
-	@echo "🚀 Setting up $(PROJECT_NAME)..."
-	@make deps-download
-	@make mod-tidy
+	@echo "🚀 Setting up project..."
+	@go mod download
+	@go mod tidy
 	@echo "✅ Setup complete"
 
-.PHONY: deps-download
-deps-download: ## Download Go dependencies
+.PHONY: deps
+deps: ## Download dependencies
 	@echo "📦 Downloading dependencies..."
 	@go mod download
 
-.PHONY: mod-tidy
-mod-tidy: ## Tidy Go modules
-	@echo "🔧 Tidying Go modules..."
+.PHONY: tidy
+tidy: ## Tidy Go modules
+	@echo "🔧 Tidying modules..."
 	@go mod tidy
 
-.PHONY: mod-verify
-mod-verify: ## Verify Go modules
-	@echo "🔍 Verifying Go modules..."
+.PHONY: verify
+verify: ## Verify Go modules
+	@echo "🔍 Verifying modules..."
 	@go mod verify
 
 # =============================================================================
-# QUALITY GATES & VALIDATION
+# BUILD & DISTRIBUTION
 # =============================================================================
 
-.PHONY: validate
-validate: ## Run complete validation (quality gate)
-	@echo "🔍 Running complete validation for $(PROJECT_NAME)..."
-	@make lint
-	@make vet
-	@make security
-	@make test
-	@make mod-verify
-	@echo "✅ Validation complete"
+.PHONY: build
+build: ## Build the server application
+	@echo "🏗️ Building $(BINARY_NAME)..."
+	@mkdir -p $(BUILD_DIR)
+	@go build -o $(BUILD_DIR)/$(BINARY_NAME) .
 
-.PHONY: check
-check: ## Quick health check
-	@echo "🏥 Running health check..."
-	@make lint
-	@make vet
-	@echo "✅ Health check complete"
+.PHONY: build-release
+build-release: ## Build optimized release
+	@echo "🏗️ Building release..."
+	@mkdir -p $(BUILD_DIR)
+	@go build -ldflags="-s -w" -o $(BUILD_DIR)/$(BINARY_NAME) .
 
-.PHONY: lint
-lint: ## Run Go linting
-	@echo "🧹 Running linting..."
-	@golangci-lint run
+.PHONY: build-all
+build-all: ## Build for multiple platforms
+	@echo "🏗️ Building for all platforms..."
+	@mkdir -p $(BUILD_DIR)
+	@GOOS=linux GOARCH=amd64 go build -o $(BUILD_DIR)/$(BINARY_NAME)-linux-amd64 .
+	@GOOS=darwin GOARCH=amd64 go build -o $(BUILD_DIR)/$(BINARY_NAME)-darwin-amd64 .
+	@GOOS=windows GOARCH=amd64 go build -o $(BUILD_DIR)/$(BINARY_NAME)-windows.exe .
 
-.PHONY: format
-format: ## Format Go code
-	@echo "🎨 Formatting code..."
-	@go fmt ./...
-	@goimports -w .
-
-.PHONY: format-check
-format-check: ## Check Go code formatting
-	@echo "🎨 Checking code formatting..."
-	@test -z "$$(gofmt -l .)"
-
-.PHONY: vet
-vet: ## Run Go vet
-	@echo "🔍 Running go vet..."
-	@go vet ./...
-
-.PHONY: security
-security: ## Run security scanning
-	@echo "🔒 Running security scanning..."
-	@gosec ./...
-
-.PHONY: fix
-fix: ## Auto-fix code issues
-	@echo "🔧 Auto-fixing code issues..."
-	@make format
-	@golangci-lint run --fix
+.PHONY: install
+install: ## Install server to GOPATH
+	@echo "📦 Installing $(BINARY_NAME)..."
+	@go install .
 
 # =============================================================================
 # TESTING
@@ -153,94 +100,104 @@ fix: ## Auto-fix code issues
 
 .PHONY: test
 test: ## Run all tests with coverage
-	@echo "🧪 Running tests with coverage..."
+	@echo "🧪 Running tests..."
 	@go test -v -race -coverprofile=coverage.out -covermode=atomic ./...
 	@go tool cover -func=coverage.out
 
 .PHONY: test-unit
 test-unit: ## Run unit tests only
-	@echo "🧪 Running unit tests..."
 	@go test -v -short ./...
 
 .PHONY: test-integration
-test-integration: ## Run integration tests only
-	@echo "🧪 Running integration tests..."
+test-integration: ## Run integration tests
 	@go test -v -run Integration ./...
 
 .PHONY: test-race
 test-race: ## Run tests with race detection
-	@echo "🧪 Running tests with race detection..."
 	@go test -v -race ./...
 
-.PHONY: test-bench
-test-bench: ## Run benchmark tests
-	@echo "🧪 Running benchmark tests..."
+.PHONY: bench
+bench: ## Run benchmark tests
 	@go test -v -bench=. -benchmem ./...
 
 .PHONY: coverage
-coverage: ## Generate coverage report
-	@echo "📊 Generating coverage report..."
-	@go test -coverprofile=coverage.out ./...
-	@go tool cover -html=coverage.out -o coverage.html
-
-.PHONY: coverage-html
-coverage-html: ## Generate HTML coverage report
-	@echo "📊 Generating HTML coverage report..."
+coverage: ## Generate HTML coverage report
 	@go test -coverprofile=coverage.out ./...
 	@go tool cover -html=coverage.out -o coverage.html
 	@echo "📊 Coverage report: coverage.html"
 
 # =============================================================================
-# BUILD & DISTRIBUTION
+# QUALITY GATES
 # =============================================================================
 
-.PHONY: build
-build: ## Build the application
-	@echo "🏗️ Building $(BINARY_NAME)..."
-	@mkdir -p $(BUILD_DIR)
-	@go build -o $(BUILD_DIR)/$(BINARY_NAME) .
+.PHONY: validate
+validate: ## Complete validation (quality gate)
+	@echo "🔍 Running validation..."
+	@make lint
+	@make vet
+	@make security
+	@make test
+	@make verify
+	@echo "✅ Validation complete"
 
-.PHONY: build-release
-build-release: ## Build release version
-	@echo "🏗️ Building release version..."
-	@mkdir -p $(BUILD_DIR)
-	@go build -ldflags="-s -w" -o $(BUILD_DIR)/$(BINARY_NAME) .
+.PHONY: check
+check: ## Quick health check
+	@echo "🏥 Health check..."
+	@make lint
+	@make vet
 
-.PHONY: build-all
-build-all: ## Build for all platforms
-	@echo "🏗️ Building for all platforms..."
-	@mkdir -p $(BUILD_DIR)
-	@GOOS=linux GOARCH=amd64 go build -o $(BUILD_DIR)/$(BINARY_NAME)-linux-amd64 .
-	@GOOS=darwin GOARCH=amd64 go build -o $(BUILD_DIR)/$(BINARY_NAME)-darwin-amd64 .
-	@GOOS=windows GOARCH=amd64 go build -o $(BUILD_DIR)/$(BINARY_NAME)-windows-amd64.exe .
+.PHONY: lint
+lint: ## Run Go linting
+	@echo "🧹 Linting..."
+	@golangci-lint run
 
-.PHONY: install
-install: ## Install the application
-	@echo "📦 Installing $(BINARY_NAME)..."
-	@go install .
+.PHONY: format
+format: ## Format Go code
+	@echo "🎨 Formatting..."
+	@go fmt ./...
+	@goimports -w .
+
+.PHONY: format-check
+format-check: ## Check code formatting
+	@test -z "$$(gofmt -l .)"
+
+.PHONY: vet
+vet: ## Run go vet
+	@echo "🔍 Running vet..."
+	@go vet ./...
+
+.PHONY: security
+security: ## Security scanning
+	@echo "🔒 Security scan..."
+	@gosec ./...
+
+.PHONY: fix
+fix: ## Auto-fix issues
+	@make format
+	@golangci-lint run --fix
 
 # =============================================================================
 # SERVER OPERATIONS
 # =============================================================================
 
 .PHONY: run
-run: ## Run the server
-	@echo "🚀 Running $(BINARY_NAME) server..."
+run: ## Run the server in development
+	@echo "🚀 Running $(BINARY_NAME)..."
 	@go run .
 
 .PHONY: serve
-serve: ## Start server in production mode
-	@echo "🌐 Starting $(BINARY_NAME) server..."
+serve: build ## Start server (production)
+	@echo "🌐 Starting server..."
 	@./$(BUILD_DIR)/$(BINARY_NAME) -port=$(SERVER_PORT) -host=$(SERVER_HOST)
 
 .PHONY: serve-dev
-serve-dev: ## Start server in development mode
-	@echo "🛠️ Starting $(BINARY_NAME) in development mode..."
+serve-dev: ## Start server (development)
+	@echo "🛠️ Starting dev server..."
 	@go run . -dev -port=$(SERVER_PORT) -host=$(SERVER_HOST)
 
 .PHONY: serve-prod
-serve-prod: build-release ## Start server in production mode
-	@echo "🏭 Starting $(BINARY_NAME) in production mode..."
+serve-prod: build-release ## Start server (production)
+	@echo "🏭 Starting production server..."
 	@./$(BUILD_DIR)/$(BINARY_NAME) -prod -port=$(SERVER_PORT) -host=$(SERVER_HOST)
 
 .PHONY: health-check
@@ -248,170 +205,85 @@ health-check: ## Check server health
 	@echo "🏥 Checking server health..."
 	@curl -f http://$(SERVER_HOST):$(SERVER_PORT)/health || echo "❌ Server not responding"
 
+.PHONY: status
+status: ## Get server status
+	@echo "📊 Getting server status..."
+	@curl -s http://$(SERVER_HOST):$(SERVER_PORT)/status || echo "❌ Status not available"
+
 .PHONY: metrics
 metrics: ## Get server metrics
 	@echo "📊 Getting server metrics..."
 	@curl -s http://$(SERVER_HOST):$(SERVER_PORT)/metrics || echo "❌ Metrics not available"
 
-.PHONY: status
-status: ## Check server status
-	@echo "📊 Checking server status..."
-	@curl -s http://$(SERVER_HOST):$(SERVER_PORT)/status || echo "❌ Status not available"
-
 .PHONY: load-test
-load-test: ## Run load tests against server
+load-test: ## Run load tests
 	@echo "🧪 Running load tests..."
-	@go test -v -run LoadTest ./... -count=1
-
-.PHONY: benchmark-server
-benchmark-server: ## Run server benchmarks
-	@echo "⚡ Running server benchmarks..."
-	@go test -bench=BenchmarkServer -benchmem ./...
-
-# =============================================================================
-# SERVER MANAGEMENT
-# =============================================================================
-
-.PHONY: server-logs
-server-logs: ## View server logs
-	@echo "📝 Viewing server logs..."
-	@tail -f /var/log/$(BINARY_NAME).log || echo "❌ Log file not found"
-
-.PHONY: server-restart
-server-restart: ## Restart server
-	@echo "🔄 Restarting $(BINARY_NAME) server..."
-	@pkill -f $(BINARY_NAME) || true
-	@sleep 2
-	@make serve
+	@go test -v -run LoadTest ./...
 
 .PHONY: server-stop
-server-stop: ## Stop server
-	@echo "🛑 Stopping $(BINARY_NAME) server..."
+server-stop: ## Stop running server
+	@echo "🛑 Stopping server..."
 	@pkill -f $(BINARY_NAME) || echo "Server not running"
 
-.PHONY: server-config
-server-config: ## Show server configuration
-	@echo "⚙️ Server Configuration:"
-	@echo "  Host: $(SERVER_HOST)"
-	@echo "  Port: $(SERVER_PORT)"
-	@echo "  Environment: $(SERVER_ENV)"
-	@echo "  Binary: $(BINARY_NAME)"
-
 # =============================================================================
-# DOCUMENTATION
-# =============================================================================
-
-.PHONY: docs
-docs: ## Generate documentation
-	@echo "📚 Generating documentation..."
-	@godoc -http=:6060
-
-.PHONY: docs-serve
-docs-serve: ## Serve documentation locally
-	@echo "📚 Serving documentation..."
-	@godoc -http=:6060
-
-.PHONY: api-docs
-api-docs: ## Generate API documentation
-	@echo "📚 Generating API documentation..."
-	@mkdir -p $(DOCS_DIR)
-	@go run . --generate-api-docs > $(DOCS_DIR)/api.md
-	@echo "📚 API documentation: $(DOCS_DIR)/api.md"
-
-# =============================================================================
-# DEPENDENCY MANAGEMENT
-# =============================================================================
-
-.PHONY: deps-update
-deps-update: ## Update dependencies
-	@echo "🔄 Updating dependencies..."
-	@go get -u ./...
-	@go mod tidy
-
-.PHONY: deps-check
-deps-check: ## Check for dependency updates
-	@echo "🔍 Checking for dependency updates..."
-	@go list -u -m all
-
-.PHONY: deps-audit
-deps-audit: ## Audit dependencies for security
-	@echo "🔍 Auditing dependencies..."
-	@go list -json -deps ./... | nancy sleuth
-
-# =============================================================================
-# MAINTENANCE & CLEANUP
+# MAINTENANCE
 # =============================================================================
 
 .PHONY: clean
 clean: ## Clean build artifacts
-	@echo "🧹 Cleaning build artifacts..."
+	@echo "🧹 Cleaning..."
 	@rm -rf $(BUILD_DIR)
 	@rm -f coverage.out coverage.html
 	@go clean
 
 .PHONY: clean-all
-clean-all: clean ## Deep clean including cache
+clean-all: clean ## Deep clean with cache
 	@echo "🧹 Deep cleaning..."
 	@go clean -cache -modcache -testcache
 
 .PHONY: reset
-reset: clean-all ## Reset project to clean state
-	@echo "🔄 Resetting project..."
-	@make setup
+reset: clean-all setup ## Reset to clean state
+
+.PHONY: deps-update
+deps-update: ## Update dependencies
+	@echo "🔄 Updating deps..."
+	@go get -u ./...
+	@go mod tidy
+
+.PHONY: deps-audit
+deps-audit: ## Audit dependencies
+	@echo "🔍 Auditing deps..."
+	@go list -json -deps ./... | nancy sleuth
 
 # =============================================================================
-# DIAGNOSTICS & TROUBLESHOOTING
+# DIAGNOSTICS
 # =============================================================================
 
 .PHONY: diagnose
-diagnose: ## Run project diagnostics
-	@echo "🔬 Running project diagnostics..."
-	@echo "Go version: $$(go version)"
-	@echo "Project info:"
+diagnose: ## Project diagnostics
+	@echo "🔬 Diagnostics..."
+	@echo "Go: $$(go version)"
 	@go list -m
-	@echo "Environment:"
-	@go env
+	@go env GOOS GOARCH
 
 .PHONY: doctor
-doctor: ## Check project health
-	@echo "👩‍⚕️ Checking project health..."
+doctor: ## Complete health check
 	@make diagnose
 	@make check
-	@echo "✅ Health check complete"
 
 # =============================================================================
-# CONVENIENCE ALIASES
+# ALIASES
 # =============================================================================
 
-.PHONY: t
-t: test ## Alias for test
-
-.PHONY: l
-l: lint ## Alias for lint
-
-.PHONY: f
-f: format ## Alias for format
-
-.PHONY: b
-b: build ## Alias for build
-
-.PHONY: c
-c: clean ## Alias for clean
-
-.PHONY: r
-r: run ## Alias for run
-
-.PHONY: v
-v: validate ## Alias for validate
-
-.PHONY: s
-s: serve ## Alias for serve
-
-.PHONY: h
-h: health-check ## Alias for health-check
-
-# =============================================================================
-# Default target
-# =============================================================================
+.PHONY: t l f b c r v s h
+t: test
+l: lint
+f: format
+b: build
+c: clean
+r: run
+v: validate
+s: serve
+h: health-check
 
 .DEFAULT_GOAL := help

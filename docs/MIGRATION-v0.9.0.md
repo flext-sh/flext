@@ -21,10 +21,12 @@ Version 0.9.0 represents a major synchronization update across the entire FLEXT 
 ### 2. Projects Affected
 
 **Core Libraries (2)**:
+
 - flext-core: 0.8.0 → 0.9.0
 - flext-observability: 0.8.0 → 0.9.0
 
 **Foundation Libraries (6)**:
+
 - flext-db-oracle: 0.8.0 → 0.9.0
 - flext-ldap: 0.8.0 → 0.9.0
 - flext-ldif: 0.8.0 → 0.9.0
@@ -33,6 +35,7 @@ Version 0.9.0 represents a major synchronization update across the entire FLEXT 
 - flext-meltano: 0.8.0 → 0.9.0
 
 **Application Services (5)**:
+
 - flext-api: 1.0.0 → 0.9.0
 - flext-auth: 1.0.0 → 0.9.0
 - flext-web: 1.0.0 → 0.9.0
@@ -40,19 +43,23 @@ Version 0.9.0 represents a major synchronization update across the entire FLEXT 
 - flext-cli: 0.8.0 → 0.9.0
 
 **Singer Ecosystem (15)**:
-- All flext-tap-* projects: 0.8.0 → 0.9.0
-- All flext-target-* projects: 0.8.0 → 0.9.0
-- All flext-dbt-* projects: 0.8.0 → 0.9.0
+
+- All flext-tap-\* projects: 0.8.0 → 0.9.0
+- All flext-target-\* projects: 0.8.0 → 0.9.0
+- All flext-dbt-\* projects: 0.8.0 → 0.9.0
 - flext-oracle-oic-ext: 0.8.0 → 0.9.0
 
 **Plugin System (1)**:
+
 - flext-plugin: 0.8.0 → 0.9.0
 
 **Legacy/Specialized (2)**:
+
 - client-a-oud-mig: 2.0.0 → 0.9.0
 - client-b-meltano-native: 1.0.0 → 0.9.0
 
 **Go Services**:
+
 - FlexCore: 0.8.0 → 0.9.0
 - FLEXT Service: 0.8.0 → 0.9.0
 
@@ -63,6 +70,7 @@ Version 0.9.0 represents a major synchronization update across the entire FLEXT 
 ### Step 1: Environment Preparation
 
 1. **Backup Current Environment** (MANDATORY):
+
 ```bash
 # Create backup of current workspace
 cp -r /path/to/flext /path/to/flext-backup-pre-0.9.0
@@ -71,6 +79,7 @@ git stash  # Stash any uncommitted changes
 ```
 
 2. **Update Git Repository**:
+
 ```bash
 git fetch origin
 git checkout main
@@ -80,6 +89,7 @@ git pull origin main
 ### Step 2: Dependency Updates
 
 1. **Update Python Dependencies**:
+
 ```bash
 # For each Python project, update pyproject.toml dependencies
 # Example for flext-api:
@@ -90,6 +100,7 @@ grep -n "flext-core" pyproject.toml
 ```
 
 2. **Update Go Dependencies**:
+
 ```bash
 cd flexcore
 go mod tidy
@@ -99,6 +110,7 @@ go mod download
 ### Step 3: Version Verification
 
 1. **Verify Python Package Versions**:
+
 ```bash
 # Run this script to verify all projects have correct version
 for project in flext-*/ client-a-*/ client-b-*/; do
@@ -110,6 +122,7 @@ done
 ```
 
 2. **Verify Go Package Versions**:
+
 ```bash
 cd flexcore && grep -n "version" config.yaml
 cd flexcore && grep -n "version" flexcore-node.yaml
@@ -118,6 +131,7 @@ cd flexcore && grep -n "version" flexcore-node.yaml
 ### Step 4: Build Verification
 
 1. **Test Python Projects**:
+
 ```bash
 # Test core library first
 cd flext-core
@@ -133,6 +147,7 @@ make build
 ```
 
 2. **Test Go Services**:
+
 ```bash
 cd flexcore
 go build .
@@ -145,11 +160,12 @@ go build .
 ### Step 5: Integration Testing
 
 1. **Start Services and Test Integration**:
+
 ```bash
 # Start FlexCore service
 cd flexcore && ./flexcore &
 
-# Start FLEXT service  
+# Start FLEXT service
 cd cmd/flext && ./flext &
 
 # Test health endpoints
@@ -166,6 +182,7 @@ curl http://localhost:8081/health  # FLEXT Service
 **BREAKING**: Projects using hardcoded version references in code must be updated.
 
 **Before**:
+
 ```python
 # In various files
 VERSION = "0.8.0"
@@ -174,6 +191,7 @@ version = "2.0.0"
 ```
 
 **After**:
+
 ```python
 # All projects now use
 VERSION = "0.9.0"
@@ -188,12 +206,13 @@ version = "0.9.0"
 **BREAKING**: Local file references between projects may need updates if paths changed.
 
 **Before**:
+
 ```toml
 [tool.poetry.dependencies]
 flext-core = {path = "../flext-core", develop = true}
 ```
 
-**After**: 
+**After**:
 Same pattern, but ensure paths are correct and both projects are on v0.9.0.
 
 **Action Required**: Verify all local file references in your pyproject.toml files.
@@ -203,14 +222,16 @@ Same pattern, but ensure paths are correct and both projects are on v0.9.0.
 **BREAKING**: Docker images now tagged with v0.9.0.
 
 **Before**:
+
 ```dockerfile
 LABEL version="0.8.0"
 FROM flext/base:0.8.0
 ```
 
 **After**:
+
 ```dockerfile
-LABEL version="0.9.0"  
+LABEL version="0.9.0"
 FROM flext/base:0.9.0
 ```
 
@@ -221,11 +242,13 @@ FROM flext/base:0.9.0
 **BREAKING**: API services may include version in response headers.
 
 **Before**:
+
 ```http
 X-API-Version: 0.8.0
 ```
 
 **After**:
+
 ```http
 X-API-Version: 0.9.0
 ```
@@ -239,7 +262,7 @@ X-API-Version: 0.9.0
 ### Backward Compatibility
 
 - **Python APIs**: No breaking changes in public APIs
-- **Go APIs**: No breaking changes in public interfaces  
+- **Go APIs**: No breaking changes in public interfaces
 - **Database Schemas**: No migrations required
 - **Configuration Files**: No breaking changes in config format
 - **Plugin Interfaces**: Maintained backward compatibility
@@ -255,12 +278,14 @@ X-API-Version: 0.9.0
 ## 🧪 TESTING MIGRATION
 
 ### 1. Unit Tests
+
 ```bash
 # Run tests for each project to ensure compatibility
 make test-all  # From workspace root
 ```
 
 ### 2. Integration Tests
+
 ```bash
 # Test service integration
 cd flexcore && ./flexcore &
@@ -271,6 +296,7 @@ make test-integration
 ```
 
 ### 3. End-to-End Tests
+
 ```bash
 # Run E2E tests with Docker
 docker-compose -f docker/docker-compose.e2e.yml up --abort-on-container-exit
@@ -283,6 +309,7 @@ docker-compose -f docker/docker-compose.e2e.yml up --abort-on-container-exit
 If issues are encountered during migration:
 
 ### Quick Rollback
+
 ```bash
 # Stop services
 pkill -f flexcore
@@ -298,6 +325,7 @@ cd /path/to/flext
 ```
 
 ### Git Rollback
+
 ```bash
 # If changes were committed
 git log --oneline -10  # Find commit before version update
@@ -331,8 +359,10 @@ git revert <version-update-commit-hash>
 ## 🐛 COMMON ISSUES & SOLUTIONS
 
 ### Issue 1: Build Failures
+
 **Symptom**: `make build` fails with dependency errors
-**Solution**: 
+**Solution**:
+
 ```bash
 # Clean and reinstall dependencies
 make clean-all
@@ -341,8 +371,10 @@ make build
 ```
 
 ### Issue 2: Import Errors
+
 **Symptom**: Python import errors for flext modules
 **Solution**:
+
 ```bash
 # Verify installations
 cd flext-core && poetry install
@@ -351,8 +383,10 @@ cd ../flext-api && poetry install
 ```
 
 ### Issue 3: Service Startup Failures
+
 **Symptom**: FlexCore or FLEXT services fail to start
 **Solution**:
+
 ```bash
 # Check configuration files
 cd flexcore && grep -n "version" config.yaml
@@ -361,8 +395,10 @@ docker-compose up -d postgres redis
 ```
 
 ### Issue 4: Version Mismatch Errors
+
 **Symptom**: Services report version conflicts
 **Solution**:
+
 ```bash
 # Verify all projects are on 0.9.0
 find . -name "pyproject.toml" -exec grep -l "version.*0.9.0" {} \;

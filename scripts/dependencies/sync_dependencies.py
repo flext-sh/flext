@@ -84,6 +84,7 @@ def get_workspace_projects(workspace_path: Path) -> list[Path]:
 def validate_projects(
     projects: list[Path],
     validator: "PoetryValidator",
+    *,
     verbose: bool,
 ) -> bool:
     """Valida todos os projetos Poetry."""
@@ -120,6 +121,7 @@ def validate_projects(
 def discover_missing_dependencies(
     projects: list[Path],
     discovery: "DependencyDiscovery",
+    *,
     verbose: bool,
 ) -> dict[Path, dict[str, list[str]]]:
     """Descobre dependências faltantes em todos os projetos."""
@@ -167,6 +169,7 @@ def discover_missing_dependencies(
 def analyze_conflicts(
     workspace_path: Path,
     analyzer: ConflictAnalyzer,
+    *,
     verbose: bool,
 ) -> dict[str, Any]:
     """Analisa conflitos de versão no workspace."""
@@ -202,6 +205,7 @@ def analyze_conflicts(
 def add_missing_dependencies(
     missing_by_project: dict[Path, dict[str, list[str]]],
     poetry_ops: PoetryOperations,
+    *,
     auto: bool,
 ) -> bool:
     """Adiciona dependências faltantes aos projetos."""
@@ -301,11 +305,13 @@ def main() -> int:
             )
 
             logger.warning(
-                "EXECUTION_BLOCKED: Tentativa de execução sem dry-run bloqueada por lock de validação",
+                "EXECUTION_BLOCKED: Tentativa de execução sem dry-run bloqueada "
+                "por lock de validação",
             )
 
             logger.error(
-                "Operation failed: Execução bloqueada por lock de validação de segurança",
+                "Operation failed: Execução bloqueada por lock de validação "
+                "de segurança",
             )
             return 1
 
@@ -408,11 +414,12 @@ def main() -> int:
     except (OSError, ValueError, TypeError) as e:
         # Log erro crítico
         logger.exception(
-            f"SYNC_ERROR: Erro crítico durante sincronização: {e!s} (tipo: {type(e).__name__})",
+            f"SYNC_ERROR: Erro crítico durante sincronização "
+            f"(tipo: {type(e).__name__})",
         )
 
         # Finaliza operação com falha
-        logger.exception(f"Operation failed: Erro crítico: {e!s}")
+        logger.exception("Operation failed: Erro crítico")
 
         print_colored(f"\n❌ Erro crítico: {e!s}", Colors.RED)
         print_colored("📋 Logs detalhados salvos em .flext_logs/", Colors.CYAN)

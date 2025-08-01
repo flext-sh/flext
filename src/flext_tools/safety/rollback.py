@@ -127,7 +127,8 @@ class RollbackManager:
 
         Args:
             session_id: ID da sessão a ser restaurada
-            confirmation_mode: Modo de confirmação (REQUIRE_CONFIRMATION ou AUTO_CONFIRM)
+            confirmation_mode: Modo de confirmação (REQUIRE_CONFIRMATION ou
+            AUTO_CONFIRM)
 
         Returns:
             Tupla (sucessos, falhas)

@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 import operator
+import shutil
 import subprocess
 import sys
 from collections import defaultdict
@@ -45,22 +46,11 @@ class LintingReport(FlextScript):
         required_tools = ["ruff", "mypy"]
 
         for tool in required_tools:
-            try:
-                subprocess.run(
-                    [tool, "--version"],
-                    capture_output=True,
-                    check=True,
-                    timeout=5,
-                )
-                print_colored(f"✅ {tool.title()} encontrado", Colors.GREEN)
-            except (
-                subprocess.CalledProcessError,
-                FileNotFoundError,
-                subprocess.TimeoutExpired,
-            ):
+            if shutil.which(tool) is None:
                 print_colored(f"❌ {tool.title()} não encontrado", Colors.RED)
                 print_colored(f"   Instale com: pip install {tool}", Colors.YELLOW)
                 return False
+            print_colored(f"✅ {tool.title()} encontrado", Colors.GREEN)
 
         return True
 
@@ -69,7 +59,7 @@ class LintingReport(FlextScript):
         try:
             workspace_root = Path.cwd()
             output_format = kwargs.get("format", "console")
-            detailed = kwargs.get("verbose", False)
+            detailed = bool(kwargs.get("verbose"))
             projects_filter = kwargs.get("projects")
 
             print_colored("📊 RELATÓRIO DE QUALIDADE DE CÓDIGO", Colors.CYAN)
@@ -125,7 +115,9 @@ class LintingReport(FlextScript):
                     total_stats["projects_with_issues"] += 1
 
                 # Mostrar resultado do projeto
-                self._print_project_summary(project_name, project_stats, detailed)
+                self._print_project_summary(
+                    project_name, project_stats, detailed=detailed
+                )
 
                 if detailed:
                     self._print_detailed_issues(ruff_result, mypy_result)
@@ -239,9 +231,10 @@ class LintingReport(FlextScript):
 
     def _print_project_summary(
         self,
-        project_name: str,
+        project_name: str,  # noqa: ARG002
         stats: dict[str, Any],
-        detailed: bool,
+        *,
+        detailed: bool,  # noqa: ARG002
     ) -> None:
         """Imprimir resumo do projeto."""
         total_issues = stats["ruff_issues"] + stats["mypy_errors"]
@@ -286,7 +279,7 @@ class LintingReport(FlextScript):
     def _print_final_summary(
         self,
         total_stats: dict[str, Any],
-        project_results: dict[str, Any],
+        project_results: dict[str, Any],  # noqa: ARG002
     ) -> None:
         """Imprimir resumo final."""
         print_colored("\n📊 RESUMO FINAL DO LINTING", Colors.BLUE)
@@ -339,7 +332,7 @@ class LintingReport(FlextScript):
         report_path = Path.cwd() / ".flext_logs" / "linting_report.json"
         report_path.parent.mkdir(exist_ok=True)
 
-        with open(report_path, "w", encoding="utf-8") as f:
+        with report_path.open("w", encoding="utf-8") as f:
             json.dump(report_data, f, indent=2, ensure_ascii=False)
 
         print_colored(f"📄 Relatório JSON: {report_path}", Colors.CYAN)

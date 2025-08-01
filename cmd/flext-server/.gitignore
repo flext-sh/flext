@@ -1,0 +1,108 @@
+# =============================================================================
+# Go Server Project .gitignore
+# =============================================================================
+
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+flext-server
+flext-server-*
+
+# Build directories
+bin/
+build/
+dist/
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool
+*.out
+coverage.html
+coverage.out
+coverage.xml
+
+# Go workspace file
+go.work
+go.work.sum
+
+# Dependency directories
+vendor/
+
+# Go module cache
+go.sum.backup
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Log files
+*.log
+logs/
+access.log
+error.log
+
+# Environment files
+.env
+.internal.invalid
+.env.development
+.env.test
+.env.production
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Debug files
+debug.log
+pprof/
+*.pprof
+
+# Server specific
+*.pid
+*.sock
+uploads/
+static/cache/
+
+# SSL certificates
+*.pem
+*.key
+*.crt
+*.csr
+certs/
+
+# Configuration files
+internal.invalid.yaml
+config.override.yaml
+internal.invalid
+
+# Docker
+.dockerignore.bak
+
+# Backup files
+*.bak
+*.backup
+
+# Archive files
+*.tar.gz
+*.zip
+*.rar
+
+# System files
+*.lock

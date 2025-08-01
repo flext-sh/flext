@@ -2,7 +2,7 @@
 
 **DOCUMENT STATUS**: SOURCE OF TRUTH  
 **VERSION**: 2.0.0  
-**ÚLTIMA ATUALIZAÇÃO**: 2025-01-22  
+**ÚLTIMA ATUALIZAÇÃO**: 2025-01-22
 
 ---
 
@@ -32,7 +32,7 @@
 │   │   │   ├── application/       # Application Services & Commands
 │   │   │   ├── domain/            # Entities, Value Objects, Services
 │   │   │   └── infrastructure/    # Repository Implementations
-│   │   ├── plugin/                # Plugin Domain Context  
+│   │   ├── plugin/                # Plugin Domain Context
 │   │   │   ├── application/       # Plugin Management Use Cases
 │   │   │   ├── domain/            # Plugin Entities & Services
 │   │   │   └── infrastructure/    # Plugin Persistence
@@ -41,7 +41,7 @@
 │   │   └── wms/                   # WMS Integration Context
 │   ├── infrastructure/            # 🏗️ INFRAESTRUTURA
 │   │   ├── container/             # DI Container Implementation
-│   │   ├── http/                  # HTTP Handlers & Routes  
+│   │   ├── http/                  # HTTP Handlers & Routes
 │   │   ├── persistence/           # Repository Implementations
 │   │   ├── database/              # Database Connection & Migrations
 │   │   ├── plugin_execution/      # Plugin Execution Engine
@@ -64,7 +64,7 @@
 │   └── flext-web/                 # Django Web Interface
 └── plugins/                        # 🔌 PLUGINS EXTERNOS
     ├── extractors/                 # Data Extraction Plugins
-    ├── loaders/                   # Data Loading Plugins  
+    ├── loaders/                   # Data Loading Plugins
     ├── transforms/                # Data Transformation Plugins
     └── utilities/                 # Utility Plugins
 ```
@@ -226,7 +226,7 @@ func (c *Container) initializeServices() error {
 
     // 4. Domain Services - Plugin Executor with Production Environment
     executorFactory := plugin_execution.NewExecutorFactory()
-    
+
     productionExecutor, err := executorFactory.CreateProductionExecutor(
         c.pluginRepo.(pipelineServices.PluginRepository),
     )
@@ -247,18 +247,18 @@ func (c *Container) initializeServices() error {
     )
 
     eventAdapter := NewEventPublisherAdapter(c.eventPublisher)
-    
+
     c.pipelineService = pipelineApp.NewPipelineService(
         c.pipelineRepo, c.pipelineExecutor, c.executionStatsService,
     )
-    
+
     c.pluginService = pluginApp.NewPluginService(
         c.pluginRepo, eventAdapter,
     )
 
     // 6. External Service Integrations (Python Libraries via HTTP/subprocess)
     pythonPath := c.config.GetEnvWithDefault("PYTHON_PATH", "/home/marlonsc/flext/.venv/bin/python3")
-    
+
     // Meltano Service Integration
     meltanoSvc, err := meltanoServices.NewMeltanoServiceWithConfig(c.logger)
     if err != nil {
@@ -268,7 +268,7 @@ func (c *Container) initializeServices() error {
         c.meltanoService = meltanoSvc
     }
 
-    // DBT Manager Integration  
+    // DBT Manager Integration
     dbtConfig := &dbt.DBTConfig{
         ProjectPath: c.config.GetEnvWithDefault("DBT_PROJECT_PATH", "./dbt_project"),
         PythonPath:  pythonPath,
@@ -302,32 +302,32 @@ type MeltanoService struct {
 
 func (s *MeltanoService) ExecutePipeline(ctx context.Context, request ExecutePipelineRequest) (*ExecutionResult, error) {
     // 1. Prepare Meltano command - Executes Python library as subprocess
-    cmd := exec.CommandContext(ctx, s.pythonPath, "-m", "meltano", 
+    cmd := exec.CommandContext(ctx, s.pythonPath, "-m", "meltano",
         "run", request.ExtractorName, request.LoaderName)
     cmd.Dir = s.workingDir
-    
+
     // 2. Set environment variables for Python libraries
     cmd.Env = append(os.Environ(),
         fmt.Sprintf("MELTANO_PROJECT_ROOT=%s", s.projectRoot),
         "PYTHONPATH=/home/marlonsc/flext/flext-core/src:/home/marlonsc/flext/flext-meltano/src",
     )
-    
+
     // 3. Execute Python subprocess
     output, err := cmd.CombinedOutput()
     if err != nil {
-        s.logger.Error("Meltano execution failed", 
+        s.logger.Error("Meltano execution failed",
             logging.F("error", err.Error()),
             logging.F("output", string(output)))
         return nil, fmt.Errorf("meltano execution failed: %w", err)
     }
-    
+
     // 4. Parse Python library output and return to Go service
     result := &ExecutionResult{
         Status: "completed",
         Output: string(output),
         Duration: time.Since(startTime),
     }
-    
+
     return result, nil
 }
 ```
@@ -385,7 +385,7 @@ func (ws *WorkflowService) ExecuteFlextPipeline(ctx context.Context, pipelineID 
         return fmt.Errorf("failed to execute pipeline command: %w", err)
     }
 
-    // 3. Plugin System - Load and execute FLEXT plugins dynamically  
+    // 3. Plugin System - Load and execute FLEXT plugins dynamically
     flextPlugin, err := ws.pluginLoader.LoadPlugin("flext-service")
     if err != nil {
         return fmt.Errorf("failed to load FLEXT service plugin: %w", err)
@@ -414,30 +414,30 @@ func (ws *WorkflowService) ExecuteFlextPipeline(ctx context.Context, pipelineID 
 func main() {
     // 1. Initialize FLEXCORE distributed runtime
     flexcoreContainer := flexcore.NewContainer()
-    
+
     // 2. Setup event sourcing + CQRS
     eventStore := flexcoreContainer.GetEventStore()
     commandBus := flexcoreContainer.GetCommandBus()
     queryBus := flexcoreContainer.GetQueryBus()
-    
+
     // 3. Setup plugin system for FLEXT service
     pluginLoader := plugins.NewHashicorpStyleLoader()
-    
+
     // 4. Register FLEXT service as a plugin in FLEXCORE
     flextPlugin := &FlextServicePlugin{
         servicePath: "/home/marlonsc/flext/cmd/flext/main.go",
         configPath:  "/home/marlonsc/flext/config.yaml",
     }
     pluginLoader.RegisterPlugin("flext-service", flextPlugin)
-    
+
     // 5. Setup distributed cluster coordination
     cluster := cluster.NewRedisCoordinator(redisConfig)
-    
+
     // 6. Initialize workflow engine with FLEXT service
     workflowService := services.NewWorkflowService(
         eventBus, pluginLoader, cluster, eventStore,
     )
-    
+
     // 7. Start FLEXCORE container (which executes FLEXT service)
     server := server.NewFlexcoreServer(workflowService)
     log.Info("Starting FLEXCORE container with FLEXT service...")
@@ -457,16 +457,16 @@ import cx_Oracle
 
 class OracleExtractorPlugin(ExtractorInterface):
     """Plugin para extração de dados do Oracle."""
-    
+
     def name(self) -> str:
         return "tap-oracle"
-    
+
     def type(self) -> str:
         return "extractor"
-    
+
     def version(self) -> str:
         return "1.0.0"
-    
+
     def extract(self, config: JsonDict) -> FlextResult[JsonDict]:
         """Extrair dados do Oracle Database."""
         try:
@@ -476,27 +476,27 @@ class OracleExtractorPlugin(ExtractorInterface):
                 password=config["password"],
                 dsn=config["dsn"]
             )
-            
+
             # Executar queries
             cursor = connection.cursor()
             cursor.execute(config["query"])
-            
+
             # Converter resultados
             columns = [desc[0] for desc in cursor.description]
             data = []
-            
+
             for row in cursor.fetchall():
                 data.append(dict(zip(columns, row)))
-            
+
             cursor.close()
             connection.close()
-            
+
             return FlextResult.ok({
                 "records": data,
                 "count": len(data),
                 "source": "oracle"
             })
-            
+
         except Exception as e:
             return FlextResult.fail(f"Oracle extraction failed: {e}")
 
@@ -549,14 +549,14 @@ func (h *PipelineHandler) ExecutePipeline(w http.ResponseWriter, r *http.Request
         http.Error(w, "Unauthorized", 401)
         return
     }
-    
+
     // 2. Parse request
     var request PipelineExecuteRequest
     if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
         http.Error(w, "Invalid request", 400)
         return
     }
-    
+
     // 3. Executar pipeline via Plugin Orchestrator
     orchestrator := h.container.Resolve("pipeline.orchestrator").(pipeline.Orchestrator)
     result, err := orchestrator.Execute(r.Context(), pipeline.ExecuteCommand{
@@ -566,13 +566,13 @@ func (h *PipelineHandler) ExecutePipeline(w http.ResponseWriter, r *http.Request
         Config:    request.Config,
         User:      user,
     })
-    
+
     // 4. Return response
     if err != nil {
         http.Error(w, err.Error(), 500)
         return
     }
-    
+
     w.Header().Set("Content-Type", "application/json")
     json.NewEncoder(w).Encode(result)
 }
@@ -588,25 +588,25 @@ func (o *Orchestrator) Execute(ctx context.Context, cmd ExecuteCommand) (*Execut
     if err != nil {
         return nil, fmt.Errorf("extractor not found: %w", err)
     }
-    
+
     // 2. Resolver loader plugin
     loader, err := o.pluginManager.GetLoader(cmd.Loader)
     if err != nil {
         return nil, fmt.Errorf("loader not found: %w", err)
     }
-    
+
     // 3. Executar extração
     extractResult, err := extractor.Extract(cmd.Config.Source)
     if err != nil {
         return nil, fmt.Errorf("extraction failed: %w", err)
     }
-    
+
     // 4. Executar carregamento
     loadResult, err := loader.Load(extractResult.Data, cmd.Config.Target)
     if err != nil {
         return nil, fmt.Errorf("loading failed: %w", err)
     }
-    
+
     // 5. Salvar pipeline execution
     execution := &domain.PipelineExecution{
         ID:           uuid.New(),
@@ -618,12 +618,12 @@ func (o *Orchestrator) Execute(ctx context.Context, cmd ExecuteCommand) (*Execut
         EndTime:       time.Now(),
         User:          cmd.User,
     }
-    
+
     repo := o.container.Resolve("pipeline.repository").(domain.PipelineRepository)
     if err := repo.SaveExecution(ctx, execution); err != nil {
         return nil, fmt.Errorf("failed to save execution: %w", err)
     }
-    
+
     return &ExecuteResult{
         ExecutionID:   execution.ID,
         Status:        "completed",
@@ -642,15 +642,15 @@ func (o *Orchestrator) Execute(ctx context.Context, cmd ExecuteCommand) (*Execut
 
 ```yaml
 # docker-compose.yml
-version: '3.8'
+version: "3.8"
 
 services:
   flext-service:
     build: .
     ports:
-      - "8080:8080"    # HTTP API
-      - "50051:50051"  # gRPC
-      - "3000:3000"    # Web Interface
+      - "8080:8080" # HTTP API
+      - "50051:50051" # gRPC
+      - "3000:3000" # Web Interface
     environment:
       - FLEXT_ENV=production
       - FLEXT_PLUGIN_DIR=/app/plugins
@@ -663,7 +663,7 @@ services:
     depends_on:
       - postgres
       - redis
-    
+
   postgres:
     image: postgres:15
     environment:
@@ -672,7 +672,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    
+
   redis:
     image: redis:7
     volumes:
@@ -742,8 +742,8 @@ func (m *MetricsCollector) ExposeMetrics() {
         },
         []string{"plugin_name", "plugin_type", "status"},
     )
-    
-    // Pipeline execution metrics  
+
+    // Pipeline execution metrics
     prometheus.NewHistogramVec(
         prometheus.HistogramOpts{
             Name: "flext_pipeline_duration_seconds",
@@ -751,7 +751,7 @@ func (m *MetricsCollector) ExposeMetrics() {
         },
         []string{"pipeline_name", "extractor", "loader"},
     )
-    
+
     // Library usage metrics
     prometheus.NewGaugeVec(
         prometheus.GaugeOpts{
@@ -774,7 +774,7 @@ func (h *HealthHandler) CheckHealth(w http.ResponseWriter, r *http.Request) {
         Version: "2.0.0",
         Libraries: map[string]string{
             "flext-core": "2.0.0",
-            "flext-api":  "2.0.0", 
+            "flext-api":  "2.0.0",
             "flext-auth": "2.0.0",
             "flext-grpc": "2.0.0",
             "flext-web":  "2.0.0",
@@ -783,7 +783,7 @@ func (h *HealthHandler) CheckHealth(w http.ResponseWriter, r *http.Request) {
         Database: h.checkDatabase(),
         Redis:    h.checkRedis(),
     }
-    
+
     json.NewEncoder(w).Encode(health)
 }
 ```
@@ -795,7 +795,7 @@ func (h *HealthHandler) CheckHealth(w http.ResponseWriter, r *http.Request) {
 ### 1. **Simplicidade Operacional**
 
 - ✅ **UM ÚNICO SERVIÇO** para deploy, não 7+ microserviços
-- ✅ **UM ÚNICO PONTO** de configuração e monitoramento  
+- ✅ **UM ÚNICO PONTO** de configuração e monitoramento
 - ✅ **UM ÚNICO LOG STREAM** para debugging
 - ✅ **UM ÚNICO HEALTH CHECK** para verificar status
 
@@ -809,7 +809,7 @@ func (h *HealthHandler) CheckHealth(w http.ResponseWriter, r *http.Request) {
 ### 3. **Performance Superior**
 
 - ✅ **Zero network overhead** entre bibliotecas (in-process)
-- ✅ **Shared memory** entre componentes  
+- ✅ **Shared memory** entre componentes
 - ✅ **Connection pooling** centralizado
 - ✅ **Cache compartilhado** entre todas as funcionalidades
 
@@ -883,7 +883,7 @@ docker logs -f flext-service
    ↓
 3. FLEXT SERVICE (Go - Clean Architecture + DDD)
    ├─ HTTP Handler (Presentation Layer)
-   ├─ Pipeline Service (Application Layer) 
+   ├─ Pipeline Service (Application Layer)
    ├─ Domain Services (Business Logic)
    ├─ DI Container (Infrastructure)
    └─ Subprocess Execution
@@ -981,7 +981,7 @@ func (h *PipelineHandler) ExecutePipeline(c *gin.Context) {
     })
 
     if err != nil {
-        h.logger.Error("Pipeline execution failed", 
+        h.logger.Error("Pipeline execution failed",
             logging.F("pipeline", request.Name),
             logging.F("error", err.Error()))
         c.JSON(500, gin.H{"error": err.Error()})
@@ -1004,8 +1004,8 @@ func (h *PipelineHandler) ExecutePipeline(c *gin.Context) {
 ```python
 # 4. Python Library Integration (subprocess execution)
 # internal/infrastructure/python_bridge.go calls Python libraries
-pythonCmd := exec.CommandContext(ctx, 
-    "/home/marlonsc/flext/.venv/bin/python3", 
+pythonCmd := exec.CommandContext(ctx,
+    "/home/marlonsc/flext/.venv/bin/python3",
     "-m", "flext_meltano.cli",
     "run", "tap-oracle", "target-postgres"
 )
@@ -1025,14 +1025,14 @@ from flext_meltano.application.services import MeltanoOrchestrator
 
 async def execute_pipeline(config: dict) -> PipelineExecution:
     """Execute Meltano pipeline using flext-core domain entities."""
-    
+
     # Use flext-core domain models
     pipeline = Pipeline(
         name=config["name"],
-        extractor=config["extractor"], 
+        extractor=config["extractor"],
         loader=config["loader"]
     )
-    
+
     # Meltano orchestration
     orchestrator = MeltanoOrchestrator()
     result = await orchestrator.run_pipeline(
@@ -1040,7 +1040,7 @@ async def execute_pipeline(config: dict) -> PipelineExecution:
         loader=pipeline.loader,
         config=config["config"]
     )
-    
+
     # Return standardized domain entity
     return PipelineExecution(
         pipeline_id=pipeline.id,
@@ -1054,7 +1054,7 @@ async def execute_pipeline(config: dict) -> PipelineExecution:
 
 ```yaml
 # docker-compose.production.yml - FLEXCORE + FLEXT DEPLOYMENT
-version: '3.8'
+version: "3.8"
 
 services:
   # FLEXCORE Container - Event-driven runtime
@@ -1063,9 +1063,9 @@ services:
       context: ./flexcore
       dockerfile: Dockerfile.production
     ports:
-      - "8080:8080"      # FlexCore API Gateway
-      - "9090:9090"      # Prometheus metrics
-      - "6379:6379"      # Redis coordination
+      - "8080:8080" # FlexCore API Gateway
+      - "9090:9090" # Prometheus metrics
+      - "6379:6379" # Redis coordination
     environment:
       - FLEXCORE_ENV=production
       - FLEXCORE_CLUSTER_MODE=true
@@ -1109,7 +1109,7 @@ services:
       - ./flext-api/src:/app/libraries/flext_api:ro
       - ./flext-meltano/src:/app/libraries/flext_meltano:ro
       - ./flext-plugin/src:/app/libraries/flext_plugin:ro
-    command: ["python3", "-c", "import time; time.sleep(3600)"]  # Keep alive
+    command: ["python3", "-c", "import time; time.sleep(3600)"] # Keep alive
     profiles: ["development-only"]
 
   # Event Store for FlexCore Event Sourcing
@@ -1143,7 +1143,7 @@ services:
 
 volumes:
   flexcore_events_data:
-  flexcore_coordination_data:  
+  flexcore_coordination_data:
   flext_data:
 ```
 
@@ -1165,7 +1165,7 @@ event_sourcing:
     connection_string: "postgres://flexcore:${FLEXCORE_POSTGRES_PASSWORD}@postgres-events:5432/flexcore_events"
   snapshots:
     enabled: true
-    interval: 100  # Take snapshot every 100 events
+    interval: 100 # Take snapshot every 100 events
 
 cqrs:
   enabled: true
@@ -1177,7 +1177,7 @@ plugins:
   directory: "/app/plugins"
   hashicorp_style: true
   dynamic_loading: true
-  
+
   # Register FLEXT service as plugin
   services:
     flext-service:
@@ -1187,7 +1187,7 @@ plugins:
       health_check_endpoint: "http://localhost:8081/health"
       capabilities:
         - "pipeline_execution"
-        - "data_extraction" 
+        - "data_extraction"
         - "data_loading"
         - "meltano_orchestration"
 
@@ -1202,12 +1202,12 @@ observability:
 ```
 
 ```yaml
-# config/flext.yaml - FLEXT SERVICE CONFIGURATION  
+# config/flext.yaml - FLEXT SERVICE CONFIGURATION
 server:
   host: "0.0.0.0"
   port: 8081
   shutdown_timeout: "30s"
-  
+
 database:
   driver: "postgres"
   host: "postgres-flext"
@@ -1215,7 +1215,7 @@ database:
   database: "flext"
   username: "flext"
   password: "${FLEXT_POSTGRES_PASSWORD}"
-  
+
 features:
   database_enabled: true
   clean_architecture:
@@ -1233,11 +1233,11 @@ python:
 plugins:
   directory: "/app/plugins"
   auto_discovery: true
-  
+
 meltano:
   project_root: "/app/meltano-projects"
   python_path: "/app/.venv/bin/python3"
-  
+
 dbt:
   project_path: "/app/dbt-projects"
   profiles_dir: "/app/.dbt"
@@ -1256,15 +1256,15 @@ func (m *FlexCoreMetrics) RegisterFlextServiceMetrics() {
         },
         []string{"workflow_type", "status", "service"},
     )
-    
+
     prometheus.NewHistogramVec(
         prometheus.HistogramOpts{
-            Name: "flexcore_workflow_duration_seconds", 
+            Name: "flexcore_workflow_duration_seconds",
             Help: "Workflow execution duration",
         },
         []string{"workflow_type", "service"},
     )
-    
+
     // FLEXT service metrics (from plugin)
     prometheus.NewCounterVec(
         prometheus.CounterOpts{
@@ -1273,7 +1273,7 @@ func (m *FlexCoreMetrics) RegisterFlextServiceMetrics() {
         },
         []string{"pipeline_name", "extractor", "loader", "status"},
     )
-    
+
     // Python library integration metrics
     prometheus.NewHistogramVec(
         prometheus.HistogramOpts{
@@ -1282,7 +1282,7 @@ func (m *FlexCoreMetrics) RegisterFlextServiceMetrics() {
         },
         []string{"library", "operation"},
     )
-    
+
     // Event sourcing metrics
     prometheus.NewCounterVec(
         prometheus.CounterOpts{
@@ -1313,7 +1313,7 @@ echo "Preparing Python libraries..."
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -e ./flext-core
-pip install -e ./flext-api  
+pip install -e ./flext-api
 pip install -e ./flext-meltano
 pip install -e ./flext-plugin
 
@@ -1376,12 +1376,14 @@ echo "📊 Metrics: http://localhost:9090/metrics"
 ### Arquitetura de 3 Camadas
 
 1. **FLEXCORE CONTAINER** (Camada Superior):
+
    - Runtime distribuído orientado a eventos (Go)
    - Event Sourcing + CQRS Pattern
    - Plugin System estilo HashiCorp
    - Coordenação de cluster distribuído
 
 2. **FLEXT SERVICE** (Camada Intermediária):
+
    - Serviço único em Clean Architecture + DDD (Go)
    - Plugin carregado dinamicamente pelo FlexCore
    - DI Container com bounded contexts

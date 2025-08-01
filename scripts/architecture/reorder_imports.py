@@ -25,7 +25,11 @@ def fix_import_order(file_path: Path) -> bool:
         original_content = content
 
         # Pattern to match DI container imports and initialization
-        di_pattern = r"(# 🚨 ARCHITECTURAL COMPLIANCE:.*?from flext_.*?infrastructure\.di_container import.*?\n\n# Initialize types via DI container\n.*? = get_.*?\(\)\n)"
+        di_pattern = (
+            r"(# 🚨 ARCHITECTURAL COMPLIANCE:.*?from flext_.*?"
+            r"infrastructure\.di_container import.*?\n\n"
+            r"# Initialize types via DI container\n.*? = get_.*?\(\)\n)"
+        )
 
         # Find DI imports block
         di_match = re.search(di_pattern, content, re.DOTALL)

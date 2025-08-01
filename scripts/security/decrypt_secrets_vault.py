@@ -7,6 +7,7 @@ para máxima segurança e padronização enterprise.
 
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 from typing import Any
@@ -67,8 +68,6 @@ class SecretsVaultDecryptor(BaseSecurityScript):
 
                 # Display secrets according to format
                 if output_format == "json":
-                    import json
-
                     print(json.dumps(decrypt_result, indent=2))
                 elif output_format == "env":
                     for key, value in decrypt_result.items():
@@ -123,7 +122,7 @@ class SecretsVaultDecryptor(BaseSecurityScript):
 
         return parser
 
-    def _process_kwargs(self, args: Any) -> dict[str, Any]:
+    def _process_kwargs(self, args: object) -> dict[str, Any]:
         """Process arguments into kwargs."""
         kwargs: dict[str, Any] = {}
         kwargs["mask_secrets"] = not getattr(args, "no_mask", False)

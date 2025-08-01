@@ -30,7 +30,7 @@ class BackupManager:
             self.backup_dir = Path.cwd() / ".flext_backups"
 
         self.backup_dir.mkdir(exist_ok=True)
-        self.session_id = datetime.now().strftime("%Y%m%d_%H%M%S")
+        self.session_id = datetime.now(UTC).strftime("%Y%m%d_%H%M%S")
         self.session_dir = self.backup_dir / f"session_{self.session_id}"
         self.session_dir.mkdir(exist_ok=True)
 
