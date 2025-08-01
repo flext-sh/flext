@@ -9,7 +9,6 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
-from typing import Any
 
 from flext_tools import Colors, print_colored
 from flext_tools.core.script_base import FlextScript, ScriptMetadata
@@ -76,7 +75,7 @@ class WorkspaceStatus(FlextScript):
             print_colored(f"❌ Erro durante análise: {e}", Colors.RED)
             return False
 
-    def _analyze_projects(self, workspace_root: Path) -> dict[str, Any]:
+    def _analyze_projects(self, workspace_root: Path) -> dict[str, object]:
         """Analisar projetos do workspace."""
         projects = {}
 
@@ -125,8 +124,8 @@ class WorkspaceStatus(FlextScript):
     def _analyze_quality(
         self,
         _workspace_root: Path,
-        projects_info: dict[str, Any],
-    ) -> dict[str, Any]:
+        projects_info: dict[str, object],
+    ) -> dict[str, object]:
         """Analisar qualidade do código."""
         quality_data = {
             "total_python_files": 0,
@@ -148,8 +147,8 @@ class WorkspaceStatus(FlextScript):
     def _analyze_dependencies(
         self,
         _workspace_root: Path,
-        projects_info: dict[str, Any],
-    ) -> dict[str, Any]:
+        projects_info: dict[str, object],
+    ) -> dict[str, object]:
         """Analisar dependências."""
         deps_data = {
             "projects_with_poetry": 0,
@@ -166,10 +165,10 @@ class WorkspaceStatus(FlextScript):
 
     def _calculate_health_score(
         self,
-        projects: dict[str, Any],
-        quality: dict[str, Any],
-        deps: dict[str, Any],
-    ) -> dict[str, Any]:
+        projects: dict[str, object],
+        quality: dict[str, object],
+        deps: dict[str, object],
+    ) -> dict[str, object]:
         """Calcular health score do workspace."""
         total_projects = projects["total_count"]
 
@@ -238,7 +237,7 @@ class WorkspaceStatus(FlextScript):
             "max_score": max_score,
         }
 
-    def _print_projects_summary(self, projects_info: dict[str, Any]) -> None:
+    def _print_projects_summary(self, projects_info: dict[str, object]) -> None:
         """Imprimir resumo dos projetos."""
         projects = projects_info["projects"]
         total_count = projects_info["total_count"]
@@ -261,7 +260,7 @@ class WorkspaceStatus(FlextScript):
                 status = "✅" if data["has_tests"] else "⚠️"
                 print(f"  {status} {name} ({data['python_files']} arquivos)")
 
-    def _print_quality_summary(self, quality_info: dict[str, Any]) -> None:
+    def _print_quality_summary(self, quality_info: dict[str, object]) -> None:
         """Imprimir resumo da qualidade."""
         print_colored("\n📊 QUALIDADE DO CÓDIGO", Colors.BLUE)
         print_colored("=" * 50, Colors.BLUE)
@@ -269,13 +268,13 @@ class WorkspaceStatus(FlextScript):
         print(f"  🧪 Projetos com testes: {quality_info['projects_with_tests']}")
         print(f"  🔧 Projetos com Makefile: {quality_info['projects_with_makefiles']}")
 
-    def _print_dependencies_summary(self, deps_info: dict[str, Any]) -> None:
+    def _print_dependencies_summary(self, deps_info: dict[str, object]) -> None:
         """Imprimir resumo das dependências."""
         print_colored("\n📦 DEPENDÊNCIAS", Colors.BLUE)
         print_colored("=" * 50, Colors.BLUE)
         print(f"  🎯 Projetos com Poetry: {deps_info['projects_with_poetry']}")
 
-    def _print_health_score(self, health: dict[str, Any]) -> None:
+    def _print_health_score(self, health: dict[str, object]) -> None:
         """Imprimir health score."""
         print_colored("\n🏥 HEALTH SCORE DO WORKSPACE", Colors.BLUE)
 

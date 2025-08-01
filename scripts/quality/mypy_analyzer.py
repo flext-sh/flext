@@ -21,10 +21,6 @@ import subprocess
 import sys
 from collections import Counter, defaultdict
 from pathlib import Path
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from typing import Any
 
 
 def run_command(cmd: list[str], cwd: Path | None = None) -> tuple[int, str, str]:
@@ -46,7 +42,7 @@ def run_command(cmd: list[str], cwd: Path | None = None) -> tuple[int, str, str]
         return 1, "", f"Command not found: {cmd[0]}"
 
 
-def parse_mypy_errors(output: str) -> list[dict[str, Any]]:
+def parse_mypy_errors(output: str) -> list[dict[str, object]]:
     """Parse MyPy output to extract structured error information."""
     errors = []
 
@@ -83,7 +79,9 @@ def get_project_from_path(file_path: str) -> str:
     return "workspace"
 
 
-def analyze_project_with_stats(project_path: Path) -> tuple[int, list[dict[str, Any]]]:
+def analyze_project_with_stats(
+    project_path: Path,
+) -> tuple[int, list[dict[str, object]]]:
     """Analisa projeto específico e retorna estatísticas detalhadas."""
     print(f"🔍 Analyzing {project_path.name}...")
 
@@ -99,7 +97,7 @@ def analyze_project_with_stats(project_path: Path) -> tuple[int, list[dict[str, 
     return exit_code, errors
 
 
-def analyze_workspace_with_stats() -> tuple[int, list[dict[str, Any]]]:
+def analyze_workspace_with_stats() -> tuple[int, list[dict[str, object]]]:
     """Analisa workspace e retorna estatísticas detalhadas."""
     print("🔍 Analyzing workspace with MyPy (PEP 518)...")
 

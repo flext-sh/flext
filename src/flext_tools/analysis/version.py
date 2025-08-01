@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import re
-from typing import Any
 
 from packaging import version
 from packaging.specifiers import SpecifierSet
@@ -101,7 +100,7 @@ class VersionAnalyzer:
     def check_version_compatibility(
         spec1: str,
         spec2: str,
-    ) -> dict[str, Any]:
+    ) -> dict[str, object]:
         """Verifica compatibilidade entre duas especificações de versão.
 
         Args:
@@ -187,7 +186,7 @@ class VersionAnalyzer:
 
     @staticmethod
     def _collect_package_versions(
-        projects_data: dict[str, dict[str, Any]],
+        projects_data: dict[str, dict[str, object]],
     ) -> dict[str, dict[str, str]]:
         """Coleta versões de cada package por projeto."""
         package_versions: dict[str, dict[str, str]] = {}
@@ -223,9 +222,9 @@ class VersionAnalyzer:
     @staticmethod
     def _detect_version_conflicts(
         package_versions: dict[str, dict[str, str]],
-    ) -> dict[str, list[dict[str, Any]]]:
+    ) -> dict[str, list[dict[str, object]]]:
         """Detecta conflitos de versão entre packages."""
-        conflicts: dict[str, list[dict[str, Any]]] = {}
+        conflicts: dict[str, list[dict[str, object]]] = {}
 
         for package_name, versions in package_versions.items():
             if len(versions) > 1:
@@ -254,8 +253,8 @@ class VersionAnalyzer:
 
     @staticmethod
     def analyze_version_conflicts(
-        projects_data: dict[str, dict[str, Any]],
-    ) -> dict[str, list[dict[str, Any]]]:
+        projects_data: dict[str, dict[str, object]],
+    ) -> dict[str, list[dict[str, object]]]:
         """Analisa conflitos de versão entre projetos."""
         print_colored("🔍 Analisando conflitos de versão...", Colors.BLUE)
 
@@ -264,7 +263,7 @@ class VersionAnalyzer:
 
     @staticmethod
     def suggest_version_resolution(
-        conflicts: dict[str, dict[str, Any]],
+        conflicts: dict[str, dict[str, object]],
     ) -> dict[str, str]:
         """Sugere resoluções para conflitos de versão.
 
@@ -346,7 +345,7 @@ def normalize_constraint(constraint: str) -> str:
     return VersionAnalyzer.normalize_constraint(constraint)
 
 
-def check_version_compatibility(spec1: str, spec2: str) -> dict[str, Any]:
+def check_version_compatibility(spec1: str, spec2: str) -> dict[str, object]:
     """Check compatibility between two version specifications.
 
     Args:
@@ -361,8 +360,8 @@ def check_version_compatibility(spec1: str, spec2: str) -> dict[str, Any]:
 
 
 def analyze_version_conflicts(
-    projects_data: dict[str, dict[str, Any]],
-) -> dict[str, list[dict[str, Any]]]:
+    projects_data: dict[str, dict[str, object]],
+) -> dict[str, list[dict[str, object]]]:
     """Analyze version conflicts between projects.
 
     Args:
@@ -375,7 +374,9 @@ def analyze_version_conflicts(
     return VersionAnalyzer.analyze_version_conflicts(projects_data)
 
 
-def suggest_version_resolution(conflicts: dict[str, dict[str, Any]]) -> dict[str, str]:
+def suggest_version_resolution(
+    conflicts: dict[str, dict[str, object]],
+) -> dict[str, str]:
     """Suggest resolutions for version conflicts.
 
     Args:

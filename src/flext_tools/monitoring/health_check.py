@@ -1,7 +1,6 @@
 """Health check service utilities."""
 
 from pathlib import Path
-from typing import Any
 
 from flext_tools.utils import Colors, print_colored
 
@@ -13,7 +12,7 @@ class HealthCheckService:
         """Initialize the health check service."""
         self.workspace_path = workspace_path
 
-    def run_health_checks(self, **_kwargs: object) -> dict[str, Any]:
+    def run_health_checks(self, **_kwargs: object) -> dict[str, object]:
         """Run health checks across the workspace."""
         print_colored("🏥 Executando verificações de saúde...", Colors.BLUE)
 

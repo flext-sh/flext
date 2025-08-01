@@ -31,7 +31,7 @@ class FLEXT_Container:  # SCREAMING_SNAKE_CASE
 # ✅ Correto - Type aliases específicos FLEXT
 TFlextEntityId = TypeVar("TFlextEntityId", bound=int | str)
 TFlextResult = FlextResult[T]
-TFlextConfig = Dict[str, Any]
+TFlextConfig = Dict[str, object]
 
 # ✅ Correto - Type aliases genéricos
 TEntityId = TypeVar("TEntityId", bound=int | str)

@@ -10,7 +10,6 @@ import sys
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
 
 from flext_core import get_logger
 
@@ -203,7 +202,7 @@ class FlextDiagnostic:
 
         return violations
 
-    def run_full_diagnostic(self) -> dict[str, Any]:
+    def run_full_diagnostic(self) -> dict[str, object]:
         """Run full diagnostic."""
         print("🚀 INICIANDO DIAGNÓSTICO COMPLETO DO WORKSPACE FLEXT")
         print("=" * 60)
@@ -237,7 +236,7 @@ class FlextDiagnostic:
             "summary": self.generate_summary(),
         }
 
-    def generate_summary(self) -> dict[str, Any]:
+    def generate_summary(self) -> dict[str, object]:
         """Generate summary."""
         total_projects = len(self.results)
         projects_with_makefile = sum(1 for s in self.results.values() if s.has_makefile)
@@ -271,7 +270,7 @@ class FlextDiagnostic:
             "projects_with_errors": projects_with_errors,
         }
 
-    def print_report(self, report: dict[str, Any]) -> None:
+    def print_report(self, report: dict[str, object]) -> None:
         """Print formatted report."""
         print("\n" + "=" * 60)
         print("📊 RELATÓRIO DE DIAGNÓSTICO FLEXT")
