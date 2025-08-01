@@ -13,9 +13,9 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/flext-sh/flext/internal/bounded_contexts/singer/domain/entities"
-	"github.com/flext-sh/flext/internal/infrastructure/logging"
-	"github.com/flext-sh/flext/internal/shared_kernel/domain"
+	"github.com/flext/flexcore/internal/bounded_contexts/singer/domain/entities"
+	"github.com/flext/flexcore/internal/infrastructure/logging"
+	"github.com/flext/flexcore/internal/shared_kernel/domain"
 	"github.com/google/uuid"
 )
 

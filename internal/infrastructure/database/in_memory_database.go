@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/flext-sh/flext/internal/infrastructure/logging"
+	"github.com/flext/flexcore/internal/infrastructure/logging"
 )
 
 // InMemoryAdvancedDatabase provides a simple in-memory database fallback

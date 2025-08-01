@@ -6,8 +6,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/flext-sh/flext/internal/adapters/controllers/http/dto"
-	"github.com/flext-sh/flext/internal/usecases/pipeline"
+	"github.com/flext/flexcore/internal/adapters/controllers/http/dto"
+	"github.com/flext/flexcore/internal/usecases/pipeline"
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 )

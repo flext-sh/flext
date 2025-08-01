@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/flext-sh/flext/internal/infrastructure/logging"
+	"github.com/flext/flexcore/internal/infrastructure/logging"
 )
 
 // HealthChecker performs comprehensive health checks

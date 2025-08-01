@@ -6,23 +6,23 @@ import (
 	"sync"
 
 	// Shared kernel imports
-	"github.com/flext-sh/flext/internal/shared_kernel/infrastructure/auth"
-	"github.com/flext-sh/flext/internal/shared_kernel/infrastructure/config"
+	"github.com/flext/flexcore/internal/shared_kernel/infrastructure/auth"
+	"github.com/flext/flexcore/internal/shared_kernel/infrastructure/config"
 
 	// Bounded context imports
-	pipelineApp "github.com/flext-sh/flext/internal/bounded_contexts/pipeline/application"
-	pipelinePorts "github.com/flext-sh/flext/internal/bounded_contexts/pipeline/application/ports"
-	pipelineServices "github.com/flext-sh/flext/internal/bounded_contexts/pipeline/domain/services"
+	pipelineApp "github.com/flext/flexcore/internal/bounded_contexts/pipeline/application"
+	pipelinePorts "github.com/flext/flexcore/internal/bounded_contexts/pipeline/application/ports"
+	pipelineServices "github.com/flext/flexcore/internal/bounded_contexts/pipeline/domain/services"
 
-	pluginApp "github.com/flext-sh/flext/internal/bounded_contexts/plugin/application"
-	pluginPorts "github.com/flext-sh/flext/internal/bounded_contexts/plugin/application/ports"
+	pluginApp "github.com/flext/flexcore/internal/bounded_contexts/plugin/application"
+	pluginPorts "github.com/flext/flexcore/internal/bounded_contexts/plugin/application/ports"
 
 	// Infrastructure imports
-	"github.com/flext-sh/flext/internal/infrastructure/database"
-	"github.com/flext-sh/flext/internal/infrastructure/events"
-	"github.com/flext-sh/flext/internal/infrastructure/execution"
-	"github.com/flext-sh/flext/internal/infrastructure/logging"
-	"github.com/flext-sh/flext/internal/infrastructure/persistence"
+	"github.com/flext/flexcore/internal/infrastructure/database"
+	"github.com/flext/flexcore/internal/infrastructure/events"
+	"github.com/flext/flexcore/internal/infrastructure/execution"
+	"github.com/flext/flexcore/internal/infrastructure/logging"
+	"github.com/flext/flexcore/internal/infrastructure/persistence"
 )
 
 // UnifiedContainer provides dependency injection using unified configuration

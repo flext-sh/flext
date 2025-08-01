@@ -7,7 +7,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/flext-sh/flext/internal/infrastructure/config"
+	"github.com/flext/flexcore/internal/infrastructure/config"
 )
 
 // LogLevel define níveis de log

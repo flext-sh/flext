@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/flext-sh/flext/internal/infrastructure/config"
+	"github.com/flext/flexcore/internal/infrastructure/config"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 )

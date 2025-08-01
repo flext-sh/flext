@@ -2,7 +2,7 @@ package pipeline
 
 import (
 	"context"
-	"github.com/flext-sh/flext/internal/bounded_contexts/pipeline/domain/entities"
+	"github.com/flext/flexcore/internal/bounded_contexts/pipeline/domain/entities"
 )
 
 // GetPipelineByNameUseCase handles retrieving a pipeline by name

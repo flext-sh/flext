@@ -5,9 +5,9 @@ import (
 	"errors"
 	"sync"
 
-	"github.com/flext-sh/flext/internal/bounded_contexts/pipeline/application/ports"
-	"github.com/flext-sh/flext/internal/bounded_contexts/pipeline/domain/entities"
-	pipelineUC "github.com/flext-sh/flext/internal/usecases/pipeline"
+	"github.com/flext/flexcore/internal/bounded_contexts/pipeline/application/ports"
+	"github.com/flext/flexcore/internal/bounded_contexts/pipeline/domain/entities"
+	pipelineUC "github.com/flext/flexcore/internal/usecases/pipeline"
 	"github.com/google/uuid"
 )
 

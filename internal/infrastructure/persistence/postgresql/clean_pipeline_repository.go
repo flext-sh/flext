@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/flext-sh/flext/internal/bounded_contexts/pipeline/domain/entities"
-	pipelineUC "github.com/flext-sh/flext/internal/usecases/pipeline"
+	"github.com/flext/flexcore/internal/bounded_contexts/pipeline/domain/entities"
+	pipelineUC "github.com/flext/flexcore/internal/usecases/pipeline"
 	"github.com/google/uuid"
 	"github.com/lib/pq"
 )

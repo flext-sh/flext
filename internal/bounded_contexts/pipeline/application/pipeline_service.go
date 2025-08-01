@@ -3,11 +3,11 @@ package application
 import (
 	"context"
 
-	"github.com/flext-sh/flext/internal/bounded_contexts/pipeline/application/commands"
-	"github.com/flext-sh/flext/internal/bounded_contexts/pipeline/application/ports"
-	"github.com/flext-sh/flext/internal/bounded_contexts/pipeline/application/queries"
-	"github.com/flext-sh/flext/internal/bounded_contexts/pipeline/application/services"
-	domainServices "github.com/flext-sh/flext/internal/bounded_contexts/pipeline/domain/services"
+	"github.com/flext/flexcore/internal/bounded_contexts/pipeline/application/commands"
+	"github.com/flext/flexcore/internal/bounded_contexts/pipeline/application/ports"
+	"github.com/flext/flexcore/internal/bounded_contexts/pipeline/application/queries"
+	"github.com/flext/flexcore/internal/bounded_contexts/pipeline/application/services"
+	domainServices "github.com/flext/flexcore/internal/bounded_contexts/pipeline/domain/services"
 )
 
 // PipelineService coordinates pipeline operations

@@ -4,8 +4,8 @@ import (
 	"errors"
 	"github.com/google/uuid"
 
-	pipelineUC "github.com/flext-sh/flext/internal/usecases/pipeline"
-	pluginUC "github.com/flext-sh/flext/internal/usecases/plugin"
+	pipelineUC "github.com/flext/flexcore/internal/usecases/pipeline"
+	pluginUC "github.com/flext/flexcore/internal/usecases/plugin"
 )
 
 // SimpleValidator implements basic validation for Clean Architecture

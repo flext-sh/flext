@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/flext-sh/flext/internal/shared_kernel/domain"
+	"github.com/flext/flexcore/internal/shared_kernel/domain"
 )
 
 // SingerSpec representa uma especificação Singer/Meltano

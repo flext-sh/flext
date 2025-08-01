@@ -4,8 +4,8 @@ import (
 	"context"
 	"strings"
 
-	"github.com/flext-sh/flext/internal/infrastructure/logging"
-	"github.com/flext-sh/flext/internal/shared_kernel/domain/value_objects"
+	"github.com/flext/flexcore/internal/infrastructure/logging"
+	"github.com/flext/flexcore/internal/shared_kernel/domain/value_objects"
 	"github.com/labstack/echo/v4"
 )
 

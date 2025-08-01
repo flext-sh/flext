@@ -3,7 +3,7 @@ package entities
 import (
 	"time"
 
-	"github.com/flext-sh/flext/internal/shared_kernel/domain/entities"
+	"github.com/flext/flexcore/internal/shared_kernel/domain/entities"
 )
 
 // TapStatus representa o status de um tap

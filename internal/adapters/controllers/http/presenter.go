@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/flext-sh/flext/internal/usecases/pipeline"
+	"github.com/flext/flexcore/internal/usecases/pipeline"
 )
 
 // PipelinePresenter defines the interface for presenting pipeline responses
