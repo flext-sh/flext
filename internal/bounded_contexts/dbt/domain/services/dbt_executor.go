@@ -12,8 +12,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/flext-sh/flext/internal/bounded_contexts/dbt/domain/entities"
-	"github.com/flext-sh/flext/internal/infrastructure/logging"
+	"github.com/flext/flexcore/internal/bounded_contexts/dbt/domain/entities"
+	"github.com/flext/flexcore/internal/infrastructure/logging"
 	"github.com/google/uuid"
 )
 

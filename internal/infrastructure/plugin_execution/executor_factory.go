@@ -5,8 +5,8 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/flext-sh/flext/internal/bounded_contexts/pipeline/domain/services"
-	"github.com/flext-sh/flext/internal/infrastructure/logging"
+	"github.com/flext/flexcore/internal/bounded_contexts/pipeline/domain/services"
+	"github.com/flext/flexcore/internal/infrastructure/logging"
 )
 
 // ExecutorFactory cria executores de plugin configurados

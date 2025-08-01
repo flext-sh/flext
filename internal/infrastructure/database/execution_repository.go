@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/flext-sh/flext/internal/infrastructure/logging"
+	"github.com/flext/flexcore/internal/infrastructure/logging"
 	"github.com/google/uuid"
 )
 

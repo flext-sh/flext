@@ -3,7 +3,7 @@ package flexcore_plugin
 import (
 	"context"
 
-	"github.com/flext-sh/flext/internal/infrastructure/logging"
+	"github.com/flext/flexcore/internal/infrastructure/logging"
 )
 
 // TestPlugin is a simple test plugin for FLEXCORE

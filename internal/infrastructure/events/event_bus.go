@@ -6,7 +6,7 @@ import (
 	"reflect"
 	"sync"
 
-	"github.com/flext-sh/flext/internal/infrastructure/logging"
+	"github.com/flext/flexcore/internal/infrastructure/logging"
 )
 
 // EventBus defines the interface for event publishing and subscription

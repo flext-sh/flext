@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/flext-sh/flext/internal/infrastructure/config"
-	"github.com/flext-sh/flext/internal/infrastructure/logging"
-	sharedApp "github.com/flext-sh/flext/internal/shared_kernel/application"
+	"github.com/flext/flexcore/internal/infrastructure/config"
+	"github.com/flext/flexcore/internal/infrastructure/logging"
+	sharedApp "github.com/flext/flexcore/internal/shared_kernel/application"
 )
 
 // ContainerType define o tipo de container

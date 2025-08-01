@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/flext-sh/flext/internal/bounded_contexts/meltano/application/services"
-	"github.com/flext-sh/flext/internal/infrastructure/logging"
+	"github.com/flext/flexcore/internal/bounded_contexts/meltano/application/services"
+	"github.com/flext/flexcore/internal/infrastructure/logging"
 	"github.com/labstack/echo/v4"
 )
 

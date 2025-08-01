@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/flext-sh/flext/internal/adapters/controllers/http/dto"
-	"github.com/flext-sh/flext/internal/usecases/plugin"
+	"github.com/flext/flexcore/internal/adapters/controllers/http/dto"
+	"github.com/flext/flexcore/internal/usecases/plugin"
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 )

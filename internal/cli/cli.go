@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/flext-sh/flext/internal/cli/commands"
+	"github.com/flext/flexcore/internal/cli/commands"
 )
 
 // CLI representa a interface de linha de comando do FLEXT

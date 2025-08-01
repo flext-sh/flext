@@ -4,9 +4,9 @@ import (
 	"context"
 	"time"
 
-	pipelineServices "github.com/flext-sh/flext/internal/bounded_contexts/pipeline/domain/services"
-	"github.com/flext-sh/flext/internal/bounded_contexts/plugin/domain/entities"
-	"github.com/flext-sh/flext/internal/infrastructure/logging"
+	pipelineServices "github.com/flext/flexcore/internal/bounded_contexts/pipeline/domain/services"
+	"github.com/flext/flexcore/internal/bounded_contexts/plugin/domain/entities"
+	"github.com/flext/flexcore/internal/infrastructure/logging"
 )
 
 // DomainPluginExecutorAdapter adapta o PluginExecutor da infraestrutura para a interface do domínio

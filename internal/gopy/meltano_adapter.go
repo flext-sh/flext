@@ -7,9 +7,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/flext-sh/flext/internal/bounded_contexts/meltano/application/services"
-	"github.com/flext-sh/flext/internal/infrastructure/config"
-	"github.com/flext-sh/flext/internal/infrastructure/logging"
+	"github.com/flext/flexcore/internal/bounded_contexts/meltano/application/services"
+	"github.com/flext/flexcore/internal/infrastructure/config"
+	"github.com/flext/flexcore/internal/infrastructure/logging"
 )
 
 // MeltanoAdapter provides a gopy-compatible interface to Meltano functionality

@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/flext-sh/flext/internal/infrastructure/logging"
-	"github.com/flext-sh/flext/internal/shared_kernel/domain/value_objects"
+	"github.com/flext/flexcore/internal/infrastructure/logging"
+	"github.com/flext/flexcore/internal/shared_kernel/domain/value_objects"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 )

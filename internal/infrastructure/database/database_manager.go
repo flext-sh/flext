@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/flext-sh/flext/internal/infrastructure/logging"
+	"github.com/flext/flexcore/internal/infrastructure/logging"
 )
 
 // DatabaseManager manages all database repositories and operations

@@ -4,9 +4,9 @@ import (
 	"context"
 	"errors"
 
-	"github.com/flext-sh/flext/internal/bounded_contexts/plugin/application/commands"
-	"github.com/flext-sh/flext/internal/bounded_contexts/plugin/application/ports"
-	"github.com/flext-sh/flext/internal/bounded_contexts/plugin/domain/entities"
+	"github.com/flext/flexcore/internal/bounded_contexts/plugin/application/commands"
+	"github.com/flext/flexcore/internal/bounded_contexts/plugin/application/ports"
+	"github.com/flext/flexcore/internal/bounded_contexts/plugin/domain/entities"
 	"github.com/google/uuid"
 	"github.com/samber/lo"
 )

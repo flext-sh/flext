@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/flext-sh/flext/internal/infrastructure/config"
-	"github.com/flext-sh/flext/internal/infrastructure/logging"
+	"github.com/flext/flexcore/internal/infrastructure/config"
+	"github.com/flext/flexcore/internal/infrastructure/logging"
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
 	"gorm.io/driver/postgres"

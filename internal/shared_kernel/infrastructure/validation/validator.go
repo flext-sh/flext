@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/flext-sh/flext/internal/shared_kernel/application"
+	"github.com/flext/flexcore/internal/shared_kernel/application"
 	"github.com/go-playground/validator/v10"
 )
 

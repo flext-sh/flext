@@ -7,8 +7,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/flext-sh/flext/internal/infrastructure/cluster"
-	"github.com/flext-sh/flext/internal/infrastructure/logging"
+	"github.com/flext/flexcore/internal/infrastructure/cluster"
+	"github.com/flext/flexcore/internal/infrastructure/logging"
 	"github.com/go-redis/redis/v8"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"

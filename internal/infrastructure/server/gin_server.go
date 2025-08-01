@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/flext-sh/flext/internal/infrastructure/config"
-	"github.com/flext-sh/flext/internal/infrastructure/logging"
+	"github.com/flext/flexcore/internal/infrastructure/config"
+	"github.com/flext/flexcore/internal/infrastructure/logging"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/timeout"
 	"github.com/gin-gonic/gin"

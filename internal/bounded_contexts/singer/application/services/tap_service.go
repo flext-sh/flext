@@ -4,10 +4,10 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/flext-sh/flext/internal/bounded_contexts/singer/application/commands"
-	"github.com/flext-sh/flext/internal/bounded_contexts/singer/application/ports"
-	"github.com/flext-sh/flext/internal/bounded_contexts/singer/application/queries"
-	"github.com/flext-sh/flext/internal/shared_kernel/domain/value_objects"
+	"github.com/flext/flexcore/internal/bounded_contexts/singer/application/commands"
+	"github.com/flext/flexcore/internal/bounded_contexts/singer/application/ports"
+	"github.com/flext/flexcore/internal/bounded_contexts/singer/application/queries"
+	"github.com/flext/flexcore/internal/shared_kernel/domain/value_objects"
 )
 
 // TapService provides high-level tap operations

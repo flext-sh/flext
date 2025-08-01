@@ -8,9 +8,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/flext-sh/flext/internal/infrastructure/cluster"
-	"github.com/flext-sh/flext/internal/infrastructure/logging"
-	"github.com/flext-sh/flext/internal/infrastructure/worker"
+	"github.com/flext/flexcore/internal/infrastructure/cluster"
+	"github.com/flext/flexcore/internal/infrastructure/logging"
+	"github.com/flext/flexcore/internal/infrastructure/worker"
 	"github.com/gorilla/websocket"
 )
 

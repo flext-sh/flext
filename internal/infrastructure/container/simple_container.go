@@ -4,10 +4,10 @@ import (
 	"context"
 	"fmt"
 
-	meltanoServices "github.com/flext-sh/flext/internal/bounded_contexts/meltano/application/services"
-	"github.com/flext-sh/flext/internal/infrastructure/config"
-	"github.com/flext-sh/flext/internal/infrastructure/http"
-	"github.com/flext-sh/flext/internal/infrastructure/logging"
+	meltanoServices "github.com/flext/flexcore/internal/bounded_contexts/meltano/application/services"
+	"github.com/flext/flexcore/internal/infrastructure/config"
+	"github.com/flext/flexcore/internal/infrastructure/http"
+	"github.com/flext/flexcore/internal/infrastructure/logging"
 )
 
 // SimpleContainer provides basic functionality for testing
