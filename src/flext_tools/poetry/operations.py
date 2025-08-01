@@ -1,10 +1,10 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3  # noqa: EXE001
 """Operações avançadas com Poetry - Validação, Cache e Rollback."""
 
 from __future__ import annotations
 
 import subprocess
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from flext_tools.safety.backup import BackupManager
 from flext_tools.safety.validator import SafetyValidator
@@ -12,6 +12,7 @@ from flext_tools.utils.colors import Colors, print_colored
 from flext_tools.utils.logging import get_logger
 
 if TYPE_CHECKING:
+    from logging import Logger
     from pathlib import Path
 
 
@@ -23,9 +24,10 @@ class PoetryOperations:
 
     def __init__(
         self,
+        *,
         dry_run: bool = True,
         enable_safety: bool = True,
-        logger: Any = None,
+        logger: Logger | None = None,
     ) -> None:
         """Initialize Poetry operations with safety system."""
         self.dry_run = dry_run
@@ -44,6 +46,7 @@ class PoetryOperations:
         self,
         project_path: Path,
         dependencies: dict[str, list[str]],
+        *,
         _auto_confirm: bool = False,
     ) -> dict[str, list[str]]:
         """Adiciona dependências a um projeto Poetry."""
@@ -115,7 +118,7 @@ class PoetryOperations:
         try:
             print_colored(f"    [+] Adicionando {dependency}...", Colors.GREEN)
 
-            result = subprocess.run(
+            result = subprocess.run(  # noqa: S603
                 cmd,
                 check=False,
                 cwd=project_path,
@@ -151,6 +154,7 @@ class PoetryOperations:
         self,
         project_path: Path,
         dependencies: list[str],
+        *,
         _auto_confirm: bool = False,
     ) -> list[str]:
         """Remove dependências de um projeto Poetry."""
@@ -197,7 +201,7 @@ class PoetryOperations:
         try:
             print_colored(f"    [-] Removendo {dependency}...", Colors.YELLOW)
 
-            result = subprocess.run(
+            result = subprocess.run(  # noqa: S603
                 cmd,
                 check=False,
                 cwd=project_path,
@@ -251,7 +255,7 @@ class PoetryOperations:
             cmd.append("--dry-run")
 
         try:
-            result = subprocess.run(
+            result = subprocess.run(  # noqa: S603
                 cmd,
                 check=False,
                 cwd=project_path,
@@ -291,7 +295,7 @@ class PoetryOperations:
         cmd = ["poetry", "lock"]
 
         try:
-            result = subprocess.run(
+            result = subprocess.run(  # noqa: S603
                 cmd,
                 check=False,
                 cwd=project_path,
@@ -325,7 +329,7 @@ class PoetryOperations:
         cmd = ["poetry", "check"]
 
         try:
-            result = subprocess.run(
+            result = subprocess.run(  # noqa: S603
                 cmd,
                 check=False,
                 cwd=project_path,

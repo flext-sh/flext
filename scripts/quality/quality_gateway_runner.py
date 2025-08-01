@@ -125,7 +125,7 @@ class QualityGatewayRunner(FlextScript):
 
         return parser
 
-    def _process_kwargs(self, args: Any) -> dict[str, Any]:
+    def _process_kwargs(self, args: object) -> dict[str, object]:
         """Process arguments into kwargs."""
         kwargs: dict[str, Any] = {}
         kwargs["generate_report"] = not getattr(args, "no_report", False)

@@ -5,7 +5,8 @@ This module is now a compatibility layer that imports from flext-meltano.
 All new development should use flext_meltano.architecture directly.
 
 Implements the architectural directive:
-"Singer, Meltano e DBT tem que estar em flext-meltano, acabae com essa confusão arrumando isso"
+"Singer, Meltano e DBT tem que estar em flext-meltano, "
+"acabae com essa confusão arrumando isso"
 """
 
 from __future__ import annotations

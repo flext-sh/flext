@@ -172,7 +172,11 @@ class FalsePositiveAuditor:
         # Verifica se é parte do próprio projeto
         return project_path.name.replace("-", "_") in import_name
 
-    def _is_legitimate_dependency(self, import_name: str, project_path: Path) -> bool:
+    def _is_legitimate_dependency(
+        self,
+        import_name: str,
+        _project_path: Path,
+    ) -> bool:
         """Verifica se é dependência legítima que deve estar no pyproject.toml."""
         # Lista de dependências comuns que são legítimas
         common_packages = {
@@ -353,7 +357,8 @@ def audit_workspace() -> tuple[
     print_colored("🔍 AUDITORIA COMPLETA DE FALSOS POSITIVOS", Colors.BLUE)
     print_colored("=" * 60, Colors.BLUE)
     print_colored(
-        "OBJETIVO: Identificar TODOS os falsos positivos antes de permitir modificações",
+        "OBJETIVO: Identificar TODOS os falsos positivos antes de permitir "
+        "modificações",
         Colors.YELLOW,
     )
     workspace_path = Path.cwd()
@@ -435,15 +440,18 @@ def audit_workspace() -> tuple[
     print_colored("\n🎯 ESTATÍSTICAS CRÍTICAS:", Colors.BLUE)
     print_colored(f"Total de imports únicos detectados: {total_imports}", Colors.CYAN)
     print_colored(
-        f"Falsos positivos confirmados: {false_positives} ({false_positives / total_imports * 100:.1f}%)",
+        "Falsos positivos confirmados: "
+        f"{false_positives} ({false_positives / total_imports * 100:.1f}%)",
         Colors.GREEN,
     )
     print_colored(
-        f"Dependências legítimas faltantes: {legitimate} ({legitimate / total_imports * 100:.1f}%)",
+        "Dependências legítimas faltantes: "
+        f"{legitimate} ({legitimate / total_imports * 100:.1f}%)",
         Colors.YELLOW,
     )
     print_colored(
-        f"Requer investigação manual: {investigation} ({investigation / total_imports * 100:.1f}%)",
+        "Requer investigação manual: "
+        f"{investigation} ({investigation / total_imports * 100:.1f}%)",
         Colors.MAGENTA,
     )
 

@@ -1,24 +1,28 @@
 #!/usr/bin/env python3
-"""Diagnóstico Completo do Workspace FLEXT.
+"""FLEXT Architecture Diagnostic Tool.
 
-Verifica lint, mypy, testes e violações arquiteturais em todos os submódulos
+Comprehensive diagnostic tool for FLEXT workspace architecture validation.
 """
 
 import json
 import subprocess
 import sys
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
+
+from flext_core import get_logger
+
+logger = get_logger(__name__)
 
 # Constants for return codes
 SUCCESS_CODE = 0
 MAKEFILE_TARGET_NOT_FOUND = 2
 COMMAND_FAILED = 1
 
-# Status constants
-STATUS_PASS = "✅ PASS"
+# Status constants (not passwords, just status indicators)
+STATUS_PASS = "✅ PASS"  # noqa: S105
 STATUS_FAIL = "❌ FAIL"
 STATUS_NO_TARGET = "⚠️  NO_TARGET"
 STATUS_SKIP = "SKIP"
@@ -95,7 +99,8 @@ class FlextDiagnostic:
     ) -> tuple[int, str, str]:
         """Execute command and return (return_code, stdout, stderr)."""
         try:
-            result = subprocess.run(
+            # Security: cmd is validated input, not user-provided
+            result = subprocess.run(  # noqa: S603
                 cmd,
                 check=False,
                 cwd=cwd or self.workspace_root,
@@ -213,7 +218,7 @@ class FlextDiagnostic:
 
         # Generate report
         return {
-            "timestamp": datetime.now().isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "workspace_root": str(self.workspace_root),
             "projects": {
                 name: {
@@ -343,7 +348,7 @@ def main() -> None:
     report_file = "scripts/architecture/diagnostic_report.json"
     Path(report_file).parent.mkdir(parents=True, exist_ok=True)
 
-    with open(report_file, "w", encoding="utf-8") as f:
+    with Path(report_file).open("w", encoding="utf-8") as f:
         json.dump(report, f, indent=2)
 
     print(f"\n💾 Relatório salvo em: {report_file}")

@@ -7,6 +7,7 @@ usando flext_tools.testing para máxima confiabilidade.
 
 from __future__ import annotations
 
+import subprocess
 import sys
 from pathlib import Path
 
@@ -40,8 +41,6 @@ class OracleE2ETestRunner(FlextScript):
 
         # Check Docker availability
         try:
-            import subprocess
-
             subprocess.run(
                 ["docker", "--version"],
                 capture_output=True,

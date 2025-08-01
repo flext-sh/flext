@@ -11,7 +11,7 @@
 ```
 /home/marlonsc/flext/
 ├── flext-api/           ← Main REST API service
-├── flext-core/          ← Core libraries and patterns  
+├── flext-core/          ← Core libraries and patterns
 ├── flext-grpc/          ← gRPC service layer
 ├── flext-auth/          ← Authentication service
 ├── flext-web/           ← Web frontend
@@ -29,7 +29,7 @@
 1. **flext-grpc** - gRPC service implementation
 2. **flext-core** - Core patterns and libraries
 
-### 🔄 ACTIVE DEVELOPMENT  
+### 🔄 ACTIVE DEVELOPMENT
 
 1. **flext-api** - REST API service (IN PROGRESS)
    - ✅ Lint: 0 errors
@@ -39,7 +39,7 @@
 ### ⏳ PENDING PROJECTS
 
 1. **flext-auth** - Authentication service
-2. **flext-web** - Web frontend  
+2. **flext-web** - Web frontend
 3. **flext-cli** - Command line interface
 4. **flext-observability** - Monitoring
 

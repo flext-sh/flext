@@ -10,6 +10,8 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+from scripts.common import discover_projects
+
 from flext_tools import Colors, DependencyDiscovery, print_colored
 from flext_tools.core.script_base import FlextScript, ScriptMetadata
 
@@ -116,7 +118,6 @@ class MissingDependenciesDiscoverer(FlextScript):
         projects_filter: str | None = None,
     ) -> list[Path]:
         """Descobrir projetos para analisar."""
-        from scripts.common import discover_projects
 
         return discover_projects(workspace_root, projects_filter)
 

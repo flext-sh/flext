@@ -25,6 +25,7 @@ The FLEXT ecosystem consists of 32 interconnected projects organized into distin
 ## Quick Start
 
 ### Prerequisites
+
 - Go 1.24+
 - Python 3.13+
 - Docker and Docker Compose
@@ -64,6 +65,7 @@ curl http://localhost:8081/health  # FLEXT service health check
 ## Development Commands
 
 ### Workspace-Level Operations
+
 ```bash
 # Quality gates (run before committing)
 make validate                # Complete validation (lint + type + security + test)
@@ -84,6 +86,7 @@ make docker-logs             # View aggregated logs
 ```
 
 ### Individual Project Commands
+
 ```bash
 # Navigate to any project directory and use:
 make check                   # Lint + type check + test
@@ -97,14 +100,17 @@ make build                   # Build project
 ## Project Structure
 
 ### Core Services (2 projects)
+
 - **FlexCore** (`flexcore/`): Go runtime container service with plugin system
 - **FLEXT Service** (`cmd/flext/`): Main data platform service with Python bridge
 
 ### Foundation Libraries (2 projects)
+
 - **flext-core**: Base patterns, dependency injection, result handling
 - **flext-observability**: Monitoring, metrics, tracing, health checks
 
 ### Infrastructure Libraries (6 projects)
+
 - **flext-db-oracle**: Oracle database connectivity and operations
 - **flext-ldap**: LDAP server connectivity and directory operations
 - **flext-ldif**: LDIF file processing and validation
@@ -113,6 +119,7 @@ make build                   # Build project
 - **flext-meltano**: Singer/Meltano/DBT orchestration platform
 
 ### Application Services (5 projects)
+
 - **flext-api**: REST API services with FastAPI
 - **flext-auth**: Authentication and authorization services
 - **flext-web**: Web interface and dashboard
@@ -120,18 +127,21 @@ make build                   # Build project
 - **flext-cli**: Command-line interface tools
 
 ### Singer Ecosystem (15 projects)
+
 - **Taps (5)**: flext-tap-ldap, flext-tap-ldif, flext-tap-oracle, flext-tap-oracle-oic, flext-tap-oracle-wms
 - **Targets (5)**: flext-target-ldap, flext-target-ldif, flext-target-oracle, flext-target-oracle-oic, flext-target-oracle-wms
 - **DBT Projects (4)**: flext-dbt-ldap, flext-dbt-ldif, flext-dbt-oracle, flext-dbt-oracle-wms
 - **Extensions (1)**: flext-oracle-oic-ext
 
 ### Legacy/Specialized (2 projects)
+
 - **client-a-oud-mig**: client-a Oracle Unified Directory migration
 - **client-b-meltano-native**: client-b-specific Meltano implementation
 
 ## Configuration Management
 
 ### Environment Variables
+
 ```bash
 # Core service configuration
 export FLEXT_MODE="server"                    # Operating mode
@@ -147,6 +157,7 @@ export JAEGER_COLLECTOR_ENDPOINT="http://localhost:14268/api/traces"
 ```
 
 ### Docker Services
+
 - **PostgreSQL**: localhost:5433 (application database)
 - **Redis**: localhost:6380 (caching and session storage)
 - **Prometheus**: localhost:9090 (metrics collection)
@@ -156,6 +167,7 @@ export JAEGER_COLLECTOR_ENDPOINT="http://localhost:14268/api/traces"
 ## Quality Standards
 
 ### Zero Tolerance Quality Gates
+
 - **Coverage**: Minimum 90% test coverage for all projects
 - **Type Safety**: Strict MyPy configuration (Python) and Go type safety
 - **Linting**: Comprehensive rule sets (Ruff for Python, golangci-lint for Go)
@@ -163,6 +175,7 @@ export JAEGER_COLLECTOR_ENDPOINT="http://localhost:14268/api/traces"
 - **Pre-commit**: Automated quality checks prevent low-quality commits
 
 ### Testing Strategy
+
 - **Unit Tests**: Comprehensive test suites for all business logic
 - **Integration Tests**: Database and service integration testing
 - **E2E Tests**: Full pipeline testing with Docker
@@ -171,6 +184,7 @@ export JAEGER_COLLECTOR_ENDPOINT="http://localhost:14268/api/traces"
 ## Deployment
 
 ### Production Deployment
+
 ```bash
 # Build production images
 make docker-build-prod
@@ -183,7 +197,9 @@ make health-check-all
 ```
 
 ### Kubernetes Support
+
 The platform includes Kubernetes manifests for production deployment with:
+
 - Horizontal pod autoscaling
 - Service mesh integration
 - Persistent volume management
@@ -192,12 +208,14 @@ The platform includes Kubernetes manifests for production deployment with:
 ## Monitoring and Observability
 
 ### Built-in Monitoring
+
 - **Health Checks**: All services expose `/health` endpoints
 - **Metrics**: Prometheus-compatible metrics collection
 - **Tracing**: OpenTelemetry distributed tracing
 - **Logging**: Structured JSON logging with correlation IDs
 
 ### Performance Monitoring
+
 ```bash
 # Monitor system performance
 make metrics-check              # Check metrics collection
@@ -208,6 +226,7 @@ make performance-benchmark     # Run performance benchmarks
 ## Common Workflows
 
 ### Adding New Services
+
 1. Follow Clean Architecture patterns from flext-core
 2. Implement dependency injection with FlextContainer
 3. Add comprehensive test coverage (90% minimum)
@@ -215,6 +234,7 @@ make performance-benchmark     # Run performance benchmarks
 5. Register with service discovery mechanisms
 
 ### Data Pipeline Development
+
 1. Create Singer tap for data extraction
 2. Implement DBT models for transformations
 3. Configure target for data loading
@@ -224,6 +244,7 @@ make performance-benchmark     # Run performance benchmarks
 ## Troubleshooting
 
 ### Common Issues
+
 ```bash
 # Service connectivity issues
 make diagnose                  # Complete system diagnostics
@@ -239,6 +260,7 @@ make resource-usage          # Check resource utilization
 ```
 
 ### Debug Mode
+
 ```bash
 # Enable debug logging
 export FLEXT_LOG_LEVEL=debug

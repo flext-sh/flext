@@ -7,9 +7,12 @@ do workspace FLEXT usando flext_tools para máxima reutilização.
 
 from __future__ import annotations
 
+import importlib.util
 import sys
 from pathlib import Path
 from typing import Any
+
+from scripts.core.script_registry import ScriptRegistry
 
 from flext_tools import Colors, print_colored
 from flext_tools.core.script_base import FlextScript, ScriptMetadata
@@ -49,8 +52,6 @@ class ScriptRunner(FlextScript):
 
             # Import script registry (lazy import)
             try:
-                from scripts.core.script_registry import ScriptRegistry
-
                 registry = ScriptRegistry()
 
                 if list_scripts:
@@ -73,7 +74,7 @@ class ScriptRunner(FlextScript):
             print_colored(f"❌ Error in script runner: {e}", Colors.RED)
             return False
 
-    def _list_all_scripts(self, registry: Any) -> None:
+    def _list_all_scripts(self, registry: object) -> None:
         """List all available scripts."""
         print_colored("📋 AVAILABLE SCRIPTS", Colors.BLUE)
         print_colored("=" * 40, Colors.BLUE)
@@ -113,7 +114,6 @@ class ScriptRunner(FlextScript):
         self,
         registry: object,
         script_name: str,
-        kwargs: dict[str, Any],
     ) -> bool:
         """Run a specific script."""
         script_metadata = registry.get_script(script_name)
@@ -128,7 +128,6 @@ class ScriptRunner(FlextScript):
 
         try:
             # Import and run the script
-            import importlib.util
 
             spec = importlib.util.spec_from_file_location(
                 f"script_{script_name}",

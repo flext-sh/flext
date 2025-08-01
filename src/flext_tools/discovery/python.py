@@ -80,7 +80,7 @@ class PythonImportDiscovery:
 
         return dependencies
 
-    def _categorize_imports(
+    def _categorize_imports(  # noqa: C901
         self,
         file_imports: set[str],
         dependencies: dict[str, set[str]],
