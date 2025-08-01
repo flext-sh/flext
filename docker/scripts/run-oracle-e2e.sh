@@ -111,7 +111,7 @@ initialize_oracle_test_db() {
 	log_info "Initializing Oracle test database..."
 
 	# Create FLEXT test user and schema if needed
-	cat <<EOF | sqlplus -s sys/Oracle123!@${ORACLE_HOST}:${ORACLE_PORT}/${ORACLE_SERVICE_NAME} as sysdba
+	cat <<EOF | sqlplus -s sys/Oracle123!@"${ORACLE_HOST}":"${ORACLE_PORT}"/${ORACLE_SERVICE_NAME} as sysdba
     -- Create FLEXT test user
     CREATE USER ${ORACLE_USERNAME} IDENTIFIED BY ${ORACLE_PASSWORD};
     GRANT CONNECT, RESOURCE, CREATE VIEW, CREATE SEQUENCE TO ${ORACLE_USERNAME};
@@ -331,7 +331,7 @@ run_db_oracle_tests() {
 	poetry run pytest tests/ \
 		--verbose \
 		--tb=short \
-		--timeout=${E2E_TEST_TIMEOUT} \
+		--timeout="${E2E_TEST_TIMEOUT}" \
 		--junitxml="${TEST_REPORTS_DIR}/flext-db-oracle-junit.xml" \
 		--cov=flext_db_oracle \
 		--cov-report=html:"${COVERAGE_DIR}/flext-db-oracle" \
@@ -360,7 +360,7 @@ run_tap_oracle_tests() {
 	poetry run pytest tests/ \
 		--verbose \
 		--tb=short \
-		--timeout=${E2E_TEST_TIMEOUT} \
+		--timeout="${E2E_TEST_TIMEOUT}" \
 		--junitxml="${TEST_REPORTS_DIR}/flext-tap-oracle-junit.xml" \
 		--cov=flext_tap_oracle \
 		--cov-report=html:"${COVERAGE_DIR}/flext-tap-oracle" \
@@ -389,7 +389,7 @@ run_target_oracle_tests() {
 	poetry run pytest tests/ \
 		--verbose \
 		--tb=short \
-		--timeout=${E2E_TEST_TIMEOUT} \
+		--timeout="${E2E_TEST_TIMEOUT}" \
 		--junitxml="${TEST_REPORTS_DIR}/flext-target-oracle-junit.xml" \
 		--cov=flext_target_oracle \
 		--cov-report=html:"${COVERAGE_DIR}/flext-target-oracle" \
@@ -418,7 +418,7 @@ run_dbt_oracle_tests() {
 	poetry run pytest tests/ \
 		--verbose \
 		--tb=short \
-		--timeout=${E2E_TEST_TIMEOUT} \
+		--timeout="${E2E_TEST_TIMEOUT}" \
 		--junitxml="${TEST_REPORTS_DIR}/flext-dbt-oracle-junit.xml" \
 		--cov=dbt.adapters.oracle \
 		--cov-report=html:"${COVERAGE_DIR}/flext-dbt-oracle" \
