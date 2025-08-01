@@ -138,13 +138,13 @@ security:
 
 ### Environment Variables
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `FLEXT_SERVER_HOST` | Server bind address | 0.0.0.0 |
-| `FLEXT_SERVER_PORT` | Server port | 8080 |
-| `FLEXT_DATABASE_URL` | Database connection URL | - |
-| `FLEXT_LOG_LEVEL` | Logging level | info |
-| `FLEXT_CONFIG_PATH` | Configuration file path | - |
+| Variable             | Description             | Default |
+| -------------------- | ----------------------- | ------- |
+| `FLEXT_SERVER_HOST`  | Server bind address     | 0.0.0.0 |
+| `FLEXT_SERVER_PORT`  | Server port             | 8080    |
+| `FLEXT_DATABASE_URL` | Database connection URL | -       |
+| `FLEXT_LOG_LEVEL`    | Logging level           | info    |
+| `FLEXT_CONFIG_PATH`  | Configuration file path | -       |
 
 ## Architecture
 
@@ -154,16 +154,16 @@ The server follows Clean Architecture principles:
 
 ```
 cmd/flext-server/               # Main application
-‚îú‚îÄ‚îÄ main.go                     # Application bootstrap
+‚"ú‚"Ä‚"Ä main.go                     # Application bootstrap
 internal/
-‚îú‚îÄ‚îÄ bounded_contexts/           # Domain boundaries
-‚îÇ   ‚îú‚îÄ‚îÄ pipeline/              # Pipeline domain
-‚îÇ   ‚îî‚îÄ‚îÄ plugin/                # Plugin domain
-‚îú‚îÄ‚îÄ infrastructure/            # Infrastructure layer
-‚îÇ   ‚îú‚îÄ‚îÄ server/               # HTTP server
-‚îÇ   ‚îú‚îÄ‚îÄ container/            # Dependency injection
-‚îÇ   ‚îî‚îÄ‚îÄ logging/              # Structured logging
-‚îî‚îÄ‚îÄ shared_kernel/            # Shared domain concepts
+‚"ú‚"Ä‚"Ä bounded_contexts/           # Domain boundaries
+‚"Ç   ‚"ú‚"Ä‚"Ä pipeline/              # Pipeline domain
+‚"Ç   ‚""‚"Ä‚"Ä plugin/                # Plugin domain
+‚"ú‚"Ä‚"Ä infrastructure/            # Infrastructure layer
+‚"Ç   ‚"ú‚"Ä‚"Ä server/               # HTTP server
+‚"Ç   ‚"ú‚"Ä‚"Ä container/            # Dependency injection
+‚"Ç   ‚""‚"Ä‚"Ä logging/              # Structured logging
+‚""‚"Ä‚"Ä shared_kernel/            # Shared domain concepts
 ```
 
 ### Dependency Injection
@@ -177,11 +177,11 @@ The server uses a dependency injection container for:
 
 ### Request Flow
 
-1. **HTTP Request** ‚Üí Router
-2. **Router** ‚Üí Handler
-3. **Handler** ‚Üí Use Case
-4. **Use Case** ‚Üí Repository
-5. **Repository** ‚Üí Database
+1. **HTTP Request** ‚Ü' Router
+2. **Router** ‚Ü' Handler
+3. **Handler** ‚Ü' Use Case
+4. **Use Case** ‚Ü' Repository
+5. **Repository** ‚Ü' Database
 6. **Response** ‚Üê Handler
 
 ## Development
@@ -257,16 +257,16 @@ spec:
         app: flext-server
     spec:
       containers:
-      - name: flext-server
-        image: flext/server:latest
-        ports:
-        - containerPort: 8080
-        env:
-        - name: FLEXT_DATABASE_URL
-          valueFrom:
-            secretKeyRef:
-              name: flext-secrets
-              key: database-url
+        - name: flext-server
+          image: flext/server:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: FLEXT_DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: flext-secrets
+                  key: database-url
 ```
 
 ## Monitoring

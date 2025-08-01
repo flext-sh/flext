@@ -13,9 +13,8 @@ from dataclasses import dataclass, field
 from enum import StrEnum
 from pathlib import Path
 
-get_logger
+from flext_core import get_logger
 
-# Usar flext_tools completo para máxima enterprise
 from flext_tools.core.script_base import ScriptMetadata
 from flext_tools.utils import Colors, print_colored
 
@@ -84,11 +83,11 @@ class ScriptRegistry:
                 script_file.name.startswith(("__", "test_"))
                 or script_file.name == "flext_tools.py"
             ):
-                get_logger(__name__).debug("Failed to parse script metadata")
+                continue
 
             # Skip core system files
             if script_file.parent.name == "core":
-                get_logger(__name__).debug("Failed to parse script metadata")
+                continue
 
             metadata = self._extract_metadata(script_file)
             if metadata:
@@ -98,7 +97,7 @@ class ScriptRegistry:
         """Extrai metadados do script."""
         try:
             # Tenta extrair usando o padrão FlextScript
-            with open(script_path, encoding="utf-8") as f:
+            with script_path.open(encoding="utf-8") as f:
                 content = f.read()
 
             # Procura por metadados no formato FlextScript
@@ -146,7 +145,7 @@ class ScriptRegistry:
     def _extract_legacy_metadata(self, script_path: Path) -> ScriptMetadata | None:
         """Extrai metadados de scripts legados."""
         try:
-            with open(script_path, encoding="utf-8") as f:
+            with script_path.open(encoding="utf-8") as f:
                 content = f.read()
 
             # Procura por docstring no início do arquivo

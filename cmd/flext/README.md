@@ -119,7 +119,7 @@ database:
 | Variable | Description | Default |
 |----------|-------------|---------|
 | `FLEXT_MODE` | Operating mode (server/cli/interactive/auto) | auto |
-| `FLEXT_CONFIG_PATH` | Configuration file path | ./flext.yaml |
+| `FLEXT_CONFIG_PATH` | Configuration file path | ./flext.YAML |
 | `FLEXT_SERVER_PORT` | Server port (server mode) | 8080 |
 | `FLEXT_DATABASE_URL` | Database connection URL | - |
 | `FLEXT_LOG_LEVEL` | Logging level | info |
@@ -183,12 +183,12 @@ Interactive shell:
 Intelligent mode detection:
 
 ```
-Environment Check → Mode Selection
-├── Container/Docker → Server Mode
-├── CI/CD Pipeline → CLI Mode
-├── Interactive TTY + Args → CLI Mode
-├── Interactive TTY + No Args → Interactive Mode
-└── Fallback → Server Mode
+Environment Check ? Mode Selection
+??? Container/Docker ? Server Mode
+??? CI/CD Pipeline ? CLI Mode
+??? Interactive TTY + Args ? CLI Mode
+??? Interactive TTY + No Args ? Interactive Mode
+??? Fallback ? Server Mode
 ```
 
 ## Architecture
@@ -211,18 +211,18 @@ func main() {
 
 ```
 cmd/flext/
-├── main.go                    # Main entry point
-├── modes/
-│   ├── server.go             # Server mode implementation
-│   ├── cli.go                # CLI mode implementation
-│   ├── interactive.go        # Interactive mode implementation
-│   └── detector.go           # Mode detection logic
-├── config/
-│   ├── config.go             # Configuration management
-│   └── validation.go         # Configuration validation
-└── bootstrap/
-    ├── app.go                # Application bootstrap
-    └── shutdown.go           # Graceful shutdown
+??? main.go                    # Main entry point
+??? modes/
+?   ??? server.go             # Server mode implementation
+?   ??? cli.go                # CLI mode implementation
+?   ??? interactive.go        # Interactive mode implementation
+?   ??? detector.go           # Mode detection logic
+??? config/
+?   ??? config.go             # Configuration management
+?   ??? validation.go         # Configuration validation
+??? bootstrap/
+    ??? app.go                # Application bootstrap
+    ??? shutdown.go           # Graceful shutdown
 ```
 
 ## Development

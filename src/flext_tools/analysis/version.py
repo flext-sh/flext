@@ -196,7 +196,9 @@ class VersionAnalyzer:
             # PEP 621 dependencies
             pep621_deps = data.get("project", {}).get("dependencies", [])
             for dep_spec in pep621_deps:
-                package_name, version_spec = VersionAnalyzer.parse_version_spec(dep_spec)
+                package_name, version_spec = VersionAnalyzer.parse_version_spec(
+                    dep_spec,
+                )
                 if package_name and version_spec:
                     if package_name not in package_versions:
                         package_versions[package_name] = {}
@@ -299,7 +301,9 @@ class VersionAnalyzer:
                 suggestions[package] = common_range
             else:
                 # Sugere a constraint mais restritiva
-                suggestions[package] = VersionAnalyzer._get_most_restrictive_spec(valid_specs)
+                suggestions[package] = VersionAnalyzer._get_most_restrictive_spec(
+                    valid_specs,
+                )
 
         return suggestions
 
@@ -356,7 +360,9 @@ def check_version_compatibility(spec1: str, spec2: str) -> dict[str, Any]:
     return VersionAnalyzer.check_version_compatibility(spec1, spec2)
 
 
-def analyze_version_conflicts(projects_data: dict[str, dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
+def analyze_version_conflicts(
+    projects_data: dict[str, dict[str, Any]],
+) -> dict[str, list[dict[str, Any]]]:
     """Analyze version conflicts between projects.
 
     Args:

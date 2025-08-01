@@ -2,10 +2,7 @@
   "dashboard": {
     "id": null,
     "title": "FLEXT Pipeline Monitoring",
-    "tags": [
-      "flext",
-      "pipeline"
-    ],
+    "tags": ["flext", "pipeline"],
     "timezone": "browser",
     "panels": [
       {

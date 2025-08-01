@@ -7,7 +7,7 @@ usando flext_tools.quality para máxima confiabilidade enterprise.
 
 from __future__ import annotations
 
-import subprocess
+import shutil
 import sys
 from pathlib import Path
 from typing import Any
@@ -39,42 +39,20 @@ class GradualLintFixerScript(FlextScript):
             return False
 
         # Check Ruff availability
-        try:
-            subprocess.run(
-                ["ruff", "--version"],
-                capture_output=True,
-                check=True,
-                timeout=5,
-            )
-            print_colored("✅ Ruff available", Colors.GREEN)
-        except (
-            subprocess.CalledProcessError,
-            FileNotFoundError,
-            subprocess.TimeoutExpired,
-        ):
+        if shutil.which("ruff") is None:
             print_colored(
                 "❌ Ruff not found - install with: pip install ruff",
                 Colors.RED,
             )
             return False
+        print_colored("✅ Ruff available", Colors.GREEN)
 
         # Check Git availability
-        try:
-            subprocess.run(
-                ["git", "--version"],
-                capture_output=True,
-                check=True,
-                timeout=5,
-            )
-            print_colored("✅ Git available", Colors.GREEN)
-            return True
-        except (
-            subprocess.CalledProcessError,
-            FileNotFoundError,
-            subprocess.TimeoutExpired,
-        ):
+        if shutil.which("git") is None:
             print_colored("❌ Git not found - required for safe branching", Colors.RED)
             return False
+        print_colored("✅ Git available", Colors.GREEN)
+        return True
 
     def execute_main_logic(self, **kwargs: object) -> bool:
         """Execute gradual lint fixing."""
@@ -150,7 +128,7 @@ class GradualLintFixerScript(FlextScript):
 
         return parser
 
-    def _process_kwargs(self, args: Any) -> dict[str, Any]:
+    def _process_kwargs(self, args: object) -> dict[str, object]:
         """Process arguments into kwargs."""
         kwargs: dict[str, Any] = {}
         kwargs["safe_only"] = not getattr(args, "unsafe", False)

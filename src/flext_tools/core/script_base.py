@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3  # noqa: EXE001
 """Base class for FLEXT scripts.
 
 Provides a standard interface for creating scripts with consistent
@@ -8,6 +8,7 @@ error handling, logging, and command-line interface.
 from __future__ import annotations
 
 import argparse
+import logging
 import time
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
@@ -176,14 +177,13 @@ class FlextScript(ABC):
         # Configure logging level
         if args.verbose:
             # Set verbose mode - our logger doesn't have set_level method
-            import logging
 
             logging.getLogger().setLevel(logging.DEBUG)
 
         return self.run(**vars(args))
 
 
-def create_simple_script(
+def create_simple_script(  # noqa: PLR0913
     name: str,
     description: str,
     category: str,

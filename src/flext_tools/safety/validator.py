@@ -194,7 +194,10 @@ class SafetyValidator:
         if file_path.name in critical_files:
             result["recommendations"].append("Arquivo crítico - backup recomendado")
 
-            if backup_requirement == BackupRequirement.REQUIRED and operation in {"write", "delete"}:
+            if backup_requirement == BackupRequirement.REQUIRED and operation in {
+                "write",
+                "delete",
+            }:
                 result["recommendations"].append(
                     "Backup obrigatório para esta operação",
                 )

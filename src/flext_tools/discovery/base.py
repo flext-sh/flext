@@ -17,7 +17,7 @@ from flext_tools.utils import (
 class DependencyDiscovery:
     """Classe principal para descoberta de dependências."""
 
-    def __init__(self, resolve_transitive: bool = True) -> None:
+    def __init__(self, *, resolve_transitive: bool = True) -> None:
         self.stdlib_modules = get_stdlib_modules()
         self.python_discovery = PythonImportDiscovery(self.stdlib_modules)
         self.config_discovery = ConfigFileDiscovery()
@@ -28,6 +28,7 @@ class DependencyDiscovery:
     def discover_project_dependencies(
         self,
         project_path: Path,
+        *,
         include_dev: bool = True,
         include_test: bool = True,
     ) -> dict[str, set[str]]:

@@ -106,29 +106,29 @@ go build -o flext-demo main.go
 
 ### Data Integration Demos
 
-| Demo | Description | Duration | Complexity |
-|------|-------------|----------|------------|
-| `basic-sync` | Simple PostgreSQL to Snowflake sync | 5 min | Beginner |
-| `streaming-etl` | Kafka to Elasticsearch streaming | 10 min | Intermediate |
-| `dbt-transform` | DBT transformation pipeline | 15 min | Intermediate |
-| `multi-source` | Multiple sources to data warehouse | 20 min | Advanced |
+| Demo            | Description                         | Duration | Complexity   |
+| --------------- | ----------------------------------- | -------- | ------------ |
+| `basic-sync`    | Simple PostgreSQL to Snowflake sync | 5 min    | Beginner     |
+| `streaming-etl` | Kafka to Elasticsearch streaming    | 10 min   | Intermediate |
+| `dbt-transform` | DBT transformation pipeline         | 15 min   | Intermediate |
+| `multi-source`  | Multiple sources to data warehouse  | 20 min   | Advanced     |
 
 ### Architecture Demos
 
-| Demo | Description | Duration | Complexity |
-|------|-------------|----------|------------|
-| `hexagonal-arch` | Hexagonal Architecture example | 10 min | Intermediate |
-| `ddd-patterns` | Domain-Driven Design patterns | 15 min | Advanced |
-| `cqrs-example` | CQRS with event sourcing | 20 min | Advanced |
-| `microservices` | Microservices communication | 25 min | Expert |
+| Demo             | Description                    | Duration | Complexity   |
+| ---------------- | ------------------------------ | -------- | ------------ |
+| `hexagonal-arch` | Hexagonal Architecture example | 10 min   | Intermediate |
+| `ddd-patterns`   | Domain-Driven Design patterns  | 15 min   | Advanced     |
+| `cqrs-example`   | CQRS with event sourcing       | 20 min   | Advanced     |
+| `microservices`  | Microservices communication    | 25 min   | Expert       |
 
 ### Performance Demos
 
-| Demo | Description | Duration | Complexity |
-|------|-------------|----------|------------|
-| `bulk-processing` | High-volume data processing | 10 min | Intermediate |
-| `parallel-pipelines` | Parallel pipeline execution | 15 min | Advanced |
-| `optimization` | Performance optimization techniques | 20 min | Advanced |
+| Demo                 | Description                         | Duration | Complexity   |
+| -------------------- | ----------------------------------- | -------- | ------------ |
+| `bulk-processing`    | High-volume data processing         | 10 min   | Intermediate |
+| `parallel-pipelines` | Parallel pipeline execution         | 15 min   | Advanced     |
+| `optimization`       | Performance optimization techniques | 20 min   | Advanced     |
 
 ## Configuration
 
@@ -137,17 +137,17 @@ go build -o flext-demo main.go
 ```yaml
 # demo-config.yaml
 demo:
-  data_size: "1MB"  # small, medium, large, or specific size
-  duration: "5m"    # Demo duration
-  cleanup: true     # Auto-cleanup after demo
-  verbose: false    # Verbose output
+  data_size: "1MB" # small, medium, large, or specific size
+  duration: "5m" # Demo duration
+  cleanup: true # Auto-cleanup after demo
+  verbose: false # Verbose output
 
 databases:
   postgres:
     host: localhost
     port: 5432
     database: demo_db
-    
+
   snowflake:
     account: demo_account
     warehouse: demo_warehouse
@@ -156,19 +156,19 @@ databases:
 streaming:
   kafka:
     bootstrap_servers: ["localhost:9092"]
-    
+
   elasticsearch:
     hosts: ["http://localhost:9200"]
 ```
 
 ### Environment Variables
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `DEMO_CONFIG_PATH` | Path to demo configuration | demo-config.yaml |
-| `DEMO_DATA_SIZE` | Demo data size (small/medium/large) | small |
-| `DEMO_CLEANUP` | Auto-cleanup after demo | true |
-| `DEMO_VERBOSE` | Enable verbose output | false |
+| Variable           | Description                         | Default          |
+| ------------------ | ----------------------------------- | ---------------- |
+| `DEMO_CONFIG_PATH` | Path to demo configuration          | demo-config.YAML |
+| `DEMO_DATA_SIZE`   | Demo data size (small/medium/large) | small            |
+| `DEMO_CLEANUP`     | Auto-cleanup after demo             | true             |
+| `DEMO_VERBOSE`     | Enable verbose output               | false            |
 
 ## Architecture
 

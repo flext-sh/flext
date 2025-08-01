@@ -10,7 +10,7 @@
 
 ### **ECOSYSTEM CLASSIFICATION**
 
-#### **📚 LIBRARIES (flext-*)**
+#### **📚 LIBRARIES (flext-\*)**
 
 All `flext-*` projects are **LIBRARIES**, not services:
 
@@ -21,7 +21,7 @@ FOUNDATION LAYER:
 
 INFRASTRUCTURE LAYER (parallel libraries):
 ├── flext-db-oracle         # Oracle database connectivity
-├── flext-ldap              # LDAP server connectivity  
+├── flext-ldap              # LDAP server connectivity
 ├── flext-ldif              # LDIF file processing
 ├── flext-oracle-wms        # Oracle WMS API connectivity
 └── flext-grpc              # gRPC communication
@@ -41,7 +41,7 @@ All tap/target/dbt/ext projects are **MELTANO PLUGINS**:
 SINGER TAPS:
 ├── flext-tap-ldap          # LDAP server extraction
 ├── flext-tap-ldif          # LDIF file extraction
-├── flext-tap-oracle        # Oracle database extraction  
+├── flext-tap-oracle        # Oracle database extraction
 ├── flext-tap-oracle-oic    # Oracle Integration Cloud extraction
 └── flext-tap-oracle-wms    # Oracle WMS extraction
 
@@ -105,7 +105,7 @@ All Singer/Meltano/DBT functionality is properly consolidated in **flext-meltano
 ```
 APPLICATION LAYER
      ↓ (can import from all lower layers)
-INTEGRATION LAYER  
+INTEGRATION LAYER
      ↓ (can import from infrastructure and foundation)
 INFRASTRUCTURE LAYER (parallel - no cross-imports)
      ↓ (can import from foundation only)
@@ -132,7 +132,7 @@ FOUNDATION LAYER
 ### **Oracle Projects (NOT duplications)**
 
 - **flext-tap-oracle**: Direct Oracle database access (SQL streams)
-- **flext-tap-oracle-oic**: Oracle Integration Cloud REST APIs  
+- **flext-tap-oracle-oic**: Oracle Integration Cloud REST APIs
 - **flext-tap-oracle-wms**: Oracle WMS specialized APIs
 - **flext-db-oracle**: Shared Oracle connectivity library
 

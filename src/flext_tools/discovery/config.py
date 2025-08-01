@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3  # noqa: EXE001
 """Descoberta de dependências em arquivos de configuração.
 
 Módulo responsável por analisar arquivos de configuração diversos

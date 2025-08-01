@@ -8,7 +8,6 @@ Este script instala todos os projetos FLEXT em modo de desenvolvimento
 com suas dependências completas via Poetry.
 """
 
-import os
 import subprocess
 import sys
 from pathlib import Path
@@ -40,8 +39,8 @@ def run_poetry_install(project_dir: str) -> tuple[bool, str]:
         print(f"📦 Instalando {Path(project_dir).name}...")
 
         # Verificar se existe pyproject.toml
-        pyproject_path = os.path.join(project_dir, "pyproject.toml")
-        if not Path(pyproject_path).exists():
+        pyproject_path = Path(project_dir) / "pyproject.toml"  # PTH118
+        if not pyproject_path.exists():
             return False, f"pyproject.toml não encontrado em {project_dir}"
 
         # Executar poetry install
@@ -102,7 +101,8 @@ def main() -> int:
                 print(f"  - {Path(project).name}: {message}")
 
     print(
-        f"\n🎉 Instalação concluída! {successful}/{len(results)} projetos instalados com sucesso.",
+        "\n🎉 Instalação concluída! "
+        f"{successful}/{len(results)} projetos instalados com sucesso."
     )
 
     return 0 if failed == 0 else 1

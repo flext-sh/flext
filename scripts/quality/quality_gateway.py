@@ -8,6 +8,7 @@ Usa flext_tools para validação consistente em todo o workspace.
 from __future__ import annotations
 
 import json
+import shutil
 import subprocess
 import sys
 from dataclasses import dataclass
@@ -93,21 +94,11 @@ class QualityGateway(FlextScript):
         missing_tools = []
 
         for tool in required_tools:
-            try:
-                subprocess.run(
-                    [tool, "--version"],
-                    capture_output=True,
-                    check=True,
-                    timeout=5,
-                )
-                print_colored(f"✅ {tool.title()} disponível", Colors.GREEN)
-            except (
-                subprocess.CalledProcessError,
-                FileNotFoundError,
-                subprocess.TimeoutExpired,
-            ):
+            if shutil.which(tool) is None:
                 missing_tools.append(tool)
                 print_colored(f"❌ {tool.title()} não encontrado", Colors.RED)
+            else:
+                print_colored(f"✅ {tool.title()} disponível", Colors.GREEN)
 
         if missing_tools:
             print_colored(
@@ -123,7 +114,7 @@ class QualityGateway(FlextScript):
         try:
             workspace_root = Path.cwd()
             projects_filter = kwargs.get("projects")
-            strict_mode = kwargs.get("strict", False)
+            strict_mode = bool(kwargs.get("strict"))
 
             print_colored("🚀 FLEXT QUALITY GATEWAY", Colors.CYAN)
             print_colored("=" * 60, Colors.CYAN)
@@ -243,8 +234,18 @@ class QualityGateway(FlextScript):
         """Analisar qualidade do código."""
         try:
             # Ruff check
-            ruff_result = subprocess.run(
-                ["ruff", "check", ".", "--output-format=json"],
+            ruff_cmd = ["ruff", "check", ".", "--output-format=json"]
+            if not shutil.which("ruff"):
+                return {
+                    "ruff_issues": -1,
+                    "mypy_errors": -1,
+                    "total_issues": -1,
+                    "status": "error",
+                    "error": "Ruff not found",
+                }
+
+            ruff_result = subprocess.run(  # noqa: S603
+                ruff_cmd,
                 check=False,
                 cwd=project_path,
                 capture_output=True,
@@ -261,8 +262,18 @@ class QualityGateway(FlextScript):
                     pass
 
             # MyPy check
-            mypy_result = subprocess.run(
-                ["mypy", ".", "--no-error-summary"],
+            mypy_cmd = ["mypy", ".", "--no-error-summary"]
+            if not shutil.which("mypy"):
+                return {
+                    "ruff_issues": ruff_issues,
+                    "mypy_errors": -1,
+                    "total_issues": ruff_issues,
+                    "status": "error",
+                    "error": "MyPy not found",
+                }
+
+            mypy_result = subprocess.run(  # noqa: S603
+                mypy_cmd,
                 check=False,
                 cwd=project_path,
                 capture_output=True,
@@ -404,7 +415,7 @@ class QualityGateway(FlextScript):
         self,
         total_stats: dict[str, Any],
         failed_projects: list[str],
-        strict_mode: bool,
+        strict_mode: bool,  # noqa: FBT001
     ) -> None:
         """Imprimir resumo final do gateway."""
         print_colored("\n📊 RESUMO DO QUALITY GATEWAY", Colors.BLUE)

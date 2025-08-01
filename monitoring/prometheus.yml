@@ -1,47 +1,47 @@
 alerting:
   alertmanagers:
-  - static_configs:
-    - targets:
-      - localhost:9093
+    - static_configs:
+        - targets:
+            - localhost:9093
 global:
   evaluation_interval: 15s
   scrape_interval: 15s
 rule_files:
-- alerts/*.yml
+  - alerts/*.yml
 scrape_configs:
-- job_name: flext-api
-  metrics_path: /metrics
-  scrape_interval: 10s
-  scrape_timeout: 5s
-  static_configs:
-  - targets:
-    - localhost:8000
-- job_name: flext-web
-  metrics_path: /metrics
-  scrape_interval: 15s
-  scrape_timeout: 5s
-  static_configs:
-  - targets:
-    - localhost:8080
-- job_name: flext-grpc
-  metrics_path: /metrics
-  scrape_interval: 10s
-  scrape_timeout: 5s
-  static_configs:
-  - targets:
-    - localhost:50051
-- job_name: node-exporter
-  scrape_interval: 15s
-  static_configs:
-  - targets:
-    - localhost:9100
-- job_name: postgres-exporter
-  scrape_interval: 30s
-  static_configs:
-  - targets:
-    - localhost:9187
-- job_name: redis-exporter
-  scrape_interval: 30s
-  static_configs:
-  - targets:
-    - localhost:9121
+  - job_name: flext-api
+    metrics_path: /metrics
+    scrape_interval: 10s
+    scrape_timeout: 5s
+    static_configs:
+      - targets:
+          - localhost:8000
+  - job_name: flext-web
+    metrics_path: /metrics
+    scrape_interval: 15s
+    scrape_timeout: 5s
+    static_configs:
+      - targets:
+          - localhost:8080
+  - job_name: flext-grpc
+    metrics_path: /metrics
+    scrape_interval: 10s
+    scrape_timeout: 5s
+    static_configs:
+      - targets:
+          - localhost:50051
+  - job_name: node-exporter
+    scrape_interval: 15s
+    static_configs:
+      - targets:
+          - localhost:9100
+  - job_name: postgres-exporter
+    scrape_interval: 30s
+    static_configs:
+      - targets:
+          - localhost:9187
+  - job_name: redis-exporter
+    scrape_interval: 30s
+    static_configs:
+      - targets:
+          - localhost:9121

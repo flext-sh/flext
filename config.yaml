@@ -6,7 +6,7 @@ server:
   environment: "development"
 
 database:
-  driver: "memory" 
+  driver: "memory"
   host: "localhost"
   port: 5432
   database: "flext_dev"
@@ -26,7 +26,7 @@ logging:
 
 plugins:
   directory: "/var/lib/flext/plugins"
-  
+
 pipelines:
   workspace: "/var/lib/flext/pipelines"
   max_concurrent: 10

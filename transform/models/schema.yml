@@ -38,4 +38,4 @@ models:
         description: "Internal vs External user classification"
         tests:
           - accepted_values:
-              values: ['Internal', 'External']
+              values: ["Internal", "External"]
