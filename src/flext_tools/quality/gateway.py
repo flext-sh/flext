@@ -14,7 +14,7 @@ class QualityGateway:
 
     def run_quality_checks(self, **_kwargs: object) -> dict[str, object]:
         """Run comprehensive quality checks."""
-        print_colored("🔍 Executando verificações de qualidade...", Colors.BLUE)
+        print_colored("🔍 Running quality checks...", Colors.BLUE)
 
         results = {
             "lint_passed": True,
@@ -24,7 +24,7 @@ class QualityGateway:
             "details": {},
         }
 
-        print_colored("✅ Verificações de qualidade concluídas", Colors.GREEN)
+        print_colored("✅ Quality checks completed", Colors.GREEN)
         return results
 
     def all_passed(self) -> bool:

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validador de segurança para operações críticas."""
+"""Security validator for critical operations."""
 
 from __future__ import annotations
 
@@ -31,12 +31,12 @@ class BackupRequirement(Enum):
 
 
 class SafetyValidator:
-    """Valida operações antes de executá-las para evitar problemas."""
+    """Validates operations before executing them to avoid problems."""
 
     def __init__(self) -> None:
         """Initialize safety validator."""
         self.known_safe_packages = {
-            # Pacotes Python seguros e comuns
+            # Safe and common Python packages
             "requests",
             "urllib3",
             "certifi",
@@ -77,7 +77,7 @@ class SafetyValidator:
         }
 
         self.dangerous_packages = {
-            # Pacotes potencialmente perigosos ou problemáticos
+            # Potentially dangerous or problematic packages
             "os-sys",
             "setup-tools",
             "urllib",  # Typosquatting comum
@@ -88,62 +88,67 @@ class SafetyValidator:
         }
 
     def validate_package_safety(self, package_name: str) -> dict[str, object]:
-        """Valida se um pacote é seguro para instalação.
+        """Validate if a package is safe for installation.
 
         Args:
-            package_name: Nome do pacote a validar
+            package_name: Name of the package to validate
 
         Returns:
-            Dict com resultado da validação
+            Dict with validation result
 
         """
+        issues: list[str] = []
+        recommendations: list[str] = []
+
         result: dict[str, object] = {
             "safe": True,
             "package": package_name,
-            "issues": [],
-            "recommendations": [],
+            "issues": issues,
+            "recommendations": recommendations,
             "confidence": "high",
         }
 
-        # Normaliza nome do pacote
+        # Normalize package name
         normalized_name = package_name.lower().replace("_", "-")
 
-        # Verifica se está na lista de pacotes perigosos
+        # Check if it's in the dangerous packages list
         if normalized_name in self.dangerous_packages:
             result["safe"] = False
-            result["issues"].append(
-                f"Pacote '{package_name}' está na lista de pacotes perigosos",
+            issues.append(
+                f"Package '{package_name}' is in the dangerous packages list",
             )
             result["confidence"] = "high"
             return result
 
-        # Verifica comprimento do nome
+        # Check name length
         if len(package_name) < MIN_NAME_LENGTH:
             result["safe"] = False
-            result["issues"].append("Nome do pacote muito curto")
+            issues.append("Package name too short")
             result["confidence"] = "high"
 
         if len(package_name) > MAX_NAME_LENGTH:
             result["safe"] = False
-            result["issues"].append("Nome do pacote muito longo")
+            issues.append("Package name too long")
             result["confidence"] = "medium"
 
-        # Verifica caracteres suspeitos
+        # Check suspicious characters
         suspicious_chars = set(package_name) & {"@", "#", "$", "%", "^", "&", "*"}
         if suspicious_chars:
             result["safe"] = False
-            result["issues"].append(f"Caracteres suspeitos no nome: {suspicious_chars}")
+            issues.append(
+                f"Suspicious characters in name: {suspicious_chars}",
+            )
             result["confidence"] = "high"
 
-        # Verifica se é pacote conhecido como seguro
+        # Check if it's a known safe package
         if normalized_name in self.known_safe_packages:
             result["confidence"] = "high"
-            result["recommendations"].append("Pacote conhecido como seguro")
+            recommendations.append("Known safe package")
 
-        # Verifica existência no PyPI (apenas se não houver issues críticos)
+        # Check existence on PyPI (only if no critical issues)
         if result["safe"] and not self._package_exists_on_pypi(package_name):
             result["safe"] = False
-            result["issues"].append("Pacote não encontrado no PyPI oficial")
+            issues.append("Package not found on official PyPI")
             result["confidence"] = "high"
 
         return result
@@ -155,32 +160,35 @@ class SafetyValidator:
         *,
         backup_requirement: BackupRequirement = BackupRequirement.REQUIRED,
     ) -> dict[str, object]:
-        """Valida operação em arquivo crítico.
+        """Validate operation on critical file.
 
         Args:
-            file_path: Caminho do arquivo
-            operation: Tipo de operação (read, write, delete)
-            backup_requirement: Requisito de backup (REQUIRED ou OPTIONAL)
+            file_path: File path
+            operation: Operation type (read, write, delete)
+            backup_requirement: Backup requirement (REQUIRED or OPTIONAL)
 
         Returns:
-            Dict com resultado da validação
+            Dict with validation result
 
         """
+        issues: list[str] = []
+        recommendations: list[str] = []
+
         result: dict[str, object] = {
             "safe": True,
             "file": str(file_path),
             "operation": operation,
-            "issues": [],
-            "recommendations": [],
+            "issues": issues,
+            "recommendations": recommendations,
         }
 
-        # Verifica se arquivo existe (para operações que precisam)
+        # Check if file exists (for operations that need it)
         if operation in {"read", "write", "delete"} and not file_path.exists():
             result["safe"] = False
-            result["issues"].append("Arquivo não encontrado")
+            result["issues"].append("File not found")
             return result
 
-        # Verifica se é arquivo crítico
+        # Check if it's a critical file
         critical_files = {
             "pyproject.toml",
             "poetry.lock",
@@ -192,24 +200,24 @@ class SafetyValidator:
         }
 
         if file_path.name in critical_files:
-            result["recommendations"].append("Arquivo crítico - backup recomendado")
+            result["recommendations"].append("Critical file - backup recommended")
 
             if backup_requirement == BackupRequirement.REQUIRED and operation in {
                 "write",
                 "delete",
             }:
                 result["recommendations"].append(
-                    "Backup obrigatório para esta operação",
+                    "Backup required for this operation",
                 )
 
-        # Verifica permissões
+        # Check permissions
         if operation == "write" and not self._can_write_file(file_path):
             result["safe"] = False
-            result["issues"].append("Sem permissão de escrita")
+            result["issues"].append("No write permission")
 
         if operation == "delete" and not self._can_delete_file(file_path):
             result["safe"] = False
-            result["issues"].append("Sem permissão de exclusão")
+            result["issues"].append("No delete permission")
 
         return result
 
@@ -218,14 +226,14 @@ class SafetyValidator:
         command: list[str],
         working_dir: Path | None = None,
     ) -> dict[str, object]:
-        """Valida execução de comando do sistema.
+        """Validate system command execution.
 
         Args:
-            command: Comando a ser executado
-            working_dir: Diretório de trabalho
+            command: Command to be executed
+            working_dir: Working directory
 
         Returns:
-            Dict com resultado da validação
+            Dict with validation result
 
         """
         result: dict[str, object] = {
@@ -237,12 +245,12 @@ class SafetyValidator:
 
         if not command:
             result["safe"] = False
-            result["issues"].append("Comando vazio")
+            result["issues"].append("Empty command")
             return result
 
         executable = command[0]
 
-        # Verifica se executável é seguro
+        # Check if executable is safe
         safe_executables = {
             "poetry",
             "pip",
@@ -260,27 +268,27 @@ class SafetyValidator:
         if executable not in safe_executables:
             result["safe"] = False
             result["issues"].append(
-                f"Executável '{executable}' não está na lista de comandos seguros",
+                f"Executable '{executable}' is not in the safe commands list",
             )
             return result
 
-        # Verifica se executável existe
+        # Check if executable exists
         if not shutil.which(executable):
             result["safe"] = False
-            result["issues"].append(f"Executável '{executable}' não encontrado no PATH")
+            result["issues"].append(f"Executable '{executable}' not found in PATH")
 
-        # Verifica argumentos perigosos
+        # Check dangerous arguments
         dangerous_args = {"rm", "delete", "--force", "-f", "sudo", "su"}
         command_args = set(command)
 
         if command_args & dangerous_args:
             result["safe"] = False
-            result["issues"].append("Argumentos perigosos detectados")
+            result["issues"].append("Dangerous arguments detected")
 
-        # Verifica diretório de trabalho
+        # Check working directory
         if working_dir and not working_dir.exists():
             result["safe"] = False
-            result["issues"].append("Diretório de trabalho não existe")
+            result["issues"].append("Working directory does not exist")
 
         return result
 
@@ -290,15 +298,15 @@ class SafetyValidator:
         operation: str,
         packages: list[str] | None = None,
     ) -> dict[str, object]:
-        """Valida operação Poetry específica.
+        """Validate specific Poetry operation.
 
         Args:
-            project_path: Caminho do projeto
-            operation: Tipo de operação (add, remove, update, install)
-            packages: Lista de pacotes (se aplicável)
+            project_path: Project path
+            operation: Operation type (add, remove, update, install)
+            packages: List of packages (if applicable)
 
         Returns:
-            Dict com resultado da validação
+            Dict with validation result
 
         """
         result: dict[str, object] = {
@@ -309,11 +317,11 @@ class SafetyValidator:
             "recommendations": [],
         }
 
-        # Verifica se projeto Poetry é válido
+        # Check if Poetry project is valid
         pyproject_path = project_path / "pyproject.toml"
         if not pyproject_path.exists():
             result["safe"] = False
-            result["issues"].append("pyproject.toml não encontrado")
+            result["issues"].append("pyproject.toml not found")
             return result
 
         try:
@@ -323,16 +331,16 @@ class SafetyValidator:
             if "tool" not in data or "poetry" not in data["tool"]:
                 result["safe"] = False
                 result["issues"].append(
-                    "Configuração Poetry não encontrada no pyproject.toml",
+                    "Poetry configuration not found in pyproject.toml",
                 )
                 return result
 
         except (OSError, tomllib.TOMLDecodeError, UnicodeDecodeError) as e:
             result["safe"] = False
-            result["issues"].append(f"Erro ao ler pyproject.toml: {e}")
+            result["issues"].append(f"Error reading pyproject.toml: {e}")
             return result
 
-        # Valida pacotes se fornecidos
+        # Validate packages if provided
         if packages:
             for package in packages:
                 package_validation = self.validate_package_safety(package)
@@ -340,27 +348,27 @@ class SafetyValidator:
                     result["safe"] = False
                     result["issues"].extend(
                         [
-                            f"Pacote '{package}': {issue}"
+                            f"Package '{package}': {issue}"
                             for issue in package_validation["issues"]
                         ],
                     )
 
-        # Recomendações específicas por operação
+        # Specific recommendations by operation
         if operation == "add":
-            result["recommendations"].append("Verificar compatibilidade de versões")
+            result["recommendations"].append("Check version compatibility")
         elif operation == "update":
-            result["recommendations"].append("Criar backup antes de atualizar")
+            result["recommendations"].append("Create backup before updating")
         elif operation == "remove":
-            result["recommendations"].append("Verificar dependências antes de remover")
+            result["recommendations"].append("Check dependencies before removing")
 
         return result
 
     def _can_write_file(self, file_path: Path) -> bool:
-        """Verifica se é possível escrever no arquivo."""
+        """Check if it's possible to write to the file."""
         try:
             if file_path.exists():
                 return file_path.is_file() and bool(file_path.stat().st_mode & 0o200)
-            # Verifica se pode criar arquivo no diretório pai
+            # Check if can create file in parent directory
             parent = file_path.parent
             return (
                 parent.exists()
@@ -371,19 +379,19 @@ class SafetyValidator:
             return False
 
     def _can_delete_file(self, file_path: Path) -> bool:
-        """Verifica se é possível deletar o arquivo."""
+        """Check if it's possible to delete the file."""
         try:
             if not file_path.exists():
                 return False
-            # Verifica permissão de escrita no diretório pai (necessária para deletar)
+            # Check write permission in parent directory (needed to delete)
             parent = file_path.parent
             return bool(parent.stat().st_mode & 0o200)
         except (OSError, PermissionError):
             return False
 
     def _is_stdlib_module(self, module_name: str) -> bool:
-        """Verifica se módulo é da standard library."""
-        # Lista básica de módulos stdlib - em produção usar bibliotecas especializadas
+        """Check if module is from standard library."""
+        # Basic list of stdlib modules - in production use specialized libraries
         stdlib_modules = {
             "os",
             "sys",
@@ -426,7 +434,7 @@ class SafetyValidator:
         return module_name.lower() in stdlib_modules
 
     def _package_exists_on_pypi(self, package_name: str) -> bool:
-        """Verifica se pacote existe no PyPI oficial."""
+        """Check if package exists on official PyPI."""
         try:
             url = f"https://pypi.org/pypi/{package_name}/json"
 
@@ -444,7 +452,7 @@ class SafetyValidator:
             return response.status_code == HTTP_OK_STATUS
 
         except (requests.RequestException, OSError):
-            # Em caso de erro de rede, assumir que existe (falso positivo é melhor)
+            # In case of network error, assume it exists (false positive is better)
             return True
 
     def get_safety_recommendations(
@@ -452,14 +460,14 @@ class SafetyValidator:
         operation_type: str,
         _context: dict[str, object],
     ) -> list[str]:
-        """Obtém recomendações de segurança para uma operação.
+        """Get security recommendations for an operation.
 
         Args:
-            operation_type: Tipo de operação
-            context: Contexto da operação
+            operation_type: Operation type
+            context: Operation context
 
         Returns:
-            Lista de recomendações
+            List of recommendations
 
         """
         recommendations = []
@@ -467,29 +475,29 @@ class SafetyValidator:
         if operation_type == "package_install":
             recommendations.extend(
                 [
-                    "Sempre revisar dependências antes de instalar",
-                    "Verificar se há versões conhecidamente vulneráveis",
-                    "Usar ambientes virtuais isolados",
-                    "Manter log de mudanças para rollback",
+                    "Always review dependencies before installing",
+                    "Check for known vulnerable versions",
+                    "Use isolated virtual environments",
+                    "Maintain change log for rollback",
                 ],
             )
 
         elif operation_type == "file_modification":
             recommendations.extend(
                 [
-                    "Criar backup antes de modificar arquivos críticos",
-                    "Validar integridade após modificação",
-                    "Usar controle de versão para track changes",
+                    "Create backup before modifying critical files",
+                    "Validate integrity after modification",
+                    "Use version control to track changes",
                 ],
             )
 
         elif operation_type == "command_execution":
             recommendations.extend(
                 [
-                    "Sempre usar shell=False em subprocess",
-                    "Validar entrada de usuário antes de executar",
-                    "Usar timeout para evitar hanging",
-                    "Log de comandos executados para auditoria",
+                    "Always use shell=False in subprocess",
+                    "Validate user input before executing",
+                    "Use timeout to avoid hanging",
+                    "Log executed commands for audit",
                 ],
             )
 

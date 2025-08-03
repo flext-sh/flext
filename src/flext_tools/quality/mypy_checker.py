@@ -14,7 +14,7 @@ class MyPyChecker:
 
     def check_workspace(self, **_kwargs: object) -> dict[str, object]:
         """Check types across the workspace."""
-        print_colored("🔍 Verificando tipos com MyPy...", Colors.BLUE)
+        print_colored("🔍 Checking types with MyPy...", Colors.BLUE)
 
         results = {
             "has_errors": False,
@@ -23,7 +23,7 @@ class MyPyChecker:
             "details": {},
         }
 
-        print_colored("✅ Verificação de tipos concluída", Colors.GREEN)
+        print_colored("✅ Type checking completed", Colors.GREEN)
         return results
 
     def has_no_errors(self) -> bool:
