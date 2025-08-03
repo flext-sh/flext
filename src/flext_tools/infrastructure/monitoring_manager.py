@@ -202,6 +202,7 @@ class MonitoringManager:
         }
 
         print_colored(
-            "✅ Monitoring infrastructure configured successfully", Colors.GREEN,
+            "✅ Monitoring infrastructure configured successfully",
+            Colors.GREEN,
         )
         return results

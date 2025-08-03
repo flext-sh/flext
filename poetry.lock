@@ -226,6 +226,7 @@ aiofiles = ">=24.1.0"
 click = ">=8.1.7"
 docker = ">=7.1.0"
 flext-cli = {path = "../flext-cli"}
+flext-core = {path = "../flext-core"}
 flext-ldap = {path = "../flext-ldap"}
 flext-ldif = {path = "../flext-ldif"}
 flext-observability = {path = "../flext-observability"}
@@ -749,14 +750,14 @@ zstd = ["zstandard (==0.23.0)"]
 
 [[package]]
 name = "certifi"
-version = "2025.7.14"
+version = "2025.8.3"
 description = "Python package for providing Mozilla's CA Bundle."
 optional = false
 python-versions = ">=3.7"
 groups = ["main", "dev"]
 files = [
-    {file = "certifi-2025.7.14-py3-none-any.whl", hash = "sha256:6b31f564a415d79ee77df69d757bb49a5bb53bd9f756cbbe24394ffd6fc1f4b2"},
-    {file = "certifi-2025.7.14.tar.gz", hash = "sha256:8ea99dbdfaaf2ba2f9bac77b9249ef62ec5218e7c2b2e903378ed5fccf765995"},
+    {file = "certifi-2025.8.3-py3-none-any.whl", hash = "sha256:f6c12493cfb1b06ba2ff328595af9350c65d6644968e5d3a2ffd78699af217a5"},
+    {file = "certifi-2025.8.3.tar.gz", hash = "sha256:e564105f78ded564e3ae7c923924435e1daa7463faeab5bb932bc53ffae63407"},
 ]
 
 [[package]]
@@ -1664,14 +1665,14 @@ bcrypt = ["bcrypt"]
 
 [[package]]
 name = "django-debug-toolbar"
-version = "4.4.6"
+version = "6.0.0"
 description = "A configurable set of panels that display various debug information about the current request/response."
 optional = false
-python-versions = ">=3.8"
+python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "django_debug_toolbar-4.4.6-py3-none-any.whl", hash = "sha256:3beb671c9ec44ffb817fad2780667f172bd1c067dbcabad6268ce39a81335f45"},
-    {file = "django_debug_toolbar-4.4.6.tar.gz", hash = "sha256:36e421cb908c2f0675e07f9f41e3d1d8618dc386392ec82d23bcfcd5d29c7044"},
+    {file = "django_debug_toolbar-6.0.0-py3-none-any.whl", hash = "sha256:0cf2cac5c307b77d6e143c914e5c6592df53ffe34642d93929e5ef095ae56841"},
+    {file = "django_debug_toolbar-6.0.0.tar.gz", hash = "sha256:6eb9fa6f4a5884bf04004700ffb5a44043f1fff38784447fc52c1633448c8c14"},
 ]
 
 [package.dependencies]
@@ -1680,18 +1681,18 @@ sqlparse = ">=0.2"
 
 [[package]]
 name = "django-filter"
-version = "23.5"
+version = "25.1"
 description = "Django-filter is a reusable Django application for allowing users to filter querysets dynamically."
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "django-filter-23.5.tar.gz", hash = "sha256:67583aa43b91fe8c49f74a832d95f4d8442be628fd4c6d65e9f811f5153a4e5c"},
-    {file = "django_filter-23.5-py3-none-any.whl", hash = "sha256:99122a201d83860aef4fe77758b69dda913e874cc5e0eaa50a86b0b18d708400"},
+    {file = "django_filter-25.1-py3-none-any.whl", hash = "sha256:4fa48677cf5857b9b1347fed23e355ea792464e0fe07244d1fdfb8a806215b80"},
+    {file = "django_filter-25.1.tar.gz", hash = "sha256:1ec9eef48fa8da1c0ac9b411744b16c3f4c31176c867886e4c48da369c407153"},
 ]
 
 [package.dependencies]
-Django = ">=3.2"
+Django = ">=4.2"
 
 [[package]]
 name = "django-stubs"
@@ -2012,7 +2013,7 @@ files = []
 develop = false
 
 [package.dependencies]
-aiohttp = ">=3.12.14,<4.0.0"
+aiohttp = ">=3.12.14"
 fastapi = ">=0.116.0"
 flext-auth = {path = "/home/marlonsc/flext/flext-auth"}
 flext-core = {path = "/home/marlonsc/flext/flext-core"}
@@ -2021,7 +2022,7 @@ flext-observability = {path = "/home/marlonsc/flext/flext-observability"}
 flext-plugin = {path = "/home/marlonsc/flext/flext-plugin"}
 grpcio = ">=1.50.0"
 grpcio-health-checking = ">=0"
-httpx = ">=0.28.1,<0.29.0"
+httpx = ">=0.28.1"
 packaging = ">=23.0"
 psutil = ">=6.1.0"
 pydantic = ">=2.10.0"
@@ -2057,7 +2058,7 @@ argon2-cffi = ">=25.1.0"
 bcrypt = ">=4.3.0"
 click = ">=8.2.1"
 cryptography = ">=45.0.5"
-email-validator = ">=2.2.0,<3.0.0"
+email-validator = ">=2.2.0"
 fastapi = ">=0.116.1"
 flext-core = {path = "/home/marlonsc/flext/flext-core"}
 flext-observability = {path = "/home/marlonsc/flext/flext-observability"}
@@ -2130,7 +2131,7 @@ develop = false
 [package.dependencies]
 pydantic = ">=2.11.7"
 pydantic-settings = ">=2.10.1"
-structlog = ">=25.4.0,<26.0.0"
+structlog = ">=25.4.0"
 
 [package.extras]
 dev = ["autoflake (>=2.3.1)", "black (>=25.1.0)", "codespell (>=2.3.0)", "deptry (>=0.23.0)", "isort (>=6.0.1)", "mypy (>=1.13.0)", "pre-commit (>=4.0.1)", "pylint (>=3.3.0)", "pyupgrade (>=3.19.0)", "radon (>=6.0.1)", "ruff (>=0.12.3)", "vulture (>=2.13)"]
@@ -2160,7 +2161,7 @@ flext-plugin = {path = "/home/marlonsc/flext/flext-plugin"}
 oracledb = ">=3.2.0"
 pydantic = ">=2.11.7"
 pydantic-settings = ">=2.10.1"
-sqlalchemy = ">=2.0.0,<3.0.0"
+sqlalchemy = ">=2.0.0"
 
 [package.source]
 type = "directory"
@@ -2297,14 +2298,14 @@ files = []
 develop = false
 
 [package.dependencies]
-click = ">=8.2.1,<9.0.0"
-cryptography = ">=45.0.5,<46.0.0"
-flext-cli = {path = "/home/marlonsc/flext/flext-cli"}
+click = ">=8.2.1"
+cryptography = ">=45.0.5"
 flext-core = {path = "/home/marlonsc/flext/flext-core"}
-ldap3 = ">=2.9.1,<3.0.0"
-pydantic = ">=2.11.7,<3.0.0"
-pydantic-settings = ">=2.10.1,<3.0.0"
-rich = ">=14.0.0,<15.0.0"
+ldap3 = ">=2.9.1"
+pydantic = ">=2.11.7"
+pydantic-settings = ">=2.10.1"
+rich = ">=14.0.0"
+structlog = ">=25.4.0"
 
 [package.source]
 type = "directory"
@@ -2321,12 +2322,13 @@ files = []
 develop = false
 
 [package.dependencies]
-click = ">=8.1.0,<9.0.0"
+click = ">=8.1.0"
 flext-cli = {path = "/home/marlonsc/flext/flext-cli"}
 flext-core = {path = "/home/marlonsc/flext/flext-core"}
-ldif3 = ">=3.2.2,<4.0.0"
-pydantic = ">=2.11.7,<3.0.0"
-pydantic-settings = ">=2.10.1,<3.0.0"
+flext-observability = {path = "/home/marlonsc/flext/flext-observability"}
+ldif3 = ">=3.2.2"
+pydantic = ">=2.11.7"
+pydantic-settings = ">=2.10.1"
 
 [package.source]
 type = "directory"
@@ -2343,16 +2345,16 @@ files = []
 develop = false
 
 [package.dependencies]
-click = ">=8.2.1,<9.0.0"
+click = ">=8.2.1"
 dbt-core = "1.10.5"
 flext-core = {path = "/home/marlonsc/flext/flext-core"}
-injectable = ">=4.0.1,<5.0.0"
-meltano = ">=3.0.0,<4.0.0"
-pydantic = ">=2.11.7,<3.0.0"
-pydantic-settings = ">=2.10.1,<3.0.0"
-pyyaml = ">=6.0.2,<7.0.0"
-requests = ">=2.31.0,<3.0.0"
-singer-sdk = ">=0.44.0,<1.0.0"
+injectable = ">=4.0.1"
+meltano = ">=3.0.0"
+pydantic = ">=2.11.7"
+pydantic-settings = ">=2.10.1"
+pyyaml = ">=6.0.2"
+requests = ">=2.31.0"
+singer-sdk = ">=0.44.0"
 
 [package.source]
 type = "directory"
@@ -2371,13 +2373,13 @@ develop = false
 [package.dependencies]
 aiofiles = ">=24.1.0,<25.0.0"
 flext-core = {path = "../flext-core"}
-opentelemetry-api = ">=1.35.0,<2.0.0"
-opentelemetry-sdk = ">=1.35.0,<2.0.0"
-prometheus-client = ">=0.22.1,<0.23.0"
+opentelemetry-api = ">=1.35.0"
+opentelemetry-sdk = ">=1.35.0"
+prometheus-client = ">=0.22.1"
 psutil = ">=6.1.0,<8.0.0"
 pydantic = ">=2.11.7,<3.0.0"
 pydantic-settings = ">=2.10.1,<3.0.0"
-rich = ">=14.0.0,<15.0.0"
+rich = ">=14.0.0"
 structlog = ">=25.4.0,<26.0.0"
 typer = ">=0.15.0,<1.0.0"
 
@@ -2403,14 +2405,14 @@ develop = false
 
 [package.dependencies]
 flext-core = {path = "/home/marlonsc/flext/flext-core"}
-httpx = ">=0.28.1,<0.29.0"
-meltano = {version = ">=3.0.0,<4.0.0", extras = ["edk"]}
-pydantic = ">=2.11.7,<3.0.0"
-pydantic-settings = ">=2.10.1,<3.0.0"
-requests = ">=2.31.0,<3.0.0"
-tenacity = ">=9.1.2,<10.0.0"
-typer = ">=0.12.0,<1.0.0"
-urllib3 = ">=2.0.0,<3.0.0"
+httpx = ">=0.28.1"
+meltano = {version = ">=3.0.0", extras = ["edk"]}
+pydantic = ">=2.11.7"
+pydantic-settings = ">=2.10.1"
+requests = ">=2.31.0"
+tenacity = ">=9.1.2"
+typer = ">=0.12.0"
+urllib3 = ">=2.0.0"
 
 [package.source]
 type = "directory"
@@ -2430,9 +2432,9 @@ develop = false
 flext-api = {path = "/home/marlonsc/flext/flext-api"}
 flext-core = {path = "/home/marlonsc/flext/flext-core"}
 flext-observability = {path = "/home/marlonsc/flext/flext-observability"}
-httpx = ">=0.28.1,<0.29.0"
-pydantic = ">=2.11.7,<3.0.0"
-pydantic-settings = ">=2.10.1,<3.0.0"
+httpx = ">=0.28.1"
+pydantic = ">=2.11.7"
+pydantic-settings = ">=2.10.1"
 
 [package.source]
 type = "directory"
@@ -2449,14 +2451,14 @@ files = []
 develop = false
 
 [package.dependencies]
-aiofiles = ">=24.1.0,<25.0.0"
+aiofiles = ">=24.1.0"
 flext-core = {path = "../flext-core"}
 flext-observability = {path = "../flext-observability"}
-jsonschema = ">=4.25.0,<5.0.0"
-psutil = ">=7.0.0,<8.0.0"
-pydantic = ">=2.11.7,<3.0.0"
-pydantic-settings = ">=2.10.1,<3.0.0"
-watchdog = ">=6.0.0,<7.0.0"
+jsonschema = ">=4.25.0"
+psutil = ">=7.0.0"
+pydantic = ">=2.11.7"
+pydantic-settings = ">=2.10.1"
+watchdog = ">=6.0.0"
 
 [package.extras]
 dev = ["autoflake (>=2.3.1)", "black (>=25.1.0)", "codespell (>=2.3.0)", "deptry (>=0.23.0)", "isort (>=6.0.1)", "mypy (>=1.13.0)", "pre-commit (>=4.0.1)", "pylint (>=3.3.0)", "pyupgrade (>=3.19.0)", "radon (>=6.0.1)", "ruff (>=0.12.3)", "vulture (>=2.13)"]
@@ -2479,17 +2481,17 @@ files = []
 develop = false
 
 [package.dependencies]
-celery = ">=5.3.0,<6.0.0"
-django = ">=5.0.0,<6.0.0"
-django-debug-toolbar = ">=4.0.0,<5.0.0"
-django-filter = ">=23.0,<24.0"
-djangorestframework = ">=3.15.0,<4.0.0"
+celery = ">=5.3.0"
+django = ">=5.0.0"
+django-debug-toolbar = ">=4.0.0"
+django-filter = ">=23.0"
+djangorestframework = ">=3.15.0"
 flext-core = {path = "/home/marlonsc/flext/flext-core"}
 flext-observability = {path = "/home/marlonsc/flext/flext-observability"}
-pydantic = ">=2.11.7,<3.0.0"
-pydantic-settings = ">=2.10.1,<3.0.0"
-redis = ">=5.0.0,<6.0.0"
-xhtml2pdf = ">=0.2.11,<1.0.0"
+pydantic = ">=2.11.7"
+pydantic-settings = ">=2.10.1"
+redis = ">=5.0.0"
+xhtml2pdf = ">=0.2.11"
 
 [package.source]
 type = "directory"
@@ -2548,9 +2550,9 @@ develop = false
 
 [package.dependencies]
 flext-core = ">=0.8.0"
-flext-db-oracle = ">=0.8.0"
-flext-meltano = ">=0.8.0"
-flext-observability = ">=0.8.0"
+flext-db-oracle = ">=0.9.0"
+flext-meltano = ">=0.9.0"
+flext-observability = ">=0.9.0"
 pydantic = ">=2.11.0"
 
 [package.source]
@@ -2718,9 +2720,9 @@ files = []
 develop = false
 
 [package.dependencies]
-celery = ">=5.5.3,<6.0.0"
-django = ">=5.0.0,<6.0.0"
-fastapi = ">=0.116.0,<1.0.0"
+celery = ">=5.5.3"
+django = ">=5.0.0"
+fastapi = ">=0.116.0"
 flask = ">=3.0.0"
 flext-core = {path = "/home/marlonsc/flext/flext-core"}
 flext-observability = {path = "/home/marlonsc/flext/flext-observability"}
@@ -3117,18 +3119,18 @@ files = []
 develop = false
 
 [package.dependencies]
-click = ">=8.2.1,<9.0.0"
-dotenv = ">=0.9.9,<0.10.0"
+click = ">=8.2.1"
+dotenv = ">=0.9.9"
 flext-core = {path = "/home/marlonsc/flext/flext-core"}
 flext-db-oracle = {path = "/home/marlonsc/flext/flext-db-oracle"}
 flext-observability = {path = "/home/marlonsc/flext/flext-observability"}
 flext-tap-oracle-wms = {path = "/home/marlonsc/flext/flext-tap-oracle-wms"}
 flext-target-oracle = {path = "/home/marlonsc/flext/flext-target-oracle"}
-meltano = ">=3.8.0,<4.0.0"
-pydantic = ">=2.11.7,<3.0.0"
-pyyaml = ">=6.0.2,<7.0.0"
-requests = ">=2.32.4,<3.0.0"
-structlog = ">=25.4.0,<26.0.0"
+meltano = ">=3.8.0"
+pydantic = ">=2.11.7"
+pyyaml = ">=6.0.2"
+requests = ">=2.32.4"
+structlog = ">=25.4.0"
 
 [package.source]
 type = "directory"
@@ -3273,15 +3275,15 @@ zstd = ["zstandard (>=0.18.0)"]
 
 [[package]]
 name = "hypothesis"
-version = "6.136.6"
+version = "6.136.7"
 description = "A library for property-based testing"
 optional = true
 python-versions = ">=3.9"
 groups = ["main"]
 markers = "extra == \"test\""
 files = [
-    {file = "hypothesis-6.136.6-py3-none-any.whl", hash = "sha256:1d6296dde36d42263bd44a084c74e91467e78186676e410167f920aa0374a9e7"},
-    {file = "hypothesis-6.136.6.tar.gz", hash = "sha256:2ad2e4f2012be4d41c6515b0628d84d48af6e6c38b4db50840bd9ac0899f5856"},
+    {file = "hypothesis-6.136.7-py3-none-any.whl", hash = "sha256:12a8b76a5c453f8478d6bb4b5450824856af571c5e7821604a15aeaafa9beefd"},
+    {file = "hypothesis-6.136.7.tar.gz", hash = "sha256:864c5cf7779adc58871ee51595bc724c496047c5bc45229e0baa950b103a73ea"},
 ]
 
 [package.dependencies]
@@ -5562,7 +5564,7 @@ version = "2.10.1"
 description = "JSON Web Token implementation in Python"
 optional = false
 python-versions = ">=3.9"
-groups = ["main", "dev"]
+groups = ["main"]
 files = [
     {file = "PyJWT-2.10.1-py3-none-any.whl", hash = "sha256:dcdd193e30abefd5debf142f9adfcdd2b58004e644f25406ffaebd50bd98dacb"},
     {file = "pyjwt-2.10.1.tar.gz", hash = "sha256:3cc5772eb20009233caf06e9d8a0577824723b44e6648ee0a2aedb6cf9381953"},
@@ -6218,22 +6220,20 @@ toml = ["tomli (>=2.0.1)"]
 
 [[package]]
 name = "redis"
-version = "5.3.1"
+version = "6.2.0"
 description = "Python client for Redis database and key-value store"
 optional = false
-python-versions = ">=3.8"
+python-versions = ">=3.9"
 groups = ["main", "dev"]
 files = [
-    {file = "redis-5.3.1-py3-none-any.whl", hash = "sha256:dc1909bd24669cc31b5f67a039700b16ec30571096c5f1f0d9d2324bff31af97"},
-    {file = "redis-5.3.1.tar.gz", hash = "sha256:ca49577a531ea64039b5a36db3d6cd1a0c7a60c34124d46924a45b956e8cf14c"},
+    {file = "redis-6.2.0-py3-none-any.whl", hash = "sha256:c8ddf316ee0aab65f04a11229e94a64b2618451dab7a67cb2f77eb799d872d5e"},
+    {file = "redis-6.2.0.tar.gz", hash = "sha256:e821f129b75dde6cb99dd35e5c76e8c49512a5a0d8dfdc560b2fbd44b85ca977"},
 ]
 
-[package.dependencies]
-PyJWT = ">=2.9.0"
-
 [package.extras]
-hiredis = ["hiredis (>=3.0.0)"]
-ocsp = ["cryptography (>=36.0.1)", "pyopenssl (==23.2.1)", "requests (>=2.31.0)"]
+hiredis = ["hiredis (>=3.2.0)"]
+jwt = ["pyjwt (>=2.9.0)"]
+ocsp = ["cryptography (>=36.0.1)", "pyopenssl (>=20.0.1)", "requests (>=2.31.0)"]
 
 [[package]]
 name = "referencing"
@@ -7534,10 +7534,9 @@ files = [
 name = "types-pyyaml"
 version = "6.0.12.20250516"
 description = "Typing stubs for PyYAML"
-optional = true
+optional = false
 python-versions = ">=3.9"
-groups = ["main"]
-markers = "extra == \"typings\""
+groups = ["main", "typings"]
 files = [
     {file = "types_pyyaml-6.0.12.20250516-py3-none-any.whl", hash = "sha256:8478208feaeb53a34cb5d970c56a7cd76b72659442e733e268a94dc72b2d0530"},
     {file = "types_pyyaml-6.0.12.20250516.tar.gz", hash = "sha256:9f21a70216fc0fa1b216a8176db5f9e0af6eb35d2f2932acb87689d03a5bf6ba"},
@@ -7845,14 +7844,14 @@ files = [
 
 [[package]]
 name = "virtualenv"
-version = "20.32.0"
+version = "20.33.0"
 description = "Virtual Python Environment builder"
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
 files = [
-    {file = "virtualenv-20.32.0-py3-none-any.whl", hash = "sha256:2c310aecb62e5aa1b06103ed7c2977b81e042695de2697d01017ff0f1034af56"},
-    {file = "virtualenv-20.32.0.tar.gz", hash = "sha256:886bf75cadfdc964674e6e33eb74d787dff31ca314ceace03ca5810620f4ecf0"},
+    {file = "virtualenv-20.33.0-py3-none-any.whl", hash = "sha256:106b6baa8ab1b526d5a9b71165c85c456fbd49b16976c88e2bc9352ee3bc5d3f"},
+    {file = "virtualenv-20.33.0.tar.gz", hash = "sha256:47e0c0d2ef1801fce721708ccdf2a28b9403fa2307c3268aebd03225976f61d2"},
 ]
 
 [package.dependencies]
@@ -8427,4 +8426,4 @@ typings = ["django-stubs", "types-ldap3", "types-protobuf", "types-psutil", "typ
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13,<3.14"
-content-hash = "8170a7a926abab186340a749a84b82eecf523ca1f02d76b22898259d2f31fb38"
+content-hash = "8901fd472568c39db5a7358819177b38ad93e10d9c15ae25d9f56ce548942201"

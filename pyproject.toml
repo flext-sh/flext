@@ -134,13 +134,16 @@ packages = [
 ]
 
 [tool.poetry.group.dev.dependencies]
-aiohttp = "^3.12.14"
-numpy = "^2.3.2"
-ldap3 = "^2.9.1"
-docker = "^7.1.0"
-redis = ">=5.0.0,<6.0.0"
-psycopg2 = "^2.9.10"
+aiohttp = ">=3.12.14"
+numpy = ">=2.3.2"
+ldap3 = ">=2.9.1"
+docker = ">=7.1.0"
+redis = ">=5.0.0"
+psycopg2 = ">=2.9.10"
 
+
+[tool.poetry.group.typings.dependencies]
+types-pyyaml = ">=6.0.12.20250516"
 
 [tool.bandit]
 extend = "./.bandit-shared.toml"

@@ -563,7 +563,8 @@ class VenvConsistencyValidator:
         """
         print_colored("\n" + "=" * 60, Colors.CYAN)
         print_colored(
-            "📊 VIRTUAL ENVIRONMENT CONSISTENCY VALIDATION SUMMARY", Colors.CYAN,
+            "📊 VIRTUAL ENVIRONMENT CONSISTENCY VALIDATION SUMMARY",
+            Colors.CYAN,
         )
         print_colored("=" * 60, Colors.CYAN)
 
@@ -607,5 +608,6 @@ class VenvConsistencyValidator:
 
             if len(conflicts) > MAX_CONFLICTS_DISPLAY:
                 print_colored(
-                    f"    ... and {len(conflicts) - 10} more conflicts", color,
+                    f"    ... and {len(conflicts) - 10} more conflicts",
+                    color,
                 )
