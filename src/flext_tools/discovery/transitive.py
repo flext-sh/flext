@@ -1,4 +1,69 @@
-"""Resolução de dependências transitivas via path dependencies."""
+"""FLEXT Transitive Dependency Resolution - Enterprise Path Dependency Analysis.
+
+Provides comprehensive transitive dependency resolution through path-based dependency
+analysis for the FLEXT ecosystem. This module analyzes Poetry path dependencies to
+map complete dependency graphs, including direct and transitive dependencies across
+interconnected projects in multi-project workspaces.
+
+The resolver implements sophisticated algorithms for dependency graph traversal with
+circular dependency detection, depth-limited recursion, and intelligent caching to
+ensure accurate and performant dependency resolution across complex project hierarchies.
+
+Key Components:
+    - TransitiveDependencyResolver: Main resolution engine for dependency graph analysis
+    - PathDependency: Structured representation of path-based dependencies
+    - TransitiveDependencies: Complete dependency resolution results
+    - Circular Dependency Detection: Prevention of infinite resolution loops
+    - Intelligent Caching: Performance optimization for repeated analysis
+
+Architecture:
+    Implements enterprise-grade dependency resolution with proper error handling,
+    performance optimization through caching, and comprehensive graph traversal
+    algorithms. Integrates with Poetry configuration parsing for accurate
+    path dependency extraction and resolution.
+
+Example:
+    Comprehensive transitive dependency resolution:
+
+    >>> from flext_tools.discovery.transitive import TransitiveDependencyResolver
+    >>> from pathlib import Path
+    >>>
+    >>> # Initialize resolver with caching
+    >>> resolver = TransitiveDependencyResolver()
+    >>>
+    >>> # Resolve complete dependency graph
+    >>> project_path = Path("/workspace/flext-core")
+    >>> dependencies = resolver.resolve_transitive_dependencies(project_path)
+    >>>
+    >>> print(f"Direct dependencies: {len(dependencies.direct)}")
+    >>> print(f"Transitive dependencies: {len(dependencies.transitive)}")
+    >>> print(f"Path dependencies: {len(dependencies.path_dependencies)}")
+    >>>
+    >>> # Check if package is available transitively
+    >>> available = resolver.is_dependency_available_transitively(
+    ...     project_path, "pydantic"
+    >>> )
+    >>> print(f"Pydantic available: {available}")
+
+Integration:
+    - Built on Poetry configuration parsing for accurate path dependency extraction
+    - Integrates with dependency analysis and conflict detection systems
+    - Coordinates with workspace management for multi-project analysis
+    - Provides foundation for dependency optimization and validation
+    - Supports complex workspace dependency management strategies
+
+Quality Standards:
+    - Comprehensive error handling with detailed context preservation
+    - Performance optimization through intelligent caching strategies
+    - Circular dependency detection and prevention mechanisms
+    - Depth-limited recursion for safe graph traversal
+    - Professional English documentation and user-facing messages
+
+Author: FLEXT Development Team
+Version: 2.0.0
+License: MIT
+
+"""
 
 from __future__ import annotations
 
@@ -15,7 +80,18 @@ if TYPE_CHECKING:
 
 @dataclass
 class PathDependency:
-    """Representa uma dependência path-based."""
+    """Represents a path-based dependency configuration.
+
+    Contains metadata for Poetry path dependencies including the dependency
+    name, file system path, and development mode flag for comprehensive
+    dependency graph analysis and resolution.
+
+    Attributes:
+        name: Dependency package name as specified in Poetry configuration
+        path: Resolved file system path to the dependency project
+        develop: Development mode flag indicating editable installation
+
+    """
 
     name: str
     path: Path
@@ -24,7 +100,18 @@ class PathDependency:
 
 @dataclass
 class TransitiveDependencies:
-    """Resultado da resolução de dependências transitivas."""
+    """Results of transitive dependency resolution analysis.
+
+    Contains complete dependency resolution results including direct dependencies,
+    transitive dependencies discovered through path dependency traversal, and
+    path dependency metadata for comprehensive dependency graph representation.
+
+    Attributes:
+        direct: Set of direct dependencies declared in the project
+        transitive: Set of transitive dependencies discovered through path resolution
+        path_dependencies: List of path-based dependencies with metadata
+
+    """
 
     direct: set[str]
     transitive: set[str]
@@ -32,7 +119,58 @@ class TransitiveDependencies:
 
 
 class TransitiveDependencyResolver:
-    """Resolve dependências transitivas através de path dependencies."""
+    """Enterprise transitive dependency resolver for path-based dependency analysis.
+
+    Provides comprehensive dependency resolution capabilities through path dependency
+    traversal with circular dependency detection, intelligent caching, and depth-limited
+    recursion for safe and performant dependency graph analysis.
+
+    This resolver serves as the primary tool for understanding complete dependency
+    relationships across interconnected FLEXT projects, enabling accurate dependency
+    management and conflict detection in complex multi-project environments.
+
+    Attributes:
+        _cache: Internal cache for resolved dependency results
+        _resolving: Set tracking currently resolving projects for circular detection
+
+    Features:
+        - Comprehensive transitive dependency resolution
+        - Circular dependency detection and prevention
+        - Intelligent caching for performance optimization
+        - Depth-limited recursion for safe graph traversal
+        - Poetry path dependency integration
+        - Normalized package name comparison
+
+    Architecture:
+        Uses graph traversal algorithms with proper cycle detection and
+        caching strategies for maintainable and performant dependency
+        resolution across complex project hierarchies.
+
+    Example:
+        Resolve project dependencies with transitive analysis:
+
+        >>> resolver = TransitiveDependencyResolver()
+        >>> from pathlib import Path
+        >>> # Resolve complete dependency graph
+        >>> project = Path("/workspace/flext-api")
+        >>> result = resolver.resolve_transitive_dependencies(project)
+        >>> print(f"Direct: {sorted(result.direct)}")
+        >>> print(f"Transitive: {sorted(result.transitive)}")
+        >>> # Check specific dependency availability
+        >>> has_pydantic = resolver.is_dependency_available_transitively(
+        ...     project, "pydantic"
+        >>> )
+        >>> print(f"Pydantic available: {has_pydantic}")
+        >>> # Get all available dependencies
+        >>> all_deps = resolver.get_all_available_dependencies(project)
+        >>> print(f"Total available: {len(all_deps)}")
+
+    Integration:
+        Integrates with Poetry configuration management, dependency analysis
+        systems, and workspace coordination for comprehensive dependency
+        management across the FLEXT ecosystem.
+
+    """
 
     def __init__(self) -> None:
         """Initialize resolver."""
@@ -44,14 +182,31 @@ class TransitiveDependencyResolver:
         project_path: Path,
         max_depth: int = 3,
     ) -> TransitiveDependencies:
-        """Resolve dependências transitivas de um projeto.
+        """Resolve transitive dependencies for a project through path dependency analysis.
+
+        Performs comprehensive dependency resolution by traversing path dependencies
+        to discover both direct and transitive dependencies with circular dependency
+        detection and intelligent caching for performance optimization.
 
         Args:
-            project_path: Caminho do projeto
-            max_depth: Profundidade máxima de resolução (evita loops infinitos)
+            project_path: Path to the project root directory for dependency analysis
+            max_depth: Maximum recursion depth to prevent infinite loops (default: 3)
 
         Returns:
-            TransitiveDependencies com dependências diretas e transitivas
+            TransitiveDependencies containing complete dependency resolution results
+            including direct dependencies, transitive dependencies, and path metadata
+
+        Resolution Process:
+            1. Check cache for previously resolved results
+            2. Detect circular dependencies to prevent infinite loops
+            3. Parse project Poetry configuration for dependencies
+            4. Extract path dependencies and traverse recursively
+            5. Aggregate direct and transitive dependencies
+            6. Cache results for performance optimization
+
+        Architecture:
+            Uses depth-first traversal with memoization and cycle detection
+            to ensure safe and efficient dependency graph resolution.
 
         """
         project_key = str(project_path.resolve())
@@ -63,7 +218,7 @@ class TransitiveDependencyResolver:
         # Circular dependency detection
         if project_key in self._resolving:
             print_colored(
-                f"  ⚠️ Dependência circular detectada: {project_path.name}",
+                f"  ⚠️ Circular dependency detected: {project_path.name}",
                 Colors.YELLOW,
             )
             return TransitiveDependencies(set(), set(), [])
@@ -82,7 +237,20 @@ class TransitiveDependencyResolver:
         project_path: Path,
         depth: int,
     ) -> TransitiveDependencies:
-        """Resolve dependências recursivamente."""
+        """Resolve dependencies recursively with depth-limited traversal.
+
+        Performs recursive dependency resolution through path dependency traversal
+        with proper depth limiting to prevent infinite loops and stack overflow
+        in complex dependency graphs.
+
+        Args:
+            project_path: Path to project for recursive dependency analysis
+            depth: Maximum remaining recursion depth for safe traversal
+
+        Returns:
+            TransitiveDependencies containing resolved dependency information
+
+        """
         if depth <= 0:
             return TransitiveDependencies(set(), set(), [])
 
@@ -94,24 +262,24 @@ class TransitiveDependencyResolver:
             with pyproject_path.open("rb") as f:
                 data = tomllib.load(f)
         except (OSError, tomllib.TOMLDecodeError) as e:
-            print_colored(f"  ⚠️ Erro ao ler {pyproject_path}: {e}", Colors.YELLOW)
+            print_colored(f"  ⚠️ Error reading {pyproject_path}: {e}", Colors.YELLOW)
             return TransitiveDependencies(set(), set(), [])
 
-        # Coleta dependências diretas
+        # Extract direct dependencies from project configuration
         direct_deps = self._extract_direct_dependencies(data)
 
-        # Coleta path dependencies
+        # Extract path dependencies for recursive analysis
         path_deps = self._extract_path_dependencies(data, project_path)
 
-        # Resolve dependências transitivas através de path dependencies
+        # Resolve transitive dependencies through path dependency traversal
         transitive_deps = set()
 
         for path_dep in path_deps:
             if path_dep.path.exists():
                 child_result = self._resolve_recursive(path_dep.path, depth - 1)
-                # Adiciona dependências diretas do path dependency como transitivas
+                # Add direct dependencies from path dependency as transitive
                 transitive_deps.update(child_result.direct)
-                # Adiciona dependências transitivas do path dependency
+                # Add transitive dependencies from path dependency
                 transitive_deps.update(child_result.transitive)
 
         return TransitiveDependencies(
@@ -121,7 +289,18 @@ class TransitiveDependencyResolver:
         )
 
     def _extract_direct_dependencies(self, data: dict[str, object]) -> set[str]:
-        """Extrai dependências diretas do poetry.lock."""
+        """Extract direct dependencies from poetry.lock file.
+
+        Parses Poetry lock file data to extract all direct dependency names
+        for accurate dependency resolution and conflict detection.
+
+        Args:
+            data: Parsed Poetry lock file data structure
+
+        Returns:
+            Set of direct dependency package names
+
+        """
         dependencies: set[str] = set()
 
         if "package" in data:
@@ -138,7 +317,19 @@ class TransitiveDependencyResolver:
         data: dict[str, object],
         project_path: Path,
     ) -> list[PathDependency]:
-        """Extrai path dependencies do pyproject.toml."""
+        """Extract path dependencies from pyproject.toml configuration.
+
+        Parses Poetry configuration to identify path-based dependencies including
+        both regular dependencies and dependency groups with path specifications.
+
+        Args:
+            data: Parsed pyproject.toml configuration data
+            project_path: Base path for resolving relative dependency paths
+
+        Returns:
+            List of PathDependency objects with resolved paths and metadata
+
+        """
         path_deps = []
 
         # Poetry path dependencies
@@ -162,7 +353,18 @@ class TransitiveDependencyResolver:
         return path_deps
 
     def _extract_package_name(self, dep_spec: str) -> str:
-        """Extrai nome do pacote de uma especificação de dependência."""
+        """Extract package name from dependency specification string.
+
+        Parses dependency specification to extract the core package name
+        by removing version constraints and other specification metadata.
+
+        Args:
+            dep_spec: Dependency specification string from Poetry configuration
+
+        Returns:
+            Extracted package name without version constraints
+
+        """
         dep_spec = dep_spec.strip().replace("(", "").replace(")", "")
         match = re.match(r"^([a-zA-Z0-9_-]+)", dep_spec)
         if match:
@@ -170,9 +372,17 @@ class TransitiveDependencyResolver:
         return ""
 
     def get_all_available_dependencies(self, project_path: Path) -> set[str]:
-        """Obtém todas as dependências disponíveis para um projeto.
+        """Get all available dependencies for a project.
 
-        Inclui dependências diretas + transitivas via path dependencies.
+        Combines direct and transitive dependencies discovered through path
+        dependency resolution to provide complete dependency availability.
+
+        Args:
+            project_path: Path to project for dependency analysis
+
+        Returns:
+            Set containing all available dependency names (direct + transitive)
+
         """
         result = self.resolve_transitive_dependencies(project_path)
         return result.direct | result.transitive
@@ -182,20 +392,49 @@ class TransitiveDependencyResolver:
         project_path: Path,
         package_name: str,
     ) -> bool:
-        """Verifica se uma dependência está disponível transitivamente."""
+        """Check if a dependency is available transitively through path dependencies.
+
+        Determines if a specific package is available either directly or
+        transitively through path dependency resolution with normalized
+        package name comparison for accurate matching.
+
+        Args:
+            project_path: Path to project for dependency analysis
+            package_name: Name of package to check for availability
+
+        Returns:
+            True if package is available directly or transitively, False otherwise
+
+        """
         available = self.get_all_available_dependencies(project_path)
 
-        # Normaliza nomes para comparação
+        # Normalize package names for accurate comparison
         normalized_available = {self._normalize_name(dep) for dep in available}
         normalized_package = self._normalize_name(package_name)
 
         return normalized_package in normalized_available
 
     def _normalize_name(self, name: str) -> str:
-        """Normaliza nome de pacote para comparação."""
+        """Normalize package name for accurate comparison.
+
+        Converts package names to standardized format by removing case
+        differences and normalizing separators for reliable matching.
+
+        Args:
+            name: Package name to normalize
+
+        Returns:
+            Normalized package name for comparison
+
+        """
         return name.lower().replace("_", "").replace("-", "")
 
     def clear_cache(self) -> None:
-        """Limpa cache de resolução."""
+        """Clear resolution cache and reset resolver state.
+
+        Clears all cached resolution results and resets internal state
+        for fresh dependency analysis, useful when project configurations
+        have changed or when memory cleanup is needed.
+        """
         self._cache.clear()
         self._resolving.clear()

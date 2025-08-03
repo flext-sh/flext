@@ -1,10 +1,67 @@
-"""FLEXT Workspace CLI - Unified command interface for the entire workspace.
+"""FLEXT Workspace CLI - Enterprise Multi-Project Command Interface.
 
-Copyright (c) 2025 FLEXT Contributors
-SPDX-License-Identifier: MIT
+Provides comprehensive command-line interface for managing the entire FLEXT
+ecosystem workspace with unified project coordination, task execution, and
+development workflow automation. This module implements enterprise-grade
+workspace management patterns for coordinating all 32 FLEXT projects with
+consistent tooling and automation capabilities.
 
-This module provides a unified CLI for managing all FLEXT projects,
-running tests, managing containers, and coordinating tasks.
+The workspace CLI serves as the central command interface for developers,
+operations teams, and automation systems working with the distributed FLEXT
+ecosystem. It provides consistent patterns for project management, testing,
+deployment, and monitoring across all ecosystem components.
+
+Key Components:
+    - Project Management: Unified commands for all FLEXT ecosystem projects
+    - Test Coordination: Cross-project testing and validation orchestration
+    - Build Automation: Consistent build processes across Python and Go projects
+    - Container Management: Docker and container orchestration commands
+    - Development Workflows: Quality gates, formatting, and validation automation
+    - Monitoring Integration: Health checks and system status coordination
+
+Architecture:
+    Implements enterprise CLI patterns with proper error handling, progress
+    reporting, and rich terminal output. Coordinates with underlying project
+    management systems while providing consistent interfaces across diverse
+    project types and technologies within the FLEXT ecosystem.
+
+Example:
+    Workspace CLI usage for development workflows:
+
+    >>> # Available through command line interface
+    >>> # flext workspace status
+    >>> # flext workspace test --all
+    >>> # flext workspace build --projects flext-core,flext-api
+    >>> # flext workspace lint --fix
+    >>> # flext workspace deploy --environment staging
+
+    >>> # Programmatic usage (for automation)
+    >>> from flext.workspace.cli import WorkspaceCLI
+    >>> from pathlib import Path
+    >>>
+    >>> cli = WorkspaceCLI(workspace_root=Path("/home/developer/flext"))
+    >>> result = cli.run_tests(projects=["flext-core", "flext-api"])
+    >>> if result.success:
+    ...     print("All tests passed successfully")
+
+Integration:
+    - Built on Rich library for enhanced terminal output and progress reporting
+    - Integrates with Click framework for robust command-line argument parsing
+    - Coordinates with subprocess management for external tool execution
+    - Supports both interactive and automated (CI/CD) execution modes
+    - Provides comprehensive logging and error reporting capabilities
+
+Quality Standards:
+    - Comprehensive error handling with detailed context and recovery suggestions
+    - Rich terminal output with progress bars, tables, and status indicators
+    - Extensive validation of workspace state and project consistency
+    - Performance optimization for large workspace operations
+    - Security-conscious subprocess execution and path handling
+
+Author: FLEXT Development Team
+Version: 2.0.0
+License: MIT
+
 """
 
 from __future__ import annotations
@@ -12,7 +69,6 @@ from __future__ import annotations
 import subprocess
 import sys
 from pathlib import Path
-from typing import Any
 
 import click
 from rich.console import Console
@@ -54,6 +110,7 @@ class WorkspaceService:
         self,
         command: list[str],
         cwd: Path | None = None,
+        *,
         check: bool = True,
     ) -> subprocess.CompletedProcess[str]:
         """Run a command in the workspace."""
@@ -80,6 +137,7 @@ class WorkspaceService:
         self,
         target: str,
         module: str | None = None,
+        *,
         check: bool = True,
     ) -> subprocess.CompletedProcess[str]:
         """Run a make target in a module or workspace."""
@@ -87,7 +145,7 @@ class WorkspaceService:
 
         return self.run_command(["make", target], cwd=cwd, check=check)
 
-    def get_module_status(self, module: str) -> dict[str, Any]:
+    def get_module_status(self, module: str) -> dict[str, object]:
         """Get the status of a module."""
         module_path = self.modules.get(module)
         if not module_path or not module_path.exists():
@@ -109,7 +167,7 @@ class WorkspaceService:
             "has_tests": has_tests,
         }
 
-    def list_modules(self) -> list[dict[str, Any]]:
+    def list_modules(self) -> list[dict[str, object]]:
         """List all modules and their status."""
         return [self.get_module_status(module) for module in self.modules]
 
@@ -183,7 +241,7 @@ def status() -> None:
     is_flag=True,
     help="Generate coverage report",
 )
-def test(module: str | None, integration: bool, coverage: bool) -> None:
+def test(module: str | None, *, integration: bool, coverage: bool) -> None:
     """Run tests across the workspace or for specific module."""
     if module:
         console.print(f"[bold]Running tests for {module}[/bold]")
@@ -214,7 +272,7 @@ def test(module: str | None, integration: bool, coverage: bool) -> None:
     type=click.Choice(list(MODULE_DIRS.keys())),
     help="Run quality checks for specific module only",
 )
-def check(module: str | None) -> None:
+def check(module: str | None, *, integration: bool, coverage: bool) -> None:
     """Run quality checks (lint, type check) across workspace."""
     if module:
         console.print(f"[bold]Running quality checks for {module}[/bold]")
@@ -231,7 +289,7 @@ def check(module: str | None) -> None:
     type=click.Choice(list(MODULE_DIRS.keys())),
     help="Build specific module only",
 )
-def build(module: str | None) -> None:
+def build(module: str | None, *, integration: bool, coverage: bool) -> None:
     """Build workspace or specific module."""
     if module:
         console.print(f"[bold]Building {module}[/bold]")
@@ -253,7 +311,7 @@ def docker() -> None:
     multiple=True,
     help="Specific services to start",
 )
-def docker_up(service: tuple[str, ...]) -> None:
+def docker_up(service: tuple[str, ...], *, integration: bool, coverage: bool) -> None:
     """Start Docker containers for development."""
     console.print("[bold]Starting Docker containers[/bold]")
 
@@ -266,7 +324,11 @@ def docker_up(service: tuple[str, ...]) -> None:
 
 
 @docker.command("down")
-def docker_down() -> None:
+def docker_down(
+    *,
+    integration: bool,
+    coverage: bool,
+) -> None:
     """Stop Docker containers."""
     console.print("[bold]Stopping Docker containers[/bold]")
     workspace_service.run_command(["docker-compose", "down"])

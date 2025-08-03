@@ -1,4 +1,83 @@
-"""Unified CLI Pattern for FLEXT Projects using Click and Rich."""
+"""
+FLEXT CLI Patterns - Enterprise Command-Line Interface Framework
+
+Provides comprehensive base classes and patterns for building consistent,
+enterprise-grade command-line interfaces across all FLEXT ecosystem projects.
+This module implements standardized CLI patterns with proper error handling,
+rich terminal output, logging integration, and architectural consistency.
+
+The CLI framework ensures unified user experience across the 32-project FLEXT
+ecosystem while maintaining extensibility and customization capabilities for
+project-specific requirements. All CLI implementations follow Clean Architecture
+principles with clear separation between interface, application, and domain
+concerns.
+
+Key Components:
+    - BaseCLI: Foundation class for all FLEXT CLI implementations
+    - CLIConfig: Unified configuration management with validation
+    - Command Patterns: Standardized command structure and organization
+    - Error Handling: Consistent error reporting and user feedback
+    - Rich Output: Enhanced terminal output with progress and formatting
+    - Logging Integration: Structured logging with correlation IDs
+
+Architecture:
+    Implements Clean Architecture Interface Layer patterns with clear separation
+    between user interaction (CLI commands), application logic (business operations),
+    and infrastructure concerns (external tool integration). All CLIs provide
+    consistent patterns for configuration, validation, and error handling.
+
+Example:
+    Enterprise CLI implementation with FLEXT patterns:
+
+    >>> from flext.cli_patterns.base_cli import BaseCLI, CLIConfig
+    >>> import click
+    >>> from pathlib import Path
+    >>>
+    >>> class ProjectCLI(BaseCLI):
+    ...     def __init__(self):
+    ...         config = CLIConfig(
+    ...             output_format="table",
+    ...             log_level="INFO",
+    ...             project_root=Path.cwd()
+    ...         )
+    ...         super().__init__(name="project-cli", version="2.0.0", config=config)
+    ...
+    ...     @click.command()
+    ...     @click.option("--project", help="Project name to process")
+    ...     def process(self, project: str):
+    ...         '''Process project with FLEXT patterns.'''
+    ...         try:
+    ...             # Business logic with proper error handling
+    ...             result = self.execute_business_operation(project)
+    ...             if result.success:
+    ...                 self.success(f"Project {project} processed successfully")
+    ...             else:
+    ...                 self.error(f"Failed to process {project}: {result.error}")
+    ...         except Exception as e:
+    ...             self.handle_error(e, context={"project": project})
+    >>>
+    >>> # CLI usage patterns
+    >>> cli = ProjectCLI()
+    >>> cli.run()  # Handles command parsing and execution
+
+Integration:
+    - Built on Click framework for robust command-line argument parsing
+    - Integrates with Rich library for enhanced terminal output and progress
+    - Uses Pydantic for configuration validation and type safety
+    - Coordinates with flext-core patterns for error handling and logging
+    - Supports both interactive and automated (CI/CD) execution modes
+
+Quality Standards:
+    - Comprehensive error handling with user-friendly messages and recovery
+    - Rich terminal output with progress bars, tables, and status indicators
+    - Structured logging with proper correlation and tracing capabilities
+    - Configuration validation with clear error messages and defaults
+    - Performance monitoring and operation timing for optimization
+
+Author: FLEXT Development Team
+Version: 2.0.0
+License: MIT
+"""
 
 from __future__ import annotations
 

@@ -9,9 +9,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/flext/flexcore/internal/infrastructure/config"
-	"github.com/flext/flexcore/internal/infrastructure/logging"
-	"github.com/flext/flexcore/internal/shared_kernel/application"
+	"github.com/flext-sh/flexcore/pkg/config"
+	"github.com/flext-sh/flexcore/pkg/logging"
+	"github.com/flext-sh/flext/pkg/utils/shared_kernel"
 )
 
 // DemoServer represents the demo server with its configuration

@@ -14,7 +14,7 @@ class GradualLintFixer:
 
     def fix_gradually(self, **_kwargs: object) -> dict[str, object]:
         """Fix lint issues gradually."""
-        print_colored("🔧 Corrigindo problemas de lint gradualmente...", Colors.BLUE)
+        print_colored("🔧 Fixing lint issues gradually...", Colors.BLUE)
 
         results = {
             "fixed_issues": 0,
@@ -23,5 +23,5 @@ class GradualLintFixer:
             "details": {},
         }
 
-        print_colored("✅ Correção gradual concluída", Colors.GREEN)
+        print_colored("✅ Gradual fixing completed", Colors.GREEN)
         return results
