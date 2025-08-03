@@ -242,7 +242,10 @@ class BackupManager:
         try:
             # Check file size
             file_size = operation["file_size"]
-            if not isinstance(file_size, int) or backup_path.stat().st_size != file_size:
+            if (
+                not isinstance(file_size, int)
+                or backup_path.stat().st_size != file_size
+            ):
                 return False
 
             # Check hash
