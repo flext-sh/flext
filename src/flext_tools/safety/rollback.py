@@ -1,4 +1,4 @@
-"""Sistema de rollback para operações críticas."""
+"""Rollback system for critical operations."""
 
 from __future__ import annotations
 
@@ -20,7 +20,7 @@ class ConfirmationMode(Enum):
 
 
 class RollbackManager:
-    """Gerencia rollback de operações baseado em backups."""
+    """Manages operation rollback based on backups."""
 
     def __init__(self, backup_dir: Path | None = None) -> None:
         """Initialize rollback manager."""
@@ -30,11 +30,11 @@ class RollbackManager:
             self.backup_dir = Path.cwd() / ".flext_backups"
 
         if not self.backup_dir.exists():
-            msg = f"Diretório de backup não encontrado: {self.backup_dir}"
+            msg = f"Backup directory not found: {self.backup_dir}"
             raise FileNotFoundError(msg)
 
     def list_sessions(self) -> list[dict[str, str | int | list[str]]]:
-        """Lista todas as sessões de backup disponíveis."""
+        """List all available backup sessions."""
         sessions = []
 
         for session_dir in self.backup_dir.glob("session_*"):
@@ -56,64 +56,64 @@ class RollbackManager:
 
             except (OSError, json.JSONDecodeError, KeyError, UnicodeDecodeError) as e:
                 print_colored(
-                    f"  ⚠️ Erro ao ler sessão {session_dir.name}: {e}",
+                    f"  ⚠️ Error reading session {session_dir.name}: {e}",
                     Colors.YELLOW,
                 )
 
         return sorted(sessions, key=operator.itemgetter("session_id"), reverse=True)
 
     def rollback_file(self, backup_id: str) -> bool:
-        """Restaura um arquivo específico do backup.
+        """Restore a specific file from backup.
 
         Args:
-            backup_id: ID do backup a ser restaurado
+            backup_id: ID of the backup to be restored
 
         Returns:
-            True se sucesso
+            True if successful
 
         """
         operation = self._find_operation(backup_id)
         if not operation:
-            print_colored(f"❌ Backup {backup_id} não encontrado", Colors.RED)
+            print_colored(f"❌ Backup {backup_id} not found", Colors.RED)
             return False
 
         backup_path = Path(operation["backup_path"])
         original_path = Path(operation["original_path"])
 
         if not backup_path.exists():
-            print_colored(f"❌ Arquivo de backup não existe: {backup_path}", Colors.RED)
+            print_colored(f"❌ Backup file does not exist: {backup_path}", Colors.RED)
             return False
 
         try:
-            # Verifica integridade do backup
+            # Verify backup integrity
             if not self._verify_backup_integrity(backup_path, operation):
                 print_colored(
-                    f"⚠️ Integridade do backup comprometida: {backup_id}",
+                    f"⚠️ Backup integrity compromised: {backup_id}",
                     Colors.YELLOW,
                 )
-                response = input("Continuar mesmo assim? (s/N): ")
-                if response.lower() not in {"s", "sim", "y", "yes"}:
+                response = input("Continue anyway? (y/N): ")
+                if response.lower() not in {"y", "yes"}:
                     return False
 
-            # Cria backup do estado atual antes de restaurar
+            # Create backup of current state before restoring
             if original_path.exists():
                 current_backup = original_path.with_suffix(
                     f"{original_path.suffix}.pre_rollback",
                 )
                 shutil.copy2(original_path, current_backup)
                 print_colored(
-                    f"  📁 Estado atual salvo em: {current_backup}",
+                    f"  📁 Current state saved to: {current_backup}",
                     Colors.CYAN,
                 )
 
-            # Restaura arquivo
+            # Restore file
             shutil.copy2(backup_path, original_path)
-            print_colored(f"  ✅ Arquivo restaurado: {original_path}", Colors.GREEN)
+            print_colored(f"  ✅ File restored: {original_path}", Colors.GREEN)
 
             return True
 
         except (OSError, PermissionError, shutil.Error) as e:
-            print_colored(f"❌ Erro ao restaurar arquivo: {e}", Colors.RED)
+            print_colored(f"❌ Error restoring file: {e}", Colors.RED)
             return False
 
     def rollback_session(
@@ -122,22 +122,22 @@ class RollbackManager:
         *,
         confirmation_mode: ConfirmationMode = ConfirmationMode.REQUIRE_CONFIRMATION,
     ) -> tuple[int, int]:
-        """Restaura todos os arquivos de uma sessão.
+        """Restore all files from a session.
 
         Args:
-            session_id: ID da sessão a ser restaurada
-            confirmation_mode: Modo de confirmação (REQUIRE_CONFIRMATION ou
+            session_id: ID of the session to be restored
+            confirmation_mode: Confirmation mode (REQUIRE_CONFIRMATION or
             AUTO_CONFIRM)
 
         Returns:
-            Tupla (sucessos, falhas)
+            Tuple (successes, failures)
 
         """
         session_dir = self.backup_dir / f"session_{session_id}"
         log_file = session_dir / "operations_log.json"
 
         if not log_file.exists():
-            print_colored(f"❌ Sessão {session_id} não encontrada", Colors.RED)
+            print_colored(f"❌ Session {session_id} not found", Colors.RED)
             return 0, 0
 
         with log_file.open(encoding="utf-8") as f:
@@ -147,18 +147,18 @@ class RollbackManager:
 
         if confirmation_mode == ConfirmationMode.REQUIRE_CONFIRMATION:
             print_colored(
-                f"⚠️ Restaurar {len(operations)} arquivos da sessão {session_id}?",
+                f"⚠️ Restore {len(operations)} files from session {session_id}?",
                 Colors.YELLOW,
             )
             for op in operations:
                 print_colored(f"  - {op['original_path']}", Colors.CYAN)
 
-            response = input("\nConfirmar rollback? (s/N): ")
-            if response.lower() not in {"s", "sim", "y", "yes"}:
-                print_colored("❌ Rollback cancelado", Colors.YELLOW)
+            response = input("\nConfirm rollback? (y/N): ")
+            if response.lower() not in {"y", "yes"}:
+                print_colored("❌ Rollback cancelled", Colors.YELLOW)
                 return 0, 0
 
-        print_colored(f"🔄 Iniciando rollback da sessão {session_id}...", Colors.BLUE)
+        print_colored(f"🔄 Starting rollback of session {session_id}...", Colors.BLUE)
 
         success_count = 0
         failure_count = 0
@@ -170,22 +170,22 @@ class RollbackManager:
                 failure_count += 1
 
         print_colored(
-            f"\n📊 Rollback: {success_count} sucessos, {failure_count} falhas",
+            f"\n📊 Rollback: {success_count} successes, {failure_count} failures",
             Colors.CYAN,
         )
         return success_count, failure_count
 
     def rollback_to_restore_point(self, restore_point_id: str) -> tuple[int, int]:
-        """Restaura até um ponto de restauração específico.
+        """Restore to a specific restore point.
 
         Args:
-            restore_point_id: ID do ponto de restauração
+            restore_point_id: ID of the restore point
 
         Returns:
-            Tupla (sucessos, falhas)
+            Tuple (successes, failures)
 
         """
-        # Extrai session_id do restore_point_id
+        # Extract session_id from restore_point_id
         session_id = (
             restore_point_id.split("_")[1] + "_" + restore_point_id.split("_")[2]
         )
@@ -195,7 +195,7 @@ class RollbackManager:
 
         if not restore_file.exists():
             print_colored(
-                f"❌ Ponto de restauração {restore_point_id} não encontrado",
+                f"❌ Restore point {restore_point_id} not found",
                 Colors.RED,
             )
             return 0, 0
@@ -206,17 +206,17 @@ class RollbackManager:
         operations_count = restore_data["operations_count"]
 
         print_colored(
-            f"🔄 Restaurando até ponto: {restore_data['description']}",
+            f"🔄 Restoring to point: {restore_data['description']}",
             Colors.BLUE,
         )
-        print_colored(f"   Operações até o ponto: {operations_count}", Colors.CYAN)
+        print_colored(f"   Operations to point: {operations_count}", Colors.CYAN)
 
-        # Carrega log de operações
+        # Load operations log
         log_file = session_dir / "operations_log.json"
         with log_file.open(encoding="utf-8") as f:
             log_data = json.load(f)
 
-        # Restaura apenas operações até o ponto
+        # Restore only operations up to the point
         operations_to_restore = log_data["operations"][:operations_count]
 
         success_count = 0
@@ -231,13 +231,13 @@ class RollbackManager:
         return success_count, failure_count
 
     def verify_rollback_feasibility(self, session_id: str) -> dict[str, object]:
-        """Verifica se é possível fazer rollback de uma sessão.
+        """Verify if rollback of a session is possible.
 
         Args:
-            session_id: ID da sessão
+            session_id: Session ID
 
         Returns:
-            Dicionário com status de verificação
+            Dictionary with verification status
 
         """
         session_dir = self.backup_dir / f"session_{session_id}"
@@ -253,7 +253,7 @@ class RollbackManager:
 
         if not log_file.exists():
             result["feasible"] = False
-            result["issues"].append("Log de operações não encontrado")
+            result["issues"].append("Operations log not found")
             return result
 
         with log_file.open(encoding="utf-8") as f:
@@ -263,16 +263,16 @@ class RollbackManager:
             backup_path = Path(operation["backup_path"])
             original_path = Path(operation["original_path"])
 
-            # Verifica se backup existe
+            # Check if backup exists
             if not backup_path.exists():
                 result["missing_backups"].append(operation["original_path"])
                 result["feasible"] = False
 
-            # Verifica integridade
+            # Check integrity
             elif not self._verify_backup_integrity(backup_path, operation):
                 result["integrity_issues"].append(operation["original_path"])
 
-            # Verifica conflitos (arquivo foi modificado após backup)
+            # Check conflicts (file was modified after backup)
             elif original_path.exists():
                 current_hash = self._calculate_hash(original_path)
                 if current_hash != operation["file_hash"]:
@@ -281,7 +281,7 @@ class RollbackManager:
         return result
 
     def _find_operation(self, backup_id: str) -> dict[str, object] | None:
-        """Encontra operação pelo ID de backup."""
+        """Find operation by backup ID."""
         session_id = "_".join(backup_id.split("_")[:2])
         session_dir = self.backup_dir / f"session_{session_id}"
         log_file = session_dir / "operations_log.json"
@@ -303,7 +303,7 @@ class RollbackManager:
         backup_path: Path,
         operation: dict[str, object],
     ) -> bool:
-        """Verifica integridade do backup."""
+        """Verify backup integrity."""
         try:
             if backup_path.stat().st_size != operation["file_size"]:
                 return False
@@ -314,7 +314,7 @@ class RollbackManager:
             return False
 
     def _calculate_hash(self, file_path: Path) -> str:
-        """Calcula hash do arquivo."""
+        """Calculate file hash."""
         hash_sha256 = hashlib.sha256()
         with file_path.open("rb") as f:
             for chunk in iter(lambda: f.read(4096), b""):

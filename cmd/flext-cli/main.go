@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/flext/flexcore/internal/cli"
-	"github.com/flext/flexcore/internal/infrastructure/logging"
-	"github.com/flext/flexcore/internal/shared_kernel/application"
+	"github.com/flext-sh/flext/pkg/interfaces/cli"
+	"github.com/flext-sh/flexcore/pkg/logging"
+	"github.com/flext-sh/flext/pkg/utils/shared_kernel"
 )
 
 func main() {

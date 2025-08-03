@@ -14,9 +14,9 @@ class OracleE2ETestManager:
 
     def run_e2e_tests(self, **_kwargs: object) -> dict[str, object]:
         """Run E2E tests for Oracle components."""
-        print_colored("🔍 Executando testes E2E Oracle...", Colors.BLUE)
+        print_colored("🔍 Running Oracle E2E tests...", Colors.BLUE)
 
-        # Implementação básica - pode ser expandida conforme necessário
+        # Basic implementation - can be expanded as needed
         results = {
             "success": True,
             "tests_run": 0,
@@ -25,14 +25,14 @@ class OracleE2ETestManager:
             "details": [],
         }
 
-        print_colored("✅ Testes E2E Oracle concluídos", Colors.GREEN)
+        print_colored("✅ Oracle E2E tests completed", Colors.GREEN)
         return results
 
     def validate_test_environment(self) -> bool:
         """Validate that the test environment is ready."""
-        print_colored("🔍 Validando ambiente de teste...", Colors.BLUE)
+        print_colored("🔍 Validating test environment...", Colors.BLUE)
         return True
 
     def cleanup_test_artifacts(self) -> None:
         """Clean up test artifacts."""
-        print_colored("🧹 Limpando artefatos de teste...", Colors.YELLOW)
+        print_colored("🧹 Cleaning up test artifacts...", Colors.YELLOW)

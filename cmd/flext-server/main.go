@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/flext/flexcore/internal/infrastructure/container"
-	"github.com/flext/flexcore/internal/infrastructure/logging"
-	"github.com/flext/flexcore/internal/infrastructure/server"
-	"github.com/flext/flexcore/internal/shared_kernel/application"
+	"github.com/flext-sh/flexcore/pkg/container"
+	"github.com/flext-sh/flexcore/pkg/logging"
+	"github.com/flext-sh/flexcore/pkg/server"
+	"github.com/flext-sh/flext/pkg/utils/shared_kernel"
 )
 
 func main() {

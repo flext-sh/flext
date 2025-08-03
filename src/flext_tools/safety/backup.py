@@ -1,4 +1,4 @@
-"""Sistema de backup para operações críticas."""
+"""Backup system for critical operations."""
 
 from __future__ import annotations
 
@@ -19,7 +19,7 @@ MIN_CONTENT_LENGTH = 100
 
 
 class BackupManager:
-    """Gerencia backups de arquivos críticos antes de modificações."""
+    """Manages backups of critical files before modifications."""
 
     def __init__(self, backup_dir: Path | None = None) -> None:
         """Initialize backup manager."""
@@ -33,26 +33,26 @@ class BackupManager:
         self.session_dir = self.backup_dir / f"session_{self.session_id}"
         self.session_dir.mkdir(exist_ok=True)
 
-        # Registro de operações
+        # Operations log
         self.operations_log: list[dict[str, object]] = []
 
     def create_backup(
         self,
         project_path: Path,
-        description: str = "Backup automático",
+        description: str = "Automatic backup",
     ) -> str:
-        """Cria backup completo de um projeto.
+        """Create complete backup of a project.
 
         Args:
-            project_path: Caminho do projeto
-            description: Descrição do backup
+            project_path: Project path
+            description: Backup description
 
         Returns:
-            ID do backup criado
+            Created backup ID
 
         """
         if not project_path.exists():
-            msg = f"Projeto não encontrado: {project_path}"
+            msg = f"Project not found: {project_path}"
             raise FileNotFoundError(msg)
 
         backup_id = f"backup_{self.session_id}_{len(self.operations_log)}"
@@ -60,7 +60,7 @@ class BackupManager:
         backup_path.mkdir(exist_ok=True)
 
         try:
-            # Copia arquivos críticos do projeto
+            # Copy critical project files
             critical_files = [
                 "pyproject.toml",
                 "poetry.lock",
@@ -77,7 +77,7 @@ class BackupManager:
                     shutil.copy2(file_path, backup_file_path)
                     backed_up_files.append(str(file_path))
 
-            # Registra operação
+            # Register operation
             operation = {
                 "backup_id": backup_id,
                 "project_path": str(project_path),
@@ -92,45 +92,45 @@ class BackupManager:
             self._save_operations_log()
 
             print_colored(
-                f"✅ Backup criado: {backup_id} ({len(backed_up_files)} arquivos)",
+                f"✅ Backup created: {backup_id} ({len(backed_up_files)} files)",
                 Colors.GREEN,
             )
 
             return backup_id
 
         except Exception as e:
-            print_colored(f"❌ Erro ao criar backup: {e}", Colors.RED)
+            print_colored(f"❌ Error creating backup: {e}", Colors.RED)
             raise
 
     def backup_file(self, file_path: Path, operation_type: str = "modify") -> str:
-        """Cria backup de um arquivo antes de modificação.
+        """Create backup of a file before modification.
 
         Args:
-            file_path: Caminho do arquivo a ser backupeado
-            operation_type: Tipo de operação (modify, add, delete)
+            file_path: Path of the file to be backed up
+            operation_type: Operation type (modify, add, delete)
 
         Returns:
-            ID do backup para rollback
+            Backup ID for rollback
 
         """
         if not file_path.exists():
-            msg = f"Arquivo não encontrado: {file_path}"
+            msg = f"File not found: {file_path}"
             raise FileNotFoundError(msg)
 
-        # Gera ID único para este backup
+        # Generate unique ID for this backup
         backup_id = f"{self.session_id}_{len(self.operations_log):03d}"
         backup_filename = f"{backup_id}_{file_path.name}"
         backup_path = self.session_dir / backup_filename
 
         try:
-            # Copia arquivo para backup
+            # Copy file to backup
             shutil.copy2(file_path, backup_path)
 
-            # Calcula hash para verificação de integridade
+            # Calculate hash for integrity verification
             file_hash = self._calculate_hash(file_path)
             file_size = file_path.stat().st_size
 
-            # Registra operação
+            # Register operation
             operation = {
                 "backup_id": backup_id,
                 "original_path": str(file_path),
@@ -153,13 +153,13 @@ class BackupManager:
             raise
 
     def create_restore_point(self, description: str) -> str:
-        """Cria um ponto de restauração.
+        """Create a restore point.
 
         Args:
-            description: Descrição do ponto de restauração
+            description: Restore point description
 
         Returns:
-            ID do ponto de restauração
+            Restore point ID
 
         """
         restore_point_id = f"restore_{self.session_id}_{len(self.operations_log)}"
@@ -177,24 +177,24 @@ class BackupManager:
             json.dump(restore_data, f, indent=2)
 
         print_colored(
-            f"📍 Ponto de restauração criado: {description}",
+            f"📍 Restore point created: {description}",
             Colors.CYAN,
         )
 
         return restore_point_id
 
     def list_backups(self) -> list[dict[str, object]]:
-        """Lista todos os backups da sessão atual."""
+        """List all backups from current session."""
         return self.operations_log.copy()
 
     def cleanup_old_backups(self, days: int = 30) -> int:
-        """Remove backups antigos.
+        """Remove old backups.
 
         Args:
-            days: Dias para manter backups
+            days: Days to keep backups
 
         Returns:
-            Número de sessões removidas
+            Number of sessions removed
 
         """
         cutoff_date = datetime.now(UTC).timestamp() - (days * 24 * 3600)
@@ -207,102 +207,111 @@ class BackupManager:
                     shutil.rmtree(session_dir)
                     removed_count += 1
                     print_colored(
-                        f"🗑️ Sessão removida: {session_dir.name}",
+                        f"🗑️ Session removed: {session_dir.name}",
                         Colors.YELLOW,
                     )
             except (OSError, PermissionError) as e:
                 print_colored(
-                    f"⚠️ Erro ao remover {session_dir.name}: {e}",
+                    f"⚠️ Error removing {session_dir.name}: {e}",
                     Colors.YELLOW,
                 )
 
         return removed_count
 
     def get_backup_info(self, backup_id: str) -> dict[str, object] | None:
-        """Obtém informações de um backup específico."""
+        """Get information for a specific backup."""
         for operation in self.operations_log:
             if operation["backup_id"] == backup_id:
                 return operation.copy()
         return None
 
     def verify_backup_integrity(self, backup_id: str) -> bool:
-        """Verifica integridade de um backup."""
+        """Verify backup integrity."""
         operation = self.get_backup_info(backup_id)
         if not operation:
             return False
 
-        backup_path = Path(operation["backup_path"])
+        backup_path_str = operation["backup_path"]
+        if not isinstance(backup_path_str, str):
+            return False
+
+        backup_path = Path(backup_path_str)
         if not backup_path.exists():
             return False
 
         try:
-            # Verifica tamanho do arquivo
-            if backup_path.stat().st_size != operation["file_size"]:
+            # Check file size
+            file_size = operation["file_size"]
+            if not isinstance(file_size, int) or backup_path.stat().st_size != file_size:
                 return False
 
-            # Verifica hash
+            # Check hash
+            file_hash = operation["file_hash"]
+            if not isinstance(file_hash, str):
+                return False
+
             backup_hash = self._calculate_hash(backup_path)
-            return bool(backup_hash == operation["file_hash"])
+            return bool(backup_hash == file_hash)
 
         except (OSError, ValueError, KeyError):
             return False
 
     def validate_poetry_environment(self, project_path: Path) -> bool:
-        """Valida ambiente Poetry antes de modificações críticas.
+        """Validate Poetry environment before critical modifications.
 
         Args:
-            project_path: Caminho do projeto
+            project_path: Project path
 
         Returns:
-            True se ambiente está válido
+            True if environment is valid
 
         """
         pyproject_toml = project_path / "pyproject.toml"
         poetry_lock = project_path / "poetry.lock"
 
-        # Verifica se pyproject.toml existe
+        # Check if pyproject.toml exists
         if not pyproject_toml.exists():
-            print_colored("❌ pyproject.toml não encontrado", Colors.RED)
+            print_colored("❌ pyproject.toml not found", Colors.RED)
             return False
 
-        # Verifica se há backup recente do poetry.lock
+        # Check if there's a recent backup of poetry.lock
         if poetry_lock.exists():
             return self._validate_poetry_lock(poetry_lock)
 
-        # Não encontrou backup - considera OK se arquivo é válido
+        # No backup found - consider OK if file is valid
         return self._validate_poetry_lock(poetry_lock)
 
     def _validate_poetry_lock(self, poetry_lock_path: Path) -> bool:
-        """Valida se um arquivo poetry.lock está bem formado.
+        """Validate if a poetry.lock file is well-formed.
 
         Args:
-            poetry_lock_path: Caminho para o poetry.lock
+            poetry_lock_path: Path to poetry.lock
 
         Returns:
-            True se válido, False caso contrário
+            True if valid, False otherwise
 
         """
         try:
             with poetry_lock_path.open(encoding="utf-8") as f:
                 content = f.read()
 
-            # Tenta parsear como TOML
+            # Try to parse as TOML
             tomllib.loads(content)
 
-            # Verifica estrutura básica
+            # Check basic structure
             if "[[package]]" not in content and '"package"' not in content:
                 return False
 
-            # Verifica se não está vazio
-            # poetry.lock mínimo tem muito mais que 100 chars
+            # Check if not empty
+            # Minimum poetry.lock has much more than 100 chars
             return len(content.strip()) >= MIN_CONTENT_LENGTH
 
         except (OSError, UnicodeDecodeError) as e:
-            print_colored(f"    ❌ Erro validando poetry.lock: {e}", Colors.RED)
+            print_colored(f"    ❌ Error validating poetry.lock: {e}", Colors.RED)
             return False
 
     def _save_operations_log(self) -> None:
-        """Salva log de operações no disco."""
+        """Save operations log to disk."""
         log_file = self.session_dir / "operations_log.json"
         log_data = {
             "session_id": self.session_id,
@@ -314,7 +323,7 @@ class BackupManager:
             json.dump(log_data, f, indent=2)
 
     def _calculate_hash(self, file_path: Path) -> str:
-        """Calcula hash SHA256 de um arquivo."""
+        """Calculate SHA256 hash of a file."""
         hash_sha256 = hashlib.sha256()
         with file_path.open("rb") as f:
             for chunk in iter(lambda: f.read(4096), b""):

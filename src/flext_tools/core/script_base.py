@@ -1,8 +1,91 @@
 #!/usr/bin/env python3  # noqa: EXE001
-"""Base class for FLEXT scripts.
+"""FLEXT Core Scripts - Enterprise Script Foundation Framework.
 
-Provides a standard interface for creating scripts with consistent
-error handling, logging, and command-line interface.
+Provides comprehensive base classes and utilities for creating FLEXT scripts with
+enterprise-grade error handling, logging, command-line interfaces, and execution
+patterns. This module implements standardized script patterns that ensure
+consistency, reliability, and maintainability across all FLEXT ecosystem
+automation and operational scripts.
+
+The script framework provides structured patterns for script lifecycle management,
+validation, execution, and cleanup with comprehensive error handling and rich
+terminal output. All scripts follow Clean Architecture principles and integrate
+with FLEXT observability and monitoring systems.
+
+Key Components:
+    - FlextScript: Abstract base class for enterprise-grade script implementation
+    - ScriptMetadata: Comprehensive metadata management for scripts
+    - Script Lifecycle: Structured validation, execution, and cleanup patterns
+    - Error Handling: Comprehensive error handling with context preservation
+    - CLI Integration: Rich command-line interface with consistent patterns
+    - Logging Integration: Structured logging with performance monitoring
+
+Architecture:
+    Implements enterprise script patterns with proper separation of concerns,
+    validation boundaries, and error handling strategies. Scripts provide
+    consistent interfaces while allowing for specialized implementation
+    of business logic and operational requirements.
+
+Example:
+    Creating enterprise-grade FLEXT scripts:
+
+    >>> from flext_tools.core.script_base import FlextScript, ScriptMetadata
+    >>> from flext_tools.core.script_base import create_simple_script
+    >>>
+    >>> class DataProcessingScript(FlextScript):
+    ...     @property
+    ...     def metadata(self) -> ScriptMetadata:
+    ...         return ScriptMetadata(
+    ...             name="data-processor",
+    ...             description="Process FLEXT data with validation and monitoring",
+    ...             category="data-operations",
+    ...             version="2.0.0",
+    ...             requires_confirmation=True,
+    ...         )
+    ...
+    ...     def validate_preconditions(self) -> bool:
+    ...         # Validate environment and dependencies
+    ...         return True
+    ...
+    ...     def execute_main_logic(self) -> bool:
+    ...         # Implement data processing logic
+    ...         self.logger.info("Processing data with enterprise patterns")
+    ...         return True
+    ...
+    ...     def cleanup(self) -> None:
+    ...         # Cleanup resources and temporary files
+    ...         pass
+    >>>
+    >>> # Simple script creation for automation
+    >>> def process_pipeline() -> bool:
+    ...     # Simple processing logic
+    ...     return True
+    >>>
+    >>> SimpleProcessorScript = create_simple_script(
+    ...     name="pipeline-processor",
+    ...     description="Simple pipeline processing automation",
+    ...     category="automation",
+    ...     main_func=process_pipeline,
+    ... )
+
+Integration:
+    - Built on flext-core patterns with comprehensive error handling
+    - Integrates with flext-observability for script monitoring and metrics
+    - Supports rich terminal output with progress indication and status reporting
+    - Coordinates with logging systems for audit trails and debugging
+    - Provides foundation for automation, operations, and maintenance scripts
+
+Quality Standards:
+    - Comprehensive error handling with detailed context and recovery patterns
+    - Full type annotation coverage for enhanced development experience
+    - Structured lifecycle management with validation and cleanup boundaries
+    - Performance monitoring and execution time tracking built-in
+    - Security-conscious execution with proper privilege and resource management
+
+Author: FLEXT Development Team
+Version: 2.0.0
+License: MIT
+
 """
 
 from __future__ import annotations

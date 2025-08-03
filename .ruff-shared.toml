@@ -115,6 +115,28 @@ lint.per-file-ignores."**/tests/**" = [
     "TRY300",
     
 ]
+lint.per-file-ignores."**/test_*.py" = [
+    "ARG",
+    "BLE001", 
+    "COM812",
+    "D",
+    "E501",
+    "EM102",
+    "G004",
+    "PLC0415",
+    "PLR0912",
+    "PLR2004",
+    "S101",
+    "S103",
+    "S104",
+    "S105",
+    "S106",
+    "S107",
+    "S112",
+    "SLF001",
+    "TRY003",
+    "TRY300",
+]
 lint.select = ["ALL"]
 respect-gitignore = true
 show-fixes = true
