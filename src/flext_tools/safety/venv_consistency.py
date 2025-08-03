@@ -1,4 +1,67 @@
-"""Validação de consistência do virtual environment."""
+"""FLEXT Virtual Environment Consistency Validation - Enterprise Environment Management.
+
+Provides comprehensive validation capabilities for shared virtual environment
+consistency across the FLEXT ecosystem. This module ensures that the workspace
+virtual environment maintains consistency with all project requirements,
+identifies conflicts, and provides actionable recommendations for resolution.
+
+The validator analyzes installed packages against project requirements from
+all Poetry configurations, detecting version conflicts, missing dependencies,
+orphaned packages, and other inconsistencies that could impact development
+and deployment stability.
+
+Key Components:
+    - VenvConsistencyValidator: Main validation engine for environment analysis
+    - PackageInfo: Structured representation of installed package metadata
+    - VenvConflict: Detailed conflict information with severity classification
+    - Consistency Analysis: Cross-project requirement validation
+    - Resolution Recommendations: Actionable suggestions for conflict resolution
+
+Architecture:
+    Implements enterprise-grade environment validation with proper error handling,
+    comprehensive scanning capabilities, and detailed reporting. Integrates with
+    Poetry dependency management and provides structured output for automated
+    and manual conflict resolution processes.
+
+Example:
+    Validate workspace virtual environment consistency:
+
+    >>> from flext_tools.safety.venv_consistency import VenvConsistencyValidator
+    >>> from pathlib import Path
+    >>>
+    >>> # Initialize validator for workspace
+    >>> validator = VenvConsistencyValidator(Path("/workspace/flext"))
+    >>>
+    >>> # Perform comprehensive consistency validation
+    >>> conflicts = validator.validate_venv_consistency()
+    >>>
+    >>> # Review critical conflicts
+    >>> if conflicts["critical"]:
+    ...     print(f"Found {len(conflicts['critical'])} critical issues")
+    ...     for conflict in conflicts["critical"]:
+    ...         print(f"Package: {conflict.package}")
+    ...         print(f"Issue: {conflict.details}")
+    ...         print(f"Projects affected: {conflict.affected_projects}")
+
+Integration:
+    - Built on Poetry configuration parsing for accurate requirement extraction
+    - Integrates with pip list for comprehensive package discovery
+    - Coordinates with quality gates for automated environment validation
+    - Provides foundation for automated environment synchronization
+    - Supports workspace-wide dependency management strategies
+
+Quality Standards:
+    - Comprehensive error handling with detailed context preservation
+    - Performance optimization for large workspace environments
+    - Configurable analysis parameters and severity thresholds
+    - Integration with development workflows and CI/CD pipelines
+    - Professional English documentation and user-facing messages
+
+Author: FLEXT Development Team
+Version: 2.0.0
+License: MIT
+
+"""
 
 from __future__ import annotations
 
@@ -22,7 +85,20 @@ MAX_CONFLICTS_DISPLAY = 10
 
 @dataclass
 class PackageInfo:
-    """Informações sobre um package instalado."""
+    """Information about an installed package.
+
+    Represents metadata for packages installed in the virtual environment
+    including version information, location, and dependency relationships
+    for comprehensive environment analysis.
+
+    Attributes:
+        name: Package name (normalized to lowercase)
+        version: Installed package version string
+        location: Installation location path (optional)
+        required_by: List of packages that depend on this package (optional)
+        dependencies: List of packages this package depends on (optional)
+
+    """
 
     name: str
     version: str
@@ -33,7 +109,20 @@ class PackageInfo:
 
 @dataclass
 class VenvConflict:
-    """Representa um conflito no virtual environment."""
+    """Represents a conflict in the virtual environment.
+
+    Contains detailed information about environment inconsistencies including
+    conflict type, affected packages, severity assessment, and impact analysis
+    for structured conflict resolution and reporting.
+
+    Attributes:
+        type: Conflict type ("version", "missing", "duplicate", "orphan")
+        package: Name of the affected package
+        details: Detailed description of the conflict
+        severity: Severity level ("critical", "warning", "info")
+        affected_projects: List of projects impacted by this conflict
+
+    """
 
     type: str  # "version", "missing", "duplicate", "orphan"
     package: str
@@ -43,7 +132,62 @@ class VenvConflict:
 
 
 class VenvConsistencyValidator:
-    """Valida consistência do virtual environment compartilhado."""
+    """Validates consistency of shared virtual environment across workspace.
+
+    Provides comprehensive validation capabilities for workspace virtual environment
+    consistency, analyzing installed packages against project requirements and
+    identifying conflicts, missing dependencies, and optimization opportunities.
+
+    This validator serves as the primary tool for maintaining environment health
+    across the FLEXT ecosystem, ensuring that the shared virtual environment
+    meets all project requirements while identifying potential issues before
+    they impact development or deployment processes.
+
+    Attributes:
+        workspace_path: Path to the workspace root directory
+        venv_path: Path to the shared virtual environment
+        installed_packages: Dictionary of installed package information
+        project_requirements: Dictionary of project requirement specifications
+        conflicts: List of identified environment conflicts
+
+    Features:
+        - Comprehensive package installation analysis
+        - Cross-project requirement validation
+        - Version conflict detection with severity assessment
+        - Orphaned package identification
+        - Missing dependency detection
+        - Detailed reporting with actionable recommendations
+
+    Architecture:
+        Uses Poetry configuration parsing and pip list integration for
+        comprehensive environment analysis with proper error handling
+        and structured conflict reporting.
+
+    Example:
+        Validate workspace environment consistency:
+
+        >>> from pathlib import Path
+        >>> validator = VenvConsistencyValidator(Path("/workspace"))
+        >>>
+        >>> conflicts = validator.validate_venv_consistency()
+        >>>
+        >>> # Check for critical issues
+        >>> if conflicts["critical"]:
+        ...     print("Critical environment issues detected:")
+        ...     for conflict in conflicts["critical"]:
+        ...         print(f"  {conflict.package}: {conflict.details}")
+        >>>
+        >>> # Review warnings and optimization opportunities
+        >>> for severity in ["warning", "info"]:
+        ...     if conflicts[severity]:
+        ...         print(f"{severity.title()} issues: {len(conflicts[severity])}")
+
+    Integration:
+        Integrates with Poetry dependency management, quality gates, and
+        automated validation pipelines for continuous environment health
+        monitoring and maintenance.
+
+    """
 
     def __init__(self, workspace_path: Path) -> None:
         """Initialize validator with workspace path."""
@@ -54,62 +198,103 @@ class VenvConsistencyValidator:
         self.conflicts: list[VenvConflict] = []
 
     def validate_venv_consistency(self) -> dict[str, list[VenvConflict]]:
-        """Valida consistência do venv compartilhado."""
+        """Validate consistency of shared virtual environment.
+
+        Performs comprehensive validation of the workspace virtual environment
+        against all project requirements, identifying conflicts, missing packages,
+        version inconsistencies, and optimization opportunities.
+
+        Returns:
+            Dictionary mapping severity levels to lists of conflicts:
+            - 'critical': Issues that must be resolved (missing venv, missing packages)
+            - 'warning': Issues that should be addressed (version conflicts)
+            - 'info': Optimization opportunities (orphaned packages)
+
+        Validation Process:
+            1. Verify virtual environment exists and is accessible
+            2. Scan all installed packages with metadata extraction
+            3. Collect requirements from all project Poetry configurations
+            4. Analyze conflicts between installed packages and requirements
+            5. Organize conflicts by severity for prioritized resolution
+            6. Generate comprehensive validation summary report
+
+        Architecture:
+            Uses pipeline pattern for validation steps with proper error handling
+            and recovery at each stage to ensure comprehensive analysis even
+            with partial failures.
+
+        """
         print_colored(
-            "🔍 Validando consistência do virtual environment...",
+            "🔍 Validating virtual environment consistency...",
             Colors.BLUE,
         )
 
-        # 1. Verifica se venv existe
+        # 1. Check if virtual environment exists
         if not self._check_venv_exists():
             return {
                 "critical": [
                     VenvConflict(
                         type="missing_venv",
                         package="",
-                        details="Virtual environment não encontrado",
+                        details="Virtual environment not found",
                         severity="critical",
                         affected_projects=[],
                     ),
                 ],
             }
 
-        # 2. Escaneia packages instalados
+        # 2. Scan installed packages
         self._scan_installed_packages()
 
-        # 3. Coleta requisitos dos projetos
+        # 3. Collect project requirements
         self._collect_project_requirements()
 
-        # 4. Analisa conflitos
+        # 4. Analyze conflicts
         self._analyze_conflicts()
 
-        # 5. Organiza conflitos por severidade
+        # 5. Organize conflicts by severity
         conflicts_by_severity = self._organize_conflicts_by_severity()
 
-        # 6. Gera relatório
+        # 6. Generate validation report
         self._print_validation_summary(conflicts_by_severity)
 
         return conflicts_by_severity
 
     def _check_venv_exists(self) -> bool:
-        """Verifica se o virtual environment existe."""
+        """Check if the virtual environment exists.
+
+        Validates that the expected virtual environment directory exists
+        and is accessible for package analysis and validation.
+
+        Returns:
+            True if virtual environment exists and is accessible,
+            False if missing or inaccessible
+
+        """
         if not self.venv_path.exists():
-            print_colored("❌ Virtual environment não encontrado!", Colors.RED)
-            print_colored(f"    Esperado em: {self.venv_path}", Colors.YELLOW)
+            print_colored("❌ Virtual environment not found!", Colors.RED)
+            print_colored(f"    Expected at: {self.venv_path}", Colors.YELLOW)
             return False
 
         print_colored(
-            f"✅ Virtual environment encontrado: {self.venv_path}",
+            f"✅ Virtual environment found: {self.venv_path}",
             Colors.GREEN,
         )
         return True
 
     def _scan_installed_packages(self) -> None:
-        """Escaneia packages instalados no venv."""
-        print_colored("  📦 Escaneando packages instalados...", Colors.CYAN)
+        """Scan packages installed in the virtual environment.
+
+        Uses pip list to discover all installed packages with their
+        versions and metadata for comprehensive environment analysis.
+
+        Updates the installed_packages dictionary with PackageInfo
+        objects containing package metadata for conflict analysis.
+        """
+        print_colored("  📦 Scanning installed packages...", Colors.CYAN)
 
         try:
-            # Usa pip list para obter packages instalados
+            # Use pip list to get installed packages
             # Safe: using sys.executable with hardcoded arguments
             result = subprocess.run(  # noqa: S603
                 [sys.executable, "-m", "pip", "list", "--format=json"],
@@ -131,18 +316,26 @@ class VenvConsistencyValidator:
                 )
 
             print_colored(
-                f"    ✅ {len(self.installed_packages)} packages encontrados",
+                f"    ✅ {len(self.installed_packages)} packages found",
                 Colors.GREEN,
             )
 
         except subprocess.CalledProcessError as e:
-            print_colored(f"    ⚠️ Erro ao escanear packages: {e}", Colors.YELLOW)
+            print_colored(f"    ⚠️ Error scanning packages: {e}", Colors.YELLOW)
         except (json.JSONDecodeError, OSError, ValueError) as e:
-            print_colored(f"    ⚠️ Erro inesperado: {e}", Colors.YELLOW)
+            print_colored(f"    ⚠️ Unexpected error: {e}", Colors.YELLOW)
 
     def _collect_project_requirements(self) -> None:
-        """Coleta requisitos de todos os projetos."""
-        print_colored("  📋 Coletando requisitos dos projetos...", Colors.CYAN)
+        """Collect requirements from all projects in workspace.
+
+        Scans all project directories for pyproject.toml files and extracts
+        Poetry dependency specifications including main dependencies and
+        development group dependencies for comprehensive requirement analysis.
+
+        Updates the project_requirements dictionary with project-specific
+        dependency specifications for conflict detection.
+        """
+        print_colored("  📋 Collecting project requirements...", Colors.CYAN)
 
         projects = [
             d
@@ -155,7 +348,7 @@ class VenvConsistencyValidator:
         for project_path in projects:
             project_name = project_path.name
 
-            # Processa pyproject.toml
+            # Process pyproject.toml
             pyproject_path = project_path / "pyproject.toml"
 
             try:
@@ -164,14 +357,14 @@ class VenvConsistencyValidator:
 
                 self.project_requirements[project_name] = {}
 
-                # Dependências principais
+                # Main dependencies
                 deps = data.get("tool", {}).get("poetry", {}).get("dependencies", {})
                 for dep_name, dep_spec in deps.items():
                     if dep_name != "python":
                         name, version = self._parse_dependency_spec(str(dep_spec))
                         self.project_requirements[project_name][name] = version
 
-                # Dependências de desenvolvimento
+                # Development dependencies
                 dev_deps = (
                     data.get("tool", {})
                     .get("poetry", {})
@@ -190,26 +383,43 @@ class VenvConsistencyValidator:
                 UnicodeDecodeError,
             ) as e:
                 print_colored(
-                    f"    ⚠️ Erro ao ler {project_name}: {e}",
+                    f"    ⚠️ Error reading {project_name}: {e}",
                     Colors.YELLOW,
                 )
 
         total_reqs = sum(len(reqs) for reqs in self.project_requirements.values())
         print_colored(
-            f"    ✅ {total_reqs} requisitos em {len(projects)} projetos",
+            f"    ✅ {total_reqs} requirements across {len(projects)} projects",
             Colors.GREEN,
         )
 
     def _parse_dependency_spec(
-        self, dep_spec: str | dict[str, object]
+        self,
+        dep_spec: str | dict[str, object],
     ) -> tuple[str, str]:
-        """Parse uma especificação de dependência PEP 621."""
+        """Parse a PEP 621 dependency specification.
+
+        Processes dependency specifications from Poetry configuration files,
+        handling both simple string formats and complex dictionary formats
+        with proper normalization and version extraction.
+
+        Args:
+            dep_spec: Dependency specification (string or dict format)
+
+        Returns:
+            Tuple containing normalized package name and version constraint
+
+        Supported Formats:
+            - Simple strings: "package", "package^1.0.0", "package>=1.0.0"
+            - Dictionary format: {"name": "package", "version": "^1.0.0"}
+
+        """
         if isinstance(dep_spec, dict):
             name = dep_spec.get("name", "unknown")
             version = dep_spec.get("version", "*")
             return name.lower(), str(version)
 
-        # String simples como "package^1.0.0" ou "package"
+        # Simple string like "package^1.0.0" or "package"
         if "^" in dep_spec:
             name, version = dep_spec.split("^", 1)
             return name.lower().strip(), f"^{version.strip()}"
@@ -222,28 +432,41 @@ class VenvConsistencyValidator:
         return dep_spec.lower().strip(), "*"
 
     def _analyze_conflicts(self) -> None:
-        """Analisa conflitos entre packages instalados e requisitos."""
-        print_colored("  🔍 Analisando conflitos...", Colors.CYAN)
+        """Analyze conflicts between installed packages and requirements.
 
-        # Mapeia qual package é requisitado por quais projetos
+        Performs comprehensive conflict analysis by comparing installed packages
+        against project requirements, identifying version conflicts, missing
+        packages, and orphaned installations for structured conflict resolution.
+
+        Analysis Types:
+            - Version conflicts: Same package with different version requirements
+            - Missing packages: Required packages not installed in environment
+            - Orphaned packages: Installed packages not required by any project
+
+        Updates the conflicts list with structured conflict information
+        including severity assessment and affected project identification.
+        """
+        print_colored("  🔍 Analyzing conflicts...", Colors.CYAN)
+
+        # Map which package is requested by which projects
         package_requesters: dict[str, list[str]] = defaultdict(list)
         package_versions: dict[str, set[str]] = defaultdict(set)
 
         for project, requirements in self.project_requirements.items():
             for package, version in requirements.items():
-                # Remove marcadores como [dev]
+                # Remove markers like [dev]
                 clean_package = package.split("[")[0]
                 package_requesters[clean_package].append(project)
                 package_versions[clean_package].add(version)
 
-        # 1. Conflitos de versão
+        # 1. Version conflicts
         for package, versions in package_versions.items():
             if len(versions) > 1:
                 self.conflicts.append(
                     VenvConflict(
                         type="version",
                         package=package,
-                        details=f"Versões conflitantes: {', '.join(versions)}",
+                        details=f"Conflicting versions: {', '.join(versions)}",
                         severity="warning",
                         affected_projects=package_requesters[package],
                     ),
@@ -256,18 +479,18 @@ class VenvConsistencyValidator:
                     VenvConflict(
                         type="missing",
                         package=package,
-                        details="Package requisitado mas não instalado",
+                        details="Package required but not installed",
                         severity="critical",
                         affected_projects=requesters,
                     ),
                 )
 
-        # 3. Packages órfãos
+        # 3. Orphaned packages
         all_required = set(package_requesters.keys())
         installed_names = set(self.installed_packages.keys())
         orphans = installed_names - all_required
 
-        # Remove packages conhecidos do sistema
+        # Remove known system packages
         system_packages = {
             "pip",
             "setuptools",
@@ -286,19 +509,32 @@ class VenvConsistencyValidator:
                 VenvConflict(
                     type="orphan",
                     package=orphan,
-                    details="Package instalado mas não requisitado por nenhum projeto",
+                    details="Package installed but not required by any project",
                     severity="info",
                     affected_projects=[],
                 ),
             )
 
         print_colored(
-            f"    ✅ {len(self.conflicts)} conflitos identificados",
+            f"    ✅ {len(self.conflicts)} conflicts identified",
             Colors.GREEN,
         )
 
     def _organize_conflicts_by_severity(self) -> dict[str, list[VenvConflict]]:
-        """Organiza conflitos por severidade."""
+        """Organize conflicts by severity level.
+
+        Groups identified conflicts into severity categories for prioritized
+        resolution and structured reporting. Critical issues require immediate
+        attention, warnings should be addressed, and info items are optimization
+        opportunities.
+
+        Returns:
+            Dictionary mapping severity levels to conflict lists:
+            - 'critical': Issues that must be resolved immediately
+            - 'warning': Issues that should be addressed
+            - 'info': Optimization opportunities and minor issues
+
+        """
         organized: dict[str, list[VenvConflict]] = {
             "critical": [],
             "warning": [],
@@ -314,20 +550,32 @@ class VenvConsistencyValidator:
         self,
         conflicts_by_severity: dict[str, list[VenvConflict]],
     ) -> None:
-        """Imprime resumo da validação."""
+        """Print comprehensive validation summary report.
+
+        Generates detailed console output summarizing the virtual environment
+        validation results including statistics, conflict breakdown by severity,
+        and actionable information for conflict resolution.
+
+        Args:
+            conflicts_by_severity: Organized conflicts grouped by severity level
+            for structured reporting and prioritized resolution planning
+
+        """
         print_colored("\n" + "=" * 60, Colors.CYAN)
-        print_colored("📊 RESUMO DA VALIDAÇÃO DE CONSISTÊNCIA", Colors.CYAN)
+        print_colored(
+            "📊 VIRTUAL ENVIRONMENT CONSISTENCY VALIDATION SUMMARY", Colors.CYAN,
+        )
         print_colored("=" * 60, Colors.CYAN)
 
         total_installed = len(self.installed_packages)
         total_projects = len(self.project_requirements)
         total_conflicts = len(self.conflicts)
 
-        print_colored(f"📦 Packages instalados: {total_installed}", Colors.BLUE)
-        print_colored(f"📂 Projetos escaneados: {total_projects}", Colors.BLUE)
-        print_colored(f"⚠️ Conflitos encontrados: {total_conflicts}", Colors.BLUE)
+        print_colored(f"📦 Packages installed: {total_installed}", Colors.BLUE)
+        print_colored(f"📂 Projects scanned: {total_projects}", Colors.BLUE)
+        print_colored(f"⚠️ Conflicts found: {total_conflicts}", Colors.BLUE)
 
-        # Exibe conflitos por severidade
+        # Display conflicts by severity
         for severity, conflicts in conflicts_by_severity.items():
             if not conflicts:
                 continue
@@ -340,7 +588,7 @@ class VenvConsistencyValidator:
                 icon, color = "[INFO]", Colors.CYAN
 
             print_colored(
-                f"\n{icon} {severity.upper()}: {len(conflicts)} conflitos",
+                f"\n{icon} {severity.upper()}: {len(conflicts)} conflicts",
                 color,
             )
 
@@ -352,8 +600,12 @@ class VenvConsistencyValidator:
                         conflict.affected_projects[:MAX_PROJECTS_DISPLAY],
                     )
                     if len(conflict.affected_projects) > MAX_PROJECTS_DISPLAY:
-                        projects_str += f" e mais {len(conflict.affected_projects) - 5}"
-                    print_colored(f"    🎯 Projetos afetados: {projects_str}", color)
+                        projects_str += (
+                            f" and {len(conflict.affected_projects) - 5} more"
+                        )
+                    print_colored(f"    🎯 Affected projects: {projects_str}", color)
 
             if len(conflicts) > MAX_CONFLICTS_DISPLAY:
-                print_colored(f"    ... e mais {len(conflicts) - 10} conflitos", color)
+                print_colored(
+                    f"    ... and {len(conflicts) - 10} more conflicts", color,
+                )

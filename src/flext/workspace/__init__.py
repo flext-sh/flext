@@ -1,7 +1,72 @@
-"""FLEXT Workspace Management.
+"""
+FLEXT Workspace Management - Multi-Project Coordination and Discovery
 
-Copyright (c) 2025 FLEXT Contributors
-SPDX-License-Identifier: MIT
+Provides comprehensive workspace management capabilities for coordinating
+multiple FLEXT ecosystem projects within a unified development environment.
+This module implements project discovery, dependency analysis, environment
+setup, and cross-project coordination patterns for enterprise-grade
+workspace management.
+
+The workspace manager serves as the central coordination point for all
+FLEXT ecosystem projects, providing unified project discovery, dependency
+tracking, and environment configuration. It supports both development
+workflows and production deployment scenarios with consistent patterns
+across the 32-project FLEXT ecosystem.
+
+Key Components:
+    - WorkspaceManager: Central project coordination and discovery
+    - Project Discovery: Automatic detection of FLEXT ecosystem projects
+    - Dependency Analysis: Cross-project dependency mapping and validation
+    - Environment Setup: Unified environment and path configuration
+    - Workspace Validation: Integrity checking and structure validation
+
+Architecture:
+    Implements workspace coordination patterns that support Clean Architecture
+    across multiple projects. Provides centralized configuration management
+    while maintaining project independence and proper separation of concerns
+    throughout the distributed FLEXT ecosystem.
+
+Example:
+    Workspace management for multi-project development:
+
+    >>> from flext.workspace import WorkspaceManager
+    >>> from pathlib import Path
+    >>>
+    >>> # Initialize workspace manager
+    >>> workspace = WorkspaceManager(Path("/home/developer/flext-workspace"))
+    >>>
+    >>> # Discover all FLEXT projects
+    >>> projects = workspace.list_projects()
+    >>> print(f"Found {len(projects)} FLEXT projects:")
+    >>> for project in projects:
+    ...     print(f"  - {project}")
+    >>>
+    >>> # Get project information
+    >>> core_info = workspace.get_project_info("flext-core")
+    >>> if core_info:
+    ...     print(f"Core project: {core_info['name']} at {core_info['path']}")
+    >>>
+    >>> # Setup development environment
+    >>> workspace.setup_environment()
+    >>> print("Workspace environment configured")
+
+Integration:
+    - Built on flext-core patterns with proper error handling
+    - Integrates with development tools and quality gates
+    - Supports dependency injection and container patterns
+    - Coordinates with build systems and deployment tools
+    - Provides foundation for CLI and automation tools
+
+Quality Standards:
+    - Comprehensive error handling with detailed workspace context
+    - Full type annotation coverage for enhanced development experience
+    - Extensive validation and integrity checking
+    - Performance optimization for large workspace operations
+    - Security-conscious path and environment handling
+
+Author: FLEXT Development Team
+Version: 2.0.0
+License: MIT
 """
 
 from __future__ import annotations
