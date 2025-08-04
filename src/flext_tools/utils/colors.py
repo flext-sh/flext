@@ -1,8 +1,25 @@
-"""Sistema de cores para output no terminal."""
+"""FLEXT Tools Terminal Colors - ANSI Color System for Terminal Output.
+
+This utility module provides ANSI color constants and terminal output functions
+for the FLEXT ecosystem tools. Used across FLEXT workspace operations for
+consistent colored terminal output and improved user experience.
+
+Key Components:
+    - Colors: ANSI color constants for terminal formatting
+    - print_colored: Utility function for colored terminal output
+
+Integration:
+    - Core utility used by FLEXT workspace management tools
+    - Provides consistent color schemes across all FLEXT CLI operations
+
+Author: FLEXT Development Team
+Version: 2.0.0
+License: MIT
+"""
 
 
 class Colors:
-    """Cores ANSI para terminal."""
+    """ANSI color constants for terminal formatting and output."""
 
     HEADER = "\033[95m"
     BLUE = "\033[94m"
@@ -21,7 +38,7 @@ class Colors:
 
 
 def print_colored(message: str, color: str = "") -> None:
-    """Imprime mensagem colorida no terminal."""
+    """Print colored message to terminal with ANSI color formatting."""
     if color:
         print(f"{color}{message}{Colors.ENDC}")  # noqa: T201
     else:
